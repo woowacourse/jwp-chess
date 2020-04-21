@@ -29,6 +29,10 @@ public enum Coordinate {
         return Math.abs(value - compared.value);
     }
 
+    public boolean isLargerThan(Coordinate coordinate) {
+        return this.value > coordinate.value;
+    }
+
     public boolean isMiddle(Coordinate start, Coordinate end) {
         if ((this.value >= start.value && this.value <= end.value)
                 || (this.value <= start.value && this.value >= end.value)) {

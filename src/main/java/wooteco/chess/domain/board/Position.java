@@ -34,6 +34,18 @@ public class Position {
         return this.y.equals(y);
     }
 
+    public int xDistance(Position position) {
+        return this.x.distance(position.x);
+    }
+
+    public int yDistance(Position position) {
+        return this.y.distance(position.y);
+    }
+
+    public boolean hasLargerX(Position position) {
+        return this.x.isLargerThan(position.x);
+    }
+
     public static Position of(int x, int y) {
         return positions.stream()
                 .filter(position -> position.x == Coordinate.of(x) && position.y == Coordinate.of(y))

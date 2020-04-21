@@ -2,6 +2,7 @@ package wooteco.chess.domain.board;
 
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceRepository;
+import wooteco.chess.domain.piece.Team;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,7 @@ public class BoardFactory {
             board.put(position, findInitialPiece(position));
         }
 
-        return new Board(board);
+        return new Board(board, Team.WHITE);
     }
 
     private static Piece findInitialPiece(Position position) {

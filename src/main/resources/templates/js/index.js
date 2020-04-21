@@ -29,7 +29,7 @@ const colorCell = function colorCell(i, j) {
     return (i + j) % 2 === 0 ? "white-cell" : "black-cell";
 };
 
-(function() {
+(function () {
     for (let i = 8; i > 0; i--) {
         const tableRow = document.createElement("TR");
         for (let j = 1; j <= 8; j++) {

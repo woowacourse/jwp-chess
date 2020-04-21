@@ -26,8 +26,8 @@
         <tr>
             <th scope="col">방 번호</th>
             <th scope="col">방 제목</th>
-            <th scope="col">입장</th>
-            <th scope="col">삭제(새로고침해야 적용됩니다...)</th>
+            <th scope="col">방 입장</th>
+            <th scope="col">방 삭제</th>
         </tr>
         </thead>
         <tbody>
@@ -57,7 +57,6 @@
         <button type="submit" class="btn btn-primary">방 만들기</button>
     </form>
 </div>
-
 <script src="/js/util.js" type="text/javascript"></script>
 <script type="text/javascript">
     let allDeleteButton = document.querySelectorAll(".deleteButton");
@@ -79,9 +78,9 @@
 
     function deleteRoom(roomId) {
         console.log("deleteRoom : " + roomId);
-        let oReq = new XMLHttpRequest();
-        oReq.open('GET', '/rooms/remove?roomId=' + roomId);
-        oReq.send();
+
+        let currentPath = window.location.pathname;
+        location.href = currentPath  + '/remove?roomId=' + roomId;
     }
 
     function enterRoom(roomId) {

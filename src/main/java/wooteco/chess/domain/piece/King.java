@@ -3,16 +3,15 @@ package wooteco.chess.domain.piece;
 import wooteco.chess.domain.board.Path;
 import wooteco.chess.domain.board.Position;
 
-public class King implements Piece{
+public class King extends Piece {
     private static final int INITIAL_BLACK_X = 1;
     private static final int INITIAL_WHITE_X = 8;
     private static final int INITIAL_Y = 5;
+    private static final double SCORE = 0;
 
-    private final Team team;
-    private final double score = 0;
 
     public King(Team team) {
-        this.team = team;
+        super(team, SCORE);
     }
 
     @Override

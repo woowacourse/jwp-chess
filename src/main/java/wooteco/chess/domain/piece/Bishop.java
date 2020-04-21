@@ -3,17 +3,15 @@ package wooteco.chess.domain.piece;
 import wooteco.chess.domain.board.Path;
 import wooteco.chess.domain.board.Position;
 
-public class Bishop implements Piece{
+public class Bishop extends Piece {
     private static final int INITIAL_BLACK_X = 1;
     private static final int INITIAL_WHITE_X = 8;
     private static final int INITIAL_LEFT_Y = 3;
     private static final int INITIAL_RIGHT_Y = 6;
-
-    private final Team team;
-    private final double score= 3;
+    private static final double SCORE = 3;
 
     public Bishop(Team team) {
-        this.team = team;
+        super(team, SCORE);
     }
 
     @Override

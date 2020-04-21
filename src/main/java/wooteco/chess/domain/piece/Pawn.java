@@ -25,6 +25,7 @@ public class Pawn extends Piece {
 
         if (path.isOnInitialPosition()) {
             return (path.distanceSquare() == INITIAL_MOVABLE_SIZE || path.distanceSquare() == MOVABLE_SIZE)
+                    && !path.isBlocked()
                     && path.headingForward()
                     && path.isEndEmpty();
         }

@@ -44,7 +44,9 @@ public class Board {
     private Map<Position, Piece> findMiddlePositions(Position start, Position end) {
         return board.entrySet()
                 .stream()
-                .filter(entry -> entry.getKey().inBetween(start, end))
+                .filter(entry -> entry.getKey().inBetween(start, end)
+                        || entry.getKey().equals(start)
+                        || entry.getKey().equals(end))
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

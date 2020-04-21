@@ -30,10 +30,6 @@
 
     <button class="btn btn-primary" id="statusButton">점수보기</button>
 
-    <button class="btn btn-primary" id="saveButton">저장하기</button>
-
-    <button class="btn btn-primary" id="loadButton">불러오기</button>
-
     <button class="btn btn-primary" id="initButton">체스판 초기화</button>
 
     <table class="chessPiece">
@@ -143,6 +139,7 @@
 <script type="text/javascript">
     let allChessPosition = document.querySelectorAll(".chessPosition");
     let isChooseSourcePosition = false;
+    let loadable = false;
 
     let sourcePosition;
     let movablePositions;
@@ -240,17 +237,7 @@
         }
 
         document.getElementById("initButton").addEventListener('click', function () {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    let chessJson = JSON.parse(xhr.responseText);
-                    applyPieces(JSON.parse(chessJson.pieces));
-                    showCurrentColor(chessJson.currentColor);
-
-                }
-            };
-            xhr.open('GET', '/game/init?roomId={{roomId}}', true);
-            xhr.send();
+            init();
         });
 
         document.getElementById("statusButton").addEventListener('click', function () {
@@ -264,26 +251,6 @@
             xhr.open('GET', '/game/status?roomId={{roomId}}', true);
             xhr.send();
         });
-
-        document.getElementById("loadButton").addEventListener('click', function () {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    let chessJson = JSON.parse(xhr.responseText);
-                    applyPieces(JSON.parse(chessJson.pieces));
-                    alert("정상적으로 불러왔습니다!");
-                } else {
-                    alert("불러오지 못했습니다!");
-                }
-            };
-            xhr.open('GET', '/game/load?roomId={{roomId}}', true);
-            xhr.send();
-        });
-
-        document.getElementById("saveButton").addEventListener('click', function () {
-            alert("정상적으로 저장되었습니다!");
-        });
-
 
         function move(sourcePosition, targetPosition) {
             let xhr = new XMLHttpRequest();
@@ -333,6 +300,46 @@
             removeBlur();
             removeOverlay();
         });
+
+        function load() {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    let chessJson = JSON.parse(xhr.responseText);
+                    let pieces = JSON.parse(chessJson.pieces);
+                    if(pieces.length === 64) {
+                        let isLoad = confirm("저장된 게임이 이미 있습니다! 불러올까요?");
+                        if(isLoad) {
+                            applyPieces(pieces);
+                            showCurrentColor(chessJson.currentColor);
+                            alert("정상적으로 불러왔습니다!");
+                        } else {
+                            init();
+                        }
+                    }else {
+                        alert("불러올 게임이 없습니다!");
+                        init();
+                    }
+                }
+            };
+            xhr.open('GET', '/game/load?roomId={{roomId}}', true);
+            xhr.send();
+        }
+
+        function init() {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert("게임을 초기화합니다.");
+                    let chessJson = JSON.parse(xhr.responseText);
+                    applyPieces(JSON.parse(chessJson.pieces));
+                    showCurrentColor(chessJson.currentColor);
+                }
+            };
+            xhr.open('GET', '/game/init?roomId={{roomId}}', true);
+            xhr.send();
+        }
+        load();
     }
 </script>
 

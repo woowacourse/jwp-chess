@@ -77,8 +77,10 @@ public class GameController {
 		Gson gson = new Gson();
 		JsonObject object = new JsonObject();
 		String pieces = gson.toJson(gameService.getPiecesResponseDTO(roomId).getPieces());
+		String currentColor = gameService.getCurrentColor(roomId);
 
 		object.addProperty("pieces", pieces);
+		object.addProperty("currentColor", currentColor);
 
 		return gson.toJson(object);
 	}

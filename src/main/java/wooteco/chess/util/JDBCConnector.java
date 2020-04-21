@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class JDBCConnector {
 	private static final String server = "localhost:13306";
-	private static final String database = "wooteco/chess";
+	private static final String database = "chess";
 	private static final String option = "?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8";
 	private static final String userName = "root";
 	private static final String password = "root";

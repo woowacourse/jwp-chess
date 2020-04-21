@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.GameDao;
 import wooteco.chess.dao.MoveDao;
 import wooteco.chess.dao.PlayerDao;
@@ -19,6 +21,7 @@ import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
 import wooteco.chess.dto.MoveRequestDto;
 
+@Service
 public class ChessServiceImpl implements ChessService {
     private final GameDao gameDao = new GameDao();
     private final MoveDao moveDao = new MoveDao();

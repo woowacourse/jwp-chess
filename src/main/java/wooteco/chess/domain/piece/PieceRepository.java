@@ -20,6 +20,7 @@ public class PieceRepository {
         pieces.add(new Knight(Team.WHITE));
         pieces.add(new Pawn(Team.BLACK));
         pieces.add(new Pawn(Team.WHITE));
+        pieces.add(new Blank());
     }
 
     public static List<Piece> pieces() {

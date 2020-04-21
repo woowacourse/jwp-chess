@@ -4,8 +4,8 @@ import wooteco.chess.domain.board.Path;
 import wooteco.chess.domain.board.Position;
 
 public class King extends Piece {
-    private static final int INITIAL_BLACK_X = 1;
-    private static final int INITIAL_WHITE_X = 8;
+    private static final int INITIAL_BLACK_X = 8;
+    private static final int INITIAL_WHITE_X = 1;
     private static final int INITIAL_Y = 5;
     private static final double SCORE = 0;
     private static final int MAX_MOVABLE_SIZE = 2;

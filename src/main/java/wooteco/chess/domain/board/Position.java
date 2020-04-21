@@ -1,5 +1,6 @@
 package wooteco.chess.domain.board;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -7,7 +8,7 @@ public class Position {
     private final Coordinate x;
     private final Coordinate y;
 
-    public static List<Position> positions;
+    public static List<Position> positions = new ArrayList<>();
 
     static {
         for(Coordinate x: Coordinate.values()) {

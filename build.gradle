@@ -13,9 +13,10 @@ repositories {
 }
 
 dependencies {
+	compile("mysql:mysql-connector-java:8.0.16")
 	implementation 'com.sparkjava:spark-core:2.9.0'
 	implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compile 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 	implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.1'

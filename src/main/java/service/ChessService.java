@@ -11,7 +11,6 @@ import dao.ChessGameDao;
 import dao.ChessGamesDao;
 import dao.PieceDao;
 import dto.*;
-import spark.Request;
 import vo.PieceVo;
 
 import java.sql.SQLException;
@@ -42,16 +41,16 @@ public class ChessService {
             return GSON.toJson(boardDto);
         }
 
-        BoardDto boardDto = new BoardDto(ChessGameConverter.convert(pieceVos, chessGameDto).getChessBoard());
+        ChessGame chessGame = ChessGameConverter.convert(pieceVos, chessGameDto);
+        BoardDto boardDto = new BoardDto(chessGame.getChessBoard());
         return GSON.toJson(boardDto);
     }
 
     public String move(LocationDto nowDto,LocationDto destinationDto, ChessGame chessGame) {
-        Location nowLocation = new Location(nowDto.getRow(), nowDto.getCol());
-        Location destinationLocation =
-                new Location(destinationDto.getRow(), destinationDto.getCol());
+        Location now = nowDto.toEntity();
+        Location destination = destinationDto.toEntity();
 
-        MoveCommand move = MoveCommand.of(nowLocation, destinationLocation, chessGame);
+        MoveCommand move = MoveCommand.of(now, destination, chessGame);
 
         Progress progress = chessGame.doOneCommand(move);
 

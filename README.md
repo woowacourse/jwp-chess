@@ -7,7 +7,7 @@
     - [이전 미션 코일의 Repository](https://github.com/slowcoyle/java-chess)
 - 추가적인 변경 사항은 다음과 같습니다.
     
-    - [ ] MVC 적용 -> Controller, DTO, Service, DAO 분리.
+    - [x] MVC 적용 -> Controller, DTO, Service, DAO 분리.
     - [ ] 테스트 코드 추가 작성.
         - fake DAO를 사용하여 추가하는 방향으로 이동.
 

@@ -21,9 +21,10 @@ public class ChessWebController {
 
     public ChessWebController(ChessService chessService) {
         this.chessService = chessService;
+        this.run();
     }
 
-    public void run() {
+    private void run() {
         staticFiles.location(STATIC_FILES_LOCATION);
 
         ChessGame chessGame = new ChessGame();
@@ -48,6 +49,7 @@ public class ChessWebController {
         post("/start/move", (req, res) -> {
             LocationDto nowDto = new LocationDto(req.queryParams("now"));
             LocationDto destinationDto = new LocationDto(req.queryParams("des"));
+
             return chessService.move(nowDto, destinationDto, chessGame);
         });
 

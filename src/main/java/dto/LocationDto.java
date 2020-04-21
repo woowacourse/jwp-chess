@@ -1,6 +1,7 @@
 package dto;
 
 import chess.location.Col;
+import chess.location.Location;
 import chess.location.Row;
 
 public class LocationDto {
@@ -17,6 +18,10 @@ public class LocationDto {
 
         this.row = Row.of(Integer.parseInt(row));
         this.col = Col.of(col.charAt(0));
+    }
+
+    public Location toEntity() {
+        return new Location(row, col);
     }
 
     private static String[] parseRowAndCol(String rowAndCol) {

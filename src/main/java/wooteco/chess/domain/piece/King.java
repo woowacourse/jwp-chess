@@ -8,6 +8,7 @@ public class King extends Piece {
     private static final int INITIAL_WHITE_X = 8;
     private static final int INITIAL_Y = 5;
     private static final double SCORE = 0;
+    private static final int MAX_MOVABLE_SIZE = 2;
 
 
     public King(Team team) {
@@ -16,7 +17,8 @@ public class King extends Piece {
 
     @Override
     public boolean isMovable(Path path) {
-        return false;
+        return path.distanceSquare() <= MAX_MOVABLE_SIZE
+                && (path.isEndEmpty() || path.isEnemyOnEnd());
     }
 
     @Override

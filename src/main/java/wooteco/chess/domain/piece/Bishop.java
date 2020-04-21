@@ -16,7 +16,9 @@ public class Bishop extends Piece {
 
     @Override
     public boolean isMovable(Path path) {
-        return false;
+        return path.isDiagonal()
+                && (path.isEndEmpty() || path.isEnemyOnEnd())
+                && !path.isBlocked();
     }
 
     @Override

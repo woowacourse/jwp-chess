@@ -17,7 +17,9 @@ public class Rook extends Piece {
 
     @Override
     public boolean isMovable(Path path) {
-        return false;
+        return path.isStraight()
+                && (path.isEndEmpty() || path.isEnemyOnEnd())
+                && !path.isBlocked();
     }
 
     @Override

@@ -24,6 +24,10 @@ public class Path {
         }
     }
 
+    public double distanceSquare() {
+        return Math.pow(start.xDistance(end), 2) + Math.pow(start.yDistance(end), 2);
+    }
+
     public boolean isEndEmpty() {
         return path.get(end) instanceof Blank;
     }

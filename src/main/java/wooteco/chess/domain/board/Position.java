@@ -26,11 +26,36 @@ public class Position {
         return this.x.equals(Coordinate.of(x));
     }
 
+    public boolean isOnX(Coordinate x) {
+        return this.x.equals(x);
+    }
+
+    public boolean isOnY(Coordinate y) {
+        return this.y.equals(y);
+    }
+
     public static Position of(int x, int y) {
         return positions.stream()
                 .filter(position -> position.x == Coordinate.of(x) && position.y == Coordinate.of(y))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 좌표 값입니다."));
+    }
+
+    public boolean inBetween(final Position start, final Position end) {
+        if (isOnX(start.x) && isOnX(end.x)
+                && y.isMiddle(start.y, end.y)) {
+            return true;
+        }
+
+        if (isOnY(start.y) && isOnY(end.y)
+                && x.isMiddle(start.x, end.x)) {
+            return true;
+        }
+
+        return x.distance(start.x) == y.distance(start.y)
+                && x.distance(end.x) == y.distance(end.y)
+                && y.isMiddle(start.y, end.y)
+                && x.isMiddle(start.x, end.x);
     }
 
     @Override

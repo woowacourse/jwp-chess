@@ -24,4 +24,16 @@ public enum Coordinate {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 좌표 값입니다."));
     }
+
+    public int distance(Coordinate compared) {
+        return Math.abs(value - compared.value);
+    }
+
+    public boolean isMiddle(Coordinate start, Coordinate end) {
+        if ((this.value >= start.value && this.value <= end.value)
+                || (this.value <= start.value && this.value >= end.value)) {
+            return true;
+        }
+        return false;
+    }
 }

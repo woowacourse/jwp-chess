@@ -37,6 +37,7 @@ public class GameService {
 
 		Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
 		GameManager gameManager = new GameManager(pieces, roomDAO.findRoomColorById(roomId));
+		gameManager.validateEndGame();
 		gameManager.moveFromTo(Position.of(sourcePosition), Position.of(targetPosition));
 		roomDAO.updateRoomColorById(roomId, gameManager.getCurrentColor());
 

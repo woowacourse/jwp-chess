@@ -74,4 +74,10 @@ public class GameManager {
 	public Color getCurrentColor() {
 		return currentColor;
 	}
+
+	public void validateEndGame() {
+		if(isKingDead()){
+			throw new IllegalArgumentException("게임이 종료되었습니다.");
+		}
+	}
 }

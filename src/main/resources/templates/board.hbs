@@ -136,68 +136,56 @@
     allImages.set("WHITE", '/white.cur');
 
     var allPieces = new Map();
-    {
-        {
-            #piecesDto
-        }
+        {{#piecesDto}}
+        allPieces.set("{{position}}", "{{piece}}");
+        {{/piecesDto}}
+
+    if ("{{error}}" !== "") {
+        alert("{{error}}");
     }
-    allPieces.set("{{position}}", "{{piece}}");
-    {
-        {
-            /piecesDto}}
 
-            if ("{{error}}" !== "") {
-                alert("{{error}}");
-            }
+    if ("{{scores}}" !== "") {
+        {{#scores}}
+            document.querySelector("#result").innerHTML += "{{color}} 의 점수 {{score}} <br>";
+        {{/scores}}
+    }
 
-            if ("{{scores}}" !== "") {
-                {
-                    {
-                        #scores
-                    }
-                }
-                document.querySelector("#result").innerHTML += "{{color}} 의 점수 {{score}} <br>";
-                {
-                    {
-                        /scores}}
-                    }
+    if ("{{winner}}" !== "") {
+        alert("승자 : {{winner}}");
+    }
 
-                    if ("{{winner}}" !== "") {
-                        alert("승자 : {{winner}}");
-                    }
+    let nowTurn = "{{turn}}";
+    console.log(nowTurn);
 
-                    let nowTurn = "{{turn}}";
-                    console.log(nowTurn);
+    document.querySelector("body")
+            .style
+            .cursor = "url('" + allImages.get(nowTurn) + "'), auto";
 
-                    document.querySelector("body")
-                        .style
-                        .cursor = "url('" + allImages.get(nowTurn) + "'), auto";
+    allPieces.forEach((a, b) => {
+        let positionDiv = document.querySelector("#" + b);
+        positionDiv.style.backgroundImage = 'url(' + allImages.get(a) + ')';
+        positionDiv.style.backgroundSize = "contain";
+    });
 
-                    allPieces.forEach((a, b) => {
-                        let positionDiv = document.querySelector("#" + b);
-                        positionDiv.style.backgroundImage = 'url(' + allImages.get(a) + ')';
-                        positionDiv.style.backgroundSize = "contain";
-                    });
-
-                    document.querySelector(".board").addEventListener("click", (arg) => {
-                        let targetText = document.querySelector("#target-text");
-                        let destinationText = document.querySelector("#destination-text");
-                        if (targetText.value === arg.target.id) {
-                            targetText.value = "";
-                            arg.target.className = "position";
-                            return;
-                        }
-                        if (targetText.value === "") {
-                            targetText.value = arg.target.id;
-                            arg.target.className = "clickedPosition";
-                            return;
-                        }
-                        if (destinationText.value === "") {
-                            destinationText.value = arg.target.id;
-                            arg.target.className = "clickedPosition";
-                            document.querySelector("#move-form").submit();
-                        }
-                    }, true);
+    document.querySelector(".board").addEventListener("click", (arg) => {
+        let targetText = document.querySelector("#target-text");
+        let destinationText = document.querySelector("#destination-text");
+        if (targetText.value === arg.target.id) {
+            targetText.value = "";
+            arg.target.className = "position";
+            return;
+        }
+        if (targetText.value === "") {
+            targetText.value = arg.target.id;
+            arg.target.className = "clickedPosition";
+            return;
+        }
+        if (destinationText.value === "") {
+            destinationText.value = arg.target.id;
+            arg.target.className = "clickedPosition";
+            document.querySelector("#move-form").submit();
+        }
+    }, true);
 
 </script>
 </body>

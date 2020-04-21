@@ -25,7 +25,7 @@ public class SparkChessApplication {
             model.put("piecesDto", WebOutputRenderer.toPiecesDto(gameManagerService.getBoard()));
             model.put("turn", gameManagerService.getCurrentTurn().name());
 
-            return render(model, "board.html");
+            return render(model, "board.hbs");
         });
 
         get("/resume", (request, response) -> {
@@ -33,7 +33,7 @@ public class SparkChessApplication {
             model.put("piecesDto", WebOutputRenderer.toPiecesDto(gameManagerService.getBoard()));
             model.put("turn", gameManagerService.getCurrentTurn().name());
 
-            return render(model, "board.html");
+            return render(model, "board.hbs");
         });
 
         post("/move", (request, response) -> {
@@ -50,9 +50,9 @@ public class SparkChessApplication {
             if (!gameManagerService.isKingAlive()) {
                 model.put("winner", gameManagerService.getCurrentTurn().reverse());
                 gameManagerService.resetGame();
-                return render(model, "end.html");
+                return render(model, "end.hbs");
             }
-            return render(model, "board.html");
+            return render(model, "board.hbs");
         });
 
         get("/status", (request, response) -> {
@@ -61,12 +61,12 @@ public class SparkChessApplication {
             model.put("turn", gameManagerService.getCurrentTurn().name());
             model.put("scores", WebOutputRenderer.scoreToModel(gameManagerService.calculateEachScore()));
 
-            return render(model, "board.html");
+            return render(model, "board.hbs");
         });
 
         get("/end", (request, response) -> {
             gameManagerService.resetGame();
-            return render(new HashMap<>(), "end.html");
+            return render(new HashMap<>(), "end.hbs");
         });
     }
 

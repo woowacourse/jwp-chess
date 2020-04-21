@@ -39,8 +39,8 @@ public class Route {
         return now.isSameCol(destination);
     }
 
-    public boolean isEmptyDestinaion() {
-        return route.containsKey(destination) == false;
+    public boolean isNotEmptyDestination() {
+        return route.containsKey(destination);
     }
 
     public boolean isEnemyNowAndDestination() {

@@ -34,11 +34,11 @@ public class PawnPieceMovable implements PieceMovable {
     }
 
     private boolean canMoveDiagonal(Route route, int value) {
-        return route.isForwardDiagonal(value) && isDestinationEmptyOrEnemy(route);
+        return route.isForwardDiagonal(value) && isDestinationNotEmptyAndEnemy(route);
     }
 
-    private boolean isDestinationEmptyOrEnemy(Route route) {
-        return route.isEmptyDestinaion() || route.isEnemyNowAndDestination();
+    private boolean isDestinationNotEmptyAndEnemy(Route route) {
+        return route.isNotEmptyDestination() && route.isEnemyNowAndDestination();
     }
 
     private boolean canMoveInInitialPawnLocation(Route route, int value) {

@@ -42,13 +42,17 @@ class PawnTest {
     }
 
     @Test
-    @DisplayName("초기 위치의 폰의 대각선 이동 테스트")
+    @DisplayName("폰의 대각선 이동 테스트")
     void canMove3() {
+        Map<Location, Piece> board = new HashMap<>();
         Pawn pawn = new Pawn(Team.BLACK);
-        Location now = new Location(7, 'a');
-        Location moveDiagonal = new Location(6, 'b');
+        Location now = new Location(6, 'a');
+        Location moveDiagonal = new Location(5, 'b');
 
-        Route route = new Route(Collections.emptyMap(), now, moveDiagonal);
+        board.put(now, pawn);
+        board.put(moveDiagonal, new Rook(Team.WHITE));
+
+        Route route = new Route(board, now, moveDiagonal);
 
         boolean moveDiagonalActual = pawn.canMove(route);
         assertThat(moveDiagonalActual).isTrue();
@@ -83,21 +87,6 @@ class PawnTest {
     }
 
     @Test
-    @DisplayName("초기 위치가 아닌 일반적인 폰의 대각선 이동")
-    void canMove5() {
-        ChessBoard chessBoard = ChessBoardCreater.create();
-
-        Pawn pawn = new Pawn(Team.BLACK);
-        Location now = new Location(6, 'a');
-        Location moveDiagonal = new Location(5, 'b');
-
-        Route route = new Route(Collections.emptyMap(), now, moveDiagonal);
-        boolean moveDiagonalAcutal = pawn.canMove(route);
-
-        assertThat(moveDiagonalAcutal).isTrue();
-    }
-
-    @Test
     @DisplayName("초기 위치가 아닌 일반적인 폰의 2단 이동")
     void cantMove2() {
         ChessBoard chessBoard = ChessBoardCreater.create();
@@ -112,22 +101,6 @@ class PawnTest {
         assertThat(moveTwiceForwardActual).isFalse();
     }
 
-    @DisplayName("폰의 대각선 위치에 적이 있는 경우")
-    @Test
-    void name() {
-        Map<Location, Piece> board = new HashMap<>();
-        Pawn givenPiece = new Pawn(Team.BLACK);
-        Location now = new Location(7, 'a');
-        board.put(now, givenPiece);
-        Location destination = new Location(6, 'b');
-        board.put(destination, new Bishop(Team.WHITE));
-
-        Route route = new Route(Collections.emptyMap(), now, destination);
-
-        boolean actual = givenPiece.canMove(route);
-        assertThat(actual).isTrue();
-    }
-
     @DisplayName("폰의 대각선 위치에 적이 없는 경우")
     @Test
     void name2() {
@@ -137,10 +110,11 @@ class PawnTest {
         board.put(now, givenPiece);
 
         Location destination = new Location(6, 'b');
-        Route route = new Route(Collections.emptyMap(), now, destination);
+
+        Route route = new Route(board, now, destination);
 
         boolean actual = givenPiece.canMove(route);
-        assertThat(actual).isTrue();
+        assertThat(actual).isFalse();
     }
 
     @DisplayName("폰의 두 칸의 직선 위치로 가는 중 적이 있는 경우")

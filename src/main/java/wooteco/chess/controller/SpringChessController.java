@@ -70,29 +70,28 @@ public class SpringChessController {
     }
 
     @GetMapping("/boards/{id}/turn")
-    public boolean isWhiteTurn(@PathVariable int id) throws SQLException {
+    private boolean isWhiteTurn(@PathVariable int id) throws SQLException {
         return service.isWhiteTurn(id);
     }
 
     @GetMapping("/boards/{id}/score")
-    public Map<Side, Double> getScore(@PathVariable int id) throws SQLException {
+    private Map<Side, Double> getScore(@PathVariable int id) throws SQLException {
         return service.getScoresById(id);
     }
 
     @PostMapping("/boards/{id}/move")
-    public boolean move(@PathVariable int id, @RequestBody MoveRequestDto dto) throws SQLException {
+    private boolean move(@PathVariable int id, @RequestBody MoveRequestDto dto) throws SQLException {
         return service.addMoveByGameId(id, dto.getFrom(), dto.getTo());
     }
 
     @PostMapping("/boards/{id}/movable")
-    public List<String> findAllAvailablePath(@PathVariable int id, @RequestBody MovableRequestDto dto) throws
+    private List<String> findAllAvailablePath(@PathVariable int id, @RequestBody MovableRequestDto dto) throws
         SQLException {
         return service.findAllAvailablePath(id, dto.getFrom());
     }
 
     @GetMapping("/scores")
-    public Map<Integer, Map<Side, Double>> getScoreContexts() throws
-        SQLException {
+    private Map<Integer, Map<Side, Double>> getScoreContexts() throws SQLException {
         return service.getScoreContexts();
     }
 }

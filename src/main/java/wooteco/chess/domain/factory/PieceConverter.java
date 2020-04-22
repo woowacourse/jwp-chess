@@ -39,7 +39,9 @@ public enum PieceConverter {
 		this.creator = creator;
 	}
 
-	public static Piece convert(String pieceName, String position) {
+	public static Piece convert(String position, String pieceName) {
+		System.out.println("여기");
+		System.out.println(position + " " + pieceName);
 		return Arrays.stream(values())
 			.filter(converter -> converter.name.equals(pieceName))
 			.findFirst()

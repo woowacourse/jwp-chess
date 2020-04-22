@@ -100,7 +100,7 @@ public class BoardFactory {
 			PieceDTO pieceDTO = findByPosition(pieceDTOS, String.format(POSITION_FORMAT, y, x));
 			String name = pieceDTO.getName();
 			String position = pieceDTO.getPosition();
-			pieces.add(PieceConverter.convert(name, position));
+			pieces.add(PieceConverter.convert(position, name));
 		}
 		return new Row(pieces);
 	}

@@ -27,17 +27,27 @@ public class Cell {
 	}
 
 	public static List<Cell> valuesBetween(Cell start, Cell end) {
-		List<Cell> result = new ArrayList<>();
 		if (start.number > end.number) {
-			for (int i = start.number - 1; i > end.number; i--) {
-				result.add(new Cell(i));
-			}
+			return buildDescendingCells(start, end);
 		} else {
-			for (int i = start.number + 1; i < end.number; i++) {
-				result.add(new Cell(i));
-			}
+			return buildAscendingCells(start, end);
 		}
-		return result;
+	}
+
+	private static List<Cell> buildAscendingCells(Cell start, Cell end) {
+		List<Cell> cells = new ArrayList<>();
+		for (int i = start.number + 1; i < end.number; i++) {
+			cells.add(new Cell(i));
+		}
+		return cells;
+	}
+
+	private static List<Cell> buildDescendingCells(Cell start, Cell end) {
+		List<Cell> cells = new ArrayList<>();
+		for (int i = start.number - 1; i > end.number; i--) {
+			cells.add(new Cell(i));
+		}
+		return cells;
 	}
 
 	public int getNumber() {

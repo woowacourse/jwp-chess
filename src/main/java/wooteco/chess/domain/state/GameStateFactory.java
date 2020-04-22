@@ -4,14 +4,15 @@ import java.util.Arrays;
 import java.util.function.BiFunction;
 
 import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Team;
 
 public enum GameStateFactory {
-	READY("ready", (turn, board) -> new Ready(new Board(board), Team.of(turn))),
-	STARTED("started", (turn, board) -> new Started(new Board(board), Team.of(turn))),
+	READY("ready", (turn, board) -> new Ready(BoardFactory.create(board), Team.of(turn))),
+	STARTED("started", (turn, board) -> new Started(BoardFactory.create(board), Team.of(turn))),
 	KING_CATCHED_FINISHED("king_catch_finished",
-		(turn, board) -> new KingCatchFinished(new Board(board), Team.of(turn))),
-	SUSPEND_FINISHED("suspend_finished", (turn, board) -> new SuspendFinished(new Board(board), Team.of(turn)));
+		(turn, board) -> new KingCatchFinished(BoardFactory.create(board), Team.of(turn))),
+	SUSPEND_FINISHED("suspend_finished", (turn, board) -> new SuspendFinished(BoardFactory.create(board), Team.of(turn)));
 
 	private final String state;
 	private final BiFunction<String, String, GameState> gameStateGenerator;

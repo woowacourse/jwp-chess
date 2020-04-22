@@ -27,7 +27,7 @@ public enum MoveRelation {
 			.filter(moveRelation -> moveRelation.relationChecker.test(from, to))
 			.map(moveRelation -> moveRelation.traceMaker.apply(from, to))
 			.findFirst()
-			.orElseThrow(() -> new IllegalArgumentException(""));
+			.orElseThrow(() -> new IllegalArgumentException("해당 위치 이동 경로는 찾을 수 없습니다."));
 	}
 
 	private static List<Position> findSameColumnTrace(Position from, Position to) {

@@ -31,7 +31,7 @@ public class JDBCGameDAO implements GameDAO {
 		jdbcTemplate.executeUpdate(query, preparedStatement -> {
 			preparedStatement.setString(1, game.getStateType());
 			preparedStatement.setString(2, game.getTurn().name());
-			preparedStatement.setString(3, game.getBoard().getAsString());
+			preparedStatement.setString(3, game.getBoard().parseString());
 			preparedStatement.setInt(4, game.getId());
 		});
 	}

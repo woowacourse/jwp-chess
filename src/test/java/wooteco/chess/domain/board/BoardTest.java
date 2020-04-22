@@ -73,30 +73,4 @@ public class BoardTest {
 		Map<Team, Double> status = result.getStatus();
 		assertThat(status).containsOnly(entry(Team.BLACK, 38.0), entry(WHITE, 38.0));
 	}
-
-	@DisplayName("문자열로 체스판 입력 받아 보드 객체 생성")
-	@Test
-	void constructWithStringTest() {
-		String boards =
-			"RNBQKBNR\n" +
-				"PPPPPPPP\n" +
-				"........\n" +
-				"........\n" +
-				"........\n" +
-				"........\n" +
-				"pppppppp\n" +
-				"rnbqkbnr\n";
-		Board board = new Board(boards);
-		Map<Position, Piece> pieces = board.getPieces();
-		assertThat(pieces).contains(
-			entry(Position.of("a2"), new Pawn(WHITE)),
-			entry(Position.of("b2"), new Pawn(WHITE)),
-			entry(Position.of("c2"), new Pawn(WHITE)),
-			entry(Position.of("d2"), new Pawn(WHITE)),
-			entry(Position.of("e2"), new Pawn(WHITE)),
-			entry(Position.of("f2"), new Pawn(WHITE)),
-			entry(Position.of("g2"), new Pawn(WHITE)),
-			entry(Position.of("h2"), new Pawn(WHITE))
-		);
-	}
 }

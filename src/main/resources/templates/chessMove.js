@@ -67,6 +67,37 @@ function getChessBoard(id) {
     });
 }
 
+function postNewGame() {
+    var game_id = document.getElementById("game_id").innerHTML;
+
+    $.ajax({
+            type: 'post',
+            url: '/start/new/game',
+            data: {"game_id": game_id.toString()},
+            success: function (data) {
+                $('#game_id').html(game_id);
+
+                $('.gamecell').html('');
+                $('.gamecell').attr('chess', 'null');
+
+                $('.gamecell grey').html('');
+                $('.gamecell grey').attr('chess', 'null');
+
+                var jsonData = JSON.parse(data);
+                for (var i = 0; i < jsonData.boardValue.length; i++) {
+                    var piece = jsonData.boardValue[i];
+                    $('#' + piece.location).html(main.variables.pieces[piece.pieceName].img);
+                    $('#' + piece.location).attr('chess', piece.pieceName);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert(error.toString());
+            },
+        }
+    );
+}
+
+
 function convertPiece(pieceName) {
     for (let piecesKey in main.variables.pieces) {
         if (piecesKey == pieceName) {
@@ -136,7 +167,7 @@ function getChessBoardResult() {
     $.ajax({
         url: "/start/winner",
         type: "get",
-        data: {"game_id" : game_id},
+        data: {"game_id": game_id},
         success: function (data) {
             var jason = JSON.parse(data);
             alert("승자는" + jason.name + "입니다.")
@@ -192,7 +223,7 @@ function postEndGame() {
     $.ajax({
         type: 'post',
         url: '/end',
-        data: {"game_id" : game_id},
+        data: {"game_id": game_id},
         dataType: 'text',
         error: function (xhr, status, error) {
             alert(error.toString());
@@ -201,47 +232,3 @@ function postEndGame() {
         }
     });
 }
-
-
-function postNewGame() {
-    var whitePlayerName = document.getElementById("white_name").value;
-    var blackPlayerName = document.getElementById("black_name").value;
-
-    console.log(whitePlayerName, blackPlayerName);
-
-    var postNewGameData = {"whitePlayerName": whitePlayerName.toString(), "blackPlayerName": blackPlayerName.toString()};
-
-    $.ajax({
-            type: 'post',
-            url: '/start/new/game',
-            data: postNewGameData,
-            dataType: 'text',
-            error: function (xhr, status, error) {
-                alert(error.toString());
-            },
-            success: function (data) {
-                // var jsonData = JSON.parse(data);
-                //
-                // if (jsonData.progress == "CONTINUE") {
-                //     var nowImg = $('#' + json.now).html();
-                //     $('#' + json.des).html(nowImg);
-                //     $('#' + json.des).attr('chess', $('#' + json.now).chess);
-                //     $('#' + json.now).html('');
-                //     $('#' + json.now).attr('chess', 'null');
-                //
-                //     $('#whiteScore').html("whiteScore : " + jsonData.chessGameScoresDto.whiteScore.value);
-                //     $('#blackScore').html("blackScore : " + jsonData.chessGameScoresDto.blackScore.value);
-                //
-                //     $('#turn').html("It's " + jsonData.turn + " Turn!");
-                // }
-                // if (jsonData.progress == "ERROR") {
-                //     alert("움직일 수 없는 경우입니다.");
-                // }
-                // if (jsonData.progress == "END") {
-                //     getChessBoardResult();
-                // }
-            }
-        }
-    );
-}
-

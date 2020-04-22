@@ -28,7 +28,6 @@ public class ChessService {
     private static final ChessGameDao chessGameDao = new ChessGameDao();
     private static final BoardDao boardDao = new BoardDao();
     private static final Gson GSON = new Gson();
-    private static final int GAME_ID = 1;
 
     public String findAllBoards() throws SQLException {
         ArrayList<ChessGameDto> all = chessGamesDao.findAll();
@@ -36,10 +35,10 @@ public class ChessService {
         return GSON.toJson(chessGamesDto);
     }
 
-    public String findBoard(int boardId) throws SQLException {
-        List<PieceVo> pieceVos = pieceDao.findAll(boardId);
+    public String findBoard(int gameId) throws SQLException {
+        List<PieceVo> pieceVos = pieceDao.findAll(gameId);
 
-        ChessGameDto chessGameDto = chessGameDao.findChessGameBy(boardId);
+        ChessGameDto chessGameDto = chessGameDao.findChessGameBy(gameId);
 
         if (pieceVos == null) {
             BoardDto boardDto = new BoardDto(new ChessGame().getChessBoard());
@@ -85,8 +84,8 @@ public class ChessService {
         return GSON.toJson(chessResultDto);
     }
 
-    public void insertChessBoard(ChessGame chessGame) throws SQLException {
-        boardDao.addBoard(chessGame.getChessBoard(), GAME_ID);
+    public void insertChessBoard(ChessGame chessGame, int game_id) throws SQLException {
+        boardDao.addBoard(chessGame.getChessBoard(), game_id);
     }
 
     public ChessGame makeGameByDB(int gameId) throws SQLException {

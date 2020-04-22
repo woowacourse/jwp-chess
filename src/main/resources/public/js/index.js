@@ -23,7 +23,7 @@ function pick(value) {
 
 function pickBefore(beforeValue) {
     document.getElementById(beforeValue).classList.add('fromPiece');
-    document.getElementById(beforeValue).style.borderColor = 'blue';
+    document.getElementById(beforeValue).style.borderColor = 'red';
 }
 
 async function pickAfter(afterValue) {

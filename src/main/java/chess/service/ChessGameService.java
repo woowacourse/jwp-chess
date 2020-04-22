@@ -57,10 +57,11 @@ public class ChessGameService {
         Board board = new Board(boardDAO.findAllPieces());
         Piece piece = board.findBy(Position.of(fromPiece));
 
+        board.move(fromPiece, toPiece);
         if (!piece.isSameTeam(getCurrentTurn())) {
             throw new TakeTurnException("체스 게임 순서를 지켜주세요.");
         }
-        board.move(fromPiece, toPiece);
+
         updateFinish(board.isFinished());
         updateTurn();
 

@@ -1,4 +1,4 @@
-package wooteco.chess.domain.state;
+package wooteco.chess.domain.game;
 
 import static wooteco.chess.domain.piece.Team.*;
 
@@ -7,7 +7,7 @@ import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.Result;
 
-public class Started extends GameState {
+public class Started extends Game {
 	public Started(Board board) {
 		this(board, WHITE);
 	}
@@ -17,13 +17,13 @@ public class Started extends GameState {
 	}
 
 	@Override
-	public GameState start() {
+	public Game start() {
 		board.start();
 		return new Started(board);
 	}
 
 	@Override
-	public GameState move(Position from, Position to) {
+	public Game move(Position from, Position to) {
 		validateRightTurn(from);
 		board.move(from, to);
 		if (board.containsSingleKingWith(turn)) {
@@ -49,7 +49,7 @@ public class Started extends GameState {
 	}
 
 	@Override
-	public GameState end() {
+	public Game end() {
 		return new SuspendFinished(board, turn);
 	}
 

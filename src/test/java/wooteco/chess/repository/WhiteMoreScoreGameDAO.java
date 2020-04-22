@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceFactory;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.domain.state.SuspendFinished;
+import wooteco.chess.domain.game.Game;
+import wooteco.chess.domain.game.SuspendFinished;
 
 public class WhiteMoreScoreGameDAO implements GameDAO {
 
@@ -21,7 +21,7 @@ public class WhiteMoreScoreGameDAO implements GameDAO {
 		maps.put(Position.of("a5"), PieceFactory.of("k"));
 		maps.put(Position.of("a7"), PieceFactory.of("P"));
 		maps.put(Position.of("b7"), PieceFactory.of("K"));
-		Game game = new Game(new SuspendFinished(new Board(maps), Team.WHITE));
+		Game game = new SuspendFinished(new Board(maps), Team.WHITE);
 		return Optional.of(game);
 	}
 

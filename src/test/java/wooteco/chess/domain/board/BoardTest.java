@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import wooteco.chess.domain.piece.Pawn;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Rook;
 import wooteco.chess.domain.piece.Team;

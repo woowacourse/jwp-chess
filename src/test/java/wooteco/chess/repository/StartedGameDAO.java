@@ -4,14 +4,14 @@ import java.util.Optional;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.game.Game;
-import wooteco.chess.domain.state.Started;
+import wooteco.chess.domain.game.Started;
 
 public class StartedGameDAO implements GameDAO {
 	private Game game;
 
 	public StartedGameDAO() {
-		this.game = new Game(new Started(new Board()));
-		game.start();
+		this.game = new Started(new Board());
+		this.game = game.start();
 	}
 
 	@Override

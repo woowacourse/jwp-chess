@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import wooteco.chess.domain.game.Game;
-import wooteco.chess.domain.state.GameStateFactory;
+import wooteco.chess.domain.game.GameStateFactory;
 import wooteco.chess.utils.jdbc.JDBCTemplate;
 
 public class JDBCGameDAO implements GameDAO {
@@ -18,11 +18,11 @@ public class JDBCGameDAO implements GameDAO {
 	public Optional<Game> findById(int gameId) {
 		String query = "SELECT * FROM game WHERE id = ?";
 		return jdbcTemplate.executeQuery(query, rs ->
-			new Game(GameStateFactory.of(
+			GameStateFactory.of(
 				rs.getString("state"),
 				rs.getString("turn"),
 				rs.getString("board")
-			)), pstmt -> pstmt.setInt(1, gameId));
+			), pstmt -> pstmt.setInt(1, gameId));
 	}
 
 	@Override

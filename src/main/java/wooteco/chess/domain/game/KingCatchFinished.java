@@ -1,4 +1,4 @@
-package wooteco.chess.domain.state;
+package wooteco.chess.domain.game;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Team;

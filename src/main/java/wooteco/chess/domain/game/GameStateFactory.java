@@ -1,9 +1,8 @@
-package wooteco.chess.domain.state;
+package wooteco.chess.domain.game;
 
 import java.util.Arrays;
 import java.util.function.BiFunction;
 
-import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Team;
 
@@ -12,17 +11,18 @@ public enum GameStateFactory {
 	STARTED("started", (turn, board) -> new Started(BoardFactory.create(board), Team.of(turn))),
 	KING_CATCHED_FINISHED("king_catch_finished",
 		(turn, board) -> new KingCatchFinished(BoardFactory.create(board), Team.of(turn))),
-	SUSPEND_FINISHED("suspend_finished", (turn, board) -> new SuspendFinished(BoardFactory.create(board), Team.of(turn)));
+	SUSPEND_FINISHED("suspend_finished",
+		(turn, board) -> new SuspendFinished(BoardFactory.create(board), Team.of(turn)));
 
 	private final String state;
-	private final BiFunction<String, String, GameState> gameStateGenerator;
+	private final BiFunction<String, String, Game> gameStateGenerator;
 
-	GameStateFactory(String state, BiFunction<String, String, GameState> gameStateGenerator) {
+	GameStateFactory(String state, BiFunction<String, String, Game> gameStateGenerator) {
 		this.state = state;
 		this.gameStateGenerator = gameStateGenerator;
 	}
 
-	public static GameState of(String state, String turn, String board) {
+	public static Game of(String state, String turn, String board) {
 		return Arrays.stream(values())
 			.filter(val -> val.state.equals(state))
 			.map(val -> val.gameStateGenerator.apply(turn, board))

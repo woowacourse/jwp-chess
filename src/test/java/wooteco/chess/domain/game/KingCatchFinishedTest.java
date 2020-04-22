@@ -1,4 +1,4 @@
-package wooteco.chess.domain.state;
+package wooteco.chess.domain.game;
 
 import static org.assertj.core.api.Assertions.*;
 import static wooteco.chess.domain.piece.Team.*;
@@ -37,7 +37,7 @@ class KingCatchFinishedTest {
 	void getWinnerTest() {
 		Map<Position, Piece> map = new HashMap<>();
 		map.put(Position.of("a1"), new King(BLACK));
-		GameState state = new KingCatchFinished(new Board(map), BLACK);
+		Game state = new KingCatchFinished(new Board(map), BLACK);
 		Team actual = state.getWinner();
 		assertThat(actual).isEqualTo(BLACK);
 	}

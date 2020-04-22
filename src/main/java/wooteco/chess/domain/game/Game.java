@@ -1,19 +1,21 @@
 package wooteco.chess.domain.game;
 
+import static wooteco.chess.domain.piece.Team.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.Result;
-import wooteco.chess.domain.state.GameState;
 
-public class Game {
+public abstract class Game {
 	private static final String ILLEGAL_STATE_CHANGE_REQUEST_EXCEPTION_MESSAGE = "유효하지 않는 변경 요청입니다.";
-	private static final Map<String, Consumer<Game>> CHANGE_STATE_FUNCTIONS;
+
+	private static final Map<String, Function<Game, Game>> CHANGE_STATE_FUNCTIONS;
 	private static final String START_REQUEST = "start";
 	private static final String END_REQUEST = "end";
 
@@ -23,57 +25,57 @@ public class Game {
 		CHANGE_STATE_FUNCTIONS.put(END_REQUEST, Game::end);
 	}
 
-	private GameState state;
+	protected final int id;
+	protected final Board board;
+	protected Team turn;
 
-	public Game(GameState state) {
-		this.state = Objects.requireNonNull(state);
+	public Game(Board board) {
+		this(1, board, WHITE);
 	}
 
-	public void changeState(String request) {
+	public Game(Board board, Team turn) {
+		this(1, board, turn);
+	}
+
+	public Game(int id, Board board, Team turn) {
+		this.id = id;
+		this.board = Objects.requireNonNull(board);
+		this.turn = Objects.requireNonNull(turn);
+	}
+
+	public abstract Game start();
+
+	public abstract Game move(Position from, Position to);
+
+	public abstract Result status();
+
+	public abstract Game end();
+
+	public abstract boolean isNotFinished();
+
+	public Game changeState(String request) {
 		if (!CHANGE_STATE_FUNCTIONS.containsKey(request)) {
 			throw new IllegalArgumentException(ILLEGAL_STATE_CHANGE_REQUEST_EXCEPTION_MESSAGE);
 		}
-		Consumer<Game> gameConsumer = CHANGE_STATE_FUNCTIONS.get(request);
-		gameConsumer.accept(this);
+		Function<Game, Game> gameFunction = CHANGE_STATE_FUNCTIONS.get(request);
+		return gameFunction.apply(this);
 	}
 
-	public void start() {
-		this.state = state.start();
-	}
-
-	public void end() {
-		this.state = state.end();
-	}
-
-	public void move(Position from, Position to) {
-		this.state = state.move(from, to);
-	}
-
-	public Result status() {
-		return state.status();
+	public Team getWinner() {
+		throw new UnsupportedOperationException("게임이 끝났을때만 승자를 구할수 있어요.");
 	}
 
 	public Board getBoard() {
-		return state.getBoard();
+		return board;
 	}
 
 	public Team getTurn() {
-		return state.getTurn();
-	}
-
-	public String getStateType() {
-		return state.getStateType();
-	}
-
-	public Team findWinner() {
-		return state.getWinner();
-	}
-
-	public boolean isNotEnd() {
-		return state.isNotFinished();
+		return turn;
 	}
 
 	public int getId() {
-		return state.getId();
+		return id;
 	}
+
+	abstract public String getStateType();
 }

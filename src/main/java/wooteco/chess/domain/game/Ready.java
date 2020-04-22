@@ -1,4 +1,4 @@
-package wooteco.chess.domain.state;
+package wooteco.chess.domain.game;
 
 import static wooteco.chess.domain.piece.Team.*;
 
@@ -7,7 +7,7 @@ import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.Result;
 
-public class Ready extends GameState {
+public class Ready extends Game {
 	public Ready(Board board) {
 		this(board, NONE);
 	}
@@ -17,13 +17,13 @@ public class Ready extends GameState {
 	}
 
 	@Override
-	public GameState start() {
+	public Game start() {
 		board.start();
 		return new Started(board);
 	}
 
 	@Override
-	public GameState move(Position from, Position to) {
+	public Game move(Position from, Position to) {
 		throw new UnsupportedOperationException("게임을 시작해야 합니다.");
 	}
 
@@ -38,7 +38,7 @@ public class Ready extends GameState {
 	}
 
 	@Override
-	public GameState end() {
+	public Game end() {
 		return new SuspendFinished(board, turn);
 	}
 

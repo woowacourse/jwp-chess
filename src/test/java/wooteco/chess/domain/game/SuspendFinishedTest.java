@@ -1,4 +1,4 @@
-package wooteco.chess.domain.state;
+package wooteco.chess.domain.game;
 
 import static org.assertj.core.api.Assertions.*;
 import static wooteco.chess.domain.piece.Team.*;
@@ -25,8 +25,8 @@ class SuspendFinishedTest {
 	@DisplayName("게임 시작 하기 전에 게임을 종료하는 경우 승자는 없다.")
 	@Test
 	void getWinner_draw_when_game_state_is_ready_Test() {
-		GameState gameState = new SuspendFinished(new Board(), BLACK);
-		Team actual = gameState.getWinner();
+		Game game = new SuspendFinished(new Board(), BLACK);
+		Team actual = game.getWinner();
 		assertThat(actual).isEqualTo(NONE);
 	}
 
@@ -38,8 +38,8 @@ class SuspendFinishedTest {
 		pieces.put(Position.of("a1"), blackPiece);
 		pieces.put(Position.of("a2"), whitePiece);
 		Board board = new Board(pieces);
-		GameState gameState = new SuspendFinished(board, WHITE);
-		Team actual = gameState.getWinner();
+		Game game = new SuspendFinished(board, WHITE);
+		Team actual = game.getWinner();
 		assertThat(actual).isEqualTo(expected);
 	}
 

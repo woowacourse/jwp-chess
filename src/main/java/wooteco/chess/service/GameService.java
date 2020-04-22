@@ -7,9 +7,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.Result;
+import wooteco.chess.domain.game.Game;
 import wooteco.chess.repository.GameDAO;
 import wooteco.chess.view.dto.requestdto.PositionRequestDTO;
 import wooteco.chess.view.dto.responsedto.BoardDTO;
@@ -38,7 +38,7 @@ public class GameService {
 	public void changeState(String request) {
 		Game game = gameDAO.findById(DEFAULT_USER_ID)
 			.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-		game.changeState(request);
+		game = game.changeState(request);
 		gameDAO.update(game);
 	}
 
@@ -84,12 +84,12 @@ public class GameService {
 	public String getWinner() {
 		Game game = gameDAO.findById(DEFAULT_USER_ID)
 			.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-		return game.findWinner().name().toLowerCase();
+		return game.getWinner().name().toLowerCase();
 	}
 
 	public boolean isNotFinish() {
 		Game game = gameDAO.findById(DEFAULT_USER_ID)
 			.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-		return game.isNotEnd();
+		return game.isNotFinished();
 	}
 }

@@ -1,11 +1,9 @@
 package wooteco.chess.domain.position;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import wooteco.chess.domain.piece.Team;
 

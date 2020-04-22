@@ -4,15 +4,15 @@ import java.util.Optional;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.game.Game;
-import wooteco.chess.domain.state.Started;
+import wooteco.chess.domain.game.Started;
 
 public class FinishedDrawGameDAO implements GameDAO {
 
 	@Override
 	public Optional<Game> findById(int gameId) {
-		Game game = new Game(new Started(new Board()));
-		game.start();
-		game.end();
+		Game game = new Started(new Board());
+		game = game.start();
+		game = game.end();
 		return Optional.of(game);
 	}
 

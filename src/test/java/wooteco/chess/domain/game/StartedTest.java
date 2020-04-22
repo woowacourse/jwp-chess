@@ -1,4 +1,4 @@
-package wooteco.chess.domain.state;
+package wooteco.chess.domain.game;
 
 import static org.assertj.core.api.Assertions.*;
 import static wooteco.chess.domain.piece.Team.*;
@@ -19,7 +19,7 @@ import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.Result;
 
 class StartedTest {
-	private GameState state;
+	private Game state;
 	private Board board;
 	private Team turn;
 

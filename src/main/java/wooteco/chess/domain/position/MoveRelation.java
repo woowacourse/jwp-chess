@@ -15,6 +15,7 @@ public enum MoveRelation {
 	private final BiPredicate<Position, Position> relationChecker;
 
 	private final BiFunction<Position, Position, List<Position>> traceMaker;
+
 	MoveRelation(
 		BiPredicate<Position, Position> relationChecker,
 		BiFunction<Position, Position, List<Position>> traceMaker) {

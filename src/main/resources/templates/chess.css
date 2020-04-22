@@ -316,3 +316,7 @@ img {
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
 }
+
+#game_id {
+    display: none;
+}

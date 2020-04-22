@@ -27,8 +27,6 @@ public class ChessWebController {
     private void run() {
         staticFiles.location(STATIC_FILES_LOCATION);
 
-        ChessGame chessGame = new ChessGame();
-
         get("/main", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             return render(model, "start.html");
@@ -49,21 +47,31 @@ public class ChessWebController {
         post("/start/move", (req, res) -> {
             LocationDto nowDto = new LocationDto(req.queryParams("now"));
             LocationDto destinationDto = new LocationDto(req.queryParams("des"));
+            int gameId = Integer.parseInt(req.queryParams("game_id"));
+            ChessGame chessGame = chessService.makeGameByDB(gameId);
 
             return chessService.move(nowDto, destinationDto, chessGame);
         });
 
-        get("/start/winner", (req, res) -> chessService.findWinner(chessGame));
+        get("/start/winner", (req, res) -> {
+            int gameId = Integer.parseInt(req.queryParams("game_id"));
+            ChessGame chessGame = chessService.makeGameByDB(gameId);
+            return chessService.findWinner(chessGame);
+        });
 
-        get("/end", (req, res) -> {
+        post("/end", (req, res) -> {
+            int gameId = Integer.parseInt(req.queryParams("game_id"));
+            ChessGame chessGame = chessService.makeGameByDB(gameId);
             chessService.insertChessBoard(chessGame);
             Map<String, Object> model = new HashMap<>();
             return render(model, "start.html");
         });
 
         post("/start/new/game", (req, res) -> {
-            String whitePlayerName = req.queryParams("whitePlayerName");
-            String blackPlayerName = req.queryParams("blackPlayerName");
+//            String whitePlayerName = req.queryParams("whitePlayerName");
+//            String blackPlayerName = req.queryParams("blackPlayerName");
+            ChessGame chessGame = new ChessGame();
+            chessService.insertChessBoard(chessGame);
             return null;
         });
     }

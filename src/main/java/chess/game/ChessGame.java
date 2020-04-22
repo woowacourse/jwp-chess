@@ -4,6 +4,7 @@ import chess.board.ChessBoardCreater;
 import chess.command.Command;
 import chess.board.ChessBoard;
 import chess.location.Location;
+import chess.piece.type.Piece;
 import chess.progress.Progress;
 import chess.player.Player;
 import chess.result.ChessResult;
@@ -75,6 +76,10 @@ public class ChessGame {
                 white.calculate(),
                 black.calculate()
         );
+    }
+
+    public Piece getPiece(Location location) {
+        return chessBoard.getPiece(location);
     }
 
     private Player getCounterTurnPlayer(Team turn) {

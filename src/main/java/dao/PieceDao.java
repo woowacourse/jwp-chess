@@ -1,6 +1,9 @@
 package dao;
 
+import chess.location.Location;
+import chess.piece.type.Piece;
 import db.DBConnection;
+import org.springframework.dao.DataAccessException;
 import vo.PieceVo;
 
 import java.sql.Connection;
@@ -47,5 +50,23 @@ public class PieceDao {
             pieceVos.add(pieceVO);
         }
         return pieceVos;
+    }
+
+    public void update(Location now, Location destination, Piece piece) throws SQLException {
+        String query = "UPDATE piece SET row = ?, col = ?, name = ? where row = ? AND col = ?;";
+
+        piece.toString();
+        piece.getName();
+        String.valueOf(piece.getName());
+        try(Connection connection = DBConnection.getConnection();
+            PreparedStatement pstmt = connection.prepareStatement(query)){
+            pstmt.setString(1, String.valueOf(destination.getRowValue()));
+            pstmt.setString(2, String.valueOf(destination.getColValue()));
+            pstmt.setString(3, String.valueOf(piece.getName()));
+
+            pstmt.setString(4, String.valueOf(now.getRowValue()));
+            pstmt.setString(5, String.valueOf(now.getColValue()));
+            pstmt.executeUpdate();
+        }
     }
 }

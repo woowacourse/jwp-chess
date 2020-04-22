@@ -8,7 +8,7 @@
 </head>
 
 <body onload="getChessGames();">
-
+<p id="game_id"></p>
 <div id="game">
     <div class='cellprefix'>8</div>
     <div class='gamecell' id='a_8'></div>
@@ -114,7 +114,7 @@
         <input class="start-button" type="submit" value="Start" style="margin-left: 60px; margin-top: 8px;" onclick="postNewGame();"/>
 
         <form action="/end" method="get">
-            <input class="end-button" type="submit" value="End" style="margin-left: 60px; margin-top: 8px;"/>
+            <input class="end-button" type="submit" value="End" style="margin-left: 60px; margin-top: 8px;" onclick="postEndGame();"/>
         </form>
     </p>
 </div>

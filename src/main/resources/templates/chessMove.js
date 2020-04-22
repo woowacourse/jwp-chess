@@ -49,6 +49,7 @@ function getChessBoard(id) {
         success: function (data) {
             $('.gamecell').html('');
             $('.gamecell').attr('chess', 'null');
+            $('#game_id').html(id);
 
             $('.gamecell grey').html('');
             $('.gamecell grey').attr('chess', 'null');
@@ -89,8 +90,9 @@ function drop(ev) {
     ev.preventDefault();
     var now = ev.dataTransfer.getData("text");
     var des = ev.target.id;
+    var game_id = document.getElementById("game_id").innerHTML;
     // console.log(now + " to " + des.toString());
-    postChessBoard({"now": now.toString(), "des": des.toString()});
+    postChessBoard({"game_id": game_id.toString(), "now": now.toString(), "des": des.toString()});
 }
 
 function postChessBoard(json) {
@@ -129,9 +131,12 @@ function postChessBoard(json) {
 }
 
 function getChessBoardResult() {
+    var game_id = document.getElementById("game_id").innerHTML;
+
     $.ajax({
         url: "/start/winner",
         type: "get",
+        data: {"game_id" : game_id},
         success: function (data) {
             var jason = JSON.parse(data);
             alert("승자는" + jason.name + "입니다.")
@@ -180,6 +185,22 @@ $(document).ready(function () {
         "ondragover": "allowDrop(event)"
     });
 });
+
+function postEndGame() {
+    var game_id = document.getElementById("game_id").innerHTML;
+
+    $.ajax({
+        type: 'post',
+        url: '/end',
+        data: {"game_id" : game_id},
+        dataType: 'text',
+        error: function (xhr, status, error) {
+            alert(error.toString());
+        },
+        success: function (data) {
+        }
+    });
+}
 
 
 function postNewGame() {

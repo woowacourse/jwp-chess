@@ -18,4 +18,11 @@ public enum Team {
         }
         return BLACK;
     }
+
+    public static Team of(boolean isTurnBlack) {
+        if (isTurnBlack) {
+            return BLACK;
+        }
+        return WHITE;
+    }
 }

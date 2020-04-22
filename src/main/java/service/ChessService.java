@@ -1,9 +1,12 @@
 package service;
 
+import chess.board.ChessBoard;
 import chess.command.MoveCommand;
 import chess.game.ChessGame;
 import chess.location.Location;
+import chess.piece.type.Piece;
 import chess.progress.Progress;
+import chess.team.Team;
 import com.google.gson.Gson;
 import converter.ChessGameConverter;
 import dao.BoardDao;
@@ -15,7 +18,9 @@ import vo.PieceVo;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChessService {
     private static final ChessGamesDao chessGamesDao = new ChessGamesDao();
@@ -46,9 +51,13 @@ public class ChessService {
         return GSON.toJson(boardDto);
     }
 
-    public String move(LocationDto nowDto,LocationDto destinationDto, ChessGame chessGame) {
+    public String move(LocationDto nowDto,LocationDto destinationDto, ChessGame chessGame) throws SQLException {
         Location now = nowDto.toEntity();
         Location destination = destinationDto.toEntity();
+
+        // 매번 저장!
+        Piece piece = chessGame.getPiece(now);
+        pieceDao.update(now, destination, piece);
 
         MoveCommand move = MoveCommand.of(now, destination, chessGame);
 
@@ -77,5 +86,30 @@ public class ChessService {
 
     public void insertChessBoard(ChessGame chessGame) throws SQLException {
         boardDao.addBoard(chessGame.getChessBoard(), GAME_ID);
+    }
+
+    public ChessGame makeGameByDB(int gameId) throws SQLException {
+        ChessGameDto chessGameDto = chessGameDao.findChessGameBy(gameId);
+        List<PieceVo> pieceDto = ChessService.pieceDao.findAll(gameId);
+        Team team = Team.of(chessGameDto.isTurnBlack());
+        ChessBoard chessBoard = makeChessBoard(pieceDto);
+        return new ChessGame(chessBoard, team);
+    }
+
+    private ChessBoard makeChessBoard(List<PieceVo> pieceDto) {
+        Map<Location, Piece> board = new HashMap<>();
+        for (PieceVo pieceVo : pieceDto) {
+            Location location = toLocation(pieceVo);
+            Piece piece = pieceVo.toPiece();
+            board.put(location, piece);
+        }
+
+        return new ChessBoard(board);
+    }
+
+    private Location toLocation(PieceVo pieceVo) {
+        int row = pieceVo.getRow();
+        char col = pieceVo.getCol().charAt(0);
+        return new Location(row, col);
     }
 }

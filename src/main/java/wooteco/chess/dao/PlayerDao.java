@@ -50,6 +50,7 @@ public class PlayerDao implements MySqlJdbcTemplateDao {
                 int playerId = resultSet.getInt("id");
                 return new Player(playerId, username, password, record);
             }
+            resultSet.close();
             throw new SQLException();
         }
     }

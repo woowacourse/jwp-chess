@@ -13,28 +13,22 @@ import java.util.Objects;
 public class Board {
     private final Map<Position, Piece> pieces;
     private Team turn;
-    private boolean isFinished;
-
-    public Board(Map<Position, Piece> pieces, Team turn, boolean isFinished) {
-        this.pieces = pieces;
-        this.turn = turn;
-        this.isFinished = isFinished;
-    }
 
     public Board(Map<Position, Piece> pieces, Team turn) {
-        this(pieces, turn, false);
+        this.pieces = pieces;
+        this.turn = turn;
     }
 
     public Board(Map<Position, Piece> pieces) {
-        this(pieces, Team.WHITE, false);
+        this(pieces, Team.WHITE);
     }
 
     public Board(PiecesInitStrategy piecesInitStrategy, Team turn) {
-        this(piecesInitStrategy.init(), turn, false);
+        this(piecesInitStrategy.init(), turn);
     }
 
     public Board(PiecesInitStrategy piecesInitStrategy) {
-        this(piecesInitStrategy.init(), Team.WHITE, false);
+        this(piecesInitStrategy.init(), Team.WHITE);
     }
 
     public void moveIfPossible(Position source, Position target) {
@@ -43,24 +37,13 @@ public class Board {
             throw new EmptySourceException(source.getKey());
         }
         pieceToBeMoved.throwExceptionIfNotMovable(this, source, target);
-        finishIfKilledEnemyKing(target);
         move(source, target);
         pieceToBeMoved.updateHasMoved();
         this.turn = turn.getOppositeTeam();
     }
 
-    private void finishIfKilledEnemyKing(Position target) {
-        if (isExistAt(target) && isEnemyKing(target)) {
-            this.isFinished = true;
-        }
-    }
-
     public boolean isExistAt(Position position) {
         return !pieces.get(position).isEmpty();
-    }
-
-    private boolean isEnemyKing(Position position) {
-        return getTeamOf(position).isNotSame(this.turn) && pieces.get(position).isKing();
     }
 
     public void move(Position source, Position target) {
@@ -114,7 +97,7 @@ public class Board {
     }
 
     public boolean isFinished() {
-        return this.isFinished;
+        return !pieces.containsValue(Piece.of('k')) || !pieces.containsValue(Piece.of('K'));
     }
 
     public boolean isNotFinished() {
@@ -145,10 +128,6 @@ public class Board {
 
     private boolean isWhite(Position position) {
         return pieces.get(position).isWhite();
-    }
-
-    public void finishGame() {
-        this.isFinished = true;
     }
 
     public Map<Position, Piece> getPieces() {

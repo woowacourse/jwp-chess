@@ -1,18 +1,18 @@
 package wooteco.chess.database;
 
-import wooteco.chess.dto.CommandDto;
+import wooteco.chess.dto.Commands;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryDatabase {
-    private List<CommandDto> commands;
+    private List<Commands> commands;
 
     public InMemoryDatabase() {
         this.commands = new ArrayList<>();
     }
 
-    public void add(CommandDto command) {
+    public void add(Commands command) {
         commands.add(command);
     }
 
@@ -20,7 +20,7 @@ public class InMemoryDatabase {
         commands.clear();
     }
 
-    public List<CommandDto> get() {
+    public List<Commands> get() {
         return commands;
     }
 }

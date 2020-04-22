@@ -50,9 +50,9 @@ public class ChessService {
 	}
 
 	public BoardDto load(Long gameId) throws SQLException {
-		List<Piece> pieces = pieceDao.findAllByGameId(gameId);
 		GameDto gameDto = gameDao.findById(gameId)
-			.orElseThrow(IllegalArgumentException::new);
+			.orElseThrow(() -> new IllegalArgumentException(String.format("%d : 존재하지 않는 게임입니다.",gameId)));
+		List<Piece> pieces = pieceDao.findAllByGameId(gameId);
 		ChessGame chessGame = new ChessGame(pieces, gameDto.getTurn());
 
 		return createBoardDto(gameId, chessGame);

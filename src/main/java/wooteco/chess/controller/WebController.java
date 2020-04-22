@@ -1,7 +1,9 @@
 package wooteco.chess.controller;
 
+import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.port;
+import static spark.Spark.post;
 import static spark.Spark.staticFileLocation;
 
 import java.util.HashMap;
@@ -30,21 +32,17 @@ public class WebController {
 			return render(model, GAME_VIEW);
 		});
 
-		get("/start", (req, res) -> {
+		post("/start", (req, res) -> {
 			BoardDto boardDto = service.createGame();
 			Map<String, Object> model = new HashMap<>();
 			model.put("response", boardDto);
 			return render(model, GAME_VIEW);
 		});
 
-		get("/move", (req, res) -> {
+		post("/move", (req, res) -> {
 			Map<String, Object> model = new HashMap<>();
-			try {
-				BoardDto boardDto = service.move(Long.parseLong(req.queryParams("gameId")), req.queryParams("moveCommand"));
-				model.put("response", boardDto);
-			} catch (IllegalArgumentException e) {
-				model.put("error", e);
-			}
+			BoardDto boardDto = service.move(Long.parseLong(req.queryParams("gameId")), req.queryParams("moveCommand"));
+			model.put("response", boardDto);
 			return render(model, GAME_VIEW);
 		});
 
@@ -54,11 +52,16 @@ public class WebController {
 			return render(model, GAME_VIEW);
 		});
 
-		get("/loading", (req, res) -> {
+		get("/load", (req, res) -> {
 			Map<String, Object> model = new HashMap<>();
 			BoardDto boardDto = service.load(Long.parseLong(req.queryParams("gameId")));
 			model.put("response", boardDto);
 			return render(model, GAME_VIEW);
+		});
+
+		exception(IllegalArgumentException.class, (exception, request, response) -> {
+			response.status(400);
+			response.body(exception.getMessage());
 		});
 	}
 

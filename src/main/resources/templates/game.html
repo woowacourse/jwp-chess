@@ -8,13 +8,13 @@
 <body>
 <h1 id="title"> Chess Game </h1>
 <h2> 게임 아이디 : {{response.gameId}}</h2>
-<form action="/start" method="get">
+<form action="/start" method="post">
     <button>시작하기</button>
 </form>
 
-<form action="/move" method="get">
-    <input type="text" name="moveCommand">
-    <input type="text" name="gameId">
+<form action="/move" method="post">
+    <input type="text" name="moveCommand" placeholder="이동(ex.move a2 a4)">
+    <input type="text" name="gameId" placeholder="방 번호">
     <button>이동하기</button>
 </form>
 
@@ -26,8 +26,8 @@
     <button>게임 저장</button>
 </form>
 
-<form action="/loading" method="get">
-    <input type="text" name="gameId">
+<form action="/load" method="get">
+    <input type="text" name="gameId" placeholder="방 번호">
     <button>불러오기</button>
 </form>
 <div>

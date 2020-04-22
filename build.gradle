@@ -13,8 +13,6 @@ repositories {
 }
 
 dependencies {
-	implementation 'com.sparkjava:spark-core:2.9.0'
-	implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
@@ -24,6 +22,10 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	runtimeOnly 'com.h2database:h2'
+
+	compile('com.sparkjava:spark-core:2.9.0')
+	compile('com.sparkjava:spark-template-handlebars:2.7.1')
+	compile("mysql:mysql-connector-java:8.0.16")
 }
 
 test {

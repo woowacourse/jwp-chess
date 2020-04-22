@@ -1,37 +1,37 @@
 package chess.dto;
 
-import chess.domain.board.Board;
+import static chess.util.NullValidator.*;
+
+import chess.domain.board.ChessBoard;
 import chess.domain.piece.PieceColor;
 
-import static chess.util.NullValidator.validateNull;
-
 public class TurnDTO {
-    private String currentTeam;
+	private String currentTeam;
 
-    private TurnDTO(String currentTeam) {
-        validateNull(currentTeam);
-        this.currentTeam = currentTeam;
-    }
+	private TurnDTO(String currentTeam) {
+		validateNull(currentTeam);
+		this.currentTeam = currentTeam;
+	}
 
-    public static TurnDTO from(Board board) {
-        validateNull(board);
+	public static TurnDTO from(ChessBoard chessBoard) {
+		validateNull(chessBoard);
 
-        String currentTeam = board.getTeam().getName();
+		String currentTeam = chessBoard.getTeam().getName();
 
-        return from(currentTeam);
-    }
+		return from(currentTeam);
+	}
 
-    public static TurnDTO from(String currentTeam) {
-        validateNull(currentTeam);
+	public static TurnDTO from(String currentTeam) {
+		validateNull(currentTeam);
 
-        return new TurnDTO(currentTeam);
-    }
+		return new TurnDTO(currentTeam);
+	}
 
-    public String getCurrentTeam() {
-        return this.currentTeam;
-    }
+	public String getCurrentTeam() {
+		return this.currentTeam;
+	}
 
-    public PieceColor createTeam() {
-        return PieceColor.of(this.currentTeam);
-    }
+	public PieceColor createTeam() {
+		return PieceColor.of(this.currentTeam);
+	}
 }

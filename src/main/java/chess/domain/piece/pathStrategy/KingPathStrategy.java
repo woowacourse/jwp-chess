@@ -1,32 +1,19 @@
 package chess.domain.piece.pathStrategy;
 
+import static chess.util.NullValidator.*;
+
 import chess.domain.board.Position;
 import chess.exception.NotMovableException;
 
-import java.util.ArrayList;
-import java.util.List;
+public class KingPathStrategy extends ShortRangePieceStrategy {
+	private static final int MAX_DISTANCE = 1;
 
-import static chess.util.NullValidator.validateNull;
+	@Override
+	public void validateDistance(Position sourcePosition, Position targetPosition) {
+		validateNull(sourcePosition, targetPosition);
 
-public class KingPathStrategy implements PathStrategy {
-    private static final int MAX_DISTANCE = 1;
-
-    @Override
-    public void validateDistance(Position sourcePosition, Position targetPosition) {
-        validateNull(sourcePosition, targetPosition);
-
-        if (sourcePosition.isBiggerGapWith(targetPosition, MAX_DISTANCE)) {
-            throw new NotMovableException(String.format("지정한 위치 %s는 킹이 이동할 수 없는 곳입니다.", targetPosition.getName()));
-        }
-    }
-
-    @Override
-    public List<Position> createPath(Position sourcePosition, Position targetPosition) {
-        validateNull(targetPosition);
-
-        List<Position> path = new ArrayList<>();
-        path.add(targetPosition);
-
-        return path;
-    }
+		if (sourcePosition.isBiggerGapWith(targetPosition, MAX_DISTANCE)) {
+			throw new NotMovableException(String.format("지정한 위치 %s는 킹이 이동할 수 없는 곳입니다.", targetPosition.getName()));
+		}
+	}
 }

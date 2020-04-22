@@ -24,23 +24,23 @@ public enum Xpoint {
 
 	public static Xpoint of(char input) {
 		return Arrays.stream(values())
-				.filter(value -> value.equalsTo(input))
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException(ERROR_MESSAGE));
+			.filter(value -> value.equalsTo(input))
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException(ERROR_MESSAGE));
 	}
 
 	public static Xpoint of(int valueInput) {
 		return Arrays.stream(values())
-				.filter(value -> value.getValue() == valueInput)
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException(ERROR_MESSAGE));
+			.filter(value -> value.getValue() == valueInput)
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException(ERROR_MESSAGE));
 	}
 
 	private boolean equalsTo(char input) {
 		return this.xPointName.equals(String.valueOf(input));
 	}
 
-	public int getGapValue(Xpoint xpoint) {
+	public int calculateGapValue(Xpoint xpoint) {
 		return this.xPointValue - xpoint.xPointValue;
 	}
 

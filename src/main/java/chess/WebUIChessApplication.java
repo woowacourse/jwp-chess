@@ -1,17 +1,16 @@
 package chess;
 
-import chess.controller.WebChessController;
-
 import java.sql.SQLException;
 
+import chess.controller.WebChessController;
+
 public class WebUIChessApplication {
-    public static void main(String[] args) {
-        WebChessController webChessController = null;
-        try {
-            webChessController = new WebChessController();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        webChessController.run();
-    }
+	public static void main(String[] args) {
+		try {
+			WebChessController webChessController = new WebChessController();
+			webChessController.run();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 }

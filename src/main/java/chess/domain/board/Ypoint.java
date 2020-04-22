@@ -24,23 +24,23 @@ public enum Ypoint {
 
 	public static Ypoint of(char input) {
 		return Arrays.stream(values())
-				.filter(value -> value.equalsTo(input))
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException(ERROR_MESSAGE));
+			.filter(value -> value.equalsTo(input))
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException(ERROR_MESSAGE));
 	}
 
 	public static Ypoint of(int valueInput) {
 		return Arrays.stream(values())
-				.filter(value -> value.getValue() == valueInput)
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException(ERROR_MESSAGE));
+			.filter(value -> value.getValue() == valueInput)
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException(ERROR_MESSAGE));
 	}
 
 	private boolean equalsTo(char input) {
 		return this.yPointName.equals(String.valueOf(input));
 	}
 
-	public int getGapValue(Ypoint yPoint) {
+	public int calculateGapValue(Ypoint yPoint) {
 		return this.yPointValue - yPoint.yPointValue;
 	}
 

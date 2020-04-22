@@ -9,7 +9,7 @@ public class Pawn extends Piece {
 	private static final int MOVE_COLUMN_BOUND = 1;
 
 	public Pawn(Position position, Team team) {
-		super(position, Name.PAWN, team);
+		super(position, Symbol.PAWN, team);
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import wooteco.chess.domain.position.Position;
 
 public class Empty extends Piece {
 	public Empty(Position position) {
-		super(position, Name.EMPTY, Team.NONE);
+		super(position, Symbol.EMPTY, Team.NONE);
 	}
 
 	@Override

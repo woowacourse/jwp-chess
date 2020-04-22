@@ -9,8 +9,8 @@ import wooteco.chess.dao.BoardDAO;
 import wooteco.chess.dao.TurnInfoDAO;
 import wooteco.chess.domain.Status;
 import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.PiecesFactory;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 
@@ -25,7 +25,7 @@ public class ChessService {
 
 	public void initialize(String gameId) {
 		if (boardDAO.hasNotGameIn(gameId)) {
-			boardDAO.addPieces(gameId, BoardFactory.toList());
+			boardDAO.addPieces(gameId, PiecesFactory.createInitial());
 			turnInfoDAO.initialize(gameId, Team.WHITE);
 		}
 	}

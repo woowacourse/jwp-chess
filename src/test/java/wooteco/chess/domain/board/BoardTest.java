@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import wooteco.chess.domain.piece.Empty;
 import wooteco.chess.domain.piece.King;
 import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.PiecesFactory;
 import wooteco.chess.domain.piece.Rook;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
@@ -18,7 +19,7 @@ import wooteco.chess.domain.position.Position;
 class BoardTest {
 	@Test
 	void create_By_Factory() {
-		assertThat(Board.of(BoardFactory.toList())).isInstanceOf(Board.class);
+		assertThat(Board.of(PiecesFactory.createInitial())).isInstanceOf(Board.class);
 	}
 
 	@Test

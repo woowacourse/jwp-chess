@@ -10,11 +10,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Empty;
 import wooteco.chess.domain.piece.King;
 import wooteco.chess.domain.piece.Pawn;
 import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.PiecesFactory;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Column;
 
@@ -48,7 +48,7 @@ public class BoardDAOTest {
 
 	@Test
 	void findAll() {
-		List<Piece> initial = new ArrayList<>(BoardFactory.toList());
+		List<Piece> initial = new ArrayList<>(PiecesFactory.createInitial());
 		for (Piece piece : initial) {
 			boardDAO.addPiece("1" ,piece);
 		}
@@ -69,7 +69,7 @@ public class BoardDAOTest {
 
 	@Test
 	void findByColumn() {
-		List<Piece> initial = new ArrayList<>(BoardFactory.toList());
+		List<Piece> initial = new ArrayList<>(PiecesFactory.createInitial());
 		for (Piece piece : initial) {
 			boardDAO.addPiece("1", piece);
 		}

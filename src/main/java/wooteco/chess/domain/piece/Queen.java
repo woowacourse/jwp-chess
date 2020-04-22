@@ -7,7 +7,7 @@ import wooteco.chess.domain.position.Position;
 
 public class Queen extends Piece {
 	public Queen(Position position, Team team) {
-		super(position, Name.QUEEN, team);
+		super(position, Symbol.QUEEN, team);
 	}
 
 	@Override

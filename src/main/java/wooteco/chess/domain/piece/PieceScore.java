@@ -4,21 +4,21 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum PieceScore {
-	KING("K", 0),
-	QUEEN("Q", 9),
-	ROOK("R", 5),
-	BISHOP("B", 3),
-	KNIGHT("N", 2.5),
-	PAWN("P", 1);
+	KING(Symbol.KING.symbols(), 0),
+	QUEEN(Symbol.QUEEN.symbols(), 9),
+	ROOK(Symbol.ROOK.symbols(), 5),
+	BISHOP(Symbol.BISHOP.symbols(), 3),
+	KNIGHT(Symbol.KNIGHT.symbols(), 2.5),
+	PAWN(Symbol.PAWN.symbols(), 1);
 
 	private static final int PAWN_PENALTY_BOUND = 2;
 	private static final double PAWN_PENALTY = 0.5;
 
-	private final String name;
+	private final List<String> symbols;
 	private final double score;
 
-	PieceScore(String name, double score) {
-		this.name = name;
+	PieceScore(List<String> symbols, double score) {
+		this.symbols = symbols;
 		this.score = score;
 	}
 
@@ -31,7 +31,7 @@ public enum PieceScore {
 
 	private static double getScoreOf(Piece piece) {
 		return Arrays.stream(values())
-			.filter(value -> value.name.equals(piece.getName().getName()))
+			.filter(value -> value.symbols.contains(piece.getSymbol()))
 			.findFirst()
 			.orElseThrow(AssertionError::new)
 			.score;

@@ -6,12 +6,12 @@ import wooteco.chess.domain.position.Position;
 
 public abstract class Piece {
 	protected Position position;
-	protected final Name name;
+	protected final Symbol symbol;
 	protected final Team team;
 
-	public Piece(Position position, Name name, Team team) {
+	public Piece(Position position, Symbol symbol, Team team) {
 		this.position = position;
-		this.name = name;
+		this.symbol = symbol;
 		this.team = team;
 	}
 
@@ -37,18 +37,14 @@ public abstract class Piece {
 		return position;
 	}
 
-	public Name getName() {
-		return name;
-	}
-
 	public Team getTeam() {
 		return team;
 	}
 
 	public String getSymbol() {
 		if (Team.WHITE == team) {
-			return name.getWhiteSymbol();
+			return symbol.getWhiteSymbol();
 		}
-		return name.getBlackSymbol();
+		return symbol.getBlackSymbol();
 	}
 }

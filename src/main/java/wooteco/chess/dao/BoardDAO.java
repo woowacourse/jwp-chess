@@ -9,9 +9,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import wooteco.chess.domain.piece.Name;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceFactory;
+import wooteco.chess.domain.piece.Symbol;
 import wooteco.chess.domain.position.Column;
 import wooteco.chess.domain.position.Position;
 
@@ -58,7 +58,7 @@ public class BoardDAO {
 			firstPstmt.setString(3, target.getPosition().getName());
 			firstPstmt.executeUpdate();
 
-			secondPstmt.setString(1, Name.EMPTY.getBlackSymbol());
+			secondPstmt.setString(1, Symbol.EMPTY.getBlackSymbol());
 			secondPstmt.setString(2, gameId);
 			secondPstmt.setString(3, source.getPosition().getName());
 			secondPstmt.executeUpdate();

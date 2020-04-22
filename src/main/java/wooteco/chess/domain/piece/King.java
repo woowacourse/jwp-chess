@@ -9,7 +9,7 @@ public class King extends Piece {
 	private static final int AROUND_BOUND = 1;
 
 	public King(Position position, Team team) {
-		super(position, Name.KING, team);
+		super(position, Symbol.KING, team);
 	}
 
 	@Override

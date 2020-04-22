@@ -9,7 +9,7 @@ public class Knight extends Piece {
 	private static final List<Integer> KNIGHT_MOVE_POSITIONS = List.of(1, 2);
 
 	public Knight(Position position, Team team) {
-		super(position, Name.KNIGHT, team);
+		super(position, Symbol.KNIGHT, team);
 	}
 
 	@Override

@@ -17,7 +17,7 @@ public class DBConnector {
     private Connection connect() {
         Connection con = null;
         String server = "127.0.0.1:13306"; // MySQL 서버 주소
-        String database = "db_name"; // MySQL DATABASE 이름
+        String database = "wootecochess"; // MySQL DATABASE 이름
         String option = "?useSSL=false&serverTimezone=UTC";
         String userName = "root"; //  MySQL 서버 아이디
         String password = "root"; // MySQL 서버 비밀번호

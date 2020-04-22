@@ -81,7 +81,6 @@ public class Pieces {
 		pieces.add(subject.move(target.getCoordinate()));
 	}
 
-	// TODO test
 	public Team computeWinner() {
 		if (isKingKilled()) {
 			return computeWinnerWhenKingKilled();

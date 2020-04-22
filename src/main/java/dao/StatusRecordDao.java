@@ -6,7 +6,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO test
 public class StatusRecordDao {
 	private static final StatusRecordDao STATUS_RECORD_WITH_ROOM_NAME_DAO;
 

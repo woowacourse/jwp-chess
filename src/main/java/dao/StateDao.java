@@ -49,7 +49,6 @@ public class StateDao {
 		}
 	}
 
-	// TODO test
 	public StateDto findStateByRoomId(final int roomId) throws SQLException {
 		final String query = "SELECT * FROM state WHERE room_id=?";
 

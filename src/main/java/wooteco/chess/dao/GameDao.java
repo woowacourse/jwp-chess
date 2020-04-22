@@ -13,7 +13,7 @@ import java.util.Map;
 import wooteco.chess.domain.Game;
 import wooteco.chess.domain.piece.Side;
 
-public class GameDao implements JdbcTemplateDao {
+public class GameDao implements MySqlJdbcTemplateDao {
 
     public static final String GAME_ID = "id";
     public static final String WHITE_ID = "white";
@@ -22,7 +22,7 @@ public class GameDao implements JdbcTemplateDao {
     public int add(final Game game) throws SQLException {
         String query = "insert into game (white, black) values (?, ?)";
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
+             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         ) {
             statement.setInt(1, game.getPlayerId(Side.WHITE));
             statement.setInt(2, game.getPlayerId(Side.BLACK));
@@ -31,6 +31,7 @@ public class GameDao implements JdbcTemplateDao {
             if (resultSet.next()) {
                 return resultSet.getInt(1);
             }
+            resultSet.close();
             throw new SQLException();
         }
     }
@@ -42,10 +43,15 @@ public class GameDao implements JdbcTemplateDao {
         ) {
             ResultSet resultSet = statement.executeQuery();
             List<Integer> gameIds = new ArrayList<>();
-            while (resultSet.next()) {
-                gameIds.add(resultSet.getInt("id"));
-            }
+            addGameIds(resultSet, gameIds);
+            resultSet.close();
             return gameIds;
+        }
+    }
+
+    private void addGameIds(final ResultSet resultSet, final List<Integer> gameIds) throws SQLException {
+        while (resultSet.next()) {
+            gameIds.add(resultSet.getInt("id"));
         }
     }
 
@@ -56,14 +62,20 @@ public class GameDao implements JdbcTemplateDao {
         ) {
             ResultSet resultSet = statement.executeQuery();
             List<Map<String, Integer>> games = new ArrayList<>();
-            while (resultSet.next()) {
-                Map<String, Integer> game = new HashMap<>();
-                game.put(GAME_ID, resultSet.getInt("id"));
-                game.put(WHITE_ID, resultSet.getInt("white"));
-                game.put(BLACK_ID, resultSet.getInt("black"));
-                games.add(game);
-            }
+            generateGamesContext(resultSet, games);
+            resultSet.close();
             return games;
+        }
+    }
+
+    private void generateGamesContext(final ResultSet resultSet, final List<Map<String, Integer>> games) throws
+        SQLException {
+        while (resultSet.next()) {
+            Map<String, Integer> game = new HashMap<>();
+            game.put(GAME_ID, resultSet.getInt("id"));
+            game.put(WHITE_ID, resultSet.getInt("white"));
+            game.put(BLACK_ID, resultSet.getInt("black"));
+            games.add(game);
         }
     }
 
@@ -80,6 +92,7 @@ public class GameDao implements JdbcTemplateDao {
                 game.put(WHITE_ID, resultSet.getInt("white"));
                 game.put(BLACK_ID, resultSet.getInt("black"));
             }
+            resultSet.close();
             return game;
         }
     }

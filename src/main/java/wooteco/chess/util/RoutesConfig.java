@@ -13,7 +13,6 @@ public class RoutesConfig {
     }
 
     public static void setJsonContentType(Request request, Response response) {
-        // response.header("Access-Control-Allow-Origin", "*");
         response.type("application/json");
     }
 }

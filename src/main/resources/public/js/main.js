@@ -1,4 +1,4 @@
-import { AVAILABLE_PATH, PIECES, ROOM_TEMPLATE } from "./template.mjs";
+import { AVAILABLE_PATH, PIECES, ROOM_TEMPLATE } from "./template.js";
 import {
   addBoard,
   checkGameOver,
@@ -11,7 +11,7 @@ import {
   isWhiteTurn,
   move,
   restart
-} from "./fetch.mjs";
+} from "./fetch.js";
 
 window.onload = function () {
 
@@ -37,11 +37,11 @@ window.onload = function () {
   function fillBoard(board) {
 
     Object.keys(board["board"])
-        .filter(position => board["board"][position]["type"] !== "EMPTY")
-        .forEach(position => {
-          document.getElementById(position).insertAdjacentHTML("beforeend",
-              PIECES[`${board["board"][position]["side"]}_${board["board"][position]["type"]}`]);
-        });
+      .filter(position => board["board"][position]["type"] !== "EMPTY")
+      .forEach(position => {
+        document.getElementById(position).insertAdjacentHTML("beforeend",
+          PIECES[`${board["board"][position]["side"]}_${board["board"][position]["type"]}`]);
+      });
   }
 
   function endGameIfKingIsDead() {
@@ -57,7 +57,7 @@ window.onload = function () {
       pieceNode.addEventListener("dragstart", event => drag(event, pieceNode), false);
       pieceNode.addEventListener("dragend", event => {
         document.querySelectorAll(".available-path")
-            .forEach(pathNode => pathNode.parentNode.removeChild(pathNode));
+          .forEach(pathNode => pathNode.parentNode.removeChild(pathNode));
         event.currentTarget.style.opacity = "1";
       }, false);
       pieceNode.addEventListener("dragover", event => {
@@ -171,7 +171,7 @@ window.onload = function () {
     }
     Object.entries(boards).forEach(([index, boardData]) => {
       document.querySelector(".rooms")
-          .insertAdjacentHTML("beforeend", ROOM_TEMPLATE(boardData, index, scores[index]["백"], scores[index]["흑"]));
+        .insertAdjacentHTML("beforeend", ROOM_TEMPLATE(boardData, index, scores[index]["백"], scores[index]["흑"]));
     });
     roomId = Object.keys(boards)[0];
     const board = await getBoard(roomId);

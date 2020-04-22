@@ -17,6 +17,7 @@ import wooteco.chess.domain.board.Path;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
+import wooteco.chess.dto.MoveRequestDto;
 
 public class ChessServiceImpl implements ChessService {
     private final GameDao gameDao = new GameDao();
@@ -26,8 +27,8 @@ public class ChessServiceImpl implements ChessService {
     @Override
     public Game findGameById(final int id) throws SQLException {
         Game game = generateGameFrom(gameDao.findGameDataById(id));
-        List<Path> paths = moveDao.getMoves(game);
-        paths.forEach(path -> game.move(path.getStart(), path.getEnd()));
+        List<MoveRequestDto> paths = moveDao.getMoves(game);
+        paths.forEach(path -> game.move(path.getFrom(), path.getTo()));
         return game;
     }
 
@@ -47,7 +48,9 @@ public class ChessServiceImpl implements ChessService {
 
     @Override
     public Map<Integer, Map<Side, Player>> getPlayerContexts() throws SQLException {
-        return generateGames().stream().collect(toMap(Game::getId, Game::getPlayers));
+        return generateGames()
+            .stream()
+            .collect(toMap(Game::getId, Game::getPlayers));
     }
 
     @Override

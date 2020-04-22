@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Result {
-    WIN("win"),
-    LOSE("lose"),
-    DRAW("draw");
+    WIN,
+    LOSE,
+    DRAW;
 
     private static Map<Result, Result> opposite = new HashMap<>();
 
@@ -14,12 +14,6 @@ public enum Result {
         opposite.put(WIN, LOSE);
         opposite.put(LOSE, WIN);
         opposite.put(DRAW, DRAW);
-    }
-
-    private final String value;
-
-    Result(final String value) {
-        this.value = value;
     }
 
     public Result getOpposite() {

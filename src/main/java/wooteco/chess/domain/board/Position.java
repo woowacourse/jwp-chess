@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class Position {
 
+    public static final int SQUARE = 2;
+
     private final Row row;
     private final Column column;
 
@@ -45,7 +47,7 @@ public class Position {
     }
 
     public double distanceSquaredWith(final Position other) {
-        return Math.pow(rowGap(other), 2) + Math.pow(columnGap(other), 2);
+        return Math.pow(rowGap(other), SQUARE) + Math.pow(columnGap(other), SQUARE);
     }
 
     public boolean existsBetween(final Position start, final Position end) {

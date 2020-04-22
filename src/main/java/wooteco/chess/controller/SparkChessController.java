@@ -22,6 +22,7 @@ import wooteco.chess.service.ChessService;
 
 public class SparkChessController {
     private ChessService service;
+    private Gson gson = new Gson();
 
     public SparkChessController(ChessService service) {
         this.service = service;
@@ -92,12 +93,13 @@ public class SparkChessController {
     }
 
     public boolean move(final Request request, final Response response) throws SQLException {
-        MoveRequestDto dto = new Gson().fromJson(request.body(), MoveRequestDto.class);
+
+        MoveRequestDto dto = gson.fromJson(request.body(), MoveRequestDto.class);
         return service.addMoveByGameId(parseId(request), dto.getFrom(), dto.getTo());
     }
 
     public List<String> findAllAvailablePath(final Request request, final Response response) throws SQLException {
-        MovableRequestDto dto = new Gson().fromJson(request.body(), MovableRequestDto.class);
+        MovableRequestDto dto = gson.fromJson(request.body(), MovableRequestDto.class);
         return service.findAllAvailablePath(parseId(request), dto.getFrom());
     }
 

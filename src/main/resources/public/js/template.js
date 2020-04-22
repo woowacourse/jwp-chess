@@ -13,25 +13,25 @@ export const PIECES = {
   WHITE_PAWN: `<img src="../image/pieces/white_pawn.png" class="white pawn piece"/>`,
 };
 
-export const AVAILABLE_PATH = `<div class="available-path"/>`
+export const AVAILABLE_PATH = `<div class="available-path"/>`;
 
 /**
  * @return {string}
  */
 export function ROOM_TEMPLATE(room, index, whiteScore, blackScore) {
-  const whiteRecord = room["백"]["record"]["record"];
-  const blackRecord = room["흑"]["record"]["record"];
+  const whiteRecord = room["WHITE"]["record"]["record"];
+  const blackRecord = room["BLACK"]["record"]["record"];
   return `
     <div class="room room-${index}">
       <div class="room-number">${index}</div>
       <div class="players">
-        <div class="player">${room["백"]["username"]}
+        <div class="player">${room["WHITE"]["username"]}
           <div class="player-record">(${whiteRecord["WIN"]}승 ${whiteRecord["DRAW"]}무 ${whiteRecord["LOSE"]}패)</div>
         </div>
-        <div class="player">${room["흑"]["username"]}
+        <div class="player">${room["BLACK"]["username"]}
           <div class="player-record">(${blackRecord["WIN"]}승 ${blackRecord["DRAW"]}무 ${blackRecord["LOSE"]}패)</div>
         </div>
       </div>
       <div class="room-status room-score">${whiteScore || 38} : ${blackScore || 38}</div>
-    </div>`
+    </div>`;
 }

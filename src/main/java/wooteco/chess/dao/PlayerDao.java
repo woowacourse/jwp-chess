@@ -10,7 +10,7 @@ import wooteco.chess.domain.player.Player;
 import wooteco.chess.domain.player.Record;
 import wooteco.chess.domain.player.Result;
 
-public class PlayerDao implements JdbcTemplateDao {
+public class PlayerDao implements MySqlJdbcTemplateDao {
 
     public void addInitialPlayers() throws SQLException {
         // 플레이어 가입 및 로그인 구현 전 오류 방지를 위한 쿼리

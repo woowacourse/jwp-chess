@@ -13,6 +13,8 @@ import wooteco.chess.domain.piece.Type;
 import wooteco.chess.exceptions.InvalidInputException;
 
 public class Board {
+    public static final int PAWN_COUNT_THRESHOLD = 2;
+    
     private final Map<Position, Piece> board;
 
     public Board(final Map<Position, Piece> board) {
@@ -87,17 +89,17 @@ public class Board {
     public int countPawnsOnSameColumn(final Side side) {
         return Arrays.stream(Column.values())
             .mapToInt(column -> getPawnCount(side, column))
-            .filter(count -> count > 1)
+            .filter(count -> count >= PAWN_COUNT_THRESHOLD)
             .sum();
     }
 
     private int getPawnCount(final Side side, final Column column) {
-        return board.keySet()
+        return (int)board.keySet()
             .stream()
             .filter(position -> board.get(position).isNotEmpty()
                 && position.isOn(column)
                 && board.get(position).is(Type.PAWN, side))
-            .collect(summingInt(x -> 1));
+            .count();
     }
 
     public Map<Position, Piece> getBoard() {

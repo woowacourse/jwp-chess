@@ -9,9 +9,9 @@ import java.util.List;
 
 import wooteco.chess.domain.Game;
 import wooteco.chess.domain.board.Path;
-import wooteco.chess.domain.board.Position;
+import wooteco.chess.dto.MoveRequestDto;
 
-public class MoveDao implements JdbcTemplateDao {
+public class MoveDao implements MySqlJdbcTemplateDao {
 
     public void addMove(final Game game, final Path path) throws SQLException {
         String query = "insert into move (game, start_position, end_position) values (?, ?, ?)";
@@ -25,20 +25,24 @@ public class MoveDao implements JdbcTemplateDao {
         }
     }
 
-    public List<Path> getMoves(final Game game) throws SQLException {
+    public List<MoveRequestDto> getMoves(final Game game) throws SQLException {
         String query = "select * from move where game = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
             statement.setInt(1, game.getId());
-            List<Path> moves = new ArrayList<>();
+            List<MoveRequestDto> moves = new ArrayList<>();
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                String end = resultSet.getString("end_position");
-                String start = resultSet.getString("start_position");
-                moves.add(new Path(Position.of(start), Position.of(end)));
-            }
+            addMoves(moves, resultSet);
             return moves;
+        }
+    }
+
+    private void addMoves(final List<MoveRequestDto> moves, final ResultSet resultSet) throws SQLException {
+        while (resultSet.next()) {
+            String end = resultSet.getString("end_position");
+            String start = resultSet.getString("start_position");
+            moves.add(new MoveRequestDto(start, end));
         }
     }
 

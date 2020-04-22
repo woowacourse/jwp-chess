@@ -34,10 +34,7 @@ public enum Coordinate {
     }
 
     public boolean isMiddle(Coordinate start, Coordinate end) {
-        if ((this.value >= start.value && this.value <= end.value)
-                || (this.value <= start.value && this.value >= end.value)) {
-            return true;
-        }
-        return false;
+        return (this.value >= start.value && this.value <= end.value)
+                || (this.value <= start.value && this.value >= end.value);
     }
 }

@@ -62,6 +62,6 @@ public class Status {
 	}
 
 	public Map<Team, Double> toMap() {
-		return Collections.unmodifiableMap(status);
+		return Map.copyOf(status);
 	}
 }

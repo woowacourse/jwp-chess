@@ -32,6 +32,9 @@ public class ChessGame {
 	}
 
 	public void move(MoveCommand moveCommand) {
+		if (!isKingAlive()) {
+			throw new IllegalStateException("이미 종료된 게임입니다.");
+		}
 		Position sourcePosition = moveCommand.getSourcePosition();
 		Position targetPosition = moveCommand.getTargetPosition();
 

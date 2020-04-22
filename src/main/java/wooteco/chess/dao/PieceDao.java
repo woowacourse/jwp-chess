@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.dto.PieceDto;
@@ -13,7 +14,7 @@ import wooteco.chess.util.PieceConverter;
 
 public class PieceDao {
 	private static final PieceDao PIECE_DAO = new PieceDao();
-	private static final String TABLE_NAME = "piece";
+	private static final String TABLE_NAME = "PIECE";
 
 	private PieceDao() {
 	}
@@ -22,28 +23,65 @@ public class PieceDao {
 		return PIECE_DAO;
 	}
 
-	public void add(PieceDto pieceDto) throws SQLException {
-		String query = "INSERT INTO " + TABLE_NAME + " VALUES(?,?,?)";
+	public PieceDto save(PieceDto pieceDto) throws SQLException {
+		String query = String.format("INSERT INTO %s (SYMBOL,GAME_ID,POSITION,TEAM) VALUES(?,?,?,?)", TABLE_NAME);
+		try (
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)
+		) {
+			pstmt.setString(1, pieceDto.getSymbol());
+			pstmt.setLong(2, pieceDto.getGameId());
+			pstmt.setString(3, pieceDto.getPosition());
+			pstmt.setString(4, pieceDto.getTeam());
+			pstmt.executeUpdate();
+
+			ResultSet generatedKeys = pstmt.getGeneratedKeys();
+			if (!generatedKeys.next()) {
+				throw new SQLException("저장 실패");
+			}
+			Long pieceId = generatedKeys.getLong(1);
+			return new PieceDto(pieceId, pieceDto.getGameId(), pieceDto.getSymbol(), pieceDto.getTeam(),
+				pieceDto.getPosition());
+		}
+	}
+
+	public void update(Long id, String newPosition) throws SQLException {
+		String query = String.format("UPDATE %s SET position = ? WHERE id = ?", TABLE_NAME);
 		try (
 			Connection conn = DBConnector.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
-			pstmt.setString(1, pieceDto.getSymbol());
-			pstmt.setString(2, pieceDto.getPosition());
-			pstmt.setString(3, pieceDto.getTeam());
+			pstmt.setString(1, newPosition);
+			pstmt.setLong(2, id);
 			pstmt.executeUpdate();
 		}
 	}
 
-	public List<Piece> findAll() throws SQLException {
-		String query = "SELECT * FROM " + TABLE_NAME;
-		List<Piece> pieces = new ArrayList<>();
-		ResultSet rs;
+	public Optional<PieceDto> findById(Long id) throws SQLException {
+		String query = String.format("SELECT * FROM %s WHERE id = ?", TABLE_NAME);
+
 		try (
 			Connection conn = DBConnector.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
-			rs = pstmt.executeQuery();
+			pstmt.setLong(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			if (!rs.next()) {
+				return Optional.empty();
+			}
+			return mapPieceDto(rs);
+		}
+	}
+
+	public List<Piece> findAllByGameId(Long gameId) throws SQLException {
+		String query = String.format("SELECT * FROM %s WHERE game_id = ?", TABLE_NAME);
+		List<Piece> pieces = new ArrayList<>();
+		try (
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(query)
+		) {
+			pstmt.setLong(1, gameId);
+			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				String symbol = rs.getString("symbol");
 				String position = rs.getString("position");
@@ -54,20 +92,35 @@ public class PieceDao {
 		return pieces;
 	}
 
-	public void update(String originalPosition, String newPosition) throws SQLException {
-		String query = "UPDATE " + TABLE_NAME + " SET position = ? WHERE position = ?";
+	public Optional<PieceDto> findByGameIdAndPosition(Long gameId, String position) throws SQLException {
+		String query = String.format("SELECT * FROM %s WHERE game_id = ? AND position = ?", TABLE_NAME);
+
 		try (
 			Connection conn = DBConnector.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
-			pstmt.setString(1, newPosition);
-			pstmt.setString(2, originalPosition);
-			pstmt.executeUpdate();
+			pstmt.setLong(1, gameId);
+			pstmt.setString(2, position);
+			ResultSet rs = pstmt.executeQuery();
+			if (!rs.next()) {
+				return Optional.empty();
+			}
+			return mapPieceDto(rs);
 		}
 	}
 
+	private Optional<PieceDto> mapPieceDto(ResultSet rs) throws SQLException {
+		return Optional.of(new PieceDto(
+			rs.getLong("id"),
+			rs.getLong("game_id"),
+			rs.getString("symbol"),
+			rs.getString("team"),
+			rs.getString("position"))
+		);
+	}
+
 	public void deleteAll() throws SQLException {
-		String query = "DELETE FROM " + TABLE_NAME;
+		String query = String.format("DELETE FROM %s", TABLE_NAME);
 		try (
 			Connection conn = DBConnector.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)

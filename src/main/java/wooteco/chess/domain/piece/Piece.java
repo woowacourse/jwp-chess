@@ -73,11 +73,11 @@ public abstract class Piece {
 		return position.getColumnNumber() == columnNumber;
 	}
 
-	public String showSymbol() {
+	public String getSymbol() {
 		if (Team.isWhite(team)) {
-			return getSymbol();
+			return getRawSymbol();
 		}
-		return getSymbol().toUpperCase();
+		return getRawSymbol().toUpperCase();
 	}
 
 	public Team getTeam() {
@@ -100,7 +100,7 @@ public abstract class Piece {
 
 	public abstract double getScore();
 
-	protected abstract String getSymbol();
+	protected abstract String getRawSymbol();
 
 	@Override
 	public int hashCode() {

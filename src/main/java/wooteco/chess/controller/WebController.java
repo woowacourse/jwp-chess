@@ -31,7 +31,7 @@ public class WebController {
 		});
 
 		get("/start", (req, res) -> {
-			BoardDto boardDto = service.createPieces();
+			BoardDto boardDto = service.createGame();
 			Map<String, Object> model = new HashMap<>();
 			model.put("response", boardDto);
 			return render(model, GAME_VIEW);
@@ -40,7 +40,7 @@ public class WebController {
 		get("/move", (req, res) -> {
 			Map<String, Object> model = new HashMap<>();
 			try {
-				BoardDto boardDto = service.move(req.queryParams("moveCommand"));
+				BoardDto boardDto = service.move(Long.parseLong(req.queryParams("gameId")), req.queryParams("moveCommand"));
 				model.put("response", boardDto);
 			} catch (IllegalArgumentException e) {
 				model.put("error", e);
@@ -56,7 +56,7 @@ public class WebController {
 
 		get("/loading", (req, res) -> {
 			Map<String, Object> model = new HashMap<>();
-			BoardDto boardDto = service.load();
+			BoardDto boardDto = service.load(Long.parseLong(req.queryParams("gameId")));
 			model.put("response", boardDto);
 			return render(model, GAME_VIEW);
 		});

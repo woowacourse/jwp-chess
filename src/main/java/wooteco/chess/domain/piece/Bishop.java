@@ -35,7 +35,7 @@ public class Bishop extends Piece {
 	}
 
 	@Override
-	protected String getSymbol() {
+	protected String getRawSymbol() {
 		return SYMBOL;
 	}
 

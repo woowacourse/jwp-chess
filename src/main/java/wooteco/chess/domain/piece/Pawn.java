@@ -90,7 +90,7 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	protected String getSymbol() {
+	protected String getRawSymbol() {
 		return SYMBOL;
 	}
 

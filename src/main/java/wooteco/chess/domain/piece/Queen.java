@@ -36,7 +36,7 @@ public class Queen extends Piece {
 	}
 
 	@Override
-	protected String getSymbol() {
+	protected String getRawSymbol() {
 		return SYMBOL;
 	}
 

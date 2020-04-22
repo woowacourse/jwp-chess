@@ -11,9 +11,8 @@ public class Knight extends Piece {
     private static final double SCORE = 2.5;
     private static final int MOVABLE_SIZE = 5;
 
-
     public Knight(Team team) {
-        super(team, SCORE);
+        super("knight", team, SCORE);
     }
 
     @Override

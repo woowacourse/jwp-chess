@@ -9,9 +9,8 @@ public class Queen extends Piece {
     private static final int INITIAL_Y = 4;
     private static final double SCORE = 9;
 
-
     public Queen(Team team) {
-        super(team, SCORE);
+        super("queen", team, SCORE);
     }
 
     @Override

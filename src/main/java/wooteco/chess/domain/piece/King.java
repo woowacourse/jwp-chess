@@ -10,9 +10,8 @@ public class King extends Piece {
     private static final double SCORE = 0;
     private static final int MAX_MOVABLE_SIZE = 2;
 
-
     public King(Team team) {
-        super(team, SCORE);
+        super("king", team, SCORE);
     }
 
     @Override

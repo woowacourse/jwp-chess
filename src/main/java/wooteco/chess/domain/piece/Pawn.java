@@ -11,9 +11,8 @@ public class Pawn extends Piece {
     private static final int INITIAL_MOVABLE_SIZE = 4;
     private static final int MOVABLE_SIZE = 1;
 
-
     public Pawn(Team team) {
-        super(team, SCORE);
+        super("pawn", team, SCORE);
     }
 
     @Override

@@ -10,9 +10,8 @@ public class Rook extends Piece {
     private static final int INITIAL_RIGHT_Y = 8;
     private static final double SCORE = 5;
 
-
     public Rook(Team team) {
-        super(team, SCORE);
+        super("rook", team, SCORE);
     }
 
     @Override

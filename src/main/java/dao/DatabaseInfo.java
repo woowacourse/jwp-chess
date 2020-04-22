@@ -1,7 +1,7 @@
 package dao;
 
 public class DatabaseInfo {
-	final static String SERVER = "localhost:13306";
+	final static String SERVER = "localhost:3306";
 	final static String DATABASE = "woowachess";
 	final static String OPTION = "?useSSL=false&serverTimezone=UTC&characterEncoding=utf8";
 	final static String USER_NAME = "root";

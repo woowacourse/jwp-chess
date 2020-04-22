@@ -1,12 +1,7 @@
 package wooteco.chess.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+public interface ChessController {
+	void start();
 
-@Controller
-public class ChessController {
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
+	void playTurn();
 }

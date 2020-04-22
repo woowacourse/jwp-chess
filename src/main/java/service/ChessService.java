@@ -76,6 +76,7 @@ public class ChessService {
     }
 
     private void updatePiece(Piece nowPiece, Location now, Location destination, int gameId) throws SQLException {
+        pieceDao.delete(destination, gameId);
         pieceDao.update(now, destination, nowPiece, gameId);
     }
 

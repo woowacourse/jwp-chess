@@ -80,4 +80,18 @@ public class PieceDao {
             pstmt.executeUpdate();
         }
     }
+
+    public void delete(Location destination, int gameId) throws SQLException {
+        String query = "DELETE FROM piece WHERE row = ? AND col = ? AND game_id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
+
+            pstmt.setString(1, String.valueOf(destination.getRowValue()));
+            pstmt.setString(2, String.valueOf(destination.getColValue()));
+            pstmt.setString(3, String.valueOf(gameId));
+
+            pstmt.execute();
+        }
+    }
 }

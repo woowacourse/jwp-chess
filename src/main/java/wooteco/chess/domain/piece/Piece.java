@@ -65,7 +65,7 @@ public class Piece {
     }
 
     public static List<Piece> getPieces() {
-        return new ArrayList<>(PieceCache.pieces.values());
+        return new ArrayList<>(PieceCache.getPieces());
     }
 
     private static class PieceCache {
@@ -94,6 +94,10 @@ public class Piece {
 
         private static String key(final Type type, final Side side) {
             return side.name() + type.getName();
+        }
+
+        private static List<Piece> getPieces() {
+            return new ArrayList<>(pieces.values());
         }
     }
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.data.annotation.Id;
+
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.judge.BasicJudge;
@@ -16,7 +18,7 @@ import wooteco.chess.domain.player.Result;
 import wooteco.chess.exceptions.InvalidInputException;
 
 public class Game {
-    private int id;
+    @Id private int id;
     private final Board board;
     private final Judge judge;
     private final Map<Side, Player> players;

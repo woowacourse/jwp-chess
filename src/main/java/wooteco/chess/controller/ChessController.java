@@ -3,6 +3,7 @@ package wooteco.chess.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,19 +19,25 @@ public class ChessController {
 		this.gameManagerService = gameManagerService;
 	}
 
-	@GetMapping("/board")
-	public String board(Model model) {
-		model.addAttribute("piecesDto", WebOutputRenderer.toPiecesDto(gameManagerService.getBoard()));
-		model.addAttribute("turn", gameManagerService.getCurrentTurn().name());
-		model.addAttribute("scores", WebOutputRenderer.scoreToModel(gameManagerService.calculateEachScore()));
+	@GetMapping("/")
+	public String index(Model model) {
+		model.addAttribute("roomNumbers", gameManagerService.getAllRoomNo());
+		return "index";
+	}
 
+	@GetMapping("/board/{roomNo}")
+	public String board(Model model, @PathVariable int roomNo) {
+		model.addAttribute("roomNo", roomNo);
+		model.addAttribute("piecesDto", WebOutputRenderer.toPiecesDto(gameManagerService.getBoard(roomNo)));
+		model.addAttribute("turn", gameManagerService.getCurrentTurn(roomNo).name());
+		model.addAttribute("scores", WebOutputRenderer.scoreToModel(gameManagerService.calculateEachScore(roomNo)));
 		return "board";
 	}
 
 	@GetMapping("/start")
 	public String start() {
-		gameManagerService.resetGame();
-		return "redirect:/board";
+		int roomNo = gameManagerService.newGame();
+		return "redirect:/board/" + roomNo;
 	}
 
 	@GetMapping("/resume")
@@ -40,24 +47,25 @@ public class ChessController {
 
 	@PostMapping("/move")
 	public String move(Model model, @RequestParam(defaultValue = "") String target,
-		@RequestParam(defaultValue = "") String destination) {
+		@RequestParam(defaultValue = "") String destination, @RequestParam int roomNo) {
 		try {
-			gameManagerService.move(Position.of(target), Position.of(destination));
+			gameManagerService.move(Position.of(target), Position.of(destination), roomNo);
 		} catch (RuntimeException e) {
 			model.addAttribute("error", e.getMessage());
+			model.addAttribute("roomNo", roomNo);
 			return "error";
 		}
-		if (!gameManagerService.isKingAlive()) {
-			model.addAttribute("winner", gameManagerService.getCurrentTurn().reverse());
-			gameManagerService.resetGame();
+		if (!gameManagerService.isKingAlive(roomNo)) {
+			model.addAttribute("winner", gameManagerService.getCurrentTurn(roomNo).reverse());
+			gameManagerService.deleteGame(roomNo);
 			return "end";
 		}
-		return "redirect:/board";
+		return "redirect:/board/" + roomNo;
 	}
 
 	@GetMapping("/end")
-	public String end() {
-		gameManagerService.resetGame();
+	public String end(@RequestParam int roomNo) {
+		gameManagerService.deleteGame(roomNo);
 		return "end";
 	}
 }

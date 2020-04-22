@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -20,30 +21,34 @@ public class GameManagerService {
 		this.gameDao = new GameDao();
 	}
 
-	public void move(Position targetPosition, Position destination) {
-		GameManager gameManager = gameDao.findGame(1);
+	public void move(Position targetPosition, Position destination, int roomNo) {
+		GameManager gameManager = gameDao.findGame(roomNo);
 		gameManager.move(targetPosition, destination);
 
-		gameDao.updateGame(new GameManagerDto(gameManager));
+		gameDao.updateGame(new GameManagerDto(gameManager), roomNo);
 	}
 
-	public void resetGame() {
+	public int newGame() {
 		Board board = BoardFactory.create();
 		GameManager gameManager = new GameManager(board, Color.WHITE);
 
-		gameDao.updateGame(new GameManagerDto(gameManager));
+		return gameDao.addGame(new GameManagerDto(gameManager));
 	}
 
-	public Board getBoard() {
-		return gameDao.findGame(1).getBoard();
+	public void deleteGame(int roomNo) {
+		gameDao.deleteGame(roomNo);
 	}
 
-	public Color getCurrentTurn() {
-		return gameDao.findGame(1).getCurrentTurn();
+	public Board getBoard(int roomNo) {
+		return gameDao.findGame(roomNo).getBoard();
 	}
 
-	public boolean isKingAlive() {
-		GameManager game = gameDao.findGame(1);
+	public Color getCurrentTurn(int roomNo) {
+		return gameDao.findGame(roomNo).getCurrentTurn();
+	}
+
+	public boolean isKingAlive(int roomNo) {
+		GameManager game = gameDao.findGame(roomNo);
 		Board board = game.getBoard();
 		Color currentTurn = game.getCurrentTurn();
 		GameManager gameManager = new GameManager(board, currentTurn);
@@ -51,9 +56,13 @@ public class GameManagerService {
 		return gameManager.isKingAlive();
 	}
 
-	public Map<Color, Double> calculateEachScore() {
-		GameManager gameManager = new GameManager(gameDao.findGame(1).getBoard());
+	public Map<Color, Double> calculateEachScore(int roomNo) {
+		GameManager gameManager = new GameManager(gameDao.findGame(roomNo).getBoard());
 
 		return gameManager.calculateEachScore();
+	}
+
+	public List<String> getAllRoomNo() {
+		return gameDao.findAllRoomNo();
 	}
 }

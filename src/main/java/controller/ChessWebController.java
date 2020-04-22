@@ -6,7 +6,6 @@ import service.ChessService;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,9 +59,6 @@ public class ChessWebController {
         });
 
         post("/end", (req, res) -> {
-            int gameId = Integer.parseInt(req.queryParams("game_id"));
-            ChessGame chessGame = chessService.makeGameByDB(gameId);
-            chessService.insertChessBoard(chessGame, gameId);
             Map<String, Object> model = new HashMap<>();
             return render(model, "start.html");
         });
@@ -70,7 +66,7 @@ public class ChessWebController {
         post("/start/new/game", (req, res) -> {
             int gameId = Integer.parseInt(req.queryParams("game_id"));
             ChessGame chessGame = new ChessGame();
-            chessService.insertChessBoard(chessGame, gameId);
+            chessService.resetChessGame(chessGame, gameId);
             return chessService.findBoard(gameId);
         });
     }

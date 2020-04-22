@@ -28,6 +28,15 @@ public class PieceDao {
         }
     }
 
+    public void deleteGame(int gameId) throws SQLException {
+        String query = "DELETE FROM piece where game_id = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, String.valueOf(gameId));
+            pstmt.execute();
+        }
+    }
+
     public List<PieceVo> findAll(int gameId) throws SQLException {
         String query = "SELECT * FROM piece WHERE game_id = ?";
         try (Connection connection = DBConnection.getConnection();

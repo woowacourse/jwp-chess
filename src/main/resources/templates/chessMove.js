@@ -89,6 +89,8 @@ function postNewGame() {
                     $('#' + piece.location).html(main.variables.pieces[piece.pieceName].img);
                     $('#' + piece.location).attr('chess', piece.pieceName);
                 }
+
+                $('#turn').html("It's White Turn!");
             },
             error: function (xhr, status, error) {
                 alert(error.toString());

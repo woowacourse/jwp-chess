@@ -84,8 +84,8 @@ public class ChessService {
         return GSON.toJson(chessResultDto);
     }
 
-    public void insertChessBoard(ChessGame chessGame, int game_id) throws SQLException {
-        boardDao.addBoard(chessGame.getChessBoard(), game_id);
+    private void resetChessBoard(ChessGame chessGame, int game_id) throws SQLException {
+        boardDao.resetBoard(chessGame.getChessBoard(), game_id);
     }
 
     public ChessGame makeGameByDB(int gameId) throws SQLException {
@@ -111,5 +111,10 @@ public class ChessService {
         int row = pieceVo.getRow();
         char col = pieceVo.getCol().charAt(0);
         return new Location(row, col);
+    }
+
+    public void resetChessGame(ChessGame chessGame, int gameId) throws SQLException {
+        chessGameDao.updateTurn(Team.WHITE, gameId);
+        resetChessBoard(chessGame, gameId);
     }
 }

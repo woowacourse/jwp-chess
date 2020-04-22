@@ -9,10 +9,11 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public class BoardDao {
-    public void addBoard(ChessBoard chessBoard, int gameId) throws SQLException {
+    public void resetBoard(ChessBoard chessBoard, int gameId) throws SQLException {
         Map<Location, Piece> board = chessBoard.getBoard();
         PieceDao pieceDao = new PieceDao();
 
+        pieceDao.deleteGame(gameId);
         addPieces(gameId, board, pieceDao);
     }
 

@@ -1,7 +1,8 @@
 package wooteco.chess.controller;
 
 public interface ChessController {
-	void start();
-
-	void playTurn();
+	void renderStart();
+	void renderBoard();
+	void updateBoard();
+	void renderResult();
 }

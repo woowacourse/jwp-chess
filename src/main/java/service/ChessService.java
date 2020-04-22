@@ -51,19 +51,22 @@ public class ChessService {
         return GSON.toJson(boardDto);
     }
 
-    public String move(LocationDto nowDto,LocationDto destinationDto, ChessGame chessGame) throws SQLException {
+    public String move(LocationDto nowDto,LocationDto destinationDto, int gameId) throws SQLException {
         Location now = nowDto.toEntity();
         Location destination = destinationDto.toEntity();
-
-        // 매번 저장!
-        Piece piece = chessGame.getPiece(now);
-        pieceDao.update(now, destination, piece);
+        ChessGame chessGame = makeGameByDB(gameId);
 
         MoveCommand move = MoveCommand.of(now, destination, chessGame);
 
+        Piece nowPiece = chessGame.getPiece(now);
+
         Progress progress = chessGame.doOneCommand(move);
 
-        changeTurnIfMoved(chessGame, progress);
+        if (!progress.isError()) {
+            updatePiece(nowPiece, now, destination, gameId);
+            chessGame.changeTurn();
+            chessGameDao.updateTurn(chessGame.getTurn(), gameId);
+        }
 
         ChessMoveDto chessMoveDto = new ChessMoveDto(
                 new ChessGameScoresDto(chessGame.calculateScores())
@@ -73,10 +76,8 @@ public class ChessService {
         return GSON.toJson(chessMoveDto);
     }
 
-    private static void changeTurnIfMoved(ChessGame chessGame, Progress progress) {
-        if (Progress.CONTINUE == progress) {
-            chessGame.changeTurn();
-        }
+    private void updatePiece(Piece nowPiece, Location now, Location destination, int gameId) throws SQLException {
+        pieceDao.update(now, destination, nowPiece, gameId);
     }
 
     public String findWinner(ChessGame chessGame) {

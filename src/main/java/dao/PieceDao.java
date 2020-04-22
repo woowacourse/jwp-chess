@@ -52,8 +52,8 @@ public class PieceDao {
         return pieceVos;
     }
 
-    public void update(Location now, Location destination, Piece piece) throws SQLException {
-        String query = "UPDATE piece SET row = ?, col = ?, name = ? where row = ? AND col = ?;";
+    public void update(Location now, Location destination, Piece piece, int gameId) throws SQLException {
+        String query = "UPDATE piece SET row = ?, col = ?, name = ? where row = ? AND col = ? AND game_id = ?;";
 
         piece.toString();
         piece.getName();
@@ -66,6 +66,8 @@ public class PieceDao {
 
             pstmt.setString(4, String.valueOf(now.getRowValue()));
             pstmt.setString(5, String.valueOf(now.getColValue()));
+
+            pstmt.setString(6, String.valueOf(gameId));
             pstmt.executeUpdate();
         }
     }

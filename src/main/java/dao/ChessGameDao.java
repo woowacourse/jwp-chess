@@ -1,5 +1,6 @@
 package dao;
 
+import chess.team.Team;
 import db.DBConnection;
 import dto.ChessGameDto;
 
@@ -27,6 +28,16 @@ public class ChessGameDao {
                     rs.getString("black_name"),
                     rs.getInt("turn_is_black")
             );
+        }
+    }
+
+    public void updateTurn(Team turn, int gameId) throws SQLException {
+        String query = "UPDATE game SET turn_is_black = ? WHERE id = ?";
+        try(Connection connection = DBConnection.getConnection();
+            PreparedStatement pstmt = connection.prepareStatement(query)){
+            pstmt.setString(1, String.valueOf(turn.getTurnIsBlack()));
+            pstmt.setString(2, String.valueOf(gameId));
+            pstmt.executeUpdate();
         }
     }
 }

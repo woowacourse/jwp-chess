@@ -48,9 +48,8 @@ public class ChessWebController {
             LocationDto nowDto = new LocationDto(req.queryParams("now"));
             LocationDto destinationDto = new LocationDto(req.queryParams("des"));
             int gameId = Integer.parseInt(req.queryParams("game_id"));
-            ChessGame chessGame = chessService.makeGameByDB(gameId);
 
-            return chessService.move(nowDto, destinationDto, chessGame);
+            return chessService.move(nowDto, destinationDto, gameId);
         });
 
         get("/start/winner", (req, res) -> {

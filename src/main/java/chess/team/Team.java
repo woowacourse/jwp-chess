@@ -1,8 +1,14 @@
 package chess.team;
 
 public enum Team {
-    BLACK,
-    WHITE;
+    BLACK(1),
+    WHITE(0);
+
+    private int turnIsBlack;
+
+    Team(int turnIsBlack) {
+        this.turnIsBlack = turnIsBlack;
+    }
 
     public boolean isBlack() {
         return this == BLACK;
@@ -24,5 +30,9 @@ public enum Team {
             return BLACK;
         }
         return WHITE;
+    }
+
+    public int getTurnIsBlack() {
+        return turnIsBlack;
     }
 }

@@ -10,7 +10,4 @@ public class Room {
         this.number = number;
         this.board = board;
     }
-
-
-
 }

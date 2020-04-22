@@ -10,15 +10,15 @@ import java.util.Map;
 
 public class
 BasicOneMoveStrategy implements MoveStrategy {
-	List<Direction> directions;
+    List<Direction> directions;
 
-	public BasicOneMoveStrategy(List<Direction> directions) {
-		this.directions = directions;
-	}
+    public BasicOneMoveStrategy(List<Direction> directions) {
+        this.directions = directions;
+    }
 
-	@Override
-	public Path findMovablePositions(Path path, Map<Position, Piece> pieces) {
-		path.findPathOneTimeByDirections(directions, pieces);
-		return path;
-	}
+    @Override
+    public Path findMovablePositions(Path path, Map<Position, Piece> pieces) {
+        path.findPathOneTimeByDirections(directions, pieces);
+        return path;
+    }
 }

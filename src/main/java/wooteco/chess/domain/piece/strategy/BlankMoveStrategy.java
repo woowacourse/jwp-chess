@@ -8,9 +8,9 @@ import java.util.Collections;
 import java.util.Map;
 
 public class BlankMoveStrategy implements MoveStrategy {
-	@Override
-	public Path findMovablePositions(final Path path, final Map<Position, Piece> pieces) {
-		path.findPathOneTimeByDirections(Collections.EMPTY_LIST, pieces);
-		return path;
-	}
+    @Override
+    public Path findMovablePositions(final Path path, final Map<Position, Piece> pieces) {
+        path.findPathOneTimeByDirections(Collections.EMPTY_LIST, pieces);
+        return path;
+    }
 }

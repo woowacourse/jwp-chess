@@ -1,14 +1,14 @@
 package wooteco.chess.domain;
 
 public enum Color {
-	WHITE,
-	BLACK,
-	NONE;
+    WHITE,
+    BLACK,
+    NONE;
 
-	public Color reverse() {
-		if (this == WHITE) {
-			return BLACK;
-		}
-		return WHITE;
-	}
+    public Color reverse() {
+        if (this == WHITE) {
+            return BLACK;
+        }
+        return WHITE;
+    }
 }

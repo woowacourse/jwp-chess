@@ -6,13 +6,13 @@ import wooteco.chess.domain.piece.Pieces;
 import java.util.List;
 
 public class PiecesResponseDTO {
-	List<PieceResponseDTO> pieces;
+    List<PieceResponseDTO> pieces;
 
-	public PiecesResponseDTO(Pieces originPieces) {
-		this.pieces = PieceMapper.getInstance().createPiecesResponseDTO(originPieces);
-	}
+    public PiecesResponseDTO(Pieces originPieces) {
+        this.pieces = PieceMapper.getInstance().createPiecesResponseDTO(originPieces);
+    }
 
-	public List<PieceResponseDTO> getPieces() {
-		return pieces;
-	}
+    public List<PieceResponseDTO> getPieces() {
+        return pieces;
+    }
 }

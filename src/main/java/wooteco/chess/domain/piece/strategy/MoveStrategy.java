@@ -8,5 +8,5 @@ import java.util.Map;
 
 @FunctionalInterface
 public interface MoveStrategy {
-	Path findMovablePositions(Path path, Map<Position, Piece> pieces);
+    Path findMovablePositions(Path path, Map<Position, Piece> pieces);
 }

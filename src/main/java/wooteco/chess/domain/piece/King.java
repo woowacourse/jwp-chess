@@ -8,22 +8,22 @@ import wooteco.chess.domain.piece.strategy.BasicOneMoveStrategy;
 import java.util.Map;
 
 public class King extends Piece {
-	public King(Color color, String symbol) {
-		super(color, symbol, new BasicOneMoveStrategy(Direction.everyDirection()));
-	}
+    public King(Color color, String symbol) {
+        super(color, symbol, new BasicOneMoveStrategy(Direction.everyDirection()));
+    }
 
-	@Override
-	public boolean isSameName(PieceScore pieceScore) {
-		return PieceScore.KING == pieceScore;
-	}
+    @Override
+    public boolean isSameName(PieceScore pieceScore) {
+        return PieceScore.KING == pieceScore;
+    }
 
-	@Override
-	public Path findPathByRule(Path path, Map<Position, Piece> pieces) {
-		return moveStrategy.findMovablePositions(path, pieces);
-	}
+    @Override
+    public Path findPathByRule(Path path, Map<Position, Piece> pieces) {
+        return moveStrategy.findMovablePositions(path, pieces);
+    }
 
-	@Override
-	public boolean isKing() {
-		return true;
-	}
+    @Override
+    public boolean isKing() {
+        return true;
+    }
 }

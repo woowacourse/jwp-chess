@@ -1,25 +1,25 @@
 package wooteco.chess.domain.room;
 
 public class Room {
-	private final int roomId;
-	private final String roomName;
-	private final String turn;
+    private final int roomId;
+    private final String roomName;
+    private final String turn;
 
-	public Room(int roomId, String roomName, String turn) {
-		this.roomId = roomId;
-		this.roomName = roomName;
-		this.turn = turn;
-	}
+    public Room(int roomId, String roomName, String turn) {
+        this.roomId = roomId;
+        this.roomName = roomName;
+        this.turn = turn;
+    }
 
-	public int getRoomId() {
-		return roomId;
-	}
+    public int getRoomId() {
+        return roomId;
+    }
 
-	public String getRoomName() {
-		return roomName;
-	}
+    public String getRoomName() {
+        return roomName;
+    }
 
-	public String getTurn() {
-		return turn;
-	}
+    public String getTurn() {
+        return turn;
+    }
 }

@@ -7,28 +7,23 @@ import wooteco.chess.domain.piece.strategy.PawnMoveStrategy;
 
 import java.util.Map;
 
-/**
- *    class description
- *
- *    @authors AnHyungJu, LeeHoBin
- */
 public class Pawn extends Piece {
-	public Pawn(Color color, String symbol) {
-		super(color, symbol, new PawnMoveStrategy(color));
-	}
+    public Pawn(Color color, String symbol) {
+        super(color, symbol, new PawnMoveStrategy(color));
+    }
 
-	@Override
-	public boolean isSameName(PieceScore pieceScore) {
-		return PieceScore.PAWN == pieceScore;
-	}
+    @Override
+    public boolean isSameName(PieceScore pieceScore) {
+        return PieceScore.PAWN == pieceScore;
+    }
 
-	@Override
-	public boolean isPawn() {
-		return true;
-	}
+    @Override
+    public boolean isPawn() {
+        return true;
+    }
 
-	@Override
-	public Path findPathByRule(Path path, Map<Position, Piece> pieces) {
-		return moveStrategy.findMovablePositions(path, pieces);
-	}
+    @Override
+    public Path findPathByRule(Path path, Map<Position, Piece> pieces) {
+        return moveStrategy.findMovablePositions(path, pieces);
+    }
 }

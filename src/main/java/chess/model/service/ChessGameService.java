@@ -2,17 +2,17 @@ package chess.model.service;
 
 import chess.model.domain.board.BoardInitialByDB;
 import chess.model.domain.board.BoardInitialization;
-import chess.model.domain.board.BoardSquare;
+import chess.model.domain.board.Square;
 import chess.model.domain.board.CastlingSetting;
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.EnPassant;
 import chess.model.domain.board.TeamScore;
-import chess.model.domain.piece.Color;
 import chess.model.domain.piece.Pawn;
 import chess.model.domain.piece.Piece;
+import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
+import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveOrder;
-import chess.model.domain.state.MoveSquare;
 import chess.model.domain.state.MoveState;
 import chess.model.dto.ChessGameDto;
 import chess.model.dto.GameResultDto;
@@ -43,7 +43,7 @@ public class ChessGameService {
         return INSTANCE;
     }
 
-    public int getIdBefore(int roomId, Map<Color, String> userNames) {
+    public int getIdBefore(int roomId, Map<Team, String> userNames) {
         Optional<Integer> gameNumberLatest = CHESS_GAME_DAO.getGameNumberLatest(roomId);
         if (gameNumberLatest.isPresent()) {
             return gameNumberLatest.get();
@@ -52,7 +52,7 @@ public class ChessGameService {
         return CHESS_GAME_DAO.getGameNumberLatest(roomId).orElseThrow(IllegalAccessError::new);
     }
 
-    public int newChessGame(int roomId, Map<Color, String> userNames) {
+    public int newChessGame(int roomId, Map<Team, String> userNames) {
         roomBeforeGameOver(roomId);
         ChessGame chessGame = new ChessGame();
         int gameId = CHESS_GAME_DAO
@@ -75,7 +75,7 @@ public class ChessGameService {
         }
     }
 
-    private Map<BoardSquare, Boolean> getCastlingElement(Map<BoardSquare, Piece> chessBoard,
+    private Map<Square, Boolean> getCastlingElement(Map<Square, Piece> chessBoard,
         Set<CastlingSetting> castlingElements) {
         return chessBoard.keySet().stream()
             .collect(Collectors.toMap(boardSquare -> boardSquare,
@@ -83,10 +83,10 @@ public class ChessGameService {
                     castlingElements)));
     }
 
-    private boolean getCastlingElement(BoardSquare boardSquare, Piece piece,
+    private boolean getCastlingElement(Square square, Piece piece,
         Set<CastlingSetting> castlingElements) {
         return castlingElements.stream()
-            .anyMatch(castlingSetting -> castlingSetting.isCastlingBefore(boardSquare, piece));
+            .anyMatch(castlingSetting -> castlingSetting.isCastlingBefore(square, piece));
     }
 
     public ChessGameDto loadChessGame(int gameId) {
@@ -96,38 +96,38 @@ public class ChessGameService {
     private ChessGame getChessGame(int gameId) {
         BoardInitialization boardInitialByDB = new BoardInitialByDB(
             CHESS_BOARD_DAO.getBoard(gameId));
-        Color gameTurn = CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalAccessError::new);
+        Team gameTurn = CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalAccessError::new);
         Set<CastlingSetting> castlingElements = CHESS_BOARD_DAO.getCastlingElements(gameId);
         EnPassant enPassant = CHESS_BOARD_DAO.getEnpassantBoard(gameId);
         return new ChessGame(boardInitialByDB, gameTurn, castlingElements, enPassant);
     }
 
     public ChessGameDto move(MoveDto moveDTO) {
-        MoveSquare moveSquare = new MoveSquare(moveDTO.getSource(), moveDTO.getTarget());
+        MoveInfo moveInfo = new MoveInfo(moveDTO.getSource(), moveDTO.getTarget());
         int gameId = moveDTO.getGameId();
         EnPassant enPassant = CHESS_BOARD_DAO.getEnpassantBoard(gameId);
         ChessGame chessGame = getChessGame(gameId);
-        boolean canCastling = chessGame.canCastling(moveSquare);
-        boolean pawnSpecialMove = chessGame.isPawnSpecialMove(moveSquare);
-        boolean movePawn = chessGame.whoMovePiece(moveSquare) instanceof Pawn;
-        MoveState moveState = chessGame.movePieceWhenCanMove(moveSquare);
-        Color gameTurn = CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalAccessError::new);
+        boolean canCastling = chessGame.canCastling(moveInfo);
+        boolean pawnSpecialMove = chessGame.isPawnJump(moveInfo);
+        boolean movePawn = chessGame.whoMovePiece(moveInfo) instanceof Pawn;
+        MoveState moveState = chessGame.movePieceWhenCanMove(moveInfo);
+        Team gameTurn = CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalAccessError::new);
         if (moveState.isSucceed()) {
             CHESS_BOARD_DAO.deleteMyEnpassant(gameId);
-            CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveSquare.get(MoveOrder.AFTER));
-            CHESS_BOARD_DAO.copyBoardSquare(gameId, moveSquare);
-            CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveSquare.get(MoveOrder.BEFORE));
+            CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfo.get(MoveOrder.TO));
+            CHESS_BOARD_DAO.copyBoardSquare(gameId, moveInfo);
+            CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfo.get(MoveOrder.FROM));
             if (pawnSpecialMove) {
-                CHESS_BOARD_DAO.updateEnPassant(gameId, moveSquare);
+                CHESS_BOARD_DAO.updateEnPassant(gameId, moveInfo);
             }
             if (movePawn && enPassant
-                .hasOtherEnpassant(moveSquare.get(MoveOrder.AFTER), gameTurn)) {
-                CHESS_BOARD_DAO.deleteEnpassant(gameId, moveSquare.get(MoveOrder.AFTER));
+                .hasOtherEnpassant(moveInfo.get(MoveOrder.TO), gameTurn)) {
+                CHESS_BOARD_DAO.deleteEnpassant(gameId, moveInfo.get(MoveOrder.TO));
             }
             if (canCastling) {
-                MoveSquare moveSquareRook = CastlingSetting.getMoveCastlingRook(moveSquare);
-                CHESS_BOARD_DAO.copyBoardSquare(gameId, moveSquareRook);
-                CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveSquareRook.get(MoveOrder.BEFORE));
+                MoveInfo moveInfoRook = CastlingSetting.getMoveCastlingRook(moveInfo);
+                CHESS_BOARD_DAO.copyBoardSquare(gameId, moveInfoRook);
+                CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfoRook.get(MoveOrder.FROM));
             }
         }
         if (moveState == MoveState.SUCCESS) {
@@ -144,15 +144,15 @@ public class ChessGameService {
     private void gameOver(int gameId) {
         if (CHESS_GAME_DAO.isProceed(gameId)) {
             CHESS_GAME_DAO.updateProceedN(gameId);
-            Map<Color, String> userNames = CHESS_GAME_DAO.getUserNames(gameId);
+            Map<Team, String> userNames = CHESS_GAME_DAO.getUserNames(gameId);
             TeamScore teamScore = new TeamScore(CHESS_GAME_DAO.getScores(gameId));
-            for (Color team : Color.values()) {
+            for (Team team : Team.values()) {
                 setGameResult(teamScore, userNames, team);
             }
         }
     }
 
-    private void setGameResult(TeamScore teamScore, Map<Color, String> userNames, Color team) {
+    private void setGameResult(TeamScore teamScore, Map<Team, String> userNames, Team team) {
         GameResultDto gameResultBefore = CHESS_RESULT_DAO.getWinOrDraw(userNames.get(team))
             .orElseThrow(IllegalAccessError::new);
         GameResultDto gameResult = teamScore.getGameResult(team);
@@ -167,7 +167,7 @@ public class ChessGameService {
         Type type = Type.of(promotionTypeDTO.getPromotionType());
         int gameId = promotionTypeDTO.getGameId();
         ChessGame chessGame = getChessGame(gameId);
-        Optional<BoardSquare> finishPawnBoard = chessGame.getFinishPawnBoard();
+        Optional<Square> finishPawnBoard = chessGame.getFinishPawnBoard();
         Piece hopePiece = chessGame.getHopePiece(type);
         MoveState moveState = chessGame.promotion(type);
         if (moveState == MoveState.SUCCESS_PROMOTION) {
@@ -183,7 +183,7 @@ public class ChessGameService {
 
     public PathDto getPath(SourceDto sourceDto) {
         ChessGame chessGame = getChessGame(sourceDto.getGameId());
-        return new PathDto(chessGame.getCheatSheet(BoardSquare.of(sourceDto.getSource())));
+        return new PathDto(chessGame.getMovableArea(Square.of(sourceDto.getSource())));
     }
 
     public ChessGameDto endGame(MoveDto moveDto) {
@@ -197,7 +197,7 @@ public class ChessGameService {
         return CHESS_GAME_DAO.getRoomId(gameId).orElseThrow(IllegalAccessError::new);
     }
 
-    public int endAndNewChessGame(int gameId, Map<Color, String> userNames) {
+    public int endAndNewChessGame(int gameId, Map<Team, String> userNames) {
         gameOver(gameId);
         return newChessGame(
             CHESS_GAME_DAO.getRoomId(gameId).orElseThrow(IllegalArgumentException::new), userNames);

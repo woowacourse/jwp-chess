@@ -2,14 +2,14 @@ package chess.model.domain.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.model.domain.piece.Color;
 import chess.model.domain.piece.King;
 import chess.model.domain.piece.Knight;
 import chess.model.domain.piece.Pawn;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Rook;
+import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
-import chess.model.domain.state.MoveSquare;
+import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class ChessGameTest {
     @Test
     void chessBoardSizeCheck() {
         ChessGame chessGame = new ChessGame();
-        Map<BoardSquare, Piece> board = chessGame.getChessBoard();
+        Map<Square, Piece> board = chessGame.getChessBoard();
         assertThat(board.size()).isEqualTo(32);
     }
 
@@ -34,13 +34,13 @@ public class ChessGameTest {
     @Test
     void canMove() {
         ChessGame chessGame = new ChessGame();
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare("a7", "a6")).isSucceed())
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("a7", "a6")).isSucceed())
             .isFalse();
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare("a2", "a3")).isSucceed())
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("a2", "a3")).isSucceed())
             .isTrue();
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare("a7", "a6")).isSucceed())
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("a7", "a6")).isSucceed())
             .isTrue();
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare("a7", "b1")).isSucceed())
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("a7", "b1")).isSucceed())
             .isFalse();
     }
 
@@ -48,31 +48,31 @@ public class ChessGameTest {
     @DisplayName("move 수행 테스트")
     void move() {
         ChessGame chessGame = new ChessGame();
-        chessGame.movePieceWhenCanMove(new MoveSquare("a2", "a3"));
-        assertThat(chessGame.getChessBoard().containsKey(BoardSquare.of("a2"))).isFalse();
-        assertThat(chessGame.getChessBoard().containsKey(BoardSquare.of("a3"))).isTrue();
-        assertThat(chessGame.getChessBoard().get(BoardSquare.of("a3")))
-            .isEqualTo(Pawn.getPieceInstance(Color.WHITE));
+        chessGame.movePieceWhenCanMove(new MoveInfo("a2", "a3"));
+        assertThat(chessGame.getChessBoard().containsKey(Square.of("a2"))).isFalse();
+        assertThat(chessGame.getChessBoard().containsKey(Square.of("a3"))).isTrue();
+        assertThat(chessGame.getChessBoard().get(Square.of("a3")))
+            .isEqualTo(Pawn.getPieceInstance(Team.WHITE));
     }
 
     @Test
     @DisplayName("king 잡혔는지 확인")
     void isKingOnChessBoard() {
         ChessGame chessGame = new ChessGame();
-        chessGame.movePieceWhenCanMove(new MoveSquare("e2", "e4"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("a7", "a5"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("e1", "e2"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("a8", "a6"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("e2", "e3"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("e2", "e4"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("a7", "a5"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("e1", "e2"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("a8", "a6"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("e2", "e3"));
 
         assertThat(chessGame.isKingCaptured()).isFalse();
 
-        chessGame.movePieceWhenCanMove(new MoveSquare("a6", "d6"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("e3", "d3"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("d6", "d3"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("a6", "d6"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("e3", "d3"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("d6", "d3"));
 
         assertThat(chessGame.isKingCaptured()).isTrue();
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare("d1", "d2")))
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("d1", "d2")))
             .isEqualTo(MoveState.KING_CAPTURED);
     }
 
@@ -80,34 +80,34 @@ public class ChessGameTest {
     @Test
     void isNoPiece() {
         ChessGame chessGame = new ChessGame();
-        assertThat(chessGame.isNoPiece(new MoveSquare("a2", "a3"))).isFalse();
-        assertThat(chessGame.isNoPiece(new MoveSquare("a3", "a4"))).isTrue();
+        assertThat(chessGame.isNoPiece(new MoveInfo("a2", "a3"))).isFalse();
+        assertThat(chessGame.isNoPiece(new MoveInfo("a3", "a4"))).isTrue();
     }
 
     @DisplayName("이동하려는 before자리의 말이 현재 차례의 말이 아닌지 확인, 말이 없는 경우도 True")
     @Test
     void isNotMyTurn() {
         ChessGame chessGame = new ChessGame();
-        assertThat(chessGame.isNotMyTurn(new MoveSquare("a2", "a3"))).isFalse();
-        assertThat(chessGame.isNotMyTurn(new MoveSquare("a3", "a4"))).isTrue();
-        assertThat(chessGame.isNotMyTurn(new MoveSquare("a7", "a6"))).isTrue();
+        assertThat(chessGame.isNotMyTurn(new MoveInfo("a2", "a3"))).isFalse();
+        assertThat(chessGame.isNotMyTurn(new MoveInfo("a3", "a4"))).isTrue();
+        assertThat(chessGame.isNotMyTurn(new MoveInfo("a7", "a6"))).isTrue();
     }
 
     @DisplayName("폰이 시작지점(즉 상대방의 시작지점)으로 이동했는지 확인")
     @Test
     void mustChangePawnThenCanGo() {
         ChessGame chessGame = new ChessGame();
-        chessGame.movePieceWhenCanMove(new MoveSquare("a2", "a4"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("a7", "a5"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("b2", "b4"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("b7", "b5"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("a4", "b5"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("c7", "c6"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("b5", "c6"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("c8", "b7"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("c6", "b7"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("h7", "h6"));
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare("b7", "a8")))
+        chessGame.movePieceWhenCanMove(new MoveInfo("a2", "a4"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("a7", "a5"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("b2", "b4"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("b7", "b5"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("a4", "b5"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("c7", "c6"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("b5", "c6"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("c8", "b7"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("c6", "b7"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("h7", "h6"));
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("b7", "a8")))
             .isEqualTo(MoveState.SUCCESS_BUT_PAWN_PROMOTION);
     }
 
@@ -115,25 +115,25 @@ public class ChessGameTest {
     @Test
     void mustChangePawnAndCanGo() {
         ChessGame chessGame = new ChessGame();
-        chessGame.movePieceWhenCanMove(new MoveSquare("a2", "a4"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("a7", "a5"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("b2", "b4"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("b7", "b5"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("a4", "b5"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("c7", "c6"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("b5", "c6"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("c8", "b7"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("c6", "b7"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("h7", "h6"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("b7", "a8"));
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare("g7", "g6")))
+        chessGame.movePieceWhenCanMove(new MoveInfo("a2", "a4"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("a7", "a5"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("b2", "b4"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("b7", "b5"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("a4", "b5"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("c7", "c6"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("b5", "c6"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("c8", "b7"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("c6", "b7"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("h7", "h6"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("b7", "a8"));
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("g7", "g6")))
             .isEqualTo(MoveState.FAIL_NOT_ORDER);
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare("g2", "g3")))
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("g2", "g3")))
             .isEqualTo(MoveState.FAIL_MUST_PAWN_PROMOTION);
         assertThat(chessGame.promotion(Type.BISHOP)).isEqualTo(MoveState.SUCCESS_PROMOTION);
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare("g2", "g3")))
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("g2", "g3")))
             .isEqualTo(MoveState.FAIL_NOT_ORDER);
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare("g7", "g6")))
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("g7", "g6")))
             .isEqualTo(MoveState.SUCCESS);
     }
 
@@ -141,19 +141,19 @@ public class ChessGameTest {
     @ParameterizedTest
     @CsvSource(value = {"e1, c1, e8, c8", "e1, g1, e8, g8"})
     void castling(String whiteBefore, String whiteAfter, String blackBefore, String blackAfter) {
-        Map<BoardSquare, Piece> boardInitial = new HashMap<>();
-        boardInitial.put(BoardSquare.of("e1"), King.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("e8"), King.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("a8"), Rook.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("h8"), Rook.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("a1"), Rook.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("h1"), Rook.getPieceInstance(Color.WHITE));
-        ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Color.WHITE,
-            CastlingSetting.getCastlingElements());
+        Map<Square, Piece> boardInitial = new HashMap<>();
+        boardInitial.put(Square.of("e1"), King.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("e8"), King.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("a8"), Rook.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("h8"), Rook.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("a1"), Rook.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
+        ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Team.WHITE,
+            CastlingSetting.getCastlingElements(), new EnPassant());
 
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare(whiteBefore, whiteAfter)))
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.SUCCESS);
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare(blackBefore, blackAfter)))
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo(blackBefore, blackAfter)))
             .isEqualTo(MoveState.SUCCESS);
     }
 
@@ -161,27 +161,27 @@ public class ChessGameTest {
     @ParameterizedTest
     @CsvSource(value = {"e1, c1, e8, c8", "e1, g1, e8, g8"})
     void castlingNo(String whiteBefore, String whiteAfter, String blackBefore, String blackAfter) {
-        Map<BoardSquare, Piece> boardInitial = new HashMap<>();
-        boardInitial.put(BoardSquare.of("e1"), King.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("e8"), King.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("a8"), Rook.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("h8"), Rook.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("a1"), Rook.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("h1"), Rook.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("d1"), Knight.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("d8"), Knight.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("f1"), Knight.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("f8"), Knight.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("a2"), Pawn.getPieceInstance(Color.WHITE));
-        ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Color.WHITE,
-            CastlingSetting.getCastlingElements());
+        Map<Square, Piece> boardInitial = new HashMap<>();
+        boardInitial.put(Square.of("e1"), King.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("e8"), King.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("a8"), Rook.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("h8"), Rook.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("a1"), Rook.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("d1"), Knight.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("d8"), Knight.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("f1"), Knight.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("f8"), Knight.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("a2"), Pawn.getPieceInstance(Team.WHITE));
+        ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Team.WHITE,
+            CastlingSetting.getCastlingElements(), new EnPassant());
 
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare(whiteBefore, whiteAfter)))
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.FAIL_CAN_NOT_MOVE);
         assertThat(chessGame
-            .movePieceWhenCanMove(new MoveSquare(BoardSquare.of("a2"), BoardSquare.of("a3"))))
+            .movePieceWhenCanMove(new MoveInfo(Square.of("a2"), Square.of("a3"))))
             .isEqualTo(MoveState.SUCCESS);
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare(blackBefore, blackAfter)))
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo(blackBefore, blackAfter)))
             .isEqualTo(MoveState.FAIL_CAN_NOT_MOVE);
     }
 
@@ -189,27 +189,27 @@ public class ChessGameTest {
     @ParameterizedTest
     @CsvSource(value = {"e1, c1, e8, c8", "e1, g1, e8, g8"})
     void castlingNo2(String whiteBefore, String whiteAfter, String blackBefore, String blackAfter) {
-        Map<BoardSquare, Piece> boardInitial = new HashMap<>();
-        boardInitial.put(BoardSquare.of("e1"), King.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("e8"), King.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("a8"), Rook.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("h8"), Rook.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("a1"), Rook.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("h1"), Rook.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("d1"), Knight.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("d8"), Knight.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("f1"), Knight.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("f8"), Knight.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("a2"), Pawn.getPieceInstance(Color.WHITE));
-        ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Color.WHITE,
-            new HashSet<>(Collections.singletonList(CastlingSetting.BLACK_KING_BEFORE)));
+        Map<Square, Piece> boardInitial = new HashMap<>();
+        boardInitial.put(Square.of("e1"), King.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("e8"), King.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("a8"), Rook.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("h8"), Rook.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("a1"), Rook.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("d1"), Knight.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("d8"), Knight.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("f1"), Knight.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("f8"), Knight.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("a2"), Pawn.getPieceInstance(Team.WHITE));
+        ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Team.WHITE,
+            new HashSet<>(Collections.singletonList(CastlingSetting.BLACK_KING_BEFORE)), new EnPassant());
 
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare(whiteBefore, whiteAfter)))
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.FAIL_CAN_NOT_MOVE);
         assertThat(chessGame
-            .movePieceWhenCanMove(new MoveSquare(BoardSquare.of("a2"), BoardSquare.of("a3"))))
+            .movePieceWhenCanMove(new MoveInfo(Square.of("a2"), Square.of("a3"))))
             .isEqualTo(MoveState.SUCCESS);
-        assertThat(chessGame.movePieceWhenCanMove(new MoveSquare(blackBefore, blackAfter)))
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo(blackBefore, blackAfter)))
             .isEqualTo(MoveState.FAIL_CAN_NOT_MOVE);
     }
 

@@ -6,19 +6,19 @@ import util.NullChecker;
 
 public class Queen extends RepeatMovePiece {
 
-    private final static Map<Color, Piece> CACHE = new HashMap<>();
+    private final static Map<Team, Piece> CACHE = new HashMap<>();
 
     static {
-        CACHE.put(Color.BLACK, new Queen(Color.BLACK, Type.QUEEN));
-        CACHE.put(Color.WHITE, new Queen(Color.WHITE, Type.QUEEN));
+        CACHE.put(Team.BLACK, new Queen(Team.BLACK, Type.QUEEN));
+        CACHE.put(Team.WHITE, new Queen(Team.WHITE, Type.QUEEN));
     }
 
-    public Queen(Color color, Type type) {
-        super(color, type);
+    public Queen(Team team, Type type) {
+        super(team, type);
     }
 
-    public static Piece getPieceInstance(Color color) {
-        NullChecker.validateNotNull(color);
-        return CACHE.get(color);
+    public static Piece getPieceInstance(Team team) {
+        NullChecker.validateNotNull(team);
+        return CACHE.get(team);
     }
 }

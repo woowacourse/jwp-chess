@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.TeamScore;
-import chess.model.domain.piece.Color;
+import chess.model.domain.piece.Team;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,16 +16,16 @@ class ChessGameDaoTest {
 
     private static final ChessGameDao CHESS_GAME_DAO = ChessGameDao.getInstance();
     private static final int ROOM_ID = 1;
-    private static final Color GAME_TURN = Color.BLACK;
-    private static final Map<Color, String> USER_NAMES;
+    private static final Team GAME_TURN = Team.BLACK;
+    private static final Map<Team, String> USER_NAMES;
     private static final String BLACK_NAME = "BLACK";
     private static final String WHITE_NAME = "WHITE";
     private static final TeamScore TEAM_SCORE = new ChessGame().getTeamScore();
 
     static {
-        Map<Color, String> userNames = new HashMap<>();
-        userNames.put(Color.BLACK, BLACK_NAME);
-        userNames.put(Color.WHITE, WHITE_NAME);
+        Map<Team, String> userNames = new HashMap<>();
+        userNames.put(Team.BLACK, BLACK_NAME);
+        userNames.put(Team.WHITE, WHITE_NAME);
         USER_NAMES = Collections.unmodifiableMap(new HashMap<>(userNames));
     }
 
@@ -137,8 +137,8 @@ class ChessGameDaoTest {
 
     @Test
     void updateScore() {
-        Map<Color, Double> teamScoreUpdate = new HashMap<>(TEAM_SCORE.getTeamScore());
-        teamScoreUpdate.put(Color.BLACK, 1.0);
+        Map<Team, Double> teamScoreUpdate = new HashMap<>(TEAM_SCORE.getTeamScore());
+        teamScoreUpdate.put(Team.BLACK, 1.0);
         CHESS_GAME_DAO.updateScore(gameId, new TeamScore(teamScoreUpdate));
         assertThat(CHESS_GAME_DAO.getScores(gameId)).isEqualTo(teamScoreUpdate);
     }

@@ -3,7 +3,7 @@ package chess.model.domain.piece;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.model.domain.board.BoardSquare;
+import chess.model.domain.board.Square;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -26,32 +26,32 @@ public class BishopTest {
     @ValueSource(strings = {"c1", "e1", "c3", "b4", "a5", "e3", "f4", "g5", "h6"})
     @DisplayName("말의 위치(비숍)를 받고 말의 종류에 따라 이동할 수 있는 칸 리스트 반환")
     void calculateScopeBishop(String input) {
-        Piece piece = Bishop.getPieceInstance(Color.WHITE);
-        Set<BoardSquare> availableBoardSquares = piece.getAllCheatSheet(BoardSquare.of("d2"));
-        assertThat(availableBoardSquares.contains(BoardSquare.of(input))).isTrue();
-        assertThat(availableBoardSquares.size()).isEqualTo(9);
+        Piece piece = Bishop.getPieceInstance(Team.WHITE);
+        Set<Square> availableSquares = piece.getAllMovableArea(Square.of("d2"));
+        assertThat(availableSquares.contains(Square.of(input))).isTrue();
+        assertThat(availableSquares.size()).isEqualTo(9);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"b7", "d7", "b5", "d5", "a4", "e4", "e8"})
     @DisplayName("판의 정보를 가져와서 bishop이 갈 수 있는 칸에 장애물이 있는지 판단하여 이동할 수 있는 리스트 반환하는 테스트")
     void movableBishopSquareTest(String input) {
-        Map<BoardSquare, Piece> board = new HashMap<>();
-        board.put(BoardSquare.of("b7"), Pawn.getPieceInstance(Color.WHITE));
-        board.put(BoardSquare.of("c7"), Pawn.getPieceInstance(Color.WHITE));
-        board.put(BoardSquare.of("a6"), King.getPieceInstance(Color.WHITE));
-        board.put(BoardSquare.of("c5"), Pawn.getPieceInstance(Color.BLACK));
-        board.put(BoardSquare.of("e8"), Knight.getPieceInstance(Color.WHITE));
-        board.put(BoardSquare.of("f6"), Queen.getPieceInstance(Color.BLACK));
-        board.put(BoardSquare.of("f3"), Pawn.getPieceInstance(Color.BLACK));
-        board.put(BoardSquare.of("g6"), King.getPieceInstance(Color.BLACK));
-        board.put(BoardSquare.of("g2"), Pawn.getPieceInstance(Color.WHITE));
+        Map<Square, Piece> board = new HashMap<>();
+        board.put(Square.of("b7"), Pawn.getPieceInstance(Team.WHITE));
+        board.put(Square.of("c7"), Pawn.getPieceInstance(Team.WHITE));
+        board.put(Square.of("a6"), King.getPieceInstance(Team.WHITE));
+        board.put(Square.of("c5"), Pawn.getPieceInstance(Team.BLACK));
+        board.put(Square.of("e8"), Knight.getPieceInstance(Team.WHITE));
+        board.put(Square.of("f6"), Queen.getPieceInstance(Team.BLACK));
+        board.put(Square.of("f3"), Pawn.getPieceInstance(Team.BLACK));
+        board.put(Square.of("g6"), King.getPieceInstance(Team.BLACK));
+        board.put(Square.of("g2"), Pawn.getPieceInstance(Team.WHITE));
 
-        Piece piece = Bishop.getPieceInstance(Color.BLACK);
-        Set<BoardSquare> availableBoardSquares = piece.getCheatSheet(BoardSquare.of("c6"), board);
+        Piece piece = Bishop.getPieceInstance(Team.BLACK);
+        Set<Square> availableSquares = piece.getMovableArea(Square.of("c6"), board);
 
-        assertThat(availableBoardSquares.contains(BoardSquare.of(input))).isTrue();
-        assertThat(availableBoardSquares.size()).isEqualTo(7);
+        assertThat(availableSquares.contains(Square.of(input))).isTrue();
+        assertThat(availableSquares.size()).isEqualTo(7);
     }
 
 

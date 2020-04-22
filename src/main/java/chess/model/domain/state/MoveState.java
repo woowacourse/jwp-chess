@@ -1,6 +1,6 @@
 package chess.model.domain.state;
 
-import chess.model.domain.piece.Color;
+import chess.model.domain.piece.Team;
 
 public enum MoveState {
     SUCCESS_BUT_PAWN_PROMOTION(true, "성공하였습니다, 폰의 승격이 필요합니다."),
@@ -28,7 +28,7 @@ public enum MoveState {
         return succeed;
     }
 
-    public Color turnTeam(Color gameTurn) {
+    public Team turnTeam(Team gameTurn) {
         if (this == SUCCESS || this == SUCCESS_PROMOTION) {
             return gameTurn.nextTurnIfEmptyMySelf();
         }

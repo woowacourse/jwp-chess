@@ -2,14 +2,14 @@ package chess.model.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.model.domain.board.BoardSquare;
+import chess.model.domain.board.Square;
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.TeamScore;
-import chess.model.domain.piece.Color;
 import chess.model.domain.piece.Pawn;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.PieceFactory;
-import chess.model.domain.state.MoveSquare;
+import chess.model.domain.piece.Team;
+import chess.model.domain.state.MoveInfo;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,21 +26,21 @@ class ChessBoardDaoTest {
     private static final RoomDao ROOM_DAO = RoomDao.getInstance();
     private static final int ROOM_ID;
     private static final int GAME_ID;
-    private static final Map<BoardSquare, Boolean> CASTLING_ELEMENTS;
+    private static final Map<Square, Boolean> CASTLING_ELEMENTS;
     private static final TeamScore TEAM_SCORE = new ChessGame().getTeamScore();
 
     static {
-        Map<BoardSquare, Boolean> castlingElements = new ChessGame().getChessBoard().keySet()
+        Map<Square, Boolean> castlingElements = new ChessGame().getChessBoard().keySet()
             .stream()
             .collect(Collectors.toMap(boardSquare -> boardSquare, boardSquare -> false));
-        castlingElements.put(BoardSquare.of("a1"), true);
+        castlingElements.put(Square.of("a1"), true);
         CASTLING_ELEMENTS = Collections.unmodifiableMap(castlingElements);
 
         ROOM_ID = ROOM_DAO.insert("테스트방", "");
-        Map<Color, String> userNames = new HashMap<>();
-        userNames.put(Color.BLACK, "BLACK");
-        userNames.put(Color.WHITE, "WHITE");
-        GAME_ID = CHESS_GAME_DAO.insert(ROOM_ID, Color.BLACK, userNames, TEAM_SCORE);
+        Map<Team, String> userNames = new HashMap<>();
+        userNames.put(Team.BLACK, "BLACK");
+        userNames.put(Team.WHITE, "WHITE");
+        GAME_ID = CHESS_GAME_DAO.insert(ROOM_ID, Team.BLACK, userNames, TEAM_SCORE);
     }
 
     @AfterAll
@@ -81,15 +81,15 @@ class ChessBoardDaoTest {
 
     @Test
     void insertBoard() {
-        BoardSquare boardSquareAfter = BoardSquare.of("a3");
-        Piece pieceBefore = Pawn.getPieceInstance(Color.WHITE);
-        CHESS_BOARD_DAO.insertBoard(GAME_ID, boardSquareAfter, pieceBefore);
+        Square squareAfter = Square.of("a3");
+        Piece pieceBefore = Pawn.getPieceInstance(Team.WHITE);
+        CHESS_BOARD_DAO.insertBoard(GAME_ID, squareAfter, pieceBefore);
     }
 
     @Test
     void deleteBoardSquare() {
-        BoardSquare boardSquareBefore = BoardSquare.of("a2");
-        CHESS_BOARD_DAO.deleteBoardSquare(GAME_ID, boardSquareBefore);
+        Square squareBefore = Square.of("a2");
+        CHESS_BOARD_DAO.deleteBoardSquare(GAME_ID, squareBefore);
     }
 
     @Test
@@ -125,44 +125,44 @@ class ChessBoardDaoTest {
     void copyBoardSquare() {
         assertThat(CHESS_BOARD_DAO.getEnpassantBoard(GAME_ID).getEnPassants()).isEmpty();
 
-        CHESS_BOARD_DAO.updateEnPassant(GAME_ID, new MoveSquare("a2", "a4"));
+        CHESS_BOARD_DAO.updateEnPassant(GAME_ID, new MoveInfo("a2", "a4"));
         assertThat(CHESS_BOARD_DAO.getEnpassantBoard(GAME_ID).getEnPassants()).isEmpty();
 
-        CHESS_BOARD_DAO.copyBoardSquare(GAME_ID, new MoveSquare("a2", "a4"));
-        CHESS_BOARD_DAO.updateEnPassant(GAME_ID, new MoveSquare("a2", "a4"));
+        CHESS_BOARD_DAO.copyBoardSquare(GAME_ID, new MoveInfo("a2", "a4"));
+        CHESS_BOARD_DAO.updateEnPassant(GAME_ID, new MoveInfo("a2", "a4"));
         assertThat(CHESS_BOARD_DAO.getEnpassantBoard(GAME_ID).getEnPassants())
-            .contains(BoardSquare.of("a3"));
+            .contains(Square.of("a3"));
     }
 
     @Test
     void updatePromotion() {
-        BoardSquare boardSquare = BoardSquare.of("a2");
+        Square square = Square.of("a2");
         Piece white_pawn = PieceFactory.of("WHITE_PAWN");
         Piece white_queen = PieceFactory.of("WHITE_QUEEN");
-        assertThat(CHESS_BOARD_DAO.getBoard(GAME_ID).get(boardSquare)).isEqualTo(white_pawn);
+        assertThat(CHESS_BOARD_DAO.getBoard(GAME_ID).get(square)).isEqualTo(white_pawn);
 
-        CHESS_BOARD_DAO.updatePromotion(GAME_ID, boardSquare, white_queen);
-        assertThat(CHESS_BOARD_DAO.getBoard(GAME_ID).get(boardSquare)).isEqualTo(white_queen);
+        CHESS_BOARD_DAO.updatePromotion(GAME_ID, square, white_queen);
+        assertThat(CHESS_BOARD_DAO.getBoard(GAME_ID).get(square)).isEqualTo(white_queen);
     }
 
     @Test
     void deleteEnpassant() {
-        CHESS_BOARD_DAO.copyBoardSquare(GAME_ID, new MoveSquare("a2", "a4"));
-        CHESS_BOARD_DAO.updateEnPassant(GAME_ID, new MoveSquare("a2", "a4"));
+        CHESS_BOARD_DAO.copyBoardSquare(GAME_ID, new MoveInfo("a2", "a4"));
+        CHESS_BOARD_DAO.updateEnPassant(GAME_ID, new MoveInfo("a2", "a4"));
         assertThat(CHESS_BOARD_DAO.getEnpassantBoard(GAME_ID).getEnPassants())
-            .contains(BoardSquare.of("a3"));
+            .contains(Square.of("a3"));
 
-        CHESS_BOARD_DAO.deleteEnpassant(GAME_ID, BoardSquare.of("a3"));
+        CHESS_BOARD_DAO.deleteEnpassant(GAME_ID, Square.of("a3"));
         assertThat(CHESS_BOARD_DAO.getEnpassantBoard(GAME_ID).getEnPassants()).isEmpty();
     }
 
     @Test
     void updateEnPassant() {
         assertThat(CHESS_BOARD_DAO.getEnpassantBoard(GAME_ID).getEnPassants()).isEmpty();
-        CHESS_BOARD_DAO.copyBoardSquare(GAME_ID, new MoveSquare("a2", "a4"));
+        CHESS_BOARD_DAO.copyBoardSquare(GAME_ID, new MoveInfo("a2", "a4"));
 
-        CHESS_BOARD_DAO.updateEnPassant(GAME_ID, new MoveSquare("a2", "a4"));
+        CHESS_BOARD_DAO.updateEnPassant(GAME_ID, new MoveInfo("a2", "a4"));
         assertThat(CHESS_BOARD_DAO.getEnpassantBoard(GAME_ID).getEnPassants())
-            .contains(BoardSquare.of("a3"));
+            .contains(Square.of("a3"));
     }
 }

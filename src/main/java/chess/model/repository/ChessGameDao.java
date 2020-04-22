@@ -4,7 +4,7 @@ import static chess.model.repository.template.JdbcTemplate.getPssFromParams;
 import static chess.model.repository.template.JdbcTemplate.makeQuery;
 
 import chess.model.domain.board.TeamScore;
-import chess.model.domain.piece.Color;
+import chess.model.domain.piece.Team;
 import chess.model.repository.template.JdbcTemplate;
 import chess.model.repository.template.PreparedStatementSetter;
 import chess.model.repository.template.ResultSetMapper;
@@ -27,7 +27,7 @@ public class ChessGameDao {
         return INSTANCE;
     }
 
-    public int insert(int roomId, Color gameTurn, Map<Color, String> userNames,
+    public int insert(int roomId, Team gameTurn, Map<Team, String> userNames,
         TeamScore teamScore) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
@@ -35,8 +35,8 @@ public class ChessGameDao {
             "VALUES (?, ?, ?, ?, ?, ?)"
         );
         PreparedStatementSetter pss = getPssFromParams(roomId, gameTurn.getName()
-            , userNames.get(Color.BLACK), userNames.get(Color.WHITE)
-            , teamScore.get(Color.BLACK), teamScore.get(Color.WHITE));
+            , userNames.get(Team.BLACK), userNames.get(Team.WHITE)
+            , teamScore.get(Team.BLACK), teamScore.get(Team.WHITE));
         return jdbcTemplate.executeUpdateWithGeneratedKey(query, pss);
     }
 
@@ -51,7 +51,7 @@ public class ChessGameDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public void updateTurn(int gameId, Color gameTurn) {
+    public void updateTurn(int gameId, Team gameTurn) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "UPDATE CHESS_GAME_TB",
@@ -71,8 +71,8 @@ public class ChessGameDao {
             "     , WHITE_SCORE = ?",
             " WHERE ID = ?"
         );
-        PreparedStatementSetter pss = getPssFromParams(teamScore.get(Color.BLACK),
-            teamScore.get(Color.WHITE), gameId);
+        PreparedStatementSetter pss = getPssFromParams(teamScore.get(Team.BLACK),
+            teamScore.get(Team.WHITE), gameId);
         jdbcTemplate.executeUpdate(query, pss);
     }
 
@@ -108,7 +108,7 @@ public class ChessGameDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public Optional<Color> getGameTurn(int gameId) {
+    public Optional<Team> getGameTurn(int gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT TURN_NM",
@@ -116,16 +116,16 @@ public class ChessGameDao {
             " WHERE ID = ?"
         );
         PreparedStatementSetter pss = pstmt -> pstmt.setInt(1, gameId);
-        ResultSetMapper<Optional<Color>> mapper = rs -> {
+        ResultSetMapper<Optional<Team>> mapper = rs -> {
             if (!rs.next()) {
                 return Optional.empty();
             }
-            return Optional.ofNullable(Color.of(rs.getString("TURN_NM")));
+            return Optional.ofNullable(Team.of(rs.getString("TURN_NM")));
         };
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public Map<Color, String> getUserNames(int gameId) {
+    public Map<Team, String> getUserNames(int gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT BLACK_USER_NM",
@@ -134,13 +134,13 @@ public class ChessGameDao {
             " WHERE ID = ?"
         );
         PreparedStatementSetter pss = pstmt -> pstmt.setInt(1, gameId);
-        ResultSetMapper<Map<Color, String>> mapper = rs -> {
-            Map<Color, String> userNames = new HashMap<>();
+        ResultSetMapper<Map<Team, String>> mapper = rs -> {
+            Map<Team, String> userNames = new HashMap<>();
             if (!rs.next()) {
                 return userNames;
             }
-            userNames.put(Color.BLACK, rs.getString("BLACK_USER_NM"));
-            userNames.put(Color.WHITE, rs.getString("WHITE_USER_NM"));
+            userNames.put(Team.BLACK, rs.getString("BLACK_USER_NM"));
+            userNames.put(Team.WHITE, rs.getString("WHITE_USER_NM"));
             return Collections.unmodifiableMap(userNames);
         };
         return jdbcTemplate.executeQuery(query, pss, mapper);
@@ -180,7 +180,7 @@ public class ChessGameDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public Map<Color, Double> getScores(int gameId) {
+    public Map<Team, Double> getScores(int gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT BLACK_SCORE",
@@ -189,13 +189,13 @@ public class ChessGameDao {
             " WHERE ID = ?"
         );
         PreparedStatementSetter pss = pstmt -> pstmt.setInt(1, gameId);
-        ResultSetMapper<Map<Color, Double>> mapper = rs -> {
-            Map<Color, Double> selectTeamScore = new HashMap<>();
+        ResultSetMapper<Map<Team, Double>> mapper = rs -> {
+            Map<Team, Double> selectTeamScore = new HashMap<>();
             if (!rs.next()) {
                 return selectTeamScore;
             }
-            selectTeamScore.put(Color.BLACK, rs.getDouble("BLACK_SCORE"));
-            selectTeamScore.put(Color.WHITE, rs.getDouble("WHITE_SCORE"));
+            selectTeamScore.put(Team.BLACK, rs.getDouble("BLACK_SCORE"));
+            selectTeamScore.put(Team.WHITE, rs.getDouble("WHITE_SCORE"));
             return selectTeamScore;
         };
         return jdbcTemplate.executeQuery(query, pss, mapper);

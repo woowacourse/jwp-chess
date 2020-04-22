@@ -1,6 +1,6 @@
 package chess.model.domain.piece;
 
-import chess.model.domain.board.BoardSquare;
+import chess.model.domain.board.Square;
 import chess.model.domain.board.CastlingSetting;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,40 +9,40 @@ import java.util.stream.Collectors;
 
 public abstract class RepeatMovePiece extends Piece {
 
-    protected RepeatMovePiece(Color color, Type type) {
-        super(color, type);
+    protected RepeatMovePiece(Team team, Type type) {
+        super(team, type);
     }
 
     @Override
     protected int getRepeatCount() {
-        return BoardSquare.MAX_FILE_AND_RANK_COUNT - BoardSquare.MIN_FILE_AND_RANK_COUNT;
+        return Square.MAX_FILE_AND_RANK_COUNT - Square.MIN_FILE_AND_RANK_COUNT;
     }
 
     @Override
-    public Set<BoardSquare> getCheatSheet(BoardSquare boardSquare, Map<BoardSquare, Piece> board,
+    public Set<Square> getMovableArea(Square boardSquare, Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements) {
-        Set<BoardSquare> allCheatSheet = getAllCheatSheet(boardSquare);
-        Set<BoardSquare> containSquares = getContainsSquares(board, allCheatSheet);
-        for (BoardSquare cheatSheet : containSquares) {
-            int fileCompare = cheatSheet.getFileCompare(boardSquare);
-            int rankCompare = cheatSheet.getRankCompare(boardSquare);
-            allCheatSheet.removeAll(findSquaresToRemove(cheatSheet, fileCompare, rankCompare));
-            allCheatSheet.removeAll(getSameColorSquare(board, cheatSheet));
+        Set<Square> allMovableArea = getAllMovableArea(boardSquare);
+        Set<Square> containSquares = getContainsSquares(board, allMovableArea);
+        for (Square square : containSquares) {
+            int fileCompare = square.getFileCompare(boardSquare);
+            int rankCompare = square.getRankCompare(boardSquare);
+            allMovableArea.removeAll(findSquaresToRemove(square, fileCompare, rankCompare));
+            allMovableArea.removeAll(getSameColorSquare(board, square));
         }
-        return allCheatSheet;
+        return allMovableArea;
     }
 
-    private Set<BoardSquare> getContainsSquares(Map<BoardSquare, Piece> board,
-        Set<BoardSquare> allCheatSheet) {
-        return allCheatSheet.stream()
+    private Set<Square> getContainsSquares(Map<Square, Piece> board,
+        Set<Square> allMovableArea) {
+        return allMovableArea.stream()
             .filter(board::containsKey)
             .collect(Collectors.toSet());
     }
 
-    private Set<BoardSquare> getSameColorSquare(Map<BoardSquare, Piece> board,
-        BoardSquare containSquare) {
-        Set<BoardSquare> sameColorSquare = new HashSet<>();
-        if (isSameColor(board.get(containSquare))) {
+    private Set<Square> getSameColorSquare(Map<Square, Piece> board,
+        Square containSquare) {
+        Set<Square> sameColorSquare = new HashSet<>();
+        if (isSameTeam(board.get(containSquare))) {
             sameColorSquare.add(containSquare);
         }
         return sameColorSquare;

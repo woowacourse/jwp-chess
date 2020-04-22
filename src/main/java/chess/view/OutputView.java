@@ -1,7 +1,7 @@
 package chess.view;
 
-import chess.model.domain.board.BoardSquare;
-import chess.model.domain.piece.Color;
+import chess.model.domain.board.Square;
+import chess.model.domain.piece.Team;
 import chess.model.dto.ChessGameDto;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class OutputView {
 
     public static void printChessBoard(ChessGameDto chessGameDto) {
         List<String> pieces = chessGameDto.getPieces();
-        int maxSize = BoardSquare.MAX_FILE_AND_RANK_COUNT;
+        int maxSize = Square.MAX_FILE_AND_RANK_COUNT;
         for (int i = 0; i < maxSize; i++) {
             for (int j = 0; j < maxSize; j++) {
                 System.out.print(getPieceLetter(pieces.get(i * maxSize + j)));
@@ -41,20 +41,20 @@ public class OutputView {
         System.out.println("해당 좌표로는 이동할 수 없습니다.");
     }
 
-    public static void printWinner(Color color) {
-        System.out.println(color.getName() + "(이)가 승리했습니다");
+    public static void printWinner(Team team) {
+        System.out.println(team.getName() + "(이)가 승리했습니다");
     }
 
-    public static void printScore(Map<Color, Double> teamScore) {
-        for (Color color : teamScore.keySet()) {
-            System.out.println(color.getName() + "의 점수는 " + teamScore.get(color) + "입니다.");
+    public static void printScore(Map<Team, Double> teamScore) {
+        for (Team team : teamScore.keySet()) {
+            System.out.println(team.getName() + "의 점수는 " + teamScore.get(team) + "입니다.");
         }
     }
 
-    public static void printWinners(List<Color> winners) {
+    public static void printWinners(List<Team> winners) {
         System.out.print("고득점자는 ");
-        for (Color color : winners) {
-            System.out.print(color.getName() + " ");
+        for (Team team : winners) {
+            System.out.print(team.getName() + " ");
         }
         System.out.println("입니다.");
     }
@@ -67,8 +67,8 @@ public class OutputView {
         System.out.println(message);
     }
 
-    public static void printNotMyTurn(Color color) {
-        System.out.println("지금은 " + color.name() + "의 차례입니다.");
+    public static void printNotMyTurn(Team team) {
+        System.out.println("지금은 " + team.name() + "의 차례입니다.");
     }
 
     public static void printNoPiece() {

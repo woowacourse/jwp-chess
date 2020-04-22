@@ -29,14 +29,14 @@
   - Mysql을 사용한다.
 
   - ```mysql
-    create table board(
+    create table chessBoard(
         position varchar(10) NOT NULL,
         pieceName varchar(10) NOT NULL
     );
     ```
 
   - ``` mysql
-    create table currentTeam(
+    create table turn(
         teamName varchar(10) NOT NULL
     );
     ```

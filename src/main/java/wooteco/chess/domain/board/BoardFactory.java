@@ -1,14 +1,10 @@
 package wooteco.chess.domain.board;
 
-import static wooteco.chess.domain.position.Position.*;
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 import wooteco.chess.domain.piece.Piece;
-import wooteco.chess.domain.piece.PieceFactory;
 import wooteco.chess.domain.position.Position;
 
 public class BoardFactory {

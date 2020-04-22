@@ -1,7 +1,6 @@
 package wooteco.chess.domain.state;
 
 import static wooteco.chess.domain.piece.Team.*;
-import static wooteco.chess.domain.state.StateType.*;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Team;
@@ -14,7 +13,7 @@ public class Started extends GameState {
 	}
 
 	public Started(Board board, Team turn) {
-		super(board, STARTED, turn);
+		super(board, turn);
 	}
 
 	@Override
@@ -57,5 +56,10 @@ public class Started extends GameState {
 	@Override
 	public boolean isNotFinished() {
 		return true;
+	}
+
+	@Override
+	public String getStateType() {
+		return "started";
 	}
 }

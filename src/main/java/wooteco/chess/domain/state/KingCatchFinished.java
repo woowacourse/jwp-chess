@@ -1,13 +1,11 @@
 package wooteco.chess.domain.state;
 
-import static wooteco.chess.domain.state.StateType.*;
-
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Team;
 
 public class KingCatchFinished extends Finished {
 	public KingCatchFinished(Board board, Team turn) {
-		super(board, KING_CATCHED_FINISHED, turn);
+		super(board, turn);
 		validCountOfKing(board);
 	}
 
@@ -21,5 +19,10 @@ public class KingCatchFinished extends Finished {
 	@Override
 	public Team getWinner() {
 		return turn;
+	}
+
+	@Override
+	public String getStateType() {
+		return "kingCatchFinish";
 	}
 }

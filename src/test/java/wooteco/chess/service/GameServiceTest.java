@@ -190,7 +190,7 @@ class GameServiceTest {
 
 	@DisplayName("게임 상태 변경이 올바르게 이뤄졌는지 확인한다.")
 	@ParameterizedTest
-	@CsvSource({"start,started", "end,suspend_finished"})
+	@CsvSource({"start,started", "end,suspendFinish"})
 	void changeStateTest(String request, String expeected) {
 		gameDAO = new StartedGameDAO();
 		service = new GameService(gameDAO);

@@ -12,21 +12,19 @@ import wooteco.chess.domain.result.Result;
 public abstract class GameState {
 	protected final int id;
 	protected final Board board;
-	protected final StateType stateType;
 	protected Team turn;
 
-	public GameState(Board board, StateType stateType) {
-		this(1, board, stateType, WHITE);
+	public GameState(Board board) {
+		this(1, board, WHITE);
 	}
 
-	public GameState(Board board, StateType stateType, Team turn) {
-		this(1, board, stateType, turn);
+	public GameState(Board board, Team turn) {
+		this(1, board, turn);
 	}
 
-	public GameState(int id, Board board, StateType stateType, Team turn) {
+	public GameState(int id, Board board, Team turn) {
 		this.id = id;
 		this.board = Objects.requireNonNull(board);
-		this.stateType = Objects.requireNonNull(stateType);
 		this.turn = Objects.requireNonNull(turn);
 	}
 
@@ -52,11 +50,9 @@ public abstract class GameState {
 		return turn;
 	}
 
-	public String getStateType() {
-		return stateType.getState();
-	}
-
 	public int getId() {
 		return id;
 	}
+
+	abstract public String getStateType();
 }

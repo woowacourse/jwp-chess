@@ -6,8 +6,8 @@ import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.Result;
 
 public abstract class Finished extends GameState {
-	public Finished(Board board, StateType stateType, Team turn) {
-		super(board, stateType, turn);
+	public Finished(Board board, Team turn) {
+		super(board, turn);
 	}
 
 	@Override

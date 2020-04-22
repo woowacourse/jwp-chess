@@ -2,6 +2,8 @@ package wooteco.chess.service;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.GameDao;
 import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.board.Board;
@@ -10,6 +12,7 @@ import wooteco.chess.domain.piece.Color;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.GameManagerDto;
 
+@Service
 public class GameManagerService {
 	private final GameDao gameDao;
 

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess</title>
+    <link href="/wooteco.chess.css" rel="stylesheet" type="text/css">
+    <script src="/wooteco.chess.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="board">
+        {{#board.board}}
+        <div class="rows">
+            {{#.}}
+            <div class="cell">
+                <img class="piece-image" src="/img/{{.}}.png">
+            </div>
+            {{/.}}
+        </div>
+        {{/board.board}}
+    </div>
+    <div class="side">
+        <form action="/wooteco.chess" method="post">
+            <label>출발 좌표</label>
+            <input name="source" type="text">
+            <br/>
+            <label>도착 좌표</label>
+            <input name="target" type="text">
+            <br/>
+            {{#room}}
+            <input hidden name="room-name" type="text" value="{{.}}">
+            {{/room}}
+            <input type="submit" value="이동">
+        </form>
+        <br/>
+        {{#error}}
+        <label>{{.}}</label>
+        {{/error}}
+        <br/>
+        {{#board.turn}}
+        <label>현재 턴 : {{.}}</label>
+        {{/board.turn}}
+        <br/>
+        {{#status}}
+        <br/>
+        <label>흰색 점수 : {{whiteScore}}</label>
+        <br/>
+        <label>검은색 점수 : {{blackScore}}</label>
+        {{/status}}
+        <br/>
+        <form action="/restart" method="post">
+            {{#room}}
+            <input hidden name="room-name" type="text" value="{{.}}">
+            {{/room}}
+            <input type="submit" value="재시작">
+        </form>
+        <form action="/" method="get">
+            <input onclick="exitRoom()" type="submit" value="나가기">
+        </form>
+    </div>
+</div>
+</body>
+</html>

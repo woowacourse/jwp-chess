@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>체스</title>
+</head>
+<body>
+<div>
+    {{#room}}
+    <div>{{.}}</div>
+    {{/room}}
+    <br/>
+    {{#error}}
+    <label>{{.}}</label>
+    {{/error}}
+</div>
+<form action="/join" method="post">
+    <input name="room-name" placeholder="방 이름을 입력해주세요." type="text">
+    <input type="submit" value="입장">
+</form>
+<br/>
+<form action="/create" method="post">
+    <input name="room-name" placeholder="방 이름을 입력해주세요." type="text">
+    <input type="submit" value="방 만들기">
+</form>
+</body>
+</html>

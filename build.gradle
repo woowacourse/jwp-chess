@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'mysql:mysql-connector-java:8.0.16'
 	implementation 'com.sparkjava:spark-core:2.9.0'
 	implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
 	implementation 'org.springframework.boot:spring-boot-starter-web'

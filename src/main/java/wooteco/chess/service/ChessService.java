@@ -1,7 +1,6 @@
 package wooteco.chess.service;
 
-import java.sql.SQLException;
-
+import org.springframework.stereotype.Service;
 import wooteco.chess.dao.ChessGameDao;
 import wooteco.chess.domain.game.Board;
 import wooteco.chess.domain.game.ChessGame;
@@ -10,12 +9,11 @@ import wooteco.chess.domain.game.exception.InvalidTurnException;
 import wooteco.chess.domain.game.state.Playing;
 import wooteco.chess.domain.piece.Position;
 import wooteco.chess.domain.piece.exception.NotMovableException;
-import wooteco.chess.dto.BoardDto;
-import wooteco.chess.dto.ChessGameDto;
-import wooteco.chess.dto.ResponseDto;
-import wooteco.chess.dto.StatusDto;
-import wooteco.chess.dto.TurnDto;
+import wooteco.chess.dto.*;
 
+import java.sql.SQLException;
+
+@Service
 public class ChessService {
     private static final ChessGameDao chessGameDao = new ChessGameDao();
 
@@ -64,7 +62,7 @@ public class ChessService {
     private static ResponseDto responseChessGame(ChessGame chessGame) {
         return new ResponseDto(ResponseDto.SUCCESS,
                 new ChessGameDto(new BoardDto(chessGame.board()), new TurnDto(chessGame.turn()),
-                    new StatusDto(chessGame.status().getWhiteScore(), chessGame.status().getBlackScore(),
-                        chessGame.status().getWinner()), chessGame.isFinished()));
+                        new StatusDto(chessGame.status().getWhiteScore(), chessGame.status().getBlackScore(),
+                                chessGame.status().getWinner()), chessGame.isFinished()));
     }
 }

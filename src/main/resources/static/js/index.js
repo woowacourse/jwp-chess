@@ -7,6 +7,9 @@ const chessCreateElement = document.querySelector('.chess-create');
 chessCreateElement.onclick = () => {
   fetch('/create', {
     method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
   })
     .then((response) => response.json())
     .then((data) => {
@@ -16,7 +19,7 @@ chessCreateElement.onclick = () => {
     });
 };
 
-fetch('http://localhost:4567/games')
+fetch('http://localhost:8080/games')
   .then((response) => response.json())
   .then((data) => drawGameList(data.dto));
 

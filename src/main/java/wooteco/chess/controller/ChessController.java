@@ -18,9 +18,8 @@ public class ChessController {
 		this.gameManagerService = gameManagerService;
 	}
 
-	@GetMapping("/start")
-	public String start(Model model) {
-		gameManagerService.resetGame();
+	@GetMapping("/board")
+	public String board(Model model) {
 		model.addAttribute("piecesDto", WebOutputRenderer.toPiecesDto(gameManagerService.getBoard()));
 		model.addAttribute("turn", gameManagerService.getCurrentTurn().name());
 		model.addAttribute("scores", WebOutputRenderer.scoreToModel(gameManagerService.calculateEachScore()));
@@ -28,13 +27,15 @@ public class ChessController {
 		return "board";
 	}
 
-	@GetMapping("/resume")
-	public String resume(Model model) {
-		model.addAttribute("piecesDto", WebOutputRenderer.toPiecesDto(gameManagerService.getBoard()));
-		model.addAttribute("turn", gameManagerService.getCurrentTurn().name());
-		model.addAttribute("scores", WebOutputRenderer.scoreToModel(gameManagerService.calculateEachScore()));
+	@GetMapping("/start")
+	public String start() {
+		gameManagerService.resetGame();
+		return "redirect:/board";
+	}
 
-		return "board";
+	@GetMapping("/resume")
+	public String resume() {
+		return "redirect:/board";
 	}
 
 	@PostMapping("/move")
@@ -44,17 +45,14 @@ public class ChessController {
 			gameManagerService.move(Position.of(target), Position.of(destination));
 		} catch (RuntimeException e) {
 			model.addAttribute("error", e.getMessage());
+			return "error";
 		}
-		model.addAttribute("piecesDto", WebOutputRenderer.toPiecesDto(gameManagerService.getBoard()));
-		model.addAttribute("turn", gameManagerService.getCurrentTurn().name());
-		model.addAttribute("scores", WebOutputRenderer.scoreToModel(gameManagerService.calculateEachScore()));
-
 		if (!gameManagerService.isKingAlive()) {
 			model.addAttribute("winner", gameManagerService.getCurrentTurn().reverse());
 			gameManagerService.resetGame();
 			return "end";
 		}
-		return "board";
+		return "redirect:/board";
 	}
 
 	@GetMapping("/end")

@@ -1,12 +1,15 @@
 package chess.dao;
 
+import chess.domain.piece.PieceColor;
 import chess.dto.TurnDTO;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class TurnDAO {
     private static TurnDAO instance = new TurnDAO();
-    private Connection connection = getConnection();
 
     private TurnDAO() {
     }
@@ -15,72 +18,44 @@ public class TurnDAO {
         return instance;
     }
 
-    private Connection getConnection() {
-        Connection connection;
-        String server = "127.0.0.1:13306";
-        String database = "Chess";
-        String option = "?useSSL=false&serverTimezone=UTC";
-        String userName = "root";
-        String password = "root";
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.err.println("※ JDBC Driver load 오류: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://" + server + "/" + database + option, userName,
-                                                     password);
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            System.err.println("※ 연결 오류: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-
-        return connection;
-    }
-
-    public void closeConnection() {
-        if (this.connection != null) {
-            try {
-                this.connection.close();
-            } catch (SQLException e) {
-                System.err.println("※ Connection 오류:" + e.getMessage());
-            }
-        }
-    }
-
-    public void saveTurn(TurnDTO turnDTO) {
+    public void saveTurn(TurnDTO turnDTO) throws SQLException {
         String query = "INSERT INTO turn VALUES (?)";
-        try (PreparedStatement pstmt = this.connection.prepareStatement(query)) {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, turnDTO.getCurrentTeam());
             pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public void deletePreviousTurn() {
+    public void deletePreviousTurn() throws SQLException {
         String query = "DELETE FROM turn";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public TurnDTO getTurn() throws SQLException {
+    public TurnDTO findTurn() throws SQLException {
         String query = "SELECT * FROM turn";
-        try (PreparedStatement pstmt = this.connection.prepareStatement(query);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
             if (!rs.next()) {
                 return null;
             }
-            return new TurnDTO(rs.getString("teamName"));
-        } catch (SQLException e) {
-            throw new SQLException("데이터 베이스에서 SQLException이 발생했습니다.");
+            return TurnDTO.from(rs.getString("teamName"));
+        }
+    }
+
+    public void updateTurn(TurnDTO turnDTO) throws SQLException {
+        String teamName = turnDTO.getCurrentTeam();
+        String oppositeTeamName = PieceColor.change(teamName).getName();
+
+        String query = "UPDATE turn SET teamName = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, oppositeTeamName);
+            pstmt.executeUpdate();
         }
     }
 }

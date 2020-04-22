@@ -4,13 +4,17 @@ import chess.service.ChessGameService;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static spark.Spark.*;
 
 public class WebChessController {
-    private ChessGameService chessGameService;
+    private ChessGameService chessGameService = new ChessGameService();
+
+    public WebChessController() throws SQLException {
+    }
 
     private static String render(Map<String, Object> model, String templatePath) {
         return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
@@ -20,30 +24,20 @@ public class WebChessController {
         port(8080);
         staticFiles.location("/static");
 
-        this.chessGameService = new ChessGameService();
-
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             return render(model, "index.html");
         });
 
         get("/chess-game", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            model.put("cells", this.chessGameService.getCells());
-            model.put("currentTeam", this.chessGameService.getCurrentTeam());
-            model.put("blackScore", this.chessGameService.getBlackPieceScore());
-            model.put("whiteScore", this.chessGameService.getWhitePieceScore());
+            Map<String, Object> model = settingModels(new HashMap<>());
             return render(model, "index.html");
         });
 
         get("/new-chess-game", (req, res) -> {
             this.chessGameService.setNewChessGame();
 
-            Map<String, Object> model = new HashMap<>();
-            model.put("cells", this.chessGameService.getCells());
-            model.put("currentTeam", this.chessGameService.getCurrentTeam());
-            model.put("blackScore", this.chessGameService.getBlackPieceScore());
-            model.put("whiteScore", this.chessGameService.getWhitePieceScore());
+            Map<String, Object> model = settingModels(new HashMap<>());
             return render(model, "index.html");
         });
 
@@ -60,23 +54,37 @@ public class WebChessController {
             }
 
             if (this.chessGameService.isGameOver()) {
-                model.put("winner", this.chessGameService.getWinner());
-                model.put("loser", this.chessGameService.getLoser());
-                model.put("blackScore", this.chessGameService.getBlackPieceScore());
-                model.put("whiteScore", this.chessGameService.getWhitePieceScore());
-                this.chessGameService.endGame();
-
-                return render(model, "winner.html");
+                res.redirect("/winner");
             }
 
-            model.put("cells", this.chessGameService.getCells());
-            model.put("currentTeam", this.chessGameService.getCurrentTeam());
-            model.put("blackScore", this.chessGameService.getBlackPieceScore());
-            model.put("whiteScore", this.chessGameService.getWhitePieceScore());
+            settingModels(model);
 
             this.chessGameService.proceedGame();
             return render(model, "index.html");
         });
 
+        get("/winner", (req, res) -> {
+            if (!this.chessGameService.isGameOver()) {
+                res.redirect("/");
+                return redirect;
+            }
+            Map<String, Object> model = new HashMap<>();
+
+            model.put("winner", this.chessGameService.getWinner());
+            model.put("loser", this.chessGameService.getLoser());
+            model.put("blackScore", this.chessGameService.getBlackPieceScore());
+            model.put("whiteScore", this.chessGameService.getWhitePieceScore());
+            this.chessGameService.endGame();
+
+            return render(model, "winner.html");
+        });
+    }
+
+    private Map<String, Object> settingModels(Map<String, Object> model) {
+        model.put("cells", this.chessGameService.getCells());
+        model.put("currentTeam", this.chessGameService.getCurrentTeam());
+        model.put("blackScore", this.chessGameService.getBlackPieceScore());
+        model.put("whiteScore", this.chessGameService.getWhitePieceScore());
+        return model;
     }
 }

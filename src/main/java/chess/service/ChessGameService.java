@@ -23,25 +23,19 @@ public class ChessGameService {
     private static final char MIN_X_POINT = 'a';
     private static final char MAX_X_POINT = 'h';
 
-    private BoardDAO boardDAO;
-    private TurnDAO turnDAO;
+    private BoardDAO boardDAO = BoardDAO.getInstance();
+    private TurnDAO turnDAO = TurnDAO.getInstance();
     private Board board;
     private GameResult gameResult;
 
-    public ChessGameService() {
-        this.boardDAO = BoardDAO.getInstance();
-        this.turnDAO = TurnDAO.getInstance();
-
-        try {
-            if (boardDAO.getBoard() == null || turnDAO.getTurn() == null) {
-                this.board = new Board();
-            } else {
-                BoardDTO boardDTO = boardDAO.getBoard();
-                TurnDTO turnDTO = turnDAO.getTurn();
-                this.board = new Board(boardDTO.createBoard(), turnDTO.createTeam());
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+    public ChessGameService() throws SQLException {
+        BoardDTO boardDto = boardDAO.getBoard();
+        TurnDTO turnDto = turnDAO.findTurn();
+        if (boardDto == null || turnDto == null) {
+            this.board = new Board();
+            turnDAO.saveTurn(TurnDTO.from(this.board));
+        } else {
+            this.board = new Board(boardDto.createBoard(), turnDto.createTeam());
         }
 
         this.gameResult = this.board.createGameResult();
@@ -98,18 +92,15 @@ public class ChessGameService {
         return gameResult.getLoser();
     }
 
-    public void endGame() {
+    public void endGame() throws SQLException {
         this.boardDAO.deletePreviousBoard();
         this.turnDAO.deletePreviousTurn();
-        this.boardDAO.closeConnection();
-        this.turnDAO.closeConnection();
         setNewChessGame();
     }
 
-    public void proceedGame() {
+    public void proceedGame() throws SQLException {
         this.boardDAO.deletePreviousBoard();
-        this.turnDAO.deletePreviousTurn();
         this.boardDAO.saveBoard(BoardDTO.from(this.board));
-        this.turnDAO.saveTurn(TurnDTO.from(this.board));
+        this.turnDAO.updateTurn(turnDAO.findTurn());
     }
 }

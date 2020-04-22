@@ -1,16 +1,16 @@
 package wooteco.chess.domain.game;
 
 public enum NormalStatus {
-	YES(true),
-	NO(false);
+    YES(true),
+    NO(false);
 
-	private boolean normalStatus;
+    private boolean normalStatus;
 
-	NormalStatus(boolean normalStatus) {
-		this.normalStatus = normalStatus;
-	}
+    NormalStatus(boolean normalStatus) {
+        this.normalStatus = normalStatus;
+    }
 
-	public boolean isNormalStatus() {
-		return normalStatus;
-	}
+    public boolean isNormalStatus() {
+        return normalStatus;
+    }
 }

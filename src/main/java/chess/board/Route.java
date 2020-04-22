@@ -4,6 +4,7 @@ import chess.location.Location;
 import chess.piece.type.Piece;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.lang.Math.abs;
@@ -50,12 +51,16 @@ public class Route {
         return nowPiece.isReverseTeam(destinationPiece);
     }
 
-    public boolean isEmpty(Location location) {
+    public boolean isExistPieceIn(Location location) {
+        return route.containsKey(location);
+    }
+
+    public boolean isNotExistPieceIn(Location location) {
         return !route.containsKey(location);
     }
 
-    public boolean isExistPieceIn(Location location) {
-        return route.containsKey(location);
+    public boolean isNotExistInDestination() {
+        return Objects.isNull(route.get(destination));
     }
 
     public Location getNow() {

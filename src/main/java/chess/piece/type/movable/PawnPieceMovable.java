@@ -75,12 +75,13 @@ public class PawnPieceMovable implements PieceMovable {
         Location next = now.calculateNextLocation(destination, 1);
 
         boolean isMoveByTwiceRowCommand = Math.abs(now.getRowValue() - destination.getRowValue()) == 2;
-        boolean hasObstacle = route.isExistPieceIn(next) || route.isExistPieceIn(destination);
-        return isMoveByTwiceRowCommand && !hasObstacle;
+        boolean hasNotObstacle = route.isNotExistPieceIn(next) && route.isNotExistInDestination();
+        return isMoveByTwiceRowCommand && hasNotObstacle;
     }
 
     private boolean canMoveOnce(Route route, int value) {
-        return isPawnForwardOneLine(route, value) && hasNotObstacleWhenOneRowMove(route);
+        return isPawnForwardOneLine(route, value) &&
+                route.isNotExistInDestination();
     }
 
     private boolean isPawnForwardOneLine(Route route, int value) {
@@ -91,14 +92,5 @@ public class PawnPieceMovable implements PieceMovable {
 
         return movedRowByValue.isSameRow(destination)
                 && movedRowByValue.isSameCol(destination);
-    }
-
-    private boolean hasNotObstacleWhenOneRowMove(Route route) {
-        Location now = route.getNow();
-        Location destination = route.getDestination();
-
-        Location next = now.calculateNextLocation(destination, 1);
-
-        return route.isEmpty(next);
     }
 }

@@ -142,9 +142,10 @@ class PawnTest {
         Map<Location, Piece> board = new HashMap<>();
 
         Pawn givenPiece = new Pawn(Team.BLACK);
-        Pawn counterPiece = new Pawn(Team.WHITE);
         Location now = new Location(7, 'a');
         board.put(now, givenPiece);
+
+        Pawn counterPiece = new Pawn(Team.WHITE);
         Location after = new Location(6, 'a');
         board.put(after, counterPiece);
 

@@ -28,6 +28,8 @@ public class ChessBoard {
         Map<Location, Piece> route = new HashMap<>();
 
         Location next = now.calculateNextLocation(after, 1);
+        route.put(now, board.get(now));
+        route.put(after, board.get(after));
 
         while (after.equals(next) == false) {
             if (board.containsKey(next)) {

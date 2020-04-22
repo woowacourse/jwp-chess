@@ -1,4 +1,4 @@
-package chess.dto;
+package wooteco.chess.dto;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package chess.domain.board;
+package wooteco.chess.domain.board;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import chess.domain.piece.GamePiece;
-import chess.domain.player.User;
+import wooteco.chess.domain.piece.GamePiece;
+import wooteco.chess.domain.player.User;
 
 public class BoardFactoryTest {
 

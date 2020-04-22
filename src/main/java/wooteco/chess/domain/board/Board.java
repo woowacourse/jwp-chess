@@ -1,4 +1,4 @@
-package chess.domain.board;
+package wooteco.chess.domain.board;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
-import chess.domain.exception.InvalidMovementException;
-import chess.domain.piece.EmptyPiece;
-import chess.domain.piece.GamePiece;
-import chess.domain.player.PlayerColor;
-import chess.domain.result.ChessResult;
+import wooteco.chess.domain.exception.InvalidMovementException;
+import wooteco.chess.domain.piece.EmptyPiece;
+import wooteco.chess.domain.piece.GamePiece;
+import wooteco.chess.domain.player.PlayerColor;
+import wooteco.chess.domain.result.ChessResult;
 
 public class Board {
 

@@ -1,4 +1,4 @@
-package chess.domain.board;
+package wooteco.chess.domain.board;
 
 import static java.util.stream.Collectors.*;
 
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import chess.domain.piece.GamePiece;
-import chess.domain.player.PlayerColor;
+import wooteco.chess.domain.piece.GamePiece;
+import wooteco.chess.domain.player.PlayerColor;
 
 public class Line {
 

@@ -1,6 +1,6 @@
-package chess.domain.piece;
+package wooteco.chess.domain.piece;
 
-import static chess.domain.player.PlayerColor.*;
+import static wooteco.chess.domain.player.PlayerColor.*;
 
 import java.util.Arrays;
 import java.util.List;

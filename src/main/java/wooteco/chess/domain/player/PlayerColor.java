@@ -1,10 +1,10 @@
-package chess.domain.player;
+package wooteco.chess.domain.player;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import chess.domain.board.Position;
+import wooteco.chess.domain.board.Position;
 
 public enum PlayerColor {
 

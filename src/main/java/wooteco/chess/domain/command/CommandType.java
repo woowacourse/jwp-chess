@@ -1,4 +1,4 @@
-package chess.domain.command;
+package wooteco.chess.domain.command;
 
 import java.util.Arrays;
 

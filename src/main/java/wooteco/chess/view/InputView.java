@@ -1,4 +1,4 @@
-package chess.view;
+package wooteco.chess.view;
 
 import java.util.Arrays;
 import java.util.List;

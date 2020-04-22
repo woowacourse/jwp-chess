@@ -1,4 +1,4 @@
-package chess.domain.board;
+package wooteco.chess.domain.board;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import chess.domain.piece.Direction;
+import wooteco.chess.domain.piece.Direction;
 
 public class Position implements Comparable<Position> {
 

@@ -1,7 +1,7 @@
-package chess.dto;
+package wooteco.chess.dto;
 
-import chess.domain.board.Position;
-import chess.domain.player.PlayerColor;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.player.PlayerColor;
 
 public class GamePieceDto {
 

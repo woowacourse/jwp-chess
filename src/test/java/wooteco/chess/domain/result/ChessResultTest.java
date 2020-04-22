@@ -1,4 +1,4 @@
-package chess.domain.result;
+package wooteco.chess.domain.result;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -9,15 +9,15 @@ import java.util.TreeMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import chess.domain.board.Board;
-import chess.domain.board.BoardFactory;
-import chess.domain.board.Position;
-import chess.domain.piece.Bishop;
-import chess.domain.piece.GamePiece;
-import chess.domain.piece.Knight;
-import chess.domain.piece.Pawn;
-import chess.domain.piece.Rook;
-import chess.domain.player.PlayerColor;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.BoardFactory;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.piece.Bishop;
+import wooteco.chess.domain.piece.GamePiece;
+import wooteco.chess.domain.piece.Knight;
+import wooteco.chess.domain.piece.Pawn;
+import wooteco.chess.domain.piece.Rook;
+import wooteco.chess.domain.player.PlayerColor;
 
 class ChessResultTest {
 

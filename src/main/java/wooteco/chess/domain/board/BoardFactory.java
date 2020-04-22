@@ -1,13 +1,13 @@
-package chess.domain.board;
+package wooteco.chess.domain.board;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import chess.domain.piece.EmptyPiece;
-import chess.domain.piece.GamePiece;
-import chess.domain.piece.GamePieces;
+import wooteco.chess.domain.piece.EmptyPiece;
+import wooteco.chess.domain.piece.GamePiece;
+import wooteco.chess.domain.piece.GamePieces;
 
 public class BoardFactory {
 

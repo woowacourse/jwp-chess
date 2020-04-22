@@ -1,6 +1,6 @@
-package chess.domain.board;
+package wooteco.chess.domain.board;
 
-import static chess.domain.piece.Direction.*;
+import static wooteco.chess.domain.piece.Direction.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.stream.Stream;
@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import chess.domain.piece.Direction;
+import wooteco.chess.domain.piece.Direction;
 
 class PositionTest {
 

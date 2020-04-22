@@ -1,20 +1,20 @@
-package chess.service;
+package wooteco.chess.service;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import chess.dao.BoardDAO;
-import chess.dao.UserDAO;
-import chess.domain.board.Board;
-import chess.domain.board.BoardFactory;
-import chess.domain.gameinfo.GameInfo;
-import chess.domain.player.User;
-import chess.domain.result.ChessResult;
-import chess.dto.LineDto;
-import chess.dto.RowsDtoConverter;
-import chess.util.DBConnector;
+import wooteco.chess.dao.BoardDAO;
+import wooteco.chess.dao.UserDAO;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.BoardFactory;
+import wooteco.chess.domain.gameinfo.GameInfo;
+import wooteco.chess.domain.player.User;
+import wooteco.chess.domain.result.ChessResult;
+import wooteco.chess.dto.LineDto;
+import wooteco.chess.dto.RowsDtoConverter;
+import wooteco.chess.util.DBConnector;
 
 public class ChessService {
 

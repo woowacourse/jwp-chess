@@ -1,10 +1,10 @@
-package chess.domain.piece;
+package wooteco.chess.domain.piece;
 
 import java.util.Collections;
 import java.util.List;
 
-import chess.domain.board.Position;
-import chess.domain.player.PlayerColor;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.player.PlayerColor;
 
 public class EmptyPiece extends GamePiece {
 

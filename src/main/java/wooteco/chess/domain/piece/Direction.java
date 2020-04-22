@@ -1,10 +1,10 @@
-package chess.domain.piece;
+package wooteco.chess.domain.piece;
 
 import java.util.Optional;
 import java.util.function.Function;
 
-import chess.domain.board.Column;
-import chess.domain.board.Row;
+import wooteco.chess.domain.board.Column;
+import wooteco.chess.domain.board.Row;
 
 /*
  *  N(North) - 북쪽으로 한 칸 이동(Row 1 증가)

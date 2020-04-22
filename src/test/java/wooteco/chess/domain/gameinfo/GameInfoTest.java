@@ -1,6 +1,6 @@
-package chess.domain.gameinfo;
+package wooteco.chess.domain.gameinfo;
 
-import static chess.domain.player.PlayerColor.*;
+import static wooteco.chess.domain.player.PlayerColor.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.HashMap;
@@ -13,14 +13,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import chess.domain.board.Board;
-import chess.domain.board.BoardFactory;
-import chess.domain.board.Position;
-import chess.domain.exception.InvalidMovementException;
-import chess.domain.piece.GamePiece;
-import chess.domain.piece.King;
-import chess.domain.piece.Pawn;
-import chess.domain.piece.Rook;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.BoardFactory;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.exception.InvalidMovementException;
+import wooteco.chess.domain.piece.GamePiece;
+import wooteco.chess.domain.piece.King;
+import wooteco.chess.domain.piece.Pawn;
+import wooteco.chess.domain.piece.Rook;
 
 class GameInfoTest {
 

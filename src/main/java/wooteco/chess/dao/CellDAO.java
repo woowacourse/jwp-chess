@@ -1,15 +1,15 @@
-package chess.dao;
+package wooteco.chess.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import chess.domain.board.Board;
-import chess.domain.board.Position;
-import chess.domain.piece.GamePiece;
-import chess.domain.piece.GamePieces;
-import chess.util.DBConnector;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.piece.GamePiece;
+import wooteco.chess.domain.piece.GamePieces;
+import wooteco.chess.util.DBConnector;
 
 public class CellDAO {
 

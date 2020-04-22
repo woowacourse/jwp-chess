@@ -1,4 +1,4 @@
-package chess.domain.result;
+package wooteco.chess.domain.result;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import chess.domain.board.Line;
-import chess.domain.board.Position;
-import chess.domain.piece.EmptyPiece;
-import chess.domain.piece.GamePiece;
-import chess.domain.player.PlayerColor;
+import wooteco.chess.domain.board.Line;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.piece.EmptyPiece;
+import wooteco.chess.domain.piece.GamePiece;
+import wooteco.chess.domain.player.PlayerColor;
 
 public class ChessResult {
 

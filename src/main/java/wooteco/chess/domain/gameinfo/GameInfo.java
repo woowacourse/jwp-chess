@@ -1,10 +1,10 @@
-package chess.domain.gameinfo;
+package wooteco.chess.domain.gameinfo;
 
-import chess.domain.board.Board;
-import chess.domain.board.BoardFactory;
-import chess.domain.board.Status;
-import chess.domain.exception.InvalidMovementException;
-import chess.domain.result.ChessResult;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.BoardFactory;
+import wooteco.chess.domain.board.Status;
+import wooteco.chess.domain.exception.InvalidMovementException;
+import wooteco.chess.domain.result.ChessResult;
 
 public class GameInfo {
 

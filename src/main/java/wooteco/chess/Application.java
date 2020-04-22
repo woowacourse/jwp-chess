@@ -1,15 +1,15 @@
-package chess;
+package wooteco.chess;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import chess.domain.command.Command;
-import chess.domain.player.User;
-import chess.dto.LineDto;
-import chess.dto.RowsDtoConverter;
-import chess.service.ChessService;
-import chess.view.InputView;
-import chess.view.OutputView;
+import wooteco.chess.domain.command.Command;
+import wooteco.chess.domain.player.User;
+import wooteco.chess.dto.LineDto;
+import wooteco.chess.dto.RowsDtoConverter;
+import wooteco.chess.service.ChessService;
+import wooteco.chess.view.InputView;
+import wooteco.chess.view.OutputView;
 
 public class Application {
 

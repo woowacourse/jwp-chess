@@ -1,12 +1,12 @@
-package chess.view;
+package wooteco.chess.view;
 
 import java.util.List;
 import java.util.Map;
 
-import chess.domain.player.PlayerColor;
-import chess.domain.result.ChessResult;
-import chess.domain.result.Score;
-import chess.dto.LineDto;
+import wooteco.chess.domain.player.PlayerColor;
+import wooteco.chess.domain.result.ChessResult;
+import wooteco.chess.domain.result.Score;
+import wooteco.chess.dto.LineDto;
 
 public class OutputView {
 

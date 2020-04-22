@@ -1,4 +1,4 @@
-package chess;
+package wooteco.chess;
 
 import static spark.Spark.*;
 

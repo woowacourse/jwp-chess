@@ -1,4 +1,4 @@
-package chess.domain.command;
+package wooteco.chess.domain.command;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -16,7 +16,7 @@ class CommandTypeTest {
     @DisplayName("from 팩토리 메서드")
     @MethodSource("createCommand")
     void from(String command, CommandType expected) {
-        assertThat(chess.domain.command.CommandType.from(command)).isEqualTo(expected);
+        assertThat(CommandType.from(command)).isEqualTo(expected);
     }
 
     static Stream<Arguments> createCommand() {
@@ -37,7 +37,7 @@ class CommandTypeTest {
     @DisplayName("팩토리 메서드 검증")
     void validate() {
         assertThatThrownBy(() -> {
-            chess.domain.command.CommandType.from("strat");
+            CommandType.from("strat");
         }).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("strat는 잘못된 입력입니다.");
     }

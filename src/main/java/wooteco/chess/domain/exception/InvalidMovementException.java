@@ -1,4 +1,4 @@
-package chess.domain.exception;
+package wooteco.chess.domain.exception;
 
 public class InvalidMovementException extends RuntimeException {
 

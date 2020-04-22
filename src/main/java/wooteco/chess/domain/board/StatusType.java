@@ -1,4 +1,4 @@
-package chess.domain.board;
+package wooteco.chess.domain.board;
 
 public enum StatusType {
 

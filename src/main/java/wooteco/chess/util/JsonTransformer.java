@@ -1,4 +1,4 @@
-package chess.util;
+package wooteco.chess.util;
 
 import com.google.gson.Gson;
 import spark.ResponseTransformer;

@@ -1,4 +1,4 @@
-package chess.dto;
+package wooteco.chess.dto;
 
 import static java.util.stream.Collectors.*;
 
@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import chess.domain.board.Board;
-import chess.domain.board.Position;
-import chess.domain.board.Row;
-import chess.domain.piece.GamePiece;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.board.Row;
+import wooteco.chess.domain.piece.GamePiece;
 
 public class RowsDtoConverter {
 

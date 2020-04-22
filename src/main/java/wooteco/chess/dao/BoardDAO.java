@@ -1,13 +1,13 @@
-package chess.dao;
+package wooteco.chess.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import chess.domain.board.Board;
-import chess.domain.board.BoardFactory;
-import chess.domain.player.User;
-import chess.util.DBConnector;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.BoardFactory;
+import wooteco.chess.domain.player.User;
+import wooteco.chess.util.DBConnector;
 
 public class BoardDAO {
 

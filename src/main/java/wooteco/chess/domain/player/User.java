@@ -1,4 +1,4 @@
-package chess.domain.player;
+package wooteco.chess.domain.player;
 
 import java.util.Objects;
 

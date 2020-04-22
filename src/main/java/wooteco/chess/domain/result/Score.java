@@ -1,9 +1,9 @@
-package chess.domain.result;
+package wooteco.chess.domain.result;
 
 import java.util.Map;
 import java.util.Objects;
 
-import chess.domain.piece.GamePiece;
+import wooteco.chess.domain.piece.GamePiece;
 
 public class Score {
 

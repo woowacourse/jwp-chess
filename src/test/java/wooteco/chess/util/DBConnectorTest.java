@@ -1,4 +1,4 @@
-package chess.util;
+package wooteco.chess.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 

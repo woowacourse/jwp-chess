@@ -1,14 +1,14 @@
-package chess.domain.piece;
+package wooteco.chess.domain.piece;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import chess.domain.board.Board;
-import chess.domain.board.Position;
-import chess.domain.exception.InvalidMovementException;
-import chess.domain.player.PlayerColor;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.exception.InvalidMovementException;
+import wooteco.chess.domain.player.PlayerColor;
 
 public abstract class GamePiece {
 

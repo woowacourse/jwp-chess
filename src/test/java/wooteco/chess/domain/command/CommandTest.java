@@ -1,4 +1,4 @@
-package chess.domain.command;
+package wooteco.chess.domain.command;
 
 import static org.assertj.core.api.Assertions.*;
 

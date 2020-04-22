@@ -77,6 +77,7 @@ public class Board {
     }
 
     public void move(final String from, final String to) {
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>" + from + "    " + to);
         Position fromPosition = Position.of(from);
         Position toPosition = Position.of(to);
 

@@ -141,3 +141,24 @@ header .inner h1 {
     font-size: 14px;
     font-weight: bold;
 }
+
+.finish-box {
+    display: flex;
+    justify-content: center;
+}
+
+.finish-box .inner{
+    position: absolute;
+    top : 320px;
+    width: 600px;
+    height: 150px;
+    border: solid 4px red;
+    background-color: coral;
+    text-align: center;
+    visibility: hidden;
+}
+
+.finish-box p {
+    font-size: 21px;
+    font-weight: bold;
+}

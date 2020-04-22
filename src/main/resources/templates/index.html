@@ -29,15 +29,9 @@
             <input id="end" type="submit" name="command" value="게임 종료">
         </form>
     </div>
-    <div class="turn" id="team-presenter">
-        {{ turn }}
-    </div>
-    <div class="controller-move">
-        <form action="/move" method="post" id="moveForm">
-            <label for="fromPiece"></label><input id="fromPiece" type="text" name="fromPiece" value="from">
-            <label for="toPiece"></label><input id="toPiece" type="text" name="toPiece" value="to">
-            <input id="moveCommand" type="submit" name="command" value="이동">
-        </form>
+
+    <div class="turn" id="current-turn">
+
     </div>
 
     <!-- SCORE STATUS -->
@@ -48,234 +42,234 @@
 
     <!-- BOARD -->
     <div class="inner board center">
-        <!-- a8 ~ h8 -->
+    <!-- a8 ~ h8 -->
         <div class="chess-row center">
-            <div class="square square-white" id="a8">
-                <img src="./images/{{ a8 }}.png" alt=""/>
+            <div class="square square-white" onclick="pick('a8')">
+                <img src="./images/{{ a8 }}.png" id="a8" alt=""/>
             </div>
-            <div class="square square-black" id="b8">
-                <img src="./images/{{ b8 }}.png" alt=""/>
+            <div class="square square-black" onclick="pick('b8')">
+                <img src="./images/{{ b8 }}.png" id="b8" alt=""/>
             </div>
-            <div class="square square-white" id="c8">
-                <img src="./images/{{ c8 }}.png" alt=""/>
+            <div class="square square-white" onclick="pick('c8')">
+                <img src="./images/{{ c8 }}.png" id="c8" alt=""/>
             </div>
-            <div class="square square-black" id="d8">
-                <img src="./images/{{ d8 }}.png" alt=""/>
+            <div class="square square-black" onclick="pick('d8')">
+                <img src="./images/{{ d8 }}.png" id="d8" alt=""/>
             </div>
-            <div class="square square-white" id="e8">
-                <img src="./images/{{ e8 }}.png" alt=""/>
+            <div class="square square-white" onclick="pick('e8')">
+                <img src="./images/{{ e8 }}.png" id="e8" alt=""/>
             </div>
-            <div class="square square-black" id="f8">
-                <img src="./images/{{ f8 }}.png" alt=""/>
+            <div class="square square-black" onclick="pick('f8')">
+                <img src="./images/{{ f8 }}.png" id="f8" alt=""/>
             </div>
-            <div class="square square-white" id="g8">
-                <img src="./images/{{ g8 }}.png" alt=""/>
+            <div class="square square-white" onclick="pick('g8')">
+                <img src="./images/{{ g8 }}.png" id="g8" alt=""/>
             </div>
-            <div class="square square-black" id="h8">
-                <img src="./images/{{ h8 }}.png" alt=""/>
+            <div class="square square-black" onclick="pick('h8')">
+                <img src="./images/{{ h8 }}.png" id="h8" alt=""/>
             </div>
             <div class="row">8</div>
         </div>
 
         <!-- a7 ~ h7 -->
         <div class="chess-row center">
-            <div class="square square-black" id="a7">
-                <img src="./images/{{a7}}.png" alt="" />
+            <div class="square square-black" onclick="pick('a7')">
+                <img src="./images/{{a7}}.png" id="a7" alt="" />
             </div>
-            <div class="square square-white" id="b7">
-                <img src="./images/{{b7}}.png" alt="" />
+            <div class="square square-white" onclick="pick('b7')">
+                <img src="./images/{{b7}}.png" id="b7" alt="" />
             </div>
-            <div class="square square-black" id="c7">
-                <img src="./images/{{c7}}.png" alt="" />
+            <div class="square square-black" onclick="pick('c7')">
+                <img src="./images/{{c7}}.png" id="c7" alt="" />
             </div>
-            <div class="square square-white" id="d7">
-                <img src="./images/{{d7}}.png" alt="" />
+            <div class="square square-white" onclick="pick('d7')">
+                <img src="./images/{{d7}}.png" id="d7" alt="" />
             </div>
-            <div class="square square-black" id="e7">
-                <img src="./images/{{e7}}.png" alt="" />
+            <div class="square square-black" onclick="pick('e7')">
+                <img src="./images/{{e7}}.png" id="e7" alt="" />
             </div>
-            <div class="square square-white" id="f7">
-                <img src="./images/{{f7}}.png" alt="" />
+            <div class="square square-white" onclick="pick('f7')">
+                <img src="./images/{{f7}}.png" id="f7" alt="" />
             </div>
-            <div class="square square-black" id="g7">
-                <img src="./images/{{g7}}.png" alt="" />
+            <div class="square square-black" onclick="pick('g7')">
+                <img src="./images/{{g7}}.png" id="g7" alt="" />
             </div>
-            <div class="square square-white" id="h7">
-                <img src="./images/{{h7}}.png" alt="" />
+            <div class="square square-white" onclick="pick('h7')">
+                <img src="./images/{{h7}}.png" id="h7" alt="" />
             </div>
             <div class="row">7</div>
         </div>
 
         <!-- a6 ~ h6 -->
         <div class="chess-row center">
-            <div class="square square-white" id="a6">
-                <img src="./images/{{a6}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('a6')">
+                <img src="./images/{{a6}}.png" id="a6" alt=""/>
             </div>
-            <div class="square square-black" id="b6">
-                <img src="./images/{{b6}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('b6')">
+                <img src="./images/{{b6}}.png" id="b6" alt=""/>
             </div>
-            <div class="square square-white" id="c6">
-                <img src="./images/{{c6}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('c6')">
+                <img src="./images/{{c6}}.png" id="c6" alt=""/>
             </div>
-            <div class="square square-black" id="d6">
-                <img src="./images/{{d6}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('d6')">
+                <img src="./images/{{d6}}.png" id="d6" alt=""/>
             </div>
-            <div class="square square-white" id="e6">
-                <img src="./images/{{e6}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('e6')">
+                <img src="./images/{{e6}}.png" id="e6" alt=""/>
             </div>
-            <div class="square square-black" id="f6">
-                <img src="./images/{{f6}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('f6')">
+                <img src="./images/{{f6}}.png" id="f6" alt=""/>
             </div>
-            <div class="square square-white" id="g6">
-                <img src="./images/{{g6}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('g6')">
+                <img src="./images/{{g6}}.png" id="g6" alt=""/>
             </div>
-            <div class="square square-black" id="h6">
-                <img src="./images/{{h6}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('h6')">
+                <img src="./images/{{h6}}.png" id="h6" alt=""/>
             </div>
             <div class="row">6</div>
         </div>
 
         <!-- a5 ~ h5 -->
         <div class="chess-row center">
-            <div class="square square-black" id="a5">
-                <img src="./images/{{a5}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('a5')">
+                <img src="./images/{{a5}}.png" id="a5" alt=""/>
             </div>
-            <div class="square square-white" id="b5">
-                <img src="./images/{{b5}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('b5')">
+                <img src="./images/{{b5}}.png" id="b5" alt=""/>
             </div>
-            <div class="square square-black" id="c5">
-                <img src="./images/{{c5}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('c5')">
+                <img src="./images/{{c5}}.png" id="c5" alt=""/>
             </div>
-            <div class="square square-white" id="d5">
-                <img src="./images/{{d5}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('d5')">
+                <img src="./images/{{d5}}.png" id="d5" alt=""/>
             </div>
-            <div class="square square-black" id="e5">
-                <img src="./images/{{e5}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('e5')">
+                <img src="./images/{{e5}}.png" id="e5" alt=""/>
             </div>
-            <div class="square square-white" id="f5">
-                <img src="./images/{{f5}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('f5')">
+                <img src="./images/{{f5}}.png" id="f5" alt=""/>
             </div>
-            <div class="square square-black" id="g5">
-                <img src="./images/{{g5}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('g5')">
+                <img src="./images/{{g5}}.png" id="g5" alt=""/>
             </div>
-            <div class="square square-white" id="h5">
-                <img src="./images/{{h5}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('h5')">
+                <img src="./images/{{h5}}.png" id="h5" alt=""/>
             </div>
             <div class="row">5</div>
         </div>
 
         <!-- a4 ~ h4 -->
         <div class="chess-row center">
-            <div class="square square-white" id="a4">
-                <img src="./images/{{a4}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('a4')">
+                <img src="./images/{{a4}}.png" id="a4" alt=""/>
             </div>
-            <div class="square square-black" id="b4">
-                <img src="./images/{{b4}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('b4')">
+                <img src="./images/{{b4}}.png" id="b4" alt=""/>
             </div>
-            <div class="square square-white" id="c4">
-                <img src="./images/{{c4}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('c4')">
+                <img src="./images/{{c4}}.png" id="c4" alt=""/>
             </div>
-            <div class="square square-black" id="d4">
-                <img src="./images/{{d4}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('d4')">
+                <img src="./images/{{d4}}.png" id="d4" alt=""/>
             </div>
-            <div class="square square-white" id="e4">
-                <img src="./images/{{e4}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('e4')">
+                <img src="./images/{{e4}}.png" id="e4" alt=""/>
             </div>
-            <div class="square square-black" id="f4">
-                <img src="./images/{{f4}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('f4')">
+                <img src="./images/{{f4}}.png" id="f4" alt=""/>
             </div>
-            <div class="square square-white" id="g4">
-                <img src="./images/{{g4}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('g4')">
+                <img src="./images/{{g4}}.png" id="g4" alt=""/>
             </div>
-            <div class="square square-black" id="h4">
-                <img src="./images/{{h4}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('h4')">
+                <img src="./images/{{h4}}.png" id="h4" alt=""/>
             </div>
             <div class="row">4</div>
         </div>
 
         <!-- a3 ~ h3 -->
         <div class="chess-row center">
-            <div class="square square-black" id="a3">
-                <img src="./images/{{a3}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('a3')">
+                <img src="./images/{{a3}}.png" id="a3" alt=""/>
             </div>
-            <div class="square square-white" id="b3">
-                <img src="./images/{{b3}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('b3')">
+                <img src="./images/{{b3}}.png" id="b3" alt=""/>
             </div>
-            <div class="square square-black" id="c3">
-                <img src="./images/{{c3}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('c3')">
+                <img src="./images/{{c3}}.png" id="c3" alt=""/>
             </div>
-            <div class="square square-white" id="d3">
-                <img src="./images/{{d3}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('d3')">
+                <img src="./images/{{d3}}.png" id="d3" alt=""/>
             </div>
-            <div class="square square-black" id="e3">
-                <img src="./images/{{e3}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('e3')">
+                <img src="./images/{{e3}}.png" id="e3" alt=""/>
             </div>
-            <div class="square square-white" id="f3">
-                <img src="./images/{{f3}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('f3')">
+                <img src="./images/{{f3}}.png" id="f3" alt=""/>
             </div>
-            <div class="square square-black" id="g3">
-                <img src="./images/{{g3}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('g3')">
+                <img src="./images/{{g3}}.png" id="g3" alt=""/>
             </div>
-            <div class="square square-white" id="h3">
-                <img src="./images/{{h3}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('h3')">
+                <img src="./images/{{h3}}.png" id="h3" alt=""/>
             </div>
             <div class="row">3</div>
         </div>
 
         <!-- a2 ~ h2 -->
         <div class="chess-row center">
-            <div class="square square-white" id="a2">
-                <img src="./images/{{ a2 }}.png" alt=""/>
+            <div class="square square-white" onclick="pick('a2')">
+                <img src="./images/{{ a2 }}.png" id="a2" alt=""/>
             </div>
-            <div class="square square-black" id="b2">
-                <img src="./images/{{ b2 }}.png" alt=""/>
+            <div class="square square-black" onclick="pick('b2')">
+                <img src="./images/{{ b2 }}.png" id="b2" alt=""/>
             </div>
-            <div class="square square-white" id="c2">
-                <img src="./images/{{ c2 }}.png" alt=""/>
+            <div class="square square-white" onclick="pick('c2')">
+                <img src="./images/{{ c2 }}.png" id="c2" alt=""/>
             </div>
-            <div class="square square-black" id="d2">
-                <img src="./images/{{ d2 }}.png" alt=""/>
+            <div class="square square-black" onclick="pick('d2')">
+                <img src="./images/{{ d2 }}.png" id="d2" alt=""/>
             </div>
-            <div class="square square-white" id="e2">
-                <img src="./images/{{ e2 }}.png" alt=""/>
+            <div class="square square-white" onclick="pick('e2')">
+                <img src="./images/{{ e2 }}.png" id="e2" alt=""/>
             </div>
-            <div class="square square-black" id="f2">
-                <img src="./images/{{ f2 }}.png" alt=""/>
+            <div class="square square-black" onclick="pick('f2')">
+                <img src="./images/{{ f2 }}.png" id="f2" alt=""/>
             </div>
-            <div class="square square-white" id="g2">
-                <img src="./images/{{ g2 }}.png" alt=""/>
+            <div class="square square-white" onclick="pick('g2')">
+                <img src="./images/{{ g2 }}.png" id="g2" alt=""/>
             </div>
-            <div class="square square-black" id="h2">
-                <img src="./images/{{ h2 }}.png" alt=""/>
+            <div class="square square-black" onclick="pick('h2')">
+                <img src="./images/{{ h2 }}.png" id="h2" alt=""/>
             </div>
             <div class="row">2</div>
         </div>
 
         <!-- a1 ~ h1 -->
         <div class="chess-row center">
-            <div class="square square-black" id="a1">
-                <img src="./images/{{a1}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('a1')">
+                <img src="./images/{{a1}}.png" id="a1" alt=""/>
             </div>
-            <div class="square square-white" id="b1">
-                <img src="./images/{{b1}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('b1')">
+                <img src="./images/{{b1}}.png" id="b1" alt=""/>
             </div>
-            <div class="square square-black" id="c1">
-                <img src="./images/{{c1}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('c1')">
+                <img src="./images/{{c1}}.png" id="c1" alt=""/>
             </div>
-            <div class="square square-white" id="d1">
-                <img src="./images/{{d1}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('d1')">
+                <img src="./images/{{d1}}.png" id="d1" alt=""/>
             </div>
-            <div class="square square-black" id="e1">
-                <img src="./images/{{e1}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('e1')">
+                <img src="./images/{{e1}}.png" id="e1" alt=""/>
             </div>
-            <div class="square square-white" id="f1">
-                <img src="./images/{{f1}}.png" alt=""/>
+            <div class="square square-white" onclick="pick('f1')">
+                <img src="./images/{{f1}}.png" id="f1" alt=""/>
             </div>
-            <div class="square square-black" id="g1">
-                <img src="./images/{{g1}}.png" alt=""/>
+            <div class="square square-black" onclick="pick('g1')">
+                <img src="./images/{{g1}}.png" id="g1" alt=""/>
             </div>
-            <div class="square square-white" id="h1">
-                <img src="./images/{{h1}}.png" alt=""/>
+            <div class="square square-white"  onclick="pick('h1')">
+                <img src="./images/{{h1}}.png" id="h1" alt=""/>
             </div>
             <div class="row">1</div>
         </div>
@@ -290,6 +284,16 @@
             <div class="square col">g</div>
             <div class="square col">h</div>
             <div class="row"></div>
+        </div>
+    </div>
+
+    <div class="finish-box">
+        <div class="inner" id="winner-box">
+            <p id="winner-message">
+            </p>
+            <form method="POST" action="/start">
+                <button type="submit">새로 시작하기</button>
+            </form>
         </div>
     </div>
 

@@ -42,10 +42,7 @@ public class ChessGameService {
         for (Position position : board.getBoard().keySet()) {
             boardDAO.placePiece(board, position);
         }
-
-        Map<String, Object> model = createBoardModel(board);
-        model.put("turn", "WHITE 가 먼저 시작합니다.");
-        return model;
+        return createBoardModel(board);
     }
 
     public Map<String, Object> receiveLoadedBoard() throws SQLException {
@@ -53,28 +50,23 @@ public class ChessGameService {
             return receiveEmptyBoard();
         }
         Board board = new Board(boardDAO.findAllPieces());
-        Map<String, Object> model = createBoardModel(board);
-        model.put("turn", getCurrentTurn() + "차례 입니다.");
-        return model;
+        return createBoardModel(board);
     }
 
-    public Map<String, Object> receiveMovedBoard(final String fromPiece, final String toPiece) throws SQLException {
+    public void receiveMovedBoard(final String fromPiece, final String toPiece) throws SQLException {
         Board board = new Board(boardDAO.findAllPieces());
         Piece piece = board.findBy(Position.of(fromPiece));
+
         if (!piece.isSameTeam(getCurrentTurn())) {
             throw new TakeTurnException("체스 게임 순서를 지켜주세요.");
         }
         board.move(fromPiece, toPiece);
         updateFinish(board.isFinished());
+        updateTurn();
 
         for (Position position : board.getBoard().keySet()) {
             boardDAO.placePiece(board, position);
         }
-
-        Map<String, Object> model = createBoardModel(board);
-        updateTurn();
-        model.put("turn", getCurrentTurn() + "차례입니다.");
-        return model;
     }
 
     private Map<String, Object> createBoardModel(final Board board) {
@@ -99,6 +91,11 @@ public class ChessGameService {
         return model;
     }
 
+    public void initializeTurn() throws SQLException {
+        turnDAO.deleteTurn();
+        turnDAO.insertTurn(Team.WHITE);
+    }
+
     public void updateTurn() throws SQLException {
         if (turnDAO.findTurn() == Team.WHITE) {
             turnDAO.updateTurn(Team.BLACK);
@@ -107,20 +104,19 @@ public class ChessGameService {
         }
     }
 
-    public void initializeTurn() throws SQLException {
-        turnDAO.updateTurn(Team.WHITE);
-    }
-
     public Team getCurrentTurn() throws SQLException {
         return turnDAO.findTurn();
     }
 
-    public Map<String, Object> receiveWinner() throws SQLException {
+    public String receiveWinner() throws SQLException {
         updateTurn();
         Team team = turnDAO.findTurn();
-        Map<String, Object> model = new HashMap<>();
-        model.put("turn", team);
-        return model;
+        return team.toString();
+    }
+
+    public void initializeFinish() throws SQLException {
+        finishDAO.deleteFinish();
+        finishDAO.insertFinish(false);
     }
 
     public void updateFinish(final boolean isFinish) throws SQLException {
@@ -129,9 +125,5 @@ public class ChessGameService {
 
     public boolean isFinish() throws SQLException {
         return finishDAO.getIsFinish().equals("true");
-    }
-
-    public void initializeFinish() throws SQLException {
-        finishDAO.updateFinish(false);
     }
 }

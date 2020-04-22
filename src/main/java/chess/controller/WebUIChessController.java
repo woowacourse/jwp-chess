@@ -8,7 +8,6 @@ import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -29,6 +28,7 @@ public class WebUIChessController {
 
         post("/start", (req, res) -> {
             chessGameService.initializeTurn();
+            chessGameService.initializeFinish();
             return render(chessGameService.receiveInitializedBoard(), "index.html");
         });
 
@@ -37,31 +37,26 @@ public class WebUIChessController {
         post("/load", (req, res) -> render(chessGameService.receiveLoadedBoard(), "index.html"));
 
         post("/move", (req, res) -> {
-            Map<String, Object> model = chessGameService.receiveLoadedBoard();
             try {
-                model = chessGameService.receiveMovedBoard(
+                chessGameService.receiveMovedBoard(
                         req.queryParams("fromPiece"), req.queryParams("toPiece"));
                 if (chessGameService.isFinish()) {
-                    chessGameService.initializeFinish();
-                    res.redirect("/finish");
+                    return chessGameService.receiveWinner();
                 }
             } catch(InvalidPositionException | PieceImpossibleMoveException | TakeTurnException e) {
-                res.redirect("/exception");
+                res.status(400);
+                return e.getMessage();
             }
-            return render(model, "index.html");
-        });
-
-        get("/finish", (req, res) -> render(chessGameService.receiveWinner(), "finish.html"));
-
-        get("/exception", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(model, "exception.html");
+            return req.queryParams("fromPiece")+ " " +req.queryParams("toPiece");
         });
 
         post("/status", (req, res) -> {
             Map<String, Object> model = chessGameService.receiveScoreStatus();
-            model.put("turn", chessGameService.getCurrentTurn() + "차례입니다.");
             return render(model, "index.html");
+        });
+
+        get("/turn", (req, res) -> {
+            return chessGameService.getCurrentTurn().toString();
         });
     }
 

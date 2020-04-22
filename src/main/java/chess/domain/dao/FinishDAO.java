@@ -41,14 +41,19 @@ public class FinishDAO {
         }
     }
 
-    public void updateFinish(final boolean isFinish) throws SQLException {
-        String query = "INSERT INTO finish (isFinish) VALUES (?) ON DUPLICATE KEY UPDATE isFinish=?";
+    public void insertFinish(final boolean isFinish) throws SQLException {
+        String query = "INSERT INTO finish (isFinish) VALUES (?)";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1, String.valueOf(isFinish));
-        preparedStatement.setString(2, String.valueOf(isFinish));
         preparedStatement.executeUpdate();
     }
 
+    public void updateFinish(final boolean isFinish) throws SQLException {
+        String query = "UPDATE finish set isFinish = (?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, String.valueOf(isFinish));
+        preparedStatement.executeUpdate();
+    }
 
     public String getIsFinish() throws SQLException {
         String query = "SELECT * FROM finish";
@@ -60,5 +65,11 @@ public class FinishDAO {
             output = resultSet.getString("isFinish");
         }
         return output;
+    }
+
+    public void deleteFinish() throws SQLException {
+        String query = "TRUNCATE finish";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.executeUpdate();
     }
 }

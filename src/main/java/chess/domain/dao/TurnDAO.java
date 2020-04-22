@@ -43,11 +43,17 @@ public class TurnDAO {
         }
     }
 
-    public void updateTurn(Team targetTeam) throws SQLException {
-        String query = "INSERT INTO turn (team) VALUES (?) ON DUPLICATE KEY UPDATE team=?";
+    public void insertTurn(Team targetTeam) throws SQLException {
+        String query = "INSERT INTO turn (team) VALUES (?)";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1, targetTeam.name());
-        preparedStatement.setString(2, targetTeam.name());
+        preparedStatement.executeUpdate();
+    }
+
+    public void updateTurn(Team targetTeam) throws SQLException {
+        String query = "UPDATE turn set team = (?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, targetTeam.name());
         preparedStatement.executeUpdate();
     }
 
@@ -61,5 +67,11 @@ public class TurnDAO {
             output = Team.of(resultSet.getString("team"));
         }
         return output;
+    }
+
+    public void deleteTurn() throws SQLException {
+        String query = "TRUNCATE turn";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.executeUpdate();
     }
 }

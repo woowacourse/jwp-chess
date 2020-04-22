@@ -5,9 +5,7 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.pieces.Pieces;
 import wooteco.chess.domain.position.Row;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ScoreResult {
@@ -64,5 +62,16 @@ public class ScoreResult {
                 .filter(piece -> piece.isSameColor(color))
                 .mapToDouble(Piece::getScore)
                 .sum();
+    }
+
+    private void validate(Color color) {
+        if (Objects.isNull(color) || color.isNone()) {
+            throw new IllegalArgumentException("잘못된 입력입니다.");
+        }
+    }
+
+    public double getScoreBy(Color color) {
+        validate(color);
+        return scores.get(color);
     }
 }

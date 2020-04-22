@@ -6,7 +6,7 @@ import static spark.Spark.staticFiles;
 
 public class SparkChessApplication {
     public static void main(String[] args) {
-        staticFiles.location("/templates/public");
+        staticFiles.location("/templates");
 
         SparkChessController sparkChessController = new SparkChessController();
 

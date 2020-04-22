@@ -1,17 +1,17 @@
 window.onload = function () {
     const PIECES = {
-        BLACK_KING: `<img src="../image/king_black.png" class="piece king"/>`,
-        BLACK_QUEEN: `<img src="../image/queen_black.png" class="piece queen"/>`,
-        BLACK_ROOK: `<img src="../image/rook_black.png" class="piece rook"/>`,
-        BLACK_BISHOP: `<img src="../image/bishop_black.png" class="piece bishop"/>`,
-        BLACK_KNIGHT: `<img src="../image/knight_black.png" class="piece knight"/>`,
-        BLACK_BLACK_PAWN: `<img src="../image/pawn_black.png" class="piece pawn"/>`,
-        WHITE_KING: `<img src="../image/king_white.png" class="piece king"/>`,
-        WHITE_QUEEN: `<img src="../image/queen_white.png" class="piece queen"/>`,
-        WHITE_ROOK: `<img src="../image/rook_white.png" class="piece rook"/>`,
-        WHITE_BISHOP: `<img src="../image/bishop_white.png" class="piece bishop"/>`,
-        WHITE_KNIGHT: `<img src="../image/knight_white.png" class="piece knight"/>`,
-        WHITE_WHITE_PAWN: `<img src="../image/pawn_white.png" class="piece pawn"/>`,
+        BLACK_KING: `<img src="../../image/king_black.png" class="piece king"/>`,
+        BLACK_QUEEN: `<img src="../../image/queen_black.png" class="piece queen"/>`,
+        BLACK_ROOK: `<img src="../../image/rook_black.png" class="piece rook"/>`,
+        BLACK_BISHOP: `<img src="../../image/bishop_black.png" class="piece bishop"/>`,
+        BLACK_KNIGHT: `<img src="../../image/knight_black.png" class="piece knight"/>`,
+        BLACK_BLACK_PAWN: `<img src="../../image/pawn_black.png" class="piece pawn"/>`,
+        WHITE_KING: `<img src="../../image/king_white.png" class="piece king"/>`,
+        WHITE_QUEEN: `<img src="../../image/queen_white.png" class="piece queen"/>`,
+        WHITE_ROOK: `<img src="../../image/rook_white.png" class="piece rook"/>`,
+        WHITE_BISHOP: `<img src="../../image/bishop_white.png" class="piece bishop"/>`,
+        WHITE_KNIGHT: `<img src="../../image/knight_white.png" class="piece knight"/>`,
+        WHITE_WHITE_PAWN: `<img src="../../image/pawn_white.png" class="piece pawn"/>`,
     };
     let startPosition = null;
 

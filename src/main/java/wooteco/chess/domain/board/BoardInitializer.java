@@ -2,7 +2,13 @@ package wooteco.chess.domain.board;
 
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.domain.strategy.initialize.*;
+import wooteco.chess.domain.strategy.initialize.BishopInitializer;
+import wooteco.chess.domain.strategy.initialize.InitializeStrategy;
+import wooteco.chess.domain.strategy.initialize.KingInitializer;
+import wooteco.chess.domain.strategy.initialize.KnightInitializer;
+import wooteco.chess.domain.strategy.initialize.PawnInitializer;
+import wooteco.chess.domain.strategy.initialize.QueenInitializer;
+import wooteco.chess.domain.strategy.initialize.RookInitializer;
 
 import java.util.ArrayList;
 import java.util.Arrays;

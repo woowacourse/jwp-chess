@@ -1,10 +1,10 @@
 package wooteco.chess.controller;
 
-import wooteco.chess.service.ChessService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import wooteco.chess.service.ChessService;
 
 import java.util.HashMap;
 import java.util.Map;

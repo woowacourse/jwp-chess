@@ -12,3 +12,10 @@ CREATE TABLE state (
 id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 turn varchar(5)
 );
+
+-- USE chess2;
+-- CREATE TABLE chessgame (
+-- 	id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- 	board VARCHAR(64) NOT NULL,
+--     turn VARCHAR(5) NOT NULL
+-- );

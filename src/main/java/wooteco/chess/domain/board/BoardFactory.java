@@ -2,7 +2,10 @@ package wooteco.chess.domain.board;
 
 import static wooteco.chess.domain.piece.PawnMovingStrategy.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import wooteco.chess.domain.piece.Bishop;
@@ -18,6 +21,20 @@ import wooteco.chess.domain.position.Position;
 
 public class BoardFactory {
 	private BoardFactory() {
+	}
+
+	public static Board of(String serializedBoard) {
+		Map<Position, Piece> board = new HashMap<>();
+		List<String> pieces = new ArrayList<>(Arrays.asList(serializedBoard.split("")));
+		for (int i = 8; i >= 1; i--) {
+			for (int j = 1; j <= 8; j++) {
+				String piece = pieces.remove(0);
+				if (!piece.equals(".")) {
+					board.put(Position.of(j, i), PieceFactory.of(piece));
+				}
+			}
+		}
+		return new Board(board);
 	}
 
 	public static Board create() {

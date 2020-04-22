@@ -2,7 +2,6 @@ package wooteco.chess.domain;
 
 import static wooteco.chess.domain.piece.Color.*;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,11 +26,6 @@ public class GameManager {
 	public GameManager(Board board, Color turn) {
 		this.board = board;
 		this.currentTurn = turn;
-	}
-
-	public GameManager() {
-		this.board = new Board(new HashMap<>());
-		this.currentTurn = WHITE;
 	}
 
 	public void move(Position targetPosition, Position destination) {
@@ -75,6 +69,7 @@ public class GameManager {
 	}
 
 	public boolean isKingAlive() {
+		System.out.println("턴" + currentTurn.name());
 		return board.isKingAliveOf(currentTurn);
 	}
 

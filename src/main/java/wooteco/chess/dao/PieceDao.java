@@ -128,4 +128,16 @@ public class PieceDao {
 			pstmt.executeUpdate();
 		}
 	}
+
+	public void deleteByGameIdAndPosition(Long gameId, String position) throws SQLException {
+		String query = String.format("DELETE FROM %s WHERE game_id = ? AND position = ?", TABLE_NAME);
+		try (
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(query)
+		) {
+			pstmt.setLong(1, gameId);
+			pstmt.setString(2, position);
+			pstmt.executeUpdate();
+		}
+	}
 }

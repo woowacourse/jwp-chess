@@ -37,9 +37,9 @@ public class ChessService {
 		MoveCommand moveCommand = new MoveCommand(command);
 		chessGame.move(moveCommand);
 
-		String originalPosition = moveCommand.getSourcePosition().toString();
-		String newPosition = moveCommand.getTargetPosition().toString();
-		updateTurn(gameId, chessGame);
+		String originalPosition = moveCommand.getSourcePosition().getName();
+		String newPosition = moveCommand.getTargetPosition().getName();
+		updateGame(gameId, chessGame);
 		return updateBoard(chessGame, gameId, originalPosition, newPosition);
 	}
 
@@ -66,7 +66,7 @@ public class ChessService {
 		return createBoardDto(gameId, chessGame);
 	}
 
-	private void updateTurn(Long id, ChessGame chessGame) throws SQLException {
+	private void updateGame(Long id, ChessGame chessGame) throws SQLException {
 		Team turn = chessGame.getTurn();
 		GameDto gameDto = new GameDto(id, turn.getName());
 		gameDao.update(gameDto);
@@ -74,7 +74,7 @@ public class ChessService {
 
 	private void savePiece(Long gameId, Piece piece) throws SQLException {
 		Team team = piece.getTeam();
-		String position = piece.getPosition().toString();
+		String position = piece.getPosition().getName();
 		String symbol = piece.getSymbol();
 		PieceDto pieceDto = new PieceDto(gameId, symbol, team.getName(), position);
 		pieceDao.save(pieceDto);
@@ -84,6 +84,7 @@ public class ChessService {
 		SQLException {
 		PieceDto originalPiece = pieceDao.findByGameIdAndPosition(gameId, originalPosition)
 			.orElseThrow(IllegalArgumentException::new);
+		pieceDao.deleteByGameIdAndPosition(gameId, newPosition);
 		pieceDao.update(originalPiece.getId(), newPosition);
 		return createBoardDto(gameId, chessGame);
 	}

@@ -75,8 +75,7 @@ public class Position {
 		return row.getRankIndex();
 	}
 
-	@Override
-	public String toString() {
+	public String getName(){
 		return column.getColumnName() + row.getNumber();
 	}
 }

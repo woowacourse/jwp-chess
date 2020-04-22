@@ -42,6 +42,5 @@ class GameDaoTest {
 		//then
 		GameDto actual = gameDao.findById(gameDto.getId()).orElseThrow(NoSuchElementException::new);
 		assertThat(actual.getTurn()).isEqualTo(updateDto.getTurn());
-
 	}
 }

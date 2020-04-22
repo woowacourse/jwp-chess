@@ -6,6 +6,7 @@ import wooteco.chess.util.JdbcTemplate;
 import wooteco.chess.util.RowMapper;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChessPieceDao implements PieceDao {
@@ -27,9 +28,18 @@ public class ChessPieceDao implements PieceDao {
 
     @Override
     public void addInitialPieces(List<ChessPiece> chessPieces) throws SQLException {
+        String query = "INSERT INTO board_status (game_id, position, piece) VALUES ";
+
+        List<String> values = new ArrayList<>();
         for (ChessPiece piece : chessPieces) {
-            addPiece(piece);
+            values.add("('" + piece.getGameId() + "','" + piece.getPosition() + "','" + piece.getPiece() + "')");
         }
+
+        query = query + String.join(",", values);
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+
+        jdbcTemplate.executeUpdate(query);
     }
 
     @Override

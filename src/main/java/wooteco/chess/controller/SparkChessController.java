@@ -17,6 +17,7 @@ import wooteco.chess.service.ChessService;
 
 public class SparkChessController implements ChessController {
 	private static final Gson GSON = new Gson();
+	private static final int MAX_INTERVAL_SECONDS = 300;
 
 	private final ChessService service;
 
@@ -37,6 +38,7 @@ public class SparkChessController implements ChessController {
 	private String renderBoard(Request request, Response response) {
 		String gameId = request.queryParams("game_id");
 		request.session(true).attribute("game_id", gameId);
+		request.session().maxInactiveInterval(MAX_INTERVAL_SECONDS);
 		service.initialize(gameId);
 		return render(service.getBoard(gameId), "chess.html");
 	}

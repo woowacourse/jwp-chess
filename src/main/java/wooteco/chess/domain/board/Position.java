@@ -11,8 +11,8 @@ public class Position {
     public static List<Position> positions = new ArrayList<>();
 
     static {
-        for(Coordinate x: Coordinate.values()) {
-            for(Coordinate y: Coordinate.values()) {
+        for (Coordinate x : Coordinate.values()) {
+            for (Coordinate y : Coordinate.values()) {
                 positions.add(new Position(x, y));
             }
         }
@@ -54,6 +54,13 @@ public class Position {
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 좌표 값입니다."));
     }
 
+    public static Position of(String value) {
+        return positions.stream()
+                .filter(position -> position.toString().equals(value))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 좌표 값입니다."));
+    }
+
     public boolean inBetween(final Position start, final Position end) {
         if (isOnX(start.x) && isOnX(end.x)
                 && y.isMiddle(start.y, end.y)) {
@@ -83,5 +90,10 @@ public class Position {
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
+    }
+
+    @Override
+    public String toString() {
+        return y.getAlphabet() + x.toString();
     }
 }

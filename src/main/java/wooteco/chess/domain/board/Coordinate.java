@@ -3,19 +3,21 @@ package wooteco.chess.domain.board;
 import java.util.stream.Stream;
 
 public enum Coordinate {
-    ONE(1),
-    TWO(2),
-    THREE(3),
-    FOUR(4),
-    FIVE(5),
-    SIX(6),
-    SEVEN(7),
-    EIGHT(8);
+    ONE(1, "a"),
+    TWO(2, "b"),
+    THREE(3, "c"),
+    FOUR(4, "d"),
+    FIVE(5, "e"),
+    SIX(6, "f"),
+    SEVEN(7, "g"),
+    EIGHT(8, "h");
 
     private final int value;
+    private final String alphabet;
 
-    Coordinate(int value) {
+    Coordinate(int value, String alphabet) {
         this.value = value;
+        this.alphabet = alphabet;
     }
 
     public static Coordinate of(int value) {
@@ -36,5 +38,14 @@ public enum Coordinate {
     public boolean isMiddle(Coordinate start, Coordinate end) {
         return (this.value >= start.value && this.value <= end.value)
                 || (this.value <= start.value && this.value >= end.value);
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
+
+    public String getAlphabet() {
+        return alphabet;
     }
 }

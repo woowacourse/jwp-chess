@@ -31,6 +31,9 @@ public abstract class Piece {
     }
 
     public boolean isTeamOf(Team team) {
+        if (this.team == null) {
+            throw new IllegalArgumentException("유효하지 않은 팀입니다.");
+        }
         return this.team.equals(team);
     }
 

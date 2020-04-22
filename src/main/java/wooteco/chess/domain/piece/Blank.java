@@ -11,7 +11,7 @@ public class Blank extends Piece {
     private static final double SCORE = 0;
 
     public Blank() {
-        super(null, SCORE);
+        super("blank", null, SCORE);
     }
 
     @Override
@@ -25,5 +25,15 @@ public class Blank extends Piece {
                 || position.isOnX(INITIAL_X_FOUR)
                 || position.isOnX(INITIAL_X_FIVE)
                 || position.isOnX(INITIAL_X_SIX);
+    }
+
+    @Override
+    public String toString() {
+        return "blank";
+    }
+
+    @Override
+    public boolean isTeamOf(Team team) {
+        return false;
     }
 }

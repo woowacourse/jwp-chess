@@ -1,6 +1,7 @@
 package wooteco.chess.domain.board;
 
 import static wooteco.chess.domain.piece.PawnMovingStrategy.*;
+import static wooteco.chess.domain.position.Position.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,15 +27,22 @@ public class BoardFactory {
 	public static Board of(String serializedBoard) {
 		Map<Position, Piece> board = new HashMap<>();
 		List<String> pieces = new ArrayList<>(Arrays.asList(serializedBoard.split("")));
-		for (int i = 8; i >= 1; i--) {
-			for (int j = 1; j <= 8; j++) {
-				String piece = pieces.remove(0);
-				if (!piece.equals(".")) {
-					board.put(Position.of(j, i), PieceFactory.of(piece));
-				}
-			}
+		for (int rank = MAX_POSITION_INDEX; rank >= MIN_POSITION_INDEX; rank--) {
+			board.putAll(putPerRank(pieces, rank));
 		}
 		return new Board(board);
+	}
+
+	private static Map<Position, Piece> putPerRank(List<String> pieces, int rank) {
+		Map<Position, Piece> piecesInRank = new HashMap<>();
+
+		for (int file = MIN_POSITION_INDEX; file <= MAX_POSITION_INDEX; file++) {
+			String piece = pieces.remove(0);
+			if (!piece.equals(".")) {
+				piecesInRank.put(Position.of(file, rank), PieceFactory.of(piece));
+			}
+		}
+		return piecesInRank;
 	}
 
 	public static Board create() {

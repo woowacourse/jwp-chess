@@ -9,13 +9,13 @@ import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.service.GameManagerService2;
+import wooteco.chess.service.GameManagerService;
 import wooteco.chess.util.WebOutputRenderer;
 
 public class SparkChessApplication {
 	public static void main(String[] args) {
 		Spark.staticFileLocation("static");
-		final GameManagerService2 gameManagerService = new GameManagerService2();
+		final GameManagerService gameManagerService = new GameManagerService();
 
 		get("/", (request, response) -> "index.html");
 

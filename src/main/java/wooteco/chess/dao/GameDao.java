@@ -12,7 +12,7 @@ import wooteco.chess.dto.GameManagerDto;
 
 public class GameDao {
 	public void addGame(GameManagerDto gameManagerDto) {
-		try (Connection connection = new SQLConnector2().getConnection()) {
+		try (Connection connection = new SQLConnector().getConnection()) {
 			String query = "INSERT INTO chessgame (board, turn) VALUES (?, ?) ON DUPLICATE KEY UPDATE board = ?,turn = ?";
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setString(1, gameManagerDto.getBoard());
@@ -26,16 +26,14 @@ public class GameDao {
 	}
 
 	public GameManager findGame(long id) {
-		try (Connection connection = new SQLConnector2().getConnection()) {
+		try (Connection connection = new SQLConnector().getConnection()) {
 			String query = "SELECT * FROM chessgame WHERE id = ?";
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setString(1, String.valueOf(id));
 			ResultSet result = statement.executeQuery();
-
 			if (!result.next()) {
 				return null;
 			}
-
 			String board = result.getString("board");
 			String turn = result.getString("turn");
 			return new GameManager(BoardFactory.of(board), Color.of(turn));
@@ -45,7 +43,7 @@ public class GameDao {
 	}
 
 	public void updateGame(GameManagerDto gameManagerDto) {
-		try (Connection connection = new SQLConnector2().getConnection()) {
+		try (Connection connection = new SQLConnector().getConnection()) {
 			String query = "UPDATE chessgame SET board = ?, turn = ? WHERE id = 1";
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setString(1, gameManagerDto.getBoard());

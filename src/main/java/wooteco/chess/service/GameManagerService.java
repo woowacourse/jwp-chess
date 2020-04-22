@@ -1,70 +1,55 @@
 package wooteco.chess.service;
 
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import wooteco.chess.dao.BoardDao;
-import wooteco.chess.dao.TurnDao;
+import wooteco.chess.dao.GameDao;
 import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Color;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.dto.PieceDto;
+import wooteco.chess.dto.GameManagerDto;
 
 public class GameManagerService {
-	private final BoardDao boardDao;
-	private final TurnDao turnDao;
+	private final GameDao gameDao;
 
 	public GameManagerService() {
-		this.boardDao = new BoardDao();
-		this.turnDao = new TurnDao();
+		this.gameDao = new GameDao();
 	}
 
 	public void move(Position targetPosition, Position destination) {
-		Board board = new Board(boardDao.findAllPieces());
-		Color turn = turnDao.findTurn();
-		GameManager gameManager = new GameManager(board, turn);
-
+		GameManager gameManager = gameDao.findGame(1);
 		gameManager.move(targetPosition, destination);
 
-		boardDao.editPieceByPosition(destination, boardDao.findPiece(targetPosition));
-		boardDao.deletePieceByPosition(targetPosition);
-		turnDao.editTurn(gameManager.getCurrentTurn());
+		gameDao.updateGame(new GameManagerDto(gameManager));
 	}
 
 	public void resetGame() {
-		boardDao.deleteAll();
-		turnDao.editTurn(Color.WHITE);
 		Board board = BoardFactory.create();
-		List<PieceDto> pieces = board.getPieces().entrySet().stream()
-			.map(x -> PieceDto.of(x.getKey(), x.getValue()))
-			.collect(Collectors.toList());
+		GameManager gameManager = new GameManager(board, Color.WHITE);
 
-		boardDao.addAllPieces(pieces);
+		gameDao.updateGame(new GameManagerDto(gameManager));
 	}
 
 	public Board getBoard() {
-		return new Board(boardDao.findAllPieces());
+		return gameDao.findGame(1).getBoard();
 	}
 
 	public Color getCurrentTurn() {
-		return turnDao.findTurn();
+		return gameDao.findGame(1).getCurrentTurn();
 	}
 
 	public boolean isKingAlive() {
-		Board board = new Board(boardDao.findAllPieces());
-		Color turn = turnDao.findTurn();
-		GameManager gameManager = new GameManager(board, turn);
+		GameManager game = gameDao.findGame(1);
+		Board board = game.getBoard();
+		Color currentTurn = game.getCurrentTurn();
+		GameManager gameManager = new GameManager(board, currentTurn);
 
 		return gameManager.isKingAlive();
 	}
 
 	public Map<Color, Double> calculateEachScore() {
-		Board board = new Board(boardDao.findAllPieces());
-		Color turn = turnDao.findTurn();
-		GameManager gameManager = new GameManager(board, turn);
+		GameManager gameManager = new GameManager(gameDao.findGame(1).getBoard());
 
 		return gameManager.calculateEachScore();
 	}

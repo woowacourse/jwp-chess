@@ -8,10 +8,10 @@ public class SQLConnector {
 	public Connection getConnection() {
 		Connection connection = null;
 		String server = "localhost:13306"; // MySQL 서버 주소
-		String database = "chess"; // MySQL DATABASE 이름
+		String database = "chess2"; // MySQL DATABASE 이름2
 		String option = "?useSSL=false&serverTimezone=UTC";
-		String userName = "root"; //  MySQL 서버 아이디
-		String password = "root"; // MySQL 서버 비밀번호
+		String userName = "root"; //  MySQL 서버 아이디2
+		String password = "root"; // MySQL 서버 비밀번호2
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

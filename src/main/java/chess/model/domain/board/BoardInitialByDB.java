@@ -7,14 +7,14 @@ import java.util.Map;
 
 public class BoardInitialByDB implements BoardInitialization {
 
-    private final Map<BoardSquare, Piece> board;
+    private final Map<Square, Piece> board;
 
-    public BoardInitialByDB(Map<BoardSquare, Piece> board) {
+    public BoardInitialByDB(Map<Square, Piece> board) {
         this.board = Collections.unmodifiableMap(board);
     }
 
     @Override
-    public Map<BoardSquare, Piece> getInitialize() {
+    public Map<Square, Piece> getInitialize() {
         return new HashMap<>(board);
     }
 }

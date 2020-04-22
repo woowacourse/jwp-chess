@@ -1,8 +1,8 @@
 package chess.model.domain.board;
 
-import chess.model.domain.piece.Color;
 import chess.model.domain.piece.King;
 import chess.model.domain.piece.Piece;
+import chess.model.domain.piece.Team;
 import chess.model.dto.GameResultDto;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,44 +17,44 @@ public class TeamScore {
     private static final double PAWN_SAME_FILE_SCORE = -0.5;
     private static final double ZERO = 0.0;
 
-    private final Map<Color, Double> teamScore;
+    private final Map<Team, Double> teamScore;
 
-    public TeamScore(Collection<Piece> pieces, Map<Color, Integer> pawnSameFileCountByColor) {
+    public TeamScore(Collection<Piece> pieces, Map<Team, Integer> pawnSameFileCountByColor) {
         NullChecker.validateNotNull(pieces, pawnSameFileCountByColor);
         this.teamScore = Collections
             .unmodifiableMap(getTeamScore(pieces, pawnSameFileCountByColor));
     }
 
-    public TeamScore(Map<Color, Double> teamScore) {
+    public TeamScore(Map<Team, Double> teamScore) {
         NullChecker.validateNotNull(teamScore);
         this.teamScore = Collections.unmodifiableMap(new HashMap<>(teamScore));
     }
 
-    private Map<Color, Double> getTeamScore(Collection<Piece> pieces,
-        Map<Color, Integer> pawnSameFileByColor) {
-        Map<Color, Double> teamScore = new HashMap<>();
-        for (Color color : Color.values()) {
-            double piecesSumScore = getSumScore(pieces, color);
-            double pawnChargeScore = pawnSameFileByColor.get(color) * PAWN_SAME_FILE_SCORE;
-            teamScore.put(color, piecesSumScore + pawnChargeScore);
+    private Map<Team, Double> getTeamScore(Collection<Piece> pieces,
+        Map<Team, Integer> pawnSameFileByColor) {
+        Map<Team, Double> teamScore = new HashMap<>();
+        for (Team team : Team.values()) {
+            double piecesSumScore = getSumScore(pieces, team);
+            double pawnChargeScore = pawnSameFileByColor.get(team) * PAWN_SAME_FILE_SCORE;
+            teamScore.put(team, piecesSumScore + pawnChargeScore);
         }
         return teamScore;
     }
 
-    private double getSumScore(Collection<Piece> pieces, Color color) {
+    private double getSumScore(Collection<Piece> pieces, Team team) {
         boolean noKing = pieces.stream()
-            .filter(piece -> piece.isSameColor(color))
+            .filter(piece -> piece.isSameTeam(team))
             .noneMatch(piece -> piece instanceof King);
         if (noKing) {
             return ZERO;
         }
         return pieces.stream()
-            .filter(piece -> piece.isSameColor(color))
+            .filter(piece -> piece.isSameTeam(team))
             .mapToDouble(Piece::getScore)
             .sum();
     }
 
-    public List<Color> getWinners() {
+    public List<Team> getWinners() {
         return teamScore.keySet().stream()
             .filter(color -> teamScore.get(color) == getWinningScore())
             .collect(Collectors.toList());
@@ -66,31 +66,31 @@ public class TeamScore {
             .orElseThrow(IllegalAccessError::new);
     }
 
-    public Map<Color, Double> getTeamScore() {
+    public Map<Team, Double> getTeamScore() {
         return teamScore;
     }
 
-    public double get(Color color) {
-        NullChecker.validateNotNull(color);
-        return teamScore.get(color);
+    public double get(Team team) {
+        NullChecker.validateNotNull(team);
+        return teamScore.get(team);
     }
 
-    public GameResultDto getGameResult(Color color) {
-        NullChecker.validateNotNull(color);
-        return new GameResultDto(getWinCount(color), getDrawCount(), getLoseCount(color));
+    public GameResultDto getGameResult(Team team) {
+        NullChecker.validateNotNull(team);
+        return new GameResultDto(getWinCount(team), getDrawCount(), getLoseCount(team));
     }
 
-    private int getWinCount(Color color) {
+    private int getWinCount(Team team) {
         if (getWinners().size() == 1
-            && getWinners().contains(color)) {
+            && getWinners().contains(team)) {
             return 1;
         }
         return 0;
     }
 
-    private int getLoseCount(Color color) {
+    private int getLoseCount(Team team) {
         if (getWinners().size() == 1
-            && !getWinners().contains(color)) {
+            && !getWinners().contains(team)) {
             return 1;
         }
         return 0;

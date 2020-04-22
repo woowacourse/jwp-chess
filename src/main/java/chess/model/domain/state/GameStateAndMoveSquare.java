@@ -16,21 +16,21 @@ public class GameStateAndMoveSquare {
     private static final String NO_MOVE_SQUARE_EXCEPTION_MESSAGE = "MoveSquare가 없습니다.";
 
     private final GameState gameState;
-    private final MoveSquare moveSquare;
+    private final MoveInfo moveInfo;
 
     public GameStateAndMoveSquare(String input) {
         NullChecker.validateNotNull(input);
         List<String> inputs = Arrays.asList(input.split(SPLIT_DELIMITER));
         this.gameState = GameState.of(inputs.get(FIRST_INDEX));
         validateByGameState(inputs);
-        this.moveSquare = getMoveSquareByGameState(inputs);
+        this.moveInfo = getMoveSquareByGameState(inputs);
     }
 
-    private MoveSquare getMoveSquareByGameState(List<String> inputs) {
+    private MoveInfo getMoveSquareByGameState(List<String> inputs) {
         if (gameState != GameState.MOVE) {
             return null;
         }
-        return new MoveSquare(inputs.get(SECOND_INDEX), inputs.get(THIRD_INDEX));
+        return new MoveInfo(inputs.get(SECOND_INDEX), inputs.get(THIRD_INDEX));
     }
 
     public boolean isSameState(GameState gameState) {
@@ -48,10 +48,10 @@ public class GameStateAndMoveSquare {
         return gameState;
     }
 
-    public MoveSquare getMoveSquare() {
+    public MoveInfo getMoveInfo() {
         if (gameState != GameState.MOVE) {
             throw new NullPointerException(NO_MOVE_SQUARE_EXCEPTION_MESSAGE);
         }
-        return moveSquare;
+        return moveInfo;
     }
 }

@@ -6,20 +6,20 @@ import util.NullChecker;
 
 public class Rook extends RepeatMovePiece {
 
-    private final static Map<Color, Piece> CACHE = new HashMap<>();
+    private final static Map<Team, Piece> CACHE = new HashMap<>();
 
     static {
-        CACHE.put(Color.BLACK, new Rook(Color.BLACK, Type.ROOK));
-        CACHE.put(Color.WHITE, new Rook(Color.WHITE, Type.ROOK));
+        CACHE.put(Team.BLACK, new Rook(Team.BLACK, Type.ROOK));
+        CACHE.put(Team.WHITE, new Rook(Team.WHITE, Type.ROOK));
     }
 
-    public Rook(Color color, Type type) {
-        super(color, type);
+    public Rook(Team team, Type type) {
+        super(team, type);
     }
 
-    public static Piece getPieceInstance(Color color) {
-        NullChecker.validateNotNull(color);
-        return CACHE.get(color);
+    public static Piece getPieceInstance(Team team) {
+        NullChecker.validateNotNull(team);
+        return CACHE.get(team);
     }
 }
 

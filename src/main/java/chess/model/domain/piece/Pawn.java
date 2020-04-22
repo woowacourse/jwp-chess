@@ -1,8 +1,8 @@
 package chess.model.domain.piece;
 
-import chess.model.domain.board.BoardSquare;
 import chess.model.domain.board.CastlingSetting;
 import chess.model.domain.board.ChessGame;
+import chess.model.domain.board.Square;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,74 +12,74 @@ import util.NullChecker;
 
 public class Pawn extends OneTimeMovePiece {
 
-    private final static Map<Color, Piece> CACHE = new HashMap<>();
+    private final static Map<Team, Piece> CACHE = new HashMap<>();
 
     static {
-        CACHE.put(Color.BLACK, new Pawn(Color.BLACK, Type.PAWN));
-        CACHE.put(Color.WHITE, new Pawn(Color.WHITE, Type.PAWN));
+        CACHE.put(Team.BLACK, new Pawn(Team.BLACK, Type.PAWN));
+        CACHE.put(Team.WHITE, new Pawn(Team.WHITE, Type.PAWN));
     }
 
-    public Pawn(Color color, Type type) {
-        super(color, type);
+    public Pawn(Team team, Type type) {
+        super(team, type);
     }
 
-    public static Piece getPieceInstance(Color color) {
-        NullChecker.validateNotNull(color);
-        return CACHE.get(color);
+    public static Piece getPieceInstance(Team team) {
+        NullChecker.validateNotNull(team);
+        return CACHE.get(team);
     }
 
     @Override
-    public Set<BoardSquare> getCheatSheet(BoardSquare boardSquare, Map<BoardSquare, Piece> board,
+    public Set<Square> getMovableArea(Square square, Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements) {
-        Set<BoardSquare> allCheatSheet = getAllCheatSheet(boardSquare);
-        Set<BoardSquare> containsCheatSheet = allCheatSheet.stream()
-            .filter(cheatSheet -> !board.containsKey(cheatSheet))
+        Set<Square> allMovableArea = getAllMovableArea(square);
+        Set<Square> containsMovableArea = allMovableArea.stream()
+            .filter(movableArea -> !board.containsKey(movableArea))
             .collect(Collectors.toSet());
-        Set<BoardSquare> totalCheatSheet = new HashSet<>();
-        totalCheatSheet.addAll(getStraightCheatSheet(boardSquare, board, containsCheatSheet));
-        totalCheatSheet.addAll(getDiagonalCheatSheet(board, allCheatSheet));
-        return totalCheatSheet;
+        Set<Square> totalMovableArea = new HashSet<>();
+        totalMovableArea.addAll(getStraightMovableArea(square, board, containsMovableArea));
+        totalMovableArea.addAll(getDiagonalMovableArea(board, allMovableArea));
+        return totalMovableArea;
     }
 
-    private Set<BoardSquare> getStraightCheatSheet(BoardSquare boardSquare,
-        Map<BoardSquare, Piece> board, Set<BoardSquare> containsCheatSheet) {
-        Set<BoardSquare> straightCheatSheet = new HashSet<>();
-        for (BoardSquare cheatSheet : containsCheatSheet) {
-            if (cheatSheet.hasIncreased(0, cheatSheet.getRankCompare(boardSquare))) {
-                BoardSquare oneMore = cheatSheet
-                    .getIncreased(0, cheatSheet.getRankCompare(boardSquare));
-                straightCheatSheet.addAll(getFrontCheatSheet(boardSquare, board, oneMore));
+    private Set<Square> getStraightMovableArea(Square square,
+        Map<Square, Piece> board, Set<Square> containsMovableArea) {
+        Set<Square> straightMovableArea = new HashSet<>();
+        for (Square movableArea : containsMovableArea) {
+            if (movableArea.hasIncreased(0, movableArea.getRankCompare(square))) {
+                Square oneMore = movableArea
+                    .getIncreased(0, movableArea.getRankCompare(square));
+                straightMovableArea.addAll(getFrontMovableArea(square, board, oneMore));
             }
-            straightCheatSheet.add(cheatSheet);
+            straightMovableArea.add(movableArea);
         }
-        return straightCheatSheet;
+        return straightMovableArea;
     }
 
-    private Set<BoardSquare> getFrontCheatSheet(BoardSquare boardSquare,
-        Map<BoardSquare, Piece> board, BoardSquare oneMore) {
-        Set<BoardSquare> frontCheatSheet = new HashSet<>();
-        boolean initialPoint = ChessGame.isInitialPoint(boardSquare, this);
+    private Set<Square> getFrontMovableArea(Square square,
+        Map<Square, Piece> board, Square oneMore) {
+        Set<Square> frontMovableArea = new HashSet<>();
+        boolean initialPoint = ChessGame.isInitialPoint(square, this);
         boolean containsOneMore = !board.containsKey(oneMore);
         if (initialPoint && containsOneMore) {
-            frontCheatSheet.add(oneMore);
+            frontMovableArea.add(oneMore);
         }
-        return frontCheatSheet;
+        return frontMovableArea;
     }
 
-    private Set<BoardSquare> getDiagonalCheatSheet(Map<BoardSquare, Piece> board,
-        Set<BoardSquare> allCheatSheet) {
-        Set<BoardSquare> diagonalCheatSheet = new HashSet<>();
-        for (BoardSquare cheatSheet : allCheatSheet) {
-            if (cheatSheet.hasIncreased(-1, 0)) {
-                diagonalCheatSheet.add(cheatSheet.getIncreased(-1, 0));
+    private Set<Square> getDiagonalMovableArea(Map<Square, Piece> board,
+        Set<Square> allMovableArea) {
+        Set<Square> diagonalMovableArea = new HashSet<>();
+        for (Square movableArea : allMovableArea) {
+            if (movableArea.hasIncreased(-1, 0)) {
+                diagonalMovableArea.add(movableArea.getIncreased(-1, 0));
             }
-            if (cheatSheet.hasIncreased(1, 0)) {
-                diagonalCheatSheet.add(cheatSheet.getIncreased(1, 0));
+            if (movableArea.hasIncreased(1, 0)) {
+                diagonalMovableArea.add(movableArea.getIncreased(1, 0));
             }
         }
-        return diagonalCheatSheet.stream()
+        return diagonalMovableArea.stream()
             .filter(board::containsKey)
-            .filter(cheatSheet -> !isSameColor(board.get(cheatSheet)))
+            .filter(movableArea -> !isSameTeam(board.get(movableArea)))
             .collect(Collectors.toSet());
     }
 }

@@ -1,16 +1,16 @@
 package chess.model.domain.piece;
 
-import chess.model.domain.board.BoardSquare;
+import chess.model.domain.board.Square;
 
 public abstract class OneTimeMovePiece extends Piece {
 
-    protected OneTimeMovePiece(Color color, Type type) {
-        super(color, type);
+    protected OneTimeMovePiece(Team team, Type type) {
+        super(team, type);
     }
 
     @Override
     protected int getRepeatCount() {
-        return BoardSquare.MIN_FILE_AND_RANK_COUNT;
+        return Square.MIN_FILE_AND_RANK_COUNT;
     }
 
 }

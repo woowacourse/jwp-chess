@@ -1,7 +1,7 @@
 package chess.model.domain.piece;
 
-import chess.model.domain.board.BoardSquare;
 import chess.model.domain.board.CastlingSetting;
+import chess.model.domain.board.Square;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -9,70 +9,70 @@ import util.NullChecker;
 
 public abstract class Piece {
 
-    private final Color color;
+    private final Team team;
     private final Type type;
 
-    protected Piece(Color color, Type type) {
-        NullChecker.validateNotNull(color, type);
-        this.color = color;
+    protected Piece(Team team, Type type) {
+        NullChecker.validateNotNull(team, type);
+        this.team = team;
         this.type = type;
     }
 
-    protected Set<BoardSquare> getAllCheatSheet(BoardSquare boardSquare) {
-        Set<BoardSquare> availableBoardSquares = new HashSet<>();
+    protected Set<Square> getAllMovableArea(Square square) {
+        Set<Square> availableSquares = new HashSet<>();
         int repeatCount = getRepeatCount();
         for (int count = 1; count <= repeatCount; count++) {
-            addCheatSheet(boardSquare, availableBoardSquares, count);
+            addMovableArea(square, availableSquares, count);
         }
-        return availableBoardSquares;
+        return availableSquares;
     }
 
     protected abstract int getRepeatCount();
 
-    private void addCheatSheet(BoardSquare boardSquare, Set<BoardSquare> availableBoardSquares,
+    private void addMovableArea(Square square, Set<Square> availableSquares,
         int count) {
-        for (Direction direction : color.getChangeDirection(type.getDirections())) {
+        for (Direction direction : team.getChangeDirection(type.getDirections())) {
             int fileIncrementBy = direction.getMultiplyFileAddAmount(count);
             int rankIncrementBy = direction.getMultiplyRankAddAmount(count);
-            if (boardSquare.hasIncreased(fileIncrementBy, rankIncrementBy)) {
-                availableBoardSquares
-                    .add(boardSquare.getIncreased(fileIncrementBy, rankIncrementBy));
+            if (square.hasIncreased(fileIncrementBy, rankIncrementBy)) {
+                availableSquares
+                    .add(square.getIncreased(fileIncrementBy, rankIncrementBy));
             }
         }
     }
 
-    public abstract Set<BoardSquare> getCheatSheet(BoardSquare boardSquare,
-        Map<BoardSquare, Piece> board,
+    public abstract Set<Square> getMovableArea(Square square,
+        Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements);
 
-    public Set<BoardSquare> getCheatSheet(BoardSquare boardSquare,
-        Map<BoardSquare, Piece> board) {
-        return getCheatSheet(boardSquare, board, new HashSet<>());
+    public Set<Square> getMovableArea(Square square,
+        Map<Square, Piece> board) {
+        return getMovableArea(square, board, new HashSet<>());
     }
 
-    protected Set<BoardSquare> findSquaresToRemove(BoardSquare boardSquare, int fileAddAmount,
+    protected Set<Square> findSquaresToRemove(Square square, int fileAddAmount,
         int rankAddAmount) {
-        Set<BoardSquare> squaresToRemove = new HashSet<>();
-        for (int i = 0, file = 0, rank = 0; i < BoardSquare.MAX_FILE_AND_RANK_COUNT;
+        Set<Square> squaresToRemove = new HashSet<>();
+        for (int i = 0, file = 0, rank = 0; i < Square.MAX_FILE_AND_RANK_COUNT;
             i++, file += fileAddAmount, rank += rankAddAmount) {
-            if (boardSquare.hasIncreased(file, rank)) {
-                squaresToRemove.add(boardSquare.getIncreased(file, rank));
+            if (square.hasIncreased(file, rank)) {
+                squaresToRemove.add(square.getIncreased(file, rank));
             }
         }
-        squaresToRemove.remove(boardSquare);
+        squaresToRemove.remove(square);
         return squaresToRemove;
     }
 
-    public boolean isSameColor(Color color) {
-        return this.color == color;
+    public boolean isSameTeam(Team team) {
+        return this.team == team;
     }
 
     public double getScore() {
         return type.getScore();
     }
 
-    public boolean isSameColor(Piece piece) {
-        return this.color == piece.color;
+    public boolean isSameTeam(Piece piece) {
+        return this.team == piece.team;
     }
 
     public boolean isSameType(Type type) {

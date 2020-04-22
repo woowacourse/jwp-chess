@@ -3,11 +3,11 @@ package chess.model.domain.board;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.model.domain.piece.Color;
 import chess.model.domain.piece.King;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Rook;
-import chess.model.domain.state.MoveSquare;
+import chess.model.domain.piece.Team;
+import chess.model.domain.state.MoveInfo;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -28,18 +28,18 @@ public class TeamScoreTest {
     void calculateScore() {
         ChessGame chessGame = new ChessGame();
         TeamScore teamScore = chessGame.getTeamScore();
-        Map<Color, Double> teamScores = teamScore.getTeamScore();
-        assertThat(teamScores.get(Color.BLACK)).isEqualTo(38);
-        assertThat(teamScores.get(Color.WHITE)).isEqualTo(38);
+        Map<Team, Double> teamScores = teamScore.getTeamScore();
+        assertThat(teamScores.get(Team.BLACK)).isEqualTo(38);
+        assertThat(teamScores.get(Team.WHITE)).isEqualTo(38);
 
-        chessGame.movePieceWhenCanMove(new MoveSquare("c2", "c4"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("d7", "d5"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("c4", "d5"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("c2", "c4"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("d7", "d5"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("c4", "d5"));
 
         teamScore = chessGame.getTeamScore();
         teamScores = teamScore.getTeamScore();
-        assertThat(teamScores.get(Color.BLACK)).isEqualTo(37);
-        assertThat(teamScores.get(Color.WHITE)).isEqualTo(37);
+        assertThat(teamScores.get(Team.BLACK)).isEqualTo(37);
+        assertThat(teamScores.get(Team.WHITE)).isEqualTo(37);
     }
 
     @Test
@@ -49,33 +49,33 @@ public class TeamScoreTest {
         TeamScore teamScore = chessGame.getTeamScore();
         assertThat(teamScore.getWinners().size()).isEqualTo(2);
 
-        chessGame.movePieceWhenCanMove(new MoveSquare("b1", "c3"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("d7", "d5"));
-        chessGame.movePieceWhenCanMove(new MoveSquare("c3", "d5"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("b1", "c3"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("d7", "d5"));
+        chessGame.movePieceWhenCanMove(new MoveInfo("c3", "d5"));
 
         teamScore = chessGame.getTeamScore();
         assertThat(teamScore.getWinners().size()).isEqualTo(1);
-        assertThat(teamScore.getWinners().get(0)).isEqualTo(Color.WHITE);
+        assertThat(teamScore.getWinners().get(0)).isEqualTo(Team.WHITE);
     }
 
     @Test
     @DisplayName("킹 잡혔을 때 0점 처리")
     void noKingZero() {
-        Map<BoardSquare, Piece> boardInitial = new HashMap<>();
-        boardInitial.put(BoardSquare.of("e1"), King.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("a8"), Rook.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("h8"), Rook.getPieceInstance(Color.BLACK));
-        boardInitial.put(BoardSquare.of("a1"), Rook.getPieceInstance(Color.WHITE));
-        boardInitial.put(BoardSquare.of("h1"), Rook.getPieceInstance(Color.WHITE));
-        ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Color.WHITE,
-            CastlingSetting.getCastlingElements());
+        Map<Square, Piece> boardInitial = new HashMap<>();
+        boardInitial.put(Square.of("e1"), King.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("a8"), Rook.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("h8"), Rook.getPieceInstance(Team.BLACK));
+        boardInitial.put(Square.of("a1"), Rook.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
+        ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Team.WHITE,
+            CastlingSetting.getCastlingElements(), new EnPassant());
 
         TeamScore teamScore = chessGame.getTeamScore();
 
-        assertThat(teamScore.getWinners().contains(Color.WHITE)).isTrue();
+        assertThat(teamScore.getWinners().contains(Team.WHITE)).isTrue();
         assertThat(teamScore.getWinners().size()).isEqualTo(1);
 
-        assertThat(teamScore.getTeamScore().get(Color.BLACK)).isEqualTo(0.0);
-        assertThat(teamScore.getTeamScore().get(Color.WHITE)).isEqualTo(10.0);
+        assertThat(teamScore.getTeamScore().get(Team.BLACK)).isEqualTo(0.0);
+        assertThat(teamScore.getTeamScore().get(Team.WHITE)).isEqualTo(10.0);
     }
 }

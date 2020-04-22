@@ -1,6 +1,6 @@
 package chess.model.dto;
 
-import chess.model.domain.board.BoardSquare;
+import chess.model.domain.board.Square;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -8,9 +8,9 @@ public class PathDto {
 
     private Set<String> path;
 
-    public PathDto(Set<BoardSquare> pathSquares) {
+    public PathDto(Set<Square> pathSquares) {
         path = pathSquares.stream()
-            .map(BoardSquare::getName)
+            .map(Square::getName)
             .collect(Collectors.toSet());
     }
 

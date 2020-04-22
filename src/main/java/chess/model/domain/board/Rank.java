@@ -37,4 +37,8 @@ public enum Rank {
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException(NO_RANK_EXCEPTION_MESSAGE));
     }
+
+    public int calculateDistance(Rank rank) {
+        return rank.number - this.number;
+    }
 }

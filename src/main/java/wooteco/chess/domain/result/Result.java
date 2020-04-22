@@ -16,8 +16,9 @@ import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 
 public class Result {
-	private static final int BONUSE_PAWN_COUNT_IN_ONE_COLUMN = 1;
+	private static final int BONUS_PAWN_COUNT_IN_ONE_COLUMN = 1;
 	private static final double PAWN_BONUS_SCORE = 0.5;
+
 	private final Map<Team, Double> status;
 
 	private Result(Map<Team, Double> status) {
@@ -49,7 +50,7 @@ public class Result {
 
 	private static void addPawnBonusScore(Map<Team, Double> collect, Map<Team, Long> cnt) {
 		cnt.keySet().stream()
-			.filter(team -> cnt.get(team) == BONUSE_PAWN_COUNT_IN_ONE_COLUMN)
+			.filter(team -> cnt.get(team) == BONUS_PAWN_COUNT_IN_ONE_COLUMN)
 			.forEach(team -> collect.put(team, collect.get(team) + PAWN_BONUS_SCORE));
 	}
 

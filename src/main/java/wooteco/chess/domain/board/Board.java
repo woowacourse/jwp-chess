@@ -23,7 +23,6 @@ import wooteco.chess.domain.position.Position;
 
 public class Board {
 	private static final int COUNT_OF_KING_TO_FINISH_GAME = 1;
-	private static final String ROW_SEPARATOR = "\n";
 
 	private final Map<Position, Piece> pieces;
 

@@ -1,4 +1,4 @@
-package wooteco.chess.utils.jdbc;
+package wooteco.chess.repository.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import wooteco.chess.exception.SQLAccessException;
+import wooteco.chess.repository.DataSource;
+import wooteco.chess.repository.PrepareStatementSetter;
+import wooteco.chess.repository.RowMapper;
 
 public class JDBCTemplate {
 	private final DataSource dataSource;

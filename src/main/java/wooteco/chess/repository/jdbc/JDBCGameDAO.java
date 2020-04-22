@@ -1,12 +1,12 @@
-package wooteco.chess.repository;
+package wooteco.chess.repository.jdbc;
 
 import java.util.Objects;
 import java.util.Optional;
 
 import wooteco.chess.domain.board.BoardParser;
 import wooteco.chess.domain.game.Game;
-import wooteco.chess.domain.game.GameStateFactory;
-import wooteco.chess.utils.jdbc.JDBCTemplate;
+import wooteco.chess.domain.game.GameFactory;
+import wooteco.chess.repository.GameDAO;
 
 public class JDBCGameDAO implements GameDAO {
 	private final JDBCTemplate jdbcTemplate;
@@ -19,7 +19,7 @@ public class JDBCGameDAO implements GameDAO {
 	public Optional<Game> findById(int gameId) {
 		String query = "SELECT * FROM game WHERE id = ?";
 		return jdbcTemplate.executeQuery(query, rs ->
-			GameStateFactory.of(
+			GameFactory.of(
 				rs.getString("state"),
 				rs.getString("turn"),
 				rs.getString("board")

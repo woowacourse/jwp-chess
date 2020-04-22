@@ -6,7 +6,7 @@ import java.util.function.BiFunction;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Team;
 
-public enum GameStateFactory {
+public enum GameFactory {
 	READY("ready", (turn, board) -> new Ready(BoardFactory.create(board), Team.of(turn))),
 	STARTED("started", (turn, board) -> new Started(BoardFactory.create(board), Team.of(turn))),
 	KING_CATCHED_FINISHED("kingCatchFinish",
@@ -17,7 +17,7 @@ public enum GameStateFactory {
 	private final String state;
 	private final BiFunction<String, String, Game> gameStateGenerator;
 
-	GameStateFactory(String state, BiFunction<String, String, Game> gameStateGenerator) {
+	GameFactory(String state, BiFunction<String, String, Game> gameStateGenerator) {
 		this.state = state;
 		this.gameStateGenerator = gameStateGenerator;
 	}

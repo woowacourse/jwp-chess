@@ -13,7 +13,7 @@ public class Queen extends Piece {
 
 	@Override
 	public List<Position> findMoveModeTrace(Position from, Position to) {
-		if (from.isNotStraght(to) && from.isNotDiagonal(to)) {
+		if (from.isNotStraight(to) && from.isNotDiagonal(to)) {
 			throw new IllegalArgumentException("해당 위치로 이동할 수 없습니다.");
 		}
 		return Position.findMultipleStepTrace(from, to);

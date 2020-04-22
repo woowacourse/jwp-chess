@@ -43,7 +43,7 @@ public class Position {
 		return CACHE.get(getKey(file, rank));
 	}
 
-	private static Position of(Cell file, Cell rank) {
+	public static Position of(Cell file, Cell rank) {
 		return CACHE.get(getKey(file.getNumber(), rank.getNumber()));
 	}
 
@@ -52,28 +52,7 @@ public class Position {
 	}
 
 	public static List<Position> findMultipleStepTrace(Position from, Position to) {
-		if (from.isSameRow(to)) {
-			List<Cell> files = Cell.valuesBetween(from.getFile(), to.getFile());
-			return files.stream()
-				.map(file -> Position.of(file, from.getRank()))
-				.collect(Collectors.toList());
-		}
-		if (from.isDiagonal(to)) {
-			List<Position> positions = new ArrayList<>();
-			List<Cell> files = Cell.valuesBetween(from.getFile(), to.getFile());
-			List<Cell> ranks = Cell.valuesBetween(from.getRank(), to.getRank());
-			for (int i = 0; i < files.size(); i++) {
-				positions.add(Position.of(files.get(i), ranks.get(i)));
-			}
-			return positions;
-		}
-		if (from.isSameColumn(to)) {
-			List<Cell> ranks = Cell.valuesBetween(from.getRank(), to.getRank());
-			return ranks.stream()
-				.map(rank -> Position.of(from.getFile(), rank))
-				.collect(Collectors.toList());
-		}
-		throw new IllegalArgumentException("해당 위치로 이동할 수 없습니다.");
+		return MoveRelation.findMultipleStepTrace(from, to);
 	}
 
 	public boolean isInitialPawnPosition(Team team) {
@@ -88,7 +67,7 @@ public class Position {
 		return col.calculateAbsolute(other.col) == row.calculateAbsolute(other.row);
 	}
 
-	public boolean isNotStraght(Position other) {
+	public boolean isNotStraight(Position other) {
 		return !col.equals(other.col) && !row.equals(other.row);
 	}
 

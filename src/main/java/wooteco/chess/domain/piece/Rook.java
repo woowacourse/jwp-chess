@@ -13,7 +13,7 @@ public class Rook extends Piece {
 
 	@Override
 	public List<Position> findMoveModeTrace(Position from, Position to) {
-		if (from.isNotStraght(to)) {
+		if (from.isNotStraight(to)) {
 			throw new IllegalArgumentException("해당 위치로 이동할 수 없습니다.");
 		}
 		return Position.findMultipleStepTrace(from, to);

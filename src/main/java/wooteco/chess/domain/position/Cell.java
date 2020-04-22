@@ -52,6 +52,10 @@ public class Cell {
 		return Math.abs(this.getNumber() - other.getNumber());
 	}
 
+	public boolean isInitialPawnRow(Team team) {
+		return this.equals(PAWN_INITIAL_ROW.get(team));
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -72,9 +76,5 @@ public class Cell {
 		return "Cell{" +
 			"number=" + number +
 			'}';
-	}
-
-	public boolean isInitialPawnRow(Team team) {
-		return this.equals(PAWN_INITIAL_ROW.get(team));
 	}
 }

@@ -1,12 +1,12 @@
 package wooteco.chess.controller;
 
-import wooteco.chess.Board;
-import wooteco.chess.Command;
-import wooteco.chess.Scores;
+import wooteco.chess.domain.Command;
+import wooteco.chess.domain.Scores;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.strategy.NormalInitStrategy;
 import wooteco.chess.exception.CommandException;
 import wooteco.chess.exception.InvalidMovementException;
-import wooteco.chess.position.Position;
-import wooteco.chess.strategy.NormalInitStrategy;
 import wooteco.chess.view.ConsoleInputView;
 import wooteco.chess.view.ConsoleOutputView;
 

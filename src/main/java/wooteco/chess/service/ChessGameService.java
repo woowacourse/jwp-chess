@@ -1,12 +1,12 @@
 package wooteco.chess.service;
 
-import wooteco.chess.Board;
-import wooteco.chess.dao.IsFinishedDao;
-import wooteco.chess.dao.PiecesDao;
-import wooteco.chess.dao.TurnDao;
-import wooteco.chess.piece.Team;
-import wooteco.chess.position.Position;
-import wooteco.chess.strategy.NormalInitStrategy;
+import wooteco.chess.database.dao.IsFinishedDao;
+import wooteco.chess.database.dao.PiecesDao;
+import wooteco.chess.database.dao.TurnDao;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.piece.Team;
+import wooteco.chess.domain.strategy.NormalInitStrategy;
 
 import java.sql.SQLException;
 

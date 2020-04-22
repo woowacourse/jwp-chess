@@ -1,10 +1,10 @@
 package wooteco.chess.view;
 
-import wooteco.chess.Scores;
-import wooteco.chess.piece.Piece;
-import wooteco.chess.position.File;
-import wooteco.chess.position.Position;
-import wooteco.chess.position.Rank;
+import wooteco.chess.domain.Scores;
+import wooteco.chess.domain.board.File;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.board.Rank;
+import wooteco.chess.domain.piece.Piece;
 
 import java.util.Arrays;
 import java.util.Comparator;

@@ -1,11 +1,11 @@
 package wooteco.chess.validator;
 
-import wooteco.chess.Board;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.Position;
 import wooteco.chess.exception.BlockedMovePathException;
 import wooteco.chess.exception.InvalidDestinationException;
 import wooteco.chess.exception.InvalidTurnException;
 import wooteco.chess.exception.TeamKillException;
-import wooteco.chess.position.Position;
 
 import java.util.List;
 

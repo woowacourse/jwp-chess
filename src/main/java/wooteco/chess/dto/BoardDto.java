@@ -1,8 +1,8 @@
 package wooteco.chess.dto;
 
-import wooteco.chess.Board;
-import wooteco.chess.piece.Piece;
-import wooteco.chess.position.Position;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.piece.Piece;
 
 import java.util.HashMap;
 import java.util.Map;

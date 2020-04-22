@@ -1,9 +1,9 @@
 package wooteco.chess.validator;
 
-import wooteco.chess.Board;
-import wooteco.chess.position.File;
-import wooteco.chess.position.Position;
-import wooteco.chess.position.Rank;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.File;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.board.Rank;
 
 import java.util.List;
 import java.util.stream.Collectors;

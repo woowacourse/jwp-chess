@@ -1,6 +1,6 @@
 package wooteco.chess.exception;
 
-import wooteco.chess.piece.Team;
+import wooteco.chess.domain.piece.Team;
 
 public class InvalidTurnException extends InvalidMovementException {
 

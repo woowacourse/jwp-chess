@@ -2,10 +2,10 @@ package wooteco.chess.controller;
 
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import wooteco.chess.Scores;
-import wooteco.chess.dao.IsFinishedDao;
-import wooteco.chess.dao.PiecesDao;
-import wooteco.chess.dao.TurnDao;
+import wooteco.chess.database.dao.IsFinishedDao;
+import wooteco.chess.database.dao.PiecesDao;
+import wooteco.chess.database.dao.TurnDao;
+import wooteco.chess.domain.Scores;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.service.ChessGameService;
 
@@ -59,12 +59,6 @@ public class WebChessController {
             model.put("scores", Scores.calculateScores(service.getBoard()));
             return render(model, "scores.html");
         });
-
-        post("/delete", (req, res) -> {
-            service.delete();
-            return null;
-        });
-
     }
 
     private static void constructModel(ChessGameService service, Map<String, Object> model) throws SQLException {

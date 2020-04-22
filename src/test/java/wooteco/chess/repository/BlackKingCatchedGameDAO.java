@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.game.Game;
+import wooteco.chess.domain.game.KingCatchFinished;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceFactory;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.domain.game.Game;
-import wooteco.chess.domain.game.KingCatchFinished;
 
 public class BlackKingCatchedGameDAO implements GameDAO {
 

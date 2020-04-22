@@ -3,6 +3,7 @@ package wooteco.chess.repository;
 import java.util.Objects;
 import java.util.Optional;
 
+import wooteco.chess.domain.board.BoardParser;
 import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.game.GameStateFactory;
 import wooteco.chess.utils.jdbc.JDBCTemplate;
@@ -31,7 +32,7 @@ public class JDBCGameDAO implements GameDAO {
 		jdbcTemplate.executeUpdate(query, preparedStatement -> {
 			preparedStatement.setString(1, game.getStateType());
 			preparedStatement.setString(2, game.getTurn().name());
-			preparedStatement.setString(3, game.getBoard().parseString());
+			preparedStatement.setString(3, BoardParser.parseString(game.getBoard()));
 			preparedStatement.setInt(4, game.getId());
 		});
 	}

@@ -9,9 +9,9 @@ import wooteco.chess.domain.piece.Team;
 public enum GameStateFactory {
 	READY("ready", (turn, board) -> new Ready(BoardFactory.create(board), Team.of(turn))),
 	STARTED("started", (turn, board) -> new Started(BoardFactory.create(board), Team.of(turn))),
-	KING_CATCHED_FINISHED("king_catch_finished",
+	KING_CATCHED_FINISHED("kingCatchFinish",
 		(turn, board) -> new KingCatchFinished(BoardFactory.create(board), Team.of(turn))),
-	SUSPEND_FINISHED("suspend_finished",
+	SUSPEND_FINISHED("suspendFinish",
 		(turn, board) -> new SuspendFinished(BoardFactory.create(board), Team.of(turn)));
 
 	private final String state;

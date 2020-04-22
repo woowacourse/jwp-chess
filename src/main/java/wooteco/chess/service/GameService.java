@@ -7,9 +7,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.Result;
-import wooteco.chess.domain.game.Game;
 import wooteco.chess.repository.GameDAO;
 import wooteco.chess.view.dto.requestdto.PositionRequestDTO;
 import wooteco.chess.view.dto.responsedto.BoardDTO;
@@ -58,7 +58,7 @@ public class GameService {
 
 		Game game = gameDAO.findById(DEFAULT_USER_ID)
 			.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-		game.move(from, to);
+		game = game.move(from, to);
 		gameDAO.update(game);
 	}
 

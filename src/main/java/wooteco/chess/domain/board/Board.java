@@ -129,22 +129,4 @@ public class Board {
 	public Map<Position, Piece> getPieces() {
 		return Collections.unmodifiableMap(this.pieces);
 	}
-
-	public String parseString() {
-		StringBuilder builder = new StringBuilder();
-		for (int row = MAXIMUM_POSITION_NUMBER; row >= MINIMUM_POSITION_NUMBER; row--) {
-			builder.append(parseRowString(row));
-		}
-		return builder.toString();
-	}
-
-	private String parseRowString(int row) {
-		StringBuilder builder = new StringBuilder();
-		for (int col = MINIMUM_POSITION_NUMBER; col <= MAXIMUM_POSITION_NUMBER; col++) {
-			Piece piece = findPiece(Position.of(col, row));
-			builder.append(piece.getSymbol());
-		}
-		builder.append(ROW_SEPARATOR);
-		return builder.toString();
-	}
 }

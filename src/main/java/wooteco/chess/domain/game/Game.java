@@ -14,7 +14,6 @@ import wooteco.chess.domain.result.Result;
 
 public abstract class Game {
 	private static final String ILLEGAL_STATE_CHANGE_REQUEST_EXCEPTION_MESSAGE = "유효하지 않는 변경 요청입니다.";
-
 	private static final Map<String, Function<Game, Game>> CHANGE_STATE_FUNCTIONS;
 	private static final String START_REQUEST = "start";
 	private static final String END_REQUEST = "end";

@@ -1,8 +1,9 @@
 package wooteco.chess.service;
 
+import static java.util.stream.Collectors.*;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import wooteco.chess.dao.BoardDAO;
 import wooteco.chess.dao.TurnInfoDAO;
@@ -23,10 +24,8 @@ public class ChessService {
 	}
 
 	public void initialize(String gameId) {
-		if (boardDAO.findAll(gameId).isEmpty()) {
-			for (Piece piece : BoardFactory.toList()) {
-				boardDAO.addPiece(gameId, piece);
-			}
+		if (boardDAO.hasNotGameIn(gameId)) {
+			boardDAO.addPieces(gameId, BoardFactory.toList());
 			turnInfoDAO.initialize(gameId, Team.WHITE);
 		}
 	}
@@ -42,10 +41,7 @@ public class ChessService {
 	public Map<String, String> getBoard(String gameId) {
 		return boardDAO.findAll(gameId)
 			.stream()
-			.collect(Collectors.toMap(
-				piece -> piece.getPosition().getName(),
-				Piece::getSymbol
-			));
+			.collect(toMap(piece -> piece.getPosition().getName(), Piece::getSymbol));
 	}
 
 	public Map<String, String> getResult(String gameId) {

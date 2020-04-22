@@ -16,6 +16,23 @@ import wooteco.chess.domain.position.Column;
 import wooteco.chess.domain.position.Position;
 
 public class BoardDAO {
+	public void addPieces(String gameId, List<Piece> pieces) {
+		String query = "INSERT INTO board VALUES (?, ?, ?)";
+		try (Connection con = getConnection();
+			 PreparedStatement pstmt = con.prepareStatement(query)) {
+			for (Piece piece : pieces) {
+				pstmt.setString(1, gameId);
+				pstmt.setString(2, piece.getPosition().getName());
+				pstmt.setString(3, piece.getSymbol());
+				pstmt.addBatch();
+				pstmt.clearParameters();
+			}
+			pstmt.executeBatch();
+		} catch (SQLException e) {
+			throw new IllegalArgumentException(e.getMessage());
+		}
+	}
+
 	public void addPiece(String gameId, Piece piece) {
 		String query = "INSERT INTO board VALUES (?, ?, ?)";
 		try (Connection con = getConnection();
@@ -45,6 +62,18 @@ public class BoardDAO {
 			secondPstmt.setString(2, gameId);
 			secondPstmt.setString(3, source.getPosition().getName());
 			secondPstmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new IllegalArgumentException(e.getMessage());
+		}
+	}
+
+	public boolean hasNotGameIn(String gameId) {
+		String query = "SELECT game_id FROM board WHERE game_id = ?";
+		try (Connection con = getConnection();
+			 PreparedStatement pstmt = con.prepareStatement(query)) {
+			pstmt.setString(1, gameId);
+			ResultSet rs = pstmt.executeQuery();
+			return !rs.next();
 		} catch (SQLException e) {
 			throw new IllegalArgumentException(e.getMessage());
 		}

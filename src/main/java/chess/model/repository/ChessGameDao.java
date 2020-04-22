@@ -163,24 +163,6 @@ public class ChessGameDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public void updateProceedNByRoomId(int roomId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "UPDATE CHESS_GAME_TB",
-            "   SET PROCEEDING_YN = 'N'",
-            " WHERE ID IN (",
-            "       SELECT ID",
-            "         FROM (",
-            "              SELECT GAME.ID",
-            "                FROM CHESS_GAME_TB AS GAME",
-            "                JOIN ROOM_TB AS ROOM",
-            "               WHERE GAME.ROOM_ID = ROOM.ID",
-            "                 AND ROOM.ID = ?) AS ID_TB)"
-        );
-        PreparedStatementSetter pss = pstmt -> pstmt.setInt(1, roomId);
-        jdbcTemplate.executeUpdate(query, pss);
-    }
-
     public Optional<Integer> getRoomId(int gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(

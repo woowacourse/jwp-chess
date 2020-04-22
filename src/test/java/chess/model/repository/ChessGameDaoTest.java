@@ -130,22 +130,6 @@ class ChessGameDaoTest {
     }
 
     @Test
-    void updateProceedNByRoomId() {
-        assertThat(CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalArgumentException::new))
-            .isEqualTo(GAME_TURN);
-        assertThat(CHESS_GAME_DAO.getUserNames(gameId)).isEqualTo(USER_NAMES);
-        assertThat(CHESS_GAME_DAO.isProceeding(gameId).orElseThrow(IllegalArgumentException::new))
-            .isTrue();
-
-        CHESS_GAME_DAO.updateProceedNByRoomId(ROOM_ID);
-        assertThat(CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalArgumentException::new))
-            .isEqualTo(GAME_TURN);
-        assertThat(CHESS_GAME_DAO.getUserNames(gameId)).isEqualTo(USER_NAMES);
-        assertThat(CHESS_GAME_DAO.isProceeding(gameId).orElseThrow(IllegalArgumentException::new))
-            .isFalse();
-    }
-
-    @Test
     void getRoomId() {
         assertThat(CHESS_GAME_DAO.getRoomId(gameId).orElseThrow(IllegalArgumentException::new))
             .isEqualTo(ROOM_ID);

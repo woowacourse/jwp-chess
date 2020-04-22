@@ -103,6 +103,10 @@ public class Position {
         return this.rank == other.rank;
     }
 
+    public boolean isSameRank(Rank rank) {
+        return this.rank == rank;
+    }
+
     public boolean isSameFile(Position other) {
         return this.file == other.file;
     }

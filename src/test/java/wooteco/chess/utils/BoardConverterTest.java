@@ -20,6 +20,9 @@ public class BoardConverterTest {
     @DisplayName("스트링을 보드로 바꾸는 기능 테스트")
     @Test
     void convertStringToBoard() {
-
+        NormalInitStrategy strategy = new NormalInitStrategy();
+        Board board = new Board(strategy.init());
+        assertThat(BoardConverter.convertToBoard("rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR"))
+                .isEqualTo(board);
     }
 }

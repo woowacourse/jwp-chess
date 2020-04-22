@@ -6,6 +6,7 @@ import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.board.Rank;
 import wooteco.chess.domain.piece.Piece;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class BoardConverter {
@@ -20,5 +21,17 @@ public class BoardConverter {
             }
         }
         return sb.toString();
+    }
+
+    public static Board convertToBoard(String boardInformation) {
+        Map<Position, Piece> pieces = new HashMap<>();
+        char[] symbols = boardInformation.toCharArray();
+        int index = 0;
+        for (Rank rank : Rank.valuesExceptNone()) {
+            for (File file : File.valuesExceptNone()) {
+                pieces.put(Position.of(file, rank), Piece.of(symbols[index++]));
+            }
+        }
+        return new Board(pieces);
     }
 }

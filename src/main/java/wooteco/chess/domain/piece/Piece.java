@@ -17,7 +17,8 @@ public class Piece {
     }
 
     public Piece(Team team, PieceType pieceType) {
-        this(team, pieceType, false);
+        this.team = team;
+        this.pieceType = pieceType;
     }
 
     public static Piece of(char symbol, boolean hasMoved) {
@@ -28,6 +29,16 @@ public class Piece {
             return new Piece(Team.BLACK, PieceType.of(symbol), hasMoved);
         }
         return new Piece(Team.WHITE, PieceType.of(Character.toUpperCase(symbol)), hasMoved);
+    }
+
+    public static Piece of(char symbol) {
+        if (symbol == '.') {
+            return new Piece(Team.NONE, PieceType.NONE);
+        }
+        if (Character.isUpperCase(symbol)) {
+            return new Piece(Team.BLACK, PieceType.of(symbol));
+        }
+        return new Piece(Team.WHITE, PieceType.of(Character.toUpperCase(symbol)));
     }
 
     public void throwExceptionIfNotMovable(Board board, Position source, Position target) {

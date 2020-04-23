@@ -2,10 +2,12 @@ package chess.service;
 
 import chess.dao.RoomDao;
 import chess.dto.RoomDto;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class ChessRoomsService {
 	private static final ChessRoomsService ROOMS_SERVICE;
 

@@ -22,7 +22,7 @@ public class ChessStatisticController2 {
 	}
 
 	@GetMapping(PATH)
-	private String routeGetMethod(final Model model) throws SQLException {
+	private String statistics(final Model model) throws SQLException {
 			final List<StatusRecordDto> statusRecordWithRoomNames
 					= chessStatisticService.loadStatusRecordsWithRoomName();
 

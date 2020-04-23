@@ -2,6 +2,7 @@ package chess.dao;
 
 import chess.dao.exceptions.DaoNoneSelectedException;
 import chess.dto.RoomDto;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class RoomDao {
 	private static final RoomDao ROOM_DAO;
 

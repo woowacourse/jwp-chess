@@ -8,7 +8,7 @@ import wooteco.chess.dao.ChessHistoryDao;
 import wooteco.chess.dao.MySqlChessGameDao;
 import wooteco.chess.dao.MySqlChessHistoryDao;
 import wooteco.chess.database.ConnectionManager;
-import wooteco.chess.database.JdbcTemplate;
+import wooteco.chess.database.CustomJdbcTemplate;
 import wooteco.chess.database.MySqlConnectionManager;
 import wooteco.chess.service.ChessService;
 
@@ -24,7 +24,7 @@ public class SparkChessApplication {
 
 	private static SparkChessController initWebController() {
 		ConnectionManager connectionManager = MySqlConnectionManager.getInstance();
-		JdbcTemplate template = new JdbcTemplate(connectionManager);
+		CustomJdbcTemplate template = new CustomJdbcTemplate(connectionManager);
 
 		ChessGameDao chessGameDao = new MySqlChessGameDao(template);
 		ChessHistoryDao chessHistoryDao = new MySqlChessHistoryDao(template);

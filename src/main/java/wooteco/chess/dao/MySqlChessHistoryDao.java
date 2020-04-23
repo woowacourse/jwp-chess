@@ -5,25 +5,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import wooteco.chess.database.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import wooteco.chess.database.CustomJdbcTemplate;
 import wooteco.chess.entity.ChessHistoryEntity;
 
+@Repository
 public class MySqlChessHistoryDao implements ChessHistoryDao {
 
 	private static final String CHESS_HISTORY_TABLE = "chess_histories";
 
-	private final JdbcTemplate jdbcTemplate;
+	private final CustomJdbcTemplate customJdbcTemplate;
 
-	public MySqlChessHistoryDao(final JdbcTemplate jdbcTemplate) {
-		Objects.requireNonNull(jdbcTemplate, "JdbcTemplate이 null입니다.");
-		this.jdbcTemplate = jdbcTemplate;
+	public MySqlChessHistoryDao(final CustomJdbcTemplate customJdbcTemplate) {
+		Objects.requireNonNull(customJdbcTemplate, "JdbcTemplate이 null입니다.");
+		this.customJdbcTemplate = customJdbcTemplate;
 	}
 
 	@Override
 	public List<ChessHistoryEntity> findAllByGameId(final long gameId) {
 		final String query = "SELECT * FROM " + CHESS_HISTORY_TABLE + " WHERE game_id = ?";
 
-		return jdbcTemplate.executeQuery(query, resultSet -> {
+		return customJdbcTemplate.executeQuery(query, resultSet -> {
 			final List<ChessHistoryEntity> entities = new ArrayList<>();
 
 			while (resultSet.next()) {
@@ -44,7 +47,7 @@ public class MySqlChessHistoryDao implements ChessHistoryDao {
 		final String query =
 			"INSERT INTO " + CHESS_HISTORY_TABLE + " (game_id, start, end, created_time) VALUES (?, ?, ?, ?)";
 
-		jdbcTemplate.executeUpdate(query, preparedStatement -> {
+		customJdbcTemplate.executeUpdate(query, preparedStatement -> {
 			preparedStatement.setLong(1, entity.getGameId());
 			preparedStatement.setString(2, entity.getStart());
 			preparedStatement.setString(3, entity.getEnd());
@@ -56,7 +59,7 @@ public class MySqlChessHistoryDao implements ChessHistoryDao {
 	public void deleteAll() {
 		final String query = "DELETE FROM " + CHESS_HISTORY_TABLE;
 
-		jdbcTemplate.executeUpdate(query);
+		customJdbcTemplate.executeUpdate(query);
 	}
 
 }

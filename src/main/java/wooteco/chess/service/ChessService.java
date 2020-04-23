@@ -5,6 +5,8 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Objects;
 
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.ChessGameDao;
 import wooteco.chess.dao.ChessHistoryDao;
 import wooteco.chess.domain.chessBoard.ChessBoard;
@@ -15,6 +17,7 @@ import wooteco.chess.entity.ChessGameEntity;
 import wooteco.chess.entity.ChessHistoryEntity;
 import wooteco.chess.service.dto.ChessGameDto;
 
+@Service
 public class ChessService {
 
 	private static final String MOVE_COMMAND = "move";

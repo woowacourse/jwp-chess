@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 
-import wooteco.chess.database.JdbcTemplate;
+import wooteco.chess.database.CustomJdbcTemplate;
 import wooteco.chess.database.MySqlConnectionManager;
 import wooteco.chess.entity.ChessGameEntity;
 
@@ -21,36 +21,37 @@ class MySqlChessGameDaoTest {
 	private static final String CHESS_GAME_TABLE = "chess_games";
 	private static final long INIT_AUTO_INCREMENT = 1L;
 
-	private JdbcTemplate jdbcTemplate;
+	private CustomJdbcTemplate customJdbcTemplate;
 
 	@BeforeEach
 	void setUp() {
-		jdbcTemplate = new JdbcTemplate(MySqlConnectionManager.getInstance());
+		customJdbcTemplate = new CustomJdbcTemplate(MySqlConnectionManager.getInstance());
 
 		final String query1 = "DELETE FROM " + CHESS_GAME_TABLE;
-		jdbcTemplate.executeUpdate(query1);
+		customJdbcTemplate.executeUpdate(query1);
 
 		final String query2 = "ALTER TABLE " + CHESS_GAME_TABLE + " AUTO_INCREMENT = ?";
-		jdbcTemplate.executeUpdate(query2, preparedStatement -> preparedStatement.setLong(1, INIT_AUTO_INCREMENT));
+		customJdbcTemplate.executeUpdate(query2,
+			preparedStatement -> preparedStatement.setLong(1, INIT_AUTO_INCREMENT));
 	}
 
 	@ParameterizedTest
 	@NullSource
-	void MySqlChessGameDao_NullJdbcTemplate_ExceptionThrown(final JdbcTemplate jdbcTemplate) {
-		assertThatThrownBy(() -> new MySqlChessGameDao(jdbcTemplate))
+	void MySqlChessGameDao_NullJdbcTemplate_ExceptionThrown(final CustomJdbcTemplate customJdbcTemplate) {
+		assertThatThrownBy(() -> new MySqlChessGameDao(customJdbcTemplate))
 			.isInstanceOf(NullPointerException.class)
 			.hasMessage("JdbcTemplate이 null입니다.");
 	}
 
 	@Test
 	void MySqlChessGameDao_JdbcTemplate_GenerateInstance() {
-		assertThat(new MySqlChessGameDao(jdbcTemplate)).isInstanceOf(MySqlChessGameDao.class);
+		assertThat(new MySqlChessGameDao(customJdbcTemplate)).isInstanceOf(MySqlChessGameDao.class);
 	}
 
 	@ParameterizedTest
 	@NullSource
 	void add_NullChessGameEntity_ExceptionThrown(final ChessGameEntity entity) {
-		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(jdbcTemplate);
+		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(customJdbcTemplate);
 
 		assertThatThrownBy(() -> mySqlChessGameDao.add(entity))
 			.isInstanceOf(NullPointerException.class)
@@ -59,7 +60,7 @@ class MySqlChessGameDaoTest {
 
 	@Test
 	void add_ChessGameEntity_InsertChessGame() {
-		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(jdbcTemplate);
+		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(customJdbcTemplate);
 		final ChessGameEntity entity = ChessGameEntity.of(LocalDateTime.now());
 
 		assertThat(mySqlChessGameDao.add(entity)).isEqualTo(INIT_AUTO_INCREMENT);
@@ -67,14 +68,14 @@ class MySqlChessGameDaoTest {
 
 	@Test
 	void findMaxGameId_EmptyChessGame_ExceptionThrown() {
-		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(jdbcTemplate);
+		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(customJdbcTemplate);
 
 		assertThat(mySqlChessGameDao.findMaxGameId()).isEqualTo(MySqlChessGameDao.EMPTY_CHESS_GAME);
 	}
 
 	@Test
 	void findMaxGameId_ReturnMaxGameId() {
-		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(jdbcTemplate);
+		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(customJdbcTemplate);
 		final ChessGameEntity entity = ChessGameEntity.of(LocalDateTime.now());
 		mySqlChessGameDao.add(entity);
 
@@ -83,14 +84,14 @@ class MySqlChessGameDaoTest {
 
 	@Test
 	void isEmpty_EmptyChessGame_ReturnTrue() {
-		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(jdbcTemplate);
+		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(customJdbcTemplate);
 
 		assertThat(mySqlChessGameDao.isEmpty()).isTrue();
 	}
 
 	@Test
 	void isEmpty_NotEmptyChessGame_ReturnFalse() {
-		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(jdbcTemplate);
+		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(customJdbcTemplate);
 		final ChessGameEntity entity = ChessGameEntity.of(LocalDateTime.now());
 		mySqlChessGameDao.add(entity);
 
@@ -99,7 +100,7 @@ class MySqlChessGameDaoTest {
 
 	@Test
 	void deleteAll_ExistChessGame_DeleteAllFromChessGameTable() {
-		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(jdbcTemplate);
+		final MySqlChessGameDao mySqlChessGameDao = new MySqlChessGameDao(customJdbcTemplate);
 		final ChessGameEntity entity = ChessGameEntity.of(LocalDateTime.now());
 		mySqlChessGameDao.add(entity);
 		mySqlChessGameDao.deleteAll();
@@ -110,7 +111,7 @@ class MySqlChessGameDaoTest {
 	private List<ChessGameEntity> findAll() {
 		final String query = "SELECT * FROM " + CHESS_GAME_TABLE;
 
-		return jdbcTemplate.executeQuery(query, resultSet -> {
+		return customJdbcTemplate.executeQuery(query, resultSet -> {
 			final List<ChessGameEntity> entities = new ArrayList<>();
 
 			while (resultSet.next()) {
@@ -126,7 +127,7 @@ class MySqlChessGameDaoTest {
 	void tearDown() {
 		final String query = "DELETE FROM " + CHESS_GAME_TABLE;
 
-		jdbcTemplate.executeUpdate(query);
+		customJdbcTemplate.executeUpdate(query);
 	}
 
 }

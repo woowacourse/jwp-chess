@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class MySqlConnectionManager implements ConnectionManager {
 
 	private static final String server = "127.0.0.1:13306"; // MySQL 서버 주소

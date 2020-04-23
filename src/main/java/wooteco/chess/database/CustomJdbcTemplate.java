@@ -6,11 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class JdbcTemplate {
+import org.springframework.stereotype.Component;
+
+@Component
+public class CustomJdbcTemplate {
 
 	private final ConnectionManager connectionManager;
 
-	public JdbcTemplate(final ConnectionManager connectionManager) {
+	public CustomJdbcTemplate(final ConnectionManager connectionManager) {
 		this.connectionManager = connectionManager;
 	}
 

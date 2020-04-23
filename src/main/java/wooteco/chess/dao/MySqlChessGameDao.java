@@ -4,19 +4,22 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-import wooteco.chess.database.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import wooteco.chess.database.CustomJdbcTemplate;
 import wooteco.chess.entity.ChessGameEntity;
 
+@Repository
 public class MySqlChessGameDao implements ChessGameDao {
 
 	public static final long EMPTY_CHESS_GAME = 0L;
 	private static final String CHESS_GAME_TABLE = "chess_games";
 
-	private final JdbcTemplate jdbcTemplate;
+	private final CustomJdbcTemplate customJdbcTemplate;
 
-	public MySqlChessGameDao(final JdbcTemplate jdbcTemplate) {
-		Objects.requireNonNull(jdbcTemplate, "JdbcTemplate이 null입니다.");
-		this.jdbcTemplate = jdbcTemplate;
+	public MySqlChessGameDao(final CustomJdbcTemplate customJdbcTemplate) {
+		Objects.requireNonNull(customJdbcTemplate, "JdbcTemplate이 null입니다.");
+		this.customJdbcTemplate = customJdbcTemplate;
 	}
 
 	@Override
@@ -24,7 +27,7 @@ public class MySqlChessGameDao implements ChessGameDao {
 		Objects.requireNonNull(entity, "엔티티가 null입니다.");
 		final String query = "INSERT INTO " + CHESS_GAME_TABLE + " (created_time) VALUES (?)";
 
-		return jdbcTemplate.executeUpdate(query, preparedStatement -> {
+		return customJdbcTemplate.executeUpdate(query, preparedStatement -> {
 			preparedStatement.setTimestamp(1, Timestamp.valueOf(entity.getCreatedTime()));
 		});
 	}
@@ -33,7 +36,7 @@ public class MySqlChessGameDao implements ChessGameDao {
 	public long findMaxGameId() {
 		final String query = "SELECT MAX(game_id) AS max_id FROM " + CHESS_GAME_TABLE;
 
-		return jdbcTemplate.executeQuery(query, resultSet -> {
+		return customJdbcTemplate.executeQuery(query, resultSet -> {
 			if (resultSet.next()) {
 				return resultSet.getLong("max_id");
 			}
@@ -45,14 +48,14 @@ public class MySqlChessGameDao implements ChessGameDao {
 	public boolean isEmpty() {
 		final String query = "SELECT * FROM " + CHESS_GAME_TABLE;
 
-		return !jdbcTemplate.executeQuery(query, ResultSet::next);
+		return !customJdbcTemplate.executeQuery(query, ResultSet::next);
 	}
 
 	@Override
 	public void deleteAll() {
 		final String query = "DELETE FROM " + CHESS_GAME_TABLE;
 
-		jdbcTemplate.executeUpdate(query);
+		customJdbcTemplate.executeUpdate(query);
 	}
 
 }

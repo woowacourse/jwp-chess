@@ -11,7 +11,7 @@ import wooteco.chess.util.StringUtil;
 import wooteco.chess.view.ConsoleInputView;
 import wooteco.chess.view.ConsoleOutputView;
 
-public class ConsoleUIChessApplication {
+public class ConsoleChessApplication {
 
 	public static void main(String[] args) {
 		ChessBoard chessBoard = new ChessBoard(ChessBoardInitializer.create());

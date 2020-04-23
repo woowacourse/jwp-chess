@@ -6,20 +6,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import wooteco.chess.service.ChessService;
-import wooteco.chess.service.dto.ChessBoardDto;
-import wooteco.chess.service.dto.ChessGameDto;
-import wooteco.chess.service.dto.ChessStatusDtos;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import wooteco.chess.service.ChessService;
+import wooteco.chess.service.dto.ChessBoardDto;
+import wooteco.chess.service.dto.ChessGameDto;
+import wooteco.chess.service.dto.ChessStatusDtos;
 
-public class WebChessController {
+public class SparkChessController {
 
 	private final ChessService chessService;
 
-	public WebChessController(final ChessService chessService) {
+	public SparkChessController(final ChessService chessService) {
 		Objects.requireNonNull(chessService, "체스 서비스가 null입니다.");
 		this.chessService = chessService;
 	}

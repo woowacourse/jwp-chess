@@ -16,7 +16,7 @@ import wooteco.chess.dto.GameManagerDto;
 public class GameDao {
 	public int addGame(GameManagerDto gameManagerDto) {
 		int roomNo = ThreadLocalRandom.current()
-			.ints(1, 999999)
+			.ints(100000, 999999)
 			.findFirst()
 			.orElse(0);
 

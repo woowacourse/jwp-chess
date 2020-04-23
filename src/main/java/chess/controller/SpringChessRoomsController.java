@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Controller
-public class ChessRoomsController2 {
+public class SpringChessRoomsController {
 	public static final String PATH = "/chess/rooms";
 	private static final String STATIC_PATH = "/rooms";
 	private static final String EMPTY = "";
@@ -23,7 +23,7 @@ public class ChessRoomsController2 {
 
 	private final ChessRoomsService chessRoomsService;
 
-	public ChessRoomsController2(final ChessRoomsService chessRoomsService) {
+	public SpringChessRoomsController(final ChessRoomsService chessRoomsService) {
 		this.chessRoomsService = chessRoomsService;
 	}
 

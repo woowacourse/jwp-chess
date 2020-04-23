@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChessRoomsController {
-	private static final ChessRoomsController ROOMS_CONTROLLER;
+public class SparkChessRoomsController {
+	private static final SparkChessRoomsController ROOMS_CONTROLLER;
 	public static final String PATH = "/chess/rooms";
 	private static final String STATIC_PATH = "/rooms.hbs";
 	private static final String EMPTY = "";
@@ -23,10 +23,10 @@ public class ChessRoomsController {
 	private final ChessRoomsService chessRoomsService;
 
 	static {
-		ROOMS_CONTROLLER = new ChessRoomsController(ChessRoomsService.getInstance());
+		ROOMS_CONTROLLER = new SparkChessRoomsController(ChessRoomsService.getInstance());
 	}
 
-	private ChessRoomsController(final ChessRoomsService chessRoomsService) {
+	private SparkChessRoomsController(final ChessRoomsService chessRoomsService) {
 		this.chessRoomsService = chessRoomsService;
 	}
 
@@ -85,7 +85,7 @@ public class ChessRoomsController {
 		return EMPTY;
 	}
 
-	public static ChessRoomsController getInstance() {
+	public static SparkChessRoomsController getInstance() {
 		return ROOMS_CONTROLLER;
 	}
 }

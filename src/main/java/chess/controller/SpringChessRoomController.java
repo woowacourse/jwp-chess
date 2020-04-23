@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.sql.SQLException;
 
 @Controller
-public class ChessRoomController2 {
+public class SpringChessRoomController {
 	private static final String PATH = "/chess/rooms";
 	private static final String PATH_VARIABLE = "{room_id}";
 	private static final String STATIC_PATH = "/chess";
@@ -24,7 +24,7 @@ public class ChessRoomController2 {
 
 	private final ChessRoomService chessRoomService;
 
-	public ChessRoomController2(final ChessRoomService chessRoomService) {
+	public SpringChessRoomController(final ChessRoomService chessRoomService) {
 		this.chessRoomService = chessRoomService;
 	}
 

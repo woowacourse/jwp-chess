@@ -5,15 +5,20 @@ import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.strategy.NormalInitStrategy;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class RoomService {
     private ChessDao chessDao = new ChessDao();
 
-    public void create() throws SQLException {
+    public List<Integer> loadRoomNumbers() throws SQLException {
+        return chessDao.loadRoomNumbers();
+    }
+
+    public int create() throws SQLException {
         NormalInitStrategy strategy = new NormalInitStrategy();
         Board board = new Board(strategy.init());
 
-        chessDao.createRoom(board);
+        return chessDao.createRoom(board);
     }
 
     public void delete(int roomId) throws SQLException {

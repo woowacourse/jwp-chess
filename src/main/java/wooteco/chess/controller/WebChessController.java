@@ -2,12 +2,11 @@ package wooteco.chess.controller;
 
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import wooteco.chess.database.dao.IsFinishedDao;
-import wooteco.chess.database.dao.PiecesDao;
-import wooteco.chess.database.dao.TurnDao;
+import wooteco.chess.database.dao.ChessDao;
 import wooteco.chess.domain.Scores;
 import wooteco.chess.dto.BoardDto;
-import wooteco.chess.service.ChessGameService;
+import wooteco.chess.service.BoardService;
+import wooteco.chess.service.RoomService;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -18,51 +17,67 @@ import static spark.Spark.*;
 public class WebChessController {
     public static void main(String[] args) {
         staticFiles.location("/public");
-        ChessGameService service = new ChessGameService(new PiecesDao(), new TurnDao(), new IsFinishedDao());
+        BoardService boardService = new BoardService(new ChessDao());
+        RoomService roomService = new RoomService();
 
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            if (service.isEmpty()) {
-                service.init();
-            }
-            constructModel(service, model);
+            model.put("roomNumbers", roomService.loadRoomNumbers());
+
             return render(model, "index.html");
         });
 
-        post("/", (req, res) -> {
+        post("/newroom", (req, res) -> {
+            int roomId = roomService.create();
+            res.redirect("/rooms/" + roomId);
+            return null;
+        });
+
+        get("/rooms/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
+            Map<String, Object> model = new HashMap<>();
+            constructModel(id, boardService, model);
+            return render(model, "board.html");
+        });
+
+        post("/rooms/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
             Map<String, Object> model = new HashMap<>();
             String source = req.queryParams("source");
             String target = req.queryParams("target");
             try {
-                service.play(source, target);
+                boardService.play(id, source, target);
             } catch (RuntimeException e) {
                 model.put("error-message", e.getMessage());
-                constructModel(service, model);
-                return render(model, "index.html");
+                constructModel(id, boardService, model);
+                return render(model, "board.html");
             }
-            if (service.isFinished()) {
-                model.put("winner", service.isTurnWhite() ? "흑팀" : "백팀");
+            if (boardService.isFinished(id)) {
+                model.put("winner", boardService.isTurnWhite(id) ? "흑팀" : "백팀");
                 return render(model, "result.html");
             }
-            constructModel(service, model);
-            return render(model, "index.html");
+            constructModel(id, boardService, model);
+            return render(model, "board.html");
         });
 
-        post("/newgame", (req, res) -> {
-            service.init();
-            res.redirect("/");
+        post("/newgame/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
+            boardService.init(id);
+            res.redirect("/rooms/" + id);
             return null;
         });
 
-        post("/scores", (req, res) -> {
+        get("/scores/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
             Map<String, Object> model = new HashMap<>();
-            model.put("scores", Scores.calculateScores(service.getBoard()));
+            model.put("id", id);
+            model.put("scores", Scores.calculateScores(boardService.getBoard(id)));
             return render(model, "scores.html");
         });
     }
 
-    private static void constructModel(ChessGameService service, Map<String, Object> model) throws SQLException {
-        BoardDto boardDTO = new BoardDto(service.getBoard());
+    private static void constructModel(int roomId, BoardService service, Map<String, Object> model) throws SQLException {
+        BoardDto boardDTO = new BoardDto(service.getBoard(roomId));
         Map<String, String> pieces = boardDTO.getBoard();
         for (String positionKey : pieces.keySet()) {
             String imageName = pieces.get(positionKey);
@@ -70,6 +85,7 @@ public class WebChessController {
                 imageName = "blank";
             }
             model.put(positionKey, imageName);
+            model.put("id", roomId);
         }
     }
 

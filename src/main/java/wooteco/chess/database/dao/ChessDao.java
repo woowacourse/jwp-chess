@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChessDao {
     private final Connection conn;
@@ -22,7 +24,9 @@ public class ChessDao {
         PreparedStatement pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, roomId);
         ResultSet rs = pstmt.executeQuery();
-
+        if (!rs.next()) {
+            return null;
+        }
         String boardInformation = rs.getString("board");
         Team turn = rs.getBoolean("is_white") ? Team.WHITE : Team.BLACK;
         return BoardConverter.convertToBoard(boardInformation, turn);
@@ -48,14 +52,39 @@ public class ChessDao {
         pstmt.executeUpdate();
     }
 
-    public void createRoom(Board board) throws SQLException{
+    public int createRoom(Board board) throws SQLException {
         String boardInformation = BoardConverter.convertToString(board);
-        boolean isWhite = board.getTurn() == Team.WHITE;
+        boolean isWhite = (board.getTurn() == Team.WHITE);
 
-        String query = "INSERT INTO chess VALUES (?, ?)";
+        String query = "INSERT INTO chess (board, is_white) VALUES (?, ?)";
         PreparedStatement pstmt = conn.prepareStatement(query);
         pstmt.setString(1, boardInformation);
         pstmt.setBoolean(2, isWhite);
         pstmt.executeUpdate();
+
+        query = "SELECT LAST_INSERT_ID()";
+        pstmt = conn.prepareStatement(query);
+        ResultSet rs = pstmt.executeQuery();
+
+        if (!rs.next()) {
+            return 0;
+        }
+        return rs.getInt(1);
+    }
+
+    public List<Integer> loadRoomNumbers() throws SQLException {
+        String query = "SELECT room_id FROM chess";
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        ResultSet rs = pstmt.executeQuery();
+
+        if (!rs.next()) {
+            return null;
+        }
+
+        List<Integer> roomNumbers = new ArrayList<>();
+        do {
+            roomNumbers.add(rs.getInt("room_id"));
+        } while (rs.next());
+        return roomNumbers;
     }
 }

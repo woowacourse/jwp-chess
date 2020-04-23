@@ -23,7 +23,6 @@ public class ConsoleChessController {
     private void start() {
         ConsoleOutputView.printGameIntro();
         if (requestCommand().isEnd()) {
-            board.finishGame();
             return;
         }
         ConsoleOutputView.printBoard(board.getPieces());

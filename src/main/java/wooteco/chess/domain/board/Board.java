@@ -3,8 +3,8 @@ package wooteco.chess.domain.board;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.exception.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Board {
@@ -13,7 +13,7 @@ public class Board {
     private static final int BLANK_END_INDEX = 6;
 
     private Map<Position, Piece> board;
-    private boolean isFinished = false;
+    private boolean isFinished;
 
     public Board(final Map<Position, Piece> board) {
         if (isNotProperBoardSize(board)) {
@@ -73,7 +73,7 @@ public class Board {
                 .filter(key -> key.equals(position))
                 .map(key -> board.get(key))
                 .findFirst()
-                .orElseThrow(() -> new InvalidPositionException("존재하지 않는 포지션입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포지션입니다."));
     }
 
     public void move(final String from, final String to) {
@@ -105,6 +105,6 @@ public class Board {
     }
 
     public Map<Position, Piece> getBoard() {
-        return board;
+        return new HashMap(board);
     }
 }

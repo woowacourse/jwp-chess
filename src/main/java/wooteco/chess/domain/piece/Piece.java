@@ -3,7 +3,6 @@ package wooteco.chess.domain.piece;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.util.Direction;
-import wooteco.chess.exception.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +44,7 @@ public abstract class Piece {
         if (pieceType.possiblePositions(board, this, fromPosition).contains(toPosition)) {
             return true;
         }
-        throw new PieceImpossibleMoveException("해당 포지션으로 이동할 수 없습니다.");
+        throw new IllegalArgumentException("해당 포지션으로 이동할 수 없습니다.");
     }
 
     public boolean isKing() {

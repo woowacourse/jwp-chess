@@ -3,7 +3,6 @@ package wooteco.chess.domain.strategy;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.exception.*;
 
 import java.util.List;
 
@@ -12,6 +11,6 @@ public class BlankStrategy implements MoveStrategy {
 
     @Override
     public List<Position> possiblePositions(Board board, Piece piece, Position position) {
-        throw new PieceImpossibleMoveException(BLANK_MOVE_UNSUPPORTED_EXCEPTION_MESSAGE);
+        throw new IllegalArgumentException(BLANK_MOVE_UNSUPPORTED_EXCEPTION_MESSAGE);
     }
 }

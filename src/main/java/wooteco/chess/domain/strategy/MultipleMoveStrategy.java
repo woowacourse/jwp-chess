@@ -19,15 +19,14 @@ public class MultipleMoveStrategy implements MoveStrategy {
                 Position nextPosition = currentPosition.moveBy(direction);
                 Piece nextPiece = board.findBy(nextPosition);
 
-                if (nextPiece.isBlank()) {
-                    possiblePositions.add(nextPosition);
-                    currentPosition = nextPosition;
-                } else if (piece.isOtherTeam(nextPiece)) {
-                    possiblePositions.add(nextPosition);
-                    break;
-                } else if (piece.isSameTeam(nextPiece)) {
+                if (!nextPiece.isBlank()) {
+                    if (piece.isOtherTeam(nextPiece)) {
+                        possiblePositions.add(nextPosition);
+                    }
                     break;
                 }
+                possiblePositions.add(nextPosition);
+                currentPosition = nextPosition;
             }
         }
         return possiblePositions;

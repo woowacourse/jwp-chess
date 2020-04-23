@@ -33,11 +33,11 @@ public enum PieceType {
 
     BLANK(new BlankStrategy(), Directions.BLANK_DIRECTION, '.', Team.BLANK, 0);
 
-    private static final Map<String, PieceType> ENUM_MAP = new HashMap<>();
+    private static final Map<String, PieceType> PIECETYPE_MAP = new HashMap<>();
 
     static {
         for (PieceType pieceType : values()) {
-            ENUM_MAP.put(pieceType.name(), pieceType);
+            PIECETYPE_MAP.put(pieceType.name(), pieceType);
         }
     }
 

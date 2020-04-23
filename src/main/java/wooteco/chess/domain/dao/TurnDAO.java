@@ -1,5 +1,6 @@
 package wooteco.chess.domain.dao;
 
+import wooteco.chess.domain.connection.Connector;
 import wooteco.chess.domain.piece.Team;
 
 import java.sql.*;
@@ -7,71 +8,47 @@ import java.sql.*;
 public class TurnDAO {
     private Connection connection;
 
-    public TurnDAO() {
-        this.connection = getConnection();
-    }
-
-    private Connection getConnection() {
-        Connection con = null;
-        String server = "localhost:13306"; // MySQL 서버 주소
-        String database = "chess"; // MySQL DATABASE 이름
-        String option = "?useSSL=false&serverTimezone=UTC";
-        String userName = "root"; //  MySQL 서버 아이디
-        String password = "root"; // MySQL 서버 비밀번호
-
-        // 드라이버 로딩
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // 드라이버 연결
-        try {
-            con = DriverManager.getConnection("jdbc:mysql://" + server + "/" + database + option, userName, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return con;
-    }
-
-    private void closeConnection() {
-        try {
-            if (connection != null)
-                connection.close();
-        } catch (SQLException ignored) {
-        }
+    public TurnDAO() throws SQLException {
+        this.connection = Connector.getConnection();
     }
 
     public void insertTurn(Team targetTeam) throws SQLException {
         String query = "INSERT INTO turn (team) VALUES (?)";
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setString(1, targetTeam.name());
-        preparedStatement.executeUpdate();
+        try (final Connection connection = Connector.getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, targetTeam.name());
+            preparedStatement.executeUpdate();
+        }
     }
 
     public void updateTurn(Team targetTeam) throws SQLException {
         String query = "UPDATE turn set team = (?)";
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setString(1, targetTeam.name());
-        preparedStatement.executeUpdate();
+        try (final Connection connection = Connector.getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, targetTeam.name());
+            preparedStatement.executeUpdate();
+        }
     }
 
     public Team findTurn() throws SQLException {
         String query = "SELECT * FROM turn";
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        ResultSet resultSet = preparedStatement.executeQuery();
+        try (final Connection connection = Connector.getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-        Team output = Team.BLANK;
-        while(resultSet.next()) {
-            output = Team.of(resultSet.getString("team"));
+            Team output = Team.BLANK;
+            while (resultSet.next()) {
+                output = Team.of(resultSet.getString("team"));
+            }
+            return output;
         }
-        return output;
     }
 
     public void deleteTurn() throws SQLException {
         String query = "TRUNCATE turn";
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.executeUpdate();
+        try (final Connection connection = Connector.getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.executeUpdate();
+        }
     }
 }

@@ -8,11 +8,11 @@ public enum Team {
     BLACK("BLACK"),
     BLANK("BLANK");
 
-    private static final Map<String, Team> ENUM_MAP = new HashMap<>();
+    private static final Map<String, Team> TEAM_MAP = new HashMap<>();
 
     static {
         for (Team team : values()) {
-            ENUM_MAP.put(team.name, team);
+            TEAM_MAP.put(team.name, team);
         }
     }
 
@@ -22,7 +22,7 @@ public enum Team {
         this.name = name;
     }
     public static Team of(final String name) {
-        return ENUM_MAP.get(name);
+        return TEAM_MAP.get(name);
     }
 
 

@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import org.springframework.stereotype.Service;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.dao.BoardDAO;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class ChessGameService {
     private BoardDAO boardDAO;
     private TurnDAO turnDAO;
@@ -33,10 +35,9 @@ public class ChessGameService {
     public Map<String, Object> receiveInitializedBoard() throws SQLException {
         Board board = BoardFactory.createBoard();
         board.initialize();
-
         boardDAO.deletePieces();
         for (Position position : board.getBoard().keySet()) {
-            boardDAO.placePiece(board, position);
+            boardDAO.insertPiece(board, position);
         }
         return createBoardModel(board);
     }
@@ -59,9 +60,11 @@ public class ChessGameService {
         }
 
         updateTurn();
-        for (Position position : board.getBoard().keySet()) {
-            boardDAO.placePiece(board, position);
-        }
+        boardDAO.updatePiece(board, Position.of(fromPiece));
+        boardDAO.updatePiece(board, Position.of(toPiece));
+//        for (Position position : board.getBoard().keySet()) {
+//            boardDAO.updatePiece(board, position);
+//        }
         return board;
     }
 

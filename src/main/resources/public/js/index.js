@@ -59,8 +59,8 @@ function move() {
         async: true,
         url: '/move',
         data: {
-            fromPiece: document.querySelector('.fromPiece').id,
-            toPiece: document.querySelector('.toPiece').id
+            "fromPiece" : document.querySelector('.fromPiece').id,
+            "toPiece" : document.querySelector('.toPiece').id
         },
         dataType: 'text',
         error: alertMessage,

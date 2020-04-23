@@ -5,7 +5,6 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.service.ChessGameService;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -13,7 +12,7 @@ import static spark.Spark.*;
 public class SparkChessController {
     private ChessGameService chessGameService;
 
-    public SparkChessController(final ChessGameService chessGameService) throws SQLException {
+    public SparkChessController(final ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 

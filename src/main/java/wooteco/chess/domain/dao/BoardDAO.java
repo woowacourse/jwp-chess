@@ -18,18 +18,28 @@ public class BoardDAO {
     public BoardDAO() {
     }
 
-    public void placePiece(final Board board, final Position position) throws SQLException {
-        String query = "INSERT INTO board (position, piece) VALUES (?, ?) ON DUPLICATE KEY UPDATE position=?, piece=?";
+    public void insertPiece(final Board board, final Position position) throws SQLException {
+        String query = "INSERT INTO board (position, piece) VALUES (?, ?)";
 
         try (final Connection connection = Connector.getConnection();
             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, position.toString());
             preparedStatement.setString(2, board.findBy(position).getName());
-            preparedStatement.setString(3, position.toString());
-            preparedStatement.setString(4, board.findBy(position).getName());
             preparedStatement.executeUpdate();
         }
     }
+
+    public void updatePiece(final Board board, final Position position) throws SQLException {
+        String query = "UPDATE board SET piece = (?) where position = (?)";
+
+        try (final Connection connection = Connector.getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, board.findBy(position).getName());
+            preparedStatement.setString(2, position.toString());
+            preparedStatement.executeUpdate();
+        }
+    }
+
 
     public void deletePieces() throws SQLException {
         String query = "TRUNCATE board";

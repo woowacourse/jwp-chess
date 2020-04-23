@@ -27,6 +27,7 @@ public class TurnDAO {
              final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, targetTeam.name());
             preparedStatement.executeUpdate();
+
         }
     }
 

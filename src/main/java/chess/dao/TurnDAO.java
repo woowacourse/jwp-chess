@@ -1,13 +1,12 @@
 package chess.dao;
 
+import chess.dto.TurnDTO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
-
-import chess.domain.piece.PieceColor;
-import chess.dto.TurnDTO;
 
 public class TurnDAO {
 	private static TurnDAO instance = new TurnDAO();
@@ -28,7 +27,7 @@ public class TurnDAO {
 		}
 	}
 
-	public void deletePreviousTurn() throws SQLException {
+	public void deleteAll() throws SQLException {
 		String query = "DELETE FROM turn";
 		try (Connection connection = DBConnection.getConnection();
 			 PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -41,7 +40,7 @@ public class TurnDAO {
 		try (Connection connection = DBConnection.getConnection();
 			 PreparedStatement pstmt = connection.prepareStatement(query);
 			 ResultSet rs = pstmt.executeQuery()) {
-			if (!rs.next()) { // 찾았을때 아무것도 없을때
+			if (!rs.next()) {
 				throw new NoSuchElementException("Turn 데이터베이스가 비었습니다!");
 			}
 			return TurnDTO.from(rs.getString("teamName"));
@@ -49,13 +48,10 @@ public class TurnDAO {
 	}
 
 	public void updateTurn(TurnDTO turnDTO) throws SQLException {
-		String teamName = turnDTO.getCurrentTeam();
-		String oppositeTeamName = PieceColor.change(teamName).getName();
-
 		String query = "UPDATE turn SET teamName = ?";
 		try (Connection connection = DBConnection.getConnection();
 			 PreparedStatement pstmt = connection.prepareStatement(query)) {
-			pstmt.setString(1, oppositeTeamName);
+			pstmt.setString(1, turnDTO.getCurrentTeam());
 			pstmt.executeUpdate();
 		}
 	}

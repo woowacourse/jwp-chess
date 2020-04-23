@@ -1,89 +1,94 @@
 package chess.controller;
 
-import static spark.Spark.*;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
+import chess.domain.GameResult;
+import chess.domain.board.ChessBoard;
+import chess.dto.CellManager;
 import chess.service.ChessGameService;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static spark.Spark.*;
+
 public class WebChessController {
-	private ChessGameService chessGameService = new ChessGameService();
+    private ChessGameService chessGameService = new ChessGameService();
 
-	public WebChessController() throws SQLException {
-	}
+    private static String render(Map<String, Object> model, String templatePath) {
+        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+    }
 
-	private static String render(Map<String, Object> model, String templatePath) {
-		return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
-	}
+    public void run() {
+        port(8080);
+        staticFiles.location("/static");
 
-	public void run() {
-		port(8080);
-		staticFiles.location("/static");
+        get("/", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            return render(model, "index.html");
+        });
 
-		get("/", (req, res) -> {
-			Map<String, Object> model = new HashMap<>();
-			return render(model, "index.html");
-		});
+        get("/chess-game", (req, res) -> {
+            ChessBoard chessBoard = chessGameService.loadBoard();
+            Map<String, Object> model = settingModels(new HashMap<>(), chessBoard);
+            return render(model, "index.html");
+        });
 
-		get("/chess-game", (req, res) -> {
-			Map<String, Object> model = settingModels(new HashMap<>());
-			return render(model, "index.html");
-		});
+        get("/new-chess-game", (req, res) -> {
+            ChessBoard chessBoard = this.chessGameService.createNewChessGame();
+            Map<String, Object> model = settingModels(new HashMap<>(), chessBoard);
+            return render(model, "index.html");
+        });
 
-		get("/new-chess-game", (req, res) -> {
-			this.chessGameService.setNewChessGame();
+        post("/move", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
 
-			Map<String, Object> model = settingModels(new HashMap<>());
-			return render(model, "index.html");
-		});
+            String source = req.queryParams("source");
+            String target = req.queryParams("target");
 
-		post("/move", (req, res) -> {
-			Map<String, Object> model = new HashMap<>();
+            ChessBoard chessBoard = null;
+            try {
+                chessBoard = this.chessGameService.movePiece(source, target);
+            } catch (IllegalArgumentException e) {
+                chessBoard = chessGameService.loadBoard();
+                model.put("error", e.getMessage());
+            }
+            if (chessBoard.isGameOver()) {
+                res.redirect("/winner");
+            }
 
-			String source = req.queryParams("source");
-			String target = req.queryParams("target");
+            settingModels(model, chessBoard);
+            return render(model, "index.html");
+        });
 
-			try {
-				this.chessGameService.movePiece(source, target);
-				this.chessGameService.proceedGame();
-			} catch (IllegalArgumentException e) {
-				model.put("error", e.getMessage());
-			}
+        get("/winner", (req, res) -> {
+            ChessBoard chessBoard = this.chessGameService.loadBoard();
 
-			if (this.chessGameService.isGameOver()) {
-				res.redirect("/winner");
-			}
+            if (!chessBoard.isGameOver()) {
+                res.redirect("/");
+                return redirect;
+            }
+            GameResult gameResult = chessBoard.createGameResult();
+            Map<String, Object> model = new HashMap<>();
 
-			settingModels(model);
-			return render(model, "index.html");
-		});
+            model.put("winner", gameResult.getWinner());
+            model.put("loser", gameResult.getLoser());
+            model.put("blackScore", gameResult.getAliveBlackPieceScoreSum());
+            model.put("whiteScore", gameResult.getAliveWhitePieceScoreSum());
+            this.chessGameService.endGame();
 
-		get("/winner", (req, res) -> {
-			if (!this.chessGameService.isGameOver()) {
-				res.redirect("/");
-				return redirect;
-			}
-			Map<String, Object> model = new HashMap<>();
+            return render(model, "winner.html");
+        });
+    }
 
-			model.put("winner", this.chessGameService.getWinner());
-			model.put("loser", this.chessGameService.getLoser());
-			model.put("blackScore", this.chessGameService.getBlackPieceScore());
-			model.put("whiteScore", this.chessGameService.getWhitePieceScore());
-			this.chessGameService.endGame();
+    private Map<String, Object> settingModels(Map<String, Object> model, ChessBoard chessBoard) {
+        GameResult gameResult = chessBoard.createGameResult();
+        CellManager cellManager = new CellManager();
 
-			return render(model, "winner.html");
-		});
-	}
-
-	private Map<String, Object> settingModels(Map<String, Object> model) {
-		model.put("cells", this.chessGameService.getCells());
-		model.put("currentTeam", this.chessGameService.getCurrentTeam());
-		model.put("blackScore", this.chessGameService.getBlackPieceScore());
-		model.put("whiteScore", this.chessGameService.getWhitePieceScore());
-		return model;
-	}
+        model.put("cells", cellManager.createCells(chessBoard));
+        model.put("currentTeam", chessBoard.getTeam().getName());
+        model.put("blackScore", gameResult.getAliveBlackPieceScoreSum());
+        model.put("whiteScore", gameResult.getAliveWhitePieceScoreSum());
+        return model;
+    }
 }

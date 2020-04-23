@@ -54,10 +54,6 @@ public enum PieceColor {
         return WHITE;
     }
 
-    public static PieceColor change(String teamName) {
-        return of(teamName).change();
-    }
-
     public String getName() {
         return name;
     }

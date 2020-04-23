@@ -7,7 +7,7 @@ public class GameResult {
 	private final double aliveWhitePieceScoreSum;
 
 	public GameResult(boolean isBlackKingKilled, boolean isWhiteKingKilled, double aliveBlackPieceScoreSum,
-		double aliveWhitePieceScoreSum) {
+					  double aliveWhitePieceScoreSum) {
 		this.winner = findWinner(isBlackKingKilled, isWhiteKingKilled);
 		this.loser = findLoser(isBlackKingKilled, isWhiteKingKilled);
 		this.aliveBlackPieceScoreSum = aliveBlackPieceScoreSum;
@@ -34,11 +34,11 @@ public class GameResult {
 		return "";
 	}
 
-	public String findWinner() {
+	public String getWinner() {
 		return winner;
 	}
 
-	public String findLoser() {
+	public String getLoser() {
 		return loser;
 	}
 

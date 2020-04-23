@@ -1,5 +1,7 @@
 package chess.dao;
 
+import chess.dto.BoardDTO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,8 +9,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-
-import chess.dto.BoardDTO;
 
 public class BoardDAO {
 	private static BoardDAO instance = new BoardDAO();
@@ -35,7 +35,7 @@ public class BoardDAO {
 		}
 	}
 
-	public void deletePreviousBoard() throws SQLException {
+	public void deleteAll() throws SQLException {
 		String query = "DELETE FROM board";
 		try (Connection connection = DBConnection.getConnection();
 			 PreparedStatement pstmt = connection.prepareStatement(query)) {

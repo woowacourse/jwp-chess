@@ -7,6 +7,7 @@ import wooteco.chess.domain.game.NormalStatus;
 import wooteco.chess.domain.position.MovingPosition;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.ChessGameDto;
+import wooteco.chess.dto.MovablePositionsDto;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -38,5 +39,15 @@ public class SpringChessService {
     private List<MovingPosition> selectAllHistory() throws SQLException {
         FakeHistoryDao historyDao = new FakeHistoryDao();
         return historyDao.selectMovingPositions();
+    }
+
+    public MovablePositionsDto findMovablePositions(String source) throws SQLException {
+        ChessGame chessGame = new ChessGame();
+        load(chessGame);
+
+        List<String> movablePositionNames = chessGame.findMovablePositionNames(source);
+
+        return new MovablePositionsDto(movablePositionNames, source);
+
     }
 }

@@ -65,7 +65,7 @@ window.onload = function () {
     })();
 
     function chooseFirstPosition(position) {
-        fetch(`http://localhost:8080/source?source=${position}`, {method: "POST"})
+        fetch(`http://localhost:8080/source?source=${position}`, {method: "GET"})
             .then(res => res.json())
             .then(data => {
                 startPosition = data.position;

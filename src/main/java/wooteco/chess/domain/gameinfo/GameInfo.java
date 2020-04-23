@@ -1,7 +1,12 @@
 package wooteco.chess.domain.gameinfo;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
+import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.board.Status;
 import wooteco.chess.domain.exception.InvalidMovementException;
 import wooteco.chess.domain.result.ChessResult;
@@ -47,8 +52,11 @@ public class GameInfo {
         }
     }
 
-    public String searchPath(String source) {
-        return board.searchPath(source);
+    public List<String> searchPath(String source) {
+        return board.searchPath(source)
+                .stream()
+                .map(Position::getName)
+                .collect(Collectors.toList());
     }
 
     public int getTurn() {

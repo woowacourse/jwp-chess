@@ -48,7 +48,7 @@ public class SparkChessApplication {
             } catch (RuntimeException e) {
                 return e.getMessage();
             }
-        });
+        }, new JsonTransformer());
 
         post("/move", (req, res) -> {
             String source = req.queryParams("source");

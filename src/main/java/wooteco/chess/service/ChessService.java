@@ -9,6 +9,7 @@ import wooteco.chess.dao.BoardDAO;
 import wooteco.chess.dao.UserDAO;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
+import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.gameinfo.GameInfo;
 import wooteco.chess.domain.player.User;
 import wooteco.chess.domain.result.ChessResult;
@@ -67,7 +68,7 @@ public class ChessService {
         dbConnector.closeConnection();
     }
 
-    public String searchPath(User blackUser, String sourceInput) {
+    public List<String> searchPath(User blackUser, String sourceInput) {
         return games.get(blackUser).searchPath(sourceInput);
     }
 

@@ -1,6 +1,7 @@
 package wooteco.chess.domain.piece;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -27,17 +28,14 @@ public abstract class GamePiece {
         this.playerColor = playerColor;
     }
 
-    public List<String> searchPaths(Board board, Position source) {
+    public List<Position> searchPaths(Board board, Position source) {
         List<Position> paths = new ArrayList<>();
 
         for (Direction direction : directions) {
             List<Position> path = source.pathTo(direction, moveCount);
             paths.addAll(findMovablePositions(board, path));
         }
-
-        return paths.stream()
-                .map(Position::getName)
-                .collect(Collectors.toList());
+        return Collections.unmodifiableList(paths);
     }
 
     private List<Position> findMovablePositions(Board board, List<Position> path) {

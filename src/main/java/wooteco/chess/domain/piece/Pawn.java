@@ -37,23 +37,23 @@ public class Pawn extends GamePiece {
     }
 
     @Override
-    public List<String> searchPaths(Board board, Position source) {
+    public List<Position> searchPaths(Board board, Position source) {
         List<Position> paths = new ArrayList<>();
         List<Position> path = decideMovePath(source);
 
         paths.addAll(findMovablePositions(board, path));
         paths.addAll(findKillPath(board, source));
 
-        return paths.stream()
-                .map(Position::getName)
-                .collect(Collectors.toList());
+        return Collections.unmodifiableList(paths);
     }
 
     private List<Position> decideMovePath(Position source) {
         List<Position> path = source.pathTo(moveDirection, moveCount);
+
         if (playerColor.reviseInitialPositions(originalPositions).contains(source)) {
             path = source.pathTo(moveDirection, FIRST_MOVE_COUNT);
         }
+
         return path;
     }
 

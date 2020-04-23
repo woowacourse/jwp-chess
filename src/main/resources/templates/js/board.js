@@ -9,7 +9,6 @@ window.onload = function() {
     }
 
     let turn = $(".turn-number").text();
-    console.log(turn);
     showTurn(turn);
 
     let source;
@@ -26,7 +25,6 @@ window.onload = function() {
         }
         cell = $(this);
         let cellPosition = $(this).attr("id");
-        console.log($(this).attr('id'));
 
         // 첫 클릭이라면 source에 포지션 저장
         if (isFirstClick) {
@@ -41,9 +39,8 @@ window.onload = function() {
                     alert(list);
                     return;
                 }
-                console.log(list);
                 document.getElementById(cellPosition).classList.add("selected-cell");
-                const path = list.split(",");
+                const path = JSON.parse(list);
                 path.forEach(position => {
                     document.getElementById(position).classList.add("y");
                 })
@@ -66,9 +63,7 @@ window.onload = function() {
             data: { source: source, target: cellPosition, blackUserName: blackUserName },
             method: "POST",
         }).done(function (model) {
-            console.log(model);
             var data = JSON.parse(model);
-            console.log(data);
             if (data["status"] == false) {
                 if (turn % 2 == 0) {
                     alert("게임이 끝났습니다. 백팀이 승리했습니다.");

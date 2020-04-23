@@ -2,6 +2,7 @@ package wooteco.chess.domain.board;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -24,12 +25,12 @@ public class Board {
         return new Board(board);
     }
 
-    public String searchPath(String sourceInput) {
+    public List<Position> searchPath(String sourceInput) {
         Position source = Position.from(sourceInput);
         GamePiece sourcePiece = board.get(source);
         validateSourcePiece(sourcePiece);
 
-        return String.join(",", sourcePiece.searchPaths(this, source));
+        return sourcePiece.searchPaths(this, source);
     }
 
     public Board move(String sourceInput, String targetInput) {

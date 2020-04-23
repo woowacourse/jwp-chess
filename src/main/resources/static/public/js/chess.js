@@ -89,7 +89,7 @@ window.onload = function () {
     }
 
     function chooseSecondPosition(position) {
-        fetch(`http://localhost:8080/destination?destination=${position}`, {method: "POST"})
+        fetch(`http://localhost:8080/destination?destination=${position}`, {method: "GET"})
             .then(res => res.json())
             .then(data => {
                 if (data.normalStatus === false) {

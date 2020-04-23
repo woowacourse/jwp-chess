@@ -40,11 +40,6 @@ public class ChessController {
 		return "redirect:/board/" + roomNo;
 	}
 
-	@GetMapping("/resume")
-	public String resume() {
-		return "redirect:/board";
-	}
-
 	@PostMapping("/move")
 	public String move(Model model, @RequestParam(defaultValue = "") String target,
 		@RequestParam(defaultValue = "") String destination, @RequestParam int roomNo) {

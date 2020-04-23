@@ -2,7 +2,6 @@ package wooteco.chess.controller;
 
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import wooteco.chess.exception.*;
 import wooteco.chess.service.ChessGameService;
 
 import java.sql.SQLException;
@@ -10,11 +9,11 @@ import java.util.Map;
 
 import static spark.Spark.*;
 
-public class WebUIChessController {
+public class SparkChessController {
     private ChessGameService chessGameService;
 
-    public WebUIChessController() throws SQLException {
-        this.chessGameService = new ChessGameService();
+    public SparkChessController(final ChessGameService chessGameService) throws SQLException {
+        this.chessGameService = chessGameService;
     }
 
     public void run() {
@@ -41,7 +40,7 @@ public class WebUIChessController {
                 if (chessGameService.isFinish()) {
                     return chessGameService.receiveWinner();
                 }
-            } catch(InvalidPositionException | PieceImpossibleMoveException | TakeTurnException e) {
+            } catch(IllegalArgumentException e) {
                 res.status(400);
                 return e.getMessage();
             }

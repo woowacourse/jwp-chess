@@ -102,8 +102,4 @@ public abstract class Piece {
         return Objects.hash(pieceType);
     }
 
-    @Override
-    public String toString() {
-        return pieceType.getRepresentation();
-    }
 }

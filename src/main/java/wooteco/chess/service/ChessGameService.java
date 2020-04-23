@@ -9,7 +9,6 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.GameResult;
-import wooteco.chess.exception.*;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -53,13 +52,13 @@ public class ChessGameService {
         return createBoardModel(board);
     }
 
-    public void receiveMovedBoard(final String fromPiece, final String toPiece) throws SQLException, TakeTurnException {
+    public void receiveMovedBoard(final String fromPiece, final String toPiece) throws SQLException {
         Board board = new Board(boardDAO.findAllPieces());
         Piece piece = board.findBy(Position.of(fromPiece));
 
         board.move(fromPiece, toPiece);
         if (!piece.isSameTeam(getCurrentTurn())) {
-            throw new TakeTurnException("체스 게임 순서를 지켜주세요.");
+            throw new IllegalArgumentException("체스 게임 순서를 지켜주세요.");
         }
 
         updateFinish(board.isFinished());
@@ -100,9 +99,9 @@ public class ChessGameService {
     public void updateTurn() throws SQLException {
         if (turnDAO.findTurn() == Team.WHITE) {
             turnDAO.updateTurn(Team.BLACK);
-        } else {
-            turnDAO.updateTurn(Team.WHITE);
+            return;
         }
+        turnDAO.updateTurn(Team.WHITE);
     }
 
     public Team getCurrentTurn() throws SQLException {

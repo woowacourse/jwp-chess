@@ -1,21 +1,15 @@
-package chess.model.service;
+package chess.service;
 
 import chess.model.dto.CreateRoomDto;
 import chess.model.dto.DeleteRoomDto;
 import chess.model.dto.RoomsDto;
 import chess.model.repository.RoomDao;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RoomService {
 
     private static final RoomDao ROOM_DAO = RoomDao.getInstance();
-    private static final RoomService INSTANCE = new RoomService();
-
-    private RoomService() {
-    }
-
-    public static RoomService getInstance() {
-        return INSTANCE;
-    }
 
     public RoomsDto getUsedRooms() {
         return new RoomsDto(ROOM_DAO.selectUsedOnly());
@@ -27,6 +21,6 @@ public class RoomService {
 
     public void deleteRoom(DeleteRoomDto deleteRoomDto) {
         ROOM_DAO.updateUsedN(deleteRoomDto.getRoomId());
-        ChessGameService.getInstance().roomBeforeGameOver(deleteRoomDto.getRoomId());
+        new ChessGameService().roomBeforeGameOver(deleteRoomDto.getRoomId());
     }
 }

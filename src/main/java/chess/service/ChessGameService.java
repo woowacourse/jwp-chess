@@ -1,4 +1,4 @@
-package chess.model.service;
+package chess.service;
 
 import chess.model.domain.board.BoardInitialByDB;
 import chess.model.domain.board.BoardInitialization;
@@ -23,34 +23,21 @@ import chess.model.dto.SourceDto;
 import chess.model.repository.ChessBoardDao;
 import chess.model.repository.ChessGameDao;
 import chess.model.repository.ChessResultDao;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessGameService {
 
     private static final ChessGameDao CHESS_GAME_DAO = ChessGameDao.getInstance();
     private static final ChessBoardDao CHESS_BOARD_DAO = ChessBoardDao.getInstance();
     private static final ChessResultDao CHESS_RESULT_DAO = ChessResultDao.getInstance();
-    private static final ChessGameService INSTANCE = new ChessGameService();
-
-    private ChessGameService() {
-    }
-
-    public static ChessGameService getInstance() {
-        return INSTANCE;
-    }
-
-    public int getIdBefore(int roomId, Map<Team, String> userNames) {
-        Optional<Integer> gameNumberLatest = CHESS_GAME_DAO.getGameNumberLatest(roomId);
-        if (gameNumberLatest.isPresent()) {
-            return gameNumberLatest.get();
-        }
-        newChessGame(roomId, userNames);
-        return CHESS_GAME_DAO.getGameNumberLatest(roomId).orElseThrow(IllegalAccessError::new);
-    }
 
     public int newChessGame(int roomId, Map<Team, String> userNames) {
         roomBeforeGameOver(roomId);
@@ -65,6 +52,25 @@ public class ChessGameService {
                 CHESS_RESULT_DAO.insert(userName);
             }
         }
+        return gameId;
+    }
+
+    public void saveUser(Map<Team, String> userNames) {
+        for (String userName : userNames.values()) {
+            if (!CHESS_RESULT_DAO.getWinOrDraw(userName).isPresent()) {
+                CHESS_RESULT_DAO.insert(userName);
+            }
+        }
+    }
+
+    public int saveRoom(Map<Team, String> userNames, int roomId) {
+        roomBeforeGameOver(roomId);
+        ChessGame chessGame = new ChessGame();
+        int gameId = CHESS_GAME_DAO
+            .insert(roomId, chessGame.getGameTurn(), userNames, chessGame.getTeamScore());
+        CHESS_BOARD_DAO.insert(gameId, chessGame.getChessBoard(),
+            getCastlingElement(chessGame.getChessBoard(), chessGame.getCastlingElements()));
+        CHESS_GAME_DAO.updateScore(gameId, chessGame.getTeamScore());
         return gameId;
     }
 

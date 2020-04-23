@@ -23,4 +23,13 @@ public class MoveDto {
     public int getGameId() {
         return gameId;
     }
+
+    @Override
+    public String toString() {
+        return "MoveDto{" +
+            "source='" + source + '\'' +
+            ", target='" + target + '\'' +
+            ", gameId=" + gameId +
+            '}';
+    }
 }

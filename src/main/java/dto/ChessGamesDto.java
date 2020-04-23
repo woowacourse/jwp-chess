@@ -3,9 +3,9 @@ package dto;
 import java.util.ArrayList;
 
 public class ChessGamesDto {
-    private final ArrayList<ChessGameDto> chessGameDtos;
+    private final ArrayList<ChessGameVo> chessGameVos;
 
-    public ChessGamesDto(ArrayList<ChessGameDto> chessGameDtos) {
-        this.chessGameDtos = chessGameDtos;
+    public ChessGamesDto(ArrayList<ChessGameVo> chessGameVos) {
+        this.chessGameVos = chessGameVos;
     }
 }

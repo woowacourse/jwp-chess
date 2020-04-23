@@ -1,7 +1,7 @@
 package dao;
 
 import db.DBConnection;
-import dto.ChessGameDto;
+import dto.ChessGameVo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,27 +10,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ChessGamesDao {
-    public ArrayList<ChessGameDto> findAll() throws SQLException {
+    public ArrayList<ChessGameVo> findAll() throws SQLException {
         String query = "SELECT * FROM game;";
 
         try(Connection connection = DBConnection.getConnection();
             PreparedStatement pstmt = connection.prepareStatement(query)) {
             ResultSet rs = pstmt.executeQuery();
-            ArrayList<ChessGameDto> chessGameDtos = getChessGameDtos(rs);
-            return chessGameDtos;
+            ArrayList<ChessGameVo> chessGameVos = getChessGameDtos(rs);
+            return chessGameVos;
         }
     }
 
-    private ArrayList<ChessGameDto> getChessGameDtos(ResultSet resultSet) throws SQLException {
-        ArrayList<ChessGameDto> chessGameDtos = new ArrayList<>();
+    private ArrayList<ChessGameVo> getChessGameDtos(ResultSet resultSet) throws SQLException {
+        ArrayList<ChessGameVo> chessGameVos = new ArrayList<>();
         while (resultSet.next()) {
-            ChessGameDto chessGameDTO = new ChessGameDto(
+            ChessGameVo chessGameVo = new ChessGameVo(
                     resultSet.getInt("id"),
                     resultSet.getString("white_name"),
                     resultSet.getString("black_name"),
                     resultSet.getInt("turn_is_black"));
-            chessGameDtos.add(chessGameDTO);
+            chessGameVos.add(chessGameVo);
         }
-        return chessGameDtos;
+        return chessGameVos;
     }
 }

@@ -47,6 +47,7 @@ function getChessBoard(id) {
         type: "get",
         data: {id: id},
         success: function (data) {
+            console.log(JSON.stringify(data));
             $('.gamecell').html('');
             $('.gamecell').attr('chess', 'null');
             $('#game_id').html(id);
@@ -55,11 +56,20 @@ function getChessBoard(id) {
             $('.gamecell grey').attr('chess', 'null');
 
             var jsonData = JSON.parse(data);
-            for (var i = 0; i < jsonData.boardValue.length; i++) {
-                var piece = jsonData.boardValue[i];
+            for (var i = 0; i < jsonData.boardDto.boardValue.length; i++) {
+                var piece = jsonData.boardDto.boardValue[i];
                 $('#' + piece.location).html(main.variables.pieces[piece.pieceName].img);
                 $('#' + piece.location).attr('chess', piece.pieceName);
             }
+
+            $('#whiteScore').html("White score : " + jsonData.whiteScore);
+            $('#blackScore').html("Black score : " + jsonData.blackScore);
+
+            var turn = "white";
+            if(jsonData.turnIsBlack === "1") {
+                turn = "black";
+            }
+            $('#turn').html("It's " + turn + " Turn!");
         },
         error: function (errorThrown) {
             alert(JSON.stringify(errorThrown));
@@ -187,9 +197,9 @@ function getChessGames() {
         success: function (data) {
             var res = JSON.parse(data);
             // console.log(JSON.stringify(data));
-            var chessGameDtos = res.chessGameDtos;
-            for (var i = 0; i < chessGameDtos.length; i++) {
-                add(chessGameDtos[i].id);
+            var chessGameVos = res.chessGameVos;
+            for (var i = 0; i < chessGameVos.length; i++) {
+                add(chessGameVos[i].id);
             }
         },
         error: function (errorThrown) {

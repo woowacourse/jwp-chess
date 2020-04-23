@@ -1,23 +1,15 @@
 package dto;
 
 public class ChessGameDto {
-    private final int id;
-    private final String whiteName;
-    private final String blackName;
-    private final boolean turnIsBlack;
+    private BoardDto boardDto;
+    private int turnIsBlack;
+    private double whiteScore;
+    private double blackScore;
 
-    public ChessGameDto(int id, String whiteName, String blackName, int turnIsBlack) {
-        this.id = id;
-        this.whiteName = whiteName;
-        this.blackName = blackName;
-        this.turnIsBlack = convertIntToBoolean(turnIsBlack);
-    }
-
-    private static boolean convertIntToBoolean(int value) {
-        return value == 1;
-    }
-
-    public boolean isTurnBlack() {
-        return turnIsBlack;
+    public ChessGameDto(BoardDto boardDto, int turnIsBlack, double whiteScore, double blackScore) {
+        this.boardDto = boardDto;
+        this.turnIsBlack = turnIsBlack;
+        this.whiteScore = whiteScore;
+        this.blackScore = blackScore;
     }
 }

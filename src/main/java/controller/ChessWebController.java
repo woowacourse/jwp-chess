@@ -41,7 +41,8 @@ public class ChessWebController {
 
         get("/start/board", (req, res) -> {
             int boardId = Integer.parseInt(req.queryParams("id"));
-            return chessService.findBoard(boardId);
+            ChessGame chessGame = chessService.makeGameByDB(boardId);
+            return chessService.findGame(chessGame);
         });
 
         post("/start/move", (req, res) -> {

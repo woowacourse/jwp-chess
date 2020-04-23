@@ -30,7 +30,7 @@ public class ChessService {
     private static final Gson GSON = new Gson();
 
     public String findAllBoards() throws SQLException {
-        ArrayList<ChessGameDto> all = chessGamesDao.findAll();
+        ArrayList<ChessGameVo> all = chessGamesDao.findAll();
         ChessGamesDto chessGamesDto = new ChessGamesDto(all);
         return GSON.toJson(chessGamesDto);
     }
@@ -38,7 +38,7 @@ public class ChessService {
     public String findBoard(int gameId) throws SQLException {
         List<PieceVo> pieceVos = pieceDao.findAll(gameId);
 
-        ChessGameDto chessGameDto = chessGameDao.findChessGameBy(gameId);
+        ChessGameVo chessGameDto = chessGameDao.findChessGameBy(gameId);
 
         if (pieceVos == null) {
             BoardDto boardDto = new BoardDto(new ChessGame().getChessBoard());
@@ -90,9 +90,9 @@ public class ChessService {
     }
 
     public ChessGame makeGameByDB(int gameId) throws SQLException {
-        ChessGameDto chessGameDto = chessGameDao.findChessGameBy(gameId);
+        ChessGameVo chessGameVo = chessGameDao.findChessGameBy(gameId);
         List<PieceVo> pieceDto = ChessService.pieceDao.findAll(gameId);
-        Team team = Team.of(chessGameDto.isTurnBlack());
+        Team team = Team.of(chessGameVo.isTurnBlack());
         ChessBoard chessBoard = makeChessBoard(pieceDto);
         return new ChessGame(chessBoard, team);
     }
@@ -117,5 +117,16 @@ public class ChessService {
     public void resetChessGame(ChessGame chessGame, int gameId) throws SQLException {
         chessGameDao.updateTurn(Team.WHITE, gameId);
         resetChessBoard(chessGame, gameId);
+    }
+
+    public String findGame(ChessGame chessGame) throws SQLException {
+        int turnIsBlack = 0;
+        if (chessGame.getTurn().isBlack()) {
+            turnIsBlack = 1;
+        }
+        double whiteScore = chessGame.calculateScores().getWhiteScore().getValue();
+        double blackScore = chessGame.calculateScores().getBlackScore().getValue();
+        return GSON.toJson(new ChessGameDto(new BoardDto(chessGame.getChessBoard())
+                , turnIsBlack, whiteScore, blackScore));
     }
 }

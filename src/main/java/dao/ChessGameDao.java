@@ -2,7 +2,7 @@ package dao;
 
 import chess.team.Team;
 import db.DBConnection;
-import dto.ChessGameDto;
+import dto.ChessGameVo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ChessGameDao {
-    public ChessGameDto findChessGameBy(int gameId) throws SQLException {
+    public ChessGameVo findChessGameBy(int gameId) throws SQLException {
         String query = "SELECT * FROM game WHERE id = ?";
 
         try(Connection connection = DBConnection.getConnection();
@@ -22,7 +22,7 @@ public class ChessGameDao {
                 return null;
             }
 
-            return new ChessGameDto(
+            return new ChessGameVo(
                     rs.getInt("id"),
                     rs.getString("white_name"),
                     rs.getString("black_name"),

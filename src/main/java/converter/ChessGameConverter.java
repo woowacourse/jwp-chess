@@ -5,10 +5,9 @@ import chess.game.ChessGame;
 import chess.location.Location;
 import chess.piece.type.*;
 import chess.team.Team;
-import dto.ChessGameDto;
+import dto.ChessGameVo;
 import vo.PieceVo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +31,9 @@ public class ChessGameConverter {
         map.put("R", new Rook(Team.BLACK));
     }
 
-    public static ChessGame convert(List<PieceVo> pieceVos, ChessGameDto chessGameDTO) {
+    public static ChessGame convert(List<PieceVo> pieceVos, ChessGameVo chessGameVo) {
 
-        boolean isTurnBlack = chessGameDTO.isTurnBlack();
+        boolean isTurnBlack = chessGameVo.isTurnBlack();
         Team turn = getTurn(isTurnBlack);
 
         Map<Location, Piece> board = new HashMap<>();

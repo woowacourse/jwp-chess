@@ -37,8 +37,8 @@ public class ChessService {
         return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
     }
 
-    public ResponseDto movePiece(int pieceId, Position sourcePosition, Position targetPosition) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(pieceId);
+    public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) throws SQLException {
+        ChessGame chessGame = chessGameDao.findById(chessGameId);
         try {
             chessGame.move(sourcePosition, targetPosition);
             chessGameDao.update(chessGame);

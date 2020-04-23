@@ -15,6 +15,9 @@ import java.util.Map;
 public class GameDAO {
     private static final GameDAO GAME_DAO = new GameDAO();
 
+    private GameDAO() {
+    }
+
     public static GameDAO getInstance() {
         return GAME_DAO;
     }

@@ -1,4 +1,4 @@
-package wooteco.chess.service;
+package wooteco.chess.dto;
 
 import wooteco.chess.domain.Color;
 import wooteco.chess.dto.PieceResponseDTO;

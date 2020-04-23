@@ -5,7 +5,10 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.pieces.Pieces;
 import wooteco.chess.domain.position.Row;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ScoreResult {

@@ -11,16 +11,14 @@ public abstract class AbstractDataSource implements DataSource {
 		this.jdbcConfiguration = jdbcConfiguration;
 	}
 
-	public Connection getConnection() {
+	public Connection getConnection() throws SQLException {
 		try {
 			Class.forName(jdbcConfiguration.getDatabaseDriver());
 			return DriverManager.getConnection(jdbcConfiguration.getUrl(), jdbcConfiguration.getUserName(),
 					jdbcConfiguration.getPassword());
 		} catch (ClassNotFoundException e) {
 			System.err.println("JDBC Driver load 오류: " + e.getMessage());
-		} catch (SQLException e) {
-			System.err.println("연결 오류:" + e.getMessage());
 		}
-		return null;
+		throw new SQLException("연결이 설정되지 않았습니다.");
 	}
 }

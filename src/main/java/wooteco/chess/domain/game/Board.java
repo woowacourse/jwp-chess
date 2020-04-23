@@ -24,6 +24,7 @@ public class Board {
 	private static final int WHITE_PIECES_Y = 0;
 	private static final int WHITE_PAWNS_Y = 1;
 	private static final int INITIAL_KING_COUNT = 2;
+	private static final String DELIMITER = "";
 
 	private Map<Position, Piece> board;
 
@@ -60,7 +61,7 @@ public class Board {
 	public static Board from(String rawBoard) {
 		Board board = new Board();
 
-		Queue<String> symbols = new LinkedList<>(Arrays.asList(rawBoard.split("")));
+		Queue<String> symbols = new LinkedList<>(Arrays.asList(rawBoard.split(DELIMITER)));
 
 		for (Position position : Position.values()) {
 			board.setBlank(position);

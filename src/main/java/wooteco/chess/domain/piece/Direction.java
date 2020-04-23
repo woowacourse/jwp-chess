@@ -32,6 +32,8 @@ public enum Direction {
 			SOUTH_SOUTH_EAST, SOUTH_SOUTH_WEST, EAST_EAST_NORTH, EAST_EAST_SOUTH, WEST_WEST_NORTH, WEST_WEST_SOUTH);
 	public static final List<Direction> WHITE_PAWN_DIRECTION = Arrays.asList(NORTH_EAST, NORTH_WEST, NORTH);
 	public static final List<Direction> BLACK_PAWN_DIRECTION = Arrays.asList(SOUTH_EAST, SOUTH_WEST, SOUTH);
+	private static final int NO_GAP = 0;
+	private static final int BORDER_PAWN_INITIAL_GAP = 2;
 
 	private final int x;
 	private final int y;
@@ -49,7 +51,7 @@ public enum Direction {
 	}
 
 	public static Direction ofDiagonal(int x, int y) {
-		if (Math.abs(x) - Math.abs(y) != 0) {
+		if (Math.abs(x) - Math.abs(y) != NO_GAP) {
 			throw new IllegalArgumentException("대각선 방향이 아닙니다.");
 		}
 		return convert(x, y);
@@ -63,14 +65,14 @@ public enum Direction {
 	}
 
 	public static Direction ofEvery(int x, int y) {
-		if (Math.abs(x) - Math.abs(y) != 0 && Math.abs(x - y) != Math.abs(x + y)) {
+		if (Math.abs(x) - Math.abs(y) != NO_GAP && Math.abs(x - y) != Math.abs(x + y)) {
 			throw new IllegalArgumentException("8방향이 아닙니다.");
 		}
 		return convert(x, y);
 	}
 
 	public static Direction ofStart(int x, int y) {
-		if (Math.abs(y) == 2) {
+		if (Math.abs(y) == BORDER_PAWN_INITIAL_GAP) {
 			return convert(x, y);
 		}
 		return of(x, y);

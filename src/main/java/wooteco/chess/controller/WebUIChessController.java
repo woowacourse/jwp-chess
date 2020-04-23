@@ -3,15 +3,15 @@ package wooteco.chess.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import spark.ModelAndView;
+import spark.Route;
+import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.domain.Board;
 import wooteco.chess.domain.Pieces;
 import wooteco.chess.domain.Position;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.service.ChessService;
-import spark.ModelAndView;
-import spark.Route;
-import spark.template.handlebars.HandlebarsTemplateEngine;
 
 public class WebUIChessController {
     private final ChessService service;
@@ -22,20 +22,33 @@ public class WebUIChessController {
 
     public Route getNewChessGameRoute() {
         return (req, res) -> {
-            service.initBoard();
             Map<String, Object> model = new HashMap<>();
+            if (req.queryParams("error") != null) {
+                model.put("error", req.queryParams("error"));
+            }
             return render(model, "chess-before-start.html");
+        };
+    }
+
+    public Route initChessGameRoute() {
+        return (req, res) -> {
+            int roomId = service.createBoard(req.queryParams("new-room-name"));
+            Board board = service.getSavedBoard(roomId);
+            Map<String, Object> model = createBasicModel(roomId, board);
+            return render(model, "chess-running.html");
         };
     }
 
     public Route getChessGameRoute() {
         return (req, res) -> {
-            Board board = service.getSavedBoard();
-            Map<String, Object> model = allocatePiecesOnMap(board);
-            model.put("teamWhiteScore", board.calculateScoreByTeam(Team.WHITE));
-            model.put("teamBlackScore", board.calculateScoreByTeam(Team.BLACK));
+            int roomId = Integer.parseInt(req.queryParams("room-id"));
+            Board board = service.getSavedBoard(roomId);
+            Map<String, Object> model = createBasicModel(roomId, board);
             if (!board.isBothKingAlive()) {
-                res.redirect("/result");
+                res.redirect("/result?room-id=" + roomId);
+            }
+            if (req.queryParams("error") != null) {
+                model.put("error", req.queryParams("error"));
             }
             return render(model, "chess-running.html");
         };
@@ -43,31 +56,42 @@ public class WebUIChessController {
 
     public Route getResultRoute() {
         return (req, res) -> {
-            Board board = service.getSavedBoard();
+            int roomId = Integer.parseInt(req.queryParams("room-id"));
+            Board board = service.getSavedBoard(roomId);
             Map<String, Object> model = allocatePiecesOnMap(board);
             model.put("winner", board.getWinner().getName());
             return render(model, "chess-result.html");
         };
     }
 
-    public Route getExceptionRoute() {
+    public Route findChessGameRoute() {
         return (req, res) -> {
-            Board board = service.getSavedBoard();
-            Map<String, Object> model = allocatePiecesOnMap(board);
-            return render(model, "chess-exception.html");
+            int roomId = Integer.parseInt(req.queryParams("existing-room-name"));
+            try {
+                Board board = service.getSavedBoard(roomId);
+                Map<String, Object> model = createBasicModel(roomId, board);
+                if (!board.isBothKingAlive()) {
+                    res.redirect("/result?room-id=" + roomId);
+                }
+                return render(model, "chess-running.html");
+            } catch (Exception e) {
+                res.redirect("/new?error=true");
+            }
+            return null;
         };
     }
 
     public Route postMoveRoute() {
         return (req, res) -> {
-            Board board = service.getSavedBoard();
+            int roomId = Integer.parseInt(req.queryParams("room-id"));
+            Board board = service.getSavedBoard(roomId);
             String source = req.queryParams("source");
             String destination = req.queryParams("destination");
             try {
-                service.processMoveInput(board, source, destination);
-                res.redirect("/");
+                service.processMoveInput(board, source, destination, roomId);
+                res.redirect("/?room-id=" + roomId);
             } catch (Exception e) {
-                res.redirect("/exception");
+                res.redirect("/?room-id=" + roomId + "&error=true");
             }
             return null;
         };
@@ -75,8 +99,9 @@ public class WebUIChessController {
 
     public Route postInitializeRoute() {
         return (req, res) -> {
-            service.initBoard();
-            res.redirect("/");
+            int roomId = Integer.parseInt(req.queryParams("room-id"));
+            service.initBoard(roomId);
+            res.redirect("/?room-id=" + roomId);
             return null;
         };
     }
@@ -90,6 +115,15 @@ public class WebUIChessController {
             pieceMap.put(position.toString(), positionPieceMap.get(position));
         }
         model.put("map", pieceMap);
+        return model;
+    }
+
+    private Map<String, Object> createBasicModel(int roomId, Board board) {
+        Map<String, Object> model = allocatePiecesOnMap(board);
+        model.put("teamWhiteScore", board.calculateScoreByTeam(Team.WHITE));
+        model.put("teamBlackScore", board.calculateScoreByTeam(Team.BLACK));
+        model.put("id", roomId);
+        model.put("turn", board.getTurn());
         return model;
     }
 

@@ -6,14 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class JdbcTemplate {
-    public void executeUpdateWithoutPss(String query) throws SQLException {
-        try (
-            Connection connection = ConnectionManager.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query)
-        ) {
-            statement.executeUpdate();
-        }
-    }
 
     public void executeUpdate(String query, PreparedStatementSetter pss) throws SQLException {
         try (
@@ -46,6 +38,16 @@ public class JdbcTemplate {
                 return null;
             }
             return rm.mapRow(rs);
+        }
+    }
+
+    public void executeBatchWithPss(String query, PreparedStatementSetter pss) throws SQLException {
+        try (
+            Connection con = ConnectionManager.getConnection();
+            PreparedStatement statement = con.prepareStatement(query)
+        ) {
+            pss.setParameters(statement);
+            statement.executeBatch();
         }
     }
 }

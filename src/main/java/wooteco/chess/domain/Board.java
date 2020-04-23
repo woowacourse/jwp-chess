@@ -18,20 +18,23 @@ public class Board {
     private static final String SAME_TEAM_PIECE_IN_DESTINATION = "해당 자리에 같은 팀 말이 있기 때문에 말을 움직일 수 없습니다!";
 
     private final Pieces pieces;
+    private Team turn;
 
     public Board() {
         PieceFactory pieceFactory = PieceFactory.create();
         this.pieces = new Pieces(pieceFactory.getPieces());
+        this.turn = Team.WHITE;
     }
 
-    public Board(Pieces pieces) {
+    public Board(Pieces pieces, Team turn) {
         this.pieces = pieces;
+        this.turn = turn;
     }
 
     public void movePiece(Position source, Position destination) {
+        validateTurn(source, turn);
         validateDestination(source, destination);
         Piece sourcePiece = pieces.findByPosition(source);
-        validateSource(sourcePiece);
         Piece destinationPiece = pieces.findByPosition(destination);
         if (sourcePiece.getScore() == PieceRule.PAWN.getScore()) {
             validatePawnDestination(source, destination);
@@ -43,6 +46,15 @@ public class Board {
             killPiece(sourcePiece, destinationPiece);
         }
         pieces.move(source, destination);
+        this.turn = turn.changeTurn();
+    }
+
+    private void validateTurn(Position source, Team turn) {
+        Piece sourcePiece = pieces.findByPosition(source);
+        validateSource(sourcePiece);
+        if (sourcePiece.getTeam() != turn) {
+            throw new IllegalMoveException(turn.getName() + "의 차례입니다.");
+        }
     }
 
     private void validateDestination(Position source, Position destination) {
@@ -97,6 +109,10 @@ public class Board {
 
     public Team getWinner() {
         return pieces.teamWithAliveKing();
+    }
+
+    public Team getTurn() {
+        return turn;
     }
 
     @Override

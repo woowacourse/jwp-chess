@@ -1,6 +1,5 @@
 package wooteco.chess.dao;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,93 +14,78 @@ import wooteco.chess.exception.DataAccessException;
 public class BoardDao {
     JdbcTemplate template = new JdbcTemplate();
 
-    public Board find() {
+    public Pieces findByRoomId(int roomId) {
         try {
-            RowMapper rm = new RowMapper() {
+            RowMapper rm = rs -> {
                 Map<Position, Piece> positionPairs = new HashMap<>();
-
-                @Override
-                public Object mapRow(ResultSet rs) throws SQLException {
-                    while (rs.next()) {
-                        String type = rs.getString("type");
-                        String position = rs.getString("position");
-                        String team = rs.getString("team");
-                        positionPairs.put(new Position(position),
-                            PieceRule.makeNewPiece(type.charAt(0), position, team));
-                    }
-                    return new Board(new Pieces(positionPairs));
+                rs.beforeFirst();
+                while (rs.next()) {
+                    String type = rs.getString("type");
+                    String position = rs.getString("position");
+                    String team = rs.getString("team");
+                    positionPairs.put(new Position(position),
+                        PieceRule.makeNewPiece(type.charAt(0), position, team));
                 }
+                return new Pieces(positionPairs);
             };
-            final String sql = "SELECT type, position, team FROM piece";
-            return (Board)template.executeQuery(sql, rm);
+            PreparedStatementSetter pss = statement -> statement.setInt(1, roomId);
+            final String sql = "SELECT * FROM piece where room_id = ?";
+            return (Pieces)template.executeQueryWithPss(sql, pss, rm);
         } catch (SQLException e) {
             throw new DataAccessException();
         }
     }
 
-    public Piece findByPosition(String position) {
-        try {
-            PreparedStatementSetter pss = statement -> statement.setString(1, position);
-            RowMapper rm = rs -> PieceRule.makeNewPiece(
-                rs.getString("type").charAt(0),
-                rs.getString("position"),
-                rs.getString("team")
-            );
-            String query = "SELECT * FROM piece WHERE position = ?";
-            return (Piece)template.executeQueryWithPss(query, pss, rm);
-        } catch (SQLException e) {
-            throw new DataAccessException();
-        }
-    }
-
-    public void editPiece(String position, String newPosition) {
+    public void editPiece(String position, String newPosition, int roomId) {
         try {
             PreparedStatementSetter pss = statement -> {
                 statement.setString(1, newPosition);
                 statement.setString(2, position);
+                statement.setInt(3, roomId);
             };
-            final String query = "UPDATE piece SET position = ? WHERE position = ?";
+            final String query = "UPDATE piece SET position = ? WHERE position = ? AND room_id = ?";
             template.executeUpdate(query, pss);
         } catch (SQLException e) {
             throw new DataAccessException();
         }
     }
 
-    public void save(Board board) {
-        removeAll();
-        for (Piece alivePiece : board.getPieces().getAlivePieces()) {
-            savePiece(alivePiece);
-        }
-    }
-
-    private void removeAll() {
+    public void removeAll(int roomId) {
         try {
-            final String sql = "DELETE FROM piece";
-            template.executeUpdateWithoutPss(sql);
+            PreparedStatementSetter pss = statement -> statement.setInt(1, roomId);
+            final String sql = "DELETE FROM piece WHERE room_id =?";
+            template.executeUpdate(sql, pss);
         } catch (SQLException e) {
             throw new DataAccessException();
         }
     }
 
-    public void removePiece(String position) {
-        try {
-            PreparedStatementSetter pss = statement -> statement.setString(1, position);
-            String query = "DELETE FROM piece WHERE position = ?";
-            template.executeUpdate(query, pss);
-        } catch (SQLException e) {
-            throw new DataAccessException();
-        }
-    }
-
-    private void savePiece(Piece piece) {
+    public void removePiece(String position, int roomId) {
         try {
             PreparedStatementSetter pss = statement -> {
-                statement.setString(1, piece.getPosition());
-                statement.setString(2, piece.toString());
-                statement.setString(3, piece.getTeam().getName());
+                statement.setString(1, position);
+                statement.setInt(2, roomId);
             };
-            final String sql = "INSERT INTO piece(position, type, team) VALUES (?, ?, ?)";
-            template.executeUpdate(sql, pss);
+            String query = "DELETE FROM piece WHERE position = ? AND room_id = ?";
+            template.executeUpdate(query, pss);
+        } catch (SQLException e) {
+            throw new DataAccessException();
+        }
+    }
+
+    public void saveBoard(Board board, int roomId) {
+        try {
+            PreparedStatementSetter pss = statement -> {
+                for (Piece alivePiece : board.getPieces().getAlivePieces()) {
+                    statement.setString(1, alivePiece.getPosition());
+                    statement.setString(2, alivePiece.toString());
+                    statement.setString(3, alivePiece.getTeam().getName());
+                    statement.setInt(4, roomId);
+                    statement.addBatch();
+                }
+            };
+            final String sql = "INSERT INTO piece(position, type, team, room_id) VALUES (?, ?, ?, ?)";
+            template.executeBatchWithPss(sql, pss);
         } catch (SQLException e) {
             throw new DataAccessException();
         }

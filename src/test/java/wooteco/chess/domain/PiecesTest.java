@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import wooteco.chess.exception.NullPieceException;
+
 public class PiecesTest {
 
     @Test
@@ -23,7 +25,7 @@ public class PiecesTest {
         Board board = new Board();
         assertThatThrownBy(() ->
             board.movePiece(new Position("d5"), new Position("d6"))
-        ).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("해당 위치에");
+        ).isInstanceOf(NullPieceException.class).hasMessageContaining("해당 위치에");
     }
 
     @Test

@@ -23,6 +23,12 @@ public enum Team {
             .orElseThrow(() -> new IllegalArgumentException("일치하는 팀이 없습니다."));
     }
 
+    public Team changeTurn() {
+        if (this == Team.WHITE)
+            return Team.BLACK;
+        return Team.WHITE;
+    }
+
     public static char getRepresentation(Piece piece) {
         return piece.getTeam().teamRepresentation.apply(piece.getRepresentations());
     }

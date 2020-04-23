@@ -3,9 +3,12 @@ package wooteco.chess.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import wooteco.chess.domain.game.NormalStatus;
+import wooteco.chess.dto.ChessGameDto;
 import wooteco.chess.service.SpringChessService;
+import wooteco.chess.web.JsonTransformer;
 
 import java.sql.SQLException;
 
@@ -29,5 +32,13 @@ public class SpringChessController {
         modelAndView.addObject("normalStatus", NormalStatus.YES.isNormalStatus());
         springChessService.clearHistory();
         return modelAndView;
+    }
+
+    @GetMapping("/board")
+    @ResponseBody
+    public String setBoard() throws SQLException {
+        ChessGameDto chessGameDto = springChessService.setBoard();
+        String board = JsonTransformer.toJson(chessGameDto);
+        return board;
     }
 }

@@ -71,6 +71,10 @@ public class GameManager {
         return pieces.getPieceByPosition(position);
     }
 
+    public Pieces getPieces() {
+        return pieces;
+    }
+
     public Color getCurrentColor() {
         return currentColor;
     }

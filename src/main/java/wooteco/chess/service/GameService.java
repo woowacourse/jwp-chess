@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import org.springframework.stereotype.Service;
 import wooteco.chess.dao.GameDAO;
 import wooteco.chess.dao.RoomDAO;
 import wooteco.chess.domain.Color;
@@ -10,8 +11,10 @@ import wooteco.chess.domain.piece.Pieces;
 import wooteco.chess.dto.PiecesResponseDTO;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
+@Service
 public class GameService {
     private static final GameService GAME_SERVICE = new GameService();
 
@@ -22,13 +25,14 @@ public class GameService {
         return GAME_SERVICE;
     }
 
-    public void initialize(int roomId) throws SQLException {
+    public GameManagerDTO initialize(int roomId) throws SQLException {
         GameDAO gameDAO = GameDAO.getInstance();
         RoomDAO roomDAO = RoomDAO.getInstance();
 
         roomDAO.updateRoomColorById(roomId, Color.WHITE);
         Pieces pieces = new Pieces(Pieces.initPieces());
         gameDAO.addAllPiecesById(roomId, pieces);
+        return new GameManagerDTO(new PiecesResponseDTO(pieces).getPieces(), Color.WHITE, false);
     }
 
     public void movePiece(int roomId, String sourcePosition, String targetPosition) throws SQLException {

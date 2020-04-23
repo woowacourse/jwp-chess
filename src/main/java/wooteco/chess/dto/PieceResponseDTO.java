@@ -1,8 +1,8 @@
 package wooteco.chess.dto;
 
 public class PieceResponseDTO {
-    String position;
-    String imgUrl;
+    private final String position;
+    private final String imgUrl;
 
     public PieceResponseDTO(String position, String imgUrl) {
         this.position = position;

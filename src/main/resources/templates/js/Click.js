@@ -34,7 +34,7 @@ function selectDestinationPiece(value) {
         },
         dataType: "text",
         success: function (data, status, jqXHR) {
-            if(data === "true") {
+            if (data === "true") {
                 alert("게임이 종료되었습니다.");
             }
             //Todo 게임이 종료 되었을 때 메시지
@@ -49,5 +49,5 @@ function selectDestinationPiece(value) {
 }
 
 const fetchId = () => {
-   return document.getElementById("id-container").innerText;
+    return document.getElementById("id-container").innerText;
 };

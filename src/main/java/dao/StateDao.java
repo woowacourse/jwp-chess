@@ -3,7 +3,10 @@ package dao;
 import dao.exceptions.DaoNoneSelectedException;
 import dto.StateDto;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class StateDao {
 	private static final StateDao STATE_DAO;

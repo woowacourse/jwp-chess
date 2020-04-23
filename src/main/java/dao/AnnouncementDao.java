@@ -3,8 +3,10 @@ package dao;
 import dao.exceptions.DaoNoneSelectedException;
 import dto.AnnouncementDto;
 
-import java.sql.*;
-import java.util.Collections;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class AnnouncementDao {
 	private static final AnnouncementDao ANNOUNCEMENT_DAO;

@@ -1,11 +1,14 @@
 package service;
 
-import dao.*;
+import dao.AnnouncementDao;
+import dao.PieceDao;
+import dao.StateDao;
+import dao.StatusRecordDao;
+import domain.coordinate.Coordinate;
 import domain.pieces.Piece;
 import domain.pieces.PieceType;
 import domain.pieces.Pieces;
 import domain.pieces.StartPieces;
-import domain.coordinate.Coordinate;
 import domain.state.State;
 import domain.state.StateType;
 import domain.team.Team;

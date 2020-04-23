@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.sql.SQLException;
 
 @Controller
-public class SpringChessRoomController {
+public class SpringRoomController {
 	private static final String PATH = "/chess/rooms";
 	private static final String PATH_VARIABLE = "{room_id}";
 	private static final String STATIC_PATH = "/chess";
@@ -24,12 +24,12 @@ public class SpringChessRoomController {
 
 	private final ChessRoomService chessRoomService;
 
-	public SpringChessRoomController(final ChessRoomService chessRoomService) {
+	public SpringRoomController(final ChessRoomService chessRoomService) {
 		this.chessRoomService = chessRoomService;
 	}
 
 	@GetMapping(PATH + SLASH + PATH_VARIABLE)
-	private String routeGetMethod(@PathVariable("room_id") final int roomId, final Model model) throws SQLException {
+	private String load(@PathVariable("room_id") final int roomId, final Model model) throws SQLException {
 		try {
 			loadData(roomId, model);
 		} catch (DaoNoneSelectedException e) {
@@ -53,7 +53,7 @@ public class SpringChessRoomController {
 	}
 
 	@PostMapping(PATH + SLASH + PATH_VARIABLE)
-	private String routePostMethod(
+	private String command(
 			@PathVariable("room_id") final int roomId,
 			@RequestParam(COMMAND_QUERY_PARAM) final String command) throws SQLException {
 

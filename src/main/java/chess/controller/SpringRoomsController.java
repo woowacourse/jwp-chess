@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Controller
-public class SpringChessRoomsController {
+public class SpringRoomsController {
 	public static final String PATH = "/chess/rooms";
 	private static final String STATIC_PATH = "/rooms";
 	private static final String EMPTY = "";
@@ -23,19 +23,19 @@ public class SpringChessRoomsController {
 
 	private final ChessRoomsService chessRoomsService;
 
-	public SpringChessRoomsController(final ChessRoomsService chessRoomsService) {
+	public SpringRoomsController(final ChessRoomsService chessRoomsService) {
 		this.chessRoomsService = chessRoomsService;
 	}
 
 	@GetMapping(PATH)
-	private String roomList(final Model model) throws SQLException {
+	private String load(final Model model) throws SQLException {
 		final List<RoomDto> rooms = chessRoomsService.findAllRooms();
 		model.addAttribute(ROOMS_KEY, rooms);
 		return STATIC_PATH;
 	}
 
 	@PostMapping(PATH)
-	private String routePostMethod(
+	private String manage(
 			@RequestParam(value = "method", defaultValue = EMPTY) final String method,
 			@RequestParam(value = ROOM_NAME_OF_FORM, defaultValue = EMPTY) final String roomName)
 			throws SQLException {

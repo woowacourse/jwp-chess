@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SparkChessRoomController {
-	private static final SparkChessRoomController CHESS_ROOM_CONTROLLER;
+public class SparkRoomController {
+	private static final SparkRoomController CHESS_ROOM_CONTROLLER;
 	private static final String PATH = "/chess/rooms/:id";
 	private static final String STATIC_PATH = "/chess.hbs";
 	private static final String SLASH = "/";
@@ -21,16 +21,16 @@ public class SparkChessRoomController {
 	private static final String ANNOUNCEMENT_KEY = "announcement";
 
 	static {
-		CHESS_ROOM_CONTROLLER = new SparkChessRoomController(ChessRoomService.getInstance());
+		CHESS_ROOM_CONTROLLER = new SparkRoomController(ChessRoomService.getInstance());
 	}
 
 	private final ChessRoomService chessRoomService;
 
-	private SparkChessRoomController(final ChessRoomService chessRoomService) {
+	private SparkRoomController(final ChessRoomService chessRoomService) {
 		this.chessRoomService = chessRoomService;
 	}
 
-	public static SparkChessRoomController getInstance() {
+	public static SparkRoomController getInstance() {
 		return CHESS_ROOM_CONTROLLER;
 	}
 
@@ -78,7 +78,7 @@ public class SparkChessRoomController {
 			} catch (RuntimeException e) {
 				chessRoomService.saveAnnouncementMessage(roomId, Announcement.of(e.getMessage()).getString());
 			}
-			response.redirect(SparkChessRoomsController.PATH + SLASH + request.params(ID_PARAM));
+			response.redirect(SparkRoomsController.PATH + SLASH + request.params(ID_PARAM));
 			return EMPTY;
 		});
 	}

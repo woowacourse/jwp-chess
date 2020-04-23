@@ -4,19 +4,19 @@ import spark.Spark;
 
 import java.util.Collections;
 
-public class SparkChessHomeController {
-	private static final SparkChessHomeController CHESS_HOME_CONTROLLER;
+public class SparkHomeController {
+	private static final SparkHomeController CHESS_HOME_CONTROLLER;
 	private static final String STATIC_PATH = "/index.html";
 	public static final String PATH = "/chess/home";
 
 	static {
-		CHESS_HOME_CONTROLLER = new SparkChessHomeController();
+		CHESS_HOME_CONTROLLER = new SparkHomeController();
 	}
 
-	private SparkChessHomeController() {
+	private SparkHomeController() {
 	}
 
-	public static SparkChessHomeController getInstance() {
+	public static SparkHomeController getInstance() {
 		return CHESS_HOME_CONTROLLER;
 	}
 

@@ -1,18 +1,18 @@
 package chess;
 
-import chess.controller.SparkChessHomeController;
-import chess.controller.SparkChessRoomController;
-import chess.controller.SparkChessRoomsController;
-import chess.controller.SparkChessStatisticController;
+import chess.controller.SparkHomeController;
+import chess.controller.SparkRoomController;
+import chess.controller.SparkRoomsController;
+import chess.controller.SparkStatisticController;
 import spark.Spark;
 
 public class SparkChessApplication {
 
-	private static final SparkChessRoomsController ROOMS_CONTROLLER = SparkChessRoomsController.getInstance();
-	private static final SparkChessRoomController ROOM_CONTROLLER = SparkChessRoomController.getInstance();
-	private static final SparkChessStatisticController STATISTIC_CONTROLLER
-			= SparkChessStatisticController.getInstance();
-	private static final SparkChessHomeController HOME_CONTROLLER = SparkChessHomeController.getInstance();
+	private static final SparkRoomsController ROOMS_CONTROLLER = SparkRoomsController.getInstance();
+	private static final SparkRoomController ROOM_CONTROLLER = SparkRoomController.getInstance();
+	private static final SparkStatisticController STATISTIC_CONTROLLER
+			= SparkStatisticController.getInstance();
+	private static final SparkHomeController HOME_CONTROLLER = SparkHomeController.getInstance();
 
 	public static void main(String[] args) {
 		Spark.port(ServerInfo.PORT);

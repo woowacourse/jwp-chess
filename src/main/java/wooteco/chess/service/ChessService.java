@@ -39,8 +39,9 @@ public class ChessService {
         return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
     }
 
-    public ResponseDto movePiece(int pieceId, Position sourcePosition, Position targetPosition) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(pieceId);
+    public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) throws
+        SQLException {
+        ChessGame chessGame = chessGameDao.findById(chessGameId);
         try {
             chessGame.move(sourcePosition, targetPosition);
             chessGameDao.update(chessGame);
@@ -63,8 +64,8 @@ public class ChessService {
 
     private static ResponseDto responseChessGame(ChessGame chessGame) {
         return new ResponseDto(ResponseDto.SUCCESS,
-                new ChessGameDto(new BoardDto(chessGame.board()), new TurnDto(chessGame.turn()),
-                    new StatusDto(chessGame.status().getWhiteScore(), chessGame.status().getBlackScore(),
-                        chessGame.status().getWinner()), chessGame.isFinished()));
+            new ChessGameDto(new BoardDto(chessGame.board()), new TurnDto(chessGame.turn()),
+                new StatusDto(chessGame.status().getWhiteScore(), chessGame.status().getBlackScore(),
+                    chessGame.status().getWinner()), chessGame.isFinished()));
     }
 }

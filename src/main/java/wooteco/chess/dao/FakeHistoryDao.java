@@ -2,8 +2,7 @@ package wooteco.chess.dao;
 
 import wooteco.chess.domain.position.MovingPosition;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class FakeHistoryDao {
     private final Map<Integer, MovingPosition> fakeHistoryDao;
@@ -19,6 +18,12 @@ public class FakeHistoryDao {
 
     public Map<Integer, MovingPosition> selectAll() {
         return fakeHistoryDao;
+    }
+
+    public List<MovingPosition> selectMovingPositions() {
+        return Collections.unmodifiableList(
+                new ArrayList<>(fakeHistoryDao.values())
+        );
     }
 
     public void clear() {

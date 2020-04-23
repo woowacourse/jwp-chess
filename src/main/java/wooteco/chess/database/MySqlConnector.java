@@ -8,7 +8,7 @@ public class MySqlConnector {
     public static Connection getConnection() {
         Connection connection = null;
         final String server = "localhost:13306";
-        final String database = "WOOWA";
+        final String database = "db_name";
         final String option = "?useSSL=false&serverTimezone=UTC";
         final String userName = "root";
         final String password = "root";

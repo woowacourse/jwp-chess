@@ -2,6 +2,7 @@ package wooteco.chess.controller;
 
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import wooteco.chess.domain.board.Board;
 import wooteco.chess.service.ChessGameService;
 
 import java.sql.SQLException;
@@ -25,7 +26,6 @@ public class SparkChessController {
 
         post("/start", (req, res) -> {
             chessGameService.initializeTurn();
-            chessGameService.initializeFinish();
             return render(chessGameService.receiveInitializedBoard(), "index.html");
         });
 
@@ -35,9 +35,9 @@ public class SparkChessController {
 
         post("/move", (req, res) -> {
             try {
-                chessGameService.receiveMovedBoard(
+                Board board = chessGameService.receiveMovedBoard(
                         req.queryParams("fromPiece"), req.queryParams("toPiece"));
-                if (chessGameService.isFinish()) {
+                if (chessGameService.isFinish(board)) {
                     return chessGameService.receiveWinner();
                 }
             } catch(IllegalArgumentException e) {

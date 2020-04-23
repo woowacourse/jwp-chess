@@ -3,7 +3,6 @@ package wooteco.chess.service;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.dao.BoardDAO;
-import wooteco.chess.domain.dao.FinishDAO;
 import wooteco.chess.domain.dao.TurnDAO;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
@@ -16,12 +15,10 @@ import java.util.Map;
 
 public class ChessGameService {
     private BoardDAO boardDAO;
-    private FinishDAO finishDAO;
     private TurnDAO turnDAO;
 
     public ChessGameService() throws SQLException {
         this.boardDAO = new BoardDAO();
-        this.finishDAO = new FinishDAO();
         this.turnDAO = new TurnDAO();
         if (getCurrentTurn() == Team.BLANK) {
             turnDAO.updateTurn(Team.WHITE);
@@ -52,7 +49,7 @@ public class ChessGameService {
         return createBoardModel(board);
     }
 
-    public void receiveMovedBoard(final String fromPiece, final String toPiece) throws SQLException {
+    public Board receiveMovedBoard(final String fromPiece, final String toPiece) throws SQLException {
         Board board = new Board(boardDAO.findAllPieces());
         Piece piece = board.findBy(Position.of(fromPiece));
 
@@ -61,12 +58,11 @@ public class ChessGameService {
             throw new IllegalArgumentException("체스 게임 순서를 지켜주세요.");
         }
 
-        updateFinish(board.isFinished());
         updateTurn();
-
         for (Position position : board.getBoard().keySet()) {
             boardDAO.placePiece(board, position);
         }
+        return board;
     }
 
     private Map<String, Object> createBoardModel(final Board board) {
@@ -114,16 +110,8 @@ public class ChessGameService {
         return team.toString();
     }
 
-    public void initializeFinish() throws SQLException {
-        finishDAO.deleteFinish();
-        finishDAO.insertFinish(false);
+    public boolean isFinish(final Board board) {
+        return board.isFinished();
     }
 
-    public void updateFinish(final boolean isFinish) throws SQLException {
-        finishDAO.updateFinish(isFinish);
-    }
-
-    public boolean isFinish() throws SQLException {
-        return finishDAO.getIsFinish().equals("true");
-    }
 }

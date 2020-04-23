@@ -45,7 +45,7 @@ newButton.onclick = () => {
 };
 
 closeButton.onclick = () => {
-    fetch('/game/api/end', {
+    fetch('/api/game/end', {
         method: 'POST',
         body: JSON.stringify({
             gameId
@@ -65,7 +65,7 @@ cells.forEach(cell => {
                 = '말이 이동할 경로(after)를 선택하세요.';
             state.innerText = "";
             cell.style.backgroundColor = 'STEELBLUE';
-            fetch('/game/api/path', {
+            fetch('/api/game/path', {
                 method: 'POST',
                 body: JSON.stringify({
                     source, gameId
@@ -83,7 +83,7 @@ cells.forEach(cell => {
         document.getElementById(source).removeAttribute('style');
         target = cell.id;
         firstClick = true;
-        fetch('/game/api/move', {
+        fetch('/api/game/move', {
             method: 'POST',
             body: JSON.stringify({
                 source, target, gameId
@@ -102,7 +102,7 @@ cells.forEach(cell => {
 promotions.forEach(promotion => {
     promotion.onclick = () => {
         let promotionType = promotion.id;
-        fetch('/game/api/promotion', {
+        fetch('/api/game/promotion', {
             method: 'POST',
             body: JSON.stringify({
                 promotionType, gameId
@@ -113,7 +113,7 @@ promotions.forEach(promotion => {
     }
 });
 
-fetch('/game/api/board', {
+fetch('/api/game/board', {
     method: 'POST',
     body: JSON.stringify({
         gameId

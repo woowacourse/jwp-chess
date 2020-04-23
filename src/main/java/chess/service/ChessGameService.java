@@ -23,8 +23,6 @@ import chess.model.dto.SourceDto;
 import chess.model.repository.ChessBoardDao;
 import chess.model.repository.ChessGameDao;
 import chess.model.repository.ChessResultDao;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,20 +37,29 @@ public class ChessGameService {
     private static final ChessBoardDao CHESS_BOARD_DAO = ChessBoardDao.getInstance();
     private static final ChessResultDao CHESS_RESULT_DAO = ChessResultDao.getInstance();
 
-    public int newChessGame(int roomId, Map<Team, String> userNames) {
+    public int create(int roomId, Map<Team, String> userNames) {
         roomBeforeGameOver(roomId);
         ChessGame chessGame = new ChessGame();
         int gameId = CHESS_GAME_DAO
             .insert(roomId, chessGame.getGameTurn(), userNames, chessGame.getTeamScore());
+
         CHESS_BOARD_DAO.insert(gameId, chessGame.getChessBoard(),
             getCastlingElement(chessGame.getChessBoard(), chessGame.getCastlingElements()));
         CHESS_GAME_DAO.updateScore(gameId, chessGame.getTeamScore());
+
         for (String userName : userNames.values()) {
             if (!CHESS_RESULT_DAO.getWinOrDraw(userName).isPresent()) {
                 CHESS_RESULT_DAO.insert(userName);
             }
         }
         return gameId;
+    }
+
+    public void roomBeforeGameOver(int roomId) {
+        List<Integer> proceedGameIds = CHESS_GAME_DAO.getProceedGameIdsByRoomId(roomId);
+        for (int gameId : proceedGameIds) {
+            gameOver(gameId);
+        }
     }
 
     public void saveUser(Map<Team, String> userNames) {
@@ -72,13 +79,6 @@ public class ChessGameService {
             getCastlingElement(chessGame.getChessBoard(), chessGame.getCastlingElements()));
         CHESS_GAME_DAO.updateScore(gameId, chessGame.getTeamScore());
         return gameId;
-    }
-
-    public void roomBeforeGameOver(int roomId) {
-        List<Integer> proceedGameIds = CHESS_GAME_DAO.getProceedGameIdsByRoomId(roomId);
-        for (int gameId : proceedGameIds) {
-            gameOver(gameId);
-        }
     }
 
     private Map<Square, Boolean> getCastlingElement(Map<Square, Piece> chessBoard,
@@ -147,7 +147,7 @@ public class ChessGameService {
             new TeamScore(CHESS_GAME_DAO.getScores(gameId)), CHESS_GAME_DAO.getUserNames(gameId));
     }
 
-    private void gameOver(int gameId) {
+    public void gameOver(int gameId) {
         if (CHESS_GAME_DAO.isProceed(gameId)) {
             CHESS_GAME_DAO.updateProceedN(gameId);
             Map<Team, String> userNames = CHESS_GAME_DAO.getUserNames(gameId);
@@ -192,8 +192,12 @@ public class ChessGameService {
         return new PathDto(chessGame.getMovableArea(Square.of(sourceDto.getSource())));
     }
 
-    public ChessGameDto endGame(MoveDto moveDto) {
-        int gameId = moveDto.getGameId();
+    public int createBy(int gameId, Map<Team, String> userNames) {
+        return create(
+            CHESS_GAME_DAO.getRoomId(gameId).orElseThrow(IllegalArgumentException::new), userNames);
+    }
+
+    public ChessGameDto endGame(int gameId) {
         gameOver(gameId);
         return new ChessGameDto(new TeamScore(CHESS_GAME_DAO.getScores(gameId)),
             CHESS_GAME_DAO.getUserNames(gameId));
@@ -203,10 +207,13 @@ public class ChessGameService {
         return CHESS_GAME_DAO.getRoomId(gameId).orElseThrow(IllegalAccessError::new);
     }
 
-    public int endAndNewChessGame(int gameId, Map<Team, String> userNames) {
-        gameOver(gameId);
-        return newChessGame(
-            CHESS_GAME_DAO.getRoomId(gameId).orElseThrow(IllegalArgumentException::new), userNames);
+    public int getIdBefore(int roomId, Map<Team, String> userNames) {
+        Optional<Integer> gameNumberLatest = CHESS_GAME_DAO.getGameNumberLatest(roomId);
+        if (gameNumberLatest.isPresent()) {
+            return gameNumberLatest.get();
+        }
+        create(roomId, userNames);
+        return CHESS_GAME_DAO.getGameNumberLatest(roomId).orElseThrow(IllegalAccessError::new);
     }
 
 }

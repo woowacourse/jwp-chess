@@ -1,10 +1,7 @@
 package chess.controller;
 
 import chess.model.domain.piece.Team;
-import chess.model.dto.MoveDto;
 import chess.service.ChessGameService;
-import com.google.gson.Gson;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class WebController {
-
-    private static final Gson GSON = new Gson();
 
     @Autowired
     private ChessGameService chessGameService;
@@ -38,27 +31,57 @@ public class WebController {
 
     @PostMapping("/game")
     public String game(@RequestParam String roomId,
-        @RequestParam(defaultValue = "WHITE") String WhiteName,
-        @RequestParam(defaultValue = "BLACK") String BlackName,
+        @RequestParam(defaultValue = "WHITE") String whiteName,
+        @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
-        Map<Team, String> userNames = new HashMap<>();
-        userNames.put(Team.BLACK, BlackName);
-        userNames.put(Team.WHITE, WhiteName);
+        Map<Team, String> userNames = makeUserNames(whiteName, blackName);
 
-        chessGameService.saveRoom(userNames, Integer.parseInt(roomId));
+        int gameId = chessGameService.saveRoom(userNames, Integer.parseInt(roomId));
         chessGameService.saveUser(userNames);
 
-        model.addAttribute("gameId", roomId);
+        model.addAttribute("gameId", gameId);
         return "game";
     }
 
-    @PostMapping("/game/api/board")
-    @ResponseBody
-    public String board(@RequestBody String req) {
-        MoveDto moveDTO = GSON.fromJson(req, MoveDto.class);
-        System.out.println(moveDTO);
-        return GSON.toJson(chessGameService.loadChessGame(moveDTO.getGameId()));
+    @PostMapping("/game/newGame")
+    public String newGame(@RequestParam String gameId,
+        @RequestParam(defaultValue = "WHITE") String whiteName,
+        @RequestParam(defaultValue = "BLACK") String blackName,
+        Model model) {
+        Map<Team, String> userNames = makeUserNames(whiteName, blackName);
+        chessGameService.gameOver(Integer.parseInt(gameId));
+        model.addAttribute("gameId",
+            chessGameService.createBy(Integer.parseInt(gameId), userNames));
+        return "game";
     }
 
+    @PostMapping("/continueGame")
+    public String continueGame(@RequestParam String roomId,
+        @RequestParam(defaultValue = "WHITE") String whiteName,
+        @RequestParam(defaultValue = "BLACK") String blackName,
+        Model model) {
+        Map<Team, String> userNames = makeUserNames(whiteName, blackName);
 
+        model.addAttribute("gameId",
+            chessGameService.getIdBefore(Integer.parseInt(roomId), userNames));
+        return "game";
+    }
+
+    @PostMapping("/game/choiceGame")
+    public String choiceGame(@RequestParam String gameId, Model model) {
+        model.addAttribute("roomId", chessGameService.getRoomId(Integer.parseInt(gameId)));
+        return "start";
+    }
+
+    @PostMapping("/result")
+    public String result() {
+        return "result";
+    }
+
+    private Map<Team, String> makeUserNames(String whiteName, String blackName) {
+        Map<Team, String> userNames = new HashMap<>();
+        userNames.put(Team.BLACK, blackName);
+        userNames.put(Team.WHITE, whiteName);
+        return userNames;
+    }
 }

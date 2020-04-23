@@ -135,4 +135,30 @@ public class ChessGameDto {
     public String getWhiteScore() {
         return whiteScore;
     }
+
+    public String getBlackName() {
+        return blackName;
+    }
+
+    public String getWhiteName() {
+        return whiteName;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    @Override
+    public String toString() {
+        return "ChessGameDto{" +
+            "pieces=" + pieces +
+            ", turn='" + turn + '\'' +
+            ", state='" + state + '\'' +
+            ", blackScore='" + blackScore + '\'' +
+            ", whiteScore='" + whiteScore + '\'' +
+            ", blackName='" + blackName + '\'' +
+            ", whiteName='" + whiteName + '\'' +
+            ", winner='" + winner + '\'' +
+            '}';
+    }
 }

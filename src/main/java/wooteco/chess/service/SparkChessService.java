@@ -9,7 +9,7 @@ import wooteco.chess.dto.*;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ChessWebService {
+public class SparkChessService {
     public void clearHistory() throws SQLException {
         HistoryDao historyDao = new HistoryDao();
 

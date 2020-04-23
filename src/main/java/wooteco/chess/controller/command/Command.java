@@ -1,6 +1,5 @@
 package wooteco.chess.controller.command;
 
-import wooteco.chess.controller.ConsoleController;
 import wooteco.chess.domain.ChessManager;
 
 import java.util.ArrayList;
@@ -9,16 +8,16 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 public enum Command {
-    START("start", ConsoleController::start),
-    END("end", ConsoleController::end),
-    MOVE("move", ConsoleController::move),
-    STATUS("status", ConsoleController::status);
+    START("start", CommandProcessor::start),
+    END("end", CommandProcessor::end),
+    MOVE("move", CommandProcessor::move),
+    STATUS("status", CommandProcessor::status);
+
+    private static final List<Command> startCommands = new ArrayList<>(Arrays.asList(START, END));
+    private static final List<Command> ContinueCommandDto = new ArrayList<>(Arrays.asList(MOVE, STATUS, END));
 
     private final String command;
     private final BiConsumer<ChessManager, String> action;
-
-    private static final List<Command> startCommands = new ArrayList<>(Arrays.asList(START, END));
-    private static final List<Command> continueCommands = new ArrayList<>(Arrays.asList(MOVE, STATUS, END));
 
     Command(String command, BiConsumer<ChessManager, String> action) {
         this.command = command;
@@ -41,7 +40,7 @@ public enum Command {
     }
 
     public static void validateContinueCommand(String inputCommand) {
-        continueCommands.stream()
+        ContinueCommandDto.stream()
                 .map(val -> val.command)
                 .filter(inputCommand::contains)
                 .findFirst()

@@ -8,7 +8,6 @@ import wooteco.chess.domain.strategy.move.direction.Direction;
 import java.util.List;
 
 public abstract class MoveStrategy {
-
     public boolean movable(Position source, Position target, Board board) {
         if (isSamePosition(source, target)) {
             return false;

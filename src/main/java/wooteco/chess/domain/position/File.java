@@ -22,7 +22,7 @@ public enum File {
 
     public static File of(String file) {
         return Arrays.stream(values())
-                .filter(f -> f.symbol == file.toLowerCase().charAt(0))
+                .filter(value -> value.symbol == file.toLowerCase().charAt(0))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 x 좌표값을 입력하였습니다."));
     }

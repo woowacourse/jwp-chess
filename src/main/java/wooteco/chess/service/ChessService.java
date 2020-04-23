@@ -13,6 +13,7 @@ import java.util.Map;
 @Service
 public class ChessService {
     private static final String MOVE_ERROR_MESSAGE = "이동할 수 없는 곳입니다. 다시 입력해주세요";
+    private static final String MOVE_DELIMETER = " ";
 
     //    private ChessDao chessDao;
     private ChessManager chessManager = new ChessManager();
@@ -36,14 +37,14 @@ public class ChessService {
     }
 
     public void playLastGame() {
-//        List<CommandDto> commands = chessDao.selectCommands();
-//        for (CommandDto command : commands) {
+//        List<Commands> commands = chessDao.selectCommands();
+//        for (Commands command : commands) {
 //            Command.MOVE.apply(chessManager, command.get());
 //        }
     }
 
     public void move(String source, String target) {
-        String command = String.join(" ", new String[]{"move", source, target});
+        String command = String.join(MOVE_DELIMETER, new String[]{"move", source, target});
 
         try {
             Command.MOVE.apply(chessManager, command);
@@ -94,7 +95,7 @@ public class ChessService {
     }
 
     private void saveToDatabase(String command) {
-//        chessDao.addCommand(new CommandDto(command));
+//        chessDao.addCommand(new Commands(command));
         chessRepository.save(new Commands(command));
     }
 }

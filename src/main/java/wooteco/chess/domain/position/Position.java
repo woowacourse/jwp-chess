@@ -3,7 +3,6 @@ package wooteco.chess.domain.position;
 import java.util.Objects;
 
 public class Position {
-
     private final File file;
     private final Rank rank;
 
@@ -28,8 +27,7 @@ public class Position {
         return this.rank.getSymbol();
     }
 
-    @Override
-    public String toString() {
+    public String toPositionName() {
         return file.name() + rank.name();
     }
 

@@ -52,7 +52,7 @@ public class WebController {
 				model.put("error", e.getMessage());
 				return render(model, "index.html");
 			}
-			return render(model, "wooteco.chess.html");
+			return render(model, "chess.html");
 		});
 	}
 

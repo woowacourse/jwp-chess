@@ -3,24 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <title>Chess</title>
-    <link href="/wooteco.chess.css" rel="stylesheet" type="text/css">
-    <script src="/wooteco.chess.js"></script>
+    <link href="/chess.css" rel="stylesheet" type="text/css">
+    <script src="/chess.js"></script>
 </head>
 <body>
 <div class="container">
     <div class="board">
         {{#board.board}}
-        <div class="rows">
-            {{#.}}
-            <div class="cell">
-                <img class="piece-image" src="/img/{{.}}.png">
-            </div>
-            {{/.}}
-        </div>
+        <table>
+            <tbody>
+            <tr class="rows">
+                <td class="cell" id="a8"><img class="piece-image" src="/img/{{a8}}.png"></td>
+                <td class="cell" id="b8"><img class="piece-image" src="/img/{{b8}}.png"></td>
+                <td class="cell" id="c8"><img class="piece-image" src="/img/{{c8}}.png"></td>
+                <td class="cell" id="d8"><img class="piece-image" src="/img/{{d8}}.png"></td>
+                <td class="cell" id="e8"><img class="piece-image" src="/img/{{e8}}.png"></td>
+                <td class="cell" id="f8"><img class="piece-image" src="/img/{{f8}}.png"></td>
+                <td class="cell" id="g8"><img class="piece-image" src="/img/{{g8}}.png"></td>
+                <td class="cell" id="h8"><img class="piece-image" src="/img/{{h8}}.png"></td>
+            </tr>
+            <tr class="rows">
+                <td class="cell" id="a7"><img class="piece-image" src="/img/{{a7}}.png"></td>
+                <td class="cell" id="b7"><img class="piece-image" src="/img/{{b7}}.png"></td>
+                <td class="cell" id="c7"><img class="piece-image" src="/img/{{c7}}.png"></td>
+                <td class="cell" id="d7"><img class="piece-image" src="/img/{{d7}}.png"></td>
+                <td class="cell" id="e7"><img class="piece-image" src="/img/{{e7}}.png"></td>
+                <td class="cell" id="f7"><img class="piece-image" src="/img/{{f7}}.png"></td>
+                <td class="cell" id="g7"><img class="piece-image" src="/img/{{g7}}.png"></td>
+                <td class="cell" id="h7"><img class="piece-image" src="/img/{{h7}}.png"></td>
+            </tr>
+            <tr class="rows">
+                <td class="cell" id="a6"><img class="piece-image" src="/img/{{a6}}.png"></td>
+                <td class="cell" id="b6"><img class="piece-image" src="/img/{{b6}}.png"></td>
+                <td class="cell" id="c6"><img class="piece-image" src="/img/{{c6}}.png"></td>
+                <td class="cell" id="d6"><img class="piece-image" src="/img/{{d6}}.png"></td>
+                <td class="cell" id="e6"><img class="piece-image" src="/img/{{e6}}.png"></td>
+                <td class="cell" id="f6"><img class="piece-image" src="/img/{{f6}}.png"></td>
+                <td class="cell" id="g6"><img class="piece-image" src="/img/{{g6}}.png"></td>
+                <td class="cell" id="h6"><img class="piece-image" src="/img/{{h6}}.png"></td>
+            </tr>
+            <tr class="rows">
+                <td class="cell" id="a5"><img class="piece-image" src="/img/{{a5}}.png"></td>
+                <td class="cell" id="b5"><img class="piece-image" src="/img/{{b5}}.png"></td>
+                <td class="cell" id="c5"><img class="piece-image" src="/img/{{c5}}.png"></td>
+                <td class="cell" id="d5"><img class="piece-image" src="/img/{{d5}}.png"></td>
+                <td class="cell" id="e5"><img class="piece-image" src="/img/{{e5}}.png"></td>
+                <td class="cell" id="f5"><img class="piece-image" src="/img/{{f5}}.png"></td>
+                <td class="cell" id="g5"><img class="piece-image" src="/img/{{g5}}.png"></td>
+                <td class="cell" id="h5"><img class="piece-image" src="/img/{{h5}}.png"></td>
+            </tr>
+            <tr class="rows">
+                <td class="cell" id="a4"><img class="piece-image" src="/img/{{a4}}.png"></td>
+                <td class="cell" id="b4"><img class="piece-image" src="/img/{{b4}}.png"></td>
+                <td class="cell" id="c4"><img class="piece-image" src="/img/{{c4}}.png"></td>
+                <td class="cell" id="d4"><img class="piece-image" src="/img/{{d4}}.png"></td>
+                <td class="cell" id="e4"><img class="piece-image" src="/img/{{e4}}.png"></td>
+                <td class="cell" id="f4"><img class="piece-image" src="/img/{{f4}}.png"></td>
+                <td class="cell" id="g4"><img class="piece-image" src="/img/{{g4}}.png"></td>
+                <td class="cell" id="h4"><img class="piece-image" src="/img/{{h4}}.png"></td>
+            </tr>
+            <tr class="rows">
+                <td class="cell" id="a3"><img class="piece-image" src="/img/{{a3}}.png"></td>
+                <td class="cell" id="b3"><img class="piece-image" src="/img/{{b3}}.png"></td>
+                <td class="cell" id="c3"><img class="piece-image" src="/img/{{c3}}.png"></td>
+                <td class="cell" id="d3"><img class="piece-image" src="/img/{{d3}}.png"></td>
+                <td class="cell" id="e3"><img class="piece-image" src="/img/{{e3}}.png"></td>
+                <td class="cell" id="f3"><img class="piece-image" src="/img/{{f3}}.png"></td>
+                <td class="cell" id="g3"><img class="piece-image" src="/img/{{g3}}.png"></td>
+                <td class="cell" id="h3"><img class="piece-image" src="/img/{{h3}}.png"></td>
+            </tr>
+            <tr class="rows">
+                <td class="cell" id="a2"><img class="piece-image" src="/img/{{a2}}.png"></td>
+                <td class="cell" id="b2"><img class="piece-image" src="/img/{{b2}}.png"></td>
+                <td class="cell" id="c2"><img class="piece-image" src="/img/{{c2}}.png"></td>
+                <td class="cell" id="d2"><img class="piece-image" src="/img/{{d2}}.png"></td>
+                <td class="cell" id="e2"><img class="piece-image" src="/img/{{e2}}.png"></td>
+                <td class="cell" id="f2"><img class="piece-image" src="/img/{{f2}}.png"></td>
+                <td class="cell" id="g2"><img class="piece-image" src="/img/{{g2}}.png"></td>
+                <td class="cell" id="h2"><img class="piece-image" src="/img/{{h2}}.png"></td>
+            </tr>
+            <tr class="rows">
+                <td class="cell" id="a1"><img class="piece-image" src="/img/{{a1}}.png"></td>
+                <td class="cell" id="b1"><img class="piece-image" src="/img/{{b1}}.png"></td>
+                <td class="cell" id="c1"><img class="piece-image" src="/img/{{c1}}.png"></td>
+                <td class="cell" id="d1"><img class="piece-image" src="/img/{{d1}}.png"></td>
+                <td class="cell" id="e1"><img class="piece-image" src="/img/{{e1}}.png"></td>
+                <td class="cell" id="f1"><img class="piece-image" src="/img/{{f1}}.png"></td>
+                <td class="cell" id="g1"><img class="piece-image" src="/img/{{g1}}.png"></td>
+                <td class="cell" id="h1"><img class="piece-image" src="/img/{{h1}}.png"></td>
+            </tr>
+            </tbody>
+        </table>
         {{/board.board}}
     </div>
+
     <div class="side">
-        <form action="/wooteco.chess" method="post">
+        <form action="/chess" method="post">
             <label>출발 좌표</label>
             <input name="source" type="text">
             <br/>

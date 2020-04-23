@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.position.Position;
@@ -16,11 +18,12 @@ import wooteco.chess.view.dto.responsedto.BoardDTO;
 import wooteco.chess.view.dto.responsedto.GameDTO;
 import wooteco.chess.view.dto.responsedto.ScoreDTO;
 
+@Service
 public class GameService {
 	private static final String NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE = "조건에 해당하는 요소가 없습니다.";
 	private static final int DEFAULT_USER_ID = 1;
 
-	private GameDAO gameDAO;
+	private final GameDAO gameDAO;
 
 	public GameService(GameDAO gameDAO) {
 		this.gameDAO = Objects.requireNonNull(gameDAO);

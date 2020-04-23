@@ -3,11 +3,17 @@ package wooteco.chess.repository.jdbc;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
 import wooteco.chess.domain.board.BoardParser;
 import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.game.GameFactory;
 import wooteco.chess.repository.GameDAO;
 
+@Primary
+@Repository
 public class JDBCGameDAO implements GameDAO {
 	private final JDBCTemplate jdbcTemplate;
 

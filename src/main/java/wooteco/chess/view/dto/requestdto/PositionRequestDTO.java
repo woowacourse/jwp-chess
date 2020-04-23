@@ -1,8 +1,11 @@
 package wooteco.chess.view.dto.requestdto;
 
 public class PositionRequestDTO {
-	private final String from;
-	private final String to;
+	private String from;
+	private String to;
+
+	public PositionRequestDTO() {
+	}
 
 	public PositionRequestDTO(String from, String to) {
 		this.from = from;

@@ -23,6 +23,7 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	compile("mysql:mysql-connector-java:8.0.16")
 	runtimeOnly 'com.h2database:h2'
 }
 

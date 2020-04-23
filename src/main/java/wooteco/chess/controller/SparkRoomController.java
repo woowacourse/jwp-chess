@@ -41,6 +41,7 @@ public class SparkRoomController {
         response.redirect("/rooms");
         return null;
     };
+
     public static Route removeRoom = (request, response) -> {
         RoomService roomService = RoomService.getInstance();
         roomService.removeRoom(Integer.parseInt(request.queryParams("roomId")));

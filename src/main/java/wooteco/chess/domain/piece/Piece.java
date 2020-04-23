@@ -13,8 +13,8 @@ import java.util.Map;
  * @author AnHyungJu, LeeHoBin
  */
 public abstract class Piece {
-    protected Color color;
-    protected MoveStrategy moveStrategy;
+    protected final Color color;
+    protected final MoveStrategy moveStrategy;
     private final String symbol;
 
     public Piece(Color color, String symbol, MoveStrategy moveStrategy) {

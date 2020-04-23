@@ -10,11 +10,10 @@ import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Color;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
+import wooteco.chess.exceptions.IllegalMovementException;
+import wooteco.chess.exceptions.TurnMisMatchException;
 
 public class GameManager {
-	private static final String TURN_MISS_MATCH_MESSAGE = "자신의 턴이 아닙니다.";
-	private static final String NOT_MOVABLE_MESSAGE = "이동할 수 없는 위치입니다.";
-
 	private Board board;
 	private Color currentTurn;
 
@@ -43,7 +42,7 @@ public class GameManager {
 
 	private void validateTurn(Piece target) {
 		if (target.isNotSameColor(currentTurn)) {
-			throw new IllegalArgumentException(TURN_MISS_MATCH_MESSAGE);
+			throw new TurnMisMatchException();
 		}
 	}
 
@@ -51,7 +50,7 @@ public class GameManager {
 		Set<Position> movablePositions = target.findMovablePositions(targetPosition,
 			board.getPieces());
 		if (!movablePositions.contains(destination)) {
-			throw new IllegalArgumentException(NOT_MOVABLE_MESSAGE);
+			throw new IllegalMovementException();
 		}
 	}
 

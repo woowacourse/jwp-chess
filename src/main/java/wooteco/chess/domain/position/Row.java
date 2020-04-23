@@ -70,4 +70,8 @@ public class Row {
 			"name='" + name + '\'' +
 			'}';
 	}
+
+	public int getValue() {
+		return this.value;
+	}
 }

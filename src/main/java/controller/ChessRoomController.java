@@ -82,13 +82,7 @@ public class ChessRoomController {
 
 			try {
 				chessRoomService.updateRoom(roomId, command);
-			} catch (CommandTypeException
-					| MoveCommandTokensException
-					| CanNotMoveException
-					| CanNotAttackException
-					| CanNotReachException
-					| StateException
-					| CoordinateException e) {
+			} catch (RuntimeException e) {
 				chessRoomService.saveAnnouncementMessage(roomId, Announcement.of(e.getMessage()).getString());
 			}
 			response.redirect(ChessRoomsController.PATH + SLASH + request.params(ID_PARAM));

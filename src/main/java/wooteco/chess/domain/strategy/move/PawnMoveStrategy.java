@@ -34,7 +34,7 @@ public class PawnMoveStrategy extends MoveStrategy {
             return board.isEmpty(target);
         }
         if (isWhitePawnStartPosition(fileGap, rankGap)) {
-            return source.getRank() == WHITE_START_POSITION;
+            return source.getRank() == WHITE_START_POSITION && checkObstacle(source, target, board);
         }
         if (isWhitePawnAttack(fileGap, rankGap)) {
             return !board.isEmpty(target) && board.getPiece(target).isBlack();
@@ -50,7 +50,7 @@ public class PawnMoveStrategy extends MoveStrategy {
             return board.isEmpty(target);
         }
         if (isBlackPawnStartPosition(fileGap, rankGap)) {
-            return source.getRank() == BLACK_START_POSITION;
+            return source.getRank() == BLACK_START_POSITION && checkObstacle(source, target, board);
         }
         if (isBlackPawnAttack(fileGap, rankGap)) {
             return !board.isEmpty(target) && board.getPiece(target).isWhite();

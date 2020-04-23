@@ -15,23 +15,19 @@ import wooteco.chess.dto.ChessGameDto;
 import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.dto.StatusDto;
 import wooteco.chess.dto.TurnDto;
-import wooteco.chess.service.exception.InvalidGameException;
 
 public class ChessService {
     private static final ChessGameDao chessGameDao = new ChessGameDao();
 
     public ResponseDto createChessRoom() throws SQLException {
         ChessGame chessGame = chessGameDao.save();
-        if (chessGame == null) {
-            return new ResponseDto(ResponseDto.FAIL, "새로운 방을 만드는데 실패했습니다.");
-        }
         chessGame.start();
         chessGameDao.update(chessGame);
         return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
     }
 
     public ResponseDto restartGame(int chessRoomId) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessRoomId).orElseThrow(InvalidGameException::new);
+        ChessGame chessGame = chessGameDao.findById(chessRoomId);
         ChessGame newChessGame = new ChessGame(chessGame.getId(), new Playing(Board.create(), Turn.WHITE));
         chessGameDao.update(newChessGame);
         return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
@@ -39,7 +35,7 @@ public class ChessService {
 
     public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) throws
         SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessGameId).orElseThrow(InvalidGameException::new);
+        ChessGame chessGame = chessGameDao.findById(chessGameId);
         try {
             chessGame.move(sourcePosition, targetPosition);
             chessGameDao.update(chessGame);
@@ -52,7 +48,7 @@ public class ChessService {
     }
 
     public ResponseDto getChessGameById(int chessGameId) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessGameId).orElseThrow(InvalidGameException::new);
+        ChessGame chessGame = chessGameDao.findById(chessGameId);
         return responseChessGame(chessGame);
     }
 

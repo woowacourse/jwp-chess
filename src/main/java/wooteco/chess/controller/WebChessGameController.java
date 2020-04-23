@@ -15,7 +15,7 @@ import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.dao.ChessGameDao;
 import wooteco.chess.domain.piece.Position;
-import wooteco.chess.service.ChessService;/**/
+import wooteco.chess.service.ChessService;
 
 public class WebChessGameController {
     private static final Gson GSON = new GsonBuilder().create();
@@ -57,20 +57,32 @@ public class WebChessGameController {
         return GSON.toJson(chessService.createChessRoom());
     }
 
-    private String restartGame(Request req, Response res) throws SQLException {
-        return GSON.toJson(chessService.restartGame(Integer.parseInt(req.params(":id"))));
+    private String restartGame(Request req, Response res) {
+        try {
+            return GSON.toJson(chessService.restartGame(Integer.parseInt(req.params(":id"))));
+        } catch (SQLException e) {
+            return "<script>location.replace('/')</script>";
+        }
     }
 
-    private String movePiece(Request req, Response res) throws SQLException {
-        int pieceId = Integer.parseInt(req.params(":id"));
-        Map<String, Double> data = GSON.fromJson(req.body(), Map.class);
-        Position source = Position.of(data.get("sx").intValue(), data.get("sy").intValue());
-        Position target = Position.of(data.get("tx").intValue(), data.get("ty").intValue());
-        return GSON.toJson(chessService.movePiece(pieceId, source, target));
+    private String movePiece(Request req, Response res) {
+        try {
+            int pieceId = Integer.parseInt(req.params(":id"));
+            Map<String, Double> data = GSON.fromJson(req.body(), Map.class);
+            Position source = Position.of(data.get("sx").intValue(), data.get("sy").intValue());
+            Position target = Position.of(data.get("tx").intValue(), data.get("ty").intValue());
+            return GSON.toJson(chessService.movePiece(pieceId, source, target));
+        } catch (SQLException e) {
+            return "<script>location.replace('/')</script>";
+        }
     }
 
-    private String getChessGameById(Request req, Response res) throws SQLException {
-        return GSON.toJson(chessService.getChessGameById(Integer.parseInt(req.params(":id"))));
+    private String getChessGameById(Request req, Response res) {
+        try {
+            return GSON.toJson(chessService.getChessGameById(Integer.parseInt(req.params(":id"))));
+        } catch (SQLException e) {
+            return "<script>location.replace('/')</script>";
+        }
     }
 
     private String getGameList(Request req, Response res) throws SQLException {

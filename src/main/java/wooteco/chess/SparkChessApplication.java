@@ -1,22 +1,12 @@
 package wooteco.chess;
 
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static spark.Spark.get;
+import wooteco.chess.controller.WebController;
+import wooteco.chess.service.ChessService;
 
 public class SparkChessApplication {
-    public static void main(String[] args) {
-        get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(model, "index.hbs");
-        });
-    }
-
-    private static String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
-    }
+	public static void main(String[] args) {
+		ChessService service = new ChessService();
+		WebController webController = new WebController(service);
+		webController.run();
+	}
 }

@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class FinishDAO {
     private Connection connection;
 
-    public FinishDAO() {
+    public FinishDAO() throws SQLException {
         this.connection = Connector.getConnection();
     }
 

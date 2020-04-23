@@ -149,10 +149,10 @@ function onDrop(e) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      sx: parseInt(e.dataTransfer.getData('x')),
-      sy: parseInt(e.dataTransfer.getData('y')),
-      tx: parseInt(e.target.parentElement.dataset.x),
-      ty: parseInt(e.target.parentElement.dataset.y),
+      startX: parseInt(e.dataTransfer.getData('x')),
+      startY: parseInt(e.dataTransfer.getData('y')),
+      targetX: parseInt(e.target.parentElement.dataset.x),
+      targetY: parseInt(e.target.parentElement.dataset.y),
     }),
   })
     .then((response) => response.json())

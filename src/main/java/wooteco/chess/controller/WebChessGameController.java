@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wooteco.chess.dao.ChessGameDao;
 import wooteco.chess.domain.piece.Position;
+import wooteco.chess.dto.MoveOperationDto;
 import wooteco.chess.service.ChessService;
 
 import java.sql.SQLException;
@@ -52,11 +53,10 @@ public class WebChessGameController {
 
     @PostMapping("/move/{id}")
     @ResponseBody
-    public String movePiece(Model model, @PathVariable String id, @RequestBody Map<String, Double> req) throws SQLException {
+    public String movePiece(Model model, @PathVariable String id, @RequestBody MoveOperationDto moveOperationDto) throws SQLException {
         int pieceId = Integer.parseInt(id);
-        // TODO: 2020/04/22 Map을 별도의 DTO 클래스로 대체할 수 있을지 고려!!
-        Position source = Position.of(req.get("sx").intValue(), req.get("sy").intValue());
-        Position target = Position.of(req.get("tx").intValue(), req.get("ty").intValue());
+        Position source = Position.of(moveOperationDto.getStartX(), moveOperationDto.getStartY());
+        Position target = Position.of(moveOperationDto.getTargetX(), moveOperationDto.getTargetY());
         return GSON.toJson(chessService.movePiece(pieceId, source, target));
     }
 

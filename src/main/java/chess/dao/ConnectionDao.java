@@ -1,11 +1,13 @@
 package chess.dao;
 
 import chess.dao.exceptions.ConnectionDaoException;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Component
 public class ConnectionDao {
 	private static final ConnectionDao CONNECTION_DAO;
 	private static final String SLASH = "/";

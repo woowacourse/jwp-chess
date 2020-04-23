@@ -6,11 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.exception.SQLAccessException;
 import wooteco.chess.repository.DataSource;
 import wooteco.chess.repository.PrepareStatementSetter;
 import wooteco.chess.repository.RowMapper;
 
+@Component
 public class JDBCTemplate {
 	private final DataSource dataSource;
 

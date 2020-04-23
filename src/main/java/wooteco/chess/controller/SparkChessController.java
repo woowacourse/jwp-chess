@@ -17,7 +17,7 @@ import wooteco.chess.view.response.StandardResponse;
 public class SparkChessController {
 	private static final HandlebarsTemplateEngine TEMPLATE_ENGINE = new HandlebarsTemplateEngine();
 	private static final ModelAndView DEFAULT_MODEL_AND_VIEW = new ModelAndView(new HashMap<String, Object>(),
-		"index.html");
+		"index.hbs");
 
 	private final GameService gameService;
 

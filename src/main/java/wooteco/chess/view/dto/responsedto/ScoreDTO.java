@@ -11,6 +11,14 @@ public class ScoreDTO {
 		this.score = score;
 	}
 
+	public String getTeam() {
+		return team;
+	}
+
+	public double getScore() {
+		return score;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)

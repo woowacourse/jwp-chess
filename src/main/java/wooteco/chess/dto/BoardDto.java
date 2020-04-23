@@ -18,7 +18,7 @@ public class BoardDto {
         Map<String, String> parseResult = board.get()
                 .entrySet()
                 .stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().toPositionName(),
+                .collect(Collectors.toMap(entry -> entry.getKey().toString(),
                         entry -> entry.getValue().toSymbol(),
                         (e1, e2) -> e1,
                         LinkedHashMap::new));

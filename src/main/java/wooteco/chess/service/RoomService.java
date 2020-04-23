@@ -11,6 +11,10 @@ import java.util.List;
 public class RoomService {
     private static final RoomService ROOM_SERVICE = new RoomService();
 
+    private RoomService(){
+
+    }
+
     public static RoomService getInstance() {
         return ROOM_SERVICE;
     }

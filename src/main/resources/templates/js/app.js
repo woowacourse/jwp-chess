@@ -46,7 +46,7 @@ const App = function App() {
         })
             .then(resolver)
             .then(render)
-            .catch(err => alert(err.message))
+            .catch(err => alert(err.body))
             .finally(() => {
                 originalPosition.value = "";
                 targetIdPosition.value = "";

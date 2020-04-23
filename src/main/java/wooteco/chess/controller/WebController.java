@@ -65,7 +65,12 @@ public class WebController {
 
 		exception(IllegalArgumentException.class, (exception, request, response) -> {
 			response.status(400);
-			response.body(exception.getMessage());
+			response.body(gson.toJson(exception.getMessage()));
+		});
+
+		exception(IllegalStateException.class, (exception, request, response) -> {
+			response.status(400);
+			response.body(gson.toJson(exception.getMessage()));
 		});
 	}
 

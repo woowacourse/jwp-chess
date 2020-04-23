@@ -1,13 +1,15 @@
 package chess.score;
 
-import chess.board.ChessBoard;
-import chess.board.ChessBoardCreater;
-import chess.game.ChessSet;
-import chess.location.Col;
-import chess.location.Location;
-import chess.location.Row;
-import chess.piece.type.Piece;
-import chess.team.Team;
+import spring.chess.board.ChessBoard;
+import spring.chess.board.ChessBoardCreater;
+import spring.chess.game.ChessSet;
+import spring.chess.location.Col;
+import spring.chess.location.Location;
+import spring.chess.location.Row;
+import spring.chess.piece.type.Piece;
+import spring.chess.score.PawnReduceScoreCalculable;
+import spring.chess.score.Score;
+import spring.chess.team.Team;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

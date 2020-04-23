@@ -1,8 +1,8 @@
-import chess.board.ChessBoardCreater;
-import chess.game.ChessSet;
-import chess.board.ChessBoard;
-import chess.score.Score;
-import chess.team.Team;
+import spring.chess.board.ChessBoardCreater;
+import spring.chess.game.ChessSet;
+import spring.chess.board.ChessBoard;
+import spring.chess.score.Score;
+import spring.chess.team.Team;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

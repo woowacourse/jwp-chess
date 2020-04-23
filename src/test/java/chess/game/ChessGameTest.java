@@ -1,7 +1,8 @@
 package chess.game;
 
-import chess.result.ChessScores;
-import chess.score.Score;
+import spring.chess.game.ChessGame;
+import spring.chess.result.ChessScores;
+import spring.chess.score.Score;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

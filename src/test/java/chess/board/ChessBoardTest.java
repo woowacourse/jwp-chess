@@ -2,19 +2,14 @@ package chess.board;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import chess.game.ChessSet;
-import chess.location.Col;
-import chess.location.Location;
-import chess.location.Row;
-import chess.piece.type.*;
-import chess.player.Player;
-import chess.score.Score;
-import chess.team.Team;
+import spring.chess.board.ChessBoard;
+import spring.chess.board.ChessBoardCreater;
+import spring.chess.location.Location;
+import spring.chess.piece.type.*;
+import spring.chess.team.Team;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

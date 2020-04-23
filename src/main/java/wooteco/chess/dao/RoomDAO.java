@@ -13,7 +13,6 @@ public class RoomDAO {
     private static final RoomDAO ROOM_DAO = new RoomDAO();
 
     private RoomDAO(){
-
     }
 
     public static RoomDAO getInstance() {

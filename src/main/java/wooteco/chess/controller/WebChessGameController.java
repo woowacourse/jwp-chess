@@ -58,31 +58,19 @@ public class WebChessGameController {
     }
 
     private String restartGame(Request req, Response res) {
-        try {
-            return GSON.toJson(chessService.restartGame(Integer.parseInt(req.params(":id"))));
-        } catch (SQLException e) {
-            return "<script>location.replace('/')</script>";
-        }
+        return GSON.toJson(chessService.restartGame(Integer.parseInt(req.params(":id"))));
     }
 
     private String movePiece(Request req, Response res) {
-        try {
-            int pieceId = Integer.parseInt(req.params(":id"));
-            Map<String, Double> data = GSON.fromJson(req.body(), Map.class);
-            Position source = Position.of(data.get("sx").intValue(), data.get("sy").intValue());
-            Position target = Position.of(data.get("tx").intValue(), data.get("ty").intValue());
-            return GSON.toJson(chessService.movePiece(pieceId, source, target));
-        } catch (SQLException e) {
-            return "<script>location.replace('/')</script>";
-        }
+        int pieceId = Integer.parseInt(req.params(":id"));
+        Map<String, Double> data = GSON.fromJson(req.body(), Map.class);
+        Position source = Position.of(data.get("sx").intValue(), data.get("sy").intValue());
+        Position target = Position.of(data.get("tx").intValue(), data.get("ty").intValue());
+        return GSON.toJson(chessService.movePiece(pieceId, source, target));
     }
 
     private String getChessGameById(Request req, Response res) {
-        try {
-            return GSON.toJson(chessService.getChessGameById(Integer.parseInt(req.params(":id"))));
-        } catch (SQLException e) {
-            return "<script>location.replace('/')</script>";
-        }
+        return GSON.toJson(chessService.getChessGameById(Integer.parseInt(req.params(":id"))));
     }
 
     private String getGameList(Request req, Response res) throws SQLException {

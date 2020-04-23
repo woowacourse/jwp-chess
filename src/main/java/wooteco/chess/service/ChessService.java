@@ -26,17 +26,21 @@ public class ChessService {
         return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
     }
 
-    public ResponseDto restartGame(int chessRoomId) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessRoomId);
-        ChessGame newChessGame = new ChessGame(chessGame.getId(), new Playing(Board.create(), Turn.WHITE));
-        chessGameDao.update(newChessGame);
-        return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
+    public ResponseDto restartGame(int chessRoomId) {
+        try {
+            ChessGame chessGame = chessGameDao.findById(chessRoomId);
+            ChessGame newChessGame = new ChessGame(chessGame.getId(), new Playing(Board.create(), Turn.WHITE));
+            chessGameDao.update(newChessGame);
+            return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
+        } catch (SQLException e) {
+            return new ResponseDto(ResponseDto.FAIL, "존재하지 않는 방 입니다.");
+        }
     }
 
-    public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) throws
-        SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessGameId);
+    public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) {
+        ChessGame chessGame = null;
         try {
+            chessGame = chessGameDao.findById(chessGameId);
             chessGame.move(sourcePosition, targetPosition);
             chessGameDao.update(chessGame);
             return responseChessGame(chessGame);
@@ -44,12 +48,18 @@ public class ChessService {
             return new ResponseDto(ResponseDto.FAIL, "이동할 수 없는 위치입니다.");
         } catch (InvalidTurnException e) {
             return new ResponseDto(ResponseDto.FAIL, chessGame.turn().getColor() + "의 턴입니다.");
+        } catch (SQLException e) {
+            return new ResponseDto(ResponseDto.FAIL, "존재하지 않는 방 입니다.");
         }
     }
 
-    public ResponseDto getChessGameById(int chessGameId) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessGameId);
-        return responseChessGame(chessGame);
+    public ResponseDto getChessGameById(int chessGameId) {
+        try {
+            ChessGame chessGame = chessGameDao.findById(chessGameId);
+            return responseChessGame(chessGame);
+        } catch (SQLException e) {
+            return new ResponseDto(ResponseDto.FAIL, "존재하지 않는 방 입니다.");
+        }
     }
 
     public ResponseDto getGameList() throws SQLException {

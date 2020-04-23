@@ -8,8 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import spark.Response;
-import spark.Spark;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -43,16 +41,28 @@ public class ChessRoomsController2 {
 			throws SQLException {
 
 		if ("delete".equals(method)) {
-			chessRoomsService.deleteRoomByRoomName(roomName);
-			return "redirect:" + PATH;
+			return delete(roomName);
 		}
 
 		try {
-			final RoomDto roomDto = chessRoomsService.findRoomByRoomName(roomName);
-			return "redirect:" + PATH + SLASH + roomDto.getId();
+			return enter(roomName);
 		} catch (DaoNoneSelectedException e) {
-			chessRoomsService.addRoomByRoomName(roomName);
-			return "redirect:" + PATH;
+			return create(roomName);
 		}
+	}
+
+	private String delete(final String roomName) throws SQLException {
+		chessRoomsService.deleteRoomByRoomName(roomName);
+		return Constants.REDIRECT + PATH;
+	}
+
+	private String enter(final String roomName) throws SQLException {
+		final RoomDto roomDto = chessRoomsService.findRoomByRoomName(roomName);
+		return Constants.REDIRECT + PATH + SLASH + roomDto.getId();
+	}
+
+	private String create(final String roomName) throws SQLException {
+		chessRoomsService.addRoomByRoomName(roomName);
+		return Constants.REDIRECT + PATH;
 	}
 }

@@ -4,8 +4,6 @@ import java.util.Objects;
 
 public class User {
 
-    public static final User EMPTY_BOARD_USER = new User("");
-
     private static final int MAXIMUM_LENGTH = 10;
     private final String name;
 

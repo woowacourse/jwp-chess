@@ -5,21 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import wooteco.chess.dao.BoardDAO;
+import wooteco.chess.dao.GamInfoDAO;
 import wooteco.chess.dao.UserDAO;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
-import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.gameinfo.GameInfo;
 import wooteco.chess.domain.player.User;
-import wooteco.chess.domain.result.ChessResult;
 import wooteco.chess.dto.LineDto;
 import wooteco.chess.dto.RowsDtoConverter;
 import wooteco.chess.util.DBConnector;
 
 public class ChessService {
 
-    private BoardDAO boardDAO;
+    private GamInfoDAO gamInfoDAO;
     private Map<User, GameInfo> games;
     private DBConnector dbConnector;
 
@@ -29,17 +27,17 @@ public class ChessService {
 
     public GameInfo findByUserName(User blackUser, User whiteUser) throws SQLException {
         dbConnector = new DBConnector();
-        boardDAO = new BoardDAO(dbConnector);
+        gamInfoDAO = new GamInfoDAO(dbConnector);
         Board board;
-        if (!boardDAO.findBoardByUser(blackUser, whiteUser).isPresent()) {
+        if (!gamInfoDAO.findGameInfoByUser(blackUser, whiteUser).isPresent()) {
             UserDAO userDAO = new UserDAO(dbConnector);
             userDAO.addUser(blackUser);
             userDAO.addUser(whiteUser);
-            boardDAO.addBoard(BoardFactory.createInitialBoard(), blackUser, whiteUser, 0);
+            gamInfoDAO.addGameInfo(BoardFactory.createInitialBoard(), blackUser, whiteUser, 0);
         }
-        board = boardDAO.findBoardByUser(blackUser, whiteUser)
+        board = gamInfoDAO.findGameInfoByUser(blackUser, whiteUser)
                 .orElse(BoardFactory.createInitialBoard());
-        int turn = boardDAO.findTurnByUser(blackUser, whiteUser)
+        int turn = gamInfoDAO.findTurnByUser(blackUser, whiteUser)
                 .orElse(0);
         GameInfo gameInfo = GameInfo.from(board, turn);
         games.put(blackUser, gameInfo);
@@ -55,12 +53,12 @@ public class ChessService {
 
     public void save(User blackUser, User whiteUser) throws SQLException {
         GameInfo gameInfo = games.get(blackUser);
-        boardDAO.saveBoardByUserName(gameInfo.getBoard(), blackUser, whiteUser, gameInfo.getTurn());
+        gamInfoDAO.saveGameInfoByUserName(gameInfo.getBoard(), blackUser, whiteUser, gameInfo.getTurn());
         games.remove(blackUser);
     }
 
     public void delete(User blackUser, User whiteUser) throws SQLException {
-        boardDAO.deleteBoardByUser(blackUser, whiteUser);
+        gamInfoDAO.deleteGameInfoByUser(blackUser, whiteUser);
         UserDAO userDAO = new UserDAO(dbConnector);
         userDAO.deleteUserByUserName(blackUser.getName());
         userDAO.deleteUserByUserName(whiteUser.getName());
@@ -92,11 +90,6 @@ public class ChessService {
 
     public double calculateBlackScore(User blackUser) {
         return games.get(blackUser).getBlackScore();
-    }
-
-    public ChessResult calculateResult(User blackUser) {
-        return games.get(blackUser)
-                .getChessResult();
     }
 
     public boolean checkGameNotFinished(User blackUser) {

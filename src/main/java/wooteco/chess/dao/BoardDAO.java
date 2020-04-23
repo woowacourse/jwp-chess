@@ -2,89 +2,55 @@ package wooteco.chess.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.board.BoardFactory;
-import wooteco.chess.domain.player.User;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.piece.GamePiece;
+import wooteco.chess.domain.piece.GamePieces;
 import wooteco.chess.util.DBConnector;
 
 public class BoardDAO {
 
-    private CellDAO cellDAO;
     private DBConnector dbConnector;
 
     public BoardDAO(DBConnector dbConnector) {
         this.dbConnector = dbConnector;
-        this.cellDAO = new CellDAO(dbConnector);
     }
 
-    public void addBoard(Board board, User blackUser, User whiteUser, int turn) throws SQLException {
-        dbConnector.executeUpdate("INSERT INTO gameinfo (black, white, turn) VALUES (?, ?, ?)", blackUser.getName(),
-                whiteUser.getName(), String.valueOf(turn));
-
-        ResultSet rs = findBoardResultSet(blackUser, whiteUser);
-
-        if (!rs.next())
-            return;
-
-        int gameInfoId = rs.getInt(1);
-
-        cellDAO.addCells(board, gameInfoId);
+    public void addBoard(Board board, int gameInfoId) throws SQLException {
+        for (Map.Entry<Position, GamePiece> entry : board.getBoard().entrySet()) {
+            dbConnector.executeUpdate("INSERT INTO board (gameinfo_id, position, piece) VALUES (?, ?, ?)",
+                    String.valueOf(gameInfoId), entry.getKey().getName(), entry.getValue().getName());
+        }
     }
 
-    public Optional<Board> findBoardByUser(User blackUser, User whiteUser) throws SQLException {
-        ResultSet rs = findBoardResultSet(blackUser, whiteUser);
+    public Map<Position, GamePiece> findBoardByGameInfoId(int gameInfoId) throws SQLException {
+        ResultSet rs = dbConnector.executeQuery("SELECT * FROM board WHERE gameinfo_id = ?", String.valueOf(gameInfoId));
+        Map<Position, GamePiece> board = new HashMap<>();
 
-        if (!rs.next())
-            return Optional.empty();
+        while (rs.next()) {
+            Position position = Position.from(rs.getString("position"));
+            GamePiece gamePiece = GamePieces.from(rs.getString("piece"));
+            board.put(position, gamePiece);
+        }
 
-        int gameInfoId = rs.getInt(1);
-
-        return Optional.ofNullable(BoardFactory.of(cellDAO.findCellsByBoardId(gameInfoId)));
+        return board;
     }
 
-    public Optional<Integer> findTurnByUser(User blackUser, User whiteUser) throws SQLException {
-        ResultSet rs = findBoardResultSet(blackUser, whiteUser);
+    public Map<Position, GamePiece> updateBoardByGameInfoId(Board board, int gameInfoId) throws SQLException {
+        for (Map.Entry<Position, GamePiece> entry : board.getBoard().entrySet()) {
+            dbConnector.executeUpdate("UPDATE board SET piece = ? WHERE position = ? AND gameinfo_id = ?",
+                    entry.getValue().getName(), entry.getKey().getName(), String.valueOf(gameInfoId));
+        }
 
-        if (!rs.next())
-            return Optional.empty();
-
-        return Optional.ofNullable(rs.getInt(4));
+        return findBoardByGameInfoId(gameInfoId);
     }
 
-    public void saveBoardByUserName(Board board, User blackUser, User whiteUser, int turn) throws SQLException {
-        dbConnector.executeUpdate("UPDATE gameinfo SET turn = ? WHERE black = ? AND white = ?",
-                String.valueOf(turn), blackUser.getName(), whiteUser.getName());
+    public boolean deleteBoardByGameInfoId(int gameInfoId) throws SQLException {
+        dbConnector.executeUpdate("DELETE FROM board WHERE gameinfo_id = ?", String.valueOf(gameInfoId));
 
-        ResultSet rs = findBoardResultSet(blackUser, whiteUser);
-
-        if (!rs.next())
-            return;
-
-        int gameInfoId = rs.getInt(1);
-
-        cellDAO.updateCellsByBoardId(board, gameInfoId);
-    }
-
-    public boolean deleteBoardByUser(User blackUser, User whiteUser) throws SQLException {
-        ResultSet rs = findBoardResultSet(blackUser, whiteUser);
-
-        if (!rs.next())
-            return false;
-
-        int gameInfoId = rs.getInt(1);
-
-        cellDAO.deleteCellsByUser(gameInfoId);
-
-        dbConnector.executeUpdate("DELETE FROM gameinfo WHERE black = ? AND white = ?", blackUser.getName(),
-                whiteUser.getName());
-
-        return !findBoardByUser(blackUser, whiteUser).isPresent();
-    }
-
-    private ResultSet findBoardResultSet(User blackUser, User whiteUser) throws SQLException {
-        return dbConnector.executeQuery("SELECT * FROM gameinfo WHERE black = ? AND white = ?", blackUser.getName(),
-                whiteUser.getName());
+        return findBoardByGameInfoId(gameInfoId) == null;
     }
 }

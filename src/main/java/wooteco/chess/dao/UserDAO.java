@@ -21,16 +21,11 @@ public class UserDAO {
 
     public Optional<User> findByUserName(String userName) throws SQLException {
         ResultSet rs = dbConnector.executeQuery("SELECT * FROM user WHERE name = ?", userName);
-        if (!rs.next())
+        if (!rs.next()) {
             return Optional.empty();
+        }
 
         return Optional.ofNullable(new User(rs.getString("name")));
-    }
-
-    public User updateUserNameByUserName(String originalName, String changedName) throws SQLException {
-        dbConnector.executeUpdate("UPDATE user SET name = ? WHERE name = ?", changedName, originalName);
-
-        return findByUserName(changedName).orElse(new User(changedName));
     }
 
     public boolean deleteUserByUserName(String name) throws SQLException {

@@ -1,11 +1,9 @@
 package wooteco.chess.domain.gameinfo;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.board.Status;
 import wooteco.chess.domain.exception.InvalidMovementException;
@@ -21,10 +19,6 @@ public class GameInfo {
         this.board = board;
         this.status = status;
         this.chessResult = board.calculateResult();
-    }
-
-    public static GameInfo start() {
-        return new GameInfo(BoardFactory.createInitialBoard(), Status.initialStatus());
     }
 
     public static GameInfo from(Board board, int turn) {

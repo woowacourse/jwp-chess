@@ -10,13 +10,15 @@ import java.util.Objects;
  * @author AnHyungJu, LeeHoBin
  */
 public class Command {
+    private static final int SOURCE_POSITION_INDEX = 1;
+    private static final int TARGET_POSITION_INDEX = 2;
+    private static final int MOVE_COMMAND_SIZE = 3;
+
     public static final int COMMAND_INDEX = 0;
     public static final int BASIC_COMMAND_SIZE = 1;
     public static final String DELIMITER = " ";
     public static final int LIMIT = -1;
-    private static final int SOURCE_POSITION_INDEX = 1;
-    private static final int TARGET_POSITION_INDEX = 2;
-    private static final int MOVE_COMMAND_SIZE = 3;
+
     private final String[] command;
 
     public Command(String input) {

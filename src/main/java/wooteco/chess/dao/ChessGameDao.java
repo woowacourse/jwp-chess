@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import wooteco.chess.domain.game.Board;
 import wooteco.chess.domain.game.ChessGame;
@@ -55,7 +56,7 @@ public class ChessGameDao implements JdbcTemplateDao {
         }
     }
 
-    public ChessGame findById(int id) throws SQLException {
+    public Optional<ChessGame> findById(int id) throws SQLException {
         String query = "SELECT * FROM chess_game WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement pstmt = connection.prepareStatement(query);) {
@@ -65,10 +66,10 @@ public class ChessGameDao implements JdbcTemplateDao {
                     State state = new Ready();
                     state = checkPlayingState(rs, state);
                     state = checkFinishState(rs, state);
-                    return new ChessGame(id, state);
+                    return Optional.of(new ChessGame(id, state));
                 }
             }
-            throw new SQLException();
+            return Optional.empty();
         }
     }
 

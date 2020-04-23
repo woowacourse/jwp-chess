@@ -15,6 +15,7 @@ import wooteco.chess.dto.ChessGameDto;
 import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.dto.StatusDto;
 import wooteco.chess.dto.TurnDto;
+import wooteco.chess.service.exception.InvalidGameException;
 
 public class ChessService {
     private static final ChessGameDao chessGameDao = new ChessGameDao();
@@ -30,10 +31,7 @@ public class ChessService {
     }
 
     public ResponseDto restartGame(int chessRoomId) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessRoomId);
-        if (chessGame == null) {
-            return null;
-        }
+        ChessGame chessGame = chessGameDao.findById(chessRoomId).orElseThrow(InvalidGameException::new);
         ChessGame newChessGame = new ChessGame(chessGame.getId(), new Playing(Board.create(), Turn.WHITE));
         chessGameDao.update(newChessGame);
         return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
@@ -41,20 +39,20 @@ public class ChessService {
 
     public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) throws
         SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessGameId);
+        ChessGame chessGame = chessGameDao.findById(chessGameId).orElseThrow(InvalidGameException::new);
         try {
             chessGame.move(sourcePosition, targetPosition);
             chessGameDao.update(chessGame);
+            return responseChessGame(chessGame);
         } catch (NotMovableException | IllegalArgumentException e) {
             return new ResponseDto(ResponseDto.FAIL, "이동할 수 없는 위치입니다.");
         } catch (InvalidTurnException e) {
             return new ResponseDto(ResponseDto.FAIL, chessGame.turn().getColor() + "의 턴입니다.");
         }
-        return responseChessGame(chessGame);
     }
 
     public ResponseDto getChessGameById(int chessGameId) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessGameId);
+        ChessGame chessGame = chessGameDao.findById(chessGameId).orElseThrow(InvalidGameException::new);
         return responseChessGame(chessGame);
     }
 

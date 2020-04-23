@@ -1,6 +1,9 @@
 package wooteco.chess.domain.piece;
 
-import static wooteco.chess.domain.piece.position.InvalidPositionException.*;
+import static wooteco.chess.domain.piece.position.InvalidPositionException.HAS_PIECE_AT_TARGET_POSITION;
+import static wooteco.chess.domain.piece.position.InvalidPositionException.HAS_PIECE_IN_ROUTE;
+import static wooteco.chess.domain.piece.position.InvalidPositionException.INVALID_DIRECTION;
+import static wooteco.chess.domain.piece.position.InvalidPositionException.INVALID_STEP_SIZE;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +38,13 @@ public class Pawn extends Piece {
 		boolean isCaptureMovement =
 			Direction.isDiagonalDirection(direction) && Math.abs(rowGap) == MIN_STEP_SIZE_OF_DIAGONAL
 				&& target.isPresent();
-
 		if (isCaptureMovement) {
 			capture(target.get(), board);
+		}
+
+		boolean isEmptyAtDiagonal = Direction.isDiagonalDirection(direction) && !target.isPresent();
+		if (isEmptyAtDiagonal) {
+			throw new InvalidPositionException(INVALID_DIRECTION);
 		}
 
 		boolean hasPieceAtTargetPosition = Direction.isLinearDirection(direction) && target.isPresent();

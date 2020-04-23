@@ -10,7 +10,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Score {
+    private static final int PAWN_SCORE_THRESHOLD = 2;
     private static final double PAWN_SCORE_IN_SAME_FILE = 0.5d;
+
+    private Score() {
+
+    }
 
     public static double calculateScore(Map<Position, Piece> board, Team team) {
         double totalScore = calculateTotalScore(board, team);
@@ -31,7 +36,7 @@ public class Score {
                     .filter(entry -> entry.getValue().isPawn() && !entry.getValue().isEnemy(team))
                     .collect(Collectors.toList());
 
-            if (sameFile.size() > 1) {
+            if (sameFile.size() >= PAWN_SCORE_THRESHOLD) {
                 score -= sameFile.size() * PAWN_SCORE_IN_SAME_FILE;
             }
         }

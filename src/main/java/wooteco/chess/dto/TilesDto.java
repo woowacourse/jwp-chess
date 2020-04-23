@@ -19,7 +19,7 @@ public class TilesDto {
 
     private List<TileDto> toDto(Board board) {
         Map<Position, Piece> fragmentedBoard = board.get();
-        List<Position> positions = Positions.getPositions();
+        List<Position> positions = Positions.getValue();
 
         Map<Position, Piece> entireBoard = new LinkedHashMap<>();
         for (Position position : positions) {

@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import org.springframework.stereotype.Service;
 import wooteco.chess.controller.dto.ResponseDto;
 import wooteco.chess.dao.ChessDAO;
 import wooteco.chess.domain.MoveParameter;
@@ -15,9 +16,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Service
 public class ChessService {
-    private ChessDAO chessDAO = new ChessDAO();
+
+    private ChessDAO chessDAO;
     private Map<Long, ChessGame> chessGames = new HashMap<>();
+
+    public ChessService(ChessDAO chessDAO) {
+        this.chessDAO = chessDAO;
+    }
 
     public Long createGame() {
         ChessGame chessGame = ChessGame.of(Board.of(new AutomatedBoardInitializer()), Turn.from(Team.WHITE));

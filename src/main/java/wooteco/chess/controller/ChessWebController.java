@@ -23,12 +23,16 @@ import static spark.Spark.post;
 
 public class ChessWebController {
 
-    private ChessService chessService = new ChessService();
+    private ChessService chessService;
+
+    public ChessWebController(ChessService chessService) {
+        this.chessService = chessService;
+    }
 
     public void run() {
         get("/", (req, res) -> {
             ChessWebIndexDto chessWebIndexDto = ChessWebIndexDto.of(chessService.getRoomId());
-            return render(chessWebIndexDto, "index.html");
+            return render(chessWebIndexDto, "index.hbs");
         });
 
         get("/chess/:id", (req, res) -> {

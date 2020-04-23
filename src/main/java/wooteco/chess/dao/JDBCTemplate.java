@@ -1,34 +1,27 @@
 package wooteco.chess.dao;
 
+import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+@Component
 public class JDBCTemplate {
 
-    private String option = "?useSSL=false&serverTimezone=UTC";
-    private String server;
-    private String database;
-    private String userName;
-    private String password;
+    private DataSource dataSource;
 
-    public JDBCTemplate(String server, String database, String userName, String password) {
-        this.server = server;
-        this.database = database;
-        this.userName = userName;
-        this.password = password;
+    public JDBCTemplate(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     private Connection getConnection() {
         Connection con = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://" + server + "/" + database + option, userName, password);
-        } catch (ClassNotFoundException ce) {
-            System.err.println(" !! JDBC Driver load 오류: " + ce.getMessage());
+            con = dataSource.getConnection();
         } catch (SQLException se) {
             System.err.println("연결 오류:" + se.getMessage());
         }

@@ -1,5 +1,6 @@
 package wooteco.chess.dao;
 
+import org.springframework.stereotype.Component;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.Turn;
@@ -15,14 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Component
 public class ChessDAO {
 
-    private static final String SERVER = "localhost:13306";
-    private static final String DATABASE = "chess";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
+    private JDBCTemplate jdbcTemplate;
 
-    private JDBCTemplate jdbcTemplate = new JDBCTemplate(SERVER, DATABASE, USERNAME, PASSWORD);
+    public ChessDAO(JDBCTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public long createChessGame(ChessGame chessGame) {
         PreparedStatementSetter setter = (preparedStatement) -> {

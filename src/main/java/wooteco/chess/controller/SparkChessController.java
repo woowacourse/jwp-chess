@@ -29,12 +29,12 @@ public class SparkChessController {
 	}
 
 	private String renderStart(final Request request, final Response response) {
-		return render(new HashMap<>(), "index.html");
+		return render(new HashMap<>(), "index.hbs");
 	}
 
 	public void run() {
 		get("/", this::renderStart);
-		get("/wooteco/chess", (request, response) -> render(chessService.loadChessGame()));
+		get("/chess", (request, response) -> render(chessService.loadChessGame()));
 
 		post("/chess_play", this::playChessGame);
 		post("/chess_new", this::newChessGame);
@@ -48,7 +48,7 @@ public class SparkChessController {
 		final Map<String, Object> model = new HashMap<>(chessBoardDto.getChessBoard());
 		model.put("piece_color", chessGameDto.getPieceColorDto());
 		model.put("status", chessStatusDtos.getChessStatusDtos());
-		return render(model, "chess.html");
+		return render(model, "chess.hbs");
 	}
 
 	private String playChessGame(final Request request, final Response response) {
@@ -70,7 +70,7 @@ public class SparkChessController {
 		model.put("is_king_caught", chessGameDto.isKingCaught());
 		model.put("piece_color", chessGameDto.getPieceColorDto());
 		model.put("status", chessStatusDtos.getChessStatusDtos());
-		return render(model, "result.html");
+		return render(model, "result.hbs");
 	}
 
 	private String newChessGame(final Request request, final Response response) {

@@ -1,83 +1,74 @@
 package wooteco.chess.controller;
 
-import static spark.Spark.*;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
-import spark.Spark;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import wooteco.chess.dao.ChessGameDao;
 import wooteco.chess.domain.piece.Position;
-import wooteco.chess.service.ChessService;/**/
+import wooteco.chess.service.ChessService;
 
+import java.sql.SQLException;
+import java.util.Map;
+
+@Controller
 public class WebChessGameController {
     private static final Gson GSON = new GsonBuilder().create();
     private static final ChessGameDao chessGameDao = new ChessGameDao();
     private ChessService chessService;
 
+    @Autowired
     public WebChessGameController(ChessService chessService) {
         this.chessService = chessService;
-        route();
     }
 
-    public void route() {
-        Spark.staticFileLocation("assets");
-
-        get("/games", this::getGameList);
-        get("/", this::renderIndexPage);
-        get("/game/:id", this::renderGamePage);
-        get("/board/:id", this::getChessGameById);
-        post("/move/:id", this::movePiece);
-        post("/restart/:id", this::restartGame);
-        post("/create", this::createChessRoom);
-        notFound("<script>location.replace('/')</script>");
-    }
-
-    private String renderGamePage(Request req, Response res) throws SQLException {
-        if (chessGameDao.selectAll().contains(Integer.parseInt(req.params(":id")))) {
-            Map<String, Object> model = new HashMap<>();
-            model.put("id", req.params(":id"));
-            return render(model, "game.html");
+    @GetMapping("/game/{id}")
+    public String renderGamePage(Model model, @PathVariable String id) {
+        if (chessGameDao.selectAll().contains(Integer.parseInt(id))) {
+            model.addAttribute("id", id);
+            return "game";
         }
-        return "<script>location.replace('/')</script>";
+        return "index";
     }
 
-    private String renderIndexPage(Request req, Response res) {
-        return render(new HashMap<>(), "index.html");
+    @GetMapping("/")
+    public String renderIndexPage(Model model) {
+        return "index";
     }
 
-    private String createChessRoom(Request req, Response res) throws SQLException {
+    @PostMapping("/create")
+    @ResponseBody
+    public String createChessRoom(Model model) {
         return GSON.toJson(chessService.createChessRoom());
     }
 
-    private String restartGame(Request req, Response res) throws SQLException {
-        return GSON.toJson(chessService.restartGame(Integer.parseInt(req.params(":id"))));
+    @PostMapping("/restart/{id}")
+    @ResponseBody
+    public String restartGame(Model model, @PathVariable String id) {
+        return GSON.toJson(chessService.restartGame(Integer.parseInt(id)));
     }
 
-    private String movePiece(Request req, Response res) throws SQLException {
-        int pieceId = Integer.parseInt(req.params(":id"));
-        Map<String, Double> data = GSON.fromJson(req.body(), Map.class);
-        Position source = Position.of(data.get("sx").intValue(), data.get("sy").intValue());
-        Position target = Position.of(data.get("tx").intValue(), data.get("ty").intValue());
+    @PostMapping("/move/{id}")
+    @ResponseBody
+    public String movePiece(Model model, @PathVariable String id, @RequestBody Map<String, Double> req) throws SQLException {
+        int pieceId = Integer.parseInt(id);
+        // TODO: 2020/04/22 Map을 별도의 DTO 클래스로 대체할 수 있을지 고려!!
+        Position source = Position.of(req.get("sx").intValue(), req.get("sy").intValue());
+        Position target = Position.of(req.get("tx").intValue(), req.get("ty").intValue());
         return GSON.toJson(chessService.movePiece(pieceId, source, target));
     }
 
-    private String getChessGameById(Request req, Response res) throws SQLException {
-        return GSON.toJson(chessService.getChessGameById(Integer.parseInt(req.params(":id"))));
+    @GetMapping("/board/{id}")
+    @ResponseBody
+    public String getChessGameById(Model model, @PathVariable String id) {
+        return GSON.toJson(chessService.getChessGameById(Integer.parseInt(id)));
     }
 
-    private String getGameList(Request req, Response res) throws SQLException {
+    @GetMapping("/games")
+    @ResponseBody
+    public String getGameList(Model model) {
         return GSON.toJson(chessService.getGameList());
-    }
-
-    private static String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
     }
 }

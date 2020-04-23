@@ -35,6 +35,9 @@ const chessCellElements = document.querySelectorAll('.chess-col');
 chessCreateSubmitElement.onclick = () => {
   fetch('/create', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
   })
     .then((response) => response.json())
     .then((data) => {
@@ -47,6 +50,9 @@ chessCreateSubmitElement.onclick = () => {
 chessResultRestartElement.onclick = () => {
   fetch('/restart/' + gameId, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
   })
     .then((response) => response.json())
     .then((data) => {
@@ -89,11 +95,11 @@ const createTemplate = {
   N: templateKnight('black'),
 };
 
-fetch('http://localhost:4567/board/' + gameId)
+fetch('http://localhost:8080/board/' + gameId)
   .then((response) => response.json())
   .then((data) => drawChessGame(data.dto));
 
-fetch('http://localhost:4567/games')
+fetch('http://localhost:8080/games')
   .then((response) => response.json())
   .then((data) => drawGameList(data.dto));
 
@@ -137,8 +143,11 @@ function onDragOver(e) {
 }
 
 function onDrop(e) {
-  fetch('http://localhost:4567/move/' + gameId, {
+  fetch('http://localhost:8080/move/' + gameId, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
       sx: parseInt(e.dataTransfer.getData('x')),
       sy: parseInt(e.dataTransfer.getData('y')),

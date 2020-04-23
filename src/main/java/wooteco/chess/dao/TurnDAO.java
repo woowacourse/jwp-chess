@@ -2,8 +2,11 @@ package wooteco.chess.dao;
 
 import static wooteco.chess.dao.Connector.*;
 
+import org.springframework.stereotype.Repository;
+
 import wooteco.chess.domain.Turn;
 
+@Repository("TurnDAO")
 public class TurnDAO {
 
 	private static final String SELECT_FROM_TURN = "SELECT * FROM turn";

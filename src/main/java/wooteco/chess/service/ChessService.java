@@ -3,6 +3,8 @@ package wooteco.chess.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.BoardDAO;
 import wooteco.chess.dao.TurnDAO;
 import wooteco.chess.domain.Result;
@@ -15,15 +17,16 @@ import wooteco.chess.domain.factory.BoardFactory;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.PieceDTO;
 
+@Service
 public class ChessService {
 	private static final boolean FIRST_TURN = true;
 
 	private final BoardDAO boardDAO;
 	private final TurnDAO turnDAO;
 
-	public ChessService() {
-		boardDAO = new BoardDAO();
-		turnDAO = new TurnDAO();
+	public ChessService(final BoardDAO boardDAO, final TurnDAO turnDAO) {
+		this.boardDAO = boardDAO;
+		this.turnDAO = turnDAO;
 	}
 
 	public Board move(Position startPosition, Position targetPosition) {

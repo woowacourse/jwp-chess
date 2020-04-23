@@ -70,7 +70,6 @@ public class SparkController {
 		get("/restart", (req, res) -> getBoardJson(chessService.restart()));
 
 		get("/status", (req, res) -> {
-			ChessService chessService = new ChessService();
 			Result result = chessService.status();
 			Map<String, Object> model = new HashMap<>();
 			model.put("blackTeamScore", result.getBlackTeamScore());

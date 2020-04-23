@@ -6,7 +6,7 @@ import domain.pieces.Pieces;
 import java.util.Set;
 
 public interface State {
-	State pushCommend(String input);
+	State pushCommand(String input);
 
 	boolean isReported();
 

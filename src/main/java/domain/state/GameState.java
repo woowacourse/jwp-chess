@@ -27,7 +27,7 @@ public abstract class GameState implements State {
     protected abstract State move(String from, String to);
 
     @Override
-    public final State pushCommend(String input) {
+    public final State pushCommand(String input) {
         CommandType commandType = CommandType.getInstance(input);
 
         if (commandType == CommandType.END) {

@@ -23,7 +23,7 @@ public class ChessRoomController {
 	private static final String SLASH = "/";
 	private static final String EMPTY = "";
 	private static final String ID_PARAM = ":id";
-	private static final String COMMEND_QUERYPARAM = "commend";
+	private static final String COMMAND_QUERYPARAM = "command";
 	private static final String TABLE_KEY = "table";
 	private static final String ANNOUNCEMENT_KEY = "announcement";
 
@@ -78,10 +78,10 @@ public class ChessRoomController {
 	private void routePostMethod() {
 		Spark.post(PATH, (request, response) -> {
 			final int roomId = Integer.parseInt(request.params(ID_PARAM));
-			final String commend = request.queryParams(COMMEND_QUERYPARAM);
+			final String command = request.queryParams(COMMAND_QUERYPARAM);
 
 			try {
-				chessRoomService.updateRoom(roomId, commend);
+				chessRoomService.updateRoom(roomId, command);
 			} catch (CommandTypeException
 					| MoveCommandTokensException
 					| CanNotMoveException

@@ -87,9 +87,9 @@ public class ChessRoomService {
 		}
 	}
 
-	public void updateRoom(final int roomId, final String commend) throws SQLException {
+	public void updateRoom(final int roomId, final String command) throws SQLException {
 		final State before = loadState(roomId);
-		final State after = before.pushCommend(commend);
+		final State after = before.pushCommand(command);
 		stateDao.setStateByRoomId(roomId, after.getStateName());
 		pieceDao.deletePieces(roomId);
 		savePiecesFromState(roomId, after);

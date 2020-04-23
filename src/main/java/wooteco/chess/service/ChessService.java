@@ -2,6 +2,8 @@ package wooteco.chess.service;
 
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.ChessGameDao;
 import wooteco.chess.domain.game.Board;
 import wooteco.chess.domain.game.ChessGame;
@@ -16,6 +18,7 @@ import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.dto.StatusDto;
 import wooteco.chess.dto.TurnDto;
 
+@Service
 public class ChessService {
     private static final ChessGameDao chessGameDao = new ChessGameDao();
 

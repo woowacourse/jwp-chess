@@ -65,7 +65,6 @@ public class JdbcChessGameDao implements ChessGameDao {
 	}
 
 	@Override
-
 	public void updateById(int id, ChessGame chessGame) throws SQLException {
 		PreparedStatementSetter setter = preparedStatement -> {
 			preparedStatement.setString(1, chessGame.getState().toString());

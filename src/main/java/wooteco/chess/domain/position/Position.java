@@ -27,7 +27,8 @@ public class Position {
         return this.rank.getSymbol();
     }
 
-    public String toPositionName() {
+    @Override
+    public String toString() {
         return file.name() + rank.name();
     }
 

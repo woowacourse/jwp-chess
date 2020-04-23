@@ -1,5 +1,6 @@
 package wooteco.chess.database;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,11 @@ class ChessDaoTest {
         }
         chessDao.addCommand(new Commands("move a2 a4"));
         chessDao.addCommand(new Commands("move a7 a5"));
+    }
+
+    @AfterEach
+    void afterEach() {
+        chessDao.clearCommands();
     }
 
     @DisplayName("테이블 행 삭제")

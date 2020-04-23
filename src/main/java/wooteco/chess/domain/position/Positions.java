@@ -46,7 +46,7 @@ public class Positions {
 
     public static List<String> get() {
         List<String> parseResult = POSITIONS.stream()
-                .map(Position::toPositionName)
+                .map(Position::toString)
                 .collect(Collectors.toList());
         return Collections.unmodifiableList(parseResult);
     }

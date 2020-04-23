@@ -1,11 +1,10 @@
 package wooteco.chess.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import wooteco.chess.service.ChessService;
 
-@Controller
+//@Controller
 public class ChessController {
 
     private ChessService chessService;

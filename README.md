@@ -13,7 +13,7 @@
 
 ### 프로그래밍 요구사항
 - 1단계
-    [프로그래밍 체크리스트](https://github.com/woowacourse/woowacourse-docs/blob/master/cleancode/pr_checklist.md)의 원칙을 지키면서 프로그래밍 한다.
+    - [프로그래밍 체크리스트](https://github.com/woowacourse/woowacourse-docs/blob/master/cleancode/pr_checklist.md)의 원칙을 지키면서 프로그래밍 한다.
 - 2단계
     - 스프링 애플리케이션으로 체스가 실행 가능 해야한다.
     - @Controller나 @RestController를 활용하여 요청을 받아야 한다.

@@ -15,13 +15,13 @@ import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.service.ChessService;
 
-public class Controller {
+public class SparkController {
 	private static final HandlebarsTemplateEngine HANDLEBARS_TEMPLATE_ENGINE = new HandlebarsTemplateEngine();
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	private final ChessService chessService;
 
-	public Controller(ChessService chessService) {
+	public SparkController(ChessService chessService) {
 		this.chessService = chessService;
 	}
 
@@ -40,7 +40,7 @@ public class Controller {
 	public void run() {
 		get("/", (req, res) -> {
 			Map<String, Object> model = new HashMap<>();
-			return render(model, "index.html");
+			return render(model, "index.hbs");
 		});
 
 		get("/init", (req, res) -> getBoardJson(chessService.find()));

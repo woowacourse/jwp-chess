@@ -25,12 +25,12 @@ public class WebChessGameController {
     }
 
     @GetMapping("/game/{id}")
-    public String renderGamePage(Model model, @PathVariable String id) throws SQLException {
+    public String renderGamePage(Model model, @PathVariable String id) {
         if (chessGameDao.selectAll().contains(Integer.parseInt(id))) {
             model.addAttribute("id", id);
             return "game";
         }
-        return "<script>location.replace('/')</script>";
+        return "index";
     }
 
     @GetMapping("/")
@@ -40,13 +40,13 @@ public class WebChessGameController {
 
     @PostMapping("/create")
     @ResponseBody
-    public String createChessRoom(Model model) throws SQLException {
+    public String createChessRoom(Model model) {
         return GSON.toJson(chessService.createChessRoom());
     }
 
     @PostMapping("/restart/{id}")
     @ResponseBody
-    public String restartGame(Model model, @PathVariable String id) throws SQLException {
+    public String restartGame(Model model, @PathVariable String id) {
         return GSON.toJson(chessService.restartGame(Integer.parseInt(id)));
     }
 
@@ -62,13 +62,13 @@ public class WebChessGameController {
 
     @GetMapping("/board/{id}")
     @ResponseBody
-    public String getChessGameById(Model model, @PathVariable String id) throws SQLException {
+    public String getChessGameById(Model model, @PathVariable String id) {
         return GSON.toJson(chessService.getChessGameById(Integer.parseInt(id)));
     }
 
     @GetMapping("/games")
     @ResponseBody
-    public String getGameList(Model model) throws SQLException {
+    public String getGameList(Model model) {
         return GSON.toJson(chessService.getGameList());
     }
 }

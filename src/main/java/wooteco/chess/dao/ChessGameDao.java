@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import wooteco.chess.domain.game.Board;
@@ -28,7 +29,7 @@ public class ChessGameDao implements JdbcTemplateDao {
         String query = "INSERT INTO chess_game(state) VALUES (?)";
 
         try (Connection connection = getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query, new String[] {"id"});) {
+             PreparedStatement pstmt = connection.prepareStatement(query, new String[]{"id"});) {
             pstmt.setString(1, READY);
             pstmt.executeUpdate();
             try (ResultSet resultSet = pstmt.getGeneratedKeys();) {
@@ -41,7 +42,7 @@ public class ChessGameDao implements JdbcTemplateDao {
         }
     }
 
-    public List<Integer> selectAll() throws SQLException {
+    public List<Integer> selectAll() {
         String query = "SELECT id FROM chess_game";
 
         try (Connection connection = getConnection();
@@ -52,6 +53,8 @@ public class ChessGameDao implements JdbcTemplateDao {
                 ids.add(rs.getInt("id"));
             }
             return ids;
+        } catch (SQLException e) {
+            return Collections.emptyList();
         }
     }
 

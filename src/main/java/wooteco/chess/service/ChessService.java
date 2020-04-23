@@ -17,28 +17,30 @@ import java.sql.SQLException;
 public class ChessService {
     private static final ChessGameDao chessGameDao = new ChessGameDao();
 
-    public ResponseDto createChessRoom() throws SQLException {
-        ChessGame chessGame = chessGameDao.save();
-        if (chessGame == null) {
-            return new ResponseDto(ResponseDto.FAIL, "새로운 방을 만드는데 실패했습니다.");
+    public ResponseDto createChessRoom() {
+        try {
+            ChessGame chessGame = chessGameDao.save();
+            chessGame.start();
+            chessGameDao.update(chessGame);
+            return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
+        } catch (SQLException e) {
+            return new ResponseDto(ResponseDto.FAIL, "잘못된 접근입니다.");
         }
-        chessGame.start();
-        chessGameDao.update(chessGame);
-        return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
     }
 
-    public ResponseDto restartGame(int chessRoomId) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessRoomId);
-        if (chessGame == null) {
-            return null;
+    public ResponseDto restartGame(int chessRoomId) {
+        try {
+            ChessGame chessGame = chessGameDao.findById(chessRoomId);
+            ChessGame newChessGame = new ChessGame(chessGame.getId(), new Playing(Board.create(), Turn.WHITE));
+            chessGameDao.update(newChessGame);
+            return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
+        } catch (SQLException e) {
+            return new ResponseDto(ResponseDto.FAIL, "잘못된 접근입니다.");
         }
-        ChessGame newChessGame = new ChessGame(chessGame.getId(), new Playing(Board.create(), Turn.WHITE));
-        chessGameDao.update(newChessGame);
-        return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
     }
 
     public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessGameId);
+        ChessGame chessGame = chessGameDao.findById(chessGameId);// TODO: 2020/04/23 이 부분도 try-catch 범위내로 넣어야됨!!
         try {
             chessGame.move(sourcePosition, targetPosition);
             chessGameDao.update(chessGame);
@@ -50,12 +52,16 @@ public class ChessService {
         return responseChessGame(chessGame);
     }
 
-    public ResponseDto getChessGameById(int chessGameId) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessGameId);
-        return responseChessGame(chessGame);
+    public ResponseDto getChessGameById(int chessGameId) {
+        try {
+            ChessGame chessGame = chessGameDao.findById(chessGameId);
+            return responseChessGame(chessGame);
+        } catch (SQLException e) {
+            return new ResponseDto(ResponseDto.FAIL, "잘못된 접근입니다.");
+        }
     }
 
-    public ResponseDto getGameList() throws SQLException {
+    public ResponseDto getGameList() {
         return new ResponseDto(ResponseDto.SUCCESS, chessGameDao.selectAll());
     }
 

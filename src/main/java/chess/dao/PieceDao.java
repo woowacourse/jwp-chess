@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dto.PieceDto;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class PieceDao {
 	private static final PieceDao PIECE_DAO;
 

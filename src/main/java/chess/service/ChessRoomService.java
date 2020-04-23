@@ -17,12 +17,14 @@ import chess.dto.StateDto;
 import chess.view.Announcement;
 import chess.view.BoardToHtml;
 import chess.view.board.Board;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class ChessRoomService {
 	private static final ChessRoomService ROOM_SERVICE;
 

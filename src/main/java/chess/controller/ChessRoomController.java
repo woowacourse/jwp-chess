@@ -12,7 +12,7 @@ import java.util.Map;
 public class ChessRoomController {
 	private static final ChessRoomController CHESS_ROOM_CONTROLLER;
 	private static final String PATH = "/chess/rooms/:id";
-	private static final String STATIC_PATH = "/chess.html";
+	private static final String STATIC_PATH = "/chess.hbs";
 	private static final String SLASH = "/";
 	private static final String EMPTY = "";
 	private static final String ID_PARAM = ":id";

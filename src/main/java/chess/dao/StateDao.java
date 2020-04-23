@@ -2,12 +2,14 @@ package chess.dao;
 
 import chess.dao.exceptions.DaoNoneSelectedException;
 import chess.dto.StateDto;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class StateDao {
 	private static final StateDao STATE_DAO;
 

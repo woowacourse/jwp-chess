@@ -2,12 +2,14 @@ package chess.dao;
 
 import chess.dao.exceptions.DaoNoneSelectedException;
 import chess.dto.AnnouncementDto;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class AnnouncementDao {
 	private static final AnnouncementDao ANNOUNCEMENT_DAO;
 

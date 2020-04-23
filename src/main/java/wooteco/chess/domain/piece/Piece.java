@@ -30,6 +30,14 @@ public class Piece {
         return !this.team.isSameTeamWith(team);
     }
 
+    public boolean isWhite() {
+        return this.team.isWhite();
+    }
+
+    public boolean isBlack() {
+        return !this.team.isWhite();
+    }
+
     public boolean isWhiteKing() {
         return this.pieceType.isKing() && this.team.isWhite();
     }

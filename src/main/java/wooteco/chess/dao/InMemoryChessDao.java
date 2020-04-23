@@ -1,7 +1,7 @@
 package wooteco.chess.dao;
 
 import wooteco.chess.database.InMemoryDatabase;
-import wooteco.chess.dto.CommandDto;
+import wooteco.chess.dto.Commands;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public class InMemoryChessDao implements ChessDao {
     private final InMemoryDatabase commands = new InMemoryDatabase();
 
     @Override
-    public void addCommand(CommandDto command) {
+    public void addCommand(Commands command) {
         commands.add(command);
     }
 
@@ -20,7 +20,7 @@ public class InMemoryChessDao implements ChessDao {
     }
 
     @Override
-    public List<CommandDto> selectCommands() {
+    public List<Commands> selectCommands() {
         return commands.get();
     }
 }

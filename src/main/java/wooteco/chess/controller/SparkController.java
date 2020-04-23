@@ -25,7 +25,7 @@ public class SparkController {
         //start
         get("/start", (req, res) -> {
             chessService.start();
-            return render(chessService.makeStartResponse(), "chessGameStart.html");
+            return render(chessService.makeStartResponse(), "chessGameStart.hbs");
         });
 
         //play last game

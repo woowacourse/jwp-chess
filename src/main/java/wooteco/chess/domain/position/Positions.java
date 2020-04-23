@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Positions {
-
-    private static List<Position> POSITIONS;
+    private static final int RANK_INDEX = 1;
+    private static final int FILE_INDEX = 0;
+    private static List<Position> POSITIONS = new ArrayList<>();
 
     static {
-        POSITIONS = new ArrayList<>();
         for (Rank rank : Rank.values()) {
             addPosition(rank);
         }
@@ -23,8 +23,8 @@ public class Positions {
     }
 
     public static Position of(final String position) {
-        File file = File.of(position.substring(0, 1));
-        Rank rank = Rank.of(position.substring(1));
+        File file = File.of(position.substring(FILE_INDEX, RANK_INDEX));
+        Rank rank = Rank.of(position.substring(RANK_INDEX));
 
         return findPosition(file, rank);
     }
@@ -46,12 +46,12 @@ public class Positions {
 
     public static List<String> get() {
         List<String> parseResult = POSITIONS.stream()
-                .map(Position::toString)
+                .map(Position::toPositionName)
                 .collect(Collectors.toList());
         return Collections.unmodifiableList(parseResult);
     }
 
-    public static List<Position> getPositions() {
-        return POSITIONS;
+    public static List<Position> getValue() {
+        return Collections.unmodifiableList(POSITIONS);
     }
 }

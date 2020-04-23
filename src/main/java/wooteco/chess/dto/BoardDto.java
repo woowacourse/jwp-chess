@@ -14,11 +14,11 @@ public class BoardDto {
         this.board = toDto(board);
     }
 
-    public Map<String, String> toDto(Board board) {
+    private Map<String, String> toDto(Board board) {
         Map<String, String> parseResult = board.get()
                 .entrySet()
                 .stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().toString(),
+                .collect(Collectors.toMap(entry -> entry.getKey().toPositionName(),
                         entry -> entry.getValue().toSymbol(),
                         (e1, e2) -> e1,
                         LinkedHashMap::new));

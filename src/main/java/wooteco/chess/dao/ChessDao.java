@@ -1,13 +1,13 @@
 package wooteco.chess.dao;
 
-import wooteco.chess.dto.CommandDto;
+import wooteco.chess.dto.Commands;
 
 import java.util.List;
 
 public interface ChessDao {
-    void addCommand(CommandDto command);
+    void addCommand(Commands command);
 
     void clearCommands();
 
-    List<CommandDto> selectCommands();
+    List<Commands> selectCommands();
 }

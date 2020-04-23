@@ -1,13 +1,5 @@
 package wooteco.chess.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import wooteco.chess.domain.game.Board;
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.Turn;
@@ -17,6 +9,14 @@ import wooteco.chess.domain.game.state.Ready;
 import wooteco.chess.domain.game.state.State;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.TurnDto;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ChessGameDao implements JdbcTemplateDao {
 

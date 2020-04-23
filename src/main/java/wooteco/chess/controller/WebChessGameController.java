@@ -11,9 +11,6 @@ import wooteco.chess.domain.piece.Position;
 import wooteco.chess.dto.MoveOperationDto;
 import wooteco.chess.service.ChessService;
 
-import java.sql.SQLException;
-import java.util.Map;
-
 @Controller
 public class WebChessGameController {
     private static final Gson GSON = new GsonBuilder().create();
@@ -53,7 +50,7 @@ public class WebChessGameController {
 
     @PostMapping("/move/{id}")
     @ResponseBody
-    public String movePiece(Model model, @PathVariable String id, @RequestBody MoveOperationDto moveOperationDto) throws SQLException {
+    public String movePiece(Model model, @PathVariable String id, @RequestBody MoveOperationDto moveOperationDto) {
         int pieceId = Integer.parseInt(id);
         Position source = Position.of(moveOperationDto.getStartX(), moveOperationDto.getStartY());
         Position target = Position.of(moveOperationDto.getTargetX(), moveOperationDto.getTargetY());

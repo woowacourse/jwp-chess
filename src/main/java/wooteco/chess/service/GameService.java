@@ -8,10 +8,10 @@ import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.PieceScore;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Pieces;
+import wooteco.chess.dto.GameManagerDTO;
 import wooteco.chess.dto.PiecesResponseDTO;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 @Service

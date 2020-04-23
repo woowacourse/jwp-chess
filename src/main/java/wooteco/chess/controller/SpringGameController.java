@@ -4,53 +4,58 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import spark.Request;
 import spark.Response;
 import wooteco.chess.domain.Color;
-import wooteco.chess.domain.GameManager;
-import wooteco.chess.service.GameManagerDTO;
+import wooteco.chess.dto.GameManagerDTO;
+import wooteco.chess.dto.MovablePositionDTO;
 import wooteco.chess.service.GameService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/game")
 public class SpringGameController {
-//    public static final String MOVE_URL = BASIC_URL + "/move";
-//    public static final String STATUS_URL = BASIC_URL + "/status";
-//    public static final String GET_URL = BASIC_URL + "/get";
 
     @Autowired
     private GameService gameService;
 
     @GetMapping("/init")
-    public GameManagerDTO init(@RequestParam(value = "roomId") Integer roomId, Model model) throws SQLException {
+    public GameManagerDTO init(@RequestParam(value = "roomId") Integer roomId) throws SQLException {
         return gameService.initialize(roomId);
     }
 
-    public static String movePiece(Request request, Response response) throws SQLException {
-        GameService gameService = GameService.getInstance();
+    @PostMapping("/move")
+    public ModelAndView move(HttpServletRequest request, ModelAndView model) throws SQLException {
 
-        int roomId = Integer.parseInt(request.queryParams("roomId"));
-        String sourcePosition = request.queryParams("sourcePosition");
-        String targetPosition = request.queryParams("targetPosition");
+        int roomId = Integer.parseInt(request.getParameter("roomId"));
+        String sourcePosition = request.getParameter("sourcePosition");
+        String targetPosition = request.getParameter("targetPosition");
         gameService.movePiece(roomId, sourcePosition, targetPosition);
         boolean kingDead = gameService.isKingDead(roomId);
         String currentColor = gameService.getCurrentColor(roomId);
 
-        Gson gson = new Gson();
-        JsonObject object = new JsonObject();
-        String pieces = gson.toJson(gameService.getPiecesResponseDTO(roomId).getPieces());
+        model.addObject("pieces", gameService.getPiecesResponseDTO(roomId).getPieces());
+        model.addObject("currentColor", Color.valueOf(currentColor));
+        model.addObject("kingDead", kingDead);
+        model.setViewName("game");
 
-        object.addProperty("pieces", pieces);
-        object.addProperty("kingDead", kingDead);
-        object.addProperty("currentColor", currentColor);
-
-        return gson.toJson(object);
+        return model;
+//        return new GameManagerDTO(gameService.getPiecesResponseDTO(roomId).getPieces(), Color.valueOf(currentColor), kingDead);
+//        Gson gson = new Gson();
+//        JsonObject object = new JsonObject();
+//        String pieces = gson.toJson(gameService.getPiecesResponseDTO(roomId).getPieces());
+//
+//        object.addProperty("pieces", pieces);
+//        object.addProperty("kingDead", kingDead);
+//        object.addProperty("currentColor", currentColor);
+//
+//        return gson.toJson(object);
     }
 
     public static String showStatus(Request request, Response response) throws SQLException {
@@ -82,13 +87,11 @@ public class SpringGameController {
         return gson.toJson(object);
     }
 
-    public static String getMovablePositions(final Request request, final Response response) throws SQLException {
-        GameService gameService = GameService.getInstance();
-        int roomId = Integer.parseInt(request.queryParams("roomId"));
-        String sourcePosition = request.queryParams("sourcePosition");
+    @GetMapping("/get")
+    public List<String> getMovablePositions(final HttpServletRequest request) throws SQLException {
+        int roomId = Integer.parseInt(request.getParameter("roomId"));
+        String sourcePosition = request.getParameter("sourcePosition");
 
-        Gson gson = new Gson();
-
-        return gson.toJson(gameService.getMovablePositions(roomId, sourcePosition));
+        return gameService.getMovablePositions(roomId, sourcePosition);
     }
 }

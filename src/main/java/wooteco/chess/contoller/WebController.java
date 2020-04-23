@@ -63,7 +63,7 @@ public class WebController {
 				String roomName = req.queryParams("room-name");
 				ChessGame chessGame = chessGameService.load(roomName);
 				putGameInfoToModel(roomName, chessGame, model);
-				return render(model, "wooteco.chess.html");
+				return render(model, "chess.html");
 			} catch (RuntimeException e) {
 				model.put("room", chessGameService.findAllRooms());
 				model.put("error", e.getMessage());
@@ -73,7 +73,7 @@ public class WebController {
 	}
 
 	private void movePiece() {
-		post("/wooteco/chess", (req, res) -> {
+		post("/chess", (req, res) -> {
 			Map<String, Object> model = new HashMap<>();
 			try {
 				String roomName = req.queryParams("room-name");
@@ -83,7 +83,7 @@ public class WebController {
 			} catch (RuntimeException e) {
 				model.put("error", e.getMessage());
 			}
-			return render(model, "wooteco.chess.html");
+			return render(model, "chess.html");
 		});
 	}
 
@@ -93,7 +93,7 @@ public class WebController {
 			String roomName = req.queryParams("room-name");
 			ChessGame chessGame = chessGameService.restart(roomName);
 			putGameInfoToModel(roomName, chessGame, model);
-			return render(model, "wooteco.chess.html");
+			return render(model, "chess.html");
 		});
 	}
 

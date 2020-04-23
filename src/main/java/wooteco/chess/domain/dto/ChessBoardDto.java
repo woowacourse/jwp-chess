@@ -1,34 +1,42 @@
 package wooteco.chess.domain.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import wooteco.chess.domain.ChessGame;
 import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.position.Column;
+import wooteco.chess.domain.position.Row;
 
 public class ChessBoardDto {
 	private static final String BLANK = "blank";
 
-	private List<List<String>> board;
+	private Map<String, String> board;
 	private String turn;
 
-	private ChessBoardDto(List<List<String>> board, String turn) {
+	public ChessBoardDto(Map<String, String> board, String turn) {
 		this.board = board;
 		this.turn = turn;
 	}
 
 	public static ChessBoardDto of(ChessGame chessGame) {
-		List<List<String>> initBoard = initBoard();
-		deployPiece(chessGame.getBoard().getPieces(), initBoard);
+		Map<String, String> board = makeStringBoard(chessGame);
 		String turn = chessGame.getTurn().name();
-		return new ChessBoardDto(initBoard, turn);
+		return new ChessBoardDto(board, turn);
 	}
 
-	private static void deployPiece(List<Piece> board, List<List<String>> initBoard) {
-		for (Piece piece : board) {
-			initBoard.get(8 - piece.getPosition().getRow().getSymbol())
-					.set(piece.getPosition().getCol().getValue() - 1, makeName(piece));
+	private static Map<String, String> makeStringBoard(ChessGame chessGame) {
+		Map<String, String> board = new HashMap<>();
+		for (Column column : Column.values()) {
+			for (Row row : Row.values()) {
+				board.put(column.getSymbol() + row.getSymbol(), BLANK);
+			}
 		}
+
+		for (Piece piece : chessGame.getBoard().getPieces()) {
+			board.replace(piece.getPosition().toString(), makeName(piece));
+		}
+		return board;
 	}
 
 	private static String makeName(Piece piece) {
@@ -36,19 +44,7 @@ public class ChessBoardDto {
 		return name.toLowerCase();
 	}
 
-	private static List<List<String>> initBoard() {
-		List<List<String>> board = new ArrayList<>();
-		for (int i = 0; i < 8; i++) {
-			List<String> emptyRow = new ArrayList<>();
-			for (int j = 0; j < 8; j++) {
-				emptyRow.add(BLANK);
-			}
-			board.add(emptyRow);
-		}
-		return board;
-	}
-
-	public List<List<String>> getBoard() {
+	public Map<String, String> getBoard() {
 		return board;
 	}
 

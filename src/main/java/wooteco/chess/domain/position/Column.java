@@ -47,4 +47,8 @@ public enum Column {
 	public int getValue() {
 		return value;
 	}
+
+	public String getSymbol() {
+		return symbol;
+	}
 }

@@ -9,7 +9,7 @@ import wooteco.chess.service.GameService;
 
 import java.sql.SQLException;
 
-public class GameController {
+public class SparkGameController {
     public static final String BASIC_URL = "/game";
     public static final String MOVE_URL = BASIC_URL + "/move";
     public static final String STATUS_URL = BASIC_URL + "/status";

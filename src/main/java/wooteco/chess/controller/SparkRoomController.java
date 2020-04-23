@@ -10,17 +10,12 @@ import java.util.Map;
 
 import static wooteco.chess.util.HandlebarsUtil.render;
 
-public class RoomController {
+public class SparkRoomController {
     public static final String BASIC_URL = "/rooms";
     public static final String ENTER_ROOM_URL = BASIC_URL + "/enter";
     public static final String CREATE_ROOM_URL = BASIC_URL + "/create";
     public static final String REMOVE_ROOM_URL = BASIC_URL + "/remove";
-    public static Route enterRoom = (request, response) -> {
-        Map<String, Object> model = new HashMap<>();
-        model.put("roomId", request.queryParams("roomId"));
 
-        return render(model, "game.html");
-    };
     public static Route getAllRoom = (request, response) -> {
         Map<String, Object> model = new HashMap<>();
 
@@ -28,8 +23,16 @@ public class RoomController {
         List<Room> rooms = roomService.findAllRoom();
         model.put("rooms", rooms);
 
-        return render(model, "index.html");
+        return render(model, "index.hbs");
     };
+
+    public static Route enterRoom = (request, response) -> {
+        Map<String, Object> model = new HashMap<>();
+        model.put("roomId", request.queryParams("roomId"));
+
+        return render(model, "game.hbs");
+    };
+
     public static Route createRoom = (request, response) -> {
         RoomService roomService = RoomService.getInstance();
         String param = request.queryParams("roomName");
@@ -46,6 +49,6 @@ public class RoomController {
         return null;
     };
 
-    private RoomController() {
+    private SparkRoomController() {
     }
 }

@@ -1,7 +1,7 @@
 package wooteco.chess;
 
-import wooteco.chess.controller.GameController;
-import wooteco.chess.controller.RoomController;
+import wooteco.chess.controller.SparkGameController;
+import wooteco.chess.controller.SparkRoomController;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -14,16 +14,16 @@ public class SparkChessApplication {
         staticFiles.location("/static");
         externalStaticFileLocation("src/main/resources/templates");
 
-        get(RoomController.BASIC_URL, RoomController.getAllRoom);
-        get(RoomController.CREATE_ROOM_URL, RoomController.createRoom);
-        get(RoomController.REMOVE_ROOM_URL, RoomController.removeRoom);
-        get(RoomController.ENTER_ROOM_URL, RoomController.enterRoom);
+        get(SparkRoomController.BASIC_URL, SparkRoomController.getAllRoom);
+        get(SparkRoomController.CREATE_ROOM_URL, SparkRoomController.createRoom);
+        get(SparkRoomController.REMOVE_ROOM_URL, SparkRoomController.removeRoom);
+        get(SparkRoomController.ENTER_ROOM_URL, SparkRoomController.enterRoom);
 
-        get(GameController.INIT_URL, GameController::initGame);
-        post(GameController.MOVE_URL, GameController::movePiece);
-        get(GameController.STATUS_URL, GameController::showStatus);
-        get(GameController.LOAD_URL, GameController::loadGame);
-        get(GameController.GET_URL, GameController::getMovablePositions);
+        get(SparkGameController.INIT_URL, SparkGameController::initGame);
+        post(SparkGameController.MOVE_URL, SparkGameController::movePiece);
+        get(SparkGameController.STATUS_URL, SparkGameController::showStatus);
+        get(SparkGameController.LOAD_URL, SparkGameController::loadGame);
+        get(SparkGameController.GET_URL, SparkGameController::getMovablePositions);
 
         exception(IllegalArgumentException.class, (e, req, res) -> {
             Gson gson = new Gson();

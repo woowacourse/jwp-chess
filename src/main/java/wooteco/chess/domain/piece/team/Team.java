@@ -5,7 +5,7 @@ import java.util.Arrays;
 import wooteco.chess.domain.piece.Pawn;
 
 public enum Team {
-	BLACK("Black", Pawn.BLACK_START_RANK_INDEX),
+	BLACK("black", Pawn.BLACK_START_RANK_INDEX),
 	WHITE("white", Pawn.WHITE_START_RANK_INDEX);
 
 	private String name;

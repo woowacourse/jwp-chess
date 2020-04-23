@@ -70,4 +70,9 @@ public class ChessGame {
 	public Team getTurn() {
 		return turn;
 	}
+
+	public Piece findPieceByPosition(Position position) {
+		return board.findPiece(position)
+			.orElseThrow(IllegalArgumentException::new);
+	}
 }

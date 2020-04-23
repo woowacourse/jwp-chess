@@ -49,11 +49,11 @@ public class UnicodeConverter {
 				.map(Piece::getSymbol)
 				.findFirst()
 				.orElse(BLANK);
-			pieces.add(map(pieceSymbol));
+			pieces.add(convert(pieceSymbol));
 		}
 	}
 
-	private static String map(String symbol) {
+	public static String convert(String symbol) {
 		return unicode.get(symbol);
 	}
 }

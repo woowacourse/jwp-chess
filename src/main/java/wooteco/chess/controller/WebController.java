@@ -9,12 +9,16 @@ import static spark.Spark.staticFileLocation;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.dto.BoardDto;
+import wooteco.chess.dto.MoveRequestDto;
+import wooteco.chess.dto.MoveResponseDto;
 import wooteco.chess.service.ChessService;
 
 public class WebController {
+	private static final Gson gson = new Gson();
 	private static final String GAME_VIEW = "game.html";
 
 	private ChessService service;
@@ -40,10 +44,10 @@ public class WebController {
 		});
 
 		post("/move", (req, res) -> {
-			Map<String, Object> model = new HashMap<>();
-			BoardDto boardDto = service.move(Long.parseLong(req.queryParams("gameId")), req.queryParams("moveCommand"));
-			model.put("response", boardDto);
-			return render(model, GAME_VIEW);
+			MoveRequestDto moveRequestDto = gson.fromJson(req.body(), MoveRequestDto.class);
+			MoveResponseDto moveResponseDto = service.move(moveRequestDto);
+
+			return gson.toJson(moveResponseDto);
 		});
 
 		get("/save", (req, res) -> {

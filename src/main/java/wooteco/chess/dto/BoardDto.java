@@ -7,11 +7,13 @@ public class BoardDto {
 	private Long gameId;
 	private List<String> piece;
 	private Map<String, Double> score;
+	private String turn;
 
-	public BoardDto(Long gameId, List<String> piece, Map<String, Double> score) {
+	public BoardDto(Long gameId, List<String> piece, Map<String, Double> score, String turn) {
 		this.gameId = gameId;
 		this.piece = piece;
 		this.score = score;
+		this.turn = turn;
 	}
 
 	public Long getGameId() {
@@ -24,5 +26,9 @@ public class BoardDto {
 
 	public Map<String, Double> getScore() {
 		return this.score;
+	}
+
+	public String getTurn() {
+		return turn;
 	}
 }

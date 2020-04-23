@@ -141,27 +141,35 @@
     let allChessPosition = document.querySelectorAll(".chessPosition");
     let isChooseSourcePosition = false;
     let loadable = false;
+    let helloworld;
+
     let sourcePosition;
     let movablePositions;
+
     window.onload = function () {
+
         function applyMovablePosition(movablePositions) {
             movablePositions.forEach(function (movablePosition) {
                 addBorder(movablePosition);
             });
         }
+
         function cancelMovablePosition(movablePositions) {
             movablePositions.forEach(function (movablePosition) {
                 removeBorder(movablePosition);
             });
         }
+
         function addBorder(movablePosition) {
             let element = document.getElementById(movablePosition);
             addClass(element, "movable");
         }
+
         function removeBorder(movablePosition) {
             let element = document.getElementById(movablePosition);
             removeClass(element, "movable");
         }
+
         function getMovablePosition(sourcePosition) {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
@@ -174,33 +182,41 @@
             xhr.open('GET', '/game/get?roomId={{roomId}}&sourcePosition=' + sourcePosition, true);
             xhr.send();
         }
+
         function applyPieces(pieces) {
             pieces.forEach(function (piece) {
                 applyBackgroundImg(piece.position, piece.imgUrl);
             });
         }
+
         function applyBackgroundImg(piecePosition, pieceImgUrl) {
             let element = document.getElementById(piecePosition);
             element.style.backgroundImage = "url(/img/" + pieceImgUrl + ")";
             element.style.backgroundSize = "cover";
         }
+
         function showStatus(whiteScore, blackScore) {
             alert("현재 White의 점수 : " + whiteScore + "\n" + "현재 Black의 점수 : " + blackScore);
         }
+
         function addBlur() {
             let containerValue = document.getElementById("all");
             addClass(containerValue, "blur");
         }
+
         function removeBlur() {
             let containerValue = document.getElementById("all");
             removeClass(containerValue, "blur");
         }
+
         function addOverlay() {
             document.getElementById("overlay").style.display = "block";
         }
+
         function removeOverlay() {
             document.getElementById("overlay").style.display = "none";
         }
+
         // TODO : 임시방편 왕이 죽는 순간 Turn도 바뀌지 않고 끝나야 함.
         function applyWinnerColor(currentColor) {
             if (currentColor === "WHITE") {
@@ -209,9 +225,11 @@
                 document.getElementById("winner").innerText = "WHITE";
             }
         }
+
         function showCurrentColor(currentColor) {
             document.getElementById("turn").innerText = currentColor;
         }
+
         function isKingDead(currentColor, kingDead) {
             if (kingDead === true) {
                 addOverlay();
@@ -219,9 +237,11 @@
                 applyWinnerColor(currentColor);
             }
         }
+
         document.getElementById("initButton").addEventListener('click', function () {
             init();
         });
+
         document.getElementById("statusButton").addEventListener('click', function () {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
@@ -233,14 +253,13 @@
             xhr.open('GET', '/game/status?roomId={{roomId}}', true);
             xhr.send();
         });
+
         function move(sourcePosition, targetPosition) {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     let chessJson = JSON.parse(xhr.responseText);
-                    console.log(chessJson);
-                    console.log(chessJson.pieces);
-                    if (chessJson.errorMessage == null) {
+                    if (typeof chessJson.errorMessage == "undefined") {
                         applyPieces(chessJson.pieces);
                         let currentColor = chessJson.currentColor;
                         isKingDead(currentColor, chessJson.kingDead);
@@ -251,20 +270,23 @@
                 }
             };
             xhr.open('POST', '/game/move?roomId={{roomId}}&sourcePosition='
-                    + sourcePosition
-                    + '&targetPosition='
-                    + targetPosition,
-                    true);
+                + sourcePosition
+                + '&targetPosition='
+                + targetPosition,
+                true);
             xhr.send();
         }
+
         for (let i = 0; i < allChessPosition.length; i++) {
             allChessPosition[i].addEventListener('click', function () {
                 if (!isChooseSourcePosition) {
                     sourcePosition = allChessPosition[i].id;
                     getMovablePosition(sourcePosition);
                 }
+
             });
         }
+
         for (let i = 0; i < allChessPosition.length; i++) {
             allChessPosition[i].addEventListener('click', function () {
                 if (isChooseSourcePosition) {
@@ -275,16 +297,18 @@
                 }
             });
         }
+
         document.getElementById("overlay").addEventListener('click', function () {
             removeBlur();
             removeOverlay();
         });
+
         function load() {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     let chessJson = JSON.parse(xhr.responseText);
-                    let pieces = chessJson.pieces;
+                    let pieces = JSON.parse(chessJson.pieces);
                     if(pieces.length === 64) {
                         let isLoad = confirm("저장된 게임이 이미 있습니다! 불러올까요?");
                         if(isLoad) {
@@ -302,6 +326,7 @@
             xhr.open('GET', '/game/load?roomId={{roomId}}', true);
             xhr.send();
         }
+
         function init() {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
@@ -318,5 +343,6 @@
         load();
     }
 </script>
+
 </body>
 </html>

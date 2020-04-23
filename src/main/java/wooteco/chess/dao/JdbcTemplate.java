@@ -27,7 +27,7 @@ public class JdbcTemplate {
         }
     }
 
-    public <T> T executeQuery(String query, PreparedStatementSetter pss, RowMapper<T> rm) throws SQLException {
+    public Object executeQuery(String query, PreparedStatementSetter pss, RowMapper rm) throws SQLException {
         try (Connection con = JDBCConnector.getConnection();
              PreparedStatement pstmt = con.prepareStatement(query)
         ) {

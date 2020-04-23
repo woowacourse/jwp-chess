@@ -8,7 +8,8 @@ import wooteco.chess.domain.piece.Piece;
 import java.util.List;
 import java.util.Map;
 
-public class BasicOneMoveStrategy implements MoveStrategy {
+public class
+BasicOneMoveStrategy implements MoveStrategy {
     List<Direction> directions;
 
     public BasicOneMoveStrategy(List<Direction> directions) {

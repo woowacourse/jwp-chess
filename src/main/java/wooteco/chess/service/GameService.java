@@ -1,6 +1,5 @@
 package wooteco.chess.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wooteco.chess.dao.GameDAO;
 import wooteco.chess.dao.RoomDAO;
@@ -9,22 +8,27 @@ import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.PieceScore;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Pieces;
-import wooteco.chess.dto.GameManagerDTO;
 import wooteco.chess.dto.PiecesResponseDTO;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 @Service
 public class GameService {
+    private static final GameService GAME_SERVICE = new GameService();
 
-    @Autowired
-    private GameDAO gameDAO;
+    private GameService() {
+    }
 
-    @Autowired
-    private RoomDAO roomDAO;
+    public static GameService getInstance() {
+        return GAME_SERVICE;
+    }
 
     public GameManagerDTO initialize(int roomId) throws SQLException {
+        GameDAO gameDAO = GameDAO.getInstance();
+        RoomDAO roomDAO = RoomDAO.getInstance();
+
         roomDAO.updateRoomColorById(roomId, Color.WHITE);
         Pieces pieces = new Pieces(Pieces.initPieces());
         gameDAO.addAllPiecesById(roomId, pieces);
@@ -32,6 +36,9 @@ public class GameService {
     }
 
     public void movePiece(int roomId, String sourcePosition, String targetPosition) throws SQLException {
+        GameDAO gameDAO = GameDAO.getInstance();
+        RoomDAO roomDAO = RoomDAO.getInstance();
+
         Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
         GameManager gameManager = new GameManager(pieces, roomDAO.findRoomColorById(roomId));
         gameManager.validateEndGame();
@@ -43,6 +50,7 @@ public class GameService {
     }
 
     public double getScore(int roomId, Color color) throws SQLException {
+        GameDAO gameDAO = GameDAO.getInstance();
         Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
         GameManager gameManager = new GameManager(pieces, color);
 
@@ -50,29 +58,32 @@ public class GameService {
     }
 
     public PiecesResponseDTO getPiecesResponseDTO(int roomId) throws SQLException {
+        GameDAO gameDAO = GameDAO.getInstance();
         Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
         return new PiecesResponseDTO(pieces);
     }
 
     public boolean isKingDead(final int roomId) throws SQLException {
+        GameDAO gameDAO = GameDAO.getInstance();
+        RoomDAO roomDAO = RoomDAO.getInstance();
+
         Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
         GameManager gameManager = new GameManager(pieces, roomDAO.findRoomColorById(roomId));
         return gameManager.isKingDead();
     }
 
     public String getCurrentColor(final int roomId) throws SQLException {
+        RoomDAO roomDAO = RoomDAO.getInstance();
         return roomDAO.findRoomColorById(roomId).name();
     }
 
     public List<String> getMovablePositions(final int roomId, final String sourcePosition) throws SQLException {
+        GameDAO gameDAO = GameDAO.getInstance();
+        RoomDAO roomDAO = RoomDAO.getInstance();
+
         Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
         GameManager gameManager = new GameManager(pieces, roomDAO.findRoomColorById(roomId));
 
         return gameManager.getMovablePositions(Position.of(sourcePosition));
-    }
-
-    public GameManagerDTO createDTO(final int roomId) throws SQLException {
-        return new GameManagerDTO(getPiecesResponseDTO(roomId).getPieces(),
-                Color.valueOf(getCurrentColor(roomId)), isKingDead(roomId));
     }
 }

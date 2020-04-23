@@ -39,17 +39,25 @@ public class ChessService {
         }
     }
 
-    public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessGameId);// TODO: 2020/04/23 이 부분도 try-catch 범위내로 넣어야됨!!
+    public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) {
+        try {
+            return getResponseDtoWithMove(chessGameId, sourcePosition, targetPosition);
+        } catch (NotMovableException | IllegalArgumentException e) {
+            return new ResponseDto(ResponseDto.FAIL, "이동할 수 없는 위치입니다.");
+        } catch (SQLException e) {
+            return new ResponseDto(ResponseDto.FAIL, "잘못된 접근입니다.");
+        }
+    }
+
+    private ResponseDto getResponseDtoWithMove(int chessGameId, Position sourcePosition, Position targetPosition) throws SQLException {
+        ChessGame chessGame = chessGameDao.findById(chessGameId);
         try {
             chessGame.move(sourcePosition, targetPosition);
             chessGameDao.update(chessGame);
-        } catch (NotMovableException | IllegalArgumentException e) {
-            return new ResponseDto(ResponseDto.FAIL, "이동할 수 없는 위치입니다.");
+            return responseChessGame(chessGame);
         } catch (InvalidTurnException e) {
             return new ResponseDto(ResponseDto.FAIL, chessGame.turn().getColor() + "의 턴입니다.");
         }
-        return responseChessGame(chessGame);
     }
 
     public ResponseDto getChessGameById(int chessGameId) {

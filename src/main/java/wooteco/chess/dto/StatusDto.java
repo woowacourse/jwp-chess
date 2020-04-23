@@ -4,30 +4,30 @@ import wooteco.chess.domain.game.Score;
 import wooteco.chess.domain.piece.Color;
 
 public class StatusDto {
-    private Score whiteScore;
-    private Score blackScore;
+    private Score white;
+    private Score black;
     private Color winner;
 
-    public StatusDto(Score whiteScore, Score blackScore, Color winner) {
-        this.whiteScore = whiteScore;
-        this.blackScore = blackScore;
+    public StatusDto(Score white, Score black, Color winner) {
+        this.white = white;
+        this.black = black;
         this.winner = winner;
     }
 
-    public Score getWhiteScore() {
-        return whiteScore;
+    public Score getWhite() {
+        return white;
     }
 
-    public void setWhiteScore(Score whiteScore) {
-        this.whiteScore = whiteScore;
+    public void setWhite(Score white) {
+        this.white = white;
     }
 
-    public Score getBlackScore() {
-        return blackScore;
+    public Score getBlack() {
+        return black;
     }
 
-    public void setBlackScore(Score blackScore) {
-        this.blackScore = blackScore;
+    public void setBlack(Score black) {
+        this.black = black;
     }
 
     public Color getWinner() {

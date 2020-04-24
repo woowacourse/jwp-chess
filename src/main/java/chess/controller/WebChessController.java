@@ -8,9 +8,9 @@ import java.util.Map;
 import chess.domain.GameResult;
 import chess.domain.board.ChessBoard;
 import chess.dto.CellManager;
-import chess.service.ChessGameService;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import wooteco.chess.service.ChessGameService;
 
 public class WebChessController {
 	private ChessGameService chessGameService = new ChessGameService();
@@ -25,19 +25,19 @@ public class WebChessController {
 
 		get("/", (req, res) -> {
 			Map<String, Object> model = new HashMap<>();
-			return render(model, "index.html");
+			return render(model, "index.hbs");
 		});
 
 		get("/chess-game", (req, res) -> {
 			ChessBoard chessBoard = chessGameService.loadBoard();
 			Map<String, Object> model = settingModels(new HashMap<>(), chessBoard);
-			return render(model, "index.html");
+			return render(model, "index.hbs");
 		});
 
 		get("/new-chess-game", (req, res) -> {
 			ChessBoard chessBoard = this.chessGameService.createNewChessGame();
 			Map<String, Object> model = settingModels(new HashMap<>(), chessBoard);
-			return render(model, "index.html");
+			return render(model, "index.hbs");
 		});
 
 		post("/move", (req, res) -> {
@@ -60,7 +60,7 @@ public class WebChessController {
 			}
 
 			settingModels(model, chessBoard);
-			return render(model, "index.html");
+			return render(model, "index.hbs");
 		});
 
 		get("/winner", (req, res) -> {
@@ -79,7 +79,7 @@ public class WebChessController {
 			model.put("whiteScore", gameResult.getAliveWhitePieceScoreSum());
 			this.chessGameService.endGame();
 
-			return render(model, "winner.html");
+			return render(model, "winner.hbs");
 		});
 	}
 

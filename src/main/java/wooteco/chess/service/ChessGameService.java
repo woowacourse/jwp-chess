@@ -1,6 +1,8 @@
-package chess.service;
+package wooteco.chess.service;
 
 import java.sql.SQLException;
+
+import org.springframework.stereotype.Service;
 
 import chess.dao.BoardDAO;
 import chess.dao.TurnDAO;
@@ -9,6 +11,7 @@ import chess.domain.command.MoveCommand;
 import chess.dto.BoardDTO;
 import chess.dto.TurnDTO;
 
+@Service
 public class ChessGameService {
     private BoardDAO boardDAO = BoardDAO.getInstance();
     private TurnDAO turnDAO = TurnDAO.getInstance();

@@ -6,14 +6,17 @@ import static org.hamcrest.Matchers.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import io.restassured.RestAssured;
-import wooteco.chess.service.ChessServiceImpl;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SpringChessControllerTest {
+class SpringChessBoardControllerTest {
+
+    @Autowired
+    SpringChessBoardController controller;
 
     @LocalServerPort
     int port;
@@ -21,7 +24,6 @@ class SpringChessControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        SpringChessController controller = new SpringChessController(new ChessServiceImpl());
     }
 
     @DisplayName("index.hbs 렌더링이 된다")

@@ -10,9 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.Game;
 import wooteco.chess.domain.piece.Side;
 
+@Component
 public class GameDao implements MySqlJdbcTemplateDao {
 
     public static final String GAME_ID = "id";

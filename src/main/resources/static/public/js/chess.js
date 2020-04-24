@@ -89,20 +89,18 @@ window.onload = function () {
     }
 
     function chooseSecondPosition(position) {
-        fetch(`http://localhost:8080/destination?destination=${position}`, {method: "GET"})
+        fetch(`http://localhost:8080/destination?destination=${position}&startPosition=${startPosition}`,
+            {method: "GET"})
             .then(res => res.json())
             .then(data => {
                 if (data.normalStatus === false) {
                     alert(data.exception);
+                    startPosition = null;
                     return;
                 }
                 const source = startPosition;
-                const destination = data.position;
+                const destination = position;
                 startPosition = null;
-
-                if (source === destination) {
-                    alert("이동을 취소합니다.");
-                }
 
                 post_to_url("/board", {"source": source, "destination": destination});
             });

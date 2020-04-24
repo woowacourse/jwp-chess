@@ -22,10 +22,6 @@ public enum Rank {
         this.number = number;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public boolean hasNextIncrement(int increment) {
         return Arrays.stream(Rank.values())
             .anyMatch(rank -> rank.number == this.number + increment);
@@ -40,5 +36,9 @@ public enum Rank {
 
     public int calculateDistance(Rank rank) {
         return rank.number - this.number;
+    }
+
+    public String getName() {
+        return name;
     }
 }

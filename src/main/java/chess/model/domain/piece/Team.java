@@ -35,18 +35,8 @@ public enum Team {
         return directionChanger.apply(directions);
     }
 
-    public Team nextTurnIfEmptyMySelf() {
-        return Arrays.stream(Team.values())
-            .filter(color -> this.nextTurnName.equals(color.name))
-            .findFirst()
-            .orElse(this);
-    }
-
-    public Team previousTurnIfEmptyMySelf() {
-        return Arrays.stream(Team.values())
-            .filter(color -> color.nextTurnIfEmptyMySelf() == this)
-            .findFirst()
-            .orElse(this);
+    public Team nextTurn() {
+        return of(this.nextTurnName);
     }
 
     public String getName() {

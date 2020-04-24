@@ -51,76 +51,81 @@ class ChessGameDaoTest {
     @Test
     void insert() {
         CHESS_GAME_DAO.delete(gameId);
-        assertThat(CHESS_GAME_DAO.getGameTurn(gameId).isPresent()).isFalse();
-        assertThat(CHESS_GAME_DAO.getUserNames(gameId)).isEmpty();
+        assertThat(CHESS_GAME_DAO.findCurrentTurn(gameId).isPresent()).isFalse();
+        assertThat(CHESS_GAME_DAO.findUserNames(gameId)).isEmpty();
         assertThat(CHESS_GAME_DAO.isProceeding(gameId).isPresent()).isFalse();
 
         gameId = CHESS_GAME_DAO.insert(ROOM_ID, GAME_TURN, USER_NAMES, TEAM_SCORE);
-        assertThat(CHESS_GAME_DAO.getGameTurn(gameId).get()).isEqualTo(GAME_TURN);
-        assertThat(CHESS_GAME_DAO.getUserNames(gameId)).isEqualTo(USER_NAMES);
+        assertThat(CHESS_GAME_DAO.findCurrentTurn(gameId).get()).isEqualTo(GAME_TURN);
+        assertThat(CHESS_GAME_DAO.findUserNames(gameId)).isEqualTo(USER_NAMES);
         assertThat(CHESS_GAME_DAO.isProceeding(gameId).get()).isTrue();
     }
 
     @Test
     void updateProceedN() {
-        assertThat(CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalArgumentException::new))
+        assertThat(
+            CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalArgumentException::new))
             .isEqualTo(GAME_TURN);
-        assertThat(CHESS_GAME_DAO.getUserNames(gameId)).isEqualTo(USER_NAMES);
+        assertThat(CHESS_GAME_DAO.findUserNames(gameId)).isEqualTo(USER_NAMES);
         assertThat(CHESS_GAME_DAO.isProceeding(gameId).orElseThrow(IllegalArgumentException::new))
             .isTrue();
 
         CHESS_GAME_DAO.updateProceedN(gameId);
-        assertThat(CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalArgumentException::new))
+        assertThat(
+            CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalArgumentException::new))
             .isEqualTo(GAME_TURN);
-        assertThat(CHESS_GAME_DAO.getUserNames(gameId)).isEqualTo(USER_NAMES);
+        assertThat(CHESS_GAME_DAO.findUserNames(gameId)).isEqualTo(USER_NAMES);
         assertThat(CHESS_GAME_DAO.isProceeding(gameId).orElseThrow(IllegalArgumentException::new))
             .isFalse();
     }
 
     @Test
     void updateTurn() {
-        assertThat(CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalArgumentException::new))
+        assertThat(
+            CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalArgumentException::new))
             .isEqualTo(GAME_TURN);
-        assertThat(CHESS_GAME_DAO.getUserNames(gameId)).isEqualTo(USER_NAMES);
+        assertThat(CHESS_GAME_DAO.findUserNames(gameId)).isEqualTo(USER_NAMES);
         assertThat(CHESS_GAME_DAO.isProceeding(gameId).orElseThrow(IllegalArgumentException::new))
             .isTrue();
 
-        CHESS_GAME_DAO.updateTurn(gameId, GAME_TURN.nextTurnIfEmptyMySelf());
-        assertThat(CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalArgumentException::new))
-            .isEqualTo(GAME_TURN.nextTurnIfEmptyMySelf());
-        assertThat(CHESS_GAME_DAO.getUserNames(gameId)).isEqualTo(USER_NAMES);
+        CHESS_GAME_DAO.updateTurn(gameId, GAME_TURN.nextTurn());
+        assertThat(
+            CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalArgumentException::new))
+            .isEqualTo(GAME_TURN.nextTurn());
+        assertThat(CHESS_GAME_DAO.findUserNames(gameId)).isEqualTo(USER_NAMES);
         assertThat(CHESS_GAME_DAO.isProceeding(gameId).orElseThrow(IllegalArgumentException::new))
             .isTrue();
     }
 
     @Test
     void delete() {
-        assertThat(CHESS_GAME_DAO.getGameTurn(gameId).get()).isEqualTo(GAME_TURN);
-        assertThat(CHESS_GAME_DAO.getUserNames(gameId)).isEqualTo(USER_NAMES);
+        assertThat(CHESS_GAME_DAO.findCurrentTurn(gameId).get()).isEqualTo(GAME_TURN);
+        assertThat(CHESS_GAME_DAO.findUserNames(gameId)).isEqualTo(USER_NAMES);
         assertThat(CHESS_GAME_DAO.isProceeding(gameId).get()).isTrue();
 
         CHESS_GAME_DAO.delete(gameId);
-        assertThat(CHESS_GAME_DAO.getGameTurn(gameId).isPresent()).isFalse();
-        assertThat(CHESS_GAME_DAO.getUserNames(gameId)).isEmpty();
+        assertThat(CHESS_GAME_DAO.findCurrentTurn(gameId).isPresent()).isFalse();
+        assertThat(CHESS_GAME_DAO.findUserNames(gameId)).isEmpty();
         assertThat(CHESS_GAME_DAO.isProceeding(gameId).isPresent()).isFalse();
     }
 
     @Test
     void getGameNumberLatest() {
         assertThat(
-            CHESS_GAME_DAO.getGameNumberLatest(ROOM_ID).orElseThrow(IllegalArgumentException::new))
+            CHESS_GAME_DAO.findGameNumberLatest(ROOM_ID).orElseThrow(IllegalArgumentException::new))
             .isGreaterThanOrEqualTo(0);
     }
 
     @Test
     void getGameTurn() {
-        assertThat(CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalArgumentException::new))
+        assertThat(
+            CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalArgumentException::new))
             .isEqualTo(GAME_TURN);
     }
 
     @Test
     void getUserNames() {
-        assertThat(CHESS_GAME_DAO.getUserNames(gameId)).isEqualTo(USER_NAMES);
+        assertThat(CHESS_GAME_DAO.findUserNames(gameId)).isEqualTo(USER_NAMES);
     }
 
     @Test
@@ -131,7 +136,7 @@ class ChessGameDaoTest {
 
     @Test
     void getRoomId() {
-        assertThat(CHESS_GAME_DAO.getRoomId(gameId).orElseThrow(IllegalArgumentException::new))
+        assertThat(CHESS_GAME_DAO.findRoomId(gameId).orElseThrow(IllegalArgumentException::new))
             .isEqualTo(ROOM_ID);
     }
 
@@ -140,12 +145,12 @@ class ChessGameDaoTest {
         Map<Team, Double> teamScoreUpdate = new HashMap<>(TEAM_SCORE.getTeamScore());
         teamScoreUpdate.put(Team.BLACK, 1.0);
         CHESS_GAME_DAO.updateScore(gameId, new TeamScore(teamScoreUpdate));
-        assertThat(CHESS_GAME_DAO.getScores(gameId)).isEqualTo(teamScoreUpdate);
+        assertThat(CHESS_GAME_DAO.findScores(gameId)).isEqualTo(teamScoreUpdate);
     }
 
     @Test
     void selectScore() {
-        assertThat(CHESS_GAME_DAO.getScores(gameId)).isEqualTo(TEAM_SCORE.getTeamScore());
+        assertThat(CHESS_GAME_DAO.findScores(gameId)).isEqualTo(TEAM_SCORE.getTeamScore());
     }
 
 }

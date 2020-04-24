@@ -1,7 +1,7 @@
 package chess.model.domain.piece;
 
-import chess.model.domain.board.Square;
 import chess.model.domain.board.CastlingSetting;
+import chess.model.domain.board.Square;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +36,7 @@ public abstract class Piece {
             int rankIncrementBy = direction.getMultiplyRankAddAmount(count);
             if (square.hasIncreased(fileIncrementBy, rankIncrementBy)) {
                 availableSquares
-                    .add(square.getIncreased(fileIncrementBy, rankIncrementBy));
+                    .add(square.getIncreasedSquare(fileIncrementBy, rankIncrementBy));
             }
         }
     }
@@ -56,7 +56,7 @@ public abstract class Piece {
         for (int i = 0, file = 0, rank = 0; i < Square.MAX_FILE_AND_RANK_COUNT;
             i++, file += fileAddAmount, rank += rankAddAmount) {
             if (square.hasIncreased(file, rank)) {
-                squaresToRemove.add(square.getIncreased(file, rank));
+                squaresToRemove.add(square.getIncreasedSquare(file, rank));
             }
         }
         squaresToRemove.remove(square);

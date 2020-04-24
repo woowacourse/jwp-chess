@@ -1,7 +1,7 @@
 package chess.model.dto;
 
-import chess.model.domain.board.Square;
 import chess.model.domain.board.ChessGame;
+import chess.model.domain.board.Square;
 import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.Bishop;
 import chess.model.domain.piece.King;
@@ -28,8 +28,8 @@ public class ChessGameDto {
 
     static {
         Map<Piece, String> piecesLetter = new HashMap<>();
-        piecesLetter.put(Pawn.getPieceInstance(Team.BLACK), "♟");
-        piecesLetter.put(Pawn.getPieceInstance(Team.WHITE), "♙");
+        piecesLetter.put(Pawn.getInstance(Team.BLACK), "♟");
+        piecesLetter.put(Pawn.getInstance(Team.WHITE), "♙");
         piecesLetter.put(Rook.getPieceInstance(Team.BLACK), "♜");
         piecesLetter.put(Rook.getPieceInstance(Team.WHITE), "♖");
         piecesLetter.put(Knight.getPieceInstance(Team.BLACK), "♞");
@@ -57,14 +57,6 @@ public class ChessGameDto {
     private final String whiteName;
     private final String winner;
 
-    public ChessGameDto(ChessGame chessGame) {
-        this(chessGame, MoveState.EMPTY, chessGame.getTeamScore(), DEFAULT_NAMES);
-    }
-
-    public ChessGameDto(ChessGame chessGame, Map<Team, String> names) {
-        this(chessGame, MoveState.EMPTY, chessGame.getTeamScore(), names);
-    }
-
     public ChessGameDto(ChessGame chessGame, MoveState moveState, TeamScore teamScore,
         Map<Team, String> names) {
         NullChecker.validateNotNull(chessGame, moveState);
@@ -84,6 +76,10 @@ public class ChessGameDto {
         this.winner = teamScore.getWinners().stream()
             .map(names::get)
             .collect(Collectors.joining(", "));
+    }
+
+    public ChessGameDto(ChessGame chessGame, Map<Team, String> names) {
+        this(chessGame, MoveState.EMPTY, chessGame.getTeamScore(), names);
     }
 
     public ChessGameDto(TeamScore teamScore, Map<Team, String> names) {

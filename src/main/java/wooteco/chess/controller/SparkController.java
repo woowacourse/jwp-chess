@@ -58,7 +58,7 @@ public class SparkController {
         get("/end", (req, res) -> {
             chessService.end();
             Map<String, Object> model = new HashMap<>();
-            return render(model, "chessGameEnd.html");
+            return render(model, "chessGameEnd.hbs");
         });
     }
 

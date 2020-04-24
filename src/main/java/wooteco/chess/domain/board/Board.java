@@ -4,18 +4,20 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class Board {
-    private final Map<Position, Piece> board;
+    private final Map<Position, Piece> board = new HashMap<>();
 
     public Board() {
         this(BoardInitializer.initializeAll());
     }
 
     public Board(Map<Position, Piece> board) {
-        this.board = board;
+        this.board.clear();
+        this.board.putAll(board);
     }
 
     public void updateBoard(Position sourcePosition, Position targetPosition) {

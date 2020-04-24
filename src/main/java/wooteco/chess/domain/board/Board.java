@@ -57,7 +57,7 @@ public class Board {
 	}
 
 	private void initAllPawns(Team team, int pawnsRow) {
-		for (int i = 0; i < MAXIMUM_POSITION_NUMBER; i++) {
+		for (int i = 0; i < MAX_POSITION_NUMBER; i++) {
 			pieces.put(Position.of((char)('a' + i) + String.valueOf(pawnsRow)), new Pawn(team));
 		}
 	}

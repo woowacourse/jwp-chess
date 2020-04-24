@@ -8,8 +8,8 @@ import java.util.Objects;
 import wooteco.chess.domain.piece.Team;
 
 public class Position {
-	public static final int MINIMUM_POSITION_NUMBER = 1;
-	public static final int MAXIMUM_POSITION_NUMBER = 8;
+	public static final int MIN_POSITION_NUMBER = 1;
+	public static final int MAX_POSITION_NUMBER = 8;
 	private static final int KNIGHT_MULTIPLICATION_OF_BETWEEN_FILE_DISTANCE_AND_RANK_DISTANCE = 2;
 	private static final Map<String, Position> CACHE = new HashMap<>();
 
@@ -18,8 +18,8 @@ public class Position {
 	}
 
 	private static void initPositionCache() {
-		for (int col = MINIMUM_POSITION_NUMBER; col <= MAXIMUM_POSITION_NUMBER; col++) {
-			for (int row = MINIMUM_POSITION_NUMBER; row <= MAXIMUM_POSITION_NUMBER; row++) {
+		for (int col = MIN_POSITION_NUMBER; col <= MAX_POSITION_NUMBER; col++) {
+			for (int row = MIN_POSITION_NUMBER; row <= MAX_POSITION_NUMBER; row++) {
 				CACHE.put(getKey(col, row), new Position(new Cell(col), new Cell(row)));
 			}
 		}

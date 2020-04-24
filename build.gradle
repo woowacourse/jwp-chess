@@ -17,6 +17,7 @@ dependencies {
     implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
     implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.1'
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -26,6 +27,7 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     runtimeOnly 'com.h2database:h2'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }
 
 test {

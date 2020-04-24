@@ -1,5 +1,8 @@
 package wooteco.chess.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.ChessGameDao;
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.exception.InvalidTurnException;
@@ -13,10 +16,11 @@ import wooteco.chess.dto.StatusDto;
 import wooteco.chess.dto.TurnDto;
 import wooteco.chess.service.exception.InvalidGameException;
 
+@Service
 public class ChessGameService {
 	private final ChessGameDao chessGameDao;
 
-	public ChessGameService(ChessGameDao chessGameDao) {
+	public ChessGameService(@Qualifier("JdbcChessGameDao") ChessGameDao chessGameDao) {
 		this.chessGameDao = chessGameDao;
 	}
 

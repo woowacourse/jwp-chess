@@ -5,15 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.state.State;
 import wooteco.chess.domain.game.state.StateFactory;
 import wooteco.chess.dto.BoardDto;
 
+@Component("JdbcChessGameDao")
 public class JdbcChessGameDao implements ChessGameDao {
 	private final JdbcTemplate jdbcTemplate;
 
-	public JdbcChessGameDao(JdbcTemplate jdbcTemplate) {
+	public JdbcChessGameDao(@Qualifier("CustomJdbcTemplate") JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 

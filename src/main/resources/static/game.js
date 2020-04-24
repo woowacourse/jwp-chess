@@ -89,14 +89,14 @@ function drawGameList(games) {
     games.forEach(id => chessGamesElement.innerHTML += templateGame(id))
 }
 
-function drawChessGame({boardDto, turnDto, statusDto, isFinished}) {
+function drawChessGame({boardDto, turnDto, statusDto, finished}) {
     drawBoard(boardDto.board)
     drawStatus(statusDto)
-    drawResult(statusDto, isFinished)
+    drawResult(statusDto, finished)
 }
 
-function drawResult(statusDto, isFinished) {
-    if (!isFinished) {
+function drawResult(statusDto, finished) {
+    if (!finished) {
         return
     }
     show(chessResultElement)

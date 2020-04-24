@@ -7,17 +7,17 @@
 </head>
 <body>
 {{#if haveLastGameRecord}}
-<button onclick="playLastGame()">기존 게임 시작하기</button>
+    <button onclick="playLastGame()">기존 게임 시작하기</button>
 {{/if}}
 <button onclick="playNewGame()">새 게임 시작하기</button>
 </body>
 <script>
     const playLastGame = function () {
-        window.location = "http://localhost:4567/playing/lastGame";
+        window.location = "http://localhost:8080/playing/lastGame";
     };
 
     const playNewGame = function () {
-        window.location = "http://localhost:4567/playing/newGame";
+        window.location = "http://localhost:8080/playing/newGame";
     }
 </script>
 </html>

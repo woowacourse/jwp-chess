@@ -1,26 +1,28 @@
 package wooteco.chess.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import wooteco.chess.controller.command.Command;
 import wooteco.chess.dao.ChessDao;
 import wooteco.chess.domain.ChessManager;
-import wooteco.chess.dto.CommandDto;
+import wooteco.chess.dto.Commands;
 import wooteco.chess.dto.GameResponse;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class ChessService {
     private static final String MOVE_ERROR_MESSAGE = "이동할 수 없는 곳입니다. 다시 입력해주세요";
+    private static final String MOVE_DELIMETER = " ";
 
+    @Autowired
     private ChessDao chessDao;
-    private ChessManager chessManager = new ChessManager();
-
-    public ChessService(ChessDao chessDao) {
-        this.chessDao = chessDao;
-    }
+    private ChessManager chessManager;
 
     public void start() {
+        chessManager = new ChessManager();
         chessManager.start();
     }
 
@@ -29,14 +31,14 @@ public class ChessService {
     }
 
     public void playLastGame() {
-        List<CommandDto> commands = chessDao.selectCommands();
-        for (CommandDto command : commands) {
+        List<Commands> commands = chessDao.findAll();
+        for (Commands command : commands) {
             Command.MOVE.apply(chessManager, command.get());
         }
     }
 
     public void move(String source, String target) {
-        String command = String.join(" ", new String[]{"move", source, target});
+        String command = String.join(MOVE_DELIMETER, new String[]{"move", source, target});
 
         try {
             Command.MOVE.apply(chessManager, command);
@@ -47,6 +49,7 @@ public class ChessService {
 
         if (!chessManager.isPlaying()) {
             initializeDatabase();
+            chessManager.end();
         }
     }
 
@@ -55,12 +58,13 @@ public class ChessService {
     }
 
     public Map<String, Object> makeStartResponse() {
+        System.out.println(chessManager.toString() + "체스매니저 ");
         GameResponse gameResponse = new GameResponse(chessManager);
         Map<String, Object> model = new HashMap<>();
         model.put("chessPieces", gameResponse.getTiles());
         model.put("currentTeam", gameResponse.getCurrentTeam());
         model.put("currentTeamScore", gameResponse.getCurrentTeamScore());
-        if (!chessDao.selectCommands().isEmpty()) {
+        if (!chessDao.findAll().isEmpty()) {
             model.put("haveLastGameRecord", "true");
         }
 
@@ -79,10 +83,10 @@ public class ChessService {
     }
 
     private void initializeDatabase() {
-        chessDao.clearCommands();
+        chessDao.deleteAll();
     }
 
     private void saveToDatabase(String command) {
-        chessDao.addCommand(new CommandDto(command));
+        chessDao.save(new Commands(command));
     }
 }

@@ -11,20 +11,20 @@
     <h1 id="title">크리스마스 체스</h1>
     <div id="chessBoard">
         {{#chessPieces}}
-        <div id="{{position}}" class="tile">
-            {{#if piece}}
-            <img alt="position" class="tileImage" src="../images/{{piece}}.png"/>
-            {{else}}
-            <img alt="empty" src="../images/blank.png"/>
-            {{/if}}
-        </div>
+            <div id="{{position}}" class="tile">
+                {{#if piece}}
+                    <img alt="position" class="tileImage" src="../images/{{piece}}.png"/>
+                {{else}}
+                    <img alt="empty" src="../images/blank.png"/>
+                {{/if}}
+            </div>
         {{/chessPieces}}
     </div>
 
     <div id="commandUI">
         <div id="current_team">{{currentTeam}}팀 차례입니다.</div>
         {{#if currentTeamScore}}
-        <div id="chess_score">{{currentTeam}}팀의 현재 점수는 {{currentTeamScore}}점 입니다.</div>
+            <div id="chess_score">{{currentTeam}}팀의 현재 점수는 {{currentTeamScore}}점 입니다.</div>
         {{/if}}
 
         <form action="/end" method="get">

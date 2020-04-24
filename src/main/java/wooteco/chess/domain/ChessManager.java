@@ -6,7 +6,6 @@ import wooteco.chess.domain.piece.Team;
 import java.util.Optional;
 
 public class ChessManager {
-
     private ChessRunner chessRunner;
     private boolean playing;
 
@@ -20,7 +19,7 @@ public class ChessManager {
     }
 
     public void move(String source, String target) {
-        chessRunner.update(source, target);
+        chessRunner.updateBoard(source, target);
         playing = stopGameIfWinnerExists();
     }
 

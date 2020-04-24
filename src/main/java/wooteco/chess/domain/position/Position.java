@@ -3,7 +3,6 @@ package wooteco.chess.domain.position;
 import java.util.Objects;
 
 public class Position {
-
     private final File file;
     private final Rank rank;
 

@@ -18,14 +18,14 @@ public class ChessRunner {
         this.currentTeam = Team.WHITE;
     }
 
-    public void update(String source, String target) {
+    public void updateBoard(String source, String target) {
         Position sourcePosition = Positions.of(source);
         Position targetPosition = Positions.of(target);
         Piece selectedPiece = this.board.getPiece(sourcePosition);
 
         validateMovement(sourcePosition, targetPosition, selectedPiece);
-        updateBoard(sourcePosition, targetPosition);
-        changeTeam();
+        this.board.updateBoard(sourcePosition, targetPosition);
+        this.currentTeam = currentTeam.changeTeam();
     }
 
     private void validateMovement(Position sourcePosition, Position targetPosition, Piece selectedPiece) {
@@ -38,12 +38,8 @@ public class ChessRunner {
         }
     }
 
-    private void updateBoard(Position sourcePosition, Position targetPosition) {
-        this.board.updateBoard(sourcePosition, targetPosition);
-    }
-
-    private void changeTeam() {
-        this.currentTeam = currentTeam.changeTeam();
+    public void clearBoard() {
+        board.clear();
     }
 
     public Optional<Team> findWinner() {

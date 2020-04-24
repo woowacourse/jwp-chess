@@ -14,7 +14,7 @@ public class BoardDto {
         this.board = toDto(board);
     }
 
-    public Map<String, String> toDto(Board board) {
+    private Map<String, String> toDto(Board board) {
         Map<String, String> parseResult = board.get()
                 .entrySet()
                 .stream()

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RightDownStrategy implements DirectionStrategy {
-
     @Override
     public List<Position> findPath(Position source, Position target) {
         List<Position> path = new ArrayList<>();

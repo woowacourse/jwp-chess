@@ -1,9 +1,13 @@
 package wooteco.chess.dto;
 
-public class CommandDto {
+import org.springframework.data.annotation.Id;
+
+public class Commands {
+    @Id
+    private Long id;
     private String command;
 
-    public CommandDto(String command) {
+    public Commands(String command) {
         this.command = command;
     }
 

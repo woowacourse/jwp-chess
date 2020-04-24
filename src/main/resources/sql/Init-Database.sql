@@ -19,3 +19,6 @@ turn varchar(5)
 -- 	board VARCHAR(64) NOT NULL,
 --     turn VARCHAR(5) NOT NULL
 -- );
+=======
+-- );
+>>>>>>> origin/hir59-step2

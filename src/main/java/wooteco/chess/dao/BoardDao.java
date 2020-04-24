@@ -12,7 +12,9 @@ import wooteco.chess.domain.piece.PieceRule;
 import wooteco.chess.exception.DataAccessException;
 
 public class BoardDao {
-    JdbcTemplate template = new JdbcTemplate();
+    private static final int FIRST_INDEX = 0;
+
+    private JdbcTemplate template = new JdbcTemplate();
 
     public Pieces findByRoomId(int roomId) {
         try {
@@ -24,7 +26,7 @@ public class BoardDao {
                     String position = rs.getString("position");
                     String team = rs.getString("team");
                     positionPairs.put(new Position(position),
-                        PieceRule.makeNewPiece(type.charAt(0), position, team));
+                        PieceRule.makeNewPiece(type.charAt(FIRST_INDEX), position, team));
                 }
                 return new Pieces(positionPairs);
             };

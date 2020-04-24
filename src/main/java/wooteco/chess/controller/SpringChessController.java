@@ -107,4 +107,13 @@ public class SpringChessController {
             return modelAndView;
         }
     }
+
+    @GetMapping("/loading")
+    public ModelAndView loadGame() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("chess");
+        modelAndView.addObject("normalStatus", NormalStatus.YES.isNormalStatus());
+
+        return modelAndView;
+    }
 }

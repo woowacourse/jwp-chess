@@ -43,7 +43,7 @@ public class PieceDao {
 			return new PieceDto(pieceId, pieceDto.getGameId(), pieceDto.getSymbol(), pieceDto.getTeam(),
 				pieceDto.getPosition());
 		} catch (SQLException e) {
-			throw new SQLAccessException(TABLE_NAME + SQLAccessException.SAVE_FAIL);
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 
@@ -57,7 +57,7 @@ public class PieceDao {
 			pstmt.setLong(2, id);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLAccessException(TABLE_NAME + SQLAccessException.UPDATE_FAIL);
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 
@@ -74,7 +74,7 @@ public class PieceDao {
 			}
 			return mapPieceDto(rs);
 		} catch (SQLException e) {
-			throw new SQLAccessException(TABLE_NAME + SQLAccessException.FIND_FAIL);
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 
@@ -94,7 +94,7 @@ public class PieceDao {
 				pieces.add(piece);
 			}
 		} catch (SQLException e) {
-			throw new SQLAccessException(TABLE_NAME + SQLAccessException.FIND_FAIL);
+			throw new SQLAccessException(e.getMessage());
 		}
 		return pieces;
 	}
@@ -113,7 +113,7 @@ public class PieceDao {
 			}
 			return mapPieceDto(rs);
 		} catch (SQLException e) {
-			throw new SQLAccessException(TABLE_NAME + SQLAccessException.FIND_FAIL);
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 
@@ -141,7 +141,7 @@ public class PieceDao {
 		) {
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLAccessException(TABLE_NAME + SQLAccessException.DELETE_FAIL);
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 

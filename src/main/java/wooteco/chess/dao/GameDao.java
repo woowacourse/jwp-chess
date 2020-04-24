@@ -31,11 +31,11 @@ public class GameDao {
 
 			ResultSet generatedKeys = pstmt.getGeneratedKeys();
 			if (!generatedKeys.next()) {
-				throw new SQLAccessException(TABLE_NAME + SQLAccessException.SAVE_FAIL);
+				throw new SQLAccessException();
 			}
 			return new GameDto(generatedKeys.getLong(1), gameDto.getTurn());
 		} catch (SQLException e) {
-			throw new SQLAccessException(TABLE_NAME + SQLAccessException.SAVE_FAIL);
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 
@@ -49,7 +49,7 @@ public class GameDao {
 			pstmt.setLong(2, gameDto.getId());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLAccessException(TABLE_NAME + SQLAccessException.UPDATE_FAIL);
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 
@@ -66,7 +66,7 @@ public class GameDao {
 			}
 			return Optional.of(new GameDto(rs.getLong("id"), rs.getString("turn")));
 		} catch (SQLException e) {
-			throw new SQLAccessException(TABLE_NAME + SQLAccessException.FIND_FAIL);
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 
@@ -78,7 +78,7 @@ public class GameDao {
 		) {
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLAccessException(TABLE_NAME + SQLAccessException.DELETE_FAIL);
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 }

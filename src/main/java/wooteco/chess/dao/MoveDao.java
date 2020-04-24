@@ -7,10 +7,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.Game;
 import wooteco.chess.domain.board.Path;
 import wooteco.chess.dto.MoveRequestDto;
 
+@Component
 public class MoveDao implements MySqlJdbcTemplateDao {
 
     public void addMove(final Game game, final Path path) throws SQLException {

@@ -1,10 +1,10 @@
 package wooteco.chess;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
+import static spark.Spark.post;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
@@ -23,7 +23,7 @@ public class SparkChessApplication {
         get("/main", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             model.put("rows", chessService.getEmptyRowsDto());
-            return render(model, "main.html");
+            return render(model, "main.hbs");
         });
 
         post("/start", (req, res) -> {
@@ -37,7 +37,7 @@ public class SparkChessApplication {
             model.put("whiteUser", whiteUserName);
             model.put("rows", chessService.getRowsDto(blackUser, whiteUser));
             model.put("turn", chessService.getTurn(blackUser));
-            return render(model, "board.html");
+            return render(model, "board.hbs");
         });
 
         post("/path", (req, res) -> {
@@ -77,7 +77,7 @@ public class SparkChessApplication {
             chessService.save(new User(blackUserName), new User(whiteUserName));
             Map<String, Object> model = new HashMap<>();
             model.put("rows", chessService.getEmptyRowsDto());
-            return render(model, "main.html");
+            return render(model, "main.hbs");
         });
 
         post("/end", (req, res) -> {
@@ -86,7 +86,7 @@ public class SparkChessApplication {
             String whiteUserName = req.queryParams("whiteUserName");
             chessService.delete(new User(blackUserName), new User(whiteUserName));
             model.put("rows", chessService.getEmptyRowsDto());
-            return render(model, "main.html");
+            return render(model, "main.hbs");
         });
     }
 

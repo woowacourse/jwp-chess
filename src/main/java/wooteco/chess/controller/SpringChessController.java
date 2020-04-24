@@ -36,7 +36,7 @@ public class SpringChessController {
 	@GetMapping("/chess")
 	public String renderBoard(@RequestParam("game_id") String gameId, Model model) {
 		service.initialize(gameId);
-		model.mergeAttributes(service.getBoard(gameId));
+		model.addAllAttributes(service.getBoard(gameId));
 		return "chess";
 	}
 
@@ -54,5 +54,11 @@ public class SpringChessController {
 	@ResponseBody
 	public String handleException(IllegalArgumentException e) {
 		return e.getMessage();
+	}
+
+	@GetMapping("/status")
+	public String renderResult(@RequestParam("game_id") String gameId, Model model) {
+		model.addAllAttributes(service.getResult(gameId));
+		return "status";
 	}
 }

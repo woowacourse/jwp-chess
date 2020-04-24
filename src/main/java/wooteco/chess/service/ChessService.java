@@ -1,5 +1,7 @@
 package wooteco.chess.service;
 
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.BoardDao;
 import wooteco.chess.dao.RoomDao;
 import wooteco.chess.domain.Board;
@@ -8,6 +10,7 @@ import wooteco.chess.domain.Position;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
 
+@Service
 public class ChessService {
     private final BoardDao boardDao;
     private final RoomDao roomDao;

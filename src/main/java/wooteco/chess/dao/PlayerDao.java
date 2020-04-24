@@ -6,10 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.player.Player;
 import wooteco.chess.domain.player.Record;
 import wooteco.chess.domain.player.Result;
 
+@Component
 public class PlayerDao implements MySqlJdbcTemplateDao {
 
     public void addInitialPlayers() throws SQLException {
@@ -50,6 +53,7 @@ public class PlayerDao implements MySqlJdbcTemplateDao {
                 int playerId = resultSet.getInt("id");
                 return new Player(playerId, username, password, record);
             }
+            resultSet.close();
             throw new SQLException();
         }
     }

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.GameDao;
 import wooteco.chess.dao.MoveDao;
 import wooteco.chess.dao.PlayerDao;
@@ -19,10 +21,17 @@ import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
 import wooteco.chess.dto.MoveRequestDto;
 
+@Service
 public class ChessServiceImpl implements ChessService {
-    private final GameDao gameDao = new GameDao();
-    private final MoveDao moveDao = new MoveDao();
-    private final PlayerDao playerDao = new PlayerDao();
+    private final GameDao gameDao;
+    private final MoveDao moveDao;
+    private final PlayerDao playerDao;
+
+    public ChessServiceImpl(final GameDao gameDao, final MoveDao moveDao, final PlayerDao playerDao) {
+        this.gameDao = gameDao;
+        this.moveDao = moveDao;
+        this.playerDao = playerDao;
+    }
 
     @Override
     public Game findGameById(final int id) throws SQLException {

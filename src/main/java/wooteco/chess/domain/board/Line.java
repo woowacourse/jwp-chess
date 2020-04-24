@@ -28,7 +28,7 @@ public class Line {
 
     public int countPawnOf(PlayerColor playerColor) {
         return (int)line.stream()
-                .filter(piece -> piece.is(playerColor))
+                .filter(piece -> piece.isSame(playerColor))
                 .filter(GamePiece::isPawn)
                 .count();
     }

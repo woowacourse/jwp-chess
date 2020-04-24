@@ -2,8 +2,7 @@
 체스 게임 구현을 위한 저장소
 
 ## 기능 요구 사항
-- 콘솔 UI에서 체스 게임을 할 수 있는 기능을 구현한다.
-- 1단계는 체스 게임을 할 수 있는 체스판을 초기 -화한다.
+- 1단계는 체스 게임을 할 수 있는 체스판을 초기화한다.
 - 체스판에서 말의 위치 값은 가로 위치는 왼쪽부터 a ~ h이고, 세로는 아래부터 위로 1 ~ 8로 구현한다.
 - 체스판에서 각 진영은 검은색(대문자)과 흰색(소문자) 편으로 구분한다.
 
@@ -59,20 +58,21 @@ create table user
 
 create table gameinfo
 (
-    id    int(50) auto_increment primary key,
+    id int(50) auto_increment primary key,
     black varchar(64) null,
     white varchar(64) null,
-    turn  int(12)     null,
+    turn  int(12) null,
     foreign key (black) references user(name),
     foreign key (white) references user(name)
 ); 
 
 create table board
 (
-    gameinfo_id int(50)     not null,
+    gameinfo_id int(50) not null,
     position varchar(64) not null,
-    piece    varchar(64) not null,
-    primary key(gameinfo_id, position)
+    piece varchar(64) not null,
+    primary key(gameinfo_id, position),
+    foreign key (gameinfo_id) references gameinfo(id)
 );
 
 ```

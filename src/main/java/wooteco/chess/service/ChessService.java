@@ -4,11 +4,13 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import wooteco.chess.dao.GamInfoDAO;
 import wooteco.chess.dao.UserDAO;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
+import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.gameinfo.GameInfo;
 import wooteco.chess.domain.player.User;
 import wooteco.chess.dto.LineDto;
@@ -26,34 +28,33 @@ public class ChessService {
     }
 
     public GameInfo findByUserName(User blackUser, User whiteUser) throws SQLException {
-        dbConnector = new DBConnector();
+        dbConnector = DBConnector.getInstance();
         gamInfoDAO = new GamInfoDAO(dbConnector);
-        Board board;
         if (!gamInfoDAO.findGameInfoByUser(blackUser, whiteUser).isPresent()) {
             UserDAO userDAO = new UserDAO(dbConnector);
             userDAO.addUser(blackUser);
             userDAO.addUser(whiteUser);
             gamInfoDAO.addGameInfo(BoardFactory.createInitialBoard(), blackUser, whiteUser, 0);
         }
-        board = gamInfoDAO.findGameInfoByUser(blackUser, whiteUser)
-                .orElse(BoardFactory.createInitialBoard());
+        Board board = gamInfoDAO.findGameInfoByUser(blackUser, whiteUser)
+                .orElseGet(BoardFactory::createInitialBoard);
         int turn = gamInfoDAO.findTurnByUser(blackUser, whiteUser)
-                .orElse(0);
+                .orElseGet(() -> 0);
         GameInfo gameInfo = GameInfo.from(board, turn);
         games.put(blackUser, gameInfo);
         return gameInfo;
     }
 
-    public GameInfo move(User blackUser, String source, String target) {
-        GameInfo gameInfo = games.get(blackUser)
+    public GameInfo move(User user, String source, String target) {
+        GameInfo gameInfo = games.get(user)
                 .move(source, target);
-        games.put(blackUser, gameInfo);
+        games.put(user, gameInfo);
         return gameInfo;
     }
 
     public void save(User blackUser, User whiteUser) throws SQLException {
         GameInfo gameInfo = games.get(blackUser);
-        gamInfoDAO.saveGameInfoByUserName(gameInfo.getBoard(), blackUser, whiteUser, gameInfo.getTurn());
+        gamInfoDAO.saveGameInfoByUserName(gameInfo.getBoard(), blackUser, whiteUser, gameInfo.getStatus());
         games.remove(blackUser);
     }
 
@@ -67,7 +68,11 @@ public class ChessService {
     }
 
     public List<String> searchPath(User blackUser, String sourceInput) {
-        return games.get(blackUser).searchPath(sourceInput);
+        return games.get(blackUser)
+                .searchPath(sourceInput)
+                .stream()
+                .map(Position::getName)
+                .collect(Collectors.toList());
     }
 
     public List<LineDto> getEmptyRowsDto() {
@@ -79,25 +84,32 @@ public class ChessService {
         return RowsDtoConverter.convertFrom(gameInfo.getBoard());
     }
 
-    public int getTurn(User blackUser) {
-        return games.get(blackUser)
+    public int getTurn(User user) {
+        return games.get(user)
+                .getStatus()
                 .getTurn();
     }
 
-    public double calculateWhiteScore(User blackUser) {
-        return games.get(blackUser).getWhiteScore();
+    public double calculateWhiteScore(User user) {
+        return games.get(user)
+                .getWhiteScore()
+                .getScore();
     }
 
-    public double calculateBlackScore(User blackUser) {
-        return games.get(blackUser).getBlackScore();
+    public double calculateBlackScore(User user) {
+        return games.get(user)
+                .getBlackScore()
+                .getScore();
     }
 
-    public boolean checkGameNotFinished(User blackUser) {
-        return games.get(blackUser)
+    public boolean checkGameNotFinished(User user) {
+        return games.get(user)
+                .getStatus()
                 .isNotFinished();
     }
 
-    public Board getBoard(User blackUser) {
-        return games.get(blackUser).getBoard();
+    public Board getBoard(User user) {
+        return games.get(user)
+                .getBoard();
     }
 }

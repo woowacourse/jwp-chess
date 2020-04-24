@@ -1,7 +1,7 @@
 package wooteco.chess.domain.piece;
 
-import static wooteco.chess.domain.piece.Direction.*;
 import static org.assertj.core.api.Assertions.*;
+import static wooteco.chess.domain.piece.Direction.*;
 
 import java.util.stream.Stream;
 

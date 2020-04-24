@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
+import wooteco.chess.domain.board.Status;
 import wooteco.chess.domain.player.User;
 import wooteco.chess.util.DBConnector;
 
@@ -56,9 +57,9 @@ public class GamInfoDAO {
         return Optional.ofNullable(rs.getInt("turn"));
     }
 
-    public void saveGameInfoByUserName(Board board, User blackUser, User whiteUser, int turn) throws SQLException {
+    public void saveGameInfoByUserName(Board board, User blackUser, User whiteUser, Status status) throws SQLException {
         dbConnector.executeUpdate("UPDATE gameinfo SET turn = ? WHERE black = ? AND white = ?",
-                String.valueOf(turn), blackUser.getName(), whiteUser.getName());
+                String.valueOf(status.getTurn()), blackUser.getName(), whiteUser.getName());
 
         ResultSet rs = findGameInfoResultSet(blackUser, whiteUser);
 
@@ -71,11 +72,11 @@ public class GamInfoDAO {
         boardDAO.updateBoardByGameInfoId(board, gameInfoId);
     }
 
-    public boolean deleteGameInfoByUser(User blackUser, User whiteUser) throws SQLException {
+    public void deleteGameInfoByUser(User blackUser, User whiteUser) throws SQLException {
         ResultSet rs = findGameInfoResultSet(blackUser, whiteUser);
 
         if (!rs.next()) {
-            return false;
+            return;
         }
         int gameInfoId = rs.getInt("id");
 
@@ -83,8 +84,6 @@ public class GamInfoDAO {
 
         dbConnector.executeUpdate("DELETE FROM gameinfo WHERE black = ? AND white = ?", blackUser.getName(),
                 whiteUser.getName());
-
-        return !findGameInfoByUser(blackUser, whiteUser).isPresent();
     }
 
     private ResultSet findGameInfoResultSet(User blackUser, User whiteUser) throws SQLException {

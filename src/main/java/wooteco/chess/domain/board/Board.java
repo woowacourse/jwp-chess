@@ -69,8 +69,8 @@ public class Board {
         }
     }
 
-    public boolean isSameColor(GamePiece gamePiece, Position position) {
-        return board.get(position).isSameColor(gamePiece);
+    public boolean isNotSameColor(GamePiece gamePiece, Position position) {
+        return !board.get(position).isSameColor(gamePiece);
     }
 
     public boolean isNotEmpty(Position position) {
@@ -88,12 +88,12 @@ public class Board {
 
     public boolean isBlack(String position) {
         GamePiece gamePiece = board.get(Position.from(position));
-        return gamePiece.is(PlayerColor.BLACK);
+        return gamePiece.isSame(PlayerColor.BLACK);
     }
 
     public boolean isWhite(String position) {
         GamePiece gamePiece = board.get(Position.from(position));
-        return gamePiece.is(PlayerColor.WHITE);
+        return gamePiece.isSame(PlayerColor.WHITE);
     }
 
     public Map<Position, GamePiece> getBoard() {

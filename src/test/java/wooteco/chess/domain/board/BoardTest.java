@@ -1,7 +1,7 @@
 package wooteco.chess.domain.board;
 
-import static wooteco.chess.domain.player.PlayerColor.*;
 import static org.assertj.core.api.Assertions.*;
+import static wooteco.chess.domain.player.PlayerColor.*;
 
 import java.util.HashMap;
 import java.util.Map;

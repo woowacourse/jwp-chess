@@ -28,9 +28,7 @@ public class UserDAO {
         return Optional.ofNullable(new User(rs.getString("name")));
     }
 
-    public boolean deleteUserByUserName(String name) throws SQLException {
+    public void deleteUserByUserName(String name) throws SQLException {
         dbConnector.executeUpdate("DELETE FROM user WHERE name = ?", name);
-
-        return !findByUserName(name).isPresent();
     }
 }

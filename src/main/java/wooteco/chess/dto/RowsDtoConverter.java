@@ -9,9 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.board.Row;
-import wooteco.chess.domain.piece.GamePiece;
 
 public class RowsDtoConverter {
 

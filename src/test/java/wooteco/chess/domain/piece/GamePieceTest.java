@@ -1,7 +1,7 @@
 package wooteco.chess.domain.piece;
 
-import static wooteco.chess.domain.player.PlayerColor.*;
 import static org.assertj.core.api.Assertions.*;
+import static wooteco.chess.domain.player.PlayerColor.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,7 +62,7 @@ class GamePieceTest {
     @DisplayName("gamepiece player가 white인지 확인")
     @MethodSource("createWhitePieces")
     void isWhite(GamePiece gamePiece, boolean expected) {
-        assertThat(gamePiece.is(WHITE)).isEqualTo(expected);
+        assertThat(gamePiece.isSame(WHITE)).isEqualTo(expected);
     }
 
     static Stream<Arguments> createWhitePieces() {

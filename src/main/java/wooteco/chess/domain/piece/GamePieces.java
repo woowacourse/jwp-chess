@@ -18,15 +18,15 @@ public enum GamePieces {
     WHITE_BISHOP("b", () -> new Bishop(WHITE)),
     BLACK_KNIGHT("N", () -> new Knight(BLACK)),
     WHITE_KNIGHT("n", () -> new Knight(WHITE)),
-    BLACk_ROOK("R", () -> new Rook(BLACK)),
+    BLACK_ROOK("R", () -> new Rook(BLACK)),
     WHITE_ROOK("r", () -> new Rook(WHITE)),
     BLACK_PAWN("P", () -> new Pawn(BLACK)),
     WHITE_PAWN("p", () -> new Pawn(WHITE));
 
-    private static Map<String, Supplier> gamePieces;
+    private static Map<String, Supplier> gamePieceSupplier;
 
     static {
-        gamePieces = Arrays.stream(GamePieces.values())
+        gamePieceSupplier = Arrays.stream(GamePieces.values())
                 .collect(Collectors.toMap(gamePiece -> gamePiece.name, gamePiece -> gamePiece.creator));
     }
 
@@ -46,7 +46,7 @@ public enum GamePieces {
 
     public static GamePiece from(String name) {
         try {
-            return (GamePiece)gamePieces.get(name).get();
+            return (GamePiece)gamePieceSupplier.get(name).get();
         } catch (NullPointerException e) {
             return EmptyPiece.getInstance();
         }

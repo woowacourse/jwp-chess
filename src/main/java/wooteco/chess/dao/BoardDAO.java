@@ -48,9 +48,7 @@ public class BoardDAO {
         return findBoardByGameInfoId(gameInfoId);
     }
 
-    public boolean deleteBoardByGameInfoId(int gameInfoId) throws SQLException {
+    public void deleteBoardByGameInfoId(int gameInfoId) throws SQLException {
         dbConnector.executeUpdate("DELETE FROM board WHERE gameinfo_id = ?", String.valueOf(gameInfoId));
-
-        return findBoardByGameInfoId(gameInfoId) == null;
     }
 }

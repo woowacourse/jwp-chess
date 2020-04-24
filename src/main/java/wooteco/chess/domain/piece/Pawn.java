@@ -76,7 +76,7 @@ public class Pawn extends GamePiece {
     }
 
     private void checkKillPosition(Board board, Position position, List<Position> paths) {
-        if (position != null && board.isNotEmpty(position) && !board.isSameColor(this, position)) {
+        if (position != null && board.isNotEmpty(position) && !board.isNotSameColor(this, position)) {
             paths.add(position);
         }
     }

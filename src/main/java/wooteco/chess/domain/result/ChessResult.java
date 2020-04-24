@@ -16,6 +16,7 @@ import wooteco.chess.domain.player.PlayerColor;
 public class ChessResult {
 
     private static final int MINIMUM_PAWN_COUNT = 2;
+
     private Map<PlayerColor, Score> result;
 
     public ChessResult(Map<PlayerColor, Score> result) {
@@ -46,24 +47,20 @@ public class ChessResult {
         return gamePieces.stream()
                 .distinct()
                 .filter(gamePiece -> gamePiece != EmptyPiece.getInstance())
-                .filter(gamePiece -> gamePiece.is(playerColor))
+                .filter(gamePiece -> gamePiece.isSame(playerColor))
                 .collect(Collectors.toMap(gamePiece -> gamePiece,
                         gamePiece -> Collections.frequency(gamePieces, gamePiece)));
     }
 
     private static int getSameColumnPawnCount(Map<Position, GamePiece> board, PlayerColor playerColor) {
         return Line.listByColumn(board).stream()
-                .map(column -> column.countPawnOf(playerColor))
+                .mapToInt(column -> column.countPawnOf(playerColor))
                 .filter(count -> count >= MINIMUM_PAWN_COUNT)
-                .reduce(0, Integer::sum);
+                .sum();
     }
 
-    public Score getWhiteScore() {
-        return result.get(PlayerColor.WHITE);
-    }
-
-    public Score getBlackScore() {
-        return result.get(PlayerColor.BLACK);
+    public Score getScore(PlayerColor playerColor) {
+        return result.get(playerColor);
     }
 
     public Map<PlayerColor, Score> getResult() {

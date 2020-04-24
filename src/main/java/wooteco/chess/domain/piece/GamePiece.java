@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.Position;
@@ -53,7 +52,7 @@ public abstract class GamePiece {
     private void checkKillPosition(Board board, List<Position> path, List<Position> possiblePath) {
         try {
             Position position = path.get(possiblePath.size());
-            if (board.isNotEmpty(position) && !board.isSameColor(this, position)) {
+            if (board.isNotEmpty(position) && board.isNotSameColor(this, position)) {
                 possiblePath.add(position);
             }
         } catch (IndexOutOfBoundsException ignored) {
@@ -87,7 +86,7 @@ public abstract class GamePiece {
         return path.subList(0, path.indexOf(target));
     }
 
-    public boolean is(PlayerColor playerColor) {
+    public boolean isSame(PlayerColor playerColor) {
         return playerColor.equals(this.playerColor);
     }
 

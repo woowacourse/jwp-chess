@@ -5,12 +5,12 @@ import static spark.Spark.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import wooteco.chess.domain.player.User;
-import wooteco.chess.service.ChessService;
-import wooteco.chess.util.JsonTransformer;
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import wooteco.chess.domain.player.User;
+import wooteco.chess.service.ChessService;
+import wooteco.chess.util.JsonTransformer;
 
 public class SparkChessApplication {
 

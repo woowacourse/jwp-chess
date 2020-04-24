@@ -1,7 +1,7 @@
 package wooteco.chess.domain.piece;
 
-import static wooteco.chess.domain.player.PlayerColor.*;
 import static org.assertj.core.api.Assertions.*;
+import static wooteco.chess.domain.player.PlayerColor.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,7 +22,6 @@ import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.exception.InvalidMovementException;
 import wooteco.chess.domain.player.PlayerColor;
-import wooteco.chess.domain.player.User;
 
 class BishopTest {
 

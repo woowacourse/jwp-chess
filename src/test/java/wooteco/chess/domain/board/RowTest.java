@@ -1,7 +1,7 @@
 package wooteco.chess.domain.board;
 
-import static wooteco.chess.domain.board.Row.*;
 import static org.assertj.core.api.Assertions.*;
+import static wooteco.chess.domain.board.Row.*;
 
 import java.util.stream.Stream;
 

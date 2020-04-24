@@ -8,10 +8,16 @@ import java.sql.SQLException;
 
 public class DBConnector {
 
+    private static DBConnector INSTANCE = new DBConnector();
+
     private Connection connection;
 
-    public DBConnector() {
+    private DBConnector() {
         this.connection = connect();
+    }
+
+    public static DBConnector getInstance() {
+        return INSTANCE;
     }
 
     private Connection connect() {
@@ -52,6 +58,7 @@ public class DBConnector {
 
     public ResultSet executeQuery(String query, String... args) throws SQLException {
         PreparedStatement pstmt = connection.prepareStatement(query);
+
         for (int i = 1; i <= args.length; i++) {
             pstmt.setString(i, args[i - 1]);
         }
@@ -59,11 +66,12 @@ public class DBConnector {
     }
 
     public int executeUpdate(String query, String... args) throws SQLException {
-        PreparedStatement pstmt = connection.prepareStatement(query);
-        for (int i = 1; i <= args.length; i++) {
-            pstmt.setString(i, args[i - 1]);
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            for (int i = 1; i <= args.length; i++) {
+                pstmt.setString(i, args[i - 1]);
+            }
+            return pstmt.executeUpdate();
         }
-        return pstmt.executeUpdate();
     }
 
     public Connection getConnection() {

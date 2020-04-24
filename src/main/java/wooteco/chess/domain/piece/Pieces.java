@@ -37,10 +37,6 @@ public class Pieces {
         return pieces.get(position).isSameColor(currentColor);
     }
 
-    public boolean isBlank(Position position) {
-        return pieces.get(position).isBlank();
-    }
-
     public Path movablePositions(Position sourcePosition) {
         Piece piece = pieces.get(sourcePosition);
         Path path = new Path(new ArrayList<>(), sourcePosition);

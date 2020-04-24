@@ -17,9 +17,13 @@ public class ChessService {
     private static final String MOVE_ERROR_MESSAGE = "이동할 수 없는 곳입니다. 다시 입력해주세요";
     private static final String MOVE_DELIMETER = " ";
 
-    @Autowired
     private ChessDao chessDao;
     private ChessManager chessManager;
+
+    @Autowired(required = false)
+    public ChessService(ChessDao chessDao) {
+        this.chessDao = chessDao;
+    }
 
     public void start() {
         chessManager = new ChessManager();
@@ -58,7 +62,6 @@ public class ChessService {
     }
 
     public Map<String, Object> makeStartResponse() {
-        System.out.println(chessManager.toString() + "체스매니저 ");
         GameResponse gameResponse = new GameResponse(chessManager);
         Map<String, Object> model = new HashMap<>();
         model.put("chessPieces", gameResponse.getTiles());
@@ -77,8 +80,11 @@ public class ChessService {
         model.put("chessPieces", gameResponse.getTiles());
         model.put("currentTeam", gameResponse.getCurrentTeam());
         model.put("currentTeamScore", gameResponse.getCurrentTeamScore());
-        chessManager.getWinner().ifPresent(winner -> model.put("winner", winner));
 
+        if (chessManager.getWinner().isPresent()) {
+            model.put("winner", chessManager.getWinner().get());
+            chessManager.clearBoard();
+        }
         return model;
     }
 

@@ -27,8 +27,8 @@ function checkSourceOrTarget(clickedPosition) {
 
 function move(source, target) {
     let moveDto = {
-        "source" : source.id,
-        "target" : target.id
+        "source": source.id,
+        "target": target.id
     };
 
     const moveInformation = {

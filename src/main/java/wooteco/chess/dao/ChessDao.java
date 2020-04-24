@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface ChessDao extends CrudRepository<Commands, Long> {
     @Override
-    List<Commands> findAll();
+    <S extends Commands> S save(S entity);
 
     @Override
     void deleteAll();
 
     @Override
-    <S extends Commands> S save(S entity);
+    List<Commands> findAll();
 }

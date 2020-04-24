@@ -15,7 +15,7 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.service.ChessService;
 
-public class SparkChessController implements ChessController {
+public class SparkChessController {
 	private static final Gson GSON = new Gson();
 	private static final int MAX_INTERVAL_SECONDS = 300;
 
@@ -33,22 +33,18 @@ public class SparkChessController implements ChessController {
 		handleException();
 	}
 
-	@Override
 	public void renderStart() {
 		get("/", this::renderStart);
 	}
 
-	@Override
 	public void renderBoard() {
 		get("/chess", this::renderBoard);
 	}
 
-	@Override
 	public void updateBoard() {
 		put("/api/move", this::updateBoard);
 	}
 
-	@Override
 	public void renderResult() {
 		get("/status", this::renderResult);
 	}

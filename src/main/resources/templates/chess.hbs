@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/chess.css">
     <link rel="stylesheet" href="/css/header.css">
-    <link rel="stylesheet" href="/css/index.css">
-    <title>우아체스 - 홈</title>
+    <title>우아체스 - 게임</title>
 </head>
 <body>
 <div class="header_box">
@@ -14,8 +14,15 @@
     </div>
 </div>
 <div class="content_box">
-    <img src="/images/woowachess_home.jpg" alt="우아체스 홈" id="woowachess_home" height="480px">
-    <a href="/chess/rooms">게임하러 가기</a>
+    {{{ table }}}
+    <form method="post" id="command_form">
+        <label for="command">명령: </label>
+        <input type="text" name="command" id="command">
+        <button type="submit" form="command_form">입력</button>
+    </form>
+    <p>
+        {{{ announcement }}}
+    </p>
 </div>
 </body>
 </html>

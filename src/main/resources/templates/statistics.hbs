@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/header.css">
-    <link rel="stylesheet" href="/css/index.css">
-    <title>우아체스 - 홈</title>
+    <link rel="stylesheet" href="/css/statistics.css">
+    <title>우아체스 - 통계</title>
 </head>
 <body>
 <div class="header_box">
@@ -14,8 +14,10 @@
     </div>
 </div>
 <div class="content_box">
-    <img src="/images/woowachess_home.jpg" alt="우아체스 홈" id="woowachess_home" height="480px">
-    <a href="/chess/rooms">게임하러 가기</a>
+    {{#status_record_with_room_names}}
+    <strong>{{roomName}} </strong> {{gameDate}}
+    <p>{{{record}}}</p>
+    {{/status_record_with_room_names}}
 </div>
 </body>
 </html>

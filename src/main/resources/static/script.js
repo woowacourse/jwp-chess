@@ -84,8 +84,9 @@ function checkKingDie() {
             }
             $('.result').show();
             $('.result > .message').html(response.message);
-            $('.result > .submit').click(() => {
+            $('.result > .submit').click(function () {
                 restart();
+                $('.result').hide();
             })
         }
     })

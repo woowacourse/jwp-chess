@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
@@ -18,12 +19,13 @@ import wooteco.chess.domain.player.Player;
 import wooteco.chess.entity.GameEntity;
 import wooteco.chess.entity.MoveEntity;
 import wooteco.chess.entity.PlayerEntity;
-import wooteco.chess.exceptions.GameNotFoundException;
+import wooteco.chess.exceptions.Game2NotFoundException;
 import wooteco.chess.exceptions.PlayerNotFoundException;
 import wooteco.chess.repository.GameRepository;
 import wooteco.chess.repository.MoveRepository;
 import wooteco.chess.repository.PlayerRepository;
 
+@Primary
 @Service
 public class SpringChessService implements ChessService {
 
@@ -39,25 +41,29 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public Map<Integer, Map<Side, Player>> addGame(final Player white, final Player black) {
-        HashMap<Integer, Map<Side, Player>> result = new HashMap<>();
-        GameEntity newGame = gameRepository.save(new GameEntity(new Game(white, black)));
+    public Map<String, Map<Side, Player>> addGame(final Player white, final Player black) {
+        HashMap<String, Map<Side, Player>> result = new HashMap<>();
+        GameEntity entity = new GameEntity(new Game(white, black));
+        gameRepository.addGame(entity.getId(), entity.getWhiteId(), entity.getBlackId());
+        GameEntity newGame = gameRepository.findById(entity.getId()).get();
+        // Game2Entity newGame = gameRepository.save(new Game2Entity(new Game2(white, black)));
+        System.out.println("@@@@@@@@@@@@@@@@@@" + newGame);
         // TODO: 플레어어 db 에서 가져오기
         result.put(newGame.getId(), newGame.toModel(white, black).getPlayers());
         return result;
     }
 
     @Override
-    public Game findGameById(final int id) {
-        GameEntity gameEntity = gameRepository.findById(id)
-            .orElseThrow(() -> new GameNotFoundException(id));
+    public Game findGameById(final String id) {
+        GameEntity gameEntity = gameRepository.findById(id.toString())
+            .orElseThrow(() -> new Game2NotFoundException(id));
         Player white = findPlayerById(gameEntity.getWhiteId());
         Player black = findPlayerById(gameEntity.getBlackId());
         Game game = gameEntity.toModel(white, black);
         return movesRecoveredGame(id, game);
     }
 
-    private Game movesRecoveredGame(final int id, final Game game) {
+    private Game movesRecoveredGame(final String id, final Game game) {
         moveRepository.findAllByGameId(id)
             .forEach(move -> game.move(move.getStart(), move.getEnd()));
         return game;
@@ -70,18 +76,18 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public Board findBoardById(final int id) {
+    public Board findBoardById(final String id) {
         return findGameById(id).getBoard();
     }
 
     @Override
-    public Board resetGameById(final int id) {
+    public Board resetGameById(final String id) {
         moveRepository.deleteAllByGameId(id);
         return findBoardById(id);
     }
 
     @Override
-    public boolean finishGameById(final int id) {
+    public boolean finishGameById(final String id) {
         Game game = findGameById(id);
         game.finish();
         saveGameResultToPlayers(game);
@@ -96,12 +102,12 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public double getScoreById(final int id, final Side side) {
+    public double getScoreById(final String id, final Side side) {
         return findGameById(id).getScoreOf(side);
     }
 
     @Override
-    public Map<Integer, Map<Side, Player>> getPlayerContexts() {
+    public Map<String, Map<Side, Player>> getPlayerContexts() {
         return generateGames()
             .stream()
             .collect(toMap(Game::getId, Game::getPlayers));
@@ -116,7 +122,7 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public Map<Integer, Map<Side, Double>> getScoreContexts() {
+    public Map<String, Map<Side, Double>> getScoreContexts() {
         List<GameEntity> games = new ArrayList<>();
         gameRepository.findAll().forEach(games::add);
         return games.stream()
@@ -125,7 +131,7 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public Map<Side, Double> getScoresById(final int id) {
+    public Map<Side, Double> getScoresById(final String id) {
         Map<Side, Double> scores = new HashMap<>();
         scores.put(Side.WHITE, getScoreById(id, Side.WHITE));
         scores.put(Side.BLACK, getScoreById(id, Side.BLACK));
@@ -133,7 +139,7 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public boolean moveIfMovable(final int gameId, final String start, final String end) {
+    public boolean moveIfMovable(final String gameId, final String start, final String end) {
         boolean movable = findGameById(gameId).move(start, end);
         if (movable) {
             moveRepository.save(new MoveEntity(gameId, start, end));
@@ -142,17 +148,17 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public List<String> findAllAvailablePath(final int id, final String start) {
+    public List<String> findAllAvailablePath(final String id, final String start) {
         return findGameById(id).findAllAvailablePath(start);
     }
 
     @Override
-    public boolean isWhiteTurn(final int id) {
+    public boolean isWhiteTurn(final String id) {
         return findGameById(id).isWhiteTurn();
     }
 
     @Override
-    public boolean isGameOver(final int id) {
+    public boolean isGameOver(final String id) {
         return findGameById(id).isGameOver();
     }
 }

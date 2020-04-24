@@ -10,29 +10,29 @@ import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
 
 public interface ChessService {
-    Map<Integer, Map<Side, Player>> addGame(Player white, Player black) throws SQLException;
+    Map<String, Map<Side, Player>> addGame(Player white, Player black) throws SQLException;
 
-    Game findGameById(int id) throws SQLException;
+    Game findGameById(String id) throws SQLException;
 
-    Board findBoardById(int id) throws SQLException;
+    Board findBoardById(String id) throws SQLException;
 
-    Board resetGameById(int id) throws SQLException;
+    Board resetGameById(String id) throws SQLException;
 
-    boolean finishGameById(int id) throws SQLException;
+    boolean finishGameById(String id) throws SQLException;
 
-    double getScoreById(int id, Side side) throws SQLException;
+    double getScoreById(String id, Side side) throws SQLException;
 
-    Map<Integer, Map<Side, Player>> getPlayerContexts() throws SQLException;
+    Map<String, Map<Side, Player>> getPlayerContexts() throws SQLException;
 
-    Map<Integer, Map<Side, Double>> getScoreContexts() throws SQLException;
+    Map<String, Map<Side, Double>> getScoreContexts() throws SQLException;
 
-    Map<Side, Double> getScoresById(int id) throws SQLException;
+    Map<Side, Double> getScoresById(String id) throws SQLException;
 
-    boolean moveIfMovable(int id, String start, String end) throws SQLException;
+    boolean moveIfMovable(String id, String start, String end) throws SQLException;
 
-    List<String> findAllAvailablePath(int id, String start) throws SQLException;
+    List<String> findAllAvailablePath(String id, String start) throws SQLException;
 
-    boolean isWhiteTurn(int id) throws SQLException;
+    boolean isWhiteTurn(String id) throws SQLException;
 
-    boolean isGameOver(int id) throws SQLException;
+    boolean isGameOver(String id) throws SQLException;
 }

@@ -30,56 +30,58 @@ public class SpringChessBoardController {
     }
 
     @GetMapping
-    private Map<Integer, Map<Side, Player>> getPlayerContexts() throws SQLException {
+    private Map<String, Map<Side, Player>> getPlayerContexts() throws SQLException {
         return service.getPlayerContexts();
     }
 
     @PostMapping
-    private Map<Integer, Map<Side, Player>> addGameAndGetPlayers() throws
+    private Map<String, Map<Side, Player>> addGameAndGetPlayers() throws
         SQLException {
         // TODO: 실제 플레이어 기능 추가
         Player white = new Player(1, "hodol", "password");
         Player black = new Player(2, "pobi", "password");
-        return service.addGame(white, black);
+        Map<String, Map<Side, Player>> map = service.addGame(white, black);
+        return map;
     }
 
     @GetMapping("/{id}")
-    private BoardDto getBoard(@PathVariable int id) throws SQLException {
+    private BoardDto getBoard(@PathVariable String id) throws SQLException {
         return new BoardDto(service.findBoardById(id));
     }
 
     @PostMapping("/{id}")
-    private BoardDto resetBoard(@PathVariable int id) throws SQLException {
+    private BoardDto resetBoard(@PathVariable String id) throws SQLException {
         return new BoardDto(service.resetGameById(id));
     }
 
     @DeleteMapping("/{id}")
-    private boolean finishGame(@PathVariable int id) throws SQLException {
+    private boolean finishGame(@PathVariable String id) throws SQLException {
         return service.finishGameById(id);
     }
 
     @GetMapping("/{id}/status")
-    private boolean isGameOver(@PathVariable int id) throws SQLException {
+    private boolean isGameOver(@PathVariable String id) throws SQLException {
         return service.isGameOver(id);
     }
 
     @GetMapping("/{id}/turn")
-    private boolean isWhiteTurn(@PathVariable int id) throws SQLException {
+    private boolean isWhiteTurn(@PathVariable String id) throws SQLException {
         return service.isWhiteTurn(id);
     }
 
     @GetMapping("/{id}/score")
-    private Map<Side, Double> getScore(@PathVariable int id) throws SQLException {
+    private Map<Side, Double> getScore(@PathVariable String id) throws SQLException {
         return service.getScoresById(id);
     }
 
     @PostMapping("/{id}/move")
-    private boolean move(@PathVariable int id, @RequestBody MoveRequestDto dto) throws SQLException {
+
+    private boolean move(@PathVariable String id, @RequestBody MoveRequestDto dto) throws SQLException {
         return service.moveIfMovable(id, dto.getFrom(), dto.getTo());
     }
 
     @PostMapping("/{id}/movable")
-    private List<String> findAllAvailablePath(@PathVariable int id, @RequestBody MovableRequestDto dto) throws
+    private List<String> findAllAvailablePath(@PathVariable String id, @RequestBody MovableRequestDto dto) throws
         SQLException {
         return service.findAllAvailablePath(id, dto.getFrom());
     }

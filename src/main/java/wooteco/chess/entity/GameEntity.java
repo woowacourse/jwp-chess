@@ -10,17 +10,22 @@ import wooteco.chess.domain.player.Player;
 
 @Table("game")
 public class GameEntity {
-    @Id private int id;
+    @Id private String id;
     @Column("white") private int whiteId;
     @Column("black") private int blackId;
 
     public GameEntity(Game game) {
+        this.id = game.getId();
         this.whiteId = game.getPlayerId(Side.WHITE);
         this.blackId = game.getPlayerId(Side.BLACK);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
+    }
+
+    public void setId(final String id) {
+        this.id = id;
     }
 
     public int getWhiteId() {

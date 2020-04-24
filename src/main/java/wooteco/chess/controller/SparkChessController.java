@@ -55,12 +55,12 @@ public class SparkChessController {
         return render(new HashMap<>());
     }
 
-    private Map<Integer, Map<Side, Player>> getPlayerContexts(final Request request, final Response response) throws
+    private Map<String, Map<Side, Player>> getPlayerContexts(final Request request, final Response response) throws
         SQLException {
         return service.getPlayerContexts();
     }
 
-    private Map<Integer, Map<Side, Player>> addGameAndGetPlayers(final Request request, final Response response) throws
+    private Map<String, Map<Side, Player>> addGameAndGetPlayers(final Request request, final Response response) throws
         SQLException {
         // TODO: 실제 플레이어 기능 추가
         Player white = new Player(1, "hodol", "password");
@@ -103,7 +103,7 @@ public class SparkChessController {
         return service.findAllAvailablePath(parseId(request), dto.getFrom());
     }
 
-    public Map<Integer, Map<Side, Double>> getScoreContexts(final Request request, final Response response) throws
+    public Map<String, Map<Side, Double>> getScoreContexts(final Request request, final Response response) throws
         SQLException {
         return service.getScoreContexts();
     }
@@ -112,7 +112,7 @@ public class SparkChessController {
         return new HandlebarsTemplateEngine().render(new ModelAndView(model, "index.html"));
     }
 
-    private static int parseId(final Request request) {
-        return Integer.parseInt(request.params(":id"));
+    private static String parseId(final Request request) {
+        return request.params(":id");
     }
 }

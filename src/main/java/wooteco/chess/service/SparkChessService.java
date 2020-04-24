@@ -33,7 +33,7 @@ public class SparkChessService implements ChessService {
     }
 
     @Override
-    public Game findGameById(final int id) throws SQLException {
+    public Game findGameById(final String id) throws SQLException {
         Game game = generateGameFrom(gameDao.findGameDataById(id));
         List<MoveRequestDto> paths = moveDao.getMoves(game);
         paths.forEach(path -> game.move(path.getFrom(), path.getTo()));
@@ -42,61 +42,61 @@ public class SparkChessService implements ChessService {
 
     private List<Game> generateGames() throws SQLException {
         List<Game> games = new ArrayList<>();
-        for (Map<String, Integer> gameData : gameDao.findGamesData()) {
+        for (Map<String, String> gameData : gameDao.findGamesData()) {
             games.add(generateGameFrom(gameData));
         }
         return games;
     }
 
-    private Game generateGameFrom(final Map<String, Integer> gameData) throws SQLException {
-        Player white = playerDao.getPlayerById(gameData.get(GameDao.WHITE_ID));
-        Player black = playerDao.getPlayerById(gameData.get(GameDao.BLACK_ID));
+    private Game generateGameFrom(final Map<String, String> gameData) throws SQLException {
+        Player white = playerDao.getPlayerById(Integer.parseInt(gameData.get(GameDao.WHITE_ID)));
+        Player black = playerDao.getPlayerById(Integer.parseInt(gameData.get(GameDao.BLACK_ID)));
         return new Game(gameData.get(GameDao.GAME_ID), white, black);
     }
 
     @Override
-    public Map<Integer, Map<Side, Player>> getPlayerContexts() throws SQLException {
+    public Map<String, Map<Side, Player>> getPlayerContexts() throws SQLException {
         return generateGames()
                 .stream()
                 .collect(toMap(Game::getId, Game::getPlayers));
     }
 
     @Override
-    public Board findBoardById(int id) throws SQLException {
+    public Board findBoardById(String id) throws SQLException {
         return findGameById(id).getBoard();
     }
 
     @Override
-    public Board resetGameById(int id) throws SQLException {
+    public Board resetGameById(String id) throws SQLException {
         moveDao.reset(findGameById(id));
         return findBoardById(id);
     }
 
     @Override
-    public Map<Integer, Map<Side, Player>> addGame(Player white, Player black) throws SQLException {
-        HashMap<Integer, Map<Side, Player>> result = new HashMap<>();
+    public Map<String, Map<Side, Player>> addGame(Player white, Player black) throws SQLException {
+        HashMap<String, Map<Side, Player>> result = new HashMap<>();
         Game gameToAdd = new Game(white, black);
-        int gameId = gameDao.add(gameToAdd);
+        String gameId = gameDao.add(gameToAdd);
         result.put(gameId, findGameById(gameId).getPlayers());
         return result;
     }
 
     @Override
-    public List<String> findAllAvailablePath(int id, String start) throws SQLException {
-        return findGameById(id).findAllAvailablePath(start);
+    public List<String> findAllAvailablePath(String id, String from) throws SQLException {
+        return findGameById(id).findAllAvailablePath(from);
     }
 
     @Override
-    public Map<Integer, Map<Side, Double>> getScoreContexts() throws SQLException {
-        Map<Integer, Map<Side, Double>> result = new HashMap<>();
-        for (int gameId : gameDao.getAllGameId()) {
+    public Map<String, Map<Side, Double>> getScoreContexts() throws SQLException {
+        Map<String, Map<Side, Double>> result = new HashMap<>();
+        for (String gameId : gameDao.getAllGameId()) {
             result.put(gameId, getScoresById(gameId));
         }
         return result;
     }
 
     @Override
-    public Map<Side, Double> getScoresById(final int id) throws SQLException {
+    public Map<Side, Double> getScoresById(final String id) throws SQLException {
         Map<Side, Double> scores = new HashMap<>();
         scores.put(Side.WHITE, getScoreById(id, Side.WHITE));
         scores.put(Side.BLACK, getScoreById(id, Side.BLACK));
@@ -104,17 +104,17 @@ public class SparkChessService implements ChessService {
     }
 
     @Override
-    public double getScoreById(final int id, final Side side) throws SQLException {
+    public double getScoreById(final String id, final Side side) throws SQLException {
         return findGameById(id).getScoreOf(side);
     }
 
     @Override
-    public boolean isWhiteTurn(final int id) throws SQLException {
+    public boolean isWhiteTurn(final String id) throws SQLException {
         return findGameById(id).isWhiteTurn();
     }
 
     @Override
-    public boolean moveIfMovable(final int id, String start, String end) throws SQLException {
+    public boolean moveIfMovable(final String id, String start, String end) throws SQLException {
         Path path = findBoardById(id).generatePath(Position.of(start), Position.of(end));
         boolean movable = findGameById(id).move(start, end);
         if (movable) {
@@ -124,7 +124,7 @@ public class SparkChessService implements ChessService {
     }
 
     @Override
-    public boolean finishGameById(final int id) throws SQLException {
+    public boolean finishGameById(final String id) throws SQLException {
         Game game = findGameById(id);
         game.finish();
         playerDao.updatePlayer(game.getPlayer(Side.WHITE));
@@ -135,7 +135,7 @@ public class SparkChessService implements ChessService {
     }
 
     @Override
-    public boolean isGameOver(final int id) throws SQLException {
+    public boolean isGameOver(final String id) throws SQLException {
         return findGameById(id).isGameOver();
     }
 }

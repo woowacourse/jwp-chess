@@ -51,7 +51,7 @@ public class SpringController {
 			return model;
 		}
 		model.put("isEnd", true);
-		model.put("isWinWhite", chessService.isWinWhiteTeam());
+		model.put("winningTeam", chessService.findWinningTeam());
 		return model;
 	}
 

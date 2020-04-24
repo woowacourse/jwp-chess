@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -77,6 +78,14 @@ public class ChessService {
 	public boolean isWinWhiteTeam() {
 		Board board = find();
 		return board.isLiveKing(Team.WHITE);
+	}
+
+	public Team findWinningTeam() {
+		Board board = find();
+		return Arrays.stream(Team.values())
+			.filter(team -> !board.isLiveKing(team))
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException("승리팀이 없습니다."));
 	}
 
 	public Result status() {

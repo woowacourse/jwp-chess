@@ -18,7 +18,7 @@ public class BoardFactory {
     private static void setUpBlank() {
         for (int row = Position.START_INDEX; row <= Position.END_INDEX; row++) {
             for (int col = Position.START_INDEX; col <= Position.END_INDEX; col++) {
-                String position = (char)(col + ASCII_GAP) + String.valueOf(row);
+                String position = (char) (col + ASCII_GAP) + String.valueOf(row);
                 BOARD.put(Position.of(position), Piece.of(PieceType.BLANK));
             }
         }

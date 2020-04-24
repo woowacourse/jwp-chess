@@ -39,11 +39,11 @@ public class SparkChessController {
                 if (chessGameService.isFinish(board)) {
                     return chessGameService.receiveWinner();
                 }
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 res.status(400);
                 return e.getMessage();
             }
-            return req.queryParams("fromPiece")+ " " +req.queryParams("toPiece");
+            return req.queryParams("fromPiece") + " " + req.queryParams("toPiece");
         });
 
         post("/status", (req, res) -> {

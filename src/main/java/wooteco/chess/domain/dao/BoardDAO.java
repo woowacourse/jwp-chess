@@ -22,7 +22,7 @@ public class BoardDAO {
         String query = "INSERT INTO board (position, piece) VALUES (?, ?)";
 
         try (final Connection connection = Connector.getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, position.toString());
             preparedStatement.setString(2, board.findBy(position).getName());
             preparedStatement.executeUpdate();

@@ -45,8 +45,9 @@ public class SpringChessController {
 
     @PostMapping("/move")
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<?> move(@RequestParam String fromPiece,
-                                  @RequestParam String toPiece) throws SQLException {
+    public ResponseEntity<?> move(
+            @RequestParam String fromPiece,
+            @RequestParam String toPiece) throws SQLException {
         try {
             Board board = chessGameService.receiveMovedBoard(fromPiece, toPiece);
             if (chessGameService.isFinish(board)) {

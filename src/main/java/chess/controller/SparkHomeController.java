@@ -5,7 +5,7 @@ import spark.Spark;
 import java.util.Collections;
 
 public class SparkHomeController {
-	private static final String STATIC_PATH = "/index.html";
+	private static final String STATIC_PATH = "/index.hbs";
 	public static final String PATH = "/chess/home";
 
 	private static final SparkHomeController CHESS_HOME_CONTROLLER;

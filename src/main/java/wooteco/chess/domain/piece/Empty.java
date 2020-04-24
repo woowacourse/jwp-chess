@@ -8,9 +8,10 @@ import wooteco.chess.domain.position.Position;
 
 public class Empty extends Piece {
 	public static final Empty EMPTY = new Empty();
+	private static final String INITIAL_CHARACTER = ".";
 
-	public Empty() {
-		super(NONE, ".");
+	private Empty() {
+		super(NONE, INITIAL_CHARACTER);
 	}
 
 	@Override
@@ -20,7 +21,7 @@ public class Empty extends Piece {
 
 	@Override
 	protected String getInitialCharacter() {
-		return ".";
+		return INITIAL_CHARACTER;
 	}
 
 	@Override

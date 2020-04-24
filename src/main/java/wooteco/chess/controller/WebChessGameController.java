@@ -14,7 +14,7 @@ public class WebChessGameController {
     private static final ChessGameDao chessGameDao = new ChessGameDao();
 
     @GetMapping("/game/{id}")
-    private String renderGamePage(@PathVariable String id, Model model) throws SQLException {
+    public String renderGamePage(@PathVariable String id, Model model) throws SQLException {
         if (chessGameDao.selectAll().contains(Integer.parseInt(id))) {
             model.addAttribute("id", id);
             return "game";
@@ -23,7 +23,7 @@ public class WebChessGameController {
     }
 
     @GetMapping("/")
-    private String renderIndexPage() {
+    public String renderIndexPage() {
         return "index";
     }
 

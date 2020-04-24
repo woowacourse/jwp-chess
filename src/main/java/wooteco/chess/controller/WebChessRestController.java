@@ -16,36 +16,36 @@ import wooteco.chess.domain.piece.Position;
 import wooteco.chess.service.ChessService;
 
 @RestController
-public class ChessRestController {
+public class WebChessRestController {
     private static final Gson GSON = new GsonBuilder().create();
     private ChessService chessService;
 
-    public ChessRestController(ChessService chessService) {
+    public WebChessRestController(ChessService chessService) {
         this.chessService = chessService;
     }
 
     @GetMapping("/board/{id}")
-    private String getChessGameById(@PathVariable String id) throws SQLException {
+    public String getChessGameById(@PathVariable String id) throws SQLException {
         return GSON.toJson(chessService.getChessGameById(Integer.parseInt(id)));
     }
 
     @GetMapping("/games")
-    private String getGameList() throws SQLException {
+    public String getGameList() throws SQLException {
         return GSON.toJson(chessService.getGameList());
     }
 
     @PostMapping("/create")
-    private String createChessRoom() throws SQLException {
+    public String createChessRoom() throws SQLException {
         return GSON.toJson(chessService.createChessRoom());
     }
 
     @PostMapping("/restart")
-    private String restartGame(@RequestParam String id) throws SQLException {
+    public String restartGame(@RequestParam String id) throws SQLException {
         return GSON.toJson(chessService.restartGame(Integer.parseInt(id)));
     }
 
     @PostMapping(value = "/move/{id}")
-    private String movePiece(@PathVariable String id, @RequestBody Map<String, Double> data) throws SQLException {
+    public String movePiece(@PathVariable String id, @RequestBody Map<String, Double> data) throws SQLException {
         int pieceId = Integer.parseInt(id);
         Position source = Position.of(data.get("sx").intValue(), data.get("sy").intValue());
         Position target = Position.of(data.get("tx").intValue(), data.get("ty").intValue());

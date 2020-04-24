@@ -24,8 +24,8 @@ import wooteco.chess.view.dto.requestdto.PositionRequestDto;
 import wooteco.chess.view.dto.responsedto.BoardDto;
 import wooteco.chess.view.dto.responsedto.GameDto;
 import wooteco.chess.view.dto.responsedto.ScoreDto;
-import wooteco.chess.view.response.ResponseStatus;
 import wooteco.chess.view.response.ResponseDto;
+import wooteco.chess.view.response.ResponseStatus;
 
 class GameServiceTest {
 	private GameService service;

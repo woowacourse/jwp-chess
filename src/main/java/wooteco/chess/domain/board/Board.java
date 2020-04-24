@@ -3,7 +3,6 @@ package wooteco.chess.domain.board;
 import java.util.Map;
 
 import wooteco.chess.domain.piece.Color;
-import wooteco.chess.domain.piece.King;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
 
@@ -37,10 +36,6 @@ public class Board {
 	}
 
 	private boolean isKingOf(Color color, Piece piece) {
-		return piece.isSameColor(color) && piece instanceof King;
-	}
-
-	public void deleteAll() {
-
+		return piece.isSameColor(color) && piece.isKing();
 	}
 }

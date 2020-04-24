@@ -83,7 +83,11 @@ function checkKingDie() {
                 return;
             }
             $('.result').show();
-            $('.result > .message').html(response.message);
+            if (response.isWinWhite) {
+                $('.result > .message').html("WHITE팀 승리!");
+            } else {
+                $('.result > .message').html("BLACK팀 승리!");
+            }
             $('.result > .submit').click(function () {
                 restart();
                 $('.result').hide();

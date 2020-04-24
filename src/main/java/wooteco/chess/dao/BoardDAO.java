@@ -27,7 +27,7 @@ public class BoardDAO {
 	}
 
 	public void update(Position position, String name) {
-		Connector.executeUpdate(UPDATE_BOARD_SET_NAME_WHERE_POSITION, name, position.toString());
+		Connector.executeUpdate(UPDATE_BOARD_SET_NAME_WHERE_POSITION, name, position.getString());
 	}
 
 }

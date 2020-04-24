@@ -5,7 +5,10 @@ import wooteco.chess.dao.FakeHistoryDao;
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.NormalStatus;
 import wooteco.chess.domain.position.MovingPosition;
-import wooteco.chess.dto.*;
+import wooteco.chess.dto.BoardDto;
+import wooteco.chess.dto.ChessGameDto;
+import wooteco.chess.dto.MovablePositionsDto;
+import wooteco.chess.dto.MoveStatusDto;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -48,29 +51,32 @@ public class SpringChessService {
 
     }
 
-    public DestinationPositionDto getDestinationPosition(String destination) {
-        return new DestinationPositionDto(destination, NormalStatus.YES);
+    public MoveStatusDto checkMovable(MovingPosition movingPosition) {
+        try {
+            ChessGame chessGame = new ChessGame();
+
+            load(chessGame);
+            chessGame.move(movingPosition);
+            return new MoveStatusDto(NormalStatus.YES.isNormalStatus());
+        } catch (IllegalArgumentException | UnsupportedOperationException | NullPointerException | SQLException e) {
+            return new MoveStatusDto(NormalStatus.NO.isNormalStatus(), e.getMessage());
+        }
     }
 
     public MoveStatusDto move(MovingPosition movingPosition) throws SQLException {
-        if (movingPosition.isStartAndEndSame()) {
-            return new MoveStatusDto(NormalStatus.YES.isNormalStatus());
-        }
-
         ChessGame chessGame = new ChessGame();
-
         load(chessGame);
         chessGame.move(movingPosition);
 
+        MoveStatusDto moveStatusDto = new MoveStatusDto(NormalStatus.YES.isNormalStatus());
+
         if (chessGame.isKingDead()) {
-            MoveStatusDto moveStatusDto = new MoveStatusDto(NormalStatus.YES.isNormalStatus(), chessGame.getAliveKingColor());
-            clearHistory();
-            return moveStatusDto;
+            moveStatusDto = new MoveStatusDto(NormalStatus.YES.isNormalStatus(), chessGame.getAliveKingColor());
         }
 
         insertHistory(movingPosition);
 
-        return new MoveStatusDto(NormalStatus.YES.isNormalStatus());
+        return moveStatusDto;
     }
 
     private void insertHistory(MovingPosition movingPosition) throws SQLException {

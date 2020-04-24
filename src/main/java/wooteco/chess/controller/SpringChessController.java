@@ -5,10 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import wooteco.chess.domain.game.NormalStatus;
-import wooteco.chess.domain.piece.Color;
 import wooteco.chess.domain.position.MovingPosition;
 import wooteco.chess.dto.ChessGameDto;
-import wooteco.chess.dto.DestinationPositionDto;
 import wooteco.chess.dto.MovablePositionsDto;
 import wooteco.chess.dto.MoveStatusDto;
 import wooteco.chess.service.SpringChessService;
@@ -44,8 +42,7 @@ public class SpringChessController {
     @ResponseBody
     public String setBoard() throws SQLException {
         ChessGameDto chessGameDto = springChessService.setBoard();
-        String board = JsonTransformer.toJson(chessGameDto);
-        return board;
+        return JsonTransformer.toJson(chessGameDto);
     }
 
     @GetMapping("/source")
@@ -67,14 +64,13 @@ public class SpringChessController {
 
     @GetMapping("/destination")
     @ResponseBody
-    public String getDestination(@RequestParam String destination) {
+    public String checkMovable(@RequestParam String startPosition, @RequestParam String destination) {
         Map<String, Object> model = new HashMap<>();
+        MoveStatusDto moveStatusDto = springChessService.checkMovable(
+                new MovingPosition(startPosition, destination));
 
-        DestinationPositionDto destinationPositionDto = springChessService.getDestinationPosition(destination);
-
-        model.put("normalStatus", destinationPositionDto.getNormalStatus().isNormalStatus());
-        model.put("position", destinationPositionDto.getPosition());
-
+        model.put("normalStatus", moveStatusDto.getNormalStatus());
+        model.put("exception", moveStatusDto.getException());
         return JsonTransformer.toJson(model);
     }
 
@@ -87,25 +83,15 @@ public class SpringChessController {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        try {
-            MoveStatusDto moveStatusDto = springChessService.move(new MovingPosition(source, destination));
-
-            modelAndView.addObject("normalStatus", moveStatusDto.getNormalStatus());
-            modelAndView.addObject("winner", moveStatusDto.getWinner());
-
-            if (moveStatusDto.getWinner().isNone()) {
-                modelAndView.setViewName("chess");
-                return modelAndView;
-            }
-            modelAndView.setViewName("result");
-            return modelAndView;
-        } catch (IllegalArgumentException | UnsupportedOperationException | NullPointerException | SQLException e) {
-            modelAndView.addObject("normalStatus", NormalStatus.NO.isNormalStatus());
-            modelAndView.addObject("exception", e.getMessage());
-            modelAndView.addObject("winner", Color.NONE);
+        MoveStatusDto moveStatusDto = springChessService.move(new MovingPosition(source, destination));
+        if (moveStatusDto.getWinner().isNone()) {
             modelAndView.setViewName("chess");
             return modelAndView;
         }
+        modelAndView.setViewName("result");
+        modelAndView.addObject("winner", moveStatusDto.getWinner());
+        springChessService.clearHistory();
+        return modelAndView;
     }
 
     @GetMapping("/loading")

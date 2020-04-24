@@ -57,7 +57,8 @@ public class ApiWebController {
 
     @PostMapping("/game/board")
     public ChessGameDto board(@RequestBody String req) {
-        int gameId = JsonParser.parseString(req).getAsJsonObject().get("gameId").getAsInt();
+        Integer gameId = GSON
+            .fromJson(JsonParser.parseString(req).getAsJsonObject().get("gameId"), Integer.class);
         return chessGameService.loadChessGame(gameId);
     }
 
@@ -76,12 +77,13 @@ public class ApiWebController {
     @PostMapping("/game/promotion")
     public ChessGameDto promotion(@RequestBody String req) {
         PromotionTypeDto promotionTypeDTO = GSON.fromJson(req, PromotionTypeDto.class);
-        return chessGameService.promotion(promotionTypeDTO);
+        return chessGameService.promote(promotionTypeDTO);
     }
 
     @PostMapping("/game/end")
     public ChessGameDto end(@RequestBody String req) {
-        int gameId = JsonParser.parseString(req).getAsJsonObject().get("gameId").getAsInt();
+        Integer gameId = GSON
+            .fromJson(JsonParser.parseString(req).getAsJsonObject().get("gameId"), Integer.class);
         return chessGameService.endGame(gameId);
     }
 
@@ -92,6 +94,6 @@ public class ApiWebController {
 
     @GetMapping("/result/userResult")
     public GameResultDto userResult(@RequestBody String req) {
-        return resultService.getResult(GSON.fromJson(req, UserNameDto .class));
+        return resultService.getResult(GSON.fromJson(req, UserNameDto.class));
     }
 }

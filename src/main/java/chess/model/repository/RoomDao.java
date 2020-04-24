@@ -20,7 +20,7 @@ public class RoomDao {
         return INSTANCE;
     }
 
-    public int insert(String roomName, String roomPW) {
+    public Integer insert(String roomName, String roomPW) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "INSERT INTO ROOM_TB(NM, PW)",
@@ -30,7 +30,7 @@ public class RoomDao {
         return jdbcTemplate.executeUpdateWithGeneratedKey(query, pss);
     }
 
-    public void updateUsedN(int roomId) {
+    public void updateUsedN(Integer roomId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "UPDATE ROOM_TB",
@@ -60,7 +60,7 @@ public class RoomDao {
         }, mapper);
     }
 
-    public Map<String, String> select(int roomId) {
+    public Map<String, String> select(Integer roomId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT NM, PW, USED_YN",
@@ -80,7 +80,7 @@ public class RoomDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public void delete(int roomId) {
+    public void delete(Integer roomId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "DELETE FROM ROOM_TB",

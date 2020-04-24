@@ -22,7 +22,6 @@ public class WebController {
         return "index";
     }
 
-
     @PostMapping("/start")
     public String start(@RequestParam String roomId, Model model) {
         model.addAttribute("roomId", roomId);
@@ -36,7 +35,7 @@ public class WebController {
         Model model) {
         Map<Team, String> userNames = makeUserNames(whiteName, blackName);
 
-        int gameId = chessGameService.saveRoom(userNames, Integer.parseInt(roomId));
+        Integer gameId = chessGameService.saveRoom(userNames, Integer.valueOf(roomId));
         chessGameService.saveUser(userNames);
 
         model.addAttribute("gameId", gameId);
@@ -49,9 +48,9 @@ public class WebController {
         @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
         Map<Team, String> userNames = makeUserNames(whiteName, blackName);
-        chessGameService.gameOver(Integer.parseInt(gameId));
+        chessGameService.closeGame(Integer.valueOf(gameId));
         model.addAttribute("gameId",
-            chessGameService.createBy(Integer.parseInt(gameId), userNames));
+            chessGameService.createBy(Integer.valueOf(gameId), userNames));
         return "game";
     }
 
@@ -63,13 +62,13 @@ public class WebController {
         Map<Team, String> userNames = makeUserNames(whiteName, blackName);
 
         model.addAttribute("gameId",
-            chessGameService.getIdBefore(Integer.parseInt(roomId), userNames));
+            chessGameService.getIdBefore(Integer.valueOf(roomId), userNames));
         return "game";
     }
 
     @PostMapping("/game/choiceGame")
     public String choiceGame(@RequestParam String gameId, Model model) {
-        model.addAttribute("roomId", chessGameService.getRoomId(Integer.parseInt(gameId)));
+        model.addAttribute("roomId", chessGameService.getRoomId(Integer.valueOf(gameId)));
         return "start";
     }
 

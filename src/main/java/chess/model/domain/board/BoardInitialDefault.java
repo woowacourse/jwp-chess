@@ -39,9 +39,9 @@ public class BoardInitialDefault implements BoardInitialization {
         for (int i = 0; i < 8; i++) {
             char file = (char) ('a' + i);
             initialBoard.put(Square.of(String.valueOf(file) + RANK_BLACK_PAWN_INIT)
-                , Pawn.getPieceInstance(Team.BLACK));
+                , Pawn.getInstance(Team.BLACK));
             initialBoard.put(Square.of(String.valueOf(file) + RANK_WHITE_PAWN_INIT)
-                , Pawn.getPieceInstance(Team.WHITE));
+                , Pawn.getInstance(Team.WHITE));
         }
         INITIAL_BOARD = Collections.unmodifiableMap(initialBoard);
     }

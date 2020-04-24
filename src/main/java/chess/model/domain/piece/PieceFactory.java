@@ -10,8 +10,8 @@ public class PieceFactory {
 
     static {
         Map<String, Piece> cache = new HashMap<>();
-        cache.put("BLACK_PAWN", Pawn.getPieceInstance(Team.BLACK));
-        cache.put("WHITE_PAWN", Pawn.getPieceInstance(Team.WHITE));
+        cache.put("BLACK_PAWN", Pawn.getInstance(Team.BLACK));
+        cache.put("WHITE_PAWN", Pawn.getInstance(Team.WHITE));
         cache.put("BLACK_ROOK", Rook.getPieceInstance(Team.BLACK));
         cache.put("WHITE_ROOK", Rook.getPieceInstance(Team.WHITE));
         cache.put("BLACK_KNIGHT", Knight.getPieceInstance(Team.BLACK));

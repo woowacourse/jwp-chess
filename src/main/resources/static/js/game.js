@@ -152,6 +152,7 @@ function gameFinish() {
         cell.classList.remove('cell');
     });
     cells = null;
+    turn.innerText = "";
     clickTiming.innerText = '게임이 종료되었습니다.';
     closeButton.innerText = "종료됨";
     closeButton.disable = true;

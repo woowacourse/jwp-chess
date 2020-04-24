@@ -52,7 +52,7 @@ public class ChessGameTest {
         assertThat(chessGame.getChessBoard().containsKey(Square.of("a2"))).isFalse();
         assertThat(chessGame.getChessBoard().containsKey(Square.of("a3"))).isTrue();
         assertThat(chessGame.getChessBoard().get(Square.of("a3")))
-            .isEqualTo(Pawn.getPieceInstance(Team.WHITE));
+            .isEqualTo(Pawn.getInstance(Team.WHITE));
     }
 
     @Test
@@ -80,8 +80,8 @@ public class ChessGameTest {
     @Test
     void isNoPiece() {
         ChessGame chessGame = new ChessGame();
-        assertThat(chessGame.isNoPiece(new MoveInfo("a2", "a3"))).isFalse();
-        assertThat(chessGame.isNoPiece(new MoveInfo("a3", "a4"))).isTrue();
+        assertThat(chessGame.isEmptySquare(new MoveInfo("a2", "a3"))).isFalse();
+        assertThat(chessGame.isEmptySquare(new MoveInfo("a3", "a4"))).isTrue();
     }
 
     @DisplayName("이동하려는 before자리의 말이 현재 차례의 말이 아닌지 확인, 말이 없는 경우도 True")
@@ -172,7 +172,7 @@ public class ChessGameTest {
         boardInitial.put(Square.of("d8"), Knight.getPieceInstance(Team.WHITE));
         boardInitial.put(Square.of("f1"), Knight.getPieceInstance(Team.BLACK));
         boardInitial.put(Square.of("f8"), Knight.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("a2"), Pawn.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Team.WHITE,
             CastlingSetting.getCastlingElements(), new EnPassant());
 
@@ -200,7 +200,7 @@ public class ChessGameTest {
         boardInitial.put(Square.of("d8"), Knight.getPieceInstance(Team.WHITE));
         boardInitial.put(Square.of("f1"), Knight.getPieceInstance(Team.BLACK));
         boardInitial.put(Square.of("f8"), Knight.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("a2"), Pawn.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Team.WHITE,
             new HashSet<>(Collections.singletonList(CastlingSetting.BLACK_KING_BEFORE)), new EnPassant());
 

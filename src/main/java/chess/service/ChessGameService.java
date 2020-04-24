@@ -2,10 +2,10 @@ package chess.service;
 
 import chess.model.domain.board.BoardInitialByDB;
 import chess.model.domain.board.BoardInitialization;
-import chess.model.domain.board.Square;
 import chess.model.domain.board.CastlingSetting;
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.EnPassant;
+import chess.model.domain.board.Square;
 import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.Pawn;
 import chess.model.domain.piece.Piece;
@@ -37,10 +37,10 @@ public class ChessGameService {
     private static final ChessBoardDao CHESS_BOARD_DAO = ChessBoardDao.getInstance();
     private static final ChessResultDao CHESS_RESULT_DAO = ChessResultDao.getInstance();
 
-    public int create(int roomId, Map<Team, String> userNames) {
-        roomBeforeGameOver(roomId);
+    public Integer create(Integer roomId, Map<Team, String> userNames) {
+        closeGamesOf(roomId);
         ChessGame chessGame = new ChessGame();
-        int gameId = CHESS_GAME_DAO
+        Integer gameId = CHESS_GAME_DAO
             .insert(roomId, chessGame.getGameTurn(), userNames, chessGame.getTeamScore());
 
         CHESS_BOARD_DAO.insert(gameId, chessGame.getChessBoard(),
@@ -48,32 +48,32 @@ public class ChessGameService {
         CHESS_GAME_DAO.updateScore(gameId, chessGame.getTeamScore());
 
         for (String userName : userNames.values()) {
-            if (!CHESS_RESULT_DAO.getWinOrDraw(userName).isPresent()) {
+            if (!CHESS_RESULT_DAO.findWinOrDraw(userName).isPresent()) {
                 CHESS_RESULT_DAO.insert(userName);
             }
         }
         return gameId;
     }
 
-    public void roomBeforeGameOver(int roomId) {
-        List<Integer> proceedGameIds = CHESS_GAME_DAO.getProceedGameIdsByRoomId(roomId);
-        for (int gameId : proceedGameIds) {
-            gameOver(gameId);
+    public void closeGamesOf(Integer roomId) {
+        List<Integer> proceedGameIds = CHESS_GAME_DAO.findProceedGameIdsBy(roomId);
+        for (Integer gameId : proceedGameIds) {
+            closeGame(gameId);
         }
     }
 
     public void saveUser(Map<Team, String> userNames) {
         for (String userName : userNames.values()) {
-            if (!CHESS_RESULT_DAO.getWinOrDraw(userName).isPresent()) {
+            if (!CHESS_RESULT_DAO.findWinOrDraw(userName).isPresent()) {
                 CHESS_RESULT_DAO.insert(userName);
             }
         }
     }
 
-    public int saveRoom(Map<Team, String> userNames, int roomId) {
-        roomBeforeGameOver(roomId);
+    public Integer saveRoom(Map<Team, String> userNames, Integer roomId) {
+        closeGamesOf(roomId);
         ChessGame chessGame = new ChessGame();
-        int gameId = CHESS_GAME_DAO
+        Integer gameId = CHESS_GAME_DAO
             .insert(roomId, chessGame.getGameTurn(), userNames, chessGame.getTeamScore());
         CHESS_BOARD_DAO.insert(gameId, chessGame.getChessBoard(),
             getCastlingElement(chessGame.getChessBoard(), chessGame.getCastlingElements()));
@@ -95,29 +95,29 @@ public class ChessGameService {
             .anyMatch(castlingSetting -> castlingSetting.isCastlingBefore(square, piece));
     }
 
-    public ChessGameDto loadChessGame(int gameId) {
-        return new ChessGameDto(getChessGame(gameId), CHESS_GAME_DAO.getUserNames(gameId));
+    public ChessGameDto loadChessGame(Integer gameId) {
+        return new ChessGameDto(getChessGame(gameId), CHESS_GAME_DAO.findUserNames(gameId));
     }
 
-    private ChessGame getChessGame(int gameId) {
+    private ChessGame getChessGame(Integer gameId) {
         BoardInitialization boardInitialByDB = new BoardInitialByDB(
-            CHESS_BOARD_DAO.getBoard(gameId));
-        Team gameTurn = CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalAccessError::new);
-        Set<CastlingSetting> castlingElements = CHESS_BOARD_DAO.getCastlingElements(gameId);
-        EnPassant enPassant = CHESS_BOARD_DAO.getEnpassantBoard(gameId);
+            CHESS_BOARD_DAO.findBoard(gameId));
+        Team gameTurn = CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalAccessError::new);
+        Set<CastlingSetting> castlingElements = CHESS_BOARD_DAO.findCastlingElements(gameId);
+        EnPassant enPassant = CHESS_BOARD_DAO.findEnpassantBoard(gameId);
         return new ChessGame(boardInitialByDB, gameTurn, castlingElements, enPassant);
     }
 
     public ChessGameDto move(MoveDto moveDTO) {
         MoveInfo moveInfo = new MoveInfo(moveDTO.getSource(), moveDTO.getTarget());
-        int gameId = moveDTO.getGameId();
-        EnPassant enPassant = CHESS_BOARD_DAO.getEnpassantBoard(gameId);
+        Integer gameId = moveDTO.getGameId();
+        EnPassant enPassant = CHESS_BOARD_DAO.findEnpassantBoard(gameId);
         ChessGame chessGame = getChessGame(gameId);
         boolean canCastling = chessGame.canCastling(moveInfo);
-        boolean pawnSpecialMove = chessGame.isPawnJump(moveInfo);
-        boolean movePawn = chessGame.whoMovePiece(moveInfo) instanceof Pawn;
+        boolean pawnSpecialMove = chessGame.isPawnMoveTwoStep(moveInfo);
+        boolean movePawn = chessGame.findPieceToMove(moveInfo) instanceof Pawn;
         MoveState moveState = chessGame.movePieceWhenCanMove(moveInfo);
-        Team gameTurn = CHESS_GAME_DAO.getGameTurn(gameId).orElseThrow(IllegalAccessError::new);
+        Team gameTurn = CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalAccessError::new);
         if (moveState.isSucceed()) {
             CHESS_BOARD_DAO.deleteMyEnpassant(gameId);
             CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfo.get(MoveOrder.TO));
@@ -131,27 +131,28 @@ public class ChessGameService {
                 CHESS_BOARD_DAO.deleteEnpassant(gameId, moveInfo.get(MoveOrder.TO));
             }
             if (canCastling) {
-                MoveInfo moveInfoRook = CastlingSetting.getMoveCastlingRook(moveInfo);
+                MoveInfo moveInfoRook = CastlingSetting.findRookMoveInfo(moveInfo);
                 CHESS_BOARD_DAO.copyBoardSquare(gameId, moveInfoRook);
                 CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfoRook.get(MoveOrder.FROM));
             }
+
         }
         if (moveState == MoveState.SUCCESS) {
             CHESS_GAME_DAO.updateTurn(gameId, chessGame.getGameTurn());
         }
         if (moveState == MoveState.KING_CAPTURED) {
-            gameOver(gameId);
+            closeGame(gameId);
         }
         CHESS_GAME_DAO.updateScore(gameId, chessGame.getTeamScore());
         return new ChessGameDto(getChessGame(gameId), moveState,
-            new TeamScore(CHESS_GAME_DAO.getScores(gameId)), CHESS_GAME_DAO.getUserNames(gameId));
+            new TeamScore(CHESS_GAME_DAO.findScores(gameId)), CHESS_GAME_DAO.findUserNames(gameId));
     }
 
-    public void gameOver(int gameId) {
+    public void closeGame(Integer gameId) {
         if (CHESS_GAME_DAO.isProceed(gameId)) {
             CHESS_GAME_DAO.updateProceedN(gameId);
-            Map<Team, String> userNames = CHESS_GAME_DAO.getUserNames(gameId);
-            TeamScore teamScore = new TeamScore(CHESS_GAME_DAO.getScores(gameId));
+            Map<Team, String> userNames = CHESS_GAME_DAO.findUserNames(gameId);
+            TeamScore teamScore = new TeamScore(CHESS_GAME_DAO.findScores(gameId));
             for (Team team : Team.values()) {
                 setGameResult(teamScore, userNames, team);
             }
@@ -159,7 +160,7 @@ public class ChessGameService {
     }
 
     private void setGameResult(TeamScore teamScore, Map<Team, String> userNames, Team team) {
-        GameResultDto gameResultBefore = CHESS_RESULT_DAO.getWinOrDraw(userNames.get(team))
+        GameResultDto gameResultBefore = CHESS_RESULT_DAO.findWinOrDraw(userNames.get(team))
             .orElseThrow(IllegalAccessError::new);
         GameResultDto gameResult = teamScore.getGameResult(team);
         GameResultDto gameResultAfter = new GameResultDto(
@@ -169,22 +170,22 @@ public class ChessGameService {
         CHESS_RESULT_DAO.update(userNames.get(team), gameResultAfter);
     }
 
-    public ChessGameDto promotion(PromotionTypeDto promotionTypeDTO) {
+    public ChessGameDto promote(PromotionTypeDto promotionTypeDTO) {
         Type type = Type.of(promotionTypeDTO.getPromotionType());
-        int gameId = promotionTypeDTO.getGameId();
+        Integer gameId = promotionTypeDTO.getGameId();
         ChessGame chessGame = getChessGame(gameId);
         Optional<Square> finishPawnBoard = chessGame.getFinishPawnBoard();
-        Piece hopePiece = chessGame.getHopePiece(type);
+        Piece pieceToChange = chessGame.getPieceToChange(type);
         MoveState moveState = chessGame.promotion(type);
         if (moveState == MoveState.SUCCESS_PROMOTION) {
             CHESS_BOARD_DAO
                 .updatePromotion(gameId, finishPawnBoard.orElseThrow(IllegalAccessError::new),
-                    hopePiece);
+                    pieceToChange);
             CHESS_GAME_DAO.updateTurn(gameId, chessGame.getGameTurn());
             CHESS_GAME_DAO.updateScore(gameId, chessGame.getTeamScore());
         }
         return new ChessGameDto(getChessGame(gameId), moveState,
-            new TeamScore(CHESS_GAME_DAO.getScores(gameId)), CHESS_GAME_DAO.getUserNames(gameId));
+            new TeamScore(CHESS_GAME_DAO.findScores(gameId)), CHESS_GAME_DAO.findUserNames(gameId));
     }
 
     public PathDto getPath(SourceDto sourceDto) {
@@ -192,28 +193,29 @@ public class ChessGameService {
         return new PathDto(chessGame.getMovableArea(Square.of(sourceDto.getSource())));
     }
 
-    public int createBy(int gameId, Map<Team, String> userNames) {
+    public Integer createBy(Integer gameId, Map<Team, String> userNames) {
         return create(
-            CHESS_GAME_DAO.getRoomId(gameId).orElseThrow(IllegalArgumentException::new), userNames);
+            CHESS_GAME_DAO.findRoomId(gameId).orElseThrow(IllegalArgumentException::new),
+            userNames);
     }
 
-    public ChessGameDto endGame(int gameId) {
-        gameOver(gameId);
-        return new ChessGameDto(new TeamScore(CHESS_GAME_DAO.getScores(gameId)),
-            CHESS_GAME_DAO.getUserNames(gameId));
+    public ChessGameDto endGame(Integer gameId) {
+        closeGame(gameId);
+        return new ChessGameDto(new TeamScore(CHESS_GAME_DAO.findScores(gameId)),
+            CHESS_GAME_DAO.findUserNames(gameId));
     }
 
-    public int getRoomId(int gameId) {
-        return CHESS_GAME_DAO.getRoomId(gameId).orElseThrow(IllegalAccessError::new);
+    public Integer getRoomId(Integer gameId) {
+        return CHESS_GAME_DAO.findRoomId(gameId).orElseThrow(IllegalAccessError::new);
     }
 
-    public int getIdBefore(int roomId, Map<Team, String> userNames) {
-        Optional<Integer> gameNumberLatest = CHESS_GAME_DAO.getGameNumberLatest(roomId);
+    public Integer getIdBefore(Integer roomId, Map<Team, String> userNames) {
+        Optional<Integer> gameNumberLatest = CHESS_GAME_DAO.findGameNumberLatest(roomId);
         if (gameNumberLatest.isPresent()) {
             return gameNumberLatest.get();
         }
         create(roomId, userNames);
-        return CHESS_GAME_DAO.getGameNumberLatest(roomId).orElseThrow(IllegalAccessError::new);
+        return CHESS_GAME_DAO.findGameNumberLatest(roomId).orElseThrow(IllegalAccessError::new);
     }
 
 }

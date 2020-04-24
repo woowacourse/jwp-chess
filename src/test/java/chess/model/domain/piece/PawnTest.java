@@ -16,7 +16,7 @@ public class PawnTest {
     @Test
     @DisplayName("Null이 of에 들어갔을 때 예외 발생")
     void validNotNull() {
-        assertThatThrownBy(() -> Pawn.getPieceInstance(null))
+        assertThatThrownBy(() -> Pawn.getInstance(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessageContaining("Null");
     }
@@ -24,8 +24,8 @@ public class PawnTest {
     @Test
     @DisplayName("말의 위치(pawn)를 받고 말의 종류에 따라 이동할 수 있는 칸 리스트 반환")
     void calculateScopePawnBlack() {
-        Piece pieceBlack = Pawn.getPieceInstance(Team.BLACK);
-        Piece pieceWhite = Pawn.getPieceInstance(Team.WHITE);
+        Piece pieceBlack = Pawn.getInstance(Team.BLACK);
+        Piece pieceWhite = Pawn.getInstance(Team.WHITE);
 
         Set<Square> availableSquaresBlack = pieceBlack.getAllMovableArea(Square.of("a7"));
         Set<Square> availableSquaresWhite = pieceWhite.getAllMovableArea(Square.of("a6"));
@@ -44,8 +44,8 @@ public class PawnTest {
         board.put(Square.of("a5"), Knight.getPieceInstance(Team.BLACK));
         board.put(Square.of("c5"), Knight.getPieceInstance(Team.WHITE));
 
-        Piece pieceBlack = Pawn.getPieceInstance(Team.BLACK);
-        Piece pieceWhite = Pawn.getPieceInstance(Team.WHITE);
+        Piece pieceBlack = Pawn.getInstance(Team.BLACK);
+        Piece pieceWhite = Pawn.getInstance(Team.WHITE);
 
         Set<Square> availableSquares = new HashSet<>();
         availableSquares.addAll(pieceWhite.getMovableArea(Square.of("a4"), board));
@@ -62,8 +62,8 @@ public class PawnTest {
         Map<Square, Piece> board = new HashMap<>();
         board.put(Square.of("b6"), Knight.getPieceInstance(Team.BLACK));
 
-        Piece pieceBlack = Pawn.getPieceInstance(Team.BLACK);
-        Piece pieceWhite = Pawn.getPieceInstance(Team.WHITE);
+        Piece pieceBlack = Pawn.getInstance(Team.BLACK);
+        Piece pieceWhite = Pawn.getInstance(Team.WHITE);
 
         Set<Square> availableSquaresBlack = pieceBlack
             .getMovableArea(Square.of("a7"), board);
@@ -92,7 +92,7 @@ public class PawnTest {
         board.put(Square.of("e5"), Knight.getPieceInstance(Team.BLACK));
         board.put(Square.of("f5"), Knight.getPieceInstance(Team.WHITE));
 
-        Piece blackPawn = Pawn.getPieceInstance(Team.BLACK);
+        Piece blackPawn = Pawn.getInstance(Team.BLACK);
         Set<Square> availableSquares = blackPawn
             .getMovableArea(Square.of("c6"), board);
         assertThat(availableSquares.contains(Square.of("c5"))).isTrue();

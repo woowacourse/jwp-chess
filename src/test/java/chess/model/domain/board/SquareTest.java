@@ -42,7 +42,7 @@ public class SquareTest {
     @Test
     void canAddTest() {
         Square square = Square.of("a2");
-        assertThat(square.getIncreased(1, 1)).isEqualTo(Square.of("b3"));
+        assertThat(square.getIncreasedSquare(1, 1)).isEqualTo(Square.of("b3"));
     }
 
     @DisplayName("같은 File의 Square인지 확인")

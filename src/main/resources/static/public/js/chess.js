@@ -96,6 +96,7 @@ window.onload = function () {
                 if (data.normalStatus === false) {
                     alert(data.exception);
                     startPosition = null;
+                    window.location.href = "/loading";
                     return;
                 }
                 const source = startPosition;

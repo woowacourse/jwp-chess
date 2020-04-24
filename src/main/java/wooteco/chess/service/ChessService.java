@@ -40,7 +40,7 @@ public class ChessService {
 	}
 
 	public Board find() {
-		List<PieceDTO> pieceDTOS = boardDAO.findAll();
+		List<PieceDTO> pieceDTOs = boardDAO.findAll();
 		Turn turn;
 		try {
 			turn = turnDAO.find();
@@ -48,10 +48,10 @@ public class ChessService {
 			turn = new Turn(FIRST_TURN);
 			turnDAO.addTurn(FIRST_TURN);
 		}
-		if (pieceDTOS.isEmpty()) {
+		if (pieceDTOs.isEmpty()) {
 			return createBoard(BoardFactory.createBoard());
 		}
-		return BoardFactory.createBoard(pieceDTOS, turn);
+		return BoardFactory.createBoard(pieceDTOs, turn);
 	}
 
 	private Board createBoard(Board board) {

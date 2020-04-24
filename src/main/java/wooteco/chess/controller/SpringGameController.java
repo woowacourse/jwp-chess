@@ -9,14 +9,18 @@ import org.springframework.web.servlet.ModelAndView;
 import spark.Request;
 import spark.Response;
 import wooteco.chess.domain.Color;
+import wooteco.chess.domain.GameManager;
 import wooteco.chess.dto.GameManagerDTO;
 import wooteco.chess.dto.MovablePositionDTO;
+import wooteco.chess.dto.MovePositionDTO;
 import wooteco.chess.service.GameService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/game")
@@ -31,22 +35,28 @@ public class SpringGameController {
     }
 
     @PostMapping("/move")
-    public ModelAndView move(HttpServletRequest request, ModelAndView model) throws SQLException {
+    public GameManagerDTO move(HttpServletRequest request) throws SQLException {
+        GameManagerDTO gameManagerDTO = null;
+
 
         int roomId = Integer.parseInt(request.getParameter("roomId"));
         String sourcePosition = request.getParameter("sourcePosition");
         String targetPosition = request.getParameter("targetPosition");
+//        try {
         gameService.movePiece(roomId, sourcePosition, targetPosition);
         boolean kingDead = gameService.isKingDead(roomId);
         String currentColor = gameService.getCurrentColor(roomId);
+        gameManagerDTO = new GameManagerDTO(gameService.getPiecesResponseDTO(roomId).getPieces(), Color.valueOf(currentColor), kingDead);
+//        } catch (Exception e) {
+//            boolean kingDead = gameService.isKingDead(roomId);
+//            String currentColor = gameService.getCurrentColor(roomId);
+//            gameManagerDTO = new GameManagerDTO(gameService.getPiecesResponseDTO(roomId).getPieces(), Color.valueOf(currentColor), kingDead);
+//            gameManagerDTO.setErrorMessage(e.getMessage());
+//        }
+        return gameManagerDTO;
+    }
 
-        model.addObject("pieces", gameService.getPiecesResponseDTO(roomId).getPieces());
-        model.addObject("currentColor", Color.valueOf(currentColor));
-        model.addObject("kingDead", kingDead);
-        model.setViewName("game");
 
-        return model;
-//        return new GameManagerDTO(gameService.getPiecesResponseDTO(roomId).getPieces(), Color.valueOf(currentColor), kingDead);
 //        Gson gson = new Gson();
 //        JsonObject object = new JsonObject();
 //        String pieces = gson.toJson(gameService.getPiecesResponseDTO(roomId).getPieces());
@@ -56,7 +66,7 @@ public class SpringGameController {
 //        object.addProperty("currentColor", currentColor);
 //
 //        return gson.toJson(object);
-    }
+
 
     public static String showStatus(Request request, Response response) throws SQLException {
         GameService gameService = GameService.getInstance();
@@ -93,5 +103,13 @@ public class SpringGameController {
         String sourcePosition = request.getParameter("sourcePosition");
 
         return gameService.getMovablePositions(roomId, sourcePosition);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ModelAndView exceptionHandler(Exception e){
+        ModelAndView model = new ModelAndView();
+        model.setViewName("game");
+        model.addObject("errorMessage", e.getMessage());
+        return model;
     }
 }

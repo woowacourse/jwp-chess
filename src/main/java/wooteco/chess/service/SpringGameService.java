@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Service
-public class GameService {
+public class SpringGameService {
 
     @Autowired
     private GameDAO gameDAO;

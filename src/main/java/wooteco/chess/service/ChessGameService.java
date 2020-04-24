@@ -62,9 +62,6 @@ public class ChessGameService {
         updateTurn();
         boardDAO.updatePiece(board, Position.of(fromPiece));
         boardDAO.updatePiece(board, Position.of(toPiece));
-//        for (Position position : board.getBoard().keySet()) {
-//            boardDAO.updatePiece(board, position);
-//        }
         return board;
     }
 
@@ -107,14 +104,14 @@ public class ChessGameService {
         return turnDAO.findTurn();
     }
 
+    public boolean isFinish(final Board board) {
+        return board.isFinished();
+    }
+
     public String receiveWinner() throws SQLException {
         updateTurn();
         Team team = turnDAO.findTurn();
         return team.toString();
-    }
-
-    public boolean isFinish(final Board board) {
-        return board.isFinished();
     }
 
 }

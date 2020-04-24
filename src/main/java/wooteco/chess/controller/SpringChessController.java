@@ -43,7 +43,7 @@ public class SpringChessController {
         return "index";
     }
 
-    @RequestMapping("/move")
+    @PostMapping("/move")
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> move(@RequestParam String fromPiece,
                                   @RequestParam String toPiece) throws SQLException {

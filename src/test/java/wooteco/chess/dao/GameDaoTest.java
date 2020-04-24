@@ -2,7 +2,6 @@ package wooteco.chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.AfterEach;
@@ -15,13 +14,13 @@ class GameDaoTest {
 	private GameDao gameDao = GameDao.getInstance();
 
 	@AfterEach
-	void tearDown() throws SQLException {
+	void tearDown() {
 		gameDao.deleteAll();
 	}
 
 	@DisplayName("save 기능 테스트")
 	@Test
-	void save() throws SQLException {
+	void save() {
 		GameDto gameDto = new GameDto("black");
 		gameDto = gameDao.save(gameDto);
 
@@ -30,7 +29,7 @@ class GameDaoTest {
 
 	@DisplayName("update 기능 테스트")
 	@Test
-	void update() throws SQLException {
+	void update() {
 		//given
 		GameDto gameDto = new GameDto("white");
 		gameDto = gameDao.save(gameDto);

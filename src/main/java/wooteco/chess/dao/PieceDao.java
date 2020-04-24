@@ -23,7 +23,7 @@ public class PieceDao {
 		return PIECE_DAO;
 	}
 
-	public PieceDto save(PieceDto pieceDto) {
+	public void save(PieceDto pieceDto) {
 		String query = String.format("INSERT INTO %s (SYMBOL,GAME_ID,POSITION,TEAM) VALUES(?,?,?,?)", TABLE_NAME);
 		try (
 			Connection conn = DBConnector.getConnection();
@@ -34,14 +34,6 @@ public class PieceDao {
 			pstmt.setString(3, pieceDto.getPosition());
 			pstmt.setString(4, pieceDto.getTeam());
 			pstmt.executeUpdate();
-
-			ResultSet generatedKeys = pstmt.getGeneratedKeys();
-			if (!generatedKeys.next()) {
-				throw new SQLException("저장 실패");
-			}
-			Long pieceId = generatedKeys.getLong(1);
-			return new PieceDto(pieceId, pieceDto.getGameId(), pieceDto.getSymbol(), pieceDto.getTeam(),
-				pieceDto.getPosition());
 		} catch (SQLException e) {
 			throw new SQLAccessException(e.getMessage());
 		}
@@ -56,23 +48,6 @@ public class PieceDao {
 			pstmt.setString(1, newPosition);
 			pstmt.setLong(2, id);
 			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			throw new SQLAccessException(e.getMessage());
-		}
-	}
-
-	public Optional<PieceDto> findById(Long id) {
-		String query = String.format("SELECT * FROM %s WHERE id = ?", TABLE_NAME);
-		try (
-			Connection conn = DBConnector.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(query)
-		) {
-			pstmt.setLong(1, id);
-			ResultSet rs = pstmt.executeQuery();
-			if (!rs.next()) {
-				return Optional.empty();
-			}
-			return mapPieceDto(rs);
 		} catch (SQLException e) {
 			throw new SQLAccessException(e.getMessage());
 		}

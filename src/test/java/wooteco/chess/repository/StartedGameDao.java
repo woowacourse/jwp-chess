@@ -6,10 +6,10 @@ import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.game.Started;
 
-public class StartedGameDAO implements GameDAO {
+public class StartedGameDao implements GameDao {
 	private Game game;
 
-	public StartedGameDAO() {
+	public StartedGameDao() {
 		this.game = new Started(new Board());
 		this.game = game.start();
 	}

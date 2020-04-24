@@ -2,11 +2,11 @@ package wooteco.chess.view.dto.responsedto;
 
 import java.util.Objects;
 
-public class ScoreDTO {
+public class ScoreDto {
 	private final String team;
 	private final double score;
 
-	public ScoreDTO(String team, double score) {
+	public ScoreDto(String team, double score) {
 		this.team = team;
 		this.score = score;
 	}
@@ -25,7 +25,7 @@ public class ScoreDTO {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		ScoreDTO scoreDTO = (ScoreDTO)o;
+		ScoreDto scoreDTO = (ScoreDto)o;
 		return Double.compare(scoreDTO.score, score) == 0 &&
 			Objects.equals(team, scoreDTO.team);
 	}

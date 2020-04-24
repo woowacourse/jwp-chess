@@ -14,177 +14,187 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import wooteco.chess.repository.BlackKingCatchedGameDAO;
-import wooteco.chess.repository.FinishedDrawGameDAO;
-import wooteco.chess.repository.GameDAO;
-import wooteco.chess.repository.ReadyGameDAO;
-import wooteco.chess.repository.StartedGameDAO;
-import wooteco.chess.repository.WhiteMoreScoreGameDAO;
-import wooteco.chess.view.dto.requestdto.PositionRequestDTO;
-import wooteco.chess.view.dto.responsedto.BoardDTO;
-import wooteco.chess.view.dto.responsedto.ScoreDTO;
+import wooteco.chess.repository.BlackKingCatchedGameDao;
+import wooteco.chess.repository.FinishedDrawGameDao;
+import wooteco.chess.repository.GameDao;
+import wooteco.chess.repository.ReadyGameDao;
+import wooteco.chess.repository.StartedGameDao;
+import wooteco.chess.repository.WhiteMoreScoreGameDao;
+import wooteco.chess.view.dto.requestdto.PositionRequestDto;
+import wooteco.chess.view.dto.responsedto.BoardDto;
+import wooteco.chess.view.dto.responsedto.GameDto;
+import wooteco.chess.view.dto.responsedto.ScoreDto;
+import wooteco.chess.view.response.ResponseStatus;
+import wooteco.chess.view.response.ResponseDto;
 
 class GameServiceTest {
 	private GameService service;
-	private GameDAO gameDAO;
+	private GameDao gameDAO;
 
 	private static Stream<Arguments> gameStateSet() {
 		return Stream.of(
-			Arguments.of(new ReadyGameDAO(), new PositionRequestDTO("a1", "a3")),
-			Arguments.of(new FinishedDrawGameDAO(), new PositionRequestDTO("a1", "a3"))
+			Arguments.of(new ReadyGameDao(), new PositionRequestDto("a1", "a3")),
+			Arguments.of(new FinishedDrawGameDao(), new PositionRequestDto("a1", "a3"))
 		);
 	}
 
 	private static Stream<Arguments> initialPositionSet() {
 		return Stream.of(
-			Arguments.arguments(new PositionRequestDTO("a1", "a2"),
-				asList(new BoardDTO("a1", "r"),
-					new BoardDTO("a2", "p"))
+			Arguments.arguments(new PositionRequestDto("a1", "a2"),
+				asList(new BoardDto("a1", "r"),
+					new BoardDto("a2", "p"))
 			),
-			Arguments.arguments(new PositionRequestDTO("c1", "c5"),
-				asList(new BoardDTO("c1", "b"),
-					new BoardDTO("c5", "."))
+			Arguments.arguments(new PositionRequestDto("c1", "c5"),
+				asList(new BoardDto("c1", "b"),
+					new BoardDto("c5", "."))
 			),
-			Arguments.arguments(new PositionRequestDTO("b1", "b8"),
-				asList(new BoardDTO("b1", "n"),
-					new BoardDTO("b8", "N"))
+			Arguments.arguments(new PositionRequestDto("b1", "b8"),
+				asList(new BoardDto("b1", "n"),
+					new BoardDto("b8", "N"))
 			)
 		);
 	}
 
-	@DisplayName("게임 시작전 점수 계산 서비스 실행시, USO 예외 발생")
+	private static Stream<Arguments> stateAndIsNotFinishExpectedSets() {
+		return Stream.of(
+			Arguments.of(new ReadyGameDao(), true),
+			Arguments.of(new StartedGameDao(), true),
+			Arguments.of(new FinishedDrawGameDao(), false)
+		);
+	}
+
+	@DisplayName("게임 시작전 점수 계산 서비스 실행시, Error status 반환")
 	@Test
 	void calculateScore_Ready_state_exception_test() {
-		gameDAO = new ReadyGameDAO();
+		gameDAO = new ReadyGameDao();
 		service = new GameService(gameDAO);
-		assertThatThrownBy(() -> service.calculateScore()).isInstanceOf(UnsupportedOperationException.class);
+		ResponseDto response = service.calculateScore();
+		assertThat(response.getStatus()).isEqualTo(ResponseStatus.ERROR);
 	}
 
 	@DisplayName("게임중 점수 계산 서비스 실행시, 정상적으로 DTO 리스트 반환")
 	@Test
 	void calculateScore_Started_state_normal_test() {
-		gameDAO = new StartedGameDAO();
+		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
-		assertThat(service.calculateScore()).containsExactlyInAnyOrder(
-			new ScoreDTO("black", 38.0),
-			new ScoreDTO("white", 38.0)
+		assertThat((List<ScoreDto>)service.calculateScore().getData()).containsExactlyInAnyOrder(
+			new ScoreDto("black", 38.0),
+			new ScoreDto("white", 38.0)
 		);
 	}
 
 	@DisplayName("게임 종료후 점수 계산 서비스 실행시, 정상적으로 DTO 리스트 반환")
 	@Test
 	void calculateScore_Finished_state_normal_test() {
-		gameDAO = new FinishedDrawGameDAO();
+		gameDAO = new FinishedDrawGameDao();
 		service = new GameService(gameDAO);
-		assertThat(service.calculateScore()).containsExactlyInAnyOrder(
-			new ScoreDTO("black", 38.0),
-			new ScoreDTO("white", 38.0)
+		assertThat((List<ScoreDto>)service.calculateScore().getData()).containsExactlyInAnyOrder(
+			new ScoreDto("black", 38.0),
+			new ScoreDto("white", 38.0)
 		);
 	}
 
 	@DisplayName("비어있는 보드 판에서 기물 DTO 목록 가져올시, 빈 리스트 반환한다.")
 	@Test
 	void findAllPiecesOnEmptyBoardTest() {
-		gameDAO = new ReadyGameDAO();
+		gameDAO = new ReadyGameDao();
 		service = new GameService(gameDAO);
-		assertThat(service.findAllPiecesOnBoard()).isEqualTo(Collections.emptyList());
+		assertThat((List<BoardDto>)service.findAllPiecesOnBoard().getData()).isEqualTo(Collections.emptyList());
 	}
 
-	@DisplayName("게임 중이 아닌 경우, move 실행시 예외 발생한다.")
+	@DisplayName("게임 중이 아닌 경우, move 실행시 error status 반환")
 	@ParameterizedTest
 	@MethodSource("gameStateSet")
-	void moveExceptionTest(GameDAO notPlayingStateDAO, PositionRequestDTO position) {
+	void moveExceptionTest(GameDao notPlayingStateDAO, PositionRequestDto position) {
 		service = new GameService(notPlayingStateDAO);
-		assertThatThrownBy(() -> service.move(position))
-			.isInstanceOf(UnsupportedOperationException.class);
+		ResponseDto response = service.move(position);
+		assertThat(response.getStatus()).isEqualTo(ResponseStatus.ERROR);
 	}
 
 	@DisplayName("게임 중인 상태에서 올바른 차례의 말 움직이면 예외 없이 정상 실행")
 	@Test
 	void startedGameMoveTest() {
-		gameDAO = new StartedGameDAO();
+		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
 		assertThatCode(() -> {
-			service.move(new PositionRequestDTO("a2", "a4"));
-			service.move(new PositionRequestDTO("a7", "a5"));
+			service.move(new PositionRequestDto("a2", "a4"));
+			service.move(new PositionRequestDto("a7", "a5"));
 		}).doesNotThrowAnyException();
 	}
 
-	@DisplayName("게임 중인 상태에서 현재 차례 말을 이동하지 못하는 경로로 움직이면 illegal argument 예외 발생")
+	@DisplayName("게임 중인 상태에서 현재 차례 말을 이동하지 못하는 경로로 움직이면 error status 반환")
 	@Test
 	void startedGameMoveWrongWayTest() {
-		gameDAO = new StartedGameDAO();
+		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
-		assertThatThrownBy(() -> {
-			service.move(new PositionRequestDTO("b2", "b4"));
-			service.move(new PositionRequestDTO("b7", "b5"));
-			service.move(new PositionRequestDTO("a1", "c3"));
-		}).isInstanceOf(IllegalArgumentException.class);
+		service.move(new PositionRequestDto("b2", "b4"));
+		service.move(new PositionRequestDto("b7", "b5"));
+		ResponseDto response = service.move(new PositionRequestDto("a1", "c3"));
+		assertThat(response.getStatus()).isEqualTo(ResponseStatus.ERROR);
 	}
 
-	@DisplayName("게임 중인 상태에서 현재 차례 말을 이동하려는 경로 사이 장애물이 있는 경우 illegal argument 예외 발생")
+	@DisplayName("게임 중인 상태에서 현재 차례 말을 이동하려는 경로 사이 장애물이 있는 경우 error status 반환")
 	@Test
 	void startedGameMoveWithObstacleTest() {
-		gameDAO = new StartedGameDAO();
+		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
-		assertThatThrownBy(() -> service.move(new PositionRequestDTO("a1", "a5")))
-			.isInstanceOf(IllegalArgumentException.class);
+		ResponseDto response = service.move(new PositionRequestDto("a1", "a5"));
+		assertThat(response.getStatus()).isEqualTo(ResponseStatus.ERROR);
 	}
 
-	@DisplayName("게임 중인 상태에서 현재 차례가 아닌 말을 움직이면 illegal argument 예외 발생")
+	@DisplayName("게임 중인 상태에서 현재 차례가 아닌 말을 움직이면 error status 빈허ㅣ")
 	@Test
 	void startedGameMoveWrongTurnTest() {
-		gameDAO = new StartedGameDAO();
+		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
-		assertThatThrownBy(() -> {
-			service.move(new PositionRequestDTO("a2", "a4"));
-			service.move(new PositionRequestDTO("a4", "a5"));
-		}).isInstanceOf(IllegalArgumentException.class);
+		service.move(new PositionRequestDto("a2", "a4"));
+		ResponseDto response = service.move(new PositionRequestDto("a4", "a5"));
+		assertThat(response.getStatus()).isEqualTo(ResponseStatus.ERROR);
 	}
 
-	@DisplayName("게임 중인 상태에서 현재 차례가 아닌 말을 움직이면 illegal argument 예외 발생")
+	@DisplayName("게임 중인 상태에서 현재 차례가 아닌 말을 움직이면 error status 빈환")
 	@Test
 	void startedGameMoveWrongTurnTest2() {
-		gameDAO = new StartedGameDAO();
+		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
-		assertThatThrownBy(() -> service.move(new PositionRequestDTO("a7", "a5")))
-			.isInstanceOf(IllegalArgumentException.class);
+		ResponseDto response = service.move(new PositionRequestDto("a7", "a5"));
+		assertThat(response.getStatus()).isEqualTo(ResponseStatus.ERROR);
 	}
 
-	@DisplayName("게임 중인 상태에서 빈공간을 출발지로 move 시 illegal argument 예외 발생")
+	@DisplayName("게임 중인 상태에서 빈공간을 출발지로 move 시 error status 반환")
 	@Test
 	void startedGameMoveEmptySpaceTest() {
-		gameDAO = new StartedGameDAO();
+		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
-		assertThatThrownBy(() -> service.move(new PositionRequestDTO("a4", "a5")))
-			.isInstanceOf(IllegalArgumentException.class);
+		ResponseDto response = service.move(new PositionRequestDto("a4", "a5"));
+		assertThat(response.getStatus()).isEqualTo(ResponseStatus.ERROR);
 	}
 
 	@DisplayName("초기화된 보드 판에서 기물 DTO 목록 가져올시, 보드위 모든 기물 DTO 목록 반환한다.")
 	@Test
 	void findAllPiecesOnInitialBoardTest() {
-		gameDAO = new StartedGameDAO();
+		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
-		assertThat(service.findAllPiecesOnBoard()).contains(
-			new BoardDTO("a2", "p"),
-			new BoardDTO("b2", "p"),
-			new BoardDTO("c2", "p"),
-			new BoardDTO("d2", "p"),
-			new BoardDTO("e2", "p"),
-			new BoardDTO("f2", "p"),
-			new BoardDTO("g2", "p"),
-			new BoardDTO("h2", "p")
+		assertThat((List<BoardDto>)service.findAllPiecesOnBoard().getData()).contains(
+			new BoardDto("a2", "p"),
+			new BoardDto("b2", "p"),
+			new BoardDto("c2", "p"),
+			new BoardDto("d2", "p"),
+			new BoardDto("e2", "p"),
+			new BoardDto("f2", "p"),
+			new BoardDto("g2", "p"),
+			new BoardDto("h2", "p")
 		);
 	}
 
 	@DisplayName("인자로 받는 두 위치에 해당하는 좌표, 기물 정보가 담긴 DTO 목록을 가져온다.")
 	@ParameterizedTest
 	@MethodSource("initialPositionSet")
-	void findChangedPiecesOnBoardTest(PositionRequestDTO positionDTO, List<BoardDTO> expected) {
-		gameDAO = new StartedGameDAO();
+	void findChangedPiecesOnBoardTest(PositionRequestDto positionDTO, List<BoardDto> expected) {
+		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
 
-		List<BoardDTO> actual = service.findChangedPiecesOnBoard(positionDTO);
+		List<BoardDto> actual = service.findChangedPiecesOnBoard(positionDTO);
 		assertThat(actual).isEqualTo(expected);
 	}
 
@@ -192,68 +202,60 @@ class GameServiceTest {
 	@ParameterizedTest
 	@CsvSource({"start,started", "end,suspendFinish"})
 	void changeStateTest(String request, String expeected) {
-		gameDAO = new StartedGameDAO();
+		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
 		service.changeState(request);
-		assertThat(service.getCurrentState().getGameState()).isEqualTo(expeected);
+		assertThat(((GameDto)service.getCurrentState().getData()).getGameState()).isEqualTo(expeected);
 	}
 
 	@DisplayName("게임이 끝난 상태가 아니면 true 반환한다.")
 	@ParameterizedTest
 	@MethodSource("stateAndIsNotFinishExpectedSets")
-	void isNotFinishTest(GameDAO gameDAO, boolean expected) {
+	void isNotFinishTest(GameDao gameDAO, boolean expected) {
 		service = new GameService(gameDAO);
-		boolean actual = service.isNotFinish();
+		boolean actual = (boolean)service.isNotFinish().getData();
 		assertThat(actual).isEqualTo(expected);
 	}
 
-	private static Stream<Arguments> stateAndIsNotFinishExpectedSets() {
-		return Stream.of(
-			Arguments.of(new ReadyGameDAO(), true),
-			Arguments.of(new StartedGameDAO(), true),
-			Arguments.of(new FinishedDrawGameDAO(), false)
-		);
-	}
-
-	@DisplayName("게임이 준비 상태인 경우, 승자를 구하고자 할때 USO 예외 발생한다.")
+	@DisplayName("게임이 준비 상태인 경우, 승자를 구하고자 할때 error status 반환")
 	@Test
 	void getWinnerExceptionTest() {
-		gameDAO = new ReadyGameDAO();
+		gameDAO = new ReadyGameDao();
 		service = new GameService(gameDAO);
-		assertThatThrownBy(() -> service.getWinner())
-			.isInstanceOf(UnsupportedOperationException.class);
+		ResponseDto response = service.getWinner();
+		assertThat(response.getStatus()).isEqualTo(ResponseStatus.ERROR);
 	}
 
-	@DisplayName("게임이 진행중인 상태인 경우, 승자를 구하고자 할때 USO 예외 발생한다.")
+	@DisplayName("게임이 진행중인 상태인 경우, 승자를 구하고자 할때 Error status를 반환한다.")
 	@Test
 	void getWinnerWithStartedStateExceptionTest() {
-		gameDAO = new StartedGameDAO();
+		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
-		assertThatThrownBy(() -> service.getWinner())
-			.isInstanceOf(UnsupportedOperationException.class);
+		ResponseDto winner = service.getWinner();
+		assertThat(winner.getStatus()).isEqualTo(ResponseStatus.ERROR);
 	}
 
 	@DisplayName("게임이 동점으로 끝난 상태인 경우, 승자가 없다.")
 	@Test
 	void getWinnerWithFinishedStateTest() {
-		gameDAO = new FinishedDrawGameDAO();
+		gameDAO = new FinishedDrawGameDao();
 		service = new GameService(gameDAO);
-		assertThat(service.getWinner()).isEqualTo("none");
+		assertThat((String)service.getWinner().getData()).isEqualTo("none");
 	}
 
 	@DisplayName("검정 왕이 잡힌 경우, 하얀 팀이 이긴다.")
 	@Test
 	void getWinnerWithFinishedStateTest2() {
-		gameDAO = new BlackKingCatchedGameDAO();
+		gameDAO = new BlackKingCatchedGameDao();
 		service = new GameService(gameDAO);
-		assertThat(service.getWinner()).isEqualTo("white");
+		assertThat((String)service.getWinner().getData()).isEqualTo("white");
 	}
 
 	@DisplayName("하얀 팀이 기물 점수가 더 높은 경우, 하얀 팀이 이긴다.")
 	@Test
 	void getWinnerWithFinishedStateTest3() {
-		gameDAO = new WhiteMoreScoreGameDAO();
+		gameDAO = new WhiteMoreScoreGameDao();
 		service = new GameService(gameDAO);
-		assertThat(service.getWinner()).isEqualTo("white");
+		assertThat((String)service.getWinner().getData()).isEqualTo("white");
 	}
 }

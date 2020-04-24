@@ -7,6 +7,9 @@ import spark.ResponseTransformer;
 public class JsonUtil {
 	private static final Gson GSON = new Gson();
 
+	private JsonUtil() {
+	}
+
 	public static String toJson(Object object) {
 		return GSON.toJson(object);
 	}

@@ -4,17 +4,17 @@ import java.util.Objects;
 
 import wooteco.chess.domain.piece.Team;
 
-public class GameDTO {
+public class GameDto {
 	private final String turn;
 	private final String gameState;
 
-	private GameDTO(String turn, String gameState) {
+	private GameDto(String turn, String gameState) {
 		this.turn = turn;
 		this.gameState = gameState;
 	}
 
-	public static GameDTO of(Team turn, String stateType) {
-		return new GameDTO(turn.getTeam(), stateType);
+	public static GameDto of(Team turn, String stateType) {
+		return new GameDto(turn.getTeam(), stateType);
 	}
 
 	public String getTurn() {
@@ -31,7 +31,7 @@ public class GameDTO {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		GameDTO gameDTO = (GameDTO)o;
+		GameDto gameDTO = (GameDto)o;
 		return Objects.equals(turn, gameDTO.turn) &&
 			Objects.equals(gameState, gameDTO.gameState);
 	}

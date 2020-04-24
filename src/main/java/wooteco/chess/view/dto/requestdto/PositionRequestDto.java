@@ -1,13 +1,13 @@
 package wooteco.chess.view.dto.requestdto;
 
-public class PositionRequestDTO {
+public class PositionRequestDto {
 	private String from;
 	private String to;
 
-	public PositionRequestDTO() {
+	public PositionRequestDto() {
 	}
 
-	public PositionRequestDTO(String from, String to) {
+	public PositionRequestDto(String from, String to) {
 		this.from = from;
 		this.to = to;
 	}

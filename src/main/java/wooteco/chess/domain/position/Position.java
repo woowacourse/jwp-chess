@@ -14,14 +14,14 @@ public class Position {
 	private static final Map<String, Position> CACHE = new HashMap<>();
 
 	static {
-		initPositionCache();
+		for (int col = MIN_POSITION_NUMBER; col <= MAX_POSITION_NUMBER; col++) {
+			initColumnPositionCache(col);
+		}
 	}
 
-	private static void initPositionCache() {
-		for (int col = MIN_POSITION_NUMBER; col <= MAX_POSITION_NUMBER; col++) {
-			for (int row = MIN_POSITION_NUMBER; row <= MAX_POSITION_NUMBER; row++) {
-				CACHE.put(getKey(col, row), new Position(new Cell(col), new Cell(row)));
-			}
+	private static void initColumnPositionCache(int col) {
+		for (int row = MIN_POSITION_NUMBER; row <= MAX_POSITION_NUMBER; row++) {
+			CACHE.put(getKey(col, row), new Position(new Cell(col), new Cell(row)));
 		}
 	}
 
@@ -46,7 +46,11 @@ public class Position {
 	}
 
 	private static String getKey(int file, int rank) {
-		return (char)('a' + file - 1) + String.valueOf(rank);
+		return convertColumnChar(file) + String.valueOf(rank);
+	}
+
+	private static char convertColumnChar(int file) {
+		return (char)('a' + file - 1);
 	}
 
 	public static List<Position> findMultipleStepTrace(Position from, Position to) {
@@ -100,6 +104,6 @@ public class Position {
 
 	@Override
 	public String toString() {
-		return String.valueOf((char)('a' + col.getNumber() - 1)) + row.getNumber();
+		return String.valueOf(convertColumnChar(col.getNumber())) + row.getNumber();
 	}
 }

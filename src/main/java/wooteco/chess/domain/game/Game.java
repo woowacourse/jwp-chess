@@ -1,7 +1,5 @@
 package wooteco.chess.domain.game;
 
-import static wooteco.chess.domain.piece.Team.*;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -17,6 +15,7 @@ public abstract class Game {
 	private static final Map<String, Function<Game, Game>> CHANGE_STATE_FUNCTIONS;
 	private static final String START_REQUEST = "start";
 	private static final String END_REQUEST = "end";
+	private static final int DEFAULT_GAME_ID = 1;
 
 	static {
 		CHANGE_STATE_FUNCTIONS = new HashMap<>();
@@ -28,12 +27,8 @@ public abstract class Game {
 	protected final Board board;
 	protected Team turn;
 
-	public Game(Board board) {
-		this(1, board, WHITE);
-	}
-
 	public Game(Board board, Team turn) {
-		this(1, board, turn);
+		this(DEFAULT_GAME_ID, board, turn);
 	}
 
 	public Game(int id, Board board, Team turn) {

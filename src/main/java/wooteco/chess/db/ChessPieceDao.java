@@ -1,5 +1,6 @@
 package wooteco.chess.db;
 
+import org.springframework.stereotype.Component;
 import wooteco.chess.domains.piece.Piece;
 import wooteco.chess.domains.position.Position;
 import wooteco.chess.util.JdbcTemplate;
@@ -9,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ChessPieceDao implements PieceDao {
     @Override
     public int countSavedPieces(String gameId) throws SQLException {

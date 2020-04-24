@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import org.springframework.stereotype.Service;
 import wooteco.chess.db.ChessPiece;
 import wooteco.chess.db.MoveHistoryDao;
 import wooteco.chess.db.PieceDao;
@@ -14,6 +15,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Service
 public class ChessWebService {
     public static final int BOARD_CELLS_NUMBER = 64;
     private static final String TURN_MSG_FORMAT = "%s의 순서입니다.";

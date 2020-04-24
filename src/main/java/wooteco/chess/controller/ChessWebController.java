@@ -17,9 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static spark.Spark.exception;
-import static spark.Spark.get;
-import static spark.Spark.post;
+import static spark.Spark.*;
 
 public class ChessWebController {
 
@@ -42,7 +40,7 @@ public class ChessWebController {
             List<ChessPieceDto> pieces = getPieceDto(id);
             model.put("chessPiece", pieces);
             model.put("id", id);
-            return render(model, "contents/chess.hbs");
+            return render(model, "chess.hbs");
         });
 
         post("/createChessGame", (req, res) -> chessService.createGame());

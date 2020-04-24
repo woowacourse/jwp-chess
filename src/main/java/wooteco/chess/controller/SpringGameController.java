@@ -36,65 +36,34 @@ public class SpringGameController {
 
     @PostMapping("/move")
     public GameManagerDTO move(HttpServletRequest request) throws SQLException {
-        GameManagerDTO gameManagerDTO = null;
-
-
         int roomId = Integer.parseInt(request.getParameter("roomId"));
         String sourcePosition = request.getParameter("sourcePosition");
         String targetPosition = request.getParameter("targetPosition");
-//        try {
-        gameService.movePiece(roomId, sourcePosition, targetPosition);
-        boolean kingDead = gameService.isKingDead(roomId);
-        String currentColor = gameService.getCurrentColor(roomId);
-        gameManagerDTO = new GameManagerDTO(gameService.getPiecesResponseDTO(roomId).getPieces(), Color.valueOf(currentColor), kingDead);
-//        } catch (Exception e) {
-//            boolean kingDead = gameService.isKingDead(roomId);
-//            String currentColor = gameService.getCurrentColor(roomId);
-//            gameManagerDTO = new GameManagerDTO(gameService.getPiecesResponseDTO(roomId).getPieces(), Color.valueOf(currentColor), kingDead);
-//            gameManagerDTO.setErrorMessage(e.getMessage());
-//        }
-        return gameManagerDTO;
+
+        GameManagerDTO gameManagerDTO = gameService.createDTO(roomId);
+        try {
+            gameService.movePiece(roomId, sourcePosition, targetPosition);
+            return gameService.createDTO(roomId);
+        } catch (IllegalArgumentException e) {
+            gameManagerDTO.setErrorMessage(e.getMessage());
+            return gameManagerDTO;
+        }
     }
 
-
-//        Gson gson = new Gson();
-//        JsonObject object = new JsonObject();
-//        String pieces = gson.toJson(gameService.getPiecesResponseDTO(roomId).getPieces());
-//
-//        object.addProperty("pieces", pieces);
-//        object.addProperty("kingDead", kingDead);
-//        object.addProperty("currentColor", currentColor);
-//
-//        return gson.toJson(object);
-
-
-    public static String showStatus(Request request, Response response) throws SQLException {
-        GameService gameService = GameService.getInstance();
-        int roomId = Integer.parseInt(request.queryParams("roomId"));
-
+    @GetMapping("/status")
+    public Model showStatus(@RequestParam Integer roomId, Model model) throws SQLException {
         double whiteScore = gameService.getScore(roomId, Color.WHITE);
         double blackScore = gameService.getScore(roomId, Color.BLACK);
 
-        Gson gson = new Gson();
-        JsonObject object = new JsonObject();
+        model.addAttribute("whiteScore", whiteScore);
+        model.addAttribute("blackScore", blackScore);
 
-        object.addProperty("whiteScore", whiteScore);
-        object.addProperty("blackScore", blackScore);
-
-        return gson.toJson(object);
+        return model;
     }
 
     @GetMapping("/load")
-    public String load(@RequestParam Integer roomId) throws SQLException {
-        Gson gson = new Gson();
-        JsonObject object = new JsonObject();
-        String pieces = gson.toJson(gameService.getPiecesResponseDTO(roomId).getPieces());
-        String currentColor = gameService.getCurrentColor(roomId);
-
-        object.addProperty("pieces", pieces);
-        object.addProperty("currentColor", currentColor);
-
-        return gson.toJson(object);
+    public GameManagerDTO load(@RequestParam Integer roomId) throws SQLException {
+        return gameService.createDTO(roomId);
     }
 
     @GetMapping("/get")
@@ -103,13 +72,5 @@ public class SpringGameController {
         String sourcePosition = request.getParameter("sourcePosition");
 
         return gameService.getMovablePositions(roomId, sourcePosition);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ModelAndView exceptionHandler(Exception e){
-        ModelAndView model = new ModelAndView();
-        model.setViewName("game");
-        model.addObject("errorMessage", e.getMessage());
-        return model;
     }
 }

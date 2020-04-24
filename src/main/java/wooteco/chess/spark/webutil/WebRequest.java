@@ -1,10 +1,10 @@
-package wooteco.chess.webutil;
+package wooteco.chess.spark.webutil;
 
 import spark.Request;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Team;
-import wooteco.chess.sparkservice.ChessService;
+import wooteco.chess.spark.sparkservice.ChessService;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public enum WebRequest {
+
     BLANK_BOARD("빈 판", req -> {
         Map<String, Object> model = ModelParser.parseBlankBoard();
         model.putAll(ModelParser.parseMovablePlaces(new ArrayList<>()));
@@ -62,19 +63,19 @@ public enum WebRequest {
     private String name;
     private ThrowingFunction generateModel;
 
-    WebRequest(String name, ThrowingFunction generateModel) {
+    WebRequest(final String name, final ThrowingFunction generateModel) {
         this.name = name;
         this.generateModel = generateModel;
     }
 
-    public static WebRequest of(String commandName) {
+    public static WebRequest of(final String commandName) {
         return Stream.of(WebRequest.values())
                 .filter(webRequest -> webRequest.name.equals(commandName))
                 .findAny()
                 .orElse(WebRequest.BLANK_BOARD);
     }
 
-    private static void tryMove(Position start, Position end) throws SQLException {
+    private static void tryMove(final Position start, final Position end) throws SQLException {
         ChessService chessService = ChessService.getInstance();
 
         try {
@@ -84,7 +85,7 @@ public enum WebRequest {
         }
     }
 
-    private static List<Position> tryFindMovablePlaces(Position start) throws SQLException {
+    private static List<Position> tryFindMovablePlaces(final Position start) throws SQLException {
         ChessService chessService = ChessService.getInstance();
 
         try {
@@ -95,7 +96,7 @@ public enum WebRequest {
         }
     }
 
-    public Map<String, Object> generateModel(Request request) throws SQLException {
+    public Map<String, Object> generateModel(final Request request) throws SQLException {
         return this.generateModel.action(request);
     }
 

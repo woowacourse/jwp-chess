@@ -2,14 +2,15 @@ package wooteco.chess;
 
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import wooteco.chess.webutil.WebRequest;
+import wooteco.chess.spark.webutil.WebRequest;
 
 import java.util.Map;
 
 import static spark.Spark.*;
 
 public class SparkChessApplication {
-    public static void main(String[] args) {
+
+    public static void main(final String[] args) {
         staticFiles.location("/public");
 
         get("/", (req, res) -> {
@@ -23,7 +24,7 @@ public class SparkChessApplication {
         });
     }
 
-    private static String render(Map<String, Object> model, String templatePath) {
+    private static String render(final Map<String, Object> model, final String templatePath) {
         return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
     }
 }

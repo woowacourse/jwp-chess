@@ -1,4 +1,4 @@
-package wooteco.chess.webutil;
+package wooteco.chess.spark.webutil;
 
 
 import wooteco.chess.domain.board.Board;
@@ -13,6 +13,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.toMap;
 
 public class ModelParser {
+
     private static final String BLANK = "blank";
     private static final String MOVABLE = "movable";
     private static final String MARK = "_mark";
@@ -23,7 +24,7 @@ public class ModelParser {
                 .collect(toMap(Position::toString, position -> BLANK));
     }
 
-    public static Map<String, Object> parseBoard(Board board) {
+    public static Map<String, Object> parseBoard(final Board board) {
         Map<String, Object> output = new HashMap<>();
 
         for (Position position : Position.positions) {
@@ -36,7 +37,7 @@ public class ModelParser {
         return output;
     }
 
-    public static Map<String, Object> parseBoard(Board board, List<Position> movablePlaces) {
+    public static Map<String, Object> parseBoard(final Board board, final List<Position> movablePlaces) {
         Map<String, Object> output = new HashMap<>();
 
         for (Position position : Position.positions) {
@@ -49,17 +50,17 @@ public class ModelParser {
         return output;
     }
 
-    public static Map<String, Object> parseMovablePlaces(List<Position> markingPlaces) {
+    public static Map<String, Object> parseMovablePlaces(final List<Position> markingPlaces) {
         return Position.positions
                 .stream()
-                .collect(toMap(position -> parseMarkPosition(position), position -> parseMovable(position, markingPlaces)));
+                .collect(toMap(ModelParser::parseMarkPosition, position -> parseMovable(position, markingPlaces)));
     }
 
-    private static String parseMarkPosition(Position position) {
+    private static String parseMarkPosition(final Position position) {
         return position.toString() + MARK;
     }
 
-    private static String parseMovable(Position position, List<Position> positions) {
+    private static String parseMovable(final Position position, final List<Position> positions) {
         if (positions.contains(position)) {
             return MOVABLE;
         }

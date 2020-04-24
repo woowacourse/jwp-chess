@@ -6,11 +6,16 @@ import wooteco.chess.domain.piece.Team;
 import java.util.Optional;
 
 public class Judge {
-    public double getScoreByTeam(Board board, Team team) {
-        return board.getDefaultScore(team) - board.countDuplicatedPawns(team) * 0.5;
+
+    private static final double PAWN_DUPLICATED_DEDUCTION = 0.5;
+
+    public double getScoreByTeam(final Board board, final Team team) {
+        double defaultScore = board.getDefaultScore(team);
+        double deduction = board.countDuplicatedPawns(team) * PAWN_DUPLICATED_DEDUCTION;
+        return defaultScore - deduction;
     }
 
-    public Optional<Team> findWinner(Board board) {
+    public Optional<Team> findWinner(final Board board) {
         if (board.hasKing(Team.BLACK) && board.hasKing(Team.WHITE)) {
             return Optional.empty();
         }

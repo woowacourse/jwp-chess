@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class PieceRepository {
+
     private static final List<Piece> pieces = new ArrayList<>();
 
     static {

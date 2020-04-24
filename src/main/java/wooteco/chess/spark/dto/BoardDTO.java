@@ -1,6 +1,7 @@
-package wooteco.chess.dto;
+package wooteco.chess.spark.dto;
 
 public class BoardDTO {
+
     String piece;
     String position;
 
@@ -8,7 +9,7 @@ public class BoardDTO {
         return piece;
     }
 
-    public void setPiece(String piece) {
+    public void setPiece(final String piece) {
         this.piece = piece;
     }
 
@@ -16,7 +17,7 @@ public class BoardDTO {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(final String position) {
         this.position = position;
     }
 }

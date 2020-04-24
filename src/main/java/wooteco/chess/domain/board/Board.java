@@ -11,42 +11,45 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class Board {
+
+    private static final int PAWN_THRESHOLD = 1;
+    private static final int NO_DUPLICATION = 0;
+
     private final Map<Position, Piece> board;
     private Team currentTurn;
 
-    public Board(Map<Position, Piece> board, Team currentTurn) {
+    public Board(final Map<Position, Piece> board, final Team currentTurn) {
         this.board = board;
         this.currentTurn = currentTurn;
     }
 
-    public Piece findPieceOn(Position position) {
+    public Piece findPieceOn(final Position position) {
         return board.get(position);
     }
 
-    public void move(Position start, Position end) {
+    public void move(final Position start, final Position end) {
         Piece startPiece = board.get(start);
         validateMove(start, end, startPiece);
 
         board.put(end, startPiece);
         board.put(start, PieceRepository.getBlank());
-        currentTurn = currentTurn.negate();
+        currentTurn = currentTurn.reverse();
     }
 
-    private void validateMove(Position start, Position end, Piece startPiece) {
+    private void validateMove(final Position start, final Position end, final Piece startPiece) {
         if (!startPiece.isTeamOf(currentTurn)) {
             throw new IllegalArgumentException("현재 차례가 아닙니다.");
         }
-
         if (!startPiece.isMovable(generatePath(start, end))) {
             throw new IllegalArgumentException("움직일 수 없습니다.");
         }
     }
 
-    private Path generatePath(Position start, Position end) {
+    private Path generatePath(final Position start, final Position end) {
         return new Path(findMiddlePositions(start, end), start, end);
     }
 
-    private Map<Position, Piece> findMiddlePositions(Position start, Position end) {
+    private Map<Position, Piece> findMiddlePositions(final Position start, final Position end) {
         return board.entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().inBetween(start, end)
@@ -55,7 +58,7 @@ public class Board {
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public double getDefaultScore(Team team) {
+    public double getDefaultScore(final Team team) {
         return board.values()
                 .stream()
                 .filter(piece -> piece.isTeamOf(team))
@@ -63,7 +66,7 @@ public class Board {
                 .sum();
     }
 
-    public long countDuplicatedPawns(Team team) {
+    public long countDuplicatedPawns(final Team team) {
         List<Position> pawnPositions = getPawnPositions(team);
 
         return Arrays.stream(Coordinate.values())
@@ -71,7 +74,7 @@ public class Board {
                 .sum();
     }
 
-    private List<Position> getPawnPositions(Team team) {
+    private List<Position> getPawnPositions(final Team team) {
         return board.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().isTeamOf(team)
@@ -80,17 +83,18 @@ public class Board {
                 .collect(toList());
     }
 
-    private long countPawnsOnCoordinates(Coordinate coordinate, List<Position> pawnPositions) {
+    private long countPawnsOnCoordinates(final Coordinate coordinate, final List<Position> pawnPositions) {
         long duplicatedPawns = pawnPositions.stream()
                 .filter(position -> position.isOnY(coordinate))
                 .count();
-        if (duplicatedPawns > 1) {
+
+        if (duplicatedPawns > PAWN_THRESHOLD) {
             return duplicatedPawns;
         }
-        return 0;
+        return NO_DUPLICATION;
     }
 
-    public boolean hasKing(Team team) {
+    public boolean hasKing(final Team team) {
         return board.values()
                 .stream()
                 .anyMatch(piece -> piece.isTeamOf(team) && piece instanceof King);

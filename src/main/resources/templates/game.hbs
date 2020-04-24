@@ -238,8 +238,10 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     let chessJson = JSON.parse(xhr.responseText);
-                    if (typeof chessJson.errorMessage == "undefined") {
-                        applyPieces(JSON.parse(chessJson.pieces));
+                    console.log(chessJson);
+                    console.log(chessJson.pieces);
+                    if (chessJson.errorMessage == null) {
+                        applyPieces(chessJson.pieces);
                         let currentColor = chessJson.currentColor;
                         isKingDead(currentColor, chessJson.kingDead);
                         showCurrentColor(currentColor);
@@ -306,7 +308,7 @@
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     alert("게임을 초기화합니다.");
                     let chessJson = JSON.parse(xhr.responseText);
-                    applyPieces(JSON.parse(chessJson.pieces));
+                    applyPieces(chessJson.pieces);
                     showCurrentColor(chessJson.currentColor);
                 }
             };

@@ -1,8 +1,6 @@
 var click_flag = false;
 var source = "";
 var target = "";
-var roomId = "";
-
 
 document.addEventListener("DOMContentLoaded", function () {
     $('.piece-image').click(function () {
@@ -15,11 +13,12 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(source);
             console.log($(this).attr('id'));
             target = $(this);
+            console.log(document.getElementById('room-name').innerText);
             $.ajax({
                 url: '/chess/move',
                 type: 'POST',
                 data: {
-                    roomName: 'asdf',
+                    roomName: document.getElementById('room-name').innerText,
                     source: source.attr('id'),
                     target: target.attr('id')
                 },

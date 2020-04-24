@@ -99,18 +99,9 @@
     </div>
 
     <div class="side">
-        <form action="/chess/move" method="post">
-            <label>출발 좌표</label>
-            <input name="source" type="text">
-            <br/>
-            <label>도착 좌표</label>
-            <input name="target" type="text">
-            <br/>
-            {{#room}}
-            <input hidden name="room-name" type="text" value="{{.}}">
-            {{/room}}
-            <input type="submit" value="이동">
-        </form>
+        {{#room}}
+        <label id="room-name">{{.}}</label>
+        {{/room}}
         <br/>
         {{#error}}
         <label>{{.}}</label>
@@ -136,7 +127,7 @@
         <form action="/" method="get">
             <input onclick="exitRoom()" type="submit" value="나가기">
         </form>
-    </div>
+    </label>
 </div>
 </body>
 </html>

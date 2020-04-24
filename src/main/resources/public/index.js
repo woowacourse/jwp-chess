@@ -1,12 +1,8 @@
-function move(moveInfo) {
-    $.ajax({
-        type: 'PUT',
-        url: '/api/move',
-        data: JSON.stringify(moveInfo),
-        dataType: 'json',
-        contentType: 'application/json; charset=utf-8',
-        success: renderPiece,
-        error: alertMessage
+async function move(moveInfo, game_id) {
+    const moveResponse = await fetch(`/api/piece/${game_id}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(moveInfo)
     });
 }
 
@@ -33,17 +29,16 @@ function boxClickHandler() {
         } else if (!isFrom) {
             moveInfo.to = event.target.id;
             isFrom = true;
-            move(moveInfo);
+            move(moveInfo, params.get("game_id"));
         }
     };
 }
 
-function getMoveInfo() {
-    $(`.box`).on(`click`, boxClickHandler())
-}
+const query = window.location.search;
+const params = new URLSearchParams(query);
 
-function init() {
-    getMoveInfo();
+window.onload = () => {
+    document.querySelectorAll('.box')
+        .forEach(box => box.addEventListener('click', boxClickHandler()));
+    document.querySelector("#param").setAttribute('value', params.get("game_id"));
 }
-
-init();

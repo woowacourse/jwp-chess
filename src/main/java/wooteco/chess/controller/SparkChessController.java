@@ -17,7 +17,6 @@ import wooteco.chess.service.ChessService;
 
 public class SparkChessController {
 	private static final Gson GSON = new Gson();
-	private static final int MAX_INTERVAL_SECONDS = 300;
 
 	private final ChessService service;
 
@@ -42,7 +41,7 @@ public class SparkChessController {
 	}
 
 	public void updateBoard() {
-		put("/api/move", this::updateBoard);
+		put("/api/piece/:game_id", this::updateBoard);
 	}
 
 	public void renderResult() {
@@ -55,8 +54,6 @@ public class SparkChessController {
 
 	private String renderBoard(Request request, Response response) {
 		String gameId = request.queryParams("game_id");
-		request.session(true).attribute("game_id", gameId);
-		request.session().maxInactiveInterval(MAX_INTERVAL_SECONDS);
 		service.initialize(gameId);
 		return render(service.getBoard(gameId), "chess.hbs");
 	}
@@ -67,14 +64,14 @@ public class SparkChessController {
 
 		String from = element.getAsJsonObject().get("from").getAsString();
 		String to = element.getAsJsonObject().get("to").getAsString();
-		String gameId = request.session().attribute("game_id");
+		String gameId = request.params("game_id");
 
 		service.move(gameId, Position.of(from), Position.of(to));
 		return GSON.toJson(from + " " + to);
 	}
 
 	private String renderResult(Request request, Response response) {
-		String gameId = request.session().attribute("game_id");
+		String gameId = request.queryParams("game_id");
 		return render(service.getResult(gameId), "status.hbs");
 	}
 

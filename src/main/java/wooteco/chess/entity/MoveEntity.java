@@ -9,9 +9,9 @@ public class MoveEntity {
     @Id private int id;
     @Column("start_position") private String start;
     @Column("end_position") private String end;
-    @Column("game") private int gameId;
+    @Column("game") private String gameId;
 
-    public MoveEntity(int gameId, String start, String end) {
+    public MoveEntity(String gameId, String start, String end) {
         this.gameId = gameId;
         this.start = start;
         this.end = end;

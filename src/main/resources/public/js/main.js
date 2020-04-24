@@ -153,7 +153,7 @@ window.onload = function () {
   async function roomEventHandler(roomNode) {
     document.querySelectorAll(".room").forEach(element => element.classList.remove("room-selected"));
     roomNode.classList.add("room-selected");
-    roomId = parseInt(roomNode.querySelector(".room-number").innerText);
+    roomId = roomNode.querySelector(".room-number").innerText;
     setBoard(await getBoard(roomId));
     if (await checkGameOver(roomId)) {
       endGameIfKingIsDead();

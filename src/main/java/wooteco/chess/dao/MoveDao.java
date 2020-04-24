@@ -21,7 +21,7 @@ public class MoveDao implements MySqlJdbcTemplateDao {
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
-            statement.setInt(1, game.getId());
+            statement.setString(1, game.getId());
             statement.setString(2, path.getStart());
             statement.setString(3, path.getEnd());
             statement.executeUpdate();
@@ -33,7 +33,7 @@ public class MoveDao implements MySqlJdbcTemplateDao {
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
-            statement.setInt(1, game.getId());
+            statement.setString(1, game.getId());
             List<MoveRequestDto> moves = new ArrayList<>();
             ResultSet resultSet = statement.executeQuery();
             addMoves(moves, resultSet);
@@ -55,7 +55,7 @@ public class MoveDao implements MySqlJdbcTemplateDao {
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
-            statement.setInt(1, game.getId());
+            statement.setString(1, game.getId());
             statement.executeUpdate();
         }
     }

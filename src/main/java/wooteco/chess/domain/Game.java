@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import wooteco.chess.domain.board.Board;
@@ -16,13 +17,14 @@ import wooteco.chess.domain.player.Result;
 import wooteco.chess.exceptions.InvalidInputException;
 
 public class Game {
-    private int id;
+    private String id;
     private final Board board;
     private final Judge judge;
     private final Map<Side, Player> players;
     private Side turn;
 
     public Game() {
+        id = UUID.randomUUID().toString();
         board = Board.init();
         judge = new BasicJudge(board);
         players = new HashMap<>();
@@ -35,7 +37,7 @@ public class Game {
         players.put(Side.BLACK, black);
     }
 
-    public Game(int id, Player white, Player black) {
+    public Game(String id, Player white, Player black) {
         this(white, black);
         this.id = id;
     }
@@ -106,7 +108,7 @@ public class Game {
         return judge.calculateScore(side);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

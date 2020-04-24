@@ -24,6 +24,10 @@ public class Board {
         this.board.remove(sourcePosition);
     }
 
+    public void clear() {
+        board.clear();
+    }
+
     public Optional<Team> checkWinner() {
         if (checkWhiteKing() && !checkBlackKing()) {
             return Optional.of(Team.WHITE);

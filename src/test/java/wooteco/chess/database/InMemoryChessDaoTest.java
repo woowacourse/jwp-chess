@@ -7,8 +7,6 @@ import wooteco.chess.dao.ChessDao;
 import wooteco.chess.dao.InMemoryChessDao;
 import wooteco.chess.dto.Commands;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 class InMemoryChessDaoTest {
     ChessDao chessDao = new InMemoryChessDao();
 

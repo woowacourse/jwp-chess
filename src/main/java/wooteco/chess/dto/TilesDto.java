@@ -21,6 +21,10 @@ public class TilesDto {
         Map<Position, Piece> fragmentedBoard = board.get();
         List<Position> positions = Positions.getValue();
 
+        for (Map.Entry<Position, Piece> entry : fragmentedBoard.entrySet()) {
+            System.out.println("보드" + entry.getKey() + ", " + entry.getValue());
+        }
+
         Map<Position, Piece> entireBoard = new LinkedHashMap<>();
         for (Position position : positions) {
             entireBoard.put(position, fragmentedBoard.get(position));

@@ -26,13 +26,17 @@ function checkSourceOrTarget(clickedPosition) {
 }
 
 function move(source, target) {
+    let moveDto = {
+        "source" : source.id,
+        "target" : target.id
+    };
+
     const moveInformation = {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'source': source.id,
-            'target': target.id
-        }
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(moveDto)
     };
     fetch("/playing/move", moveInformation)
         .then(response => {
@@ -53,7 +57,8 @@ function move(source, target) {
             let winner = response.body.winner;
             if (winner != null) {
                 alert(winner + "팀이 이겼습니다.");
-                window.location = "http://localhost:4567/start";
+                initialize(source, target);
+                window.location = "http://localhost:8080/start";
                 return;
             }
             update(board, team, currentTeamScore);

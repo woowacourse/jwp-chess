@@ -38,6 +38,10 @@ public class ChessRunner {
         }
     }
 
+    public void clearBoard() {
+        board.clear();
+    }
+
     public Optional<Team> findWinner() {
         return this.board.checkWinner();
     }

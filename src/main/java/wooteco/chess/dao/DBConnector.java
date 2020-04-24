@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnector {
-	public static Connection getConnection() {
+	public static Connection getMysqlConnection() {
 		Connection con = null;
 		String server = "localhost:13306";
 		String database = "chessgame";

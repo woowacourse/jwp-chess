@@ -23,7 +23,7 @@ public class GameDao {
 	public GameDto save(GameDto gameDto) {
 		String query = String.format("INSERT INTO %s (TURN) VALUES (?)", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
 		) {
 			pstmt.setString(1, gameDto.getTurn());
@@ -42,7 +42,7 @@ public class GameDao {
 	public void update(GameDto gameDto) {
 		String query = String.format("UPDATE %s SET turn = ? WHERE id = ?", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.setString(1, gameDto.getTurn());
@@ -56,7 +56,7 @@ public class GameDao {
 	public Optional<GameDto> findById(Long id) {
 		String query = String.format("SELECT * FROM %s WHERE id = ?", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.setLong(1, id);
@@ -73,7 +73,7 @@ public class GameDao {
 	public void deleteAll() {
 		String query = String.format("DELETE FROM %s", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.executeUpdate();

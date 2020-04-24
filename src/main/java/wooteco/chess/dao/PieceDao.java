@@ -26,7 +26,7 @@ public class PieceDao {
 	public void save(PieceDto pieceDto) {
 		String query = String.format("INSERT INTO %s (SYMBOL,GAME_ID,POSITION,TEAM) VALUES(?,?,?,?)", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)
 		) {
 			pstmt.setString(1, pieceDto.getSymbol());
@@ -42,7 +42,7 @@ public class PieceDao {
 	public void update(Long id, String newPosition) {
 		String query = String.format("UPDATE %s SET position = ? WHERE id = ?", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.setString(1, newPosition);
@@ -57,7 +57,7 @@ public class PieceDao {
 		String query = String.format("SELECT * FROM %s WHERE game_id = ?", TABLE_NAME);
 		List<Piece> pieces = new ArrayList<>();
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.setLong(1, gameId);
@@ -77,7 +77,7 @@ public class PieceDao {
 	public Optional<PieceDto> findByGameIdAndPosition(Long gameId, String position) {
 		String query = String.format("SELECT * FROM %s WHERE game_id = ? AND position = ?", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.setLong(1, gameId);
@@ -111,7 +111,7 @@ public class PieceDao {
 	public void deleteAll() {
 		String query = String.format("DELETE FROM %s", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.executeUpdate();
@@ -123,7 +123,7 @@ public class PieceDao {
 	public void deleteByGameIdAndPosition(Long gameId, String position) {
 		String query = String.format("DELETE FROM %s WHERE game_id = ? AND position = ?", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.setLong(1, gameId);

@@ -6,4 +6,9 @@ public class Pawn extends Piece {
 	public Pawn(Color color) {
 		super(color, "p", new PawnMovingStrategy(color), PAWN_SCORE);
 	}
+
+	@Override
+	public boolean isKing() {
+		return false;
+	}
 }

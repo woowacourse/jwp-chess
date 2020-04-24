@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Color;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
@@ -68,17 +67,10 @@ public class GameManager {
 	}
 
 	public boolean isKingAlive() {
-		System.out.println("턴" + currentTurn.name());
 		return board.isKingAliveOf(currentTurn);
 	}
 
 	public Board getBoard() {
 		return board;
-	}
-
-	public void resetGame() {
-		board.deleteAll();
-		board = BoardFactory.create();
-		currentTurn = WHITE;
 	}
 }

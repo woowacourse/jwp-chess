@@ -12,7 +12,7 @@ import wooteco.chess.domain.piece.PieceFactory;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.BoardDto;
 
-public class BoardFactory {
+public class BoardMapper {
 	public static Board create(List<BoardDto> mappers) {
 		Map<Position, Piece> board = new TreeMap<>();
 		for (BoardDto mapper : mappers) {

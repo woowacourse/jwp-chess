@@ -11,13 +11,13 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
 
 public class GameDto {
-	private final List<UnitDto> units;
+	private final List<PieceDto> units;
 	private final Turn turn;
 	private final Status status;
 
 	public GameDto(Map<Position, Piece> units, Turn turn, Status status) {
 		this.units = units.values().stream()
-			.map(piece -> new UnitDto(
+			.map(piece -> new PieceDto(
 				piece.getColumnValue(),
 				piece.getRowValue(),
 				piece.getTeam().name(),
@@ -31,7 +31,7 @@ public class GameDto {
 		return turn;
 	}
 
-	public List<UnitDto> getUnits() {
+	public List<PieceDto> getUnits() {
 		return Collections.unmodifiableList(units);
 	}
 }

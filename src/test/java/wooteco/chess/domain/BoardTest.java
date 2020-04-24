@@ -5,12 +5,12 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.domain.state.BoardRepository;
+import wooteco.chess.domain.state.BoardFactory;
 
 class BoardTest {
 	@Test
 	void isKingDeadTest() {
-		Board board = BoardRepository.create();
+		Board board = BoardFactory.create();
 		board.move(Position.of("c2"), Position.of("c4"), new Turn(Team.WHITE));
 		board.move(Position.of("b7"), Position.of("b5"), new Turn(Team.BLACK));
 		board.move(Position.of("c4"), Position.of("c5"), new Turn(Team.WHITE));

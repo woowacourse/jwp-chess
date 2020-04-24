@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import wooteco.chess.domain.Board;
 
-class BoardRepositoryTest {
+class BoardFactoryTest {
 	@Test
 	@DisplayName("BoardRepository 가 정상적으로 Board를 생성해주는지 테스트합니다.")
 	void createBoardTest() {
-		assertThat(BoardRepository.create()).isInstanceOf(Board.class);
+		assertThat(BoardFactory.create()).isInstanceOf(Board.class);
 	}
 }

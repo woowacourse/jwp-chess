@@ -15,7 +15,7 @@ import wooteco.chess.dto.BoardDto;
 public class BoardDao {
 
 	public Board create(int roomId, Board board) throws SQLException, ClassNotFoundException {
-		List<BoardDto> mappers = BoardFactory.createMappers(board);
+		List<BoardDto> mappers = BoardMapper.createMappers(board);
 		String query = "insert into board(room_id, piece_name, piece_team, piece_position) values (?,?,?,?)";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
 			for (BoardDto mapper : mappers) {
@@ -55,7 +55,7 @@ public class BoardDao {
 			while (rs.next()) {
 				mappers.add(new BoardDto(rs.getString(2), rs.getString(3), rs.getString(4)));
 			}
-			return BoardFactory.create(mappers);
+			return BoardMapper.create(mappers);
 		}
 	}
 }

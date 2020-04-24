@@ -18,7 +18,7 @@ class ScoreTest {
 
 	@Test
 	void calculateScoreTest() {
-		Board board = BoardRepository.create();
+		Board board = BoardFactory.create();
 		Collection<Piece> pieces = board.getBoard().values();
 		assertThat(Score.calculate(new ArrayList<>(pieces)).getScore()).isEqualTo(69);
 	}

@@ -1,17 +1,11 @@
 package wooteco.chess;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import wooteco.chess.domain.Board;
 import wooteco.chess.domain.Status;
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.Turn;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.domain.state.BoardRepository;
 import wooteco.chess.domain.state.ChessGameState;
-import wooteco.chess.domain.state.Playing;
 import wooteco.chess.domain.state.Score;
 
 public class ChessGame {
@@ -49,15 +43,5 @@ public class ChessGame {
 		Score white = state.score(Team.WHITE);
 		Score black = state.score(Team.BLACK);
 		return new Status(white, black);
-	}
-
-	public static ChessGame createGameByMoves(Map<Integer, List<String>> moves) {
-		Objects.requireNonNull(moves);
-
-		ChessGame game = new ChessGame(new Playing(BoardRepository.create(), new Turn(Team.WHITE)));
-		for (List<String> value : moves.values()) {
-			game.move(Position.of(value.get(0)), Position.of(value.get(1)));
-		}
-		return game;
 	}
 }

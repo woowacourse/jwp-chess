@@ -10,7 +10,7 @@ import wooteco.chess.domain.Board;
 import wooteco.chess.domain.Turn;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.domain.state.BoardRepository;
+import wooteco.chess.domain.state.BoardFactory;
 import wooteco.chess.domain.state.Playing;
 import wooteco.chess.dto.GameDto;
 
@@ -20,7 +20,7 @@ public class BoardService {
 	private final PlayerDao playerDao = new PlayerDao();
 
 	public Board create(int roomId) throws SQLException, ClassNotFoundException {
-		Board board = boardDao.create(roomId, BoardRepository.create());
+		Board board = boardDao.create(roomId, BoardFactory.create());
 		return board;
 	}
 

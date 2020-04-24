@@ -14,7 +14,7 @@ import wooteco.chess.domain.piece.queen.Queen;
 import wooteco.chess.domain.piece.rook.Rook;
 import wooteco.chess.domain.position.Position;
 
-public class BoardRepository {
+public class BoardFactory {
 	private static final String BLACK_PAWN = "2";
 	private static final String WHITE_PAWN = "7";
 

@@ -2,6 +2,7 @@ package wooteco.chess.controller;
 
 import static spark.Spark.*;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,14 +34,8 @@ public class SparkController {
 
 	private String createNewGame(Request request, Response response) {
 		try {
-			Map<String, String> params = new HashMap<>();
-			params = gson.fromJson(request.body(), params.getClass());
-			int player1Id = playerService.create(params.get("player1Name"), params.get("player1Password"), "white");
-			int player2Id = playerService.create(params.get("player2Name"), params.get("player2Password"), "black");
-
-			int roomId = boardService.createRoom(player1Id, player2Id);
+			int roomId = createPlayers(request);
 			boardService.create(roomId);
-
 			HashMap<String, Object> model = new HashMap<>();
 			model.put("id", roomId);
 			return gson.toJson(model);
@@ -48,6 +43,14 @@ public class SparkController {
 			response.status(500);
 			return gson.toJson(e.getMessage());
 		}
+	}
+
+	private int createPlayers(Request request) throws SQLException, ClassNotFoundException {
+		Map<String, String> params = new HashMap<>();
+		params = gson.fromJson(request.body(), params.getClass());
+		int player1Id = playerService.create(params.get("player1Name"), params.get("player1Password"), "white");
+		int player2Id = playerService.create(params.get("player2Name"), params.get("player2Password"), "black");
+		return boardService.createRoom(player1Id, player2Id);
 	}
 
 	private String startGame(Request request, Response response) {
@@ -64,7 +67,6 @@ public class SparkController {
 			response.status(500);
 			return gson.toJson(e.getMessage());
 		}
-
 	}
 
 	private String move(Request request, Response response) {
@@ -72,10 +74,8 @@ public class SparkController {
 			int id = Integer.parseInt(request.params(":id"));
 			Map<String, Integer> map = gson.fromJson(request.body(), new TypeToken<Map<String, Integer>>() {
 			}.getType());
-
 			Position source = Position.of(map.get("sourceX"), map.get("sourceY"));
 			Position target = Position.of(map.get("targetX"), map.get("targetY"));
-
 			GameDto dto = boardService.move(id, source, target);
 			return gson.toJson(dto);
 		} catch (Exception e) {

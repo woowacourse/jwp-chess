@@ -9,7 +9,7 @@ import wooteco.chess.domain.Team;
 import wooteco.chess.domain.position.Position;
 
 class FinishTest {
-	private Finish finish = new Finish(BoardRepository.create());
+	private Finish finish = new Finish(BoardFactory.create());
 
 	@Test
 	void isEnd() {

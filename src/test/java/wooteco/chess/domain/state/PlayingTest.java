@@ -17,7 +17,7 @@ class PlayingTest {
 
 	@BeforeEach
 	void setUp() {
-		playing = new Playing(BoardRepository.create(), new Turn(Team.WHITE));
+		playing = new Playing(BoardFactory.create(), new Turn(Team.WHITE));
 	}
 
 	@Test

@@ -12,7 +12,6 @@ public class RoomDao {
 			pstmt.setInt(1, roomId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					System.out.println("ROOM ID 반환 성공 =============");
 					return rs.getInt(1);
 				}
 				throw new IllegalArgumentException("Turn이 잘못되었습니다.");

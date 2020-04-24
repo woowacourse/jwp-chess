@@ -79,7 +79,7 @@ public class BoardDAO {
 		}
 	}
 
-	public List<Piece> findAll(String gameId) {
+	public List<Piece> findAllPieces(String gameId) {
 		List<Piece> result = new ArrayList<>();
 		String query = "SELECT * FROM board WHERE game_id = ?";
 		try (Connection con = getConnection();
@@ -122,10 +122,10 @@ public class BoardDAO {
 			pstmt.setString(1, gameId);
 			pstmt.setString(2, position.getName());
 			ResultSet rs = pstmt.executeQuery();
-			rs.next();
-			Piece piece = PieceFactory.of(rs.getString("symbol")).create(position);
-
-			return piece;
+			if (!rs.next()) {
+				throw new IllegalArgumentException("기물이 존재하지 않습니다. position : " + position.getName());
+			}
+			return PieceFactory.of(rs.getString("symbol")).create(position);
 		} catch (SQLException e) {
 			throw new IllegalArgumentException(e.getMessage());
 		}

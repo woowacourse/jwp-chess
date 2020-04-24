@@ -28,8 +28,9 @@ public class TurnInfoDAO {
 			 PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setString(1, gameId);
 			ResultSet rs = pstmt.executeQuery();
-			rs.next();
-
+			if (!rs.next()) {
+				throw new IllegalArgumentException("현재 차례의 팀이 존재하지 않습니다. game id : " + gameId);
+			}
 			return Team.valueOf(rs.getString("current_team"));
 		} catch (SQLException e) {
 			throw new IllegalArgumentException(e.getMessage());

@@ -31,7 +31,7 @@ public class ChessService {
 	}
 
 	public void move(String gameId, Position from, Position to) {
-		Board board = Board.of(boardDAO.findAll(gameId));
+		Board board = Board.of(boardDAO.findAllPieces(gameId));
 		board.verifyMove(from, to, turnInfoDAO.findCurrent(gameId));
 
 		boardDAO.update(gameId, from, to);
@@ -39,14 +39,14 @@ public class ChessService {
 	}
 
 	public Map<String, String> getBoard(String gameId) {
-		return boardDAO.findAll(gameId)
+		return boardDAO.findAllPieces(gameId)
 			.stream()
 			.collect(toMap(piece -> piece.getPosition().getName(), Piece::getSymbol));
 	}
 
 	public Map<String, String> getResult(String gameId) {
 		Map<String, String> result = new HashMap<>();
-		Status status = Status.of(boardDAO.findAll(gameId));
+		Status status = Status.of(boardDAO.findAllPieces(gameId));
 
 		String whiteScore = String.valueOf(status.toMap().get(Team.WHITE));
 		String blackScore = String.valueOf(status.toMap().get(Team.BLACK));

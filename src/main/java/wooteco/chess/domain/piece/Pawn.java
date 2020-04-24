@@ -53,7 +53,8 @@ public class Pawn extends Piece {
 	}
 
 	private boolean isAbleToMoveDoubleSquare(Position start, Position end) {
-		return start.isInitialPawnPosition(team) || (Math.abs(end.getRankNumber() - start.getRankNumber()) != INITIAL_MAX_STEP);
+		return start.isInitialPawnPosition(team) || (Math.abs(end.getRankNumber() - start.getRankNumber())
+			!= INITIAL_MAX_STEP);
 	}
 
 	private boolean isNotAbleToMoveDoubleSquare(Position start, Position end) {

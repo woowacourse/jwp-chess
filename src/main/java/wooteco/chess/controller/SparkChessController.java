@@ -25,10 +25,32 @@ public class SparkChessController implements ChessController {
 		this.service = service;
 	}
 
+	public void run() {
+		renderStart();
+		renderBoard();
+		updateBoard();
+		renderResult();
+		handleException();
+	}
+
 	@Override
-	public void start() {
+	public void renderStart() {
 		get("/", this::renderStart);
+	}
+
+	@Override
+	public void renderBoard() {
 		get("/chess", this::renderBoard);
+	}
+
+	@Override
+	public void updateBoard() {
+		put("/api/move", this::updateBoard);
+	}
+
+	@Override
+	public void renderResult() {
+		get("/status", this::renderResult);
 	}
 
 	private String renderStart(Request request, Response response) {
@@ -41,13 +63,6 @@ public class SparkChessController implements ChessController {
 		request.session().maxInactiveInterval(MAX_INTERVAL_SECONDS);
 		service.initialize(gameId);
 		return render(service.getBoard(gameId), "chess.html");
-	}
-
-	@Override
-	public void playTurn() {
-		post("/api/move", this::updateBoard);
-		get("/status", this::renderResult);
-		exception(IllegalArgumentException.class, this::handleException);
 	}
 
 	private String updateBoard(Request request, Response response) {
@@ -65,6 +80,10 @@ public class SparkChessController implements ChessController {
 	private String renderResult(Request request, Response response) {
 		String gameId = request.session().attribute("game_id");
 		return render(service.getResult(gameId), "status.html");
+	}
+
+	public void handleException() {
+		exception(IllegalArgumentException.class, this::handleException);
 	}
 
 	private void handleException(IllegalArgumentException exception, Request request, Response response) {

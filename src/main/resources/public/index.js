@@ -1,6 +1,6 @@
 function move(moveInfo) {
     $.ajax({
-        type: 'POST',
+        type: 'PUT',
         url: '/api/move',
         data: JSON.stringify(moveInfo),
         dataType: 'json',

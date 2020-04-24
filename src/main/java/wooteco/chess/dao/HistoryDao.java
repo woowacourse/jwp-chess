@@ -15,6 +15,7 @@ public class HistoryDao {
 
     public void insert(MovingPosition movingPosition) throws SQLException {
         String query = "INSERT INTO history (start, end) VALUES (?, ?)";
+
         try (PreparedStatement pstmt = connectionManager.getConnection().prepareStatement(query)) {
             pstmt.setString(1, movingPosition.getStart());
             pstmt.setString(2, movingPosition.getEnd());
@@ -24,8 +25,8 @@ public class HistoryDao {
 
     public List<MovingPosition> selectAll() throws SQLException {
         String query = "SELECT * FROM history";
-        try (PreparedStatement pstmt = connectionManager.getConnection().prepareStatement(query); ResultSet rs = pstmt.executeQuery()) {
 
+        try (PreparedStatement pstmt = connectionManager.getConnection().prepareStatement(query); ResultSet rs = pstmt.executeQuery()) {
             List<MovingPosition> result = new ArrayList<>();
             while (rs.next()) {
                 result.add(new MovingPosition(rs.getString("start"), rs.getString("end")));
@@ -36,6 +37,7 @@ public class HistoryDao {
 
     public void clear() throws SQLException {
         String query = "DELETE FROM history";
+
         try (PreparedStatement pstmt = connectionManager.getConnection().prepareStatement(query)) {
             pstmt.executeUpdate();
         }

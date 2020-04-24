@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+import org.springframework.stereotype.Service;
 import wooteco.chess.dao.GamInfoDAO;
 import wooteco.chess.dao.UserDAO;
 import wooteco.chess.domain.board.Board;
@@ -17,6 +17,7 @@ import wooteco.chess.dto.LineDto;
 import wooteco.chess.dto.RowsDtoConverter;
 import wooteco.chess.util.DBConnector;
 
+@Service
 public class ChessService {
 
     private GamInfoDAO gamInfoDAO;

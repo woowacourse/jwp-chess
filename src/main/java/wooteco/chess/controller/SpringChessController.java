@@ -1,20 +1,18 @@
 package wooteco.chess.controller;
 
-import java.util.List;
+import static wooteco.chess.view.response.ResponseStatus.*;
 
-import org.springframework.http.ResponseEntity;
+import java.util.function.Supplier;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import wooteco.chess.domain.piece.Team;
 import wooteco.chess.service.GameService;
 import wooteco.chess.view.dto.requestdto.PositionRequestDTO;
-import wooteco.chess.view.dto.responsedto.BoardDTO;
-import wooteco.chess.view.dto.responsedto.GameDTO;
-import wooteco.chess.view.dto.responsedto.ScoreDTO;
+import wooteco.chess.view.response.StandardResponse;
 
 @Controller
 public class SpringChessController {
@@ -30,39 +28,63 @@ public class SpringChessController {
 	}
 
 	@GetMapping("/chess/state")
-	public ResponseEntity<GameDTO> findCurrentState() {
-		return ResponseEntity.ok(gameService.getCurrentState());
+	@ResponseBody
+	public StandardResponse findCurrentState() {
+		return makeResponse(() ->
+			new StandardResponse(SUCCESS, gameService.getCurrentState()));
 	}
 
 	@PostMapping("/chess/state")
-	public ResponseEntity<String> changeState(@RequestBody String request) {
-		gameService.changeState(request);
-		return ResponseEntity.ok("success");
+	@ResponseBody
+	public StandardResponse changeState(@RequestBody String request) {
+		return makeResponse(() -> {
+			gameService.changeState(request);
+			return new StandardResponse(SUCCESS);
+		});
 	}
 
 	@GetMapping("/chess/pieces")
-	public ResponseEntity<List<BoardDTO>> findAllPiecesOnBoard() {
-		return ResponseEntity.ok(gameService.findAllPiecesOnBoard());
+	@ResponseBody
+	public StandardResponse findAllPiecesOnBoard() {
+		return makeResponse(() ->
+			new StandardResponse(SUCCESS, gameService.findAllPiecesOnBoard()));
 	}
 
 	@GetMapping("/chess/record")
-	public ResponseEntity<List<ScoreDTO>> calculateScore() {
-		return ResponseEntity.ok(gameService.calculateScore());
+	@ResponseBody
+	public StandardResponse calculateScore() {
+		return makeResponse(() ->
+			new StandardResponse(SUCCESS, gameService.calculateScore()));
 	}
 
 	@PostMapping("/chess/move")
-	public ResponseEntity<List<BoardDTO>> res(@RequestBody PositionRequestDTO requestDTO) {
-		gameService.move(requestDTO);
-		return ResponseEntity.ok(gameService.findChangedPiecesOnBoard(requestDTO));
+	@ResponseBody
+	public StandardResponse move(@RequestBody PositionRequestDTO requestDTO) {
+		return makeResponse(() -> {
+			gameService.move(requestDTO);
+			return new StandardResponse(SUCCESS, gameService.findChangedPiecesOnBoard(requestDTO));
+		});
 	}
 
 	@GetMapping("/chess/isnotfinish")
-	public ResponseEntity<Boolean> isNotFinish() {
-		return ResponseEntity.ok(gameService.isNotFinish());
+	@ResponseBody
+	public StandardResponse isNotFinish() {
+		return makeResponse(() ->
+			new StandardResponse(SUCCESS, gameService.isNotFinish()));
 	}
 
 	@GetMapping("/chess/result")
-	public ResponseEntity<String> findWinner() {
-		return ResponseEntity.ok(this.gameService.getWinner());
+	@ResponseBody
+	public StandardResponse findWinner() {
+		return makeResponse(() ->
+			new StandardResponse(SUCCESS, gameService.getWinner()));
+	}
+
+	private StandardResponse makeResponse(Supplier<StandardResponse> responseGenerator) {
+		try {
+			return responseGenerator.get();
+		} catch (RuntimeException e) {
+			return new StandardResponse(ERROR, e.getMessage());
+		}
 	}
 }

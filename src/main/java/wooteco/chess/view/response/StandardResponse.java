@@ -1,23 +1,28 @@
 package wooteco.chess.view.response;
 
-import com.google.gson.JsonElement;
-
 public class StandardResponse {
 	private ResponseStatus status;
-	private String message;
-	private JsonElement data;
+	private Object data;
 
 	public StandardResponse(ResponseStatus status) {
 		this.status = status;
 	}
 
-	public StandardResponse(ResponseStatus status, String message) {
-		this.status = status;
-		this.message = message;
-	}
-
-	public StandardResponse(ResponseStatus status, JsonElement data) {
+	public StandardResponse(ResponseStatus status, String data) {
 		this.status = status;
 		this.data = data;
+	}
+
+	public StandardResponse(ResponseStatus status, Object data) {
+		this.status = status;
+		this.data = data;
+	}
+
+	public ResponseStatus getStatus() {
+		return status;
+	}
+
+	public Object getData() {
+		return data;
 	}
 }

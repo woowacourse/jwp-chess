@@ -1,6 +1,5 @@
 package wooteco.chess.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -23,7 +22,6 @@ public class BoardMapper {
 	}
 
 	public static List<BoardDto> createMappers(Board board) {
-		List<Object> pieces = new ArrayList<>();
 		return board.getBoard().entrySet()
 			.stream()
 			.map(entry -> {

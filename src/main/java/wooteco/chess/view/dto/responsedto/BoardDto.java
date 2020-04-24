@@ -2,11 +2,11 @@ package wooteco.chess.view.dto.responsedto;
 
 import java.util.Objects;
 
-public class BoardDTO {
+public class BoardDto {
 	private final String position;
 	private final String symbol;
 
-	public BoardDTO(String position, String symbol) {
+	public BoardDto(String position, String symbol) {
 		this.position = position;
 		this.symbol = symbol;
 	}
@@ -25,7 +25,7 @@ public class BoardDTO {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		BoardDTO boardDTO = (BoardDTO)o;
+		BoardDto boardDTO = (BoardDto)o;
 		return Objects.equals(position, boardDTO.position) &&
 			Objects.equals(symbol, boardDTO.symbol);
 	}

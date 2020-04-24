@@ -3,7 +3,6 @@ package wooteco.chess.domain.piece;
 import static wooteco.chess.domain.piece.Team.*;
 
 import java.util.Arrays;
-import java.util.function.Supplier;
 
 public enum PieceFactory {
 	BLACK_PAWN("P", () -> new Pawn(BLACK)),

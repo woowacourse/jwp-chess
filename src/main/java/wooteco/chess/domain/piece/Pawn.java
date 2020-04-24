@@ -7,6 +7,9 @@ import wooteco.chess.domain.position.Position;
 
 public class Pawn extends Piece {
 	private static final String INITIAL_CHARACTER = "P";
+	private static final int INITIAL_MAX_STEP = 2;
+	private static final int REVERSE_FACTOR = -1;
+	private static final int DEFAULT_STEP = 1;
 
 	public Pawn(Team team) {
 		super(team, INITIAL_CHARACTER);
@@ -18,7 +21,7 @@ public class Pawn extends Piece {
 			throw new IllegalArgumentException("해당 위치로 이동할 수 없습니다.");
 		}
 
-		if ((Math.abs(to.getRankNumber() - from.getRankNumber()) == 2)) {
+		if ((Math.abs(to.getRankNumber() - from.getRankNumber()) == INITIAL_MAX_STEP)) {
 			return Position.findMultipleStepTrace(from, to);
 		}
 		return Collections.emptyList();
@@ -37,13 +40,20 @@ public class Pawn extends Piece {
 	}
 
 	private boolean isMovable(Position start, Position end) {
+		int rankMoveDistance = calculateMoveDistance(start, end);
+		return rankMoveDistance >= DEFAULT_STEP && rankMoveDistance <= INITIAL_MAX_STEP;
+	}
+
+	private int calculateMoveDistance(Position start, Position end) {
 		int rankMoveDistance = end.getRankNumber() - start.getRankNumber();
-		rankMoveDistance *= team.isBlack() ? -1 : 1;
-		return rankMoveDistance > 0 && rankMoveDistance <= 2;
+		if (team.isBlack()) {
+			return rankMoveDistance * REVERSE_FACTOR;
+		}
+		return rankMoveDistance;
 	}
 
 	private boolean isAbleToMoveDoubleSquare(Position start, Position end) {
-		return start.isInitialPawnPosition(team) || (Math.abs(end.getRankNumber() - start.getRankNumber()) != 2);
+		return start.isInitialPawnPosition(team) || (Math.abs(end.getRankNumber() - start.getRankNumber()) != INITIAL_MAX_STEP);
 	}
 
 	private boolean isNotAbleToMoveDoubleSquare(Position start, Position end) {

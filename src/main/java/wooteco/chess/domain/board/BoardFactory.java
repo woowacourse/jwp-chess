@@ -11,6 +11,9 @@ public class BoardFactory {
 	private static final Pattern PIECES_PATTERN = Pattern.compile("([\\.pPbBrRkKnNqQ]{8}\\n){8}");
 	private static final String ILLEGAL_BOARD_REGEX_EXCEPTION_MESSAGE = "문자열의 형태가 체스판의 형식이 아닙니다.";
 
+	private BoardFactory() {
+	}
+
 	public static Board create(String board) {
 		validateBoardRegex(Objects.requireNonNull(board));
 		Map<Position, Piece> pieces = BoardParser.parsePieces(board);

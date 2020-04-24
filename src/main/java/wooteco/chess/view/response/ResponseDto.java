@@ -1,19 +1,19 @@
 package wooteco.chess.view.response;
 
-public class StandardResponse {
+public class ResponseDto {
 	private ResponseStatus status;
 	private Object data;
 
-	public StandardResponse(ResponseStatus status) {
+	public ResponseDto(ResponseStatus status) {
 		this.status = status;
 	}
 
-	public StandardResponse(ResponseStatus status, String data) {
+	public ResponseDto(ResponseStatus status, String data) {
 		this.status = status;
 		this.data = data;
 	}
 
-	public StandardResponse(ResponseStatus status, Object data) {
+	public ResponseDto(ResponseStatus status, Object data) {
 		this.status = status;
 		this.data = data;
 	}

@@ -2,9 +2,12 @@ package wooteco.chess.dao;
 
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.exception.DataAccessException;
 
+@Component
 public class RoomDao {
     JdbcTemplate template = new JdbcTemplate();
 

@@ -32,8 +32,10 @@ public abstract class Piece {
 	}
 
 	public boolean isEnemy(Piece that) {
-		return !this.color.equals(that.getColor());
+		return isNotSameColor(that.color);
 	}
+
+	public abstract boolean isKing();
 
 	public boolean isSameColor(Color color) {
 		return getColor().equals(color);

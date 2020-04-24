@@ -52,27 +52,27 @@ public class GameDao {
 	}
 
 	public void updateGame(GameManagerDto gameManagerDto, int roomNo) {
-		try (Connection connection = new SQLConnector().getConnection()) {
-			String query = "UPDATE chessgame SET board = ?, turn = ? WHERE roomno = ?";
-			PreparedStatement statement = connection.prepareStatement(query);
-			statement.setString(1, gameManagerDto.getBoard());
-			statement.setString(2, gameManagerDto.getTurn());
-			statement.setString(3, String.valueOf(roomNo));
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			throw new RuntimeException(e.getMessage());
-		}
+		JDBCTemplate jdbcTemplate = new JDBCTemplate() {
+			@Override
+			public void setParameters(PreparedStatement statement) throws SQLException {
+				statement.setString(1, gameManagerDto.getBoard());
+				statement.setString(2, gameManagerDto.getTurn());
+				statement.setString(3, String.valueOf(roomNo));
+			}
+		};
+		String query = "UPDATE chessgame SET board = ?, turn = ? WHERE roomno = ?";
+		jdbcTemplate.execute(query);
 	}
 
 	public void deleteGame(int roomNo) {
-		try (Connection connection = new SQLConnector().getConnection()) {
-			String query = "DELETE FROM chessgame WHERE roomno = ?";
-			PreparedStatement statement = connection.prepareStatement(query);
-			statement.setString(1, String.valueOf(roomNo));
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			throw new RuntimeException(e.getMessage());
-		}
+		JDBCTemplate jdbcTemplate = new JDBCTemplate() {
+			@Override
+			public void setParameters(PreparedStatement statement) throws SQLException {
+				statement.setString(1, String.valueOf(roomNo));
+			}
+		};
+		String query = "DELETE FROM chessgame WHERE roomno = ?";
+		jdbcTemplate.execute(query);
 	}
 
 	public List<String> findAllRoomNo() {

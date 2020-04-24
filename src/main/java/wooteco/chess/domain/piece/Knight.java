@@ -15,4 +15,9 @@ public class Knight extends Piece {
 			RIGHT_DOWN_DOWN, RIGHT_UP_UP)),
 			KNIGHT_SCORE);
 	}
+
+	@Override
+	public boolean isKing() {
+		return false;
+	}
 }

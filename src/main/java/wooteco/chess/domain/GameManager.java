@@ -63,6 +63,10 @@ public class GameManager {
         return pieces.isKingDead(currentColor);
     }
 
+    public Piece getPiece(String position) {
+        return pieces.getPieceByPosition(Position.of(position));
+    }
+
     public Piece getPiece(Position position) {
         return pieces.getPieceByPosition(position);
     }

@@ -1,5 +1,5 @@
-async function move(moveInfo) {
-    const moveResponse = await fetch('/api/piece', {
+async function move(moveInfo, game_id) {
+    const moveResponse = await fetch(`/api/piece/${game_id}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(moveInfo)
@@ -32,10 +32,17 @@ function boxClickHandler() {
         } else if (!isFrom) {
             moveInfo.to = event.target.id;
             isFrom = true;
-            move(moveInfo);
+            move(moveInfo, params.get("game_id"));
         }
     };
 }
 
-window.onload = () => document.querySelectorAll('.box')
-    .forEach(box => box.addEventListener('click', boxClickHandler()));
+const query = window.location.search;
+const params = new URLSearchParams(query);
+
+window.onload = () => {
+    document.querySelectorAll('.box')
+        .forEach(box => box.addEventListener('click', boxClickHandler()));
+    document.querySelector("#param").setAttribute('value', params.get("game_id"));
+}
+

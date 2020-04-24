@@ -14,7 +14,6 @@ import wooteco.chess.domain.piece.PiecesFactory;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 
-
 public class ChessService {
 	private final BoardDAO boardDAO;
 	private final TurnInfoDAO turnInfoDAO;

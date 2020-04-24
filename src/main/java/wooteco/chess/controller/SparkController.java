@@ -31,13 +31,13 @@ public class SparkController {
         //play last game
         get("/playing/lastGame", (req, res) -> {
             chessService.playLastGame();
-            return render(chessService.makeMoveResponse(), "chessGame.html");
+            return render(chessService.makeMoveResponse(), "chessGame.hbs");
         });
 
         //play new game
         get("/playing/newGame", (req, res) -> {
             chessService.playNewGame();
-            return render(chessService.makeMoveResponse(), "chessGame.html");
+            return render(chessService.makeMoveResponse(), "chessGame.hbs");
         });
 
         //move source target

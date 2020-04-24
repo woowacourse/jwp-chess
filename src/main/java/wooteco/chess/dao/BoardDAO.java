@@ -9,12 +9,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceFactory;
 import wooteco.chess.domain.piece.Symbol;
 import wooteco.chess.domain.position.Column;
 import wooteco.chess.domain.position.Position;
 
+@Component
 public class BoardDAO {
 	public void addPieces(String gameId, List<Piece> pieces) {
 		String query = "INSERT INTO board VALUES (?, ?, ?)";

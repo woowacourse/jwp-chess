@@ -5,6 +5,8 @@ import static java.util.stream.Collectors.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.BoardDAO;
 import wooteco.chess.dao.TurnInfoDAO;
 import wooteco.chess.domain.Status;
@@ -14,6 +16,7 @@ import wooteco.chess.domain.piece.PiecesFactory;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 
+@Service
 public class ChessService {
 	private final BoardDAO boardDAO;
 	private final TurnInfoDAO turnInfoDAO;

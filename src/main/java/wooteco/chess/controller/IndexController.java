@@ -27,7 +27,7 @@ public class IndexController {
 			model.addAttribute("id", id);
 			return "game";
 		} catch (Exception e) {
-			return "<script>location.replace('/')</script>";
+			return "index";
 		}
 	}
 }

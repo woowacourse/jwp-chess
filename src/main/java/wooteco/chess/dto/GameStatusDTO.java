@@ -1,4 +1,4 @@
-package wooteco.chess.controller;
+package wooteco.chess.dto;
 
 public class GameStatusDTO {
     private final double whiteScore;

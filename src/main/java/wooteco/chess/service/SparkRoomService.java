@@ -23,11 +23,6 @@ public class SparkRoomService {
         roomDAO.removeRoomById(roomId);
     }
 
-    public Room findRoom(int roomId) throws SQLException {
-        SparkRoomDAO roomDAO = SparkRoomDAO.getInstance();
-        return roomDAO.findRoomById(roomId);
-    }
-
     public List<Room> findAllRoom() throws SQLException {
         SparkRoomDAO roomDAO = SparkRoomDAO.getInstance();
         List<Room> rooms = roomDAO.findAllRoom();

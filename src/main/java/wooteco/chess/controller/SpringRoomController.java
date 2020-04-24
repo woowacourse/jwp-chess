@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wooteco.chess.domain.room.Room;
+import wooteco.chess.dto.RoomName;
 import wooteco.chess.service.SpringRoomService;
 
 import javax.validation.Valid;

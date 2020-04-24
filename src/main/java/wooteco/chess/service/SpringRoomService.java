@@ -22,10 +22,6 @@ public class SpringRoomService {
         roomDAO.removeRoomById(roomId);
     }
 
-    public Room findRoom(int roomId) throws SQLException {
-        return roomDAO.findRoomById(roomId);
-    }
-
     public List<Room> findAllRoom() throws SQLException {
         return roomDAO.findAllRoom();
     }

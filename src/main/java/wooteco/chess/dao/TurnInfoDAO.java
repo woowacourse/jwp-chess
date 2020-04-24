@@ -7,8 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.piece.Team;
 
+@Component
 public class TurnInfoDAO {
 	public void initialize(String gameId, Team team) {
 		String query = "INSERT INTO turn_info VALUES (?, ?)";

@@ -20,16 +20,20 @@ public class BoardDAO {
 		String query = "INSERT INTO board VALUES (?, ?, ?)";
 		try (Connection con = getConnection();
 			 PreparedStatement pstmt = con.prepareStatement(query)) {
-			for (Piece piece : pieces) {
-				pstmt.setString(1, gameId);
-				pstmt.setString(2, piece.getPosition().getName());
-				pstmt.setString(3, piece.getSymbol());
-				pstmt.addBatch();
-				pstmt.clearParameters();
-			}
+			setStatementByPieceIn(gameId, pieces, pstmt);
 			pstmt.executeBatch();
 		} catch (SQLException e) {
 			throw new IllegalArgumentException(e.getMessage());
+		}
+	}
+
+	private void setStatementByPieceIn(String gameId, List<Piece> pieces, PreparedStatement pstmt) throws SQLException {
+		for (Piece piece : pieces) {
+			pstmt.setString(1, gameId);
+			pstmt.setString(2, piece.getPosition().getName());
+			pstmt.setString(3, piece.getSymbol());
+			pstmt.addBatch();
+			pstmt.clearParameters();
 		}
 	}
 

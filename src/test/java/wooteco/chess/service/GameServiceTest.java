@@ -201,11 +201,11 @@ class GameServiceTest {
 	@DisplayName("게임 상태 변경이 올바르게 이뤄졌는지 확인한다.")
 	@ParameterizedTest
 	@CsvSource({"start,started", "end,suspendFinish"})
-	void changeStateTest(String request, String expeected) {
+	void changeStateTest(String request, String expected) {
 		gameDAO = new StartedGameDao();
 		service = new GameService(gameDAO);
 		service.changeState(request);
-		assertThat(((GameDto)service.getCurrentState().getData()).getGameState()).isEqualTo(expeected);
+		assertThat(((GameDto)service.getCurrentState().getData()).getGameState()).isEqualTo(expected);
 	}
 
 	@DisplayName("게임이 끝난 상태가 아니면 true 반환한다.")

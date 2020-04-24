@@ -26,7 +26,7 @@ public class Result {
 	}
 
 	public static Result from(Board board) {
-		Map<Team, Double> collect = findDafaultScores(board);
+		Map<Team, Double> collect = findDefaultScores(board);
 		for (int col = MIN_POSITION_NUMBER; col <= MAX_POSITION_NUMBER; col++) {
 			inputNthColumnPawnBonus(board, collect, col);
 		}
@@ -38,7 +38,7 @@ public class Result {
 		addPawnBonusScore(collect, cnt);
 	}
 
-	private static HashMap<Team, Double> findDafaultScores(Board board) {
+	private static Map<Team, Double> findDefaultScores(Board board) {
 		HashMap<Team, Double> collect = board.getPieces().values().stream()
 			.filter(Piece::isNotBlank)
 			.collect(groupingBy(Piece::getTeam, HashMap::new, summingDouble(Piece::getScore)));

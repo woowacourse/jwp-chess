@@ -10,7 +10,7 @@ public class Empty extends Piece {
 	public static final Empty EMPTY = new Empty();
 	private static final String INITIAL_CHARACTER = ".";
 
-	public Empty() {
+	private Empty() {
 		super(NONE, INITIAL_CHARACTER);
 	}
 

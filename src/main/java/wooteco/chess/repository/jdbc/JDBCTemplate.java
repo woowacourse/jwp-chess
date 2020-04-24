@@ -21,7 +21,7 @@ public class JDBCTemplate {
 		this.dataSource = dataSource;
 	}
 
-	public <T> Optional<T> executeQuery(String query, RowMapper<T> mapper, PrepareStatementSetter setter) {
+	<T> Optional<T> executeQuery(String query, RowMapper<T> mapper, PrepareStatementSetter setter) {
 		try (Connection con = dataSource.getConnection();
 			 PreparedStatement preparedStatement = con.prepareStatement(query)) {
 			setter.set(preparedStatement);
@@ -35,7 +35,7 @@ public class JDBCTemplate {
 		}
 	}
 
-	public int executeUpdate(String query, PrepareStatementSetter setter) {
+	int executeUpdate(String query, PrepareStatementSetter setter) {
 		try (Connection con = dataSource.getConnection();
 			 PreparedStatement preparedStatement = con.prepareStatement(query)) {
 			setter.set(preparedStatement);

@@ -1,10 +1,10 @@
 package chess.domain.board;
 
-import static chess.util.NullValidator.*;
+import chess.domain.piece.direction.Direction;
 
 import java.util.Objects;
 
-import chess.domain.piece.direction.Direction;
+import static chess.util.NullValidator.validateNull;
 
 public class Position {
 	private Xpoint xPoint;
@@ -105,9 +105,9 @@ public class Position {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		Position position = (Position)o;
+		Position position = (Position) o;
 		return xPoint == position.xPoint &&
-			yPoint == position.yPoint;
+				yPoint == position.yPoint;
 	}
 
 	@Override
@@ -115,7 +115,8 @@ public class Position {
 		return Objects.hash(xPoint, yPoint);
 	}
 
-	public int getPointSum() {
-		return this.xPoint.getValue() + this.yPoint.getValue();
+	public boolean hasEvenPointSum() {
+		int pointSum = this.xPoint.getValue() + this.yPoint.getValue();
+		return pointSum % 2 == 0;
 	}
 }

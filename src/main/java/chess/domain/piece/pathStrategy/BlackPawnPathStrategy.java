@@ -1,15 +1,15 @@
 package chess.domain.piece.pathStrategy;
 
-import static chess.domain.piece.direction.Direction.*;
-import static chess.util.NullValidator.*;
+import chess.domain.board.Position;
+import chess.domain.piece.direction.Direction;
+import chess.exception.NotMovableException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import chess.domain.board.Position;
-import chess.domain.piece.direction.Direction;
-import chess.exception.NotMovableException;
+import static chess.domain.piece.direction.Direction.*;
+import static chess.util.NullValidator.validateNull;
 
 public class BlackPawnPathStrategy extends PathStrategy {
 	private static final int NO_DISTANCE = 0;
@@ -21,22 +21,23 @@ public class BlackPawnPathStrategy extends PathStrategy {
 
 	@Override
 	public void validateDistance(Position sourcePosition, Position targetPosition) {
-		validateNull(sourcePosition, targetPosition);
+        validateNull(sourcePosition, targetPosition);
 
-		if (sourcePosition.isYPointEqualsSeven()) {
-			if (isInvalidForwardPosition(sourcePosition, targetPosition) && isInvalidDiagonalPosition(sourcePosition,
-				targetPosition)) {
-				throw new NotMovableException(String.format("지정한 위치 %s는 검은색 폰이 이동할 수 없는 곳입니다.",
-					targetPosition.getName()));
-			}
-		} else {
-			if (isInvalidXPointGap(sourcePosition, targetPosition) || !sourcePosition.hasYGap(targetPosition,
-				FORWARD_MIN_DISTANCE)) {
-				throw new NotMovableException(String.format("지정한 위치 %s는 검은색 폰이 이동할 수 없는 곳입니다.",
-					targetPosition.getName()));
-			}
-		}
-	}
+        if (sourcePosition.isYPointEqualsSeven()) {
+            if (isInvalidForwardPosition(sourcePosition, targetPosition) && isInvalidDiagonalPosition(sourcePosition,
+                                                                                                      targetPosition)) {
+                throw new NotMovableException(String.format("지정한 위치 %s는 검은색 폰이 이동할 수 없는 곳입니다.",
+                                                            targetPosition.getName()));
+            }
+            return;
+        }
+
+        if (isInvalidXPointGap(sourcePosition, targetPosition) || !sourcePosition.hasYGap(targetPosition,
+                                                                                          FORWARD_MIN_DISTANCE)) {
+            throw new NotMovableException(String.format("지정한 위치 %s는 검은색 폰이 이동할 수 없는 곳입니다.",
+                                                        targetPosition.getName()));
+        }
+    }
 
 	private boolean isInvalidForwardPosition(Position sourcePosition, Position targetPosition) {
 		return !(sourcePosition.hasXGap(targetPosition, NO_DISTANCE) &&

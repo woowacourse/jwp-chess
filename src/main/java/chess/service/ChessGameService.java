@@ -1,7 +1,5 @@
 package chess.service;
 
-import java.sql.SQLException;
-
 import chess.dao.BoardDAO;
 import chess.dao.TurnDAO;
 import chess.domain.board.ChessBoard;
@@ -9,9 +7,16 @@ import chess.domain.command.MoveCommand;
 import chess.dto.BoardDTO;
 import chess.dto.TurnDTO;
 
+import java.sql.SQLException;
+
 public class ChessGameService {
     private BoardDAO boardDAO = BoardDAO.getInstance();
     private TurnDAO turnDAO = TurnDAO.getInstance();
+
+    public ChessGameService(BoardDAO boardDAO, TurnDAO turnDAO) {
+        this.boardDAO = boardDAO;
+        this.turnDAO = turnDAO;
+    }
 
     public ChessBoard createNewChessGame() throws SQLException {
         ChessBoard chessBoard = new ChessBoard();

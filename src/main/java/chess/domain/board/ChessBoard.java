@@ -1,39 +1,34 @@
 package chess.domain.board;
 
-import static chess.domain.piece.Pawn.*;
-import static chess.util.NullValidator.*;
+import chess.domain.GameResult;
+import chess.domain.command.MoveCommand;
+import chess.domain.piece.EmptyPiece;
+import chess.domain.piece.Pawn;
+import chess.domain.piece.Piece;
+import chess.domain.piece.PieceColor;
+import chess.exception.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import chess.domain.GameResult;
-import chess.domain.command.MoveCommand;
-import chess.domain.piece.Bishop;
-import chess.domain.piece.EmptyPiece;
-import chess.domain.piece.Pawn;
-import chess.domain.piece.Piece;
-import chess.domain.piece.PieceColor;
-import chess.domain.piece.Queen;
-import chess.domain.piece.Rook;
-import chess.exception.AnotherTeamPieceException;
-import chess.exception.OtherPieceInPathException;
-import chess.exception.PawnNotAttackableException;
-import chess.exception.PieceNotFoundException;
-import chess.exception.SameTeamPieceException;
+import static chess.domain.piece.Pawn.PAWN_HALF_SCORE;
+import static chess.domain.piece.Pawn.PAWN_SCORE;
+import static chess.util.NullValidator.validateNull;
 
 public class ChessBoard {
-	public static final int ONLY_ONE_PAWN_IN_XPOINT = 1;
+    public static final int ONLY_ONE_PAWN_IN_XPOINT = 1;
+    private static final int ONE_STEP_RANGE = 1;
 
-	private Map<Position, Piece> board;
-	private PieceColor team;
+    private Map<Position, Piece> board;
+    private PieceColor team;
 
-	public ChessBoard(Map<Position, Piece> board, PieceColor team) {
-		this.board = board;
-		this.team = team;
-	}
+    public ChessBoard(Map<Position, Piece> board, PieceColor team) {
+        this.board = board;
+        this.team = team;
+    }
 
-	public ChessBoard() {
+    public ChessBoard() {
 		this(BoardFactory.createBoard(), PieceColor.WHITE);
 	}
 
@@ -54,35 +49,35 @@ public class ChessBoard {
 	}
 
 	private void checkPath(Piece piece, Position targetPosition) {
-		if (piece.isPawn()) {
-			checkPawnPath(piece, targetPosition);
-			return;
-		}
+        if (piece.isPawn()) {
+            checkPawnPath(piece, targetPosition);
+            return;
+        }
 
-		List<Position> path = piece.getPathTo(targetPosition);
+        List<Position> path = piece.getPathTo(targetPosition);
 
-		if (piece instanceof Bishop || piece instanceof Queen || piece instanceof Rook) {
-			if (havePieceBeforeTargetPosition(path)) {
-				throw new OtherPieceInPathException(String.format("이동 경로 중에 다른 체스말이 있기 때문에 지정한 위치(targetPosition) %s" +
-						"(으)로 이동할 수 없습니다.",
-					targetPosition.getName()));
-			}
-		}
+        if (piece.hasLongRangePieceStrategy()) {
+            if (havePieceBeforeTargetPosition(path)) {
+                throw new OtherPieceInPathException(String.format("이동 경로 중에 다른 체스말이 있기 때문에 지정한 위치(targetPosition) %s" +
+                                                                          "(으)로 이동할 수 없습니다.",
+                                                                  targetPosition.getName()));
+            }
+        }
 
-		if (cannotMoveToTargetPosition(piece, targetPosition)) {
-			throw new SameTeamPieceException(String.format("지정한 위치(targetPosition) %s에 같은 색의 체스말이 있기 때문에 이동할 수 없습니다."
-				, targetPosition.getName()));
+        if (cannotMoveToTargetPosition(piece, targetPosition)) {
+            throw new SameTeamPieceException(String.format("지정한 위치(targetPosition) %s에 같은 색의 체스말이 있기 때문에 이동할 수 없습니다."
+                    , targetPosition.getName()));
 		}
 	}
 
 	private boolean havePieceBeforeTargetPosition(List<Position> path) {
-		if (path.size() == 1) {
-			return false;
-		}
+        if (path.size() == ONE_STEP_RANGE) {
+            return false;
+        }
 
-		path.remove(path.size() - 1);
-		return havePieceIn(path);
-	}
+        path.remove(path.size() - 1);
+        return havePieceIn(path);
+    }
 
 	private boolean cannotMoveToTargetPosition(Piece piece, Position targetPosition) {
 		Piece targetPiece = board.get(targetPosition);
@@ -156,27 +151,32 @@ public class ChessBoard {
 		double scoreSum = 0;
 
 		for (char x = 'a'; x <= 'h'; x++) {
-			int pawnInXPointCount = 0;
-			for (char y = '1'; y <= '8'; y++) {
-				Piece piece = board.get(PositionFactory.of(x, y));
-				if (piece.isPawn() && piece.isSameColor(pieceColor)) {
-					pawnInXPointCount++;
-				}
-			}
-			scoreSum += getPawnScoreSumInXPoint(pawnInXPointCount);
-		}
+            int pawnInXPointCount = 0;
+            for (char y = '1'; y <= '8'; y++) {
+                Piece piece = board.get(PositionFactory.of(x, y));
+                pawnInXPointCount = calculatePawnInXPointCount(pieceColor, pawnInXPointCount, piece);
+            }
+            scoreSum += getPawnScoreSumInXPoint(pawnInXPointCount);
+        }
 
-		return scoreSum;
-	}
+        return scoreSum;
+    }
 
-	private double getPawnScoreSumInXPoint(int pawnInXPointCount) {
-		double scoreSum = 0;
+    private int calculatePawnInXPointCount(PieceColor pieceColor, int pawnInXPointCount, Piece piece) {
+        if (piece.isPawn() && piece.isSameColor(pieceColor)) {
+            pawnInXPointCount++;
+        }
+        return pawnInXPointCount;
+    }
 
-		if (ONLY_ONE_PAWN_IN_XPOINT < pawnInXPointCount) {
-			scoreSum += pawnInXPointCount * PAWN_HALF_SCORE;
-		} else {
-			scoreSum += pawnInXPointCount * PAWN_SCORE;
-		}
+    private double getPawnScoreSumInXPoint(int pawnInXPointCount) {
+        double scoreSum = 0;
+
+        if (ONLY_ONE_PAWN_IN_XPOINT < pawnInXPointCount) {
+            scoreSum += pawnInXPointCount * PAWN_HALF_SCORE;
+        } else {
+            scoreSum += pawnInXPointCount * PAWN_SCORE;
+        }
 
 		return scoreSum;
 	}

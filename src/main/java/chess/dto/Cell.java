@@ -4,6 +4,10 @@ import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 
 public class Cell {
+    private static final String BLACK = "BLACK";
+    private static final String WHITE = "WHITE";
+    private static final String NONE = "NONE";
+
     private String tileColor;
     private String position;
     private String pieceColor;
@@ -26,23 +30,14 @@ public class Cell {
     }
 
     private static String createTileColor(Position position) {
-        int positionPointSum = position.getPointSum();
-
-        if ((positionPointSum) % 2 == 0) {
-            return "BLACK";
+        if (position.hasEvenPointSum()) {
+            return BLACK;
         }
-        if ((positionPointSum) % 2 != 0) {
-            return "WHITE";
-        }
-        return "NONE";
+        return WHITE;
     }
 
     public String getTileColor() {
         return tileColor;
-    }
-
-    public void setTileColor(String tileColor) {
-        this.tileColor = tileColor;
     }
 
     public String getPosition() {

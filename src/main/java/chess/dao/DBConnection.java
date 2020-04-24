@@ -12,21 +12,14 @@ public class DBConnection {
     public static final String PASSWORD = "root";
 
     public static Connection getConnection() {
-        Connection connection;
+        Connection connection = null;
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.err.println("※ JDBC Driver load 오류: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-
-        try {
             connection = DriverManager.getConnection("jdbc:mysql://" + SERVER + "/" + DATABASE + OPTION, USER_NAME,
                                                      PASSWORD);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             System.err.println("※ 연결 오류: " + e.getMessage());
-            throw new RuntimeException(e);
         }
 
         return connection;

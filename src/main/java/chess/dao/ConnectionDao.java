@@ -9,18 +9,9 @@ import java.sql.SQLException;
 
 @Component
 public class ConnectionDao {
-	private static final ConnectionDao CONNECTION_DAO;
 	private static final String SLASH = "/";
 
-	static {
-		CONNECTION_DAO = new ConnectionDao();
-	}
-
-	private ConnectionDao() {
-	}
-
-	public static ConnectionDao getInstance() {
-		return CONNECTION_DAO;
+	public ConnectionDao() {
 	}
 
 	public Connection getConnection() throws SQLException {

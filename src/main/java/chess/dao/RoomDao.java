@@ -13,20 +13,10 @@ import java.util.List;
 
 @Component
 public class RoomDao {
-	private static final RoomDao ROOM_DAO;
-
-	static {
-		ROOM_DAO = new RoomDao(ConnectionDao.getInstance());
-	}
-
 	private final ConnectionDao connectionDao;
 
-	private RoomDao(final ConnectionDao connectionDao) {
+	public RoomDao(final ConnectionDao connectionDao) {
 		this.connectionDao = connectionDao;
-	}
-
-	public static RoomDao getInstance() {
-		return ROOM_DAO;
 	}
 
 	public int addRoomByRoomName(final String roomName) throws SQLException {

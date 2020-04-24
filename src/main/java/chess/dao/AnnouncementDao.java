@@ -11,20 +11,10 @@ import java.sql.SQLException;
 
 @Component
 public class AnnouncementDao {
-	private static final AnnouncementDao ANNOUNCEMENT_DAO;
-
-	static {
-		ANNOUNCEMENT_DAO = new AnnouncementDao(ConnectionDao.getInstance());
-	}
-
 	private final ConnectionDao connectionDao;
 
-	private AnnouncementDao(final ConnectionDao connectionDao) {
+	public AnnouncementDao(final ConnectionDao connectionDao) {
 		this.connectionDao = connectionDao;
-	}
-
-	public static AnnouncementDao getInstance() {
-		return ANNOUNCEMENT_DAO;
 	}
 
 	public int addAnnouncement(final String message, final int roomId) throws SQLException {

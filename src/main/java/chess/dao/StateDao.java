@@ -11,20 +11,10 @@ import java.sql.SQLException;
 
 @Component
 public class StateDao {
-	private static final StateDao STATE_DAO;
-
-	static {
-		STATE_DAO = new StateDao(ConnectionDao.getInstance());
-	}
-
 	private final ConnectionDao connectionDao;
 
-	private StateDao(final ConnectionDao connectionDao) {
+	public StateDao(final ConnectionDao connectionDao) {
 		this.connectionDao = connectionDao;
-	}
-
-	public static StateDao getInstance() {
-		return STATE_DAO;
 	}
 
 	public int addState(final String state, final int roomId) throws SQLException {

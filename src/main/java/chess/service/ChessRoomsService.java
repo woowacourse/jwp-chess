@@ -9,20 +9,10 @@ import java.util.List;
 
 @Service
 public class ChessRoomsService {
-	private static final ChessRoomsService ROOMS_SERVICE;
-
-	static {
-		ROOMS_SERVICE = new ChessRoomsService(RoomDao.getInstance());
-	}
-
 	private final RoomDao roomDao;
 
-	private ChessRoomsService(final RoomDao roomDao) {
+	public ChessRoomsService(final RoomDao roomDao) {
 		this.roomDao = roomDao;
-	}
-
-	public static ChessRoomsService getInstance() {
-		return ROOMS_SERVICE;
 	}
 
 	public List<RoomDto> findAllRooms() throws SQLException {

@@ -26,28 +26,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChessRoomService {
-	private static final ChessRoomService ROOM_SERVICE;
-
-	static {
-		ROOM_SERVICE = new ChessRoomService(StateDao.getInstance(), PieceDao.getInstance(),
-				StatusRecordDao.getInstance(), AnnouncementDao.getInstance());
-	}
-
 	private final StateDao stateDao;
 	private final PieceDao pieceDao;
 	private final StatusRecordDao statusRecordDao;
 	private final AnnouncementDao announcementDao;
 
-	private ChessRoomService(final StateDao stateDao, final PieceDao pieceDao
+	public ChessRoomService(final StateDao stateDao, final PieceDao pieceDao
 			, final StatusRecordDao statusRecordDao, final AnnouncementDao announcementDao) {
 		this.stateDao = stateDao;
 		this.pieceDao = pieceDao;
 		this.statusRecordDao = statusRecordDao;
 		this.announcementDao = announcementDao;
-	}
-
-	public static ChessRoomService getInstance() {
-		return ROOM_SERVICE;
 	}
 
 	public String loadBoardHtml(final int roomId) throws SQLException {

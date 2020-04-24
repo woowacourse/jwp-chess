@@ -12,20 +12,10 @@ import java.util.List;
 
 @Component
 public class PieceDao {
-	private static final PieceDao PIECE_DAO;
-
-	static {
-		PIECE_DAO = new PieceDao(ConnectionDao.getInstance());
-	}
-
 	private final ConnectionDao connectionDao;
 
-	private PieceDao(final ConnectionDao connectionDao) {
+	public PieceDao(final ConnectionDao connectionDao) {
 		this.connectionDao = connectionDao;
-	}
-
-	public static PieceDao getInstance() {
-		return PIECE_DAO;
 	}
 
 	public int addPiece(final String pieceTypeName, final String teamName, final String coordinateRepresentation,

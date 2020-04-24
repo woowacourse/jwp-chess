@@ -12,20 +12,10 @@ import java.util.List;
 
 @Component
 public class StatusRecordDao {
-	private static final StatusRecordDao STATUS_RECORD_WITH_ROOM_NAME_DAO;
-
-	static {
-		STATUS_RECORD_WITH_ROOM_NAME_DAO = new StatusRecordDao(ConnectionDao.getInstance());
-	}
-
 	private final ConnectionDao connectionDao;
 
-	private StatusRecordDao(final ConnectionDao connectionDao) {
+	public StatusRecordDao(final ConnectionDao connectionDao) {
 		this.connectionDao = connectionDao;
-	}
-
-	public static StatusRecordDao getInstance() {
-		return STATUS_RECORD_WITH_ROOM_NAME_DAO;
 	}
 
 	public List<StatusRecordDto> findStatusRecords() throws SQLException {

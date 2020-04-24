@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SparkRoomController {
-	private static final SparkRoomController CHESS_ROOM_CONTROLLER;
 	private static final String PATH = "/chess/rooms/:id";
 	private static final String STATIC_PATH = "/chess.hbs";
 	private static final String SLASH = "/";
@@ -20,18 +19,10 @@ public class SparkRoomController {
 	private static final String TABLE_KEY = "table";
 	private static final String ANNOUNCEMENT_KEY = "announcement";
 
-	static {
-		CHESS_ROOM_CONTROLLER = new SparkRoomController(ChessRoomService.getInstance());
-	}
-
 	private final ChessRoomService chessRoomService;
 
-	private SparkRoomController(final ChessRoomService chessRoomService) {
+	public SparkRoomController(final ChessRoomService chessRoomService) {
 		this.chessRoomService = chessRoomService;
-	}
-
-	public static SparkRoomController getInstance() {
-		return CHESS_ROOM_CONTROLLER;
 	}
 
 	public void run() {

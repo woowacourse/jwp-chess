@@ -20,10 +20,10 @@ public class GameDao {
 		return INSTANCE;
 	}
 
-	public GameDto save(GameDto gameDto) throws SQLException {
+	public GameDto save(GameDto gameDto) {
 		String query = String.format("INSERT INTO %s (TURN) VALUES (?)", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
 		) {
 			pstmt.setString(1, gameDto.getTurn());
@@ -31,28 +31,32 @@ public class GameDao {
 
 			ResultSet generatedKeys = pstmt.getGeneratedKeys();
 			if (!generatedKeys.next()) {
-				throw new SQLException("저장 실패");
+				throw new SQLAccessException();
 			}
 			return new GameDto(generatedKeys.getLong(1), gameDto.getTurn());
+		} catch (SQLException e) {
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 
-	public void update(GameDto gameDto) throws SQLException {
+	public void update(GameDto gameDto) {
 		String query = String.format("UPDATE %s SET turn = ? WHERE id = ?", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.setString(1, gameDto.getTurn());
 			pstmt.setLong(2, gameDto.getId());
 			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 
-	public Optional<GameDto> findById(Long id) throws SQLException {
+	public Optional<GameDto> findById(Long id) {
 		String query = String.format("SELECT * FROM %s WHERE id = ?", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.setLong(1, id);
@@ -61,16 +65,20 @@ public class GameDao {
 				return Optional.empty();
 			}
 			return Optional.of(new GameDto(rs.getLong("id"), rs.getString("turn")));
+		} catch (SQLException e) {
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 
-	public void deleteAll() throws SQLException {
+	public void deleteAll() {
 		String query = String.format("DELETE FROM %s", TABLE_NAME);
 		try (
-			Connection conn = DBConnector.getConnection();
+			Connection conn = DBConnector.getMysqlConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new SQLAccessException(e.getMessage());
 		}
 	}
 }

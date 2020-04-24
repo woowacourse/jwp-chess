@@ -20,7 +20,7 @@ class PositionCache {
 	}
 
 	private static String toKey(Column column, Row row) {
-		return column.getColumnName()+ row.getRow();
+		return column.getColumnName() + row.getRow();
 	}
 
 	public static Position of(String inputPosition) {

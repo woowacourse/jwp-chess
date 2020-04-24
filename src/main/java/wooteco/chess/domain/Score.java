@@ -18,8 +18,8 @@ public class Score {
 	private static double calculateScoreByTeam(List<Piece> pieces, Team team) {
 		double sum = pieces.stream()
 			.filter(piece -> piece.isTeam(team))
-			.map(Piece::getScore)
-			.reduce(0.0, Double::sum);
+			.mapToDouble(Piece::getScore)
+			.sum();
 		return applyPawnScore(pieces, team, sum);
 	}
 

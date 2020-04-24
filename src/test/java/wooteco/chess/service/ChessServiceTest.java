@@ -17,6 +17,7 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.position.Position;
 import wooteco.chess.domain.piece.team.Team;
 import wooteco.chess.dto.BoardDto;
+import wooteco.chess.dto.MoveRequestDto;
 
 class ChessServiceTest {
 	private GameDao gameDao = GameDao.getInstance();
@@ -24,21 +25,21 @@ class ChessServiceTest {
 	private ChessService chessService = new ChessService();
 
 	@AfterEach
-	void tearDown() throws SQLException {
+	void tearDown(){
 		pieceDao.deleteAll();
 		gameDao.deleteAll();
 	}
 
 	@DisplayName("새로운 게임을 생성한다.")
 	@Test
-	void createGame() throws SQLException {
+	void createGame()  {
 		BoardDto boardDto = chessService.createGame();
 		assertThat(gameDao.findById(boardDto.getGameId())).isNotNull();
 	}
 
 	@DisplayName("생성된 게임을 불러온다.")
 	@Test
-	void load() throws SQLException {
+	void load(){
 		//given
 		BoardDto boardDto = chessService.createGame();
 
@@ -51,13 +52,14 @@ class ChessServiceTest {
 
 	@DisplayName("체스말을 이동시킨다.")
 	@Test
-	void move() throws SQLException {
+	void move() {
 		//given
 		BoardDto game = chessService.createGame();
 		String command = "move a2 a4";
+		MoveRequestDto moveRequestDto = new MoveRequestDto(game.getGameId(), command);
 
 		//when
-		chessService.move(game.getGameId(), command);
+		chessService.move(moveRequestDto);
 
 		//then
 		List<Piece> pieces = pieceDao.findAllByGameId(game.getGameId());

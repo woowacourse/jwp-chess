@@ -11,7 +11,7 @@ class DBConnectorTest {
 	@DisplayName("DB 연결 테스트")
 	@Test
 	void connection() {
-		Connection con = DBConnector.getConnection();
+		Connection con = DBConnector.getMysqlConnection();
 		assertNotNull(con);
 	}
 }

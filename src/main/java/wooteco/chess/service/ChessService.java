@@ -1,6 +1,5 @@
 package wooteco.chess.service;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -24,14 +23,14 @@ public class ChessService {
 	private PieceDao pieceDao = PieceDao.getInstance();
 	private GameDao gameDao = GameDao.getInstance();
 
-	public BoardDto createGame() throws SQLException {
+	public BoardDto createGame() {
 		ChessGame chessGame = new ChessGame();
 		Long gameId = saveGame(chessGame)
 			.getId();
 		return savePieces(gameId, chessGame);
 	}
 
-	public MoveResponseDto move(MoveRequestDto moveRequestDto) throws SQLException {
+	public MoveResponseDto move(MoveRequestDto moveRequestDto) {
 		Long gameId = moveRequestDto.getGameId();
 		String command = moveRequestDto.getCommand();
 
@@ -49,7 +48,7 @@ public class ChessService {
 		return updateBoard(chessGame, gameId, originalPosition, newPosition);
 	}
 
-	public BoardDto load(Long gameId) throws SQLException {
+	public BoardDto load(Long gameId) {
 		GameDto gameDto = gameDao.findById(gameId)
 			.orElseThrow(() -> new IllegalArgumentException(String.format("%d : 존재하지 않는 게임입니다.", gameId)));
 		List<Piece> pieces = pieceDao.findAllByGameId(gameId);
@@ -58,13 +57,13 @@ public class ChessService {
 		return createBoardDto(gameId, chessGame);
 	}
 
-	private GameDto saveGame(ChessGame chessGame) throws SQLException {
+	private GameDto saveGame(ChessGame chessGame) {
 		Team turn = chessGame.getTurn();
 		GameDto gameDto = new GameDto(turn.getName());
 		return gameDao.save(gameDto);
 	}
 
-	private BoardDto savePieces(Long gameId, ChessGame chessGame) throws SQLException {
+	private BoardDto savePieces(Long gameId, ChessGame chessGame) {
 		List<Piece> pieces = chessGame.getPieces();
 		for (Piece piece : pieces) {
 			savePiece(gameId, piece);
@@ -72,13 +71,13 @@ public class ChessService {
 		return createBoardDto(gameId, chessGame);
 	}
 
-	private void updateGame(Long id, ChessGame chessGame) throws SQLException {
+	private void updateGame(Long id, ChessGame chessGame) {
 		Team turn = chessGame.getTurn();
 		GameDto gameDto = new GameDto(id, turn.getName());
 		gameDao.update(gameDto);
 	}
 
-	private void savePiece(Long gameId, Piece piece) throws SQLException {
+	private void savePiece(Long gameId, Piece piece) {
 		Team team = piece.getTeam();
 		String position = piece.getPosition().getName();
 		String symbol = piece.getSymbol();
@@ -87,8 +86,7 @@ public class ChessService {
 	}
 
 	private MoveResponseDto updateBoard(ChessGame chessGame, Long gameId, String originalPosition,
-		String targetPosition) throws
-		SQLException {
+		String targetPosition) {
 		PieceDto originalPiece = pieceDao.findByGameIdAndPosition(gameId, originalPosition)
 			.orElseThrow(IllegalArgumentException::new);
 		pieceDao.deleteByGameIdAndPosition(gameId, targetPosition);

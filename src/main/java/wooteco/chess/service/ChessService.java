@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wooteco.chess.controller.command.Command;
 import wooteco.chess.dao.ChessDao;
@@ -19,10 +20,7 @@ public class ChessService {
     private ChessDao chessDao;
     private ChessManager chessManager;
 
-    public ChessService() {
-
-    }
-
+    @Autowired(required = false)
     public ChessService(ChessDao chessDao) {
         this.chessDao = chessDao;
     }

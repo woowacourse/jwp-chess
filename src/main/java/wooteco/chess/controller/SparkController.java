@@ -2,6 +2,8 @@ package wooteco.chess.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.service.ChessService;
@@ -42,8 +44,11 @@ public class SparkController {
 
         //move source target
         post("/playing/move", (req, res) -> {
-            String source = req.headers("source");
-            String target = req.headers("target");
+            JsonParser jsonParser = new JsonParser();
+            JsonElement jsonElement = jsonParser.parse(req.body());
+            String source = jsonElement.getAsJsonObject().get("source").getAsString();
+            String target = jsonElement.getAsJsonObject().get("target").getAsString();
+
             chessService.move(source, target);
 
             return GSON.toJson(chessService.makeMoveResponse());

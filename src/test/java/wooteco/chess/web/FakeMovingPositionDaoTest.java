@@ -18,7 +18,6 @@ class FakeMovingPositionDaoTest {
         FakeHistoryDao fakeHistoryDao = new FakeHistoryDao();
         assertThat(fakeHistoryDao.selectAll().get(iter).getStart()).isEqualTo(start);
         assertThat(fakeHistoryDao.selectAll().get(iter).getEnd()).isEqualTo(end);
-
     }
 
     @DisplayName("clear 동작 확인")
@@ -37,6 +36,5 @@ class FakeMovingPositionDaoTest {
         fakeHistoryDao.insert("b2", "b4");
         assertThat(fakeHistoryDao.selectAll().get(iter).getStart()).isEqualTo(start);
         assertThat(fakeHistoryDao.selectAll().get(iter).getEnd()).isEqualTo(end);
-
     }
 }

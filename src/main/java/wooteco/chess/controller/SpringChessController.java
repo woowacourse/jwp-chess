@@ -24,7 +24,7 @@ public class SpringChessController {
     private SpringChessService springChessService;
 
     @GetMapping("/")
-    public ModelAndView index() {
+    public ModelAndView routeMainPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
         modelAndView.addObject("normalStatus", NormalStatus.YES.isNormalStatus());

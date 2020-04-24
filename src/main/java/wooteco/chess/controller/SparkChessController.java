@@ -28,7 +28,7 @@ public class SparkChessController {
     }
 
     public void route() {
-        get("/", this::index);
+        get("/", this::routeMainPage);
 
         get("/new", this::startNewGame);
 
@@ -43,7 +43,7 @@ public class SparkChessController {
         post("/destination", this::move, json());
     }
 
-    private String index(Request req, Response res) {
+    private String routeMainPage(Request req, Response res) {
         Map<String, Object> model = new HashMap<>();
         model.put("normalStatus", NormalStatus.YES.isNormalStatus());
 

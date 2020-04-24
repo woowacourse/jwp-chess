@@ -73,15 +73,16 @@ public class WebController {
 	}
 
 	private void movePiece() {
-		post("/chess", (req, res) -> {
+		post("/chess/move", (req, res) -> {
 			Map<String, Object> model = new HashMap<>();
 			try {
-				String roomName = req.queryParams("room-name");
+				String roomName = req.queryParams("roomName");
 				ChessGame chessGame = chessGameService.move(roomName,
 						req.queryParams("source"), req.queryParams("target"));
 				putGameInfoToModel(roomName, chessGame, model);
 			} catch (RuntimeException e) {
-				model.put("error", e.getMessage());
+				res.status(409);
+				res.body(e.getMessage());
 			}
 			return render(model, "chess.html");
 		});

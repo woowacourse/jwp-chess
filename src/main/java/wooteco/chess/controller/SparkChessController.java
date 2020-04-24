@@ -54,7 +54,7 @@ public class SparkChessController implements ChessController {
 	}
 
 	private String renderStart(Request request, Response response) {
-		return render(new HashMap<>(), "index.html");
+		return render(new HashMap<>(), "index.hbs");
 	}
 
 	private String renderBoard(Request request, Response response) {
@@ -62,7 +62,7 @@ public class SparkChessController implements ChessController {
 		request.session(true).attribute("game_id", gameId);
 		request.session().maxInactiveInterval(MAX_INTERVAL_SECONDS);
 		service.initialize(gameId);
-		return render(service.getBoard(gameId), "chess.html");
+		return render(service.getBoard(gameId), "chess.hbs");
 	}
 
 	private String updateBoard(Request request, Response response) {
@@ -79,7 +79,7 @@ public class SparkChessController implements ChessController {
 
 	private String renderResult(Request request, Response response) {
 		String gameId = request.session().attribute("game_id");
-		return render(service.getResult(gameId), "status.html");
+		return render(service.getResult(gameId), "status.hbs");
 	}
 
 	public void handleException() {

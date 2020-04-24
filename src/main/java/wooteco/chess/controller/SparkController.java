@@ -54,7 +54,7 @@ public class SparkController {
 
 		get("/isEnd", (req, res) -> {
 			Map<String, Object> model = new HashMap<>();
-			if (!chessService.isEnd()) {
+			if (chessService.isNotEnd()) {
 				model.put("isEnd", false);
 				return GSON.toJson(model);
 			}

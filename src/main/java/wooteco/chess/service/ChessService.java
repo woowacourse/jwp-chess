@@ -12,6 +12,7 @@ import wooteco.chess.domain.Status;
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.Turn;
 import wooteco.chess.domain.chessboard.Board;
+import wooteco.chess.domain.chesspiece.Blank;
 import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.factory.BoardFactory;
 import wooteco.chess.domain.position.Position;
@@ -34,7 +35,7 @@ public class ChessService {
 		Piece startPiece = board.findByPosition(startPosition);
 		board.move(startPosition, targetPosition);
 		boardDAO.update(targetPosition, startPiece.getName());
-		boardDAO.update(startPosition, ".");
+		boardDAO.update(startPosition, Blank.NAME);
 		turnDAO.changeTurn(board.isWhiteTurn());
 		return board;
 	}
@@ -68,9 +69,9 @@ public class ChessService {
 		return find();
 	}
 
-	public boolean isEnd() {
+	public boolean isNotEnd() {
 		Board board = find();
-		return !board.isLiveBothKing();
+		return board.isLiveBothKing();
 	}
 
 	public boolean isWinWhiteTeam() {

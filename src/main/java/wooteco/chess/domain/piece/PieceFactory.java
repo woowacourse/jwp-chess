@@ -6,31 +6,31 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 
 public enum PieceFactory {
-	BLACK_PAWN("P", () -> new Pawn(BLACK)),
-	BLACK_BISHOP("B", () -> new Bishop(BLACK)),
-	BLACK_KNIGHT("N", () -> new Knight(BLACK)),
-	BLACK_ROOK("R", () -> new Rook(BLACK)),
-	BLACK_QUEEN("Q", () -> new Queen(BLACK)),
-	BLACK_KING("K", () -> new King(BLACK)),
-	WHITE_PAWN("p", () -> new Pawn(WHITE)),
-	WHITE_BISHOP("b", () -> new Bishop(WHITE)),
-	WHITE_KNIGHT("n", () -> new Knight(WHITE)),
-	WHITE_ROOK("r", () -> new Rook(WHITE)),
-	WHITE_QUEEN("q", () -> new Queen(WHITE)),
-	WHITE_KING("k", () -> new King(WHITE));
+	BLACK_PAWN("P", new Pawn(BLACK)),
+	BLACK_BISHOP("B", new Bishop(BLACK)),
+	BLACK_KNIGHT("N", new Knight(BLACK)),
+	BLACK_ROOK("R", new Rook(BLACK)),
+	BLACK_QUEEN("Q", new Queen(BLACK)),
+	BLACK_KING("K", new King(BLACK)),
+	WHITE_PAWN("p", new Pawn(WHITE)),
+	WHITE_BISHOP("b", new Bishop(WHITE)),
+	WHITE_KNIGHT("n", new Knight(WHITE)),
+	WHITE_ROOK("r", new Rook(WHITE)),
+	WHITE_QUEEN("q", new Queen(WHITE)),
+	WHITE_KING("k", new King(WHITE));
 
 	private final String symbol;
-	private final Supplier<Piece> pieceSupplier;
+	private final Piece piece;
 
-	PieceFactory(String symbol, Supplier<Piece> pieceSupplier) {
+	PieceFactory(String symbol, Piece piece) {
 		this.symbol = symbol;
-		this.pieceSupplier = pieceSupplier;
+		this.piece = piece;
 	}
 
 	public static Piece of(String symbol) {
 		return Arrays.stream(values())
 			.filter(val -> val.symbol.equals(symbol))
-			.map(val -> val.pieceSupplier.get())
+			.map(val -> val.piece)
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException("유효한 심볼이 아닙니다. : " + symbol));
 	}

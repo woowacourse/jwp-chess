@@ -57,7 +57,7 @@ class GameInfoTest {
         GameInfo gameInfo = GameInfo.from(BoardFactory.of(map), 1);
         gameInfo = gameInfo.move(source, target);
 
-        assertThat(gameInfo.isNotFinished()).isEqualTo(expected);
+        assertThat(gameInfo.getStatus().isNotFinished()).isEqualTo(expected);
     }
 
     static Stream<Arguments> createFinish() {

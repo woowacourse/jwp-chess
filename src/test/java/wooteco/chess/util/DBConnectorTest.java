@@ -13,7 +13,7 @@ class DBConnectorTest {
 
     @BeforeEach
     void setUp() {
-        dbConnector = new DBConnector();
+        dbConnector = DBConnector.getInstance();
     }
 
     @Test

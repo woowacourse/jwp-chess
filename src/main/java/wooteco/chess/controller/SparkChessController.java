@@ -45,7 +45,7 @@ public class SparkChessController implements ChessController {
 
 	@Override
 	public void updateBoard() {
-		put("/api/move", this::updateBoard);
+		put("/api/piece", this::updateBoard);
 	}
 
 	@Override

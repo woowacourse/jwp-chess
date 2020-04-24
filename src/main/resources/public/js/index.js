@@ -59,8 +59,13 @@ function move() {
         async: true,
         url: '/move',
         data: {
+<<<<<<< HEAD
             "fromPiece" : document.querySelector('.fromPiece').id,
             "toPiece" : document.querySelector('.toPiece').id
+=======
+            fromPiece: document.querySelector('.fromPiece').id,
+            toPiece: document.querySelector('.toPiece').id
+>>>>>>> 07531a24140626facee5c29ec262a9d7ed546abe
         },
         dataType: 'text',
         error: alertMessage,

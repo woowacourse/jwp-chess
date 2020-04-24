@@ -40,7 +40,6 @@ public class BoardDAO {
         }
     }
 
-
     public void deletePieces() throws SQLException {
         String query = "TRUNCATE board";
 

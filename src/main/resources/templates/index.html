@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<h1>게임 방 목록</h1>
+
+입장할 방 번호를 선택해 주세요.
+<select id="select">
+    {{#each roomNumbers}}
+    <option value="{{this}}">{{this}}번방</option>
+    {{/each}}
+</select>
+<button onclick="submit()">이동</button>
+
+
+<br>
+<form method="POST" action="/newroom">
+    <input type="submit" value="방 만들기">
+</form>
+
+</body>
+<script>
+    function submit() {
+        var e = document.getElementById("select");
+        var room_id = e.options[e.selectedIndex].value;
+        window.location = "/rooms/" + room_id;
+    }
+</script>
+</html>

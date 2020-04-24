@@ -284,7 +284,7 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     let chessJson = JSON.parse(xhr.responseText);
-                    let pieces = JSON.parse(chessJson.pieces);
+                    let pieces = chessJson.pieces;
                     if(pieces.length === 64) {
                         let isLoad = confirm("저장된 게임이 이미 있습니다! 불러올까요?");
                         if(isLoad) {

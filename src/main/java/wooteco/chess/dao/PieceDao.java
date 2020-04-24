@@ -23,7 +23,7 @@ public class PieceDao {
 		return PIECE_DAO;
 	}
 
-	public PieceDto save(PieceDto pieceDto) throws SQLException {
+	public PieceDto save(PieceDto pieceDto) {
 		String query = String.format("INSERT INTO %s (SYMBOL,GAME_ID,POSITION,TEAM) VALUES(?,?,?,?)", TABLE_NAME);
 		try (
 			Connection conn = DBConnector.getConnection();
@@ -42,10 +42,12 @@ public class PieceDao {
 			Long pieceId = generatedKeys.getLong(1);
 			return new PieceDto(pieceId, pieceDto.getGameId(), pieceDto.getSymbol(), pieceDto.getTeam(),
 				pieceDto.getPosition());
+		} catch (SQLException e) {
+			throw new SQLAccessException(TABLE_NAME + SQLAccessException.SAVE_FAIL);
 		}
 	}
 
-	public void update(Long id, String newPosition) throws SQLException {
+	public void update(Long id, String newPosition) {
 		String query = String.format("UPDATE %s SET position = ? WHERE id = ?", TABLE_NAME);
 		try (
 			Connection conn = DBConnector.getConnection();
@@ -54,12 +56,13 @@ public class PieceDao {
 			pstmt.setString(1, newPosition);
 			pstmt.setLong(2, id);
 			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new SQLAccessException(TABLE_NAME + SQLAccessException.UPDATE_FAIL);
 		}
 	}
 
-	public Optional<PieceDto> findById(Long id) throws SQLException {
+	public Optional<PieceDto> findById(Long id) {
 		String query = String.format("SELECT * FROM %s WHERE id = ?", TABLE_NAME);
-
 		try (
 			Connection conn = DBConnector.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
@@ -70,10 +73,12 @@ public class PieceDao {
 				return Optional.empty();
 			}
 			return mapPieceDto(rs);
+		} catch (SQLException e) {
+			throw new SQLAccessException(TABLE_NAME + SQLAccessException.FIND_FAIL);
 		}
 	}
 
-	public List<Piece> findAllByGameId(Long gameId) throws SQLException {
+	public List<Piece> findAllByGameId(Long gameId) {
 		String query = String.format("SELECT * FROM %s WHERE game_id = ?", TABLE_NAME);
 		List<Piece> pieces = new ArrayList<>();
 		try (
@@ -88,13 +93,14 @@ public class PieceDao {
 				Piece piece = PieceConverter.of(symbol, position);
 				pieces.add(piece);
 			}
+		} catch (SQLException e) {
+			throw new SQLAccessException(TABLE_NAME + SQLAccessException.FIND_FAIL);
 		}
 		return pieces;
 	}
 
-	public Optional<PieceDto> findByGameIdAndPosition(Long gameId, String position) throws SQLException {
+	public Optional<PieceDto> findByGameIdAndPosition(Long gameId, String position) {
 		String query = String.format("SELECT * FROM %s WHERE game_id = ? AND position = ?", TABLE_NAME);
-
 		try (
 			Connection conn = DBConnector.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
@@ -106,30 +112,40 @@ public class PieceDao {
 				return Optional.empty();
 			}
 			return mapPieceDto(rs);
+		} catch (SQLException e) {
+			throw new SQLAccessException(TABLE_NAME + SQLAccessException.FIND_FAIL);
 		}
 	}
 
-	private Optional<PieceDto> mapPieceDto(ResultSet rs) throws SQLException {
-		return Optional.of(new PieceDto(
-			rs.getLong("id"),
-			rs.getLong("game_id"),
-			rs.getString("symbol"),
-			rs.getString("team"),
-			rs.getString("position"))
-		);
+	private Optional<PieceDto> mapPieceDto(ResultSet rs) {
+		Optional<PieceDto> pieceDto;
+		try {
+			pieceDto = Optional.of(new PieceDto(
+				rs.getLong("id"),
+				rs.getLong("game_id"),
+				rs.getString("symbol"),
+				rs.getString("team"),
+				rs.getString("position"))
+			);
+		} catch (SQLException e) {
+			throw new SQLAccessException();
+		}
+		return pieceDto;
 	}
 
-	public void deleteAll() throws SQLException {
+	public void deleteAll() {
 		String query = String.format("DELETE FROM %s", TABLE_NAME);
 		try (
 			Connection conn = DBConnector.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query)
 		) {
 			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new SQLAccessException(TABLE_NAME + SQLAccessException.DELETE_FAIL);
 		}
 	}
 
-	public void deleteByGameIdAndPosition(Long gameId, String position) throws SQLException {
+	public void deleteByGameIdAndPosition(Long gameId, String position) {
 		String query = String.format("DELETE FROM %s WHERE game_id = ? AND position = ?", TABLE_NAME);
 		try (
 			Connection conn = DBConnector.getConnection();
@@ -138,6 +154,8 @@ public class PieceDao {
 			pstmt.setLong(1, gameId);
 			pstmt.setString(2, position);
 			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new SQLAccessException();
 		}
 	}
 }

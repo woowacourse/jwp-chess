@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chess</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="public/css/board.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="./js/board.js"></script>
+</head>
+
+<body background="./img/treeboard.png">
+    <div id="app">
+        <div class="turn-number">{{turn}}</div>
+        <div class="board">
+            {{#rows}}
+            <div class="row">
+                {{#gamePieces}}
+                <div id="{{position.name}}" class="cell">
+                    <img src="./img/{{playerColor.name}}_{{name}}.png">
+                </div>
+                {{/gamePieces}}
+            </div>
+            {{/rows}}
+        </div>
+        <div class="side">
+            <div class="user">
+                <img src="./img/BLACK_P.png">
+                <div class="user-status">
+                    <div class="game">
+                        <p class="user-name">{{blackUser}}</p>
+                        <p id="black-turn" class="turn">TURN</p>
+                    </div>
+                    <div class="score" id="black-score">38점</div>
+                </div>
+            </div>
+            <div class="button">
+                <form action="/save" method="post">
+                    <input type="hidden" name="blackUserName" value="{{blackUser}}">
+                    <input type="hidden" name="whiteUserName" value="{{whiteUser}}">
+                    <input type="submit" value="SAVE">
+                </form>
+            </div>
+            <div class="button">
+                <form action="/end" method="post">
+                    <input type="hidden" name="blackUserName" value="{{blackUser}}">
+                    <input type="hidden" name="whiteUserName" value="{{whiteUser}}">
+                    <input type="submit" value="END">
+                </form>
+            </div>
+            <div class="user">
+                <img src="./img/WHITE_p.png">
+                <div class="user-status">
+                    <div class="game">
+                        <p class="user-name">{{whiteUser}}</p>
+                        <p id="white-turn" class="turn">TURN</p>
+                    </div>
+                    <div class="score" id="white-score">38점</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

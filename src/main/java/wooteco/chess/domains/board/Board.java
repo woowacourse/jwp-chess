@@ -85,24 +85,13 @@ public class Board {
         return count != TWO_KINGS;
     }
 
-    public double calculateScore() {
-        double score = board.values()
-                .stream()
-                .filter(playingPiece -> playingPiece.isMine(teamColor))
-                .mapToDouble(Piece::score)
-                .sum();
-
-        int pawnCount = countOfPawnsInSameColumn();
-
-        return score - pawnCount * SCORE_OF_PAWN_SAME_COLUMN;
-    }
-
     public double calculateScore(PieceColor pieceColor) {
         double score = board.values()
                 .stream()
                 .filter(playingPiece -> playingPiece.isMine(pieceColor))
                 .mapToDouble(Piece::score)
                 .sum();
+
 
         int pawnCount = countOfPawnsInSameColumn();
 
@@ -118,9 +107,8 @@ public class Board {
     }
 
     private int countValidPawns(Column column) {
-        int sameColumnPiecesCount = (int) board.keySet()
+        int sameColumnPiecesCount = (int) Position.fromColumn(column)
                 .stream()
-                .filter(position -> position.isColumn(column))
                 .map(board::get)
                 .filter(playingPiece -> playingPiece.isMine(teamColor)
                         && playingPiece.is(PieceType.PAWN))

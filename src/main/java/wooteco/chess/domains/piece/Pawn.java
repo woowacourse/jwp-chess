@@ -22,9 +22,9 @@ public class Pawn extends Piece {
         int yGap = current.yGapBetween(target);
 
         if (pieceColor == PieceColor.WHITE) {
-            return Math.abs(xGap) <= King.ONE_BLOCK && yGap == ONE_BLOCK_UP;
+            return Math.abs(xGap) <= ONE_BLOCK && yGap == ONE_BLOCK_UP;
         }
-        return Math.abs(xGap) <= King.ONE_BLOCK && yGap == ONE_BLOCK_DOWN;
+        return Math.abs(xGap) <= ONE_BLOCK && yGap == ONE_BLOCK_DOWN;
     }
 
     private boolean isInitialPosition(Position current) {

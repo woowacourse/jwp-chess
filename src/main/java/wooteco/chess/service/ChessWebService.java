@@ -11,7 +11,10 @@ import wooteco.chess.domains.piece.PieceColor;
 import wooteco.chess.domains.position.Position;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -114,52 +117,9 @@ public class ChessWebService {
 
     private List<String> convertPieces(Board board) {
         List<Piece> pieces = board.showBoard();
-        List<String> pieceCodes = new ArrayList<>();
-
-        for (Piece piece : pieces) {
-            switch (piece.name()) {
-                case "r":
-                    pieceCodes.add("♖");
-                    break;
-                case "n":
-                    pieceCodes.add("♘");
-                    break;
-                case "b":
-                    pieceCodes.add("♗");
-                    break;
-                case "k":
-                    pieceCodes.add("♕");
-                    break;
-                case "q":
-                    pieceCodes.add("♔");
-                    break;
-                case "p":
-                    pieceCodes.add("♙");
-                    break;
-                case "R":
-                    pieceCodes.add("♜");
-                    break;
-                case "N":
-                    pieceCodes.add("♞");
-                    break;
-                case "B":
-                    pieceCodes.add("♝");
-                    break;
-                case "K":
-                    pieceCodes.add("♛");
-                    break;
-                case "Q":
-                    pieceCodes.add("♚");
-                    break;
-                case "P":
-                    pieceCodes.add("♟");
-                    break;
-                case ".":
-                    pieceCodes.add("");
-                    break;
-            }
-        }
-        return pieceCodes;
+        return pieces.stream()
+                .map(Piece::symbol)
+                .collect(Collectors.toList());
     }
 
     private String turnMsg(Board board) {

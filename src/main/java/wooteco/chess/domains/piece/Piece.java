@@ -45,6 +45,13 @@ public abstract class Piece {
         return type.getName();
     }
 
+    public String symbol() {
+        if (pieceColor == PieceColor.BLACK) {
+            return type.getBlackSymbol();
+        }
+        return type.getWhiteSymbol();
+    }
+
     public double score() {
         return type.getScore();
     }

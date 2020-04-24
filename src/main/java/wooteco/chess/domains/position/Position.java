@@ -34,8 +34,19 @@ public class Position implements Comparable<Position> {
     }
 
     public static List<Position> fromRow(Row row) {
-        return cachedPositions.values().stream()
-                .filter(position -> position.isRow(row))
+        String rowName = String.valueOf(row.getRow());
+        return Arrays.stream(Column.values())
+                .map(column -> column.getColumn() + rowName)
+                .map(cachedPositions::get)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public static List<Position> fromColumn(Column column) {
+        String columnName = String.valueOf(column.getColumn());
+        return Arrays.stream(Row.values())
+                .map(row -> columnName + row.getRow())
+                .map(cachedPositions::get)
                 .sorted()
                 .collect(Collectors.toList());
     }

@@ -249,7 +249,7 @@
             xhr.send();
         });
 
-        function move(sourcePosition, targetPosition) {
+        function move(source, target) {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
@@ -266,12 +266,14 @@
                     }
                 }
             };
-            xhr.open('POST', '/game/move?roomId={{roomId}}&sourcePosition='
-                    + sourcePosition
-                    + '&targetPosition='
-                    + targetPosition,
-                    true);
-            xhr.send();
+            let data = {
+                roomId: {{roomId}},
+                sourcePosition: source,
+                targetPosition: target,
+            };
+            xhr.open('POST', '/game/move', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
         }
 
         for (let i = 0; i < allChessPosition.length; i++) {

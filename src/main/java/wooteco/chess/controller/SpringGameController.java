@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import wooteco.chess.domain.Color;
 import wooteco.chess.dto.GameManagerDTO;
 import wooteco.chess.dto.GameStatusDTO;
+import wooteco.chess.dto.MoveManagerDTO;
 import wooteco.chess.service.SpringGameService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,15 +25,12 @@ public class SpringGameController {
     }
 
     @PostMapping("/move")
-    public GameManagerDTO move(HttpServletRequest request) throws SQLException {
-        int roomId = Integer.parseInt(request.getParameter("roomId"));
-        String sourcePosition = request.getParameter("sourcePosition");
-        String targetPosition = request.getParameter("targetPosition");
+    public GameManagerDTO move(@RequestBody MoveManagerDTO moveDto) throws SQLException {
 
-        GameManagerDTO gameManagerDTO = gameService.createDTO(roomId);
+        GameManagerDTO gameManagerDTO = gameService.createDTO(moveDto.getRoomId());
         try {
-            gameService.movePiece(roomId, sourcePosition, targetPosition);
-            return gameService.createDTO(roomId);
+            gameService.movePiece(moveDto.getRoomId(), moveDto.getSourcePosition(), moveDto.getTargetPosition());
+            return gameService.createDTO(moveDto.getRoomId());
         } catch (IllegalArgumentException e) {
             gameManagerDTO.setErrorMessage(e.getMessage());
             return gameManagerDTO;

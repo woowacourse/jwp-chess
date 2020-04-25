@@ -103,7 +103,7 @@ public enum CastlingSetting {
                 == moveInfo.getTarget());
     }
 
-    public static MoveInfo findMoveInfoOfRook(Square moveTarget) {
+    public static MoveInfo findRookCastlingMotion(Square moveTarget) {
         Map<String, CastlingSetting> selectCastling = TOTALS.stream()
             .filter(total -> moveTarget == total.get(KEYS_KING_AFTER).square)
             .findFirst()

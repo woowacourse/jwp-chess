@@ -62,7 +62,7 @@ public enum Type {
         return score;
     }
 
-    public boolean canChangeFromPawn() {
+    public boolean canPromote() {
         return changeFromPawn;
     }
 }

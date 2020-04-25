@@ -12,7 +12,6 @@ import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -62,19 +61,27 @@ public class ChessGame {
     }
 
     private void movePiece(MoveInfo moveInfo) {
-        Square moveInfoBefore = moveInfo.getSource();
-        Square moveInfoAfter = moveInfo.getTarget();
+        chessBoard.move(moveInfo);
+        executeEnPassant(moveInfo);
+        executeCastling(moveInfo);
+    }
 
-        if (enPassant.hasOtherEnpassant(moveInfoAfter, gameTurn)) {
-            chessBoard.removeBy(enPassant.getAfterSquare(moveInfoAfter));
+    private void executeEnPassant(MoveInfo moveInfo) {
+        if (enPassant.isEnemyPast(moveInfo.getTarget(), gameTurn)) {
+            chessBoard.removeBy(enPassant.getCurrentSquare(moveInfo.getTarget()));
         }
-        Piece currentPiece = chessBoard.removeBy(moveInfoBefore);
-        chessBoard.put(moveInfoAfter, currentPiece);
         enPassant.removeEnPassant(moveInfo);
+    }
+
+    private void executeCastling(MoveInfo moveInfo) {
         if (canCastling(moveInfo)) {
-            castlingRook(moveInfo);
+            chessBoard.move(CastlingSetting.findRookCastlingMotion(moveInfo.getTarget()));
         }
-        castlingElements.remove(moveInfoBefore);
+        castlingElements.remove(moveInfo.getSource());
+    }
+
+    public boolean canCastling(MoveInfo moveInfo) {
+        return castlingElements.canCastling(moveInfo);
     }
 
     public Square findSquareForPromote() {
@@ -86,18 +93,18 @@ public class ChessGame {
         return chessBoard.findSquareForPromote().isPresent();
     }
 
-    public MoveState promotion(Type typeToChange) {
+    public MoveState promote(Type typeToPromotion) {
         MoveState moveState = PROMOTION_MOVE_CHECKER.check(this);
         if (moveState == MoveState.NEEDS_PROMOTION) {
-            chessBoard.put(findSquareForPromote(), makePieceToChange(typeToChange));
+            chessBoard.changePiece(findSquareForPromote(), makePieceToPromotion(typeToPromotion));
             moveState = MoveState.SUCCESS_PROMOTION;
             gameTurn = moveState.turnTeam(gameTurn);
         }
         return moveState;
     }
 
-    public Piece makePieceToChange(Type typeToChange) {
-        if (typeToChange.canChangeFromPawn()) {
+    public Piece makePieceToPromotion(Type typeToChange) {
+        if (typeToChange.canPromote()) {
             return PieceFactory.of(gameTurn, typeToChange);
         }
         throw new ChessException(typeToChange + "은 프로모션 할 수 있는 타입이 아닙니다.");
@@ -108,52 +115,45 @@ public class ChessGame {
     }
 
     public boolean isMovable(MoveInfo moveInfo) {
-        Square moveInfoBefore = moveInfo.getSource();
-        Square moveInfoAfter = moveInfo.getTarget();
-        Piece movePieceBefore = findPieceToMove(moveInfo);
-        if (chessBoard.hasNot(moveInfoBefore) || !movePieceBefore.isSameTeam(gameTurn)) {
+        Piece sourcePiece = findPiece(moveInfo.getSource());
+        Set<Square> movableArea = findMovableAreas(moveInfo.getSource());
+        if (movableArea.isEmpty()) {
             return false;
         }
-        if (isPawnMoveTwoRankForward(moveInfo)) {
-            enPassant.add(movePieceBefore, moveInfo);
-        }
-        Map<Square, Piece> board = new HashMap<>(chessBoard.getChessBoard());
-        if (movePieceBefore instanceof Pawn) {
-            board.putAll(enPassant.getEnPassantBoard(gameTurn));
-        }
-        return movePieceBefore
-            .getMovableArea(moveInfoBefore, board, castlingElements.getCastlingElements())
-            .contains(moveInfoAfter);
+        addEnPassant(moveInfo, sourcePiece);
+        return movableArea.contains(moveInfo.getTarget());
     }
 
-    public Set<Square> getMovableArea(Square beforeSquare) {
-        Piece beforePiece = chessBoard.findPieceBy(beforeSquare);
-        if (chessBoard.hasNot(beforeSquare) || !beforePiece.isSameTeam(gameTurn)) {
+    private void addEnPassant(MoveInfo moveInfo, Piece sourcePiece) {
+        if (isPawnMoveTwoRankForward(moveInfo)) {
+            enPassant.add(sourcePiece, moveInfo);
+        }
+    }
+
+    public Set<Square> findMovableAreas(Square source) {
+        Piece sourcePiece = findPiece(source);
+        if (chessBoard.isNotExist(source) || sourcePiece.isNotSameTeam(gameTurn)) {
             return new HashSet<>();
         }
-        Map<Square, Piece> board = new HashMap<>();
-        board.putAll(chessBoard.getChessBoard());
-        board.putAll(enPassant.getEnPassantBoard(gameTurn));
-        return beforePiece
-            .getMovableArea(beforeSquare, board, castlingElements.getCastlingElements());
+        ChessBoard chessBoardForMovable = makeChessBoardForMovable(sourcePiece);
+        return sourcePiece.findMovableAreas(source,
+            chessBoardForMovable.getChessBoard(), castlingElements.getCastlingElements());
+    }
+
+    private ChessBoard makeChessBoardForMovable(Piece sourcePiece) {
+        ChessBoard chessBoardForCheck = ChessBoard.of(chessBoard);
+        if (sourcePiece instanceof Pawn) {
+            chessBoardForCheck.addElements(enPassant.getEnPassantBoard(gameTurn));
+        }
+        return chessBoardForCheck;
     }
 
     public boolean isPawnMoveTwoRankForward(MoveInfo moveInfo) {
-        Piece movePieceBefore = chessBoard.findPieceBy(moveInfo.getSource());
-        return EnPassant.isPawnMoveTwoRank(movePieceBefore, moveInfo);
-    }
-
-    public boolean canCastling(MoveInfo moveInfo) {
-        return castlingElements.canCastling(moveInfo);
-    }
-
-    private void castlingRook(MoveInfo moveInfo) {
-        if (castlingElements.remove(moveInfo.getSource())) {
-            MoveInfo moveInfoOfRook = CastlingSetting.findMoveInfoOfRook(moveInfo.getTarget());
-            Piece currentPiece = chessBoard.removeBy(moveInfoOfRook.getSource());
-            chessBoard.put(
-                moveInfoOfRook.getTarget(), currentPiece);
+        if (chessBoard.isNotExist(moveInfo.getSource())) {
+            return false;
         }
+        Piece sourcePiece = chessBoard.findPieceBy(moveInfo.getSource());
+        return EnPassant.isPawnMoveTwoRank(sourcePiece, moveInfo);
     }
 
     public boolean isKingCaptured() {
@@ -164,19 +164,19 @@ public class ChessGame {
         return chessBoard.deriveTeamScoreFrom();
     }
 
-    public boolean isEmptySquare(MoveInfo moveInfo) {
-        return chessBoard.hasNot(moveInfo.getSource());
+    public boolean isNotExistPiece(Square square) {
+        return chessBoard.isNotExist(square);
     }
 
-    public boolean isNotMyTurn(MoveInfo moveInfo) {
-        if (isEmptySquare(moveInfo)) {
+    public boolean isNotCorrectTurn(MoveInfo moveInfo) {
+        if (chessBoard.isNotExist(moveInfo.getSource())) {
             return true;
         }
         return !chessBoard.findPieceBy(moveInfo.getSource()).isSameTeam(gameTurn);
     }
 
-    public Piece findPieceToMove(MoveInfo moveInfo) {
-        return chessBoard.findPieceBy(moveInfo.getSource());
+    public Piece findPiece(Square square) {
+        return chessBoard.findPieceBy(square);
     }
 
     public Set<CastlingSetting> getCastlingElements() {

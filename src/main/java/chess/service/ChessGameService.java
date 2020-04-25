@@ -114,7 +114,7 @@ public class ChessGameService {
         ChessGame chessGame = getChessGame(gameId);
         boolean canCastling = chessGame.canCastling(moveInfo);
         boolean pawnSpecialMove = chessGame.isPawnMoveTwoRankForward(moveInfo);
-        boolean movePawn = chessGame.findPieceToMove(moveInfo) instanceof Pawn;
+        boolean movePawn = chessGame.findPiece(moveInfo.getSource()) instanceof Pawn;
         MoveState moveState = chessGame.move(moveInfo);
         Team gameTurn = CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalAccessError::new);
         if (moveState.isSucceed()) {
@@ -126,11 +126,12 @@ public class ChessGameService {
                 CHESS_BOARD_DAO.updateEnPassant(gameId, moveInfo);
             }
             if (movePawn && enPassant
-                .hasOtherEnpassant(moveInfo.getTarget(), gameTurn)) {
+                .isEnemyPast(moveInfo.getTarget(), gameTurn)) {
                 CHESS_BOARD_DAO.deleteEnpassant(gameId, moveInfo.getTarget());
             }
             if (canCastling) {
-                MoveInfo moveInfoRook = CastlingSetting.findMoveInfoOfRook(moveInfo.getTarget());
+                MoveInfo moveInfoRook = CastlingSetting
+                    .findRookCastlingMotion(moveInfo.getTarget());
                 CHESS_BOARD_DAO.copyBoardSquare(gameId, moveInfoRook);
                 CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfoRook.getSource());
             }
@@ -174,8 +175,8 @@ public class ChessGameService {
         Integer gameId = promotionTypeDTO.getGameId();
         ChessGame chessGame = getChessGame(gameId);
         Square finishPawnBoard = chessGame.findSquareForPromote();
-        Piece pieceToChange = chessGame.makePieceToChange(type);
-        MoveState moveState = chessGame.promotion(type);
+        Piece pieceToChange = chessGame.makePieceToPromotion(type);
+        MoveState moveState = chessGame.promote(type);
         if (moveState == MoveState.SUCCESS_PROMOTION) {
             CHESS_BOARD_DAO.updatePromotion(gameId, finishPawnBoard, pieceToChange);
             CHESS_GAME_DAO.updateTurn(gameId, chessGame.getGameTurn());
@@ -187,7 +188,7 @@ public class ChessGameService {
 
     public PathDto getPath(SourceDto sourceDto) {
         ChessGame chessGame = getChessGame(sourceDto.getGameId());
-        return new PathDto(chessGame.getMovableArea(Square.of(sourceDto.getSource())));
+        return new PathDto(chessGame.findMovableAreas(Square.of(sourceDto.getSource())));
     }
 
     public Integer createBy(Integer gameId, Map<Team, String> userNames) {

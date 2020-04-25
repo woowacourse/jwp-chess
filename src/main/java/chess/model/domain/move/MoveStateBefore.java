@@ -23,10 +23,10 @@ public class MoveStateBefore extends AbstractMoveState {
     }
 
     private MoveState findMoveStateWhenNotMovable(ChessGame chessGame, MoveInfo moveInfo) {
-        if (chessGame.isEmptySquare(moveInfo)) {
+        if (chessGame.isNotExistPiece(moveInfo.getSource())) {
             return MoveState.FAIL_NO_PIECE;
         }
-        if (chessGame.isNotMyTurn(moveInfo)) {
+        if (chessGame.isNotCorrectTurn(moveInfo)) {
             return MoveState.FAIL_NOT_ORDER;
         }
         return MoveState.FAIL_CAN_NOT_MOVE;

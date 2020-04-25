@@ -41,7 +41,7 @@ public class KingTest {
         board.put(Square.of("a5"), Pawn.getInstance(Team.WHITE));
         board.put(Square.of("b6"), Pawn.getInstance(Team.BLACK));
         Piece piece = King.getPieceInstance(Team.BLACK);
-        Set<Square> availableSquares = piece.getMovableArea(Square.of("a6"), board);
+        Set<Square> availableSquares = piece.findMovableAreas(Square.of("a6"), board);
 
         assertThat(availableSquares.contains(Square.of(input))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(4);
@@ -57,14 +57,14 @@ public class KingTest {
         board.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
 
         Piece piece = King.getPieceInstance(Team.BLACK);
-        Set<Square> availableSquares = piece.getMovableArea(Square.of("e8"), board,
+        Set<Square> availableSquares = piece.findMovableAreas(Square.of("e8"), board,
             CastlingSetting.getCastlingElements());
 
         assertThat(availableSquares.contains(Square.of("c8"))).isTrue();
         assertThat(availableSquares.contains(Square.of("g8"))).isTrue();
 
         piece = King.getPieceInstance(Team.WHITE);
-        availableSquares = piece.getMovableArea(Square.of("e1"), board,
+        availableSquares = piece.findMovableAreas(Square.of("e1"), board,
             CastlingSetting.getCastlingElements());
 
         assertThat(availableSquares.contains(Square.of("c1"))).isTrue();
@@ -73,14 +73,14 @@ public class KingTest {
         board.put(Square.of("d8"), Rook.getPieceInstance(Team.BLACK));
 
         piece = King.getPieceInstance(Team.BLACK);
-        availableSquares = piece.getMovableArea(Square.of("e8"), board,
+        availableSquares = piece.findMovableAreas(Square.of("e8"), board,
             CastlingSetting.getCastlingElements());
 
         assertThat(availableSquares.contains(Square.of("c8"))).isFalse();
         assertThat(availableSquares.contains(Square.of("g8"))).isTrue();
 
         piece = King.getPieceInstance(Team.BLACK);
-        availableSquares = piece.getMovableArea(Square.of("e7"), board,
+        availableSquares = piece.findMovableAreas(Square.of("e7"), board,
             CastlingSetting.getCastlingElements());
 
         assertThat(availableSquares.contains(Square.of("c7"))).isFalse();
@@ -89,7 +89,7 @@ public class KingTest {
         piece = King.getPieceInstance(Team.WHITE);
         Set<CastlingSetting> castlingSettings = CastlingSetting.getCastlingElements();
         castlingSettings.remove(CastlingSetting.WHITE_KING_BEFORE);
-        availableSquares = piece.getMovableArea(Square.of("e1"), board,
+        availableSquares = piece.findMovableAreas(Square.of("e1"), board,
             castlingSettings);
 
         assertThat(availableSquares.contains(Square.of("c1"))).isFalse();

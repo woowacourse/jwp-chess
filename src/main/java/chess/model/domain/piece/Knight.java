@@ -1,7 +1,7 @@
 package chess.model.domain.piece;
 
-import chess.model.domain.board.Square;
 import chess.model.domain.board.CastlingSetting;
+import chess.model.domain.board.Square;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +27,7 @@ public class Knight extends OneTimeMovePiece {
     }
 
     @Override
-    public Set<Square> getMovableArea(Square square, Map<Square, Piece> board,
+    public Set<Square> findMovableAreas(Square square, Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements) {
         return getAllMovableArea(square).stream()
             .filter(s -> !(board.containsKey(s) && isSameTeam(board.get(s))))

@@ -67,12 +67,12 @@ public class EnPassant {
         throw new IllegalArgumentException("앙파상 Rank가 아닙니다.");
     }
 
-    public boolean hasOtherEnpassant(Square square, Team gameTurn) {
-        return enPassantsToAfterSquares.containsKey(square)
-            && !getPawnByRank(square).isSameTeam(gameTurn);
+    public boolean isEnemyPast(Square square, Team gameTurn) {
+        return enPassantsToAfterSquares.containsKey(square) && !getPawnByRank(square)
+            .isSameTeam(gameTurn);
     }
 
-    public Square getAfterSquare(Square enPassantSquare) {
+    public Square getCurrentSquare(Square enPassantSquare) {
         return enPassantsToAfterSquares.get(enPassantSquare);
     }
 

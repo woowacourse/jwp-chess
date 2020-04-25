@@ -48,10 +48,10 @@ public class PawnTest {
         Piece pieceWhite = Pawn.getInstance(Team.WHITE);
 
         Set<Square> availableSquares = new HashSet<>();
-        availableSquares.addAll(pieceWhite.getMovableArea(Square.of("a4"), board));
-        availableSquares.addAll(pieceWhite.getMovableArea(Square.of("c4"), board));
-        availableSquares.addAll(pieceBlack.getMovableArea(Square.of("a6"), board));
-        availableSquares.addAll(pieceBlack.getMovableArea(Square.of("c6"), board));
+        availableSquares.addAll(pieceWhite.findMovableAreas(Square.of("a4"), board));
+        availableSquares.addAll(pieceWhite.findMovableAreas(Square.of("c4"), board));
+        availableSquares.addAll(pieceBlack.findMovableAreas(Square.of("a6"), board));
+        availableSquares.addAll(pieceBlack.findMovableAreas(Square.of("c6"), board));
 
         assertThat(availableSquares.size()).isEqualTo(0);
     }
@@ -66,11 +66,11 @@ public class PawnTest {
         Piece pieceWhite = Pawn.getInstance(Team.WHITE);
 
         Set<Square> availableSquaresBlack = pieceBlack
-            .getMovableArea(Square.of("a7"), board);
+            .findMovableAreas(Square.of("a7"), board);
         Set<Square> availableSquaresBlack2 = pieceBlack
-            .getMovableArea(Square.of("b7"), board);
+            .findMovableAreas(Square.of("b7"), board);
         Set<Square> availableSquaresWhite = pieceWhite
-            .getMovableArea(Square.of("a2"), board);
+            .findMovableAreas(Square.of("a2"), board);
 
         assertThat(availableSquaresBlack.contains(Square.of("a5"))).isTrue();
         assertThat(availableSquaresBlack.contains(Square.of("a6"))).isTrue();
@@ -94,19 +94,19 @@ public class PawnTest {
 
         Piece blackPawn = Pawn.getInstance(Team.BLACK);
         Set<Square> availableSquares = blackPawn
-            .getMovableArea(Square.of("c6"), board);
+            .findMovableAreas(Square.of("c6"), board);
         assertThat(availableSquares.contains(Square.of("c5"))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(1);
 
-        availableSquares = blackPawn.getMovableArea(Square.of("f6"), board);
+        availableSquares = blackPawn.findMovableAreas(Square.of("f6"), board);
         assertThat(availableSquares.contains(Square.of("f5"))).isFalse();
         assertThat(availableSquares.size()).isEqualTo(0);
 
-        availableSquares = blackPawn.getMovableArea(Square.of("e6"), board);
+        availableSquares = blackPawn.findMovableAreas(Square.of("e6"), board);
         assertThat(availableSquares.contains(Square.of("f5"))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(1);
 
-        availableSquares = blackPawn.getMovableArea(Square.of("g6"), board);
+        availableSquares = blackPawn.findMovableAreas(Square.of("g6"), board);
         assertThat(availableSquares.contains(Square.of("g5"))).isTrue();
         assertThat(availableSquares.contains(Square.of("f5"))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(2);

@@ -29,7 +29,7 @@ public class Pawn extends OneTimeMovePiece {
     }
 
     @Override
-    public Set<Square> getMovableArea(Square square, Map<Square, Piece> board,
+    public Set<Square> findMovableAreas(Square square, Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements) {
         Set<Square> allMovableArea = getAllMovableArea(square);
         Set<Square> containsMovableArea = allMovableArea.stream()

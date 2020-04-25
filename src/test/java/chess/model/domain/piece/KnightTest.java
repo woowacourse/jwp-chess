@@ -41,7 +41,7 @@ public class KnightTest {
         board.put(Square.of("c2"), Queen.getPieceInstance(Team.WHITE));
         board.put(Square.of("g4"), Pawn.getInstance(Team.WHITE));
         Piece piece = Knight.getPieceInstance(Team.WHITE);
-        Set<Square> availableSquares = piece.getMovableArea(Square.of("e3"), board);
+        Set<Square> availableSquares = piece.findMovableAreas(Square.of("e3"), board);
         assertThat(availableSquares.contains(Square.of(input))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(6);
     }

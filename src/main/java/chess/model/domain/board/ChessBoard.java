@@ -4,6 +4,7 @@ import chess.model.domain.piece.King;
 import chess.model.domain.piece.Pawn;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Team;
+import chess.model.domain.state.MoveInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,21 +15,25 @@ public class ChessBoard {
 
     private Map<Square, Piece> chessBoard;
 
-    public ChessBoard(Map<Square, Piece> chessBoard) {
-        this.chessBoard = chessBoard;
+    private ChessBoard(Map<Square, Piece> chessBoard) {
+        this.chessBoard = new HashMap<>(chessBoard);
     }
 
-    public static boolean isInitialPoint(Square square, Piece piece) {
-        return (piece instanceof Pawn)
-            && (square.isSameRank(Rank.SEVENTH) || square.isSameRank(Rank.SECOND));
+    public static ChessBoard createInitial() {
+        return new ChessBoard(new BoardInitial().getInitialize());
     }
 
     public static ChessBoard of(Map<Square, Piece> chessBoard) {
         return new ChessBoard(chessBoard);
     }
 
-    public static ChessBoard createInitial() {
-        return new ChessBoard(new BoardInitial().getInitialize());
+    public static ChessBoard of(ChessBoard chessBoard) {
+        return new ChessBoard(chessBoard.getChessBoard());
+    }
+
+    public static boolean isInitialPoint(Square square, Piece piece) {
+        return (piece instanceof Pawn)
+            && (square.isSameRank(Rank.SEVENTH) || square.isSameRank(Rank.SECOND));
     }
 
     public Optional<Square> findSquareForPromote() {
@@ -42,7 +47,7 @@ public class ChessBoard {
         return chessBoard.remove(square);
     }
 
-    public void put(Square square, Piece piece) {
+    public void changePiece(Square square, Piece piece) {
         chessBoard.put(square, piece);
     }
 
@@ -50,7 +55,7 @@ public class ChessBoard {
         return chessBoard.get(square);
     }
 
-    public boolean hasNot(Square square) {
+    public boolean isNotExist(Square square) {
         return !chessBoard.containsKey(square);
     }
 
@@ -87,6 +92,20 @@ public class ChessBoard {
                 .count();
         }
         return count;
+    }
+
+    public void move(MoveInfo moveInfo) {
+        Square moveInfoBefore = moveInfo.getSource();
+        Square moveInfoAfter = moveInfo.getTarget();
+
+        Piece currentPiece = chessBoard.remove(moveInfoBefore);
+        chessBoard.put(moveInfoAfter, currentPiece);
+    }
+
+    public void addElements(Map<Square, Piece> enPassantBoard) {
+        for (Square square : enPassantBoard.keySet()) {
+            chessBoard.put(square, enPassantBoard.get(square));
+        }
     }
 
     public Map<Square, Piece> getChessBoard() {

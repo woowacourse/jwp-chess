@@ -48,7 +48,7 @@ public class BishopTest {
         board.put(Square.of("g2"), Pawn.getInstance(Team.WHITE));
 
         Piece piece = Bishop.getPieceInstance(Team.BLACK);
-        Set<Square> availableSquares = piece.getMovableArea(Square.of("c6"), board);
+        Set<Square> availableSquares = piece.findMovableAreas(Square.of("c6"), board);
 
         assertThat(availableSquares.contains(Square.of(input))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(7);

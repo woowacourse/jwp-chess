@@ -78,21 +78,20 @@ public class ChessGameTest {
             .isEqualTo(MoveState.KING_CAPTURED);
     }
 
-    @DisplayName("이동하려는 before자리에 말이 없는건지 확인")
+    @DisplayName("칸에 말이 없는건지 확인")
     @ParameterizedTest
-    @CsvSource(value = {"a2, a3, false", "a3, a4, true"})
-    void isNoPiece(String source, String target, boolean success) {
+    @CsvSource(value = {"a2, false", "a3, true"})
+    void isNoPiece(String source, boolean success) {
         ChessGame chessGame = new ChessGame();
-        assertThat(chessGame.isEmptySquare(new MoveInfo(source, target)) == success).isTrue();
+        assertThat(chessGame.isNotExistPiece(Square.of(source)) == success).isTrue();
     }
 
-    @DisplayName("이동하려는 before자리의 말이 현재 차례의 말이 아닌지 확인, 말이 없는 경우도 True")
+    @DisplayName("이동하려는 before자리의 말이 현재 차례의 말이 아닌지 확인")
     @Test
     void isNotMyTurn() {
         ChessGame chessGame = new ChessGame();
-        assertThat(chessGame.isNotMyTurn(new MoveInfo("a2", "a3"))).isFalse();
-        assertThat(chessGame.isNotMyTurn(new MoveInfo("a3", "a4"))).isTrue();
-        assertThat(chessGame.isNotMyTurn(new MoveInfo("a7", "a6"))).isTrue();
+        assertThat(chessGame.isNotCorrectTurn(new MoveInfo("a2", "a3"))).isFalse();
+        assertThat(chessGame.isNotCorrectTurn(new MoveInfo("a7", "a6"))).isTrue();
     }
 
     @DisplayName("폰이 시작지점(즉 상대방의 시작지점)으로 이동했는지 확인")
@@ -132,7 +131,7 @@ public class ChessGameTest {
             .isEqualTo(MoveState.FAIL_NOT_ORDER);
         assertThat(chessGame.move(new MoveInfo("g2", "g3")))
             .isEqualTo(MoveState.FAIL_MUST_PAWN_PROMOTION);
-        assertThat(chessGame.promotion(Type.BISHOP)).isEqualTo(MoveState.SUCCESS_PROMOTION);
+        assertThat(chessGame.promote(Type.BISHOP)).isEqualTo(MoveState.SUCCESS_PROMOTION);
         assertThat(chessGame.move(new MoveInfo("g2", "g3")))
             .isEqualTo(MoveState.FAIL_NOT_ORDER);
         assertThat(chessGame.move(new MoveInfo("g7", "g6")))

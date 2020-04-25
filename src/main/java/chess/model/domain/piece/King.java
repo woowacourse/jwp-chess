@@ -29,7 +29,7 @@ public class King extends OneTimeMovePiece {
     }
 
     @Override
-    public Set<Square> getMovableArea(Square square, Map<Square, Piece> board,
+    public Set<Square> findMovableAreas(Square square, Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements) {
         Set<Square> movableArea = getAllMovableArea(square).stream()
             .filter(s -> !(board.containsKey(s) && isSameTeam(board.get(s))))

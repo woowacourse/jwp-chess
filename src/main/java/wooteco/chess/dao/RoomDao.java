@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RoomDao {
-	public int findTurnPlayerId(int roomId) throws SQLException, ClassNotFoundException {
+	public int findTurnPlayerId(int roomId) throws SQLException {
 		String query = "select turn from room where room_id = (?)";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setInt(1, roomId);
@@ -14,12 +14,12 @@ public class RoomDao {
 				if (rs.next()) {
 					return rs.getInt(1);
 				}
-				throw new IllegalArgumentException("Turn이 잘못되었습니다.");
+				throw new IllegalArgumentException("존재하지 않는 방입니다.");
 			}
 		}
 	}
 
-	public int create(int player1Id, int player2Id) throws SQLException, ClassNotFoundException {
+	public int create(int player1Id, int player2Id) throws SQLException {
 		String query = "insert into room(turn, player1_id, player2_id) value (?, ?, ?)";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query,
 			PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -41,12 +41,10 @@ public class RoomDao {
 		}
 	}
 
-	public void updateTurn(int roomId) throws SQLException, ClassNotFoundException {
-		String query = "";
+	public void updateTurn(int roomId) throws SQLException {
+		String query = "update room set turn = player1_id where room_id = (?)";
 		if (findTurnPlayerId(roomId) == findFirstPlayerId(roomId)) {
 			query = "update room set turn = player2_id where room_id = (?)";
-		} else {
-			query = "update room set turn = player1_id where room_id = (?)";
 		}
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setInt(1, roomId);
@@ -54,7 +52,7 @@ public class RoomDao {
 		}
 	}
 
-	private int findFirstPlayerId(int roomId) throws SQLException, ClassNotFoundException {
+	private int findFirstPlayerId(int roomId) throws SQLException {
 		String query = "select player1_id from room where room_id = (?)";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setInt(1, roomId);
@@ -62,7 +60,7 @@ public class RoomDao {
 			if (resultSet.next()) {
 				return resultSet.getInt(1);
 			}
-			throw new IllegalAccessError();
+			throw new AssertionError();
 		}
 	}
 }

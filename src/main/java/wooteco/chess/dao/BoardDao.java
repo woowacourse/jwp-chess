@@ -14,7 +14,7 @@ import wooteco.chess.dto.BoardDto;
 
 public class BoardDao {
 
-	public Board create(int roomId, Board board) throws SQLException, ClassNotFoundException {
+	public Board create(int roomId, Board board) throws SQLException {
 		List<BoardDto> mappers = BoardMapper.createMappers(board);
 		String query = "insert into board(room_id, piece_name, piece_team, piece_position) values (?,?,?,?)";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
@@ -30,7 +30,7 @@ public class BoardDao {
 		return board;
 	}
 
-	public Board findByRoomId(int roomId) throws SQLException, ClassNotFoundException {
+	public Board findByRoomId(int roomId) throws SQLException {
 		String query = "select * from board where room_id = (?)";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setInt(1, roomId);
@@ -38,7 +38,7 @@ public class BoardDao {
 		}
 	}
 
-	public void updateBoard(int roomId, Position position, Piece piece) throws SQLException, ClassNotFoundException {
+	public void updateBoard(int roomId, Position position, Piece piece) throws SQLException {
 		String query = "update board set piece_name = ? , piece_team = ? where room_id = ? and piece_position = ?";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setString(1, piece.getSymbol());

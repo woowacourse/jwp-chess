@@ -16,6 +16,7 @@ import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.GameDto;
+import wooteco.chess.dto.PlayerDto;
 import wooteco.chess.service.BoardService;
 import wooteco.chess.service.PlayerService;
 
@@ -45,11 +46,13 @@ public class SparkController {
 		}
 	}
 
-	private int createPlayers(Request request) throws SQLException, ClassNotFoundException {
+	private int createPlayers(Request request) throws SQLException {
 		Map<String, String> params = new HashMap<>();
 		params = gson.fromJson(request.body(), params.getClass());
-		int player1Id = playerService.create(params.get("player1Name"), params.get("player1Password"), "white");
-		int player2Id = playerService.create(params.get("player2Name"), params.get("player2Password"), "black");
+		int player1Id = playerService.create(
+			new PlayerDto(params.get("player1Name"), params.get("player1Password"), "white"));
+		int player2Id = playerService.create(
+			new PlayerDto(params.get("player2Name"), params.get("player2Password"), "black"));
 		return boardService.createRoom(player1Id, player2Id);
 	}
 

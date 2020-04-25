@@ -1,25 +1,25 @@
 package wooteco.chess.dto;
 
 public class BoardDto {
-	private final String piece_name;
-	private final String piece_team;
-	private final String piece_position;
+	private final String pieceName;
+	private final String pieceTeam;
+	private final String piecePosition;
 
-	public BoardDto(String piece_name, String piece_team, String piece_position) {
-		this.piece_name = piece_name;
-		this.piece_team = piece_team;
-		this.piece_position = piece_position;
+	public BoardDto(String pieceName, String pieceTeam, String piecePosition) {
+		this.pieceName = pieceName;
+		this.pieceTeam = pieceTeam;
+		this.piecePosition = piecePosition;
 	}
 
 	public String pieceName() {
-		return piece_name;
+		return pieceName;
 	}
 
 	public String pieceTeam() {
-		return piece_team;
+		return pieceTeam;
 	}
 
 	public String piecePosition() {
-		return piece_position;
+		return piecePosition;
 	}
 }

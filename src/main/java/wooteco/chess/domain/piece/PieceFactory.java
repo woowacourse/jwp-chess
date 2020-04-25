@@ -31,11 +31,20 @@ public enum PieceFactory {
 	}
 
 	public static Piece of(String name, String team, String position) {
-		PieceFactory pieveFactory = Arrays.stream(values())
+		PieceFactory pieceFactory = Arrays.stream(values())
 			.filter(value -> value.name.equals(name))
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException("없는 말입니다."));
 		Team color = Team.of(team);
-		return pieveFactory.expression.apply(color, Position.of(position));
+		return pieceFactory.expression.apply(color, Position.of(position));
+	}
+
+	public static Piece of(String name, String team, int x, int y) {
+		PieceFactory pieceFactory = Arrays.stream(values())
+			.filter(value -> value.name.equals(name))
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException("없는 말입니다."));
+		Team color = Team.of(team);
+		return pieceFactory.expression.apply(color, Position.of(x, y));
 	}
 }

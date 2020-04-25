@@ -1,0 +1,10 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:13306?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+      username: root
+      password: root

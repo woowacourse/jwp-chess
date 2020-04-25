@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<input id="originalPosition" type="text" value="">
+<input id="targetPosition" type="text" value="">
+<input id="gameId" type="text" value="{{response.gameId}}">
+
+<h1 id="title"> Chess Game </h1>
+<h2> 게임 아이디 : {{response.gameId}}</h2>
+
+<h2>
+    <span id="now-turn">{{response.turn}}</span>의 차례입니다.
+</h2>
+
+<form action="/start" method="post">
+    <button>시작하기</button>
+</form>
+
+<form action="/" method="get">
+    <button>게임종료</button>
+</form>
+
+<form action="/save" method="get">
+    <button>게임 저장</button>
+</form>
+
+<form action="/load" method="get">
+    <input type="text" name="gameId" placeholder="방 번호">
+    <button>불러오기</button>
+</form>
+<div>
+    {{#each response.score}}
+    {{@key}} : {{this}}
+    <br>
+    {{/each}}
+</div>
+<h2>{{error}}</h2>
+<div class="chessboard">
+    <!-- 1st -->
+    <div class="white" id="a8">{{response.piece.0}}</div>
+    <div class="black" id="b8">{{response.piece.1}}</div>
+    <div class="white" id="c8">{{response.piece.2}}</div>
+    <div class="black" id="d8">{{response.piece.3}}</div>
+    <div class="white" id="e8">{{response.piece.4}}</div>
+    <div class="black" id="f8">{{response.piece.5}}</div>
+    <div class="white" id="g8">{{response.piece.6}}</div>
+    <div class="black" id="h8">{{response.piece.7}}</div>
+    <!-- 2nd -->
+    <div class="black" id="a7">{{response.piece.8}}</div>
+    <div class="white" id="b7">{{response.piece.9}}</div>
+    <div class="black" id="c7">{{response.piece.10}}</div>
+    <div class="white" id="d7">{{response.piece.11}}</div>
+    <div class="black" id="e7">{{response.piece.12}}</div>
+    <div class="white" id="f7">{{response.piece.13}}</div>
+    <div class="black" id="g7">{{response.piece.14}}</div>
+    <div class="white" id="h7">{{response.piece.15}}</div>
+    <!-- 3th -->
+    <div class="white" id="a6">{{response.piece.16}}</div>
+    <div class="black" id="b6">{{response.piece.17}}</div>
+    <div class="white" id="c6">{{response.piece.18}}</div>
+    <div class="black" id="d6">{{response.piece.19}}</div>
+    <div class="white" id="e6">{{response.piece.20}}</div>
+    <div class="black" id="f6">{{response.piece.21}}</div>
+    <div class="white" id="g6">{{response.piece.22}}</div>
+    <div class="black" id="h6">{{response.piece.23}}</div>
+    <!-- 4st -->
+    <div class="black" id="a5">{{response.piece.24}}</div>
+    <div class="white" id="b5">{{response.piece.25}}</div>
+    <div class="black" id="c5">{{response.piece.26}}</div>
+    <div class="white" id="d5">{{response.piece.27}}</div>
+    <div class="black" id="e5">{{response.piece.28}}</div>
+    <div class="white" id="f5">{{response.piece.29}}</div>
+    <div class="black" id="g5">{{response.piece.30}}</div>
+    <div class="white" id="h5">{{response.piece.31}}</div>
+    <!-- 5th -->
+    <div class="white" id="a4">{{response.piece.32}}</div>
+    <div class="black" id="b4">{{response.piece.33}}</div>
+    <div class="white" id="c4">{{response.piece.34}}</div>
+    <div class="black" id="d4">{{response.piece.35}}</div>
+    <div class="white" id="e4">{{response.piece.36}}</div>
+    <div class="black" id="f4">{{response.piece.37}}</div>
+    <div class="white" id="g4">{{response.piece.38}}</div>
+    <div class="black" id="h4">{{response.piece.39}}</div>
+    <!-- 6th -->
+    <div class="black" id="a3">{{response.piece.40}}</div>
+    <div class="white" id="b3">{{response.piece.41}}</div>
+    <div class="black" id="c3">{{response.piece.42}}</div>
+    <div class="white" id="d3">{{response.piece.43}}</div>
+    <div class="black" id="e3">{{response.piece.44}}</div>
+    <div class="white" id="f3">{{response.piece.45}}</div>
+    <div class="black" id="g3">{{response.piece.46}}</div>
+    <div class="white" id="h3">{{response.piece.47}}</div>
+    <!-- 7th -->
+    <div class="white" id="a2">{{response.piece.48}}</div>
+    <div class="black" id="b2">{{response.piece.49}}</div>
+    <div class="white" id="c2">{{response.piece.50}}</div>
+    <div class="black" id="d2">{{response.piece.51}}</div>
+    <div class="white" id="e2">{{response.piece.52}}</div>
+    <div class="black" id="f2">{{response.piece.53}}</div>
+    <div class="white" id="g2">{{response.piece.54}}</div>
+    <div class="black" id="h2">{{response.piece.55}}</div>
+    <!-- 8th -->
+    <div class="black" id="a1">{{response.piece.56}}</div>
+    <div class="white" id="b1">{{response.piece.57}}</div>
+    <div class="black" id="c1">{{response.piece.58}}</div>
+    <div class="white" id="d1">{{response.piece.59}}</div>
+    <div class="black" id="e1">{{response.piece.60}}</div>
+    <div class="white" id="f1">{{response.piece.61}}</div>
+    <div class="black" id="g1">{{response.piece.62}}</div>
+    <div class="white" id="h1">{{response.piece.63}}</div>
+</div>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

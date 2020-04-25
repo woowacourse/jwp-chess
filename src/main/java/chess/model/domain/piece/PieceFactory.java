@@ -34,6 +34,14 @@ public class PieceFactory {
             .orElseThrow(IllegalArgumentException::new);
     }
 
+    public static Piece of(Team team, Type type) {
+        return CACHE.values().stream()
+            .filter(piece -> piece.isSameTeam(team))
+            .filter(piece -> piece.isSameType(type))
+            .findFirst()
+            .orElseThrow(IllegalArgumentException::new);
+    }
+
     public static String getName(Piece piece) {
         return CACHE.keySet().stream()
             .filter(key -> CACHE.get(key) == piece)

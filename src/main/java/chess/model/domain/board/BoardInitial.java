@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BoardInitialDefault implements BoardInitialization {
+public class BoardInitial {
 
     private static final int RANK_BLACK_PAWN_INIT = 7;
     private static final int RANK_WHITE_PAWN_INIT = 2;
@@ -46,7 +46,6 @@ public class BoardInitialDefault implements BoardInitialization {
         INITIAL_BOARD = Collections.unmodifiableMap(initialBoard);
     }
 
-    @Override
     public Map<Square, Piece> getInitialize() {
         return new HashMap<>(INITIAL_BOARD);
     }

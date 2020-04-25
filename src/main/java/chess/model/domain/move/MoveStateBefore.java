@@ -16,7 +16,7 @@ public class MoveStateBefore implements MoveStateStrategy {
         if (chessGame.isNotMovable(moveInfo)) {
             return findMoveStateWhenNotMovable(chessGame, moveInfo);
         }
-        if (chessGame.isNeedPromotion()) {
+        if (chessGame.canPromote()) {
             return MoveState.FAIL_MUST_PAWN_PROMOTION;
         }
         return MoveState.READY;

@@ -1,5 +1,6 @@
 package chess.model.domain.board;
 
+import chess.model.domain.exception.ChessException;
 import chess.model.domain.piece.Pawn;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Team;
@@ -22,8 +23,8 @@ public class EnPassant {
         this.enPassantsToAfterSquares = enPassantsToAfterSquares;
     }
 
-    public static boolean isPawnJump(Piece piece, MoveInfo moveInfo) {
-        return piece instanceof Pawn && isJumpRank(moveInfo);
+    public static boolean isPawnMoveTwoRank(Piece piece, MoveInfo moveInfo) {
+        return piece instanceof Pawn && isMoveTwoRank(moveInfo);
     }
 
     public void removeEnPassant(MoveInfo moveInfo) {
@@ -38,12 +39,14 @@ public class EnPassant {
         }
     }
 
-    public void addIfPawnJump(Piece piece, MoveInfo moveInfo) {
-        if (isPawnJump(piece, moveInfo)) {
+    public void add(Piece piece, MoveInfo moveInfo) {
+        if (isPawnMoveTwoRank(piece, moveInfo)) {
             Square betweenWhenJumpRank = getBetween(moveInfo);
             Square afterSquare = moveInfo.get(MoveOrder.TO);
             enPassantsToAfterSquares.put(betweenWhenJumpRank, afterSquare);
+            return;
         }
+        throw new ChessException("폰이 두 칸 전진하지 않아, 앙파상 룰을 적용할 수 없습니다.");
     }
 
     public Map<Square, Piece> getEnPassantBoard(Team team) {
@@ -75,19 +78,17 @@ public class EnPassant {
     }
 
     public static Square getBetween(MoveInfo moveInfo) {
-        if(isJumpRank(moveInfo)) {
+        if (isMoveTwoRank(moveInfo)) {
             Square squareFrom = moveInfo.get(MoveOrder.FROM);
             Square squareTo = moveInfo.get(MoveOrder.TO);
             int rankCompare = squareFrom.getRankCompare(squareTo);
             return squareFrom.getIncreasedSquare(0, rankCompare * -1);
         }
-        throw new IllegalArgumentException("JUMP RANK가 아닙니다.");
+        throw new IllegalArgumentException("2칸 이동하지 않았습니다.");
     }
 
-    private static boolean isJumpRank(MoveInfo moveInfo) {
-        Square squareFrom = moveInfo.get(MoveOrder.FROM);
-        Square squareTo = moveInfo.get(MoveOrder.TO);
-        return Math.abs(squareFrom.calculateRankDistance(squareTo)) == 2;
+    private static boolean isMoveTwoRank(MoveInfo moveInfo) {
+        return Math.abs(moveInfo.calculateRankDistance()) == 2;
     }
 
     public Set<Square> getEnPassants() {

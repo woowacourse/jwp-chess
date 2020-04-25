@@ -1,8 +1,7 @@
 package chess.service;
 
-import chess.model.domain.board.BoardInitialByDB;
-import chess.model.domain.board.BoardInitialization;
 import chess.model.domain.board.CastlingSetting;
+import chess.model.domain.board.ChessBoard;
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.EnPassant;
 import chess.model.domain.board.Square;
@@ -100,12 +99,11 @@ public class ChessGameService {
     }
 
     private ChessGame getChessGame(Integer gameId) {
-        BoardInitialization boardInitialByDB = new BoardInitialByDB(
-            CHESS_BOARD_DAO.findBoard(gameId));
+        ChessBoard chessBoard = ChessBoard.of(CHESS_BOARD_DAO.findBoard(gameId));
         Team gameTurn = CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalAccessError::new);
         Set<CastlingSetting> castlingElements = CHESS_BOARD_DAO.findCastlingElements(gameId);
         EnPassant enPassant = CHESS_BOARD_DAO.findEnpassantBoard(gameId);
-        return new ChessGame(boardInitialByDB, gameTurn, castlingElements, enPassant);
+        return new ChessGame(chessBoard, gameTurn, castlingElements, enPassant);
     }
 
     public ChessGameDto move(MoveDto moveDTO) {
@@ -114,7 +112,7 @@ public class ChessGameService {
         EnPassant enPassant = CHESS_BOARD_DAO.findEnpassantBoard(gameId);
         ChessGame chessGame = getChessGame(gameId);
         boolean canCastling = chessGame.canCastling(moveInfo);
-        boolean pawnSpecialMove = chessGame.isPawnMoveTwoStep(moveInfo);
+        boolean pawnSpecialMove = chessGame.isPawnMoveTwoRankForward(moveInfo);
         boolean movePawn = chessGame.findPieceToMove(moveInfo) instanceof Pawn;
         MoveState moveState = chessGame.movePieceWhenCanMove(moveInfo);
         Team gameTurn = CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalAccessError::new);
@@ -131,7 +129,7 @@ public class ChessGameService {
                 CHESS_BOARD_DAO.deleteEnpassant(gameId, moveInfo.get(MoveOrder.TO));
             }
             if (canCastling) {
-                MoveInfo moveInfoRook = CastlingSetting.findRookMoveInfo(moveInfo);
+                MoveInfo moveInfoRook = CastlingSetting.findMoveInfoOfRook(moveInfo);
                 CHESS_BOARD_DAO.copyBoardSquare(gameId, moveInfoRook);
                 CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfoRook.get(MoveOrder.FROM));
             }
@@ -174,13 +172,11 @@ public class ChessGameService {
         Type type = Type.of(promotionTypeDTO.getPromotionType());
         Integer gameId = promotionTypeDTO.getGameId();
         ChessGame chessGame = getChessGame(gameId);
-        Optional<Square> finishPawnBoard = chessGame.getFinishPawnBoard();
-        Piece pieceToChange = chessGame.getPieceToChange(type);
+        Square finishPawnBoard = chessGame.findSquareForPromote();
+        Piece pieceToChange = chessGame.makePieceToChange(type);
         MoveState moveState = chessGame.promotion(type);
         if (moveState == MoveState.SUCCESS_PROMOTION) {
-            CHESS_BOARD_DAO
-                .updatePromotion(gameId, finishPawnBoard.orElseThrow(IllegalAccessError::new),
-                    pieceToChange);
+            CHESS_BOARD_DAO.updatePromotion(gameId, finishPawnBoard, pieceToChange);
             CHESS_GAME_DAO.updateTurn(gameId, chessGame.getGameTurn());
             CHESS_GAME_DAO.updateScore(gameId, chessGame.getTeamScore());
         }

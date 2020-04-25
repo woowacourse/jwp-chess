@@ -104,7 +104,7 @@ public enum CastlingSetting {
                 == moveInfo.get(MoveOrder.TO));
     }
 
-    public static MoveInfo findRookMoveInfo(MoveInfo moveInfo) {
+    public static MoveInfo findMoveInfoOfRook(MoveInfo moveInfo) {
         Square moveSquareAfter = moveInfo.get(MoveOrder.TO);
         Map<String, CastlingSetting> selectCastling = TOTALS.stream()
             .filter(total -> moveSquareAfter == total.get(KEYS_KING_AFTER).square)

@@ -63,7 +63,7 @@ public class ChessGameTest {
 
         Map<Square, Piece> whiteKingBoard = new HashMap<>();
         whiteKingBoard.put(Square.of("a1"), King.getPieceInstance(Team.WHITE));
-        chessGame = new ChessGame(new BoardInitialTestUse(whiteKingBoard), Team.BLACK,
+        chessGame = new ChessGame(ChessBoard.of(whiteKingBoard), Team.BLACK,
             new HashSet<>(), new EnPassant());
         assertThat(chessGame.isKingCaptured()).isTrue();
         assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("d1", "d2")))
@@ -71,7 +71,7 @@ public class ChessGameTest {
 
         Map<Square, Piece> blackKingBoard = new HashMap<>();
         blackKingBoard.put(Square.of("a1"), King.getPieceInstance(Team.BLACK));
-        chessGame = new ChessGame(new BoardInitialTestUse(blackKingBoard), Team.WHITE,
+        chessGame = new ChessGame(ChessBoard.of(blackKingBoard), Team.WHITE,
             new HashSet<>(), new EnPassant());
         assertThat(chessGame.isKingCaptured()).isTrue();
         assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("d1", "d2")))
@@ -150,7 +150,7 @@ public class ChessGameTest {
         boardInitial.put(Square.of("h8"), Rook.getPieceInstance(Team.BLACK));
         boardInitial.put(Square.of("a1"), Rook.getPieceInstance(Team.WHITE));
         boardInitial.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
-        ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Team.WHITE,
+        ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
             CastlingSetting.getCastlingElements(), new EnPassant());
 
         assertThat(chessGame.movePieceWhenCanMove(new MoveInfo(whiteBefore, whiteAfter)))
@@ -175,7 +175,7 @@ public class ChessGameTest {
         boardInitial.put(Square.of("f1"), Knight.getPieceInstance(Team.BLACK));
         boardInitial.put(Square.of("f8"), Knight.getPieceInstance(Team.WHITE));
         boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
-        ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Team.WHITE,
+        ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
             CastlingSetting.getCastlingElements(), new EnPassant());
 
         assertThat(chessGame.movePieceWhenCanMove(new MoveInfo(whiteBefore, whiteAfter)))
@@ -203,7 +203,7 @@ public class ChessGameTest {
         boardInitial.put(Square.of("f1"), Knight.getPieceInstance(Team.BLACK));
         boardInitial.put(Square.of("f8"), Knight.getPieceInstance(Team.WHITE));
         boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
-        ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Team.WHITE,
+        ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
             new HashSet<>(Collections.singletonList(CastlingSetting.BLACK_KING_BEFORE)),
             new EnPassant());
 

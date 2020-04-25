@@ -29,6 +29,12 @@ public class MoveInfo {
         return squares.get(moveOrder);
     }
 
+    public int calculateRankDistance() {
+        Square squareFrom = squares.get(MoveOrder.FROM);
+        Square squareTo = squares.get(MoveOrder.TO);
+        return squareFrom.calculateRankDistance(squareTo);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

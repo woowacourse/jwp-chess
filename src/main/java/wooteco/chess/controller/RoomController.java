@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 import wooteco.chess.dto.RoomDto;
-import wooteco.chess.result.Result;
-import wooteco.chess.service.RoomService;
 import wooteco.chess.utils.validator.RoomValidator;
 
 public class RoomController {
@@ -27,7 +25,9 @@ public class RoomController {
         if (result.isSuccess()) {
             return result.getObject();
         }
-        throw new IllegalArgumentException(result.getObject().toString());
+        response.body(result.getObject().toString());
+        response.status(409);
+        return response;
     }
 
     public Object join(Request request, Response response) {
@@ -41,7 +41,9 @@ public class RoomController {
         if (result.isSuccess()) {
             return result.getObject();
         }
-        throw new IllegalArgumentException(result.getObject().toString());
+        response.body(result.getObject().toString());
+        response.status(409);
+        return response;
     }
 
     public Object exit(Request request, Response response) {
@@ -63,6 +65,8 @@ public class RoomController {
         if (result.isSuccess()) {
             return new Gson().toJson(result.getObject());
         }
-        throw new IllegalArgumentException(result.getObject().toString());
+        response.body(result.getObject().toString());
+        response.status(409);
+        return response;
     }
 }

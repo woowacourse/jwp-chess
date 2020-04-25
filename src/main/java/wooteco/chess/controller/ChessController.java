@@ -23,7 +23,9 @@ public class ChessController {
         if (result.isSuccess()) {
             return result.getObject();
         }
-        throw new IllegalArgumentException(result.getObject().toString());
+        response.body(result.getObject().toString());
+        response.status(409);
+        return response;
     }
 
     public Object getMovableWay(Request request, Response response) {
@@ -34,7 +36,9 @@ public class ChessController {
         if (result.isSuccess()) {
             return new Gson().toJson(result.getObject());
         }
-        throw new IllegalArgumentException(result.getObject().toString());
+        response.body(result.getObject().toString());
+        response.status(409);
+        return response;
     }
 
     public Object renew(Request request, Response response) {
@@ -43,6 +47,8 @@ public class ChessController {
         if (result.isSuccess()) {
             return new Gson().toJson(result.getObject());
         }
-        throw new IllegalArgumentException(result.getObject().toString());
+        response.body(result.getObject().toString());
+        response.status(409);
+        return response;
     }
 }

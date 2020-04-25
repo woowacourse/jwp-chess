@@ -1,12 +1,22 @@
 package wooteco.chess.controller;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import wooteco.chess.service.ChessService;
 
-@Controller
+//@Controller
 public class ChessController {
-    @GetMapping("/")
-    public String index() {
-        return "index";
+
+    private ChessService chessService;
+
+    public ChessController(ChessService chessService) {
+        this.chessService = chessService;
+    }
+
+    @GetMapping("/start")
+    public String startGame(Model model) {
+        chessService.start();
+        model.addAllAttributes(chessService.makeStartResponse());
+        return "chessGameStart";
     }
 }

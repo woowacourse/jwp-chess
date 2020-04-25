@@ -23,17 +23,6 @@ public class JdbcConfiguration {
 		this.driverClassName = driverClassName;
 	}
 
-	@Override
-	public String toString() {
-		return "JdbcConfiguration{" +
-				"url='" + url + '\'' +
-				", option='" + option + '\'' +
-				", username='" + username + '\'' +
-				", password='" + password + '\'' +
-				", driverClassName='" + driverClassName + '\'' +
-				'}';
-	}
-
 	public String getUrl() {
 		return url + option;
 	}
@@ -72,6 +61,17 @@ public class JdbcConfiguration {
 
 	public void setDriverClassName(String driverClassName) {
 		this.driverClassName = driverClassName;
+	}
+
+	@Override
+	public String toString() {
+		return "JdbcConfiguration{" +
+				"url='" + url + '\'' +
+				", option='" + option + '\'' +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", driverClassName='" + driverClassName + '\'' +
+				'}';
 	}
 
 	public static class Builder {

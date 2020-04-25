@@ -1,6 +1,8 @@
 package wooteco.chess.domain.coordinate;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum Direction {
     LEFT_UP(-1, 1),
@@ -15,20 +17,31 @@ public enum Direction {
     private final int fileVariation;
     private final int rankVariation;
 
+    private static final Map<Integer, Direction> byVariations = new HashMap<>();
+
+    static {
+        for (Direction direction : values()) {
+            int key = makeKey(direction.fileVariation, direction.rankVariation);
+            byVariations.put(key, direction);
+        }
+    }
+
     Direction(final int fileVariation, final int rankVariation) {
         this.fileVariation = fileVariation;
         this.rankVariation = rankVariation;
     }
 
-    public static Direction findByValue(int fileVariation, int rankVariation) {
-        return Arrays.stream(values())
-                .filter(direction -> direction.isSameDirection(fileVariation, rankVariation))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("fileVariation : %d, rankVariation : %d, 입력값을 확인하시오.", fileVariation, rankVariation)));
+    public static Direction findByVariations(int fileVariation, int rankVariation) {
+        if (!byVariations.containsKey(makeKey(fileVariation, rankVariation))) {
+            throw new IllegalArgumentException("fileVariation : " + fileVariation
+                    + ", rankVariation : " + rankVariation
+                    + ", 입력값을 확인하시오.");
+        }
+        return byVariations.get(makeKey(fileVariation, rankVariation));
     }
 
-    private boolean isSameDirection(int fileVariation, int rankVariation) {
-        return this.fileVariation == fileVariation && this.rankVariation == rankVariation;
+    private static int makeKey(int fileVariation, int rankVariation) {
+        return fileVariation * 10 + rankVariation;
     }
 
     public int getFileVariation() {

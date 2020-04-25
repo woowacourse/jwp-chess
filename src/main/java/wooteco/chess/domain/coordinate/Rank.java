@@ -1,6 +1,8 @@
 package wooteco.chess.domain.coordinate;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum Rank {
     EIGHT(8),
@@ -12,6 +14,14 @@ public enum Rank {
     TWO(2),
     ONE(1);
 
+    private static final Map<Integer, Rank> byValue = new HashMap<>();
+
+    static {
+        for (Rank rank : values()) {
+            byValue.put(rank.value, rank);
+        }
+    }
+
     private final int value;
 
     Rank(final int value) {
@@ -19,10 +29,10 @@ public enum Rank {
     }
 
     public static Rank findByValue(int value) {
-        return Arrays.stream(values())
-                .filter(aRank -> aRank.value == value)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("%d : 1 ~ 8 을 벗어났습니다.", value)));
+        if (!byValue.containsKey(value)) {
+            throw new IllegalArgumentException("rank : " + value + ", file의 value는 1부터 8까지 입니다.");
+        }
+        return byValue.get(value);
     }
 
     public int subtract(Rank rank) {

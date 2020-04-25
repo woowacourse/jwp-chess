@@ -26,7 +26,7 @@ class RankTest {
     void findByValue1(int wrongValue) {
         assertThatThrownBy(() -> Rank.findByValue(wrongValue))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("%d : 1 ~ 8 을 벗어났습니다.", wrongValue);
+                .hasMessage("rank : " + wrongValue + ", file의 value는 1부터 8까지 입니다.");
     }
 
 

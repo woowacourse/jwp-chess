@@ -36,7 +36,7 @@ public class Vector {
 
     public Direction getUnitVector() {
         int maxValue = getMaxValue();
-        return Direction.findByValue(fileVariation / maxValue, rankVariation / maxValue);
+        return Direction.findByVariations(fileVariation / maxValue, rankVariation / maxValue);
     }
 
     public int getMaxValue() {

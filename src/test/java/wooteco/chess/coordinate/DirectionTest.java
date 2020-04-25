@@ -15,7 +15,7 @@ class DirectionTest {
     @CsvSource(value = {"2,0", "0,0"})
     void findByValue(int fileVariation, int rankVariation) {
 
-        assertThatThrownBy(() -> Direction.findByValue(fileVariation, rankVariation))
+        assertThatThrownBy(() -> Direction.findByVariations(fileVariation, rankVariation))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("fileVariation : %d, rankVariation : %d, 입력값을 확인하시오.", fileVariation, rankVariation);
     }
@@ -35,7 +35,7 @@ class DirectionTest {
 
     })
     void findByValue1(int fileVariation, int rankVariation, Direction expect) {
-        Direction actual = Direction.findByValue(fileVariation, rankVariation);
+        Direction actual = Direction.findByVariations(fileVariation, rankVariation);
 
         assertThat(actual).isEqualTo(expect);
     }

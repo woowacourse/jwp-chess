@@ -1,8 +1,11 @@
 package wooteco.chess.consolView;
 
+import wooteco.chess.domain.coordinate.File;
 import wooteco.chess.domain.piece.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum PieceRender {
     KING(King.class, (piece) -> piece.isBlack() ? "♚" : "♔"),
@@ -13,6 +16,14 @@ public enum PieceRender {
     PAWN(AbstractPawn.class, (piece) -> piece.isBlack() ? "♟" : "♙"),
     BLANK(Blank.class, (piece -> ""));
 
+    private static final Map<Class<? extends Piece>, RenderStrategy> byClass = new HashMap<>();
+
+    static {
+        for (PieceRender pieceRender : values()) {
+            byClass.put(pieceRender.pieceClass, pieceRender.renderStrategy);
+        }
+    }
+
     private final Class<? extends Piece> pieceClass;
     private final RenderStrategy renderStrategy;
 
@@ -22,11 +33,10 @@ public enum PieceRender {
     }
 
     public static String findTokenByPiece(Piece piece) {
-        return Arrays.stream(values())
-                .filter(render -> render.isSameType(piece))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new)
-                .renderStrategy.render(piece);
+        if (byClass.containsKey(piece.getClass())) {
+            return byClass.get(piece.getClass()).render(piece);
+        }
+        return byClass.get(piece.getClass().getSuperclass()).render(piece);
     }
 
     private boolean isSameType(Piece piece) {

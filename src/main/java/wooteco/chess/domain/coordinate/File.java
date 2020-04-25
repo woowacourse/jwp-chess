@@ -1,6 +1,8 @@
 package wooteco.chess.domain.coordinate;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum File {
     A("a", 1),
@@ -12,6 +14,16 @@ public enum File {
     G("g", 7),
     H("h", 8);
 
+    private static final Map<String, File> bySymbol = new HashMap<>();
+    private static final Map<Integer, File> byValue = new HashMap<>();
+
+    static {
+        for (File file: values()) {
+            bySymbol.put(file.symbol, file);
+            byValue.put(file.value, file);
+        }
+    }
+
     private final String symbol;
     private final int value;
 
@@ -21,10 +33,17 @@ public enum File {
     }
 
     public static File findByValue(int value) {
-        return Arrays.stream(values())
-                .filter(aFile -> aFile.value == value)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("file : %d, file의 value는 1부터 8까지 입니다.", value)));
+        if(!byValue.containsKey(value)) {
+            throw new IllegalArgumentException("file : "+value+", file의 value는 1부터 8까지 입니다.");
+        }
+        return byValue.get(value);
+    }
+
+    public static File findBySymbol(String symbol) {
+        if(!bySymbol.containsKey(symbol)) {
+            throw new IllegalArgumentException("file : "+symbol+", file의 value는 1부터 8까지 입니다.");
+        }
+        return bySymbol.get(symbol);
     }
 
     public int subtract(File file) {

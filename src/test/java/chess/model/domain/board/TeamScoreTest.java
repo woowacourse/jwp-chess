@@ -27,16 +27,16 @@ public class TeamScoreTest {
     @DisplayName("게임 점수 계산")
     void calculateScore() {
         ChessGame chessGame = new ChessGame();
-        TeamScore teamScore = chessGame.getTeamScore();
+        TeamScore teamScore = chessGame.deriveTeamScoreFrom();
         Map<Team, Double> teamScores = teamScore.getTeamScore();
         assertThat(teamScores.get(Team.BLACK)).isEqualTo(38);
         assertThat(teamScores.get(Team.WHITE)).isEqualTo(38);
 
-        chessGame.movePieceWhenCanMove(new MoveInfo("c2", "c4"));
-        chessGame.movePieceWhenCanMove(new MoveInfo("d7", "d5"));
-        chessGame.movePieceWhenCanMove(new MoveInfo("c4", "d5"));
+        chessGame.move(new MoveInfo("c2", "c4"));
+        chessGame.move(new MoveInfo("d7", "d5"));
+        chessGame.move(new MoveInfo("c4", "d5"));
 
-        teamScore = chessGame.getTeamScore();
+        teamScore = chessGame.deriveTeamScoreFrom();
         teamScores = teamScore.getTeamScore();
         assertThat(teamScores.get(Team.BLACK)).isEqualTo(37);
         assertThat(teamScores.get(Team.WHITE)).isEqualTo(37);
@@ -46,14 +46,14 @@ public class TeamScoreTest {
     @DisplayName("승자 구하기")
     void getWinnerByScore() {
         ChessGame chessGame = new ChessGame();
-        TeamScore teamScore = chessGame.getTeamScore();
+        TeamScore teamScore = chessGame.deriveTeamScoreFrom();
         assertThat(teamScore.getWinners().size()).isEqualTo(2);
 
-        chessGame.movePieceWhenCanMove(new MoveInfo("b1", "c3"));
-        chessGame.movePieceWhenCanMove(new MoveInfo("d7", "d5"));
-        chessGame.movePieceWhenCanMove(new MoveInfo("c3", "d5"));
+        chessGame.move(new MoveInfo("b1", "c3"));
+        chessGame.move(new MoveInfo("d7", "d5"));
+        chessGame.move(new MoveInfo("c3", "d5"));
 
-        teamScore = chessGame.getTeamScore();
+        teamScore = chessGame.deriveTeamScoreFrom();
         assertThat(teamScore.getWinners().size()).isEqualTo(1);
         assertThat(teamScore.getWinners().get(0)).isEqualTo(Team.WHITE);
     }
@@ -68,9 +68,9 @@ public class TeamScoreTest {
         boardInitial.put(Square.of("a1"), Rook.getPieceInstance(Team.WHITE));
         boardInitial.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
-            CastlingSetting.getCastlingElements(), new EnPassant());
+            CastlingElement.createInitial(), new EnPassant());
 
-        TeamScore teamScore = chessGame.getTeamScore();
+        TeamScore teamScore = chessGame.deriveTeamScoreFrom();
 
         assertThat(teamScore.getWinners().contains(Team.WHITE)).isTrue();
         assertThat(teamScore.getWinners().size()).isEqualTo(1);

@@ -9,7 +9,6 @@ import chess.model.domain.board.Square;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.PieceFactory;
 import chess.model.domain.state.MoveInfo;
-import chess.model.domain.state.MoveOrder;
 import chess.model.repository.template.JdbcTemplate;
 import chess.model.repository.template.PreparedStatementSetter;
 import chess.model.repository.template.ResultSetMapper;
@@ -162,8 +161,8 @@ public class ChessBoardDao {
             "          AND BOARDSQUARE_NM = ?), 'N')"
         );
         PreparedStatementSetter pss = JdbcTemplate
-            .getPssFromParams(gameId, moveInfo.get(MoveOrder.TO).getName(), gameId,
-                moveInfo.get(MoveOrder.FROM).getName());
+            .getPssFromParams(gameId, moveInfo.getTarget().getName(), gameId,
+                moveInfo.getSource().getName());
         jdbcTemplate.executeUpdate(query, pss);
     }
 
@@ -202,7 +201,7 @@ public class ChessBoardDao {
         );
         PreparedStatementSetter pss = JdbcTemplate
             .getPssFromParams(EnPassant.getBetween(moveInfo).getName(), gameId,
-                moveInfo.get(MoveOrder.TO).getName());
+                moveInfo.getTarget().getName());
         jdbcTemplate.executeUpdate(query, pss);
     }
 

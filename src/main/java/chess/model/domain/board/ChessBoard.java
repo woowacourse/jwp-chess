@@ -27,7 +27,7 @@ public class ChessBoard {
         return new ChessBoard(chessBoard);
     }
 
-    public static ChessBoard create() {
+    public static ChessBoard createInitial() {
         return new ChessBoard(new BoardInitial().getInitialize());
     }
 
@@ -38,7 +38,7 @@ public class ChessBoard {
             .findFirst();
     }
 
-    public Piece remove(Square square) {
+    public Piece removeBy(Square square) {
         return chessBoard.remove(square);
     }
 
@@ -46,7 +46,7 @@ public class ChessBoard {
         chessBoard.put(square, piece);
     }
 
-    public Piece get(Square square) {
+    public Piece findPieceBy(Square square) {
         return chessBoard.get(square);
     }
 
@@ -60,26 +60,26 @@ public class ChessBoard {
             .count();
     }
 
-    public TeamScore getTeamScore() {
+    public TeamScore deriveTeamScoreFrom() {
         return new TeamScore(chessBoard.values(), countPawnSameFileByTeam());
     }
 
     private Map<Team, Integer> countPawnSameFileByTeam() {
         Map<Team, Integer> pawnSameFileCountByTeam = new HashMap<>();
         for (Team team : Team.values()) {
-            List<Square> pawnSquare = getPawnSquaresOf(team);
-            pawnSameFileCountByTeam.put(team, getCountSameFile(pawnSquare));
+            List<Square> pawnSquare = findPawnSquaresOf(team);
+            pawnSameFileCountByTeam.put(team, countSameFile(pawnSquare));
         }
         return pawnSameFileCountByTeam;
     }
 
-    private List<Square> getPawnSquaresOf(Team team) {
+    private List<Square> findPawnSquaresOf(Team team) {
         return chessBoard.keySet().stream()
             .filter(square -> chessBoard.get(square) == Pawn.getInstance(team))
             .collect(Collectors.toList());
     }
 
-    private int getCountSameFile(List<Square> pawnSquare) {
+    private int countSameFile(List<Square> pawnSquare) {
         int count = 0;
         for (Square boardSquare : pawnSquare) {
             count += pawnSquare.stream()

@@ -1,38 +1,34 @@
 package chess.model.domain.state;
 
 import chess.model.domain.board.Square;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import util.NullChecker;
 
 public class MoveInfo {
 
-    private final Map<MoveOrder, Square> squares;
+    private final Square source;
+    private final Square target;
 
-    public MoveInfo(String before, String after) {
-        this(Square.of(before), Square.of(after));
+    public MoveInfo(Square source, Square target) {
+        NullChecker.validateNotNull(source, target);
+        this.source = source;
+        this.target = target;
     }
 
-    public MoveInfo(Square squareBefore, Square squareAfter) {
-        NullChecker.validateNotNull(squareBefore, squareAfter);
-
-        Map<MoveOrder, Square> squares = new HashMap<>();
-        squares.put(MoveOrder.FROM, squareBefore);
-        squares.put(MoveOrder.TO, squareAfter);
-
-        this.squares = Collections.unmodifiableMap(squares);
+    public MoveInfo(String source, String target) {
+        this(Square.of(source), Square.of(target));
     }
 
-    public Square get(MoveOrder moveOrder) {
-        return squares.get(moveOrder);
+    public Square getSource() {
+        return source;
+    }
+
+    public Square getTarget() {
+        return target;
     }
 
     public int calculateRankDistance() {
-        Square squareFrom = squares.get(MoveOrder.FROM);
-        Square squareTo = squares.get(MoveOrder.TO);
-        return squareFrom.calculateRankDistance(squareTo);
+        return source.calculateRankDistance(target);
     }
 
     @Override
@@ -43,12 +39,13 @@ public class MoveInfo {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        MoveInfo that = (MoveInfo) o;
-        return Objects.equals(squares, that.squares);
+        MoveInfo moveInfo = (MoveInfo) o;
+        return Objects.equals(source, moveInfo.source) &&
+            Objects.equals(target, moveInfo.target);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(squares);
+        return Objects.hash(source, target);
     }
 }

@@ -5,7 +5,7 @@ import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
 import util.NullChecker;
 
-public class MoveStateBefore implements MoveStateStrategy {
+public class MoveStateBefore extends AbstractMoveState {
 
     @Override
     public MoveState findMoveState(ChessGame chessGame, MoveInfo moveInfo) {

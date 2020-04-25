@@ -5,7 +5,6 @@ import chess.model.domain.piece.Pawn;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Team;
 import chess.model.domain.state.MoveInfo;
-import chess.model.domain.state.MoveOrder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -28,8 +27,8 @@ public class EnPassant {
     }
 
     public void removeEnPassant(MoveInfo moveInfo) {
-        enPassantsToAfterSquares.remove(moveInfo.get(MoveOrder.TO));
-        Square squareBefore = moveInfo.get(MoveOrder.FROM);
+        enPassantsToAfterSquares.remove(moveInfo.getTarget());
+        Square squareBefore = moveInfo.getSource();
         if (enPassantsToAfterSquares.containsValue(squareBefore)) {
             enPassantsToAfterSquares.remove(enPassantsToAfterSquares.keySet().stream()
                 .filter(
@@ -42,7 +41,7 @@ public class EnPassant {
     public void add(Piece piece, MoveInfo moveInfo) {
         if (isPawnMoveTwoRank(piece, moveInfo)) {
             Square betweenWhenJumpRank = getBetween(moveInfo);
-            Square afterSquare = moveInfo.get(MoveOrder.TO);
+            Square afterSquare = moveInfo.getTarget();
             enPassantsToAfterSquares.put(betweenWhenJumpRank, afterSquare);
             return;
         }
@@ -79,8 +78,8 @@ public class EnPassant {
 
     public static Square getBetween(MoveInfo moveInfo) {
         if (isMoveTwoRank(moveInfo)) {
-            Square squareFrom = moveInfo.get(MoveOrder.FROM);
-            Square squareTo = moveInfo.get(MoveOrder.TO);
+            Square squareFrom = moveInfo.getSource();
+            Square squareTo = moveInfo.getTarget();
             int rankCompare = squareFrom.getRankCompare(squareTo);
             return squareFrom.getIncreasedSquare(0, rankCompare * -1);
         }

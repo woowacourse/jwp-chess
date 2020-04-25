@@ -20,7 +20,7 @@ class ChessGameDaoTest {
     private static final Map<Team, String> USER_NAMES;
     private static final String BLACK_NAME = "BLACK";
     private static final String WHITE_NAME = "WHITE";
-    private static final TeamScore TEAM_SCORE = new ChessGame().getTeamScore();
+    private static final TeamScore TEAM_SCORE = new ChessGame().deriveTeamScoreFrom();
 
     static {
         Map<Team, String> userNames = new HashMap<>();

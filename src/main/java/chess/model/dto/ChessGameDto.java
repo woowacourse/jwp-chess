@@ -79,7 +79,7 @@ public class ChessGameDto {
     }
 
     public ChessGameDto(ChessGame chessGame, Map<Team, String> names) {
-        this(chessGame, MoveState.EMPTY, chessGame.getTeamScore(), names);
+        this(chessGame, MoveState.EMPTY, chessGame.deriveTeamScoreFrom(), names);
     }
 
     public ChessGameDto(TeamScore teamScore, Map<Team, String> names) {

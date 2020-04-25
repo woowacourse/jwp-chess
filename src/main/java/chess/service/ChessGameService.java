@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.model.domain.board.CastlingElement;
 import chess.model.domain.board.CastlingSetting;
 import chess.model.domain.board.ChessBoard;
 import chess.model.domain.board.ChessGame;
@@ -11,7 +12,6 @@ import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import chess.model.domain.state.MoveInfo;
-import chess.model.domain.state.MoveOrder;
 import chess.model.domain.state.MoveState;
 import chess.model.dto.ChessGameDto;
 import chess.model.dto.GameResultDto;
@@ -40,11 +40,11 @@ public class ChessGameService {
         closeGamesOf(roomId);
         ChessGame chessGame = new ChessGame();
         Integer gameId = CHESS_GAME_DAO
-            .insert(roomId, chessGame.getGameTurn(), userNames, chessGame.getTeamScore());
+            .insert(roomId, chessGame.getGameTurn(), userNames, chessGame.deriveTeamScoreFrom());
 
         CHESS_BOARD_DAO.insert(gameId, chessGame.getChessBoard(),
             getCastlingElement(chessGame.getChessBoard(), chessGame.getCastlingElements()));
-        CHESS_GAME_DAO.updateScore(gameId, chessGame.getTeamScore());
+        CHESS_GAME_DAO.updateScore(gameId, chessGame.deriveTeamScoreFrom());
 
         for (String userName : userNames.values()) {
             if (!CHESS_RESULT_DAO.findWinOrDraw(userName).isPresent()) {
@@ -73,10 +73,10 @@ public class ChessGameService {
         closeGamesOf(roomId);
         ChessGame chessGame = new ChessGame();
         Integer gameId = CHESS_GAME_DAO
-            .insert(roomId, chessGame.getGameTurn(), userNames, chessGame.getTeamScore());
+            .insert(roomId, chessGame.getGameTurn(), userNames, chessGame.deriveTeamScoreFrom());
         CHESS_BOARD_DAO.insert(gameId, chessGame.getChessBoard(),
             getCastlingElement(chessGame.getChessBoard(), chessGame.getCastlingElements()));
-        CHESS_GAME_DAO.updateScore(gameId, chessGame.getTeamScore());
+        CHESS_GAME_DAO.updateScore(gameId, chessGame.deriveTeamScoreFrom());
         return gameId;
     }
 
@@ -101,7 +101,8 @@ public class ChessGameService {
     private ChessGame getChessGame(Integer gameId) {
         ChessBoard chessBoard = ChessBoard.of(CHESS_BOARD_DAO.findBoard(gameId));
         Team gameTurn = CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalAccessError::new);
-        Set<CastlingSetting> castlingElements = CHESS_BOARD_DAO.findCastlingElements(gameId);
+        CastlingElement castlingElements = CastlingElement
+            .of(CHESS_BOARD_DAO.findCastlingElements(gameId));
         EnPassant enPassant = CHESS_BOARD_DAO.findEnpassantBoard(gameId);
         return new ChessGame(chessBoard, gameTurn, castlingElements, enPassant);
     }
@@ -114,24 +115,24 @@ public class ChessGameService {
         boolean canCastling = chessGame.canCastling(moveInfo);
         boolean pawnSpecialMove = chessGame.isPawnMoveTwoRankForward(moveInfo);
         boolean movePawn = chessGame.findPieceToMove(moveInfo) instanceof Pawn;
-        MoveState moveState = chessGame.movePieceWhenCanMove(moveInfo);
+        MoveState moveState = chessGame.move(moveInfo);
         Team gameTurn = CHESS_GAME_DAO.findCurrentTurn(gameId).orElseThrow(IllegalAccessError::new);
         if (moveState.isSucceed()) {
             CHESS_BOARD_DAO.deleteMyEnpassant(gameId);
-            CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfo.get(MoveOrder.TO));
+            CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfo.getTarget());
             CHESS_BOARD_DAO.copyBoardSquare(gameId, moveInfo);
-            CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfo.get(MoveOrder.FROM));
+            CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfo.getSource());
             if (pawnSpecialMove) {
                 CHESS_BOARD_DAO.updateEnPassant(gameId, moveInfo);
             }
             if (movePawn && enPassant
-                .hasOtherEnpassant(moveInfo.get(MoveOrder.TO), gameTurn)) {
-                CHESS_BOARD_DAO.deleteEnpassant(gameId, moveInfo.get(MoveOrder.TO));
+                .hasOtherEnpassant(moveInfo.getTarget(), gameTurn)) {
+                CHESS_BOARD_DAO.deleteEnpassant(gameId, moveInfo.getTarget());
             }
             if (canCastling) {
-                MoveInfo moveInfoRook = CastlingSetting.findMoveInfoOfRook(moveInfo);
+                MoveInfo moveInfoRook = CastlingSetting.findMoveInfoOfRook(moveInfo.getTarget());
                 CHESS_BOARD_DAO.copyBoardSquare(gameId, moveInfoRook);
-                CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfoRook.get(MoveOrder.FROM));
+                CHESS_BOARD_DAO.deleteBoardSquare(gameId, moveInfoRook.getSource());
             }
 
         }
@@ -141,7 +142,7 @@ public class ChessGameService {
         if (moveState == MoveState.KING_CAPTURED) {
             closeGame(gameId);
         }
-        CHESS_GAME_DAO.updateScore(gameId, chessGame.getTeamScore());
+        CHESS_GAME_DAO.updateScore(gameId, chessGame.deriveTeamScoreFrom());
         return new ChessGameDto(getChessGame(gameId), moveState,
             new TeamScore(CHESS_GAME_DAO.findScores(gameId)), CHESS_GAME_DAO.findUserNames(gameId));
     }
@@ -178,7 +179,7 @@ public class ChessGameService {
         if (moveState == MoveState.SUCCESS_PROMOTION) {
             CHESS_BOARD_DAO.updatePromotion(gameId, finishPawnBoard, pieceToChange);
             CHESS_GAME_DAO.updateTurn(gameId, chessGame.getGameTurn());
-            CHESS_GAME_DAO.updateScore(gameId, chessGame.getTeamScore());
+            CHESS_GAME_DAO.updateScore(gameId, chessGame.deriveTeamScoreFrom());
         }
         return new ChessGameDto(getChessGame(gameId), moveState,
             new TeamScore(CHESS_GAME_DAO.findScores(gameId)), CHESS_GAME_DAO.findUserNames(gameId));

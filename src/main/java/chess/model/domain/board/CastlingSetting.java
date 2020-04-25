@@ -8,7 +8,6 @@ import chess.model.domain.piece.Queen;
 import chess.model.domain.piece.Rook;
 import chess.model.domain.piece.Team;
 import chess.model.domain.state.MoveInfo;
-import chess.model.domain.state.MoveOrder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -99,15 +98,14 @@ public enum CastlingSetting {
             .filter(total -> elements.contains(total.get(KEYS_KING_BEFORE)))
             .filter(total -> elements.contains(total.get(KEYS_ROOK_BEFORE)))
             .filter(total -> total.get(KEYS_KING_BEFORE).square
-                == moveInfo.get(MoveOrder.FROM))
+                == moveInfo.getSource())
             .anyMatch(total -> total.get(KEYS_KING_AFTER).square
-                == moveInfo.get(MoveOrder.TO));
+                == moveInfo.getTarget());
     }
 
-    public static MoveInfo findMoveInfoOfRook(MoveInfo moveInfo) {
-        Square moveSquareAfter = moveInfo.get(MoveOrder.TO);
+    public static MoveInfo findMoveInfoOfRook(Square moveTarget) {
         Map<String, CastlingSetting> selectCastling = TOTALS.stream()
-            .filter(total -> moveSquareAfter == total.get(KEYS_KING_AFTER).square)
+            .filter(total -> moveTarget == total.get(KEYS_KING_AFTER).square)
             .findFirst()
             .orElseThrow(IllegalAccessError::new);
         return new MoveInfo(selectCastling.get(KEYS_ROOK_BEFORE).square,
@@ -135,10 +133,6 @@ public enum CastlingSetting {
 
     public boolean isSameColor(Piece piece) {
         return this.piece.isSameTeam(piece);
-    }
-
-    public boolean isContains(Square moveSquare) {
-        return this.square == moveSquare;
     }
 
     public boolean isCastlingBefore(Square square, Piece piece) {

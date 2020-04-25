@@ -27,7 +27,7 @@ class ChessBoardDaoTest {
     private static final int ROOM_ID;
     private static final int GAME_ID;
     private static final Map<Square, Boolean> CASTLING_ELEMENTS;
-    private static final TeamScore TEAM_SCORE = new ChessGame().getTeamScore();
+    private static final TeamScore TEAM_SCORE = new ChessGame().deriveTeamScoreFrom();
 
     static {
         Map<Square, Boolean> castlingElements = new ChessGame().getChessBoard().keySet()

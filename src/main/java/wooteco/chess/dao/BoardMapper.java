@@ -12,11 +12,13 @@ import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.BoardDto;
 
 public class BoardMapper {
-	public static Board create(List<BoardDto> mappers) {
+	public static Board create(List<BoardDto> boardDtos) {
 		Map<Position, Piece> board = new TreeMap<>();
-		for (BoardDto mapper : mappers) {
-			board.put(Position.of(mapper.piecePosition()),
-				PieceFactory.of(mapper.pieceName(), mapper.pieceTeam(), mapper.piecePosition()));
+		for (BoardDto boardDto : boardDtos) {
+			board.put(
+				Position.of(boardDto.piecePosition()),
+				PieceFactory.of(boardDto.pieceName(), boardDto.pieceTeam(), boardDto.piecePosition())
+			);
 		}
 		return new Board(board);
 	}

@@ -19,12 +19,12 @@ public class BoardService {
 	private final RoomDao roomDao = new RoomDao();
 	private final PlayerDao playerDao = new PlayerDao();
 
-	public Board create(int roomId) throws SQLException, ClassNotFoundException {
+	public Board create(int roomId) throws SQLException {
 		Board board = boardDao.create(roomId, BoardFactory.create());
 		return board;
 	}
 
-	public GameDto load(int roomId) throws SQLException, ClassNotFoundException {
+	public GameDto load(int roomId) throws SQLException {
 		Board board = boardDao.findByRoomId(roomId);
 		int turnPlayerId = roomDao.findTurnPlayerId(roomId);
 		Turn turn = playerDao.findTurn(turnPlayerId);
@@ -32,7 +32,7 @@ public class BoardService {
 		return new GameDto(board.getBoard(), turn, game.status());
 	}
 
-	public GameDto move(int roomId, Position source, Position target) throws SQLException, ClassNotFoundException {
+	public GameDto move(int roomId, Position source, Position target) throws SQLException {
 		Board board = boardDao.findByRoomId(roomId);
 		int turnPlayerId = roomDao.findTurnPlayerId(roomId);
 		Turn turn = playerDao.findTurn(turnPlayerId);
@@ -49,7 +49,7 @@ public class BoardService {
 		return new GameDto(game.board().getBoard(), turn, game.status());
 	}
 
-	public int createRoom(int player1Id, int player2Id) throws SQLException, ClassNotFoundException {
+	public int createRoom(int player1Id, int player2Id) throws SQLException {
 		RoomDao roomDao = new RoomDao();
 		return roomDao.create(player1Id, player2Id);
 	}

@@ -2,15 +2,15 @@ package chess.model.dto;
 
 public class SourceDto {
 
-    private int gameId;
+    private Integer gameId;
     private String source;
 
-    public SourceDto(int gameId, String source) {
+    public SourceDto(Integer gameId, String source) {
         this.gameId = gameId;
         this.source = source;
     }
 
-    public int getGameId() {
+    public Integer getGameId() {
         return gameId;
     }
 

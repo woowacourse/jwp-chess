@@ -3,9 +3,9 @@ package chess.model.repository;
 import static chess.model.repository.template.JdbcTemplate.getPssFromParams;
 import static chess.model.repository.template.JdbcTemplate.makeQuery;
 
-import chess.model.domain.board.Square;
 import chess.model.domain.board.CastlingSetting;
 import chess.model.domain.board.EnPassant;
+import chess.model.domain.board.Square;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.PieceFactory;
 import chess.model.domain.state.MoveInfo;
@@ -29,7 +29,7 @@ public class ChessBoardDao {
         return INSTANCE;
     }
 
-    public void insert(int gameId, Map<Square, Piece> board,
+    public void insert(Integer gameId, Map<Square, Piece> board,
         Map<Square, Boolean> castlingElements) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
@@ -53,7 +53,7 @@ public class ChessBoardDao {
         return changer ? "Y" : "N";
     }
 
-    public void insertBoard(int gameId, Square square, Piece piece) {
+    public void insertBoard(Integer gameId, Square square, Piece piece) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "INSERT INTO CHESS_BOARD_TB(GAME_ID, BOARDSQUARE_NM, PIECE_NM, CASTLING_ELEMENT_YN)",
@@ -64,7 +64,7 @@ public class ChessBoardDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public void deleteBoardSquare(int gameId, Square square) {
+    public void deleteBoardSquare(Integer gameId, Square square) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "DELETE FROM CHESS_BOARD_TB",
@@ -75,7 +75,7 @@ public class ChessBoardDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public Set<CastlingSetting> getCastlingElements(int gameId) {
+    public Set<CastlingSetting> findCastlingElements(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT BOARDSQUARE_NM",
@@ -97,7 +97,7 @@ public class ChessBoardDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public EnPassant getEnpassantBoard(int gameId) {
+    public EnPassant findEnpassantBoard(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT EN_PASSANT_NM",
@@ -118,7 +118,7 @@ public class ChessBoardDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public Map<Square, Piece> getBoard(int gameId) {
+    public Map<Square, Piece> findBoard(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT BOARDSQUARE_NM",
@@ -138,7 +138,7 @@ public class ChessBoardDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public void delete(int gameId) {
+    public void delete(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "DELETE FROM CHESS_BOARD_TB",
@@ -148,7 +148,7 @@ public class ChessBoardDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public void copyBoardSquare(int gameId, MoveInfo moveInfo) {
+    public void copyBoardSquare(Integer gameId, MoveInfo moveInfo) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "INSERT INTO CHESS_BOARD_TB(GAME_ID, BOARDSQUARE_NM, PIECE_NM, CASTLING_ELEMENT_YN)",
@@ -167,7 +167,7 @@ public class ChessBoardDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public void updatePromotion(int gameId, Square finishPawnBoard, Piece hopePiece) {
+    public void updatePromotion(Integer gameId, Square finishPawnBoard, Piece hopePiece) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "UPDATE CHESS_BOARD_TB",
@@ -180,7 +180,7 @@ public class ChessBoardDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public void deleteEnpassant(int gameId, Square enpassantSquare) {
+    public void deleteEnpassant(Integer gameId, Square enpassantSquare) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "DELETE FROM CHESS_BOARD_TB",
@@ -192,7 +192,7 @@ public class ChessBoardDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public void updateEnPassant(int gameId, MoveInfo moveInfo) {
+    public void updateEnPassant(Integer gameId, MoveInfo moveInfo) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "UPDATE CHESS_BOARD_TB",
@@ -206,7 +206,7 @@ public class ChessBoardDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public void deleteMyEnpassant(int gameId) {
+    public void deleteMyEnpassant(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "UPDATE CHESS_BOARD_TB",

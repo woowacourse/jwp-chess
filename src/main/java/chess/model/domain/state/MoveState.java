@@ -30,17 +30,13 @@ public enum MoveState {
 
     public Team turnTeam(Team gameTurn) {
         if (this == SUCCESS || this == SUCCESS_PROMOTION) {
-            return gameTurn.nextTurnIfEmptyMySelf();
+            return gameTurn.nextTurn();
         }
         return gameTurn;
     }
 
     public boolean isReady() {
         return this == READY;
-    }
-
-    public boolean isSuccess() {
-        return this == SUCCESS;
     }
 
     public String getMessage() {

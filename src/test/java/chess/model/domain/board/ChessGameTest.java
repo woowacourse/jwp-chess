@@ -52,36 +52,38 @@ public class ChessGameTest {
         assertThat(chessGame.getChessBoard().containsKey(Square.of("a2"))).isFalse();
         assertThat(chessGame.getChessBoard().containsKey(Square.of("a3"))).isTrue();
         assertThat(chessGame.getChessBoard().get(Square.of("a3")))
-            .isEqualTo(Pawn.getPieceInstance(Team.WHITE));
+            .isEqualTo(Pawn.getInstance(Team.WHITE));
     }
 
     @Test
     @DisplayName("king 잡혔는지 확인")
     void isKingOnChessBoard() {
         ChessGame chessGame = new ChessGame();
-        chessGame.movePieceWhenCanMove(new MoveInfo("e2", "e4"));
-        chessGame.movePieceWhenCanMove(new MoveInfo("a7", "a5"));
-        chessGame.movePieceWhenCanMove(new MoveInfo("e1", "e2"));
-        chessGame.movePieceWhenCanMove(new MoveInfo("a8", "a6"));
-        chessGame.movePieceWhenCanMove(new MoveInfo("e2", "e3"));
-
         assertThat(chessGame.isKingCaptured()).isFalse();
 
-        chessGame.movePieceWhenCanMove(new MoveInfo("a6", "d6"));
-        chessGame.movePieceWhenCanMove(new MoveInfo("e3", "d3"));
-        chessGame.movePieceWhenCanMove(new MoveInfo("d6", "d3"));
+        Map<Square, Piece> whiteKingBoard = new HashMap<>();
+        whiteKingBoard.put(Square.of("a1"), King.getPieceInstance(Team.WHITE));
+        chessGame = new ChessGame(new BoardInitialTestUse(whiteKingBoard), Team.BLACK,
+            new HashSet<>(), new EnPassant());
+        assertThat(chessGame.isKingCaptured()).isTrue();
+        assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("d1", "d2")))
+            .isEqualTo(MoveState.KING_CAPTURED);
 
+        Map<Square, Piece> blackKingBoard = new HashMap<>();
+        blackKingBoard.put(Square.of("a1"), King.getPieceInstance(Team.BLACK));
+        chessGame = new ChessGame(new BoardInitialTestUse(blackKingBoard), Team.WHITE,
+            new HashSet<>(), new EnPassant());
         assertThat(chessGame.isKingCaptured()).isTrue();
         assertThat(chessGame.movePieceWhenCanMove(new MoveInfo("d1", "d2")))
             .isEqualTo(MoveState.KING_CAPTURED);
     }
 
     @DisplayName("이동하려는 before자리에 말이 없는건지 확인")
-    @Test
-    void isNoPiece() {
+    @ParameterizedTest
+    @CsvSource(value = {"a2, a3, false", "a3, a4, true"})
+    void isNoPiece(String source, String target, boolean success) {
         ChessGame chessGame = new ChessGame();
-        assertThat(chessGame.isNoPiece(new MoveInfo("a2", "a3"))).isFalse();
-        assertThat(chessGame.isNoPiece(new MoveInfo("a3", "a4"))).isTrue();
+        assertThat(chessGame.isEmptySquare(new MoveInfo(source, target)) == success).isTrue();
     }
 
     @DisplayName("이동하려는 before자리의 말이 현재 차례의 말이 아닌지 확인, 말이 없는 경우도 True")
@@ -172,7 +174,7 @@ public class ChessGameTest {
         boardInitial.put(Square.of("d8"), Knight.getPieceInstance(Team.WHITE));
         boardInitial.put(Square.of("f1"), Knight.getPieceInstance(Team.BLACK));
         boardInitial.put(Square.of("f8"), Knight.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("a2"), Pawn.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Team.WHITE,
             CastlingSetting.getCastlingElements(), new EnPassant());
 
@@ -200,9 +202,10 @@ public class ChessGameTest {
         boardInitial.put(Square.of("d8"), Knight.getPieceInstance(Team.WHITE));
         boardInitial.put(Square.of("f1"), Knight.getPieceInstance(Team.BLACK));
         boardInitial.put(Square.of("f8"), Knight.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("a2"), Pawn.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(new BoardInitialTestUse(boardInitial), Team.WHITE,
-            new HashSet<>(Collections.singletonList(CastlingSetting.BLACK_KING_BEFORE)), new EnPassant());
+            new HashSet<>(Collections.singletonList(CastlingSetting.BLACK_KING_BEFORE)),
+            new EnPassant());
 
         assertThat(chessGame.movePieceWhenCanMove(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.FAIL_CAN_NOT_MOVE);

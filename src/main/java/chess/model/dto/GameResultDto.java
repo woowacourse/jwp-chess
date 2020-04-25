@@ -4,25 +4,25 @@ import java.util.Objects;
 
 public class GameResultDto {
 
-    private final int winCount;
-    private final int drawCount;
-    private final int loseCount;
+    private final Integer winCount;
+    private final Integer drawCount;
+    private final Integer loseCount;
 
-    public GameResultDto(int winCount, int drawCount, int loseCount) {
+    public GameResultDto(Integer winCount, Integer drawCount, Integer loseCount) {
         this.winCount = winCount;
         this.drawCount = drawCount;
         this.loseCount = loseCount;
     }
 
-    public int getWinCount() {
+    public Integer getWinCount() {
         return winCount;
     }
 
-    public int getDrawCount() {
+    public Integer getDrawCount() {
         return drawCount;
     }
 
-    public int getLoseCount() {
+    public Integer getLoseCount() {
         return loseCount;
     }
 

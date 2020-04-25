@@ -51,27 +51,23 @@ public class EnPassant {
             return new HashMap<>();
         }
         return enPassantsToAfterSquares.keySet().stream()
-            .filter(boardSquare -> !getRankByPawn(boardSquare).isSameTeam(team))
-            .collect(Collectors.toMap(boardSquare -> boardSquare, this::getRankByPawn));
+            .filter(boardSquare -> !getPawnByRank(boardSquare).isSameTeam(team))
+            .collect(Collectors.toMap(boardSquare -> boardSquare, this::getPawnByRank));
     }
 
-    private Piece getRankByPawn(Square square) {
+    private Piece getPawnByRank(Square square) {
         if (square.isSameRank(Rank.THIRD)) {
-            return Pawn.getPieceInstance(Team.WHITE);
+            return Pawn.getInstance(Team.WHITE);
         }
         if (square.isSameRank(Rank.SIXTH)) {
-            return Pawn.getPieceInstance(Team.BLACK);
+            return Pawn.getInstance(Team.BLACK);
         }
-        throw new IllegalArgumentException("인자 오류");
-    }
-
-    public Set<Square> getEnPassants() {
-        return enPassantsToAfterSquares.keySet();
+        throw new IllegalArgumentException("앙파상 Rank가 아닙니다.");
     }
 
     public boolean hasOtherEnpassant(Square square, Team gameTurn) {
         return enPassantsToAfterSquares.containsKey(square)
-            && !getRankByPawn(square).isSameTeam(gameTurn);
+            && !getPawnByRank(square).isSameTeam(gameTurn);
     }
 
     public Square getAfterSquare(Square enPassantSquare) {
@@ -83,7 +79,7 @@ public class EnPassant {
             Square squareFrom = moveInfo.get(MoveOrder.FROM);
             Square squareTo = moveInfo.get(MoveOrder.TO);
             int rankCompare = squareFrom.getRankCompare(squareTo);
-            return squareFrom.getIncreased(0, rankCompare * -1);
+            return squareFrom.getIncreasedSquare(0, rankCompare * -1);
         }
         throw new IllegalArgumentException("JUMP RANK가 아닙니다.");
     }
@@ -92,5 +88,9 @@ public class EnPassant {
         Square squareFrom = moveInfo.get(MoveOrder.FROM);
         Square squareTo = moveInfo.get(MoveOrder.TO);
         return Math.abs(squareFrom.calculateRankDistance(squareTo)) == 2;
+    }
+
+    public Set<Square> getEnPassants() {
+        return enPassantsToAfterSquares.keySet();
     }
 }

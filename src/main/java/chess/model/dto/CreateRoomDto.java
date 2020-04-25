@@ -17,4 +17,12 @@ public class CreateRoomDto {
     public String getRoomPassword() {
         return roomPassword;
     }
+
+    @Override
+    public String toString() {
+        return "CreateRoomDto{" +
+            "roomName='" + roomName + '\'' +
+            ", roomPassword='" + roomPassword + '\'' +
+            '}';
+    }
 }

@@ -8,7 +8,7 @@ import util.NullChecker;
 public class MoveStateAfter implements MoveStateStrategy {
 
     @Override
-    public MoveState getMoveState(ChessGame chessGame, MoveInfo moveInfo) {
+    public MoveState findMoveState(ChessGame chessGame, MoveInfo moveInfo) {
         NullChecker.validateNotNull(chessGame);
         if (chessGame.isKingCaptured()) {
             return MoveState.KING_CAPTURED;

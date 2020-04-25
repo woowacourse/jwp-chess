@@ -1,21 +1,21 @@
-const templatePiece = color => `<div class="chess-piece ${color}" draggable="true" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
-const templateBlank = `<div class="chess-piece blank" draggable="true" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
-const templateGame = id => `<a href="/rooms/${id}" class="chess-game"><div class="chess-game-title">체스 게임 ${id}</div></a>`
+const templatePiece = color => `<div class="chess-piece ${color}" draggable="true" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`;
+const templateBlank = `<div class="chess-piece blank" draggable="true" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`;
+const templateGame = id => `<a href="/rooms/${id}" class="chess-game"><div class="chess-game-title">체스 게임 ${id}</div></a>`;
 
-const blackScoreElement = document.querySelector('#black-score')
-const whiteScoreElement = document.querySelector('#white-score')
-const chessAlertElement = document.querySelector('.chess-alert')
-const chessAlertMessageElement = document.querySelector('.chess-alert-message')
+const blackScoreElement = document.querySelector('#black-score');
+const whiteScoreElement = document.querySelector('#white-score');
+const chessAlertElement = document.querySelector('.chess-alert');
+const chessAlertMessageElement = document.querySelector('.chess-alert-message');
 
-const chessResultElement = document.querySelector('.chess-result')
-const chessResultMessageElement = document.querySelector('.chess-result-message')
-const chessResultRestartElement = document.querySelector('.chess-result-restart')
-const chessResultDeleteElement = document.querySelector('.chess-result-delete')
+const chessResultElement = document.querySelector('.chess-result');
+const chessResultMessageElement = document.querySelector('.chess-result-message');
+const chessResultRestartElement = document.querySelector('.chess-result-restart');
+const chessResultDeleteElement = document.querySelector('.chess-result-delete');
 
-const chessGamesElement = document.querySelector('.chess-games')
-const chessCreateSubmitElement = document.querySelector('.chess-create-submit')
+const chessGamesElement = document.querySelector('.chess-games');
+const chessCreateSubmitElement = document.querySelector('.chess-create-submit');
 
-const chessCellElements = document.querySelectorAll('.chess-col')
+const chessCellElements = document.querySelectorAll('.chess-col');
 
 chessCreateSubmitElement.onclick = () => {
     fetch('/rooms', {
@@ -23,7 +23,7 @@ chessCreateSubmitElement.onclick = () => {
     })
         .then(response => response.json())
         .then(data => {
-            if (data.statusCode == 1) {
+            if (data.statusCode === 1) {
                 location.replace('/rooms/' + data.dto)
             }
         })
@@ -38,7 +38,7 @@ chessResultRestartElement.onclick = () => {
     })
         .then(response => response.json())
         .then(data => {
-            if (data.statusCode == 1) {
+            if (data.statusCode === 1) {
                 location.reload()
             }
         })
@@ -53,14 +53,14 @@ chessResultDeleteElement.onclick = () => {
     })
         .then(response => response.json())
         .then(data => {
-            if (data.statusCode == 1) {
+            if (data.statusCode === 1) {
                 location.replace('/')
             }
         })
 }
 
 function showAlert(message, delay) {
-    show(chessAlertElement)
+    show(chessAlertElement);
     chessAlertMessageElement.innerHTML = message
     setTimeout(() => {
         hide(chessAlertElement)
@@ -68,31 +68,31 @@ function showAlert(message, delay) {
 }
 
 function show(element) {
-    element.classList.remove('hide')
-    element.classList.add('show')
+    element.classList.remove('hide');
+    element.classList.add('show');
 }
 
 function hide(element) {
-    element.classList.remove('show')
-    element.classList.add('hide')
+    element.classList.remove('show');
+    element.classList.add('hide');
 }
 
 fetch(`/rooms/${id}/board`)
     .then(response => response.json())
-    .then(data => drawChessGame(data.dto))
+    .then(data => drawChessGame(data.dto));
 
 fetch('/rooms')
     .then(response => response.json())
-    .then(data => drawGameList(data.dto))
+    .then(data => drawGameList(data.dto));
 
 function drawGameList(games) {
-    games.forEach(id => chessGamesElement.innerHTML += templateGame(id))
+    games.forEach(id => chessGamesElement.innerHTML += templateGame(id));
 }
 
-function drawChessGame({boardDto, turnDto, statusDto, finished}) {
-    drawBoard(boardDto.board)
-    drawStatus(statusDto)
-    drawResult(statusDto, finished)
+function drawChessGame({boardDto, statusDto, finished}) {
+    drawBoard(boardDto.board);
+    drawStatus(statusDto);
+    drawResult(statusDto, finished);
 }
 
 function drawResult(statusDto, finished) {
@@ -105,22 +105,22 @@ function drawResult(statusDto, finished) {
 
 function drawBoard(board) {
     chessCellElements.forEach((element, i) => {
-        const symbol = board[i]
-        element.innerHTML = symbol == '.' ? templateBlank : templatePiece(symbol)
+        const symbol = board[i];
+        element.innerHTML = symbol === '.' ? templateBlank : templatePiece(symbol);
     })
 }
 
 function drawStatus(statusDto) {
-    blackScoreElement.innerHTML = statusDto.black
-    whiteScoreElement.innerHTML = statusDto.white
+    blackScoreElement.innerHTML = statusDto.black;
+    whiteScoreElement.innerHTML = statusDto.white;
 }
 
 function onDragStart(e) {
-    e.dataTransfer.setData('src_pos', e.target.parentElement.dataset.pos)
+    e.dataTransfer.setData('src_pos', e.target.parentElement.dataset.pos);
 }
 
 function onDragOver(e) {
-    e.preventDefault()
+    e.preventDefault();
 }
 
 function onDrop(e) {
@@ -134,9 +134,9 @@ function onDrop(e) {
         .then(response => response.json())
         .then(data => {
             if (data.statusCode === 1) {
-                drawChessGame(data.dto)
-                return
+                drawChessGame(data.dto);
+                return;
             }
-            showAlert(data.dto, 1000)
+            showAlert(data.dto, 1000);
         })
 }

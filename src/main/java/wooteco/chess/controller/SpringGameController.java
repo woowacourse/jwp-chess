@@ -20,7 +20,7 @@ public class SpringGameController {
     private SpringGameService gameService;
 
     @GetMapping("/init")
-    public GameManagerDTO init(@RequestParam(value = "roomId") Integer roomId) throws SQLException {
+    public GameManagerDTO init(@RequestParam Integer roomId) throws SQLException {
         return gameService.initialize(roomId);
     }
 

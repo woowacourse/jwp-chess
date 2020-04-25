@@ -15,10 +15,8 @@ public class DataSource {
 	}
 
 	public Connection getConnection() throws SQLException {
-		System.err.println(jdbcConfiguration);
 		try {
 			Class.forName(jdbcConfiguration.getDriverClassName());
-			System.err.println(jdbcConfiguration);
 			return DriverManager.getConnection(jdbcConfiguration.getUrl(), jdbcConfiguration.getUsername(),
 					jdbcConfiguration.getPassword());
 		} catch (ClassNotFoundException e) {

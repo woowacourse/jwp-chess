@@ -13,6 +13,8 @@ repositories {
 }
 
 dependencies {
+	compile('com.google.code.gson:gson:2.8.5')
+	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
 	implementation 'com.sparkjava:spark-core:2.9.0'
 	implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
 	implementation 'org.springframework.boot:spring-boot-starter-web'

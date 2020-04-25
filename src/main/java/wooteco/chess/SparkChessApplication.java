@@ -1,22 +1,23 @@
 package wooteco.chess;
 
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+import com.mysql.cj.jdbc.MysqlDataSource;
+import wooteco.chess.controller.ChessWebController;
+import wooteco.chess.dao.ChessDAO;
+import wooteco.chess.dao.JDBCTemplate;
+import wooteco.chess.service.ChessService;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.sql.DataSource;
 
-import static spark.Spark.get;
+import static spark.Spark.staticFileLocation;
 
 public class SparkChessApplication {
     public static void main(String[] args) {
-        get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(model, "index.hbs");
-        });
-    }
-
-    private static String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+        staticFileLocation("templates");
+        DataSource mySqlDataSource = new MysqlDataSource();
+        JDBCTemplate jdbcTemplate = new JDBCTemplate(mySqlDataSource);
+        ChessDAO chessDAO = new ChessDAO(jdbcTemplate);
+        ChessService chessService = new ChessService(chessDAO);
+        ChessWebController chessWebController = new ChessWebController(chessService);
+        chessWebController.run();
     }
 }

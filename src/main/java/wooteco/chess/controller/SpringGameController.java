@@ -1,11 +1,13 @@
 package wooteco.chess.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import wooteco.chess.domain.Color;
-import wooteco.chess.dto.GameManagerDTO;
+import wooteco.chess.dto.MoveResponseDTO;
 import wooteco.chess.dto.GameStatusDTO;
-import wooteco.chess.dto.MoveManagerDTO;
+import wooteco.chess.dto.MoveRequestDTO;
 import wooteco.chess.service.SpringGameService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,24 +18,26 @@ import java.util.List;
 @RequestMapping("/game")
 public class SpringGameController {
 
-    @Autowired
-    private SpringGameService gameService;
+    private final SpringGameService gameService;
+
+    public SpringGameController(final SpringGameService gameService) {
+        this.gameService = gameService;
+    }
 
     @GetMapping("/init")
-    public GameManagerDTO init(@RequestParam Integer roomId) throws SQLException {
+    public MoveResponseDTO init(@RequestParam Integer roomId) throws SQLException {
         return gameService.initialize(roomId);
     }
 
     @PostMapping("/move")
-    public GameManagerDTO move(@RequestBody MoveManagerDTO moveDto) throws SQLException {
+    public ResponseEntity<MoveResponseDTO> move(@RequestBody MoveRequestDTO requestDTO) throws SQLException {
 
-        GameManagerDTO gameManagerDTO = gameService.createDTO(moveDto.getRoomId());
+        MoveResponseDTO moveResponseDTO = gameService.createMoveResponseDTO(requestDTO.getRoomId());
         try {
-            gameService.movePiece(moveDto.getRoomId(), moveDto.getSourcePosition(), moveDto.getTargetPosition());
-            return gameService.createDTO(moveDto.getRoomId());
+            return ResponseEntity.status(HttpStatus.OK).body(gameService.move(requestDTO));
         } catch (IllegalArgumentException e) {
-            gameManagerDTO.setErrorMessage(e.getMessage());
-            return gameManagerDTO;
+            moveResponseDTO.setErrorMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body(moveResponseDTO);
         }
     }
 
@@ -43,8 +47,8 @@ public class SpringGameController {
     }
 
     @GetMapping("/load")
-    public GameManagerDTO load(@RequestParam Integer roomId) throws SQLException {
-        return gameService.createDTO(roomId);
+    public MoveResponseDTO load(@RequestParam Integer roomId) throws SQLException {
+        return gameService.createMoveResponseDTO(roomId);
     }
 
     @GetMapping("/get")

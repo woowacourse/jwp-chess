@@ -9,7 +9,8 @@ import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.PieceScore;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Pieces;
-import wooteco.chess.dto.GameManagerDTO;
+import wooteco.chess.dto.MoveRequestDTO;
+import wooteco.chess.dto.MoveResponseDTO;
 import wooteco.chess.dto.PiecesResponseDTO;
 
 import java.sql.SQLException;
@@ -24,22 +25,27 @@ public class SpringGameService {
     @Autowired
     private RoomDAO roomDAO;
 
-    public GameManagerDTO initialize(int roomId) throws SQLException {
+    public MoveResponseDTO initialize(int roomId) throws SQLException {
         roomDAO.updateRoomColorById(roomId, Color.WHITE);
         Pieces pieces = new Pieces(Pieces.initPieces());
         gameDAO.addAllPiecesById(roomId, pieces);
-        return new GameManagerDTO(new PiecesResponseDTO(pieces).getPieces(), Color.WHITE, false);
+        return new MoveResponseDTO(new PiecesResponseDTO(pieces).getPieces(), Color.WHITE, false);
     }
 
-    public void movePiece(int roomId, String sourcePosition, String targetPosition) throws SQLException {
+    public MoveResponseDTO move(MoveRequestDTO requestDTO) throws SQLException {
+        Integer roomId = requestDTO.getRoomId();
+        String sourcePosition = requestDTO.getSourcePosition();
+        String targetPosition = requestDTO.getTargetPosition();
+
         Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
-        GameManager gameManager = new GameManager(pieces, roomDAO.findRoomColorById(roomId));
+        Color currentColor = roomDAO.findRoomColorById(roomId);
+        GameManager gameManager = new GameManager(pieces, currentColor);
         gameManager.validateEndGame();
         gameManager.moveFromTo(Position.of(sourcePosition), Position.of(targetPosition));
         roomDAO.updateRoomColorById(roomId, gameManager.getCurrentColor());
-
         gameDAO.removeAllPiecesById(roomId);
         gameDAO.addAllPiecesById(roomId, pieces);
+        return new MoveResponseDTO(new PiecesResponseDTO(pieces).getPieces(), currentColor, gameManager.isKingDead());
     }
 
     public double getScore(int roomId, Color color) throws SQLException {
@@ -71,8 +77,8 @@ public class SpringGameService {
         return gameManager.getMovablePositions(Position.of(sourcePosition));
     }
 
-    public GameManagerDTO createDTO(final int roomId) throws SQLException {
-        return new GameManagerDTO(getPiecesResponseDTO(roomId).getPieces(),
+    public MoveResponseDTO createMoveResponseDTO(final int roomId) throws SQLException {
+        return new MoveResponseDTO(getPiecesResponseDTO(roomId).getPieces(),
                 Color.valueOf(getCurrentColor(roomId)), isKingDead(roomId));
     }
 }

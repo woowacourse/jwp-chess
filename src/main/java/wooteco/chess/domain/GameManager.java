@@ -16,6 +16,10 @@ public class GameManager {
         this.currentColor = currentColor;
     }
 
+    public static GameManager of(Pieces pieces, Color currentColor){
+        return new GameManager(pieces, currentColor);
+    }
+
     public void moveFromTo(Position sourcePosition, Position targetPosition) {
         validateOtherPieceSourcePosition(sourcePosition);
         validateSameColorTargetPosition(targetPosition);

@@ -5,10 +5,10 @@ import static chess.model.repository.template.JdbcTemplate.makeQuery;
 
 import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.Team;
+import chess.model.dto.GameInfoDto;
 import chess.model.repository.template.JdbcTemplate;
 import chess.model.repository.template.PreparedStatementSetter;
 import chess.model.repository.template.ResultSetMapper;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -220,19 +220,6 @@ public class ChessGameDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public boolean isProceed(Integer gameId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "SELECT ID",
-            "  FROM CHESS_GAME_TB",
-            " WHERE ID = ?",
-            "   AND PROCEEDING_YN = 'Y'"
-        );
-        PreparedStatementSetter pss = pstmt -> pstmt.setInt(1, gameId);
-        ResultSetMapper<Boolean> mapper = ResultSet::next;
-        return jdbcTemplate.executeQuery(query, pss, mapper);
-    }
-
     public void update(Integer gameId, Team gameTurn, TeamScore teamScore, boolean proceed) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
@@ -248,5 +235,34 @@ public class ChessGameDao {
             teamScore.get(Team.BLACK),
             teamScore.get(Team.WHITE), proceed ? "Y" : "N", gameId);
         jdbcTemplate.executeUpdate(query, pss);
+    }
+
+    public Optional<GameInfoDto> findGameInfo(Integer gameId) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String query = makeQuery(
+            "SELECT TURN_NM",
+            "     , BLACK_USER_NM",
+            "     , WHITE_USER_NM",
+            "     , BLACK_SCORE",
+            "     , WHITE_SCORE",
+            "  FROM CHESS_GAME_TB",
+            " WHERE ID = ?",
+            "   AND PROCEEDING_YN = 'Y'"
+        );
+        PreparedStatementSetter pss = pstmt -> pstmt.setInt(1, gameId);
+        ResultSetMapper<Optional<GameInfoDto>> mapper = rs -> {
+            if (!rs.next()) {
+                return Optional.empty();
+            }
+            Map<Team, String> userNames = new HashMap<>();
+            userNames.put(Team.BLACK, rs.getString("BLACK_USER_NM"));
+            userNames.put(Team.WHITE, rs.getString("WHITE_USER_NM"));
+            Map<Team, Double> teamScores = new HashMap<>();
+            teamScores.put(Team.BLACK, rs.getDouble("BLACK_SCORE"));
+            teamScores.put(Team.WHITE, rs.getDouble("WHITE_SCORE"));
+            return Optional.of(new GameInfoDto(Team.of(rs.getString("TURN_NM")), userNames,
+                new TeamScore(teamScores)));
+        };
+        return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 }

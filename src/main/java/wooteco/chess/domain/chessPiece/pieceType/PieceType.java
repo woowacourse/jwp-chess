@@ -4,6 +4,7 @@ import wooteco.chess.domain.chessPiece.pieceStrategy.BishopStrategy;
 import wooteco.chess.domain.chessPiece.pieceStrategy.BlackPawnStrategy;
 import wooteco.chess.domain.chessPiece.pieceStrategy.KingStrategy;
 import wooteco.chess.domain.chessPiece.pieceStrategy.KnightStrategy;
+import wooteco.chess.domain.chessPiece.pieceStrategy.PawnStrategy;
 import wooteco.chess.domain.chessPiece.pieceStrategy.PieceStrategy;
 import wooteco.chess.domain.chessPiece.pieceStrategy.QueenStrategy;
 import wooteco.chess.domain.chessPiece.pieceStrategy.RookStrategy;
@@ -61,7 +62,7 @@ public enum PieceType implements PieceStrategy {
 	}
 
 	public boolean isPawn() {
-		return this.equals(BLACK_PAWN) || this.equals(WHITE_PAWN);
+		return this.pieceStrategy instanceof PawnStrategy;
 	}
 
 	public boolean isKing() {

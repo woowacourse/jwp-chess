@@ -60,7 +60,7 @@ public class ChessGame {
 	}
 
 	private void checkLeapable(final Position sourcePosition, final Position targetPosition) {
-		if (!chessBoard.isLeapableChessPieceOn(sourcePosition)) {
+		if (!chessBoard.canLeapChessPieceOn(sourcePosition)) {
 			chessBoard.checkChessPieceExistInRoute(sourcePosition, targetPosition);
 		}
 	}

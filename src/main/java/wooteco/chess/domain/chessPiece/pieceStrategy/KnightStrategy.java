@@ -13,6 +13,15 @@ public class KnightStrategy implements PieceStrategy {
 
 	@Override
 	public boolean canMove(final Position sourcePosition, final Position targetPosition, final int pawnMovableRange) {
+		return canMove(sourcePosition, targetPosition);
+	}
+
+	@Override
+	public boolean canCatch(final Position sourcePosition, final Position targetPosition) {
+		return canMove(sourcePosition, targetPosition);
+	}
+
+	private boolean canMove(final Position sourcePosition, final Position targetPosition) {
 		final int chessFileGap = Math.abs(sourcePosition.calculateChessFileGapTo(targetPosition));
 		final int chessRankGap = Math.abs(sourcePosition.calculateChessRankGapTo(targetPosition));
 
@@ -25,14 +34,6 @@ public class KnightStrategy implements PieceStrategy {
 
 	private boolean isKnightCanMoveRange(final int chessFileGap, final int chessRankGap) {
 		return (chessFileGap + chessRankGap) == KNIGHT_MOVABLE_RANGE;
-	}
-
-	@Override
-	public boolean canCatch(final Position sourcePosition, final Position targetPosition) {
-		final int chessFileGap = Math.abs(sourcePosition.calculateChessFileGapTo(targetPosition));
-		final int chessRankGap = Math.abs(sourcePosition.calculateChessRankGapTo(targetPosition));
-
-		return isNotExistOnAxis(chessFileGap, chessRankGap) && isKnightCanMoveRange(chessFileGap, chessRankGap);
 	}
 
 }

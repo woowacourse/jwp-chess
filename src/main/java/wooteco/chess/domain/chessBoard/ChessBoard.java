@@ -19,7 +19,7 @@ public class ChessBoard {
 		this.chessBoard = chessBoard;
 	}
 
-	public void validate(final Position position) {
+	private void validate(final Position position) {
 		Objects.requireNonNull(position, "체스 위치가 null입니다.");
 	}
 
@@ -49,7 +49,7 @@ public class ChessBoard {
 		return chessBoard.get(position).isSame(pieceColor);
 	}
 
-	public boolean isLeapableChessPieceOn(final Position position) {
+	public boolean canLeapChessPieceOn(final Position position) {
 		validate(position);
 		return chessBoard.get(position).canLeap();
 	}
@@ -59,7 +59,7 @@ public class ChessBoard {
 		final MoveDirection checkingDirection = findDirectionFrom(sourcePosition, targetPosition);
 		Position checkingPosition = checkingDirection.move(sourcePosition);
 
-		while (!checkingPosition.equals(targetPosition) && isChessPieceNotExistOn(checkingPosition)) {
+		while (!checkingPosition.equals(targetPosition) && isVacantOn(checkingPosition)) {
 			checkingPosition = checkingDirection.move(checkingPosition);
 		}
 	}
@@ -71,7 +71,8 @@ public class ChessBoard {
 			.orElseThrow(() -> new IllegalArgumentException("체스 피스가 이동할 수 없는 위치를 입력하였습니다."));
 	}
 
-	private boolean isChessPieceNotExistOn(final Position checkingPosition) {
+	// NOTE: 2020/04/26 메서드명 고민해보기
+	private boolean isVacantOn(final Position checkingPosition) {
 		if (Objects.nonNull(chessBoard.get(checkingPosition))) {
 			throw new IllegalArgumentException("체스 피스의 이동 경로에 다른 체스 피스가 존재합니다.");
 		}

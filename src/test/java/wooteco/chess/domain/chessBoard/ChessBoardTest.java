@@ -124,21 +124,21 @@ public class ChessBoardTest {
 	}
 
 	@Test
-	void isLeapableChessPieceOn_LeapableChessPiece_ReturnTrue() {
+	void canLeapChessPieceOn_LeapableChessPiece_ReturnTrue() {
 		final Map<Position, ChessPiece> value = new HashMap<>();
 		value.put(Position.of("c4"), new ChessPiece(PieceType.WHITE_KING));
 		final ChessBoard chessBoard = new ChessBoard(value);
 
-		assertThat(chessBoard.isLeapableChessPieceOn(Position.of("c4"))).isTrue();
+		assertThat(chessBoard.canLeapChessPieceOn(Position.of("c4"))).isTrue();
 	}
 
 	@Test
-	void isLeapableChessPieceOn_NonLeapableChessPiece_ReturnFalse() {
+	void canLeapChessPieceOn_NonLeapableChessPiece_ReturnFalse() {
 		final Map<Position, ChessPiece> value = new HashMap<>();
 		value.put(Position.of("c4"), new ChessPiece(PieceType.WHITE_ROOK));
 		final ChessBoard chessBoard = new ChessBoard(value);
 
-		assertThat(chessBoard.isLeapableChessPieceOn(Position.of("c4"))).isFalse();
+		assertThat(chessBoard.canLeapChessPieceOn(Position.of("c4"))).isFalse();
 	}
 
 	@Test

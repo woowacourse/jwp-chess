@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Component;
 
-@Component
-public class MySqlConnectionManager implements ConnectionManager {
+@Component("CustomDataSource")
+public class MySqlDataSource implements DataSource {
 
 	private static final String server = "127.0.0.1:13306"; // MySQL 서버 주소
 	private static final String database = "woowa_level_01_chess"; // MySQL DATABASE 이름
@@ -16,10 +16,10 @@ public class MySqlConnectionManager implements ConnectionManager {
 	private static final String password = "root"; // MySQL 서버 비밀번호
 	private static final String CONNECTION_FORMAT = "jdbc:mysql://%s/%s%s";
 
-	private MySqlConnectionManager() {
+	private MySqlDataSource() {
 	}
 
-	public static MySqlConnectionManager getInstance() {
+	public static MySqlDataSource getInstance() {
 		return LazyHolder.INSTANCE;
 	}
 
@@ -40,7 +40,7 @@ public class MySqlConnectionManager implements ConnectionManager {
 	}
 
 	private static class LazyHolder {
-		private static final MySqlConnectionManager INSTANCE = new MySqlConnectionManager();
+		private static final MySqlDataSource INSTANCE = new MySqlDataSource();
 	}
 
 }

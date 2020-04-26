@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 
-import wooteco.chess.database.CustomJdbcTemplate;
-import wooteco.chess.database.MySqlConnectionManager;
+import wooteco.chess.database.JdbcTemplate;
+import wooteco.chess.database.MySqlDataSource;
 import wooteco.chess.entity.ChessHistoryEntity;
 
 class MySqlChessHistoryDaoTest {
@@ -22,36 +22,36 @@ class MySqlChessHistoryDaoTest {
 	private static final String CHESS_HISTORY_TABLE = "chess_histories";
 	private static final long INIT_AUTO_INCREMENT = 1L;
 
-	private CustomJdbcTemplate customJdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 
 	@BeforeEach
 	void setUp() {
-		customJdbcTemplate = new CustomJdbcTemplate(MySqlConnectionManager.getInstance());
+		jdbcTemplate = new JdbcTemplate(MySqlDataSource.getInstance());
 
 		final String query1 = "DELETE FROM " + CHESS_HISTORY_TABLE;
-		customJdbcTemplate.executeUpdate(query1);
+		jdbcTemplate.executeUpdate(query1);
 
 		final String query2 = "ALTER TABLE " + CHESS_HISTORY_TABLE + " AUTO_INCREMENT = ?";
-		customJdbcTemplate.executeUpdate(query2,
+		jdbcTemplate.executeUpdate(query2,
 			preparedStatement -> preparedStatement.setLong(1, INIT_AUTO_INCREMENT));
 	}
 
 	@ParameterizedTest
 	@NullSource
-	void MySqlChessHistoryDao_NullJdbcTemplate_ExceptionThrown(final CustomJdbcTemplate customJdbcTemplate) {
-		assertThatThrownBy(() -> new MySqlChessHistoryDao(customJdbcTemplate))
+	void MySqlChessHistoryDao_NullJdbcTemplate_ExceptionThrown(final JdbcTemplate jdbcTemplate) {
+		assertThatThrownBy(() -> new MySqlChessHistoryDao(jdbcTemplate))
 			.isInstanceOf(NullPointerException.class)
 			.hasMessage("JdbcTemplate이 null입니다.");
 	}
 
 	@Test
 	void MySqlChessHistoryDao_JdbcTemplate_GenerateInstance() {
-		assertThat(new MySqlChessHistoryDao(customJdbcTemplate)).isInstanceOf(MySqlChessHistoryDao.class);
+		assertThat(new MySqlChessHistoryDao(jdbcTemplate)).isInstanceOf(MySqlChessHistoryDao.class);
 	}
 
 	@Test
 	void findAllByGameId_GameId_ReturnChessHistoryEntities() {
-		final MySqlChessHistoryDao mySqlChessHistoryDao = new MySqlChessHistoryDao(customJdbcTemplate);
+		final MySqlChessHistoryDao mySqlChessHistoryDao = new MySqlChessHistoryDao(jdbcTemplate);
 		final long gameId = 1;
 		final ChessHistoryEntity value = ChessHistoryEntity.of(gameId, "b2", "b4", LocalDateTime.now());
 		mySqlChessHistoryDao.add(value);
@@ -69,7 +69,7 @@ class MySqlChessHistoryDaoTest {
 	@ParameterizedTest
 	@NullSource
 	void add_NullChessHistoryEntity_ExceptionThrown(final ChessHistoryEntity entity) {
-		final MySqlChessHistoryDao mySqlChessHistoryDao = new MySqlChessHistoryDao(customJdbcTemplate);
+		final MySqlChessHistoryDao mySqlChessHistoryDao = new MySqlChessHistoryDao(jdbcTemplate);
 
 		assertThatThrownBy(() -> mySqlChessHistoryDao.add(entity))
 			.isInstanceOf(NullPointerException.class)
@@ -78,7 +78,7 @@ class MySqlChessHistoryDaoTest {
 
 	@Test
 	void add_ChessHistoryEntity_InsertChessHistory() {
-		final MySqlChessHistoryDao mySqlChessHistoryDao = new MySqlChessHistoryDao(customJdbcTemplate);
+		final MySqlChessHistoryDao mySqlChessHistoryDao = new MySqlChessHistoryDao(jdbcTemplate);
 		final long gameId = 1;
 		mySqlChessHistoryDao.add(ChessHistoryEntity.of(gameId, "b2", "b4", LocalDateTime.now()));
 
@@ -88,7 +88,7 @@ class MySqlChessHistoryDaoTest {
 	private boolean isChessHistoryExist(final String start, final String end) {
 		final String query = "SELECT * FROM " + CHESS_HISTORY_TABLE + " WHERE start = ? AND end = ?";
 
-		return customJdbcTemplate.executeQuery(query, ResultSet::next, preparedStatement -> {
+		return jdbcTemplate.executeQuery(query, ResultSet::next, preparedStatement -> {
 			preparedStatement.setString(1, start);
 			preparedStatement.setString(2, end);
 		});
@@ -96,7 +96,7 @@ class MySqlChessHistoryDaoTest {
 
 	@Test
 	void deleteAll_DeleteAllChessHistoryFromChessHistoryTable() {
-		final MySqlChessHistoryDao mySqlChessHistoryDao = new MySqlChessHistoryDao(customJdbcTemplate);
+		final MySqlChessHistoryDao mySqlChessHistoryDao = new MySqlChessHistoryDao(jdbcTemplate);
 		mySqlChessHistoryDao.add(ChessHistoryEntity.of("b2", "b4"));
 		mySqlChessHistoryDao.deleteAll();
 
@@ -106,7 +106,7 @@ class MySqlChessHistoryDaoTest {
 	private List<ChessHistoryEntity> findAll() {
 		final String query = "SELECT * FROM " + CHESS_HISTORY_TABLE;
 
-		return customJdbcTemplate.executeQuery(query, resultSet -> {
+		return jdbcTemplate.executeQuery(query, resultSet -> {
 			final List<ChessHistoryEntity> entities = new ArrayList<>();
 
 			while (resultSet.next()) {
@@ -125,7 +125,7 @@ class MySqlChessHistoryDaoTest {
 	void tearDown() {
 		final String query = "DELETE FROM " + CHESS_HISTORY_TABLE;
 
-		customJdbcTemplate.executeUpdate(query);
+		jdbcTemplate.executeUpdate(query);
 	}
 
 }

@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import wooteco.chess.database.CustomJdbcTemplate;
+import wooteco.chess.database.JdbcTemplate;
 import wooteco.chess.entity.ChessHistoryEntity;
 
 @Repository
@@ -15,18 +16,18 @@ public class MySqlChessHistoryDao implements ChessHistoryDao {
 
 	private static final String CHESS_HISTORY_TABLE = "chess_histories";
 
-	private final CustomJdbcTemplate customJdbcTemplate;
+	private final JdbcTemplate jdbcTemplate;
 
-	public MySqlChessHistoryDao(final CustomJdbcTemplate customJdbcTemplate) {
-		Objects.requireNonNull(customJdbcTemplate, "JdbcTemplate이 null입니다.");
-		this.customJdbcTemplate = customJdbcTemplate;
+	public MySqlChessHistoryDao(@Qualifier("CustomJdbcTemplate") final JdbcTemplate jdbcTemplate) {
+		Objects.requireNonNull(jdbcTemplate, "JdbcTemplate이 null입니다.");
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	@Override
 	public List<ChessHistoryEntity> findAllByGameId(final long gameId) {
 		final String query = "SELECT * FROM " + CHESS_HISTORY_TABLE + " WHERE game_id = ?";
 
-		return customJdbcTemplate.executeQuery(query, resultSet -> {
+		return jdbcTemplate.executeQuery(query, resultSet -> {
 			final List<ChessHistoryEntity> entities = new ArrayList<>();
 
 			while (resultSet.next()) {
@@ -47,7 +48,7 @@ public class MySqlChessHistoryDao implements ChessHistoryDao {
 		final String query =
 			"INSERT INTO " + CHESS_HISTORY_TABLE + " (game_id, start, end, created_time) VALUES (?, ?, ?, ?)";
 
-		customJdbcTemplate.executeUpdate(query, preparedStatement -> {
+		jdbcTemplate.executeUpdate(query, preparedStatement -> {
 			preparedStatement.setLong(1, entity.getGameId());
 			preparedStatement.setString(2, entity.getStart());
 			preparedStatement.setString(3, entity.getEnd());
@@ -59,7 +60,7 @@ public class MySqlChessHistoryDao implements ChessHistoryDao {
 	public void deleteAll() {
 		final String query = "DELETE FROM " + CHESS_HISTORY_TABLE;
 
-		customJdbcTemplate.executeUpdate(query);
+		jdbcTemplate.executeUpdate(query);
 	}
 
 }

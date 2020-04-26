@@ -6,19 +6,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-@Component
-public class CustomJdbcTemplate {
+@Component("CustomJdbcTemplate")
+public class JdbcTemplate {
 
-	private final ConnectionManager connectionManager;
+	private final DataSource dataSource;
 
-	public CustomJdbcTemplate(final ConnectionManager connectionManager) {
-		this.connectionManager = connectionManager;
+	public JdbcTemplate(@Qualifier("CustomDataSource") final DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 	public <T> T executeQuery(String query, RowMapper<T> rowMapper, PreparedStatementSetter preparedStatementSetter) {
-		try (Connection connection = connectionManager.getConnection();
+		try (Connection connection = dataSource.getConnection();
 			 PreparedStatement preparedStatement = connection.prepareStatement(query)
 		) {
 			preparedStatementSetter.setArgument(preparedStatement);
@@ -35,7 +36,7 @@ public class CustomJdbcTemplate {
 	}
 
 	public Long executeUpdate(String query, PreparedStatementSetter preparedStatementSetter) {
-		try (Connection connection = connectionManager.getConnection();
+		try (Connection connection = dataSource.getConnection();
 			 PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
 		) {
 			preparedStatementSetter.setArgument(preparedStatement);

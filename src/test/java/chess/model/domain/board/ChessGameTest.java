@@ -62,7 +62,7 @@ public class ChessGameTest {
         assertThat(chessGame.isKingCaptured()).isFalse();
 
         Map<Square, Piece> whiteKingBoard = new HashMap<>();
-        whiteKingBoard.put(Square.of("a1"), King.getPieceInstance(Team.WHITE));
+        whiteKingBoard.put(Square.of("a1"), King.getInstance(Team.WHITE));
         chessGame = new ChessGame(ChessBoard.of(whiteKingBoard), Team.BLACK,
             CastlingElement.of(new HashSet<>()), new EnPassant());
         assertThat(chessGame.isKingCaptured()).isTrue();
@@ -70,7 +70,7 @@ public class ChessGameTest {
             .isEqualTo(MoveState.KING_CAPTURED);
 
         Map<Square, Piece> blackKingBoard = new HashMap<>();
-        blackKingBoard.put(Square.of("a1"), King.getPieceInstance(Team.BLACK));
+        blackKingBoard.put(Square.of("a1"), King.getInstance(Team.BLACK));
         chessGame = new ChessGame(ChessBoard.of(blackKingBoard), Team.WHITE,
             CastlingElement.of(new HashSet<>()), new EnPassant());
         assertThat(chessGame.isKingCaptured()).isTrue();
@@ -143,12 +143,12 @@ public class ChessGameTest {
     @CsvSource(value = {"e1, c1, e8, c8", "e1, g1, e8, g8"})
     void castling(String whiteBefore, String whiteAfter, String blackBefore, String blackAfter) {
         Map<Square, Piece> boardInitial = new HashMap<>();
-        boardInitial.put(Square.of("e1"), King.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("e8"), King.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("a8"), Rook.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("h8"), Rook.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("a1"), Rook.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("e1"), King.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("e8"), King.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("a8"), Rook.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("h8"), Rook.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("a1"), Rook.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("h1"), Rook.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
             CastlingElement.createInitial(), new EnPassant());
 
@@ -163,16 +163,16 @@ public class ChessGameTest {
     @CsvSource(value = {"e1, c1, e8, c8", "e1, g1, e8, g8"})
     void castlingNo(String whiteBefore, String whiteAfter, String blackBefore, String blackAfter) {
         Map<Square, Piece> boardInitial = new HashMap<>();
-        boardInitial.put(Square.of("e1"), King.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("e8"), King.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("a8"), Rook.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("h8"), Rook.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("a1"), Rook.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("d1"), Knight.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("d8"), Knight.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("f1"), Knight.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("f8"), Knight.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("e1"), King.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("e8"), King.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("a8"), Rook.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("h8"), Rook.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("a1"), Rook.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("h1"), Rook.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("d1"), Knight.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("d8"), Knight.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("f1"), Knight.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("f8"), Knight.getInstance(Team.WHITE));
         boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
             CastlingElement.createInitial(), new EnPassant());
@@ -191,16 +191,16 @@ public class ChessGameTest {
     @CsvSource(value = {"e1, c1, e8, c8", "e1, g1, e8, g8"})
     void castlingNo2(String whiteBefore, String whiteAfter, String blackBefore, String blackAfter) {
         Map<Square, Piece> boardInitial = new HashMap<>();
-        boardInitial.put(Square.of("e1"), King.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("e8"), King.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("a8"), Rook.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("h8"), Rook.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("a1"), Rook.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("d1"), Knight.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("d8"), Knight.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("f1"), Knight.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("f8"), Knight.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("e1"), King.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("e8"), King.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("a8"), Rook.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("h8"), Rook.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("a1"), Rook.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("h1"), Rook.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("d1"), Knight.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("d8"), Knight.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("f1"), Knight.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("f8"), Knight.getInstance(Team.WHITE));
         boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
             CastlingElement

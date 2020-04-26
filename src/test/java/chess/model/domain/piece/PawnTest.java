@@ -41,8 +41,8 @@ public class PawnTest {
     @DisplayName("앞에 말이 있다면 못가는지 테스트")
     void canNotCaptureFrontPiece() {
         Map<Square, Piece> board = new HashMap<>();
-        board.put(Square.of("a5"), Knight.getPieceInstance(Team.BLACK));
-        board.put(Square.of("c5"), Knight.getPieceInstance(Team.WHITE));
+        board.put(Square.of("a5"), Knight.getInstance(Team.BLACK));
+        board.put(Square.of("c5"), Knight.getInstance(Team.WHITE));
 
         Piece pieceBlack = Pawn.getInstance(Team.BLACK);
         Piece pieceWhite = Pawn.getInstance(Team.WHITE);
@@ -60,7 +60,7 @@ public class PawnTest {
     @DisplayName("폰이 두 칸 움직일 수 있는지 테스트")
     void movablePawnTwoSquareTest() {
         Map<Square, Piece> board = new HashMap<>();
-        board.put(Square.of("b6"), Knight.getPieceInstance(Team.BLACK));
+        board.put(Square.of("b6"), Knight.getInstance(Team.BLACK));
 
         Piece pieceBlack = Pawn.getInstance(Team.BLACK);
         Piece pieceWhite = Pawn.getInstance(Team.WHITE);
@@ -88,9 +88,9 @@ public class PawnTest {
     void movablePawnSquareTest() {
         Map<Square, Piece> board = new HashMap<>();
 
-        board.put(Square.of("b5"), Knight.getPieceInstance(Team.BLACK));
-        board.put(Square.of("e5"), Knight.getPieceInstance(Team.BLACK));
-        board.put(Square.of("f5"), Knight.getPieceInstance(Team.WHITE));
+        board.put(Square.of("b5"), Knight.getInstance(Team.BLACK));
+        board.put(Square.of("e5"), Knight.getInstance(Team.BLACK));
+        board.put(Square.of("f5"), Knight.getInstance(Team.WHITE));
 
         Piece blackPawn = Pawn.getInstance(Team.BLACK);
         Set<Square> availableSquares = blackPawn

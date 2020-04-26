@@ -30,16 +30,16 @@ public class ChessGameDto {
         Map<Piece, String> piecesLetter = new HashMap<>();
         piecesLetter.put(Pawn.getInstance(Team.BLACK), "♟");
         piecesLetter.put(Pawn.getInstance(Team.WHITE), "♙");
-        piecesLetter.put(Rook.getPieceInstance(Team.BLACK), "♜");
-        piecesLetter.put(Rook.getPieceInstance(Team.WHITE), "♖");
-        piecesLetter.put(Knight.getPieceInstance(Team.BLACK), "♞");
-        piecesLetter.put(Knight.getPieceInstance(Team.WHITE), "♘");
-        piecesLetter.put(Bishop.getPieceInstance(Team.BLACK), "♝");
-        piecesLetter.put(Bishop.getPieceInstance(Team.WHITE), "♗");
-        piecesLetter.put(Queen.getPieceInstance(Team.BLACK), "♛");
-        piecesLetter.put(Queen.getPieceInstance(Team.WHITE), "♕");
-        piecesLetter.put(King.getPieceInstance(Team.BLACK), "♚");
-        piecesLetter.put(King.getPieceInstance(Team.WHITE), "♔");
+        piecesLetter.put(Rook.getInstance(Team.BLACK), "♜");
+        piecesLetter.put(Rook.getInstance(Team.WHITE), "♖");
+        piecesLetter.put(Knight.getInstance(Team.BLACK), "♞");
+        piecesLetter.put(Knight.getInstance(Team.WHITE), "♘");
+        piecesLetter.put(Bishop.getInstance(Team.BLACK), "♝");
+        piecesLetter.put(Bishop.getInstance(Team.WHITE), "♗");
+        piecesLetter.put(Queen.getInstance(Team.BLACK), "♛");
+        piecesLetter.put(Queen.getInstance(Team.WHITE), "♕");
+        piecesLetter.put(King.getInstance(Team.BLACK), "♚");
+        piecesLetter.put(King.getInstance(Team.WHITE), "♔");
         PIECES_LETTER = Collections.unmodifiableMap(piecesLetter);
 
         Map<Team, String> defaultNames = new HashMap<>();

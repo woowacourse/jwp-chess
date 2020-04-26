@@ -62,11 +62,11 @@ public class TeamScoreTest {
     @DisplayName("킹 잡혔을 때 0점 처리")
     void noKingZero() {
         Map<Square, Piece> boardInitial = new HashMap<>();
-        boardInitial.put(Square.of("e1"), King.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("a8"), Rook.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("h8"), Rook.getPieceInstance(Team.BLACK));
-        boardInitial.put(Square.of("a1"), Rook.getPieceInstance(Team.WHITE));
-        boardInitial.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
+        boardInitial.put(Square.of("e1"), King.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("a8"), Rook.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("h8"), Rook.getInstance(Team.BLACK));
+        boardInitial.put(Square.of("a1"), Rook.getInstance(Team.WHITE));
+        boardInitial.put(Square.of("h1"), Rook.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
             CastlingElement.createInitial(), new EnPassant());
 

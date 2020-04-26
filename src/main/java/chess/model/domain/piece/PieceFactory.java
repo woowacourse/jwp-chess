@@ -12,16 +12,16 @@ public class PieceFactory {
         Map<String, Piece> cache = new HashMap<>();
         cache.put("BLACK_PAWN", Pawn.getInstance(Team.BLACK));
         cache.put("WHITE_PAWN", Pawn.getInstance(Team.WHITE));
-        cache.put("BLACK_ROOK", Rook.getPieceInstance(Team.BLACK));
-        cache.put("WHITE_ROOK", Rook.getPieceInstance(Team.WHITE));
-        cache.put("BLACK_KNIGHT", Knight.getPieceInstance(Team.BLACK));
-        cache.put("WHITE_KNIGHT", Knight.getPieceInstance(Team.WHITE));
-        cache.put("BLACK_BISHOP", Bishop.getPieceInstance(Team.BLACK));
-        cache.put("WHITE_BISHOP", Bishop.getPieceInstance(Team.WHITE));
-        cache.put("BLACK_QUEEN", Queen.getPieceInstance(Team.BLACK));
-        cache.put("WHITE_QUEEN", Queen.getPieceInstance(Team.WHITE));
-        cache.put("BLACK_KING", King.getPieceInstance(Team.BLACK));
-        cache.put("WHITE_KING", King.getPieceInstance(Team.WHITE));
+        cache.put("BLACK_ROOK", Rook.getInstance(Team.BLACK));
+        cache.put("WHITE_ROOK", Rook.getInstance(Team.WHITE));
+        cache.put("BLACK_KNIGHT", Knight.getInstance(Team.BLACK));
+        cache.put("WHITE_KNIGHT", Knight.getInstance(Team.WHITE));
+        cache.put("BLACK_BISHOP", Bishop.getInstance(Team.BLACK));
+        cache.put("WHITE_BISHOP", Bishop.getInstance(Team.WHITE));
+        cache.put("BLACK_QUEEN", Queen.getInstance(Team.BLACK));
+        cache.put("WHITE_QUEEN", Queen.getInstance(Team.WHITE));
+        cache.put("BLACK_KING", King.getInstance(Team.BLACK));
+        cache.put("WHITE_KING", King.getInstance(Team.WHITE));
 
         CACHE = Collections.unmodifiableMap(cache);
     }

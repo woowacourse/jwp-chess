@@ -18,7 +18,7 @@ public class KingTest {
     @Test
     @DisplayName("Null이 of에 들어갔을 때 예외 발생")
     void validNotNull() {
-        assertThatThrownBy(() -> King.getPieceInstance(null))
+        assertThatThrownBy(() -> King.getInstance(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessageContaining("Null");
     }
@@ -27,7 +27,7 @@ public class KingTest {
     @ValueSource(strings = {"e6", "e8", "f6", "f7", "f8", "d6", "d7", "d8"})
     @DisplayName("말의 위치(king)를 받고 말의 종류에 따라 이동할 수 있는 칸 리스트 반환")
     void calculateScopeKing(String input) {
-        Piece piece = King.getPieceInstance(Team.BLACK);
+        Piece piece = King.getInstance(Team.BLACK);
         Set<Square> availableSquares = piece.getAllMovableArea(Square.of("e7"));
         assertThat(availableSquares.contains(Square.of(input))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(8);
@@ -40,7 +40,7 @@ public class KingTest {
         Map<Square, Piece> board = new HashMap<>();
         board.put(Square.of("a5"), Pawn.getInstance(Team.WHITE));
         board.put(Square.of("b6"), Pawn.getInstance(Team.BLACK));
-        Piece piece = King.getPieceInstance(Team.BLACK);
+        Piece piece = King.getInstance(Team.BLACK);
         Set<Square> availableSquares = piece.findMovableAreas(Square.of("a6"), board);
 
         assertThat(availableSquares.contains(Square.of(input))).isTrue();
@@ -51,42 +51,42 @@ public class KingTest {
     @Test
     void checkCastling() {
         Map<Square, Piece> board = new HashMap<>();
-        board.put(Square.of("a8"), Rook.getPieceInstance(Team.BLACK));
-        board.put(Square.of("h8"), Rook.getPieceInstance(Team.BLACK));
-        board.put(Square.of("a1"), Rook.getPieceInstance(Team.WHITE));
-        board.put(Square.of("h1"), Rook.getPieceInstance(Team.WHITE));
+        board.put(Square.of("a8"), Rook.getInstance(Team.BLACK));
+        board.put(Square.of("h8"), Rook.getInstance(Team.BLACK));
+        board.put(Square.of("a1"), Rook.getInstance(Team.WHITE));
+        board.put(Square.of("h1"), Rook.getInstance(Team.WHITE));
 
-        Piece piece = King.getPieceInstance(Team.BLACK);
+        Piece piece = King.getInstance(Team.BLACK);
         Set<Square> availableSquares = piece.findMovableAreas(Square.of("e8"), board,
             CastlingSetting.getCastlingElements());
 
         assertThat(availableSquares.contains(Square.of("c8"))).isTrue();
         assertThat(availableSquares.contains(Square.of("g8"))).isTrue();
 
-        piece = King.getPieceInstance(Team.WHITE);
+        piece = King.getInstance(Team.WHITE);
         availableSquares = piece.findMovableAreas(Square.of("e1"), board,
             CastlingSetting.getCastlingElements());
 
         assertThat(availableSquares.contains(Square.of("c1"))).isTrue();
         assertThat(availableSquares.contains(Square.of("g1"))).isTrue();
 
-        board.put(Square.of("d8"), Rook.getPieceInstance(Team.BLACK));
+        board.put(Square.of("d8"), Rook.getInstance(Team.BLACK));
 
-        piece = King.getPieceInstance(Team.BLACK);
+        piece = King.getInstance(Team.BLACK);
         availableSquares = piece.findMovableAreas(Square.of("e8"), board,
             CastlingSetting.getCastlingElements());
 
         assertThat(availableSquares.contains(Square.of("c8"))).isFalse();
         assertThat(availableSquares.contains(Square.of("g8"))).isTrue();
 
-        piece = King.getPieceInstance(Team.BLACK);
+        piece = King.getInstance(Team.BLACK);
         availableSquares = piece.findMovableAreas(Square.of("e7"), board,
             CastlingSetting.getCastlingElements());
 
         assertThat(availableSquares.contains(Square.of("c7"))).isFalse();
         assertThat(availableSquares.contains(Square.of("g7"))).isFalse();
 
-        piece = King.getPieceInstance(Team.WHITE);
+        piece = King.getInstance(Team.WHITE);
         Set<CastlingSetting> castlingSettings = CastlingSetting.getCastlingElements();
         castlingSettings.remove(CastlingSetting.WHITE_KING_BEFORE);
         availableSquares = piece.findMovableAreas(Square.of("e1"), board,

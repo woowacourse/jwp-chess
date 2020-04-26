@@ -17,7 +17,7 @@ public class RookTest {
     @Test
     @DisplayName("Null이 of에 들어갔을 때 예외 발생")
     void validNotNull() {
-        assertThatThrownBy(() -> Rook.getPieceInstance(null))
+        assertThatThrownBy(() -> Rook.getInstance(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessageContaining("Null");
     }
@@ -27,7 +27,7 @@ public class RookTest {
         "g2", "h2"})
     @DisplayName("말의 위치(룩)를 받고 말의 종류에 따라 이동할 수 있는 칸 리스트 반환")
     void calculateScopeRook(String input) {
-        Piece piece = Rook.getPieceInstance(Team.WHITE);
+        Piece piece = Rook.getInstance(Team.WHITE);
         Set<Square> availableSquares = piece.getAllMovableArea(Square.of("d2"));
         assertThat(availableSquares.contains(Square.of(input))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(14);
@@ -40,15 +40,15 @@ public class RookTest {
         Map<Square, Piece> board = new HashMap<>();
         board.put(Square.of("b7"), Pawn.getInstance(Team.WHITE));
         board.put(Square.of("c7"), Pawn.getInstance(Team.WHITE));
-        board.put(Square.of("a6"), King.getPieceInstance(Team.WHITE));
+        board.put(Square.of("a6"), King.getInstance(Team.WHITE));
         board.put(Square.of("c5"), Pawn.getInstance(Team.BLACK));
-        board.put(Square.of("e8"), Knight.getPieceInstance(Team.WHITE));
-        board.put(Square.of("f6"), Queen.getPieceInstance(Team.BLACK));
+        board.put(Square.of("e8"), Knight.getInstance(Team.WHITE));
+        board.put(Square.of("f6"), Queen.getInstance(Team.BLACK));
         board.put(Square.of("f3"), Pawn.getInstance(Team.BLACK));
-        board.put(Square.of("g6"), King.getPieceInstance(Team.BLACK));
+        board.put(Square.of("g6"), King.getInstance(Team.BLACK));
         board.put(Square.of("g2"), Pawn.getInstance(Team.WHITE));
 
-        Piece piece = Rook.getPieceInstance(Team.BLACK);
+        Piece piece = Rook.getInstance(Team.BLACK);
         Set<Square> availableSquares = piece.findMovableAreas(Square.of("c6"), board);
 
         assertThat(availableSquares.contains(Square.of(input))).isTrue();

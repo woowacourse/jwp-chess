@@ -75,15 +75,10 @@ public class SpringChessController {
     }
 
     @PostMapping("/board")
-    public ModelAndView saveHistory(@RequestBody String param) throws SQLException {
-        // TODO: 20. 4. 23. @RequestBody 의 값을 Map 으로 받아서 처리하는 방법 찾기
-        String[] params = param.split("&");
-        String source = params[0].substring(7);
-        String destination = params[1].substring(12);
-
+    public ModelAndView saveHistory(@RequestBody MovingPosition movingPosition) throws SQLException {
         ModelAndView modelAndView = new ModelAndView();
 
-        MoveStatusDto moveStatusDto = springChessService.move(new MovingPosition(source, destination));
+        MoveStatusDto moveStatusDto = springChessService.move(movingPosition);
         if (moveStatusDto.getWinner().isNone()) {
             modelAndView.setViewName("chess");
             return modelAndView;

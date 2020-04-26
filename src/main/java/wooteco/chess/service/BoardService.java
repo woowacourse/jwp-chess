@@ -2,11 +2,13 @@ package wooteco.chess.service;
 
 import java.sql.SQLException;
 
-import wooteco.chess.ChessGame;
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.BoardDao;
 import wooteco.chess.dao.PlayerDao;
 import wooteco.chess.dao.RoomDao;
 import wooteco.chess.domain.Board;
+import wooteco.chess.domain.ChessGame;
 import wooteco.chess.domain.Turn;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
@@ -14,6 +16,7 @@ import wooteco.chess.domain.state.BoardFactory;
 import wooteco.chess.domain.state.Playing;
 import wooteco.chess.dto.GameDto;
 
+@Service
 public class BoardService {
 	private final BoardDao boardDao = new BoardDao();
 	private final RoomDao roomDao = new RoomDao();

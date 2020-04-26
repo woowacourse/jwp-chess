@@ -34,4 +34,8 @@ public class GameDto {
 	public List<PieceDto> getUnits() {
 		return Collections.unmodifiableList(units);
 	}
+
+	public Status getStatus() {
+		return status;
+	}
 }

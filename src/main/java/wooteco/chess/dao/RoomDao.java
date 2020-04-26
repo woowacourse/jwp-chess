@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import wooteco.chess.dao.util.ConnectionLoader;
+
 public class RoomDao {
 	public int findTurnPlayerId(int roomId) throws SQLException {
 		String query = "select turn from room where room_id = (?)";

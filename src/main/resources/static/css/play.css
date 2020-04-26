@@ -1,0 +1,194 @@
+.entire_div {
+    background-image: url("../background.jpg");
+    height: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: #333;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.wooteco.chess-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 10%;
+}
+
+.board-title {
+    height: 40%;
+}
+
+.turn-info {
+    justify-content: center;
+    height: 30%;
+}
+
+.wooteco.chess-info {
+    justify-content: center;
+    height: 30%;
+}
+
+.wooteco.chess-board {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    background: #5A3C29;
+    box-shadow: 0 0 15px #222;
+}
+
+.wooteco.chess-map {
+    display: flex;
+    flex-direction: column;
+}
+
+.wooteco.chess-row {
+    display: flex;
+}
+
+.wooteco.chess-col {
+    display: flex;
+    width: 64px;
+    height: 64px;
+    justify-content: center;
+    align-items: center;
+}
+
+.wooteco.chess-row:nth-child(2n) .wooteco.chess-col {
+    background-color: #5A3C29;
+}
+
+.wooteco.chess-row:nth-child(2n) .wooteco.chess-col:nth-child(2n) {
+    background-color: #EDCAA4;
+}
+
+.wooteco.chess-row:nth-child(2n + 1) .wooteco.chess-col {
+    background-color: #EDCAA4;
+}
+
+.wooteco.chess-row:nth-child(2n + 1) .wooteco.chess-col:nth-child(2n) {
+    background-color: #5A3C29;
+}
+
+.wooteco.chess-container {
+    display: flex;
+}
+
+.wooteco.chess-file {
+    display: flex;
+    justify-content: center;
+    background: #EDCAA4;
+}
+
+.wooteco.chess-rank {
+    display: flex;
+    flex-direction: column-reverse;
+    background: #EDCAA4;
+}
+
+.wooteco.chess-symbol {
+    color: #5A3C29;
+    text-align: center;
+    font-weight: bold;
+}
+
+.wooteco.chess-file .wooteco.chess-symbol {
+    width: 64px;
+    height: 24px;
+    padding: 0 12px;
+}
+
+.wooteco.chess-rank .wooteco.chess-symbol {
+    width: 24px;
+    height: 64px;
+    padding: 12 0px;
+    line-height: 64px;
+}
+
+.wooteco.chess-map {
+    display: flex;
+    border: 4px solid #5A3C29;
+}
+
+.wooteco.chess-piece {
+    width: 55px;
+    height: 55px;
+}
+
+.wooteco.chess-piece.queen.white {
+    background: url('../wooteco.chess-pieces.png');
+}
+
+.wooteco.chess-piece.king.white {
+    background: url('../wooteco.chess-pieces.png');
+    background-position: -55px 0;
+}
+
+.wooteco.chess-piece.bishop.white {
+    background: url('../wooteco.chess-pieces.png');
+    background-position: -110px 0;
+}
+
+.wooteco.chess-piece.knight.white {
+    background: url('../wooteco.chess-pieces.png');
+    background-position: -165px 0;
+}
+
+.wooteco.chess-piece.rook.white {
+    background: url('../wooteco.chess-pieces.png');
+    background-position: -220px 0;
+}
+
+.wooteco.chess-piece.pawn.white {
+    background: url('../wooteco.chess-pieces.png');
+    background-position: -275px 0;
+}
+
+.wooteco.chess-piece.queen.black {
+    background: url('../wooteco.chess-pieces.png');
+    background-position: 0 55px;
+}
+
+.wooteco.chess-piece.king.black {
+    background: url('../wooteco.chess-pieces.png');
+    background-position: -55px 55px;
+}
+
+.wooteco.chess-piece.bishop.black {
+    background: url('../wooteco.chess-pieces.png');
+    background-position: -110px 55px;
+}
+
+.wooteco.chess-piece.knight.black {
+    background: url('../wooteco.chess-pieces.png');
+    background-position: -165px 55px;
+}
+
+.wooteco.chess-piece.rook.black {
+    background: url('../wooteco.chess-pieces.png');
+    background-position: -220px 55px;
+}
+
+.wooteco.chess-piece.pawn.black {
+    background: url('../wooteco.chess-pieces.png');
+    background-position: -275px 55px;
+}

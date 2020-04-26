@@ -1,4 +1,4 @@
-package wooteco.chess.controller;
+package wooteco.chess.controller.spark;
 
 import static spark.Spark.*;
 
@@ -59,7 +59,7 @@ public class SparkController {
 	private String startGame(Request request, Response response) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", request.params(":id"));
-		return render(map, "play.html");
+		return render(map, "play.hbs");
 	}
 
 	private String loadBoard(Request request, Response response) {

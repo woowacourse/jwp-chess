@@ -17,6 +17,8 @@ import wooteco.chess.service.dto.ChessStatusDtos;
 
 public class SparkChessController {
 
+	private static final HandlebarsTemplateEngine HANDLEBARS_TEMPLATE_ENGINE = new HandlebarsTemplateEngine();
+
 	private final ChessService chessService;
 
 	public SparkChessController(final ChessService chessService) {
@@ -24,24 +26,39 @@ public class SparkChessController {
 		this.chessService = chessService;
 	}
 
-	private static String render(Map<String, Object> model, String templatePath) {
-		return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
-	}
-
-	private String renderStart(final Request request, final Response response) {
-		return render(new HashMap<>(), "index.hbs");
-	}
-
 	public void run() {
-		get("/", this::renderStart);
-		get("/chess", (request, response) -> render(chessService.loadChessGame()));
+		get("/", this::renderStartPage);
+		get("/chess", (request, response) -> renderGame(chessService.loadChessGame()));
 
 		post("/chess_play", this::playChessGame);
 		post("/chess_new", this::newChessGame);
 		post("/chess_end", this::endChessGame);
 	}
 
-	private String render(final ChessGameDto chessGameDto) {
+	private String renderStartPage(final Request request, final Response response) {
+		return render(new HashMap<>(), "index.hbs");
+	}
+
+	private String playChessGame(final Request request, final Response response) {
+		final String sourcePosition = request.queryParams("sourcePosition").trim();
+		final String targetPosition = request.queryParams("targetPosition").trim();
+		final ChessGameDto chessGameDto = chessService.playChessGame(sourcePosition, targetPosition);
+
+		if (chessGameDto.isEndState()) {
+			return renderResult(chessGameDto);
+		}
+		return renderGame(chessGameDto);
+	}
+
+	private String newChessGame(final Request request, final Response response) {
+		return renderGame(chessService.createChessGame());
+	}
+
+	private String endChessGame(final Request request, final Response response) {
+		return renderResult(chessService.endChessGame());
+	}
+
+	private String renderGame(final ChessGameDto chessGameDto) {
 		final ChessBoardDto chessBoardDto = chessGameDto.getChessBoardDto();
 		final ChessStatusDtos chessStatusDtos = chessGameDto.getChessStatusDtos();
 
@@ -51,18 +68,7 @@ public class SparkChessController {
 		return render(model, "chess.hbs");
 	}
 
-	private String playChessGame(final Request request, final Response response) {
-		final String sourcePosition = request.queryParams("sourcePosition").trim();
-		final String targetPosition = request.queryParams("targetPosition").trim();
-		final ChessGameDto chessGameDto = chessService.playChessGame(sourcePosition, targetPosition);
-
-		if (chessGameDto.isEndState()) {
-			return renderEnd(chessGameDto);
-		}
-		return render(chessGameDto);
-	}
-
-	private String renderEnd(final ChessGameDto chessGameDto) {
+	private String renderResult(final ChessGameDto chessGameDto) {
 		final ChessBoardDto chessBoardDto = chessGameDto.getChessBoardDto();
 		final ChessStatusDtos chessStatusDtos = chessGameDto.getChessStatusDtos();
 
@@ -73,12 +79,8 @@ public class SparkChessController {
 		return render(model, "result.hbs");
 	}
 
-	private String newChessGame(final Request request, final Response response) {
-		return render(chessService.createChessGame());
-	}
-
-	private String endChessGame(final Request request, final Response response) {
-		return renderEnd(chessService.endChessGame());
+	private static String render(Map<String, Object> model, String templatePath) {
+		return HANDLEBARS_TEMPLATE_ENGINE.render(new ModelAndView(model, templatePath));
 	}
 
 }

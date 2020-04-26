@@ -29,7 +29,7 @@ public class SpringChessController {
 	public String loadChessGame(final Model model) {
 		final ChessGameDto chessGameDto = chessService.loadChessGame();
 
-		return render(chessGameDto, model);
+		return renderGame(chessGameDto, model);
 	}
 
 	@PostMapping("/chess_play")
@@ -38,23 +38,23 @@ public class SpringChessController {
 		final ChessGameDto chessGameDto = chessService.playChessGame(sourcePosition.trim(), targetPosition.trim());
 
 		if (chessGameDto.isEndState()) {
-			return renderEnd(chessGameDto, model);
+			return renderResult(chessGameDto, model);
 		}
-		return render(chessGameDto, model);
+		return renderGame(chessGameDto, model);
 	}
 
 	@PostMapping("/chess_new")
 	public String newChessGame(final Model model) {
-		return render(chessService.createChessGame(), model);
+		return renderGame(chessService.createChessGame(), model);
 	}
 
 	@PostMapping("/chess_end")
 	public String endChessGame(final Model model) {
 		final ChessGameDto chessGameDto = chessService.endChessGame();
-		return renderEnd(chessGameDto, model);
+		return renderResult(chessGameDto, model);
 	}
 
-	private String render(final ChessGameDto chessGameDto, final Model model) {
+	private String renderGame(final ChessGameDto chessGameDto, final Model model) {
 		final ChessBoardDto chessBoardDto = chessGameDto.getChessBoardDto();
 		final ChessStatusDtos chessStatusDtos = chessGameDto.getChessStatusDtos();
 
@@ -64,7 +64,7 @@ public class SpringChessController {
 		return "chess";
 	}
 
-	private String renderEnd(final ChessGameDto chessGameDto, final Model model) {
+	private String renderResult(final ChessGameDto chessGameDto, final Model model) {
 		final ChessBoardDto chessBoardDto = chessGameDto.getChessBoardDto();
 		final ChessStatusDtos chessStatusDtos = chessGameDto.getChessStatusDtos();
 

@@ -7,9 +7,6 @@ public class JdbcConfiguration {
 	private String password;
 	private String driverClassName;
 
-	public JdbcConfiguration() {
-	}
-
 	private JdbcConfiguration(String url, String option, String username, String password, String driverClassName) {
 		this.url = url;
 		this.option = option;
@@ -20,14 +17,6 @@ public class JdbcConfiguration {
 
 	public String getFullUrl() {
 		return url + option;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public String getOption() {
-		return option;
 	}
 
 	public String getUsername() {
@@ -60,47 +49,27 @@ public class JdbcConfiguration {
 		private String password;
 		private String driverClassName;
 
-		public void setUrl(String url) {
-			this.url = url;
-		}
-
-		public void setOption(String option) {
-			this.option = option;
-		}
-
-		public void setUsername(String username) {
-			this.username = username;
-		}
-
-		public void setPassword(String password) {
-			this.password = password;
-		}
-
-		public void setDriverClassName(String driverClassName) {
-			this.driverClassName = driverClassName;
-		}
-
-		public Builder url(String url) {
+		public Builder setUrl(String url) {
 			this.url = url;
 			return this;
 		}
 
-		public Builder option(String option) {
+		public Builder setOption(String option) {
 			this.option = option;
 			return this;
 		}
 
-		public Builder username(String username) {
+		public Builder setUsername(String username) {
 			this.username = username;
 			return this;
 		}
 
-		public Builder password(String password) {
+		public Builder setPassword(String password) {
 			this.password = password;
 			return this;
 		}
 
-		public Builder driverClassName(String driverClassName) {
+		public Builder setDriverClassName(String driverClassName) {
 			this.driverClassName = driverClassName;
 			return this;
 		}

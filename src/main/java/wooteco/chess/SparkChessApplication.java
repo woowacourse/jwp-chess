@@ -22,11 +22,11 @@ public class SparkChessApplication {
 
 	private static DataSource generateDataSource() {
 		return new DataSource(new JdbcConfiguration.Builder()
-				.url("jdbc:mysql://localhost:13306/chess_game")
-				.option("?useSSL=false&serverTimezone=UTC")
-				.username("root")
-				.password("root")
-				.driverClassName("com.mysql.cj.jdbc.Driver")
+				.setUrl("jdbc:mysql://localhost:13306/chess_game")
+				.setOption("?useSSL=false&serverTimezone=UTC")
+				.setUsername("root")
+				.setPassword("root")
+				.setDriverClassName("com.mysql.cj.jdbc.Driver")
 				.build());
 	}
 }

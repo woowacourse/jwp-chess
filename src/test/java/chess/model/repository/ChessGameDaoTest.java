@@ -112,7 +112,8 @@ class ChessGameDaoTest {
     @Test
     void getGameNumberLatest() {
         assertThat(
-            CHESS_GAME_DAO.findGameNumberLatest(ROOM_ID).orElseThrow(IllegalArgumentException::new))
+            CHESS_GAME_DAO.findProceedGameIdLatest(ROOM_ID)
+                .orElseThrow(IllegalArgumentException::new))
             .isGreaterThanOrEqualTo(0);
     }
 

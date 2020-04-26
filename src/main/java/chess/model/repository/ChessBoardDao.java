@@ -1,6 +1,5 @@
 package chess.model.repository;
 
-import static chess.model.repository.template.JdbcTemplate.getPssFromParams;
 import static chess.model.repository.template.JdbcTemplate.makeQuery;
 
 import chess.model.domain.board.CastlingSetting;
@@ -40,16 +39,12 @@ public class ChessBoardDao {
                 pstmt.setInt(1, gameId);
                 pstmt.setString(2, boardSquare.getName());
                 pstmt.setString(3, PieceFactory.getName(board.get(boardSquare)));
-                pstmt.setString(4, changeBooleanToString(castlingElements.get(boardSquare)));
+                pstmt.setString(4, JdbcTemplate.convertYN(castlingElements.get(boardSquare)));
                 pstmt.addBatch();
                 pstmt.clearParameters();
             }
         };
         jdbcTemplate.executeUpdateWhenLoop(query, pss);
-    }
-
-    private String changeBooleanToString(boolean changer) {
-        return changer ? "Y" : "N";
     }
 
     public void insertBoard(Integer gameId, Square square, Piece piece) {
@@ -205,20 +200,6 @@ public class ChessBoardDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public void deleteMyEnpassant(Integer gameId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "UPDATE CHESS_BOARD_TB",
-            "   SET EN_PASSANT_NM = NULL",
-            " WHERE GAME_ID = ?",
-            "   AND PIECE_NM = (SELECT CONCAT(TURN_NM, '_PAWN')",
-            "                     FROM CHESS_GAME_TB",
-            "                    WHERE ID = ?)"
-        );
-        PreparedStatementSetter pss = getPssFromParams(gameId, gameId);
-        jdbcTemplate.executeUpdate(query, pss);
-    }
-
     public void create(Integer gameId, Map<Square, Piece> chessBoard,
         Map<Square, Boolean> castlingElements, Map<Square, Square> enPassant) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
@@ -231,7 +212,7 @@ public class ChessBoardDao {
                 pstmt.setInt(1, gameId);
                 pstmt.setString(2, square.getName());
                 pstmt.setString(3, PieceFactory.getName(chessBoard.get(square)));
-                pstmt.setString(4, changeBooleanToString(castlingElements.get(square)));
+                pstmt.setString(4, JdbcTemplate.convertYN(castlingElements.get(square)));
                 pstmt.setObject(5, enPassant.keySet().stream()
                     .filter(key -> enPassant.containsKey(square))
                     .map(enSquare -> enPassant.get(square).getName())

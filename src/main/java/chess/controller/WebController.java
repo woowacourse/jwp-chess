@@ -59,10 +59,10 @@ public class WebController {
         @RequestParam(defaultValue = "WHITE") String whiteName,
         @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
-        Map<Team, String> userNames = makeUserNames(whiteName, blackName);
-
         model.addAttribute("gameId",
-            chessGameService.findIdBefore(Integer.valueOf(roomId), userNames));
+            chessGameService.findProceedGameIdLatest(Integer.valueOf(roomId))
+                .orElseGet(() -> chessGameService
+                    .create(Integer.valueOf(roomId), makeUserNames(whiteName, blackName))));
         return "game";
     }
 

@@ -86,7 +86,7 @@ public class ChessGameDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public Optional<Integer> findGameNumberLatest(Integer roomId) {
+    public Optional<Integer> findProceedGameIdLatest(Integer roomId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT GAME.ID",
@@ -233,7 +233,7 @@ public class ChessGameDao {
         );
         PreparedStatementSetter pss = getPssFromParams(gameTurn.getName(),
             teamScore.get(Team.BLACK),
-            teamScore.get(Team.WHITE), proceed ? "Y" : "N", gameId);
+            teamScore.get(Team.WHITE), JdbcTemplate.convertYN(proceed), gameId);
         jdbcTemplate.executeUpdate(query, pss);
     }
 

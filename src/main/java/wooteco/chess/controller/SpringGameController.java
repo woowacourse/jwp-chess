@@ -31,11 +31,10 @@ public class SpringGameController {
 
     @PostMapping("/move")
     public ResponseEntity<MoveResponseDTO> move(@RequestBody MoveRequestDTO requestDTO) throws SQLException {
-
-        MoveResponseDTO moveResponseDTO = gameService.createMoveResponseDTO(requestDTO.getRoomId());
         try {
             return ResponseEntity.status(HttpStatus.OK).body(gameService.move(requestDTO));
         } catch (IllegalArgumentException e) {
+            MoveResponseDTO moveResponseDTO = gameService.createMoveResponseDTO(requestDTO.getRoomId());
             moveResponseDTO.setErrorMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(moveResponseDTO);
         }

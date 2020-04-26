@@ -45,7 +45,8 @@ public class SpringGameService {
         roomDAO.updateRoomColorById(roomId, gameManager.getCurrentColor());
         gameDAO.removeAllPiecesById(roomId);
         gameDAO.addAllPiecesById(roomId, pieces);
-        return new MoveResponseDTO(new PiecesResponseDTO(pieces).getPieces(), currentColor, gameManager.isKingDead());
+        return new MoveResponseDTO(new PiecesResponseDTO(pieces).getPieces(), roomDAO.findRoomColorById(roomId),
+                gameManager.isKingDead());
     }
 
     public double getScore(int roomId, Color color) throws SQLException {
@@ -60,14 +61,14 @@ public class SpringGameService {
         return new PiecesResponseDTO(pieces);
     }
 
-    public boolean isKingDead(final int roomId) throws SQLException {
+    private boolean isKingDead(final int roomId) throws SQLException {
         Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
-        GameManager gameManager = new GameManager(pieces, roomDAO.findRoomColorById(roomId));
-        return gameManager.isKingDead();
+        Color currentColor = roomDAO.findRoomColorById(roomId);
+        return pieces.isKingDead(currentColor);
     }
 
-    public String getCurrentColor(final int roomId) throws SQLException {
-        return roomDAO.findRoomColorById(roomId).name();
+    private Color getCurrentColor(final int roomId) throws SQLException {
+        return roomDAO.findRoomColorById(roomId);
     }
 
     public List<String> getMovablePositions(final int roomId, final String sourcePosition) throws SQLException {
@@ -79,6 +80,6 @@ public class SpringGameService {
 
     public MoveResponseDTO createMoveResponseDTO(final int roomId) throws SQLException {
         return new MoveResponseDTO(getPiecesResponseDTO(roomId).getPieces(),
-                Color.valueOf(getCurrentColor(roomId)), isKingDead(roomId));
+                getCurrentColor(roomId), isKingDead(roomId));
     }
 }

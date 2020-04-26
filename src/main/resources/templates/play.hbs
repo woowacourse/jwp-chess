@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>체스 게임</title>
     <link rel="stylesheet" href="/static/css/play.css" type="text/css">
@@ -9,203 +10,206 @@
 <body>
 <div class="entire_div">
     <div class="wrapper">
-        <div class="wooteco.chess-title">
+        <div class="wooteco chess-title">
             <h1 class="board-title">우아한 테크코스 체스게임</h1>
-            <div class="wooteco.chess-info">이곳에 점수가 표기됩니다.</div>
+            <h2 id="id" style="display:none">{{id}}</h2>
+            <div class="wooteco chess-info">이곳에 점수가 표기됩니다.</div>
             <div class="turn-info">이곳에 차례가 표기됩니다.</div>
         </div>
-        <div class="wooteco.chess-board">
-            <div class="wooteco.chess-file">
-                <div class="wooteco.chess-symbol">A</div>
-                <div class="wooteco.chess-symbol">B</div>
-                <div class="wooteco.chess-symbol">C</div>
-                <div class="wooteco.chess-symbol">D</div>
-                <div class="wooteco.chess-symbol">E</div>
-                <div class="wooteco.chess-symbol">F</div>
-                <div class="wooteco.chess-symbol">G</div>
-                <div class="wooteco.chess-symbol">H</div>
+        <div class="wooteco chess-board">
+            <div class="wooteco chess-file">
+                <div class="wooteco chess-symbol">A</div>
+                <div class="wooteco chess-symbol">B</div>
+                <div class="wooteco chess-symbol">C</div>
+                <div class="wooteco chess-symbol">D</div>
+                <div class="wooteco chess-symbol">E</div>
+                <div class="wooteco chess-symbol">F</div>
+                <div class="wooteco chess-symbol">G</div>
+                <div class="wooteco chess-symbol">H</div>
             </div>
-            <div class="wooteco.chess-container">
-                <div class="wooteco.chess-rank">
-                    <div class="wooteco.chess-symbol">1</div>
-                    <div class="wooteco.chess-symbol">2</div>
-                    <div class="wooteco.chess-symbol">3</div>
-                    <div class="wooteco.chess-symbol">4</div>
-                    <div class="wooteco.chess-symbol">5</div>
-                    <div class="wooteco.chess-symbol">6</div>
-                    <div class="wooteco.chess-symbol">7</div>
-                    <div class="wooteco.chess-symbol">8</div>
+            <div class="wooteco chess-container">
+                <div class="wooteco chess-rank">
+                    <div class="wooteco chess-symbol">1</div>
+                    <div class="wooteco chess-symbol">2</div>
+                    <div class="wooteco chess-symbol">3</div>
+                    <div class="wooteco chess-symbol">4</div>
+                    <div class="wooteco chess-symbol">5</div>
+                    <div class="wooteco chess-symbol">6</div>
+                    <div class="wooteco chess-symbol">7</div>
+                    <div class="wooteco chess-symbol">8</div>
                 </div>
-                <div class="wooteco.chess-map">
-                    <div class="wooteco.chess-row">
-                        <div class="wooteco.chess-col" data-x="0" data-y="7">
+                <div class="wooteco chess-map">
+                    <div class="wooteco chess-row">
+                        <div class="wooteco chess-col" data-x="0" data-y="7">
                         </div>
-                        <div class="wooteco.chess-col" data-x="1" data-y="7">
+                        <div class="wooteco chess-col" data-x="1" data-y="7">
                         </div>
-                        <div class="wooteco.chess-col" data-x="2" data-y="7">
+                        <div class="wooteco chess-col" data-x="2" data-y="7">
                         </div>
-                        <div class="wooteco.chess-col" data-x="3" data-y="7">
+                        <div class="wooteco chess-col" data-x="3" data-y="7">
                         </div>
-                        <div class="wooteco.chess-col" data-x="4" data-y="7">
+                        <div class="wooteco chess-col" data-x="4" data-y="7">
                         </div>
-                        <div class="wooteco.chess-col" data-x="5" data-y="7">
+                        <div class="wooteco chess-col" data-x="5" data-y="7">
                         </div>
-                        <div class="wooteco.chess-col" data-x="6" data-y="7">
+                        <div class="wooteco chess-col" data-x="6" data-y="7">
                         </div>
-                        <div class="wooteco.chess-col" data-x="7" data-y="7">
-                        </div>
-                    </div>
-                    <div class="wooteco.chess-row">
-                        <div class="wooteco.chess-col" data-x="0" data-y="6">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="1" data-y="6">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="2" data-y="6">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="3" data-y="6">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="4" data-y="6">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="5" data-y="6">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="6" data-y="6">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="7" data-y="6">
+                        <div class="wooteco chess-col" data-x="7" data-y="7">
                         </div>
                     </div>
-                    <div class="wooteco.chess-row">
-                        <div class="wooteco.chess-col" data-x="0" data-y="5">
+                    <div class="wooteco chess-row">
+                        <div class="wooteco chess-col" data-x="0" data-y="6">
                         </div>
-                        <div class="wooteco.chess-col" data-x="1" data-y="5">
+                        <div class="wooteco chess-col" data-x="1" data-y="6">
                         </div>
-                        <div class="wooteco.chess-col" data-x="2" data-y="5">
+                        <div class="wooteco chess-col" data-x="2" data-y="6">
                         </div>
-                        <div class="wooteco.chess-col" data-x="3" data-y="5">
+                        <div class="wooteco chess-col" data-x="3" data-y="6">
                         </div>
-                        <div class="wooteco.chess-col" data-x="4" data-y="5">
+                        <div class="wooteco chess-col" data-x="4" data-y="6">
                         </div>
-                        <div class="wooteco.chess-col" data-x="5" data-y="5">
+                        <div class="wooteco chess-col" data-x="5" data-y="6">
                         </div>
-                        <div class="wooteco.chess-col" data-x="6" data-y="5">
+                        <div class="wooteco chess-col" data-x="6" data-y="6">
                         </div>
-                        <div class="wooteco.chess-col" data-x="7" data-y="5">
-                        </div>
-                    </div>
-                    <div class="wooteco.chess-row">
-                        <div class="wooteco.chess-col" data-x="0" data-y="4">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="1" data-y="4">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="2" data-y="4">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="3" data-y="4">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="4" data-y="4">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="5" data-y="4">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="6" data-y="4">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="7" data-y="4">
+                        <div class="wooteco chess-col" data-x="7" data-y="6">
                         </div>
                     </div>
-                    <div class="wooteco.chess-row">
-                        <div class="wooteco.chess-col" data-x="0" data-y="3">
+                    <div class="wooteco chess-row">
+                        <div class="wooteco chess-col" data-x="0" data-y="5">
                         </div>
-                        <div class="wooteco.chess-col" data-x="1" data-y="3">
+                        <div class="wooteco chess-col" data-x="1" data-y="5">
                         </div>
-                        <div class="wooteco.chess-col" data-x="2" data-y="3">
+                        <div class="wooteco chess-col" data-x="2" data-y="5">
                         </div>
-                        <div class="wooteco.chess-col" data-x="3" data-y="3">
+                        <div class="wooteco chess-col" data-x="3" data-y="5">
                         </div>
-                        <div class="wooteco.chess-col" data-x="4" data-y="3">
+                        <div class="wooteco chess-col" data-x="4" data-y="5">
                         </div>
-                        <div class="wooteco.chess-col" data-x="5" data-y="3">
+                        <div class="wooteco chess-col" data-x="5" data-y="5">
                         </div>
-                        <div class="wooteco.chess-col" data-x="6" data-y="3">
+                        <div class="wooteco chess-col" data-x="6" data-y="5">
                         </div>
-                        <div class="wooteco.chess-col" data-x="7" data-y="3">
-                        </div>
-                    </div>
-                    <div class="wooteco.chess-row">
-                        <div class="wooteco.chess-col" data-x="0" data-y="2">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="1" data-y="2">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="2" data-y="2">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="3" data-y="2">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="4" data-y="2">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="5" data-y="2">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="6" data-y="2">
-                        </div>
-                        <div class="wooteco.chess-col" data-x="7" data-y="2">
+                        <div class="wooteco chess-col" data-x="7" data-y="5">
                         </div>
                     </div>
-                    <div class="wooteco.chess-row">
-                        <div class="wooteco.chess-col" data-x="0" data-y="1">
+                    <div class="wooteco chess-row">
+                        <div class="wooteco chess-col" data-x="0" data-y="4">
                         </div>
-                        <div class="wooteco.chess-col" data-x="1" data-y="1">
+                        <div class="wooteco chess-col" data-x="1" data-y="4">
                         </div>
-                        <div class="wooteco.chess-col" data-x="2" data-y="1">
+                        <div class="wooteco chess-col" data-x="2" data-y="4">
                         </div>
-                        <div class="wooteco.chess-col" data-x="3" data-y="1">
+                        <div class="wooteco chess-col" data-x="3" data-y="4">
                         </div>
-                        <div class="wooteco.chess-col" data-x="4" data-y="1">
+                        <div class="wooteco chess-col" data-x="4" data-y="4">
                         </div>
-                        <div class="wooteco.chess-col" data-x="5" data-y="1">
+                        <div class="wooteco chess-col" data-x="5" data-y="4">
                         </div>
-                        <div class="wooteco.chess-col" data-x="6" data-y="1">
+                        <div class="wooteco chess-col" data-x="6" data-y="4">
                         </div>
-                        <div class="wooteco.chess-col" data-x="7" data-y="1">
+                        <div class="wooteco chess-col" data-x="7" data-y="4">
                         </div>
                     </div>
-                    <div class="wooteco.chess-row">
-                        <div class="wooteco.chess-col" data-x="0" data-y="0">
+                    <div class="wooteco chess-row">
+                        <div class="wooteco chess-col" data-x="0" data-y="3">
                         </div>
-                        <div class="wooteco.chess-col" data-x="1" data-y="0">
+                        <div class="wooteco chess-col" data-x="1" data-y="3">
                         </div>
-                        <div class="wooteco.chess-col" data-x="2" data-y="0">
+                        <div class="wooteco chess-col" data-x="2" data-y="3">
                         </div>
-                        <div class="wooteco.chess-col" data-x="3" data-y="0">
+                        <div class="wooteco chess-col" data-x="3" data-y="3">
                         </div>
-                        <div class="wooteco.chess-col" data-x="4" data-y="0">
+                        <div class="wooteco chess-col" data-x="4" data-y="3">
                         </div>
-                        <div class="wooteco.chess-col" data-x="5" data-y="0">
+                        <div class="wooteco chess-col" data-x="5" data-y="3">
                         </div>
-                        <div class="wooteco.chess-col" data-x="6" data-y="0">
+                        <div class="wooteco chess-col" data-x="6" data-y="3">
                         </div>
-                        <div class="wooteco.chess-col" data-x="7" data-y="0">
+                        <div class="wooteco chess-col" data-x="7" data-y="3">
+                        </div>
+                    </div>
+                    <div class="wooteco chess-row">
+                        <div class="wooteco chess-col" data-x="0" data-y="2">
+                        </div>
+                        <div class="wooteco chess-col" data-x="1" data-y="2">
+                        </div>
+                        <div class="wooteco chess-col" data-x="2" data-y="2">
+                        </div>
+                        <div class="wooteco chess-col" data-x="3" data-y="2">
+                        </div>
+                        <div class="wooteco chess-col" data-x="4" data-y="2">
+                        </div>
+                        <div class="wooteco chess-col" data-x="5" data-y="2">
+                        </div>
+                        <div class="wooteco chess-col" data-x="6" data-y="2">
+                        </div>
+                        <div class="wooteco chess-col" data-x="7" data-y="2">
+                        </div>
+                    </div>
+                    <div class="wooteco chess-row">
+                        <div class="wooteco chess-col" data-x="0" data-y="1">
+                        </div>
+                        <div class="wooteco chess-col" data-x="1" data-y="1">
+                        </div>
+                        <div class="wooteco chess-col" data-x="2" data-y="1">
+                        </div>
+                        <div class="wooteco chess-col" data-x="3" data-y="1">
+                        </div>
+                        <div class="wooteco chess-col" data-x="4" data-y="1">
+                        </div>
+                        <div class="wooteco chess-col" data-x="5" data-y="1">
+                        </div>
+                        <div class="wooteco chess-col" data-x="6" data-y="1">
+                        </div>
+                        <div class="wooteco chess-col" data-x="7" data-y="1">
+                        </div>
+                    </div>
+                    <div class="wooteco chess-row">
+                        <div class="wooteco chess-col" data-x="0" data-y="0">
+                        </div>
+                        <div class="wooteco chess-col" data-x="1" data-y="0">
+                        </div>
+                        <div class="wooteco chess-col" data-x="2" data-y="0">
+                        </div>
+                        <div class="wooteco chess-col" data-x="3" data-y="0">
+                        </div>
+                        <div class="wooteco chess-col" data-x="4" data-y="0">
+                        </div>
+                        <div class="wooteco chess-col" data-x="5" data-y="0">
+                        </div>
+                        <div class="wooteco chess-col" data-x="6" data-y="0">
+                        </div>
+                        <div class="wooteco chess-col" data-x="7" data-y="0">
                         </div>
                     </div>
                 </div>
-                <div class="wooteco.chess-rank">
-                    <div class="wooteco.chess-symbol">1</div>
-                    <div class="wooteco.chess-symbol">2</div>
-                    <div class="wooteco.chess-symbol">3</div>
-                    <div class="wooteco.chess-symbol">4</div>
-                    <div class="wooteco.chess-symbol">5</div>
-                    <div class="wooteco.chess-symbol">6</div>
-                    <div class="wooteco.chess-symbol">7</div>
-                    <div class="wooteco.chess-symbol">8</div>
+                <div class="wooteco chess-rank">
+                    <div class="wooteco chess-symbol">1</div>
+                    <div class="wooteco chess-symbol">2</div>
+                    <div class="wooteco chess-symbol">3</div>
+                    <div class="wooteco chess-symbol">4</div>
+                    <div class="wooteco chess-symbol">5</div>
+                    <div class="wooteco chess-symbol">6</div>
+                    <div class="wooteco chess-symbol">7</div>
+                    <div class="wooteco chess-symbol">8</div>
                 </div>
             </div>
-            <div class="wooteco.chess-file">
-                <div class="wooteco.chess-symbol">A</div>
-                <div class="wooteco.chess-symbol">B</div>
-                <div class="wooteco.chess-symbol">C</div>
-                <div class="wooteco.chess-symbol">D</div>
-                <div class="wooteco.chess-symbol">E</div>
-                <div class="wooteco.chess-symbol">F</div>
-                <div class="wooteco.chess-symbol">G</div>
-                <div class="wooteco.chess-symbol">H</div>
+            <div class="wooteco chess-file">
+                <div class="wooteco chess-symbol">A</div>
+                <div class="wooteco chess-symbol">B</div>
+                <div class="wooteco chess-symbol">C</div>
+                <div class="wooteco chess-symbol">D</div>
+                <div class="wooteco chess-symbol">E</div>
+                <div class="wooteco chess-symbol">F</div>
+                <div class="wooteco chess-symbol">G</div>
+                <div class="wooteco chess-symbol">H</div>
             </div>
         </div>
     </div>
 </div>
-<script src="/static/js/play.js"></script>
+
+<script src="/static/js/play.js">
+</script>
 </body>
 </html>

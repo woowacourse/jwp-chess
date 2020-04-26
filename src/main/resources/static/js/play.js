@@ -1,10 +1,10 @@
-const templateQueen = color => `<div class="wooteco.chess-piece queen ${color}" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
-const templateKing = color => `<div class="wooteco.chess-piece king ${color}" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
-const templateBishop = color => `<div class="wooteco.chess-piece bishop ${color}" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
-const templateKnight = color => `<div class="wooteco.chess-piece knight ${color}" draggable="true" ondrag="onDrag())" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
-const templateRook = color => `<div class="wooteco.chess-piece rook ${color}" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
-const templatePawn = color => `<div class="wooteco.chess-piece pawn ${color}" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
-const templateBlank = () => `<div class="wooteco.chess-piece" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
+const templateQueen = color => `<div class="wooteco chess-piece queen ${color}" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
+const templateKing = color => `<div class="wooteco chess-piece king ${color}" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
+const templateBishop = color => `<div class="wooteco chess-piece bishop ${color}" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
+const templateKnight = color => `<div class="wooteco chess-piece knight ${color}" draggable="true" ondrag="onDrag())" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
+const templateRook = color => `<div class="wooteco chess-piece rook ${color}" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
+const templatePawn = color => `<div class="wooteco chess-piece pawn ${color}" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
+const templateBlank = () => `<div class="wooteco chess-piece" draggable="true" ondrag="onDrag(event)" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`
 
 const createTemplate = (team, symbol) => {
     console.log(team, symbol);
@@ -44,18 +44,14 @@ const createTemplate = (team, symbol) => {
 }
 const findChessCell = (x, y) => document.querySelector(`[data-x="${x - 1}"][data-y="${y - 1}"]`)
 
-fetch("http://localhost:4567/loadBoard/" + {
-{
-    id
-}
-}).
-then((response) => response.json()).then((board) => {
+fetch("http://localhost:4567/loadBoard/" + document.getElementById("id").innerText).then(res => res.json()).then((board) => {
     console.dir(board);
     for (let i = 1; i < 9; i++) {
         for (let j = 1; j < 9; j++) {
             findChessCell(i, j).innerHTML = templateBlank();
         }
     }
+    console.log(board.units);
     let units = board.units;
     for (let i = 0; i < units.length; i++) {
         let position = findChessCell(units[i].x, units[i].y);
@@ -90,23 +86,13 @@ function onDrop(e) {
     let targetX = (parseInt(e.target.parentElement.dataset.x) + 1);
     let targetY = (parseInt(e.target.parentElement.dataset.y) + 1);
 
-    fetch("http://localhost:4567/move/" + {
-    {
-        id
-    }
-},
-    {
-        method: 'POST', body
-    :
-        JSON.stringify({
+    fetch("http://localhost:4567/move/" + document.getElementById("id").innerText ,{
+        method: 'POST', body:JSON.stringify({
             sourceX: e.dataTransfer.getData('x'),
             sourceY: e.dataTransfer.getData('y'),
             targetX: (parseInt(e.target.parentElement.dataset.x) + 1) + "",
             targetY: (parseInt(e.target.parentElement.dataset.y) + 1) + "",
-        })
-    }
-).
-    then(function (response) {
+        })}).then(function (response) {
         if (response.ok) {
             findChessCell(targetX, targetY).innerHTML = findChessCell(sourceX, sourceY).innerHTML;
             findChessCell(sourceX, sourceY).innerHTML = templateBlank();

@@ -16,8 +16,8 @@ class FakeMovingPositionDaoTest {
     @CsvSource(value = {"1,a2,a4", "2,a7,a6", "3,a4,a5", "4,b7,b5"})
     void selectAll_normal_test(int iter, String start, String end) {
         FakeHistoryDao fakeHistoryDao = new FakeHistoryDao();
-        assertThat(fakeHistoryDao.selectAll().get(iter).getStart()).isEqualTo(start);
-        assertThat(fakeHistoryDao.selectAll().get(iter).getEnd()).isEqualTo(end);
+        assertThat(fakeHistoryDao.selectAll().get(iter - 1).getStart()).isEqualTo(start);
+        assertThat(fakeHistoryDao.selectAll().get(iter - 1).getEnd()).isEqualTo(end);
     }
 
     @DisplayName("clear 동작 확인")
@@ -34,7 +34,7 @@ class FakeMovingPositionDaoTest {
     void insert_normal_test(int iter, String start, String end) {
         FakeHistoryDao fakeHistoryDao = new FakeHistoryDao();
         fakeHistoryDao.insert("b2", "b4");
-        assertThat(fakeHistoryDao.selectAll().get(iter).getStart()).isEqualTo(start);
-        assertThat(fakeHistoryDao.selectAll().get(iter).getEnd()).isEqualTo(end);
+        assertThat(fakeHistoryDao.selectAll().get(iter - 1).getStart()).isEqualTo(start);
+        assertThat(fakeHistoryDao.selectAll().get(iter - 1).getEnd()).isEqualTo(end);
     }
 }

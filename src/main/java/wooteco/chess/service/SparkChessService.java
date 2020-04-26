@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import wooteco.chess.dao.DatabaseHistoryDao;
 import wooteco.chess.dao.HistoryDao;
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.NormalStatus;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class SparkChessService {
     public void clearHistory() throws SQLException {
-        HistoryDao historyDao = new HistoryDao();
+        HistoryDao historyDao = new DatabaseHistoryDao();
 
         historyDao.clear();
     }
@@ -33,7 +34,7 @@ public class SparkChessService {
     }
 
     private List<MovingPosition> selectAllHistory() throws SQLException {
-        HistoryDao historyDao = new HistoryDao();
+        HistoryDao historyDao = new DatabaseHistoryDao();
         return historyDao.selectAll();
     }
 
@@ -59,7 +60,7 @@ public class SparkChessService {
     }
 
     private void insertHistory(MovingPosition movingPosition) throws SQLException {
-        HistoryDao historyDao = new HistoryDao();
+        HistoryDao historyDao = new DatabaseHistoryDao();
         historyDao.insert(movingPosition);
     }
 

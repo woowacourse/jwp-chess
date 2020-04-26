@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.state.Ready;
 
-@Component("InMemoryChessGameDao")
+@Component
 public class InMemoryChessGameDao implements ChessGameDao {
 	private Map<Integer, ChessGame> memory;
 

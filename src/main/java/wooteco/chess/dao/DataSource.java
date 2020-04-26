@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Component;
 
-@Component("CustomDataSource")
+@Component
 public class DataSource {
 	private final JdbcConfiguration jdbcConfiguration;
 

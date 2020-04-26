@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import wooteco.chess.domain.game.ChessGame;
@@ -13,19 +12,17 @@ import wooteco.chess.domain.game.state.State;
 import wooteco.chess.domain.game.state.StateFactory;
 import wooteco.chess.dto.BoardDto;
 
-@Component("JdbcChessGameDao")
+@Component
 public class JdbcChessGameDao implements ChessGameDao {
 	private final JdbcTemplate jdbcTemplate;
 
-	public JdbcChessGameDao(@Qualifier("CustomJdbcTemplate") JdbcTemplate jdbcTemplate) {
+	public JdbcChessGameDao(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	@Override
 	public int create() throws SQLException {
-		PreparedStatementSetter setter = preparedStatement -> {
-			preparedStatement.setString(1, "READY");
-		};
+		PreparedStatementSetter setter = preparedStatement -> preparedStatement.setString(1, "READY");
 
 		RowMapper<Integer> mapper = resultSet -> {
 			if (resultSet.next()) {
@@ -52,9 +49,7 @@ public class JdbcChessGameDao implements ChessGameDao {
 
 	@Override
 	public Optional<ChessGame> findById(int id) throws SQLException {
-		PreparedStatementSetter setter = preparedStatement -> {
-			preparedStatement.setInt(1, id);
-		};
+		PreparedStatementSetter setter = preparedStatement -> preparedStatement.setInt(1, id);
 
 		RowMapper<Optional<ChessGame>> mapper = resultSet -> {
 			if (resultSet.next()) {
@@ -82,9 +77,7 @@ public class JdbcChessGameDao implements ChessGameDao {
 
 	@Override
 	public void deleteById(int id) throws SQLException {
-		PreparedStatementSetter setter = preparedStatement -> {
-			preparedStatement.setInt(1, id);
-		};
+		PreparedStatementSetter setter = preparedStatement -> preparedStatement.setInt(1, id);
 
 		jdbcTemplate.executeUpdate("DELETE FROM chess_game WHERE id = ?", setter);
 	}

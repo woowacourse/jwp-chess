@@ -6,14 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-@Component("CustomJdbcTemplate")
+@Component
 public class JdbcTemplate {
 	private final DataSource dataSource;
 
-	public JdbcTemplate(@Qualifier("CustomDataSource") DataSource dataSource) {
+	public JdbcTemplate(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 

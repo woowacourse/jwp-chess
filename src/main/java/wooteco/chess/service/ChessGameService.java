@@ -1,6 +1,5 @@
 package wooteco.chess.service;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import wooteco.chess.dao.ChessGameDao;
@@ -20,7 +19,7 @@ import wooteco.chess.service.exception.InvalidGameException;
 public class ChessGameService {
 	private final ChessGameDao chessGameDao;
 
-	public ChessGameService(@Qualifier("JdbcChessGameDao") ChessGameDao chessGameDao) {
+	public ChessGameService(ChessGameDao chessGameDao) {
 		this.chessGameDao = chessGameDao;
 	}
 

@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import wooteco.chess.dao.util.BoardMapper;
+import wooteco.chess.dao.util.ConnectionLoader;
 import wooteco.chess.domain.Board;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.function.Consumer;
 
-import wooteco.chess.ChessGame;
+import wooteco.chess.domain.ChessGame;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.view.InputView;
 import wooteco.chess.view.OutputView;

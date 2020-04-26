@@ -1,4 +1,4 @@
-package wooteco.chess.dao;
+package wooteco.chess.dao.util;
 
 import java.util.List;
 import java.util.Map;

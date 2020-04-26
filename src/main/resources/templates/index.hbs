@@ -1,9 +1,20 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>모두의 체스</title>
+    <meta charset="UTF-8">
+    <title>우아한 체스게임</title>
+    <link rel="stylesheet" href="/static/css/index.css" type="text/css">
 </head>
 <body>
-<h1>Hello World</h1>
+<div class="entire_div">
+    <button class="new_game" onclick="location.href='/createNewGame.hbs'">시작</button>
+    <div class="on_games">
+        <form action="/games" method="get">
+            <input type="button" value="기존게임보기!" onclick="on_games()">
+            <div class=games></div>
+        </form>
+    </div>
+</div>
+<script src="/static/js/chess.js"></script>
 </body>
 </html>

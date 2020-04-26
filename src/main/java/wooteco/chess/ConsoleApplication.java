@@ -1,6 +1,7 @@
 package wooteco.chess;
 
 import wooteco.chess.controller.ConsoleController;
+import wooteco.chess.domain.ChessGame;
 import wooteco.chess.domain.state.Ready;
 
 public class ConsoleApplication {

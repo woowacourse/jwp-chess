@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import wooteco.chess.dao.util.ConnectionLoader;
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.Turn;
 

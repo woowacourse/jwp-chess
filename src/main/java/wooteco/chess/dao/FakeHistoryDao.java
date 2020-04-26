@@ -32,8 +32,4 @@ public class FakeHistoryDao implements HistoryDao {
     public void insert(MovingPosition movingPosition) {
         fakeHistoryDao.put(fakeHistoryDao.size() + 1, movingPosition);
     }
-
-    public void insert(String start, String end) {
-        insert(new MovingPosition(start, end));
-    }
 }

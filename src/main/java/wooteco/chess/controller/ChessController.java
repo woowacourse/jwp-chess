@@ -35,7 +35,7 @@ public class ChessController {
     }
 
     @PostMapping("/load-game")
-    public ModelAndView loadGame(ServletRequest request) throws SQLException {
+    public ModelAndView loadGame() throws SQLException {
         ModelAndView view = new ModelAndView();
         view.setViewName("index");
         view.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));

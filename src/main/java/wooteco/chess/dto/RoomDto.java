@@ -1,6 +1,9 @@
 package wooteco.chess.dto;
 
+import org.springframework.data.annotation.Id;
+
 public class RoomDto {
+	@Id
 	private final int id;
 	private final String name;
 	private final String player1Name;

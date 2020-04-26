@@ -29,18 +29,17 @@ public class RoomController {
 
 	@GetMapping("/")
 	public String index() {
-		return "index.hbs";
+		return "index";
 	}
 
-	@GetMapping("/startGame/{id}")
-	public String start(@PathVariable int id, Model model) {
-		model.addAttribute("id", id);
-		return "play.hbs";
+	@GetMapping("/createNewGame")
+	public String createNewGame() {
+		return "createNewGame";
 	}
 
 	@PostMapping("/createNewGame")
 	@ResponseBody
-	public ResponseEntity createNewGame(@RequestBody PlayersDto playersDto) {
+	public ResponseEntity<Object> createNewGame(@RequestBody PlayersDto playersDto) {
 		try {
 			int roomId = createPlayers(playersDto);
 			boardService.create(roomId);
@@ -50,6 +49,12 @@ public class RoomController {
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(e.getMessage());
 		}
+	}
+
+	@GetMapping("/startGame/{id}")
+	public String start(@PathVariable int id, Model model) {
+		model.addAttribute("id", id);
+		return "play";
 	}
 
 	private int createPlayers(PlayersDto playersDto) throws SQLException {

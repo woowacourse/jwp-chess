@@ -10,7 +10,7 @@ html, body {
 }
 
 .entire_div {
-    background-image: url("background.jpg");
+    background-image: url("/static/img/background.jpg");
     height: 100%;
     display: flex;
 }
@@ -20,7 +20,7 @@ html, body {
 }
 
 input {
-    background-image: url("background.jpg");
+    background-image: url("/static/img/background.jpg");
     font-size: 50px;
     font-family: ".SF NS Mono";
 }

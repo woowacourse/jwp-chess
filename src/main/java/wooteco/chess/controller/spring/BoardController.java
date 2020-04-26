@@ -43,5 +43,4 @@ public class BoardController {
 			return ResponseEntity.status(406).body(e.getMessage());
 		}
 	}
-
 }

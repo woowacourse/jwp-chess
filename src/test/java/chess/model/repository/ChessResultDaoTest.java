@@ -93,7 +93,7 @@ class ChessResultDaoTest {
 
     @Test
     void getUsers() {
-        assertThat(CHESS_RESULT_DAO.findUsers().contains(FIRST_NAME)).isTrue();
-        assertThat(CHESS_RESULT_DAO.findUsers().contains(SECOND_NAME)).isTrue();
+        assertThat(CHESS_RESULT_DAO.findUserNames().contains(FIRST_NAME)).isTrue();
+        assertThat(CHESS_RESULT_DAO.findUserNames().contains(SECOND_NAME)).isTrue();
     }
 }

@@ -12,11 +12,11 @@ public class RoomService {
     private static final RoomDao ROOM_DAO = RoomDao.getInstance();
 
     public RoomsDto getUsedRooms() {
-        return new RoomsDto(ROOM_DAO.selectUsedOnly());
+        return new RoomsDto(ROOM_DAO.findUsed());
     }
 
     public void addRoom(CreateRoomDto createRoomDto) {
-        ROOM_DAO.insert(createRoomDto.getRoomName(), createRoomDto.getRoomPassword());
+        ROOM_DAO.create(createRoomDto.getRoomName(), createRoomDto.getRoomPassword());
     }
 
     public void deleteRoom(DeleteRoomDto deleteRoomDto) {

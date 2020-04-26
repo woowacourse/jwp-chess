@@ -114,7 +114,7 @@ public class ChessGame {
 
     public Piece makePieceToPromotion(Type typeToChange) {
         if (typeToChange.canPromote()) {
-            return PieceFactory.of(turn, typeToChange);
+            return PieceFactory.getPiece(turn, typeToChange);
         }
         throw new IllegalArgumentException(typeToChange + "은 프로모션 할 수 있는 타입이 아닙니다.");
     }

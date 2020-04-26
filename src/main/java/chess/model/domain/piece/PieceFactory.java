@@ -1,41 +1,39 @@
 package chess.model.domain.piece;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
-public class PieceFactory {
+public enum PieceFactory {
 
-    private static final Map<String, Piece> CACHE;
+    BLACK_PAWN(Pawn.getInstance(Team.BLACK)),
+    WHITE_PAWN(Pawn.getInstance(Team.WHITE)),
+    BLACK_ROOK(Rook.getInstance(Team.BLACK)),
+    WHITE_ROOK(Rook.getInstance(Team.WHITE)),
+    BLACK_KNIGHT(Knight.getInstance(Team.BLACK)),
+    WHITE_KNIGHT(Knight.getInstance(Team.WHITE)),
+    BLACK_BISHOP(Bishop.getInstance(Team.BLACK)),
+    WHITE_BISHOP(Bishop.getInstance(Team.WHITE)),
+    BLACK_QUEEN(Queen.getInstance(Team.BLACK)),
+    WHITE_QUEEN(Queen.getInstance(Team.WHITE)),
+    BLACK_KING(King.getInstance(Team.BLACK)),
+    WHITE_KING(King.getInstance(Team.WHITE));
 
-    static {
-        Map<String, Piece> cache = new HashMap<>();
-        cache.put("BLACK_PAWN", Pawn.getInstance(Team.BLACK));
-        cache.put("WHITE_PAWN", Pawn.getInstance(Team.WHITE));
-        cache.put("BLACK_ROOK", Rook.getInstance(Team.BLACK));
-        cache.put("WHITE_ROOK", Rook.getInstance(Team.WHITE));
-        cache.put("BLACK_KNIGHT", Knight.getInstance(Team.BLACK));
-        cache.put("WHITE_KNIGHT", Knight.getInstance(Team.WHITE));
-        cache.put("BLACK_BISHOP", Bishop.getInstance(Team.BLACK));
-        cache.put("WHITE_BISHOP", Bishop.getInstance(Team.WHITE));
-        cache.put("BLACK_QUEEN", Queen.getInstance(Team.BLACK));
-        cache.put("WHITE_QUEEN", Queen.getInstance(Team.WHITE));
-        cache.put("BLACK_KING", King.getInstance(Team.BLACK));
-        cache.put("WHITE_KING", King.getInstance(Team.WHITE));
+    private final Piece piece;
 
-        CACHE = Collections.unmodifiableMap(cache);
+    PieceFactory(Piece piece) {
+        this.piece = piece;
     }
 
-    public static Piece of(String pieceName) {
-        return CACHE.keySet().stream()
-            .filter(name -> name.equalsIgnoreCase(pieceName))
-            .map(CACHE::get)
+    public static Piece getPiece(String pieceName) {
+        return Arrays.stream(PieceFactory.values())
+            .filter(PieceFactory -> PieceFactory.name().equalsIgnoreCase(pieceName))
+            .map(pieceFactory -> pieceFactory.piece)
             .findFirst()
             .orElseThrow(IllegalArgumentException::new);
     }
 
-    public static Piece of(Team team, Type type) {
-        return CACHE.values().stream()
+    public static Piece getPiece(Team team, Type type) {
+        return Arrays.stream(PieceFactory.values())
+            .map(pieceFactory -> pieceFactory.piece)
             .filter(piece -> piece.isSameTeam(team))
             .filter(piece -> piece.isSameType(type))
             .findFirst()
@@ -43,9 +41,14 @@ public class PieceFactory {
     }
 
     public static String getName(Piece piece) {
-        return CACHE.keySet().stream()
-            .filter(key -> CACHE.get(key) == piece)
+        return Arrays.stream(PieceFactory.values())
+            .filter(pieceFactory -> pieceFactory.piece.equals(piece))
+            .map(Enum::name)
             .findFirst()
             .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public Piece getPiece() {
+        return piece;
     }
 }

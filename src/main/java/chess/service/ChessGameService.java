@@ -49,13 +49,14 @@ public class ChessGameService {
         Integer gameId = CHESS_GAME_DAO
             .create(roomId, chessGame.getTurn(), userNames, chessGame.deriveTeamScore());
         CHESS_BOARD_DAO.create(gameId, chessGame.getChessBoard(),
-            makeCastlingElements(chessGame.getChessBoard(), chessGame.getCastlingElements()));
+            makeCastlingElements(chessGame.getChessBoard(), chessGame.getCastlingElements()),
+            makeEnPassants(chessGame));
         return gameId;
     }
 
     public void saveNewUserNames(Map<Team, String> userNames) {
         Set<String> noExistingUserName = userNames.values().stream()
-            .filter(userName -> !CHESS_RESULT_DAO.findUsers().contains(userName))
+            .filter(userName -> !CHESS_RESULT_DAO.findUserNames().contains(userName))
             .collect(Collectors.toSet());
         if (!noExistingUserName.isEmpty()) {
             CHESS_RESULT_DAO.createUserNames(noExistingUserName);
@@ -78,7 +79,7 @@ public class ChessGameService {
     }
 
     private GameInfoDto getGameInfo(Integer gameId) {
-        return CHESS_GAME_DAO.findGameInfo(gameId)
+        return CHESS_GAME_DAO.findInfo(gameId)
             .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
     }
 
@@ -102,9 +103,13 @@ public class ChessGameService {
             CHESS_BOARD_DAO.delete(gameId);
             CHESS_BOARD_DAO.create(gameId, chessGame.getChessBoard(),
                 makeCastlingElements(chessGame.getChessBoard(), chessGame.getCastlingElements()),
-                chessGame.getEnPassants().entrySet().stream()
-                    .collect(Collectors.toMap(Entry::getValue, Entry::getKey)));
+                makeEnPassants(chessGame));
         }
+    }
+
+    private Map<Square, Square> makeEnPassants(ChessGame chessGame) {
+        return chessGame.getEnPassants().entrySet().stream()
+            .collect(Collectors.toMap(Entry::getValue, Entry::getKey));
     }
 
     public void closeGamesOf(Integer roomId) {

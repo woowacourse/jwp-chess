@@ -1,24 +1,30 @@
 package wooteco.chess.service;
 
+import chess.domain.GameResult;
+import chess.domain.board.ChessBoard;
+import chess.domain.board.Position;
+import chess.domain.command.MoveCommand;
+import chess.domain.piece.Piece;
+import chess.dto.BoardDto;
+import chess.dto.CellManager;
+import chess.dto.TurnDto;
+import org.springframework.stereotype.Service;
+import wooteco.chess.repository.BoardRepository;
+import wooteco.chess.repository.TurnRepository;
+
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
-
-import chess.dao.BoardDao;
-import chess.dao.TurnDao;
-import chess.domain.GameResult;
-import chess.domain.board.ChessBoard;
-import chess.domain.command.MoveCommand;
-import chess.dto.BoardDto;
-import chess.dto.CellManager;
-import chess.dto.TurnDto;
-
 @Service
 public class ChessGameService {
-	private BoardDao boardDAO = BoardDao.getInstance();
-	private TurnDao turnDAO = TurnDao.getInstance();
+	private BoardRepository boardRepository;
+	private TurnRepository turnRepository;
+
+	public ChessGameService(BoardRepository boardRepository, TurnRepository turnRepository) {
+		this.boardRepository = boardRepository;
+		this.turnRepository = turnRepository;
+	}
 
 	public Map<String, Object> loadBoard() throws SQLException {
 		ChessBoard chessBoard = createBoardFromDb();
@@ -27,28 +33,36 @@ public class ChessGameService {
 
 	public Map<String, Object> createNewChessGame() throws SQLException {
 		ChessBoard chessBoard = new ChessBoard();
+		Map<Position, Piece> board = chessBoard.getBoard();
 
-		turnDAO.deleteAll();
-		boardDAO.saveBoard(BoardDto.from(chessBoard));
-		turnDAO.saveTurn(TurnDto.from(chessBoard));
+		this.turnRepository.deleteAll();
+		for (Position position : board.keySet()) {
+			System.out.println(position.getName());
+			System.out.println(board.get(position).getName());
+			this.boardRepository.insert(position.getName(), board.get(position).getName());
+		}
+		this.turnRepository.update(TurnDto.from(chessBoard).getCurrentTeam());
 
 		return createModel(chessBoard);
 	}
 
 	public Map<String, Object> movePiece(String source, String target) throws SQLException {
 		ChessBoard chessBoard = createBoardFromDb();
+		Map<Position, Piece> board = chessBoard.getBoard();
 		chessBoard.move(new MoveCommand(String.format("move %s %s", source, target)));
 
-		this.boardDAO.deleteAll();
-		this.boardDAO.saveBoard(BoardDto.from(chessBoard));
-		this.turnDAO.updateTurn(TurnDto.from(chessBoard));
+		this.boardRepository.deleteAll();
+		for (Position position : board.keySet()) {
+			this.boardRepository.insert(position.getName(), board.get(position).getName());
+		}
+		this.turnRepository.update(TurnDto.from(chessBoard).getCurrentTeam());
 
 		return createModel(chessBoard);
 	}
 
 	public void endGame() throws SQLException {
-		this.boardDAO.deleteAll();
-		this.turnDAO.deleteAll();
+		this.boardRepository.deleteAll();
+		this.turnRepository.deleteAll();
 	}
 
 	public Map<String, Object> findWinner() throws SQLException {
@@ -89,8 +103,8 @@ public class ChessGameService {
 	}
 
 	private ChessBoard createBoardFromDb() throws SQLException {
-		BoardDto boardDto = boardDAO.findBoard();
-		TurnDto turnDto = turnDAO.findTurn();
+		BoardDto boardDto = this.boardRepository.findFirst();
+		TurnDto turnDto = this.turnRepository.findFirst();
 		return new ChessBoard(boardDto.createBoard(), turnDto.createTeam());
 	}
 }

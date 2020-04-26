@@ -35,8 +35,8 @@ public class WebController {
         Model model) {
         Map<Team, String> userNames = makeUserNames(whiteName, blackName);
 
-        Integer gameId = chessGameService.saveRoom(userNames, Integer.valueOf(roomId));
-        chessGameService.saveUser(userNames);
+        Integer gameId = chessGameService.saveNewGameInfo(userNames, Integer.valueOf(roomId));
+        chessGameService.saveNewUserNames(userNames);
 
         model.addAttribute("gameId", gameId);
         return "game";
@@ -62,13 +62,13 @@ public class WebController {
         Map<Team, String> userNames = makeUserNames(whiteName, blackName);
 
         model.addAttribute("gameId",
-            chessGameService.getIdBefore(Integer.valueOf(roomId), userNames));
+            chessGameService.findIdBefore(Integer.valueOf(roomId), userNames));
         return "game";
     }
 
     @PostMapping("/game/choiceGame")
     public String choiceGame(@RequestParam String gameId, Model model) {
-        model.addAttribute("roomId", chessGameService.getRoomId(Integer.valueOf(gameId)));
+        model.addAttribute("roomId", chessGameService.findRoomId(Integer.valueOf(gameId)));
         return "start";
     }
 

@@ -20,7 +20,7 @@ class ChessGameDaoTest {
     private static final Map<Team, String> USER_NAMES;
     private static final String BLACK_NAME = "BLACK";
     private static final String WHITE_NAME = "WHITE";
-    private static final TeamScore TEAM_SCORE = new ChessGame().deriveTeamScoreFrom();
+    private static final TeamScore TEAM_SCORE = new ChessGame().deriveTeamScore();
 
     static {
         Map<Team, String> userNames = new HashMap<>();
@@ -33,7 +33,7 @@ class ChessGameDaoTest {
 
     @BeforeEach
     void setup() {
-        gameId = CHESS_GAME_DAO.insert(ROOM_ID, GAME_TURN, USER_NAMES, TEAM_SCORE);
+        gameId = CHESS_GAME_DAO.create(ROOM_ID, GAME_TURN, USER_NAMES, TEAM_SCORE);
     }
 
     @AfterEach
@@ -55,7 +55,7 @@ class ChessGameDaoTest {
         assertThat(CHESS_GAME_DAO.findUserNames(gameId)).isEmpty();
         assertThat(CHESS_GAME_DAO.isProceeding(gameId).isPresent()).isFalse();
 
-        gameId = CHESS_GAME_DAO.insert(ROOM_ID, GAME_TURN, USER_NAMES, TEAM_SCORE);
+        gameId = CHESS_GAME_DAO.create(ROOM_ID, GAME_TURN, USER_NAMES, TEAM_SCORE);
         assertThat(CHESS_GAME_DAO.findCurrentTurn(gameId).get()).isEqualTo(GAME_TURN);
         assertThat(CHESS_GAME_DAO.findUserNames(gameId)).isEqualTo(USER_NAMES);
         assertThat(CHESS_GAME_DAO.isProceeding(gameId).get()).isTrue();

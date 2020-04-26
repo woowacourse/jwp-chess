@@ -27,7 +27,7 @@ public class ChessGameDao {
         return INSTANCE;
     }
 
-    public Integer insert(Integer roomId, Team gameTurn, Map<Team, String> userNames,
+    public Integer create(Integer roomId, Team gameTurn, Map<Team, String> userNames,
         TeamScore teamScore) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
@@ -231,5 +231,22 @@ public class ChessGameDao {
         PreparedStatementSetter pss = pstmt -> pstmt.setInt(1, gameId);
         ResultSetMapper<Boolean> mapper = ResultSet::next;
         return jdbcTemplate.executeQuery(query, pss, mapper);
+    }
+
+    public void update(Integer gameId, Team gameTurn, TeamScore teamScore, boolean proceed) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String query = makeQuery(
+            "UPDATE CHESS_GAME_TB",
+            "   SET TURN_NM = ?",
+            "     , BLACK_SCORE = ?",
+            "     , WHITE_SCORE = ?",
+            "     , PROCEEDING_YN = ?",
+            " WHERE ID = ?",
+            "   AND PROCEEDING_YN = 'Y'"
+        );
+        PreparedStatementSetter pss = getPssFromParams(gameTurn.getName(),
+            teamScore.get(Team.BLACK),
+            teamScore.get(Team.WHITE), proceed ? "Y" : "N", gameId);
+        jdbcTemplate.executeUpdate(query, pss);
     }
 }

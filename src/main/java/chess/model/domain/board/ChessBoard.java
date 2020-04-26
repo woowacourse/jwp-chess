@@ -65,7 +65,7 @@ public class ChessBoard {
             .count();
     }
 
-    public TeamScore deriveTeamScoreFrom() {
+    public TeamScore deriveTeamScore() {
         return new TeamScore(chessBoard.values(), countPawnSameFileByTeam());
     }
 

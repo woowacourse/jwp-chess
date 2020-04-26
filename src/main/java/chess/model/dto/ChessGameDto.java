@@ -67,7 +67,7 @@ public class ChessGameDto {
             printRankRaw(pieces, board, rank);
         }
         this.pieces = pieces;
-        this.turn = chessGame.getGameTurn().getName();
+        this.turn = chessGame.getTurn().getName();
         this.state = moveState.getMessage();
         this.blackScore = String.valueOf(teamScore.get(Team.BLACK));
         this.whiteScore = String.valueOf(teamScore.get(Team.WHITE));
@@ -79,7 +79,7 @@ public class ChessGameDto {
     }
 
     public ChessGameDto(ChessGame chessGame, Map<Team, String> names) {
-        this(chessGame, MoveState.EMPTY, chessGame.deriveTeamScoreFrom(), names);
+        this(chessGame, MoveState.EMPTY, chessGame.deriveTeamScore(), names);
     }
 
     public ChessGameDto(TeamScore teamScore, Map<Team, String> names) {

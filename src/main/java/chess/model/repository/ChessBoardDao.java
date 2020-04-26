@@ -28,7 +28,7 @@ public class ChessBoardDao {
         return INSTANCE;
     }
 
-    public void insert(Integer gameId, Map<Square, Piece> board,
+    public void create(Integer gameId, Map<Square, Piece> board,
         Map<Square, Boolean> castlingElements) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
@@ -217,5 +217,30 @@ public class ChessBoardDao {
         );
         PreparedStatementSetter pss = getPssFromParams(gameId, gameId);
         jdbcTemplate.executeUpdate(query, pss);
+    }
+
+    public void create(Integer gameId, Map<Square, Piece> chessBoard,
+        Map<Square, Boolean> castlingElements, Map<Square, Square> enPassant) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String query = makeQuery(
+            "INSERT INTO CHESS_BOARD_TB(GAME_ID, BOARDSQUARE_NM, PIECE_NM, CASTLING_ELEMENT_YN, EN_PASSANT_NM)"
+            , "VALUES (?, ?, ?, ?, ?)"
+        );
+        PreparedStatementSetter pss = pstmt -> {
+            for (Square square : chessBoard.keySet()) {
+                pstmt.setInt(1, gameId);
+                pstmt.setString(2, square.getName());
+                pstmt.setString(3, PieceFactory.getName(chessBoard.get(square)));
+                pstmt.setString(4, changeBooleanToString(castlingElements.get(square)));
+                pstmt.setObject(5, enPassant.keySet().stream()
+                    .filter(key -> enPassant.containsKey(square))
+                    .map(enSquare -> enPassant.get(square).getName())
+                    .findFirst()
+                    .orElse(null));
+                pstmt.addBatch();
+                pstmt.clearParameters();
+            }
+        };
+        jdbcTemplate.executeUpdateWhenLoop(query, pss);
     }
 }

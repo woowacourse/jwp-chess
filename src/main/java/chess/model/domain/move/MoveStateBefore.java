@@ -5,7 +5,7 @@ import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
 import util.NullChecker;
 
-public class MoveStateBefore extends AbstractMoveState {
+public class MoveStateBefore implements MoveStateStrategy {
 
     @Override
     public MoveState findMoveState(ChessGame chessGame, MoveInfo moveInfo) {
@@ -14,7 +14,7 @@ public class MoveStateBefore extends AbstractMoveState {
             return MoveState.KING_CAPTURED;
         }
         if (chessGame.isNotMovable(moveInfo)) {
-            return findMoveStateWhenNotMovable(chessGame, moveInfo);
+            return findFailMoveState(chessGame, moveInfo);
         }
         if (chessGame.canPromote()) {
             return MoveState.FAIL_MUST_PAWN_PROMOTION;
@@ -22,7 +22,7 @@ public class MoveStateBefore extends AbstractMoveState {
         return MoveState.READY;
     }
 
-    private MoveState findMoveStateWhenNotMovable(ChessGame chessGame, MoveInfo moveInfo) {
+    private MoveState findFailMoveState(ChessGame chessGame, MoveInfo moveInfo) {
         if (chessGame.isNotExistPiece(moveInfo.getSource())) {
             return MoveState.FAIL_NO_PIECE;
         }

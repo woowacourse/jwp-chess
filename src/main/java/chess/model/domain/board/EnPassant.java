@@ -5,12 +5,28 @@ import chess.model.domain.piece.Pawn;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Team;
 import chess.model.domain.state.MoveInfo;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EnPassant {
+
+    private static Set<Square> BLACK_EN_PASSANTS;
+    private static Set<Square> WHITE_EN_PASSANTS;
+
+    static {
+        Set<Square> blackEnPassants = new HashSet<>();
+        Set<Square> whiteEnPassants = new HashSet<>();
+        for (char file = 'a'; file <= 'h'; file++) {
+            blackEnPassants.add(Square.of(file + "7"));
+            whiteEnPassants.add(Square.of(file + "2"));
+        }
+        BLACK_EN_PASSANTS = Collections.unmodifiableSet(blackEnPassants);
+        WHITE_EN_PASSANTS = Collections.unmodifiableSet(whiteEnPassants);
+    }
 
     private Map<Square, Square> enPassantsToAfterSquares;
 
@@ -35,6 +51,20 @@ public class EnPassant {
                     boardSquare -> enPassantsToAfterSquares.get(boardSquare) == squareBefore)
                 .findFirst()
                 .orElseThrow(IllegalAccessError::new));
+        }
+    }
+
+    public void removeEnPassant(Team gameTurn) {
+        if (gameTurn == Team.BLACK) {
+            remove(BLACK_EN_PASSANTS);
+            return;
+        }
+        remove(WHITE_EN_PASSANTS);
+    }
+
+    private void remove(Set<Square> deleteElements) {
+        for (Square deleteElement : deleteElements) {
+            enPassantsToAfterSquares.remove(deleteElement);
         }
     }
 
@@ -90,7 +120,11 @@ public class EnPassant {
         return Math.abs(moveInfo.calculateRankDistance()) == 2;
     }
 
-    public Set<Square> getEnPassants() {
+    public Set<Square> getEnPassantsKeys() {
         return enPassantsToAfterSquares.keySet();
+    }
+
+    public Map<Square, Square> getEnPassants() {
+        return enPassantsToAfterSquares;
     }
 }

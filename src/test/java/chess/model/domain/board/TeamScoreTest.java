@@ -27,7 +27,7 @@ public class TeamScoreTest {
     @DisplayName("게임 점수 계산")
     void calculateScore() {
         ChessGame chessGame = new ChessGame();
-        TeamScore teamScore = chessGame.deriveTeamScoreFrom();
+        TeamScore teamScore = chessGame.deriveTeamScore();
         Map<Team, Double> teamScores = teamScore.getTeamScore();
         assertThat(teamScores.get(Team.BLACK)).isEqualTo(38);
         assertThat(teamScores.get(Team.WHITE)).isEqualTo(38);
@@ -36,7 +36,7 @@ public class TeamScoreTest {
         chessGame.move(new MoveInfo("d7", "d5"));
         chessGame.move(new MoveInfo("c4", "d5"));
 
-        teamScore = chessGame.deriveTeamScoreFrom();
+        teamScore = chessGame.deriveTeamScore();
         teamScores = teamScore.getTeamScore();
         assertThat(teamScores.get(Team.BLACK)).isEqualTo(37);
         assertThat(teamScores.get(Team.WHITE)).isEqualTo(37);
@@ -46,14 +46,14 @@ public class TeamScoreTest {
     @DisplayName("승자 구하기")
     void getWinnerByScore() {
         ChessGame chessGame = new ChessGame();
-        TeamScore teamScore = chessGame.deriveTeamScoreFrom();
+        TeamScore teamScore = chessGame.deriveTeamScore();
         assertThat(teamScore.getWinners().size()).isEqualTo(2);
 
         chessGame.move(new MoveInfo("b1", "c3"));
         chessGame.move(new MoveInfo("d7", "d5"));
         chessGame.move(new MoveInfo("c3", "d5"));
 
-        teamScore = chessGame.deriveTeamScoreFrom();
+        teamScore = chessGame.deriveTeamScore();
         assertThat(teamScore.getWinners().size()).isEqualTo(1);
         assertThat(teamScore.getWinners().get(0)).isEqualTo(Team.WHITE);
     }
@@ -70,7 +70,7 @@ public class TeamScoreTest {
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
             CastlingElement.createInitial(), new EnPassant());
 
-        TeamScore teamScore = chessGame.deriveTeamScoreFrom();
+        TeamScore teamScore = chessGame.deriveTeamScore();
 
         assertThat(teamScore.getWinners().contains(Team.WHITE)).isTrue();
         assertThat(teamScore.getWinners().size()).isEqualTo(1);

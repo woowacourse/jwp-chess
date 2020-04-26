@@ -21,6 +21,5 @@ public class RoomService {
 
     public void deleteRoom(DeleteRoomDto deleteRoomDto) {
         ROOM_DAO.updateUsedN(deleteRoomDto.getRoomId());
-        new ChessGameService().closeGamesOf(deleteRoomDto.getRoomId());
     }
 }

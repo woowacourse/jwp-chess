@@ -13,9 +13,9 @@ import wooteco.chess.domain.position.Position;
 public class GameDto {
 	private final List<PieceDto> units;
 	private final Turn turn;
-	private final Status status;
+	private final Status status2;
 
-	public GameDto(Map<Position, Piece> units, Turn turn, Status status) {
+	public GameDto(Map<Position, Piece> units, Turn turn, Status status2) {
 		this.units = units.values().stream()
 			.map(piece -> new PieceDto(
 				piece.getColumnValue(),
@@ -24,7 +24,7 @@ public class GameDto {
 				piece.getSymbol()
 			)).collect(Collectors.toList());
 		this.turn = turn;
-		this.status = status;
+		this.status2 = status2;
 	}
 
 	public Turn getTurn() {
@@ -35,7 +35,7 @@ public class GameDto {
 		return Collections.unmodifiableList(units);
 	}
 
-	public Status getStatus() {
-		return status;
+	public Status getStatus2() {
+		return status2;
 	}
 }

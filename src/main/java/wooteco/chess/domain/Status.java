@@ -21,11 +21,11 @@ public class Status {
 		return Team.NONE;
 	}
 
-	public double getWhiteScore() {
+	public double getWhite() {
 		return white.getScore();
 	}
 
-	public double getBlackScore() {
+	public double getBlack() {
 		return black.getScore();
 	}
 }

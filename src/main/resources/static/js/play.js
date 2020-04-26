@@ -87,16 +87,22 @@ function onDrop(e) {
     let targetY = (parseInt(e.target.parentElement.dataset.y) + 1);
 
     fetch("http://localhost:4567/move/" + document.getElementById("id").innerText ,{
-        method: 'POST', body:JSON.stringify({
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({
             sourceX: e.dataTransfer.getData('x'),
             sourceY: e.dataTransfer.getData('y'),
             targetX: (parseInt(e.target.parentElement.dataset.x) + 1) + "",
             targetY: (parseInt(e.target.parentElement.dataset.y) + 1) + "",
         })}).then(function (response) {
-        if (response.ok) {
-            findChessCell(targetX, targetY).innerHTML = findChessCell(sourceX, sourceY).innerHTML;
-            findChessCell(sourceX, sourceY).innerHTML = templateBlank();
-        }
+            if(response.ok) {
+                findChessCell(targetX, targetY).innerHTML = findChessCell(sourceX, sourceY).innerHTML;
+                findChessCell(sourceX, sourceY).innerHTML = templateBlank();
+                document.getElementById("chess-info").innerHTML = "흑색 : " + response.json().status2.black + "백색 : " + response.json().status2.white;
+
+            }
     }).catch(function (error) {
         alert(error);
     });

@@ -1,4 +1,4 @@
-package wooteco.chess.spark.dto;
+package wooteco.chess.dto;
 
 public class BoardDTO {
 

@@ -5,9 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-import wooteco.chess.domain.board.Position;
-import wooteco.chess.spark.sparkservice.ChessService;
-import wooteco.chess.spark.webutil.ModelParser;
+import wooteco.chess.service.ChessService;
+import wooteco.chess.webutil.ModelParser;
 
 import javax.servlet.ServletRequest;
 import java.sql.SQLException;
@@ -55,8 +54,8 @@ public class ChessController {
         ModelAndView view = new ModelAndView();
         view.setViewName("index");
 
-        Position start = Position.of(request.getParameter("start"));
-        Position end = Position.of(request.getParameter("end"));
+        String start = request.getParameter("start");
+        String end = request.getParameter("end");
         chessService.move(start, end);
 
         view.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));

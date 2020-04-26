@@ -1,8 +1,8 @@
-package wooteco.chess.spark.dao;
+package wooteco.chess.repository;
 
 import org.springframework.stereotype.Repository;
-import wooteco.chess.spark.dto.BoardDTO;
-import wooteco.chess.spark.dto.GameStatusDTO;
+import wooteco.chess.dto.BoardDTO;
+import wooteco.chess.dto.GameStatusDTO;
 
 import java.sql.*;
 import java.util.ArrayList;

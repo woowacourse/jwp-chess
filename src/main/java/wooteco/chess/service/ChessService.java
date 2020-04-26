@@ -1,4 +1,4 @@
-package wooteco.chess.spark.sparkservice;
+package wooteco.chess.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,10 +8,10 @@ import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.judge.Judge;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
-import wooteco.chess.spark.dao.BoardDAO;
-import wooteco.chess.spark.dto.BoardDTO;
-import wooteco.chess.spark.dto.GameStatusDTO;
-import wooteco.chess.spark.webutil.ModelParser;
+import wooteco.chess.dto.BoardDTO;
+import wooteco.chess.dto.GameStatusDTO;
+import wooteco.chess.repository.BoardDAO;
+import wooteco.chess.webutil.ModelParser;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class ChessService {
     @Autowired
     BoardDAO boardDAO;
 
-    public Map<String,Object> loadInitBoard() {
+    public Map<String, Object> loadInitBoard() {
         Map<String, Object> model = ModelParser.parseBlankBoard();
         model.putAll(ModelParser.parseMovablePlaces(new ArrayList<>()));
         return model;
@@ -59,13 +59,13 @@ public class ChessService {
         boardDAO.updateTurn(gameStatusDTO);
     }
 
-    public void move(final Position start, final Position end) throws SQLException {
+    public void move(String start, String end) throws SQLException {
         checkGameOver();
 
         Board board = readBoard();
-        try{
-            board.move(start, end);
-        } catch (IllegalArgumentException e){
+        try {
+            board.move(Position.of(start), Position.of(end));
+        } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
 
@@ -81,7 +81,7 @@ public class ChessService {
         return new Board(parsePieceInformation(boardDTOs), currentTurn);
     }
 
-    public Map<String,Object> readBoardWithScore() throws SQLException {
+    public Map<String, Object> readBoardWithScore() throws SQLException {
         Board board = readBoard();
 
         Map<String, Object> model = ModelParser.parseBoard(board);
@@ -97,10 +97,10 @@ public class ChessService {
 
     private double calculateScore(final Team team) throws SQLException {
         Judge judge = new Judge();
-        return judge.getScoreByTeam(readBoard(), team);
+        return Judge.getScoreByTeam(readBoard(), team);
     }
 
-    public Map<String,Object> loadMovable(String startName) throws SQLException {
+    public Map<String, Object> loadMovable(String startName) throws SQLException {
         Position start = Position.of(startName);
         List<Position> movablePositions = findMovablePlaces(start);
         Map<String, Object> model = ModelParser.parseBoard(readBoard(), movablePositions);
@@ -116,9 +116,7 @@ public class ChessService {
     }
 
     private void checkGameOver() throws SQLException {
-        Judge judge = new Judge();
-
-        if (judge.findWinner(readBoard()).isPresent()) {
+        if (Judge.findWinner(readBoard()).isPresent()) {
             throw new IllegalArgumentException();
         }
     }

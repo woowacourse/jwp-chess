@@ -56,7 +56,7 @@ public class Position {
     }
 
     public boolean isOnX(final int x) {
-        return this.x.equals(Coordinate.of(x));
+        return isOnX(Coordinate.of(x));
     }
 
     public boolean isOnX(final Coordinate x) {

@@ -1,4 +1,4 @@
-package wooteco.chess.spark.webutil;
+package wooteco.chess.webutil;
 
 
 import wooteco.chess.domain.board.Board;

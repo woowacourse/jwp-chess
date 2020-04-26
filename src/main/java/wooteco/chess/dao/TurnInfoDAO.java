@@ -7,8 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.piece.Team;
 
+@Component
 public class TurnInfoDAO {
 	public void initialize(String gameId, Team team) {
 		String query = "INSERT INTO turn_info VALUES (?, ?)";
@@ -28,8 +31,9 @@ public class TurnInfoDAO {
 			 PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setString(1, gameId);
 			ResultSet rs = pstmt.executeQuery();
-			rs.next();
-
+			if (!rs.next()) {
+				throw new IllegalArgumentException("현재 차례의 팀이 존재하지 않습니다. game id : " + gameId);
+			}
 			return Team.valueOf(rs.getString("current_team"));
 		} catch (SQLException e) {
 			throw new IllegalArgumentException(e.getMessage());

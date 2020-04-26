@@ -9,27 +9,34 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceFactory;
 import wooteco.chess.domain.piece.Symbol;
 import wooteco.chess.domain.position.Column;
 import wooteco.chess.domain.position.Position;
 
+@Component
 public class BoardDAO {
 	public void addPieces(String gameId, List<Piece> pieces) {
 		String query = "INSERT INTO board VALUES (?, ?, ?)";
 		try (Connection con = getConnection();
 			 PreparedStatement pstmt = con.prepareStatement(query)) {
-			for (Piece piece : pieces) {
-				pstmt.setString(1, gameId);
-				pstmt.setString(2, piece.getPosition().getName());
-				pstmt.setString(3, piece.getSymbol());
-				pstmt.addBatch();
-				pstmt.clearParameters();
-			}
+			setStatementByPieceIn(gameId, pieces, pstmt);
 			pstmt.executeBatch();
 		} catch (SQLException e) {
 			throw new IllegalArgumentException(e.getMessage());
+		}
+	}
+
+	private void setStatementByPieceIn(String gameId, List<Piece> pieces, PreparedStatement pstmt) throws SQLException {
+		for (Piece piece : pieces) {
+			pstmt.setString(1, gameId);
+			pstmt.setString(2, piece.getPosition().getName());
+			pstmt.setString(3, piece.getSymbol());
+			pstmt.addBatch();
+			pstmt.clearParameters();
 		}
 	}
 
@@ -79,7 +86,7 @@ public class BoardDAO {
 		}
 	}
 
-	public List<Piece> findAll(String gameId) {
+	public List<Piece> findAllPieces(String gameId) {
 		List<Piece> result = new ArrayList<>();
 		String query = "SELECT * FROM board WHERE game_id = ?";
 		try (Connection con = getConnection();
@@ -122,10 +129,10 @@ public class BoardDAO {
 			pstmt.setString(1, gameId);
 			pstmt.setString(2, position.getName());
 			ResultSet rs = pstmt.executeQuery();
-			rs.next();
-			Piece piece = PieceFactory.of(rs.getString("symbol")).create(position);
-
-			return piece;
+			if (!rs.next()) {
+				throw new IllegalArgumentException("기물이 존재하지 않습니다. position : " + position.getName());
+			}
+			return PieceFactory.of(rs.getString("symbol")).create(position);
 		} catch (SQLException e) {
 			throw new IllegalArgumentException(e.getMessage());
 		}

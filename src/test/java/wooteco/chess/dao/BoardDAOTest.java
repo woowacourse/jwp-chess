@@ -53,7 +53,7 @@ public class BoardDAOTest {
 			boardDAO.addPiece("1" ,piece);
 		}
 
-		assertThat(boardDAO.findAll("1").size()).isEqualTo(64);
+		assertThat(boardDAO.findAllPieces("1").size()).isEqualTo(64);
 	}
 
 	@Test

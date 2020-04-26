@@ -57,7 +57,7 @@
         </div>
         <button type="submit" class="btn btn-primary">방 만들기</button>
         {{#if errors}}
-        <div style="color: red">방 제목은 한 글자 이상이어야 합니다.</div>
+            <div style="color: red">방 제목은 한 글자 이상이어야 합니다.</div>
         {{/if}}
     </form>
 </div>
@@ -84,13 +84,13 @@
         console.log("deleteRoom : " + roomId);
 
         let currentPath = window.location.pathname;
-        location.href = currentPath  + '/remove?roomId=' + roomId;
+        location.href = currentPath + '/remove?roomId=' + roomId;
     }
 
     function enterRoom(roomId) {
         console.log("enterRoom : " + roomId);
         let currentPath = window.location.pathname;
-        location.href = currentPath  + '/enter?roomId=' + roomId;
+        location.href = currentPath + '/enter?roomId=' + roomId;
     }
 
 </script>

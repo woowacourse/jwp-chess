@@ -19,9 +19,7 @@ public class GameManager {
     public void moveFromTo(Position sourcePosition, Position targetPosition) {
         validateOtherPieceSourcePosition(sourcePosition);
         validateSameColorTargetPosition(targetPosition);
-
         movePiece(sourcePosition, targetPosition);
-
         nextTurn();
     }
 

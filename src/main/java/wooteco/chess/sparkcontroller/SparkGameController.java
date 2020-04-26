@@ -1,11 +1,11 @@
-package wooteco.chess.controller;
+package wooteco.chess.sparkcontroller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import spark.Request;
 import spark.Response;
 import wooteco.chess.domain.Color;
-import wooteco.chess.service.GameService;
+import wooteco.chess.service.SparkGameService;
 
 import java.sql.SQLException;
 
@@ -18,7 +18,7 @@ public class SparkGameController {
     public static final String GET_URL = BASIC_URL + "/get";
 
     public static String initGame(Request request, Response response) throws SQLException {
-        GameService gameService = GameService.getInstance();
+        SparkGameService gameService = SparkGameService.getInstance();
         int roomId = Integer.parseInt(request.queryParams("roomId"));
         gameService.initialize(roomId);
 
@@ -34,7 +34,7 @@ public class SparkGameController {
     }
 
     public static String movePiece(Request request, Response response) throws SQLException {
-        GameService gameService = GameService.getInstance();
+        SparkGameService gameService = SparkGameService.getInstance();
 
         int roomId = Integer.parseInt(request.queryParams("roomId"));
         String sourcePosition = request.queryParams("sourcePosition");
@@ -55,7 +55,7 @@ public class SparkGameController {
     }
 
     public static String showStatus(Request request, Response response) throws SQLException {
-        GameService gameService = GameService.getInstance();
+        SparkGameService gameService = SparkGameService.getInstance();
         int roomId = Integer.parseInt(request.queryParams("roomId"));
 
         double whiteScore = gameService.getScore(roomId, Color.WHITE);
@@ -71,7 +71,7 @@ public class SparkGameController {
     }
 
     public static String loadGame(Request request, Response response) throws SQLException {
-        GameService gameService = GameService.getInstance();
+        SparkGameService gameService = SparkGameService.getInstance();
         int roomId = Integer.parseInt(request.queryParams("roomId"));
 
         Gson gson = new Gson();
@@ -85,8 +85,8 @@ public class SparkGameController {
         return gson.toJson(object);
     }
 
-	public static String getMovablePositions(final Request request, final Response response) throws SQLException {
-        GameService gameService = GameService.getInstance();
+    public static String getMovablePositions(final Request request, final Response response) throws SQLException {
+        SparkGameService gameService = SparkGameService.getInstance();
         int roomId = Integer.parseInt(request.queryParams("roomId"));
         String sourcePosition = request.queryParams("sourcePosition");
 

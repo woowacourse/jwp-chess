@@ -1,6 +1,5 @@
 package wooteco.chess.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -8,7 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wooteco.chess.domain.room.Room;
-import wooteco.chess.service.RoomService;
+import wooteco.chess.dto.RoomName;
+import wooteco.chess.service.SpringRoomService;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
@@ -18,9 +18,9 @@ import java.util.List;
 @RequestMapping("/rooms")
 public class SpringRoomController {
 
-    private final RoomService roomService;
+    private final SpringRoomService roomService;
 
-    private SpringRoomController(final RoomService roomService) {
+    private SpringRoomController(final SpringRoomService roomService) {
         this.roomService = roomService;
     }
 

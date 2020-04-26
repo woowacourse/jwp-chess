@@ -13,10 +13,11 @@
     background: #D4B66A;
 }
 
-.title{
+.title {
     margin: 50px 0 50px 0;
     text-align: center;
 }
+
 #overlay {
     position: fixed;
     display: none;

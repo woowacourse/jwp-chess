@@ -1,12 +1,11 @@
 package wooteco.chess;
 
-import wooteco.chess.controller.SparkGameController;
-import wooteco.chess.controller.SparkRoomController;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import wooteco.chess.sparkcontroller.SparkGameController;
+import wooteco.chess.sparkcontroller.SparkRoomController;
 
 import static spark.Spark.*;
-import static spark.Spark.exception;
 
 public class SparkChessApplication {
     public static void main(String[] args) {

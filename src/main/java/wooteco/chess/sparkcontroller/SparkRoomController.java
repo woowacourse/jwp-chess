@@ -1,8 +1,8 @@
-package wooteco.chess.controller;
+package wooteco.chess.sparkcontroller;
 
-import wooteco.chess.domain.room.Room;
-import wooteco.chess.service.RoomService;
 import spark.Route;
+import wooteco.chess.domain.room.Room;
+import wooteco.chess.service.SparkRoomService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,30 +19,31 @@ public class SparkRoomController {
     public static Route getAllRoom = (request, response) -> {
         Map<String, Object> model = new HashMap<>();
 
-        RoomService roomService = RoomService.getInstance();
+        SparkRoomService roomService = SparkRoomService.getInstance();
         List<Room> rooms = roomService.findAllRoom();
         model.put("rooms", rooms);
 
-        return render(model, "index.hbs");
+        return render(model, "index.html");
     };
 
     public static Route enterRoom = (request, response) -> {
         Map<String, Object> model = new HashMap<>();
         model.put("roomId", request.queryParams("roomId"));
 
-        return render(model, "game.hbs");
+        return render(model, "game.html");
     };
 
     public static Route createRoom = (request, response) -> {
-        RoomService roomService = RoomService.getInstance();
+        SparkRoomService roomService = SparkRoomService.getInstance();
         String param = request.queryParams("roomName");
         roomService.addRoom(param);
 
         response.redirect("/rooms");
         return null;
     };
+
     public static Route removeRoom = (request, response) -> {
-        RoomService roomService = RoomService.getInstance();
+        SparkRoomService roomService = SparkRoomService.getInstance();
         roomService.removeRoom(Integer.parseInt(request.queryParams("roomId")));
 
         response.redirect("/rooms");

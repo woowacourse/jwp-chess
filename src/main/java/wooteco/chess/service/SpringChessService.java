@@ -2,6 +2,7 @@ package wooteco.chess.service;
 
 import org.springframework.stereotype.Service;
 import wooteco.chess.dao.FakeHistoryDao;
+import wooteco.chess.dao.HistoryDao;
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.NormalStatus;
 import wooteco.chess.domain.position.MovingPosition;
@@ -15,10 +16,10 @@ import java.util.List;
 
 @Service
 public class SpringChessService {
-    FakeHistoryDao fakeHistoryDao = new FakeHistoryDao();
+    HistoryDao historyDao = new FakeHistoryDao();
 
-    public void clearHistory() {
-        fakeHistoryDao.clear();
+    public void clearHistory() throws SQLException {
+        historyDao.clear();
     }
 
     public ChessGameDto setBoard() throws SQLException {
@@ -38,7 +39,7 @@ public class SpringChessService {
     }
 
     private List<MovingPosition> selectAllHistory() throws SQLException {
-        return fakeHistoryDao.selectMovingPositions();
+        return historyDao.selectAll();
     }
 
     public MovablePositionsDto findMovablePositions(String source) throws SQLException {
@@ -80,6 +81,6 @@ public class SpringChessService {
     }
 
     private void insertHistory(MovingPosition movingPosition) throws SQLException {
-        fakeHistoryDao.insert(movingPosition);
+        historyDao.insert(movingPosition);
     }
 }

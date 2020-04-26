@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "mysql.datasource")
+@ConfigurationProperties(prefix = "spring.custom.datasource")
 public class JdbcConfiguration {
 	private String url;
 	private String option;

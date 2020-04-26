@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import wooteco.chess.domain.game.Board;
+import wooteco.chess.domain.piece.Piece;
 
 public class BoardDto {
     private List<String> board;
@@ -12,8 +13,15 @@ public class BoardDto {
         this.board = board.getBoard()
             .values()
             .stream()
-            .map(piece -> piece.isBlack() ? piece.symbol().toUpperCase() : piece.symbol())
+            .map(BoardDto::getSymbolByPiece)
             .collect(Collectors.toList());
+    }
+
+    private static String getSymbolByPiece(Piece piece) {
+        if(piece.isBlack()) {
+            return piece.symbol().toUpperCase();
+        }
+        return piece.symbol();
     }
 
     public List<String> getBoard() {

@@ -1,20 +1,18 @@
 package wooteco.chess.controller;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
 import wooteco.chess.service.ChessGameService;
 
-// hbs로 바꾸고, REST -> controller 로 바꿨는데 됐다
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 @Controller
 public class ChessController {
 	@Autowired
@@ -26,7 +24,7 @@ public class ChessController {
 	}
 
 	@GetMapping("/load-game")
-	public ModelAndView loadChessGame() throws SQLException {
+	public ModelAndView loadChessGame() {
 		Map<String, Object> model = new HashMap<>();
 		try {
 			model = chessGameService.loadBoard();

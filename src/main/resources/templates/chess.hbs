@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="jeseok95@gmail.com"/>
+    <title>체스 게임</title>
+    <link href="../static/css/chess.css" rel="stylesheet"/>
+    <link href="../static/css/fontawesome.min.css" rel="stylesheet"/>
+    <link href="../static/css/all.min.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<header>
+    <div id=title>
+        <h1>체스 고고</h1>
+    </div>
+</header>
+<article id="contents-box">
+    <div id="id-container" style='display: none'>
+        {{id}}
+    </div>
+    <div class="wrapper">
+        <table class="board">
+            <!-- 8/8 -->
+            <tr>
+                <td class="white" id="A8" onclick="onClick('A8')">
+                </td>
+                <td class="gray" id="B8" onclick="onClick('B8')">
+                </td>
+                <td class="white" id="C8" onclick="onClick('C8')">
+                </td>
+                <td class="gray" id="D8" onclick="onClick('D8')">
+                </td>
+                <td class="white" id="E8" onclick="onClick('E8')">
+                </td>
+                <td class="gray" id="F8" onclick="onClick('F8')">
+                </td>
+                <td class="white" id="G8" onclick="onClick('G8')">
+                </td>
+                <td class="gray" id="H8" onclick="onClick('H8')">
+                </td>
+            </tr>
+            <!-- 7/8 -->
+            <tr>
+                <td class="gray" id="A7" onclick="onClick('A7')">
+                </td>
+                <td class="white" id="B7" onclick="onClick('B7')">
+                </td>
+                <td class="gray" id="C7" onclick="onClick('C7')">
+                </td>
+                <td class="white" id="D7" onclick="onClick('D7')">
+                </td>
+                <td class="gray" id="E7" onclick="onClick('E7')">
+                </td>
+                <td class="white" id="F7" onclick="onClick('F7')">
+                </td>
+                <td class="gray" id="G7" onclick="onClick('G7')">
+                </td>
+                <td class="white" id="H7" onclick="onClick('H7')">
+                </td>
+            </tr>
+            <!-- 6/8 -->
+            <tr>
+                <td class="white" id="A6" onclick="onClick('A6')">
+                </td>
+                <td class="gray" id="B6" onclick="onClick('B6')">
+                </td>
+                <td class="white" id="C6" onclick="onClick('C6')">
+                </td>
+                <td class="gray" id="D6" onclick="onClick('D6')">
+                </td>
+                <td class="white" id="E6" onclick="onClick('E6')">
+                </td>
+                <td class="gray" id="F6" onclick="onClick('F6')">
+                </td>
+                <td class="white" id="G6" onclick="onClick('G6')">
+                </td>
+                <td class="gray" id="H6" onclick="onClick('H6')">
+                </td>
+            </tr>
+            <!-- 5/8 -->
+            <tr>
+                <td class="gray" id="A5" onclick="onClick('A5')">
+                </td>
+                <td class="white" id="B5" onclick="onClick('B5')">
+                </td>
+                <td class="gray" id="C5" onclick="onClick('C5')">
+                </td>
+                <td class="white" id="D5" onclick="onClick('D5')">
+                </td>
+                <td class="gray" id="E5" onclick="onClick('E5')">
+                </td>
+                <td class="white" id="F5" onclick="onClick('F5')">
+                </td>
+                <td class="gray" id="G5" onclick="onClick('G5')">
+                </td>
+                <td class="white" id="H5" onclick="onClick('H5')">
+                </td>
+            </tr>
+            <!-- 4/8 -->
+            <tr>
+                <td class="white" id="A4" onclick="onClick('A4')">
+                </td>
+                <td class="gray" id="B4" onclick="onClick('B4')">
+                </td>
+                <td class="white" id="C4" onclick="onClick('C4')">
+                </td>
+                <td class="gray" id="D4" onclick="onClick('D4')">
+                </td>
+                <td class="white" id="E4" onclick="onClick('E4')">
+                </td>
+                <td class="gray" id="F4" onclick="onClick('F4')">
+                </td>
+                <td class="white" id="G4" onclick="onClick('G4')">
+                </td>
+                <td class="gray" id="H4" onclick="onClick('H4')">
+                </td>
+            </tr>
+            <!-- 3/8 -->
+            <tr>
+                <td class="gray" id="A3" onclick="onClick('A3')">
+                </td>
+                <td class="white" id="B3" onclick="onClick('B3')">
+                </td>
+                <td class="gray" id="C3" onclick="onClick('C3')">
+                </td>
+                <td class="white" id="D3" onclick="onClick('D3')">
+                </td>
+                <td class="gray" id="E3" onclick="onClick('E3')">
+                </td>
+                <td class="white" id="F3" onclick="onClick('F3')">
+                </td>
+                <td class="gray" id="G3" onclick="onClick('G3')">
+                </td>
+                <td class="white" id="H3" onclick="onClick('H3')">
+                </td>
+            </tr>
+            <!-- 2/8 -->
+            <tr>
+                <td class="white" id="A2" onclick="onClick('A2')">
+                </td>
+                <td class="gray" id="B2" onclick="onClick('B2')">
+                </td>
+                <td class="white" id="C2" onclick="onClick('C2')">
+                </td>
+                <td class="gray" id="D2" onclick="onClick('D2')">
+                </td>
+                <td class="white" id="E2" onclick="onClick('E2')">
+                </td>
+                <td class="gray" id="F2" onclick="onClick('F2')">
+                </td>
+                <td class="white" id="G2" onclick="onClick('G2')">
+                </td>
+                <td class="gray" id="H2" onclick="onClick('H2')">
+                </td>
+            </tr>
+            <!-- 1/8 -->
+            <tr>
+                <td class="gray" id="A1" onclick="onClick('A1')">
+                </td>
+                <td class="white" id="B1" onclick="onClick('B1')">
+                </td>
+                <td class="gray" id="C1" onclick="onClick('C1')">
+                </td>
+                <td class="white" id="D1" onclick="onClick('D1')">
+                </td>
+                <td class="gray" id="E1" onclick="onClick('E1')">
+                </td>
+                <td class="white" id="F1" onclick="onClick('F1')">
+                </td>
+                <td class="gray" id="G1" onclick="onClick('G1')">
+                </td>
+                <td class="white" id="H1" onclick="onClick('H1')">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="wrapper">
+        <div class="menu-center">
+            <div class="box">
+                <form action="/" method="get">
+                    <input type="submit" value="&#xf015;" class="fa-3x" style="max-width: 100%">
+                </form>
+            </div>
+            <div class="text" style="margin-top: 10px">
+                홈으로
+            </div>
+            <div class="box">
+                <input type="submit" value="&#xf0e2;" class="fa-3x" style="max-width: 100%" onclick="restart()">
+            </div>
+            <div class="text" style="margin-top: 10px">
+                새 게임
+            </div>
+            <div class="box">
+                <input type="submit" value="&#xf0c7;" class="fa-3x" style="max-width: 100%" onclick="save()">
+            </div>
+            <div class="text" style="margin-top: 10px">
+                저장 하기
+            </div>
+            <div class="box">
+                <input type="submit" value="&#xf05e;" class="fa-3x" style="max-width: 100%" onclick="end()">
+            </div>
+            <div class="text" style="margin-top: 10px">
+                게임 종료
+            </div>
+            <div class="box">
+                <input type="submit" value="&#xf197;" class="fa-3x" style="max-width: 100%;" onclick="score()">
+            </div>
+            <div class="text" style="margin-top: 10px">
+                점수
+            </div>
+        </div>
+    </div>
+</article>
+<footer>
+    <p>
+        Copyright 2020
+        <a href="https://github.com/joseph415">https://github.com/joseph415</a>
+        All rights reserved
+    </p>
+</footer>
+<script type="text/javascript" src="../static/js/Click.js"></script>
+<script type="text/javascript" src="../static/js/chess.js"></script>
+<script>
+    window.onload = function () {
+        {{#chessPiece}}
+            document.getElementById('{{position}}').innerHTML = findPieceBy('{{piece}}', '{{team}}');
+        {{/chessPiece}}
+    }
+</script>
+</body>
+</html>

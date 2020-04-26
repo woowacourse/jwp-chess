@@ -32,7 +32,7 @@
     :: 체 스 게 임 ::
 </div>
 <div id="btnBox">
-    <a href="/chess-game"><input class="btn" type="button" value="이어서 하기"></a>
+    <a href="/load-game"><input class="btn" type="button" value="이어서 하기"></a>
     <a href="/new-chess-game"><input class="btn" type="button" value="새 게임"></a>
     <a href="/"><input class="endBtn" type="button" value="끝내기"></a>
 </div>
@@ -64,9 +64,9 @@
                 </div>
 
                 {{#cells}}
-                <div class="{{tileColor}}" id="{{position}}">
-                    <img src="images/{{pieceColor}}{{piece}}.png" style="width: 100%">
-                </div>
+                    <div class="{{tileColor}}" id="{{position}}">
+                        <img src="images/{{pieceColor}}{{piece}}.png" style="width: 100%">
+                    </div>
                 {{/cells}}
 
             </div>
@@ -117,11 +117,11 @@
     teamChangeEvent();
 
     $(document).ready(function () {
-        $('.WHITE, .BLACK').click(function () {
+        $('.White, .Black').click(function () {
             let selectCellName = $(this).attr('id');
             if ($("input[name='source']").val() === "") {
                 $("input[name='source']").attr('value', selectCellName);
-            }else {
+            } else {
                 var form = document.createElement("form");
                 form.setAttribute("charset", "UTF-8");
                 form.setAttribute("method", "Post");  //Post 방식
@@ -130,7 +130,7 @@
                 var hiddenField = document.createElement("input");
                 hiddenField.setAttribute("type", "hidden");
                 hiddenField.setAttribute("name", "source");
-                hiddenField.setAttribute("value",  $("input[name='source']").val());
+                hiddenField.setAttribute("value", $("input[name='source']").val());
                 form.appendChild(hiddenField);
 
                 hiddenField = document.createElement("input");

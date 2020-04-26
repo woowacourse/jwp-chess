@@ -1,13 +1,16 @@
 package chess.domain;
 
+import chess.domain.piece.PieceColor;
+
 public class GameResult {
+	private static final String EMPTY_RESULT = "";
 	private final String winner;
 	private final String loser;
 	private final double aliveBlackPieceScoreSum;
 	private final double aliveWhitePieceScoreSum;
 
 	public GameResult(boolean isBlackKingKilled, boolean isWhiteKingKilled, double aliveBlackPieceScoreSum,
-					  double aliveWhitePieceScoreSum) {
+		double aliveWhitePieceScoreSum) {
 		this.winner = findWinner(isBlackKingKilled, isWhiteKingKilled);
 		this.loser = findLoser(isBlackKingKilled, isWhiteKingKilled);
 		this.aliveBlackPieceScoreSum = aliveBlackPieceScoreSum;
@@ -16,22 +19,22 @@ public class GameResult {
 
 	private String findWinner(boolean isBlackKingKilled, boolean isWhiteKingKilled) {
 		if (isBlackKingKilled) {
-			return "White";
+			return PieceColor.WHITE.getName();
 		}
 		if (isWhiteKingKilled) {
-			return "Black";
+			return PieceColor.BLACK.getName();
 		}
-		return "";
+		return EMPTY_RESULT;
 	}
 
 	private String findLoser(boolean isBlackKingKilled, boolean isWhiteKingKilled) {
 		if (isBlackKingKilled) {
-			return "Black";
+			return PieceColor.BLACK.getName();
 		}
 		if (isWhiteKingKilled) {
-			return "White";
+			return PieceColor.WHITE.getName();
 		}
-		return "";
+		return EMPTY_RESULT;
 	}
 
 	public String getWinner() {

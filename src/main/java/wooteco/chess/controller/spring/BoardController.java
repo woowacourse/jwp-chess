@@ -26,6 +26,7 @@ public class BoardController {
 		try {
 			return ResponseEntity.status(200).body(boardService.load(id));
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return ResponseEntity.status(400).body(e.getMessage());
 		}
 	}
@@ -40,6 +41,7 @@ public class BoardController {
 					Position.of(req.getSourceX(), req.getSourceY()),
 					Position.of(req.getTargetX(), req.getTargetY())));
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return ResponseEntity.status(406).body(e.getMessage());
 		}
 	}

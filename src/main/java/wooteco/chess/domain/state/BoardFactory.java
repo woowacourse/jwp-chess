@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 
+import javafx.geometry.Pos;
 import wooteco.chess.domain.Board;
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.piece.Piece;
@@ -13,8 +14,8 @@ import wooteco.chess.domain.piece.pawn.Pawn;
 import wooteco.chess.domain.position.Position;
 
 public class BoardFactory {
-	private static final String BLACK_PAWN = "2";
-	private static final String WHITE_PAWN = "7";
+	private static final int BLACK_PAWN = 2;
+	private static final int WHITE_PAWN = 7;
 	private static final int BLANK_START_COLUMN = 3;
 	private static final int BLANK_END_COLUMN = 6;
 	private static final int FIRST_ROW = 1;
@@ -31,31 +32,37 @@ public class BoardFactory {
 	private static void loadBlank(TreeMap<Position, Piece> initialBoard) {
 		for (int i = BLANK_START_COLUMN; i <= BLANK_END_COLUMN; i++) {
 			for (int j = FIRST_ROW; j <= LAST_ROW; j++) {
-				initialBoard.put(Position.of(i, j), new Blank(Position.of(i, j)));
+				initialBoard.put(Position.of(j, i), new Blank(Position.of(j,i)));
 			}
 		}
 	}
 
 	private static void loadPawn(TreeMap<Position, Piece> initialBoard) {
-		for (char i = 'a'; i <= 'h'; i++) {
-			initialBoard.put(Position.of(i + BLACK_PAWN),
-				Pawn.of(Team.WHITE, Position.of((char)i + BLACK_PAWN)));
-			initialBoard.put(Position.of((char)i + WHITE_PAWN),
-				Pawn.of(Team.BLACK, Position.of((char)i + WHITE_PAWN)));
+		for (int i = 1; i <= 8; i++) {
+			initialBoard.put(Position.of(i,BLACK_PAWN),
+				Pawn.of(Team.WHITE, Position.of(i,BLACK_PAWN)));
+			initialBoard.put(Position.of(i, WHITE_PAWN),
+				Pawn.of(Team.BLACK, Position.of(i, WHITE_PAWN)));
 		}
 	}
 
 	private static void loadOthers(TreeMap<Position, Piece> initialBoard) {
 		List<String> pieceNames = Arrays.asList("r", "n", "b", "q", "k", "b", "n", "r");
 		for (int i = 1; i <= pieceNames.size(); i++) {
+			final Piece white = PieceFactory.of(pieceNames.get(i - 1), "white",  i,1);
 			initialBoard.put(
-				Position.of(i, 1),
-				PieceFactory.of(pieceNames.get(i), "white", i, 1)
+				Position.of(i,1),
+				white
 			);
+			System.out.println(Position.of(i,1).getName());
+			System.out.println(white.getSymbol());
+			final Piece black = PieceFactory.of(pieceNames.get(i - 1), "black", i,8);
 			initialBoard.put(
-				Position.of(i, 8),
-				PieceFactory.of(pieceNames.get(i), "black", i, 1)
+				Position.of(i,8),
+				black
 			);
+			System.out.println(Position.of(i,8).getName());
+			System.out.println(black.getSymbol());
 		}
 	}
 }

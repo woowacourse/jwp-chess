@@ -241,14 +241,14 @@
     </div>
 
     <div class="menu">
-        <form action="/" method="post">
-            <input class="menuButton" name="command" type="submit" value="새 게임">
+        <form action="/new-game" method="post">
+            <input class="menuButton" type="submit" value="새 게임">
         </form>
-        <form action="/" method="post">
-            <input class="menuButton" name="command" type="submit" value="불러오기">
+        <form action="/load-game" method="post">
+            <input class="menuButton" type="submit" value="불러오기">
         </form>
-        <form action="/" method="post">
-            <input class="menuButton" name="command" type="submit" value="현재점수">
+        <form action="/score" method="post">
+            <input class="menuButton" type="submit" value="현재점수">
         </form>
     </div>
 
@@ -258,10 +258,14 @@
         {{player2_info}}
     </div>
 
-    <form action="/" class="invisible" id="moveForm" method="post">
+    <form action="/move" class="invisible" id="moveForm" method="post">
         <input id="moveStart" name="start" type="text" value={{start}}>
         <input id="moveEnd" name="end" type="text" value="{{end}}">
-        <input id="moveCommand" name="command" type="text">
+    </form>
+
+    <form action="/show-movable" class="invisible" id="movableForm" method="post">
+        <input id="moveStart-movable" name="start" type="text" value={{start}}>
+        <input id="moveEnd-movable" name="end" type="text" value="{{end}}">
     </form>
 
 </main>

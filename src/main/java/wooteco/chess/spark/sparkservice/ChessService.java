@@ -1,5 +1,7 @@
 package wooteco.chess.spark.sparkservice;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.board.Position;
@@ -9,21 +11,24 @@ import wooteco.chess.domain.piece.Team;
 import wooteco.chess.spark.dao.BoardDAO;
 import wooteco.chess.spark.dto.BoardDTO;
 import wooteco.chess.spark.dto.GameStatusDTO;
+import wooteco.chess.spark.webutil.ModelParser;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class ChessService {
 
-    private static ChessService chessService = new ChessService();
+    @Autowired
+    BoardDAO boardDAO;
 
-    private ChessService() {
-    }
-
-    public static ChessService getInstance() {
-        return chessService;
+    public Map<String,Object> loadInitBoard() {
+        Map<String, Object> model = ModelParser.parseBlankBoard();
+        model.putAll(ModelParser.parseMovablePlaces(new ArrayList<>()));
+        return model;
     }
 
     public Board newGame() throws SQLException {
@@ -36,8 +41,6 @@ public class ChessService {
     }
 
     private void writeWholeBoard(final Board board) throws SQLException {
-        BoardDAO boardDAO = BoardDAO.getInstance();
-
         BoardDTO boardDTO = new BoardDTO();
         for (Position position : Position.positions) {
             Piece piece = board.findPieceOn(position);
@@ -50,8 +53,6 @@ public class ChessService {
     }
 
     private void writeCurrentTurn(final Team turn) throws SQLException {
-        BoardDAO boardDAO = BoardDAO.getInstance();
-
         GameStatusDTO gameStatusDTO = new GameStatusDTO();
         gameStatusDTO.setCurrentTeam(turn.toString());
 
@@ -62,15 +63,17 @@ public class ChessService {
         checkGameOver();
 
         Board board = readBoard();
-        board.move(start, end);
+        try{
+            board.move(start, end);
+        } catch (IllegalArgumentException e){
+            System.err.println(e.getMessage());
+        }
 
         writeWholeBoard(board);
         writeCurrentTurn(board.getCurrentTurn());
     }
 
     public Board readBoard() throws SQLException {
-        BoardDAO boardDAO = BoardDAO.getInstance();
-
         List<BoardDTO> boardDTOs = boardDAO.findAllPieces();
         GameStatusDTO gameStatusDTO = boardDAO.readCurrentTurn();
 
@@ -78,17 +81,36 @@ public class ChessService {
         return new Board(parsePieceInformation(boardDTOs), currentTurn);
     }
 
+    public Map<String,Object> readBoardWithScore() throws SQLException {
+        Board board = readBoard();
+
+        Map<String, Object> model = ModelParser.parseBoard(board);
+        model.put("player1_info", "WHITE: " + calculateScore(Team.WHITE));
+        model.put("player2_info", "BLACK: " + calculateScore(Team.BLACK));
+        return model;
+    }
+
     private Map<Position, Piece> parsePieceInformation(final List<BoardDTO> boardDTOs) {
         return boardDTOs.stream()
                 .collect(Collectors.toMap(dto -> Position.of(dto.getPosition()), dto -> Piece.of(dto.getPiece())));
     }
 
-    public double calculateScore(final Team team) throws SQLException {
+    private double calculateScore(final Team team) throws SQLException {
         Judge judge = new Judge();
         return judge.getScoreByTeam(readBoard(), team);
     }
 
-    public List<Position> findMovablePlaces(final Position start) throws SQLException {
+    public Map<String,Object> loadMovable(String startName) throws SQLException {
+        Position start = Position.of(startName);
+        List<Position> movablePositions = findMovablePlaces(start);
+        Map<String, Object> model = ModelParser.parseBoard(readBoard(), movablePositions);
+        if (movablePositions.size() != 0) {
+            model.put("start", startName);
+        }
+        return model;
+    }
+
+    private List<Position> findMovablePlaces(final Position start) throws SQLException {
         checkGameOver();
         return readBoard().findMovablePositions(start);
     }

@@ -1,5 +1,6 @@
 package wooteco.chess.spark.dao;
 
+import org.springframework.stereotype.Repository;
 import wooteco.chess.spark.dto.BoardDTO;
 import wooteco.chess.spark.dto.GameStatusDTO;
 
@@ -9,27 +10,22 @@ import java.util.List;
 
 import static ch.qos.logback.core.db.DBHelper.closeConnection;
 
+@Repository
 public class BoardDAO {
 
     private static final String SERVER = "localhost:13306";
-    private static final String DATABASE = "db_name";
+    private static final String DATABASE = "chess";
     private static final String OPTION = "?useSSL=false&serverTimezone=UTC";
     private static final String USER_NAME = "root";
     private static final String PASSWORD = "root";
     private static final String DESTINATION = String.format("jdbc:mysql://%s/%s%s", SERVER, DATABASE, OPTION);
 
-    private static BoardDAO boardDAO = new BoardDAO();
-
-    private BoardDAO() {
+    public BoardDAO() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             System.err.println(" !! JDBC Driver load 오류: " + e.getMessage());
         }
-    }
-
-    public static BoardDAO getInstance() {
-        return boardDAO;
     }
 
     public void placePieceOn(final BoardDTO boardDTO) throws SQLException {

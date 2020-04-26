@@ -10,7 +10,7 @@ public class JdbcConfiguration {
 	public JdbcConfiguration() {
 	}
 
-	public JdbcConfiguration(String url, String option, String username, String password, String driverClassName) {
+	private JdbcConfiguration(String url, String option, String username, String password, String driverClassName) {
 		this.url = url;
 		this.option = option;
 		this.username = username;
@@ -18,44 +18,28 @@ public class JdbcConfiguration {
 		this.driverClassName = driverClassName;
 	}
 
-	public String getUrl() {
+	public String getFullUrl() {
 		return url + option;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public String getUrl() {
+		return url;
 	}
 
 	public String getOption() {
 		return option;
 	}
 
-	public void setOption(String option) {
-		this.option = option;
-	}
-
 	public String getUsername() {
 		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public String getDriverClassName() {
 		return driverClassName;
-	}
-
-	public void setDriverClassName(String driverClassName) {
-		this.driverClassName = driverClassName;
 	}
 
 	@Override
@@ -75,6 +59,26 @@ public class JdbcConfiguration {
 		private String username;
 		private String password;
 		private String driverClassName;
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+		public void setOption(String option) {
+			this.option = option;
+		}
+
+		public void setUsername(String username) {
+			this.username = username;
+		}
+
+		public void setPassword(String password) {
+			this.password = password;
+		}
+
+		public void setDriverClassName(String driverClassName) {
+			this.driverClassName = driverClassName;
+		}
 
 		public Builder url(String url) {
 			this.url = url;

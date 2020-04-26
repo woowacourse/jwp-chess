@@ -17,7 +17,7 @@ public class DataSource {
 	public Connection getConnection() throws SQLException {
 		try {
 			Class.forName(jdbcConfiguration.getDriverClassName());
-			return DriverManager.getConnection(jdbcConfiguration.getUrl(), jdbcConfiguration.getUsername(),
+			return DriverManager.getConnection(jdbcConfiguration.getFullUrl(), jdbcConfiguration.getUsername(),
 					jdbcConfiguration.getPassword());
 		} catch (ClassNotFoundException e) {
 			System.err.println("JDBC Driver load 오류: " + e.getMessage());

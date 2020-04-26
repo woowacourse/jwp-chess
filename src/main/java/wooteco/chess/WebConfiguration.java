@@ -11,9 +11,14 @@ import wooteco.chess.dao.JdbcConfiguration;
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 @Configuration
 public class WebConfiguration {
+	@Bean
+	public JdbcConfiguration provideJdbcConfiguration(JdbcConfiguration.Builder builder) {
+		return builder.build();
+	}
+
 	@ConfigurationProperties(prefix = "spring.datasource")
 	@Bean
-	public JdbcConfiguration provideJdbcConfiguration() {
-		return new JdbcConfiguration();
+	public JdbcConfiguration.Builder provideJdbcConfigurationBuilder() {
+		return new JdbcConfiguration.Builder();
 	}
 }

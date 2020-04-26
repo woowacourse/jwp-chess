@@ -92,7 +92,7 @@ window.onload = function () {
         fetch(`http://localhost:8080/destination?destination=${position}&startPosition=${startPosition}`,
             {method: "GET"})
             .then(res => res.json())
-            .then(data => {
+            .then(async data => {
                 if (data.normalStatus === false) {
                     alert(data.exception);
                     startPosition = null;
@@ -103,7 +103,15 @@ window.onload = function () {
                 const destination = position;
                 startPosition = null;
 
-                post_to_url("/board", {"source": source, "destination": destination});
+                await fetch("http://localhost:8080/board", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        start: source,
+                        end: destination
+                    }),
+                    headers: {"Content-Type": "application/json"}
+                })
+                    .then(window.location.href = "/loading");
             });
     }
 
@@ -120,19 +128,4 @@ window.onload = function () {
             });
         }
     );
-
-    function post_to_url(path, params) {
-        let form = document.createElement("form");
-        form.setAttribute("method", "post");
-        form.setAttribute("action", path);
-        for (let key in params) {
-            let hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", key);
-            hiddenField.setAttribute("value", params[key]);
-            form.appendChild(hiddenField);
-        }
-        document.body.appendChild(form);
-        form.submit();
-    }
 };

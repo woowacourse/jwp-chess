@@ -1,4 +1,4 @@
-package wooteco.chess.controller;
+package wooteco.chess.dto;
 
 import javax.validation.constraints.NotEmpty;
 

@@ -1,21 +1,15 @@
 package wooteco.chess.dao;
 
+import org.springframework.stereotype.Repository;
 import wooteco.chess.domain.Color;
 import wooteco.chess.domain.room.Room;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class RoomDAO {
-    private static final RoomDAO ROOM_DAO = new RoomDAO();
-
-    public static RoomDAO getInstance() {
-        return ROOM_DAO;
-    }
-
     public void addRoom(String roomName, String roomColor) throws SQLException {
         String query = "INSERT INTO room(room_name, room_color) VALUES (?, ?)";
 

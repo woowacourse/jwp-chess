@@ -1,24 +1,18 @@
 package wooteco.chess.dao;
 
+import org.springframework.stereotype.Repository;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Blank;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceMapper;
 import wooteco.chess.domain.piece.Pieces;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class GameDAO {
-    private static final GameDAO GAME_DAO = new GameDAO();
-
-    public static GameDAO getInstance() {
-        return GAME_DAO;
-    }
-
     public void removeAllPiecesById(int roomId) throws SQLException {
         String query = "DELETE FROM board WHERE room_id = ?";
 

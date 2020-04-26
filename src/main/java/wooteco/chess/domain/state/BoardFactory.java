@@ -38,7 +38,7 @@ public class BoardFactory {
 	}
 
 	private static void loadPawn(TreeMap<Position, Piece> initialBoard) {
-		for (int i = 1; i <= 8; i++) {
+		for (int i = FIRST_ROW; i <= LAST_ROW; i++) {
 			initialBoard.put(Position.of(i,BLACK_PAWN),
 				Pawn.of(Team.WHITE, Position.of(i,BLACK_PAWN)));
 			initialBoard.put(Position.of(i, WHITE_PAWN),
@@ -49,20 +49,14 @@ public class BoardFactory {
 	private static void loadOthers(TreeMap<Position, Piece> initialBoard) {
 		List<String> pieceNames = Arrays.asList("r", "n", "b", "q", "k", "b", "n", "r");
 		for (int i = 1; i <= pieceNames.size(); i++) {
-			final Piece white = PieceFactory.of(pieceNames.get(i - 1), "white",  i,1);
 			initialBoard.put(
 				Position.of(i,1),
-				white
+				PieceFactory.of(pieceNames.get(i - 1), "white",  i,1)
 			);
-			System.out.println(Position.of(i,1).getName());
-			System.out.println(white.getSymbol());
-			final Piece black = PieceFactory.of(pieceNames.get(i - 1), "black", i,8);
 			initialBoard.put(
 				Position.of(i,8),
-				black
+				PieceFactory.of(pieceNames.get(i - 1), "black", i,8)
 			);
-			System.out.println(Position.of(i,8).getName());
-			System.out.println(black.getSymbol());
 		}
 	}
 }

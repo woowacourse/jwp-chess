@@ -1,6 +1,5 @@
 package chess.model.domain.board;
 
-import chess.model.domain.exception.ChessException;
 import chess.model.domain.move.MoveStateAfter;
 import chess.model.domain.move.MoveStateBefore;
 import chess.model.domain.move.MoveStateChecker;
@@ -96,7 +95,7 @@ public class ChessGame {
 
     public Square findSquareForPromote() {
         return chessBoard.findSquareForPromote()
-            .orElseThrow(() -> new ChessException("프로모션 가능한 폰이 없습니다."));
+            .orElseThrow(() -> new IllegalArgumentException("프로모션 가능한 폰이 없습니다."));
     }
 
     public boolean canPromote() {
@@ -117,7 +116,7 @@ public class ChessGame {
         if (typeToChange.canPromote()) {
             return PieceFactory.of(turn, typeToChange);
         }
-        throw new ChessException(typeToChange + "은 프로모션 할 수 있는 타입이 아닙니다.");
+        throw new IllegalArgumentException(typeToChange + "은 프로모션 할 수 있는 타입이 아닙니다.");
     }
 
     public boolean isNotMovable(MoveInfo moveInfo) {

@@ -1,6 +1,5 @@
 package chess.model.domain.board;
 
-import chess.model.domain.exception.ChessException;
 import chess.model.domain.piece.Pawn;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Team;
@@ -75,7 +74,7 @@ public class EnPassant {
             enPassantsToAfterSquares.put(betweenWhenJumpRank, afterSquare);
             return;
         }
-        throw new ChessException("폰이 두 칸 전진하지 않아, 앙파상 룰을 적용할 수 없습니다.");
+        throw new IllegalArgumentException("폰이 두 칸 전진하지 않아, 앙파상 룰을 적용할 수 없습니다.");
     }
 
     public Map<Square, Piece> getEnPassantBoard(Team team) {

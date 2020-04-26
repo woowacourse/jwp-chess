@@ -7,7 +7,6 @@ import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.EnPassant;
 import chess.model.domain.board.Square;
 import chess.model.domain.board.TeamScore;
-import chess.model.domain.exception.ChessException;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
@@ -137,7 +136,8 @@ public class ChessGameService {
 
     public GameInfoDto closeGame(Integer gameId) {
         Optional<GameInfoDto> gameInfoDTO = CHESS_GAME_DAO.findGameInfo(gameId);
-        GameInfoDto gameInfoDto = gameInfoDTO.orElseThrow(() -> new ChessException("닫을 게임이 없습니다."));
+        GameInfoDto gameInfoDto = gameInfoDTO
+            .orElseThrow(() -> new IllegalArgumentException("닫을 게임이 없습니다."));
         CHESS_GAME_DAO.updateProceedN(gameId);
         Map<Team, String> userNames = gameInfoDto.getUserNames();
         TeamScore teamScore = gameInfoDto.getTeamScores();

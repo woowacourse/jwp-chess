@@ -21,11 +21,11 @@ public class ChessGameService {
 		this.roomDao = roomDao;
 	}
 
-	public ChessGame create(String roomName) throws SQLException {
+	public ChessGameDto create(String roomName) throws SQLException {
 		validateDuplicated(roomName);
 		ChessGame chessGame = ChessGame.start();
-		roomDao.addRoom(ChessGameDto.of(roomName, chessGame));
-		return chessGame;
+		roomDao.addRoom(roomName, chessGame);
+		return ChessGameDto.of(roomName, chessGame);
 	}
 
 	private void validateDuplicated(String roomName) throws SQLException {
@@ -38,21 +38,24 @@ public class ChessGameService {
 		return roomDao.findByRoomName(roomName, "board").isPresent();
 	}
 
-	public ChessGame move(String roomName, String source, String target) throws SQLException {
-		ChessGame chessGame = load(roomName);
+	public ChessGameDto move(String roomName, String source, String target) throws SQLException {
+		ChessGameDto chessGameDto = load(roomName);
+		ChessGame chessGame = new ChessGame(BoardConverter.convertToBoard(chessGameDto.getBoard()),
+				Side.valueOf(chessGameDto.getTurn()));
+
 		chessGame.move(new Position(source), new Position(target));
-		roomDao.updateRoom(ChessGameDto.of(roomName, chessGame));
-		return chessGame;
+		roomDao.updateRoom(roomName, chessGame);
+		return ChessGameDto.of(roomName, chessGame);
 	}
 
 	public List<RoomDto> findAllRooms() throws SQLException {
 		List<String> rooms = roomDao.findAll();
 		return rooms.stream()
-				.map(RoomDto::new)
+				.map(RoomDto::of)
 				.collect(Collectors.toList());
 	}
 
-	public ChessGame load(String roomName) throws SQLException {
+	public ChessGameDto load(String roomName) throws SQLException {
 		validatePresent(roomName);
 		String finishFlag = roomDao.findByRoomName(roomName, "finish_flag")
 				.orElseThrow(NoSuchElementException::new);
@@ -62,7 +65,8 @@ public class ChessGameService {
 				.orElseThrow(NoSuchElementException::new);
 		String turn = roomDao.findByRoomName(roomName, "turn")
 				.orElseThrow(NoSuchElementException::new);
-		return new ChessGame(BoardConverter.convertToBoard(board), Side.valueOf(turn));
+		ChessGame chessGame = new ChessGame(BoardConverter.convertToBoard(board), Side.valueOf(turn));
+		return ChessGameDto.of(roomName, chessGame);
 	}
 
 	private void validatePresent(String roomName) throws SQLException {
@@ -77,9 +81,9 @@ public class ChessGameService {
 		}
 	}
 
-	public ChessGame restart(String roomName) throws SQLException {
+	public ChessGameDto restart(String roomName) throws SQLException {
 		ChessGame chessGame = ChessGame.start();
-		roomDao.updateRoom(ChessGameDto.of(roomName, chessGame));
-		return chessGame;
+		roomDao.updateRoom(roomName, chessGame);
+		return ChessGameDto.of(roomName, chessGame);
 	}
 }

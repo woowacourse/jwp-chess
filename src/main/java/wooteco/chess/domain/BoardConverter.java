@@ -1,9 +1,13 @@
 package wooteco.chess.domain;
 
+import static wooteco.chess.domain.dto.ChessGameDto.*;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceFactory;
@@ -29,6 +33,25 @@ public class BoardConverter {
 			}
 		}
 		return new ChessBoard(pieces);
+	}
+
+	public static ChessBoard convertToBoard(Map<String, String> board) {
+		List<Piece> pieces = board.entrySet().stream()
+				.filter(e -> !e.getValue().equals(BLANK))
+				.map(BoardConverter::convertToPiece)
+				.collect(Collectors.toList());
+		return new ChessBoard(pieces);
+	}
+
+	private static Piece convertToPiece(Map.Entry<String, String> entry) {
+		String pieceName = entry.getValue().substring(0, 1);
+		Optional<Piece> piece;
+		if (entry.getValue().substring(2).equals("black")) {
+			piece = PieceFactory.of(pieceName, Side.BLACK, new Position(entry.getKey()));
+			return piece.orElseThrow(NoSuchElementException::new);
+		}
+		piece = PieceFactory.of(pieceName, Side.WHITE, new Position(entry.getKey()));
+		return piece.orElseThrow(NoSuchElementException::new);
 	}
 
 	private static Side convertToSide(String boardName) {

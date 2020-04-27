@@ -2,14 +2,17 @@ package wooteco.chess.contoller;
 
 import static spark.Spark.*;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import spark.ModelAndView;
+import spark.Request;
+import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import wooteco.chess.domain.ChessGame;
-import wooteco.chess.domain.dto.ChessBoardDto;
-import wooteco.chess.domain.dto.StatusDto;
+import wooteco.chess.domain.dto.ChessGameDto;
+import wooteco.chess.domain.dto.MoveDto;
 import wooteco.chess.domain.service.ChessGameService;
 
 public class WebController {
@@ -19,88 +22,74 @@ public class WebController {
 		this.chessGameService = chessGameService;
 	}
 
+	public void run() {
+		staticFiles.location("/public");
+		port(8080);
+
+		get("/", this::renderMain);
+		get("/api/rooms", this::getRooms);
+		post("/join", this::joinRoom);
+		post("/create", this::createRoom);
+		put("/move", this::movePiece);
+		post("/restart", this::restartGame);
+	}
+
 	private static String render(Map<String, Object> model, String templatePath) {
 		return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
 	}
 
-	public void run() {
-		staticFiles.location("/public");
-		mainRendering();
-		createRoom();
-		joinRoom();
-		movePiece();
-		restartGame();
+	private String renderMain(Request request, Response response) {
+		return render(new HashMap<>(), "index.html");
 	}
 
-	private void mainRendering() {
-		get("/", (req, res) -> {
-			Map<String, Object> model = new HashMap<>();
-			model.put("room", chessGameService.findAllRooms());
+	private String getRooms(Request request, Response response) throws SQLException {
+		return new Gson().toJson(chessGameService.findAllRooms());
+	}
+
+	private String joinRoom(Request request, Response response) throws SQLException {
+		Map<String, Object> model = new HashMap<>();
+		try {
+			ChessGameDto chessGameDto = chessGameService.load(request.queryParams("room-name"));
+			model.put("chessGame", chessGameDto);
+			return render(model, "chess.html");
+		} catch (IllegalArgumentException e) {
+			response.status(409);
+			model.put("error", e.getMessage());
 			return render(model, "index.html");
-		});
+		}
 	}
 
-	private void createRoom() {
-		post("/create", (req, res) -> {
-			Map<String, Object> model = new HashMap<>();
-			try {
-				String roomName = req.queryParams("room-name");
-				ChessGame chessGame = chessGameService.create(roomName);
-				putGameInfoToModel(roomName, chessGame, model);
-			} catch (RuntimeException e) {
-				model.put("room", chessGameService.findAllRooms());
-				model.put("error", e.getMessage());
-				return render(model, "index.html");
-			}
+	private String createRoom(Request request, Response response) throws SQLException {
+		Map<String, Object> model = new HashMap<>();
+		try {
+			ChessGameDto chessGameDto = chessGameService.create(request.queryParams("room-name"));
+			model.put("chessGame", chessGameDto);
 			return render(model, "chess.html");
-		});
+		} catch (IllegalArgumentException e) {
+			response.status(409);
+			model.put("error", e.getMessage());
+			return render(model, "index.html");
+		}
 	}
 
-	private void joinRoom() {
-		post("/join", (req, res) -> {
-			Map<String, Object> model = new HashMap<>();
-			try {
-				String roomName = req.queryParams("room-name");
-				ChessGame chessGame = chessGameService.load(roomName);
-				putGameInfoToModel(roomName, chessGame, model);
-				return render(model, "chess.html");
-			} catch (RuntimeException e) {
-				model.put("room", chessGameService.findAllRooms());
-				model.put("error", e.getMessage());
-				return render(model, "index.html");
-			}
-		});
+	private String movePiece(Request request, Response response) throws SQLException {
+		Map<String, Object> model = new HashMap<>();
+		try {
+			MoveDto moveDto = new Gson().fromJson(request.body(), MoveDto.class);
+			ChessGameDto chessGameDto = chessGameService.move(moveDto.getRoomName(), moveDto.getSource(),
+					moveDto.getTarget());
+			model.put("chessGame", chessGameDto);
+		} catch (IllegalArgumentException e) {
+			response.status(409);
+			model.put("error", e.getMessage());
+		}
+		return render(model, "chess.html");
 	}
 
-	private void movePiece() {
-		post("/chess/move", (req, res) -> {
-			Map<String, Object> model = new HashMap<>();
-			try {
-				String roomName = req.queryParams("roomName");
-				ChessGame chessGame = chessGameService.move(roomName,
-						req.queryParams("source"), req.queryParams("target"));
-				putGameInfoToModel(roomName, chessGame, model);
-			} catch (RuntimeException e) {
-				res.status(409);
-				res.body(e.getMessage());
-			}
-			return render(model, "chess.html");
-		});
-	}
-
-	private void restartGame() {
-		post("/restart", (req, res) -> {
-			Map<String, Object> model = new HashMap<>();
-			String roomName = req.queryParams("room-name");
-			ChessGame chessGame = chessGameService.restart(roomName);
-			putGameInfoToModel(roomName, chessGame, model);
-			return render(model, "chess.html");
-		});
-	}
-
-	private void putGameInfoToModel(String roomName, ChessGame chessGame, Map<String, Object> model) {
-		model.put("room", roomName);
-		model.put("board", ChessBoardDto.of(chessGame));
-		model.put("status", StatusDto.of(chessGame));
+	private String restartGame(Request request, Response response) throws SQLException {
+		Map<String, Object> model = new HashMap<>();
+		ChessGameDto chessGameDto = chessGameService.restart(request.queryParams("room-name"));
+		model.put("chessGame", chessGameDto);
+		return render(model, "chess.html");
 	}
 }

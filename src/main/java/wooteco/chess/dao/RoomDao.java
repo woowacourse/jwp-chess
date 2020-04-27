@@ -6,15 +6,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import wooteco.chess.dao.util.ConnectionLoader;
+import wooteco.chess.dto.RoomDto;
 
 public class RoomDao {
-	public int findTurnPlayerId(int roomId) throws SQLException {
-		String query = "select turn from room where room_id = (?)";
+	public RoomDto findById(int roomId) throws SQLException {
+		String query = "select * from room where room_id = (?)";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setInt(1, roomId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					return rs.getInt(1);
+					RoomDto roomDto = new RoomDto();
+					roomDto.setId(rs.getInt(1));
+					roomDto.setTurnId(rs.getInt(2));
+					roomDto.setPlayer1Id(rs.getInt(3));
+					roomDto.setPlayer2Id(rs.getInt(4));
+					return roomDto;
 				}
 				throw new IllegalArgumentException("존재하지 않는 방입니다.");
 			}
@@ -43,13 +49,11 @@ public class RoomDao {
 		}
 	}
 
-	public void updateTurn(int roomId) throws SQLException {
-		String query = "update room set turn = player1_id where room_id = (?)";
-		if (findTurnPlayerId(roomId) == findFirstPlayerId(roomId)) {
-			query = "update room set turn = player2_id where room_id = (?)";
-		}
+	public void updateTurn(int roomId, int turn) throws SQLException {
+		String query = "update room set turn = (?) where room_id = (?)";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
-			pstmt.setInt(1, roomId);
+			pstmt.setInt(1, turn);
+			pstmt.setInt(2, roomId);
 			pstmt.executeUpdate();
 		}
 	}

@@ -35,11 +35,6 @@ public class SpringChessBoardController {
         return service.getBoards();
     }
 
-    // @GetMapping
-    // private Map<String, Map<Side, Player>> getPlayerContexts() throws SQLException {
-    //     return service.getPlayerContexts();
-    // }
-
     @PostMapping
     private Map<String, GameResponseDto> addGameAndGetPlayers(@RequestBody GameRequestDto dto) throws
         SQLException {

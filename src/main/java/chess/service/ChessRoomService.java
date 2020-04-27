@@ -4,6 +4,7 @@ import chess.dao.AnnouncementDao;
 import chess.dao.PieceDao;
 import chess.dao.StateDao;
 import chess.dao.StatusRecordDao;
+import chess.darepository.AnnouncementRepository;
 import chess.domain.coordinate.Coordinate;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.PieceType;
@@ -30,13 +31,16 @@ public class ChessRoomService {
 	private final PieceDao pieceDao;
 	private final StatusRecordDao statusRecordDao;
 	private final AnnouncementDao announcementDao;
+	private final AnnouncementRepository announcementRepository;
 
 	public ChessRoomService(final StateDao stateDao, final PieceDao pieceDao
-			, final StatusRecordDao statusRecordDao, final AnnouncementDao announcementDao) {
+			, final StatusRecordDao statusRecordDao, final AnnouncementDao announcementDao,
+							final AnnouncementRepository announcementRepository) {
 		this.stateDao = stateDao;
 		this.pieceDao = pieceDao;
 		this.statusRecordDao = statusRecordDao;
 		this.announcementDao = announcementDao;
+		this.announcementRepository = announcementRepository;
 	}
 
 	public String loadBoardHtml(final int roomId) throws SQLException {
@@ -85,7 +89,7 @@ public class ChessRoomService {
 		pieceDao.deletePieces(roomId);
 		savePiecesFromState(roomId, after);
 		saveStatusRecordIfEnded(roomId, after);
-		announcementDao.setAnnouncementByRoomId(roomId, createRightAnnouncement(after));
+		announcementRepository.setByRoomId(roomId, createRightAnnouncement(after));
 	}
 
 	private void savePiecesFromState(final int roomId, final State after) throws SQLException {
@@ -111,15 +115,16 @@ public class ChessRoomService {
 		return Announcement.ofEnd().getString();
 	}
 
-	public String loadAnnouncementMessage(int roomId) throws SQLException {
-		return announcementDao.findAnnouncementByRoomId(roomId).getMessage();
+	public String loadAnnouncementMessage(int roomId){
+		return announcementRepository.findById(roomId).orElseThrow(NullPointerException::new)
+				.getMessage();
 	}
 
-	public int saveNewAnnouncementMessage(int roomId) throws SQLException {
-		return announcementDao.addAnnouncement(Announcement.ofFirst().getString(), roomId);
+	public void saveNewAnnouncementMessage(int roomId) {
+		announcementRepository.save(Announcement.ofFirst().getString(), roomId);
 	}
 
-	public int saveAnnouncementMessage(final int roomId, final String message) throws SQLException {
-		return announcementDao.setAnnouncementByRoomId(roomId, message);
+	public void saveAnnouncementMessage(final int roomId, final String message){
+		announcementRepository.setByRoomId(roomId, message);
 	}
 }

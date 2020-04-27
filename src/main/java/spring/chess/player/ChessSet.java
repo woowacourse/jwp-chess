@@ -3,7 +3,6 @@ package spring.chess.player;
 import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.location.Col;
 import spring.chess.location.Location;
-import spring.chess.piece.type.Pawn;
 import spring.chess.piece.type.Piece;
 import spring.chess.score.Score;
 import spring.chess.team.Team;
@@ -52,7 +51,7 @@ public class ChessSet {
         for (Map.Entry<Location, Piece> element : chessSet.entrySet()) {
             if (element.getKey().isSame(col)
                     && element.getValue().isSameTeam(getTeam())
-                    && element.getValue() instanceof Pawn
+                    && element.getValue().isPawn()
             ) {
                 count++;
             }

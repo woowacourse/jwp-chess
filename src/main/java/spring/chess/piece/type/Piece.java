@@ -1,12 +1,12 @@
 package spring.chess.piece.type;
 
-import java.util.Objects;
-
 import spring.chess.board.Route;
 import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.piece.type.movable.PieceMovable;
 import spring.chess.score.Score;
 import spring.chess.team.Team;
+
+import java.util.Objects;
 
 public abstract class Piece {
     public final char name;
@@ -50,7 +50,11 @@ public abstract class Piece {
     }
 
     public boolean isKing() {
-        return this.getClass() == King.class;
+        return this.getClass().equals(King.class);
+    }
+
+    public boolean isPawn() {
+        return this.getClass().equals(Pawn.class);
     }
 
     public boolean isReverseTeam(Piece piece) {

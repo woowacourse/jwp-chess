@@ -38,7 +38,7 @@ public class BoardService {
 
 	public GameDto move(int roomId, Position source, Position target) throws SQLException {
 		Board board = boardDao.findByRoomId(roomId);
-		final RoomDto room = roomDao.findById(roomId);
+		RoomDto room = roomDao.findById(roomId);
 		Turn turn = playerDao.findTurn(room.getTurnId());
 
 		ChessGame game = new ChessGame(new Playing(board, turn));

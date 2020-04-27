@@ -44,7 +44,7 @@ const createTemplate = (team, symbol) => {
 }
 const findChessCell = (x, y) => document.querySelector(`[data-x="${x - 1}"][data-y="${y - 1}"]`)
 
-fetch("http://localhost:4567/loadBoard/" + document.getElementById("id").innerText).then(res => res.json()).then((board) => {
+fetch("http://localhost:4567/board/" + document.getElementById("id").innerText).then(res => res.json()).then((board) => {
     console.dir(board);
     for (let i = 1; i < 9; i++) {
         for (let j = 1; j < 9; j++) {
@@ -86,8 +86,8 @@ function onDrop(e) {
     let targetX = (parseInt(e.target.parentElement.dataset.x) + 1);
     let targetY = (parseInt(e.target.parentElement.dataset.y) + 1);
 
-    fetch("http://localhost:4567/move/" + document.getElementById("id").innerText, {
-        method: 'POST',
+    fetch("http://localhost:4567/board/" + document.getElementById("id").innerText, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },

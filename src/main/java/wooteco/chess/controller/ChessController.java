@@ -27,22 +27,28 @@ public class ChessController {
 
     @GetMapping("/new")
     public String entrance(@RequestParam(defaultValue = "") String error, Model model) {
-        if (error != null) {
+        if (!error.isEmpty()) {
             model.addAttribute("error", error);
         }
         return "chess-before-start";
     }
 
     @PostMapping("/make-room")
-    public String loadNewGame(@RequestParam(value = "new-room-name") String name, Model model) {
-        int roomId = service.createBoard(name);
-        final Board savedBoard = service.getSavedBoard(roomId);
-        createBasicModel(roomId, savedBoard, model);
-        return "chess-running";
+    public String loadNewGame(@RequestParam(value = "new-room-name") String name, Model model,
+        RedirectAttributes redirectAttributes) {
+        try {
+            int roomId = service.createBoard(name);
+            final Board savedBoard = service.getSavedBoard(roomId);
+            createBasicModel(roomId, savedBoard, model);
+            return "chess-running";
+        } catch (RuntimeException e) {
+            redirectAttributes.addAttribute("error", e.getMessage());
+            return "redirect:/new";
+        }
     }
 
     @GetMapping("/")
-    public String showGame(@RequestParam(value = "room-id") int roomId, @RequestParam(defaultValue = "") Boolean error,
+    public String showGame(@RequestParam(value = "room-id") int roomId, @RequestParam(defaultValue = "") String error,
         RedirectAttributes redirectAttributes, Model model) {
         Board board = service.getSavedBoard(roomId);
         createBasicModel(roomId, board, model);
@@ -50,8 +56,7 @@ public class ChessController {
             redirectAttributes.addAttribute("room-id", roomId);
             return "redirect:/result";
         }
-        if (error != null) {
-            model.addAttribute("room-id", roomId);
+        if (!error.isEmpty()) {
             model.addAttribute("error", error);
         }
         return "chess-running";
@@ -61,15 +66,17 @@ public class ChessController {
     public String showResult(@RequestParam(value = "room-id") int id, Model model) {
         Board board = service.getSavedBoard(id);
         allocatePiecesOnMap(board, model);
-        model.addAttribute("winner", board.getWinner().getName());
+        Team winner = board.getWinner();
+        model.addAttribute("winner", winner.getName());
         model.addAttribute("id", id);
         return "chess-result";
     }
 
     @PostMapping("/continue-game")
-    public String continueGame(@RequestParam(value = "existing-room-name") int id,
+    public String continueGame(@RequestParam(value = "existing-room-name") String name,
         RedirectAttributes redirectAttributes, Model model) {
         try {
+            int id = service.getIdByName(name);
             Board board = service.getSavedBoard(id);
             createBasicModel(id, board, model);
             redirectAttributes.addAttribute("room-id", id);
@@ -77,8 +84,8 @@ public class ChessController {
                 return "redirect:/result";
             }
             return "redirect:/";
-        } catch (Exception e) {
-            redirectAttributes.addAttribute("error", Boolean.TRUE);
+        } catch (RuntimeException e) {
+            redirectAttributes.addAttribute("error", e.getMessage());
             return "redirect:/new";
         }
     }
@@ -92,7 +99,7 @@ public class ChessController {
         redirectAttributes.addAttribute("room-id", roomId);
         try {
             service.processMoveInput(board, source, destination, roomId);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             redirectAttributes.addAttribute("error", Boolean.TRUE);
         }
         return "redirect:/";
@@ -120,6 +127,7 @@ public class ChessController {
         model.addAttribute("teamWhiteScore", board.calculateScoreByTeam(Team.WHITE));
         model.addAttribute("teamBlackScore", board.calculateScoreByTeam(Team.BLACK));
         model.addAttribute("id", roomId);
+        model.addAttribute("roomName", service.findNameById(roomId));
         model.addAttribute("turn", board.getTurn());
     }
 }

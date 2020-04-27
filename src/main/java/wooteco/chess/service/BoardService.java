@@ -15,6 +15,7 @@ import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.state.BoardFactory;
 import wooteco.chess.domain.state.Playing;
 import wooteco.chess.dto.GameDto;
+import wooteco.chess.dto.RoomDto;
 
 @Service
 public class BoardService {
@@ -29,16 +30,16 @@ public class BoardService {
 
 	public GameDto load(int roomId) throws SQLException {
 		Board board = boardDao.findByRoomId(roomId);
-		int turnPlayerId = roomDao.findTurnPlayerId(roomId);
-		Turn turn = playerDao.findTurn(turnPlayerId);
+		RoomDto room = roomDao.findById(roomId);
+		Turn turn = playerDao.findTurn(room.getTurnId());
 		ChessGame game = new ChessGame(new Playing(board, turn));
 		return new GameDto(board.getBoard(), turn, game.status());
 	}
 
 	public GameDto move(int roomId, Position source, Position target) throws SQLException {
 		Board board = boardDao.findByRoomId(roomId);
-		int turnPlayerId = roomDao.findTurnPlayerId(roomId);
-		Turn turn = playerDao.findTurn(turnPlayerId);
+		final RoomDto room = roomDao.findById(roomId);
+		Turn turn = playerDao.findTurn(room.getTurnId());
 
 		ChessGame game = new ChessGame(new Playing(board, turn));
 		game.move(source, target);
@@ -48,8 +49,16 @@ public class BoardService {
 		boardDao.updateBoard(roomId, source, sourcePiece);
 		boardDao.updateBoard(roomId, target, targetPiece);
 
-		roomDao.updateTurn(roomId);
+		updateTurn(roomId, room);
 		return new GameDto(game.board().getBoard(), turn, game.status());
+	}
+
+	private void updateTurn(int roomId, RoomDto room) throws SQLException {
+		int turnId = room.getPlayer1Id();
+		if (room.getTurnId() == room.getPlayer1Id()) {
+			turnId = room.getPlayer2Id();
+		}
+		roomDao.updateTurn(roomId, turnId);
 	}
 
 	public int createRoom(int player1Id, int player2Id) throws SQLException {

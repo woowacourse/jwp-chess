@@ -4,16 +4,22 @@ import org.springframework.data.annotation.Id;
 
 public class RoomDto {
 	@Id
-	private final int id;
-	private final String name;
-	private final String player1Name;
-	private final String player2Name;
+	private int id;
+	private int turnId;
+	private int player1Id;
+	private int player2Id;
+	private String name;
+	private String player1Name;
+	private String player2Name;
 
 	public RoomDto(int id, String player1Name, String player2Name) {
 		this.id = id;
 		this.name = "체스 " + id + "번방";
 		this.player1Name = player1Name;
 		this.player2Name = player2Name;
+	}
+
+	public RoomDto() {
 	}
 
 	public int getId() {
@@ -30,5 +36,33 @@ public class RoomDto {
 
 	public String getPlayer2Name() {
 		return player2Name;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getTurnId() {
+		return turnId;
+	}
+
+	public void setTurnId(int turnId) {
+		this.turnId = turnId;
+	}
+
+	public int getPlayer1Id() {
+		return player1Id;
+	}
+
+	public void setPlayer1Id(int player1Id) {
+		this.player1Id = player1Id;
+	}
+
+	public int getPlayer2Id() {
+		return player2Id;
+	}
+
+	public void setPlayer2Id(int player2Id) {
+		this.player2Id = player2Id;
 	}
 }

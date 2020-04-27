@@ -15,9 +15,8 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.service.ChessService;
 
-public class SparkChessController implements ChessController {
+public class SparkChessController {
 	private static final Gson GSON = new Gson();
-	private static final int MAX_INTERVAL_SECONDS = 300;
 
 	private final ChessService service;
 
@@ -33,36 +32,30 @@ public class SparkChessController implements ChessController {
 		handleException();
 	}
 
-	@Override
 	public void renderStart() {
 		get("/", this::renderStart);
 	}
 
-	@Override
 	public void renderBoard() {
 		get("/chess", this::renderBoard);
 	}
 
-	@Override
 	public void updateBoard() {
-		put("/api/move", this::updateBoard);
+		put("/api/piece/:game_id", this::updateBoard);
 	}
 
-	@Override
 	public void renderResult() {
 		get("/status", this::renderResult);
 	}
 
 	private String renderStart(Request request, Response response) {
-		return render(new HashMap<>(), "index.html");
+		return render(new HashMap<>(), "index.hbs");
 	}
 
 	private String renderBoard(Request request, Response response) {
 		String gameId = request.queryParams("game_id");
-		request.session(true).attribute("game_id", gameId);
-		request.session().maxInactiveInterval(MAX_INTERVAL_SECONDS);
 		service.initialize(gameId);
-		return render(service.getBoard(gameId), "chess.html");
+		return render(service.getBoard(gameId), "chess.hbs");
 	}
 
 	private String updateBoard(Request request, Response response) {
@@ -71,15 +64,15 @@ public class SparkChessController implements ChessController {
 
 		String from = element.getAsJsonObject().get("from").getAsString();
 		String to = element.getAsJsonObject().get("to").getAsString();
-		String gameId = request.session().attribute("game_id");
+		String gameId = request.params("game_id");
 
 		service.move(gameId, Position.of(from), Position.of(to));
 		return GSON.toJson(from + " " + to);
 	}
 
 	private String renderResult(Request request, Response response) {
-		String gameId = request.session().attribute("game_id");
-		return render(service.getResult(gameId), "status.html");
+		String gameId = request.queryParams("game_id");
+		return render(service.getResult(gameId), "status.hbs");
 	}
 
 	public void handleException() {

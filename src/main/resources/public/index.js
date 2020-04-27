@@ -1,31 +1,30 @@
-function move(moveInfo) {
-    $.ajax({
-        type: 'PUT',
-        url: '/api/move',
-        data: JSON.stringify(moveInfo),
-        dataType: 'json',
-        contentType: 'application/json; charset=utf-8',
-        success: renderPiece,
-        error: alertMessage
+async function move(moveInfo, game_id) {
+    const moveResponse = await fetch(`/api/piece/${game_id}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(moveInfo)
     });
-}
 
-function alertMessage(response) {
-    alert(response.responseText);
+    if (moveResponse.ok) {
+        renderPiece(await moveResponse.json());
+    } else {
+        alert(await moveResponse.text());
+    }
 }
 
 function renderPiece(response) {
-    const fromTo = response.split(" ");
-    const sourceNode = document.getElementById(fromTo[0]);
-    const targetNode = document.getElementById(fromTo[1]);
+    const [from, to] = response.split(" ");
+    const sourceNode = document.getElementById(from);
+    const targetNode = document.getElementById(to);
 
     targetNode.innerText = sourceNode.innerText;
     sourceNode.innerText = " ";
 }
 
+let isFrom = true;
+const moveInfo = {};
+
 function boxClickHandler() {
-    let isFrom = true;
-    const moveInfo = {};
     return (event) => {
         if (isFrom && event.target.innerText !== " ") {
             moveInfo.from = event.target.id;
@@ -33,17 +32,17 @@ function boxClickHandler() {
         } else if (!isFrom) {
             moveInfo.to = event.target.id;
             isFrom = true;
-            move(moveInfo);
+            move(moveInfo, params.get("game_id"));
         }
     };
 }
 
-function getMoveInfo() {
-    $(`.box`).on(`click`, boxClickHandler())
+const query = window.location.search;
+const params = new URLSearchParams(query);
+
+window.onload = () => {
+    document.querySelectorAll('.box')
+        .forEach(box => box.addEventListener('click', boxClickHandler()));
+    document.querySelector("#param").setAttribute('value', params.get("game_id"));
 }
 
-function init() {
-    getMoveInfo();
-}
-
-init();

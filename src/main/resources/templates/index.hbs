@@ -1,9 +1,19 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>모두의 체스</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./index.css">
+    <title>우체코</title>
 </head>
-<body>
-<h1>Hello World</h1>
+<body class="main">
+<form action="/chess" method="get">
+    <p>
+        <strong>방 번호</strong>
+        <input type="text" name="game_id" placeholder="방 번호 입력">
+    </p>
+    <p>
+        <input class="submit" type="submit" value="입장">
+    </p>
+</form>
 </body>
 </html>

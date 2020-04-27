@@ -23,13 +23,14 @@ public class GameDao implements MySqlJdbcTemplateDao {
     public static final String BLACK_ID = "black";
 
     public String add(final Game game) throws SQLException {
-        String query = "INSERT INTO game (id, white, black) VALUES (?, ?, ?)";
+        String query = "INSERT INTO game (id, title, white, black) VALUES (?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         ) {
             statement.setString(1, game.getId());
-            statement.setInt(2, game.getPlayerId(Side.WHITE));
-            statement.setInt(3, game.getPlayerId(Side.BLACK));
+            statement.setString(2, game.getTitle());
+            statement.setInt(3, game.getPlayerId(Side.WHITE));
+            statement.setInt(4, game.getPlayerId(Side.BLACK));
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -82,7 +83,7 @@ public class GameDao implements MySqlJdbcTemplateDao {
             games.add(game);
         }
     }
-    
+
     public Map<String, String> findGameDataById(String gameId) throws SQLException {
         String query = "SELECT id, white, black FROM game WHERE id = ?";
         try (Connection connection = getConnection();

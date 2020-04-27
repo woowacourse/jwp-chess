@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
-import wooteco.chess.dto.BoardDto;
+import wooteco.chess.dto.GameRequestDto;
+import wooteco.chess.dto.GameResponseDto;
 import wooteco.chess.dto.MovableRequestDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.service.ChessService;
@@ -30,29 +31,33 @@ public class SpringChessBoardController {
     }
 
     @GetMapping
-    private Map<String, Map<Side, Player>> getPlayerContexts() throws SQLException {
-        return service.getPlayerContexts();
+    private Map<String, GameResponseDto> getBoards() {
+        return service.getBoards();
     }
 
+    // @GetMapping
+    // private Map<String, Map<Side, Player>> getPlayerContexts() throws SQLException {
+    //     return service.getPlayerContexts();
+    // }
+
     @PostMapping
-    private Map<String, Map<Side, Player>> addGameAndGetPlayers() throws
+    private Map<String, GameResponseDto> addGameAndGetPlayers(@RequestBody GameRequestDto dto) throws
         SQLException {
         // TODO: 실제 플레이어 기능 추가
         Player white = new Player(1, "hodol", "password");
         Player black = new Player(2, "pobi", "password");
-        Map<String, Map<Side, Player>> map = service.addGame(white, black);
-        System.out.println("@@@@@@@@@@@@@@@@@@" + map.toString());
+        Map<String, GameResponseDto> map = service.addGame(dto.getTitle(), white, black);
         return map;
     }
 
     @GetMapping("/{id}")
-    private BoardDto getBoard(@PathVariable String id) throws SQLException {
-        return new BoardDto(service.findBoardById(id));
+    private GameResponseDto getBoard(@PathVariable String id) throws SQLException {
+        return new GameResponseDto(service.findGameById(id));
     }
 
     @PostMapping("/{id}")
-    private BoardDto resetBoard(@PathVariable String id) throws SQLException {
-        return new BoardDto(service.resetGameById(id));
+    private GameResponseDto resetBoard(@PathVariable String id) throws SQLException {
+        return new GameResponseDto(service.resetGameById(id));
     }
 
     @DeleteMapping("/{id}")

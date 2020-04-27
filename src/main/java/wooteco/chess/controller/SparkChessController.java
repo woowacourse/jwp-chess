@@ -15,7 +15,8 @@ import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
-import wooteco.chess.dto.BoardDto;
+import wooteco.chess.dto.GameRequestDto;
+import wooteco.chess.dto.GameResponseDto;
 import wooteco.chess.dto.MovableRequestDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.service.ChessService;
@@ -60,20 +61,21 @@ public class SparkChessController {
         return service.getPlayerContexts();
     }
 
-    private Map<String, Map<Side, Player>> addGameAndGetPlayers(final Request request, final Response response) throws
+    private Map<String, GameResponseDto> addGameAndGetPlayers(final Request request, final Response response) throws
         SQLException {
+        GameRequestDto dto = gson.fromJson(request.body(), GameRequestDto.class);
         // TODO: 실제 플레이어 기능 추가
         Player white = new Player(1, "hodol", "password");
         Player black = new Player(2, "pobi", "password");
-        return service.addGame(white, black);
+        return service.addGame(dto.getTitle(), white, black);
     }
 
-    private BoardDto getBoard(final Request request, final Response response) throws SQLException {
-        return new BoardDto(service.findBoardById(parseId(request)));
+    private GameResponseDto getBoard(final Request request, final Response response) throws SQLException {
+        return new GameResponseDto(service.findGameById(parseId(request)));
     }
 
-    private BoardDto resetBoard(final Request request, final Response response) throws SQLException {
-        return new BoardDto(service.resetGameById(parseId(request)));
+    private GameResponseDto resetBoard(final Request request, final Response response) throws SQLException {
+        return new GameResponseDto(service.resetGameById(parseId(request)));
     }
 
     public boolean finishGame(final Request request, final Response response) throws SQLException {

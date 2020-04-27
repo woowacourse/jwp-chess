@@ -25,7 +25,7 @@ public class WebChessRestController {
     }
 
     @GetMapping("/board/{id}")
-    public String getChessGameById(@PathVariable String id) throws SQLException {
+    public String getChessGameById(@PathVariable String id) {
         return GSON.toJson(chessService.getChessGameById(Integer.parseInt(id)));
     }
 
@@ -40,15 +40,15 @@ public class WebChessRestController {
     }
 
     @PostMapping("/restart")
-    public String restartGame(@RequestParam String id) throws SQLException {
+    public String restartGame(@RequestParam String id) {
         return GSON.toJson(chessService.restartGame(Integer.parseInt(id)));
     }
 
     @PostMapping(value = "/move/{id}")
-    public String movePiece(@PathVariable String id, @RequestBody Map<String, Double> data) throws SQLException {
-        int pieceId = Integer.parseInt(id);
-        Position source = Position.of(data.get("sx").intValue(), data.get("sy").intValue());
-        Position target = Position.of(data.get("tx").intValue(), data.get("ty").intValue());
-        return GSON.toJson(chessService.movePiece(pieceId, source, target));
+    public String movePiece(@PathVariable String id, @RequestBody Map<String, Integer> data) {
+        int chessGameId = Integer.parseInt(id);
+        Position source = Position.of(data.get("sx"), data.get("sy"));
+        Position target = Position.of(data.get("tx"), data.get("ty"));
+        return GSON.toJson(chessService.movePiece(chessGameId, source, target));
     }
 }

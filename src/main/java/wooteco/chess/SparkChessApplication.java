@@ -1,10 +1,10 @@
 package wooteco.chess;
 
-import wooteco.chess.controller.WebChessGameController;
+import wooteco.chess.controller.WebChessGameRestController;
 import wooteco.chess.service.ChessService;
 
 public class SparkChessApplication {
     public static void main(String[] args) {
-        new WebChessGameController(new ChessService());
+        new WebChessGameRestController(new ChessService());
     }
 }

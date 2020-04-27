@@ -8,9 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import wooteco.chess.domain.game.Board;
 import wooteco.chess.domain.game.Turn;
-import wooteco.chess.domain.game.state.Finished;
-import wooteco.chess.domain.game.state.Playing;
-import wooteco.chess.domain.game.state.State;
 import wooteco.chess.domain.piece.Color;
 import wooteco.chess.domain.piece.Position;
 
@@ -61,8 +58,8 @@ public class PlayingTest {
     @Test
     @DisplayName("초기 게임 결과 확인")
     void status() {
-        assertThat(state.status().getWhiteScore().getValue()).isEqualTo(38);
-        assertThat(state.status().getBlackScore().getValue()).isEqualTo(38);
+        assertThat(state.status().getWhiteScore().getScore()).isEqualTo(38);
+        assertThat(state.status().getBlackScore().getScore()).isEqualTo(38);
         assertThat(state.status().getWinner()).isEqualTo(Color.NONE);
     }
 

@@ -47,7 +47,7 @@ public class Score {
         return this.score > that.score;
     }
 
-    public double getValue() {
+    public double getScore() {
         return score;
     }
 }

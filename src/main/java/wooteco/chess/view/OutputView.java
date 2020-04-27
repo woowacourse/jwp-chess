@@ -36,7 +36,7 @@ public class OutputView {
     }
 
     public static void printStatus(Status status) {
-        System.out.printf(STATUS_FORMAT, status.getWhiteScore().getValue(), status.getBlackScore().getValue(),
+        System.out.printf(STATUS_FORMAT, status.getWhiteScore().getScore(), status.getBlackScore().getScore(),
             status.getWinner());
     }
 }

@@ -26,7 +26,7 @@ public class WebUIChessController {
             if (req.queryParams("error") != null) {
                 model.put("error", req.queryParams("error"));
             }
-            return render(model, "chess-before-start.html");
+            return render(model, "chess-before-start.hbs");
         };
     }
 
@@ -35,7 +35,7 @@ public class WebUIChessController {
             int roomId = service.createBoard(req.queryParams("new-room-name"));
             Board board = service.getSavedBoard(roomId);
             Map<String, Object> model = createBasicModel(roomId, board);
-            return render(model, "chess-running.html");
+            return render(model, "chess-running.hbs");
         };
     }
 
@@ -50,7 +50,7 @@ public class WebUIChessController {
             if (req.queryParams("error") != null) {
                 model.put("error", req.queryParams("error"));
             }
-            return render(model, "chess-running.html");
+            return render(model, "chess-running.hbs");
         };
     }
 
@@ -60,7 +60,8 @@ public class WebUIChessController {
             Board board = service.getSavedBoard(roomId);
             Map<String, Object> model = allocatePiecesOnMap(board);
             model.put("winner", board.getWinner().getName());
-            return render(model, "chess-result.html");
+            model.put("id", roomId);
+            return render(model, "chess-result.hbs");
         };
     }
 
@@ -73,7 +74,7 @@ public class WebUIChessController {
                 if (!board.isBothKingAlive()) {
                     res.redirect("/result?room-id=" + roomId);
                 }
-                return render(model, "chess-running.html");
+                return render(model, "chess-running.hbs");
             } catch (Exception e) {
                 res.redirect("/new?error=true");
             }

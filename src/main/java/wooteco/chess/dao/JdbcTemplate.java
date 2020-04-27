@@ -17,16 +17,6 @@ public class JdbcTemplate {
         }
     }
 
-    public Object executeQuery(String query, RowMapper rm) throws SQLException {
-        try (
-            Connection con = ConnectionManager.getConnection();
-            PreparedStatement statement = con.prepareStatement(query);
-            ResultSet rs = statement.executeQuery()
-        ) {
-            return rm.mapRow(rs);
-        }
-    }
-
     public Object executeQueryWithPss(String query, PreparedStatementSetter pss, RowMapper rm) throws SQLException {
         try (
             Connection con = ConnectionManager.getConnection();

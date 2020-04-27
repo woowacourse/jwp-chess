@@ -14,7 +14,7 @@ import java.util.Map;
 
 import static spark.Spark.*;
 
-public class WebChessController {
+public class SparkChessController {
     public static void main(String[] args) {
         staticFiles.location("/public");
         BoardService boardService = new BoardService(new ChessDao());
@@ -24,7 +24,7 @@ public class WebChessController {
             Map<String, Object> model = new HashMap<>();
             model.put("roomNumbers", roomService.loadRoomNumbers());
 
-            return render(model, "index.html");
+            return render(model, "index.hbs");
         });
 
         post("/newroom", (req, res) -> {
@@ -37,7 +37,7 @@ public class WebChessController {
             int id = Integer.parseInt(req.params(":id"));
             Map<String, Object> model = new HashMap<>();
             constructModel(id, boardService, model);
-            return render(model, "board.html");
+            return render(model, "board.hbs");
         });
 
         post("/rooms/:id", (req, res) -> {
@@ -50,14 +50,14 @@ public class WebChessController {
             } catch (RuntimeException e) {
                 model.put("error-message", e.getMessage());
                 constructModel(id, boardService, model);
-                return render(model, "board.html");
+                return render(model, "board.hbs");
             }
             if (boardService.isFinished(id)) {
                 model.put("winner", boardService.isTurnWhite(id) ? "흑팀" : "백팀");
-                return render(model, "result.html");
+                return render(model, "result.hbs");
             }
             constructModel(id, boardService, model);
-            return render(model, "board.html");
+            return render(model, "board.hbs");
         });
 
         post("/newgame/:id", (req, res) -> {
@@ -72,7 +72,7 @@ public class WebChessController {
             Map<String, Object> model = new HashMap<>();
             model.put("id", id);
             model.put("scores", Scores.calculateScores(boardService.getBoard(id)));
-            return render(model, "scores.html");
+            return render(model, "scores.hbs");
         });
     }
 

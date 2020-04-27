@@ -15,20 +15,22 @@ import wooteco.chess.domain.position.Position;
 
 public class BoardConverter {
 	public static final String BLANK_MARK = ".";
+	private static final int BOARD_MIN_SIZE = 0;
+	private static final int BOARD_MAX_SIZE = 8;
 
 	public static ChessBoard convertToBoard(String board) {
 		List<Piece> pieces = new ArrayList<>();
-		int col = 0;
-		int row = 8;
+		int col = BOARD_MIN_SIZE;
+		int row = BOARD_MAX_SIZE;
 
 		for (String pieceName : board.split("")) {
 			Optional<Piece> piece = PieceFactory.of(pieceName.toLowerCase(), convertToSide(pieceName),
-					new Position((col % 8) + 1, row));
+					new Position((col % BOARD_MAX_SIZE) + 1, row));
 
 			if (piece.isPresent()) {
 				pieces.add(piece.orElseThrow(NoSuchElementException::new));
 			}
-			if (++col % 8 == 0) {
+			if (++col % BOARD_MAX_SIZE == BOARD_MIN_SIZE) {
 				row--;
 			}
 		}
@@ -82,15 +84,15 @@ public class BoardConverter {
 
 	private static void deployPieces(List<Piece> pieces, List<List<String>> board) {
 		for (Piece piece : pieces) {
-			board.get(8 - piece.getPosition().getRow().getSymbol())
+			board.get(BOARD_MAX_SIZE - piece.getPosition().getRow().getSymbol())
 					.set(piece.getPosition().getCol().getValue() - 1, piece.getName());
 		}
 	}
 
 	private static void makeEmptyBoard(List<List<String>> board) {
-		for (int i = 0; i < 8; i++) {
+		for (int i = BOARD_MIN_SIZE; i < BOARD_MAX_SIZE; i++) {
 			List<String> emptyRow = new ArrayList<>();
-			for (int j = 0; j < 8; j++) {
+			for (int j = BOARD_MIN_SIZE; j < BOARD_MAX_SIZE; j++) {
 				emptyRow.add(BLANK_MARK);
 			}
 			board.add(emptyRow);

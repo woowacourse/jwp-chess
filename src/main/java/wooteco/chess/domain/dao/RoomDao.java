@@ -22,7 +22,7 @@ public class RoomDao extends MySqlDao {
 		while (rs.next()) {
 			roomNames.add(rs.getString("room_name"));
 		}
-		return new ArrayList<>(roomNames);
+		return roomNames;
 	}
 
 	public Optional<String> findByRoomName(String roomName, String columnLabel) throws SQLException {

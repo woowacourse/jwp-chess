@@ -1,3 +1,13 @@
 spring:
-  h2.console.enabled: true
   http.converters.preferred-json-mapper: gson
+  h2.console.enabled: true
+  datasource:
+    platform: test
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+  test:
+    database:
+      replace: NONE
+
+chess.test.data:
+  sample1: No1Id
+  sample2: No2Id

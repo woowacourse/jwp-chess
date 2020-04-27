@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import wooteco.chess.domain.Turn;
 
-@Repository("TurnDAO")
-public class TurnDAO {
+@Repository("TurnDao")
+public class TurnDao {
 	private static final String SELECT_FROM_TURN = "SELECT * FROM turn";
 	private static final String INSERT_INTO_TURN_VALUES = "INSERT INTO turn(isWhiteTurn) VALUES (?)";
 	private static final String TRUNCATE_TURN = "TRUNCATE turn";

@@ -66,7 +66,7 @@ function getChessBoard(id) {
             $('#blackScore').html("Black score : " + jsonData.blackScore);
 
             var turn = "white";
-            if(jsonData.turnIsBlack === "1") {
+            if (jsonData.turnIsBlack === "1") {
                 turn = "black";
             }
             $('#turn').html("It's " + turn + " Turn!");

@@ -1,12 +1,7 @@
 package vo;
 
-import chess.piece.type.Pawn;
 import chess.piece.type.Piece;
 import chess.piece.type.PieceMapper;
-import chess.piece.type.Rook;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PieceVo {
     private final int gameId;

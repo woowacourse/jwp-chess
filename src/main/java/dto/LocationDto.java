@@ -20,12 +20,12 @@ public class LocationDto {
         this.col = Col.of(col.charAt(0));
     }
 
-    public Location toEntity() {
-        return new Location(row, col);
-    }
-
     private static String[] parseRowAndCol(String rowAndCol) {
         return rowAndCol.split(UNDER_BAR);
+    }
+
+    public Location toEntity() {
+        return new Location(row, col);
     }
 
     public Row getRow() {

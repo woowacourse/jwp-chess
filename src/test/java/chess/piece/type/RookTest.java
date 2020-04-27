@@ -1,19 +1,19 @@
 package chess.piece.type;
 
-import static org.assertj.core.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import spring.chess.board.Route;
+import spring.chess.location.Location;
+import spring.chess.piece.type.Bishop;
+import spring.chess.piece.type.Piece;
+import spring.chess.piece.type.Rook;
+import spring.chess.team.Team;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-import chess.board.ChessBoard;
-import chess.board.Route;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import chess.location.Location;
-import chess.team.Team;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class RookTest {
     @Test

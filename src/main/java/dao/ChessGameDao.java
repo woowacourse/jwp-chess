@@ -13,8 +13,8 @@ public class ChessGameDao {
     public ChessGameVo findChessGameBy(int gameId) throws SQLException {
         String query = "SELECT * FROM game WHERE id = ?";
 
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, gameId);
             ResultSet rs = pstmt.executeQuery();
 
@@ -33,8 +33,8 @@ public class ChessGameDao {
 
     public void updateTurn(Team turn, int gameId) throws SQLException {
         String query = "UPDATE game SET turn_is_black = ? WHERE id = ?";
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement pstmt = connection.prepareStatement(query)){
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, String.valueOf(turn.getTurnIsBlack()));
             pstmt.setString(2, String.valueOf(gameId));
             pstmt.executeUpdate();

@@ -1,12 +1,12 @@
 package chess.game;
 
+import chess.board.ChessBoard;
 import chess.board.ChessBoardCreater;
 import chess.command.Command;
-import chess.board.ChessBoard;
 import chess.location.Location;
 import chess.piece.type.Piece;
-import chess.progress.Progress;
 import chess.player.Player;
+import chess.progress.Progress;
 import chess.result.ChessResult;
 import chess.result.ChessScores;
 import chess.team.Team;
@@ -83,7 +83,7 @@ public class ChessGame {
     }
 
     private Player getCounterTurnPlayer(Team turn) {
-        if(black.isNotSame(turn)) {
+        if (black.isNotSame(turn)) {
             return black;
         }
         return white;

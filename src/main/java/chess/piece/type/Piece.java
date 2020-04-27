@@ -1,11 +1,11 @@
 package chess.piece.type;
 
-import java.util.Objects;
-
 import chess.board.Route;
 import chess.piece.type.movable.PieceMovable;
 import chess.score.Score;
 import chess.team.Team;
+
+import java.util.Objects;
 
 public abstract class Piece {
     public final char name;

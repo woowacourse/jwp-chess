@@ -1,12 +1,12 @@
 package view;
 
-import java.util.Map;
-
-import chess.result.ChessResult;
 import chess.board.ChessBoard;
 import chess.location.Location;
 import chess.piece.type.Piece;
+import chess.result.ChessResult;
 import chess.team.Team;
+
+import java.util.Map;
 
 public class OutputView {
     private static final int MAXIMUM_BOARD_SIZE = 8;
@@ -32,7 +32,7 @@ public class OutputView {
     }
 
     private static String findPieceOrDefault(Map<Location, Piece> board, Location target) {
-        if(board.containsKey(target)) {
+        if (board.containsKey(target)) {
             Piece piece = board.get(target);
             return piece.toString();
         }

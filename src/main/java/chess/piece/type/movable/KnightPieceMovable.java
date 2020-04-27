@@ -3,9 +3,6 @@ package chess.piece.type.movable;
 import chess.board.Route;
 import chess.location.Location;
 import chess.location.NoExistChessLocationException;
-import chess.piece.type.Piece;
-
-import java.util.Map;
 
 public class KnightPieceMovable implements PieceMovable {
 

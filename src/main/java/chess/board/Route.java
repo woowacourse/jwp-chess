@@ -5,10 +5,8 @@ import chess.piece.type.Piece;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.log;
 
 public class Route {
     private final Map<Location, Piece> route;

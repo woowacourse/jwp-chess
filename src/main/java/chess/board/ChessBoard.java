@@ -1,11 +1,13 @@
 package chess.board;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import chess.location.Location;
 import chess.piece.type.Piece;
 import chess.team.Team;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ChessBoard {
     private final Map<Location, Piece> board;

@@ -13,8 +13,8 @@ public class ChessGamesDao {
     public ArrayList<ChessGameVo> findAll() throws SQLException {
         String query = "SELECT * FROM game;";
 
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
             ResultSet rs = pstmt.executeQuery();
             ArrayList<ChessGameVo> chessGameVos = getChessGameDtos(rs);
             return chessGameVos;

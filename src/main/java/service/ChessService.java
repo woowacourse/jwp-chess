@@ -50,7 +50,7 @@ public class ChessService {
         return GSON.toJson(boardDto);
     }
 
-    public String move(LocationDto nowDto,LocationDto destinationDto, int gameId) throws SQLException {
+    public String move(LocationDto nowDto, LocationDto destinationDto, int gameId) throws SQLException {
         Location now = nowDto.toEntity();
         Location destination = destinationDto.toEntity();
         ChessGame chessGame = makeGameByDB(gameId);

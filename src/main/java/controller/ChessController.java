@@ -1,9 +1,10 @@
 package controller;
 
-import chess.command.*;
+import chess.command.Command;
+import chess.command.CommandMapper;
 import chess.game.ChessGame;
-import chess.result.ChessResult;
 import chess.progress.Progress;
+import chess.result.ChessResult;
 import view.InputView;
 import view.OutputView;
 

@@ -1,4 +1,4 @@
-package wooteco.chess.domain.dao;
+package wooteco.chess.dao;
 
 import static org.assertj.core.api.Assertions.*;
 

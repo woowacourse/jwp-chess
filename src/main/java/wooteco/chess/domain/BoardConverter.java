@@ -1,6 +1,6 @@
 package wooteco.chess.domain;
 
-import static wooteco.chess.domain.dto.ChessGameDto.*;
+import static wooteco.chess.dto.ChessGameDto.*;
 
 import java.util.ArrayList;
 import java.util.List;

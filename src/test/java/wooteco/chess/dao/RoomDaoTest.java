@@ -1,4 +1,4 @@
-package wooteco.chess.domain.dao;
+package wooteco.chess.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import wooteco.chess.domain.BoardConverter;
 import wooteco.chess.domain.ChessGame;
 import wooteco.chess.domain.Side;
-import wooteco.chess.domain.dto.ChessGameDto;
+import wooteco.chess.dto.ChessGameDto;
 
 public class RoomDaoTest {
 	private RoomDao roomDao;

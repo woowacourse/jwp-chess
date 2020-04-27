@@ -1,8 +1,8 @@
 package wooteco.chess;
 
-import wooteco.chess.contoller.WebController;
-import wooteco.chess.domain.dao.RoomDao;
-import wooteco.chess.domain.service.ChessGameService;
+import wooteco.chess.controller.WebController;
+import wooteco.chess.dao.RoomDao;
+import wooteco.chess.service.ChessGameService;
 
 public class SparkChessApplication {
 	public static void main(String[] args) {

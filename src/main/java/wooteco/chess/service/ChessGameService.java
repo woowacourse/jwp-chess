@@ -1,4 +1,4 @@
-package wooteco.chess.domain.service;
+package wooteco.chess.service;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -9,9 +9,9 @@ import wooteco.chess.domain.BoardConverter;
 import wooteco.chess.domain.ChessGame;
 import wooteco.chess.domain.FinishFlag;
 import wooteco.chess.domain.Side;
-import wooteco.chess.domain.dao.RoomDao;
-import wooteco.chess.domain.dto.ChessGameDto;
-import wooteco.chess.domain.dto.RoomDto;
+import wooteco.chess.dao.RoomDao;
+import wooteco.chess.dto.ChessGameDto;
+import wooteco.chess.dto.RoomDto;
 import wooteco.chess.domain.position.Position;
 
 public class ChessGameService {

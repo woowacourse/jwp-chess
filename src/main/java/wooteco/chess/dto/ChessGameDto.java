@@ -1,4 +1,4 @@
-package wooteco.chess.domain.dto;
+package wooteco.chess.dto;
 
 import java.util.HashMap;
 import java.util.List;

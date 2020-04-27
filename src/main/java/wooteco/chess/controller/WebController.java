@@ -1,4 +1,4 @@
-package wooteco.chess.contoller;
+package wooteco.chess.controller;
 
 import static spark.Spark.*;
 
@@ -11,9 +11,9 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import wooteco.chess.domain.dto.ChessGameDto;
-import wooteco.chess.domain.dto.MoveDto;
-import wooteco.chess.domain.service.ChessGameService;
+import wooteco.chess.dto.ChessGameDto;
+import wooteco.chess.dto.MoveDto;
+import wooteco.chess.service.ChessGameService;
 
 public class WebController {
 	private final ChessGameService chessGameService;

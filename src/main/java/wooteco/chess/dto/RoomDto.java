@@ -1,4 +1,4 @@
-package wooteco.chess.domain.dto;
+package wooteco.chess.dto;
 
 public class RoomDto {
 	private String name;

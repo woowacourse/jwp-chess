@@ -1,4 +1,4 @@
-package wooteco.chess.contoller;
+package wooteco.chess.controller;
 
 import static wooteco.chess.view.InputView.*;
 import static wooteco.chess.view.OutputView.*;

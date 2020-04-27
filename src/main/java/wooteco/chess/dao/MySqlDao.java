@@ -1,4 +1,4 @@
-package wooteco.chess.domain.dao;
+package wooteco.chess.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

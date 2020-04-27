@@ -1,13 +1,17 @@
 package wooteco.chess.dao;
 
+import org.springframework.data.repository.CrudRepository;
 import wooteco.chess.dto.Commands;
 
 import java.util.List;
 
-public interface ChessDao {
-    void addCommand(Commands command);
+public interface ChessDao extends CrudRepository<Commands, Long> {
+    @Override
+    <S extends Commands> S save(S entity);
 
-    void clearCommands();
+    @Override
+    void deleteAll();
 
-    List<Commands> selectCommands();
+    @Override
+    List<Commands> findAll();
 }

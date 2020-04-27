@@ -1,5 +1,7 @@
 package wooteco.chess.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import wooteco.chess.controller.command.Command;
 import wooteco.chess.dao.ChessDao;
 import wooteco.chess.domain.ChessManager;
@@ -10,18 +12,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class ChessService {
     private static final String MOVE_ERROR_MESSAGE = "이동할 수 없는 곳입니다. 다시 입력해주세요";
     private static final String MOVE_DELIMETER = " ";
 
     private ChessDao chessDao;
-    private ChessManager chessManager = new ChessManager();
+    private ChessManager chessManager;
 
+    @Autowired(required = false)
     public ChessService(ChessDao chessDao) {
         this.chessDao = chessDao;
     }
 
     public void start() {
+        chessManager = new ChessManager();
         chessManager.start();
     }
 
@@ -30,14 +35,13 @@ public class ChessService {
     }
 
     public void playLastGame() {
-        List<Commands> commands = chessDao.selectCommands();
+        List<Commands> commands = chessDao.findAll();
         for (Commands command : commands) {
             Command.MOVE.apply(chessManager, command.get());
         }
     }
 
     public void move(String source, String target) {
-        System.out.println(source + target);
         String command = String.join(MOVE_DELIMETER, new String[]{"move", source, target});
 
         try {
@@ -49,6 +53,7 @@ public class ChessService {
 
         if (!chessManager.isPlaying()) {
             initializeDatabase();
+            chessManager.end();
         }
     }
 
@@ -62,7 +67,7 @@ public class ChessService {
         model.put("chessPieces", gameResponse.getTiles());
         model.put("currentTeam", gameResponse.getCurrentTeam());
         model.put("currentTeamScore", gameResponse.getCurrentTeamScore());
-        if (!chessDao.selectCommands().isEmpty()) {
+        if (!chessDao.findAll().isEmpty()) {
             model.put("haveLastGameRecord", "true");
         }
 
@@ -75,16 +80,19 @@ public class ChessService {
         model.put("chessPieces", gameResponse.getTiles());
         model.put("currentTeam", gameResponse.getCurrentTeam());
         model.put("currentTeamScore", gameResponse.getCurrentTeamScore());
-        chessManager.getWinner().ifPresent(winner -> model.put("winner", winner));
 
+        if (chessManager.getWinner().isPresent()) {
+            model.put("winner", chessManager.getWinner().get());
+            chessManager.clearBoard();
+        }
         return model;
     }
 
     private void initializeDatabase() {
-        chessDao.clearCommands();
+        chessDao.deleteAll();
     }
 
     private void saveToDatabase(String command) {
-        chessDao.addCommand(new Commands(command));
+        chessDao.save(new Commands(command));
     }
 }

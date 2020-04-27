@@ -1,4 +1,5 @@
+spring.profiles.active: prod
+
 spring:
   h2.console.enabled: true
   http.converters.preferred-json-mapper: gson
-  profiles.active: prod

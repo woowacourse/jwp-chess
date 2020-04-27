@@ -1,30 +1,28 @@
 package wooteco.chess.repository;
 
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-import wooteco.chess.domain.Game;
+import wooteco.chess.AbstractChessApplicationTest;
 import wooteco.chess.domain.player.Player;
-import wooteco.chess.entity.GameEntity;
 import wooteco.chess.entity.PlayerEntity;
 
-@SpringBootTest
-@ActiveProfiles("test")
-class PlayerRepositoryTest {
+class PlayerRepositoryTest extends AbstractChessApplicationTest {
 
     @Autowired
     private PlayerRepository playerRepository;
 
-    @Autowired
-    private GameRepository gameRepository;
-
     @DisplayName("생성이 되는가")
     @Test
     void create() {
+        int newId = (int)playerRepository.count() + 1;
         playerRepository.save(new PlayerEntity(new Player("woonjang", "password")));
-        gameRepository.save(new GameEntity(new Game()));
+        assertThat(playerRepository.findById(newId)).isNotEmpty();
+        assertThat(playerRepository.findById(newId + 1)).isEmpty();
+        playerRepository.save(new PlayerEntity(new Player(newId, "hodol", "password")));
+        assertThat(playerRepository.findById(newId).get().getUsername()).isEqualTo("hodol");
     }
 }

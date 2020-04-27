@@ -45,11 +45,11 @@ public class ChessDAO {
             System.out.println(e.getMessage());
             throw new RuntimeException();
         }
-        addBoard(id, chessGame);
+        insertBoard(id, chessGame);
         return id;
     }
 
-    public void addBoard(long chessGameId, ChessGame chessGame) {
+    public void updateChessGame(long chessGameId, ChessGame chessGame) {
         deleteBoard(chessGameId);
         updateTurn(chessGameId, chessGame);
         insertBoard(chessGameId, chessGame);

@@ -10,14 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import wooteco.chess.domain.piece.Position;
+import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.service.ChessService;
 
 @RestController
 public class WebChessRestController {
-    private static final Gson GSON = new GsonBuilder().create();
     private ChessService chessService;
 
     public WebChessRestController(ChessService chessService) {
@@ -25,30 +23,30 @@ public class WebChessRestController {
     }
 
     @GetMapping("/board/{id}")
-    public String getChessGameById(@PathVariable String id) {
-        return GSON.toJson(chessService.getChessGameById(Integer.parseInt(id)));
+    public ResponseDto getChessGameById(@PathVariable String id) {
+        return chessService.getChessGameById(Integer.parseInt(id));
     }
 
     @GetMapping("/games")
-    public String getGameList() throws SQLException {
-        return GSON.toJson(chessService.getGameList());
+    public ResponseDto getGameList() throws SQLException {
+        return chessService.getGameList();
     }
 
     @PostMapping("/create")
-    public String createChessRoom() throws SQLException {
-        return GSON.toJson(chessService.createChessRoom());
+    public ResponseDto createChessRoom() throws SQLException {
+        return chessService.createChessRoom();
     }
 
     @PostMapping("/restart")
-    public String restartGame(@RequestParam String id) {
-        return GSON.toJson(chessService.restartGame(Integer.parseInt(id)));
+    public ResponseDto restartGame(@RequestParam String id) {
+        return chessService.restartGame(Integer.parseInt(id));
     }
 
     @PostMapping(value = "/move/{id}")
-    public String movePiece(@PathVariable String id, @RequestBody Map<String, Integer> data) {
+    public ResponseDto movePiece(@PathVariable String id, @RequestBody Map<String, Integer> data) {
         int chessGameId = Integer.parseInt(id);
         Position source = Position.of(data.get("sx"), data.get("sy"));
         Position target = Position.of(data.get("tx"), data.get("ty"));
-        return GSON.toJson(chessService.movePiece(chessGameId, source, target));
+        return chessService.movePiece(chessGameId, source, target);
     }
 }

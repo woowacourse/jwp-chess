@@ -6,8 +6,8 @@ import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
-import wooteco.chess.dao.BoardDAO;
-import wooteco.chess.dao.TurnDAO;
+import wooteco.chess.dao.BoardDao;
+import wooteco.chess.dao.TurnDao;
 import wooteco.chess.domain.Result;
 import wooteco.chess.domain.Status;
 import wooteco.chess.domain.Team;
@@ -17,56 +17,56 @@ import wooteco.chess.domain.chesspiece.Blank;
 import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.factory.BoardFactory;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.dto.PieceDTO;
+import wooteco.chess.dto.PieceDto;
 
 @Service
 public class ChessService {
 	private static final boolean FIRST_TURN = true;
 
-	private final BoardDAO boardDAO;
-	private final TurnDAO turnDAO;
+	private final BoardDao boardDao;
+	private final TurnDao turnDao;
 
-	public ChessService(final BoardDAO boardDAO, final TurnDAO turnDAO) {
-		this.boardDAO = boardDAO;
-		this.turnDAO = turnDAO;
+	public ChessService(final BoardDao boardDao, final TurnDao turnDao) {
+		this.boardDao = boardDao;
+		this.turnDao = turnDao;
 	}
 
 	public Board move(Position startPosition, Position targetPosition) {
 		Board board = find();
 		Piece startPiece = board.findByPosition(startPosition);
 		board.move(startPosition, targetPosition);
-		boardDAO.update(targetPosition, startPiece.getName());
-		boardDAO.update(startPosition, Blank.NAME);
-		turnDAO.changeTurn(board.isWhiteTurn());
+		boardDao.update(targetPosition, startPiece.getName());
+		boardDao.update(startPosition, Blank.NAME);
+		turnDao.changeTurn(board.isWhiteTurn());
 		return board;
 	}
 
 	public Board find() {
-		List<PieceDTO> pieceDTOs = boardDAO.findAll();
+		List<PieceDto> pieceDtos = boardDao.findAll();
 		Turn turn;
 		try {
-			turn = turnDAO.find();
+			turn = turnDao.find();
 		} catch (NoSuchElementException e) {
 			turn = new Turn(FIRST_TURN);
-			turnDAO.addTurn(FIRST_TURN);
+			turnDao.addTurn(FIRST_TURN);
 		}
-		if (pieceDTOs.isEmpty()) {
+		if (pieceDtos.isEmpty()) {
 			return createBoard(BoardFactory.createBoard());
 		}
-		return BoardFactory.createBoard(pieceDTOs, turn);
+		return BoardFactory.createBoard(pieceDtos, turn);
 	}
 
 	private Board createBoard(Board board) {
 		List<Piece> pieces = board.findAll();
 		for (Piece piece : pieces) {
-			boardDAO.addPiece(PieceDTO.from(piece));
+			boardDao.addPiece(PieceDto.from(piece));
 		}
 		return board;
 	}
 
 	public Board restart() {
-		boardDAO.removeAll();
-		turnDAO.removeAll();
+		boardDao.removeAll();
+		turnDao.removeAll();
 		return find();
 	}
 

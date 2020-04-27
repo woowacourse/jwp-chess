@@ -21,17 +21,10 @@ public enum Row {
     }
 
     public static Row of(int value) {
-        if (isInValidRange(value)) {
-            throw new NoExistChessLocationException();
-        }
         return Arrays.stream(Row.values())
                 .filter(row -> row.value == value)
                 .findAny()
-                .get();
-    }
-
-    private static boolean isInValidRange(int value) {
-        return ONE.value > value || EIGHT.value < value;
+                .orElseThrow(NoExistChessLocationException::new);
     }
 
     public boolean is(Row row) {

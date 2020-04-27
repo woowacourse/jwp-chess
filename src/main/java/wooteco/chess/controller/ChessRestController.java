@@ -2,14 +2,14 @@ package wooteco.chess.controller;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import wooteco.chess.domain.piece.Position;
+import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.service.ChessGameService;
 
@@ -48,8 +48,8 @@ public class ChessRestController {
 	}
 
 	@PutMapping("/{id}/board")
-	public ResponseDto movePiece(@PathVariable Integer id, @RequestParam String source,
-			@RequestParam String target) throws Exception {
-		return chessGameService.move(id, Position.from(source), Position.from(target));
+	public ResponseDto movePiece(@PathVariable Integer id, @ModelAttribute MoveRequestDto moveRequestDto) throws
+			Exception {
+		return chessGameService.move(id, moveRequestDto.source(), moveRequestDto.target());
 	}
 }

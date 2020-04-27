@@ -65,13 +65,14 @@ window.onload = function() {
         }).done(function (model) {
             var data = model;  //JSON.parse(model);
             console.log(data);
-            if (data["status"] == false) {
+            console.log()
+            if (data["isNotFinished"] == false) {
                 if (turn % 2 == 0) {
                     alert("게임이 끝났습니다. 백팀이 승리했습니다.");
                 } else {
                     alert("게임이 끝났습니다. 흑팀이 승리했습니다.");
                 }
-                window.location.href = '/main';
+                window.location.href = '/';
                 return;
             } else if (data["message"] !== "") {
                 alert(data["message"]);

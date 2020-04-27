@@ -1,5 +1,6 @@
 package spring.dao;
 
+import spring.chess.board.ChessBoard;
 import spring.chess.location.Location;
 import spring.chess.piece.type.Piece;
 import spring.db.DBConnection;
@@ -11,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PieceDao {
     public void addPiece(PieceVo pieceVO) throws SQLException {
@@ -41,11 +43,11 @@ public class PieceDao {
              PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, gameId);
             ResultSet rs = pstmt.executeQuery();
-            return getPieceVOS(rs);
+            return getPieceVos(rs);
         }
     }
 
-    private List<PieceVo> getPieceVOS(ResultSet resultSet) throws SQLException {
+    private List<PieceVo> getPieceVos(ResultSet resultSet) throws SQLException {
         ArrayList<PieceVo> pieceVos = new ArrayList<>();
         while (resultSet.next()) {
             PieceVo pieceVO = new PieceVo(
@@ -90,6 +92,29 @@ public class PieceDao {
             pstmt.setString(3, String.valueOf(gameId));
 
             pstmt.execute();
+        }
+    }
+
+    public void resetBoard(ChessBoard chessBoard, int gameId) throws SQLException {
+        Map<Location, Piece> board = chessBoard.getBoard();
+        PieceDao pieceDao = new PieceDao();
+
+        pieceDao.deleteGame(gameId);
+        addPieces(gameId, board, pieceDao);
+    }
+
+    // TODO : addBatch 활용해보자.
+    private void addPieces(int gameId, Map<Location, Piece> board, PieceDao pieceDAO) throws SQLException {
+        for (Map.Entry<Location, Piece> entry : board.entrySet()) {
+            Location location = entry.getKey();
+            Piece piece = entry.getValue();
+
+            PieceVo pieceVo = new PieceVo(gameId
+                    , Character.toString(piece.getName())
+                    , location.getRowValue()
+                    , Character.toString(location.getColValue()));
+
+            pieceDAO.addPiece(pieceVo);
         }
     }
 }

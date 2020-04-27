@@ -1,5 +1,7 @@
 package spring.service;
 
+import com.google.gson.Gson;
+import org.springframework.stereotype.Service;
 import spring.chess.board.ChessBoard;
 import spring.chess.command.MoveCommand;
 import spring.chess.game.ChessGame;
@@ -7,13 +9,10 @@ import spring.chess.location.Location;
 import spring.chess.piece.type.Piece;
 import spring.chess.progress.Progress;
 import spring.chess.team.Team;
-import com.google.gson.Gson;
 import spring.converter.ChessGameConverter;
-import spring.dao.BoardDao;
 import spring.dao.ChessGameDao;
 import spring.dao.ChessGamesDao;
 import spring.dao.PieceDao;
-import org.springframework.stereotype.Service;
 import spring.dto.*;
 import spring.vo.PieceVo;
 
@@ -28,7 +27,6 @@ public class ChessService {
     private static final ChessGamesDao chessGamesDao = new ChessGamesDao();
     private static final PieceDao pieceDao = new PieceDao();
     private static final ChessGameDao chessGameDao = new ChessGameDao();
-    private static final BoardDao boardDao = new BoardDao();
     private static final Gson GSON = new Gson();
 
     public String findAllBoards() throws SQLException {
@@ -88,7 +86,8 @@ public class ChessService {
     }
 
     private void resetChessBoard(ChessGame chessGame, int game_id) throws SQLException {
-        boardDao.resetBoard(chessGame.getChessBoard(), game_id);
+        pieceDao.resetBoard(chessGame.getChessBoard(), game_id);
+        ;
     }
 
     public ChessGame makeGameByDB(int gameId) throws SQLException {

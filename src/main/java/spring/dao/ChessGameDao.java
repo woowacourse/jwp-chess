@@ -18,16 +18,21 @@ public class ChessGameDao {
             pstmt.setInt(1, gameId);
             ResultSet rs = pstmt.executeQuery();
 
+            // TODO : null 제거
             if (!rs.next()) {
                 return null;
             }
 
-            return new ChessGameVo(
+            ChessGameVo chessGameVo = new ChessGameVo(
                     rs.getInt("id"),
                     rs.getString("white_name"),
                     rs.getString("black_name"),
                     rs.getInt("turn_is_black")
             );
+
+            rs.close();
+
+            return chessGameVo;
         }
     }
 

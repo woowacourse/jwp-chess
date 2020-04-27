@@ -14,8 +14,8 @@ public class ChessGamesDao {
         String query = "SELECT * FROM game;";
 
         try(Connection connection = DBConnection.getConnection();
-            PreparedStatement pstmt = connection.prepareStatement(query)) {
-            ResultSet rs = pstmt.executeQuery();
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery()) {
             ArrayList<ChessGameVo> chessGameVos = getChessGameDtos(rs);
             return chessGameVos;
         }

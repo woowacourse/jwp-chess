@@ -9,6 +9,6 @@ import wooteco.chess.entity.GameEntity;
 
 public interface GameRepository extends CrudRepository<GameEntity, String> {
     @Modifying
-    @Query("insert into game (id, white, black) VALUES (:id, :white, :black)")
-    int addGame(@Param("id") String id, @Param("white") int white, @Param("black") int black);
+    @Query("insert into game (id, title, white, black) VALUES (:id, :title, :white, :black)")
+    int addGame(@Param("id") String id, @Param("title") String title, @Param("white") int white, @Param("black") int black);
 }

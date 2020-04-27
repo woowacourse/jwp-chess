@@ -8,15 +8,16 @@ import wooteco.chess.domain.Game;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
+import wooteco.chess.dto.GameResponseDto;
 
 public interface ChessService {
-    Map<String, Map<Side, Player>> addGame(Player white, Player black) throws SQLException;
+    Map<String, GameResponseDto> addGame(String title, Player white, Player black) throws SQLException;
 
     Game findGameById(String id) throws SQLException;
 
     Board findBoardById(String id) throws SQLException;
 
-    Board resetGameById(String id) throws SQLException;
+    Game resetGameById(String id) throws SQLException;
 
     boolean finishGameById(String id) throws SQLException;
 
@@ -35,4 +36,6 @@ public interface ChessService {
     boolean isWhiteTurn(String id) throws SQLException;
 
     boolean isGameOver(String id) throws SQLException;
+
+    Map<String, GameResponseDto> getBoards();
 }

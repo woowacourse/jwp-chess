@@ -10,6 +10,7 @@ import wooteco.chess.domain.board.Path;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
+import wooteco.chess.dto.GameResponseDto;
 import wooteco.chess.dto.MoveRequestDto;
 
 import java.sql.SQLException;
@@ -67,17 +68,17 @@ public class SparkChessService implements ChessService {
     }
 
     @Override
-    public Board resetGameById(String id) throws SQLException {
+    public Game resetGameById(String id) throws SQLException {
         moveDao.reset(findGameById(id));
-        return findBoardById(id);
+        return findGameById(id);
     }
 
     @Override
-    public Map<String, Map<Side, Player>> addGame(Player white, Player black) throws SQLException {
-        HashMap<String, Map<Side, Player>> result = new HashMap<>();
-        Game gameToAdd = new Game(white, black);
+    public Map<String, GameResponseDto> addGame(String title, Player white, Player black) throws SQLException {
+        HashMap<String, GameResponseDto> result = new HashMap<>();
+        Game gameToAdd = new Game(title, white, black);
         String gameId = gameDao.add(gameToAdd);
-        result.put(gameId, findGameById(gameId).getPlayers());
+        result.put(gameId, new GameResponseDto(findGameById(gameId)));
         return result;
     }
 
@@ -137,5 +138,10 @@ public class SparkChessService implements ChessService {
     @Override
     public boolean isGameOver(final String id) throws SQLException {
         return findGameById(id).isGameOver();
+    }
+
+    @Override
+    public Map<String, GameResponseDto> getBoards() {
+        return null;
     }
 }

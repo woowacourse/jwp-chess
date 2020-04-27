@@ -16,6 +16,7 @@ import wooteco.chess.domain.Game;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
+import wooteco.chess.dto.GameResponseDto;
 import wooteco.chess.entity.GameEntity;
 import wooteco.chess.entity.MoveEntity;
 import wooteco.chess.entity.PlayerEntity;
@@ -41,21 +42,26 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public Map<String, Map<Side, Player>> addGame(final Player white, final Player black) {
-        HashMap<String, Map<Side, Player>> result = new HashMap<>();
-        GameEntity entity = new GameEntity(new Game(white, black));
-        gameRepository.addGame(entity.getId(), entity.getWhiteId(), entity.getBlackId());
+    public Map<String, GameResponseDto> getBoards() {
+        return generateGames()
+            .stream()
+            .collect(toMap(Game::getId, GameResponseDto::new));
+    }
+
+    @Override
+    public Map<String, GameResponseDto> addGame(final String title, final Player white, final Player black) {
+        HashMap<String, GameResponseDto> result = new HashMap<>();
+        GameEntity entity = new GameEntity(new Game(title, white, black));
+        gameRepository.addGame(entity.getId(), entity.getTitle(), entity.getWhiteId(), entity.getBlackId());
         GameEntity newGame = gameRepository.findById(entity.getId()).get();
-        // Game2Entity newGame = gameRepository.save(new Game2Entity(new Game2(white, black)));
-        System.out.println("@@@@@@@@@@@@@@@@@@" + newGame);
         // TODO: 플레어어 db 에서 가져오기
-        result.put(newGame.getId(), newGame.toModel(white, black).getPlayers());
+        result.put(newGame.getId(), new GameResponseDto(newGame.toModel(white, black)));
         return result;
     }
 
     @Override
     public Game findGameById(final String id) {
-        GameEntity gameEntity = gameRepository.findById(id.toString())
+        GameEntity gameEntity = gameRepository.findById(id)
             .orElseThrow(() -> new Game2NotFoundException(id));
         Player white = findPlayerById(gameEntity.getWhiteId());
         Player black = findPlayerById(gameEntity.getBlackId());
@@ -81,9 +87,9 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public Board resetGameById(final String id) {
+    public Game resetGameById(final String id) {
         moveRepository.deleteAllByGameId(id);
-        return findBoardById(id);
+        return findGameById(id);
     }
 
     @Override

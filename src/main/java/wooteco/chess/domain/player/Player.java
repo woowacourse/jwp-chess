@@ -20,6 +20,12 @@ public class Player {
         this.record = record;
     }
 
+    public Player(final String username, final String password) {
+        this.username = username;
+        this.password = password;
+        this.record = new Record();
+    }
+
     public String getUsername() {
         return username;
     }

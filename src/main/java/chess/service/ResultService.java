@@ -12,7 +12,7 @@ public class ResultService {
     private static final ChessResultDao CHESS_RESULT_DAO = ChessResultDao.getInstance();
 
     public UserNamesDto getUsers() {
-        return new UserNamesDto(CHESS_RESULT_DAO.findUsers());
+        return new UserNamesDto(CHESS_RESULT_DAO.findUserNames());
     }
 
     public GameResultDto getResult(UserNameDto userNameDto) {

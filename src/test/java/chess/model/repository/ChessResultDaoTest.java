@@ -3,6 +3,7 @@ package chess.model.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.model.dto.GameResultDto;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -29,8 +30,7 @@ class ChessResultDaoTest {
 
     @BeforeEach
     void setUp() {
-        CHESS_RESULT_DAO.insert(FIRST_NAME);
-        CHESS_RESULT_DAO.insert(SECOND_NAME);
+        CHESS_RESULT_DAO.createUserNames(new HashSet<>(Arrays.asList(FIRST_NAME, SECOND_NAME)));
     }
 
     @AfterEach
@@ -60,8 +60,7 @@ class ChessResultDaoTest {
         assertThat(CHESS_RESULT_DAO.findWinOrDraw(FIRST_NAME)).isEmpty();
         assertThat(CHESS_RESULT_DAO.findWinOrDraw(SECOND_NAME)).isEmpty();
 
-        CHESS_RESULT_DAO.insert(FIRST_NAME);
-        CHESS_RESULT_DAO.insert(SECOND_NAME);
+        CHESS_RESULT_DAO.createUserNames(new HashSet<>(Arrays.asList(FIRST_NAME, SECOND_NAME)));
         assertThat(CHESS_RESULT_DAO.findWinOrDraw(FIRST_NAME)).isNotEmpty();
         assertThat(CHESS_RESULT_DAO.findWinOrDraw(SECOND_NAME)).isNotEmpty();
     }
@@ -94,7 +93,7 @@ class ChessResultDaoTest {
 
     @Test
     void getUsers() {
-        assertThat(CHESS_RESULT_DAO.findUsers().contains(FIRST_NAME)).isTrue();
-        assertThat(CHESS_RESULT_DAO.findUsers().contains(SECOND_NAME)).isTrue();
+        assertThat(CHESS_RESULT_DAO.findUserNames().contains(FIRST_NAME)).isTrue();
+        assertThat(CHESS_RESULT_DAO.findUserNames().contains(SECOND_NAME)).isTrue();
     }
 }

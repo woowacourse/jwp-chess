@@ -51,7 +51,9 @@ public class ApiWebController {
 
     @PostMapping("/deleteRoom")
     public RoomsDto deleteRoom(@RequestBody String req) {
-        roomService.deleteRoom(GSON.fromJson(req, DeleteRoomDto.class));
+        DeleteRoomDto deleteRoomDto = GSON.fromJson(req, DeleteRoomDto.class);
+        roomService.deleteRoom(deleteRoomDto);
+        chessGameService.closeGamesOf(deleteRoomDto.getRoomId());
         return roomService.getUsedRooms();
     }
 
@@ -71,7 +73,7 @@ public class ApiWebController {
     @PostMapping("/game/path")
     public PathDto path(@RequestBody String req) {
         SourceDto sourceDto = GSON.fromJson(req, SourceDto.class);
-        return chessGameService.getPath(sourceDto);
+        return chessGameService.findPath(sourceDto);
     }
 
     @PostMapping("/game/promotion")

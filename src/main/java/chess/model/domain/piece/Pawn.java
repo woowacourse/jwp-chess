@@ -1,7 +1,7 @@
 package chess.model.domain.piece;
 
 import chess.model.domain.board.CastlingSetting;
-import chess.model.domain.board.ChessGame;
+import chess.model.domain.board.ChessBoard;
 import chess.model.domain.board.Square;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ public class Pawn extends OneTimeMovePiece {
     }
 
     @Override
-    public Set<Square> getMovableArea(Square square, Map<Square, Piece> board,
+    public Set<Square> findMovableAreas(Square square, Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements) {
         Set<Square> allMovableArea = getAllMovableArea(square);
         Set<Square> containsMovableArea = allMovableArea.stream()
@@ -58,7 +58,7 @@ public class Pawn extends OneTimeMovePiece {
     private Set<Square> getFrontMovableArea(Square square,
         Map<Square, Piece> board, Square oneMore) {
         Set<Square> frontMovableArea = new HashSet<>();
-        boolean initialPoint = ChessGame.isInitialPoint(square, this);
+        boolean initialPoint = ChessBoard.isInitialPoint(square, this);
         boolean containsOneMore = !board.containsKey(oneMore);
         if (initialPoint && containsOneMore) {
             frontMovableArea.add(oneMore);

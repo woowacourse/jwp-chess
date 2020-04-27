@@ -1,6 +1,5 @@
 package util;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 public class NullChecker {
@@ -9,8 +8,8 @@ public class NullChecker {
     }
 
     public static void validateNotNull(Object... objects) {
-        if (Arrays.stream(objects).anyMatch(Objects::isNull)) {
-            throw new NullPointerException("인자로 Null을 사용하실 수 없습니다.");
+        for (int i = 0; i < objects.length; i++) {
+            Objects.requireNonNull(objects[i], i + "번째 인자에 Null이 사용되었습니다.");
         }
     }
 }

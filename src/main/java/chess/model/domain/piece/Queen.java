@@ -17,7 +17,7 @@ public class Queen extends RepeatMovePiece {
         super(team, type);
     }
 
-    public static Piece getPieceInstance(Team team) {
+    public static Piece getInstance(Team team) {
         NullChecker.validateNotNull(team);
         return CACHE.get(team);
     }

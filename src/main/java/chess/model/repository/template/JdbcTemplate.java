@@ -77,4 +77,8 @@ public class JdbcTemplate {
             throw new DataAccessException(e.getMessage());
         }
     }
+
+    public static String convertYN(boolean changer) {
+        return changer ? "Y" : "N";
+    }
 }

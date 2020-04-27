@@ -1,19 +1,18 @@
 package wooteco.chess.controller.spring;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.req.MoveRequestDto;
 import wooteco.chess.service.BoardService;
 
-@Controller
+@RestController
 @RequestMapping("/board")
 public class BoardController {
 	private final BoardService boardService;
@@ -23,7 +22,6 @@ public class BoardController {
 	}
 
 	@GetMapping("/{id}")
-	@ResponseBody
 	public ResponseEntity<Object> loadBoard(@PathVariable int id) {
 		try {
 			return ResponseEntity.status(200).body(boardService.load(id));

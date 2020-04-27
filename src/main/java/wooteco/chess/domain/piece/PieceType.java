@@ -61,8 +61,8 @@ public enum PieceType {
         return team == currentTurn && team != Team.BLANK;
     }
 
-    public boolean isSameTeam(final PieceType pieceType) {
-        return team == pieceType.team;
+    public boolean isNotSameTeam(final Team currentTurn) {
+        return team != currentTurn && team != Team.BLANK;
     }
 
     public boolean isOtherTeam(final PieceType pieceType) {

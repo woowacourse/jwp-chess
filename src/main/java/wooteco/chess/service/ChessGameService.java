@@ -55,7 +55,7 @@ public class ChessGameService {
         Piece piece = board.findBy(Position.of(fromPiece));
 
         board.move(fromPiece, toPiece);
-        if (!piece.isSameTeam(getCurrentTurn())) {
+        if (piece.isNotSameTeam(getCurrentTurn())) {
             throw new IllegalArgumentException("체스 게임 순서를 지켜주세요.");
         }
 

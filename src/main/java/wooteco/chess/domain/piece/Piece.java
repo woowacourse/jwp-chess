@@ -63,8 +63,8 @@ public abstract class Piece {
         return pieceType.isOtherTeam(piece.pieceType);
     }
 
-    public boolean isSameTeam(final Piece piece) {
-        return pieceType.isSameTeam(piece.pieceType);
+    public boolean isNotSameTeam(final Team currentTurn) {
+        return pieceType.isNotSameTeam(currentTurn);
     }
 
     public boolean isSameTeam(final Team currentTurn) {

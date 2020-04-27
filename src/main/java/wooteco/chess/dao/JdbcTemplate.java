@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class JdbcTemplate {
 	private final DataSource dataSource;
 

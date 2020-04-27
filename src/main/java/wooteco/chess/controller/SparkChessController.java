@@ -31,6 +31,7 @@ public class SparkChessController {
 		staticFileLocation("static");
 
 		get("/", this::index);
+
 		get("/rooms", this::getRooms);
 		post("/rooms", this::createRoom);
 

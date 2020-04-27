@@ -2,10 +2,10 @@ package wooteco.chess.dto;
 
 import java.util.List;
 
-public class MovablePositionDTO {
+public class MovablePositionDto {
     private final List<String> positions;
 
-    public MovablePositionDTO(final List<String> positions) {
+    public MovablePositionDto(final List<String> positions) {
         this.positions = positions;
     }
 

@@ -1,13 +1,12 @@
 package wooteco.chess.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import wooteco.chess.domain.Color;
-import wooteco.chess.dto.MoveResponseDTO;
-import wooteco.chess.dto.GameStatusDTO;
-import wooteco.chess.dto.MoveRequestDTO;
+import wooteco.chess.dto.MoveResponseDto;
+import wooteco.chess.dto.GameStatusDto;
+import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.service.SpringGameService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,28 +24,28 @@ public class SpringGameController {
     }
 
     @GetMapping("/init")
-    public MoveResponseDTO init(@RequestParam Integer roomId) throws SQLException {
+    public MoveResponseDto init(@RequestParam Integer roomId) throws SQLException {
         return gameService.initialize(roomId);
     }
 
     @PostMapping("/move")
-    public ResponseEntity<MoveResponseDTO> move(@RequestBody MoveRequestDTO requestDTO) throws SQLException {
+    public ResponseEntity<MoveResponseDto> move(@RequestBody MoveRequestDto requestDTO) throws SQLException {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(gameService.move(requestDTO));
         } catch (IllegalArgumentException e) {
-            MoveResponseDTO moveResponseDTO = gameService.createMoveResponseDTO(requestDTO.getRoomId());
+            MoveResponseDto moveResponseDTO = gameService.createMoveResponseDTO(requestDTO.getRoomId());
             moveResponseDTO.setErrorMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(moveResponseDTO);
         }
     }
 
     @GetMapping("/status")
-    public GameStatusDTO showStatus(@RequestParam Integer roomId) throws SQLException {
-        return new GameStatusDTO(gameService.getScore(roomId, Color.WHITE), gameService.getScore(roomId, Color.BLACK));
+    public GameStatusDto showStatus(@RequestParam Integer roomId) throws SQLException {
+        return new GameStatusDto(gameService.getScore(roomId, Color.WHITE), gameService.getScore(roomId, Color.BLACK));
     }
 
     @GetMapping("/load")
-    public MoveResponseDTO load(@RequestParam Integer roomId) throws SQLException {
+    public MoveResponseDto load(@RequestParam Integer roomId) throws SQLException {
         return gameService.createMoveResponseDTO(roomId);
     }
 

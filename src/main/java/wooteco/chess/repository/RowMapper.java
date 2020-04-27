@@ -1,4 +1,4 @@
-package wooteco.chess.dao;
+package wooteco.chess.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

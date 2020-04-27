@@ -22,9 +22,4 @@ public class WebChessGameController {
         return "<script>location.replace('/')</script>";
     }
 
-    @GetMapping("/")
-    public String renderIndexPage() {
-        return "index";
-    }
-
 }

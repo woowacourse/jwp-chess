@@ -1,4 +1,4 @@
-package wooteco.chess.domain.strategy.move.direction;
+package wooteco.chess.domain.move.direction;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

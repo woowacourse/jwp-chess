@@ -1,4 +1,4 @@
-package wooteco.chess.domain.strategy.move.direction;
+package wooteco.chess.domain.move.direction;
 
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.position.Positions;
@@ -6,13 +6,13 @@ import wooteco.chess.domain.position.Positions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeftStrategy implements DirectionStrategy {
+public class UpStrategy implements DirectionStrategy {
     @Override
     public List<Position> findPath(Position source, Position target) {
         List<Position> path = new ArrayList<>();
 
-        for (int i = target.getFile() + 1; i < source.getFile(); i++) {
-            path.add(Positions.of(i, source.getRank()));
+        for (int i = target.getRank() - 1; i > source.getRank(); i--) {
+            path.add(Positions.of(source.getFile(), i));
         }
         return path;
     }

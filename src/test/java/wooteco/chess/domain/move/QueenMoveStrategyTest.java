@@ -1,4 +1,4 @@
-package wooteco.chess.domain.strategy.move;
+package wooteco.chess.domain.move;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

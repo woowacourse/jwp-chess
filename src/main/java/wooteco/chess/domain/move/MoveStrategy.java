@@ -1,9 +1,9 @@
-package wooteco.chess.domain.strategy.move;
+package wooteco.chess.domain.move;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.domain.strategy.move.direction.Direction;
+import wooteco.chess.domain.move.direction.Direction;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package wooteco.chess.domain.strategy.move;
+package wooteco.chess.domain.move;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Piece;

@@ -1,4 +1,4 @@
-package wooteco.chess.domain.strategy.move.direction;
+package wooteco.chess.domain.move.direction;
 
 import wooteco.chess.domain.position.Position;
 

@@ -1,6 +1,6 @@
 package spring.chess.score;
 
-import spring.chess.game.ChessSet;
+import spring.chess.player.ChessSet;
 
 public class ScoreCalculator implements Calculatable {
     private static final PawnReduceScoreCalculable pawnReduceScoreCalculable

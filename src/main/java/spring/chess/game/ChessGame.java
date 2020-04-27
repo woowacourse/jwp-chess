@@ -1,13 +1,14 @@
 package spring.chess.game;
 
+import spring.chess.board.ChessBoard;
 import spring.chess.board.ChessBoardCreater;
 import spring.chess.command.Command;
-import spring.chess.board.ChessBoard;
 import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.location.Location;
 import spring.chess.piece.type.Piece;
-import spring.chess.progress.Progress;
+import spring.chess.player.ChessSet;
 import spring.chess.player.Player;
+import spring.chess.progress.Progress;
 import spring.chess.result.ChessResult;
 import spring.chess.result.ChessScores;
 import spring.chess.team.Team;

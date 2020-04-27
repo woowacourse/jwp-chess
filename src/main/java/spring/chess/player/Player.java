@@ -1,13 +1,11 @@
 package spring.chess.player;
 
 import spring.chess.exception.InvalidConstructorValueException;
-import spring.chess.game.ChessSet;
 import spring.chess.location.Location;
 import spring.chess.score.Score;
 import spring.chess.score.ScoreCalculator;
 import spring.chess.team.Team;
 
-import javax.validation.constraints.Null;
 import java.util.Objects;
 
 public class Player {

@@ -1,4 +1,4 @@
-package spring.chess.game;
+package spring.chess.player;
 
 import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.location.Col;
@@ -26,10 +26,12 @@ public class ChessSet {
     }
 
     public Score calculateScoreExceptPawnReduce() {
-        return chessSet.values().stream()
+        double sum = chessSet.values().stream()
                 .map(Piece::getScore)
-                .reduce(Score::plus)
-                .get();
+                .mapToDouble(Score::getValue)
+                .sum();
+
+        return new Score(sum);
     }
 
     public void remove(Location location) {

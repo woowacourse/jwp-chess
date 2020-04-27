@@ -1,10 +1,10 @@
-import spring.chess.board.ChessBoardCreater;
-import spring.chess.game.ChessSet;
-import spring.chess.board.ChessBoard;
-import spring.chess.score.Score;
-import spring.chess.team.Team;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import spring.chess.board.ChessBoard;
+import spring.chess.board.ChessBoardCreater;
+import spring.chess.player.ChessSet;
+import spring.chess.score.Score;
+import spring.chess.team.Team;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

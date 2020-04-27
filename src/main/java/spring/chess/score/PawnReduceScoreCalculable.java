@@ -1,7 +1,7 @@
 package spring.chess.score;
 
-import spring.chess.game.ChessSet;
 import spring.chess.location.Col;
+import spring.chess.player.ChessSet;
 
 import static spring.chess.board.ChessBoardCreater.COL_END;
 import static spring.chess.board.ChessBoardCreater.COL_START;

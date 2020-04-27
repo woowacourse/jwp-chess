@@ -19,7 +19,7 @@ import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.chesspiece.Queen;
 import wooteco.chess.domain.chesspiece.Rook;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.dto.PieceDTO;
+import wooteco.chess.dto.PieceDto;
 
 public class BoardFactory {
 	private static final String NOT_MATCH_ALL_PIECE_NUMBER_MESSAGE = "64개의 ChessDTO가 아닙니다.";
@@ -83,31 +83,31 @@ public class BoardFactory {
 		return new Row(pieces);
 	}
 
-	public static Board createBoard(List<PieceDTO> pieceDTOS, Turn turn) {
-		if (pieceDTOS.size() != ALL_PIECE_NUMBER.get()) {
+	public static Board createBoard(List<PieceDto> pieceDtos, Turn turn) {
+		if (pieceDtos.size() != ALL_PIECE_NUMBER.get()) {
 			throw new IllegalArgumentException(NOT_MATCH_ALL_PIECE_NUMBER_MESSAGE);
 		}
 		List<Row> rows = new ArrayList<>();
 		for (int x = BOARD_FROM_INDEX.get(); x <= BOARD_TO_INDEX.get(); x++) {
-			rows.add(createRow(pieceDTOS, x));
+			rows.add(createRow(pieceDtos, x));
 		}
 		return new Board(rows, turn);
 	}
 
-	private static Row createRow(List<PieceDTO> pieceDTOS, int x) {
+	private static Row createRow(List<PieceDto> pieceDtos, int x) {
 		List<Piece> pieces = new ArrayList<>();
 		for (int y = ROW_FROM_INDEX.get(); y <= ROW_TO_INDEX.get(); y++) {
-			PieceDTO pieceDTO = findByPosition(pieceDTOS, String.format(POSITION_FORMAT, y, x));
-			String name = pieceDTO.getName();
-			String position = pieceDTO.getPosition();
+			PieceDto pieceDto = findByPosition(pieceDtos, String.format(POSITION_FORMAT, y, x));
+			String name = pieceDto.getName();
+			String position = pieceDto.getPosition();
 			pieces.add(PieceConverter.convert(position, name));
 		}
 		return new Row(pieces);
 	}
 
-	private static PieceDTO findByPosition(List<PieceDTO> pieceDTOS, String position) {
-		return pieceDTOS.stream()
-			.filter(pieceDTO -> pieceDTO.getPosition().equals(position))
+	private static PieceDto findByPosition(List<PieceDto> pieceDtos, String position) {
+		return pieceDtos.stream()
+			.filter(pieceDto -> pieceDto.getPosition().equals(position))
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException(NOT_MATCH_POSITION_MESSAGE));
 	}

@@ -83,9 +83,12 @@ function checkKingDie() {
                 return;
             }
             $('.result').show();
-            $('.result > .message').html(response.message);
-            $('.result > .submit').click(() => {
+
+            $('.result > .message').html(`${response.winningTeam}팀 승리!`);
+
+            $('.result > .submit').click(function () {
                 restart();
+                $('.result').hide();
             })
         }
     })

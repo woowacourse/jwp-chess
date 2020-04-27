@@ -46,16 +46,12 @@ public class SpringController {
 	@ResponseBody
 	public Map<String, Object> isEnd() {
 		Map<String, Object> model = new HashMap<>();
-		if (!chessService.isEnd()) {
+		if (chessService.isNotEnd()) {
 			model.put("isEnd", false);
 			return model;
 		}
 		model.put("isEnd", true);
-		if (chessService.isWinWhiteTeam()) {
-			model.put("message", "WHITE팀 승리!");
-			return model;
-		}
-		model.put("message", "BLACK팀 승리!");
+		model.put("winningTeam", chessService.findWinningTeam());
 		return model;
 	}
 

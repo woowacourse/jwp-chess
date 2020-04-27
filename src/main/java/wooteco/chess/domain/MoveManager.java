@@ -27,7 +27,7 @@ public class MoveManager {
 	}
 
 	public void validateMove(Direction direction, List<Direction> directions) {
-		if (directions.contains(direction) == false) {
+		if (!directions.contains(direction)) {
 			throw new IllegalArgumentException(CANNOT_MOVE_POSITION);
 		}
 	}

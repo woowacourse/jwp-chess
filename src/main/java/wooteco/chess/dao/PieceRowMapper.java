@@ -6,23 +6,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wooteco.chess.domain.factory.PieceConverter;
-import wooteco.chess.dto.PieceDTO;
+import wooteco.chess.dto.PieceDto;
 
-public class PieceRowMapper implements RowMapper<List<PieceDTO>> {
+public class PieceRowMapper implements RowMapper<List<PieceDto>> {
 
 	@Override
-	public List<PieceDTO> mapRow(ResultSet resultSet) throws SQLException {
+	public List<PieceDto> mapRow(ResultSet resultSet) throws SQLException {
 		return mapPiece(resultSet);
 	}
 
-	private List<PieceDTO> mapPiece(ResultSet resultSet) throws SQLException {
-		List<PieceDTO> pieceDTOs = new ArrayList<>();
+	private List<PieceDto> mapPiece(ResultSet resultSet) throws SQLException {
+		List<PieceDto> pieceDtos = new ArrayList<>();
 
 		while (resultSet.next()) {
 			String position = resultSet.getString("position");
 			String name = resultSet.getString("name");
-			pieceDTOs.add(PieceDTO.from(PieceConverter.convert(position, name)));
+			pieceDtos.add(PieceDto.from(PieceConverter.convert(position, name)));
 		}
-		return pieceDTOs;
+		return pieceDtos;
 	}
 }

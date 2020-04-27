@@ -1,0 +1,5 @@
+spring.datasource:
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://localhost:13306/chess?serverTimezone=Asia/Seoul
+  username: root
+  password: root

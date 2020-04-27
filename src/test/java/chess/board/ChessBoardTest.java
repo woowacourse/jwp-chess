@@ -25,7 +25,7 @@ class ChessBoardTest {
     @Test
     void giveMyPiece() {
         ChessBoard chessBoard = ChessBoardCreater.create();
-        Map<Location, Piece> givenPieces = chessBoard.giveMyPiece(Team.BLACK);
+        Map<Location, Piece> givenPieces = chessBoard.giveMyPieces(Team.BLACK);
 
         Map<Location, Piece> actual = new HashMap<>();
         putNoble(actual, 8);

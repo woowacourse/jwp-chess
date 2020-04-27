@@ -31,8 +31,8 @@ public class ChessGame {
     public ChessGame(ChessBoard chessBoard, Team turn) {
         validNullValue(chessBoard, turn);
         this.chessBoard = chessBoard;
-        white = new Player(new ChessSet(chessBoard.giveMyPiece(WHITE)), WHITE);
-        black = new Player(new ChessSet(chessBoard.giveMyPiece(BLACK)), BLACK);
+        white = new Player(new ChessSet(chessBoard.giveMyPieces(WHITE)), WHITE);
+        black = new Player(new ChessSet(chessBoard.giveMyPieces(BLACK)), BLACK);
         this.turn = turn;
     }
 

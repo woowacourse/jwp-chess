@@ -53,7 +53,7 @@ class PlayerTest {
     @Test
     void calculateScoreExceptPawnReduce() {
         ChessBoard chessBoard = ChessBoardCreater.create();
-        Map<Location, Piece> locationPieceMap = chessBoard.giveMyPiece(Team.WHITE);
+        Map<Location, Piece> locationPieceMap = chessBoard.giveMyPieces(Team.WHITE);
         Player player = new Player(new ChessSet(locationPieceMap), Team.WHITE);
 
         assertThat(player.calculateScoreExceptPawnReduce()).isEqualTo(new Score(38));

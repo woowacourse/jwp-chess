@@ -13,7 +13,7 @@ class ChessSetTest {
     @Test
     void calculateScore() {
         ChessBoard chessBoard = ChessBoardCreater.create();
-        ChessSet chessSet = new ChessSet(chessBoard.giveMyPiece(Team.BLACK));
+        ChessSet chessSet = new ChessSet(chessBoard.giveMyPieces(Team.BLACK));
 
         Score result = chessSet.calculateScoreExceptPawnReduce();
         assertThat(result).isEqualTo(new Score(38));

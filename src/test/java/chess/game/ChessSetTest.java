@@ -21,7 +21,7 @@ class ChessSetTest {
     @Test
     void calculateScoreExceptPawnReduce() {
         ChessBoard chessBoard = ChessBoardCreater.create();
-        ChessSet chessSet = new ChessSet(chessBoard.giveMyPiece(Team.WHITE));
+        ChessSet chessSet = new ChessSet(chessBoard.giveMyPieces(Team.WHITE));
         assertThat(chessSet.calculateScoreExceptPawnReduce()).isEqualTo(new Score(38));
     }
 

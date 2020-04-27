@@ -61,14 +61,13 @@ public class ChessBoard {
         return true;
     }
 
-    public Map<Location, Piece> giveMyPiece(Team team) {
+    public Map<Location, Piece> giveMyPieces(Team team) {
         return board.entrySet().stream()
                 .filter(entry -> entry.getValue().isSameTeam(team))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public void move(Location now, Location destination) {
-        board.remove(destination);
         Piece piece = board.remove(now);
         board.put(destination, piece);
     }

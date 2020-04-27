@@ -22,7 +22,7 @@ class PawnReduceScoreCalculableTest {
     @Test
     void calculateReducePawnScore1() {
         ChessBoard chessBoard = ChessBoardCreater.create();
-        Map<Location, Piece> chessBoardPieces = chessBoard.giveMyPiece(Team.WHITE);
+        Map<Location, Piece> chessBoardPieces = chessBoard.giveMyPieces(Team.WHITE);
         PawnReduceScoreCalculable pawnReduceScoreCalculable = new PawnReduceScoreCalculable();
         ChessSet chessSet = new ChessSet(chessBoardPieces);
         assertThat(pawnReduceScoreCalculable.calculate(chessSet))
@@ -38,7 +38,7 @@ class PawnReduceScoreCalculableTest {
         Location after = new Location(Row.of(3), Col.of('b'));
         chessBoard.move(now, after);
 
-        ChessSet chessSet = new ChessSet(chessBoard.giveMyPiece(Team.WHITE));
+        ChessSet chessSet = new ChessSet(chessBoard.giveMyPieces(Team.WHITE));
         PawnReduceScoreCalculable pawnReduceScoreCalculable = new PawnReduceScoreCalculable();
 
         assertThat(pawnReduceScoreCalculable.calculate(chessSet).getValue())
@@ -62,7 +62,7 @@ class PawnReduceScoreCalculableTest {
         chessBoard.move(now1, after1);
         chessBoard.move(now2, after2);
 
-        ChessSet chessSet = new ChessSet(chessBoard.giveMyPiece(Team.WHITE));
+        ChessSet chessSet = new ChessSet(chessBoard.giveMyPieces(Team.WHITE));
         PawnReduceScoreCalculable pawnReduceScoreCalculable = new PawnReduceScoreCalculable();
 
         assertThat(pawnReduceScoreCalculable.calculate(chessSet))

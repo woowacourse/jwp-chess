@@ -20,7 +20,7 @@ class ScoreCalculatorTest {
     @DisplayName("점수 계산")
     void calculateScore() {
         ChessBoard chessBoard = ChessBoardCreater.create();
-        Map<Location, Piece> chessBoardPieces = chessBoard.giveMyPiece(Team.WHITE);
+        Map<Location, Piece> chessBoardPieces = chessBoard.giveMyPieces(Team.WHITE);
         ScoreCalculator scoreCalculator = new ScoreCalculator();
         ChessSet chessSet = new ChessSet(chessBoardPieces);
         assertThat(scoreCalculator.calculate(chessSet))

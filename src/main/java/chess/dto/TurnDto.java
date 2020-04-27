@@ -5,15 +5,15 @@ import static chess.util.NullValidator.*;
 import chess.domain.board.ChessBoard;
 import chess.domain.piece.PieceColor;
 
-public class TurnDTO {
+public class TurnDto {
 	private String currentTeam;
 
-	private TurnDTO(String currentTeam) {
+	private TurnDto(String currentTeam) {
 		validateNull(currentTeam);
 		this.currentTeam = currentTeam;
 	}
 
-	public static TurnDTO from(ChessBoard chessBoard) {
+	public static TurnDto from(ChessBoard chessBoard) {
 		validateNull(chessBoard);
 
 		String currentTeam = chessBoard.getTeam().getName();
@@ -21,17 +21,17 @@ public class TurnDTO {
 		return from(currentTeam);
 	}
 
-	public static TurnDTO from(String currentTeam) {
+	public static TurnDto from(String currentTeam) {
 		validateNull(currentTeam);
 
-		return new TurnDTO(currentTeam);
-	}
-
-	public String getCurrentTeam() {
-		return this.currentTeam;
+		return new TurnDto(currentTeam);
 	}
 
 	public PieceColor createTeam() {
 		return PieceColor.of(this.currentTeam);
+	}
+
+	public String getCurrentTeam() {
+		return this.currentTeam;
 	}
 }

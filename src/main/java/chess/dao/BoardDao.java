@@ -1,7 +1,5 @@
 package chess.dao;
 
-import chess.dto.BoardDTO;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,17 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-public class BoardDAO {
-	private static BoardDAO instance = new BoardDAO();
+import chess.dto.BoardDto;
 
-	private BoardDAO() {
+public class BoardDao {
+	private static final BoardDao instance = new BoardDao();
+
+	private BoardDao() {
 	}
 
-	public static BoardDAO getInstance() {
+	public static BoardDao getInstance() {
 		return instance;
 	}
 
-	public void saveBoard(BoardDTO boardDTO) throws SQLException {
+	public void saveBoard(BoardDto boardDTO) throws SQLException {
 		Map<String, String> board = boardDTO.getBoard();
 
 		String query = "INSERT INTO board VALUES (?, ?)";
@@ -43,22 +43,26 @@ public class BoardDAO {
 		}
 	}
 
-	public BoardDTO findBoard() throws SQLException {
+	public BoardDto findBoard() throws SQLException {
 		Map<String, String> board = new HashMap<>();
 		String query = "SELECT * FROM board";
 		try (Connection connection = DBConnection.getConnection();
 			 PreparedStatement pstmt = connection.prepareStatement(query);
 			 ResultSet rs = pstmt.executeQuery()) {
 
-			if (!rs.next()) {
-				throw new NoSuchElementException("Board 데이터베이스가 비었습니다.");
-			}
+			checkEmpty(rs);
 
 			do {
 				board.put(rs.getString(1), rs.getString(2));
 			} while (rs.next());
 
-			return new BoardDTO(board);
+			return new BoardDto(board);
+		}
+	}
+
+	private void checkEmpty(ResultSet rs) throws SQLException {
+		if (!rs.next()) {
+			throw new NoSuchElementException("Board 데이터베이스가 비었습니다.");
 		}
 	}
 }

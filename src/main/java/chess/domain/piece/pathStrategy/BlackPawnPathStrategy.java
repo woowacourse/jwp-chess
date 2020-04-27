@@ -29,12 +29,13 @@ public class BlackPawnPathStrategy extends PathStrategy {
 				throw new NotMovableException(String.format("지정한 위치 %s는 검은색 폰이 이동할 수 없는 곳입니다.",
 					targetPosition.getName()));
 			}
-		} else {
-			if (isInvalidXPointGap(sourcePosition, targetPosition) || !sourcePosition.hasYGap(targetPosition,
-				FORWARD_MIN_DISTANCE)) {
-				throw new NotMovableException(String.format("지정한 위치 %s는 검은색 폰이 이동할 수 없는 곳입니다.",
-					targetPosition.getName()));
-			}
+			return;
+		}
+
+		if (isInvalidXPointGap(sourcePosition, targetPosition) || !sourcePosition.hasYGap(targetPosition,
+			FORWARD_MIN_DISTANCE)) {
+			throw new NotMovableException(String.format("지정한 위치 %s는 검은색 폰이 이동할 수 없는 곳입니다.",
+				targetPosition.getName()));
 		}
 	}
 

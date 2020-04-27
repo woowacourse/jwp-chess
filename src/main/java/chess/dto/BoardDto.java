@@ -11,14 +11,14 @@ import chess.domain.board.PositionFactory;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
 
-public class BoardDTO {
+public class BoardDto {
 	private Map<String, String> board;
 
-	public BoardDTO(Map<String, String> board) {
+	public BoardDto(Map<String, String> board) {
 		this.board = board;
 	}
 
-	public static BoardDTO from(ChessBoard chessBoard) {
+	public static BoardDto from(ChessBoard chessBoard) {
 		validateNull(chessBoard);
 
 		Map<Position, Piece> boardData = chessBoard.getBoard();
@@ -28,11 +28,7 @@ public class BoardDTO {
 			boardDTOData.put(position.getName(), boardData.get(position).getName());
 		}
 
-		return new BoardDTO(boardDTOData);
-	}
-
-	public Map<String, String> getBoard() {
-		return this.board;
+		return new BoardDto(boardDTOData);
 	}
 
 	public Map<Position, Piece> createBoard() {
@@ -47,5 +43,9 @@ public class BoardDTO {
 		}
 
 		return boardData;
+	}
+
+	public Map<String, String> getBoard() {
+		return this.board;
 	}
 }

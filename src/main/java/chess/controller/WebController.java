@@ -32,13 +32,13 @@ public class WebController {
     }
 
     @PostMapping("/game")
-    public String game(@RequestParam String roomId,
+    public String game(@RequestParam Integer roomId,
         @RequestParam(defaultValue = "WHITE") String whiteName,
         @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
         Map<Team, String> userNames = makeUserNames(whiteName, blackName);
 
-        Integer gameId = chessGameService.saveNewGameInfo(userNames, Integer.valueOf(roomId));
+        Integer gameId = chessGameService.saveNewGameInfo(userNames, roomId);
         chessGameService.saveNewUserNames(userNames);
 
         model.addAttribute("gameId", gameId);
@@ -46,32 +46,33 @@ public class WebController {
     }
 
     @PostMapping("/game/newGame")
-    public String newGame(@RequestParam String gameId,
+    public String newGame(@RequestParam Integer gameId,
         @RequestParam(defaultValue = "WHITE") String whiteName,
         @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
         Map<Team, String> userNames = makeUserNames(whiteName, blackName);
-        chessGameService.closeGame(Integer.valueOf(gameId));
-        model.addAttribute("gameId",
-            chessGameService.createBy(Integer.valueOf(gameId), userNames));
+        if (chessGameService.isGameProceed(gameId)) {
+            chessGameService.closeGame(gameId);
+        }
+        model.addAttribute("gameId", chessGameService.createBy(gameId, userNames));
         return "game";
     }
 
     @PostMapping("/continueGame")
-    public String continueGame(@RequestParam String roomId,
+    public String continueGame(@RequestParam Integer roomId,
         @RequestParam(defaultValue = "WHITE") String whiteName,
         @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
         model.addAttribute("gameId",
-            chessGameService.findProceedGameIdLatest(Integer.valueOf(roomId))
+            chessGameService.findProceedGameIdLatest(roomId)
                 .orElseGet(() -> chessGameService
-                    .create(Integer.valueOf(roomId), makeUserNames(whiteName, blackName))));
+                    .create(roomId, makeUserNames(whiteName, blackName))));
         return "game";
     }
 
     @PostMapping("/game/choiceGame")
-    public String choiceGame(@RequestParam String gameId, Model model) {
-        model.addAttribute("roomId", chessGameService.findRoomId(Integer.valueOf(gameId)));
+    public String choiceGame(@RequestParam Integer gameId, Model model) {
+        model.addAttribute("roomId", chessGameService.findRoomId(gameId));
         return "start";
     }
 

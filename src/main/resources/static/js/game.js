@@ -47,6 +47,9 @@ newButton.onclick = () => {
 closeButton.onclick = () => {
     fetch('/api/game/end', {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             gameId
         })
@@ -67,6 +70,9 @@ cells.forEach(cell => {
             cell.style.backgroundColor = 'STEELBLUE';
             fetch('/api/game/path', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({
                     source, gameId
                 })
@@ -85,6 +91,9 @@ cells.forEach(cell => {
         firstClick = true;
         fetch('/api/game/move', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
                 source, target, gameId
             })
@@ -104,6 +113,9 @@ promotions.forEach(promotion => {
         let promotionType = promotion.id;
         fetch('/api/game/promotion', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
                 promotionType, gameId
             })
@@ -115,6 +127,9 @@ promotions.forEach(promotion => {
 
 fetch('/api/game/board', {
     method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
         gameId
     })

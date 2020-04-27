@@ -1,13 +1,13 @@
 package chess.piece.type;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import spring.chess.board.ChessBoard;
 import spring.chess.board.ChessBoardCreater;
 import spring.chess.board.Route;
 import spring.chess.location.Location;
-import spring.chess.team.Team;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import spring.chess.piece.type.Knight;
+import spring.chess.team.Team;
 
 import java.util.Collections;
 

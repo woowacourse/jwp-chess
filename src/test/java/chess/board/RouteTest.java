@@ -1,12 +1,12 @@
 package chess.board;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import spring.chess.board.Route;
 import spring.chess.location.Location;
 import spring.chess.piece.type.Pawn;
 import spring.chess.piece.type.Piece;
 import spring.chess.team.Team;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;

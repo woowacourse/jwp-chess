@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class ConnectionManager {
-    public static Connection getConnection() {
+public class ConnectionManager implements Connectable {
+    public Connection getConnection() {
         Connection con = null;
         String server = "localhost:13306"; // MySQL 서버 주소
         String database = "chess"; // MySQL DATABASE 이름

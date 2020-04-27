@@ -9,9 +9,9 @@ import wooteco.chess.exception.IllegalMoveException;
 
 public class Pawn extends Piece {
     public static final List<Direction> LOWER_TEAM_POSSIBLE_DIRECTIONS = Arrays.asList(Direction.NORTH,
-        Direction.NORTHNORTH, Direction.NORTHEAST, Direction.NORTHWEST);
+        Direction.NN, Direction.NE, Direction.NW);
     public static final List<Direction> UPPER_TEAM_POSSIBLE_DIRECTIONS = Arrays.asList(Direction.SOUTH,
-        Direction.SOUTHSOUTH, Direction.SOUTHEAST, Direction.SOUTHWEST);
+        Direction.SS, Direction.SE, Direction.SW);
 
     public Pawn(Position position, Team team) {
         super(position, team);

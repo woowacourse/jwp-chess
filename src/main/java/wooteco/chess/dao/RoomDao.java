@@ -10,7 +10,11 @@ import wooteco.chess.exception.DataAccessException;
 
 @Component
 public class RoomDao {
-    JdbcTemplate template = new JdbcTemplate();
+    private JdbcTemplate template;
+
+    public RoomDao(JdbcTemplate template) {
+        this.template = template;
+    }
 
     public void createRoom(String name) {
         try {

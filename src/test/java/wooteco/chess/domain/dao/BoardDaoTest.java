@@ -10,19 +10,22 @@ import org.junit.jupiter.api.Test;
 
 import wooteco.chess.dao.BoardDao;
 import wooteco.chess.dao.ConnectionManager;
+import wooteco.chess.dao.JdbcTemplate;
 
 class BoardDaoTest {
     private BoardDao boardDao;
 
     @BeforeEach
     void setup() {
-        boardDao = new BoardDao();
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(new ConnectionManager());
+        boardDao = new BoardDao(jdbcTemplate);
     }
 
     @Test
     @DisplayName("커넥션이 제대로 연결되었는지 확인")
     void connection() {
-        Connection con = ConnectionManager.getConnection();
+        ConnectionManager connectionManager = new ConnectionManager();
+        Connection con = connectionManager.getConnection();
         assertNotNull(con);
     }
 

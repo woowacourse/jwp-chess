@@ -11,13 +11,13 @@ public enum Direction {
     EAST(1, 0),
     SOUTH(0, -1),
 
-    NORTHNORTH(0, 2),
-    SOUTHSOUTH(0, -2),
+    NN(0, 2),
+    SS(0, -2),
 
-    NORTHEAST(1, 1),
-    NORTHWEST(-1, 1),
-    SOUTHEAST(1, -1),
-    SOUTHWEST(-1, -1),
+    NE(1, 1),
+    NW(-1, 1),
+    SE(1, -1),
+    SW(-1, -1),
 
     NNE(1, 2),
     NEE(2, 1),
@@ -44,16 +44,16 @@ public enum Direction {
     }
 
     public boolean isDiagonal() {
-        List<Direction> diagonalDirection = Arrays.asList(NORTHWEST, NORTHEAST, SOUTHWEST, SOUTHEAST);
+        List<Direction> diagonalDirection = Arrays.asList(NW, NE, SW, SE);
         return diagonalDirection.contains(this);
     }
 
     public boolean isForwardDouble() {
-        return (this == NORTHNORTH || this == SOUTHSOUTH);
+        return (this == NN || this == SS);
     }
 
     public boolean isForwardForPawn() {
-        List<Direction> forwardDirection = Arrays.asList(NORTH, NORTHNORTH, SOUTH, SOUTHSOUTH);
+        List<Direction> forwardDirection = Arrays.asList(NORTH, NN, SOUTH, SS);
         return forwardDirection.contains(this);
     }
 

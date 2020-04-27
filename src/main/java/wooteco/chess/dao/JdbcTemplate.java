@@ -1,15 +1,23 @@
 package wooteco.chess.dao;
 
+import org.springframework.stereotype.Component;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class JdbcTemplate {
+    private Connectable connectable;
+
+    public JdbcTemplate(Connectable connectable) {
+        this.connectable = connectable;
+    }
 
     public void executeUpdate(String query, PreparedStatementSetter pss) throws SQLException {
         try (
-            Connection connection = ConnectionManager.getConnection();
+            Connection connection = connectable.getConnection();
             PreparedStatement statement = connection.prepareStatement(query)
         ) {
             pss.setParameters(statement);
@@ -19,7 +27,7 @@ public class JdbcTemplate {
 
     public Object executeQueryWithPss(String query, PreparedStatementSetter pss, RowMapper rm) throws SQLException {
         try (
-            Connection con = ConnectionManager.getConnection();
+            Connection con = connectable.getConnection();
             PreparedStatement statement = con.prepareStatement(query)
         ) {
             pss.setParameters(statement);
@@ -33,7 +41,7 @@ public class JdbcTemplate {
 
     public void executeBatchWithPss(String query, PreparedStatementSetter pss) throws SQLException {
         try (
-            Connection con = ConnectionManager.getConnection();
+            Connection con = connectable.getConnection();
             PreparedStatement statement = con.prepareStatement(query)
         ) {
             pss.setParameters(statement);

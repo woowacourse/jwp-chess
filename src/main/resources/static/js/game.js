@@ -45,8 +45,9 @@ chessCreateSubmitElement.onclick = () => {
 };
 
 chessResultRestartElement.onclick = () => {
-    fetch('/restart/' + gameId, {
+    fetch('/restart', {
         method: 'POST',
+        body: gameId
     })
         .then((response) => response.json())
         .then((data) => {
@@ -91,7 +92,10 @@ const createTemplate = {
 
 fetch('http://localhost:8080/board/' + gameId)
     .then((response) => response.json())
-    .then((data) => drawChessGame(data.dto));
+    .then((data) => {
+        console.log(data);
+        drawChessGame(data.dto)
+    });
 
 fetch('http://localhost:8080/games')
     .then((response) => response.json())
@@ -102,6 +106,11 @@ function drawGameList(games) {
 }
 
 function drawChessGame({boardDto, turnDto, statusDto, isFinished}) {
+    console.log(boardDto);
+    console.log(turnDto);
+    console.log(statusDto);
+    console.log(isFinished);
+
     drawBoard(boardDto.board);
     drawStatus(statusDto);
     drawResult(statusDto, isFinished);
@@ -141,10 +150,10 @@ function onDrop(e) {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-            sx: parseInt(e.dataTransfer.getData('x')),
-            sy: parseInt(e.dataTransfer.getData('y')),
-            tx: parseInt(e.target.parentElement.dataset.x),
-            ty: parseInt(e.target.parentElement.dataset.y),
+            sourceX: parseInt(e.dataTransfer.getData('x')),
+            sourceY: parseInt(e.dataTransfer.getData('y')),
+            targetX: parseInt(e.target.parentElement.dataset.x),
+            targetY: parseInt(e.target.parentElement.dataset.y),
         }),
     })
         .then((response) => response.json())

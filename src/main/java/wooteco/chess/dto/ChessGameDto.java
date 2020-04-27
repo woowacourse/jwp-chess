@@ -13,11 +13,11 @@ public class ChessGameDto {
         this.isFinished = isFinished;
     }
 
-    public boolean isFinished() {
+    public boolean getIsFinished() {
         return isFinished;
     }
 
-    public void setFinished(boolean finished) {
+    public void setIsFinished(boolean finished) {
         isFinished = finished;
     }
 

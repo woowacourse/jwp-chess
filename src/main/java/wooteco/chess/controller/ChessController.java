@@ -60,5 +60,4 @@ public class ChessController {
 		mv.addObject("response", boardDto);
 		return mv;
 	}
-
 }

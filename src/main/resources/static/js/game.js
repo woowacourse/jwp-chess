@@ -48,11 +48,12 @@ chessCreateSubmitElement.onclick = () => {
 };
 
 chessResultRestartElement.onclick = () => {
-  fetch('/restart/' + gameId, {
+  fetch('/restart', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
+    body: gameId
   })
     .then((response) => response.json())
     .then((data) => {

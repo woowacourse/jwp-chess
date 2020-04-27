@@ -20,9 +20,9 @@ public class WebChessGameRestController {
         return chessService.createChessRoom();
     }
 
-    @PostMapping("/restart/{id}")
-    public ResponseDto restartGame(@PathVariable String id) {
-        return chessService.restartGame(Integer.parseInt(id));
+    @PostMapping("/restart")
+    public ResponseDto restartGame(@RequestBody String gameId) {
+        return chessService.restartGame(Integer.parseInt(gameId));
     }
 
     @PostMapping("/move/{id}")

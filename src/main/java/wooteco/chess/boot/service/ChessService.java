@@ -13,6 +13,7 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,7 +68,16 @@ public class ChessService {
 
     public List<Position> findMovablePlaces(final Position start) throws SQLException {
         checkGameOver();
-        return readBoard().findMovablePositions(start);
+        return tryFindMovablePositions(start);
+    }
+
+    private List<Position> tryFindMovablePositions(final Position start) throws SQLException {
+        try {
+            return readBoard().findMovablePositions(start);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     private void checkGameOver() throws SQLException {
@@ -80,11 +90,23 @@ public class ChessService {
 
     public void move(final Position start, final Position end) throws SQLException {
         checkGameOver();
+        tryMove(start, end);
+    }
 
-        Board board = readBoard();
-        board.move(start, end);
+    private void tryMove(final Position start, final Position end) throws SQLException {
+        try {
+            Board board = readBoard();
+            board.move(start, end);
 
-        writeWholeBoard(board);
-        writeCurrentTurn(board.getCurrentTurn());
+            writeWholeBoard(board);
+            writeCurrentTurn(board.getCurrentTurn());
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public double calculateScore(final Team team) throws SQLException {
+        Judge judge = new Judge();
+        return judge.getScoreByTeam(readBoard(), team);
     }
 }

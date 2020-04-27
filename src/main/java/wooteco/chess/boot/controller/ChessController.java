@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import wooteco.chess.boot.service.ChessService;
 import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.piece.Team;
 import wooteco.chess.util.ModelParser;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,8 +52,8 @@ public class ChessController {
     }
 
     private Map<String, Object> parseMovablePositionsModel(String start) throws SQLException {
-        List<Position> movablePositions = tryFindMovablePositions(start);
-        Map<String, Object> objects = ModelParser.parseBoard(chessService.readBoard(), tryFindMovablePositions(start));
+        List<Position> movablePositions = chessService.findMovablePlaces(Position.of(start));
+        Map<String, Object> objects = ModelParser.parseBoard(chessService.readBoard(), movablePositions);
 
         if (movablePositions.size() != 0) {
             objects.put("start", start);
@@ -61,29 +61,21 @@ public class ChessController {
         return objects;
     }
 
-    private List<Position> tryFindMovablePositions(String start) throws SQLException {
-        try {
-            return chessService.findMovablePlaces(Position.of(start));
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-            return new ArrayList<>();
-        }
-    }
-
     @PostMapping("/move")
     public ModelAndView move(@RequestParam(defaultValue = "") String start, @RequestParam(defaultValue = "") String end) throws SQLException {
         ModelAndView modelAndView = new ModelAndView("boot_index");
 
-        tryMove(start, end);
+        chessService.move(Position.of(start), Position.of(end));
         modelAndView.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));
         return modelAndView;
     }
 
-    private void tryMove(String start, String end) throws SQLException {
-        try {
-            chessService.move(Position.of(start), Position.of(end));
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-        }
+    @GetMapping("/score")
+    public ModelAndView score() throws SQLException {
+        ModelAndView modelAndView = new ModelAndView("boot_index");
+        modelAndView.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));
+        modelAndView.addObject("player1_info", "WHITE: " + chessService.calculateScore(Team.WHITE));
+        modelAndView.addObject("player2_info", "BLACK: " + chessService.calculateScore(Team.BLACK));
+        return modelAndView;
     }
 }

@@ -29,13 +29,13 @@ public class BoardDAO {
         }
     }
 
-    public void updatePiece(final Board board, final Position position) throws SQLException {
+    public void updatePiece(final String position, final String piece) throws SQLException {
         String query = "UPDATE board SET piece = (?) where position = (?)";
 
         try (final Connection connection = Connector.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, board.findBy(position).getName());
-            preparedStatement.setString(2, position.toString());
+            preparedStatement.setString(1, piece);
+            preparedStatement.setString(2, position);
             preparedStatement.executeUpdate();
         }
     }

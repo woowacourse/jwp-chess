@@ -1,7 +1,6 @@
 package wooteco.chess.domain.board;
 
 import wooteco.chess.domain.piece.Piece;
-import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.position.Position;
 
 import java.util.HashMap;
@@ -24,23 +23,20 @@ public class Board {
     public Piece findBy(final Position position) {
         return board.keySet().stream()
                 .filter(key -> key.equals(position))
-                .map(board::get)
+                .map(key -> board.get(key))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포지션입니다."));
     }
 
-    public void move(final String from, final String to) {
+    public boolean isMovable(final String from, final String to) {
         Position fromPosition = Position.of(from);
         Position toPosition = Position.of(to);
 
         Piece fromPiece = board.get(fromPosition);
         Piece toPiece = board.get(toPosition);
 
-        if (fromPiece.isMovable(this, fromPosition, toPosition)) {
-            board.put(toPosition, fromPiece.getNextPiece());
-            board.put(fromPosition, Piece.of(PieceType.BLANK));
-        }
         changeFlagWhenKingCaptured(toPiece);
+        return fromPiece.isMovable(this, fromPosition, toPosition);
     }
 
     public void changeFlagWhenKingCaptured(final Piece toPiece) {

@@ -1,11 +1,12 @@
 package wooteco.chess.service;
 
 import org.springframework.stereotype.Service;
-import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.dao.BoardDAO;
 import wooteco.chess.dao.TurnDAO;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.GameResult;
@@ -49,18 +50,20 @@ public class ChessGameService {
         return createBoardModel(board);
     }
 
-    public Board receiveMovedBoard(final String fromPiece, final String toPiece) throws SQLException {
+    public Board receiveMovedBoard(final String fromPosition, final String toPosition) throws SQLException {
         Board board = new Board(boardDAO.findAllPieces());
-        Piece piece = board.findBy(Position.of(fromPiece));
+        Piece piece = board.findBy(Position.of(fromPosition));
 
-        board.move(fromPiece, toPiece);
         if (piece.isNotSameTeam(getCurrentTurn())) {
             throw new IllegalArgumentException("체스 게임 순서를 지켜주세요.");
         }
 
+        if(board.isMovable(fromPosition, toPosition)){
+            boardDAO.updatePiece(fromPosition, PieceType.BLANK.name());
+            boardDAO.updatePiece(toPosition, piece.getName());
+        }
+
         updateTurn();
-        boardDAO.updatePiece(board, Position.of(fromPiece));
-        boardDAO.updatePiece(board, Position.of(toPiece));
         return board;
     }
 

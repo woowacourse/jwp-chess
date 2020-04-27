@@ -8,7 +8,8 @@ Refactoring Todo list
     - [ ] Room id 추가
     - [ ] BoardDAO 에서 Room id 로 조회 기능
 - [ ] Board 도메인 수정
-    - [ ] move -> 검증 메서드로 변경
+    - [ ] finish 체크 할 때 보드 반환 리팩토링
+    - [x] move -> 검증 메서드로 변경
     - [x] initial Board 위치 변경
  
 # jwp-chess

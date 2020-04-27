@@ -83,7 +83,7 @@ public class ChessService {
 	public Team findWinningTeam() {
 		Board board = find();
 		return Arrays.stream(Team.values())
-			.filter(team -> !board.isLiveKing(team))
+			.filter(board::isLiveKing)
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException("승리팀이 없습니다."));
 	}

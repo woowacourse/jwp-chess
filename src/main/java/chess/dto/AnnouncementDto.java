@@ -1,6 +1,11 @@
 package chess.dto;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
+@Table("announcement")
 public class AnnouncementDto {
+	@Id
 	private final int id;
 	private final String announcement;
 	private final int roomId;

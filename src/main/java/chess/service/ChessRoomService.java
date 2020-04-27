@@ -116,7 +116,7 @@ public class ChessRoomService {
 	}
 
 	public String loadAnnouncementMessage(int roomId){
-		return announcementRepository.findById(roomId).orElseThrow(NullPointerException::new)
+		return announcementRepository.findByRoomId(roomId).orElseThrow(NullPointerException::new)
 				.getMessage();
 	}
 

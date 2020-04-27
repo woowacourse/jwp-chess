@@ -8,11 +8,11 @@ public class MySqlDao implements Connectable {
 	@Override
 	public Connection connect() {
 		Connection con = null;
-		String server = "localhost:3306";
+		String server = "localhost:13306";
 		String database = "chess_game";
 		String option = "?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8";
 		String userName = "root";
-		String password = "root1230";
+		String password = "root";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

@@ -1,27 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <link href="/index.css" rel="stylesheet" type="text/css">
     <title>체스</title>
 </head>
 <body>
-<div>
-    {{#room}}
-    <div>{{.}}</div>
-    {{/room}}
-    <br/>
-    {{#error}}
-    <label>{{.}}</label>
-    {{/error}}
+<div class="container">
+    <div class="room-container">
+    </div>
+    <div class="side">
+        <form action="/join" method="post">
+            <input name="room-name" placeholder="방 이름을 입력해주세요." type="text">
+            <input type="submit" value="입장">
+        </form>
+        <br/>
+        <form action="/create" method="post">
+            <input name="room-name" placeholder="방 이름을 입력해주세요." type="text">
+            <input type="submit" value="방 만들기">
+        </form>
+        <br/>
+        <br/>
+        {{#error}}
+        <label>{{.}}</label>
+        {{/error}}
+    </div>
 </div>
-<form action="/join" method="post">
-    <input name="room-name" placeholder="방 이름을 입력해주세요." type="text">
-    <input type="submit" value="입장">
-</form>
-<br/>
-<form action="/create" method="post">
-    <input name="room-name" placeholder="방 이름을 입력해주세요." type="text">
-    <input type="submit" value="방 만들기">
-</form>
+<script src="/index.js"></script>
 </body>
 </html>

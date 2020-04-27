@@ -1,5 +1,12 @@
 package wooteco.chess.dao;
 
+import wooteco.chess.dao.util.BoardMapper;
+import wooteco.chess.dao.util.ConnectionLoader;
+import wooteco.chess.domain.Board;
+import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.position.Position;
+import wooteco.chess.dto.PieceDto;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,24 +14,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import wooteco.chess.dao.util.BoardMapper;
-import wooteco.chess.dao.util.ConnectionLoader;
-import wooteco.chess.domain.Board;
-import wooteco.chess.domain.piece.Piece;
-import wooteco.chess.domain.position.Position;
-import wooteco.chess.dto.BoardDto;
-
 public class BoardDao {
-
-	public Board create(int roomId, Board board) throws SQLException {
-		List<BoardDto> mappers = BoardMapper.createMappers(board);
+	public Board save(int roomId, Board board) throws SQLException {
+		List<PieceDto> mappers = BoardMapper.convertToPieceDto(board);
 		String query = "insert into board(room_id, piece_name, piece_team, piece_position) values (?,?,?,?)";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
-			for (BoardDto mapper : mappers) {
+			for (PieceDto mapper : mappers) {
 				pstmt.setInt(1, roomId);
-				pstmt.setString(2, mapper.pieceName());
-				pstmt.setString(3, mapper.pieceTeam());
-				pstmt.setString(4, mapper.piecePosition());
+				pstmt.setString(2, mapper.getSymbol());
+				pstmt.setString(3, mapper.getTeam());
+				pstmt.setString(4, mapper.getPosition().getName());
 				pstmt.addBatch();
 			}
 			pstmt.executeBatch();
@@ -36,7 +35,16 @@ public class BoardDao {
 		String query = "select * from board where room_id = (?)";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setInt(1, roomId);
-			return createResult(pstmt);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				List<PieceDto> mappers = new ArrayList<>();
+				while (rs.next()) {
+					mappers.add(new PieceDto(
+							Position.of(rs.getString("piece_position")),
+							rs.getString("piece_team"),
+							rs.getString("piece_name")));
+				}
+				return BoardMapper.convertToBoard(mappers);
+			}
 		}
 	}
 
@@ -48,16 +56,6 @@ public class BoardDao {
 			pstmt.setInt(3, roomId);
 			pstmt.setString(4, position.getName());
 			pstmt.executeUpdate();
-		}
-	}
-
-	private Board createResult(PreparedStatement pstmt) throws SQLException {
-		try (ResultSet rs = pstmt.executeQuery()) {
-			List<BoardDto> mappers = new ArrayList<>();
-			while (rs.next()) {
-				mappers.add(new BoardDto(rs.getString(2), rs.getString(3), rs.getString(4)));
-			}
-			return BoardMapper.create(mappers);
 		}
 	}
 }

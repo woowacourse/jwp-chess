@@ -24,7 +24,7 @@ public class BoardService {
 	private final PlayerDao playerDao = new PlayerDao();
 
 	public Board create(int roomId) throws SQLException {
-		Board board = boardDao.create(roomId, BoardFactory.create());
+		Board board = boardDao.save(roomId, BoardFactory.create());
 		return board;
 	}
 

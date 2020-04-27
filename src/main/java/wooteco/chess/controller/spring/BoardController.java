@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import wooteco.chess.domain.position.Position;
+import wooteco.chess.dto.GameDto;
 import wooteco.chess.dto.req.MoveRequestDto;
 import wooteco.chess.service.BoardService;
 
@@ -24,7 +25,7 @@ public class BoardController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> loadBoard(@PathVariable int id) {
 		try {
-			return ResponseEntity.status(200).body(boardService.load(id));
+			return ResponseEntity.ok(boardService.load(id));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(400).body(e.getMessage());
@@ -34,12 +35,11 @@ public class BoardController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Object> move(@PathVariable int id, @RequestBody MoveRequestDto req) {
 		try {
-			return ResponseEntity
-				.status(200)
-				.body(boardService.move(
+			GameDto gameDto = boardService.move(
 					id,
 					Position.of(req.getSourceX(), req.getSourceY()),
-					Position.of(req.getTargetX(), req.getTargetY())));
+					Position.of(req.getTargetX(), req.getTargetY()));
+			return ResponseEntity.ok(gameDto);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(409).body(e.getMessage());

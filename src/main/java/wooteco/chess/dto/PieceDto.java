@@ -1,31 +1,27 @@
 package wooteco.chess.dto;
 
+import wooteco.chess.domain.position.Position;
+
 public class PieceDto {
-	private final int x;
-	private final int y;
+	private final Position position;
 	private final String team;
-	private final String unit;
+	private final String symbol;
 
-	public PieceDto(int x, int y, String team, String unit) {
-		this.x = x;
-		this.y = y;
+	public PieceDto(Position position, String team, String symbol) {
+		this.position = position;
 		this.team = team;
-		this.unit = unit;
+		this.symbol = symbol;
 	}
 
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
+	public Position getPosition() {
+		return position;
 	}
 
 	public String getTeam() {
 		return team;
 	}
 
-	public String getUnit() {
-		return unit;
+	public String getSymbol() {
+		return symbol;
 	}
 }

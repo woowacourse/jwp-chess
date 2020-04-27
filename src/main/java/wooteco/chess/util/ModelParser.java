@@ -1,4 +1,4 @@
-package wooteco.chess.spark.webutil;
+package wooteco.chess.util;
 
 
 import wooteco.chess.domain.board.Board;
@@ -19,9 +19,22 @@ public class ModelParser {
     private static final String MARK = "_mark";
 
     public static Map<String, Object> parseBlankBoard() {
+        Map<String, Object> blankBoard = parseBlankPieces();
+        blankBoard.putAll(parseBlankMovables());
+
+        return blankBoard;
+    }
+
+    private static Map<String, Object> parseBlankPieces() {
         return Position.positions
                 .stream()
                 .collect(toMap(Position::toString, position -> BLANK));
+    }
+
+    private static Map<String, Object> parseBlankMovables() {
+        return Position.positions
+                .stream()
+                .collect(toMap(ModelParser::parsePositionToMovable, position -> BLANK));
     }
 
     public static Map<String, Object> parseBoard(final Board board) {
@@ -53,10 +66,10 @@ public class ModelParser {
     public static Map<String, Object> parseMovablePlaces(final List<Position> markingPlaces) {
         return Position.positions
                 .stream()
-                .collect(toMap(ModelParser::parseMarkPosition, position -> parseMovable(position, markingPlaces)));
+                .collect(toMap(ModelParser::parsePositionToMovable, position -> parseMovable(position, markingPlaces)));
     }
 
-    private static String parseMarkPosition(final Position position) {
+    private static String parsePositionToMovable(final Position position) {
         return position.toString() + MARK;
     }
 

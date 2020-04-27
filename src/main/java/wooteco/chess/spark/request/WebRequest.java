@@ -1,10 +1,11 @@
-package wooteco.chess.spark.webutil;
+package wooteco.chess.spark.request;
 
 import spark.Request;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.spark.sparkservice.ChessService;
+import wooteco.chess.util.ModelParser;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ public enum WebRequest {
 
     BLANK_BOARD("빈 판", req -> {
         Map<String, Object> model = ModelParser.parseBlankBoard();
-        model.putAll(ModelParser.parseMovablePlaces(new ArrayList<>()));
         return model;
     }),
     NEW_GAME("새 게임", req -> {

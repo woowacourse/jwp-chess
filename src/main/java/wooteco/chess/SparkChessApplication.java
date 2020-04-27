@@ -2,7 +2,7 @@ package wooteco.chess;
 
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import wooteco.chess.spark.webutil.WebRequest;
+import wooteco.chess.spark.request.WebRequest;
 
 import java.util.Map;
 

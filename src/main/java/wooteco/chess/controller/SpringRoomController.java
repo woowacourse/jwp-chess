@@ -6,7 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import wooteco.chess.domain.room.Room;
+import wooteco.chess.dto.RoomResponseDto;
 import wooteco.chess.dto.RoomName;
 import wooteco.chess.service.SpringRoomService;
 
@@ -26,7 +26,7 @@ public class SpringRoomController {
 
     @GetMapping
     public String getAllRooms(Model model) throws SQLException {
-        List<Room> rooms = roomService.findAllRoom();
+        List<RoomResponseDto> rooms = roomService.findAllRoom();
         model.addAttribute("rooms", rooms);
 
         return "index";

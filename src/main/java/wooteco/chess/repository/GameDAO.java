@@ -1,4 +1,4 @@
-package wooteco.chess.dao;
+package wooteco.chess.repository;
 
 import org.springframework.stereotype.Repository;
 import wooteco.chess.domain.board.Position;

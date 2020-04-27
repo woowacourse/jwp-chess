@@ -20,7 +20,7 @@
 <div class="container">
     <h1>전체 방 목록</h1>
 
-    {{#if rooms}}
+    {{#if roomResponseDtos}}
     <table class="table table-hover">
         <thead>
         <tr>
@@ -30,7 +30,7 @@
         </tr>
         </thead>
         <tbody>
-        {{#each rooms}}
+        {{#each roomResponseDtos}}
         <tr>
             <td>{{this.roomId}}</td>
             <td>{{this.roomName}}</td>
@@ -45,7 +45,7 @@
     <h1>방이 하나도 개설되지 않았습니다!</h1>
     {{/if}}
 
-    <form action="/rooms/create" method="get">
+    <form action="/roomResponseDtos/create" method="get">
         <div class="form-group">
             <small class="form-text text-muted">방을 만드려면 방 제목을 입력해주세요.</small>
             <input class="form-control" name="roomName" type="text">
@@ -53,7 +53,7 @@
         <button class="btn btn-primary" type="submit">방 만들기</button>
     </form>
 
-    <form action="/rooms/enter" method="get">
+    <form action="/roomResponseDtos/enter" method="get">
         <div class="form-group">
             <small class="form-text text-muted">방에 입장하려면 방 번호를 입력해주세요.</small>
             <input class="form-control" name="roomId" placeholder="일단 있는 것만 입력해주세요 ㅎㅎ" type="text">
@@ -76,7 +76,7 @@
     function deleteRoom(roomId) {
         console.log("deleteRoom : " + roomId);
         let oReq = new XMLHttpRequest();
-        oReq.open('GET', '/rooms/remove?roomId=' + roomId);
+        oReq.open('GET', '/roomResponseDtos/remove?roomId=' + roomId);
         oReq.send();
     }
 </script>

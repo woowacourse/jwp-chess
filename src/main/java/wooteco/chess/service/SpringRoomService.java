@@ -2,28 +2,34 @@ package wooteco.chess.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import wooteco.chess.dao.RoomDAO;
 import wooteco.chess.domain.Color;
-import wooteco.chess.domain.room.Room;
+import wooteco.chess.dto.RoomResponseDto;
+import wooteco.chess.repository.RoomRepository;
+import wooteco.chess.repository.entity.RoomEntity;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class SpringRoomService {
 
     @Autowired
-    private RoomDAO roomDAO;
+    private RoomRepository roomRepository;
 
     public void addRoom(String roomName) throws SQLException {
-        roomDAO.addRoom(roomName, Color.WHITE.name());
+        roomRepository.save(new RoomEntity(roomName, Color.WHITE.name()));
     }
 
     public void removeRoom(int roomId) throws SQLException {
-        roomDAO.removeRoomById(roomId);
+        roomRepository.deleteById(roomId);
     }
 
-    public List<Room> findAllRoom() throws SQLException {
-        return roomDAO.findAllRoom();
+    public List<RoomResponseDto> findAllRoom() throws SQLException {
+        List<RoomResponseDto> rooms = new ArrayList<>();
+        for (final RoomEntity roomEntity : roomRepository.findAll()) {
+            rooms.add(RoomResponseDto.of(roomEntity));
+        }
+        return rooms;
     }
 }

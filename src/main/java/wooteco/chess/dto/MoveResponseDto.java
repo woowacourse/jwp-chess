@@ -1,24 +1,22 @@
 package wooteco.chess.dto;
 
 import wooteco.chess.domain.Color;
-import wooteco.chess.dto.PieceResponseDTO;
 
 import java.util.List;
-import java.util.Map;
 
-public class GameManagerDTO {
-    private final List<PieceResponseDTO> pieces;
+public class MoveResponseDto {
+    private final List<PieceResponseDto> pieces;
     private final Color currentColor;
     private final boolean kingDead;
     private String errorMessage;
 
-    public GameManagerDTO(final List<PieceResponseDTO> pieces, final Color currentColor, final boolean kingDead) {
+    public MoveResponseDto(final List<PieceResponseDto> pieces, final Color currentColor, final boolean kingDead) {
         this.pieces = pieces;
         this.currentColor = currentColor;
         this.kingDead = kingDead;
     }
 
-    public List<PieceResponseDTO> getPieces() {
+    public List<PieceResponseDto> getPieces() {
         return pieces;
     }
 

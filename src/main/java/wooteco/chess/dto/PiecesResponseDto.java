@@ -5,14 +5,14 @@ import wooteco.chess.domain.piece.Pieces;
 
 import java.util.List;
 
-public class PiecesResponseDTO {
-    private final List<PieceResponseDTO> pieces;
+public class PiecesResponseDto {
+    private final List<PieceResponseDto> pieces;
 
-    public PiecesResponseDTO(Pieces originPieces) {
+    public PiecesResponseDto(Pieces originPieces) {
         this.pieces = PieceMapper.getInstance().createPiecesResponseDTO(originPieces);
     }
 
-    public List<PieceResponseDTO> getPieces() {
+    public List<PieceResponseDto> getPieces() {
         return pieces;
     }
 }

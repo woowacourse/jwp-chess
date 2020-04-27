@@ -2,9 +2,12 @@ package wooteco.chess.dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.PieceDTO;
 
+@Repository("BoardDAO")
 public class BoardDAO {
 	private static final String INSERT_PIECE = "INSERT INTO board (position, name) VALUES (?, ?)";
 	private static final String TRUNCATE_BOARD = "TRUNCATE board";
@@ -24,7 +27,7 @@ public class BoardDAO {
 	}
 
 	public void update(Position position, String name) {
-		Connector.executeUpdate(UPDATE_BOARD_SET_NAME_WHERE_POSITION, name, position.toString());
+		Connector.executeUpdate(UPDATE_BOARD_SET_NAME_WHERE_POSITION, name, position.getString());
 	}
 
 }

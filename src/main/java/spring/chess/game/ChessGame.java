@@ -3,6 +3,7 @@ package spring.chess.game;
 import spring.chess.board.ChessBoardCreater;
 import spring.chess.command.Command;
 import spring.chess.board.ChessBoard;
+import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.location.Location;
 import spring.chess.piece.type.Piece;
 import spring.chess.progress.Progress;
@@ -10,6 +11,8 @@ import spring.chess.player.Player;
 import spring.chess.result.ChessResult;
 import spring.chess.result.ChessScores;
 import spring.chess.team.Team;
+
+import java.util.Objects;
 
 import static spring.chess.progress.Progress.END;
 import static spring.chess.team.Team.BLACK;
@@ -26,10 +29,17 @@ public class ChessGame {
     }
 
     public ChessGame(ChessBoard chessBoard, Team turn) {
+        validNullValue(chessBoard, turn);
         this.chessBoard = chessBoard;
         white = new Player(new ChessSet(chessBoard.giveMyPiece(WHITE)), WHITE);
         black = new Player(new ChessSet(chessBoard.giveMyPiece(BLACK)), BLACK);
         this.turn = turn;
+    }
+
+    private void validNullValue(ChessBoard chessBoard, Team turn) {
+        if (Objects.isNull(chessBoard) || Objects.isNull(turn)) {
+            throw new InvalidConstructorValueException();
+        }
     }
 
     public void changeTurn() {

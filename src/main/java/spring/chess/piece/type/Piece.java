@@ -3,6 +3,7 @@ package spring.chess.piece.type;
 import java.util.Objects;
 
 import spring.chess.board.Route;
+import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.piece.type.movable.PieceMovable;
 import spring.chess.score.Score;
 import spring.chess.team.Team;
@@ -13,9 +14,16 @@ public abstract class Piece {
     private final PieceMovable pieceMovable;
 
     Piece(char name, Score score, Team team, PieceMovable pieceMovable) {
+        validNullValue(score, team, pieceMovable);
         this.name = changeName(team, name);
         this.score = score;
         this.pieceMovable = pieceMovable;
+    }
+
+    private void validNullValue(Score score, Team team, PieceMovable pieceMovable) {
+        if (Objects.isNull(score) || Objects.isNull(team) || Objects.isNull(pieceMovable)) {
+            throw new InvalidConstructorValueException();
+        }
     }
 
     private static char changeName(Team team, char name) {

@@ -2,7 +2,7 @@ package spring.chess.piece.type.movable;
 
 import spring.chess.board.Route;
 import spring.chess.location.Location;
-import spring.chess.location.NoExistChessLocationException;
+import spring.chess.location.exception.NoExistChessLocationException;
 
 public class KnightPieceMovable implements PieceMovable {
 

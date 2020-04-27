@@ -1,5 +1,7 @@
 package spring.chess.location;
 
+import spring.chess.location.exception.NoExistChessLocationException;
+
 import java.util.Arrays;
 
 public enum Col {

@@ -1,10 +1,14 @@
 package spring.chess.player;
 
+import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.game.ChessSet;
 import spring.chess.location.Location;
 import spring.chess.score.Score;
 import spring.chess.score.ScoreCalculator;
 import spring.chess.team.Team;
+
+import javax.validation.constraints.Null;
+import java.util.Objects;
 
 public class Player {
     private static final ScoreCalculator scoreCalculator = new ScoreCalculator();
@@ -13,16 +17,19 @@ public class Player {
     private final Team team;
 
     public Player(ChessSet chessSet, Team team) {
+        validNullValue(chessSet, team);
         this.chessSet = chessSet;
         this.team = team;
     }
 
-    public Score calculate() {
-        return scoreCalculator.calculate(chessSet);
+    private void validNullValue(ChessSet chessSet, Team team) {
+        if (Objects.isNull(chessSet) || Objects.isNull(team)) {
+            throw new InvalidConstructorValueException();
+        }
     }
 
-    Score calculateScoreExceptPawnReduce() {
-        return chessSet.calculateScoreExceptPawnReduce();
+    public Score calculate() {
+        return scoreCalculator.calculate(chessSet);
     }
 
     public boolean is(Team team) {

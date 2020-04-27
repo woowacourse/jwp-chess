@@ -1,5 +1,6 @@
 package spring.chess.board;
 
+import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.location.Location;
 import spring.chess.piece.type.Piece;
 
@@ -14,9 +15,23 @@ public class Route {
     private final Location destination;
 
     public Route(Map<Location, Piece> route, Location now, Location destination) {
+        validNullValueOfRoute(route);
+        validNullValueOfLocations(now, destination);
         this.route = route;
         this.now = now;
         this.destination = destination;
+    }
+
+    private void validNullValueOfLocations(Location now, Location destination) {
+        if (Objects.isNull(now) || Objects.isNull(destination)) {
+            throw new InvalidConstructorValueException();
+        }
+    }
+
+    private void validNullValueOfRoute(Map<Location, Piece> route) {
+        if (Objects.isNull(route)) {
+            throw new InvalidConstructorValueException();
+        }
     }
 
     public boolean isDiagonal() {

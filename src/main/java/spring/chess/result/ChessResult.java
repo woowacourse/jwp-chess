@@ -1,6 +1,9 @@
 package spring.chess.result;
 
+import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.player.Player;
+
+import java.util.Objects;
 
 public class ChessResult {
     private static final String DRAW_RESULT_NAME = "승자 없음";
@@ -9,6 +12,9 @@ public class ChessResult {
     private final String name;
 
     public ChessResult(Result result, String name) {
+        if (Objects.isNull(result) || Objects.isNull(name) || name.isEmpty()) {
+            throw new InvalidConstructorValueException();
+        }
         this.result = result;
         this.name = name;
     }

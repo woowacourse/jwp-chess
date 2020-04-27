@@ -3,6 +3,7 @@ package spring.chess.board;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.location.Location;
 import spring.chess.piece.type.Piece;
 import spring.chess.team.Team;
@@ -11,7 +12,14 @@ public class ChessBoard {
     private final Map<Location, Piece> board;
 
     public ChessBoard(Map<Location, Piece> board) {
+        validNullValue(board);
         this.board = board;
+    }
+
+    private void validNullValue(Map<Location, Piece> board) {
+        if(Objects.isNull(board) || board.containsKey(null) || board.containsValue(null)) {
+            throw new InvalidConstructorValueException();
+        }
     }
 
     public boolean canMove(Location now, Location destination) {
@@ -92,7 +100,6 @@ public class ChessBoard {
     }
 
     public Piece getPiece(Location location) {
-        System.out.println("이건 로그" + board.get(location));
         return board.get(location);
     }
 }

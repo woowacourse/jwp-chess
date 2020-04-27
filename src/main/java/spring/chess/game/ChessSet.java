@@ -1,5 +1,6 @@
 package spring.chess.game;
 
+import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.location.Col;
 import spring.chess.location.Location;
 import spring.chess.piece.type.Pawn;
@@ -14,7 +15,14 @@ public class ChessSet {
     private final Map<Location, Piece> chessSet;
 
     public ChessSet(Map<Location, Piece> chessSet) {
+        validNullValue(chessSet);
         this.chessSet = chessSet;
+    }
+
+    private void validNullValue(Map<Location, Piece> chessSet) {
+        if (Objects.isNull(chessSet) || chessSet.containsKey(null) || chessSet.containsValue(null)) {
+            throw new InvalidConstructorValueException();
+        }
     }
 
     public Score calculateScoreExceptPawnReduce() {

@@ -1,89 +1,81 @@
 package wooteco.chess.dao;
 
 public class JdbcConfiguration {
-	private static final String URL = "jdbc:%s://%s/%s%s";
+	private String url;
+	private String option;
+	private String username;
+	private String password;
+	private String driverClassName;
 
-	private final String server;
-	private final String database;
-	private final String option;
-	private final String userName;
-	private final String password;
-	private final String databaseDriver;
-	private final String dataSourceName;
-
-	private JdbcConfiguration(String server, String database, String option, String userName, String password,
-			String databaseDriver, String dataSourceName) {
-		this.server = server;
-		this.database = database;
+	private JdbcConfiguration(String url, String option, String username, String password, String driverClassName) {
+		this.url = url;
 		this.option = option;
-		this.userName = userName;
+		this.username = username;
 		this.password = password;
-		this.databaseDriver = databaseDriver;
-		this.dataSourceName = dataSourceName;
+		this.driverClassName = driverClassName;
 	}
 
-	public String getDatabaseDriver() {
-		return databaseDriver;
+	public String getFullUrl() {
+		return url + option;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
 	public String getPassword() {
 		return password;
 	}
 
-	public String getUrl() {
-		return String.format(URL, dataSourceName, server, database, option);
+	public String getDriverClassName() {
+		return driverClassName;
+	}
+
+	@Override
+	public String toString() {
+		return "JdbcConfiguration{" +
+				"url='" + url + '\'' +
+				", option='" + option + '\'' +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", driverClassName='" + driverClassName + '\'' +
+				'}';
 	}
 
 	public static class Builder {
-		private String server;
-		private String database;
+		private String url;
 		private String option;
-		private String userName;
+		private String username;
 		private String password;
-		private String databaseDriver;
-		private String dataSourceName;
+		private String driverClassName;
 
-		public Builder server(String server) {
-			this.server = server;
+		public Builder setUrl(String url) {
+			this.url = url;
 			return this;
 		}
 
-		public Builder database(String database) {
-			this.database = database;
-			return this;
-		}
-
-		public Builder option(String option) {
+		public Builder setOption(String option) {
 			this.option = option;
 			return this;
 		}
 
-		public Builder userName(String userName) {
-			this.userName = userName;
+		public Builder setUsername(String username) {
+			this.username = username;
 			return this;
 		}
 
-		public Builder password(String password) {
+		public Builder setPassword(String password) {
 			this.password = password;
 			return this;
 		}
 
-		public Builder databaseDriver(String databaseDriver) {
-			this.databaseDriver = databaseDriver;
-			return this;
-		}
-
-		public Builder dataSourceName(String dataSourceName) {
-			this.dataSourceName = dataSourceName;
+		public Builder setDriverClassName(String driverClassName) {
+			this.driverClassName = driverClassName;
 			return this;
 		}
 
 		public JdbcConfiguration build() {
-			return new JdbcConfiguration(server, database, option, userName, password, databaseDriver, dataSourceName);
+			return new JdbcConfiguration(url, option, username, password, driverClassName);
 		}
 	}
 }

@@ -4,21 +4,21 @@ public class ChessGameDto {
 	private BoardDto boardDto;
 	private TurnDto turnDto;
 	private StatusDto statusDto;
-	private boolean isFinished;
+	private boolean finished;
 
-	public ChessGameDto(BoardDto boardDto, TurnDto turnDto, StatusDto statusDto, boolean isFinished) {
+	public ChessGameDto(BoardDto boardDto, TurnDto turnDto, StatusDto statusDto, boolean finished) {
 		this.boardDto = boardDto;
 		this.turnDto = turnDto;
 		this.statusDto = statusDto;
-		this.isFinished = isFinished;
+		this.finished = finished;
 	}
 
-	public boolean isFinished() {
-		return isFinished;
+	public boolean getFinished() {
+		return finished;
 	}
 
 	public void setFinished(boolean finished) {
-		isFinished = finished;
+		this.finished = finished;
 	}
 
 	public BoardDto getBoardDto() {

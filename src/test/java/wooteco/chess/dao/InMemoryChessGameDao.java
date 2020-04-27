@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.state.Ready;
 
+@Component
 public class InMemoryChessGameDao implements ChessGameDao {
 	private Map<Integer, ChessGame> memory;
 

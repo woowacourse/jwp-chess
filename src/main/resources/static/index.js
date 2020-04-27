@@ -9,7 +9,7 @@ chessCreateElement.onclick = () => {
     }).then(response => response.json())
         .then(data => {
             if (data.statusCode == 1) {
-                location.replace('/rooms/' + data.dto)
+                location.replace(`/rooms/${data.dto}`)
             }
         })
 };

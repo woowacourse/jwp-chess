@@ -32,18 +32,26 @@
         flex-wrap: wrap;
     }
 
+    .boardwrapper {
+        display: flex;
+        margin-left: auto;
+        margin-right: auto;
+        width: 1200px;
+    }
+
 </style>
 <body id="body">
-<div class="board" id="board"
-     style="background-image: url('/board.jpg'); width: 800px; height: 800px; background-size: cover;">
-    <div class="position" id="A8"></div>
-    <div class="position" id="B8"></div>
-    <div class="position" id="C8"></div>
-    <div class="position" id="D8"></div>
-    <div class="position" id="E8"></div>
-    <div class="position" id="F8"></div>
-    <div class="position" id="G8"></div>
-    <div class="position" id="H8"></div>
+<div class="boardwrapper">
+    <div class="board" id="board"
+         style="background-image: url('/board.jpg'); width: 800px; height: 800px; background-size: cover;">
+        <div class="position" id="A8"></div>
+        <div class="position" id="B8"></div>
+        <div class="position" id="C8"></div>
+        <div class="position" id="D8"></div>
+        <div class="position" id="E8"></div>
+        <div class="position" id="F8"></div>
+        <div class="position" id="G8"></div>
+        <div class="position" id="H8"></div>
     <div class="position" id="A7"></div>
     <div class="position" id="B7"></div>
     <div class="position" id="C7"></div>
@@ -92,33 +100,37 @@
     <div class="position" id="F2"></div>
     <div class="position" id="G2"></div>
     <div class="position" id="H2"></div>
-    <div class="position" id="A1"></div>
-    <div class="position" id="B1"></div>
-    <div class="position" id="C1"></div>
-    <div class="position" id="D1"></div>
-    <div class="position" id="E1"></div>
-    <div class="position" id="F1"></div>
-    <div class="position" id="G1"></div>
-    <div class="position" id="H1"></div>
-</div>
+        <div class="position" id="A1"></div>
+        <div class="position" id="B1"></div>
+        <div class="position" id="C1"></div>
+        <div class="position" id="D1"></div>
+        <div class="position" id="E1"></div>
+        <div class="position" id="F1"></div>
+        <div class="position" id="G1"></div>
+        <div class="position" id="H1"></div>
+    </div>
 
-<form action="/move" id="move-form" method="post" style="display: none">
+
+    <form action="/move?roomNo={{roomNo}}" id="move-form" method="post" style="display: none">
     <label for="target-text">출발지 좌표</label>
     <input id="target-text" name="target" type="text">
     <label for="destination-text">도착지 좌표</label>
     <input id="destination-text" name="destination" type="text">
     <input id="move-button" type="submit" value="이동">
-</form>
+    </form>
 
-<form action="/status" id="status-form" method="get">
-    <input id="status-button" type="submit" value="결과">
-</form>
-<form action="/end" id="end-form" method="get">
-    <input id="end-button" type="submit" value="종료">
-</form>
-<div id="result"></div>
-
+    <!--<form action="/status" id="status-form" method="get">-->
+    <!--    <input id="status-button" type="submit" value="결과">-->
+    <!--</form>-->
+    <form action="/end" id="end-form" method="get">
+        <input id="roomNo-text" type="text" name="roomNo" style="display: none">
+        <input id="end-button" type="submit" value="종료">
+    </form>
+    <div id="roomno">{{roomNo}}번 방 입니다.</div>
+    <div id="result"></div>
+</div>
 <script>
+    document.querySelector("#roomNo-text").value = {{roomNo}};
     let allImages = new Map();
     allImages.set("B", '/bishop_black.png');
     allImages.set("b", '/bishop_white.png');

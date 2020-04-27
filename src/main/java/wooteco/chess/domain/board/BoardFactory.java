@@ -19,6 +19,7 @@ import wooteco.chess.domain.piece.Queen;
 import wooteco.chess.domain.piece.Rook;
 import wooteco.chess.domain.position.Column;
 import wooteco.chess.domain.position.Position;
+import wooteco.chess.domain.position.Row;
 
 public class BoardFactory {
 	private BoardFactory() {
@@ -36,10 +37,10 @@ public class BoardFactory {
 	private static Map<Position, Piece> putPerRank(List<String> pieces, int rank) {
 		Map<Position, Piece> piecesInRank = new HashMap<>();
 
-		for (int file = MIN_POSITION_INDEX; file <= MAX_POSITION_INDEX; file++) {
+		for (Row row : Row.rowNames()) {
 			String piece = pieces.remove(0);
 			if (!piece.equals(".")) {
-				piecesInRank.put(Position.of(file, rank), PieceFactory.of(piece));
+				piecesInRank.put(Position.of(row.getValue(), rank), PieceFactory.of(piece));
 			}
 		}
 		return piecesInRank;

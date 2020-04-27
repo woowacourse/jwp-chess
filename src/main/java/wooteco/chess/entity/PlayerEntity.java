@@ -29,6 +29,10 @@ public class PlayerEntity {
         return id;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     public Player toModel() {
         return new Player(id, username, password, Record.of(win, lose, draw));
     }

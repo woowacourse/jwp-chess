@@ -20,7 +20,7 @@ import wooteco.chess.dto.GameResponseDto;
 import wooteco.chess.entity.GameEntity;
 import wooteco.chess.entity.MoveEntity;
 import wooteco.chess.entity.PlayerEntity;
-import wooteco.chess.exceptions.Game2NotFoundException;
+import wooteco.chess.exceptions.GameNotFoundException;
 import wooteco.chess.exceptions.PlayerNotFoundException;
 import wooteco.chess.repository.GameRepository;
 import wooteco.chess.repository.MoveRepository;
@@ -62,7 +62,7 @@ public class SpringChessService implements ChessService {
     @Override
     public Game findGameById(final String id) {
         GameEntity gameEntity = gameRepository.findById(id)
-            .orElseThrow(() -> new Game2NotFoundException(id));
+            .orElseThrow(() -> new GameNotFoundException(id));
         Player white = findPlayerById(gameEntity.getWhiteId());
         Player black = findPlayerById(gameEntity.getBlackId());
         Game game = gameEntity.toModel(white, black);

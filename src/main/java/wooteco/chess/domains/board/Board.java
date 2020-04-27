@@ -16,6 +16,7 @@ public class Board {
     private static final int TWO_KINGS = 2;
     private static final double SCORE_OF_PAWN_SAME_COLUMN = 0.5;
     private static final String GAME_ENDED_ERR_MSG = "종료된 게임입니다.";
+    private static final int ONLY_ONE_PAWN = 1;
 
     private final Map<Position, Piece> board = BoardFactory.getBoard();
     private PieceColor teamColor = PieceColor.WHITE;
@@ -56,9 +57,6 @@ public class Board {
     }
 
     private void validRoute(List<Position> route) {
-        if (route.isEmpty()) {
-            return;
-        }
         if (isBlocked(route)) {
             throw new IllegalArgumentException(INVALID_ROUTE_ERR_MSG);
         }
@@ -85,24 +83,13 @@ public class Board {
         return count != TWO_KINGS;
     }
 
-    public double calculateScore() {
-        double score = board.values()
-                .stream()
-                .filter(playingPiece -> playingPiece.isMine(teamColor))
-                .mapToDouble(Piece::score)
-                .sum();
-
-        int pawnCount = countOfPawnsInSameColumn();
-
-        return score - pawnCount * SCORE_OF_PAWN_SAME_COLUMN;
-    }
-
     public double calculateScore(PieceColor pieceColor) {
         double score = board.values()
                 .stream()
                 .filter(playingPiece -> playingPiece.isMine(pieceColor))
                 .mapToDouble(Piece::score)
                 .sum();
+
 
         int pawnCount = countOfPawnsInSameColumn();
 
@@ -118,15 +105,14 @@ public class Board {
     }
 
     private int countValidPawns(Column column) {
-        int sameColumnPiecesCount = (int) board.keySet()
+        int sameColumnPiecesCount = (int) Position.fromColumn(column)
                 .stream()
-                .filter(position -> position.isColumn(column))
                 .map(board::get)
                 .filter(playingPiece -> playingPiece.isMine(teamColor)
                         && playingPiece.is(PieceType.PAWN))
                 .count();
 
-        if (sameColumnPiecesCount > 1) {
+        if (sameColumnPiecesCount > ONLY_ONE_PAWN) {
             return sameColumnPiecesCount;
         }
         return 0;

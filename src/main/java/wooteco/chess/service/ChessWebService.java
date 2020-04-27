@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import org.springframework.stereotype.Service;
 import wooteco.chess.db.ChessPiece;
 import wooteco.chess.db.MoveHistoryDao;
 import wooteco.chess.db.PieceDao;
@@ -10,14 +11,19 @@ import wooteco.chess.domains.piece.PieceColor;
 import wooteco.chess.domains.position.Position;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Service
 public class ChessWebService {
     public static final int BOARD_CELLS_NUMBER = 64;
     private static final String TURN_MSG_FORMAT = "%s의 순서입니다.";
     private static final String WINNING_MSG_FORMAT = "%s이/가 이겼습니다.";
+    private static final String PIECE_NOT_FOUND_ERR_MSG = "해당 Piece 정보를 찾을 수 없습니다.";
 
     private final PieceDao pieceDao;
     private final MoveHistoryDao moveHistoryDao;
@@ -39,13 +45,17 @@ public class ChessWebService {
         Board board = new Board();
         playingBoards.put(gameId, board);
 
-        List<ChessPiece> chessPieces = Position.stream()
+        List<ChessPiece> chessPieces = createChessPieces(gameId, board);
+        pieceDao.addInitialPieces(chessPieces);
+    }
+
+    private List<ChessPiece> createChessPieces(String gameId, Board board) {
+        return Position.stream()
                 .map(position -> {
                     Piece piece = board.getPieceByPosition(position);
                     return new ChessPiece(gameId, position.name(), piece.name());
                 })
                 .collect(Collectors.toList());
-        pieceDao.addInitialPieces(chessPieces);
     }
 
     public void resumeGame(String gameId) throws SQLException {
@@ -55,7 +65,7 @@ public class ChessWebService {
                     try {
                         pieceName = pieceDao.findPieceNameByPosition(gameId, position);
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        System.out.println(PIECE_NOT_FOUND_ERR_MSG);
                     }
                     return BoardFactory.findPieceByPieceName(pieceName);
                 }));
@@ -89,7 +99,7 @@ public class ChessWebService {
             deleteSavedGame(gameId);
             return winningMsg(board);
         }
-        return null;
+        return "";
     }
 
     public Map<String, Object> provideGameInfo(String gameId) {
@@ -112,52 +122,9 @@ public class ChessWebService {
 
     private List<String> convertPieces(Board board) {
         List<Piece> pieces = board.showBoard();
-        List<String> pieceCodes = new ArrayList<>();
-
-        for (Piece piece : pieces) {
-            switch (piece.name()) {
-                case "r":
-                    pieceCodes.add("♖");
-                    break;
-                case "n":
-                    pieceCodes.add("♘");
-                    break;
-                case "b":
-                    pieceCodes.add("♗");
-                    break;
-                case "k":
-                    pieceCodes.add("♕");
-                    break;
-                case "q":
-                    pieceCodes.add("♔");
-                    break;
-                case "p":
-                    pieceCodes.add("♙");
-                    break;
-                case "R":
-                    pieceCodes.add("♜");
-                    break;
-                case "N":
-                    pieceCodes.add("♞");
-                    break;
-                case "B":
-                    pieceCodes.add("♝");
-                    break;
-                case "K":
-                    pieceCodes.add("♛");
-                    break;
-                case "Q":
-                    pieceCodes.add("♚");
-                    break;
-                case "P":
-                    pieceCodes.add("♟");
-                    break;
-                case ".":
-                    pieceCodes.add("");
-                    break;
-            }
-        }
-        return pieceCodes;
+        return pieces.stream()
+                .map(Piece::symbol)
+                .collect(Collectors.toList());
     }
 
     private String turnMsg(Board board) {

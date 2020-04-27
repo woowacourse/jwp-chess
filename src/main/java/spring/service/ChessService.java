@@ -85,14 +85,13 @@ public class ChessService {
         return GSON.toJson(chessResultDto);
     }
 
-    private void resetChessBoard(ChessGame chessGame, int game_id) throws SQLException {
-        pieceDao.resetBoard(chessGame.getChessBoard(), game_id);
-        ;
+    private void resetChessBoard(ChessGame chessGame, int gameId) throws SQLException {
+        pieceDao.resetBoard(chessGame.getChessBoard(), gameId);
     }
 
     public ChessGame makeGameByDB(int gameId) throws SQLException {
         ChessGameVo chessGameVo = chessGameDao.findChessGameBy(gameId);
-        List<PieceVo> pieceDto = ChessService.pieceDao.findAll(gameId);
+        List<PieceVo> pieceDto = pieceDao.findAll(gameId);
         Team team = Team.of(chessGameVo.isTurnBlack());
         ChessBoard chessBoard = makeChessBoard(pieceDto);
         return new ChessGame(chessBoard, team);

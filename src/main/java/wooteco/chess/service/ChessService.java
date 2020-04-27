@@ -1,5 +1,7 @@
 package wooteco.chess.service;
 
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.BoardDao;
 import wooteco.chess.dao.RoomDao;
 import wooteco.chess.domain.Board;
@@ -7,7 +9,9 @@ import wooteco.chess.domain.Pieces;
 import wooteco.chess.domain.Position;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
+import wooteco.chess.exception.DuplicateRoomNameException;
 
+@Service
 public class ChessService {
     private final BoardDao boardDao;
     private final RoomDao roomDao;
@@ -23,12 +27,26 @@ public class ChessService {
         boardDao.saveBoard(new Board(), roomId);
     }
 
+    public boolean isPresentRoom(String name) {
+        return roomDao.findRoomIdByName(name).isPresent();
+    }
+
     public int createBoard(String name) {
+        validateRoomName(name);
         roomDao.createRoom(name);
-        int roomId = roomDao.findRoomIdByName(name);
-        boardDao.removeAll(roomId);
+        int roomId = roomDao.findRoomIdByName(name)
+            .orElseThrow(AssertionError::new);
         boardDao.saveBoard(new Board(), roomId);
         return roomId;
+    }
+
+    private void validateRoomName(String name) {
+        if (isPresentRoom(name)) {
+            throw new DuplicateRoomNameException("존재하는 방 이름입니다.");
+        }
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException("방 이름을 입력해주세요.");
+        }
     }
 
     public Board getSavedBoard(int roomId) {
@@ -47,5 +65,15 @@ public class ChessService {
             boardDao.editPiece(source, destination, roomId);
         }
         roomDao.updateTurn(roomId, board.getTurn());
+    }
+
+    public int getIdByName(String name) {
+        return roomDao.findRoomIdByName(name)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방 이름입니다."));
+    }
+
+    public String findNameById(int roomId) {
+        return roomDao.findRoomNameById(roomId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
     }
 }

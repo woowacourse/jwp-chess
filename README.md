@@ -10,9 +10,11 @@
   - [x] localhost:8080 요청 시 노출되는 페이지에 체스방을 만들 수 있는 버튼이 있다.
   - [x] 체스방 만들기 버튼을 누르면 새로운 체스판이 초기화 된다.
   - [x] 체스방에는 고유식별값이 랜덤으로 부여된다.
-- [ ] TDD를 고려하여 기능 구현을 해본다.
-  - [ ] 반드시 TDD를 해야하는 것은 아니지만 최대한 TDD 프로세스를 따르려고 노력해본다.
-  - [ ] 테스트를 구현할 수 있는 로직에 대해서는 테스트를 만들어 본다.
+  - [x] localhost:8080 요청 시 체스방 목록을 조회할 수 있다
+  - [x] 체스방 목록에는 체스방 제목이 표시된다.
+- [x] TDD를 고려하여 기능 구현을 해본다.
+  - [x] 반드시 TDD를 해야하는 것은 아니지만 최대한 TDD 프로세스를 따르려고 노력해본다.
+  - [x] 테스트를 구현할 수 있는 로직에 대해서는 테스트를 만들어 본다.
 
 ### 3단계 Spring Data JDBC 적용하기
 - [x] Spring Data JDBC를 활용하여 기존에 사용하던 DB에 접근하기
@@ -54,20 +56,24 @@
             primary key (id)
         );
       
-        create table if not exists game (
-            id varchar(255) charset ascii not null primary key,
+        create table game (
+            id varchar(255) not null primary key,
+            title varchar(255) not null,
             white int not null,
             black int not null,
             constraint game_ibfk_1 foreign key (white) references player (id),
             constraint game_ibfk_2 foreign key (black) references player (id)
         );
         
-        create index black on game (black);
-        create index white on game (white);
+        create index black
+            on game (black);
+        
+        create index white
+            on game (white);
         
         create table if not exists move (
             id int auto_increment primary key,
-            game varchar(255) charset ascii not null,
+            game varchar(255) not null,
             start_position varchar(2) not null,
             end_position varchar(2) not null,
             constraint move_ibfk_1 foreign key (game) references game (id)

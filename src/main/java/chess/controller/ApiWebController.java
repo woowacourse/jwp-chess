@@ -16,7 +16,6 @@ import chess.service.ResultService;
 import chess.service.RoomService;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,14 +28,16 @@ public class ApiWebController {
 
     private static final Gson GSON = new Gson();
 
-    @Autowired
-    private ChessGameService chessGameService;
+    private final ChessGameService chessGameService;
+    private final RoomService roomService;
+    private final ResultService resultService;
 
-    @Autowired
-    private RoomService roomService;
-
-    @Autowired
-    private ResultService resultService;
+    public ApiWebController(ChessGameService chessGameService, RoomService roomService,
+        ResultService resultService) {
+        this.chessGameService = chessGameService;
+        this.roomService = roomService;
+        this.resultService = resultService;
+    }
 
     @GetMapping("/viewRooms")
     public String viewRooms() {

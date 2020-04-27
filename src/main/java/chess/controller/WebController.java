@@ -4,7 +4,6 @@ import chess.model.domain.piece.Team;
 import chess.service.ChessGameService;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class WebController {
 
-    @Autowired
-    private ChessGameService chessGameService;
+    private final ChessGameService chessGameService;
+
+    public WebController(
+        ChessGameService chessGameService) {
+        this.chessGameService = chessGameService;
+    }
 
     @GetMapping("/")
     public String index() {

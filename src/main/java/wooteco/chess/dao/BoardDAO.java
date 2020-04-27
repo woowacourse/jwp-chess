@@ -1,7 +1,7 @@
-package wooteco.chess.domain.dao;
+package wooteco.chess.dao;
 
 import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.connection.Connector;
+import wooteco.chess.connection.Connector;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.position.Position;

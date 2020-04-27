@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.piece.Team;
 import wooteco.chess.service.ChessGameService;
 
 import java.sql.SQLException;
@@ -12,7 +13,7 @@ import java.sql.SQLException;
 @Controller
 public class SpringChessController {
 
-    private ChessGameService chessGameService;
+    private final ChessGameService chessGameService;
 
     public SpringChessController(final ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
@@ -68,6 +69,7 @@ public class SpringChessController {
     @GetMapping("/turn")
     @ResponseBody
     public String Status() throws SQLException {
-        return chessGameService.getCurrentTurn().toString();
+        Team currentTurn = chessGameService.getCurrentTurn();
+        return currentTurn.name();
     }
 }

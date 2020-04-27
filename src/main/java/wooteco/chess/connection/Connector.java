@@ -1,4 +1,4 @@
-package wooteco.chess.domain.connection;
+package wooteco.chess.connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

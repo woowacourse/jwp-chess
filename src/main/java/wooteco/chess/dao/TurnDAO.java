@@ -1,6 +1,6 @@
-package wooteco.chess.domain.dao;
+package wooteco.chess.dao;
 
-import wooteco.chess.domain.connection.Connector;
+import wooteco.chess.connection.Connector;
 import wooteco.chess.domain.piece.Team;
 
 import java.sql.*;

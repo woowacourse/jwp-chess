@@ -2,14 +2,14 @@ package chess.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/chess/home")
 public class SpringHomeController {
-	private static final String PATH = "/chess/home";
-	private static final String STATIC_PATH = "/index";
 
-	@GetMapping(PATH)
+	@GetMapping()
 	public String home() {
-		return STATIC_PATH;
+		return "index";
 	}
 }

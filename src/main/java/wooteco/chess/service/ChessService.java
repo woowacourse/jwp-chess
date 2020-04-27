@@ -3,6 +3,8 @@ package wooteco.chess.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.GameDao;
 import wooteco.chess.dao.PieceDao;
 import wooteco.chess.domain.Score;
@@ -19,9 +21,15 @@ import wooteco.chess.dto.PieceDto;
 import wooteco.chess.util.ScoreConverter;
 import wooteco.chess.util.UnicodeConverter;
 
+@Service
 public class ChessService {
-	private PieceDao pieceDao = PieceDao.getInstance();
-	private GameDao gameDao = GameDao.getInstance();
+	private final PieceDao pieceDao;
+	private final GameDao gameDao;
+
+	public ChessService(PieceDao pieceDao, GameDao gameDao) {
+		this.pieceDao = pieceDao;
+		this.gameDao = gameDao;
+	}
 
 	public BoardDto createGame() {
 		ChessGame chessGame = new ChessGame();

@@ -8,15 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.dto.PieceDto;
 import wooteco.chess.util.PieceConverter;
 
+@Repository
 public class PieceDao {
 	private static final PieceDao PIECE_DAO = new PieceDao();
 	private static final String TABLE_NAME = "PIECE";
 
-	private PieceDao() {
+	protected PieceDao() {
 	}
 
 	public static PieceDao getInstance() {

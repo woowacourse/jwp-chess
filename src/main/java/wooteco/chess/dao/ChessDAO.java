@@ -10,11 +10,7 @@ import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class ChessDAO {
@@ -45,11 +41,11 @@ public class ChessDAO {
             System.out.println(e.getMessage());
             throw new RuntimeException();
         }
-        addBoard(id, chessGame);
+        insertBoard(id, chessGame);
         return id;
     }
 
-    public void addBoard(long chessGameId, ChessGame chessGame) {
+    public void updateChessGame(long chessGameId, ChessGame chessGame) {
         deleteBoard(chessGameId);
         updateTurn(chessGameId, chessGame);
         insertBoard(chessGameId, chessGame);

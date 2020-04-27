@@ -14,7 +14,7 @@ public enum Column {
 
     public static final String COLUMN_OUT_OF_RANGE_EXCEPTION_MESSAGE = "Column 범위를 벗어났습니다.";
 
-    private char column;
+    private final char column;
 
     Column(char column) {
         this.column = column;

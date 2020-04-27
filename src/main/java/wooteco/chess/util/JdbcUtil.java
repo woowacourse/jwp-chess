@@ -18,7 +18,6 @@ public class JdbcUtil {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             System.err.println(" !! JDBC Driver load 오류: " + e.getMessage());
-            e.printStackTrace();
         }
 
         // 드라이버 연결
@@ -27,7 +26,6 @@ public class JdbcUtil {
             System.out.println("정상적으로 연결되었습니다.");
         } catch (SQLException e) {
             System.err.println("연결 오류:" + e.getMessage());
-            e.printStackTrace();
         }
 
         return conn;

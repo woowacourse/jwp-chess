@@ -23,8 +23,8 @@ public enum Direction {
 
     public static final String INVALID_DIRECTION_ERR_MSG = "방향을 찾을 수 없습니다.";
 
-    int xGap;
-    int yGap;
+    private final int xGap;
+    private final int yGap;
 
     Direction(int xGap, int yGap) {
         this.xGap = xGap;
@@ -75,5 +75,13 @@ public enum Direction {
 
     public boolean isVertical() {
         return Arrays.asList(Direction.NORTH, Direction.SOUTH).contains(this);
+    }
+
+    public int getxGap() {
+        return xGap;
+    }
+
+    public int getyGap() {
+        return yGap;
     }
 }

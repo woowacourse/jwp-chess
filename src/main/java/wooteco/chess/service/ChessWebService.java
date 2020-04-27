@@ -23,6 +23,7 @@ public class ChessWebService {
     public static final int BOARD_CELLS_NUMBER = 64;
     private static final String TURN_MSG_FORMAT = "%s의 순서입니다.";
     private static final String WINNING_MSG_FORMAT = "%s이/가 이겼습니다.";
+    private static final String PIECE_NOT_FOUND_ERR_MSG = "해당 Piece 정보를 찾을 수 없습니다.";
 
     private final PieceDao pieceDao;
     private final MoveHistoryDao moveHistoryDao;
@@ -44,13 +45,17 @@ public class ChessWebService {
         Board board = new Board();
         playingBoards.put(gameId, board);
 
-        List<ChessPiece> chessPieces = Position.stream()
+        List<ChessPiece> chessPieces = createChessPieces(gameId, board);
+        pieceDao.addInitialPieces(chessPieces);
+    }
+
+    private List<ChessPiece> createChessPieces(String gameId, Board board) {
+        return Position.stream()
                 .map(position -> {
                     Piece piece = board.getPieceByPosition(position);
                     return new ChessPiece(gameId, position.name(), piece.name());
                 })
                 .collect(Collectors.toList());
-        pieceDao.addInitialPieces(chessPieces);
     }
 
     public void resumeGame(String gameId) throws SQLException {
@@ -60,7 +65,7 @@ public class ChessWebService {
                     try {
                         pieceName = pieceDao.findPieceNameByPosition(gameId, position);
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        System.out.println(PIECE_NOT_FOUND_ERR_MSG);
                     }
                     return BoardFactory.findPieceByPieceName(pieceName);
                 }));
@@ -94,7 +99,7 @@ public class ChessWebService {
             deleteSavedGame(gameId);
             return winningMsg(board);
         }
-        return null;
+        return "";
     }
 
     public Map<String, Object> provideGameInfo(String gameId) {

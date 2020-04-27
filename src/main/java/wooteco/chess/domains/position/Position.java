@@ -87,13 +87,13 @@ public class Position implements Comparable<Position> {
         ArrayList<Position> route = new ArrayList<>();
         Direction direction = findDirection(target);
 
-        Column x = this.x.moveBy(direction.xGap);
-        Row y = this.y.moveBy(direction.yGap);
+        Column x = this.x.moveBy(direction.getxGap());
+        Row y = this.y.moveBy(direction.getyGap());
 
         while (x != target.x || y != target.y) {
             route.add(new Position(x, y));
-            x = x.moveBy(direction.xGap);
-            y = y.moveBy(direction.yGap);
+            x = x.moveBy(direction.getxGap());
+            y = y.moveBy(direction.getyGap());
         }
 
         return route;

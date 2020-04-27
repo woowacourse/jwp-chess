@@ -33,8 +33,7 @@ public class ChessGameService {
     }
 
     public Map<String, Object> receiveInitializedBoard() throws SQLException {
-        Board board = BoardFactory.createBoard();
-        board.initialize();
+        Board board = BoardFactory.initializeBoard();
         boardDAO.deletePieces();
         for (Position position : board.getBoard().keySet()) {
             boardDAO.insertPiece(board, position);

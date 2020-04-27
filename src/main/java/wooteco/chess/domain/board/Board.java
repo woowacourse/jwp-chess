@@ -9,10 +9,8 @@ import java.util.Map;
 
 public class Board {
     private static final int BOARD_SIZE = 64;
-    private static final int BLANK_START_ROW_INDEX = 3;
-    private static final int BLANK_END_ROW_INDEX = 6;
 
-    private Map<Position, Piece> board;
+    private final Map<Position, Piece> board;
     private boolean isFinished;
 
     public Board(final Map<Position, Piece> board) {
@@ -20,58 +18,13 @@ public class Board {
             throw new IllegalArgumentException("보드가 제대로 생성되지 못했습니다.");
         }
         this.board = board;
-    }
-
-    public void initialize() {
-        isFinished = false;
-
-        board.put(Position.of("a1"), Piece.of(PieceType.WHITE_ROOK));
-        board.put(Position.of("b1"), Piece.of(PieceType.WHITE_KNIGHT));
-        board.put(Position.of("c1"), Piece.of(PieceType.WHITE_BISHOP));
-        board.put(Position.of("d1"), Piece.of(PieceType.WHITE_QUEEN));
-        board.put(Position.of("e1"), Piece.of(PieceType.WHITE_KING));
-        board.put(Position.of("f1"), Piece.of(PieceType.WHITE_BISHOP));
-        board.put(Position.of("g1"), Piece.of(PieceType.WHITE_KNIGHT));
-        board.put(Position.of("h1"), Piece.of(PieceType.WHITE_ROOK));
-
-        board.put(Position.of("a2"), Piece.of(PieceType.FIRST_WHITE_PAWN));
-        board.put(Position.of("b2"), Piece.of(PieceType.FIRST_WHITE_PAWN));
-        board.put(Position.of("c2"), Piece.of(PieceType.FIRST_WHITE_PAWN));
-        board.put(Position.of("d2"), Piece.of(PieceType.FIRST_WHITE_PAWN));
-        board.put(Position.of("e2"), Piece.of(PieceType.FIRST_WHITE_PAWN));
-        board.put(Position.of("f2"), Piece.of(PieceType.FIRST_WHITE_PAWN));
-        board.put(Position.of("g2"), Piece.of(PieceType.FIRST_WHITE_PAWN));
-        board.put(Position.of("h2"), Piece.of(PieceType.FIRST_WHITE_PAWN));
-
-        for (int row = BLANK_START_ROW_INDEX; row <= BLANK_END_ROW_INDEX; row++) {
-            for (int col = Position.START_INDEX; col <= Position.END_INDEX; col++) {
-                board.put(Position.of(Position.convertToStringPosition(col, row)), Piece.of(PieceType.BLANK));
-            }
-        }
-
-        board.put(Position.of("a7"), Piece.of(PieceType.FIRST_BLACK_PAWN));
-        board.put(Position.of("b7"), Piece.of(PieceType.FIRST_BLACK_PAWN));
-        board.put(Position.of("c7"), Piece.of(PieceType.FIRST_BLACK_PAWN));
-        board.put(Position.of("d7"), Piece.of(PieceType.FIRST_BLACK_PAWN));
-        board.put(Position.of("e7"), Piece.of(PieceType.FIRST_BLACK_PAWN));
-        board.put(Position.of("f7"), Piece.of(PieceType.FIRST_BLACK_PAWN));
-        board.put(Position.of("g7"), Piece.of(PieceType.FIRST_BLACK_PAWN));
-        board.put(Position.of("h7"), Piece.of(PieceType.FIRST_BLACK_PAWN));
-
-        board.put(Position.of("a8"), Piece.of(PieceType.BLACK_ROOK));
-        board.put(Position.of("b8"), Piece.of(PieceType.BLACK_KNIGHT));
-        board.put(Position.of("c8"), Piece.of(PieceType.BLACK_BISHOP));
-        board.put(Position.of("d8"), Piece.of(PieceType.BLACK_QUEEN));
-        board.put(Position.of("e8"), Piece.of(PieceType.BLACK_KING));
-        board.put(Position.of("f8"), Piece.of(PieceType.BLACK_BISHOP));
-        board.put(Position.of("g8"), Piece.of(PieceType.BLACK_KNIGHT));
-        board.put(Position.of("h8"), Piece.of(PieceType.BLACK_ROOK));
+        this.isFinished = false;
     }
 
     public Piece findBy(final Position position) {
         return board.keySet().stream()
                 .filter(key -> key.equals(position))
-                .map(key -> board.get(key))
+                .map(board::get)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포지션입니다."));
     }

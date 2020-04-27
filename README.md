@@ -1,3 +1,16 @@
+Refactoring Todo list
+- [ ] Room Model 생성 
+    - [ ] RoomDAO
+    - [ ] RoomController
+    - [ ] RoomService
+    - [ ] RoomDTO
+- [ ] Board Table 수정
+    - [ ] Room id 추가
+    - [ ] BoardDAO 에서 Room id 로 조회 기능
+- [ ] Board 도메인 수정
+    - [ ] move -> 검증 메서드로 변경
+    - [x] initial Board 위치 변경
+ 
 # jwp-chess
 ### 1단계
 - [x] 웹으로 체스 게임이 가능해야 한다.(스파크 적용)

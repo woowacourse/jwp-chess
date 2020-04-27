@@ -36,8 +36,7 @@ public class BoardTest {
     @ParameterizedTest
     @MethodSource("getCasesForPieceMove")
     void movePiece(String from, String to, Object fromPiece, Object toPiece) {
-        Board board = BoardFactory.createBoard();
-        board.initialize();
+        Board board = BoardFactory.initializeBoard();
         board.move(from, to);
         assertThat(board.findBy(Position.of(from)).getClass()).isEqualTo(toPiece);
         assertThat(board.findBy(Position.of(to)).getClass()).isEqualTo(fromPiece);

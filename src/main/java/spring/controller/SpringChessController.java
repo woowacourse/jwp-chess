@@ -1,11 +1,14 @@
 package spring.controller;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import spark.ModelAndView;
+import spark.template.handlebars.HandlebarsTemplateEngine;
 import spring.chess.game.ChessGame;
 import spring.dto.LocationDto;
 import spring.service.ChessService;
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -24,31 +27,31 @@ public class SpringChessController {
     }
 
     @GetMapping("/main")
-    String main() {
+    public String main() {
         Map<String, Object> model = new HashMap<>();
         return render(model, "start.html");
     }
 
     @GetMapping("/start")
-    String start() {
+    public String start() {
         Map<String, Object> model = new HashMap<>();
         return render(model, "index.html");
     }
 
     @GetMapping("/start/boards")
-    String findBoards() throws SQLException {
+    public String findBoards() throws SQLException {
         return chessService.findAllBoards();
     }
 
     @GetMapping("/start/board")
-    String findBoard(@RequestParam(name = "id") String id) throws SQLException {
+    public String findBoard(@RequestParam(name = "id") String id) throws SQLException {
         int boardId = Integer.parseInt(id);
         ChessGame chessGame = chessService.makeGameByDB(boardId);
         return chessService.findGame(chessGame);
     }
 
     @PostMapping("/start/move")
-    String move(@RequestParam(name="now") String now, @RequestParam(name="des") String des, @RequestParam(name="game_id") String gameIdData) throws SQLException {
+    public String move(@RequestParam(name = "now") String now, @RequestParam(name = "des") String des, @RequestParam(name = "game_id") String gameIdData) throws SQLException {
         LocationDto nowDto = new LocationDto(now);
         LocationDto destinationDto = new LocationDto(des);
         int gameId = Integer.parseInt(gameIdData);
@@ -57,20 +60,20 @@ public class SpringChessController {
     }
 
     @GetMapping("/start/winner")
-    String findWinner(@RequestParam(name="game_id") String gameIdData) throws SQLException {
+    public String findWinner(@RequestParam(name = "game_id") String gameIdData) throws SQLException {
         int gameId = Integer.parseInt(gameIdData);
         ChessGame chessGame = chessService.makeGameByDB(gameId);
         return chessService.findWinner(chessGame);
     }
 
     @PostMapping("/end")
-    String end() {
+    public String end() {
         Map<String, Object> model = new HashMap<>();
         return render(model, "start.html");
     }
 
     @PostMapping("/start/new/game")
-    String startNewGame(@RequestParam(name="game_id") String gameIdData) throws SQLException {
+    public String startNewGame(@RequestParam(name = "game_id") String gameIdData) throws SQLException {
         int gameId = Integer.parseInt(gameIdData);
         ChessGame chessGame = new ChessGame();
         chessService.resetChessGame(chessGame, gameId);

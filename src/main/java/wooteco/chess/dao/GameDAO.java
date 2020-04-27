@@ -7,8 +7,6 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceMapper;
 import wooteco.chess.domain.piece.Pieces;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;

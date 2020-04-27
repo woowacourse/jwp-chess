@@ -36,18 +36,18 @@ public abstract class Piece {
             int rankIncrementBy = direction.getMultiplyRankAddAmount(count);
             if (square.hasIncreased(fileIncrementBy, rankIncrementBy)) {
                 availableSquares
-                    .add(square.getIncreased(fileIncrementBy, rankIncrementBy));
+                    .add(square.getIncreasedSquare(fileIncrementBy, rankIncrementBy));
             }
         }
     }
 
-    public abstract Set<Square> getMovableArea(Square square,
+    public abstract Set<Square> findMovableAreas(Square square,
         Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements);
 
-    public Set<Square> getMovableArea(Square square,
+    public Set<Square> findMovableAreas(Square square,
         Map<Square, Piece> board) {
-        return getMovableArea(square, board, new HashSet<>());
+        return findMovableAreas(square, board, new HashSet<>());
     }
 
     protected Set<Square> findSquaresToRemove(Square square, int fileAddAmount,
@@ -56,7 +56,7 @@ public abstract class Piece {
         for (int i = 0, file = 0, rank = 0; i < Square.MAX_FILE_AND_RANK_COUNT;
             i++, file += fileAddAmount, rank += rankAddAmount) {
             if (square.hasIncreased(file, rank)) {
-                squaresToRemove.add(square.getIncreased(file, rank));
+                squaresToRemove.add(square.getIncreasedSquare(file, rank));
             }
         }
         squaresToRemove.remove(square);
@@ -65,6 +65,10 @@ public abstract class Piece {
 
     public boolean isSameTeam(Team team) {
         return this.team == team;
+    }
+
+    public boolean isNotSameTeam(Team team) {
+        return !isSameTeam(team);
     }
 
     public double getScore() {

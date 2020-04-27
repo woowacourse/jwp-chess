@@ -36,16 +36,12 @@ public class Square {
         if (CACHE.containsKey(location)) {
             return CACHE.get(location);
         }
-        throw new IllegalArgumentException("잘못된 입력 - Square 인자");
+        throw new IllegalArgumentException("잘못된 입력 - Square 인자 : " + location);
     }
 
     public static Square of(File file, Rank rank) {
         NullChecker.validateNotNull(file, rank);
         return Square.of(file.getName() + rank.getName());
-    }
-
-    public String getName() {
-        return file.getName() + rank.getName();
     }
 
     public boolean hasIncreased(int fileIncrement, int rankIncrement) {
@@ -55,18 +51,6 @@ public class Square {
             return CACHE.containsKey(nextIncrementFile.getName() + nextIncrementRank.getName());
         }
         return false;
-    }
-
-    public Square getIncreased(int fileIncrement, int rankIncrement) {
-        return Square.of(file.findIncrement(fileIncrement), rank.findIncrement(rankIncrement));
-    }
-
-    public int getFileCompare(Square square) {
-        return Integer.compare(file.compareTo(square.file), 0);
-    }
-
-    public int getRankCompare(Square square) {
-        return Integer.compare(rank.compareTo(square.rank), 0);
     }
 
     public boolean isSameFile(Square square) {
@@ -85,9 +69,28 @@ public class Square {
         return this.rank.calculateDistance(square.rank);
     }
 
+    public int getRankCompare(Square square) {
+        return Integer.compare(rank.compareTo(square.rank), 0);
+    }
+
+    public int getFileCompare(Square square) {
+        return Integer.compare(file.compareTo(square.file), 0);
+    }
+
+    public Square getIncreasedSquare(int fileIncrement, int rankIncrement) {
+        return Square.of(file.findIncrement(fileIncrement), rank.findIncrement(rankIncrement));
+    }
+
+    public String getName() {
+        return file.getName() + rank.getName();
+    }
+
     @Override
     public String toString() {
-        return file.getName() + rank.getName();
+        return "Square{" +
+            "file=" + file +
+            ", rank=" + rank +
+            '}';
     }
 
     @Override
@@ -98,9 +101,9 @@ public class Square {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Square that = (Square) o;
-        return file == that.file &&
-            rank == that.rank;
+        Square square = (Square) o;
+        return file == square.file &&
+            rank == square.rank;
     }
 
     @Override

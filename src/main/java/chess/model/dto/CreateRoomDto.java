@@ -2,8 +2,12 @@ package chess.model.dto;
 
 public class CreateRoomDto {
 
-    private final String roomName;
-    private final String roomPassword;
+    private String roomName;
+    private String roomPassword;
+
+    protected CreateRoomDto() {
+
+    }
 
     public CreateRoomDto(String roomName, String roomPassword) {
         this.roomName = roomName;
@@ -16,5 +20,13 @@ public class CreateRoomDto {
 
     public String getRoomPassword() {
         return roomPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateRoomDto{" +
+            "roomName='" + roomName + '\'' +
+            ", roomPassword='" + roomPassword + '\'' +
+            '}';
     }
 }

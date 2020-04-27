@@ -19,6 +19,6 @@ public class MoveStateChecker {
     }
 
     public MoveState check(ChessGame chessGame, MoveInfo moveInfo) {
-        return moveStateStrategy.getMoveState(chessGame, moveInfo);
+        return moveStateStrategy.findMoveState(chessGame, moveInfo);
     }
 }

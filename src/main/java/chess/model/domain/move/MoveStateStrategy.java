@@ -6,6 +6,6 @@ import chess.model.domain.state.MoveState;
 
 public interface MoveStateStrategy {
 
-    MoveState getMoveState(ChessGame chessGame, MoveInfo moveInfo);
+    MoveState findMoveState(ChessGame chessGame, MoveInfo moveInfo);
 
 }

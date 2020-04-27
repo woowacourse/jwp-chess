@@ -2,9 +2,15 @@ package wooteco.chess.controller;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Objects;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -91,5 +97,30 @@ class ChessControllerTest {
 		assertThat(moveResponseDto.getGameId()).isEqualTo(game.getGameId());
 		assertThat(moveResponseDto.getPiece()).isEqualTo("♙");
 		assertThat(moveResponseDto.getTurn()).isEqualTo("black");
+	}
+
+	@Test
+	void save() {
+		given().log().all()
+			.when().get("/save")
+			.then().log().all()
+			.statusCode(200)
+			.body(containsString("저장되었습니다."));
+	}
+
+	@Test
+	void load() throws Exception {
+		//given
+		BoardDto game = chessService.createGame();
+
+		//when
+		MvcResult mvcResult = mockMvc.perform(get("http://localhost:" + port + "/load?gameId=" + game.getGameId()))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andReturn();
+
+		//then
+		BoardDto response = (BoardDto)Objects.requireNonNull(mvcResult.getModelAndView()).getModel().get("response");
+		assertThat(response.getGameId()).isEqualTo(game.getGameId());
 	}
 }

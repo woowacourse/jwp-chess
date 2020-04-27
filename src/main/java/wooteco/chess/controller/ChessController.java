@@ -48,7 +48,7 @@ public class ChessController {
 	public ModelAndView save() {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("game");
-		mv.addObject("message", "저장되었습니다.");
+		mv.addObject("saveMessage", "저장되었습니다.");
 		return mv;
 	}
 

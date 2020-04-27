@@ -151,6 +151,10 @@ public class ChessGameService {
         return new ChessGame(chessBoard, turn, castlingElements, enPassant);
     }
 
+    public boolean isGameProceed(Integer gameId) {
+        return CHESS_GAME_DAO.findInfo(gameId).isPresent();
+    }
+
     public GameInfoDto closeGame(Integer gameId) {
         GameInfoDto gameInfo = getGameInfo(gameId);
         CHESS_GAME_DAO.updateProceedN(gameId);

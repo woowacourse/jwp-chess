@@ -24,8 +24,7 @@ window.onload = function () {
                     if (res.status !== 200) {
                         console.log("error", res);
                         source = undefined;
-                    }
-                    location.reload();
+                    } else location.reload();
                 })
             }
         })

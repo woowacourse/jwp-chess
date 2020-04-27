@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Position {
 
-    public static List<Position> positions = new ArrayList<>();
+    public static final List<Position> positions = new ArrayList<>();
 
     private final Coordinate x;
     private final Coordinate y;
@@ -27,6 +27,13 @@ public class Position {
     public static Position of(final int x, final int y) {
         return positions.stream()
                 .filter(position -> position.x == Coordinate.of(x) && position.y == Coordinate.of(y))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 좌표 값입니다."));
+    }
+
+    public static Position of(final Coordinate x, final Coordinate y) {
+        return positions.stream()
+                .filter(position -> position.x == x && position.y == y)
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 좌표 값입니다."));
     }

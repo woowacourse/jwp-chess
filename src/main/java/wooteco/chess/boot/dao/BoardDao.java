@@ -8,8 +8,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ch.qos.logback.core.db.DBHelper.closeConnection;
-
 @Component
 public class BoardDao {
 
@@ -40,7 +38,7 @@ public class BoardDao {
     }
 
     public List<BoardDto> findAllPieces() throws SQLException {
-        String query = "SELECT * FROM board ";
+        String query = "SELECT * FROM board";
 
         return executeQuery(query, ps -> {
             List<BoardDto> boardDTOs = new ArrayList<>();
@@ -74,28 +72,6 @@ public class BoardDao {
         });
     }
 
-    private void executeUpdate(final String query, final throwingConsumer<PreparedStatement> consumer) throws SQLException {
-        try (Connection con = DriverManager.getConnection(DESTINATION, USER_NAME, PASSWORD);
-             PreparedStatement ps = con.prepareStatement(query)) {
-            consumer.accept(ps);
-            ps.executeUpdate();
-
-            ps.close();
-            closeConnection(con);
-        }
-    }
-
-    private <R> R executeQuery(final String query, final throwingFunction<PreparedStatement, R> function) throws SQLException {
-        try (Connection con = DriverManager.getConnection(DESTINATION, USER_NAME, PASSWORD);
-             PreparedStatement ps = con.prepareStatement(query)) {
-            R result = function.accept(ps);
-
-            ps.close();
-            closeConnection(con);
-            return result;
-        }
-    }
-
     public GameStatusDto readCurrentTurn() throws SQLException {
         String query = "SELECT * FROM game_status";
 
@@ -108,11 +84,28 @@ public class BoardDao {
         });
     }
 
-    private interface throwingConsumer<T> {
+    private void executeUpdate(final String query, final ThrowingConsumer<PreparedStatement> consumer) throws SQLException {
+        try (Connection con = DriverManager.getConnection(DESTINATION, USER_NAME, PASSWORD);
+             PreparedStatement ps = con.prepareStatement(query)) {
+            consumer.accept(ps);
+            ps.executeUpdate();
+        }
+    }
+
+    private <R> R executeQuery(final String query, final ThrowingFunction<PreparedStatement, R> function) throws SQLException {
+        try (Connection con = DriverManager.getConnection(DESTINATION, USER_NAME, PASSWORD);
+             PreparedStatement ps = con.prepareStatement(query)) {
+            R result = function.apply(ps);
+
+            return result;
+        }
+    }
+
+    private interface ThrowingConsumer<T> {
         void accept(T t) throws SQLException;
     }
 
-    private interface throwingFunction<T, R> {
-        R accept(T t) throws SQLException;
+    private interface ThrowingFunction<T, R> {
+        R apply(T t) throws SQLException;
     }
 }

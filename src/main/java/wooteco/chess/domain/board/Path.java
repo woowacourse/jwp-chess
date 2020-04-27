@@ -32,12 +32,12 @@ public class Path {
         return Math.pow(start.xDistance(end), TWO) + Math.pow(start.yDistance(end), TWO);
     }
 
-    public boolean isEndEmpty() {
+    public boolean isEmptyOnEnd() {
         return path.get(end) instanceof Blank;
     }
 
     public boolean isEnemyOnEnd() {
-        if (isEndEmpty()) {
+        if (isEmptyOnEnd()) {
             return false;
         }
 
@@ -46,11 +46,11 @@ public class Path {
         return startPiece.isEnemy(endPiece);
     }
 
-    public boolean isBlocked() {
+    public boolean isNotBlocked() {
         return path.entrySet()
                 .stream()
                 .filter(entry -> entry.getKey() != start && entry.getKey() != end)
-                .anyMatch(entry -> !(entry.getValue() instanceof Blank));
+                .allMatch(entry -> entry.getValue() instanceof Blank);
     }
 
     public boolean isStraight() {

@@ -67,35 +67,38 @@ public class ChessService {
     }
 
     public List<Position> findMovablePlaces(final Position start) throws SQLException {
-        checkGameOver();
         return tryFindMovablePositions(start);
     }
 
     private List<Position> tryFindMovablePositions(final Position start) throws SQLException {
+        Board board = readBoard();
+
         try {
-            return readBoard().findMovablePositions(start);
+            checkGameOver(board);
+            return board.findMovablePositions(start);
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
             return new ArrayList<>();
         }
     }
 
-    private void checkGameOver() throws SQLException {
+    private void checkGameOver(Board board) {
         Judge judge = new Judge();
 
-        if (judge.findWinner(readBoard()).isPresent()) {
+        if (judge.findWinner(board).isPresent()) {
             throw new IllegalArgumentException("게임이 종료되었습니다.");
         }
     }
 
     public void move(final Position start, final Position end) throws SQLException {
-        checkGameOver();
         tryMove(start, end);
     }
 
     private void tryMove(final Position start, final Position end) throws SQLException {
+        Board board = readBoard();
+
         try {
-            Board board = readBoard();
+            checkGameOver(board);
             board.move(start, end);
 
             writeWholeBoard(board);

@@ -1,6 +1,5 @@
 package wooteco.chess.util;
 
-
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Piece;

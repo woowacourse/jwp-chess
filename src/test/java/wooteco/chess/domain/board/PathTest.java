@@ -68,7 +68,7 @@ public class PathTest {
         route.put(Position.of(3, 1), new Blank());
         route.put(Position.of(4, 1), new Blank());
 
-        assertThat(new Path(route, start, end).isEndEmpty()).isTrue();
+        assertThat(new Path(route, start, end).isEmptyOnEnd()).isTrue();
     }
 
     @Test
@@ -96,7 +96,7 @@ public class PathTest {
         route.put(Position.of(3, 1), new Blank());
         route.put(Position.of(4, 1), new Blank());
 
-        assertThat(new Path(route, start, end).isBlocked()).isFalse();
+        assertThat(new Path(route, start, end).isNotBlocked()).isTrue();
     }
 
     @Test

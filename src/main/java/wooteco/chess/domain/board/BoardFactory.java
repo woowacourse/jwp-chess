@@ -23,6 +23,6 @@ public class BoardFactory {
                 .stream()
                 .filter(piece -> piece.isInitialPosition(position))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 위치에 적절한 말이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(position.toString() + "에 적절한 말이 없습니다."));
     }
 }

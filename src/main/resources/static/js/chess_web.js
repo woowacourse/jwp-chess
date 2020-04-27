@@ -7,7 +7,7 @@ window.onload = function () {
     if (end) {
         moveBtn.setAttribute("disabled", "disabled");
         turn.innerText = "";
-        alert(end);
+        alert(end.innerText);
     }
 
     if (window.location.pathname !== "/ready") {

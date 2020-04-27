@@ -13,7 +13,7 @@ import static wooteco.chess.domains.board.Board.COLUMN_SIZE;
 
 
 public class BoardFactory {
-    private static Map<Position, Piece> board;
+    private static final Map<Position, Piece> board;
 
     static {
         List<Piece> whitePieces = PieceFactory.getWhitePieces();

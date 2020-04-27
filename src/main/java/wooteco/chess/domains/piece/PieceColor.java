@@ -7,7 +7,7 @@ public enum PieceColor {
     WHITE,
     BLANK;
 
-    private static final String NOT_FOUND_PIECECOLOR_ERR_MSG = "해당하는 PieceColor가 없습니다.";
+    private static final String NOT_FOUND_PIECE_COLOR_ERR_MSG = "해당하는 PieceColor가 없습니다.";
 
     public static PieceColor of(String color) {
         String colorName = color.toUpperCase();
@@ -15,7 +15,7 @@ public enum PieceColor {
         return Arrays.stream(PieceColor.values())
                 .filter(pieceColor -> pieceColor.name().equals(colorName))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_PIECECOLOR_ERR_MSG));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_PIECE_COLOR_ERR_MSG));
     }
 
     public PieceColor changeTeam() {

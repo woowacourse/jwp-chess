@@ -1,5 +1,6 @@
 package wooteco.chess.db;
 
+import org.springframework.stereotype.Component;
 import wooteco.chess.domains.piece.PieceColor;
 import wooteco.chess.domains.position.Position;
 import wooteco.chess.util.JdbcTemplate;
@@ -8,6 +9,7 @@ import wooteco.chess.util.RowMapper;
 import java.sql.SQLException;
 import java.util.Optional;
 
+@Component
 public class MoveHistoryDao {
     public void addMoveHistory(String gameId, PieceColor team, Position source, Position target) throws SQLException {
         String query = "INSERT INTO move_history (game_id, moves, team, source_position, target_position) " +

@@ -19,4 +19,5 @@ public abstract class JdbcTemplate {
     }
 
     public abstract void setParameters(PreparedStatement preparedStatement) throws SQLException;
+
 }

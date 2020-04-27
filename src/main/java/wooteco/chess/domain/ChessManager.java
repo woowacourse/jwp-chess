@@ -23,6 +23,10 @@ public class ChessManager {
         playing = stopGameIfWinnerExists();
     }
 
+    public void clearBoard() {
+        chessRunner.clearBoard();
+    }
+
     private boolean stopGameIfWinnerExists() {
         return !chessRunner.findWinner().isPresent();
     }

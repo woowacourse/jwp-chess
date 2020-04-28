@@ -29,6 +29,16 @@ public class StateDao {
 		}
 	}
 
+	public StateDto findStateByRoomId(final int roomId) throws SQLException {
+		final String query = "SELECT * FROM state WHERE room_id=?";
+
+		try (final Connection connection = connectionDao.getConnection();
+			 final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+			preparedStatement.setInt(1, roomId);
+			return prepareStateDto(preparedStatement);
+		}
+	}
+
 	private StateDto prepareStateDto(final PreparedStatement preparedStatement) throws SQLException {
 		try (final ResultSet resultSet = preparedStatement.executeQuery()) {
 			validateHasResult(resultSet);
@@ -41,16 +51,6 @@ public class StateDao {
 	private void validateHasResult(final ResultSet resultSet) throws SQLException {
 		if (!resultSet.next()) {
 			throw new DaoNoneSelectedException();
-		}
-	}
-
-	public StateDto findStateByRoomId(final int roomId) throws SQLException {
-		final String query = "SELECT * FROM state WHERE room_id=?";
-
-		try (final Connection connection = connectionDao.getConnection();
-			 final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-			preparedStatement.setInt(1, roomId);
-			return prepareStateDto(preparedStatement);
 		}
 	}
 

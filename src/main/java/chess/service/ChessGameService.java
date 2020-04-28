@@ -21,6 +21,8 @@ import chess.model.dto.PromotionTypeDto;
 import chess.model.dto.SourceDto;
 import chess.model.repository.ChessBoardDao;
 import chess.model.repository.ChessGameDao;
+import chess.model.repository.ChessGameEntity;
+import chess.model.repository.ChessGameRepository;
 import chess.model.repository.ChessResultDao;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,13 @@ public class ChessGameService {
     private static final ChessBoardDao CHESS_BOARD_DAO = ChessBoardDao.getInstance();
     private static final ChessResultDao CHESS_RESULT_DAO = ChessResultDao.getInstance();
 
+    private final ChessGameRepository chessGameRepository;
+
+    public ChessGameService(
+        ChessGameRepository chessGameRepository) {
+        this.chessGameRepository = chessGameRepository;
+    }
+
     public Integer create(Integer roomId, Map<Team, String> userNames) {
         Integer gameId = saveNewGameInfo(userNames, roomId);
         saveNewUserNames(userNames);
@@ -46,8 +55,22 @@ public class ChessGameService {
     public Integer saveNewGameInfo(Map<Team, String> userNames, Integer roomId) {
         closeGamesOf(roomId);
         ChessGame chessGame = new ChessGame();
+
         Integer gameId = CHESS_GAME_DAO
             .create(roomId, chessGame.getTurn(), userNames, chessGame.deriveTeamScore());
+
+        Map<Team, Double> teamScore = chessGame.deriveTeamScore().getTeamScore();
+
+        ChessGameEntity chessGameEntity = new ChessGameEntity(
+            roomId
+            , chessGame.getTurn().getName()
+            , "Y"
+            , userNames.get(Team.BLACK)
+            , userNames.get(Team.WHITE)
+            , teamScore.get(Team.BLACK)
+            , teamScore.get(Team.WHITE));
+        chessGameRepository.save(chessGameEntity);
+
         CHESS_BOARD_DAO.create(gameId, chessGame.getChessBoard(),
             makeCastlingElements(chessGame.getChessBoard(), chessGame.getCastlingElements()),
             makeEnPassants(chessGame));

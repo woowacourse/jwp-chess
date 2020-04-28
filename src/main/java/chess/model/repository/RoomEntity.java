@@ -5,7 +5,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("ROOM_TB")
-public class Room {
+public class RoomEntity {
 
     @Id
     private Integer id;
@@ -15,14 +15,14 @@ public class Room {
     private String password;
     private String usedYN;
 
-    public Room() {
+    public RoomEntity() {
     }
 
-    public Room(String name, String password) {
+    public RoomEntity(String name, String password) {
         this(name, password, "Y");
     }
 
-    public Room(String name, String password, String usedYN) {
+    public RoomEntity(String name, String password, String usedYN) {
         this.name = name;
         this.password = password;
         this.usedYN = usedYN;

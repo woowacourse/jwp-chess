@@ -7,13 +7,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import wooteco.chess.dto.GameDto;
 
+@Repository
 public class GameDao {
 	private static final GameDao INSTANCE = new GameDao();
 	private static final String TABLE_NAME = "GAME";
 
-	private GameDao() {
+	protected GameDao() {
 	}
 
 	public static GameDao getInstance() {

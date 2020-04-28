@@ -66,6 +66,8 @@ const App = function App() {
     function resolver(response) {
         return new Promise((resolve, reject) => {
             let func;
+            console.log(response.status);
+            console.log(response.body);
             response.status < 400 ? func = resolve : func = reject;
             response.json().then(data => func({
                 "status": response.status,

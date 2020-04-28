@@ -6,6 +6,8 @@ public class MoveResponseDto {
 	private String piece;
 	private String turn;
 
+	protected MoveResponseDto(){}
+
 	public MoveResponseDto(Long gameId,boolean kingAlive, String piece, String turn) {
 		this.gameId = gameId;
 		this.kingAlive = kingAlive;

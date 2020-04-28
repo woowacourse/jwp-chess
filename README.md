@@ -26,3 +26,10 @@
 - 웹 UI를 적용할 때 도메인 객체의 변경을 최소화해야한다.
 - 스프링 빈임을 나타내는 애너테이션(@Component, @Service 등)을 활용한다.
 - 컴포넌트 스캔을 통해 빈 등록하여 사용한다.
+
+# 체스 3단계 - Spring Data JDBC 적용하기
+
+## **프로그래밍 요구사항**
+- Spring Data JDBC를 활용하여 기존에 사용하던 DB에 접근하기
+- 엔티티 클래스를 만들어 DB 테이블과 맵핑한다.
+- Spring Data JDBC에서 제공하는 Repository를 활용하여 DB에 접근한다.

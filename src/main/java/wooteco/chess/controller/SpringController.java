@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import wooteco.chess.dto.ChessGameDto;
 import wooteco.chess.dto.RoomDto;
 import wooteco.chess.service.ChessGameService;
 
@@ -28,5 +31,14 @@ public class SpringController {
 	@ResponseBody
 	public List<RoomDto> getRooms() throws SQLException {
 		return chessGameService.findAllRooms();
+	}
+
+	@PostMapping("/join")
+	public ModelAndView joinRoom(
+			@RequestParam(value = "name") String name) throws SQLException {
+		ModelAndView modelAndView = new ModelAndView("chess");
+		ChessGameDto chessGameDto = chessGameService.load(name);
+		modelAndView.addObject("chessGame", chessGameDto);
+		return modelAndView;
 	}
 }

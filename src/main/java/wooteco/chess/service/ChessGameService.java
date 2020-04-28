@@ -56,7 +56,7 @@ public class ChessGameService {
 	public List<RoomDto> findAllRooms() throws SQLException {
 		List<String> rooms = roomDao.findAll();
 		return rooms.stream()
-				.map(RoomDto::of)
+				.map(RoomDto::new)
 				.collect(Collectors.toList());
 	}
 

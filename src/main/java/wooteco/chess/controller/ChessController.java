@@ -25,14 +25,12 @@ public class ChessController {
 
     @GetMapping("/")
     public ModelAndView index() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("rows", chessService.getEmptyRowsDto());
-        modelAndView.setViewName("main");
-        return modelAndView;
+        return createEmptyModelAndView();
     }
 
     @PostMapping("/start")
-    public ModelAndView start(@RequestParam HashMap<String, String> paramMap) throws SQLException {
+    public ModelAndView start(@RequestParam HashMap<String, String> paramMap)
+            throws SQLException {
         ModelAndView modelAndView = new ModelAndView();
 
         User blackUser = new User(paramMap.get("blackUserName"));
@@ -82,22 +80,25 @@ public class ChessController {
     }
 
     @PostMapping("/save")
-    public ModelAndView save(@RequestParam HashMap<String, String> paramMap) throws SQLException {
-        ModelAndView modelAndView = new ModelAndView();
+    public ModelAndView save(@RequestParam HashMap<String, String> paramMap)
+            throws SQLException {
+        chessService.save(new User(paramMap.get("blackUserName")),
+            new User(paramMap.get("whiteUserName")));
 
-        chessService.save(new User(paramMap.get("blackUserName")), new User(paramMap.get("whiteUserName")));
-
-        modelAndView.addObject("rows", chessService.getEmptyRowsDto());
-        modelAndView.setViewName("main");
-        return modelAndView;
+        return createEmptyModelAndView();
     }
 
     @PostMapping("/end")
-    public ModelAndView end(@RequestParam HashMap<String, String> paramMap) throws SQLException {
+    public ModelAndView end(@RequestParam HashMap<String, String> paramMap)
+            throws SQLException {
+        chessService.delete(new User(paramMap.get("blackUserName")),
+            new User(paramMap.get("whiteUserName")));
+
+        return createEmptyModelAndView();
+    }
+
+    private ModelAndView createEmptyModelAndView() {
         ModelAndView modelAndView = new ModelAndView();
-
-        chessService.delete(new User(paramMap.get("blackUserName")), new User(paramMap.get("whiteUserName")));
-
         modelAndView.addObject("rows", chessService.getEmptyRowsDto());
         modelAndView.setViewName("main");
         return modelAndView;

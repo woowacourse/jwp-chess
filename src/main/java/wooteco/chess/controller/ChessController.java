@@ -39,9 +39,9 @@ public class ChessController {
 
         service.startNewGame(gameId);
 
-        Map<String, Object> gameInfo = service.provideGameInfo(gameId);
-        Map<String, Object> model = new HashMap<>(gameInfo);
+        Map<String, Object> model = new HashMap<>(service.provideGameInfo(gameId));
         model.put("game_id", gameId);
+
         return render(templateEngine, model, "game_room.html");
     }
 
@@ -50,9 +50,9 @@ public class ChessController {
 
         service.resumeGame(gameId);
 
-        Map<String, Object> gameInfo = service.provideGameInfo(gameId);
-        Map<String, Object> model = new HashMap<>(gameInfo);
+        Map<String, Object> model = new HashMap<>(service.provideGameInfo(gameId));
         model.put("game_id", gameId);
+
         return render(templateEngine, model, "game_room.html");
     }
 
@@ -63,10 +63,10 @@ public class ChessController {
 
         service.move(gameId, source, target);
 
-        Map<String, Object> gameInfo = service.provideGameInfo(gameId);
-        Map<String, Object> model = new HashMap<>(gameInfo);
+        Map<String, Object> model = new HashMap<>(service.provideGameInfo(gameId));
         model.put("game_id", gameId);
         model.put("end", service.provideWinner(gameId));
+
         return render(templateEngine, model, "game_room.html");
     }
 

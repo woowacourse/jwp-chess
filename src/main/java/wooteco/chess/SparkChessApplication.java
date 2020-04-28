@@ -2,21 +2,29 @@ package wooteco.chess;
 
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import wooteco.chess.spark.request.WebRequest;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import static spark.Spark.get;
+import static spark.Spark.*;
 
 public class SparkChessApplication {
-    public static void main(String[] args) {
+
+    public static void main(final String[] args) {
+        staticFiles.location("/public");
+
         get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(model, "index.hbs");
+            WebRequest webRequest = WebRequest.BLANK_BOARD;
+            return render(webRequest.generateModel(req), "index.html");
+        });
+
+        post("/", (req, res) -> {
+            WebRequest webRequest = WebRequest.of(req.queryParams("command"));
+            return render(webRequest.generateModel(req), "index.html");
         });
     }
 
-    private static String render(Map<String, Object> model, String templatePath) {
+    private static String render(final Map<String, Object> model, final String templatePath) {
         return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
     }
 }

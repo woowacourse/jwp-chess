@@ -1,0 +1,20 @@
+package chess.repository;
+
+import chess.dto.RoomDto;
+import org.springframework.data.jdbc.repository.query.Modifying;
+import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
+public interface RoomRepository extends CrudRepository<RoomDto, Integer> {
+	@Modifying
+	@Query("INSERT INTO room (room_name) VALUES (:room_name)")
+	void saveByRoomName(@Param("room_name") final String roomName);
+
+	@Query("SELECT * FROM room WHERE room_name = :room_name")
+	RoomDto findByRoomName(@Param("room_name") final String roomName);
+
+	@Modifying
+	@Query("DELETE FROM room WHERE room_name = :room_name")
+	void deleteByRoomName(@Param("room_name") final String roomName);
+}

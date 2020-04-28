@@ -20,14 +20,6 @@ public class GameEntity {
 		this.board = board;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public String getState() {
-		return state;
-	}
-
 	public String getTurn() {
 		return turn;
 	}

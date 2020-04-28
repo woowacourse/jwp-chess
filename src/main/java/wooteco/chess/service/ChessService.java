@@ -58,23 +58,16 @@ public class ChessService {
     }
 
     public Map<String, Object> makeStartResponse() {
-        GameResponse gameResponse = new GameResponse(chessManager);
-        Map<String, Object> model = new HashMap<>();
-        model.put("chessPieces", gameResponse.getTiles());
-        model.put("currentTeam", gameResponse.getCurrentTeam());
-        model.put("currentTeamScore", gameResponse.getCurrentTeamScore());
+        Map<String, Object> model = new HashMap<>(new GameResponse(chessManager).get());
         model.put("haveLastGameRecord", !commandsRepository.findAll().isEmpty());
 
         return model;
     }
 
     public Map<String, Object> makeMoveResponse() {
-        GameResponse gameResponse = new GameResponse(chessManager);
-        Map<String, Object> model = new HashMap<>();
-        model.put("chessPieces", gameResponse.getTiles());
-        model.put("currentTeam", gameResponse.getCurrentTeam());
-        model.put("currentTeamScore", gameResponse.getCurrentTeamScore());
+        Map<String, Object> model = new HashMap<>(new GameResponse(chessManager).get());
         model.put("winner", chessManager.getWinner());
+
         return model;
     }
 

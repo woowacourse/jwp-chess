@@ -3,7 +3,9 @@ package wooteco.chess.dto;
 import wooteco.chess.domain.ChessManager;
 import wooteco.chess.domain.piece.Team;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameResponse {
     private List<TileDto> tiles;
@@ -16,15 +18,12 @@ public class GameResponse {
         this.currentTeamScore = chessManager.calculateScore();
     }
 
-    public List<TileDto> getTiles() {
-        return tiles;
-    }
+    public Map<String, Object> get() {
+        Map<String, Object> model = new HashMap<>();
+        model.put("chessPieces", tiles);
+        model.put("currentTeam", currentTeam);
+        model.put("currentTeamScore", currentTeamScore);
 
-    public Team getCurrentTeam() {
-        return currentTeam;
-    }
-
-    public double getCurrentTeamScore() {
-        return currentTeamScore;
+        return model;
     }
 }

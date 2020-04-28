@@ -14,7 +14,7 @@ import wooteco.chess.domain.piece.Team;
 @Component
 public class TurnInfoDAO {
 	public void initialize(String gameId, Team team) {
-		String query = "INSERT INTO turn_info VALUES (?, ?)";
+		String query = "INSERT INTO turn_info (game_id, current_team) VALUES (?, ?)";
 		try (Connection con = getConnection();
 			 PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setString(1, gameId);

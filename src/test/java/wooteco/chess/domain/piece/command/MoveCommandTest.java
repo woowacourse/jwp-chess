@@ -1,6 +1,7 @@
 package wooteco.chess.domain.piece.command;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,7 +22,7 @@ public class MoveCommandTest {
 	@ParameterizedTest
 	@ValueSource(strings = {"move b1 b2 b3", "move c3d4"})
 	void constructor_InvalidInput_ExceptionThrown(String command) {
-		assertThatThrownBy(()->new MoveCommand(command))
+		assertThatThrownBy(() -> new MoveCommand(command))
 			.isInstanceOf(InvalidCommandException.class)
 			.hasMessage(InvalidCommandException.INVALID_MOVE_COMMAND);
 	}

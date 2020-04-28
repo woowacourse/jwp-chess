@@ -24,22 +24,6 @@ import wooteco.chess.domain.piece.position.Position;
 import wooteco.chess.domain.piece.team.Team;
 
 public class BoardFactoryTest {
-	@DisplayName("체스 보드판 생성")
-	@Test
-	void create_CreateInitialBoard() {
-		assertThat(BoardFactory.create()).isInstanceOf(Board.class);
-	}
-
-	@DisplayName("각 말의 위치 확인")
-	@MethodSource("initRanks")
-	@ParameterizedTest
-	void create_initializedBoard_True(List<Rank> expectedRanks) {
-		List<Rank> ranks = BoardFactory.create().getRanks();
-		for (int i = 0; i < expectedRanks.size(); i++) {
-			assertThat(ranks.get(i)).isEqualTo(expectedRanks.get(i));
-		}
-	}
-
 	private static Stream<Arguments> initRanks() {
 		List<Rank> ranks = new ArrayList<>();
 
@@ -82,5 +66,21 @@ public class BoardFactoryTest {
 		ranks.add(new Rank(eighth));
 
 		return Stream.of(Arguments.of(ranks));
+	}
+
+	@DisplayName("체스 보드판 생성")
+	@Test
+	void create_CreateInitialBoard() {
+		assertThat(BoardFactory.create()).isInstanceOf(Board.class);
+	}
+
+	@DisplayName("각 말의 위치 확인")
+	@MethodSource("initRanks")
+	@ParameterizedTest
+	void create_initializedBoard_True(List<Rank> expectedRanks) {
+		List<Rank> ranks = BoardFactory.create().getRanks();
+		for (int i = 0; i < expectedRanks.size(); i++) {
+			assertThat(ranks.get(i)).isEqualTo(expectedRanks.get(i));
+		}
 	}
 }

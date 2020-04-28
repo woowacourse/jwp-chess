@@ -3,14 +3,14 @@ package wooteco.chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import wooteco.chess.dao.GameDao;
-import wooteco.chess.dao.PieceDao;
 import wooteco.chess.domain.board.Rank;
 import wooteco.chess.domain.piece.Pawn;
 import wooteco.chess.domain.piece.Piece;
@@ -18,30 +18,32 @@ import wooteco.chess.domain.piece.position.Position;
 import wooteco.chess.domain.piece.team.Team;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.MoveRequestDto;
+import wooteco.chess.repository.GameRepository;
+import wooteco.chess.repository.PieceRepository;
 
+@SpringBootTest
 class ChessServiceTest {
-	private GameDao gameDao;
-	private PieceDao pieceDao;
+	@Autowired
+	private GameRepository gameRepository;
+	@Autowired
+	private PieceRepository pieceRepository;
+	@Autowired
 	private ChessService chessService;
-
-	@BeforeEach
-	void setUp() {
-		gameDao = GameDao.getInstance();
-		pieceDao = PieceDao.getInstance();
-		chessService = new ChessService(pieceDao, gameDao);
-	}
 
 	@AfterEach
 	void tearDown() {
-		pieceDao.deleteAll();
-		gameDao.deleteAll();
+		gameRepository.deleteAll();
+		pieceRepository.deleteAll();
 	}
 
 	@DisplayName("새로운 게임을 생성한다.")
 	@Test
 	void createGame() {
 		BoardDto boardDto = chessService.createGame();
-		assertThat(gameDao.findById(boardDto.getGameId())).isNotNull();
+
+		boolean present = gameRepository.findById(boardDto.getGameId()).isPresent();
+
+		assertThat(present).isTrue();
 	}
 
 	@DisplayName("생성된 게임을 불러온다.")
@@ -69,7 +71,10 @@ class ChessServiceTest {
 		chessService.move(moveRequestDto);
 
 		//then
-		List<Piece> pieces = pieceDao.findAllByGameId(game.getGameId());
+		List<Piece> pieces = gameRepository.findById(game.getGameId())
+			.orElseThrow(NoSuchElementException::new)
+			.toPieces();
+
 		Rank rank = new Rank(pieces);
 		Piece a4 = rank.findPiece(Position.of("a4"))
 			.orElseThrow(IllegalArgumentException::new);

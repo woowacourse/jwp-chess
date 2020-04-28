@@ -12,6 +12,7 @@ import wooteco.chess.domain.piece.Empty;
 import wooteco.chess.domain.piece.King;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PiecesFactory;
+import wooteco.chess.domain.piece.Queen;
 import wooteco.chess.domain.piece.Rook;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
@@ -27,6 +28,7 @@ class BoardTest {
 		Map<Position, Piece> setter = new LinkedHashMap<>();
 		setter.put(C8, new King(C8, Team.WHITE));
 		setter.put(C7, new King(C7, Team.BLACK));
+		setter.put(B2, new Queen(B2, Team.BLACK));
 
 		setter.put(B1, new Rook(B1, Team.BLACK));
 

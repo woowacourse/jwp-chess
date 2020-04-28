@@ -1,10 +1,10 @@
 package wooteco.chess.domain.board;
 
-import static java.util.stream.Collectors.*;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+
+import org.springframework.data.annotation.Id;
 
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
@@ -14,22 +14,21 @@ import wooteco.chess.domain.position.Position;
 public class Board {
 	private static final int ALIVE_COUNT = 2;
 
-	private final Map<Position, Piece> board;
+	@Id
+	private Long id;
 
-	private Board(Map<Position, Piece> board) {
-		this.board = board;
-	}
+	private final List<Piece> pieces;
 
-	public static Board of(Map<Position, Piece> board) {
-		return new Board(board);
+	private Board(List<Piece> pieces) {
+		this.pieces = pieces;
 	}
 
 	public static Board of(List<Piece> pieces) {
-		return of(pieces.stream()
-			.collect(toMap(
-				Piece::getPosition,
-				Function.identity())
-			));
+		return new Board(pieces);
+	}
+
+	public static Board of(Map<Position, Piece> board) {
+		return new Board(new ArrayList<>(board.values()));
 	}
 
 	public void verifyMove(Position from, Position to, Team current) {
@@ -37,8 +36,8 @@ public class Board {
 			throw new IllegalArgumentException("게임 끝");
 		}
 
-		Piece piece = board.get(from);
-		Piece target = board.get(to);
+		Piece piece = findPieceIn(from);
+		Piece target = findPieceIn(to);
 
 		if (piece.isNotSameTeam(current)) {
 			throw new IllegalArgumentException("아군 기물의 위치가 아닙니다.");
@@ -48,15 +47,21 @@ public class Board {
 		}
 	}
 
+	private Piece findPieceIn(Position position) {
+		return pieces.stream()
+				.filter(piece -> piece.isPositionEquals(position))
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("해당 위치에 기물이 존재하지 않습니다. position = " + position.getName()));
+	}
+
 	private boolean hasPieceIn(Path path) {
 		return path.toList()
 			.stream()
-			.anyMatch(position -> board.get(position).isObstacle());
+			.anyMatch(position -> findPieceIn(position).isObstacle());
 	}
 
 	private boolean isEnd() {
-		return board.values()
-			.stream()
+		return pieces.stream()
 			.filter(Piece::hasToAlive)
 			.count() != ALIVE_COUNT;
 	}

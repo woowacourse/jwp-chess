@@ -2,11 +2,22 @@ package wooteco.chess.domain.piece;
 
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+
 import wooteco.chess.domain.position.Position;
 
 public abstract class Piece {
+	@Id
+	private Long id;
+
+	@Column("board_id")
+	private Long boardId;
+
 	protected Position position;
+
 	protected final Symbol symbol;
+
 	protected final Team team;
 
 	public Piece(Position position, Symbol symbol, Team team) {
@@ -46,5 +57,9 @@ public abstract class Piece {
 			return symbol.getWhiteSymbol();
 		}
 		return symbol.getBlackSymbol();
+	}
+
+	public boolean isPositionEquals(Position position) {
+		return this.position.equals(position);
 	}
 }

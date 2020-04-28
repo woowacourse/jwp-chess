@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.gson.Gson;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.service.ChessService;
+import wooteco.chess.service.SparkChessService;
 
 @Controller
 public class SpringChessController {
 	private static final Gson GSON = new Gson();
 
-	private ChessService service;
+	private SparkChessService service;
 
-	public SpringChessController(ChessService service) {
+	public SpringChessController(SparkChessService service) {
 		this.service = service;
 	}
 

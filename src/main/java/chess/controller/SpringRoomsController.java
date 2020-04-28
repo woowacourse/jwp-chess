@@ -34,8 +34,7 @@ public class SpringRoomsController {
 	@PostMapping()
 	private String manage(
 			@RequestParam(value = "method", defaultValue = EMPTY) final String method,
-			@RequestParam(value = "room_name", defaultValue = EMPTY) final String roomName)
-			throws SQLException {
+			@RequestParam(value = "room_name", defaultValue = EMPTY) final String roomName) {
 
 		if ("delete".equals(method)) {
 			return delete(roomName);
@@ -48,17 +47,17 @@ public class SpringRoomsController {
 		}
 	}
 
-	private String delete(final String roomName) throws SQLException {
+	private String delete(final String roomName) {
 		chessRoomsService.deleteRoomByRoomName(roomName);
 		return Constants.REDIRECT + "/chess/rooms";
 	}
 
-	private String enter(final String roomName) throws SQLException {
+	private String enter(final String roomName) {
 		final RoomDto roomDto = chessRoomsService.findRoomByRoomName(roomName);
 		return Constants.REDIRECT + "/chess/rooms/" + roomDto.getId();
 	}
 
-	private String create(final String roomName) throws SQLException {
+	private String create(final String roomName) {
 		chessRoomsService.addRoomByRoomName(roomName);
 		return Constants.REDIRECT + "/chess/rooms";
 	}

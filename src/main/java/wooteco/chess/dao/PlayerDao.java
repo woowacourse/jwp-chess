@@ -13,7 +13,7 @@ import wooteco.chess.domain.Turn;
 
 @Component
 public class PlayerDao {
-	
+
 	public Turn findTurn(int playerId) throws SQLException {
 		String query = "select * from player where player_id = (?)";
 		try (Connection con = ConnectionLoader.load();
@@ -33,7 +33,7 @@ public class PlayerDao {
 		}
 	}
 
-	public int create(String name, String password, String team) throws SQLException {
+	public int save(String name, String password, String team) throws SQLException {
 		String query = "insert into player(name, password, team) value (?, ?, ?)";
 		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query,
 			PreparedStatement.RETURN_GENERATED_KEYS)) {

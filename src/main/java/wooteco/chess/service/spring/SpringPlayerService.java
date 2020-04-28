@@ -13,7 +13,7 @@ public class SpringPlayerService {
 		this.playerRepository = playerRepository;
 	}
 
-	public PlayerDto save(PlayerDto playerDto) {
-		return playerRepository.save(playerDto);
+	public long save(PlayerDto playerDto) {
+		return playerRepository.save(playerDto).getId();
 	}
 }

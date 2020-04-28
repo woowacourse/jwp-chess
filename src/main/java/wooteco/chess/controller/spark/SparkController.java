@@ -20,12 +20,13 @@ import wooteco.chess.dao.RoomDao;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.GameDto;
 import wooteco.chess.dto.PlayerDto;
-import wooteco.chess.service.BoardService;
+import wooteco.chess.service.spark.SparkBoardService;
 import wooteco.chess.service.spark.SparkPlayerService;
 
 public class SparkController {
 	private final Gson gson = new GsonBuilder().create();
-	private final BoardService boardService = new BoardService(new BoardDao(), new RoomDao(), new PlayerDao());
+	private final SparkBoardService sparkBoardService = new SparkBoardService(new BoardDao(), new RoomDao(),
+		new PlayerDao());
 	private final SparkPlayerService sparkPlayerService = new SparkPlayerService(new PlayerDao());
 
 	public void route() {
@@ -39,7 +40,7 @@ public class SparkController {
 	private String createNewGame(Request request, Response response) {
 		try {
 			int roomId = createPlayers(request);
-			boardService.create(roomId);
+			sparkBoardService.create(roomId);
 			HashMap<String, Object> model = new HashMap<>();
 			model.put("id", roomId);
 			return gson.toJson(model);
@@ -52,11 +53,11 @@ public class SparkController {
 	private int createPlayers(Request request) throws SQLException {
 		Map<String, String> params = new HashMap<>();
 		params = gson.fromJson(request.body(), params.getClass());
-		int player1Id = sparkPlayerService.create(
+		int player1Id = sparkPlayerService.save(
 			new PlayerDto(params.get("player1Name"), params.get("player1Password"), "white"));
-		int player2Id = sparkPlayerService.create(
+		int player2Id = sparkPlayerService.save(
 			new PlayerDto(params.get("player2Name"), params.get("player2Password"), "black"));
-		return boardService.createRoom(player1Id, player2Id);
+		return sparkBoardService.createRoom(player1Id, player2Id);
 	}
 
 	private String startGame(Request request, Response response) {
@@ -68,7 +69,7 @@ public class SparkController {
 	private String loadBoard(Request request, Response response) {
 		try {
 			int id = Integer.parseInt(request.params(":id"));
-			return gson.toJson(boardService.load(id));
+			return gson.toJson(sparkBoardService.load(id));
 		} catch (Exception e) {
 			response.status(500);
 			return gson.toJson(e.getMessage());
@@ -82,7 +83,7 @@ public class SparkController {
 			}.getType());
 			Position source = Position.of(map.get("sourceX"), map.get("sourceY"));
 			Position target = Position.of(map.get("targetX"), map.get("targetY"));
-			GameDto dto = boardService.move(id, source, target);
+			GameDto dto = sparkBoardService.move(id, source, target);
 			return gson.toJson(dto);
 		} catch (Exception e) {
 			response.status(500);

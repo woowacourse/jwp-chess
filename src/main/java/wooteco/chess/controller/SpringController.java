@@ -3,11 +3,14 @@ package wooteco.chess.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import wooteco.chess.domain.Result;
 import wooteco.chess.domain.chessboard.Board;
@@ -69,6 +72,13 @@ public class SpringController {
 		model.put("blackTeamScore", result.getBlackTeamScore());
 		model.put("whiteTeamScore", result.getWhiteTeamScore());
 		return model;
+	}
+
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({IllegalArgumentException.class, UnsupportedOperationException.class})
+	@ResponseBody
+	public String handleException(RuntimeException e) {
+		return e.getMessage();
 	}
 
 	private Map<String, Object> makeModel(Board board) {

@@ -17,20 +17,21 @@ import java.util.Map;
 
 @Controller
 public class ChessController {
+    private static final String INDEX = "boot_index";
 
     @Autowired
     private ChessService chessService;
 
     @GetMapping("/")
     public ModelAndView blankBoard() {
-        ModelAndView modelAndView = new ModelAndView("boot_index");
+        ModelAndView modelAndView = new ModelAndView(INDEX);
         modelAndView.addAllObjects(ModelParser.parseBlankBoard());
         return modelAndView;
     }
 
     @PostMapping("/new_game")
     public ModelAndView newGame() throws SQLException {
-        ModelAndView modelAndView = new ModelAndView("boot_index");
+        ModelAndView modelAndView = new ModelAndView(INDEX);
         Map<String, Object> objects = ModelParser.parseBoard(chessService.newGame());
         modelAndView.addAllObjects(objects);
         return modelAndView;
@@ -38,7 +39,7 @@ public class ChessController {
 
     @GetMapping("/load_game")
     public ModelAndView loadGame() throws SQLException {
-        ModelAndView modelAndView = new ModelAndView("boot_index");
+        ModelAndView modelAndView = new ModelAndView(INDEX);
         Map<String, Object> objects = ModelParser.parseBoard(chessService.readBoard());
         modelAndView.addAllObjects(objects);
         return modelAndView;
@@ -46,7 +47,7 @@ public class ChessController {
 
     @GetMapping("/show_movable")
     public ModelAndView showMovable(@RequestParam(defaultValue = "") String start) throws SQLException {
-        ModelAndView modelAndView = new ModelAndView("boot_index");
+        ModelAndView modelAndView = new ModelAndView(INDEX);
         modelAndView.addAllObjects(parseMovablePositionsModel(start));
         return modelAndView;
     }
@@ -63,7 +64,7 @@ public class ChessController {
 
     @PostMapping("/move")
     public ModelAndView move(@RequestParam(defaultValue = "") String start, @RequestParam(defaultValue = "") String end) throws SQLException {
-        ModelAndView modelAndView = new ModelAndView("boot_index");
+        ModelAndView modelAndView = new ModelAndView(INDEX);
 
         chessService.move(Position.of(start), Position.of(end));
         modelAndView.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));
@@ -72,7 +73,7 @@ public class ChessController {
 
     @GetMapping("/score")
     public ModelAndView score() throws SQLException {
-        ModelAndView modelAndView = new ModelAndView("boot_index");
+        ModelAndView modelAndView = new ModelAndView(INDEX);
         modelAndView.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));
         modelAndView.addObject("player1_info", "WHITE: " + chessService.calculateScore(Team.WHITE));
         modelAndView.addObject("player2_info", "BLACK: " + chessService.calculateScore(Team.BLACK));

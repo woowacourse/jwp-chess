@@ -1,6 +1,5 @@
 package chess.service;
 
-import chess.dao.PieceDao;
 import chess.dao.exceptions.DaoNoneSelectedException;
 import chess.domain.coordinate.Coordinate;
 import chess.domain.pieces.Piece;
@@ -13,33 +12,33 @@ import chess.domain.team.Team;
 import chess.dto.PieceDto;
 import chess.dto.StateDto;
 import chess.repository.AnnouncementRepository;
+import chess.repository.PieceRepository;
 import chess.repository.StateRepository;
 import chess.repository.StatusRecordRepository;
 import chess.view.Announcement;
 import chess.view.BoardToHtml;
 import chess.view.board.Board;
 import org.springframework.stereotype.Service;
-import java.sql.SQLException;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class ChessRoomService {
-	private final PieceDao pieceDao;
 	private final AnnouncementRepository announcementRepository;
 	private final StatusRecordRepository statusRecordRepository;
 	private final StateRepository stateRepository;
+	private final PieceRepository pieceRepository;
 
-	public ChessRoomService(final PieceDao pieceDao
-			, final AnnouncementRepository announcementRepository, final StatusRecordRepository statusRecordRepository, final StateRepository stateRepository) {
-		this.pieceDao = pieceDao;
+	public ChessRoomService(final AnnouncementRepository announcementRepository, final StatusRecordRepository statusRecordRepository, final StateRepository stateRepository, final PieceRepository pieceRepository) {
 		this.announcementRepository = announcementRepository;
 		this.statusRecordRepository = statusRecordRepository;
 		this.stateRepository = stateRepository;
+		this.pieceRepository = pieceRepository;
 	}
 
-	public String loadBoardHtml(final int roomId) throws SQLException {
+	public String loadBoardHtml(final int roomId) {
 		final State state = loadState(roomId);
 
 		return createBoardHtml(state);
@@ -52,9 +51,9 @@ public class ChessRoomService {
 				.collect(Collectors.toSet());
 	}
 
-	private State loadState(final int roomId) throws SQLException {
+	private State loadState(final int roomId) {
 		final StateDto stateDto = stateRepository.findByRoomId(roomId).orElseThrow(DaoNoneSelectedException::new);
-		final List<PieceDto> pieceDtos = pieceDao.findPiecesByRoomId(roomId);
+		final List<PieceDto> pieceDtos = pieceRepository.findPiecesByRoomId(roomId);
 
 		final Set<Piece> pieces = createPieceSet(pieceDtos);
 		return StateType.getFactory(stateDto.getState()).apply(
@@ -70,27 +69,27 @@ public class ChessRoomService {
 		stateRepository.save("ended", roomId);
 	}
 
-	public void saveNewPieces(final int roomId) throws SQLException {
+	public void saveNewPieces(final int roomId) {
 		final Set<Piece> pieces = new StartPieces().getInstance();
 		for (Piece piece : pieces) {
-			pieceDao.addPiece(piece.getPieceTypeName(), piece.getTeamName(),
+			pieceRepository.save(piece.getPieceTypeName(), piece.getTeamName(),
 					piece.getCoordinateRepresentation(), roomId);
 		}
 	}
 
-	public void updateRoom(final int roomId, final String command) throws SQLException {
+	public void updateRoom(final int roomId, final String command) {
 		final State before = loadState(roomId);
 		final State after = before.pushCommand(command);
 		stateRepository.setByRoomId(after.getStateName(), roomId);
-		pieceDao.deletePieces(roomId);
+		pieceRepository.deletePieces(roomId);
 		savePiecesFromState(roomId, after);
 		saveStatusRecordIfEnded(roomId, after);
 		announcementRepository.setByRoomId(roomId, createRightAnnouncement(after));
 	}
 
-	private void savePiecesFromState(final int roomId, final State after) throws SQLException {
+	private void savePiecesFromState(final int roomId, final State after) {
 		for (final Piece piece : after.getSet()) {
-			pieceDao.addPiece(piece.getPieceTypeName(), piece.getTeamName(),
+			pieceRepository.save(piece.getPieceTypeName(), piece.getTeamName(),
 					piece.getCoordinateRepresentation(), roomId);
 		}
 	}

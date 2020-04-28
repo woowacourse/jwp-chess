@@ -2,9 +2,12 @@ package wooteco.chess.repository;
 
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import wooteco.chess.domain.game.Game;
 
-public interface GameDAO {
+@Repository
+public interface GameDao {
 	Optional<Game> findById(int gameId);
 
 	void update(Game game);

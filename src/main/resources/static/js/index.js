@@ -74,7 +74,7 @@ const updateGameState = function updateGameState() {
         if (this.readyState === 4 && this.status === 200) {
             const data = JSON.parse(xhttp.responseText);
             if (data['status'] === 'ERROR') {
-                alert(data['message']);
+                alert(data['data']);
                 return;
             }
             renderCurrentGameState(data['data']);
@@ -90,7 +90,7 @@ const requestMovePieces = function requestMovePieces(data) {
         if (this.readyState === 4 && this.status === 200) {
             const data = JSON.parse(xhttp.responseText);
             if (data['status'] === 'ERROR') {
-                alert(data['message']);
+                alert(data['data']);
                 return;
             }
             updatePieceOnBoard(data['data']);
@@ -102,6 +102,7 @@ const requestMovePieces = function requestMovePieces(data) {
         }
     };
     xhttp.open("POST", "/chess/move", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(data);
 };
 
@@ -111,7 +112,7 @@ const checkWhetherGameIsFinished = function checkWhetherGameIsFinished() {
         if (this.readyState === 4 && this.status === 200) {
             const data = JSON.parse(xhttp.responseText);
             if (data['status'] === 'ERROR') {
-                alert(data['message']);
+                alert(data['data']);
                 return;
             }
             if (!data['data']) {
@@ -129,7 +130,7 @@ const requestEndGame = function requestEndGame() {
         if (this.readyState === 4 && this.status === 200) {
             const data = JSON.parse(xhttp.responseText);
             if (data['status'] === 'ERROR') {
-                alert(data['message']);
+                alert(data['data']);
                 return;
             }
             updateGameState();
@@ -146,7 +147,7 @@ const requestWinner = function requestWinner() {
         if (this.readyState === 4 && this.status === 200) {
             const data = JSON.parse(xhttp.responseText);
             if (data['status'] === 'ERROR') {
-                alert(data['message']);
+                alert(data['data']);
                 return;
             }
             alert("승리 : " + data['data']);
@@ -163,7 +164,7 @@ const requestNewGame = function requestNewGame() {
         if (this.readyState === 4 && this.status === 200) {
             const data = JSON.parse(xhttp.responseText);
             if (data['status'] === 'ERROR') {
-                alert(data['message']);
+                alert(data['data']);
                 return;
             }
             requestAllPieces();
@@ -270,7 +271,7 @@ const requestRecord = function requestRecord() {
         if (this.readyState === 4 && this.status === 200) {
             const data = JSON.parse(xhttp.responseText);
             if (data['status'] === 'ERROR') {
-                alert(data['message']);
+                alert(data['data']);
                 return;
             }
             updateRecord(data['data']);
@@ -298,7 +299,7 @@ const requestAllPieces = function requestAllPieces() {
         if (this.readyState === 4 && this.status === 200) {
             const data = JSON.parse(xhttp.responseText);
             if (data['status'] === 'ERROR') {
-                alert(data['message']);
+                alert(data['data']);
                 return;
             }
             updatePieceOnBoard(data['data']);

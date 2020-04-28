@@ -6,11 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.exception.SQLAccessException;
 import wooteco.chess.repository.DataSource;
 import wooteco.chess.repository.PrepareStatementSetter;
 import wooteco.chess.repository.RowMapper;
 
+@Component
 public class JDBCTemplate {
 	private final DataSource dataSource;
 
@@ -18,7 +21,7 @@ public class JDBCTemplate {
 		this.dataSource = dataSource;
 	}
 
-	public <T> Optional<T> executeQuery(String query, RowMapper<T> mapper, PrepareStatementSetter setter) {
+	<T> Optional<T> executeQuery(String query, RowMapper<T> mapper, PrepareStatementSetter setter) {
 		try (Connection con = dataSource.getConnection();
 			 PreparedStatement preparedStatement = con.prepareStatement(query)) {
 			setter.set(preparedStatement);
@@ -32,7 +35,7 @@ public class JDBCTemplate {
 		}
 	}
 
-	public int executeUpdate(String query, PrepareStatementSetter setter) {
+	int executeUpdate(String query, PrepareStatementSetter setter) {
 		try (Connection con = dataSource.getConnection();
 			 PreparedStatement preparedStatement = con.prepareStatement(query)) {
 			setter.set(preparedStatement);

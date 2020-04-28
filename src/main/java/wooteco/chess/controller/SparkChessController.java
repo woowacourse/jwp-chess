@@ -11,13 +11,13 @@ import java.util.function.Supplier;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.service.GameService;
-import wooteco.chess.view.dto.requestdto.PositionRequestDTO;
-import wooteco.chess.view.response.StandardResponse;
+import wooteco.chess.view.dto.requestdto.PositionRequestDto;
+import wooteco.chess.view.response.ResponseDto;
 
 public class SparkChessController {
 	private static final HandlebarsTemplateEngine TEMPLATE_ENGINE = new HandlebarsTemplateEngine();
 	private static final ModelAndView DEFAULT_MODEL_AND_VIEW = new ModelAndView(new HashMap<String, Object>(),
-		"index.html");
+		"index.hbs");
 
 	private final GameService gameService;
 
@@ -30,61 +30,61 @@ public class SparkChessController {
 
 		get("/chess/state", (req, res) ->
 				makeResponse(() ->
-					new StandardResponse(SUCCESS, toJsonTree(gameService.getCurrentState()))),
+					new ResponseDto(SUCCESS, toJsonTree(gameService.getCurrentState()))),
 			json()
 		);
 
 		post("/chess/state", (req, res) ->
 				makeResponse(() -> {
 					gameService.changeState(req.body());
-					return new StandardResponse(SUCCESS);
+					return new ResponseDto(SUCCESS);
 				}),
 			json()
 		);
 
 		get("/chess/pieces", (req, res) ->
 				makeResponse(() ->
-					new StandardResponse(SUCCESS, toJsonTree(this.gameService.findAllPiecesOnBoard()))
+					new ResponseDto(SUCCESS, toJsonTree(this.gameService.findAllPiecesOnBoard()))
 				),
 			json()
 		);
 
 		get("/chess/record", (req, res) ->
 				makeResponse(() ->
-					new StandardResponse(SUCCESS, toJsonTree(this.gameService.calculateScore()))
+					new ResponseDto(SUCCESS, toJsonTree(this.gameService.calculateScore()))
 				),
 			json()
 		);
 
 		post("/chess/move", (req, res) ->
 				makeResponse(() -> {
-					PositionRequestDTO requestDTO = fromJson(req.body(), PositionRequestDTO.class);
+					PositionRequestDto requestDTO = fromJson(req.body(), PositionRequestDto.class);
 					this.gameService.move(requestDTO);
-					return new StandardResponse(SUCCESS, toJsonTree(gameService.findChangedPiecesOnBoard(requestDTO)));
+					return new ResponseDto(SUCCESS, toJsonTree(gameService.findChangedPiecesOnBoard(requestDTO)));
 				}),
 			json()
 		);
 
 		get("/chess/isnotfinish", (req, res) ->
 				makeResponse(() ->
-					new StandardResponse(SUCCESS, toJsonTree(this.gameService.isNotFinish()))
+					new ResponseDto(SUCCESS, toJsonTree(this.gameService.isNotFinish()))
 				),
 			json()
 		);
 
 		get("/chess/result", (req, res) ->
 				makeResponse(() ->
-					new StandardResponse(SUCCESS, toJsonTree(this.gameService.getWinner()))
+					new ResponseDto(SUCCESS, toJsonTree(this.gameService.getWinner()))
 				),
 			json()
 		);
 	}
 
-	private StandardResponse makeResponse(Supplier<StandardResponse> responseGenerator) {
+	private ResponseDto makeResponse(Supplier<ResponseDto> responseGenerator) {
 		try {
 			return responseGenerator.get();
 		} catch (RuntimeException e) {
-			return new StandardResponse(ERROR, e.getMessage());
+			return new ResponseDto(ERROR, e.getMessage());
 		}
 	}
 }

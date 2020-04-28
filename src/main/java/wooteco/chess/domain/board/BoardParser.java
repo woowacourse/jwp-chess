@@ -14,6 +14,9 @@ public class BoardParser {
 	private static final String COLUMN_SEPARATOR = "";
 	private static final String EMPTY_ZONE = ".";
 
+	private BoardParser() {
+	}
+
 	public static Map<Position, Piece> parsePieces(String board) {
 		Map<Position, Piece> pieces = new HashMap<>();
 		String[] rowBoards = board.split(ROW_SEPARATOR);

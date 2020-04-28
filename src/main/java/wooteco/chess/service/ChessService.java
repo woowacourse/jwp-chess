@@ -20,7 +20,11 @@ import wooteco.chess.dto.TurnDto;
 
 @Service
 public class ChessService {
-    private static final ChessGameDao chessGameDao = new ChessGameDao();
+    private final ChessGameDao chessGameDao;
+
+    public ChessService(ChessGameDao chessGameDao) {
+        this.chessGameDao = chessGameDao;
+    }
 
     public ResponseDto createChessRoom() throws SQLException {
         ChessGame chessGame = chessGameDao.save();

@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.game.Board;
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.Turn;
@@ -17,6 +19,7 @@ import wooteco.chess.domain.game.state.State;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.TurnDto;
 
+@Component
 public class ChessGameDao implements JdbcTemplateDao {
 
     private static final String STATE = "state";

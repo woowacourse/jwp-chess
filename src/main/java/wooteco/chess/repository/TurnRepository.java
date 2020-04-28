@@ -1,6 +1,7 @@
 package wooteco.chess.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
@@ -14,4 +15,7 @@ import wooteco.chess.entity.TurnEntity;
 public interface TurnRepository extends CrudRepository<TurnEntity, Long> {
 	@Override
 	List<TurnEntity> findAll();
+
+	@Override
+	Optional<TurnEntity> findById(Long id);
 }

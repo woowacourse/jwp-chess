@@ -1,6 +1,6 @@
 const templatePiece = color => `<div class="chess-piece ${color}" draggable="true" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`;
 const templateBlank = `<div class="chess-piece blank" draggable="true" ondrop="onDrop(event)" ondragstart="onDragStart(event)" ondragover="onDragOver(event)"></div>`;
-const templateGame = id => `<a href="/rooms/${id}" class="chess-game"><div class="chess-game-title">체스 게임 ${id}</div></a>`;
+const templateGame = (id, number) => `<a href="/rooms/${id}" class="chess-game"><div class="chess-game-title">체스 게임 ${number}</div></a>`;
 
 const blackScoreElement = document.querySelector('#black-score');
 const whiteScoreElement = document.querySelector('#white-score');
@@ -86,7 +86,7 @@ fetch('/rooms')
     .then(data => drawGameList(data.dto));
 
 function drawGameList(games) {
-    games.forEach(id => chessGamesElement.innerHTML += templateGame(id));
+    games.forEach((id, number) => chessGamesElement.innerHTML += templateGame(id, number + 1));
 }
 
 function drawChessGame({boardDto, statusDto, finished}) {

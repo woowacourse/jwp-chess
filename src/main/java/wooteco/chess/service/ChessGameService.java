@@ -28,20 +28,21 @@ public class ChessGameService {
 		return new ResponseDto(ResponseDto.SUCCESS, chessGameRepository.findRoomIds());
 	}
 
-	public ResponseDto find(Long id) {
+	public ResponseDto find(String id) {
 		ChessGameEntity persistChessGameEntity = chessGameRepository.findById(id)
 				.orElseThrow(InvalidGameException::new);
 		return new ResponseDto(ResponseDto.SUCCESS, convertToChessGameDto(persistChessGameEntity.toDomain()));
 	}
 
-	public ResponseDto move(Long id, Position source, Position target) {
+	public ResponseDto move(String id, Position source, Position target) {
 		ChessGameEntity persistChessGameEntity = chessGameRepository.findById(id)
 				.orElseThrow(InvalidGameException::new);
 		ChessGame chessGame = persistChessGameEntity.toDomain();
 		try {
 			chessGame.move(source, target);
 			persistChessGameEntity.update(chessGame);
-			chessGameRepository.save(persistChessGameEntity);
+			ChessGameEntity result = chessGameRepository.save(persistChessGameEntity);
+
 			return new ResponseDto(ResponseDto.SUCCESS, convertToChessGameDto(chessGame));
 		} catch (NotMovableException | IllegalArgumentException e) {
 			return new ResponseDto(ResponseDto.FAIL, "이동할 수 없는 위치입니다.");
@@ -58,7 +59,7 @@ public class ChessGameService {
 		return new ResponseDto(ResponseDto.SUCCESS, persistChessGameEntity.getId());
 	}
 
-	public ResponseDto restart(Long id) {
+	public ResponseDto restart(String id) {
 		ChessGame chessGame = new ChessGame(new Ready());
 		chessGame.start();
 		ChessGameEntity persistChessGameEntity = chessGameRepository.findById(id)
@@ -68,7 +69,7 @@ public class ChessGameService {
 		return new ResponseDto(ResponseDto.SUCCESS, id);
 	}
 
-	public ResponseDto delete(Long id) {
+	public ResponseDto delete(String id) {
 		chessGameRepository.deleteById(id);
 		return new ResponseDto(ResponseDto.SUCCESS, null);
 	}

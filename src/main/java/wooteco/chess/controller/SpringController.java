@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -34,14 +34,14 @@ public class SpringController {
 	@GetMapping("/init")
 	@ResponseBody
 	public Map<String, Object> init() {
-		return makeModel(chessService.find());
+		return makeModel(chessService.init());
 	}
 
-	@PostMapping("/move")
+	@PutMapping("/move")
 	@ResponseBody
-	public Map<String, Object> move(@RequestParam("startPosition") String startPosition,
-		@RequestParam("targetPosition") String targetPosition) {
-		Board board = chessService.move(Position.of(startPosition), Position.of(targetPosition));
+	public Map<String, Object> move(@RequestParam("start") String start,
+		@RequestParam("target") String target) {
+		Board board = chessService.move(Position.of(start), Position.of(target));
 		return makeModel(board);
 	}
 

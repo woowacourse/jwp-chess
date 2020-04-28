@@ -43,7 +43,7 @@ public class SparkController {
 			return render(model, "index.hbs");
 		});
 
-		get("/init", (req, res) -> getBoardJson(chessService.find()));
+		get("/init", (req, res) -> getBoardJson(chessService.init()));
 
 		post("/move", (req, res) -> {
 			Position startPosition = Position.of(req.queryParams("startPosition"));

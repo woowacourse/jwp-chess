@@ -33,30 +33,30 @@ $('.cell').click(function () {
     }
 });
 
-function requestMove(startPosition, targetPosition) {
+function requestMove(start, target) {
     $.ajax({
-        type: 'post',
+        type: 'put',
         url: '/move',
-        data: {startPosition: startPosition, targetPosition: targetPosition},
+        data: {start: start, target: target},
         dataType: 'json',
         error: function (response) {
             alert(response.responseText);
         },
         success: function () {
-            move({startPosition, targetPosition});
+            move({start: start, target: target});
         }
     })
 }
 
 function move(position) {
-    let startPositionClassName = getChessPieceClassName(position.startPosition);
-    let targetPositionClassName = getChessPieceClassName(position.targetPosition);
+    let startPositionClassName = getChessPieceClassName(position.start);
+    let targetPositionClassName = getChessPieceClassName(position.target);
 
     if (targetPositionClassName !== '') {
-        getClassList(position.targetPosition).remove(targetPositionClassName);
+        getClassList(position.target).remove(targetPositionClassName);
     }
-    getClassList(position.startPosition).remove(startPositionClassName);
-    getClassList(position.targetPosition).add(startPositionClassName);
+    getClassList(position.start).remove(startPositionClassName);
+    getClassList(position.target).add(startPositionClassName);
     setTimeout(() => checkKingDie(), 0);
     setTimeout(() => status(), 0);
 }

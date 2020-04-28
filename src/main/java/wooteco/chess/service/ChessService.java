@@ -32,7 +32,7 @@ public class ChessService {
 	}
 
 	public Board move(Position startPosition, Position targetPosition) {
-		Board board = find();
+		Board board = init();
 		Piece startPiece = board.findByPosition(startPosition);
 		board.move(startPosition, targetPosition);
 		boardDao.update(targetPosition, startPiece.getName());
@@ -41,19 +41,27 @@ public class ChessService {
 		return board;
 	}
 
-	public Board find() {
-		List<PieceDto> pieceDtos = boardDao.findAll();
-		Turn turn;
-		try {
-			turn = turnDao.find();
-		} catch (NoSuchElementException e) {
-			turn = new Turn(FIRST_TURN);
-			turnDao.addTurn(FIRST_TURN);
-		}
+	public Board init() {
+		List<PieceDto> pieceDtos = findPieces();
+		Turn turn = findTurn();
 		if (pieceDtos.isEmpty()) {
 			return createBoard(BoardFactory.createBoard());
 		}
 		return BoardFactory.createBoard(pieceDtos, turn);
+	}
+
+	private List<PieceDto> findPieces() {
+		return boardDao.findAll();
+	}
+
+	private Turn findTurn() {
+		try {
+			return turnDao.find();
+		} catch (NoSuchElementException e) {
+			Turn turn = new Turn(FIRST_TURN);
+			turnDao.addTurn(FIRST_TURN);
+			return turn;
+		}
 	}
 
 	private Board createBoard(Board board) {
@@ -67,21 +75,21 @@ public class ChessService {
 	public Board restart() {
 		boardDao.removeAll();
 		turnDao.removeAll();
-		return find();
+		return init();
 	}
 
 	public boolean isNotEnd() {
-		Board board = find();
+		Board board = init();
 		return board.isLiveBothKing();
 	}
 
 	public boolean isWinWhiteTeam() {
-		Board board = find();
+		Board board = init();
 		return board.isLiveKing(Team.WHITE);
 	}
 
 	public Team findWinningTeam() {
-		Board board = find();
+		Board board = init();
 		return Arrays.stream(Team.values())
 			.filter(board::isLiveKing)
 			.findFirst()
@@ -89,7 +97,7 @@ public class ChessService {
 	}
 
 	public Result status() {
-		Board board = find();
+		Board board = init();
 		Status status = board.createStatus();
 		return status.getResult();
 	}

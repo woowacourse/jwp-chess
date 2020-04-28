@@ -10,8 +10,8 @@ import org.springframework.data.relational.core.mapping.Table;
  */
 @Table("board")
 public class BoardEntity {
-	private final @Id
-	Long id;
+	@Id
+	private final Long id;
 
 	private final Long roomId;
 	private final String position;

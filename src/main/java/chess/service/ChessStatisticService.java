@@ -17,5 +17,4 @@ public class ChessStatisticService {
 	public List<StatusRecordDto> loadStatusRecordsWithRoomName() {
 		return statusRecordRepository.findAll();
 	}
-
 }

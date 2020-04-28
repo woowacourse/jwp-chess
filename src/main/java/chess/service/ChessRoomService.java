@@ -3,6 +3,7 @@ package chess.service;
 import chess.dao.PieceDao;
 import chess.dao.StateDao;
 import chess.dao.StatusRecordDao;
+import chess.dao.exceptions.DaoNoneSelectedException;
 import chess.domain.coordinate.Coordinate;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.PieceType;
@@ -14,6 +15,7 @@ import chess.domain.team.Team;
 import chess.dto.PieceDto;
 import chess.dto.StateDto;
 import chess.repository.AnnouncementRepository;
+import chess.repository.StatusRecordRepository;
 import chess.view.Announcement;
 import chess.view.BoardToHtml;
 import chess.view.board.Board;
@@ -30,13 +32,15 @@ public class ChessRoomService {
 	private final PieceDao pieceDao;
 	private final StatusRecordDao statusRecordDao;
 	private final AnnouncementRepository announcementRepository;
+	private final StatusRecordRepository statusRecordRepository;
 
 	public ChessRoomService(final StateDao stateDao, final PieceDao pieceDao
-			, final StatusRecordDao statusRecordDao, final AnnouncementRepository announcementRepository) {
+			, final StatusRecordDao statusRecordDao, final AnnouncementRepository announcementRepository, final StatusRecordRepository statusRecordRepository) {
 		this.stateDao = stateDao;
 		this.pieceDao = pieceDao;
 		this.statusRecordDao = statusRecordDao;
 		this.announcementRepository = announcementRepository;
+		this.statusRecordRepository = statusRecordRepository;
 	}
 
 	public String loadBoardHtml(final int roomId) throws SQLException {
@@ -95,9 +99,9 @@ public class ChessRoomService {
 		}
 	}
 
-	private void saveStatusRecordIfEnded(final int roomId, final State after) throws SQLException {
+	private void saveStatusRecordIfEnded(final int roomId, final State after) {
 		if (after.isEnded()) {
-			statusRecordDao.addStatusRecord(Announcement.ofStatus(after.getPieces()).getString(), roomId);
+			statusRecordRepository.save(Announcement.ofStatus(after.getPieces()).getString(), roomId);
 		}
 	}
 
@@ -112,7 +116,7 @@ public class ChessRoomService {
 	}
 
 	public String loadAnnouncementMessage(int roomId) {
-		return announcementRepository.findByRoomId(roomId).orElseThrow(NullPointerException::new)
+		return announcementRepository.findByRoomId(roomId).orElseThrow(DaoNoneSelectedException::new)
 				.getMessage();
 	}
 

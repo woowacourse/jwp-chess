@@ -13,10 +13,10 @@ public interface AnnouncementRepository extends CrudRepository<AnnouncementDto, 
 	@Query("INSERT INTO announcement(message, room_id) VALUES(:message, :room_id)")
 	void save(@Param("message") final String message, @Param("room_id") final int roomId);
 
-	@Query("SELECT * FROM announcement WHERE room_id = :room_id")
+	@Query("SELECT * FROM announcement WHERE room_id=:room_id")
 	Optional<AnnouncementDto> findByRoomId(@Param("room_id") final int roomId);
 
 	@Modifying
-	@Query("UPDATE announcement SET message = :message WHERE room_id = :room_id")
+	@Query("UPDATE announcement SET message = :message WHERE room_id=:room_id")
 	void setByRoomId(@Param("room_id") final int roomId, @Param("message") final String message);
 }

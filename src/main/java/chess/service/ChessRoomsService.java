@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.dao.exceptions.DaoNoneSelectedException;
 import chess.dto.RoomDto;
 import chess.repository.RoomRepository;
 import com.google.common.collect.Lists;
@@ -20,7 +21,7 @@ public class ChessRoomsService {
 	}
 
 	public RoomDto findRoomByRoomName(final String roomName) {
-		return roomRepository.findByRoomName(roomName);
+		return roomRepository.findByRoomName(roomName).orElseThrow(DaoNoneSelectedException::new);
 	}
 
 	public void addRoomByRoomName(final String roomName) {

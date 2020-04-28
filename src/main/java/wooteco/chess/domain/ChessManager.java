@@ -12,17 +12,13 @@ public class ChessManager {
         playing = true;
     }
 
-    public void end() {
-        playing = false;
-    }
-
     public void move(String source, String target) {
         chessRunner.updateBoard(source, target);
-        playing = hasWinner();
+        playing = bothKingAlive();
     }
 
-    public void clearBoard() {
-        chessRunner.clearBoard();
+    public void end() {
+        playing = false;
     }
 
     public boolean isPlaying() {
@@ -33,8 +29,8 @@ public class ChessManager {
         return chessRunner.calculateScore();
     }
 
-    public boolean hasWinner() {
-        return getWinner() != Team.NONE;
+    public boolean bothKingAlive() {
+        return getWinner() == Team.NONE;
     }
 
     public Board getBoard() {

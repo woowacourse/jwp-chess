@@ -27,7 +27,7 @@ public class CommandProcessor {
         chessManager.move(moveCommand.get(1), moveCommand.get(2));
         printBoard(new BoardDto(chessManager.getBoard()));
 
-        if (chessManager.hasWinner()) {
+        if (chessManager.bothKingAlive()) {
             outputView.printWinner(chessManager.getWinner());
         }
     }

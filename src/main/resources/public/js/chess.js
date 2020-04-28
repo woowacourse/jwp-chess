@@ -55,7 +55,8 @@ function move(source, target) {
             let team = response.body.currentTeam;
             let currentTeamScore = response.body.currentTeamScore;
             let winner = response.body.winner;
-            if (winner != null) {
+
+            if (winner != "NONE") {
                 alert(winner + "팀이 이겼습니다.");
                 initialize(source, target);
                 window.location = "http://localhost:8080";

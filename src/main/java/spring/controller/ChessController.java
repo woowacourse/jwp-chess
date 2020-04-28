@@ -1,10 +1,10 @@
 package spring.controller;
 
-import spring.chess.game.ChessGame;
 import spring.chess.command.Command;
 import spring.chess.command.CommandMapper;
-import spring.chess.result.ChessResult;
+import spring.chess.game.ChessGame;
 import spring.chess.progress.Progress;
+import spring.chess.result.ChessResult;
 import spring.view.InputView;
 import spring.view.OutputView;
 

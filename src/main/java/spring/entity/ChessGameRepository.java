@@ -1,4 +1,6 @@
 package spring.entity;
 
-public interface ChessGameRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface ChessGameRepository extends CrudRepository<ChessGameEntity, Long> {
 }

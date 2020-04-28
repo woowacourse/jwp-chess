@@ -1,4 +1,6 @@
 package spring.entity;
 
-public interface PieceRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface PieceRepository extends CrudRepository<PieceEntity, Long> {
 }

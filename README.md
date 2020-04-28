@@ -1,12 +1,14 @@
 Refactoring Todo list
-- [ ] Room Model 생성 
-    - [ ] RoomDAO
-    - [ ] RoomController
-    - [ ] RoomService
-    - [ ] RoomDTO
-- [ ] Board Table 수정
-    - [ ] Room id 추가
-    - [ ] BoardDAO 에서 Room id 로 조회 기능
+- [ ] score
+- [ ] finish -> db 지우기
+- [ ] turn 표시
+- [x] Room Model 생성 
+    - [x] RoomDAO
+    - [x] RoomController
+    - [x] RoomService
+- [x] Board Table 수정
+    - [x] Room id 추가
+    - [x] BoardDAO 에서 Room id 로 조회 기능
 - [ ] Board 도메인 수정
     - [ ] finish 체크 할 때 보드 반환 리팩토링
     - [x] move -> 검증 메서드로 변경

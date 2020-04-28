@@ -1,14 +1,5 @@
 // setTurn();
 
-// 점수 현황 동적 렌더링
-let scoreStatus = document.getElementById("score-status");
- let score = document.querySelector("#score-status span");
- if (score.innerText === "") {
-    scoreStatus.style.visibility = "hidden"
-} else {
-    scoreStatus.style.visibility = "visible";
-}
-
 // 체스 말 선택
 function pick(value) {
     console.log(value);
@@ -34,7 +25,7 @@ async function pickAfter(afterValue) {
 // 체스말 이동
 function setPiece(response) {
     console.log(response);
-    if(response === "BLACK" || response === "WHITE"){
+    if (response === "BLACK" || response === "WHITE") {
         let finish_box = document.getElementById("winner-box");
         finish_box.style.visibility = "visible";
 
@@ -49,7 +40,6 @@ function setPiece(response) {
 
     toPiece.src = fromPiece.src;
     fromPiece.src = "../images/BLANK.png";
-    scoreStatus.style.visibility = 'hidden';
 }
 
 // 체스말 이동 : 비동기
@@ -69,23 +59,44 @@ function move() {
         dataType: 'text',
         error: alertMessage,
         success: setPiece,
-        complete: function(){
+        complete: function () {
             clear();
-            setTurn();
+            // setTurn()
         }
     });
 }
 
- function clear() {
-     let before = document.querySelector('.fromPiece');
-     let after = document.querySelector('.toPiece');
-     if (before) {
-         before.classList.remove('fromPiece');
-     }
-     if (after) {
-         after.classList.remove('toPiece');
-     }
- }
+function clear() {
+    let before = document.querySelector('.fromPiece');
+    let after = document.querySelector('.toPiece');
+    if (before) {
+        before.classList.remove('fromPiece');
+    }
+    if (after) {
+        after.classList.remove('toPiece');
+    }
+}
+
+function setScore() {
+    let room_id = document.getElementById('room_id').innerText;
+    $.ajax({
+        type: 'GET',
+        async: true,
+        url: `/room/${room_id}/score`,
+        data: {
+            room_id
+        },
+        dataType: 'json',
+        error: alertMessage,
+        success: function (response) {
+            console.log(response);
+            document.getElementById("black-score").innerText = "Black : " + response.black;
+            document.getElementById("white-score").innerText = "White : " + response.white;
+        },
+        complete: function () {
+        }
+    })
+}
 
 // 게임 턴 : 비동기
 // function setTurn(){
@@ -102,6 +113,6 @@ function move() {
 // }
 
 // 에러 메세지
- function alertMessage(response) {
-     alert(response.responseText);
- }
+function alertMessage(response) {
+    alert(response.responseText);
+}

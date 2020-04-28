@@ -29,6 +29,10 @@ header .inner h1 {
     font-size: 40px;
 }
 
+.room_information {
+    border: solid 3px black;
+}
+
 /* CONTROLLER */
 .controller {
     position: absolute;

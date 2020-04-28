@@ -7,8 +7,10 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
+import wooteco.chess.domain.result.GameResult;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -39,29 +41,19 @@ public class BoardService {
         roomService.updateTurn(roomId);
         return board;
     }
-//
-//    private Map<String, Object> createBoardModel(final Board board) {
-//        Map<String, Object> model = new HashMap<>();
-//        Map<Position, Piece> rawBoard = board.getBoard();
-//        for (Position position : rawBoard.keySet()) {
-//            model.put(position.toString(), rawBoard.get(position).getName());
-//        }
-//        return model;
-//    }
-//
-//    public Map<String, Object> showScoreStatus(final Long roomId) throws SQLException {
-//        GameResult gameResult = new GameResult();
-//        Board board = new Board(boardDAO.findAllById(roomId));
-//
-//        double blackScore = gameResult.calculateScore(board, Team.BLACK);
-//        double whiteScore = gameResult.calculateScore(board, Team.WHITE);
-//
-//        Map<String, Object> model = createBoardModel(board);
-//        model.put("black", blackScore);
-//        model.put("white", whiteScore);
-//        return model;
-//    }
-//
+
+    public Map<String, String> showScoreStatus(final Long roomId) throws SQLException {
+        GameResult gameResult = new GameResult();
+        Board board = Board.createLoadedBoard(boardDAO.findAllById(roomId));
+
+        double blackScore = gameResult.calculateScore(board, Team.BLACK);
+        double whiteScore = gameResult.calculateScore(board, Team.WHITE);
+
+        Map<String, String> model = new HashMap<>();
+        model.put("black", String.valueOf(blackScore));
+        model.put("white", String.valueOf(whiteScore));
+        return model;
+    }
 
     public String receiveWinner(final Long roomId) throws SQLException {
         roomService.updateTurn(roomId);

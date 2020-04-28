@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>체스게임 by BossDog & Orange</title>
@@ -15,7 +15,7 @@
         </div>
     </header>
 
-    <div style="visibility: hidden" id="room_id">{{roomId}}</div>
+    <div class="room_information" id="room_id">{{roomId}}</div>
 
     <!-- CONTROLLER -->
     <div class="controller">
@@ -25,9 +25,7 @@
         <form action="/load" method="post">
             <input id="load" type="submit" name="command" value="불러오기">
         </form>
-        <form action="/status" method="post">
-            <input id="status" type="submit" name="command" value="점수 현황">
-        </form>
+        <Button id="status" onclick="setScore()">점수 현황</Button>
         <form action="/" method="get">
             <button type="submit" >방 나가기</button>
         </form>
@@ -39,8 +37,8 @@
 
     <!-- SCORE STATUS -->
     <div id="score-status">
-        <div class="score" id="black-score">Black : <span>{{ black }}</span></div>
-        <div class="score" id="white-score">White : <span>{{ white }}</span></div>
+        <div class="score" id="black-score"></div>
+        <div class="score" id="white-score"></div>
     </div>
 
     <!-- BOARD -->

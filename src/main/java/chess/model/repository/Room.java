@@ -8,12 +8,15 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Room {
 
     @Id
-    private Long id;
+    private Integer id;
     @Column("NM")
     private String name;
     @Column("PW")
     private String password;
     private String usedYN;
+
+    public Room() {
+    }
 
     public Room(String name, String password) {
         this(name, password, "Y");
@@ -23,6 +26,10 @@ public class Room {
         this.name = name;
         this.password = password;
         this.usedYN = usedYN;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
@@ -35,5 +42,9 @@ public class Room {
 
     public String getUsedYN() {
         return usedYN;
+    }
+
+    public void setUsedYN(String usedYN) {
+        this.usedYN = usedYN;
     }
 }

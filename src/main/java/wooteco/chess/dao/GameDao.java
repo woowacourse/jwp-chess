@@ -17,6 +17,8 @@ import wooteco.chess.repository.ChessGameRepository;
 
 @Component
 public class GameDao {
+	private static final int MIN_ROOM_NUMBER = 100000;
+	private static final int MAX_ROOM_NUMBER = 999999;
 	private final ChessGameRepository chessGameRepository;
 
 	public GameDao(ChessGameRepository chessGameRepository) {
@@ -25,7 +27,7 @@ public class GameDao {
 
 	public int addGame(GameManagerDto gameManagerDto) {
 		int roomNo = ThreadLocalRandom.current()
-			.ints(100000, 999999)
+			.ints(MIN_ROOM_NUMBER, MAX_ROOM_NUMBER)
 			.findFirst()
 			.orElse(0);
 

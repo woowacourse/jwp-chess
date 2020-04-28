@@ -8,8 +8,11 @@ import java.util.Map;
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import wooteco.chess.dao.GameInfoDAO;
+import wooteco.chess.dao.UserDAO;
 import wooteco.chess.domain.player.User;
 import wooteco.chess.service.ChessService;
+import wooteco.chess.util.DBConnector;
 import wooteco.chess.util.JsonTransformer;
 
 public class SparkChessApplication {
@@ -18,7 +21,9 @@ public class SparkChessApplication {
 
         Spark.staticFiles.location("/templates");
 
-        ChessService chessService = new ChessService();
+        DBConnector dbConnector = new DBConnector();
+        ChessService chessService = new ChessService(
+            new GameInfoDAO(dbConnector), new UserDAO(dbConnector));
 
         get("/main", (req, res) -> {
             Map<String, Object> model = new HashMap<>();

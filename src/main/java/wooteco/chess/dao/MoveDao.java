@@ -37,7 +37,6 @@ public class MoveDao implements MySqlJdbcTemplateDao {
             List<MoveRequestDto> moves = new ArrayList<>();
             ResultSet resultSet = statement.executeQuery();
             addMoves(moves, resultSet);
-            resultSet.close();
             return moves;
         }
     }

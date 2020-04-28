@@ -21,10 +21,6 @@ public interface ChessService {
 
     boolean finishGameById(String id) throws SQLException;
 
-    double getScoreById(String id, Side side) throws SQLException;
-
-    Map<String, Map<Side, Player>> getPlayerContexts() throws SQLException;
-
     Map<String, Map<Side, Double>> getScoreContexts() throws SQLException;
 
     Map<Side, Double> getScoresById(String id) throws SQLException;
@@ -37,5 +33,5 @@ public interface ChessService {
 
     boolean isGameOver(String id) throws SQLException;
 
-    Map<String, GameResponseDto> getBoards();
+    Map<String, GameResponseDto> getGames() throws SQLException;
 }

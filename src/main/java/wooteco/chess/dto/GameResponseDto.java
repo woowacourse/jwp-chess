@@ -9,9 +9,9 @@ import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
 
 public class GameResponseDto {
-    private String title;
-    private Map<Side, Player> players;
-    private Map<Position, Piece> board;
+    private final String title;
+    private final Map<Side, Player> players;
+    private final Map<Position, Piece> board;
 
     public GameResponseDto(final Game game) {
         this.title = game.getTitle();

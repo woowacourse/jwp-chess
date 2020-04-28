@@ -31,13 +31,12 @@ public class SpringChessBoardController {
     }
 
     @GetMapping
-    private Map<String, GameResponseDto> getBoards() {
-        return service.getBoards();
+    private Map<String, GameResponseDto> getGames() throws SQLException {
+        return service.getGames();
     }
 
     @PostMapping
-    private Map<String, GameResponseDto> addGameAndGetPlayers(@RequestBody GameRequestDto dto) throws
-        SQLException {
+    private Map<String, GameResponseDto> addGame(@RequestBody GameRequestDto dto) throws SQLException {
         // TODO: 실제 플레이어 기능 추가
         Player white = new Player(1, "hodol", "password");
         Player black = new Player(2, "pobi", "password");
@@ -45,12 +44,12 @@ public class SpringChessBoardController {
     }
 
     @GetMapping("/{id}")
-    private GameResponseDto getBoard(@PathVariable String id) throws SQLException {
+    private GameResponseDto getGame(@PathVariable String id) throws SQLException {
         return new GameResponseDto(service.findGameById(id));
     }
 
     @PostMapping("/{id}")
-    private GameResponseDto resetBoard(@PathVariable String id) throws SQLException {
+    private GameResponseDto resetGame(@PathVariable String id) throws SQLException {
         return new GameResponseDto(service.resetGameById(id));
     }
 

@@ -16,10 +16,9 @@ public class GameEntity {
     @Column("black") private int blackId;
 
     public GameEntity(Game game) {
-        this.id = game.getId();
-        this.title = game.getTitle();
-        this.whiteId = game.getPlayerId(Side.WHITE);
-        this.blackId = game.getPlayerId(Side.BLACK);
+        title = game.getTitle();
+        whiteId = game.getPlayerId(Side.WHITE);
+        blackId = game.getPlayerId(Side.BLACK);
     }
 
     public String getId() {
@@ -46,6 +45,6 @@ public class GameEntity {
         return new Game(id, title, white, black);
     }
 
-    private GameEntity() {
+    public GameEntity() {
     }
 }

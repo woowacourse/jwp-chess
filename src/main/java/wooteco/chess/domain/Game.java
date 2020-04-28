@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import wooteco.chess.domain.board.Board;
@@ -25,7 +24,6 @@ public class Game {
     private Side turn;
 
     public Game() {
-        id = UUID.randomUUID().toString();
         board = Board.init();
         judge = new BasicJudge(board);
         players = new HashMap<>();

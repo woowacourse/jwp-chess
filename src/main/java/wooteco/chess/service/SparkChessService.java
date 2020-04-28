@@ -41,12 +41,11 @@ public class SparkChessService implements ChessService {
         return game;
     }
 
-    private List<Game> generateGames() throws SQLException {
-        List<Game> games = new ArrayList<>();
-        for (Map<String, String> gameData : gameDao.findGamesData()) {
-            games.add(generateGameFrom(gameData));
-        }
-        return games;
+    @Override
+    public Map<String, GameResponseDto> getGames() throws SQLException {
+        return generateGames()
+            .stream()
+            .collect(toMap(Game::getId, GameResponseDto::new));
     }
 
     private Game generateGameFrom(final Map<String, String> gameData) throws SQLException {
@@ -55,11 +54,12 @@ public class SparkChessService implements ChessService {
         return new Game(gameData.get(GameDao.GAME_ID), white, black);
     }
 
-    @Override
-    public Map<String, Map<Side, Player>> getPlayerContexts() throws SQLException {
-        return generateGames()
-                .stream()
-                .collect(toMap(Game::getId, Game::getPlayers));
+    private List<Game> generateGames() throws SQLException {
+        List<Game> games = new ArrayList<>();
+        for (Map<String, String> gameData : gameDao.findGamesData()) {
+            games.add(generateGameFrom(gameData));
+        }
+        return games;
     }
 
     @Override
@@ -104,7 +104,6 @@ public class SparkChessService implements ChessService {
         return scores;
     }
 
-    @Override
     public double getScoreById(final String id, final Side side) throws SQLException {
         return findGameById(id).getScoreOf(side);
     }
@@ -138,10 +137,5 @@ public class SparkChessService implements ChessService {
     @Override
     public boolean isGameOver(final String id) throws SQLException {
         return findGameById(id).isGameOver();
-    }
-
-    @Override
-    public Map<String, GameResponseDto> getBoards() {
-        return null;
     }
 }

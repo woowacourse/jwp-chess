@@ -20,3 +20,14 @@
 
     - [x] 추 후 다중 게임 환경에 유연하게 대처하기 위한 도메인 리팩토링
         - [x] 매 API 통신마다 ChessGame을 생성하여 도메인 로직 구동 
+        
+        
+## 시즌 3 - JDBC 적용하기
+
+## To-Do List
+
+ - [x] resources 패키지 내의 테이블을 생성하는 sql 파일 작성
+ - [x] Entity 클래스 작성
+ - [x] Repository 작성
+ - [ ] Entity to Domain 로직 구현
+ - [ ] Service 구현

@@ -7,14 +7,13 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("state")
 public class StateDto {
 	@Id
-	final int id;
+	private int id;
 	@Column("state")
-	final String state;
+	private String state;
 	@Column("room_id")
-	final int roomId;
+	private int roomId;
 
-	public StateDto(final int id, final String state, final int roomId) {
-		this.id = id;
+	public StateDto(final String state, final int roomId) {
 		this.state = state;
 		this.roomId = roomId;
 	}

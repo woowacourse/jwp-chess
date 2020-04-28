@@ -7,12 +7,11 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("room")
 public class RoomDto {
 	@Id
-	private final int id;
+	private int id;
 	@Column("room_name")
 	private final String roomName;
 
-	public RoomDto(final int id, final String roomName) {
-		this.id = id;
+	public RoomDto(final String roomName) {
 		this.roomName = roomName;
 	}
 

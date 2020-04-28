@@ -41,8 +41,7 @@ public class AnnouncementDao {
 	private AnnouncementDto prepareAnnouncementDto(final PreparedStatement preparedStatement) throws SQLException {
 		try (final ResultSet resultSet = preparedStatement.executeQuery()) {
 			validateHasResult(resultSet);
-			return new AnnouncementDto(resultSet.getInt("id"),
-					resultSet.getString("message"), resultSet.getInt("room_id"));
+			return new AnnouncementDto(resultSet.getString("message"), resultSet.getInt("room_id"));
 		}
 	}
 

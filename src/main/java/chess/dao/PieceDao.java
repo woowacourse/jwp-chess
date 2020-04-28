@@ -53,7 +53,7 @@ public class PieceDao {
 	private List<PieceDto> collectPieceDtos(final ResultSet resultSet) throws SQLException {
 		List<PieceDto> pieceDtos = new ArrayList<>();
 		while (resultSet.next()) {
-			pieceDtos.add(new PieceDto(resultSet.getInt("id"), resultSet.getString("piece_type"),
+			pieceDtos.add(new PieceDto(resultSet.getString("piece_type"),
 					resultSet.getString("team"), resultSet.getString("coordinate"),
 					resultSet.getInt("room_id")));
 		}

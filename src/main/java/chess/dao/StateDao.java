@@ -43,8 +43,7 @@ public class StateDao {
 		try (final ResultSet resultSet = preparedStatement.executeQuery()) {
 			validateHasResult(resultSet);
 
-			return new StateDto(resultSet.getInt("id"), resultSet.getString("state"),
-					resultSet.getInt("room_id"));
+			return new StateDto(resultSet.getString("state"), resultSet.getInt("room_id"));
 		}
 	}
 

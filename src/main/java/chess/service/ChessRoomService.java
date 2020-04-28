@@ -71,10 +71,12 @@ public class ChessRoomService {
 
 	public void saveNewPieces(final int roomId) {
 		final Set<Piece> pieces = new StartPieces().getInstance();
-		for (Piece piece : pieces) {
-			pieceRepository.save(piece.getPieceTypeName(), piece.getTeamName(),
-					piece.getCoordinateRepresentation(), roomId);
-		}
+
+		final List<PieceDto> pieceDtos = pieces.stream()
+				.map(piece -> new PieceDto(piece.getPieceTypeName(), piece.getTeamName(),
+						piece.getCoordinateRepresentation(), roomId))
+				.collect(Collectors.toList());
+		pieceRepository.saveAll(pieceDtos);
 	}
 
 	public void updateRoom(final int roomId, final String command) {
@@ -88,10 +90,12 @@ public class ChessRoomService {
 	}
 
 	private void savePiecesFromState(final int roomId, final State after) {
-		for (final Piece piece : after.getSet()) {
-			pieceRepository.save(piece.getPieceTypeName(), piece.getTeamName(),
-					piece.getCoordinateRepresentation(), roomId);
-		}
+		List<PieceDto> prieceDtos = after.getSet()
+				.stream()
+				.map(piece -> new PieceDto(piece.getPieceTypeName(), piece.getTeamName(),
+						piece.getCoordinateRepresentation(), roomId))
+				.collect(Collectors.toList());
+		pieceRepository.saveAll(prieceDtos);
 	}
 
 	private void saveStatusRecordIfEnded(final int roomId, final State after) {

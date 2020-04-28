@@ -16,8 +16,8 @@ public class BoardMapper {
 		Map<Position, Piece> board = new TreeMap<>();
 		for (BoardDto boardDto : boardDtos) {
 			board.put(
-				Position.of(boardDto.piecePosition()),
-				PieceFactory.of(boardDto.pieceName(), boardDto.pieceTeam(), boardDto.piecePosition())
+				Position.of(boardDto.getPiecePosition()),
+				PieceFactory.of(boardDto.getPieceName(), boardDto.getPieceTeam(), boardDto.getPiecePosition())
 			);
 		}
 		return new Board(board);

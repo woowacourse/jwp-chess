@@ -16,16 +16,16 @@ import wooteco.chess.dto.PlayerDto;
 import wooteco.chess.dto.RoomDto;
 import wooteco.chess.dto.req.PlayersDto;
 import wooteco.chess.service.BoardService;
-import wooteco.chess.service.PlayerService;
+import wooteco.chess.service.spark.SparkPlayerService;
 
 @Controller
 @RequestMapping("/room")
 public class RoomController {
-	private final PlayerService playerService;
+	private final SparkPlayerService sparkPlayerService;
 	private final BoardService boardService;
 
-	public RoomController(PlayerService playerService, BoardService boardService) {
-		this.playerService = playerService;
+	public RoomController(SparkPlayerService sparkPlayerService, BoardService boardService) {
+		this.sparkPlayerService = sparkPlayerService;
 		this.boardService = boardService;
 	}
 
@@ -42,7 +42,7 @@ public class RoomController {
 			boardService.create(roomId);
 			return ResponseEntity
 				.status(200)
-				.body(new RoomDto(roomId, playersDto.getPlayer1Name(), playersDto.getPlayer2Password()));
+				.body(new RoomDto(roomId, playersDto.getPlayer1Name(), playersDto.getPlayer2Name()));
 		} catch (Exception e) {
 			return ResponseEntity.status(400).body(e.getMessage());
 		}
@@ -55,9 +55,9 @@ public class RoomController {
 	}
 
 	private int createRoom(PlayersDto playersDto) throws SQLException {
-		int player1Id = playerService.create(
+		int player1Id = sparkPlayerService.create(
 			new PlayerDto(playersDto.getPlayer1Name(), playersDto.getPlayer1Password(), "white"));
-		int player2Id = playerService.create(
+		int player2Id = sparkPlayerService.create(
 			new PlayerDto(playersDto.getPlayer2Name(), playersDto.getPlayer2Password(), "black"));
 		return boardService.createRoom(player1Id, player2Id);
 	}

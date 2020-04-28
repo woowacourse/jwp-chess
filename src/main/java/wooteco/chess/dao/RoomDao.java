@@ -5,9 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.dao.util.ConnectionLoader;
 import wooteco.chess.dto.RoomDto;
 
+@Component
 public class RoomDao {
 	public RoomDto findById(int roomId) throws SQLException {
 		String query = "select * from room where room_id = (?)";
@@ -55,18 +58,6 @@ public class RoomDao {
 			pstmt.setInt(1, turn);
 			pstmt.setInt(2, roomId);
 			pstmt.executeUpdate();
-		}
-	}
-
-	private int findFirstPlayerId(int roomId) throws SQLException {
-		String query = "select player1_id from room where room_id = (?)";
-		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
-			pstmt.setInt(1, roomId);
-			ResultSet resultSet = pstmt.executeQuery();
-			if (resultSet.next()) {
-				return resultSet.getInt(1);
-			}
-			throw new AssertionError();
 		}
 	}
 }

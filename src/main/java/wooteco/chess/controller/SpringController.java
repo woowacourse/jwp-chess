@@ -62,4 +62,13 @@ public class SpringController {
 		modelAndView.addObject("chessGame", chessGameDto);
 		return modelAndView;
 	}
+
+	@PostMapping("/restart")
+	public ModelAndView restart(
+			@RequestParam(value = "name") String name) throws SQLException {
+		ModelAndView modelAndView = new ModelAndView("chess");
+		ChessGameDto chessGameDto = chessGameService.restart(name);
+		modelAndView.addObject("chessGame", chessGameDto);
+		return modelAndView;
+	}
 }

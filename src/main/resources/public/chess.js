@@ -11,12 +11,12 @@ window.onload = function () {
                 target = elem.id;
 
                 fetch("/move", {
-                    method: "put",
+                    method: "post",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        roomName: document.getElementById('room-name').innerText,
+                        roomName: document.getElementById('name').innerText,
                         source: source,
                         target: target
                     })

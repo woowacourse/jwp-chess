@@ -1,4 +1,4 @@
-package chess.darepository;
+package chess.repository;
 
 import chess.dto.AnnouncementDto;
 import org.springframework.data.jdbc.repository.query.Modifying;

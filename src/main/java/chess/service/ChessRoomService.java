@@ -1,10 +1,8 @@
 package chess.service;
 
-import chess.dao.AnnouncementDao;
 import chess.dao.PieceDao;
 import chess.dao.StateDao;
 import chess.dao.StatusRecordDao;
-import chess.darepository.AnnouncementRepository;
 import chess.domain.coordinate.Coordinate;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.PieceType;
@@ -15,6 +13,7 @@ import chess.domain.state.StateType;
 import chess.domain.team.Team;
 import chess.dto.PieceDto;
 import chess.dto.StateDto;
+import chess.repository.AnnouncementRepository;
 import chess.view.Announcement;
 import chess.view.BoardToHtml;
 import chess.view.board.Board;
@@ -30,16 +29,13 @@ public class ChessRoomService {
 	private final StateDao stateDao;
 	private final PieceDao pieceDao;
 	private final StatusRecordDao statusRecordDao;
-	private final AnnouncementDao announcementDao;
 	private final AnnouncementRepository announcementRepository;
 
 	public ChessRoomService(final StateDao stateDao, final PieceDao pieceDao
-			, final StatusRecordDao statusRecordDao, final AnnouncementDao announcementDao,
-							final AnnouncementRepository announcementRepository) {
+			, final StatusRecordDao statusRecordDao, final AnnouncementRepository announcementRepository) {
 		this.stateDao = stateDao;
 		this.pieceDao = pieceDao;
 		this.statusRecordDao = statusRecordDao;
-		this.announcementDao = announcementDao;
 		this.announcementRepository = announcementRepository;
 	}
 
@@ -115,7 +111,7 @@ public class ChessRoomService {
 		return Announcement.ofEnd().getString();
 	}
 
-	public String loadAnnouncementMessage(int roomId){
+	public String loadAnnouncementMessage(int roomId) {
 		return announcementRepository.findByRoomId(roomId).orElseThrow(NullPointerException::new)
 				.getMessage();
 	}
@@ -124,7 +120,7 @@ public class ChessRoomService {
 		announcementRepository.save(Announcement.ofFirst().getString(), roomId);
 	}
 
-	public void saveAnnouncementMessage(final int roomId, final String message){
+	public void saveAnnouncementMessage(final int roomId, final String message) {
 		announcementRepository.setByRoomId(roomId, message);
 	}
 }

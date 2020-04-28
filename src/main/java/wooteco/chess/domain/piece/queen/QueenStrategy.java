@@ -1,13 +1,13 @@
 package wooteco.chess.domain.piece.queen;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import wooteco.chess.domain.Direction;
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.piece.MovingStrategy;
 import wooteco.chess.domain.position.Position;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public class QueenStrategy extends MovingStrategy {
 	private static final List<Direction> directions = Direction.EVERY_DIRECTION;

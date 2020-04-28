@@ -1,10 +1,10 @@
 package wooteco.chess.domain.piece.bishop;
 
+import java.util.Map;
+
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
-
-import java.util.Map;
 
 public class Bishop extends Piece {
 	private static final double BISHOP_SCORE = 3;

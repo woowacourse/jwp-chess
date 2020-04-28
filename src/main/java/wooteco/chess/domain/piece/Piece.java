@@ -1,11 +1,11 @@
 package wooteco.chess.domain.piece;
 
+import java.util.Map;
+
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.Turn;
 import wooteco.chess.domain.piece.king.King;
 import wooteco.chess.domain.position.Position;
-
-import java.util.Map;
 
 public abstract class Piece {
 	protected final MovingStrategy strategy;
@@ -42,7 +42,9 @@ public abstract class Piece {
 
 	public boolean isNotNone() {
 		return true;
-	};
+	}
+
+	;
 
 	public Position getPosition() {
 		return position;

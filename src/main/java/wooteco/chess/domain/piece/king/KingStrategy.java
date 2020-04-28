@@ -1,12 +1,12 @@
 package wooteco.chess.domain.piece.king;
 
+import java.util.List;
+import java.util.Map;
+
 import wooteco.chess.domain.Direction;
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.piece.MovingStrategy;
 import wooteco.chess.domain.position.Position;
-
-import java.util.List;
-import java.util.Map;
 
 public class KingStrategy extends MovingStrategy {
 	private static final List<Direction> directions = Direction.EVERY_DIRECTION;

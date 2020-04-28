@@ -1,14 +1,17 @@
 package wooteco.chess.service;
 
-import wooteco.chess.dao.PlayerDao;
-
 import java.sql.SQLException;
 
-public class PlayerService {
-    private final PlayerDao playerDao = new PlayerDao();
+import org.springframework.stereotype.Service;
 
-    public int create(String playerName, String playerPassword, String team) throws SQLException, ClassNotFoundException {
-        int id = playerDao.create(playerName, playerPassword, team);
-        return id;
-    }
+import wooteco.chess.dao.PlayerDao;
+import wooteco.chess.dto.PlayerDto;
+
+@Service
+public class PlayerService {
+	private final PlayerDao playerDao = new PlayerDao();
+
+	public int create(PlayerDto playerDto) throws SQLException {
+		return playerDao.create(playerDto.getName(), playerDto.getPassword(), playerDto.getTeam());
+	}
 }

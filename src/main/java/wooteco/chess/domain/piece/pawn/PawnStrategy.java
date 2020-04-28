@@ -1,14 +1,14 @@
 package wooteco.chess.domain.piece.pawn;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import wooteco.chess.domain.Direction;
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.piece.MovingStrategy;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.position.Row;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public class PawnStrategy extends MovingStrategy {
 	protected final List<Direction> directions;

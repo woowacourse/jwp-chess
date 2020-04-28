@@ -1,10 +1,10 @@
 package wooteco.chess.domain.piece.pawn;
 
+import java.util.Map;
+
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
-
-import java.util.Map;
 
 public class Pawn extends Piece {
 	private static final int PAWN_SCORE = 1;

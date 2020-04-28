@@ -1,9 +1,9 @@
 package wooteco.chess.domain.position;
 
-import wooteco.chess.domain.Direction;
-
 import java.util.Arrays;
 import java.util.Objects;
+
+import wooteco.chess.domain.Direction;
 
 public class Position implements Comparable<Position> {
 	private final Column column;
@@ -65,7 +65,6 @@ public class Position implements Comparable<Position> {
 	public String getName() {
 		return column.getName() + row.getName();
 	}
-
 
 	@Override
 	public boolean equals(Object o) {

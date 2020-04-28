@@ -11,7 +11,7 @@ public enum Team {
 		return Arrays.stream(values())
 			.filter(value -> value.name().equals(team.toUpperCase()))
 			.findFirst()
-			.orElseThrow(()-> new IllegalArgumentException("존재하지 않는 팀입니다."));
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
 	}
 
 	public Team switchTeam() {

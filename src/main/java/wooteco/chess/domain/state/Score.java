@@ -1,8 +1,8 @@
 package wooteco.chess.domain.state;
 
-import wooteco.chess.domain.piece.Piece;
-
 import java.util.List;
+
+import wooteco.chess.domain.piece.Piece;
 
 public class Score {
 	private static final double PAWN_HALF_SCORE = 0.5;
@@ -45,7 +45,7 @@ public class Score {
 			.filter(piece -> piece.isPawn() && piece.getPosition().equalsX(x))
 			.count();
 		if (count >= PAWN_COUNT) {
-			return (int) count;
+			return (int)count;
 		}
 		return 0;
 	}

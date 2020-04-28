@@ -15,7 +15,7 @@ public class SparkPlayerService {
 		this.playerDao = playerDao;
 	}
 
-	public int create(PlayerDto playerDto) throws SQLException {
-		return playerDao.create(playerDto.getName(), playerDto.getPassword(), playerDto.getTeam());
+	public int save(PlayerDto playerDto) throws SQLException {
+		return playerDao.save(playerDto.getName(), playerDto.getPassword(), playerDto.getTeam());
 	}
 }

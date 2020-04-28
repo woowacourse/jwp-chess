@@ -1,4 +1,4 @@
-package wooteco.chess.service;
+package wooteco.chess.service.spark;
 
 import java.sql.SQLException;
 
@@ -18,12 +18,12 @@ import wooteco.chess.dto.GameDto;
 import wooteco.chess.dto.RoomDto;
 
 @Service
-public class BoardService {
+public class SparkBoardService {
 	private final BoardDao boardDao;
 	private final RoomDao roomDao;
 	private final PlayerDao playerDao;
 
-	public BoardService(BoardDao boardDao, RoomDao roomDao, PlayerDao playerDao) {
+	public SparkBoardService(BoardDao boardDao, RoomDao roomDao, PlayerDao playerDao) {
 		this.boardDao = boardDao;
 		this.roomDao = roomDao;
 		this.playerDao = playerDao;

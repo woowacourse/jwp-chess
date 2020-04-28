@@ -15,17 +15,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wooteco.chess.dto.PlayerDto;
 import wooteco.chess.dto.RoomDto;
 import wooteco.chess.dto.req.PlayersDto;
-import wooteco.chess.service.BoardService;
-import wooteco.chess.service.spark.SparkPlayerService;
+import wooteco.chess.service.spring.SpringBoardService;
+import wooteco.chess.service.spring.SpringPlayerService;
 
 @Controller
 @RequestMapping("/room")
 public class RoomController {
-	private final SparkPlayerService sparkPlayerService;
-	private final BoardService boardService;
+	private final SpringPlayerService playerService;
+	private final SpringBoardService boardService;
 
-	public RoomController(SparkPlayerService sparkPlayerService, BoardService boardService) {
-		this.sparkPlayerService = sparkPlayerService;
+	public RoomController(SpringPlayerService playerService, SpringBoardService boardService) {
+		this.playerService = playerService;
 		this.boardService = boardService;
 	}
 
@@ -55,9 +55,9 @@ public class RoomController {
 	}
 
 	private int createRoom(PlayersDto playersDto) throws SQLException {
-		int player1Id = sparkPlayerService.create(
+		long player1Id = playerService.save(
 			new PlayerDto(playersDto.getPlayer1Name(), playersDto.getPlayer1Password(), "white"));
-		int player2Id = sparkPlayerService.create(
+		long player2Id = playerService.save(
 			new PlayerDto(playersDto.getPlayer2Name(), playersDto.getPlayer2Password(), "black"));
 		return boardService.createRoom(player1Id, player2Id);
 	}

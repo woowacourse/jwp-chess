@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import wooteco.chess.dao.GameDao2;
+import wooteco.chess.dao.GameDao;
 import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
@@ -15,9 +15,9 @@ import wooteco.chess.dto.GameManagerDto;
 
 @Service
 public class GameManagerService {
-	private final GameDao2 gameDao;
+	private final GameDao gameDao;
 
-	public GameManagerService(GameDao2 gameDao) {
+	public GameManagerService(GameDao gameDao) {
 		this.gameDao = gameDao;
 	}
 

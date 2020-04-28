@@ -1,5 +1,7 @@
 package wooteco.chess.entity;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -13,22 +15,16 @@ public class BoardEntity {
 	@Id
 	private final Long id;
 
-	private final Long roomId;
-	private final String position;
-	private final String name;
+	private final List<PieceEntity> pieces;
+	private final TurnEntity turn;
 
-	BoardEntity(final Long id, final Long roomId, final String position, final String name) {
+	BoardEntity(final Long id, final List<PieceEntity> pieces, final TurnEntity turn) {
 		this.id = id;
-		this.roomId = roomId;
-		this.position = position;
-		this.name = name;
+		this.pieces = pieces;
+		this.turn = turn;
 	}
 
-	public static BoardEntity of(final Long roomId, final String position, final String name) {
-		return new BoardEntity(null, roomId, position, name);
-	}
-
-	public BoardEntity withId(final Long id) {
-		return new BoardEntity(id, this.roomId, this.position, this.name);
+	public static BoardEntity of(final List<PieceEntity> pieces, final TurnEntity turn) {
+		return new BoardEntity(null, pieces, turn);
 	}
 }

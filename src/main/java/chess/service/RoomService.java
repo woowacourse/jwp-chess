@@ -3,7 +3,6 @@ package chess.service;
 import chess.model.dto.CreateRoomDto;
 import chess.model.dto.DeleteRoomDto;
 import chess.model.dto.RoomsDto;
-import chess.model.repository.RoomDao;
 import chess.model.repository.RoomEntity;
 import chess.model.repository.RoomRepository;
 import java.util.HashMap;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RoomService {
-
-    private static final RoomDao ROOM_DAO = RoomDao.getInstance();
 
     private final RoomRepository roomRepository;
 
@@ -33,7 +30,6 @@ public class RoomService {
         RoomEntity roomEntity = new RoomEntity(createRoomDto.getRoomName(),
             createRoomDto.getRoomPassword());
         roomRepository.save(roomEntity);
-        ROOM_DAO.create(createRoomDto.getRoomName(), createRoomDto.getRoomPassword());
     }
 
     public void deleteRoom(DeleteRoomDto deleteRoomDto) {
@@ -41,6 +37,5 @@ public class RoomService {
             .orElseThrow(IllegalArgumentException::new);
         roomEntity.setUsedYN("N");
         roomRepository.save(roomEntity);
-        ROOM_DAO.updateUsedN(deleteRoomDto.getRoomId());
     }
 }

@@ -9,28 +9,21 @@ public class BoardEntity {
 
     @Id
     private Integer id;
-    @Column("GAME_ID")
-    private Integer gameId;
     @Column("BOARDSQUARE_NM")
     private String squareName;
     @Column("PIECE_NM")
-    private String PieceName;
+    private String pieceName;
     @Column("CASTLING_ELEMENT_YN")
     private String castlingElementYN;
     @Column("EN_PASSANT_NM")
     private String enPassantName;
 
-    public BoardEntity(Integer gameId, String squareName, String pieceName,
-        String castlingElementYN, String enPassantName) {
-        this.gameId = gameId;
+    public BoardEntity(String squareName, String pieceName, String castlingElementYN,
+        String enPassantName) {
         this.squareName = squareName;
-        PieceName = pieceName;
+        this.pieceName = pieceName;
         this.castlingElementYN = castlingElementYN;
         this.enPassantName = enPassantName;
-    }
-
-    public Integer getGameId() {
-        return gameId;
     }
 
     public String getSquareName() {
@@ -38,7 +31,7 @@ public class BoardEntity {
     }
 
     public String getPieceName() {
-        return PieceName;
+        return pieceName;
     }
 
     public String getCastlingElementYN() {
@@ -52,9 +45,8 @@ public class BoardEntity {
     @Override
     public String toString() {
         return "BoardEntity{" +
-            "gameId=" + gameId +
-            ", squareName='" + squareName + '\'' +
-            ", PieceName='" + PieceName + '\'' +
+            "squareName='" + squareName + '\'' +
+            ", PieceName='" + pieceName + '\'' +
             ", castlingElementYN='" + castlingElementYN + '\'' +
             ", enPassantName='" + enPassantName + '\'' +
             '}';

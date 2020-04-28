@@ -1,5 +1,7 @@
 package chess.model.repository;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -14,6 +16,7 @@ public class RoomEntity {
     @Column("PW")
     private String password;
     private String usedYN;
+    private Set<ChessGameEntity> chessGameEntities = new HashSet<>();
 
     public RoomEntity() {
     }
@@ -26,6 +29,10 @@ public class RoomEntity {
         this.name = name;
         this.password = password;
         this.usedYN = usedYN;
+    }
+
+    public void addGame(ChessGameEntity chessGameEntity) {
+        chessGameEntities.add(chessGameEntity);
     }
 
     public Integer getId() {

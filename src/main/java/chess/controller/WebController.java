@@ -1,7 +1,10 @@
 package chess.controller;
 
 import chess.model.domain.piece.Team;
+import chess.model.repository.ChessGameEntity;
 import chess.service.ChessGameService;
+import chess.service.ResultService;
+import chess.service.RoomService;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
@@ -14,10 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class WebController {
 
     private final ChessGameService chessGameService;
+    private final ResultService resultService;
+    private final RoomService roomService;
 
     public WebController(
-        ChessGameService chessGameService) {
+        ChessGameService chessGameService, ResultService resultService, RoomService roomService) {
         this.chessGameService = chessGameService;
+        this.resultService = resultService;
+        this.roomService = roomService;
     }
 
     @GetMapping("/")
@@ -36,8 +43,9 @@ public class WebController {
         @RequestParam(defaultValue = "WHITE") String whiteName,
         @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
-        Map<Team, String> userNames = makeUserNames(whiteName, blackName);
+        chessGameService.findProceedGameId(roomId).ifPresent(chessGameService::closeGame);
 
+        Map<Team, String> userNames = makeUserNames(whiteName, blackName);
         Integer gameId = chessGameService.saveNewGameInfo(userNames, roomId);
         chessGameService.saveNewUserNames(userNames);
 
@@ -52,7 +60,8 @@ public class WebController {
         Model model) {
         Map<Team, String> userNames = makeUserNames(whiteName, blackName);
         if (chessGameService.isGameProceed(gameId)) {
-            chessGameService.closeGame(gameId);
+            ChessGameEntity chessGameEntity = chessGameService.closeGame(gameId);
+            resultService.setGameResult(chessGameEntity);
         }
         model.addAttribute("gameId", chessGameService.createBy(gameId, userNames));
         return "game";
@@ -64,16 +73,15 @@ public class WebController {
         @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
         model.addAttribute("gameId",
-            chessGameService.findProceedGameIdLatest(roomId)
+            chessGameService.findProceedGameId(roomId)
                 .orElseGet(() -> chessGameService
                     .create(roomId, makeUserNames(whiteName, blackName))));
         return "game";
     }
 
     @PostMapping("/game/choiceGame")
-    public String choiceGame(@RequestParam Integer gameId, Model model) {
-        model.addAttribute("roomId", chessGameService.findRoomId(gameId));
-        return "start";
+    public String choiceGame() {
+        return "index";
     }
 
     @PostMapping("/result")

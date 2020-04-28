@@ -112,6 +112,20 @@ public class ChessGameDto {
         return "";
     }
 
+    public TeamScore makeTeamScore() {
+        Map<Team, Double> teamScore = new HashMap<>();
+        teamScore.put(Team.BLACK, Double.valueOf(blackScore));
+        teamScore.put(Team.WHITE, Double.valueOf(whiteScore));
+        return new TeamScore(teamScore);
+    }
+
+    public Map<Team, String> makeUserNames() {
+        Map<Team, String> userNames = new HashMap<>();
+        userNames.put(Team.BLACK, blackName);
+        userNames.put(Team.WHITE, whiteName);
+        return userNames;
+    }
+
     public String getTurn() {
         return turn;
     }

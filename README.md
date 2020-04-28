@@ -1,7 +1,7 @@
 Refactoring Todo list
 - [x] score
 - [x] finish -> db 지우기
-- [ ] turn 표시
+- [x] turn 표시
 - [x] Room Model 생성 
     - [x] RoomDAO
     - [x] RoomController
@@ -11,7 +11,7 @@ Refactoring Todo list
     - [x] BoardDAO 에서 Room id 로 조회 기능
 - [ ] Board 도메인 수정
     - [ ] finish 체크 할 때 보드 반환 리팩토링
-    - [ ] 폰 2칸 움직이는거 수정
+    - [ ] 폰 2칸 움직이는 거 수정
     - [x] move -> 검증 메서드로 변경
     - [x] initial Board 위치 변경
  

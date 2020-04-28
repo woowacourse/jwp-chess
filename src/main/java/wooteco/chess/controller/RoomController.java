@@ -64,4 +64,14 @@ public class RoomController {
         Team currentTurn = roomService.getCurrentTurn(roomId);
         return currentTurn.name();
     }
+
+    @GetMapping("/room/{room_id}/reset")
+    public String reset(
+            @PathVariable("room_id") Long roomId,
+            Model model
+    ) throws SQLException {
+        model.addAttribute("board", roomService.resetRoom(roomId));
+        model.addAttribute("roomId", roomId);
+        return "room";
+    }
 }

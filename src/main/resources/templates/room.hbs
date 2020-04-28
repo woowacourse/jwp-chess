@@ -19,8 +19,8 @@
 
     <!-- CONTROLLER -->
     <div class="controller">
-        <form action="/start" method="post">
-            <input id="start" type="submit" name="command" value="새 게임">
+        <form action="/room/{{roomId}}/reset" method="get">
+            <button type="submit">새로 시작하기</button>
         </form>
         <form action="/room/{{roomId}}" method="post">
             <button type="submit" >방 삭제하기</button>

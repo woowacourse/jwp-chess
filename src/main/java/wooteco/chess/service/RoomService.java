@@ -76,4 +76,10 @@ public class RoomService {
         roomDAO.deleteRoomById(roomId);
         boardDAO.deleteBoardById(roomId);
     }
+
+    public Map<String, String> resetRoom(final Long roomId) throws SQLException {
+        roomDAO.updateTurn(roomId, Team.WHITE);
+        boardDAO.deleteBoardById(roomId);
+        return initializeBoard(roomId);
+    }
 }

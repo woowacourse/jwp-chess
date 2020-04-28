@@ -1,23 +1,21 @@
 package chess.service;
 
-import chess.dao.StatusRecordDao;
 import chess.dto.StatusRecordDto;
-import org.springframework.stereotype.Component;
+import chess.repository.StatusRecordRepository;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Service
 public class ChessStatisticService {
-	private final StatusRecordDao statusRecordDao;
+	private final StatusRecordRepository statusRecordRepository;
 
-	public ChessStatisticService(final StatusRecordDao statusRecordDao) {
-		this.statusRecordDao = statusRecordDao;
+	public ChessStatisticService(final StatusRecordRepository statusRecordRepository) {
+		this.statusRecordRepository = statusRecordRepository;
 	}
 
-	public List<StatusRecordDto> loadStatusRecordsWithRoomName() throws SQLException {
-		return statusRecordDao.findStatusRecords();
+	public List<StatusRecordDto> loadStatusRecordsWithRoomName() {
+		return statusRecordRepository.findAll();
 	}
 
 }

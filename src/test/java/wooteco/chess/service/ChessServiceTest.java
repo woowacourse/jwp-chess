@@ -2,10 +2,10 @@ package wooteco.chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,26 +20,33 @@ import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.MoveRequestDto;
 
 class ChessServiceTest {
-	private GameDao gameDao = GameDao.getInstance();
-	private PieceDao pieceDao = PieceDao.getInstance();
-	private ChessService chessService = new ChessService();
+	private GameDao gameDao;
+	private PieceDao pieceDao;
+	private ChessService chessService;
+
+	@BeforeEach
+	void setUp() {
+		gameDao = GameDao.getInstance();
+		pieceDao = PieceDao.getInstance();
+		chessService = new ChessService(pieceDao, gameDao);
+	}
 
 	@AfterEach
-	void tearDown(){
+	void tearDown() {
 		pieceDao.deleteAll();
 		gameDao.deleteAll();
 	}
 
 	@DisplayName("새로운 게임을 생성한다.")
 	@Test
-	void createGame()  {
+	void createGame() {
 		BoardDto boardDto = chessService.createGame();
 		assertThat(gameDao.findById(boardDto.getGameId())).isNotNull();
 	}
 
 	@DisplayName("생성된 게임을 불러온다.")
 	@Test
-	void load(){
+	void load() {
 		//given
 		BoardDto boardDto = chessService.createGame();
 

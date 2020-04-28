@@ -57,27 +57,31 @@
 create database wootecochess;
 
 create table user
-(
-    name varchar(64) not null primary key
+(  
+    id bigint auto_increment,  
+    name varchar(64) not null,  
+    primary key(id),  
+    unique(name)
 );
+
 
 create table gameinfo
 (
-    id int(50) auto_increment primary key,
-    black varchar(64) null,
-    white varchar(64) null,
-    turn  int(12) null,
-    foreign key (black) references user(name),
-    foreign key (white) references user(name)
-); 
+    id bigint auto_increment primary key,
+    black bigint not null,
+    white bigint not null,
+    turn int not null,
+    foreign key (black) references user(id),
+    foreign key (white) references user(id)
+);
+
 
 create table board
 (
-    gameinfo_id int(50) not null,
+    id bigint auto_increment,
+    gameinfo_id bigint not null,
     position varchar(64) not null,
     piece varchar(64) not null,
-    primary key(gameinfo_id, position),
-    foreign key (gameinfo_id) references gameinfo(id)
-);
-
+    primary key(id),
+    foreign key(gameinfo_id) references gameinfo(id));
 ```

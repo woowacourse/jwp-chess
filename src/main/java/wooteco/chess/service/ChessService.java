@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wooteco.chess.dao.GameInfoDAO;
 import wooteco.chess.dao.UserDAO;
@@ -15,24 +16,29 @@ import wooteco.chess.domain.gameinfo.GameInfo;
 import wooteco.chess.domain.player.User;
 import wooteco.chess.dto.LineDto;
 import wooteco.chess.dto.RowsDtoConverter;
+import wooteco.chess.repository.GameInfoRepository;
+import wooteco.chess.repository.UserRepository;
 
 @Service
 public class ChessService {
 
+    @Autowired
+    private GameInfoRepository gameInfoRepository;
+
+    @Autowired
+    private UserRepository userRepository;
     private GameInfoDAO gameInfoDAO;
-    private UserDAO userDAO;
     private Map<User, GameInfo> games;
 
-    public ChessService(GameInfoDAO gameInfoDAO, UserDAO userDAO) {
+    public ChessService(GameInfoDAO gameInfoDAO) {
         this.gameInfoDAO = gameInfoDAO;
-        this.userDAO = userDAO;
         games = new HashMap<>();
     }
 
     public GameInfo findByUserName(User blackUser, User whiteUser) throws SQLException {
         if (!gameInfoDAO.findGameInfoByUser(blackUser, whiteUser).isPresent()) {
-            userDAO.addUser(blackUser);
-            userDAO.addUser(whiteUser);
+            userRepository.save(blackUser);
+            userRepository.save(whiteUser);
             gameInfoDAO.addGameInfo(BoardFactory.createInitialBoard(), blackUser, whiteUser, 0);
         }
         Board board = gameInfoDAO.findGameInfoByUser(blackUser, whiteUser)
@@ -59,8 +65,8 @@ public class ChessService {
 
     public void delete(User blackUser, User whiteUser) throws SQLException {
         gameInfoDAO.deleteGameInfoByUser(blackUser, whiteUser);
-        userDAO.deleteUserByUserName(blackUser.getName());
-        userDAO.deleteUserByUserName(whiteUser.getName());
+        userRepository.delete(blackUser);
+        userRepository.delete(whiteUser);
         games.remove(blackUser);
     }
 

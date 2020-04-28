@@ -17,7 +17,7 @@ public class UserDAO {
     }
 
     public void addUser(User user) throws SQLException {
-        dbConnector.executeUpdate("INSERT INTO user VALUES (?)", user.getName());
+        dbConnector.executeUpdate("INSERT INTO user(name) VALUES (?)", user.getName());
     }
 
     public Optional<User> findByUserName(String userName) throws SQLException {

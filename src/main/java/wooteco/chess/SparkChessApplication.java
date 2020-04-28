@@ -22,8 +22,7 @@ public class SparkChessApplication {
         Spark.staticFiles.location("/templates");
 
         DBConnector dbConnector = new DBConnector();
-        ChessService chessService = new ChessService(
-            new GameInfoDAO(dbConnector), new UserDAO(dbConnector));
+        ChessService chessService = new ChessService(new GameInfoDAO(dbConnector));
 
         get("/main", (req, res) -> {
             Map<String, Object> model = new HashMap<>();

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.service.GameManagerService;
 import wooteco.chess.util.WebOutputRenderer;
-
 @Controller
 public class ChessController {
 	private GameManagerService gameManagerService;
@@ -53,7 +52,6 @@ public class ChessController {
 		String target = param.get("target");
 		String destination = param.get("destination");
 		int roomNo = Integer.parseInt(param.get("roomNo"));
-		
 		try {
 			gameManagerService.move(Position.of(target), Position.of(destination), roomNo);
 		} catch (RuntimeException e) {

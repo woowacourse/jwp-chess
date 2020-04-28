@@ -1,10 +1,19 @@
 package wooteco.chess.domain.player;
 
 import java.util.Objects;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
+@Table("user")
 public class User {
 
     private static final int MAXIMUM_LENGTH = 10;
+
+    @Id
+    private Long id;
+
+    @Column
     private final String name;
 
     public User(String name) {

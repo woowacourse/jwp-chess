@@ -22,10 +22,13 @@ public class GameInfoDAO {
     }
 
     public void addGameInfo(Board board, User blackUser, User whiteUser, int turn) throws SQLException {
-        dbConnector.executeUpdate("INSERT INTO gameinfo (black, white, turn) VALUES (?, ?, ?)", blackUser.getName(),
-                whiteUser.getName(), String.valueOf(turn));
+        String blackUserId = findUsersId(blackUser);
+        String whiteUserId = findUsersId(whiteUser);
 
-        ResultSet rs = findGameInfoResultSet(blackUser, whiteUser);
+        dbConnector.executeUpdate("INSERT INTO gameinfo (black, white, turn) VALUES (?, ?, ?)",
+            blackUserId, whiteUserId, String.valueOf(turn));
+
+        ResultSet rs = findGameInfoResultSet(blackUserId, whiteUserId);
 
         if (!rs.next()) {
             return;
@@ -37,7 +40,7 @@ public class GameInfoDAO {
     }
 
     public Optional<Board> findGameInfoByUser(User blackUser, User whiteUser) throws SQLException {
-        ResultSet rs = findGameInfoResultSet(blackUser, whiteUser);
+        ResultSet rs = findGameInfoResultSet(findUsersId(blackUser), findUsersId(whiteUser));
 
         if (!rs.next()) {
             return Optional.empty();
@@ -49,7 +52,7 @@ public class GameInfoDAO {
     }
 
     public Optional<Integer> findTurnByUser(User blackUser, User whiteUser) throws SQLException {
-        ResultSet rs = findGameInfoResultSet(blackUser, whiteUser);
+        ResultSet rs = findGameInfoResultSet(findUsersId(blackUser), findUsersId(whiteUser));
 
         if (!rs.next()) {
             return Optional.empty();
@@ -62,7 +65,7 @@ public class GameInfoDAO {
         dbConnector.executeUpdate("UPDATE gameinfo SET turn = ? WHERE black = ? AND white = ?",
                 String.valueOf(status.getTurn()), blackUser.getName(), whiteUser.getName());
 
-        ResultSet rs = findGameInfoResultSet(blackUser, whiteUser);
+        ResultSet rs = findGameInfoResultSet(findUsersId(blackUser), findUsersId(whiteUser));
 
         if (!rs.next()) {
             return;
@@ -74,7 +77,7 @@ public class GameInfoDAO {
     }
 
     public void deleteGameInfoByUser(User blackUser, User whiteUser) throws SQLException {
-        ResultSet rs = findGameInfoResultSet(blackUser, whiteUser);
+        ResultSet rs = findGameInfoResultSet(findUsersId(blackUser), findUsersId(whiteUser));
 
         if (!rs.next()) {
             return;
@@ -87,8 +90,17 @@ public class GameInfoDAO {
                 whiteUser.getName());
     }
 
-    private ResultSet findGameInfoResultSet(User blackUser, User whiteUser) throws SQLException {
-        return dbConnector.executeQuery("SELECT * FROM gameinfo WHERE black = ? AND white = ?", blackUser.getName(),
-                whiteUser.getName());
+    private ResultSet findGameInfoResultSet(String blackUserId, String whiteUserId) throws SQLException {
+        return dbConnector.executeQuery("SELECT * FROM gameinfo WHERE black = ? AND white = ?", blackUserId,
+                whiteUserId);
+    }
+
+    private String findUsersId(User user) throws SQLException {
+        ResultSet rs = dbConnector.executeQuery("SELECT id FROM user where name = ?", user.getName());
+
+        if (!rs.next()) {
+            return "";
+        }
+        return rs.getString("id");
     }
 }

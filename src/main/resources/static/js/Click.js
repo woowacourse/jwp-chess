@@ -29,18 +29,25 @@ const selectDestinationPiece = (value) => {
     let moveRequest = {
         method: "POST",
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/json'
         },
-        body:
-            `source=${document.getElementsByClassName("sourcePosition")[0].id}
-            &target=${document.getElementById(value).id}`
+        body: JSON.stringify({
+            'source': document.getElementsByClassName("sourcePosition")[0].id,
+            'target': document.getElementById(value).id
+        })
     };
     fetch(url, moveRequest)
         .then(response => {
-            if (response.data) {
-                alert("게임이 종료되었습니다.");
+            if (response.status === 200) {
+                if (response.data) {
+                    alert("게임이 종료되었습니다.");
+                }
+                movePiece(value);
+            } else {
+                resetSourcePosition();
+                alert("잘못된 명령입니다.");
+
             }
-            movePiece(value);
         })
         .catch(reason => {
             alert(reason.data);

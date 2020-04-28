@@ -5,14 +5,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wooteco.chess.controller.dto.ChessPieceDto;
-import wooteco.chess.controller.dto.ChessWebIndexDto;
+import wooteco.chess.controller.dto.MoveRequestDto;
 import wooteco.chess.controller.dto.PieceDto;
 import wooteco.chess.controller.dto.ResponseDto;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.service.ChessService;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,8 +27,8 @@ public class ChessController {
 
     @GetMapping("/")
     public String index(Model model) {
-        ChessWebIndexDto chessWebIndexDto = ChessWebIndexDto.of(chessService.getRoomId());
-        model.addAttribute("chessRoomId", chessWebIndexDto);
+        List<Long> roomIds = chessService.getRoomIds();
+        model.addAttribute("chessRoomIds", roomIds);
         return "index";
     }
 
@@ -71,9 +70,8 @@ public class ChessController {
 
     @PostMapping("/move/{id}")
     @ResponseBody
-    public boolean move(@PathVariable Long id, @RequestParam String source, @RequestParam String target) {
-        List<String> parameters = Arrays.asList(source, target);
-        chessService.move(id, parameters);
+    public Boolean move(@PathVariable Long id, @RequestBody MoveRequestDto moveRequestDto) {
+        chessService.move(id, moveRequestDto);
         return chessService.isEnd(id);
     }
 

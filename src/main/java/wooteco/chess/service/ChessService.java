@@ -1,9 +1,9 @@
 package wooteco.chess.service;
 
 import org.springframework.stereotype.Service;
+import wooteco.chess.controller.dto.MoveRequestDto;
 import wooteco.chess.controller.dto.ResponseDto;
 import wooteco.chess.dao.ChessDAO;
-import wooteco.chess.domain.MoveParameter;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.initializer.AutomatedBoardInitializer;
 import wooteco.chess.domain.game.ChessGame;
@@ -36,7 +36,7 @@ public class ChessService {
     public void restart(final Long id) {
         ChessGame chessGame = ChessGame.of(Board.of(new AutomatedBoardInitializer()), Turn.from(Team.WHITE));
         chessGames.put(id, chessGame);
-        chessDAO.addBoard(id, chessGames.get(id));
+        chessDAO.updateChessGame(id, chessGames.get(id));
     }
 
     public void load(final Long id) {
@@ -45,7 +45,7 @@ public class ChessService {
     }
 
     public void save(final Long id) {
-        chessDAO.addBoard(id, chessGames.get(id));
+        chessDAO.updateChessGame(id, chessGames.get(id));
         chessGames.remove(id);
     }
 
@@ -60,10 +60,10 @@ public class ChessService {
         return chessGame.isEnd();
     }
 
-    public void move(final Long id, final List<String> parameters) {
+    public void move(final Long id, final MoveRequestDto moveRequestDto) {
         loadIfNotExisting(id);
         ChessGame chessGame = chessGames.get(id);
-        chessGame.move(MoveParameter.of(parameters));
+        chessGame.move(moveRequestDto.generateMoveParameter());
     }
 
     public List<Position> getMovablePositions(final Long id, final Position source) {
@@ -92,7 +92,7 @@ public class ChessService {
         return chessGame.getTurn();
     }
 
-    public List<Long> getRoomId() {
+    public List<Long> getRoomIds() {
         return chessDAO.getRoomId();
     }
 

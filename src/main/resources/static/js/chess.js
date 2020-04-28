@@ -1,66 +1,64 @@
-function score() {
-    $.ajax({
-        type: 'get',
-        url: '/status/' + fetchId(),
-        dataType: 'text',
-        success(data, status, jqXHR) {
-            console.log(status);
-            console.log(jqXHR.responseText);
-            alert(data);
-        },
-        error(jpXHR, textError, errorThrown) {
-            console.log(textError);
-            console.log(errorThrown);
-            alert(jpXHR.responseText);
-        }
-    });
-}
+const score = () => {
+    let url = "/status/" + fetchId();
+    let scoreRequest = {
+        method: "GET",
+    };
+    fetch(url, scoreRequest)
+        .then(response => {
+            alert(response.data);
+        })
+        .catch(reason => {
+            alert(reason.data);
+        })
 
-function save() {
-    $.ajax({
-        type: 'post',
-        url: '/save/' + fetchId(),
-        dataType: 'text',
-        success(data, status, jqXHR) {
+};
+
+const save = () => {
+    let url = "/save/" + fetchId();
+    let saveRequest = {
+        method: "POST",
+    };
+    fetch(url, saveRequest)
+        .then(() => {
             alert("저장을 완료했습니다.");
-        },
-        error(jpXHR, textError, errorThrown) {
-            console.log(textError);
-            console.log(errorThrown);
-            alert(jpXHR.responseText);
-        }
-    });
-}
+        })
+        .catch(reason => {
+            alert(reason.data);
+        })
 
-function restart() {
-    $.ajax({
-        type: 'post',
-        url: '/restart/' + fetchId(),
-        dataType: 'text',
-        success(data, status, jqXHR) {
+};
+
+const restart = () => {
+    let url = "/restart/" + fetchId();
+    let saveRequest = {
+        method: "POST",
+    };
+    fetch(url, saveRequest)
+        .then(() => {
             location.href = "/chess/" + fetchId();
-        },
-        error(jpXHR, textError, errorThrown) {
-            console.log(textError);
-            console.log(errorThrown);
-            alert(jpXHR.responseText);
-        }
-    });
-}
+        })
+        .catch(reason => {
+            alert(reason.data);
+        })
 
-function end() {
-    $.ajax({
-        type: 'post',
-        url: '/end/' + fetchId(),
-        dataType: 'text',
-        success(data, status, jqXHR) {
-            alert("게임을 종료했습니다");
+};
+
+const end = () => {
+    let url = "/end/" + fetchId();
+    let saveRequest = {
+        method: "POST",
+    };
+    fetch(url, saveRequest)
+        .then(() => {
+            alert("게임을 종료했습니다.");
             location.href = "/";
-        },
-        error(jpXHR, textError, errorThrown) {
-            console.log(textError);
-            console.log(errorThrown);
-            alert(jpXHR.responseText);
-        }
-    });
+        })
+        .catch(reason => {
+            alert(reason.data);
+        })
+
+};
+
+function findPieceBy(piece, team) {
+    return "<img src='../piece/" + piece + "_" + team + ".png' style='max-width: 100%' alt='" + team + "" + piece + team + "'>";
 }

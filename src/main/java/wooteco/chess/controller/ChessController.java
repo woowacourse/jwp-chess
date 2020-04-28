@@ -1,5 +1,7 @@
 package wooteco.chess.controller;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,8 +49,11 @@ public class ChessController {
 	}
 
 	@PostMapping("/move")
-	public String move(Model model, @RequestParam(defaultValue = "") String target,
-		@RequestParam(defaultValue = "") String destination, @RequestParam int roomNo) {
+	public String move(Model model, @RequestParam Map<String, String> param) {
+		String target = param.get("target");
+		String destination = param.get("destination");
+		int roomNo = Integer.parseInt(param.get("roomNo"));
+		
 		try {
 			gameManagerService.move(Position.of(target), Position.of(destination), roomNo);
 		} catch (RuntimeException e) {

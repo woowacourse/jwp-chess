@@ -43,24 +43,26 @@ public class RoomDAO {
         }
     }
 
-    public void updateTurn(Team targetTeam) throws SQLException {
-        String query = "UPDATE turn set team = (?)";
+    public void updateTurn(final Long roomId, Team targetTeam) throws SQLException {
+        String query = "UPDATE room set turn = (?) WHERE id = (?)";
         try (final Connection connection = Connector.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, targetTeam.name());
+            preparedStatement.setLong(2, roomId);
             preparedStatement.executeUpdate();
         }
     }
 
-    public Team findTurn() throws SQLException {
-        String query = "SELECT * FROM turn";
+    public Team findTurn(final Long roomId) throws SQLException {
+        String query = "SELECT turn FROM room WHERE id = (?)";
         try (final Connection connection = Connector.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, roomId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             Team output = Team.BLANK;
             while (resultSet.next()) {
-                output = Team.of(resultSet.getString("team"));
+                output = Team.of(resultSet.getString("turn"));
             }
             return output;
         }

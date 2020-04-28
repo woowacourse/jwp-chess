@@ -15,6 +15,8 @@
         </div>
     </header>
 
+    <div style="visibility: hidden" id="room_id">{{roomId}}</div>
+
     <!-- CONTROLLER -->
     <div class="controller">
         <form action="/start" method="post">
@@ -26,8 +28,8 @@
         <form action="/status" method="post">
             <input id="status" type="submit" name="command" value="점수 현황">
         </form>
-        <form action="/end" method="post">
-            <input id="end" type="submit" name="command" value="게임 종료">
+        <form action="/" method="get">
+            <button type="submit" >방 나가기</button>
         </form>
     </div>
 

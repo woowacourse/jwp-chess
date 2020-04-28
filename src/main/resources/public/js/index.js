@@ -54,13 +54,17 @@ function setPiece(response) {
 
 // 체스말 이동 : 비동기
 function move() {
+    let fromPiece = document.querySelector('.fromPiece').id;
+    let toPiece = document.querySelector('.toPiece').id;
+    let room_id = document.getElementById('room_id').innerText;
     $.ajax({
-        type: 'POST',
+        type: 'PUT',
         async: true,
-        url: '/move',
+        url: `/room/${room_id}/move`,
         data: {
-            "fromPiece" : document.querySelector('.fromPiece').id,
-            "toPiece" : document.querySelector('.toPiece').id
+            fromPiece,
+            toPiece,
+            room_id
         },
         dataType: 'text',
         error: alertMessage,

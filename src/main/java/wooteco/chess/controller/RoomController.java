@@ -46,13 +46,8 @@ public class RoomController {
             Model model) throws SQLException {
         Map<String, String> board = roomService.findPiecesById(id);
         model.addAttribute("board", board);
+        model.addAttribute("roomId", id);
         return "room";
     }
-//
-//    @GetMapping("/turn")
-//    @ResponseBody
-//    public String Status() throws SQLException {
-//        Team currentTurn = boardService.getCurrentTurn();
-//        return currentTurn.name();
-//    }
+
 }

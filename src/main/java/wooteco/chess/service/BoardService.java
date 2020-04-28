@@ -2,8 +2,14 @@ package wooteco.chess.service;
 
 import org.springframework.stereotype.Service;
 import wooteco.chess.dao.BoardDAO;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.PieceType;
+import wooteco.chess.domain.piece.Team;
+import wooteco.chess.domain.position.Position;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 @Service
 public class BoardService {
@@ -16,37 +22,23 @@ public class BoardService {
         roomService = new RoomService();
     }
 
-//    public Map<String, Object> initializeBoard(final Long roomId) throws SQLException {
-//        Board board = BoardFactory.initializeBoard();
-//        boardDAO.deleteAllById(roomId);
-//
-//        for (Position position : board.getBoard().keySet()) {
-//            boardDAO.insertPiece(roomId, board, position);
-//        }
-//        return createBoardModel(board);
-//    }
-//
-//    public Map<String, Object> loadBoard(final Long roomId) throws SQLException {
-//        Board board = new Board(boardDAO.findAllById(roomId));
-//        return createBoardModel(board);
-//    }
-//
-//    public Board movePiece(final Long roomId, final String fromPosition, final String toPosition) throws SQLException {
-//        Board board = new Board(boardDAO.findAllById(roomId));
-//        Piece piece = board.findBy(Position.of(fromPosition));
-//
-//        if (piece.isNotSameTeam(roomService.getCurrentTurn())) {
-//            throw new IllegalArgumentException("체스 게임 순서를 지켜주세요.");
-//        }
-//
-//        if(board.isMovable(fromPosition, toPosition)){
-//            boardDAO.updatePiece(roomId, fromPosition, PieceType.BLANK.name());
-//            boardDAO.updatePiece(roomId, toPosition, piece.getName());
-//        }
-//
-//        roomService.updateTurn();
-//        return board;
-//    }
+    public Board movePiece(final Long roomId, final String fromPosition, final String toPosition) throws SQLException {
+        Map<String, String> boardDto = boardDAO.findAllById(roomId);
+        Board board = Board.createLoadedBoard(boardDto);
+        Piece piece = board.findBy(Position.of(fromPosition));
+
+        if (piece.isNotSameTeam(roomService.getCurrentTurn(roomId))) {
+            throw new IllegalArgumentException("체스 게임 순서를 지켜주세요.");
+        }
+
+        if(board.isMovable(fromPosition, toPosition)){
+            boardDAO.updatePiece(roomId, fromPosition, PieceType.BLANK.name());
+            boardDAO.updatePiece(roomId, toPosition, piece.getName());
+        }
+
+        roomService.updateTurn(roomId);
+        return board;
+    }
 //
 //    private Map<String, Object> createBoardModel(final Board board) {
 //        Map<String, Object> model = new HashMap<>();
@@ -70,8 +62,15 @@ public class BoardService {
 //        return model;
 //    }
 //
-//    public boolean isFinish(final Board board) {
-//        return board.isFinished();
-//    }
+
+    public String receiveWinner(final Long roomId) throws SQLException {
+        roomService.updateTurn(roomId);
+        Team team = roomService.getCurrentTurn(roomId);
+        return team.toString();
+    }
+
+    public boolean isFinish(final Board board) {
+        return board.isFinished();
+    }
 
 }

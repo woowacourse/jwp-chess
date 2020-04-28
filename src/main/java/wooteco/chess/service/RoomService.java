@@ -56,22 +56,16 @@ public class RoomService {
         return boardDAO.findAllById(id);
     }
 
-    public void updateTurn() throws SQLException {
-        if (roomDAO.findTurn() == Team.WHITE) {
-            roomDAO.updateTurn(Team.BLACK);
+    public void updateTurn(final Long roomId) throws SQLException {
+        if (roomDAO.findTurn(roomId) == Team.WHITE) {
+            roomDAO.updateTurn(roomId, Team.BLACK);
             return;
         }
-        roomDAO.updateTurn(Team.WHITE);
+        roomDAO.updateTurn(roomId, Team.WHITE);
     }
 
-    public Team getCurrentTurn() throws SQLException {
-        return roomDAO.findTurn();
-    }
-
-    public String receiveWinner() throws SQLException {
-        updateTurn();
-        Team team = roomDAO.findTurn();
-        return team.toString();
+    public Team getCurrentTurn(final Long roomId) throws SQLException {
+        return roomDAO.findTurn(roomId);
     }
 
     public Long findCurrentMaxId() throws SQLException {

@@ -8,7 +8,7 @@
 <body>
 <input id="originalPosition" type="text" value="">
 <input id="targetPosition" type="text" value="">
-<input id="gameId" type="text" value="{{response.gameId}}">\
+<input id="gameId" type="text" value="{{response.gameId}}">
 
 <h1 id="title"> Chess Game </h1>
 <h2> 게임 아이디 : {{response.gameId}}</h2>
@@ -28,15 +28,15 @@
 <form action="/save" method="get">
     <button>게임 저장</button>
 </form>
-
+<h1>{{saveMessage}}</h1>
 <form action="/load" method="get">
     <input type="text" name="gameId" placeholder="방 번호">
     <button>불러오기</button>
 </form>
 <div>
     {{#each response.score}}
-    {{@key}} : {{this}}
-    <br>
+        {{@key}} : {{this}}
+        <br>
     {{/each}}
 </div>
 <h2>{{error}}</h2>

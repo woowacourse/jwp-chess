@@ -3,17 +3,17 @@ package wooteco.chess.dto;
 import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.position.Position;
 
-public class PieceDTO {
+public class PieceDto {
 	private final Position position;
 	private final String name;
 
-	private PieceDTO(Position position, String name) {
+	private PieceDto(Position position, String name) {
 		this.position = position;
 		this.name = name;
 	}
 
-	public static PieceDTO from(Piece piece) {
-		return new PieceDTO(piece.getPosition(), piece.getName());
+	public static PieceDto from(Piece piece) {
+		return new PieceDto(piece.getPosition(), piece.getName());
 	}
 
 	public String getName() {

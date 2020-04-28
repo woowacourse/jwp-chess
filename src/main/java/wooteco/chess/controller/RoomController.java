@@ -3,6 +3,7 @@ package wooteco.chess.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.room.Room;
 import wooteco.chess.service.RoomService;
 
@@ -53,5 +54,14 @@ public class RoomController {
     ) throws SQLException {
         roomService.deleteRoom(roomId);
         return "redirect:" + "/";
+    }
+
+    @GetMapping("/room/{room_id}/turn")
+    @ResponseBody
+    public String turn(
+            @PathVariable("room_id") Long roomId
+    ) throws SQLException {
+        Team currentTurn = roomService.getCurrentTurn(roomId);
+        return currentTurn.name();
     }
 }

@@ -44,11 +44,4 @@ public class BoardController {
         model.addAttribute(boardService.showScoreStatus(roomId));
         return new Gson().toJson(boardService.showScoreStatus(roomId));
     }
-
-//    @GetMapping("/turn")
-//    @ResponseBody
-//    public String Status() throws SQLException {
-//        Team currentTurn = boardService.getCurrentTurn();
-//        return currentTurn.name();
-//    }
 }

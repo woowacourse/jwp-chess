@@ -1,4 +1,4 @@
-// setTurn();
+setTurn();
 
 // 체스 말 선택
 function pick(value) {
@@ -61,7 +61,7 @@ function move() {
         success: setPiece,
         complete: function () {
             clear();
-            // setTurn()
+            setTurn()
         }
     });
 }
@@ -99,18 +99,21 @@ function setScore() {
 }
 
 // 게임 턴 : 비동기
-// function setTurn(){
-//     $.ajax({
-//         type : 'GET',
-//         async: true,
-//         url: '/turn',
-//         dataType: 'text',
-//         error: alertMessage,
-//         success: function (response) {
-//             document.getElementById("current-turn").innerText = response + " 의 차례입니다.";
-//         }
-//     })
-// }
+function setTurn(){
+    let room_id = document.getElementById('room_id').innerText;
+
+    $.ajax({
+        type : 'GET',
+        async: true,
+        url: `/room/${room_id}/turn`,
+        date : room_id,
+        dataType: 'text',
+        error: alertMessage,
+        success: function (response) {
+            document.getElementById("current-turn").innerText = response + " 의 차례입니다.";
+        }
+    })
+}
 
 // 에러 메세지
 function alertMessage(response) {

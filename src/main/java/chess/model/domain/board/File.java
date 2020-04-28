@@ -22,10 +22,6 @@ public enum File {
         this.number = number;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public boolean hasNextIncrement(int increment) {
         return Arrays.stream(File.values())
             .anyMatch(file -> file.number == this.number + increment);
@@ -36,6 +32,10 @@ public enum File {
             .filter(file -> file.number == this.number + increment)
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException(NO_FILE_EXCEPTION_MESSAGE));
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

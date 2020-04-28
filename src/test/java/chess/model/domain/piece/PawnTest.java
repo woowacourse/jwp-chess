@@ -16,7 +16,7 @@ public class PawnTest {
     @Test
     @DisplayName("Null이 of에 들어갔을 때 예외 발생")
     void validNotNull() {
-        assertThatThrownBy(() -> Pawn.getPieceInstance(null))
+        assertThatThrownBy(() -> Pawn.getInstance(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessageContaining("Null");
     }
@@ -24,8 +24,8 @@ public class PawnTest {
     @Test
     @DisplayName("말의 위치(pawn)를 받고 말의 종류에 따라 이동할 수 있는 칸 리스트 반환")
     void calculateScopePawnBlack() {
-        Piece pieceBlack = Pawn.getPieceInstance(Team.BLACK);
-        Piece pieceWhite = Pawn.getPieceInstance(Team.WHITE);
+        Piece pieceBlack = Pawn.getInstance(Team.BLACK);
+        Piece pieceWhite = Pawn.getInstance(Team.WHITE);
 
         Set<Square> availableSquaresBlack = pieceBlack.getAllMovableArea(Square.of("a7"));
         Set<Square> availableSquaresWhite = pieceWhite.getAllMovableArea(Square.of("a6"));
@@ -41,17 +41,17 @@ public class PawnTest {
     @DisplayName("앞에 말이 있다면 못가는지 테스트")
     void canNotCaptureFrontPiece() {
         Map<Square, Piece> board = new HashMap<>();
-        board.put(Square.of("a5"), Knight.getPieceInstance(Team.BLACK));
-        board.put(Square.of("c5"), Knight.getPieceInstance(Team.WHITE));
+        board.put(Square.of("a5"), Knight.getInstance(Team.BLACK));
+        board.put(Square.of("c5"), Knight.getInstance(Team.WHITE));
 
-        Piece pieceBlack = Pawn.getPieceInstance(Team.BLACK);
-        Piece pieceWhite = Pawn.getPieceInstance(Team.WHITE);
+        Piece pieceBlack = Pawn.getInstance(Team.BLACK);
+        Piece pieceWhite = Pawn.getInstance(Team.WHITE);
 
         Set<Square> availableSquares = new HashSet<>();
-        availableSquares.addAll(pieceWhite.getMovableArea(Square.of("a4"), board));
-        availableSquares.addAll(pieceWhite.getMovableArea(Square.of("c4"), board));
-        availableSquares.addAll(pieceBlack.getMovableArea(Square.of("a6"), board));
-        availableSquares.addAll(pieceBlack.getMovableArea(Square.of("c6"), board));
+        availableSquares.addAll(pieceWhite.findMovableAreas(Square.of("a4"), board));
+        availableSquares.addAll(pieceWhite.findMovableAreas(Square.of("c4"), board));
+        availableSquares.addAll(pieceBlack.findMovableAreas(Square.of("a6"), board));
+        availableSquares.addAll(pieceBlack.findMovableAreas(Square.of("c6"), board));
 
         assertThat(availableSquares.size()).isEqualTo(0);
     }
@@ -60,17 +60,17 @@ public class PawnTest {
     @DisplayName("폰이 두 칸 움직일 수 있는지 테스트")
     void movablePawnTwoSquareTest() {
         Map<Square, Piece> board = new HashMap<>();
-        board.put(Square.of("b6"), Knight.getPieceInstance(Team.BLACK));
+        board.put(Square.of("b6"), Knight.getInstance(Team.BLACK));
 
-        Piece pieceBlack = Pawn.getPieceInstance(Team.BLACK);
-        Piece pieceWhite = Pawn.getPieceInstance(Team.WHITE);
+        Piece pieceBlack = Pawn.getInstance(Team.BLACK);
+        Piece pieceWhite = Pawn.getInstance(Team.WHITE);
 
         Set<Square> availableSquaresBlack = pieceBlack
-            .getMovableArea(Square.of("a7"), board);
+            .findMovableAreas(Square.of("a7"), board);
         Set<Square> availableSquaresBlack2 = pieceBlack
-            .getMovableArea(Square.of("b7"), board);
+            .findMovableAreas(Square.of("b7"), board);
         Set<Square> availableSquaresWhite = pieceWhite
-            .getMovableArea(Square.of("a2"), board);
+            .findMovableAreas(Square.of("a2"), board);
 
         assertThat(availableSquaresBlack.contains(Square.of("a5"))).isTrue();
         assertThat(availableSquaresBlack.contains(Square.of("a6"))).isTrue();
@@ -88,25 +88,25 @@ public class PawnTest {
     void movablePawnSquareTest() {
         Map<Square, Piece> board = new HashMap<>();
 
-        board.put(Square.of("b5"), Knight.getPieceInstance(Team.BLACK));
-        board.put(Square.of("e5"), Knight.getPieceInstance(Team.BLACK));
-        board.put(Square.of("f5"), Knight.getPieceInstance(Team.WHITE));
+        board.put(Square.of("b5"), Knight.getInstance(Team.BLACK));
+        board.put(Square.of("e5"), Knight.getInstance(Team.BLACK));
+        board.put(Square.of("f5"), Knight.getInstance(Team.WHITE));
 
-        Piece blackPawn = Pawn.getPieceInstance(Team.BLACK);
+        Piece blackPawn = Pawn.getInstance(Team.BLACK);
         Set<Square> availableSquares = blackPawn
-            .getMovableArea(Square.of("c6"), board);
+            .findMovableAreas(Square.of("c6"), board);
         assertThat(availableSquares.contains(Square.of("c5"))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(1);
 
-        availableSquares = blackPawn.getMovableArea(Square.of("f6"), board);
+        availableSquares = blackPawn.findMovableAreas(Square.of("f6"), board);
         assertThat(availableSquares.contains(Square.of("f5"))).isFalse();
         assertThat(availableSquares.size()).isEqualTo(0);
 
-        availableSquares = blackPawn.getMovableArea(Square.of("e6"), board);
+        availableSquares = blackPawn.findMovableAreas(Square.of("e6"), board);
         assertThat(availableSquares.contains(Square.of("f5"))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(1);
 
-        availableSquares = blackPawn.getMovableArea(Square.of("g6"), board);
+        availableSquares = blackPawn.findMovableAreas(Square.of("g6"), board);
         assertThat(availableSquares.contains(Square.of("g5"))).isTrue();
         assertThat(availableSquares.contains(Square.of("f5"))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(2);

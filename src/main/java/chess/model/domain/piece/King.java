@@ -1,7 +1,7 @@
 package chess.model.domain.piece;
 
-import chess.model.domain.board.Square;
 import chess.model.domain.board.CastlingSetting;
+import chess.model.domain.board.Square;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -23,13 +23,13 @@ public class King extends OneTimeMovePiece {
         super(team, type);
     }
 
-    public static Piece getPieceInstance(Team team) {
+    public static Piece getInstance(Team team) {
         NullChecker.validateNotNull(team);
         return CACHE.get(team);
     }
 
     @Override
-    public Set<Square> getMovableArea(Square square, Map<Square, Piece> board,
+    public Set<Square> findMovableAreas(Square square, Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements) {
         Set<Square> movableArea = getAllMovableArea(square).stream()
             .filter(s -> !(board.containsKey(s) && isSameTeam(board.get(s))))
@@ -52,7 +52,7 @@ public class King extends OneTimeMovePiece {
             Set<Square> squaresForCastling = IntStream
                 .range(1, Square.MAX_FILE_AND_RANK_COUNT)
                 .filter(index -> square.hasIncreased(fileCompare * -index, 0))
-                .mapToObj(index -> square.getIncreased(fileCompare * -index, 0))
+                .mapToObj(index -> square.getIncreasedSquare(fileCompare * -index, 0))
                 .collect(Collectors.toSet());
             if (squaresForCastling.size() == getNonContains(board, squaresForCastling)) {
                 totalMovableArea.add(castlingMovableArea);

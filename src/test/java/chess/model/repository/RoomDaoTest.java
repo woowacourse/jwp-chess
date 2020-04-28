@@ -21,7 +21,7 @@ class RoomDaoTest {
 
     @BeforeEach
     void setUp() {
-        roomId = ROOM_DAO.insert(ROOM_NAME, ROOM_PASSWORD);
+        roomId = ROOM_DAO.create(ROOM_NAME, ROOM_PASSWORD);
     }
 
     @AfterEach
@@ -39,9 +39,9 @@ class RoomDaoTest {
     @ParameterizedTest
     @CsvSource(value = {"방이름, 비밀번호", "방이름,"})
     void insert(String name, String password) {
-        int roomId1 = ROOM_DAO.insert(name, password);
-        assertThat(ROOM_DAO.select(roomId1).get("NM")).isEqualTo(name);
-        assertThat(ROOM_DAO.select(roomId1).get("PW")).isEqualTo(password);
+        int roomId1 = ROOM_DAO.create(name, password);
+        assertThat(ROOM_DAO.findInfo(roomId1).get("NM")).isEqualTo(name);
+        assertThat(ROOM_DAO.findInfo(roomId1).get("PW")).isEqualTo(password);
         ROOM_DAO.delete(roomId1);
     }
 
@@ -49,29 +49,29 @@ class RoomDaoTest {
     @ParameterizedTest
     @CsvSource(value = {", 비밀번호", " , "})
     void insertNameNull(String name, String password) {
-        assertThatThrownBy(() -> ROOM_DAO.insert(name, password))
+        assertThatThrownBy(() -> ROOM_DAO.create(name, password))
             .isInstanceOf(DataAccessException.class)
             .hasMessageContaining("null");
     }
 
     @Test
     void updateUsedN() {
-        assertThat(ROOM_DAO.select(roomId).get("USED_YN")).isEqualTo("Y");
+        assertThat(ROOM_DAO.findInfo(roomId).get("USED_YN")).isEqualTo("Y");
         ROOM_DAO.updateUsedN(roomId);
-        assertThat(ROOM_DAO.select(roomId).get("USED_YN")).isEqualTo("N");
+        assertThat(ROOM_DAO.findInfo(roomId).get("USED_YN")).isEqualTo("N");
     }
 
     @Test
     void selectUsedOnly() {
-        assertThat(ROOM_DAO.select(roomId).get("USED_YN")).isEqualTo("Y");
-        assertThat(ROOM_DAO.selectUsedOnly().containsKey(roomId)).isTrue();
+        assertThat(ROOM_DAO.findInfo(roomId).get("USED_YN")).isEqualTo("Y");
+        assertThat(ROOM_DAO.findUsed().containsKey(roomId)).isTrue();
         ROOM_DAO.updateUsedN(roomId);
-        assertThat(ROOM_DAO.selectUsedOnly().containsKey(roomId)).isFalse();
+        assertThat(ROOM_DAO.findUsed().containsKey(roomId)).isFalse();
     }
 
     @Test
     void select() {
-        Map<String, String> selectResult = ROOM_DAO.select(roomId);
+        Map<String, String> selectResult = ROOM_DAO.findInfo(roomId);
         assertThat(selectResult.get("NM")).isEqualTo(ROOM_NAME);
         assertThat(selectResult.get("PW")).isEqualTo(ROOM_PASSWORD);
     }
@@ -79,6 +79,6 @@ class RoomDaoTest {
     @Test
     void delete() {
         ROOM_DAO.delete(roomId);
-        assertThat(ROOM_DAO.select(roomId)).isEmpty();
+        assertThat(ROOM_DAO.findInfo(roomId)).isEmpty();
     }
 }

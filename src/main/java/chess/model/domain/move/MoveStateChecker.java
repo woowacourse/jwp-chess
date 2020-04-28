@@ -1,7 +1,7 @@
 package chess.model.domain.move;
 
-import chess.model.domain.board.Square;
 import chess.model.domain.board.ChessGame;
+import chess.model.domain.board.Square;
 import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
 
@@ -19,6 +19,6 @@ public class MoveStateChecker {
     }
 
     public MoveState check(ChessGame chessGame, MoveInfo moveInfo) {
-        return moveStateStrategy.getMoveState(chessGame, moveInfo);
+        return moveStateStrategy.findMoveState(chessGame, moveInfo);
     }
 }

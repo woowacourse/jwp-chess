@@ -1,7 +1,7 @@
 package chess.model.domain.piece;
 
-import chess.model.domain.board.Square;
 import chess.model.domain.board.CastlingSetting;
+import chess.model.domain.board.Square;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +19,7 @@ public abstract class RepeatMovePiece extends Piece {
     }
 
     @Override
-    public Set<Square> getMovableArea(Square boardSquare, Map<Square, Piece> board,
+    public Set<Square> findMovableAreas(Square boardSquare, Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements) {
         Set<Square> allMovableArea = getAllMovableArea(boardSquare);
         Set<Square> containSquares = getContainsSquares(board, allMovableArea);

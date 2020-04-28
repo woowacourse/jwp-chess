@@ -23,7 +23,23 @@ public class ChessResultDao {
         return INSTANCE;
     }
 
-    public List<String> getUsers() {
+    public void createUserNames(Set<String> userNames) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String query = makeQuery(
+            "INSERT INTO CHESS_RESULT_TB(USER_NM)",
+            "VALUES (?)"
+        );
+        PreparedStatementSetter pss = pstmt -> {
+            for (String userName : userNames) {
+                pstmt.setString(1, userName);
+                pstmt.addBatch();
+                pstmt.clearParameters();
+            }
+        };
+        jdbcTemplate.executeUpdateWhenLoop(query, pss);
+    }
+
+    public List<String> findUserNames() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT USER_NM",
@@ -41,47 +57,7 @@ public class ChessResultDao {
         }, mapper);
     }
 
-    public void update(String userName, GameResultDto gameResultDto) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "UPDATE CHESS_RESULT_TB",
-            "   SET WIN = ?",
-            "     , DRAW = ?",
-            "     , LOSE = ?",
-            " WHERE USER_NM = ?"
-        );
-        PreparedStatementSetter pss = getPssFromParams(gameResultDto.getWinCount(),
-            gameResultDto.getDrawCount(), gameResultDto.getLoseCount(), userName);
-        jdbcTemplate.executeUpdate(query, pss);
-    }
-
-    public void insert(String userName) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "INSERT INTO CHESS_RESULT_TB(USER_NM)",
-            "VALUES (?)"
-        );
-        PreparedStatementSetter pss = pstmt -> pstmt.setString(1, userName);
-        jdbcTemplate.executeUpdate(query, pss);
-    }
-
-    public void delete(Set<String> userNames) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "DELETE FROM CHESS_RESULT_TB",
-            " WHERE USER_NM = ?"
-        );
-        PreparedStatementSetter pss = pstmt -> {
-            for (String userName : userNames) {
-                pstmt.setString(1, userName);
-                pstmt.addBatch();
-                pstmt.clearParameters();
-            }
-        };
-        jdbcTemplate.executeUpdateWhenLoop(query, pss);
-    }
-
-    public Optional<GameResultDto> getWinOrDraw(String userName) {
+    public Optional<GameResultDto> findWinOrDraw(String userName) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT WIN",
@@ -99,6 +75,36 @@ public class ChessResultDao {
                 .of(new GameResultDto(rs.getInt("WIN"), rs.getInt("DRAW"), rs.getInt("LOSE")));
         };
         return jdbcTemplate.executeQuery(query, pss, mapper);
+    }
+
+    public void update(String userName, GameResultDto gameResultDto) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String query = makeQuery(
+            "UPDATE CHESS_RESULT_TB",
+            "   SET WIN = ?",
+            "     , DRAW = ?",
+            "     , LOSE = ?",
+            " WHERE USER_NM = ?"
+        );
+        PreparedStatementSetter pss = getPssFromParams(gameResultDto.getWinCount(),
+            gameResultDto.getDrawCount(), gameResultDto.getLoseCount(), userName);
+        jdbcTemplate.executeUpdate(query, pss);
+    }
+
+    public void delete(Set<String> userNames) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String query = makeQuery(
+            "DELETE FROM CHESS_RESULT_TB",
+            " WHERE USER_NM = ?"
+        );
+        PreparedStatementSetter pss = pstmt -> {
+            for (String userName : userNames) {
+                pstmt.setString(1, userName);
+                pstmt.addBatch();
+                pstmt.clearParameters();
+            }
+        };
+        jdbcTemplate.executeUpdateWhenLoop(query, pss);
     }
 }
 

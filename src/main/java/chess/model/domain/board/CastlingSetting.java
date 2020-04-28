@@ -8,7 +8,6 @@ import chess.model.domain.piece.Queen;
 import chess.model.domain.piece.Rook;
 import chess.model.domain.piece.Team;
 import chess.model.domain.state.MoveInfo;
-import chess.model.domain.state.MoveOrder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,23 +18,23 @@ import java.util.stream.Collectors;
 
 public enum CastlingSetting {
 
-    WHITE_ROOK_LEFT_BEFORE(Square.of("a1"), Rook.getPieceInstance(Team.WHITE), true),
-    WHITE_KING_BEFORE(Square.of("e1"), King.getPieceInstance(Team.WHITE), true),
-    WHITE_ROOK_RIGHT_BEFORE(Square.of("h1"), Rook.getPieceInstance(Team.WHITE), true),
+    WHITE_ROOK_LEFT_BEFORE(Square.of("a1"), Rook.getInstance(Team.WHITE), true),
+    WHITE_KING_BEFORE(Square.of("e1"), King.getInstance(Team.WHITE), true),
+    WHITE_ROOK_RIGHT_BEFORE(Square.of("h1"), Rook.getInstance(Team.WHITE), true),
 
-    BLACK_ROOK_LEFT_BEFORE(Square.of("h8"), Rook.getPieceInstance(Team.BLACK), true),
-    BLACK_ROOK_RIGHT_BEFORE(Square.of("a8"), Rook.getPieceInstance(Team.BLACK), true),
-    BLACK_KING_BEFORE(Square.of("e8"), King.getPieceInstance(Team.BLACK), true),
+    BLACK_ROOK_LEFT_BEFORE(Square.of("h8"), Rook.getInstance(Team.BLACK), true),
+    BLACK_ROOK_RIGHT_BEFORE(Square.of("a8"), Rook.getInstance(Team.BLACK), true),
+    BLACK_KING_BEFORE(Square.of("e8"), King.getInstance(Team.BLACK), true),
 
-    WHITE_KING_RIGHT_AFTER(Square.of("g1"), Knight.getPieceInstance(Team.WHITE), false),
-    BLACK_KING_LEFT_AFTER(Square.of("g8"), Knight.getPieceInstance(Team.BLACK), false),
-    WHITE_KING_LEFT_AFTER(Square.of("c1"), Bishop.getPieceInstance(Team.WHITE), false),
-    BLACK_KING_RIGHT_AFTER(Square.of("c8"), Bishop.getPieceInstance(Team.BLACK), false),
+    WHITE_KING_RIGHT_AFTER(Square.of("g1"), Knight.getInstance(Team.WHITE), false),
+    BLACK_KING_LEFT_AFTER(Square.of("g8"), Knight.getInstance(Team.BLACK), false),
+    WHITE_KING_LEFT_AFTER(Square.of("c1"), Bishop.getInstance(Team.WHITE), false),
+    BLACK_KING_RIGHT_AFTER(Square.of("c8"), Bishop.getInstance(Team.BLACK), false),
 
-    WHITE_ROOK_RIGHT_AFTER(Square.of("f1"), Bishop.getPieceInstance(Team.WHITE), false),
-    BLACK_ROOK_LEFT_AFTER(Square.of("f8"), Bishop.getPieceInstance(Team.BLACK), false),
-    WHITE_ROOK_LEFT_AFTER(Square.of("d1"), Queen.getPieceInstance(Team.WHITE), false),
-    BLACK_ROOK_RIGHT_AFTER(Square.of("d8"), Queen.getPieceInstance(Team.BLACK), false);
+    WHITE_ROOK_RIGHT_AFTER(Square.of("f1"), Bishop.getInstance(Team.WHITE), false),
+    BLACK_ROOK_LEFT_AFTER(Square.of("f8"), Bishop.getInstance(Team.BLACK), false),
+    WHITE_ROOK_LEFT_AFTER(Square.of("d1"), Queen.getInstance(Team.WHITE), false),
+    BLACK_ROOK_RIGHT_AFTER(Square.of("d8"), Queen.getInstance(Team.BLACK), false);
 
     private static final Set<Map<String, CastlingSetting>> TOTALS;
     private static final String KEYS_KING_BEFORE = "KING_BEFORE";
@@ -86,14 +85,12 @@ public enum CastlingSetting {
         this.castlingPiece = castlingPiece;
     }
 
-    public static MoveInfo getMoveCastlingRook(MoveInfo moveInfo) {
-        Square moveSquareAfter = moveInfo.get(MoveOrder.TO);
-        Map<String, CastlingSetting> selectCastling = TOTALS.stream()
-            .filter(total -> moveSquareAfter == total.get(KEYS_KING_AFTER).square)
+    public static CastlingSetting of(Square square, Piece piece) {
+        return Arrays.stream(CastlingSetting.values())
+            .filter(castlingSetting -> castlingSetting.square == square)
+            .filter(castlingSetting -> castlingSetting.piece == piece)
             .findFirst()
-            .orElseThrow(IllegalAccessError::new);
-        return new MoveInfo(selectCastling.get(KEYS_ROOK_BEFORE).square,
-            selectCastling.get(KEYS_ROOK_AFTER).square);
+            .orElseThrow(IllegalArgumentException::new);
     }
 
     public static boolean canCastling(Set<CastlingSetting> elements, MoveInfo moveInfo) {
@@ -101,24 +98,18 @@ public enum CastlingSetting {
             .filter(total -> elements.contains(total.get(KEYS_KING_BEFORE)))
             .filter(total -> elements.contains(total.get(KEYS_ROOK_BEFORE)))
             .filter(total -> total.get(KEYS_KING_BEFORE).square
-                == moveInfo.get(MoveOrder.FROM))
+                == moveInfo.getSource())
             .anyMatch(total -> total.get(KEYS_KING_AFTER).square
-                == moveInfo.get(MoveOrder.TO));
+                == moveInfo.getTarget());
     }
 
-    public static CastlingSetting of(String castlingSettingName) {
-        return Arrays.stream(CastlingSetting.values())
-            .filter(castlingSetting -> castlingSetting.name().equalsIgnoreCase(castlingSettingName))
+    public static MoveInfo findRookCastlingMotion(Square moveTarget) {
+        Map<String, CastlingSetting> selectCastling = TOTALS.stream()
+            .filter(total -> moveTarget == total.get(KEYS_KING_AFTER).square)
             .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
-    }
-
-    public static CastlingSetting of(Square boardsquare, Piece piece) {
-        return Arrays.stream(CastlingSetting.values())
-            .filter(castlingSetting -> castlingSetting.square == boardsquare)
-            .filter(castlingSetting -> castlingSetting.piece == piece)
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(IllegalAccessError::new);
+        return new MoveInfo(selectCastling.get(KEYS_ROOK_BEFORE).square,
+            selectCastling.get(KEYS_ROOK_AFTER).square);
     }
 
     public static Set<CastlingSetting> getCastlingElements() {
@@ -136,20 +127,12 @@ public enum CastlingSetting {
             .collect(Collectors.toSet()));
     }
 
-    public Piece getPiece() {
-        return piece;
-    }
-
     public boolean isEqualSquare(Square square) {
         return this.square.equals(square);
     }
 
     public boolean isSameColor(Piece piece) {
         return this.piece.isSameTeam(piece);
-    }
-
-    public boolean isContains(Square moveSquare) {
-        return this.square == moveSquare;
     }
 
     public boolean isCastlingBefore(Square square, Piece piece) {
@@ -159,5 +142,9 @@ public enum CastlingSetting {
             .findFirst()
             .map(castlingSetting -> castlingSetting.castlingPiece)
             .orElse(false);
+    }
+
+    public Piece getPiece() {
+        return piece;
     }
 }

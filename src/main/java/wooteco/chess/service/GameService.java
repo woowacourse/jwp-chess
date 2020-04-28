@@ -49,13 +49,13 @@ public class GameService {
 
 	public ResponseDto changeState(String request) {
 		return makeResponse(() -> {
-			GameEntity savedGameEntity = gameRepository.findById(DEFAULT_USER_ID)
-				.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-			Game game = savedGameEntity.convert();
-			game = game.changeState(request);
-			GameEntity updatedGameEntity = convert(game);
-			savedGameEntity.update(updatedGameEntity);
-			gameRepository.save(savedGameEntity);
+				GameEntity savedGameEntity = gameRepository.findById(DEFAULT_USER_ID)
+					.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
+				Game game = savedGameEntity.convert();
+				game = game.changeState(request);
+				GameEntity updatedGameEntity = convert(game);
+				savedGameEntity.update(updatedGameEntity);
+				gameRepository.save(savedGameEntity);
 				return new ResponseDto(SUCCESS);
 			}
 		);
@@ -77,22 +77,22 @@ public class GameService {
 
 	public ResponseDto move(PositionRequestDto positionRequestDTO) {
 		return makeResponse(() -> {
-			Position from = Position.of(positionRequestDTO.getFrom());
-			Position to = Position.of(positionRequestDTO.getTo());
+				Position from = Position.of(positionRequestDTO.getFrom());
+				Position to = Position.of(positionRequestDTO.getTo());
 
-			GameEntity saveEntity = gameRepository.findById(DEFAULT_USER_ID)
-				.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-			Game game = saveEntity.convert();
-			game = game.move(from, to);
-			GameEntity updateEntity = convert(game);
-			saveEntity.update(updateEntity);
-			gameRepository.save(saveEntity);
+				GameEntity saveEntity = gameRepository.findById(DEFAULT_USER_ID)
+					.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
+				Game game = saveEntity.convert();
+				game = game.move(from, to);
+				GameEntity updateEntity = convert(game);
+				saveEntity.update(updateEntity);
+				gameRepository.save(saveEntity);
 
-			Board board = game.getBoard();
-			List<BoardDto> result = new ArrayList<>();
-			result.add(new BoardDto(from.toString(), board.findSymbol(from)));
-			result.add(new BoardDto(to.toString(), board.findSymbol(to)));
-			return new ResponseDto(SUCCESS, result);
+				Board board = game.getBoard();
+				List<BoardDto> result = new ArrayList<>();
+				result.add(new BoardDto(from.toString(), board.findSymbol(from)));
+				result.add(new BoardDto(to.toString(), board.findSymbol(to)));
+				return new ResponseDto(SUCCESS, result);
 			}
 		);
 	}
@@ -120,8 +120,8 @@ public class GameService {
 		return makeResponse(() -> {
 				GameEntity gameEntity = gameRepository.findById(DEFAULT_USER_ID)
 					.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-			Game game = gameEntity.convert();
-			return new ResponseDto(SUCCESS, game.isNotFinished());
+				Game game = gameEntity.convert();
+				return new ResponseDto(SUCCESS, game.isNotFinished());
 			}
 		);
 	}

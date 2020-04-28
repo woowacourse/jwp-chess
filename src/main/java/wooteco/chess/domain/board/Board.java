@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.annotation.Id;
-
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Path;
@@ -13,9 +11,6 @@ import wooteco.chess.domain.position.Position;
 
 public class Board {
 	private static final int ALIVE_COUNT = 2;
-
-	@Id
-	private Long id;
 
 	private final List<Piece> pieces;
 
@@ -64,5 +59,9 @@ public class Board {
 		return pieces.stream()
 			.filter(Piece::hasToAlive)
 			.count() != ALIVE_COUNT;
+	}
+
+	public List<Piece> getPieces() {
+		return pieces;
 	}
 }

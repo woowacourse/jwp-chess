@@ -3,6 +3,7 @@ package wooteco.chess.domain.piece;
 import java.util.Arrays;
 import java.util.function.Function;
 
+import wooteco.chess.domain.entity.PieceEntity;
 import wooteco.chess.domain.position.Position;
 
 public enum PieceFactory {
@@ -31,6 +32,15 @@ public enum PieceFactory {
 	public static PieceFactory of(String symbol) {
 		return Arrays.stream(PieceFactory.values())
 			.filter(value -> value.symbol.equals(symbol))
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 기물 입니다."));
+	}
+
+
+	public static Piece createBy(PieceEntity pieceEntity) {
+		return Arrays.stream(PieceFactory.values())
+			.filter(value -> value.symbol.equals(pieceEntity.getSymbol()))
+			.map(value -> value.pieceGenerator.apply(Position.of(pieceEntity.getPosition())))
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 기물 입니다."));
 	}

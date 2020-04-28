@@ -92,7 +92,6 @@ public class ChessService {
         return chessGame.getTurn();
     }
 
-
     public List<Long> getRoomIds() {
         return chessDAO.getRoomId();
     }

@@ -27,10 +27,16 @@ public class ChessController {
 
 	@GetMapping("/board/{roomNo}")
 	public String board(Model model, @PathVariable int roomNo) {
-		model.addAttribute("roomNo", roomNo);
-		model.addAttribute("piecesDto", WebOutputRenderer.toPiecesDto(gameManagerService.getBoard(roomNo)));
-		model.addAttribute("turn", gameManagerService.getCurrentTurn(roomNo).name());
-		model.addAttribute("scores", WebOutputRenderer.scoreToModel(gameManagerService.calculateEachScore(roomNo)));
+		try {
+			model.addAttribute("roomNo", roomNo);
+			model.addAttribute("piecesDto", WebOutputRenderer.toPiecesDto(gameManagerService.getBoard(roomNo)));
+			model.addAttribute("turn", gameManagerService.getCurrentTurn(roomNo).name());
+			model.addAttribute("scores", WebOutputRenderer.scoreToModel(gameManagerService.calculateEachScore(roomNo)));
+		} catch (RuntimeException e) {
+			model.addAttribute("error", e.getMessage());
+			model.addAttribute("redirectUrl", "/");
+			return "error";
+		}
 		return "board";
 	}
 
@@ -47,7 +53,7 @@ public class ChessController {
 			gameManagerService.move(Position.of(target), Position.of(destination), roomNo);
 		} catch (RuntimeException e) {
 			model.addAttribute("error", e.getMessage());
-			model.addAttribute("roomNo", roomNo);
+			model.addAttribute("redirectUrl", "/board/" + roomNo);
 			return "error";
 		}
 		if (!gameManagerService.isKingAlive(roomNo)) {

@@ -12,6 +12,7 @@ import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Color;
 import wooteco.chess.dto.GameManagerDto;
 import wooteco.chess.entity.ChessGame;
+import wooteco.chess.exceptions.RoomNotFoundException;
 import wooteco.chess.repository.ChessGameRepository;
 
 @Component
@@ -37,7 +38,7 @@ public class GameDao {
 
 		return Optional.ofNullable(game)
 			.map(chessGame -> new GameManager(BoardFactory.of(chessGame.getBoard()), Color.of(chessGame.getTurn())))
-			.orElseThrow(() -> new IllegalArgumentException("없는데"));
+			.orElseThrow(RoomNotFoundException::new);
 	}
 
 	public void updateGame(GameManagerDto gameManagerDto, int roomNo) {

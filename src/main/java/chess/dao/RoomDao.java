@@ -42,8 +42,7 @@ public class RoomDao {
 	private RoomDto prepareRoomDto(final PreparedStatement preparedStatement) throws SQLException {
 		try (final ResultSet resultSet = preparedStatement.executeQuery()) {
 			validateHasResult(resultSet);
-			return new RoomDto(resultSet.getInt("id"),
-					resultSet.getString("room_name"));
+			return new RoomDto(resultSet.getString("room_name"));
 		}
 	}
 
@@ -71,8 +70,7 @@ public class RoomDao {
 	private List<RoomDto> collectRoomDtos(final ResultSet resultSet) throws SQLException {
 		final List<RoomDto> roomDtos = new ArrayList<>();
 		while (resultSet.next()) {
-			roomDtos.add(new RoomDto(resultSet.getInt("id"),
-					resultSet.getString("room_name")));
+			roomDtos.add(new RoomDto(resultSet.getString("room_name")));
 		}
 		return roomDtos;
 	}

@@ -9,19 +9,18 @@ import java.util.Objects;
 @Table("piece")
 public class PieceDto {
 	@Id
-	int id;
+	private int id;
 	@Column("piece_type")
-	final String pieceType;
+	private final String pieceType;
 	@Column("team")
-	final String team;
+	private final String team;
 	@Column("coordinate")
-	final String coordinate;
+	private final String coordinate;
 	@Column("room_id")
-	final int roomId;
+	private final int roomId;
 
-	public PieceDto(final int id, final String pieceType, final String team,
+	public PieceDto(final String pieceType, final String team,
 					final String coordinate, final int roomId) {
-		this.id = id;
 		this.pieceType = pieceType;
 		this.team = team;
 		this.coordinate = coordinate;

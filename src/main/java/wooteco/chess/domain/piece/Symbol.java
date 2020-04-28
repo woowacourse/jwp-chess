@@ -27,6 +27,10 @@ public enum Symbol {
 		return whiteSymbol;
 	}
 
+	public String getEmptySymbol() {
+		return " ";
+	}
+
 	public List<String> symbols() {
 		return List.of(blackSymbol, whiteSymbol);
 	}

@@ -5,6 +5,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.Symbol;
 
 @Table("piece")
 public class PieceEntity {
@@ -28,15 +29,19 @@ public class PieceEntity {
 		return new PieceEntity(roomId, piece.getPosition().getName(), piece.getSymbol());
 	}
 
-	public Long getId() {
-		return id;
-	}
-
 	public String getPosition() {
 		return position;
 	}
 
 	public String getSymbol() {
 		return symbol;
+	}
+
+	public void updateSymbolToEmpty() {
+		symbol = Symbol.EMPTY.getEmptySymbol();
+	}
+
+	public void updateSymbolToSource(PieceEntity source) {
+		symbol = source.symbol;
 	}
 }

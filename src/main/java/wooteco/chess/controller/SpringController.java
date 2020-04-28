@@ -39,8 +39,7 @@ public class SpringController {
 
 	@PutMapping("/move")
 	@ResponseBody
-	public Map<String, Object> move(@RequestParam("start") String start,
-		@RequestParam("target") String target) {
+	public Map<String, Object> move(@RequestParam("start") String start, @RequestParam("target") String target) {
 		Board board = chessService.move(Position.of(start), Position.of(target));
 		return makeModel(board);
 	}

@@ -8,6 +8,7 @@ import chess.model.domain.board.EnPassant;
 import chess.model.domain.board.Square;
 import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.Piece;
+import chess.model.domain.piece.PieceFactory;
 import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import chess.model.domain.state.MoveInfo;
@@ -19,11 +20,15 @@ import chess.model.dto.MoveDto;
 import chess.model.dto.PathDto;
 import chess.model.dto.PromotionTypeDto;
 import chess.model.dto.SourceDto;
+import chess.model.repository.BoardEntity;
+import chess.model.repository.BoardRepository;
 import chess.model.repository.ChessBoardDao;
 import chess.model.repository.ChessGameDao;
 import chess.model.repository.ChessGameEntity;
 import chess.model.repository.ChessGameRepository;
 import chess.model.repository.ChessResultDao;
+import chess.model.repository.template.JdbcTemplate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,10 +45,12 @@ public class ChessGameService {
     private static final ChessResultDao CHESS_RESULT_DAO = ChessResultDao.getInstance();
 
     private final ChessGameRepository chessGameRepository;
+    private final BoardRepository boardRepository;
 
-    public ChessGameService(
-        ChessGameRepository chessGameRepository) {
+    public ChessGameService(ChessGameRepository chessGameRepository,
+        BoardRepository boardRepository) {
         this.chessGameRepository = chessGameRepository;
+        this.boardRepository = boardRepository;
     }
 
     public Integer create(Integer roomId, Map<Team, String> userNames) {
@@ -71,10 +78,36 @@ public class ChessGameService {
             , teamScore.get(Team.WHITE));
         chessGameRepository.save(chessGameEntity);
 
+        Map<Square, Square> enPassants = makeEnPassants(chessGame);
+        Map<Square, Boolean> castlingElements = makeCastlingElements(chessGame.getChessBoard(),
+            chessGame.getCastlingElements());
+        Map<Square, Piece> chessBoard = chessGame.getChessBoard();
+
+        ChessGameEntity savedEntity = chessGameRepository.save(chessGameEntity);
+
+        HashSet<BoardEntity> boardEntities = new HashSet<>();
+
+        for (Square square : chessBoard.keySet()) {
+            BoardEntity boardEntity = new BoardEntity(
+                savedEntity.getId(),
+                square.getName(),
+                PieceFactory.getName(chessBoard.get(square)),
+                JdbcTemplate.convertYN(castlingElements.get(square)),
+                enPassants.keySet().stream()
+                    .filter(key -> enPassants.containsKey(square))
+                    .map(enSquare -> enPassants.get(square).getName())
+                    .findFirst()
+                    .orElse(null));
+            boardEntities.add(boardEntity);
+        }
+
+        boardRepository.saveAll(boardEntities);
+
         CHESS_BOARD_DAO.create(gameId, chessGame.getChessBoard(),
             makeCastlingElements(chessGame.getChessBoard(), chessGame.getCastlingElements()),
             makeEnPassants(chessGame));
-        return gameId;
+
+        return savedEntity.getId();
     }
 
     public void saveNewUserNames(Map<Team, String> userNames) {

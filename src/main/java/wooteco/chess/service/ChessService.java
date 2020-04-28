@@ -1,43 +1,48 @@
 package wooteco.chess.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.stereotype.Service;
 
-import wooteco.chess.dao.BoardDao;
-import wooteco.chess.dao.RoomDao;
 import wooteco.chess.domain.Board;
 import wooteco.chess.domain.Pieces;
 import wooteco.chess.domain.Position;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.exception.DuplicateRoomNameException;
+import wooteco.chess.repository.PieceEntity;
+import wooteco.chess.repository.RoomEntity;
+import wooteco.chess.repository.RoomRepository;
 
 @Service
 public class ChessService {
-    private final BoardDao boardDao;
-    private final RoomDao roomDao;
+    private final RoomRepository roomRepository;
 
-    public ChessService(BoardDao boardDao, RoomDao roomDao) {
-        this.boardDao = boardDao;
-        this.roomDao = roomDao;
+    public ChessService(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
     }
 
     public void initBoard(int roomId) {
-        roomDao.updateTurn(roomId, Team.WHITE);
-        boardDao.removeAll(roomId);
-        boardDao.saveBoard(new Board(), roomId);
+        Set<PieceEntity> pieceEntities = new HashSet<>();
+        for (Piece alivePiece : new Board().getPieces().getAlivePieces()) {
+            pieceEntities.add(new PieceEntity(alivePiece.getPosition(), alivePiece.toString(), alivePiece.getTeam()));
+        }
+        roomRepository.save(new RoomEntity((long)roomId, findNameById(roomId), Team.WHITE, pieceEntities));
     }
 
     public boolean isPresentRoom(String name) {
-        return roomDao.findRoomIdByName(name).isPresent();
+        return roomRepository.findIdByName(name).isPresent();
     }
 
     public int createBoard(String name) {
         validateRoomName(name);
-        roomDao.createRoom(name);
-        int roomId = roomDao.findRoomIdByName(name)
-            .orElseThrow(AssertionError::new);
-        boardDao.saveBoard(new Board(), roomId);
-        return roomId;
+        Set<PieceEntity> pieceEntities = new HashSet<>();
+        for (Piece alivePiece : new Board().getPieces().getAlivePieces()) {
+            pieceEntities.add(new PieceEntity(alivePiece.getPosition(), alivePiece.toString(), alivePiece.getTeam()));
+        }
+        RoomEntity savedRoom = roomRepository.save(new RoomEntity(name, Team.WHITE, pieceEntities));
+        return savedRoom.getId().intValue();
     }
 
     private void validateRoomName(String name) {
@@ -50,30 +55,30 @@ public class ChessService {
     }
 
     public Board getSavedBoard(int roomId) {
-        return new Board(boardDao.findByRoomId(roomId), roomDao.findTurnById(roomId));
+        RoomEntity roomEntity = roomRepository.findById((long)roomId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 id의 방이 존재하지 않습니다."));
+        return new Board(new Pieces(roomEntity.getPieceEntities()), roomEntity.getTurn());
     }
 
     public void processMoveInput(Board board, String source, String destination, int roomId) {
         board.movePiece(new Position(source), new Position(destination));
         Pieces pieces = board.getPieces();
         Piece destinationPiece = pieces.findByPosition(new Position(destination));
-        if (destinationPiece == null) {
-            boardDao.editPiece(source, destination, roomId);
+        Set<PieceEntity> pieceEntities = new HashSet<>();
+        for (Piece alivePiece : board.getPieces().getAlivePieces()) {
+            pieceEntities.add(new PieceEntity(alivePiece.getPosition(), alivePiece.toString(), alivePiece.getTeam()));
         }
-        if (destinationPiece != null) {
-            boardDao.removePiece(destination, roomId);
-            boardDao.editPiece(source, destination, roomId);
-        }
-        roomDao.updateTurn(roomId, board.getTurn());
+        roomRepository.save(new RoomEntity((long)roomId, findNameById(roomId), board.getTurn(), pieceEntities));
     }
 
-    public int getIdByName(String name) {
-        return roomDao.findRoomIdByName(name)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방 이름입니다."));
+    public int findIdByName(String name) {
+        return roomRepository.findIdByName(name)
+            .orElseThrow(() -> new IllegalArgumentException("해당 이름의 방이 존재하지 않습니다."));
     }
 
     public String findNameById(int roomId) {
-        return roomDao.findRoomNameById(roomId)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+        return roomRepository.findById((long)roomId)
+            .map(RoomEntity::getName)
+            .orElseThrow(() -> new IllegalArgumentException("해당 id의 방이 존재하지 않습니다."));
     }
 }

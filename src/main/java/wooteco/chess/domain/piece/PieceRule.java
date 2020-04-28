@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import wooteco.chess.domain.Position;
+import wooteco.chess.repository.PieceEntity;
 
 public enum PieceRule {
     KING(0, Arrays.asList('♔', '♚'), (position, team) -> new King(new Position(position), Team.of(team))),
@@ -33,6 +34,11 @@ public enum PieceRule {
 
     public static Piece makeNewPiece(char representation, String position, String team) {
         return PieceRule.of(representation).generator.apply(position, team);
+    }
+
+    public static Piece makeNewPiece(PieceEntity pieceEntity) {
+        return makeNewPiece(pieceEntity.getType().charAt(0), pieceEntity.getPosition(),
+            pieceEntity.getTeam().getName());
     }
 
     public double getScore() {

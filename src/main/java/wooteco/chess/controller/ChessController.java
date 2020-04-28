@@ -76,7 +76,7 @@ public class ChessController {
     public String continueGame(@RequestParam(value = "existing-room-name") String name,
         RedirectAttributes redirectAttributes, Model model) {
         try {
-            int id = service.getIdByName(name);
+            int id = service.findIdByName(name);
             Board board = service.getSavedBoard(id);
             createBasicModel(id, board, model);
             redirectAttributes.addAttribute("room-id", id);

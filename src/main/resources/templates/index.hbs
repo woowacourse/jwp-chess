@@ -35,7 +35,7 @@
             {{#each rooms}}
                 <tr>
                     <td>{{this.roomId}}</td>
-                    <td>{{this.roomName}}</td>
+                    <td>{{this.roomDto}}</td>
                     <td>
                         <button type="button" class="btn btn-primary enterButton">ENTER</button>
                     </td>
@@ -53,7 +53,7 @@
     <form action="/rooms/create" method="get">
         <div class="form-group">
             <small class="form-text text-muted">방을 만드려면 방 제목을 입력해주세요.</small>
-            <input type="text" name="roomName" class="form-control">
+            <input type="text" name="roomId" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">방 만들기</button>
         {{#if errors}}

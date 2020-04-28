@@ -4,13 +4,13 @@ import wooteco.chess.domain.Color;
 
 import java.util.List;
 
-public class MoveResponseDto {
+public class GameResponseDto {
     private final List<PieceResponseDto> pieces;
     private final Color currentColor;
     private final boolean kingDead;
     private String errorMessage;
 
-    public MoveResponseDto(final List<PieceResponseDto> pieces, final Color currentColor, final boolean kingDead) {
+    public GameResponseDto(final List<PieceResponseDto> pieces, final Color currentColor, final boolean kingDead) {
         this.pieces = pieces;
         this.currentColor = currentColor;
         this.kingDead = kingDead;

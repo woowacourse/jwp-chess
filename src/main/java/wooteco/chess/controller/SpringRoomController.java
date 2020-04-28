@@ -6,8 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import wooteco.chess.dto.RoomResponseDto;
-import wooteco.chess.dto.RoomName;
+import wooteco.chess.dto.RoomDto;
 import wooteco.chess.service.SpringRoomService;
 
 import javax.validation.Valid;
@@ -26,7 +25,7 @@ public class SpringRoomController {
 
     @GetMapping
     public String getAllRooms(Model model) throws SQLException {
-        List<RoomResponseDto> rooms = roomService.findAllRoom();
+        List<RoomDto> rooms = roomService.findAllRoom();
         model.addAttribute("rooms", rooms);
 
         return "index";
@@ -40,18 +39,18 @@ public class SpringRoomController {
 
     // TODO: 2020/04/22 valid 에러페이지 이동 문제
     @GetMapping("/create")
-    public String createRoom(@Valid RoomName roomName, Errors errors, Model model) throws SQLException {
+    public String createRoom(@Valid RoomDto roomId, Errors errors, Model model) throws SQLException {
         if (errors.hasErrors()) {
             model.addAttribute("errors", errors);
             return getAllRooms(model);
         }
-        roomService.addRoom(roomName.getRoomName());
+        roomService.addRoom(roomId);
         return "redirect:/rooms";
     }
 
     @GetMapping("/remove")
-    public String removeRoom(@RequestParam(value = "roomId") Integer roomId) throws SQLException {
-        roomService.removeRoom(roomId);
+    public String removeRoom(@RequestParam(value = "roomId") RoomDto roomDto) throws SQLException {
+        roomService.removeRoom(roomDto);
         return "redirect:/rooms";
     }
 }

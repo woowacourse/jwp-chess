@@ -6,41 +6,43 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import wooteco.chess.domain.Color;
 
+import javax.annotation.Generated;
+import java.util.Set;
+import java.util.UUID;
+
 @Table("room")
 public class RoomEntity {
 
     @Id
-    private Integer roomId;
+    private UUID id;
+    private String name;
+    private String password;
+    @Column(value = "room")
+    private GameEntity game;
 
-    private String roomName;
-
-    @Column("room_color")
-    private String currentColor;
-
-
-    private RoomEntity(){
+    public RoomEntity(final String name, final String password, final GameEntity game) {
+        this.name = name;
+        this.password = password;
+        this.game = game;
     }
 
-    public RoomEntity(final String roomName, final String currentColor) {
-        this.roomName = roomName;
-        this.currentColor = currentColor;
+    public UUID getId() {
+        return id;
     }
 
-    public RoomEntity(final int roomId, final String roomName, final String currentColor) {
-        this.roomId = roomId;
-        this.roomName = roomName;
-        this.currentColor = currentColor;
+    public String getName() {
+        return name;
     }
 
-    public int getRoomId() {
-        return roomId;
+    public String getPassword() {
+        return password;
     }
 
-    public String getRoomName() {
-        return roomName;
+    public GameEntity getGame() {
+        return game;
     }
 
-    public String getCurrentColor() {
-        return currentColor;
+    public void updateGame(final GameEntity game) {
+        this.game = game;
     }
 }

@@ -7,10 +7,11 @@ import org.springframework.stereotype.Repository;
 import wooteco.chess.domain.Color;
 import wooteco.chess.repository.entity.RoomEntity;
 
-public interface RoomRepository extends CrudRepository<RoomEntity, Integer> {
+import java.util.List;
+import java.util.UUID;
 
-    @Modifying
-    @Query("UPDATE room SET room_color = :currentColor WHERE room_id = :roomId")
-    void updateRoomColorById(int roomId, String currentColor);
+public interface RoomRepository extends CrudRepository<RoomEntity, UUID> {
 
+    @Override
+    List<RoomEntity> findAll();
 }

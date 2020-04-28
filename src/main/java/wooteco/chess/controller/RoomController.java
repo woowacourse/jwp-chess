@@ -45,6 +45,7 @@ public class RoomController {
         Map<String, String> board = roomService.findPiecesById(id);
         model.addAttribute("board", board);
         model.addAttribute("roomId", id);
+        model.addAttribute("title", roomService.findTitleById(id));
         return "room";
     }
 
@@ -72,6 +73,7 @@ public class RoomController {
     ) throws SQLException {
         model.addAttribute("board", roomService.resetRoom(roomId));
         model.addAttribute("roomId", roomId);
+        model.addAttribute("title", roomService.findTitleById(roomId));
         return "room";
     }
 }

@@ -57,7 +57,7 @@ public class RoomService {
     }
 
     public void updateTurn(final Long roomId) throws SQLException {
-        if (roomDAO.findTurn(roomId) == Team.WHITE) {
+        if (roomDAO.findTurnById(roomId) == Team.WHITE) {
             roomDAO.updateTurn(roomId, Team.BLACK);
             return;
         }
@@ -65,7 +65,7 @@ public class RoomService {
     }
 
     public Team getCurrentTurn(final Long roomId) throws SQLException {
-        return roomDAO.findTurn(roomId);
+        return roomDAO.findTurnById(roomId);
     }
 
     public Long findCurrentMaxId() throws SQLException {
@@ -81,5 +81,9 @@ public class RoomService {
         roomDAO.updateTurn(roomId, Team.WHITE);
         boardDAO.deleteBoardById(roomId);
         return initializeBoard(roomId);
+    }
+
+    public String findTitleById(final Long id) throws SQLException {
+        return roomDAO.findTitleById(id);
     }
 }

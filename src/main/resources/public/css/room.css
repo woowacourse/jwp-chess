@@ -17,7 +17,6 @@ header {
 
 header .inner {
     height: 70px;
-    background-color: lightcoral;
     text-align: center;
     display: flex;
     align-items: center;
@@ -25,23 +24,24 @@ header .inner {
 }
 
 header .inner h1 {
-    color : whitesmoke;
+    color : slateblue;
     font-size: 40px;
 }
 
 .room_information {
-    border: solid 3px black;
+    font-size: 40px;
+    color: darkblue;
+    margin-right: 16px;
 }
 
 /* CONTROLLER */
-.controller {
+.button-controller {
     position: absolute;
     top: 30%;
     right: 4%;
     margin-right: 20px;
     width: 150px;
     height: 280px;
-    background-color: lightcoral;
     float: right;
     display: flex;
     align-items: center;
@@ -49,10 +49,27 @@ header .inner h1 {
     flex-direction: column;
 }
 
-.controller input {
-    width: 90px;
-    height: 45px;
-    margin: 20px 0;
+.button-controller button {
+    width: 127px;
+    height: 50px;
+    font-size: 21px;
+    color: darkblue;
+    border-radius: 5px;
+    border: solid slateblue 2.5px;
+    padding: 5px;
+    margin-bottom: 12px;
+    background-color: antiquewhite;
+}
+
+.button-controller button:hover {
+    background-color: chartreuse;
+    cursor: pointer;
+}
+
+.turn-score {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .turn {
@@ -146,6 +163,10 @@ header .inner h1 {
     font-size: 14px;
 }
 
+#bottom-info {
+    margin-bottom: 75px;
+}
+
 
 /* finish */
 .finish-box {
@@ -155,15 +176,46 @@ header .inner h1 {
 
 .finish-box .inner{
     position: absolute;
-    top : 320px;
+    top : 240px;
     width: 600px;
-    height: 150px;
-    border: solid 4px red;
-    background-color: coral;
+    height: 200px;
+    border: solid 4px slateblue;
+    border-radius: 5px;
+    background-color: skyblue;
     text-align: center;
     visibility: hidden;
 }
 
 .finish-box p {
+    font-size: 34px;
+}
+
+.finish-box button {
+    width: 127px;
+    height: 50px;
     font-size: 21px;
+    color: darkblue;
+    border-radius: 5px;
+    border: solid slateblue 2.5px;
+    padding: 5px;
+    margin-bottom: 12px;
+    background-color: antiquewhite;
+}
+
+.finish-box button:hover {
+    background-color: chartreuse;
+    cursor: pointer;
+}
+
+footer {
+    height: 100px;
+    width: 100%;
+    background-color: tomato;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+}
+
+footer .creator {
+    margin-top: 15px;
 }

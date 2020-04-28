@@ -53,7 +53,21 @@ public class RoomDAO {
         }
     }
 
-    public Team findTurn(final Long roomId) throws SQLException {
+    public String findTitleById(final Long roomId) throws SQLException {
+        String query = "SELECT title FROM room WHERE id = (?)";
+        try (final Connection connection = Connector.getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, roomId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            String title = "";
+            while(resultSet.next()) {
+                return resultSet.getString("title");
+            }
+            return title;
+        }
+    }
+
+    public Team findTurnById(final Long roomId) throws SQLException {
         String query = "SELECT turn FROM room WHERE id = (?)";
         try (final Connection connection = Connector.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -89,5 +103,4 @@ public class RoomDAO {
         }
         return id;
     }
-
 }

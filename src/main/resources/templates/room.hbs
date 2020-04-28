@@ -11,34 +11,38 @@
     <!-- HEADER -->
     <header class="center">
         <div class="inner center">
-            <h1> ♔ 체스 게임 ♕ </h1>
+            <span class="room_information">#</span>
+            <div class="room_information" id="room_id">{{roomId}}</div>
+            <h1>{{title}}</h1>
         </div>
     </header>
 
-    <div class="room_information" id="room_id">{{roomId}}</div>
+
 
     <!-- CONTROLLER -->
-    <div class="controller">
+    <div class="button-controller">
         <form action="/room/{{roomId}}/reset" method="get">
-            <button type="submit">새로 시작하기</button>
+            <button type="submit">새 게임</button>
         </form>
         <form action="/room/{{roomId}}" method="post">
             <button type="submit" >방 삭제하기</button>
         </form>
-        <Button id="status" onclick="setScore()">점수 현황</Button>
+        <button id="status" onclick="setScore()">점수 현황</button>
         <form action="/" method="get">
             <button type="submit" >방 나가기</button>
         </form>
     </div>
 
-    <div class="turn" id="current-turn">
+    <!--TURN & SCORE-->
+    <div class="turn-score">
+        <div class="turn" id="current-turn">
+        </div>
 
-    </div>
-
-    <!-- SCORE STATUS -->
-    <div id="score-status">
-        <div class="score" id="black-score"></div>
-        <div class="score" id="white-score"></div>
+        <!-- SCORE STATUS -->
+        <div id="score-status">
+            <div class="score" id="black-score"></div>
+            <div class="score" id="white-score"></div>
+        </div>
     </div>
 
     <!-- BOARD -->
@@ -275,7 +279,7 @@
             <div class="row">1</div>
         </div>
 
-        <div class="chess-row center">
+        <div class="chess-row center" id="bottom-info">
             <div class="square col">a</div>
             <div class="square col">b</div>
             <div class="square col">c</div>
@@ -297,6 +301,12 @@
             </form>
         </div>
     </div>
+
+    <footer>
+        <div class="creator">
+            created by Bossdog & Orange
+        </div>
+    </footer>
 
     <script type="application/javascript" src="/js/index.js"></script>
 </body>

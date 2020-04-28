@@ -5,11 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.dao.util.ConnectionLoader;
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.Turn;
 
+@Component
 public class PlayerDao {
+	
 	public Turn findTurn(int playerId) throws SQLException {
 		String query = "select * from player where player_id = (?)";
 		try (Connection con = ConnectionLoader.load();

@@ -14,6 +14,8 @@ public class GameDto {
 	private final List<PieceDto> units;
 	private final Turn turn;
 	private final Status status2;
+	private String player1Name;
+	private String player2Name;
 
 	public GameDto(Map<Position, Piece> units, Turn turn, Status status2) {
 		this.units = units.values().stream()
@@ -25,6 +27,14 @@ public class GameDto {
 			)).collect(Collectors.toList());
 		this.turn = turn;
 		this.status2 = status2;
+	}
+
+	public void setPlayer1Name(String player1Name) {
+		this.player1Name = player1Name;
+	}
+
+	public void setPlayer2Name(String player2Name) {
+		this.player2Name = player2Name;
 	}
 
 	public Turn getTurn() {

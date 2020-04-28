@@ -14,16 +14,19 @@ import spark.Request;
 import spark.Response;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import wooteco.chess.dao.BoardDao;
+import wooteco.chess.dao.PlayerDao;
+import wooteco.chess.dao.RoomDao;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.GameDto;
 import wooteco.chess.dto.PlayerDto;
 import wooteco.chess.service.BoardService;
-import wooteco.chess.service.PlayerService;
+import wooteco.chess.service.spark.SparkPlayerService;
 
 public class SparkController {
 	private final Gson gson = new GsonBuilder().create();
-	private final BoardService boardService = new BoardService();
-	private final PlayerService playerService = new PlayerService();
+	private final BoardService boardService = new BoardService(new BoardDao(), new RoomDao(), new PlayerDao());
+	private final SparkPlayerService sparkPlayerService = new SparkPlayerService(new PlayerDao());
 
 	public void route() {
 		Spark.staticFileLocation("/templates");
@@ -49,9 +52,9 @@ public class SparkController {
 	private int createPlayers(Request request) throws SQLException {
 		Map<String, String> params = new HashMap<>();
 		params = gson.fromJson(request.body(), params.getClass());
-		int player1Id = playerService.create(
+		int player1Id = sparkPlayerService.create(
 			new PlayerDto(params.get("player1Name"), params.get("player1Password"), "white"));
-		int player2Id = playerService.create(
+		int player2Id = sparkPlayerService.create(
 			new PlayerDto(params.get("player2Name"), params.get("player2Password"), "black"));
 		return boardService.createRoom(player1Id, player2Id);
 	}

@@ -1,8 +1,11 @@
 package wooteco.chess.dao.repository;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-import wooteco.chess.domain.Player;
+import wooteco.chess.dto.PlayerDto;
 
-public interface PlayerRepository extends CrudRepository<Player, Long> {
+@Repository
+public interface PlayerRepository extends CrudRepository<PlayerDto, Long> {
+
 }

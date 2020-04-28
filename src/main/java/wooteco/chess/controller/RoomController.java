@@ -2,10 +2,7 @@ package wooteco.chess.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import wooteco.chess.domain.room.Room;
 import wooteco.chess.service.RoomService;
 
@@ -50,4 +47,11 @@ public class RoomController {
         return "room";
     }
 
+    @PostMapping("/room/{room_id}")
+    public String finish(
+            @PathVariable("room_id") Long roomId
+    ) throws SQLException {
+        roomService.deleteRoom(roomId);
+        return "redirect:" + "/";
+    }
 }

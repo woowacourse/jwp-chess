@@ -22,8 +22,8 @@
         <form action="/start" method="post">
             <input id="start" type="submit" name="command" value="새 게임">
         </form>
-        <form action="/load" method="post">
-            <input id="load" type="submit" name="command" value="불러오기">
+        <form action="/room/{{roomId}}" method="post">
+            <button type="submit" >방 삭제하기</button>
         </form>
         <Button id="status" onclick="setScore()">점수 현황</Button>
         <form action="/" method="get">
@@ -292,8 +292,8 @@
         <div class="inner" id="winner-box">
             <p id="winner-message">
             </p>
-            <form method="POST" action="/start">
-                <button type="submit">새로 시작하기</button>
+            <form method="POST" action="/room/{{roomId}}">
+                <button type="submit">게임 끝내기</button>
             </form>
         </div>
     </div>

@@ -36,7 +36,6 @@ public class BoardController {
         return ResponseEntity.ok().body(fromPiece + " " + toPiece);
     }
 
-
     @GetMapping("/room/{room_id}/score")
     @ResponseBody
     public String status(

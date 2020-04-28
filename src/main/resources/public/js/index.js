@@ -30,7 +30,7 @@ function setPiece(response) {
         finish_box.style.visibility = "visible";
 
         const winner = document.getElementById("winner-message");
-        winner.innerText = response + "이(가) 승리했습니다. " + " 다시 시작하기 버튼을 눌러 새로 시작해주세요.";
+        winner.innerText = response + "이(가) 승리했습니다. ";
         return;
     }
 

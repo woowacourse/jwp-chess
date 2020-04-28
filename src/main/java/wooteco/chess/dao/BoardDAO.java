@@ -40,16 +40,6 @@ public class BoardDAO {
         }
     }
 
-    public void deleteAllById(Long roomId) throws SQLException {
-        String query = "DELETE FROM board where roomId = (?)";
-
-        try (final Connection connection = Connector.getConnection();
-             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setLong(1, roomId);
-            preparedStatement.executeUpdate();
-        }
-    }
-
     public Map<String, String> findAllById(Long roomId) throws SQLException {
         String query = "SELECT * FROM board where roomId = (?)";
         try (final Connection connection = Connector.getConnection();
@@ -64,6 +54,15 @@ public class BoardDAO {
                 boardDto.put(position, piece);
             }
             return boardDto;
+        }
+    }
+
+    public void deleteBoardById(Long roomId) throws SQLException {
+        String query = "DELETE FROM board where roomId = (?)";
+        try (final Connection connection = Connector.getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, roomId);
+            preparedStatement.executeUpdate();
         }
     }
 }

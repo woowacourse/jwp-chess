@@ -71,4 +71,9 @@ public class RoomService {
     public Long findCurrentMaxId() throws SQLException {
         return roomDAO.findCurrentMaxId();
     }
+
+    public void deleteRoom(final Long roomId) throws SQLException {
+        roomDAO.deleteRoomById(roomId);
+        boardDAO.deleteBoardById(roomId);
+    }
 }

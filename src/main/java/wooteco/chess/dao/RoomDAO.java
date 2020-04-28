@@ -68,10 +68,11 @@ public class RoomDAO {
         }
     }
 
-    public void deleteTurn() throws SQLException {
-        String query = "TRUNCATE turn";
+    public void deleteRoomById(Long roomId) throws SQLException {
+        String query = "DELETE FROM room WHERE id = (?)";
         try (final Connection connection = Connector.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, roomId);
             preparedStatement.executeUpdate();
         }
     }

@@ -12,9 +12,4 @@ public class Queen extends Piece {
 			UP, DOWN, LEFT, RIGHT, LEFT_UP, LEFT_DOWN, RIGHT_UP, RIGHT_DOWN)),
 			QUEEN_SCORE);
 	}
-
-	@Override
-	public boolean isKing() {
-		return false;
-	}
 }

@@ -35,7 +35,9 @@ public abstract class Piece {
 		return isNotSameColor(that.color);
 	}
 
-	public abstract boolean isKing();
+	public boolean isKing() {
+		return false;
+	}
 
 	public boolean isSameColor(Color color) {
 		return getColor().equals(color);

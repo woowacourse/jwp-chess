@@ -1,0 +1,6 @@
+CREATE TABLE chess_game (
+	id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	board VARCHAR(64) NOT NULL,
+    turn VARCHAR(5) NOT NULL,
+    room_no int(6) NOT NULL UNIQUE
+);

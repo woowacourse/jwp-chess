@@ -39,6 +39,10 @@
         width: 1200px;
     }
 
+    #sidebar {
+        padding: 10px;
+    }
+
 </style>
 <body id="body">
 <div class="boardwrapper">
@@ -122,12 +126,15 @@
     <!--<form action="/status" id="status-form" method="get">-->
     <!--    <input id="status-button" type="submit" value="결과">-->
     <!--</form>-->
-    <form action="/end" id="end-form" method="get">
-        <input id="roomNo-text" type="text" name="roomNo" style="display: none">
-        <input id="end-button" type="submit" value="종료">
-    </form>
-    <div id="roomno">{{roomNo}}번 방 입니다.</div>
-    <div id="result"></div>
+    <div id="sidebar">
+        <div id="roomno">{{roomNo}}번 방 입니다.</div>
+        <div id="result"></div>
+
+        <form action="/end" id="end-form" method="get">
+            <input id="roomNo-text" type="text" name="roomNo" style="display: none">
+            <input id="end-button" type="submit" value="종료">
+        </form>
+    </div>
 </div>
 <script>
     document.querySelector("#roomNo-text").value = {{roomNo}};

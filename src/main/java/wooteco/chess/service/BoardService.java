@@ -35,7 +35,7 @@ public class BoardService {
 
         if(board.isMovable(fromPosition, toPosition)){
             boardDAO.updatePiece(roomId, fromPosition, PieceType.BLANK.name());
-            boardDAO.updatePiece(roomId, toPosition, piece.getName());
+            boardDAO.updatePiece(roomId, toPosition, piece.getNextPiece().getName());
         }
 
         roomService.updateTurn(roomId);

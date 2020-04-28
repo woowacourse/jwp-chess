@@ -5,19 +5,15 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DBConnector {
-
-    private static DBConnector INSTANCE = new DBConnector();
 
     private Connection connection;
 
-    private DBConnector() {
+    public DBConnector() {
         this.connection = connect();
-    }
-
-    public static DBConnector getInstance() {
-        return INSTANCE;
     }
 
     private Connection connect() {

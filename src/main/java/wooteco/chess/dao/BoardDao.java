@@ -17,9 +17,9 @@ import wooteco.chess.exception.DataAccessException;
 public class BoardDao {
     private static final int FIRST_INDEX = 0;
 
-    private JdbcTemplate template;
+    private JDBCTemplate template;
 
-    public BoardDao(JdbcTemplate template) {
+    public BoardDao(JDBCTemplate template) {
         this.template = template;
     }
 

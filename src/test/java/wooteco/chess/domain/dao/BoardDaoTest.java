@@ -10,14 +10,14 @@ import org.junit.jupiter.api.Test;
 
 import wooteco.chess.dao.BoardDao;
 import wooteco.chess.dao.ConnectionManager;
-import wooteco.chess.dao.JdbcTemplate;
+import wooteco.chess.dao.JDBCTemplate;
 
 class BoardDaoTest {
     private BoardDao boardDao;
 
     @BeforeEach
     void setup() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(new ConnectionManager());
+        JDBCTemplate jdbcTemplate = new JDBCTemplate(new ConnectionManager());
         boardDao = new BoardDao(jdbcTemplate);
     }
 

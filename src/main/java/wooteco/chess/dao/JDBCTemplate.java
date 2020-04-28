@@ -8,10 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class JdbcTemplate {
+public class JDBCTemplate {
     private Connectable connectable;
 
-    public JdbcTemplate(Connectable connectable) {
+    public JDBCTemplate(Connectable connectable) {
         this.connectable = connectable;
     }
 

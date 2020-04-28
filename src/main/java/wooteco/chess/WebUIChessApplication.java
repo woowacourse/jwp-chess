@@ -5,13 +5,13 @@ import static spark.Spark.*;
 import wooteco.chess.controller.WebUIChessController;
 import wooteco.chess.dao.BoardDao;
 import wooteco.chess.dao.ConnectionManager;
-import wooteco.chess.dao.JdbcTemplate;
+import wooteco.chess.dao.JDBCTemplate;
 import wooteco.chess.dao.RoomDao;
 import wooteco.chess.service.ChessService;
 
 public class WebUIChessApplication {
     public static void main(String[] args) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(new ConnectionManager());
+        JDBCTemplate jdbcTemplate = new JDBCTemplate(new ConnectionManager());
         ChessService service = new ChessService(new BoardDao(jdbcTemplate), new RoomDao(jdbcTemplate));
         WebUIChessController controller = new WebUIChessController(service);
 

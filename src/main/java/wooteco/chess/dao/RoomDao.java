@@ -10,9 +10,9 @@ import wooteco.chess.exception.DataAccessException;
 
 @Component
 public class RoomDao {
-    private JdbcTemplate template;
+    private JDBCTemplate template;
 
-    public RoomDao(JdbcTemplate template) {
+    public RoomDao(JDBCTemplate template) {
         this.template = template;
     }
 

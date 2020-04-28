@@ -1,9 +1,7 @@
 package wooteco.chess.dao;
 
-import wooteco.chess.domain.board.Board;
 import wooteco.chess.connection.Connector;
-import wooteco.chess.domain.piece.Piece;
-import wooteco.chess.domain.piece.PieceType;
+import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.position.Position;
 
 import java.sql.Connection;
@@ -18,50 +16,54 @@ public class BoardDAO {
     public BoardDAO() {
     }
 
-    public void insertPiece(final Board board, final Position position) throws SQLException {
-        String query = "INSERT INTO board (position, piece) VALUES (?, ?)";
+    public void insertPiece(final Long roomId, final Board board, final Position position) throws SQLException {
+        String query = "INSERT INTO board (roomId, position, piece) VALUES (?, ?, ?)";
 
         try (final Connection connection = Connector.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, position.toString());
-            preparedStatement.setString(2, board.findBy(position).getName());
+            preparedStatement.setLong(1, roomId);
+            preparedStatement.setString(2, position.toString());
+            preparedStatement.setString(3, board.findBy(position).getName());
             preparedStatement.executeUpdate();
         }
     }
 
-    public void updatePiece(final String position, final String piece) throws SQLException {
-        String query = "UPDATE board SET piece = (?) where position = (?)";
+    public void updatePiece(final Long roomId, final String position, final String piece) throws SQLException {
+        String query = "UPDATE board SET piece = (?) where roomId = (?) AND position = (?)";
 
         try (final Connection connection = Connector.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, piece);
-            preparedStatement.setString(2, position);
+            preparedStatement.setLong(2, roomId);
+            preparedStatement.setString(3, position);
             preparedStatement.executeUpdate();
         }
     }
 
-    public void deletePieces() throws SQLException {
-        String query = "TRUNCATE board";
+    public void deleteAllById(Long roomId) throws SQLException {
+        String query = "DELETE FROM board where roomId = (?)";
 
         try (final Connection connection = Connector.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, roomId);
             preparedStatement.executeUpdate();
         }
     }
 
-    public Map<Position, Piece> findAllPieces() throws SQLException {
-        String query = "SELECT * FROM board";
+    public Map<String, String> findAllById(Long roomId) throws SQLException {
+        String query = "SELECT * FROM board where roomId = (?)";
         try (final Connection connection = Connector.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, roomId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            Map<Position, Piece> output = new HashMap<>();
+            Map<String, String> boardDto = new HashMap<>();
             while (resultSet.next()) {
-                Piece piece = Piece.of(PieceType.valueOf(resultSet.getString("piece")));
-                Position position = Position.of(resultSet.getString("position"));
-                output.put(position, piece);
+                String piece = resultSet.getString("piece");
+                String position = resultSet.getString("position");
+                boardDto.put(position, piece);
             }
-            return output;
+            return boardDto;
         }
     }
 }

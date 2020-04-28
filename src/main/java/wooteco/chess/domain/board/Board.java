@@ -23,7 +23,7 @@ public class Board {
     public Piece findBy(final Position position) {
         return board.keySet().stream()
                 .filter(key -> key.equals(position))
-                .map(key -> board.get(key))
+                .map(board::get)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포지션입니다."));
     }

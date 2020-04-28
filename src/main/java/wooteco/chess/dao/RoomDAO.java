@@ -2,21 +2,43 @@ package wooteco.chess.dao;
 
 import wooteco.chess.connection.Connector;
 import wooteco.chess.domain.piece.Team;
+import wooteco.chess.domain.room.Room;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class TurnDAO {
+public class RoomDAO {
     private Connection connection;
 
-    public TurnDAO() throws SQLException {
+    public RoomDAO() throws SQLException {
         this.connection = Connector.getConnection();
     }
 
-    public void insertTurn(Team targetTeam) throws SQLException {
-        String query = "INSERT INTO turn (team) VALUES (?)";
+    public List<Room> findAllRoom() throws SQLException {
+        String query = "SELECT * FROM room";
         try (final Connection connection = Connector.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, targetTeam.name());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Room> rooms = new ArrayList<>();
+            while (resultSet.next()) {
+                rooms.add(new Room(resultSet.getLong("id"), resultSet.getString("title")));
+            }
+            return rooms;
+        }
+    }
+
+    public void insertRoom(final Long id, final String title, final String turn) throws SQLException {
+        String query = "INSERT INTO room (id, title, turn) VALUES (?, ?, ?)";
+        try (final Connection connection = Connector.getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.setString(2, title);
+            preparedStatement.setString(3, turn);
             preparedStatement.executeUpdate();
         }
     }
@@ -51,4 +73,18 @@ public class TurnDAO {
             preparedStatement.executeUpdate();
         }
     }
+
+    public Long findCurrentMaxId() throws SQLException {
+        String query = "SELECT MAX(id) FROM room";
+        Long id = (long)0;
+        try (final Connection connection = Connector.getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                return resultSet.getLong(1);
+            }
+        }
+        return id;
+    }
+
 }

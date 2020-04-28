@@ -1,4 +1,4 @@
-setTurn();
+// setTurn();
 
 // 점수 현황 동적 렌더링
 let scoreStatus = document.getElementById("score-status");
@@ -84,18 +84,18 @@ function move() {
  }
 
 // 게임 턴 : 비동기
-function setTurn(){
-    $.ajax({
-        type : 'GET',
-        async: true,
-        url: '/turn',
-        dataType: 'text',
-        error: alertMessage,
-        success: function (response) {
-            document.getElementById("current-turn").innerText = response + " 의 차례입니다.";
-        }
-    })
-}
+// function setTurn(){
+//     $.ajax({
+//         type : 'GET',
+//         async: true,
+//         url: '/turn',
+//         dataType: 'text',
+//         error: alertMessage,
+//         success: function (response) {
+//             document.getElementById("current-turn").innerText = response + " 의 차례입니다.";
+//         }
+//     })
+// }
 
 // 에러 메세지
  function alertMessage(response) {

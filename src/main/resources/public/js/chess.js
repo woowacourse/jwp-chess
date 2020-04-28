@@ -58,7 +58,7 @@ function move(source, target) {
             if (winner != null) {
                 alert(winner + "팀이 이겼습니다.");
                 initialize(source, target);
-                window.location = "http://localhost:8080/start";
+                window.location = "http://localhost:8080";
                 return;
             }
             update(board, team, currentTeamScore);

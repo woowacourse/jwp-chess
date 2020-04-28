@@ -5,12 +5,6 @@ public class MoveDto {
     private String target;
 
     protected MoveDto() {
-
-    }
-
-    public MoveDto(String source, String target) {
-        this.source = source;
-        this.target = target;
     }
 
     public String getSource() {

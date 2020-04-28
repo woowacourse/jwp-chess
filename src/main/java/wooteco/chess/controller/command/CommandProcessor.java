@@ -27,7 +27,9 @@ public class CommandProcessor {
         chessManager.move(moveCommand.get(1), moveCommand.get(2));
         printBoard(new BoardDto(chessManager.getBoard()));
 
-        chessManager.getWinner().ifPresent(outputView::printWinner);
+        if (chessManager.hasWinner()) {
+            outputView.printWinner(chessManager.getWinner());
+        }
     }
 
     static void status(ChessManager chessManager, String input) {

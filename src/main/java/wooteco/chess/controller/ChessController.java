@@ -21,7 +21,7 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/start")
+    @GetMapping("/")
     public String startGame(Model model) {
         chessService.start();
         model.addAllAttributes(chessService.makeStartResponse());

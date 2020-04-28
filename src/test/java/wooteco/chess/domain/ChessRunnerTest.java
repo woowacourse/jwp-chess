@@ -8,8 +8,6 @@ import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Positions;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -49,7 +47,7 @@ class ChessRunnerTest {
     @DisplayName("우승자가 없을 때")
     @Test
     void findWinner() {
-        assertThat(chessRunner.findWinner()).isEqualTo(Optional.empty());
+        assertThat(chessRunner.findWinner()).isEqualTo(Team.NONE);
     }
 
     @DisplayName("점수 계산")

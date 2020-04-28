@@ -6,7 +6,6 @@ import wooteco.chess.domain.position.Position;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class Board {
     private final Map<Position, Piece> board = new HashMap<>();
@@ -30,23 +29,23 @@ public class Board {
         board.clear();
     }
 
-    public Optional<Team> checkWinner() {
-        if (checkWhiteKing() && !checkBlackKing()) {
-            return Optional.of(Team.WHITE);
+    public Team checkWinner() {
+        if (hasWhiteKing() && !hasBlackKing()) {
+            return Team.WHITE;
         }
-        if (!checkWhiteKing() && checkBlackKing()) {
-            return Optional.of(Team.BLACK);
+        if (!hasWhiteKing() && hasBlackKing()) {
+            return Team.BLACK;
         }
-        return Optional.empty();
+        return Team.NONE;
     }
 
-    private boolean checkWhiteKing() {
+    private boolean hasWhiteKing() {
         return board.values()
                 .stream()
                 .anyMatch(Piece::isWhiteKing);
     }
 
-    private boolean checkBlackKing() {
+    private boolean hasBlackKing() {
         return board.values()
                 .stream()
                 .anyMatch(Piece::isBlackKing);

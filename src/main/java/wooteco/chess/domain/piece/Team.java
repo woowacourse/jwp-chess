@@ -4,7 +4,8 @@ import java.util.function.Function;
 
 public enum Team {
     BLACK(String::toUpperCase),
-    WHITE(String::toLowerCase);
+    WHITE(String::toLowerCase),
+    NONE(String::toString);
 
     private final Function<String, String> expression;
 

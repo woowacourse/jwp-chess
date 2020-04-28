@@ -3,10 +3,10 @@ package wooteco.chess.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wooteco.chess.controller.command.Command;
-import wooteco.chess.dao.ChessDao;
 import wooteco.chess.domain.ChessManager;
 import wooteco.chess.dto.Commands;
 import wooteco.chess.dto.GameResponse;
+import wooteco.chess.repository.CommandsRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +17,9 @@ public class ChessService {
     private static final String MOVE_ERROR_MESSAGE = "이동할 수 없는 곳입니다. 다시 입력해주세요";
     private static final String MOVE_DELIMITER = " ";
 
-    private ChessDao chessDao;
+    @Autowired
+    private CommandsRepository commandsRepository;
     private ChessManager chessManager;
-
-    @Autowired(required = false)
-    public ChessService(ChessDao chessDao) {
-        this.chessDao = chessDao;
-    }
 
     public void start() {
         chessManager = new ChessManager();
@@ -35,7 +31,7 @@ public class ChessService {
     }
 
     public void playLastGame() {
-        List<Commands> commands = chessDao.findAll();
+        List<Commands> commands = commandsRepository.findAll();
         for (Commands command : commands) {
             Command.MOVE.apply(chessManager, command.get());
         }
@@ -67,9 +63,7 @@ public class ChessService {
         model.put("chessPieces", gameResponse.getTiles());
         model.put("currentTeam", gameResponse.getCurrentTeam());
         model.put("currentTeamScore", gameResponse.getCurrentTeamScore());
-        if (!chessDao.findAll().isEmpty()) {
-            model.put("haveLastGameRecord", "true");
-        }
+        model.put("haveLastGameRecord", !commandsRepository.findAll().isEmpty());
 
         return model;
     }
@@ -80,19 +74,15 @@ public class ChessService {
         model.put("chessPieces", gameResponse.getTiles());
         model.put("currentTeam", gameResponse.getCurrentTeam());
         model.put("currentTeamScore", gameResponse.getCurrentTeamScore());
-
-        if (chessManager.getWinner().isPresent()) {
-            model.put("winner", chessManager.getWinner().get());
-            chessManager.clearBoard();
-        }
+        model.put("winner", chessManager.getWinner());
         return model;
     }
 
     private void initializeDatabase() {
-        chessDao.deleteAll();
+        commandsRepository.deleteAll();
     }
 
     private void saveToDatabase(String command) {
-        chessDao.save(new Commands(command));
+        commandsRepository.save(new Commands(command));
     }
 }

@@ -12,7 +12,6 @@ import wooteco.chess.domain.score.Score;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class BoardTest {
     @DisplayName("빈 칸으로 말 이동")
@@ -62,9 +61,9 @@ public class BoardTest {
         bothKing.put(Positions.of("b7"), new Piece(PieceType.KING, Team.WHITE));
         Board drawBoard = new Board(bothKing);
 
-        Assertions.assertThat(whiteWinBoard.checkWinner()).isEqualTo(Optional.of(Team.WHITE));
-        Assertions.assertThat(blackWinBoard.checkWinner()).isEqualTo(Optional.of(Team.BLACK));
-        Assertions.assertThat(drawBoard.checkWinner()).isEmpty();
+        Assertions.assertThat(whiteWinBoard.checkWinner()).isEqualTo(Team.WHITE);
+        Assertions.assertThat(blackWinBoard.checkWinner()).isEqualTo(Team.BLACK);
+        Assertions.assertThat(drawBoard.checkWinner()).isEqualTo(Team.NONE);
     }
 
     @DisplayName("지정한 칸이 비어있는지 판단")

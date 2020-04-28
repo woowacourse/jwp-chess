@@ -3,8 +3,6 @@ package wooteco.chess.domain;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Team;
 
-import java.util.Optional;
-
 public class ChessManager {
     private ChessRunner chessRunner;
     private boolean playing;
@@ -20,15 +18,11 @@ public class ChessManager {
 
     public void move(String source, String target) {
         chessRunner.updateBoard(source, target);
-        playing = stopGameIfWinnerExists();
+        playing = hasWinner();
     }
 
     public void clearBoard() {
         chessRunner.clearBoard();
-    }
-
-    private boolean stopGameIfWinnerExists() {
-        return !chessRunner.findWinner().isPresent();
     }
 
     public boolean isPlaying() {
@@ -39,6 +33,10 @@ public class ChessManager {
         return chessRunner.calculateScore();
     }
 
+    public boolean hasWinner() {
+        return getWinner() != Team.NONE;
+    }
+
     public Board getBoard() {
         return chessRunner.getBoard();
     }
@@ -47,7 +45,7 @@ public class ChessManager {
         return chessRunner.getCurrentTeam();
     }
 
-    public Optional<Team> getWinner() {
+    public Team getWinner() {
         return chessRunner.findWinner();
     }
 }

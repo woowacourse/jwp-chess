@@ -7,8 +7,6 @@ import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.position.Positions;
 import wooteco.chess.domain.score.Score;
 
-import java.util.Optional;
-
 public class ChessRunner {
     private final Board board;
     private Team currentTeam;
@@ -42,7 +40,7 @@ public class ChessRunner {
         board.clear();
     }
 
-    public Optional<Team> findWinner() {
+    public Team findWinner() {
         return this.board.checkWinner();
     }
 

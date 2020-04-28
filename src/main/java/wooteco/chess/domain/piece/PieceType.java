@@ -1,7 +1,6 @@
 package wooteco.chess.domain.piece;
 
 import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.move.BishopMoveStrategy;
 import wooteco.chess.domain.move.KingMoveStrategy;
 import wooteco.chess.domain.move.KnightMoveStrategy;
@@ -9,6 +8,7 @@ import wooteco.chess.domain.move.MoveStrategy;
 import wooteco.chess.domain.move.PawnMoveStrategy;
 import wooteco.chess.domain.move.QueenMoveStrategy;
 import wooteco.chess.domain.move.RookMoveStrategy;
+import wooteco.chess.domain.position.Position;
 
 public enum PieceType {
     KING("k", 0, new KingMoveStrategy()),

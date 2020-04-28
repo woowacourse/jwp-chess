@@ -36,7 +36,6 @@ public class GameDao implements MySqlJdbcTemplateDao {
             if (resultSet.next()) {
                 return resultSet.getString(Statement.RETURN_GENERATED_KEYS);
             }
-            resultSet.close();
             throw new SQLException();
         }
     }
@@ -49,7 +48,6 @@ public class GameDao implements MySqlJdbcTemplateDao {
             ResultSet resultSet = statement.executeQuery();
             List<String> gameIds = new ArrayList<>();
             addGameIds(resultSet, gameIds);
-            resultSet.close();
             return gameIds;
         }
     }
@@ -68,7 +66,6 @@ public class GameDao implements MySqlJdbcTemplateDao {
             ResultSet resultSet = statement.executeQuery();
             List<Map<String, String>> games = new ArrayList<>();
             generateGamesContext(resultSet, games);
-            resultSet.close();
             return games;
         }
     }
@@ -97,7 +94,6 @@ public class GameDao implements MySqlJdbcTemplateDao {
                 game.put(WHITE_ID, Integer.toString(resultSet.getInt("white")));
                 game.put(BLACK_ID, Integer.toString(resultSet.getInt("black")));
             }
-            resultSet.close();
             return game;
         }
     }

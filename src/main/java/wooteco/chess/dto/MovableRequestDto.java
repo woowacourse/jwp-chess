@@ -1,7 +1,7 @@
 package wooteco.chess.dto;
 
 public class MovableRequestDto {
-    private String from;
+    private final String from;
 
     public MovableRequestDto(final String from) {
         this.from = from;

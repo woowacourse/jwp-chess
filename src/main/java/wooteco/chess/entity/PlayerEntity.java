@@ -16,7 +16,7 @@ public class PlayerEntity {
     private int lose;
     private int draw;
 
-    public PlayerEntity(Player player) {
+    public PlayerEntity(final Player player) {
         this.id = player.getId();
         this.username = player.getUsername();
         this.password = player.getPassword();

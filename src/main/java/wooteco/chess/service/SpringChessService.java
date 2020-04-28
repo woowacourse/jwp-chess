@@ -42,7 +42,7 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public Map<String, GameResponseDto> getBoards() {
+    public Map<String, GameResponseDto> getGames() {
         return generateGames()
             .stream()
             .collect(toMap(Game::getId, GameResponseDto::new));
@@ -51,9 +51,7 @@ public class SpringChessService implements ChessService {
     @Override
     public Map<String, GameResponseDto> addGame(final String title, final Player white, final Player black) {
         HashMap<String, GameResponseDto> result = new HashMap<>();
-        GameEntity entity = new GameEntity(new Game(title, white, black));
-        gameRepository.addGame(entity.getId(), entity.getTitle(), entity.getWhiteId(), entity.getBlackId());
-        GameEntity newGame = gameRepository.findById(entity.getId()).get();
+        GameEntity newGame = gameRepository.save(new GameEntity(new Game(title, white, black)));
         // TODO: 플레어어 db 에서 가져오기
         result.put(newGame.getId(), new GameResponseDto(newGame.toModel(white, black)));
         return result;
@@ -107,23 +105,13 @@ public class SpringChessService implements ChessService {
         playerRepository.save(new PlayerEntity(game.getPlayer(Side.BLACK)));
     }
 
-    @Override
-    public double getScoreById(final String id, final Side side) {
-        return findGameById(id).getScoreOf(side);
-    }
-
-    @Override
-    public Map<String, Map<Side, Player>> getPlayerContexts() {
-        return generateGames()
-            .stream()
-            .collect(toMap(Game::getId, Game::getPlayers));
-    }
-
     private List<Game> generateGames() {
         List<GameEntity> games = Lists.newArrayList(gameRepository.findAll());
         return games.stream()
-            .map(gameEntity -> gameEntity.toModel(findPlayerById(gameEntity.getWhiteId()),
-                findPlayerById(gameEntity.getBlackId())))
+            .map(gameEntity -> gameEntity.toModel(
+                findPlayerById(gameEntity.getWhiteId()),
+                findPlayerById(gameEntity.getBlackId()))
+            )
             .collect(toList());
     }
 
@@ -142,6 +130,10 @@ public class SpringChessService implements ChessService {
         scores.put(Side.WHITE, getScoreById(id, Side.WHITE));
         scores.put(Side.BLACK, getScoreById(id, Side.BLACK));
         return scores;
+    }
+
+    public double getScoreById(final String id, final Side side) {
+        return findGameById(id).getScoreOf(side);
     }
 
     @Override

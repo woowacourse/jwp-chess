@@ -11,7 +11,7 @@ public class MoveEntity {
     @Column("end_position") private String end;
     @Column("game") private String gameId;
 
-    public MoveEntity(String gameId, String start, String end) {
+    public MoveEntity(final String gameId, final String start, final String end) {
         this.gameId = gameId;
         this.start = start;
         this.end = end;

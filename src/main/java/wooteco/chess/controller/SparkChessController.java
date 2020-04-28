@@ -32,7 +32,7 @@ public class SparkChessController {
 
     public void route() {
         get("/", this::renderEntryPoint);
-        get("/boards", this::getPlayerContexts, json());
+        get("/boards", this::getGames, json());
         post("/boards", this::addGameAndGetPlayers, json());
 
         get("/boards/:id", this::getBoard, json());
@@ -56,9 +56,9 @@ public class SparkChessController {
         return render(new HashMap<>());
     }
 
-    private Map<String, Map<Side, Player>> getPlayerContexts(final Request request, final Response response) throws
+    private Map<String, GameResponseDto> getGames(final Request request, final Response response) throws
         SQLException {
-        return service.getPlayerContexts();
+        return service.getGames();
     }
 
     private Map<String, GameResponseDto> addGameAndGetPlayers(final Request request, final Response response) throws

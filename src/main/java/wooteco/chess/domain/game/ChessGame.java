@@ -1,5 +1,8 @@
 package wooteco.chess.domain.game;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 import wooteco.chess.domain.MoveParameter;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.PieceState;
@@ -12,17 +15,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Table("chess_game")
 public class ChessGame {
 
+    @Id
+    private Long id;
     private Board board;
-    private Turn turn;
+    @Column("team")
+    private Team turn;
 
-    private ChessGame(final Board board, final Turn turn) {
+    private ChessGame(final Board board, final Team turn) {
         this.board = board;
         this.turn = turn;
     }
 
-    public static ChessGame of(final Board board, final Turn turn) {
+    public static ChessGame of(final Board board, final Team turn) {
         return new ChessGame(board, turn);
     }
 
@@ -33,7 +40,7 @@ public class ChessGame {
     public void move(MoveParameter moveParameter) {
         if (!isEnd()) {
             board.move(moveParameter.getSource(), moveParameter.getTarget(), turn);
-            turn.switchTurn();
+            switchTurn();
             return;
         }
         throw new UnsupportedOperationException("게임이 종료 되었습니다.");
@@ -48,7 +55,7 @@ public class ChessGame {
     }
 
     public double getScore() {
-        return board.getScores(turn.getTurn());
+        return board.getScores(turn);
     }
 
     public Map<Team, Double> getStatus() {
@@ -60,7 +67,7 @@ public class ChessGame {
     }
 
     public Team getTurn() {
-        return turn.getTurn();
+        return turn;
     }
 
     public Team getWinner() {
@@ -71,5 +78,13 @@ public class ChessGame {
                     .findFirst().get();
         }
         throw new UnsupportedOperationException("게임이 아직 종료되지 않았습니다.");
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    private void switchTurn() {
+        turn.toggle();
     }
 }

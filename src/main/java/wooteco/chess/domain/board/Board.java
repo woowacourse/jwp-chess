@@ -1,6 +1,6 @@
 package wooteco.chess.domain.board;
 
-import wooteco.chess.domain.game.Turn;
+import org.springframework.data.relational.core.mapping.MappedCollection;
 import wooteco.chess.domain.piece.PieceState;
 import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.piece.implementation.piece.King;
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class Board {
 
     private static final int RUNNING_KING_COUNT = 2;
+    @MappedCollection(idColumn = "game_id", keyColumn = "")
     private Map<Position, PieceState> board;
 
     private Board(Map<Position, PieceState> board) {
@@ -30,7 +31,7 @@ public class Board {
         return new Board(board);
     }
 
-    public void move(Position source, Position target, Turn turn) {
+    public void move(Position source, Position target, Team turn) {
         PieceState sourcePiece = board.get(source);
         validateSource(sourcePiece, turn);
         PieceState piece = sourcePiece.move(target, getBoardState());
@@ -38,7 +39,7 @@ public class Board {
         board.put(target, piece);
     }
 
-    public List<Position> getMovablePositions(Position source, Turn turn) {
+    public List<Position> getMovablePositions(Position source, Team turn) {
         PieceState sourcePiece = board.get(source);
         validateTurn(sourcePiece, turn);
         return sourcePiece.getMovablePositions(getBoardState());
@@ -63,7 +64,7 @@ public class Board {
         return Collections.unmodifiableMap(board);
     }
 
-    private void validateSource(PieceState sourcePiece, Turn turn) {
+    private void validateSource(PieceState sourcePiece, Team turn) {
         validateExists(sourcePiece);
         validateTurn(sourcePiece, turn);
     }
@@ -74,7 +75,7 @@ public class Board {
         }
     }
 
-    private void validateTurn(PieceState sourcePiece, Turn turn) {
+    private void validateTurn(PieceState sourcePiece, Team turn) {
         if (!turn.isSameTeam(sourcePiece.getTeam())) {
             throw new IllegalArgumentException("해당 플레이어의 턴이 아닙니다.");
         }

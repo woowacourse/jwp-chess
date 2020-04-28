@@ -1,18 +1,19 @@
 package wooteco.chess.dao;
 
-import org.springframework.stereotype.Component;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.game.ChessGame;
-import wooteco.chess.domain.game.Turn;
 import wooteco.chess.domain.piece.PieceState;
 import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-@Component
 public class ChessDAO {
 
     private JDBCTemplate jdbcTemplate;
@@ -131,7 +132,7 @@ public class ChessDAO {
     public Optional<ChessGame> findGameById(long id) {
         try {
             Board board = getCurrentBoard(id);
-            Turn turn = getCurrentTurn(id);
+            Team turn = getCurrentTurn(id);
             return Optional.of(ChessGame.of(board, turn));
         } catch (SQLException e) {
             return Optional.empty();
@@ -162,15 +163,15 @@ public class ChessDAO {
         return jdbcTemplate.executeQuery(query, preparedStatementSetter, resultSetMapper);
     }
 
-    private Turn getCurrentTurn(final long id) throws SQLException {
+    private Team getCurrentTurn(final long id) throws SQLException {
         String query = "SELECT turn FROM chessGameTable WHERE id = ?;";
         PreparedStatementSetter preparedStatementSetter = preparedStatement -> {
             preparedStatement.setLong(1, id);
         };
-        ResultSetMapper<Turn> resultSetMapper = resultSet -> {
+        ResultSetMapper<Team> resultSetMapper = resultSet -> {
             if (resultSet.next()) {
                 String team = resultSet.getString("turn");
-                return Turn.from(Team.valueOf(team));
+                return Team.valueOf(team);
             }
             throw new IllegalArgumentException("턴 정보가 없습니다.");
         };

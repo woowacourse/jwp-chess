@@ -7,6 +7,6 @@ import java.util.List;
 
 @Repository
 public interface HistoryRepository extends CrudRepository<History, Long> {
-	@Override
-	List<History> findAll();
+    @Override
+    List<History> findAll();
 }

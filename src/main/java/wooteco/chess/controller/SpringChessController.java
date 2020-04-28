@@ -9,7 +9,7 @@ import wooteco.chess.domain.position.MovingPosition;
 import wooteco.chess.dto.ChessGameDto;
 import wooteco.chess.dto.MovablePositionsDto;
 import wooteco.chess.dto.MoveStatusDto;
-import wooteco.chess.service.SpringChessService;
+import wooteco.chess.service.SpringDataJDBCChessService;
 import wooteco.chess.web.JsonTransformer;
 
 import java.sql.SQLException;
@@ -19,7 +19,7 @@ import java.util.Map;
 @Controller
 public class SpringChessController {
     @Autowired
-    private SpringChessService springChessService;
+    private SpringDataJDBCChessService springChessService;
 
     @GetMapping("/")
     public ModelAndView routeMainPage() {

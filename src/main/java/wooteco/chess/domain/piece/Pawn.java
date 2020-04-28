@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.Column;
 import wooteco.chess.domain.board.Position;
@@ -59,6 +58,7 @@ public class Pawn extends GamePiece {
 
     private List<Position> findMovablePositions(Board board, List<Position> path) {
         List<Position> possiblePath = new ArrayList<>();
+
         for (int i = 0; i < path.size() && !board.isNotEmpty(path.get(i)); i++) {
             Position position = path.get(i);
             possiblePath.add(position);
@@ -76,7 +76,8 @@ public class Pawn extends GamePiece {
     }
 
     private void checkKillPosition(Board board, Position position, List<Position> paths) {
-        if (position != null && board.isNotEmpty(position) && !board.isNotSameColor(this, position)) {
+        if (position != null && board.isNotEmpty(position)
+                && board.isNotSameColor(this, position)) {
             paths.add(position);
         }
     }

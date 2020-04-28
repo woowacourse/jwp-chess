@@ -10,7 +10,8 @@ public class History {
     private @Column("start") String start;
     private @Column("end") String end;
 
-    public History() {}
+    public History() {
+    }
 
     public History(String start, String end) {
         this.start = start;

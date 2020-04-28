@@ -19,7 +19,6 @@ import chess.view.Announcement;
 import chess.view.BoardToHtml;
 import chess.view.board.Board;
 import org.springframework.stereotype.Service;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
@@ -54,7 +53,7 @@ public class ChessRoomService {
 	}
 
 	private State loadState(final int roomId) throws SQLException {
-		final StateDto stateDto = stateRepository.findByRoomId(roomId);
+		final StateDto stateDto = stateRepository.findByRoomId(roomId).orElseThrow(DaoNoneSelectedException::new);
 		final List<PieceDto> pieceDtos = pieceDao.findPiecesByRoomId(roomId);
 
 		final Set<Piece> pieces = createPieceSet(pieceDtos);

@@ -2,100 +2,135 @@ package wooteco.chess.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import wooteco.chess.dto.RoomResponseDto;
-import wooteco.chess.repository.GameDAO;
+import org.springframework.transaction.annotation.Transactional;
+import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.PieceMapper;
+import wooteco.chess.dto.*;
+import wooteco.chess.repository.GameRepository;
+import wooteco.chess.repository.PieceRepository;
 import wooteco.chess.domain.Color;
 import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.PieceScore;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Pieces;
-import wooteco.chess.dto.MoveRequestDto;
-import wooteco.chess.dto.MoveResponseDto;
-import wooteco.chess.dto.PiecesResponseDto;
 import wooteco.chess.repository.RoomRepository;
+import wooteco.chess.repository.entity.GameEntity;
+import wooteco.chess.repository.entity.PieceEntity;
 import wooteco.chess.repository.entity.RoomEntity;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class SpringGameService {
 
     @Autowired
-    private GameDAO gameDAO;
-
-    @Autowired
     private RoomRepository roomRepository;
 
-    public MoveResponseDto initialize(int roomId) throws SQLException {
-        roomRepository.updateRoomColorById(roomId, Color.WHITE.name());
-        Pieces pieces = new Pieces(Pieces.initPieces());
-        gameDAO.addAllPiecesById(roomId, pieces);
-        return new MoveResponseDto(new PiecesResponseDto(pieces).getPieces(), Color.WHITE, false);
+    @Transactional
+    public GameResponseDto initialize(GameRequestDto request) throws SQLException {
+        RoomEntity roomEntity = roomRepository.findById(request.getId())
+                .orElseThrow(RuntimeException::new);
+        Set<PieceEntity> pieceEntities = convertPiecesToPieceEntity(Pieces.initPieces());
+        GameEntity gameEntity = new GameEntity(Color.WHITE, pieceEntities);
+        roomEntity.updateGame(gameEntity);
+        RoomEntity persistEntity = roomRepository.save(roomEntity);
+
+        return convertRoomEntityToGameDto(persistEntity);
     }
 
-    public MoveResponseDto move(MoveRequestDto requestDTO) throws SQLException {
-        Integer roomId = requestDTO.getRoomId();
-        String sourcePosition = requestDTO.getSourcePosition();
-        String targetPosition = requestDTO.getTargetPosition();
+    public GameResponseDto move(MoveRequestDto moveRequestDto) throws SQLException {
+        UUID id = moveRequestDto.getId();
+        String sourcePosition = moveRequestDto.getSourcePosition();
+        String targetPosition = moveRequestDto.getTargetPosition();
 
-        Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
-        RoomResponseDto responseDto = roomRepository.findById(roomId)
-                .map(RoomResponseDto::of)
+        RoomEntity roomEntity = roomRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
-        GameManager gameManager = new GameManager(pieces, Color.valueOf(responseDto.getCurrentColor()));
+        GameEntity gameEntity = roomEntity.getGame();
+
+        Pieces pieces = new Pieces(convertPieceEntityToPieces(gameEntity.getPiece()));
+
+        GameManager gameManager = new GameManager(pieces, gameEntity.getTurn());
         gameManager.validateEndGame();
         gameManager.moveFromTo(Position.of(sourcePosition), Position.of(targetPosition));
-        roomRepository.updateRoomColorById(roomId, gameManager.getCurrentColor().name());
-        gameDAO.removeAllPiecesById(roomId);
-        gameDAO.addAllPiecesById(roomId, pieces);
-        return new MoveResponseDto(new PiecesResponseDto(pieces).getPieces(), Color.valueOf(responseDto.getCurrentColor()),
-                gameManager.isKingDead());
+
+        Pieces movedPieces = gameManager.getPieces();
+        gameEntity.updatePiece(convertPiecesToPieceEntity(movedPieces.getPieces()));
+        gameEntity.updateTurn(gameManager.getCurrentColor());
+
+        roomEntity.updateGame(gameEntity);
+        roomRepository.save(roomEntity);
+
+        return convertRoomEntityToGameDto(roomEntity);
     }
 
-    public double getScore(int roomId, Color color) throws SQLException {
-        Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
-        GameManager gameManager = new GameManager(pieces, color);
+    public double getScore(final GameRequestDto gameRequestDto) throws SQLException {
+        UUID id = gameRequestDto.getId();
 
-        return PieceScore.calculateByColor(gameManager, color);
-    }
-
-    public PiecesResponseDto getPiecesResponseDTO(int roomId) throws SQLException {
-        Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
-        return new PiecesResponseDto(pieces);
-    }
-
-    private boolean isKingDead(final int roomId) throws SQLException {
-        Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
-        RoomResponseDto responseDto = roomRepository.findById(roomId)
-                .map(RoomResponseDto::of)
+        RoomEntity roomEntity = roomRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
-        Color currentColor = Color.valueOf(responseDto.getCurrentColor());
 
-        return pieces.isKingDead(currentColor);
+        GameEntity gameEntity = roomEntity.getGame();
+
+
+        Map<Position, Piece> originPieces = convertPieceEntityToPieces(gameEntity.getPiece());
+        Pieces pieces = new Pieces(originPieces);
+        GameManager gameManager = new GameManager(pieces, gameEntity.getTurn());
+
+        return PieceScore.calculateByColor(gameManager, gameEntity.getTurn());
     }
 
-    private Color getCurrentColor(final int roomId) throws SQLException {
-        RoomResponseDto responseDto = roomRepository.findById(roomId)
-                .map(RoomResponseDto::of)
-                .orElseThrow(RuntimeException::new);
-        return Color.valueOf(responseDto.getCurrentColor());
-    }
+    public List<String> getMovablePositions(final MoveRequestDto moveRequestDto) throws SQLException {
+        UUID id = moveRequestDto.getId();
+        String sourcePosition = moveRequestDto.getSourcePosition();
 
-    public List<String> getMovablePositions(final int roomId, final String sourcePosition) throws SQLException {
-        Pieces pieces = new Pieces(gameDAO.findAllPiecesById(roomId));
-        RoomResponseDto responseDto = roomRepository.findById(roomId)
-                .map(RoomResponseDto::of)
+        RoomEntity roomEntity = roomRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
-        Color currentColor = Color.valueOf(responseDto.getCurrentColor());
+        GameEntity game = roomEntity.getGame();
+        Map<Position, Piece> originPieces = convertPieceEntityToPieces(game.getPiece());
+        Pieces pieces = new Pieces(originPieces);
 
-        GameManager gameManager = new GameManager(pieces, currentColor);
+        GameManager gameManager = new GameManager(pieces, game.getTurn());
 
         return gameManager.getMovablePositions(Position.of(sourcePosition));
     }
 
-    public MoveResponseDto createMoveResponseDTO(final int roomId) throws SQLException {
-        return new MoveResponseDto(getPiecesResponseDTO(roomId).getPieces(),
-                getCurrentColor(roomId), isKingDead(roomId));
+    private GameResponseDto convertRoomEntityToGameDto(final RoomEntity roomEntity) {
+        GameEntity game = roomEntity.getGame();
+        Color turn = game.getTurn();
+        Set<PieceEntity> pieceEntities = game.getPiece();
+        Map<Position, Piece> originPieces = convertPieceEntityToPieces(pieceEntities);
+        Pieces pieces = new Pieces(originPieces);
+        boolean kingDead = pieces.isKingDead(turn);
+
+        return new GameResponseDto(new PiecesResponseDto(pieces).getPieces(), turn, kingDead);
+    }
+
+    private Set<PieceEntity> convertPiecesToPieceEntity(final Map<Position, Piece> pieces) {
+        return pieces.entrySet().stream()
+                .map(entry ->
+                        new PieceEntity(entry.getValue().getSymbol(),
+                                entry.getValue().getColor().name(),
+                                entry.getKey().getPosition()))
+                .collect(Collectors.toSet());
+    }
+
+    private Map<Position, Piece> convertPieceEntityToPieces(final Set<PieceEntity> entity) {
+        return entity.stream()
+                .collect(Collectors.toMap(
+                        pieceEntity -> Position.of(pieceEntity.getPosition()),
+                        pieceEntity -> PieceMapper.getInstance().findDBPiece(pieceEntity.getName())
+                ));
+    }
+
+    public GameResponseDto findAllPieces(final UUID roomId) {
+        return convertRoomEntityToGameDto(roomRepository
+                        .findById(roomId)
+                        .orElseThrow(RuntimeException::new)
+        );
     }
 }

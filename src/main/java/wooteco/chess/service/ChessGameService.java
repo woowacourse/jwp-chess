@@ -6,14 +6,12 @@ import chess.domain.board.Position;
 import chess.domain.command.MoveCommand;
 import chess.domain.piece.Piece;
 import chess.dto.BoardDto;
-import chess.dto.CellManager;
 import chess.dto.TurnDto;
 import org.springframework.stereotype.Service;
 import wooteco.chess.entity.PieceEntity;
 import wooteco.chess.repository.BoardRepository;
 import wooteco.chess.repository.TurnRepository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -28,12 +26,12 @@ public class ChessGameService {
         this.turnRepository = turnRepository;
     }
 
-    public Map<String, Object> loadBoard() {
-        ChessBoard chessBoard = createBoardFromDb();
-        return createModel(chessBoard);
+    public ChessBoard loadBoard() {
+        return createBoardFromDb();
+//        return createModel(chessBoard);
     }
 
-    public Map<String, Object> createNewChessGame() {
+    public ChessBoard createNewChessGame() {
         ChessBoard chessBoard = new ChessBoard();
         Map<Position, Piece> board = chessBoard.getBoard();
 
@@ -43,10 +41,10 @@ public class ChessGameService {
         }
         this.turnRepository.insert(TurnDto.from(chessBoard).getCurrentTeam());
 
-        return createModel(chessBoard);
+        return chessBoard;
     }
 
-    public Map<String, Object> movePiece(String source, String target) {
+    public ChessBoard movePiece(String source, String target) {
         ChessBoard chessBoard = createBoardFromDb();
         Map<Position, Piece> board = chessBoard.getBoard();
         chessBoard.move(new MoveCommand(String.format("move %s %s", source, target)));
@@ -57,27 +55,19 @@ public class ChessGameService {
         }
         this.turnRepository.update(TurnDto.from(chessBoard).getCurrentTeam());
 
-        return createModel(chessBoard);
+        return chessBoard;
     }
 
-    public void endGame() {
+    private void endGame() {
         this.boardRepository.deleteAll();
         this.turnRepository.deleteAll();
     }
 
-    public Map<String, Object> findWinner() {
-        Map<String, Object> model = new HashMap<>();
-
+    public GameResult findWinner() {
         ChessBoard chessBoard = createBoardFromDb();
-
         GameResult gameResult = chessBoard.createGameResult();
-        model.put("winner", gameResult.getWinner());
-        model.put("loser", gameResult.getLoser());
-        model.put("blackScore", gameResult.getAliveBlackPieceScoreSum());
-        model.put("whiteScore", gameResult.getAliveWhitePieceScoreSum());
-
         endGame();
-        return model;
+        return gameResult;
     }
 
     public boolean isGameOver() {
@@ -87,19 +77,6 @@ public class ChessGameService {
 
     public boolean isNotGameOver() {
         return !isGameOver();
-    }
-
-    private Map<String, Object> createModel(ChessBoard chessBoard) {
-        Map<String, Object> model = new HashMap<>();
-        GameResult gameResult = chessBoard.createGameResult();
-        CellManager cellManager = new CellManager();
-
-        model.put("cells", cellManager.createCells(chessBoard));
-        model.put("currentTeam", chessBoard.getTeam().getName());
-        model.put("blackScore", gameResult.getAliveBlackPieceScoreSum());
-        model.put("whiteScore", gameResult.getAliveWhitePieceScoreSum());
-
-        return model;
     }
 
     private ChessBoard createBoardFromDb() {

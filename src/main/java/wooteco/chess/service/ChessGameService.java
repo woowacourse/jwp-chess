@@ -5,15 +5,18 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
+import wooteco.chess.dao.RoomDao;
 import wooteco.chess.domain.BoardConverter;
 import wooteco.chess.domain.ChessGame;
 import wooteco.chess.domain.FinishFlag;
 import wooteco.chess.domain.Side;
-import wooteco.chess.dao.RoomDao;
+import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.ChessGameDto;
 import wooteco.chess.dto.RoomDto;
-import wooteco.chess.domain.position.Position;
 
+@Service
 public class ChessGameService {
 	private final RoomDao roomDao;
 
@@ -51,7 +54,7 @@ public class ChessGameService {
 	public List<RoomDto> findAllRooms() throws SQLException {
 		List<String> rooms = roomDao.findAll();
 		return rooms.stream()
-				.map(RoomDto::of)
+				.map(RoomDto::new)
 				.collect(Collectors.toList());
 	}
 

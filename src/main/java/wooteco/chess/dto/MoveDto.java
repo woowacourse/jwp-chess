@@ -5,12 +5,6 @@ public class MoveDto {
 	private String source;
 	private String target;
 
-	public MoveDto(String roomName, String source, String target) {
-		this.roomName = roomName;
-		this.source = source;
-		this.target = target;
-	}
-
 	public String getRoomName() {
 		return roomName;
 	}

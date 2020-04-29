@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import wooteco.chess.domain.BoardConverter;
 import wooteco.chess.domain.ChessGame;
 import wooteco.chess.domain.FinishFlag;
 
+@Repository
 public class RoomDao extends MySqlDao {
 	public List<String> findAll() throws SQLException {
 		String query = "SELECT * FROM room";

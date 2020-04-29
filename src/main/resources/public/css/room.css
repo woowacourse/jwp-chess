@@ -1,0 +1,221 @@
+body {
+    margin: 0;
+    position: relative;
+    background: url("../images/bg.png");
+    font-family: 'Do Hyeon', sans-serif;
+}
+
+.center {
+    margin: 0 auto;
+}
+
+/* HEADER */
+header {
+    width: 750px;
+    margin: 0;
+}
+
+header .inner {
+    height: 70px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header .inner h1 {
+    color : slateblue;
+    font-size: 40px;
+}
+
+.room_information {
+    font-size: 40px;
+    color: darkblue;
+    margin-right: 16px;
+}
+
+/* CONTROLLER */
+.button-controller {
+    position: absolute;
+    top: 30%;
+    right: 4%;
+    margin-right: 20px;
+    width: 150px;
+    height: 280px;
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.button-controller button {
+    width: 127px;
+    height: 50px;
+    font-size: 21px;
+    color: darkblue;
+    border-radius: 5px;
+    border: solid slateblue 2.5px;
+    padding: 5px;
+    margin-bottom: 12px;
+    background-color: antiquewhite;
+}
+
+.button-controller button:hover {
+    background-color: chartreuse;
+    cursor: pointer;
+}
+
+.turn-score {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.turn {
+    position: absolute;
+    top: 27%;
+    left: 4%;
+    font-size: 25px;
+    color: darkgreen;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.controller-move {
+    position: absolute;
+    top: 35%;
+    left: 4%;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.controller-move input {
+    width: 50px;
+    height: 25px;
+    margin: 0 10px;
+}
+
+/* status */
+#score-status {
+    position: absolute;
+    top: 45%;
+    left: 5%;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 25px;
+    color: darkgreen;
+}
+
+#score-status .score {
+    margin: 20px;
+    padding: 5px;
+}
+
+/* BOARD */
+.inner {
+    max-width: 680px;
+    padding: 10px;
+    text-align: center;
+}
+
+.inner .chess-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inner .chess-row .square {
+    width: 64px;
+    height: 64px;
+
+}
+
+.inner .chess-row .square-white {
+    background-color: #F5DEB3;
+}
+
+.inner .chess-row .square-black {
+    background-color: #4A2511;
+}
+
+.inner .chess-row .square img {
+    width: 64px;
+    height: 64px;
+    box-sizing: border-box;
+    border: solid 1px;
+}
+
+.inner .chess-row .row {
+    margin-left: 9px;
+    color: #fff;
+    font-size: 14px;
+}
+
+.inner .chess-row .col {
+    color: #fff;
+    font-size: 14px;
+}
+
+#bottom-info {
+    margin-bottom: 75px;
+}
+
+
+/* finish */
+.finish-box {
+    display: flex;
+    justify-content: center;
+}
+
+.finish-box .inner{
+    position: absolute;
+    top : 240px;
+    width: 600px;
+    height: 200px;
+    border: solid 4px slateblue;
+    border-radius: 5px;
+    background-color: skyblue;
+    text-align: center;
+    visibility: hidden;
+}
+
+.finish-box p {
+    font-size: 34px;
+}
+
+.finish-box button {
+    width: 127px;
+    height: 50px;
+    font-size: 21px;
+    color: darkblue;
+    border-radius: 5px;
+    border: solid slateblue 2.5px;
+    padding: 5px;
+    margin-bottom: 12px;
+    background-color: antiquewhite;
+}
+
+.finish-box button:hover {
+    background-color: chartreuse;
+    cursor: pointer;
+}
+
+footer {
+    height: 100px;
+    width: 100%;
+    background-color: tomato;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+}
+
+footer .creator {
+    margin-top: 15px;
+}

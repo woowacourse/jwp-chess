@@ -40,9 +40,12 @@ public class BoardService {
         if (board.isMovable(fromPosition, toPosition)) {
             BoardEntity fromBoardEntity = boardRepository.findByRoomIdAndPosition(roomId, fromPosition);
             fromBoardEntity.setPiece(PieceType.BLANK.name());
+            boardRepository.save(fromBoardEntity);
 
             BoardEntity toBoardEntity = boardRepository.findByRoomIdAndPosition(roomId, toPosition);
             toBoardEntity.setPiece(piece.getNextPiece().getName());
+            boardRepository.save(toBoardEntity);
+
         }
 
         roomService.updateTurn(roomId);

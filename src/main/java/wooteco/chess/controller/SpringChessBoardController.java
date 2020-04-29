@@ -75,7 +75,7 @@ public class SpringChessBoardController {
 
     @PostMapping("/{id}/move")
     private boolean move(@PathVariable int id, @RequestBody MoveRequestDto dto) throws SQLException {
-        return service.addMoveByGameId(id, dto.getFrom(), dto.getTo());
+        return service.moveIfMovable(id, dto.getFrom(), dto.getTo());
     }
 
     @PostMapping("/{id}/movable")

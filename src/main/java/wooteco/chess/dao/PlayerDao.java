@@ -17,7 +17,7 @@ public class PlayerDao implements MySqlJdbcTemplateDao {
 
     public void addInitialPlayers() throws SQLException {
         // 플레이어 가입 및 로그인 구현 전 오류 방지를 위한 쿼리
-        String query = "insert ignore into player (id, username, password) values (1, 'hodol', 'password'), (2, 'pobi', 'password')";
+        String query = "INSERT IGNORE INTO player (id, username, password) VALUES (1, 'hodol', 'password'), (2, 'pobi', 'password')";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
@@ -26,7 +26,7 @@ public class PlayerDao implements MySqlJdbcTemplateDao {
     }
 
     public void addPlayer(Player player) throws SQLException {
-        String query = "insert into player (username, password, win, lose, draw) values (?, ?, ?, ?, ?);";
+        String query = "INSERT INTO player (username, password, win, lose, draw) VALUES (?, ?, ?, ?, ?);";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         ) {
@@ -40,7 +40,7 @@ public class PlayerDao implements MySqlJdbcTemplateDao {
     }
 
     public Player getPlayerById(int id) throws SQLException {
-        String query = "select * from player where id = ?";
+        String query = "SELECT * FROM player WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
@@ -59,7 +59,7 @@ public class PlayerDao implements MySqlJdbcTemplateDao {
     }
 
     public void updatePlayer(Player player) throws SQLException {
-        String query = "update player set win = ?, lose = ?, draw = ? where id = ?";
+        String query = "UPDATE player SET win = ?, lose = ?, draw = ? WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {

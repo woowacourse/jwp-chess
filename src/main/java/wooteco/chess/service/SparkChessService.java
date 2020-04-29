@@ -1,15 +1,6 @@
 package wooteco.chess.service;
 
-import static java.util.stream.Collectors.*;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
-
 import wooteco.chess.dao.GameDao;
 import wooteco.chess.dao.MoveDao;
 import wooteco.chess.dao.PlayerDao;
@@ -21,13 +12,21 @@ import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
 import wooteco.chess.dto.MoveRequestDto;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
+
 @Service
-public class ChessServiceImpl implements ChessService {
+public class SparkChessService implements ChessService {
     private final GameDao gameDao;
     private final MoveDao moveDao;
     private final PlayerDao playerDao;
 
-    public ChessServiceImpl(final GameDao gameDao, final MoveDao moveDao, final PlayerDao playerDao) {
+    public SparkChessService(final GameDao gameDao, final MoveDao moveDao, final PlayerDao playerDao) {
         this.gameDao = gameDao;
         this.moveDao = moveDao;
         this.playerDao = playerDao;
@@ -58,8 +57,8 @@ public class ChessServiceImpl implements ChessService {
     @Override
     public Map<Integer, Map<Side, Player>> getPlayerContexts() throws SQLException {
         return generateGames()
-            .stream()
-            .collect(toMap(Game::getId, Game::getPlayers));
+                .stream()
+                .collect(toMap(Game::getId, Game::getPlayers));
     }
 
     @Override
@@ -83,8 +82,8 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public List<String> findAllAvailablePath(int id, String from) throws SQLException {
-        return findGameById(id).findAllAvailablePath(from);
+    public List<String> findAllAvailablePath(int id, String start) throws SQLException {
+        return findGameById(id).findAllAvailablePath(start);
     }
 
     @Override
@@ -115,7 +114,7 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public boolean addMoveByGameId(final int id, String start, String end) throws SQLException {
+    public boolean moveIfMovable(final int id, String start, String end) throws SQLException {
         Path path = findBoardById(id).generatePath(Position.of(start), Position.of(end));
         boolean movable = findGameById(id).move(start, end);
         if (movable) {

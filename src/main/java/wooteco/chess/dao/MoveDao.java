@@ -17,7 +17,7 @@ import wooteco.chess.dto.MoveRequestDto;
 public class MoveDao implements MySqlJdbcTemplateDao {
 
     public void addMove(final Game game, final Path path) throws SQLException {
-        String query = "insert into move (game, start_position, end_position) values (?, ?, ?)";
+        String query = "INSERT INTO move (game, start_position, end_position) VALUES (?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
@@ -29,7 +29,7 @@ public class MoveDao implements MySqlJdbcTemplateDao {
     }
 
     public List<MoveRequestDto> getMoves(final Game game) throws SQLException {
-        String query = "select * from move where game = ?";
+        String query = "SELECT * FROM move WHERE game = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
@@ -51,7 +51,7 @@ public class MoveDao implements MySqlJdbcTemplateDao {
     }
 
     public void reset(final Game game) throws SQLException {
-        String query = "delete from move where game = ?";
+        String query = "DELETE FROM move WHERE game = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {

@@ -29,7 +29,7 @@ public class SpringGameService {
     private RoomRepository roomRepository;
 
     @Transactional
-    public GameResponseDto initialize(GameRequestDto request) throws SQLException {
+    public GameResponseDto initialize(GameRequestDto request) {
         RoomEntity roomEntity = roomRepository.findById(request.getId())
                 .orElseThrow(RuntimeException::new);
         Set<PieceEntity> pieceEntities = convertPiecesToPieceEntity(Pieces.initPieces());
@@ -40,7 +40,7 @@ public class SpringGameService {
         return convertRoomEntityToGameDto(persistEntity);
     }
 
-    public GameResponseDto move(MoveRequestDto moveRequestDto) throws SQLException {
+    public GameResponseDto move(MoveRequestDto moveRequestDto) {
         Long id = moveRequestDto.getId();
         String sourcePosition = moveRequestDto.getSourcePosition();
         String targetPosition = moveRequestDto.getTargetPosition();
@@ -65,7 +65,7 @@ public class SpringGameService {
         return convertRoomEntityToGameDto(roomEntity);
     }
 
-    public double getScore(final GameRequestDto gameRequestDto) throws SQLException {
+    public double getScore(final GameRequestDto gameRequestDto) {
         Long id = gameRequestDto.getId();
 
         RoomEntity roomEntity = roomRepository.findById(id)
@@ -81,7 +81,7 @@ public class SpringGameService {
         return PieceScore.calculateByColor(gameManager, gameEntity.getTurn());
     }
 
-    public List<String> getMovablePositions(final MoveRequestDto moveRequestDto) throws SQLException {
+    public List<String> getMovablePositions(final MoveRequestDto moveRequestDto) {
         Long id = moveRequestDto.getId();
         String sourcePosition = moveRequestDto.getSourcePosition();
 

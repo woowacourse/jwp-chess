@@ -7,6 +7,7 @@ public class History {
     private Long id;
     private String start;
     private String end;
+    private GameRef game;
 
     public History() {
     }
@@ -14,6 +15,12 @@ public class History {
     public History(String start, String end) {
         this.start = start;
         this.end = end;
+    }
+
+    public History(String start, String end, Game game) {
+        this.start = start;
+        this.end = end;
+        this.game = new GameRef(game);
     }
 
     public Long getId() {

@@ -35,7 +35,7 @@ public class RoomController {
         Long roomId = created.getId();
         Map<String, String> board = roomService.initializeBoard(roomId);
         model.addAttribute("board", board);
-        return "redirect:" + "/room/" + roomId;
+        return "redirect:/room/" + roomId;
     }
 
     @GetMapping("/room/{room_id}")
@@ -51,25 +51,22 @@ public class RoomController {
 
     @PostMapping("/room/{room_id}")
     public String finish(
-            @PathVariable("room_id") Long roomId
-    ) {
+            @PathVariable("room_id") Long roomId) {
         roomService.deleteRoom(roomId);
-        return "redirect:" + "/";
+        return "redirect:/";
     }
 
     @GetMapping("/room/{room_id}/turn")
     @ResponseBody
     public String turn(
-            @PathVariable("room_id") Long roomId
-    ) {
+            @PathVariable("room_id") Long roomId) {
         return roomService.findTurnById(roomId);
     }
 
     @GetMapping("/room/{room_id}/reset")
     public String reset(
             @PathVariable("room_id") Long roomId,
-            Model model
-    ) {
+            Model model) {
         model.addAttribute("board", roomService.resetRoom(roomId));
         model.addAttribute("roomId", roomId);
         model.addAttribute("title", roomService.findTitleById(roomId));

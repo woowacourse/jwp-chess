@@ -11,11 +11,7 @@ public class BoardEntity {
 
     @Column("roomId")
     private Long roomId;
-
-    @Column("position")
     private String position;
-
-    @Column("piece")
     private String piece;
 
     public BoardEntity(final Long roomId, final String position, final String piece) {

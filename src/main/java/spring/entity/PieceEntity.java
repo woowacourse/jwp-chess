@@ -1,5 +1,8 @@
 package spring.entity;
 
+import chess.location.Location;
+import chess.piece.type.Piece;
+import chess.piece.type.PieceMapper;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -15,6 +18,14 @@ public class PieceEntity {
         this.name = name;
         this.row = row;
         this.col = col;
+    }
+
+    public Location toLocation() {
+        return new Location(Integer.parseInt(row), col.charAt(0));
+    }
+
+    public Piece toPiece() {
+        return PieceMapper.of(name.charAt(0));
     }
 
     public void update(String name, String row, String col) {

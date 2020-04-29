@@ -29,5 +29,5 @@
  - [x] resources 패키지 내의 테이블을 생성하는 sql 파일 작성
  - [x] Entity 클래스 작성
  - [x] Repository 작성
- - [ ] Entity to Domain 로직 구현
+ - [x] Entity to Domain 로직 구현
  - [ ] Service 구현

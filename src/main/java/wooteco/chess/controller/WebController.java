@@ -15,13 +15,16 @@ import wooteco.chess.dto.ChessGameDto;
 import wooteco.chess.dto.MoveDto;
 import wooteco.chess.dto.RoomDto;
 import wooteco.chess.service.ChessGameService;
+import wooteco.chess.service.SpringChessService;
 
 @RestController
 public class WebController {
-	private ChessGameService chessGameService;
+	private final ChessGameService chessGameService;
+	private final SpringChessService springChessService;
 
-	public WebController(ChessGameService chessGameService) {
+	public WebController(ChessGameService chessGameService, SpringChessService springChessService) {
 		this.chessGameService = chessGameService;
+		this.springChessService = springChessService;
 	}
 
 	@GetMapping("/")
@@ -31,8 +34,8 @@ public class WebController {
 
 	@GetMapping("/api/rooms")
 	@ResponseBody
-	public List<RoomDto> getRooms() throws SQLException {
-		return chessGameService.findAllRooms();
+	public List<RoomDto> getRooms() {
+		return springChessService.findAllRooms();
 	}
 
 	@PostMapping("/join")

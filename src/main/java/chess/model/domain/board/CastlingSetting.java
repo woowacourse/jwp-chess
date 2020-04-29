@@ -86,14 +86,12 @@ public enum CastlingSetting {
         this.castlingPiece = castlingPiece;
     }
 
-    public static MoveInfo getMoveCastlingRook(MoveInfo moveInfo) {
-        Square moveSquareAfter = moveInfo.get(MoveOrder.TO);
-        Map<String, CastlingSetting> selectCastling = TOTALS.stream()
-            .filter(total -> moveSquareAfter == total.get(KEYS_KING_AFTER).square)
+    public static CastlingSetting of(Square square, Piece piece) {
+        return Arrays.stream(CastlingSetting.values())
+            .filter(castlingSetting -> castlingSetting.square == square)
+            .filter(castlingSetting -> castlingSetting.piece == piece)
             .findFirst()
-            .orElseThrow(IllegalAccessError::new);
-        return new MoveInfo(selectCastling.get(KEYS_ROOK_BEFORE).square,
-            selectCastling.get(KEYS_ROOK_AFTER).square);
+            .orElseThrow(IllegalArgumentException::new);
     }
 
     public static boolean canCastling(Set<CastlingSetting> elements, MoveInfo moveInfo) {
@@ -106,19 +104,14 @@ public enum CastlingSetting {
                 == moveInfo.get(MoveOrder.TO));
     }
 
-    public static CastlingSetting of(String castlingSettingName) {
-        return Arrays.stream(CastlingSetting.values())
-            .filter(castlingSetting -> castlingSetting.name().equalsIgnoreCase(castlingSettingName))
+    public static MoveInfo findRookMoveInfo(MoveInfo moveInfo) {
+        Square moveSquareAfter = moveInfo.get(MoveOrder.TO);
+        Map<String, CastlingSetting> selectCastling = TOTALS.stream()
+            .filter(total -> moveSquareAfter == total.get(KEYS_KING_AFTER).square)
             .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
-    }
-
-    public static CastlingSetting of(Square boardsquare, Piece piece) {
-        return Arrays.stream(CastlingSetting.values())
-            .filter(castlingSetting -> castlingSetting.square == boardsquare)
-            .filter(castlingSetting -> castlingSetting.piece == piece)
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(IllegalAccessError::new);
+        return new MoveInfo(selectCastling.get(KEYS_ROOK_BEFORE).square,
+            selectCastling.get(KEYS_ROOK_AFTER).square);
     }
 
     public static Set<CastlingSetting> getCastlingElements() {
@@ -134,10 +127,6 @@ public enum CastlingSetting {
             .filter(total -> castlingElements.contains(total.get(KEYS_KING_BEFORE)))
             .map(total -> total.get(KEYS_KING_AFTER).square)
             .collect(Collectors.toSet()));
-    }
-
-    public Piece getPiece() {
-        return piece;
     }
 
     public boolean isEqualSquare(Square square) {
@@ -159,5 +148,9 @@ public enum CastlingSetting {
             .findFirst()
             .map(castlingSetting -> castlingSetting.castlingPiece)
             .orElse(false);
+    }
+
+    public Piece getPiece() {
+        return piece;
     }
 }

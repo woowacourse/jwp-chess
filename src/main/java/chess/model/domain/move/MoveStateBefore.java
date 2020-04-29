@@ -8,13 +8,13 @@ import util.NullChecker;
 public class MoveStateBefore implements MoveStateStrategy {
 
     @Override
-    public MoveState getMoveState(ChessGame chessGame, MoveInfo moveInfo) {
+    public MoveState findMoveState(ChessGame chessGame, MoveInfo moveInfo) {
         NullChecker.validateNotNull(chessGame, moveInfo);
         if (chessGame.isKingCaptured()) {
             return MoveState.KING_CAPTURED;
         }
-        if (!chessGame.canMove(moveInfo)) {
-            return getWhyCanMove(chessGame, moveInfo);
+        if (chessGame.isNotMovable(moveInfo)) {
+            return findMoveStateWhenNotMovable(chessGame, moveInfo);
         }
         if (chessGame.isNeedPromotion()) {
             return MoveState.FAIL_MUST_PAWN_PROMOTION;
@@ -22,8 +22,8 @@ public class MoveStateBefore implements MoveStateStrategy {
         return MoveState.READY;
     }
 
-    private MoveState getWhyCanMove(ChessGame chessGame, MoveInfo moveInfo) {
-        if (chessGame.isNoPiece(moveInfo)) {
+    private MoveState findMoveStateWhenNotMovable(ChessGame chessGame, MoveInfo moveInfo) {
+        if (chessGame.isEmptySquare(moveInfo)) {
             return MoveState.FAIL_NO_PIECE;
         }
         if (chessGame.isNotMyTurn(moveInfo)) {

@@ -1,11 +1,11 @@
 const startGame = document.getElementById("start-game");
-const followGame = document.getElementById("follow-game");
+const continueGame = document.getElementById("continue-game");
 const startButton = document.getElementById("start-button");
-const followButton = document.getElementById("follow-button");
+const continueButton = document.getElementById("continue-button");
 const blackName = document.getElementById("black-name");
 const whiteName = document.getElementById("white-name");
-const blackNameFollow = document.getElementById("black-name-follow");
-const whiteNameFollow = document.getElementById("white-name-follow");
+const blackNameContinue = document.getElementById("black-name-continue");
+const whiteNameContinue = document.getElementById("white-name-continue");
 const roomButton = document.getElementById("room-button");
 
 startButton.onclick = () => {
@@ -18,11 +18,11 @@ roomButton.onclick = () => {
     location.href = '/'
 };
 
-followButton.onclick = () => {
+continueButton.onclick = () => {
     if (checkNames()) {
-        whiteNameFollow.value = whiteName.value;
-        blackNameFollow.value = blackName.value;
-        followGame.submit();
+        whiteNameContinue.value = whiteName.value;
+        blackNameContinue.value = blackName.value;
+        continueGame.submit();
     }
 };
 

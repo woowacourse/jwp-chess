@@ -27,7 +27,7 @@ public class ChessGameDao {
         return INSTANCE;
     }
 
-    public int insert(int roomId, Team gameTurn, Map<Team, String> userNames,
+    public Integer insert(Integer roomId, Team gameTurn, Map<Team, String> userNames,
         TeamScore teamScore) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
@@ -40,7 +40,7 @@ public class ChessGameDao {
         return jdbcTemplate.executeUpdateWithGeneratedKey(query, pss);
     }
 
-    public void updateProceedN(int gameId) {
+    public void updateProceedN(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "UPDATE CHESS_GAME_TB",
@@ -51,7 +51,7 @@ public class ChessGameDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public void updateTurn(int gameId, Team gameTurn) {
+    public void updateTurn(Integer gameId, Team gameTurn) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "UPDATE CHESS_GAME_TB",
@@ -63,7 +63,7 @@ public class ChessGameDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public void updateScore(int gameId, TeamScore teamScore) {
+    public void updateScore(Integer gameId, TeamScore teamScore) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "UPDATE CHESS_GAME_TB",
@@ -76,7 +76,7 @@ public class ChessGameDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public void delete(int gameId) {
+    public void delete(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "DELETE FROM CHESS_GAME_TB",
@@ -86,7 +86,7 @@ public class ChessGameDao {
         jdbcTemplate.executeUpdate(query, pss);
     }
 
-    public Optional<Integer> getGameNumberLatest(int roomId) {
+    public Optional<Integer> findGameNumberLatest(Integer roomId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT GAME.ID",
@@ -108,7 +108,7 @@ public class ChessGameDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public Optional<Team> getGameTurn(int gameId) {
+    public Optional<Team> findCurrentTurn(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT TURN_NM",
@@ -125,7 +125,7 @@ public class ChessGameDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public Map<Team, String> getUserNames(int gameId) {
+    public Map<Team, String> findUserNames(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT BLACK_USER_NM",
@@ -146,7 +146,7 @@ public class ChessGameDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public Optional<Boolean> isProceeding(int gameId) {
+    public Optional<Boolean> isProceeding(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT PROCEEDING_YN",
@@ -163,7 +163,7 @@ public class ChessGameDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public Optional<Integer> getRoomId(int gameId) {
+    public Optional<Integer> findRoomId(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT ROOM_ID",
@@ -180,7 +180,7 @@ public class ChessGameDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public Map<Team, Double> getScores(int gameId) {
+    public Map<Team, Double> findScores(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT BLACK_SCORE",
@@ -201,7 +201,7 @@ public class ChessGameDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public List<Integer> getProceedGameIdsByRoomId(int roomId) {
+    public List<Integer> findProceedGameIdsBy(Integer roomId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT ID",
@@ -220,7 +220,7 @@ public class ChessGameDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public boolean isProceed(int gameId) {
+    public boolean isProceed(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT ID",

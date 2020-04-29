@@ -3,8 +3,8 @@ package chess.model.domain.piece;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.model.domain.board.Square;
 import chess.model.domain.board.CastlingSetting;
+import chess.model.domain.board.Square;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -38,8 +38,8 @@ public class KingTest {
     @DisplayName("판의 정보를 가져와서 king이 갈 수 있는 칸에 장애물이 있는지 판단하여 이동할 수 있는 리스트 반환하는 테스트")
     void movableKingSquareTest(String input) {
         Map<Square, Piece> board = new HashMap<>();
-        board.put(Square.of("a5"), Pawn.getPieceInstance(Team.WHITE));
-        board.put(Square.of("b6"), Pawn.getPieceInstance(Team.BLACK));
+        board.put(Square.of("a5"), Pawn.getInstance(Team.WHITE));
+        board.put(Square.of("b6"), Pawn.getInstance(Team.BLACK));
         Piece piece = King.getPieceInstance(Team.BLACK);
         Set<Square> availableSquares = piece.getMovableArea(Square.of("a6"), board);
 

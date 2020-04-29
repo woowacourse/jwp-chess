@@ -54,10 +54,6 @@ public class ChessGame {
             && (square.isSameRank(Rank.SEVENTH) || square.isSameRank(Rank.SECOND));
     }
 
-    public Map<Square, Piece> getChessBoard() {
-        return chessBoard;
-    }
-
     public MoveState movePieceWhenCanMove(MoveInfo moveInfo) {
         MoveState moveState = BEFORE_MOVE_CHECKER.check(this, moveInfo);
         moveState = moveIfReady(moveInfo, moveState);
@@ -86,34 +82,38 @@ public class ChessGame {
             .anyMatch(Square::isLastRank);
     }
 
-    public MoveState promotion(Type hopeType) {
+    public MoveState promotion(Type typeToChange) {
         MoveState moveState = PROMOTION_MOVE_CHECKER.check(this);
         if (moveState == MoveState.NEEDS_PROMOTION) {
             chessBoard.put(getFinishPawnBoard().orElseThrow(IllegalAccessError::new),
-                getHopePiece(hopeType));
+                getPieceToChange(typeToChange));
             moveState = MoveState.SUCCESS_PROMOTION;
             gameTurn = moveState.turnTeam(gameTurn);
         }
         return moveState;
     }
 
-    public Piece getHopePiece(Type hopeType) {
+    public Piece getPieceToChange(Type typeToChange) {
         return Arrays.stream(CastlingSetting.values())
             .map(CastlingSetting::getPiece)
-            .filter(piece -> piece.isSameType(hopeType))
+            .filter(piece -> piece.isSameType(typeToChange))
             .filter(piece -> piece.isSameTeam(gameTurn))
             .findFirst()
             .orElseThrow(IllegalArgumentException::new);
     }
 
-    public boolean canMove(MoveInfo moveInfo) {
+    public boolean isNotMovable(MoveInfo moveInfo) {
+        return !isMovable(moveInfo);
+    }
+
+    public boolean isMovable(MoveInfo moveInfo) {
         Square moveInfoBefore = moveInfo.get(MoveOrder.FROM);
         Square moveInfoAfter = moveInfo.get(MoveOrder.TO);
-        Piece movePieceBefore = whoMovePiece(moveInfo);
+        Piece movePieceBefore = findPieceToMove(moveInfo);
         if (!chessBoard.containsKey(moveInfoBefore) || !movePieceBefore.isSameTeam(gameTurn)) {
             return false;
         }
-        if (isPawnJump(moveInfo)) {
+        if (isPawnMoveTwoStep(moveInfo)) {
             enPassant.addIfPawnJump(movePieceBefore, moveInfo);
         }
         Map<Square, Piece> board = new HashMap<>(chessBoard);
@@ -135,7 +135,7 @@ public class ChessGame {
         return beforePiece.getMovableArea(beforeSquare, board, castlingElements);
     }
 
-    public boolean isPawnJump(MoveInfo moveInfo) {
+    public boolean isPawnMoveTwoStep(MoveInfo moveInfo) {
         Piece movePieceBefore = chessBoard.get(moveInfo.get(MoveOrder.FROM));
         return EnPassant.isPawnJump(movePieceBefore, moveInfo);
     }
@@ -169,7 +169,7 @@ public class ChessGame {
                 castlingElement -> castlingElement.isEqualSquare(moveInfo.get(MoveOrder.FROM)))
             .collect(Collectors.toSet());
         if (castlingElements.removeAll(removeCastlingElements)) {
-            MoveInfo moveInfoRook = CastlingSetting.getMoveCastlingRook(moveInfo);
+            MoveInfo moveInfoRook = CastlingSetting.findRookMoveInfo(moveInfo);
             Piece currentPiece = chessBoard.remove(moveInfoRook.get(MoveOrder.FROM));
             chessBoard.put(moveInfoRook.get(MoveOrder.TO), currentPiece);
         }
@@ -185,14 +185,10 @@ public class ChessGame {
         return new TeamScore(chessBoard.values(), countPawnSameFileByTeam());
     }
 
-    public Team getWinnerTurn() {
-        return gameTurn.previousTurnIfEmptyMySelf();
-    }
-
     private Map<Team, Integer> countPawnSameFileByTeam() {
         Map<Team, Integer> pawnSameFileCountByTeam = new HashMap<>();
         for (Team team : Team.values()) {
-            List<Square> pawnSquare = getSquareIfSameTeamPawn(team);
+            List<Square> pawnSquare = getPawnSquaresOf(team);
             pawnSameFileCountByTeam.put(team, getCountSameFile(pawnSquare));
         }
         return pawnSameFileCountByTeam;
@@ -208,32 +204,36 @@ public class ChessGame {
         return count;
     }
 
-    private List<Square> getSquareIfSameTeamPawn(Team team) {
+    private List<Square> getPawnSquaresOf(Team team) {
         return chessBoard.keySet().stream()
-            .filter(square -> chessBoard.get(square) == Pawn.getPieceInstance(team))
+            .filter(square -> chessBoard.get(square) == Pawn.getInstance(team))
             .collect(Collectors.toList());
     }
 
-    public boolean isNoPiece(MoveInfo moveInfo) {
+    public boolean isEmptySquare(MoveInfo moveInfo) {
         return !chessBoard.containsKey(moveInfo.get(MoveOrder.FROM));
     }
 
-    public Team getGameTurn() {
-        return gameTurn;
-    }
-
     public boolean isNotMyTurn(MoveInfo moveInfo) {
-        if (isNoPiece(moveInfo)) {
+        if (isEmptySquare(moveInfo)) {
             return true;
         }
         return !chessBoard.get(moveInfo.get(MoveOrder.FROM)).isSameTeam(gameTurn);
+    }
+
+    public Piece findPieceToMove(MoveInfo moveInfo) {
+        return chessBoard.get(moveInfo.get(MoveOrder.FROM));
     }
 
     public Set<CastlingSetting> getCastlingElements() {
         return castlingElements;
     }
 
-    public Piece whoMovePiece(MoveInfo moveInfo) {
-        return chessBoard.get(moveInfo.get(MoveOrder.FROM));
+    public Team getGameTurn() {
+        return gameTurn;
+    }
+
+    public Map<Square, Piece> getChessBoard() {
+        return chessBoard;
     }
 }

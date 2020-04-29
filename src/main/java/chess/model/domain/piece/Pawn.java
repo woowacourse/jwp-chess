@@ -1,8 +1,8 @@
 package chess.model.domain.piece;
 
-import chess.model.domain.board.Square;
 import chess.model.domain.board.CastlingSetting;
 import chess.model.domain.board.ChessGame;
+import chess.model.domain.board.Square;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class Pawn extends OneTimeMovePiece {
         super(team, type);
     }
 
-    public static Piece getPieceInstance(Team team) {
+    public static Piece getInstance(Team team) {
         NullChecker.validateNotNull(team);
         return CACHE.get(team);
     }
@@ -47,7 +47,7 @@ public class Pawn extends OneTimeMovePiece {
         for (Square movableArea : containsMovableArea) {
             if (movableArea.hasIncreased(0, movableArea.getRankCompare(square))) {
                 Square oneMore = movableArea
-                    .getIncreased(0, movableArea.getRankCompare(square));
+                    .getIncreasedSquare(0, movableArea.getRankCompare(square));
                 straightMovableArea.addAll(getFrontMovableArea(square, board, oneMore));
             }
             straightMovableArea.add(movableArea);
@@ -71,10 +71,10 @@ public class Pawn extends OneTimeMovePiece {
         Set<Square> diagonalMovableArea = new HashSet<>();
         for (Square movableArea : allMovableArea) {
             if (movableArea.hasIncreased(-1, 0)) {
-                diagonalMovableArea.add(movableArea.getIncreased(-1, 0));
+                diagonalMovableArea.add(movableArea.getIncreasedSquare(-1, 0));
             }
             if (movableArea.hasIncreased(1, 0)) {
-                diagonalMovableArea.add(movableArea.getIncreased(1, 0));
+                diagonalMovableArea.add(movableArea.getIncreasedSquare(1, 0));
             }
         }
         return diagonalMovableArea.stream()

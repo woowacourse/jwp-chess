@@ -23,7 +23,7 @@ public class ChessResultDao {
         return INSTANCE;
     }
 
-    public List<String> getUsers() {
+    public List<String> findUsers() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT USER_NM",
@@ -81,7 +81,7 @@ public class ChessResultDao {
         jdbcTemplate.executeUpdateWhenLoop(query, pss);
     }
 
-    public Optional<GameResultDto> getWinOrDraw(String userName) {
+    public Optional<GameResultDto> findWinOrDraw(String userName) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT WIN",

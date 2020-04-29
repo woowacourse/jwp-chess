@@ -39,7 +39,7 @@ public class KnightTest {
         Map<Square, Piece> board = new HashMap<>();
         board.put(Square.of("d5"), King.getPieceInstance(Team.BLACK));
         board.put(Square.of("c2"), Queen.getPieceInstance(Team.WHITE));
-        board.put(Square.of("g4"), Pawn.getPieceInstance(Team.WHITE));
+        board.put(Square.of("g4"), Pawn.getInstance(Team.WHITE));
         Piece piece = Knight.getPieceInstance(Team.WHITE);
         Set<Square> availableSquares = piece.getMovableArea(Square.of("e3"), board);
         assertThat(availableSquares.contains(Square.of(input))).isTrue();

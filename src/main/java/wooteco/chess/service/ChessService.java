@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wooteco.chess.dao.GameInfoDAO;
-import wooteco.chess.dao.UserDAO;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.board.Position;
@@ -35,38 +34,36 @@ public class ChessService {
         games = new HashMap<>();
     }
 
-    public GameInfo findByUserName(User blackUser, User whiteUser) throws SQLException {
-        if (!gameInfoDAO.findGameInfoByUser(blackUser, whiteUser).isPresent()) {
+    public GameInfo findByUserName(User blackUser) throws SQLException {
+        if (!gameInfoDAO.findGameInfoByUser(blackUser).isPresent()) {
             userRepository.save(blackUser);
-            userRepository.save(whiteUser);
-            gameInfoDAO.addGameInfo(BoardFactory.createInitialBoard(), blackUser, whiteUser, 0);
+            gameInfoDAO.addGameInfo(BoardFactory.createInitialBoard(), blackUser, 0);
         }
-        Board board = gameInfoDAO.findGameInfoByUser(blackUser, whiteUser)
+        Board board = gameInfoDAO.findGameInfoByUser(blackUser)
                 .orElseGet(BoardFactory::createInitialBoard);
-        int turn = gameInfoDAO.findTurnByUser(blackUser, whiteUser)
+        int turn = gameInfoDAO.findTurnByUser(blackUser)
                 .orElseGet(() -> 0);
         GameInfo gameInfo = GameInfo.from(board, turn);
         games.put(blackUser, gameInfo);
         return gameInfo;
     }
 
-    public GameInfo move(User user, String source, String target) {
-        GameInfo gameInfo = games.get(user)
+    public GameInfo move(User blackUser, String source, String target) {
+        GameInfo gameInfo = games.get(blackUser)
                 .move(source, target);
-        games.put(user, gameInfo);
+        games.put(blackUser, gameInfo);
         return gameInfo;
     }
 
-    public void save(User blackUser, User whiteUser) throws SQLException {
+    public void save(User blackUser) throws SQLException {
         GameInfo gameInfo = games.get(blackUser);
-        gameInfoDAO.saveGameInfoByUserName(gameInfo.getBoard(), blackUser, whiteUser, gameInfo.getStatus());
+        gameInfoDAO.saveGameInfoByUserName(gameInfo.getBoard(), blackUser, gameInfo.getStatus());
         games.remove(blackUser);
     }
 
-    public void delete(User blackUser, User whiteUser) throws SQLException {
-        gameInfoDAO.deleteGameInfoByUser(blackUser, whiteUser);
+    public void delete(User blackUser) throws SQLException {
+        gameInfoDAO.deleteGameInfoByUser(blackUser);
         userRepository.delete(blackUser);
-        userRepository.delete(whiteUser);
         games.remove(blackUser);
     }
 
@@ -82,8 +79,8 @@ public class ChessService {
         return RowsDtoConverter.convertFrom(BoardFactory.EMPTY_BOARD);
     }
 
-    public List<LineDto> getRowsDto(User blackUser, User whiteUser) throws SQLException {
-        GameInfo gameInfo = findByUserName(blackUser, whiteUser);
+    public List<LineDto> getRowsDto(User blackUser) throws SQLException {
+        GameInfo gameInfo = findByUserName(blackUser);
         return RowsDtoConverter.convertFrom(gameInfo.getBoard());
     }
 

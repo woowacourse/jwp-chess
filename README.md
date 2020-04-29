@@ -69,10 +69,8 @@ create table gameinfo
 (
     id bigint auto_increment primary key,
     black bigint not null,
-    white bigint not null,
     turn int not null,
-    foreign key (black) references user(id),
-    foreign key (white) references user(id)
+    foreign key (black) references user(id)
 );
 
 

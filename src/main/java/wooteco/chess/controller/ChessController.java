@@ -33,13 +33,10 @@ public class ChessController {
             throws SQLException {
         ModelAndView modelAndView = new ModelAndView();
 
-        User blackUser = new User(paramMap.get("blackUserName"));
-        User whiteUser = new User(paramMap.get("whiteUserName"));
-
-        modelAndView.addObject("blackUser", blackUser.getName());
-        modelAndView.addObject("whiteUser", whiteUser.getName());
-        modelAndView.addObject("rows", chessService.getRowsDto(blackUser, whiteUser));
-        modelAndView.addObject("turn", chessService.getTurn(blackUser));
+        User user = new User(paramMap.get("userName"));
+        modelAndView.addObject("user", user.getName());
+        modelAndView.addObject("rows", chessService.getRowsDto(user));
+        modelAndView.addObject("turn", chessService.getTurn(user));
 
         modelAndView.setViewName("board");
 
@@ -50,17 +47,16 @@ public class ChessController {
     @ResponseBody
     public List<String> path(@RequestParam HashMap<String, String> paramMap) {
         try {
-            return chessService.searchPath(new User(paramMap.get("blackUserName")), paramMap.get("source"));
+            return chessService.searchPath(new User(paramMap.get("userName")), paramMap.get("source"));
         } catch (RuntimeException e) {
             return Collections.singletonList(e.getMessage());
         }
     }
 
-    // todo: 죽일 수 있는 말 표시 확 인
     @PostMapping("/move")
     @ResponseBody
     public Map<String, Object> move(@RequestParam HashMap<String, String> paramMap) {
-        User blackUser = new User(paramMap.get("blackUserName"));
+        User blackUser = new User(paramMap.get("userName"));
 
         Map<String, Object> model = new HashMap<>();
         model.put("isNotFinished", false);
@@ -80,19 +76,17 @@ public class ChessController {
     }
 
     @PostMapping("/save")
-    public ModelAndView save(@RequestParam HashMap<String, String> paramMap)
+    public ModelAndView save(@RequestParam String userName)
             throws SQLException {
-        chessService.save(new User(paramMap.get("blackUserName")),
-            new User(paramMap.get("whiteUserName")));
+        chessService.save(new User(userName));
 
         return createEmptyModelAndView();
     }
 
     @PostMapping("/end")
-    public ModelAndView end(@RequestParam HashMap<String, String> paramMap)
+    public ModelAndView end(@RequestParam String userName)
             throws SQLException {
-        chessService.delete(new User(paramMap.get("blackUserName")),
-            new User(paramMap.get("whiteUserName")));
+        chessService.delete(new User(userName));
 
         return createEmptyModelAndView();
     }

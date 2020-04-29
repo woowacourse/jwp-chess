@@ -19,6 +19,7 @@ import wooteco.chess.repository.ChessGameRepository;
 
 @Service
 public class ChessService {
+    public static final String GAME_NOT_EXIST_MESSAGE = "해당 게임이 존재하지 않습니다.";
     private final ChessGameRepository chessGameRepository;
 
     public ChessService(ChessGameRepository chessGameRepository) {
@@ -38,7 +39,7 @@ public class ChessService {
         newChessGame.start();
 
         ChessGameEntity chessGameEntity = chessGameRepository.findById(chessGameId)
-            .orElseThrow(() -> new NoSuchElementException("해당 게임이 존재하지 않습니다."));
+            .orElseThrow(() -> new NoSuchElementException(GAME_NOT_EXIST_MESSAGE));
         chessGameEntity.update(newChessGame);
         chessGameRepository.save(chessGameEntity);
         return new ResponseDto(ResponseDto.SUCCESS, chessGameId);
@@ -49,7 +50,7 @@ public class ChessService {
         ChessGame chessGame = null;
         try {
             ChessGameEntity chessGameEntity = chessGameRepository.findById(chessGameId)
-                .orElseThrow(() -> new NoSuchElementException("해당 게임이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(GAME_NOT_EXIST_MESSAGE));
             chessGame = chessGameEntity.toModel();
             chessGame.move(sourcePosition, targetPosition);
             chessGameEntity.update(chessGame);
@@ -64,7 +65,7 @@ public class ChessService {
 
     public ResponseDto getChessGameById(int chessGameId) {
         ChessGameEntity chessGameEntity = chessGameRepository.findById(chessGameId)
-            .orElseThrow(() -> new NoSuchElementException("해당 게임이 존재하지 않습니다."));
+            .orElseThrow(() -> new NoSuchElementException(GAME_NOT_EXIST_MESSAGE));
         ChessGame chessGame = chessGameEntity.toModel();
         return responseChessGame(chessGame);
     }

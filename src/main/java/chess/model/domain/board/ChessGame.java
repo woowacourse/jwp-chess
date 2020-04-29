@@ -69,13 +69,14 @@ public class ChessGame {
     }
 
     private void movePiece(MoveInfo moveInfo) {
+        Piece currentPiece = chessBoard.getCurrentPiece(moveInfo.getSource());
         chessBoard.move(moveInfo);
-        executeEnPassant(moveInfo);
+        executeEnPassant(moveInfo, currentPiece);
         executeCastling(moveInfo);
     }
 
-    private void executeEnPassant(MoveInfo moveInfo) {
-        if (enPassant.isEnemyPast(moveInfo.getTarget(), turn)) {
+    private void executeEnPassant(MoveInfo moveInfo, Piece currentPiece) {
+        if (enPassant.isEnemyPast(moveInfo.getTarget(), turn) && currentPiece instanceof Pawn) {
             chessBoard.removeBy(enPassant.getCurrentSquare(moveInfo.getTarget()));
         }
         enPassant.removeEnPassant(turn);

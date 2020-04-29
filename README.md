@@ -17,7 +17,8 @@
     - [x] initial Board 위치 변경
 ### step 3
 - [x] Room Entity, Room Repository 생성
-- [ ] Board Entity, Board Repository 생성
+- [x] Board Entity, Board Repository 생성
+- [ ] entity json으로 넘기는 거
 
 # jwp-chess
 ### 1단계
@@ -33,9 +34,9 @@
     - [x] 컴포넌트 스캔을 통해 빈 등록하여 사용한다.
 
 ### 3단계
-- [ ] Spring Data JDBC를 활용하여 기존에 사용하던 DB에 접근하기
-- [ ] 엔티티 클래스를 만들어 DB 테이블과 맵핑한다.
-- [ ] Spring Data JDBC에서 제공하는 Repository를 활용하여 DB에 접근한다.
+- [x] Spring Data JDBC를 활용하여 기존에 사용하던 DB에 접근하기
+- [x] 엔티티 클래스를 만들어 DB 테이블과 맵핑한다.
+- [x] Spring Data JDBC에서 제공하는 Repository를 활용하여 DB에 접근한다.
 
 ### 4단계
 - [x] 체스 게임을 진행할 수 있는 방을 만들어서 동시에 여러 게임이 가능하도록 하기

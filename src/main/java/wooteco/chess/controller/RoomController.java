@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import wooteco.chess.domain.room.Room;
 import wooteco.chess.service.RoomService;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -31,29 +30,29 @@ public class RoomController {
     @PostMapping("/room")
     public String create(
             @RequestParam String title,
-            Model model) throws SQLException {
+            Model model) {
         Room created = roomService.createRoom(title);
-        Long id = created.getId();
-        Map<String, String> board = roomService.initializeBoard(id);
+        Long roomId = created.getId();
+        Map<String, String> board = roomService.initializeBoard(roomId);
         model.addAttribute("board", board);
-        return "redirect:" + "/room/" + id ;
+        return "redirect:" + "/room/" + roomId;
     }
 
     @GetMapping("/room/{room_id}")
     public String room(
-            @PathVariable("room_id") Long id,
-            Model model) throws SQLException {
-        Map<String, String> board = roomService.findPiecesById(id);
+            @PathVariable("room_id") Long roomId,
+            Model model) {
+        Map<String, String> board = roomService.findPiecesById(roomId);
         model.addAttribute("board", board);
-        model.addAttribute("roomId", id);
-        model.addAttribute("title", roomService.findTitleById(id));
+        model.addAttribute("roomId", roomId);
+        model.addAttribute("title", roomService.findTitleById(roomId));
         return "room";
     }
 
     @PostMapping("/room/{room_id}")
     public String finish(
             @PathVariable("room_id") Long roomId
-    ) throws SQLException {
+    ) {
         roomService.deleteRoom(roomId);
         return "redirect:" + "/";
     }
@@ -62,7 +61,7 @@ public class RoomController {
     @ResponseBody
     public String turn(
             @PathVariable("room_id") Long roomId
-    ) throws SQLException {
+    ) {
         return roomService.findTurnById(roomId);
     }
 
@@ -70,7 +69,7 @@ public class RoomController {
     public String reset(
             @PathVariable("room_id") Long roomId,
             Model model
-    ) throws SQLException {
+    ) {
         model.addAttribute("board", roomService.resetRoom(roomId));
         model.addAttribute("roomId", roomId);
         model.addAttribute("title", roomService.findTitleById(roomId));

@@ -1,6 +1,5 @@
 package wooteco.chess.domain.room;
 
-import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,8 +19,5 @@ public interface RoomRepository extends CrudRepository<Room, Long> {
 
     @Override
     void deleteById(Long roomId);
-
-    @Query("SELECT MAX(id) FROM room")
-    Long findCurrentMaxId();
 
 }

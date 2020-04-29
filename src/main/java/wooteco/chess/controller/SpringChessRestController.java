@@ -1,10 +1,6 @@
 package wooteco.chess.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import wooteco.chess.service.GameService;
 import wooteco.chess.view.dto.requestdto.PositionRequestDto;
@@ -39,7 +35,7 @@ public class SpringChessRestController {
 		return gameService.calculateScore();
 	}
 
-	@PostMapping("/move")
+	@PutMapping("/move")
 	public ResponseDto move(@RequestBody PositionRequestDto requestDTO) {
 		return gameService.move(requestDTO);
 	}

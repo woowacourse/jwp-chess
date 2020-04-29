@@ -12,7 +12,7 @@ import wooteco.chess.domain.piece.PieceFactory;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 
-public class BlackKingCatchedGameDao implements GameDao {
+public class BlackKingCatchedGameRepository implements GameRepository {
 
 	@Override
 	public Optional<Game> findById(int gameId) {

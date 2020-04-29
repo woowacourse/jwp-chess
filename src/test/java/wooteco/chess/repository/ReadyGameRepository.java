@@ -6,7 +6,7 @@ import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.game.Ready;
 
-public class ReadyGameDao implements GameDao {
+public class ReadyGameRepository implements GameRepository {
 
 	@Override
 	public Optional<Game> findById(int gameId) {

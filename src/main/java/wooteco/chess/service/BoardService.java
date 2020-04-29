@@ -1,6 +1,5 @@
 package wooteco.chess.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.chess.domain.board.Board;
@@ -21,11 +20,11 @@ public class BoardService {
 
     private BoardRepository boardRepository;
 
-    @Autowired
-    private RoomService roomService;
+    private final RoomService roomService;
 
-    public BoardService(final BoardRepository boardRepository) {
+    public BoardService(final BoardRepository boardRepository, RoomService roomService) {
         this.boardRepository = boardRepository;
+        this.roomService = roomService;
     }
 
     @Transactional

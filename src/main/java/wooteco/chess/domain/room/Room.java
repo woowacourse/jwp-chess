@@ -1,9 +1,11 @@
 package wooteco.chess.domain.room;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 import wooteco.chess.domain.piece.Team;
 
 
+@Table("room")
 public class Room {
     @Id
     private Long id;

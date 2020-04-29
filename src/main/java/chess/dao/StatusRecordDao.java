@@ -41,7 +41,7 @@ public class StatusRecordDao {
 		final List<StatusRecordDto> statusRecordDtos = new ArrayList<>();
 		while (resultSet.next()) {
 			statusRecordDtos.add(
-					new StatusRecordDto(resultSet.getInt("id"), resultSet.getString("record"),
+					new StatusRecordDto(resultSet.getString("record"),
 							resultSet.getDate("game_date"), resultSet.getString("room_name")));
 		}
 		return statusRecordDtos;

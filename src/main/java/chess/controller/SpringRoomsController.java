@@ -7,19 +7,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.SQLException;
 import java.util.List;
 
 @Controller
+@RequestMapping("/chess/rooms")
 public class SpringRoomsController {
-	public static final String PATH = "/chess/rooms";
-	private static final String STATIC_PATH = "/rooms";
 	private static final String EMPTY = "";
-	private static final String SLASH = "/";
-	private static final String ROOM_NAME_OF_FORM = "room_name";
-	private static final String ROOMS_KEY = "rooms";
 
 	private final ChessRoomsService chessRoomsService;
 
@@ -27,18 +24,17 @@ public class SpringRoomsController {
 		this.chessRoomsService = chessRoomsService;
 	}
 
-	@GetMapping(PATH)
+	@GetMapping()
 	private String load(final Model model) throws SQLException {
 		final List<RoomDto> rooms = chessRoomsService.findAllRooms();
-		model.addAttribute(ROOMS_KEY, rooms);
-		return STATIC_PATH;
+		model.addAttribute("rooms", rooms);
+		return "rooms";
 	}
 
-	@PostMapping(PATH)
+	@PostMapping()
 	private String manage(
 			@RequestParam(value = "method", defaultValue = EMPTY) final String method,
-			@RequestParam(value = ROOM_NAME_OF_FORM, defaultValue = EMPTY) final String roomName)
-			throws SQLException {
+			@RequestParam(value = "room_name", defaultValue = EMPTY) final String roomName) {
 
 		if ("delete".equals(method)) {
 			return delete(roomName);
@@ -51,18 +47,18 @@ public class SpringRoomsController {
 		}
 	}
 
-	private String delete(final String roomName) throws SQLException {
+	private String delete(final String roomName) {
 		chessRoomsService.deleteRoomByRoomName(roomName);
-		return Constants.REDIRECT + PATH;
+		return Constants.REDIRECT + "/chess/rooms";
 	}
 
-	private String enter(final String roomName) throws SQLException {
+	private String enter(final String roomName) {
 		final RoomDto roomDto = chessRoomsService.findRoomByRoomName(roomName);
-		return Constants.REDIRECT + PATH + SLASH + roomDto.getId();
+		return Constants.REDIRECT + "/chess/rooms/" + roomDto.getId();
 	}
 
-	private String create(final String roomName) throws SQLException {
+	private String create(final String roomName) {
 		chessRoomsService.addRoomByRoomName(roomName);
-		return Constants.REDIRECT + PATH;
+		return Constants.REDIRECT + "/chess/rooms";
 	}
 }

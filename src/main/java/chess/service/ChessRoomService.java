@@ -1,9 +1,6 @@
 package chess.service;
 
-import chess.dao.AnnouncementDao;
-import chess.dao.PieceDao;
-import chess.dao.StateDao;
-import chess.dao.StatusRecordDao;
+import chess.dao.exceptions.DaoNoneSelectedException;
 import chess.domain.coordinate.Coordinate;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.PieceType;
@@ -14,32 +11,34 @@ import chess.domain.state.StateType;
 import chess.domain.team.Team;
 import chess.dto.PieceDto;
 import chess.dto.StateDto;
+import chess.repository.AnnouncementRepository;
+import chess.repository.PieceRepository;
+import chess.repository.StateRepository;
+import chess.repository.StatusRecordRepository;
 import chess.view.Announcement;
 import chess.view.BoardToHtml;
 import chess.view.board.Board;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class ChessRoomService {
-	private final StateDao stateDao;
-	private final PieceDao pieceDao;
-	private final StatusRecordDao statusRecordDao;
-	private final AnnouncementDao announcementDao;
+	private final AnnouncementRepository announcementRepository;
+	private final StatusRecordRepository statusRecordRepository;
+	private final StateRepository stateRepository;
+	private final PieceRepository pieceRepository;
 
-	public ChessRoomService(final StateDao stateDao, final PieceDao pieceDao
-			, final StatusRecordDao statusRecordDao, final AnnouncementDao announcementDao) {
-		this.stateDao = stateDao;
-		this.pieceDao = pieceDao;
-		this.statusRecordDao = statusRecordDao;
-		this.announcementDao = announcementDao;
+	public ChessRoomService(final AnnouncementRepository announcementRepository, final StatusRecordRepository statusRecordRepository, final StateRepository stateRepository, final PieceRepository pieceRepository) {
+		this.announcementRepository = announcementRepository;
+		this.statusRecordRepository = statusRecordRepository;
+		this.stateRepository = stateRepository;
+		this.pieceRepository = pieceRepository;
 	}
 
-	public String loadBoardHtml(final int roomId) throws SQLException {
+	public String loadBoardHtml(final int roomId) {
 		final State state = loadState(roomId);
 
 		return createBoardHtml(state);
@@ -52,9 +51,9 @@ public class ChessRoomService {
 				.collect(Collectors.toSet());
 	}
 
-	private State loadState(final int roomId) throws SQLException {
-		final StateDto stateDto = stateDao.findStateByRoomId(roomId);
-		final List<PieceDto> pieceDtos = pieceDao.findPiecesByRoomId(roomId);
+	private State loadState(final int roomId) {
+		final StateDto stateDto = stateRepository.findByRoomId(roomId).orElseThrow(DaoNoneSelectedException::new);
+		final List<PieceDto> pieceDtos = pieceRepository.findPiecesByRoomId(roomId);
 
 		final Set<Piece> pieces = createPieceSet(pieceDtos);
 		return StateType.getFactory(stateDto.getState()).apply(
@@ -66,38 +65,42 @@ public class ChessRoomService {
 		return BoardToHtml.of(board).getHtml();
 	}
 
-	public int saveNewState(final int roomId) throws SQLException {
-		return stateDao.addState("ended", roomId);
+	public void saveNewState(final int roomId) {
+		stateRepository.save("ended", roomId);
 	}
 
-	public void saveNewPieces(final int roomId) throws SQLException {
+	public void saveNewPieces(final int roomId) {
 		final Set<Piece> pieces = new StartPieces().getInstance();
-		for (Piece piece : pieces) {
-			pieceDao.addPiece(piece.getPieceTypeName(), piece.getTeamName(),
-					piece.getCoordinateRepresentation(), roomId);
-		}
+
+		final List<PieceDto> pieceDtos = pieces.stream()
+				.map(piece -> new PieceDto(piece.getPieceTypeName(), piece.getTeamName(),
+						piece.getCoordinateRepresentation(), roomId))
+				.collect(Collectors.toList());
+		pieceRepository.saveAll(pieceDtos);
 	}
 
-	public void updateRoom(final int roomId, final String command) throws SQLException {
+	public void updateRoom(final int roomId, final String command) {
 		final State before = loadState(roomId);
 		final State after = before.pushCommand(command);
-		stateDao.setStateByRoomId(roomId, after.getStateName());
-		pieceDao.deletePieces(roomId);
+		stateRepository.setByRoomId(after.getStateName(), roomId);
+		pieceRepository.deletePieces(roomId);
 		savePiecesFromState(roomId, after);
 		saveStatusRecordIfEnded(roomId, after);
-		announcementDao.setAnnouncementByRoomId(roomId, createRightAnnouncement(after));
+		announcementRepository.setByRoomId(roomId, createRightAnnouncement(after));
 	}
 
-	private void savePiecesFromState(final int roomId, final State after) throws SQLException {
-		for (final Piece piece : after.getSet()) {
-			pieceDao.addPiece(piece.getPieceTypeName(), piece.getTeamName(),
-					piece.getCoordinateRepresentation(), roomId);
-		}
+	private void savePiecesFromState(final int roomId, final State after) {
+		List<PieceDto> prieceDtos = after.getSet()
+				.stream()
+				.map(piece -> new PieceDto(piece.getPieceTypeName(), piece.getTeamName(),
+						piece.getCoordinateRepresentation(), roomId))
+				.collect(Collectors.toList());
+		pieceRepository.saveAll(prieceDtos);
 	}
 
-	private void saveStatusRecordIfEnded(final int roomId, final State after) throws SQLException {
+	private void saveStatusRecordIfEnded(final int roomId, final State after) {
 		if (after.isEnded()) {
-			statusRecordDao.addStatusRecord(Announcement.ofStatus(after.getPieces()).getString(), roomId);
+			statusRecordRepository.save(Announcement.ofStatus(after.getPieces()).getString(), roomId);
 		}
 	}
 
@@ -111,15 +114,16 @@ public class ChessRoomService {
 		return Announcement.ofEnd().getString();
 	}
 
-	public String loadAnnouncementMessage(int roomId) throws SQLException {
-		return announcementDao.findAnnouncementByRoomId(roomId).getMessage();
+	public String loadAnnouncementMessage(int roomId) {
+		return announcementRepository.findByRoomId(roomId).orElseThrow(DaoNoneSelectedException::new)
+				.getMessage();
 	}
 
-	public int saveNewAnnouncementMessage(int roomId) throws SQLException {
-		return announcementDao.addAnnouncement(Announcement.ofFirst().getString(), roomId);
+	public void saveNewAnnouncementMessage(int roomId) {
+		announcementRepository.save(Announcement.ofFirst().getString(), roomId);
 	}
 
-	public int saveAnnouncementMessage(final int roomId, final String message) throws SQLException {
-		return announcementDao.setAnnouncementByRoomId(roomId, message);
+	public void saveAnnouncementMessage(final int roomId, final String message) {
+		announcementRepository.setByRoomId(roomId, message);
 	}
 }

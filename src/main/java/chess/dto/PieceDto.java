@@ -1,17 +1,26 @@
 package chess.dto;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
 import java.util.Objects;
 
+@Table("piece")
 public class PieceDto {
-	final int id;
-	final String pieceType;
-	final String team;
-	final String coordinate;
-	final int roomId;
+	@Id
+	private int id;
+	@Column("piece_type")
+	private final String pieceType;
+	@Column("team")
+	private final String team;
+	@Column("coordinate")
+	private final String coordinate;
+	@Column("room_id")
+	private final int roomId;
 
-	public PieceDto(final int id, final String pieceType, final String team,
+	public PieceDto(final String pieceType, final String team,
 					final String coordinate, final int roomId) {
-		this.id = id;
 		this.pieceType = pieceType;
 		this.team = team;
 		this.coordinate = coordinate;

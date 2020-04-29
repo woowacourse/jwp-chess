@@ -4,6 +4,9 @@ public class GameRequestDto {
 
     private Long id;
 
+    public GameRequestDto() {
+    }
+
     public GameRequestDto(final Long id) {
         this.id = id;
     }

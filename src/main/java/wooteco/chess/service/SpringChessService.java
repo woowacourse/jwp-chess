@@ -3,14 +3,14 @@ package wooteco.chess.service;
 import org.springframework.stereotype.Service;
 import wooteco.chess.db.ChessPiece;
 import wooteco.chess.db.ChessPieceRepository;
-import wooteco.chess.db.MoveHistoryDao;
+import wooteco.chess.db.MoveHistory;
+import wooteco.chess.db.MoveHistoryRepository;
 import wooteco.chess.domains.board.Board;
 import wooteco.chess.domains.board.BoardFactory;
 import wooteco.chess.domains.piece.Piece;
 import wooteco.chess.domains.piece.PieceColor;
 import wooteco.chess.domains.position.Position;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +25,12 @@ public class SpringChessService {
     private static final String WINNING_MSG_FORMAT = "%s이/가 이겼습니다.";
 
     private final ChessPieceRepository chessPieceRepository;
-    private final MoveHistoryDao moveHistoryDao;
+    private final MoveHistoryRepository moveHistoryRepository;
     private final Map<String, Board> playingBoards = new HashMap<>();
 
-    public SpringChessService(MoveHistoryDao moveHistoryDao, ChessPieceRepository chessPieceRepository) {
-        this.moveHistoryDao = moveHistoryDao;
+    public SpringChessService(ChessPieceRepository chessPieceRepository, MoveHistoryRepository moveHistoryRepository) {
         this.chessPieceRepository = chessPieceRepository;
+        this.moveHistoryRepository = moveHistoryRepository;
     }
 
     public boolean canResume(String gameId) {
@@ -38,7 +38,7 @@ public class SpringChessService {
         return savedPiecesNumber == BOARD_CELLS_NUMBER;
     }
 
-    public void startNewGame(String gameId) throws SQLException {
+    public void startNewGame(String gameId) {
         deleteSavedGame(gameId);
 
         Board board = new Board();
@@ -57,7 +57,7 @@ public class SpringChessService {
                 .collect(Collectors.toList());
     }
 
-    public void resumeGame(String gameId) throws SQLException {
+    public void resumeGame(String gameId) {
         Map<Position, Piece> savedBoardStatus = Position.stream()
                 .collect(Collectors.toMap(Function.identity(), position -> {
                     String pieceName = null;
@@ -65,7 +65,8 @@ public class SpringChessService {
                     return BoardFactory.findPieceByPieceName(pieceName);
                 }));
 
-        Optional<String> lastTurn = moveHistoryDao.figureLastTurn(gameId);
+        Optional<MoveHistory> moveHistory = moveHistoryRepository.findById(gameId);
+        Optional<String> lastTurn = moveHistory.map(MoveHistory::getTeam);
 
         Board board = new Board();
         board.recoverBoard(savedBoardStatus, lastTurn);
@@ -73,7 +74,7 @@ public class SpringChessService {
         playingBoards.put(gameId, board);
     }
 
-    public void move(String gameId, String sourceName, String targetName) throws SQLException {
+    public void move(String gameId, String sourceName, String targetName) {
         Board board = playingBoards.get(gameId);
         PieceColor currentTeam = board.getTeamColor();
 
@@ -83,11 +84,11 @@ public class SpringChessService {
         board.move(source, target);
 
         chessPieceRepository.save(new ChessPiece(gameId, source.name(), board.getPieceByPosition(source).name()));
-        chessPieceRepository.updatePiece(gameId, target, board.getPieceByPosition(target));
-        moveHistoryDao.addMoveHistory(gameId, currentTeam, source, target);
+        chessPieceRepository.save(new ChessPiece(gameId, target.name(), board.getPieceByPosition(target).name()));
+        moveHistoryRepository.addMoveHistory(gameId, currentTeam, source, target);
     }
 
-    public String provideWinner(String gameId) throws SQLException {
+    public String provideWinner(String gameId) {
         Board board = playingBoards.get(gameId);
 
         if (board.isGameOver()) {
@@ -109,9 +110,9 @@ public class SpringChessService {
         return gameInfo;
     }
 
-    private void deleteSavedGame(String gameId) throws SQLException {
+    private void deleteSavedGame(String gameId) {
         chessPieceRepository.deleteById(gameId);
-        moveHistoryDao.deleteMoveHistory(gameId);
+        moveHistoryRepository.deleteById(gameId);
         playingBoards.remove(gameId);
     }
 

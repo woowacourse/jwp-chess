@@ -10,7 +10,7 @@ import wooteco.chess.domain.position.MovingPosition;
 import wooteco.chess.dto.DestinationPositionDto;
 import wooteco.chess.dto.MovablePositionsDto;
 import wooteco.chess.dto.MoveStatusDto;
-import wooteco.chess.service.ChessWebService;
+import wooteco.chess.service.SparkChessService;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -21,102 +21,102 @@ import static spark.Spark.post;
 import static wooteco.chess.web.JsonTransformer.json;
 
 public class SparkChessController {
-	private ChessWebService chessWebService;
+    private SparkChessService sparkChessService;
 
-	public SparkChessController() {
-		this.chessWebService = new ChessWebService();
-	}
+    public SparkChessController() {
+        this.sparkChessService = new SparkChessService();
+    }
 
-	public void route() {
-		get("/", this::index);
+    public void route() {
+        get("/", this::routeMainPage);
 
-		get("/new", this::startNewGame);
+        get("/new", this::startNewGame);
 
-		get("/loading", this::loadGame);
+        get("/loading", this::loadGame);
 
-		get("/board", (req, res) -> chessWebService.setBoard(), json());
+        get("/board", (req, res) -> sparkChessService.setBoard(), json());
 
-		post("/board", this::postBoard);
+        post("/board", this::postBoard);
 
-		post("/source", this::getMovablePositions, json());
+        post("/source", this::getMovablePositions, json());
 
-		post("/destination", this::move, json());
-	}
+        post("/destination", this::move, json());
+    }
 
-	private String index(Request req, Response res) {
-		Map<String, Object> model = new HashMap<>();
-		model.put("normalStatus", NormalStatus.YES.isNormalStatus());
+    private String routeMainPage(Request req, Response res) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("normalStatus", NormalStatus.YES.isNormalStatus());
 
-		return render(model, "index.html");
-	}
+        return render(model, "index.html");
+    }
 
-	private String startNewGame(Request req, Response res) throws SQLException {
-		Map<String, Object> model = new HashMap<>();
-		model.put("normalStatus", NormalStatus.YES.isNormalStatus());
+    private String startNewGame(Request req, Response res) throws SQLException {
+        Map<String, Object> model = new HashMap<>();
+        model.put("normalStatus", NormalStatus.YES.isNormalStatus());
 
-		chessWebService.clearHistory();
+        sparkChessService.clearHistory();
 
-		return render(model, "chess.html");
-	}
+        return render(model, "chess.html");
+    }
 
-	private String loadGame(Request req, Response res) {
-		Map<String, Object> model = new HashMap<>();
-		model.put("normalStatus", NormalStatus.YES.isNormalStatus());
+    private String loadGame(Request req, Response res) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("normalStatus", NormalStatus.YES.isNormalStatus());
 
-		return render(model, "chess.html");
-	}
+        return render(model, "chess.html");
+    }
 
-	private String postBoard(Request req, Response res) {
-		Map<String, Object> model = new HashMap<>();
+    private String postBoard(Request req, Response res) {
+        Map<String, Object> model = new HashMap<>();
 
-		try {
-			MoveStatusDto moveStatusDto = chessWebService.move(new MovingPosition(req.queryParams("source"), req.queryParams("destination")));
+        try {
+            MoveStatusDto moveStatusDto = sparkChessService.move(new MovingPosition(req.queryParams("source"), req.queryParams("destination")));
 
-			model.put("normalStatus", moveStatusDto.getNormalStatus());
-			model.put("winner", moveStatusDto.getWinner());
+            model.put("normalStatus", moveStatusDto.getNormalStatus());
+            model.put("winner", moveStatusDto.getWinner());
 
-			if (moveStatusDto.getWinner().isNone()) {
-				return render(model, "chess.html");
-			}
-			return render(model, "result.html");
-		} catch (IllegalArgumentException | UnsupportedOperationException | NullPointerException | SQLException e) {
-			model.put("normalStatus", NormalStatus.NO.isNormalStatus());
-			model.put("exception", e.getMessage());
-			model.put("winner", Color.NONE);
-			return render(model, "chess.html");
-		}
-	}
+            if (moveStatusDto.getWinner().isNone()) {
+                return render(model, "chess.html");
+            }
+            return render(model, "result.html");
+        } catch (IllegalArgumentException | UnsupportedOperationException | NullPointerException | SQLException e) {
+            model.put("normalStatus", NormalStatus.NO.isNormalStatus());
+            model.put("exception", e.getMessage());
+            model.put("winner", Color.NONE);
+            return render(model, "chess.html");
+        }
+    }
 
-	private Map<String, Object> getMovablePositions(Request req, Response res) throws SQLException {
-		Map<String, Object> model = new HashMap<>();
-		try {
-			MovablePositionsDto movablePositionsDto = chessWebService.findMovablePositions(req.queryParams("source"));
+    private Map<String, Object> getMovablePositions(Request req, Response res) throws SQLException {
+        Map<String, Object> model = new HashMap<>();
+        try {
+            MovablePositionsDto movablePositionsDto = sparkChessService.findMovablePositions(req.queryParams("source"));
 
-			model.put("movable", movablePositionsDto.getMovablePositionNames());
-			model.put("position", movablePositionsDto.getPosition());
-			model.put("normalStatus", NormalStatus.YES.isNormalStatus());
+            model.put("movable", movablePositionsDto.getMovablePositionNames());
+            model.put("position", movablePositionsDto.getPosition());
+            model.put("normalStatus", NormalStatus.YES.isNormalStatus());
 
-			return model;
-		} catch (IllegalArgumentException | UnsupportedOperationException | NullPointerException e) {
-			model.put("normalStatus", NormalStatus.NO.isNormalStatus());
-			model.put("exception", e.getMessage());
+            return model;
+        } catch (IllegalArgumentException | UnsupportedOperationException | NullPointerException e) {
+            model.put("normalStatus", NormalStatus.NO.isNormalStatus());
+            model.put("exception", e.getMessage());
 
-			return model;
-		}
-	}
+            return model;
+        }
+    }
 
-	private Map<String, Object> move(Request req, Response res) {
-		Map<String, Object> model = new HashMap<>();
+    private Map<String, Object> move(Request req, Response res) {
+        Map<String, Object> model = new HashMap<>();
 
-		DestinationPositionDto destinationPositionDto = chessWebService.chooseDestinationPosition(req.queryParams("destination"));
+        DestinationPositionDto destinationPositionDto = sparkChessService.chooseDestinationPosition(req.queryParams("destination"));
 
-		model.put("normalStatus", destinationPositionDto.getNormalStatus().isNormalStatus());
-		model.put("position", destinationPositionDto.getPosition());
+        model.put("normalStatus", destinationPositionDto.getNormalStatus().isNormalStatus());
+        model.put("position", destinationPositionDto.getPosition());
 
-		return model;
-	}
+        return model;
+    }
 
-	private static String render(Map<String, Object> model, String templatePath) {
-		return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
-	}
+    private static String render(Map<String, Object> model, String templatePath) {
+        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+    }
 }

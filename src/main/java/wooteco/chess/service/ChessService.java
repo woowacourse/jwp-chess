@@ -97,8 +97,9 @@ public class ChessService {
     }
 
     private ChessGame findChessGame(final Long id) {
-        Optional<ChessGame> chessGameOptional = chessDAO.findGameById(id);
-        return chessGameOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 게임 번호입니다."));
+        Optional<ChessGameTable> chessGameTableOptional = chessGameRepository.findById(id);
+        ChessGameTable chessGameTable = chessGameTableOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 게임 번호입니다."));
+        return chessGameTable.toChessGame();
     }
 
     private void loadIfNotExisting(final Long id) {

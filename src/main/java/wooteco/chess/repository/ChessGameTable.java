@@ -19,13 +19,11 @@ public class ChessGameTable {
     private Set<BoardTable> board;
     private String team;
 
-    private ChessGameTable(Long id, Set<BoardTable> board, String team) {
-        this.id = id;
-        this.board = board;
-        this.team = team;
+    private ChessGameTable() {
     }
 
-    private ChessGameTable(Set<BoardTable> board, String team) {
+    private ChessGameTable(Long id, Set<BoardTable> board, String team) {
+        this.id = id;
         this.board = board;
         this.team = team;
     }
@@ -40,7 +38,7 @@ public class ChessGameTable {
                                 entry.getValue().getTeam().toString()
                         ))
                 .collect(Collectors.toSet());
-        return new ChessGameTable(board, chessGame.getTurn().toString());
+        return new ChessGameTable(null, board, chessGame.getTurn().toString());
     }
 
     public static ChessGameTable createForUpdate(ChessGame chessGame) {

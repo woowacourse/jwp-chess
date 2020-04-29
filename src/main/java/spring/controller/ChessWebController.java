@@ -31,7 +31,7 @@ public class ChessWebController {
 
         getBoards();
 
-        getBoard();
+//        getBoard();
 
         postMove();
 
@@ -76,13 +76,13 @@ public class ChessWebController {
         });
     }
 
-    private void getBoard() {
-        get("/start/board", (req, res) -> {
-            int boardId = Integer.parseInt(req.queryParams("id"));
-            ChessGame chessGame = chessService.makeGameByDB(boardId);
-            return chessService.findGame(chessGame);
-        });
-    }
+//    private void getBoard() {
+//        get("/start/board", (req, res) -> {
+//            int boardId = Integer.parseInt(req.queryParams("id"));
+//            ChessGame chessGame = chessService.makeGameByDB(boardId);
+//            return chessService.findGame(chessGame);
+//        });
+//    }
 
     private void getBoards() {
         get("/start/boards", (req, res) -> chessService.findAllBoards());

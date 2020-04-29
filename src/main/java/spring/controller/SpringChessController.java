@@ -1,5 +1,6 @@
 package spring.controller;
 
+import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,12 +44,12 @@ public class SpringChessController {
         return chessService.findAllBoards();
     }
 
-    @GetMapping("/start/board")
-    public String findBoard(@RequestParam(name = "id") String id) throws SQLException {
-        int boardId = Integer.parseInt(id);
-        ChessGame chessGame = chessService.makeGameByDB(boardId);
-        return chessService.findGame(chessGame);
-    }
+//    @GetMapping("/start/board")
+//    public String findBoard(@RequestParam(name = "id") String id) throws SQLException {
+//        int boardId = Integer.parseInt(id);
+//        ChessGame chessGame = chessService.makeGameByDB(boardId);
+//        return chessService.findGame(chessGame);
+//    }
 
     @PostMapping("/start/move")
     public String move(@RequestParam(name = "now") String now, @RequestParam(name = "des") String des, @RequestParam(name = "game_id") String gameIdData) throws SQLException {
@@ -82,5 +83,12 @@ public class SpringChessController {
 
     private static String render(Map<String, Object> model, String templatePath) {
         return handlebarsTemplateEngine.render(new ModelAndView(model, templatePath));
+    }
+
+    ///
+
+    @PostMapping("/start/abc")
+    public String starts() {
+        return new Gson().toJson(chessService.makeChessBoard());
     }
 }

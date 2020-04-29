@@ -1,12 +1,13 @@
 package spring.chess.board;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import spring.chess.exception.InvalidConstructorValueException;
 import spring.chess.location.Location;
 import spring.chess.piece.type.Piece;
 import spring.chess.team.Team;
+import spring.entity.PieceEntity;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ChessBoard {
     private final Map<Location, Piece> board;
@@ -88,6 +89,22 @@ public class ChessBoard {
         return board;
     }
 
+    public Piece getPiece(Location location) {
+        return board.get(location);
+    }
+
+    public Set<PieceEntity> toEntities() {
+        Set<PieceEntity> pieces = new HashSet<>();
+        for (Location location : this.board.keySet()) {
+            String name = String.valueOf(board.get(location).getName());
+            String row = String.valueOf(location.getRowValue());
+            String col = String.valueOf(location.getColValue());
+
+            pieces.add(new PieceEntity(name, row, col));
+        }
+        return pieces;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -96,9 +113,5 @@ public class ChessBoard {
             sb.append(format);
         }
         return sb.toString();
-    }
-
-    public Piece getPiece(Location location) {
-        return board.get(location);
     }
 }

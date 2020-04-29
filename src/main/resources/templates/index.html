@@ -111,12 +111,18 @@
     </p>
 
     <p style="margin-top: 8px;">
-        <input class="start-button" type="submit" value="reset" style="margin-left: 60px; margin-top: 8px;" onclick="postNewGame();"/>
+        <input class="start-button" type="submit" value="reset" style="margin-left: 60px; margin-top: 8px;"
+               onclick="postNewGame();"/>
 
-        <form action="/end" method="get">
-            <input class="end-button" type="submit" value="End" style="margin-left: 60px; margin-top: 8px;" onclick="postEndGame();"/>
-        </form>
+    <form action="/end" method="get">
+        <input class="end-button" type="submit" value="End" style="margin-left: 60px; margin-top: 8px;"
+               onclick="postEndGame();"/>
+    </form>
     </p>
+
+    <form action="/start/abc" method="post">
+        <input class="classssss" style="margin-left: 60px; margin-top: 8px;" type="submit" value="새게임"/>
+    </form>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

@@ -8,7 +8,7 @@ import chess.team.Team;
 import java.util.Objects;
 
 public abstract class Piece {
-    public final char name;
+    private final char name;
     protected final Score score;
     private final PieceMovable pieceMovable;
 

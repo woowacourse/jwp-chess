@@ -3,6 +3,7 @@ package spring.service;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 import spring.chess.board.ChessBoard;
+import spring.chess.board.ChessBoardCreater;
 import spring.chess.command.MoveCommand;
 import spring.chess.game.ChessGame;
 import spring.chess.location.Location;
@@ -14,6 +15,9 @@ import spring.dao.ChessGameDao;
 import spring.dao.ChessGamesDao;
 import spring.dao.PieceDao;
 import spring.dto.*;
+import spring.entity.ChessGameEntity;
+import spring.entity.repository.ChessGameRepository;
+import spring.entity.repository.PieceRepository;
 import spring.vo.PieceVo;
 
 import java.sql.SQLException;
@@ -28,6 +32,14 @@ public class ChessService {
     private static final PieceDao pieceDao = new PieceDao();
     private static final ChessGameDao chessGameDao = new ChessGameDao();
     private static final Gson GSON = new Gson();
+
+    private PieceRepository pieceRepository;
+    private ChessGameRepository chessGameRepository;
+
+    public ChessService(PieceRepository pieceRepository, ChessGameRepository chessGameRepository) {
+        this.pieceRepository = pieceRepository;
+        this.chessGameRepository = chessGameRepository;
+    }
 
     public String findAllBoards() throws SQLException {
         ArrayList<ChessGameVo> all = chessGamesDao.findAll();
@@ -119,14 +131,29 @@ public class ChessService {
         resetChessBoard(chessGame, gameId);
     }
 
-    public String findGame(ChessGame chessGame) throws SQLException {
-        int turnIsBlack = 0;
-        if (chessGame.getTurn().isBlack()) {
-            turnIsBlack = 1;
-        }
-        double whiteScore = chessGame.calculateScores().getWhiteScore().getValue();
-        double blackScore = chessGame.calculateScores().getBlackScore().getValue();
-        return GSON.toJson(new ChessGameDto(new BoardDto(chessGame.getChessBoard())
-                , turnIsBlack, whiteScore, blackScore));
+//    public String findGame(ChessGame chessGame) throws SQLException {
+//        int turnIsBlack = 0;
+//        if (chessGame.getTurn().isBlack()) {
+//            turnIsBlack = 1;
+//        }
+//        double whiteScore = chessGame.calculateScores().getWhiteScore().getValue();
+//        double blackScore = chessGame.calculateScores().getBlackScore().getValue();
+//        return GSON.toJson(new ChessGameDto(new BoardDto(chessGame.getChessBoard())
+//                , turnIsBlack, whiteScore, blackScore));
+//    }
+
+    public ChessGameDto makeChessBoard() {
+        ChessGame chessGame = new ChessGame(ChessBoardCreater.create(), Team.WHITE);
+
+        ChessGameEntity save = chessGameRepository.save(chessGame.toEntity());
+
+        ChessGame savedChessGame = save.toChessGame();
+
+        BoardDto boardDto = new BoardDto(savedChessGame.getChessBoard());
+        boolean isTurnBlack = savedChessGame.getTurn().isBlack();
+        double whiteScore = savedChessGame.calculateScores().getWhiteScore().getValue();
+        double blackScore = savedChessGame.calculateScores().getBlackScore().getValue();
+
+        return new ChessGameDto(boardDto, isTurnBlack, whiteScore, blackScore);
     }
 }

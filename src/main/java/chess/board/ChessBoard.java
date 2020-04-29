@@ -94,7 +94,6 @@ public class ChessBoard {
     }
 
     public Piece getPiece(Location location) {
-        System.out.println("이건 로그" + board.get(location));
         return board.get(location);
     }
 }

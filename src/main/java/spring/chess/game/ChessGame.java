@@ -12,8 +12,11 @@ import spring.chess.progress.Progress;
 import spring.chess.result.ChessResult;
 import spring.chess.result.ChessScores;
 import spring.chess.team.Team;
+import spring.entity.ChessGameEntity;
+import spring.entity.PieceEntity;
 
 import java.util.Objects;
+import java.util.Set;
 
 import static spring.chess.progress.Progress.END;
 import static spring.chess.team.Team.BLACK;
@@ -106,5 +109,10 @@ public class ChessGame {
 
     public ChessBoard getChessBoard() {
         return chessBoard;
+    }
+
+    public ChessGameEntity toEntity() {
+        Set<PieceEntity> pieces = this.chessBoard.toEntities();
+        return new ChessGameEntity(this.turn == BLACK, pieces);
     }
 }

@@ -1,10 +1,11 @@
 package spring.entity;
 
-import chess.board.ChessBoard;
-import chess.game.ChessGame;
-import chess.team.Team;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import spring.chess.board.ChessBoard;
+import spring.chess.game.ChessGame;
+import spring.chess.team.Team;
 import spring.entity.converter.ChessBoardConverter;
 
 import java.util.Set;
@@ -13,14 +14,11 @@ import java.util.Set;
 public class ChessGameEntity {
     @Id
     Long id;
-    String whiteName;
-    String blackName;
+    @Column("turn_is_black")
     Boolean isTurnBlack;
     Set<PieceEntity> pieces;
 
-    public ChessGameEntity(String whiteName, String blackName, Boolean isTurnBlack, Set<PieceEntity> pieces) {
-        this.whiteName = whiteName;
-        this.blackName = blackName;
+    public ChessGameEntity(Boolean isTurnBlack, Set<PieceEntity> pieces) {
         this.isTurnBlack = isTurnBlack;
         this.pieces = pieces;
     }
@@ -29,6 +27,18 @@ public class ChessGameEntity {
         Team turn = Team.of(isTurnBlack);
         ChessBoard chessBoard = ChessBoardConverter.convert(pieces);
         return new ChessGame(chessBoard, turn);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Boolean getTurnBlack() {
+        return isTurnBlack;
+    }
+
+    public Set<PieceEntity> getPieces() {
+        return pieces;
     }
 
     public void add(PieceEntity pieceEntity) {

@@ -1,17 +1,20 @@
 package spring.entity;
 
-import chess.location.Location;
-import chess.piece.type.Piece;
-import chess.piece.type.PieceMapper;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import spring.chess.location.Location;
+import spring.chess.piece.type.Piece;
+import spring.chess.piece.type.PieceMapper;
 
 @Table("piece2")
 public class PieceEntity {
     @Id
     Long id;
     String name;
+    @Column("piece_row")
     String row;
+    @Column("piece_col")
     String col;
 
     public PieceEntity(String name, String row, String col) {

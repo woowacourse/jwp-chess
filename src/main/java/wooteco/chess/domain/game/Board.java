@@ -1,19 +1,10 @@
 package wooteco.chess.domain.game;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
-import wooteco.chess.domain.piece.Color;
-import wooteco.chess.domain.piece.Path;
-import wooteco.chess.domain.piece.Piece;
-import wooteco.chess.domain.piece.PieceFactory;
-import wooteco.chess.domain.piece.Position;
-import wooteco.chess.domain.piece.Symbol;
+import wooteco.chess.domain.piece.*;
 import wooteco.chess.domain.piece.exception.NotMovableException;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Board {
     public static final Board EMPTY = new Board();
@@ -34,8 +25,8 @@ public class Board {
         Board board = new Board();
 
         List<Symbol> pieceSequence = Arrays.asList(
-            Symbol.ROOK, Symbol.KNIGHT, Symbol.BISHOP, Symbol.QUEEN,
-            Symbol.KING, Symbol.BISHOP, Symbol.KNIGHT, Symbol.ROOK
+                Symbol.ROOK, Symbol.KNIGHT, Symbol.BISHOP, Symbol.QUEEN,
+                Symbol.KING, Symbol.BISHOP, Symbol.KNIGHT, Symbol.ROOK
         );
 
         for (Position position : Position.values()) {
@@ -44,13 +35,13 @@ public class Board {
 
         for (int x = Position.BEGIN_X; x < Position.END_X; x++) {
             board.setPiece(Position.of(x, BLACK_PIECES_Y),
-                PieceFactory.create(pieceSequence.get(x), Position.of(x, BLACK_PIECES_Y), Color.BLACK));
+                    PieceFactory.create(pieceSequence.get(x), Position.of(x, BLACK_PIECES_Y), Color.BLACK));
             board.setPiece(Position.of(x, BLACK_PAWNS_Y),
-                PieceFactory.create(Symbol.PAWN, Position.of(x, BLACK_PAWNS_Y), Color.BLACK));
+                    PieceFactory.create(Symbol.PAWN, Position.of(x, BLACK_PAWNS_Y), Color.BLACK));
             board.setPiece(Position.of(x, WHITE_PAWNS_Y),
-                PieceFactory.create(Symbol.PAWN, Position.of(x, WHITE_PAWNS_Y), Color.WHITE));
+                    PieceFactory.create(Symbol.PAWN, Position.of(x, WHITE_PAWNS_Y), Color.WHITE));
             board.setPiece(Position.of(x, WHITE_PIECES_Y),
-                PieceFactory.create(pieceSequence.get(x), Position.of(x, WHITE_PIECES_Y), Color.WHITE));
+                    PieceFactory.create(pieceSequence.get(x), Position.of(x, WHITE_PIECES_Y), Color.WHITE));
         }
 
         return board;
@@ -74,7 +65,7 @@ public class Board {
                 continue;
             }
             board.setPiece(Position.of(x, y),
-                PieceFactory.create(Symbol.from(pieces[i]), Position.of(x, y), color));
+                    PieceFactory.create(Symbol.from(pieces[i]), Position.of(x, y), color));
         }
         return board;
     }
@@ -97,22 +88,22 @@ public class Board {
 
     public List<Piece> findPiecesByColor(Color color) {
         return board.values()
-            .stream()
-            .filter(piece -> piece.isSameColor(color))
-            .collect(Collectors.toList());
+                .stream()
+                .filter(piece -> piece.isSameColor(color))
+                .collect(Collectors.toList());
     }
 
     public boolean isKingDead() {
         return board.values()
-            .stream()
-            .filter(Piece::isKing)
-            .count() < INITIAL_KING_COUNT;
+                .stream()
+                .filter(Piece::isKing)
+                .count() < INITIAL_KING_COUNT;
     }
 
     public boolean hasKing(Color color) {
         return board.values()
-            .stream()
-            .anyMatch(piece -> piece.isKing() && piece.isSameColor(color));
+                .stream()
+                .anyMatch(piece -> piece.isKing() && piece.isSameColor(color));
     }
 
     private void validateMove(Piece source, Piece target, Path path) {

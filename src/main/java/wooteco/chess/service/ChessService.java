@@ -1,59 +1,60 @@
 package wooteco.chess.service;
 
 import org.springframework.stereotype.Service;
-import wooteco.chess.dao.ChessGameDao;
+import wooteco.chess.domain.entity.ChessGameEntity;
 import wooteco.chess.domain.game.Board;
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.Turn;
 import wooteco.chess.domain.game.exception.InvalidTurnException;
+import wooteco.chess.domain.game.exception.RoomNotFoundException;
 import wooteco.chess.domain.game.state.Playing;
+import wooteco.chess.domain.game.state.Ready;
 import wooteco.chess.domain.piece.Position;
 import wooteco.chess.domain.piece.exception.NotMovableException;
+import wooteco.chess.domain.repository.ChessRepository;
 import wooteco.chess.dto.*;
-
-import java.sql.SQLException;
 
 @Service
 public class ChessService {
-    private static final ChessGameDao chessGameDao = new ChessGameDao();
+    private ChessRepository chessRepository;
+
+    public ChessService(ChessRepository chessRepository) {
+        this.chessRepository = chessRepository;
+    }
 
     public ResponseDto createChessRoom() {
-        try {
-            ChessGame chessGame = chessGameDao.save();
-            chessGame.start();
-            chessGameDao.update(chessGame);
-            return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
-        } catch (SQLException e) {
-            return new ResponseDto(ResponseDto.FAIL, "잘못된 접근입니다.");
-        }
+        ChessGame chessGame = new ChessGame(new Ready());
+        chessGame.start();
+        ChessGameEntity chessGameEntity = new ChessGameEntity(chessGame);
+        chessGameEntity = chessRepository.save(chessGameEntity);
+        return new ResponseDto(ResponseDto.SUCCESS, chessGameEntity.getId());
     }
 
-    public ResponseDto restartGame(int chessRoomId) {
-        try {
-            ChessGame chessGame = chessGameDao.findById(chessRoomId);
-            ChessGame newChessGame = new ChessGame(chessGame.getId(), new Playing(Board.create(), Turn.WHITE));
-            chessGameDao.update(newChessGame);
-            return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
-        } catch (SQLException e) {
-            return new ResponseDto(ResponseDto.FAIL, "잘못된 접근입니다.");
-        }
+    public ResponseDto restartGame(int chessGameId) {
+        ChessGameEntity chessGameEntity = chessRepository.findById(chessGameId)
+                .orElseThrow(RoomNotFoundException::new);
+        ChessGame chessGame = new ChessGame(new Playing(Board.create(), Turn.WHITE));
+        chessGameEntity.update(chessGame);
+        chessRepository.save(chessGameEntity);
+        return new ResponseDto(ResponseDto.SUCCESS, chessGameEntity.getId());
     }
 
-    public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) {
+    public ResponseDto movePiece(int chessRoomId, Position sourcePosition, Position targetPosition) {
         try {
-            return getResponseDtoWithMove(chessGameId, sourcePosition, targetPosition);
+            return getResponseDtoWithMove(chessRoomId, sourcePosition, targetPosition);
         } catch (NotMovableException | IllegalArgumentException e) {
             return new ResponseDto(ResponseDto.FAIL, "이동할 수 없는 위치입니다.");
-        } catch (SQLException e) {
-            return new ResponseDto(ResponseDto.FAIL, "잘못된 접근입니다.");
         }
     }
 
-    private ResponseDto getResponseDtoWithMove(int chessGameId, Position sourcePosition, Position targetPosition) throws SQLException {
-        ChessGame chessGame = chessGameDao.findById(chessGameId);
+    private ResponseDto getResponseDtoWithMove(int chessGameId, Position sourcePosition, Position targetPosition) {
+        ChessGameEntity chessGameEntity = chessRepository.findById(chessGameId)
+                .orElseThrow(RoomNotFoundException::new);
+        ChessGame chessGame = chessGameEntity.createChessGame();
         try {
             chessGame.move(sourcePosition, targetPosition);
-            chessGameDao.update(chessGame);
+            chessGameEntity.update(chessGame);
+            chessRepository.save(chessGameEntity);
             return responseChessGame(chessGame);
         } catch (InvalidTurnException e) {
             return new ResponseDto(ResponseDto.FAIL, chessGame.turn().getColor() + "의 턴입니다.");
@@ -61,16 +62,13 @@ public class ChessService {
     }
 
     public ResponseDto getChessGameById(int chessGameId) {
-        try {
-            ChessGame chessGame = chessGameDao.findById(chessGameId);
-            return responseChessGame(chessGame);
-        } catch (SQLException e) {
-            return new ResponseDto(ResponseDto.FAIL, "잘못된 접근입니다.");
-        }
+        ChessGameEntity chessGameEntity = chessRepository.findById(chessGameId)
+                .orElseThrow(RoomNotFoundException::new);
+        return responseChessGame(chessGameEntity.createChessGame());
     }
 
     public ResponseDto getGameList() {
-        return new ResponseDto(ResponseDto.SUCCESS, chessGameDao.selectAll());
+        return new ResponseDto(ResponseDto.SUCCESS, chessRepository.selectAll());
     }
 
     private static ResponseDto responseChessGame(ChessGame chessGame) {

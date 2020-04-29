@@ -4,15 +4,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import wooteco.chess.dao.ChessGameDao;
+import wooteco.chess.domain.repository.ChessRepository;
 
 @Controller
 public class WebChessGameController {
-    private static final ChessGameDao chessGameDao = new ChessGameDao();
+    ChessRepository chessRepository;
+
+    public WebChessGameController(ChessRepository chessRepository) {
+        this.chessRepository = chessRepository;
+    }
 
     @GetMapping("/game/{id}")
     public String renderGamePage(Model model, @PathVariable String id) {
-        if (chessGameDao.selectAll().contains(Integer.parseInt(id))) {
+        if (chessRepository.selectAll().contains(Integer.parseInt(id))) {
             model.addAttribute("id", id);
             return "game";
         }

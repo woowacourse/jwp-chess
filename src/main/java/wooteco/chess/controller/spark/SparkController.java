@@ -1,11 +1,5 @@
 package wooteco.chess.controller.spark;
 
-import static spark.Spark.*;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,16 +8,28 @@ import spark.Request;
 import spark.Response;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import wooteco.chess.dao.BoardDao;
+import wooteco.chess.dao.PlayerDao;
+import wooteco.chess.dao.RoomDao;
+import wooteco.chess.domain.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.GameDto;
 import wooteco.chess.dto.PlayerDto;
 import wooteco.chess.service.BoardService;
 import wooteco.chess.service.PlayerService;
 
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static spark.Spark.get;
+import static spark.Spark.post;
+
 public class SparkController {
 	private final Gson gson = new GsonBuilder().create();
-	private final BoardService boardService = new BoardService();
-	private final PlayerService playerService = new PlayerService();
+	private final BoardService boardService = new BoardService(new BoardDao(), new RoomDao(), new PlayerDao());
+	private final PlayerService playerService = new PlayerService(new PlayerDao());
+
 
 	public void route() {
 		Spark.staticFileLocation("/templates");
@@ -50,9 +56,9 @@ public class SparkController {
 		Map<String, String> params = new HashMap<>();
 		params = gson.fromJson(request.body(), params.getClass());
 		int player1Id = playerService.create(
-			new PlayerDto(params.get("player1Name"), params.get("player1Password"), "white"));
+			new PlayerDto(params.get("player1Name"), params.get("player1Password"), Team.WHITE.name()));
 		int player2Id = playerService.create(
-			new PlayerDto(params.get("player2Name"), params.get("player2Password"), "black"));
+			new PlayerDto(params.get("player2Name"), params.get("player2Password"), Team.BLACK.name()));
 		return boardService.createRoom(player1Id, player2Id);
 	}
 

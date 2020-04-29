@@ -19,9 +19,15 @@ import wooteco.chess.dto.RoomDto;
 
 @Service
 public class BoardService {
-	private final BoardDao boardDao = new BoardDao();
-	private final RoomDao roomDao = new RoomDao();
-	private final PlayerDao playerDao = new PlayerDao();
+	private final BoardDao boardDao;
+	private final RoomDao roomDao;
+	private final PlayerDao playerDao;
+
+	public BoardService(BoardDao boardDao, RoomDao roomDao, PlayerDao playerDao) {
+		this.boardDao = boardDao;
+		this.roomDao = roomDao;
+		this.playerDao = playerDao;
+	}
 
 	public Board create(int roomId) throws SQLException {
 		Board board = boardDao.create(roomId, BoardFactory.create());

@@ -5,9 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
 import wooteco.chess.dao.util.ConnectionLoader;
 import wooteco.chess.dto.RoomDto;
 
+@Component
 public class RoomDao {
 	public RoomDto findById(int roomId) throws SQLException {
 		String query = "select * from room where room_id = (?)";

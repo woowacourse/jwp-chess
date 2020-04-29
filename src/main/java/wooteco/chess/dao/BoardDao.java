@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import wooteco.chess.dao.util.BoardMapper;
 import wooteco.chess.dao.util.ConnectionLoader;
 import wooteco.chess.domain.Board;
@@ -14,6 +15,7 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.BoardDto;
 
+@Component
 public class BoardDao {
 
 	public Board create(int roomId, Board board) throws SQLException {

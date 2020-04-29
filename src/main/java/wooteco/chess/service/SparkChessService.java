@@ -114,7 +114,7 @@ public class SparkChessService implements ChessService {
     }
 
     @Override
-    public boolean addMoveByGameId(final int id, String start, String end) throws SQLException {
+    public boolean moveIfMovable(final int id, String start, String end) throws SQLException {
         Path path = findBoardById(id).generatePath(Position.of(start), Position.of(end));
         boolean movable = findGameById(id).move(start, end);
         if (movable) {

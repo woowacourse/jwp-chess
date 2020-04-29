@@ -11,9 +11,9 @@ import wooteco.chess.entity.MoveEntity;
 
 public interface MoveRepository extends CrudRepository<MoveEntity, Integer> {
     @Modifying
-    @Query("delete from move where game = :gameId")
+    @Query("DELETE FROM move WHERE game = :gameId")
     void deleteAllByGameId(@Param("gameId") int gameId);
 
-    @Query("select * from move where game = :gameId")
+    @Query("SELECT * FROM move WHERE game = :gameId")
     List<MoveEntity> findAllByGameId(@Param("gameId") int gameId);
 }

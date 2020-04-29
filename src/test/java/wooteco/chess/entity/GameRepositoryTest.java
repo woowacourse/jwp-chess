@@ -9,6 +9,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,5 +59,27 @@ class GameRepositoryTest {
 		Game actualGame = gameRepository.save(new Game(foundGame.getId(), foundGame.getName(), foundGame.getUuid(), false));
 
 		assertThat(actualGame.getCanContinue()).isEqualTo(false);
+	}
+
+	@DisplayName("게임 선택 시 해당하는 히스토리 조회")
+	@Test
+	void getHistories_history_from_specific_game() {
+		Game firstGame = gameRepository.save(new Game(firstGameName, firstUuid, true));
+		Game secondGame = gameRepository.save(new Game("secondGameName", "secondUuid", true));
+		History firstHistory = new History("a2", "a4");
+		History secondHistory = new History("b2", "b4");
+		History thirdHistory = new History("a7", "a5");
+		firstGame.addHistory(firstHistory);
+		secondGame.addHistory(secondHistory);
+		firstGame.addHistory(thirdHistory);
+
+		Game persistFirstGame = gameRepository.save(firstGame);
+		Game persistSecondGame = gameRepository.save(secondGame);
+
+		Set<History> firstHistories = persistFirstGame.getHistories();
+		Set<History> secondHistories = persistSecondGame.getHistories();
+
+		assertThat(firstHistories).contains(firstHistory, thirdHistory);
+		assertThat(secondHistories).contains(secondHistory);
 	}
 }

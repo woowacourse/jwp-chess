@@ -10,10 +10,7 @@ CREATE TABLE IF NOT EXISTS history (
     id BIGINT NOT NULL AUTO_INCREMENT,
     start VARCHAR(2) NOT NULL,
     end VARCHAR(2) NOT NULL,
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS history_game (
-    history BIGINT NOT NULL,
-    game BIGINT NOT NULL
+    game BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(game) REFERENCES game(id)
 );

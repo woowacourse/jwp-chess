@@ -18,6 +18,9 @@ submit.onclick = () => {
     let userName = userNames.value;
     fetch('/api/result/userResult', {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             userName
         })

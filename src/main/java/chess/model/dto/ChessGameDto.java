@@ -30,16 +30,16 @@ public class ChessGameDto {
         Map<Piece, String> piecesLetter = new HashMap<>();
         piecesLetter.put(Pawn.getInstance(Team.BLACK), "♟");
         piecesLetter.put(Pawn.getInstance(Team.WHITE), "♙");
-        piecesLetter.put(Rook.getPieceInstance(Team.BLACK), "♜");
-        piecesLetter.put(Rook.getPieceInstance(Team.WHITE), "♖");
-        piecesLetter.put(Knight.getPieceInstance(Team.BLACK), "♞");
-        piecesLetter.put(Knight.getPieceInstance(Team.WHITE), "♘");
-        piecesLetter.put(Bishop.getPieceInstance(Team.BLACK), "♝");
-        piecesLetter.put(Bishop.getPieceInstance(Team.WHITE), "♗");
-        piecesLetter.put(Queen.getPieceInstance(Team.BLACK), "♛");
-        piecesLetter.put(Queen.getPieceInstance(Team.WHITE), "♕");
-        piecesLetter.put(King.getPieceInstance(Team.BLACK), "♚");
-        piecesLetter.put(King.getPieceInstance(Team.WHITE), "♔");
+        piecesLetter.put(Rook.getInstance(Team.BLACK), "♜");
+        piecesLetter.put(Rook.getInstance(Team.WHITE), "♖");
+        piecesLetter.put(Knight.getInstance(Team.BLACK), "♞");
+        piecesLetter.put(Knight.getInstance(Team.WHITE), "♘");
+        piecesLetter.put(Bishop.getInstance(Team.BLACK), "♝");
+        piecesLetter.put(Bishop.getInstance(Team.WHITE), "♗");
+        piecesLetter.put(Queen.getInstance(Team.BLACK), "♛");
+        piecesLetter.put(Queen.getInstance(Team.WHITE), "♕");
+        piecesLetter.put(King.getInstance(Team.BLACK), "♚");
+        piecesLetter.put(King.getInstance(Team.WHITE), "♔");
         PIECES_LETTER = Collections.unmodifiableMap(piecesLetter);
 
         Map<Team, String> defaultNames = new HashMap<>();
@@ -67,7 +67,7 @@ public class ChessGameDto {
             printRankRaw(pieces, board, rank);
         }
         this.pieces = pieces;
-        this.turn = chessGame.getGameTurn().getName();
+        this.turn = chessGame.getTurn().getName();
         this.state = moveState.getMessage();
         this.blackScore = String.valueOf(teamScore.get(Team.BLACK));
         this.whiteScore = String.valueOf(teamScore.get(Team.WHITE));
@@ -79,7 +79,7 @@ public class ChessGameDto {
     }
 
     public ChessGameDto(ChessGame chessGame, Map<Team, String> names) {
-        this(chessGame, MoveState.EMPTY, chessGame.getTeamScore(), names);
+        this(chessGame, MoveState.EMPTY, chessGame.deriveTeamScore(), names);
     }
 
     public ChessGameDto(TeamScore teamScore, Map<Team, String> names) {
@@ -110,6 +110,20 @@ public class ChessGameDto {
             return PIECES_LETTER.get(gameBoard.get(Square.of(String.valueOf(file) + rank)));
         }
         return "";
+    }
+
+    public TeamScore makeTeamScore() {
+        Map<Team, Double> teamScore = new HashMap<>();
+        teamScore.put(Team.BLACK, Double.valueOf(blackScore));
+        teamScore.put(Team.WHITE, Double.valueOf(whiteScore));
+        return new TeamScore(teamScore);
+    }
+
+    public Map<Team, String> makeUserNames() {
+        Map<Team, String> userNames = new HashMap<>();
+        userNames.put(Team.BLACK, blackName);
+        userNames.put(Team.WHITE, whiteName);
+        return userNames;
     }
 
     public String getTurn() {

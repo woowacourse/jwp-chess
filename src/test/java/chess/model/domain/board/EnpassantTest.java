@@ -3,10 +3,7 @@ package chess.model.domain.board;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.model.domain.board.EnPassant;
-import chess.model.domain.board.Square;
 import chess.model.domain.state.MoveInfo;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class EnpassantTest {

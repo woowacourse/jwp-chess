@@ -14,19 +14,19 @@ public class MoveStateBefore implements MoveStateStrategy {
             return MoveState.KING_CAPTURED;
         }
         if (chessGame.isNotMovable(moveInfo)) {
-            return findMoveStateWhenNotMovable(chessGame, moveInfo);
+            return findFailMoveState(chessGame, moveInfo);
         }
-        if (chessGame.isNeedPromotion()) {
+        if (chessGame.canPromote()) {
             return MoveState.FAIL_MUST_PAWN_PROMOTION;
         }
         return MoveState.READY;
     }
 
-    private MoveState findMoveStateWhenNotMovable(ChessGame chessGame, MoveInfo moveInfo) {
-        if (chessGame.isEmptySquare(moveInfo)) {
+    private MoveState findFailMoveState(ChessGame chessGame, MoveInfo moveInfo) {
+        if (chessGame.isNotExistPiece(moveInfo.getSource())) {
             return MoveState.FAIL_NO_PIECE;
         }
-        if (chessGame.isNotMyTurn(moveInfo)) {
+        if (chessGame.isNotCorrectTurn(moveInfo)) {
             return MoveState.FAIL_NOT_ORDER;
         }
         return MoveState.FAIL_CAN_NOT_MOVE;

@@ -2,8 +2,11 @@ package chess.model.dto;
 
 public class PromotionTypeDto {
 
-    private final String promotionType;
-    private final Integer gameId;
+    private String promotionType;
+    private Integer gameId;
+
+    public PromotionTypeDto() {
+    }
 
     public PromotionTypeDto(String promotionType, Integer gameId) {
         this.promotionType = promotionType;

@@ -17,7 +17,7 @@ public class QueenTest {
     @Test
     @DisplayName("Null이 of에 들어갔을 때 예외 발생")
     void validNotNull() {
-        assertThatThrownBy(() -> Queen.getPieceInstance(null))
+        assertThatThrownBy(() -> Queen.getInstance(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessageContaining("Null");
     }
@@ -27,7 +27,7 @@ public class QueenTest {
         "c7", "c8", "d2", "e3", "f4", "g5", "h6", "b2", "a3"})
     @DisplayName("말의 위치(퀸)를 받고 말의 종류에 따라 이동할 수 있는 칸 리스트 반환")
     void calculateScopeQueen(String input) {
-        Piece piece = Queen.getPieceInstance(Team.WHITE);
+        Piece piece = Queen.getInstance(Team.WHITE);
         Set<Square> availableSquares = piece.getAllMovableArea(Square.of("c1"));
         assertThat(availableSquares.contains(Square.of(input))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(21);
@@ -40,16 +40,16 @@ public class QueenTest {
         Map<Square, Piece> board = new HashMap<>();
         board.put(Square.of("b7"), Pawn.getInstance(Team.WHITE));
         board.put(Square.of("c7"), Pawn.getInstance(Team.WHITE));
-        board.put(Square.of("a6"), King.getPieceInstance(Team.WHITE));
+        board.put(Square.of("a6"), King.getInstance(Team.WHITE));
         board.put(Square.of("c5"), Pawn.getInstance(Team.BLACK));
-        board.put(Square.of("e8"), Knight.getPieceInstance(Team.WHITE));
-        board.put(Square.of("f6"), Queen.getPieceInstance(Team.BLACK));
+        board.put(Square.of("e8"), Knight.getInstance(Team.WHITE));
+        board.put(Square.of("f6"), Queen.getInstance(Team.BLACK));
         board.put(Square.of("f3"), Pawn.getInstance(Team.BLACK));
-        board.put(Square.of("g6"), King.getPieceInstance(Team.BLACK));
+        board.put(Square.of("g6"), King.getInstance(Team.BLACK));
         board.put(Square.of("g2"), Pawn.getInstance(Team.WHITE));
 
-        Piece piece = Queen.getPieceInstance(Team.BLACK);
-        Set<Square> availableSquares = piece.getMovableArea(Square.of("c6"), board);
+        Piece piece = Queen.getInstance(Team.BLACK);
+        Set<Square> availableSquares = piece.findMovableAreas(Square.of("c6"), board);
 
         assertThat(availableSquares.contains(Square.of(input))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(12);

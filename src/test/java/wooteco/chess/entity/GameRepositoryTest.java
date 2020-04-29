@@ -35,18 +35,17 @@ class GameRepositoryTest {
 		assertThat(game.getCanContinue()).isEqualTo(true);
 	}
 
-	@DisplayName("게임 목록 조회 기능 구현")
+	@DisplayName("게임 목록 중 진행중인 게임 조회 기능 구현")
 	@Test
 	void selectAll_test() {
-		String secondGameName = "second game";
-		String secondUuid = "1q2w3e4r5t6y7u8i9o0p1q4ky985myktl";
-
 		Game firstGame = gameRepository.save(new Game(firstGameName, firstUuid, true));
-		Game secondGame = gameRepository.save(new Game(secondGameName, secondUuid, true));
+		Game secondGame = gameRepository.save(new Game("secondGameName", "secondUuid", true));
+		Game thirdGame = gameRepository.save(new Game("thirdGameName", "thirdUuid", false));
 
 		List<Game> games = gameRepository.findAll();
 
 		assertThat(games).contains(firstGame, secondGame);
+		assertThat(games).doesNotContain(thirdGame);
 	}
 
 	@DisplayName("이미 저장되어있는 게임에 canContinue를 false로 변경 확인")

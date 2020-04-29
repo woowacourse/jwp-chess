@@ -1,7 +1,5 @@
 package wooteco.chess.controller;
 
-import java.sql.SQLException;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,12 +25,12 @@ public class WebChessRestController {
     }
 
     @GetMapping("/games")
-    public ResponseDto getGameList() throws SQLException {
-        return chessService.getGameList();
+    public ResponseDto getGameList() {
+        return chessService.getGameListId();
     }
 
     @PostMapping("/create")
-    public ResponseDto createChessRoom() throws SQLException {
+    public ResponseDto createChessRoom() {
         return chessService.createChessRoom();
     }
 

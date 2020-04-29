@@ -95,7 +95,7 @@ public class SparkChessController {
     public boolean move(final Request request, final Response response) throws SQLException {
 
         MoveRequestDto dto = gson.fromJson(request.body(), MoveRequestDto.class);
-        return service.addMoveByGameId(parseId(request), dto.getFrom(), dto.getTo());
+        return service.moveIfMovable(parseId(request), dto.getFrom(), dto.getTo());
     }
 
     public List<String> findAllAvailablePath(final Request request, final Response response) throws SQLException {

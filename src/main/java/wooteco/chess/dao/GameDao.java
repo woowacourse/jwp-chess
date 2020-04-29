@@ -23,7 +23,7 @@ public class GameDao implements MySqlJdbcTemplateDao {
     public static final String BLACK_ID = "black";
 
     public int add(final Game game) throws SQLException {
-        String query = "insert into game (white, black) values (?, ?)";
+        String query = "INSERT INTO game (white, black) VALUES (?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         ) {
@@ -40,7 +40,7 @@ public class GameDao implements MySqlJdbcTemplateDao {
     }
 
     public List<Integer> getAllGameId() throws SQLException {
-        String query = "select id from game";
+        String query = "SELECT id FROM game";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
@@ -59,7 +59,7 @@ public class GameDao implements MySqlJdbcTemplateDao {
     }
 
     public List<Map<String, Integer>> findGamesData() throws SQLException {
-        String query = "select id, white, black from game";
+        String query = "SELECT id, white, black FROM game";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
@@ -83,7 +83,7 @@ public class GameDao implements MySqlJdbcTemplateDao {
     }
 
     public Map<String, Integer> findGameDataById(int gameId) throws SQLException {
-        String query = "select id, white, black from game where id = ?";
+        String query = "SELECT id, white, black FROM game WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
@@ -101,7 +101,7 @@ public class GameDao implements MySqlJdbcTemplateDao {
     }
 
     public void remove(final Game game) throws SQLException {
-        String query = "delete from game where id = ?";
+        String query = "DELETE FROM game WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {

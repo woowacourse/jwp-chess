@@ -10,6 +10,7 @@ import java.util.function.Function;
 
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
 import wooteco.chess.domain.Game;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Side;
@@ -107,8 +108,7 @@ public class SpringChessService implements ChessService {
     }
 
     private List<Game> generateGames() {
-        List<GameEntity> games = new ArrayList<>();
-        gameRepository.findAll().forEach(games::add);
+        List<GameEntity> games = Lists.newArrayList(gameRepository.findAll());
         return games.stream()
             .map(gameEntity -> gameEntity.toModel(findPlayerById(gameEntity.getWhiteId()),
                 findPlayerById(gameEntity.getBlackId())))
@@ -133,7 +133,7 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public boolean addMoveByGameId(final int gameId, final String start, final String end) {
+    public boolean moveIfMovable(final int gameId, final String start, final String end) {
         boolean movable = findGameById(gameId).move(start, end);
         if (movable) {
             moveRepository.save(new MoveEntity(gameId, start, end));

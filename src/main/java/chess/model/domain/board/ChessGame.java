@@ -80,6 +80,7 @@ public class ChessGame {
             chessBoard.removeBy(enPassant.getCurrentSquare(moveInfo.getTarget()));
         }
         enPassant.removeEnPassant(turn);
+        updateEnPassant(moveInfo, currentPiece);
         enPassant.removeEnPassant(moveInfo);
     }
 
@@ -130,12 +131,12 @@ public class ChessGame {
         if (movableArea.isEmpty()) {
             return false;
         }
-        addEnPassant(moveInfo, sourcePiece);
+        updateEnPassant(moveInfo, sourcePiece);
         return movableArea.contains(moveInfo.getTarget());
     }
 
-    private void addEnPassant(MoveInfo moveInfo, Piece sourcePiece) {
-        if (isPawnMoveTwoRankForward(moveInfo)) {
+    private void updateEnPassant(MoveInfo moveInfo, Piece sourcePiece) {
+        if (EnPassant.isPawnMoveTwoRank(sourcePiece, moveInfo)) {
             enPassant.add(sourcePiece, moveInfo);
         }
     }
@@ -156,14 +157,6 @@ public class ChessGame {
             chessBoardForCheck.addElements(enPassant.getEnPassantBoard(turn));
         }
         return chessBoardForCheck;
-    }
-
-    public boolean isPawnMoveTwoRankForward(MoveInfo moveInfo) {
-        if (chessBoard.isNotExist(moveInfo.getSource())) {
-            return false;
-        }
-        Piece sourcePiece = chessBoard.findPieceBy(moveInfo.getSource());
-        return EnPassant.isPawnMoveTwoRank(sourcePiece, moveInfo);
     }
 
     public boolean isKingCaptured() {

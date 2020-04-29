@@ -20,8 +20,8 @@ public class EnPassant {
         Set<Square> blackEnPassants = new HashSet<>();
         Set<Square> whiteEnPassants = new HashSet<>();
         for (char file = 'a'; file <= 'h'; file++) {
-            blackEnPassants.add(Square.of(file + "7"));
-            whiteEnPassants.add(Square.of(file + "2"));
+            blackEnPassants.add(Square.of(file + "6"));
+            whiteEnPassants.add(Square.of(file + "3"));
         }
         BLACK_EN_PASSANTS = Collections.unmodifiableSet(blackEnPassants);
         WHITE_EN_PASSANTS = Collections.unmodifiableSet(whiteEnPassants);
@@ -125,5 +125,12 @@ public class EnPassant {
 
     public Map<Square, Square> getEnPassants() {
         return enPassantsToAfterSquares;
+    }
+
+    @Override
+    public String toString() {
+        return "EnPassant{" +
+            "enPassantsToAfterSquares=" + enPassantsToAfterSquares +
+            '}';
     }
 }

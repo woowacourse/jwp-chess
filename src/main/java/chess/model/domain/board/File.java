@@ -38,4 +38,11 @@ public enum File {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return "File{" +
+            "name='" + name + '\'' +
+            ", number=" + number +
+            '}';
+    }
 }

@@ -115,4 +115,11 @@ public class ChessBoard {
     public Map<Square, Piece> getChessBoard() {
         return chessBoard;
     }
+
+    @Override
+    public String toString() {
+        return "ChessBoard{" +
+            "chessBoard=" + chessBoard +
+            '}';
+    }
 }

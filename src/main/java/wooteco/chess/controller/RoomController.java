@@ -1,74 +1,61 @@
 package wooteco.chess.controller;
 
-import com.google.gson.Gson;
-import spark.Request;
-import spark.Response;
+import org.springframework.web.bind.annotation.*;
+import wooteco.chess.dto.ChessResponseDto;
+import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.dto.RoomDto;
-import wooteco.chess.result.Result;
+import wooteco.chess.service.ChessService;
 import wooteco.chess.service.RoomService;
-import wooteco.chess.utils.validator.RoomValidator;
 
+
+@RestController
+@RequestMapping("/room")
 public class RoomController {
-    private RoomService roomService = new wooteco.chess.service.RoomService();
+    private RoomService roomService;
+    private ChessService chessService;
 
-    public Object create(Request request, Response response) {
-        String roomName = request.queryParams("roomName");
-        int userId = Integer.parseInt(request.queryParams("userId"));
+    public RoomController(RoomService roomService, ChessService chessService)
+    {
+        this.roomService = roomService;
+        this.chessService = chessService;
+    }
 
-        RoomValidator.checkRoomName(roomName);
-        RoomValidator.checkUserId(userId);
-
+    @PostMapping("/create")
+    @ResponseBody
+    public ResponseDto create(@RequestParam String roomName,
+                              @RequestParam Long userId) throws Exception {
         RoomDto roomDto = new RoomDto();
         roomDto.setWhiteUserId(userId);
         roomDto.setName(roomName);
 
-        Result result = roomService.create(roomDto);
-
-        if (result.isSuccess()) {
-            return result.getObject();
-        }
-        response.body(result.getObject().toString());
-        response.status(409);
-        return response;
+        return roomService.create(roomDto);
     }
 
-    public Object join(Request request, Response response) {
-        String roomName = request.queryParams("roomName");
-        int userId = Integer.parseInt(request.queryParams("userId"));
+    @PostMapping("/join")
+    @ResponseBody
+    public ResponseDto join(@RequestParam String roomName,
+                            @RequestParam Long userId) throws Exception {
 
-        RoomValidator.checkRoomName(roomName);
-        RoomValidator.checkUserId(userId);
-
-        Result result = roomService.join(roomName, userId);
-        if (result.isSuccess()) {
-            return result.getObject();
-        }
-        response.body(result.getObject().toString());
-        response.status(409);
-        return response;
+        return roomService.join(roomName, userId);
     }
 
-    public Object exit(Request request, Response response) {
-        int roomId = Integer.parseInt(request.queryParams("roomId"));
-        int userId = Integer.parseInt(request.queryParams("userId"));
-
+    @PostMapping("/exit")
+    @ResponseBody
+    public ResponseDto exit(@RequestParam Long roomId,
+                            @RequestParam Long userId) throws Exception {
         return roomService.exit(roomId, userId);
     }
 
-    public Object quit(Request request, Response response) {
-        int roomId = Integer.parseInt(request.queryParams("roomId"));
-
-        return roomService.quit(roomId);
+    @GetMapping("/status/{roomId}")
+    @ResponseBody
+    public ResponseDto status(@PathVariable Long roomId) throws Exception {
+        return roomService.status(roomId);
     }
 
-    public Object status(Request request, Response response) {
-        int roomId = Integer.parseInt(request.queryParams("roomId"));
-        Result result = roomService.status(roomId);
-        if (result.isSuccess()) {
-            return new Gson().toJson(result.getObject());
-        }
-        response.body(result.getObject().toString());
-        response.status(409);
-        return response;
+    @GetMapping("/renew/{roomId}")
+    @ResponseBody
+    public ResponseDto<ChessResponseDto> renew(@PathVariable int roomId) throws Exception {
+        return chessService.renew(roomId);
     }
 }
+

@@ -9,7 +9,6 @@ import chess.dto.SourceDto;
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.ChessGameFactory;
 import chess.model.domain.board.Square;
-import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import chess.model.domain.state.MoveInfo;
@@ -22,7 +21,6 @@ import chess.model.repository.ResultRepository;
 import chess.model.repository.RoomEntity;
 import chess.model.repository.RoomRepository;
 import chess.util.BooleanYNConverter;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -116,17 +114,8 @@ public class ChessGameService {
 
     private GameInfoDto getGameInfo(ChessGameEntity chessGameEntity) {
         Team team = Team.of(chessGameEntity.getTurnName());
-        Map<Team, String> userNames = new HashMap<>();
-        userNames.put(Team.BLACK, chessGameEntity.getBlackName());
-        userNames.put(Team.WHITE, chessGameEntity.getWhiteName());
-
-        Map<Team, Double> teamScores = new HashMap<>();
-        teamScores.put(Team.BLACK, chessGameEntity.getBlackScore());
-        teamScores.put(Team.WHITE, chessGameEntity.getWhiteScore());
-
-        TeamScore teamScore = new TeamScore(teamScores);
-
-        return new GameInfoDto(team, userNames, teamScore);
+        return new GameInfoDto(team, chessGameEntity.makeUserNames(),
+            chessGameEntity.makeTeamScore());
     }
 
     private ChessGame combineChessGame(Integer gameId) {

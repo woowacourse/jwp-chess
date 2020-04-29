@@ -12,6 +12,17 @@ public class Room {
 	private String turn;
 	private String finishFlag;
 
+	public Room(String roomName, String board) {
+		this.roomName = roomName;
+		this.board = board;
+		this.turn = "WHITE";
+		this.finishFlag = "N";
+	}
+
+	public Long getRoomId() {
+		return roomId;
+	}
+
 	public String getRoomName() {
 		return roomName;
 	}
@@ -26,5 +37,16 @@ public class Room {
 
 	public String getFinishFlag() {
 		return finishFlag;
+	}
+
+	@Override
+	public String toString() {
+		return "Room{" +
+				"roomId=" + roomId +
+				", roomName='" + roomName + '\'' +
+				", board='" + board + '\'' +
+				", turn='" + turn + '\'' +
+				", finishFlag='" + finishFlag + '\'' +
+				'}';
 	}
 }

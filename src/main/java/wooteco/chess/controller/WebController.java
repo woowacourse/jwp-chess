@@ -51,7 +51,7 @@ public class WebController {
 	public ModelAndView createRoom(
 			@RequestParam String name) throws SQLException {
 		ModelAndView modelAndView = new ModelAndView("chess");
-		ChessGameDto chessGameDto = chessGameService.create(name);
+		ChessGameDto chessGameDto = springChessService.create(name);
 		modelAndView.addObject("chessGame", chessGameDto);
 		return modelAndView;
 	}

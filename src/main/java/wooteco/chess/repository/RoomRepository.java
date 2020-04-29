@@ -13,4 +13,7 @@ public interface RoomRepository extends CrudRepository<Room, Long> {
 
 	@Query("SELECT * FROM room WHERE room_name = :name")
 	Optional<Room> findByRoomName(@Param("name") String name);
+
+	@Override
+	<S extends Room> S save(S room);
 }

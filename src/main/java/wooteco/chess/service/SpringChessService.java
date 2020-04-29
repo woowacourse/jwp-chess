@@ -46,4 +46,18 @@ public class SpringChessService {
 			throw new IllegalArgumentException("종료된 게임입니다.");
 		}
 	}
+
+	public ChessGameDto create(String roomName) {
+		validateDuplicated(roomName);
+		ChessGame chessGame = ChessGame.start();
+		String board = BoardConverter.convertToString(chessGame.getBoard());
+		roomRepository.save(new Room(roomName, board));
+		return ChessGameDto.of(roomName, chessGame);
+	}
+
+	private void validateDuplicated(String roomName) {
+		if (roomRepository.findByRoomName(roomName).isPresent()) {
+			throw new IllegalArgumentException("입력한 방이 이미 존재합니다.");
+		}
+	}
 }

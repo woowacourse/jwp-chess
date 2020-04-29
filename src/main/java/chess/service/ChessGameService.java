@@ -94,14 +94,25 @@ public class ChessGameService {
 
     public ChessGameDto move(MoveDto moveDTO) {
         Integer gameId = moveDTO.getGameId();
-        ChessGameEntity chessGameEntity = chessGameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
+        ChessGameEntity chessGameEntity = findChessGameEntity(gameId);
         GameInfoDto gameInfo = getGameInfo(chessGameEntity);
         ChessGame chessGame = combineChessGame(gameId, gameInfo.getTurn());
         MoveState moveState
             = chessGame.move(new MoveInfo(moveDTO.getSource(), moveDTO.getTarget()));
-        Map<Team, String> userNames = gameInfo.getUserNames();
+        saveGameAndBoard(chessGameEntity, chessGame, moveState);
 
+        return new ChessGameDto(gameInfo.getUserNames())
+            .chessGame(chessGame)
+            .moveState(moveState);
+    }
+
+    private ChessGameEntity findChessGameEntity(Integer gameId) {
+        return chessGameRepository.findById(gameId)
+            .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
+    }
+
+    private void saveGameAndBoard(ChessGameEntity chessGameEntity, ChessGame chessGame,
+        MoveState moveState) {
         String proceed = BooleanYNConverter.convertYN(moveState != MoveState.KING_CAPTURED);
 
         if (moveState.isSucceed()) {
@@ -109,9 +120,6 @@ public class ChessGameService {
             chessGameEntity.saveBoard(chessGame);
             chessGameRepository.save(chessGameEntity);
         }
-        return new ChessGameDto(userNames)
-            .chessGame(chessGame)
-            .moveState(moveState);
     }
 
     private GameInfoDto getGameInfo(ChessGameEntity chessGameEntity) {
@@ -130,15 +138,13 @@ public class ChessGameService {
     }
 
     private ChessGame combineChessGame(Integer gameId) {
-        ChessGameEntity chessGameEntity = chessGameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
+        ChessGameEntity chessGameEntity = findChessGameEntity(gameId);
         GameInfoDto gameInfo = getGameInfo(chessGameEntity);
         return combineChessGame(gameId, gameInfo.getTurn());
     }
 
     public ChessGameDto loadChessGame(Integer gameId) {
-        ChessGameEntity chessGameEntity = chessGameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
+        ChessGameEntity chessGameEntity = findChessGameEntity(gameId);
         GameInfoDto gameInfo = getGameInfo(chessGameEntity);
         return new ChessGameDto(gameInfo.getUserNames())
             .chessGame(combineChessGame(gameId, gameInfo.getTurn()));
@@ -151,21 +157,33 @@ public class ChessGameService {
         Map<Square, Square> enPassants = new HashMap<>();
 
         for (BoardEntity boardEntity : boardRepository.findAllByGameId(gameId)) {
-            chessBoard.put(Square.of(boardEntity.getSquareName()),
-                PieceFactory.getPiece(boardEntity.getPieceName()));
-            if (boardEntity.getCastlingElementYN().equals("Y")) {
-                castlingElements
-                    .add(CastlingSetting.of(Square.of(boardEntity.getSquareName()),
-                        PieceFactory.getPiece(boardEntity.getPieceName())));
-            }
-            if (boardEntity.getEnPassantName() != null) {
-                enPassants.put(Square.of(boardEntity.getEnPassantName()),
-                    Square.of(boardEntity.getSquareName()));
-            }
+            combineBoard(chessBoard, boardEntity);
+            combineCastlingElements(castlingElements, boardEntity);
+            combineEnPassants(enPassants, boardEntity);
         }
 
         return new ChessGame(ChessBoard.of(chessBoard), turn, CastlingElement.of(castlingElements),
             EnPassant.of(enPassants));
+    }
+
+    private void combineEnPassants(Map<Square, Square> enPassants, BoardEntity boardEntity) {
+        if (boardEntity.getEnPassantName() != null) {
+            enPassants.put(Square.of(boardEntity.getEnPassantName()),
+                Square.of(boardEntity.getSquareName()));
+        }
+    }
+
+    private void combineCastlingElements(Set<CastlingSetting> castlingElements,
+        BoardEntity boardEntity) {
+        if (boardEntity.getCastlingElementYN().equals("Y")) {
+            castlingElements.add(CastlingSetting.of(Square.of(boardEntity.getSquareName()),
+                PieceFactory.getPiece(boardEntity.getPieceName())));
+        }
+    }
+
+    private void combineBoard(Map<Square, Piece> chessBoard, BoardEntity boardEntity) {
+        chessBoard.put(Square.of(boardEntity.getSquareName()),
+            PieceFactory.getPiece(boardEntity.getPieceName()));
     }
 
     public boolean isGameProceed(Integer gameId) {
@@ -173,28 +191,20 @@ public class ChessGameService {
     }
 
     public ChessGameEntity closeGame(Integer gameId) {
-        ChessGameEntity chessGameEntity = chessGameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
-
+        ChessGameEntity chessGameEntity = findChessGameEntity(gameId);
         chessGameEntity.setProceeding("N");
         chessGameRepository.save(chessGameEntity);
         return chessGameEntity;
-
     }
 
     public ChessGameDto promote(PromotionTypeDto promotionTypeDTO) {
         Integer gameId = promotionTypeDTO.getGameId();
-        ChessGameEntity chessGameEntity = chessGameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
+        ChessGameEntity chessGameEntity = findChessGameEntity(gameId);
         GameInfoDto gameInfo = getGameInfo(chessGameEntity);
         ChessGame chessGame = combineChessGame(gameId, gameInfo.getTurn());
         MoveState moveState = chessGame.promote(Type.of(promotionTypeDTO.getPromotionType()));
 
-        if (moveState.isSucceed()) {
-            chessGameEntity.update(chessGame, "Y");
-            chessGameEntity.saveBoard(chessGame);
-            chessGameRepository.save(chessGameEntity);
-        }
+        saveGameAndBoard(chessGameEntity, chessGame, moveState);
 
         return new ChessGameDto(gameInfo.getUserNames())
             .chessGame(chessGame)

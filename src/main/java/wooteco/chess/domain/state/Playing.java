@@ -26,12 +26,19 @@ public class Playing extends Ready {
 
 	@Override
 	public ChessGameState move(Position source, Position target) {
+		checkKingDead();
 		board.move(source, target, turn);
 		if (board.isKingDead()) {
 			return new Finish(board);
 		}
 		turn = turn.switchTurn();
 		return this;
+	}
+
+	private void checkKingDead() {
+		if (board.isKingDead()) {
+			throw new IllegalArgumentException("왕이 죽어 게임을 진행할 수 없습니다.");
+		}
 	}
 
 	@Override

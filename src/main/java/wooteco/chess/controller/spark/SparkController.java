@@ -1,4 +1,4 @@
-package wooteco.chess.controller;
+package wooteco.chess.controller.spark;
 
 import static spark.Spark.*;
 
@@ -16,6 +16,7 @@ import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.GameDto;
+import wooteco.chess.dto.PlayerDto;
 import wooteco.chess.service.BoardService;
 import wooteco.chess.service.PlayerService;
 
@@ -45,18 +46,20 @@ public class SparkController {
 		}
 	}
 
-	private int createPlayers(Request request) throws SQLException, ClassNotFoundException {
+	private int createPlayers(Request request) throws SQLException {
 		Map<String, String> params = new HashMap<>();
 		params = gson.fromJson(request.body(), params.getClass());
-		int player1Id = playerService.create(params.get("player1Name"), params.get("player1Password"), "white");
-		int player2Id = playerService.create(params.get("player2Name"), params.get("player2Password"), "black");
+		int player1Id = playerService.create(
+			new PlayerDto(params.get("player1Name"), params.get("player1Password"), "white"));
+		int player2Id = playerService.create(
+			new PlayerDto(params.get("player2Name"), params.get("player2Password"), "black"));
 		return boardService.createRoom(player1Id, player2Id);
 	}
 
 	private String startGame(Request request, Response response) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", request.params(":id"));
-		return render(map, "play.html");
+		return render(map, "play.hbs");
 	}
 
 	private String loadBoard(Request request, Response response) {

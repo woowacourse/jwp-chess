@@ -1,11 +1,11 @@
-package wooteco.chess.domain;
+package wooteco.chess.dto;
 
-public class Player {
+public class PlayerDto {
 	private final String name;
 	private final String password;
-	private final Team team;
+	private final String team;
 
-	public Player(String name, String password, Team team) {
+	public PlayerDto(String name, String password, String team) {
 		this.name = name;
 		this.password = password;
 		this.team = team;
@@ -19,7 +19,7 @@ public class Player {
 		return password;
 	}
 
-	public Team getTeam() {
+	public String getTeam() {
 		return team;
 	}
 }

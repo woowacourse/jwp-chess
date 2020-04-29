@@ -1,9 +1,5 @@
-package wooteco.chess;
+package wooteco.chess.domain;
 
-import wooteco.chess.domain.Board;
-import wooteco.chess.domain.Status;
-import wooteco.chess.domain.Team;
-import wooteco.chess.domain.Turn;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.state.ChessGameState;
 import wooteco.chess.domain.state.Score;

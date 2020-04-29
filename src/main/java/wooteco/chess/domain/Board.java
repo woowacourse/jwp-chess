@@ -10,23 +10,21 @@ import java.util.stream.Collectors;
 
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.blank.Blank;
+import wooteco.chess.domain.piece.king.King;
+import wooteco.chess.domain.piece.pawn.Pawn;
 import wooteco.chess.domain.position.Position;
 
 public class Board {
-	private Map<Team, Boolean> kingDead = new HashMap<>();
-
 	private final Map<Position, Piece> board;
 
 	public Board(Map<Position, Piece> board) {
 		this.board = new TreeMap<>(board);
-		kingDead.put(Team.BLACK, false);
-		kingDead.put(Team.WHITE, false);
 	}
 
 	public boolean isKingDead() {
-		return kingDead.entrySet()
-			.stream()
-			.anyMatch(Map.Entry::getValue);
+		return board.entrySet().stream()
+			.filter(entry -> entry.getValue() instanceof King)
+			.count() != 2;
 	}
 
 	public void move(Position from, Position to, Turn turn) {
@@ -35,20 +33,12 @@ public class Board {
 		source = source.move(from, to, getTeamBoard());
 		board.remove(from);
 		board.put(from, new Blank(from));
-		checkKingDead(to);
 		board.put(to, source);
 	}
 
 	private void checkTurn(Turn turn, Piece source) {
 		if (!source.isTurn(turn)) {
 			throw new IllegalArgumentException("해당 플레이어의 턴이 아닙니다.");
-		}
-	}
-
-	private void checkKingDead(Position to) {
-		Piece target = board.get(to);
-		if (Objects.nonNull(target) && target.isKing()) {
-			kingDead.put(board.get(to).getTeam(), true);
 		}
 	}
 

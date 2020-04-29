@@ -6,9 +6,9 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<input id="originalPosition" type="text" value="">
-<input id="targetPosition" type="text" value="">
-<input id="gameId" type="text" value="{{response.gameId}}">
+<input id="originalPosition" type="hidden" value="">
+<input id="targetPosition" type="hidden" value="">
+<input id="gameId" type="hidden" value="{{response.gameId}}">
 
 <h1 id="title"> Chess Game </h1>
 <h2> 게임 아이디 : {{response.gameId}}</h2>
@@ -17,10 +17,6 @@
     <span id="now-turn">{{response.turn}}</span>의 차례입니다.
 </h2>
 
-<!--<form action="/start" method="post">
-    <button>방만들기</button>
-</form>
- -->
 <form action="/" method="get">
     <button>게임종료</button>
 </form>
@@ -28,10 +24,6 @@
 <form action="/" method="get">
     <button>게임 저장</button>
 </form>
-<!--<form action="/load" method="get">
-    <input type="text" name="gameId" placeholder="방 번호">
-    <button>불러오기</button>
-</form>-->
 <div>
     {{#each response.score}}
         {{@key}} : {{this}}

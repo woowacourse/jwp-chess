@@ -2,13 +2,16 @@ package wooteco.chess.dao;
 
 import static wooteco.chess.dao.Connector.*;
 
+import org.springframework.stereotype.Repository;
+
 import wooteco.chess.domain.Turn;
 
-public class TurnDAO {
-
+@Repository("TurnDao")
+public class TurnDao {
 	private static final String SELECT_FROM_TURN = "SELECT * FROM turn";
-	private static final String INSERT_INTO_TURN_VALUES = "INSERT INTO turn VALUES (?)";
+	private static final String INSERT_INTO_TURN_VALUES = "INSERT INTO turn(isWhiteTurn) VALUES (?)";
 	private static final String TRUNCATE_TURN = "TRUNCATE turn";
+	private static final String UPDATE_TURN_SET_IS_WHITE_TURN = "UPDATE turn SET isWhiteTurn = ? WHERE id = 1";
 
 	public Turn find() {
 		return executeQuery(SELECT_FROM_TURN, new TurnRowMapper());
@@ -23,7 +26,6 @@ public class TurnDAO {
 	}
 
 	public void changeTurn(boolean isWhiteTurn) {
-		removeAll();
-		addTurn(isWhiteTurn);
+		Connector.executeUpdate(UPDATE_TURN_SET_IS_WHITE_TURN, isWhiteTurn);
 	}
 }

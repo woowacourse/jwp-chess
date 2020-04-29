@@ -20,6 +20,7 @@ import wooteco.chess.service.ChessService;
 
 @Controller
 public class SpringController {
+
 	private final ChessService chessService;
 
 	public SpringController(ChessService chessService) {
@@ -34,7 +35,11 @@ public class SpringController {
 	@GetMapping("/init")
 	@ResponseBody
 	public Map<String, Object> init() {
-		return makeModel(chessService.init());
+		Board board = chessService.init();
+		for (Piece piece : board.findAll()) {
+			System.out.println(piece.getPosition().getString() + " " + piece.getName());
+		}
+		return makeModel(board);
 	}
 
 	@PutMapping("/move")

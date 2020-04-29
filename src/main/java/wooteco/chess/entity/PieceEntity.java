@@ -20,4 +20,16 @@ public class PieceEntity {
 	public static PieceEntity of(final String position, final String name) {
 		return new PieceEntity(position, name);
 	}
+
+	public boolean isMathPosition(String position) {
+		return this.position.equals(position);
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public String getName() {
+		return name;
+	}
 }

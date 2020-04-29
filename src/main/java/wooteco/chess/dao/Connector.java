@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import wooteco.chess.jdbc.DataAccessException;
 
 public class Connector {
-	private static final String ADDRESS = "localhost:13306";
+	private static final String ADDRESS = "localhost:3306";
 	private static final String NAME = "chess";
 	private static final String OPTION = "?useSSL=false&serverTimezone=UTC";
 	private static final String CONNECTION_FORMAT = String.format("jdbc:mysql://%s/%s%s", ADDRESS, NAME, OPTION);
-	private static final String ID = "root";
-	private static final String PASSWORD = "root";
+	private static final String ID = "woowa2";
+	private static final String PASSWORD = "test123";
 	private static final String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
 
 	public static Connection getConnection() {

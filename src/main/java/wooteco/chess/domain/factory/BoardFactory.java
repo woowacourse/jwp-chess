@@ -26,7 +26,7 @@ public class BoardFactory {
 	private static final String NOT_MATCH_POSITION_MESSAGE = "찾을 수 없는 포지션입니다.";
 	private static final String POSITION_FORMAT = "%c%d";
 
-	public static Board createBoard() {
+	public static Board create() {
 		List<Row> board = new ArrayList<>();
 		board.addAll(createBlackTeam());
 		board.addAll(createBlankTeam());
@@ -83,7 +83,7 @@ public class BoardFactory {
 		return new Row(pieces);
 	}
 
-	public static Board createBoard(List<PieceDto> pieceDtos, Turn turn) {
+	public static Board create(List<PieceDto> pieceDtos, Turn turn) {
 		if (pieceDtos.size() != ALL_PIECE_NUMBER.get()) {
 			throw new IllegalArgumentException(NOT_MATCH_ALL_PIECE_NUMBER_MESSAGE);
 		}

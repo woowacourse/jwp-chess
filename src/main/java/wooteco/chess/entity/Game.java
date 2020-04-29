@@ -2,7 +2,9 @@ package wooteco.chess.entity;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class Game {
 	@Id
@@ -10,6 +12,7 @@ public class Game {
 	private String name;
 	private String uuid;
 	private Boolean canContinue;
+	private Set<History> histories = new HashSet<>();
 
 	public Game() {
 	}
@@ -32,6 +35,10 @@ public class Game {
 		this.canContinue = canContinue;
 	}
 
+	public void addHistory(History history) {
+		histories.add(history);
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -46,6 +53,10 @@ public class Game {
 
 	public Boolean getCanContinue() {
 		return canContinue;
+	}
+
+	public Set<History> getHistories() {
+		return histories;
 	}
 
 	@Override

@@ -39,4 +39,20 @@ class BoardFactoryTest {
 			entry(Position.of("h2"), new Pawn(WHITE))
 		);
 	}
+
+	@DisplayName("빈 체스판 정상 변")
+	@Test
+	void constructWithStringTest2() {
+		String input =
+			"........\n" +
+				"........\n" +
+				"........\n" +
+				"........\n" +
+				"........\n" +
+				"........\n" +
+				"........\n" +
+				"........\n";
+		assertThatCode(() -> BoardFactory.create(input))
+			.doesNotThrowAnyException();
+	}
 }

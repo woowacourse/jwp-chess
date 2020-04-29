@@ -85,9 +85,9 @@ public class ChessService {
 
 	@Transactional(readOnly = true)
 	public SavedGameBundleDto findAllGames() {
-		List<Game> games = gameRepository.findAll();
-		return games.stream()
-			.map(game -> new SavedGameDto(game.getId()))
+		List<Long> gameId = gameRepository.finAllGameId();
+		return gameId.stream()
+			.map(SavedGameDto::new)
 			.collect(collectingAndThen(toList(), SavedGameBundleDto::new));
 	}
 }

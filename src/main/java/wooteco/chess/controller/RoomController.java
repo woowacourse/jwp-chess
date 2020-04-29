@@ -1,9 +1,9 @@
 package wooteco.chess.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.room.Room;
 import wooteco.chess.service.RoomService;
 
@@ -16,12 +16,13 @@ public class RoomController {
 
     private final RoomService roomService;
 
+    @Autowired
     public RoomController(final RoomService roomService) {
         this.roomService = roomService;
     }
 
     @GetMapping("/")
-    public String index(Model model) throws SQLException {
+    public String index(Model model) {
         List<Room> rooms = roomService.findAllRoom();
         model.addAttribute("rooms", rooms);
         return "index";
@@ -31,8 +32,8 @@ public class RoomController {
     public String create(
             @RequestParam String title,
             Model model) throws SQLException {
-        Long id = roomService.findCurrentMaxId() + 1;
-        roomService.createRoom(id, title);
+        Room created = roomService.createRoom(title);
+        Long id = created.getId();
         Map<String, String> board = roomService.initializeBoard(id);
         model.addAttribute("board", board);
         return "redirect:" + "/room/" + id ;
@@ -62,8 +63,7 @@ public class RoomController {
     public String turn(
             @PathVariable("room_id") Long roomId
     ) throws SQLException {
-        Team currentTurn = roomService.getCurrentTurn(roomId);
-        return currentTurn.name();
+        return roomService.findTurnById(roomId);
     }
 
     @GetMapping("/room/{room_id}/reset")

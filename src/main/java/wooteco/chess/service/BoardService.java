@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wooteco.chess.dao.BoardDAO;
 import wooteco.chess.domain.board.Board;
@@ -17,11 +18,12 @@ import java.util.Map;
 public class BoardService {
 
     private BoardDAO boardDAO;
+
+    @Autowired
     private RoomService roomService;
 
-    public BoardService() throws SQLException {
+    public BoardService() {
         this.boardDAO = new BoardDAO();
-        roomService = new RoomService();
     }
 
     public Board movePiece(final Long roomId, final String fromPosition, final String toPosition) throws SQLException {
@@ -29,7 +31,8 @@ public class BoardService {
         Board board = Board.createLoadedBoard(boardDto);
         Piece piece = board.findBy(Position.of(fromPosition));
 
-        if (piece.isNotSameTeam(roomService.getCurrentTurn(roomId))) {
+
+        if (piece.isNotSameTeam(Team.of(roomService.findTurnById(roomId)))) {
             throw new IllegalArgumentException("체스 게임 순서를 지켜주세요.");
         }
 
@@ -57,8 +60,7 @@ public class BoardService {
 
     public String receiveWinner(final Long roomId) throws SQLException {
         roomService.updateTurn(roomId);
-        Team team = roomService.getCurrentTurn(roomId);
-        return team.toString();
+        return roomService.findTurnById(roomId);
     }
 
     public boolean isFinish(final Board board) {

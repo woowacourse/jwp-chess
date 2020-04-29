@@ -26,7 +26,7 @@ public class RoomDAO {
 
             List<Room> rooms = new ArrayList<>();
             while (resultSet.next()) {
-                rooms.add(new Room(resultSet.getLong("id"), resultSet.getString("title")));
+                rooms.add(new Room(resultSet.getString("title")));
             }
             return rooms;
         }

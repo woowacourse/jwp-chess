@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import org.springframework.stereotype.Service;
 import wooteco.chess.database.dao.ChessDao;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.strategy.NormalInitStrategy;
@@ -7,6 +8,7 @@ import wooteco.chess.domain.strategy.NormalInitStrategy;
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class RoomService {
     private ChessDao chessDao = new ChessDao();
 

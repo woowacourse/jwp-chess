@@ -25,6 +25,7 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	runtimeOnly 'com.h2database:h2'
+	compile 'org.codehaus.groovy:groovy-all:2.4.6'
 }
 
 test {

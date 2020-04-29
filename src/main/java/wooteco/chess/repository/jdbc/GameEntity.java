@@ -10,7 +10,7 @@ import wooteco.chess.domain.game.GameFactory;
 @Table("game")
 public class GameEntity {
 	@Id
-	private int id;
+	private String id;
 	private String state;
 	private String turn;
 	private String board;
@@ -19,6 +19,20 @@ public class GameEntity {
 		this.state = state;
 		this.turn = turn;
 		this.board = board;
+	}
+
+	public static GameEntity of(Game game) {
+		return new GameEntity(game.getStateType(), game.getTurn().name(), BoardParser.parseString(game.getBoard()));
+	}
+
+	public void setIdIfIdIsNull(String id) {
+		if (this.id == null) {
+			this.id = id;
+		}
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public String getTurn() {

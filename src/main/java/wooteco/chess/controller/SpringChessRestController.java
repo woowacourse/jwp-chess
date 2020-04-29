@@ -1,7 +1,9 @@
 package wooteco.chess.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,38 +21,48 @@ public class SpringChessRestController {
 		this.gameService = gameService;
 	}
 
-	@GetMapping("/state")
-	public ResponseDto findCurrentState() {
-		return gameService.getCurrentState();
+	@GetMapping("/games")
+	public ResponseDto games() {
+		return gameService.findAllGameIds();
 	}
 
-	@PostMapping("/state")
-	public ResponseDto changeState(@RequestBody String request) {
-		return gameService.changeState(request);
+	@PostMapping("/game")
+	public ResponseDto createNewGame() {
+		return gameService.createNewGame();
 	}
 
-	@GetMapping("/pieces")
-	public ResponseDto findAllPiecesOnBoard() {
-		return gameService.findAllPiecesOnBoard();
+	@GetMapping("/state/{id}")
+	public ResponseDto findCurrentState(@PathVariable String id) {
+		return gameService.getCurrentState(id);
 	}
 
-	@GetMapping("/record")
-	public ResponseDto calculateScore() {
-		return gameService.calculateScore();
+	@PutMapping("/state/{id}")
+	public ResponseDto changeState(@RequestBody String request, @PathVariable String id) {
+		return gameService.changeState(id, request);
 	}
 
-	@PostMapping("/move")
-	public ResponseDto move(@RequestBody PositionRequestDto requestDTO) {
-		return gameService.move(requestDTO);
+	@GetMapping("/pieces/{id}")
+	public ResponseDto findAllPiecesOnBoard(@PathVariable String id) {
+		return gameService.findAllPiecesOnBoard(id);
 	}
 
-	@GetMapping("/isnotfinish")
-	public ResponseDto isNotFinish() {
-		return gameService.isNotFinish();
+	@GetMapping("/record/{id}")
+	public ResponseDto calculateScore(@PathVariable String id) {
+		return gameService.calculateScore(id);
 	}
 
-	@GetMapping("/result")
-	public ResponseDto findWinner() {
-		return gameService.getWinner();
+	@PutMapping("/move/{id}")
+	public ResponseDto move(@RequestBody PositionRequestDto requestDTO, @PathVariable String id) {
+		return gameService.move(id, requestDTO);
+	}
+
+	@GetMapping("/isnotfinish/{id}")
+	public ResponseDto isNotFinish(@PathVariable String id) {
+		return gameService.isNotFinish(id);
+	}
+
+	@GetMapping("/result/{id}")
+	public ResponseDto findWinner(@PathVariable String id) {
+		return gameService.getWinner(id);
 	}
 }

@@ -42,7 +42,7 @@ public class WebController {
 	public ModelAndView joinRoom(
 			@RequestParam String name) throws SQLException {
 		ModelAndView modelAndView = new ModelAndView("chess");
-		ChessGameDto chessGameDto = chessGameService.load(name);
+		ChessGameDto chessGameDto = springChessService.load(name);
 		modelAndView.addObject("chessGame", chessGameDto);
 		return modelAndView;
 	}

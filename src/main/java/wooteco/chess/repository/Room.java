@@ -15,4 +15,16 @@ public class Room {
 	public String getRoomName() {
 		return roomName;
 	}
+
+	public String getBoard() {
+		return board;
+	}
+
+	public String getTurn() {
+		return turn;
+	}
+
+	public String getFinishFlag() {
+		return finishFlag;
+	}
 }

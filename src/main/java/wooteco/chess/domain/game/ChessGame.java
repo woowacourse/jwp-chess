@@ -84,6 +84,6 @@ public class ChessGame {
     }
 
     private void switchTurn() {
-        turn.toggle();
+        turn = turn.toggle();
     }
 }

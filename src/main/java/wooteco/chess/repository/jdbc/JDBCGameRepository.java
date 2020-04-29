@@ -9,14 +9,14 @@ import org.springframework.stereotype.Repository;
 import wooteco.chess.domain.board.BoardParser;
 import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.game.GameFactory;
-import wooteco.chess.repository.GameDao;
+import wooteco.chess.repository.GameRepository;
 
 @Primary
 @Repository
-public class JDBCGameDao implements GameDao {
+public class JDBCGameRepository implements GameRepository {
 	private final JDBCTemplate jdbcTemplate;
 
-	public JDBCGameDao(JDBCTemplate jdbcTemplate) {
+	public JDBCGameRepository(JDBCTemplate jdbcTemplate) {
 		this.jdbcTemplate = Objects.requireNonNull(jdbcTemplate);
 	}
 

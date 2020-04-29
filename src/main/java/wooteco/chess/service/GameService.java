@@ -14,7 +14,7 @@ import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.Result;
-import wooteco.chess.repository.GameDao;
+import wooteco.chess.repository.GameRepository;
 import wooteco.chess.view.dto.requestdto.PositionRequestDto;
 import wooteco.chess.view.dto.responsedto.BoardDto;
 import wooteco.chess.view.dto.responsedto.GameDto;
@@ -26,15 +26,15 @@ public class GameService {
 	private static final String NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE = "조건에 해당하는 요소가 없습니다.";
 	private static final int DEFAULT_USER_ID = 1;
 
-	private final GameDao gameDao;
+	private final GameRepository gameRepository;
 
-	public GameService(GameDao gameDao) {
-		this.gameDao = gameDao;
+	public GameService(GameRepository gameRepository) {
+		this.gameRepository = gameRepository;
 	}
 
 	public ResponseDto calculateScore() {
 		return makeResponse(() -> {
-			Game game = gameDao.findById(DEFAULT_USER_ID)
+			Game game = gameRepository.findById(DEFAULT_USER_ID)
 				.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
 			Result status = game.status();
 			List<ScoreDto> scores = status.getStatus().entrySet().stream()
@@ -46,10 +46,10 @@ public class GameService {
 
 	public ResponseDto changeState(String request) {
 		return makeResponse(() -> {
-				Game game = gameDao.findById(DEFAULT_USER_ID)
+				Game game = gameRepository.findById(DEFAULT_USER_ID)
 					.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
 				game = game.changeState(request);
-				gameDao.update(game);
+				gameRepository.update(game);
 				return new ResponseDto(SUCCESS);
 			}
 		);
@@ -57,7 +57,7 @@ public class GameService {
 
 	public ResponseDto findAllPiecesOnBoard() {
 		return makeResponse(() -> {
-			Game game = gameDao.findById(DEFAULT_USER_ID)
+			Game game = gameRepository.findById(DEFAULT_USER_ID)
 				.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
 			Board board = game.getBoard();
 
@@ -73,10 +73,10 @@ public class GameService {
 				Position from = Position.of(positionRequestDTO.getFrom());
 				Position to = Position.of(positionRequestDTO.getTo());
 
-				Game game = gameDao.findById(DEFAULT_USER_ID)
+				Game game = gameRepository.findById(DEFAULT_USER_ID)
 					.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
 				game = game.move(from, to);
-				gameDao.update(game);
+				gameRepository.update(game);
 				Board board = game.getBoard();
 				List<BoardDto> result = new ArrayList<>();
 				result.add(new BoardDto(from.toString(), board.findSymbol(from)));
@@ -87,7 +87,7 @@ public class GameService {
 	}
 
 	public List<BoardDto> findChangedPiecesOnBoard(PositionRequestDto positionRequestDTO) {
-		Game game = gameDao.findById(DEFAULT_USER_ID)
+		Game game = gameRepository.findById(DEFAULT_USER_ID)
 			.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
 		Position from = Position.of(positionRequestDTO.getFrom());
 		Position to = Position.of(positionRequestDTO.getTo());
@@ -101,7 +101,7 @@ public class GameService {
 
 	public ResponseDto getCurrentState() {
 		return makeResponse(() -> {
-			Game game = gameDao.findById(DEFAULT_USER_ID)
+			Game game = gameRepository.findById(DEFAULT_USER_ID)
 				.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
 			return new ResponseDto(SUCCESS, GameDto.of(game.getTurn(), game.getStateType()));
 		});
@@ -109,7 +109,7 @@ public class GameService {
 
 	public ResponseDto getWinner() {
 		return makeResponse(() -> {
-			Game game = gameDao.findById(DEFAULT_USER_ID)
+			Game game = gameRepository.findById(DEFAULT_USER_ID)
 				.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
 			String winner = game.getWinner().name().toLowerCase();
 			return new ResponseDto(SUCCESS, winner);
@@ -118,7 +118,7 @@ public class GameService {
 
 	public ResponseDto isNotFinish() {
 		return makeResponse(() -> {
-				Game game = gameDao.findById(DEFAULT_USER_ID)
+				Game game = gameRepository.findById(DEFAULT_USER_ID)
 					.orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
 				return new ResponseDto(SUCCESS, game.isNotFinished());
 			}

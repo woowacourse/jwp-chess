@@ -10,32 +10,6 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PieceTypeTest {
-    @DisplayName("체스 말 각각의 표식")
-    @ParameterizedTest
-    @MethodSource("getCasesForPieceRepresentation")
-    void representationTest(PieceType pieceType, String expectedRepresentation) {
-        assertThat(pieceType.getRepresentation()).isEqualTo(expectedRepresentation);
-    }
-
-    private static Stream<Arguments> getCasesForPieceRepresentation() {
-        return Stream.of(
-                Arguments.of(PieceType.FIRST_WHITE_PAWN, "p"),
-                Arguments.of(PieceType.FIRST_BLACK_PAWN, "P"),
-                Arguments.of(PieceType.WHITE_PAWN, "p"),
-                Arguments.of(PieceType.BLACK_PAWN, "P"),
-                Arguments.of(PieceType.WHITE_ROOK, "r"),
-                Arguments.of(PieceType.BLACK_ROOK, "R"),
-                Arguments.of(PieceType.WHITE_KNIGHT, "n"),
-                Arguments.of(PieceType.BLACK_KNIGHT, "N"),
-                Arguments.of(PieceType.WHITE_BISHOP, "b"),
-                Arguments.of(PieceType.BLACK_BISHOP, "B"),
-                Arguments.of(PieceType.WHITE_QUEEN, "q"),
-                Arguments.of(PieceType.BLACK_QUEEN, "Q"),
-                Arguments.of(PieceType.WHITE_KING, "k"),
-                Arguments.of(PieceType.BLACK_KING, "K")
-        );
-    }
-
     @DisplayName("체스 말 각각의 점수 확인")
     @ParameterizedTest
     @MethodSource("getCasesForPieceScore")

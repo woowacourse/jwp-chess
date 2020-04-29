@@ -1,7 +1,6 @@
 package wooteco.chess.domain.position;
 
 import wooteco.chess.domain.util.Direction;
-import wooteco.chess.exception.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class Position {
                 .filter(key -> key.equals(position))
                 .map(ALL_POSITIONS::get)
                 .findFirst()
-                .orElseThrow(() -> new InvalidPositionException(position));
+                .orElseThrow(() -> new IllegalArgumentException(String.format("좌표를 올바른 방식으로 입력해 주세요. 입력 : %s", position)));
     }
 
     public static Position of(final int col, final int row) {

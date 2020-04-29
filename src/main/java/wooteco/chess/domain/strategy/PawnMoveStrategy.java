@@ -14,7 +14,7 @@ public class PawnMoveStrategy implements MoveStrategy {
         List<Position> possiblePositions = new ArrayList<>();
 
         for (Direction direction : piece.getDirections()) {
-            if(position.isNextPositionValidForward(direction)) {
+            if (position.isNextPositionValidForward(direction)) {
                 Position nextPosition = position.moveBy(direction);
                 Piece nextPiece = board.findBy(nextPosition);
 

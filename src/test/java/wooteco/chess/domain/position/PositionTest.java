@@ -1,6 +1,5 @@
 package wooteco.chess.domain.position;
 
-import wooteco.chess.exception.InvalidPositionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -17,7 +16,7 @@ public class PositionTest {
     void constructFail(String position) {
         assertThatThrownBy(() -> {
             Position.of(position);
-        }).isInstanceOf(InvalidPositionException.class);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 
     private static Stream<Arguments> getCasesForPositionsOutOfBoardRange() {

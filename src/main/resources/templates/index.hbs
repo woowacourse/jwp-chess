@@ -91,24 +91,25 @@
     function deleteRoom(id) {
         console.log("deleteRoom : " + id);
 
-        let currentPath = window.location.pathname;
-        location.href = currentPath + '/remove/' + names;
+        fetch("/rooms/remove/" + id, {
+            method: 'DELETE',
+        }).then(response => response.json())
+                .then(result => location.replace('/rooms'));
     }
 
     function enterRoom(id) {
         console.log("enterRoom : " + id);
-        let currentPath = window.location.pathname;
         let inputPassword = prompt('비밀번호를 입력해주세요!');
-        if(authorizePassword(id, inputPassword)) {
-            alert("통과됐습니다");
+        if (inputPassword != null) {
+            authorizePassword(id, inputPassword);
         }
-        // location.href = currentPath + '/enter/' + id;
     }
+
 
     function authorizePassword(id, inputPassword) {
         let data = {
-            id : id,
-            password : inputPassword
+            id: id,
+            password: inputPassword
         };
 
         fetch("/rooms/authorize", {
@@ -117,11 +118,19 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data),
-        }).then(response => response.json()){
-            return response;
-        }
+        }).then(response => response.json())
+                .then(result => movePage(result, id));
     }
 
+    function movePage(result, id) {
+        if (result) {
+            alert(id + "번 방으로 입장합니다.");
+            let currentPath = window.location.pathname;
+            location.href = currentPath + '/enter/' + id;
+        } else {
+            alert("방의 비밀번호가 틀렸습니다! 다시 입력해주세요");
+        }
+    }
 </script>
 </body>
 </html>

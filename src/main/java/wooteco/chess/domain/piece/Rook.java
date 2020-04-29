@@ -12,9 +12,4 @@ public class Rook extends Piece {
 			UP, DOWN, LEFT, RIGHT)),
 			ROOK_SCORE);
 	}
-
-	@Override
-	public boolean isKing() {
-		return false;
-	}
 }

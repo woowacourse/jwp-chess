@@ -1,5 +1,7 @@
 package wooteco.chess.controller;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.service.GameManagerService;
 import wooteco.chess.util.WebOutputRenderer;
-
 @Controller
 public class ChessController {
 	private GameManagerService gameManagerService;
@@ -27,10 +28,16 @@ public class ChessController {
 
 	@GetMapping("/board/{roomNo}")
 	public String board(Model model, @PathVariable int roomNo) {
-		model.addAttribute("roomNo", roomNo);
-		model.addAttribute("piecesDto", WebOutputRenderer.toPiecesDto(gameManagerService.getBoard(roomNo)));
-		model.addAttribute("turn", gameManagerService.getCurrentTurn(roomNo).name());
-		model.addAttribute("scores", WebOutputRenderer.scoreToModel(gameManagerService.calculateEachScore(roomNo)));
+		try {
+			model.addAttribute("roomNo", roomNo);
+			model.addAttribute("piecesDto", WebOutputRenderer.toPiecesDto(gameManagerService.getBoard(roomNo)));
+			model.addAttribute("turn", gameManagerService.getCurrentTurn(roomNo).name());
+			model.addAttribute("scores", WebOutputRenderer.scoreToModel(gameManagerService.calculateEachScore(roomNo)));
+		} catch (RuntimeException e) {
+			model.addAttribute("error", e.getMessage());
+			model.addAttribute("redirectUrl", "/");
+			return "error";
+		}
 		return "board";
 	}
 
@@ -41,13 +48,15 @@ public class ChessController {
 	}
 
 	@PostMapping("/move")
-	public String move(Model model, @RequestParam(defaultValue = "") String target,
-		@RequestParam(defaultValue = "") String destination, @RequestParam int roomNo) {
+	public String move(Model model, @RequestParam Map<String, String> param) {
+		String target = param.get("target");
+		String destination = param.get("destination");
+		int roomNo = Integer.parseInt(param.get("roomNo"));
 		try {
 			gameManagerService.move(Position.of(target), Position.of(destination), roomNo);
 		} catch (RuntimeException e) {
 			model.addAttribute("error", e.getMessage());
-			model.addAttribute("roomNo", roomNo);
+			model.addAttribute("redirectUrl", "/board/" + roomNo);
 			return "error";
 		}
 		if (!gameManagerService.isKingAlive(roomNo)) {

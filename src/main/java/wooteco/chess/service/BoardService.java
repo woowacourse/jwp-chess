@@ -1,7 +1,6 @@
 package wooteco.chess.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardEntity;
 import wooteco.chess.domain.board.BoardRepository;
@@ -27,7 +26,6 @@ public class BoardService {
         this.roomService = roomService;
     }
 
-    @Transactional
     public Board movePiece(final Long roomId, final String fromPosition, final String toPosition) {
         List<BoardEntity> boardEntities = boardRepository.findByRoomId(roomId);
         Board board = Board.createLoadedBoard(boardEntities);
@@ -45,9 +43,7 @@ public class BoardService {
             BoardEntity toBoardEntity = boardRepository.findByRoomIdAndPosition(roomId, toPosition);
             toBoardEntity.setPiece(piece.getNextPiece().getName());
             boardRepository.save(toBoardEntity);
-
         }
-
         roomService.updateTurn(roomId);
         return board;
     }

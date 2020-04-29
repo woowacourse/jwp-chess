@@ -17,6 +17,10 @@ public class Room {
         this.turn = Team.WHITE.name();
     }
 
+    public boolean isWhiteTurn(){
+        return turn.equals(Team.WHITE.name());
+    }
+
     public void setTurn(Team turn) {
         this.turn = turn.name();
     }

@@ -60,7 +60,7 @@ public class RoomService {
     public void updateTurn(final Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room 정보가 없습니다."));
-        if (room.getTurn().equals(Team.WHITE.name())) {
+        if (room.isWhiteTurn()) {
             room.setTurn(Team.BLACK);
             roomRepository.save(room);
             return;

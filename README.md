@@ -11,14 +11,12 @@
     - [x] Room id 추가
     - [x] BoardDAO 에서 Room id 로 조회 기능
 - [ ] Board 도메인 수정
-    - [ ] finish 체크 할 때 보드 반환 리팩토링
     - [x] 폰 2칸 움직이는 거 수정
     - [x] move -> 검증 메서드로 변경
     - [x] initial Board 위치 변경
 ### step 3
 - [x] Room Entity, Room Repository 생성
 - [x] Board Entity, Board Repository 생성
-- [ ] entity json으로 넘기는 거
 
 # jwp-chess
 ### 1단계

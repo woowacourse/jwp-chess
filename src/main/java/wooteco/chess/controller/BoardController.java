@@ -23,13 +23,14 @@ public class BoardController {
             @PathVariable("room_id") Long roomId,
             @RequestParam String fromPiece,
             @RequestParam String toPiece) {
+        Board board;
         try {
-            Board board = boardService.movePiece(roomId, fromPiece, toPiece);
-            if (boardService.isFinish(board)) {
-                return ResponseEntity.ok().body(boardService.receiveWinner(roomId));
-            }
+            board = boardService.movePiece(roomId, fromPiece, toPiece);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        if (boardService.isFinish(board)) {
+            return ResponseEntity.ok().body(boardService.receiveWinner(roomId));
         }
         return ResponseEntity.ok().body(fromPiece + " " + toPiece);
     }

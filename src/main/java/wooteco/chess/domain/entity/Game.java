@@ -8,6 +8,7 @@ import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
 import wooteco.chess.domain.board.ChessGame;
+import wooteco.chess.domain.command.MoveCommand;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.util.PieceConverter;
 
@@ -32,14 +33,25 @@ public class Game {
 		this.id = id;
 	}
 
-	public ChessGame toChessGame() {
-		return new ChessGame(toPieces(), turn);
+	public Game(ChessGame chessGame) {
+		this(chessGame.getTurnName(), chessGame.toPieceEntity());
+	}
+
+	public void move(MoveCommand moveCommand) {
+		ChessGame chessGame = getChessGame();
+		chessGame.move(moveCommand);
+		this.turn = chessGame.getTurnName();
+		this.gamePieces = chessGame.toPieceEntity();
 	}
 
 	private List<Piece> toPieces() {
 		return this.gamePieces.stream()
 			.map(piece -> PieceConverter.of(piece.getSymbol(), piece.getPosition()))
 			.collect(Collectors.toList());
+	}
+
+	public ChessGame getChessGame() {
+		return new ChessGame(toPieces(), turn);
 	}
 
 	public Long getId() {

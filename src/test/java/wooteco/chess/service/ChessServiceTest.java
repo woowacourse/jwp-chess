@@ -73,7 +73,8 @@ class ChessServiceTest {
 		//then
 		List<Piece> pieces = gameRepository.findById(game.getGameId())
 			.orElseThrow(NoSuchElementException::new)
-			.toPieces();
+			.getChessGame()
+			.getPieces();
 
 		Rank rank = new Rank(pieces);
 		Piece a4 = rank.findPiece(Position.of("a4"))

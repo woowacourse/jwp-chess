@@ -50,6 +50,17 @@ public class ChessGame {
 		return board.isKingAlive();
 	}
 
+	public Piece findPieceByPosition(Position position) {
+		return board.findPiece(position)
+			.orElseThrow(IllegalArgumentException::new);
+	}
+
+	public List<GamePiece> toPieceEntity() {
+		return getPieces().stream()
+			.map(Piece::toEntity)
+			.collect(Collectors.toList());
+	}
+
 	public Board getBoard() {
 		return board;
 	}
@@ -73,14 +84,7 @@ public class ChessGame {
 		return turn;
 	}
 
-	public Piece findPieceByPosition(Position position) {
-		return board.findPiece(position)
-			.orElseThrow(IllegalArgumentException::new);
-	}
-
-	public List<GamePiece> toPieceEntity() {
-		return getPieces().stream()
-			.map(Piece::toEntity)
-			.collect(Collectors.toList());
+	public String getTurnName(){
+		return turn.getName();
 	}
 }

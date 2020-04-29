@@ -20,11 +20,6 @@ public class GamePiece {
 		this.team = team;
 	}
 
-	public GamePiece(Long id, String symbol, String position, String team) {
-		this(symbol, position, team);
-		this.id = id;
-	}
-
 	public Long getId() {
 		return id;
 	}

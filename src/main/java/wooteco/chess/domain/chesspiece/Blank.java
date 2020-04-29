@@ -4,7 +4,7 @@ import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.position.Positions;
 
 public class Blank extends Piece {
-	private static final String NAME = ".";
+	public static final String NAME = ".";
 	private static final String NOT_SUPPORT_MESSAGE = "BLANK에서는 지원하지 않는 기능입니다.";
 
 	public Blank(Position position) {

@@ -18,13 +18,18 @@ public class ChessGame {
     private Board board;
     private Team turn;
 
-    private ChessGame(final Board board, final Team turn) {
+    private ChessGame(final Long id, final Board board, final Team turn) {
+        this.id = id;
         this.board = board;
         this.turn = turn;
     }
 
     public static ChessGame of(final Board board, final Team turn) {
-        return new ChessGame(board, turn);
+        return new ChessGame(null, board, turn);
+    }
+
+    public static ChessGame of(final Long id, final Board board, final Team turn) {
+        return new ChessGame(id, board, turn);
     }
 
     public boolean isEnd() {

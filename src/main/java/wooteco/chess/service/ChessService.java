@@ -35,13 +35,10 @@ public class ChessService {
 		Piece startPiece = board.findByPosition(start);
 
 		board.move(start, target);
-		try {
-			pieceRepository.update(startPiece.getName(), target.getString(), boardId);
-			pieceRepository.update(Blank.NAME, start.getString(), boardId);
-			turnRepository.update(board.isWhiteTurn(), boardId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		pieceRepository.update(startPiece.getName(), target.getString(), boardId);
+		pieceRepository.update(Blank.NAME, start.getString(), boardId);
+		turnRepository.update(board.isWhiteTurn(), boardId);
+
 		return board;
 	}
 
@@ -62,11 +59,6 @@ public class ChessService {
 	public boolean isNotEnd() {
 		Board board = init();
 		return board.isLiveBothKing();
-	}
-
-	public boolean isWinWhiteTeam() {
-		Board board = init();
-		return board.isLiveKing(Team.WHITE);
 	}
 
 	public Team findWinningTeam() {

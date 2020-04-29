@@ -34,11 +34,7 @@ public class SpringController {
 	@GetMapping("/init")
 	@ResponseBody
 	public Map<String, Object> init() {
-		Board board = chessService.init();
-		for (Piece piece : board.findAll()) {
-			System.out.println(piece.getPosition().getString() + " " + piece.getName());
-		}
-		return makeModel(board);
+		return makeModel(chessService.init());
 	}
 
 	@PutMapping("/move")

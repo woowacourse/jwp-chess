@@ -4,6 +4,7 @@ import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.PieceFactory;
 import chess.model.domain.piece.Team;
 import chess.model.repository.BoardEntity;
+import chess.util.TFAndYNConverter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class ChessGameFactory {
 
     private static void combineCastlingElements(Set<CastlingSetting> castlingElements,
         BoardEntity boardEntity) {
-        if (boardEntity.getCastlingElementYN().equals("Y")) {
+        if (TFAndYNConverter.convertTF(boardEntity.getCastlingElementYN())) {
             castlingElements.add(CastlingSetting.of(Square.of(boardEntity.getSquareName()),
                 PieceFactory.getPiece(boardEntity.getPieceName())));
         }

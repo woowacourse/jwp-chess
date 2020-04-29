@@ -7,7 +7,7 @@ import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.PieceFactory;
 import chess.model.domain.piece.Team;
-import chess.util.BooleanYNConverter;
+import chess.util.TFAndYNConverter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -113,7 +113,7 @@ public class ChessGameEntity {
             boardEntities.add(new BoardEntity(
                 square.getName(),
                 PieceFactory.getName(chessBoard.get(square)),
-                BooleanYNConverter.convertYN(castlingElements.get(square)),
+                TFAndYNConverter.convertYN(castlingElements.get(square)),
                 enPassants.keySet().stream()
                     .filter(key -> enPassants.containsKey(square))
                     .map(enSquare -> enPassants.get(square).getName())

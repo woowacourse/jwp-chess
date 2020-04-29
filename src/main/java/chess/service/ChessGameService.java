@@ -20,7 +20,7 @@ import chess.model.repository.ResultEntity;
 import chess.model.repository.ResultRepository;
 import chess.model.repository.RoomEntity;
 import chess.model.repository.RoomRepository;
-import chess.util.BooleanYNConverter;
+import chess.util.TFAndYNConverter;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -108,7 +108,7 @@ public class ChessGameService {
 
     private void saveGameAndBoard(ChessGameEntity chessGameEntity, ChessGame chessGame,
         MoveState moveState) {
-        String proceed = BooleanYNConverter.convertYN(moveState != MoveState.KING_CAPTURED);
+        String proceed = TFAndYNConverter.convertYN(moveState != MoveState.KING_CAPTURED);
 
         if (moveState.isSucceed()) {
             chessGameEntity.update(chessGame, proceed);

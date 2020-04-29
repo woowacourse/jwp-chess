@@ -1,80 +1,73 @@
 package wooteco.chess.service;
 
+import org.springframework.stereotype.Service;
 import wooteco.chess.domain.Chess;
 import wooteco.chess.domain.board.BoardGenerator;
 import wooteco.chess.domain.coordinate.Coordinate;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.dto.ChessResponseDto;
 import wooteco.chess.dto.MoveDto;
+import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.repository.MoveRepository;
-import wooteco.chess.repository.MoveRepositoryImpl;
-import wooteco.chess.result.Result;
+import wooteco.chess.support.ChessResponseCode;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
+@Service
 public class ChessService {
-    private MoveRepository moveRepository = new MoveRepositoryImpl();
+    private MoveRepository moveRepository;
     private Map<Integer, Chess> cachedChess = new HashMap<>();
 
-    public Result move(MoveDto moveDto) {
-        if (!cachedChess.containsKey(moveDto.getRoomId())) {
-            return new Result(false, "Can not find room. room id : " + moveDto.getRoomId());
-        }
-        Chess chess = cachedChess.get(moveDto.getRoomId());
-        chess.move(moveDto.getSource(), moveDto.getTarget());
-        if (!chess.isKingAlive()) {
-            return new Result(true, "win");
-        }
-        try {
-            return moveRepository.add(moveDto);
-        } catch (SQLException e) {
-            return new Result(false, "SQLException occur.");
-        }
+    public ChessService(MoveRepository moveRepository) {
+        this.moveRepository = moveRepository;
     }
 
-    public Result getMovableWay(int roomId, Team team, Coordinate coordinate) {
+    public ResponseDto move(MoveDto moveDto) throws SQLException {
+        if (!cachedChess.containsKey(moveDto.getRoomId())) {
+            return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
+        }
+
+        Chess chess = cachedChess.get(moveDto.getRoomId());
+        chess.move(moveDto.getSource(), moveDto.getTarget());
+        moveRepository.add(moveDto);
+
+        if (!chess.isKingAlive()) {
+            return ResponseDto.success(ChessResponseCode.WIN);
+        }
+        return ResponseDto.success();
+    }
+
+    public ResponseDto getMovableWay(int roomId, Team team, Coordinate coordinate) {
         if (!cachedChess.containsKey(roomId)) {
-            return new Result(false, "Can not find room. room id : " + roomId);
+            return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
         }
         Chess chess = cachedChess.get(roomId);
         if (!chess.isTurnOf(team) || chess.isTurnOf(coordinate)) {
-            return new Result(false, "not your turn");
+            return ResponseDto.fail(ChessResponseCode.NOT_YOUR_TURN);
         }
-
-        List<String> movableWay = chess.getMovableWay(coordinate);
-        return new Result(true, movableWay);
+        return ResponseDto.success(chess.getMovableWay(coordinate));
     }
 
-    public Result renew(int roomId) {
+    public ResponseDto renew(int roomId) throws SQLException{
         if (!cachedChess.containsKey(roomId)) {
             load(roomId);
         }
         Chess chess = cachedChess.get(roomId);
         if (!chess.isKingAlive()) {
-            return new Result(true, "lose");
+            return ResponseDto.success(ChessResponseCode.LOSE);
         }
-        return new Result(true, ChessResponseDto.of(chess));
+        return ResponseDto.success(ChessResponseDto.of(chess));
     }
 
-    private void load(int roomId) {
+    private void load(int roomId) throws SQLException{
         Chess chess = new Chess(BoardGenerator.create());
-        try {
-            Result result = moveRepository.findByRoomId(roomId);
-            if (Objects.isNull(result.getObject())) {
-                cachedChess.put(roomId, chess);
-                return;
-            }
-            List<MoveDto> moveDtos = (List<MoveDto>) result.getObject();
-            for (MoveDto moveDto : moveDtos) {
-                chess.move(moveDto.getSource(), moveDto.getTarget());
-            }
-            cachedChess.put(roomId, chess);
-        } catch (SQLException e) {
-            return;
+        List<MoveDto> moveDtos = moveRepository.findByRoomId(roomId);
+        for (MoveDto moveDto : moveDtos) {
+            chess.move(moveDto.getSource(), moveDto.getTarget());
         }
+        cachedChess.put(roomId, chess);
     }
 }

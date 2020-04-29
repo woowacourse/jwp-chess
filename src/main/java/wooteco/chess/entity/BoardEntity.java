@@ -23,13 +23,14 @@ import wooteco.chess.domain.factory.PieceConverter;
  */
 @Table("board")
 public class BoardEntity {
-	private final Set<PieceEntity> pieces;
 	@Id
-	private Long board_id;
+	private Long id;
+
+	private final Set<PieceEntity> pieces;
 	private final TurnEntity turn;
 
-	BoardEntity(final Long board_id, final Set<PieceEntity> pieces, final TurnEntity turn) {
-		this.board_id = board_id;
+	BoardEntity(final Long id, final Set<PieceEntity> pieces, final TurnEntity turn) {
+		this.id = id;
 		this.pieces = pieces;
 		this.turn = turn;
 	}
@@ -74,7 +75,7 @@ public class BoardEntity {
 			.orElseThrow(() -> new IllegalArgumentException(""));
 	}
 
-	public Set<PieceEntity> getPieces() {
-		return pieces;
+	public Long getId() {
+		return id;
 	}
 }

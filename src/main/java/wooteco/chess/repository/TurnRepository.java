@@ -1,9 +1,11 @@
 package wooteco.chess.repository;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.data.jdbc.repository.query.Modifying;
+import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import wooteco.chess.entity.TurnEntity;
 
@@ -16,6 +18,7 @@ public interface TurnRepository extends CrudRepository<TurnEntity, Long> {
 	@Override
 	List<TurnEntity> findAll();
 
-	@Override
-	Optional<TurnEntity> findById(Long id);
+	@Modifying
+	@Query("UPDATE turn SET is_white_turn = :isWhiteTurn WHERE board_entity = :boardId")
+	void update(@Param("isWhiteTurn") Boolean isWhiteTurn, @Param("boardId") Long boardId);
 }

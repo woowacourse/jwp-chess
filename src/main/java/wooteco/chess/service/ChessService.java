@@ -1,7 +1,6 @@
 package wooteco.chess.service;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -9,12 +8,11 @@ import wooteco.chess.domain.Result;
 import wooteco.chess.domain.Status;
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.chessboard.Board;
+import wooteco.chess.domain.chesspiece.Blank;
 import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.factory.BoardFactory;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.entity.BoardEntity;
-import wooteco.chess.entity.PieceEntity;
-import wooteco.chess.entity.TurnEntity;
 import wooteco.chess.repository.BoardRepository;
 import wooteco.chess.repository.PieceRepository;
 import wooteco.chess.repository.TurnRepository;
@@ -32,31 +30,27 @@ public class ChessService {
 		this.pieceRepository = pieceRepository;
 	}
 
-
-	public Board move(Position start, Position target) {
+	public Board move(Position start, Position target, Long boardId) {
 		Board board = init();
 		Piece startPiece = board.findByPosition(start);
+
 		board.move(start, target);
-		//boardDao.update(target, startPiece.getName());
-		//boardDao.update(start, Blank.NAME);
-		//turnDao.changeTurn(board.isWhiteTurn());
+		try {
+			pieceRepository.update(startPiece.getName(), target.getString(), boardId);
+			pieceRepository.update(Blank.NAME, start.getString(), boardId);
+			turnRepository.update(board.isWhiteTurn(), boardId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return board;
 	}
 
 	public Board init() {
+		// TODO id를 roomID로 mapping
 		BoardEntity boardEntity = boardRepository.findById(1L)
 			.orElseGet(() -> boardRepository.save(BoardEntity.from(BoardFactory.create())));
 		return boardEntity.createBoard();
 
-	}
-
-	private List<PieceEntity> findPieces() {
-		return pieceRepository.findAll();
-	}
-
-	private TurnEntity findTurn() {
-		return turnRepository.findById(1L)
-			.orElseGet(() -> turnRepository.save(TurnEntity.of(FIRST_TURN)));
 	}
 
 	public Board restart() {

@@ -12,9 +12,4 @@ public class Bishop extends Piece {
 			LEFT_UP, RIGHT_UP, LEFT_DOWN, RIGHT_DOWN)),
 			BISHOP_SCORE);
 	}
-
-	@Override
-	public boolean isKing() {
-		return false;
-	}
 }

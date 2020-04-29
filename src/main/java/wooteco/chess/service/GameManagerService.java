@@ -17,8 +17,8 @@ import wooteco.chess.dto.GameManagerDto;
 public class GameManagerService {
 	private final GameDao gameDao;
 
-	public GameManagerService() {
-		this.gameDao = new GameDao();
+	public GameManagerService(GameDao gameDao) {
+		this.gameDao = gameDao;
 	}
 
 	public void move(Position targetPosition, Position destination, int roomNo) {

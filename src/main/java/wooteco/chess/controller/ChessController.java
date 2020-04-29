@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,9 +29,9 @@ public class ChessController {
         return "chessGameStart";
     }
 
-    @GetMapping("/playing/lastGame")
-    public String lastGame(Model model) {
-        chessService.playLastGame();
+    @GetMapping("/playing/lastGame/{roomId}")
+    public String lastGame(@PathVariable("roomId") Long roomId, Model model) {
+        chessService.playLastGame(roomId);
         model.addAllAttributes(chessService.makeMoveResponse());
         return "chessGame";
     }

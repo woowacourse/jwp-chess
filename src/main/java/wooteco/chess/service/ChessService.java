@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wooteco.chess.controller.command.Command;
 import wooteco.chess.domain.ChessManager;
-import wooteco.chess.dto.Commands;
+import wooteco.chess.repository.ChessRoomRepository;
+import wooteco.chess.repository.Commands;
 import wooteco.chess.dto.GameResponse;
 import wooteco.chess.repository.CommandsRepository;
 
@@ -19,6 +20,8 @@ public class ChessService {
 
     @Autowired
     private CommandsRepository commandsRepository;
+    @Autowired
+    private ChessRoomRepository chessRoomRepository;
     private ChessManager chessManager;
 
     public void start() {
@@ -30,8 +33,8 @@ public class ChessService {
         initializeDatabase();
     }
 
-    public void playLastGame() {
-        List<Commands> commands = commandsRepository.findAll();
+    public void playLastGame(Long roomId) {
+        List<Commands> commands = commandsRepository.findByRoomId(roomId);
         for (Commands command : commands) {
             Command.MOVE.apply(chessManager, command.get());
         }
@@ -59,7 +62,7 @@ public class ChessService {
 
     public Map<String, Object> makeStartResponse() {
         Map<String, Object> model = new HashMap<>(new GameResponse(chessManager).get());
-        model.put("haveLastGameRecord", !commandsRepository.findAll().isEmpty());
+        model.put("chessRooms", chessRoomRepository.findAll());
 
         return model;
     }

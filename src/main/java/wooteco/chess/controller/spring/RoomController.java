@@ -38,7 +38,7 @@ public class RoomController {
 	@ResponseBody
 	public ResponseEntity<Object> createNewGame(@RequestBody PlayersDto playersDto) {
 		try {
-			int roomId = createRoom(playersDto);
+			long roomId = createRoom(playersDto);
 			boardService.create(roomId);
 			return ResponseEntity
 				.status(200)
@@ -54,7 +54,7 @@ public class RoomController {
 		return "play";
 	}
 
-	private int createRoom(PlayersDto playersDto) throws SQLException {
+	private long createRoom(PlayersDto playersDto) throws SQLException {
 		long player1Id = playerService.save(
 			new PlayerDto(playersDto.getPlayer1Name(), playersDto.getPlayer1Password(), "white"));
 		long player2Id = playerService.save(

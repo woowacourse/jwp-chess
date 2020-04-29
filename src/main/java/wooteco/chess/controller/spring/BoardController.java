@@ -10,23 +10,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.req.MoveRequestDto;
-import wooteco.chess.service.spark.SparkBoardService;
+import wooteco.chess.service.spring.SpringBoardService;
 
 @RestController
 @RequestMapping("/board")
 public class BoardController {
-	private final SparkBoardService sparkBoardService;
+	private final SpringBoardService springBoardService;
 
-	public BoardController(SparkBoardService sparkBoardService) {
-		this.sparkBoardService = sparkBoardService;
+	public BoardController(SpringBoardService springBoardService) {
+		this.springBoardService = springBoardService;
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> loadBoard(@PathVariable int id) {
 		try {
-			return ResponseEntity.status(200).body(sparkBoardService.load(id));
+			return ResponseEntity.status(200).body(springBoardService.load(id));
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			return ResponseEntity.status(400).body(e.getMessage());
 		}
 	}
@@ -36,7 +35,7 @@ public class BoardController {
 		try {
 			return ResponseEntity
 				.status(200)
-				.body(sparkBoardService.move(
+				.body(springBoardService.move(
 					id,
 					Position.of(req.getSourceX(), req.getSourceY()),
 					Position.of(req.getTargetX(), req.getTargetY())));

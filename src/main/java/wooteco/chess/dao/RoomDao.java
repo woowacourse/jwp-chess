@@ -19,7 +19,7 @@ public class RoomDao {
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
 					RoomDto roomDto = new RoomDto();
-					roomDto.setId(rs.getInt(1));
+					roomDto.setId(rs.getLong(1));
 					roomDto.setTurnId(rs.getInt(2));
 					roomDto.setPlayer1Id(rs.getInt(3));
 					roomDto.setPlayer2Id(rs.getInt(4));

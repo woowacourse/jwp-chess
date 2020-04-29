@@ -101,7 +101,6 @@ function onDrop(e) {
         if (response.ok) {
             findChessCell(targetX, targetY).innerHTML = findChessCell(sourceX, sourceY).innerHTML;
             findChessCell(sourceX, sourceY).innerHTML = templateBlank();
-            document.getElementById("chess-info").innerHTML = "흑색 : " + response["status2"]["black"] + "백색 : " + response["status2"]["white"];
         }
     }).catch(function (error) {
         alert(error);

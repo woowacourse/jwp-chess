@@ -32,6 +32,6 @@ public class PlayerDto {
 	}
 
 	public String getTeam() {
-		return team;
+		return team.toUpperCase();
 	}
 }

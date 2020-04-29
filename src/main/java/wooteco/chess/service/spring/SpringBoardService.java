@@ -72,9 +72,11 @@ public class SpringBoardService {
 	}
 
 	private void updateTurn(long roomId, RoomDto2 room) {
-		long turnId = room.getPlayer1Id();
-		if (room.getTurnId() == room.getPlayer1Id()) {
+		Long turnId = room.getTurnId();
+		if (turnId.equals(room.getPlayer1Id())) {
 			turnId = room.getPlayer2Id();
+		} else {
+			turnId = room.getPlayer1Id();
 		}
 		roomRepository.updateTurn(roomId, turnId);
 	}

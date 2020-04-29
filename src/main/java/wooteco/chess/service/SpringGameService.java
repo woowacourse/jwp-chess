@@ -6,8 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceMapper;
 import wooteco.chess.dto.*;
-import wooteco.chess.repository.GameRepository;
-import wooteco.chess.repository.PieceRepository;
 import wooteco.chess.domain.Color;
 import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.PieceScore;
@@ -22,7 +20,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,7 +41,7 @@ public class SpringGameService {
     }
 
     public GameResponseDto move(MoveRequestDto moveRequestDto) throws SQLException {
-        UUID id = moveRequestDto.getId();
+        Long id = moveRequestDto.getId();
         String sourcePosition = moveRequestDto.getSourcePosition();
         String targetPosition = moveRequestDto.getTargetPosition();
 
@@ -69,7 +66,7 @@ public class SpringGameService {
     }
 
     public double getScore(final GameRequestDto gameRequestDto) throws SQLException {
-        UUID id = gameRequestDto.getId();
+        Long id = gameRequestDto.getId();
 
         RoomEntity roomEntity = roomRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
@@ -85,7 +82,7 @@ public class SpringGameService {
     }
 
     public List<String> getMovablePositions(final MoveRequestDto moveRequestDto) throws SQLException {
-        UUID id = moveRequestDto.getId();
+        Long id = moveRequestDto.getId();
         String sourcePosition = moveRequestDto.getSourcePosition();
 
         RoomEntity roomEntity = roomRepository.findById(id)
@@ -127,7 +124,7 @@ public class SpringGameService {
                 ));
     }
 
-    public GameResponseDto findAllPieces(final UUID roomId) {
+    public GameResponseDto findAllPieces(final Long roomId) {
         return convertRoomEntityToGameDto(roomRepository
                         .findById(roomId)
                         .orElseThrow(RuntimeException::new)

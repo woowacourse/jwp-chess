@@ -1,13 +1,13 @@
 package wooteco.chess.service;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wooteco.chess.domain.Color;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Pieces;
-import wooteco.chess.dto.RoomDto;
+import wooteco.chess.dto.RoomRequestDto;
+import wooteco.chess.dto.RoomResponseDto;
 import wooteco.chess.repository.RoomRepository;
 import wooteco.chess.repository.entity.GameEntity;
 import wooteco.chess.repository.entity.PieceEntity;
@@ -25,27 +25,25 @@ public class SpringRoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public void addRoom(RoomDto roomDto) throws SQLException {
+    public void addRoom(RoomRequestDto roomRequestDto) throws SQLException {
         Set<PieceEntity> pieceEntities = convertPiecesToPieceEntity(Pieces.initPieces());
         GameEntity gameEntity = new GameEntity(Color.WHITE, pieceEntities);
-        roomRepository.save(new RoomEntity(roomDto.getRoomName(), roomDto.getPassword(), gameEntity));
+        roomRepository.save(new RoomEntity(roomRequestDto.getName(), roomRequestDto.getPassword(), gameEntity));
     }
 
-    public void removeRoom(RoomDto roomDto) throws SQLException {
-        roomRepository.deleteById(roomDto.getId());
+    public void removeRoom(RoomResponseDto roomResponseDto) throws SQLException {
+        roomRepository.deleteById(roomResponseDto.getId());
     }
 
-    public List<RoomDto> findAllRoom() throws SQLException {
+    public List<RoomResponseDto> findAllRoom() throws SQLException {
         return convertRoomEntityToDto(roomRepository.findAll());
 
     }
 
-    private List<RoomDto> convertRoomEntityToDto(final List<RoomEntity> roomEntities) {
+    private List<RoomResponseDto> convertRoomEntityToDto(final List<RoomEntity> roomEntities) {
         return roomEntities.stream()
-                .map(roomEntity -> new RoomDto(roomEntity.getId(), roomEntity.getName(), roomEntity.getPassword()))
+                .map(roomEntity -> new RoomResponseDto(roomEntity.getId(), roomEntity.getName(), roomEntity.getPassword()))
                 .collect(Collectors.toList());
     }
 
@@ -56,5 +54,15 @@ public class SpringRoomService {
                                 entry.getValue().getColor().name(),
                                 entry.getKey().getPosition()))
                 .collect(Collectors.toSet());
+    }
+
+    public boolean authorize(final Long id, final String password) {
+        RoomEntity roomEntity = roomRepository.findById(id)
+                .orElseThrow(RuntimeException::new);
+
+        if (password.equals(roomEntity.getPassword())) {
+            return true;
+        }
+        return false;
     }
 }

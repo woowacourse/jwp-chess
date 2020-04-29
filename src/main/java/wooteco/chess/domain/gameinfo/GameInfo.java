@@ -1,7 +1,6 @@
 package wooteco.chess.domain.gameinfo;
 
 import java.util.List;
-
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.board.Status;
@@ -48,6 +47,9 @@ public class GameInfo {
     }
 
     public List<Position> searchPath(String source) {
+        for (Position p : board.searchPath(source)) {
+            //System.out.println(p.getName() + " ");
+        }
         return board.searchPath(source);
     }
 

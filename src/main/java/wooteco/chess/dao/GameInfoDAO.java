@@ -21,14 +21,13 @@ public class GameInfoDAO {
         this.boardDAO = new BoardDAO(dbConnector);
     }
 
-    public void addGameInfo(Board board, User blackUser, User whiteUser, int turn) throws SQLException {
-        String blackUserId = findUsersId(blackUser);
-        String whiteUserId = findUsersId(whiteUser);
+    public void addGameInfo(Board board, User user, int turn) throws SQLException {
+        String blackUserId = findUsersId(user);
 
-        dbConnector.executeUpdate("INSERT INTO gameinfo (black, white, turn) VALUES (?, ?, ?)",
-            blackUserId, whiteUserId, String.valueOf(turn));
+        dbConnector.executeUpdate("INSERT INTO gameinfo (user, turn) VALUES (?, ?)",
+            blackUserId, String.valueOf(turn));
 
-        ResultSet rs = findGameInfoResultSet(blackUserId, whiteUserId);
+        ResultSet rs = findGameInfoResultSet(blackUserId);
 
         if (!rs.next()) {
             return;
@@ -39,8 +38,8 @@ public class GameInfoDAO {
         boardDAO.addBoard(board, gameInfoId);
     }
 
-    public Optional<Board> findGameInfoByUser(User blackUser, User whiteUser) throws SQLException {
-        ResultSet rs = findGameInfoResultSet(findUsersId(blackUser), findUsersId(whiteUser));
+    public Optional<Board> findGameInfoByUser(User user) throws SQLException {
+        ResultSet rs = findGameInfoResultSet(findUsersId(user));
 
         if (!rs.next()) {
             return Optional.empty();
@@ -51,8 +50,8 @@ public class GameInfoDAO {
         return Optional.ofNullable(BoardFactory.of(boardDAO.findBoardByGameInfoId(gameInfoId)));
     }
 
-    public Optional<Integer> findTurnByUser(User blackUser, User whiteUser) throws SQLException {
-        ResultSet rs = findGameInfoResultSet(findUsersId(blackUser), findUsersId(whiteUser));
+    public Optional<Integer> findTurnByUser(User user) throws SQLException {
+        ResultSet rs = findGameInfoResultSet(findUsersId(user));
 
         if (!rs.next()) {
             return Optional.empty();
@@ -61,11 +60,11 @@ public class GameInfoDAO {
         return Optional.ofNullable(rs.getInt("turn"));
     }
 
-    public void saveGameInfoByUserName(Board board, User blackUser, User whiteUser, Status status) throws SQLException {
-        dbConnector.executeUpdate("UPDATE gameinfo SET turn = ? WHERE black = ? AND white = ?",
-                String.valueOf(status.getTurn()), blackUser.getName(), whiteUser.getName());
+    public void saveGameInfoByUserName(Board board, User user, Status status) throws SQLException {
+        dbConnector.executeUpdate("UPDATE gameinfo SET turn = ? WHERE user = ?",
+                String.valueOf(status.getTurn()), user.getName());
 
-        ResultSet rs = findGameInfoResultSet(findUsersId(blackUser), findUsersId(whiteUser));
+        ResultSet rs = findGameInfoResultSet(findUsersId(user));
 
         if (!rs.next()) {
             return;
@@ -76,8 +75,8 @@ public class GameInfoDAO {
         boardDAO.updateBoardByGameInfoId(board, gameInfoId);
     }
 
-    public void deleteGameInfoByUser(User blackUser, User whiteUser) throws SQLException {
-        ResultSet rs = findGameInfoResultSet(findUsersId(blackUser), findUsersId(whiteUser));
+    public void deleteGameInfoByUser(User user) throws SQLException {
+        ResultSet rs = findGameInfoResultSet(findUsersId(user));
 
         if (!rs.next()) {
             return;
@@ -86,13 +85,12 @@ public class GameInfoDAO {
 
         boardDAO.deleteBoardByGameInfoId(gameInfoId);
 
-        dbConnector.executeUpdate("DELETE FROM gameinfo WHERE black = ? AND white = ?", blackUser.getName(),
-                whiteUser.getName());
+        dbConnector.executeUpdate("DELETE FROM gameinfo WHERE user = ?",
+            user.getName());
     }
 
-    private ResultSet findGameInfoResultSet(String blackUserId, String whiteUserId) throws SQLException {
-        return dbConnector.executeQuery("SELECT * FROM gameinfo WHERE black = ? AND white = ?", blackUserId,
-                whiteUserId);
+    private ResultSet findGameInfoResultSet(String userId) throws SQLException {
+        return dbConnector.executeQuery("SELECT * FROM gameinfo WHERE user = ?", userId);
     }
 
     private String findUsersId(User user) throws SQLException {

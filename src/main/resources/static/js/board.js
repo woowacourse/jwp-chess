@@ -15,7 +15,7 @@ window.onload = function() {
     let isFirstClick = true;
     let cell;
     let before;
-    var blackUserName = document.getElementsByClassName("user-name")[0].innerHTML;
+    var userName = $("#userName").val();
 
     $(".cell").click(function () {
         if (document.querySelector(".selected-cell") !== null) {
@@ -29,10 +29,11 @@ window.onload = function() {
         // 첫 클릭이라면 source에 포지션 저장
         if (isFirstClick) {
             source = cellPosition;
+            console.log(source);
 
             $.ajax({
                 url: "/path",
-                data: { source: source, blackUserName: blackUserName },
+                data: { source: source, userName: userName },
                 method: "POST",
             }).done(function (list) {
                 console.log(list);
@@ -60,7 +61,7 @@ window.onload = function() {
         // 두번째 클릭이라면 이동
         $.ajax({
             url: "/move",
-            data: { source: source, target: cellPosition, blackUserName: blackUserName },
+            data: { source: source, target: cellPosition, userName: userName },
             method: "POST",
         }).done(function (model) {
             var data = model;  //JSON.parse(model);

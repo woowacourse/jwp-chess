@@ -9,7 +9,6 @@ import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.dao.GameInfoDAO;
-import wooteco.chess.dao.UserDAO;
 import wooteco.chess.domain.player.User;
 import wooteco.chess.service.ChessService;
 import wooteco.chess.util.DBConnector;
@@ -33,13 +32,10 @@ public class SparkChessApplication {
         post("/start", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             String blackUserName = req.queryParams("blackUserName");
-            String whiteUserName = req.queryParams("whiteUserName");
             User blackUser = new User(blackUserName);
-            User whiteUser = new User(whiteUserName);
 
             model.put("blackUser", blackUserName);
-            model.put("whiteUser", whiteUserName);
-            model.put("rows", chessService.getRowsDto(blackUser, whiteUser));
+            model.put("rows", chessService.getRowsDto(blackUser));
             model.put("turn", chessService.getTurn(blackUser));
             return render(model, "board.hbs");
         });
@@ -77,8 +73,7 @@ public class SparkChessApplication {
 
         post("/save", (req, res) -> {
             String blackUserName = req.queryParams("blackUserName");
-            String whiteUserName = req.queryParams("whiteUserName");
-            chessService.save(new User(blackUserName), new User(whiteUserName));
+            chessService.save(new User(blackUserName));
             Map<String, Object> model = new HashMap<>();
             model.put("rows", chessService.getEmptyRowsDto());
             return render(model, "main.hbs");
@@ -87,8 +82,7 @@ public class SparkChessApplication {
         post("/end", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             String blackUserName = req.queryParams("blackUserName");
-            String whiteUserName = req.queryParams("whiteUserName");
-            chessService.delete(new User(blackUserName), new User(whiteUserName));
+            chessService.delete(new User(blackUserName));
             model.put("rows", chessService.getEmptyRowsDto());
             return render(model, "main.hbs");
         });

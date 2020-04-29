@@ -24,8 +24,8 @@
 </div>
 
 <div class="container" id="all">
-    <div class="title"><h1><a href="/roomResponseDtos">체스체스</a></h1></div>
-    <h2>이곳은 {{roomId}}번 방입니다!</h2>
+    <div class="title"><h1><a href="/rooms">체스체스</a></h1></div>
+    <h2>이곳은 {{id}}번 방입니다!</h2>
 
     <div>현재 턴은 <span id="turn"></span>입니다.</div>
 
@@ -140,9 +140,12 @@
 <script type="text/javascript">
     let allChessPosition = document.querySelectorAll(".chessPosition");
     let isChooseSourcePosition = false;
-    let loadable = false;
     let sourcePosition;
     let movablePositions;
+    let data = {
+        id: {{id}}
+    }
+
     window.onload = function () {
         function applyMovablePosition(movablePositions) {
             movablePositions.forEach(function (movablePosition) {
@@ -164,19 +167,6 @@
         function removeBorder(movablePosition) {
             let element = document.getElementById(movablePosition);
             removeClass(element, "movable");
-        }
-
-        function getMovablePosition(sourcePosition) {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    movablePositions = JSON.parse(xhr.responseText);
-                    applyMovablePosition(movablePositions);
-                    isChooseSourcePosition = true;
-                }
-            };
-            xhr.open('GET', '/game/get?roomId={{roomId}}&sourcePosition=' + sourcePosition, true);
-            xhr.send();
         }
 
         function applyPieces(pieces) {
@@ -213,7 +203,6 @@
             document.getElementById("overlay").style.display = "none";
         }
 
-        // TODO : 임시방편 왕이 죽는 순간 Turn도 바뀌지 않고 끝나야 함.
         function applyWinnerColor(currentColor) {
             if (currentColor === "WHITE") {
                 document.getElementById("winner").innerText = "BLACK";
@@ -237,6 +226,7 @@
         document.getElementById("initButton").addEventListener('click', function () {
             init();
         });
+
         document.getElementById("statusButton").addEventListener('click', function () {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
@@ -245,9 +235,28 @@
                     showStatus(statusResponse.whiteScore, statusResponse.blackScore);
                 }
             };
-            xhr.open('GET', '/game/status?roomId={{roomId}}', true);
-            xhr.send();
+            xhr.open('POST', '/game/status', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
         });
+
+        function getMovablePosition(sourcePosition) {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    movablePositions = JSON.parse(xhr.responseText);
+                    applyMovablePosition(movablePositions);
+                    isChooseSourcePosition = true;
+                }
+            };
+            let data = {
+                id: {{id}},
+                sourcePosition: sourcePosition
+            };
+            xhr.open('POST', '/game/getPath', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
+        }
 
         function move(source, target) {
             let xhr = new XMLHttpRequest();
@@ -267,7 +276,7 @@
                 }
             };
             let data = {
-                roomId: {{roomId}},
+                id: {{id}},
                 sourcePosition: source,
                 targetPosition: target,
             };
@@ -319,8 +328,9 @@
                     }
                 }
             };
-            xhr.open('GET', '/game/load?roomId={{roomId}}', true);
-            xhr.send();
+            xhr.open('POST', '/game/load', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
         }
 
         function init() {
@@ -333,8 +343,9 @@
                     showCurrentColor(chessJson.currentColor);
                 }
             };
-            xhr.open('GET', '/game/init?roomId={{roomId}}', true);
-            xhr.send();
+            xhr.open('POST', '/game/init', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
         }
 
         load();

@@ -1,26 +1,29 @@
 package wooteco.chess.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import wooteco.chess.domain.piece.Piece;
-import wooteco.chess.domain.piece.PieceMapper;
-import wooteco.chess.dto.*;
-import wooteco.chess.domain.Color;
-import wooteco.chess.domain.GameManager;
-import wooteco.chess.domain.PieceScore;
-import wooteco.chess.domain.board.Position;
-import wooteco.chess.domain.piece.Pieces;
-import wooteco.chess.repository.RoomRepository;
-import wooteco.chess.repository.entity.GameEntity;
-import wooteco.chess.repository.entity.PieceEntity;
-import wooteco.chess.repository.entity.RoomEntity;
-
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import wooteco.chess.domain.Color;
+import wooteco.chess.domain.GameManager;
+import wooteco.chess.domain.PieceScore;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.PieceMapper;
+import wooteco.chess.domain.piece.Pieces;
+import wooteco.chess.dto.GameRequestDto;
+import wooteco.chess.dto.GameResponseDto;
+import wooteco.chess.dto.MoveRequestDto;
+import wooteco.chess.dto.PiecesResponseDto;
+import wooteco.chess.repository.RoomRepository;
+import wooteco.chess.repository.entity.GameEntity;
+import wooteco.chess.repository.entity.PieceEntity;
+import wooteco.chess.repository.entity.RoomEntity;
 
 @Service
 public class SpringGameService {
@@ -124,9 +127,9 @@ public class SpringGameService {
                 ));
     }
 
-    public GameResponseDto findAllPieces(final Long roomId) {
+    public GameResponseDto findAllPieces(final Long id) {
         return convertRoomEntityToGameDto(roomRepository
-                        .findById(roomId)
+                        .findById(id)
                         .orElseThrow(RuntimeException::new)
         );
     }

@@ -3,6 +3,7 @@ package wooteco.chess.repository.jdbc;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import wooteco.chess.domain.board.BoardParser;
 import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.game.GameFactory;
 
@@ -28,13 +29,13 @@ public class GameEntity {
 		return board;
 	}
 
-	public void update(GameEntity gameEntity) {
-		this.state = gameEntity.state;
-		this.turn = gameEntity.turn;
-		this.board = gameEntity.board;
+	public void update(Game game) {
+		this.state = game.getStateType();
+		this.turn = game.getTurn().name();
+		this.board = BoardParser.parseString(game.getBoard());
 	}
 
-	public Game convert() {
+	public Game toDomain() {
 		return GameFactory.of(state, turn, board);
 	}
 }

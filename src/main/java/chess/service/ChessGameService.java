@@ -62,17 +62,22 @@ public class ChessGameService {
             .orElseThrow(IllegalArgumentException::new);
         Map<Team, Double> teamScore = chessGame.deriveTeamScore().getTeamScore();
 
-        ChessGameEntity chessGameEntity = new ChessGameEntity(
+        ChessGameEntity chessGameEntity = makeChessGameEntity(userNames, chessGame, teamScore);
+        roomEntity.addGame(chessGameEntity);
+        roomRepository.save(roomEntity);
+
+        return chessGameEntity;
+    }
+
+    private ChessGameEntity makeChessGameEntity(Map<Team, String> userNames, ChessGame chessGame,
+        Map<Team, Double> teamScore) {
+        return new ChessGameEntity(
             chessGame.getTurn().getName()
             , "Y"
             , userNames.get(Team.BLACK)
             , userNames.get(Team.WHITE)
             , teamScore.get(Team.BLACK)
             , teamScore.get(Team.WHITE));
-        roomEntity.addGame(chessGameEntity);
-        roomRepository.save(roomEntity);
-
-        return chessGameEntity;
     }
 
     public void saveNewUserNames(Map<Team, String> userNames) {

@@ -38,8 +38,7 @@ public class ResultService {
     public GameResultDto getResult(UserNameDto userNameDto) {
         ResultEntity resultEntity = resultRepository.findByUserName(userNameDto.getUserName())
             .orElseThrow(IllegalArgumentException::new);
-        return new GameResultDto(resultEntity.getWin(), resultEntity.getDraw(),
-            resultEntity.getLose());
+        return new GameResultDto(resultEntity);
     }
 
     public void updateResult(ChessGameDto chessGameDto) {
@@ -53,11 +52,7 @@ public class ResultService {
         for (Team team : Team.values()) {
             ResultEntity resultEntity = resultRepository.findByUserName(userNames.get(team))
                 .orElseThrow(IllegalAccessError::new);
-
-            GameResultDto gameResult = teamScore.getGameResult(team);
-            resultEntity.addWin(gameResult.getWinCount());
-            resultEntity.addDraw(gameResult.getDrawCount());
-            resultEntity.addLose(gameResult.getLoseCount());
+            resultEntity.updateWinOrLose(teamScore, team);
             resultRepository.save(resultEntity);
         }
     }

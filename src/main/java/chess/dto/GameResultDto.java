@@ -1,6 +1,6 @@
 package chess.dto;
 
-import java.util.Objects;
+import chess.model.repository.ResultEntity;
 
 public class GameResultDto {
 
@@ -8,10 +8,10 @@ public class GameResultDto {
     private final Integer drawCount;
     private final Integer loseCount;
 
-    public GameResultDto(Integer winCount, Integer drawCount, Integer loseCount) {
-        this.winCount = winCount;
-        this.drawCount = drawCount;
-        this.loseCount = loseCount;
+    public GameResultDto(ResultEntity resultEntity) {
+        this.winCount = resultEntity.getWin();
+        this.drawCount = resultEntity.getDraw();
+        this.loseCount = resultEntity.getLose();
     }
 
     public Integer getWinCount() {
@@ -24,24 +24,5 @@ public class GameResultDto {
 
     public Integer getLoseCount() {
         return loseCount;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        GameResultDto that = (GameResultDto) o;
-        return Objects.equals(winCount, that.winCount) &&
-            Objects.equals(drawCount, that.drawCount) &&
-            Objects.equals(loseCount, that.loseCount);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(winCount, drawCount, loseCount);
     }
 }

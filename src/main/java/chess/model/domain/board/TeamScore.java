@@ -1,6 +1,5 @@
 package chess.model.domain.board;
 
-import chess.dto.GameResultDto;
 import chess.model.domain.piece.King;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Team;
@@ -75,9 +74,20 @@ public class TeamScore {
         return teamScore.get(team);
     }
 
-    public GameResultDto getGameResult(Team team) {
-        NullChecker.validateNotNull(team);
-        return new GameResultDto(getWinCount(team), getDrawCount(), getLoseCount(team));
+    public boolean isDraw() {
+        return getWinners().size() == 2;
+    }
+
+    public boolean isNotDraw() {
+        return !isDraw();
+    }
+
+    public boolean isWin(Team team) {
+        return isNotDraw() && getWinners().contains(team);
+    }
+
+    public boolean isLose(Team team) {
+        return isNotDraw() && getWinners().contains(team);
     }
 
     private int getWinCount(Team team) {

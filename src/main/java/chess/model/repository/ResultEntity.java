@@ -1,5 +1,7 @@
 package chess.model.repository;
 
+import chess.model.domain.board.TeamScore;
+import chess.model.domain.piece.Team;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -45,16 +47,16 @@ public class ResultEntity {
         return lose;
     }
 
-    public void addWin(Integer winCount) {
-        this.win += winCount;
+    public void updateWinOrLose(TeamScore teamScore, Team team) {
+        this.win += convertScore(teamScore.isWin(team));
+        this.draw += convertScore(teamScore.isDraw());
+        this.lose += convertScore(teamScore.isLose(team));
     }
 
-
-    public void addDraw(Integer drawCount) {
-        this.draw += drawCount;
-    }
-
-    public void addLose(Integer loseCount) {
-        this.lose += loseCount;
+    private int convertScore(boolean condition) {
+        if (condition) {
+            return 1;
+        }
+        return 0;
     }
 }

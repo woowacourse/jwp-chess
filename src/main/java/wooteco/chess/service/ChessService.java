@@ -47,11 +47,10 @@ public class ChessService {
     }
 
     public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) {
-        ChessGame chessGame = null;
+        ChessGameEntity chessGameEntity = chessGameRepository.findById(chessGameId)
+            .orElseThrow(() -> new NoSuchElementException(GAME_NOT_EXIST_MESSAGE));
+        ChessGame chessGame = chessGameEntity.toModel();
         try {
-            ChessGameEntity chessGameEntity = chessGameRepository.findById(chessGameId)
-                .orElseThrow(() -> new NoSuchElementException(GAME_NOT_EXIST_MESSAGE));
-            chessGame = chessGameEntity.toModel();
             chessGame.move(sourcePosition, targetPosition);
             chessGameEntity.update(chessGame);
             chessGameRepository.save(chessGameEntity);

@@ -66,7 +66,7 @@ function getChessBoard(id) {
             $('#blackScore').html("Black score : " + jsonData.blackScore);
 
             var turn = "white";
-            if(jsonData.turnIsBlack === "1") {
+            if (jsonData.turnIsBlack === "1") {
                 turn = "black";
             }
             $('#turn').html("It's " + turn + " Turn!");
@@ -77,37 +77,37 @@ function getChessBoard(id) {
     });
 }
 
-function postNewGame() {
-    var game_id = document.getElementById("game_id").innerHTML;
-
-    $.ajax({
-            type: 'post',
-            url: '/start/new/game',
-            data: {"game_id": game_id.toString()},
-            success: function (data) {
-                $('#game_id').html(game_id);
-
-                $('.gamecell').html('');
-                $('.gamecell').attr('chess', 'null');
-
-                $('.gamecell grey').html('');
-                $('.gamecell grey').attr('chess', 'null');
-
-                var jsonData = JSON.parse(data);
-                for (var i = 0; i < jsonData.boardValue.length; i++) {
-                    var piece = jsonData.boardValue[i];
-                    $('#' + piece.location).html(main.variables.pieces[piece.pieceName].img);
-                    $('#' + piece.location).attr('chess', piece.pieceName);
-                }
-
-                $('#turn').html("It's White Turn!");
-            },
-            error: function (xhr, status, error) {
-                alert(error.toString());
-            },
-        }
-    );
-}
+// function postNewGame() {
+//     var game_id = document.getElementById("game_id").innerHTML;
+//
+//     $.ajax({
+//             type: 'post',
+//             url: '/start/new/game',
+//             data: {"game_id": game_id.toString()},
+//             success: function (data) {
+//                 $('#game_id').html(game_id);
+//
+//                 $('.gamecell').html('');
+//                 $('.gamecell').attr('chess', 'null');
+//
+//                 $('.gamecell grey').html('');
+//                 $('.gamecell grey').attr('chess', 'null');
+//
+//                 var jsonData = JSON.parse(data);
+//                 for (var i = 0; i < jsonData.boardValue.length; i++) {
+//                     var piece = jsonData.boardValue[i];
+//                     $('#' + piece.location).html(main.variables.pieces[piece.pieceName].img);
+//                     $('#' + piece.location).attr('chess', piece.pieceName);
+//                 }
+//
+//                 $('#turn').html("It's White Turn!");
+//             },
+//             error: function (xhr, status, error) {
+//                 alert(error.toString());
+//             },
+//         }
+//     );
+// }
 
 
 function convertPiece(pieceName) {
@@ -241,6 +241,38 @@ function postEndGame() {
             alert(error.toString());
         },
         success: function (data) {
+        }
+    });
+}
+
+/////
+
+function postNewGame() {
+    $.ajax({
+        type: 'post',
+        url: '/api/game',
+        dataType: 'text',
+        error: function (xhr, status, error) {
+            alert(error.toString());
+        },
+        success: function (data) {
+            $('#game_id').html(game_id);
+
+            $('.gamecell').html('');
+            $('.gamecell').attr('chess', 'null');
+
+            $('.gamecell grey').html('');
+            $('.gamecell grey').attr('chess', 'null');
+
+            var jsonData = JSON.parse(data);
+
+            for (var i = 0; i < jsonData.boardDto.boardValue.length; i++) {
+                var piece = jsonData.boardDto.boardValue[i];
+                $('#' + piece.location).html(main.variables.pieces[piece.pieceName].img);
+                $('#' + piece.location).attr('chess', piece.pieceName);
+            }
+
+            $('#turn').html("It's White Turn!");
         }
     });
 }

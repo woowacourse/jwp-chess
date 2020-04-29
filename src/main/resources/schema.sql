@@ -1,16 +1,16 @@
-create table if NOT EXISTS game (
-    id bigint not null auto_increment,
-    uuid varchar(36) not null,
-    name varchar(255) not null,
-    can_continue tinyint(1) not null,
-    primary key(id)
+CREATE TABLE IF NOT EXISTS game (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(36) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    can_continue BOOL NOT NULL,
+    PRIMARY KEY(id)
 );
 
-create table if NOT EXISTS history (
-    id bigint not null auto_increment,
-    start varchar(2) not null,
-    end varchar(2) not null,
-    game_id bigint not null,
-    primary key(id),
-    foreign key(game_id) references game(id)
+CREATE TABLE IF NOT EXISTS history (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    start VARCHAR(2) NOT NULL,
+    end VARCHAR(2) NOT NULL,
+    game_id BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (game_id) REFERENCES game(id)
 );

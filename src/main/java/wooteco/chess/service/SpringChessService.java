@@ -1,17 +1,7 @@
 package wooteco.chess.service;
 
-import static java.util.stream.Collectors.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-
-import com.google.common.collect.Lists;
 import wooteco.chess.domain.Game;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Side;
@@ -26,6 +16,14 @@ import wooteco.chess.repository.GameRepository;
 import wooteco.chess.repository.MoveRepository;
 import wooteco.chess.repository.PlayerRepository;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+
 @Primary
 @Service
 public class SpringChessService implements ChessService {
@@ -35,7 +33,7 @@ public class SpringChessService implements ChessService {
     private final PlayerRepository playerRepository;
 
     public SpringChessService(GameRepository gameRepository, MoveRepository moveRepository,
-        PlayerRepository playerRepository) {
+                              PlayerRepository playerRepository) {
         this.gameRepository = gameRepository;
         this.moveRepository = moveRepository;
         this.playerRepository = playerRepository;
@@ -44,8 +42,8 @@ public class SpringChessService implements ChessService {
     @Override
     public Map<String, GameResponseDto> getGames() {
         return generateGames()
-            .stream()
-            .collect(toMap(Game::getId, GameResponseDto::new));
+                .stream()
+                .collect(toMap(Game::getId, GameResponseDto::new));
     }
 
     @Override
@@ -60,7 +58,7 @@ public class SpringChessService implements ChessService {
     @Override
     public Game findGameById(final String id) {
         GameEntity gameEntity = gameRepository.findById(id)
-            .orElseThrow(() -> new GameNotFoundException(id));
+                .orElseThrow(() -> new GameNotFoundException(id));
         Player white = findPlayerById(gameEntity.getWhiteId());
         Player black = findPlayerById(gameEntity.getBlackId());
         Game game = gameEntity.toModel(white, black);
@@ -69,14 +67,14 @@ public class SpringChessService implements ChessService {
 
     private Game movesRecoveredGame(final String id, final Game game) {
         moveRepository.findAllByGameId(id)
-            .forEach(move -> game.move(move.getStart(), move.getEnd()));
+                .forEach(move -> game.move(move.getStart(), move.getEnd()));
         return game;
     }
 
     private Player findPlayerById(final int id) {
         return playerRepository.findById(id)
-            .orElseThrow(() -> new PlayerNotFoundException(id))
-            .toModel();
+                .orElseThrow(() -> new PlayerNotFoundException(id))
+                .toModel();
     }
 
     @Override
@@ -106,22 +104,21 @@ public class SpringChessService implements ChessService {
     }
 
     private List<Game> generateGames() {
-        List<GameEntity> games = Lists.newArrayList(gameRepository.findAll());
-        return games.stream()
-            .map(gameEntity -> gameEntity.toModel(
-                findPlayerById(gameEntity.getWhiteId()),
-                findPlayerById(gameEntity.getBlackId()))
-            )
-            .collect(toList());
+        return gameRepository.findAll()
+                .stream()
+                .map(gameEntity -> gameEntity.toModel(
+                        findPlayerById(gameEntity.getWhiteId()),
+                        findPlayerById(gameEntity.getBlackId()))
+                )
+                .collect(toList());
     }
 
     @Override
     public Map<String, Map<Side, Double>> getScoreContexts() {
-        List<GameEntity> games = new ArrayList<>();
-        gameRepository.findAll().forEach(games::add);
-        return games.stream()
-            .map(GameEntity::getId)
-            .collect(toMap(Function.identity(), this::getScoresById));
+        return gameRepository.findAll()
+                .stream()
+                .map(GameEntity::getId)
+                .collect(toMap(Function.identity(), this::getScoresById));
     }
 
     @Override

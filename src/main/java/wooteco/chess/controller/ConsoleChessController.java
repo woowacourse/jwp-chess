@@ -10,11 +10,11 @@ import wooteco.chess.domain.chessGame.ChessCommand;
 import wooteco.chess.domain.chessGame.ChessGame;
 import wooteco.chess.util.ChessBoardRenderer;
 
-public class ChessController {
+public class ConsoleChessController {
 
 	private final ChessGame chessGame;
 
-	public ChessController(ChessGame chessGame) {
+	public ConsoleChessController(ChessGame chessGame) {
 		Objects.requireNonNull(chessGame, "체스 게임이 null입니다.");
 		this.chessGame = chessGame;
 	}

@@ -20,11 +20,18 @@ article > form {
     text-align: center;
 }
 
-#game__room {
+article.game__start {
+    text-align: center;
+    line-height: 1.6;
+    font-size: 2.5rem;
+}
+
+#game__room__list {
     display: inline-block;
     margin: 0.5rem auto;
     padding: 0.8rem;
-    width: 10rem;
+    width: 12rem;
+    height: 3rem;
     text-align: center;
     font-size: 2rem;
     border: 3px solid #333;
@@ -35,7 +42,23 @@ article > form {
     cursor: pointer;
 }
 
-.game__room::placeholder {
+#game__room__new {
+    display: inline-block;
+    margin: 0.5rem auto;
+    padding: 0.8rem;
+    width: 12rem;
+    height: 3rem;
+    text-align: center;
+    font-size: 2rem;
+    border: 3px solid #333;
+    background-color: #777;
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#game__room__new::placeholder {
     color: #999;
 }
 
@@ -52,6 +75,7 @@ article > form {
     border-radius: 10px;
     text-decoration: none;
     cursor: pointer;
+    vertical-align: middle;
 }
 
 #start__button:hover {

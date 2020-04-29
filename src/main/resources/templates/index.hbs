@@ -10,19 +10,19 @@
 <header>
     <h1>Chess Game</h1>
 </header>
-<article>
+<article class="game__start">
     <form action="/game" method="POST">
-        게임 찾기:&nbsp;
-        <select id="game__room" name="name">
-            {{#each gameNames}}
-                <option value="{{this}}">{{this}}</option>
-            {{/each}}
+        게임 찾기 :&nbsp;
+        <select id="game__room__list" name="name">
+            {{#games}}
+                <option value="{{name}}">{{name}}{{#state}}&nbsp;(종료){{/state}}</option>
+            {{/games}}
         </select>
         <input id="start__button" type="submit" value="게임 시작"/>
     </form>
     <form action="/game/new" method="POST">
-        새로운 게임:&nbsp;
-        <input id="game__room" name="name" placeholder="게임방 이름" type="text"/>
+        새로운 게임 :&nbsp;
+        <input id="game__room__new" name="name" placeholder="게임방 이름" type="text"/>
         <input id="start__button" type="submit" value="게임 시작"/>
     </form>
 

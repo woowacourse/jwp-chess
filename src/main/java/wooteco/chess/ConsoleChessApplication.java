@@ -2,7 +2,7 @@ package wooteco.chess;
 
 import java.util.List;
 
-import wooteco.chess.controller.ChessController;
+import wooteco.chess.controller.ConsoleChessController;
 import wooteco.chess.domain.chessBoard.ChessBoard;
 import wooteco.chess.domain.chessBoard.ChessBoardInitializer;
 import wooteco.chess.domain.chessGame.ChessCommand;
@@ -16,11 +16,11 @@ public class ConsoleChessApplication {
 	public static void main(String[] args) {
 		ChessBoard chessBoard = new ChessBoard(ChessBoardInitializer.create());
 		ChessGame chessGame = ChessGame.from(chessBoard);
-		ChessController chessController = new ChessController(chessGame);
+		ConsoleChessController consoleChessController = new ConsoleChessController(chessGame);
 
 		ConsoleOutputView.printChessStart();
 		if (isStartChessCommand()) {
-			chessController.run();
+			consoleChessController.run();
 		}
 		ConsoleOutputView.printChessEnd();
 	}

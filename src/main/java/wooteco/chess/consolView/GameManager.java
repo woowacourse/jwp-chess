@@ -10,6 +10,7 @@ public class GameManager {
     public static final int SOURCE_INDEX = 1;
     public static final int TARGET_INDEX = 2;
     public static final String DELIMITER = " ";
+
     private Chess chess;
     private boolean isNotEnd;
 
@@ -25,21 +26,20 @@ public class GameManager {
     }
 
     public void action() {
-        String input = InputView.inputCommand();
-        Command command = Command.findBy(input);
-        if (command == Command.START) {
+        String command = InputView.inputCommand();
+        if (Command.isStart(command)) {
             start();
         }
-        if (command == Command.END) {
+        if (Command.isEnd(command)) {
             end();
         }
         if (Objects.isNull(chess)) {
             return;
         }
-        if (command == Command.MOVE) {
-            move(input);
+        if (Command.isMove(command)) {
+            move(command);
         }
-        if (command == Command.STATUS) {
+        if (Command.isStatus(command)) {
             status();
         }
         OutputView.showChessBoard(this.chess.getChessBoard());

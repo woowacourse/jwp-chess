@@ -5,41 +5,53 @@ import wooteco.chess.domain.coordinate.Coordinate;
 import java.util.Objects;
 
 public class MoveDto {
-    public static final int DEFAULT_MOVE_ID = -1;
-    private int moveId;
-    private int roomId;
+    public static final Long DEFAULT_MOVE_ID = -1L;
+    private Long moveId;
+    private Long roomId;
     private Coordinate source;
     private Coordinate target;
 
-    public MoveDto(int moveId, int roomId, Coordinate source, Coordinate target) {
+    public MoveDto(Long moveId, Long roomId, Coordinate source, Coordinate target) {
         this.moveId = moveId;
         this.roomId = roomId;
         this.source = source;
         this.target = target;
     }
 
-    public MoveDto(int roomId, Coordinate source, Coordinate target) {
+    public MoveDto(Long roomId, Coordinate source, Coordinate target) {
         this(DEFAULT_MOVE_ID, roomId, source, target);
     }
 
-    public int getMoveId() {
+    public Long getMoveId() {
         return moveId;
     }
 
-    public void setMoveId(int moveId) {
+    public void setMoveId(Long moveId) {
         this.moveId = moveId;
+    }
+
+    public Long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
     }
 
     public Coordinate getSource() {
         return source;
     }
 
-    public int getRoomId() {
-        return roomId;
+    public void setSource(Coordinate source) {
+        this.source = source;
     }
 
     public Coordinate getTarget() {
         return target;
+    }
+
+    public void setTarget(Coordinate target) {
+        this.target = target;
     }
 
     @Override

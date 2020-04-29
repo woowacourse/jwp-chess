@@ -59,10 +59,7 @@ public class ChessBoard implements Publishable {
         }
 
         Directions directions = sourceTile.findPath(targetTile);
-        if (directions.hasObstacle(source, chessBoard::get)) {
-            return false;
-        }
-        return true;
+        return !directions.hasObstacle(source, chessBoard::get);
     }
 
     public List<String> getMovableWay(Coordinate sourceCoordinate) {

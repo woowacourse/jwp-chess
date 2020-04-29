@@ -37,7 +37,7 @@ public class SpringController {
 
 	@PostMapping("/join")
 	public ModelAndView joinRoom(
-			@RequestParam(value = "name") String name) throws SQLException {
+			@RequestParam String name) throws SQLException {
 		ModelAndView modelAndView = new ModelAndView("chess");
 		ChessGameDto chessGameDto = chessGameService.load(name);
 		modelAndView.addObject("chessGame", chessGameDto);
@@ -46,7 +46,7 @@ public class SpringController {
 
 	@PostMapping("/create")
 	public ModelAndView createRoom(
-			@RequestParam(value = "name") String name) throws SQLException {
+			@RequestParam String name) throws SQLException {
 		ModelAndView modelAndView = new ModelAndView("chess");
 		ChessGameDto chessGameDto = chessGameService.create(name);
 		modelAndView.addObject("chessGame", chessGameDto);
@@ -65,7 +65,7 @@ public class SpringController {
 
 	@PostMapping("/restart")
 	public ModelAndView restart(
-			@RequestParam(value = "name") String name) throws SQLException {
+			@RequestParam String name) throws SQLException {
 		ModelAndView modelAndView = new ModelAndView("chess");
 		ChessGameDto chessGameDto = chessGameService.restart(name);
 		modelAndView.addObject("chessGame", chessGameDto);

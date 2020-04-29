@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import wooteco.chess.dao.RoomDao;
@@ -21,7 +20,6 @@ import wooteco.chess.dto.RoomDto;
 public class ChessGameService {
 	private final RoomDao roomDao;
 
-	@Autowired
 	public ChessGameService(RoomDao roomDao) {
 		this.roomDao = roomDao;
 	}

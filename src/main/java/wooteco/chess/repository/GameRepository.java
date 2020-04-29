@@ -5,5 +5,5 @@ import wooteco.chess.repository.entity.GameEntity;
 
 import java.util.UUID;
 
-public interface GameRepository extends CrudRepository<GameEntity, UUID> {
+public interface GameRepository extends CrudRepository<GameEntity, Long> {
 }

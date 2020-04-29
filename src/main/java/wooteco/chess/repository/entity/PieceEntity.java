@@ -3,10 +3,11 @@ package wooteco.chess.repository.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Table("piece")
-public class PieceEntity {
+public class PieceEntity implements Serializable {
     private String name;
     private String color;
     private String position;

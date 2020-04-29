@@ -3,17 +3,14 @@ package wooteco.chess.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import wooteco.chess.domain.Color;
 import wooteco.chess.dto.GameRequestDto;
 import wooteco.chess.dto.GameResponseDto;
 import wooteco.chess.dto.GameStatusDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.service.SpringGameService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/game")
@@ -47,7 +44,7 @@ public class SpringGameController {
     }
 
     @GetMapping("/load")
-    public GameResponseDto load(@RequestParam UUID roomId) throws SQLException {
+    public GameResponseDto load(@RequestParam Long roomId) throws SQLException {
         return gameService.findAllPieces(roomId);
     }
 

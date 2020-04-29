@@ -1,20 +1,18 @@
 package wooteco.chess.dto;
 
-import java.util.UUID;
-
 public class MoveRequestDto {
 
-    private UUID id;
+    private Long id;
     private String sourcePosition;
     private String targetPosition;
 
-    public MoveRequestDto(final UUID id, final String sourcePosition, final String targetPosition) {
+    public MoveRequestDto(final Long id, final String sourcePosition, final String targetPosition) {
         this.id = id;
         this.sourcePosition = sourcePosition;
         this.targetPosition = targetPosition;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 

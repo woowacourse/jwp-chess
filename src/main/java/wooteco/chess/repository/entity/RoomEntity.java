@@ -1,20 +1,14 @@
 package wooteco.chess.repository.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-import wooteco.chess.domain.Color;
-
-import javax.annotation.Generated;
-import java.util.Set;
-import java.util.UUID;
 
 @Table("room")
 public class RoomEntity {
 
     @Id
-    private UUID id;
+    private Long id;
     private String name;
     private String password;
     @Column(value = "room")
@@ -26,7 +20,7 @@ public class RoomEntity {
         this.game = game;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 

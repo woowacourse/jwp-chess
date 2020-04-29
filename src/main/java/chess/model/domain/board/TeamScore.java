@@ -1,9 +1,9 @@
 package chess.model.domain.board;
 
+import chess.dto.GameResultDto;
 import chess.model.domain.piece.King;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Team;
-import chess.model.dto.GameResultDto;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;

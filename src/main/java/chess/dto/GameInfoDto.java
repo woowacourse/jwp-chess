@@ -1,4 +1,4 @@
-package chess.model.dto;
+package chess.dto;
 
 import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.Team;

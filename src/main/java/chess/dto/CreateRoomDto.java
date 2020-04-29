@@ -1,4 +1,4 @@
-package chess.model.dto;
+package chess.dto;
 
 public class CreateRoomDto {
 
@@ -6,7 +6,6 @@ public class CreateRoomDto {
     private String roomPassword;
 
     protected CreateRoomDto() {
-
     }
 
     public CreateRoomDto(String roomName, String roomPassword) {

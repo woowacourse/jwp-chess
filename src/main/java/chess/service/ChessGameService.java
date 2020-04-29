@@ -1,5 +1,11 @@
 package chess.service;
 
+import chess.dto.ChessGameDto;
+import chess.dto.GameInfoDto;
+import chess.dto.MoveDto;
+import chess.dto.PathDto;
+import chess.dto.PromotionTypeDto;
+import chess.dto.SourceDto;
 import chess.model.domain.board.CastlingElement;
 import chess.model.domain.board.CastlingSetting;
 import chess.model.domain.board.ChessBoard;
@@ -13,12 +19,6 @@ import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
-import chess.model.dto.ChessGameDto;
-import chess.model.dto.GameInfoDto;
-import chess.model.dto.MoveDto;
-import chess.model.dto.PathDto;
-import chess.model.dto.PromotionTypeDto;
-import chess.model.dto.SourceDto;
 import chess.model.repository.BoardEntity;
 import chess.model.repository.BoardRepository;
 import chess.model.repository.ChessGameEntity;
@@ -130,7 +130,9 @@ public class ChessGameService {
             chessGameEntity.clearBoard();
             saveBoard(chessGame, chessGameEntity);
         }
-        return new ChessGameDto(chessGame, moveState, chessGame.deriveTeamScore(), userNames);
+        return new ChessGameDto(userNames)
+            .chessGame(chessGame)
+            .moveState(moveState);
     }
 
     private GameInfoDto getGameInfo(ChessGameEntity chessGameEntity) {
@@ -177,8 +179,8 @@ public class ChessGameService {
         ChessGameEntity chessGameEntity = chessGameRepository.findById(gameId)
             .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
         GameInfoDto gameInfo = getGameInfo(chessGameEntity);
-        return new ChessGameDto(combineChessGame(gameId, gameInfo.getTurn()),
-            gameInfo.getUserNames());
+        return new ChessGameDto(gameInfo.getUserNames())
+            .chessGame(combineChessGame(gameId, gameInfo.getTurn()));
     }
 
     private ChessGame combineChessGame(Integer gameId, Team turn) {
@@ -233,8 +235,9 @@ public class ChessGameService {
             saveBoard(chessGame, chessGameEntity);
         }
 
-        return new ChessGameDto(chessGame, moveState, chessGame.deriveTeamScore(),
-            gameInfo.getUserNames());
+        return new ChessGameDto(gameInfo.getUserNames())
+            .chessGame(chessGame)
+            .moveState(moveState);
     }
 
     public PathDto findPath(SourceDto sourceDto) {

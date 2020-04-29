@@ -1,4 +1,4 @@
-package chess.model.dto;
+package chess.dto;
 
 import java.util.Objects;
 
@@ -35,9 +35,9 @@ public class GameResultDto {
             return false;
         }
         GameResultDto that = (GameResultDto) o;
-        return winCount == that.winCount &&
-            drawCount == that.drawCount &&
-            loseCount == that.loseCount;
+        return Objects.equals(winCount, that.winCount) &&
+            Objects.equals(drawCount, that.drawCount) &&
+            Objects.equals(loseCount, that.loseCount);
     }
 
     @Override

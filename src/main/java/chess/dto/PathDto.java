@@ -1,4 +1,4 @@
-package chess.model.dto;
+package chess.dto;
 
 import chess.model.domain.board.Square;
 import java.util.Set;

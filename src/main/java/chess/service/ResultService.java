@@ -1,12 +1,12 @@
 package chess.service;
 
+import chess.dto.ChessGameDto;
+import chess.dto.GameResultDto;
+import chess.dto.UserNameDto;
+import chess.dto.UserNamesDto;
 import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.Team;
 import chess.model.domain.state.MoveState;
-import chess.model.dto.ChessGameDto;
-import chess.model.dto.GameResultDto;
-import chess.model.dto.UserNameDto;
-import chess.model.dto.UserNamesDto;
 import chess.model.repository.ChessGameEntity;
 import chess.model.repository.ResultEntity;
 import chess.model.repository.ResultRepository;

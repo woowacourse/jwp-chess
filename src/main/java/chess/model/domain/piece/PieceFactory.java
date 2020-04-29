@@ -48,6 +48,10 @@ public enum PieceFactory {
             .orElseThrow(IllegalArgumentException::new);
     }
 
+    public boolean isSame(Piece piece) {
+        return this.piece == piece;
+    }
+
     public Piece getPiece() {
         return piece;
     }

@@ -1,16 +1,16 @@
 package chess.controller;
 
-import chess.model.dto.ChessGameDto;
-import chess.model.dto.CreateRoomDto;
-import chess.model.dto.DeleteRoomDto;
-import chess.model.dto.GameResultDto;
-import chess.model.dto.MoveDto;
-import chess.model.dto.PathDto;
-import chess.model.dto.PromotionTypeDto;
-import chess.model.dto.RoomsDto;
-import chess.model.dto.SourceDto;
-import chess.model.dto.UserNameDto;
-import chess.model.dto.UserNamesDto;
+import chess.dto.ChessGameDto;
+import chess.dto.CreateRoomDto;
+import chess.dto.DeleteRoomDto;
+import chess.dto.GameResultDto;
+import chess.dto.MoveDto;
+import chess.dto.PathDto;
+import chess.dto.PromotionTypeDto;
+import chess.dto.RoomsDto;
+import chess.dto.SourceDto;
+import chess.dto.UserNameDto;
+import chess.dto.UserNamesDto;
 import chess.model.repository.ChessGameEntity;
 import chess.service.ChessGameService;
 import chess.service.ResultService;
@@ -93,7 +93,8 @@ public class ApiWebController {
 
         ChessGameEntity chessGameEntity = chessGameService.closeGame(gameId);
         resultService.setGameResult(chessGameEntity);
-        return new ChessGameDto(chessGameEntity.makeTeamScore(), chessGameEntity.makeUserNames());
+        return new ChessGameDto(chessGameEntity.makeUserNames())
+            .teamScore(chessGameEntity.makeTeamScore());
     }
 
     @GetMapping("/result/viewUsers")

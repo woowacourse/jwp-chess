@@ -1,4 +1,4 @@
-package chess.model.dto;
+package chess.dto;
 
 public class MoveDto {
 

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Service;
 
+import wooteco.chess.db.ConnectionLoader;
 import wooteco.chess.db.dao.BoardDao;
 import wooteco.chess.db.dao.PlayerDao;
 import wooteco.chess.db.dao.RoomDao;
@@ -68,7 +69,7 @@ public class SparkBoardService {
 	}
 
 	public int createRoom(int player1Id, int player2Id) throws SQLException {
-		RoomDao roomDao = new RoomDao();
+		RoomDao roomDao = new RoomDao(new ConnectionLoader());
 		return roomDao.create(player1Id, player2Id);
 	}
 }

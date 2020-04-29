@@ -33,6 +33,6 @@ class PlayerRepositoryTest {
 		PlayerEntity actual = playerRepository.save(playerEntity);
 
 		Optional<PlayerEntity> findPlayer = playerRepository.findById(actual.getId());
-		assertThat(findPlayer.get().getTeam()).isEqualTo("black");
+		assertThat(findPlayer.get().getTeam()).isEqualTo("BLACK");
 	}
 }

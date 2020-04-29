@@ -11,7 +11,8 @@ import wooteco.chess.domain.piece.PieceRule;
 import wooteco.chess.domain.piece.Team;
 
 public class Pieces {
-    public static final int BOTH_TEAM_KING_NUMBER = 2;
+    private static final int BOTH_TEAM_KING_NUMBER = 2;
+
     private final Map<Position, Piece> pieces;
 
     public Pieces(Map<Position, Piece> pieces) {

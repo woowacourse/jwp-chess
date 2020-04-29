@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import wooteco.chess.domain.Board;
 import wooteco.chess.domain.Pieces;
 import wooteco.chess.domain.Position;
@@ -11,10 +13,15 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceRule;
 import wooteco.chess.exception.DataAccessException;
 
+@Component
 public class BoardDao {
     private static final int FIRST_INDEX = 0;
 
-    private JdbcTemplate template = new JdbcTemplate();
+    private JDBCTemplate template;
+
+    public BoardDao(JDBCTemplate template) {
+        this.template = template;
+    }
 
     public Pieces findByRoomId(int roomId) {
         try {

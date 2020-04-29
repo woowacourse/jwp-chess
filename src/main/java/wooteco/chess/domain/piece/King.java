@@ -7,9 +7,11 @@ import wooteco.chess.domain.Direction;
 import wooteco.chess.domain.Position;
 import wooteco.chess.exception.IllegalMoveException;
 
+import static wooteco.chess.domain.Direction.*;
+
 public class King extends Piece {
-    private static List<Direction> possibleDirections = Arrays.asList(Direction.NORTH, Direction.EAST, Direction.WEST,
-        Direction.SOUTH, Direction.NORTHEAST, Direction.NORTHWEST, Direction.SOUTHEAST, Direction.SOUTHWEST);
+    private static List<Direction> possibleDirections = Arrays.asList(NORTH, EAST, WEST,
+        SOUTH, NE, NW, SE, SW);
 
     public King(Position position, Team team) {
         super(position, team);

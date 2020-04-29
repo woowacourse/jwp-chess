@@ -4,14 +4,17 @@ import static spark.Spark.*;
 
 import wooteco.chess.controller.WebUIChessController;
 import wooteco.chess.dao.BoardDao;
+import wooteco.chess.dao.ConnectionManager;
+import wooteco.chess.dao.JDBCTemplate;
 import wooteco.chess.dao.RoomDao;
 import wooteco.chess.service.ChessService;
 
 public class WebUIChessApplication {
-    private static ChessService service = new ChessService(new BoardDao(), new RoomDao());
-    private static WebUIChessController controller = new WebUIChessController(service);
-
     public static void main(String[] args) {
+        JDBCTemplate jdbcTemplate = new JDBCTemplate(new ConnectionManager());
+        ChessService service = new ChessService(new BoardDao(jdbcTemplate), new RoomDao(jdbcTemplate));
+        WebUIChessController controller = new WebUIChessController(service);
+
         staticFileLocation("/public");
 
         get("/new", controller.getNewChessGameRoute());

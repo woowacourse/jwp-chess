@@ -1,5 +1,6 @@
 package wooteco.chess.repository;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.relational.core.conversion.AggregateChange;
@@ -12,7 +13,9 @@ import wooteco.chess.entity.GameEntity;
 public class RandomUUIDProvider implements BeforeSaveCallback<GameEntity> {
     @Override
     public GameEntity onBeforeSave(final GameEntity aggregate, final AggregateChange<GameEntity> aggregateChange) {
-        aggregate.setId(UUID.randomUUID().toString());
+        if (Objects.isNull(aggregate.getId())) {
+            aggregate.setId(UUID.randomUUID().toString());
+        }
         return aggregate;
     }
 }

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.InvalidTurnException;
+import wooteco.chess.domain.entity.GamePiece;
 import wooteco.chess.domain.piece.position.Direction;
 import wooteco.chess.domain.piece.position.InvalidPositionException;
 import wooteco.chess.domain.piece.position.Position;
@@ -90,6 +91,10 @@ public abstract class Piece {
 
 	public int getRankIndex() {
 		return position.getRankIndex();
+	}
+
+	public GamePiece toEntity() {
+		return new GamePiece(getSymbol(), position.getName(), team.getName());
 	}
 
 	protected abstract void validateDirection(Direction direction);

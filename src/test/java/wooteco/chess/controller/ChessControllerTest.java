@@ -6,12 +6,11 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Objects;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +27,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
-import wooteco.chess.dao.GameDao;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.dto.MoveResponseDto;
+import wooteco.chess.repository.GameRepository;
+import wooteco.chess.repository.PieceRepository;
 import wooteco.chess.service.ChessService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -39,7 +39,10 @@ class ChessControllerTest {
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	@Autowired
-	private GameDao gameDao;
+	private GameRepository gameRepository;
+
+	@Autowired
+	private PieceRepository pieceRepository;
 
 	@Autowired
 	private ChessService chessService;
@@ -58,6 +61,12 @@ class ChessControllerTest {
 			.addFilter(new CharacterEncodingFilter("UTF-8", true))
 			.build();
 		RestAssured.port = port;
+	}
+
+	@AfterEach
+	void tearDown() {
+		pieceRepository.deleteAll();
+		gameRepository.deleteAll();
 	}
 
 	@Test

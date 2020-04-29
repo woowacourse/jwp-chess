@@ -1,6 +1,6 @@
 package wooteco.chess.domain.board;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class RankTest {
 
 	@DisplayName("각 라인마다 왕이 몇 개 존재하는지 검사")
 	@ParameterizedTest
-	@CsvSource({"0,1","1,0","2,0","3,0","4,0","5,0","6,0","7,1"})
+	@CsvSource({"0,1", "1,0", "2,0", "3,0", "4,0", "5,0", "6,0", "7,1"})
 	void countOfKing_GivenRank_ReturnCountOfKing(int rankIndex, int expected) {
 		assertThat(ranks.get(rankIndex).countOfKing()).isEqualTo(expected);
 	}

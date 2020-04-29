@@ -41,4 +41,8 @@ public class MoveCommand {
 	public Position getTargetPosition() {
 		return positions.get(TARGET_POSITION);
 	}
+
+	public String getTargetPoistionName(){
+		return getTargetPosition().getName();
+	}
 }

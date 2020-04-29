@@ -3,8 +3,10 @@ package wooteco.chess.domain.board;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import wooteco.chess.domain.command.MoveCommand;
+import wooteco.chess.domain.entity.GamePiece;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.position.InvalidPositionException;
 import wooteco.chess.domain.piece.position.Position;
@@ -48,6 +50,17 @@ public class ChessGame {
 		return board.isKingAlive();
 	}
 
+	public Piece findPieceByPosition(Position position) {
+		return board.findPiece(position)
+			.orElseThrow(IllegalArgumentException::new);
+	}
+
+	public List<GamePiece> toPieceEntity() {
+		return getPieces().stream()
+			.map(Piece::toEntity)
+			.collect(Collectors.toList());
+	}
+
 	public Board getBoard() {
 		return board;
 	}
@@ -71,8 +84,7 @@ public class ChessGame {
 		return turn;
 	}
 
-	public Piece findPieceByPosition(Position position) {
-		return board.findPiece(position)
-			.orElseThrow(IllegalArgumentException::new);
+	public String getTurnName(){
+		return turn.getName();
 	}
 }

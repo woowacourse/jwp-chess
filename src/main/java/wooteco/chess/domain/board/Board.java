@@ -1,6 +1,5 @@
 package wooteco.chess.domain.board;
 
-import org.springframework.data.relational.core.mapping.MappedCollection;
 import wooteco.chess.domain.piece.PieceState;
 import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.piece.implementation.piece.King;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 public class Board {
 
     private static final int RUNNING_KING_COUNT = 2;
-    @MappedCollection(idColumn = "game_id", keyColumn = "")
     private Map<Position, PieceState> board;
 
     private Board(Map<Position, PieceState> board) {

@@ -1,8 +1,5 @@
 package wooteco.chess.domain.game;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 import wooteco.chess.domain.MoveParameter;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.PieceState;
@@ -15,13 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Table("chess_game")
 public class ChessGame {
 
-    @Id
     private Long id;
     private Board board;
-    @Column("team")
     private Team turn;
 
     private ChessGame(final Board board, final Team turn) {

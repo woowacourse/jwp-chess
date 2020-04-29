@@ -1,8 +1,5 @@
 package wooteco.chess.domain.player;
 
-import org.springframework.data.relational.core.mapping.Table;
-
-@Table("team_table")
 public enum Team {
 
     WHITE,

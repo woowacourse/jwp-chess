@@ -1,6 +1,5 @@
 package wooteco.chess.domain.position;
 
-import org.springframework.data.annotation.Id;
 import wooteco.chess.domain.direction.MovingDirection;
 
 import java.util.HashMap;
@@ -11,22 +10,17 @@ public class Position {
     private static final Map<String, Position> matcher = new HashMap<>();
 
     static {
-        Long id = 1L;
         for (File file : File.values()) {
             for (Rank rank : Rank.values()) {
-                matcher.put(key(file, rank), new Position(id, file, rank));
-                id++;
+                matcher.put(key(file, rank), new Position(file, rank));
             }
         }
     }
 
-    @Id
-    private Long id;
     private final File file;
     private final Rank rank;
 
-    private Position(final Long id, final File file, final Rank rank) {
-        this.id = id;
+    private Position(final File file, final Rank rank) {
         this.file = file;
         this.rank = rank;
     }

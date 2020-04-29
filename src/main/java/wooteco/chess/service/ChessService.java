@@ -9,7 +9,8 @@ import wooteco.chess.domain.board.initializer.AutomatedBoardInitializer;
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.repository.ChessGameRepository;
+import wooteco.chess.repository.ChessGameTable;
+import wooteco.chess.repository.ChessGameTableRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,25 +21,22 @@ import java.util.Optional;
 public class ChessService {
 
     private ChessDAO chessDAO;
-    private ChessGameRepository chessGameRepository;
+    private ChessGameTableRepository chessGameRepository;
     private Map<Long, ChessGame> chessGames = new HashMap<>();
 
-    public ChessService(ChessGameRepository chessGameRepository) {
+    public ChessService(ChessGameTableRepository chessGameRepository) {
         this.chessGameRepository = chessGameRepository;
     }
 
     public Long createGame() {
         ChessGame chessGame = ChessGame.of(Board.of(new AutomatedBoardInitializer()), Team.WHITE);
-        chessGameRepository.save(chessGame);
-//        Long id = chessDAO.createChessGame(chessGame);
-//        chessGames.put(id, chessGame);
-        return chessGame.getId();
+        return chessGameRepository.save(ChessGameTable.createForSave(chessGame)).getId();
     }
 
     public void restart(final Long id) {
         ChessGame chessGame = ChessGame.of(Board.of(new AutomatedBoardInitializer()), Team.WHITE);
         chessGames.put(id, chessGame);
-        chessDAO.updateChessGame(id, chessGames.get(id));
+        chessGameRepository.save(ChessGameTable.createForUpdate(chessGame));
     }
 
     public void load(final Long id) {

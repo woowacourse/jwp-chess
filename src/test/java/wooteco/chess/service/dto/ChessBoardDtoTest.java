@@ -16,7 +16,7 @@ import wooteco.chess.domain.position.Position;
 
 class ChessBoardDtoTest {
 
-	private static final String IMAGE_SOURCE_FORMAT = "<img class=\"chessboard\" src=\"./images/%s.png\">";
+	private static final String IMAGE_SOURCE_FORMAT = "<img class=\"chessboard\" src=\"/images/%s.png\">";
 
 	@ParameterizedTest
 	@NullSource

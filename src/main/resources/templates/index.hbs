@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <link href="./style.css" rel="stylesheet"/>
+    <link href="/style.css" rel="stylesheet"/>
     <title>스티치의 체스 게임</title>
 </head>
 <body>
@@ -11,9 +11,22 @@
     <h1>Chess Game</h1>
 </header>
 <article>
-    <form action="/chess" method="get">
+    <form action="/game" method="POST">
+        게임 찾기:&nbsp;
+        <select id="game__room" name="name">
+            {{#each gameNames}}
+                <option value="{{this}}">{{this}}</option>
+            {{/each}}
+        </select>
         <input id="start__button" type="submit" value="게임 시작"/>
     </form>
+    <form action="/game/new" method="POST">
+        새로운 게임:&nbsp;
+        <input id="game__room" name="name" placeholder="게임방 이름" type="text"/>
+        <input id="start__button" type="submit" value="게임 시작"/>
+    </form>
+
+
 </article>
 </body>
 </html>

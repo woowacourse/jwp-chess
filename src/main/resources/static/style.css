@@ -20,6 +20,25 @@ article > form {
     text-align: center;
 }
 
+#game__room {
+    display: inline-block;
+    margin: 0.5rem auto;
+    padding: 0.8rem;
+    width: 10rem;
+    text-align: center;
+    font-size: 2rem;
+    border: 3px solid #333;
+    background-color: #777;
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.game__room::placeholder {
+    color: #999;
+}
+
 #start__button {
     display: inline-block;
     padding: 15px 0;

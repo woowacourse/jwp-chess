@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <link href="./style.css" rel="stylesheet"/>
+    <link href="/style.css" rel="stylesheet"/>
     <title>스티치의 체스 게임</title>
 </head>
 <body>
@@ -100,14 +100,14 @@
 <article class="chess__status">
     <div id="chess__status__area">
         {{#status}}
-        {{pieceColor}}의 점수 : {{score}}
-        <br/>
+            {{pieceColor}}의 점수 : {{score}}
+            <br/>
         {{/status}}
     </div>
 </article>
 <article class="chess_command">
-    <form action="/chess_new" method="POST">
-        <input class="restart__command__submit" type="submit" value="다시시작"/>
+    <form action="/" method="get">
+        <input class="restart__command__submit" type="submit" value="처음으로"/>
     </form>
 </article>
 </body>

@@ -1,18 +1,22 @@
-package wooteco.chess.database;
+package wooteco.chess.repository;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import wooteco.chess.repository.Commands;
-import wooteco.chess.repository.CommandsRepository;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-class SpringCommandsDaoTest {
+@ExtendWith(SpringExtension.class)
+@DataJdbcTest
+@Transactional
+class CommandsRepositoryTest {
     @Autowired
     CommandsRepository commandsRepository;
 

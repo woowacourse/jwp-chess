@@ -36,7 +36,7 @@ public class ChessService {
     public void playLastGame(Long roomId) {
         List<Commands> commands = commandsRepository.findByRoomId(roomId);
         for (Commands command : commands) {
-            Command.MOVE.apply(chessManager, command.get());
+            Command.MOVE.apply(chessManager, command.getCommand());
         }
     }
 

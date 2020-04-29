@@ -9,8 +9,12 @@ public class ChessRoom {
     @Id
     @Column("RoomID")
     private Long roomId;
+
     @Column("RoomName")
     private String roomName;
+
+    public ChessRoom() {
+    }
 
     public ChessRoom(String roomName) {
         this.roomName = roomName;

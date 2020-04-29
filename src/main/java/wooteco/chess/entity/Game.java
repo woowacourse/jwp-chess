@@ -4,6 +4,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.util.Objects;
+
 @Table("game")
 public class Game {
 	private @Id Long id;
@@ -26,10 +28,10 @@ public class Game {
 		this.canContinue = canContinue;
 	}
 
-	public Game(String gameName, String uuid, Boolean i) {
+	public Game(String gameName, String uuid, Boolean canContinue) {
 		this.name = gameName;
 		this.uuid = uuid;
-		this.canContinue = i;
+		this.canContinue = canContinue;
 	}
 
 	public Long getId() {
@@ -46,5 +48,25 @@ public class Game {
 
 	public Boolean getCanContinue() {
 		return canContinue;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Game game = (Game) o;
+		return Objects.equals(id, game.id) &&
+				Objects.equals(name, game.name) &&
+				Objects.equals(uuid, game.uuid) &&
+				Objects.equals(canContinue, game.canContinue);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, uuid, canContinue);
 	}
 }

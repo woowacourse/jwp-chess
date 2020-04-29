@@ -1,4 +1,4 @@
-package wooteco.chess.dao;
+package wooteco.chess.db.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,14 +7,20 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Component;
 
-import wooteco.chess.dao.util.ConnectionLoader;
+import wooteco.chess.db.ConnectionLoader;
 import wooteco.chess.dto.RoomDto;
 
 @Component
 public class RoomDao {
+	private final ConnectionLoader connectionLoader;
+
+	public RoomDao(ConnectionLoader connectionLoader) {
+		this.connectionLoader = connectionLoader;
+	}
+
 	public RoomDto findById(int roomId) throws SQLException {
 		String query = "select * from room where room_id = (?)";
-		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
+		try (Connection con = connectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setInt(1, roomId);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
@@ -32,7 +38,7 @@ public class RoomDao {
 
 	public int create(int player1Id, int player2Id) throws SQLException {
 		String query = "insert into room(turn, player1_id, player2_id) value (?, ?, ?)";
-		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query,
+		try (Connection con = connectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query,
 			PreparedStatement.RETURN_GENERATED_KEYS)) {
 			pstmt.setInt(1, player1Id);
 			pstmt.setInt(2, player1Id);
@@ -54,7 +60,7 @@ public class RoomDao {
 
 	public void updateTurn(int roomId, int turn) throws SQLException {
 		String query = "update room set turn = (?) where room_id = (?)";
-		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
+		try (Connection con = connectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setInt(1, turn);
 			pstmt.setInt(2, roomId);
 			pstmt.executeUpdate();

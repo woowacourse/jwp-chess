@@ -14,20 +14,24 @@ import spark.Request;
 import spark.Response;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import wooteco.chess.dao.BoardDao;
-import wooteco.chess.dao.PlayerDao;
-import wooteco.chess.dao.RoomDao;
+import wooteco.chess.db.dao.BoardDao;
+import wooteco.chess.db.dao.PlayerDao;
+import wooteco.chess.db.dao.RoomDao;
+import wooteco.chess.db.entity.PlayerEntity;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.GameDto;
-import wooteco.chess.dto.PlayerDto;
 import wooteco.chess.service.spark.SparkBoardService;
 import wooteco.chess.service.spark.SparkPlayerService;
 
 public class SparkController {
 	private final Gson gson = new GsonBuilder().create();
-	private final SparkBoardService sparkBoardService = new SparkBoardService(new BoardDao(), new RoomDao(),
-		new PlayerDao());
-	private final SparkPlayerService sparkPlayerService = new SparkPlayerService(new PlayerDao());
+	private final SparkBoardService sparkBoardService;
+	private final SparkPlayerService sparkPlayerService;
+
+	public SparkController(BoardDao boardDao, RoomDao roomDao, PlayerDao playerDao) {
+		this.sparkBoardService = new SparkBoardService(boardDao, roomDao, playerDao);
+		this.sparkPlayerService = new SparkPlayerService(playerDao);
+	}
 
 	public void route() {
 		Spark.staticFileLocation("/templates");
@@ -54,9 +58,9 @@ public class SparkController {
 		Map<String, String> params = new HashMap<>();
 		params = gson.fromJson(request.body(), params.getClass());
 		int player1Id = sparkPlayerService.save(
-			new PlayerDto(params.get("player1Name"), params.get("player1Password"), "white"));
+			new PlayerEntity(params.get("player1Name"), params.get("player1Password"), "white"));
 		int player2Id = sparkPlayerService.save(
-			new PlayerDto(params.get("player2Name"), params.get("player2Password"), "black"));
+			new PlayerEntity(params.get("player2Name"), params.get("player2Password"), "black"));
 		return sparkBoardService.createRoom(player1Id, player2Id);
 	}
 

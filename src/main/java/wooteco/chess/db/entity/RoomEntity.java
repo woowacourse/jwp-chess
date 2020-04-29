@@ -1,11 +1,11 @@
-package wooteco.chess.dto;
+package wooteco.chess.db.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("room")
-public class RoomDto2 {
+public class RoomEntity {
 	@Id
 	@Column("room_id")
 	private Long id;
@@ -14,7 +14,7 @@ public class RoomDto2 {
 	private final Long player1Id;
 	private final Long player2Id;
 
-	public RoomDto2(Long turnId, Long player1Id, Long player2Id) {
+	public RoomEntity(Long turnId, Long player1Id, Long player2Id) {
 		this.turnId = turnId;
 		this.player1Id = player1Id;
 		this.player2Id = player2Id;

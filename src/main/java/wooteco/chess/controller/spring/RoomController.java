@@ -12,19 +12,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import wooteco.chess.dto.PlayerDto;
+import wooteco.chess.db.entity.PlayerEntity;
 import wooteco.chess.dto.RoomDto;
 import wooteco.chess.dto.req.PlayersDto;
-import wooteco.chess.service.spring.SpringBoardService;
+import wooteco.chess.service.spring.SpringGameService;
 import wooteco.chess.service.spring.SpringPlayerService;
 
 @Controller
 @RequestMapping("/room")
 public class RoomController {
 	private final SpringPlayerService playerService;
-	private final SpringBoardService boardService;
+	private final SpringGameService boardService;
 
-	public RoomController(SpringPlayerService playerService, SpringBoardService boardService) {
+	public RoomController(SpringPlayerService playerService, SpringGameService boardService) {
 		this.playerService = playerService;
 		this.boardService = boardService;
 	}
@@ -39,7 +39,7 @@ public class RoomController {
 	public ResponseEntity<Object> createNewGame(@RequestBody PlayersDto playersDto) {
 		try {
 			long roomId = createRoom(playersDto);
-			boardService.create(roomId);
+			boardService.createBoard(roomId);
 			return ResponseEntity
 				.status(200)
 				.body(new RoomDto(roomId, playersDto.getPlayer1Name(), playersDto.getPlayer2Name()));
@@ -56,9 +56,9 @@ public class RoomController {
 
 	private long createRoom(PlayersDto playersDto) throws SQLException {
 		long player1Id = playerService.save(
-			new PlayerDto(playersDto.getPlayer1Name(), playersDto.getPlayer1Password(), "white"));
+			new PlayerEntity(playersDto.getPlayer1Name(), playersDto.getPlayer1Password(), "white"));
 		long player2Id = playerService.save(
-			new PlayerDto(playersDto.getPlayer2Name(), playersDto.getPlayer2Password(), "black"));
+			new PlayerEntity(playersDto.getPlayer2Name(), playersDto.getPlayer2Password(), "black"));
 		return boardService.createRoom(player1Id, player2Id);
 	}
 }

@@ -2,8 +2,8 @@ package wooteco.chess.service.spring;
 
 import org.springframework.stereotype.Service;
 
-import wooteco.chess.dao.repository.PlayerRepository;
-import wooteco.chess.dto.PlayerDto;
+import wooteco.chess.db.entity.PlayerEntity;
+import wooteco.chess.db.repository.PlayerRepository;
 
 @Service
 public class SpringPlayerService {
@@ -13,7 +13,7 @@ public class SpringPlayerService {
 		this.playerRepository = playerRepository;
 	}
 
-	public long save(PlayerDto playerDto) {
-		return playerRepository.save(playerDto).getId();
+	public long save(PlayerEntity playerEntity) {
+		return playerRepository.save(playerEntity).getId();
 	}
 }

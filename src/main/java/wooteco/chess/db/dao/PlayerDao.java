@@ -1,4 +1,4 @@
-package wooteco.chess.dao;
+package wooteco.chess.db.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,16 +7,21 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Component;
 
-import wooteco.chess.dao.util.ConnectionLoader;
+import wooteco.chess.db.ConnectionLoader;
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.Turn;
 
 @Component
 public class PlayerDao {
+	private final ConnectionLoader connectionLoader;
+
+	public PlayerDao(ConnectionLoader connectionLoader) {
+		this.connectionLoader = connectionLoader;
+	}
 
 	public Turn findTurn(int playerId) throws SQLException {
 		String query = "select * from player where player_id = (?)";
-		try (Connection con = ConnectionLoader.load();
+		try (Connection con = connectionLoader.load();
 			 PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setInt(1, playerId);
 			return getTurn(pstmt);
@@ -35,7 +40,7 @@ public class PlayerDao {
 
 	public int save(String name, String password, String team) throws SQLException {
 		String query = "insert into player(name, password, team) value (?, ?, ?)";
-		try (Connection con = ConnectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query,
+		try (Connection con = connectionLoader.load(); PreparedStatement pstmt = con.prepareStatement(query,
 			PreparedStatement.RETURN_GENERATED_KEYS)) {
 			pstmt.setString(1, name);
 			pstmt.setString(2, password);

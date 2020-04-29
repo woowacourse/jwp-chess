@@ -4,8 +4,8 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Service;
 
-import wooteco.chess.dao.PlayerDao;
-import wooteco.chess.dto.PlayerDto;
+import wooteco.chess.db.dao.PlayerDao;
+import wooteco.chess.db.entity.PlayerEntity;
 
 @Service
 public class SparkPlayerService {
@@ -15,7 +15,7 @@ public class SparkPlayerService {
 		this.playerDao = playerDao;
 	}
 
-	public int save(PlayerDto playerDto) throws SQLException {
-		return playerDao.save(playerDto.getName(), playerDto.getPassword(), playerDto.getTeam());
+	public int save(PlayerEntity playerEntity) throws SQLException {
+		return playerDao.save(playerEntity.getName(), playerEntity.getPassword(), playerEntity.getTeam());
 	}
 }

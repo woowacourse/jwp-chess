@@ -1,9 +1,12 @@
-package wooteco.chess.dao.util;
+package wooteco.chess.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ConnectionLoader {
 	private static final String SERVER = "127.0.0.1:13306";
 	private static final String DB_NAME = "db_name";
@@ -12,7 +15,7 @@ public class ConnectionLoader {
 	private static final String PASSWORD = "root";
 	private static final String DRIVER = "com.mysql.jdbc.Driver";
 
-	public static Connection load() {
+	public Connection load() {
 		Connection con = null;
 		try {
 			Class.forName(DRIVER);

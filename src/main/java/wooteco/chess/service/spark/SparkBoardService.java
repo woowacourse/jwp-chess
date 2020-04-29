@@ -4,9 +4,9 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Service;
 
-import wooteco.chess.dao.BoardDao;
-import wooteco.chess.dao.PlayerDao;
-import wooteco.chess.dao.RoomDao;
+import wooteco.chess.db.dao.BoardDao;
+import wooteco.chess.db.dao.PlayerDao;
+import wooteco.chess.db.dao.RoomDao;
 import wooteco.chess.domain.Board;
 import wooteco.chess.domain.ChessGame;
 import wooteco.chess.domain.Turn;

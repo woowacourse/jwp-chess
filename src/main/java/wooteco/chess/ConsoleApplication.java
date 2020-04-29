@@ -3,7 +3,7 @@ package wooteco.chess;
 import org.springframework.context.annotation.Bean;
 
 import wooteco.chess.controller.ConsoleController;
-import wooteco.chess.dao.util.ConnectionLoader;
+import wooteco.chess.db.ConnectionLoader;
 import wooteco.chess.domain.ChessGame;
 import wooteco.chess.domain.state.Ready;
 

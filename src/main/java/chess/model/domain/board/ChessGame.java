@@ -11,7 +11,6 @@ import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -31,26 +30,13 @@ public class ChessGame {
     private Team turn;
     private EnPassant enPassant;
 
-    public ChessGame() {
-        this(ChessBoard.createInitial(), Team.WHITE, CastlingElement.createInitial(),
-            EnPassant.createEmpty());
-    }
-
-    public ChessGame(ChessBoard chessBoard, Team turn, CastlingElement castlingElements,
+    ChessGame(ChessBoard chessBoard, Team turn, CastlingElement castlingElements,
         EnPassant enPassant) {
         NullChecker.validateNotNull(chessBoard, turn, castlingElements, enPassant);
         this.chessBoard = chessBoard;
         this.turn = turn;
         this.castlingElements = castlingElements;
         this.enPassant = enPassant;
-    }
-
-    public static ChessGame of(ChessGame chessGame) {
-        return new ChessGame(ChessBoard.of(new HashMap<>(chessGame.getChessBoard()))
-            , chessGame.turn
-            , CastlingElement.of(new HashSet<>(chessGame.getCastlingElements()))
-            , EnPassant.of(chessGame.getEnPassants())
-        );
     }
 
     public MoveState move(MoveInfo moveInfo) {

@@ -6,20 +6,14 @@ import chess.dto.MoveDto;
 import chess.dto.PathDto;
 import chess.dto.PromotionTypeDto;
 import chess.dto.SourceDto;
-import chess.model.domain.board.CastlingElement;
-import chess.model.domain.board.CastlingSetting;
-import chess.model.domain.board.ChessBoard;
 import chess.model.domain.board.ChessGame;
-import chess.model.domain.board.EnPassant;
+import chess.model.domain.board.ChessGameFactory;
 import chess.model.domain.board.Square;
 import chess.model.domain.board.TeamScore;
-import chess.model.domain.piece.Piece;
-import chess.model.domain.piece.PieceFactory;
 import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
-import chess.model.repository.BoardEntity;
 import chess.model.repository.BoardRepository;
 import chess.model.repository.ChessGameEntity;
 import chess.model.repository.ChessGameRepository;
@@ -29,10 +23,8 @@ import chess.model.repository.RoomEntity;
 import chess.model.repository.RoomRepository;
 import chess.util.BooleanYNConverter;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,7 +51,7 @@ public class ChessGameService {
     }
 
     public Integer saveNewGameInfo(Map<Team, String> userNames, Integer roomId) {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGameFactory.create();
         ChessGameEntity chessGameEntity = saveGame(userNames, roomId, chessGame);
         chessGameEntity.saveBoard(chessGame);
         chessGameRepository.save(chessGameEntity);
@@ -151,39 +143,7 @@ public class ChessGameService {
     }
 
     private ChessGame combineChessGame(Integer gameId, Team turn) {
-
-        Map<Square, Piece> chessBoard = new HashMap<>();
-        Set<CastlingSetting> castlingElements = new HashSet<>();
-        Map<Square, Square> enPassants = new HashMap<>();
-
-        for (BoardEntity boardEntity : boardRepository.findAllByGameId(gameId)) {
-            combineBoard(chessBoard, boardEntity);
-            combineCastlingElements(castlingElements, boardEntity);
-            combineEnPassants(enPassants, boardEntity);
-        }
-
-        return new ChessGame(ChessBoard.of(chessBoard), turn, CastlingElement.of(castlingElements),
-            EnPassant.of(enPassants));
-    }
-
-    private void combineEnPassants(Map<Square, Square> enPassants, BoardEntity boardEntity) {
-        if (boardEntity.getEnPassantName() != null) {
-            enPassants.put(Square.of(boardEntity.getEnPassantName()),
-                Square.of(boardEntity.getSquareName()));
-        }
-    }
-
-    private void combineCastlingElements(Set<CastlingSetting> castlingElements,
-        BoardEntity boardEntity) {
-        if (boardEntity.getCastlingElementYN().equals("Y")) {
-            castlingElements.add(CastlingSetting.of(Square.of(boardEntity.getSquareName()),
-                PieceFactory.getPiece(boardEntity.getPieceName())));
-        }
-    }
-
-    private void combineBoard(Map<Square, Piece> chessBoard, BoardEntity boardEntity) {
-        chessBoard.put(Square.of(boardEntity.getSquareName()),
-            PieceFactory.getPiece(boardEntity.getPieceName()));
+        return ChessGameFactory.of(turn, boardRepository.findAllByGameId(gameId));
     }
 
     public boolean isGameProceed(Integer gameId) {

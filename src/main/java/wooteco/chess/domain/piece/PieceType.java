@@ -14,9 +14,9 @@ public enum PieceType {
     FIRST_WHITE_PAWN(new PawnMoveStrategy(), Directions.FIRST_WHITE_PAWN_DIRECTION, Team.WHITE, 1),
     FIRST_BLACK_PAWN(new PawnMoveStrategy(), Directions.FIRST_BLACK_PAWN_DIRECTION, Team.BLACK, 1),
     WHITE_PAWN(new PawnMoveStrategy(), Directions.WHITE_PAWN_DIRECTION, Team.WHITE, 1),
-    BLACK_PAWN(new PawnMoveStrategy(), Directions.BLACK_PAWN_DIRECTION,  Team.BLACK, 1),
+    BLACK_PAWN(new PawnMoveStrategy(), Directions.BLACK_PAWN_DIRECTION, Team.BLACK, 1),
 
-    WHITE_KNIGHT(new SingleMoveStrategy(), Directions.KNIGHT_DIRECTION, Team.WHITE,  2.5),
+    WHITE_KNIGHT(new SingleMoveStrategy(), Directions.KNIGHT_DIRECTION, Team.WHITE, 2.5),
     BLACK_KNIGHT(new SingleMoveStrategy(), Directions.KNIGHT_DIRECTION, Team.BLACK, 2.5),
 
     WHITE_KING(new SingleMoveStrategy(), Directions.KING_DIRECTION, Team.WHITE, 0),
@@ -61,8 +61,8 @@ public enum PieceType {
         return team == currentTurn && team != Team.BLANK;
     }
 
-    public boolean isSameTeam(final PieceType pieceType) {
-        return team == pieceType.team;
+    public boolean isNotSameTeam(final Team currentTurn) {
+        return team != currentTurn && team != Team.BLANK;
     }
 
     public boolean isOtherTeam(final PieceType pieceType) {

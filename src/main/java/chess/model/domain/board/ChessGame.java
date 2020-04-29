@@ -33,7 +33,7 @@ public class ChessGame {
 
     public ChessGame() {
         this(ChessBoard.createInitial(), Team.WHITE, CastlingElement.createInitial(),
-            new EnPassant());
+            EnPassant.createEmpty());
     }
 
     public ChessGame(ChessBoard chessBoard, Team turn, CastlingElement castlingElements,
@@ -49,7 +49,7 @@ public class ChessGame {
         return new ChessGame(ChessBoard.of(new HashMap<>(chessGame.getChessBoard()))
             , chessGame.turn
             , CastlingElement.of(new HashSet<>(chessGame.getCastlingElements()))
-            , new EnPassant(new HashMap<>(chessGame.getEnPassants()))
+            , EnPassant.of(chessGame.getEnPassants())
         );
     }
 

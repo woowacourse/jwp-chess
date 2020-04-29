@@ -29,12 +29,16 @@ public class EnPassant {
 
     private Map<Square, Square> enPassantsToAfterSquares;
 
-    public EnPassant() {
-        this(new HashMap<>());
+    private EnPassant(Map<Square, Square> enPassantsToAfterSquares) {
+        this.enPassantsToAfterSquares = enPassantsToAfterSquares;
     }
 
-    public EnPassant(Map<Square, Square> enPassantsToAfterSquares) {
-        this.enPassantsToAfterSquares = enPassantsToAfterSquares;
+    public static EnPassant of(Map<Square, Square> enPassantsToAfterSquares) {
+        return new EnPassant(new HashMap<>(enPassantsToAfterSquares));
+    }
+
+    public static EnPassant createEmpty() {
+        return new EnPassant(new HashMap<>());
     }
 
     public static boolean isPawnMoveTwoRank(Piece piece, MoveInfo moveInfo) {
@@ -117,10 +121,6 @@ public class EnPassant {
 
     private static boolean isMoveTwoRank(MoveInfo moveInfo) {
         return Math.abs(moveInfo.calculateRankDistance()) == 2;
-    }
-
-    public Set<Square> getEnPassantsKeys() {
-        return enPassantsToAfterSquares.keySet();
     }
 
     public Map<Square, Square> getEnPassants() {

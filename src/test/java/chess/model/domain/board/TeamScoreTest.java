@@ -68,7 +68,7 @@ public class TeamScoreTest {
         boardInitial.put(Square.of("a1"), Rook.getInstance(Team.WHITE));
         boardInitial.put(Square.of("h1"), Rook.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
-            CastlingElement.createInitial(), new EnPassant());
+            CastlingElement.createInitial(), EnPassant.createEmpty());
 
         TeamScore teamScore = chessGame.deriveTeamScore();
 

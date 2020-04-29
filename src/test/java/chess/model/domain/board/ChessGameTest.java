@@ -64,7 +64,7 @@ public class ChessGameTest {
         Map<Square, Piece> whiteKingBoard = new HashMap<>();
         whiteKingBoard.put(Square.of("a1"), King.getInstance(Team.WHITE));
         chessGame = new ChessGame(ChessBoard.of(whiteKingBoard), Team.BLACK,
-            CastlingElement.of(new HashSet<>()), new EnPassant());
+            CastlingElement.of(new HashSet<>()), EnPassant.createEmpty());
         assertThat(chessGame.isKingCaptured()).isTrue();
         assertThat(chessGame.move(new MoveInfo("d1", "d2")))
             .isEqualTo(MoveState.KING_CAPTURED);
@@ -72,7 +72,7 @@ public class ChessGameTest {
         Map<Square, Piece> blackKingBoard = new HashMap<>();
         blackKingBoard.put(Square.of("a1"), King.getInstance(Team.BLACK));
         chessGame = new ChessGame(ChessBoard.of(blackKingBoard), Team.WHITE,
-            CastlingElement.of(new HashSet<>()), new EnPassant());
+            CastlingElement.of(new HashSet<>()), EnPassant.createEmpty());
         assertThat(chessGame.isKingCaptured()).isTrue();
         assertThat(chessGame.move(new MoveInfo("d1", "d2")))
             .isEqualTo(MoveState.KING_CAPTURED);
@@ -150,7 +150,7 @@ public class ChessGameTest {
         boardInitial.put(Square.of("a1"), Rook.getInstance(Team.WHITE));
         boardInitial.put(Square.of("h1"), Rook.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
-            CastlingElement.createInitial(), new EnPassant());
+            CastlingElement.createInitial(), EnPassant.createEmpty());
 
         assertThat(chessGame.move(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.SUCCESS);
@@ -175,7 +175,7 @@ public class ChessGameTest {
         boardInitial.put(Square.of("f8"), Knight.getInstance(Team.WHITE));
         boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
-            CastlingElement.createInitial(), new EnPassant());
+            CastlingElement.createInitial(), EnPassant.createEmpty());
 
         assertThat(chessGame.move(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.FAIL_CAN_NOT_MOVE);
@@ -205,7 +205,7 @@ public class ChessGameTest {
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
             CastlingElement
                 .of(new HashSet<>(Collections.singletonList(CastlingSetting.BLACK_KING_BEFORE))),
-            new EnPassant());
+            EnPassant.createEmpty());
 
         assertThat(chessGame.move(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.FAIL_CAN_NOT_MOVE);

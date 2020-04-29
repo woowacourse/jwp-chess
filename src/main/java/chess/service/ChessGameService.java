@@ -204,7 +204,7 @@ public class ChessGameService {
         }
 
         return new ChessGame(ChessBoard.of(chessBoard), turn, CastlingElement.of(castlingElements),
-            new EnPassant(enPassants));
+            EnPassant.of(enPassants));
     }
 
     public boolean isGameProceed(Integer gameId) {

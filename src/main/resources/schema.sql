@@ -1,12 +1,12 @@
-create table game (
+create table if NOT EXISTS game (
     id bigint not null auto_increment,
     uuid varchar(36) not null,
     name varchar(255) not null,
-    can_continue tinyint(1) default 1 not null,
+    can_continue tinyint(1) not null,
     primary key(id)
 );
 
-create table history (
+create table if NOT EXISTS history (
     id bigint not null auto_increment,
     start varchar(2) not null,
     end varchar(2) not null,

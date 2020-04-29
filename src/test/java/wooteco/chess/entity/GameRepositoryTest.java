@@ -17,29 +17,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class GameRepositoryTest {
 
+	private final String firstGameName = "first game";
+	private final String firstUuid = "1q2w3e4r5t6y7u8i9o0p1q2w32e4t5y5u";
+
 	@Autowired
 	private GameRepository gameRepository;
 
 	@DisplayName("save 새 게임 시작시 게임정보 저장 테스트")
 	@Test
 	void save_normal_test() {
-		String gameName = "first game";
-		String uuid = "1q2w3e4r5t6y7u8i9o0p1q2w32e4t5y5u";
-
-		Game game = gameRepository.save(new Game(gameName, uuid, true));
+		Game game = gameRepository.save(new Game(firstGameName, firstUuid, true));
 
 		assertThat(game.getId()).isEqualTo(1);
-		assertThat(game.getName()).isEqualTo(gameName);
-		assertThat(game.getUuid()).isEqualTo(uuid);
+		assertThat(game.getName()).isEqualTo(firstGameName);
+		assertThat(game.getUuid()).isEqualTo(firstUuid);
 		assertThat(game.getCanContinue()).isEqualTo(true);
 	}
 
 	@DisplayName("게임 목록 조회 기능 구현")
 	@Test
 	void selectAll_test() {
-		String firstGameName = "first game";
 		String secondGameName = "second game";
-		String firstUuid = "1q2w3e4r5t6y7u8i9o0p1q2w32e4t5y5u";
 		String secondUuid = "1q2w3e4r5t6y7u8i9o0p1q4ky985myktl";
 
 		Game firstGame = gameRepository.save(new Game(firstGameName, firstUuid, true));
@@ -48,5 +46,17 @@ class GameRepositoryTest {
 		List<Game> games = gameRepository.findAll();
 
 		assertThat(games).contains(firstGame, secondGame);
+	}
+
+	@DisplayName("이미 저장되어있는 게임에 canContinue를 false로 변경 확인")
+	@Test
+	void save_update_can_continue_column() {
+		gameRepository.save(new Game(firstGameName, firstUuid, true));
+
+		Game foundGame = gameRepository.findByUuid(firstUuid);
+
+		Game actualGame = gameRepository.save(new Game(foundGame.getId(), foundGame.getName(), foundGame.getUuid(), false));
+
+		assertThat(actualGame.getCanContinue()).isEqualTo(false);
 	}
 }

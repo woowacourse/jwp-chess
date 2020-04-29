@@ -1,17 +1,15 @@
 package wooteco.chess.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Objects;
 
-@Table("game")
 public class Game {
-	private @Id Long id;
-	private @Column("name") String name;
-	private @Column("uuid") String uuid;
-	private @Column("can_continue") Boolean canContinue;
+	@Id
+	private Long id;
+	private String name;
+	private String uuid;
+	private Boolean canContinue;
 
 	public Game() {
 	}

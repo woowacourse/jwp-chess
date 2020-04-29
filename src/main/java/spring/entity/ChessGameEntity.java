@@ -1,11 +1,11 @@
 package spring.entity;
 
+import chess.board.ChessBoard;
+import chess.game.ChessGame;
+import chess.team.Team;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-import spring.chess.board.ChessBoard;
-import spring.chess.game.ChessGame;
-import spring.chess.team.Team;
 import spring.entity.converter.ChessBoardConverter;
 
 import java.util.Set;

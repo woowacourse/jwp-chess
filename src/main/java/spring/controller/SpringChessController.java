@@ -1,5 +1,6 @@
 package spring.controller;
 
+import chess.game.ChessGame;
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import spring.chess.game.ChessGame;
 import spring.dto.LocationDto;
 import spring.service.ChessService;
 

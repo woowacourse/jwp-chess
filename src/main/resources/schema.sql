@@ -1,4 +1,4 @@
-create table piece2
+create table if not exists piece2
 (
     id                int auto_increment,
     name              varchar(244) not null,
@@ -8,7 +8,7 @@ create table piece2
     primary key (id)
 );
 
-create table chessgame2
+create table if not exists chessgame2
 (
     id            int auto_increment,
     turn_is_black boolean not null,

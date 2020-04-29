@@ -1,13 +1,10 @@
 package chess.piece.type;
 
+import chess.board.Route;
+import chess.location.Location;
+import chess.team.Team;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import spring.chess.board.Route;
-import spring.chess.location.Location;
-import spring.chess.piece.type.Bishop;
-import spring.chess.piece.type.Piece;
-import spring.chess.piece.type.Queen;
-import spring.chess.team.Team;
 
 import java.util.HashMap;
 import java.util.Map;

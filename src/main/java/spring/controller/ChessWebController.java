@@ -1,8 +1,8 @@
 package spring.controller;
 
+import chess.game.ChessGame;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import spring.chess.game.ChessGame;
 import spring.dto.LocationDto;
 import spring.service.ChessService;
 

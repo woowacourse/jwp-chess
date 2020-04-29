@@ -11,16 +11,16 @@ public class StatusCommand implements Command {
         this.title = title;
     }
 
-    public static boolean isStatus(String command) {
-        String lowerCaseCommand = command.toLowerCase();
-        return COMMAND.equals(lowerCaseCommand);
-    }
-
     @Override
     public Progress conduct() {
         if (COMMAND.equals(title)) {
             return Progress.STATUS;
         }
         return Progress.ERROR;
+    }
+
+    public static boolean isStatus(String command) {
+        String lowerCaseCommand = command.toLowerCase();
+        return COMMAND.equals(lowerCaseCommand);
     }
 }

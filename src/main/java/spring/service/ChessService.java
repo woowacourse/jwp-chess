@@ -1,15 +1,15 @@
 package spring.service;
 
+import chess.board.ChessBoard;
+import chess.board.ChessBoardCreater;
+import chess.command.MoveCommand;
+import chess.game.ChessGame;
+import chess.location.Location;
+import chess.piece.type.Piece;
+import chess.progress.Progress;
+import chess.team.Team;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
-import spring.chess.board.ChessBoard;
-import spring.chess.board.ChessBoardCreater;
-import spring.chess.command.MoveCommand;
-import spring.chess.game.ChessGame;
-import spring.chess.location.Location;
-import spring.chess.piece.type.Piece;
-import spring.chess.progress.Progress;
-import spring.chess.team.Team;
 import spring.converter.ChessGameConverter;
 import spring.dao.ChessGameDao;
 import spring.dao.ChessGamesDao;

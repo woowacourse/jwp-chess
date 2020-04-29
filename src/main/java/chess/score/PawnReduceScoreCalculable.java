@@ -1,7 +1,7 @@
 package chess.score;
 
-import chess.game.ChessSet;
 import chess.location.Col;
+import chess.player.ChessSet;
 
 import static chess.board.ChessBoardCreater.COL_END;
 import static chess.board.ChessBoardCreater.COL_START;

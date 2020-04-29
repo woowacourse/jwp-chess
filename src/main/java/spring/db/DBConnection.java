@@ -18,7 +18,7 @@ public class DBConnection {
 
     static {
         try {
-            Reader reader = new FileReader("src/main/resources/db.properties");
+            Reader reader = new FileReader("src/main/resources/spark.db.properties");
             properties.load(reader);
 
             server = properties.getProperty("server");

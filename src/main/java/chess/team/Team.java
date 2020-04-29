@@ -10,13 +10,6 @@ public enum Team {
         this.turnIsBlack = turnIsBlack;
     }
 
-    public static Team of(boolean isTurnBlack) {
-        if (isTurnBlack) {
-            return BLACK;
-        }
-        return WHITE;
-    }
-
     public boolean isBlack() {
         return this == BLACK;
     }
@@ -30,6 +23,13 @@ public enum Team {
             return WHITE;
         }
         return BLACK;
+    }
+
+    public static Team of(boolean isTurnBlack) {
+        if (isTurnBlack) {
+            return BLACK;
+        }
+        return WHITE;
     }
 
     public int getTurnIsBlack() {

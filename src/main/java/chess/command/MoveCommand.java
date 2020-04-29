@@ -7,10 +7,13 @@ import chess.location.LocationSubStringUtil;
 import chess.progress.Progress;
 import chess.team.Team;
 
+import java.util.Objects;
+
 public class MoveCommand implements Command {
     private static final String SPACE = " ";
     private static final int NOW_INDEX_IN_MOVE_COMMAND = 1;
     private static final int DESTINATION_INDEX_IN_MOVE_COMMAND = 2;
+    private static final String INVALID_ARGUMENTS_ERROR_MESSAGE = "null 혹은 빈 문자열의 값이 존재합니다.";
 
     private final Location now;
     private final Location destination;
@@ -22,20 +25,6 @@ public class MoveCommand implements Command {
         this.now = now;
         this.destination = destination;
         this.chessGame = chessGame;
-    }
-
-    public static MoveCommand of(String rawCommand, ChessGame chessGame) {
-        String now = rawCommand.split(SPACE)[NOW_INDEX_IN_MOVE_COMMAND];
-        String destination = rawCommand.split(SPACE)[DESTINATION_INDEX_IN_MOVE_COMMAND];
-
-        Location nowLocation = LocationSubStringUtil.substring(now);
-        Location destinationLocation = LocationSubStringUtil.substring(destination);
-
-        return new MoveCommand(nowLocation, destinationLocation, chessGame);
-    }
-
-    public static MoveCommand of(Location now, Location destination, ChessGame chessGame) {
-        return new MoveCommand(now, destination, chessGame);
     }
 
     @Override
@@ -54,6 +43,28 @@ public class MoveCommand implements Command {
         chessGame.movePieceInPlayerChessSet(now, destination);
 
         return chessGame.finishIfKingDie();
+    }
+
+    public static MoveCommand of(String rawCommand, ChessGame chessGame) {
+        valid(rawCommand, chessGame);
+
+        String now = rawCommand.split(SPACE)[NOW_INDEX_IN_MOVE_COMMAND];
+        String destination = rawCommand.split(SPACE)[DESTINATION_INDEX_IN_MOVE_COMMAND];
+
+        Location nowLocation = LocationSubStringUtil.substring(now);
+        Location destinationLocation = LocationSubStringUtil.substring(destination);
+
+        return new MoveCommand(nowLocation, destinationLocation, chessGame);
+    }
+
+    private static void valid(String rawCommand, ChessGame chessGame) {
+        if (Objects.isNull(rawCommand) || rawCommand.isEmpty() || Objects.isNull(chessGame)) {
+            throw new IllegalArgumentException(INVALID_ARGUMENTS_ERROR_MESSAGE);
+        }
+    }
+
+    public static MoveCommand of(Location now, Location destination, ChessGame chessGame) {
+        return new MoveCommand(now, destination, chessGame);
     }
 
     public Location getNow() {

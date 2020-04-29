@@ -1,12 +1,12 @@
 package spring.view;
 
-import java.util.Map;
+import chess.board.ChessBoard;
+import chess.location.Location;
+import chess.piece.type.Piece;
+import chess.result.ChessResult;
+import chess.team.Team;
 
-import spring.chess.result.ChessResult;
-import spring.chess.board.ChessBoard;
-import spring.chess.location.Location;
-import spring.chess.piece.type.Piece;
-import spring.chess.team.Team;
+import java.util.Map;
 
 public class OutputView {
     private static final int MAXIMUM_BOARD_SIZE = 8;

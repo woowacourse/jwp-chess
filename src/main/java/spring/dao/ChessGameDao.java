@@ -1,6 +1,6 @@
 package spring.dao;
 
-import spring.chess.team.Team;
+import chess.team.Team;
 import spring.db.DBConnection;
 import spring.dto.ChessGameVo;
 

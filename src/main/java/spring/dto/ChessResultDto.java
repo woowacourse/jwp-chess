@@ -1,6 +1,6 @@
 package spring.dto;
 
-import spring.chess.result.ChessResult;
+import chess.result.ChessResult;
 
 public class ChessResultDto {
     private static final String WIN_VALUE = "승리";

@@ -9,7 +9,7 @@ import wooteco.chess.dao.GameDao;
 import wooteco.chess.dao.MoveDao;
 import wooteco.chess.dao.PlayerDao;
 import wooteco.chess.service.ChessService;
-import wooteco.chess.service.ChessServiceImpl;
+import wooteco.chess.service.SparkChessService;
 import wooteco.chess.util.RoutesConfig;
 
 public class SparkChessApplication {
@@ -18,7 +18,7 @@ public class SparkChessApplication {
         RoutesConfig.configure();
         addTemporaryPlayers();
         before(RoutesConfig::setJsonContentType);
-        ChessService service = new ChessServiceImpl(new GameDao(), new MoveDao(), new PlayerDao());
+        ChessService service = new SparkChessService(new GameDao(), new MoveDao(), new PlayerDao());
         new SparkChessController(service);
     }
 

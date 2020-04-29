@@ -22,12 +22,12 @@ import wooteco.chess.domain.player.Player;
 import wooteco.chess.dto.MoveRequestDto;
 
 @Service
-public class ChessServiceImpl implements ChessService {
+public class SparkChessService implements ChessService {
     private final GameDao gameDao;
     private final MoveDao moveDao;
     private final PlayerDao playerDao;
 
-    public ChessServiceImpl(final GameDao gameDao, final MoveDao moveDao, final PlayerDao playerDao) {
+    public SparkChessService(final GameDao gameDao, final MoveDao moveDao, final PlayerDao playerDao) {
         this.gameDao = gameDao;
         this.moveDao = moveDao;
         this.playerDao = playerDao;
@@ -115,7 +115,7 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public boolean addMoveByGameId(final int id, String start, String end) throws SQLException {
+    public boolean moveIfMovable(final int id, String start, String end) throws SQLException {
         Path path = findBoardById(id).generatePath(Position.of(start), Position.of(end));
         boolean movable = findGameById(id).move(start, end);
         if (movable) {

@@ -28,9 +28,9 @@ public interface ChessService {
 
     Map<Side, Double> getScoresById(int id) throws SQLException;
 
-    boolean addMoveByGameId(int id, String from, String to) throws SQLException;
+    boolean moveIfMovable(int id, String start, String end) throws SQLException;
 
-    List<String> findAllAvailablePath(int id, String from) throws SQLException;
+    List<String> findAllAvailablePath(int id, String start) throws SQLException;
 
     boolean isWhiteTurn(int id) throws SQLException;
 

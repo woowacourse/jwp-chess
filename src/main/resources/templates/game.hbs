@@ -17,22 +17,21 @@
     <span id="now-turn">{{response.turn}}</span>의 차례입니다.
 </h2>
 
-<form action="/start" method="post">
-    <button>시작하기</button>
+<!--<form action="/start" method="post">
+    <button>방만들기</button>
 </form>
-
+ -->
 <form action="/" method="get">
     <button>게임종료</button>
 </form>
 
-<form action="/save" method="get">
+<form action="/" method="get">
     <button>게임 저장</button>
 </form>
-<h1>{{saveMessage}}</h1>
-<form action="/load" method="get">
+<!--<form action="/load" method="get">
     <input type="text" name="gameId" placeholder="방 번호">
     <button>불러오기</button>
-</form>
+</form>-->
 <div>
     {{#each response.score}}
         {{@key}} : {{this}}

@@ -1,9 +1,13 @@
 package wooteco.chess.service;
 
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import wooteco.chess.domain.Score;
 import wooteco.chess.domain.board.ChessGame;
@@ -16,10 +20,11 @@ import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.GameDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.dto.MoveResponseDto;
+import wooteco.chess.dto.SavedGameBundleDto;
+import wooteco.chess.dto.SavedGameDto;
 import wooteco.chess.repository.GameRepository;
 import wooteco.chess.util.ScoreConverter;
-import wooteco.chess.util.UnicodeConverter
-		;
+import wooteco.chess.util.UnicodeConverter;
 
 @Service
 public class ChessService {
@@ -29,6 +34,7 @@ public class ChessService {
 		this.gameRepository = gameRepository;
 	}
 
+	@Transactional
 	public BoardDto createGame() {
 		ChessGame chessGame = new ChessGame();
 		Long gameId = saveGame(chessGame)
@@ -36,6 +42,7 @@ public class ChessService {
 		return createBoardDto(gameId, chessGame);
 	}
 
+	@Transactional
 	public MoveResponseDto move(MoveRequestDto moveRequestDto) {
 		Game game = findGameById(moveRequestDto.getGameId());
 		MoveCommand moveCommand = new MoveCommand(moveRequestDto.getCommand());
@@ -57,6 +64,7 @@ public class ChessService {
 			.orElseThrow(() -> new IllegalArgumentException(gameId + "은 존재하지 않는 게임입니다."));
 	}
 
+	@Transactional(readOnly = true)
 	public BoardDto load(Long gameId) {
 		Game game = findGameById(gameId);
 		ChessGame chessGame = game.getChessGame();
@@ -73,5 +81,13 @@ public class ChessService {
 		List<String> symbols = UnicodeConverter.convert(chessGame.getReverse());
 		Map<Team, Double> score = Score.calculateScore(chessGame.getPieces(), Team.values());
 		return new BoardDto(gameId, symbols, ScoreConverter.convert(score), chessGame.getTurnName());
+	}
+
+	@Transactional(readOnly = true)
+	public SavedGameBundleDto findAllGames() {
+		List<Game> games = gameRepository.findAll();
+		return games.stream()
+			.map(game -> new SavedGameDto(game.getId()))
+			.collect(collectingAndThen(toList(), SavedGameBundleDto::new));
 	}
 }

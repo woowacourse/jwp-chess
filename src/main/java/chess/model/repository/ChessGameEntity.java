@@ -1,12 +1,19 @@
 package chess.model.repository;
 
+import chess.model.domain.board.CastlingSetting;
 import chess.model.domain.board.ChessGame;
+import chess.model.domain.board.Square;
 import chess.model.domain.board.TeamScore;
+import chess.model.domain.piece.Piece;
+import chess.model.domain.piece.PieceFactory;
 import chess.model.domain.piece.Team;
+import chess.util.BooleanYNConverter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -38,10 +45,6 @@ public class ChessGameEntity {
         this.whiteScore = whiteScore;
     }
 
-    public void addBoard(BoardEntity boardEntity) {
-        this.boardEntities.add(boardEntity);
-    }
-
     public boolean isProceeding() {
         return this.proceeding.equals("Y");
     }
@@ -51,10 +54,6 @@ public class ChessGameEntity {
         this.proceeding = proceed;
         this.blackScore = chessGame.deriveTeamScore().get(Team.BLACK);
         this.whiteScore = chessGame.deriveTeamScore().get(Team.WHITE);
-    }
-
-    public void clearBoard() {
-        this.boardEntities.clear();
     }
 
     public Integer getId() {
@@ -101,5 +100,43 @@ public class ChessGameEntity {
         userNames.put(Team.BLACK, blackName);
         userNames.put(Team.WHITE, whiteName);
         return userNames;
+    }
+
+    public void saveBoard(ChessGame chessGame) {
+        boardEntities.clear();
+        Map<Square, Square> enPassants = makeEnPassants(chessGame);
+        Map<Square, Boolean> castlingElements = makeCastlingElements(chessGame.getChessBoard(),
+            chessGame.getCastlingElements());
+        Map<Square, Piece> chessBoard = chessGame.getChessBoard();
+
+        for (Square square : chessBoard.keySet()) {
+            boardEntities.add(new BoardEntity(
+                square.getName(),
+                PieceFactory.getName(chessBoard.get(square)),
+                BooleanYNConverter.convertYN(castlingElements.get(square)),
+                enPassants.keySet().stream()
+                    .filter(key -> enPassants.containsKey(square))
+                    .map(enSquare -> enPassants.get(square).getName())
+                    .findFirst()
+                    .orElse(null)));
+        }
+    }
+
+    private Map<Square, Square> makeEnPassants(ChessGame chessGame) {
+        return chessGame.getEnPassants().entrySet().stream()
+            .collect(Collectors.toMap(Entry::getValue, Entry::getKey));
+    }
+
+    private Map<Square, Boolean> makeCastlingElements(Map<Square, Piece> chessBoard,
+        Set<CastlingSetting> castlingElements) {
+        return chessBoard.keySet().stream()
+            .collect(Collectors.toMap(square -> square,
+                square -> makeCastlingElements(square, chessBoard.get(square), castlingElements)));
+    }
+
+    private boolean makeCastlingElements(Square square, Piece piece,
+        Set<CastlingSetting> castlingElements) {
+        return castlingElements.stream()
+            .anyMatch(castlingSetting -> castlingSetting.isCastlingBefore(square, piece));
     }
 }

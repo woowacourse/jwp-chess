@@ -27,13 +27,12 @@ import chess.model.repository.ResultEntity;
 import chess.model.repository.ResultRepository;
 import chess.model.repository.RoomEntity;
 import chess.model.repository.RoomRepository;
+import chess.util.BooleanYNConverter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -62,7 +61,8 @@ public class ChessGameService {
     public Integer saveNewGameInfo(Map<Team, String> userNames, Integer roomId) {
         ChessGame chessGame = new ChessGame();
         ChessGameEntity chessGameEntity = saveGame(userNames, roomId, chessGame);
-        saveBoard(chessGame, chessGameEntity);
+        chessGameEntity.saveBoard(chessGame);
+        chessGameRepository.save(chessGameEntity);
         return chessGameEntity.getId();
     }
 
@@ -85,27 +85,6 @@ public class ChessGameService {
         return chessGameEntity;
     }
 
-    private void saveBoard(ChessGame chessGame, ChessGameEntity chessGameEntity) {
-        Map<Square, Square> enPassants = makeEnPassants(chessGame);
-        Map<Square, Boolean> castlingElements = makeCastlingElements(chessGame.getChessBoard(),
-            chessGame.getCastlingElements());
-        Map<Square, Piece> chessBoard = chessGame.getChessBoard();
-
-        for (Square square : chessBoard.keySet()) {
-            chessGameEntity.addBoard(new BoardEntity(
-                square.getName(),
-                PieceFactory.getName(chessBoard.get(square)),
-                convertYN(castlingElements.get(square)),
-                enPassants.keySet().stream()
-                    .filter(key -> enPassants.containsKey(square))
-                    .map(enSquare -> enPassants.get(square).getName())
-                    .findFirst()
-                    .orElse(null)));
-        }
-
-        chessGameRepository.save(chessGameEntity);
-    }
-
     public void saveNewUserNames(Map<Team, String> userNames) {
         userNames.values()
             .stream()
@@ -123,12 +102,12 @@ public class ChessGameService {
             = chessGame.move(new MoveInfo(moveDTO.getSource(), moveDTO.getTarget()));
         Map<Team, String> userNames = gameInfo.getUserNames();
 
-        String proceed = convertYN(moveState != MoveState.KING_CAPTURED);
+        String proceed = BooleanYNConverter.convertYN(moveState != MoveState.KING_CAPTURED);
 
         if (moveState.isSucceed()) {
             chessGameEntity.update(chessGame, proceed);
-            chessGameEntity.clearBoard();
-            saveBoard(chessGame, chessGameEntity);
+            chessGameEntity.saveBoard(chessGame);
+            chessGameRepository.save(chessGameEntity);
         }
         return new ChessGameDto(userNames)
             .chessGame(chessGame)
@@ -148,24 +127,6 @@ public class ChessGameService {
         TeamScore teamScore = new TeamScore(teamScores);
 
         return new GameInfoDto(team, userNames, teamScore);
-    }
-
-    private Map<Square, Square> makeEnPassants(ChessGame chessGame) {
-        return chessGame.getEnPassants().entrySet().stream()
-            .collect(Collectors.toMap(Entry::getValue, Entry::getKey));
-    }
-
-    private Map<Square, Boolean> makeCastlingElements(Map<Square, Piece> chessBoard,
-        Set<CastlingSetting> castlingElements) {
-        return chessBoard.keySet().stream()
-            .collect(Collectors.toMap(square -> square,
-                square -> makeCastlingElements(square, chessBoard.get(square), castlingElements)));
-    }
-
-    private boolean makeCastlingElements(Square square, Piece piece,
-        Set<CastlingSetting> castlingElements) {
-        return castlingElements.stream()
-            .anyMatch(castlingSetting -> castlingSetting.isCastlingBefore(square, piece));
     }
 
     private ChessGame combineChessGame(Integer gameId) {
@@ -231,8 +192,8 @@ public class ChessGameService {
 
         if (moveState.isSucceed()) {
             chessGameEntity.update(chessGame, "Y");
-            chessGameEntity.clearBoard();
-            saveBoard(chessGame, chessGameEntity);
+            chessGameEntity.saveBoard(chessGame);
+            chessGameRepository.save(chessGameEntity);
         }
 
         return new ChessGameDto(gameInfo.getUserNames())
@@ -258,9 +219,5 @@ public class ChessGameService {
             }
         }
         return Optional.empty();
-    }
-
-    public static String convertYN(boolean changer) {
-        return changer ? "Y" : "N";
     }
 }

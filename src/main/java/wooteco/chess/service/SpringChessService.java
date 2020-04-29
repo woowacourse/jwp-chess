@@ -2,7 +2,6 @@ package wooteco.chess.service;
 
 import static java.util.stream.Collectors.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import java.util.function.Function;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
 import wooteco.chess.domain.Game;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Side;
@@ -106,8 +104,8 @@ public class SpringChessService implements ChessService {
     }
 
     private List<Game> generateGames() {
-        List<GameEntity> games = Lists.newArrayList(gameRepository.findAll());
-        return games.stream()
+        return gameRepository.findAll()
+            .stream()
             .map(gameEntity -> gameEntity.toModel(
                 findPlayerById(gameEntity.getWhiteId()),
                 findPlayerById(gameEntity.getBlackId()))
@@ -117,9 +115,8 @@ public class SpringChessService implements ChessService {
 
     @Override
     public Map<String, Map<Side, Double>> getScoreContexts() {
-        List<GameEntity> games = new ArrayList<>();
-        gameRepository.findAll().forEach(games::add);
-        return games.stream()
+        return gameRepository.findAll()
+            .stream()
             .map(GameEntity::getId)
             .collect(toMap(Function.identity(), this::getScoresById));
     }

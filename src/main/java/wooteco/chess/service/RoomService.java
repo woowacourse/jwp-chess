@@ -2,8 +2,7 @@ package wooteco.chess.service;
 
 import org.springframework.stereotype.Service;
 import wooteco.chess.dto.ResponseDto;
-import wooteco.chess.dto.RoomDto;
-import wooteco.chess.repository.CachedRoomRepository;
+import wooteco.chess.entity.Room;
 import wooteco.chess.repository.RoomRepository;
 import wooteco.chess.support.ChessResponseCode;
 
@@ -16,53 +15,55 @@ public class RoomService {
 
     private RoomRepository roomRepository;
 
-    public RoomService(CachedRoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
     }
 
-    public ResponseDto create(RoomDto roomDto) throws SQLException {
-        return ResponseDto.success(roomRepository.create(roomDto));
+    public ResponseDto create(Room room){
+        return ResponseDto.success(roomRepository.save(room));
     }
 
     public ResponseDto status(Long roomId) throws SQLException {
         return ResponseDto.success(roomRepository.findById(roomId));
     }
 
-    public ResponseDto join(String roomName, Long userId) throws SQLException {
-        RoomDto roomDto = roomRepository.findByName(roomName);
+    public ResponseDto join(String roomName, Long userId){
+        Room room = roomRepository.findByName(roomName)
+                .orElse(null);
 
-        if (Objects.isNull(roomDto)) {
+        if (Objects.isNull(room)) {
             return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
         }
 
-        if (roomDto.getWhiteUserId() == DEFAULT_VALUE) {
-            roomDto.setWhiteUserId(userId);
-        } else if (roomDto.getBlackUserId() == DEFAULT_VALUE) {
-            roomDto.setBlackUserId(userId);
+        if (room.getWhiteUserId() == DEFAULT_VALUE) {
+            room.setWhiteUserId(userId);
+        } else if (room.getBlackUserId() == DEFAULT_VALUE) {
+            room.setBlackUserId(userId);
         } else {
             return ResponseDto.fail(ChessResponseCode.ROOM_IS_FULL);
         }
 
-        roomRepository.update(roomDto);
+        roomRepository.save(room);
         return ResponseDto.success();
     }
 
-    public ResponseDto exit(Long roomId, Long userId) throws SQLException {
-        RoomDto roomDto = roomRepository.findById(roomId);
+    public ResponseDto exit(Long roomId, Long userId) {
+        Room room = roomRepository.findById(roomId)
+                .orElse(null);
 
-        if (Objects.isNull(roomDto)) {
+        if (Objects.isNull(room)) {
             return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
         }
 
-        if (roomDto.getWhiteUserId() == userId) {
-            roomDto.setWhiteUserId(DEFAULT_VALUE);
-        } else if (roomDto.getBlackUserId() == userId) {
-            roomDto.setBlackUserId(DEFAULT_VALUE);
+        if (room.getWhiteUserId() == userId) {
+            room.setWhiteUserId(DEFAULT_VALUE);
+        } else if (room.getBlackUserId() == userId) {
+            room.setBlackUserId(DEFAULT_VALUE);
         } else {
             return ResponseDto.fail(ChessResponseCode.BAD_REQUEST);
         }
 
-        roomRepository.update(roomDto);
+        roomRepository.save(room);
         return ResponseDto.success();
     }
 }

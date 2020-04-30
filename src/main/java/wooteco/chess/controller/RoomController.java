@@ -3,7 +3,7 @@ package wooteco.chess.controller;
 import org.springframework.web.bind.annotation.*;
 import wooteco.chess.dto.ChessResponseDto;
 import wooteco.chess.dto.ResponseDto;
-import wooteco.chess.dto.RoomDto;
+import wooteco.chess.entity.Room;
 import wooteco.chess.service.ChessService;
 import wooteco.chess.service.RoomService;
 
@@ -24,11 +24,11 @@ public class RoomController {
     @ResponseBody
     public ResponseDto create(@RequestParam String roomName,
                               @RequestParam Long userId) throws Exception {
-        RoomDto roomDto = new RoomDto();
-        roomDto.setWhiteUserId(userId);
-        roomDto.setName(roomName);
+        Room room = new Room();
+        room.setWhiteUserId(userId);
+        room.setName(roomName);
 
-        return roomService.create(roomDto);
+        return roomService.create(room);
     }
 
     @PostMapping("/join")
@@ -54,7 +54,7 @@ public class RoomController {
 
     @GetMapping("/renew/{roomId}")
     @ResponseBody
-    public ResponseDto<ChessResponseDto> renew(@PathVariable int roomId) throws Exception {
+    public ResponseDto<ChessResponseDto> renew(@PathVariable Long roomId) throws Exception {
         return chessService.renew(roomId);
     }
 }

@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.*;
 import wooteco.chess.domain.coordinate.Coordinate;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.dto.ChessResponseDto;
-import wooteco.chess.dto.MoveDto;
 import wooteco.chess.dto.ResponseDto;
+import wooteco.chess.entity.Move;
 import wooteco.chess.service.ChessService;
 
 import java.util.List;
@@ -24,12 +24,12 @@ public class ChessController {
     public ResponseDto move(@RequestParam Long roomId,
                             @RequestParam String source,
                             @RequestParam String target) throws Exception {
-        return chessService.move(new MoveDto(roomId, Coordinate.of(source), Coordinate.of(target)));
+        return chessService.move(new Move(roomId, Coordinate.of(source), Coordinate.of(target)));
     }
 
     @GetMapping("/way")
     @ResponseBody
-    public ResponseDto<List<String>> way(@RequestParam int roomId,
+    public ResponseDto<List<String>> way(@RequestParam Long roomId,
                                          @RequestParam String team,
                                          @RequestParam String coordinate) throws Exception{
         return chessService.getMovableWay(roomId, Team.valueOf(team), Coordinate.of(coordinate));
@@ -37,7 +37,7 @@ public class ChessController {
 
     @GetMapping("/renew/{roomId}")
     @ResponseBody
-    public ResponseDto<ChessResponseDto> renew(@PathVariable int roomId) throws Exception {
+    public ResponseDto<ChessResponseDto> renew(@PathVariable Long roomId) throws Exception {
         return chessService.renew(roomId);
     }
 }

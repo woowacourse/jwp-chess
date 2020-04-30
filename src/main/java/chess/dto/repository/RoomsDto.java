@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.repository;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,5 +14,12 @@ public class RoomsDto {
 
     public Map<Integer, String> getRooms() {
         return rooms;
+    }
+
+    @Override
+    public String toString() {
+        return "RoomsDto{" +
+            "rooms=" + rooms +
+            '}';
     }
 }

@@ -1,8 +1,8 @@
 package chess.controller.api;
 
-import chess.dto.CreateRoomDto;
-import chess.dto.DeleteRoomDto;
-import chess.dto.RoomsDto;
+import chess.dto.repository.RoomsDto;
+import chess.dto.view.CreateRoomDto;
+import chess.dto.view.DeleteRoomDto;
 import chess.service.ChessGameService;
 import chess.service.RoomService;
 import org.springframework.http.HttpStatus;

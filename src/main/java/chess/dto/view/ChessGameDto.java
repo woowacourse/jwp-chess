@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.view;
 
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.Square;
@@ -82,12 +82,6 @@ public class ChessGameDto {
         this.winner = winners.stream()
             .map(team -> makeUserNames().get(team))
             .collect(Collectors.joining(", "));
-        return this;
-    }
-
-    public ChessGameDto teamScore(Map<Team, Double> teamScore) {
-        blackScore(teamScore.get(Team.BLACK));
-        whiteScore(teamScore.get(Team.WHITE));
         return this;
     }
 

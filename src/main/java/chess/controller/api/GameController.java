@@ -1,11 +1,11 @@
 package chess.controller.api;
 
-import chess.dto.ChessGameDto;
-import chess.dto.GameIdDto;
-import chess.dto.GameSettingDto;
-import chess.dto.MovableAreasDto;
-import chess.dto.MoveDto;
-import chess.dto.PromotionTypeDto;
+import chess.dto.repository.GameIdDto;
+import chess.dto.repository.MovableAreasDto;
+import chess.dto.view.ChessGameDto;
+import chess.dto.view.GameSettingDto;
+import chess.dto.view.MoveDto;
+import chess.dto.view.PromotionTypeDto;
 import chess.model.domain.piece.Team;
 import chess.model.repository.ChessGameEntity;
 import chess.service.ChessGameService;

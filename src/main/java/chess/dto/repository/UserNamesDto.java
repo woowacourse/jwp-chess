@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,5 +14,12 @@ public class UserNamesDto {
 
     public List<String> getUserNames() {
         return userNames;
+    }
+
+    @Override
+    public String toString() {
+        return "UserNamesDto{" +
+            "userNames=" + userNames +
+            '}';
     }
 }

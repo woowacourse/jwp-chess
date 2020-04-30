@@ -1,16 +1,11 @@
-package chess.dto;
+package chess.dto.view;
 
 public class MoveDto {
 
     private String source;
     private String target;
 
-    public MoveDto() {
-    }
-
-    public MoveDto(String source, String target) {
-        this.source = source;
-        this.target = target;
+    protected MoveDto() {
     }
 
     public String getSource() {
@@ -20,7 +15,6 @@ public class MoveDto {
     public String getTarget() {
         return target;
     }
-
 
     @Override
     public String toString() {

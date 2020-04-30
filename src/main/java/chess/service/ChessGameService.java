@@ -1,10 +1,10 @@
 package chess.service;
 
-import chess.dto.ChessGameDto;
-import chess.dto.GameInfoDto;
-import chess.dto.MovableAreasDto;
-import chess.dto.MoveDto;
-import chess.dto.PromotionTypeDto;
+import chess.dto.repository.GameInfoDto;
+import chess.dto.repository.MovableAreasDto;
+import chess.dto.view.ChessGameDto;
+import chess.dto.view.MoveDto;
+import chess.dto.view.PromotionTypeDto;
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.ChessGameFactory;
 import chess.model.domain.board.Square;

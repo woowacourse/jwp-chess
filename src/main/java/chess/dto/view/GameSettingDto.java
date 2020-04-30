@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.view;
 
 import chess.model.domain.piece.Team;
 import java.util.Collections;

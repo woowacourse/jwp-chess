@@ -16,15 +16,8 @@ reset.onclick = () => {
 
 submit.onclick = () => {
     let userName = userNames.value;
-    fetch('/api/result/userResult', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            userName
-        })
-    }).then(res => res.json()).then(data => {
+    fetch('/api/result/userResult?userName=' + userName).then(
+        res => res.json()).then(data => {
         let {winCount, drawCount, loseCount} = data;
         winDrawLose.innerText = userName + ' : '
             + (winCount + drawCount + loseCount) + "전 " + winCount + "승 "

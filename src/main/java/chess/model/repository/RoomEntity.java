@@ -7,7 +7,9 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("ROOM_TB")
-public class RoomEntity {
+public final class RoomEntity {
+
+    private static final String DEFAULT_USED_YN = "Y";
 
     @Id
     private Integer id;
@@ -18,11 +20,11 @@ public class RoomEntity {
     private String usedYN;
     private Set<ChessGameEntity> chessGameEntities = new HashSet<>();
 
-    public RoomEntity() {
+    protected RoomEntity() {
     }
 
     public RoomEntity(String name, String password) {
-        this(name, password, "Y");
+        this(name, password, DEFAULT_USED_YN);
     }
 
     public RoomEntity(String name, String password, String usedYN) {

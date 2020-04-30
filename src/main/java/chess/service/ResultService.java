@@ -1,9 +1,8 @@
 package chess.service;
 
-import chess.dto.ChessGameDto;
-import chess.dto.GameResultDto;
-import chess.dto.UserNameDto;
-import chess.dto.UserNamesDto;
+import chess.dto.repository.GameResultDto;
+import chess.dto.repository.UserNamesDto;
+import chess.dto.view.ChessGameDto;
 import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.Team;
 import chess.model.domain.state.MoveState;
@@ -35,8 +34,8 @@ public class ResultService {
         return new UserNamesDto(userNames);
     }
 
-    public GameResultDto getResult(UserNameDto userNameDto) {
-        ResultEntity resultEntity = resultRepository.findByUserName(userNameDto.getUserName())
+    public GameResultDto getResult(String userName) {
+        ResultEntity resultEntity = resultRepository.findByUserName(userName)
             .orElseThrow(IllegalArgumentException::new);
         return new GameResultDto(resultEntity);
     }

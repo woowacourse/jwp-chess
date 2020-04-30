@@ -1,8 +1,8 @@
 package chess.service;
 
-import chess.dto.CreateRoomDto;
-import chess.dto.DeleteRoomDto;
-import chess.dto.RoomsDto;
+import chess.dto.repository.RoomsDto;
+import chess.dto.view.CreateRoomDto;
+import chess.dto.view.DeleteRoomDto;
 import chess.model.repository.RoomEntity;
 import chess.model.repository.RoomRepository;
 import java.util.HashMap;

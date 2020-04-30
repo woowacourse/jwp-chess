@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.repository;
 
 public class GameIdDto {
 

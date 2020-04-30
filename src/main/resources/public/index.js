@@ -13,11 +13,10 @@ function getRooms() {
 }
 
 function bindRooms(data) {
-  for (let room in data) {
-    const div = document.createElement("div");
-    div.setAttribute("class", "room");
-    div.innerText = data[room].name;
-
-    document.getElementsByClassName("room-container")[0].appendChild(div);
+  for (let i in data) {
+    const roomName = document.createElement("div");
+    roomName.setAttribute("class", "room");
+    roomName.innerText = data[i].name;
+    document.querySelector(`.room-container`).appendChild(roomName);
   }
 }

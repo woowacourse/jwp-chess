@@ -21,6 +21,10 @@ public class Room {
 		this.finishFlag = finishFlag;
 	}
 
+	public Long getRoomId() {
+		return roomId;
+	}
+
 	public String getRoomName() {
 		return roomName;
 	}

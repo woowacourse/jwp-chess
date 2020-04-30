@@ -1,11 +1,5 @@
 package wooteco.chess.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
-import org.springframework.stereotype.Service;
-
 import chess.domain.GameResult;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
@@ -13,94 +7,116 @@ import chess.domain.command.MoveCommand;
 import chess.domain.piece.Piece;
 import chess.dto.BoardDto;
 import chess.dto.TurnDto;
+import org.springframework.stereotype.Service;
 import wooteco.chess.entity.BoardEntity;
+import wooteco.chess.entity.RoomEntity;
 import wooteco.chess.entity.TurnEntity;
 import wooteco.chess.repository.BoardRepository;
+import wooteco.chess.repository.RoomRepository;
 import wooteco.chess.repository.TurnRepository;
+
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class ChessGameService {
-	private BoardRepository boardRepository;
-	private TurnRepository turnRepository;
+    private RoomRepository roomRepository;
+    private BoardRepository boardRepository;
+    private TurnRepository turnRepository;
 
-	public ChessGameService(BoardRepository boardRepository, TurnRepository turnRepository) {
-		this.boardRepository = boardRepository;
-		this.turnRepository = turnRepository;
-	}
+    public ChessGameService(RoomRepository roomRepository, BoardRepository boardRepository,
+                            TurnRepository turnRepository) {
+        this.roomRepository = roomRepository;
+        this.boardRepository = boardRepository;
+        this.turnRepository = turnRepository;
+    }
 
-	public ChessBoard loadBoard() {
-		return createBoardFromDb();
-	}
+    public RoomEntity createRoom(String name) {
+        return roomRepository.save(new RoomEntity(name));
+    }
 
-	public ChessBoard createNewChessGame() {
-		ChessBoard chessBoard = new ChessBoard();
-		Map<Position, Piece> board = chessBoard.getBoard();
+    public List<RoomEntity> loadRooms() {
+        return roomRepository.findAll();
+    }
 
-		this.turnRepository.deleteAll();
-		for (Position position : board.keySet()) {
-			this.boardRepository.save(
-				new BoardEntity(position.getName(), board.get(position).getName())
-			);
-		}
-		String currentTeam = TurnDto.from(chessBoard).getCurrentTeam();
-		this.turnRepository.save(new TurnEntity(currentTeam));
+    public ChessBoard loadBoard() {
+        return createBoardFromDb();
+    }
 
-		return chessBoard;
-	}
+    public ChessBoard createNewChessGame(Long roomId) {
+        ChessBoard chessBoard = new ChessBoard();
+        Map<Position, Piece> board = chessBoard.getBoard();
+        Optional<RoomEntity> maybeRoom = roomRepository.findById(roomId);
+        RoomEntity emptyRoomEntity = maybeRoom.orElseThrow(() -> new IllegalArgumentException(String.format("방 번호가 %d인 방이 " +
+                                                                                                                    "없습니다" +
+                                                                                                                    ".",
+                                                                                                            roomId)));
 
-	public ChessBoard movePiece(String source, String target) {
-		ChessBoard chessBoard = createBoardFromDb();
-		Map<Position, Piece> board = chessBoard.getBoard();
-		chessBoard.move(new MoveCommand(String.format("move %s %s", source, target)));
+        for (Position position : board.keySet()) {
+            emptyRoomEntity.addBoard(new BoardEntity(position.getName(), board.get(position).getName()));
+        }
+        String currentTeam = TurnDto.from(chessBoard).getCurrentTeam();
+        RoomEntity roomEntity = new RoomEntity(emptyRoomEntity, new TurnEntity(currentTeam));
+        roomRepository.save(roomEntity);
 
-		this.boardRepository.deleteAll();
-		for (Position position : board.keySet()) {
-			this.boardRepository.save(
-				new BoardEntity(position.getName(), board.get(position).getName())
-			);
-		}
+        return chessBoard;
+    }
 
-		TurnEntity first = this.turnRepository.findFirst();
+    public ChessBoard movePiece(String source, String target) {
+        ChessBoard chessBoard = createBoardFromDb();
+        Map<Position, Piece> board = chessBoard.getBoard();
+        chessBoard.move(new MoveCommand(String.format("move %s %s", source, target)));
 
-		this.turnRepository.save(
-			new TurnEntity(
-				first.getId(), TurnDto.from(chessBoard).getCurrentTeam()
-			)
-		);
+        this.boardRepository.deleteAll();
+        for (Position position : board.keySet()) {
+            this.boardRepository.save(
+                    new BoardEntity(position.getName(), board.get(position).getName())
+            );
+        }
 
-		return chessBoard;
-	}
+        TurnEntity first = this.turnRepository.findFirst();
 
-	private void endGame() {
-		this.boardRepository.deleteAll();
-		this.turnRepository.deleteAll();
-	}
+        this.turnRepository.save(
+                new TurnEntity(
+                        first.getId(), TurnDto.from(chessBoard).getCurrentTeam()
+                )
+        );
 
-	public GameResult findWinner() {
-		ChessBoard chessBoard = createBoardFromDb();
-		GameResult gameResult = chessBoard.createGameResult();
-		endGame();
-		return gameResult;
-	}
+        return chessBoard;
+    }
 
-	public boolean isGameOver() {
-		ChessBoard chessBoard = createBoardFromDb();
-		return chessBoard.isGameOver();
-	}
+    private void endGame() {
+        this.boardRepository.deleteAll();
+        this.turnRepository.deleteAll();
+    }
 
-	public boolean isNotGameOver() {
-		return !isGameOver();
-	}
+    public GameResult findWinner() {
+        ChessBoard chessBoard = createBoardFromDb();
+        GameResult gameResult = chessBoard.createGameResult();
+        endGame();
+        return gameResult;
+    }
 
-	private ChessBoard createBoardFromDb() {
-		List<BoardEntity> boardEntities = this.boardRepository.findAll();
-		if (boardEntities.isEmpty()) {
-			throw new NoSuchElementException("테이블의 행이 비었습니다!!");
-		}
-		BoardDto boardDto = new BoardDto(boardEntities);
+    public boolean isGameOver() {
+        ChessBoard chessBoard = createBoardFromDb();
+        return chessBoard.isGameOver();
+    }
 
-		TurnDto turnDto = TurnDto.from(this.turnRepository.findFirst().getTeamName());
+    public boolean isNotGameOver() {
+        return !isGameOver();
+    }
 
-		return new ChessBoard(boardDto.createBoard(), turnDto.createTeam());
-	}
+    private ChessBoard createBoardFromDb() {
+        List<BoardEntity> boardEntities = this.boardRepository.findAll();
+        if (boardEntities.isEmpty()) {
+            throw new NoSuchElementException("테이블의 행이 비었습니다!!");
+        }
+        BoardDto boardDto = new BoardDto(boardEntities);
+
+        TurnDto turnDto = TurnDto.from(this.turnRepository.findFirst().getTeamName());
+
+        return new ChessBoard(boardDto.createBoard(), turnDto.createTeam());
+    }
 }

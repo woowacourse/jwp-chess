@@ -37,13 +37,15 @@
         <th>방 ID</th>
         <th>방 제목</th>
     </tr>
-    <tr>
-        <td>1</td>
-        <td>테스트</td>
-    </tr>
+    {{#rooms}}
+        <tr>
+            <td><a href="/{{id}}">{{id}}</a></td>
+            <td>{{name}}</td>
+        </tr>
+    {{/rooms}}
 </table>
 
-<form method="post" action="#">
+<form method="post" action="/create-room">
     <input type="text" name="name">
     <input type="submit" value="방 만들기">
 </form>

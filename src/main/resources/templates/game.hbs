@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>:: 체스 게임 ::</title>
 
-    <link href="images/cool-lime.ico" rel="shortcut icon" type="image/x-icon"/>
+    <link href="/images/cool-lime.ico" rel="shortcut icon" type="image/x-icon"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <style>
@@ -23,7 +23,7 @@
         }
     </style>
 
-    <link href="css/indexStyle.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/indexStyle.css" rel="stylesheet" type="text/css"/>
 
 </head>
 
@@ -33,7 +33,7 @@
 </div>
 <div id="btnBox">
     <a href="/load-game"><input class="btn" type="button" value="이어서 하기"></a>
-    <a href="/new-chess-game"><input class="btn" type="button" value="새 게임"></a>
+    <a href="/{{roomId}}/new"><input class="btn" type="button" value="새 게임"></a>
     <a href="/"><input class="endBtn" type="button" value="끝내기"></a>
 </div>
 
@@ -51,7 +51,7 @@
                 <div class="rankElement">h</div>
             </div>
 
-            <div id="chessBoard" style="background: url(./images/board.png); background-size: contain">
+            <div id="chessBoard" style="background: url(/images/board.png); background-size: contain">
                 <div class="file" style="float: left">
                     <div class="fileElement">8</div>
                     <div class="fileElement">7</div>
@@ -65,7 +65,7 @@
 
                 {{#cells}}
                     <div class="{{tileColor}}" id="{{position}}">
-                        <img src="images/{{pieceColor}}{{piece}}.png" style="width: 100%">
+                        <img src="/images/{{pieceColor}}{{piece}}.png" style="width: 100%">
                     </div>
                 {{/cells}}
 

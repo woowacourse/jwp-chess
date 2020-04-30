@@ -6,7 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import wooteco.chess.domain.piece.Team;
+import wooteco.chess.domain.piece.Turn;
 
 public class TurnInfoDAOTest {
 	private TurnInfoDAO turnInfoDAO;
@@ -28,16 +28,16 @@ public class TurnInfoDAOTest {
 
 	@Test
 	void initialize() {
-		turnInfoDAO.initialize("1", Team.WHITE);
+		turnInfoDAO.initialize("1", Turn.WHITE);
 
-		assertThat(turnInfoDAO.findCurrent("1")).isEqualTo(Team.WHITE);
+		assertThat(turnInfoDAO.findCurrent("1")).isEqualTo(Turn.WHITE);
 	}
 
 	@Test
 	void updateNext() {
-		turnInfoDAO.initialize("1", Team.WHITE);
+		turnInfoDAO.initialize("1", Turn.WHITE);
 		turnInfoDAO.updateNext("1");
 
-		assertThat(turnInfoDAO.findCurrent("1")).isEqualTo(Team.BLACK);
+		assertThat(turnInfoDAO.findCurrent("1")).isEqualTo(Turn.BLACK);
 	}
 }

@@ -11,12 +11,12 @@ class PawnTest {
 
 	@BeforeEach
 	void setUp() {
-		pawn = new Pawn(C2, Team.WHITE);
+		pawn = new Pawn(C2, Turn.WHITE);
 	}
 
 	@Test
 	void canNotMoveTo_Return_True_When_TryStraightAttack() {
-		Piece target = new Pawn(C3, Team.BLACK);
+		Piece target = new Pawn(C3, Turn.BLACK);
 		assertThatIllegalArgumentException()
 			.isThrownBy(() -> pawn.canNotMoveTo(target))
 			.withMessage("폰은 전방의 적을 공격할 수 없습니다.");
@@ -32,7 +32,7 @@ class PawnTest {
 
 	@Test
 	void canNotMoveTo_Return_True_When_TryJump() {
-		Pawn pawn = new Pawn(C4, Team.WHITE);
+		Pawn pawn = new Pawn(C4, Turn.WHITE);
 		Piece target = new Empty(C6);
 		assertThat(pawn.canNotMoveTo(target)).isTrue();
 	}
@@ -57,7 +57,7 @@ class PawnTest {
 
 	@Test
 	void canNotMoveTo_Return_False_When_TryDiagonalAttack() {
-		Piece target = new Pawn(B3, Team.BLACK);
+		Piece target = new Pawn(B3, Turn.BLACK);
 		assertThat(pawn.canNotMoveTo(target)).isFalse();
 	}
 }

@@ -11,7 +11,7 @@ class BishopTest {
 
 	@BeforeEach
 	void setUp() {
-		bishop = new Bishop(C3, Team.BLACK);
+		bishop = new Bishop(C3, Turn.BLACK);
 	}
 
 	@Test

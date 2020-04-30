@@ -12,18 +12,18 @@ import org.junit.jupiter.api.Test;
 
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Rook;
-import wooteco.chess.domain.piece.Team;
+import wooteco.chess.domain.piece.Turn;
 
 class StatusTest {
 
 	@Test
 	void result() {
 		List<Piece> pieces = new ArrayList<>();
-		pieces.add(new Rook(A2, Team.BLACK));
+		pieces.add(new Rook(A2, Turn.BLACK));
 
-		Map<Team, Double> expected = new HashMap<>();
-		expected.put(Team.BLACK, 5.0);
-		expected.put(Team.WHITE, 0.0);
+		Map<Turn, Double> expected = new HashMap<>();
+		expected.put(Turn.BLACK, 5.0);
+		expected.put(Turn.WHITE, 0.0);
 
 		assertThat(Status.of(pieces).toMap()).isEqualTo(expected);
 	}
@@ -31,25 +31,25 @@ class StatusTest {
 	@Test
 	void winner_Return_White() {
 		List<Piece> pieces = new ArrayList<>();
-		pieces.add(new Rook(A2, Team.WHITE));
+		pieces.add(new Rook(A2, Turn.WHITE));
 
-		assertThat(Status.of(pieces).getWinner()).isEqualTo(Team.WHITE);
+		assertThat(Status.of(pieces).getWinner()).isEqualTo(Turn.WHITE);
 	}
 
 	@Test
 	void winner_Return_Black() {
 		List<Piece> pieces = new ArrayList<>();
-		pieces.add(new Rook(A2, Team.BLACK));
+		pieces.add(new Rook(A2, Turn.BLACK));
 
-		assertThat(Status.of(pieces).getWinner()).isEqualTo(Team.BLACK);
+		assertThat(Status.of(pieces).getWinner()).isEqualTo(Turn.BLACK);
 	}
 
 	@Test
 	void winner_Return_Draw() {
 		List<Piece> pieces = new ArrayList<>();
-		pieces.add(new Rook(A2, Team.BLACK));
-		pieces.add(new Rook(A3, Team.WHITE));
+		pieces.add(new Rook(A2, Turn.BLACK));
+		pieces.add(new Rook(A3, Turn.WHITE));
 
-		assertThat(Status.of(pieces).getWinner()).isEqualTo(Team.NONE);
+		assertThat(Status.of(pieces).getWinner()).isEqualTo(Turn.NONE);
 	}
 }

@@ -21,16 +21,16 @@ class PieceScoreTest {
 	private static Stream<Arguments> createColumn() {
 		return Stream.of(
 			Arguments.of(List.of(
-				new Queen(A1, Team.WHITE),
-				new Pawn(A2, Team.WHITE)), 10.0),
+				new Queen(A1, Turn.WHITE),
+				new Pawn(A2, Turn.WHITE)), 10.0),
 			Arguments.of(List.of(
-				new King(A1, Team.WHITE),
-				new Pawn(A2, Team.WHITE),
-				new Knight(A3, Team.WHITE)), 3.5),
+				new King(A1, Turn.WHITE),
+				new Pawn(A2, Turn.WHITE),
+				new Knight(A3, Turn.WHITE)), 3.5),
 			Arguments.of(List.of(
-				new Pawn(A2, Team.WHITE),
-				new Pawn(A3, Team.WHITE),
-				new Pawn(A4, Team.WHITE)), 1.5)
+				new Pawn(A2, Turn.WHITE),
+				new Pawn(A3, Turn.WHITE),
+				new Pawn(A4, Turn.WHITE)), 1.5)
 		);
 	}
 }

@@ -87,8 +87,7 @@ public class ChessGameService {
             .forEach(name -> resultRepository.save(new ResultEntity(name)));
     }
 
-    public ChessGameDto move(MoveDto moveDTO) {
-        Integer gameId = moveDTO.getGameId();
+    public ChessGameDto move(Integer gameId, MoveDto moveDTO) {
         ChessGameEntity chessGameEntity = findChessGameEntity(gameId);
         GameInfoDto gameInfo = getGameInfo(chessGameEntity);
         ChessGame chessGame = combineChessGame(gameId, gameInfo.getTurn());
@@ -140,10 +139,6 @@ public class ChessGameService {
         return ChessGameFactory.of(turn, boardRepository.findAllByGameId(gameId));
     }
 
-    public boolean isGameProceed(Integer gameId) {
-        return chessGameRepository.findById(gameId).isPresent();
-    }
-
     public ChessGameEntity closeGame(Integer gameId) {
         ChessGameEntity chessGameEntity = findChessGameEntity(gameId);
         chessGameEntity.setProceeding("N");
@@ -151,8 +146,7 @@ public class ChessGameService {
         return chessGameEntity;
     }
 
-    public ChessGameDto promote(PromotionTypeDto promotionTypeDTO) {
-        Integer gameId = promotionTypeDTO.getGameId();
+    public ChessGameDto promote(Integer gameId, PromotionTypeDto promotionTypeDTO) {
         ChessGameEntity chessGameEntity = findChessGameEntity(gameId);
         GameInfoDto gameInfo = getGameInfo(chessGameEntity);
         ChessGame chessGame = combineChessGame(gameId, gameInfo.getTurn());
@@ -165,15 +159,9 @@ public class ChessGameService {
             .moveState(moveState);
     }
 
-    public PathDto findPath(SourceDto sourceDto) {
-        ChessGame chessGame = combineChessGame(sourceDto.getGameId());
+    public PathDto findPath(Integer gameId, SourceDto sourceDto) {
+        ChessGame chessGame = combineChessGame(gameId);
         return new PathDto(chessGame.findMovableAreas(Square.of(sourceDto.getSource())));
-    }
-
-    public Integer createBy(Integer gameId, Map<Team, String> userNames) {
-        Integer roomId = chessGameRepository.findRoomIdById(gameId)
-            .orElseThrow(IllegalArgumentException::new);
-        return create(roomId, userNames);
     }
 
     public Optional<Integer> findProceedGameId(Integer roomId) {

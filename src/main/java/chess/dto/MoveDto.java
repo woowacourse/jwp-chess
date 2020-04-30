@@ -4,15 +4,13 @@ public class MoveDto {
 
     private String source;
     private String target;
-    private Integer gameId;
 
     public MoveDto() {
     }
 
-    public MoveDto(String source, String target, Integer gameId) {
+    public MoveDto(String source, String target) {
         this.source = source;
         this.target = target;
-        this.gameId = gameId;
     }
 
     public String getSource() {
@@ -23,16 +21,12 @@ public class MoveDto {
         return target;
     }
 
-    public Integer getGameId() {
-        return gameId;
-    }
 
     @Override
     public String toString() {
         return "MoveDto{" +
             "source='" + source + '\'' +
             ", target='" + target + '\'' +
-            ", gameId=" + gameId +
             '}';
     }
 }

@@ -3,21 +3,15 @@ package chess.dto;
 public class PromotionTypeDto {
 
     private String promotionType;
-    private Integer gameId;
 
     public PromotionTypeDto() {
     }
 
-    public PromotionTypeDto(String promotionType, Integer gameId) {
+    public PromotionTypeDto(String promotionType) {
         this.promotionType = promotionType;
-        this.gameId = gameId;
     }
 
     public String getPromotionType() {
         return promotionType;
-    }
-
-    public Integer getGameId() {
-        return gameId;
     }
 }

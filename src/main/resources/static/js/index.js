@@ -14,6 +14,7 @@ intoRoom.onclick = () => {
         createRoomName.focus();
         return;
     }
+    document.getElementById("start").action = '/room/' + rooms.value;
     document.getElementById("start").submit();
 };
 
@@ -38,7 +39,6 @@ deleteRoom.onclick = () => {
         createRoomName.value = "";
     })
 };
-
 
 creatRoom.onclick = () => {
     let roomName = createRoomName.value;

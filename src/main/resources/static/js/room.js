@@ -1,30 +1,42 @@
-const startGame = document.getElementById("start-game");
-const continueGame = document.getElementById("continue-game");
+const formGame = document.getElementById("form-game");
 const startButton = document.getElementById("start-button");
-const continueButton = document.getElementById("continue-button");
+const loadButton = document.getElementById("load-button");
 const blackName = document.getElementById("black-name");
 const whiteName = document.getElementById("white-name");
-const blackNameContinue = document.getElementById("black-name-continue");
-const whiteNameContinue = document.getElementById("white-name-continue");
 const roomButton = document.getElementById("room-button");
-
-startButton.onclick = () => {
-    if (checkNames()) {
-        startGame.submit();
-    }
-};
+const roomId = window.location.href.match(
+    /(?:\w+:)?\/\/[^\/]+([^?#]+)/).pop().split('/')[2];
 
 roomButton.onclick = () => {
     location.href = '/'
 };
 
-continueButton.onclick = () => {
+startButton.onclick = () => {
     if (checkNames()) {
-        whiteNameContinue.value = whiteName.value;
-        blackNameContinue.value = blackName.value;
-        continueGame.submit();
+        goGame('new');
     }
 };
+
+loadButton.onclick = () => {
+    if (checkNames()) {
+        goGame('load');
+    }
+};
+
+function goGame(way) {
+    fetch('/api/room/' + roomId + '/game?way=' + way, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            blackName, whiteName
+        })
+    }).then(res => res.json()).then(data => {
+        formGame.action = '/room/' + roomId + '/game/' + data.gameId;
+        formGame.submit();
+    });
+}
 
 function checkNames() {
     if (blackName.value.toUpperCase() === "WHITE") {

@@ -10,21 +10,22 @@ const whiteName = document.getElementById('whiteName');
 const winner = document.getElementById('winner');
 const closeButton = document.getElementById('close-button');
 const choiceGame = document.getElementById('choice-game');
-const choiceGameId = document.getElementById('choice-game-id');
 const choiceButton = document.getElementById('choice-button');
 const roomButton = document.getElementById('room-button');
 const resultButton = document.getElementById('result-button');
 const resultGame = document.getElementById('result-game');
 const newGame = document.getElementById('new-game');
-const newGameId = document.getElementById('new-game-id');
 const newButton = document.getElementById('new-button');
-const newBlackName = document.getElementById('new-black-name');
-const newWhiteName = document.getElementById('new-white-name');
+const roomId = window.location.href.match(
+    /(?:\w+:)?\/\/[^\/]+([^?#]+)/).pop().split('/')[2];
+const gameId = window.location.href.match(
+    /(?:\w+:)?\/\/[^\/]+([^?#]+)/).pop().split('/')[4];
+const roomUrl = '/api/room/' + roomId;
+const gameUrl = roomUrl + '/game/' + gameId;
 
 let firstClick = true;
 let source = null;
 let target = null;
-let gameId = document.getElementById('gameId').innerText;
 
 roomButton.onclick = () => {
     location.href = '/'
@@ -35,17 +36,22 @@ resultButton.onclick = () => {
 };
 
 choiceButton.onclick = () => {
-    choiceGameId.value = gameId;
+    choiceGame.action = '/room/' + roomId;
     choiceGame.submit();
 };
 
 newButton.onclick = () => {
-    newGameId.value = gameId;
-    newGame.submit();
+    fetch(roomUrl + '/game?way=new&blackName=' + blackName.innerText
+        + "&whiteName=" + whiteName.innerText, {
+        method: 'POST'
+    }).then(res => res.json()).then(data => {
+        newGame.action = '/room/' + roomId + '/game/' + data.gameId;
+        newGame.submit();
+    });
 };
 
 closeButton.onclick = () => {
-    fetch('/api/game/end', {
+    fetch(gameUrl + '/end', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -68,7 +74,7 @@ cells.forEach(cell => {
                 = '말이 이동할 경로(after)를 선택하세요.';
             state.innerText = "";
             cell.style.backgroundColor = 'STEELBLUE';
-            fetch('/api/game/path', {
+            fetch(gameUrl + '/path', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -89,13 +95,13 @@ cells.forEach(cell => {
         document.getElementById(source).removeAttribute('style');
         target = cell.id;
         firstClick = true;
-        fetch('/api/game/move', {
+        fetch(gameUrl + '/move', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                source, target, gameId
+                source, target
             })
         }).then(res => res.json()).then(data => {
             gameSetting(data);
@@ -111,7 +117,7 @@ cells.forEach(cell => {
 promotions.forEach(promotion => {
     promotion.onclick = () => {
         let promotionType = promotion.id;
-        fetch('/api/game/promotion', {
+        fetch(gameUrl + '/promotion', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -125,15 +131,8 @@ promotions.forEach(promotion => {
     }
 });
 
-fetch('/api/game/board', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        gameId
-    })
-}).then(res => res.json()).then(data => {
+fetch(gameUrl + '/board').then(
+    res => res.json()).then(data => {
     gameSetting(data);
 });
 
@@ -155,9 +154,7 @@ function gameSetting(data) {
     blackScore.innerText = data.blackScore;
     whiteScore.innerText = data.whiteScore;
     blackName.innerText = data.blackName;
-    newBlackName.value = data.blackName;
     whiteName.innerText = data.whiteName;
-    newWhiteName.value = data.whiteName;
     winner.innerText = data.winner;
 }
 

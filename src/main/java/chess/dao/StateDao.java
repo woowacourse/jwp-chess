@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.dao.exceptions.DaoNoneSelectedException;
-import chess.dto.StateDto;
+import chess.entity.StateEntity;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -29,7 +29,7 @@ public class StateDao {
 		}
 	}
 
-	public StateDto findStateByRoomId(final int roomId) throws SQLException {
+	public StateEntity findStateByRoomId(final int roomId) throws SQLException {
 		final String query = "SELECT * FROM state WHERE room_id=?";
 
 		try (final Connection connection = connectionDao.getConnection();
@@ -39,11 +39,11 @@ public class StateDao {
 		}
 	}
 
-	private StateDto prepareStateDto(final PreparedStatement preparedStatement) throws SQLException {
+	private StateEntity prepareStateDto(final PreparedStatement preparedStatement) throws SQLException {
 		try (final ResultSet resultSet = preparedStatement.executeQuery()) {
 			validateHasResult(resultSet);
 
-			return new StateDto(resultSet.getString("state"), resultSet.getInt("room_id"));
+			return new StateEntity(resultSet.getString("state"), resultSet.getInt("room_id"));
 		}
 	}
 

@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dto.StatusRecordDto;
+import chess.entity.StatusRecordEntity;
 import chess.repository.StatusRecordRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class ChessStatisticService {
 		this.statusRecordRepository = statusRecordRepository;
 	}
 
-	public List<StatusRecordDto> loadStatusRecordsWithRoomName() {
+	public List<StatusRecordEntity> loadStatusRecordsWithRoomName() {
 		return statusRecordRepository.findAll();
 	}
 }

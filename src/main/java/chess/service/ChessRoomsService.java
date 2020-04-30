@@ -1,7 +1,7 @@
 package chess.service;
 
 import chess.dao.exceptions.DaoNoneSelectedException;
-import chess.dto.RoomDto;
+import chess.entity.RoomEntity;
 import chess.repository.RoomRepository;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
@@ -16,11 +16,11 @@ public class ChessRoomsService {
 		this.roomRepository = roomRepository;
 	}
 
-	public List<RoomDto> findAllRooms() {
+	public List<RoomEntity> findAllRooms() {
 		return Lists.newArrayList(roomRepository.findAll());
 	}
 
-	public RoomDto findRoomByRoomName(final String roomName) {
+	public RoomEntity findRoomByRoomName(final String roomName) {
 		return roomRepository.findByRoomName(roomName).orElseThrow(DaoNoneSelectedException::new);
 	}
 

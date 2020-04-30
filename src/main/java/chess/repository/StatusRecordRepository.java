@@ -1,6 +1,6 @@
 package chess.repository;
 
-import chess.dto.StatusRecordDto;
+import chess.entity.StatusRecordEntity;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -8,11 +8,11 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface StatusRecordRepository extends CrudRepository<StatusRecordDto, Integer> {
+public interface StatusRecordRepository extends CrudRepository<StatusRecordEntity, Integer> {
 
 	@Override
 	@Query("SELECT * FROM status_record ORDER BY game_date DESC")
-	List<StatusRecordDto> findAll();
+	List<StatusRecordEntity> findAll();
 
 	@Modifying
 	@Query("INSERT INTO status_record(record, room_name) " +

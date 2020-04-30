@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -6,7 +6,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.util.Objects;
 
 @Table("piece")
-public class PieceDto {
+public class PieceEntity {
 	@Id
 	private int id;
 	private final String pieceType;
@@ -14,8 +14,8 @@ public class PieceDto {
 	private final String coordinate;
 	private final int roomId;
 
-	public PieceDto(final String pieceType, final String team,
-					final String coordinate, final int roomId) {
+	public PieceEntity(final String pieceType, final String team,
+					   final String coordinate, final int roomId) {
 		this.pieceType = pieceType;
 		this.team = team;
 		this.coordinate = coordinate;
@@ -46,12 +46,12 @@ public class PieceDto {
 	public boolean equals(final Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final PieceDto pieceDto = (PieceDto) o;
-		return id == pieceDto.id &&
-				roomId == pieceDto.roomId &&
-				Objects.equals(pieceType, pieceDto.pieceType) &&
-				Objects.equals(team, pieceDto.team) &&
-				Objects.equals(coordinate, pieceDto.coordinate);
+		final PieceEntity pieceEntity = (PieceEntity) o;
+		return id == pieceEntity.id &&
+				roomId == pieceEntity.roomId &&
+				Objects.equals(pieceType, pieceEntity.pieceType) &&
+				Objects.equals(team, pieceEntity.team) &&
+				Objects.equals(coordinate, pieceEntity.coordinate);
 	}
 
 	@Override

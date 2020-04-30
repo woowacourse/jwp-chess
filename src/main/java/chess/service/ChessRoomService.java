@@ -9,8 +9,8 @@ import chess.domain.pieces.StartPieces;
 import chess.domain.state.State;
 import chess.domain.state.StateType;
 import chess.domain.team.Team;
-import chess.dto.PieceDto;
-import chess.dto.StateDto;
+import chess.entity.PieceEntity;
+import chess.entity.StateEntity;
 import chess.repository.AnnouncementRepository;
 import chess.repository.PieceRepository;
 import chess.repository.StateRepository;
@@ -44,19 +44,19 @@ public class ChessRoomService {
 		return createBoardHtml(state);
 	}
 
-	private Set<Piece> createPieceSet(final List<PieceDto> pieceDtos) {
-		return pieceDtos.stream()
-				.map(daoPieceDto -> PieceType.getFactoryOfName(daoPieceDto.getPieceType()).apply(
-						Team.of(daoPieceDto.getTeam()), Coordinate.of(daoPieceDto.getCoordinate())))
+	private Set<Piece> createPieceSet(final List<PieceEntity> pieceEntities) {
+		return pieceEntities.stream()
+				.map(pieceEntity -> PieceType.getFactoryOfName(pieceEntity.getPieceType()).apply(
+						Team.of(pieceEntity.getTeam()), Coordinate.of(pieceEntity.getCoordinate())))
 				.collect(Collectors.toSet());
 	}
 
 	private State loadState(final int roomId) {
-		final StateDto stateDto = stateRepository.findByRoomId(roomId).orElseThrow(DaoNoneSelectedException::new);
-		final List<PieceDto> pieceDtos = pieceRepository.findPiecesByRoomId(roomId);
+		final StateEntity stateEntity = stateRepository.findByRoomId(roomId).orElseThrow(DaoNoneSelectedException::new);
+		final List<PieceEntity> pieceEntities = pieceRepository.findPiecesByRoomId(roomId);
 
-		final Set<Piece> pieces = createPieceSet(pieceDtos);
-		return StateType.getFactory(stateDto.getState()).apply(
+		final Set<Piece> pieces = createPieceSet(pieceEntities);
+		return StateType.getFactory(stateEntity.getState()).apply(
 				new Pieces(pieces));
 	}
 
@@ -72,11 +72,11 @@ public class ChessRoomService {
 	public void saveNewPieces(final int roomId) {
 		final Set<Piece> pieces = new StartPieces().getInstance();
 
-		final List<PieceDto> pieceDtos = pieces.stream()
-				.map(piece -> new PieceDto(piece.getPieceTypeName(), piece.getTeamName(),
+		final List<PieceEntity> pieceEntities = pieces.stream()
+				.map(piece -> new PieceEntity(piece.getPieceTypeName(), piece.getTeamName(),
 						piece.getCoordinateRepresentation(), roomId))
 				.collect(Collectors.toList());
-		pieceRepository.saveAll(pieceDtos);
+		pieceRepository.saveAll(pieceEntities);
 	}
 
 	public void updateRoom(final int roomId, final String command) {
@@ -90,9 +90,9 @@ public class ChessRoomService {
 	}
 
 	private void savePiecesFromState(final int roomId, final State after) {
-		List<PieceDto> prieceDtos = after.getSet()
+		List<PieceEntity> prieceDtos = after.getSet()
 				.stream()
-				.map(piece -> new PieceDto(piece.getPieceTypeName(), piece.getTeamName(),
+				.map(piece -> new PieceEntity(piece.getPieceTypeName(), piece.getTeamName(),
 						piece.getCoordinateRepresentation(), roomId))
 				.collect(Collectors.toList());
 		pieceRepository.saveAll(prieceDtos);

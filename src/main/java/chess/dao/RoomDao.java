@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.dao.exceptions.DaoNoneSelectedException;
-import chess.dto.RoomDto;
+import chess.entity.RoomEntity;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -29,7 +29,7 @@ public class RoomDao {
 		}
 	}
 
-	public RoomDto findRoomByRoomName(final String roomName) throws SQLException {
+	public RoomEntity findRoomByRoomName(final String roomName) throws SQLException {
 		final String query = "SELECT * FROM room WHERE room_name = ?";
 
 		try (final Connection connection = connectionDao.getConnection();
@@ -39,10 +39,10 @@ public class RoomDao {
 		}
 	}
 
-	private RoomDto prepareRoomDto(final PreparedStatement preparedStatement) throws SQLException {
+	private RoomEntity prepareRoomDto(final PreparedStatement preparedStatement) throws SQLException {
 		try (final ResultSet resultSet = preparedStatement.executeQuery()) {
 			validateHasResult(resultSet);
-			return new RoomDto(resultSet.getString("room_name"));
+			return new RoomEntity(resultSet.getString("room_name"));
 		}
 	}
 
@@ -52,7 +52,7 @@ public class RoomDao {
 		}
 	}
 
-	public List<RoomDto> findAllRooms() throws SQLException {
+	public List<RoomEntity> findAllRooms() throws SQLException {
 		final String query = "SELECT * FROM room";
 
 		try (final Connection connection = connectionDao.getConnection();
@@ -61,18 +61,18 @@ public class RoomDao {
 		}
 	}
 
-	private List<RoomDto> prepareRoomDtos(final PreparedStatement preparedStatement) throws SQLException {
+	private List<RoomEntity> prepareRoomDtos(final PreparedStatement preparedStatement) throws SQLException {
 		try (final ResultSet resultSet = preparedStatement.executeQuery()) {
 			return collectRoomDtos(resultSet);
 		}
 	}
 
-	private List<RoomDto> collectRoomDtos(final ResultSet resultSet) throws SQLException {
-		final List<RoomDto> roomDtos = new ArrayList<>();
+	private List<RoomEntity> collectRoomDtos(final ResultSet resultSet) throws SQLException {
+		final List<RoomEntity> roomEntities = new ArrayList<>();
 		while (resultSet.next()) {
-			roomDtos.add(new RoomDto(resultSet.getString("room_name")));
+			roomEntities.add(new RoomEntity(resultSet.getString("room_name")));
 		}
-		return roomDtos;
+		return roomEntities;
 	}
 
 	public int deleteRoomByRoomName(final String roomName) throws SQLException {

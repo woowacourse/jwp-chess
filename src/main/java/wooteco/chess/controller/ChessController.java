@@ -19,9 +19,7 @@ public class ChessController {
 
     @GetMapping("/")
     public String index(Model model) {
-        System.out.println("@########################################");
         model.addAllAttributes(chessService.loadInitBoard());
-        System.out.println("@########################################222");
         return INDEX_PAGE;
     }
 

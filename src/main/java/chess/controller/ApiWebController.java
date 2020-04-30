@@ -18,6 +18,7 @@ import chess.service.RoomService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,18 +42,19 @@ public class ApiWebController {
         this.resultService = resultService;
     }
 
-    @GetMapping("/viewRooms")
-    public RoomsDto viewRooms() {
+    @GetMapping("/rooms")
+    public RoomsDto getRooms() {
         return roomService.getUsedRooms();
     }
 
-    @PostMapping("/createRoom")
-    public RoomsDto createRoom(@RequestBody CreateRoomDto createRoomDto) {
+    @PostMapping("/room")
+    public RoomsDto postRoom(@RequestBody CreateRoomDto createRoomDto) {
         roomService.addRoom(createRoomDto);
+
         return roomService.getUsedRooms();
     }
 
-    @PostMapping("/deleteRoom")
+    @DeleteMapping("/room")
     public RoomsDto deleteRoom(@RequestBody DeleteRoomDto deleteRoomDto) {
         roomService.deleteRoom(deleteRoomDto);
         chessGameService.findProceedGameId(deleteRoomDto.getRoomId())

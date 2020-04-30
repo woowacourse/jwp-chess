@@ -52,12 +52,17 @@ public class SpringChessController {
     public String move(@RequestParam(name = "now") String now,
                        @RequestParam(name = "des") String destination,
                        @RequestParam(name = "game_id") String gameIdData) throws SQLException {
-        System.out.println(gameIdData);
         LocationDto nowDto = new LocationDto(now);
         LocationDto destinationDto = new LocationDto(destination);
         long gameId = Long.parseLong(gameIdData);
 
         return GSON.toJson(chessService.move(gameId, nowDto, destinationDto));
+    }
+
+    @DeleteMapping("/api/games/{id}")
+    public Long deleteGame(@PathVariable Long id) throws SQLException {
+        chessService.endGame(id);
+        return id;
     }
 
     private static String render(Map<String, Object> model, String templatePath) {

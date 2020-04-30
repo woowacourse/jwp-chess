@@ -8,7 +8,6 @@ import chess.progress.Progress;
 import chess.team.Team;
 import org.springframework.stereotype.Service;
 import spark.dto.LocationDto;
-import spring.dto.BoardDto;
 import spring.dto.ChessGameDto;
 import spring.dto.ChessGameScoresDto;
 import spring.dto.ChessMoveDto;
@@ -75,5 +74,15 @@ public class ChessService {
                 () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
 
         return new ChessGameDto(chessGameEntity.toChessGame());
+    }
+
+    public void endGame(Long gameId) throws SQLException {
+        // deleteById 는 믿을 수 없다. 존재하지 않는 row를 삭제해도 에러를 띄우지 않는다.
+        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(gameId);
+
+        ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(
+                () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
+
+        chessGameRepository.delete(chessGameEntity);
     }
 }

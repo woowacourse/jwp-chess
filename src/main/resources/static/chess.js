@@ -306,6 +306,7 @@ function move(json) {
             }
             if (jsonData.progress == "END") {
                 getChessBoardResult();
+                deleteChessGame();
             }
             // alert(JSON.stringify(jsonData));
         }
@@ -313,21 +314,36 @@ function move(json) {
 }
 
 function getChessBoardResult() {
-    var game_id = document.getElementById("game_id").innerHTML;
+    // var game_id = document.getElementById("game_id").innerHTML;
+    //
+    // $.ajax({
+    //     url: "/start/winner",
+    //     type: "get",
+    //     data: {"game_id": game_id},
+    //     success: function (data) {
+    //         var jason = JSON.parse(data);
+    //         alert("승자는" + jason.name + "입니다.")
+    //     },
+    //     error: function (errorThrown) {
+    //         alert(errorThrown);
+    //     },
+    // });
+}
+
+function deleteChessGame() {
+    const game_id = document.getElementById("game_id").innerHTML;
 
     $.ajax({
-        url: "/start/winner",
-        type: "get",
-        data: {"game_id": game_id},
+        url: "/api/games/" + game_id,
+        type: "delete",
         success: function (data) {
-            var jason = JSON.parse(data);
-            alert("승자는" + jason.name + "입니다.")
         },
         error: function (errorThrown) {
             alert(errorThrown);
         },
     });
 }
+
 
 function resume() {
     $.ajax({

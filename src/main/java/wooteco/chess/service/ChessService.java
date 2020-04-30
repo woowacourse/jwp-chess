@@ -8,22 +8,25 @@ import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.judge.Judge;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
-import wooteco.chess.dto.BoardDTO;
-import wooteco.chess.dto.GameStatusDTO;
-import wooteco.chess.repository.BoardDAO;
+import wooteco.chess.repository.GameStatus;
+import wooteco.chess.repository.GameStatusRepository;
+import wooteco.chess.repository.PieceInfo;
+import wooteco.chess.repository.PieceInfoRepository;
 import wooteco.chess.webutil.ModelParser;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ChessService {
 
     @Autowired
-    BoardDAO boardDAO;
+    private PieceInfoRepository pieceInfoRepository;
+    @Autowired
+    private GameStatusRepository gameStatusRepository;
 
     public Map<String, Object> loadInitBoard() {
         Map<String, Object> model = ModelParser.parseBlankBoard();
@@ -31,35 +34,32 @@ public class ChessService {
         return model;
     }
 
-    public Board newGame() throws SQLException {
+    public Board newGame() {
+        truncateAll();
         Board board = BoardFactory.create();
-
         writeWholeBoard(board);
         writeCurrentTurn(Team.WHITE);
-
         return board;
     }
 
-    private void writeWholeBoard(final Board board) throws SQLException {
-        BoardDTO boardDTO = new BoardDTO();
+    private void truncateAll() {
+        pieceInfoRepository.deleteAll();
+        gameStatusRepository.deleteAll();
+    }
+
+    private void writeWholeBoard(final Board board) {
         for (Position position : Position.positions) {
             Piece piece = board.findPieceOn(position);
 
-            boardDTO.setPosition(position.toString());
-            boardDTO.setPiece(piece.toString());
-
-            boardDAO.placePieceOn(boardDTO);
+            pieceInfoRepository.save(new PieceInfo(piece.toString(), position.toString()));
         }
     }
 
-    private void writeCurrentTurn(final Team turn) throws SQLException {
-        GameStatusDTO gameStatusDTO = new GameStatusDTO();
-        gameStatusDTO.setCurrentTeam(turn.toString());
-
-        boardDAO.updateTurn(gameStatusDTO);
+    private void writeCurrentTurn(final Team turn) {
+        gameStatusRepository.save(new GameStatus(turn.toString()));
     }
 
-    public void move(String start, String end) throws SQLException {
+    public void move(String start, String end) {
         checkGameOver();
 
         Board board = readBoard();
@@ -69,19 +69,21 @@ public class ChessService {
             System.err.println(e.getMessage());
         }
 
+        truncateAll();
         writeWholeBoard(board);
         writeCurrentTurn(board.getCurrentTurn());
     }
 
-    public Board readBoard() throws SQLException {
-        List<BoardDTO> boardDTOs = boardDAO.findAllPieces();
-        GameStatusDTO gameStatusDTO = boardDAO.readCurrentTurn();
-
-        Team currentTurn = Team.of(gameStatusDTO.getCurrentTeam());
-        return new Board(parsePieceInformation(boardDTOs), currentTurn);
+    public Board readBoard() {
+        Iterable<PieceInfo> persistGameInfo = pieceInfoRepository.findAll();
+        GameStatus persistGameStatus = gameStatusRepository.findAll()
+                .iterator()
+                .next();
+        Team team = Team.of(persistGameStatus.getCurrentTurn());
+        return new Board(parsePieceInformation(persistGameInfo), team);
     }
 
-    public Map<String, Object> readBoardWithScore() throws SQLException {
+    public Map<String, Object> readBoardWithScore() {
         Board board = readBoard();
 
         Map<String, Object> model = ModelParser.parseBoard(board);
@@ -90,17 +92,16 @@ public class ChessService {
         return model;
     }
 
-    private Map<Position, Piece> parsePieceInformation(final List<BoardDTO> boardDTOs) {
-        return boardDTOs.stream()
-                .collect(Collectors.toMap(dto -> Position.of(dto.getPosition()), dto -> Piece.of(dto.getPiece())));
+    private Map<Position, Piece> parsePieceInformation(Iterable<PieceInfo> persistGameInfo) {
+        return StreamSupport.stream(persistGameInfo.spliterator(), false)
+                .collect(Collectors.toMap(gameInfo -> Position.of(gameInfo.getPosition()), gameInfo -> Piece.of(gameInfo.getPiece())));
     }
 
-    private double calculateScore(final Team team) throws SQLException {
-        Judge judge = new Judge();
+    private double calculateScore(final Team team) {
         return Judge.getScoreByTeam(readBoard(), team);
     }
 
-    public Map<String, Object> loadMovable(String startName) throws SQLException {
+    public Map<String, Object> loadMovable(String startName) {
         Position start = Position.of(startName);
         List<Position> movablePositions = findMovablePlaces(start);
         Map<String, Object> model = ModelParser.parseBoard(readBoard(), movablePositions);
@@ -110,12 +111,12 @@ public class ChessService {
         return model;
     }
 
-    private List<Position> findMovablePlaces(final Position start) throws SQLException {
+    private List<Position> findMovablePlaces(final Position start) {
         checkGameOver();
         return readBoard().findMovablePositions(start);
     }
 
-    private void checkGameOver() throws SQLException {
+    private void checkGameOver() {
         if (Judge.findWinner(readBoard()).isPresent()) {
             throw new IllegalArgumentException();
         }

@@ -19,40 +19,35 @@ public class ChessController {
 
     @GetMapping("/")
     public ModelAndView index() {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("index");
+        ModelAndView view = new ModelAndView("index");
         view.addAllObjects(chessService.loadInitBoard());
         return view;
     }
 
     @PostMapping("/new-game")
     public ModelAndView newGame() throws SQLException {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("index");
+        ModelAndView view = new ModelAndView("index");
         view.addAllObjects(ModelParser.parseBoard(chessService.newGame()));
         return view;
     }
 
     @PostMapping("/load-game")
     public ModelAndView loadGame() throws SQLException {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("index");
+        ModelAndView view = new ModelAndView("index");
         view.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));
         return view;
     }
 
     @PostMapping("/score")
     public ModelAndView score() throws SQLException {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("index");
+        ModelAndView view = new ModelAndView("index");
         view.addAllObjects(chessService.readBoardWithScore());
         return view;
     }
 
     @PostMapping("/move")
     public ModelAndView move(ServletRequest request) throws SQLException {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("index");
+        ModelAndView view = new ModelAndView("index");
 
         String start = request.getParameter("start");
         String end = request.getParameter("end");
@@ -64,8 +59,7 @@ public class ChessController {
 
     @PostMapping("/show-movable")
     public ModelAndView showMovable(ServletRequest request) throws SQLException {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("index");
+        ModelAndView view = new ModelAndView("index");
         view.addAllObjects(chessService.loadMovable(request.getParameter("start")));
         return view;
     }

@@ -28,7 +28,7 @@ public class ChessController {
     }
 
     @PostMapping("/start")
-    public ModelAndView start(@RequestParam HashMap<String, String> paramMap) {
+    public ModelAndView start(@RequestParam Map<String, String> paramMap) {
         ModelAndView modelAndView = new ModelAndView();
 
         Room room = new Room(paramMap.get("roomName"));

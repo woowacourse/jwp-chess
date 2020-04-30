@@ -15,7 +15,7 @@ import java.util.Map;
 @Service
 public class ChessService {
     private static final String MOVE_ERROR_MESSAGE = "이동할 수 없는 곳입니다. 다시 입력해주세요";
-    private static final String MOVE_DELIMETER = " ";
+    private static final String MOVE_DELIMITER = " ";
 
     private ChessDao chessDao;
     private ChessManager chessManager;
@@ -42,7 +42,7 @@ public class ChessService {
     }
 
     public void move(String source, String target) {
-        String command = String.join(MOVE_DELIMETER, new String[]{"move", source, target});
+        String command = String.join(MOVE_DELIMITER, new String[]{"move", source, target});
 
         try {
             Command.MOVE.apply(chessManager, command);

@@ -130,6 +130,10 @@ public class Board {
         return pieces.get(position).isWhite();
     }
 
+    public boolean isTurnWhite() {
+        return turn.isWhite();
+    }
+
     public Map<Position, Piece> getPieces() {
         return this.pieces;
     }

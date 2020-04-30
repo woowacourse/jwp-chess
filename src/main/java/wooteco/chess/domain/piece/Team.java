@@ -9,6 +9,13 @@ public enum Team {
         this.symbol = symbol;
     }
 
+    public static Team of(boolean isWhite) {
+        if (isWhite) {
+            return WHITE;
+        }
+        return BLACK;
+    }
+
     public boolean isBlack() {
         return this == BLACK;
     }

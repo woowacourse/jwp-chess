@@ -5,13 +5,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import wooteco.chess.domain.Scores;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.service.BoardService;
 import wooteco.chess.service.RoomService;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 @Controller
@@ -25,63 +23,57 @@ public class SpringChessController {
     }
 
     @GetMapping("/")
-    public String index(Model model) throws SQLException {
+    public String index(Model model) {
+        System.out.println("첫화면");
         model.addAttribute("roomNumbers", roomService.loadRoomNumbers());
         return "index";
     }
 
     @PostMapping("/newroom")
-    public String newRoom() throws SQLException {
-        int roomId = roomService.create();
+    public String newRoom() {
+        System.out.println("새 방");
+        Long roomId = roomService.create();
         return "redirect:/rooms/" + roomId;
     }
 
     @GetMapping("/rooms/{roomId}")
-    public String loadBoard(@PathVariable int roomId, Model model) throws SQLException {
+    public String loadBoard(@PathVariable Long roomId, Model model) {
         constructModel(roomId, model);
         return "board";
     }
 
-    @PostMapping("/rooms/{roomId}")
-    public String move(@PathVariable int roomId, @RequestParam String source, @RequestParam String target, Model model) throws SQLException {
-        try {
-            boardService.play(roomId, source, target);
-        } catch (RuntimeException e) {
-            model.addAttribute("error-message", e.getMessage());
-            constructModel(roomId, model);
-            return "board";
-        }
-        if (boardService.isFinished(roomId)) {
-            model.addAttribute("winner", boardService.isTurnWhite(roomId) ? "흑팀" : "백팀");
-            return "result";
-        }
-        constructModel(roomId, model);
-        return "board";
-    }
+//    @PostMapping("/rooms/{roomId}")
+//    public String move(@PathVariable Long roomId, @RequestParam String source, @RequestParam String target, Model model) throws SQLException {
+//        try {
+//            boardService.play(roomId, source, target);
+//        } catch (RuntimeException e) {
+//            model.addAttribute("error-message", e.getMessage());
+//            constructModel(roomId, model);
+//            return "board";
+//        }
+//        if (boardService.isFinished(roomId)) {
+//            model.addAttribute("winner", boardService.isTurnWhite(roomId) ? "흑팀" : "백팀");
+//            return "result";
+//        }
+//        constructModel(roomId, model);
+//        return "board";
+//    }
 
     @PostMapping("/newgame/{roomId}")
-    public String newGame(@PathVariable int roomId) throws SQLException{
+    public String newGame(@PathVariable Long roomId) {
         boardService.init(roomId);
         return "redirect:/rooms/" + roomId;
     }
 
     @GetMapping("/scores/{roomId}")
-    public String scores(@PathVariable int roomId, Model model) throws SQLException {
+    public String scores(@PathVariable Long roomId, Model model) {
         model.addAttribute("id", roomId);
-        model.addAttribute("scores", Scores.calculateScores(boardService.getBoard(roomId)));
+        model.addAttribute("scores", Scores.calculateScores(boardService.loadBoard(roomId)));
         return "scores";
     }
 
-
-
-
-
-
-
-
-
-    private void constructModel(int roomId, Model model) throws SQLException {
-        BoardDto boardDTO = new BoardDto(boardService.getBoard(roomId));
+    private void constructModel(Long roomId, Model model) {
+        BoardDto boardDTO = new BoardDto(boardService.loadBoard(roomId));
         Map<String, String> pieces = boardDTO.getBoard();
         for (String positionKey : pieces.keySet()) {
             String imageName = pieces.get(positionKey);

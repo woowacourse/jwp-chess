@@ -25,11 +25,11 @@ public class PieceEntity {
         return roomId;
     }
 
-    private String getPlace() {
+    public String getPlace() {
         return place;
     }
 
-    private String getPiece() {
+    public String getPiece() {
         return piece;
     }
 }

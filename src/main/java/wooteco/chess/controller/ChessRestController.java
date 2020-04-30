@@ -23,33 +23,32 @@ public class ChessRestController {
 	}
 
 	@GetMapping
-	public ResponseDto getRooms() throws Exception {
+	public ResponseDto getRooms() {
 		return chessGameService.games();
 	}
 
 	@PostMapping
-	public ResponseDto createRoom() throws Exception {
+	public ResponseDto createRoom() {
 		return chessGameService.create();
 	}
 
 	@PutMapping("/{id}")
-	public ResponseDto restartRoom(@PathVariable Integer id) throws Exception {
+	public ResponseDto restartRoom(@PathVariable Long id) {
 		return chessGameService.restart(id);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseDto deleteRoom(@PathVariable Integer id) throws Exception {
+	public ResponseDto deleteRoom(@PathVariable Long id) {
 		return chessGameService.delete(id);
 	}
 
 	@GetMapping("/{id}/board")
-	public ResponseDto getBoard(@PathVariable Integer id) throws Exception {
+	public ResponseDto getBoard(@PathVariable Long id) {
 		return chessGameService.find(id);
 	}
 
 	@PutMapping("/{id}/board")
-	public ResponseDto movePiece(@PathVariable Integer id, @ModelAttribute MoveRequestDto moveRequestDto) throws
-			Exception {
+	public ResponseDto movePiece(@PathVariable Long id, @ModelAttribute MoveRequestDto moveRequestDto) {
 		return chessGameService.move(id, moveRequestDto.source(), moveRequestDto.target());
 	}
 }

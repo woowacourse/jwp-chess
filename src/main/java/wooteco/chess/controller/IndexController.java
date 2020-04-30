@@ -21,7 +21,7 @@ public class IndexController {
 	}
 
 	@GetMapping("/rooms/{id}")
-	public String renderRoom(@PathVariable Integer id, Model model) {
+	public String renderRoom(@PathVariable Long id, Model model) {
 		try {
 			chessGameService.find(id);
 			model.addAttribute("id", id);

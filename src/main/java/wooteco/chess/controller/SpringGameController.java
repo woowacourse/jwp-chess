@@ -3,10 +3,7 @@ package wooteco.chess.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import wooteco.chess.dto.GameRequestDto;
-import wooteco.chess.dto.GameResponseDto;
-import wooteco.chess.dto.GameStatusDto;
-import wooteco.chess.dto.MoveRequestDto;
+import wooteco.chess.dto.*;
 import wooteco.chess.service.SpringGameService;
 
 import java.sql.SQLException;
@@ -23,8 +20,8 @@ public class SpringGameController {
     }
 
     @GetMapping("/init")
-    public GameResponseDto init(@RequestParam GameRequestDto gameRequestDto) throws SQLException {
-        return gameService.initialize(gameRequestDto);
+    public GameResponseDto init(@RequestParam Long roomId) throws SQLException {
+        return gameService.initialize(roomId);
     }
 
     @PostMapping("/move")
@@ -32,15 +29,15 @@ public class SpringGameController {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(gameService.move(requestDTO));
         } catch (IllegalArgumentException e) {
-            GameResponseDto gameResponseDTO = gameService.findAllPieces(requestDTO.getId());
+            GameResponseDto gameResponseDTO = gameService.findAllPieces(requestDTO.getRoomId());
             gameResponseDTO.setErrorMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(gameResponseDTO);
         }
     }
 
     @GetMapping("/status")
-    public GameStatusDto showStatus(@RequestParam GameRequestDto gameRequestDto) throws SQLException {
-        return new GameStatusDto(gameService.getScore(gameRequestDto), gameService.getScore(gameRequestDto));
+    public GameStatusDto showStatus(@RequestParam Long roomId) throws SQLException {
+        return gameService.getScore(roomId);
     }
 
     @GetMapping("/load")

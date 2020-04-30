@@ -32,8 +32,8 @@ public class SpringRoomService {
         roomRepository.save(new RoomEntity(roomRequestDto.getName(), roomRequestDto.getPassword(), gameEntity));
     }
 
-    public void removeRoom(RoomResponseDto roomResponseDto) throws SQLException {
-        roomRepository.deleteById(roomResponseDto.getId());
+    public void removeRoom(Long id) throws SQLException {
+        roomRepository.deleteById(id);
     }
 
     public List<RoomResponseDto> findAllRoom() throws SQLException {

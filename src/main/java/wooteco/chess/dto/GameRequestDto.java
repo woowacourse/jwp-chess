@@ -2,13 +2,13 @@ package wooteco.chess.dto;
 
 public class GameRequestDto {
 
-    private Long id;
+    private Long roomId;
 
-    public GameRequestDto(final Long id) {
-        this.id = id;
+    public GameRequestDto(final Long roomId) {
+        this.roomId = roomId;
     }
 
-    public Long getId() {
-        return id;
+    public Long getRoomId() {
+        return roomId;
     }
 }

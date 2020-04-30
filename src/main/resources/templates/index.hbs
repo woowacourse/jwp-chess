@@ -89,37 +89,95 @@
     }
 
     function deleteRoom(id) {
-        console.log("deleteRoom : " + id);
-
-        let currentPath = window.location.pathname;
-        location.href = currentPath + '/remove/' + names;
-    }
-
-    function enterRoom(id) {
-        console.log("enterRoom : " + id);
-        let currentPath = window.location.pathname;
-        let inputPassword = prompt('비밀번호를 입력해주세요!');
-        if(authorizePassword(id, inputPassword)) {
-            alert("통과됐습니다");
-        }
-        // location.href = currentPath + '/enter/' + id;
-    }
-
-    function authorizePassword(id, inputPassword) {
+        let inputPassword = prompt("비밀번호를 입력해 주세요");
         let data = {
             id : id,
             password : inputPassword
         };
 
-        fetch("/rooms/authorize", {
+        fetch("rooms/authorize", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data),
-        }).then(response => response.json()){
-            return response;
-        }
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+                .then(data => {
+                    if(!data){
+                        alert("비밀번호가 일치하지 않습니다.");
+                    }
+                    let form = document.createElement("form");
+                    form.setAttribute("charset", "UTF-8");
+                    form.setAttribute("method", "POST");  //Post 방식
+                    form.setAttribute("action", "/rooms/remove"); //요청 보낼 주소
+
+                    let hiddenField1 = document.createElement("input");
+                    hiddenField1.setAttribute("type", "hidden");
+                    hiddenField1.setAttribute("name", "id");
+                    hiddenField1.setAttribute("value", id);
+                    form.appendChild(hiddenField1);
+
+                    hiddenField2 = document.createElement("input");
+                    hiddenField2.setAttribute("type", "hidden");
+                    hiddenField2.setAttribute("name", "loginSuccess");
+                    hiddenField2.setAttribute("value", data);
+                    form.appendChild(hiddenField2);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                    form = null;
+                }).catch(error =>{
+                    alert(error);
+                });
+
+        // let currentPath = window.location.pathname;
+        // location.href = currentPath + '/remove?roomId=' + id;
+    }
+
+    function enterRoom(id) {
+        let inputPassword = prompt('비밀번호를 입력해주세요!');
+        let data = {
+            id : id,
+            password : inputPassword
+        };
+
+        fetch("rooms/authorize", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+        .then(data => {
+            if(data){
+                alert("로그인 성공");
+            } else {
+                alert("비밀번호가 일치하지 않습니다.");
+            }
+            let form = document.createElement("form");
+            form.setAttribute("charset", "UTF-8");
+            form.setAttribute("method", "POST");  //Post 방식
+            form.setAttribute("action", "/rooms/enter"); //요청 보낼 주소
+
+            let hiddenField1 = document.createElement("input");
+            hiddenField1.setAttribute("type", "hidden");
+            hiddenField1.setAttribute("name", "id");
+            hiddenField1.setAttribute("value", id);
+            form.appendChild(hiddenField1);
+
+            hiddenField2 = document.createElement("input");
+            hiddenField2.setAttribute("type", "hidden");
+            hiddenField2.setAttribute("name", "loginSuccess");
+            hiddenField2.setAttribute("value", data);
+            form.appendChild(hiddenField2);
+
+            document.body.appendChild(form);
+            form.submit();
+            form = null;
+        }).catch(error =>{
+            alert(error);
+        })
+
     }
 
 </script>

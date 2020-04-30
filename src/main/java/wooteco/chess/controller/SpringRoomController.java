@@ -6,7 +6,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import wooteco.chess.dto.AuthorizeDto;
+import wooteco.chess.dto.LoginRequest;
 import wooteco.chess.dto.RoomRequestDto;
 import wooteco.chess.dto.RoomResponseDto;
 import wooteco.chess.service.SpringRoomService;
@@ -14,6 +16,7 @@ import wooteco.chess.service.SpringRoomService;
 import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/rooms")
@@ -33,10 +36,15 @@ public class SpringRoomController {
         return "index";
     }
 
-    @GetMapping("/enter")
-    public String enterRoom(@RequestParam(value = "roomId") Integer roomId, Model model) {
-        model.addAttribute("roomId", roomId);
-        return "game";
+    @PostMapping("/enter")
+    public String enterRoom(LoginRequest loginRequest,
+                            Model model, RedirectAttributes redirectAttributes) throws SQLException {
+        if(loginRequest.getLoginSuccess()) {
+            model.addAttribute("roomId", loginRequest.getId());
+            return "game";
+        }
+        redirectAttributes.addFlashAttribute("authorizeError", "wrongPassword");
+        return "redirect:/rooms";
     }
 
     // TODO: 2020/04/22 valid 에러페이지 이동 문제
@@ -51,28 +59,22 @@ public class SpringRoomController {
         return "redirect:/rooms";
     }
 
-    @GetMapping("/remove")
-    public String removeRoom(@RequestParam(value = "roomId") RoomResponseDto roomResponseDto) throws SQLException {
-        roomService.removeRoom(roomResponseDto);
+    @PostMapping("/remove")
+    public String removeRoom(LoginRequest loginRequest, Model model, RedirectAttributes redirectAttributes) throws SQLException {
+        if(loginRequest.getLoginSuccess()){
+            roomService.removeRoom(loginRequest.getId());
+            return "redirect:/rooms";
+        }
+        redirectAttributes.addFlashAttribute("authorizeError", "wrongPassword");
         return "redirect:/rooms";
     }
 
     @PostMapping("/authorize")
     @ResponseBody
     public boolean authorize(@Valid @RequestBody AuthorizeDto authorizeDto, Errors errors) {
-//        ModelAndView model = new ModelAndView("index");
-//
-//        if(errors.hasErrors()){
-//            model.addObject("errors", errors);
-//            return model;
-//        }
-        return roomService.authorize(authorizeDto.getId(), authorizeDto.getPassword());
-//        model.addObject("result", result);
-//        if (!result) {
-//            errors.rejectValue("password", "wrongPassword", "wrong Password");
-//            model.addObject("authorizeError", errors.getFieldValue("password"));
-//        }
-//        return model;
-
+        if(Objects.nonNull(authorizeDto.getPassword())) {
+            return roomService.authorize(authorizeDto.getId(), authorizeDto.getPassword());
+        }
+        return false;
     }
 }

@@ -29,8 +29,8 @@ public class SpringGameService {
     private RoomRepository roomRepository;
 
     @Transactional
-    public GameResponseDto initialize(GameRequestDto request) throws SQLException {
-        RoomEntity roomEntity = roomRepository.findById(request.getId())
+    public GameResponseDto initialize(Long roomId) throws SQLException {
+        RoomEntity roomEntity = roomRepository.findById(roomId)
                 .orElseThrow(RuntimeException::new);
         Set<PieceEntity> pieceEntities = convertPiecesToPieceEntity(Pieces.initPieces());
         GameEntity gameEntity = new GameEntity(Color.WHITE, pieceEntities);
@@ -41,7 +41,7 @@ public class SpringGameService {
     }
 
     public GameResponseDto move(MoveRequestDto moveRequestDto) throws SQLException {
-        Long id = moveRequestDto.getId();
+        Long id = moveRequestDto.getRoomId();
         String sourcePosition = moveRequestDto.getSourcePosition();
         String targetPosition = moveRequestDto.getTargetPosition();
 
@@ -65,24 +65,23 @@ public class SpringGameService {
         return convertRoomEntityToGameDto(roomEntity);
     }
 
-    public double getScore(final GameRequestDto gameRequestDto) throws SQLException {
-        Long id = gameRequestDto.getId();
-
-        RoomEntity roomEntity = roomRepository.findById(id)
+    public GameStatusDto getScore(final Long roomId) throws SQLException {
+        RoomEntity roomEntity = roomRepository.findById(roomId)
                 .orElseThrow(RuntimeException::new);
 
         GameEntity gameEntity = roomEntity.getGame();
-
 
         Map<Position, Piece> originPieces = convertPieceEntityToPieces(gameEntity.getPiece());
         Pieces pieces = new Pieces(originPieces);
         GameManager gameManager = new GameManager(pieces, gameEntity.getTurn());
 
-        return PieceScore.calculateByColor(gameManager, gameEntity.getTurn());
+
+        return new GameStatusDto(PieceScore.calculateByColor(gameManager, Color.WHITE),
+                PieceScore.calculateByColor(gameManager, Color.BLACK));
     }
 
     public List<String> getMovablePositions(final MoveRequestDto moveRequestDto) throws SQLException {
-        Long id = moveRequestDto.getId();
+        Long id = moveRequestDto.getRoomId();
         String sourcePosition = moveRequestDto.getSourcePosition();
 
         RoomEntity roomEntity = roomRepository.findById(id)

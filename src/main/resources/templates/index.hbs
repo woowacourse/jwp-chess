@@ -9,15 +9,11 @@
     <button>방만들기</button>
 </form>
 
-<form action="/load" method="get">
-    <input type="text" name="gameId" placeholder="방 번호">
-    <button>불러오기</button>
-</form>
 <div class="room-container">
     {{#rooms.room}}
         <div class="room-wrapper">
             <div id="{{id}}" class="room">
-                <button type="button" onclick="/load?gameId={{id}}">{{id}} 방</button>
+                <button type="button" onclick="location.href='/load?gameId={{id}}'">{{id}} 방</button>
             </div>
         </div>
     {{/rooms.room}}

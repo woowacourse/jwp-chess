@@ -56,7 +56,12 @@ public class ChessService {
 		Piece piece = chessGame.findPieceByPosition(targetPosition);
 
 		return new MoveResponseDto(game.getId(), chessGame.isKingAlive(), UnicodeConverter.convert(piece.getSymbol()),
-			chessGame.getTurnName());
+			chessGame.getTurnName(), getScore(chessGame));
+	}
+
+	private Map<String, Double> getScore(ChessGame chessGame) {
+		Map<Team, Double> score = Score.calculateScore(chessGame.getPieces(), Team.values());
+		return ScoreConverter.convert(score);
 	}
 
 	private Game findGameById(Long gameId) {
@@ -79,15 +84,15 @@ public class ChessService {
 
 	private BoardDto createBoardDto(Long gameId, ChessGame chessGame) {
 		List<String> symbols = UnicodeConverter.convert(chessGame.getReverse());
-		Map<Team, Double> score = Score.calculateScore(chessGame.getPieces(), Team.values());
-		return new BoardDto(gameId, symbols, ScoreConverter.convert(score), chessGame.getTurnName());
+		Map<String, Double> score = getScore(chessGame);
+		return new BoardDto(gameId, symbols, score, chessGame.getTurnName());
 	}
 
 	@Transactional(readOnly = true)
 	public SavedGameBundleDto findAllGames() {
-		List<Game> games = gameRepository.findAll();
-		return games.stream()
-			.map(game -> new SavedGameDto(game.getId()))
+		List<Long> gameId = gameRepository.findAllById();
+		return gameId.stream()
+			.map(SavedGameDto::new)
 			.collect(collectingAndThen(toList(), SavedGameBundleDto::new));
 	}
 }

@@ -1,10 +1,10 @@
 package wooteco.chess.domain.piece.queen;
 
+import java.util.Map;
+
 import wooteco.chess.domain.Team;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.position.Position;
-
-import java.util.Map;
 
 public class Queen extends Piece {
 	private static final int QUEEN_SCORE = 9;

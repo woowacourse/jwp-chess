@@ -1,10 +1,10 @@
 package wooteco.chess.domain.piece;
 
-import wooteco.chess.domain.Team;
-import wooteco.chess.domain.position.Position;
-
 import java.util.Map;
 import java.util.Objects;
+
+import wooteco.chess.domain.Team;
+import wooteco.chess.domain.position.Position;
 
 public abstract class MovingStrategy {
 	public void validateMove(Position source, Position target, Map<Position, Team> teamBoard) {

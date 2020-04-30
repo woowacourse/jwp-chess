@@ -1,9 +1,9 @@
 package wooteco.chess;
 
-import wooteco.chess.controller.SparkController;
+import wooteco.chess.controller.spark.SparkController;
 
 public class SparkChessApplication {
-    public static void main(String[] args) {
-        new SparkController().route();
-    }
+	public static void main(String[] args) {
+		new SparkController().route();
+	}
 }

@@ -13,7 +13,7 @@ public class Ready implements ChessGameState {
 
 	@Override
 	public ChessGameState start() {
-		return new Playing(BoardRepository.create(), new Turn(Team.WHITE));
+		return new Playing(BoardFactory.create(), new Turn(Team.WHITE));
 	}
 
 	@Override

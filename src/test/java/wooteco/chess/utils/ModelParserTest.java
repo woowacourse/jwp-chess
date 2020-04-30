@@ -1,4 +1,4 @@
-package wooteco.chess.webutil;
+package wooteco.chess.utils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,8 @@ public class ModelParserTest {
     @Test
     @DisplayName("빈 보드 파싱 테스트")
     void parseBlankBoard() {
-        assertThat(ModelParser.parseBlankBoard()).isInstanceOf(Map.class);
+        Map<String, Object> board = ModelParser.parseBlankBoard();
+        assertThat(board.size()).isEqualTo(64);
     }
 
     @Test

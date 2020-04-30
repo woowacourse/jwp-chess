@@ -12,7 +12,7 @@ import wooteco.chess.repository.GameStatus;
 import wooteco.chess.repository.GameStatusRepository;
 import wooteco.chess.repository.PieceInfo;
 import wooteco.chess.repository.PieceInfoRepository;
-import wooteco.chess.webutil.ModelParser;
+import wooteco.chess.utils.ModelParser;
 
 import java.util.ArrayList;
 import java.util.List;

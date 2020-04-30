@@ -1,4 +1,4 @@
-package wooteco.chess.webutil;
+package wooteco.chess.utils;
 
 
 import wooteco.chess.domain.board.Board;
@@ -25,16 +25,7 @@ public class ModelParser {
     }
 
     public static Map<String, Object> parseBoard(final Board board) {
-        Map<String, Object> output = new HashMap<>();
-
-        for (Position position : Position.positions) {
-            Piece piece = board.findPieceOn(position);
-            output.put(position.toString(), piece.toString());
-        }
-
-        output.putAll(parseMovablePlaces(new ArrayList<>()));
-
-        return output;
+        return parseBoard(board, new ArrayList<>());
     }
 
     public static Map<String, Object> parseBoard(final Board board, final List<Position> movablePlaces) {

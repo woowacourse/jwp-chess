@@ -2,65 +2,60 @@ package wooteco.chess.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.ModelAndView;
 import wooteco.chess.service.ChessService;
-import wooteco.chess.webutil.ModelParser;
+import wooteco.chess.utils.ModelParser;
 
 import javax.servlet.ServletRequest;
-import java.sql.SQLException;
 
 @Controller
 public class ChessController {
+    private static final String INDEX_PAGE = "/index";
 
     @Autowired
     ChessService chessService;
 
     @GetMapping("/")
-    public ModelAndView index() {
-        ModelAndView view = new ModelAndView("index");
-        view.addAllObjects(chessService.loadInitBoard());
-        return view;
+    public String index(Model model) {
+        model.addAllAttributes(chessService.loadInitBoard());
+        return INDEX_PAGE;
     }
 
     @PostMapping("/new-game")
-    public ModelAndView newGame() throws SQLException {
-        ModelAndView view = new ModelAndView("index");
-        view.addAllObjects(ModelParser.parseBoard(chessService.newGame()));
-        return view;
+    public String newGame(Model model) {
+        model.addAllAttributes(ModelParser.parseBoard(chessService.newGame()));
+        return INDEX_PAGE;
     }
 
     @PostMapping("/load-game")
-    public ModelAndView loadGame() throws SQLException {
-        ModelAndView view = new ModelAndView("index");
-        view.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));
-        return view;
+    public String loadGame(Model model) {
+        model.addAllAttributes(ModelParser.parseBoard(chessService.readBoard()));
+        return INDEX_PAGE;
     }
 
     @PostMapping("/score")
-    public ModelAndView score() throws SQLException {
-        ModelAndView view = new ModelAndView("index");
-        view.addAllObjects(chessService.readBoardWithScore());
-        return view;
+    public String score(Model model) {
+        model.addAllAttributes(chessService.readBoardWithScore());
+        return INDEX_PAGE;
     }
 
     @PostMapping("/move")
-    public ModelAndView move(ServletRequest request) throws SQLException {
-        ModelAndView view = new ModelAndView("index");
-
+    public String move(ServletRequest request, Model model) {
         String start = request.getParameter("start");
         String end = request.getParameter("end");
         chessService.move(start, end);
 
-        view.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));
-        return view;
+        model.addAllAttributes(ModelParser.parseBoard(chessService.readBoard()));
+        return INDEX_PAGE;
     }
 
     @PostMapping("/show-movable")
-    public ModelAndView showMovable(ServletRequest request) throws SQLException {
-        ModelAndView view = new ModelAndView("index");
-        view.addAllObjects(chessService.loadMovable(request.getParameter("start")));
-        return view;
+    public String showMovable(ServletRequest request, Model model) {
+        String startPosition = request.getParameter("start");
+
+        model.addAllAttributes(chessService.loadMovable(startPosition));
+        return INDEX_PAGE;
     }
 }

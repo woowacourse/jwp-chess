@@ -4,6 +4,7 @@ import chess.repository.exceptions.DaoNoneSelectedException;
 import chess.service.ChessRoomService;
 import chess.view.Announcement;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +20,11 @@ public class SpringRoomController {
 	}
 
 	@GetMapping("/{room_id}")
-	private String load(@PathVariable("room_id") final int roomId, final Model model) {
+	public String load(@PathVariable("room_id") final int roomId, final Model model) {
 		try {
 			loadData(roomId, model);
 		} catch (DaoNoneSelectedException e) {
-			initRoom(roomId);
+			chessRoomService.initRoom(roomId);
 			loadData(roomId, model);
 		}
 		return "chess";
@@ -34,12 +35,6 @@ public class SpringRoomController {
 		final String announcementMessage = chessRoomService.loadAnnouncementMessage(roomId);
 		model.addAttribute("table", boardHtml);
 		model.addAttribute("announcement", announcementMessage);
-	}
-
-	private void initRoom(final int roomId) {
-		chessRoomService.saveNewState(roomId);
-		chessRoomService.saveNewPieces(roomId);
-		chessRoomService.saveNewAnnouncementMessage(roomId);
 	}
 
 	@PostMapping("/{room_id}")

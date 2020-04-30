@@ -20,6 +20,7 @@ import chess.view.Announcement;
 import chess.view.BoardToHtml;
 import chess.view.board.Board;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -66,11 +67,18 @@ public class ChessRoomService {
 		return BoardToHtml.of(board).getHtml();
 	}
 
-	public void saveNewState(final int roomId) {
+	@Transactional
+	public void initRoom(final int roomId) {
+		saveNewState(roomId);
+		saveNewPieces(roomId);
+		saveNewAnnouncementMessage(roomId);
+	}
+
+	private void saveNewState(final int roomId) {
 		stateRepository.save("ended", roomId);
 	}
 
-	public void saveNewPieces(final int roomId) {
+	private void saveNewPieces(final int roomId) {
 		final Set<Piece> pieces = new StartPieces().getInstance();
 
 		final List<PieceEntity> pieceEntities = pieces.stream()
@@ -80,6 +88,12 @@ public class ChessRoomService {
 		pieceRepository.saveAll(pieceEntities);
 	}
 
+	private void saveNewAnnouncementMessage(int roomId) {
+		AnnouncementEntity announcementEntity = new AnnouncementEntity(Announcement.ofFirst().getString(), roomId);
+		announcementRepository.save(announcementEntity);
+	}
+
+	@Transactional
 	public void updateRoom(final int roomId, final String command) {
 		final State before = loadState(roomId);
 		final State after = before.pushCommand(command);
@@ -118,11 +132,6 @@ public class ChessRoomService {
 	public String loadAnnouncementMessage(int roomId) {
 		return announcementRepository.findByRoomId(roomId).orElseThrow(DaoNoneSelectedException::new)
 				.getMessage();
-	}
-
-	public void saveNewAnnouncementMessage(int roomId) {
-		AnnouncementEntity announcementEntity = new AnnouncementEntity(Announcement.ofFirst().getString(), roomId);
-		announcementRepository.save(announcementEntity);
 	}
 
 	public void saveAnnouncementMessage(final int roomId, final String message) {

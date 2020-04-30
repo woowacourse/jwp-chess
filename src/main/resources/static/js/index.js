@@ -1,62 +1,70 @@
-const rooms = document.getElementById("rooms");
-const createRoomName = document.getElementById("room-name");
-const creatRoom = document.getElementById("create-room");
-const deleteRoom = document.getElementById("delete-room");
-const intoRoom = document.getElementById("into-room");
+const roomsCombo = document.getElementById("rooms");
+const roomName = document.getElementById("room-name");
+const intoRoomButton = document.getElementById("into-room");
+const deleteRoomButton = document.getElementById("delete-room");
+const creatRoomButton = document.getElementById("create-room");
 
 fetch('/api/rooms').then(res => res.json()).then(data => {
     roomSetting(data);
 });
 
-intoRoom.onclick = () => {
-    if (rooms.value === "") {
+intoRoomButton.onclick = () => {
+    if (roomsCombo.value === "") {
         alert("들어갈 방이 없습니다. 방을 생성하세요.");
-        createRoomName.focus();
+        roomName.focus();
         return;
     }
-    document.getElementById("start").action = '/room/' + rooms.value;
+    document.getElementById("start").action = '/room/' + roomsCombo.value;
     document.getElementById("start").submit();
 };
 
-deleteRoom.onclick = () => {
-    if (rooms.value === "") {
+deleteRoomButton.onclick = () => {
+    if (roomsCombo.value === "") {
         alert("삭제할 방이 없습니다. 방을 만들어보면 어떨까요?");
-        createRoomName.focus();
+        roomName.focus();
         return;
     }
-    let roomId = rooms.value;
-    fetch("/api/room", {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            roomId
+    deleteRoom();
+
+    function deleteRoom() {
+        let roomId = roomsCombo.value;
+        fetch("/api/room", {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                roomId
+            })
+        }).then(res => res.json()).then(data => {
+            initialRooms();
+            roomSetting(data);
+            roomName.value = "";
         })
-    }).then(res => res.json()).then(data => {
-        initialRooms();
-        roomSetting(data);
-        createRoomName.value = "";
-    })
+    }
 };
 
-creatRoom.onclick = () => {
-    let roomName = createRoomName.value;
-    let roomPassword = '';
+creatRoomButton.onclick = () => {
     fetch('/api/room', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            roomName, roomPassword
+            roomName: roomName.value, roomPassword: ''
         })
     }).then(res => res.json()).then(data => {
         initialRooms();
         roomSetting(data);
-        createRoomName.value = "";
+        roomName.value = "";
     })
 };
+
+function initialRooms() {
+    for (let index = 0; index < roomsCombo.childElementCount;) {
+        roomsCombo.removeChild(roomsCombo.children.item(index));
+    }
+}
 
 function roomSetting(data) {
     for (key in data.rooms) {
@@ -64,14 +72,7 @@ function roomSetting(data) {
             let opt = document.createElement("option");
             opt.value = key;
             opt.textContent = "#" + key + " - " + data.rooms[key];
-            rooms.appendChild(opt);
+            roomsCombo.appendChild(opt);
         }
-    }
-}
-
-function initialRooms() {
-    let roomsChild = rooms.children;
-    for (let index = 0; index < rooms.childElementCount;) {
-        rooms.removeChild(roomsChild.item(index));
     }
 }

@@ -4,14 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wooteco.chess.controller.command.Command;
 import wooteco.chess.domain.ChessManager;
-import wooteco.chess.repository.ChessRoomRepository;
-import wooteco.chess.repository.Commands;
 import wooteco.chess.dto.GameResponse;
-import wooteco.chess.repository.CommandsRepository;
+import wooteco.chess.repository.ChessRoom;
+import wooteco.chess.repository.ChessRoomRepository;
+import wooteco.chess.repository.MoveCommand;
+import wooteco.chess.repository.MoveCommandRepository;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ChessService {
@@ -19,7 +20,7 @@ public class ChessService {
     private static final String MOVE_DELIMITER = " ";
 
     @Autowired
-    private CommandsRepository commandsRepository;
+    private MoveCommandRepository moveCommandRepository;
     @Autowired
     private ChessRoomRepository chessRoomRepository;
     private ChessManager chessManager;
@@ -29,29 +30,31 @@ public class ChessService {
         chessManager.start();
     }
 
-    public void playNewGame() {
-        initializeDatabase();
+    public void playNewGame(String roomName) {
+        ChessRoom newRoom = addNewRoom(roomName);
     }
 
     public void playLastGame(Long roomId) {
-        List<Commands> commands = commandsRepository.findByRoomId(roomId);
-        for (Commands command : commands) {
+//        List<MoveCommand> commands = chessRoomRepository.findByRoomId(roomId);
+        ChessRoom savedRoom = chessRoomRepository.findById(roomId).get();
+        Set<MoveCommand> commands = savedRoom.getMoveCommand();
+        for (MoveCommand command : commands) {
             Command.MOVE.apply(chessManager, command.getCommand());
         }
     }
 
-    public void move(String source, String target) {
+    public void move(String source, String target, Long roomId) {
         String command = String.join(MOVE_DELIMITER, new String[]{"move", source, target});
 
         try {
             Command.MOVE.apply(chessManager, command);
-            saveToDatabase(command);
+            saveCommand(command, roomId);
         } catch (Exception e) {
             throw new IllegalArgumentException(MOVE_ERROR_MESSAGE);
         }
 
         if (!chessManager.isPlaying()) {
-            initializeDatabase();
+            initializeCommandsById(roomId);
             chessManager.end();
         }
     }
@@ -74,11 +77,15 @@ public class ChessService {
         return model;
     }
 
-    private void initializeDatabase() {
-        commandsRepository.deleteAll();
+    private ChessRoom addNewRoom(String roomName) {
+        return chessRoomRepository.save(new ChessRoom(roomName));
     }
 
-    private void saveToDatabase(String command) {
-        commandsRepository.save(new Commands(command));
+    private void initializeCommandsById(Long roomId) {
+        chessRoomRepository.deleteById(roomId);
+    }
+
+    private void saveCommand(String command, Long roomId) {
+        moveCommandRepository.save(new MoveCommand(command));
     }
 }

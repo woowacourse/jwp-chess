@@ -4,23 +4,18 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("Commands")
-public class Commands {
+@Table("move_command")
+public class MoveCommand {
     @Id
-    @Column("CommandID")
+    @Column("command_id")
     private Long commandId;
-
-    @Column("Command")
     private String command;
-    private ChessRoomRef chessRoom;
 
-    public Commands(String command) {
-        this.command = command;
+    public MoveCommand() {
     }
 
-    public Commands(String command, ChessRoom chessRoom) {
+    public MoveCommand(String command) {
         this.command = command;
-        this.chessRoom = new ChessRoomRef(chessRoom);
     }
 
     public Long getCommandId() {
@@ -29,9 +24,5 @@ public class Commands {
 
     public String getCommand() {
         return command;
-    }
-
-    public ChessRoomRef getChessRoom() {
-        return chessRoom;
     }
 }

@@ -1,12 +1,13 @@
-DROP TABLE IF EXISTS commands;
-DROP TABLE IF EXISTS ChessRoom;
+DROP TABLE IF EXISTS move_command;
+DROP TABLE IF EXISTS chess_room;
 
-CREATE TABLE commands (
-    CommandID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    Command VARCHAR(128) NOT NULL
+CREATE TABLE move_command (
+    command_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    chess_room INT NOT NULL,
+    command VARCHAR(128) NOT NULL
 );
 
-CREATE TABLE ChessRoom (
-    RoomID int PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    RoomName varchar(128) NOT NULL
+CREATE TABLE chess_room (
+    room_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    room_name VARCHAR(128) NOT NULL
 );

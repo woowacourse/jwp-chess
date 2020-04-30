@@ -28,7 +28,7 @@ public class ChessController {
     }
 
     @PostMapping("/start")
-    public ModelAndView start(@RequestParam HashMap<String, String> paramMap) {
+    public ModelAndView start(@RequestParam Map<String, String> paramMap) {
         ModelAndView modelAndView = new ModelAndView();
 
         Room room = new Room(paramMap.get("roomName"));
@@ -43,7 +43,7 @@ public class ChessController {
 
     @PostMapping("/path")
     @ResponseBody
-    public List<String> path(@RequestParam HashMap<String, String> paramMap) {
+    public List<String> path(@RequestParam Map<String, String> paramMap) {
         try {
             return chessService.searchPath(new Room(paramMap.get("roomName")), paramMap.get("source"));
         } catch (RuntimeException e) {
@@ -53,7 +53,7 @@ public class ChessController {
 
     @PostMapping("/move")
     @ResponseBody
-    public Map<String, Object> move(@RequestParam HashMap<String, String> paramMap) {
+    public Map<String, Object> move(@RequestParam Map<String, String> paramMap) {
         Room blackRoom = new Room(paramMap.get("roomName"));
 
         Map<String, Object> model = new HashMap<>();

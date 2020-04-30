@@ -8,9 +8,9 @@ import util.NullChecker;
 public class MoveStatePromotion implements MoveStateStrategy {
 
     @Override
-    public MoveState getMoveState(ChessGame chessGame, MoveInfo moveInfo) {
+    public MoveState findMoveState(ChessGame chessGame, MoveInfo moveInfo) {
         NullChecker.validateNotNull(chessGame);
-        if (chessGame.isNeedPromotion()) {
+        if (chessGame.canPromote()) {
             return MoveState.NEEDS_PROMOTION;
         }
         return MoveState.NO_PAWN_PROMOTION;

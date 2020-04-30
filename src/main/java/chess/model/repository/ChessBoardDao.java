@@ -1,6 +1,5 @@
 package chess.model.repository;
 
-import static chess.model.repository.template.JdbcTemplate.getPssFromParams;
 import static chess.model.repository.template.JdbcTemplate.makeQuery;
 
 import chess.model.domain.board.CastlingSetting;
@@ -8,8 +7,6 @@ import chess.model.domain.board.EnPassant;
 import chess.model.domain.board.Square;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.PieceFactory;
-import chess.model.domain.state.MoveInfo;
-import chess.model.domain.state.MoveOrder;
 import chess.model.repository.template.JdbcTemplate;
 import chess.model.repository.template.PreparedStatementSetter;
 import chess.model.repository.template.ResultSetMapper;
@@ -29,19 +26,24 @@ public class ChessBoardDao {
         return INSTANCE;
     }
 
-    public void insert(int gameId, Map<Square, Piece> board,
-        Map<Square, Boolean> castlingElements) {
+    public void create(Integer gameId, Map<Square, Piece> chessBoard,
+        Map<Square, Boolean> castlingElements, Map<Square, Square> enPassant) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
-            "INSERT INTO CHESS_BOARD_TB(GAME_ID, BOARDSQUARE_NM, PIECE_NM, CASTLING_ELEMENT_YN)"
-            , "VALUES (?, ?, ?, ?)"
+            "INSERT INTO CHESS_BOARD_TB(GAME_ID, BOARDSQUARE_NM, PIECE_NM, CASTLING_ELEMENT_YN, EN_PASSANT_NM)"
+            , "VALUES (?, ?, ?, ?, ?)"
         );
         PreparedStatementSetter pss = pstmt -> {
-            for (Square boardSquare : board.keySet()) {
+            for (Square square : chessBoard.keySet()) {
                 pstmt.setInt(1, gameId);
-                pstmt.setString(2, boardSquare.getName());
-                pstmt.setString(3, PieceFactory.getName(board.get(boardSquare)));
-                pstmt.setString(4, changeBooleanToString(castlingElements.get(boardSquare)));
+                pstmt.setString(2, square.getName());
+                pstmt.setString(3, PieceFactory.getName(chessBoard.get(square)));
+                pstmt.setString(4, JdbcTemplate.convertYN(castlingElements.get(square)));
+                pstmt.setObject(5, enPassant.keySet().stream()
+                    .filter(key -> enPassant.containsKey(square))
+                    .map(enSquare -> enPassant.get(square).getName())
+                    .findFirst()
+                    .orElse(null));
                 pstmt.addBatch();
                 pstmt.clearParameters();
             }
@@ -49,33 +51,7 @@ public class ChessBoardDao {
         jdbcTemplate.executeUpdateWhenLoop(query, pss);
     }
 
-    private String changeBooleanToString(boolean changer) {
-        return changer ? "Y" : "N";
-    }
-
-    public void insertBoard(int gameId, Square square, Piece piece) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "INSERT INTO CHESS_BOARD_TB(GAME_ID, BOARDSQUARE_NM, PIECE_NM, CASTLING_ELEMENT_YN)",
-            "VALUES (?, ?, ?, 'N')"
-        );
-        PreparedStatementSetter pss = JdbcTemplate
-            .getPssFromParams(gameId, square.getName(), PieceFactory.getName(piece));
-        jdbcTemplate.executeUpdate(query, pss);
-    }
-
-    public void deleteBoardSquare(int gameId, Square square) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "DELETE FROM CHESS_BOARD_TB",
-            " WHERE GAME_ID = ?",
-            "   AND BOARDSQUARE_NM = ?"
-        );
-        PreparedStatementSetter pss = JdbcTemplate.getPssFromParams(gameId, square.getName());
-        jdbcTemplate.executeUpdate(query, pss);
-    }
-
-    public Set<CastlingSetting> getCastlingElements(int gameId) {
+    public Set<CastlingSetting> findCastlingElements(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT BOARDSQUARE_NM",
@@ -90,14 +66,14 @@ public class ChessBoardDao {
             while (rs.next()) {
                 castlingElements
                     .add(CastlingSetting.of(Square.of(rs.getString("BOARDSQUARE_NM")),
-                        PieceFactory.of(rs.getString("PIECE_NM"))));
+                        PieceFactory.getPiece(rs.getString("PIECE_NM"))));
             }
             return castlingElements;
         };
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public EnPassant getEnpassantBoard(int gameId) {
+    public EnPassant findEnpassantBoard(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT EN_PASSANT_NM",
@@ -118,7 +94,7 @@ public class ChessBoardDao {
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public Map<Square, Piece> getBoard(int gameId) {
+    public Map<Square, Piece> findBoard(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "SELECT BOARDSQUARE_NM",
@@ -131,92 +107,20 @@ public class ChessBoardDao {
             Map<Square, Piece> board = new HashMap<>();
             while (rs.next()) {
                 board.put(Square.of(rs.getString("BOARDSQUARE_NM")),
-                    PieceFactory.of(rs.getString("PIECE_NM")));
+                    PieceFactory.getPiece(rs.getString("PIECE_NM")));
             }
             return board;
         };
         return jdbcTemplate.executeQuery(query, pss, mapper);
     }
 
-    public void delete(int gameId) {
+    public void delete(Integer gameId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String query = makeQuery(
             "DELETE FROM CHESS_BOARD_TB",
             " WHERE GAME_ID = ?"
         );
         PreparedStatementSetter pss = pstmt -> pstmt.setInt(1, gameId);
-        jdbcTemplate.executeUpdate(query, pss);
-    }
-
-    public void copyBoardSquare(int gameId, MoveInfo moveInfo) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "INSERT INTO CHESS_BOARD_TB(GAME_ID, BOARDSQUARE_NM, PIECE_NM, CASTLING_ELEMENT_YN)",
-            "VALUES (?, ?, (",
-            "       SELECT PIECE_NM",
-            "         FROM CHESS_BOARD_TB AS BOARD",
-            "         JOIN CHESS_GAME_TB  AS GAME",
-            "        WHERE BOARD.GAME_ID = GAME.ID",
-            "          AND GAME.PROCEEDING_YN = 'Y'",
-            "          AND GAME.ID = ? ",
-            "          AND BOARDSQUARE_NM = ?), 'N')"
-        );
-        PreparedStatementSetter pss = JdbcTemplate
-            .getPssFromParams(gameId, moveInfo.get(MoveOrder.TO).getName(), gameId,
-                moveInfo.get(MoveOrder.FROM).getName());
-        jdbcTemplate.executeUpdate(query, pss);
-    }
-
-    public void updatePromotion(int gameId, Square finishPawnBoard, Piece hopePiece) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "UPDATE CHESS_BOARD_TB",
-            "   SET PIECE_NM = ?",
-            " WHERE GAME_ID = ?",
-            "   AND BOARDSQUARE_NM = ?"
-        );
-        PreparedStatementSetter pss = JdbcTemplate
-            .getPssFromParams(PieceFactory.getName(hopePiece), gameId, finishPawnBoard.getName());
-        jdbcTemplate.executeUpdate(query, pss);
-    }
-
-    public void deleteEnpassant(int gameId, Square enpassantSquare) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "DELETE FROM CHESS_BOARD_TB",
-            " WHERE GAME_ID = ?",
-            "   AND EN_PASSANT_NM = ?"
-        );
-        PreparedStatementSetter pss = JdbcTemplate
-            .getPssFromParams(gameId, enpassantSquare.getName());
-        jdbcTemplate.executeUpdate(query, pss);
-    }
-
-    public void updateEnPassant(int gameId, MoveInfo moveInfo) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "UPDATE CHESS_BOARD_TB",
-            "   SET EN_PASSANT_NM = ?",
-            " WHERE GAME_ID = ?",
-            "   AND BOARDSQUARE_NM = ?"
-        );
-        PreparedStatementSetter pss = JdbcTemplate
-            .getPssFromParams(EnPassant.getBetween(moveInfo).getName(), gameId,
-                moveInfo.get(MoveOrder.TO).getName());
-        jdbcTemplate.executeUpdate(query, pss);
-    }
-
-    public void deleteMyEnpassant(int gameId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String query = makeQuery(
-            "UPDATE CHESS_BOARD_TB",
-            "   SET EN_PASSANT_NM = NULL",
-            " WHERE GAME_ID = ?",
-            "   AND PIECE_NM = (SELECT CONCAT(TURN_NM, '_PAWN')",
-            "                     FROM CHESS_GAME_TB",
-            "                    WHERE ID = ?)"
-        );
-        PreparedStatementSetter pss = getPssFromParams(gameId, gameId);
         jdbcTemplate.executeUpdate(query, pss);
     }
 }

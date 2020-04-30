@@ -2,7 +2,10 @@ package chess.model.dto;
 
 public class UserNameDto {
 
-    private final String userName;
+    private String userName;
+
+    public UserNameDto() {
+    }
 
     public UserNameDto(String userName) {
         this.userName = userName;

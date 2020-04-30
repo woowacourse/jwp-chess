@@ -2,11 +2,14 @@ package chess.model.dto;
 
 public class MoveDto {
 
-    private final String source;
-    private final String target;
-    private final int gameId;
+    private String source;
+    private String target;
+    private Integer gameId;
 
-    public MoveDto(String source, String target, int gameId) {
+    public MoveDto() {
+    }
+
+    public MoveDto(String source, String target, Integer gameId) {
         this.source = source;
         this.target = target;
         this.gameId = gameId;
@@ -20,7 +23,16 @@ public class MoveDto {
         return target;
     }
 
-    public int getGameId() {
+    public Integer getGameId() {
         return gameId;
+    }
+
+    @Override
+    public String toString() {
+        return "MoveDto{" +
+            "source='" + source + '\'' +
+            ", target='" + target + '\'' +
+            ", gameId=" + gameId +
+            '}';
     }
 }

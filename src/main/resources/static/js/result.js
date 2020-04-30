@@ -16,8 +16,11 @@ reset.onclick = () => {
 
 submit.onclick = () => {
     let userName = userNames.value;
-    fetch('/result/api/userResult', {
+    fetch('/api/result/userResult', {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             userName
         })
@@ -29,7 +32,7 @@ submit.onclick = () => {
     })
 };
 
-fetch('/result/api/viewUsers').then(res => res.json()).then(data => {
+fetch('/api/result/viewUsers').then(res => res.json()).then(data => {
     for (let userName of data.userNames) {
         let opt = document.createElement("option");
         opt.value = userName;

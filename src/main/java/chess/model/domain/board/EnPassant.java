@@ -4,13 +4,28 @@ import chess.model.domain.piece.Pawn;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Team;
 import chess.model.domain.state.MoveInfo;
-import chess.model.domain.state.MoveOrder;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EnPassant {
+
+    private static Set<Square> BLACK_EN_PASSANTS;
+    private static Set<Square> WHITE_EN_PASSANTS;
+
+    static {
+        Set<Square> blackEnPassants = new HashSet<>();
+        Set<Square> whiteEnPassants = new HashSet<>();
+        for (char file = 'a'; file <= 'h'; file++) {
+            blackEnPassants.add(Square.of(file + "7"));
+            whiteEnPassants.add(Square.of(file + "2"));
+        }
+        BLACK_EN_PASSANTS = Collections.unmodifiableSet(blackEnPassants);
+        WHITE_EN_PASSANTS = Collections.unmodifiableSet(whiteEnPassants);
+    }
 
     private Map<Square, Square> enPassantsToAfterSquares;
 
@@ -22,13 +37,13 @@ public class EnPassant {
         this.enPassantsToAfterSquares = enPassantsToAfterSquares;
     }
 
-    public static boolean isPawnJump(Piece piece, MoveInfo moveInfo) {
-        return piece instanceof Pawn && isJumpRank(moveInfo);
+    public static boolean isPawnMoveTwoRank(Piece piece, MoveInfo moveInfo) {
+        return piece instanceof Pawn && isMoveTwoRank(moveInfo);
     }
 
     public void removeEnPassant(MoveInfo moveInfo) {
-        enPassantsToAfterSquares.remove(moveInfo.get(MoveOrder.TO));
-        Square squareBefore = moveInfo.get(MoveOrder.FROM);
+        enPassantsToAfterSquares.remove(moveInfo.getTarget());
+        Square squareBefore = moveInfo.getSource();
         if (enPassantsToAfterSquares.containsValue(squareBefore)) {
             enPassantsToAfterSquares.remove(enPassantsToAfterSquares.keySet().stream()
                 .filter(
@@ -38,12 +53,28 @@ public class EnPassant {
         }
     }
 
-    public void addIfPawnJump(Piece piece, MoveInfo moveInfo) {
-        if (isPawnJump(piece, moveInfo)) {
-            Square betweenWhenJumpRank = getBetween(moveInfo);
-            Square afterSquare = moveInfo.get(MoveOrder.TO);
-            enPassantsToAfterSquares.put(betweenWhenJumpRank, afterSquare);
+    public void removeEnPassant(Team gameTurn) {
+        if (gameTurn == Team.BLACK) {
+            remove(BLACK_EN_PASSANTS);
+            return;
         }
+        remove(WHITE_EN_PASSANTS);
+    }
+
+    private void remove(Set<Square> deleteElements) {
+        for (Square deleteElement : deleteElements) {
+            enPassantsToAfterSquares.remove(deleteElement);
+        }
+    }
+
+    public void add(Piece piece, MoveInfo moveInfo) {
+        if (isPawnMoveTwoRank(piece, moveInfo)) {
+            Square betweenWhenJumpRank = getBetween(moveInfo);
+            Square afterSquare = moveInfo.getTarget();
+            enPassantsToAfterSquares.put(betweenWhenJumpRank, afterSquare);
+            return;
+        }
+        throw new IllegalArgumentException("폰이 두 칸 전진하지 않아, 앙파상 룰을 적용할 수 없습니다.");
     }
 
     public Map<Square, Piece> getEnPassantBoard(Team team) {
@@ -51,46 +82,48 @@ public class EnPassant {
             return new HashMap<>();
         }
         return enPassantsToAfterSquares.keySet().stream()
-            .filter(boardSquare -> !getRankByPawn(boardSquare).isSameTeam(team))
-            .collect(Collectors.toMap(boardSquare -> boardSquare, this::getRankByPawn));
+            .filter(boardSquare -> !getPawnByRank(boardSquare).isSameTeam(team))
+            .collect(Collectors.toMap(boardSquare -> boardSquare, this::getPawnByRank));
     }
 
-    private Piece getRankByPawn(Square square) {
+    private Piece getPawnByRank(Square square) {
         if (square.isSameRank(Rank.THIRD)) {
-            return Pawn.getPieceInstance(Team.WHITE);
+            return Pawn.getInstance(Team.WHITE);
         }
         if (square.isSameRank(Rank.SIXTH)) {
-            return Pawn.getPieceInstance(Team.BLACK);
+            return Pawn.getInstance(Team.BLACK);
         }
-        throw new IllegalArgumentException("인자 오류");
+        throw new IllegalArgumentException("앙파상 Rank가 아닙니다.");
     }
 
-    public Set<Square> getEnPassants() {
-        return enPassantsToAfterSquares.keySet();
+    public boolean isEnemyPast(Square square, Team gameTurn) {
+        return enPassantsToAfterSquares.containsKey(square) && !getPawnByRank(square)
+            .isSameTeam(gameTurn);
     }
 
-    public boolean hasOtherEnpassant(Square square, Team gameTurn) {
-        return enPassantsToAfterSquares.containsKey(square)
-            && !getRankByPawn(square).isSameTeam(gameTurn);
-    }
-
-    public Square getAfterSquare(Square enPassantSquare) {
+    public Square getCurrentSquare(Square enPassantSquare) {
         return enPassantsToAfterSquares.get(enPassantSquare);
     }
 
     public static Square getBetween(MoveInfo moveInfo) {
-        if (isJumpRank(moveInfo)) {
-            Square squareFrom = moveInfo.get(MoveOrder.FROM);
-            Square squareTo = moveInfo.get(MoveOrder.TO);
+        if (isMoveTwoRank(moveInfo)) {
+            Square squareFrom = moveInfo.getSource();
+            Square squareTo = moveInfo.getTarget();
             int rankCompare = squareFrom.getRankCompare(squareTo);
-            return squareFrom.getIncreased(0, rankCompare * -1);
+            return squareFrom.getIncreasedSquare(0, rankCompare * -1);
         }
-        throw new IllegalArgumentException("JUMP RANK가 아닙니다.");
+        throw new IllegalArgumentException("2칸 이동하지 않았습니다.");
     }
 
-    private static boolean isJumpRank(MoveInfo moveInfo) {
-        Square squareFrom = moveInfo.get(MoveOrder.FROM);
-        Square squareTo = moveInfo.get(MoveOrder.TO);
-        return Math.abs(squareFrom.calculateRankDistance(squareTo)) == 2;
+    private static boolean isMoveTwoRank(MoveInfo moveInfo) {
+        return Math.abs(moveInfo.calculateRankDistance()) == 2;
+    }
+
+    public Set<Square> getEnPassantsKeys() {
+        return enPassantsToAfterSquares.keySet();
+    }
+
+    public Map<Square, Square> getEnPassants() {
+        return enPassantsToAfterSquares;
     }
 }

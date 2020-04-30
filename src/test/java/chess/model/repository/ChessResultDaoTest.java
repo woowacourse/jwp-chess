@@ -3,6 +3,7 @@ package chess.model.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.model.dto.GameResultDto;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -29,8 +30,7 @@ class ChessResultDaoTest {
 
     @BeforeEach
     void setUp() {
-        CHESS_RESULT_DAO.insert(FIRST_NAME);
-        CHESS_RESULT_DAO.insert(SECOND_NAME);
+        CHESS_RESULT_DAO.createUserNames(new HashSet<>(Arrays.asList(FIRST_NAME, SECOND_NAME)));
     }
 
     @AfterEach
@@ -50,41 +50,40 @@ class ChessResultDaoTest {
     void update(int winCount, int drawCount, int loseCount) {
         GameResultDto gameResultDto = new GameResultDto(1, 0, 0);
         CHESS_RESULT_DAO.update(FIRST_NAME, gameResultDto);
-        assertThat(CHESS_RESULT_DAO.getWinOrDraw(FIRST_NAME).orElseThrow(IllegalAccessError::new))
+        assertThat(CHESS_RESULT_DAO.findWinOrDraw(FIRST_NAME).orElseThrow(IllegalAccessError::new))
             .isEqualTo(gameResultDto);
     }
 
     @Test
     void insert() {
         CHESS_RESULT_DAO.delete(USER_NAMES);
-        assertThat(CHESS_RESULT_DAO.getWinOrDraw(FIRST_NAME)).isEmpty();
-        assertThat(CHESS_RESULT_DAO.getWinOrDraw(SECOND_NAME)).isEmpty();
+        assertThat(CHESS_RESULT_DAO.findWinOrDraw(FIRST_NAME)).isEmpty();
+        assertThat(CHESS_RESULT_DAO.findWinOrDraw(SECOND_NAME)).isEmpty();
 
-        CHESS_RESULT_DAO.insert(FIRST_NAME);
-        CHESS_RESULT_DAO.insert(SECOND_NAME);
-        assertThat(CHESS_RESULT_DAO.getWinOrDraw(FIRST_NAME)).isNotEmpty();
-        assertThat(CHESS_RESULT_DAO.getWinOrDraw(SECOND_NAME)).isNotEmpty();
+        CHESS_RESULT_DAO.createUserNames(new HashSet<>(Arrays.asList(FIRST_NAME, SECOND_NAME)));
+        assertThat(CHESS_RESULT_DAO.findWinOrDraw(FIRST_NAME)).isNotEmpty();
+        assertThat(CHESS_RESULT_DAO.findWinOrDraw(SECOND_NAME)).isNotEmpty();
     }
 
     @Test
     void delete() {
-        assertThat(CHESS_RESULT_DAO.getWinOrDraw(FIRST_NAME)).isNotEmpty();
-        assertThat(CHESS_RESULT_DAO.getWinOrDraw(SECOND_NAME)).isNotEmpty();
+        assertThat(CHESS_RESULT_DAO.findWinOrDraw(FIRST_NAME)).isNotEmpty();
+        assertThat(CHESS_RESULT_DAO.findWinOrDraw(SECOND_NAME)).isNotEmpty();
 
         CHESS_RESULT_DAO.delete(USER_NAMES);
-        assertThat(CHESS_RESULT_DAO.getWinOrDraw(FIRST_NAME)).isEmpty();
-        assertThat(CHESS_RESULT_DAO.getWinOrDraw(SECOND_NAME)).isEmpty();
+        assertThat(CHESS_RESULT_DAO.findWinOrDraw(FIRST_NAME)).isEmpty();
+        assertThat(CHESS_RESULT_DAO.findWinOrDraw(SECOND_NAME)).isEmpty();
     }
 
     @Test
     void select() {
-        assertThat(CHESS_RESULT_DAO.getWinOrDraw(FIRST_NAME)).isNotEmpty();
-        assertThat(CHESS_RESULT_DAO.getWinOrDraw(SECOND_NAME)).isNotEmpty();
+        assertThat(CHESS_RESULT_DAO.findWinOrDraw(FIRST_NAME)).isNotEmpty();
+        assertThat(CHESS_RESULT_DAO.findWinOrDraw(SECOND_NAME)).isNotEmpty();
     }
 
     @Test
     void getWinOrDraw() {
-        Optional<GameResultDto> gameResult = CHESS_RESULT_DAO.getWinOrDraw(FIRST_NAME);
+        Optional<GameResultDto> gameResult = CHESS_RESULT_DAO.findWinOrDraw(FIRST_NAME);
         assertThat(gameResult.isPresent()).isTrue();
         GameResultDto gameResultDto = gameResult.orElseThrow(IllegalArgumentException::new);
         assertThat(gameResultDto.getWinCount()).isGreaterThanOrEqualTo(0);
@@ -94,7 +93,7 @@ class ChessResultDaoTest {
 
     @Test
     void getUsers() {
-        assertThat(CHESS_RESULT_DAO.getUsers().contains(FIRST_NAME)).isTrue();
-        assertThat(CHESS_RESULT_DAO.getUsers().contains(SECOND_NAME)).isTrue();
+        assertThat(CHESS_RESULT_DAO.findUserNames().contains(FIRST_NAME)).isTrue();
+        assertThat(CHESS_RESULT_DAO.findUserNames().contains(SECOND_NAME)).isTrue();
     }
 }

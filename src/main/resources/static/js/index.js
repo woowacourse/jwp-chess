@@ -25,7 +25,10 @@ deleteRoom.onclick = () => {
     }
     let roomId = rooms.value;
     fetch("/api/deleteRoom", {
-        method: 'Post',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             roomId
         })
@@ -36,11 +39,15 @@ deleteRoom.onclick = () => {
     })
 };
 
+
 creatRoom.onclick = () => {
     let roomName = createRoomName.value;
     let roomPassword = '';
     fetch('/api/createRoom', {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             roomName, roomPassword
         })

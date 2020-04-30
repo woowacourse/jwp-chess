@@ -2,13 +2,16 @@ package chess.model.dto;
 
 public class DeleteRoomDto {
 
-    private final int roomId;
+    private Integer roomId;
 
-    public DeleteRoomDto(int roomId) {
+    public DeleteRoomDto() {
+    }
+
+    public DeleteRoomDto(Integer roomId) {
         this.roomId = roomId;
     }
 
-    public int getRoomId() {
+    public Integer getRoomId() {
         return roomId;
     }
 }

@@ -19,7 +19,7 @@ public abstract class RepeatMovePiece extends Piece {
     }
 
     @Override
-    public Set<Square> getMovableArea(Square boardSquare, Map<Square, Piece> board,
+    public Set<Square> findMovableAreas(Square boardSquare, Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements) {
         Set<Square> allMovableArea = getAllMovableArea(boardSquare);
         Set<Square> containSquares = getContainsSquares(board, allMovableArea);

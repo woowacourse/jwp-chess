@@ -36,11 +36,11 @@ public class SpringRoomController {
         return "index";
     }
 
-    @PostMapping("/enter")
-    public String enterRoom(LoginRequest loginRequest,
+    @PostMapping("/enter/{id}")
+    public String enterRoom(@PathVariable Long id, @RequestParam Boolean loginSuccess,
                             Model model, RedirectAttributes redirectAttributes) throws SQLException {
-        if(loginRequest.getLoginSuccess()) {
-            model.addAttribute("roomId", loginRequest.getId());
+        if(loginSuccess) {
+            model.addAttribute("roomId", id);
             return "game";
         }
         redirectAttributes.addFlashAttribute("authorizeError", "wrongPassword");
@@ -59,10 +59,10 @@ public class SpringRoomController {
         return "redirect:/rooms";
     }
 
-    @PostMapping("/remove")
-    public String removeRoom(LoginRequest loginRequest, Model model, RedirectAttributes redirectAttributes) throws SQLException {
-        if(loginRequest.getLoginSuccess()){
-            roomService.removeRoom(loginRequest.getId());
+    @PostMapping("/remove/{id}")
+    public String removeRoom(@PathVariable Long id, @RequestParam Boolean loginSuccess, RedirectAttributes redirectAttributes) throws SQLException {
+        if(loginSuccess){
+            roomService.removeRoom(id);
             return "redirect:/rooms";
         }
         redirectAttributes.addFlashAttribute("authorizeError", "wrongPassword");

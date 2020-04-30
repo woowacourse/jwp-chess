@@ -109,13 +109,7 @@
                     let form = document.createElement("form");
                     form.setAttribute("charset", "UTF-8");
                     form.setAttribute("method", "POST");  //Post 방식
-                    form.setAttribute("action", "/rooms/remove"); //요청 보낼 주소
-
-                    let hiddenField1 = document.createElement("input");
-                    hiddenField1.setAttribute("type", "hidden");
-                    hiddenField1.setAttribute("name", "id");
-                    hiddenField1.setAttribute("value", id);
-                    form.appendChild(hiddenField1);
+                    form.setAttribute("action", "/rooms/remove/"+id); //요청 보낼 주소
 
                     hiddenField2 = document.createElement("input");
                     hiddenField2.setAttribute("type", "hidden");
@@ -129,9 +123,6 @@
                 }).catch(error =>{
                     alert(error);
                 });
-
-        // let currentPath = window.location.pathname;
-        // location.href = currentPath + '/remove?roomId=' + id;
     }
 
     function enterRoom(id) {
@@ -157,13 +148,7 @@
             let form = document.createElement("form");
             form.setAttribute("charset", "UTF-8");
             form.setAttribute("method", "POST");  //Post 방식
-            form.setAttribute("action", "/rooms/enter"); //요청 보낼 주소
-
-            let hiddenField1 = document.createElement("input");
-            hiddenField1.setAttribute("type", "hidden");
-            hiddenField1.setAttribute("name", "id");
-            hiddenField1.setAttribute("value", id);
-            form.appendChild(hiddenField1);
+            form.setAttribute("action", "/rooms/enter/"+id); //요청 보낼 주소
 
             hiddenField2 = document.createElement("input");
             hiddenField2.setAttribute("type", "hidden");

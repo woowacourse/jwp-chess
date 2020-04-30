@@ -6,10 +6,12 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.entity.ChessGame;
 import wooteco.chess.domain.entity.PieceEntity;
 import wooteco.chess.domain.piece.PiecesFactory;
 import wooteco.chess.domain.piece.Turn;
+import wooteco.chess.domain.position.Position;
 import wooteco.chess.repository.ChessGameRepository;
 import wooteco.chess.repository.PieceRepository;
 
@@ -38,5 +40,22 @@ public class SpringChessService {
 			.map(ChessGame::getPieces)
 			.findFirst()
 			.orElseThrow();
+	}
+
+	public void move(String gameId, Position from, Position to) {
+		ChessGame chessGame = chessGameRepository.findByRoomId(gameId)
+			.orElseThrow(() -> new IllegalArgumentException("게임이 존재하지 않습니다. game id = " + gameId));
+		Board board = Board.of(chessGame.getPieces());
+
+		PieceEntity source = pieceRepository.findByGameIdAndPosition(chessGame.getId(), from.getName())
+			.orElseThrow(() -> new IllegalArgumentException("기물이 존재하지 않습니다. position : " + from.getName()));
+		PieceEntity target = pieceRepository.findByGameIdAndPosition(chessGame.getId(), to.getName())
+			.orElseThrow(() -> new IllegalArgumentException("기물이 존재하지 않습니다. position : " + to.getName()));
+
+		board.move(source, target, chessGame);
+
+		pieceRepository.save(target);
+		pieceRepository.save(source);
+		chessGameRepository.save(chessGame);
 	}
 }

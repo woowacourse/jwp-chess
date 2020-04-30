@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import wooteco.chess.domain.entity.ChessGame;
 import wooteco.chess.domain.entity.PieceEntity;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceFactory;
@@ -19,6 +20,10 @@ public class Board {
 
 	private Board(Set<PieceEntity> pieces) {
 		this.pieces = pieces;
+	}
+
+	public static Board of(Set<PieceEntity> pieces) {
+		return new Board(pieces);
 	}
 
 	public static Board of(List<Piece> pieces) {
@@ -36,6 +41,14 @@ public class Board {
 			.collect(Collectors.toSet());
 
 		return new Board(pieceEntities);
+	}
+
+	public void move(PieceEntity source, PieceEntity target, ChessGame chessGame) {
+		verifyMove(source.getPosition(), target.getPosition(), chessGame.getTurn());
+
+		target.updateSymbolToSource(source);
+		source.updateSymbolToEmpty();
+		chessGame.updateTurnToNext();
 	}
 
 	public void verifyMove(Position from, Position to, Turn current) {

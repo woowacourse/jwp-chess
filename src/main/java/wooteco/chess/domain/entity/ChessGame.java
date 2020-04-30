@@ -35,4 +35,8 @@ public class ChessGame {
 	public Set<PieceEntity> getPieces() {
 		return pieces;
 	}
+
+	public Long getId() {
+		return id;
+	}
 }

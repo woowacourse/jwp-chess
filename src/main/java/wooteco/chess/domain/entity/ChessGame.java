@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import wooteco.chess.domain.piece.Turn;
+import wooteco.chess.domain.position.Position;
 
 @Table("chess_game")
 public class ChessGame {
@@ -36,7 +37,10 @@ public class ChessGame {
 		return pieces;
 	}
 
-	public Long getId() {
-		return id;
+	public PieceEntity findPieceByPosition(Position position) {
+		return pieces.stream()
+			.filter(pieceEntity -> pieceEntity.isPositionEquals(position))
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException("기물이 존재하지 않습니다. position : " + position.getName()));
 	}
 }

@@ -50,15 +50,11 @@ public class SpringChessService {
 			.orElseThrow(() -> new IllegalArgumentException("게임이 존재하지 않습니다. game id = " + roomId));
 		Board board = Board.of(chessGame.getPieces());
 
-		PieceEntity source = pieceRepository.findByGameIdAndPosition(chessGame.getId(), from.getName())
-			.orElseThrow(() -> new IllegalArgumentException("기물이 존재하지 않습니다. position : " + from.getName()));
-		PieceEntity target = pieceRepository.findByGameIdAndPosition(chessGame.getId(), to.getName())
-			.orElseThrow(() -> new IllegalArgumentException("기물이 존재하지 않습니다. position : " + to.getName()));
+		PieceEntity source = chessGame.findPieceByPosition(from);
+		PieceEntity target = chessGame.findPieceByPosition(to);
 
 		board.move(source, target, chessGame);
 
-		pieceRepository.save(target);
-		pieceRepository.save(source);
 		chessGameRepository.save(chessGame);
 	}
 

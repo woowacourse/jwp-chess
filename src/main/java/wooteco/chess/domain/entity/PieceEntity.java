@@ -40,4 +40,8 @@ public class PieceEntity {
 	public void updateSymbolToSource(PieceEntity source) {
 		symbol = source.symbol;
 	}
+
+	public boolean isPositionEquals(Position position) {
+		return this.position.equals(position);
+	}
 }

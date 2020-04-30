@@ -13,7 +13,8 @@ import chess.domain.command.MoveCommand;
 import chess.domain.piece.Piece;
 import chess.dto.BoardDto;
 import chess.dto.TurnDto;
-import wooteco.chess.entity.PieceEntity;
+import wooteco.chess.entity.BoardEntity;
+import wooteco.chess.entity.TurnEntity;
 import wooteco.chess.repository.BoardRepository;
 import wooteco.chess.repository.TurnRepository;
 
@@ -37,9 +38,12 @@ public class ChessGameService {
 
 		this.turnRepository.deleteAll();
 		for (Position position : board.keySet()) {
-			this.boardRepository.insert(position.getName(), board.get(position).getName());
+			this.boardRepository.save(
+				new BoardEntity(position.getName(), board.get(position).getName())
+			);
 		}
-		this.turnRepository.insert(TurnDto.from(chessBoard).getCurrentTeam());
+		String currentTeam = TurnDto.from(chessBoard).getCurrentTeam();
+		this.turnRepository.save(new TurnEntity(currentTeam));
 
 		return chessBoard;
 	}
@@ -51,9 +55,18 @@ public class ChessGameService {
 
 		this.boardRepository.deleteAll();
 		for (Position position : board.keySet()) {
-			this.boardRepository.insert(position.getName(), board.get(position).getName());
+			this.boardRepository.save(
+				new BoardEntity(position.getName(), board.get(position).getName())
+			);
 		}
-		this.turnRepository.update(TurnDto.from(chessBoard).getCurrentTeam());
+
+		TurnEntity first = this.turnRepository.findFirst();
+
+		this.turnRepository.save(
+			new TurnEntity(
+				first.getId(), TurnDto.from(chessBoard).getCurrentTeam()
+			)
+		);
 
 		return chessBoard;
 	}
@@ -80,13 +93,13 @@ public class ChessGameService {
 	}
 
 	private ChessBoard createBoardFromDb() {
-		List<PieceEntity> pieceEntities = this.boardRepository.findAll();
-		if (pieceEntities.isEmpty()) {
+		List<BoardEntity> boardEntities = this.boardRepository.findAll();
+		if (boardEntities.isEmpty()) {
 			throw new NoSuchElementException("테이블의 행이 비었습니다!!");
 		}
-		BoardDto boardDto = new BoardDto(pieceEntities);
+		BoardDto boardDto = new BoardDto(boardEntities);
 
-		TurnDto turnDto = TurnDto.from(this.turnRepository.findFirst());
+		TurnDto turnDto = TurnDto.from(this.turnRepository.findFirst().getTeamName());
 
 		return new ChessBoard(boardDto.createBoard(), turnDto.createTeam());
 	}

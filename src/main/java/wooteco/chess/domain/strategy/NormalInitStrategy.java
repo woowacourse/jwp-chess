@@ -7,7 +7,6 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.piece.Team;
 
-
 import java.util.HashMap;
 import java.util.Map;
 

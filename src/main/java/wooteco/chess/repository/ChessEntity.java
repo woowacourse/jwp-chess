@@ -19,7 +19,6 @@ public class ChessEntity {
     }
 
     public ChessEntity(Long roomId, String board, boolean isWhite) {
-        System.out.println("엔티티 생성자");
         this.roomId = roomId;
         this.board = board;
         this.isWhite = isWhite;
@@ -38,7 +37,6 @@ public class ChessEntity {
     }
 
     public boolean getIsWhite() {
-        System.out.println("디비->불리언");
         return isWhite;
     }
 }

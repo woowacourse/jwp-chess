@@ -27,8 +27,6 @@ public class RoomService {
 
         ChessEntity entity = chessRepository.save(
                 new ChessEntity(BoardConverter.convertToString(board), board.isTurnWhite()));
-        System.out.println("엔티티: " + entity);
-        System.out.println("엔티티의 isWhite : " + entity.getIsWhite());
         return entity.getRoomId();
     }
 }

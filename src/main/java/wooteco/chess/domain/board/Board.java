@@ -38,7 +38,6 @@ public class Board {
         }
         pieceToBeMoved.throwExceptionIfNotMovable(this, source, target);
         move(source, target);
-        pieceToBeMoved.updateHasMoved();
         this.turn = turn.getOppositeTeam();
     }
 

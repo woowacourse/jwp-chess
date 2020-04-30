@@ -8,15 +8,15 @@
  [x] 체스 게임 저장  
  
 ## 2단계 - Spring MVC 적용하기
- [ ] 스프링 애플리케이션으로 체스가 실행 가능  
- [ ] @Controller나 @RestController를 활용하여 요청  
- [ ] 웹 UI를 적용할 때 도메인 객체의 변경 최소화  
- [ ] 스프링 빈임을 나타내는 애너테이션(@Component, @Service 등)을 활용  
- [ ] 컴포넌트 스캔을 통해 빈을 등록하여 사용  
+ [x] 스프링 애플리케이션으로 체스가 실행 가능  
+ [x] @Controller나 @RestController를 활용하여 요청  
+ [x] 웹 UI를 적용할 때 도메인 객체의 변경 최소화  
+ [x] 스프링 빈임을 나타내는 애너테이션(@Component, @Service 등)을 활용  
+ [x] 컴포넌트 스캔을 통해 빈을 등록하여 사용  
  
 ## 3단계 - Spring Data JDBC 적용하기
- [ ] 엔티티 클래스를 만들어 DB 테이블 맵핑  
- [ ] Repository를 활용하여 DB에 접근  
+ [x] 엔티티 클래스를 만들어 DB 테이블 맵핑  
+ [x] Repository를 활용하여 DB에 접근  
  
 ## 4단계 - 동시에 여러 게임 하기
  - 체스방 만들기  

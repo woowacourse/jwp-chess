@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,10 +29,15 @@ public class ChessController {
     }
 
     @PostMapping("/start")
-    public ModelAndView start(@RequestParam Map<String, String> paramMap) {
+    public String start(@RequestParam String roomName) {
+        return "redirect:/start/" + roomName;
+    }
+
+    @GetMapping("/start/{room}")
+    public ModelAndView room(@PathVariable("room") String roomName) {
         ModelAndView modelAndView = new ModelAndView();
 
-        Room room = new Room(paramMap.get("roomName"));
+        Room room = new Room(roomName);
         modelAndView.addObject("room", room.getName());
         modelAndView.addObject("rows", chessService.getRowsDto(room));
         modelAndView.addObject("turn", chessService.getTurn(room));
@@ -89,8 +95,11 @@ public class ChessController {
 
     private ModelAndView createEmptyModelAndView() {
         ModelAndView modelAndView = new ModelAndView();
+
         modelAndView.addObject("rows", chessService.getEmptyRowsDto());
+        modelAndView.addObject("rooms", chessService.getRooms());
         modelAndView.setViewName("main");
+
         return modelAndView;
     }
 }

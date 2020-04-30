@@ -19,12 +19,12 @@ public class ChessResult {
         this.name = name;
     }
 
-    public static ChessResult of(Player white, Player black) {
-        return ChessResultCreater.findWinner(white, black);
-    }
-
     public ChessResult(Result result) {
         this(result, DRAW_RESULT_NAME);
+    }
+
+    public static ChessResult of(Player white, Player black) {
+        return ChessResultCreater.findWinner(white, black);
     }
 
     public boolean isDraw() {

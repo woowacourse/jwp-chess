@@ -75,5 +75,4 @@ public class SpringChessController {
     private static String render(Map<String, Object> model, String templatePath) {
         return handlebarsTemplateEngine.render(new ModelAndView(model, templatePath));
     }
-
 }

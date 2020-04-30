@@ -35,6 +35,9 @@ public class ChessGameEntity {
     private Double whiteScore;
     private Set<BoardEntity> boardEntities = new HashSet<>();
 
+    protected ChessGameEntity() {
+    }
+
     public ChessGameEntity(String turnName, String proceeding,
         String blackName, String whiteName, Double blackScore, Double whiteScore) {
         this.turnName = turnName;
@@ -54,38 +57,6 @@ public class ChessGameEntity {
         this.proceeding = proceed;
         this.blackScore = chessGame.deriveTeamScore().get(Team.BLACK);
         this.whiteScore = chessGame.deriveTeamScore().get(Team.WHITE);
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getTurnName() {
-        return turnName;
-    }
-
-    public String getProceeding() {
-        return proceeding;
-    }
-
-    public String getBlackName() {
-        return blackName;
-    }
-
-    public String getWhiteName() {
-        return whiteName;
-    }
-
-    public Double getBlackScore() {
-        return blackScore;
-    }
-
-    public Double getWhiteScore() {
-        return whiteScore;
-    }
-
-    public void setProceeding(String proceeding) {
-        this.proceeding = proceeding;
     }
 
     public TeamScore makeTeamScore() {
@@ -138,5 +109,41 @@ public class ChessGameEntity {
         Set<CastlingSetting> castlingElements) {
         return castlingElements.stream()
             .anyMatch(castlingSetting -> castlingSetting.isCastlingBefore(square, piece));
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getTurnName() {
+        return turnName;
+    }
+
+    public String getProceeding() {
+        return proceeding;
+    }
+
+    public void setProceeding(String proceeding) {
+        this.proceeding = proceeding;
+    }
+
+    public String getBlackName() {
+        return blackName;
+    }
+
+    public String getWhiteName() {
+        return whiteName;
+    }
+
+    public Double getBlackScore() {
+        return blackScore;
+    }
+
+    public Double getWhiteScore() {
+        return whiteScore;
+    }
+
+    public Set<BoardEntity> getBoardEntities() {
+        return boardEntities;
     }
 }

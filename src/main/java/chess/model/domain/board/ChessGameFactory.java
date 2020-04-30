@@ -17,7 +17,7 @@ public class ChessGameFactory {
             CastlingElement.createInitial(), EnPassant.createEmpty());
     }
 
-    public static ChessGame of(Team turn, Iterable<BoardEntity> boardEntities) {
+    public static ChessGame of(Team turn, Set<BoardEntity> boardEntities) {
         Map<Square, Piece> chessBoard = new HashMap<>();
         Set<CastlingSetting> castlingElements = new HashSet<>();
         Map<Square, Square> enPassants = new HashMap<>();

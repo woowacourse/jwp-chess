@@ -17,7 +17,7 @@ public class ResultEntity {
     private Integer draw;
     private Integer lose;
 
-    public ResultEntity() {
+    protected ResultEntity() {
     }
 
     public ResultEntity(String userName, Integer win, Integer draw, Integer lose) {

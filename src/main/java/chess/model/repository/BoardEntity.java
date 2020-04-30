@@ -18,6 +18,9 @@ public class BoardEntity {
     @Column("EN_PASSANT_NM")
     private String enPassantName;
 
+    protected BoardEntity() {
+    }
+
     public BoardEntity(String squareName, String pieceName, String castlingElementYN,
         String enPassantName) {
         this.squareName = squareName;

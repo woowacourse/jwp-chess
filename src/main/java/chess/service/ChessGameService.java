@@ -12,7 +12,6 @@ import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
-import chess.model.repository.BoardRepository;
 import chess.model.repository.ChessGameEntity;
 import chess.model.repository.ChessGameRepository;
 import chess.model.repository.ResultEntity;
@@ -28,15 +27,12 @@ import org.springframework.stereotype.Service;
 public class ChessGameService {
 
     private final ChessGameRepository chessGameRepository;
-    private final BoardRepository boardRepository;
     private final RoomRepository roomRepository;
     private final ResultRepository resultRepository;
 
-    public ChessGameService(ChessGameRepository chessGameRepository,
-        BoardRepository boardRepository, RoomRepository roomRepository,
+    public ChessGameService(ChessGameRepository chessGameRepository, RoomRepository roomRepository,
         ResultRepository resultRepository) {
         this.chessGameRepository = chessGameRepository;
-        this.boardRepository = boardRepository;
         this.roomRepository = roomRepository;
         this.resultRepository = resultRepository;
     }
@@ -135,7 +131,9 @@ public class ChessGameService {
     }
 
     private ChessGame combineChessGame(Integer gameId, Team turn) {
-        return ChessGameFactory.of(turn, boardRepository.findAllByGameId(gameId));
+        ChessGameEntity chessGameEntity = chessGameRepository.findById(gameId)
+            .orElseThrow(IllegalArgumentException::new);
+        return ChessGameFactory.of(turn, chessGameEntity.getBoardEntities());
     }
 
     public ChessGameEntity closeGame(Integer gameId) {

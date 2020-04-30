@@ -8,5 +8,4 @@ public class SpringChessApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringChessApplication.class, args);
     }
-
 }

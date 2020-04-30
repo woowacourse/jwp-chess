@@ -26,7 +26,10 @@ function checkSourceOrTarget(clickedPosition) {
 }
 
 function move(source, target) {
+    let currentPath = window.location.pathname.split("/");
+    let roomId = currentPath.slice(-1)[0];
     let moveDto = {
+        "roomId": roomId,
         "source": source.id,
         "target": target.id
     };
@@ -38,7 +41,7 @@ function move(source, target) {
         },
         body: JSON.stringify(moveDto)
     };
-    fetch("/playing/move", moveInformation)
+    fetch("/playing/" + roomId, moveInformation)
         .then(response => {
             if (!response.ok) {
                 alert("이동할 수 없는 곳입니다.");
@@ -55,7 +58,7 @@ function move(source, target) {
             let team = response.body.currentTeam;
             let currentTeamScore = response.body.currentTeamScore;
             let winner = response.body.winner;
-
+            console.log("WINNER is " + winner);
             if (winner != "NONE") {
                 alert(winner + "팀이 이겼습니다.");
                 initialize(source, target);

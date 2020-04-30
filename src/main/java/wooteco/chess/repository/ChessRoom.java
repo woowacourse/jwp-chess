@@ -1,8 +1,6 @@
 package wooteco.chess.repository;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.ArrayList;
@@ -11,10 +9,8 @@ import java.util.List;
 @Table("chess_room")
 public class ChessRoom {
     @Id
-    @Column("room_id")
     private Long roomId;
     private String roomName;
-    @MappedCollection(keyColumn = "command")
     private List<MoveCommand> moveCommand = new ArrayList<>();
 
     public ChessRoom() {
@@ -42,5 +38,15 @@ public class ChessRoom {
 
     public String getRoomName() {
         return roomName;
+    }
+
+
+    @Override
+    public String toString() {
+        return "ChessRoom{" +
+                "roomId=" + roomId +
+                ", roomName='" + roomName + '\'' +
+                ", moveCommand=" + moveCommand +
+                '}';
     }
 }

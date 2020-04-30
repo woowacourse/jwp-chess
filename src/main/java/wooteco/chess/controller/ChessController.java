@@ -25,42 +25,33 @@ public class ChessController {
 
     @GetMapping("/")
     public String startGame(Model model) {
-        chessService.start(); //TODO : 여러 게임 진행할 때를 대비해 옮겨야 함
+        chessService.start();
         model.addAllAttributes(chessService.makeStartResponse());
         return "chessGameStart";
     }
 
-    @PostMapping("/playing")
+    @PostMapping("/")
     public String playing(@RequestParam("newRoomName") String newRoomName, Model model) {
-        chessService.playNewGame(newRoomName);
-        model.addAllAttributes(chessService.makeMoveResponse());
-        return "chessGame";
+        Long newRoomId = chessService.playNewGame(newRoomName);
+        return "redirect:/playing/" + newRoomId;
     }
 
-    @GetMapping("/playing/lastGame/{roomId}")
+    @GetMapping("/playing/{roomId}")
     public String lastGame(@PathVariable("roomId") Long roomId, Model model) {
-        chessService.playLastGame(roomId);
-        model.addAllAttributes(chessService.makeMoveResponse());
+        model.addAllAttributes(chessService.playLastGame(roomId));
         return "chessGame";
     }
 
-//    @PostMapping("/playing/newGame")
-//    public String newGame(@RequestParam("newRoomName") String roomName, Model model) {
-//        chessService.playNewGame(roomName);
-//        model.addAllAttributes(chessService.makeMoveResponse());
-//        return "chessGame";
-//    }
-
-    @GetMapping("/end")
-    public String endGame() {
-        chessService.end();
+    @GetMapping("/end/{roomId}")
+    public String endGame(@PathVariable("roomId") Long roomId) {
+        chessService.end(roomId);
         return "chessGameEnd";
     }
 
-    @PostMapping("/playing/move")
+    @PostMapping("/playing/{roomId}")
     @ResponseBody
-    public String move(@RequestBody MoveDto moveDto) {
-        chessService.move(moveDto.getSource(), moveDto.getTarget(), 1L);
-        return GSON.toJson(chessService.makeMoveResponse());
+    public String move(@PathVariable("roomId") Long roomId, @RequestBody MoveDto moveDto) {
+        chessService.move(moveDto.getSource(), moveDto.getTarget(), roomId);
+        return GSON.toJson(chessService.makeMoveResponse(moveDto.getRoomId()));
     }
 }

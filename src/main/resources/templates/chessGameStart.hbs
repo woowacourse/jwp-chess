@@ -6,7 +6,7 @@
     <title>엘리의 크리스마스 체스</title>
 </head>
 <body>
-<form action="/playing" method="post">
+<form action="/" method="post">
     <input type="text" name="newRoomName" placeholder="새 게임방 제목을 입력하세요"/>
     <button type="submit">입장</button>
 </form>
@@ -22,7 +22,7 @@
 </body>
 <script>
     const playLastGame = function (roomId) {
-        window.location = "http://localhost:8080/playing/lastGame/" + roomId;
+        window.location = "http://localhost:8080/playing/" + roomId;
     };
 </script>
 </html>

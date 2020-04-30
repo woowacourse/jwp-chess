@@ -50,7 +50,6 @@ public class BoardService {
     public Board loadBoard(Long roomId) {
         ChessEntity entity = chessRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room이 없습니다."));
-        System.out.println("보드 로딩");
         return BoardConverter.convertToBoard(entity.getBoard(), entity.getIsWhite());
     }
 }

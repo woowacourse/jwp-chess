@@ -1,18 +1,15 @@
 package wooteco.chess.controller;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import wooteco.chess.entity.Room;
 import wooteco.chess.service.ChessService;
 
@@ -31,8 +28,7 @@ public class ChessController {
     }
 
     @PostMapping("/start")
-    public ModelAndView start(@RequestParam HashMap<String, String> paramMap)
-            throws SQLException {
+    public ModelAndView start(@RequestParam HashMap<String, String> paramMap) {
         ModelAndView modelAndView = new ModelAndView();
 
         Room room = new Room(paramMap.get("roomName"));
@@ -78,16 +74,14 @@ public class ChessController {
     }
 
     @PostMapping("/save")
-    public ModelAndView save(@RequestParam String roomName)
-            throws SQLException {
+    public ModelAndView save(@RequestParam String roomName) {
         chessService.save(new Room(roomName));
 
         return createEmptyModelAndView();
     }
 
     @PostMapping("/end")
-    public ModelAndView end(@RequestParam String roomName)
-            throws SQLException {
+    public ModelAndView end(@RequestParam String roomName) {
         chessService.delete(new Room(roomName));
 
         return createEmptyModelAndView();

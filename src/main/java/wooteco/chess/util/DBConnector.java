@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,11 +18,11 @@ public class DBConnector {
 
     private Connection connect() {
         Connection con = null;
-        String server = "127.0.0.1:13306"; // MySQL 서버 주소
-        String database = "wootecochess"; // MySQL DATABASE 이름
+        String server = "127.0.0.1:3306"; // MySQL 서버 주소
+        String database = "wootechochess"; // MySQL DATABASE 이름
         String option = "?useSSL=false&serverTimezone=UTC";
         String userName = "root"; //  MySQL 서버 아이디
-        String password = "root"; // MySQL 서버 비밀번호
+        String password = ""; // MySQL 서버 비밀번호
 
         // 드라이버 로딩
         try {

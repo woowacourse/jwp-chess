@@ -67,7 +67,7 @@ public class WebController {
 	public ModelAndView restart(
 			@RequestParam String name) throws SQLException {
 		ModelAndView modelAndView = new ModelAndView("chess");
-		ChessGameDto chessGameDto = chessGameService.restart(name);
+		ChessGameDto chessGameDto = springChessService.restart(name);
 		modelAndView.addObject("chessGame", chessGameDto);
 		return modelAndView;
 	}

@@ -77,4 +77,13 @@ public class SpringChessService {
 				FinishFlag.of(chessGame.isEnd()).getSymbol());
 		return roomRepository.save(room);
 	}
+
+	public ChessGameDto restart(String name) {
+		Room room = roomRepository.findByRoomName(name).orElseThrow(NoSuchElementException::new);
+		ChessGame chessGame = ChessGame.start();
+		room.update(BoardConverter.convertToString(chessGame.getBoard()), chessGame.getTurn(),
+				FinishFlag.of(chessGame.isEnd()).getSymbol());
+		roomRepository.save(room);
+		return ChessGameDto.of(name, chessGame);
+	}
 }

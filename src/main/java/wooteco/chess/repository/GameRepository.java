@@ -12,5 +12,5 @@ public interface GameRepository extends CrudRepository<Game, Long> {
 	List<Game> findAll();
 
 	@Query("SELECT ID FROM GAME")
-	List<Long> finAllGameId();
+	List<Long> findAllById();
 }

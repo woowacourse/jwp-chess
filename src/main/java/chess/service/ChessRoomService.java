@@ -82,10 +82,14 @@ public class ChessRoomService {
 		final Set<Piece> pieces = new StartPieces().getInstance();
 
 		final List<PieceEntity> pieceEntities = pieces.stream()
-				.map(piece -> new PieceEntity(piece.getPieceTypeName(), piece.getTeamName(),
-						piece.getCoordinateRepresentation(), roomId))
+				.map(piece -> toPieceEntity(piece, roomId))
 				.collect(Collectors.toList());
 		pieceRepository.saveAll(pieceEntities);
+	}
+
+	private PieceEntity toPieceEntity(final Piece piece, final int roomId) {
+		return new PieceEntity(piece.getPieceTypeName(), piece.getTeamName(),
+				piece.getCoordinateRepresentation(), roomId);
 	}
 
 	private void saveNewAnnouncementMessage(int roomId) {

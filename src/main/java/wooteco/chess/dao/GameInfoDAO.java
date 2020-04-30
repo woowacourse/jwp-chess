@@ -3,19 +3,20 @@ package wooteco.chess.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
-
+import org.springframework.stereotype.Component;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.board.Status;
 import wooteco.chess.domain.player.User;
 import wooteco.chess.util.DBConnector;
 
-public class GamInfoDAO {
+@Component
+public class GameInfoDAO {
 
     private BoardDAO boardDAO;
     private DBConnector dbConnector;
 
-    public GamInfoDAO(DBConnector dbConnector) {
+    public GameInfoDAO(DBConnector dbConnector) {
         this.dbConnector = dbConnector;
         this.boardDAO = new BoardDAO(dbConnector);
     }

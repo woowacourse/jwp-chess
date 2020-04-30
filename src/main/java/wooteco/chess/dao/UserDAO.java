@@ -3,10 +3,11 @@ package wooteco.chess.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
-
+import org.springframework.stereotype.Component;
 import wooteco.chess.domain.player.User;
 import wooteco.chess.util.DBConnector;
 
+@Component
 public class UserDAO {
 
     private DBConnector dbConnector;

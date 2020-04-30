@@ -32,7 +32,7 @@
     :: 체 스 게 임 ::
 </div>
 <div id="btnBox">
-    <a href="/chess-game"><input class="btn" type="button" value="이어서 하기"></a>
+    <a href="/load-game"><input class="btn" type="button" value="이어서 하기"></a>
     <a href="/new-chess-game"><input class="btn" type="button" value="새 게임"></a>
     <a href="/"><input class="endBtn" type="button" value="끝내기"></a>
 </div>
@@ -64,9 +64,9 @@
                 </div>
 
                 {{#cells}}
-                <div class="{{tileColor}}" id="{{position}}">
-                    <img src="images/{{pieceColor}}{{piece}}.png" style="width: 100%">
-                </div>
+                    <div class="{{tileColor}}" id="{{position}}">
+                        <img src="images/{{pieceColor}}{{piece}}.png" style="width: 100%">
+                    </div>
                 {{/cells}}
 
             </div>
@@ -82,8 +82,6 @@
                 <form action="/move" method="POST">
                     <input class="moveForm" name="source" placeholder="체스말 선택" readonly type="text"/><br>
                     <input class="moveForm" name="target" placeholder="옮길 위치 선택" readonly type="text"/><br>
-                    <input class="btn" id="moveBtn" style="color: greenyellow; width: 70px" type="submit" value="이 동">
-                    <a href="/chess-game"><input class="btn" style="width: 70px" type="button" value="초기화"></a>
                 </form>
             </div>
 
@@ -119,12 +117,30 @@
     teamChangeEvent();
 
     $(document).ready(function () {
-        $('.WHITE, .BLACK').click(function () {
+        $('.White, .Black').click(function () {
             let selectCellName = $(this).attr('id');
-            if ($("input[name='source']").val() !== "") {
-                $("input[name='target']").attr('value', selectCellName);
-            } else {
+            if ($("input[name='source']").val() === "") {
                 $("input[name='source']").attr('value', selectCellName);
+            } else {
+                var form = document.createElement("form");
+                form.setAttribute("charset", "UTF-8");
+                form.setAttribute("method", "Post");  //Post 방식
+                form.setAttribute("action", "/move"); //요청 보낼 주소
+
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", "source");
+                hiddenField.setAttribute("value", $("input[name='source']").val());
+                form.appendChild(hiddenField);
+
+                hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", "target");
+                hiddenField.setAttribute("value", selectCellName);
+                form.appendChild(hiddenField);
+
+                document.body.appendChild(form);
+                form.submit();
             }
         });
     });

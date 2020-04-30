@@ -7,13 +7,14 @@ import static chess.util.NullValidator.validateNull;
 
 public class MoveCommand {
     private static final String MOVE_COMMAND = "move";
+    private static final String DELIMITER = " ";
 
     private final Position sourcePosition;
     private final Position targetPosition;
 
     public MoveCommand(String moveCommand) {
         validate(moveCommand);
-        String[] separatedCommand = moveCommand.split(" ");
+        String[] separatedCommand = moveCommand.split(DELIMITER);
         sourcePosition = PositionFactory.of(separatedCommand[1]);
         targetPosition = PositionFactory.of(separatedCommand[2]);
     }

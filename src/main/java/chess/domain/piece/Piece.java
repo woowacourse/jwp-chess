@@ -1,12 +1,13 @@
 package chess.domain.piece;
 
-import static chess.util.NullValidator.*;
+import chess.domain.board.Position;
+import chess.domain.piece.pathStrategy.LongRangePieceStrategy;
+import chess.domain.piece.pathStrategy.PathStrategy;
+import chess.exception.NotMovableException;
 
 import java.util.List;
 
-import chess.domain.board.Position;
-import chess.domain.piece.pathStrategy.PathStrategy;
-import chess.exception.NotMovableException;
+import static chess.util.NullValidator.validateNull;
 
 public abstract class Piece {
 	protected final PieceColor pieceColor;
@@ -59,21 +60,25 @@ public abstract class Piece {
 		return pathStrategy.createPaths(this.position, targetPosition);
 	}
 
-	private void validateEqualPosition(Position targetPosition) {
-		if (this.position.equals(targetPosition)) {
-			throw new NotMovableException(String.format("현재 자리한 위치(%s)로는 이동할 수 없습니다.", targetPosition.getName()));
-		}
-	}
+    private void validateEqualPosition(Position targetPosition) {
+        if (this.position.equals(targetPosition)) {
+            throw new NotMovableException(String.format("현재 자리한 위치(%s)로는 이동할 수 없습니다.", targetPosition.getName()));
+        }
+    }
 
-	public void changeTo(Position position) {
-		this.position = position;
-	}
+    public void changeTo(Position position) {
+        this.position = position;
+    }
 
-	public Position getPosition() {
-		return position;
-	}
+    public boolean hasLongRangePieceStrategy() {
+        return this.pathStrategy instanceof LongRangePieceStrategy;
+    }
 
-	public double getScore() {
-		return score;
-	}
+    public Position getPosition() {
+        return position;
+    }
+
+    public double getScore() {
+        return score;
+    }
 }

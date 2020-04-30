@@ -9,21 +9,21 @@ import java.util.Map;
 
 import chess.domain.GameResult;
 import chess.domain.command.MoveCommand;
-import chess.domain.piece.Bishop;
 import chess.domain.piece.EmptyPiece;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
-import chess.domain.piece.Queen;
-import chess.domain.piece.Rook;
 import chess.exception.AnotherTeamPieceException;
+import chess.exception.NotMovableException;
 import chess.exception.OtherPieceInPathException;
 import chess.exception.PawnNotAttackableException;
 import chess.exception.PieceNotFoundException;
 import chess.exception.SameTeamPieceException;
 
 public class ChessBoard {
-	public static final int ONLY_ONE_PAWN_IN_XPOINT = 1;
+	private static final int ONLY_ONE_PAWN_IN_X_POINT = 1;
+	private static final int ONE_STEP_RANGE = 1;
+	private static final String KING_MARK = "K";
 
 	private Map<Position, Piece> board;
 	private PieceColor team;
@@ -61,7 +61,7 @@ public class ChessBoard {
 
 		List<Position> path = piece.getPathTo(targetPosition);
 
-		if (piece instanceof Bishop || piece instanceof Queen || piece instanceof Rook) {
+		if (piece.hasLongRangePieceStrategy()) {
 			if (havePieceBeforeTargetPosition(path)) {
 				throw new OtherPieceInPathException(String.format("이동 경로 중에 다른 체스말이 있기 때문에 지정한 위치(targetPosition) %s" +
 						"(으)로 이동할 수 없습니다.",
@@ -76,7 +76,7 @@ public class ChessBoard {
 	}
 
 	private boolean havePieceBeforeTargetPosition(List<Position> path) {
-		if (path.size() == 1) {
+		if (path.size() == ONE_STEP_RANGE) {
 			return false;
 		}
 
@@ -97,7 +97,8 @@ public class ChessBoard {
 			path)) {
 			throw new OtherPieceInPathException(String.format("이동 경로 중에 다른 체스말이 있기 때문에 지정한 위치(targetPosition) %s(으)로 " +
 				"이동할 수 없습니다.", targetPosition.getName()));
-		} else if (!pawn.getDirection(targetPosition).isSouth() && !pawn.getDirection(targetPosition).isNorth()
+		}
+		if (!pawn.getDirection(targetPosition).isSouth() && !pawn.getDirection(targetPosition).isNorth()
 			&& cannotMovePawnToTargetPosition(piece, targetPosition)) {
 			throw new PawnNotAttackableException(String.format("지정한 위치(targetPosition) %s에 다른 색의 체스말이 없기 때문에 이동할 수 " +
 				"없습니다.", targetPosition.getName()));
@@ -120,6 +121,9 @@ public class ChessBoard {
 
 	public void move(MoveCommand moveCommand) {
 		validateNull(moveCommand);
+		if (isGameOver()) {
+			throw new NotMovableException("게임이 종료되서 움직일 수 없습니다.");
+		}
 
 		Piece piece = findPiece(moveCommand.getSourcePosition(), team);
 		Position targetPosition = moveCommand.getTargetPosition();
@@ -134,56 +138,56 @@ public class ChessBoard {
 	private boolean isBlackKingKilled() {
 		return board.values().stream()
 			.map(Piece::getName)
-			.noneMatch("K"::equals);
+			.noneMatch(KING_MARK::equals);
 	}
 
 	private boolean isWhiteKingKilled() {
 		return board.values().stream()
 			.map(Piece::getName)
-			.noneMatch("k"::equals);
+			.noneMatch(KING_MARK::equals);
 	}
 
-	private double getAlivePieceScoreSumBy(PieceColor pieceColor) {
+	private double calculateAlivePieceScoreSumBy(PieceColor pieceColor) {
 		double scoreSum = board.values().stream()
 			.filter(piece -> piece.isNotPawn() && piece.isSameColor(pieceColor))
 			.mapToDouble(Piece::getScore)
 			.sum();
 
-		return scoreSum + getAlivePawnScoreSumBy(pieceColor);
+		return scoreSum + calculateAlivePawnScoreSumBy(pieceColor);
 	}
 
-	private double getAlivePawnScoreSumBy(PieceColor pieceColor) {
+	private double calculateAlivePawnScoreSumBy(PieceColor pieceColor) {
 		double scoreSum = 0;
 
-		for (char x = 'a'; x <= 'h'; x++) {
+		for (Xpoint xpoint : Xpoint.values()) {
 			int pawnInXPointCount = 0;
-			for (char y = '1'; y <= '8'; y++) {
-				Piece piece = board.get(PositionFactory.of(x, y));
-				if (piece.isPawn() && piece.isSameColor(pieceColor)) {
-					pawnInXPointCount++;
-				}
+			for (Ypoint ypoint : Ypoint.values()) {
+				Piece piece = board.get(PositionFactory.of(xpoint.getValue(), ypoint.getValue()));
+				pawnInXPointCount = calculatePawnInXPointCount(pieceColor, pawnInXPointCount, piece);
 			}
-			scoreSum += getPawnScoreSumInXPoint(pawnInXPointCount);
+			scoreSum += calculatePawnScoreSumInXPoint(pawnInXPointCount);
 		}
 
 		return scoreSum;
 	}
 
-	private double getPawnScoreSumInXPoint(int pawnInXPointCount) {
-		double scoreSum = 0;
-
-		if (ONLY_ONE_PAWN_IN_XPOINT < pawnInXPointCount) {
-			scoreSum += pawnInXPointCount * PAWN_HALF_SCORE;
-		} else {
-			scoreSum += pawnInXPointCount * PAWN_SCORE;
+	private int calculatePawnInXPointCount(PieceColor pieceColor, int pawnInXPointCount, Piece piece) {
+		if (piece.isPawn() && piece.isSameColor(pieceColor)) {
+			pawnInXPointCount++;
 		}
+		return pawnInXPointCount;
+	}
 
-		return scoreSum;
+	private double calculatePawnScoreSumInXPoint(int pawnInXPointCount) {
+		if (ONLY_ONE_PAWN_IN_X_POINT < pawnInXPointCount) {
+			return pawnInXPointCount * PAWN_HALF_SCORE;
+		}
+		return pawnInXPointCount * PAWN_SCORE;
 	}
 
 	public GameResult createGameResult() {
-		return new GameResult(isBlackKingKilled(), isWhiteKingKilled(), getAlivePieceScoreSumBy(PieceColor.BLACK),
-			getAlivePieceScoreSumBy(PieceColor.WHITE));
+		return new GameResult(isBlackKingKilled(), isWhiteKingKilled(), calculateAlivePieceScoreSumBy(PieceColor.BLACK),
+			calculateAlivePieceScoreSumBy(PieceColor.WHITE));
 	}
 
 	public boolean isGameOver() {

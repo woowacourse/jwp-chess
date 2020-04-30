@@ -1,5 +1,6 @@
 package wooteco.chess.controller;
 
+
 import org.springframework.web.bind.annotation.*;
 
 import wooteco.chess.service.GameService;

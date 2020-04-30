@@ -15,7 +15,6 @@ public abstract class Game {
 	private static final Map<String, Function<Game, Game>> CHANGE_STATE_FUNCTIONS;
 	private static final String START_REQUEST = "start";
 	private static final String END_REQUEST = "end";
-	private static final int DEFAULT_GAME_ID = 1;
 
 	static {
 		CHANGE_STATE_FUNCTIONS = new HashMap<>();
@@ -23,16 +22,10 @@ public abstract class Game {
 		CHANGE_STATE_FUNCTIONS.put(END_REQUEST, Game::end);
 	}
 
-	protected final int id;
 	protected final Board board;
 	protected Team turn;
 
 	public Game(Board board, Team turn) {
-		this(DEFAULT_GAME_ID, board, turn);
-	}
-
-	public Game(int id, Board board, Team turn) {
-		this.id = id;
 		this.board = Objects.requireNonNull(board);
 		this.turn = Objects.requireNonNull(turn);
 	}
@@ -65,10 +58,6 @@ public abstract class Game {
 
 	public Team getTurn() {
 		return turn;
-	}
-
-	public int getId() {
-		return id;
 	}
 
 	abstract public String getStateType();

@@ -1,6 +1,11 @@
 package wooteco.chess.db;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
+@Table("board_status")
 public class ChessPiece {
+    @Id
     private String gameId;
     private String position;
     private String piece;

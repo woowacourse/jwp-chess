@@ -5,19 +5,16 @@ const App = function App() {
     const turn = document.querySelector("#now-turn");
     const whiteScore = document.querySelector("#score-white");
     const blackScore = document.querySelector("#score-black");
-
     const chessBoard = document.querySelector(".chessboard");
 
     chessBoard.addEventListener('click', (event) => moveEventListener(event));
 
     function moveEventListener(event) {
         const target = event.target;
-        //게임이 진행중이지 않은경우
         if (!gameId.value) {
             return false;
         }
-        // 클릭에 따른 아이디를 저장한다
-        console.log(target);
+
         if (isNotCell(target.className)) {
             return false;
         }

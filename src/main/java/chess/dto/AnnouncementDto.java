@@ -1,20 +1,17 @@
 package chess.dto;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("announcement")
 public class AnnouncementDto {
 	@Id
 	private int id;
-	@Column("message")
-	private final String announcement;
-	@Column("room_id")
+	private final String message;
 	private final int roomId;
 
-	public AnnouncementDto(final String announcement, final int roomId) {
-		this.announcement = announcement;
+	public AnnouncementDto(final String message, final int roomId) {
+		this.message = message;
 		this.roomId = roomId;
 	}
 
@@ -23,7 +20,7 @@ public class AnnouncementDto {
 	}
 
 	public String getMessage() {
-		return announcement;
+		return message;
 	}
 
 	public int getRoomId() {

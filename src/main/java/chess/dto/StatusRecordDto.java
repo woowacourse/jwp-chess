@@ -1,18 +1,14 @@
 package chess.dto;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 
 import java.util.Date;
 
 public class StatusRecordDto {
 	@Id
 	private int id;
-	@Column("record")
 	private final String record;
-	@Column("game_date")
 	private final Date gameDate;
-	@Column("room_name")
 	private final String roomName;
 
 	public StatusRecordDto(final String record, final Date gameDate, final String roomName) {

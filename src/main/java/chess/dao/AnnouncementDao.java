@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.dao.exceptions.DaoNoneSelectedException;
-import chess.dto.AnnouncementDto;
+import chess.entity.AnnouncementEntity;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -28,7 +28,7 @@ public class AnnouncementDao {
 		}
 	}
 
-	public AnnouncementDto findAnnouncementByRoomId(final int roomId) throws SQLException {
+	public AnnouncementEntity findAnnouncementByRoomId(final int roomId) throws SQLException {
 		final String query = "SELECT * FROM announcement WHERE room_id = ?";
 
 		try (final Connection connection = connectionDao.getConnection();
@@ -38,10 +38,10 @@ public class AnnouncementDao {
 		}
 	}
 
-	private AnnouncementDto prepareAnnouncementDto(final PreparedStatement preparedStatement) throws SQLException {
+	private AnnouncementEntity prepareAnnouncementDto(final PreparedStatement preparedStatement) throws SQLException {
 		try (final ResultSet resultSet = preparedStatement.executeQuery()) {
 			validateHasResult(resultSet);
-			return new AnnouncementDto(resultSet.getString("message"), resultSet.getInt("room_id"));
+			return new AnnouncementEntity(resultSet.getString("message"), resultSet.getInt("room_id"));
 		}
 	}
 

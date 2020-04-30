@@ -1,17 +1,17 @@
-package chess.dto;
+package chess.entity;
 
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
-public class StatusRecordDto {
+public class StatusRecordEntity {
 	@Id
 	private int id;
 	private final String record;
 	private final Date gameDate;
 	private final String roomName;
 
-	public StatusRecordDto(final String record, final Date gameDate, final String roomName) {
+	public StatusRecordEntity(final String record, final Date gameDate, final String roomName) {
 		this.record = record;
 		this.gameDate = gameDate;
 		this.roomName = roomName;

@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.StatusRecordDto;
+import chess.entity.StatusRecordEntity;
 import chess.service.ChessStatisticService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +21,7 @@ public class SpringStatisticController {
 
 	@GetMapping()
 	private String load(final Model model) throws SQLException {
-			final List<StatusRecordDto> statusRecordWithRoomNames
+			final List<StatusRecordEntity> statusRecordWithRoomNames
 					= chessStatisticService.loadStatusRecordsWithRoomName();
 
 			model.addAttribute("status_record_with_room_names", statusRecordWithRoomNames);

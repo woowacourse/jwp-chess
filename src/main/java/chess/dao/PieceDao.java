@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dto.PieceDto;
+import chess.entity.PieceEntity;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -33,7 +33,7 @@ public class PieceDao {
 		}
 	}
 
-	public List<PieceDto> findPiecesByRoomId(final int roomId) throws SQLException {
+	public List<PieceEntity> findPiecesByRoomId(final int roomId) throws SQLException {
 		final String query = "SELECT * FROM piece WHERE room_id = ?";
 
 		try (final Connection connection = connectionDao.getConnection();
@@ -44,21 +44,21 @@ public class PieceDao {
 
 	}
 
-	private List<PieceDto> preparePieceDtos(final PreparedStatement preparedStatement) throws SQLException {
+	private List<PieceEntity> preparePieceDtos(final PreparedStatement preparedStatement) throws SQLException {
 		try (ResultSet resultSet = preparedStatement.executeQuery()) {
 			return collectPieceDtos(resultSet);
 		}
 	}
 
-	private List<PieceDto> collectPieceDtos(final ResultSet resultSet) throws SQLException {
-		List<PieceDto> pieceDtos = new ArrayList<>();
+	private List<PieceEntity> collectPieceDtos(final ResultSet resultSet) throws SQLException {
+		List<PieceEntity> pieceEntities = new ArrayList<>();
 		while (resultSet.next()) {
-			pieceDtos.add(new PieceDto(resultSet.getString("piece_type"),
+			pieceEntities.add(new PieceEntity(resultSet.getString("piece_type"),
 					resultSet.getString("team"), resultSet.getString("coordinate"),
 					resultSet.getInt("room_id")));
 		}
 
-		return pieceDtos;
+		return pieceEntities;
 	}
 
 	public int deletePieces(final int roomId) throws SQLException {

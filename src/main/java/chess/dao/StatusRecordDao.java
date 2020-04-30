@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dto.StatusRecordDto;
+import chess.entity.StatusRecordEntity;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -18,7 +18,7 @@ public class StatusRecordDao {
 		this.connectionDao = connectionDao;
 	}
 
-	public List<StatusRecordDto> findStatusRecords() throws SQLException {
+	public List<StatusRecordEntity> findStatusRecords() throws SQLException {
 		final String query = "SELECT * "
 				+ "FROM status_record "
 				+ "ORDER BY room_name";
@@ -29,22 +29,22 @@ public class StatusRecordDao {
 		}
 	}
 
-	private List<StatusRecordDto> prepareStatusRecordDtos(final PreparedStatement preparedStatement)
+	private List<StatusRecordEntity> prepareStatusRecordDtos(final PreparedStatement preparedStatement)
 			throws SQLException {
 		try (final ResultSet resultSet = preparedStatement.executeQuery()) {
 			return collectStatusRecordDtos(resultSet);
 		}
 	}
 
-	private List<StatusRecordDto> collectStatusRecordDtos(final ResultSet resultSet)
+	private List<StatusRecordEntity> collectStatusRecordDtos(final ResultSet resultSet)
 			throws SQLException {
-		final List<StatusRecordDto> statusRecordDtos = new ArrayList<>();
+		final List<StatusRecordEntity> statusRecordEntities = new ArrayList<>();
 		while (resultSet.next()) {
-			statusRecordDtos.add(
-					new StatusRecordDto(resultSet.getString("record"),
+			statusRecordEntities.add(
+					new StatusRecordEntity(resultSet.getString("record"),
 							resultSet.getDate("game_date"), resultSet.getString("room_name")));
 		}
-		return statusRecordDtos;
+		return statusRecordEntities;
 	}
 
 	public int addStatusRecord(final String record, final int roomId) throws SQLException {

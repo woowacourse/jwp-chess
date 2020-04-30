@@ -1,13 +1,13 @@
 package spring.controller;
 
 import com.google.gson.Gson;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import spark.ModelAndView;
+import spark.dto.LocationDto;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import spring.service.ChessService;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 public class SpringChessController {
     private static final HandlebarsTemplateEngine handlebarsTemplateEngine = new HandlebarsTemplateEngine();
-
+    private static final Gson GSON = new Gson();
     private final ChessService chessService;
 
     // TODO : 생성자 주입이 더 나은 이유
@@ -42,7 +42,20 @@ public class SpringChessController {
         return new Gson().toJson(chessService.makeChessBoard());
     }
 
+    @PutMapping("/api/piece")
+    public String move(@RequestParam(name = "now") String now,
+                       @RequestParam(name = "des") String destination,
+                       @RequestParam(name = "game_id") String gameIdData) throws SQLException {
+        System.out.println(gameIdData);
+        LocationDto nowDto = new LocationDto(now);
+        LocationDto destinationDto = new LocationDto(destination);
+        long gameId = Long.parseLong(gameIdData);
+
+        return GSON.toJson(chessService.move(gameId, nowDto, destinationDto));
+    }
+
     private static String render(Map<String, Object> model, String templatePath) {
         return handlebarsTemplateEngine.render(new ModelAndView(model, templatePath));
     }
+
 }

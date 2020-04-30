@@ -29,6 +29,10 @@ public class ChessGameEntity {
         return new ChessGame(chessBoard, turn);
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
@@ -39,6 +43,10 @@ public class ChessGameEntity {
 
     public Set<PieceEntity> getPieces() {
         return pieces;
+    }
+
+    public void updateTurn() {
+        this.isTurnBlack = !isTurnBlack;
     }
 
     public void add(PieceEntity pieceEntity) {

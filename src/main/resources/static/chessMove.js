@@ -134,8 +134,8 @@ function drop(ev) {
     var now = ev.dataTransfer.getData("text");
     var des = ev.target.id;
     var game_id = document.getElementById("game_id").innerHTML;
-    // console.log(now + " to " + des.toString());
-    postChessBoard({"game_id": game_id.toString(), "now": now.toString(), "des": des.toString()});
+    console.log("이건 로그" + game_id + " " + now + " " + des);
+    move({"game_id": "1", "now": now.toString(), "des": des.toString()});
 }
 
 function postChessBoard(json) {
@@ -274,5 +274,57 @@ function postNewGame() {
 
             $('#turn').html("It's White Turn!");
         }
+    });
+}
+
+function move(json) {
+    $.ajax({
+        type: 'put',
+        url: '/api/piece',
+        data: json,
+        dataType: 'text',
+        error: function (xhr, status, error) {
+            alert(error.toString());
+        },
+        success: function (data) {
+            var jsonData = JSON.parse(data);
+
+            if (jsonData.progress == "CONTINUE") {
+                var nowImg = $('#' + json.now).html();
+                $('#' + json.des).html(nowImg);
+                $('#' + json.des).attr('chess', $('#' + json.now).chess);
+                $('#' + json.now).html('');
+                $('#' + json.now).attr('chess', 'null');
+
+                $('#whiteScore').html("whiteScore : " + jsonData.chessGameScoresDto.whiteScore.value);
+                $('#blackScore').html("blackScore : " + jsonData.chessGameScoresDto.blackScore.value);
+
+                $('#turn').html("It's " + jsonData.turn + " Turn!");
+            }
+            if (jsonData.progress == "ERROR") {
+                alert("움직일 수 없는 경우입니다.");
+            }
+            if (jsonData.progress == "END") {
+                getChessBoardResult();
+            }
+            alert(jsonData);
+        }
+    });
+}
+
+function getChessBoardResult() {
+    var game_id = document.getElementById("game_id").innerHTML;
+
+    $.ajax({
+        url: "/start/winner",
+        type: "get",
+        data: {"game_id": game_id},
+        success: function (data) {
+            var jason = JSON.parse(data);
+            alert("승자는" + jason.name + "입니다.")
+        },
+        error: function (errorThrown) {
+            alert(errorThrown);
+        },
     });
 }

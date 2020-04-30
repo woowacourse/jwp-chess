@@ -51,8 +51,8 @@ public class ChessService {
     }
 
     public String move(LocationDto nowDto, LocationDto destinationDto, int gameId) throws SQLException {
-        Location now = nowDto.toEntity();
-        Location destination = destinationDto.toEntity();
+        Location now = nowDto.toLocation();
+        Location destination = destinationDto.toLocation();
         ChessGame chessGame = makeGameByDB(gameId);
 
         MoveCommand move = MoveCommand.of(now, destination, chessGame);

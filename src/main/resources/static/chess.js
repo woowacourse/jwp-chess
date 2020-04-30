@@ -274,7 +274,7 @@ function drop(ev) {
     var des = ev.target.id;
     var game_id = document.getElementById("game_id").innerHTML;
     console.log("이건 로그" + game_id + " " + now + " " + des);
-    move({"game_id": "2", "now": now.toString(), "des": des.toString()});
+    move({"game_id": "1", "now": now.toString(), "des": des.toString()});
 }
 
 function move(json) {
@@ -307,7 +307,7 @@ function move(json) {
             if (jsonData.progress == "END") {
                 getChessBoardResult();
             }
-            alert(JSON.stringify(jsonData));
+            // alert(JSON.stringify(jsonData));
         }
     });
 }
@@ -325,6 +325,42 @@ function getChessBoardResult() {
         },
         error: function (errorThrown) {
             alert(errorThrown);
+        },
+    });
+}
+
+function resume() {
+    $.ajax({
+        url: "/api/resume",
+        type: "get",
+        success: function (data) {
+            console.log(JSON.stringify(data));
+            $('.board').css('display', 'block');
+            $('.gamecell').html('');
+            $('.gamecell').attr('chess', 'null');
+            $('#game_id').html(1);
+
+            $('.gamecell grey').html('');
+            $('.gamecell grey').attr('chess', 'null');
+
+            var jsonData = JSON.parse(data);
+            for (var i = 0; i < jsonData.boardDto.boardValue.length; i++) {
+                var piece = jsonData.boardDto.boardValue[i];
+                $('#' + piece.location).html(main.variables.pieces[piece.pieceName].img);
+                $('#' + piece.location).attr('chess', piece.pieceName);
+            }
+
+            $('#whiteScore').html("White score : " + jsonData.whiteScore);
+            $('#blackScore').html("Black score : " + jsonData.blackScore);
+
+            var turn = "white";
+            if (jsonData.turnIsBlack === "1") {
+                turn = "black";
+            }
+            $('#turn').html("It's " + turn + " Turn!");
+        },
+        error: function (errorThrown) {
+            alert(JSON.stringify(errorThrown));
         },
     });
 }

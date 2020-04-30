@@ -37,12 +37,7 @@ public class ChessService {
 
         ChessGame savedChessGame = save.toChessGame();
 
-        BoardDto boardDto = new BoardDto(savedChessGame.getChessBoard());
-        boolean isTurnBlack = savedChessGame.getTurn().isBlack();
-        double whiteScore = savedChessGame.calculateScores().getWhiteScore().getValue();
-        double blackScore = savedChessGame.calculateScores().getBlackScore().getValue();
-
-        return new ChessGameDto(boardDto, isTurnBlack, whiteScore, blackScore);
+        return new ChessGameDto(savedChessGame);
     }
 
     public ChessMoveDto move(long gameId, LocationDto nowDto, LocationDto destinationDto) throws SQLException {
@@ -71,5 +66,14 @@ public class ChessService {
             targetChessGameEntity.setId(chessGameEntity.getId());
             chessGameRepository.save(targetChessGameEntity);
         }
+    }
+
+    public ChessGameDto resumeGame() throws SQLException {
+        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(1L);
+
+        ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(
+                () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
+
+        return new ChessGameDto(chessGameEntity.toChessGame());
     }
 }

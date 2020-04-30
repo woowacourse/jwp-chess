@@ -38,6 +38,11 @@ public class SpringChessController {
         return render(model, "index.html");
     }
 
+    @GetMapping("/api/resume")
+    public String resume() throws SQLException {
+        return GSON.toJson(chessService.resumeGame());
+    }
+
     @PostMapping("/api/game")
     public String starts() {
         return new Gson().toJson(chessService.makeChessBoard());

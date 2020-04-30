@@ -56,6 +56,12 @@ public class SpringChessController {
 		return GSON.toJson(from + " " + to);
 	}
 
+	@GetMapping("/status")
+	private String renderResult(@RequestParam("game_id") String game_id, Model model) {
+		model.addAllAttributes(service.getResult(game_id));
+		return "status";
+	}
+
 	@ResponseStatus(value = HttpStatus.CONFLICT)
 	@ExceptionHandler(IllegalArgumentException.class)
 	@ResponseBody

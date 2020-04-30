@@ -1,16 +1,16 @@
 package wooteco.chess.service;
 
 import org.springframework.stereotype.Service;
-import wooteco.chess.dao.BoardDAO;
-import wooteco.chess.dao.RoomDAO;
 import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.BoardEntity;
 import wooteco.chess.domain.board.BoardFactory;
+import wooteco.chess.domain.board.BoardRepository;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.room.Room;
+import wooteco.chess.domain.room.RoomRepository;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,72 +18,81 @@ import java.util.Map;
 @Service
 public class RoomService {
 
-    private RoomDAO roomDAO;
-    private BoardDAO boardDAO;
+    private RoomRepository roomRepository;
+    private BoardRepository boardRepository;
 
-    public RoomService() throws SQLException {
-        roomDAO = new RoomDAO();
-        boardDAO = new BoardDAO();
+    public RoomService(final RoomRepository roomRepository, final BoardRepository boardRepository) {
+        this.boardRepository = boardRepository;
+        this.roomRepository = roomRepository;
     }
 
-    // Get("/")
-    public List<Room> findAllRoom() throws SQLException {
-        return roomDAO.findAllRoom();
+    public List<Room> findAllRoom() {
+        return roomRepository.findAll();
     }
 
-    // Post("/room")
-    public Map<String, String> initializeBoard(Long roomId) throws SQLException {
+    public Map<String, String> initializeBoard(Long roomId) {
         Board board = BoardFactory.initializeBoard();
         Map<Position, Piece> rawBoard = board.getBoard();
 
         Map<String, String> boardDTO = new HashMap<>();
         for (Position position : rawBoard.keySet()) {
-            boardDAO.insertPiece(roomId, board, position);
+            BoardEntity boardEntity = new BoardEntity(roomId, position.toString(), rawBoard.get(position).getName());
+            boardRepository.save(boardEntity);
             boardDTO.put(position.toString(), rawBoard.get(position).getName());
         }
         return boardDTO;
     }
 
-    //Post("/room")
-    public Room createRoom(final Long id, final String title) throws SQLException {
-        Room room = new Room(id, title);
-        roomDAO.insertRoom(id, title, room.getTurn());
-        return room;
+    public Room createRoom(final String title) {
+        Room room = new Room(title);
+        return roomRepository.save(room);
     }
 
-    // Get("/room/{room_id}")
-    public Map<String, String> findPiecesById(Long id) throws SQLException {
-        return boardDAO.findAllById(id);
+    public Map<String, String> findPiecesById(Long id) {
+        List<BoardEntity> board = boardRepository.findByRoomId(id);
+        Map<String, String> boardDto = new HashMap<>();
+        for (BoardEntity boardEntity : board) {
+            boardDto.put(boardEntity.getPosition(), boardEntity.getPiece());
+        }
+        return boardDto;
     }
 
-    public void updateTurn(final Long roomId) throws SQLException {
-        if (roomDAO.findTurnById(roomId) == Team.WHITE) {
-            roomDAO.updateTurn(roomId, Team.BLACK);
+    public void updateTurn(final Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room 정보가 없습니다."));
+        if (room.getTurn().equals(Team.WHITE.name())) {
+            room.setTurn(Team.BLACK);
+            roomRepository.save(room);
             return;
         }
-        roomDAO.updateTurn(roomId, Team.WHITE);
+        room.setTurn(Team.WHITE);
+        roomRepository.save(room);
     }
 
-    public Team getCurrentTurn(final Long roomId) throws SQLException {
-        return roomDAO.findTurnById(roomId);
+    public String findTurnById(final Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room 정보가 없습니다."));
+        return room.getTurn();
     }
 
-    public Long findCurrentMaxId() throws SQLException {
-        return roomDAO.findCurrentMaxId();
+    public String findTitleById(final Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room 정보가 없습니다."));
+        return room.getTitle();
     }
 
-    public void deleteRoom(final Long roomId) throws SQLException {
-        roomDAO.deleteRoomById(roomId);
-        boardDAO.deleteBoardById(roomId);
-    }
+    public Map<String, String> resetRoom(final Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room 정보가 없습니다."));
+        room.setTurn(Team.WHITE);
+        roomRepository.save(room);
 
-    public Map<String, String> resetRoom(final Long roomId) throws SQLException {
-        roomDAO.updateTurn(roomId, Team.WHITE);
-        boardDAO.deleteBoardById(roomId);
+        boardRepository.deleteByRoomId(roomId);
         return initializeBoard(roomId);
     }
 
-    public String findTitleById(final Long id) throws SQLException {
-        return roomDAO.findTitleById(id);
+    public void deleteRoom(final Long roomId) {
+        roomRepository.deleteById(roomId);
+        boardRepository.deleteByRoomId(roomId);
     }
 }

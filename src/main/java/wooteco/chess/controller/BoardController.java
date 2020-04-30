@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.service.BoardService;
 
-import java.sql.SQLException;
-
 @Controller
 public class BoardController {
 
@@ -24,7 +22,7 @@ public class BoardController {
     public ResponseEntity<?> move(
             @PathVariable("room_id") Long roomId,
             @RequestParam String fromPiece,
-            @RequestParam String toPiece) throws SQLException {
+            @RequestParam String toPiece) {
         try {
             Board board = boardService.movePiece(roomId, fromPiece, toPiece);
             if (boardService.isFinish(board)) {
@@ -40,7 +38,7 @@ public class BoardController {
     @ResponseBody
     public String status(
             @PathVariable("room_id") Long roomId,
-            Model model) throws SQLException {
+            Model model) {
         model.addAttribute(boardService.showScoreStatus(roomId));
         return new Gson().toJson(boardService.showScoreStatus(roomId));
     }

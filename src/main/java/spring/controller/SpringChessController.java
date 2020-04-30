@@ -59,6 +59,13 @@ public class SpringChessController {
         return GSON.toJson(chessService.move(gameId, nowDto, destinationDto));
     }
 
+    @GetMapping("/api/games/{id}/result")
+    public String winnerGame(@PathVariable Long id) throws SQLException {
+        System.out.println("id는 " + id);
+        chessService.findWinner(id);
+        return GSON.toJson(chessService.findWinner(id));
+    }
+
     @DeleteMapping("/api/games/{id}")
     public Long deleteGame(@PathVariable Long id) throws SQLException {
         chessService.endGame(id);

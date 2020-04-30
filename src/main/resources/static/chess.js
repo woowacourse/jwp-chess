@@ -129,58 +129,6 @@ function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
 }
 
-function postChessBoard(json) {
-    $.ajax({
-        type: 'post',
-        url: '/start/move',
-        data: json,
-        dataType: 'text',
-        error: function (xhr, status, error) {
-            alert(error.toString());
-        },
-        success: function (data) {
-            var jsonData = JSON.parse(data);
-            // console.log(JSON.stringify(jsonData));
-
-            if (jsonData.progress == "CONTINUE") {
-                var nowImg = $('#' + json.now).html();
-                $('#' + json.des).html(nowImg);
-                $('#' + json.des).attr('chess', $('#' + json.now).chess);
-                $('#' + json.now).html('');
-                $('#' + json.now).attr('chess', 'null');
-
-                $('#whiteScore').html("whiteScore : " + jsonData.chessGameScoresDto.whiteScore.value);
-                $('#blackScore').html("blackScore : " + jsonData.chessGameScoresDto.blackScore.value);
-
-                $('#turn').html("It's " + jsonData.turn + " Turn!");
-            }
-            if (jsonData.progress == "ERROR") {
-                alert("움직일 수 없는 경우입니다.");
-            }
-            if (jsonData.progress == "END") {
-                getChessBoardResult();
-            }
-        }
-    });
-}
-
-function getChessBoardResult() {
-    var game_id = document.getElementById("game_id").innerHTML;
-
-    $.ajax({
-        url: "/start/winner",
-        type: "get",
-        data: {"game_id": game_id},
-        success: function (data) {
-            var jason = JSON.parse(data);
-            alert("승자는" + jason.name + "입니다.")
-        },
-        error: function (errorThrown) {
-            alert(errorThrown);
-        },
-    });
-}
-
 function getChessGames() {
     $.ajax({
         url: "/start/boards",
@@ -247,7 +195,9 @@ function postNewGame() {
             alert(error.toString());
         },
         success: function (data) {
-            $('#game_id').html(game_id);
+            $('.board').css('display', 'block');
+            // TODO : game_id를 받아와야 합니다.
+            $('#game_id').html("1");
 
             $('.gamecell').html('');
             $('.gamecell').attr('chess', 'null');
@@ -314,25 +264,26 @@ function move(json) {
 }
 
 function getChessBoardResult() {
-    // var game_id = document.getElementById("game_id").innerHTML;
-    //
-    // $.ajax({
-    //     url: "/start/winner",
-    //     type: "get",
-    //     data: {"game_id": game_id},
-    //     success: function (data) {
-    //         var jason = JSON.parse(data);
-    //         alert("승자는" + jason.name + "입니다.")
-    //     },
-    //     error: function (errorThrown) {
-    //         alert(errorThrown);
-    //     },
-    // });
+    const id = document.getElementById("game_id").innerHTML;
+    console.log("아이디는 " + id);
+    $.ajax({
+        url: "/api/games/" + id + "/result",
+        type: "get",
+        success: function (data) {
+            var jason = JSON.parse(data);
+            alert("승자는" + jason.name + "입니다.");
+            if (confirm('메인 페이지로 이동하겠습니까?')) {
+                window.location.href = "/"
+            }
+        },
+        error: function (errorThrown) {
+            alert(errorThrown);
+        },
+    });
 }
 
 function deleteChessGame() {
     const game_id = document.getElementById("game_id").innerHTML;
-
     $.ajax({
         url: "/api/games/" + game_id,
         type: "delete",

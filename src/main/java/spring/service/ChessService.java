@@ -11,6 +11,7 @@ import spark.dto.LocationDto;
 import spring.dto.ChessGameDto;
 import spring.dto.ChessGameScoresDto;
 import spring.dto.ChessMoveDto;
+import spring.dto.ChessResultDto;
 import spring.entity.ChessGameEntity;
 import spring.entity.repository.ChessGameRepository;
 import spring.entity.repository.PieceRepository;
@@ -74,6 +75,16 @@ public class ChessService {
                 () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
 
         return new ChessGameDto(chessGameEntity.toChessGame());
+    }
+
+    public ChessResultDto findWinner(Long gameId) throws SQLException {
+        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(gameId);
+
+        ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(
+                () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
+
+        ChessGame chessGame = chessGameEntity.toChessGame();
+        return new ChessResultDto(chessGame.findWinner());
     }
 
     public void endGame(Long gameId) throws SQLException {

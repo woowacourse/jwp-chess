@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChessRoomService {
+	private static final String ENDED = "ended";
+
 	private final AnnouncementRepository announcementRepository;
 	private final StatusRecordRepository statusRecordRepository;
 	private final StateRepository stateRepository;
@@ -75,7 +77,7 @@ public class ChessRoomService {
 	}
 
 	private void saveNewState(final int roomId) {
-		stateRepository.save("ended", roomId);
+		stateRepository.save(ENDED, roomId);
 	}
 
 	private void saveNewPieces(final int roomId) {

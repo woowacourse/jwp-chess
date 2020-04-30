@@ -6,6 +6,7 @@ import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.entity.Room;
 import wooteco.chess.service.ChessService;
 import wooteco.chess.service.RoomService;
+import wooteco.chess.utils.IdGenerator;
 
 
 @RestController
@@ -25,6 +26,7 @@ public class RoomController {
     public ResponseDto create(@RequestParam String roomName,
                               @RequestParam Long userId) throws Exception {
         Room room = new Room();
+        room.setRoomId(IdGenerator.generateRoomId());
         room.setWhiteUserId(userId);
         room.setName(roomName);
 

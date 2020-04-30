@@ -7,6 +7,7 @@ import wooteco.chess.dto.ChessResponseDto;
 import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.entity.Move;
 import wooteco.chess.service.ChessService;
+import wooteco.chess.utils.IdGenerator;
 
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class ChessController {
     public ResponseDto move(@RequestParam Long roomId,
                             @RequestParam String source,
                             @RequestParam String target) throws Exception {
-        return chessService.move(new Move(roomId, Coordinate.of(source), Coordinate.of(target)));
+        return chessService.move(new Move(IdGenerator.generateMoveId(),
+                roomId, Coordinate.of(source), Coordinate.of(target)));
     }
 
     @GetMapping("/way")

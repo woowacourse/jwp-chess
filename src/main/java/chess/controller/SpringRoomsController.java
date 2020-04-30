@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/chess/rooms")
 public class SpringRoomsController {
 	private static final String EMPTY = "";
+	private static final String DELETE = "delete";
 
 	private final ChessRoomsService chessRoomsService;
 
@@ -35,7 +36,7 @@ public class SpringRoomsController {
 			@RequestParam(value = "method", defaultValue = EMPTY) final String method,
 			@RequestParam(value = "room_name", defaultValue = EMPTY) final String roomName) {
 
-		if ("delete".equals(method)) {
+		if (DELETE.equals(method)) {
 			return delete(roomName);
 		}
 

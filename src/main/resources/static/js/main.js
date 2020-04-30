@@ -7,4 +7,14 @@ window.onload = function() {
         }
         $(".cell:eq(" + i + ")").addClass(cell);
     }
-}
+
+    let roomButtons = document.querySelectorAll(".room-button");
+
+    roomButtons.forEach(button => {
+        button.addEventListener("click", evt => {
+            console.log("clicked", button);
+                window.location.href = "/start/" + button.innerHTML;
+            }
+        )
+    })
+};

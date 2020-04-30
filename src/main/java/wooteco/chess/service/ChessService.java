@@ -2,9 +2,7 @@ package wooteco.chess.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
-
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.board.Position;
@@ -110,5 +108,9 @@ public class ChessService {
     public Board getBoard(Room room) {
         return gameRepository.findByRoom(room)
                 .getBoard();
+    }
+
+    public List<Room> getRooms() {
+        return roomRepository.findAll();
     }
 }

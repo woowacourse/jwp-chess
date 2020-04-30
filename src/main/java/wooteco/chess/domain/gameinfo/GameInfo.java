@@ -1,6 +1,7 @@
 package wooteco.chess.domain.gameinfo;
 
 import java.util.List;
+
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.board.Status;

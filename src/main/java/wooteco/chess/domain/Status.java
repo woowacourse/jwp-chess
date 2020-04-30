@@ -6,10 +6,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import wooteco.chess.domain.entity.PieceEntity;
 import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.PieceFactory;
 import wooteco.chess.domain.piece.PieceScore;
 import wooteco.chess.domain.piece.Turn;
 
@@ -25,6 +28,12 @@ public class Status {
 			Turn.BLACK, calculateOf(groupByTeam(pieces, Turn.BLACK)),
 			Turn.WHITE, calculateOf(groupByTeam(pieces, Turn.WHITE))
 		));
+	}
+
+	public static Status of(Set<PieceEntity> pieceEntities) {
+		return of(pieceEntities.stream()
+			.map(PieceFactory::createBy)
+			.collect(toList()));
 	}
 
 	private static List<Piece> groupByTeam(List<Piece> pieces, Turn turn) {

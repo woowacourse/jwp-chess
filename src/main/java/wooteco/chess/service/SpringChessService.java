@@ -2,10 +2,13 @@ package wooteco.chess.service;
 
 import static java.util.stream.Collectors.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import wooteco.chess.domain.Status;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.entity.ChessGame;
 import wooteco.chess.domain.entity.PieceEntity;
@@ -42,9 +45,9 @@ public class SpringChessService {
 			.orElseThrow();
 	}
 
-	public void move(String gameId, Position from, Position to) {
-		ChessGame chessGame = chessGameRepository.findByRoomId(gameId)
-			.orElseThrow(() -> new IllegalArgumentException("게임이 존재하지 않습니다. game id = " + gameId));
+	public void move(String roomId, Position from, Position to) {
+		ChessGame chessGame = chessGameRepository.findByRoomId(roomId)
+			.orElseThrow(() -> new IllegalArgumentException("게임이 존재하지 않습니다. game id = " + roomId));
 		Board board = Board.of(chessGame.getPieces());
 
 		PieceEntity source = pieceRepository.findByGameIdAndPosition(chessGame.getId(), from.getName())
@@ -57,5 +60,26 @@ public class SpringChessService {
 		pieceRepository.save(target);
 		pieceRepository.save(source);
 		chessGameRepository.save(chessGame);
+	}
+
+	public Map<String, String> getResult(String roomId) {
+		Map<String, String> result = new HashMap<>();
+		Set<PieceEntity> pieceEntities = chessGameRepository.findByRoomId(roomId)
+			.stream()
+			.map(ChessGame::getPieces)
+			.findFirst()
+			.orElseThrow();
+
+		Status status = Status.of(pieceEntities);
+
+		String whiteScore = String.valueOf(status.toMap().get(Turn.WHITE));
+		String blackScore = String.valueOf(status.toMap().get(Turn.BLACK));
+		String winner = status.getWinner().name();
+
+		result.put("whiteScore", whiteScore);
+		result.put("blackScore", blackScore);
+		result.put("result", winner);
+
+		return result;
 	}
 }

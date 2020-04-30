@@ -8,20 +8,20 @@ import wooteco.chess.domain.position.Position;
 public class Pawn extends Piece {
 	private static final int MOVE_COLUMN_BOUND = 1;
 
-	public Pawn(Position position, Team team) {
-		super(position, Symbol.PAWN, team);
+	public Pawn(Position position, Turn turn) {
+		super(position, Symbol.PAWN, turn);
 	}
 
 	@Override
 	public boolean canNotMoveTo(Piece that) {
 		int columnGap = Math.abs(this.position.getColumnGap(that.position));
-		if (columnGap == 0 && team.isEnemy(that.team)) {
+		if (columnGap == 0 && turn.isEnemy(that.turn)) {
 			throw new IllegalArgumentException("폰은 전방의 적을 공격할 수 없습니다.");
 		}
-		if (columnGap == 1 && team.isNotEnemy(that.team)) {
+		if (columnGap == 1 && turn.isNotEnemy(that.turn)) {
 			throw new IllegalArgumentException("폰은 공격이 아니면 대각선 이동이 불가합니다.");
 		}
-		return isSameTeam(that.team) || !createMovableArea().contains(that.position);
+		return isSameTeam(that.turn) || !createMovableArea().contains(that.position);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class Pawn extends Piece {
 			.filter(this::isPawnArea)
 			.collect(Collectors.toList());
 
-		PawnMoveInfo moveInfo = PawnMoveInfo.of(team);
+		PawnMoveInfo moveInfo = PawnMoveInfo.of(turn);
 		if (moveInfo.isInitialRow(position)) {
 			movableArea.add(moveInfo.getJumpedPositionOf(position));
 		}
@@ -42,7 +42,7 @@ public class Pawn extends Piece {
 
 	private boolean isPawnArea(Position position) {
 		return Math.abs(this.position.getColumnGap(position)) <= MOVE_COLUMN_BOUND &&
-			PawnMoveInfo.of(team).isValidRowGap(this.position.getRowGap(position));
+			PawnMoveInfo.of(turn).isValidRowGap(this.position.getRowGap(position));
 	}
 
 	@Override

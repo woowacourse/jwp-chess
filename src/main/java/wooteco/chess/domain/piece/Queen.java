@@ -6,13 +6,13 @@ import java.util.stream.Collectors;
 import wooteco.chess.domain.position.Position;
 
 public class Queen extends Piece {
-	public Queen(Position position, Team team) {
-		super(position, Symbol.QUEEN, team);
+	public Queen(Position position, Turn turn) {
+		super(position, Symbol.QUEEN, turn);
 	}
 
 	@Override
 	public boolean canNotMoveTo(Piece that) {
-		return isSameTeam(that.team) || !createMovableArea().contains(that.position);
+		return isSameTeam(that.turn) || !createMovableArea().contains(that.position);
 	}
 
 	@Override

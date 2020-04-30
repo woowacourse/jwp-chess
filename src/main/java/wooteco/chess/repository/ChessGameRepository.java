@@ -6,9 +6,9 @@ import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import wooteco.chess.domain.entity.ChessGameEntity;
+import wooteco.chess.domain.entity.ChessGame;
 
-public interface ChessGameRepository extends CrudRepository<ChessGameEntity, Long> {
-	@Query("select * from chessGame where room_id = :roomId")
-	Optional<ChessGameEntity> findByRoomId(@Param("roomId") String gameId);
+public interface ChessGameRepository extends CrudRepository<ChessGame, Long> {
+	@Query("select * from chess_game where room_id = :roomId")
+	Optional<ChessGame> findByRoomId(@Param("roomId") String roomId);
 }

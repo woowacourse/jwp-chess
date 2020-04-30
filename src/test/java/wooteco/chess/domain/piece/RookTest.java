@@ -11,7 +11,7 @@ class RookTest {
 
 	@BeforeEach
 	void setUp() {
-		rook = new Rook(C3, Team.BLACK);
+		rook = new Rook(C3, Turn.BLACK);
 	}
 
 	@Test

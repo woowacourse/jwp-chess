@@ -7,12 +7,12 @@ import wooteco.chess.domain.position.Position;
 public abstract class Piece {
 	protected Position position;
 	protected final Symbol symbol;
-	protected final Team team;
+	protected final Turn turn;
 
-	public Piece(Position position, Symbol symbol, Team team) {
+	public Piece(Position position, Symbol symbol, Turn turn) {
 		this.position = position;
 		this.symbol = symbol;
-		this.team = team;
+		this.turn = turn;
 	}
 
 	public abstract boolean canNotMoveTo(Piece that);
@@ -25,24 +25,24 @@ public abstract class Piece {
 
 	public abstract boolean isPenaltyApplier();
 
-	public boolean isSameTeam(Team team) {
-		return this.team == team;
+	public boolean isSameTeam(Turn turn) {
+		return this.turn == turn;
 	}
 
-	public boolean isNotSameTeam(Team team) {
-		return this.team != team;
+	public boolean isNotSameTeam(Turn turn) {
+		return this.turn != turn;
 	}
 
 	public Position getPosition() {
 		return position;
 	}
 
-	public Team getTeam() {
-		return team;
+	public Turn getTurn() {
+		return turn;
 	}
 
 	public String getSymbol() {
-		if (Team.WHITE == team) {
+		if (Turn.WHITE == turn) {
 			return symbol.getWhiteSymbol();
 		}
 		return symbol.getBlackSymbol();

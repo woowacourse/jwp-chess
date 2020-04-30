@@ -34,7 +34,7 @@ public class GameController {
     @PostMapping("")
     public GameIdDto postGame(@PathVariable Integer roomId,
         @RequestBody GameSettingDto gameSettingDto) {
-        Map<Team, String> userNames = gameSettingDto.getUserNames();
+        Map<Team, String> userNames = gameSettingDto.findUserNames();
         String way = gameSettingDto.getWay();
         if (way.equals("new")) {
             return createGame(roomId, userNames);
@@ -44,7 +44,6 @@ public class GameController {
         }
         return null;
     }
-
 
     private GameIdDto createGame(Integer roomId, Map<Team, String> userNames) {
         chessGameService.findProceedGameId(roomId).ifPresent(chessGameService::closeGame);

@@ -1,8 +1,8 @@
 const formGame = document.getElementById("form-game");
 const startButton = document.getElementById("start-button");
 const loadButton = document.getElementById("load-button");
-const blackName = document.getElementById("black-name");
-const whiteName = document.getElementById("white-name");
+const blackNameInput = document.getElementById("black-name");
+const whiteNameInput = document.getElementById("white-name");
 const roomButton = document.getElementById("room-button");
 const roomId = window.location.href.match(
     /(?:\w+:)?\/\/[^\/]+([^?#]+)/).pop().split('/')[2];
@@ -30,7 +30,9 @@ function goGame(way) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            blackName, whiteName, way
+            blackName: blackNameInput.value,
+            whiteName: whiteNameInput.value,
+            way
         })
     }).then(res => res.json()).then(data => {
         formGame.action = '/room/' + roomId + '/game/' + data.gameId;
@@ -39,16 +41,16 @@ function goGame(way) {
 }
 
 function checkNames() {
-    if (blackName.value.toUpperCase() === "WHITE") {
+    if (blackNameInput.value.toUpperCase() === "WHITE") {
         alert("Black팀의 이름은 WHITE로 지정할 수 없습니다.");
         return false;
     }
-    if (whiteName.value.toUpperCase() === "BLACK") {
+    if (whiteNameInput.value.toUpperCase() === "BLACK") {
         alert("White팀의 이름은 BLACK으로 지정할 수 없습니다.");
         return false;
     }
-    if ((blackName.value !== "" || whiteName.value !== "")
-        && blackName.value === whiteName.value) {
+    if ((blackNameInput.value !== "" || whiteNameInput.value !== "")
+        && blackNameInput.value === whiteNameInput.value) {
         alert("Black팀과 White 팀의 이름은 같을 수 없습니다.");
         return false;
     }

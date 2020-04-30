@@ -1,20 +1,20 @@
 let cells = document.querySelectorAll('.cell');
-const turn = document.getElementById('turn');
-const state = document.getElementById('state');
-const clickTiming = document.getElementById('clickTiming');
+const turnLabel = document.getElementById('turn');
+const clickTimingLabel = document.getElementById('clickTiming');
+const stateLabel = document.getElementById('state');
 const promotions = document.querySelectorAll('.promotion');
-const blackScore = document.getElementById('blackScore');
-const whiteScore = document.getElementById('whiteScore');
-const blackName = document.getElementById('blackName');
-const whiteName = document.getElementById('whiteName');
-const winner = document.getElementById('winner');
+const blackScoreLabel = document.getElementById('blackScore');
+const whiteScoreLabel = document.getElementById('whiteScore');
+const blackNameLabel = document.getElementById('blackName');
+const whiteNameLabel = document.getElementById('whiteName');
+const winnerLabel = document.getElementById('winner');
 const closeButton = document.getElementById('close-button');
-const choiceGame = document.getElementById('choice-game');
+const choiceGameForm = document.getElementById('choice-game');
 const choiceButton = document.getElementById('choice-button');
 const roomButton = document.getElementById('room-button');
 const resultButton = document.getElementById('result-button');
-const resultGame = document.getElementById('result-game');
-const newGame = document.getElementById('new-game');
+const resultForm = document.getElementById('result');
+const newGameForm = document.getElementById('new-game');
 const newButton = document.getElementById('new-button');
 const roomId = window.location.href.match(
     /(?:\w+:)?\/\/[^\/]+([^?#]+)/).pop().split('/')[2];
@@ -32,21 +32,28 @@ roomButton.onclick = () => {
 };
 
 resultButton.onclick = () => {
-    resultGame.submit();
+    resultForm.submit();
 };
 
 choiceButton.onclick = () => {
-    choiceGame.action = '/room/' + roomId;
-    choiceGame.submit();
+    choiceGameForm.action = '/room/' + roomId;
+    choiceGameForm.submit();
 };
 
 newButton.onclick = () => {
-    fetch(roomUrl + '/game?way=new&blackName=' + blackName.innerText
-        + "&whiteName=" + whiteName.innerText, {
-        method: 'POST'
+    fetch(roomUrl + '/game', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            blackName: blackNameLabel.innerText,
+            whiteName: whiteNameLabel.innerText,
+            way: 'new'
+        })
     }).then(res => res.json()).then(data => {
-        newGame.action = '/room/' + roomId + '/game/' + data.gameId;
-        newGame.submit();
+        newGameForm.action = '/room/' + roomId + '/game/' + data.gameId;
+        newGameForm.submit();
     });
 };
 
@@ -72,7 +79,7 @@ cells.forEach(cell => {
             firstClick = false;
             document.getElementById('clickTiming').innerText
                 = '말이 이동할 경로(after)를 선택하세요.';
-            state.innerText = "";
+            stateLabel.innerText = "";
             cell.style.backgroundColor = 'STEELBLUE';
             fetch(gameUrl + '/path', {
                 method: 'POST',
@@ -80,7 +87,7 @@ cells.forEach(cell => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    source, gameId
+                    source
                 })
             }).then(res => res.json()).then(data => {
                 cells.forEach(cell => {
@@ -116,14 +123,13 @@ cells.forEach(cell => {
 
 promotions.forEach(promotion => {
     promotion.onclick = () => {
-        let promotionType = promotion.id;
         fetch(gameUrl + '/promotion', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                promotionType, gameId
+                promotionType: promotion.id
             })
         }).then(res => res.json()).then(data => {
             gameSetting(data);
@@ -142,20 +148,20 @@ function gameSetting(data) {
         cell.classList.remove('path');
     });
     if (typeof data.turn === 'undefined') {
-        turn.innerText = "";
+        turnLabel.innerText = "";
     } else {
-        turn.innerText = '현재 턴 : ' + data.turn;
+        turnLabel.innerText = '현재 턴 : ' + data.turn;
     }
     if (typeof data.state === 'undefined') {
-        state.innerText = "";
+        stateLabel.innerText = "";
     } else {
-        state.innerText = data.state;
+        stateLabel.innerText = data.state;
     }
-    blackScore.innerText = data.blackScore;
-    whiteScore.innerText = data.whiteScore;
-    blackName.innerText = data.blackName;
-    whiteName.innerText = data.whiteName;
-    winner.innerText = data.winner;
+    blackScoreLabel.innerText = data.blackScore;
+    whiteScoreLabel.innerText = data.whiteScore;
+    blackNameLabel.innerText = data.blackName;
+    whiteNameLabel.innerText = data.whiteName;
+    winnerLabel.innerText = data.winner;
 }
 
 function gameFinish() {
@@ -164,8 +170,8 @@ function gameFinish() {
         cell.classList.remove('cell');
     });
     cells = null;
-    turn.innerText = "";
-    clickTiming.innerText = '게임이 종료되었습니다.';
+    turnLabel.innerText = "";
+    clickTimingLabel.innerText = '게임이 종료되었습니다.';
     closeButton.innerText = "종료됨";
     closeButton.disable = true;
 }

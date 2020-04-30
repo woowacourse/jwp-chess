@@ -1,5 +1,5 @@
 create table room(
-        id varchar(32) NOT NULL PRIMARY KEY,
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
         name varchar(30) NOT NULL
 );
 

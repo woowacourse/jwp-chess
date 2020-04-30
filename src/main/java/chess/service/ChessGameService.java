@@ -164,11 +164,6 @@ public class ChessGameService {
     }
 
     public Optional<Integer> findProceedGameId(Integer roomId) {
-        for (ChessGameEntity chessGameEntity : chessGameRepository.findAllByRoomId(roomId)) {
-            if (chessGameEntity.isProceeding()) {
-                return Optional.ofNullable(chessGameEntity.getId());
-            }
-        }
-        return Optional.empty();
+        return chessGameRepository.findProceedingByRoomId(roomId);
     }
 }

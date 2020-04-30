@@ -4,6 +4,8 @@ import chess.dto.GameResultDto;
 import chess.dto.UserNameDto;
 import chess.dto.UserNamesDto;
 import chess.service.ResultService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,12 +23,14 @@ public class ResultController {
     }
 
     @GetMapping("/result/users")
-    public UserNamesDto getUsers() {
-        return resultService.getUsers();
+    public ResponseEntity<UserNamesDto> getUsers() {
+        UserNamesDto userNamesDto = resultService.getUsers();
+        return new ResponseEntity<>(userNamesDto, HttpStatus.OK);
     }
 
     @PostMapping("/result/userResult")
-    public GameResultDto userResult(@RequestBody UserNameDto userNameDto) {
-        return resultService.getResult(userNameDto);
+    public ResponseEntity<GameResultDto> userResult(@RequestBody UserNameDto userNameDto) {
+        GameResultDto gameResultDto = resultService.getResult(userNameDto);
+        return new ResponseEntity<>(gameResultDto, HttpStatus.OK);
     }
 }

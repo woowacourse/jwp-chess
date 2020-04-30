@@ -5,6 +5,8 @@ import chess.dto.DeleteRoomDto;
 import chess.dto.RoomsDto;
 import chess.service.ChessGameService;
 import chess.service.RoomService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,22 +27,24 @@ public class RoomController {
     }
 
     @GetMapping("/rooms")
-    public RoomsDto getRooms() {
-        return roomService.getUsedRooms();
+    public ResponseEntity<RoomsDto> getRooms() {
+        RoomsDto roomsDto = roomService.getUsedRooms();
+        return new ResponseEntity<>(roomsDto, HttpStatus.OK);
     }
 
     @PostMapping("/room")
-    public RoomsDto postRoom(@RequestBody CreateRoomDto createRoomDto) {
+    public ResponseEntity<RoomsDto> createRoom(@RequestBody CreateRoomDto createRoomDto) {
         roomService.addRoom(createRoomDto);
-        return roomService.getUsedRooms();
+        RoomsDto roomsDto = roomService.getUsedRooms();
+        return new ResponseEntity<>(roomsDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/room")
-    public RoomsDto deleteRoom(@RequestBody DeleteRoomDto deleteRoomDto) {
+    public ResponseEntity<RoomsDto> deleteRoom(@RequestBody DeleteRoomDto deleteRoomDto) {
         roomService.deleteRoom(deleteRoomDto);
         chessGameService.findProceedGameId(deleteRoomDto.getRoomId())
             .ifPresent(chessGameService::closeGame);
-
-        return roomService.getUsedRooms();
+        RoomsDto roomsDto = roomService.getUsedRooms();
+        return new ResponseEntity<>(roomsDto, HttpStatus.OK);
     }
 }

@@ -81,20 +81,14 @@ cells.forEach(cell => {
                 = '말이 이동할 경로(after)를 선택하세요.';
             stateLabel.innerText = "";
             cell.style.backgroundColor = 'STEELBLUE';
-            fetch(gameUrl + '/path', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    source
-                })
-            }).then(res => res.json()).then(data => {
+            fetch(gameUrl + '/path?source=' + source).then(
+                res => res.json()).then(data => {
                 cells.forEach(cell => {
-                    cell.classList.remove('path');
+                    cell.classList.remove('movableArea');
                 });
-                data.path.forEach(path => {
-                    document.getElementById(path).classList.add('path');
+                data.movableAreas.forEach(movableArea => {
+                    document.getElementById(movableArea).classList.add(
+                        'movableArea');
                 })
             });
             return;
@@ -102,7 +96,7 @@ cells.forEach(cell => {
         document.getElementById(source).removeAttribute('style');
         target = cell.id;
         firstClick = true;
-        fetch(gameUrl + '/move', {
+        fetch(gameUrl + '/path', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -145,7 +139,7 @@ fetch(gameUrl + '/board').then(
 function gameSetting(data) {
     cells.forEach(cell => {
         cell.innerHTML = data.pieces.shift();
-        cell.classList.remove('path');
+        cell.classList.remove('movableArea');
     });
     if (typeof data.turn === 'undefined') {
         turnLabel.innerText = "";

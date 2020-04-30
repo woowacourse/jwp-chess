@@ -2,10 +2,9 @@ package chess.service;
 
 import chess.dto.ChessGameDto;
 import chess.dto.GameInfoDto;
+import chess.dto.MovableAreasDto;
 import chess.dto.MoveDto;
-import chess.dto.PathDto;
 import chess.dto.PromotionTypeDto;
-import chess.dto.SourceDto;
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.ChessGameFactory;
 import chess.model.domain.board.Square;
@@ -159,9 +158,9 @@ public class ChessGameService {
             .moveState(moveState);
     }
 
-    public PathDto findPath(Integer gameId, SourceDto sourceDto) {
+    public MovableAreasDto findPath(Integer gameId, String source) {
         ChessGame chessGame = combineChessGame(gameId);
-        return new PathDto(chessGame.findMovableAreas(Square.of(sourceDto.getSource())));
+        return new MovableAreasDto(chessGame.findMovableAreas(Square.of(source)));
     }
 
     public Optional<Integer> findProceedGameId(Integer roomId) {

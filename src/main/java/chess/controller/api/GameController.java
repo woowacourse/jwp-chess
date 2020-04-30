@@ -3,20 +3,22 @@ package chess.controller.api;
 import chess.dto.ChessGameDto;
 import chess.dto.GameIdDto;
 import chess.dto.GameSettingDto;
+import chess.dto.MovableAreasDto;
 import chess.dto.MoveDto;
-import chess.dto.PathDto;
 import chess.dto.PromotionTypeDto;
-import chess.dto.SourceDto;
 import chess.model.domain.piece.Team;
 import chess.model.repository.ChessGameEntity;
 import chess.service.ChessGameService;
 import chess.service.ResultService;
 import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,17 +34,19 @@ public class GameController {
     }
 
     @PostMapping("")
-    public GameIdDto postGame(@PathVariable Integer roomId,
+    public ResponseEntity<GameIdDto> startGame(@PathVariable Integer roomId,
         @RequestBody GameSettingDto gameSettingDto) {
         Map<Team, String> userNames = gameSettingDto.findUserNames();
         String way = gameSettingDto.getWay();
         if (way.equals("new")) {
-            return createGame(roomId, userNames);
+            GameIdDto gameIdDto = createGame(roomId, userNames);
+            return new ResponseEntity<>(gameIdDto, HttpStatus.OK);
         }
         if (way.equals("load")) {
-            return loadGame(roomId, userNames);
+            GameIdDto gameIdDto = loadGame(roomId, userNames);
+            return new ResponseEntity<>(gameIdDto, HttpStatus.OK);
         }
-        return null;
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     private GameIdDto createGame(Integer roomId, Map<Team, String> userNames) {
@@ -58,34 +62,39 @@ public class GameController {
     }
 
     @GetMapping("/{gameId}/board")
-    public ChessGameDto getBoard(@PathVariable Integer gameId) {
-        return chessGameService.loadChessGame(gameId);
+    public ResponseEntity<ChessGameDto> getBoard(@PathVariable Integer gameId) {
+        ChessGameDto chessGameDto = chessGameService.loadChessGame(gameId);
+        return new ResponseEntity<>(chessGameDto, HttpStatus.OK);
     }
 
-    // TODO GET으로 바꾸기
+    @GetMapping("/{gameId}/path")
+    public ResponseEntity<MovableAreasDto> getMovableArea(@PathVariable Integer gameId,
+        @RequestParam String source) {
+        MovableAreasDto movableAreasDto = chessGameService.findPath(gameId, source);
+        return new ResponseEntity<>(movableAreasDto, HttpStatus.OK);
+    }
+
     @PostMapping("/{gameId}/path")
-    public PathDto path(@PathVariable Integer gameId, @RequestBody SourceDto sourceDto) {
-        return chessGameService.findPath(gameId, sourceDto);
-    }
-
-    @PostMapping("/{gameId}/move")
-    public ChessGameDto move(@PathVariable Integer gameId, @RequestBody MoveDto MoveDto) {
+    public ResponseEntity<ChessGameDto> move(@PathVariable Integer gameId,
+        @RequestBody MoveDto MoveDto) {
         ChessGameDto chessGameDto = chessGameService.move(gameId, MoveDto);
         resultService.updateResult(chessGameDto);
-        return chessGameDto;
+        return new ResponseEntity<>(chessGameDto, HttpStatus.OK);
     }
 
     @PostMapping("/{gameId}/promotion")
-    public ChessGameDto promotion(@PathVariable Integer gameId,
+    public ResponseEntity<ChessGameDto> promotion(@PathVariable Integer gameId,
         @RequestBody PromotionTypeDto promotionTypeDTO) {
-        return chessGameService.promote(gameId, promotionTypeDTO);
+        ChessGameDto chessGameDto = chessGameService.promote(gameId, promotionTypeDTO);
+        return new ResponseEntity<>(chessGameDto, HttpStatus.OK);
     }
 
     @PostMapping("/{gameId}/end")
-    public ChessGameDto end(@PathVariable Integer gameId) {
+    public ResponseEntity<ChessGameDto> end(@PathVariable Integer gameId) {
         ChessGameEntity chessGameEntity = chessGameService.closeGame(gameId);
         resultService.setGameResult(chessGameEntity);
-        return new ChessGameDto(chessGameEntity.makeUserNames())
+        ChessGameDto chessGameDto = new ChessGameDto(chessGameEntity.makeUserNames())
             .teamScore(chessGameEntity.makeTeamScore());
+        return new ResponseEntity<>(chessGameDto, HttpStatus.OK);
     }
 }

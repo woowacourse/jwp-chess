@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,7 +37,11 @@ class MoveCommandRepositoryTest {
     @DisplayName("체스 게임방에서 이동 기록 가져오기")
     @Test
     void findByRoomId() {
-        Set<MoveCommand> commands = savedRoom.getMoveCommand();
-        assertThat(commands.contains("move a2 a4"));
+        List<MoveCommand> commands = savedRoom.getMoveCommand();
+        assertThat(commands.get(0).getCommand()).isEqualTo("move a2 a4");
+        assertThat(commands.get(1).getCommand()).isEqualTo("move a7 a5");
+
+//        List<MoveCommand> commands2 = moveCommandRepository.findAllByRoomId(savedRoom.getRoomId());
+//        assertThat(commands2.get(0).getCommand()).isEqualTo("move a2 a4");
     }
 }

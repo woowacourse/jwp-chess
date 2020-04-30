@@ -11,8 +11,8 @@ import wooteco.chess.repository.MoveCommand;
 import wooteco.chess.repository.MoveCommandRepository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class ChessService {
@@ -31,13 +31,14 @@ public class ChessService {
     }
 
     public void playNewGame(String roomName) {
-        ChessRoom newRoom = addNewRoom(roomName);
+        ChessRoom newRoom = chessRoomRepository.save(new ChessRoom(roomName));
     }
 
-    public void playLastGame(Long roomId) {
-//        List<MoveCommand> commands = chessRoomRepository.findByRoomId(roomId);
-        ChessRoom savedRoom = chessRoomRepository.findById(roomId).get();
-        Set<MoveCommand> commands = savedRoom.getMoveCommand();
+    public void playLastGame(Long roomId) throws IllegalArgumentException {
+        ChessRoom savedRoom = chessRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+        List<MoveCommand> commands = savedRoom.getMoveCommand();
+
         for (MoveCommand command : commands) {
             Command.MOVE.apply(chessManager, command.getCommand());
         }
@@ -75,10 +76,6 @@ public class ChessService {
         model.put("winner", chessManager.getWinner());
 
         return model;
-    }
-
-    private ChessRoom addNewRoom(String roomName) {
-        return chessRoomRepository.save(new ChessRoom(roomName));
     }
 
     private void initializeCommandsById(Long roomId) {

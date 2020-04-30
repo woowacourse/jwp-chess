@@ -1,12 +1,13 @@
-package wooteco.chess.service;
+package wooteco.chess.service.spark;
 
 import java.sql.SQLException;
 
 import org.springframework.stereotype.Service;
 
-import wooteco.chess.dao.BoardDao;
-import wooteco.chess.dao.PlayerDao;
-import wooteco.chess.dao.RoomDao;
+import wooteco.chess.db.ConnectionLoader;
+import wooteco.chess.db.dao.BoardDao;
+import wooteco.chess.db.dao.PlayerDao;
+import wooteco.chess.db.dao.RoomDao;
 import wooteco.chess.domain.Board;
 import wooteco.chess.domain.ChessGame;
 import wooteco.chess.domain.Turn;
@@ -18,12 +19,12 @@ import wooteco.chess.dto.GameDto;
 import wooteco.chess.dto.RoomDto;
 
 @Service
-public class BoardService {
+public class SparkBoardService {
 	private final BoardDao boardDao;
 	private final RoomDao roomDao;
 	private final PlayerDao playerDao;
 
-	public BoardService(BoardDao boardDao, RoomDao roomDao, PlayerDao playerDao) {
+	public SparkBoardService(BoardDao boardDao, RoomDao roomDao, PlayerDao playerDao) {
 		this.boardDao = boardDao;
 		this.roomDao = roomDao;
 		this.playerDao = playerDao;
@@ -68,7 +69,7 @@ public class BoardService {
 	}
 
 	public int createRoom(int player1Id, int player2Id) throws SQLException {
-		RoomDao roomDao = new RoomDao();
+		RoomDao roomDao = new RoomDao(new ConnectionLoader());
 		return roomDao.create(player1Id, player2Id);
 	}
 }

@@ -1,4 +1,4 @@
-package wooteco.chess.controller;
+package wooteco.chess.controller.console;
 
 import java.util.HashMap;
 import java.util.Map;

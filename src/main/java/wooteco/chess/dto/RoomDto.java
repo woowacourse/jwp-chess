@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 
 public class RoomDto {
 	@Id
-	private int id;
+	private Long id;
 	private int turnId;
 	private int player1Id;
 	private int player2Id;
@@ -12,7 +12,7 @@ public class RoomDto {
 	private String player1Name;
 	private String player2Name;
 
-	public RoomDto(int id, String player1Name, String player2Name) {
+	public RoomDto(Long id, String player1Name, String player2Name) {
 		this.id = id;
 		this.name = "체스 " + id + "번방";
 		this.player1Name = player1Name;
@@ -22,7 +22,7 @@ public class RoomDto {
 	public RoomDto() {
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -38,7 +38,7 @@ public class RoomDto {
 		return player2Name;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -12,19 +12,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import wooteco.chess.dto.PlayerDto;
+import wooteco.chess.db.entity.PlayerEntity;
 import wooteco.chess.dto.RoomDto;
 import wooteco.chess.dto.req.PlayersDto;
-import wooteco.chess.service.BoardService;
-import wooteco.chess.service.PlayerService;
+import wooteco.chess.service.spring.SpringGameService;
+import wooteco.chess.service.spring.SpringPlayerService;
 
 @Controller
 @RequestMapping("/room")
 public class RoomController {
-	private final PlayerService playerService;
-	private final BoardService boardService;
+	private final SpringPlayerService playerService;
+	private final SpringGameService boardService;
 
-	public RoomController(PlayerService playerService, BoardService boardService) {
+	public RoomController(SpringPlayerService playerService, SpringGameService boardService) {
 		this.playerService = playerService;
 		this.boardService = boardService;
 	}
@@ -38,11 +38,11 @@ public class RoomController {
 	@ResponseBody
 	public ResponseEntity<Object> createNewGame(@RequestBody PlayersDto playersDto) {
 		try {
-			int roomId = createRoom(playersDto);
-			boardService.create(roomId);
+			long roomId = createRoom(playersDto);
+			boardService.createBoard(roomId);
 			return ResponseEntity
 				.status(200)
-				.body(new RoomDto(roomId, playersDto.getPlayer1Name(), playersDto.getPlayer2Password()));
+				.body(new RoomDto(roomId, playersDto.getPlayer1Name(), playersDto.getPlayer2Name()));
 		} catch (Exception e) {
 			return ResponseEntity.status(400).body(e.getMessage());
 		}
@@ -54,11 +54,11 @@ public class RoomController {
 		return "play";
 	}
 
-	private int createRoom(PlayersDto playersDto) throws SQLException {
-		int player1Id = playerService.create(
-			new PlayerDto(playersDto.getPlayer1Name(), playersDto.getPlayer1Password(), "white"));
-		int player2Id = playerService.create(
-			new PlayerDto(playersDto.getPlayer2Name(), playersDto.getPlayer2Password(), "black"));
+	private long createRoom(PlayersDto playersDto) throws SQLException {
+		long player1Id = playerService.save(
+			new PlayerEntity(playersDto.getPlayer1Name(), playersDto.getPlayer1Password(), "white"));
+		long player2Id = playerService.save(
+			new PlayerEntity(playersDto.getPlayer2Name(), playersDto.getPlayer2Password(), "black"));
 		return boardService.createRoom(player1Id, player2Id);
 	}
 }

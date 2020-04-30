@@ -19,7 +19,7 @@ public class SpringStatisticController {
 		this.chessStatisticService = chessStatisticService;
 	}
 
-	@GetMapping()
+	@GetMapping
 	private String load(final Model model) {
 		final List<StatusRecordDto> statusRecord
 				= chessStatisticService.loadStatusRecordsWithRoomName();

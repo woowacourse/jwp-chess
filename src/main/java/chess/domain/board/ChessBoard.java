@@ -1,20 +1,25 @@
 package chess.domain.board;
 
+import static chess.domain.piece.Pawn.*;
+import static chess.util.NullValidator.*;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import chess.domain.GameResult;
 import chess.domain.command.MoveCommand;
 import chess.domain.piece.EmptyPiece;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
-import chess.exception.*;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import static chess.domain.piece.Pawn.PAWN_HALF_SCORE;
-import static chess.domain.piece.Pawn.PAWN_SCORE;
-import static chess.util.NullValidator.validateNull;
+import chess.exception.AnotherTeamPieceException;
+import chess.exception.NotMovableException;
+import chess.exception.OtherPieceInPathException;
+import chess.exception.PawnNotAttackableException;
+import chess.exception.PieceNotFoundException;
+import chess.exception.SameTeamPieceException;
 
 public class ChessBoard {
 	private static final int ONLY_ONE_PAWN_IN_X_POINT = 1;
@@ -134,14 +139,14 @@ public class ChessBoard {
 
 	private boolean isBlackKingKilled() {
 		return board.values().stream()
-				.map(Piece::getName)
-				.noneMatch(BLACK_KING_MARK::equals);
+			.map(Piece::getName)
+			.noneMatch(BLACK_KING_MARK::equals);
 	}
 
 	private boolean isWhiteKingKilled() {
 		return board.values().stream()
-				.map(Piece::getName)
-				.noneMatch(WHITE_KING_MARK::equals);
+			.map(Piece::getName)
+			.noneMatch(WHITE_KING_MARK::equals);
 	}
 
 	private double calculateAlivePieceScoreSumBy(PieceColor pieceColor) {
@@ -197,5 +202,21 @@ public class ChessBoard {
 
 	public Map<Position, Piece> getBoard() {
 		return Collections.unmodifiableMap(board);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		ChessBoard that = (ChessBoard)o;
+		return Objects.equals(board, that.board) &&
+			team == that.team;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(board, team);
 	}
 }

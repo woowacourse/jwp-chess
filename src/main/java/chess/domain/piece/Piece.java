@@ -1,13 +1,14 @@
 package chess.domain.piece;
 
+import static chess.util.NullValidator.*;
+
+import java.util.List;
+import java.util.Objects;
+
 import chess.domain.board.Position;
 import chess.domain.piece.pathStrategy.LongRangePieceStrategy;
 import chess.domain.piece.pathStrategy.PathStrategy;
 import chess.exception.NotMovableException;
-
-import java.util.List;
-
-import static chess.util.NullValidator.validateNull;
 
 public abstract class Piece {
 	protected final PieceColor pieceColor;
@@ -60,25 +61,43 @@ public abstract class Piece {
 		return pathStrategy.createPaths(this.position, targetPosition);
 	}
 
-    private void validateEqualPosition(Position targetPosition) {
-        if (this.position.equals(targetPosition)) {
-            throw new NotMovableException(String.format("현재 자리한 위치(%s)로는 이동할 수 없습니다.", targetPosition.getName()));
-        }
-    }
+	private void validateEqualPosition(Position targetPosition) {
+		if (this.position.equals(targetPosition)) {
+			throw new NotMovableException(String.format("현재 자리한 위치(%s)로는 이동할 수 없습니다.", targetPosition.getName()));
+		}
+	}
 
-    public void changeTo(Position position) {
-        this.position = position;
-    }
+	public void changeTo(Position position) {
+		this.position = position;
+	}
 
-    public boolean hasLongRangePieceStrategy() {
-        return this.pathStrategy instanceof LongRangePieceStrategy;
-    }
+	public boolean hasLongRangePieceStrategy() {
+		return this.pathStrategy instanceof LongRangePieceStrategy;
+	}
 
-    public Position getPosition() {
-        return position;
-    }
+	public Position getPosition() {
+		return position;
+	}
 
-    public double getScore() {
-        return score;
-    }
+	public double getScore() {
+		return score;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Piece piece = (Piece)o;
+		return Double.compare(piece.score, score) == 0 &&
+			pieceColor == piece.pieceColor &&
+			Objects.equals(name, piece.name) &&
+			Objects.equals(position, piece.position);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(pieceColor, name, score, pathStrategy, position);
+	}
 }

@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dao.exceptions.DaoNoneSelectedException;
+import chess.repository.exceptions.DaoNoneSelectedException;
 import chess.domain.coordinate.Coordinate;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.PieceType;

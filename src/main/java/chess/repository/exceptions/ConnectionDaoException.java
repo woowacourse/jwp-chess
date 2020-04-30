@@ -1,4 +1,4 @@
-package chess.dao.exceptions;
+package chess.repository.exceptions;
 
 public class ConnectionDaoException extends RuntimeException {
 	public ConnectionDaoException(final String message) {

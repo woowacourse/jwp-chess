@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.entity.AnnouncementEntity;
 import chess.repository.exceptions.DaoNoneSelectedException;
 import chess.domain.coordinate.Coordinate;
 import chess.domain.pieces.Piece;
@@ -120,7 +121,8 @@ public class ChessRoomService {
 	}
 
 	public void saveNewAnnouncementMessage(int roomId) {
-		announcementRepository.save(Announcement.ofFirst().getString(), roomId);
+		AnnouncementEntity announcementEntity = new AnnouncementEntity(Announcement.ofFirst().getString(), roomId);
+		announcementRepository.save(announcementEntity);
 	}
 
 	public void saveAnnouncementMessage(final int roomId, final String message) {

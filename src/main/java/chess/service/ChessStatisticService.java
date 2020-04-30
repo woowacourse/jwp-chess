@@ -1,10 +1,12 @@
 package chess.service;
 
+import chess.dto.StatusRecordDto;
 import chess.entity.StatusRecordEntity;
 import chess.repository.StatusRecordRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChessStatisticService {
@@ -14,7 +16,11 @@ public class ChessStatisticService {
 		this.statusRecordRepository = statusRecordRepository;
 	}
 
-	public List<StatusRecordEntity> loadStatusRecordsWithRoomName() {
-		return statusRecordRepository.findAll();
+	public List<StatusRecordDto> loadStatusRecordsWithRoomName() {
+		List<StatusRecordEntity> statusRecordEntities = statusRecordRepository.findAll();
+		return statusRecordEntities.stream()
+				.map(entity -> new StatusRecordDto(entity.getRecord(),
+						entity.getGameDate(), entity.getRoomName()))
+				.collect(Collectors.toList());
 	}
 }

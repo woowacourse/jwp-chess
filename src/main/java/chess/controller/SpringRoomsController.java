@@ -1,7 +1,7 @@
 package chess.controller;
 
+import chess.dto.RoomDto;
 import chess.repository.exceptions.DaoNoneSelectedException;
-import chess.entity.RoomEntity;
 import chess.service.ChessRoomsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Controller
@@ -26,7 +25,7 @@ public class SpringRoomsController {
 
 	@GetMapping()
 	private String load(final Model model) {
-		final List<RoomEntity> rooms = chessRoomsService.findAllRooms();
+		final List<RoomDto> rooms = chessRoomsService.findAllRooms();
 		model.addAttribute("rooms", rooms);
 		return "rooms";
 	}
@@ -53,8 +52,8 @@ public class SpringRoomsController {
 	}
 
 	private String enter(final String roomName) {
-		final RoomEntity roomEntity = chessRoomsService.findRoomByRoomName(roomName);
-		return Constants.REDIRECT + "/chess/rooms/" + roomEntity.getId();
+		final int roomId = chessRoomsService.findRoomIdByRoomName(roomName);
+		return Constants.REDIRECT + "/chess/rooms/" + roomId;
 	}
 
 	private String create(final String roomName) {

@@ -7,8 +7,8 @@ import org.springframework.data.relational.core.mapping.Table;
 public class AnnouncementEntity {
 	@Id
 	private int id;
-	private final String message;
-	private final int roomId;
+	private String message;
+	private int roomId;
 
 	public AnnouncementEntity(final String message, final int roomId) {
 		this.message = message;

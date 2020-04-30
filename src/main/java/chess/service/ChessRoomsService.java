@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dao.exceptions.DaoNoneSelectedException;
+import chess.repository.exceptions.DaoNoneSelectedException;
 import chess.entity.RoomEntity;
 import chess.repository.RoomRepository;
 import com.google.common.collect.Lists;

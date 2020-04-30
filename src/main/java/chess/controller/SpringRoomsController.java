@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dao.exceptions.DaoNoneSelectedException;
+import chess.repository.exceptions.DaoNoneSelectedException;
 import chess.entity.RoomEntity;
 import chess.service.ChessRoomsService;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ public class SpringRoomsController {
 	}
 
 	@GetMapping()
-	private String load(final Model model) throws SQLException {
+	private String load(final Model model) {
 		final List<RoomEntity> rooms = chessRoomsService.findAllRooms();
 		model.addAttribute("rooms", rooms);
 		return "rooms";

@@ -20,11 +20,11 @@ public class SpringStatisticController {
 	}
 
 	@GetMapping()
-	private String load(final Model model) throws SQLException {
-			final List<StatusRecordEntity> statusRecordWithRoomNames
-					= chessStatisticService.loadStatusRecordsWithRoomName();
+	private String load(final Model model) {
+		final List<StatusRecordEntity> statusRecordWithRoomNames
+				= chessStatisticService.loadStatusRecordsWithRoomName();
 
-			model.addAttribute("status_record_with_room_names", statusRecordWithRoomNames);
-			return "statistics";
+		model.addAttribute("status_record_with_room_names", statusRecordWithRoomNames);
+		return "statistics";
 	}
 }

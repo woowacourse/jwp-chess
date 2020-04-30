@@ -3,6 +3,8 @@ const App = function App() {
     const originalPosition = document.querySelector("#originalPosition");
     const targetIdPosition = document.querySelector("#targetPosition");
     const turn = document.querySelector("#now-turn");
+    const whiteScore = document.querySelector("#score-white");
+    const blackScore = document.querySelector("#score-black");
 
     const chessBoard = document.querySelector(".chessboard");
 
@@ -54,20 +56,17 @@ const App = function App() {
 
     }
 
-    function render(data) {
-        console.log(data);
-        const originalCell = document.querySelector("#" + originalPosition.value);
-        const targetCell = document.querySelector("#" + targetIdPosition.value);
-        originalCell.innerHTML = "";
-        targetCell.innerHTML = data.body.piece;
-        turn.innerHTML = data.body.turn;
+    function isEmpty(value) {
+        return !value || value === "";
+    }
+
+    function isNotCell(className) {
+        return !(className === "black" || className === "white");
     }
 
     function resolver(response) {
         return new Promise((resolve, reject) => {
             let func;
-            console.log(response.status);
-            console.log(response.body);
             response.status < 400 ? func = resolve : func = reject;
             response.json().then(data => func({
                 "status": response.status,
@@ -76,12 +75,14 @@ const App = function App() {
         });
     }
 
-    function isEmpty(value) {
-        return !value || value === "";
-    }
-
-    function isNotCell(className) {
-        return !(className === "black" || className === "white");
+    function render(data) {
+        const originalCell = document.querySelector("#" + originalPosition.value);
+        const targetCell = document.querySelector("#" + targetIdPosition.value);
+        originalCell.innerHTML = "";
+        targetCell.innerHTML = data.body.piece;
+        turn.innerHTML = data.body.turn;
+        whiteScore.innerHTML = data.body.score.white;
+        blackScore.innerHTML = data.body.score.black;
     }
 };
 

@@ -35,7 +35,6 @@ import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.dto.MoveResponseDto;
 import wooteco.chess.dto.SavedGameBundleDto;
 import wooteco.chess.repository.GameRepository;
-import wooteco.chess.repository.PieceRepository;
 import wooteco.chess.service.ChessService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,9 +43,6 @@ class ChessControllerTest {
 
 	@Autowired
 	private GameRepository gameRepository;
-
-	@Autowired
-	private PieceRepository pieceRepository;
 
 	@Autowired
 	private ChessService chessService;
@@ -69,7 +65,6 @@ class ChessControllerTest {
 
 	@AfterEach
 	void tearDown() {
-		pieceRepository.deleteAll();
 		gameRepository.deleteAll();
 	}
 

@@ -24,12 +24,8 @@
 <form action="/" method="get">
     <button>게임 저장</button>
 </form>
-<div>
-    {{#each response.score}}
-        {{@key}} : {{this}}
-        <br>
-    {{/each}}
-</div>
+    white : <span id="score-white">{{response.score.white}}</span><br>
+    black : <span id="score-black">{{response.score.black}}</span><br>
 <h2>{{error}}</h2>
 <div class="chessboard">
     <!-- 1st -->

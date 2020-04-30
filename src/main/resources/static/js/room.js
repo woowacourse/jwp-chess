@@ -24,13 +24,13 @@ loadButton.onclick = () => {
 };
 
 function goGame(way) {
-    fetch('/api/room/' + roomId + '/game?way=' + way, {
+    fetch('/api/room/' + roomId + '/game', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            blackName, whiteName
+            blackName, whiteName, way
         })
     }).then(res => res.json()).then(data => {
         formGame.action = '/room/' + roomId + '/game/' + data.gameId;

@@ -1,5 +1,6 @@
 package wooteco.chess.database.dao;
 
+import org.springframework.stereotype.Repository;
 import wooteco.chess.database.DBConnector;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Team;
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository("ChessDao")
 public class ChessDao {
     private final Connection conn;
 

@@ -1,9 +1,9 @@
 package wooteco.chess.dto;
 
-public class RoomDto {
+public class RoomNameDto {
 	private String name;
 
-	public RoomDto(String name) {
+	public RoomNameDto(String name) {
 		this.name = name;
 	}
 

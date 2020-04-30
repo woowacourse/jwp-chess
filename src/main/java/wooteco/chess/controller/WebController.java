@@ -12,20 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import wooteco.chess.dto.ChessGameDto;
-import wooteco.chess.dto.MoveDto;
-import wooteco.chess.dto.RoomDto;
+import wooteco.chess.dto.PieceMoveDto;
+import wooteco.chess.dto.RoomNameDto;
 import wooteco.chess.repository.Room;
 import wooteco.chess.service.ChessGameService;
-import wooteco.chess.service.SpringChessService;
 
 @RestController
 public class WebController {
 	private final ChessGameService chessGameService;
-	private final SpringChessService springChessService;
 
-	public WebController(ChessGameService chessGameService, SpringChessService springChessService) {
+	public WebController(ChessGameService chessGameService) {
 		this.chessGameService = chessGameService;
-		this.springChessService = springChessService;
 	}
 
 	@GetMapping("/")
@@ -35,15 +32,15 @@ public class WebController {
 
 	@GetMapping("/api/rooms")
 	@ResponseBody
-	public List<RoomDto> getRooms() {
-		return springChessService.findAllRooms();
+	public List<RoomNameDto> getRooms() {
+		return chessGameService.findAllRooms();
 	}
 
 	@PostMapping("/join")
 	public ModelAndView joinRoom(
 			@RequestParam String name) {
 		ModelAndView modelAndView = new ModelAndView("chess");
-		ChessGameDto chessGameDto = springChessService.load(name);
+		ChessGameDto chessGameDto = chessGameService.load(name);
 		modelAndView.addObject("chessGame", chessGameDto);
 		return modelAndView;
 	}
@@ -52,22 +49,22 @@ public class WebController {
 	public ModelAndView createRoom(
 			@RequestParam String name) {
 		ModelAndView modelAndView = new ModelAndView("chess");
-		ChessGameDto chessGameDto = springChessService.create(name);
+		ChessGameDto chessGameDto = chessGameService.create(name);
 		modelAndView.addObject("chessGame", chessGameDto);
 		return modelAndView;
 	}
 
 	@PostMapping("/api/move")
 	@ResponseBody
-	public Room movePiece(@RequestBody MoveDto moveDto) {
-		return springChessService.move(moveDto);
+	public Room movePiece(@RequestBody PieceMoveDto pieceMoveDto) {
+		return chessGameService.move(pieceMoveDto);
 	}
 
 	@PostMapping("/restart")
 	public ModelAndView restart(
 			@RequestParam String name) throws SQLException {
 		ModelAndView modelAndView = new ModelAndView("chess");
-		ChessGameDto chessGameDto = springChessService.restart(name);
+		ChessGameDto chessGameDto = chessGameService.restart(name);
 		modelAndView.addObject("chessGame", chessGameDto);
 		return modelAndView;
 	}

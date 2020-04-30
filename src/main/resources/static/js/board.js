@@ -15,7 +15,7 @@ window.onload = function() {
     let isFirstClick = true;
     let cell;
     let before;
-    var userName = $("#userName").val();
+    var roomName = $("#roomName").val();
 
     $(".cell").click(function () {
         if (document.querySelector(".selected-cell") !== null) {
@@ -33,7 +33,7 @@ window.onload = function() {
 
             $.ajax({
                 url: "/path",
-                data: { source: source, userName: userName },
+                data: { source: source, roomName: roomName },
                 method: "POST",
             }).done(function (list) {
                 console.log(list);
@@ -61,7 +61,7 @@ window.onload = function() {
         // 두번째 클릭이라면 이동
         $.ajax({
             url: "/move",
-            data: { source: source, target: cellPosition, userName: userName },
+            data: { source: source, target: cellPosition, roomName: roomName },
             method: "POST",
         }).done(function (model) {
             var data = model;  //JSON.parse(model);
@@ -77,7 +77,6 @@ window.onload = function() {
                 return;
             } else if (data["message"] !== "") {
                 alert(data["message"]);
-                before.removeClass("selected-cell");
                 return;
             }
             move(source, cellPosition);

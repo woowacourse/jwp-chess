@@ -56,30 +56,19 @@
 ```sql
 create database wootecochess;
 
-create table user
+create table room
 (  
     id bigint auto_increment,  
-    name varchar(64) not null,  
+    name varchar(64) not null,
+    turn int not null,
     primary key(id),  
     unique(name)
 );
 
-
-create table gameinfo
+create table cell
 (
-    id bigint auto_increment primary key,
-    black bigint not null,
-    turn int not null,
-    foreign key (black) references user(id)
-);
-
-
-create table board
-(
-    id bigint auto_increment,
-    gameinfo_id bigint not null,
+    room bigint not null,
     position varchar(64) not null,
-    piece varchar(64) not null,
-    primary key(id),
-    foreign key(gameinfo_id) references gameinfo(id));
+    piece varchar(64) not null
+);
 ```

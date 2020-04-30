@@ -129,15 +129,6 @@ function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
 }
 
-function drop(ev) {
-    ev.preventDefault();
-    var now = ev.dataTransfer.getData("text");
-    var des = ev.target.id;
-    var game_id = document.getElementById("game_id").innerHTML;
-    console.log("이건 로그" + game_id + " " + now + " " + des);
-    move({"game_id": "1", "now": now.toString(), "des": des.toString()});
-}
-
 function postChessBoard(json) {
     $.ajax({
         type: 'post',
@@ -277,6 +268,15 @@ function postNewGame() {
     });
 }
 
+function drop(ev) {
+    ev.preventDefault();
+    var now = ev.dataTransfer.getData("text");
+    var des = ev.target.id;
+    var game_id = document.getElementById("game_id").innerHTML;
+    console.log("이건 로그" + game_id + " " + now + " " + des);
+    move({"game_id": "2", "now": now.toString(), "des": des.toString()});
+}
+
 function move(json) {
     $.ajax({
         type: 'put',
@@ -307,7 +307,7 @@ function move(json) {
             if (jsonData.progress == "END") {
                 getChessBoardResult();
             }
-            alert(jsonData);
+            alert(JSON.stringify(jsonData));
         }
     });
 }

@@ -4,10 +4,8 @@ import chess.board.ChessBoardCreater;
 import chess.command.MoveCommand;
 import chess.game.ChessGame;
 import chess.location.Location;
-import chess.piece.type.Piece;
 import chess.progress.Progress;
 import chess.team.Team;
-import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 import spark.dto.LocationDto;
 import spring.dto.BoardDto;
@@ -23,7 +21,6 @@ import java.util.Optional;
 
 @Service
 public class ChessService {
-    private static final Gson GSON = new Gson();
 
     private PieceRepository pieceRepository;
     private ChessGameRepository chessGameRepository;
@@ -49,32 +46,30 @@ public class ChessService {
     }
 
     public ChessMoveDto move(long gameId, LocationDto nowDto, LocationDto destinationDto) throws SQLException {
-        Optional<ChessGameEntity> chessGameEntity = chessGameRepository.findById(gameId);
+        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(gameId);
 
-        if (!chessGameEntity.isPresent()) {
-            throw new SQLException("game id에 맞는 데이터가 존재하지 않습니다.");
-        }
+        ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(
+                () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
 
-        ChessGameEntity chessGameEntity2 = chessGameEntity.get();
-        ChessGame chessGame = chessGameEntity2.toChessGame();
+        ChessGame chessGame = chessGameEntity.toChessGame();
         Location now = nowDto.toLocation();
         Location destination = destinationDto.toLocation();
-
         MoveCommand move = MoveCommand.of(now, destination, chessGame);
-
-        Piece nowPiece = chessGame.getPiece(now);
-
         Progress progress = chessGame.doOneCommand(move);
 
-        if (!progress.isError()) {
-            ChessGameEntity chessGameEntity1 = chessGame.toEntity();
-            chessGameEntity1.setId(chessGameEntity2.getId());
-            chessGameRepository.save(chessGameEntity1);
-            chessGame.changeTurn();
-        }
+        saveChessGameIfProgressIsNotEnd(chessGameEntity, chessGame, progress);
 
-        return new ChessMoveDto(new ChessGameScoresDto(chessGame.calculateScores()),
-                progress,
-                chessGame.getTurn());
+        ChessGameScoresDto chessGameScoresDto = new ChessGameScoresDto(chessGame.calculateScores());
+
+        return new ChessMoveDto(chessGameScoresDto, progress, chessGame.getTurn());
+    }
+
+    private void saveChessGameIfProgressIsNotEnd(ChessGameEntity chessGameEntity, ChessGame chessGame, Progress progress) {
+        if (!progress.isError()) {
+            chessGame.changeTurn();
+            ChessGameEntity targetChessGameEntity = chessGame.toEntity();
+            targetChessGameEntity.setId(chessGameEntity.getId());
+            chessGameRepository.save(targetChessGameEntity);
+        }
     }
 }

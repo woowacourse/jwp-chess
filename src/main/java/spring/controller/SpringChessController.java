@@ -16,9 +16,10 @@ import java.util.Map;
 public class SpringChessController {
     private static final HandlebarsTemplateEngine handlebarsTemplateEngine = new HandlebarsTemplateEngine();
     private static final Gson GSON = new Gson();
+
     private final ChessService chessService;
 
-    // TODO : 생성자 주입이 더 나은 이유
+    // TODO : 생성자 주입이 더 나은 이유`
     public SpringChessController(ChessService chessService) {
         this.chessService = chessService;
     }

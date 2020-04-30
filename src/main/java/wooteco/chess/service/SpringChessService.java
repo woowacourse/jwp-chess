@@ -3,7 +3,6 @@ package wooteco.chess.service;
 import org.springframework.stereotype.Service;
 import wooteco.chess.db.ChessPiece;
 import wooteco.chess.db.ChessPieceRepository;
-import wooteco.chess.db.MoveHistory;
 import wooteco.chess.db.MoveHistoryRepository;
 import wooteco.chess.domains.board.Board;
 import wooteco.chess.domains.board.BoardFactory;
@@ -45,7 +44,9 @@ public class SpringChessService {
         playingBoards.put(gameId, board);
 
         List<ChessPiece> chessPieces = createChessPieces(gameId, board);
-        chessPieceRepository.saveAll(chessPieces);
+        for (ChessPiece chessPiece : chessPieces) {
+            chessPieceRepository.savePiece(gameId, chessPiece.getPosition(), chessPiece.getPiece());
+        }
     }
 
     private List<ChessPiece> createChessPieces(String gameId, Board board) {
@@ -61,12 +62,11 @@ public class SpringChessService {
         Map<Position, Piece> savedBoardStatus = Position.stream()
                 .collect(Collectors.toMap(Function.identity(), position -> {
                     String pieceName = null;
-                    pieceName = chessPieceRepository.findPieceNameByPosition(gameId, position);
+                    pieceName = chessPieceRepository.findPieceNameByPosition(gameId, position.name());
                     return BoardFactory.findPieceByPieceName(pieceName);
                 }));
 
-        Optional<MoveHistory> moveHistory = moveHistoryRepository.findById(gameId);
-        Optional<String> lastTurn = moveHistory.map(MoveHistory::getTeam);
+        Optional<String> lastTurn = moveHistoryRepository.findLastTurn(gameId);
 
         Board board = new Board();
         board.recoverBoard(savedBoardStatus, lastTurn);
@@ -83,9 +83,9 @@ public class SpringChessService {
 
         board.move(source, target);
 
-        chessPieceRepository.save(new ChessPiece(gameId, source.name(), board.getPieceByPosition(source).name()));
-        chessPieceRepository.save(new ChessPiece(gameId, target.name(), board.getPieceByPosition(target).name()));
-        moveHistoryRepository.addMoveHistory(gameId, currentTeam, source, target);
+        chessPieceRepository.updatePiece(gameId, source.name(), board.getPieceByPosition(source).name());
+        chessPieceRepository.updatePiece(gameId, target.name(), board.getPieceByPosition(target).name());
+        moveHistoryRepository.addMoveHistory(gameId, currentTeam.name(), source.name(), target.name());
     }
 
     public String provideWinner(String gameId) {

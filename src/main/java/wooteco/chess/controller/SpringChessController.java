@@ -5,16 +5,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import wooteco.chess.service.ChessWebService;
+import wooteco.chess.service.SpringChessService;
 
 import java.sql.SQLException;
 import java.util.Map;
 
 @Controller
 public class SpringChessController {
-    private final ChessWebService service;
+    private final SpringChessService service;
 
-    public SpringChessController(ChessWebService service) {
+    public SpringChessController(SpringChessService service) {
         this.service = service;
     }
 

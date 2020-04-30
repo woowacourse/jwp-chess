@@ -100,8 +100,8 @@ public class ChessGameService {
     }
 
     private ChessGameEntity findChessGameEntity(Integer gameId) {
-        return chessGameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
+        return chessGameRepository.findProceedingById(gameId)
+            .orElseThrow(() -> new IllegalArgumentException("진행중인 gameId(" + gameId + ")가 없습니다."));
     }
 
     private void saveGameAndBoard(ChessGameEntity chessGameEntity, ChessGame chessGame,

@@ -10,6 +10,7 @@ public interface ChessGameRepository extends CrudRepository<ChessGameEntity, Int
     @Query("SELECT * FROM CHESS_GAME_TB WHERE ROOM_ENTITY = :ROOM_ENTITY")
     Iterable<ChessGameEntity> findAllByRoomId(@Param("ROOM_ENTITY") Integer roomId);
 
-    @Query("SELECT ROOM_ENTITY FROM CHESS_GAME_TB WHERE ID = :ID")
-    Optional<Integer> findRoomIdById(@Param("ID") Integer gameId);
+
+    @Query("SELECT * FROM CHESS_GAME_TB WHERE ID = :ID AND PROCEEDING_YN = 'Y'")
+    Optional<ChessGameEntity> findProceedingById(@Param("ID") Integer gameId);
 }

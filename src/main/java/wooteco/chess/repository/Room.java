@@ -3,24 +3,22 @@ package wooteco.chess.repository;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import wooteco.chess.domain.Side;
+
 @Table("room")
 public class Room {
 	@Id
 	private Long roomId;
 	private String roomName;
 	private String board;
-	private String turn;
+	private Side turn;
 	private String finishFlag;
 
-	public Room(String roomName, String board) {
+	public Room(String roomName, String board, Side turn, String finishFlag) {
 		this.roomName = roomName;
 		this.board = board;
-		this.turn = "WHITE";
-		this.finishFlag = "N";
-	}
-
-	public Long getRoomId() {
-		return roomId;
+		this.turn = turn;
+		this.finishFlag = finishFlag;
 	}
 
 	public String getRoomName() {
@@ -31,7 +29,7 @@ public class Room {
 		return board;
 	}
 
-	public String getTurn() {
+	public Side getTurn() {
 		return turn;
 	}
 
@@ -48,5 +46,11 @@ public class Room {
 				", turn='" + turn + '\'' +
 				", finishFlag='" + finishFlag + '\'' +
 				'}';
+	}
+
+	public void update(String board, Side turn, String finishFlag) {
+		this.board = board;
+		this.turn = turn;
+		this.finishFlag = finishFlag;
 	}
 }

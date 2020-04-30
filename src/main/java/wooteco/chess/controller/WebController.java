@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import wooteco.chess.dto.ChessGameDto;
 import wooteco.chess.dto.MoveDto;
 import wooteco.chess.dto.RoomDto;
+import wooteco.chess.repository.Room;
 import wooteco.chess.service.ChessGameService;
 import wooteco.chess.service.SpringChessService;
 
@@ -40,7 +41,7 @@ public class WebController {
 
 	@PostMapping("/join")
 	public ModelAndView joinRoom(
-			@RequestParam String name) throws SQLException {
+			@RequestParam String name) {
 		ModelAndView modelAndView = new ModelAndView("chess");
 		ChessGameDto chessGameDto = springChessService.load(name);
 		modelAndView.addObject("chessGame", chessGameDto);
@@ -49,21 +50,17 @@ public class WebController {
 
 	@PostMapping("/create")
 	public ModelAndView createRoom(
-			@RequestParam String name) throws SQLException {
+			@RequestParam String name) {
 		ModelAndView modelAndView = new ModelAndView("chess");
 		ChessGameDto chessGameDto = springChessService.create(name);
 		modelAndView.addObject("chessGame", chessGameDto);
 		return modelAndView;
 	}
 
-	@PostMapping("/move")
-	public ModelAndView movePiece(
-			@RequestBody MoveDto moveDto) throws SQLException {
-		ModelAndView modelAndView = new ModelAndView("chess");
-		ChessGameDto chessGameDto = chessGameService.move(moveDto.getRoomName(), moveDto.getSource(),
-				moveDto.getTarget());
-		modelAndView.addObject("chessGame", chessGameDto);
-		return modelAndView;
+	@PostMapping("/api/move")
+	@ResponseBody
+	public Room movePiece(@RequestBody MoveDto moveDto) {
+		return springChessService.move(moveDto);
 	}
 
 	@PostMapping("/restart")

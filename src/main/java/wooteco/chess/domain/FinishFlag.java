@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public enum FinishFlag {
 	FINISH(true, "Y"),
-	ON_GOING(false, "N");
+	GOING(false, "N");
 
 	private boolean flag;
 	private String symbol;

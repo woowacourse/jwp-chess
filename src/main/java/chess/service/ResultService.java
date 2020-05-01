@@ -10,10 +10,11 @@ import chess.model.dto.UserNamesDto;
 import chess.model.repository.ChessGameEntity;
 import chess.model.repository.ResultEntity;
 import chess.model.repository.ResultRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ResultService {
@@ -49,10 +50,10 @@ public class ResultService {
         }
     }
 
-    public void setGameResult(TeamScore teamScore, Map<Team, String> userNames) {
+    private void setGameResult(TeamScore teamScore, Map<Team, String> userNames) {
         for (Team team : Team.values()) {
             ResultEntity resultEntity = resultRepository.findByUserName(userNames.get(team))
-                .orElseThrow(IllegalAccessError::new);
+                    .orElseThrow(IllegalAccessError::new);
 
             GameResultDto gameResult = teamScore.getGameResult(team);
             resultEntity.addWin(gameResult.getWinCount());

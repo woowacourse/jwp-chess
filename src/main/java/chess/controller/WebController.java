@@ -4,27 +4,25 @@ import chess.model.domain.piece.Team;
 import chess.model.repository.ChessGameEntity;
 import chess.service.ChessGameService;
 import chess.service.ResultService;
-import chess.service.RoomService;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 public class WebController {
-
     private final ChessGameService chessGameService;
     private final ResultService resultService;
-    private final RoomService roomService;
 
     public WebController(
-        ChessGameService chessGameService, ResultService resultService, RoomService roomService) {
+            ChessGameService chessGameService, ResultService resultService) {
         this.chessGameService = chessGameService;
         this.resultService = resultService;
-        this.roomService = roomService;
     }
 
     @GetMapping("/")
@@ -32,17 +30,17 @@ public class WebController {
         return "index";
     }
 
-    @PostMapping("/start")
+    @PostMapping("/room")
     public String start(@RequestParam String roomId, Model model) {
         model.addAttribute("roomId", roomId);
-        return "start";
+        return "room";
     }
 
-    @PostMapping("/game")
-    public String game(@RequestParam Integer roomId,
-        @RequestParam(defaultValue = "WHITE") String whiteName,
-        @RequestParam(defaultValue = "BLACK") String blackName,
-        Model model) {
+    @PostMapping("/room/{roomId}/game")
+    public String game(@PathVariable Integer roomId,
+                       @RequestParam(defaultValue = "WHITE") String whiteName,
+                       @RequestParam(defaultValue = "BLACK") String blackName,
+                       Model model) {
         chessGameService.findProceedGameId(roomId).ifPresent(chessGameService::closeGame);
 
         Map<Team, String> userNames = makeUserNames(whiteName, blackName);

@@ -66,7 +66,7 @@ public class ChessGameDto {
             printRankRaw(pieces, board, rank);
         }
         this.pieces = pieces;
-        this.turn = chessGame.getTurn().getName();
+        this.turn = chessGame.getTurnName();
         this.state = moveState.getMessage();
         this.blackScore = String.valueOf(teamScore.get(Team.BLACK));
         this.whiteScore = String.valueOf(teamScore.get(Team.WHITE));

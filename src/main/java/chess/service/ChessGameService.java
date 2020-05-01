@@ -75,7 +75,7 @@ public class ChessGameService {
         Map<Team, Double> teamScores = teamScore.getTeamScore();
 
         ChessGameEntity chessGameEntity = new ChessGameEntity(
-                chessGame.getTurn().getName()
+                chessGame.getTurnName()
                 , "Y"
                 , userNames.get(Team.BLACK)
                 , userNames.get(Team.WHITE)

@@ -11,11 +11,12 @@ import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
+import util.NullChecker;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import util.NullChecker;
 
 public class ChessGame {
 
@@ -192,8 +193,8 @@ public class ChessGame {
         return castlingElements.getCastlingElements();
     }
 
-    public Team getTurn() {
-        return turn;
+    public String getTurnName() {
+        return turn.getName();
     }
 
     public Map<Square, Piece> getChessBoard() {

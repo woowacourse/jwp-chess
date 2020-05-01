@@ -14,10 +14,12 @@ window.onload = function () {
     WHITE_WHITE_PAWN: `<img src="../../image/pawn_white.png" class="piece pawn"/>`,
   };
   let startPosition = null;
+  let pathName;
 
   async function getChessGame() {
-    let pathName = window.location.pathname;
-    const response = await fetch(`http://localhost:8080/board/${pathName.substring(6)}`);
+    let path = window.location.pathname;
+    pathName = path.substring(path.lastIndexOf("/") + 1);
+    const response = await fetch(`http://localhost:8080/board/${pathName}`);
     return await response.json();
   }
 
@@ -51,7 +53,6 @@ window.onload = function () {
   }
 
   (async function () {
-    console.log("start!");
     const chessGame = await getChessGame();
     const board = await chessGame["boardDto"]["board"];
     console.log(board);
@@ -68,7 +69,7 @@ window.onload = function () {
   })();
 
   function chooseFirstPosition(position) {
-    fetch(`http://localhost:8080/source?source=${position}`,
+    fetch(`http://localhost:8080/board/${pathName}/source?source=${position}`,
       {method: "GET"})
       .then(res => res.json())
       .then(data => {
@@ -93,21 +94,21 @@ window.onload = function () {
   }
 
   function chooseSecondPosition(position) {
-    fetch(`http://localhost:8080/destination?destination=${position}&startPosition=${startPosition}`,
+    fetch(`http://localhost:8080/board/${pathName}/destination?destination=${position}&startPosition=${startPosition}`,
       {method: "GET"})
       .then(res => res.json())
       .then(async data => {
         if (data.normalStatus === false) {
           alert(data.exception);
           startPosition = null;
-          window.location.href = "/loading";
+          window.location.href = `/loading/${pathName}`;
           return;
         }
         const source = startPosition;
         const destination = position;
         startPosition = null;
 
-        await fetch("http://localhost:8080/board", {
+        await fetch(`http://localhost:8080/board/${pathName}`, {
           method: "POST",
           body: JSON.stringify({
             start: source,
@@ -115,7 +116,7 @@ window.onload = function () {
           }),
           headers: {"Content-Type": "application/json"}
         })
-          .then(window.location.href = "/loading");
+          .then(window.location.href = `/loading/${pathName}`);
       });
   }
 

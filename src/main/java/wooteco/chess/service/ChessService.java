@@ -1,6 +1,7 @@
 package wooteco.chess.service;
 
 import org.springframework.stereotype.Service;
+import wooteco.chess.controller.dto.ChessRoomResponseDto;
 import wooteco.chess.controller.dto.MoveRequestDto;
 import wooteco.chess.controller.dto.ResponseDto;
 import wooteco.chess.domain.board.Board;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ChessService {
@@ -39,7 +41,6 @@ public class ChessService {
     }
 
     public void load(final Long id) {
-        loadIfNotExisting(id);
         ChessGame chessGame = findChessGame(id);
         chessGames.put(id, chessGame);
     }
@@ -91,8 +92,8 @@ public class ChessService {
         return chessGame.getTurn();
     }
 
-    public List<Long> getRoomIds() {
-        return chessGameRepository.findRoomIds();
+    public List<ChessRoomResponseDto> getRoomIds() {
+        return chessGameRepository.findRoomIds().stream().map(ChessRoomResponseDto::new).collect(Collectors.toList());
     }
 
     private ChessGame findChessGame(final Long id) {

@@ -13,7 +13,7 @@ public class MoveStateAfter implements MoveStateStrategy {
         if (chessGame.isKingCaptured()) {
             return MoveState.KING_CAPTURED;
         }
-        if (chessGame.isNeedPromotion()) {
+        if (chessGame.canPromote()) {
             return MoveState.SUCCESS_BUT_PAWN_PROMOTION;
         }
         return MoveState.SUCCESS;

@@ -1,10 +1,12 @@
 package chess.controller;
 
 import chess.model.domain.piece.Team;
+import chess.model.repository.ChessGameEntity;
 import chess.service.ChessGameService;
+import chess.service.ResultService;
+import chess.service.RoomService;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class WebController {
 
-    @Autowired
-    private ChessGameService chessGameService;
+    private final ChessGameService chessGameService;
+    private final ResultService resultService;
+    private final RoomService roomService;
+
+    public WebController(
+        ChessGameService chessGameService, ResultService resultService, RoomService roomService) {
+        this.chessGameService = chessGameService;
+        this.resultService = resultService;
+        this.roomService = roomService;
+    }
 
     @GetMapping("/")
     public String index() {
@@ -29,47 +39,49 @@ public class WebController {
     }
 
     @PostMapping("/game")
-    public String game(@RequestParam String roomId,
+    public String game(@RequestParam Integer roomId,
         @RequestParam(defaultValue = "WHITE") String whiteName,
         @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
-        Map<Team, String> userNames = makeUserNames(whiteName, blackName);
+        chessGameService.findProceedGameId(roomId).ifPresent(chessGameService::closeGame);
 
-        Integer gameId = chessGameService.saveRoom(userNames, Integer.valueOf(roomId));
-        chessGameService.saveUser(userNames);
+        Map<Team, String> userNames = makeUserNames(whiteName, blackName);
+        Integer gameId = chessGameService.saveNewGameInfo(userNames, roomId);
+        chessGameService.saveNewUserNames(userNames);
 
         model.addAttribute("gameId", gameId);
         return "game";
     }
 
     @PostMapping("/game/newGame")
-    public String newGame(@RequestParam String gameId,
+    public String newGame(@RequestParam Integer gameId,
         @RequestParam(defaultValue = "WHITE") String whiteName,
         @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
         Map<Team, String> userNames = makeUserNames(whiteName, blackName);
-        chessGameService.closeGame(Integer.valueOf(gameId));
-        model.addAttribute("gameId",
-            chessGameService.createBy(Integer.valueOf(gameId), userNames));
+        if (chessGameService.isGameProceed(gameId)) {
+            ChessGameEntity chessGameEntity = chessGameService.closeGame(gameId);
+            resultService.setGameResult(chessGameEntity);
+        }
+        model.addAttribute("gameId", chessGameService.createBy(gameId, userNames));
         return "game";
     }
 
     @PostMapping("/continueGame")
-    public String continueGame(@RequestParam String roomId,
+    public String continueGame(@RequestParam Integer roomId,
         @RequestParam(defaultValue = "WHITE") String whiteName,
         @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
-        Map<Team, String> userNames = makeUserNames(whiteName, blackName);
-
         model.addAttribute("gameId",
-            chessGameService.getIdBefore(Integer.valueOf(roomId), userNames));
+            chessGameService.findProceedGameId(roomId)
+                .orElseGet(() -> chessGameService
+                    .create(roomId, makeUserNames(whiteName, blackName))));
         return "game";
     }
 
     @PostMapping("/game/choiceGame")
-    public String choiceGame(@RequestParam String gameId, Model model) {
-        model.addAttribute("roomId", chessGameService.getRoomId(Integer.valueOf(gameId)));
-        return "start";
+    public String choiceGame() {
+        return "index";
     }
 
     @PostMapping("/result")

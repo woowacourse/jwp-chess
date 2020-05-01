@@ -41,13 +41,13 @@ public abstract class Piece {
         }
     }
 
-    public abstract Set<Square> getMovableArea(Square square,
+    public abstract Set<Square> findMovableAreas(Square square,
         Map<Square, Piece> board,
         Set<CastlingSetting> castlingElements);
 
-    public Set<Square> getMovableArea(Square square,
+    public Set<Square> findMovableAreas(Square square,
         Map<Square, Piece> board) {
-        return getMovableArea(square, board, new HashSet<>());
+        return findMovableAreas(square, board, new HashSet<>());
     }
 
     protected Set<Square> findSquaresToRemove(Square square, int fileAddAmount,
@@ -65,6 +65,10 @@ public abstract class Piece {
 
     public boolean isSameTeam(Team team) {
         return this.team == team;
+    }
+
+    public boolean isNotSameTeam(Team team) {
+        return !isSameTeam(team);
     }
 
     public double getScore() {

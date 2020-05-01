@@ -101,9 +101,9 @@ public class Square {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Square that = (Square) o;
-        return file == that.file &&
-            rank == that.rank;
+        Square square = (Square) o;
+        return file == square.file &&
+            rank == square.rank;
     }
 
     @Override

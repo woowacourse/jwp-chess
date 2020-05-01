@@ -2,9 +2,12 @@ package chess.model.dto;
 
 public class MoveDto {
 
-    private final String source;
-    private final String target;
-    private final Integer gameId;
+    private String source;
+    private String target;
+    private Integer gameId;
+
+    public MoveDto() {
+    }
 
     public MoveDto(String source, String target, Integer gameId) {
         this.source = source;

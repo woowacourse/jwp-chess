@@ -17,7 +17,7 @@ public class KnightTest {
     @Test
     @DisplayName("Null이 of에 들어갔을 때 예외 발생")
     void validNotNull() {
-        assertThatThrownBy(() -> Knight.getPieceInstance(null))
+        assertThatThrownBy(() -> Knight.getInstance(null))
             .isInstanceOf(NullPointerException.class)
             .hasMessageContaining("Null");
     }
@@ -26,7 +26,7 @@ public class KnightTest {
     @ValueSource(strings = {"b1", "a2", "b5", "a4", "e4", "d1", "d5", "e2"})
     @DisplayName("말의 위치(knight)를 받고 말의 종류에 따라 이동할 수 있는 칸 리스트 반환")
     void calculateScopeKnight(String input) {
-        Piece piece = Knight.getPieceInstance(Team.BLACK);
+        Piece piece = Knight.getInstance(Team.BLACK);
         Set<Square> availableSquares = piece.getAllMovableArea(Square.of("c3"));
         assertThat(availableSquares.contains(Square.of(input))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(8);
@@ -37,11 +37,11 @@ public class KnightTest {
     @DisplayName("판의 정보를 가져와서 나이트가 갈 수 있는 칸에 장애물이 있는지 판단하여 이동할 수 있는 리스트 반환하는 테스트")
     void movableKnightSquareTest(String input) {
         Map<Square, Piece> board = new HashMap<>();
-        board.put(Square.of("d5"), King.getPieceInstance(Team.BLACK));
-        board.put(Square.of("c2"), Queen.getPieceInstance(Team.WHITE));
+        board.put(Square.of("d5"), King.getInstance(Team.BLACK));
+        board.put(Square.of("c2"), Queen.getInstance(Team.WHITE));
         board.put(Square.of("g4"), Pawn.getInstance(Team.WHITE));
-        Piece piece = Knight.getPieceInstance(Team.WHITE);
-        Set<Square> availableSquares = piece.getMovableArea(Square.of("e3"), board);
+        Piece piece = Knight.getInstance(Team.WHITE);
+        Set<Square> availableSquares = piece.findMovableAreas(Square.of("e3"), board);
         assertThat(availableSquares.contains(Square.of(input))).isTrue();
         assertThat(availableSquares.size()).isEqualTo(6);
     }
@@ -49,17 +49,17 @@ public class KnightTest {
     @Test
     @DisplayName("두 동일한 객체를 가져왔을 때 같은지 확인")
     void checkSameInstance() {
-        Piece piece = Knight.getPieceInstance(Team.BLACK);
-        assertThat(piece).isEqualTo(Knight.getPieceInstance(Team.BLACK));
+        Piece piece = Knight.getInstance(Team.BLACK);
+        assertThat(piece).isEqualTo(Knight.getInstance(Team.BLACK));
     }
 
     @Test
     @DisplayName("체스 말이 같은 색인지 검증하는 테스트")
     void isBlack() {
-        assertThat(Knight.getPieceInstance(Team.BLACK).isSameTeam(Team.BLACK)).isTrue();
-        assertThat(Knight.getPieceInstance(Team.BLACK).isSameTeam(Team.WHITE)).isFalse();
-        assertThat(Knight.getPieceInstance(Team.WHITE).isSameTeam(Team.BLACK)).isFalse();
-        assertThat(Knight.getPieceInstance(Team.WHITE).isSameTeam(Team.WHITE)).isTrue();
+        assertThat(Knight.getInstance(Team.BLACK).isSameTeam(Team.BLACK)).isTrue();
+        assertThat(Knight.getInstance(Team.BLACK).isSameTeam(Team.WHITE)).isFalse();
+        assertThat(Knight.getInstance(Team.WHITE).isSameTeam(Team.BLACK)).isFalse();
+        assertThat(Knight.getInstance(Team.WHITE).isSameTeam(Team.WHITE)).isTrue();
     }
 
 

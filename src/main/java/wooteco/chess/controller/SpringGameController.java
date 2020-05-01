@@ -35,7 +35,7 @@ public class SpringGameController {
         return new GameStatusDto(gameService.getScore(gameRequestDto), gameService.getScore(gameRequestDto));
     }
 
-    @PostMapping("/getPath")
+    @PostMapping("/path")
     public List<String> getMovablePositions(@RequestBody MoveRequestDto moveRequestDto) {
         System.out.println(moveRequestDto);
         return gameService.getMovablePositions(moveRequestDto);

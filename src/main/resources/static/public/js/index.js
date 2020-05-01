@@ -8,7 +8,7 @@ window.onload = function () {
       }),
       headers: {"Content-Type": "application/json"}
     })
-      .then(async function(response) {
+      .then(async function (response) {
         return await response.json();
       })
       .then(data => {

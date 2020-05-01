@@ -1,12 +1,13 @@
 package wooteco.chess.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.google.common.collect.Lists;
 import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Color;
@@ -17,8 +18,8 @@ import wooteco.chess.repository.ChessGameRepository;
 
 @Component
 public class GameDao {
-	private static final int MIN_ROOM_NUMBER = 100000;
-	private static final int MAX_ROOM_NUMBER = 999999;
+	private static final int MIN_ROOM_NUMBER = 100_000;
+	private static final int MAX_ROOM_NUMBER = 999_999;
 	private final ChessGameRepository chessGameRepository;
 
 	public GameDao(ChessGameRepository chessGameRepository) {
@@ -36,10 +37,10 @@ public class GameDao {
 	}
 
 	public GameManager findGame(int roomNo) {
-		ChessGame game = chessGameRepository.findChessGameByRoomNo(roomNo);
+		Optional<ChessGame> game = chessGameRepository.findChessGameByRoomNo(roomNo);
 
-		return Optional.ofNullable(game)
-			.map(chessGame -> new GameManager(BoardFactory.of(chessGame.getBoard()), Color.of(chessGame.getTurn())))
+		return game.map(
+			chessGame -> new GameManager(BoardFactory.of(chessGame.getBoard()), Color.of(chessGame.getTurn())))
 			.orElseThrow(RoomNotFoundException::new);
 	}
 
@@ -52,11 +53,10 @@ public class GameDao {
 	}
 
 	public List<String> findAllRoomNo() {
-		List<String> allRoomNo = new ArrayList<>();
-
-		chessGameRepository.findAll()
-			.forEach(x -> allRoomNo.add(String.valueOf(x.getRoomNo())));
-
-		return allRoomNo;
+		return Lists.newArrayList(chessGameRepository.findAll())
+			.stream()
+			.map(ChessGame::getRoomNo)
+			.map(String::valueOf)
+			.collect(Collectors.toList());
 	}
 }

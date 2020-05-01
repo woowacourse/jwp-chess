@@ -2,6 +2,7 @@ package wooteco.chess.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Color;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.GameManagerDto;
+import wooteco.chess.dto.PieceDto;
 
 @Service
 public class GameManagerService {
@@ -39,8 +41,15 @@ public class GameManagerService {
 		gameDao.deleteGame(roomNo);
 	}
 
-	public Board getBoard(int roomNo) {
-		return gameDao.findGame(roomNo).getBoard();
+	public List<PieceDto> getBoardDto(int roomNo) {
+		GameManager game = gameDao.findGame(roomNo);
+
+		return game.getBoard()
+			.getPieces()
+			.entrySet()
+			.stream()
+			.map(x -> PieceDto.of(x.getKey(), x.getValue()))
+			.collect(Collectors.toList());
 	}
 
 	public Color getCurrentTurn(int roomNo) {

@@ -1,28 +1,39 @@
 package wooteco.chess.domain.room;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 import wooteco.chess.domain.piece.Team;
 
+
+@Table("room")
 public class Room {
-    private final Long id;
+    @Id
+    private Long id;
+    private String title;
+    private String turn;
 
-    private Team turn;
-    private final String title;
-
-    public Room(final Long id, final String title) {
-        this.id = id;
+    public Room(final String title) {
         this.title = title;
-        this.turn = Team.WHITE;
+        this.turn = Team.WHITE.name();
     }
 
-    public Long getId() {
-        return id;
+    public boolean isWhiteTurn(){
+        return turn.equals(Team.WHITE.name());
+    }
+
+    public void setTurn(Team turn) {
+        this.turn = turn.name();
+    }
+
+    public String getTurn() {
+        return turn;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getTurn() {
-        return turn.name();
+    public Long getId() {
+        return id;
     }
 }

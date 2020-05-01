@@ -36,15 +36,14 @@ choiceButton.onclick = () => {
 };
 
 newButton.onclick = () => {
-    fetch(roomUrl + '/game', {
+    fetch(roomUrl + '/game/new', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             blackName: blackNameLabel.innerText,
-            whiteName: whiteNameLabel.innerText,
-            way: 'new'
+            whiteName: whiteNameLabel.innerText
         })
     }).then(res => res.json()).then(data => {
         const newGameForm = document.getElementById('new-game');

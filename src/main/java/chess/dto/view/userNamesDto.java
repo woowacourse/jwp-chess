@@ -6,13 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class GameSettingDto {
+public class userNamesDto {
 
     private String whiteName;
     private String blackName;
-    private String way;
 
-    protected GameSettingDto() {
+    protected userNamesDto() {
     }
 
     public Map<Team, String> findUserNames() {
@@ -36,9 +35,5 @@ public class GameSettingDto {
 
     public String getBlackName() {
         return blackName;
-    }
-
-    public String getWay() {
-        return way;
     }
 }

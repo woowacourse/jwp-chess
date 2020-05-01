@@ -42,15 +42,14 @@ function checkNameAndGo(way) {
     function goGame(way) {
         const roomId = window.location.href.match(
             /(?:\w+:)?\/\/[^\/]+([^?#]+)/).pop().split('/')[2];
-        fetch('/api/room/' + roomId + '/game', {
+        fetch('/api/room/' + roomId + '/game/' + way, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 blackName: blackNameInput.value,
-                whiteName: whiteNameInput.value,
-                way
+                whiteName: whiteNameInput.value
             })
         }).then(res => res.json()).then(data => {
             const formGame = document.getElementById("form-game");

@@ -3,9 +3,9 @@ package chess.controller.api;
 import chess.dto.repository.GameIdDto;
 import chess.dto.repository.MovableAreasDto;
 import chess.dto.view.GameInformationDto;
-import chess.dto.view.GameSettingDto;
 import chess.dto.view.MoveDto;
 import chess.dto.view.PromotionTypeDto;
+import chess.dto.view.userNamesDto;
 import chess.model.domain.piece.Team;
 import chess.model.repository.ChessGameEntity;
 import chess.service.ChessGameService;
@@ -33,32 +33,24 @@ public class GameController {
         this.resultService = resultService;
     }
 
-    @PostMapping("")
-    public ResponseEntity<GameIdDto> startGame(@PathVariable Integer roomId,
-        @RequestBody GameSettingDto gameSettingDto) {
-        Map<Team, String> userNames = gameSettingDto.findUserNames();
-        String way = gameSettingDto.getWay();
-        if (way.equals("new")) {
-            GameIdDto gameIdDto = createGame(roomId, userNames);
-            return new ResponseEntity<>(gameIdDto, HttpStatus.OK);
-        }
-        if (way.equals("load")) {
-            GameIdDto gameIdDto = loadGame(roomId, userNames);
-            return new ResponseEntity<>(gameIdDto, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    private GameIdDto createGame(Integer roomId, Map<Team, String> userNames) {
+    @PostMapping("/new")
+    public ResponseEntity<GameIdDto> newGame(@PathVariable Integer roomId,
+        @RequestBody userNamesDto userNamesDto) {
+        Map<Team, String> userNames = userNamesDto.findUserNames();
         chessGameService.findProceedGameId(roomId).ifPresent(chessGameService::closeGame);
         chessGameService.saveNewUserNames(userNames);
-        return new GameIdDto(chessGameService.saveNewGameInfo(userNames, roomId));
+        GameIdDto gameIdDto = new GameIdDto(chessGameService.saveNewGameInfo(userNames, roomId));
+        return new ResponseEntity<>(gameIdDto, HttpStatus.OK);
     }
 
-    private GameIdDto loadGame(Integer roomId, Map<Team, String> userNames) {
-        return new GameIdDto(chessGameService.findProceedGameId(roomId)
+    @PostMapping("/load")
+    public ResponseEntity<GameIdDto> loadGame(@PathVariable Integer roomId,
+        @RequestBody userNamesDto userNamesDto) {
+        Map<Team, String> userNames = userNamesDto.findUserNames();
+        GameIdDto gameIdDto = new GameIdDto(chessGameService.findProceedGameId(roomId)
             .orElseGet(() -> chessGameService
                 .create(roomId, userNames)));
+        return new ResponseEntity<>(gameIdDto, HttpStatus.OK);
     }
 
     @GetMapping("/{gameId}/board")

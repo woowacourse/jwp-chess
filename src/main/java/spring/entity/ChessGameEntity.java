@@ -6,7 +6,7 @@ import chess.team.Team;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-import spring.entity.converter.ChessBoardConverter;
+import spring.entity.util.ChessBoardConverter;
 
 import java.util.Set;
 

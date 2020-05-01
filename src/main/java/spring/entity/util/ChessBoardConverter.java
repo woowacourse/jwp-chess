@@ -1,4 +1,4 @@
-package spring.entity.converter;
+package spring.entity.util;
 
 import chess.board.ChessBoard;
 import chess.location.Location;

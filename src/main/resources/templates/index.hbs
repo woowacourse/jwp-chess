@@ -34,8 +34,8 @@
             <tbody>
             {{#each rooms}}
                 <tr>
-                    <td>{{this.roomId}}</td>
-                    <td>{{this.roomName}}</td>
+                    <td>{{this.id}}</td>
+                    <td>{{this.name}}</td>
                     <td>
                         <button type="button" class="btn btn-primary enterButton">ENTER</button>
                     </td>
@@ -50,15 +50,23 @@
         <h1>방이 하나도 개설되지 않았습니다!</h1>
     {{/if}}
 
-    <form action="/rooms/create" method="get">
+    <form action="/rooms/create" method="post">
         <div class="form-group">
-            <small class="form-text text-muted">방을 만드려면 방 제목을 입력해주세요.</small>
-            <input type="text" name="roomName" class="form-control">
+            <small class="form-text text-muted">방을 만드려면 방 제목과 비밀번호를 입력해주세요.</small>
+            <input type="text" name="name" class="form-control" placeholder="방 제목">
+            <input type="text" name="password" class="form-control" placeholder="방 비밀번호">
         </div>
         <button type="submit" class="btn btn-primary">방 만들기</button>
-        {{#if errors}}
+        {{#if nameError}}
             <div style="color: red">방 제목은 한 글자 이상이어야 합니다.</div>
         {{/if}}
+        {{#if passwordError}}
+            <div style="color: red">방 비밀번호는 한 글자 이상이어야 합니다.</div>
+        {{/if}}
+        {{#if authorizeError}}
+            <div style="color: red">비밀번호가 일치하지 않습니다.</div>
+        {{/if}}
+
     </form>
 </div>
 <script src="/js/util.js" type="text/javascript"></script>
@@ -68,29 +76,93 @@
 
     for (let i = 0; i < allDeleteButton.length; i++) {
         allDeleteButton[i].addEventListener('click', function () {
-            let roomId = allDeleteButton[i].parentElement.parentElement.firstElementChild.innerHTML;
-            deleteRoom(roomId);
+            let id = allDeleteButton[i].parentElement.parentElement.firstElementChild.innerHTML;
+            deleteRoom(id);
         });
     }
 
     for (let i = 0; i < allEnterButton.length; i++) {
         allEnterButton[i].addEventListener('click', function () {
-            let roomId = allEnterButton[i].parentElement.parentElement.firstElementChild.innerHTML;
-            enterRoom(roomId);
+            let id = allEnterButton[i].parentElement.parentElement.firstElementChild.innerHTML;
+            enterRoom(id);
         });
     }
 
-    function deleteRoom(roomId) {
-        console.log("deleteRoom : " + roomId);
+    function deleteRoom(id) {
+        let inputPassword = prompt("비밀번호를 입력해 주세요");
+        let data = {
+            id : id,
+            password : inputPassword
+        };
 
-        let currentPath = window.location.pathname;
-        location.href = currentPath + '/remove?roomId=' + roomId;
+        fetch("rooms/authorize", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+                .then(data => {
+                    if(!data){
+                        alert("비밀번호가 일치하지 않습니다.");
+                    }
+                    let form = document.createElement("form");
+                    form.setAttribute("charset", "UTF-8");
+                    form.setAttribute("method", "POST");  //Post 방식
+                    form.setAttribute("action", "/rooms/remove/"+id); //요청 보낼 주소
+
+                    hiddenField2 = document.createElement("input");
+                    hiddenField2.setAttribute("type", "hidden");
+                    hiddenField2.setAttribute("name", "loginSuccess");
+                    hiddenField2.setAttribute("value", data);
+                    form.appendChild(hiddenField2);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                    form = null;
+                }).catch(error =>{
+                    alert(error);
+                });
     }
 
-    function enterRoom(roomId) {
-        console.log("enterRoom : " + roomId);
-        let currentPath = window.location.pathname;
-        location.href = currentPath + '/enter?roomId=' + roomId;
+    function enterRoom(id) {
+        let inputPassword = prompt('비밀번호를 입력해주세요!');
+        let data = {
+            id : id,
+            password : inputPassword
+        };
+
+        fetch("rooms/authorize", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+        .then(data => {
+            if(data){
+                alert("로그인 성공");
+            } else {
+                alert("비밀번호가 일치하지 않습니다.");
+            }
+            let form = document.createElement("form");
+            form.setAttribute("charset", "UTF-8");
+            form.setAttribute("method", "POST");  //Post 방식
+            form.setAttribute("action", "/rooms/enter/"+id); //요청 보낼 주소
+
+            hiddenField2 = document.createElement("input");
+            hiddenField2.setAttribute("type", "hidden");
+            hiddenField2.setAttribute("name", "loginSuccess");
+            hiddenField2.setAttribute("value", data);
+            form.appendChild(hiddenField2);
+
+            document.body.appendChild(form);
+            form.submit();
+            form = null;
+        }).catch(error =>{
+            alert(error);
+        })
+
     }
 
 </script>

@@ -2,17 +2,21 @@ package wooteco.chess.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import wooteco.chess.domain.room.Room;
-import wooteco.chess.dto.RoomName;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import wooteco.chess.dto.AuthorizeDto;
+import wooteco.chess.dto.LoginRequest;
+import wooteco.chess.dto.RoomRequestDto;
+import wooteco.chess.dto.RoomResponseDto;
 import wooteco.chess.service.SpringRoomService;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/rooms")
@@ -26,32 +30,51 @@ public class SpringRoomController {
 
     @GetMapping
     public String getAllRooms(Model model) throws SQLException {
-        List<Room> rooms = roomService.findAllRoom();
+        List<RoomResponseDto> rooms = roomService.findAllRoom();
         model.addAttribute("rooms", rooms);
 
         return "index";
     }
 
-    @GetMapping("/enter")
-    public String enterRoom(@RequestParam(value = "roomId") Integer roomId, Model model) {
-        model.addAttribute("roomId", roomId);
-        return "game";
+    @PostMapping("/enter/{id}")
+    public String enterRoom(@PathVariable Long id, @RequestParam Boolean loginSuccess,
+                            Model model, RedirectAttributes redirectAttributes) throws SQLException {
+        if(loginSuccess) {
+            model.addAttribute("roomId", id);
+            return "game";
+        }
+        redirectAttributes.addFlashAttribute("authorizeError", "wrongPassword");
+        return "redirect:/rooms";
     }
 
     // TODO: 2020/04/22 valid 에러페이지 이동 문제
-    @GetMapping("/create")
-    public String createRoom(@Valid RoomName roomName, Errors errors, Model model) throws SQLException {
-        if (errors.hasErrors()) {
-            model.addAttribute("errors", errors);
+    @PostMapping("/create")
+    public String createRoom(@Valid RoomRequestDto roomRequestDto, BindingResult bindingResult, Model model) throws SQLException {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("nameError", bindingResult.getFieldError("name"));
+            model.addAttribute("passwordError", bindingResult.getFieldError("password"));
             return getAllRooms(model);
         }
-        roomService.addRoom(roomName.getRoomName());
+        roomService.addRoom(roomRequestDto);
         return "redirect:/rooms";
     }
 
-    @GetMapping("/remove")
-    public String removeRoom(@RequestParam(value = "roomId") Integer roomId) throws SQLException {
-        roomService.removeRoom(roomId);
+    @PostMapping("/remove/{id}")
+    public String removeRoom(@PathVariable Long id, @RequestParam Boolean loginSuccess, RedirectAttributes redirectAttributes) throws SQLException {
+        if(loginSuccess){
+            roomService.removeRoom(id);
+            return "redirect:/rooms";
+        }
+        redirectAttributes.addFlashAttribute("authorizeError", "wrongPassword");
         return "redirect:/rooms";
+    }
+
+    @PostMapping("/authorize")
+    @ResponseBody
+    public boolean authorize(@Valid @RequestBody AuthorizeDto authorizeDto, Errors errors) {
+        if(Objects.nonNull(authorizeDto.getPassword())) {
+            return roomService.authorize(authorizeDto.getId(), authorizeDto.getPassword());
+        }
+        return false;
     }
 }

@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO : Controller 분리 기준 알아보자.
 @RestController
 public class SpringChessController {
     private static final HandlebarsTemplateEngine handlebarsTemplateEngine = new HandlebarsTemplateEngine();
@@ -19,7 +18,6 @@ public class SpringChessController {
 
     private final ChessService chessService;
 
-    // TODO : 생성자 주입이 더 나은 이유`
     public SpringChessController(ChessService chessService) {
         this.chessService = chessService;
     }
@@ -30,15 +28,13 @@ public class SpringChessController {
         return render(model, "start.html");
     }
 
-    @GetMapping("/start")
+    @GetMapping("/index")
     public String start() {
         Map<String, Object> model = new HashMap<>();
-        // 받았다.
-        // game_id, 혹은 select할 수있는 뭔가;
         return render(model, "index.html");
     }
 
-    @GetMapping("/api/resume")
+    @GetMapping("/api/game")
     public String resume() throws SQLException {
         return GSON.toJson(chessService.resumeGame());
     }

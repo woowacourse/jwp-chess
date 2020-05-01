@@ -8,6 +8,7 @@ import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.state.BoardFactory;
 
 class BoardTest {
+
 	@Test
 	void isKingDeadTest() {
 		Board board = BoardFactory.create();

@@ -12,7 +12,4 @@ public interface GameRepository extends CrudRepository<Game, Long> {
 	@Override
 	@Query("SELECT * FROM game WHERE can_continue = true")
 	List<Game> findAll();
-
-	@Query("SELECT * FROM game WHERE uuid = :uuid")
-	Game findByUuid(@Param("uuid") String uuid);
 }

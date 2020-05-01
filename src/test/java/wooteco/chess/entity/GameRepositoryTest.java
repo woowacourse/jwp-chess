@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GameRepositoryTest {
 
 	private final String firstGameName = "first game";
-	private final String firstUuid = "1q2w3e4r5t6y7u8i9o0p1q2w32e4t5y5u";
 
 	@Autowired
 	private GameRepository gameRepository;
@@ -27,20 +26,19 @@ class GameRepositoryTest {
 	@DisplayName("save 새 게임 시작시 게임정보 저장 테스트")
 	@Test
 	void save_normal_test() {
-		Game game = gameRepository.save(new Game(firstGameName, firstUuid, true));
+		Game game = gameRepository.save(new Game(firstGameName, true));
 
 		assertThat(game.getId()).isEqualTo(1);
 		assertThat(game.getName()).isEqualTo(firstGameName);
-		assertThat(game.getUuid()).isEqualTo(firstUuid);
 		assertThat(game.getCanContinue()).isEqualTo(true);
 	}
 
 	@DisplayName("게임 목록 중 진행중인 게임 조회 기능 구현")
 	@Test
 	void selectAll_test() {
-		Game firstGame = gameRepository.save(new Game(firstGameName, firstUuid, true));
-		Game secondGame = gameRepository.save(new Game("secondGameName", "secondUuid", true));
-		Game thirdGame = gameRepository.save(new Game("thirdGameName", "thirdUuid", false));
+		Game firstGame = gameRepository.save(new Game(firstGameName, true));
+		Game secondGame = gameRepository.save(new Game("secondGameName", true));
+		Game thirdGame = gameRepository.save(new Game("thirdGameName", false));
 
 		List<Game> games = gameRepository.findAll();
 
@@ -51,11 +49,11 @@ class GameRepositoryTest {
 	@DisplayName("이미 저장되어있는 게임에 canContinue를 false로 변경 확인")
 	@Test
 	void save_update_can_continue_column() {
-		gameRepository.save(new Game(firstGameName, firstUuid, true));
+		gameRepository.save(new Game(firstGameName, true));
 
-		Game foundGame = gameRepository.findByUuid(firstUuid);
+		Game foundGame = gameRepository.findById(1L).get();
 
-		Game actualGame = gameRepository.save(new Game(foundGame.getId(), foundGame.getName(), foundGame.getUuid(), false));
+		Game actualGame = gameRepository.save(new Game(foundGame.getId(), foundGame.getName(), false));
 
 		assertThat(actualGame.getCanContinue()).isEqualTo(false);
 	}
@@ -63,8 +61,8 @@ class GameRepositoryTest {
 	@DisplayName("게임 선택 시 해당하는 히스토리 조회")
 	@Test
 	void getHistories_history_from_specific_game() {
-		Game firstGame = gameRepository.save(new Game(firstGameName, firstUuid, true));
-		Game secondGame = gameRepository.save(new Game("secondGameName", "secondUuid", true));
+		Game firstGame = gameRepository.save(new Game(firstGameName, true));
+		Game secondGame = gameRepository.save(new Game("secondGameName", true));
 		History firstHistory = new History("a2", "a4");
 		History secondHistory = new History("b2", "b4");
 		History thirdHistory = new History("a7", "a5");

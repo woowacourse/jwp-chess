@@ -1,6 +1,6 @@
 package wooteco.chess.dto;
 
-public class MoveDto {
+public class PieceMoveDto {
 	private String roomName;
 	private String source;
 	private String target;

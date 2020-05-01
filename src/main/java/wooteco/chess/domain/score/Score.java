@@ -14,7 +14,6 @@ public class Score {
     private static final double PAWN_SCORE_IN_SAME_FILE = 0.5d;
 
     private Score() {
-
     }
 
     public static double calculateScore(Map<Position, Piece> board, Team team) {

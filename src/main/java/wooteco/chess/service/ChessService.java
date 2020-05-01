@@ -1,6 +1,13 @@
 package wooteco.chess.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
+
 import wooteco.chess.controller.dto.ChessRoomResponseDto;
 import wooteco.chess.controller.dto.MoveRequestDto;
 import wooteco.chess.controller.dto.ResponseDto;
@@ -11,12 +18,6 @@ import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.repository.ChessGameTable;
 import wooteco.chess.repository.ChessGameTableRepository;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ChessService {
@@ -98,7 +99,8 @@ public class ChessService {
 
     private ChessGame findChessGame(final Long id) {
         Optional<ChessGameTable> chessGameTableOptional = chessGameRepository.findById(id);
-        ChessGameTable chessGameTable = chessGameTableOptional.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게임 번호입니다."));
+        ChessGameTable chessGameTable = chessGameTableOptional.orElseThrow(
+            () -> new IllegalArgumentException("존재하지 않는 게임 번호입니다."));
         return chessGameTable.toChessGame();
     }
 

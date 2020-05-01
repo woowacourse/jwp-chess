@@ -1,10 +1,10 @@
 package wooteco.chess.domain.board;
 
-import wooteco.chess.domain.player.Team;
-import wooteco.chess.domain.position.Position;
-
 import java.util.Map;
 import java.util.Objects;
+
+import wooteco.chess.domain.player.Team;
+import wooteco.chess.domain.position.Position;
 
 public class BoardSituation {
 
@@ -36,9 +36,9 @@ public class BoardSituation {
 
     public boolean existSamePieceInSameFile(Position position, Team team) {
         return boardState.entrySet()
-                .stream()
-                .filter(entry -> team.isSameTeam(entry.getValue()))
-                .filter(entry -> position.isSameFile(entry.getKey()))
-                .count() > DUPLICATE_THRESHOLD;
+            .stream()
+            .filter(entry -> team.isSameTeam(entry.getValue()))
+            .filter(entry -> position.isSameFile(entry.getKey()))
+            .count() > DUPLICATE_THRESHOLD;
     }
 }

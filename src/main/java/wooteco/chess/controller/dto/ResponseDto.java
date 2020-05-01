@@ -1,12 +1,12 @@
 package wooteco.chess.controller.dto;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.piece.PieceState;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
-
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ResponseDto {
 
@@ -22,7 +22,8 @@ public class ResponseDto {
         this.turn = turn;
     }
 
-    private ResponseDto(final Map<Position, PieceDto> board, final Map<Team, Double> scores, final Team turn, final Team winner, final String message) {
+    private ResponseDto(final Map<Position, PieceDto> board, final Map<Team, Double> scores, final Team turn,
+        final Team winner, final String message) {
         this.board = board;
         this.scores = scores;
         this.turn = turn;
@@ -44,11 +45,11 @@ public class ResponseDto {
 
     private static Map<Position, PieceDto> createBoardDto(Map<Position, PieceState> board) {
         return board.entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> PieceDto.of(entry.getValue())
-                ));
+            .stream()
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                entry -> PieceDto.of(entry.getValue())
+            ));
     }
 
     public Map<Position, PieceDto> getBoard() {

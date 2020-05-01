@@ -1,16 +1,16 @@
 package wooteco.chess.domain.game;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import wooteco.chess.domain.MoveParameter;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.PieceState;
 import wooteco.chess.domain.piece.implementation.piece.King;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ChessGame {
 
@@ -59,10 +59,10 @@ public class ChessGame {
 
     public Map<Team, Double> getStatus() {
         return Arrays.stream(Team.values())
-                .collect(Collectors.toMap(
-                        value -> value,
-                        value -> board.getScores(value)
-                ));
+            .collect(Collectors.toMap(
+                value -> value,
+                value -> board.getScores(value)
+            ));
     }
 
     public Team getTurn() {
@@ -72,9 +72,9 @@ public class ChessGame {
     public Team getWinner() {
         if (isEnd()) {
             return getBoard().values().stream()
-                    .filter(piece -> piece instanceof King)
-                    .map(PieceState::getTeam)
-                    .findFirst().get();
+                .filter(piece -> piece instanceof King)
+                .map(PieceState::getTeam)
+                .findFirst().get();
         }
         throw new UnsupportedOperationException("게임이 아직 종료되지 않았습니다.");
     }

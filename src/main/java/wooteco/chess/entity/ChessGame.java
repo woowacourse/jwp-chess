@@ -30,4 +30,12 @@ public class ChessGame {
 	public Integer getRoomNo() {
 		return roomNo;
 	}
+
+	public void setBoard(String board) {
+		this.board = board;
+	}
+
+	public void setTurn(String turn) {
+		this.turn = turn;
+	}
 }

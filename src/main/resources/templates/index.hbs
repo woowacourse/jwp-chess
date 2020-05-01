@@ -10,24 +10,40 @@
 
 입장할 방 번호를 선택해 주세요.
 <select id="select">
-    {{#each roomNumbers}}
-        <option value="{{this}}">{{this}}번방</option>
+    {{#each roomInformation}}
+        <option value="{{this.roomId}}">{{this.roomId}}번방: {{this.title}}</option>
     {{/each}}
 </select>
-<button onclick="submit()">이동</button>
+<button onclick="move()">이동</button>
 
 
 <br>
-<form method="POST" action="/newroom">
-    <input type="submit" value="방 만들기">
+<form id="form" method="POST" action="/newroom">
+    <textarea id="textarea" name="title" placeholder="방 이름을 입력해주세요."></textarea>
+    <button id="create-room-button">방 만들기</button>
 </form>
 
 </body>
 <script>
-    function submit() {
+    document.querySelector("#create-room-button").addEventListener("click", event => {
+        makeNewRoom(event);
+    })
+
+    function move() {
         var e = document.getElementById("select");
         var room_id = e.options[e.selectedIndex].value;
         window.location = "/rooms/" + room_id;
     }
+
+    function makeNewRoom(event) {
+        var tmp = document.getElementById("textarea").value;
+        var form = document.createElement("form");
+        if (tmp.trim() === '') {
+            alert("방 이름은 공백이 될 수 없습니다.");
+            event.preventDefault();
+            return;
+        }
+    }
+
 </script>
 </html>

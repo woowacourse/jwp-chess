@@ -20,7 +20,7 @@ public class BoardService {
     public void init(Long roomId) {
         NormalInitStrategy normalInitStrategy = new NormalInitStrategy();
         Board board = new Board(normalInitStrategy.init());
-        ChessEntity chessEntity = new ChessEntity(roomId, BoardConverter.convertToString(board));
+        ChessEntity chessEntity = new ChessEntity(roomId, chessRepository.findTitleById(roomId), BoardConverter.convertToString(board));
         chessRepository.save(chessEntity);
     }
 
@@ -52,4 +52,9 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room이 없습니다."));
         return BoardConverter.convertToBoard(entity.getBoard(), entity.getIsWhite());
     }
+
+    public String loadTitle(Long roomId) {
+        return chessRepository.findTitleById(roomId);
+    }
+
 }

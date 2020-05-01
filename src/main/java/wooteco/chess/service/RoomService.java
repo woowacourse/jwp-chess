@@ -21,12 +21,16 @@ public class RoomService {
         return chessRepository.findIds();
     }
 
-    public Long create() {
+    public Iterable<ChessEntity> loadRoomInformation() {
+        return chessRepository.findAll();
+    }
+
+    public Long create(String title) {
         NormalInitStrategy strategy = new NormalInitStrategy();
         Board board = new Board(strategy.init());
 
         ChessEntity entity = chessRepository.save(
-                new ChessEntity(BoardConverter.convertToString(board), board.isTurnWhite()));
+                new ChessEntity(title, BoardConverter.convertToString(board), board.isTurnWhite()));
         return entity.getRoomId();
     }
 }

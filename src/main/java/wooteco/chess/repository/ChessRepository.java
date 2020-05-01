@@ -12,6 +12,9 @@ public interface ChessRepository extends CrudRepository<ChessEntity, Long> {
     @Query("SELECT room_id FROM chess")
     List<Long> findIds();
 
+    @Query("SELECT title FROM chess")
+    List<String> findTitles();
+
     @Override
     Optional<ChessEntity> findById(Long roomId);
 
@@ -21,4 +24,7 @@ public interface ChessRepository extends CrudRepository<ChessEntity, Long> {
     @Modifying
     @Query("UPDATE chess SET board = :board, is_white = :isWhite WHERE room_id = :roomId")
     void update(@Param("roomId") Long roomId, @Param("board") String board, @Param("isWhite") boolean isWhite);
+
+    @Query("SELECT title FROM chess WHERE room_id = :roomId")
+    String findTitleById(@Param("roomId") Long roomId);
 }

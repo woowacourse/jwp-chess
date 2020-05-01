@@ -9,11 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OutputView {
-    public static void constructModel(Long roomId, Board board, Model model) {
+    public static void constructModel(Long roomId, String title, Board board, Model model) {
         Map<String, String> pieces = toImageNames(board);
         pieces.keySet()
                 .forEach(positionKey -> model.addAttribute(positionKey, pieces.get(positionKey)));
         model.addAttribute("id", roomId);
+        model.addAttribute("title", title);
     }
 
     private static Map<String, String> toImageNames(Board board) {

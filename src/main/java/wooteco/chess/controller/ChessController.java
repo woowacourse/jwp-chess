@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import wooteco.chess.domain.piece.Color;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.service.GameManagerService;
-import wooteco.chess.util.WebOutputRenderer;
 
 @Controller
 public class ChessController {
@@ -36,7 +35,7 @@ public class ChessController {
 			model.addAttribute("roomNo", roomNo);
 			model.addAttribute("piecesDto", gameManagerService.getBoardDto(roomNo));
 			model.addAttribute("turn", currentTurn.name());
-			model.addAttribute("scores", WebOutputRenderer.scoreToModel(gameManagerService.calculateEachScore(roomNo)));
+			model.addAttribute("scores", gameManagerService.calculateEachScore(roomNo));
 		} catch (RuntimeException e) {
 			model.addAttribute("error", e.getMessage());
 			model.addAttribute("redirectUrl", "/");

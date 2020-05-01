@@ -57,7 +57,6 @@
     color: lightsalmon;
 }
 
-
 input[type="submit"], input[type="button"] {
     font-family: 'Font Awesome 5 Free', serif;
     font-weight: 900;
@@ -102,7 +101,6 @@ body {
     width: max-content;
     height: max-content;
 }
-
 
 footer {
     position: absolute;

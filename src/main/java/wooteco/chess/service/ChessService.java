@@ -3,7 +3,6 @@ package wooteco.chess.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -31,7 +30,7 @@ public class ChessService {
 
     public Long createGame() {
         ChessGame chessGame = ChessGame.of(Board.of(new AutomatedBoardInitializer()), Team.WHITE);
-        return chessGameRepository.save(ChessGameTable.createForSave(chessGame)).getId();
+        return chessGameRepository.save(ChessGameTable.createForInsert(chessGame)).getId();
     }
 
     public void restart(final Long id) {
@@ -98,10 +97,9 @@ public class ChessService {
     }
 
     private ChessGame findChessGame(final Long id) {
-        Optional<ChessGameTable> chessGameTableOptional = chessGameRepository.findById(id);
-        ChessGameTable chessGameTable = chessGameTableOptional.orElseThrow(
-            () -> new IllegalArgumentException("존재하지 않는 게임 번호입니다."));
-        return chessGameTable.toChessGame();
+        return chessGameRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게임 번호입니다."))
+            .toChessGame();
     }
 
     private void loadIfNotExisting(final Long id) {

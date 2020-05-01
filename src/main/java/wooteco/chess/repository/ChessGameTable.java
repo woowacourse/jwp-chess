@@ -18,32 +18,29 @@ public class ChessGameTable {
     @Id
     private Long id;
     private Set<BoardTable> board;
-    private String team;
+    private String turn;
 
     private ChessGameTable() {
     }
 
-    private ChessGameTable(Long id, Set<BoardTable> board, String team) {
+    private ChessGameTable(Long id, Set<BoardTable> board, String turn) {
         this.id = id;
         this.board = board;
-        this.team = team;
+        this.turn = turn;
     }
 
-    public static ChessGameTable createForSave(ChessGame chessGame) {
-        Set<BoardTable> board = chessGame.getBoard().entrySet()
-            .stream()
-            .map(entry ->
-                new BoardTable(
-                    entry.getKey().getName(),
-                    entry.getValue().getPieceType().toString(),
-                    entry.getValue().getTeam().toString()
-                ))
-            .collect(Collectors.toSet());
+    public static ChessGameTable createForInsert(ChessGame chessGame) {
+        Set<BoardTable> board = toBoardTable(chessGame.getBoard());
         return new ChessGameTable(null, board, chessGame.getTurn().toString());
     }
 
     public static ChessGameTable createForUpdate(ChessGame chessGame) {
-        Set<BoardTable> board = chessGame.getBoard().entrySet()
+        Set<BoardTable> board = toBoardTable(chessGame.getBoard());
+        return new ChessGameTable(chessGame.getId(), board, chessGame.getTurn().toString());
+    }
+
+    private static Set<BoardTable> toBoardTable(Map<Position, PieceState> board) {
+        return board.entrySet()
             .stream()
             .map(entry ->
                 new BoardTable(
@@ -52,7 +49,6 @@ public class ChessGameTable {
                     entry.getValue().getTeam().toString()
                 ))
             .collect(Collectors.toSet());
-        return new ChessGameTable(chessGame.getId(), board, chessGame.getTurn().toString());
     }
 
     public ChessGame toChessGame() {
@@ -62,7 +58,7 @@ public class ChessGameTable {
                 table -> createPieceState(table.getPiece(), table.getPosition(), table.getTeam()))
             );
 
-        return ChessGame.of(id, Board.of(board), Team.valueOf(team));
+        return ChessGame.of(id, Board.of(board), Team.valueOf(turn));
     }
 
     private PieceState createPieceState(final String piece, final String position, final String team) {
@@ -79,6 +75,6 @@ public class ChessGameTable {
     }
 
     public String getTeam() {
-        return team;
+        return turn;
     }
 }

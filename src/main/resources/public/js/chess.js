@@ -28,8 +28,8 @@ function checkSourceOrTarget(clickedPosition) {
 function move(source, target) {
     let currentPath = window.location.pathname.split("/");
     let roomId = currentPath.slice(-1)[0];
+
     let moveDto = {
-        "roomId": roomId,
         "source": source.id,
         "target": target.id
     };

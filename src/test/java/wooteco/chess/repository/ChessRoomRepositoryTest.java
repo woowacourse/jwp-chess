@@ -8,6 +8,8 @@ import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -18,29 +20,32 @@ class ChessRoomRepositoryTest {
     @Autowired
     private ChessRoomRepository chessRoomRepository;
 
+    @DisplayName("체스 방 생성")
     @Test
-    void save() {
-        ChessRoom room1 = new ChessRoom("첫 번째 방");
-        ChessRoom savedRoom1 = chessRoomRepository.save(room1);
+    void createNewRoom() {
+        ChessRoom chessRoom = new ChessRoom("1번 방");
+        ChessRoom savedChessRoom = chessRoomRepository.save(chessRoom);
 
-        assertThat(savedRoom1.getRoomName()).isEqualTo("첫 번째 방");
+        List<ChessRoom> foundRooms = chessRoomRepository.findAll();
+
+        assertThat(savedChessRoom.getRoomId()).isEqualTo(foundRooms.get(0).getRoomId());
     }
 
-    @DisplayName("체스 방 업데이트")
+    @DisplayName("체스 방에 명령어 추가")
     @Test
     void update() {
         ChessRoom room1 = new ChessRoom("1번 방");
-        ChessRoom savedRoom = chessRoomRepository.save(room1);
+        room1.addCommand(new MoveCommand("move a2 a4"));
+        ChessRoom room2 = chessRoomRepository.save(room1);
+        List<MoveCommand> commands1 = room2.getMoveCommand();
 
-        ChessRoom foundRoom = chessRoomRepository.findById(savedRoom.getRoomId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 방 번호입니다."));
-        foundRoom.addCommand(new MoveCommand("move a2 a4"));
-        ChessRoom room2 = chessRoomRepository.save(foundRoom);
+        assertThat(commands1.get(0).getCommand()).isEqualTo("move a2 a4");
 
         room2.addCommand(new MoveCommand("move a7 a5"));
         ChessRoom room3 = chessRoomRepository.save(room2);
+        List<MoveCommand> commands2 = room3.getMoveCommand();
 
-        assertThat(room3.getMoveCommand().get(0).getCommand()).isEqualTo("move a2 a4");
-        assertThat(room3.getMoveCommand().get(1).getCommand()).isEqualTo("move a7 a5");
+        assertThat(commands2.get(0).getCommand()).isEqualTo("move a2 a4");
+        assertThat(commands2.get(1).getCommand()).isEqualTo("move a7 a5");
     }
 }

@@ -22,9 +22,14 @@ public class ChessService {
     private Map<Long, ChessManager> chessGames = new HashMap<>();
 
     public void start() {
+        System.out.println("HERE1 생성자 ");
         List<ChessRoom> chessRooms = chessRoomRepository.findAll();
         for (ChessRoom chessRoom : chessRooms) {
             chessGames.put(chessRoom.getRoomId(), new ChessManager());
+        }
+
+        for (Map.Entry<Long, ChessManager> entry : chessGames.entrySet()) {
+            System.out.println("생성됨" + entry.getKey() + ": " + entry.getValue());
         }
     }
 
@@ -46,6 +51,7 @@ public class ChessService {
 
     public void move(String source, String target, Long roomId) {
         ChessManager chessManager = chessGames.get(roomId);
+        System.out.println("HERE1 " + chessManager + " " + source + " " + target);
         chessManager.move(source, target);
         saveCommand(source, target, roomId);
     }
@@ -61,7 +67,6 @@ public class ChessService {
         ChessManager chessManager = chessGames.get(roomId);
         chessManager.end();
     }
-    //TODO: private으로 변경
 
     public Map<String, Object> makeStartResponse() {
         Map<String, Object> model = new HashMap<>();

@@ -35,14 +35,4 @@ public class ChessRoom {
     public String getRoomName() {
         return roomName;
     }
-
-
-    @Override
-    public String toString() {
-        return "ChessRoom{" +
-                "roomId=" + roomId +
-                ", roomName='" + roomName + '\'' +
-                ", moveCommand=" + moveCommand +
-                '}';
-    }
 }

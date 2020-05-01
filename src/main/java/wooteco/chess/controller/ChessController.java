@@ -24,11 +24,11 @@ public class ChessController {
 
     public ChessController(ChessService chessService) {
         this.chessService = chessService;
+        chessService.start();
     }
 
     @GetMapping("/")
     public String startGame(Model model) {
-        chessService.start();
         model.addAllAttributes(chessService.makeStartResponse());
         return "chessGameStart";
     }

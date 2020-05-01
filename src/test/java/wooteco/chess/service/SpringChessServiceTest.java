@@ -27,12 +27,12 @@ class SpringChessServiceTest extends AbstractChessApplicationTest {
     @Test
     void moveEachWorksWithinDifferentGames() throws SQLException {
         // when
-        chessService.addMoveByGameId(gameOneId, "b2", "b4");
-        chessService.addMoveByGameId(gameTwoId, "a2", "a4");
+        chessService.moveIfMovable(gameOneId, "b2", "b4");
+        chessService.moveIfMovable(gameTwoId, "a2", "a4");
 
         // then
-        assertThat(chessService.addMoveByGameId(gameOneId, "a2", "a4")).isTrue();
-        assertThat(chessService.addMoveByGameId(gameTwoId, "b2", "b4")).isTrue();
+        assertThat(chessService.moveIfMovable(gameOneId, "a2", "a4")).isTrue();
+        assertThat(chessService.moveIfMovable(gameTwoId, "b2", "b4")).isTrue();
     }
 
     @DisplayName("finish한 게임만 지워지는지")
@@ -51,22 +51,22 @@ class SpringChessServiceTest extends AbstractChessApplicationTest {
     @Test
     void resetEachWorksWithinDifferentGames() throws SQLException {
         // given
-        chessService.addMoveByGameId(gameOneId, "b2", "b4");
-        assertThat(chessService.addMoveByGameId(gameOneId, "b2", "b4")).isFalse();
+        chessService.moveIfMovable(gameOneId, "b2", "b4");
+        assertThat(chessService.moveIfMovable(gameOneId, "b2", "b4")).isFalse();
 
         // when
         chessService.resetGameById(gameOneId);
 
         // then
-        assertThat(chessService.addMoveByGameId(gameOneId, "b2", "b4")).isTrue();
-        assertThat(chessService.addMoveByGameId(gameTwoId, "b2", "b4")).isTrue();
+        assertThat(chessService.moveIfMovable(gameOneId, "b2", "b4")).isTrue();
+        assertThat(chessService.moveIfMovable(gameTwoId, "b2", "b4")).isTrue();
     }
 
     @DisplayName("turn이 개별적으로 작동하는지")
     @Test
     void isWhiteTurnEachWorksWithinDifferentGames() throws SQLException {
         // when
-        chessService.addMoveByGameId(gameOneId, "b2", "b4");
+        chessService.moveIfMovable(gameOneId, "b2", "b4");
 
         // then
         assertThat(chessService.isWhiteTurn(gameOneId)).isFalse();

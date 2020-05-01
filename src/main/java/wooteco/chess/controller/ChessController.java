@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.dto.MoveResponseDto;
+import wooteco.chess.dto.RoomsDto;
 import wooteco.chess.service.ChessService;
 
 @Controller
@@ -25,8 +26,11 @@ public class ChessController {
 	}
 
 	@GetMapping("/")
-	public String index() {
-		return "game";
+	public ModelAndView index() {
+		ModelAndView mv = new ModelAndView("index");
+		RoomsDto roomsDto = chessService.findAllGames();
+		mv.addObject("rooms", roomsDto);
+		return mv;
 	}
 
 	@PostMapping("/start")
@@ -42,14 +46,6 @@ public class ChessController {
 	public ResponseEntity<MoveResponseDto> move(@RequestBody MoveRequestDto moveRequestDto) {
 		MoveResponseDto moveResponseDto = chessService.move(moveRequestDto);
 		return new ResponseEntity<>(moveResponseDto, HttpStatus.OK);
-	}
-
-	@GetMapping("/save")
-	public ModelAndView save() {
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("game");
-		mv.addObject("saveMessage", "저장되었습니다.");
-		return mv;
 	}
 
 	@GetMapping("/load")

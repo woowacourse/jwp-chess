@@ -17,7 +17,7 @@ public class Game {
 	@Id
 	private Long id;
 	private String turn;
-	@MappedCollection(idColumn = "game_id", keyColumn = "id")
+	@MappedCollection(idColumn = "game_id", keyColumn = "game_key")
 	private List<GamePiece> gamePieces;
 
 	protected Game() {

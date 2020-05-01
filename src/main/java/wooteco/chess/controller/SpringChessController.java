@@ -19,7 +19,7 @@ import java.util.Map;
 @Controller
 public class SpringChessController {
     @Autowired
-    private SpringDataJDBCChessService springChessService;
+    private SpringDataJDBCChessService springDataJDBCChessService;
 
     @GetMapping("/")
     public ModelAndView routeMainPage() {
@@ -29,19 +29,35 @@ public class SpringChessController {
         return modelAndView;
     }
 
-    @GetMapping("/new")
-    public ModelAndView startNewGame() throws SQLException {
+    @PostMapping("/new")
+    @ResponseBody
+    public String saveNewGame(@RequestBody Map<String, Object> param) {
+        System.out.println(param.get("gameName"));
+        ChessGameDto chessGameDto = springDataJDBCChessService.createGameBy((String) param.get("gameName"));
+
+        return JsonTransformer.toJson(chessGameDto);
+    }
+
+    @GetMapping("/game/{id}")
+    @ResponseBody
+    public ModelAndView startGame(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("chess");
         modelAndView.addObject("normalStatus", NormalStatus.YES.isNormalStatus());
-        springChessService.clearHistory();
         return modelAndView;
+    }
+
+    @GetMapping("/board/{id}")
+    @ResponseBody
+    public String setBoard(@PathVariable Long id) {
+        ChessGameDto chessGameDto = springDataJDBCChessService.setBoardBy(id);
+        return JsonTransformer.toJson(chessGameDto);
     }
 
     @GetMapping("/board")
     @ResponseBody
     public String setBoard() throws SQLException {
-        ChessGameDto chessGameDto = springChessService.setBoard();
+        ChessGameDto chessGameDto = springDataJDBCChessService.setBoard();
         return JsonTransformer.toJson(chessGameDto);
     }
 
@@ -50,7 +66,7 @@ public class SpringChessController {
     public String getMovablePositions(@RequestParam String source) throws SQLException {
         Map<String, Object> model = new HashMap<>();
         try {
-            MovablePositionsDto movablePositionsDto = springChessService.findMovablePositions(source);
+            MovablePositionsDto movablePositionsDto = springDataJDBCChessService.findMovablePositions(source);
             model.put("movable", movablePositionsDto.getMovablePositionNames());
             model.put("position", movablePositionsDto.getPosition());
             model.put("normalStatus", NormalStatus.YES.isNormalStatus());
@@ -66,7 +82,7 @@ public class SpringChessController {
     @ResponseBody
     public String checkMovable(@RequestParam String startPosition, @RequestParam String destination) {
         Map<String, Object> model = new HashMap<>();
-        MoveStatusDto moveStatusDto = springChessService.checkMovable(
+        MoveStatusDto moveStatusDto = springDataJDBCChessService.checkMovable(
                 new MovingPosition(startPosition, destination));
 
         model.put("normalStatus", moveStatusDto.getNormalStatus());
@@ -78,14 +94,14 @@ public class SpringChessController {
     public ModelAndView saveHistory(@RequestBody MovingPosition movingPosition) throws SQLException {
         ModelAndView modelAndView = new ModelAndView();
 
-        MoveStatusDto moveStatusDto = springChessService.move(movingPosition);
+        MoveStatusDto moveStatusDto = springDataJDBCChessService.move(movingPosition);
         if (moveStatusDto.getWinner().isNone()) {
             modelAndView.setViewName("chess");
             return modelAndView;
         }
         modelAndView.setViewName("result");
         modelAndView.addObject("winner", moveStatusDto.getWinner());
-        springChessService.clearHistory();
+        springDataJDBCChessService.clearHistory();
         return modelAndView;
     }
 

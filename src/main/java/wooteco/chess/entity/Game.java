@@ -10,28 +10,20 @@ public class Game {
 	@Id
 	private Long id;
 	private String name;
-	private String uuid;
 	private Boolean canContinue;
 	private Set<History> histories = new HashSet<>();
 
 	public Game() {
 	}
 
-	public Game(String name, String uuid) {
-		this.name = name;
-		this.uuid = uuid;
-	}
-
-	public Game(Long id, String name, String uuid, Boolean canContinue) {
+	public Game(Long id, String name, Boolean canContinue) {
 		this.id = id;
 		this.name = name;
-		this.uuid = uuid;
 		this.canContinue = canContinue;
 	}
 
-	public Game(String gameName, String uuid, Boolean canContinue) {
+	public Game(String gameName, Boolean canContinue) {
 		this.name = gameName;
-		this.uuid = uuid;
 		this.canContinue = canContinue;
 	}
 
@@ -45,10 +37,6 @@ public class Game {
 
 	public String getName() {
 		return name;
-	}
-
-	public String getUuid() {
-		return uuid;
 	}
 
 	public Boolean getCanContinue() {
@@ -70,12 +58,11 @@ public class Game {
 		Game game = (Game) o;
 		return Objects.equals(id, game.id) &&
 				Objects.equals(name, game.name) &&
-				Objects.equals(uuid, game.uuid) &&
 				Objects.equals(canContinue, game.canContinue);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, uuid, canContinue);
+		return Objects.hash(id, name, canContinue);
 	}
 }

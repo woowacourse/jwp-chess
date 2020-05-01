@@ -25,14 +25,14 @@ public class SpringRoomsController {
 	}
 
 	@GetMapping
-	private String load(final Model model) {
+	public String load(final Model model) {
 		final List<RoomDto> rooms = chessRoomsService.findAllRooms();
 		model.addAttribute("rooms", rooms);
 		return "rooms";
 	}
 
 	@PostMapping
-	private String manage(
+	public String manage(
 			@RequestParam(value = "method", defaultValue = EMPTY) final String method,
 			@RequestParam(value = "room_name", defaultValue = EMPTY) final String roomName) {
 

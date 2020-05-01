@@ -17,7 +17,6 @@ import wooteco.chess.entity.HistoryRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,14 +29,6 @@ public class SpringDataJDBCChessService {
 
     public void clearHistory() {
         historyRepository.deleteAll();
-    }
-
-    public ChessGameDto setBoard() {
-        ChessGame chessGame = new ChessGame();
-
-        load(chessGame);
-
-        return new ChessGameDto(new BoardDto(chessGame.getPieces()), chessGame.getTurn(), chessGame.calculateScore(), NormalStatus.YES.isNormalStatus());
     }
 
     public ChessGameDto createGameBy(String gameName) {
@@ -76,23 +67,9 @@ public class SpringDataJDBCChessService {
                 .collect(Collectors.toList()));
     }
 
-    private void load(ChessGame chessGame) {
-        List<MovingPosition> histories = selectAllHistory();
-
-        for (MovingPosition movingPosition : histories) {
-            chessGame.move(movingPosition);
-        }
-    }
-
-    private List<MovingPosition> selectAllHistory() {
-        return Collections.unmodifiableList(historyRepository.findAll().stream()
-                .map(history -> new MovingPosition(history.getStart(), history.getEnd()))
-                .collect(Collectors.toList()));
-    }
-
-    public MovablePositionsDto findMovablePositions(String source) {
+    public MovablePositionsDto findMovablePositions(Long id, String source) {
         ChessGame chessGame = new ChessGame();
-        load(chessGame);
+        load(chessGame, id);
 
         List<String> movablePositionNames = chessGame.findMovablePositionNames(source);
 
@@ -100,11 +77,11 @@ public class SpringDataJDBCChessService {
 
     }
 
-    public MoveStatusDto checkMovable(MovingPosition movingPosition) {
+    public MoveStatusDto checkMovable(Long id, MovingPosition movingPosition) {
         try {
             ChessGame chessGame = new ChessGame();
 
-            load(chessGame);
+            load(chessGame, id);
             chessGame.move(movingPosition);
             return new MoveStatusDto(NormalStatus.YES.isNormalStatus());
         } catch (IllegalArgumentException | UnsupportedOperationException | NullPointerException e) {
@@ -112,9 +89,9 @@ public class SpringDataJDBCChessService {
         }
     }
 
-    public MoveStatusDto move(MovingPosition movingPosition) {
+    public MoveStatusDto move(Long id, MovingPosition movingPosition) {
         ChessGame chessGame = new ChessGame();
-        load(chessGame);
+        load(chessGame, id);
         chessGame.move(movingPosition);
 
         MoveStatusDto moveStatusDto = new MoveStatusDto(NormalStatus.YES.isNormalStatus());
@@ -123,13 +100,15 @@ public class SpringDataJDBCChessService {
             moveStatusDto = new MoveStatusDto(NormalStatus.YES.isNormalStatus(), chessGame.getAliveKingColor());
         }
 
-        insertHistory(movingPosition);
+        insertHistory(id, movingPosition);
 
         return moveStatusDto;
     }
 
-    private void insertHistory(MovingPosition movingPosition) {
+    private void insertHistory(Long id, MovingPosition movingPosition) {
+        Game game = gameRepository.findById(id).get(); // TODO: 2020/05/01 예외 처리 생각하기
         History history = new History(movingPosition.getStart(), movingPosition.getEnd());
-        historyRepository.save(history);
+        game.addHistory(history);
+        gameRepository.save(game);
     }
 }

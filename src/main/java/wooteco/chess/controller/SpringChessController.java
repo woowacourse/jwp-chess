@@ -12,7 +12,6 @@ import wooteco.chess.dto.MoveStatusDto;
 import wooteco.chess.service.SpringDataJDBCChessService;
 import wooteco.chess.web.JsonTransformer;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ public class SpringChessController {
 
     @GetMapping("/game/{id}")
     @ResponseBody
-    public ModelAndView startGame(@PathVariable Long id) {
+    public ModelAndView startGame() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("chess");
         modelAndView.addObject("normalStatus", NormalStatus.YES.isNormalStatus());
@@ -54,19 +53,12 @@ public class SpringChessController {
         return JsonTransformer.toJson(chessGameDto);
     }
 
-    @GetMapping("/board")
+    @GetMapping("/board/{id}/source")
     @ResponseBody
-    public String setBoard() throws SQLException {
-        ChessGameDto chessGameDto = springDataJDBCChessService.setBoard();
-        return JsonTransformer.toJson(chessGameDto);
-    }
-
-    @GetMapping("/source")
-    @ResponseBody
-    public String getMovablePositions(@RequestParam String source) throws SQLException {
+    public String getMovablePositions2(@PathVariable Long id, @RequestParam String source) {
         Map<String, Object> model = new HashMap<>();
         try {
-            MovablePositionsDto movablePositionsDto = springDataJDBCChessService.findMovablePositions(source);
+            MovablePositionsDto movablePositionsDto = springDataJDBCChessService.findMovablePositions(id, source);
             model.put("movable", movablePositionsDto.getMovablePositionNames());
             model.put("position", movablePositionsDto.getPosition());
             model.put("normalStatus", NormalStatus.YES.isNormalStatus());
@@ -78,11 +70,12 @@ public class SpringChessController {
         }
     }
 
-    @GetMapping("/destination")
+    @GetMapping("/board/{id}/destination")
     @ResponseBody
-    public String checkMovable(@RequestParam String startPosition, @RequestParam String destination) {
+    public String checkMovable(@PathVariable Long id, @RequestParam String startPosition,
+                               @RequestParam String destination) {
         Map<String, Object> model = new HashMap<>();
-        MoveStatusDto moveStatusDto = springDataJDBCChessService.checkMovable(
+        MoveStatusDto moveStatusDto = springDataJDBCChessService.checkMovable(id,
                 new MovingPosition(startPosition, destination));
 
         model.put("normalStatus", moveStatusDto.getNormalStatus());
@@ -90,11 +83,11 @@ public class SpringChessController {
         return JsonTransformer.toJson(model);
     }
 
-    @PostMapping("/board")
-    public ModelAndView saveHistory(@RequestBody MovingPosition movingPosition) throws SQLException {
+    @PostMapping("/board/{id}")
+    public ModelAndView saveHistory(@PathVariable Long id, @RequestBody MovingPosition movingPosition) {
         ModelAndView modelAndView = new ModelAndView();
 
-        MoveStatusDto moveStatusDto = springDataJDBCChessService.move(movingPosition);
+        MoveStatusDto moveStatusDto = springDataJDBCChessService.move(id, movingPosition);
         if (moveStatusDto.getWinner().isNone()) {
             modelAndView.setViewName("chess");
             return modelAndView;
@@ -105,7 +98,7 @@ public class SpringChessController {
         return modelAndView;
     }
 
-    @GetMapping("/loading")
+    @GetMapping("/loading/{id}")
     public ModelAndView loadGame() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("chess");

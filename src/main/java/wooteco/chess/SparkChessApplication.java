@@ -1,7 +1,7 @@
 package wooteco.chess;
 
 import wooteco.chess.controller.SparkController;
-import wooteco.chess.dao.SparkCommandsDao;
+import wooteco.chess.repository.SparkCommandsRepository;
 import wooteco.chess.service.ChessService;
 
 import static spark.Spark.port;
@@ -12,7 +12,7 @@ public class SparkChessApplication {
         port(8080);
         staticFiles.location("/public");
 
-        SparkCommandsDao sparkCommandsDao = new SparkCommandsDao() {
+        SparkCommandsRepository sparkCommandsDao = new SparkCommandsRepository() {
         };
 
         SparkController controller = new SparkController(new ChessService(sparkCommandsDao));

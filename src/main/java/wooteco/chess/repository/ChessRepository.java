@@ -7,5 +7,11 @@ import java.util.List;
 
 public interface ChessRepository extends CrudRepository<Commands, Long> {
     @Override
+    <S extends Commands> S save(S entity);
+
+    @Override
+    void deleteAll();
+
+    @Override
     List<Commands> findAll();
 }

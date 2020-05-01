@@ -3,7 +3,7 @@ package wooteco.chess.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wooteco.chess.controller.command.Command;
-import wooteco.chess.dao.ChessDao;
+import wooteco.chess.repository.ChessRepository;
 import wooteco.chess.domain.ChessManager;
 import wooteco.chess.dto.Commands;
 import wooteco.chess.dto.GameResponse;
@@ -17,12 +17,12 @@ public class ChessService {
     private static final String MOVE_ERROR_MESSAGE = "이동할 수 없는 곳입니다. 다시 입력해주세요";
     private static final String MOVE_DELIMITER = " ";
 
-    private ChessDao chessDao;
+    private ChessRepository chessRepository;
     private ChessManager chessManager;
 
     @Autowired(required = false)
-    public ChessService(ChessDao chessDao) {
-        this.chessDao = chessDao;
+    public ChessService(ChessRepository chessRepository) {
+        this.chessRepository = chessRepository;
     }
 
     public void start() {
@@ -35,7 +35,7 @@ public class ChessService {
     }
 
     public void playLastGame() {
-        List<Commands> commands = chessDao.findAll();
+        List<Commands> commands = chessRepository.findAll();
         for (Commands command : commands) {
             Command.MOVE.apply(chessManager, command.get());
         }
@@ -67,7 +67,7 @@ public class ChessService {
         model.put("chessPieces", gameResponse.getTiles());
         model.put("currentTeam", gameResponse.getCurrentTeam());
         model.put("currentTeamScore", gameResponse.getCurrentTeamScore());
-        if (!chessDao.findAll().isEmpty()) {
+        if (!chessRepository.findAll().isEmpty()) {
             model.put("haveLastGameRecord", "true");
         }
 
@@ -89,10 +89,10 @@ public class ChessService {
     }
 
     private void initializeDatabase() {
-        chessDao.deleteAll();
+        chessRepository.deleteAll();
     }
 
     private void saveToDatabase(String command) {
-        chessDao.save(new Commands(command));
+        chessRepository.save(new Commands(command));
     }
 }

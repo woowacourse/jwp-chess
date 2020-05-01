@@ -1,4 +1,4 @@
-package wooteco.chess.dao;
+package wooteco.chess.repository;
 
 import wooteco.chess.dto.Commands;
 
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class SparkCommandsDao implements ChessDao {
+public abstract class SparkCommandsRepository implements ChessRepository {
     @Override
     public Commands save(Commands command) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate() {

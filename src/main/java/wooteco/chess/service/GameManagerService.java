@@ -1,6 +1,11 @@
 package wooteco.chess.service;
 
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
+
 import wooteco.chess.dao.GameDao;
 import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.board.Board;
@@ -9,11 +14,7 @@ import wooteco.chess.domain.piece.Color;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.GameManagerDto;
 import wooteco.chess.dto.PieceDto;
-
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
+import wooteco.chess.dto.ScoreDto;
 
 @Service
 public class GameManagerService {
@@ -37,9 +38,9 @@ public class GameManagerService {
 		Board board = BoardFactory.create();
 		GameManager gameManager = new GameManager(board, Color.WHITE);
 		int roomNo = ThreadLocalRandom.current()
-				.ints(MIN_ROOM_NUMBER, MAX_ROOM_NUMBER)
-				.findFirst()
-				.orElse(0);
+			.ints(MIN_ROOM_NUMBER, MAX_ROOM_NUMBER)
+			.findFirst()
+			.orElse(0);
 		return gameDao.addGame(new GameManagerDto(gameManager), roomNo);
 	}
 
@@ -71,10 +72,13 @@ public class GameManagerService {
 		return gameManager.isKingAlive();
 	}
 
-	public Map<Color, Double> calculateEachScore(int roomNo) {
+	public List<ScoreDto> calculateEachScore(int roomNo) {
 		GameManager gameManager = new GameManager(gameDao.findGame(roomNo).getBoard());
 
-		return gameManager.calculateEachScore();
+		return gameManager.calculateEachScore().entrySet()
+			.stream()
+			.map(x -> new ScoreDto(x.getKey(), x.getValue()))
+			.collect(Collectors.toList());
 	}
 
 	public List<String> getAllRoomNo() {

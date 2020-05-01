@@ -1,18 +1,19 @@
 package wooteco.chess.repository;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
+import org.springframework.transaction.annotation.Transactional;
 import wooteco.chess.entity.ChessGame;
 import wooteco.chess.exceptions.RoomNotFoundException;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Transactional
 @SpringBootTest
 @ActiveProfiles("test")
 class ChessGameRepositoryTest {
@@ -28,10 +29,10 @@ class ChessGameRepositoryTest {
 	@Test
 	public void CrudTest() {
 		chessGameRepository.save(
-			new ChessGame("rnbqkbnrppp.pppp....................p...........PPPP.PPPRNBQKBNR", "WHITE", 123456));
+				new ChessGame("rnbqkbnrppp.pppp....................p...........PPPP.PPPRNBQKBNR", "WHITE", 123456));
 
 		ChessGame game = chessGameRepository.findChessGameByRoomNo(123456)
-			.orElseThrow(RoomNotFoundException::new);
+				.orElseThrow(RoomNotFoundException::new);
 
 		assertThat(game.getBoard()).isEqualTo("rnbqkbnrppp.pppp....................p...........PPPP.PPPRNBQKBNR");
 

@@ -28,13 +28,13 @@ public class GameInformationDto {
     }
 
     private List<String> pieces = EMPTY_PIECES;
-    private String turn = null;
+    private String turn;
     private String state = MoveState.EMPTY.getMessage();
-    private String blackScore = null;
-    private String whiteScore = null;
-    private String blackName = null;
-    private String whiteName = null;
-    private String winner = null;
+    private String blackScore;
+    private String whiteScore;
+    private String blackName;
+    private String whiteName;
+    private String winner;
 
     public GameInformationDto(Map<Team, String> userNames) {
         if (!userNames.isEmpty()) {

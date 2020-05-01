@@ -7,16 +7,14 @@ import chess.location.Location;
 import chess.progress.Progress;
 import chess.team.Team;
 import org.springframework.stereotype.Service;
-import spark.dto.LocationDto;
-import spring.dto.ChessGameDto;
-import spring.dto.ChessGameScoresDto;
-import spring.dto.ChessMoveDto;
-import spring.dto.ChessResultDto;
+import spring.dto.*;
 import spring.entity.ChessGameEntity;
 import spring.entity.repository.ChessGameRepository;
 import spring.entity.repository.PieceRepository;
+import spring.vo.ChessGameVo;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -94,5 +92,11 @@ public class ChessService {
                 () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
 
         chessGameRepository.delete(chessGameEntity);
+    }
+
+    public List<ChessGameVo> findAllGame() {
+        List<ChessGameEntity> chessGameEntities = chessGameRepository.findAll();
+
+        return new ChessGamesDto(chessGameEntities).getGames();
     }
 }

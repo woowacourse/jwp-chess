@@ -24,7 +24,7 @@ public class LocationDto {
         return rowAndCol.split(UNDER_BAR);
     }
 
-    public Location toEntity() {
+    public Location toLocation() {
         return new Location(row, col);
     }
 

@@ -3,8 +3,8 @@ package spring.controller;
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.*;
 import spark.ModelAndView;
-import spark.dto.LocationDto;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import spring.dto.LocationDto;
 import spring.service.ChessService;
 
 import java.sql.SQLException;
@@ -25,6 +25,7 @@ public class SpringChessController {
     @GetMapping("/")
     public String main() {
         Map<String, Object> model = new HashMap<>();
+        model.put("games", chessService.findAllGame());
         return render(model, "start.html");
     }
 

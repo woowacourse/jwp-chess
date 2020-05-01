@@ -4,13 +4,35 @@
 <head>
     <meta charset="utf-8">
     <title>Java chess game start</title>
+    <link href="/chess.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
+<div class="game">
+    <h2>체스</h2>
+    <div class="list">
+        <table class="games">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">방 제목</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#games}}
+            <tr>
+                <th scope="row">{{id}}</th>
+                <td>{{name}}</td>
+            </tr>
+            {{/games}}
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<form action="/index" method="get">
+<!-- <form action="/index" method="get">
     <input class="start-button" type="submit" value="스타트"/>
-</form>
+</form> -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </body>

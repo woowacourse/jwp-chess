@@ -66,4 +66,7 @@ public class ChessGameEntity {
     public void update(Set<PieceEntity> pieces) {
         this.pieces = pieces;
     }
+
+    private ChessGameEntity() {
+    }
 }

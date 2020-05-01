@@ -1,33 +1,34 @@
 package chess.service;
 
-import chess.dao.RoomDao;
+import chess.dao.exceptions.DaoNoneSelectedException;
 import chess.dto.RoomDto;
+import chess.repository.RoomRepository;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Service
 public class ChessRoomsService {
-	private final RoomDao roomDao;
+	private final RoomRepository roomRepository;
 
-	public ChessRoomsService(final RoomDao roomDao) {
-		this.roomDao = roomDao;
+	public ChessRoomsService(final RoomRepository roomRepository) {
+		this.roomRepository = roomRepository;
 	}
 
-	public List<RoomDto> findAllRooms() throws SQLException {
-		return roomDao.findAllRooms();
+	public List<RoomDto> findAllRooms() {
+		return Lists.newArrayList(roomRepository.findAll());
 	}
 
-	public RoomDto findRoomByRoomName(final String roomName) throws SQLException {
-		return roomDao.findRoomByRoomName(roomName);
+	public RoomDto findRoomByRoomName(final String roomName) {
+		return roomRepository.findByRoomName(roomName).orElseThrow(DaoNoneSelectedException::new);
 	}
 
-	public int addRoomByRoomName(final String roomName) throws SQLException {
-		return roomDao.addRoomByRoomName(roomName);
+	public void addRoomByRoomName(final String roomName) {
+		roomRepository.saveByRoomName(roomName);
 	}
 
-	public int deleteRoomByRoomName(final String roomName) throws SQLException {
-		return roomDao.deleteRoomByRoomName(roomName);
+	public void deleteRoomByRoomName(final String roomName) {
+		roomRepository.deleteByRoomName(roomName);
 	}
 }

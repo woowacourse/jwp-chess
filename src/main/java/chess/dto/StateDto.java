@@ -1,12 +1,19 @@
 package chess.dto;
 
-public class StateDto {
-	final int id;
-	final String state;
-	final int roomId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-	public StateDto(final int id, final String state, final int roomId) {
-		this.id = id;
+@Table("state")
+public class StateDto {
+	@Id
+	private int id;
+	@Column("state")
+	private String state;
+	@Column("room_id")
+	private int roomId;
+
+	public StateDto(final String state, final int roomId) {
 		this.state = state;
 		this.roomId = roomId;
 	}

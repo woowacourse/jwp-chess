@@ -18,6 +18,12 @@ public class ChessGameEntity {
     Boolean isTurnBlack;
     Set<PieceEntity> pieces;
 
+    public ChessGameEntity(Long gameId, Boolean isTurnBlack, Set<PieceEntity> pieces) {
+        this.id = gameId;
+        this.isTurnBlack = isTurnBlack;
+        this.pieces = pieces;
+    }
+
     public ChessGameEntity(Boolean isTurnBlack, Set<PieceEntity> pieces) {
         this.isTurnBlack = isTurnBlack;
         this.pieces = pieces;

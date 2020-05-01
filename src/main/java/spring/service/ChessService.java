@@ -62,8 +62,7 @@ public class ChessService {
     private void saveChessGameIfProgressIsNotEnd(ChessGameEntity chessGameEntity, ChessGame chessGame, Progress progress) {
         if (!progress.isError()) {
             chessGame.changeTurn();
-            ChessGameEntity targetChessGameEntity = chessGame.toEntity();
-            targetChessGameEntity.setId(chessGameEntity.getId());
+            ChessGameEntity targetChessGameEntity = chessGame.toEntity(chessGameEntity.getId());
             chessGameRepository.save(targetChessGameEntity);
         }
     }
@@ -87,8 +86,8 @@ public class ChessService {
         return new ChessResultDto(chessGame.findWinner());
     }
 
+    // deleteById 는 믿을 수 없다. 존재하지 않는 row를 삭제해도 에러를 띄우지 않는다.
     public void endGame(Long gameId) throws SQLException {
-        // deleteById 는 믿을 수 없다. 존재하지 않는 row를 삭제해도 에러를 띄우지 않는다.
         Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(gameId);
 
         ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(

@@ -64,6 +64,7 @@ function drop(ev) {
     var now = ev.dataTransfer.getData("text");
     var des = ev.target.id;
     var game_id = document.getElementById("game_id").innerHTML;
+    // todo
     move({"game_id": "1", "now": now.toString(), "des": des.toString()});
 }
 
@@ -107,6 +108,7 @@ function postNewGame() {
         },
         success: function (data) {
             $('.board').css('display', 'block');
+            // todo
             $('#game_id').html("1");
 
             $('.gamecell').html('');
@@ -203,6 +205,7 @@ function resume() {
             $('.board').css('display', 'block');
             $('.gamecell').html('');
             $('.gamecell').attr('chess', 'null');
+            // todo
             $('#game_id').html(1);
 
             $('.gamecell grey').html('');

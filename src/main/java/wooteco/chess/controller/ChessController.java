@@ -45,12 +45,6 @@ public class ChessController {
         return "chessGame";
     }
 
-    @GetMapping("/end/{roomId}")
-    public String endGame(@PathVariable("roomId") Long roomId) {
-        chessService.end(roomId);
-        return "chessGameEnd";
-    }
-
     @PostMapping("/playing/{roomId}")
     @ResponseBody
     public String move(@PathVariable("roomId") Long roomId, @RequestBody MoveDto moveDto) {
@@ -58,5 +52,11 @@ public class ChessController {
         Map<String, Object> model = new HashMap<>(chessService.makeMoveResponse(roomId));
         chessService.checkIfPlaying(roomId);
         return GSON.toJson(model);
+    }
+
+    @GetMapping("/end/{roomId}")
+    public String endGame(@PathVariable("roomId") Long roomId) {
+        chessService.end(roomId);
+        return "chessGameEnd";
     }
 }

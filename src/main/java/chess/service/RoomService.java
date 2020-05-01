@@ -1,10 +1,10 @@
 package chess.service;
 
-import chess.model.dto.CreateRoomDto;
-import chess.model.dto.DeleteRoomDto;
-import chess.model.dto.RoomsDto;
-import chess.model.repository.RoomEntity;
-import chess.model.repository.RoomRepository;
+import chess.dto.CreateRoomDto;
+import chess.dto.DeleteRoomDto;
+import chess.dto.RoomsDto;
+import chess.repository.RoomEntity;
+import chess.repository.RoomRepository;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Service;

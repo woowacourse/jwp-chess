@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.dto.repository.GameIdDto;
 import chess.dto.repository.GameInfoDto;
 import chess.dto.repository.MovableAreasDto;
 import chess.dto.view.GameInformationDto;
@@ -163,5 +164,10 @@ public class ChessGameService {
 
     public Optional<Integer> findProceedGameId(Integer roomId) {
         return chessGameRepository.findProceedingByRoomId(roomId);
+    }
+
+    public GameIdDto loadGame(Integer roomId, Map<Team, String> userNames) {
+        return new GameIdDto(findProceedGameId(roomId)
+            .orElseGet(() -> create(roomId, userNames)));
     }
 }

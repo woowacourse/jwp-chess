@@ -47,9 +47,7 @@ public class GameController {
     public ResponseEntity<GameIdDto> loadGame(@PathVariable Integer roomId,
         @RequestBody userNamesDto userNamesDto) {
         Map<Team, String> userNames = userNamesDto.findUserNames();
-        GameIdDto gameIdDto = new GameIdDto(chessGameService.findProceedGameId(roomId)
-            .orElseGet(() -> chessGameService
-                .create(roomId, userNames)));
+        GameIdDto gameIdDto = chessGameService.loadGame(roomId, userNames);
         return new ResponseEntity<>(gameIdDto, HttpStatus.OK);
     }
 

@@ -6,13 +6,13 @@ import java.util.stream.Collectors;
 import wooteco.chess.domain.position.Position;
 
 public class Bishop extends Piece {
-	public Bishop(Position position, Team team) {
-		super(position, Symbol.BISHOP, team);
+	public Bishop(Position position, Turn turn) {
+		super(position, Symbol.BISHOP, turn);
 	}
 
 	@Override
 	public boolean canNotMoveTo(Piece that) {
-		return isSameTeam(that.team) || !createMovableArea().contains(that.position);
+		return isSameTeam(that.turn) || !createMovableArea().contains(that.position);
 	}
 
 	@Override

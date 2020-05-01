@@ -6,13 +6,13 @@ import java.util.stream.Collectors;
 import wooteco.chess.domain.position.Position;
 
 public class Rook extends Piece {
-	public Rook(Position position, Team team) {
-		super(position, Symbol.ROOK, team);
+	public Rook(Position position, Turn turn) {
+		super(position, Symbol.ROOK, turn);
 	}
 
 	@Override
 	public boolean canNotMoveTo(Piece that) {
-		return isSameTeam(that.team) || !createMovableArea().contains(that.position);
+		return isSameTeam(that.turn) || !createMovableArea().contains(that.position);
 	}
 
 	@Override

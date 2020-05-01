@@ -15,7 +15,7 @@ import wooteco.chess.domain.piece.King;
 import wooteco.chess.domain.piece.Pawn;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PiecesFactory;
-import wooteco.chess.domain.piece.Team;
+import wooteco.chess.domain.piece.Turn;
 import wooteco.chess.domain.position.Column;
 
 public class BoardDAOTest {
@@ -39,7 +39,7 @@ public class BoardDAOTest {
 
 	@Test
 	void addPiece() {
-		Piece piece = new King(A3, Team.WHITE);
+		Piece piece = new King(A3, Turn.WHITE);
 		boardDAO.addPiece("1", piece);
 
 		assertThat(boardDAO.findPieceBy("1", A3).getSymbol()).isEqualTo(piece.getSymbol());
@@ -58,7 +58,7 @@ public class BoardDAOTest {
 
 	@Test
 	void update() {
-		boardDAO.addPiece("1", new Pawn(A2, Team.WHITE));
+		boardDAO.addPiece("1", new Pawn(A2, Turn.WHITE));
 		boardDAO.addPiece("1", new Empty(A4));
 
 		boardDAO.update("1", A2, A4);

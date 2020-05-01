@@ -5,23 +5,20 @@ import static java.util.stream.Collectors.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
-
 import wooteco.chess.dao.BoardDAO;
 import wooteco.chess.dao.TurnInfoDAO;
 import wooteco.chess.domain.Status;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PiecesFactory;
-import wooteco.chess.domain.piece.Team;
+import wooteco.chess.domain.piece.Turn;
 import wooteco.chess.domain.position.Position;
 
-@Service
-public class ChessService {
+public class SparkChessService {
 	private final BoardDAO boardDAO;
 	private final TurnInfoDAO turnInfoDAO;
 
-	public ChessService(BoardDAO boardDAO, TurnInfoDAO turnInfoDAO) {
+	public SparkChessService(BoardDAO boardDAO, TurnInfoDAO turnInfoDAO) {
 		this.boardDAO = boardDAO;
 		this.turnInfoDAO = turnInfoDAO;
 	}
@@ -29,7 +26,7 @@ public class ChessService {
 	public void initialize(String gameId) {
 		if (boardDAO.hasNotGameIn(gameId)) {
 			boardDAO.addPieces(gameId, PiecesFactory.createInitial());
-			turnInfoDAO.initialize(gameId, Team.WHITE);
+			turnInfoDAO.initialize(gameId, Turn.WHITE);
 		}
 	}
 
@@ -51,8 +48,8 @@ public class ChessService {
 		Map<String, String> result = new HashMap<>();
 		Status status = Status.of(boardDAO.findAllPieces(gameId));
 
-		String whiteScore = String.valueOf(status.toMap().get(Team.WHITE));
-		String blackScore = String.valueOf(status.toMap().get(Team.BLACK));
+		String whiteScore = String.valueOf(status.toMap().get(Turn.WHITE));
+		String blackScore = String.valueOf(status.toMap().get(Turn.BLACK));
 		String winner = status.getWinner().name();
 
 		result.put("whiteScore", whiteScore);

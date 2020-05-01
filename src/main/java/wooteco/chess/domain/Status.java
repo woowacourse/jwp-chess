@@ -6,30 +6,39 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import wooteco.chess.domain.entity.PieceEntity;
 import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.PieceFactory;
 import wooteco.chess.domain.piece.PieceScore;
-import wooteco.chess.domain.piece.Team;
+import wooteco.chess.domain.piece.Turn;
 
 public class Status {
-	private final Map<Team, Double> status;
+	private final Map<Turn, Double> status;
 
-	private Status(Map<Team, Double> status) {
+	private Status(Map<Turn, Double> status) {
 		this.status = status;
 	}
 
 	public static Status of(List<Piece> pieces) {
 		return new Status(Map.of(
-			Team.BLACK, calculateOf(groupByTeam(pieces, Team.BLACK)),
-			Team.WHITE, calculateOf(groupByTeam(pieces, Team.WHITE))
+			Turn.BLACK, calculateOf(groupByTeam(pieces, Turn.BLACK)),
+			Turn.WHITE, calculateOf(groupByTeam(pieces, Turn.WHITE))
 		));
 	}
 
-	private static List<Piece> groupByTeam(List<Piece> pieces, Team team) {
+	public static Status of(Set<PieceEntity> pieceEntities) {
+		return of(pieceEntities.stream()
+			.map(PieceFactory::createBy)
+			.collect(toList()));
+	}
+
+	private static List<Piece> groupByTeam(List<Piece> pieces, Turn turn) {
 		return pieces.stream()
-			.filter(piece -> piece.isSameTeam(team))
+			.filter(piece -> piece.isSameTeam(turn))
 			.collect(Collectors.toList());
 	}
 
@@ -48,9 +57,9 @@ public class Status {
 			.values();
 	}
 
-	public Team getWinner() {
-		if (status.get(Team.BLACK).equals(status.get(Team.WHITE))) {
-			return Team.NONE;
+	public Turn getWinner() {
+		if (status.get(Turn.BLACK).equals(status.get(Turn.WHITE))) {
+			return Turn.NONE;
 		}
 
 		double winnerScore = Collections.max(status.values());
@@ -61,7 +70,7 @@ public class Status {
 			.orElseThrow(NullPointerException::new);
 	}
 
-	public Map<Team, Double> toMap() {
+	public Map<Turn, Double> toMap() {
 		return Map.copyOf(status);
 	}
 }

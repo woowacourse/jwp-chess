@@ -8,13 +8,13 @@ import wooteco.chess.domain.position.Position;
 public class King extends Piece {
 	private static final int AROUND_BOUND = 1;
 
-	public King(Position position, Team team) {
-		super(position, Symbol.KING, team);
+	public King(Position position, Turn turn) {
+		super(position, Symbol.KING, turn);
 	}
 
 	@Override
 	public boolean canNotMoveTo(Piece that) {
-		return isSameTeam(that.team) || !createMovableArea().contains(that.position);
+		return isSameTeam(that.turn) || !createMovableArea().contains(that.position);
 	}
 
 	@Override

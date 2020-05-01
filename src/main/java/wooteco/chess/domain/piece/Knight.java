@@ -8,13 +8,13 @@ import wooteco.chess.domain.position.Position;
 public class Knight extends Piece {
 	private static final List<Integer> KNIGHT_MOVE_POSITIONS = List.of(1, 2);
 
-	public Knight(Position position, Team team) {
-		super(position, Symbol.KNIGHT, team);
+	public Knight(Position position, Turn turn) {
+		super(position, Symbol.KNIGHT, turn);
 	}
 
 	@Override
 	public boolean canNotMoveTo(Piece that) {
-		return isSameTeam(that.team) || !createMovableArea().contains(that.position);
+		return isSameTeam(that.turn) || !createMovableArea().contains(that.position);
 	}
 
 	@Override

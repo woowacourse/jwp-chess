@@ -13,14 +13,14 @@ import spark.Request;
 import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.service.ChessService;
+import wooteco.chess.service.SparkChessService;
 
 public class SparkChessController {
 	private static final Gson GSON = new Gson();
 
-	private final ChessService service;
+	private final SparkChessService service;
 
-	public SparkChessController(ChessService service) {
+	public SparkChessController(SparkChessService service) {
 		this.service = service;
 	}
 

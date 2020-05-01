@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class ChessBoard {
 
-    private Map<Square, Piece> chessBoard;
+    private final Map<Square, Piece> chessBoard;
 
     private ChessBoard(Map<Square, Piece> chessBoard) {
         this.chessBoard = new HashMap<>(chessBoard);

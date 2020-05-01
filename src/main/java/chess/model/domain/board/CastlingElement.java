@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class CastlingElement {
 
-    private Set<CastlingSetting> castlingElements;
+    private final Set<CastlingSetting> castlingElements;
 
     private CastlingElement(Set<CastlingSetting> castlingElements) {
         this.castlingElements = castlingElements;

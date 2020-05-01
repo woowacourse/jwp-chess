@@ -26,10 +26,10 @@ public class ChessGame {
     private static final MoveStateChecker PROMOTION_MOVE_CHECKER
         = new MoveStateChecker(new MoveStatePromotion());
 
-    private ChessBoard chessBoard;
-    private CastlingElement castlingElements;
+    private final ChessBoard chessBoard;
+    private final CastlingElement castlingElements;
     private Team turn;
-    private EnPassant enPassant;
+    private final EnPassant enPassant;
 
     public ChessGame() {
         this(ChessBoard.createInitial(), Team.WHITE, CastlingElement.createInitial(),

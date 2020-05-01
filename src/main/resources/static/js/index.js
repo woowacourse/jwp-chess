@@ -39,7 +39,6 @@ deleteRoom.onclick = () => {
     })
 };
 
-
 creatRoom.onclick = () => {
     let roomName = createRoomName.value;
     let roomPassword = '';

@@ -3,7 +3,11 @@ package wooteco.chess.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import wooteco.chess.controller.dto.ChessPieceDto;
 import wooteco.chess.controller.dto.MoveRequestDto;
 import wooteco.chess.controller.dto.PieceDto;
@@ -27,8 +31,8 @@ public class ChessController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Long> roomIds = chessService.getRoomIds();
-        model.addAttribute("chessRoomIds", roomIds);
+//        List<Long> roomIds = chessService.getRoomIds();
+//        model.addAttribute("chessRoomIds", roomIds);
         return "index";
     }
 

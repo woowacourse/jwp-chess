@@ -2,7 +2,9 @@ create table chessGameTable
 (
     id int auto_increment
         primary key,
-    turn varchar(5) not null
+    teamId int not null,
+    constraint chessGameTable_ibfk_1
+        foreign key (teamId) references teamTable (id),
 );
 create table pieceTable
 (

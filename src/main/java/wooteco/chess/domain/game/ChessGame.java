@@ -14,16 +14,22 @@ import java.util.stream.Collectors;
 
 public class ChessGame {
 
+    private Long id;
     private Board board;
-    private Turn turn;
+    private Team turn;
 
-    private ChessGame(final Board board, final Turn turn) {
+    private ChessGame(final Long id, final Board board, final Team turn) {
+        this.id = id;
         this.board = board;
         this.turn = turn;
     }
 
-    public static ChessGame of(final Board board, final Turn turn) {
-        return new ChessGame(board, turn);
+    public static ChessGame of(final Board board, final Team turn) {
+        return new ChessGame(null, board, turn);
+    }
+
+    public static ChessGame of(final Long id, final Board board, final Team turn) {
+        return new ChessGame(id, board, turn);
     }
 
     public boolean isEnd() {
@@ -33,7 +39,7 @@ public class ChessGame {
     public void move(MoveParameter moveParameter) {
         if (!isEnd()) {
             board.move(moveParameter.getSource(), moveParameter.getTarget(), turn);
-            turn.switchTurn();
+            switchTurn();
             return;
         }
         throw new UnsupportedOperationException("게임이 종료 되었습니다.");
@@ -48,7 +54,7 @@ public class ChessGame {
     }
 
     public double getScore() {
-        return board.getScores(turn.getTurn());
+        return board.getScores(turn);
     }
 
     public Map<Team, Double> getStatus() {
@@ -60,7 +66,7 @@ public class ChessGame {
     }
 
     public Team getTurn() {
-        return turn.getTurn();
+        return turn;
     }
 
     public Team getWinner() {
@@ -71,5 +77,13 @@ public class ChessGame {
                     .findFirst().get();
         }
         throw new UnsupportedOperationException("게임이 아직 종료되지 않았습니다.");
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    private void switchTurn() {
+        turn = turn.toggle();
     }
 }

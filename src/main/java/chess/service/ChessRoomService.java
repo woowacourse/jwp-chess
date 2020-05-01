@@ -48,6 +48,11 @@ public class ChessRoomService {
 		return createBoardHtml(state);
 	}
 
+	private String createBoardHtml(final State state) {
+		final List<List<String>> board = Board.of(state.getSet()).getLists();
+		return BoardToHtml.of(board).getHtml();
+	}
+
 	private Set<Piece> createPieceSet(final List<PieceEntity> pieceEntities) {
 		return pieceEntities.stream()
 				.map(pieceEntity -> PieceType.getFactoryOfName(pieceEntity.getPieceType()).apply(
@@ -62,11 +67,6 @@ public class ChessRoomService {
 		final Set<Piece> pieces = createPieceSet(pieceEntities);
 		return StateType.getFactory(stateEntity.getState()).apply(
 				new Pieces(pieces));
-	}
-
-	private String createBoardHtml(final State state) {
-		final List<List<String>> board = Board.of(state.getSet()).getLists();
-		return BoardToHtml.of(board).getHtml();
 	}
 
 	@Transactional

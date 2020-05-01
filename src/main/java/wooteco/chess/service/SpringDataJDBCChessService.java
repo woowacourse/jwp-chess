@@ -27,10 +27,6 @@ public class SpringDataJDBCChessService {
     @Autowired
     private GameRepository gameRepository;
 
-    public void clearHistory() {
-        historyRepository.deleteAll();
-    }
-
     public ChessGameDto createGameBy(String gameName) {
         ChessGame chessGame = new ChessGame();
         Long gameId = save(gameName);
@@ -97,12 +93,18 @@ public class SpringDataJDBCChessService {
         MoveStatusDto moveStatusDto = new MoveStatusDto(NormalStatus.YES.isNormalStatus());
 
         if (chessGame.isKingDead()) {
+            updateCanContinueToFalse(id);
             moveStatusDto = new MoveStatusDto(NormalStatus.YES.isNormalStatus(), chessGame.getAliveKingColor());
         }
 
         insertHistory(id, movingPosition);
 
         return moveStatusDto;
+    }
+
+    private void updateCanContinueToFalse(Long id) {
+        Game game = gameRepository.findById(id).get(); // TODO: 2020/05/01 예외 처리 수정
+        gameRepository.save(new Game(game.getId(), game.getName(), false));
     }
 
     private void insertHistory(Long id, MovingPosition movingPosition) {

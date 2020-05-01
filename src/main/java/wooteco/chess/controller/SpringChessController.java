@@ -84,18 +84,10 @@ public class SpringChessController {
     }
 
     @PostMapping("/board/{id}")
-    public ModelAndView saveHistory(@PathVariable Long id, @RequestBody MovingPosition movingPosition) {
-        ModelAndView modelAndView = new ModelAndView();
-
+    @ResponseBody
+    public String saveHistory(@PathVariable Long id, @RequestBody MovingPosition movingPosition) {
         MoveStatusDto moveStatusDto = springDataJDBCChessService.move(id, movingPosition);
-        if (moveStatusDto.getWinner().isNone()) {
-            modelAndView.setViewName("chess");
-            return modelAndView;
-        }
-        modelAndView.setViewName("result");
-        modelAndView.addObject("winner", moveStatusDto.getWinner());
-        springDataJDBCChessService.clearHistory();
-        return modelAndView;
+        return JsonTransformer.toJson(moveStatusDto);
     }
 
     @GetMapping("/loading/{id}")
@@ -103,7 +95,14 @@ public class SpringChessController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("chess");
         modelAndView.addObject("normalStatus", NormalStatus.YES.isNormalStatus());
+        return modelAndView;
+    }
 
+    @GetMapping("/result/{winner}")
+    public ModelAndView showResult(@PathVariable String winner) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("result");
+        modelAndView.addObject("winner", winner);
         return modelAndView;
     }
 }

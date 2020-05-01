@@ -96,8 +96,10 @@ window.onload = function () {
   function chooseSecondPosition(position) {
     fetch(`http://localhost:8080/board/${pathName}/destination?destination=${position}&startPosition=${startPosition}`,
       {method: "GET"})
-      .then(res => res.json())
-      .then(async data => {
+      .then(function (response) {
+        return response.json();
+      })
+      .then(data => {
         if (data.normalStatus === false) {
           alert(data.exception);
           startPosition = null;
@@ -108,7 +110,7 @@ window.onload = function () {
         const destination = position;
         startPosition = null;
 
-        await fetch(`http://localhost:8080/board/${pathName}`, {
+        fetch(`http://localhost:8080/board/${pathName}`, {
           method: "POST",
           body: JSON.stringify({
             start: source,
@@ -116,7 +118,17 @@ window.onload = function () {
           }),
           headers: {"Content-Type": "application/json"}
         })
-          .then(window.location.href = `/loading/${pathName}`);
+          .then(function (winnerResponse) {
+            return winnerResponse.json();
+          })
+          .then(winnerData => {
+            console.log(winnerData);
+            if (winnerData["winner"] !== "NONE") {
+              let winnerTeam = winnerData["winner"];
+              return location.href = `/result/${winnerTeam}`;
+            }
+            location.href= `/loading/${pathName}`;
+          })
       });
   }
 

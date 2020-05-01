@@ -3,17 +3,17 @@ package wooteco.chess.dto;
 import java.util.Objects;
 
 public class RoomDto {
-    public static final int DEFAULT_ROOM_ID = -1;
-    public static final int DEFAULT_USER_ID = -1;
+    public static final Long DEFAULT_ROOM_ID = -1L;
+    public static final Long DEFAULT_USER_ID = -1L;
     public static final String DEFAULT_NAME = "default";
 
-    private int roomId;
+    private Long roomId;
     private String name;
-    private int blackUserId;
-    private int whiteUserId;
+    private Long blackUserId;
+    private Long whiteUserId;
     private boolean isEnd;
 
-    public RoomDto(int roomId, int blackUserId, int whiteUserId, boolean isEnd, String name) {
+    public RoomDto(Long roomId, Long blackUserId, Long whiteUserId, boolean isEnd, String name) {
         this.roomId = roomId;
         this.blackUserId = blackUserId;
         this.whiteUserId = whiteUserId;
@@ -25,11 +25,11 @@ public class RoomDto {
         this(DEFAULT_ROOM_ID, DEFAULT_USER_ID, DEFAULT_USER_ID, false, DEFAULT_NAME);
     }
 
-    public int getRoomId() {
+    public Long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(int roomId) {
+    public void setRoomId(Long roomId) {
         this.roomId = roomId;
     }
 
@@ -41,19 +41,19 @@ public class RoomDto {
         this.name = name;
     }
 
-    public int getBlackUserId() {
+    public Long getBlackUserId() {
         return blackUserId;
     }
 
-    public void setBlackUserId(int blackUserId) {
+    public void setBlackUserId(Long blackUserId) {
         this.blackUserId = blackUserId;
     }
 
-    public int getWhiteUserId() {
+    public Long getWhiteUserId() {
         return whiteUserId;
     }
 
-    public void setWhiteUserId(int whiteUserId) {
+    public void setWhiteUserId(Long whiteUserId) {
         this.whiteUserId = whiteUserId;
     }
 

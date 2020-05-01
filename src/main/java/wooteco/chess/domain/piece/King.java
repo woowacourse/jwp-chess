@@ -5,6 +5,7 @@ import wooteco.chess.domain.coordinate.Vector;
 public class King extends Piece {
 
     private static final int KING_SCORE = 0;
+    private static final int KING_MOVE_RANGE = 1;
 
     public King(final Team team) {
         super(team, KING_SCORE);
@@ -15,7 +16,7 @@ public class King extends Piece {
         if (targetPiece.isSameTeam(this.team)) {
             return false;
         }
-        return vector.isRangeUnderAbsolute(1);
+        return vector.isRangeUnderAbsolute(KING_MOVE_RANGE);
     }
 
     @Override

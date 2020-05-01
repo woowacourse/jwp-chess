@@ -1,107 +1,69 @@
 package wooteco.chess.service;
 
-import wooteco.chess.dto.RoomDto;
-import wooteco.chess.repository.CachedRoomRepository;
+import org.springframework.stereotype.Service;
+import wooteco.chess.dto.ResponseDto;
+import wooteco.chess.entity.Room;
 import wooteco.chess.repository.RoomRepository;
-import wooteco.chess.result.Result;
+import wooteco.chess.support.ChessResponseCode;
 
 import java.sql.SQLException;
+import java.util.Objects;
 
+@Service
 public class RoomService {
-    private static final int DEFAULT_VALUE = -1;
+    private static final Long DEFAULT_VALUE = -1L;
 
-    private RoomRepository roomRepository = new CachedRoomRepository();
+    private RoomRepository roomRepository;
 
-    public Result create(RoomDto roomDto) {
-        try {
-            return roomRepository.create(roomDto);
-        } catch (SQLException e) {
-            return new Result(false, e.getMessage());
-        }
+    public RoomService(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
     }
 
-    public Result status(int roomId) {
-        try {
-            return roomRepository.findById(roomId);
-        } catch (SQLException e) {
-            return new Result(false, e.getMessage());
-        }
+    public ResponseDto create(Room room){
+        return ResponseDto.success(roomRepository.save(room));
     }
 
-    public Result join(String roomName, int userId) {
-        Result result;
-        try {
-            result = roomRepository.findByName(roomName);
-        } catch (SQLException e) {
-            return new Result(false, e.getMessage());
+    public ResponseDto status(Long roomId) throws SQLException {
+        return ResponseDto.success(roomRepository.findById(roomId));
+    }
+
+    public ResponseDto join(String roomName, Long userId){
+        Room room = roomRepository.findByName(roomName)
+                .orElse(null);
+
+        if (Objects.isNull(room)) {
+            return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
         }
 
-        if (!result.isSuccess()) {
-            return new Result(false, "Can not find room. Room name : " + roomName);
-        }
-        RoomDto roomDto = (RoomDto) result.getObject();
-
-        if (roomDto.getWhiteUserId() == DEFAULT_VALUE) {
-            roomDto.setWhiteUserId(userId);
-        } else if (roomDto.getBlackUserId() == DEFAULT_VALUE) {
-            roomDto.setBlackUserId(userId);
+        if (room.getWhiteUserId() == DEFAULT_VALUE) {
+            room.setWhiteUserId(userId);
+        } else if (room.getBlackUserId() == DEFAULT_VALUE) {
+            room.setBlackUserId(userId);
         } else {
-            return new Result(false, "Room is full");
+            return ResponseDto.fail(ChessResponseCode.ROOM_IS_FULL);
         }
 
-        try {
-            roomRepository.update(roomDto);
-        } catch (SQLException e) {
-            return new Result(false, e.getMessage());
-        }
-
-        return new Result(true, roomDto.getRoomId());
+        roomRepository.save(room);
+        return ResponseDto.success();
     }
 
-    public Result exit(int roomId, int userId) {
-        Result result;
-        try {
-            result = roomRepository.findById(roomId);
-        } catch (SQLException e) {
-            return new Result(false, e.getMessage());
+    public ResponseDto exit(Long roomId, Long userId) {
+        Room room = roomRepository.findById(roomId)
+                .orElse(null);
+
+        if (Objects.isNull(room)) {
+            return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
         }
 
-        if (!result.isSuccess()) {
-            return new Result(false, "Can not find room. Room id : " + roomId);
-        }
-        RoomDto roomDto = (RoomDto) result.getObject();
-
-        if (roomDto.getWhiteUserId() == userId) {
-            roomDto.setWhiteUserId(DEFAULT_VALUE);
-        } else if (roomDto.getBlackUserId() == userId) {
-            roomDto.setBlackUserId(DEFAULT_VALUE);
+        if (room.getWhiteUserId() == userId) {
+            room.setWhiteUserId(DEFAULT_VALUE);
+        } else if (room.getBlackUserId() == userId) {
+            room.setBlackUserId(DEFAULT_VALUE);
         } else {
-            return new Result(false, "id : " + userId + "is not in this room.");
+            return ResponseDto.fail(ChessResponseCode.BAD_REQUEST);
         }
 
-        try {
-            return roomRepository.update(roomDto);
-        } catch (SQLException e) {
-            return new Result(false, e.getMessage());
-        }
-    }
-
-    public Result quit(int roomId) {
-        Result result;
-        try {
-            result = roomRepository.findById(roomId);
-        } catch (SQLException e) {
-            return new Result(false, e.getMessage());
-        }
-
-        if (!result.isSuccess()) {
-            return new Result(false, "Can not find room. Room id : " + roomId);
-        }
-
-        try {
-            return roomRepository.delete(roomId);
-        } catch (SQLException e) {
-            return new Result(false, e.getMessage());
-        }
+        roomRepository.save(room);
+        return ResponseDto.success();
     }
 }

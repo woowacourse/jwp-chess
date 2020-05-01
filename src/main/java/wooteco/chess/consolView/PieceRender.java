@@ -1,9 +1,7 @@
 package wooteco.chess.consolView;
 
-import wooteco.chess.domain.coordinate.File;
 import wooteco.chess.domain.piece.*;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

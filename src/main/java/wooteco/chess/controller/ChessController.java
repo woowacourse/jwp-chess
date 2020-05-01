@@ -1,51 +1,46 @@
 package wooteco.chess.controller;
 
-import com.google.gson.Gson;
-import spark.Request;
-import spark.Response;
-import wooteco.chess.result.Result;
-import wooteco.chess.service.ChessService;
+import org.springframework.web.bind.annotation.*;
 import wooteco.chess.domain.coordinate.Coordinate;
 import wooteco.chess.domain.piece.Team;
-import wooteco.chess.dto.MoveDto;
+import wooteco.chess.dto.ChessResponseDto;
+import wooteco.chess.dto.ResponseDto;
+import wooteco.chess.entity.Move;
+import wooteco.chess.service.ChessService;
+import wooteco.chess.utils.IdGenerator;
 
+import java.util.List;
+
+@RestController
+@RequestMapping("/chess")
 public class ChessController {
-    private ChessService chessService = new ChessService();
+    private ChessService chessService;
 
-    public Object move(Request request, Response response) {
-        int roomId = Integer.parseInt(request.queryParams("roomId"));
-        Coordinate source = Coordinate.of(request.queryParams("source"));
-        Coordinate target = Coordinate.of(request.queryParams("target"));
-        Result result = chessService.move(new MoveDto(roomId, source, target));
-        if (result.isSuccess()) {
-            return result.getObject();
-        }
-        response.body(result.getObject().toString());
-        response.status(409);
-        return response;
+    public ChessController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
-    public Object getMovableWay(Request request, Response response) {
-        int roomId = Integer.parseInt(request.queryParams("roomId"));
-        Team team = Team.valueOf(request.queryParams("team"));
-        Coordinate coordinate = Coordinate.of(request.queryParams("coordinate"));
-        Result result = chessService.getMovableWay(roomId, team, coordinate);
-        if (result.isSuccess()) {
-            return new Gson().toJson(result.getObject());
-        }
-        response.body(result.getObject().toString());
-        response.status(409);
-        return response;
+    @PostMapping("/move")
+    @ResponseBody
+    public ResponseDto move(@RequestParam Long roomId,
+                            @RequestParam String source,
+                            @RequestParam String target) throws Exception {
+        return chessService.move(new Move(IdGenerator.generateMoveId(),
+                roomId, Coordinate.of(source), Coordinate.of(target)));
     }
 
-    public Object renew(Request request, Response response) {
-        int roomId = Integer.parseInt(request.queryParams("roomId"));
-        Result result = chessService.renew(roomId);
-        if (result.isSuccess()) {
-            return new Gson().toJson(result.getObject());
-        }
-        response.body(result.getObject().toString());
-        response.status(409);
-        return response;
+    @GetMapping("/way")
+    @ResponseBody
+    public ResponseDto<List<String>> way(@RequestParam Long roomId,
+                                         @RequestParam String team,
+                                         @RequestParam String coordinate) throws Exception{
+        return chessService.getMovableWay(roomId, Team.valueOf(team), Coordinate.of(coordinate));
+    }
+
+    @GetMapping("/renew/{roomId}")
+    @ResponseBody
+    public ResponseDto<ChessResponseDto> renew(@PathVariable Long roomId) throws Exception {
+        return chessService.renew(roomId);
     }
 }
+

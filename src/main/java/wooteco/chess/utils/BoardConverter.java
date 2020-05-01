@@ -24,7 +24,7 @@ public class BoardConverter {
         return sb.toString();
     }
 
-    public static Board convertToBoard(String boardInformation, Team turn) {
+    public static Board convertToBoard(String boardInformation, boolean isWhite) {
         Map<Position, Piece> pieces = new HashMap<>();
         char[] symbols = boardInformation.toCharArray();
         int index = 0;
@@ -33,6 +33,6 @@ public class BoardConverter {
                 pieces.put(Position.of(file, rank), Piece.of(symbols[index++]));
             }
         }
-        return new Board(pieces, turn);
+        return new Board(pieces, Team.of(isWhite));
     }
 }

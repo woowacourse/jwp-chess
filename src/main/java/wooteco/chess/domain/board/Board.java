@@ -38,7 +38,6 @@ public class Board {
         }
         pieceToBeMoved.throwExceptionIfNotMovable(this, source, target);
         move(source, target);
-        pieceToBeMoved.updateHasMoved();
         this.turn = turn.getOppositeTeam();
     }
 
@@ -100,10 +99,6 @@ public class Board {
         return !pieces.containsValue(Piece.of('k')) || !pieces.containsValue(Piece.of('K'));
     }
 
-    public boolean isNotFinished() {
-        return !isFinished();
-    }
-
     public boolean isNotTurnOf(Position position) {
         return getTeamOf(position).isNotSame(this.turn);
     }
@@ -128,6 +123,10 @@ public class Board {
 
     private boolean isWhite(Position position) {
         return pieces.get(position).isWhite();
+    }
+
+    public boolean isTurnWhite() {
+        return turn.isWhite();
     }
 
     public Map<Position, Piece> getPieces() {

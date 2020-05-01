@@ -8,27 +8,10 @@ import java.util.Objects;
 public class Piece {
     private final Team team;
     private final PieceType pieceType;
-    private boolean hasMoved;
-
-    public Piece(Team team, PieceType pieceType, boolean hasMoved) {
-        this.team = team;
-        this.pieceType = pieceType;
-        this.hasMoved = hasMoved;
-    }
 
     public Piece(Team team, PieceType pieceType) {
         this.team = team;
         this.pieceType = pieceType;
-    }
-
-    public static Piece of(char symbol, boolean hasMoved) {
-        if (symbol == '.') {
-            return new Piece(Team.NONE, PieceType.NONE);
-        }
-        if (Character.isUpperCase(symbol)) {
-            return new Piece(Team.BLACK, PieceType.of(symbol), hasMoved);
-        }
-        return new Piece(Team.WHITE, PieceType.of(Character.toUpperCase(symbol)), hasMoved);
     }
 
     public static Piece of(char symbol) {
@@ -43,10 +26,6 @@ public class Piece {
 
     public void throwExceptionIfNotMovable(Board board, Position source, Position target) {
         this.pieceType.validate(board, source, target);
-    }
-
-    public void updateHasMoved() {
-        this.hasMoved = true;
     }
 
     public boolean isSameTeam(Piece piece) {
@@ -65,10 +44,6 @@ public class Piece {
         return this.team == Team.BLACK;
     }
 
-    public boolean isKing() {
-        return this.pieceType.isKing();
-    }
-
     public boolean isPawn() {
         return this.pieceType.isPawn();
     }
@@ -77,27 +52,16 @@ public class Piece {
         return this.pieceType.isNone();
     }
 
-    public boolean isNotEmpty() {
-        return !isEmpty();
-    }
-
     public Team getTeam() {
         return this.team;
     }
 
+    public String getTeamSymbol() {
+        return Character.toString(team.getSymbol());
+    }
+
     public char getSymbol() {
         return team.isBlack() ? pieceType.getUpperCaseInitialCharacter() : pieceType.getLowerCaseInitialCharacter();
-    }
-
-    public String getKey() {
-        if (isEmpty()) {
-            return ".";
-        }
-        return Character.toString(team.getSymbol()) + getSymbol();
-    }
-
-    public boolean getHasMoved() {
-        return this.hasMoved;
     }
 
     public double getScore() {
@@ -109,13 +73,12 @@ public class Piece {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Piece piece = (Piece) o;
-        return hasMoved == piece.hasMoved &&
-                team == piece.team &&
+        return team == piece.team &&
                 pieceType == piece.pieceType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(team, pieceType, hasMoved);
+        return Objects.hash(team, pieceType);
     }
 }

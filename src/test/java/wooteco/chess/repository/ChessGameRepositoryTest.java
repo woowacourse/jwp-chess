@@ -1,47 +1,44 @@
 package wooteco.chess.repository;
 
-import static org.assertj.core.api.Assertions.*;
-
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
 import wooteco.chess.entity.ChessGame;
+import wooteco.chess.exceptions.RoomNotFoundException;
 
-@ActiveProfiles("test")
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+
 @SpringBootTest
+@ActiveProfiles("test")
 class ChessGameRepositoryTest {
 
 	@Autowired
 	private ChessGameRepository chessGameRepository;
 
 	@Test
-	@DisplayName("Create 테스트")
-	public void createTest() {
-		chessGameRepository.save(
-			new ChessGame("rnbqkbnrppp.pppp....................p...........PPPP.PPPRNBQKBNR", "WHITE", 123456));
-	}
-
-	@Test
 	public void CrudTest() {
 		chessGameRepository.save(
-			new ChessGame("rnbqkbnrppp.pppp....................p...........PPPP.PPPRNBQKBNR", "WHITE", 123456));
+				new ChessGame("rnbqkbnrppp.pppp....................p...........PPPP.PPPRNBQKBNR", "WHITE", 123456));
 
-		ChessGame game = chessGameRepository.findChessGameByRoomNo(123456);
+		ChessGame game = chessGameRepository.findChessGameByRoomNo(123456)
+				.orElseThrow(RoomNotFoundException::new);
 
 		assertThat(game.getBoard()).isEqualTo("rnbqkbnrppp.pppp....................p...........PPPP.PPPRNBQKBNR");
 
-		chessGameRepository.updateChessGame("................................................PPPP.PPPRNBQKBNR", "BLACK",
-			123456);
+		game.setBoard("................................................PPPP.PPPRNBQKBNR");
+		game.setTurn("BLACK");
+		chessGameRepository.save(game);
 
-		game = chessGameRepository.findChessGameByRoomNo(123456);
+		game = chessGameRepository.findChessGameByRoomNo(123456)
+				.orElseThrow(RoomNotFoundException::new);
 		assertThat(game.getBoard()).isEqualTo("................................................PPPP.PPPRNBQKBNR");
 
-		chessGameRepository.deleteByRoomNo(123456);
+		chessGameRepository.delete(game);
 
-		game = chessGameRepository.findChessGameByRoomNo(123456);
-		assertThat(game).isNull();
+		assertThat(chessGameRepository.findChessGameByRoomNo(123456)).isEqualTo(Optional.empty());
 	}
 }

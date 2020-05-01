@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.domain.room.Room;
 import chess.dto.RoomDto;
 import chess.repository.exceptions.DaoNoneSelectedException;
 import chess.entity.RoomEntity;
@@ -32,7 +33,9 @@ public class ChessRoomsService {
 	}
 
 	public void addRoomByRoomName(final String roomName) {
-		roomRepository.saveByRoomName(roomName);
+		Room room = new Room(roomName);
+		RoomEntity roomEntity = new RoomEntity(room.getName());
+		roomRepository.save(roomEntity);
 	}
 
 	public void deleteRoomByRoomName(final String roomName) {

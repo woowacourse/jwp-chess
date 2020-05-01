@@ -38,7 +38,7 @@ public class SpringRoomController {
 	}
 
 	@PostMapping("/{room_id}")
-	private String command(
+	public String command(
 			@PathVariable("room_id") final int roomId,
 			@RequestParam("command") final String command) {
 

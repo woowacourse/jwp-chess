@@ -11,6 +11,7 @@ import chess.model.dto.RoomsDto;
 import chess.model.dto.SourceDto;
 import chess.model.dto.UserNameDto;
 import chess.model.dto.UserNamesDto;
+import chess.model.repository.ChessGameEntity;
 import chess.service.ChessGameService;
 import chess.service.ResultService;
 import chess.service.RoomService;
@@ -54,7 +55,8 @@ public class ApiWebController {
     @PostMapping("/deleteRoom")
     public RoomsDto deleteRoom(@RequestBody DeleteRoomDto deleteRoomDto) {
         roomService.deleteRoom(deleteRoomDto);
-        chessGameService.closeGamesOf(deleteRoomDto.getRoomId());
+        chessGameService.findProceedGameId(deleteRoomDto.getRoomId())
+            .ifPresent(chessGameService::closeGame);
 
         return roomService.getUsedRooms();
     }
@@ -69,7 +71,9 @@ public class ApiWebController {
 
     @PostMapping("/game/move")
     public ChessGameDto move(@RequestBody MoveDto MoveDto) {
-        return chessGameService.move(MoveDto);
+        ChessGameDto chessGameDto = chessGameService.move(MoveDto);
+        resultService.updateResult(chessGameDto);
+        return chessGameDto;
     }
 
     @PostMapping("/game/path")
@@ -87,7 +91,9 @@ public class ApiWebController {
         JsonObject body = JsonParser.parseString(req).getAsJsonObject();
         Integer gameId = GSON.fromJson(body.get("gameId"), Integer.class);
 
-        return chessGameService.endGame(gameId);
+        ChessGameEntity chessGameEntity = chessGameService.closeGame(gameId);
+        resultService.setGameResult(chessGameEntity);
+        return new ChessGameDto(chessGameEntity.makeTeamScore(), chessGameEntity.makeUserNames());
     }
 
     @GetMapping("/result/viewUsers")
@@ -95,7 +101,7 @@ public class ApiWebController {
         return resultService.getUsers();
     }
 
-    @GetMapping("/result/userResult")
+    @PostMapping("/result/userResult")
     public GameResultDto userResult(@RequestBody UserNameDto userNameDto) {
         return resultService.getResult(userNameDto);
     }

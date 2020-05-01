@@ -1,13 +1,13 @@
 package wooteco.chess.domain.piece.implementation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import wooteco.chess.domain.board.BoardSituation;
 import wooteco.chess.domain.direction.MovingDirection;
 import wooteco.chess.domain.piece.MoveStrategy;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class MoveByDirectionStrategy implements MoveStrategy {
 
@@ -28,7 +28,8 @@ public abstract class MoveByDirectionStrategy implements MoveStrategy {
         return positions;
     }
 
-    private List<Position> getMovablePositionsByDirection(MovingDirection direction, Position source, BoardSituation boardSituation) {
+    private List<Position> getMovablePositionsByDirection(MovingDirection direction, Position source,
+        BoardSituation boardSituation) {
         List<Position> positions = new ArrayList<>();
         Position startPosition = source;
         while (startPosition.canMoveBy(direction)) {

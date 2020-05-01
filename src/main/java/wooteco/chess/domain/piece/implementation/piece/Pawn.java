@@ -1,5 +1,10 @@
 package wooteco.chess.domain.piece.implementation.piece;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+
 import wooteco.chess.domain.board.BoardSituation;
 import wooteco.chess.domain.direction.MovingDirection;
 import wooteco.chess.domain.piece.Piece;
@@ -9,11 +14,6 @@ import wooteco.chess.domain.piece.implementation.Strategy.PawnStrategy;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.position.Rank;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
 
 public class Pawn extends Piece {
 
@@ -78,13 +78,14 @@ public class Pawn extends Piece {
     private void moveOneStepMore(BoardSituation boardSituation, List<Position> positions) {
         MovingDirection movingDirection = MOVING_DIRECTION_BY_TEAM.get(team);
         Position twoStepMovedPosition = position.moveByDirection(movingDirection)
-                .moveByDirection(movingDirection);
+            .moveByDirection(movingDirection);
         if (boardSituation.canMove(twoStepMovedPosition)) {
             positions.add(twoStepMovedPosition);
         }
     }
 
-    private void canAttackBy(MovingDirection attackDirection, BoardSituation boardSituation, List<Position> attackPositions) {
+    private void canAttackBy(MovingDirection attackDirection, BoardSituation boardSituation,
+        List<Position> attackPositions) {
         Position startPosition = position;
         if (startPosition.canMoveBy(attackDirection)) {
             startPosition = startPosition.moveByDirection(attackDirection);

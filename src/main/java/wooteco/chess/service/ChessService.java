@@ -1,42 +1,41 @@
 package wooteco.chess.service;
 
-import org.springframework.stereotype.Service;
-import wooteco.chess.controller.dto.MoveRequestDto;
-import wooteco.chess.controller.dto.ResponseDto;
-import wooteco.chess.dao.ChessDAO;
-import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.board.initializer.AutomatedBoardInitializer;
-import wooteco.chess.domain.game.ChessGame;
-import wooteco.chess.domain.game.Turn;
-import wooteco.chess.domain.player.Team;
-import wooteco.chess.domain.position.Position;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import wooteco.chess.controller.dto.MoveRequestDto;
+import wooteco.chess.controller.dto.ResponseDto;
+import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.initializer.AutomatedBoardInitializer;
+import wooteco.chess.domain.game.ChessGame;
+import wooteco.chess.domain.player.Team;
+import wooteco.chess.domain.position.Position;
+import wooteco.chess.repository.ChessGameTable;
+import wooteco.chess.repository.ChessGameTableRepository;
 
 @Service
 public class ChessService {
 
-    private ChessDAO chessDAO;
+    private ChessGameTableRepository chessGameRepository;
     private Map<Long, ChessGame> chessGames = new HashMap<>();
 
-    public ChessService(ChessDAO chessDAO) {
-        this.chessDAO = chessDAO;
+    public ChessService(ChessGameTableRepository chessGameRepository) {
+        this.chessGameRepository = chessGameRepository;
     }
 
     public Long createGame() {
-        ChessGame chessGame = ChessGame.of(Board.of(new AutomatedBoardInitializer()), Turn.from(Team.WHITE));
-        Long id = chessDAO.createChessGame(chessGame);
-        chessGames.put(id, chessGame);
-        return id;
+        ChessGame chessGame = ChessGame.of(Board.of(new AutomatedBoardInitializer()), Team.WHITE);
+        return chessGameRepository.save(ChessGameTable.createForInsert(chessGame)).getId();
     }
 
     public void restart(final Long id) {
-        ChessGame chessGame = ChessGame.of(Board.of(new AutomatedBoardInitializer()), Turn.from(Team.WHITE));
+        loadIfNotExisting(id);
+        ChessGame chessGame = ChessGame.of(id, Board.of(new AutomatedBoardInitializer()), Team.WHITE);
         chessGames.put(id, chessGame);
-        chessDAO.updateChessGame(id, chessGames.get(id));
+        chessGameRepository.save(ChessGameTable.createForUpdate(chessGame));
     }
 
     public void load(final Long id) {
@@ -45,12 +44,14 @@ public class ChessService {
     }
 
     public void save(final Long id) {
-        chessDAO.updateChessGame(id, chessGames.get(id));
-        chessGames.remove(id);
+        loadIfNotExisting(id);
+        ChessGame chessGame = chessGames.get(id);
+        chessGameRepository.save(ChessGameTable.createForUpdate(chessGame));
     }
 
     public void remove(final Long id) {
-        chessDAO.deleteGame(id);
+        loadIfNotExisting(id);
+        chessGameRepository.deleteById(id);
         chessGames.remove(id);
     }
 
@@ -73,10 +74,7 @@ public class ChessService {
     }
 
     public ResponseDto getResponseDto(final Long id) {
-        if (!chessGames.containsKey(id)) {
-            ChessGame chessGame = findChessGame(id);
-            return ResponseDto.of(chessGame);
-        }
+        loadIfNotExisting(id);
         return ResponseDto.of(chessGames.get(id));
     }
 
@@ -93,12 +91,13 @@ public class ChessService {
     }
 
     public List<Long> getRoomIds() {
-        return chessDAO.getRoomId();
+        return chessGameRepository.findRoomIds();
     }
 
     private ChessGame findChessGame(final Long id) {
-        Optional<ChessGame> chessGameOptional = chessDAO.findGameById(id);
-        return chessGameOptional.orElseThrow(() -> new IllegalArgumentException("잘못된 게임 번호입니다."));
+        return chessGameRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게임 번호입니다."))
+            .toChessGame();
     }
 
     private void loadIfNotExisting(final Long id) {

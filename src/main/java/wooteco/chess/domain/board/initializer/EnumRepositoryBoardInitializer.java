@@ -1,11 +1,11 @@
 package wooteco.chess.domain.board.initializer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import wooteco.chess.domain.board.BoardInitializer;
 import wooteco.chess.domain.piece.PieceState;
 import wooteco.chess.domain.position.Position;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class EnumRepositoryBoardInitializer implements BoardInitializer {
 

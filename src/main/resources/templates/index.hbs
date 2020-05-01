@@ -19,7 +19,7 @@
     </header>
     <nav>
         <div class="wrapper">
-        <div class="room-container">
+            <div class="room-container">
                 <div class="room-title"><h3>게임 목록</h3></div>
                 <div class="room-table-head">
                     <div class="room-id table-head">id</div>
@@ -27,16 +27,16 @@
                 </div>
                 <div class="room-table-body">
                     {{#chessRoomIds}}
-                    <a class="room-button" id="{{roomId}}">
-                        <div class="room">
-                            <div class="room-id">{{roomId}}</div>
-                            <div class="room-name">player1 vs player2</div>
-                        </div>
-                    </a>
+                        <a class="room-button" id="{{roomId}}">
+                            <div class="room">
+                                <div class="room-id">{{roomId}}</div>
+                                <div class="room-name">player1 vs player2</div>
+                            </div>
+                        </a>
                     {{/chessRoomIds}}
                 </div>
             </div>
-           <div class="box">
+            <div class="box">
                 <form>
                     <input type="button" onclick="chessStart()" value="&#xf197;" class="fa-3x">
                 </form>
@@ -62,12 +62,12 @@
 </div>
 <script>
     window.onload = () => {
-            document.querySelectorAll(".room-button").forEach(element => {
-                element.addEventListener("click", event => {
-                    event.preventDefault();
-                    loadGame(element.id);
-                })
-            });
+        document.querySelectorAll(".room-button").forEach(element => {
+            element.addEventListener("click", event => {
+                event.preventDefault();
+                loadGame(element.id);
+            })
+        });
     }
 
     const loadGame = (id) => {

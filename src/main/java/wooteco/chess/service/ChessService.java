@@ -13,6 +13,7 @@ import wooteco.chess.controller.dto.ResponseDto;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.initializer.AutomatedBoardInitializer;
 import wooteco.chess.domain.game.ChessGame;
+import wooteco.chess.domain.game.Turn;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.repository.ChessGameTable;
@@ -29,15 +30,16 @@ public class ChessService {
     }
 
     public Long createGame() {
-        ChessGame chessGame = ChessGame.of(Board.of(new AutomatedBoardInitializer()), Team.WHITE);
+        ChessGame chessGame = ChessGame.of(Board.of(new AutomatedBoardInitializer()), Turn.from(Team.WHITE));
         return chessGameRepository.save(ChessGameTable.createForInsert(chessGame)).getId();
     }
 
     public void restart(final Long id) {
         loadIfNotExisting(id);
-        ChessGame chessGame = ChessGame.of(id, Board.of(new AutomatedBoardInitializer()), Team.WHITE);
-        chessGames.put(id, chessGame);
-        chessGameRepository.save(ChessGameTable.createForUpdate(chessGame));
+        ChessGame restartedChessGame = ChessGame.of(id, Board.of(new AutomatedBoardInitializer()),
+            Turn.from(Team.WHITE));
+        chessGames.put(id, restartedChessGame);
+        chessGameRepository.save(ChessGameTable.createForUpdate(restartedChessGame));
     }
 
     public void load(final Long id) {

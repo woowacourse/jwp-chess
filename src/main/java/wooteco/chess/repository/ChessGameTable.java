@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.game.ChessGame;
+import wooteco.chess.domain.game.Turn;
 import wooteco.chess.domain.piece.PieceState;
 import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.player.Team;
@@ -58,7 +59,7 @@ public class ChessGameTable {
                 table -> createPieceState(table.getPiece(), table.getPosition(), table.getTeam()))
             );
 
-        return ChessGame.of(id, Board.of(board), Team.valueOf(turn));
+        return ChessGame.of(id, Board.of(board), Turn.from(Team.valueOf(turn)));
     }
 
     private PieceState createPieceState(final String piece, final String position, final String team) {

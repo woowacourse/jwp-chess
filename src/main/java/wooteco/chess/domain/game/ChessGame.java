@@ -16,19 +16,19 @@ public class ChessGame {
 
     private Long id;
     private Board board;
-    private Team turn;
+    private Turn turn;
 
-    private ChessGame(final Long id, final Board board, final Team turn) {
+    private ChessGame(final Long id, final Board board, final Turn turn) {
         this.id = id;
         this.board = board;
         this.turn = turn;
     }
 
-    public static ChessGame of(final Board board, final Team turn) {
+    public static ChessGame of(final Board board, final Turn turn) {
         return new ChessGame(null, board, turn);
     }
 
-    public static ChessGame of(final Long id, final Board board, final Team turn) {
+    public static ChessGame of(final Long id, final Board board, final Turn turn) {
         return new ChessGame(id, board, turn);
     }
 
@@ -39,7 +39,7 @@ public class ChessGame {
     public void move(MoveParameter moveParameter) {
         if (!isEnd()) {
             board.move(moveParameter.getSource(), moveParameter.getTarget(), turn);
-            switchTurn();
+            turn.switchTurn();
             return;
         }
         throw new UnsupportedOperationException("게임이 종료 되었습니다.");
@@ -54,7 +54,7 @@ public class ChessGame {
     }
 
     public double getScore() {
-        return board.getScores(turn);
+        return board.getScores(turn.getTeam());
     }
 
     public Map<Team, Double> getStatus() {
@@ -66,7 +66,7 @@ public class ChessGame {
     }
 
     public Team getTurn() {
-        return turn;
+        return turn.getTeam();
     }
 
     public Team getWinner() {
@@ -81,9 +81,5 @@ public class ChessGame {
 
     public Long getId() {
         return id;
-    }
-
-    private void switchTurn() {
-        turn = turn.toggle();
     }
 }

@@ -17,7 +17,7 @@ public class PieceEntity {
 		this.name = name;
 	}
 
-	public static PieceEntity of(final String position, final String name) {
+	static PieceEntity of(final String position, final String name) {
 		return new PieceEntity(position, name);
 	}
 

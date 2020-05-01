@@ -83,7 +83,7 @@ public class SpringController {
 	private Map<String, Object> makeModel(Board board) {
 		Map<String, Object> model = new HashMap<>();
 		for (Piece piece : board.findAll()) {
-			model.put(piece.getPosition().getString(), piece.getName());
+			model.put(piece.getPosition(), piece.getName());
 		}
 		return model;
 	}

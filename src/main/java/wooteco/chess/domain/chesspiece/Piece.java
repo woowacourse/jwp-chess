@@ -57,8 +57,8 @@ public abstract class Piece {
 		positions.validateCanMovePath(findByPosition);
 	}
 
-	public Position getPosition() {
-		return position;
+	public String getPosition() {
+		return position.getString();
 	}
 
 	public abstract boolean isNotNeedCheckPath();

@@ -14,7 +14,7 @@ public class TurnEntity {
 		this.isWhiteTurn = isWhiteTurn;
 	}
 
-	public static TurnEntity of(final boolean isWhiteTurn) {
+	static TurnEntity of(final boolean isWhiteTurn) {
 		return new TurnEntity(isWhiteTurn);
 	}
 

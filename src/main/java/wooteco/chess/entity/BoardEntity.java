@@ -24,7 +24,7 @@ import wooteco.chess.domain.factory.PieceConverter;
 @Table("board")
 public class BoardEntity {
 	@Id
-	private Long id;
+	private final Long id;
 
 	private final Set<PieceEntity> pieces;
 	private final TurnEntity turn;
@@ -35,14 +35,14 @@ public class BoardEntity {
 		this.turn = turn;
 	}
 
-	public static BoardEntity of(final Set<PieceEntity> pieces, final TurnEntity turn) {
+	static BoardEntity of(final Set<PieceEntity> pieces, final TurnEntity turn) {
 		return new BoardEntity(null, pieces, turn);
 	}
 
 	public static BoardEntity from(Board board) {
 		Set<PieceEntity> pieces = new HashSet<>();
 		for (Piece piece : board.findAll()) {
-			String position = piece.getPosition().getString();
+			String position = piece.getPosition();
 			String name = piece.getName();
 			pieces.add(PieceEntity.of(position, name));
 		}
@@ -73,6 +73,10 @@ public class BoardEntity {
 			.filter(pieceEntity -> pieceEntity.isMathPosition(position))
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException(""));
+	}
+
+	BoardEntity withId(final Long id) {
+		return new BoardEntity(id, this.pieces, this.turn);
 	}
 
 	public Long getId() {

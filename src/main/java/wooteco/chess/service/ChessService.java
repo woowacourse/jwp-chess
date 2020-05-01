@@ -39,7 +39,6 @@ public class ChessService {
     }
 
     public void load(final Long id) {
-        loadIfNotExisting(id);
         ChessGame chessGame = findChessGame(id);
         chessGames.put(id, chessGame);
     }

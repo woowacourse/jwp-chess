@@ -29,15 +29,16 @@ public class SpringChessController {
         return render(model, "start.html");
     }
 
-    @GetMapping("/index")
-    public String start() {
+    @GetMapping("/index/{game_id}")
+    public String start(@PathVariable(name = "game_id") Long gameId) {
         Map<String, Object> model = new HashMap<>();
+        model.put("game_id", gameId);
         return render(model, "index.html");
     }
 
-    @GetMapping("/api/game")
-    public String resume() throws SQLException {
-        return GSON.toJson(chessService.resumeGame());
+    @GetMapping("/api/game/{game_id}")
+    public String load(@PathVariable(name = "game_id") Long gameId) throws SQLException {
+        return GSON.toJson(chessService.resumeGame(gameId));
     }
 
     @PostMapping("/api/game")

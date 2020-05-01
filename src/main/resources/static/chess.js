@@ -64,8 +64,7 @@ function drop(ev) {
     var now = ev.dataTransfer.getData("text");
     var des = ev.target.id;
     var game_id = document.getElementById("game_id").innerHTML;
-    // todo
-    move({"game_id": "1", "now": now.toString(), "des": des.toString()});
+    move({"game_id": game_id, "now": now.toString(), "des": des.toString()});
 }
 
 // function getChessGames() {
@@ -107,25 +106,12 @@ function postNewGame() {
             alert(error.toString());
         },
         success: function (data) {
-            $('.board').css('display', 'block');
-            // todo
-            $('#game_id').html("1");
+            const jsonData = JSON.parse(data);
 
-            $('.gamecell').html('');
-            $('.gamecell').attr('chess', 'null');
+            const game_id = jsonData.id;
 
-            $('.gamecell grey').html('');
-            $('.gamecell grey').attr('chess', 'null');
-
-            var jsonData = JSON.parse(data);
-
-            for (var i = 0; i < jsonData.boardDto.boardValue.length; i++) {
-                var piece = jsonData.boardDto.boardValue[i];
-                $('#' + piece.location).html(main.variables.pieces[piece.pieceName].img);
-                $('#' + piece.location).attr('chess', piece.pieceName);
-            }
-
-            $('#turn').html("It's White Turn!");
+            console.log(game_id);
+            window.location.href = "/index/" + game_id;
         }
     });
 }
@@ -197,16 +183,17 @@ function deleteChessGame() {
 }
 
 
-function resume() {
+function load() {
+    const gameId = document.getElementById("game_id").innerHTML;
+
     $.ajax({
-        url: "/api/game",
+        url: "/api/game/" + gameId,
         type: "get",
         success: function (data) {
             $('.board').css('display', 'block');
             $('.gamecell').html('');
             $('.gamecell').attr('chess', 'null');
-            // todo
-            $('#game_id').html(1);
+            $('#game_id').html(gameId);
 
             $('.gamecell grey').html('');
             $('.gamecell grey').attr('chess', 'null');
@@ -231,4 +218,7 @@ function resume() {
             alert(JSON.stringify(errorThrown));
         },
     });
+}
+
+function getChessBoard() {
 }

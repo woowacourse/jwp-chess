@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import spring.dto.*;
 import spring.entity.ChessGameEntity;
 import spring.entity.repository.ChessGameRepository;
-import spring.entity.repository.PieceRepository;
 import spring.vo.ChessGameVo;
 
 import java.sql.SQLException;
@@ -19,23 +18,19 @@ import java.util.Optional;
 
 @Service
 public class ChessService {
+    private final ChessGameRepository chessGameRepository;
 
-    private PieceRepository pieceRepository;
-    private ChessGameRepository chessGameRepository;
-
-    public ChessService(PieceRepository pieceRepository, ChessGameRepository chessGameRepository) {
-        this.pieceRepository = pieceRepository;
+    public ChessService(ChessGameRepository chessGameRepository) {
         this.chessGameRepository = chessGameRepository;
     }
 
-    public ChessGameDto makeChessBoard() {
+    public ChessGameIdDto makeChessBoard() {
         ChessGame chessGame = new ChessGame(ChessBoardCreater.create(), Team.WHITE);
 
+        // TODO : Save 확인 로직 필요!
         ChessGameEntity save = chessGameRepository.save(chessGame.toEntity());
 
-        ChessGame savedChessGame = save.toChessGame();
-
-        return new ChessGameDto(savedChessGame);
+        return new ChessGameIdDto(save.getId());
     }
 
     public ChessMoveDto move(long gameId, LocationDto nowDto, LocationDto destinationDto) throws SQLException {
@@ -65,8 +60,8 @@ public class ChessService {
         }
     }
 
-    public ChessGameDto resumeGame() throws SQLException {
-        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(1L);
+    public ChessGameDto resumeGame(Long gameId) throws SQLException {
+        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(gameId);
 
         ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(
                 () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));

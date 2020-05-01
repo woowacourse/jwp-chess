@@ -1,5 +1,12 @@
 package wooteco.chess.domain.board.initializer;
 
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiFunction;
+
 import wooteco.chess.domain.board.BoardInitializer;
 import wooteco.chess.domain.piece.PieceState;
 import wooteco.chess.domain.piece.implementation.piece.Bishop;
@@ -12,13 +19,6 @@ import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.File;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.position.Rank;
-
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiFunction;
 
 public class AutomatedBoardInitializer implements BoardInitializer {
 

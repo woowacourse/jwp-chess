@@ -1,11 +1,11 @@
 package wooteco.chess.domain.piece;
 
+import java.util.List;
+
 import wooteco.chess.domain.board.BoardSituation;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.exception.MovingException;
-
-import java.util.List;
 
 public abstract class Piece implements PieceState {
 

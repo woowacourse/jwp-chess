@@ -1,10 +1,10 @@
 package wooteco.chess.domain.position;
 
-import wooteco.chess.domain.direction.MovingDirection;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import wooteco.chess.domain.direction.MovingDirection;
 
 public class Position {
     private static final Map<String, Position> matcher = new HashMap<>();
@@ -46,7 +46,8 @@ public class Position {
     }
 
     public Position moveByDirection(MovingDirection movingDirection) {
-        return matcher.get(key(file.add(movingDirection.getFileDirection()), rank.add(movingDirection.getRankDirection())));
+        return matcher.get(
+            key(file.add(movingDirection.getFileDirection()), rank.add(movingDirection.getRankDirection())));
     }
 
     public int getFileDifference(Position target) {

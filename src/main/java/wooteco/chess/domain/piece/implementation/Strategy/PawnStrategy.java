@@ -1,16 +1,16 @@
 package wooteco.chess.domain.piece.implementation.Strategy;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+
 import wooteco.chess.domain.board.BoardSituation;
 import wooteco.chess.domain.direction.MovingDirection;
 import wooteco.chess.domain.piece.MoveStrategy;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.position.Rank;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
 
 public class PawnStrategy implements MoveStrategy {
 

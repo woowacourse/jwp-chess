@@ -1,9 +1,9 @@
 package wooteco.chess.domain.direction;
 
+import java.util.Arrays;
+
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.exception.MovingException;
-
-import java.util.Arrays;
 
 public enum MovingDirection {
     NORTH(0, 1),
@@ -35,9 +35,9 @@ public enum MovingDirection {
 
     public static MovingDirection getDirection(Position source, Position target) {
         return Arrays.stream(values())
-                .filter(direction -> direction.isSameDirection(source, target))
-                .findFirst()
-                .orElseThrow(MovingException::new);
+            .filter(direction -> direction.isSameDirection(source, target))
+            .findFirst()
+            .orElseThrow(MovingException::new);
     }
 
     private boolean isSameDirection(Position source, Position target) {
@@ -48,7 +48,7 @@ public enum MovingDirection {
     }
 
     private boolean isSameTangent(Double tangent) {
-        Double directionTangent = this.rankDirection / (double) this.fileDirection;
+        Double directionTangent = this.rankDirection / (double)this.fileDirection;
         return directionTangent.equals(tangent);
     }
 

@@ -1,5 +1,7 @@
 package wooteco.chess.domain.piece;
 
+import java.util.function.BiFunction;
+
 import wooteco.chess.domain.piece.implementation.piece.Bishop;
 import wooteco.chess.domain.piece.implementation.piece.King;
 import wooteco.chess.domain.piece.implementation.piece.Knight;
@@ -8,8 +10,6 @@ import wooteco.chess.domain.piece.implementation.piece.Queen;
 import wooteco.chess.domain.piece.implementation.piece.Rook;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
-
-import java.util.function.BiFunction;
 
 public enum PieceType {
 

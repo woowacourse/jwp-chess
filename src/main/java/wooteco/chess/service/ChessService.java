@@ -20,8 +20,8 @@ import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.GameDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.dto.MoveResponseDto;
-import wooteco.chess.dto.SavedGameBundleDto;
-import wooteco.chess.dto.SavedGameDto;
+import wooteco.chess.dto.RoomsDto;
+import wooteco.chess.dto.RoomDto;
 import wooteco.chess.repository.GameRepository;
 import wooteco.chess.util.ScoreConverter;
 import wooteco.chess.util.UnicodeConverter;
@@ -89,10 +89,10 @@ public class ChessService {
 	}
 
 	@Transactional(readOnly = true)
-	public SavedGameBundleDto findAllGames() {
-		List<Long> gameId = gameRepository.findAllById();
+	public RoomsDto findAllGames() {
+		List<Long> gameId = gameRepository.findAllId();
 		return gameId.stream()
-			.map(SavedGameDto::new)
-			.collect(collectingAndThen(toList(), SavedGameBundleDto::new));
+			.map(RoomDto::new)
+			.collect(collectingAndThen(toList(), RoomsDto::new));
 	}
 }

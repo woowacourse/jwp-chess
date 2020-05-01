@@ -33,7 +33,7 @@ import wooteco.chess.domain.entity.Game;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.dto.MoveResponseDto;
-import wooteco.chess.dto.SavedGameBundleDto;
+import wooteco.chess.dto.RoomsDto;
 import wooteco.chess.repository.GameRepository;
 import wooteco.chess.service.ChessService;
 
@@ -148,9 +148,9 @@ class ChessControllerTest {
 			.andExpect(status().isOk())
 			.andReturn();
 
-		SavedGameBundleDto savedGameBundleDto = (SavedGameBundleDto)mvcResult.getModelAndView().getModel().get("room");
+		RoomsDto roomsDto = (RoomsDto)mvcResult.getModelAndView().getModel().get("room");
 
 		//then
-		assertThat(savedGameBundleDto.getRoom()).hasSize(2);
+		assertThat(roomsDto.getRoom()).hasSize(2);
 	}
 }

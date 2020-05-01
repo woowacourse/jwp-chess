@@ -1,9 +1,9 @@
 package wooteco.chess.dto;
 
-public class SavedGameDto {
+public class RoomDto {
 	private Long id;
 
-	public SavedGameDto(Long id) {
+	public RoomDto(Long id) {
 		this.id = id;
 	}
 

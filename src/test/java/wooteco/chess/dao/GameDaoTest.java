@@ -3,12 +3,13 @@ package wooteco.chess.dao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-
 import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Color;
 import wooteco.chess.dto.GameManagerDto;
 import wooteco.chess.repository.ChessGameRepository;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJdbcTest
 public class GameDaoTest {
@@ -21,6 +22,8 @@ public class GameDaoTest {
 		GameManager gameManager = new GameManager(BoardFactory.create(), Color.WHITE);
 		GameManagerDto gameManagerDto = new GameManagerDto(gameManager);
 
-		gameDao.addGame(gameManagerDto);
+		gameDao.addGame(gameManagerDto, 123456);
+
+		assertThat(gameDao.findGame(123456)).isNotNull();
 	}
 }

@@ -1,11 +1,6 @@
 package wooteco.chess.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
-
 import wooteco.chess.dao.GameDao;
 import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.board.Board;
@@ -15,8 +10,16 @@ import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.GameManagerDto;
 import wooteco.chess.dto.PieceDto;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+
 @Service
 public class GameManagerService {
+	private static final int MIN_ROOM_NUMBER = 100_000;
+	private static final int MAX_ROOM_NUMBER = 999_999;
+
 	private final GameDao gameDao;
 
 	public GameManagerService(GameDao gameDao) {
@@ -33,8 +36,11 @@ public class GameManagerService {
 	public int newGame() {
 		Board board = BoardFactory.create();
 		GameManager gameManager = new GameManager(board, Color.WHITE);
-
-		return gameDao.addGame(new GameManagerDto(gameManager));
+		int roomNo = ThreadLocalRandom.current()
+				.ints(MIN_ROOM_NUMBER, MAX_ROOM_NUMBER)
+				.findFirst()
+				.orElse(0);
+		return gameDao.addGame(new GameManagerDto(gameManager), roomNo);
 	}
 
 	public void deleteGame(int roomNo) {

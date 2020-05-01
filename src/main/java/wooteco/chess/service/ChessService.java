@@ -1,15 +1,12 @@
 package wooteco.chess.service;
 
-import java.sql.SQLException;
+import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
-import wooteco.chess.dao.ChessGameDao;
-import wooteco.chess.domain.game.Board;
 import wooteco.chess.domain.game.ChessGame;
-import wooteco.chess.domain.game.Turn;
 import wooteco.chess.domain.game.exception.InvalidTurnException;
-import wooteco.chess.domain.game.state.Playing;
+import wooteco.chess.domain.game.state.Ready;
 import wooteco.chess.domain.piece.Position;
 import wooteco.chess.domain.piece.exception.NotMovableException;
 import wooteco.chess.dto.BoardDto;
@@ -17,60 +14,63 @@ import wooteco.chess.dto.ChessGameDto;
 import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.dto.StatusDto;
 import wooteco.chess.dto.TurnDto;
+import wooteco.chess.entity.ChessGameEntity;
+import wooteco.chess.repository.ChessGameRepository;
 
 @Service
 public class ChessService {
-    private final ChessGameDao chessGameDao;
+    public static final String GAME_NOT_EXIST_MESSAGE = "해당 게임이 존재하지 않습니다.";
+    private final ChessGameRepository chessGameRepository;
 
-    public ChessService(ChessGameDao chessGameDao) {
-        this.chessGameDao = chessGameDao;
+    public ChessService(ChessGameRepository chessGameRepository) {
+        this.chessGameRepository = chessGameRepository;
     }
 
-    public ResponseDto createChessRoom() throws SQLException {
-        ChessGame chessGame = chessGameDao.save();
+    public ResponseDto createChessRoom() {
+        ChessGame chessGame = ChessGame.of(new Ready());
         chessGame.start();
-        chessGameDao.update(chessGame);
-        return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
+        ChessGameEntity chessGameEntity = new ChessGameEntity(chessGame);
+        ChessGameEntity savedChessGameEntity = chessGameRepository.save(chessGameEntity);
+        return new ResponseDto(ResponseDto.SUCCESS, savedChessGameEntity.getId());
     }
 
-    public ResponseDto restartGame(int chessRoomId) {
-        try {
-            ChessGame chessGame = chessGameDao.findById(chessRoomId);
-            ChessGame newChessGame = new ChessGame(chessGame.getId(), new Playing(Board.create(), Turn.WHITE));
-            chessGameDao.update(newChessGame);
-            return new ResponseDto(ResponseDto.SUCCESS, chessGame.getId());
-        } catch (SQLException e) {
-            return new ResponseDto(ResponseDto.FAIL, "존재하지 않는 방 입니다.");
-        }
+    public ResponseDto restartGame(int chessGameId) {
+        ChessGame newChessGame = ChessGame.of(new Ready());
+        newChessGame.start();
+
+        ChessGameEntity chessGameEntity = chessGameRepository.findById(chessGameId)
+            .orElseThrow(() -> new NoSuchElementException(GAME_NOT_EXIST_MESSAGE));
+        chessGameEntity.update(newChessGame);
+        chessGameRepository.save(chessGameEntity);
+        return new ResponseDto(ResponseDto.SUCCESS, chessGameId);
+
     }
 
     public ResponseDto movePiece(int chessGameId, Position sourcePosition, Position targetPosition) {
-        ChessGame chessGame = null;
+        ChessGameEntity chessGameEntity = chessGameRepository.findById(chessGameId)
+            .orElseThrow(() -> new NoSuchElementException(GAME_NOT_EXIST_MESSAGE));
+        ChessGame chessGame = chessGameEntity.toModel();
         try {
-            chessGame = chessGameDao.findById(chessGameId);
             chessGame.move(sourcePosition, targetPosition);
-            chessGameDao.update(chessGame);
+            chessGameEntity.update(chessGame);
+            chessGameRepository.save(chessGameEntity);
             return responseChessGame(chessGame);
         } catch (NotMovableException | IllegalArgumentException e) {
             return new ResponseDto(ResponseDto.FAIL, "이동할 수 없는 위치입니다.");
         } catch (InvalidTurnException e) {
             return new ResponseDto(ResponseDto.FAIL, chessGame.turn().getColor() + "의 턴입니다.");
-        } catch (SQLException e) {
-            return new ResponseDto(ResponseDto.FAIL, "존재하지 않는 방 입니다.");
         }
     }
 
     public ResponseDto getChessGameById(int chessGameId) {
-        try {
-            ChessGame chessGame = chessGameDao.findById(chessGameId);
-            return responseChessGame(chessGame);
-        } catch (SQLException e) {
-            return new ResponseDto(ResponseDto.FAIL, "존재하지 않는 방 입니다.");
-        }
+        ChessGameEntity chessGameEntity = chessGameRepository.findById(chessGameId)
+            .orElseThrow(() -> new NoSuchElementException(GAME_NOT_EXIST_MESSAGE));
+        ChessGame chessGame = chessGameEntity.toModel();
+        return responseChessGame(chessGame);
     }
 
-    public ResponseDto getGameList() throws SQLException {
-        return new ResponseDto(ResponseDto.SUCCESS, chessGameDao.selectAll());
+    public ResponseDto getGameListId() {
+        return new ResponseDto(ResponseDto.SUCCESS, chessGameRepository.findAllGameId());
     }
 
     private static ResponseDto responseChessGame(ChessGame chessGame) {

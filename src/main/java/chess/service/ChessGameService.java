@@ -2,7 +2,7 @@ package chess.service;
 
 import chess.dto.repository.GameInfoDto;
 import chess.dto.repository.MovableAreasDto;
-import chess.dto.view.ChessGameDto;
+import chess.dto.view.GameInformationDto;
 import chess.dto.view.MoveDto;
 import chess.dto.view.PromotionTypeDto;
 import chess.model.domain.board.ChessGame;
@@ -82,7 +82,7 @@ public class ChessGameService {
             .forEach(name -> resultRepository.save(new ResultEntity(name)));
     }
 
-    public ChessGameDto move(Integer gameId, MoveDto moveDTO) {
+    public GameInformationDto move(Integer gameId, MoveDto moveDTO) {
         ChessGameEntity chessGameEntity = findChessGameEntity(gameId);
         GameInfoDto gameInfo = getGameInfo(chessGameEntity);
         ChessGame chessGame = combineChessGame(gameId, gameInfo.getTurn());
@@ -90,7 +90,7 @@ public class ChessGameService {
             = chessGame.move(new MoveInfo(moveDTO.getSource(), moveDTO.getTarget()));
         saveGameAndBoard(chessGameEntity, chessGame, moveState);
 
-        return new ChessGameDto(gameInfo.getUserNames())
+        return new GameInformationDto(gameInfo.getUserNames())
             .chessGame(chessGame)
             .moveState(moveState);
     }
@@ -123,10 +123,10 @@ public class ChessGameService {
         return combineChessGame(gameId, gameInfo.getTurn());
     }
 
-    public ChessGameDto loadChessGame(Integer gameId) {
+    public GameInformationDto loadChessGame(Integer gameId) {
         ChessGameEntity chessGameEntity = findChessGameEntity(gameId);
         GameInfoDto gameInfo = getGameInfo(chessGameEntity);
-        return new ChessGameDto(gameInfo.getUserNames())
+        return new GameInformationDto(gameInfo.getUserNames())
             .chessGame(combineChessGame(gameId, gameInfo.getTurn()));
     }
 
@@ -143,7 +143,7 @@ public class ChessGameService {
         return chessGameEntity;
     }
 
-    public ChessGameDto promote(Integer gameId, PromotionTypeDto promotionTypeDTO) {
+    public GameInformationDto promote(Integer gameId, PromotionTypeDto promotionTypeDTO) {
         ChessGameEntity chessGameEntity = findChessGameEntity(gameId);
         GameInfoDto gameInfo = getGameInfo(chessGameEntity);
         ChessGame chessGame = combineChessGame(gameId, gameInfo.getTurn());
@@ -151,7 +151,7 @@ public class ChessGameService {
 
         saveGameAndBoard(chessGameEntity, chessGame, moveState);
 
-        return new ChessGameDto(gameInfo.getUserNames())
+        return new GameInformationDto(gameInfo.getUserNames())
             .chessGame(chessGame)
             .moveState(moveState);
     }

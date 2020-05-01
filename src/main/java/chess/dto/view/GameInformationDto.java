@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class ChessGameDto {
+public class GameInformationDto {
 
     private static final List<String> EMPTY_PIECES;
 
@@ -36,14 +36,14 @@ public class ChessGameDto {
     private String whiteName = null;
     private String winner = null;
 
-    public ChessGameDto(Map<Team, String> userNames) {
+    public GameInformationDto(Map<Team, String> userNames) {
         if (!userNames.isEmpty()) {
             blackName(userNames.get(Team.BLACK));
             whiteName(userNames.get(Team.WHITE));
         }
     }
 
-    public ChessGameDto chessGame(ChessGame chessGame) {
+    public GameInformationDto chessGame(ChessGame chessGame) {
         pieces(chessGame.getChessBoard());
         turn(chessGame.getTurn());
         TeamScore teamScore = chessGame.deriveTeamScore();
@@ -51,7 +51,7 @@ public class ChessGameDto {
         return this;
     }
 
-    public ChessGameDto pieces(Map<Square, Piece> chessBoard) {
+    public GameInformationDto pieces(Map<Square, Piece> chessBoard) {
         List<String> pieces = new ArrayList<>();
         for (int rank = Square.MAX_FILE_AND_RANK_COUNT; rank >= Square.MIN_FILE_AND_RANK_COUNT;
             rank--) {
@@ -61,46 +61,46 @@ public class ChessGameDto {
         return this;
     }
 
-    public ChessGameDto turn(Team turn) {
+    public GameInformationDto turn(Team turn) {
         this.turn = turn.getName();
         return this;
     }
 
-    public ChessGameDto moveState(MoveState moveState) {
+    public GameInformationDto moveState(MoveState moveState) {
         this.state = moveState.getMessage();
         return this;
     }
 
-    public ChessGameDto teamScore(TeamScore teamScore) {
+    public GameInformationDto teamScore(TeamScore teamScore) {
         blackScore(teamScore.get(Team.BLACK));
         whiteScore(teamScore.get(Team.WHITE));
         winner(teamScore.getWinners());
         return this;
     }
 
-    public ChessGameDto winner(List<Team> winners) {
+    public GameInformationDto winner(List<Team> winners) {
         this.winner = winners.stream()
             .map(team -> makeUserNames().get(team))
             .collect(Collectors.joining(", "));
         return this;
     }
 
-    public ChessGameDto blackScore(Double blackScore) {
+    public GameInformationDto blackScore(Double blackScore) {
         this.blackScore = String.valueOf(blackScore);
         return this;
     }
 
-    public ChessGameDto whiteScore(Double whiteScore) {
+    public GameInformationDto whiteScore(Double whiteScore) {
         this.whiteScore = String.valueOf(whiteScore);
         return this;
     }
 
-    public ChessGameDto blackName(String blackName) {
+    public GameInformationDto blackName(String blackName) {
         this.blackName = blackName;
         return this;
     }
 
-    public ChessGameDto whiteName(String whiteName) {
+    public GameInformationDto whiteName(String whiteName) {
         this.whiteName = whiteName;
         return this;
     }

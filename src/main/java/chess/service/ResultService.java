@@ -2,7 +2,7 @@ package chess.service;
 
 import chess.dto.repository.GameResultDto;
 import chess.dto.repository.UserNamesDto;
-import chess.dto.view.ChessGameDto;
+import chess.dto.view.GameInformationDto;
 import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.Team;
 import chess.model.domain.state.MoveState;
@@ -40,10 +40,10 @@ public class ResultService {
         return new GameResultDto(resultEntity);
     }
 
-    public void updateResult(ChessGameDto chessGameDto) {
-        String state = chessGameDto.getState();
+    public void updateResult(GameInformationDto gameInformationDto) {
+        String state = gameInformationDto.getState();
         if (KING_CAPTURED.equals(state)) {
-            setGameResult(chessGameDto.makeTeamScore(), chessGameDto.makeUserNames());
+            setGameResult(gameInformationDto.makeTeamScore(), gameInformationDto.makeUserNames());
         }
     }
 

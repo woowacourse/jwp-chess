@@ -9,7 +9,7 @@ public class MoveCommand {
     private Long commandId;
     private String command;
 
-    public MoveCommand() {
+    protected MoveCommand() {
     }
 
     public MoveCommand(String command) {

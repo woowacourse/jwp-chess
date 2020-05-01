@@ -13,7 +13,7 @@ public class ChessRoom {
     private String roomName;
     private List<MoveCommand> moveCommand = new ArrayList<>();
 
-    public ChessRoom() {
+    protected ChessRoom() {
     }
 
     public ChessRoom(String roomName) {
@@ -22,10 +22,6 @@ public class ChessRoom {
 
     public void addCommand(MoveCommand command) {
         moveCommand.add(command);
-    }
-
-    public void removeCommand(MoveCommand commands) {
-        moveCommand.remove(commands);
     }
 
     public List<MoveCommand> getMoveCommand() {

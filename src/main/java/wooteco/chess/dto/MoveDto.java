@@ -1,5 +1,6 @@
 package wooteco.chess.dto;
 
+//TODO : roomId 제거
 public class MoveDto {
     private Long roomId;
     private String source;

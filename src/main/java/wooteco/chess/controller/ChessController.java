@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wooteco.chess.dto.MoveDto;
 import wooteco.chess.service.ChessService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 public class ChessController {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -52,6 +55,8 @@ public class ChessController {
     @ResponseBody
     public String move(@PathVariable("roomId") Long roomId, @RequestBody MoveDto moveDto) {
         chessService.move(moveDto.getSource(), moveDto.getTarget(), roomId);
-        return GSON.toJson(chessService.makeMoveResponse(moveDto.getRoomId()));
+        Map<String, Object> model = new HashMap<>(chessService.makeMoveResponse(roomId));
+        chessService.checkIfPlaying(roomId);
+        return GSON.toJson(model);
     }
 }

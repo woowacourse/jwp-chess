@@ -45,14 +45,15 @@ public class ChessService {
     }
 
     public void move(String source, String target, Long roomId) {
-        String command = String.join(MOVE_DELIMITER, new String[]{"move", source, target});
         ChessManager chessManager = chessGames.get(roomId);
-        Command.MOVE.apply(chessManager, command);
-        saveCommand(command, roomId);
+        chessManager.move(source, target);
+        saveCommand(source, target, roomId);
+    }
 
+    public void checkIfPlaying(Long roomId) {
+        ChessManager chessManager = chessGames.get(roomId);
         if (!chessManager.isPlaying()) {
-            initializeCommandsById(roomId);
-            chessManager.end();
+            deleteRoom(roomId);
         }
     }
 
@@ -60,8 +61,8 @@ public class ChessService {
         ChessManager chessManager = chessGames.get(roomId);
         chessManager.end();
     }
-
     //TODO: private으로 변경
+
     public Map<String, Object> makeStartResponse() {
         Map<String, Object> model = new HashMap<>();
         model.put("chessRooms", chessRoomRepository.findAll());
@@ -79,18 +80,19 @@ public class ChessService {
         return model;
     }
 
-    private void initializeCommandsById(Long roomId) {
-        chessRoomRepository.deleteById(roomId);
-    }
-
-    private void saveCommand(String command, Long roomId) {
+    private void saveCommand(String source, String target, Long roomId) {
+        String command = String.join(MOVE_DELIMITER, new String[]{"move", source, target});
         ChessRoom chessRoom = findRoom(roomId);
         chessRoom.addCommand(new MoveCommand(command));
-        ChessRoom savedRoom = chessRoomRepository.save(chessRoom);
+        chessRoomRepository.save(chessRoom);
     }
 
     private ChessRoom findRoom(Long roomId) {
         return chessRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+    }
+
+    private void deleteRoom(Long roomId) {
+        chessRoomRepository.deleteById(roomId);
     }
 }

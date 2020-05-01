@@ -40,7 +40,7 @@ class ChessRoomRepositoryTest {
         room2.addCommand(new MoveCommand("move a7 a5"));
         ChessRoom room3 = chessRoomRepository.save(room2);
 
-//        assertThat(room3.getMoveCommand().get(0).getCommand()).isEqualTo("move a2 a4");
-//        assertThat(room3.getMoveCommand().get(1).getCommand()).isEqualTo("move a7 a5");
+        assertThat(room3.getMoveCommand().get(0).getCommand()).isEqualTo("move a2 a4");
+        assertThat(room3.getMoveCommand().get(1).getCommand()).isEqualTo("move a7 a5");
     }
 }

@@ -1,8 +1,4 @@
-CREATE DATABASE chess_game DEFAULT CHARACTER SET utf8mb4 collate utf8mb4_general_ci;
-
-USE chess_game;
-
-CREATE TABLE chess_game
+CREATE TABLE IF NOT EXISTS chess_game_entity
 (
     id    INT        NOT NULL AUTO_INCREMENT,
     state VARCHAR(8) NOT NULL,

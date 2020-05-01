@@ -1,9 +1,9 @@
 package wooteco.chess.dto;
 
 public class ScoreDto {
-	private double score;
+	private Double score;
 
-	public ScoreDto(double score) {
+	public ScoreDto(Double score) {
 		this.score = score;
 	}
 
@@ -11,7 +11,7 @@ public class ScoreDto {
 		return score;
 	}
 
-	public void setScore(double score) {
+	public void setScore(Double score) {
 		this.score = score;
 	}
 }

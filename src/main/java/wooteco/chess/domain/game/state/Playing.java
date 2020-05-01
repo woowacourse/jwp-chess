@@ -43,7 +43,7 @@ public class Playing implements State {
 
 	private void validateTurn(Piece piece) {
 		if (piece.isDifferentColor(turn.getColor())) {
-			throw new InvalidTurnException();
+			throw new InvalidTurnException(turn);
 		}
 	}
 

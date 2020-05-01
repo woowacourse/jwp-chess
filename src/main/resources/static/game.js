@@ -21,42 +21,32 @@ chessCreateSubmitElement.onclick = () => {
     fetch('/rooms', {
         method: 'POST'
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.statusCode === 1) {
-                location.replace('/rooms/' + data.dto)
-            }
-        })
+    .then(response => response.json())
+    .then(id => {
+        location.replace('/rooms/' + id)
+    })
 }
 
 chessResultRestartElement.onclick = () => {
     fetch(`/rooms/${id}`, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.statusCode === 1) {
-                location.reload()
-            }
-        })
+    .then(response => {
+        if (response.ok) {
+            location.reload()
+            return
+        }
+        location.replace('/')
+    })
 }
 
 chessResultDeleteElement.onclick = () => {
     fetch(`/rooms/${id}`, {
         method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.statusCode === 1) {
-                location.replace('/')
-            }
-        })
+    .then(() => {
+        location.replace('/')
+    })
 }
 
 function showAlert(message, delay) {
@@ -78,12 +68,12 @@ function hide(element) {
 }
 
 fetch(`/rooms/${id}/board`)
-    .then(response => response.json())
-    .then(data => drawChessGame(data.dto));
+.then(response => response.json())
+.then(data => drawChessGame(data));
 
 fetch('/rooms')
-    .then(response => response.json())
-    .then(data => drawGameList(data.dto));
+.then(response => response.json())
+.then(data => drawGameList(data));
 
 function drawGameList(games) {
     games.forEach(id => chessGamesElement.innerHTML += templateGame(id));
@@ -123,20 +113,28 @@ function onDragOver(e) {
     e.preventDefault();
 }
 
-function onDrop(e) {
-    fetch(`/rooms/${id}/board`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `source=${e.dataTransfer.getData('src_pos')}&target=${e.target.parentElement.dataset.pos}`
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.statusCode === 1) {
-                drawChessGame(data.dto);
-                return;
-            }
-            showAlert(data.dto, 1000);
+async function onDrop(e) {
+    try {
+        const response = await fetch(`/rooms/${id}/board`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                source: e.dataTransfer.getData('src_pos'),
+                target: e.target.parentElement.dataset.pos
+            })
         })
+
+        const data = await response.json()
+
+        if (response.ok) {
+            drawChessGame(data)
+            return
+        }
+
+        showAlert(data.message, 1000)
+    } catch (e) {
+        alert(e.message)
+    }
 }

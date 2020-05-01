@@ -1,23 +1,34 @@
 package wooteco.chess.dto;
 
+import wooteco.chess.domain.game.ChessGame;
+import wooteco.chess.entity.ChessGameEntity;
+
 public class ChessGameDto {
 	private BoardDto boardDto;
 	private TurnDto turnDto;
 	private StatusDto statusDto;
-	private boolean finished;
+	private Boolean finished;
 
-	public ChessGameDto(BoardDto boardDto, TurnDto turnDto, StatusDto statusDto, boolean finished) {
+	private ChessGameDto(BoardDto boardDto, TurnDto turnDto, StatusDto statusDto, Boolean finished) {
 		this.boardDto = boardDto;
 		this.turnDto = turnDto;
 		this.statusDto = statusDto;
 		this.finished = finished;
 	}
 
-	public boolean getFinished() {
+	public static ChessGameDto from(ChessGameEntity chessGameEntity) {
+		ChessGame chessGame = chessGameEntity.toDomain();
+		BoardDto boardDto = BoardDto.from(chessGame.board());
+		TurnDto turnDto = TurnDto.from(chessGame.turn());
+		StatusDto statusDto = StatusDto.from(chessGame.status());
+		return new ChessGameDto(boardDto, turnDto, statusDto, chessGame.isFinished());
+	}
+
+	public Boolean getFinished() {
 		return finished;
 	}
 
-	public void setFinished(boolean finished) {
+	public void setFinished(Boolean finished) {
 		this.finished = finished;
 	}
 

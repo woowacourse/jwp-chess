@@ -1,20 +1,20 @@
 package wooteco.chess.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import wooteco.chess.dto.MoveRequestDto;
-import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.service.ChessGameService;
 
-@RequestMapping("/rooms")
 @RestController
+@RequestMapping("/rooms")
 public class ChessRestController {
 	private final ChessGameService chessGameService;
 
@@ -23,32 +23,34 @@ public class ChessRestController {
 	}
 
 	@GetMapping
-	public ResponseDto getRooms() {
-		return chessGameService.games();
+	public ResponseEntity getRooms() {
+		return ResponseEntity.ok(chessGameService.games());
 	}
 
 	@PostMapping
-	public ResponseDto createRoom() {
-		return chessGameService.create();
+	public ResponseEntity createRoom() {
+		return ResponseEntity.ok(chessGameService.create());
 	}
 
 	@PutMapping("/{id}")
-	public ResponseDto restartRoom(@PathVariable Long id) {
-		return chessGameService.restart(id);
+	public ResponseEntity restartRoom(@PathVariable Long id) {
+		chessGameService.restart(id);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseDto deleteRoom(@PathVariable Long id) {
-		return chessGameService.delete(id);
+	public ResponseEntity deleteRoom(@PathVariable Long id) {
+		chessGameService.delete(id);
+		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/{id}/board")
-	public ResponseDto getBoard(@PathVariable Long id) {
-		return chessGameService.find(id);
+	public ResponseEntity getBoard(@PathVariable Long id) {
+		return ResponseEntity.ok(chessGameService.find(id));
 	}
 
 	@PutMapping("/{id}/board")
-	public ResponseDto movePiece(@PathVariable Long id, @ModelAttribute MoveRequestDto moveRequestDto) {
-		return chessGameService.move(id, moveRequestDto.source(), moveRequestDto.target());
+	public ResponseEntity movePiece(@PathVariable Long id, @RequestBody MoveRequestDto moveRequestDto) {
+		return ResponseEntity.ok(chessGameService.move(id, moveRequestDto.getSource(), moveRequestDto.getTarget()));
 	}
 }

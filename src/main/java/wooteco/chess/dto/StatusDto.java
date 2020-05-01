@@ -1,6 +1,7 @@
 package wooteco.chess.dto;
 
 import wooteco.chess.domain.game.Score;
+import wooteco.chess.domain.game.Status;
 import wooteco.chess.domain.piece.Color;
 
 public class StatusDto {
@@ -8,10 +9,14 @@ public class StatusDto {
 	private Double black;
 	private String winner;
 
-	public StatusDto(Score white, Score black, Color winner) {
+	private StatusDto(Score white, Score black, Color winner) {
 		this.white = white.getValue();
 		this.black = black.getValue();
 		this.winner = winner.name();
+	}
+
+	public static StatusDto from(Status status) {
+		return new StatusDto(status.getWhiteScore(), status.getBlackScore(), status.getWinner());
 	}
 
 	public Double getWhite() {

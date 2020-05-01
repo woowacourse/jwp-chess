@@ -10,17 +10,23 @@ import wooteco.chess.domain.player.Player;
 
 @Table("game")
 public class GameEntity {
-    @Id private int id;
+    @Id private String id;
+    private String title;
     @Column("white") private int whiteId;
     @Column("black") private int blackId;
 
     public GameEntity(Game game) {
-        this.whiteId = game.getPlayerId(Side.WHITE);
-        this.blackId = game.getPlayerId(Side.BLACK);
+        title = game.getTitle();
+        whiteId = game.getPlayerId(Side.WHITE);
+        blackId = game.getPlayerId(Side.BLACK);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
+    }
+
+    public void setId(final String id) {
+        this.id = id;
     }
 
     public int getWhiteId() {
@@ -31,10 +37,14 @@ public class GameEntity {
         return blackId;
     }
 
-    public Game toModel(Player white, Player black) {
-        return new Game(id, white, black);
+    public String getTitle() {
+        return title;
     }
 
-    private GameEntity() {
+    public Game toModel(Player white, Player black) {
+        return new Game(id, title, white, black);
+    }
+
+    public GameEntity() {
     }
 }

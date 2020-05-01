@@ -4,6 +4,23 @@
 
 ## 레벨 2 체스 요구사항
 
+### 4단계 동시에 여러 게임 하기
+- [x] 체스 게임을 진행할 수 있는 방을 만들어서 동시에 여러 게임이 가능하도록 하기
+  - [x] 체스방 만들기
+  - [x] localhost:8080 요청 시 노출되는 페이지에 체스방을 만들 수 있는 버튼이 있다.
+  - [x] 체스방 만들기 버튼을 누르면 새로운 체스판이 초기화 된다.
+  - [x] 체스방에는 고유식별값이 랜덤으로 부여된다.
+  - [x] localhost:8080 요청 시 체스방 목록을 조회할 수 있다
+  - [x] 체스방 목록에는 체스방 제목이 표시된다.
+- [x] TDD를 고려하여 기능 구현을 해본다.
+  - [x] 반드시 TDD를 해야하는 것은 아니지만 최대한 TDD 프로세스를 따르려고 노력해본다.
+  - [x] 테스트를 구현할 수 있는 로직에 대해서는 테스트를 만들어 본다.
+
+### 3단계 Spring Data JDBC 적용하기
+- [x] Spring Data JDBC를 활용하여 기존에 사용하던 DB에 접근하기
+  - [x] 엔티티 클래스를 만들어 DB 테이블과 맵핑한다.
+  - [x] Spring Data JDBC에서 제공하는 Repository를 활용하여 DB에 접근한다.
+
 ### 2단계 Spring MVC 적용하기
 - [x] 스파크 애플리케이션을 유지한 상태에서 스프링 애플리케이션을 추가
 - [x] 도메인 객체가 아니며 재사용 할 객체를 스프링 빈을 활용하여 관리하기
@@ -38,22 +55,31 @@
             draw int,
             primary key (id)
         );
-        create table if not exists game (
-            id int not null auto_increment,
+      
+        create table game (
+            id varchar(255) not null primary key,
+            title varchar(255) not null,
             white int not null,
             black int not null,
-            primary key (id),
-            foreign key (white) references player(id),
-            foreign key (black) references player(id)
+            constraint game_ibfk_1 foreign key (white) references player (id),
+            constraint game_ibfk_2 foreign key (black) references player (id)
         );
+        
+        create index black
+            on game (black);
+        
+        create index white
+            on game (white);
+        
         create table if not exists move (
-            id int not null auto_increment,
-            game int not null,
+            id int auto_increment primary key,
+            game varchar(255) not null,
             start_position varchar(2) not null,
             end_position varchar(2) not null,
-            primary key (id),
-            foreign key (game) references game(id)
+            constraint move_ibfk_1 foreign key (game) references game (id)
         );
+        
+        create index game on move (game);
         ```
 
 - [x] (선택) 체스 게임방을 만들고 체스 게임방에 입장할 수 있는 기능을 추가한다.

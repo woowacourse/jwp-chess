@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
-import wooteco.chess.dto.BoardDto;
+import wooteco.chess.dto.GameRequestDto;
+import wooteco.chess.dto.GameResponseDto;
 import wooteco.chess.dto.MovableRequestDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.service.ChessService;
@@ -30,56 +31,55 @@ public class SpringChessBoardController {
     }
 
     @GetMapping
-    private Map<Integer, Map<Side, Player>> getPlayerContexts() throws SQLException {
-        return service.getPlayerContexts();
+    private Map<String, GameResponseDto> getGames() throws SQLException {
+        return service.getGames();
     }
 
     @PostMapping
-    private Map<Integer, Map<Side, Player>> addGameAndGetPlayers() throws
-        SQLException {
+    private Map<String, GameResponseDto> addGame(@RequestBody GameRequestDto dto) throws SQLException {
         // TODO: 실제 플레이어 기능 추가
         Player white = new Player(1, "hodol", "password");
         Player black = new Player(2, "pobi", "password");
-        return service.addGame(white, black);
+        return service.addGame(dto.getTitle(), white, black);
     }
 
     @GetMapping("/{id}")
-    private BoardDto getBoard(@PathVariable int id) throws SQLException {
-        return new BoardDto(service.findBoardById(id));
+    private GameResponseDto getGame(@PathVariable String id) throws SQLException {
+        return new GameResponseDto(service.findGameById(id));
     }
 
     @PostMapping("/{id}")
-    private BoardDto resetBoard(@PathVariable int id) throws SQLException {
-        return new BoardDto(service.resetGameById(id));
+    private GameResponseDto resetGame(@PathVariable String id) throws SQLException {
+        return new GameResponseDto(service.resetGameById(id));
     }
 
     @DeleteMapping("/{id}")
-    private boolean finishGame(@PathVariable int id) throws SQLException {
+    private boolean finishGame(@PathVariable String id) throws SQLException {
         return service.finishGameById(id);
     }
 
     @GetMapping("/{id}/status")
-    private boolean isGameOver(@PathVariable int id) throws SQLException {
+    private boolean isGameOver(@PathVariable String id) throws SQLException {
         return service.isGameOver(id);
     }
 
     @GetMapping("/{id}/turn")
-    private boolean isWhiteTurn(@PathVariable int id) throws SQLException {
+    private boolean isWhiteTurn(@PathVariable String id) throws SQLException {
         return service.isWhiteTurn(id);
     }
 
     @GetMapping("/{id}/score")
-    private Map<Side, Double> getScore(@PathVariable int id) throws SQLException {
+    private Map<Side, Double> getScore(@PathVariable String id) throws SQLException {
         return service.getScoresById(id);
     }
 
     @PostMapping("/{id}/move")
-    private boolean move(@PathVariable int id, @RequestBody MoveRequestDto dto) throws SQLException {
+    private boolean move(@PathVariable String id, @RequestBody MoveRequestDto dto) throws SQLException {
         return service.moveIfMovable(id, dto.getFrom(), dto.getTo());
     }
 
     @PostMapping("/{id}/movable")
-    private List<String> findAllAvailablePath(@PathVariable int id, @RequestBody MovableRequestDto dto) throws
+    private List<String> findAllAvailablePath(@PathVariable String id, @RequestBody MovableRequestDto dto) throws
         SQLException {
         return service.findAllAvailablePath(id, dto.getFrom());
     }

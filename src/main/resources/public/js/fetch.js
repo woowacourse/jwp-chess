@@ -4,7 +4,6 @@ export async function getBoards() {
 }
 
 export async function getBoard(roomId) {
-  console.log(roomId);
   const response = await fetch(`http://localhost:8080/boards/${roomId}`);
   return await response.json();
 }

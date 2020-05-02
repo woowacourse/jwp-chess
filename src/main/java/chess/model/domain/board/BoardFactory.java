@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BoardInitial {
+public class BoardFactory {
 
     private static final int RANK_BLACK_PAWN_INIT = 7;
     private static final int RANK_WHITE_PAWN_INIT = 2;
@@ -46,7 +46,7 @@ public class BoardInitial {
         INITIAL_BOARD = Collections.unmodifiableMap(initialBoard);
     }
 
-    public Map<Square, Piece> getInitialize() {
+    public Map<Square, Piece> create() {
         return new HashMap<>(INITIAL_BOARD);
     }
 }

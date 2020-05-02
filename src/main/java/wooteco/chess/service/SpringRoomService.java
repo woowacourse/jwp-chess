@@ -8,6 +8,7 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Pieces;
 import wooteco.chess.dto.RoomRequestDto;
 import wooteco.chess.dto.RoomResponseDto;
+import wooteco.chess.exception.WrongIdException;
 import wooteco.chess.repository.RoomRepository;
 import wooteco.chess.repository.entity.GameEntity;
 import wooteco.chess.repository.entity.PieceEntity;
@@ -16,6 +17,7 @@ import wooteco.chess.repository.entity.RoomEntity;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,10 +28,10 @@ public class SpringRoomService {
     private RoomRepository roomRepository;
 
 
-    public void addRoom(RoomRequestDto roomRequestDto) throws SQLException {
+    public RoomEntity addRoom(RoomRequestDto roomRequestDto) throws SQLException {
         Set<PieceEntity> pieceEntities = convertPiecesToPieceEntity(Pieces.initPieces());
         GameEntity gameEntity = new GameEntity(Color.WHITE, pieceEntities);
-        roomRepository.save(new RoomEntity(roomRequestDto.getName(), roomRequestDto.getPassword(), gameEntity));
+        return roomRepository.save(new RoomEntity(roomRequestDto.getName(), roomRequestDto.getPassword(), gameEntity));
     }
 
     public void removeRoom(Long id) throws SQLException {
@@ -64,5 +66,9 @@ public class SpringRoomService {
             return true;
         }
         return false;
+    }
+
+    public RoomEntity findById(Long id) {
+        return roomRepository.findById(id).orElseThrow(WrongIdException::new);
     }
 }

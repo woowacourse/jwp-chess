@@ -47,7 +47,6 @@ public class SpringRoomController {
         return "redirect:/rooms";
     }
 
-    // TODO: 2020/04/22 valid 에러페이지 이동 문제
     @PostMapping("/create")
     public String createRoom(@Valid RoomRequestDto roomRequestDto, BindingResult bindingResult, Model model) throws SQLException {
         if (bindingResult.hasErrors()) {
@@ -71,7 +70,7 @@ public class SpringRoomController {
 
     @PostMapping("/authorize")
     @ResponseBody
-    public boolean authorize(@Valid @RequestBody AuthorizeDto authorizeDto, Errors errors) {
+    public boolean authorize(@Valid @RequestBody AuthorizeDto authorizeDto) {
         if(Objects.nonNull(authorizeDto.getPassword())) {
             return roomService.authorize(authorizeDto.getId(), authorizeDto.getPassword());
         }

@@ -10,6 +10,4 @@ public class SpringDefaultController {
     public String index() {
         return "redirect:/rooms";
     }
-
-
 }

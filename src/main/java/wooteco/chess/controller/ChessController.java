@@ -83,6 +83,6 @@ public class ChessController {
 	public ModelAndView exceptionHandler(Exception e) {
 		Map<String, Object> model = new HashMap<>();
 		model.put("error", e.getMessage());
-		return new ModelAndView("404", model);
+		return new ModelAndView("error", model);
 	}
 }

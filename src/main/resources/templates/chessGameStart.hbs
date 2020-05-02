@@ -9,7 +9,8 @@
 {{#if haveLastGameRecord}}
     <button onclick="playLastGame()">기존 게임 시작하기</button>
 {{/if}}
-<button onclick="playNewGame()">새 게임 시작하기</button>
+    <input type = "text" id="roomName">
+    <input type = "submit" value="방 이름을 입력하신후 여기를 클릭해주세요" onclick="playNewGame()">
 </body>
 <script>
     const playLastGame = function () {
@@ -17,7 +18,10 @@
     };
 
     const playNewGame = function () {
-        window.location = "http://localhost:8080/playing/newGame";
+        window.location = 'http://localhost:8080/playing/newGame' + "?" + document.getElementById("roomName").value;
     }
 </script>
+<body>
+
+</body>
 </html>

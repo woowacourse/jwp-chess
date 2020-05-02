@@ -12,17 +12,17 @@ SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE =
 -- -----------------------------------------------------
 -- Schema wooteco.chess
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `wooteco.chess` DEFAULT CHARACTER SET utf8;
-USE `wooteco.chess`;
+CREATE SCHEMA IF NOT EXISTS `chess` DEFAULT CHARACTER SET utf8;
+USE `chess`;
 
 -- -----------------------------------------------------
--- Table `wooteco.chess`.`room`
+-- Table `chess`.`room`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `wooteco.chess`.`room`
+CREATE TABLE IF NOT EXISTS `chess`.`room`
 (
-    `id`            INT         NOT NULL,
-    `black_user_id` INT         NOT NULL,
-    `white_user_id` INT         NOT NULL,
+    `id`            BIGINT         NOT NULL,
+    `black_user_id` BIGINT         NOT NULL,
+    `white_user_id` BIGINT         NOT NULL,
     `is_end`        TINYINT     NOT NULL,
     `name`          VARCHAR(21) NOT NULL,
     PRIMARY KEY (`id`)
@@ -31,19 +31,19 @@ CREATE TABLE IF NOT EXISTS `wooteco.chess`.`room`
 
 
 -- -----------------------------------------------------
--- Table `wooteco.chess`.`move`
+-- Table `chess`.`move`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `wooteco.chess`.`move`
+CREATE TABLE IF NOT EXISTS `chess`.`move`
 (
-    `id`      INT        NOT NULL,
-    `room_id` INT        NOT NULL,
+    `id`      BIGINT        NOT NULL,
+    `room_id` BIGINT        NOT NULL,
     `source`  VARCHAR(2) NOT NULL,
     `target`  VARCHAR(2) NOT NULL,
     PRIMARY KEY (`id`),
     INDEX `room_id_idx` (`room_id` ASC),
     CONSTRAINT `room_id`
         FOREIGN KEY (`room_id`)
-            REFERENCES `wooteco.chess`.`room` (`id`)
+            REFERENCES `chess`.`room` (`id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )

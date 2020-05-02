@@ -1,7 +1,7 @@
 package chess.dto;
 
-import chess.domain.board.TeamScore;
-import chess.domain.piece.Team;
+import chess.model.domain.board.TeamScore;
+import chess.model.domain.piece.Team;
 import java.util.Map;
 
 public class GameInfoDto {

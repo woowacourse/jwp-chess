@@ -1,7 +1,7 @@
 package chess.controller;
 
-import chess.domain.piece.Team;
-import chess.repository.ChessGameEntity;
+import chess.model.domain.piece.Team;
+import chess.model.repository.ChessGameEntity;
 import chess.service.ChessGameService;
 import chess.service.ResultService;
 import java.util.HashMap;

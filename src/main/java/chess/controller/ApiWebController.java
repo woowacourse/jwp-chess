@@ -11,14 +11,12 @@ import chess.dto.RoomsDto;
 import chess.dto.SourceDto;
 import chess.dto.UserNameDto;
 import chess.dto.UserNamesDto;
-import chess.repository.ChessGameEntity;
+import chess.model.repository.ChessGameEntity;
 import chess.service.ChessGameService;
 import chess.service.ResultService;
 import chess.service.RoomService;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class ApiWebController {
-
-    private static final Gson GSON = new Gson();
 
     private final ChessGameService chessGameService;
     private final RoomService roomService;
@@ -61,11 +57,8 @@ public class ApiWebController {
         return roomService.getUsedRooms();
     }
 
-    @PostMapping("/game/board")
-    public ChessGameDto board(@RequestBody String req) {
-        JsonObject body = JsonParser.parseString(req).getAsJsonObject();
-        Integer gameId = GSON.fromJson(body.get("gameId"), Integer.class);
-
+    @PostMapping("/game/{gameId}/board")
+    public ChessGameDto board(@PathVariable Integer gameId) {
         return chessGameService.loadChessGame(gameId);
     }
 
@@ -86,11 +79,8 @@ public class ApiWebController {
         return chessGameService.promote(promotionTypeDTO);
     }
 
-    @PostMapping("/game/end")
-    public ChessGameDto end(@RequestBody String req) {
-        JsonObject body = JsonParser.parseString(req).getAsJsonObject();
-        Integer gameId = GSON.fromJson(body.get("gameId"), Integer.class);
-
+    @PostMapping("/game/{gameId}/end")
+    public ChessGameDto end(@PathVariable Integer gameId) {
         ChessGameEntity chessGameEntity = chessGameService.closeGame(gameId);
         resultService.setGameResult(chessGameEntity);
         return new ChessGameDto(chessGameEntity.makeTeamScore(), chessGameEntity.makeUserNames());

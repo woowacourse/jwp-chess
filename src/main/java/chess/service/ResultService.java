@@ -1,15 +1,15 @@
 package chess.service;
 
-import chess.domain.board.TeamScore;
-import chess.domain.piece.Team;
-import chess.domain.state.MoveState;
+import chess.model.domain.board.TeamScore;
+import chess.model.domain.piece.Team;
+import chess.model.domain.state.MoveState;
 import chess.dto.ChessGameDto;
 import chess.dto.GameResultDto;
 import chess.dto.UserNameDto;
 import chess.dto.UserNamesDto;
-import chess.repository.ChessGameEntity;
-import chess.repository.ResultEntity;
-import chess.repository.ResultRepository;
+import chess.model.repository.ChessGameEntity;
+import chess.model.repository.ResultEntity;
+import chess.model.repository.ResultRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

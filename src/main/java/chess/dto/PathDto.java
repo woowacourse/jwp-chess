@@ -1,6 +1,6 @@
 package chess.dto;
 
-import chess.domain.board.Square;
+import chess.model.domain.board.Square;
 import java.util.Set;
 import java.util.stream.Collectors;
 

@@ -1,11 +1,9 @@
 package wooteco.chess.controller;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +26,5 @@ public class ResultController {
 		GameResultParser gameResultParser = chessGameService.findWinner(roomID);
 		Map<String, Object> model = gameResultParser.parseModel();
 		return new ModelAndView("winner", model);
-	}
-
-	@ExceptionHandler(IllegalArgumentException.class)
-	public ModelAndView exceptionHandler(Exception e) {
-		Map<String, Object> model = new HashMap<>();
-		model.put("error", e.getMessage());
-		return new ModelAndView("error", model);
 	}
 }

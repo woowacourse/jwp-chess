@@ -29,6 +29,9 @@ public class RoomController {
 
 	@PostMapping("/new")
 	public String createRoom(@RequestParam(defaultValue = "") String name) {
+		if (name == null || name.isEmpty()) {
+			throw new IllegalArgumentException("방 제목이 없습니다.");
+		}
 		RoomEntity roomEntity = chessGameService.createRoom(name);
 		return String.format("redirect:/chess/%s", roomEntity.getId());
 	}

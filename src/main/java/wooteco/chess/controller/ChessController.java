@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,12 +63,5 @@ public class ChessController {
 			return new ModelAndView(String.format("redirect:/result/%d", roomId));
 		}
 		return new ModelAndView("game", model);
-	}
-
-	@ExceptionHandler(IllegalArgumentException.class)
-	public ModelAndView exceptionHandler(Exception e) {
-		Map<String, Object> model = new HashMap<>();
-		model.put("error", e.getMessage());
-		return new ModelAndView("error", model);
 	}
 }

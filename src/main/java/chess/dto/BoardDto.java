@@ -1,8 +1,8 @@
 package chess.dto;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import chess.domain.board.Position;
 import chess.domain.board.PositionFactory;
@@ -13,7 +13,7 @@ import wooteco.chess.entity.BoardEntity;
 public class BoardDto {
 	private Map<String, String> board;
 
-	public BoardDto(List<BoardEntity> pieceEntities) {
+	public BoardDto(Set<BoardEntity> pieceEntities) {
 		Map<String, String> board = new HashMap<>();
 		for (BoardEntity boardEntity : pieceEntities) {
 			board.put(boardEntity.getPosition(), boardEntity.getPieceName());

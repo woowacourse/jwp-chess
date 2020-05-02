@@ -15,4 +15,11 @@ public class RoomsDto {
     public Map<Integer, String> getRooms() {
         return rooms;
     }
+
+    @Override
+    public String toString() {
+        return "RoomsDto{" +
+            "rooms=" + rooms +
+            '}';
+    }
 }

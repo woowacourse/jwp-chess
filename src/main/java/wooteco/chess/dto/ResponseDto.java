@@ -6,24 +6,25 @@ import wooteco.chess.support.ResponseCode;
 import java.util.Collections;
 
 public class ResponseDto<T> {
-    private String responseCode;
-    private String errorMessage;
+    private Integer responseCode;
+    private String message;
     private T responseData;
 
-    public ResponseDto(ResponseCode responseCode, String errorMessage) {
+    private ResponseDto(ResponseCode responseCode, String message) {
         this.responseCode = responseCode.getCode();
-        this.errorMessage = errorMessage;
+        this.message = message;
         this.responseData = (T) Collections.EMPTY_MAP;
     }
 
-    public ResponseDto(ResponseCode responseCode) {
+    private ResponseDto(ResponseCode responseCode) {
         this.responseCode = responseCode.getCode();
-        this.errorMessage = responseCode.getMessage();
+        this.message = responseCode.getMessage();
         this.responseData = (T) Collections.EMPTY_MAP;
     }
 
-    public ResponseDto(ResponseCode responseCode, T responseData) {
+    private ResponseDto(ResponseCode responseCode, T responseData) {
         this.responseCode = responseCode.getCode();
+        this.message = responseCode.getMessage();
         this.responseData = responseData;
     }
 
@@ -47,4 +48,27 @@ public class ResponseDto<T> {
         return new ResponseDto<>(responseCode, responseCode.getMessage());
     }
 
+    public Integer getResponseCode() {
+        return responseCode;
+    }
+
+    public void setResponseCode(Integer responseCode) {
+        this.responseCode = responseCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getResponseData() {
+        return responseData;
+    }
+
+    public void setResponseData(T responseData) {
+        this.responseData = responseData;
+    }
 }

@@ -19,12 +19,12 @@ public enum ChessResponseCode implements ResponseCode {
     }
 
     @Override
-    public String getCode() {
-        return null;
+    public Integer getCode() {
+        return code;
     }
 
     @Override
     public String getMessage() {
-        return null;
+        return message;
     }
 }

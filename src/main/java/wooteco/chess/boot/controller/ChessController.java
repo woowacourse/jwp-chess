@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import wooteco.chess.boot.repository.RoomRepository;
 import wooteco.chess.boot.service.ChessService;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.util.ModelParser;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +23,13 @@ public class ChessController {
     @Autowired
     private ChessService chessService;
 
+    @Autowired
+    RoomRepository roomRepository;
+
     @GetMapping("/")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView(INDEX);
+        modelAndView.addObject("rooms", roomRepository.findAll());
         return modelAndView;
     }
 
@@ -53,7 +57,7 @@ public class ChessController {
     }
 
     @GetMapping("/show_movable")
-    public ModelAndView showMovable(@RequestParam(defaultValue = "") String start) throws SQLException {
+    public ModelAndView showMovable(@RequestParam(defaultValue = "") String start) {
         ModelAndView modelAndView = new ModelAndView(BOARD);
         modelAndView.addAllObjects(parseMovablePositionsModel(start));
         return modelAndView;
@@ -70,7 +74,7 @@ public class ChessController {
     }
 
     @PostMapping("/move")
-    public ModelAndView move(@RequestParam(defaultValue = "") String start, @RequestParam(defaultValue = "") String end) throws SQLException {
+    public ModelAndView move(@RequestParam(defaultValue = "") String start, @RequestParam(defaultValue = "") String end) {
         ModelAndView modelAndView = new ModelAndView(BOARD);
 
         chessService.move(Position.of(start), Position.of(end));

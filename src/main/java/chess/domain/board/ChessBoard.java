@@ -1,29 +1,26 @@
 package chess.domain.board;
 
-import static chess.domain.piece.Pawn.*;
-import static chess.util.NullValidator.*;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import chess.domain.GameResult;
 import chess.domain.command.MoveCommand;
 import chess.domain.piece.EmptyPiece;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
-import chess.exception.AnotherTeamPieceException;
-import chess.exception.NotMovableException;
-import chess.exception.OtherPieceInPathException;
-import chess.exception.PawnNotAttackableException;
-import chess.exception.PieceNotFoundException;
-import chess.exception.SameTeamPieceException;
+import chess.exception.*;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import static chess.domain.piece.Pawn.PAWN_HALF_SCORE;
+import static chess.domain.piece.Pawn.PAWN_SCORE;
+import static chess.util.NullValidator.validateNull;
 
 public class ChessBoard {
 	private static final int ONLY_ONE_PAWN_IN_X_POINT = 1;
 	private static final int ONE_STEP_RANGE = 1;
-	private static final String KING_MARK = "K";
+	private static final String BLACK_KING_MARK = "K";
+	private static final String WHITE_KING_MARK = "k";
 
 	private Map<Position, Piece> board;
 	private PieceColor team;
@@ -137,14 +134,14 @@ public class ChessBoard {
 
 	private boolean isBlackKingKilled() {
 		return board.values().stream()
-			.map(Piece::getName)
-			.noneMatch(KING_MARK::equals);
+				.map(Piece::getName)
+				.noneMatch(BLACK_KING_MARK::equals);
 	}
 
 	private boolean isWhiteKingKilled() {
 		return board.values().stream()
-			.map(Piece::getName)
-			.noneMatch(KING_MARK::equals);
+				.map(Piece::getName)
+				.noneMatch(WHITE_KING_MARK::equals);
 	}
 
 	private double calculateAlivePieceScoreSumBy(PieceColor pieceColor) {

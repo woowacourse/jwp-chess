@@ -1,7 +1,5 @@
 # 체스 - 스프링 실습
-## 
-
-## STEP1
+## STEP 1
 ### 기능목록
 
 - 체스판을 초기화 할 수 있다.
@@ -26,7 +24,8 @@
   - Mysql을 사용한다.
 
   - ```mysql
-    create table chessBoard(
+    create table board(
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
         position varchar(10) NOT NULL,
         pieceName varchar(10) NOT NULL
     );
@@ -34,11 +33,12 @@
 
   - ``` mysql
     create table turn(
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
         teamName varchar(10) NOT NULL
     );
     ```
 
-## STEP2
+## STEP 2
 ### 요구사항
 - 스프링 애플리케이션으로 체스가 실행 가능 해야한다.
 - @Controller나 @RestController를 활용하여 요청을 받아야 한다.
@@ -57,3 +57,12 @@
     - 체스게임에서 말을 이동한다
 5. "/winner"
     - 승패 결과 및 점수 페이지를 로드한다.
+
+
+
+## STEP 3
+
+### 요구사항
+
+- 엔티티 클래스를 만들어 DB 테이블과 맵핑한다.
+- Spring Data JDBC에서 제공하는 Repository를 활용하여 DB에 접근한다.

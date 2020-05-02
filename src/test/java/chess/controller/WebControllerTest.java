@@ -6,8 +6,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import chess.dto.CreateRoomDto;
 import chess.model.domain.piece.Team;
+import chess.model.repository.RoomEntity;
 import chess.service.ChessGameService;
+import chess.service.RoomService;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,13 +31,19 @@ class WebControllerTest {
 
     @Autowired
     private ChessGameService chessGameService;
+    @Autowired
+    private RoomService roomService;
 
     Map<Team, String> userNames = new HashMap<>();
+    RoomEntity room;
 
     @BeforeEach
     void setUp() {
         userNames.put(Team.BLACK, "BLACK");
         userNames.put(Team.WHITE, "WHITE");
+        room = roomService.addRoom(
+            new CreateRoomDto("test1", ""));
+        chessGameService.saveNewUserNames(userNames);
     }
 
     @Test
@@ -55,10 +64,13 @@ class WebControllerTest {
 
     @Test
     void game() throws Exception {
-        Integer gameId = chessGameService.saveNewGameInfo(userNames, 1);
+        Integer roomId = roomService.addRoom(
+            new CreateRoomDto("test1", ""))
+            .getId();
+        Integer gameId = chessGameService.saveNewGameInfo(userNames, roomId);
 
         mockMvc.perform(post("/game")
-            .param("roomId", "1"))
+            .param("roomId", String.valueOf(roomId)))
             .andExpect(status().isOk())
             .andExpect(model().attribute("gameId", gameId + 1))
             .andExpect(view().name("game"));
@@ -66,10 +78,10 @@ class WebControllerTest {
 
     @Test
     void load() throws Exception {
-        Integer gameId = chessGameService.saveNewGameInfo(userNames, 1);
+        Integer gameId = chessGameService.saveNewGameInfo(userNames, room.getId());
 
         mockMvc.perform(post("/load")
-            .param("roomId", "1"))
+            .param("roomId", String.valueOf(room.getId())))
             .andExpect(status().isOk())
             .andExpect(model().attribute("gameId", gameId))
             .andExpect(view().name("game"));
@@ -77,7 +89,7 @@ class WebControllerTest {
 
     @Test
     void newGame() throws Exception {
-        Integer gameId = chessGameService.saveNewGameInfo(userNames, 1);
+        Integer gameId = chessGameService.saveNewGameInfo(userNames, room.getId());
 
         mockMvc.perform(post("/game/new")
             .param("gameId", String.valueOf(gameId)))

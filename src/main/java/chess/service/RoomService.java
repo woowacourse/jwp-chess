@@ -26,10 +26,10 @@ public class RoomService {
         return new RoomsDto(rooms);
     }
 
-    public void addRoom(CreateRoomDto createRoomDto) {
+    public RoomEntity addRoom(CreateRoomDto createRoomDto) {
         RoomEntity roomEntity = new RoomEntity(createRoomDto.getRoomName(),
             createRoomDto.getRoomPassword());
-        roomRepository.save(roomEntity);
+        return roomRepository.save(roomEntity);
     }
 
     public void deleteRoom(DeleteRoomDto deleteRoomDto) {

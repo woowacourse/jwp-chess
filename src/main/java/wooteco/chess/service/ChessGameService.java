@@ -1,21 +1,22 @@
 package wooteco.chess.service;
 
-import chess.domain.GameResult;
-import chess.domain.board.ChessBoard;
-import chess.domain.board.Position;
-import chess.domain.command.MoveCommand;
-import chess.domain.piece.Piece;
-import chess.dto.BoardDto;
-import chess.dto.TurnDto;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
+
+import wooteco.chess.domain.GameResult;
+import wooteco.chess.domain.board.ChessBoard;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.command.MoveCommand;
+import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.dto.BoardDto;
+import wooteco.chess.dto.TurnDto;
 import wooteco.chess.entity.BoardEntity;
 import wooteco.chess.entity.RoomEntity;
 import wooteco.chess.entity.TurnEntity;
 import wooteco.chess.repository.RoomRepository;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class ChessGameService {
@@ -68,7 +69,7 @@ public class ChessGameService {
 		}
 
 		RoomEntity roomEntity = new RoomEntity(loadedRoomEntity, new TurnEntity(
-				loadedRoomEntity.getTurnEntity().getId(), TurnDto.from(chessBoard).getCurrentTeam()
+			loadedRoomEntity.getTurnEntity().getId(), TurnDto.from(chessBoard).getCurrentTeam()
 		));
 		roomRepository.save(roomEntity);
 
@@ -100,7 +101,7 @@ public class ChessGameService {
 	private RoomEntity findRoomEntityById(Long roomId) {
 		Optional<RoomEntity> maybeRoomEntity = roomRepository.findById(roomId);
 		return maybeRoomEntity.orElseThrow(
-				() -> new IllegalArgumentException(String.format("%d 해당 아이디의 방을 찾을 수 없습니다.", roomId)));
+			() -> new IllegalArgumentException(String.format("%d 해당 아이디의 방을 찾을 수 없습니다.", roomId)));
 	}
 
 	private ChessBoard createBoardFromDb(RoomEntity roomEntity) {

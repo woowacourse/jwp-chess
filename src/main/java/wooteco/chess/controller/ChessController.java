@@ -1,22 +1,16 @@
 package wooteco.chess.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-
 import chess.domain.GameResult;
 import chess.domain.board.ChessBoard;
 import chess.dto.CellManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import wooteco.chess.service.ChessGameService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/chess")
@@ -43,8 +37,8 @@ public class ChessController {
 		Map<String, Object> model = new HashMap<>();
 		try {
 			model = createCurrentGameModel(chessGameService.loadBoard(roomId), roomId);
-		} catch (NoSuchElementException e) {
-			model.put("error", "새 게임을 눌러주세요!");
+		} catch (IllegalArgumentException e) {
+			model.put("error", e.getMessage());
 		}
 		return new ModelAndView("game", model);
 	}
@@ -83,5 +77,12 @@ public class ChessController {
 		model.put("roomId", roomId);
 
 		return model;
+	}
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ModelAndView exceptionHandler(Exception e) {
+		Map<String, Object> model = new HashMap<>();
+		model.put("error", e.getMessage());
+		return new ModelAndView("404", model);
 	}
 }

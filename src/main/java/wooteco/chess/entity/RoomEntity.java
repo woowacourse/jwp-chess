@@ -1,10 +1,10 @@
 package wooteco.chess.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Table("room")
 public class RoomEntity {
@@ -55,5 +55,13 @@ public class RoomEntity {
 
 	public TurnEntity getTurnEntity() {
 		return turnEntity;
+	}
+
+	public boolean isEmptyBoard() {
+		return boardEntities.isEmpty();
+	}
+
+	public boolean isEmptyTurn() {
+		return turnEntity == null;
 	}
 }

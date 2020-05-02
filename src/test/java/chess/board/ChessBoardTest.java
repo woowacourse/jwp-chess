@@ -1,17 +1,15 @@
 package chess.board;
 
-import static org.assertj.core.api.Assertions.*;
+import chess.location.Location;
+import chess.piece.type.*;
+import chess.team.Team;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import spring.chess.board.ChessBoard;
-import spring.chess.board.ChessBoardCreater;
-import spring.chess.location.Location;
-import spring.chess.piece.type.*;
-import spring.chess.team.Team;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ChessBoardTest {
     @DisplayName("생성자 테스트")

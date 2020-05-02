@@ -1,8 +1,8 @@
 package spring.dto;
 
-import spring.chess.board.ChessBoard;
-import spring.chess.location.Location;
-import spring.chess.piece.type.Piece;
+import chess.board.ChessBoard;
+import chess.location.Location;
+import chess.piece.type.Piece;
 
 import java.util.ArrayList;
 import java.util.List;

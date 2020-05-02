@@ -1,10 +1,9 @@
 package chess.command;
 
-import spring.chess.game.ChessGame;
-import spring.chess.location.Location;
+import chess.game.ChessGame;
+import chess.location.Location;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import spring.chess.command.MoveCommand;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

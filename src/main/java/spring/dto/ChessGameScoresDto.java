@@ -1,7 +1,7 @@
 package spring.dto;
 
-import spring.chess.result.ChessScores;
-import spring.chess.score.Score;
+import chess.result.ChessScores;
+import chess.score.Score;
 
 public class ChessGameScoresDto {
     private final Score whiteScore;

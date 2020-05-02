@@ -1,7 +1,7 @@
 package spring.dto;
 
-import spring.chess.progress.Progress;
-import spring.chess.team.Team;
+import chess.progress.Progress;
+import chess.team.Team;
 
 public class ChessMoveDto {
     private final ChessGameScoresDto chessGameScoresDto;

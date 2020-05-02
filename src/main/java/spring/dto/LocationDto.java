@@ -1,8 +1,8 @@
 package spring.dto;
 
-import spring.chess.location.Col;
-import spring.chess.location.Location;
-import spring.chess.location.Row;
+import chess.location.Col;
+import chess.location.Location;
+import chess.location.Row;
 
 public class LocationDto {
     private static final String UNDER_BAR = "_";

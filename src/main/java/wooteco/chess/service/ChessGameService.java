@@ -1,8 +1,8 @@
 package wooteco.chess.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -11,8 +11,10 @@ import wooteco.chess.domain.board.ChessBoard;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.command.MoveCommand;
 import wooteco.chess.domain.piece.Piece;
-import wooteco.chess.dto.BoardDto;
-import wooteco.chess.dto.TurnDto;
+import wooteco.chess.domain.piece.PieceColor;
+import wooteco.chess.domain.piece.PieceType;
+import wooteco.chess.dto.ChessGameParser;
+import wooteco.chess.dto.GameResultParser;
 import wooteco.chess.entity.BoardEntity;
 import wooteco.chess.entity.RoomEntity;
 import wooteco.chess.entity.TurnEntity;
@@ -34,12 +36,12 @@ public class ChessGameService {
 		return roomRepository.findAll();
 	}
 
-	public ChessBoard loadBoard(Long roomId) {
-		RoomEntity roomEntity = findRoomEntityById(roomId);
-		return createBoardFromDb(roomEntity);
+	public ChessGameParser loadBoard(Long roomId) {
+		ChessBoard chessBoard = createBoardById(roomId);
+		return new ChessGameParser(chessBoard, roomId);
 	}
 
-	public ChessBoard createNewChessGame(Long roomId) {
+	public ChessGameParser createNewChessGame(Long roomId) {
 		ChessBoard chessBoard = new ChessBoard();
 		Map<Position, Piece> board = chessBoard.getBoard();
 		RoomEntity emptyRoomEntity = findRoomEntityById(roomId);
@@ -47,17 +49,17 @@ public class ChessGameService {
 		for (Position position : board.keySet()) {
 			emptyRoomEntity.addBoard(new BoardEntity(position.getName(), board.get(position).getName()));
 		}
-		String currentTeam = TurnDto.from(chessBoard).getCurrentTeam();
+		String currentTeam = chessBoard.getTeam().getName();
 		RoomEntity roomEntity = new RoomEntity(emptyRoomEntity, new TurnEntity(currentTeam));
 		roomRepository.save(roomEntity);
 
-		return chessBoard;
+		return new ChessGameParser(chessBoard, roomId);
 	}
 
-	public ChessBoard movePiece(Long roomId, String source, String target) {
+	public ChessGameParser movePiece(Long roomId, String source, String target) {
 		RoomEntity loadedRoomEntity = findRoomEntityById(roomId);
 
-		ChessBoard chessBoard = createBoardFromDb(loadedRoomEntity);
+		ChessBoard chessBoard = createBoardById(roomId);
 		Map<Position, Piece> board = chessBoard.getBoard();
 		chessBoard.move(new MoveCommand(String.format("move %s %s", source, target)));
 
@@ -69,28 +71,26 @@ public class ChessGameService {
 		}
 
 		RoomEntity roomEntity = new RoomEntity(loadedRoomEntity, new TurnEntity(
-			loadedRoomEntity.getTurnEntity().getId(), TurnDto.from(chessBoard).getCurrentTeam()
+			loadedRoomEntity.getTurnEntity().getId(), chessBoard.getTeam().getName()
 		));
 		roomRepository.save(roomEntity);
 
-		return chessBoard;
+		return new ChessGameParser(chessBoard, roomId);
 	}
 
 	private void endGame(Long roomId) {
 		this.roomRepository.deleteById(roomId);
 	}
 
-	public GameResult findWinner(Long roomId) {
-		RoomEntity roomEntity = findRoomEntityById(roomId);
-		ChessBoard chessBoard = createBoardFromDb(roomEntity);
+	public GameResultParser findWinner(Long roomId) {
+		ChessBoard chessBoard = createBoardById(roomId);
 		GameResult gameResult = chessBoard.createGameResult();
 		endGame(roomId);
-		return gameResult;
+		return new GameResultParser(gameResult);
 	}
 
 	public boolean isGameOver(Long roomId) {
-		RoomEntity roomEntity = findRoomEntityById(roomId);
-		ChessBoard chessBoard = createBoardFromDb(roomEntity);
+		ChessBoard chessBoard = createBoardById(roomId);
 		return chessBoard.isGameOver();
 	}
 
@@ -99,19 +99,26 @@ public class ChessGameService {
 	}
 
 	private RoomEntity findRoomEntityById(Long roomId) {
-		Optional<RoomEntity> maybeRoomEntity = roomRepository.findById(roomId);
-		return maybeRoomEntity.orElseThrow(
-			() -> new IllegalArgumentException(String.format("%d 해당 아이디의 방을 찾을 수 없습니다.", roomId)));
+		return roomRepository.findById(roomId)
+			.orElseThrow(() -> new IllegalArgumentException(String.format("%d 해당 아이디의 방을 찾을 수 없습니다.", roomId)));
 	}
 
-	private ChessBoard createBoardFromDb(RoomEntity roomEntity) {
+	private ChessBoard createBoardById(Long roomId) {
+		RoomEntity roomEntity = findRoomEntityById(roomId);
+
 		if (roomEntity.isEmptyBoard() && roomEntity.isEmptyTurn()) {
 			throw new IllegalArgumentException("새 게임을 눌러주세요!");
 		}
 
-		BoardDto boardDto = new BoardDto(roomEntity.getBoardEntities());
-		TurnDto turnDto = TurnDto.from(roomEntity.getTurnEntity().getTeamName());
+		Map<Position, Piece> board = new HashMap<>();
 
-		return new ChessBoard(boardDto.createBoard(), turnDto.createTeam());
+		for (BoardEntity boardEntity : roomEntity.getBoardEntities()) {
+			Position position = new Position(boardEntity.getPosition());
+			Piece piece = PieceType.of(boardEntity.getPieceName()).createPiece(position);
+			board.put(position, piece);
+		}
+
+		PieceColor currentTeam = PieceColor.of(roomEntity.getTurnEntity().getTeamName());
+		return new ChessBoard(board, currentTeam);
 	}
 }

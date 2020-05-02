@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import wooteco.chess.domain.GameResult;
+import wooteco.chess.dto.GameResultParser;
 import wooteco.chess.service.ChessGameService;
 
 @Controller
@@ -25,20 +25,9 @@ public class ResultController {
 		if (chessGameService.isNotGameOver(roomID)) {
 			return new ModelAndView(String.format("redirect:/chess/%d", roomID));
 		}
-
-		GameResult gameResult = chessGameService.findWinner(roomID);
-		Map<String, Object> model = createWinnerModel(gameResult);
+		GameResultParser gameResultParser = chessGameService.findWinner(roomID);
+		Map<String, Object> model = gameResultParser.parseModel();
 		return new ModelAndView("winner", model);
-	}
-
-	private Map<String, Object> createWinnerModel(GameResult gameResult) {
-		Map<String, Object> model = new HashMap<>();
-		model.put("winner", gameResult.getWinner());
-		model.put("loser", gameResult.getLoser());
-		model.put("blackScore", gameResult.getAliveBlackPieceScoreSum());
-		model.put("whiteScore", gameResult.getAliveWhitePieceScoreSum());
-
-		return model;
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)

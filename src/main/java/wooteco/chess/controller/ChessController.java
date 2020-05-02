@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import wooteco.chess.domain.GameResult;
-import wooteco.chess.domain.board.ChessBoard;
-import wooteco.chess.dto.CellManager;
+import wooteco.chess.dto.ChessGameParser;
 import wooteco.chess.service.ChessGameService;
 
 @Controller
@@ -33,8 +31,8 @@ public class ChessController {
 
 	@PostMapping("/{roomId}")
 	public ModelAndView newChessGame(@PathVariable Long roomId) {
-		ChessBoard chessBoard = chessGameService.createNewChessGame(roomId);
-		Map<String, Object> model = createCurrentGameModel(chessBoard, roomId);
+		ChessGameParser chessGameParser = chessGameService.createNewChessGame(roomId);
+		Map<String, Object> model = chessGameParser.parseModel();
 		return new ModelAndView("game", model);
 	}
 
@@ -42,7 +40,7 @@ public class ChessController {
 	public ModelAndView loadChessGame(@PathVariable Long roomId) {
 		Map<String, Object> model = new HashMap<>();
 		try {
-			model = createCurrentGameModel(chessGameService.loadBoard(roomId), roomId);
+			model = chessGameService.loadBoard(roomId).parseModel();
 		} catch (IllegalArgumentException e) {
 			model.put("error", e.getMessage());
 		}
@@ -54,35 +52,18 @@ public class ChessController {
 		@RequestParam(defaultValue = "") String source,
 		@RequestParam(defaultValue = "") String target) {
 
-		ChessBoard chessBoard;
 		Map<String, Object> model;
 		try {
-			chessBoard = chessGameService.movePiece(roomId, source, target);
-			model = createCurrentGameModel(chessBoard, roomId);
+			model = chessGameService.movePiece(roomId, source, target).parseModel();
 		} catch (IllegalArgumentException e) {
-			chessBoard = chessGameService.loadBoard(roomId);
-			model = createCurrentGameModel(chessBoard, roomId);
+			model = chessGameService.loadBoard(roomId).parseModel();
 			model.put("error", e.getMessage());
 		}
 
-		if (chessBoard.isGameOver()) {
+		if (chessGameService.isGameOver(roomId)) {
 			return new ModelAndView(String.format("redirect:/result/%d", roomId));
 		}
 		return new ModelAndView("game", model);
-	}
-
-	private Map<String, Object> createCurrentGameModel(ChessBoard chessBoard, Long roomId) {
-		Map<String, Object> model = new HashMap<>();
-		GameResult gameResult = chessBoard.createGameResult();
-		CellManager cellManager = new CellManager();
-
-		model.put("cells", cellManager.createCells(chessBoard));
-		model.put("currentTeam", chessBoard.getTeam().getName());
-		model.put("blackScore", gameResult.getAliveBlackPieceScoreSum());
-		model.put("whiteScore", gameResult.getAliveWhitePieceScoreSum());
-		model.put("roomId", roomId);
-
-		return model;
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)

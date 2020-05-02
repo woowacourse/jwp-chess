@@ -18,28 +18,35 @@ import java.util.Map;
 @Controller
 public class ChessController {
     private static final String INDEX = "boot_index";
+    private static final String BOARD = "boot_board";
 
     @Autowired
     private ChessService chessService;
 
     @GetMapping("/")
-    public ModelAndView blankBoard() {
+    public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView(INDEX);
+        return modelAndView;
+    }
+
+    @GetMapping("/blank")
+    public ModelAndView blankBoard() {
+        ModelAndView modelAndView = new ModelAndView(BOARD);
         modelAndView.addAllObjects(ModelParser.parseBlankBoard());
         return modelAndView;
     }
 
     @PostMapping("/new_game")
-    public ModelAndView newGame() throws SQLException {
-        ModelAndView modelAndView = new ModelAndView(INDEX);
+    public ModelAndView newGame() {
+        ModelAndView modelAndView = new ModelAndView(BOARD);
         Map<String, Object> objects = ModelParser.parseBoard(chessService.newGame());
         modelAndView.addAllObjects(objects);
         return modelAndView;
     }
 
     @GetMapping("/load_game")
-    public ModelAndView loadGame() throws SQLException {
-        ModelAndView modelAndView = new ModelAndView(INDEX);
+    public ModelAndView loadGame() {
+        ModelAndView modelAndView = new ModelAndView(BOARD);
         Map<String, Object> objects = ModelParser.parseBoard(chessService.readBoard());
         modelAndView.addAllObjects(objects);
         return modelAndView;
@@ -47,12 +54,12 @@ public class ChessController {
 
     @GetMapping("/show_movable")
     public ModelAndView showMovable(@RequestParam(defaultValue = "") String start) throws SQLException {
-        ModelAndView modelAndView = new ModelAndView(INDEX);
+        ModelAndView modelAndView = new ModelAndView(BOARD);
         modelAndView.addAllObjects(parseMovablePositionsModel(start));
         return modelAndView;
     }
 
-    private Map<String, Object> parseMovablePositionsModel(String start) throws SQLException {
+    private Map<String, Object> parseMovablePositionsModel(String start) {
         List<Position> movablePositions = chessService.findMovablePlaces(Position.of(start));
         Map<String, Object> objects = ModelParser.parseBoard(chessService.readBoard(), movablePositions);
 
@@ -64,7 +71,7 @@ public class ChessController {
 
     @PostMapping("/move")
     public ModelAndView move(@RequestParam(defaultValue = "") String start, @RequestParam(defaultValue = "") String end) throws SQLException {
-        ModelAndView modelAndView = new ModelAndView(INDEX);
+        ModelAndView modelAndView = new ModelAndView(BOARD);
 
         chessService.move(Position.of(start), Position.of(end));
         modelAndView.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));
@@ -72,8 +79,8 @@ public class ChessController {
     }
 
     @GetMapping("/score")
-    public ModelAndView score() throws SQLException {
-        ModelAndView modelAndView = new ModelAndView(INDEX);
+    public ModelAndView score() {
+        ModelAndView modelAndView = new ModelAndView(BOARD);
         modelAndView.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));
         modelAndView.addObject("player1_info", "WHITE: " + chessService.calculateScore(Team.WHITE));
         modelAndView.addObject("player2_info", "BLACK: " + chessService.calculateScore(Team.BLACK));

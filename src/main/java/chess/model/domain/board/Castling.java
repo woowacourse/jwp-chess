@@ -13,11 +13,11 @@ public class Castling {
     }
 
     public static Castling createInitial() {
-        return new Castling(CastlingSetting.getCastlingElements());
+        return new Castling(CastlingSetting.getCastling());
     }
 
-    public static Castling of(Set<CastlingSetting> castlingElements) {
-        return new Castling(castlingElements);
+    public static Castling of(Set<CastlingSetting> castling) {
+        return new Castling(castling);
     }
 
     public boolean canCastling(MoveInfo moveInfo) {

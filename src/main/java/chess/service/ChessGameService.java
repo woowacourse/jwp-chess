@@ -1,8 +1,14 @@
 package chess.service;
 
+import chess.dto.ChessGameDto;
+import chess.dto.GameInfoDto;
+import chess.dto.MoveDto;
+import chess.dto.PathDto;
+import chess.dto.PromotionTypeDto;
+import chess.dto.SourceDto;
+import chess.model.domain.board.Board;
 import chess.model.domain.board.Castling;
 import chess.model.domain.board.CastlingSetting;
-import chess.model.domain.board.Board;
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.EnPassant;
 import chess.model.domain.board.Square;
@@ -13,12 +19,6 @@ import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
-import chess.dto.ChessGameDto;
-import chess.dto.GameInfoDto;
-import chess.dto.MoveDto;
-import chess.dto.PathDto;
-import chess.dto.PromotionTypeDto;
-import chess.dto.SourceDto;
 import chess.model.repository.BoardEntity;
 import chess.model.repository.BoardRepository;
 import chess.model.repository.ChessGameEntity;
@@ -87,23 +87,43 @@ public class ChessGameService {
 
     private void saveBoard(ChessGame chessGame, ChessGameEntity chessGameEntity) {
         Map<Square, Square> enPassants = makeEnPassants(chessGame);
-        Map<Square, Boolean> castlingElements = makeCastlingElements(chessGame.getBoard(),
-            chessGame.getCastling());
+        Map<Square, Boolean> castling
+            = makeCastling(chessGame.getBoard(), chessGame.getCastling());
         Map<Square, Piece> chessBoard = chessGame.getBoard();
 
         for (Square square : chessBoard.keySet()) {
-            chessGameEntity.addBoard(new BoardEntity(
-                square.getName(),
-                PieceFactory.getName(chessBoard.get(square)),
-                convertYN(castlingElements.get(square)),
-                enPassants.keySet().stream()
-                    .filter(key -> enPassants.containsKey(square))
-                    .map(enSquare -> enPassants.get(square).getName())
-                    .findFirst()
-                    .orElse(null)));
+            chessGameEntity.addBoard(
+                new BoardEntity(
+                    square.getName(),
+                    PieceFactory.getName(chessBoard.get(square)),
+                    convertYN(castling.get(square)),
+                    enPassants.keySet().stream()
+                        .filter(key -> enPassants.containsKey(square))
+                        .map(enSquare -> enPassants.get(square).getName())
+                        .findFirst()
+                        .orElse(null)
+                ));
         }
 
         chessGameRepository.save(chessGameEntity);
+    }
+
+    private Map<Square, Square> makeEnPassants(ChessGame chessGame) {
+        return chessGame.getEnPassants().entrySet().stream()
+            .collect(Collectors.toMap(Entry::getValue, Entry::getKey));
+    }
+
+    private Map<Square, Boolean> makeCastling(Map<Square, Piece> chessBoard,
+        Set<CastlingSetting> castling) {
+        return chessBoard.keySet().stream()
+            .collect(Collectors.toMap(square -> square,
+                square -> isAnyCastling(square, chessBoard.get(square), castling)));
+    }
+
+    private boolean isAnyCastling(Square square, Piece piece,
+        Set<CastlingSetting> castling) {
+        return castling.stream()
+            .anyMatch(castlingSetting -> castlingSetting.isCastlingBefore(square, piece));
     }
 
     public void saveNewUserNames(Map<Team, String> userNames) {
@@ -148,31 +168,6 @@ public class ChessGameService {
         return new GameInfoDto(team, userNames, teamScore);
     }
 
-    private Map<Square, Square> makeEnPassants(ChessGame chessGame) {
-        return chessGame.getEnPassants().entrySet().stream()
-            .collect(Collectors.toMap(Entry::getValue, Entry::getKey));
-    }
-
-    private Map<Square, Boolean> makeCastlingElements(Map<Square, Piece> chessBoard,
-        Set<CastlingSetting> castlingElements) {
-        return chessBoard.keySet().stream()
-            .collect(Collectors.toMap(square -> square,
-                square -> makeCastlingElements(square, chessBoard.get(square), castlingElements)));
-    }
-
-    private boolean makeCastlingElements(Square square, Piece piece,
-        Set<CastlingSetting> castlingElements) {
-        return castlingElements.stream()
-            .anyMatch(castlingSetting -> castlingSetting.isCastlingBefore(square, piece));
-    }
-
-    private ChessGame combineChessGame(Integer gameId) {
-        ChessGameEntity chessGameEntity = chessGameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
-        GameInfoDto gameInfo = getGameInfo(chessGameEntity);
-        return combineChessGame(gameId, gameInfo.getTurn());
-    }
-
     public ChessGameDto loadChessGame(Integer gameId) {
         ChessGameEntity chessGameEntity = chessGameRepository.findById(gameId)
             .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
@@ -184,24 +179,26 @@ public class ChessGameService {
     private ChessGame combineChessGame(Integer gameId, Team turn) {
 
         Map<Square, Piece> chessBoard = new HashMap<>();
-        Set<CastlingSetting> castlingElements = new HashSet<>();
+        Set<CastlingSetting> castling = new HashSet<>();
         Map<Square, Square> enPassants = new HashMap<>();
 
         for (BoardEntity boardEntity : boardRepository.findAllByGameId(gameId)) {
             chessBoard.put(Square.of(boardEntity.getSquareName()),
                 PieceFactory.getPiece(boardEntity.getPieceName()));
-            if (boardEntity.getCastlingElementYN().equals("Y")) {
-                castlingElements
-                    .add(CastlingSetting.of(Square.of(boardEntity.getSquareName()),
+            if (boardEntity.getCastlingYN().equals("Y")) {
+                castling.add(
+                    CastlingSetting.of(
+                        Square.of(boardEntity.getSquareName()),
                         PieceFactory.getPiece(boardEntity.getPieceName())));
             }
             if (boardEntity.getEnPassantName() != null) {
-                enPassants.put(Square.of(boardEntity.getEnPassantName()),
+                enPassants.put(
+                    Square.of(boardEntity.getEnPassantName()),
                     Square.of(boardEntity.getSquareName()));
             }
         }
 
-        return new ChessGame(Board.of(chessBoard), turn, Castling.of(castlingElements),
+        return new ChessGame(Board.of(chessBoard), turn, Castling.of(castling),
             new EnPassant(enPassants));
     }
 
@@ -217,6 +214,18 @@ public class ChessGameService {
         chessGameRepository.save(chessGameEntity);
         return chessGameEntity;
 
+    }
+
+    public PathDto findPath(SourceDto sourceDto) {
+        ChessGame chessGame = combineChessGame(sourceDto.getGameId());
+        return new PathDto(chessGame.findMovableAreas(Square.of(sourceDto.getSource())));
+    }
+
+    private ChessGame combineChessGame(Integer gameId) {
+        ChessGameEntity chessGameEntity = chessGameRepository.findById(gameId)
+            .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
+        GameInfoDto gameInfo = getGameInfo(chessGameEntity);
+        return combineChessGame(gameId, gameInfo.getTurn());
     }
 
     public ChessGameDto promote(PromotionTypeDto promotionTypeDTO) {
@@ -235,11 +244,6 @@ public class ChessGameService {
 
         return new ChessGameDto(chessGame, moveState, chessGame.deriveTeamScore(),
             gameInfo.getUserNames());
-    }
-
-    public PathDto findPath(SourceDto sourceDto) {
-        ChessGame chessGame = combineChessGame(sourceDto.getGameId());
-        return new PathDto(chessGame.findMovableAreas(Square.of(sourceDto.getSource())));
     }
 
     public Integer createBy(Integer gameId, Map<Team, String> userNames) {

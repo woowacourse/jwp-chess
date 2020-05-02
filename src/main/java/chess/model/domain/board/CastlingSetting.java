@@ -112,17 +112,17 @@ public enum CastlingSetting {
             selectCastling.get(KEYS_ROOK_AFTER).square);
     }
 
-    public static Set<CastlingSetting> getCastlingElements() {
+    public static Set<CastlingSetting> getCastling() {
         return Arrays.stream(CastlingSetting.values())
-            .filter(castlingElement -> castlingElement.castlingPiece)
+            .filter(castling -> castling.castlingPiece)
             .collect(Collectors.toSet());
     }
 
     public static Set<Square> getCastlingMovableAreas(
-        Set<CastlingSetting> castlingElements) {
+        Set<CastlingSetting> castling) {
         return Collections.unmodifiableSet(TOTALS.stream()
-            .filter(total -> castlingElements.contains(total.get(KEYS_ROOK_BEFORE)))
-            .filter(total -> castlingElements.contains(total.get(KEYS_KING_BEFORE)))
+            .filter(total -> castling.contains(total.get(KEYS_ROOK_BEFORE)))
+            .filter(total -> castling.contains(total.get(KEYS_KING_BEFORE)))
             .map(total -> total.get(KEYS_KING_AFTER).square)
             .collect(Collectors.toSet()));
     }

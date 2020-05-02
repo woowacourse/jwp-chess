@@ -5,11 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.model.domain.board.CastlingSetting;
 import chess.model.domain.board.Square;
-import chess.model.domain.piece.King;
-import chess.model.domain.piece.Pawn;
-import chess.model.domain.piece.Piece;
-import chess.model.domain.piece.Rook;
-import chess.model.domain.piece.Team;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -63,14 +58,14 @@ public class KingTest {
 
         Piece piece = King.getInstance(Team.BLACK);
         Set<Square> availableSquares = piece.findMovableAreas(Square.of("e8"), board,
-            CastlingSetting.getCastlingElements());
+            CastlingSetting.getCastling());
 
         assertThat(availableSquares.contains(Square.of("c8"))).isTrue();
         assertThat(availableSquares.contains(Square.of("g8"))).isTrue();
 
         piece = King.getInstance(Team.WHITE);
         availableSquares = piece.findMovableAreas(Square.of("e1"), board,
-            CastlingSetting.getCastlingElements());
+            CastlingSetting.getCastling());
 
         assertThat(availableSquares.contains(Square.of("c1"))).isTrue();
         assertThat(availableSquares.contains(Square.of("g1"))).isTrue();
@@ -79,20 +74,20 @@ public class KingTest {
 
         piece = King.getInstance(Team.BLACK);
         availableSquares = piece.findMovableAreas(Square.of("e8"), board,
-            CastlingSetting.getCastlingElements());
+            CastlingSetting.getCastling());
 
         assertThat(availableSquares.contains(Square.of("c8"))).isFalse();
         assertThat(availableSquares.contains(Square.of("g8"))).isTrue();
 
         piece = King.getInstance(Team.BLACK);
         availableSquares = piece.findMovableAreas(Square.of("e7"), board,
-            CastlingSetting.getCastlingElements());
+            CastlingSetting.getCastling());
 
         assertThat(availableSquares.contains(Square.of("c7"))).isFalse();
         assertThat(availableSquares.contains(Square.of("g7"))).isFalse();
 
         piece = King.getInstance(Team.WHITE);
-        Set<CastlingSetting> castlingSettings = CastlingSetting.getCastlingElements();
+        Set<CastlingSetting> castlingSettings = CastlingSetting.getCastling();
         castlingSettings.remove(CastlingSetting.WHITE_KING_BEFORE);
         availableSquares = piece.findMovableAreas(Square.of("e1"), board,
             castlingSettings);

@@ -34,7 +34,7 @@ public class BoardEntity {
         return pieceName;
     }
 
-    public String getCastlingElementYN() {
+    public String getCastlingYN() {
         return castlingElementYN;
     }
 

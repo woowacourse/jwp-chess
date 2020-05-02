@@ -39,13 +39,13 @@
     </tr>
     {{#rooms}}
         <tr>
-            <td><a href="/{{id}}">{{id}}</a></td>
+            <td><a href="/chess/{{id}}">{{id}}</a></td>
             <td>{{name}}</td>
         </tr>
     {{/rooms}}
 </table>
 
-<form method="post" action="/create-room">
+<form method="post" action="/new">
     <input type="text" name="name">
     <input type="submit" value="방 만들기">
 </form>

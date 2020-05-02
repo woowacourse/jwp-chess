@@ -14,9 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+// Todo: Move시 자신의 말 위치로 이동하면 IllgalStateException -> 체스 게임 커스텀 exception 생성하고 처리해주기~
 @Service
 public class SpringChessService {
     public static final int BOARD_CELLS_NUMBER = 64;
@@ -25,7 +25,6 @@ public class SpringChessService {
 
     private final ChessPieceRepository chessPieceRepository;
     private final MoveHistoryRepository moveHistoryRepository;
-    private final Map<String, Board> playingBoards = new HashMap<>();
 
     public SpringChessService(ChessPieceRepository chessPieceRepository, MoveHistoryRepository moveHistoryRepository) {
         this.chessPieceRepository = chessPieceRepository;
@@ -37,11 +36,11 @@ public class SpringChessService {
         return savedPiecesNumber == BOARD_CELLS_NUMBER;
     }
 
+    // Todo: chessPieces saveAll로 수정
     public void startNewGame(String gameId) {
         deleteSavedGame(gameId);
 
         Board board = new Board();
-        playingBoards.put(gameId, board);
 
         List<ChessPiece> chessPieces = createChessPieces(gameId, board);
         for (ChessPiece chessPiece : chessPieces) {
@@ -59,23 +58,30 @@ public class SpringChessService {
     }
 
     public void resumeGame(String gameId) {
-        Map<Position, Piece> savedBoardStatus = Position.stream()
-                .collect(Collectors.toMap(Function.identity(), position -> {
-                    String pieceName = null;
-                    pieceName = chessPieceRepository.findPieceNameByPosition(gameId, position.name());
-                    return BoardFactory.findPieceByPieceName(pieceName);
-                }));
-
+        Board board = new Board();
+        List<ChessPiece> chessPieces = chessPieceRepository.findByGameId(gameId);
         Optional<String> lastTurn = moveHistoryRepository.findLastTurn(gameId);
 
-        Board board = new Board();
-        board.recoverBoard(savedBoardStatus, lastTurn);
-
-        playingBoards.put(gameId, board);
+        Map<Position, Piece> savedBoard = chessPieces.stream()
+                .collect(Collectors.toMap(
+                        piece -> Position.ofPositionName(piece.getPosition()),
+                        piece -> BoardFactory.findPieceByPieceName(piece.getPiece())
+                ));
+        board.recoverBoard(savedBoard, lastTurn);
     }
 
     public void move(String gameId, String sourceName, String targetName) {
-        Board board = playingBoards.get(gameId);
+        Board board = new Board();
+        List<ChessPiece> chessPieces = chessPieceRepository.findByGameId(gameId);
+        Optional<String> lastTurn = moveHistoryRepository.findLastTurn(gameId);
+
+        Map<Position, Piece> savedBoard = chessPieces.stream()
+                .collect(Collectors.toMap(
+                        piece -> Position.ofPositionName(piece.getPosition()),
+                        piece -> BoardFactory.findPieceByPieceName(piece.getPiece())
+                ));
+        board.recoverBoard(savedBoard, lastTurn);
+
         PieceColor currentTeam = board.getTeamColor();
 
         Position source = Position.ofPositionName(sourceName);
@@ -89,7 +95,16 @@ public class SpringChessService {
     }
 
     public String provideWinner(String gameId) {
-        Board board = playingBoards.get(gameId);
+        Board board = new Board();
+        List<ChessPiece> chessPieces = chessPieceRepository.findByGameId(gameId);
+        Optional<String> lastTurn = moveHistoryRepository.findLastTurn(gameId);
+
+        Map<Position, Piece> savedBoard = chessPieces.stream()
+                .collect(Collectors.toMap(
+                        piece -> Position.ofPositionName(piece.getPosition()),
+                        piece -> BoardFactory.findPieceByPieceName(piece.getPiece())
+                ));
+        board.recoverBoard(savedBoard, lastTurn);
 
         if (board.isGameOver()) {
             deleteSavedGame(gameId);
@@ -98,8 +113,19 @@ public class SpringChessService {
         return "";
     }
 
+
+    // Todo: piece을 symbol로 저장? -> convertPieces 삭제, recoverBoard 메서드 사용하지 않고, 보드 생성하지 않고 진행하게
     public Map<String, Object> provideGameInfo(String gameId) {
-        Board board = playingBoards.get(gameId);
+        Board board = new Board();
+        List<ChessPiece> chessPieces = chessPieceRepository.findByGameId(gameId);
+        Optional<String> lastTurn = moveHistoryRepository.findLastTurn(gameId);
+
+        Map<Position, Piece> savedBoard = chessPieces.stream()
+                .collect(Collectors.toMap(
+                        piece -> Position.ofPositionName(piece.getPosition()),
+                        piece -> BoardFactory.findPieceByPieceName(piece.getPiece())
+                ));
+        board.recoverBoard(savedBoard, lastTurn);
 
         Map<String, Object> gameInfo = new HashMap<>();
         gameInfo.put("pieces", convertPieces(board));
@@ -113,7 +139,6 @@ public class SpringChessService {
     private void deleteSavedGame(String gameId) {
         chessPieceRepository.deleteById(gameId);
         moveHistoryRepository.deleteById(gameId);
-        playingBoards.remove(gameId);
     }
 
     private List<String> convertPieces(Board board) {

@@ -51,7 +51,7 @@ public class WebController {
     }
 
     @PostMapping("/load")
-    public String continueGame(@RequestParam Integer roomId,
+    public String loadGame(@RequestParam Integer roomId,
         @RequestParam(defaultValue = "WHITE") String whiteName,
         @RequestParam(defaultValue = "BLACK") String blackName,
         Model model) {
@@ -77,7 +77,7 @@ public class WebController {
     }
 
     @PostMapping("/game/exit")
-    public String choiceGame() {
+    public String exitGame() {
         return "index";
     }
 

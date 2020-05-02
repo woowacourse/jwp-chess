@@ -29,7 +29,7 @@
         <br/>
         <br/>
         <label class="red-label">* 게임 이어하기시, 이어할 게임이 없으면 위의 이름들로 새 게임을 진행합니다.</label>
-        <form action="/continueGame" hidden id="continue-game" method="post">
+        <form action="/load" hidden id="continue-game" method="post">
             <input hidden name="roomId" value={{roomId}} type="text"/>
             <input hidden id="white-name-continue" maxlength="10" name="whiteName" type="text"/><br>
             <input hidden id="black-name-continue" maxlength="10" name="blackName" type="text"/><br>

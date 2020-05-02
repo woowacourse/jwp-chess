@@ -50,7 +50,19 @@ public class WebController {
         return "game";
     }
 
-    @PostMapping("/game/newGame")
+    @PostMapping("/load")
+    public String continueGame(@RequestParam Integer roomId,
+        @RequestParam(defaultValue = "WHITE") String whiteName,
+        @RequestParam(defaultValue = "BLACK") String blackName,
+        Model model) {
+        model.addAttribute("gameId",
+            chessGameService.findProceedGameId(roomId)
+                .orElseGet(() -> chessGameService
+                    .create(roomId, makeUserNames(whiteName, blackName))));
+        return "game";
+    }
+
+    @PostMapping("/game/new")
     public String newGame(@RequestParam Integer gameId,
         @RequestParam(defaultValue = "WHITE") String whiteName,
         @RequestParam(defaultValue = "BLACK") String blackName,
@@ -64,19 +76,7 @@ public class WebController {
         return "game";
     }
 
-    @PostMapping("/continueGame")
-    public String continueGame(@RequestParam Integer roomId,
-        @RequestParam(defaultValue = "WHITE") String whiteName,
-        @RequestParam(defaultValue = "BLACK") String blackName,
-        Model model) {
-        model.addAttribute("gameId",
-            chessGameService.findProceedGameId(roomId)
-                .orElseGet(() -> chessGameService
-                    .create(roomId, makeUserNames(whiteName, blackName))));
-        return "game";
-    }
-
-    @PostMapping("/game/choiceGame")
+    @PostMapping("/game/exit")
     public String choiceGame() {
         return "index";
     }

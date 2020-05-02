@@ -44,7 +44,7 @@ const createTemplate = (team, symbol) => {
 }
 const findChessCell = (x, y) => document.querySelector(`[data-x="${x - 1}"][data-y="${y - 1}"]`)
 
-fetch("http://localhost:4567/board/" + document.getElementById("id").innerText).then(res => res.json()).then((board) => {
+fetch("/board/" + document.getElementById("id").innerText).then(res => res.json()).then((board) => {
     console.dir(board);
     for (let i = 1; i < 9; i++) {
         for (let j = 1; j < 9; j++) {
@@ -101,7 +101,6 @@ function onDrop(e) {
         if (response.ok) {
             findChessCell(targetX, targetY).innerHTML = findChessCell(sourceX, sourceY).innerHTML;
             findChessCell(sourceX, sourceY).innerHTML = templateBlank();
-            document.getElementById("chess-info").innerHTML = "흑색 : " + response["status2"]["black"] + "백색 : " + response["status2"]["white"];
         }
     }).catch(function (error) {
         alert(error);

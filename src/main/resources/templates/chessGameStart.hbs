@@ -18,7 +18,8 @@
     };
 
     const playNewGame = function () {
-        window.location = 'http://localhost:8080/playing/newGame' + "?" + document.getElementById("roomName").value;
+        window.location = 'http://localhost:8080/playing/newGame'
+                + "?roomName=" + document.getElementById("roomName").value;
     }
 </script>
 <body>

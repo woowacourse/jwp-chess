@@ -26,7 +26,7 @@
         {{#if currentTeamScore}}
             <div id="chess_score">{{currentTeam}}팀의 현재 점수는 {{currentTeamScore}}점 입니다.</div>
         {{/if}}
-
+        <input id = "roomNumber" value = "{{roomNumber}}">
         <form action="/end" method="get">
             <button>종료하기</button>
         </form>

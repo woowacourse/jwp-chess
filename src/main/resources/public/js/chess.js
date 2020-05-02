@@ -2,6 +2,7 @@ let source = null;
 let target = null;
 
 const tiles = document.getElementsByClassName("tile");
+const roomNumber = document.querySelector("#roomNumber").value;
 for (i = 0; i < tiles.length; i++) {
     tiles.item(i).addEventListener("click", function () {
         changeOpacity(this);
@@ -21,14 +22,17 @@ function checkSourceOrTarget(clickedPosition) {
     }
     if (target == null) {
         target = clickedPosition;
-        move(source, target);
+        move(source, target, roomNumber);
     }
 }
 
-function move(source, target) {
+function move(source, target, roomNumber) {
+    console.log(roomNumber);
+
     let moveDto = {
-        "source": source.id,
-        "target": target.id
+        roomNumber : roomNumber,
+        source: source.id,
+        target: target.id
     };
 
     const moveInformation = {

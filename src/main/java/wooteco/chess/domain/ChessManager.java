@@ -6,8 +6,13 @@ import wooteco.chess.domain.piece.Team;
 import java.util.Optional;
 
 public class ChessManager {
+    private Long id;
     private ChessRunner chessRunner;
     private boolean playing;
+
+    public ChessManager(Long id) {
+        this.id = id;
+    }
 
     public void start() {
         this.chessRunner = new ChessRunner();
@@ -49,5 +54,9 @@ public class ChessManager {
 
     public Optional<Team> getWinner() {
         return chessRunner.findWinner();
+    }
+
+    public Long getId() {
+        return id;
     }
 }

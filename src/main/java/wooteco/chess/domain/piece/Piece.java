@@ -1,11 +1,11 @@
 package wooteco.chess.domain.piece;
 
+import java.util.Map;
+
 import wooteco.chess.domain.Color;
 import wooteco.chess.domain.PieceScore;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.strategy.MoveStrategy;
-
-import java.util.Map;
 
 /**
  * 체스 기물을 의미하는 클래스입니다.
@@ -46,7 +46,7 @@ public abstract class Piece {
     }
 
     public abstract Path findPathByRule(Path path,
-                                        Map<Position, Piece> pieces);
+        Map<Position, Piece> pieces);
 
     public Color getColor() {
         return color;

@@ -1,13 +1,12 @@
 package wooteco.chess.repository.entity;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
-import wooteco.chess.domain.Color;
-
 import java.io.Serializable;
 import java.util.Set;
-import java.util.UUID;
+
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
+import wooteco.chess.domain.Color;
 
 @Table("game")
 public class GameEntity implements Serializable {

@@ -1,12 +1,12 @@
 package wooteco.chess.domain.piece.strategy;
 
+import java.util.List;
+import java.util.Map;
+
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Direction;
 import wooteco.chess.domain.piece.Path;
 import wooteco.chess.domain.piece.Piece;
-
-import java.util.List;
-import java.util.Map;
 
 public class BasicOneMoveStrategy implements MoveStrategy {
     List<Direction> directions;

@@ -1,32 +1,22 @@
 package wooteco.chess.controller;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.sql.SQLException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import wooteco.chess.dto.AuthorizeDto;
 import wooteco.chess.dto.RoomRequestDto;
 import wooteco.chess.exception.WrongIdException;
 import wooteco.chess.repository.entity.RoomEntity;
-import wooteco.chess.service.SpringGameService;
 import wooteco.chess.service.SpringRoomService;
 
 @SpringBootTest
@@ -43,7 +33,7 @@ class SpringRoomControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private RoomRequestDto ddRoom = new RoomRequestDto("DD", "1234");;
+    private final RoomRequestDto ddRoom = new RoomRequestDto("DD", "1234");
 
     @Test
     void getAllRooms() throws Exception {
@@ -54,17 +44,17 @@ class SpringRoomControllerTest {
     }
 
     @Test
-    void enterRoom() throws Exception{
+    void enterRoom() throws Exception {
         RoomEntity persistEntity = roomService.addRoom(ddRoom);
         mockMvc.perform(post("/rooms/enter/" + persistEntity.getId())
             .param("loginSuccess", "true"))
-        .andExpect(status().isOk())
-        .andExpect(model().attribute("roomId", persistEntity.getId()))
-        .andExpect(view().name("game"));
+            .andExpect(status().isOk())
+            .andExpect(model().attribute("roomId", persistEntity.getId()))
+            .andExpect(view().name("game"));
     }
 
     @Test
-    void canNotEnterRoom() throws Exception{
+    void canNotEnterRoom() throws Exception {
         RoomEntity persistEntity = roomService.addRoom(ddRoom);
         mockMvc.perform(post("/rooms/enter/" + persistEntity.getId())
             .param("loginSuccess", "false"))
@@ -85,11 +75,11 @@ class SpringRoomControllerTest {
     void removeRoom() throws Exception {
         RoomEntity persistEntity = roomService.addRoom(ddRoom);
         Long id = persistEntity.getId();
-        mockMvc.perform(post("/rooms/remove/"+id).param("loginSuccess", "true"))
+        mockMvc.perform(post("/rooms/remove/" + id).param("loginSuccess", "true"))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/rooms"));
 
-        assertThatThrownBy(()->roomService.findById(id))
+        assertThatThrownBy(() -> roomService.findById(id))
             .isInstanceOf(WrongIdException.class);
     }
 
@@ -97,9 +87,9 @@ class SpringRoomControllerTest {
     void authorize() throws Exception {
         RoomEntity roomEntity = roomService.addRoom(ddRoom);
         mockMvc.perform(post("/rooms/authorize")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new AuthorizeDto(roomEntity.getId(),
-                    roomEntity.getPassword()))))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new AuthorizeDto(roomEntity.getId(),
+                roomEntity.getPassword()))))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("true"));

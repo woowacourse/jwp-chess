@@ -1,12 +1,13 @@
 package wooteco.chess.domain;
 
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Pawn;
 import wooteco.chess.domain.piece.Pieces;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class PieceScoreTest {
     @DisplayName("최종적으로 각 팀의 점수를 계산해 제대로 나오는지 확인하는 테스트")

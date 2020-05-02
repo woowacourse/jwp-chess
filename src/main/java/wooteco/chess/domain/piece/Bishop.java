@@ -1,11 +1,11 @@
 package wooteco.chess.domain.piece;
 
+import java.util.Map;
+
 import wooteco.chess.domain.Color;
 import wooteco.chess.domain.PieceScore;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.strategy.BasicRepeatMoveStrategy;
-
-import java.util.Map;
 
 public class Bishop extends Piece {
     public Bishop(Color color, String symbol) {

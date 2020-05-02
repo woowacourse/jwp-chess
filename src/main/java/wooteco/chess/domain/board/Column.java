@@ -27,9 +27,9 @@ public enum Column {
 
     public static Column of(int column) {
         return Arrays.stream(wooteco.chess.domain.board.Column.values())
-                .filter(file -> column == file.number)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("잘못입력하셨습니다!"));
+            .filter(file -> column == file.number)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("잘못입력하셨습니다!"));
     }
 
     public String getColumn() {

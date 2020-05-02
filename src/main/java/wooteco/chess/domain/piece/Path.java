@@ -1,10 +1,10 @@
 package wooteco.chess.domain.piece;
 
-import wooteco.chess.domain.board.Position;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import wooteco.chess.domain.board.Position;
 
 public class Path {
     private final int INITIAL_MOVABLE_PAWN_DISTANCE = 1;
@@ -17,7 +17,8 @@ public class Path {
         this.sourcePosition = sourcePosition;
     }
 
-    public void findPathOneTimeByDirections(List<Direction> directions, Map<Position, Piece> pieces) {
+    public void findPathOneTimeByDirections(List<Direction> directions,
+        Map<Position, Piece> pieces) {
         for (Direction direction : directions) {
             int nextPositionOfX = sourcePosition.getColumn() + direction.getX();
             int nextPositionOfY = sourcePosition.getRow() + direction.getY();
@@ -26,13 +27,15 @@ public class Path {
             }
             Position nextPosition = Position.of(nextPositionOfX, nextPositionOfY);
             if (isBlankPosition(pieces, nextPosition)
-                    || (!isBlankPosition(pieces, nextPosition) && isSameColorPiece(pieces, nextPosition))) {
+                || (!isBlankPosition(pieces, nextPosition) && isSameColorPiece(pieces,
+                nextPosition))) {
                 positions.add(nextPosition);
             }
         }
     }
 
-    public void findPathManyTimesByDirections(List<Direction> directions, Map<Position, Piece> pieces) {
+    public void findPathManyTimesByDirections(List<Direction> directions,
+        Map<Position, Piece> pieces) {
         for (Direction direction : directions) {
             int nextPositionOfX = sourcePosition.getColumn() + direction.getX();
             int nextPositionOfY = sourcePosition.getRow() + direction.getY();
@@ -40,8 +43,9 @@ public class Path {
         }
     }
 
-    private void goForwardPath(Map<Position, Piece> pieces, Direction direction, int nextPositionOfX,
-                               int nextPositionOfY) {
+    private void goForwardPath(Map<Position, Piece> pieces, Direction direction,
+        int nextPositionOfX,
+        int nextPositionOfY) {
         while (!isOutOfBoundPosition(nextPositionOfX, nextPositionOfY)) {
             Position nextPosition = Position.of(nextPositionOfX, nextPositionOfY);
             addPositionIfNextBlank(pieces, nextPosition);
@@ -54,12 +58,13 @@ public class Path {
         }
     }
 
-    public void findPathPawnByDirections(List<Direction> moveDirections, List<Direction> attackDirections,
-                                         Map<Position, Piece> pieces) {
+    public void findPathPawnByDirections(List<Direction> moveDirections,
+        List<Direction> attackDirections,
+        Map<Position, Piece> pieces) {
         for (int i = 0; i < moveDirections.size(); i++) {
             Direction direction = moveDirections.get(i);
             if (i == INITIAL_MOVABLE_PAWN_DISTANCE && !sourcePosition.isInitialPawnPosition(
-                    pieces.get(sourcePosition).getColor())) {
+                pieces.get(sourcePosition).getColor())) {
                 continue;
             }
             int nextPositionOfX = sourcePosition.getColumn() + direction.getX();
@@ -105,8 +110,9 @@ public class Path {
     }
 
     private boolean isOutOfBoundPosition(int positionOfX, int positionOfY) {
-        return positionOfX > Position.MAX || positionOfX < Position.MIN || positionOfY > Position.MAX
-                || positionOfY < Position.MIN;
+        return positionOfX > Position.MAX || positionOfX < Position.MIN
+            || positionOfY > Position.MAX
+            || positionOfY < Position.MIN;
     }
 
     public boolean isMovable(Position target) {
@@ -115,7 +121,7 @@ public class Path {
 
     public List<String> getPositions() {
         return positions.stream()
-                .map(Position::getPosition)
-                .collect(Collectors.toList());
+            .map(Position::getPosition)
+            .collect(Collectors.toList());
     }
 }

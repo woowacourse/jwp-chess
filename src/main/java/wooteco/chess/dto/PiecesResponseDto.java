@@ -1,9 +1,9 @@
 package wooteco.chess.dto;
 
+import java.util.List;
+
 import wooteco.chess.domain.piece.PieceMapper;
 import wooteco.chess.domain.piece.Pieces;
-
-import java.util.List;
 
 public class PiecesResponseDto {
     private final List<PieceResponseDto> pieces;

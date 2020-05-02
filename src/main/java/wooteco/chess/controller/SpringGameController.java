@@ -1,13 +1,21 @@
 package wooteco.chess.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import wooteco.chess.dto.*;
-import wooteco.chess.service.SpringGameService;
-
 import java.sql.SQLException;
 import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import wooteco.chess.dto.GameResponseDto;
+import wooteco.chess.dto.GameStatusDto;
+import wooteco.chess.dto.MoveRequestDto;
+import wooteco.chess.service.SpringGameService;
 
 @RestController
 @RequestMapping("/game")
@@ -25,7 +33,8 @@ public class SpringGameController {
     }
 
     @PostMapping("/move")
-    public ResponseEntity<GameResponseDto> move(@RequestBody MoveRequestDto requestDTO) throws SQLException {
+    public ResponseEntity<GameResponseDto> move(@RequestBody MoveRequestDto requestDTO) throws
+        SQLException {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(gameService.move(requestDTO));
         } catch (IllegalArgumentException e) {
@@ -46,7 +55,8 @@ public class SpringGameController {
     }
 
     @GetMapping("/get")
-    public List<String> getMovablePositions(final MoveRequestDto moveRequestDto) throws SQLException {
+    public List<String> getMovablePositions(final MoveRequestDto moveRequestDto) throws
+        SQLException {
         return gameService.getMovablePositions(moveRequestDto);
     }
 }

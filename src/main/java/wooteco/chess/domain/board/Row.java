@@ -26,9 +26,9 @@ public enum Row {
 
     public static Row of(int row) {
         return Arrays.stream(Row.values())
-                .filter(rank -> rank.row == row)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("잘못입력하셨습니다!"));
+            .filter(rank -> rank.row == row)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("잘못입력하셨습니다!"));
     }
 
     public int getRow() {

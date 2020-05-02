@@ -1,12 +1,12 @@
 package wooteco.chess.domain.piece;
 
-import wooteco.chess.domain.Color;
-import wooteco.chess.dto.PieceResponseDto;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import wooteco.chess.domain.Color;
+import wooteco.chess.dto.PieceResponseDto;
 
 public class PieceMapper {
     private static final PieceMapper PIECE_MAPPER = new PieceMapper();
@@ -62,10 +62,10 @@ public class PieceMapper {
 
     public List<PieceResponseDto> createPiecesResponseDTO(Pieces pieces) {
         return pieces.getPieces().keySet().stream()
-                .map(position -> new PieceResponseDto(
-                        position.getPosition(),
-                        findViewPiece(pieces.getPieceByPosition(position).getSymbol()))
-                )
-                .collect(Collectors.toList());
+            .map(position -> new PieceResponseDto(
+                position.getPosition(),
+                findViewPiece(pieces.getPieceByPosition(position).getSymbol()))
+            )
+            .collect(Collectors.toList());
     }
 }

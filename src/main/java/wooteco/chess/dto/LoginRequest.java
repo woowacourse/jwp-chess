@@ -2,8 +2,8 @@ package wooteco.chess.dto;
 
 public class LoginRequest {
 
-    private Long id;
-    private Boolean loginSuccess;
+    private final Long id;
+    private final Boolean loginSuccess;
 
     public LoginRequest(final Long id, final Boolean loginSuccess) {
         this.id = id;

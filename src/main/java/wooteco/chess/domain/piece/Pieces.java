@@ -1,11 +1,11 @@
 package wooteco.chess.domain.piece;
 
-import wooteco.chess.domain.Color;
-import wooteco.chess.domain.board.Position;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import wooteco.chess.domain.Color;
+import wooteco.chess.domain.board.Position;
 
 public class Pieces {
     public static final int KING_DIE_COUNT = 0;
@@ -50,10 +50,10 @@ public class Pieces {
 
     public boolean isKingDead(Color currentColor) {
         long kingLiveCount = pieces.keySet().stream()
-                .map(pieces::get)
-                .filter(Piece::isKing)
-                .filter(piece -> piece.isSameColor(currentColor))
-                .count();
+            .map(pieces::get)
+            .filter(Piece::isKing)
+            .filter(piece -> piece.isSameColor(currentColor))
+            .count();
 
         return kingLiveCount == KING_DIE_COUNT;
     }

@@ -46,7 +46,7 @@ public class BoardFactory {
         INITIAL_BOARD = Collections.unmodifiableMap(initialBoard);
     }
 
-    public Map<Square, Piece> create() {
+    public static Map<Square, Piece> create() {
         return new HashMap<>(INITIAL_BOARD);
     }
 }

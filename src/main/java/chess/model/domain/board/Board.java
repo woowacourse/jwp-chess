@@ -20,7 +20,7 @@ public class Board {
     }
 
     public static Board createInitial() {
-        return new Board(new BoardFactory().create());
+        return new Board(BoardFactory.create());
     }
 
     public static Board of(Map<Square, Piece> chessBoard) {

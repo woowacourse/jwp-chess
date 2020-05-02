@@ -22,18 +22,19 @@ public class ChessController {
     @PostMapping("/move")
     @ResponseBody
     public ResponseDto move(@RequestParam Long roomId,
+                            @RequestParam String userPassword,
                             @RequestParam String source,
                             @RequestParam String target) throws Exception {
         return chessService.move(new Move(
-                roomId, source, target));
+                roomId, source, target), userPassword);
     }
 
     @GetMapping("/way")
     @ResponseBody
     public ResponseDto<List<String>> way(@RequestParam Long roomId,
-                                         @RequestParam String team,
+                                         @RequestParam String userPassword,
                                          @RequestParam String coordinate) throws Exception{
-        return chessService.getMovableWay(roomId, Team.valueOf(team), Coordinate.of(coordinate));
+        return chessService.getMovableWay(roomId, Coordinate.of(coordinate), userPassword);
     }
 
     @GetMapping("/renew/{roomId}")

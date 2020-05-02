@@ -9,6 +9,7 @@ import wooteco.chess.dto.ChessResponseDto;
 import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.entity.Move;
 import wooteco.chess.repository.MoveRepository;
+import wooteco.chess.repository.RoomRepository;
 import wooteco.chess.support.ChessResponseCode;
 
 import java.util.HashMap;
@@ -18,18 +19,25 @@ import java.util.Map;
 @Service
 public class ChessService {
     private MoveRepository moveRepository;
+    private RoomService roomService;
+
     private Map<Long, Chess> cachedChess = new HashMap<>();
 
-    public ChessService(MoveRepository moveRepository) {
+    public ChessService(MoveRepository moveRepository, RoomService roomService) {
         this.moveRepository = moveRepository;
+        this.roomService = roomService;
     }
 
-    public ResponseDto move(Move move){
+    public ResponseDto move(Move move, String userPassword){
         if (!cachedChess.containsKey(move.getRoomId())) {
             return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
         }
 
         Chess chess = cachedChess.get(move.getRoomId());
+        if (!chess.isTurnOf(roomService.checkAuthentication(move.getRoomId(), userPassword))) {
+            return ResponseDto.fail(ChessResponseCode.NOT_YOUR_TURN);
+        }
+
         chess.move(Coordinate.of(move.getSource()), Coordinate.of(move.getTarget()));
         cachedChess.put(move.getRoomId(), chess);
         moveRepository.save(move);
@@ -40,13 +48,14 @@ public class ChessService {
         return ResponseDto.success();
     }
 
-    public ResponseDto getMovableWay(Long roomId, Team team, Coordinate coordinate) {
+    public ResponseDto getMovableWay(Long roomId, Coordinate coordinate, String userPassword) {
         if (!cachedChess.containsKey(roomId)) {
             return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
         }
 
         Chess chess = cachedChess.get(roomId);
-        if (!chess.isTurnOf(team) || chess.isTurnOf(coordinate)) {
+        Team team = roomService.checkAuthentication(roomId, userPassword);
+        if (!(chess.isTurnOf(team) && chess.isTurnOf(coordinate))) {
             return ResponseDto.fail(ChessResponseCode.NOT_YOUR_TURN);
         }
         return ResponseDto.success(chess.getMovableWay(coordinate));

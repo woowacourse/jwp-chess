@@ -3,12 +3,6 @@ package chess.model.domain.board;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.model.domain.board.CastlingElement;
-import chess.model.domain.board.ChessBoard;
-import chess.model.domain.board.ChessGame;
-import chess.model.domain.board.EnPassant;
-import chess.model.domain.board.Square;
-import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.King;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Rook;
@@ -73,8 +67,8 @@ public class TeamScoreTest {
         boardInitial.put(Square.of("h8"), Rook.getInstance(Team.BLACK));
         boardInitial.put(Square.of("a1"), Rook.getInstance(Team.WHITE));
         boardInitial.put(Square.of("h1"), Rook.getInstance(Team.WHITE));
-        ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
-            CastlingElement.createInitial(), new EnPassant());
+        ChessGame chessGame = new ChessGame(Board.of(boardInitial), Team.WHITE,
+            Castling.createInitial(), new EnPassant());
 
         TeamScore teamScore = chessGame.deriveTeamScore();
 

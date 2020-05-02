@@ -11,7 +11,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("CHESS_GAME_TB")
+@Table("CHESS_GAME")
 public class ChessGameEntity {
 
     @Id

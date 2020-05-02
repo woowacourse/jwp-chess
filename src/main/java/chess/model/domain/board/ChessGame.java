@@ -26,29 +26,29 @@ public class ChessGame {
     private static final MoveStateChecker PROMOTION_MOVE_CHECKER
         = new MoveStateChecker(new MoveStatePromotion());
 
-    private final ChessBoard chessBoard;
-    private final CastlingElement castlingElements;
-    private Team turn;
+    private final Board board;
+    private final Castling castling;
     private final EnPassant enPassant;
+    private Team turn;
 
     public ChessGame() {
-        this(ChessBoard.createInitial(), Team.WHITE, CastlingElement.createInitial(),
+        this(Board.createInitial(), Team.WHITE, Castling.createInitial(),
             new EnPassant());
     }
 
-    public ChessGame(ChessBoard chessBoard, Team turn, CastlingElement castlingElements,
+    public ChessGame(Board board, Team turn, Castling castling,
         EnPassant enPassant) {
-        NullChecker.validateNotNull(chessBoard, turn, castlingElements, enPassant);
-        this.chessBoard = chessBoard;
+        NullChecker.validateNotNull(board, turn, castling, enPassant);
+        this.board = board;
         this.turn = turn;
-        this.castlingElements = castlingElements;
+        this.castling = castling;
         this.enPassant = enPassant;
     }
 
     public static ChessGame of(ChessGame chessGame) {
-        return new ChessGame(ChessBoard.of(new HashMap<>(chessGame.getChessBoard()))
+        return new ChessGame(Board.of(new HashMap<>(chessGame.getBoard()))
             , chessGame.turn
-            , CastlingElement.of(new HashSet<>(chessGame.getCastlingElements()))
+            , Castling.of(new HashSet<>(chessGame.getCastling()))
             , new EnPassant(new HashMap<>(chessGame.getEnPassants()))
         );
     }
@@ -69,14 +69,14 @@ public class ChessGame {
     }
 
     private void movePiece(MoveInfo moveInfo) {
-        chessBoard.move(moveInfo);
+        board.move(moveInfo);
         executeEnPassant(moveInfo);
         executeCastling(moveInfo);
     }
 
     private void executeEnPassant(MoveInfo moveInfo) {
         if (enPassant.isEnemyPast(moveInfo.getTarget(), turn)) {
-            chessBoard.removeBy(enPassant.getCurrentSquare(moveInfo.getTarget()));
+            board.removeBy(enPassant.getCurrentSquare(moveInfo.getTarget()));
         }
         enPassant.removeEnPassant(turn);
         enPassant.removeEnPassant(moveInfo);
@@ -84,28 +84,28 @@ public class ChessGame {
 
     private void executeCastling(MoveInfo moveInfo) {
         if (canCastling(moveInfo)) {
-            chessBoard.move(CastlingSetting.findRookCastlingMotion(moveInfo.getTarget()));
+            board.move(CastlingSetting.findRookCastlingMotion(moveInfo.getTarget()));
         }
-        castlingElements.remove(moveInfo.getSource());
+        castling.remove(moveInfo.getSource());
     }
 
-    public boolean canCastling(MoveInfo moveInfo) {
-        return castlingElements.canCastling(moveInfo);
+    private boolean canCastling(MoveInfo moveInfo) {
+        return castling.canCastling(moveInfo);
     }
 
     public Square findSquareForPromote() {
-        return chessBoard.findSquareForPromote()
+        return board.findSquareForPromote()
             .orElseThrow(() -> new IllegalArgumentException("프로모션 가능한 폰이 없습니다."));
     }
 
     public boolean canPromote() {
-        return chessBoard.findSquareForPromote().isPresent();
+        return board.findSquareForPromote().isPresent();
     }
 
     public MoveState promote(Type typeToPromotion) {
         MoveState moveState = PROMOTION_MOVE_CHECKER.check(this);
         if (moveState == MoveState.NEEDS_PROMOTION) {
-            chessBoard.changePiece(findSquareForPromote(), makePieceToPromotion(typeToPromotion));
+            board.changePiece(findSquareForPromote(), makePieceToPromotion(typeToPromotion));
             moveState = MoveState.SUCCESS_PROMOTION;
             turn = moveState.turnTeam(turn);
         }
@@ -124,7 +124,7 @@ public class ChessGame {
     }
 
     public boolean isMovable(MoveInfo moveInfo) {
-        Piece sourcePiece = findPiece(moveInfo.getSource());
+        Piece sourcePiece = board.findPieceBy(moveInfo.getSource());
         Set<Square> movableArea = findMovableAreas(moveInfo.getSource());
         if (movableArea.isEmpty()) {
             return false;
@@ -140,64 +140,60 @@ public class ChessGame {
     }
 
     public Set<Square> findMovableAreas(Square source) {
-        Piece sourcePiece = findPiece(source);
-        if (chessBoard.isNotExist(source) || sourcePiece.isNotSameTeam(turn)) {
+        Piece sourcePiece = board.findPieceBy(source);
+        if (board.isNotExist(source) || sourcePiece.isNotSameTeam(turn)) {
             return new HashSet<>();
         }
-        ChessBoard chessBoardForMovable = makeChessBoardForMovable(sourcePiece);
+        Board boardForMovable = makeChessBoardForMovable(sourcePiece);
         return sourcePiece.findMovableAreas(source,
-            chessBoardForMovable.getChessBoard(), castlingElements.getCastlingElements());
+            boardForMovable.getBoard(), castling.getCastling());
     }
 
-    private ChessBoard makeChessBoardForMovable(Piece sourcePiece) {
-        ChessBoard chessBoardForCheck = ChessBoard.of(chessBoard);
+    private Board makeChessBoardForMovable(Piece sourcePiece) {
+        Board boardForCheck = Board.of(board);
         if (sourcePiece instanceof Pawn) {
-            chessBoardForCheck.addElements(enPassant.getEnPassantBoard(turn));
+            boardForCheck.addElements(enPassant.getEnPassantBoard(turn));
         }
-        return chessBoardForCheck;
+        return boardForCheck;
     }
 
     public boolean isPawnMoveTwoRankForward(MoveInfo moveInfo) {
-        if (chessBoard.isNotExist(moveInfo.getSource())) {
+        if (board.isNotExist(moveInfo.getSource())) {
             return false;
         }
-        Piece sourcePiece = chessBoard.findPieceBy(moveInfo.getSource());
+        Piece sourcePiece = board.findPieceBy(moveInfo.getSource());
         return EnPassant.isPawnMoveTwoRank(sourcePiece, moveInfo);
     }
 
     public boolean isKingCaptured() {
-        return chessBoard.countPieceOfKing() != Team.values().length;
+        return board.countPieceOfKing() != Team.values().length;
     }
 
     public TeamScore deriveTeamScore() {
-        return chessBoard.deriveTeamScore();
+        return board.deriveTeamScore();
     }
 
     public boolean isNotExistPiece(Square square) {
-        return chessBoard.isNotExist(square);
+        return board.isNotExist(square);
     }
 
     public boolean isNotCorrectTurn(MoveInfo moveInfo) {
-        if (chessBoard.isNotExist(moveInfo.getSource())) {
+        if (board.isNotExist(moveInfo.getSource())) {
             return true;
         }
-        return !chessBoard.findPieceBy(moveInfo.getSource()).isSameTeam(turn);
+        return !board.findPieceBy(moveInfo.getSource()).isSameTeam(turn);
     }
 
-    public Piece findPiece(Square square) {
-        return chessBoard.findPieceBy(square);
-    }
-
-    public Set<CastlingSetting> getCastlingElements() {
-        return castlingElements.getCastlingElements();
+    public Set<CastlingSetting> getCastling() {
+        return castling.getCastling();
     }
 
     public Team getTurn() {
         return turn;
     }
 
-    public Map<Square, Piece> getChessBoard() {
-        return chessBoard.getChessBoard();
+    public Map<Square, Piece> getBoard() {
+        return board.getBoard();
     }
 
     public Map<Square, Square> getEnPassants() {

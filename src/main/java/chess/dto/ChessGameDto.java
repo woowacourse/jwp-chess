@@ -60,7 +60,7 @@ public class ChessGameDto {
     public ChessGameDto(ChessGame chessGame, MoveState moveState, TeamScore teamScore,
         Map<Team, String> names) {
         NullChecker.validateNotNull(chessGame, moveState);
-        Map<Square, Piece> board = chessGame.getChessBoard();
+        Map<Square, Piece> board = chessGame.getBoard();
         List<String> pieces = new ArrayList<>();
         for (int rank = Square.MAX_FILE_AND_RANK_COUNT;
             rank >= Square.MIN_FILE_AND_RANK_COUNT; rank--) {

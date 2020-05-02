@@ -71,15 +71,15 @@ public abstract class Piece {
         return !isSameTeam(team);
     }
 
-    public double getScore() {
-        return type.getScore();
-    }
-
     public boolean isSameTeam(Piece piece) {
         return this.team == piece.team;
     }
 
     public boolean isSameType(Type type) {
         return this.type == type;
+    }
+
+    public double getScore() {
+        return type.getScore();
     }
 }

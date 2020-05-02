@@ -1,8 +1,8 @@
 package chess.service;
 
-import chess.model.domain.board.CastlingElement;
+import chess.model.domain.board.Castling;
 import chess.model.domain.board.CastlingSetting;
-import chess.model.domain.board.ChessBoard;
+import chess.model.domain.board.Board;
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.EnPassant;
 import chess.model.domain.board.Square;
@@ -87,9 +87,9 @@ public class ChessGameService {
 
     private void saveBoard(ChessGame chessGame, ChessGameEntity chessGameEntity) {
         Map<Square, Square> enPassants = makeEnPassants(chessGame);
-        Map<Square, Boolean> castlingElements = makeCastlingElements(chessGame.getChessBoard(),
-            chessGame.getCastlingElements());
-        Map<Square, Piece> chessBoard = chessGame.getChessBoard();
+        Map<Square, Boolean> castlingElements = makeCastlingElements(chessGame.getBoard(),
+            chessGame.getCastling());
+        Map<Square, Piece> chessBoard = chessGame.getBoard();
 
         for (Square square : chessBoard.keySet()) {
             chessGameEntity.addBoard(new BoardEntity(
@@ -201,7 +201,7 @@ public class ChessGameService {
             }
         }
 
-        return new ChessGame(ChessBoard.of(chessBoard), turn, CastlingElement.of(castlingElements),
+        return new ChessGame(Board.of(chessBoard), turn, Castling.of(castlingElements),
             new EnPassant(enPassants));
     }
 

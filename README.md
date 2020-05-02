@@ -108,7 +108,7 @@ create table room(
 ```mysql
 create table board(
         id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        room int NOT NULL,
+        room_entity int NOT NULL,
         position varchar(10) NOT NULL,
         pieceName varchar(10) NOT NULL
   );
@@ -117,7 +117,7 @@ create table board(
 ``` mysql
 create table turn(
         id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        room int NOT NULL,
+        room_entity int NOT NULL,
         teamName varchar(10) NOT NULL
 );
 ```

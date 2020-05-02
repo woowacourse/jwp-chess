@@ -1,17 +1,17 @@
 package wooteco.chess.service;
 
 import org.springframework.stereotype.Service;
+import wooteco.chess.domain.piece.Team;
 import wooteco.chess.dto.ResponseDto;
 import wooteco.chess.entity.Room;
 import wooteco.chess.repository.RoomRepository;
 import wooteco.chess.support.ChessResponseCode;
 
-import java.sql.SQLException;
 import java.util.Objects;
 
 @Service
 public class RoomService {
-    private static final Long DEFAULT_VALUE = -1L;
+    private static final String DEFAULT_VALUE = "default";
 
     private RoomRepository roomRepository;
 
@@ -23,11 +23,16 @@ public class RoomService {
         return ResponseDto.success(roomRepository.save(room));
     }
 
-    public ResponseDto status(Long roomId) throws SQLException {
-        return ResponseDto.success(roomRepository.findById(roomId));
+    public ResponseDto status(Long roomId){
+        Room room = roomRepository.findById(roomId)
+                .orElse(null);
+        if(Objects.isNull(room)) {
+            return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
+        }
+        return ResponseDto.success(room);
     }
 
-    public ResponseDto join(String roomName, Long userId){
+    public ResponseDto join(String roomName, String userPassword){
         Room room = roomRepository.findByName(roomName)
                 .orElse(null);
 
@@ -35,19 +40,18 @@ public class RoomService {
             return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
         }
 
-        if (room.getWhiteUserId() == DEFAULT_VALUE) {
-            room.setWhiteUserId(userId);
-        } else if (room.getBlackUserId() == DEFAULT_VALUE) {
-            room.setBlackUserId(userId);
+        if (room.getWhitePassword().equals(DEFAULT_VALUE)) {
+            room.setWhitePassword(userPassword);
+        } else if (room.getBlackPassword().equals(DEFAULT_VALUE)) {
+            room.setBlackPassword(userPassword);
         } else {
             return ResponseDto.fail(ChessResponseCode.ROOM_IS_FULL);
         }
 
-        roomRepository.save(room);
-        return ResponseDto.success();
+        return ResponseDto.success(roomRepository.save(room));
     }
 
-    public ResponseDto exit(Long roomId, Long userId) {
+    public ResponseDto exit(Long roomId, String userPassword) {
         Room room = roomRepository.findById(roomId)
                 .orElse(null);
 
@@ -55,15 +59,31 @@ public class RoomService {
             return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
         }
 
-        if (room.getWhiteUserId() == userId) {
-            room.setWhiteUserId(DEFAULT_VALUE);
-        } else if (room.getBlackUserId() == userId) {
-            room.setBlackUserId(DEFAULT_VALUE);
+        if (room.getWhitePassword().equals(userPassword)) {
+            room.setWhitePassword(DEFAULT_VALUE);
+        } else if (room.getBlackPassword().equals(userPassword)) {
+            room.setBlackPassword(DEFAULT_VALUE);
         } else {
             return ResponseDto.fail(ChessResponseCode.BAD_REQUEST);
         }
 
         roomRepository.save(room);
         return ResponseDto.success();
+    }
+
+    public Team checkAuthentication(Long roomId, String userPassword) {
+        Room room = roomRepository.findById(roomId)
+                .orElse(null);
+        if (Objects.isNull(room)) {
+            return Team.NOTHING;
+        }
+
+        if(room.getWhitePassword().equals(userPassword)) {
+            return Team.WHITE;
+        }
+        if (room.getBlackPassword().equals(userPassword)) {
+            return Team.BLACK;
+        }
+        return Team.NOTHING;
     }
 }

@@ -1,7 +1,7 @@
 package wooteco.chess.support;
 
 public interface ResponseCode {
-    String getCode();
+    Integer getCode();
 
     String getMessage();
 }

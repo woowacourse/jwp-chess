@@ -1,20 +1,15 @@
 package wooteco.chess.repository;
 
-import wooteco.chess.dto.RoomDto;
-import wooteco.chess.result.Result;
+import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import wooteco.chess.entity.Room;
 
-import java.sql.SQLException;
+import java.util.Optional;
 
-public interface RoomRepository {
-    Result create(RoomDto roomDto) throws SQLException;
-
-    Result findById(int roomId) throws SQLException;
-
-    Result findByName(String roomName) throws SQLException;
-
-    Result update(RoomDto roomDto) throws SQLException;
-
-    Result delete(int roomId) throws SQLException;
-
-    Result deleteAll() throws SQLException;
+@Repository
+public interface RoomRepository extends CrudRepository<Room, Long> {
+    @Query("SELECT * FROM room WHERE name = :name")
+    Optional<Room> findByName(@Param("name") String name);
 }

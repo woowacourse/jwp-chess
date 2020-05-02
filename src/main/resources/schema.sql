@@ -21,9 +21,9 @@ USE `chess`;
 CREATE TABLE IF NOT EXISTS `chess`.`room`
 (
     `id`            BIGINT         NOT NULL,
-    `black_user_id` BIGINT         NOT NULL,
-    `white_user_id` BIGINT         NOT NULL,
-    `is_end`        TINYINT     NOT NULL,
+    `black_password` VARCHAR(21)    NOT NULL,
+    `white_password` VARCHAR(21)    NOT NULL,
+    `is_end`        BIT     NOT NULL,
     `name`          VARCHAR(21) NOT NULL,
     PRIMARY KEY (`id`)
 )

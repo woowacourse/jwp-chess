@@ -5,27 +5,27 @@ import org.springframework.data.relational.core.mapping.Table;
 
 @Table("room")
 public class Room {
-    public static final Long DEFAULT_USER_ID = -1L;
+    public static final String DEFAULT_USER_ID = "default";
     public static final String DEFAULT_NAME = "default";
 
     @Id
     private Long id;
-    private Long blackUserId;
-    private Long whiteUserId;
+    private String blackPassword;
+    private String whitePassword;
     private boolean isEnd;
     private String name;
 
-    public Room(Long id, Long blackUserId, Long whiteUserId, boolean isEnd, String name) {
+    public Room(Long id, String blackPassword, String whitePassword, boolean isEnd, String name) {
         this.id = id;
-        this.blackUserId = blackUserId;
-        this.whiteUserId = whiteUserId;
+        this.blackPassword = blackPassword;
+        this.whitePassword = whitePassword;
         this.isEnd = isEnd;
         this.name = name;
     }
 
-    public Room(Long blackUserId, Long whiteUserId, boolean isEnd, String name) {
-        this.blackUserId = blackUserId;
-        this.whiteUserId = whiteUserId;
+    public Room(String blackPassword, String whitePassword, boolean isEnd, String name) {
+        this.blackPassword = blackPassword;
+        this.whitePassword = whitePassword;
         this.isEnd = isEnd;
         this.name = name;
     }
@@ -51,20 +51,20 @@ public class Room {
         this.name = name;
     }
 
-    public Long getBlackUserId() {
-        return blackUserId;
+    public String getBlackPassword() {
+        return blackPassword;
     }
 
-    public void setBlackUserId(Long blackUserId) {
-        this.blackUserId = blackUserId;
+    public void setBlackPassword(String blackPassword) {
+        this.blackPassword = blackPassword;
     }
 
-    public Long getWhiteUserId() {
-        return whiteUserId;
+    public String getWhitePassword() {
+        return whitePassword;
     }
 
-    public void setWhiteUserId(Long whiteUserId) {
-        this.whiteUserId = whiteUserId;
+    public void setWhitePassword(String whitePassword) {
+        this.whitePassword = whitePassword;
     }
 
     public boolean isEnd() {

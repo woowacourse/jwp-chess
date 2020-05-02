@@ -6,12 +6,11 @@ import wooteco.chess.domain.board.BoardGenerator;
 import wooteco.chess.domain.coordinate.Coordinate;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.dto.ChessResponseDto;
-import wooteco.chess.entity.Move;
 import wooteco.chess.dto.ResponseDto;
+import wooteco.chess.entity.Move;
 import wooteco.chess.repository.MoveRepository;
 import wooteco.chess.support.ChessResponseCode;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ public class ChessService {
         }
 
         Chess chess = cachedChess.get(move.getRoomId());
-        chess.move(move.getSource(), move.getTarget());
+        chess.move(Coordinate.of(move.getSource()), Coordinate.of(move.getTarget()));
         cachedChess.put(move.getRoomId(), chess);
         moveRepository.save(move);
 
@@ -45,6 +44,7 @@ public class ChessService {
         if (!cachedChess.containsKey(roomId)) {
             return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
         }
+
         Chess chess = cachedChess.get(roomId);
         if (!chess.isTurnOf(team) || chess.isTurnOf(coordinate)) {
             return ResponseDto.fail(ChessResponseCode.NOT_YOUR_TURN);
@@ -68,7 +68,7 @@ public class ChessService {
         List<Move> moves = moveRepository.findByRoomId(roomId)
                 .orElse(null);
         for (Move move : moves) {
-            chess.move(move.getSource(), move.getTarget());
+            chess.move(Coordinate.of(move.getSource()), Coordinate.of(move.getTarget()));
         }
         cachedChess.put(roomId, chess);
     }

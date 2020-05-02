@@ -6,7 +6,6 @@ import wooteco.chess.entity.Room;
 import wooteco.chess.repository.RoomRepository;
 import wooteco.chess.support.ChessResponseCode;
 
-import java.sql.SQLException;
 import java.util.Objects;
 
 @Service
@@ -23,8 +22,13 @@ public class RoomService {
         return ResponseDto.success(roomRepository.save(room));
     }
 
-    public ResponseDto status(Long roomId) throws SQLException {
-        return ResponseDto.success(roomRepository.findById(roomId));
+    public ResponseDto status(Long roomId){
+        Room room = roomRepository.findById(roomId)
+                .orElse(null);
+        if(Objects.isNull(room)) {
+            return ResponseDto.fail(ChessResponseCode.CANNOT_FIND_ROOM_ID);
+        }
+        return ResponseDto.success(room);
     }
 
     public ResponseDto join(String roomName, Long userId){
@@ -43,8 +47,7 @@ public class RoomService {
             return ResponseDto.fail(ChessResponseCode.ROOM_IS_FULL);
         }
 
-        roomRepository.save(room);
-        return ResponseDto.success();
+        return ResponseDto.success(roomRepository.save(room));
     }
 
     public ResponseDto exit(Long roomId, Long userId) {

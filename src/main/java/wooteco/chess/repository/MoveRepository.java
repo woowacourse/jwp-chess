@@ -1,20 +1,16 @@
 package wooteco.chess.repository;
 
-import wooteco.chess.dto.MoveDto;
-import wooteco.chess.result.Result;
+import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import wooteco.chess.entity.Move;
 
-import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
-public interface MoveRepository {
-    Result add(MoveDto moveDto) throws SQLException;
-
-    Result findById(int moveId) throws SQLException;
-
-    Result findByRoomId(int roomId) throws SQLException;
-
-    Result deleteById(int moveId) throws SQLException;
-
-    Result deleteByRoomId(int roomId) throws SQLException;
-
-    Result deleteAll() throws SQLException;
+@Repository
+public interface MoveRepository extends CrudRepository<Move, Long> {
+    @Query("SELECT * FROM move WHERE room_id = :roomId ORDER BY id ASC")
+    Optional<List<Move>> findByRoomId(@Param("roomId") Long roomId);
 }

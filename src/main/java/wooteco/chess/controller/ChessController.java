@@ -14,7 +14,6 @@ import wooteco.chess.domain.Board;
 import wooteco.chess.domain.Pieces;
 import wooteco.chess.domain.Position;
 import wooteco.chess.domain.piece.Piece;
-import wooteco.chess.domain.piece.Team;
 import wooteco.chess.service.ChessService;
 
 @Controller
@@ -27,6 +26,7 @@ public class ChessController {
 
     @GetMapping("/new")
     public String entrance(@RequestParam(defaultValue = "") String error, Model model) {
+        model.addAttribute("roomNames", service.getAllRoomNames());
         if (!error.isEmpty()) {
             model.addAttribute("error", error);
         }
@@ -37,9 +37,7 @@ public class ChessController {
     public String loadNewGame(@RequestParam(value = "new-room-name") String name, Model model,
         RedirectAttributes redirectAttributes) {
         try {
-            int roomId = service.createBoard(name);
-            final Board savedBoard = service.getSavedBoard(roomId);
-            createBasicModel(roomId, savedBoard, model);
+            model.addAttribute("room", service.createGame(name));
             return "chess-running";
         } catch (RuntimeException e) {
             redirectAttributes.addAttribute("error", e.getMessage());
@@ -50,9 +48,8 @@ public class ChessController {
     @GetMapping("/")
     public String showGame(@RequestParam(value = "room-id") int roomId, @RequestParam(defaultValue = "") String error,
         RedirectAttributes redirectAttributes, Model model) {
-        Board board = service.getSavedBoard(roomId);
-        createBasicModel(roomId, board, model);
-        if (!board.isBothKingAlive()) {
+        model.addAttribute("room", service.findGame(roomId));
+        if (service.isGameEnd(roomId)) {
             redirectAttributes.addAttribute("room-id", roomId);
             return "redirect:/result";
         }
@@ -64,23 +61,17 @@ public class ChessController {
 
     @GetMapping("/result")
     public String showResult(@RequestParam(value = "room-id") int id, Model model) {
-        Board board = service.getSavedBoard(id);
-        allocatePiecesOnMap(board, model);
-        Team winner = board.getWinner();
-        model.addAttribute("winner", winner.getName());
-        model.addAttribute("id", id);
+        model.addAttribute("result", service.endGame(id));
         return "chess-result";
     }
 
-    @PostMapping("/continue-game")
+    @PostMapping("continue-game")
     public String continueGame(@RequestParam(value = "existing-room-name") String name,
-        RedirectAttributes redirectAttributes, Model model) {
+        RedirectAttributes redirectAttributes) {
         try {
             int id = service.findIdByName(name);
-            Board board = service.getSavedBoard(id);
-            createBasicModel(id, board, model);
             redirectAttributes.addAttribute("room-id", id);
-            if (!board.isBothKingAlive()) {
+            if (service.isGameEnd(id)) {
                 return "redirect:/result";
             }
             return "redirect:/";
@@ -120,14 +111,5 @@ public class ChessController {
             pieceMap.put(position.toString(), positionPieceMap.get(position));
         }
         model.addAttribute("map", pieceMap);
-    }
-
-    private void createBasicModel(int roomId, Board board, Model model) {
-        allocatePiecesOnMap(board, model);
-        model.addAttribute("teamWhiteScore", board.calculateScoreByTeam(Team.WHITE));
-        model.addAttribute("teamBlackScore", board.calculateScoreByTeam(Team.BLACK));
-        model.addAttribute("id", roomId);
-        model.addAttribute("roomName", service.findNameById(roomId));
-        model.addAttribute("turn", board.getTurn());
     }
 }

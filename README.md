@@ -47,9 +47,8 @@
 - [x] Command 입력
 - [x] Board 출력
 - [x] Score 출력
-- [ ] 방 목록 출력
+- [x] 방 목록 출력
 
 ### Framework
-- [x] Spark
 - [x] Spring
 - [x] Spring Data JDBC

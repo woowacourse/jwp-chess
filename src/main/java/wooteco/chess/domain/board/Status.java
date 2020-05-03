@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Status {
 
-    private static final int INIT_TURN = 0;
+    public static final int INIT_TURN = 0;
 
     private final int turn;
     private final StatusType statusType;

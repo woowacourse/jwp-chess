@@ -49,9 +49,9 @@ public class ChessController {
 
     @PostMapping("/path")
     @ResponseBody
-    public List<String> path(@RequestParam Map<String, String> paramMap) {
+    public List<String> path(@RequestParam Map<String, String> parameters) {
         try {
-            return chessService.searchPath(new Room(paramMap.get("roomName")), paramMap.get("source"));
+            return chessService.searchPath(new Room(parameters.get("roomName")), parameters.get("source"));
         } catch (RuntimeException e) {
             return Collections.singletonList(e.getMessage());
         }
@@ -59,15 +59,15 @@ public class ChessController {
 
     @PostMapping("/move")
     @ResponseBody
-    public Map<String, Object> move(@RequestParam Map<String, String> paramMap) {
-        Room blackRoom = new Room(paramMap.get("roomName"));
+    public Map<String, Object> move(@RequestParam Map<String, String> parameters) {
+        Room blackRoom = new Room(parameters.get("roomName"));
 
         Map<String, Object> model = new HashMap<>();
         model.put("isNotFinished", false);
         model.put("message", "");
 
         try {
-            chessService.move(blackRoom, paramMap.get("source"), paramMap.get("target"));
+            chessService.move(blackRoom, parameters.get("source"), parameters.get("target"));
             model.put("white", chessService.calculateWhiteScore(blackRoom));
             model.put("black", chessService.calculateBlackScore(blackRoom));
         } catch (RuntimeException e) {

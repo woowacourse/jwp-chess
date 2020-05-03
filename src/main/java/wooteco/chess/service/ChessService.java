@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.board.Status;
 import wooteco.chess.domain.gameinfo.GameInfo;
 import wooteco.chess.dto.LineDto;
 import wooteco.chess.dto.RowsDtoConverter;
@@ -27,7 +28,7 @@ public class ChessService {
 
     public GameInfo findByRoom(Room room) {
         if (!roomRepository.findByName(room.getName()).isPresent()) {
-            GameEntity gameEntity = new GameEntity(0);
+            GameEntity gameEntity = new GameEntity(Status.INIT_TURN);
             gameEntity.addBoard(BoardFactory.createInitialBoard());
             room.updateGame(gameEntity);
             roomRepository.save(room);

@@ -1,18 +1,19 @@
 package wooteco.chess.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import wooteco.chess.domain.Color;
-import wooteco.chess.dto.MoveResponseDTO;
-import wooteco.chess.dto.GameStatusDTO;
-import wooteco.chess.dto.MoveRequestDTO;
-import wooteco.chess.service.SpringGameService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
-import java.util.List;
+import wooteco.chess.dto.GameRequestDto;
+import wooteco.chess.dto.GameResponseDto;
+import wooteco.chess.dto.GameStatusDto;
+import wooteco.chess.dto.MoveRequestDto;
+import wooteco.chess.service.SpringGameService;
 
 @RestController
 @RequestMapping("/game")
@@ -24,37 +25,35 @@ public class SpringGameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/init")
-    public MoveResponseDTO init(@RequestParam Integer roomId) throws SQLException {
-        return gameService.initialize(roomId);
+    @PostMapping("/init")
+    public GameResponseDto init(@RequestBody GameRequestDto gameRequestDto) {
+        return gameService.initialize(gameRequestDto);
+    }
+
+    @PostMapping("/status")
+    public GameStatusDto showStatus(@RequestBody GameRequestDto gameRequestDto) {
+        return new GameStatusDto(gameService.getScore(gameRequestDto), gameService.getScore(gameRequestDto));
+    }
+
+    @PostMapping("/path")
+    public List<String> getMovablePositions(@RequestBody MoveRequestDto moveRequestDto) {
+        System.out.println(moveRequestDto);
+        return gameService.getMovablePositions(moveRequestDto);
     }
 
     @PostMapping("/move")
-    public ResponseEntity<MoveResponseDTO> move(@RequestBody MoveRequestDTO requestDTO) throws SQLException {
+    public ResponseEntity<GameResponseDto> move(@RequestBody MoveRequestDto moveRequestDto) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(gameService.move(requestDTO));
+            return ResponseEntity.status(HttpStatus.OK).body(gameService.move(moveRequestDto));
         } catch (IllegalArgumentException e) {
-            MoveResponseDTO moveResponseDTO = gameService.createMoveResponseDTO(requestDTO.getRoomId());
-            moveResponseDTO.setErrorMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.OK).body(moveResponseDTO);
+            GameResponseDto gameResponseDTO = gameService.findAllPieces(moveRequestDto.getId());
+            gameResponseDTO.setErrorMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body(gameResponseDTO);
         }
     }
 
-    @GetMapping("/status")
-    public GameStatusDTO showStatus(@RequestParam Integer roomId) throws SQLException {
-        return new GameStatusDTO(gameService.getScore(roomId, Color.WHITE), gameService.getScore(roomId, Color.BLACK));
-    }
-
-    @GetMapping("/load")
-    public MoveResponseDTO load(@RequestParam Integer roomId) throws SQLException {
-        return gameService.createMoveResponseDTO(roomId);
-    }
-
-    @GetMapping("/get")
-    public List<String> getMovablePositions(final HttpServletRequest request) throws SQLException {
-        int roomId = Integer.parseInt(request.getParameter("roomId"));
-        String sourcePosition = request.getParameter("sourcePosition");
-
-        return gameService.getMovablePositions(roomId, sourcePosition);
+    @PostMapping("/load")
+    public GameResponseDto load(@RequestBody GameRequestDto gameRequestDto) {
+        return gameService.findAllPieces(gameRequestDto.getId());
     }
 }

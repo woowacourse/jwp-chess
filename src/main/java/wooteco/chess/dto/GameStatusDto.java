@@ -1,10 +1,10 @@
 package wooteco.chess.dto;
 
-public class GameStatusDTO {
+public class GameStatusDto {
     private final double whiteScore;
     private final double blackScore;
 
-    public GameStatusDTO(final double whiteScore, final double blackScore) {
+    public GameStatusDto(final double whiteScore, final double blackScore) {
         this.whiteScore = whiteScore;
         this.blackScore = blackScore;
     }

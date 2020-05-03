@@ -7,6 +7,8 @@ import wooteco.chess.entity.Room;
 import wooteco.chess.repository.RoomRepository;
 import wooteco.chess.support.ChessResponseCode;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -69,6 +71,12 @@ public class RoomService {
 
         roomRepository.save(room);
         return ResponseDto.success();
+    }
+
+    public ResponseDto getRooms() {
+        List<String> rooms = new ArrayList<>();
+        roomRepository.findAll().forEach(room -> rooms.add(room.getName()));
+        return ResponseDto.success(rooms);
     }
 
     public Team checkAuthentication(Long roomId, String userPassword) {

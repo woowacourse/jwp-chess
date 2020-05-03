@@ -6,13 +6,15 @@ import wooteco.chess.entity.Room;
 import wooteco.chess.service.ChessService;
 import wooteco.chess.service.RoomService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/room")
 public class RoomController {
     private RoomService roomService;
 
-    public RoomController(RoomService roomService, ChessService chessService)
+    public RoomController(RoomService roomService)
     {
         this.roomService = roomService;
     }
@@ -20,7 +22,7 @@ public class RoomController {
     @PostMapping("/create")
     @ResponseBody
     public ResponseDto create(@RequestParam String roomName,
-                              @RequestParam String userPassword) throws Exception {
+                              @RequestParam String userPassword){
         Room room = new Room();
         room.setWhitePassword(userPassword);
         room.setName(roomName);
@@ -31,7 +33,7 @@ public class RoomController {
     @PostMapping("/join")
     @ResponseBody
     public ResponseDto join(@RequestParam String roomName,
-                            @RequestParam String userPassword) throws Exception {
+                            @RequestParam String userPassword){
 
         return roomService.join(roomName, userPassword);
     }
@@ -39,14 +41,20 @@ public class RoomController {
     @PostMapping("/exit")
     @ResponseBody
     public ResponseDto exit(@RequestParam Long roomId,
-                            @RequestParam String userPassword) throws Exception {
+                            @RequestParam String userPassword){
         return roomService.exit(roomId, userPassword);
     }
 
     @GetMapping("/status/{roomId}")
     @ResponseBody
-    public ResponseDto status(@PathVariable Long roomId) throws Exception {
+    public ResponseDto status(@PathVariable Long roomId){
         return roomService.status(roomId);
+    }
+
+    @GetMapping("/list")
+    @ResponseBody
+    public ResponseDto<List<String>> list() {
+        return roomService.getRooms();
     }
 }
 

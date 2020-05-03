@@ -24,7 +24,7 @@ public class ChessController {
     public ResponseDto move(@RequestParam Long roomId,
                             @RequestParam String userPassword,
                             @RequestParam String source,
-                            @RequestParam String target) throws Exception {
+                            @RequestParam String target){
         return chessService.move(new Move(
                 roomId, source, target), userPassword);
     }
@@ -33,13 +33,13 @@ public class ChessController {
     @ResponseBody
     public ResponseDto<List<String>> way(@RequestParam Long roomId,
                                          @RequestParam String userPassword,
-                                         @RequestParam String coordinate) throws Exception{
+                                         @RequestParam String coordinate){
         return chessService.getMovableWay(roomId, Coordinate.of(coordinate), userPassword);
     }
 
     @GetMapping("/renew/{roomId}")
     @ResponseBody
-    public ResponseDto<ChessResponseDto> renew(@PathVariable Long roomId) throws Exception {
+    public ResponseDto<ChessResponseDto> renew(@PathVariable Long roomId){
         return chessService.renew(roomId);
     }
 }

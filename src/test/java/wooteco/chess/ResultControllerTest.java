@@ -1,6 +1,7 @@
 package wooteco.chess;
 
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ResultContollerTest {
+public class ResultControllerTest {
     @LocalServerPort
     int port;
     @Autowired
@@ -43,5 +44,10 @@ public class ResultContollerTest {
                 log().all().
                 statusCode(200).
                 body(containsString(":: 체스 게임 ::"));
+    }
+
+    @AfterEach
+    void removeRoom() {
+        roomRepository.deleteById(roomEntity.getId());
     }
 }

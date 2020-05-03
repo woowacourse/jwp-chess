@@ -1,6 +1,7 @@
 package wooteco.chess;
 
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -107,5 +108,10 @@ public class ChessControllerTest {
                 log().all().
                 statusCode(200).
                 body(containsString(errorMsg));
+    }
+
+    @AfterEach
+    void removeRoom() {
+        roomRepository.deleteById(roomEntity.getId());
     }
 }

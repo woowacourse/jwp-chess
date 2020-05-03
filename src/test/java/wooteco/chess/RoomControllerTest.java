@@ -34,10 +34,10 @@ public class RoomControllerTest {
                 body(containsString(":: 체 스 게 임 방 목 록 ::"));
     }
 
-    @DisplayName("새 게임 방을 생성하면 리다이렉트를 제대로 수행하는지 확인")
+    @DisplayName("이름 없는 방을 생성하면 에러 페이지로 응답하는지 확인")
     @Test
-    void validateResponseToCreateRoom() {
-        String name = "우테코 체스";
+    void validateResponseToCreateRoomWithNoName() {
+        String name = "";
 
         given().
                 log().all().
@@ -47,6 +47,7 @@ public class RoomControllerTest {
                 post("/new").
                 then().
                 log().all().
-                statusCode(302);
+                statusCode(200).
+                body(containsString("방 제목이 없습니다."));
     }
 }

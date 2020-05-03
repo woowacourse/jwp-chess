@@ -29,8 +29,7 @@ public class RoomController {
 
     @PostMapping("/room")
     public String create(
-            @RequestParam String title,
-            Model model) {
+            @RequestParam String title, Model model) {
         Room created = roomService.createRoom(title);
         Long roomId = created.getId();
         Map<String, String> board = roomService.initializeBoard(roomId);
@@ -40,8 +39,7 @@ public class RoomController {
 
     @GetMapping("/room/{room_id}")
     public String room(
-            @PathVariable("room_id") Long roomId,
-            Model model) {
+            @PathVariable("room_id") Long roomId, Model model) {
         Map<String, String> board = roomService.findPiecesById(roomId);
         model.addAttribute("board", board);
         model.addAttribute("roomId", roomId);
@@ -65,8 +63,7 @@ public class RoomController {
 
     @GetMapping("/room/{room_id}/reset")
     public String reset(
-            @PathVariable("room_id") Long roomId,
-            Model model) {
+            @PathVariable("room_id") Long roomId, Model model) {
         model.addAttribute("board", roomService.resetRoom(roomId));
         model.addAttribute("roomId", roomId);
         model.addAttribute("title", roomService.findTitleById(roomId));

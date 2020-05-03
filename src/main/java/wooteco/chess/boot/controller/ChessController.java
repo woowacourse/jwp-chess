@@ -2,16 +2,18 @@ package wooteco.chess.boot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import wooteco.chess.boot.entity.RoomEntity;
 import wooteco.chess.boot.repository.RoomRepository;
 import wooteco.chess.boot.service.ChessService;
+import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.util.ModelParser;
 
+import javax.servlet.ServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -27,45 +29,48 @@ public class ChessController {
     RoomRepository roomRepository;
 
     @GetMapping("/")
-    public ModelAndView index() {
-        ModelAndView modelAndView = new ModelAndView(INDEX);
-        modelAndView.addObject("rooms", roomRepository.findAll());
-        return modelAndView;
+    public String index(Model model) {
+        List<RoomEntity> allRooms = roomRepository.findAll();
+        model.addAttribute("rooms", allRooms);
+        return INDEX;
     }
 
-    @GetMapping("/blank")
-    public ModelAndView blankBoard() {
-        ModelAndView modelAndView = new ModelAndView(BOARD);
-        modelAndView.addAllObjects(ModelParser.parseBlankBoard());
-        return modelAndView;
+    @PostMapping("/remove")
+    public String remove(ServletRequest request, Model model) {
+        Long roomNumber = Long.parseLong(request.getParameter("room_number"));
+        roomRepository.deleteByRoomNumber(roomNumber);
+        List<RoomEntity> allRooms = roomRepository.findAll();
+        model.addAttribute("rooms", allRooms);
+        return INDEX;
     }
 
     @PostMapping("/new_game")
-    public ModelAndView newGame() {
-        ModelAndView modelAndView = new ModelAndView(BOARD);
-        Map<String, Object> objects = ModelParser.parseBoard(chessService.newGame());
-        modelAndView.addAllObjects(objects);
-        return modelAndView;
+    public String newGame(Model model) {
+        Long roomNumber = chessService.newGame();
+        Board board = chessService.readBoard(roomNumber);
+        model.addAllAttributes(ModelParser.parseBoard(board, roomNumber));
+        return BOARD;
     }
 
     @GetMapping("/load_game")
-    public ModelAndView loadGame() {
-        ModelAndView modelAndView = new ModelAndView(BOARD);
-        Map<String, Object> objects = ModelParser.parseBoard(chessService.readBoard());
-        modelAndView.addAllObjects(objects);
-        return modelAndView;
+    public String loadGame(ServletRequest request, Model model) {
+        Long roomNumber = Long.parseLong(request.getParameter("room_number"));
+        Board board = chessService.readBoard(roomNumber);
+        model.addAllAttributes(ModelParser.parseBoard(board, roomNumber));
+        return BOARD;
     }
 
     @GetMapping("/show_movable")
-    public ModelAndView showMovable(@RequestParam(defaultValue = "") String start) {
-        ModelAndView modelAndView = new ModelAndView(BOARD);
-        modelAndView.addAllObjects(parseMovablePositionsModel(start));
-        return modelAndView;
+    public String showMovable(ServletRequest request, Model model) {
+        Long roomNumber = Long.parseLong(request.getParameter("room_number"));
+        String start = request.getParameter("start");
+        model.addAllAttributes(parseMovablePositionsModel(roomNumber, start));
+        return BOARD;
     }
 
-    private Map<String, Object> parseMovablePositionsModel(String start) {
-        List<Position> movablePositions = chessService.findMovablePlaces(Position.of(start));
-        Map<String, Object> objects = ModelParser.parseBoard(chessService.readBoard(), movablePositions);
+    private Map<String, Object> parseMovablePositionsModel(Long roomNumber, String start) {
+        List<Position> movablePositions = chessService.findMovablePlaces(roomNumber, Position.of(start));
+        Map<String, Object> objects = ModelParser.parseBoard(chessService.readBoard(roomNumber), movablePositions, roomNumber);
 
         if (movablePositions.size() != 0) {
             objects.put("start", start);
@@ -74,20 +79,25 @@ public class ChessController {
     }
 
     @PostMapping("/move")
-    public ModelAndView move(@RequestParam(defaultValue = "") String start, @RequestParam(defaultValue = "") String end) {
-        ModelAndView modelAndView = new ModelAndView(BOARD);
+    public String move(ServletRequest request, Model model) {
+        Long roomNumber = Long.parseLong(request.getParameter("room_number"));
+        String start = request.getParameter("start");
+        String end = request.getParameter("end");
 
-        chessService.move(Position.of(start), Position.of(end));
-        modelAndView.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));
-        return modelAndView;
+        chessService.move(roomNumber, Position.of(start), Position.of(end));
+        Board board = chessService.readBoard(roomNumber);
+        model.addAllAttributes(ModelParser.parseBoard(board, roomNumber));
+        return BOARD;
     }
 
     @GetMapping("/score")
-    public ModelAndView score() {
-        ModelAndView modelAndView = new ModelAndView(BOARD);
-        modelAndView.addAllObjects(ModelParser.parseBoard(chessService.readBoard()));
-        modelAndView.addObject("player1_info", "WHITE: " + chessService.calculateScore(Team.WHITE));
-        modelAndView.addObject("player2_info", "BLACK: " + chessService.calculateScore(Team.BLACK));
-        return modelAndView;
+    public String score(ServletRequest request, Model model) {
+        Long roomNumber = Long.parseLong(request.getParameter("room_number"));
+        Board board = chessService.readBoard(roomNumber);
+
+        model.addAllAttributes(ModelParser.parseBoard(board, roomNumber));
+        model.addAttribute("player1_info", "WHITE: " + chessService.calculateScore(roomNumber, Team.WHITE));
+        model.addAttribute("player2_info", "BLACK: " + chessService.calculateScore(roomNumber, Team.BLACK));
+        return BOARD;
     }
 }

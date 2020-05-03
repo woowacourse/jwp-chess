@@ -8,4 +8,7 @@ public interface RoomInfoRepository extends CrudRepository<RoomInfoEntity, Long>
 
     @Query("SELECT * from room_info where room_id = :roomId limit 1")
     RoomInfoEntity findByRoomId(Long roomId);
+
+    @Query("SELECT id from room_info where room_id = :roomId limit 1")
+    Long findIdByRoomId(Long roomId);
 }

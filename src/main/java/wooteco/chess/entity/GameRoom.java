@@ -1,10 +1,10 @@
 package wooteco.chess.entity;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Table("game_room")
 public class GameRoom {

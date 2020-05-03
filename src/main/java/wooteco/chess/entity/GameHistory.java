@@ -1,13 +1,12 @@
 package wooteco.chess.entity;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-
 import wooteco.chess.domain.chessGame.ChessCommand;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Table("game_history")
 public class GameHistory {

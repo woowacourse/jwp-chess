@@ -1,14 +1,6 @@
 package wooteco.chess.service;
 
-import static java.util.stream.Collectors.*;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-
 import org.springframework.stereotype.Service;
-
 import wooteco.chess.database.GameRoomRepository;
 import wooteco.chess.domain.chessBoard.ChessBoard;
 import wooteco.chess.domain.chessBoard.ChessBoardInitializer;
@@ -17,6 +9,13 @@ import wooteco.chess.domain.chessGame.ChessGame;
 import wooteco.chess.entity.GameHistory;
 import wooteco.chess.entity.GameRoom;
 import wooteco.chess.service.dto.ChessGameDto;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ChessService {

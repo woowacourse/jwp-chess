@@ -1,8 +1,8 @@
 package wooteco.chess.service.dto;
 
-import java.util.Objects;
-
 import wooteco.chess.domain.chessGame.ChessGame;
+
+import java.util.Objects;
 
 public class ChessGameDto {
 

@@ -1,12 +1,11 @@
 package wooteco.chess.database;
 
-import java.util.List;
-
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-
 import wooteco.chess.entity.GameRoom;
+
+import java.util.List;
 
 public interface GameRoomRepository extends CrudRepository<GameRoom, Long> {
 

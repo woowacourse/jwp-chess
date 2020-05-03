@@ -2,12 +2,13 @@ package wooteco.chess.controller;
 
 import java.util.List;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import wooteco.chess.dto.ChessGameDto;
@@ -16,7 +17,7 @@ import wooteco.chess.dto.RoomNameDto;
 import wooteco.chess.repository.Room;
 import wooteco.chess.service.ChessGameService;
 
-@RestController
+@Controller
 public class WebController {
 	private final ChessGameService chessGameService;
 
@@ -35,11 +36,11 @@ public class WebController {
 		return chessGameService.findAllRooms();
 	}
 
-	@PostMapping("/join")
+	@GetMapping("/room/{roomName}")
 	public ModelAndView joinRoom(
-			@RequestParam String name) {
+			@PathVariable String roomName) {
 		ModelAndView modelAndView = new ModelAndView("chess");
-		ChessGameDto chessGameDto = chessGameService.load(name);
+		ChessGameDto chessGameDto = chessGameService.load(roomName);
 		modelAndView.addObject("chessGame", chessGameDto);
 		return modelAndView;
 	}

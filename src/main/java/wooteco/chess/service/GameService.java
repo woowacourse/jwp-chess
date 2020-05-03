@@ -1,5 +1,6 @@
 package wooteco.chess.service;
 
+import static wooteco.chess.domain.game.Ready.*;
 import static wooteco.chess.view.response.ResponseStatus.*;
 
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import wooteco.chess.view.response.ResponseDto;
 @Service
 public class GameService {
     private static final String NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE = "조건에 해당하는 요소가 없습니다.";
-    private static final Long DEFAULT_USER_ID = 1L;
 
     private final GameRepository gameRepository;
 
@@ -33,9 +33,9 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
-    public ResponseDto calculateScore() {
+    public ResponseDto calculateScore(String gameId) {
         return makeResponse(() -> {
-            Game game = findGame();
+            Game game = findGame(gameId);
             Result status = game.status();
             List<ScoreDto> scores = status.getStatus().entrySet().stream()
                     .map(ScoreDto::new)
@@ -44,9 +44,9 @@ public class GameService {
         });
     }
 
-    public ResponseDto changeState(String request) {
+    public ResponseDto changeState(String gameId, String request) {
         return makeResponse(() -> {
-            GameEntity savedGameEntity = gameRepository.findById(DEFAULT_USER_ID)
+            GameEntity savedGameEntity = gameRepository.findById(gameId)
                     .orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
             Game game = savedGameEntity.toDomain();
             game = game.changeState(request);
@@ -56,9 +56,9 @@ public class GameService {
         });
     }
 
-    public ResponseDto findAllPiecesOnBoard() {
+    public ResponseDto findAllPiecesOnBoard(String gameId) {
         return makeResponse(() -> {
-            Game game = findGame();
+            Game game = findGame(gameId);
             Board board = game.getBoard();
 
             List<BoardDto> pieces = board.getPieces().entrySet().stream()
@@ -68,12 +68,12 @@ public class GameService {
         });
     }
 
-    public ResponseDto move(PositionRequestDto positionRequestDTO) {
+    public ResponseDto move(String gameId, PositionRequestDto positionRequestDTO) {
         return makeResponse(() -> {
             Position from = Position.of(positionRequestDTO.getFrom());
             Position to = Position.of(positionRequestDTO.getTo());
 
-            GameEntity saveEntity = gameRepository.findById(DEFAULT_USER_ID)
+            GameEntity saveEntity = gameRepository.findById(gameId)
                     .orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
             Game game = saveEntity.toDomain();
             game = game.move(from, to);
@@ -88,25 +88,37 @@ public class GameService {
         });
     }
 
-    public ResponseDto getCurrentState() {
+    public ResponseDto getCurrentState(String gameId) {
         return makeResponse(() -> {
-            Game game = findGame();
+            Game game = findGame(gameId);
             return new ResponseDto(SUCCESS, GameDto.of(game.getTurn(), game.getStateType()));
         });
     }
 
-    public ResponseDto getWinner() {
+    public ResponseDto getWinner(String gameId) {
         return makeResponse(() -> {
-            Game game = findGame();
+            Game game = findGame(gameId);
             String winner = game.getWinner().name().toLowerCase();
             return new ResponseDto(SUCCESS, winner);
         });
     }
 
-    public ResponseDto isNotFinish() {
+    public ResponseDto isNotFinish(String gameId) {
         return makeResponse(() -> {
-            Game game = findGame();
+            Game game = findGame(gameId);
             return new ResponseDto(SUCCESS, game.isNotFinished());
+        });
+    }
+
+    public ResponseDto findAllGameIds() {
+        return makeResponse(() -> new ResponseDto(SUCCESS, gameRepository.findAllIds()));
+    }
+
+    public ResponseDto createNewGame() {
+        return makeResponse(() -> {
+            GameEntity newGameEntity = GameEntity.of(READY_INSTANCE);
+            gameRepository.save(newGameEntity);
+            return new ResponseDto(SUCCESS, newGameEntity.getId());
         });
     }
 
@@ -118,8 +130,8 @@ public class GameService {
         }
     }
 
-    private Game findGame() {
-        GameEntity gameEntity = gameRepository.findById(DEFAULT_USER_ID)
+    private Game findGame(String gameId) {
+        GameEntity gameEntity = gameRepository.findById(gameId)
                 .orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
         return gameEntity.toDomain();
     }

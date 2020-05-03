@@ -30,7 +30,7 @@ public class RoomInfoEntity {
         return roomId;
     }
 
-    public String getTurn() {
+    private String getTurn() {
         return turn;
     }
 

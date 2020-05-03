@@ -37,11 +37,16 @@ public class ChessController {
 
     @PostMapping("/remove")
     public String remove(ServletRequest request, Model model) {
-        Long roomNumber = Long.parseLong(request.getParameter("room_number"));
-        roomRepository.deleteByRoomNumber(roomNumber);
+        roomRepository.deleteByRoomNumber(findRoomNumber(request));
+
         List<RoomEntity> allRooms = roomRepository.findAll();
         model.addAttribute("rooms", allRooms);
         return INDEX;
+    }
+
+    private Long findRoomNumber(ServletRequest request) {
+        String roomNumber = request.getParameter("room_number");
+        return Long.parseLong(roomNumber);
     }
 
     @PostMapping("/new_game")
@@ -54,7 +59,7 @@ public class ChessController {
 
     @GetMapping("/load_game")
     public String loadGame(ServletRequest request, Model model) {
-        Long roomNumber = Long.parseLong(request.getParameter("room_number"));
+        Long roomNumber = findRoomNumber(request);
         Board board = chessService.readBoard(roomNumber);
         model.addAllAttributes(ModelParser.parseBoard(board, roomNumber));
         return BOARD;
@@ -62,9 +67,8 @@ public class ChessController {
 
     @GetMapping("/show_movable")
     public String showMovable(ServletRequest request, Model model) {
-        Long roomNumber = Long.parseLong(request.getParameter("room_number"));
         String start = request.getParameter("start");
-        model.addAllAttributes(parseMovablePositionsModel(roomNumber, start));
+        model.addAllAttributes(parseMovablePositionsModel(findRoomNumber(request), start));
         return BOARD;
     }
 
@@ -80,7 +84,7 @@ public class ChessController {
 
     @PostMapping("/move")
     public String move(ServletRequest request, Model model) {
-        Long roomNumber = Long.parseLong(request.getParameter("room_number"));
+        Long roomNumber = findRoomNumber(request);
         String start = request.getParameter("start");
         String end = request.getParameter("end");
 
@@ -92,7 +96,7 @@ public class ChessController {
 
     @GetMapping("/score")
     public String score(ServletRequest request, Model model) {
-        Long roomNumber = Long.parseLong(request.getParameter("room_number"));
+        Long roomNumber = findRoomNumber(request);
         Board board = chessService.readBoard(roomNumber);
 
         model.addAllAttributes(ModelParser.parseBoard(board, roomNumber));

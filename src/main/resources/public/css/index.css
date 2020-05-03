@@ -1,6 +1,5 @@
 .invisible {
-    visibility: hidden;
-    width: 0px;
+    display: none;
 }
 
 .menuButton {

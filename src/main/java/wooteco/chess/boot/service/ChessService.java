@@ -2,6 +2,7 @@ package wooteco.chess.boot.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import wooteco.chess.boot.entity.PieceEntity;
 import wooteco.chess.boot.entity.RoomEntity;
 import wooteco.chess.boot.entity.RoomInfoEntity;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 @Service
 public class ChessService {
 
+    private static final int HASH_CONSTANT = 1000000;
+
     @Autowired
     private RoomRepository roomRepository;
     @Autowired
@@ -30,23 +33,29 @@ public class ChessService {
     @Autowired
     private PieceRepository pieceRepository;
 
+    @Transactional
     public Long newGame() {
-        Board board = BoardFactory.create();
         Long roomNumber = generateCurrentTimeHash();
 
-        RoomEntity roomEntity = roomRepository.save(new RoomEntity(roomNumber));
-        Long roomId = roomEntity.getId();
-
-        writeBoard(roomId, board);
-
-        roomInfoRepository.save(new RoomInfoEntity(roomId, Team.WHITE.toString(), false));
+        Long roomId = writeRoom(roomNumber);
+        writeRoomInfo(roomId, Team.WHITE, false);
+        writeBoard(roomId, BoardFactory.create());
 
         return roomNumber;
     }
 
     private Long generateCurrentTimeHash() {
         Long currentTime = System.currentTimeMillis();
-        return (long) -currentTime.hashCode() % 1000000;
+        return (long) -currentTime.hashCode() % HASH_CONSTANT;
+    }
+
+    private Long writeRoom(final Long roomNumber) {
+        RoomEntity roomEntity = roomRepository.save(new RoomEntity(roomNumber));
+        return roomEntity.getId();
+    }
+
+    private void writeRoomInfo(final Long roomId, final Team turn, final boolean isOver) {
+        roomInfoRepository.save(new RoomInfoEntity(roomId, turn.toString(), isOver));
     }
 
     private void writeBoard(final Long roomId, final Board board) {
@@ -56,12 +65,13 @@ public class ChessService {
         }
     }
 
+    @Transactional
     public Board readBoard(Long roomNumber) {
         Long roomId = roomRepository.findIdByNumber(roomNumber);
-        List<PieceEntity> pieces = pieceRepository.findAllByRoomId(roomId);
-        RoomInfoEntity roomInfoEntity = roomInfoRepository.findByRoomId(roomId);
 
-        Team currentTurn = Team.of(roomInfoEntity.getTurn());
+        List<PieceEntity> pieces = pieceRepository.findAllByRoomId(roomId);
+        Team currentTurn = Team.of(roomInfoRepository.findTurnByRoomId(roomId));
+
         return new Board(parsePieceEntities(pieces), currentTurn);
     }
 
@@ -70,6 +80,7 @@ public class ChessService {
                 .collect(Collectors.toMap(entity -> Position.of(entity.getPlace()), entity -> Piece.of(entity.getPiece())));
     }
 
+    @Transactional
     public List<Position> findMovablePlaces(final Long roomNumber, final Position start) {
         Board board = readBoard(roomNumber);
 
@@ -84,12 +95,12 @@ public class ChessService {
 
     private void checkGameOver(Board board) {
         Judge judge = new Judge();
-
         if (judge.findWinner(board).isPresent()) {
             throw new IllegalArgumentException("게임이 종료되었습니다.");
         }
     }
 
+    @Transactional
     public void move(final Long roomNumber, final Position start, final Position end) {
         Long roomId = roomRepository.findIdByNumber(roomNumber);
         Board board = readBoard(roomNumber);
@@ -101,13 +112,14 @@ public class ChessService {
             pieceRepository.deleteAllByRoomId(roomId);
             writeBoard(roomId, board);
 
-            Long id = roomInfoRepository.findIdByRoomId(roomId);
-            roomInfoRepository.save(new RoomInfoEntity(id, roomId, board.getCurrentTurn().toString(), false));
+            Long roomInfoId = roomInfoRepository.findIdByRoomId(roomId);
+            roomInfoRepository.save(new RoomInfoEntity(roomInfoId, roomId, board.getCurrentTurn().toString(), false));
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
     }
 
+    @Transactional
     public double calculateScore(final Long roomNumber, final Team team) {
         Judge judge = new Judge();
         return judge.getScoreByTeam(readBoard(roomNumber), team);

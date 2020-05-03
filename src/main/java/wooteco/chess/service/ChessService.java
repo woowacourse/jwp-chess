@@ -43,7 +43,6 @@ public class ChessService {
 	}
 
 	public Board init() {
-		// TODO id를 roomID로 mapping
 		BoardEntity boardEntity = boardRepository.findById(1L)
 			.orElseGet(() -> boardRepository.save(BoardEntity.from(BoardFactory.create())));
 		return boardEntity.createBoard();

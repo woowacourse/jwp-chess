@@ -19,8 +19,7 @@ function showBoard(response) {
         }
         document.getElementById(position).classList.add(pieceName);
     }
-    setTimeout(() = > status(), 0;
-)
+    setTimeout(() => status(), 0);
 }
 
 let startPosition = '';
@@ -58,10 +57,8 @@ function move(position) {
     }
     getClassList(position.start).remove(startPositionClassName);
     getClassList(position.target).add(startPositionClassName);
-    setTimeout(() = > checkKingDie(), 0;
-)
-    setTimeout(() = > status(), 0;
-)
+    setTimeout(() => checkKingDie(), 0);
+    setTimeout(() => status(), 0);
 }
 
 function getChessPieceClassName(position) {
@@ -97,26 +94,26 @@ function checkKingDie() {
     })
 }
 
-$('.reload').click(() = > {
+$('.reload').click(() => {
     restart();
-})
-$('.cancel').click(() = > {
+});
+
+$('.cancel').click(() => {
     startPosition = '';
-})
+});
+
 
 function restart() {
     $.ajax({
         type: 'get',
         url: '/restart',
         dataType: 'json',
-        error: function (request, status, error) {
-            alert(request.status + "\n" + request.responseText + "\n" + error + "\n" + status);
+        error: function () {
+            alert('restart error');
         },
         success: function (response) {
-            setTimeout(() = > remove(response), 0;
-        )
-            setTimeout(() = > showBoard(response), 0;
-        )
+            setTimeout(() => remove(response), 0);
+            setTimeout(() => showBoard(response), 0);
         }
     });
 }

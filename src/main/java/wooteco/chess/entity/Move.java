@@ -27,6 +27,9 @@ public class Move {
         this.target = target;
     }
 
+    public Move() {
+    }
+
     public Long getId() {
         return id;
     }

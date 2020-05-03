@@ -1,99 +1,67 @@
 package wooteco.chess.controller;
 
-import chess.domain.GameResult;
-import chess.domain.board.ChessBoard;
-import chess.dto.CellManager;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import wooteco.chess.dto.ChessGameParser;
 import wooteco.chess.service.ChessGameService;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
 @Controller
+@RequestMapping("/chess")
 public class ChessController {
-    @Autowired
-    private ChessGameService chessGameService;
+	@Autowired
+	private ChessGameService chessGameService;
 
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
+	@GetMapping("/{roomId}")
+	public ModelAndView enterRoom(@PathVariable String roomId) {
+		Map<String, Object> model = new HashMap<>();
+		model.put("roomId", roomId);
+		return new ModelAndView("game", model);
+	}
 
-    @GetMapping("/load-game")
-    public ModelAndView loadChessGame() {
-        Map<String, Object> model = new HashMap<>();
-        try {
-            model = createCurrentGameModel(chessGameService.loadBoard());
-        } catch (NoSuchElementException e) {
-            model.put("error", "새 게임을 눌러주세요!");
-        }
-        return new ModelAndView("index", model);
-    }
+	@PostMapping("/{roomId}")
+	public ModelAndView newChessGame(@PathVariable Long roomId) {
+		ChessGameParser chessGameParser = chessGameService.createNewChessGame(roomId);
+		Map<String, Object> model = chessGameParser.parseModel();
+		return new ModelAndView("game", model);
+	}
 
-    @GetMapping("/new-chess-game")
-    public ModelAndView newChessGame() {
-        ChessBoard chessBoard = chessGameService.createNewChessGame();
-        Map<String, Object> model = createCurrentGameModel(chessBoard);
-        return new ModelAndView("index", model);
-    }
+	@GetMapping("/{roomId}/load")
+	public ModelAndView loadChessGame(@PathVariable Long roomId) {
+		Map<String, Object> model = new HashMap<>();
+		try {
+			model = chessGameService.loadBoard(roomId).parseModel();
+		} catch (IllegalArgumentException e) {
+			model.put("error", e.getMessage());
+		}
+		return new ModelAndView("game", model);
+	}
 
-    @GetMapping("/winner")
-    public ModelAndView winner() {
-        if (chessGameService.isNotGameOver()) {
-            return new ModelAndView("redirect:/");
-        }
+	@PostMapping("/{roomId}/move")
+	public ModelAndView winner(@PathVariable Long roomId,
+		@RequestParam(defaultValue = "") String source,
+		@RequestParam(defaultValue = "") String target) {
 
-        GameResult gameResult = chessGameService.findWinner();
-        Map<String, Object> model = createWinnerModel(gameResult);
-        return new ModelAndView("winner", model);
-    }
+		Map<String, Object> model;
+		try {
+			model = chessGameService.movePiece(roomId, source, target).parseModel();
+		} catch (IllegalArgumentException e) {
+			model = chessGameService.loadBoard(roomId).parseModel();
+			model.put("error", e.getMessage());
+		}
 
-    @PostMapping("/move")
-    public ModelAndView winner(@RequestParam(defaultValue = "") String source,
-                               @RequestParam(defaultValue = "") String target) {
-        ChessBoard chessBoard;
-        Map<String, Object> model;
-        try {
-            chessBoard = chessGameService.movePiece(source, target);
-            model = createCurrentGameModel(chessBoard);
-        } catch (IllegalArgumentException e) {
-            chessBoard = chessGameService.loadBoard();
-            model = createCurrentGameModel(chessBoard);
-            model.put("error", e.getMessage());
-        }
-
-        if (chessBoard.isGameOver()) {
-            return new ModelAndView("redirect:/winner");
-        }
-        return new ModelAndView("index", model);
-    }
-
-    private Map<String, Object> createCurrentGameModel(ChessBoard chessBoard) {
-        Map<String, Object> model = new HashMap<>();
-        GameResult gameResult = chessBoard.createGameResult();
-        CellManager cellManager = new CellManager();
-
-        model.put("cells", cellManager.createCells(chessBoard));
-        model.put("currentTeam", chessBoard.getTeam().getName());
-        model.put("blackScore", gameResult.getAliveBlackPieceScoreSum());
-        model.put("whiteScore", gameResult.getAliveWhitePieceScoreSum());
-
-        return model;
-    }
-
-    private Map<String, Object> createWinnerModel(GameResult gameResult) {
-        Map<String, Object> model = new HashMap<>();
-        model.put("winner", gameResult.getWinner());
-        model.put("loser", gameResult.getLoser());
-        model.put("blackScore", gameResult.getAliveBlackPieceScoreSum());
-        model.put("whiteScore", gameResult.getAliveWhitePieceScoreSum());
-
-        return model;
-    }
+		if (chessGameService.isGameOver(roomId)) {
+			return new ModelAndView(String.format("redirect:/result/%d", roomId));
+		}
+		return new ModelAndView("game", model);
+	}
 }

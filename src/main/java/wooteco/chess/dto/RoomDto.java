@@ -12,11 +12,11 @@ public class RoomDto {
     private Map<String, Piece> pieceMap;
     private double teamWhiteScore;
     private double teamBlackScore;
-    private int id;
+    private long id;
     private String name;
     private Team turn;
 
-    private RoomDto(Map<String, Piece> pieceMap, double teamWhiteScore, double teamBlackScore, int id, String name,
+    private RoomDto(Map<String, Piece> pieceMap, double teamWhiteScore, double teamBlackScore, long id, String name,
         Team turn) {
         this.pieceMap = pieceMap;
         this.teamWhiteScore = teamWhiteScore;
@@ -26,7 +26,7 @@ public class RoomDto {
         this.turn = turn;
     }
 
-    public static RoomDto of(Board board, int id, String name) {
+    public static RoomDto of(Board board, long id, String name) {
         Map<String, Piece> pieceMap = new HashMap<>();
         Pieces pieces = board.getPieces();
         for (Piece alivePiece : pieces.getAlivePieces()) {
@@ -48,7 +48,7 @@ public class RoomDto {
         return teamBlackScore;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

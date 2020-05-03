@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import wooteco.chess.domain.Board;
-import wooteco.chess.domain.Pieces;
 import wooteco.chess.domain.Position;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
@@ -27,12 +26,12 @@ public class ChessService {
         this.roomRepository = roomRepository;
     }
 
-    public void initBoard(int roomId) {
+    public void initBoard(long roomId) {
         Set<PieceEntity> pieceEntities = new HashSet<>();
         for (Piece alivePiece : new Board().getPieces().getAlivePieces()) {
             pieceEntities.add(new PieceEntity(alivePiece.getPosition(), alivePiece.toString(), alivePiece.getTeam()));
         }
-        roomRepository.save(new RoomEntity((long)roomId, findNameById(roomId), Team.WHITE, pieceEntities));
+        roomRepository.save(new RoomEntity(roomId, findNameById(roomId), Team.WHITE, pieceEntities));
     }
 
     private boolean isPresentRoom(String name) {
@@ -62,20 +61,20 @@ public class ChessService {
         }
     }
 
-    public Board getSavedBoard(int roomId) {
-        RoomEntity roomEntity = roomRepository.findById((long)roomId)
+    public Board getSavedBoard(long roomId) {
+        RoomEntity roomEntity = roomRepository.findById(roomId)
             .orElseThrow(() -> new IllegalArgumentException("해당 id의 방이 존재하지 않습니다."));
-        return new Board(new Pieces(roomEntity.getPieceEntities()), roomEntity.getTurn());
+        return new Board(roomEntity.getPieces(), roomEntity.getTurn());
     }
 
-    public void processMoveInput(Board board, String source, String destination, int roomId) {
+    public void processMoveInput(Board board, String source, String destination, long roomId) {
         board.movePiece(new Position(source), new Position(destination));
         Set<PieceEntity> pieceEntities = board.getPieces()
             .getAlivePieces()
             .stream()
             .map(alivePiece -> new PieceEntity(alivePiece.getPosition(), alivePiece.toString(), alivePiece.getTeam()))
             .collect(Collectors.toSet());
-        roomRepository.save(new RoomEntity((long)roomId, findNameById(roomId), board.getTurn(), pieceEntities));
+        roomRepository.save(new RoomEntity(roomId, findNameById(roomId), board.getTurn(), pieceEntities));
     }
 
     public int findIdByName(String name) {
@@ -83,8 +82,8 @@ public class ChessService {
             .orElseThrow(() -> new IllegalArgumentException("해당 이름의 방이 존재하지 않습니다."));
     }
 
-    public String findNameById(int roomId) {
-        return roomRepository.findById((long)roomId)
+    public String findNameById(long roomId) {
+        return roomRepository.findById(roomId)
             .map(RoomEntity::getName)
             .orElseThrow(() -> new IllegalArgumentException("해당 id의 방이 존재하지 않습니다."));
     }
@@ -95,17 +94,17 @@ public class ChessService {
         return RoomDto.of(board, roomId, name);
     }
 
-    public RoomDto findGame(int roomId) {
+    public RoomDto findGame(long roomId) {
         Board board = getSavedBoard(roomId);
         return RoomDto.of(board, roomId, findNameById(roomId));
     }
 
-    public boolean isGameEnd(int roomId) {
+    public boolean isGameEnd(long roomId) {
         Board board = getSavedBoard(roomId);
         return !board.isBothKingAlive();
     }
 
-    public ResultDto endGame(int roomId) {
+    public ResultDto endGame(long roomId) {
         Board board = getSavedBoard(roomId);
         return ResultDto.of(board, roomId);
     }

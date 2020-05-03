@@ -1,6 +1,5 @@
 package wooteco.chess.controller;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -11,9 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import wooteco.chess.domain.Board;
-import wooteco.chess.domain.Pieces;
-import wooteco.chess.domain.Position;
-import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.service.ChessService;
 
 @Controller
@@ -46,7 +42,7 @@ public class ChessController {
     }
 
     @GetMapping("/")
-    public String showGame(@RequestParam(value = "room-id") int roomId, @RequestParam(defaultValue = "") String error,
+    public String showGame(@RequestParam(value = "room-id") long roomId, @RequestParam(defaultValue = "") String error,
         RedirectAttributes redirectAttributes, Model model) {
         model.addAttribute("room", service.findGame(roomId));
         if (service.isGameEnd(roomId)) {
@@ -60,7 +56,7 @@ public class ChessController {
     }
 
     @GetMapping("/result")
-    public String showResult(@RequestParam(value = "room-id") int id, Model model) {
+    public String showResult(@RequestParam(value = "room-id") long id, Model model) {
         model.addAttribute("result", service.endGame(id));
         return "chess-result";
     }
@@ -69,7 +65,7 @@ public class ChessController {
     public String continueGame(@RequestParam(value = "existing-room-name") String name,
         RedirectAttributes redirectAttributes) {
         try {
-            int id = service.findIdByName(name);
+            long id = service.findIdByName(name);
             redirectAttributes.addAttribute("room-id", id);
             if (service.isGameEnd(id)) {
                 return "redirect:/result";
@@ -83,7 +79,7 @@ public class ChessController {
 
     @PostMapping("/move")
     public String executeMove(@RequestParam Map<String, String> parameters, RedirectAttributes redirectAttributes) {
-        int roomId = Integer.parseInt(parameters.get("room-id"));
+        long roomId = Long.parseLong(parameters.get("room-id"));
         Board board = service.getSavedBoard(roomId);
         String source = parameters.get("source");
         String destination = parameters.get("destination");
@@ -97,19 +93,9 @@ public class ChessController {
     }
 
     @PostMapping("/initialize")
-    public String initializeGame(@RequestParam(value = "room-id") int roomId, RedirectAttributes redirectAttributes) {
+    public String initializeGame(@RequestParam(value = "room-id") long roomId, RedirectAttributes redirectAttributes) {
         service.initBoard(roomId);
         redirectAttributes.addAttribute("room-id", roomId);
         return "redirect:/";
-    }
-
-    private void allocatePiecesOnMap(Board board, Model model) {
-        Pieces pieces = board.getPieces();
-        Map<Position, Piece> positionPieceMap = pieces.getPieces();
-        Map<String, Piece> pieceMap = new HashMap<>();
-        for (Position position : positionPieceMap.keySet()) {
-            pieceMap.put(position.toString(), positionPieceMap.get(position));
-        }
-        model.addAttribute("map", pieceMap);
     }
 }

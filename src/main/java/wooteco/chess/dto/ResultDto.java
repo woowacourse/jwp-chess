@@ -10,16 +10,16 @@ import wooteco.chess.domain.piece.Team;
 
 public class ResultDto {
     private Team winner;
-    private int roomId;
+    private long roomId;
     private Map<String, Piece> pieceMap;
 
-    private ResultDto(Team winner, int roomId, Map<String, Piece> pieceMap) {
+    private ResultDto(Team winner, long roomId, Map<String, Piece> pieceMap) {
         this.winner = winner;
         this.roomId = roomId;
         this.pieceMap = pieceMap;
     }
 
-    public static ResultDto of(Board board, int roomId) {
+    public static ResultDto of(Board board, long roomId) {
         Map<String, Piece> pieceMap = new HashMap<>();
         Pieces pieces = board.getPieces();
         for (Piece alivePiece : pieces.getAlivePieces()) {
@@ -32,7 +32,7 @@ public class ResultDto {
         return winner;
     }
 
-    public int getRoomId() {
+    public long getRoomId() {
         return roomId;
     }
 

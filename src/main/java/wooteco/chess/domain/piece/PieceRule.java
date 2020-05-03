@@ -15,6 +15,7 @@ public enum PieceRule {
     KNIGHT(2.5, Arrays.asList('♘', '♞'), (position, team) -> new Knight(new Position(position), Team.of(team))),
     PAWN(1, Arrays.asList('♙', '♟'), (position, team) -> new Pawn(new Position(position), Team.of(team)));
 
+    public static final int FIRST_INDEX = 0;
     private double score;
     private List<Character> representations;
     private BiFunction<String, String, Piece> generator;
@@ -37,8 +38,10 @@ public enum PieceRule {
     }
 
     public static Piece makeNewPiece(PieceEntity pieceEntity) {
-        return makeNewPiece(pieceEntity.getType().charAt(0), pieceEntity.getPosition(),
-            pieceEntity.getTeam().getName());
+        Team team = pieceEntity.getTeam();
+        String type = pieceEntity.getType();
+        return makeNewPiece(type.charAt(FIRST_INDEX), pieceEntity.getPosition(),
+            team.getName());
     }
 
     public double getScore() {

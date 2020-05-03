@@ -6,6 +6,7 @@ import wooteco.chess.domain.chesspiece.Piece;
 
 public class Turn {
 	private static final String NOT_THIS_TEAM_TURN_MESSAGE = "해당 팀 차례가 아닙니다.";
+	public static final boolean FIRST = true;
 
 	private boolean isWhiteTurn;
 

@@ -19,19 +19,15 @@ import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.chesspiece.Queen;
 import wooteco.chess.domain.chesspiece.Rook;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.dto.PieceDto;
 
 public class BoardFactory {
-	private static final String NOT_MATCH_ALL_PIECE_NUMBER_MESSAGE = "64개의 ChessDTO가 아닙니다.";
-	private static final String NOT_MATCH_POSITION_MESSAGE = "찾을 수 없는 포지션입니다.";
-	private static final String POSITION_FORMAT = "%c%d";
 
-	public static Board createBoard() {
+	public static Board create() {
 		List<Row> board = new ArrayList<>();
 		board.addAll(createBlackTeam());
 		board.addAll(createBlankTeam());
 		board.addAll(createWhiteTeam());
-		return new Board(board, new Turn(true));
+		return new Board(board, new Turn(Turn.FIRST));
 	}
 
 	private static List<Row> createBlackTeam() {
@@ -81,34 +77,5 @@ public class BoardFactory {
 			pieces.add(new Blank(Position.of(index, y)));
 		}
 		return new Row(pieces);
-	}
-
-	public static Board createBoard(List<PieceDto> pieceDtos, Turn turn) {
-		if (pieceDtos.size() != ALL_PIECE_NUMBER.get()) {
-			throw new IllegalArgumentException(NOT_MATCH_ALL_PIECE_NUMBER_MESSAGE);
-		}
-		List<Row> rows = new ArrayList<>();
-		for (int x = BOARD_FROM_INDEX.get(); x <= BOARD_TO_INDEX.get(); x++) {
-			rows.add(createRow(pieceDtos, x));
-		}
-		return new Board(rows, turn);
-	}
-
-	private static Row createRow(List<PieceDto> pieceDtos, int x) {
-		List<Piece> pieces = new ArrayList<>();
-		for (int y = ROW_FROM_INDEX.get(); y <= ROW_TO_INDEX.get(); y++) {
-			PieceDto pieceDto = findByPosition(pieceDtos, String.format(POSITION_FORMAT, y, x));
-			String name = pieceDto.getName();
-			String position = pieceDto.getPosition();
-			pieces.add(PieceConverter.convert(position, name));
-		}
-		return new Row(pieces);
-	}
-
-	private static PieceDto findByPosition(List<PieceDto> pieceDtos, String position) {
-		return pieceDtos.stream()
-			.filter(pieceDto -> pieceDto.getPosition().equals(position))
-			.findFirst()
-			.orElseThrow(() -> new IllegalArgumentException(NOT_MATCH_POSITION_MESSAGE));
 	}
 }

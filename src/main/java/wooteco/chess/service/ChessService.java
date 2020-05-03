@@ -1,87 +1,68 @@
 package wooteco.chess.service;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
-import wooteco.chess.dao.BoardDao;
-import wooteco.chess.dao.TurnDao;
 import wooteco.chess.domain.Result;
 import wooteco.chess.domain.Status;
 import wooteco.chess.domain.Team;
-import wooteco.chess.domain.Turn;
 import wooteco.chess.domain.chessboard.Board;
 import wooteco.chess.domain.chesspiece.Blank;
 import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.factory.BoardFactory;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.dto.PieceDto;
+import wooteco.chess.entity.BoardEntity;
+import wooteco.chess.repository.BoardRepository;
+import wooteco.chess.repository.PieceRepository;
+import wooteco.chess.repository.TurnRepository;
 
 @Service
 public class ChessService {
-	private static final boolean FIRST_TURN = true;
+	private final BoardRepository boardRepository;
+	private final TurnRepository turnRepository;
+	private final PieceRepository pieceRepository;
 
-	private final BoardDao boardDao;
-	private final TurnDao turnDao;
-
-	public ChessService(final BoardDao boardDao, final TurnDao turnDao) {
-		this.boardDao = boardDao;
-		this.turnDao = turnDao;
+	public ChessService(BoardRepository boardRepository, TurnRepository turnRepository,
+		PieceRepository pieceRepository) {
+		this.boardRepository = boardRepository;
+		this.turnRepository = turnRepository;
+		this.pieceRepository = pieceRepository;
 	}
 
-	public Board move(Position startPosition, Position targetPosition) {
-		Board board = find();
-		Piece startPiece = board.findByPosition(startPosition);
-		board.move(startPosition, targetPosition);
-		boardDao.update(targetPosition, startPiece.getName());
-		boardDao.update(startPosition, Blank.NAME);
-		turnDao.changeTurn(board.isWhiteTurn());
+	public Board move(Position start, Position target, Long boardId) {
+		Board board = init();
+		Piece startPiece = board.findByPosition(start);
+
+		board.move(start, target);
+		pieceRepository.update(startPiece.getName(), target.getString(), boardId);
+		pieceRepository.update(Blank.NAME, start.getString(), boardId);
+		turnRepository.update(board.isWhiteTurn(), boardId);
+
 		return board;
 	}
 
-	public Board find() {
-		List<PieceDto> pieceDtos = boardDao.findAll();
-		Turn turn;
-		try {
-			turn = turnDao.find();
-		} catch (NoSuchElementException e) {
-			turn = new Turn(FIRST_TURN);
-			turnDao.addTurn(FIRST_TURN);
-		}
-		if (pieceDtos.isEmpty()) {
-			return createBoard(BoardFactory.createBoard());
-		}
-		return BoardFactory.createBoard(pieceDtos, turn);
-	}
+	public Board init() {
+		// TODO id를 roomID로 mapping
+		BoardEntity boardEntity = boardRepository.findById(1L)
+			.orElseGet(() -> boardRepository.save(BoardEntity.from(BoardFactory.create())));
+		return boardEntity.createBoard();
 
-	private Board createBoard(Board board) {
-		List<Piece> pieces = board.findAll();
-		for (Piece piece : pieces) {
-			boardDao.addPiece(PieceDto.from(piece));
-		}
-		return board;
 	}
 
 	public Board restart() {
-		boardDao.removeAll();
-		turnDao.removeAll();
-		return find();
+		boardRepository.deleteAll();
+		turnRepository.deleteAll();
+		return init();
 	}
 
 	public boolean isNotEnd() {
-		Board board = find();
+		Board board = init();
 		return board.isLiveBothKing();
 	}
 
-	public boolean isWinWhiteTeam() {
-		Board board = find();
-		return board.isLiveKing(Team.WHITE);
-	}
-
 	public Team findWinningTeam() {
-		Board board = find();
+		Board board = init();
 		return Arrays.stream(Team.values())
 			.filter(board::isLiveKing)
 			.findFirst()
@@ -89,7 +70,7 @@ public class ChessService {
 	}
 
 	public Result status() {
-		Board board = find();
+		Board board = init();
 		Status status = board.createStatus();
 		return status.getResult();
 	}

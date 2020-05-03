@@ -3,11 +3,14 @@ package wooteco.chess.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import wooteco.chess.domain.Result;
 import wooteco.chess.domain.chessboard.Board;
@@ -31,14 +34,13 @@ public class SpringController {
 	@GetMapping("/init")
 	@ResponseBody
 	public Map<String, Object> init() {
-		return makeModel(chessService.find());
+		return makeModel(chessService.init());
 	}
 
-	@PostMapping("/move")
+	@PutMapping("/move")
 	@ResponseBody
-	public Map<String, Object> move(@RequestParam("startPosition") String startPosition,
-		@RequestParam("targetPosition") String targetPosition) {
-		Board board = chessService.move(Position.of(startPosition), Position.of(targetPosition));
+	public Map<String, Object> move(@RequestParam("start") String start, @RequestParam("target") String target) {
+		Board board = chessService.move(Position.of(start), Position.of(target), 1L);
 		return makeModel(board);
 	}
 
@@ -71,10 +73,17 @@ public class SpringController {
 		return model;
 	}
 
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({IllegalArgumentException.class, UnsupportedOperationException.class})
+	@ResponseBody
+	public String handleException(RuntimeException e) {
+		return e.getMessage();
+	}
+
 	private Map<String, Object> makeModel(Board board) {
 		Map<String, Object> model = new HashMap<>();
 		for (Piece piece : board.findAll()) {
-			model.put(piece.getPosition().getString(), piece.getName());
+			model.put(piece.getPosition(), piece.getName());
 		}
 		return model;
 	}

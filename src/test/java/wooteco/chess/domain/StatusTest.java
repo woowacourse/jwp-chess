@@ -11,7 +11,7 @@ public class StatusTest {
 
 	@Test
 	void getResultTest() {
-		Board board = BoardFactory.createBoard();
+		Board board = BoardFactory.create();
 		Status status = board.createStatus();
 
 		assertThat(status.getResult().getBlackTeamScore()).isEqualTo(38);

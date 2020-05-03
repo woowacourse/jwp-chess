@@ -1,0 +1,24 @@
+package wooteco.chess.repository;
+
+import java.util.List;
+
+import org.springframework.data.jdbc.repository.query.Modifying;
+import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
+import wooteco.chess.entity.TurnEntity;
+
+/**
+ *    Turn Repository 인터페이스 입니다.
+ *
+ *    @author HyungJu An, JunSeong Hong
+ */
+public interface TurnRepository extends CrudRepository<TurnEntity, Long> {
+	@Override
+	List<TurnEntity> findAll();
+
+	@Modifying
+	@Query("UPDATE turn SET is_white_turn = :isWhiteTurn WHERE board_entity = :boardId")
+	void update(@Param("isWhiteTurn") Boolean isWhiteTurn, @Param("boardId") Long boardId);
+}

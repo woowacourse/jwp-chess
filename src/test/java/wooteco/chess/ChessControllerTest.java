@@ -89,7 +89,7 @@ public class ChessControllerTest {
     @ParameterizedTest
     @CsvSource(value = {"a1,a1,현재 자리한 위치(a1)로는 이동할 수 없습니다.", "a7,a5,위치(sourcePosition) a7의 말은 현재 차례인 White의 말이 아니므로 " +
             "움직일 " +
-            "수 없습니다.", "2,a5,지정한 위치 a5는 하얀색 폰이 이동할 수 없는 곳입니다."})
+            "수 없습니다.", "a2,a5,지정한 위치 a5는 하얀색 폰이 이동할 수 없는 곳입니다."})
     void validateResponseToMovePieceWrongly(String source, String target, String errorMsg) {
         given().
                 log().all().

@@ -98,7 +98,6 @@ public class ChessService {
         if (foundRoomInfo != null) {
             roomInfoRepository.deleteById(foundRoomInfo.getId());
         }
-
         return roomInfoRepository.save(roomInfo);
     }
 
@@ -172,11 +171,10 @@ public class ChessService {
     }
 
     private List<Position> findMovablePlaces(String roomName, final Position start) {
-        Board board = readBoard(roomName);
         List<Position> movablePlaces = new ArrayList<>();
         try {
             checkGameOver(roomName);
-            movablePlaces = board.findMovablePositions(start);
+            movablePlaces = readBoard(roomName).findMovablePositions(start);
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
@@ -191,7 +189,6 @@ public class ChessService {
 
     public Map<String, Object> loadGame(String roomName) {
         Map<String, Object> model = ModelParser.parseBoard(readBoard(roomName));
-
         addScoreToModel(model, roomName);
         model.put("roomName", roomName);
         return model;

@@ -39,14 +39,6 @@ public class ChessController {
         return GAME_PAGE;
     }
 
-    @PostMapping("/load-game")
-    public String loadGame(HttpServletRequest request, Model model) {
-        String roomName = request.getParameter("roomName");
-
-        model.addAllAttributes(chessService.loadGame(roomName));
-        return GAME_PAGE;
-    }
-
     @PostMapping("/move")
     public String move(HttpServletRequest request, Model model) {
         String roomName = request.getParameter("roomName");
@@ -63,6 +55,14 @@ public class ChessController {
         String startPosition = request.getParameter("start");
 
         model.addAllAttributes(chessService.loadMovable(roomName, startPosition));
+        return GAME_PAGE;
+    }
+
+    @PostMapping("/load-game")
+    public String loadGame(HttpServletRequest request, Model model) {
+        String roomName = request.getParameter("roomName");
+
+        model.addAllAttributes(chessService.loadGame(roomName));
         return GAME_PAGE;
     }
 }

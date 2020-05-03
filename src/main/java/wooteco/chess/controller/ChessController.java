@@ -1,6 +1,5 @@
 package wooteco.chess.controller;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -11,9 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import wooteco.chess.domain.Board;
-import wooteco.chess.domain.Pieces;
-import wooteco.chess.domain.Position;
-import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.service.ChessService;
 
 @Controller
@@ -101,15 +97,5 @@ public class ChessController {
         service.initBoard(roomId);
         redirectAttributes.addAttribute("room-id", roomId);
         return "redirect:/";
-    }
-
-    private void allocatePiecesOnMap(Board board, Model model) {
-        Pieces pieces = board.getPieces();
-        Map<Position, Piece> positionPieceMap = pieces.getPieces();
-        Map<String, Piece> pieceMap = new HashMap<>();
-        for (Position position : positionPieceMap.keySet()) {
-            pieceMap.put(position.toString(), positionPieceMap.get(position));
-        }
-        model.addAttribute("map", pieceMap);
     }
 }

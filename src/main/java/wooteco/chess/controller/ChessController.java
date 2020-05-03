@@ -5,11 +5,16 @@ import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wooteco.chess.dto.MoveDto;
 import wooteco.chess.service.ChessService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class ChessController {
@@ -19,39 +24,40 @@ public class ChessController {
 
     public ChessController(ChessService chessService) {
         this.chessService = chessService;
+        chessService.start();
     }
 
     @GetMapping("/")
     public String startGame(Model model) {
-        chessService.start();
         model.addAllAttributes(chessService.makeStartResponse());
         return "chessGameStart";
     }
 
-    @GetMapping("/playing/lastGame")
-    public String lastGame(Model model) {
-        chessService.playLastGame();
-        model.addAllAttributes(chessService.makeMoveResponse());
+    @PostMapping("/")
+    public String playing(@RequestParam("newRoomName") String newRoomName) {
+        Long newRoomId = chessService.playNewGame(newRoomName);
+        return "redirect:/playing/" + newRoomId;
+    }
+
+    @GetMapping("/playing/{roomId}")
+    public String lastGame(@PathVariable("roomId") Long roomId, Model model) {
+        model.addAllAttributes(chessService.playLastGame(roomId));
         return "chessGame";
     }
 
-    @GetMapping("/playing/newGame")
-    public String newGame(Model model) {
-        chessService.playNewGame();
-        model.addAllAttributes(chessService.makeMoveResponse());
-        return "chessGame";
-    }
-
-    @GetMapping("/end")
-    public String endGame() {
-        chessService.end();
-        return "chessGameEnd";
-    }
-
-    @PostMapping("/playing/move")
+    @PostMapping("/playing/{roomId}")
     @ResponseBody
-    public String move(@RequestBody MoveDto moveDto) {
-        chessService.move(moveDto.getSource(), moveDto.getTarget());
-        return GSON.toJson(chessService.makeMoveResponse());
+    public String move(@PathVariable("roomId") Long roomId, @RequestBody MoveDto moveDto) {
+        chessService.move(moveDto.getSource(), moveDto.getTarget(), roomId);
+        Map<String, Object> model = new HashMap<>(chessService.makeMoveResponse(roomId));
+        chessService.checkIfPlaying(roomId);
+
+        return GSON.toJson(model);
+    }
+
+    @GetMapping("/end/{roomId}")
+    public String endGame(@PathVariable("roomId") Long roomId) {
+        chessService.end(roomId);
+        return "chessGameEnd";
     }
 }

@@ -4,9 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wooteco.chess.controller.command.Command;
 import wooteco.chess.domain.ChessManager;
-import wooteco.chess.dto.Commands;
 import wooteco.chess.dto.GameResponse;
-import wooteco.chess.repository.CommandsRepository;
+import wooteco.chess.repository.ChessRoom;
+import wooteco.chess.repository.ChessRoomRepository;
+import wooteco.chess.repository.MoveCommand;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,68 +15,86 @@ import java.util.Map;
 
 @Service
 public class ChessService {
-    private static final String MOVE_ERROR_MESSAGE = "이동할 수 없는 곳입니다. 다시 입력해주세요";
     private static final String MOVE_DELIMITER = " ";
 
     @Autowired
-    private CommandsRepository commandsRepository;
-    private ChessManager chessManager;
+    private ChessRoomRepository chessRoomRepository;
+    private Map<Long, ChessManager> chessGames = new HashMap<>();
 
     public void start() {
-        chessManager = new ChessManager();
+        List<ChessRoom> chessRooms = chessRoomRepository.findAll();
+        for (ChessRoom chessRoom : chessRooms) {
+            chessGames.put(chessRoom.getRoomId(), new ChessManager());
+        }
+    }
+
+    public Long playNewGame(String roomName) {
+        ChessRoom newRoom = chessRoomRepository.save(new ChessRoom(roomName));
+        chessGames.put(newRoom.getRoomId(), new ChessManager());
+        return newRoom.getRoomId();
+    }
+
+    public Map<String, Object> playLastGame(Long roomId) throws IllegalArgumentException {
+        List<MoveCommand> commands = findRoom(roomId).getMoveCommand();
+        ChessManager chessManager = chessGames.get(roomId);
         chessManager.start();
-    }
-
-    public void playNewGame() {
-        initializeDatabase();
-    }
-
-    public void playLastGame() {
-        List<Commands> commands = commandsRepository.findAll();
-        for (Commands command : commands) {
-            Command.MOVE.apply(chessManager, command.get());
+        for (MoveCommand command : commands) {
+            Command.MOVE.apply(chessManager, command.getCommand());
         }
+        return makeMoveResponse(roomId);
     }
 
-    public void move(String source, String target) {
-        String command = String.join(MOVE_DELIMITER, new String[]{"move", source, target});
-
+    public void move(String source, String target, Long roomId) {
+        ChessManager chessManager = chessGames.get(roomId);
         try {
-            Command.MOVE.apply(chessManager, command);
-            saveToDatabase(command);
+            chessManager.move(source, target);
         } catch (Exception e) {
-            throw new IllegalArgumentException(MOVE_ERROR_MESSAGE);
+            throw new IllegalArgumentException(e.getMessage());
         }
+        saveCommand(source, target, roomId);
+    }
 
+    public void checkIfPlaying(Long roomId) {
+        ChessManager chessManager = chessGames.get(roomId);
         if (!chessManager.isPlaying()) {
-            initializeDatabase();
-            chessManager.end();
+            deleteRoom(roomId);
         }
     }
 
-    public void end() {
+    public void end(Long roomId) {
+        ChessManager chessManager = chessGames.get(roomId);
         chessManager.end();
     }
 
     public Map<String, Object> makeStartResponse() {
-        Map<String, Object> model = new HashMap<>(new GameResponse(chessManager).get());
-        model.put("haveLastGameRecord", !commandsRepository.findAll().isEmpty());
+        Map<String, Object> model = new HashMap<>();
+        model.put("chessRooms", chessRoomRepository.findAll());
 
         return model;
     }
 
-    public Map<String, Object> makeMoveResponse() {
+    public Map<String, Object> makeMoveResponse(Long roomId) {
+        ChessManager chessManager = chessGames.get(roomId);
         Map<String, Object> model = new HashMap<>(new GameResponse(chessManager).get());
         model.put("winner", chessManager.getWinner());
-
+        model.put("roomId", roomId);
+        model.put("roomName", findRoom(roomId).getRoomName());
         return model;
     }
 
-    private void initializeDatabase() {
-        commandsRepository.deleteAll();
+    private void saveCommand(String source, String target, Long roomId) {
+        String command = String.join(MOVE_DELIMITER, new String[]{"move", source, target});
+        ChessRoom chessRoom = findRoom(roomId);
+        chessRoom.addCommand(new MoveCommand(command));
+        chessRoomRepository.save(chessRoom);
     }
 
-    private void saveToDatabase(String command) {
-        commandsRepository.save(new Commands(command));
+    private ChessRoom findRoom(Long roomId) {
+        return chessRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+    }
+
+    private void deleteRoom(Long roomId) {
+        chessRoomRepository.deleteById(roomId);
     }
 }

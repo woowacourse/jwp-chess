@@ -26,6 +26,9 @@ function checkSourceOrTarget(clickedPosition) {
 }
 
 function move(source, target) {
+    let currentPath = window.location.pathname.split("/");
+    let roomId = currentPath.slice(-1)[0];
+  
     let moveDto = {
         "source": source.id,
         "target": target.id
@@ -38,10 +41,12 @@ function move(source, target) {
         },
         body: JSON.stringify(moveDto)
     };
-    fetch("/playing/move", moveInformation)
+
+    fetch("/playing/" + roomId, moveInformation)
         .then(response => {
             if (!response.ok) {
                 alert("이동할 수 없는 곳입니다.");
+                return;
             }
             const parsedResponse = response.text().then(text => {
                 return text ? JSON.parse(text) : {}

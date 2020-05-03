@@ -9,6 +9,7 @@
 <body>
 <div id="gameUI">
     <h1 id="title">크리스마스 체스</h1>
+    <h2 id="roomName">{{roomName}}</h2>
     <div id="chessBoard">
         {{#chessPieces}}
             <div id="{{position}}" class="tile">
@@ -27,8 +28,8 @@
             <div id="chess_score">{{currentTeam}}팀의 현재 점수는 {{currentTeamScore}}점 입니다.</div>
         {{/if}}
 
-        <form action="/end" method="get">
-            <button>종료하기</button>
+        <form action="/end/{{roomId}}" method="get">
+            <button>저장 후 종료하기</button>
         </form>
     </div>
 </div>

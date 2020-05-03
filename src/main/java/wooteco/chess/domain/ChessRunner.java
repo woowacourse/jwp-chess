@@ -16,7 +16,7 @@ public class ChessRunner {
         this.currentTeam = Team.WHITE;
     }
 
-    public void updateBoard(String source, String target) {
+    public void updateBoard(String source, String target) throws IllegalArgumentException {
         Position sourcePosition = Positions.of(source);
         Position targetPosition = Positions.of(target);
         Piece selectedPiece = this.board.getPiece(sourcePosition);
@@ -34,10 +34,6 @@ public class ChessRunner {
         if (!(selectedPiece.movable(sourcePosition, targetPosition, board))) {
             throw new IllegalArgumentException("이동할 수 없는 곳입니다.");
         }
-    }
-
-    public void clearBoard() {
-        board.clear();
     }
 
     public Team findWinner() {

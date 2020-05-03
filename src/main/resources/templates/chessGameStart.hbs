@@ -3,21 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <link href="./css/chessStyle.css" rel="stylesheet" type="text/css"/>
-    <title>엘리의 크리스마스 체스</title>
+    <title>크리스마스 체스</title>
 </head>
 <body>
-{{#haveLastGameRecord}}
-    <button onclick="playLastGame()">기존 게임 시작하기</button>
-{{/haveLastGameRecord}}
-<button onclick="playNewGame()">새 게임 시작하기</button>
+<form action="/" method="post">
+    <input type="text" name="newRoomName" placeholder="새 게임방 제목을 입력하세요"/>
+    <button type="submit">입장</button>
+</form>
+
+{{#chessRooms}}
+    <div class="chessRoom">
+        <div class="chessRoomId">{{roomId}}</div>
+        <div class="chessRoomName">{{roomName}}</div>
+        <button class="chessRoomEnterBtn" onclick="playLastGame({{roomId}})">입장하기</button>
+    </div>
+{{else}}
+    <div>입장 가능한 방이 없습니다. 새로운 방을 만들어주세요.</div>
+{{/chessRooms}}
 </body>
 <script>
-    const playLastGame = function () {
-        window.location = "http://localhost:8080/playing/lastGame";
+    const playLastGame = function (roomId) {
+        window.location = "http://localhost:8080/playing/" + roomId;
     };
-
-    const playNewGame = function () {
-        window.location = "http://localhost:8080/playing/newGame";
-    }
 </script>
 </html>

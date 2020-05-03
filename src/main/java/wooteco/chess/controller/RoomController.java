@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +16,11 @@ import wooteco.chess.entity.Room;
 import wooteco.chess.service.ChessService;
 
 @Controller
-public class ChessController {
+public class RoomController {
 
     private ChessService chessService;
 
-    ChessController(ChessService chessService) {
+    RoomController(ChessService chessService) {
         this.chessService = chessService;
     }
 
@@ -45,38 +46,6 @@ public class ChessController {
         modelAndView.setViewName("board");
 
         return modelAndView;
-    }
-
-    @PostMapping("/path")
-    @ResponseBody
-    public List<String> path(@RequestParam Map<String, String> parameters) {
-        try {
-            return chessService.searchPath(new Room(parameters.get("roomName")), parameters.get("source"));
-        } catch (RuntimeException e) {
-            return Collections.singletonList(e.getMessage());
-        }
-    }
-
-    @PostMapping("/move")
-    @ResponseBody
-    public Map<String, Object> move(@RequestParam Map<String, String> parameters) {
-        Room blackRoom = new Room(parameters.get("roomName"));
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("isNotFinished", false);
-        model.put("message", "");
-
-        try {
-            chessService.move(blackRoom, parameters.get("source"), parameters.get("target"));
-            model.put("white", chessService.calculateWhiteScore(blackRoom));
-            model.put("black", chessService.calculateBlackScore(blackRoom));
-        } catch (RuntimeException e) {
-            model.put("message", e.getMessage());
-        }
-        if (chessService.checkGameNotFinished(blackRoom)) {
-            model.put("isNotFinished", true);
-        }
-        return model;
     }
 
     @PostMapping("/save")

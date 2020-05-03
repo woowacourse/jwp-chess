@@ -8,17 +8,19 @@ import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.judge.Judge;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
-import wooteco.chess.repository.GameStatus;
-import wooteco.chess.repository.GameStatusRepository;
 import wooteco.chess.repository.PieceInfo;
 import wooteco.chess.repository.PieceInfoRepository;
+import wooteco.chess.repository.RoomInfo;
+import wooteco.chess.repository.RoomInfoRepository;
 import wooteco.chess.utils.ModelParser;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class ChessService {
@@ -26,99 +28,172 @@ public class ChessService {
     @Autowired
     private PieceInfoRepository pieceInfoRepository;
     @Autowired
-    private GameStatusRepository gameStatusRepository;
+    private RoomInfoRepository roomInfoRepository;
 
-    public Map<String, Object> loadInitBoard() {
-        Map<String, Object> model = ModelParser.parseBlankBoard();
-        model.putAll(ModelParser.parseMovablePlaces(new ArrayList<>()));
+    public Map<String, Object> loadRooms() {
+        List<RoomInfo> roominfos = roomInfoRepository.findAll();
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("rooms", roominfos);
         return model;
     }
 
-    public Board newGame() {
-        truncateAll();
+    public Map<String, Object> newGame(String roomName) {
+        deleteGameData(roomName);
+
         Board board = BoardFactory.create();
-        writeWholeBoard(board);
-        writeCurrentTurn(Team.WHITE);
-        return board;
+        RoomInfo roomInfo = writeCurrentTurn(board.makeGameInfo(roomName));
+        writeWholeBoard(board, roomInfo);
+
+        return makeResultModel(roomName, board);
     }
 
-    private void truncateAll() {
-        pieceInfoRepository.deleteAll();
-        gameStatusRepository.deleteAll();
+    private Map<String, Object> makeResultModel(String roomName, Board board) {
+        Map<String, Object> model = ModelParser.parseBoard(board);
+        addScoreToModel(model, roomName);
+        model.put("roomName", roomName);
+        return model;
     }
 
-    private void writeWholeBoard(final Board board) {
+    private Map<String, Object> makeResultModel(String roomName, Board board, List<Position> movablePositions) {
+        Map<String, Object> model = ModelParser.parseBoard(board, movablePositions);
+        addScoreToModel(model, roomName);
+        model.put("roomName", roomName);
+        return model;
+    }
+
+    private void deleteGameData(String roomName) {
+        String roomNameHash = makeHash(roomName);
+        Iterable<PieceInfo> pieceInfos = pieceInfoRepository.findByRoomNameHash(roomNameHash);
+        RoomInfo roomInfo = roomInfoRepository.findByRoomNameOnlyOne(roomName);
+
+        for (PieceInfo pieceInfo : pieceInfos) {
+            pieceInfoRepository.deleteById(pieceInfo.getId());
+        }
+        if (roomInfo != null) {
+            roomInfoRepository.deleteById(roomInfo.getId());
+        }
+    }
+
+    private String makeHash(String roomName) {
+        String MD5 = "";
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(roomName.getBytes());
+            byte[] byteData = md.digest();
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < byteData.length; i++) {
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            MD5 = sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            MD5 = null;
+        }
+        return MD5;
+    }
+
+    private RoomInfo writeCurrentTurn(RoomInfo roomInfo) {
+        RoomInfo foundRoomInfo = roomInfoRepository.findByRoomNameOnlyOne(roomInfo.getRoomName());
+        if (foundRoomInfo != null) {
+            roomInfoRepository.deleteById(foundRoomInfo.getId());
+        }
+
+        return roomInfoRepository.save(roomInfo);
+    }
+
+    private void writeWholeBoard(final Board board, final RoomInfo roomInfo) {
         for (Position position : Position.positions) {
             Piece piece = board.findPieceOn(position);
 
-            pieceInfoRepository.save(new PieceInfo(piece.toString(), position.toString()));
+            pieceInfoRepository.save(new PieceInfo(piece.toString(), position.toString(), makeHash(roomInfo.getRoomName())));
         }
     }
 
-    private void writeCurrentTurn(final Team turn) {
-        gameStatusRepository.save(new GameStatus(turn.toString()));
+    public Map<String, Object> move(String roomName, String start, String end) {
+        return makeResultModel(roomName, tryMove(roomName, start, end));
     }
 
-    public void move(String start, String end) {
-        checkGameOver();
-
-        Board board = readBoard();
+    private Board tryMove(String roomName, String start, String end) {
+        Board board = readBoard(roomName);
         try {
+            checkGameOver(roomName);
             board.move(Position.of(start), Position.of(end));
+            writeCurrentTurn(board.makeGameInfo(roomName));
+            updateBoard(makeHash(roomName), start, end);
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
-
-        truncateAll();
-        writeWholeBoard(board);
-        writeCurrentTurn(board.getCurrentTurn());
+        return board;
     }
 
-    public Board readBoard() {
-        Iterable<PieceInfo> persistGameInfo = pieceInfoRepository.findAll();
-        GameStatus persistGameStatus = gameStatusRepository.findAll()
-                .iterator()
-                .next();
-        Team team = Team.of(persistGameStatus.getCurrentTurn());
-        return new Board(parsePieceInformation(persistGameInfo), team);
+    private void updateBoard(String roomNameHash, String start, String end) {
+        PieceInfo startPiece = pieceInfoRepository.findByRoomNameHashAndPositionOnlyOne(roomNameHash, start);
+        PieceInfo endPiece = pieceInfoRepository.findByRoomNameHashAndPositionOnlyOne(roomNameHash, end);
+
+        PieceInfo newStartPiece = new PieceInfo(startPiece.getId(), "blank", startPiece.getPosition(), roomNameHash);
+        PieceInfo newEndPiece = new PieceInfo(endPiece.getId(), startPiece.getPiece(), endPiece.getPosition(), roomNameHash);
+
+        pieceInfoRepository.save(newStartPiece);
+        pieceInfoRepository.save(newEndPiece);
     }
 
-    public Map<String, Object> readBoardWithScore() {
-        Board board = readBoard();
+    public Board readBoard(String roomName) {
+        List<PieceInfo> pieceInfos = pieceInfoRepository.findByRoomNameHash(makeHash(roomName));
+        RoomInfo roomInfo = roomInfoRepository.findByRoomNameOnlyOne(roomName);
 
-        Map<String, Object> model = ModelParser.parseBoard(board);
-        model.put("player1_info", "WHITE: " + calculateScore(Team.WHITE));
-        model.put("player2_info", "BLACK: " + calculateScore(Team.BLACK));
-        return model;
+        Team currentTurn = Team.of(roomInfo.getCurrentTurn());
+        return new Board(parsePieceInformation(pieceInfos), currentTurn);
     }
 
-    private Map<Position, Piece> parsePieceInformation(Iterable<PieceInfo> persistGameInfo) {
-        return StreamSupport.stream(persistGameInfo.spliterator(), false)
-                .collect(Collectors.toMap(gameInfo -> Position.of(gameInfo.getPosition()), gameInfo -> Piece.of(gameInfo.getPiece())));
+    public void addScoreToModel(Map<String, Object> model, String roomName) {
+        model.put("player1_info", "WHITE: " + calculateScore(roomName, Team.WHITE));
+        model.put("player2_info", "BLACK: " + calculateScore(roomName, Team.BLACK));
     }
 
-    private double calculateScore(final Team team) {
-        return Judge.getScoreByTeam(readBoard(), team);
+    private Map<Position, Piece> parsePieceInformation(List<PieceInfo> persistGameInfo) {
+        return persistGameInfo.stream()
+                .collect(Collectors.toMap(pieceInfo -> Position.of(pieceInfo.getPosition()), pieceInfo -> Piece.of(pieceInfo.getPiece())));
     }
 
-    public Map<String, Object> loadMovable(String startName) {
+    private double calculateScore(String roomName, final Team team) {
+        return Judge.getScoreByTeam(readBoard(roomName), team);
+    }
+
+    public Map<String, Object> loadMovable(String roomName, String startName) {
         Position start = Position.of(startName);
-        List<Position> movablePositions = findMovablePlaces(start);
-        Map<String, Object> model = ModelParser.parseBoard(readBoard(), movablePositions);
+        List<Position> movablePositions = findMovablePlaces(roomName, start);
+        Map<String, Object> model = makeResultModel(roomName, readBoard(roomName), movablePositions);
+
         if (movablePositions.size() != 0) {
             model.put("start", startName);
         }
         return model;
     }
 
-    private List<Position> findMovablePlaces(final Position start) {
-        checkGameOver();
-        return readBoard().findMovablePositions(start);
+    private List<Position> findMovablePlaces(String roomName, final Position start) {
+        Board board = readBoard(roomName);
+        List<Position> movablePlaces = new ArrayList<>();
+        try {
+            checkGameOver(roomName);
+            movablePlaces = board.findMovablePositions(start);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+        return movablePlaces;
     }
 
-    private void checkGameOver() {
-        if (Judge.findWinner(readBoard()).isPresent()) {
-            throw new IllegalArgumentException();
+    private void checkGameOver(String roomName) {
+        if (Judge.findWinner(readBoard(roomName)).isPresent()) {
+            throw new IllegalArgumentException("게임이 종료됐습니다.");
         }
+    }
+
+    public Map<String, Object> loadGame(String roomName) {
+        Map<String, Object> model = ModelParser.parseBoard(readBoard(roomName));
+
+        addScoreToModel(model, roomName);
+        model.put("roomName", roomName);
+        return model;
     }
 }

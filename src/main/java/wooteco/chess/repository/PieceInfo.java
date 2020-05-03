@@ -1,25 +1,31 @@
 package wooteco.chess.repository;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("board")
+@Table("piece_info")
 public class PieceInfo {
 
     @Id
-    Long id;
-    @Column
+    private Long id;
     private String piece;
     private String position;
+    private String roomNameHash;
 
-    public PieceInfo(String piece, String position) {
-        this.piece = piece;
-        this.position = position;
+    public PieceInfo() {
     }
 
-    public Long getId() {
-        return id;
+    public PieceInfo(String piece, String position, String roomNameHash) {
+        this.piece = piece;
+        this.position = position;
+        this.roomNameHash = roomNameHash;
+    }
+
+    public PieceInfo(Long id, String piece, String position, String roomNameHash) {
+        this.id = id;
+        this.piece = piece;
+        this.position = position;
+        this.roomNameHash = roomNameHash;
     }
 
     public void setPiece(String piece) {
@@ -30,11 +36,19 @@ public class PieceInfo {
         this.position = position;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getPiece() {
         return piece;
     }
 
     public String getPosition() {
         return position;
+    }
+
+    public String getRoomNameHash() {
+        return roomNameHash;
     }
 }

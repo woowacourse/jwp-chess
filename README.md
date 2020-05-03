@@ -47,37 +47,9 @@
 - [x] Command 입력
 - [x] Board 출력
 - [x] Score 출력
+- [ ] 방 목록 출력
 
 ### Framework
 - [x] Spark
-- [ ] Spring
-
-### 테이블 생성
-```sql
-create database wootecochess;
-
-create table user
-(
-    name varchar(64) not null primary key
-);
-
-create table gameinfo
-(
-    id int(50) auto_increment primary key,
-    black varchar(64) null,
-    white varchar(64) null,
-    turn  int(12) null,
-    foreign key (black) references user(name),
-    foreign key (white) references user(name)
-); 
-
-create table board
-(
-    gameinfo_id int(50) not null,
-    position varchar(64) not null,
-    piece varchar(64) not null,
-    primary key(gameinfo_id, position),
-    foreign key (gameinfo_id) references gameinfo(id)
-);
-
-```
+- [x] Spring
+- [x] Spring Data JDBC

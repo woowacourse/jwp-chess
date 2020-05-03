@@ -80,7 +80,7 @@ body {
     margin: 2px 0;
 }
 
-.user {
+.room {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -89,7 +89,7 @@ body {
     border-radius: 10px;
 }
 
-.user > img {
+.room > img {
     flex: 1;
     height: 150px;
     margin: 0 auto;
@@ -99,7 +99,7 @@ body {
     display: flex;
 }
 
-.user-status {
+.room-status {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -108,7 +108,7 @@ body {
     margin: 5px auto;
 }
 
-.user-status .user-name {
+.room-status .room-name {
     margin: 0;
     font-size: 50px;
     font-family: fantasy;
@@ -116,7 +116,7 @@ body {
     flex: 1;
 }
 
-.user-status .turn {
+.room-status .turn {
     margin: 0;
     font-size: 50px;
     font-family: fantasy;
@@ -124,7 +124,7 @@ body {
     flex: 1;
 }
 
-.user-status .score {
+.room-status .score {
     text-align: center;
     font-family: fantasy;
     font-size: 30px;

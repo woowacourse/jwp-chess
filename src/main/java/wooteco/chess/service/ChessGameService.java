@@ -1,11 +1,6 @@
 package wooteco.chess.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
-
 import wooteco.chess.domain.GameResult;
 import wooteco.chess.domain.board.ChessBoard;
 import wooteco.chess.domain.board.Position;
@@ -19,6 +14,10 @@ import wooteco.chess.entity.BoardEntity;
 import wooteco.chess.entity.RoomEntity;
 import wooteco.chess.entity.TurnEntity;
 import wooteco.chess.repository.RoomRepository;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ChessGameService {
@@ -104,19 +103,19 @@ public class ChessGameService {
 	}
 
 	private ChessBoard createBoardById(Long roomId) {
-		RoomEntity roomEntity = findRoomEntityById(roomId);
+        RoomEntity roomEntity = findRoomEntityById(roomId);
 
-		if (roomEntity.isEmptyBoard() && roomEntity.isEmptyTurn()) {
-			throw new IllegalArgumentException("새 게임을 눌러주세요!");
-		}
+        if (roomEntity.hasEmptyBoard() && roomEntity.hasEmptyTurn()) {
+            throw new IllegalArgumentException("새 게임을 눌러주세요!");
+        }
 
-		Map<Position, Piece> board = new HashMap<>();
+        Map<Position, Piece> board = new HashMap<>();
 
-		for (BoardEntity boardEntity : roomEntity.getBoardEntities()) {
-			Position position = new Position(boardEntity.getPosition());
-			Piece piece = PieceType.of(boardEntity.getPieceName()).createPiece(position);
-			board.put(position, piece);
-		}
+        for (BoardEntity boardEntity : roomEntity.getBoardEntities()) {
+            Position position = new Position(boardEntity.getPosition());
+            Piece piece = PieceType.of(boardEntity.getPieceName()).createPiece(position);
+            board.put(position, piece);
+        }
 
 		PieceColor currentTeam = PieceColor.of(roomEntity.getTurnEntity().getTeamName());
 		return new ChessBoard(board, currentTeam);

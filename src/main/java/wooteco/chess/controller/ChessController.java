@@ -1,19 +1,14 @@
 package wooteco.chess.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import wooteco.chess.dto.ChessGameParser;
 import wooteco.chess.service.ChessGameService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/chess")
@@ -47,9 +42,9 @@ public class ChessController {
 	}
 
 	@PostMapping("/{roomId}/move")
-	public ModelAndView winner(@PathVariable Long roomId,
-		@RequestParam(defaultValue = "") String source,
-		@RequestParam(defaultValue = "") String target) {
+	public ModelAndView proceedChessGame(@PathVariable Long roomId,
+										 @RequestParam(defaultValue = "") String source,
+										 @RequestParam(defaultValue = "") String target) {
 
 		Map<String, Object> model;
 		try {

@@ -57,11 +57,11 @@ public class RoomEntity {
 		return turnEntity;
 	}
 
-	public boolean isEmptyBoard() {
+	public boolean hasEmptyBoard() {
 		return boardEntities.isEmpty();
 	}
 
-	public boolean isEmptyTurn() {
+	public boolean hasEmptyTurn() {
 		return turnEntity == null;
 	}
 }

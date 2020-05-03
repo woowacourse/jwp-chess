@@ -1,6 +1,5 @@
 package wooteco.chess.controller;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,7 +61,7 @@ public class WebController {
 
 	@PostMapping("/restart")
 	public ModelAndView restart(
-			@RequestParam String name) throws SQLException {
+			@RequestParam String name) {
 		ModelAndView modelAndView = new ModelAndView("chess");
 		ChessGameDto chessGameDto = chessGameService.restart(name);
 		modelAndView.addObject("chessGame", chessGameDto);

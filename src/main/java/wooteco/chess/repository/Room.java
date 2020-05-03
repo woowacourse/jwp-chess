@@ -21,6 +21,12 @@ public class Room {
 		this.finishFlag = finishFlag;
 	}
 
+	public void update(String board, Side turn, String finishFlag) {
+		this.board = board;
+		this.turn = turn;
+		this.finishFlag = finishFlag;
+	}
+
 	public Long getRoomId() {
 		return roomId;
 	}
@@ -50,11 +56,5 @@ public class Room {
 				", turn='" + turn + '\'' +
 				", finishFlag='" + finishFlag + '\'' +
 				'}';
-	}
-
-	public void update(String board, Side turn, String finishFlag) {
-		this.board = board;
-		this.turn = turn;
-		this.finishFlag = finishFlag;
 	}
 }

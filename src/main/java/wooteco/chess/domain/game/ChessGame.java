@@ -15,21 +15,23 @@ import wooteco.chess.domain.position.Position;
 public class ChessGame {
 
     private Long id;
+    private String title;
     private Board board;
     private Turn turn;
 
-    private ChessGame(final Long id, final Board board, final Turn turn) {
+    private ChessGame(Long id, String title, Board board, Turn turn) {
         this.id = id;
+        this.title = title;
         this.board = board;
         this.turn = turn;
     }
 
-    public static ChessGame of(final Board board, final Turn turn) {
-        return new ChessGame(null, board, turn);
+    public static ChessGame of(final String title, final Board board, final Turn turn) {
+        return new ChessGame(null, title, board, turn);
     }
 
-    public static ChessGame of(final Long id, final Board board, final Turn turn) {
-        return new ChessGame(id, board, turn);
+    public static ChessGame of(final Long id, String title, final Board board, final Turn turn) {
+        return new ChessGame(id, title, board, turn);
     }
 
     public boolean isEnd() {
@@ -81,5 +83,9 @@ public class ChessGame {
 
     public Long getId() {
         return id;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

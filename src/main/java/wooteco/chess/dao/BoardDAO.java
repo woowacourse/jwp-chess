@@ -20,7 +20,7 @@ import wooteco.chess.domain.position.Position;
 @Component
 public class BoardDAO {
 	public void addPieces(String gameId, List<Piece> pieces) {
-		String query = "INSERT INTO board VALUES (?, ?, ?)";
+		String query = "INSERT INTO board (game_id, position, symbol) VALUES (?, ?, ?)";
 		try (Connection con = getConnection();
 			 PreparedStatement pstmt = con.prepareStatement(query)) {
 			setStatementByPieceIn(gameId, pieces, pstmt);
@@ -41,7 +41,7 @@ public class BoardDAO {
 	}
 
 	public void addPiece(String gameId, Piece piece) {
-		String query = "INSERT INTO board VALUES (?, ?, ?)";
+		String query = "INSERT INTO board (game_id, position, symbol) VALUES (?, ?, ?)";
 		try (Connection con = getConnection();
 			 PreparedStatement pstmt = con.prepareStatement(query)) {
 			pstmt.setString(1, gameId);

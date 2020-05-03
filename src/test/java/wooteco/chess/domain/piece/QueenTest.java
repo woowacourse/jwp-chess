@@ -11,7 +11,7 @@ class QueenTest {
 
 	@BeforeEach
 	void setUp() {
-		queen = new Queen(C3, Team.BLACK);
+		queen = new Queen(C3, Turn.BLACK);
 	}
 
 	@Test

@@ -1,11 +1,11 @@
 package wooteco.chess.domain.piece;
 
-public enum Team {
+public enum Turn {
 	BLACK,
 	WHITE,
 	NONE;
 
-	public Team next() {
+	public Turn next() {
 		if (BLACK == this) {
 			return WHITE;
 		}
@@ -15,17 +15,17 @@ public enum Team {
 		throw new IllegalArgumentException("잘못된 팀 입력입니다.");
 	}
 
-	public boolean isEnemy(Team team) {
+	public boolean isEnemy(Turn turn) {
 		if (BLACK == this) {
-			return WHITE == team;
+			return WHITE == turn;
 		}
 		if (WHITE == this) {
-			return BLACK == team;
+			return BLACK == turn;
 		}
 		throw new IllegalArgumentException("잘못된 팀 입력입니다.");
 	}
 
-	public boolean isNotEnemy(Team team) {
-		return !isEnemy(team);
+	public boolean isNotEnemy(Turn turn) {
+		return !isEnemy(turn);
 	}
 }

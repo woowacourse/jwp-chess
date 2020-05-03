@@ -11,7 +11,7 @@ public class KnightTest {
 
 	@BeforeEach
 	void setUp() {
-		knight = new Knight(C3, Team.BLACK);
+		knight = new Knight(C3, Turn.BLACK);
 	}
 
 	@Test

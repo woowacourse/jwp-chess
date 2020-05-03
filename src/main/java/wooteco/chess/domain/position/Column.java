@@ -1,7 +1,5 @@
 package wooteco.chess.domain.position;
 
-import java.util.Arrays;
-
 public enum Column {
 	A("a"),
 	B("b"),
@@ -21,17 +19,19 @@ public enum Column {
 	}
 
 	public Column plus() {
-		return Arrays.stream(Column.values())
-			.filter(value -> value.ordinal() == this.ordinal() + STEP)
-			.findFirst()
-			.orElseThrow(() -> new IllegalArgumentException("9 이상의 column 값은 가질수 없습니다."));
+		try {
+			return values()[ordinal() + STEP];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw new IllegalArgumentException("9 이상의 column 값은 가질수 없습니다.");
+		}
 	}
 
 	public Column minus() {
-		return Arrays.stream(Column.values())
-			.filter(value -> value.ordinal() == this.ordinal() - STEP)
-			.findFirst()
-			.orElseThrow(() -> new IllegalArgumentException("0 이하의 column 값은 가질수 없습니다."));
+		try {
+			return values()[ordinal() - STEP];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw new IllegalArgumentException("0 이하의 column 값은 가질수 없습니다.");
+		}
 	}
 
 	public String getName() {

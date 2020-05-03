@@ -11,7 +11,7 @@ class KingTest {
 
 	@BeforeEach
 	void setUp() {
-		king = new King(C3, Team.BLACK);
+		king = new King(C3, Turn.BLACK);
 	}
 
 	@Test

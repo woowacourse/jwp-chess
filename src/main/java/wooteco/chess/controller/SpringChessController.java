@@ -1,5 +1,7 @@
 package wooteco.chess.controller;
 
+import static java.util.stream.Collectors.*;
+
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -15,16 +17,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.gson.Gson;
+import wooteco.chess.domain.entity.PieceEntity;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.service.ChessService;
+import wooteco.chess.service.SpringChessService;
 
 @Controller
 public class SpringChessController {
 	private static final Gson GSON = new Gson();
 
-	private ChessService service;
+	private SpringChessService service;
 
-	public SpringChessController(ChessService service) {
+	public SpringChessController(SpringChessService service) {
 		this.service = service;
 	}
 
@@ -36,7 +39,11 @@ public class SpringChessController {
 	@GetMapping("/chess")
 	public String renderBoard(@RequestParam("game_id") String gameId, Model model) {
 		service.initialize(gameId);
-		model.addAllAttributes(service.getBoard(gameId));
+		Map<String, String> board = service.getBoard(gameId)
+			.stream()
+			.collect(toMap(pieceEntity -> pieceEntity.getPosition().getName(), PieceEntity::getSymbol));
+
+		model.addAllAttributes(board);
 		return "chess";
 	}
 
@@ -49,16 +56,16 @@ public class SpringChessController {
 		return GSON.toJson(from + " " + to);
 	}
 
+	@GetMapping("/status")
+	private String renderResult(@RequestParam("game_id") String game_id, Model model) {
+		model.addAllAttributes(service.getResult(game_id));
+		return "status";
+	}
+
 	@ResponseStatus(value = HttpStatus.CONFLICT)
 	@ExceptionHandler(IllegalArgumentException.class)
 	@ResponseBody
 	public String handleException(IllegalArgumentException e) {
 		return e.getMessage();
-	}
-
-	@GetMapping("/status")
-	public String renderResult(@RequestParam("game_id") String gameId, Model model) {
-		model.addAllAttributes(service.getResult(gameId));
-		return "status";
 	}
 }

@@ -43,10 +43,10 @@ public class ChessGameEntity {
     }
 
     public ChessGame createChessGame() {
-        return new ChessGame(createStateByRecode());
+        return new ChessGame(createState());
     }
 
-    private State createStateByRecode() {
+    private State createState() {
         if (state.equals("PLAYING")) {
             return new Playing(Board.from(board), Turn.from(turn));
         }

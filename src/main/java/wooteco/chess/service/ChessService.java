@@ -72,9 +72,6 @@ public class ChessService {
     }
 
     private static ResponseDto responseChessGame(ChessGame chessGame) {
-        return new ResponseDto(ResponseDto.SUCCESS,
-                new ChessGameDto(new BoardDto(chessGame.board()), new TurnDto(chessGame.turn()),
-                        new StatusDto(chessGame.status().getWhiteScore(), chessGame.status().getBlackScore(),
-                                chessGame.status().getWinner()), chessGame.isFinished()));
+        return new ResponseDto(ResponseDto.SUCCESS, new ChessGameDto(chessGame));
     }
 }

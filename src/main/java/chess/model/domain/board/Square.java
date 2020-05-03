@@ -87,10 +87,7 @@ public class Square {
 
     @Override
     public String toString() {
-        return "Square{" +
-            "file=" + file +
-            ", rank=" + rank +
-            '}';
+        return "Square{" + file.getName() + rank.getName() + '}';
     }
 
     @Override

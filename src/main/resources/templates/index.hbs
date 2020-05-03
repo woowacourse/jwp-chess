@@ -15,10 +15,10 @@
     <div class="room">
         <label class="mini-title">체스 방을 선택하여 입장 또는 삭제하세요.</label><br/>
         <br/>
-        <form action="/start" id="start" method="post">
+        <form action="/room/${roomId}" id="start" method="get">
+        </form>
             <select class="room-combo" id="rooms" name="roomId">
             </select>
-        </form>
         <button class="room-button" id="into-room">입장</button>
         <button class="room-button" id="delete-room">삭제</button>
     </div>
@@ -33,7 +33,7 @@
     <div class="room">
         <label class="mini-title">그 동안의 결과를 확인하세요.</label><br/>
         <br/>
-        <form action="/result" id="result-game" method="post">
+        <form action="/result" id="result-game" method="get">
             <button class="room-button" id="result-button">게임 결과보기</button>
         </form>
     </div>

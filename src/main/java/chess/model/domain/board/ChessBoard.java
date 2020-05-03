@@ -94,6 +94,10 @@ public class ChessBoard {
         return count;
     }
 
+    public Piece getCurrentPiece(Square square) {
+        return chessBoard.get(square);
+    }
+
     public void move(MoveInfo moveInfo) {
         Square moveInfoBefore = moveInfo.getSource();
         Square moveInfoAfter = moveInfo.getTarget();
@@ -110,5 +114,12 @@ public class ChessBoard {
 
     public Map<Square, Piece> getChessBoard() {
         return chessBoard;
+    }
+
+    @Override
+    public String toString() {
+        return "ChessBoard{" +
+            "chessBoard=" + chessBoard +
+            '}';
     }
 }

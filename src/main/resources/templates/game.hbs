@@ -125,13 +125,8 @@
         <br/>
         <button id="close-button" style="font-size: 2em">게임종료</button>
         <button id="new-button" style="font-size: 2em">새 게임</button>
-        <form action="/game/newGame" hidden id="new-game" method="post">
-            <input id="new-game-id" name="gameId" type="text"/>
-            <input id="new-black-name" name="blackName" type="text"/>
-            <input id="new-white-name" name="whiteName" type="text"/>
+        <form action="/room/{roomId}/game/{gameId}" hidden id="new-game">
         </form>
-        <label hidden id="gameId">{{gameId}}</label>
-
     </div>
 
     <div class="result2">
@@ -151,10 +146,9 @@
         <div class="button-div" id="room-button">방 선택</div>
         <div class="button-div" id="choice-button">게임 선택</div>
         <div class="button-div" id="result-button">결과 보기</div>
-        <form action="/game/choiceGame" hidden id="choice-game" method="post">
-            <input id="choice-game-id" name="gameId" type="text"/>
+        <form action="/room/{roomId}" hidden id="choice-game">
         </form>
-        <form action="/result" hidden id="result-game" method="post">
+        <form action="/result" hidden id="result">
         </form>
     </div>
 

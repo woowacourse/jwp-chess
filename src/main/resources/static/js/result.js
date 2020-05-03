@@ -1,42 +1,44 @@
-const reset = document.getElementById('reset');
-const winDrawLose = document.getElementById('win-draw-lose');
-const submit = document.getElementById('submit');
-const userNames = document.getElementById('user-names');
 const roomButton = document.getElementById("room-button");
+const resetButton = document.getElementById('reset');
+const submitButton = document.getElementById('submit');
+const winDrawLoseDiv = document.getElementById('win-draw-lose');
+const userNamesCombo = document.getElementById('user-names');
 
 roomButton.onclick = () => {
     location.href = '/'
 };
 
-reset.onclick = () => {
-    userNames.value = 1;
-    userNames.focus();
-    winDrawLose.innerText = "";
+resetButton.onclick = () => {
+    userNamesCombo.value = 1;
+    userNamesCombo.focus();
+    winDrawLoseDiv.innerText = "";
 };
 
-submit.onclick = () => {
-    let userName = userNames.value;
-    fetch('/api/result/userResult', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            userName
-        })
-    }).then(res => res.json()).then(data => {
+submitButton.onclick = () => {
+    let userName = userNamesCombo.value;
+
+    fetch('/api/result/userResult?userName=' + userName).then(
+        res => res.json()).then(data => {
+        setWinOrDraw(data);
+    });
+
+    function setWinOrDraw(data) {
         let {winCount, drawCount, loseCount} = data;
-        winDrawLose.innerText = userName + ' : '
+        winDrawLoseDiv.innerText = userName + ' : '
             + (winCount + drawCount + loseCount) + "전 " + winCount + "승 "
             + drawCount + "무 " + loseCount + "패";
-    })
+    }
 };
 
-fetch('/api/result/viewUsers').then(res => res.json()).then(data => {
+fetch('/api/result/users').then(res => res.json()).then(data => {
+    setUserNames(data);
+});
+
+function setUserNames(data) {
     for (let userName of data.userNames) {
         let opt = document.createElement("option");
         opt.value = userName;
         opt.textContent = userName;
-        userNames.appendChild(opt);
+        userNamesCombo.appendChild(opt);
     }
-});
+}

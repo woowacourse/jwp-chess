@@ -25,7 +25,7 @@ public class ChessGameTest {
     @DisplayName("체스보드 생성시 32개의 칸-말 셋트를 가지고 있는지 확인")
     @Test
     void chessBoardSizeCheck() {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGameFactory.create();
         Map<Square, Piece> board = chessGame.getChessBoard();
         assertThat(board.size()).isEqualTo(32);
     }
@@ -33,7 +33,7 @@ public class ChessGameTest {
     @DisplayName("move 수행이 가능한지 판단하면서 수행, 턴 변경시 수행 불가능한지도 검증")
     @Test
     void canMove() {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGameFactory.create();
         assertThat(chessGame.move(new MoveInfo("a7", "a6")).isSucceed())
             .isFalse();
         assertThat(chessGame.move(new MoveInfo("a2", "a3")).isSucceed())
@@ -47,7 +47,7 @@ public class ChessGameTest {
     @Test
     @DisplayName("move 수행 테스트")
     void move() {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGameFactory.create();
         chessGame.move(new MoveInfo("a2", "a3"));
         assertThat(chessGame.getChessBoard().containsKey(Square.of("a2"))).isFalse();
         assertThat(chessGame.getChessBoard().containsKey(Square.of("a3"))).isTrue();
@@ -58,13 +58,13 @@ public class ChessGameTest {
     @Test
     @DisplayName("king 잡혔는지 확인")
     void isKingOnChessBoard() {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGameFactory.create();
         assertThat(chessGame.isKingCaptured()).isFalse();
 
         Map<Square, Piece> whiteKingBoard = new HashMap<>();
         whiteKingBoard.put(Square.of("a1"), King.getInstance(Team.WHITE));
         chessGame = new ChessGame(ChessBoard.of(whiteKingBoard), Team.BLACK,
-            CastlingElement.of(new HashSet<>()), new EnPassant());
+            CastlingElement.of(new HashSet<>()), EnPassant.createEmpty());
         assertThat(chessGame.isKingCaptured()).isTrue();
         assertThat(chessGame.move(new MoveInfo("d1", "d2")))
             .isEqualTo(MoveState.KING_CAPTURED);
@@ -72,7 +72,7 @@ public class ChessGameTest {
         Map<Square, Piece> blackKingBoard = new HashMap<>();
         blackKingBoard.put(Square.of("a1"), King.getInstance(Team.BLACK));
         chessGame = new ChessGame(ChessBoard.of(blackKingBoard), Team.WHITE,
-            CastlingElement.of(new HashSet<>()), new EnPassant());
+            CastlingElement.of(new HashSet<>()), EnPassant.createEmpty());
         assertThat(chessGame.isKingCaptured()).isTrue();
         assertThat(chessGame.move(new MoveInfo("d1", "d2")))
             .isEqualTo(MoveState.KING_CAPTURED);
@@ -82,14 +82,14 @@ public class ChessGameTest {
     @ParameterizedTest
     @CsvSource(value = {"a2, false", "a3, true"})
     void isNoPiece(String source, boolean success) {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGameFactory.create();
         assertThat(chessGame.isNotExistPiece(Square.of(source)) == success).isTrue();
     }
 
     @DisplayName("이동하려는 before자리의 말이 현재 차례의 말이 아닌지 확인")
     @Test
     void isNotMyTurn() {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGameFactory.create();
         assertThat(chessGame.isNotCorrectTurn(new MoveInfo("a2", "a3"))).isFalse();
         assertThat(chessGame.isNotCorrectTurn(new MoveInfo("a7", "a6"))).isTrue();
     }
@@ -97,7 +97,7 @@ public class ChessGameTest {
     @DisplayName("폰이 시작지점(즉 상대방의 시작지점)으로 이동했는지 확인")
     @Test
     void mustChangePawnThenCanGo() {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGameFactory.create();
         chessGame.move(new MoveInfo("a2", "a4"));
         chessGame.move(new MoveInfo("a7", "a5"));
         chessGame.move(new MoveInfo("b2", "b4"));
@@ -115,7 +115,7 @@ public class ChessGameTest {
     @DisplayName("폰이 시작지점(즉 상대방의 시작지점)으로 이동했을 때, 변경 여부에 따른 진행 여부")
     @Test
     void mustChangePawnAndCanGo() {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGameFactory.create();
         chessGame.move(new MoveInfo("a2", "a4"));
         chessGame.move(new MoveInfo("a7", "a5"));
         chessGame.move(new MoveInfo("b2", "b4"));
@@ -150,7 +150,7 @@ public class ChessGameTest {
         boardInitial.put(Square.of("a1"), Rook.getInstance(Team.WHITE));
         boardInitial.put(Square.of("h1"), Rook.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
-            CastlingElement.createInitial(), new EnPassant());
+            CastlingElement.createInitial(), EnPassant.createEmpty());
 
         assertThat(chessGame.move(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.SUCCESS);
@@ -175,7 +175,7 @@ public class ChessGameTest {
         boardInitial.put(Square.of("f8"), Knight.getInstance(Team.WHITE));
         boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
-            CastlingElement.createInitial(), new EnPassant());
+            CastlingElement.createInitial(), EnPassant.createEmpty());
 
         assertThat(chessGame.move(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.FAIL_CAN_NOT_MOVE);
@@ -205,7 +205,7 @@ public class ChessGameTest {
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
             CastlingElement
                 .of(new HashSet<>(Collections.singletonList(CastlingSetting.BLACK_KING_BEFORE))),
-            new EnPassant());
+            EnPassant.createEmpty());
 
         assertThat(chessGame.move(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.FAIL_CAN_NOT_MOVE);

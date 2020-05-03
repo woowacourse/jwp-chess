@@ -1,51 +1,59 @@
-let cells = document.querySelectorAll('.cell');
-const turn = document.getElementById('turn');
-const state = document.getElementById('state');
-const clickTiming = document.getElementById('clickTiming');
-const promotions = document.querySelectorAll('.promotion');
-const blackScore = document.getElementById('blackScore');
-const whiteScore = document.getElementById('whiteScore');
-const blackName = document.getElementById('blackName');
-const whiteName = document.getElementById('whiteName');
-const winner = document.getElementById('winner');
-const closeButton = document.getElementById('close-button');
-const choiceGame = document.getElementById('choice-game');
-const choiceGameId = document.getElementById('choice-game-id');
-const choiceButton = document.getElementById('choice-button');
 const roomButton = document.getElementById('room-button');
 const resultButton = document.getElementById('result-button');
-const resultGame = document.getElementById('result-game');
-const newGame = document.getElementById('new-game');
-const newGameId = document.getElementById('new-game-id');
+const choiceButton = document.getElementById('choice-button');
 const newButton = document.getElementById('new-button');
-const newBlackName = document.getElementById('new-black-name');
-const newWhiteName = document.getElementById('new-white-name');
+const closeButton = document.getElementById('close-button');
+const promotions = document.querySelectorAll('.promotion');
+const turnLabel = document.getElementById('turn');
+const stateLabel = document.getElementById('state');
+const blackNameLabel = document.getElementById('blackName');
+const whiteNameLabel = document.getElementById('whiteName');
 
+const roomId = window.location.href.match(
+    /(?:\w+:)?\/\/[^\/]+([^?#]+)/).pop().split('/')[2];
+const gameId = window.location.href.match(
+    /(?:\w+:)?\/\/[^\/]+([^?#]+)/).pop().split('/')[4];
+const roomUrl = '/api/room/' + roomId;
+const gameUrl = roomUrl + '/game/' + gameId;
+
+let cells = document.querySelectorAll('.cell');
 let firstClick = true;
 let source = null;
-let target = null;
-let gameId = document.getElementById('gameId').innerText;
 
 roomButton.onclick = () => {
     location.href = '/'
 };
 
 resultButton.onclick = () => {
-    resultGame.submit();
+    const resultForm = document.getElementById('result');
+    resultForm.submit();
 };
 
 choiceButton.onclick = () => {
-    choiceGameId.value = gameId;
-    choiceGame.submit();
+    const choiceGameForm = document.getElementById('choice-game');
+    choiceGameForm.action = '/room/' + roomId;
+    choiceGameForm.submit();
 };
 
 newButton.onclick = () => {
-    newGameId.value = gameId;
-    newGame.submit();
+    fetch(roomUrl + '/game/new', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            blackName: blackNameLabel.innerText,
+            whiteName: whiteNameLabel.innerText
+        })
+    }).then(res => res.json()).then(data => {
+        const newGameForm = document.getElementById('new-game');
+        newGameForm.action = '/room/' + roomId + '/game/' + data.gameId;
+        newGameForm.submit();
+    });
 };
 
 closeButton.onclick = () => {
-    fetch('/api/game/end', {
+    fetch(gameUrl + '/end', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -62,62 +70,62 @@ closeButton.onclick = () => {
 cells.forEach(cell => {
     cell.onclick = () => {
         if (firstClick) {
+            getMovableAreas();
+            return;
+        }
+        move();
+
+        function getMovableAreas() {
             source = cell.id;
             firstClick = false;
             document.getElementById('clickTiming').innerText
                 = '말이 이동할 경로(after)를 선택하세요.';
-            state.innerText = "";
+            stateLabel.innerText = "";
             cell.style.backgroundColor = 'STEELBLUE';
-            fetch('/api/game/path', {
+            fetch(gameUrl + '/path?source=' + source).then(
+                res => res.json()).then(data => {
+                cells.forEach(cell => {
+                    cell.classList.remove('movableArea');
+                });
+                data.movableAreas.forEach(movableArea => {
+                    document.getElementById(movableArea).classList.add(
+                        'movableArea');
+                })
+            });
+        }
+
+        function move() {
+            document.getElementById(source).removeAttribute('style');
+            firstClick = true;
+            fetch(gameUrl + '/path', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    source, gameId
+                    source, target: cell.id
                 })
             }).then(res => res.json()).then(data => {
-                cells.forEach(cell => {
-                    cell.classList.remove('path');
-                });
-                data.path.forEach(path => {
-                    document.getElementById(path).classList.add('path');
-                })
+                gameSetting(data);
+                if (data.state.includes("왕")) {
+                    gameFinish();
+                }
+                document.getElementById('clickTiming').innerText
+                    = '말이 이동할 경로(before)를 선택하세요.';
             });
-            return;
         }
-        document.getElementById(source).removeAttribute('style');
-        target = cell.id;
-        firstClick = true;
-        fetch('/api/game/move', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                source, target, gameId
-            })
-        }).then(res => res.json()).then(data => {
-            gameSetting(data);
-            if (data.state.includes("왕")) {
-                gameFinish();
-            }
-            document.getElementById('clickTiming').innerText
-                = '말이 이동할 경로(before)를 선택하세요.';
-        })
     }
 });
 
 promotions.forEach(promotion => {
     promotion.onclick = () => {
-        let promotionType = promotion.id;
-        fetch('/api/game/promotion', {
+        fetch(gameUrl + '/promotion', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                promotionType, gameId
+                promotionType: promotion.id
             })
         }).then(res => res.json()).then(data => {
             gameSetting(data);
@@ -125,50 +133,53 @@ promotions.forEach(promotion => {
     }
 });
 
-fetch('/api/game/board', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        gameId
-    })
-}).then(res => res.json()).then(data => {
+fetch(gameUrl + '/board').then(
+    res => res.json()).then(data => {
     gameSetting(data);
 });
 
 function gameSetting(data) {
+    const blackScoreLabel = document.getElementById('blackScore');
+    const whiteScoreLabel = document.getElementById('whiteScore');
+    const winnerLabel = document.getElementById('winner');
+
     cells.forEach(cell => {
         cell.innerHTML = data.pieces.shift();
-        cell.classList.remove('path');
+        cell.classList.remove('movableArea');
     });
-    if (typeof data.turn === 'undefined') {
-        turn.innerText = "";
-    } else {
-        turn.innerText = '현재 턴 : ' + data.turn;
+    turnLabel.innerText = getTurn();
+    stateLabel.innerText = getState();
+    blackScoreLabel.innerText = data.blackScore;
+    whiteScoreLabel.innerText = data.whiteScore;
+    blackNameLabel.innerText = data.blackName;
+    whiteNameLabel.innerText = data.whiteName;
+    winnerLabel.innerText = data.winner;
+
+    function getTurn() {
+        if (typeof data.turn === 'undefined') {
+            return "";
+        }
+        return '현재 턴 : ' + data.turn;
     }
-    if (typeof data.state === 'undefined') {
-        state.innerText = "";
-    } else {
-        state.innerText = data.state;
+
+    function getState() {
+        if (typeof data.state === 'undefined') {
+            return "";
+        }
+        return data.state;
     }
-    blackScore.innerText = data.blackScore;
-    whiteScore.innerText = data.whiteScore;
-    blackName.innerText = data.blackName;
-    newBlackName.value = data.blackName;
-    whiteName.innerText = data.whiteName;
-    newWhiteName.value = data.whiteName;
-    winner.innerText = data.winner;
 }
 
 function gameFinish() {
+    const clickTimingLabel = document.getElementById('clickTiming');
+
     cells.forEach(cell => {
         cell.innerHTML = "";
         cell.classList.remove('cell');
     });
     cells = null;
-    turn.innerText = "";
-    clickTiming.innerText = '게임이 종료되었습니다.';
+    turnLabel.innerText = "";
+    clickTimingLabel.innerText = '게임이 종료되었습니다.';
     closeButton.innerText = "종료됨";
     closeButton.disable = true;
 }

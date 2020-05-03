@@ -32,6 +32,14 @@ public class MoveInfo {
     }
 
     @Override
+    public String toString() {
+        return "MoveInfo{" +
+            "source=" + source +
+            ", target=" + target +
+            '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

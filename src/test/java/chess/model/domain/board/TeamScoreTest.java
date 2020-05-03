@@ -26,7 +26,7 @@ public class TeamScoreTest {
     @Test
     @DisplayName("게임 점수 계산")
     void calculateScore() {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGameFactory.create();
         TeamScore teamScore = chessGame.deriveTeamScore();
         Map<Team, Double> teamScores = teamScore.getTeamScore();
         assertThat(teamScores.get(Team.BLACK)).isEqualTo(38);
@@ -45,7 +45,7 @@ public class TeamScoreTest {
     @Test
     @DisplayName("승자 구하기")
     void getWinnerByScore() {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGameFactory.create();
         TeamScore teamScore = chessGame.deriveTeamScore();
         assertThat(teamScore.getWinners().size()).isEqualTo(2);
 
@@ -68,7 +68,7 @@ public class TeamScoreTest {
         boardInitial.put(Square.of("a1"), Rook.getInstance(Team.WHITE));
         boardInitial.put(Square.of("h1"), Rook.getInstance(Team.WHITE));
         ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
-            CastlingElement.createInitial(), new EnPassant());
+            CastlingElement.createInitial(), EnPassant.createEmpty());
 
         TeamScore teamScore = chessGame.deriveTeamScore();
 

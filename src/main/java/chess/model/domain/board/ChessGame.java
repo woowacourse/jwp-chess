@@ -11,7 +11,6 @@ import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import chess.model.domain.state.MoveInfo;
 import chess.model.domain.state.MoveState;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -31,26 +30,13 @@ public class ChessGame {
     private Team turn;
     private EnPassant enPassant;
 
-    public ChessGame() {
-        this(ChessBoard.createInitial(), Team.WHITE, CastlingElement.createInitial(),
-            new EnPassant());
-    }
-
-    public ChessGame(ChessBoard chessBoard, Team turn, CastlingElement castlingElements,
+    ChessGame(ChessBoard chessBoard, Team turn, CastlingElement castlingElements,
         EnPassant enPassant) {
         NullChecker.validateNotNull(chessBoard, turn, castlingElements, enPassant);
         this.chessBoard = chessBoard;
         this.turn = turn;
         this.castlingElements = castlingElements;
         this.enPassant = enPassant;
-    }
-
-    public static ChessGame of(ChessGame chessGame) {
-        return new ChessGame(ChessBoard.of(new HashMap<>(chessGame.getChessBoard()))
-            , chessGame.turn
-            , CastlingElement.of(new HashSet<>(chessGame.getCastlingElements()))
-            , new EnPassant(new HashMap<>(chessGame.getEnPassants()))
-        );
     }
 
     public MoveState move(MoveInfo moveInfo) {
@@ -69,16 +55,18 @@ public class ChessGame {
     }
 
     private void movePiece(MoveInfo moveInfo) {
+        Piece currentPiece = chessBoard.getCurrentPiece(moveInfo.getSource());
         chessBoard.move(moveInfo);
-        executeEnPassant(moveInfo);
+        executeEnPassant(moveInfo, currentPiece);
         executeCastling(moveInfo);
     }
 
-    private void executeEnPassant(MoveInfo moveInfo) {
-        if (enPassant.isEnemyPast(moveInfo.getTarget(), turn)) {
+    private void executeEnPassant(MoveInfo moveInfo, Piece currentPiece) {
+        if (enPassant.isEnemyPast(moveInfo.getTarget(), turn) && currentPiece instanceof Pawn) {
             chessBoard.removeBy(enPassant.getCurrentSquare(moveInfo.getTarget()));
         }
         enPassant.removeEnPassant(turn);
+        updateEnPassant(moveInfo, currentPiece);
         enPassant.removeEnPassant(moveInfo);
     }
 
@@ -129,12 +117,12 @@ public class ChessGame {
         if (movableArea.isEmpty()) {
             return false;
         }
-        addEnPassant(moveInfo, sourcePiece);
+        updateEnPassant(moveInfo, sourcePiece);
         return movableArea.contains(moveInfo.getTarget());
     }
 
-    private void addEnPassant(MoveInfo moveInfo, Piece sourcePiece) {
-        if (isPawnMoveTwoRankForward(moveInfo)) {
+    private void updateEnPassant(MoveInfo moveInfo, Piece sourcePiece) {
+        if (EnPassant.isPawnMoveTwoRank(sourcePiece, moveInfo)) {
             enPassant.add(sourcePiece, moveInfo);
         }
     }
@@ -155,14 +143,6 @@ public class ChessGame {
             chessBoardForCheck.addElements(enPassant.getEnPassantBoard(turn));
         }
         return chessBoardForCheck;
-    }
-
-    public boolean isPawnMoveTwoRankForward(MoveInfo moveInfo) {
-        if (chessBoard.isNotExist(moveInfo.getSource())) {
-            return false;
-        }
-        Piece sourcePiece = chessBoard.findPieceBy(moveInfo.getSource());
-        return EnPassant.isPawnMoveTwoRank(sourcePiece, moveInfo);
     }
 
     public boolean isKingCaptured() {

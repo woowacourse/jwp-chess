@@ -4,6 +4,11 @@
     text-align: center;
 }
 
+.chessRoomId, .chessRoomName, .chessRoomEnterBtn {
+    display: inline;
+    padding: 10px;
+}
+
 #chessBoard {
     display: inline-block;
     width: 480px;
@@ -66,7 +71,6 @@ img {
     height: 50px;
     padding: 0;
 }
-
 
 .error {
     color: #b71a07;

@@ -34,7 +34,7 @@ public class ChessController {
     }
 
     @PostMapping("/")
-    public String playing(@RequestParam("newRoomName") String newRoomName, Model model) {
+    public String playing(@RequestParam("newRoomName") String newRoomName) {
         Long newRoomId = chessService.playNewGame(newRoomName);
         return "redirect:/playing/" + newRoomId;
     }
@@ -51,6 +51,7 @@ public class ChessController {
         chessService.move(moveDto.getSource(), moveDto.getTarget(), roomId);
         Map<String, Object> model = new HashMap<>(chessService.makeMoveResponse(roomId));
         chessService.checkIfPlaying(roomId);
+
         return GSON.toJson(model);
     }
 

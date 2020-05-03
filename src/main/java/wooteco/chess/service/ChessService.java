@@ -46,7 +46,11 @@ public class ChessService {
 
     public void move(String source, String target, Long roomId) {
         ChessManager chessManager = chessGames.get(roomId);
-        chessManager.move(source, target);
+        try {
+            chessManager.move(source, target);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
         saveCommand(source, target, roomId);
     }
 
@@ -75,7 +79,6 @@ public class ChessService {
         model.put("winner", chessManager.getWinner());
         model.put("roomId", roomId);
         model.put("roomName", findRoom(roomId).getRoomName());
-
         return model;
     }
 

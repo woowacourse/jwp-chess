@@ -43,10 +43,10 @@ function move(source, target) {
     };
 
     fetch("/playing/" + roomId, moveInformation)
-
         .then(response => {
             if (!response.ok) {
                 alert("이동할 수 없는 곳입니다.");
+                return;
             }
             const parsedResponse = response.text().then(text => {
                 return text ? JSON.parse(text) : {}

@@ -32,23 +32,39 @@
     :: 체 스 게 임 방 목 록 ::
 </div>
 
-<table>
-    <tr>
-        <th>방 ID</th>
-        <th>방 제목</th>
-    </tr>
-    {{#rooms}}
+<div style="width: 50%; margin: 30px auto; font-family: BMHANNAAir, sans-serif">
+    <table style="width: 400px; margin: 0 auto">
         <tr>
-            <td><a href="/chess/{{id}}">{{id}}</a></td>
-            <td>{{name}}</td>
+            <th class="subTitle" style="padding: 10px; background-color: rgba(144,238,195,0.51); border-radius: 10px">방
+                ID
+            </th>
+            <th class="subTitle" style="padding: 10px; background-color: rgba(144,238,195,0.51); border-radius: 10px">방
+                제목
+            </th>
         </tr>
-    {{/rooms}}
-</table>
+        {{#rooms}}
+            <tr>
+                <td class="subTitle"
+                    style="padding: 10px; border: 1px solid rgba(144,238,195,0.51); border-radius: 10px; font-size: 16px; text-align: center; color: black">
+                    <a href="/chess/{{id}}">{{id}}</a>
+                </td>
+                <td td class="subTitle"
+                    style="padding: 10px; border: 1px solid rgba(144,238,195,0.51); border-radius: 10px; font-size: 16px; text-align: center; color: black">
+                    {{name}}
+                </td>
+            </tr>
+        {{/rooms}}
+    </table>
+</div>
 
-<form method="post" action="/new">
-    <input type="text" name="name" required>
-    <input type="submit" value="방 만들기">
-</form>
+<div style="width: 50%; margin: 0 auto">
+    <div style="margin: 0 auto; text-align: center; width: 50%">
+        <form method="post" action="/new">
+            <input type="text" class="moveForm" style="border: 1px solid rgba(75, 0, 130, 0.8)" name="name" required>
+            <input type="submit" class="btn" value="방 만들기">
+        </form>
+    </div>
+</div>
 
 </body>
 </html>

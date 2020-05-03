@@ -21,8 +21,8 @@ class StatusTest {
 
     static Stream<Arguments> createWhiteStatus() {
         return Stream.of(
-                Arguments.of(Status.from(0), true),
-                Arguments.of(Status.from(1), false)
+            Arguments.of(Status.from(0), true),
+            Arguments.of(Status.from(1), false)
         );
     }
 
@@ -35,8 +35,8 @@ class StatusTest {
 
     static Stream<Arguments> createBlackStatus() {
         return Stream.of(
-                Arguments.of(Status.from(0), false),
-                Arguments.of(Status.from(1), true)
+            Arguments.of(Status.from(0), false),
+            Arguments.of(Status.from(1), true)
         );
     }
 
@@ -49,8 +49,8 @@ class StatusTest {
 
     static Stream<Arguments> createNotProcessingStatus() {
         return Stream.of(
-                Arguments.of(Status.initialStatus(), false),
-                Arguments.of(Status.initialStatus().finish(), true)
+            Arguments.of(Status.initialStatus(), false),
+            Arguments.of(Status.initialStatus().finish(), true)
         );
     }
 
@@ -63,8 +63,8 @@ class StatusTest {
 
     static Stream<Arguments> createNotFinishedStatus() {
         return Stream.of(
-                Arguments.of(Status.initialStatus(), true),
-                Arguments.of(Status.initialStatus().finish(), false)
+            Arguments.of(Status.initialStatus(), true),
+            Arguments.of(Status.initialStatus().finish(), false)
         );
     }
 

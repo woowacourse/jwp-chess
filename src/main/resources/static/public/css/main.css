@@ -1,104 +1,104 @@
 body {
-    background-position: center;
-    background-size: cover;
-    margin: auto;
+  background-position: center;
+  background-size: cover;
+  margin: auto;
 }
 
 #app {
-    display: flex;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    height: 773px;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  height: 773px;
 }
 
 .board {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    width: 63%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  width: 63%;
 }
 
 .row {
-    display: flex;
-    text-align: center;
-    margin: 0 auto;
-    width: 85%;
+  display: flex;
+  text-align: center;
+  margin: 0 auto;
+  width: 85%;
 }
 
 .cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
 }
 
 .white-cell {
-    background-color: white;
+  background-color: white;
 }
 
 .black-cell {
-    background-color: black;
+  background-color: black;
 }
 
 .cell > img {
-    width: 100%;
-    margin: 0 auto;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .start {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 37%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 37%;
+  height: 100%;
 }
 
 form {
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .users {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .room-input {
-    margin: 10px auto;
-    font-size: 30px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    color: black;
+  margin: 10px auto;
+  font-size: 30px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: black;
 }
 
 input[type="submit"] {
-    width: 100%;
-    height: 100px;
-    border-radius: 10px;
-    background-color: rosybrown;
-    font-family: Arial, Helvetica, Sans-serif;
-    font-size: 50px;
+  width: 100%;
+  height: 100px;
+  border-radius: 10px;
+  background-color: rosybrown;
+  font-family: Arial, Helvetica, Sans-serif;
+  font-size: 50px;
 }
 
 .rooms {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .room-button {
-    width: 100%;
-    font-size: 20px;
-    text-align: center;
-    padding-top: 10px;
-    margin: 5px auto;
-    border-radius: 10px;
-    background-color: white;
-    height: 40px;
+  width: 100%;
+  font-size: 20px;
+  text-align: center;
+  padding-top: 10px;
+  margin: 5px auto;
+  border-radius: 10px;
+  background-color: white;
+  height: 40px;
 }
 

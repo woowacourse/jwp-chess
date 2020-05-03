@@ -38,7 +38,7 @@ class ChessResultTest {
     @DisplayName("같은 player, 같은 column의 pawn이 여러개 있는 경우 score 계산")
     void calculateScoreWhiteSameColumnPawn() {
         Map<Position, GamePiece> map = new TreeMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         map.put(Position.from("d5"), new Pawn(PlayerColor.WHITE));
         map.put(Position.from("d6"), new Pawn(PlayerColor.WHITE));
         map.put(Position.from("f3"), new Pawn(PlayerColor.WHITE));
@@ -54,7 +54,7 @@ class ChessResultTest {
     @DisplayName("여러 말 점수 계산")
     void calculateScoreWithSomePieces() {
         Map<Position, GamePiece> map = new TreeMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         map.put(Position.from("d5"), new Pawn(PlayerColor.WHITE));
         map.put(Position.from("d6"), new Pawn(PlayerColor.WHITE));
         map.put(Position.from("f3"), new Pawn(PlayerColor.WHITE));

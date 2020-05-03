@@ -118,7 +118,7 @@ public class Position implements Comparable<Position> {
             return false;
         Position position = (Position)o;
         return column == position.column &&
-                row == position.row;
+            row == position.row;
     }
 
     @Override

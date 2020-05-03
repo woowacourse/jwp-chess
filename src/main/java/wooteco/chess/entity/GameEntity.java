@@ -29,11 +29,6 @@ public class GameEntity {
         this.turn = turn;
     }
 
-    public GameEntity(int turn, Set<Cell> cells) {
-        this.turn = turn;
-        this.cells = cells;
-    }
-
     public void addBoard(Board board) {
         for (Map.Entry<Position, GamePiece> entry : board.getBoard().entrySet()) {
             cells.add(new Cell(entry.getKey().getName(), entry.getValue().getName()));
@@ -47,13 +42,10 @@ public class GameEntity {
 
     public Board createBoard() {
         Map<Position, GamePiece> boardMap = cells.stream()
-                .collect(Collectors.toMap(cell -> Position.from(cell.getPosition()), cell -> GamePieces.from(cell.getPiece())));
+            .collect(Collectors.toMap(cell -> Position.from(cell.getPosition()),
+                cell -> GamePieces.from(cell.getPiece())));
 
         return BoardFactory.of(boardMap);
-    }
-
-    public void updateTurn(Integer turn) {
-        this.turn = turn;
     }
 
     public Integer getTurn() {

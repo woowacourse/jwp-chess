@@ -15,8 +15,8 @@ public class BoardFactory {
 
     private static Map<Position, GamePiece> createEmptyMap() {
         return Position.list()
-                .stream()
-                .collect(Collectors.toMap(Function.identity(), position -> EmptyPiece.getInstance()));
+            .stream()
+            .collect(Collectors.toMap(Function.identity(), position -> EmptyPiece.getInstance()));
     }
 
     public static Board createInitialBoard() {
@@ -28,7 +28,8 @@ public class BoardFactory {
         return Board.of(initialBoard);
     }
 
-    private static void placePiecesOnInitialPositions(Map<Position, GamePiece> board, GamePiece piece) {
+    private static void placePiecesOnInitialPositions(Map<Position, GamePiece> board,
+        GamePiece piece) {
         for (Position position : piece.getOriginalPositions()) {
             board.put(position, piece);
         }

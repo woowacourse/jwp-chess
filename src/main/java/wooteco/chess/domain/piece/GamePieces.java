@@ -27,7 +27,7 @@ public enum GamePieces {
 
     static {
         gamePieceSupplier = Arrays.stream(GamePieces.values())
-                .collect(Collectors.toMap(gamePiece -> gamePiece.name, gamePiece -> gamePiece.creator));
+            .collect(Collectors.toMap(gamePiece -> gamePiece.name, gamePiece -> gamePiece.creator));
     }
 
     private String name;
@@ -40,8 +40,8 @@ public enum GamePieces {
 
     public static List<GamePiece> createGamePieces() {
         return Arrays.stream(GamePieces.values())
-                .map(gamePiece -> gamePiece.creator.get())
-                .collect(Collectors.toList());
+            .map(gamePiece -> gamePiece.creator.get())
+            .collect(Collectors.toList());
     }
 
     public static GamePiece from(String name) {

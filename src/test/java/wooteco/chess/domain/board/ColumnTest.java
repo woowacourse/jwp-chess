@@ -21,14 +21,14 @@ class ColumnTest {
 
     static Stream<Arguments> createOppositeCase() {
         return Stream.of(
-                Arguments.of(A, H),
-                Arguments.of(B, G),
-                Arguments.of(C, F),
-                Arguments.of(D, E),
-                Arguments.of(E, D),
-                Arguments.of(F, C),
-                Arguments.of(G, B),
-                Arguments.of(H, A)
+            Arguments.of(A, H),
+            Arguments.of(B, G),
+            Arguments.of(C, F),
+            Arguments.of(D, E),
+            Arguments.of(E, D),
+            Arguments.of(F, C),
+            Arguments.of(G, B),
+            Arguments.of(H, A)
         );
     }
 
@@ -41,10 +41,10 @@ class ColumnTest {
 
     static Stream<Arguments> createJumpFile() {
         return Stream.of(
-                Arguments.of(3, A, D),
-                Arguments.of(-2, H, F),
-                Arguments.of(2, G, null),
-                Arguments.of(-3, B, null)
+            Arguments.of(3, A, D),
+            Arguments.of(-2, H, F),
+            Arguments.of(2, G, null),
+            Arguments.of(-3, B, null)
         );
     }
 
@@ -57,8 +57,8 @@ class ColumnTest {
 
     static Stream<Arguments> createNextFile() {
         return Stream.of(
-                Arguments.of(B, C),
-                Arguments.of(H, null)
+            Arguments.of(B, C),
+            Arguments.of(H, null)
         );
     }
 
@@ -71,8 +71,8 @@ class ColumnTest {
 
     static Stream<Arguments> createPreviousFile() {
         return Stream.of(
-                Arguments.of(B, A),
-                Arguments.of(A, null)
+            Arguments.of(B, A),
+            Arguments.of(A, null)
         );
     }
 }

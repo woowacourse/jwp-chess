@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import wooteco.chess.entity.Room;
@@ -25,7 +24,8 @@ public class GameController {
     @PostMapping("/path")
     public List<String> path(@RequestParam Map<String, String> parameters) {
         try {
-            return chessService.searchPath(new Room(parameters.get("roomName")), parameters.get("source"));
+            return chessService.searchPath(new Room(parameters.get("roomName")),
+                parameters.get("source"));
         } catch (RuntimeException e) {
             return Collections.singletonList(e.getMessage());
         }

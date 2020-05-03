@@ -28,22 +28,22 @@ class DirectionTest {
 
     static Stream<Arguments> createDirection() {
         return Stream.of(
-                Arguments.of(N, Position.from("d6")),
-                Arguments.of(NE, Position.from("e6")),
-                Arguments.of(E, Position.from("e5")),
-                Arguments.of(SE, Position.from("e4")),
-                Arguments.of(S, Position.from("d4")),
-                Arguments.of(SW, Position.from("c4")),
-                Arguments.of(W, Position.from("c5")),
-                Arguments.of(NW, Position.from("c6")),
-                Arguments.of(NNE, Position.from("e7")),
-                Arguments.of(NEE, Position.from("f6")),
-                Arguments.of(SEE, Position.from("f4")),
-                Arguments.of(SSE, Position.from("e3")),
-                Arguments.of(SSW, Position.from("c3")),
-                Arguments.of(SWW, Position.from("b4")),
-                Arguments.of(NWW, Position.from("b6")),
-                Arguments.of(NNW, Position.from("c7"))
+            Arguments.of(N, Position.from("d6")),
+            Arguments.of(NE, Position.from("e6")),
+            Arguments.of(E, Position.from("e5")),
+            Arguments.of(SE, Position.from("e4")),
+            Arguments.of(S, Position.from("d4")),
+            Arguments.of(SW, Position.from("c4")),
+            Arguments.of(W, Position.from("c5")),
+            Arguments.of(NW, Position.from("c6")),
+            Arguments.of(NNE, Position.from("e7")),
+            Arguments.of(NEE, Position.from("f6")),
+            Arguments.of(SEE, Position.from("f4")),
+            Arguments.of(SSE, Position.from("e3")),
+            Arguments.of(SSW, Position.from("c3")),
+            Arguments.of(SWW, Position.from("b4")),
+            Arguments.of(NWW, Position.from("b6")),
+            Arguments.of(NNW, Position.from("c7"))
         );
     }
 }

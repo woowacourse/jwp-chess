@@ -28,7 +28,7 @@ class GameInfoTest {
     @MethodSource("createBoardAndTurn")
     void moveWhenInvalidTurn(int turn, GamePiece gamePiece) {
         Map<Position, GamePiece> map = new HashMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         map.put(Position.from("d5"), gamePiece);
         Board board = BoardFactory.of(map);
         GameInfo gameInfo = GameInfo.from(board, turn);
@@ -36,13 +36,13 @@ class GameInfoTest {
         assertThatThrownBy(() -> {
             gameInfo.move("d5", "g8");
         }).isInstanceOf(InvalidMovementException.class)
-                .hasMessage("이동할 수 없습니다.\n해당 플레이어의 턴이 아닙니다.");
+            .hasMessage("이동할 수 없습니다.\n해당 플레이어의 턴이 아닙니다.");
     }
 
     static Stream<Arguments> createBoardAndTurn() {
         return Stream.of(
-                Arguments.of(1, new Rook(WHITE)),
-                Arguments.of(0, new Rook(BLACK))
+            Arguments.of(1, new Rook(WHITE)),
+            Arguments.of(0, new Rook(BLACK))
         );
     }
 
@@ -51,7 +51,7 @@ class GameInfoTest {
     @MethodSource("createFinish")
     void isBoardFinished(String source, String target, boolean expected) {
         Map<Position, GamePiece> map = new HashMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         map.put(Position.from("c5"), new King(WHITE));
         map.put(Position.from("d6"), new Pawn(BLACK));
         GameInfo gameInfo = GameInfo.from(BoardFactory.of(map), 1);
@@ -62,8 +62,8 @@ class GameInfoTest {
 
     static Stream<Arguments> createFinish() {
         return Stream.of(
-                Arguments.of("d6", "d5", true),
-                Arguments.of("d6", "c5", false)
+            Arguments.of("d6", "d5", true),
+            Arguments.of("d6", "c5", false)
         );
     }
 }

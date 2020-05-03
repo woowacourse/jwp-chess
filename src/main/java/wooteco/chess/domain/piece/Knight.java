@@ -16,10 +16,11 @@ public class Knight extends GamePiece {
     private static final double SCORE = 2.5;
     private static final int MOVE_COUNT = 1;
     private static List<Position> originalPositions = Arrays.asList(Position.of(Column.B, Row.ONE),
-            Position.of(Column.G, Row.ONE));
+        Position.of(Column.G, Row.ONE));
 
     public Knight(PlayerColor playerColor) {
-        super(NAME, SCORE, playerColor, Arrays.asList(NNE, NEE, SEE, SSE, SSW, SWW, NWW, NNW), MOVE_COUNT);
+        super(NAME, SCORE, playerColor, Arrays.asList(NNE, NEE, SEE, SSE, SSW, SWW, NWW, NNW),
+            MOVE_COUNT);
     }
 
     @Override

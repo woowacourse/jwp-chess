@@ -31,8 +31,10 @@ public class ChessResult {
         Map<PlayerColor, Score> scores = new HashMap<>();
         List<GamePiece> gamePieces = new ArrayList<>(board.values());
 
-        Map<GamePiece, Integer> gameWhitePiecesCount = getGamePieceCount(gamePieces, PlayerColor.WHITE);
-        Map<GamePiece, Integer> gameBlackPiecesCount = getGamePieceCount(gamePieces, PlayerColor.BLACK);
+        Map<GamePiece, Integer> gameWhitePiecesCount = getGamePieceCount(gamePieces,
+            PlayerColor.WHITE);
+        Map<GamePiece, Integer> gameBlackPiecesCount = getGamePieceCount(gamePieces,
+            PlayerColor.BLACK);
 
         int sameColumnWhitePawnCount = getSameColumnPawnCount(board, PlayerColor.WHITE);
         int sameColumnBlackPawnCount = getSameColumnPawnCount(board, PlayerColor.BLACK);
@@ -43,20 +45,22 @@ public class ChessResult {
         return scores;
     }
 
-    private static Map<GamePiece, Integer> getGamePieceCount(List<GamePiece> gamePieces, PlayerColor playerColor) {
+    private static Map<GamePiece, Integer> getGamePieceCount(List<GamePiece> gamePieces,
+        PlayerColor playerColor) {
         return gamePieces.stream()
-                .distinct()
-                .filter(gamePiece -> gamePiece != EmptyPiece.getInstance())
-                .filter(gamePiece -> gamePiece.isSame(playerColor))
-                .collect(Collectors.toMap(gamePiece -> gamePiece,
-                        gamePiece -> Collections.frequency(gamePieces, gamePiece)));
+            .distinct()
+            .filter(gamePiece -> gamePiece != EmptyPiece.getInstance())
+            .filter(gamePiece -> gamePiece.isSame(playerColor))
+            .collect(Collectors.toMap(gamePiece -> gamePiece,
+                gamePiece -> Collections.frequency(gamePieces, gamePiece)));
     }
 
-    private static int getSameColumnPawnCount(Map<Position, GamePiece> board, PlayerColor playerColor) {
+    private static int getSameColumnPawnCount(Map<Position, GamePiece> board,
+        PlayerColor playerColor) {
         return Line.listByColumn(board).stream()
-                .mapToInt(column -> column.countPawnOf(playerColor))
-                .filter(count -> count >= MINIMUM_PAWN_COUNT)
-                .sum();
+            .mapToInt(column -> column.countPawnOf(playerColor))
+            .filter(count -> count >= MINIMUM_PAWN_COUNT)
+            .sum();
     }
 
     public Score getScore(PlayerColor playerColor) {

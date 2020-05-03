@@ -35,7 +35,7 @@ class PositionTest {
         assertThatThrownBy(() -> {
             Position.from("z1");
         }).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageMatching(".+는 잘못된 입력입니다.");
+            .hasMessageMatching(".+는 잘못된 입력입니다.");
     }
 
     @Test
@@ -66,14 +66,14 @@ class PositionTest {
 
     static Stream<Arguments> createDirection() {
         return Stream.of(
-                Arguments.of(N, Position.from("d6")),
-                Arguments.of(NE, Position.from("e6")),
-                Arguments.of(E, Position.from("e5")),
-                Arguments.of(SE, Position.from("e4")),
-                Arguments.of(S, Position.from("d4")),
-                Arguments.of(SW, Position.from("c4")),
-                Arguments.of(W, Position.from("c5")),
-                Arguments.of(NW, Position.from("c6"))
+            Arguments.of(N, Position.from("d6")),
+            Arguments.of(NE, Position.from("e6")),
+            Arguments.of(E, Position.from("e5")),
+            Arguments.of(SE, Position.from("e4")),
+            Arguments.of(S, Position.from("d4")),
+            Arguments.of(SW, Position.from("c4")),
+            Arguments.of(W, Position.from("c5")),
+            Arguments.of(NW, Position.from("c6"))
         );
     }
 
@@ -86,14 +86,14 @@ class PositionTest {
 
     static Stream<Arguments> createOutOfIndex() {
         return Stream.of(
-                Arguments.of(N, Position.from("h8")),
-                Arguments.of(NE, Position.from("h8")),
-                Arguments.of(E, Position.from("h8")),
-                Arguments.of(SE, Position.from("h1")),
-                Arguments.of(S, Position.from("h1")),
-                Arguments.of(SW, Position.from("a2")),
-                Arguments.of(W, Position.from("a5")),
-                Arguments.of(NW, Position.from("a8"))
+            Arguments.of(N, Position.from("h8")),
+            Arguments.of(NE, Position.from("h8")),
+            Arguments.of(E, Position.from("h8")),
+            Arguments.of(SE, Position.from("h1")),
+            Arguments.of(S, Position.from("h1")),
+            Arguments.of(SW, Position.from("a2")),
+            Arguments.of(W, Position.from("a5")),
+            Arguments.of(NW, Position.from("a8"))
         );
     }
 }

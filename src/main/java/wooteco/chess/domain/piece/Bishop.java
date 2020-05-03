@@ -16,7 +16,7 @@ public class Bishop extends GamePiece {
     private static final int SCORE = 3;
     private static final int MOVE_COUNT = 8;
     private static List<Position> originalPositions = Arrays.asList(Position.of(Column.C, Row.ONE),
-            Position.of(Column.F, Row.ONE));
+        Position.of(Column.F, Row.ONE));
 
     public Bishop(PlayerColor playerColor) {
         super(NAME, SCORE, playerColor, Arrays.asList(NE, SE, NW, SW), MOVE_COUNT);

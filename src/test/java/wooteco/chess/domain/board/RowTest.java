@@ -21,14 +21,14 @@ class RowTest {
 
     static Stream<Arguments> createOppositeCase() {
         return Stream.of(
-                Arguments.of(ONE, EIGHT),
-                Arguments.of(TWO, SEVEN),
-                Arguments.of(THREE, SIX),
-                Arguments.of(FOUR, FIVE),
-                Arguments.of(FIVE, FOUR),
-                Arguments.of(SIX, THREE),
-                Arguments.of(SEVEN, TWO),
-                Arguments.of(EIGHT, ONE)
+            Arguments.of(ONE, EIGHT),
+            Arguments.of(TWO, SEVEN),
+            Arguments.of(THREE, SIX),
+            Arguments.of(FOUR, FIVE),
+            Arguments.of(FIVE, FOUR),
+            Arguments.of(SIX, THREE),
+            Arguments.of(SEVEN, TWO),
+            Arguments.of(EIGHT, ONE)
         );
     }
 
@@ -41,10 +41,10 @@ class RowTest {
 
     static Stream<Arguments> createJumpRank() {
         return Stream.of(
-                Arguments.of(3, ONE, FOUR),
-                Arguments.of(-2, EIGHT, SIX),
-                Arguments.of(2, SEVEN, null),
-                Arguments.of(-3, TWO, null)
+            Arguments.of(3, ONE, FOUR),
+            Arguments.of(-2, EIGHT, SIX),
+            Arguments.of(2, SEVEN, null),
+            Arguments.of(-3, TWO, null)
         );
     }
 
@@ -57,8 +57,8 @@ class RowTest {
 
     static Stream<Arguments> createNextRank() {
         return Stream.of(
-                Arguments.of(ONE, TWO),
-                Arguments.of(EIGHT, null)
+            Arguments.of(ONE, TWO),
+            Arguments.of(EIGHT, null)
         );
     }
 
@@ -71,8 +71,8 @@ class RowTest {
 
     static Stream<Arguments> createPreviousRank() {
         return Stream.of(
-                Arguments.of(TWO, ONE),
-                Arguments.of(ONE, null)
+            Arguments.of(TWO, ONE),
+            Arguments.of(ONE, null)
         );
     }
 }

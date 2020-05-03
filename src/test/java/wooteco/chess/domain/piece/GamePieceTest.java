@@ -25,8 +25,8 @@ class GamePieceTest {
 
     static Stream<Arguments> createPieces() {
         return Stream.of(
-                Arguments.of(new Rook(BLACK), false),
-                Arguments.of(new Pawn(WHITE), true)
+            Arguments.of(new Rook(BLACK), false),
+            Arguments.of(new Pawn(WHITE), true)
         );
     }
 
@@ -39,8 +39,8 @@ class GamePieceTest {
 
     static Stream<Arguments> createKingPieces() {
         return Stream.of(
-                Arguments.of(new King(BLACK), true),
-                Arguments.of(new Pawn(WHITE), false)
+            Arguments.of(new King(BLACK), true),
+            Arguments.of(new Pawn(WHITE), false)
         );
     }
 
@@ -53,8 +53,8 @@ class GamePieceTest {
 
     static Stream<Arguments> createPositions() {
         return Stream.of(
-                Arguments.of(new Rook(BLACK), Arrays.asList(Position.from("a8"), Position.from("h8"))),
-                Arguments.of(new Rook(WHITE), Arrays.asList(Position.from("a1"), Position.from("h1")))
+            Arguments.of(new Rook(BLACK), Arrays.asList(Position.from("a8"), Position.from("h8"))),
+            Arguments.of(new Rook(WHITE), Arrays.asList(Position.from("a1"), Position.from("h1")))
         );
     }
 
@@ -67,8 +67,8 @@ class GamePieceTest {
 
     static Stream<Arguments> createWhitePieces() {
         return Stream.of(
-                Arguments.of(new Rook(BLACK), false),
-                Arguments.of(new Rook(WHITE), true)
+            Arguments.of(new Rook(BLACK), false),
+            Arguments.of(new Rook(WHITE), true)
         );
     }
 }

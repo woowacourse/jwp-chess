@@ -35,7 +35,8 @@ public enum Direction {
     private final Function<Column, Optional<Column>> columnDestination;
     private final Function<Row, Optional<Row>> rowDestination;
 
-    Direction(Function<Column, Optional<Column>> columnDestination, Function<Row, Optional<Row>> rowDestination) {
+    Direction(Function<Column, Optional<Column>> columnDestination,
+        Function<Row, Optional<Row>> rowDestination) {
         this.columnDestination = columnDestination;
         this.rowDestination = rowDestination;
     }

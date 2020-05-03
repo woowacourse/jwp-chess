@@ -16,10 +16,11 @@ public class BoardFactoryTest {
     void create() {
         Board board = BoardFactory.createInitialBoard();
         String map = board.getBoard()
-                .values()
-                .stream()
-                .map(GamePiece::getName)
-                .collect(Collectors.joining(""));
-        assertThat(map).isEqualTo("RNBQKBNRPPPPPPPP................................pppppppprnbqkbnr");
+            .values()
+            .stream()
+            .map(GamePiece::getName)
+            .collect(Collectors.joining(""));
+        assertThat(map).isEqualTo(
+            "RNBQKBNRPPPPPPPP................................pppppppprnbqkbnr");
     }
 }

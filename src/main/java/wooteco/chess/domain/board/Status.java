@@ -62,7 +62,7 @@ public class Status {
             return false;
         Status status = (Status)o;
         return turn == status.turn &&
-                statusType == status.statusType;
+            statusType == status.statusType;
     }
 
     @Override

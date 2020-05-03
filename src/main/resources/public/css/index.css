@@ -1,5 +1,6 @@
 .invisible {
     visibility: hidden;
+    width: 0px;
 }
 
 .menuButton {
@@ -9,4 +10,8 @@
     font-family: serif;
     font-size: 12px;
     background-color: cornsilk;
+}
+
+form {
+    display: inline-block;
 }

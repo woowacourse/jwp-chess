@@ -35,12 +35,10 @@ public class GameService {
 
     public ResponseDto calculateScore() {
         return makeResponse(() -> {
-            GameEntity gameEntity = gameRepository.findById(DEFAULT_USER_ID)
-                    .orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-            Game game = gameEntity.toDomain();
+            Game game = findGame();
             Result status = game.status();
             List<ScoreDto> scores = status.getStatus().entrySet().stream()
-                    .map(entry -> new ScoreDto(entry.getKey().getTeam(), entry.getValue()))
+                    .map(ScoreDto::new)
                     .collect(Collectors.toList());
             return new ResponseDto(SUCCESS, scores);
         });
@@ -60,9 +58,7 @@ public class GameService {
 
     public ResponseDto findAllPiecesOnBoard() {
         return makeResponse(() -> {
-            GameEntity gameEntity = gameRepository.findById(DEFAULT_USER_ID)
-                    .orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-            Game game = gameEntity.toDomain();
+            Game game = findGame();
             Board board = game.getBoard();
 
             List<BoardDto> pieces = board.getPieces().entrySet().stream()
@@ -94,18 +90,14 @@ public class GameService {
 
     public ResponseDto getCurrentState() {
         return makeResponse(() -> {
-            GameEntity gameEntity = gameRepository.findById(DEFAULT_USER_ID)
-                    .orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-            Game game = gameEntity.toDomain();
+            Game game = findGame();
             return new ResponseDto(SUCCESS, GameDto.of(game.getTurn(), game.getStateType()));
         });
     }
 
     public ResponseDto getWinner() {
         return makeResponse(() -> {
-            GameEntity gameEntity = gameRepository.findById(DEFAULT_USER_ID)
-                    .orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-            Game game = gameEntity.toDomain();
+            Game game = findGame();
             String winner = game.getWinner().name().toLowerCase();
             return new ResponseDto(SUCCESS, winner);
         });
@@ -113,9 +105,7 @@ public class GameService {
 
     public ResponseDto isNotFinish() {
         return makeResponse(() -> {
-            GameEntity gameEntity = gameRepository.findById(DEFAULT_USER_ID)
-                    .orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
-            Game game = gameEntity.toDomain();
+            Game game = findGame();
             return new ResponseDto(SUCCESS, game.isNotFinished());
         });
     }
@@ -126,5 +116,11 @@ public class GameService {
         } catch (RuntimeException e) {
             return new ResponseDto(ERROR, e.getMessage());
         }
+    }
+
+    private Game findGame() {
+        GameEntity gameEntity = gameRepository.findById(DEFAULT_USER_ID)
+                .orElseThrow(() -> new NoSuchElementException(NONE_ELEMENT_QUERY_RESULT_EXCEPTION_MESSAGE));
+        return gameEntity.toDomain();
     }
 }

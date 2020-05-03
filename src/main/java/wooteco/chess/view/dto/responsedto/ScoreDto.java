@@ -1,17 +1,24 @@
 package wooteco.chess.view.dto.responsedto;
 
+import wooteco.chess.domain.piece.Team;
+
+import java.util.Map;
 import java.util.Objects;
 
 public class ScoreDto {
 	private final String team;
 	private final double score;
 
-	public ScoreDto(String team, double score) {
+	private ScoreDto(String team, double score) {
 		this.team = team;
 		this.score = score;
 	}
 
-	public String getTeam() {
+	public ScoreDto(Map.Entry<Team, Double> entry) {
+		this(entry.getKey().getTeam(), entry.getValue());
+	}
+
+    public String getTeam() {
 		return team;
 	}
 

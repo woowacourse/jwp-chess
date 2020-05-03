@@ -37,8 +37,7 @@ public class WebController {
 	}
 
 	@GetMapping("/room/{roomName}")
-	public ModelAndView joinRoom(
-			@PathVariable String roomName) {
+	public ModelAndView joinRoom(@PathVariable String roomName) {
 		ModelAndView modelAndView = new ModelAndView("chess");
 		ChessGameDto chessGameDto = chessGameService.load(roomName);
 		modelAndView.addObject("chessGame", chessGameDto);
@@ -46,8 +45,7 @@ public class WebController {
 	}
 
 	@PostMapping("/create")
-	public ModelAndView createRoom(
-			@RequestParam String name) {
+	public ModelAndView createRoom(@RequestParam String name) {
 		ModelAndView modelAndView = new ModelAndView("chess");
 		ChessGameDto chessGameDto = chessGameService.create(name);
 		modelAndView.addObject("chessGame", chessGameDto);
@@ -61,8 +59,7 @@ public class WebController {
 	}
 
 	@PostMapping("/restart")
-	public ModelAndView restart(
-			@RequestParam String name) {
+	public ModelAndView restart(@RequestParam String name) {
 		ModelAndView modelAndView = new ModelAndView("chess");
 		ChessGameDto chessGameDto = chessGameService.restart(name);
 		modelAndView.addObject("chessGame", chessGameDto);

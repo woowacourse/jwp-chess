@@ -8,18 +8,13 @@
 <body>
 <div class="container">
 	<div class="room-container">
-	    <div class="room"></div>
+		<div class="room"></div>
 	</div>
 	<div class="side">
-		<form action="/create" method="post">
-			<input name="name" placeholder="방 이름을 입력해 주세요." type="text">
-			<input type="submit" value="방 만들기">
+		<button id="create-btn">방 만들기</button>
+		<form id="create-form" action="/create" method="post">
+			<input id="create-input" type="hidden" name="name">
 		</form>
-		<br/>
-		<br/>
-		{{#error}}
-		<label>{{.}}</label>
-		{{/error}}
 	</div>
 </div>
 <script src="/index.js"></script>

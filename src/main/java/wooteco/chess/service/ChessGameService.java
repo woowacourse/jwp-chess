@@ -34,7 +34,8 @@ public class ChessGameService {
 	}
 
 	public ChessGameDto load(String roomName) {
-		Room room = roomRepository.findByRoomName(roomName).orElseThrow(NoSuchElementException::new);
+		Room room = roomRepository.findByRoomName(roomName)
+				.orElseThrow(NoSuchElementException::new);
 		validateFinish(room.getFinishFlag());
 
 		String board = room.getBoard();
@@ -52,8 +53,11 @@ public class ChessGameService {
 	public ChessGameDto create(String roomName) {
 		validateDuplicated(roomName);
 		ChessGame chessGame = ChessGame.start();
-		String board = BoardConverter.convertToString(chessGame.getBoard());
-		roomRepository.save(new Room(roomName, board, Side.WHITE, FinishFlag.GOING.getSymbol()));
+		roomRepository.save(
+				new Room(roomName,
+						BoardConverter.convertToString(chessGame.getBoard()),
+						chessGame.getTurn(),
+						FinishFlag.of(chessGame.isEnd()).getSymbol()));
 		return ChessGameDto.of(roomName, chessGame);
 	}
 
@@ -65,7 +69,8 @@ public class ChessGameService {
 
 	public Room move(PieceMoveDto pieceMoveDto) {
 		String roomName = pieceMoveDto.getRoomName();
-		Room room = roomRepository.findByRoomName(roomName).orElseThrow(NoSuchElementException::new);
+		Room room = roomRepository.findByRoomName(roomName)
+				.orElseThrow(NoSuchElementException::new);
 		ChessGame chessGame = new ChessGame(BoardConverter.convertToBoard(room.getBoard()),
 				room.getTurn());
 

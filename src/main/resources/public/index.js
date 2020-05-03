@@ -1,17 +1,25 @@
 const $roomContainer = document.querySelector(`.room-container`);
 const $emptyRoom = document.querySelector(`.room`);
+const $createBtn = document.querySelector(`#create-btn`);
+const $createInput = document.querySelector(`#create-input`);
+const $createForm = document.querySelector(`#create-form`);
 
 window.onload = async function () {
 	await getRooms();
-	addClickEvent();
-}
 
-function addClickEvent() {
 	const $rooms = document.querySelectorAll(`.room`);
-	$rooms.forEach(room => room.addEventListener('click', onJoinEvent));
+	$rooms.forEach(room => room.addEventListener('click', onRoomClick));
+
+	$createBtn.addEventListener('click', onCreateBtnClick);
 }
 
-function onJoinEvent(e) {
+function onCreateBtnClick(e) {
+	let roomName = prompt('방 이름을 입력해주세요.');
+	$createInput.setAttribute('value', roomName);
+	$createForm.submit();
+}
+
+function onRoomClick(e) {
 	if (e.target && e.target.nodeName === 'DIV') {
 		const roomName = e.target.innerText;
 		location.href = `/room/${roomName}`;

@@ -28,10 +28,15 @@ public class chessRepositoryTest {
     @DisplayName("findByRoomId 잘 작동 하는지 확인")
     @Test
     void findByRoomId() {
-        roomRepository.save(new Room("blackPassword", "whitePassword", false, "testRoom"));
-        Room room = roomRepository.findByName("testRoom").orElse(null);
+        Room room = new Room("blackPassword",
+                "whitePassword",
+                false,
+                "testRoom");
+        roomRepository.save(room);
+        room = roomRepository.findByName("testRoom").orElse(null);
         moveRepository.save(new Move(room.getId(), "a2", "a4"));
         List<Move> moves = moveRepository.findByRoomId(room.getId()).orElse(null);
-        assertThat(moves.get(0).getSource()+moves.get(0).getTarget()).isEqualTo("a2a4");
+        assertThat(moves.get(0).getSource()+moves.get(0).getTarget())
+                .isEqualTo("a2a4");
     }
 }

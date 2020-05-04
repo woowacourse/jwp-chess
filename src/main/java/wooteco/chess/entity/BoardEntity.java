@@ -28,10 +28,6 @@ public class BoardEntity {
 	private final Set<PieceEntity> pieces;
 	private final TurnEntity turn;
 
-	private BoardEntity(Set<PieceEntity> pieces, TurnEntity turn) {
-		this(null, pieces, turn);
-	}
-
 	private BoardEntity(Long id, Set<PieceEntity> pieces, TurnEntity turn) {
 		this.id = id;
 		this.pieces = pieces;
@@ -39,7 +35,7 @@ public class BoardEntity {
 	}
 
 	public static BoardEntity of(Set<PieceEntity> pieces, TurnEntity turn) {
-		return new BoardEntity(pieces, turn);
+		return new BoardEntity(null, pieces, turn);
 	}
 
 	public static BoardEntity from(Board board) {
@@ -49,7 +45,7 @@ public class BoardEntity {
 			String name = piece.getName();
 			pieces.add(PieceEntity.of(position, name));
 		}
-		return new BoardEntity(pieces, TurnEntity.of(Turn.FIRST));
+		return BoardEntity.of(pieces, TurnEntity.of(Turn.FIRST));
 	}
 
 	public Board createBoard() {

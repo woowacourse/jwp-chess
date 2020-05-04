@@ -43,7 +43,7 @@ public class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("점수값이 잘 들어왔지는 확인")
+    @DisplayName("점수값이 잘 들어왔는지 확인")
     void isFinishTest(){
         Map<String, String> model = boardService.showScoreStatus(testId1);
         assertThat(model.size()).isEqualTo(2);

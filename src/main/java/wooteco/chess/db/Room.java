@@ -10,7 +10,7 @@ public class Room {
     private Long id;
     private String name;
     private Set<ChessPiece> chessPieces = new HashSet<>();
-    private Set<MoveHistory> moveHistorys = new HashSet<>();
+    private Set<MoveHistory> moveHistories = new HashSet<>();
 
     public Room() {
     }
@@ -43,11 +43,11 @@ public class Room {
         this.chessPieces.addAll(chessPieces);
     }
 
-    public Set<MoveHistory> getMoveHistorys() {
-        return moveHistorys;
+    public Set<MoveHistory> getMoveHistories() {
+        return moveHistories;
     }
 
     public void addMoveHistory(MoveHistory moveHistory) {
-        this.moveHistorys.add(moveHistory);
+        this.moveHistories.add(moveHistory);
     }
 }

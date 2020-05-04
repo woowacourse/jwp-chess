@@ -7,18 +7,22 @@ import wooteco.chess.domains.board.BoardFactory;
 import wooteco.chess.domains.piece.Piece;
 import wooteco.chess.domains.piece.PieceColor;
 import wooteco.chess.domains.position.Position;
+import wooteco.chess.dto.GameResponseDto;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 // Todo: Move시 자신의 말 위치로 이동하면 IllgalStateException -> 체스 게임 커스텀 exception 생성하고 처리해주기~
 @Service
 public class SpringChessService {
     public static final int BOARD_CELLS_NUMBER = 64;
-    private static final String TURN_MSG_FORMAT = "%s의 순서입니다.";
-    private static final String WINNING_MSG_FORMAT = "%s이/가 이겼습니다.";
     private static final String CAN_NOT_RESUME_ERR_MSG = "해당 게임을 이어할 수 없습니다.";
     private static final String CAN_NOT_FIND_GAME_ROOM_ERR_MSG = "해당 게임을 찾을 수 없습니다.";
+    private static final String TURN_MSG_FORMAT = "%s의 순서입니다.";
+    private static final String WINNING_MSG_FORMAT = "%s이/가 이겼습니다.";
 
     private final RoomRepository roomRepository;
     private final ChessPieceRepository chessPieceRepository;
@@ -35,7 +39,7 @@ public class SpringChessService {
         return roomRepository.findAll();
     }
 
-    public Long startNewGame(String roomName) {
+    public GameResponseDto startNewGame(String roomName) {
         Room room = new Room(roomName);
         Board board = new Board();
 
@@ -46,39 +50,24 @@ public class SpringChessService {
         room.addChessPieces(chessPieces);
         Room savedRoom = roomRepository.save(room);
 
-        return savedRoom.getId();
+        return createGameResponseDto(savedRoom.getId(), board);
     }
 
-    public void resumeGame(Long roomId) {
+    public GameResponseDto resumeGame(Long roomId) {
         int savedPiecesNumber = chessPieceRepository.countSavedPiecesByRoomId(roomId);
 
         if (savedPiecesNumber != BOARD_CELLS_NUMBER) {
             throw new IllegalArgumentException(CAN_NOT_RESUME_ERR_MSG);
         }
+
+        Board savedBoard = createSavedBoard(roomId);
+
+        return createGameResponseDto(roomId, savedBoard);
     }
 
     // Todo: room으로 save?
-    public void move(Long roomId, MoveHistory moveHistory) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException(CAN_NOT_FIND_GAME_ROOM_ERR_MSG));
-
-        Board board = new Board();
-        Set<ChessPiece> chessPieces = room.getChessPieces();
-        Set<MoveHistory> moveHistorys = room.getMoveHistorys();
-
-        Optional<String> lastTurn = moveHistorys.stream()
-                .sorted(Comparator.comparing(MoveHistory::getId).reversed())
-                .map(MoveHistory::getTeam)
-                .findFirst();
-
-        Map<Position, Piece> savedBoard = chessPieces.stream()
-                .collect(Collectors.toMap(
-                        piece -> Position.ofPositionName(piece.getPosition()),
-                        piece -> BoardFactory.findPieceByPieceName(piece.getPiece())
-                ));
-
-        board.recoverBoard(savedBoard, lastTurn);
-
+    public GameResponseDto move(Long roomId, MoveHistory moveHistory) {
+        Board board = createSavedBoard(roomId);
         PieceColor currentTeam = board.getTeamColor();
 
         Position source = Position.ofPositionName(moveHistory.getSourcePosition());
@@ -89,31 +78,15 @@ public class SpringChessService {
         chessPieceRepository.updatePiece(roomId, source.name(), board.getPieceByPosition(source).name());
         chessPieceRepository.updatePiece(roomId, target.name(), board.getPieceByPosition(target).name());
         moveHistoryRepository.addMoveHistory(roomId, currentTeam.name(), source.name(), target.name());
-    }
-
-    public String provideWinner(Long roomId) {
-        Board board = createSavedBoard(roomId);
 
         if (board.isGameOver()) {
             roomRepository.deleteById(roomId);
-            return winningMsg(board);
         }
-        return "";
+
+        return createGameResponseDto(roomId, board);
     }
 
     // Todo: piece을 symbol로 저장? -> convertPieces 삭제, recoverBoard 메서드 사용하지 않고, 보드 생성하지 않고 진행하게
-
-    public Map<String, Object> provideGameInfo(Long roomId) {
-        Board board = createSavedBoard(roomId);
-
-        Map<String, Object> gameInfo = new HashMap<>();
-        gameInfo.put("pieces", convertPieces(board));
-        gameInfo.put("turn", turnMsg(board));
-        gameInfo.put("white_score", calculateScore(board, PieceColor.WHITE));
-        gameInfo.put("black_score", calculateScore(board, PieceColor.BLACK));
-
-        return gameInfo;
-    }
 
     private Board createSavedBoard(Long roomId) {
         Board board = new Board();
@@ -129,9 +102,26 @@ public class SpringChessService {
         return board;
     }
 
+    private GameResponseDto createGameResponseDto(Long roomId, Board board) {
+        List<String> pieces = convertPieces(board);
+
+        String turn = turnMsg(board);
+
+        double whiteScore = board.calculateScore(PieceColor.WHITE);
+        double blackScore = board.calculateScore(PieceColor.BLACK);
+
+        String end = null;
+        if (board.isGameOver()) {
+            end = winningMsg(board);
+        }
+
+        return new GameResponseDto(roomId, pieces, turn, whiteScore, blackScore, end);
+    }
+
+
     private List<String> convertPieces(Board board) {
-        List<Piece> pieces = board.showBoard();
-        return pieces.stream()
+        return board.showBoard()
+                .stream()
                 .map(Piece::symbol)
                 .collect(Collectors.toList());
     }
@@ -139,10 +129,6 @@ public class SpringChessService {
     private String turnMsg(Board board) {
         PieceColor team = board.getTeamColor();
         return String.format(TURN_MSG_FORMAT, team.name());
-    }
-
-    private double calculateScore(Board board, PieceColor pieceColor) {
-        return board.calculateScore(pieceColor);
     }
 
     private String winningMsg(Board board) {

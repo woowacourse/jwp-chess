@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wooteco.chess.db.MoveHistory;
+import wooteco.chess.dto.GameResponseDto;
 import wooteco.chess.service.SpringChessService;
 
 @Controller
@@ -25,29 +26,22 @@ public class SpringChessController {
 
     @PostMapping("/play")
     public String startGame(@RequestParam(value = "room_name") String roomName, Model model) {
-        Long roomId = springChessService.startNewGame(roomName);
-
-        model.addAllAttributes(springChessService.provideGameInfo(roomId));
-        model.addAttribute("room_id", roomId);
+        GameResponseDto gameResponseDto = springChessService.startNewGame(roomName);
+        model.addAttribute("response", gameResponseDto);
         return "game_room";
     }
 
     @PostMapping("/resume")
     public String resumeGame(@RequestParam(value = "room_id") Long roomId, Model model) {
-        springChessService.resumeGame(roomId);
-
-        model.addAllAttributes(springChessService.provideGameInfo(roomId));
-        model.addAttribute("room_id", roomId);
+        GameResponseDto gameResponseDto = springChessService.resumeGame(roomId);
+        model.addAttribute("response", gameResponseDto);
         return "game_room";
     }
 
     @PostMapping("/move")
     public String move(@RequestParam(value = "room_id") Long roomId, MoveHistory moveHistory, Model model) {
-        springChessService.move(roomId, moveHistory);
-
-        model.addAllAttributes(springChessService.provideGameInfo(roomId));
-        model.addAttribute("room_id", roomId);
-        model.addAttribute("end", springChessService.provideWinner(roomId));
+        GameResponseDto gameResponseDto = springChessService.move(roomId, moveHistory);
+        model.addAttribute("response", gameResponseDto);
         return "game_room";
     }
 

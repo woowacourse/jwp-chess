@@ -5,18 +5,13 @@ import org.springframework.stereotype.Service;
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.NormalStatus;
 import wooteco.chess.domain.position.MovingPosition;
-import wooteco.chess.dto.BoardDto;
-import wooteco.chess.dto.ChessGameDto;
-import wooteco.chess.dto.MovablePositionsDto;
-import wooteco.chess.dto.MoveStatusDto;
+import wooteco.chess.dto.*;
 import wooteco.chess.entity.Game;
 import wooteco.chess.entity.GameRepository;
 import wooteco.chess.entity.History;
 import wooteco.chess.entity.HistoryRepository;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,5 +107,12 @@ public class SpringDataJDBCChessService {
         History history = new History(movingPosition.getStart(), movingPosition.getEnd());
         game.addHistory(history);
         gameRepository.save(game);
+    }
+
+    public GamesDto selectAvailableGames() {
+        Map<Long, String> games = gameRepository.findAvailableGames().stream()
+                .collect(Collectors.toMap(game -> game.getId(), game -> game.getName(),
+                        (e1, e2) -> e1, LinkedHashMap::new));
+        return new GamesDto(games);
     }
 }

@@ -1,8 +1,8 @@
 package spring.dto;
 
-import spring.chess.location.Col;
-import spring.chess.location.Location;
-import spring.chess.location.Row;
+import chess.location.Col;
+import chess.location.Location;
+import chess.location.Row;
 
 public class LocationDto {
     private static final String UNDER_BAR = "_";
@@ -20,12 +20,12 @@ public class LocationDto {
         this.col = Col.of(col.charAt(0));
     }
 
-    public Location toEntity() {
-        return new Location(row, col);
-    }
-
     private static String[] parseRowAndCol(String rowAndCol) {
         return rowAndCol.split(UNDER_BAR);
+    }
+
+    public Location toEntity() {
+        return new Location(row, col);
     }
 
     public Row getRow() {

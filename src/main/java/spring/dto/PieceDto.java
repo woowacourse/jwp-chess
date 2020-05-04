@@ -1,7 +1,7 @@
 package spring.dto;
 
-import spring.chess.location.Location;
-import spring.chess.piece.type.Piece;
+import chess.location.Location;
+import chess.piece.type.Piece;
 
 public class PieceDto {
     private String location;

@@ -1,6 +1,7 @@
 package chess.piece.type;
 
 import chess.board.Route;
+import chess.exception.InvalidConstructorValueException;
 import chess.piece.type.movable.PieceMovable;
 import chess.score.Score;
 import chess.team.Team;
@@ -13,9 +14,16 @@ public abstract class Piece {
     private final PieceMovable pieceMovable;
 
     Piece(char name, Score score, Team team, PieceMovable pieceMovable) {
+        validNullValue(score, team, pieceMovable);
         this.name = changeName(team, name);
         this.score = score;
         this.pieceMovable = pieceMovable;
+    }
+
+    private void validNullValue(Score score, Team team, PieceMovable pieceMovable) {
+        if (Objects.isNull(score) || Objects.isNull(team) || Objects.isNull(pieceMovable)) {
+            throw new InvalidConstructorValueException();
+        }
     }
 
     private static char changeName(Team team, char name) {
@@ -42,7 +50,11 @@ public abstract class Piece {
     }
 
     public boolean isKing() {
-        return this.getClass() == King.class;
+        return this.getClass().equals(King.class);
+    }
+
+    public boolean isPawn() {
+        return this.getClass().equals(Pawn.class);
     }
 
     public boolean isReverseTeam(Piece piece) {

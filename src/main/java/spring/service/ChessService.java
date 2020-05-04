@@ -1,132 +1,99 @@
 package spring.service;
 
-import com.google.gson.Gson;
+import chess.board.ChessBoardCreater;
+import chess.command.MoveCommand;
+import chess.game.ChessGame;
+import chess.location.Location;
+import chess.progress.Progress;
+import chess.team.Team;
 import org.springframework.stereotype.Service;
-import spring.chess.board.ChessBoard;
-import spring.chess.command.MoveCommand;
-import spring.chess.game.ChessGame;
-import spring.chess.location.Location;
-import spring.chess.piece.type.Piece;
-import spring.chess.progress.Progress;
-import spring.chess.team.Team;
-import spring.converter.ChessGameConverter;
-import spring.dao.ChessGameDao;
-import spring.dao.ChessGamesDao;
-import spring.dao.PieceDao;
-import spring.dto.*;
-import spring.vo.PieceVo;
+import spark.dto.LocationDto;
+import spring.dto.ChessGameDto;
+import spring.dto.ChessGameScoresDto;
+import spring.dto.ChessMoveDto;
+import spring.dto.ChessResultDto;
+import spring.entity.ChessGameEntity;
+import spring.entity.repository.ChessGameRepository;
+import spring.entity.repository.PieceRepository;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ChessService {
-    private static final ChessGamesDao chessGamesDao = new ChessGamesDao();
-    private static final PieceDao pieceDao = new PieceDao();
-    private static final ChessGameDao chessGameDao = new ChessGameDao();
-    private static final Gson GSON = new Gson();
 
-    public String findAllBoards() throws SQLException {
-        ArrayList<ChessGameVo> all = chessGamesDao.findAll();
-        ChessGamesDto chessGamesDto = new ChessGamesDto(all);
-        return GSON.toJson(chessGamesDto);
+    private PieceRepository pieceRepository;
+    private ChessGameRepository chessGameRepository;
+
+    public ChessService(PieceRepository pieceRepository, ChessGameRepository chessGameRepository) {
+        this.pieceRepository = pieceRepository;
+        this.chessGameRepository = chessGameRepository;
     }
 
-    public String findBoard(int gameId) throws SQLException {
-        List<PieceVo> pieceVos = pieceDao.findAll(gameId);
+    public ChessGameDto makeChessBoard() {
+        ChessGame chessGame = new ChessGame(ChessBoardCreater.create(), Team.WHITE);
 
-        ChessGameVo chessGameDto = chessGameDao.findChessGameBy(gameId);
+        ChessGameEntity save = chessGameRepository.save(chessGame.toEntity());
 
-        if (pieceVos == null) {
-            BoardDto boardDto = new BoardDto(new ChessGame().getChessBoard());
-            return GSON.toJson(boardDto);
-        }
+        ChessGame savedChessGame = save.toChessGame();
 
-        ChessGame chessGame = ChessGameConverter.convert(pieceVos, chessGameDto);
-        BoardDto boardDto = new BoardDto(chessGame.getChessBoard());
-        return GSON.toJson(boardDto);
+        return new ChessGameDto(savedChessGame);
     }
 
-    public String move(LocationDto nowDto,LocationDto destinationDto, int gameId) throws SQLException {
-        Location now = nowDto.toEntity();
-        Location destination = destinationDto.toEntity();
-        ChessGame chessGame = makeGameByDB(gameId);
+    public ChessMoveDto move(long gameId, LocationDto nowDto, LocationDto destinationDto) throws SQLException {
+        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(gameId);
 
+        ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(
+                () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
+
+        ChessGame chessGame = chessGameEntity.toChessGame();
+        Location now = nowDto.toLocation();
+        Location destination = destinationDto.toLocation();
         MoveCommand move = MoveCommand.of(now, destination, chessGame);
-
-        Piece nowPiece = chessGame.getPiece(now);
-
         Progress progress = chessGame.doOneCommand(move);
 
+        saveChessGameIfProgressIsNotEnd(chessGameEntity, chessGame, progress);
+
+        ChessGameScoresDto chessGameScoresDto = new ChessGameScoresDto(chessGame.calculateScores());
+
+        return new ChessMoveDto(chessGameScoresDto, progress, chessGame.getTurn());
+    }
+
+    private void saveChessGameIfProgressIsNotEnd(ChessGameEntity chessGameEntity, ChessGame chessGame, Progress progress) {
         if (!progress.isError()) {
-            updatePiece(nowPiece, now, destination, gameId);
             chessGame.changeTurn();
-            chessGameDao.updateTurn(chessGame.getTurn(), gameId);
+            ChessGameEntity targetChessGameEntity = chessGame.toEntity();
+            targetChessGameEntity.setId(chessGameEntity.getId());
+            chessGameRepository.save(targetChessGameEntity);
         }
-
-        ChessMoveDto chessMoveDto = new ChessMoveDto(
-                new ChessGameScoresDto(chessGame.calculateScores())
-                , progress
-                , chessGame.getTurn());
-
-        return GSON.toJson(chessMoveDto);
     }
 
-    private void updatePiece(Piece nowPiece, Location now, Location destination, int gameId) throws SQLException {
-        pieceDao.delete(destination, gameId);
-        pieceDao.update(now, destination, nowPiece, gameId);
+    public ChessGameDto resumeGame() throws SQLException {
+        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(1L);
+
+        ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(
+                () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
+
+        return new ChessGameDto(chessGameEntity.toChessGame());
     }
 
-    public String findWinner(ChessGame chessGame) {
-        ChessResultDto chessResultDto = new ChessResultDto(chessGame.findWinner());
-        return GSON.toJson(chessResultDto);
+    public ChessResultDto findWinner(Long gameId) throws SQLException {
+        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(gameId);
+
+        ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(
+                () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
+
+        ChessGame chessGame = chessGameEntity.toChessGame();
+        return new ChessResultDto(chessGame.findWinner());
     }
 
-    private void resetChessBoard(ChessGame chessGame, int gameId) throws SQLException {
-        pieceDao.resetBoard(chessGame.getChessBoard(), gameId);
-    }
+    public void endGame(Long gameId) throws SQLException {
+        // deleteById 는 믿을 수 없다. 존재하지 않는 row를 삭제해도 에러를 띄우지 않는다.
+        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(gameId);
 
-    public ChessGame makeGameByDB(int gameId) throws SQLException {
-        ChessGameVo chessGameVo = chessGameDao.findChessGameBy(gameId);
-        List<PieceVo> pieceDto = pieceDao.findAll(gameId);
-        Team team = Team.of(chessGameVo.isTurnBlack());
-        ChessBoard chessBoard = makeChessBoard(pieceDto);
-        return new ChessGame(chessBoard, team);
-    }
+        ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(
+                () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
 
-    private ChessBoard makeChessBoard(List<PieceVo> pieceDto) {
-        Map<Location, Piece> board = new HashMap<>();
-        for (PieceVo pieceVo : pieceDto) {
-            Location location = toLocation(pieceVo);
-            Piece piece = pieceVo.toPiece();
-            board.put(location, piece);
-        }
-
-        return new ChessBoard(board);
-    }
-
-    private Location toLocation(PieceVo pieceVo) {
-        int row = pieceVo.getRow();
-        char col = pieceVo.getCol().charAt(0);
-        return new Location(row, col);
-    }
-
-    public void resetChessGame(ChessGame chessGame, int gameId) throws SQLException {
-        chessGameDao.updateTurn(Team.WHITE, gameId);
-        resetChessBoard(chessGame, gameId);
-    }
-
-    public String findGame(ChessGame chessGame) throws SQLException {
-        int turnIsBlack = 0;
-        if (chessGame.getTurn().isBlack()) {
-            turnIsBlack = 1;
-        }
-        double whiteScore = chessGame.calculateScores().getWhiteScore().getValue();
-        double blackScore = chessGame.calculateScores().getBlackScore().getValue();
-        return GSON.toJson(new ChessGameDto(new BoardDto(chessGame.getChessBoard())
-                , turnIsBlack, whiteScore, blackScore));
+        chessGameRepository.delete(chessGameEntity);
     }
 }

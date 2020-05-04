@@ -1,6 +1,6 @@
 package chess.score;
 
-import chess.game.ChessSet;
+import chess.player.ChessSet;
 
 public interface Calculatable {
     Score calculate(ChessSet chessSet);

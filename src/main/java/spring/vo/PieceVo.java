@@ -1,7 +1,7 @@
 package spring.vo;
 
-import spring.chess.piece.type.Piece;
-import spring.chess.piece.type.PieceMapper;
+import chess.piece.type.Piece;
+import chess.piece.type.PieceMapper;
 
 public class PieceVo {
     private final int gameId;

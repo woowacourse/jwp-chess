@@ -1,5 +1,7 @@
 package chess.location;
 
+import chess.exception.InvalidConstructorValueException;
+
 import java.util.Objects;
 
 // 팀별 초기위치를 갖고있는다.
@@ -8,12 +10,19 @@ public class Location {
     private final Col col;
 
     public Location(final Row row, final Col col) {
+        validNullValue(row, col);
         this.row = row;
         this.col = col;
     }
 
     public Location(final int row, final char col) {
         this(Row.of(row), Col.of(col));
+    }
+
+    private void validNullValue(Row row, Col col) {
+        if (Objects.isNull(row) || Objects.isNull(col)) {
+            throw new InvalidConstructorValueException();
+        }
     }
 
     public Location moveTo(final int row, final char col) {

@@ -1,13 +1,10 @@
 package spring.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.google.gson.Gson;
+import org.springframework.web.bind.annotation.*;
 import spark.ModelAndView;
+import spark.dto.LocationDto;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-import spring.chess.game.ChessGame;
-import spring.dto.LocationDto;
 import spring.service.ChessService;
 
 import java.sql.SQLException;
@@ -18,15 +15,16 @@ import java.util.Map;
 @RestController
 public class SpringChessController {
     private static final HandlebarsTemplateEngine handlebarsTemplateEngine = new HandlebarsTemplateEngine();
+    private static final Gson GSON = new Gson();
 
     private final ChessService chessService;
 
-    // TODO : 생성자 주입이 더 나은 이유
+    // TODO : 생성자 주입이 더 나은 이유`
     public SpringChessController(ChessService chessService) {
         this.chessService = chessService;
     }
 
-    @GetMapping("/main")
+    @GetMapping("/")
     public String main() {
         Map<String, Object> model = new HashMap<>();
         return render(model, "start.html");
@@ -35,49 +33,43 @@ public class SpringChessController {
     @GetMapping("/start")
     public String start() {
         Map<String, Object> model = new HashMap<>();
+        // 받았다.
+        // game_id, 혹은 select할 수있는 뭔가;
         return render(model, "index.html");
     }
 
-    @GetMapping("/start/boards")
-    public String findBoards() throws SQLException {
-        return chessService.findAllBoards();
+    @GetMapping("/api/resume")
+    public String resume() throws SQLException {
+        return GSON.toJson(chessService.resumeGame());
     }
 
-    @GetMapping("/start/board")
-    public String findBoard(@RequestParam(name = "id") String id) throws SQLException {
-        int boardId = Integer.parseInt(id);
-        ChessGame chessGame = chessService.makeGameByDB(boardId);
-        return chessService.findGame(chessGame);
+    @PostMapping("/api/game")
+    public String starts() {
+        return new Gson().toJson(chessService.makeChessBoard());
     }
 
-    @PostMapping("/start/move")
-    public String move(@RequestParam(name = "now") String now, @RequestParam(name = "des") String des, @RequestParam(name = "game_id") String gameIdData) throws SQLException {
+    @PutMapping("/api/piece")
+    public String move(@RequestParam(name = "now") String now,
+                       @RequestParam(name = "des") String destination,
+                       @RequestParam(name = "game_id") String gameIdData) throws SQLException {
         LocationDto nowDto = new LocationDto(now);
-        LocationDto destinationDto = new LocationDto(des);
-        int gameId = Integer.parseInt(gameIdData);
+        LocationDto destinationDto = new LocationDto(destination);
+        long gameId = Long.parseLong(gameIdData);
 
-        return chessService.move(nowDto, destinationDto, gameId);
+        return GSON.toJson(chessService.move(gameId, nowDto, destinationDto));
     }
 
-    @GetMapping("/start/winner")
-    public String findWinner(@RequestParam(name = "game_id") String gameIdData) throws SQLException {
-        int gameId = Integer.parseInt(gameIdData);
-        ChessGame chessGame = chessService.makeGameByDB(gameId);
-        return chessService.findWinner(chessGame);
+    @GetMapping("/api/games/{id}/result")
+    public String winnerGame(@PathVariable Long id) throws SQLException {
+        System.out.println("id는 " + id);
+        chessService.findWinner(id);
+        return GSON.toJson(chessService.findWinner(id));
     }
 
-    @PostMapping("/end")
-    public String end() {
-        Map<String, Object> model = new HashMap<>();
-        return render(model, "start.html");
-    }
-
-    @PostMapping("/start/new/game")
-    public String startNewGame(@RequestParam(name = "game_id") String gameIdData) throws SQLException {
-        int gameId = Integer.parseInt(gameIdData);
-        ChessGame chessGame = new ChessGame();
-        chessService.resetChessGame(chessGame, gameId);
-        return chessService.findBoard(gameId);
+    @DeleteMapping("/api/games/{id}")
+    public Long deleteGame(@PathVariable Long id) throws SQLException {
+        chessService.endGame(id);
+        return id;
     }
 
     private static String render(Map<String, Object> model, String templatePath) {

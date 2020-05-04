@@ -1,10 +1,8 @@
 package chess.player;
 
+import chess.team.Team;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import spring.chess.player.ChessSet;
-import spring.chess.player.Player;
-import spring.chess.team.Team;
 
 import java.util.Collections;
 

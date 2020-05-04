@@ -2,7 +2,7 @@ package chess.piece.type.movable;
 
 import chess.board.Route;
 import chess.location.Location;
-import chess.location.NoExistChessLocationException;
+import chess.location.exception.NoExistChessLocationException;
 
 public class KnightPieceMovable implements PieceMovable {
 

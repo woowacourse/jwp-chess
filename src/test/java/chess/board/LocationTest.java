@@ -1,10 +1,10 @@
 package chess.board;
 
+import chess.location.Col;
+import chess.location.Location;
+import chess.location.Row;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import spring.chess.location.Col;
-import spring.chess.location.Location;
-import spring.chess.location.Row;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

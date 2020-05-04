@@ -1,10 +1,10 @@
 package spring.converter;
 
-import spring.chess.board.ChessBoard;
-import spring.chess.game.ChessGame;
-import spring.chess.location.Location;
-import spring.chess.piece.type.*;
-import spring.chess.team.Team;
+import chess.board.ChessBoard;
+import chess.game.ChessGame;
+import chess.location.Location;
+import chess.piece.type.*;
+import chess.team.Team;
 import spring.dto.ChessGameVo;
 import spring.vo.PieceVo;
 

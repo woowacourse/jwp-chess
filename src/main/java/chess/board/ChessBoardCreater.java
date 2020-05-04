@@ -19,14 +19,14 @@ public class ChessBoardCreater {
 
     public static ChessBoard create() {
         Map<Location, Piece> board = new HashMap<>();
-        putNoble(board, WHITE_NOBLE_LINE, Team.WHITE);
+        putNobles(board, WHITE_NOBLE_LINE, Team.WHITE);
         putPawns(board, WHITE_PAWN_LINE, Team.WHITE);
         putPawns(board, BLACK_PAWN_LINE, Team.BLACK);
-        putNoble(board, BLACK_NOBLE_LINE, Team.BLACK);
+        putNobles(board, BLACK_NOBLE_LINE, Team.BLACK);
         return new ChessBoard(board);
     }
 
-    private static void putNoble(Map<Location, Piece> board, int row, Team team) {
+    private static void putNobles(Map<Location, Piece> board, int row, Team team) {
         board.put(new Location(row, 'a'), new Rook(team));
         board.put(new Location(row, 'b'), new Knight(team));
         board.put(new Location(row, 'c'), new Bishop(team));

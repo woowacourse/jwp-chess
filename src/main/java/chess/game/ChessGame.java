@@ -3,13 +3,20 @@ package chess.game;
 import chess.board.ChessBoard;
 import chess.board.ChessBoardCreater;
 import chess.command.Command;
+import chess.exception.InvalidConstructorValueException;
 import chess.location.Location;
 import chess.piece.type.Piece;
+import chess.player.ChessSet;
 import chess.player.Player;
 import chess.progress.Progress;
 import chess.result.ChessResult;
 import chess.result.ChessScores;
 import chess.team.Team;
+import spring.entity.ChessGameEntity;
+import spring.entity.PieceEntity;
+
+import java.util.Objects;
+import java.util.Set;
 
 import static chess.progress.Progress.END;
 import static chess.team.Team.BLACK;
@@ -26,10 +33,17 @@ public class ChessGame {
     }
 
     public ChessGame(ChessBoard chessBoard, Team turn) {
+        validNullValue(chessBoard, turn);
         this.chessBoard = chessBoard;
-        white = new Player(new ChessSet(chessBoard.giveMyPiece(WHITE)), WHITE);
-        black = new Player(new ChessSet(chessBoard.giveMyPiece(BLACK)), BLACK);
+        white = new Player(new ChessSet(chessBoard.giveMyPieces(WHITE)), WHITE);
+        black = new Player(new ChessSet(chessBoard.giveMyPieces(BLACK)), BLACK);
         this.turn = turn;
+    }
+
+    private void validNullValue(ChessBoard chessBoard, Team turn) {
+        if (Objects.isNull(chessBoard) || Objects.isNull(turn)) {
+            throw new InvalidConstructorValueException();
+        }
     }
 
     public void changeTurn() {
@@ -95,5 +109,10 @@ public class ChessGame {
 
     public ChessBoard getChessBoard() {
         return chessBoard;
+    }
+
+    public ChessGameEntity toEntity() {
+        Set<PieceEntity> pieces = this.chessBoard.toEntities();
+        return new ChessGameEntity(this.turn == BLACK, pieces);
     }
 }

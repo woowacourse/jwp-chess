@@ -35,12 +35,12 @@ class GameRepositoryTest {
 
 	@DisplayName("게임 목록 중 진행중인 게임 조회 기능 구현")
 	@Test
-	void selectAll_test() {
+	void findAvailableGames_test() {
 		Game firstGame = gameRepository.save(new Game(firstGameName, true));
 		Game secondGame = gameRepository.save(new Game("secondGameName", true));
 		Game thirdGame = gameRepository.save(new Game("thirdGameName", false));
 
-		List<Game> games = gameRepository.findAll();
+		List<Game> games = gameRepository.findAvailableGames();
 
 		assertThat(games).contains(firstGame, secondGame);
 		assertThat(games).doesNotContain(thirdGame);

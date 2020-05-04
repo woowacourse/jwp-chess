@@ -127,7 +127,7 @@ window.onload = function () {
               let winnerTeam = winnerData["winner"];
               return location.href = `/result/${winnerTeam}`;
             }
-            location.href= `/loading/${pathName}`;
+            location.href = `/loading/${pathName}`;
           })
       });
   }

@@ -3,6 +3,7 @@ package wooteco.chess.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +40,7 @@ public class WebChessRestController {
         return chessService.restartGame(Integer.parseInt(gameId));
     }
 
-    @PostMapping(value = "/move/{id}")
+    @PutMapping(value = "/move/{id}")
     public ResponseDto movePiece(@PathVariable String id, @RequestBody MovePositionDto movePositionDto) {
         int chessGameId = Integer.parseInt(id);
         Position source = Position.of(movePositionDto.getSourceX(), movePositionDto.getSourceY());

@@ -142,4 +142,11 @@ public class TeamScore {
     public Map<Team, Double> getTeamScore() {
         return teamScore;
     }
+
+    @Override
+    public String toString() {
+        return "TeamScore{" +
+            "teamScore=" + teamScore +
+            '}';
+    }
 }

@@ -10,7 +10,6 @@ import chess.model.domain.piece.Team;
 import chess.model.domain.piece.Type;
 import com.sun.tools.javac.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -151,7 +150,7 @@ public class TeamScoreTest {
         assertAll(
             () -> assertThat(blackWinTeamScore.findWinners()).isEqualTo(List.of(Team.BLACK)),
             () -> assertThat(whiteWinTeamScore.findWinners()).isEqualTo(List.of(Team.WHITE)),
-            () -> assertThat(allWinTeamScore.findWinners()).isEqualTo(Arrays.asList(Team.values()))
+            () -> assertThat(allWinTeamScore.findWinners()).contains(Team.WHITE, Team.BLACK)
         );
     }
 

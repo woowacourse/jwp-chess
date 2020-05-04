@@ -99,10 +99,6 @@ public class Board {
         return !pieces.containsValue(Piece.of('k')) || !pieces.containsValue(Piece.of('K'));
     }
 
-    public boolean isNotFinished() {
-        return !isFinished();
-    }
-
     public boolean isNotTurnOf(Position position) {
         return getTeamOf(position).isNotSame(this.turn);
     }

@@ -32,7 +32,8 @@ public class SpringChessController {
 	}
 
 	@GetMapping("/")
-	public String renderStart() {
+	public String renderStart(Model model) {
+		model.addAttribute("rooms", service.getGames());
 		return "index";
 	}
 

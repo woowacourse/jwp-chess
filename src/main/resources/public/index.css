@@ -97,3 +97,32 @@ form {
 .box:nth-child(57) ~ div:nth-child(-2n+64){
     background-color: #773c1d;
 }
+
+.room-list-container {
+    text-align: center;
+    position: relative;
+    top: 400px;
+    height: 100px;
+}
+
+.room-list {
+    list-style: none;
+}
+
+#room-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.room a {
+    font-size: 2rem;
+    color: white;
+    padding: 0.5rem;
+}
+
+a:link, a:visited, a:hover {
+    color: white;
+    text-decoration-line: none;
+}

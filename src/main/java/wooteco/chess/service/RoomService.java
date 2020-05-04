@@ -7,18 +7,12 @@ import wooteco.chess.repository.ChessEntity;
 import wooteco.chess.repository.ChessRepository;
 import wooteco.chess.utils.BoardConverter;
 
-import java.util.List;
-
 @Service
 public class RoomService {
     private final ChessRepository chessRepository;
 
     public RoomService(ChessRepository chessRepository) {
         this.chessRepository = chessRepository;
-    }
-
-    public List<Long> loadRoomNumbers() {
-        return chessRepository.findIds();
     }
 
     public Iterable<ChessEntity> loadRoomInformation() {

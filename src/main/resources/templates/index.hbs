@@ -30,14 +30,14 @@
     })
 
     function move() {
-        var e = document.getElementById("select");
-        var room_id = e.options[e.selectedIndex].value;
+        let e = document.getElementById("select");
+        let room_id = e.options[e.selectedIndex].value;
         window.location = "/rooms/" + room_id;
     }
 
     function makeNewRoom(event) {
-        var tmp = document.getElementById("textarea").value;
-        var form = document.createElement("form");
+        let tmp = document.getElementById("textarea").value;
+        let form = document.createElement("form");
         if (tmp.trim() === '') {
             alert("방 이름은 공백이 될 수 없습니다.");
             event.preventDefault();

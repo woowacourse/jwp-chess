@@ -29,13 +29,6 @@ public class ChessEntity {
         this.isWhite = isWhite;
     }
 
-    public ChessEntity(Long roomId, String title, String board, Boolean isWhite) {
-        this.roomId = roomId;
-        this.title = title;
-        this.board = board;
-        this.isWhite = isWhite;
-    }
-
     public Long getRoomId() {
         return roomId;
     }

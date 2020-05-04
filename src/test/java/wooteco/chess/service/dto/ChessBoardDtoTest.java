@@ -1,22 +1,22 @@
 package wooteco.chess.service.dto;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
-
 import wooteco.chess.domain.chessBoard.ChessBoard;
 import wooteco.chess.domain.chessPiece.ChessPiece;
 import wooteco.chess.domain.chessPiece.pieceType.PieceType;
 import wooteco.chess.domain.position.Position;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 class ChessBoardDtoTest {
 
-	private static final String IMAGE_SOURCE_FORMAT = "<img class=\"chessboard\" src=\"./images/%s.png\">";
+    private static final String IMAGE_SOURCE_FORMAT = "<img class=\"chessboard\" src=\"/images/%s.png\">";
 
 	@ParameterizedTest
 	@NullSource

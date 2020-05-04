@@ -9,6 +9,7 @@ import wooteco.chess.domain.chessGame.ChessGame;
 import wooteco.chess.entity.GameHistory;
 import wooteco.chess.entity.GameRoom;
 import wooteco.chess.service.dto.ChessGameDto;
+import wooteco.chess.service.dto.GameRoomDto;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,17 +52,14 @@ public class ChessService {
 	}
 
 	private ChessGameDto moveChessPiece(final Long gameId, final String sourcePosition, final String targetPosition) {
-		GameRoom gameRoom = gameRoomRepository.findById(gameId)
+		final GameRoom gameRoom = gameRoomRepository.findById(gameId)
 			.orElseThrow(() -> new NoSuchElementException("게임이 존재하지 않습니다."));
-
 		final ChessGame chessGame = initChessGameOf(gameRoom);
 		final ChessCommand chessCommand = ChessCommand.of(Arrays.asList(MOVE_COMMAND, sourcePosition, targetPosition));
 
 		chessGame.move(chessCommand);
 		gameRoom.addGameHistory(new GameHistory(sourcePosition, targetPosition, gameId));
-
-		gameRoomRepository.save(gameRoom);
-
+		gameRoomRepository.save(new GameRoom(gameRoom, chessGame.isEndState()));
 		return ChessGameDto.of(gameRoom.getId(), chessGame);
 	}
 
@@ -76,7 +74,7 @@ public class ChessService {
 		final ChessGame chessGame = initChessGameOf(gameRoom);
 
 		chessGame.end();
-		gameRoomRepository.save(new GameRoom(gameRoom, true));
+		gameRoomRepository.save(new GameRoom(gameRoom, chessGame.isEndState()));
 		return ChessGameDto.of(gameRoom.getId(), chessGame);
 	}
 
@@ -86,11 +84,11 @@ public class ChessService {
 		return gameRoom.getState();
 	}
 
-	public List<String> showAllGames() {
+	public List<GameRoomDto> showAllGames() {
 		List<GameRoom> gameRooms = gameRoomRepository.findAll();
 
 		return gameRooms.stream()
-			.map(GameRoom::getName)
+				.map(GameRoomDto::of)
 			.collect(toList());
 	}
 

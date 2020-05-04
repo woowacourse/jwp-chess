@@ -1,7 +1,11 @@
 package wooteco.chess.dao;
 
-import com.google.common.collect.Lists;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
+
+import com.google.common.collect.Lists;
 import wooteco.chess.domain.GameManager;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Color;
@@ -9,10 +13,6 @@ import wooteco.chess.dto.GameManagerDto;
 import wooteco.chess.entity.ChessGame;
 import wooteco.chess.exceptions.RoomNotFoundException;
 import wooteco.chess.repository.ChessGameRepository;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class GameDao {
@@ -28,16 +28,14 @@ public class GameDao {
 	}
 
 	public GameManager findGame(int roomNo) {
-		Optional<ChessGame> game = chessGameRepository.findChessGameByRoomNo(roomNo);
-
-		return game.map(
-				chessGame -> new GameManager(BoardFactory.of(chessGame.getBoard()), Color.of(chessGame.getTurn())))
-				.orElseThrow(RoomNotFoundException::new);
+		return chessGameRepository.findChessGameByRoomNo(roomNo)
+			.map(chessGame -> new GameManager(BoardFactory.of(chessGame.getBoard()), Color.of(chessGame.getTurn())))
+			.orElseThrow(RoomNotFoundException::new);
 	}
 
 	public void updateGame(GameManagerDto gameManagerDto, int roomNo) {
 		ChessGame chessGame = chessGameRepository.findChessGameByRoomNo(roomNo)
-				.orElseThrow(RoomNotFoundException::new);
+			.orElseThrow(RoomNotFoundException::new);
 		chessGame.setBoard(gameManagerDto.getBoard());
 		chessGame.setTurn(gameManagerDto.getTurn());
 		chessGameRepository.save(chessGame);
@@ -45,7 +43,7 @@ public class GameDao {
 
 	public void deleteGame(int roomNo) {
 		ChessGame chessGame = chessGameRepository.findChessGameByRoomNo(roomNo)
-				.orElseThrow(RoomNotFoundException::new);
+			.orElseThrow(RoomNotFoundException::new);
 		chessGameRepository.delete(chessGame);
 	}
 

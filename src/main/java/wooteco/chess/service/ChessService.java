@@ -14,7 +14,6 @@ import java.util.Map;
 
 @Service
 public class ChessService {
-    private static final String MOVE_DELIMITER = " ";
 
     @Autowired
     private ChessRoomRepository chessRoomRepository;
@@ -82,7 +81,6 @@ public class ChessService {
     }
 
     private void saveCommand(String source, String target, Long roomId) {
-        String command = String.join(MOVE_DELIMITER, new String[]{"move", source, target});
         ChessRoom chessRoom = findRoom(roomId);
         chessRoom.addCommand(new MoveCommand(source, target));
         chessRoomRepository.save(chessRoom);

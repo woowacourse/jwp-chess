@@ -12,6 +12,6 @@ create table piece
 
 create table turn
 (
-    board_entity bigint primary key,
+    board_entity bigint not null,
     is_white_turn tinyint(1) not null
 );

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>로비</title>
+    <link href="../static/lobby.css?ver=1" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<div class="wrapper">
+    <h1 class="room_title">체스 방 목록</h1>
+    <div>
+        <table class="room_table">
+            <tr>
+                <th class="id">방 번호</th>
+                <th class="title">방 제목</th>
+            </tr>
+            <!--        {{#rooms}}-->
+            <tr>
+                <td class="id">1</td>
+                <td class="title">첫 번째방</td>
+            </tr>
+            <tr>
+                <td class="id">2</td>
+                <td class="title">두 번째방</td>
+            </tr>
+            <tr>
+                <td class="id">3</td>
+                <td class="title">세 번째방</td>
+            </tr>
+            <!--        {{/rooms}}-->
+        </table>
+    </div>
+
+    <div>
+        <input class="new_room" type="button" value="방 만들기"/>
+    </div>
+    <div class="create">
+        <div>
+            <h1 id="create_room">방 만들기</h1>
+        </div>
+        <div>
+            <form class="form">
+                <div id="input_room_info">
+                    <label for="room_name">방 제목: </label>
+                    <input id="room_name" type="text"/>
+                </div>
+                <div>
+                    <input id="complete" type="submit" value="만들기"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+<script src="lobby.js?ver=1"></script>
+</body>
+</html>

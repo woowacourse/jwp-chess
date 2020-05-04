@@ -1,0 +1,115 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+.wrapper {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-family: 'Do Hyeon', sans-serif;
+    background-color: black;
+}
+
+.room_title {
+    font-size: 50px;
+    letter-spacing: 10px;
+    margin-bottom: 20px;
+}
+
+.room_table {
+    width: 800px;
+    height: 100%;
+    font-size: 30px;
+    background-color: #2d2d2d;
+    letter-spacing: 5px;
+}
+
+tr > td, th {
+    text-align: center;
+    border: 1px solid white;
+}
+
+.id {
+    width: 150px;
+    border-right: none;
+}
+
+tr > th {
+    background-color: #363824;
+    height: 70px;
+}
+
+tr > td {
+    border-top: none;
+}
+
+
+.new_room {
+    margin-top: 30px;
+    width: 300px;
+    height: 60px;
+    font-size: 30px;
+    background-color: #63413f;
+    color: white;
+    border: 1px solid white;
+    cursor: pointer;
+    font-family: 'Do Hyeon', sans-serif;
+}
+
+.create {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid gray;
+    width: 400px;
+    height: 250px;
+    background-color: white;
+    color: black;
+}
+
+#create_room {
+    margin-bottom: 40px;
+}
+
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+}
+
+.form > .input_room_info {
+    flex-direction: row;
+}
+
+#room_name {
+    height: 40px;
+    width: 270px;
+}
+
+#complete {
+    margin-top: 20px;
+    width: 100px;
+    height: 40px;
+    font-size: 23px;
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    cursor: pointer;
+    font-family: 'Do Hyeon', sans-serif;
+    letter-spacing: 4px;
+}

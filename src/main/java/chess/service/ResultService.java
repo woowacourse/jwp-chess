@@ -49,7 +49,13 @@ public class ResultService {
         }
     }
 
-    public void setGameResult(TeamScore teamScore, Map<Team, String> userNames) {
+    public void setGameResult(ChessGameEntity chessGameEntity) {
+        TeamScore teamScore = chessGameEntity.makeTeamScore();
+        Map<Team, String> userNames = chessGameEntity.makeUserNames();
+        setGameResult(teamScore, userNames);
+    }
+
+    private void setGameResult(TeamScore teamScore, Map<Team, String> userNames) {
         for (Team team : Team.values()) {
             ResultEntity resultEntity = resultRepository.findByUserName(userNames.get(team))
                 .orElseThrow(IllegalAccessError::new);
@@ -60,11 +66,5 @@ public class ResultService {
             resultEntity.addLose(gameResult.getLoseCount());
             resultRepository.save(resultEntity);
         }
-    }
-
-    public void setGameResult(ChessGameEntity chessGameEntity) {
-        TeamScore teamScore = chessGameEntity.makeTeamScore();
-        Map<Team, String> userNames = chessGameEntity.makeUserNames();
-        setGameResult(teamScore, userNames);
     }
 }

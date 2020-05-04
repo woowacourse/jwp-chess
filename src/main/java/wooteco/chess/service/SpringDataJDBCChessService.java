@@ -75,7 +75,7 @@ public class SpringDataJDBCChessService {
         }
     }
 
-    public MoveStatusDto move(Long id, MovingPosition movingPosition) {
+    public MoveStatusDto move(Long id, MovingPosition movingPosition) throws IllegalArgumentException {
         ChessGame chessGame = new ChessGame();
         load(chessGame, id);
         chessGame.move(movingPosition);
@@ -93,12 +93,16 @@ public class SpringDataJDBCChessService {
     }
 
     private void updateCanContinueToFalse(Long id) {
-        Game game = gameRepository.findById(id).get(); // TODO: 2020/05/01 예외 처리 수정
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("해당 id의 방이 없습니다."));
         gameRepository.save(new Game(game.getId(), game.getName(), false));
     }
 
     private void insertHistory(Long id, MovingPosition movingPosition) {
-        Game game = gameRepository.findById(id).get(); // TODO: 2020/05/01 예외 처리 생각하기
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("해당 id의 방이 없습니다."));
         History history = new History(movingPosition.getStart(), movingPosition.getEnd());
         game.addHistory(history);
         gameRepository.save(game);

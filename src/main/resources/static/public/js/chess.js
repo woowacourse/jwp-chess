@@ -55,7 +55,6 @@ window.onload = function () {
   (async function () {
     const chessGame = await getChessGame();
     const board = await chessGame["boardDto"]["board"];
-    console.log(board);
     const turn = chessGame["turn"];
     const score = chessGame["score"]["scores"];
 
@@ -74,7 +73,6 @@ window.onload = function () {
       .then(res => res.json())
       .then(data => {
         startPosition = data.position;
-        console.log(data.normalStatus);
         if (data.normalStatus === false) {
           alert(data.exception);
           startPosition = null;
@@ -122,7 +120,10 @@ window.onload = function () {
             return winnerResponse.json();
           })
           .then(winnerData => {
-            console.log(winnerData);
+            if (!winnerData["normalStatus"]) {
+              alert(winnerData["exception"]);
+              return location.href = "/";
+            }
             if (winnerData["winner"] !== "NONE") {
               let winnerTeam = winnerData["winner"];
               return location.href = `/result/${winnerTeam}`;

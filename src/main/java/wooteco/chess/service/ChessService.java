@@ -1,14 +1,7 @@
 package wooteco.chess.service;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import wooteco.chess.domain.Score;
 import wooteco.chess.domain.board.ChessGame;
 import wooteco.chess.domain.command.MoveCommand;
@@ -25,6 +18,12 @@ import wooteco.chess.dto.SavedGameDto;
 import wooteco.chess.repository.GameRepository;
 import wooteco.chess.util.ScoreConverter;
 import wooteco.chess.util.UnicodeConverter;
+
+import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ChessService {
@@ -79,7 +78,7 @@ public class ChessService {
 	private GameDto saveGame(ChessGame chessGame) {
 		Game game = new Game(chessGame);
 		game = gameRepository.save(game);
-		return new GameDto(game);
+		return new GameDto(game.getId(), game.getTurn());
 	}
 
 	private BoardDto createBoardDto(Long gameId, ChessGame chessGame) {

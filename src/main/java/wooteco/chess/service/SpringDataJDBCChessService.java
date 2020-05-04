@@ -9,16 +9,12 @@ import wooteco.chess.dto.*;
 import wooteco.chess.entity.Game;
 import wooteco.chess.entity.GameRepository;
 import wooteco.chess.entity.History;
-import wooteco.chess.entity.HistoryRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class SpringDataJDBCChessService {
-    @Autowired
-    private HistoryRepository historyRepository;
-
     @Autowired
     private GameRepository gameRepository;
 

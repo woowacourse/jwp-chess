@@ -1,8 +1,11 @@
 const $board = document.querySelector('.board');
 const $roomName = document.querySelector('#room-name');
 
-let source;
-let target;
+let $sourceDiv;
+let $targetDiv;
+let sourceId;
+let targetId;
+let tempColor;
 let pickFlag = false;
 
 window.onload = function () {
@@ -12,13 +15,21 @@ window.onload = function () {
 async function onClickBoard(e) {
 	if (e.target && e.target.nodeName === 'IMG') {
 		if (!pickFlag) {
-			source = e.target.closest('div').id;
+			$sourceDiv = e.target.closest('div');
+			sourceId = $sourceDiv.id;
+
+			tempColor = $sourceDiv.style.backgroundColor;
+			$sourceDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
 			pickFlag = !pickFlag;
 		} else {
-			target = e.target.closest('div').id;
+			$targetDiv = e.target.closest('div');
+			targetId = $targetDiv.id;
+
 			const movedInfo = await getMovedInfo();
 			renderMovedPiece();
 			renderChangedTurn(movedInfo.turn);
+
+			$sourceDiv.style.backgroundColor = tempColor;
 			pickFlag = !pickFlag;
 		}
 	}
@@ -32,16 +43,14 @@ function getMovedInfo() {
 		},
 		body: JSON.stringify({
 			roomName: $roomName.innerText,
-			source: source,
-			target: target
+			source: sourceId,
+			target: targetId
 		})
 	}).then(res => res.json());
 }
 
 function renderMovedPiece() {
-	let $source = document.querySelector(`#${source}`);
-	let $target = document.querySelector(`#${target}`);
-	[$source.innerHTML, $target.innerHTML] = [$target.innerHTML, $source.innerHTML]; // swap
+	[$sourceDiv.innerHTML, $targetDiv.innerHTML] = [$targetDiv.innerHTML, $sourceDiv.innerHTML]; // swap
 }
 
 function renderChangedTurn(turn) {

@@ -78,7 +78,9 @@ public class ChessGameService {
 		Position target = new Position(pieceMoveDto.getTarget());
 		chessGame.move(source, target);
 
-		room.update(BoardConverter.convertToString(chessGame.getBoard()), chessGame.getTurn(),
+		room.update(
+				BoardConverter.convertToString(chessGame.getBoard()),
+				chessGame.getTurn(),
 				FinishFlag.of(chessGame.isEnd()).getSymbol());
 		return roomRepository.save(room);
 	}

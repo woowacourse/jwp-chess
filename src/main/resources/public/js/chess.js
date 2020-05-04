@@ -60,7 +60,7 @@ function move(source, target, roomNumber) {
             let currentTeamScore = response.body.currentTeamScore;
             let winner = response.body.winner;
             if (winner != null) {
-                alert(winner + "팀이 이겼습니다.");
+                alert(winner + "팀이 이겼습니다!");
                 initialize(source, target);
                 window.location = "http://localhost:8080/start";
                 return;

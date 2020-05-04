@@ -9,17 +9,38 @@
 {{#if haveLastGameRecord}}
     <button onclick="playLastGame()">기존 게임 시작하기</button>
 {{/if}}
-    <input type = "text" id="roomName">
-    <input type = "submit" value="방 이름을 입력하신후 여기를 클릭해주세요" onclick="playNewGame()">
+<h2>새게임 생성 방법  </h2>
+<h3>빈칸에 방이름 입력 후 Click을 눌러주세요 </h3>
+<input type = "text" id="newRoomName">
+<input type = "submit" value="Click" onclick="playNewGame()"><br>
+
+<br>
+<br>
+
+<h2>이어하는 방법</h2>
+<h3>자신이 생성한 방의 id값을 클릭 하세요</h3>
+<table border = "1">
+    <th>아이디</th>
+    <th>방이름</th>
+    {{#rooms}}
+        <tr>
+            <td>{{id}}<br></td>
+            <td><a href = "http://localhost:8080/playing/lastGame/{{id}}">{{roomName}}<br></td>
+        </tr>
+    {{/rooms}}
+
+</table>
 </body>
+
 <script>
     const playLastGame = function () {
-        window.location = "http://localhost:8080/playing/lastGame";
+        window.location = "http://localhost:8080/playing/lastGame"
+                + "/" + document.getElementById("lastRoomName").value;
     };
 
     const playNewGame = function () {
         window.location = 'http://localhost:8080/playing/newGame'
-                + "?roomName=" + document.getElementById("roomName").value;
+                + "?roomName=" + document.getElementById("newRoomName").value;
     }
 </script>
 <body>

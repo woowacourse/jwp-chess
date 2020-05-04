@@ -55,15 +55,15 @@ public class ChessGameEntity {
     public void update(ChessGame chessGame, String proceed) {
         this.turnName = chessGame.getTurn().getName();
         this.proceeding = proceed;
-        this.blackScore = chessGame.deriveTeamScore().get(Team.BLACK);
-        this.whiteScore = chessGame.deriveTeamScore().get(Team.WHITE);
+        this.blackScore = chessGame.deriveTeamScore().findScore(Team.BLACK);
+        this.whiteScore = chessGame.deriveTeamScore().findScore(Team.WHITE);
     }
 
     public TeamScore makeTeamScore() {
         Map<Team, Double> teamScore = new HashMap<>();
         teamScore.put(Team.BLACK, blackScore);
         teamScore.put(Team.WHITE, whiteScore);
-        return new TeamScore(teamScore);
+        return TeamScore.of(teamScore);
     }
 
     public Map<Team, String> makeUserNames() {

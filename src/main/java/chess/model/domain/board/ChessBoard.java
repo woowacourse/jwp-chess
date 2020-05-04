@@ -66,7 +66,7 @@ public class ChessBoard {
     }
 
     public TeamScore deriveTeamScore() {
-        return new TeamScore(chessBoard.values(), countPawnSameFileByTeam());
+        return TeamScore.of(chessBoard.values(), countPawnSameFileByTeam());
     }
 
     private Map<Team, Integer> countPawnSameFileByTeam() {
@@ -94,7 +94,7 @@ public class ChessBoard {
         return count;
     }
 
-    public Piece getCurrentPiece(Square square) {
+    public Piece findCurrentPiece(Square square) {
         return chessBoard.get(square);
     }
 

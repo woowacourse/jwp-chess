@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullSource;
 
 class TFAndYNConverterTest {
 
@@ -12,6 +13,14 @@ class TFAndYNConverterTest {
     @CsvSource(value = {"true, Y", "false, N"})
     void convertYN(boolean changer, String expected) {
         assertThat(TFAndYNConverter.convertYN(changer)).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @NullSource
+    void convertTF_WHEN_NULL(String changer) {
+        assertThatThrownBy(() -> TFAndYNConverter.convertTF(changer))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessageContaining("null");
     }
 
     @ParameterizedTest

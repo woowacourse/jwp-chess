@@ -18,7 +18,7 @@ public class TeamScoreTest {
     @Test
     @DisplayName("Null이 생성자에 들어갔을 때 예외 발생")
     void validNotNull() {
-        assertThatThrownBy(() -> new TeamScore(null, null))
+        assertThatThrownBy(() -> TeamScore.of(null, null))
             .isInstanceOf(NullPointerException.class)
             .hasMessageContaining("Null");
     }
@@ -47,15 +47,15 @@ public class TeamScoreTest {
     void getWinnerByScore() {
         ChessGame chessGame = ChessGameFactory.create();
         TeamScore teamScore = chessGame.deriveTeamScore();
-        assertThat(teamScore.getWinners().size()).isEqualTo(2);
+        assertThat(teamScore.findWinners().size()).isEqualTo(2);
 
         chessGame.move(new MoveInfo("b1", "c3"));
         chessGame.move(new MoveInfo("d7", "d5"));
         chessGame.move(new MoveInfo("c3", "d5"));
 
         teamScore = chessGame.deriveTeamScore();
-        assertThat(teamScore.getWinners().size()).isEqualTo(1);
-        assertThat(teamScore.getWinners().get(0)).isEqualTo(Team.WHITE);
+        assertThat(teamScore.findWinners().size()).isEqualTo(1);
+        assertThat(teamScore.findWinners().get(0)).isEqualTo(Team.WHITE);
     }
 
     @Test
@@ -72,8 +72,8 @@ public class TeamScoreTest {
 
         TeamScore teamScore = chessGame.deriveTeamScore();
 
-        assertThat(teamScore.getWinners().contains(Team.WHITE)).isTrue();
-        assertThat(teamScore.getWinners().size()).isEqualTo(1);
+        assertThat(teamScore.findWinners().contains(Team.WHITE)).isTrue();
+        assertThat(teamScore.findWinners().size()).isEqualTo(1);
 
         assertThat(teamScore.getTeamScore().get(Team.BLACK)).isEqualTo(0.0);
         assertThat(teamScore.getTeamScore().get(Team.WHITE)).isEqualTo(10.0);

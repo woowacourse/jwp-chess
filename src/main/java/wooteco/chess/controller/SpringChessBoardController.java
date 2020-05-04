@@ -12,7 +12,6 @@ import wooteco.chess.view.OutputView;
 
 @Controller
 public class SpringChessBoardController {
-
     private final BoardService boardService;
 
     public SpringChessBoardController(BoardService boardService) {

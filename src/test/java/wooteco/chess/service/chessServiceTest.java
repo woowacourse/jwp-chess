@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import wooteco.chess.domain.coordinate.Coordinate;
+import wooteco.chess.dto.RequestDto.ChessMoveRequestDto;
+import wooteco.chess.dto.RequestDto.RoomCreateRequestDto;
 import wooteco.chess.entity.Move;
 import wooteco.chess.entity.Room;
 import wooteco.chess.repository.MoveRepository;
@@ -36,22 +38,22 @@ public class chessServiceTest {
     @DisplayName("renew 테스트")
     @Test
     void renew() {
-        Room room = (Room)roomService.create(
-                new Room("blackPassword", "whitePassword",
-                        false,"renewTest"))
+        RoomCreateRequestDto requestDto = new RoomCreateRequestDto("whitePassword",
+                "renewTest");
+        Long roomId = (Long)roomService.create(requestDto)
                 .getResponseData();
-        assertThat(chessService.renew(room.getId()).getResponseCode()).isEqualTo(200);
+        assertThat(chessService.renew(roomId).getResponseCode()).isEqualTo(200);
     }
 
     @DisplayName("getMovableWay 테스트")
     @Test
     void getMovableWay() {
-        Room room = (Room)roomService.create(
-                new Room("blackPassword", "whitePassword",
-                        false,"wayTest"))
+        RoomCreateRequestDto requestDto = new RoomCreateRequestDto("whitePassword",
+                "wayTest");
+        Long roomId = (Long)roomService.create(requestDto)
                 .getResponseData();
-        chessService.renew(room.getId());
-        assertThat(chessService.getMovableWay(room.getId(), Coordinate.of("a2"),"whitePassword")
+        chessService.renew(roomId);
+        assertThat(chessService.getMovableWay(roomId, Coordinate.of("a2"),"whitePassword")
                 .getResponseCode())
                 .isEqualTo(200);
     }
@@ -59,12 +61,13 @@ public class chessServiceTest {
     @DisplayName("move 테스트")
     @Test
     void move() {
-        Room room = (Room)roomService.create(
-                new Room("blackPassword", "whitePassword",
-                        false,"wayTest"))
+        RoomCreateRequestDto requestDto = new RoomCreateRequestDto("whitePassword",
+                "moveTest");
+        Long roomId = (Long)roomService.create(requestDto)
                 .getResponseData();
-        chessService.renew(room.getId());
-        assertThat(chessService.move(new Move(room.getId(), "a2", "a4"),"whitePassword")
+        chessService.renew(roomId);
+        ChessMoveRequestDto moveRequestDto = new ChessMoveRequestDto(roomId,"whitePassword", "a2", "a4");
+        assertThat(chessService.move(moveRequestDto)
                 .getResponseCode())
                 .isEqualTo(200);
     }

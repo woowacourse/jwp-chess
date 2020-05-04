@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import wooteco.chess.domain.piece.Team;
+import wooteco.chess.dto.RequestDto.RoomCreateRequestDto;
+import wooteco.chess.dto.RequestDto.RoomJoinRequestDto;
 import wooteco.chess.entity.Room;
 import wooteco.chess.repository.RoomRepository;
 
@@ -26,11 +28,9 @@ public class roomServiceTest {
     @DisplayName("create 테스트")
     @Test
     void create() {
-        Room room = new Room("blackPassword",
-                "whitePassword",
-                false,
+        RoomCreateRequestDto requestDto = new RoomCreateRequestDto("whitePassword",
                 "createTest");
-        assertThat(roomService.create(room)
+        assertThat(roomService.create(requestDto)
                 .getResponseCode())
                 .isEqualTo(200);
     }
@@ -38,12 +38,12 @@ public class roomServiceTest {
     @DisplayName("join 테스트")
     @Test
     void join() {
-        Room room = new Room("default",
-                "whitePassword",
-                false,
+        RoomCreateRequestDto requestDto = new RoomCreateRequestDto("whitePassword",
                 "joinTest");
-        roomService.create(room);
-        assertThat(roomService.join("joinTest", "blackPassword")
+        roomService.create(requestDto);
+        RoomJoinRequestDto requestDto1 = new RoomJoinRequestDto("blackPassword",
+                "joinTest");
+        assertThat(roomService.join(requestDto1)
                 .getResponseCode())
                 .isEqualTo(200);
     }
@@ -51,12 +51,10 @@ public class roomServiceTest {
     @DisplayName("checkAuthentication 테스트")
     @Test
     void checkAuthentication() {
-        Room room = new Room("default",
-                "whitePassword",
-                false,
+        RoomCreateRequestDto requestDto = new RoomCreateRequestDto("whitePassword",
                 "authenticationTest");
-        room = (Room)roomService.create(room).getResponseData();
-        assertThat(roomService.checkAuthentication(room.getId(), "whitePassword"))
+        Long roomId = (Long) roomService.create(requestDto).getResponseData();
+        assertThat(roomService.checkAuthentication(roomId, "whitePassword"))
                 .isEqualTo(Team.WHITE);
     }
 }

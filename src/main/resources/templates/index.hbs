@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>우아한 체스게임</title>
-    <link rel="stylesheet" href="/static/css/index.css" type="text/css">
+  <meta charset="UTF-8">
+  <title>우아한 체스게임</title>
+  <link rel="stylesheet" href="/static/css/index.css" type="text/css">
 </head>
 <body>
 <div class="entire_div">
-    <a class="new_game" href="room">시작</a>
-    <div class="on_games">
-        <form action="/games" method="get">
-            <input type="button" value="기존게임보기!" onclick="on_games()">
-            <div class=games></div>
-        </form>
-    </div>
+  <a class="new_game" href="room">시작</a>
+  <div class="on_games">
+    <form action="/games" method="get">
+      <input type="button" value="기존게임보기!" onclick="on_games()">
+      <div class=games></div>
+    </form>
+  </div>
 </div>
+<div> 방 목록</div>
+<ul class="rooms">
+</ul>
 <script src="/static/js/chess.js"></script>
 </body>
 </html>

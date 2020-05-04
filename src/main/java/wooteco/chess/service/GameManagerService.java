@@ -1,7 +1,8 @@
 package wooteco.chess.service;
 
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,14 @@ import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Color;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.dto.GameManagerDto;
+import wooteco.chess.dto.PieceDto;
+import wooteco.chess.dto.ScoreDto;
 
 @Service
 public class GameManagerService {
+	private static final int MIN_ROOM_NUMBER = 100_000;
+	private static final int MAX_ROOM_NUMBER = 999_999;
+
 	private final GameDao gameDao;
 
 	public GameManagerService(GameDao gameDao) {
@@ -31,16 +37,26 @@ public class GameManagerService {
 	public int newGame() {
 		Board board = BoardFactory.create();
 		GameManager gameManager = new GameManager(board, Color.WHITE);
-
-		return gameDao.addGame(new GameManagerDto(gameManager));
+		int roomNo = ThreadLocalRandom.current()
+			.ints(MIN_ROOM_NUMBER, MAX_ROOM_NUMBER)
+			.findFirst()
+			.orElse(0);
+		return gameDao.addGame(new GameManagerDto(gameManager), roomNo);
 	}
 
 	public void deleteGame(int roomNo) {
 		gameDao.deleteGame(roomNo);
 	}
 
-	public Board getBoard(int roomNo) {
-		return gameDao.findGame(roomNo).getBoard();
+	public List<PieceDto> getBoardDto(int roomNo) {
+		GameManager game = gameDao.findGame(roomNo);
+
+		return game.getBoard()
+			.getPieces()
+			.entrySet()
+			.stream()
+			.map(x -> PieceDto.of(x.getKey(), x.getValue()))
+			.collect(Collectors.toList());
 	}
 
 	public Color getCurrentTurn(int roomNo) {
@@ -56,10 +72,13 @@ public class GameManagerService {
 		return gameManager.isKingAlive();
 	}
 
-	public Map<Color, Double> calculateEachScore(int roomNo) {
+	public List<ScoreDto> calculateEachScore(int roomNo) {
 		GameManager gameManager = new GameManager(gameDao.findGame(roomNo).getBoard());
 
-		return gameManager.calculateEachScore();
+		return gameManager.calculateEachScore().entrySet()
+			.stream()
+			.map(x -> new ScoreDto(x.getKey(), x.getValue()))
+			.collect(Collectors.toList());
 	}
 
 	public List<String> getAllRoomNo() {

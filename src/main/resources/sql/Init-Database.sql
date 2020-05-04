@@ -13,18 +13,9 @@ id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 turn varchar(5)
 );
 
-<<<<<<< HEAD
 USE chess2;
 CREATE TABLE chessgame (
 	id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	board VARCHAR(64) NOT NULL,
     turn VARCHAR(5) NOT NULL
 );
-=======
--- USE chess2;
--- CREATE TABLE chessgame (
--- 	id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
--- 	board VARCHAR(64) NOT NULL,
---     turn VARCHAR(5) NOT NULL
--- );
->>>>>>> 827eadd15c7172a0d4e3e5c1ad52e84358726210

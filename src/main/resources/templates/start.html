@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Java chess game start</title>
+    <link href="/chess.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="game">
+    <h2>체스</h2>
+    <div class="list">
+        <table class="games">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">방 제목</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#games}}
+            <tr onclick="location.href='index/{{id}}'">
+                <th scope="row">{{id}}</th>
+                <td>{{name}}</td>
+            </tr>
+            {{/games}}
+            </tbody>
+        </table>
+
+        <input id="game_name" name="game_name" type="text" value="방 제목을 입력해주세요"/>
+        <button onclick="postNewGame()">새게임</button>
+
+
+    </div>
+</div>
+
+<!-- <form action="/index" method="get">
+    <input class="start-button" type="submit" value="스타트"/>
+</form> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="/chess.js" type="text/javascript"></script>
+</body>
+</html>

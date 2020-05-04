@@ -10,7 +10,7 @@ public class TurnEntity {
 	@Column("is_white_turn")
 	private final Boolean isWhiteTurn;
 
-	TurnEntity(final boolean isWhiteTurn) {
+	private TurnEntity(final boolean isWhiteTurn) {
 		this.isWhiteTurn = isWhiteTurn;
 	}
 

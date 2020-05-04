@@ -32,13 +32,13 @@ public class BoardFactory {
 
 	private static List<Row> createBlackTeam() {
 		return Arrays.asList(
-			createExecutive(BLACK_TEAM_EXECUTIVE_INDEX.get(), Team.BLACK),
-			createPawns(BLACK_TEAM_PAWN_INDEX.get(), Team.BLACK));
+			createExecutive(BLACK_TEAM_EXECUTIVE.index, Team.BLACK),
+			createPawns(BLACK_TEAM_PAWN.index, Team.BLACK));
 	}
 
 	private static List<Row> createBlankTeam() {
 		List<Row> rows = new ArrayList<>();
-		for (int index = BLACK_TO_INDEX.get(); index >= BLACK_FROM_INDEX.get(); index--) {
+		for (int index = BLACK_TO.index; index >= BLACK_FROM.index; index--) {
 			rows.add(createBlanks(index));
 		}
 		return rows;
@@ -46,26 +46,26 @@ public class BoardFactory {
 
 	private static List<Row> createWhiteTeam() {
 		return Arrays.asList(
-			createPawns(WHITE_TEAM_PAWN_INDEX.get(), Team.WHITE),
-			createExecutive(WHITE_TEAM_EXECUTIVE_INDEX.get(), Team.WHITE));
+			createPawns(WHITE_TEAM_PAWN.index, Team.WHITE),
+			createExecutive(WHITE_TEAM_EXECUTIVE.index, Team.WHITE));
 	}
 
 	private static Row createExecutive(int index, Team team) {
 		List<Piece> pieces = new ArrayList<>();
-		pieces.add(new Rook(Position.of(index, ROOK_FIRST_INDEX.get()), team));
-		pieces.add(new Knight(Position.of(index, KNIGHT_FIRST_INDEX.get()), team));
-		pieces.add(new Bishop(Position.of(index, BISHOP_FIRST_INDEX.get()), team));
-		pieces.add(new Queen(Position.of(index, QUEEN_INDEX.get()), team));
-		pieces.add(new King(Position.of(index, KING_INDEX.get()), team));
-		pieces.add(new Bishop(Position.of(index, BISHOP_SECOND_INDEX.get()), team));
-		pieces.add(new Knight(Position.of(index, KNIGHT_SECOND_INDEX.get()), team));
-		pieces.add(new Rook(Position.of(index, ROOK_SECOND_INDEX.get()), team));
+		pieces.add(new Rook(Position.of(index, ROOK_FIRST.index), team));
+		pieces.add(new Knight(Position.of(index, KNIGHT_FIRST.index), team));
+		pieces.add(new Bishop(Position.of(index, BISHOP_FIRST.index), team));
+		pieces.add(new Queen(Position.of(index, QUEEN.index), team));
+		pieces.add(new King(Position.of(index, KING.index), team));
+		pieces.add(new Bishop(Position.of(index, BISHOP_SECOND.index), team));
+		pieces.add(new Knight(Position.of(index, KNIGHT_SECOND.index), team));
+		pieces.add(new Rook(Position.of(index, ROOK_SECOND.index), team));
 		return new Row(pieces);
 	}
 
 	private static Row createPawns(int index, Team team) {
 		List<Piece> pieces = new ArrayList<>();
-		for (int y = BOARD_FROM_INDEX.get(); y <= BOARD_TO_INDEX.get(); y++) {
+		for (int y = BOARD_FROM.index; y <= BOARD_TO.index; y++) {
 			pieces.add(new Pawn(Position.of(index, y), team));
 		}
 		return new Row(pieces);
@@ -73,7 +73,7 @@ public class BoardFactory {
 
 	private static Row createBlanks(int index) {
 		List<Piece> pieces = new ArrayList<>();
-		for (int y = BOARD_FROM_INDEX.get(); y <= BOARD_TO_INDEX.get(); y++) {
+		for (int y = BOARD_FROM.index; y <= BOARD_TO.index; y++) {
 			pieces.add(new Blank(Position.of(index, y)));
 		}
 		return new Row(pieces);

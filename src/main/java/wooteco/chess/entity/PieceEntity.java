@@ -21,7 +21,7 @@ public class PieceEntity {
 		return new PieceEntity(position, name);
 	}
 
-	public boolean isMathPosition(String position) {
+	public boolean isMatchPosition(String position) {
 		return this.position.equals(position);
 	}
 

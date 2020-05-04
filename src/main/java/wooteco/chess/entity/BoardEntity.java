@@ -23,19 +23,23 @@ import wooteco.chess.domain.factory.PieceConverter;
  */
 @Table("board")
 public class BoardEntity {
-	private final Set<PieceEntity> pieces;
-	private final TurnEntity turn;
 	@Id
 	private Long id;
+	private final Set<PieceEntity> pieces;
+	private final TurnEntity turn;
 
-	BoardEntity(final Long id, final Set<PieceEntity> pieces, final TurnEntity turn) {
+	private BoardEntity(Set<PieceEntity> pieces, TurnEntity turn) {
+		this(null, pieces, turn);
+	}
+
+	private BoardEntity(Long id, Set<PieceEntity> pieces, TurnEntity turn) {
 		this.id = id;
 		this.pieces = pieces;
 		this.turn = turn;
 	}
 
-	public static BoardEntity of(final Set<PieceEntity> pieces, final TurnEntity turn) {
-		return new BoardEntity(null, pieces, turn);
+	public static BoardEntity of(Set<PieceEntity> pieces, TurnEntity turn) {
+		return new BoardEntity(pieces, turn);
 	}
 
 	public static BoardEntity from(Board board) {
@@ -45,12 +49,12 @@ public class BoardEntity {
 			String name = piece.getName();
 			pieces.add(PieceEntity.of(position, name));
 		}
-		return new BoardEntity(null, pieces, TurnEntity.of(Turn.FIRST));
+		return new BoardEntity(pieces, TurnEntity.of(Turn.FIRST));
 	}
 
 	public Board createBoard() {
 		List<Row> rows = new ArrayList<>();
-		for (int x = BOARD_FROM_INDEX.get(); x <= BOARD_TO_INDEX.get(); x++) {
+		for (int x = BOARD_FROM.index; x <= BOARD_TO.index; x++) {
 			rows.add(createRow(x));
 		}
 		return new Board(rows, turn.createTurn());
@@ -58,7 +62,7 @@ public class BoardEntity {
 
 	private Row createRow(int x) {
 		List<Piece> pieces = new ArrayList<>();
-		for (int y = ROW_FROM_INDEX.get(); y <= ROW_TO_INDEX.get(); y++) {
+		for (int y = ROW_FROM.index; y <= ROW_TO.index; y++) {
 			PieceEntity pieceEntity = findByPosition(String.format("%c%d", y, x));
 			String name = pieceEntity.getName();
 			String position = pieceEntity.getPosition();
@@ -69,12 +73,8 @@ public class BoardEntity {
 
 	private PieceEntity findByPosition(String position) {
 		return pieces.stream()
-			.filter(pieceEntity -> pieceEntity.isMathPosition(position))
+			.filter(pieceEntity -> pieceEntity.isMatchPosition(position))
 			.findFirst()
-			.orElseThrow(() -> new IllegalArgumentException(""));
-	}
-
-	public Long getId() {
-		return id;
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Position입니다."));
 	}
 }

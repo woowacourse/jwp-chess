@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import wooteco.chess.dto.GameRequestDto;
 import wooteco.chess.dto.GameResponseDto;
-import wooteco.chess.dto.GameStatusDto;
+import wooteco.chess.dto.GameScoreDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.service.SpringGameService;
 
@@ -30,14 +30,13 @@ public class SpringGameController {
         return gameService.initialize(gameRequestDto);
     }
 
-    @PostMapping("/status")
-    public GameStatusDto showStatus(@RequestBody GameRequestDto gameRequestDto) {
-        return new GameStatusDto(gameService.getScore(gameRequestDto), gameService.getScore(gameRequestDto));
+    @PostMapping("/score")
+    public GameScoreDto showStatus(@RequestBody GameRequestDto gameRequestDto) {
+        return new GameScoreDto(gameService.getScore(gameRequestDto), gameService.getScore(gameRequestDto));
     }
 
     @PostMapping("/path")
     public List<String> getMovablePositions(@RequestBody MoveRequestDto moveRequestDto) {
-        System.out.println(moveRequestDto);
         return gameService.getMovablePositions(moveRequestDto);
     }
 

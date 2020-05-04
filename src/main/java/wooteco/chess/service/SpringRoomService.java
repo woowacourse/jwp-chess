@@ -25,10 +25,10 @@ public class SpringRoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    public void addRoom(RoomRequestDto roomRequestDto) {
+    public RoomEntity addRoom(RoomRequestDto roomRequestDto) {
         Set<PieceEntity> pieceEntities = convertPiecesToPieceEntity(Pieces.initPieces());
         GameEntity gameEntity = new GameEntity(Color.WHITE, pieceEntities);
-        roomRepository.save(new RoomEntity(roomRequestDto.getName(), roomRequestDto.getPassword(), gameEntity));
+        return roomRepository.save(new RoomEntity(roomRequestDto.getName(), roomRequestDto.getPassword(), gameEntity));
     }
 
     public void removeRoom(Long id) {

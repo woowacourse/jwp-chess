@@ -29,7 +29,7 @@
 
     <div>현재 턴은 <span id="turn"></span>입니다.</div>
 
-    <button class="btn btn-primary" id="statusButton">점수보기</button>
+    <button class="btn btn-primary" id="scoreButton">점수보기</button>
 
     <button class="btn btn-primary" id="initButton">체스판 초기화</button>
 
@@ -227,15 +227,15 @@
             init();
         });
 
-        document.getElementById("statusButton").addEventListener('click', function () {
+        document.getElementById("scoreButton").addEventListener('click', function () {
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    let statusResponse = JSON.parse(xhr.responseText);
-                    showStatus(statusResponse.whiteScore, statusResponse.blackScore);
+                    let scoreResponse = JSON.parse(xhr.responseText);
+                    showStatus(scoreResponse.whiteScore, scoreResponse.blackScore);
                 }
             };
-            xhr.open('POST', '/game/status', true);
+            xhr.open('POST', '/game/score', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify(data));
         });

@@ -3,6 +3,7 @@ package wooteco.chess.service;
 import static java.util.stream.Collectors.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,6 +24,10 @@ public class SpringChessService {
 
 	public SpringChessService(ChessGameRepository chessGameRepository) {
 		this.chessGameRepository = chessGameRepository;
+	}
+
+	public List<ChessGame> getGames() {
+		return chessGameRepository.findAll();
 	}
 
 	public void initialize(String roomId) {

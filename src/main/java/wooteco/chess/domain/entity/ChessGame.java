@@ -43,4 +43,8 @@ public class ChessGame {
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException("기물이 존재하지 않습니다. position : " + position.getName()));
 	}
+
+	public String getRoomId() {
+		return roomId;
+	}
 }

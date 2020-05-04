@@ -4,13 +4,13 @@ const score = () => {
         method: "GET",
     };
     fetch(url, scoreRequest)
-        .then(response => {
-            alert(response.data);
+        .then(response => response.text())
+        .then(text => {
+            alert(text);
         })
         .catch(reason => {
             alert(reason.data);
         })
-
 };
 
 const save = () => {

@@ -16,14 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.google.gson.Gson;
-import wooteco.chess.domain.entity.PieceEntity;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.service.SpringChessService;
 
 @Controller
 public class SpringChessController {
-	private static final Gson GSON = new Gson();
 
 	private SpringChessService service;
 
@@ -54,7 +51,7 @@ public class SpringChessController {
 		String from = moveInfo.get("from");
 		String to = moveInfo.get("to");
 		service.move(game_id, Position.of(from), Position.of(to));
-		return GSON.toJson(from + " " + to);
+		return from + " " + to;
 	}
 
 	@GetMapping("/status")

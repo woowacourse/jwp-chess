@@ -22,6 +22,7 @@ public class SpringChessService {
     public static final int BOARD_CELLS_NUMBER = 64;
     private static final String TURN_MSG_FORMAT = "%s의 순서입니다.";
     private static final String WINNING_MSG_FORMAT = "%s이/가 이겼습니다.";
+    private static final String CAN_NOT_RESUME_ERR_MSG = "해당 게임을 이어할 수 없습니다.";
 
     private final ChessPieceRepository chessPieceRepository;
     private final MoveHistoryRepository moveHistoryRepository;
@@ -31,20 +32,18 @@ public class SpringChessService {
         this.moveHistoryRepository = moveHistoryRepository;
     }
 
-    public boolean canResume(String gameId) {
-        int savedPiecesNumber = chessPieceRepository.countSavedPieces(gameId);
-        return savedPiecesNumber == BOARD_CELLS_NUMBER;
+    public List<String> findRooms() {
+        return chessPieceRepository.findRooms();
     }
 
-    // Todo: chessPieces saveAll로 수정
+    // Todo: saveAll로 저장
     public void startNewGame(String gameId) {
         deleteSavedGame(gameId);
 
         Board board = new Board();
-
         List<ChessPiece> chessPieces = createChessPieces(gameId, board);
         for (ChessPiece chessPiece : chessPieces) {
-            chessPieceRepository.savePiece(gameId, chessPiece.getPosition(), chessPiece.getPiece());
+            chessPieceRepository.savePiece(chessPiece.getGameId(), chessPiece.getPosition(), chessPiece.getPiece());
         }
     }
 
@@ -58,6 +57,10 @@ public class SpringChessService {
     }
 
     public void resumeGame(String gameId) {
+        if (!canResume(gameId)) {
+            throw new IllegalArgumentException(CAN_NOT_RESUME_ERR_MSG);
+        }
+
         Board board = new Board();
         List<ChessPiece> chessPieces = chessPieceRepository.findByGameId(gameId);
         Optional<String> lastTurn = moveHistoryRepository.findLastTurn(gameId);
@@ -70,6 +73,12 @@ public class SpringChessService {
         board.recoverBoard(savedBoard, lastTurn);
     }
 
+    private boolean canResume(String gameId) {
+        int savedPiecesNumber = chessPieceRepository.countSavedPieces(gameId);
+        return savedPiecesNumber == BOARD_CELLS_NUMBER;
+    }
+
+    // Todo: 받아온 보드의 piece로 save
     public void move(String gameId, String sourceName, String targetName) {
         Board board = new Board();
         List<ChessPiece> chessPieces = chessPieceRepository.findByGameId(gameId);
@@ -113,8 +122,8 @@ public class SpringChessService {
         return "";
     }
 
-
     // Todo: piece을 symbol로 저장? -> convertPieces 삭제, recoverBoard 메서드 사용하지 않고, 보드 생성하지 않고 진행하게
+
     public Map<String, Object> provideGameInfo(String gameId) {
         Board board = new Board();
         List<ChessPiece> chessPieces = chessPieceRepository.findByGameId(gameId);

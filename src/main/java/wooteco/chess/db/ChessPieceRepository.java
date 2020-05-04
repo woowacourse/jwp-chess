@@ -18,9 +18,6 @@ public interface ChessPieceRepository extends CrudRepository<ChessPiece, String>
     @Query("INSERT INTO board_status (game_id, position, piece) VALUES (:gameId, :position, :piece)")
     void savePiece(String gameId, String position, String piece);
 
-    @Query("SELECT piece FROM board_status WHERE game_id = :game_id AND position = :position")
-    String findPieceNameByPosition(@Param("game_id") String gameId, @Param("position") String position);
-
     @Modifying
     @Query("UPDATE board_status SET piece = :piece WHERE game_id = :game_id AND position = :position")
     void updatePiece(@Param("game_id") String gameId, @Param("position") String position, @Param("piece") String piece);
@@ -30,4 +27,7 @@ public interface ChessPieceRepository extends CrudRepository<ChessPiece, String>
 
     @Query("SELECT * FROM board_status WHERE game_id = :gameId")
     List<ChessPiece> findByGameId(String gameId);
+
+    @Query("SELECT game_id FROM board_status GROUP BY game_id")
+    List<String> findRooms();
 }

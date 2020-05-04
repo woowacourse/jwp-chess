@@ -6,25 +6,49 @@
 </head>
 <body>
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
- <script type="text/javascript">
-     $(document).ready(function () {
-                      $("#game_id").keydown(function(key) {
-                     if (key.keyCode == 13) {
-                         goReadyPage();
-                     }
-                 });
-             });
+    <script type="text/javascript">
+        $(document).ready(function () {
+            const rooms = document.querySelector("#rooms");
+            rooms.addEventListener("click", onClickEnterRoom);
 
-     function goReadyPage(){
-        var game_id = document.getElementById("game_id").value;
-        var form = document.getElementById("readyForm");
-        form.setAttribute("action", "/ready/" + game_id);
-        form.submit();
-     }
-</script>
-<form id="readyForm" action="/ready/" method="post">
-    <input id="game_id" name="game_id" placeholder="게임을 저장하기 위한 이름을 입력해주세요." type="text"/>
-    <input type="button" onClick ="goReadyPage()" value="입장"/>
-</form>
+            $("#game_id").keydown(function(key) {
+             if (key.keyCode == 13) {
+                 goReadyPage();
+             }
+            });
+        });
+
+        function goReadyPage(){
+            var game_id = document.getElementById("game_id").value;
+            var form = document.getElementById("readyForm");
+            form.setAttribute("action", "/play");
+            form.submit();
+        }
+
+        function onClickEnterRoom(event) {
+            if(event.target && event.target.className === 'room') {
+                var form = document.createElement('form');
+                form.setAttribute('method', 'post');
+                form.setAttribute('action', '/resume');
+                var input = event.target.firstElementChild;
+                form.appendChild(input);
+                this.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+    <form id="readyForm" action="/play" method="post">
+        <input id="game_id" name="game_id" placeholder="체스방 이름을 입력해주세요." type="text"/>
+        <input type="button" onClick ="goReadyPage()" value="방 만들기"/>
+    </form>
+
+    <ul id="rooms">
+        {{#rooms}}
+            <li class="room">
+                <input type="hidden" name="game_id" value="{{.}}">
+                {{.}}입장하기
+            </li>
+        {{/rooms}}
+    </ul>
 </body>
 </html>

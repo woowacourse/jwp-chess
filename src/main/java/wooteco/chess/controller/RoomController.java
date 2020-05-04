@@ -1,24 +1,21 @@
 package wooteco.chess.controller;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import wooteco.chess.entity.Room;
 import wooteco.chess.service.ChessService;
 
 @Controller
-public class ChessController {
+public class RoomController {
 
     private ChessService chessService;
 
-    ChessController(ChessService chessService) {
+    RoomController(ChessService chessService) {
         this.chessService = chessService;
     }
 
@@ -28,10 +25,15 @@ public class ChessController {
     }
 
     @PostMapping("/start")
-    public ModelAndView start(@RequestParam Map<String, String> paramMap) {
+    public String start(@RequestParam String roomName) {
+        return "redirect:/start/" + roomName;
+    }
+
+    @GetMapping("/start/{room}")
+    public ModelAndView room(@PathVariable("room") String roomName) {
         ModelAndView modelAndView = new ModelAndView();
 
-        Room room = new Room(paramMap.get("roomName"));
+        Room room = new Room(roomName);
         modelAndView.addObject("room", room.getName());
         modelAndView.addObject("rows", chessService.getRowsDto(room));
         modelAndView.addObject("turn", chessService.getTurn(room));
@@ -39,38 +41,6 @@ public class ChessController {
         modelAndView.setViewName("board");
 
         return modelAndView;
-    }
-
-    @PostMapping("/path")
-    @ResponseBody
-    public List<String> path(@RequestParam Map<String, String> paramMap) {
-        try {
-            return chessService.searchPath(new Room(paramMap.get("roomName")), paramMap.get("source"));
-        } catch (RuntimeException e) {
-            return Collections.singletonList(e.getMessage());
-        }
-    }
-
-    @PostMapping("/move")
-    @ResponseBody
-    public Map<String, Object> move(@RequestParam Map<String, String> paramMap) {
-        Room blackRoom = new Room(paramMap.get("roomName"));
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("isNotFinished", false);
-        model.put("message", "");
-
-        try {
-            chessService.move(blackRoom, paramMap.get("source"), paramMap.get("target"));
-            model.put("white", chessService.calculateWhiteScore(blackRoom));
-            model.put("black", chessService.calculateBlackScore(blackRoom));
-        } catch (RuntimeException e) {
-            model.put("message", e.getMessage());
-        }
-        if (chessService.checkGameNotFinished(blackRoom)) {
-            model.put("isNotFinished", true);
-        }
-        return model;
     }
 
     @PostMapping("/save")
@@ -89,8 +59,11 @@ public class ChessController {
 
     private ModelAndView createEmptyModelAndView() {
         ModelAndView modelAndView = new ModelAndView();
+
         modelAndView.addObject("rows", chessService.getEmptyRowsDto());
+        modelAndView.addObject("rooms", chessService.getRooms());
         modelAndView.setViewName("main");
+
         return modelAndView;
     }
 }

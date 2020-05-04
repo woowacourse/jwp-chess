@@ -47,9 +47,32 @@
 - [x] Command 입력
 - [x] Board 출력
 - [x] Score 출력
-- [ ] 방 목록 출력
+- [x] 방 목록 출력
 
 ### Framework
-- [x] Spark
 - [x] Spring
 - [x] Spring Data JDBC
+
+```
+create database wootechchess if not exists default character set utf8 collate utf8_general_ci;
+
+create table if not exists room
+(
+    id bigint auto_increment primary key,
+    name varchar(64) not null,
+    unique(name)
+) default character set utf8 collate utf8_general_ci;
+
+create table if not exists game
+(
+    room bigint,
+    turn int not null
+) default character set utf8 collate utf8_general_ci;
+
+create table if not exists cell
+(
+    game bigint not null,
+    position varchar(64) not null,
+    piece varchar(64) not null
+) default character set utf8 collate utf8_general_ci;
+```

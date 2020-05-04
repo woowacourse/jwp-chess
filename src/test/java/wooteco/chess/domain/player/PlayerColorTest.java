@@ -24,24 +24,25 @@ class PlayerColorTest {
 
     static Stream<Arguments> createPlayer() {
         return Stream.of(
-                Arguments.of(PlayerColor.BLACK, "K"),
-                Arguments.of(PlayerColor.WHITE, "k")
+            Arguments.of(PlayerColor.BLACK, "K"),
+            Arguments.of(PlayerColor.WHITE, "k")
         );
     }
 
     @ParameterizedTest
     @DisplayName("플레이어별 기물 초기 위치")
     @MethodSource("createPosition")
-    void reviseInitialPosition(PlayerColor playerColor, List<Position> initial, List<Position> expected) {
+    void reviseInitialPosition(PlayerColor playerColor, List<Position> initial,
+        List<Position> expected) {
         assertThat(playerColor.reviseInitialPositions(initial)).isEqualTo(expected);
     }
 
     static Stream<Arguments> createPosition() {
         return Stream.of(
-                Arguments.of(PlayerColor.BLACK, Collections.singletonList(Position.from("b1")),
-                        Collections.singletonList(Position.from("b8"))),
-                Arguments.of(PlayerColor.WHITE, Collections.singletonList(Position.from("b1")),
-                        Collections.singletonList(Position.from("b1")))
+            Arguments.of(PlayerColor.BLACK, Collections.singletonList(Position.from("b1")),
+                Collections.singletonList(Position.from("b8"))),
+            Arguments.of(PlayerColor.WHITE, Collections.singletonList(Position.from("b1")),
+                Collections.singletonList(Position.from("b1")))
         );
     }
 }

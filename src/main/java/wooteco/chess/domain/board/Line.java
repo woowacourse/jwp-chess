@@ -19,17 +19,18 @@ public class Line {
 
     public static List<Line> listByColumn(Map<Position, GamePiece> gamePieces) {
         Map<Column, Line> columns = gamePieces.entrySet()
-                .stream()
-                .collect(groupingBy(entry -> entry.getKey().getColumn(),       // key(column)
-                        mapping(Map.Entry::getValue, collectingAndThen(toList(), Line::new)))); // value(Line)
+            .stream()
+            .collect(groupingBy(entry -> entry.getKey().getColumn(),       // key(column)
+                mapping(Map.Entry::getValue,
+                    collectingAndThen(toList(), Line::new)))); // value(Line)
 
         return new ArrayList<>(columns.values());
     }
 
     public int countPawnOf(PlayerColor playerColor) {
         return (int)line.stream()
-                .filter(piece -> piece.isSame(playerColor))
-                .filter(GamePiece::isPawn)
-                .count();
+            .filter(piece -> piece.isSame(playerColor))
+            .filter(GamePiece::isPawn)
+            .count();
     }
 }

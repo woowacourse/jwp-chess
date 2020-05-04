@@ -9,7 +9,8 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("room")
 public class Room {
 
-    private static final int MAXIMUM_LENGTH = 10;
+    private static final int MAXIMUM_LENGTH = 64;
+    private static final String EMPTY = "";
 
     @Id
     private Long id;
@@ -34,6 +35,9 @@ public class Room {
     private void validateName(String name) {
         if (name.length() > MAXIMUM_LENGTH) {
             throw new IllegalArgumentException("이름은 최대 10자입니다.");
+        }
+        if (EMPTY.equals(name)) {
+            throw new IllegalArgumentException("빈 이름은 사용할 수 없습니다.");
         }
     }
 

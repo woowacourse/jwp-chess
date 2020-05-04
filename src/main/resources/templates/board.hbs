@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <title>Chess</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="public/css/board.css">
+    <link rel="stylesheet" href="../public/css/board.css">
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script src="./js/board.js"></script>
+    <script src="../js/board.js"></script>
 </head>
 
-<body background="./img/treeboard.png">
+<body background="../img/treeboard.png">
     <div id="app">
         <div class="turn-number">{{turn}}</div>
         <div class="board">
@@ -18,7 +18,7 @@
             <div class="row">
                 {{#gamePieces}}
                 <div id="{{position.name}}" class="cell">
-                    <img src="./img/{{playerColor.name}}_{{name}}.png">
+                    <img src="../img/{{playerColor.name}}_{{name}}.png">
                 </div>
                 {{/gamePieces}}
             </div>
@@ -26,7 +26,7 @@
         </div>
         <div class="side">
             <div class="room">
-                <img src="./img/BLACK_P.png">
+                <img src="../img/BLACK_P.png">
                 <div class="room-status">
                     <div class="game">
                         <p class="room-name">BLACK</p>
@@ -42,13 +42,13 @@
                 </form>
             </div>
             <div class="button">
-                <form action="/end" method="post">
+                <form action="/end">
                     <input type="hidden" name="roomName" value="{{room}}">
                     <input type="submit" value="END">
                 </form>
             </div>
             <div class="room">
-                <img src="./img/WHITE_p.png">
+                <img src="../img/WHITE_p.png">
                 <div class="room-status">
                     <div class="game">
                         <p class="room-name">WHITE</p>

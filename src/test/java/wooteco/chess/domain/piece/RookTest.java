@@ -36,7 +36,7 @@ class RookTest {
     @MethodSource("createSourceToTarget")
     void findMovePath(Position source, Position target, List<Position> expected) {
         Map<Position, GamePiece> boardMap = new TreeMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         boardMap.put(source, gamePiece);
 
         Board board = BoardFactory.of(boardMap);
@@ -49,15 +49,15 @@ class RookTest {
 
     static Stream<Arguments> createSourceToTarget() {
         return Stream.of(
-                Arguments.of(Position.from("a1"), Position.from("a4"),
-                        Arrays.asList(Position.from("a2"), Position.from("a3"))),
-                Arguments.of(Position.from("a4"), Position.from("a1"),
-                        Arrays.asList(Position.from("a3"), Position.from("a2"))),
-                Arguments.of(Position.from("b2"), Position.from("f2"),
-                        Arrays.asList(Position.from("c2"), Position.from("d2"), Position.from("e2"))),
-                Arguments.of(Position.from("f2"), Position.from("b2"),
-                        Arrays.asList(Position.from("e2"), Position.from("d2"), Position.from("c2"))),
-                Arguments.of(Position.from("g5"), Position.from("g4"), Collections.emptyList())
+            Arguments.of(Position.from("a1"), Position.from("a4"),
+                Arrays.asList(Position.from("a2"), Position.from("a3"))),
+            Arguments.of(Position.from("a4"), Position.from("a1"),
+                Arrays.asList(Position.from("a3"), Position.from("a2"))),
+            Arguments.of(Position.from("b2"), Position.from("f2"),
+                Arrays.asList(Position.from("c2"), Position.from("d2"), Position.from("e2"))),
+            Arguments.of(Position.from("f2"), Position.from("b2"),
+                Arrays.asList(Position.from("e2"), Position.from("d2"), Position.from("c2"))),
+            Arguments.of(Position.from("g5"), Position.from("g4"), Collections.emptyList())
         );
     }
 
@@ -67,7 +67,7 @@ class RookTest {
     void invalidMovementException(Position target) {
         Position source = Position.from("d5");
         Map<Position, GamePiece> boardMap = new TreeMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         boardMap.put(source, gamePiece);
 
         Board board = BoardFactory.of(boardMap);
@@ -75,19 +75,19 @@ class RookTest {
         assertThatThrownBy(() -> {
             gamePiece.validateMoveTo(board, source, target);
         }).isInstanceOf(InvalidMovementException.class)
-                .hasMessage("이동할 수 없습니다.\n이동할 수 없는 경로입니다.");
+            .hasMessage("이동할 수 없습니다.\n이동할 수 없는 경로입니다.");
     }
 
     static Stream<Arguments> createInvalidTarget() {
         return Stream.of(
-                Arguments.of(Position.from("e7")),
-                Arguments.of(Position.from("f6")),
-                Arguments.of(Position.from("f4")),
-                Arguments.of(Position.from("e3")),
-                Arguments.of(Position.from("e4")),
-                Arguments.of(Position.from("c4")),
-                Arguments.of(Position.from("c6")),
-                Arguments.of(Position.from("c7"))
+            Arguments.of(Position.from("e7")),
+            Arguments.of(Position.from("f6")),
+            Arguments.of(Position.from("f4")),
+            Arguments.of(Position.from("e3")),
+            Arguments.of(Position.from("e4")),
+            Arguments.of(Position.from("c4")),
+            Arguments.of(Position.from("c6")),
+            Arguments.of(Position.from("c7"))
         );
     }
 
@@ -95,7 +95,7 @@ class RookTest {
     @DisplayName("장애물이 있을 경우")
     void obstacle() {
         Map<Position, GamePiece> boardMap = new TreeMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         Position source = Position.from("d5");
         Position target = Position.from("g5");
 
@@ -109,6 +109,6 @@ class RookTest {
         assertThatThrownBy(() -> {
             gamePiece.validateMoveTo(board, source, target);
         }).isInstanceOf(InvalidMovementException.class)
-                .hasMessage("이동할 수 없습니다.\n경로에 기물이 존재합니다.");
+            .hasMessage("이동할 수 없습니다.\n경로에 기물이 존재합니다.");
     }
 }

@@ -19,7 +19,7 @@ public abstract class GamePiece {
     protected final int moveCount;
 
     protected GamePiece(String name, double score, PlayerColor playerColor,
-            List<Direction> directions, int moveCount) {
+        List<Direction> directions, int moveCount) {
         this.directions = directions;
         this.moveCount = moveCount;
         this.name = playerColor.decideName(name);
@@ -67,19 +67,19 @@ public abstract class GamePiece {
 
     private List<Position> findPath(Position source, Position target) {
         return directions.stream()
-                .map(direction -> source.pathTo(direction, moveCount))
-                .filter(eachPath -> eachPath.contains(target))
-                .findFirst()
-                .orElseThrow(() -> new InvalidMovementException("이동할 수 없는 경로입니다."));
+            .map(direction -> source.pathTo(direction, moveCount))
+            .filter(eachPath -> eachPath.contains(target))
+            .findFirst()
+            .orElseThrow(() -> new InvalidMovementException("이동할 수 없는 경로입니다."));
     }
 
     private void validateObstacle(Board board, Position target, List<Position> path) {
         pathFromSourceToTarget(target, path).stream()
-                .filter(board::isNotEmpty)
-                .findFirst()
-                .ifPresent(position -> {
-                    throw new InvalidMovementException("경로에 기물이 존재합니다.");
-                });
+            .filter(board::isNotEmpty)
+            .findFirst()
+            .ifPresent(position -> {
+                throw new InvalidMovementException("경로에 기물이 존재합니다.");
+            });
     }
 
     protected List<Position> pathFromSourceToTarget(Position target, List<Position> path) {

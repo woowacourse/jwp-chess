@@ -35,7 +35,7 @@ class KingTest {
     void findMovePath(Position target, List<Position> expected) {
         Position source = Position.from("d5");
         Map<Position, GamePiece> boardMap = new TreeMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         boardMap.put(source, gamePiece);
 
         Board board = BoardFactory.of(boardMap);
@@ -47,14 +47,14 @@ class KingTest {
 
     static Stream<Arguments> createSourceToTarget() {
         return Stream.of(
-                Arguments.of(Position.from("d6"), Collections.emptyList()),
-                Arguments.of(Position.from("e6"), Collections.emptyList()),
-                Arguments.of(Position.from("e5"), Collections.emptyList()),
-                Arguments.of(Position.from("e4"), Collections.emptyList()),
-                Arguments.of(Position.from("d4"), Collections.emptyList()),
-                Arguments.of(Position.from("c4"), Collections.emptyList()),
-                Arguments.of(Position.from("c5"), Collections.emptyList()),
-                Arguments.of(Position.from("c6"), Collections.emptyList())
+            Arguments.of(Position.from("d6"), Collections.emptyList()),
+            Arguments.of(Position.from("e6"), Collections.emptyList()),
+            Arguments.of(Position.from("e5"), Collections.emptyList()),
+            Arguments.of(Position.from("e4"), Collections.emptyList()),
+            Arguments.of(Position.from("d4"), Collections.emptyList()),
+            Arguments.of(Position.from("c4"), Collections.emptyList()),
+            Arguments.of(Position.from("c5"), Collections.emptyList()),
+            Arguments.of(Position.from("c6"), Collections.emptyList())
         );
     }
 
@@ -64,7 +64,7 @@ class KingTest {
     void invalidMovementException(Position target) {
         Position source = Position.from("d5");
         Map<Position, GamePiece> boardMap = new TreeMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         boardMap.put(source, gamePiece);
 
         Board board = BoardFactory.of(boardMap);
@@ -72,16 +72,16 @@ class KingTest {
         assertThatThrownBy(() -> {
             gamePiece.validateMoveTo(board, source, target);
         }).isInstanceOf(InvalidMovementException.class)
-                .hasMessage("이동할 수 없습니다.\n이동할 수 없는 경로입니다.");
+            .hasMessage("이동할 수 없습니다.\n이동할 수 없는 경로입니다.");
     }
 
     static Stream<Arguments> createInvalidTarget() {
         return Stream.of(
-                Arguments.of(Position.from("b5")),
-                Arguments.of(Position.from("b6")),
-                Arguments.of(Position.from("c7")),
-                Arguments.of(Position.from("d7")),
-                Arguments.of(Position.from("g6"))
+            Arguments.of(Position.from("b5")),
+            Arguments.of(Position.from("b6")),
+            Arguments.of(Position.from("c7")),
+            Arguments.of(Position.from("d7")),
+            Arguments.of(Position.from("g6"))
         );
     }
 }

@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Status {
 
-    private static final int INIT_TURN = 0;
+    public static final int INIT_TURN = 0;
 
     private final int turn;
     private final StatusType statusType;
@@ -62,7 +62,7 @@ public class Status {
             return false;
         Status status = (Status)o;
         return turn == status.turn &&
-                statusType == status.statusType;
+            statusType == status.statusType;
     }
 
     @Override

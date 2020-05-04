@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.board.Status;
 import wooteco.chess.domain.gameinfo.GameInfo;
 import wooteco.chess.dto.LineDto;
 import wooteco.chess.dto.RowsDtoConverter;
@@ -29,16 +30,16 @@ public class ChessService {
 
     public GameInfo findByRoom(Room room) {
         if (!roomRepository.findByName(room.getName()).isPresent()) {
-            GameEntity gameEntity = new GameEntity(0);
+            GameEntity gameEntity = new GameEntity(Status.INIT_TURN);
             gameEntity.addBoard(BoardFactory.createInitialBoard());
             room.updateGame(gameEntity);
             roomRepository.save(room);
         }
         Room saved = roomRepository.findByName(room.getName()).orElseThrow(AssertionError::new);
         Board board = saved.getGame()
-                .createBoard();
+            .createBoard();
         int turn = saved.getGame()
-                .getTurn();
+            .getTurn();
         GameInfo gameInfo = GameInfo.from(board, turn);
         gameRepository.save(saved, gameInfo);
         return gameInfo;
@@ -46,7 +47,7 @@ public class ChessService {
 
     public void move(Room room, String source, String target) {
         GameInfo gameInfo = gameRepository.findByRoom(room)
-                .move(source, target);
+            .move(source, target);
         gameRepository.save(room, gameInfo);
     }
 
@@ -68,10 +69,10 @@ public class ChessService {
 
     public List<String> searchPath(Room room, String sourceInput) {
         return gameRepository.findByRoom(room)
-                .searchPath(sourceInput)
-                .stream()
-                .map(Position::getName)
-                .collect(Collectors.toList());
+            .searchPath(sourceInput)
+            .stream()
+            .map(Position::getName)
+            .collect(Collectors.toList());
     }
 
     public List<LineDto> getEmptyRowsDto() {
@@ -85,30 +86,34 @@ public class ChessService {
 
     public int getTurn(Room room) {
         return gameRepository.findByRoom(room)
-                .getStatus()
-                .getTurn();
+            .getStatus()
+            .getTurn();
     }
 
     public double calculateWhiteScore(Room room) {
         return gameRepository.findByRoom(room)
-                .getWhiteScore()
-                .getScore();
+            .getWhiteScore()
+            .getScore();
     }
 
     public double calculateBlackScore(Room room) {
         return gameRepository.findByRoom(room)
-                .getBlackScore()
-                .getScore();
+            .getBlackScore()
+            .getScore();
     }
 
     public boolean checkGameNotFinished(Room room) {
         return gameRepository.findByRoom(room)
-                .getStatus()
-                .isNotFinished();
+            .getStatus()
+            .isNotFinished();
     }
 
     public Board getBoard(Room room) {
         return gameRepository.findByRoom(room)
-                .getBoard();
+            .getBoard();
+    }
+
+    public List<Room> getRooms() {
+        return roomRepository.findAll();
     }
 }

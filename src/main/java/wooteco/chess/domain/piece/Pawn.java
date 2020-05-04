@@ -19,8 +19,8 @@ public class Pawn extends GamePiece {
     private static final int SCORE = 1;
     private static final int MOVE_COUNT = 1;
     private static List<Position> originalPositions = Arrays.stream(Column.values()).
-            map(file -> Position.of(file, Row.TWO))
-            .collect(Collectors.toList());
+        map(file -> Position.of(file, Row.TWO))
+        .collect(Collectors.toList());
 
     private static final int FIRST_MOVE_COUNT = 2;
     private Direction moveDirection;
@@ -78,7 +78,7 @@ public class Pawn extends GamePiece {
 
     private void checkKillPosition(Board board, Position position, List<Position> paths) {
         if (position != null && board.isNotEmpty(position)
-                && board.isNotSameColor(this, position)) {
+            && board.isNotSameColor(this, position)) {
             paths.add(position);
         }
     }
@@ -95,10 +95,10 @@ public class Pawn extends GamePiece {
 
     private void validateKillPath(Position source, Position target) {
         killDirections.stream()
-                .map(direction -> source.pathTo(direction, moveCount))
-                .filter(eachPath -> eachPath.contains(target))
-                .findFirst()
-                .orElseThrow(() -> new InvalidMovementException("이동할 수 없는 경로입니다."));
+            .map(direction -> source.pathTo(direction, moveCount))
+            .filter(eachPath -> eachPath.contains(target))
+            .findFirst()
+            .orElseThrow(() -> new InvalidMovementException("이동할 수 없는 경로입니다."));
     }
 
     private void validateMovePath(Board board, Position source, Position target) {
@@ -109,11 +109,11 @@ public class Pawn extends GamePiece {
         }
 
         pathFromSourceToTarget(target, path).stream()
-                .filter(board::isNotEmpty)
-                .findFirst()
-                .ifPresent(position -> {
-                    throw new InvalidMovementException("경로에 기물이 존재합니다.");
-                });
+            .filter(board::isNotEmpty)
+            .findFirst()
+            .ifPresent(position -> {
+                throw new InvalidMovementException("경로에 기물이 존재합니다.");
+            });
     }
 
     @Override

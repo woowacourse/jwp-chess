@@ -16,7 +16,8 @@ public enum PlayerColor {
     private final Function<String, String> nameDecider;
     private final Function<Position, Position> positionReviser;
 
-    PlayerColor(String name, Function<String, String> nameDecider, Function<Position, Position> positionReviser) {
+    PlayerColor(String name, Function<String, String> nameDecider,
+        Function<Position, Position> positionReviser) {
         this.name = name;
         this.nameDecider = nameDecider;
         this.positionReviser = positionReviser;
@@ -28,8 +29,8 @@ public enum PlayerColor {
 
     public List<Position> reviseInitialPositions(List<Position> positions) {
         return positions.stream()
-                .map(positionReviser)
-                .collect(Collectors.toList());
+            .map(positionReviser)
+            .collect(Collectors.toList());
     }
 
     public String getName() {

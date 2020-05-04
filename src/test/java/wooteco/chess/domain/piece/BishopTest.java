@@ -37,7 +37,7 @@ class BishopTest {
     @MethodSource("createSourceToTarget")
     void findMovePath(Position source, Position target, List<Position> expected) {
         Map<Position, GamePiece> boardMap = new TreeMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         boardMap.put(source, gamePiece);
 
         Board board = BoardFactory.of(boardMap);
@@ -50,15 +50,15 @@ class BishopTest {
 
     static Stream<Arguments> createSourceToTarget() {
         return Stream.of(
-                Arguments.of(Position.from("a1"), Position.from("d4"),
-                        Arrays.asList(Position.from("b2"), Position.from("c3"))),
-                Arguments.of(Position.from("d4"), Position.from("a1"),
-                        Arrays.asList(Position.from("c3"), Position.from("b2"))),
-                Arguments.of(Position.from("b2"), Position.from("f6"),
-                        Arrays.asList(Position.from("c3"), Position.from("d4"), Position.from("e5"))),
-                Arguments.of(Position.from("f6"), Position.from("b2"),
-                        Arrays.asList(Position.from("e5"), Position.from("d4"), Position.from("c3"))),
-                Arguments.of(Position.from("g5"), Position.from("f4"), Collections.emptyList())
+            Arguments.of(Position.from("a1"), Position.from("d4"),
+                Arrays.asList(Position.from("b2"), Position.from("c3"))),
+            Arguments.of(Position.from("d4"), Position.from("a1"),
+                Arrays.asList(Position.from("c3"), Position.from("b2"))),
+            Arguments.of(Position.from("b2"), Position.from("f6"),
+                Arrays.asList(Position.from("c3"), Position.from("d4"), Position.from("e5"))),
+            Arguments.of(Position.from("f6"), Position.from("b2"),
+                Arrays.asList(Position.from("e5"), Position.from("d4"), Position.from("c3"))),
+            Arguments.of(Position.from("g5"), Position.from("f4"), Collections.emptyList())
         );
     }
 
@@ -68,7 +68,7 @@ class BishopTest {
     void invalidMovementException(Position target) {
         Position source = Position.from("d5");
         Map<Position, GamePiece> boardMap = new TreeMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         boardMap.put(source, gamePiece);
 
         Board board = BoardFactory.of(boardMap);
@@ -76,15 +76,15 @@ class BishopTest {
         assertThatThrownBy(() -> {
             gamePiece.validateMoveTo(board, source, target);
         }).isInstanceOf(InvalidMovementException.class)
-                .hasMessage("이동할 수 없습니다.\n이동할 수 없는 경로입니다.");
+            .hasMessage("이동할 수 없습니다.\n이동할 수 없는 경로입니다.");
     }
 
     static Stream<Arguments> createInvalidTarget() {
         return Stream.of(
-                Arguments.of(Position.from("c5")),
-                Arguments.of(Position.from("e5")),
-                Arguments.of(Position.from("d6")),
-                Arguments.of(Position.from("g3"))
+            Arguments.of(Position.from("c5")),
+            Arguments.of(Position.from("e5")),
+            Arguments.of(Position.from("d6")),
+            Arguments.of(Position.from("g3"))
         );
     }
 
@@ -92,7 +92,7 @@ class BishopTest {
     @DisplayName("장애물이 있을 경우")
     void obstacle() {
         Map<Position, GamePiece> boardMap = new TreeMap<>(
-                BoardFactory.EMPTY_BOARD.getBoard());
+            BoardFactory.EMPTY_BOARD.getBoard());
         Position source = Position.from("d5");
         Position target = Position.from("f7");
 
@@ -106,6 +106,6 @@ class BishopTest {
         assertThatThrownBy(() -> {
             gamePiece.validateMoveTo(board, source, target);
         }).isInstanceOf(InvalidMovementException.class)
-                .hasMessage("이동할 수 없습니다.\n경로에 기물이 존재합니다.");
+            .hasMessage("이동할 수 없습니다.\n경로에 기물이 존재합니다.");
     }
 }

@@ -6,6 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import wooteco.chess.dto.ChessRoom;
 
+import java.util.List;
+
 public interface ChessRoomRepository extends CrudRepository<ChessRoom, Long> {
     @Modifying
     @Query("INSERT INTO chess_room VALUES (:id, :room_name)")
@@ -13,4 +15,7 @@ public interface ChessRoomRepository extends CrudRepository<ChessRoom, Long> {
 
     @Query("SELECT room_name FROM chess_room WHERE id = :id ")
     String findRoomNameById(@Param("id") Long id);
+
+    @Query("SELECT * FROM chess_room")
+    List<ChessRoom> findAllChessRoom();
 }

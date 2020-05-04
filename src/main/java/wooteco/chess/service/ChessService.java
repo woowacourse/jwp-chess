@@ -16,8 +16,7 @@ import java.util.*;
 public class ChessService {
     private static final String MOVE_ERROR_MESSAGE = "이동할 수 없는 곳입니다. 다시 입력해주세요";
     private static final String MOVE_DELIMITER = " ";
-    private static Random random;
-    private CommandRepository commandRepository;
+    private final CommandRepository commandRepository;
     private ChessRoomRepository chessRoomRepository;
     private ChessManager chessManager;
 
@@ -27,12 +26,16 @@ public class ChessService {
     }
 
     public void playNewGame(String roomName) {
-        long seed = System.currentTimeMillis();
-        random = new Random(seed);
-        long randomNumber = random.nextInt(10000);
+        long randomNumber = createChessRoomNumber();
         chessRoomRepository.saveRoom(randomNumber, roomName);
         chessManager = new ChessManager(randomNumber);
         chessManager.start();
+    }
+
+    private long createChessRoomNumber() {
+        long seed = System.currentTimeMillis();
+        Random random = new Random(seed);
+        return random.nextInt(10000);
     }
 
     public void playLastGame(Long roomNumber) {
@@ -45,13 +48,13 @@ public class ChessService {
         }
 
         for (Commands command : allByRoomNumber) {
-            System.out.println(command.getRoomNumber() + command.getCommand() + " 여기라구욥");
             Command.MOVE.apply(chessManager, command.getCommand());
         }
     }
 
     public void move(Long roomNumber, String source, String target) {
         String command = String.join(MOVE_DELIMITER, new String[]{"move", source, target});
+
         try {
             Command.MOVE.apply(chessManager, command);
             saveToDatabase(roomNumber, command);
@@ -59,6 +62,10 @@ public class ChessService {
             throw new IllegalArgumentException(MOVE_ERROR_MESSAGE);
         }
 
+        checkGameOver(roomNumber);
+    }
+
+    private void checkGameOver(Long roomNumber) {
         if (!chessManager.isPlaying()) {
             chessRoomRepository.deleteById(roomNumber);
             commandRepository.deleteById(roomNumber);
@@ -93,12 +100,7 @@ public class ChessService {
     }
 
     public List<ChessRoom> findAllRooms() {
-        Iterable<ChessRoom> iterChessRooms = chessRoomRepository.findAll();
-        List<ChessRoom> chessRooms = new ArrayList<>();
-        for (ChessRoom chessRoom : iterChessRooms) {
-            chessRooms.add(chessRoom);
-        }
-        return chessRooms;
+        return chessRoomRepository.findAllChessRoom();
     }
 
     public String getRoomName(Long id) {

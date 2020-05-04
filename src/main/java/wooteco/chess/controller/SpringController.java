@@ -1,6 +1,7 @@
 package wooteco.chess.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -12,11 +13,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import wooteco.chess.domain.Result;
 import wooteco.chess.domain.chessboard.Board;
 import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.position.Position;
+import wooteco.chess.entity.BoardEntity;
 import wooteco.chess.service.ChessService;
 
 @Controller
@@ -28,8 +31,12 @@ public class SpringController {
 	}
 
 	@GetMapping("/")
-	public String index() {
-		return "index";
+	public ModelAndView index() {
+		ModelAndView modelAndView = new ModelAndView();
+		List<BoardEntity> roomIds = chessService.findRoomIds();
+		modelAndView.setViewName("index");
+		modelAndView.addObject("roomIds", roomIds);
+		return modelAndView;
 	}
 
 	@GetMapping("/chess/{roomId}")
@@ -39,7 +46,7 @@ public class SpringController {
 	}
 
 	@GetMapping("/exit")
-	public String roomExit() {
+	public ModelAndView roomExit() {
 		return index();
 	}
 

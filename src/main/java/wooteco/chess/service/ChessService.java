@@ -1,6 +1,7 @@
 package wooteco.chess.service;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -43,11 +44,14 @@ public class ChessService {
 	}
 
 	public Board init(Long id) {
-		// TODO id를 roomID로 mapping
 		BoardEntity boardEntity = boardRepository.findById(id)
 			.orElseGet(() -> boardRepository.save(BoardEntity.from(BoardFactory.create())));
 		return boardEntity.createBoard();
 
+	}
+
+	public List<BoardEntity> findRoomIds() {
+		return boardRepository.findAll();
 	}
 
 	public Board restart(Long id) {

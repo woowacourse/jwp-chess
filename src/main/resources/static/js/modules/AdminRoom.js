@@ -1,7 +1,16 @@
 import {EVENT_TYPE, KEY_TYPE} from "../../utils/constants.js";
 import {listItemTemplate} from "../../utils/templates.js";
 
-let count = 1;
+let currentTop = getCount();
+
+function getCount() {
+    const $lastRoomId = document.querySelector("#room-list").lastElementChild.innerText;
+
+    if ($lastRoomId) {
+        return parseInt($lastRoomId) + 1;
+    }
+    return 1;
+}
 
 function AdminRoom() {
     const $roomList = document.querySelector("#room-list");
@@ -16,13 +25,13 @@ function AdminRoom() {
         $.ajax({
             type: 'get',
             url: '/add',
-            data: {roomId: count},
+            data: {roomId: currentTop},
             error: function (request, status, error) {
                 alert(request.status + "\n" + request.responseText + "\n" + error + "\n" + status);
             },
             success: function () {
                 alert('방 추가!');
-                $roomList.insertAdjacentHTML("beforeend", listItemTemplate(count++));
+                $roomList.insertAdjacentHTML("beforeend", listItemTemplate(currentTop++));
             }
         });
     };

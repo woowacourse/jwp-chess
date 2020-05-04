@@ -26,8 +26,8 @@ public class WebController {
 	}
 
 	@GetMapping("/")
-	public ModelAndView index() {
-		return new ModelAndView("index");
+	public String index() {
+		return "index.html";
 	}
 
 	@GetMapping("/api/rooms")

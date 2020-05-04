@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import wooteco.chess.db.BoardMapper;
 import wooteco.chess.db.entity.BoardEntity;
+import wooteco.chess.db.entity.PlayerEntity;
 import wooteco.chess.db.entity.RoomEntity;
 import wooteco.chess.db.repository.BoardRepository;
 import wooteco.chess.db.repository.PlayerRepository;
@@ -33,14 +34,13 @@ public class SpringGameService {
 		this.playerRepository = playerRepository;
 	}
 
-	public Board createBoard(long roomId) {
+	public void createBoard(long roomId) {
 		Board board = BoardFactory.create();
 		List<BoardEntity> boardEntities = BoardMapper.createMappers(board);
 		for (BoardEntity boardEntity : boardEntities) {
 			boardEntity.setRoomId(roomId);
 			boardRepository.save(boardEntity);
 		}
-		return board;
 	}
 
 	public GameDto load(long roomId) {
@@ -48,7 +48,9 @@ public class SpringGameService {
 		Board board = BoardMapper.create(boardEntity);
 		RoomEntity room = roomRepository.findById(roomId)
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방 번호입니다."));
-		Turn turn = Turn.from(playerRepository.findById(room.getTurnId()).get().getTeam());
+		PlayerEntity turnPlayer = playerRepository.findById(room.getTurnId())
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Player입니다."));
+		Turn turn = Turn.from(turnPlayer.getTeam());
 		ChessGame chessGame = new ChessGame(new Playing(board, turn));
 		return new GameDto(board.getBoard(), turn, chessGame.status());
 	}

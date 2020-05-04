@@ -1,5 +1,3 @@
-
-
 CREATE TABLE room
   (
       id    bigint       NOT NULL auto_increment,

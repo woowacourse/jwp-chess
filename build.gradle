@@ -16,8 +16,6 @@ dependencies {
 	compile('com.h2database:h2')
 	compile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
 	compile("mysql:mysql-connector-java:8.0.16")
-	implementation 'com.sparkjava:spark-core:2.9.0'
-	implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
@@ -27,7 +25,7 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	runtimeOnly 'com.h2database:h2'
-    implementation 'junit:junit:4.12'
+	implementation 'junit:junit:4.12'
 }
 
 test {

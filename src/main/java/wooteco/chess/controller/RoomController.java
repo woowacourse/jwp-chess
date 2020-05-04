@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +15,11 @@ import wooteco.chess.service.ChessGameService;
 
 @Controller
 public class RoomController {
-	@Autowired
-	private ChessGameService chessGameService;
+	private final ChessGameService chessGameService;
+
+	public RoomController(ChessGameService chessGameService) {
+		this.chessGameService = chessGameService;
+	}
 
 	@GetMapping("/")
 	public ModelAndView index() {
@@ -29,7 +31,7 @@ public class RoomController {
 
 	@PostMapping("/new")
 	public String createRoom(@RequestParam(defaultValue = "") String name) {
-		if (name == null || name.isEmpty()) {
+		if (name.isEmpty()) {
 			throw new IllegalArgumentException("방 제목이 없습니다.");
 		}
 		RoomEntity roomEntity = chessGameService.createRoom(name);

@@ -1,10 +1,11 @@
-package wooteco.chess.dto;
+package wooteco.chess.dto.response;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import wooteco.chess.domain.GameResult;
 import wooteco.chess.domain.board.ChessBoard;
+import wooteco.chess.dto.CellManager;
 
 public class ChessGameParser {
 	private final ChessBoard chessBoard;

@@ -13,8 +13,9 @@ import wooteco.chess.domain.command.MoveCommand;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceColor;
 import wooteco.chess.domain.piece.PieceType;
-import wooteco.chess.dto.ChessGameParser;
-import wooteco.chess.dto.GameResultParser;
+import wooteco.chess.dto.request.MoveRequestDto;
+import wooteco.chess.dto.response.ChessGameParser;
+import wooteco.chess.dto.response.GameResultParser;
 import wooteco.chess.entity.BoardEntity;
 import wooteco.chess.entity.RoomEntity;
 import wooteco.chess.entity.TurnEntity;
@@ -56,12 +57,13 @@ public class ChessGameService {
 		return new ChessGameParser(chessBoard, roomId);
 	}
 
-	public ChessGameParser movePiece(Long roomId, String source, String target) {
-		RoomEntity loadedRoomEntity = findRoomEntityById(roomId);
+	public ChessGameParser movePiece(MoveRequestDto moveRequestDto) {
+		RoomEntity loadedRoomEntity = findRoomEntityById(moveRequestDto.getRoomId());
+		ChessBoard chessBoard = createBoardById(moveRequestDto.getRoomId());
 
-		ChessBoard chessBoard = createBoardById(roomId);
 		Map<Position, Piece> board = chessBoard.getBoard();
-		chessBoard.move(new MoveCommand(String.format("move %s %s", source, target)));
+		chessBoard.move(
+			new MoveCommand(String.format("move %s %s", moveRequestDto.getSource(), moveRequestDto.getTarget())));
 
 		loadedRoomEntity.deleteAllBoard();
 		for (Position position : board.keySet()) {
@@ -75,7 +77,7 @@ public class ChessGameService {
 		));
 		roomRepository.save(roomEntity);
 
-		return new ChessGameParser(chessBoard, roomId);
+		return new ChessGameParser(chessBoard, moveRequestDto.getRoomId());
 	}
 
 	private void endGame(Long roomId) {
@@ -96,6 +98,10 @@ public class ChessGameService {
 
 	public boolean isNotGameOver(Long roomId) {
 		return !isGameOver(roomId);
+	}
+
+	public void deleteGame(Long roomId) {
+		roomRepository.deleteById(roomId);
 	}
 
 	private RoomEntity findRoomEntityById(Long roomId) {

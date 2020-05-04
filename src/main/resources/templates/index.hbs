@@ -5,5 +5,19 @@
 </head>
 <body>
 <h1>Hello World</h1>
+<form action="/start" method="post">
+    <button>방만들기</button>
+</form>
+
+<div class="room-container">
+    {{#rooms.room}}
+        <div class="room-wrapper">
+            <div id="{{id}}" class="room">
+                <button type="button" onclick="location.href='/load?gameId={{id}}'">{{id}} 방</button>
+            </div>
+        </div>
+    {{/rooms.room}}
+</div>
+
 </body>
 </html>

@@ -2,7 +2,6 @@ package wooteco.chess.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import wooteco.chess.controller.command.Command;
 import wooteco.chess.domain.ChessManager;
 import wooteco.chess.dto.GameResponse;
 import wooteco.chess.repository.ChessRoom;

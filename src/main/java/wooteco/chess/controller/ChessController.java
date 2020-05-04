@@ -20,6 +20,7 @@ public class ChessController {
 
     @GetMapping("/start")
     public String startGame(Model model) {
+        model.addAttribute("rooms",chessService.findAllRooms());
         return "chessGameStart";
     }
 
@@ -38,6 +39,7 @@ public class ChessController {
     @GetMapping("/playing/{id}")
     public String Game(@PathVariable Long id, Model model) {
         model.addAttribute("roomNumber", chessService.getRoomNumber());
+        model.addAttribute("roomName",chessService.getRoomName(id));
         model.addAllAttributes(chessService.makeMoveResponse());
         return "chessGame";
     }

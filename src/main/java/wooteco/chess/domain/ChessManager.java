@@ -10,8 +10,16 @@ public class ChessManager {
     private ChessRunner chessRunner;
     private boolean playing;
 
+    public ChessManager(Long id, ChessRunner chessRunner) {
+        this.id = id;
+        this.chessRunner = chessRunner;
+    }
+
     public ChessManager(Long id) {
         this.id = id;
+    }
+
+    public ChessManager() {
     }
 
     public void start() {

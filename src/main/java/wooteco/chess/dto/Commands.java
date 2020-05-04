@@ -8,6 +8,9 @@ public class Commands {
     private Long roomNumber;
     private String command;
 
+    public Commands() {
+    }
+
     public Commands(Long roomNumber, String command) {
         this.roomNumber = roomNumber;
         this.command = command;
@@ -21,7 +24,11 @@ public class Commands {
         return roomNumber;
     }
 
-    public String get() {
+    public Long getId() {
+        return id;
+    }
+
+    public String getCommand() {
         return command;
     }
 }

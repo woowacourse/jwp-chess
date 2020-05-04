@@ -3,16 +3,14 @@ package wooteco.chess.service;
 import org.springframework.stereotype.Service;
 import wooteco.chess.controller.command.Command;
 import wooteco.chess.domain.ChessManager;
+import wooteco.chess.domain.ChessRunner;
 import wooteco.chess.dto.ChessRoom;
 import wooteco.chess.dto.Commands;
 import wooteco.chess.dto.GameResponse;
 import wooteco.chess.repository.ChessRoomRepository;
 import wooteco.chess.repository.CommandRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class ChessService {
@@ -38,16 +36,22 @@ public class ChessService {
     }
 
     public void playLastGame(Long roomNumber) {
-        List<Commands> commands = commandRepository.findAllByRoomNumber(roomNumber);
-        chessManager = new ChessManager(roomNumber);
-        for (Commands command : commands) {
-            Command.MOVE.apply(chessManager, command.get());
+        List<Commands> allByRoomNumber = commandRepository.findAllByRoomNumber(roomNumber);
+
+        chessManager = new ChessManager(roomNumber, new ChessRunner());
+        if(allByRoomNumber.size() == 0) {
+            chessManager.start();
+            return;
+        }
+
+        for (Commands command : allByRoomNumber) {
+            System.out.println(command.getRoomNumber() + command.getCommand() + " 여기라구욥");
+            Command.MOVE.apply(chessManager, command.getCommand());
         }
     }
 
     public void move(Long roomNumber, String source, String target) {
         String command = String.join(MOVE_DELIMITER, new String[]{"move", source, target});
-
         try {
             Command.MOVE.apply(chessManager, command);
             saveToDatabase(roomNumber, command);
@@ -56,6 +60,8 @@ public class ChessService {
         }
 
         if (!chessManager.isPlaying()) {
+            chessRoomRepository.deleteById(roomNumber);
+            commandRepository.deleteById(roomNumber);
             chessManager.end();
         }
     }
@@ -86,9 +92,16 @@ public class ChessService {
         return chessManager.getId();
     }
 
-    public ChessRoom findRoom(Long id) {
-        return chessRoomRepository
-                .findById(id)
-                .orElseThrow(IllegalArgumentException::new);
+    public List<ChessRoom> findAllRooms() {
+        Iterable<ChessRoom> iterChessRooms = chessRoomRepository.findAll();
+        List<ChessRoom> chessRooms = new ArrayList<>();
+        for (ChessRoom chessRoom : iterChessRooms) {
+            chessRooms.add(chessRoom);
+        }
+        return chessRooms;
+    }
+
+    public String getRoomName(Long id) {
+        return chessRoomRepository.findRoomNameById(id);
     }
 }

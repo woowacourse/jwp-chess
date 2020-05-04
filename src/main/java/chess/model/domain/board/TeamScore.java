@@ -1,6 +1,7 @@
 package chess.model.domain.board;
 
 import chess.model.domain.piece.King;
+import chess.model.domain.piece.Pawn;
 import chess.model.domain.piece.Piece;
 import chess.model.domain.piece.Team;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ public class TeamScore {
 
     private static final double PAWN_SAME_FILE_SCORE = 0.5;
     private static final double HAS_NOT_KING_SCORE = 0.0;
+    private static final Integer NO_PAWN_COUNT = 0;
 
     private final Map<Team, Double> teamScore;
 
@@ -31,7 +33,44 @@ public class TeamScore {
     public static TeamScore of(Collection<Piece> pieces,
         Map<Team, Integer> pawnSameFileCountByTeam) {
         NullChecker.validateNotNull(pieces, pawnSameFileCountByTeam);
+        validationPawnCount(pieces, pawnSameFileCountByTeam);
         return new TeamScore(makeTeamScore(pieces, pawnSameFileCountByTeam));
+    }
+
+    private static void validationPawnCount(Collection<Piece> pieces,
+        Map<Team, Integer> pawnSameFileCountByTeam) {
+        for (Team team : Team.values()) {
+            validationPawnCountByTeam(team, pieces, pawnSameFileCountByTeam);
+        }
+    }
+
+    private static void validationPawnCountByTeam(Team team, Collection<Piece> pieces,
+        Map<Team, Integer> pawnSameFileCountByTeam) {
+        long pawnCount = calculatePawnCount(team, pieces);
+        int pawnSameFileCount = pawnSameFileCountByTeam.getOrDefault(team, NO_PAWN_COUNT);
+        validateMinimum(team, pawnSameFileCount);
+        validateComparativeValue(team, pawnCount, pawnSameFileCount);
+    }
+
+    private static long calculatePawnCount(Team team, Collection<Piece> pieces) {
+        return pieces.stream()
+            .filter(piece -> piece.isSameTeam(team))
+            .filter(piece -> piece instanceof Pawn)
+            .count();
+    }
+
+    private static void validateMinimum(Team team, int pawnSameFileCount) {
+        if (pawnSameFileCount == 1) {
+            throw new IllegalArgumentException(team.getName() + "팀의 같은 파일 폰의 개수가 1개"
+                + "입니다. 같은 파일의 폰은 최소 2개 이상이어야 합니다.");
+        }
+    }
+
+    private static void validateComparativeValue(Team team, long pawnCount, int pawnSameFileCount) {
+        if (pawnCount < pawnSameFileCount) {
+            throw new IllegalArgumentException(team.getName() + "팀의 폰의 개수가 맞지 않습니다."
+                + " 폰의 개수 : " + pawnCount + ", 같은 파일 폰의 개수 : " + pawnSameFileCount);
+        }
     }
 
     private static Map<Team, Double> makeTeamScore(Collection<Piece> pieces,
@@ -62,7 +101,7 @@ public class TeamScore {
     }
 
     private static double sumPawnSubtractWeight(Team team, Map<Team, Integer> pawnSameFileByTeam) {
-        return pawnSameFileByTeam.get(team) * PAWN_SAME_FILE_SCORE;
+        return pawnSameFileByTeam.getOrDefault(team, NO_PAWN_COUNT) * PAWN_SAME_FILE_SCORE;
     }
 
     public List<Team> findWinners() {
@@ -92,7 +131,7 @@ public class TeamScore {
 
     public boolean isLose(Team team) {
         NullChecker.validateNotNull(team);
-        return isNotDraw() && findWinners().contains(team);
+        return isNotDraw() && !findWinners().contains(team);
     }
 
     public double findScore(Team team) {

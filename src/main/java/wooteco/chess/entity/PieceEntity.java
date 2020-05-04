@@ -12,7 +12,7 @@ public class PieceEntity {
 	private final String position;
 	private final String name;
 
-	PieceEntity(final String position, final String name) {
+	private PieceEntity(final String position, final String name) {
 		this.position = position;
 		this.name = name;
 	}

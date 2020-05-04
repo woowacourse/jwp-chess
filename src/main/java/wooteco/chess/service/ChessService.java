@@ -30,38 +30,40 @@ public class ChessService {
 		this.pieceRepository = pieceRepository;
 	}
 
-	public Board move(Position start, Position target, Long boardId) {
-		Board board = init();
+	public void move(Position start, Position target, Long boardId) {
+		Board board = find();
 		Piece startPiece = board.findByPosition(start);
 
 		board.move(start, target);
 		pieceRepository.update(startPiece.getName(), target.getString(), boardId);
 		pieceRepository.update(Blank.NAME, start.getString(), boardId);
 		turnRepository.update(board.isWhiteTurn(), boardId);
-
-		return board;
 	}
 
-	public Board init() {
+	public Board find() {
 		BoardEntity boardEntity = boardRepository.findById(1L)
-			.orElseGet(() -> boardRepository.save(BoardEntity.from(BoardFactory.create())));
+			.orElseGet(this::init);
 		return boardEntity.createBoard();
 
+	}
+
+	private BoardEntity init() {
+		return boardRepository.save(BoardEntity.from(BoardFactory.create()));
 	}
 
 	public Board restart() {
 		boardRepository.deleteAll();
 		turnRepository.deleteAll();
-		return init();
+		return find();
 	}
 
 	public boolean isEnd() {
-		Board board = init();
+		Board board = find();
 		return !board.isLiveBothKing();
 	}
 
 	public Team findWinningTeam() {
-		Board board = init();
+		Board board = find();
 		return Arrays.stream(Team.values())
 			.filter(board::isLiveKing)
 			.findFirst()
@@ -69,7 +71,7 @@ public class ChessService {
 	}
 
 	public Result status() {
-		Board board = init();
+		Board board = find();
 		Status status = board.createStatus();
 		return status.getResult();
 	}

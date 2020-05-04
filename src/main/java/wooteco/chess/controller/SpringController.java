@@ -35,7 +35,7 @@ public class SpringController {
 	@GetMapping("/init")
 	@ResponseBody
 	public Map<String, Object> init() {
-		return makeModel(chessService.init());
+		return makeModel(chessService.find());
 	}
 
 	@PutMapping("/move")

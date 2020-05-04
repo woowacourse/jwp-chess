@@ -47,7 +47,6 @@ function getChessBoard(id) {
         type: "get",
         data: {id: id},
         success: function (data) {
-            console.log(JSON.stringify(data));
             $('.gamecell').html('');
             $('.gamecell').attr('chess', 'null');
             $('#game_id').html(id);
@@ -135,7 +134,6 @@ function getChessGames() {
         type: "get",
         success: function (data) {
             var res = JSON.parse(data);
-            // console.log(JSON.stringify(data));
             var chessGameVos = res.chessGameVos;
             for (var i = 0; i < chessGameVos.length; i++) {
                 add(chessGameVos[i].id);
@@ -223,7 +221,6 @@ function drop(ev) {
     var now = ev.dataTransfer.getData("text");
     var des = ev.target.id;
     var game_id = document.getElementById("game_id").innerHTML;
-    console.log("이건 로그" + game_id + " " + now + " " + des);
     move({"game_id": "1", "now": now.toString(), "des": des.toString()});
 }
 
@@ -265,7 +262,6 @@ function move(json) {
 
 function getChessBoardResult() {
     const id = document.getElementById("game_id").innerHTML;
-    console.log("아이디는 " + id);
     $.ajax({
         url: "/api/games/" + id + "/result",
         type: "get",
@@ -301,7 +297,6 @@ function resume() {
         url: "/api/resume",
         type: "get",
         success: function (data) {
-            console.log(JSON.stringify(data));
             $('.board').css('display', 'block');
             $('.gamecell').html('');
             $('.gamecell').attr('chess', 'null');

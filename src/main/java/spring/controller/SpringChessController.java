@@ -43,7 +43,6 @@ public class SpringChessController {
 
     @PostMapping("/api/game")
     public String starts(@RequestParam(name = "game_name") String gameName) {
-        System.out.println("game name : " + gameName);
         return GSON.toJson(chessService.makeChessBoard(gameName));
     }
 
@@ -60,7 +59,6 @@ public class SpringChessController {
 
     @GetMapping("/api/games/{id}/result")
     public String winnerGame(@PathVariable Long id) throws SQLException {
-        System.out.println("id는 " + id);
         chessService.findWinner(id);
         return GSON.toJson(chessService.findWinner(id));
     }

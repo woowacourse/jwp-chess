@@ -43,4 +43,19 @@ class GameControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string("[\"A3\",\"A4\"]"));
     }
+
+    @Test
+    void move() throws Exception {
+        Room room = new Room("lowoon");
+
+        given(chessService.calculateWhiteScore(room)).willReturn(38D);
+
+        mvc.perform(post("/move")
+            .contentType(MediaType.APPLICATION_JSON)
+            .param("source", "A2")
+            .param("target, ", "A4")
+            .param("roomName", "lowoon"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"white\":38")));
+    }
 }

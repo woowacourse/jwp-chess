@@ -50,10 +50,11 @@ class RoomControllerTest {
     @Test
     void start() throws Exception {
         GameEntity gameEntity = new GameEntity(0);
-        Room room = new Room("lowoon",gameEntity);
+        Room room = new Room("lowoon", gameEntity);
 
         given(chessService.getTurn(room)).willReturn(0);
-        given(chessService.getRowsDto(room)).willReturn(RowsDtoConverter.convertFrom(BoardFactory.createInitialBoard()));
+        given(chessService.getRowsDto(room)).willReturn(
+            RowsDtoConverter.convertFrom(BoardFactory.createInitialBoard()));
 
         mvc.perform(get("/start/lowoon"))
             .andExpect(status().isOk())

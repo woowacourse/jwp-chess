@@ -20,6 +20,7 @@ import wooteco.chess.service.ChessService;
 
 @Controller
 public class SpringController {
+
 	private final ChessService chessService;
 
 	public SpringController(ChessService chessService) {
@@ -40,19 +41,19 @@ public class SpringController {
 	@PutMapping("/move")
 	@ResponseBody
 	public Map<String, Object> move(@RequestParam("start") String start, @RequestParam("target") String target) {
-		Board board = chessService.move(Position.of(start), Position.of(target), 1L);
-		return makeModel(board);
+		Map<String, Object> model = new HashMap<>();
+
+		chessService.move(Position.of(start), Position.of(target), 1L);
+		model.put("start", start);
+		model.put("target", target);
+		model.put("isEnd", chessService.isEnd());
+		return model;
 	}
 
-	@GetMapping("/isEnd")
+	@GetMapping("/findWinningTeam")
 	@ResponseBody
 	public Map<String, Object> isEnd() {
 		Map<String, Object> model = new HashMap<>();
-		if (chessService.isNotEnd()) {
-			model.put("isEnd", false);
-			return model;
-		}
-		model.put("isEnd", true);
 		model.put("winningTeam", chessService.findWinningTeam());
 		return model;
 	}

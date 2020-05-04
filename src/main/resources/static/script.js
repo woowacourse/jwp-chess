@@ -42,22 +42,22 @@ function requestMove(start, target) {
         error: function (response) {
             alert(response.responseText);
         },
-        success: function () {
-            move({start: start, target: target});
-        }
+        success: move
     })
 }
 
-function move(position) {
-    let startPositionClassName = getChessPieceClassName(position.start);
-    let targetPositionClassName = getChessPieceClassName(position.target);
+function move(response) {
+    let startPositionClassName = getChessPieceClassName(response.start);
+    let targetPositionClassName = getChessPieceClassName(response.target);
 
     if (targetPositionClassName !== '') {
-        getClassList(position.target).remove(targetPositionClassName);
+        getClassList(response.target).remove(targetPositionClassName);
     }
-    getClassList(position.start).remove(startPositionClassName);
-    getClassList(position.target).add(startPositionClassName);
-    setTimeout(() => checkKingDie(), 0);
+    getClassList(response.start).remove(startPositionClassName);
+    getClassList(response.target).add(startPositionClassName);
+    if (response.isEnd) {
+        setTimeout(() => findWinningTeam(), 0);
+    }
     setTimeout(() => status(), 0);
 }
 
@@ -70,22 +70,17 @@ function getClassList(position) {
     return document.getElementById(position).classList
 }
 
-function checkKingDie() {
+function findWinningTeam() {
     $.ajax({
         type: 'get',
-        url: '/isEnd',
+        url: '/findWinningTeam',
         dataType: 'json',
         error: function () {
             alert("isEnd Error")
         },
         success: function (response) {
-            if (!response.isEnd) {
-                return;
-            }
             $('.result').show();
-
             $('.result > .message').html(`${response.winningTeam}팀 승리!`);
-
             $('.result > .submit').click(function () {
                 restart();
                 $('.result').hide();

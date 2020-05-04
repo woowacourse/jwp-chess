@@ -55,9 +55,9 @@ public class ChessService {
 		return init();
 	}
 
-	public boolean isNotEnd() {
+	public boolean isEnd() {
 		Board board = init();
-		return board.isLiveBothKing();
+		return !board.isLiveBothKing();
 	}
 
 	public Team findWinningTeam() {

@@ -6,22 +6,24 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("board_status")
 public class ChessPiece {
     @Id
-    private String gameId;
+    private Long id;
     private String position;
     private String piece;
 
-    public ChessPiece(String gameId, String position, String piece) {
-        this.gameId = gameId;
+    public ChessPiece() {
+    }
+
+    public ChessPiece(String position, String piece) {
         this.position = position;
         this.piece = piece;
     }
 
-    public String getGameId() {
-        return gameId;
+    public Long getId() {
+        return id;
     }
 
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPosition() {

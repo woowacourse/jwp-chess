@@ -11,7 +11,7 @@
             const rooms = document.querySelector("#rooms");
             rooms.addEventListener("click", onClickEnterRoom);
 
-            $("#game_id").keydown(function(key) {
+            $("#room_name").keydown(function(key) {
              if (key.keyCode == 13) {
                  goReadyPage();
              }
@@ -19,8 +19,8 @@
         });
 
         function goReadyPage(){
-            var game_id = document.getElementById("game_id").value;
-            var form = document.getElementById("readyForm");
+            var room_name = document.getElementById("room_name").value;
+            var form = document.getElementById("createRoom");
             form.setAttribute("action", "/play");
             form.submit();
         }
@@ -37,16 +37,18 @@
             }
         }
     </script>
-    <form id="readyForm" action="/play" method="post">
-        <input id="game_id" name="game_id" placeholder="체스방 이름을 입력해주세요." type="text"/>
+
+
+    <form id="createRoom" action="/play" method="post">
+        <input id="room_name" name="room_name" placeholder="체스방 이름을 입력해주세요." type="text"/>
         <input type="button" onClick ="goReadyPage()" value="방 만들기"/>
     </form>
 
     <ul id="rooms">
         {{#rooms}}
             <li class="room">
-                <input type="hidden" name="game_id" value="{{.}}">
-                {{.}}입장하기
+                <input type="hidden" name="room_id" value="{{id}}">
+                {{name}}입장하기
             </li>
         {{/rooms}}
     </ul>

@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import wooteco.chess.db.MoveHistory;
 import wooteco.chess.service.SpringChessService;
-
-import java.util.Map;
 
 @Controller
 public class SpringChessController {
@@ -25,31 +24,30 @@ public class SpringChessController {
     }
 
     @PostMapping("/play")
-    public String startGame(@RequestParam(value = "game_id") String gameId, Model model) {
-        springChessService.startNewGame(gameId);
+    public String startGame(@RequestParam(value = "room_name") String roomName, Model model) {
+        Long roomId = springChessService.startNewGame(roomName);
 
-        model.addAllAttributes(springChessService.provideGameInfo(gameId));
-        model.addAttribute("game_id", gameId);
+        model.addAllAttributes(springChessService.provideGameInfo(roomId));
+        model.addAttribute("room_id", roomId);
         return "game_room";
     }
 
     @PostMapping("/resume")
-    public String resumeGame(@RequestParam(value = "game_id") String gameId, Model model) {
-        springChessService.resumeGame(gameId);
+    public String resumeGame(@RequestParam(value = "room_id") Long roomId, Model model) {
+        springChessService.resumeGame(roomId);
 
-        model.addAllAttributes(springChessService.provideGameInfo(gameId));
-        model.addAttribute("game_id", gameId);
+        model.addAllAttributes(springChessService.provideGameInfo(roomId));
+        model.addAttribute("room_id", roomId);
         return "game_room";
     }
 
     @PostMapping("/move")
-    public String move(@RequestParam Map<String, String> params, Model model) {
-        String gameId = params.get("game_id");
-        springChessService.move(gameId, params.get("source"), params.get("target"));
+    public String move(@RequestParam(value = "room_id") Long roomId, MoveHistory moveHistory, Model model) {
+        springChessService.move(roomId, moveHistory);
 
-        model.addAllAttributes(springChessService.provideGameInfo(gameId));
-        model.addAttribute("game_id", gameId);
-        model.addAttribute("end", springChessService.provideWinner(gameId));
+        model.addAllAttributes(springChessService.provideGameInfo(roomId));
+        model.addAttribute("room_id", roomId);
+        model.addAttribute("end", springChessService.provideWinner(roomId));
         return "game_room";
     }
 

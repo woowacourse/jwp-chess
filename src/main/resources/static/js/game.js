@@ -147,7 +147,7 @@ function onDragOver(e) {
 
 function onDrop(e) {
     fetch('http://localhost:8080/move/' + gameId, {
-        method: 'POST',
+        method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             sourceX: parseInt(e.dataTransfer.getData('x')),

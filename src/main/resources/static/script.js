@@ -33,31 +33,31 @@ $('.cell').click(function () {
     }
 });
 
-function requestMove(startPosition, targetPosition) {
+function requestMove(start, target) {
     $.ajax({
-        type: 'post',
+        type: 'put',
         url: '/move',
-        data: {startPosition: startPosition, targetPosition: targetPosition},
+        data: {start: start, target: target},
         dataType: 'json',
         error: function (response) {
             alert(response.responseText);
         },
-        success: function () {
-            move({startPosition, targetPosition});
-        }
+        success: move
     })
 }
 
-function move(position) {
-    let startPositionClassName = getChessPieceClassName(position.startPosition);
-    let targetPositionClassName = getChessPieceClassName(position.targetPosition);
+function move(response) {
+    let startPositionClassName = getChessPieceClassName(response.start);
+    let targetPositionClassName = getChessPieceClassName(response.target);
 
     if (targetPositionClassName !== '') {
-        getClassList(position.targetPosition).remove(targetPositionClassName);
+        getClassList(response.target).remove(targetPositionClassName);
     }
-    getClassList(position.startPosition).remove(startPositionClassName);
-    getClassList(position.targetPosition).add(startPositionClassName);
-    setTimeout(() => checkKingDie(), 0);
+    getClassList(response.start).remove(startPositionClassName);
+    getClassList(response.target).add(startPositionClassName);
+    if (response.isEnd) {
+        setTimeout(() => findWinningTeam(), 0);
+    }
     setTimeout(() => status(), 0);
 }
 
@@ -70,22 +70,17 @@ function getClassList(position) {
     return document.getElementById(position).classList
 }
 
-function checkKingDie() {
+function findWinningTeam() {
     $.ajax({
         type: 'get',
-        url: '/isEnd',
+        url: '/findWinningTeam',
         dataType: 'json',
         error: function () {
             alert("isEnd Error")
         },
         success: function (response) {
-            if (!response.isEnd) {
-                return;
-            }
             $('.result').show();
-
             $('.result > .message').html(`${response.winningTeam}팀 승리!`);
-
             $('.result > .submit').click(function () {
                 restart();
                 $('.result').hide();
@@ -108,8 +103,8 @@ function restart() {
         type: 'get',
         url: '/restart',
         dataType: 'json',
-        error: function (request, status, error) {
-            alert(request.status + "\n" + request.responseText + "\n" + error + "\n" + status);
+        error: function () {
+            alert('restart error');
         },
         success: function (response) {
             setTimeout(() => remove(response), 0);

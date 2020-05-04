@@ -1,48 +1,52 @@
-const BLANK_IMAGE = `<img class="piece-image" src="/img/BLANK.png">`;
+const $board = document.querySelector('.board');
+const $roomName = document.querySelector('#room-name');
+
 let source;
 let target;
+let pickFlag = false;
 
 window.onload = function () {
-	const elements = document.querySelectorAll('.cell');
-	[].forEach.call(elements, (elem) => {
-		elem.addEventListener('click', (ev) => {
-			if (source === undefined) {
-				source = elem.id;
-			} else {
-				target = elem.id;
+	$board.addEventListener('click', onClickBoard)
+}
 
-				fetch('/api/move', {
-					method: 'post',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						roomName: document.getElementById('room-name').innerText,
-						source: source,
-						target: target
-					})
-				}).then(async res => {
-					if (res.status !== 200) {
-						source = undefined;
-					} else {
-						renderMovedPiece();
-						renderChangedTurn(await res.json());
-					}
-				})
-			}
+async function onClickBoard(e) {
+	if (e.target && e.target.nodeName === 'IMG') {
+		if (!pickFlag) {
+			source = e.target.closest('div').id;
+			pickFlag = !pickFlag;
+		} else {
+			target = e.target.closest('div').id;
+			const movedInfo = await getMovedInfo();
+			renderMovedPiece();
+			renderChangedTurn(movedInfo.turn);
+			pickFlag = !pickFlag;
+		}
+	}
+}
+
+function getMovedInfo() {
+	return fetch('/api/move', {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			roomName: $roomName.innerText,
+			source: source,
+			target: target
 		})
-	})
+	}).then(res => res.json());
 }
 
 function renderMovedPiece() {
-	const sourceElem = document.querySelector(`#${source}`);
-	const targetElem = document.querySelector(`#${target}`);
-	const tempElem = sourceElem.innerHTML;
-	sourceElem.innerHTML = BLANK_IMAGE;
-	targetElem.innerHTML = tempElem;
+	let $source = document.querySelector(`#${source}`);
+	let $target = document.querySelector(`#${target}`);
+	[$source.innerHTML, $target.innerHTML] = [$target.innerHTML, $source.innerHTML]; // swap
 }
 
-function renderChangedTurn(data) {
-	const turn = document.querySelector(`#turn`);
-	turn.innerText = data.turn;
+function renderChangedTurn(turn) {
+	const $turn = document.querySelector(`#turn`);
+	if (turn) {
+		$turn.innerText = turn;
+	}
 }

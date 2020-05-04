@@ -39,7 +39,7 @@ public class ChessService {
         ChessManager chessManager = chessGames.get(roomId);
         chessManager.start();
         for (MoveCommand command : commands) {
-            Command.MOVE.apply(chessManager, command.getCommand());
+            chessManager.move(command.getSource(), command.getTarget());
         }
         return makeMoveResponse(roomId);
     }
@@ -85,7 +85,7 @@ public class ChessService {
     private void saveCommand(String source, String target, Long roomId) {
         String command = String.join(MOVE_DELIMITER, new String[]{"move", source, target});
         ChessRoom chessRoom = findRoom(roomId);
-        chessRoom.addCommand(new MoveCommand(command));
+        chessRoom.addCommand(new MoveCommand(source, target));
         chessRoomRepository.save(chessRoom);
     }
 

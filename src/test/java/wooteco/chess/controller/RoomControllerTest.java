@@ -26,11 +26,11 @@ import wooteco.chess.service.ChessService;
 @WebMvcTest(RoomController.class)
 class RoomControllerTest {
 
-    @MockBean(ChessService.class)
-    ChessService chessService;
-
     @Autowired
     MockMvc mvc;
+
+    @MockBean(ChessService.class)
+    ChessService chessService;
 
     @Test
     void list() throws Exception {

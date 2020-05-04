@@ -43,9 +43,8 @@ h1 {
 
 #loading-table {
     border: 1px solid black;
-    margin: auto;
     text-align: center;
-    margin-top: 2em;
+    margin: 2em auto auto;
 }
 
 #loading-table th,

@@ -3,7 +3,6 @@ package wooteco.chess.utils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.strategy.NormalInitStrategy;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +22,7 @@ public class BoardConverterTest {
     void convertStringToBoard() {
         NormalInitStrategy strategy = new NormalInitStrategy();
         Board board = new Board(strategy.init());
-        assertThat(BoardConverter.convertToBoard("rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR", Team.WHITE))
+        assertThat(BoardConverter.convertToBoard("rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR", true))
                 .isEqualTo(board);
     }
 }

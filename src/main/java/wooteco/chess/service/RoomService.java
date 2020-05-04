@@ -1,29 +1,32 @@
 package wooteco.chess.service;
 
 import org.springframework.stereotype.Service;
-import wooteco.chess.database.dao.ChessDao;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.strategy.NormalInitStrategy;
+import wooteco.chess.repository.ChessEntity;
+import wooteco.chess.repository.ChessRepository;
+import wooteco.chess.utils.BoardConverter;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Service
 public class RoomService {
-    private ChessDao chessDao = new ChessDao();
+    private final ChessRepository chessRepository;
 
-    public List<Integer> loadRoomNumbers() throws SQLException {
-        return chessDao.loadRoomNumbers();
+    public RoomService(ChessRepository chessRepository) {
+        this.chessRepository = chessRepository;
     }
 
-    public int create() throws SQLException {
+    public List<Long> loadRoomNumbers() {
+        return chessRepository.findIds();
+    }
+
+    public Long create() {
         NormalInitStrategy strategy = new NormalInitStrategy();
         Board board = new Board(strategy.init());
 
-        return chessDao.createRoom(board);
-    }
-
-    public void delete(int roomId) throws SQLException {
-        chessDao.delete(roomId);
+        ChessEntity entity = chessRepository.save(
+                new ChessEntity(BoardConverter.convertToString(board), board.isTurnWhite()));
+        return entity.getRoomId();
     }
 }

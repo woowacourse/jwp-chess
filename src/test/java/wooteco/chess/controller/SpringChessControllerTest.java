@@ -24,7 +24,6 @@ public class SpringChessControllerTest {
     @DisplayName("get 요청을 보내고 문자열 응답 받기")
     @Test
     void test1() {
-        System.out.println("테스트 시작");
         given().
                 log().all().
         when().

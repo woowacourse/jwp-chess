@@ -38,7 +38,6 @@ public class Board {
         }
         pieceToBeMoved.throwExceptionIfNotMovable(this, source, target);
         move(source, target);
-        pieceToBeMoved.updateHasMoved();
         this.turn = turn.getOppositeTeam();
     }
 
@@ -128,6 +127,10 @@ public class Board {
 
     private boolean isWhite(Position position) {
         return pieces.get(position).isWhite();
+    }
+
+    public boolean isTurnWhite() {
+        return turn.isWhite();
     }
 
     public Map<Position, Piece> getPieces() {

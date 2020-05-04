@@ -16,7 +16,6 @@ window.onload = function () {
         return await response.json();
       })
       .then(data => {
-        console.log(data);
         let gameId = data["gameId"];
         window.location.href = `/game/${gameId}`;
       });

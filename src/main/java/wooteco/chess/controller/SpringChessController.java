@@ -94,8 +94,13 @@ public class SpringChessController {
 	@PostMapping("/board/{id}")
 	@ResponseBody
 	public String saveHistory(@PathVariable Long id, @RequestBody MovingPosition movingPosition) {
-		MoveStatusDto moveStatusDto = springDataJDBCChessService.move(id, movingPosition);
-		return JsonTransformer.toJson(moveStatusDto);
+		try {
+			MoveStatusDto moveStatusDto = springDataJDBCChessService.move(id, movingPosition);
+			return JsonTransformer.toJson(moveStatusDto);
+		} catch (IllegalArgumentException e) {
+			MoveStatusDto moveStatusDto = new MoveStatusDto(false, e.getMessage());
+			return JsonTransformer.toJson(moveStatusDto);
+		}
 	}
 
 	@GetMapping("/loading/{id}")

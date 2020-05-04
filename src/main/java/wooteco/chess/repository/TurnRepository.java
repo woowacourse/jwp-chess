@@ -14,6 +14,6 @@ import wooteco.chess.entity.TurnEntity;
  */
 public interface TurnRepository extends CrudRepository<TurnEntity, Long> {
 	@Modifying
-	@Query("UPDATE turn SET is_white_turn = :isWhiteTurn WHERE board_entity = :boardId")
-	void update(@Param("isWhiteTurn") Boolean isWhiteTurn, @Param("boardId") Long boardId);
+	@Query("UPDATE turn SET is_white_turn = :isWhiteTurn WHERE room_entity = :roomId")
+	void update(@Param("isWhiteTurn") Boolean isWhiteTurn, @Param("roomId") Long roomId);
 }

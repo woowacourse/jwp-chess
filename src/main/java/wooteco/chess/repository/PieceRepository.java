@@ -9,6 +9,6 @@ import wooteco.chess.entity.PieceEntity;
 
 public interface PieceRepository extends CrudRepository<PieceEntity, Long> {
 	@Modifying
-	@Query("UPDATE piece SET name = :name WHERE position = :position AND board_entity = :boardId")
-	void update(@Param("name") String name, @Param("position") String position, @Param("boardId") Long boardId);
+	@Query("UPDATE piece SET name = :name WHERE position = :position AND room_entity = :roomId")
+	void update(@Param("name") String name, @Param("position") String position, @Param("roomId") Long roomId);
 }

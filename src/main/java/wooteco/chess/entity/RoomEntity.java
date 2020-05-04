@@ -21,31 +21,33 @@ import wooteco.chess.domain.factory.PieceConverter;
  *
  *    @author HyungJu An, JunSeong Hong
  */
-@Table("board")
-public class BoardEntity {
+@Table("room")
+public class RoomEntity {
 	@Id
 	private Long id;
+	private final String title;
 	private final Set<PieceEntity> pieces;
 	private final TurnEntity turn;
 
-	private BoardEntity(Long id, Set<PieceEntity> pieces, TurnEntity turn) {
+	private RoomEntity(Long id, String title, Set<PieceEntity> pieces, TurnEntity turn) {
 		this.id = id;
+		this.title = title;
 		this.pieces = pieces;
 		this.turn = turn;
 	}
 
-	public static BoardEntity of(Set<PieceEntity> pieces, TurnEntity turn) {
-		return new BoardEntity(null, pieces, turn);
+	public static RoomEntity of(String title, Set<PieceEntity> pieces, TurnEntity turn) {
+		return new RoomEntity(null, title, pieces, turn);
 	}
 
-	public static BoardEntity from(Board board) {
+	public static RoomEntity from(String title, Board board) {
 		Set<PieceEntity> pieces = new HashSet<>();
 		for (Piece piece : board.findAll()) {
 			String position = piece.getPosition().getString();
 			String name = piece.getName();
 			pieces.add(PieceEntity.of(position, name));
 		}
-		return BoardEntity.of(pieces, TurnEntity.of(Turn.FIRST));
+		return RoomEntity.of(title, pieces, TurnEntity.of(Turn.FIRST));
 	}
 
 	public Board createBoard() {

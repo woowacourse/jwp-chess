@@ -12,66 +12,66 @@ import wooteco.chess.domain.chesspiece.Blank;
 import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.factory.BoardFactory;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.entity.BoardEntity;
-import wooteco.chess.repository.BoardRepository;
+import wooteco.chess.entity.RoomEntity;
 import wooteco.chess.repository.PieceRepository;
+import wooteco.chess.repository.RoomRepository;
 import wooteco.chess.repository.TurnRepository;
 
 @Service
 public class ChessService {
-	private final BoardRepository boardRepository;
+	private final RoomRepository roomRepository;
 	private final TurnRepository turnRepository;
 	private final PieceRepository pieceRepository;
 
-	public ChessService(BoardRepository boardRepository, TurnRepository turnRepository,
+	public ChessService(RoomRepository roomRepository, TurnRepository turnRepository,
 		PieceRepository pieceRepository) {
-		this.boardRepository = boardRepository;
+		this.roomRepository = roomRepository;
 		this.turnRepository = turnRepository;
 		this.pieceRepository = pieceRepository;
 	}
 
-	public void move(Position start, Position target, Long boardId) {
-		Board board = find();
+	public void move(Long roomId, Position start, Position target) {
+		Board board = find(roomId);
 		Piece startPiece = board.findByPosition(start);
 
 		board.move(start, target);
-		pieceRepository.update(startPiece.getName(), target.getString(), boardId);
-		pieceRepository.update(Blank.NAME, start.getString(), boardId);
-		turnRepository.update(board.isWhiteTurn(), boardId);
+		pieceRepository.update(startPiece.getName(), target.getString(), roomId);
+		pieceRepository.update(Blank.NAME, start.getString(), roomId);
+		turnRepository.update(board.isWhiteTurn(), roomId);
 	}
 
-	public Board find() {
-		BoardEntity boardEntity = boardRepository.findById(1L)
-			.orElseGet(this::init);
-		return boardEntity.createBoard();
+	public Board find(Long roomId) {
+		RoomEntity roomEntity = roomRepository.findById(roomId)
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+		return roomEntity.createBoard();
 
 	}
 
-	private BoardEntity init() {
-		return boardRepository.save(BoardEntity.from(BoardFactory.create()));
+	public void init(String title) {
+		roomRepository.save(RoomEntity.from(title, BoardFactory.create()));
 	}
 
-	public Board restart() {
-		boardRepository.deleteAll();
+	public Board restart(Long roomId) {
+		roomRepository.deleteAll();
 		turnRepository.deleteAll();
-		return find();
+		return find(roomId);
 	}
 
-	public boolean isEnd() {
-		Board board = find();
+	public boolean isEnd(Long roomId) {
+		Board board = find(roomId);
 		return !board.isLiveBothKing();
 	}
 
-	public Team findWinningTeam() {
-		Board board = find();
+	public Team findWinningTeam(Long roomId) {
+		Board board = find(roomId);
 		return Arrays.stream(Team.values())
 			.filter(board::isLiveKing)
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException("승리팀이 없습니다."));
 	}
 
-	public Result status() {
-		Board board = find();
+	public Result status(Long roomId) {
+		Board board = find(roomId);
 		Status status = board.createStatus();
 		return status.getResult();
 	}

@@ -24,6 +24,9 @@ public interface BoardRepository extends CrudRepository<BoardEntity, Long> {
     @Query("DELETE FROM board WHERE roomId = :roomId")
     void deleteByRoomId(@Param("roomId") Long roomId);
 
-
-
+    @Modifying
+    @Query("UPDATE board SET piece = :piece WHERE roomId = :roomId AND position = :position")
+    void updateBoardPosition(@Param("roomId") Long roomId,
+                             @Param("position") String fromPosition,
+                             @Param("piece") String piece);
 }

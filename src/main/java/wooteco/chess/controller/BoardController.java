@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.result.Status;
 import wooteco.chess.service.BoardService;
 
 @Controller
@@ -24,8 +24,8 @@ public class BoardController {
             @RequestParam String fromPiece,
             @RequestParam String toPiece) {
         try {
-            Board board = boardService.movePiece(roomId, fromPiece, toPiece);
-            if (boardService.isFinish(board)) {
+            Status status = boardService.movePiece(roomId, fromPiece, toPiece);
+            if (status.isFinish()) {
                 return ResponseEntity.ok().body(boardService.receiveWinner(roomId));
             }
         } catch (IllegalArgumentException e) {

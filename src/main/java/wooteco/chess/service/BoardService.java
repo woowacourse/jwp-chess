@@ -11,6 +11,7 @@ import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.GameResult;
+import wooteco.chess.domain.result.Status;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,7 @@ public class BoardService {
     }
 
     @Transactional
-    public Board movePiece(final Long roomId, final String fromPosition, final String toPosition) {
+    public Status movePiece(final Long roomId, final String fromPosition, final String toPosition) {
         List<BoardEntity> boardEntities = boardRepository.findByRoomId(roomId);
         Board board = Board.createLoadedBoard(boardEntities);
         Piece piece = board.findBy(Position.of(fromPosition));
@@ -37,17 +38,17 @@ public class BoardService {
         if (piece.isNotSameTeam(Team.of(roomService.findTurnById(roomId)))) {
             throw new IllegalArgumentException("체스 게임 순서를 지켜주세요.");
         }
-
-        if (board.isMovable(fromPosition, toPosition)) {
-            BoardEntity fromBoardEntity = boardRepository.findByRoomIdAndPosition(roomId, fromPosition);
-            fromBoardEntity.setPiece(PieceType.BLANK.name());
-
-            BoardEntity toBoardEntity = boardRepository.findByRoomIdAndPosition(roomId, toPosition);
-            toBoardEntity.setPiece(piece.getNextPiece().getName());
+        Status status = board.isMovable(fromPosition, toPosition);
+        if (status.isMove()) {
+            boardRepository.updateBoardPosition(roomId, fromPosition, PieceType.BLANK.name());
+            boardRepository.updateBoardPosition(roomId, toPosition, piece.getNextPiece().getName());
         }
 
         roomService.updateTurn(roomId);
-        return board;
+        if (board.isFinished()) {
+            status = Status.Finish;
+        }
+        return status;
     }
 
     public Map<String, String> showScoreStatus(final Long roomId) {

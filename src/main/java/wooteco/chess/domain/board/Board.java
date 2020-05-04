@@ -3,6 +3,7 @@ package wooteco.chess.domain.board;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.position.Position;
+import wooteco.chess.domain.result.Status;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +40,7 @@ public class Board {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포지션입니다."));
     }
 
-    public boolean isMovable(final String from, final String to) {
+    public Status isMovable(final String from, final String to) {
         Position fromPosition = Position.of(from);
         Position toPosition = Position.of(to);
 
@@ -47,7 +48,7 @@ public class Board {
         Piece toPiece = board.get(toPosition);
 
         changeFlagWhenKingCaptured(toPiece);
-        return fromPiece.isMovable(this, fromPosition, toPosition);
+        return Status.of(fromPiece.isMovable(this, fromPosition, toPosition));
     }
 
     public void changeFlagWhenKingCaptured(final Piece toPiece) {

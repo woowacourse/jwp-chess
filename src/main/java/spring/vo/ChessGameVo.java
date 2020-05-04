@@ -8,7 +8,7 @@ public class ChessGameVo {
 
     public ChessGameVo(ChessGameEntity chessGameEntity) {
         this.id = chessGameEntity.getId();
-        this.name = "게-임";
+        this.name = chessGameEntity.getGameName();
     }
 
     public Long getId() {

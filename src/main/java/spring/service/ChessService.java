@@ -24,11 +24,14 @@ public class ChessService {
         this.chessGameRepository = chessGameRepository;
     }
 
-    public ChessGameIdDto makeChessBoard() {
+    public ChessGameIdDto makeChessBoard(String gameName) {
         ChessGame chessGame = new ChessGame(ChessBoardCreater.create(), Team.WHITE);
 
+        ChessGameEntity chessGameEntity = chessGame.toEntity();
+
+        chessGameEntity.setGameName(gameName);
         // TODO : Save 확인 로직 필요!
-        ChessGameEntity save = chessGameRepository.save(chessGame.toEntity());
+        ChessGameEntity save = chessGameRepository.save(chessGameEntity);
 
         return new ChessGameIdDto(save.getId());
     }

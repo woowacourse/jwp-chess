@@ -17,6 +17,8 @@ public class ChessGameEntity {
     @Column("turn_is_black")
     Boolean isTurnBlack;
     Set<PieceEntity> pieces;
+    @Column("game_name")
+    String gameName;
 
     public ChessGameEntity(Long gameId, Boolean isTurnBlack, Set<PieceEntity> pieces) {
         this.id = gameId;
@@ -35,8 +37,8 @@ public class ChessGameEntity {
         return new ChessGame(chessBoard, turn);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getGameName() {
+        return gameName;
     }
 
     public Long getId() {
@@ -51,20 +53,8 @@ public class ChessGameEntity {
         return pieces;
     }
 
-    public void updateTurn() {
-        this.isTurnBlack = !isTurnBlack;
-    }
-
-    public void add(PieceEntity pieceEntity) {
-        pieces.add(pieceEntity);
-    }
-
-    public void delete(PieceEntity pieceEntity) {
-        pieces.remove(pieceEntity);
-    }
-
-    public void update(Set<PieceEntity> pieces) {
-        this.pieces = pieces;
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
     }
 
     private ChessGameEntity() {

@@ -98,9 +98,11 @@ function drop(ev) {
 // }
 
 function postNewGame() {
+    const game_name = document.getElementById("game_name").value;
     $.ajax({
         type: 'post',
         url: '/api/game',
+        data: {"game_name": game_name},
         dataType: 'text',
         error: function (xhr, status, error) {
             alert(error.toString());
@@ -182,7 +184,6 @@ function deleteChessGame() {
     });
 }
 
-
 function load() {
     const gameId = document.getElementById("game_id").innerHTML;
 
@@ -190,6 +191,7 @@ function load() {
         url: "/api/game/" + gameId,
         type: "get",
         success: function (data) {
+
             $('.board').css('display', 'block');
             $('.gamecell').html('');
             $('.gamecell').attr('chess', 'null');

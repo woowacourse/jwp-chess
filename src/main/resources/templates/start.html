@@ -20,7 +20,7 @@
             </thead>
             <tbody>
             {{#games}}
-            <tr>
+            <tr onclick="location.href='index/{{id}}'">
                 <th scope="row">{{id}}</th>
                 <td>{{name}}</td>
             </tr>
@@ -28,7 +28,10 @@
             </tbody>
         </table>
 
+        <input id="game_name" name="game_name" type="text" value="방 제목을 입력해주세요"/>
         <button onclick="postNewGame()">새게임</button>
+
+
     </div>
 </div>
 

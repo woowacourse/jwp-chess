@@ -42,8 +42,9 @@ public class SpringChessController {
     }
 
     @PostMapping("/api/game")
-    public String starts() {
-        return new Gson().toJson(chessService.makeChessBoard());
+    public String starts(@RequestParam(name = "game_name") String gameName) {
+        System.out.println("game name : " + gameName);
+        return GSON.toJson(chessService.makeChessBoard(gameName));
     }
 
     @PutMapping("/api/piece")

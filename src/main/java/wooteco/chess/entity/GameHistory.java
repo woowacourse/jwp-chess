@@ -5,7 +5,6 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import wooteco.chess.domain.chessGame.ChessCommand;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Table("game_history")
@@ -22,9 +21,6 @@ public class GameHistory {
 	@Column("target_position")
 	private String targetPosition;
 
-	@Column("created_time")
-	private LocalDateTime createdTime;
-
 	@Column("game_room")
 	private Long gameRoom;
 
@@ -34,7 +30,6 @@ public class GameHistory {
 	public GameHistory(final String sourcePosition, final String targetPosition, final Long gameRoom) {
 		this.sourcePosition = sourcePosition;
 		this.targetPosition = targetPosition;
-		this.createdTime = LocalDateTime.now();
 		this.gameRoom = gameRoom;
 	}
 
@@ -52,10 +47,6 @@ public class GameHistory {
 
 	public String getTargetPosition() {
 		return targetPosition;
-	}
-
-	public LocalDateTime getCreatedTime() {
-		return createdTime;
 	}
 
 	public Long getGameRoom() {

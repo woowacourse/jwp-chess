@@ -3,8 +3,8 @@ package wooteco.chess.dto;
 import wooteco.chess.domain.game.NormalStatus;
 
 public class DestinationPositionDto {
-    private String position;
-    private NormalStatus normalStatus;
+    private final String position;
+    private final NormalStatus normalStatus;
 
     public DestinationPositionDto(String position, NormalStatus normalStatus) {
         this.position = position;

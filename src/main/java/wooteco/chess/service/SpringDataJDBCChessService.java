@@ -33,7 +33,7 @@ public class SpringDataJDBCChessService {
     public ChessGameDto setBoardBy(Long id) {
         ChessGame chessGame = new ChessGame();
         load(chessGame, id);
-        return new ChessGameDto(new BoardDto(chessGame.getPieces()), chessGame.getTurn(),
+        return new ChessGameDto(id, new BoardDto(chessGame.getPieces()), chessGame.getTurn(),
                 chessGame.calculateScore(), NormalStatus.YES.isNormalStatus());
     }
 
@@ -61,7 +61,6 @@ public class SpringDataJDBCChessService {
         List<String> movablePositionNames = chessGame.findMovablePositionNames(source);
 
         return new MovablePositionsDto(movablePositionNames, source);
-
     }
 
     public MoveStatusDto checkMovable(Long id, MovingPosition movingPosition) {

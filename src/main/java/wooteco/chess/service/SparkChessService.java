@@ -22,7 +22,8 @@ public class SparkChessService {
 
         load(chessGame);
 
-        return new ChessGameDto(new BoardDto(chessGame.getPieces()), chessGame.getTurn(), chessGame.calculateScore(), NormalStatus.YES.isNormalStatus());
+        return new ChessGameDto(new BoardDto(chessGame.getPieces()), chessGame.getTurn(), chessGame.calculateScore(),
+                NormalStatus.YES.isNormalStatus());
     }
 
     private void load(ChessGame chessGame) throws SQLException {
@@ -49,7 +50,8 @@ public class SparkChessService {
         chessGame.move(movingPosition);
 
         if (chessGame.isKingDead()) {
-            MoveStatusDto moveStatusDto = new MoveStatusDto(NormalStatus.YES.isNormalStatus(), chessGame.getAliveKingColor());
+            MoveStatusDto moveStatusDto = new MoveStatusDto(NormalStatus.YES.isNormalStatus(),
+                    chessGame.getAliveKingColor());
             clearHistory();
             return moveStatusDto;
         }

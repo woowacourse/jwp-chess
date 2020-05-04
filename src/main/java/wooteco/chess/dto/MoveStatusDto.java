@@ -5,9 +5,9 @@ import wooteco.chess.domain.piece.Color;
 public class MoveStatusDto {
     private static final String EMPTY_STRING = "";
 
-    private boolean normalStatus;
-    private Color winner;
-    private String exception;
+    private final boolean normalStatus;
+    private final Color winner;
+    private final String exception;
 
     public MoveStatusDto(boolean normalStatus, String exception) {
         this.normalStatus = normalStatus;

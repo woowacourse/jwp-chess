@@ -63,7 +63,7 @@ public class SpringChessController {
 
 	@GetMapping("/board/{id}/source")
 	@ResponseBody
-	public String getMovablePositions2(@PathVariable Long id, @RequestParam String source) {
+	public String getMovablePositions(@PathVariable Long id, @RequestParam String source) {
 		Map<String, Object> model = new HashMap<>();
 		try {
 			MovablePositionsDto movablePositionsDto = springDataJDBCChessService.findMovablePositions(id, source);

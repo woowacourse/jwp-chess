@@ -26,8 +26,8 @@ public class RoomController {
     public ResponseDto create(@RequestBody final RoomCreateRequestDto requestDto){
         ResponseDto responseDto = roomService.create(requestDto);
         if(responseDto.getResponseCode() == 200){
-            Room room = (Room)(responseDto.getResponseData());
-            responseDto = ResponseDto.success(room.getId().toString());
+            Long roomId = (Long)(responseDto.getResponseData());
+            responseDto = ResponseDto.success(roomId.toString());
         }
         return responseDto;
     }

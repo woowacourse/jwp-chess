@@ -44,4 +44,24 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+
+    $('.btn-getRoomList').click(async function () {
+        $.ajax({
+            type: "GET",
+            url: "/room/list",
+            dataType: "json",
+            contentType: "application/json",
+            success: function (data) {
+                console.log(data)
+                rooms = "";
+                jQuery.each(data.responseData, function (key, value) {
+                    rooms += value + "\r\n"
+                })
+                $(`#${"roomList"}`).html(rooms)
+            },
+            error: function (e) {
+                console.log(e.message);
+            }
+        });
+    });
 });

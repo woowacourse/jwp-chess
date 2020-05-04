@@ -4,12 +4,14 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +23,7 @@ import wooteco.chess.repository.RoomEntity;
 import wooteco.chess.repository.RoomRepository;
 
 @ExtendWith(SpringExtension.class)
-@DataJdbcTest
+@SpringBootTest
 @Transactional
 public class RoomRepositoryTest {
     @Autowired
@@ -50,7 +52,7 @@ public class RoomRepositoryTest {
         for (Piece alivePiece : new Board().getPieces().getAlivePieces()) {
             pieceEntities.add(new PieceEntity(alivePiece.getPosition(), alivePiece.toString(), alivePiece.getTeam()));
         }
-        assertThat(roomRepository.save(new RoomEntity(1L, "방1", Team.WHITE, pieceEntities))).isNotNull();
+        assertThat(roomRepository.save(new RoomEntity(UUID.randomUUID(), "방1", Team.WHITE, pieceEntities))).isNotNull();
     }
 
     @DisplayName("모든 방의 이름이 제대로 반환되는지")

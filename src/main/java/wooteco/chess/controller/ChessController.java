@@ -1,6 +1,7 @@
 package wooteco.chess.controller;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,8 +43,8 @@ public class ChessController {
     }
 
     @GetMapping("/")
-    public String showGame(@RequestParam(value = "room-id") long roomId, @RequestParam(defaultValue = "") String error,
-        RedirectAttributes redirectAttributes, Model model) {
+    public String showGame(@RequestParam(value = "room-id") UUID roomId, @RequestParam(defaultValue = "") String error,
+                           RedirectAttributes redirectAttributes, Model model) {
         model.addAttribute("room", service.findGame(roomId));
         if (service.isGameEnd(roomId)) {
             redirectAttributes.addAttribute("room-id", roomId);
@@ -56,7 +57,7 @@ public class ChessController {
     }
 
     @GetMapping("/result")
-    public String showResult(@RequestParam(value = "room-id") long id, Model model) {
+    public String showResult(@RequestParam(value = "room-id") UUID id, Model model) {
         model.addAttribute("result", service.endGame(id));
         return "chess-result";
     }
@@ -65,7 +66,7 @@ public class ChessController {
     public String continueGame(@RequestParam(value = "existing-room-name") String name,
         RedirectAttributes redirectAttributes) {
         try {
-            long id = service.findIdByName(name);
+            UUID id = service.findIdByName(name);
             redirectAttributes.addAttribute("room-id", id);
             if (service.isGameEnd(id)) {
                 return "redirect:/result";
@@ -79,7 +80,7 @@ public class ChessController {
 
     @PostMapping("/move")
     public String executeMove(@RequestParam Map<String, String> parameters, RedirectAttributes redirectAttributes) {
-        long roomId = Long.parseLong(parameters.get("room-id"));
+        UUID roomId = UUID.fromString(parameters.get("room-id"));
         Board board = service.getSavedBoard(roomId);
         String source = parameters.get("source");
         String destination = parameters.get("destination");
@@ -93,7 +94,7 @@ public class ChessController {
     }
 
     @PostMapping("/initialize")
-    public String initializeGame(@RequestParam(value = "room-id") long roomId, RedirectAttributes redirectAttributes) {
+    public String initializeGame(@RequestParam(value = "room-id") UUID roomId, RedirectAttributes redirectAttributes) {
         service.initBoard(roomId);
         redirectAttributes.addAttribute("room-id", roomId);
         return "redirect:/";

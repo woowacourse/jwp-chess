@@ -2,6 +2,7 @@ package wooteco.chess.dto;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import wooteco.chess.domain.Board;
 import wooteco.chess.domain.Pieces;
@@ -10,16 +11,16 @@ import wooteco.chess.domain.piece.Team;
 
 public class ResultDto {
     private Team winner;
-    private long roomId;
+    private UUID roomId;
     private Map<String, Piece> pieceMap;
 
-    private ResultDto(Team winner, long roomId, Map<String, Piece> pieceMap) {
+    private ResultDto(Team winner, UUID roomId, Map<String, Piece> pieceMap) {
         this.winner = winner;
         this.roomId = roomId;
         this.pieceMap = pieceMap;
     }
 
-    public static ResultDto of(Board board, long roomId) {
+    public static ResultDto of(Board board, UUID roomId) {
         Map<String, Piece> pieceMap = new HashMap<>();
         Pieces pieces = board.getPieces();
         for (Piece alivePiece : pieces.getAlivePieces()) {
@@ -32,7 +33,7 @@ public class ResultDto {
         return winner;
     }
 
-    public long getRoomId() {
+    public UUID getRoomId() {
         return roomId;
     }
 

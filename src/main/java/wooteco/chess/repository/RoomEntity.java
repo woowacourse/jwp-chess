@@ -1,9 +1,6 @@
 package wooteco.chess.repository;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -17,7 +14,7 @@ import wooteco.chess.domain.piece.Team;
 @Table("room")
 public class RoomEntity {
     @Id
-    private Long id;
+    private UUID id;
     private String name;
     private Team turn;
     private Set<PieceEntity> pieceEntities = new HashSet<>();
@@ -30,7 +27,7 @@ public class RoomEntity {
         this.turn = turn;
     }
 
-    public RoomEntity(Long id, String name, Team turn, Set<PieceEntity> pieceEntities) {
+    public RoomEntity(UUID id, String name, Team turn, Set<PieceEntity> pieceEntities) {
         this(name, turn);
         this.id = id;
         this.pieceEntities = pieceEntities;
@@ -41,7 +38,7 @@ public class RoomEntity {
         this.pieceEntities = pieceEntities;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -63,5 +60,9 @@ public class RoomEntity {
             positionPiecePair.put(new Position(pieceEntity.getPosition()), PieceRule.makeNewPiece(pieceEntity));
         }
         return new Pieces(positionPiecePair);
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }

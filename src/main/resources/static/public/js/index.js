@@ -22,15 +22,13 @@ window.onload = function () {
     fetch("http://localhost:8080/games")
       .then(res => res.json())
       .then(games => {
-        const loadingDiv = document.querySelector("#loading");
+        const loadingDiv = document.querySelector("#loading-table > tbody");
         loadingDiv.innerHTML += generateGames(games, Object.keys(games["games"]));
       });
   }
 
   function generateGames(games, keys) {
-    console.log(games);
-    console.log(keys);
-    return keys.map(key => `<div class="game info"> <a href=/game/${key}>${games["games"][key]}</a></div>`)
+    return keys.map(key => `<tr><td><a href=/game/${key}>${key}</a></td><td>${games["games"][key]}</td></tr>`)
       .join("");
   }
 

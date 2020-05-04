@@ -16,16 +16,13 @@ import wooteco.chess.domain.piece.PiecesFactory;
 import wooteco.chess.domain.piece.Turn;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.repository.ChessGameRepository;
-import wooteco.chess.repository.PieceRepository;
 
 @Service
 public class SpringChessService {
 	private ChessGameRepository chessGameRepository;
-	private PieceRepository pieceRepository;
 
-	public SpringChessService(ChessGameRepository chessGameRepository, PieceRepository pieceRepository) {
+	public SpringChessService(ChessGameRepository chessGameRepository) {
 		this.chessGameRepository = chessGameRepository;
-		this.pieceRepository = pieceRepository;
 	}
 
 	public void initialize(String roomId) {
@@ -37,12 +34,15 @@ public class SpringChessService {
 		}
 	}
 
-	public Set<PieceEntity> getBoard(String roomId) {
-		return chessGameRepository.findByRoomId(roomId)
+	public Map<String, String> getBoard(String roomId) {
+		Set<PieceEntity> pieceEntities = chessGameRepository.findByRoomId(roomId)
 			.stream()
 			.map(ChessGame::getPieces)
 			.findFirst()
 			.orElseThrow();
+
+		return pieceEntities.stream()
+			.collect(toMap(pieceEntity -> pieceEntity.getPosition().getName(), PieceEntity::getSymbol));
 	}
 
 	public void move(String roomId, Position from, Position to) {

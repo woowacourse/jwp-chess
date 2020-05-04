@@ -23,7 +23,8 @@ public class ConnectionManager {
 
 		// 드라이버 연결
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://" + server + "/" + database + option, userName, password);
+			con = DriverManager.getConnection("jdbc:mysql://" + server + "/" + database + option, userName,
+					password);
 			System.out.println("정상적으로 연결되었습니다.");
 		} catch (SQLException e) {
 			System.err.println("연결 오류:" + e.getMessage());

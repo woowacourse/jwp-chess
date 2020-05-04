@@ -70,7 +70,8 @@ public class SparkChessController {
         Map<String, Object> model = new HashMap<>();
 
         try {
-            MoveStatusDto moveStatusDto = sparkChessService.move(new MovingPosition(req.queryParams("source"), req.queryParams("destination")));
+            MoveStatusDto moveStatusDto = sparkChessService.move(new MovingPosition(req.queryParams("source"),
+                    req.queryParams("destination")));
 
             model.put("normalStatus", moveStatusDto.getNormalStatus());
             model.put("winner", moveStatusDto.getWinner());
@@ -108,7 +109,8 @@ public class SparkChessController {
     private Map<String, Object> move(Request req, Response res) {
         Map<String, Object> model = new HashMap<>();
 
-        DestinationPositionDto destinationPositionDto = sparkChessService.chooseDestinationPosition(req.queryParams("destination"));
+        DestinationPositionDto destinationPositionDto = sparkChessService.chooseDestinationPosition(
+                req.queryParams("destination"));
 
         model.put("normalStatus", destinationPositionDto.getNormalStatus().isNormalStatus());
         model.put("position", destinationPositionDto.getPosition());

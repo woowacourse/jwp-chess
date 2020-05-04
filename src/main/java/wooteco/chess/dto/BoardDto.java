@@ -4,6 +4,7 @@ import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.pieces.Pieces;
 import wooteco.chess.domain.position.Position;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,6 @@ public class BoardDto {
     }
 
     public Map<Position, PieceDto> getBoard() {
-        return board;
+        return Collections.unmodifiableMap(board);
     }
 }

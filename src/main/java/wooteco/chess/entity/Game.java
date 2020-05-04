@@ -2,6 +2,7 @@ package wooteco.chess.entity;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -44,7 +45,7 @@ public class Game {
 	}
 
 	public Set<History> getHistories() {
-		return histories;
+		return Collections.unmodifiableSet(histories);
 	}
 
 	@Override

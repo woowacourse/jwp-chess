@@ -7,9 +7,8 @@ function on_games() {
 
     let result = "";
     for (let i = 0; i < playersDto.length; i++) {
-      let id = playersDto[i].id
       console.log(playersDto[i].name)
-      result += `<li onclick="location.href = 'http://localhost:4567/room' + id;"> ${playersDto[i].name} </li>`;
+      result += `<li onclick="location.href = 'http://localhost:4567/room/' + ${playersDto[i].id}"> ${playersDto[i].name} </li>`;
     }
     point.innerHTML = result;
   })

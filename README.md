@@ -10,8 +10,8 @@
 - [x] Board Table 수정
     - [x] Room id 추가
     - [x] BoardDAO 에서 Room id 로 조회 기능
-- [ ] Board 도메인 수정
-    - [ ] finish 체크 할 때 보드 반환 리팩토링
+- [x] Board 도메인 수정
+    - [x] finish 체크 할 때 보드 반환 리팩토링
     - [x] 폰 2칸 움직이는 거 수정
     - [x] move -> 검증 메서드로 변경
     - [x] initial Board 위치 변경
@@ -20,7 +20,14 @@
 - [x] Board Entity, Board Repository 생성
 - [ ] entity json으로 넘기는 거
 
-# jwp-chess
+### step 4
+- [ ] Board entity 개선
+- [ ] controller test 추가
+- [ ] User 도메인 추가 및 회원가입 로그인 기능
+- [ ] User 페이지 만들기
+- [ ] User table 기록 누적
+
+# jwp-chess 미션 요구사항
 ### 1단계
 - [x] 웹으로 체스 게임이 가능해야 한다.(스파크 적용)
 - [x] 웹 서버를 재시작하더라도 이전에 하던 체스 게임을 다시 시작할 수 있어야 한다.(DB 적용)

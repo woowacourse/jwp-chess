@@ -1,8 +1,11 @@
 $('.result').hide();
 
+const roomId = window.location.href.split("/", -1)[4];
+
 $.ajax({
     type: 'get',
     url: '/init',
+    data: {roomId: roomId},
     dataType: 'json',
     error: function (error) {
         alert("initError" + " " + error);
@@ -37,7 +40,7 @@ function requestMove(start, target) {
     $.ajax({
         type: 'put',
         url: '/move',
-        data: {start: start, target: target},
+        data: {roomId: roomId, start: start, target: target},
         dataType: 'json',
         error: function (response) {
             alert(response.responseText);
@@ -74,9 +77,11 @@ function checkKingDie() {
     $.ajax({
         type: 'get',
         url: '/isEnd',
+        data: {roomId: roomId},
         dataType: 'json',
-        error: function () {
-            alert("isEnd Error")
+        error: function (error) {
+            alert("isEnd Error" + error);
+            console.log(error);
         },
         success: function (response) {
             if (!response.isEnd) {
@@ -98,8 +103,17 @@ $('.reload').click(() => {
     restart();
 });
 
-$('.cancel').click(() => {
-    startPosition = '';
+$('.exit').click(() => {
+    $.ajax({
+        type: 'get',
+        url: '/exit',
+        error: function (request, error, status) {
+            alert(request.status + "\n" + error + "\n" + status);
+        },
+        success: function () {
+            window.location.href = '/';
+        }
+    });
 });
 
 
@@ -107,6 +121,7 @@ function restart() {
     $.ajax({
         type: 'get',
         url: '/restart',
+        data: {roomId: roomId},
         dataType: 'json',
         error: function (request, status, error) {
             alert(request.status + "\n" + request.responseText + "\n" + error + "\n" + status);
@@ -131,6 +146,7 @@ function status() {
     $.ajax({
         type: 'get',
         url: '/status',
+        data: {roomId: roomId},
         dataType: 'json',
         error: function () {
             alert("status Error")

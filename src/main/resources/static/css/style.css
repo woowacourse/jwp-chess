@@ -63,7 +63,7 @@ html, body {
     cursor: default;
 }
 
-.cancel {
+.exit {
     width: 170px;
     text-align: center;
     border: 1px solid white;
@@ -127,51 +127,51 @@ html, body {
 }
 
 .k {
-    background-image: url("images/king_white.png");
+    background-image: url("../images/king_white.png");
 }
 
 .K {
-    background-image: url("images/king_black.png");
+    background-image: url("../images/king_black.png");
 }
 
 .b {
-    background-image: url("images/bishop_white.png");
+    background-image: url("../images/bishop_white.png");
 }
 
 .B {
-    background-image: url("images/bishop_black.png");
+    background-image: url("../images/bishop_black.png");
 }
 
 .n {
-    background-image: url("images/knight_white.png");
+    background-image: url("../images/knight_white.png");
 }
 
 .N {
-    background-image: url("images/knight_black.png");
+    background-image: url("../images/knight_black.png");
 }
 
 .p {
-    background-image: url("images/pawn_white.png");
+    background-image: url("../images/pawn_white.png");
 }
 
 .P {
-    background-image: url("images/pawn_black.png");
+    background-image: url("../images/pawn_black.png");
 }
 
 .q {
-    background-image: url("images/queen_white.png");
+    background-image: url("../images/queen_white.png");
 }
 
 .Q {
-    background-image: url("images/queen_black.png");
+    background-image: url("../images/queen_black.png");
 }
 
 .r {
-    background-image: url("images/rook_white.png");
+    background-image: url("../images/rook_white.png");
 }
 
 .R {
-    background-image: url("images/rook_black.png");
+    background-image: url("../images/rook_black.png");
 }
 
 .result {

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,42 +32,61 @@ public class SpringController {
 		return "index";
 	}
 
+	@GetMapping("/chess/{roomId}")
+	public String index2(@PathVariable String roomId) {
+		chessService.init(Long.parseLong(roomId));
+		return "chess";
+	}
+
+	@GetMapping("/exit")
+	public String roomExit() {
+		return index();
+	}
+
 	@GetMapping("/init")
 	@ResponseBody
-	public Map<String, Object> init() {
-		return makeModel(chessService.init());
+	public Map<String, Object> init(@RequestParam("roomId") Long roomId) {
+		return makeModel(chessService.init(roomId));
 	}
 
 	@PutMapping("/move")
 	@ResponseBody
-	public Map<String, Object> move(@RequestParam("start") String start, @RequestParam("target") String target) {
-		Board board = chessService.move(Position.of(start), Position.of(target), 1L);
+	public Map<String, Object> move(@RequestParam("roomId") Long roomId, @RequestParam("start") String start,
+		@RequestParam("target") String target) {
+		Board board = chessService.move(Position.of(start), Position.of(target), roomId);
 		return makeModel(board);
+	}
+
+	@GetMapping("/add")
+	@ResponseBody
+	public String addRoom(@RequestParam("roomId") Long roomId) {
+		chessService.init(roomId);
+		return index2(roomId + "");
 	}
 
 	@GetMapping("/isEnd")
 	@ResponseBody
-	public Map<String, Object> isEnd() {
+	public Map<String, Object> isEnd(@RequestParam("roomId") Long roomId) {
 		Map<String, Object> model = new HashMap<>();
-		if (chessService.isNotEnd()) {
+		if (chessService.isNotEnd(roomId)) {
 			model.put("isEnd", false);
 			return model;
 		}
 		model.put("isEnd", true);
-		model.put("winningTeam", chessService.findWinningTeam());
+		model.put("winningTeam", chessService.findWinningTeam(roomId));
 		return model;
 	}
 
 	@GetMapping("/restart")
 	@ResponseBody
-	public Map<String, Object> restart() {
-		return makeModel(chessService.restart());
+	public Map<String, Object> restart(@RequestParam("roomId") Long roomId) {
+		return makeModel(chessService.restart(roomId));
 	}
 
 	@GetMapping("/status")
 	@ResponseBody
-	public Map<String, Object> status() {
-		Result result = chessService.status();
+	public Map<String, Object> status(@RequestParam("roomId") Long roomId) {
+		Result result = chessService.status(roomId);
 		Map<String, Object> model = new HashMap<>();
 		model.put("blackTeamScore", result.getBlackTeamScore());
 		model.put("whiteTeamScore", result.getWhiteTeamScore());

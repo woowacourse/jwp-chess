@@ -31,7 +31,7 @@ public class ChessService {
 	}
 
 	public Board move(Position start, Position target, Long boardId) {
-		Board board = init();
+		Board board = init(boardId);
 		Piece startPiece = board.findByPosition(start);
 
 		board.move(start, target);
@@ -42,35 +42,35 @@ public class ChessService {
 		return board;
 	}
 
-	public Board init() {
+	public Board init(Long id) {
 		// TODO id를 roomID로 mapping
-		BoardEntity boardEntity = boardRepository.findById(1L)
+		BoardEntity boardEntity = boardRepository.findById(id)
 			.orElseGet(() -> boardRepository.save(BoardEntity.from(BoardFactory.create())));
 		return boardEntity.createBoard();
 
 	}
 
-	public Board restart() {
+	public Board restart(Long id) {
 		boardRepository.deleteAll();
 		turnRepository.deleteAll();
-		return init();
+		return init(id);
 	}
 
-	public boolean isNotEnd() {
-		Board board = init();
+	public boolean isNotEnd(Long id) {
+		Board board = init(id);
 		return board.isLiveBothKing();
 	}
 
-	public Team findWinningTeam() {
-		Board board = init();
+	public Team findWinningTeam(Long id) {
+		Board board = init(id);
 		return Arrays.stream(Team.values())
 			.filter(board::isLiveKing)
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException("승리팀이 없습니다."));
 	}
 
-	public Result status() {
-		Board board = init();
+	public Result status(Long id) {
+		Board board = init(id);
 		Status status = board.createStatus();
 		return status.getResult();
 	}

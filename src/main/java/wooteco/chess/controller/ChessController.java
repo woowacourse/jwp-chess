@@ -2,10 +2,9 @@ package wooteco.chess.controller;
 
 import org.springframework.web.bind.annotation.*;
 import wooteco.chess.domain.coordinate.Coordinate;
-import wooteco.chess.domain.piece.Team;
-import wooteco.chess.dto.ChessResponseDto;
-import wooteco.chess.dto.ResponseDto;
-import wooteco.chess.entity.Move;
+import wooteco.chess.dto.RequestDto.ChessMoveRequestDto;
+import wooteco.chess.dto.ResponseDto.ChessResponseDto;
+import wooteco.chess.dto.ResponseDto.ResponseDto;
 import wooteco.chess.service.ChessService;
 
 import java.util.List;
@@ -21,19 +20,15 @@ public class ChessController {
 
     @PostMapping("/move")
     @ResponseBody
-    public ResponseDto move(@RequestParam Long roomId,
-                            @RequestParam String userPassword,
-                            @RequestParam String source,
-                            @RequestParam String target){
-        return chessService.move(new Move(
-                roomId, source, target), userPassword);
+    public ResponseDto move(@RequestBody ChessMoveRequestDto requestDto) {
+        return chessService.move(requestDto);
     }
 
-    @GetMapping("/way")
+    @GetMapping("/way/{roomId}/{userPassword}/{coordinate}")
     @ResponseBody
-    public ResponseDto<List<String>> way(@RequestParam Long roomId,
-                                         @RequestParam String userPassword,
-                                         @RequestParam String coordinate){
+    public ResponseDto<List<String>> way(@PathVariable Long roomId,
+                                         @PathVariable String userPassword,
+                                         @PathVariable String coordinate){
         return chessService.getMovableWay(roomId, Coordinate.of(coordinate), userPassword);
     }
 

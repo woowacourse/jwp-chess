@@ -1,9 +1,11 @@
 package wooteco.chess.controller;
 
 import org.springframework.web.bind.annotation.*;
-import wooteco.chess.dto.ResponseDto;
+import wooteco.chess.dto.RequestDto.RoomExitRequestDto;
+import wooteco.chess.dto.RequestDto.RoomJoinRequestDto;
+import wooteco.chess.dto.ResponseDto.ResponseDto;
+import wooteco.chess.dto.RequestDto.RoomCreateRequestDto;
 import wooteco.chess.entity.Room;
-import wooteco.chess.service.ChessService;
 import wooteco.chess.service.RoomService;
 
 import java.util.List;
@@ -21,28 +23,26 @@ public class RoomController {
 
     @PostMapping("/create")
     @ResponseBody
-    public ResponseDto create(@RequestParam String roomName,
-                              @RequestParam String userPassword){
-        Room room = new Room();
-        room.setWhitePassword(userPassword);
-        room.setName(roomName);
-
-        return roomService.create(room);
+    public ResponseDto create(@RequestBody final RoomCreateRequestDto requestDto){
+        ResponseDto responseDto = roomService.create(requestDto);
+        if(responseDto.getResponseCode() == 200){
+            Room room = (Room)(responseDto.getResponseData());
+            responseDto = ResponseDto.success(room.getId().toString());
+        }
+        return responseDto;
     }
 
     @PostMapping("/join")
     @ResponseBody
-    public ResponseDto join(@RequestParam String roomName,
-                            @RequestParam String userPassword){
-
-        return roomService.join(roomName, userPassword);
+    public ResponseDto<String> join(@RequestBody final RoomJoinRequestDto requestDto){
+        Room room = (Room)(roomService.join(requestDto).getResponseData());
+        return ResponseDto.success(room.getId().toString());
     }
 
     @PostMapping("/exit")
     @ResponseBody
-    public ResponseDto exit(@RequestParam Long roomId,
-                            @RequestParam String userPassword){
-        return roomService.exit(roomId, userPassword);
+    public ResponseDto exit(@RequestBody final RoomExitRequestDto requestDto){
+        return roomService.exit(requestDto);
     }
 
     @GetMapping("/status/{roomId}")

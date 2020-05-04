@@ -1,3 +1,20 @@
+@import url(//fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+@import url(//fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+@import url(//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+@import url(//fonts.googleapis.com/earlyaccess/hanna.css);
+
+@font-face {
+    font-family: "BMHANNAAir";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+}
+
+* {
+    font-family: BMHANNAAir;
+    font-size: 30px;
+}
+
 .title {
     justify-content: center;
     background-color: gray;
@@ -55,4 +72,9 @@
 #turn-box {
     height: 20px;
     padding: 0;
+}
+
+.exit {
+    margin: 8px auto auto;
+    text-align: center;
 }

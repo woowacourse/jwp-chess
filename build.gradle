@@ -27,6 +27,7 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	runtimeOnly 'com.h2database:h2'
+    implementation 'junit:junit:4.12'
 }
 
 test {

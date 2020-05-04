@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import wooteco.chess.domain.room.Room;
+import wooteco.chess.repository.RoomEntity;
 import wooteco.chess.service.RoomService;
 
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -22,15 +21,14 @@ public class RoomController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Room> rooms = roomService.findAllRoom();
-        model.addAttribute("rooms", rooms);
+        model.addAttribute("rooms", roomService.findAllRoom());
         return "index";
     }
 
     @PostMapping("/room")
     public String create(
             @RequestParam String title, Model model) {
-        Room created = roomService.createRoom(title);
+        RoomEntity created = roomService.createRoom(title);
         Long roomId = created.getId();
         Map<String, String> board = roomService.initializeBoard(roomId);
         model.addAttribute("board", board);

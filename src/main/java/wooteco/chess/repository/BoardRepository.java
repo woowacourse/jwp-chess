@@ -1,4 +1,4 @@
-package wooteco.chess.domain.board;
+package wooteco.chess.repository;
 
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
@@ -23,7 +23,5 @@ public interface BoardRepository extends CrudRepository<BoardEntity, Long> {
     @Modifying
     @Query("DELETE FROM board WHERE roomId = :roomId")
     void deleteByRoomId(@Param("roomId") Long roomId);
-
-
 
 }

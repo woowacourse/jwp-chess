@@ -83,7 +83,7 @@ public abstract class Piece {
         return pieceType.name();
     }
 
-    public abstract Piece getNextPiece();
+    public abstract Piece getNextPiece() throws IllegalArgumentException;
 
     @Override
     public boolean equals(final Object o) {

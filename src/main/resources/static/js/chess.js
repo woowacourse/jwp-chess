@@ -4,8 +4,9 @@ const score = () => {
         method: "GET",
     };
     fetch(url, scoreRequest)
-        .then(response => {
-            alert(response.data);
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
         })
         .catch(reason => {
             alert(reason.data);

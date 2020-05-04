@@ -1,6 +1,10 @@
 window.onload = function () {
   document.querySelector("#new").addEventListener("click", () => {
     let gameName = prompt("게임 이름을 입력하세요.");
+    if (!gameName) {
+      alert("게임 이름을 입력하지 않으셨습니다.");
+      return;
+    }
     fetch("http://localhost:8080/new", {
       method: "POST",
       body: JSON.stringify({

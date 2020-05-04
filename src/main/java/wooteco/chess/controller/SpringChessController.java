@@ -2,14 +2,17 @@ package wooteco.chess.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import wooteco.chess.service.ChessService;
 import wooteco.chess.service.dto.ChessBoardDto;
 import wooteco.chess.service.dto.ChessGameDto;
 import wooteco.chess.service.dto.ChessStatusDtos;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class SpringChessController {
@@ -21,21 +24,42 @@ public class SpringChessController {
 	}
 
 	@GetMapping("/")
-	public String start() {
+	public String index(Model model) {
+		model.addAttribute("gameNames", chessService.showAllGames());
 		return "index";
 	}
 
-	@GetMapping("/chess")
-	public String loadChessGame(final Model model) {
-		final ChessGameDto chessGameDto = chessService.loadChessGame();
+	@PostMapping("/game/new")
+	public String createGame(@RequestParam("name") final String name, final Model model, HttpServletResponse response) {
+		ChessGameDto chessGameDto = chessService.createChessGame(name);
+		Cookie cookie = new Cookie("gameId", String.valueOf(chessGameDto.getId()));
 
+		cookie.setPath("/");
+		response.addCookie(cookie);
 		return renderGame(chessGameDto, model);
 	}
 
-	@PostMapping("/chess_play")
-	public String playChessGame(@RequestParam final String sourcePosition, @RequestParam final String targetPosition,
-		final Model model) {
-		final ChessGameDto chessGameDto = chessService.playChessGame(sourcePosition.trim(), targetPosition.trim());
+	@PostMapping("/game")
+	public String showGame(@RequestParam("name") final String name, final Model model, HttpServletResponse response) {
+		ChessGameDto chessGameDto = chessService.loadChessGameByName(name);
+		Long gameId = chessGameDto.getId();
+
+		if (chessService.isEndGame(gameId)) {
+			return renderResult(chessGameDto, model);
+		}
+
+		Cookie cookie = new Cookie("gameId", String.valueOf(gameId));
+		cookie.setPath("/");
+		response.addCookie(cookie);
+		return renderGame(chessGameDto, model);
+	}
+
+	@PostMapping("/game/play")
+	public String playChessGame(@CookieValue("gameId") Cookie gameIdCookie, @RequestParam final String sourcePosition,
+		@RequestParam final String targetPosition, final Model model) {
+		final Long gameId = Long.parseLong(gameIdCookie.getValue());
+		final ChessGameDto chessGameDto = chessService.playChessGame(gameId, sourcePosition.trim(),
+			targetPosition.trim());
 
 		if (chessGameDto.isEndState()) {
 			return renderResult(chessGameDto, model);
@@ -43,14 +67,9 @@ public class SpringChessController {
 		return renderGame(chessGameDto, model);
 	}
 
-	@PostMapping("/chess_new")
-	public String newChessGame(final Model model) {
-		return renderGame(chessService.createChessGame(), model);
-	}
-
-	@PostMapping("/chess_end")
-	public String endChessGame(final Model model) {
-		final ChessGameDto chessGameDto = chessService.endChessGame();
+	@PostMapping("/game/end")
+	public String endChessGame(@CookieValue("gameId") Long gameId, final Model model) {
+		final ChessGameDto chessGameDto = chessService.endChessGame(gameId);
 		return renderResult(chessGameDto, model);
 	}
 
@@ -74,5 +93,4 @@ public class SpringChessController {
 		model.addAttribute("status", chessStatusDtos.getChessStatusDtos());
 		return "result";
 	}
-
 }

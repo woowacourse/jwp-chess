@@ -12,6 +12,6 @@ public class ChessGameTest {
     @Test
     @DisplayName("체스 게임 생성")
     void constructor() {
-        assertThat(new ChessGame(0, new Ready())).isInstanceOf(ChessGame.class);
+        assertThat(new ChessGame(new Ready())).isInstanceOf(ChessGame.class);
     }
 }

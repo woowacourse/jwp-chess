@@ -1,5 +1,7 @@
 package wooteco.chess.dto;
 
+import wooteco.chess.domain.game.ChessGame;
+
 public class ChessGameDto {
     private BoardDto boardDto;
     private TurnDto turnDto;
@@ -11,6 +13,14 @@ public class ChessGameDto {
         this.turnDto = turnDto;
         this.statusDto = statusDto;
         this.isFinished = isFinished;
+    }
+
+    public ChessGameDto(ChessGame chessGame) {
+        this.boardDto = new BoardDto(chessGame.board());
+        this.turnDto = new TurnDto(chessGame.turn());
+        this.statusDto = new StatusDto(chessGame.status().getWhiteScore(),
+                chessGame.status().getBlackScore(), chessGame.status().getWinner());
+        this.isFinished = chessGame.isFinished();
     }
 
     public boolean getIsFinished() {

@@ -8,7 +8,8 @@ public enum ChessResponseCode implements ResponseCode {
     CANNOT_FIND_ROOM_ID(401,"유효 하지 않은 방"),
     NOT_YOUR_TURN(402,"차례 아님"),
     HAS_OBSTACLE(403, "장애물 있음"),
-    ROOM_IS_FULL(404,"방이 꽉 찼음");
+    ROOM_IS_FULL(404,"방이 꽉 찼음"),
+    ROOM_IS_ALREADY_EXIST(405, "방이 이미 존재함");
 
     private Integer code;
     private String message;

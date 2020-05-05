@@ -40,7 +40,7 @@ public class SpringController {
 	}
 
 	@GetMapping("/chess/{roomId}")
-	public String index2(@PathVariable String roomId) {
+	public String chess(@PathVariable String roomId) {
 		chessService.init(Long.parseLong(roomId));
 		return "chess";
 	}
@@ -68,7 +68,7 @@ public class SpringController {
 	@ResponseBody
 	public String addRoom(@RequestParam("roomId") Long roomId) {
 		chessService.init(roomId);
-		return index2(roomId + "");
+		return chess(roomId + "");
 	}
 
 	@GetMapping("/isEnd")

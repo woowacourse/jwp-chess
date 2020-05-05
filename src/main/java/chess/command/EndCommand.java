@@ -11,16 +11,16 @@ public class EndCommand implements Command {
         this.value = value;
     }
 
+    public static boolean isEnd(String command) {
+        String lowerCaseCommand = command.toLowerCase();
+        return COMMAND.equals(lowerCaseCommand);
+    }
+
     @Override
     public Progress conduct() {
         if (COMMAND.equals(value)) {
             return Progress.END;
         }
         return Progress.ERROR;
-    }
-
-    public static boolean isEnd(String command) {
-        String lowerCaseCommand = command.toLowerCase();
-        return COMMAND.equals(lowerCaseCommand);
     }
 }

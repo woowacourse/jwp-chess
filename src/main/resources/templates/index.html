@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="/chess.css" type="text/css">
 </head>
 
-<body onload="getChessGames();">
-<p id="game_id"></p>
-<div id="game">
+<body onload="load()">
+<p id="game_id">{{game_id}}</p>
+<div class="game">
     <div class="board">
         <div class='cellprefix'>8</div>
         <div class='gamecell' id='a_8'></div>
@@ -101,31 +101,13 @@
         <div class='cellprefix'>g</div>
         <div class='cellprefix'>h</div>
     </div>
-    <div id='whiteScore' style="margin-left: 60px; margin-top: 8px;">White score : 38</div>
-    <div id='blackScore' style="margin-left: 60px; margin-top: 4px;">Black score : 38</div>
-    <p id="chessBar" style="margin-left: 60px; margin-top: 8px;">체스 방 :</p>
+    <div class="game-info">
+        <div id='whiteScore'>White score : 38</div>
+        <div id='blackScore'>Black score : 38</div>
+        <p id="chessBar">체스 방 :</p>
 
-    <div id='turn'>It's whites Turn!</div>
-
-    <p style="margin-left: 60px;">
-        화이트 플레이어 : <input type="text" id="white_name" size="15" style="margin-top: 8px;">
-        블랙 플레이어 : <input type="text" id="black_name" size="15" style="margin-top: 8px;">
-    </p>
-
-    <p style="margin-top: 8px;">
-        <input class="start-button" type="submit" value="reset" style="margin-left: 60px; margin-top: 8px;"
-               onclick="postNewGame();"/>
-
-    <form action="/end" method="get">
-        <input class="end-button" type="submit" value="End" style="margin-left: 60px; margin-top: 8px;"
-               onclick="postEndGame();"/>
-    </form>
-    </p>
-
-    <input class="start-btn" onclick="postNewGame();" style="margin-left: 60px; margin-top: 8px;" type="submit"
-           value="새게임"/>
-
-    <button class="resume-btn" onclick="resume();">불러오기</button>
+        <div id='turn'>It's whites Turn!</div>
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

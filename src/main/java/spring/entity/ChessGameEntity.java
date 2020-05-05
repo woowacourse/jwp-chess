@@ -6,7 +6,7 @@ import chess.team.Team;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-import spring.entity.converter.ChessBoardConverter;
+import spring.entity.util.ChessBoardConverter;
 
 import java.util.Set;
 
@@ -17,6 +17,15 @@ public class ChessGameEntity {
     @Column("turn_is_black")
     Boolean isTurnBlack;
     Set<PieceEntity> pieces;
+    @Column("game_name")
+    String gameName;
+
+    public ChessGameEntity(Long gameId, Boolean isTurnBlack, Set<PieceEntity> pieces, String gameName) {
+        this.id = gameId;
+        this.isTurnBlack = isTurnBlack;
+        this.pieces = pieces;
+        this.gameName = gameName;
+    }
 
     public ChessGameEntity(Boolean isTurnBlack, Set<PieceEntity> pieces) {
         this.isTurnBlack = isTurnBlack;
@@ -29,8 +38,8 @@ public class ChessGameEntity {
         return new ChessGame(chessBoard, turn);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getGameName() {
+        return gameName;
     }
 
     public Long getId() {
@@ -45,19 +54,10 @@ public class ChessGameEntity {
         return pieces;
     }
 
-    public void updateTurn() {
-        this.isTurnBlack = !isTurnBlack;
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
     }
 
-    public void add(PieceEntity pieceEntity) {
-        pieces.add(pieceEntity);
-    }
-
-    public void delete(PieceEntity pieceEntity) {
-        pieces.remove(pieceEntity);
-    }
-
-    public void update(Set<PieceEntity> pieces) {
-        this.pieces = pieces;
+    private ChessGameEntity() {
     }
 }

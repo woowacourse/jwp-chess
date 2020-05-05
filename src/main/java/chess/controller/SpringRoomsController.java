@@ -5,10 +5,7 @@ import chess.repository.exceptions.DaoNoneSelectedException;
 import chess.service.ChessRoomsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,14 +29,7 @@ public class SpringRoomsController {
 	}
 
 	@PostMapping
-	public String manage(
-			@RequestParam(value = "method", defaultValue = EMPTY) final String method,
-			@RequestParam(value = "room_name", defaultValue = EMPTY) final String roomName) {
-
-		if (DELETE.equals(method)) {
-			return delete(roomName);
-		}
-
+	public String manage(@RequestParam(value = "room_name", defaultValue = EMPTY) final String roomName) {
 		try {
 			return enter(roomName);
 		} catch (DaoNoneSelectedException e) {
@@ -47,7 +37,8 @@ public class SpringRoomsController {
 		}
 	}
 
-	private String delete(final String roomName) {
+	@PostMapping("/delete")
+	public String delete(@RequestParam(value = "room_name", defaultValue = EMPTY) final String roomName) {
 		chessRoomsService.deleteRoomByRoomName(roomName);
 		return Constants.REDIRECT + "/chess/rooms";
 	}

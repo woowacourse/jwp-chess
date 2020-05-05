@@ -15,20 +15,19 @@
 </div>
 <div class="content_box_wrapper">
     <div class="content_box">
-        <ul>
+        <h2>방 목록</h2>
             {{#rooms}}
-            <li>{{roomName}}</li>
+                <form action="rooms/delete" method="post" id="room_form">
+                    - {{roomName}}
+                    <input type="hidden" name="room_name" value="{{ roomName }}"/>
+                    <input type="submit" value="X" id="delete"/>
+                </form>
             {{/rooms}}
-        </ul>
         <form method="post" id="room_form">
             <label for="room_name">방</label>
-            <input type="text" name="room_name" id="room_name"><br/>
-            <input type="radio" name="method" value="post" id="enter_or_create" checked="checked"/>
-            <label for="enter_or_create">입장/생성</label><br/>
-            <input type="radio" name="method" value="delete" id="delete"/>
-            <label for="delete">삭제</label>
+            <input type="text" name="room_name"><br/>
         </form>
-        <button form="room_form">입력</button>
+        <button form="room_form">생성/입장</button>
         <a href="/chess/statistics">통계보러가기</a>
     </div>
 </div>

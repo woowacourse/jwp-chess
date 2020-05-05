@@ -34,8 +34,8 @@ public class ChessService {
 	}
 
 	public List<RoomDto> findAllRoom() {
-		List<RoomEntity> rooms = (List<RoomEntity>)roomRepository.findAll();
-		return rooms.stream()
+		return roomRepository.findAll()
+			.stream()
 			.map(roomEntity -> roomEntity.createDto())
 			.collect(Collectors.toList());
 	}

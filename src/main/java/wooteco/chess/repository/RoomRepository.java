@@ -1,5 +1,7 @@
 package wooteco.chess.repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import wooteco.chess.entity.RoomEntity;
@@ -10,4 +12,6 @@ import wooteco.chess.entity.RoomEntity;
  *    @author HyungJu An, JunSeong Hong
  */
 public interface RoomRepository extends CrudRepository<RoomEntity, Long> {
+	@Override
+	List<RoomEntity> findAll();
 }

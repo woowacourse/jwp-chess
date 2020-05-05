@@ -20,10 +20,11 @@ public class ChessGameEntity {
     @Column("game_name")
     String gameName;
 
-    public ChessGameEntity(Long gameId, Boolean isTurnBlack, Set<PieceEntity> pieces) {
+    public ChessGameEntity(Long gameId, Boolean isTurnBlack, Set<PieceEntity> pieces, String gameName) {
         this.id = gameId;
         this.isTurnBlack = isTurnBlack;
         this.pieces = pieces;
+        this.gameName = gameName;
     }
 
     public ChessGameEntity(Boolean isTurnBlack, Set<PieceEntity> pieces) {

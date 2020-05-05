@@ -51,7 +51,6 @@ $(document).ready(function () {
 });
 
 function allowDrop(ev) {
-    // 고유의 동작 제거
     ev.preventDefault();
 }
 
@@ -66,36 +65,6 @@ function drop(ev) {
     var game_id = document.getElementById("game_id").innerHTML;
     move({"game_id": game_id, "now": now.toString(), "des": des.toString()});
 }
-
-// function getChessGames() {
-//     $.ajax({
-//         url: "/start/boards",
-//         type: "get",
-//         success: function (data) {
-//             var res = JSON.parse(data);
-//             // console.log(JSON.stringify(data));
-//             var chessGameVos = res.chessGameVos;
-//             for (var i = 0; i < chessGameVos.length; i++) {
-//                 add(chessGameVos[i].id);
-//             }
-//         },
-//         error: function (errorThrown) {
-//
-//         },
-//     });
-// }
-
-// function add(id) {
-//     var element = document.createElement("input");
-//     element.type = "button";
-//     element.value = id + "번 체스 게임";
-//     element.onclick = function () {
-//         getChessBoard(id);
-//     };
-//
-//     var chessBar = document.getElementById("chessBar");
-//     chessBar.appendChild(element);
-// }
 
 function postNewGame() {
     const game_name = document.getElementById("game_name").value;
@@ -220,7 +189,4 @@ function load() {
             alert(JSON.stringify(errorThrown));
         },
     });
-}
-
-function getChessBoard() {
 }

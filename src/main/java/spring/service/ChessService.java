@@ -58,7 +58,7 @@ public class ChessService {
     private void saveChessGameIfProgressIsNotEnd(ChessGameEntity chessGameEntity, ChessGame chessGame, Progress progress) {
         if (!progress.isError()) {
             chessGame.changeTurn();
-            ChessGameEntity targetChessGameEntity = chessGame.toEntity(chessGameEntity.getId());
+            ChessGameEntity targetChessGameEntity = chessGame.toEntity(chessGameEntity.getId(), chessGameEntity.getGameName());
             chessGameRepository.save(targetChessGameEntity);
         }
     }

@@ -23,8 +23,7 @@
         form.submit();
      }
 
-     function goGameRoom() {
-        var game_id = document.querySelector('#game_room').value;
+     function goGameRoom(game_id) {
         window.location.assign('/ready/' + game_id)
      }
 </script>
@@ -32,14 +31,14 @@
     {{#each roomNames}}
     <div class='game_room'>
         {{this}}
-        <button id='game_room' value='{{this}}' onClick='goGameRoom()'>입장</button>
+        <input type='button' id={{this}} value='입장' onClick='goGameRoom(this.id)'/>
     </div>
     {{/each}}
 </br>
 <div class='create_room'>체스방 새로 만들기</div></br>
 <form id="readyForm" action="/ready/" method="post">
     <input id="game_id" name="game_id" placeholder="게임을 저장하기 위한 이름을 입력해주세요." type="text"/>
-    <input type="button" onClick ="goReadyPage()" value="입장"/>
+    <input type="button" onClick ="goReadyPage()" value="생성"/>
 </form>
 </body>
 </html>

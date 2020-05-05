@@ -18,19 +18,14 @@ public class BoardController {
     }
 
     @PutMapping("/room/{room_id}/move")
-    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> move(
             @PathVariable("room_id") Long roomId,
             @RequestParam String fromPiece,
             @RequestParam String toPiece) {
-        try {
             Status status = boardService.movePiece(roomId, fromPiece, toPiece);
             if (status.isFinish()) {
                 return ResponseEntity.ok().body(boardService.receiveWinner(roomId));
             }
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
         return ResponseEntity.ok().body(fromPiece + " " + toPiece);
     }
 

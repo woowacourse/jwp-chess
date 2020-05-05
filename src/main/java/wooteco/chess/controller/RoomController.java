@@ -20,11 +20,11 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/room")
     public String index(Model model) {
         List<Room> rooms = roomService.findAllRoom();
         model.addAttribute("rooms", rooms);
-        return "index";
+        return "room";
     }
 
     @PostMapping("/room")
@@ -46,7 +46,7 @@ public class RoomController {
         model.addAttribute("board", board);
         model.addAttribute("roomId", roomId);
         model.addAttribute("title", roomService.findTitleById(roomId));
-        return "room";
+        return "board";
     }
 
     @PostMapping("/room/{room_id}")
@@ -54,7 +54,7 @@ public class RoomController {
             @PathVariable("room_id") Long roomId
     ) {
         roomService.deleteRoom(roomId);
-        return "redirect:" + "/";
+        return "redirect:" + "/room";
     }
 
     @GetMapping("/room/{room_id}/turn")
@@ -73,6 +73,6 @@ public class RoomController {
         model.addAttribute("board", roomService.resetRoom(roomId));
         model.addAttribute("roomId", roomId);
         model.addAttribute("title", roomService.findTitleById(roomId));
-        return "room";
+        return "board";
     }
 }

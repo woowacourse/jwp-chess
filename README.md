@@ -18,7 +18,7 @@
 ### step 3
 - [x] Room Entity, Room Repository 생성
 - [x] Board Entity, Board Repository 생성
-- [ ] entity json으로 넘기는 거
+- [x] entity json으로 넘기기
 
 ### step 4
 - [ ] Board entity 개선

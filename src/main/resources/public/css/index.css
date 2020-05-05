@@ -1,0 +1,8 @@
+header {
+    text-align: center;
+}
+
+.signup-section {
+    display: flex;
+    justify-content: center;
+}

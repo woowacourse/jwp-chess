@@ -1,11 +1,11 @@
 package wooteco.chess.domain.piece;
 
+import java.util.Map;
+
 import wooteco.chess.domain.Color;
 import wooteco.chess.domain.board.Column;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.board.Row;
-
-import java.util.Map;
 
 public class PiecesFactory {
     public static void createBlankPieces(Map<Position, Piece> pieces) {
@@ -48,27 +48,33 @@ public class PiecesFactory {
         initPawn("2", "p", color, pieces);
     }
 
-    private static void initKing(String position, String symbol, Color color, Map<Position, Piece> pieces) {
+    private static void initKing(String position, String symbol, Color color,
+        Map<Position, Piece> pieces) {
         pieces.put(Position.of(position), new King(color, symbol));
     }
 
-    private static void initQueen(String position, String symbol, Color color, Map<Position, Piece> pieces) {
+    private static void initQueen(String position, String symbol, Color color,
+        Map<Position, Piece> pieces) {
         pieces.put(Position.of(position), new Queen(color, symbol));
     }
 
-    private static void initKnight(String position, String symbol, Color color, Map<Position, Piece> pieces) {
+    private static void initKnight(String position, String symbol, Color color,
+        Map<Position, Piece> pieces) {
         pieces.put(Position.of(position), new Knight(color, symbol));
     }
 
-    private static void initBishop(String position, String symbol, Color color, Map<Position, Piece> pieces) {
+    private static void initBishop(String position, String symbol, Color color,
+        Map<Position, Piece> pieces) {
         pieces.put(Position.of(position), new Bishop(color, symbol));
     }
 
-    private static void initRook(String position, String symbol, Color color, Map<Position, Piece> pieces) {
+    private static void initRook(String position, String symbol, Color color,
+        Map<Position, Piece> pieces) {
         pieces.put(Position.of(position), new Rook(color, symbol));
     }
 
-    private static void initPawn(String position, String symbol, Color color, Map<Position, Piece> pieces) {
+    private static void initPawn(String position, String symbol, Color color,
+        Map<Position, Piece> pieces) {
         for (Column column : wooteco.chess.domain.board.Column.values()) {
             pieces.put(Position.of(column.getColumn() + position), new Pawn(color, symbol));
         }

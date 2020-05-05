@@ -1,8 +1,12 @@
 package wooteco.chess.domain.board;
 
-import wooteco.chess.domain.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-import java.util.*;
+import wooteco.chess.domain.Color;
 
 public class Position {
     public static final int MIN = 1;
@@ -23,7 +27,7 @@ public class Position {
 
     public static Position of(int afterMoveOfX, int afterMoveOfY) {
         String afterMovePosition = PositionCache.createKey(Column.of(afterMoveOfX),
-                Row.of(afterMoveOfY));
+            Row.of(afterMoveOfY));
         return Position.of(afterMovePosition);
     }
 
@@ -67,9 +71,9 @@ public class Position {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        Position position = (Position) o;
+        Position position = (Position)o;
         return column == position.column &&
-                row == position.row;
+            row == position.row;
     }
 
     @Override

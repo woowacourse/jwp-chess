@@ -1,17 +1,25 @@
 package wooteco.chess.domain.board;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import wooteco.chess.domain.Color;
-import wooteco.chess.domain.GameManager;
-import wooteco.chess.domain.piece.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import wooteco.chess.domain.Color;
+import wooteco.chess.domain.GameManager;
+import wooteco.chess.domain.piece.Bishop;
+import wooteco.chess.domain.piece.King;
+import wooteco.chess.domain.piece.Knight;
+import wooteco.chess.domain.piece.Pawn;
+import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.Pieces;
+import wooteco.chess.domain.piece.PiecesFactory;
+import wooteco.chess.domain.piece.Queen;
+import wooteco.chess.domain.piece.Rook;
 
 public class GameManagerTest {
     private GameManager gameManager;
@@ -89,7 +97,7 @@ public class GameManagerTest {
         assertThatThrownBy(() -> {
             gameManager.moveFromTo(Position.of("b8"), Position.of("a4"));
         }).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("상대방의 말을 선택하셨습니다");
+            .hasMessageContaining("상대방의 말을 선택하셨습니다");
     }
 
     @DisplayName("target position 을 자신의 말로 선택했을 경우")
@@ -98,7 +106,7 @@ public class GameManagerTest {
         assertThatThrownBy(() -> {
             gameManager.moveFromTo(Position.of("b1"), Position.of("d2"));
         }).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("target에 자신의 말이 있습니다");
+            .hasMessageContaining("target에 자신의 말이 있습니다");
     }
 
     @DisplayName("target position 을 해당 말로 갈 수 없는 곳으 선택했을 경우")
@@ -107,7 +115,7 @@ public class GameManagerTest {
         assertThatThrownBy(() -> {
             gameManager.moveFromTo(Position.of("b1"), Position.of("a4"));
         }).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("갈 수 없는 곳을 선택하셨습니다");
+            .hasMessageContaining("갈 수 없는 곳을 선택하셨습니다");
     }
 
     @DisplayName("초기화 상태일 때 King이 안 죽었는지 확인하는 테스트")

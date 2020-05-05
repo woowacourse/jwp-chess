@@ -15,7 +15,8 @@ public class RoomResponseDto {
     private RoomResponseDto() {
     }
 
-    public RoomResponseDto(final Long id, @NotEmpty final String name, @NotEmpty final String password) {
+    public RoomResponseDto(final Long id, @NotEmpty final String name,
+        @NotEmpty final String password) {
         this.id = id;
         this.name = name;
         this.password = password;

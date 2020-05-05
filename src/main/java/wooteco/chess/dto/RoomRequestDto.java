@@ -1,13 +1,12 @@
 package wooteco.chess.dto;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 public class RoomRequestDto {
     @NotEmpty
-    private String name;
+    private final String name;
     @NotEmpty
-    private String password;
+    private final String password;
 
     public RoomRequestDto(@NotEmpty final String name, @NotEmpty final String password) {
         this.name = name;

@@ -1,14 +1,14 @@
 package wooteco.chess.domain;
 
-import wooteco.chess.domain.board.Column;
-import wooteco.chess.domain.board.Position;
-import wooteco.chess.domain.board.Row;
-import wooteco.chess.domain.piece.Piece;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import wooteco.chess.domain.board.Column;
+import wooteco.chess.domain.board.Position;
+import wooteco.chess.domain.board.Row;
+import wooteco.chess.domain.piece.Piece;
 
 public enum PieceScore {
     KING(0),
@@ -29,9 +29,9 @@ public enum PieceScore {
 
     private static PieceScore of(Piece piece) {
         return Arrays.stream(PieceScore.values())
-                .filter(piece::isSameName)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 Piece가 Null입니다!"));
+            .filter(piece::isSameName)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("해당하는 Piece가 Null입니다!"));
     }
 
     public static double calculateByColor(GameManager gameManager, Color color) {
@@ -47,22 +47,23 @@ public enum PieceScore {
 
     private static List<Piece> pawnsOfColumn(Color color, Column column, GameManager gameManager) {
         return Arrays.stream(Row.values())
-                .map(rank -> gameManager.getPiece(Position.of(column, rank)))
-                .filter(Objects::nonNull)
-                .filter(piece -> piece.isSameColor(color))
-                .filter(Piece::isPawn)
-                .collect(Collectors.toList());
+            .map(rank -> gameManager.getPiece(Position.of(column, rank)))
+            .filter(Objects::nonNull)
+            .filter(piece -> piece.isSameColor(color))
+            .filter(Piece::isPawn)
+            .collect(Collectors.toList());
 
     }
 
-    private static double sumPieceScoreExceptPawn(Color color, Column column, GameManager gameManager) {
+    private static double sumPieceScoreExceptPawn(Color color, Column column,
+        GameManager gameManager) {
         return Arrays.stream(Row.values())
-                .map(rank -> gameManager.getPiece(Position.of(column, rank)))
-                .filter(Objects::nonNull)
-                .filter(piece -> piece.isSameColor(color))
-                .filter(piece -> !piece.isPawn())
-                .mapToDouble(PieceScore::calculateScore)
-                .sum();
+            .map(rank -> gameManager.getPiece(Position.of(column, rank)))
+            .filter(Objects::nonNull)
+            .filter(piece -> piece.isSameColor(color))
+            .filter(piece -> !piece.isPawn())
+            .mapToDouble(PieceScore::calculateScore)
+            .sum();
     }
 
     private static double calculateScore(Piece piece) {
@@ -75,7 +76,7 @@ public enum PieceScore {
         }
 
         return pawns.stream()
-                .mapToDouble(pawn -> of(pawn).score)
-                .sum();
+            .mapToDouble(pawn -> of(pawn).score)
+            .sum();
     }
 }

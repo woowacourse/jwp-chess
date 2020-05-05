@@ -1,11 +1,11 @@
 package wooteco.chess.domain;
 
+import java.util.List;
+
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.Path;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Pieces;
-
-import java.util.List;
 
 public class GameManager {
     private final Pieces pieces;

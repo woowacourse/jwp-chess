@@ -1,11 +1,12 @@
 package wooteco.chess.domain.piece;
 
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import wooteco.chess.domain.Color;
 import wooteco.chess.domain.PieceScore;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author AnHyungJu, LeeHoBin

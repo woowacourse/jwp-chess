@@ -1,15 +1,13 @@
 package wooteco.chess.dto;
 
-import org.springframework.lang.NonNull;
-
 import javax.validation.constraints.NotEmpty;
 
 public class AuthorizeDto {
 
-    private Long id;
+    private final Long id;
 
     @NotEmpty
-    private String password;
+    private final String password;
 
     public AuthorizeDto(@NotEmpty final Long id, @NotEmpty final String password) {
         this.id = id;

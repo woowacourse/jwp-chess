@@ -24,9 +24,7 @@ dependencies {
 	implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.1'
 	implementation 'com.google.code.gson:gson:2.8.6'
 	testImplementation 'io.rest-assured:rest-assured:3.3.0'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'com.h2database:h2'
 }
 

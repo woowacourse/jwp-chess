@@ -9,8 +9,8 @@ public class RoomEntity {
 
     @Id
     private Long id;
-    private String name;
-    private String password;
+    private final String name;
+    private final String password;
     @Column(value = "room")
     private GameEntity game;
 

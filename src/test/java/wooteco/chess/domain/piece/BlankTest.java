@@ -1,10 +1,11 @@
 package wooteco.chess.domain.piece;
 
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import wooteco.chess.domain.Color;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import wooteco.chess.domain.Color;
 
 class BlankTest {
     @DisplayName("빈 값을 가져오는지 테스트")

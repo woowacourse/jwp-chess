@@ -1,11 +1,11 @@
 package wooteco.chess.domain.piece;
 
+import java.util.Map;
+
 import wooteco.chess.domain.Color;
 import wooteco.chess.domain.PieceScore;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.piece.strategy.BlankMoveStrategy;
-
-import java.util.Map;
 
 public class Blank extends Piece {
     private static final Blank blank = new Blank(Color.NONE, "blank");

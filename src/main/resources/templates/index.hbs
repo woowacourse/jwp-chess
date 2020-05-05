@@ -1,169 +1,171 @@
 <!DOCTYPE>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <link href="/css/index.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-            crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <link href="/css/index.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+          integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+          integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+          crossorigin="anonymous"></script>
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+        crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+          integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+          crossorigin="anonymous"></script>
 </head>
 <body>
 
 <div class="container">
-    <div class="title"><h1><a href="/rooms">체스체스</a></h1></div>
-    <h2>전체 방 목록</h2>
+  <div class="title"><h1><a href="/rooms">체스체스</a></h1></div>
+  <h2>전체 방 목록</h2>
 
-    {{#if rooms}}
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">방 번호</th>
-                <th scope="col">방 제목</th>
-                <th scope="col">방 입장</th>
-                <th scope="col">방 삭제</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{#each rooms}}
-                <tr>
-                    <td>{{this.id}}</td>
-                    <td>{{this.name}}</td>
-                    <td>
-                        <button type="button" class="btn btn-primary enterButton">ENTER</button>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-danger deleteButton">DELETE</button>
-                    </td>
-                </tr>
-            {{/each}}
-            </tbody>
-        </table>
-    {{else}}
-        <h1>방이 하나도 개설되지 않았습니다!</h1>
+  {{#if rooms}}
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th scope="col">방 번호</th>
+        <th scope="col">방 제목</th>
+        <th scope="col">방 입장</th>
+        <th scope="col">방 삭제</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each rooms}}
+        <tr>
+          <td>{{this.id}}</td>
+          <td>{{this.name}}</td>
+          <td>
+            <button type="button" class="btn btn-primary enterButton">ENTER</button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger deleteButton">DELETE</button>
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <h1>방이 하나도 개설되지 않았습니다!</h1>
+  {{/if}}
+
+  <form action="/rooms/create" method="post">
+    <div class="form-group">
+      <small class="form-text text-muted">방을 만드려면 방 제목과 비밀번호를 입력해주세요.</small>
+      <input type="text" name="name" class="form-control" placeholder="방 제목">
+      <input type="text" name="password" class="form-control" placeholder="방 비밀번호">
+    </div>
+    <button type="submit" class="btn btn-primary">방 만들기</button>
+    {{#if nameError}}
+      <div style="color: red">방 제목은 한 글자 이상이어야 합니다.</div>
+    {{/if}}
+    {{#if passwordError}}
+      <div style="color: red">방 비밀번호는 한 글자 이상이어야 합니다.</div>
+    {{/if}}
+    {{#if authorizeError}}
+      <div style="color: red">비밀번호가 일치하지 않습니다.</div>
     {{/if}}
 
-    <form action="/rooms/create" method="post">
-        <div class="form-group">
-            <small class="form-text text-muted">방을 만드려면 방 제목과 비밀번호를 입력해주세요.</small>
-            <input type="text" name="name" class="form-control" placeholder="방 제목">
-            <input type="text" name="password" class="form-control" placeholder="방 비밀번호">
-        </div>
-        <button type="submit" class="btn btn-primary">방 만들기</button>
-        {{#if nameError}}
-            <div style="color: red">방 제목은 한 글자 이상이어야 합니다.</div>
-        {{/if}}
-        {{#if passwordError}}
-            <div style="color: red">방 비밀번호는 한 글자 이상이어야 합니다.</div>
-        {{/if}}
-        {{#if authorizeError}}
-            <div style="color: red">비밀번호가 일치하지 않습니다.</div>
-        {{/if}}
-
-    </form>
+  </form>
 </div>
 <script src="/js/util.js" type="text/javascript"></script>
 <script type="text/javascript">
-    let allDeleteButton = document.querySelectorAll(".deleteButton");
-    let allEnterButton = document.querySelectorAll(".enterButton");
+  let allDeleteButton = document.querySelectorAll(".deleteButton");
+  let allEnterButton = document.querySelectorAll(".enterButton");
 
-    for (let i = 0; i < allDeleteButton.length; i++) {
-        allDeleteButton[i].addEventListener('click', function () {
-            let id = allDeleteButton[i].parentElement.parentElement.firstElementChild.innerHTML;
-            deleteRoom(id);
-        });
-    }
+  for (let i = 0; i < allDeleteButton.length; i++) {
+    allDeleteButton[i].addEventListener('click', function () {
+      let id = allDeleteButton[i].parentElement.parentElement.firstElementChild.innerHTML;
+      deleteRoom(id);
+    });
+  }
 
-    for (let i = 0; i < allEnterButton.length; i++) {
-        allEnterButton[i].addEventListener('click', function () {
-            let id = allEnterButton[i].parentElement.parentElement.firstElementChild.innerHTML;
-            enterRoom(id);
-        });
-    }
+  for (let i = 0; i < allEnterButton.length; i++) {
+    allEnterButton[i].addEventListener('click', function () {
+      let id = allEnterButton[i].parentElement.parentElement.firstElementChild.innerHTML;
+      enterRoom(id);
+    });
+  }
 
-    function deleteRoom(id) {
-        let inputPassword = prompt("비밀번호를 입력해 주세요");
-        let data = {
-            id : id,
-            password : inputPassword
-        };
+  function deleteRoom(id) {
+    let inputPassword = prompt("비밀번호를 입력해 주세요");
+    let data = {
+      id: id,
+      password: inputPassword
+    };
 
-        fetch("rooms/authorize", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(response => response.json())
-                .then(data => {
-                    if(!data){
-                        alert("비밀번호가 일치하지 않습니다.");
-                    }
-                    let form = document.createElement("form");
-                    form.setAttribute("charset", "UTF-8");
-                    form.setAttribute("method", "POST");  //Post 방식
-                    form.setAttribute("action", "/rooms/remove/"+id); //요청 보낼 주소
+    fetch("rooms/authorize", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }).then(response => response.json())
+    .then(data => {
+      if (!data) {
+        alert("비밀번호가 일치하지 않습니다.");
+      }
+      let form = document.createElement("form");
+      form.setAttribute("charset", "UTF-8");
+      form.setAttribute("method", "POST");  //Post 방식
+      form.setAttribute("action", "/rooms/remove/" + id); //요청 보낼 주소
 
-                    hiddenField2 = document.createElement("input");
-                    hiddenField2.setAttribute("type", "hidden");
-                    hiddenField2.setAttribute("name", "loginSuccess");
-                    hiddenField2.setAttribute("value", data);
-                    form.appendChild(hiddenField2);
+      hiddenField2 = document.createElement("input");
+      hiddenField2.setAttribute("type", "hidden");
+      hiddenField2.setAttribute("name", "loginSuccess");
+      hiddenField2.setAttribute("value", data);
+      form.appendChild(hiddenField2);
 
-                    document.body.appendChild(form);
-                    form.submit();
-                    form = null;
-                }).catch(error =>{
-                    alert(error);
-                });
-    }
+      document.body.appendChild(form);
+      form.submit();
+      form = null;
+    }).catch(error => {
+      alert(error);
+    });
+  }
 
-    function enterRoom(id) {
-        let inputPassword = prompt('비밀번호를 입력해주세요!');
-        let data = {
-            id : id,
-            password : inputPassword
-        };
+  function enterRoom(id) {
+    let inputPassword = prompt('비밀번호를 입력해주세요!');
+    let data = {
+      id: id,
+      password: inputPassword
+    };
 
-        fetch("rooms/authorize", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(response => response.json())
-        .then(data => {
-            if(data){
-                alert("로그인 성공");
-            } else {
-                alert("비밀번호가 일치하지 않습니다.");
-            }
-            let form = document.createElement("form");
-            form.setAttribute("charset", "UTF-8");
-            form.setAttribute("method", "POST");  //Post 방식
-            form.setAttribute("action", "/rooms/enter/"+id); //요청 보낼 주소
+    fetch("rooms/authorize", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }).then(response => response.json())
+    .then(data => {
+      if (data) {
+        alert("로그인 성공");
+      } else {
+        alert("비밀번호가 일치하지 않습니다.");
+      }
+      let form = document.createElement("form");
+      form.setAttribute("charset", "UTF-8");
+      form.setAttribute("method", "POST");  //Post 방식
+      form.setAttribute("action", "/rooms/enter/" + id); //요청 보낼 주소
 
-            hiddenField2 = document.createElement("input");
-            hiddenField2.setAttribute("type", "hidden");
-            hiddenField2.setAttribute("name", "loginSuccess");
-            hiddenField2.setAttribute("value", data);
-            form.appendChild(hiddenField2);
+      hiddenField2 = document.createElement("input");
+      hiddenField2.setAttribute("type", "hidden");
+      hiddenField2.setAttribute("name", "loginSuccess");
+      hiddenField2.setAttribute("value", data);
+      form.appendChild(hiddenField2);
 
-            document.body.appendChild(form);
-            form.submit();
-            form = null;
-        }).catch(error =>{
-            alert(error);
-        })
+      document.body.appendChild(form);
+      form.submit();
+      form = null;
+    }).catch(error => {
+      alert(error);
+    })
 
-    }
+  }
 
 </script>
 </body>

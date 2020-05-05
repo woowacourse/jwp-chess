@@ -1,17 +1,13 @@
 package wooteco.chess.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import wooteco.chess.domain.game.ChessGame;
-import wooteco.chess.domain.game.exception.InvalidTurnException;
 import wooteco.chess.domain.game.state.Ready;
 import wooteco.chess.domain.piece.Position;
-import wooteco.chess.domain.piece.exception.NotMovableException;
-import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.ChessGameDto;
-import wooteco.chess.dto.ResponseDto;
-import wooteco.chess.dto.StatusDto;
-import wooteco.chess.dto.TurnDto;
 import wooteco.chess.entity.ChessGameEntity;
 import wooteco.chess.entity.ChessGameRepository;
 import wooteco.chess.service.exception.InvalidGameException;
@@ -24,58 +20,41 @@ public class ChessGameService {
 		this.chessGameRepository = chessGameRepository;
 	}
 
-	public ResponseDto games() {
-		return new ResponseDto(ResponseDto.SUCCESS, chessGameRepository.findRoomIds());
+	public List<Long> games() {
+		return chessGameRepository.findRoomIds();
 	}
 
-	public ResponseDto find(Long id) {
-		ChessGameEntity persistChessGameEntity = chessGameRepository.findById(id)
-				.orElseThrow(InvalidGameException::new);
-		return new ResponseDto(ResponseDto.SUCCESS, convertToChessGameDto(persistChessGameEntity.toDomain()));
+	public ChessGameDto find(Long id) {
+		return ChessGameDto.from(chessGameRepository.findById(id)
+				.orElseThrow(InvalidGameException::new));
 	}
 
-	public ResponseDto move(Long id, Position source, Position target) {
+	public ChessGameDto move(Long id, Position source, Position target) {
 		ChessGameEntity persistChessGameEntity = chessGameRepository.findById(id)
 				.orElseThrow(InvalidGameException::new);
 		ChessGame chessGame = persistChessGameEntity.toDomain();
-		try {
-			chessGame.move(source, target);
-			persistChessGameEntity.update(chessGame);
-			chessGameRepository.save(persistChessGameEntity);
-			return new ResponseDto(ResponseDto.SUCCESS, convertToChessGameDto(chessGame));
-		} catch (NotMovableException | IllegalArgumentException e) {
-			return new ResponseDto(ResponseDto.FAIL, "이동할 수 없는 위치입니다.");
-		} catch (InvalidTurnException e) {
-			return new ResponseDto(ResponseDto.FAIL, chessGame.turn().getColor() + "의 턴입니다.");
-		}
+		chessGame.move(source, target);
+		persistChessGameEntity.update(chessGame);
+		return ChessGameDto.from(chessGameRepository.save(persistChessGameEntity));
 	}
 
-	public ResponseDto create() {
+	public Long create() {
 		ChessGame chessGame = new ChessGame(new Ready());
 		chessGame.start();
-		ChessGameEntity chessGameEntity = new ChessGameEntity(chessGame);
-		ChessGameEntity persistChessGameEntity = chessGameRepository.save(chessGameEntity);
-		return new ResponseDto(ResponseDto.SUCCESS, persistChessGameEntity.getId());
+		return chessGameRepository.save(new ChessGameEntity(chessGame))
+				.getId();
 	}
 
-	public ResponseDto restart(Long id) {
+	public void restart(Long id) {
 		ChessGame chessGame = new ChessGame(new Ready());
 		chessGame.start();
 		ChessGameEntity persistChessGameEntity = chessGameRepository.findById(id)
 				.orElseThrow(InvalidGameException::new);
 		persistChessGameEntity.update(chessGame);
 		chessGameRepository.save(persistChessGameEntity);
-		return new ResponseDto(ResponseDto.SUCCESS, id);
 	}
 
-	public ResponseDto delete(Long id) {
+	public void delete(Long id) {
 		chessGameRepository.deleteById(id);
-		return new ResponseDto(ResponseDto.SUCCESS, null);
-	}
-
-	private ChessGameDto convertToChessGameDto(ChessGame chessGame) {
-		return new ChessGameDto(new BoardDto(chessGame.board()), new TurnDto(chessGame.turn()),
-				new StatusDto(chessGame.status().getWhiteScore(), chessGame.status().getBlackScore(),
-						chessGame.status().getWinner()), chessGame.isFinished());
 	}
 }

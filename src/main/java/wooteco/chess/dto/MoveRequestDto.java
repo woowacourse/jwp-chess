@@ -3,35 +3,26 @@ package wooteco.chess.dto;
 import wooteco.chess.domain.piece.Position;
 
 public class MoveRequestDto {
-	private String source;
-	private String target;
+	private Position source;
+	private Position target;
 
-	public MoveRequestDto(String source, String target) {
-		this.source = source;
-		this.target = target;
+	public MoveRequestDto() {
+
 	}
 
-	public String getFrom() {
+	public Position getSource() {
 		return source;
 	}
 
-	public void setFrom(String from) {
-		this.source = from;
+	public void setSource(String source) {
+		this.source = Position.from(source);
 	}
 
-	public String getTarget() {
+	public Position getTarget() {
 		return target;
 	}
 
 	public void setTarget(String target) {
-		this.target = target;
-	}
-
-	public Position source() {
-		return Position.from(source);
-	}
-
-	public Position target() {
-		return Position.from(target);
+		this.target = Position.from(target);
 	}
 }

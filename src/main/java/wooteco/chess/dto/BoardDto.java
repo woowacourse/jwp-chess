@@ -8,12 +8,16 @@ import wooteco.chess.domain.game.Board;
 public class BoardDto {
 	private List<String> board;
 
-	public BoardDto(Board board) {
-		this.board = board.getBoard()
+	private BoardDto(List<String> board) {
+		this.board = board;
+	}
+
+	public static BoardDto from(Board board) {
+		return new BoardDto(board.getBoard()
 				.values()
 				.stream()
 				.map(piece -> piece.isBlack() ? piece.symbol().toUpperCase() : piece.symbol())
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()));
 	}
 
 	public List<String> getBoard() {

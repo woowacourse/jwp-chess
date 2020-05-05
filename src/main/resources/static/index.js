@@ -6,17 +6,16 @@ const chessCreateElement = document.querySelector('.chess-create');
 chessCreateElement.onclick = () => {
     fetch('/rooms', {
         method: 'POST'
-    }).then(response => response.json())
-        .then(data => {
-            if (data.statusCode == 1) {
-                location.replace(`/rooms/${data.dto}`)
-            }
-        })
+    })
+    .then(response => response.json())
+    .then(id => {
+        location.replace(`/rooms/${id}`)
+    })
 };
 
 fetch('/rooms')
-    .then(response => response.json())
-    .then(data => drawGameList(data.dto));
+.then(response => response.json())
+.then(data => drawGameList(data));
 
 function drawGameList(games) {
     games.forEach(id => chessGamesElement.innerHTML += templateGame(id))

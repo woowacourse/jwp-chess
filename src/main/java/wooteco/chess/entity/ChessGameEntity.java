@@ -41,7 +41,7 @@ public class ChessGameEntity {
 
 	public void update(ChessGame chessGame) {
 		this.state = chessGame.getState().toString();
-		this.board = String.join("", new BoardDto(chessGame.board()).getBoard());
+		this.board = String.join("", BoardDto.from(chessGame.board()).getBoard());
 		this.turn = String.valueOf(chessGame.turn());
 	}
 

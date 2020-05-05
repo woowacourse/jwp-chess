@@ -1,12 +1,15 @@
 package chess.service;
 
-import chess.dao.exceptions.DaoNoneSelectedException;
+import chess.domain.room.Room;
 import chess.dto.RoomDto;
+import chess.repository.exceptions.DaoNoneSelectedException;
+import chess.entity.RoomEntity;
 import chess.repository.RoomRepository;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChessRoomsService {
@@ -17,15 +20,22 @@ public class ChessRoomsService {
 	}
 
 	public List<RoomDto> findAllRooms() {
-		return Lists.newArrayList(roomRepository.findAll());
+		List<RoomEntity> roomEntities = Lists.newArrayList(roomRepository.findAll());
+		return roomEntities.stream()
+				.map(roomEntity -> new RoomDto(roomEntity.getRoomName()))
+				.collect(Collectors.toList());
 	}
 
-	public RoomDto findRoomByRoomName(final String roomName) {
-		return roomRepository.findByRoomName(roomName).orElseThrow(DaoNoneSelectedException::new);
+	public int findRoomIdByRoomName(final String roomName) {
+		return roomRepository.findByRoomName(roomName)
+				.orElseThrow(DaoNoneSelectedException::new)
+				.getId();
 	}
 
 	public void addRoomByRoomName(final String roomName) {
-		roomRepository.saveByRoomName(roomName);
+		Room room = new Room(roomName);
+		RoomEntity roomEntity = new RoomEntity(room.getName());
+		roomRepository.save(roomEntity);
 	}
 
 	public void deleteRoomByRoomName(final String roomName) {

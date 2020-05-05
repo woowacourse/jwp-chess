@@ -1,9 +1,10 @@
 package chess.controller;
 
-import chess.dao.exceptions.DaoNoneSelectedException;
+import chess.repository.exceptions.DaoNoneSelectedException;
 import chess.service.ChessRoomService;
 import chess.view.Announcement;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,33 +20,27 @@ public class SpringRoomController {
 	}
 
 	@GetMapping("/{room_id}")
-	private String load(@PathVariable("room_id") final int roomId, final Model model) throws SQLException {
+	public String load(@PathVariable("room_id") final int roomId, final Model model) {
 		try {
 			loadData(roomId, model);
 		} catch (DaoNoneSelectedException e) {
-			initRoom(roomId);
+			chessRoomService.initRoom(roomId);
 			loadData(roomId, model);
 		}
 		return "chess";
 	}
 
-	private void loadData(final int roomId, final Model model) throws SQLException {
+	private void loadData(final int roomId, final Model model) {
 		final String boardHtml = chessRoomService.loadBoardHtml(roomId);
 		final String announcementMessage = chessRoomService.loadAnnouncementMessage(roomId);
 		model.addAttribute("table", boardHtml);
 		model.addAttribute("announcement", announcementMessage);
 	}
 
-	private void initRoom(final int roomId) throws SQLException {
-		chessRoomService.saveNewState(roomId);
-		chessRoomService.saveNewPieces(roomId);
-		chessRoomService.saveNewAnnouncementMessage(roomId);
-	}
-
 	@PostMapping("/{room_id}")
-	private String command(
+	public String command(
 			@PathVariable("room_id") final int roomId,
-			@RequestParam("command") final String command) throws SQLException {
+			@RequestParam("command") final String command) {
 
 		try {
 			chessRoomService.updateRoom(roomId, command);

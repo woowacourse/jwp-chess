@@ -21,3 +21,7 @@ html, body {
     vertical-align: middle;
 }
 
+li {
+    display: inline-block;
+}
+

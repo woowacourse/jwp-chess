@@ -1,4 +1,4 @@
-package chess.dao.exceptions;
+package chess.repository.exceptions;
 
 public class DaoNoneSelectedException extends RuntimeException {
 	public DaoNoneSelectedException() {

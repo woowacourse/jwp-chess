@@ -1,26 +1,21 @@
-package chess.dto;
+package chess.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Objects;
 
 @Table("piece")
-public class PieceDto {
+public class PieceEntity {
 	@Id
 	private int id;
-	@Column("piece_type")
 	private final String pieceType;
-	@Column("team")
 	private final String team;
-	@Column("coordinate")
 	private final String coordinate;
-	@Column("room_id")
 	private final int roomId;
 
-	public PieceDto(final String pieceType, final String team,
-					final String coordinate, final int roomId) {
+	public PieceEntity(final String pieceType, final String team,
+					   final String coordinate, final int roomId) {
 		this.pieceType = pieceType;
 		this.team = team;
 		this.coordinate = coordinate;
@@ -45,23 +40,6 @@ public class PieceDto {
 
 	public int getRoomId() {
 		return roomId;
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		final PieceDto pieceDto = (PieceDto) o;
-		return id == pieceDto.id &&
-				roomId == pieceDto.roomId &&
-				Objects.equals(pieceType, pieceDto.pieceType) &&
-				Objects.equals(team, pieceDto.team) &&
-				Objects.equals(coordinate, pieceDto.coordinate);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, pieceType, team, coordinate, roomId);
 	}
 
 	@Override

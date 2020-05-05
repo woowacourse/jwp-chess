@@ -3,13 +3,13 @@ package wooteco.chess.dto;
 import java.util.List;
 
 public class SavedGameBundleDto {
-	private List<SavedGameDto> room;
+	private List<SavedGameDto> rooms;
 
-	public SavedGameBundleDto(List<SavedGameDto> room) {
-		this.room = room;
+	public SavedGameBundleDto(List<SavedGameDto> rooms) {
+		this.rooms = rooms;
 	}
 
-	public List<SavedGameDto> getRoom() {
-		return room;
+	public List<SavedGameDto> getRooms() {
+		return rooms;
 	}
 }

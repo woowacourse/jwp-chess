@@ -17,7 +17,7 @@ public class MoveResponseDto {
 		this.kingAlive = kingAlive;
 		this.piece = piece;
 		this.turn = turn;
-		this.score =score;
+		this.score = score;
 	}
 
 	public Long getGameId() {

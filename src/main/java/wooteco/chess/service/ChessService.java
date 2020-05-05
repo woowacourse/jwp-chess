@@ -3,14 +3,18 @@ package wooteco.chess.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import wooteco.chess.controller.dto.ChessRoomResponseDto;
+import wooteco.chess.controller.dto.CreateChessRequestDto;
 import wooteco.chess.controller.dto.MoveRequestDto;
 import wooteco.chess.controller.dto.ResponseDto;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.initializer.AutomatedBoardInitializer;
 import wooteco.chess.domain.game.ChessGame;
+import wooteco.chess.domain.game.Turn;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.repository.ChessGameTable;
@@ -26,16 +30,20 @@ public class ChessService {
         this.chessGameRepository = chessGameRepository;
     }
 
-    public Long createGame() {
-        ChessGame chessGame = ChessGame.of(Board.of(new AutomatedBoardInitializer()), Team.WHITE);
-        return chessGameRepository.save(ChessGameTable.createForInsert(chessGame)).getId();
+    public Long createGame(CreateChessRequestDto createChessRequestDto) {
+        ChessGame chessGame = ChessGame.of(createChessRequestDto.getTitle(),
+            Board.of(new AutomatedBoardInitializer()),
+            Turn.from(Team.WHITE));
+        return chessGameRepository.save(ChessGameTable.from(chessGame)).getId();
     }
 
     public void restart(final Long id) {
         loadIfNotExisting(id);
-        ChessGame chessGame = ChessGame.of(id, Board.of(new AutomatedBoardInitializer()), Team.WHITE);
-        chessGames.put(id, chessGame);
-        chessGameRepository.save(ChessGameTable.createForUpdate(chessGame));
+        ChessGame chessGame = chessGames.get(id);
+        ChessGame restartedChessGame = ChessGame.of(id, chessGame.getTitle(), Board.of(new AutomatedBoardInitializer()),
+            Turn.from(Team.WHITE));
+        chessGames.put(id, restartedChessGame);
+        chessGameRepository.save(ChessGameTable.from(restartedChessGame));
     }
 
     public void load(final Long id) {
@@ -46,7 +54,7 @@ public class ChessService {
     public void save(final Long id) {
         loadIfNotExisting(id);
         ChessGame chessGame = chessGames.get(id);
-        chessGameRepository.save(ChessGameTable.createForUpdate(chessGame));
+        chessGameRepository.save(ChessGameTable.from(chessGame));
     }
 
     public void remove(final Long id) {
@@ -90,8 +98,11 @@ public class ChessService {
         return chessGame.getTurn();
     }
 
-    public List<Long> getRoomIds() {
-        return chessGameRepository.findRoomIds();
+    public List<ChessRoomResponseDto> getRoomIds() {
+        return chessGameRepository.findAll().stream()
+            .map(chessGameTable ->
+                new ChessRoomResponseDto(chessGameTable.getId(), chessGameTable.getTitle())
+            ).collect(Collectors.toList());
     }
 
     private ChessGame findChessGame(final Long id) {

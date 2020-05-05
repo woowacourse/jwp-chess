@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import wooteco.chess.domain.game.Turn;
 import wooteco.chess.domain.piece.PieceState;
 import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.piece.implementation.piece.King;
@@ -29,7 +30,7 @@ public class Board {
         return new Board(board);
     }
 
-    public void move(Position source, Position target, Team turn) {
+    public void move(Position source, Position target, Turn turn) {
         PieceState sourcePiece = board.get(source);
         validateSource(sourcePiece, turn);
         PieceState piece = sourcePiece.move(target, getBoardState());
@@ -37,9 +38,9 @@ public class Board {
         board.put(target, piece);
     }
 
-    public List<Position> getMovablePositions(Position source, Team turn) {
+    public List<Position> getMovablePositions(Position source, Turn turn) {
         PieceState sourcePiece = board.get(source);
-        validateTurn(sourcePiece, turn);
+        validateSource(sourcePiece, turn);
         return sourcePiece.getMovablePositions(getBoardState());
     }
 
@@ -62,7 +63,7 @@ public class Board {
         return Collections.unmodifiableMap(board);
     }
 
-    private void validateSource(PieceState sourcePiece, Team turn) {
+    private void validateSource(PieceState sourcePiece, Turn turn) {
         validateExists(sourcePiece);
         validateTurn(sourcePiece, turn);
     }
@@ -73,7 +74,7 @@ public class Board {
         }
     }
 
-    private void validateTurn(PieceState sourcePiece, Team turn) {
+    private void validateTurn(PieceState sourcePiece, Turn turn) {
         if (!turn.isSameTeam(sourcePiece.getTeam())) {
             throw new IllegalArgumentException("해당 플레이어의 턴이 아닙니다.");
         }

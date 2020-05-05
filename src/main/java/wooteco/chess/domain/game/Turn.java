@@ -22,7 +22,7 @@ public class Turn {
         return turn.equals(team);
     }
 
-    public Team getTurn() {
+    public Team getTeam() {
         return turn;
     }
 }

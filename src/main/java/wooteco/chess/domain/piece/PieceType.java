@@ -28,7 +28,7 @@ public enum PieceType {
         this.creator = creator;
     }
 
-    public PieceState apply(Position position, Team team) {
+    public PieceState create(Position position, Team team) {
         return creator.apply(position, team);
     }
 

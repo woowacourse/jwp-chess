@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import wooteco.chess.controller.dto.ChessPieceDto;
+import wooteco.chess.controller.dto.ChessRoomResponseDto;
+import wooteco.chess.controller.dto.CreateChessRequestDto;
 import wooteco.chess.controller.dto.MoveRequestDto;
 import wooteco.chess.controller.dto.PieceDto;
 import wooteco.chess.controller.dto.ResponseDto;
@@ -32,8 +34,8 @@ public class ChessController {
 
     @GetMapping("/")
     public String index(Model model) {
-        //        List<Long> roomIds = chessService.getRoomIds();
-        //        model.addAttribute("chessRoomIds", roomIds);
+        List<ChessRoomResponseDto> roomIds = chessService.getRoomIds();
+        model.addAttribute("chessRoomIds", roomIds);
         return "index";
     }
 
@@ -46,10 +48,10 @@ public class ChessController {
         return "chess";
     }
 
-    @PostMapping("createChessGame")
+    @PostMapping("/createChessGame")
     @ResponseBody
-    public Long createChessGame() {
-        return chessService.createGame();
+    public Long createChessGame(@RequestBody CreateChessRequestDto createChessRequestDto) {
+        return chessService.createGame(createChessRequestDto);
     }
 
     @PostMapping("/restart/{id}")

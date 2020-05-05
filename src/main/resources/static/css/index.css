@@ -6,6 +6,56 @@
 
 }
 
+.room-title {
+    color: black;
+}
+
+.room-table-head {
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    opacity: 0.7;
+    border: #4b2305 1px solid;
+}
+
+.room-table-body {
+    width: 400px;
+    max-height: 150px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0.7;
+    border: #4b2305 1px solid;
+    overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.room-id {
+    width: 50%;
+    text-align: center;
+    border: #4b2305 1px solid;
+}
+
+.room-name {
+    width: 50%;
+    text-align: center;
+    border: #4b2305 1px solid;
+}
+
+.room {
+    display: flex;
+}
+
+.room-button {
+    color: #4b2305;
+}
+
+.room-button:hover {
+    cursor: pointer;
+    color: lightsalmon;
+}
 
 input[type="submit"], input[type="button"] {
     font-family: 'Font Awesome 5 Free', serif;
@@ -51,7 +101,6 @@ body {
     width: max-content;
     height: max-content;
 }
-
 
 footer {
     position: absolute;

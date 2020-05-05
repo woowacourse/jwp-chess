@@ -8,7 +8,6 @@
     <link href="css/index.css" rel="stylesheet"/>
     <link href="css/fontawesome.min.css" rel="stylesheet"/>
     <link href="css/all.min.css" rel="stylesheet"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <div id="wrapper">
@@ -19,17 +18,28 @@
     </header>
     <nav>
         <div class="wrapper">
+            <div class="room-container">
+                <div class="room-title"><h3>게임 목록</h3></div>
+                <div class="room-table-head">
+                    <div class="room-id table-head">id</div>
+                    <div class="room-name table-head">title</div>
+                </div>
+                <div class="room-table-body">
+                    {{#chessRoomIds}}
+                        <a class="room-button" id="{{roomId}}">
+                            <div class="room">
+                                <div class="room-id">{{roomId}}</div>
+                                <div class="room-name">{{title}}</div>
+                            </div>
+                        </a>
+                    {{/chessRoomIds}}
+                </div>
+            </div>
             <div class="box">
                 <form>
                     <input type="button" onclick="chessStart()" value="&#xf197;" class="fa-3x">
                 </form>
                 <span class="arrowIcon">새로 시작</span>
-            </div>
-            <div class="box">
-                <form action="/chess" method="get">
-                    <input type="submit" value="&#xf197;" class="fa-3x">
-                </form>
-                <span class="arrowIcon">이어하기</span>
             </div>
         </div>
     </nav>
@@ -38,27 +48,46 @@
             Copyright 2020
             <a href="https://github.com/joseph415"
             >https://github.com/joseph415</a
+            >,
+            <a href="https://github.com/jjj0611"
+            >https://github.com/jjj0611</a
             >
             All rights reserved
         </p>
     </footer>
 </div>
 <script>
-    function chessStart() {
-        $.ajax({
-            type: "post",
-            url: "/createChessGame",
-
-            dataType: "text",
-            success: function (success) {
-                location.href = "/chess/" + success;
-            },
-            error: function (jqXHR) {
-                console.log('error');
-                alert(jqXHR.responseText);
-            }
+    window.onload = () => {
+        document.querySelectorAll(".room-button").forEach(element => {
+            element.addEventListener("click", event => {
+                event.preventDefault();
+                loadGame(element.id);
+            })
         });
-    }
+    };
+
+    const loadGame = (id) => {
+        location.href = "/chess/" + id;
+    };
+
+    const chessStart = () => {
+        const title = prompt("방 제목을 입력해주세요");
+        const createChessRequest = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "title": title,
+            })
+        };
+
+        fetch("/createChessGame", createChessRequest)
+                .then(response => response.json())
+                .then(data => {
+                    location.href = "/chess/" + data;
+                })
+    };
 </script>
 </body>
 </html>

@@ -43,23 +43,6 @@ public class PieceEntity {
 	}
 
 	@Override
-	public boolean equals(final Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		final PieceEntity pieceEntity = (PieceEntity) o;
-		return id == pieceEntity.id &&
-				roomId == pieceEntity.roomId &&
-				Objects.equals(pieceType, pieceEntity.pieceType) &&
-				Objects.equals(team, pieceEntity.team) &&
-				Objects.equals(coordinate, pieceEntity.coordinate);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, pieceType, team, coordinate, roomId);
-	}
-
-	@Override
 	public String toString() {
 		return "Piece{" +
 				"id=" + id +

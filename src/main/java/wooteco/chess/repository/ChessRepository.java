@@ -17,6 +17,10 @@ public interface ChessRepository extends CrudRepository<ChessEntity, Long> {
     List<Long> findAllIds();
 
     @Override
+    @Query("SELECT room_id, title, board, is_white FROM chess")
+    List<ChessEntity> findAll();
+
+    @Override
     Optional<ChessEntity> findById(Long roomId);
 
     @Modifying

@@ -22,10 +22,18 @@
         form.setAttribute("action", "/ready/" + game_id);
         form.submit();
      }
+
+     function goGameRoom() {
+        var game_id = document.querySelector('#game_room').value;
+        window.location.assign('/ready/' + game_id)
+     }
 </script>
 <div class='game_room'> 체스방 목록 </div>
     {{#each roomNames}}
-    <div class='game_room'>{{this}}</div>
+    <div class='game_room'>
+        {{this}}
+        <button id='game_room' value='{{this}}' onClick='goGameRoom()'>입장</button>
+    </div>
     {{/each}}
 </br>
 <div class='create_room'>체스방 새로 만들기</div></br>

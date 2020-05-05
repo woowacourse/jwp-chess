@@ -3,7 +3,6 @@ package wooteco.chess.service;
 import org.springframework.stereotype.Service;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.Position;
-import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.strategy.NormalInitStrategy;
 import wooteco.chess.repository.ChessEntity;
 import wooteco.chess.repository.ChessRepository;
@@ -20,7 +19,7 @@ public class BoardService {
     public void init(Long roomId) {
         NormalInitStrategy normalInitStrategy = new NormalInitStrategy();
         Board board = new Board(normalInitStrategy.init());
-        ChessEntity chessEntity = new ChessEntity(roomId, BoardConverter.convertToString(board));
+        ChessEntity chessEntity = new ChessEntity(roomId, chessRepository.findTitleById(roomId), BoardConverter.convertToString(board));
         chessRepository.save(chessEntity);
     }
 
@@ -44,7 +43,7 @@ public class BoardService {
         ChessEntity entity = chessRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room이 없습니다."));
         Board board = BoardConverter.convertToBoard(entity.getBoard(), entity.getIsWhite());
-        return board.getTurn() == Team.WHITE;
+        return board.isTurnWhite();
     }
 
     public Board loadBoard(Long roomId) {
@@ -52,4 +51,9 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room이 없습니다."));
         return BoardConverter.convertToBoard(entity.getBoard(), entity.getIsWhite());
     }
+
+    public String loadTitle(Long roomId) {
+        return chessRepository.findTitleById(roomId);
+    }
+
 }

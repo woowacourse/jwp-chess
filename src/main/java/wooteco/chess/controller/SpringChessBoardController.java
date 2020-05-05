@@ -20,7 +20,7 @@ public class SpringChessBoardController {
 
     @GetMapping("/rooms/{roomId}")
     public String loadBoard(@PathVariable Long roomId, Model model) {
-        OutputView.constructModel(roomId, boardService.loadBoard(roomId), model);
+        OutputView.constructModel(roomId, boardService.loadTitle(roomId), boardService.loadBoard(roomId), model);
         return "board";
     }
 
@@ -30,14 +30,14 @@ public class SpringChessBoardController {
             boardService.play(roomId, source, target);
         } catch (RuntimeException e) {
             model.addAttribute("error-message", e.getMessage());
-            OutputView.constructModel(roomId, boardService.loadBoard(roomId), model);
+            OutputView.constructModel(roomId, boardService.loadTitle(roomId), boardService.loadBoard(roomId), model);
         }
         if (boardService.isFinished(roomId)) {
             model.addAttribute("id", roomId);
             model.addAttribute("winner", boardService.isTurnWhite(roomId) ? "흑팀" : "백팀");
             return "result";
         }
-        OutputView.constructModel(roomId, boardService.loadBoard(roomId), model);
+        OutputView.constructModel(roomId, boardService.loadTitle(roomId), boardService.loadBoard(roomId), model);
         return "board";
     }
 

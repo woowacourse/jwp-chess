@@ -1,76 +1,61 @@
 package wooteco.chess.controller;
 
-import spark.ModelAndView;
-import spark.Request;
-import spark.template.handlebars.HandlebarsTemplateEngine;
-import wooteco.chess.db.ChessPieceDao;
-import wooteco.chess.db.MoveHistoryDao;
-import wooteco.chess.service.ChessWebService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import wooteco.chess.db.MoveHistory;
+import wooteco.chess.dto.GameResponseDto;
+import wooteco.chess.service.ChessGameService;
+import wooteco.chess.service.ChessRoomService;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
+@Controller
 public class ChessController {
-    private final ChessWebService service;
-    private final HandlebarsTemplateEngine templateEngine = new HandlebarsTemplateEngine();
+    private final ChessGameService chessGameService;
+    private final ChessRoomService chessRoomService;
 
-    public ChessController() {
-        this.service = new ChessWebService(new ChessPieceDao(), new MoveHistoryDao());
+    public ChessController(ChessGameService chessGameService, ChessRoomService chessRoomService) {
+        this.chessGameService = chessGameService;
+        this.chessRoomService = chessRoomService;
     }
 
-    public String chessGame() {
-        return render(templateEngine, new HashMap<>(), "index.html");
+    @GetMapping("/")
+    public String chessGame(Model model) {
+        model.addAttribute("rooms", chessRoomService.findRooms());
+        return "index";
     }
 
-    public String enterGameRoom(Request req) throws SQLException {
-        String gameId = req.queryParams("game_id");
-
-        boolean canResume = service.canResume(gameId);
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("canResume", canResume);
-        model.put("game_id", gameId);
-        return render(templateEngine, model, "game_room.html");
+    @PostMapping("/play")
+    public String startGame(@RequestParam(value = "room_name") String roomName, Model model) {
+        GameResponseDto gameResponseDto = chessRoomService.addRoom(roomName);
+        model.addAttribute("game_info", gameResponseDto);
+        return "game_room";
     }
 
-    public String startGame(Request req) throws SQLException {
-        String gameId = req.queryParams("game_id");
-
-        service.startNewGame(gameId);
-
-        Map<String, Object> model = new HashMap<>(service.provideGameInfo(gameId));
-        model.put("game_id", gameId);
-
-        return render(templateEngine, model, "game_room.html");
+    @PostMapping("/resume")
+    public String resumeGame(@RequestParam(value = "room_id") Long roomId, Model model) {
+        GameResponseDto gameResponseDto = chessGameService.resumeGame(roomId);
+        model.addAttribute("game_info", gameResponseDto);
+        return "game_room";
     }
 
-    public String resumeGame(Request req) throws SQLException {
-        String gameId = req.queryParams("game_id");
+    @PostMapping("/move")
+    public String move(@RequestParam(value = "room_id") Long roomId, MoveHistory moveHistory, Model model) {
+        GameResponseDto gameResponseDto = chessGameService.move(roomId, moveHistory);
 
-        service.resumeGame(gameId);
+        if (gameResponseDto.getEnd() != null) {
+            chessRoomService.deleteRoom(roomId);
+        }
 
-        Map<String, Object> model = new HashMap<>(service.provideGameInfo(gameId));
-        model.put("game_id", gameId);
-
-        return render(templateEngine, model, "game_room.html");
+        model.addAttribute("game_info", gameResponseDto);
+        return "game_room";
     }
 
-    public String move(Request req) throws SQLException {
-        String gameId = req.queryParams("game_id");
-        String source = req.queryParams("source");
-        String target = req.queryParams("target");
-
-        service.move(gameId, source, target);
-
-        Map<String, Object> model = new HashMap<>(service.provideGameInfo(gameId));
-        model.put("game_id", gameId);
-        model.put("end", service.provideWinner(gameId));
-
-        return render(templateEngine, model, "game_room.html");
-    }
-
-    private String render(HandlebarsTemplateEngine templateEngine, Map<String, Object> model, String templatePath) {
-        return templateEngine.render(new ModelAndView(model, templatePath));
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String errorMessage(Exception e, Model model) {
+        model.addAttribute("error", e.getMessage());
+        return "game_room";
     }
 }

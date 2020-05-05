@@ -1,17 +1,17 @@
 package wooteco.chess.controller;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import wooteco.chess.domain.player.User;
+import wooteco.chess.entity.Room;
 import wooteco.chess.service.ChessService;
 
 @Controller
@@ -25,23 +25,22 @@ public class ChessController {
 
     @GetMapping("/")
     public ModelAndView index() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("rows", chessService.getEmptyRowsDto());
-        modelAndView.setViewName("main");
-        return modelAndView;
+        return createEmptyModelAndView();
     }
 
     @PostMapping("/start")
-    public ModelAndView start(@RequestParam HashMap<String, String> paramMap) throws SQLException {
+    public String start(@RequestParam String roomName) {
+        return "redirect:/start/" + roomName;
+    }
+
+    @GetMapping("/start/{room}")
+    public ModelAndView room(@PathVariable("room") String roomName) {
         ModelAndView modelAndView = new ModelAndView();
 
-        User blackUser = new User(paramMap.get("blackUserName"));
-        User whiteUser = new User(paramMap.get("whiteUserName"));
-
-        modelAndView.addObject("blackUser", blackUser.getName());
-        modelAndView.addObject("whiteUser", whiteUser.getName());
-        modelAndView.addObject("rows", chessService.getRowsDto(blackUser, whiteUser));
-        modelAndView.addObject("turn", chessService.getTurn(blackUser));
+        Room room = new Room(roomName);
+        modelAndView.addObject("room", room.getName());
+        modelAndView.addObject("rows", chessService.getRowsDto(room));
+        modelAndView.addObject("turn", chessService.getTurn(room));
 
         modelAndView.setViewName("board");
 
@@ -50,56 +49,57 @@ public class ChessController {
 
     @PostMapping("/path")
     @ResponseBody
-    public List<String> path(@RequestParam HashMap<String, String> paramMap) {
+    public List<String> path(@RequestParam Map<String, String> paramMap) {
         try {
-            return chessService.searchPath(new User(paramMap.get("blackUserName")), paramMap.get("source"));
+            return chessService.searchPath(new Room(paramMap.get("roomName")), paramMap.get("source"));
         } catch (RuntimeException e) {
             return Collections.singletonList(e.getMessage());
         }
     }
 
-    // todo: 죽일 수 있는 말 표시 확 인
     @PostMapping("/move")
     @ResponseBody
-    public Map<String, Object> move(@RequestParam HashMap<String, String> paramMap) {
-        User blackUser = new User(paramMap.get("blackUserName"));
+    public Map<String, Object> move(@RequestParam Map<String, String> paramMap) {
+        Room blackRoom = new Room(paramMap.get("roomName"));
 
         Map<String, Object> model = new HashMap<>();
         model.put("isNotFinished", false);
         model.put("message", "");
 
         try {
-            chessService.move(blackUser, paramMap.get("source"), paramMap.get("target"));
-            model.put("white", chessService.calculateWhiteScore(blackUser));
-            model.put("black", chessService.calculateBlackScore(blackUser));
+            chessService.move(blackRoom, paramMap.get("source"), paramMap.get("target"));
+            model.put("white", chessService.calculateWhiteScore(blackRoom));
+            model.put("black", chessService.calculateBlackScore(blackRoom));
         } catch (RuntimeException e) {
             model.put("message", e.getMessage());
         }
-        if (chessService.checkGameNotFinished(blackUser)) {
+        if (chessService.checkGameNotFinished(blackRoom)) {
             model.put("isNotFinished", true);
         }
         return model;
     }
 
     @PostMapping("/save")
-    public ModelAndView save(@RequestParam HashMap<String, String> paramMap) throws SQLException {
-        ModelAndView modelAndView = new ModelAndView();
+    public ModelAndView save(@RequestParam String roomName) {
+        chessService.save(new Room(roomName));
 
-        chessService.save(new User(paramMap.get("blackUserName")), new User(paramMap.get("whiteUserName")));
-
-        modelAndView.addObject("rows", chessService.getEmptyRowsDto());
-        modelAndView.setViewName("main");
-        return modelAndView;
+        return createEmptyModelAndView();
     }
 
     @PostMapping("/end")
-    public ModelAndView end(@RequestParam HashMap<String, String> paramMap) throws SQLException {
+    public ModelAndView end(@RequestParam String roomName) {
+        chessService.delete(new Room(roomName));
+
+        return createEmptyModelAndView();
+    }
+
+    private ModelAndView createEmptyModelAndView() {
         ModelAndView modelAndView = new ModelAndView();
 
-        chessService.delete(new User(paramMap.get("blackUserName")), new User(paramMap.get("whiteUserName")));
-
         modelAndView.addObject("rows", chessService.getEmptyRowsDto());
+        modelAndView.addObject("rooms", chessService.getRooms());
         modelAndView.setViewName("main");
+
         return modelAndView;
     }
 }

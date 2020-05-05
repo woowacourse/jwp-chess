@@ -48,6 +48,9 @@ public class GameInfo {
     }
 
     public List<Position> searchPath(String source) {
+        for (Position p : board.searchPath(source)) {
+            //System.out.println(p.getName() + " ");
+        }
         return board.searchPath(source);
     }
 

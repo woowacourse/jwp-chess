@@ -1,6 +1,7 @@
 body {
     background-position: center;
     background-size: cover;
+    margin: auto;
 }
 
 #app {
@@ -59,7 +60,7 @@ form {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 50%;
+    height: 100%;
 }
 
 .users {
@@ -68,7 +69,7 @@ form {
     justify-content: center;
 }
 
-.user {
+.room-input {
     margin: 10px auto;
     font-size: 30px;
     font-family: Georgia, 'Times New Roman', Times, serif;
@@ -83,3 +84,21 @@ input[type="submit"] {
     font-family: Arial, Helvetica, Sans-serif;
     font-size: 50px;
 }
+
+.rooms {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.room-button {
+    width: 100%;
+    font-size: 20px;
+    text-align: center;
+    padding-top: 10px;
+    margin: 5px auto;
+    border-radius: 10px;
+    background-color: white;
+    height: 40px;
+}
+

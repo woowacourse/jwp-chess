@@ -1,71 +1,71 @@
 package wooteco.chess.service;
 
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import wooteco.chess.dao.GameInfoDAO;
-import wooteco.chess.dao.UserDAO;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.board.Position;
 import wooteco.chess.domain.gameinfo.GameInfo;
-import wooteco.chess.domain.player.User;
 import wooteco.chess.dto.LineDto;
 import wooteco.chess.dto.RowsDtoConverter;
+import wooteco.chess.entity.GameEntity;
+import wooteco.chess.entity.Room;
+import wooteco.chess.repository.GameRepository;
+import wooteco.chess.repository.RoomRepository;
 
 @Service
 public class ChessService {
 
-    private GameInfoDAO gameInfoDAO;
-    private UserDAO userDAO;
-    private Map<User, GameInfo> games;
+    private RoomRepository roomRepository;
+    private GameRepository gameRepository;
 
-    public ChessService(GameInfoDAO gameInfoDAO, UserDAO userDAO) {
-        this.gameInfoDAO = gameInfoDAO;
-        this.userDAO = userDAO;
-        games = new HashMap<>();
+    public ChessService(RoomRepository roomRepository, GameRepository gameRepository) {
+        this.roomRepository = roomRepository;
+        this.gameRepository = gameRepository;
     }
 
-    public GameInfo findByUserName(User blackUser, User whiteUser) throws SQLException {
-        if (!gameInfoDAO.findGameInfoByUser(blackUser, whiteUser).isPresent()) {
-            userDAO.addUser(blackUser);
-            userDAO.addUser(whiteUser);
-            gameInfoDAO.addGameInfo(BoardFactory.createInitialBoard(), blackUser, whiteUser, 0);
+    public GameInfo findByRoom(Room room) {
+        if (!roomRepository.findByName(room.getName()).isPresent()) {
+            GameEntity gameEntity = new GameEntity(0);
+            gameEntity.addBoard(BoardFactory.createInitialBoard());
+            room.updateGame(gameEntity);
+            roomRepository.save(room);
         }
-        Board board = gameInfoDAO.findGameInfoByUser(blackUser, whiteUser)
-                .orElseGet(BoardFactory::createInitialBoard);
-        int turn = gameInfoDAO.findTurnByUser(blackUser, whiteUser)
-                .orElseGet(() -> 0);
+        Room saved = roomRepository.findByName(room.getName()).orElseThrow(AssertionError::new);
+        Board board = saved.getGame()
+                .createBoard();
+        int turn = saved.getGame()
+                .getTurn();
         GameInfo gameInfo = GameInfo.from(board, turn);
-        games.put(blackUser, gameInfo);
+        gameRepository.save(saved, gameInfo);
         return gameInfo;
     }
 
-    public GameInfo move(User user, String source, String target) {
-        GameInfo gameInfo = games.get(user)
+    public void move(Room room, String source, String target) {
+        GameInfo gameInfo = gameRepository.findByRoom(room)
                 .move(source, target);
-        games.put(user, gameInfo);
-        return gameInfo;
+        gameRepository.save(room, gameInfo);
     }
 
-    public void save(User blackUser, User whiteUser) throws SQLException {
-        GameInfo gameInfo = games.get(blackUser);
-        gameInfoDAO.saveGameInfoByUserName(gameInfo.getBoard(), blackUser, whiteUser, gameInfo.getStatus());
-        games.remove(blackUser);
+    public void save(Room room) {
+        GameInfo gameInfo = gameRepository.findByRoom(room);
+        GameEntity gameEntity = new GameEntity(gameInfo.getStatus().getTurn());
+        gameEntity.updateBoard(gameInfo.getBoard());
+        Room saved = roomRepository.findByName(room.getName()).orElseThrow(AssertionError::new);
+        saved.updateGame(gameEntity);
+        roomRepository.save(saved);
+        gameRepository.delete(room);
     }
 
-    public void delete(User blackUser, User whiteUser) throws SQLException {
-        gameInfoDAO.deleteGameInfoByUser(blackUser, whiteUser);
-        userDAO.deleteUserByUserName(blackUser.getName());
-        userDAO.deleteUserByUserName(whiteUser.getName());
-        games.remove(blackUser);
+    public void delete(Room room) {
+        Room saved = roomRepository.findByName(room.getName()).orElseThrow(AssertionError::new);
+        roomRepository.delete(saved);
+        gameRepository.delete(room);
     }
 
-    public List<String> searchPath(User blackUser, String sourceInput) {
-        return games.get(blackUser)
+    public List<String> searchPath(Room room, String sourceInput) {
+        return gameRepository.findByRoom(room)
                 .searchPath(sourceInput)
                 .stream()
                 .map(Position::getName)
@@ -76,37 +76,41 @@ public class ChessService {
         return RowsDtoConverter.convertFrom(BoardFactory.EMPTY_BOARD);
     }
 
-    public List<LineDto> getRowsDto(User blackUser, User whiteUser) throws SQLException {
-        GameInfo gameInfo = findByUserName(blackUser, whiteUser);
+    public List<LineDto> getRowsDto(Room room) {
+        GameInfo gameInfo = findByRoom(room);
         return RowsDtoConverter.convertFrom(gameInfo.getBoard());
     }
 
-    public int getTurn(User user) {
-        return games.get(user)
+    public int getTurn(Room room) {
+        return gameRepository.findByRoom(room)
                 .getStatus()
                 .getTurn();
     }
 
-    public double calculateWhiteScore(User user) {
-        return games.get(user)
+    public double calculateWhiteScore(Room room) {
+        return gameRepository.findByRoom(room)
                 .getWhiteScore()
                 .getScore();
     }
 
-    public double calculateBlackScore(User user) {
-        return games.get(user)
+    public double calculateBlackScore(Room room) {
+        return gameRepository.findByRoom(room)
                 .getBlackScore()
                 .getScore();
     }
 
-    public boolean checkGameNotFinished(User user) {
-        return games.get(user)
+    public boolean checkGameNotFinished(Room room) {
+        return gameRepository.findByRoom(room)
                 .getStatus()
                 .isNotFinished();
     }
 
-    public Board getBoard(User user) {
-        return games.get(user)
+    public Board getBoard(Room room) {
+        return gameRepository.findByRoom(room)
                 .getBoard();
+    }
+
+    public List<Room> getRooms() {
+        return roomRepository.findAll();
     }
 }

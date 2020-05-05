@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.board.Column;
 import wooteco.chess.domain.board.Position;

@@ -27,21 +27,21 @@ public class SpringChessController {
     @PostMapping("/play")
     public String startGame(@RequestParam(value = "room_name") String roomName, Model model) {
         GameResponseDto gameResponseDto = springChessService.startNewGame(roomName);
-        model.addAttribute("response", gameResponseDto);
+        model.addAttribute("game_info", gameResponseDto);
         return "game_room";
     }
 
     @PostMapping("/resume")
     public String resumeGame(@RequestParam(value = "room_id") Long roomId, Model model) {
         GameResponseDto gameResponseDto = springChessService.resumeGame(roomId);
-        model.addAttribute("response", gameResponseDto);
+        model.addAttribute("game_info", gameResponseDto);
         return "game_room";
     }
 
     @PostMapping("/move")
     public String move(@RequestParam(value = "room_id") Long roomId, MoveHistory moveHistory, Model model) {
         GameResponseDto gameResponseDto = springChessService.move(roomId, moveHistory);
-        model.addAttribute("response", gameResponseDto);
+        model.addAttribute("game_info", gameResponseDto);
         return "game_room";
     }
 

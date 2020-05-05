@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 public class SpringChessService {
     public static final int BOARD_CELLS_NUMBER = 64;
     private static final String CAN_NOT_RESUME_ERR_MSG = "해당 게임을 이어할 수 없습니다.";
-    private static final String CAN_NOT_FIND_GAME_ROOM_ERR_MSG = "해당 게임을 찾을 수 없습니다.";
     private static final String TURN_MSG_FORMAT = "%s의 순서입니다.";
     private static final String WINNING_MSG_FORMAT = "%s이/가 이겼습니다.";
 

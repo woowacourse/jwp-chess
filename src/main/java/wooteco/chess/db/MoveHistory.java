@@ -12,7 +12,7 @@ public class MoveHistory {
     private String sourcePosition;
     private String targetPosition;
 
-    public MoveHistory() {
+    MoveHistory() {
     }
 
     public MoveHistory(String team, String sourcePosition, String targetPosition) {
@@ -25,39 +25,19 @@ public class MoveHistory {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Integer getMoves() {
         return moves;
-    }
-
-    public void setMoves(Integer moves) {
-        this.moves = moves;
     }
 
     public String getTeam() {
         return team;
     }
 
-    public void setTeam(String team) {
-        this.team = team;
-    }
-
     public String getSourcePosition() {
         return sourcePosition;
     }
 
-    public void setSourcePosition(String sourcePosition) {
-        this.sourcePosition = sourcePosition;
-    }
-
     public String getTargetPosition() {
         return targetPosition;
-    }
-
-    public void setTargetPosition(String targetPosition) {
-        this.targetPosition = targetPosition;
     }
 }

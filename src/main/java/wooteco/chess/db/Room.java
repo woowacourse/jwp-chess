@@ -12,7 +12,7 @@ public class Room {
     private Set<ChessPiece> chessPieces = new HashSet<>();
     private Set<MoveHistory> moveHistories = new HashSet<>();
 
-    public Room() {
+    Room() {
     }
 
     public Room(String name) {
@@ -23,16 +23,8 @@ public class Room {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Set<ChessPiece> getChessPieces() {

@@ -10,7 +10,7 @@ public class ChessPiece {
     private String position;
     private String piece;
 
-    public ChessPiece() {
+    ChessPiece() {
     }
 
     public ChessPiece(String position, String piece) {
@@ -22,23 +22,11 @@ public class ChessPiece {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
     public String getPiece() {
         return piece;
-    }
-
-    public void setPiece(String piece) {
-        this.piece = piece;
     }
 }

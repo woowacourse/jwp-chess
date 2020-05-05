@@ -18,8 +18,11 @@ import java.util.Map;
 
 @Controller
 public class SpringChessController {
-	@Autowired
-	private SpringDataJDBCChessService springDataJDBCChessService;
+	private final SpringDataJDBCChessService springDataJDBCChessService;
+
+	public SpringChessController(SpringDataJDBCChessService springDataJDBCChessService) {
+		this.springDataJDBCChessService = springDataJDBCChessService;
+	}
 
 	@GetMapping("/")
 	public ModelAndView routeMainPage() {

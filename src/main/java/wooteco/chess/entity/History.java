@@ -8,9 +8,6 @@ public class History {
     private String start;
     private String end;
 
-    public History() {
-    }
-
     public History(String start, String end) {
         this.start = start;
         this.end = end;

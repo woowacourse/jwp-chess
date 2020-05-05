@@ -1,6 +1,7 @@
 package wooteco.chess.domain.board;
 
 import wooteco.chess.domain.piece.*;
+import wooteco.chess.repository.RoomInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,7 +116,15 @@ public class Board {
         return movablePositions;
     }
 
+    public boolean isGameEnd() {
+        return !(hasKing(Team.WHITE) && hasKing(Team.BLACK));
+    }
+
     public Team getCurrentTurn() {
         return currentTurn;
+    }
+
+    public RoomInfo makeGameInfo(String roomName) {
+        return new RoomInfo(roomName, currentTurn.toString(), isGameEnd());
     }
 }

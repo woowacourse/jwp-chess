@@ -1,13 +1,11 @@
 package wooteco.chess.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import wooteco.chess.domain.room.Room;
+import wooteco.chess.domain.repository.RoomEntity;
 import wooteco.chess.service.RoomService;
 
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -15,23 +13,20 @@ public class RoomController {
 
     private final RoomService roomService;
 
-    @Autowired
     public RoomController(final RoomService roomService) {
         this.roomService = roomService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Room> rooms = roomService.findAllRoom();
-        model.addAttribute("rooms", rooms);
+        model.addAttribute("rooms", roomService.findAllRoom());
         return "index";
     }
 
     @PostMapping("/room")
     public String create(
-            @RequestParam String title,
-            Model model) {
-        Room created = roomService.createRoom(title);
+            @RequestParam String title, Model model) {
+        RoomEntity created = roomService.createRoom(title);
         Long roomId = created.getId();
         Map<String, String> board = roomService.initializeBoard(roomId);
         model.addAttribute("board", board);
@@ -40,8 +35,7 @@ public class RoomController {
 
     @GetMapping("/room/{room_id}")
     public String room(
-            @PathVariable("room_id") Long roomId,
-            Model model) {
+            @PathVariable("room_id") Long roomId, Model model) {
         Map<String, String> board = roomService.findPiecesById(roomId);
         model.addAttribute("board", board);
         model.addAttribute("roomId", roomId);
@@ -65,8 +59,7 @@ public class RoomController {
 
     @GetMapping("/room/{room_id}/reset")
     public String reset(
-            @PathVariable("room_id") Long roomId,
-            Model model) {
+            @PathVariable("room_id") Long roomId, Model model) {
         model.addAttribute("board", roomService.resetRoom(roomId));
         model.addAttribute("roomId", roomId);
         model.addAttribute("title", roomService.findTitleById(roomId));

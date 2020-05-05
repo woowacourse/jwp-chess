@@ -1,32 +1,35 @@
 package wooteco.chess.service;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import wooteco.chess.domain.board.Board;
-import wooteco.chess.domain.board.BoardEntity;
 import wooteco.chess.domain.board.BoardFactory;
-import wooteco.chess.domain.board.BoardRepository;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.domain.room.Room;
-import wooteco.chess.domain.room.RoomRepository;
+import wooteco.chess.domain.repository.BoardEntity;
+import wooteco.chess.domain.repository.BoardRepository;
+import wooteco.chess.domain.repository.RoomEntity;
+import wooteco.chess.domain.repository.RoomRepository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Component
 public class RoomService {
+
 
     private RoomRepository roomRepository;
     private BoardRepository boardRepository;
 
-    public RoomService(final RoomRepository roomRepository, final BoardRepository boardRepository) {
+    public RoomService(RoomRepository roomRepository, BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
         this.roomRepository = roomRepository;
     }
 
-    public List<Room> findAllRoom() {
+    public List<RoomEntity> findAllRoom() {
         return roomRepository.findAll();
     }
 
@@ -43,8 +46,8 @@ public class RoomService {
         return boardDTO;
     }
 
-    public Room createRoom(final String title) {
-        Room room = new Room(title);
+    public RoomEntity createRoom(final String title) {
+        RoomEntity room = new RoomEntity(title);
         return roomRepository.save(room);
     }
 
@@ -58,7 +61,7 @@ public class RoomService {
     }
 
     public void updateTurn(final Long roomId) {
-        Room room = roomRepository.findById(roomId)
+        RoomEntity room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room 정보가 없습니다."));
         if (room.isWhiteTurn()) {
             room.setTurn(Team.BLACK);
@@ -70,23 +73,22 @@ public class RoomService {
     }
 
     public String findTurnById(final Long roomId) {
-        Room room = roomRepository.findById(roomId)
+        RoomEntity room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room 정보가 없습니다."));
         return room.getTurn();
     }
 
     public String findTitleById(final Long roomId) {
-        Room room = roomRepository.findById(roomId)
+        RoomEntity room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room 정보가 없습니다."));
         return room.getTitle();
     }
 
     public Map<String, String> resetRoom(final Long roomId) {
-        Room room = roomRepository.findById(roomId)
+        RoomEntity room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room 정보가 없습니다."));
         room.setTurn(Team.WHITE);
         roomRepository.save(room);
-
         boardRepository.deleteByRoomId(roomId);
         return initializeBoard(roomId);
     }

@@ -1,4 +1,4 @@
-package wooteco.chess.domain.room;
+package wooteco.chess.domain.repository;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -6,13 +6,13 @@ import wooteco.chess.domain.piece.Team;
 
 
 @Table("room")
-public class Room {
+public class RoomEntity {
     @Id
     private Long id;
     private String title;
     private String turn;
 
-    public Room(final String title) {
+    public RoomEntity(final String title) {
         this.title = title;
         this.turn = Team.WHITE.name();
     }

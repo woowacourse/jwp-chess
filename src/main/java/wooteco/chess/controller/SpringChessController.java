@@ -24,7 +24,9 @@ public class SpringChessController {
     @GetMapping("/")
     public String chessGame(Model model) {
         List<String> roomNames = springChessService.findRoomNames();
-        model.addAttribute("rooms", roomNames);
+        int roomSize = roomNames.size();
+        model.addAttribute("roomNames", roomNames);
+        model.addAttribute("roomCount", roomSize);
         return "index";
     }
 

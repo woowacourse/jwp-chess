@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>모두의 체스</title>
+    <link href="/css/index.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
@@ -22,6 +23,12 @@
         form.submit();
      }
 </script>
+<div class='game_room'> 체스방 목록 </div>
+    {{#each roomNames}}
+    <div class='game_room'>{{this}}</div>
+    {{/each}}
+</br>
+<div class='create_room'>체스방 새로 만들기</div></br>
 <form id="readyForm" action="/ready/" method="post">
     <input id="game_id" name="game_id" placeholder="게임을 저장하기 위한 이름을 입력해주세요." type="text"/>
     <input type="button" onClick ="goReadyPage()" value="입장"/>

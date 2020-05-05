@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import wooteco.chess.domain.piece.Team;
-import wooteco.chess.repository.RoomEntity;
+import wooteco.chess.domain.repository.RoomEntity;
 
 import java.util.List;
 

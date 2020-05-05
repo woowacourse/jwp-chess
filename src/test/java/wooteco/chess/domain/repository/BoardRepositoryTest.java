@@ -1,4 +1,4 @@
-package wooteco.chess.repository;
+package wooteco.chess.domain.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

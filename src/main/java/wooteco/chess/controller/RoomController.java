@@ -3,7 +3,7 @@ package wooteco.chess.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import wooteco.chess.repository.RoomEntity;
+import wooteco.chess.domain.repository.RoomEntity;
 import wooteco.chess.service.RoomService;
 
 import java.util.Map;

@@ -7,8 +7,8 @@ import wooteco.chess.domain.piece.PieceType;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.GameResult;
-import wooteco.chess.repository.BoardEntity;
-import wooteco.chess.repository.BoardRepository;
+import wooteco.chess.domain.repository.BoardEntity;
+import wooteco.chess.domain.repository.BoardRepository;
 
 import java.util.HashMap;
 import java.util.List;

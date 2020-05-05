@@ -7,10 +7,10 @@ import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
-import wooteco.chess.repository.BoardEntity;
-import wooteco.chess.repository.BoardRepository;
-import wooteco.chess.repository.RoomEntity;
-import wooteco.chess.repository.RoomRepository;
+import wooteco.chess.domain.repository.BoardEntity;
+import wooteco.chess.domain.repository.BoardRepository;
+import wooteco.chess.domain.repository.RoomEntity;
+import wooteco.chess.domain.repository.RoomRepository;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package wooteco.chess.repository;
+package wooteco.chess.domain.repository;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;

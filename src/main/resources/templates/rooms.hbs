@@ -17,7 +17,7 @@
     <div class="content_box">
         <h2>방 목록</h2>
             {{#rooms}}
-                <form action="rooms/delete" method="post" id="room_form">
+                <form action="rooms/delete" method="post">
                     - {{roomName}}
                     <input type="hidden" name="room_name" value="{{ roomName }}"/>
                     <input type="submit" value="X" id="delete"/>

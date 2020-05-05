@@ -12,6 +12,8 @@ import chess.model.domain.piece.Queen;
 import chess.model.domain.piece.Rook;
 import chess.model.domain.piece.Team;
 import chess.model.domain.state.MoveState;
+import util.NullChecker;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,12 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import util.NullChecker;
 
 public class ChessGameDto {
 
     private static final Map<Piece, String> PIECES_LETTER;
-    private static final Map<Team, String> DEFAULT_NAMES;
 
     static {
         Map<Piece, String> piecesLetter = new HashMap<>();
@@ -45,7 +45,6 @@ public class ChessGameDto {
         Map<Team, String> defaultNames = new HashMap<>();
         defaultNames.put(Team.BLACK, "BLACK");
         defaultNames.put(Team.WHITE, "WHITE");
-        DEFAULT_NAMES = Collections.unmodifiableMap(defaultNames);
     }
 
     private final List<String> pieces;
@@ -67,7 +66,7 @@ public class ChessGameDto {
             printRankRaw(pieces, board, rank);
         }
         this.pieces = pieces;
-        this.turn = chessGame.getTurn().getName();
+        this.turn = chessGame.getTurnName();
         this.state = moveState.getMessage();
         this.blackScore = String.valueOf(teamScore.get(Team.BLACK));
         this.whiteScore = String.valueOf(teamScore.get(Team.WHITE));

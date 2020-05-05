@@ -3,13 +3,14 @@ package chess.model.repository;
 import chess.model.domain.board.ChessGame;
 import chess.model.domain.board.TeamScore;
 import chess.model.domain.piece.Team;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 @Table("CHESS_GAME_TB")
 public class ChessGameEntity {
@@ -47,7 +48,7 @@ public class ChessGameEntity {
     }
 
     public void update(ChessGame chessGame, String proceed) {
-        this.turnName = chessGame.getTurn().getName();
+        this.turnName = chessGame.getTurnName();
         this.proceeding = proceed;
         this.blackScore = chessGame.deriveTeamScore().get(Team.BLACK);
         this.whiteScore = chessGame.deriveTeamScore().get(Team.WHITE);

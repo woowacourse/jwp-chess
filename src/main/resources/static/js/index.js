@@ -4,8 +4,8 @@ const creatRoom = document.getElementById("create-room");
 const deleteRoom = document.getElementById("delete-room");
 const intoRoom = document.getElementById("into-room");
 
-fetch('/api/viewRooms').then(res => res.json()).then(data => {
-    roomSetting(data);
+fetch('/api/Rooms').then(res => res.json()).then(data => {
+	roomSetting(data);
 });
 
 intoRoom.onclick = () => {
@@ -18,24 +18,24 @@ intoRoom.onclick = () => {
 };
 
 deleteRoom.onclick = () => {
-    if (rooms.value === "") {
-        alert("삭제할 방이 없습니다. 방을 만들어보면 어떨까요?");
-        createRoomName.focus();
-        return;
-    }
-    let roomId = rooms.value;
-    fetch("/api/deleteRoom", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            roomId
-        })
-    }).then(res => res.json()).then(data => {
-        initialRooms();
-        roomSetting(data);
-        createRoomName.value = "";
+	if (rooms.value === "") {
+		alert("삭제할 방이 없습니다. 방을 만들어보면 어떨까요?");
+		createRoomName.focus();
+		return;
+	}
+	let roomId = rooms.value;
+	fetch("/api/room", {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			roomId
+		})
+	}).then(res => res.json()).then(data => {
+		initialRooms();
+		roomSetting(data);
+		createRoomName.value = "";
     })
 };
 
@@ -43,15 +43,15 @@ deleteRoom.onclick = () => {
 creatRoom.onclick = () => {
     let roomName = createRoomName.value;
     let roomPassword = '';
-    fetch('/api/createRoom', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            roomName, roomPassword
-        })
-    }).then(res => res.json()).then(data => {
+	fetch('/api/room', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			roomName, roomPassword
+		})
+	}).then(res => res.json()).then(data => {
         initialRooms();
         roomSetting(data);
         createRoomName.value = "";

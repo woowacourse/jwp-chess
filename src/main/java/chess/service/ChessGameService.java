@@ -27,6 +27,8 @@ import chess.model.repository.ResultEntity;
 import chess.model.repository.ResultRepository;
 import chess.model.repository.RoomEntity;
 import chess.model.repository.RoomRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,7 +36,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ChessGameService {
@@ -69,16 +70,17 @@ public class ChessGameService {
     private ChessGameEntity saveGame(Map<Team, String> userNames, Integer roomId,
         ChessGame chessGame) {
         RoomEntity roomEntity = roomRepository.findById(roomId)
-            .orElseThrow(IllegalArgumentException::new);
-        Map<Team, Double> teamScore = chessGame.deriveTeamScore().getTeamScore();
+                .orElseThrow(IllegalArgumentException::new);
+        TeamScore teamScore = chessGame.deriveTeamScore();
+        Map<Team, Double> teamScores = teamScore.getTeamScore();
 
         ChessGameEntity chessGameEntity = new ChessGameEntity(
-            chessGame.getTurn().getName()
-            , "Y"
-            , userNames.get(Team.BLACK)
-            , userNames.get(Team.WHITE)
-            , teamScore.get(Team.BLACK)
-            , teamScore.get(Team.WHITE));
+                chessGame.getTurnName()
+                , "Y"
+                , userNames.get(Team.BLACK)
+                , userNames.get(Team.WHITE)
+                , teamScores.get(Team.BLACK)
+                , teamScores.get(Team.WHITE));
         roomEntity.addGame(chessGameEntity);
         roomRepository.save(roomEntity);
 
@@ -178,31 +180,38 @@ public class ChessGameService {
             .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
         GameInfoDto gameInfo = getGameInfo(chessGameEntity);
         return new ChessGameDto(combineChessGame(gameId, gameInfo.getTurn()),
-            gameInfo.getUserNames());
+                gameInfo.getUserNames());
     }
 
     private ChessGame combineChessGame(Integer gameId, Team turn) {
-
         Map<Square, Piece> chessBoard = new HashMap<>();
         Set<CastlingSetting> castlingElements = new HashSet<>();
         Map<Square, Square> enPassants = new HashMap<>();
 
         for (BoardEntity boardEntity : boardRepository.findAllByGameId(gameId)) {
             chessBoard.put(Square.of(boardEntity.getSquareName()),
-                PieceFactory.getPiece(boardEntity.getPieceName()));
-            if (boardEntity.getCastlingElementYN().equals("Y")) {
-                castlingElements
-                    .add(CastlingSetting.of(Square.of(boardEntity.getSquareName()),
-                        PieceFactory.getPiece(boardEntity.getPieceName())));
-            }
-            if (boardEntity.getEnPassantName() != null) {
-                enPassants.put(Square.of(boardEntity.getEnPassantName()),
-                    Square.of(boardEntity.getSquareName()));
-            }
+                    PieceFactory.getPiece(boardEntity.getPieceName()));
+            addCastlingElements(castlingElements, boardEntity);
+            addEnPassants(enPassants, boardEntity);
         }
 
         return new ChessGame(ChessBoard.of(chessBoard), turn, CastlingElement.of(castlingElements),
-            new EnPassant(enPassants));
+                new EnPassant(enPassants));
+    }
+
+    private void addCastlingElements(final Set<CastlingSetting> castlingElements, final BoardEntity boardEntity) {
+        if (boardEntity.isExistCastlingElement()) {
+            castlingElements
+                    .add(CastlingSetting.of(Square.of(boardEntity.getSquareName()),
+                            PieceFactory.getPiece(boardEntity.getPieceName())));
+        }
+    }
+
+    private void addEnPassants(final Map<Square, Square> enPassants, final BoardEntity boardEntity) {
+        if (boardEntity.isEnPassantNameNotNull()) {
+            enPassants.put(Square.of(boardEntity.getEnPassantName()),
+                    Square.of(boardEntity.getSquareName()));
+        }
     }
 
     public boolean isGameProceed(Integer gameId) {
@@ -211,7 +220,7 @@ public class ChessGameService {
 
     public ChessGameEntity closeGame(Integer gameId) {
         ChessGameEntity chessGameEntity = chessGameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("gameId(" + gameId + ")가 없습니다."));
 
         chessGameEntity.setProceeding("N");
         chessGameRepository.save(chessGameEntity);

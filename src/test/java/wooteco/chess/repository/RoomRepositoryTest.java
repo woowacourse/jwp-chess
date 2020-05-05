@@ -1,4 +1,4 @@
-package wooteco.chess.domain.repository;
+package wooteco.chess.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import wooteco.chess.domain.Board;
 import wooteco.chess.domain.piece.Piece;
 import wooteco.chess.domain.piece.Team;
-import wooteco.chess.repository.PieceEntity;
-import wooteco.chess.repository.RoomEntity;
-import wooteco.chess.repository.RoomRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

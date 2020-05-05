@@ -62,7 +62,7 @@ public class ChessController {
         return "chess-result";
     }
 
-    @PostMapping("continue-game")
+    @PostMapping("/continue-game")
     public String continueGame(@RequestParam(value = "existing-room-name") String name,
         RedirectAttributes redirectAttributes) {
         try {

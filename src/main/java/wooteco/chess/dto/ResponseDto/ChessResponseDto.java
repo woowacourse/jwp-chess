@@ -1,4 +1,4 @@
-package wooteco.chess.dto;
+package wooteco.chess.dto.ResponseDto;
 
 import wooteco.chess.consolView.PieceRender;
 import wooteco.chess.domain.Chess;

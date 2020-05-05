@@ -34,7 +34,7 @@ public class Chess implements Observable {
     }
 
     public boolean isTurnOf(Coordinate source) {
-        return chessBoard.isNotSameTeam(source, currentTeam);
+        return !chessBoard.isNotSameTeam(source, currentTeam);
     }
 
     public List<String> getMovableWay(Coordinate sourceCoordinate) {

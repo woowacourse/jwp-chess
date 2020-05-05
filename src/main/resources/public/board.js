@@ -1,7 +1,7 @@
 var click_flag = 0;
 var source = "";
 var target = "";
-var team = "";
+var password = "";
 var way = "";
 var roomId = "";
 var end_flag = false;
@@ -12,38 +12,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $(document).ready(function () {
         roomId = location.href.substr(
+            location.href.indexOf("?id")+4,
+            18
+        )
+        password = location.href.substr(
             location.href.lastIndexOf('=') + 1
         );
     });
 
     setInterval(function () {
-        console.log(roomId)
         if (!end_flag) {
             $.ajax({
                 type: "GET",
-                url: "/room/status?roomId=" + roomId,
-                dataType: 'text',// xml, json, script, html
+                url: "/room/status/" + roomId,
+                dataType: 'json',// xml, json, script, html
                 success: function (data) {
-                    jsonData = JSON.parse(data);
-                    if (jsonData.isEnd) {
+                    responseData = data.responseData
+                    if (responseData.end) {
                         end_flag = true
                     }
                     playerNumber = 0
-                    console.log(jsonData)
-                    if (jsonData.blackUserId !== -1) {
-                        console.log(jsonData.blackUserId)
+                    if (responseData.blackPassword !== "default") {
                         playerNumber++
                     }
-                    if (jsonData.whiteUserId !== -1) {
-                        console.log(jsonData.whiteUserId)
+                    if (responseData.whitePassword !== "default") {
                         playerNumber++
-                    }
-
-                    if (team === "" && playerNumber === 1) {
-                        team = "WHITE"
-                    }
-                    if (team === "" && playerNumber === 2) {
-                        team = "BLACK"
                     }
                 },
                 error: function (e) {
@@ -53,11 +46,11 @@ document.addEventListener("DOMContentLoaded", function () {
             if (playerNumber === 2) {
                 $.ajax({
                     type: "GET",
-                    url: "/chess/renew?roomId=" + roomId,
-                    dataType: 'text',// xml, json, script, html
+                    url: "/chess/renew/" + roomId,
+                    dataType: 'json',// xml, json, script, html
                     success: function (data) {
                         console.log(data)
-                        drawBoard(data)
+                        drawBoard(data.responseData)
                     },
                     error: function (e) {
                         console.log(e.message);
@@ -72,10 +65,11 @@ document.addEventListener("DOMContentLoaded", function () {
     $('.btn-quit').click(function () {
         $.ajax({
             type: "POST",
-            url: "/room/quit",
+            url: "/room/exit",
             async: true,
             data: {
-                roomId: roomId
+                roomId: roomId,
+                userPassword: password
             },
             success: function (data) {
                 console.log(data);
@@ -92,15 +86,20 @@ document.addEventListener("DOMContentLoaded", function () {
         if (click_flag === 0) {
             source = $(this).attr('id');
             $.ajax({
-                url: '/chess/way?roomId=' + roomId + '&team=' + team + '&coordinate=' + source,
+                url: '/chess/way/' + roomId + '/' + password + '/' + source,
                 async: true,
                 type: 'GET',
-                dataType: 'text',// xml, json, script, html
+                dataType: 'json',// xml, json, script, html
 
                 success: function (data) {
-                    console.log(data)
-                    drawWay(data)
-                    click_flag = 1;
+                    if(data.responseCode === 200) {
+                        console.log(data)
+                        drawWay(data.responseData)
+                        click_flag = 1;
+                    }
+                    else {
+                        alert(data.message)
+                    }
                 },// 요청 완료 시
                 error: function (e) {
                     console.log("false");
@@ -118,19 +117,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 url: '/chess/move',
                 async: true,
                 type: 'POST',
-                data: {
+                dataType: 'json',// xml, json, script, html
+                contentType: "application/json",
+                data: JSON.stringify({
                     roomId: roomId,
+                    userPassword: password,
                     source: source,
                     target: target
-                },
-                dataType: 'text',// xml, json, script, html
+                }),
 
                 success: function (data) {
-                    if (data === "win") {
+                    if (data.responseCode === 201) {
                         printWinner()
                         end_flag = true
                     }
-                    console.log("success");
+                    if (data.responseCode === 200) {
+                        console.log("success");
+                    }
                 },// 요청 완료 시
                 error: function (e) {
                     console.log("false");
@@ -144,8 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-function drawBoard(data) {
-    let jsonData = JSON.parse(data)
+function drawBoard(jsonData) {
     let board = jsonData.board
     let blackScore = jsonData.blackScore
     let whiteScore = jsonData.whiteScore
@@ -161,10 +163,9 @@ function drawBoard(data) {
 }
 
 function drawWay(data) {
-    let jsonData = JSON.parse(data);
-    way = jsonData;
-    console.log(jsonData)
-    jQuery.each(jsonData, function (key, value) {
+    way = data;
+    console.log(data)
+    jQuery.each(data, function (key, value) {
         $(`#${value}`).css("background-color", "red")
     })
 }

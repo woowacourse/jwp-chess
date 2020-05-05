@@ -21,7 +21,7 @@ public class ChessEntity {
         return new ChessEntity(title, board, isWhite);
     }
 
-    public ChessEntity() {
+    ChessEntity() {
 
     }
 

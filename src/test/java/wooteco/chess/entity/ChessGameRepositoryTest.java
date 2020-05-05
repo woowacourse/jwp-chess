@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,6 @@ import wooteco.chess.service.exception.InvalidGameException;
 class ChessGameRepositoryTest {
 	@Autowired
 	private ChessGameRepository chessGameRepository;
-
-	@BeforeEach
-	void setup() {
-		chessGameRepository.deleteAll();
-	}
 
 	private ChessGameEntity generateNewChessGameEntity() {
 		ChessGame chessGame = new ChessGame(new Ready());

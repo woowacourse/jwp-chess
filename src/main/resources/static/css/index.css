@@ -11,3 +11,8 @@
 .create_room {
     font-size: 20px;
 }
+
+#game_room {
+    float: right;
+    padding-right: 5px;
+}

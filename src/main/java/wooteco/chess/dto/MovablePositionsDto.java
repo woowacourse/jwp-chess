@@ -1,10 +1,11 @@
 package wooteco.chess.dto;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MovablePositionsDto {
-    private List<String> movablePositionNames;
-    private String position;
+    private final List<String> movablePositionNames;
+    private final String position;
 
     public MovablePositionsDto(List<String> movablePositionNames, String position) {
         this.movablePositionNames = movablePositionNames;
@@ -12,7 +13,7 @@ public class MovablePositionsDto {
     }
 
     public List<String> getMovablePositionNames() {
-        return movablePositionNames;
+        return Collections.unmodifiableList(movablePositionNames);
     }
 
     public String getPosition() {

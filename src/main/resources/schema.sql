@@ -1,6 +1,15 @@
-create table history (
-    id bigint not null auto_increment,
-    start varchar(2) not null,
-    end varchar(2) not null,
-    primary key(id)
+CREATE TABLE IF NOT EXISTS game (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    can_continue BOOL NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS history (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    start VARCHAR(2) NOT NULL,
+    end VARCHAR(2) NOT NULL,
+    game BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(game) REFERENCES game(id)
 );

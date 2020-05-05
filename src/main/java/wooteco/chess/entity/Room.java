@@ -18,8 +18,7 @@ public class Room {
     @Column("room")
     private GameEntity game;
 
-    public Room() {
-    }
+    public Room() {}
 
     public Room(String name) {
         validateName(name);

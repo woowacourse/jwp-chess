@@ -22,8 +22,7 @@ public class GameEntity {
     @Column("game")
     private Set<Cell> cells = new HashSet<>();
 
-    public GameEntity() {
-    }
+    public GameEntity() {}
 
     public GameEntity(int turn) {
         this.turn = turn;

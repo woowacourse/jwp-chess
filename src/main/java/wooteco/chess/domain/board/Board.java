@@ -40,7 +40,7 @@ public class Board {
 
     public List<Position> getMovablePositions(Position source, Turn turn) {
         PieceState sourcePiece = board.get(source);
-        validateTurn(sourcePiece, turn);
+        validateSource(sourcePiece, turn);
         return sourcePiece.getMovablePositions(getBoardState());
     }
 

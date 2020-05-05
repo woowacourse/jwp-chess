@@ -1,21 +1,22 @@
-package chess.domain.piece.implementation;
+package wooteco.chess.domain.piece.implementation;
 
-import chess.domain.board.BoardSituation;
-import chess.domain.piece.PieceState;
-import chess.domain.piece.implementation.piece.Pawn;
-import chess.domain.player.Team;
-import chess.domain.position.Position;
+import static org.assertj.core.api.Assertions.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import wooteco.chess.domain.board.BoardSituation;
+import wooteco.chess.domain.piece.PieceState;
+import wooteco.chess.domain.piece.implementation.piece.Pawn;
+import wooteco.chess.domain.player.Team;
+import wooteco.chess.domain.position.Position;
 
 class PawnTest {
 
@@ -28,8 +29,8 @@ class PawnTest {
 
     @BeforeEach
     void setUp() {
-        whitePawn = Pawn.of(Position.of("B2"), chess.domain.player.Team.WHITE);
-        blackPawn = Pawn.of(Position.of("A7"), chess.domain.player.Team.BLACK);
+        whitePawn = Pawn.of(Position.of("B2"), wooteco.chess.domain.player.Team.WHITE);
+        blackPawn = Pawn.of(Position.of("A7"), wooteco.chess.domain.player.Team.BLACK);
         boardDto = new HashMap<>();
         boardSituation = BoardSituation.of(boardDto);
     }
@@ -40,7 +41,7 @@ class PawnTest {
         boardDto.put(Position.of("B4"), whiteTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whitePawn.move(Position.of("B4"), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -49,14 +50,14 @@ class PawnTest {
         boardDto.put(Position.of("B4"), blackTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whitePawn.move(Position.of("B4"), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("직선 진행 타겟에 아무것도 없는 경우 이동 가능")
     void moveToEmpty() {
         assertThat(whitePawn.move(Position.of("B4"), boardSituation))
-                .isInstanceOf(Pawn.class);
+            .isInstanceOf(Pawn.class);
     }
 
     @Test
@@ -65,7 +66,7 @@ class PawnTest {
         boardDto.put(Position.of("C3"), blackTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThat(whitePawn.move(Position.of("C3"), boardSituation))
-                .isInstanceOf(Pawn.class);
+            .isInstanceOf(Pawn.class);
     }
 
     @ParameterizedTest
@@ -73,7 +74,7 @@ class PawnTest {
     @DisplayName("진행 규칙에 어긋나는 경우 예외 발생")
     void movePolicyException(String input) {
         assertThatThrownBy(() -> whitePawn.move(Position.of(input), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -82,7 +83,7 @@ class PawnTest {
         boardDto.put(Position.of("D4"), blackTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whitePawn.move(Position.of("D4"), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
@@ -92,7 +93,7 @@ class PawnTest {
         boardDto.put(Position.of(target), blackTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whitePawn.move(Position.of(target), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -101,7 +102,7 @@ class PawnTest {
         boardDto.put(Position.of("B3"), blackTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whitePawn.move(Position.of("B4"), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
@@ -109,7 +110,7 @@ class PawnTest {
     @DisplayName("직선 진행 타겟에 아무것도 없는 경우 이동 가능")
     void moveToEmpty(String target) {
         assertThat(whitePawn.move(Position.of(target), boardSituation))
-                .isInstanceOf(Pawn.class);
+            .isInstanceOf(Pawn.class);
     }
 
     @ParameterizedTest
@@ -119,6 +120,30 @@ class PawnTest {
         boardDto.put(Position.of(target), blackTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whitePawn.move(Position.of(target), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void movablePositions() {
+        boardDto.put(Position.of("A4"), whiteTeam);
+        boardSituation = BoardSituation.of(boardDto);
+        List<Position> positions = blackPawn.getMovablePositions(boardSituation);
+        assertThat(positions).contains(Position.of("A6"), Position.of("A5"));
+    }
+
+    @Test
+    void attackablePositions() {
+        boardDto.put(Position.of("c3"), blackTeam);
+        boardSituation = BoardSituation.of(boardDto);
+        List<Position> positions = whitePawn.getMovablePositions(boardSituation);
+        assertThat(positions).contains(Position.of("c3"));
+    }
+
+    @Test
+    void score() {
+        boardDto.put(Position.of("B4"), whiteTeam);
+        boardDto.put(Position.of("B2"), whiteTeam);
+        boardSituation = BoardSituation.of(boardDto);
+        assertThat(whitePawn.getPoint(boardSituation)).isEqualTo(0.5d);
     }
 }

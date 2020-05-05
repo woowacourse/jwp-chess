@@ -1,6 +1,7 @@
 package wooteco.chess.repository;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,13 +33,11 @@ public class ChessGameTable {
         this.turn = turn;
     }
 
-    public static ChessGameTable createForInsert(ChessGame chessGame) {
+    public static ChessGameTable from(ChessGame chessGame) {
         Set<BoardTable> board = toBoardTable(chessGame.getBoard());
-        return new ChessGameTable(null, chessGame.getTitle(), board, chessGame.getTurn().toString());
-    }
-
-    public static ChessGameTable createForUpdate(ChessGame chessGame) {
-        Set<BoardTable> board = toBoardTable(chessGame.getBoard());
+        if (Objects.isNull(chessGame.getId())) {
+            return new ChessGameTable(null, chessGame.getTitle(), board, chessGame.getTurn().toString());
+        }
         return new ChessGameTable(chessGame.getId(), chessGame.getTitle(), board, chessGame.getTurn().toString());
     }
 
@@ -66,7 +65,7 @@ public class ChessGameTable {
 
     private PieceState createPieceState(final String piece, final String position, final String team) {
         PieceType type = PieceType.valueOf(piece);
-        return type.apply(Position.of(position), Team.valueOf(team));
+        return type.create(Position.of(position), Team.valueOf(team));
     }
 
     public Long getId() {

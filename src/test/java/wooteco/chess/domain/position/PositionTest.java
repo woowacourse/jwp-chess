@@ -1,11 +1,10 @@
-package chess.domain.position;
+package wooteco.chess.domain.position;
+
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class PositionTest {
     @ParameterizedTest
@@ -18,7 +17,7 @@ public class PositionTest {
     @ValueSource(strings = {"a9", "h9", "a0", "h0", "i1", "i8"})
     void wrongPosition(String input) {
         assertThatThrownBy(() -> Position.of(input))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -34,5 +33,12 @@ public class PositionTest {
     @Test
     void getRankDifference() {
         assertThat(Position.of("A1").getRankDifference(Position.of("A5"))).isEqualTo(4);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"A1", "A2", "A3", "A4", "A3", "A5", "A7"})
+    void getName(String input) {
+        Position position = Position.of(input);
+        assertThat(position.getName()).isEqualTo(input);
     }
 }

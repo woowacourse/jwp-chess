@@ -1,20 +1,20 @@
-package chess.domain.piece.implementation;
+package wooteco.chess.domain.piece.implementation;
 
-import chess.domain.board.BoardSituation;
-import chess.domain.piece.PieceState;
-import chess.domain.piece.implementation.piece.King;
-import chess.domain.player.Team;
-import chess.domain.position.Position;
+import static org.assertj.core.api.Assertions.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import wooteco.chess.domain.board.BoardSituation;
+import wooteco.chess.domain.piece.PieceState;
+import wooteco.chess.domain.piece.implementation.piece.King;
+import wooteco.chess.domain.player.Team;
+import wooteco.chess.domain.position.Position;
 
 class KingTest {
 
@@ -26,7 +26,7 @@ class KingTest {
 
     @BeforeEach
     void setUp() {
-        whiteKing = King.of(Position.of("C4"), chess.domain.player.Team.WHITE);
+        whiteKing = King.of(Position.of("C4"), wooteco.chess.domain.player.Team.WHITE);
         boardDto = new HashMap<>();
         boardSituation = BoardSituation.of(boardDto);
     }
@@ -36,7 +36,7 @@ class KingTest {
     @DisplayName("진행 경로에 아무것도 없는 경우 이동 가능")
     void moveToEmpty(String target) {
         assertThat(whiteKing.move(Position.of(target), boardSituation))
-                .isInstanceOf(King.class);
+            .isInstanceOf(King.class);
     }
 
     @ParameterizedTest
@@ -46,7 +46,7 @@ class KingTest {
         boardDto.put(Position.of(target), whiteTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whiteKing.move(Position.of(target), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
@@ -56,7 +56,7 @@ class KingTest {
         boardDto.put(Position.of(target), blackTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThat(whiteKing.move(Position.of(target), boardSituation))
-                .isInstanceOf(King.class);
+            .isInstanceOf(King.class);
     }
 
     @ParameterizedTest
@@ -64,7 +64,7 @@ class KingTest {
     @DisplayName("진행 규칙에 어긋나는 경우 예외 발생")
     void movePolicyException(String input) {
         assertThatThrownBy(() -> whiteKing.move(Position.of(input), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
@@ -74,6 +74,6 @@ class KingTest {
         boardDto.put(Position.of(target), blackTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whiteKing.move(Position.of(target), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -14,12 +14,12 @@ import wooteco.chess.domain.position.Position;
 
 public class ChessGame {
 
-    private Long id;
-    private String title;
-    private Board board;
-    private Turn turn;
+    private final Long id;
+    private final String title;
+    private final Board board;
+    private final Turn turn;
 
-    private ChessGame(Long id, String title, Board board, Turn turn) {
+    private ChessGame(final Long id, final String title, final Board board, final Turn turn) {
         this.id = id;
         this.title = title;
         this.board = board;
@@ -38,7 +38,7 @@ public class ChessGame {
         return board.isEnd();
     }
 
-    public void move(MoveParameter moveParameter) {
+    public void move(final MoveParameter moveParameter) {
         if (!isEnd()) {
             board.move(moveParameter.getSource(), moveParameter.getTarget(), turn);
             turn.switchTurn();
@@ -47,16 +47,8 @@ public class ChessGame {
         throw new UnsupportedOperationException("게임이 종료 되었습니다.");
     }
 
-    public List<Position> getMovablePositions(Position source) {
+    public List<Position> getMovablePositions(final Position source) {
         return board.getMovablePositions(source, turn);
-    }
-
-    public Map<Position, PieceState> getBoard() {
-        return board.getBoard();
-    }
-
-    public double getScore() {
-        return board.getScores(turn.getTeam());
     }
 
     public Map<Team, Double> getStatus() {
@@ -65,10 +57,6 @@ public class ChessGame {
                 value -> value,
                 value -> board.getScores(value)
             ));
-    }
-
-    public Team getTurn() {
-        return turn.getTeam();
     }
 
     public Team getWinner() {
@@ -81,11 +69,23 @@ public class ChessGame {
         throw new UnsupportedOperationException("게임이 아직 종료되지 않았습니다.");
     }
 
+    public double getScore() {
+        return board.getScores(turn.getTeam());
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public Map<Position, PieceState> getBoard() {
+        return board.getBoard();
+    }
+
+    public Team getTurn() {
+        return turn.getTeam();
     }
 }

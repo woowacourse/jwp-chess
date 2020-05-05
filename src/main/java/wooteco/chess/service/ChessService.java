@@ -34,7 +34,7 @@ public class ChessService {
         ChessGame chessGame = ChessGame.of(createChessRequestDto.getTitle(),
             Board.of(new AutomatedBoardInitializer()),
             Turn.from(Team.WHITE));
-        return chessGameRepository.save(ChessGameTable.createForInsert(chessGame)).getId();
+        return chessGameRepository.save(ChessGameTable.from(chessGame)).getId();
     }
 
     public void restart(final Long id) {
@@ -43,7 +43,7 @@ public class ChessService {
         ChessGame restartedChessGame = ChessGame.of(id, chessGame.getTitle(), Board.of(new AutomatedBoardInitializer()),
             Turn.from(Team.WHITE));
         chessGames.put(id, restartedChessGame);
-        chessGameRepository.save(ChessGameTable.createForUpdate(restartedChessGame));
+        chessGameRepository.save(ChessGameTable.from(restartedChessGame));
     }
 
     public void load(final Long id) {
@@ -54,7 +54,7 @@ public class ChessService {
     public void save(final Long id) {
         loadIfNotExisting(id);
         ChessGame chessGame = chessGames.get(id);
-        chessGameRepository.save(ChessGameTable.createForUpdate(chessGame));
+        chessGameRepository.save(ChessGameTable.from(chessGame));
     }
 
     public void remove(final Long id) {

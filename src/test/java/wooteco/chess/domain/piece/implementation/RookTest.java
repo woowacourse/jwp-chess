@@ -1,21 +1,21 @@
-package chess.domain.piece.implementation;
+package wooteco.chess.domain.piece.implementation;
 
-import chess.domain.board.BoardSituation;
-import chess.domain.piece.PieceState;
-import chess.domain.piece.implementation.piece.Rook;
-import chess.domain.player.Team;
-import chess.domain.position.Position;
+import static org.assertj.core.api.Assertions.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import wooteco.chess.domain.board.BoardSituation;
+import wooteco.chess.domain.piece.PieceState;
+import wooteco.chess.domain.piece.implementation.piece.Rook;
+import wooteco.chess.domain.player.Team;
+import wooteco.chess.domain.position.Position;
 
 class RookTest {
 
@@ -27,7 +27,7 @@ class RookTest {
 
     @BeforeEach
     void setUp() {
-        whiteRook = Rook.of(Position.of("C4"), chess.domain.player.Team.WHITE);
+        whiteRook = Rook.of(Position.of("C4"), wooteco.chess.domain.player.Team.WHITE);
         boardDto = new HashMap<>();
         boardSituation = BoardSituation.of(boardDto);
     }
@@ -37,7 +37,7 @@ class RookTest {
     @DisplayName("진행 경로에 아무것도 없는 경우 이동 가능")
     void moveToEmpty(String target) {
         assertThat(whiteRook.move(Position.of(target), boardSituation))
-                .isInstanceOf(Rook.class);
+            .isInstanceOf(Rook.class);
     }
 
     @ParameterizedTest
@@ -47,7 +47,7 @@ class RookTest {
         boardDto.put(Position.of(target), whiteTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whiteRook.move(Position.of(target), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
@@ -57,7 +57,7 @@ class RookTest {
         boardDto.put(Position.of(path), whiteTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whiteRook.move(Position.of(target), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
@@ -67,7 +67,7 @@ class RookTest {
         boardDto.put(Position.of(target), blackTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThat(whiteRook.move(Position.of(target), boardSituation))
-                .isInstanceOf(Rook.class);
+            .isInstanceOf(Rook.class);
     }
 
     @ParameterizedTest
@@ -77,7 +77,7 @@ class RookTest {
         boardDto.put(Position.of(path), blackTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whiteRook.move(Position.of(target), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
@@ -85,7 +85,7 @@ class RookTest {
     @DisplayName("진행 규칙에 어긋나는 경우 예외 발생")
     void movePolicyException(String input) {
         assertThatThrownBy(() -> whiteRook.move(Position.of(input), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
@@ -95,6 +95,6 @@ class RookTest {
         boardDto.put(Position.of(target), blackTeam);
         boardSituation = BoardSituation.of(boardDto);
         assertThatThrownBy(() -> whiteRook.move(Position.of(target), boardSituation))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

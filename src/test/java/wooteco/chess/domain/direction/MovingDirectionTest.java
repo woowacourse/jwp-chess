@@ -1,11 +1,11 @@
-package chess.domain.direction;
+package wooteco.chess.domain.direction;
 
-import chess.domain.position.Position;
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import wooteco.chess.domain.position.Position;
 
 class MovingDirectionTest {
 
@@ -125,6 +125,6 @@ class MovingDirectionTest {
     @DisplayName("체스 움직임 예외")
     void findDirectionException() {
         assertThatThrownBy(() -> MovingDirection.getDirection(Position.of("c3"), Position.of("f4")))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

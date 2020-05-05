@@ -13,17 +13,26 @@ public class ChessEntity {
     private String board;
     private Boolean isWhite;
 
-    public ChessEntity() {
+    public static ChessEntity of(Long roomId, String title, String board) {
+        return new ChessEntity(roomId, title, board);
     }
 
-    public ChessEntity(Long roomId, String title, String board) {
+    public static ChessEntity of(String title, String board, boolean isWhite) {
+        return new ChessEntity(title, board, isWhite);
+    }
+
+    public ChessEntity() {
+
+    }
+
+    ChessEntity(Long roomId, String title, String board) {
         this.roomId = roomId;
         this.title = title;
         this.board = board;
         this.isWhite = true;
     }
 
-    public ChessEntity(String title, String board, boolean isWhite) {
+    ChessEntity(String title, String board, boolean isWhite) {
         this.title = title;
         this.board = board;
         this.isWhite = isWhite;

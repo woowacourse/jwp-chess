@@ -116,8 +116,8 @@ public class ChessGame {
         return new ChessGameEntity(this.turn == BLACK, pieces);
     }
 
-    public ChessGameEntity toEntity(Long gameId) {
+    public ChessGameEntity toEntity(Long gameId, String gameName) {
         Set<PieceEntity> pieces = this.chessBoard.toEntities();
-        return new ChessGameEntity(gameId, this.turn == BLACK, pieces);
+        return new ChessGameEntity(gameId, this.turn == BLACK, pieces, gameName);
     }
 }

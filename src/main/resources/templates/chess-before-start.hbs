@@ -139,11 +139,16 @@
             </form>
         </div>
         <div class="enter-room">
+            <div> 방 목록 </div>
+            {{#roomNames}}
             <form action="/continue-game" method="post">
-                <div>방 입장하기</div>
-                <input name="existing-room-name" placeholder="방의 이름을 입력해주세요" type="text">
-                <input type="submit">
+            <div class="room-entity">
+                <input type="submit" value="입장">
+                <div>{{.}}</div>
+                <input type="hidden" name="existing-room-name" value={{.}}>
+                </div>
             </form>
+            {{/roomNames}}
         </div>
         {{#error}}
         <div class="error-message">{{error}}</div>

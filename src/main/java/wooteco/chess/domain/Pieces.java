@@ -21,14 +21,6 @@ public class Pieces {
         this.pieces = new HashMap<>(pieces);
     }
 
-    public Pieces(Set<PieceEntity> pieceEntities) {
-        Map<Position, Piece> positionPiecePair = new HashMap<>();
-        for (PieceEntity pieceEntity : pieceEntities) {
-            positionPiecePair.put(new Position(pieceEntity.getPosition()), PieceRule.makeNewPiece(pieceEntity));
-        }
-        this.pieces = positionPiecePair;
-    }
-
     public List<Piece> getAlivePieces() {
         return pieces.values().stream()
             .filter(Piece::isAlive)

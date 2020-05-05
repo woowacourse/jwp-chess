@@ -1,6 +1,6 @@
 create table if not exists piece2
 (
-    id                bingint auto_increment,
+    id                bigInt auto_increment,
     name              varchar(244) not null,
     piece_row         varchar(244) not null,
     piece_col         varchar(244) not null,

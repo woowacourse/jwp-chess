@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class ChessIndexController {
-	@GetMapping("/")
+	@GetMapping
 	public String index() {
 		return "index";
 	}
 
-	@GetMapping("/game/{id}")
+	@GetMapping("/games/{id}")
 	public String game(@PathVariable String id, Model model) {
 		model.addAttribute("id", id);
 		return "game";

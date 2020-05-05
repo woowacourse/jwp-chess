@@ -5,7 +5,7 @@ const loadGameRooms = function addGameRooms(datas) {
     for (const data of datas) {
         const list = document.createElement("LI");
         const link = document.createElement("A");
-        link.setAttribute("href", "/game/" + data);
+        link.setAttribute("href", "/games/" + data);
         link.innerText = data + " 번방";
         list.appendChild(link);
         games.appendChild(list);
@@ -24,7 +24,7 @@ const showGames = function showGames() {
             loadGameRooms(data['data']);
         }
     };
-    xhttp.open("GET", "/chess/games", true);
+    xhttp.open("GET", "/games", true);
     xhttp.send();
 };
 
@@ -40,7 +40,7 @@ const createGame = function createGame() {
             location.reload();
         }
     };
-    xhttp.open("POST", "/chess/game", true);
+    xhttp.open("POST", "/games", true);
     xhttp.send();
 };
 

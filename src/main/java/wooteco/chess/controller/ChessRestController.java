@@ -13,7 +13,7 @@ import wooteco.chess.view.dto.requestdto.PositionRequestDto;
 import wooteco.chess.view.response.ResponseDto;
 
 @RestController
-@RequestMapping("/chess")
+@RequestMapping("/games")
 public class ChessRestController {
 	private final GameService gameService;
 
@@ -21,47 +21,47 @@ public class ChessRestController {
 		this.gameService = gameService;
 	}
 
-	@GetMapping("/games")
+	@GetMapping
 	public ResponseDto games() {
 		return gameService.findAllGameIds();
 	}
 
-	@PostMapping("/game")
+	@PostMapping
 	public ResponseDto createNewGame() {
 		return gameService.createNewGame();
 	}
 
-	@GetMapping("/state/{id}")
+	@GetMapping("/{id}/state")
 	public ResponseDto findCurrentState(@PathVariable String id) {
 		return gameService.getCurrentState(id);
 	}
 
-	@PutMapping("/state/{id}")
+	@PutMapping("/{id}/state")
 	public ResponseDto changeState(@RequestBody String request, @PathVariable String id) {
 		return gameService.changeState(id, request);
 	}
 
-	@GetMapping("/pieces/{id}")
+	@GetMapping("/{id}/board/pieces")
 	public ResponseDto findAllPiecesOnBoard(@PathVariable String id) {
 		return gameService.findAllPiecesOnBoard(id);
 	}
 
-	@GetMapping("/record/{id}")
+	@GetMapping("/{id}/scores")
 	public ResponseDto calculateScore(@PathVariable String id) {
 		return gameService.calculateScore(id);
 	}
 
-	@PutMapping("/move/{id}")
+	@PutMapping("/{id}/board/pieces")
 	public ResponseDto move(@RequestBody PositionRequestDto requestDTO, @PathVariable String id) {
 		return gameService.move(id, requestDTO);
 	}
 
-	@GetMapping("/isnotfinish/{id}")
+	@GetMapping("/{id}/non-finish-status")
 	public ResponseDto isNotFinish(@PathVariable String id) {
 		return gameService.isNotFinish(id);
 	}
 
-	@GetMapping("/result/{id}")
+	@GetMapping("/{id}/winner")
 	public ResponseDto findWinner(@PathVariable String id) {
 		return gameService.getWinner(id);
 	}

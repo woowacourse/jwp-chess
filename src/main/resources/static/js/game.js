@@ -82,7 +82,7 @@ const updateGameState = function updateGameState() {
             renderCurrentGameState(data['data']);
         }
     };
-    xhttp.open("GET", "/chess/state/" + gameId, true);
+    xhttp.open("GET", "/games/" + gameId + "/state", true);
     xhttp.send();
 };
 
@@ -101,7 +101,7 @@ const requestMovePieces = function requestMovePieces(data) {
             updateGameState();
         }
     };
-    xhttp.open("PUT", "/chess/move/" + gameId, true);
+    xhttp.open("PUT", "/games/" + gameId + "/board/pieces", true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(data);
 };
@@ -120,7 +120,7 @@ const checkWhetherGameIsFinished = function checkWhetherGameIsFinished() {
             }
         }
     };
-    xhttp.open("GET", "/chess/isnotfinish/" + gameId, true);
+    xhttp.open("GET", "/games/" + gameId + "/non-finish-status", true);
     xhttp.send();
 };
 
@@ -137,7 +137,7 @@ const requestEndGame = function requestEndGame() {
             requestWinner();
         }
     };
-    xhttp.open("PUT", "/chess/state/" + gameId, true);
+    xhttp.open("PUT", "/games/" + gameId + "/state", true);
     xhttp.send("end");
 };
 
@@ -153,7 +153,7 @@ const requestWinner = function requestWinner() {
             alert("승리 : " + data['data']);
         }
     };
-    xhttp.open("GET", "/chess/result/" + gameId, true);
+    xhttp.open("GET", "/games/" + gameId + "/winner", true);
     xhttp.send();
 };
 
@@ -171,7 +171,7 @@ const requestNewGame = function requestNewGame() {
             updateGameState();
         }
     };
-    xhttp.open("PUT", "/chess/state/" + gameId, true);
+    xhttp.open("PUT", "/games/" + gameId + "/state", true);
     xhttp.send("start");
 };
 
@@ -275,7 +275,7 @@ const requestRecord = function requestRecord() {
             updateRecord(data['data']);
         }
     };
-    xhttp.open("GET", "/chess/record/" + gameId, true);
+    xhttp.open("GET", "/games/" + gameId + "/scores", true);
     xhttp.send();
 };
 
@@ -304,7 +304,7 @@ const requestAllPieces = function requestAllPieces() {
             requestRecord();
         }
     };
-    xhttp.open("GET", "/chess/pieces/" + gameId, true);
+    xhttp.open("GET", "/games/" + gameId + "/board/pieces", true);
     xhttp.send();
 };
 

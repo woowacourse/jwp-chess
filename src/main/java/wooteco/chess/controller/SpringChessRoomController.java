@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import wooteco.chess.service.RoomService;
 
 @Controller
@@ -16,13 +17,16 @@ public class SpringChessRoomController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("roomNumbers", roomService.loadRoomNumbers());
+        model.addAttribute("roomInformation", roomService.loadRoomInformation());
         return "index";
     }
 
     @PostMapping("/newroom")
-    public String newRoom() {
-        Long roomId = roomService.create();
+    public String newRoom(@RequestParam String title) {
+        if (title.trim().isEmpty()) {
+            return "redirect:/";
+        }
+        Long roomId = roomService.create(title);
         return "redirect:/rooms/" + roomId;
     }
 

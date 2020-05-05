@@ -9,16 +9,24 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChessRepository extends CrudRepository<ChessEntity, Long> {
+    @Modifying
+    @Query("ALTER TABLE chess AUTO_INCREMENT = 1")
+    void initTable();
+
     @Query("SELECT room_id FROM chess")
-    List<Long> findIds();
+    List<Long> findAllIds();
+
+    @Override
+    @Query("SELECT room_id, title, board, is_white FROM chess")
+    List<ChessEntity> findAll();
 
     @Override
     Optional<ChessEntity> findById(Long roomId);
 
-    @Override
-    ChessEntity save(ChessEntity entity);
-
     @Modifying
     @Query("UPDATE chess SET board = :board, is_white = :isWhite WHERE room_id = :roomId")
     void update(@Param("roomId") Long roomId, @Param("board") String board, @Param("isWhite") boolean isWhite);
+
+    @Query("SELECT title FROM chess WHERE room_id = :roomId")
+    String findTitleById(@Param("roomId") Long roomId);
 }

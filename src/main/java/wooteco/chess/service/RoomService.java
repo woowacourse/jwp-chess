@@ -17,16 +17,16 @@ public class RoomService {
         this.chessRepository = chessRepository;
     }
 
-    public List<Long> loadRoomNumbers() {
-        return chessRepository.findIds();
+    public List<ChessEntity> loadRoomInformation() {
+        return chessRepository.findAll();
     }
 
-    public Long create() {
+    public Long create(String title) {
         NormalInitStrategy strategy = new NormalInitStrategy();
         Board board = new Board(strategy.init());
 
         ChessEntity entity = chessRepository.save(
-                new ChessEntity(BoardConverter.convertToString(board), board.isTurnWhite()));
+                ChessEntity.of(title, BoardConverter.convertToString(board), board.isTurnWhite()));
         return entity.getRoomId();
     }
 }

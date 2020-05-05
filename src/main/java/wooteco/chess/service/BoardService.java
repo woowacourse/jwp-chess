@@ -11,6 +11,7 @@ import wooteco.chess.utils.BoardConverter;
 
 @Service
 public class BoardService {
+    public static final String NO_ROOM_MATCHING_WITH_ID = "Id와 일치하는 Room이 없습니다.";
     private final ChessRepository chessRepository;
 
     public BoardService(ChessRepository chessRepository) {
@@ -20,13 +21,13 @@ public class BoardService {
     public void init(Long roomId) {
         NormalInitStrategy normalInitStrategy = new NormalInitStrategy();
         Board board = new Board(normalInitStrategy.init());
-        ChessEntity chessEntity = new ChessEntity(roomId, BoardConverter.convertToString(board));
+        ChessEntity chessEntity = ChessEntity.of(roomId, chessRepository.findTitleById(roomId), BoardConverter.convertToString(board));
         chessRepository.save(chessEntity);
     }
 
     public void play(Long roomId, String source, String target) {
         ChessEntity entity = chessRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(NO_ROOM_MATCHING_WITH_ID));
         Board board = BoardConverter.convertToBoard(entity.getBoard(), entity.getIsWhite());
         board.moveIfPossible(Position.of(source), Position.of(target));
 
@@ -35,21 +36,26 @@ public class BoardService {
 
     public boolean isFinished(Long roomId) {
         ChessEntity entity = chessRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(NO_ROOM_MATCHING_WITH_ID));
         Board board = BoardConverter.convertToBoard(entity.getBoard(), entity.getIsWhite());
         return board.isFinished();
     }
 
     public boolean isTurnWhite(Long roomId) {
         ChessEntity entity = chessRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(NO_ROOM_MATCHING_WITH_ID));
         Board board = BoardConverter.convertToBoard(entity.getBoard(), entity.getIsWhite());
         return board.getTurn() == Team.WHITE;
     }
 
     public Board loadBoard(Long roomId) {
         ChessEntity entity = chessRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("Id와 일치하는 Room이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(NO_ROOM_MATCHING_WITH_ID));
         return BoardConverter.convertToBoard(entity.getBoard(), entity.getIsWhite());
     }
+
+    public String loadTitle(Long roomId) {
+        return chessRepository.findTitleById(roomId);
+    }
+
 }

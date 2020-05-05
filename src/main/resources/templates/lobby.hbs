@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>로비</title>
-    <link href="../static/lobby.css?ver=1" rel="stylesheet"/>
+    <link href="lobby.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet"/>
 </head>
 <body>
@@ -15,20 +15,12 @@
                 <th class="id">방 번호</th>
                 <th class="title">방 제목</th>
             </tr>
-            <!--        {{#rooms}}-->
-            <tr>
-                <td class="id">1</td>
-                <td class="title">첫 번째방</td>
-            </tr>
-            <tr>
-                <td class="id">2</td>
-                <td class="title">두 번째방</td>
-            </tr>
-            <tr>
-                <td class="id">3</td>
-                <td class="title">세 번째방</td>
-            </tr>
-            <!--        {{/rooms}}-->
+           {{#rooms}}
+                <tr class="list">
+                    <td class="id">{{ id }}</td>
+                    <td class="title">{{ title }}</td>
+                </tr>
+           {{/rooms}}
         </table>
     </div>
 
@@ -43,16 +35,16 @@
             <form class="form">
                 <div id="input_room_info">
                     <label for="room_name">방 제목: </label>
-                    <input id="room_name" type="text"/>
+                    <input id="room_name" type="text" name="title"/>
                 </div>
                 <div>
-                    <input id="complete" type="submit" value="만들기"/>
+                    <input type="button" class="complete" value="만들기"/>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
-<script src="lobby.js?ver=1"></script>
+<script src="lobby.js"></script>
 </body>
 </html>

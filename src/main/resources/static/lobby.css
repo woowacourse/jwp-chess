@@ -101,7 +101,7 @@ tr > td {
     width: 270px;
 }
 
-#complete {
+.complete {
     margin-top: 20px;
     width: 100px;
     height: 40px;

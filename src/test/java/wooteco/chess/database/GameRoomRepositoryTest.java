@@ -2,6 +2,8 @@ package wooteco.chess.database;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.NoSuchElementException;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +29,8 @@ class GameRoomRepositoryTest {
 		String gameRoomName = "test";
 		GameRoom savedGameRoom = gameRoomRepository.save(new GameRoom(gameRoomName));
 
-		GameRoom expected = gameRoomRepository.findByName(gameRoomName);
+		GameRoom expected = gameRoomRepository.findByName(gameRoomName)
+			.orElseThrow(() -> new NoSuchElementException("해당 이름의 방이 존재하지 않습니다."));
 		assertThat(savedGameRoom.getName()).isEqualTo(expected.getName());
 	}
 

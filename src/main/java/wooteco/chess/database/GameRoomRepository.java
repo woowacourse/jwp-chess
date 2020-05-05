@@ -1,6 +1,7 @@
 package wooteco.chess.database;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -14,6 +15,6 @@ public interface GameRoomRepository extends CrudRepository<GameRoom, Long> {
 	List<GameRoom> findAll();
 
 	@Query("SELECT * FROM game_room WHERE name = :name")
-	GameRoom findByName(@Param("name") final String name);
+	Optional<GameRoom> findByName(@Param("name") final String name);
 
 }

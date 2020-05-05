@@ -31,7 +31,8 @@ public class ChessService {
 	}
 
 	public ChessGameDto loadChessGameByName(String name) {
-		GameRoom gameRoom = gameRoomRepository.findByName(name);
+		GameRoom gameRoom = gameRoomRepository.findByName(name)
+			.orElseThrow(() -> new NoSuchElementException("해당 이름의 방이 존재하지 않습니다."));
 		return ChessGameDto.of(gameRoom.getId(), initChessGameOf(gameRoom));
 	}
 

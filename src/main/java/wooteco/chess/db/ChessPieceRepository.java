@@ -1,5 +1,7 @@
 package wooteco.chess.db;
 
+import java.util.List;
+
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -24,4 +26,7 @@ public interface ChessPieceRepository extends CrudRepository<ChessPiece, String>
 
     @Override
     void deleteById(String gameId);
+
+    @Query("SELECT DISTINCT game_id FROM board_status")
+    List<String> findRoomNames();
 }

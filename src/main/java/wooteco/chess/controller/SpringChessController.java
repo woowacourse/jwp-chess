@@ -1,11 +1,17 @@
 package wooteco.chess.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import wooteco.chess.service.SpringChessService;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Map;
+import wooteco.chess.service.SpringChessService;
 
 @Controller
 public class SpringChessController {
@@ -16,7 +22,9 @@ public class SpringChessController {
     }
 
     @GetMapping("/")
-    public String chessGame() {
+    public String chessGame(Model model) {
+        List<String> roomNames = springChessService.findRoomNames();
+        model.addAttribute("rooms", roomNames);
         return "index";
     }
 

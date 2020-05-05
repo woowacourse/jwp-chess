@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS chess_game_entity
 (
-    id    INT        NOT NULL AUTO_INCREMENT,
+    id    VARCHAR(255) NOT NULL,
     state VARCHAR(8) NOT NULL,
     board VARCHAR(64),
     turn  VARCHAR(5),

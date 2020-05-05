@@ -10,5 +10,4 @@ import wooteco.chess.entity.RoomEntity;
  *    @author HyungJu An, JunSeong Hong
  */
 public interface RoomRepository extends CrudRepository<RoomEntity, Long> {
-
 }

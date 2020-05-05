@@ -15,6 +15,7 @@ import wooteco.chess.domain.chessboard.Board;
 import wooteco.chess.domain.chessboard.Row;
 import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.factory.PieceConverter;
+import wooteco.chess.dto.RoomDto;
 
 /**
  *    board entity class입니다.
@@ -48,6 +49,10 @@ public class RoomEntity {
 			pieces.add(PieceEntity.of(position, name));
 		}
 		return RoomEntity.of(title, pieces, TurnEntity.of(Turn.FIRST));
+	}
+
+	public RoomDto createDto() {
+		return new RoomDto(id, title);
 	}
 
 	public Board createBoard() {

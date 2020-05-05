@@ -1,10 +1,10 @@
 package wooteco.chess.dto;
 
 public class RoomDto {
-	private final long id;
+	private final Long id;
 	private final String title;
 
-	public RoomDto(long id, String title) {
+	public RoomDto(Long id, String title) {
 		this.id = id;
 		this.title = title;
 	}
@@ -13,7 +13,4 @@ public class RoomDto {
 		return id;
 	}
 
-	public String getTitle() {
-		return title;
-	}
 }

@@ -1,6 +1,8 @@
 package wooteco.chess.service;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import wooteco.chess.domain.chesspiece.Blank;
 import wooteco.chess.domain.chesspiece.Piece;
 import wooteco.chess.domain.factory.BoardFactory;
 import wooteco.chess.domain.position.Position;
+import wooteco.chess.dto.RoomDto;
 import wooteco.chess.entity.RoomEntity;
 import wooteco.chess.repository.PieceRepository;
 import wooteco.chess.repository.RoomRepository;
@@ -30,8 +33,22 @@ public class ChessService {
 		this.pieceRepository = pieceRepository;
 	}
 
+	public List<RoomDto> findAllRoom() {
+		List<RoomEntity> rooms = (List<RoomEntity>)roomRepository.findAll();
+		return rooms.stream()
+			.map(roomEntity -> roomEntity.createDto())
+			.collect(Collectors.toList());
+	}
+
+	public Board findByRoomId(Long roomId) {
+		RoomEntity roomEntity = roomRepository.findById(roomId)
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+		return roomEntity.createBoard();
+
+	}
+
 	public void move(Long roomId, Position start, Position target) {
-		Board board = find(roomId);
+		Board board = findByRoomId(roomId);
 		Piece startPiece = board.findByPosition(start);
 
 		board.move(start, target);
@@ -40,30 +57,23 @@ public class ChessService {
 		turnRepository.update(board.isWhiteTurn(), roomId);
 	}
 
-	public Board find(Long roomId) {
-		RoomEntity roomEntity = roomRepository.findById(roomId)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
-		return roomEntity.createBoard();
+	public RoomDto insertRoom(String title) {
+		RoomEntity roomEntity = roomRepository.save(RoomEntity.from(title, BoardFactory.create()));
+		return roomEntity.createDto();
 
 	}
 
-	public void init(String title) {
-		roomRepository.save(RoomEntity.from(title, BoardFactory.create()));
-	}
-
-	public Board restart(Long roomId) {
-		roomRepository.deleteAll();
-		turnRepository.deleteAll();
-		return find(roomId);
+	public void delete(Long roomId) {
+		roomRepository.deleteById(roomId);
 	}
 
 	public boolean isEnd(Long roomId) {
-		Board board = find(roomId);
+		Board board = findByRoomId(roomId);
 		return !board.isLiveBothKing();
 	}
 
 	public Team findWinningTeam(Long roomId) {
-		Board board = find(roomId);
+		Board board = findByRoomId(roomId);
 		return Arrays.stream(Team.values())
 			.filter(board::isLiveKing)
 			.findFirst()
@@ -71,7 +81,7 @@ public class ChessService {
 	}
 
 	public Result status(Long roomId) {
-		Board board = find(roomId);
+		Board board = findByRoomId(roomId);
 		Status status = board.createStatus();
 		return status.getResult();
 	}

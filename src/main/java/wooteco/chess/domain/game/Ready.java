@@ -3,14 +3,13 @@ package wooteco.chess.domain.game;
 import static wooteco.chess.domain.piece.Team.*;
 
 import wooteco.chess.domain.board.Board;
+import wooteco.chess.domain.board.BoardFactory;
 import wooteco.chess.domain.piece.Team;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.Result;
 
 public class Ready extends Game {
-	public Ready(Board board) {
-		this(board, NONE);
-	}
+	public static final Ready READY_INSTANCE = new Ready(BoardFactory.ofEmpty(), NONE);
 
 	public Ready(Board board, Team turn) {
 		super(board, turn);

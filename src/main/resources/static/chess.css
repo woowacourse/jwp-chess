@@ -343,3 +343,8 @@ img {
 th, td {
     border: solid 1px;
 }
+
+.game-info {
+    text-align:center;
+    margin: auto;
+}

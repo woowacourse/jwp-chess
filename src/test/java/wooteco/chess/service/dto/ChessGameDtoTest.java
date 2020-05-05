@@ -15,7 +15,7 @@ class ChessGameDtoTest {
 	@ParameterizedTest
 	@NullSource
 	void of_NullChessGame_ExceptionThrown(final ChessGame chessGame) {
-		assertThatThrownBy(() -> ChessGameDto.of(chessGame))
+		assertThatThrownBy(() -> ChessGameDto.of(Long.valueOf(1), chessGame))
 			.isInstanceOf(NullPointerException.class)
 			.hasMessage("체스 게임이 null입니다.");
 	}
@@ -25,7 +25,7 @@ class ChessGameDtoTest {
 		final ChessBoard chessBoard = new ChessBoard(ChessBoardInitializer.create());
 		final ChessGame chessGame = ChessGame.from(chessBoard);
 
-		assertThat(ChessGameDto.of(chessGame)).isInstanceOf(ChessGameDto.class);
+		assertThat(ChessGameDto.of(Long.valueOf(1), chessGame)).isInstanceOf(ChessGameDto.class);
 	}
 
 }

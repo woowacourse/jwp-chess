@@ -3,14 +3,12 @@ package wooteco.chess.entity;
 import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.state.State;
 import wooteco.chess.domain.game.state.StateFactory;
 import wooteco.chess.dto.BoardDto;
 
-@Table
 public class ChessGameEntity {
 	@Id
 	private String id;

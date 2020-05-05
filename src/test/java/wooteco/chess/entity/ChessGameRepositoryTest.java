@@ -8,11 +8,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import wooteco.chess.domain.game.ChessGame;
 import wooteco.chess.domain.game.state.Ready;
@@ -20,7 +18,6 @@ import wooteco.chess.domain.piece.Position;
 import wooteco.chess.service.exception.InvalidGameException;
 
 @Import(RandomUUIDProvider.class)
-@ExtendWith(SpringExtension.class)
 @DataJdbcTest
 class ChessGameRepositoryTest {
 	@Autowired

@@ -1,64 +1,65 @@
 package wooteco.chess.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import wooteco.chess.domain.room.Room;
 import wooteco.chess.service.RoomService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 public class RoomController {
 
-    private final RoomService roomService;
-
     @Autowired
-    public RoomController(final RoomService roomService) {
-        this.roomService = roomService;
-    }
+    private RoomService roomService;
 
     @GetMapping("/room")
-    public String index(Model model) {
+    public ModelAndView index(ModelAndView model) {
         List<Room> rooms = roomService.findAllRoom();
-        model.addAttribute("rooms", rooms);
-        return "room";
+        model.addObject("rooms", rooms);
+        model.setViewName("room");
+        return model;
     }
 
     @PostMapping("/room")
-    public String create(
+    public ModelAndView create(
             @RequestParam String title,
-            Model model) {
+            ModelAndView model,
+            HttpServletResponse response) throws IOException {
         Room created = roomService.createRoom(title);
         Long roomId = created.getId();
         Map<String, String> board = roomService.initializeBoard(roomId);
-        model.addAttribute("board", board);
-        return "redirect:" + "/room/" + roomId;
+        model.addObject("board", board);
+        response.sendRedirect("/room/" + roomId);
+        return model;
     }
 
     @GetMapping("/room/{room_id}")
-    public String room(
+    public ModelAndView room(
             @PathVariable("room_id") Long roomId,
-            Model model) {
+            ModelAndView model) {
         Map<String, String> board = roomService.findPiecesById(roomId);
-        model.addAttribute("board", board);
-        model.addAttribute("roomId", roomId);
-        model.addAttribute("title", roomService.findTitleById(roomId));
-        return "board";
+        model.addObject("board", board);
+        model.addObject("roomId", roomId);
+        model.addObject("title", roomService.findTitleById(roomId));
+        model.setViewName("board");
+        return model;
     }
 
     @PostMapping("/room/{room_id}")
-    public String finish(
-            @PathVariable("room_id") Long roomId
-    ) {
+    public void finish(
+            @PathVariable("room_id") Long roomId,
+            HttpServletResponse response
+    ) throws IOException {
         roomService.deleteRoom(roomId);
-        return "redirect:" + "/room";
+        response.sendRedirect("/room");
     }
 
     @GetMapping("/room/{room_id}/turn")
-    @ResponseBody
     public String turn(
             @PathVariable("room_id") Long roomId
     ) {
@@ -66,13 +67,14 @@ public class RoomController {
     }
 
     @GetMapping("/room/{room_id}/reset")
-    public String reset(
+    public ModelAndView reset(
             @PathVariable("room_id") Long roomId,
-            Model model
+            ModelAndView model
     ) {
-        model.addAttribute("board", roomService.resetRoom(roomId));
-        model.addAttribute("roomId", roomId);
-        model.addAttribute("title", roomService.findTitleById(roomId));
-        return "board";
+        model.addObject("board", roomService.resetRoom(roomId));
+        model.addObject("roomId", roomId);
+        model.addObject("title", roomService.findTitleById(roomId));
+        model.setViewName("board");
+        return model;
     }
 }

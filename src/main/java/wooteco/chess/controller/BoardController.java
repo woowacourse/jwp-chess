@@ -2,13 +2,12 @@ package wooteco.chess.controller;
 
 import com.google.gson.Gson;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import wooteco.chess.domain.result.Status;
 import wooteco.chess.service.BoardService;
 
-@Controller
+@RestController
 public class BoardController {
 
     private final BoardService boardService;
@@ -30,11 +29,10 @@ public class BoardController {
     }
 
     @GetMapping("/room/{room_id}/score")
-    @ResponseBody
     public String status(
             @PathVariable("room_id") Long roomId,
-            Model model) {
-        model.addAttribute(boardService.showScoreStatus(roomId));
+            ModelAndView model) {
+        model.addObject(boardService.showScoreStatus(roomId));
         return new Gson().toJson(boardService.showScoreStatus(roomId));
     }
 }

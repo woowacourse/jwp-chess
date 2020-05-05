@@ -90,6 +90,6 @@ public class SpringGameService {
 	}
 
 	public List<RoomEntity> getRooms() {
-		return (List) roomRepository.findAll();
+		return (List<RoomEntity>) roomRepository.findAll();
 	}
 }

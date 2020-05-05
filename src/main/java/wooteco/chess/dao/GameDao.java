@@ -22,80 +22,78 @@ public class GameDao implements MySqlJdbcTemplateDao {
     public static final String WHITE_ID = "white";
     public static final String BLACK_ID = "black";
 
-    public int add(final Game game) throws SQLException {
-        String query = "INSERT INTO game (white, black) VALUES (?, ?)";
+    public String add(final Game game) throws SQLException {
+        String query = "insert into game (id, title, white, black) values (?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         ) {
-            statement.setInt(1, game.getPlayerId(Side.WHITE));
-            statement.setInt(2, game.getPlayerId(Side.BLACK));
+            statement.setString(1, game.getId());
+            statement.setString(2, game.getTitle());
+            statement.setInt(3, game.getPlayerId(Side.WHITE));
+            statement.setInt(4, game.getPlayerId(Side.BLACK));
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
-                return resultSet.getInt(1);
+                return resultSet.getString(Statement.RETURN_GENERATED_KEYS);
             }
-            resultSet.close();
             throw new SQLException();
         }
     }
 
-    public List<Integer> getAllGameId() throws SQLException {
+    public List<String> getAllGameId() throws SQLException {
         String query = "SELECT id FROM game";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
             ResultSet resultSet = statement.executeQuery();
-            List<Integer> gameIds = new ArrayList<>();
+            List<String> gameIds = new ArrayList<>();
             addGameIds(resultSet, gameIds);
-            resultSet.close();
             return gameIds;
         }
     }
 
-    private void addGameIds(final ResultSet resultSet, final List<Integer> gameIds) throws SQLException {
+    private void addGameIds(final ResultSet resultSet, final List<String> gameIds) throws SQLException {
         while (resultSet.next()) {
-            gameIds.add(resultSet.getInt("id"));
+            gameIds.add(resultSet.getString("id"));
         }
     }
 
-    public List<Map<String, Integer>> findGamesData() throws SQLException {
+    public List<Map<String, String>> findGamesData() throws SQLException {
         String query = "SELECT id, white, black FROM game";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
             ResultSet resultSet = statement.executeQuery();
-            List<Map<String, Integer>> games = new ArrayList<>();
+            List<Map<String, String>> games = new ArrayList<>();
             generateGamesContext(resultSet, games);
-            resultSet.close();
             return games;
         }
     }
 
-    private void generateGamesContext(final ResultSet resultSet, final List<Map<String, Integer>> games) throws
+    private void generateGamesContext(final ResultSet resultSet, final List<Map<String, String>> games) throws
         SQLException {
         while (resultSet.next()) {
-            Map<String, Integer> game = new HashMap<>();
-            game.put(GAME_ID, resultSet.getInt("id"));
-            game.put(WHITE_ID, resultSet.getInt("white"));
-            game.put(BLACK_ID, resultSet.getInt("black"));
+            Map<String, String> game = new HashMap<>();
+            game.put(GAME_ID, resultSet.getString("id"));
+            game.put(WHITE_ID, Integer.toString(resultSet.getInt("white")));
+            game.put(BLACK_ID, Integer.toString(resultSet.getInt("black")));
             games.add(game);
         }
     }
 
-    public Map<String, Integer> findGameDataById(int gameId) throws SQLException {
+    public Map<String, String> findGameDataById(String gameId) throws SQLException {
         String query = "SELECT id, white, black FROM game WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
-            statement.setInt(1, gameId);
+            statement.setString(1, gameId);
             ResultSet resultSet = statement.executeQuery();
-            Map<String, Integer> game = new HashMap<>();
+            Map<String, String> game = new HashMap<>();
             if (resultSet.next()) {
-                game.put(GAME_ID, resultSet.getInt("id"));
-                game.put(WHITE_ID, resultSet.getInt("white"));
-                game.put(BLACK_ID, resultSet.getInt("black"));
+                game.put(GAME_ID, resultSet.getString("id"));
+                game.put(WHITE_ID, Integer.toString(resultSet.getInt("white")));
+                game.put(BLACK_ID, Integer.toString(resultSet.getInt("black")));
             }
-            resultSet.close();
             return game;
         }
     }
@@ -105,7 +103,7 @@ public class GameDao implements MySqlJdbcTemplateDao {
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)
         ) {
-            statement.setInt(1, game.getId());
+            statement.setString(1, game.getId());
             statement.executeUpdate();
         }
     }

@@ -4,13 +4,18 @@ export async function getBoards() {
 }
 
 export async function getBoard(roomId) {
+  console.log(roomId);
   const response = await fetch(`http://localhost:8080/boards/${roomId}`);
   return await response.json();
 }
 
-export async function addBoard() {
+export async function addBoard(title) {
   const response = await fetch("http://localhost:8080/boards", {
-    method: "POST"
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ title })
   });
   return await response.json();
 }
@@ -30,8 +35,8 @@ export async function isWhiteTurn(roomId) {
 export async function move(roomId, from, to) {
   const data = await fetch(`http://localhost:8080/boards/${roomId}/move`, {
     method: "POST",
-    body: JSON.stringify({from, to}),
-    headers: {"Content-Type": "application/json"}
+    body: JSON.stringify({ from, to }),
+    headers: { "Content-Type": "application/json" }
   });
   return await data.json();
 }
@@ -39,8 +44,8 @@ export async function move(roomId, from, to) {
 export async function getAvailablePath(roomId, from) {
   const data = await fetch(`http://localhost:8080/boards/${roomId}/movable`, {
     method: "POST",
-    body: JSON.stringify({from}),
-    headers: {"Content-Type": "application/json"}
+    body: JSON.stringify({ from }),
+    headers: { "Content-Type": "application/json" }
   });
   return await data.json();
 }

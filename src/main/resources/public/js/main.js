@@ -153,13 +153,14 @@ window.onload = function () {
   async function roomEventHandler(roomNode) {
     document.querySelectorAll(".room").forEach(element => element.classList.remove("room-selected"));
     roomNode.classList.add("room-selected");
-    roomId = parseInt(roomNode.querySelector(".room-number").innerText);
+    roomId = roomNode.querySelector(".room-id").innerText;
+    const roomTitle = roomNode.querySelector(".room-number").innerText;
     setBoard(await getBoard(roomId));
     if (await checkGameOver(roomId)) {
       endGameIfKingIsDead();
       return;
     }
-    setMessage(`${roomId}번 체스 게임에 입장하셨습니다. ${await checkTurn(roomId)}`);
+    setMessage(`${roomTitle} 체스 게임에 입장하셨습니다. ${await checkTurn(roomId)}`);
   }
 
   async function initiate() {
@@ -210,8 +211,9 @@ window.onload = function () {
 
   function addRoomEventHandler() {
     document.querySelector(".room-add").addEventListener("click", async () => {
+      const title = prompt("방 제목을 입력해주세요.");
       const rooms = document.querySelector(".rooms");
-      Object.entries(await addBoard()).forEach(([key, value]) => {
+      Object.entries(await addBoard(title)).forEach(([key, value]) => {
         rooms.insertAdjacentHTML("beforeend", ROOM_TEMPLATE(value, key));
       });
       rooms.lastElementChild.addEventListener("click", async function () {
@@ -222,7 +224,7 @@ window.onload = function () {
 
   function addEndButtonEventHandler() {
     document.querySelector(".end").addEventListener("click", async function () {
-      if (roomId && confirm(`정말 ${roomId}번 게임을 종료하시겠습니까?`)) {
+      if (roomId && confirm(`정말 게임을 종료하시겠습니까?`)) {
         await finishGame(roomId);
         const roomToRemove = document.querySelector(`.room-${roomId}`);
         roomToRemove.parentNode.removeChild(roomToRemove);
@@ -233,9 +235,9 @@ window.onload = function () {
         setMessage("새 게임을 추가해주세요.");
         return;
       }
-      const firstRoomLeft = Object.keys(boards)[0];
-      setMessage(`${roomId}번 게임이 종료되었습니다. ${firstRoomLeft ? `${firstRoomLeft}번 게임에 입장합니다.` : ""}`);
-      roomId = firstRoomLeft;
+      const firstRoomLeft = boards[Object.keys(boards)[0]]["title"];
+      setMessage(`게임이 종료되었습니다. ${firstRoomLeft ? `${firstRoomLeft} 게임에 입장합니다.` : ""}`);
+      roomId = Object.keys(boards)[0];
       const board = await getBoard(roomId);
       document.querySelector(`.room-${roomId}`).classList.add("room-selected");
       setBoard(board);

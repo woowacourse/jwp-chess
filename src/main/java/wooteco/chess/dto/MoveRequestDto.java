@@ -1,8 +1,8 @@
 package wooteco.chess.dto;
 
 public class MoveRequestDto {
-    private String from;
-    private String to;
+    private final String from;
+    private final String to;
 
     public MoveRequestDto(final String from, final String to) {
         this.from = from;

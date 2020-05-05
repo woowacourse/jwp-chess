@@ -21,7 +21,7 @@ public class SpringChessScoreController {
     }
 
     @GetMapping
-    private Map<Integer, Map<Side, Double>> getScoreContexts() throws SQLException {
+    private Map<String, Map<Side, Double>> getScoreContexts() throws SQLException {
         return service.getScoreContexts();
     }
 }

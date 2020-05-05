@@ -16,7 +16,8 @@ import wooteco.chess.domain.player.Result;
 import wooteco.chess.exceptions.InvalidInputException;
 
 public class Game {
-    private int id;
+    private String id;
+    private String title;
     private final Board board;
     private final Judge judge;
     private final Map<Side, Player> players;
@@ -29,14 +30,15 @@ public class Game {
         turn = Side.WHITE;
     }
 
-    public Game(Player white, Player black) {
+    public Game(String title, Player white, Player black) {
         this();
+        this.title = title;
         players.put(Side.WHITE, white);
         players.put(Side.BLACK, black);
     }
 
-    public Game(int id, Player white, Player black) {
-        this(white, black);
+    public Game(String id, String title, Player white, Player black) {
+        this(title, white, black);
         this.id = id;
     }
 
@@ -106,8 +108,12 @@ public class Game {
         return judge.calculateScore(side);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     @Override

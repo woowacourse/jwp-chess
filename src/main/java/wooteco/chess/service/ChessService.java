@@ -8,31 +8,30 @@ import wooteco.chess.domain.Game;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.Side;
 import wooteco.chess.domain.player.Player;
+import wooteco.chess.dto.GameResponseDto;
 
 public interface ChessService {
-    Map<Integer, Map<Side, Player>> addGame(Player white, Player black) throws SQLException;
+    Map<String, GameResponseDto> addGame(String title, Player white, Player black) throws SQLException;
 
-    Game findGameById(int id) throws SQLException;
+    Game findGameById(String id) throws SQLException;
 
-    Board findBoardById(int id) throws SQLException;
+    Board findBoardById(String id) throws SQLException;
 
-    Board resetGameById(int id) throws SQLException;
+    Game resetGameById(String id) throws SQLException;
 
-    boolean finishGameById(int id) throws SQLException;
+    boolean finishGameById(String id) throws SQLException;
 
-    double getScoreById(int id, Side side) throws SQLException;
+    Map<String, Map<Side, Double>> getScoreContexts() throws SQLException;
 
-    Map<Integer, Map<Side, Player>> getPlayerContexts() throws SQLException;
+    Map<Side, Double> getScoresById(String id) throws SQLException;
 
-    Map<Integer, Map<Side, Double>> getScoreContexts() throws SQLException;
+    boolean moveIfMovable(String id, String start, String end) throws SQLException;
 
-    Map<Side, Double> getScoresById(int id) throws SQLException;
+    List<String> findAllAvailablePath(String id, String start) throws SQLException;
 
-    boolean moveIfMovable(int id, String start, String end) throws SQLException;
+    boolean isWhiteTurn(String id) throws SQLException;
 
-    List<String> findAllAvailablePath(int id, String start) throws SQLException;
+    boolean isGameOver(String id) throws SQLException;
 
-    boolean isWhiteTurn(int id) throws SQLException;
-
-    boolean isGameOver(int id) throws SQLException;
+    Map<String, GameResponseDto> getGames() throws SQLException;
 }

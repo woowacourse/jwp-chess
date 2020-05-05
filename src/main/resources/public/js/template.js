@@ -19,16 +19,17 @@ export const AVAILABLE_PATH = `<div class="available-path"/>`;
  * @return {string}
  */
 export function ROOM_TEMPLATE(room, index, whiteScore, blackScore) {
-  const whiteRecord = room["WHITE"]["record"]["record"];
-  const blackRecord = room["BLACK"]["record"]["record"];
+  const whiteRecord = room["players"]["WHITE"]["record"]["record"];
+  const blackRecord = room["players"]["BLACK"]["record"]["record"];
   return `
     <div class="room room-${index}">
-      <div class="room-number">${index}</div>
+     <div class="room-id" style="display: none">${index}</div>
+      <div class="room-number">${room["title"]}</div>
       <div class="players">
-        <div class="player">${room["WHITE"]["username"]}
+        <div class="player">${room["players"]["WHITE"]["username"]}
           <div class="player-record">(${whiteRecord["WIN"]}승 ${whiteRecord["DRAW"]}무 ${whiteRecord["LOSE"]}패)</div>
         </div>
-        <div class="player">${room["BLACK"]["username"]}
+        <div class="player">${room["players"]["BLACK"]["username"]}
           <div class="player-record">(${blackRecord["WIN"]}승 ${blackRecord["DRAW"]}무 ${blackRecord["LOSE"]}패)</div>
         </div>
       </div>

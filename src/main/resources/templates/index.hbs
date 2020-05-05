@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <title>우아한 체스게임</title>
     <link rel="stylesheet" href="/static/css/index.css" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 <body>
 <div class="entire_div">
     <a class="new_game" href="room">시작</a>
     <div class="on_games">
-        <form action="/games" method="get">
+        <form action="/room/allRooms" method="get">
             <input type="button" value="기존게임보기!" onclick="on_games()">
             <div class=games></div>
         </form>
     </div>
+
 </div>
-<script src="/static/js/chess.js"></script>
+<script src="/static/js/allRooms.js"></script>
 </body>
 </html>

@@ -1,10 +1,7 @@
 package wooteco.chess.service.spring;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import wooteco.chess.db.BoardMapper;
 import wooteco.chess.db.entity.BoardEntity;
 import wooteco.chess.db.entity.PlayerEntity;
@@ -20,6 +17,8 @@ import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.state.BoardFactory;
 import wooteco.chess.domain.state.Playing;
 import wooteco.chess.dto.GameDto;
+
+import java.util.List;
 
 @Service
 public class SpringGameService {
@@ -88,5 +87,9 @@ public class SpringGameService {
 	public long createRoom(long player1Id, long player2Id) {
 		RoomEntity room = roomRepository.save(new RoomEntity(player1Id, player1Id, player2Id));
 		return room.getId();
+	}
+
+	public List<RoomEntity> getRooms() {
+		return (List<RoomEntity>) roomRepository.findAll();
 	}
 }

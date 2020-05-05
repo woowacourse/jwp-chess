@@ -7,18 +7,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import chess.domain.board.ChessBoard;
-import chess.domain.board.PositionFactory;
-import chess.domain.piece.Bishop;
-import chess.domain.piece.King;
-import chess.domain.piece.Knight;
-import chess.domain.piece.Pawn;
-import chess.domain.piece.Piece;
-import chess.domain.piece.PieceColor;
-import chess.domain.piece.Queen;
-import chess.domain.piece.Rook;
-import chess.exception.AnotherTeamPieceException;
-import chess.exception.PieceNotFoundException;
+import wooteco.chess.domain.board.ChessBoard;
+import wooteco.chess.domain.board.PositionFactory;
+import wooteco.chess.domain.piece.Bishop;
+import wooteco.chess.domain.piece.King;
+import wooteco.chess.domain.piece.Knight;
+import wooteco.chess.domain.piece.Pawn;
+import wooteco.chess.domain.piece.Piece;
+import wooteco.chess.domain.piece.PieceColor;
+import wooteco.chess.domain.piece.Queen;
+import wooteco.chess.domain.piece.Rook;
+import wooteco.chess.exception.AnotherTeamPieceException;
+import wooteco.chess.exception.PieceNotFoundException;
 
 public class ChessBoardTest {
 	private static ChessBoard chessBoard;

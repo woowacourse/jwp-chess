@@ -1,20 +1,14 @@
 package wooteco.chess.repository;
 
-import org.springframework.data.jdbc.repository.query.Modifying;
-import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-import wooteco.chess.entity.PieceEntity;
-
 import java.util.List;
 
-@Repository
-public interface BoardRepository extends CrudRepository<PieceEntity, Long> {
-    @Modifying
-    @Query("INSERT INTO board(position, pieceName) VALUES (:position, :pieceName)")
-    void insert(@Param("position") String position, @Param("pieceName") String pieceName);
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-    @Override
-    List<PieceEntity> findAll();
+import wooteco.chess.entity.BoardEntity;
+
+@Repository
+public interface BoardRepository extends CrudRepository<BoardEntity, Long> {
+	@Override
+	List<BoardEntity> findAll();
 }

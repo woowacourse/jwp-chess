@@ -99,8 +99,6 @@ const requestMovePieces = function requestMovePieces(data) {
             requestRecord();
             checkWhetherGameIsFinished();
             updateGameState();
-        } else if (this.status === 500) {
-            console.log(this.responseText);
         }
     };
     xhttp.open("PUT", "/chess/move/" + gameId, true);
@@ -180,7 +178,6 @@ const requestNewGame = function requestNewGame() {
 const cellClickListener = function cellClickListener() {
     return e => {
         const clickedCell = e.currentTarget;
-        console.log(clickedCell);
         toggleCell(clickedCell);
         const count = findCountOfToggled(cells);
         if (count === 0) {
@@ -203,7 +200,6 @@ const cleanBoard = function cleanBoard() {
 };
 
 const updatePieceOnBoard = function updatePieceOnBoard(datas) {
-    console.log(datas);
     moveAllPieces(datas);
 };
 

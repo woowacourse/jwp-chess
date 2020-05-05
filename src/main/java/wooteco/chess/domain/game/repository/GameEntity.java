@@ -1,13 +1,11 @@
-package wooteco.chess.repository.jdbc;
+package wooteco.chess.domain.game.repository;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
 import wooteco.chess.domain.board.BoardParser;
 import wooteco.chess.domain.game.Game;
 import wooteco.chess.domain.game.GameFactory;
 
-@Table("game")
 public class GameEntity {
 	@Id
 	private String id;

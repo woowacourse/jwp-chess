@@ -14,10 +14,10 @@ import wooteco.chess.view.response.ResponseDto;
 
 @RestController
 @RequestMapping("/chess")
-public class SpringChessRestController {
+public class ChessRestController {
 	private final GameService gameService;
 
-	public SpringChessRestController(GameService gameService) {
+	public ChessRestController(GameService gameService) {
 		this.gameService = gameService;
 	}
 

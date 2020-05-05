@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
-public class SpringChessController {
+public class ChessIndexController {
 	@GetMapping("/")
 	public String index() {
 		return "index";

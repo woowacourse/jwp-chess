@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.game.Game;
+import wooteco.chess.domain.game.repository.GameEntity;
+import wooteco.chess.domain.game.repository.GameRepository;
 import wooteco.chess.domain.position.Position;
 import wooteco.chess.domain.result.Result;
-import wooteco.chess.repository.jdbc.GameEntity;
-import wooteco.chess.repository.jdbc.GameRepository;
 import wooteco.chess.view.dto.requestdto.PositionRequestDto;
 import wooteco.chess.view.dto.responsedto.BoardDto;
 import wooteco.chess.view.dto.responsedto.GameDto;

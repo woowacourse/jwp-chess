@@ -8,10 +8,10 @@ public class JdbcUtil {
     public static Connection getConnection() {
         Connection conn = null;
         String server = "localhost:3306"; // MySQL 서버 주소
-        String database = "chess_game"; // MySQL DATABASE 이름
+        String database = "chess"; // MySQL DATABASE 이름
         String option = "?useSSL=false&serverTimezone=UTC";
-        String userName = "chess_manager"; //  MySQL 서버 아이디
-        String password = "manager"; // MySQL 서버 비밀번호
+        String userName = "root"; //  MySQL 서버 아이디
+        String password = "1234"; // MySQL 서버 비밀번호
 
         // 드라이버 로딩
         try {

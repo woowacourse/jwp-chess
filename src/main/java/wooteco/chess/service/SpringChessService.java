@@ -1,6 +1,14 @@
 package wooteco.chess.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
+
 import wooteco.chess.db.ChessPiece;
 import wooteco.chess.db.ChessPieceRepository;
 import wooteco.chess.db.MoveHistoryRepository;
@@ -9,13 +17,6 @@ import wooteco.chess.domains.board.BoardFactory;
 import wooteco.chess.domains.piece.Piece;
 import wooteco.chess.domains.piece.PieceColor;
 import wooteco.chess.domains.position.Position;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class SpringChessService {
@@ -135,5 +136,9 @@ public class SpringChessService {
     private String winningMsg(Board board) {
         PieceColor winner = board.getTeamColor().changeTeam();
         return String.format(WINNING_MSG_FORMAT, winner);
+    }
+
+    public List<String> findGameIds() {
+        return chessPieceRepository.findGameIds();
     }
 }

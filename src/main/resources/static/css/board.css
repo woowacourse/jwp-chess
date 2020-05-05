@@ -1,0 +1,37 @@
+body {
+    margin: 0;
+}
+
+.position {
+    z-index: 100;
+    width: 12.5%;
+    height: 80px;
+}
+
+.clickedPosition {
+    z-index: 100;
+    width: 12.5%;
+    height: 80px;
+    background-color: rgba(62, 248, 117, 0.17);
+}
+
+.board {
+    padding: 70px;
+    box-sizing: border-box;
+    width: 800px;
+    height: 800px;
+    background-size: cover;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.boardwrapper {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    width: 1200px;
+}
+
+#sidebar {
+    padding: 10px;
+}

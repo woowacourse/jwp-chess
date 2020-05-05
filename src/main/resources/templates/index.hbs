@@ -85,7 +85,6 @@
         fetch("/createChessGame", createChessRequest)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     location.href = "/chess/" + data;
                 })
     };

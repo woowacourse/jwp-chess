@@ -51,7 +51,6 @@ public class ChessController {
     @PostMapping("/createChessGame")
     @ResponseBody
     public Long createChessGame(@RequestBody CreateChessRequestDto createChessRequestDto) {
-        System.out.println(createChessRequestDto.getTitle());
         return chessService.createGame(createChessRequestDto);
     }
 

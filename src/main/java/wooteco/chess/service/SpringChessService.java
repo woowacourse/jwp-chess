@@ -138,7 +138,7 @@ public class SpringChessService {
         return String.format(WINNING_MSG_FORMAT, winner);
     }
 
-    public List<String> findRoomNames() {
-        return chessPieceRepository.findRoomNames();
+    public List<String> findGameIds() {
+        return chessPieceRepository.findGameIds();
     }
 }

@@ -23,7 +23,7 @@ public class SpringChessServiceTest {
 	@Test
 	void getRoomNamesTest() {
 		chessPieceRepository.savePiece("test:3ali7m", "a2", "p");
-		assertTrue(chessPieceRepository.findRoomNames().contains("test:3ali7m"));
+		assertTrue(chessPieceRepository.findGameIds().contains("test:3ali7m"));
 		chessPieceRepository.deleteById("test:3ali7m");
 	}
 }

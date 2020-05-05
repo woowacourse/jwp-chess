@@ -28,5 +28,5 @@ public interface ChessPieceRepository extends CrudRepository<ChessPiece, String>
     void deleteById(String gameId);
 
     @Query("SELECT DISTINCT game_id FROM board_status")
-    List<String> findRoomNames();
+	List<String> findGameIds();
 }

@@ -28,7 +28,7 @@
      }
 </script>
 <div class='game_room'> 체스방 목록 </div>
-    {{#each roomNames}}
+    {{#each gameIds}}
     <div class='game_room'>
         {{this}}
         <input type='button' id={{this}} value='입장' onClick='goGameRoom(this.id)'/>

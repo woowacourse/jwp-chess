@@ -1,17 +1,12 @@
 package wooteco.chess.controller;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Objects;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,17 +17,24 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import io.restassured.RestAssured;
+import wooteco.chess.domain.board.ChessGame;
+import wooteco.chess.domain.entity.Game;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.dto.MoveResponseDto;
+import wooteco.chess.dto.SavedGameBundleDto;
 import wooteco.chess.repository.GameRepository;
-import wooteco.chess.repository.PieceRepository;
 import wooteco.chess.service.ChessService;
+
+import java.util.Objects;
+
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ChessControllerTest {
@@ -40,9 +42,6 @@ class ChessControllerTest {
 
 	@Autowired
 	private GameRepository gameRepository;
-
-	@Autowired
-	private PieceRepository pieceRepository;
 
 	@Autowired
 	private ChessService chessService;
@@ -65,7 +64,6 @@ class ChessControllerTest {
 
 	@AfterEach
 	void tearDown() {
-		pieceRepository.deleteAll();
 		gameRepository.deleteAll();
 	}
 
@@ -131,5 +129,27 @@ class ChessControllerTest {
 		//then
 		BoardDto response = (BoardDto)Objects.requireNonNull(mvcResult.getModelAndView()).getModel().get("response");
 		assertThat(response.getGameId()).isEqualTo(game.getGameId());
+	}
+
+	@DisplayName("게임 목록 불러오기")
+	@Test
+	void loadGameList() throws Exception {
+		//given
+		Game game1 = new Game(new ChessGame());
+		Game game2 = new Game(new ChessGame());
+
+		gameRepository.save(game1);
+		gameRepository.save(game2);
+
+		//when
+		MvcResult mvcResult = mockMvc.perform(get("http://localhost:8080"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andReturn();
+
+		SavedGameBundleDto savedGameBundleDto = (SavedGameBundleDto) mvcResult.getModelAndView().getModel().get("room");
+
+		//then
+		assertThat(savedGameBundleDto.getRooms()).hasSize(2);
 	}
 }

@@ -8,3 +8,10 @@ spring:
       jdbc-url: jdbc:mysql://localhost:13306/chessgame?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
       username: root
       password: root
+logging:
+  level:
+    org:
+      springframework:
+        jdbc:
+          core:
+            JdbcTemplate: debug

@@ -9,55 +9,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
+import org.springframework.web.servlet.view.RedirectView;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.dto.MoveResponseDto;
+import wooteco.chess.dto.SavedGameBundleDto;
 import wooteco.chess.service.ChessService;
 
 @Controller
 public class ChessController {
 
-	private final ChessService chessService;
+    private final ChessService chessService;
 
-	public ChessController(ChessService chessService) {
-		this.chessService = chessService;
-	}
+    public ChessController(ChessService chessService) {
+        this.chessService = chessService;
+    }
 
-	@GetMapping("/")
-	public String index() {
-		return "game";
-	}
+    @GetMapping("/")
+    public ModelAndView index() {
+        ModelAndView mv = new ModelAndView("index");
+        SavedGameBundleDto savedGameBundleDto = chessService.findAllGames();
+        mv.addObject("rooms", savedGameBundleDto);
+        return mv;
+    }
 
-	@PostMapping("/start")
-	public ModelAndView start() {
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("game");
-		mv.addObject("response", chessService.createGame());
-		return mv;
-	}
+    @PostMapping("/start")
+    public RedirectView start() {
+        BoardDto game = chessService.createGame();
+        return new RedirectView("/load?gameId=" + game.getGameId());
+    }
 
-	@ResponseBody
-	@PostMapping("/move")
-	public ResponseEntity<MoveResponseDto> move(@RequestBody MoveRequestDto moveRequestDto) {
-		MoveResponseDto moveResponseDto = chessService.move(moveRequestDto);
-		return new ResponseEntity<>(moveResponseDto, HttpStatus.OK);
-	}
+    @ResponseBody
+    @PostMapping("/move")
+    public ResponseEntity<MoveResponseDto> move(@RequestBody MoveRequestDto moveRequestDto) {
+        MoveResponseDto moveResponseDto = chessService.move(moveRequestDto);
+        return new ResponseEntity<>(moveResponseDto, HttpStatus.OK);
+    }
 
-	@GetMapping("/save")
-	public ModelAndView save() {
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("game");
-		mv.addObject("saveMessage", "저장되었습니다.");
-		return mv;
-	}
-
-	@GetMapping("/load")
-	public ModelAndView load(@RequestParam(name = "gameId") Long gameId) {
-		ModelAndView mv = new ModelAndView();
-		BoardDto boardDto = chessService.load(gameId);
-		mv.setViewName("game");
-		mv.addObject("response", boardDto);
-		return mv;
-	}
+    @GetMapping("/load")
+    public ModelAndView load(@RequestParam(name = "gameId") Long gameId) {
+        ModelAndView mv = new ModelAndView();
+        BoardDto boardDto = chessService.load(gameId);
+        mv.setViewName("game");
+        mv.addObject("response", boardDto);
+        return mv;
+    }
 }

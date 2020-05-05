@@ -19,21 +19,17 @@ import wooteco.chess.domain.piece.team.Team;
 import wooteco.chess.dto.BoardDto;
 import wooteco.chess.dto.MoveRequestDto;
 import wooteco.chess.repository.GameRepository;
-import wooteco.chess.repository.PieceRepository;
 
 @SpringBootTest
 class ChessServiceTest {
 	@Autowired
 	private GameRepository gameRepository;
 	@Autowired
-	private PieceRepository pieceRepository;
-	@Autowired
 	private ChessService chessService;
 
 	@AfterEach
 	void tearDown() {
 		gameRepository.deleteAll();
-		pieceRepository.deleteAll();
 	}
 
 	@DisplayName("새로운 게임을 생성한다.")

@@ -1,6 +1,7 @@
 package chess.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -58,7 +59,7 @@ class RoomApiControllerTest {
         temp.put(room.getId(), "test");
         RoomsDto expected = new RoomsDto(temp);
 
-        mockMvc.perform(get("/api/viewRooms"))
+        mockMvc.perform(get("/api/rooms"))
             .andExpect(status().isOk())
             .andExpect(content().json(GSON.toJson(expected)));
     }
@@ -73,7 +74,7 @@ class RoomApiControllerTest {
         RoomsDto expected = new RoomsDto(temp);
 
         //실행 과정 검사 및 결과 반환
-        MvcResult result = mockMvc.perform(post("/api/createRoom")
+        MvcResult result = mockMvc.perform(post("/api/room")
             .contentType(MediaType.APPLICATION_JSON)
             .content(request))
             .andExpect(status().isOk())
@@ -95,7 +96,7 @@ class RoomApiControllerTest {
         RoomsDto expected = new RoomsDto(temp);
 
         //실행 과정 검사 및 결과 반환
-        MvcResult result = mockMvc.perform(post("/api/deleteRoom")
+        MvcResult result = mockMvc.perform(delete("/api/room")
             .contentType(MediaType.APPLICATION_JSON)
             .content(body))
             .andExpect(status().isOk())

@@ -18,7 +18,6 @@ public class RoomInfoEntity {
         this.isOver = isOver;
     }
 
-    //임시로 방 하나만 쓰기 위한 코드(4단계에서 수정)
     @PersistenceConstructor
     public RoomInfoEntity(Long id, Long roomId, String turn, boolean isOver) {
         this.id = id;
@@ -31,7 +30,7 @@ public class RoomInfoEntity {
         return roomId;
     }
 
-    public String getTurn() {
+    private String getTurn() {
         return turn;
     }
 

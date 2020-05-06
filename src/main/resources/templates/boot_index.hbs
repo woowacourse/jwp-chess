@@ -3,9 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>체스-라유</title>
+    <link href="./css/index.css" rel="stylesheet">
 </head>
 <main>
-    hi
+    이용 가능한 방 번호는 아래에 있습니다
+    <form action="/new_game" method="post">
+        <input class="menuButton" name="command" type="submit" value="새 게임">
+    </form>
+    <br><br>
+
+    {{#rooms}}
+        <div class="room_number_index">
+            <form action="/load_game" method="get">
+                room number: {{roomNumber}}
+                <input class="menuButton" name="command" type="submit" value="불러오기">
+                <input class="invisible" name="room_number" value="{{roomNumber}}" type="text">
+            </form>
+            <form action="/remove" method="post">
+                <input class="menuButton" name="command" type="submit" value="방 삭제">
+                <input class="invisible" name="room_number" value="{{roomNumber}}" type="text">
+            </form>
+        </div>
+    {{/rooms}}
+
 </main>
 </body>
 </html>

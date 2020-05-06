@@ -2,6 +2,7 @@ package wooteco.chess.boot.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import wooteco.chess.boot.entity.PieceEntity;
 import wooteco.chess.boot.entity.RoomEntity;
 import wooteco.chess.boot.entity.RoomInfoEntity;
@@ -23,10 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class ChessService {
 
-    //임시로 방 하나만 쓰기 위한 코드(4단계에서 수정)
-    private static final long STATIC_ROOM_ID = 6;
-    private static final long STATIC_ROOM_NUMBER = 1;
-    private static final long STATIC_ROOM_INFO_ID = 7;
+    private static final int HASH_CONSTANT = 1000000;
 
     @Autowired
     private RoomRepository roomRepository;
@@ -35,42 +33,45 @@ public class ChessService {
     @Autowired
     private PieceRepository pieceRepository;
 
-    public Board newGame() {
-        Board board = BoardFactory.create();
+    @Transactional
+    public Long newGame() {
+        Long roomNumber = generateCurrentTimeHash();
 
-        RoomEntity roomEntity = roomRepository.save(new RoomEntity(STATIC_ROOM_ID, STATIC_ROOM_NUMBER));
-        Long roomId = roomEntity.getId();
+        Long roomId = writeRoom(roomNumber);
+        writeRoomInfo(roomId, Team.WHITE, false);
+        writeBoard(roomId, BoardFactory.create());
 
-        writeBoard(roomId, board);
-
-        //임시로 방 하나만 쓰기 위한 코드(4단계에서 수정)
-        roomInfoRepository.save(new RoomInfoEntity(STATIC_ROOM_INFO_ID, roomId, Team.WHITE.toString(), false));
-
-        return board;
+        return roomNumber;
     }
 
-    //4단계에서 사용할 roomNumber generator
-    private Long generateRandomNumber() {
+    private Long generateCurrentTimeHash() {
         Long currentTime = System.currentTimeMillis();
-        return (long) currentTime.hashCode();
+        return (long) -currentTime.hashCode() % HASH_CONSTANT;
+    }
+
+    private Long writeRoom(final Long roomNumber) {
+        RoomEntity roomEntity = roomRepository.save(new RoomEntity(roomNumber));
+        return roomEntity.getId();
+    }
+
+    private void writeRoomInfo(final Long roomId, final Team turn, final boolean isOver) {
+        roomInfoRepository.save(new RoomInfoEntity(roomId, turn.toString(), isOver));
     }
 
     private void writeBoard(final Long roomId, final Board board) {
-        //임시로 방 하나만 쓰기 위한 코드(4단계에서 수정)
-        pieceRepository.deleteAll();
-
         for (Position position : Position.positions) {
             Piece piece = board.findPieceOn(position);
             pieceRepository.save(new PieceEntity(roomId, position.toString(), piece.toString()));
         }
     }
 
-    public Board readBoard() {
-        List<PieceEntity> pieces = pieceRepository.findAll();
-        //임시로 방 하나만 쓰기 위한 코드(4단계에서 수정)
-        RoomInfoEntity roomInfoEntity = roomInfoRepository.findByRoomId(STATIC_ROOM_ID);
+    @Transactional
+    public Board readBoard(Long roomNumber) {
+        Long roomId = roomRepository.findIdByNumber(roomNumber);
 
-        Team currentTurn = Team.of(roomInfoEntity.getTurn());
+        List<PieceEntity> pieces = pieceRepository.findAllByRoomId(roomId);
+        Team currentTurn = Team.of(roomInfoRepository.findTurnByRoomId(roomId));
+
         return new Board(parsePieceEntities(pieces), currentTurn);
     }
 
@@ -79,8 +80,9 @@ public class ChessService {
                 .collect(Collectors.toMap(entity -> Position.of(entity.getPlace()), entity -> Piece.of(entity.getPiece())));
     }
 
-    public List<Position> findMovablePlaces(final Position start) {
-        Board board = readBoard();
+    @Transactional
+    public List<Position> findMovablePlaces(final Long roomNumber, final Position start) {
+        Board board = readBoard(roomNumber);
 
         try {
             checkGameOver(board);
@@ -93,28 +95,33 @@ public class ChessService {
 
     private void checkGameOver(Board board) {
         Judge judge = new Judge();
-
         if (judge.findWinner(board).isPresent()) {
             throw new IllegalArgumentException("게임이 종료되었습니다.");
         }
     }
 
-    public void move(final Position start, final Position end) {
-        Board board = readBoard();
+    @Transactional
+    public void move(final Long roomNumber, final Position start, final Position end) {
+        Long roomId = roomRepository.findIdByNumber(roomNumber);
+        Board board = readBoard(roomNumber);
 
         try {
             checkGameOver(board);
             board.move(start, end);
 
-            writeBoard(STATIC_ROOM_ID, board);
-            roomInfoRepository.save(new RoomInfoEntity(STATIC_ROOM_INFO_ID, STATIC_ROOM_ID, board.getCurrentTurn().toString(), false));
+            pieceRepository.deleteAllByRoomId(roomId);
+            writeBoard(roomId, board);
+
+            Long roomInfoId = roomInfoRepository.findIdByRoomId(roomId);
+            roomInfoRepository.save(new RoomInfoEntity(roomInfoId, roomId, board.getCurrentTurn().toString(), false));
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
     }
 
-    public double calculateScore(final Team team) {
+    @Transactional
+    public double calculateScore(final Long roomNumber, final Team team) {
         Judge judge = new Judge();
-        return judge.getScoreByTeam(readBoard(), team);
+        return judge.getScoreByTeam(readBoard(roomNumber), team);
     }
 }

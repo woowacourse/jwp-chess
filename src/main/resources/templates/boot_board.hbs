@@ -244,11 +244,12 @@
         <form action="/new_game" method="post">
             <input class="menuButton" name="command" type="submit" value="새 게임">
         </form>
-        <form action="/load_game" method="get">
-            <input class="menuButton" name="command" type="submit" value="불러오기">
+        <form action="/" method="get">
+            <input class="menuButton" name="command" type="submit" value="메인으로">
         </form>
         <form action="/score" method="get">
             <input class="menuButton" name="command" type="submit" value="현재점수">
+            <input class="invisible" name="room_number" value="{{roomNumber}}" type="text">
         </form>
     </div>
 
@@ -259,12 +260,14 @@
     </div>
 
     <form action="/move" class="invisible" id="moveForm" method="post">
+        <input name="room_number" value="{{roomNumber}}" type="text">
         <input id="moveStart" name="start" type="text" value={{start}}>
         <input id="moveEnd" name="end" type="text" value="{{end}}">
         <input id="moveCommand" name="command" type="text">
     </form>
 
     <form action="/show_movable" class="invisible" id="movableForm" method="get">
+        <input name="room_number" value="{{roomNumber}}" type="text">
         <input id="start_candidate" name="start" type="text" value={{start_candidate}}>
         <input id="movableCommand" name="command" type="text">
     </form>

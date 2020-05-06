@@ -36,9 +36,10 @@ public class ModelParser {
                 .collect(toMap(ModelParser::parsePositionToMovable, position -> BLANK));
     }
 
-    public static Map<String, Object> parseBoard(final Board board) {
+    public static Map<String, Object> parseBoard(final Board board, final Long roomNumber) {
         Map<String, Object> output = new HashMap<>();
 
+        output.put("roomNumber", roomNumber);
         for (Position position : Position.positions) {
             Piece piece = board.findPieceOn(position);
             output.put(position.toString(), piece.toString());
@@ -49,9 +50,10 @@ public class ModelParser {
         return output;
     }
 
-    public static Map<String, Object> parseBoard(final Board board, final List<Position> movablePlaces) {
+    public static Map<String, Object> parseBoard(final Board board, final List<Position> movablePlaces, final Long roomNumber) {
         Map<String, Object> output = new HashMap<>();
 
+        output.put("roomNumber", roomNumber);
         for (Position position : Position.positions) {
             Piece piece = board.findPieceOn(position);
             output.put(position.toString(), piece.toString());

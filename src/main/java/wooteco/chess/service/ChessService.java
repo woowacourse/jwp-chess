@@ -1,6 +1,14 @@
 package wooteco.chess.service;
 
+import static java.util.stream.Collectors.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
 import org.springframework.stereotype.Service;
+
 import wooteco.chess.database.GameRoomRepository;
 import wooteco.chess.domain.chessBoard.ChessBoard;
 import wooteco.chess.domain.chessBoard.ChessBoardInitializer;
@@ -10,13 +18,6 @@ import wooteco.chess.entity.GameHistory;
 import wooteco.chess.entity.GameRoom;
 import wooteco.chess.service.dto.ChessGameDto;
 import wooteco.chess.service.dto.GameRoomDto;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class ChessService {
@@ -29,9 +30,17 @@ public class ChessService {
 		this.gameRoomRepository = gameRoomRepository;
 	}
 
-	public ChessGameDto loadChessGameByName(String name) {
-		GameRoom gameRoom = gameRoomRepository.findByName(name);
-		return ChessGameDto.of(gameRoom.getId(), initChessGameOf(gameRoom));
+	public List<GameRoomDto> showAllGames() {
+		List<GameRoom> gameRooms = gameRoomRepository.findAll();
+
+		return gameRooms.stream()
+			.map(GameRoomDto::of)
+			.collect(toList());
+	}
+
+	public ChessGameDto createChessGame(final String name) {
+		GameRoom savedGameRoom = gameRoomRepository.save(new GameRoom(name));
+		return ChessGameDto.of(savedGameRoom.getId(), initChessGameOf(savedGameRoom));
 	}
 
 	private ChessGame initChessGameOf(final GameRoom gameRoom) {
@@ -43,6 +52,11 @@ public class ChessService {
 			.forEach(chessGame::move);
 
 		return chessGame;
+	}
+
+	public ChessGameDto loadChessGameByName(String name) {
+		GameRoom gameRoom = gameRoomRepository.findByName(name);
+		return ChessGameDto.of(gameRoom.getId(), initChessGameOf(gameRoom));
 	}
 
 	public ChessGameDto playChessGame(final Long gameId, final String sourcePosition, final String targetPosition) {
@@ -63,11 +77,6 @@ public class ChessService {
 		return ChessGameDto.of(gameRoom.getId(), chessGame);
 	}
 
-	public ChessGameDto createChessGame(final String name) {
-		GameRoom savedGameRoom = gameRoomRepository.save(new GameRoom(name));
-		return ChessGameDto.of(savedGameRoom.getId(), initChessGameOf(savedGameRoom));
-	}
-
 	public ChessGameDto endChessGame(final Long gameId) {
 		GameRoom gameRoom = gameRoomRepository.findById(gameId)
 			.orElseThrow(() -> new NoSuchElementException("게임이 존재하지 않습니다."));
@@ -82,14 +91,6 @@ public class ChessService {
 		GameRoom gameRoom = gameRoomRepository.findById(gameId)
 			.orElseThrow(() -> new NoSuchElementException("게임이 존재하지 않습니다."));
 		return gameRoom.getState();
-	}
-
-	public List<GameRoomDto> showAllGames() {
-		List<GameRoom> gameRooms = gameRoomRepository.findAll();
-
-		return gameRooms.stream()
-				.map(GameRoomDto::of)
-			.collect(toList());
 	}
 
 }

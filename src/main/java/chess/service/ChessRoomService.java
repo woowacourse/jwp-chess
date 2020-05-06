@@ -1,6 +1,7 @@
 package chess.service;
 
-import chess.dao.exceptions.DaoNoneSelectedException;
+import chess.entity.AnnouncementEntity;
+import chess.repository.exceptions.DaoNoneSelectedException;
 import chess.domain.coordinate.Coordinate;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.PieceType;
@@ -9,8 +10,8 @@ import chess.domain.pieces.StartPieces;
 import chess.domain.state.State;
 import chess.domain.state.StateType;
 import chess.domain.team.Team;
-import chess.dto.PieceDto;
-import chess.dto.StateDto;
+import chess.entity.PieceEntity;
+import chess.entity.StateEntity;
 import chess.repository.AnnouncementRepository;
 import chess.repository.PieceRepository;
 import chess.repository.StateRepository;
@@ -19,6 +20,7 @@ import chess.view.Announcement;
 import chess.view.BoardToHtml;
 import chess.view.board.Board;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -26,6 +28,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChessRoomService {
+	private static final String ENDED = "ended";
+
 	private final AnnouncementRepository announcementRepository;
 	private final StatusRecordRepository statusRecordRepository;
 	private final StateRepository stateRepository;
@@ -44,41 +48,58 @@ public class ChessRoomService {
 		return createBoardHtml(state);
 	}
 
-	private Set<Piece> createPieceSet(final List<PieceDto> pieceDtos) {
-		return pieceDtos.stream()
-				.map(daoPieceDto -> PieceType.getFactoryOfName(daoPieceDto.getPieceType()).apply(
-						Team.of(daoPieceDto.getTeam()), Coordinate.of(daoPieceDto.getCoordinate())))
-				.collect(Collectors.toSet());
-	}
-
-	private State loadState(final int roomId) {
-		final StateDto stateDto = stateRepository.findByRoomId(roomId).orElseThrow(DaoNoneSelectedException::new);
-		final List<PieceDto> pieceDtos = pieceRepository.findPiecesByRoomId(roomId);
-
-		final Set<Piece> pieces = createPieceSet(pieceDtos);
-		return StateType.getFactory(stateDto.getState()).apply(
-				new Pieces(pieces));
-	}
-
 	private String createBoardHtml(final State state) {
 		final List<List<String>> board = Board.of(state.getSet()).getLists();
 		return BoardToHtml.of(board).getHtml();
 	}
 
-	public void saveNewState(final int roomId) {
-		stateRepository.save("ended", roomId);
+	private Set<Piece> createPieceSet(final List<PieceEntity> pieceEntities) {
+		return pieceEntities.stream()
+				.map(pieceEntity -> PieceType.getFactoryOfName(pieceEntity.getPieceType()).apply(
+						Team.of(pieceEntity.getTeam()), Coordinate.of(pieceEntity.getCoordinate())))
+				.collect(Collectors.toSet());
 	}
 
-	public void saveNewPieces(final int roomId) {
+	private State loadState(final int roomId) {
+		final StateEntity stateEntity = stateRepository.findByRoomId(roomId).orElseThrow(DaoNoneSelectedException::new);
+		final List<PieceEntity> pieceEntities = pieceRepository.findPiecesByRoomId(roomId);
+
+		final Set<Piece> pieces = createPieceSet(pieceEntities);
+		return StateType.getFactory(stateEntity.getState()).apply(
+				new Pieces(pieces));
+	}
+
+	@Transactional
+	public void initRoom(final int roomId) {
+		saveNewState(roomId);
+		saveNewPieces(roomId);
+		saveNewAnnouncementMessage(roomId);
+	}
+
+	private void saveNewState(final int roomId) {
+		stateRepository.save(ENDED, roomId);
+	}
+
+	private void saveNewPieces(final int roomId) {
 		final Set<Piece> pieces = new StartPieces().getInstance();
 
-		final List<PieceDto> pieceDtos = pieces.stream()
-				.map(piece -> new PieceDto(piece.getPieceTypeName(), piece.getTeamName(),
-						piece.getCoordinateRepresentation(), roomId))
+		final List<PieceEntity> pieceEntities = pieces.stream()
+				.map(piece -> toPieceEntity(piece, roomId))
 				.collect(Collectors.toList());
-		pieceRepository.saveAll(pieceDtos);
+		pieceRepository.saveAll(pieceEntities);
 	}
 
+	private PieceEntity toPieceEntity(final Piece piece, final int roomId) {
+		return new PieceEntity(piece.getPieceTypeName(), piece.getTeamName(),
+				piece.getCoordinateRepresentation(), roomId);
+	}
+
+	private void saveNewAnnouncementMessage(int roomId) {
+		AnnouncementEntity announcementEntity = new AnnouncementEntity(Announcement.ofFirst().getString(), roomId);
+		announcementRepository.save(announcementEntity);
+	}
+
+	@Transactional
 	public void updateRoom(final int roomId, final String command) {
 		final State before = loadState(roomId);
 		final State after = before.pushCommand(command);
@@ -90,9 +111,9 @@ public class ChessRoomService {
 	}
 
 	private void savePiecesFromState(final int roomId, final State after) {
-		List<PieceDto> prieceDtos = after.getSet()
+		List<PieceEntity> prieceDtos = after.getSet()
 				.stream()
-				.map(piece -> new PieceDto(piece.getPieceTypeName(), piece.getTeamName(),
+				.map(piece -> new PieceEntity(piece.getPieceTypeName(), piece.getTeamName(),
 						piece.getCoordinateRepresentation(), roomId))
 				.collect(Collectors.toList());
 		pieceRepository.saveAll(prieceDtos);
@@ -117,10 +138,6 @@ public class ChessRoomService {
 	public String loadAnnouncementMessage(int roomId) {
 		return announcementRepository.findByRoomId(roomId).orElseThrow(DaoNoneSelectedException::new)
 				.getMessage();
-	}
-
-	public void saveNewAnnouncementMessage(int roomId) {
-		announcementRepository.save(Announcement.ofFirst().getString(), roomId);
 	}
 
 	public void saveAnnouncementMessage(final int roomId, final String message) {

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/chess/home")
 public class SpringHomeController {
 
-	@GetMapping()
+	@GetMapping
 	public String home() {
 		return "index";
 	}

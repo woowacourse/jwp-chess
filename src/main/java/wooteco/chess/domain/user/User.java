@@ -21,13 +21,13 @@ public class User {
     private String team;
 
     @Column("user_status")
-    private String userStatus; // 게임 중인지, 아닌지
+    private String userStatus;
 
     public User(final String name, final String password) {
         this.name = name;
         this.password = password;
         team = Team.BLANK.name();
-        userStatus = UserStatus.Waiting.name();
+        userStatus = UserStatus.WAITING.name();
     }
 
     public Long getId() {

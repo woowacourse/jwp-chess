@@ -3,8 +3,8 @@ package wooteco.chess.domain.user;
 import java.util.Arrays;
 
 public enum UserStatus {
-    Waiting("waiting"),
-    Gaming("gaming");
+    WAITING("waiting"),
+    GAMING("gaming");
 
     private final String name;
 

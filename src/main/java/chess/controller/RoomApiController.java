@@ -5,6 +5,7 @@ import chess.dto.DeleteRoomDto;
 import chess.dto.RoomsDto;
 import chess.service.ChessGameService;
 import chess.service.RoomService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,18 +24,18 @@ public class RoomApiController {
         this.roomService = roomService;
     }
 
-    @GetMapping("/viewRooms")
+    @GetMapping("/rooms")
     public RoomsDto viewRooms() {
         return roomService.getUsedRooms();
     }
 
-    @PostMapping("/createRoom")
+    @PostMapping("/room")
     public RoomsDto createRoom(@RequestBody CreateRoomDto createRoomDto) {
         roomService.addRoom(createRoomDto);
         return roomService.getUsedRooms();
     }
 
-    @PostMapping("/deleteRoom")
+    @DeleteMapping("/room")
     public RoomsDto deleteRoom(@RequestBody DeleteRoomDto deleteRoomDto) {
         roomService.deleteRoom(deleteRoomDto);
         chessGameService.findProceedGameId(deleteRoomDto.getRoomId())

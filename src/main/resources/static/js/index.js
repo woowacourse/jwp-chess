@@ -4,7 +4,7 @@ const creatRoom = document.getElementById("create-room");
 const deleteRoom = document.getElementById("delete-room");
 const intoRoom = document.getElementById("into-room");
 
-fetch('/api/viewRooms').then(res => res.json()).then(data => {
+fetch('/api/rooms').then(res => res.json()).then(data => {
     roomSetting(data);
 });
 
@@ -24,8 +24,8 @@ deleteRoom.onclick = () => {
         return;
     }
     let roomId = rooms.value;
-    fetch("/api/deleteRoom", {
-        method: 'POST',
+    fetch("/api/room", {
+        method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -42,7 +42,7 @@ deleteRoom.onclick = () => {
 creatRoom.onclick = () => {
     let roomName = createRoomName.value;
     let roomPassword = '';
-    fetch('/api/createRoom', {
+    fetch('/api/room', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

@@ -20,7 +20,7 @@ public class ResultApiController {
         this.resultService = resultService;
     }
 
-    @GetMapping("/viewUsers")
+    @GetMapping("/users")
     public UserNamesDto viewUsers() {
         return resultService.getUsers();
     }

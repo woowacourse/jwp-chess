@@ -20,7 +20,7 @@ public class ChessController {
         this.service = service;
     }
 
-    @GetMapping("/new")
+    @GetMapping("/")
     public String entrance(@RequestParam(defaultValue = "") String error, Model model) {
         model.addAttribute("roomNames", service.getAllRoomNames());
         if (!error.isEmpty()) {
@@ -37,11 +37,11 @@ public class ChessController {
             return "chess-running";
         } catch (RuntimeException e) {
             redirectAttributes.addAttribute("error", e.getMessage());
-            return "redirect:/new";
+            return "redirect:/";
         }
     }
 
-    @GetMapping("/")
+    @GetMapping("/game")
     public String showGame(@RequestParam(value = "room-id") int roomId, @RequestParam(defaultValue = "") String error,
         RedirectAttributes redirectAttributes, Model model) {
         model.addAttribute("room", service.findGame(roomId));
@@ -70,10 +70,10 @@ public class ChessController {
             if (service.isGameEnd(id)) {
                 return "redirect:/result";
             }
-            return "redirect:/";
+            return "redirect:/game";
         } catch (RuntimeException e) {
             redirectAttributes.addAttribute("error", e.getMessage());
-            return "redirect:/new";
+            return "redirect:/";
         }
     }
 
@@ -89,13 +89,13 @@ public class ChessController {
         } catch (RuntimeException e) {
             redirectAttributes.addAttribute("error", Boolean.TRUE);
         }
-        return "redirect:/";
+        return "redirect:/game";
     }
 
     @PostMapping("/initialize")
     public String initializeGame(@RequestParam(value = "room-id") int roomId, RedirectAttributes redirectAttributes) {
         service.initBoard(roomId);
         redirectAttributes.addAttribute("room-id", roomId);
-        return "redirect:/";
+        return "redirect:/game";
     }
 }

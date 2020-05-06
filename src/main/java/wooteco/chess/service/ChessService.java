@@ -54,6 +54,9 @@ public class ChessService {
     }
 
     private void validateRoomName(String name) {
+        if (name.length() > 20) {
+            throw new IllegalArgumentException("방 이름의 길이는 20자를 초과할 수 없습니다.");
+        }
         if (isPresentRoom(name)) {
             throw new DuplicateRoomNameException("존재하는 방 이름입니다.");
         }

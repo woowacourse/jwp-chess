@@ -1,5 +1,7 @@
 package chess.util;
 
+import java.util.Objects;
+
 public class TFAndYNConverter {
 
     public static String convertYN(boolean changer) {
@@ -7,6 +9,7 @@ public class TFAndYNConverter {
     }
 
     public static boolean convertTF(String changer) {
+        Objects.requireNonNull(changer, "바뀔 대상은 null일 수 없습니다.");
         if (changer.equalsIgnoreCase("Y")) {
             return true;
         }

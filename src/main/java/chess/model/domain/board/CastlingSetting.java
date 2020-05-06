@@ -72,6 +72,7 @@ public enum CastlingSetting {
         totals.add(blackRight);
         totals.add(whiteLeft);
         totals.add(whiteRight);
+
         TOTALS = Collections.unmodifiableSet(new HashSet<>(totals));
     }
 

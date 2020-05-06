@@ -72,9 +72,9 @@ public class GameInformationDto {
     }
 
     public GameInformationDto teamScore(TeamScore teamScore) {
-        blackScore(teamScore.get(Team.BLACK));
-        whiteScore(teamScore.get(Team.WHITE));
-        winner(teamScore.getWinners());
+        blackScore(teamScore.findScore(Team.BLACK));
+        whiteScore(teamScore.findScore(Team.WHITE));
+        winner(teamScore.findWinners());
         return this;
     }
 
@@ -124,7 +124,7 @@ public class GameInformationDto {
         Map<Team, Double> teamScore = new HashMap<>();
         teamScore.put(Team.BLACK, Double.valueOf(blackScore));
         teamScore.put(Team.WHITE, Double.valueOf(whiteScore));
-        return new TeamScore(teamScore);
+        return TeamScore.of(teamScore);
     }
 
     public Map<Team, String> makeUserNames() {

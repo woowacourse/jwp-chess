@@ -55,7 +55,7 @@ public class ChessGame {
     }
 
     private void movePiece(MoveInfo moveInfo) {
-        Piece currentPiece = chessBoard.getCurrentPiece(moveInfo.getSource());
+        Piece currentPiece = chessBoard.findCurrentPiece(moveInfo.getSource());
         chessBoard.move(moveInfo);
         executeEnPassant(moveInfo, currentPiece);
         executeCastling(moveInfo);

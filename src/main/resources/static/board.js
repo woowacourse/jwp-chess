@@ -1,12 +1,14 @@
 $('.result').hide();
 
+const roomId = document.location.href.split("=")[1];
+
 $.ajax({
     type: 'get',
     url: '/init',
+    data: {'roomId': roomId},
     dataType: 'json',
     error: function (error) {
         alert("initError" + " " + error);
-        console.log(error);
     },
     success: showBoard
 });
@@ -37,7 +39,7 @@ function requestMove(start, target) {
     $.ajax({
         type: 'put',
         url: '/move',
-        data: {start: start, target: target},
+        data: {roomId: roomId, start: start, target: target},
         dataType: 'json',
         error: function (response) {
             alert(response.responseText);
@@ -74,6 +76,7 @@ function findWinningTeam() {
     $.ajax({
         type: 'get',
         url: '/findWinningTeam',
+        data: {roomId: roomId},
         dataType: 'json',
         error: function () {
             alert("isEnd Error")
@@ -82,15 +85,15 @@ function findWinningTeam() {
             $('.result').show();
             $('.result > .message').html(`${response.winningTeam}팀 승리!`);
             $('.result > .submit').click(function () {
-                restart();
+                exitAndMoveRoomList();
                 $('.result').hide();
             })
         }
     })
 }
 
-$('.reload').click(() => {
-    restart();
+$('.exit').click(() => {
+    exitAndMoveRoomList();
 });
 
 $('.cancel').click(() => {
@@ -98,34 +101,25 @@ $('.cancel').click(() => {
 });
 
 
-function restart() {
+function exitAndMoveRoomList() {
     $.ajax({
         type: 'get',
-        url: '/restart',
-        dataType: 'json',
+        url: '/delete',
+        data: {roomId: roomId},
         error: function () {
-            alert('restart error');
+            alert('exitAndMoveRoomList error');
         },
-        success: function (response) {
-            setTimeout(() => remove(response), 0);
-            setTimeout(() => showBoard(response), 0);
+        success: function () {
+            location.href = "/";
         }
     });
-}
-
-function remove(response) {
-    for (position in response) {
-        const className = getChessPieceClassName(position);
-        if (className !== '') {
-            getClassList(position).remove(className);
-        }
-    }
 }
 
 function status() {
     $.ajax({
         type: 'get',
         url: '/status',
+        data: {roomId: roomId},
         dataType: 'json',
         error: function () {
             alert("status Error")

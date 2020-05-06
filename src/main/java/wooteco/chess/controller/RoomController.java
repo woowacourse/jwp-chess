@@ -12,12 +12,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/room")
 public class RoomController {
 
     @Autowired
     private RoomService roomService;
 
-    @GetMapping("/room")
+    @GetMapping
     public ModelAndView index(ModelAndView model) {
         List<Room> rooms = roomService.findAllRoom();
         model.addObject("rooms", rooms);
@@ -25,7 +26,7 @@ public class RoomController {
         return model;
     }
 
-    @PostMapping("/room")
+    @PostMapping
     public ModelAndView create(
             @RequestParam String title,
             ModelAndView model,
@@ -38,7 +39,7 @@ public class RoomController {
         return model;
     }
 
-    @GetMapping("/room/{room_id}")
+    @GetMapping("/{room_id}")
     public ModelAndView room(
             @PathVariable("room_id") Long roomId,
             ModelAndView model) {
@@ -50,7 +51,7 @@ public class RoomController {
         return model;
     }
 
-    @PostMapping("/room/{room_id}")
+    @PostMapping("/{room_id}")
     public void finish(
             @PathVariable("room_id") Long roomId,
             HttpServletResponse response
@@ -59,14 +60,14 @@ public class RoomController {
         response.sendRedirect("/room");
     }
 
-    @GetMapping("/room/{room_id}/turn")
+    @GetMapping("/{room_id}/turn")
     public String turn(
             @PathVariable("room_id") Long roomId
     ) {
         return roomService.findTurnById(roomId);
     }
 
-    @GetMapping("/room/{room_id}/reset")
+    @GetMapping("/{room_id}/reset")
     public ModelAndView reset(
             @PathVariable("room_id") Long roomId,
             ModelAndView model

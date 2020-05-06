@@ -25,7 +25,7 @@ class BoardControllerTest {
     void setUp() {
         roomService.createRoom("test room");
         List<Room> rooms = roomService.findAllRoom();
-        testId = rooms.get(rooms.size() - 1).getId();
+        testId = rooms.get(rooms.size()-1).getId();
         roomService.initializeBoard(testId);
     }
 

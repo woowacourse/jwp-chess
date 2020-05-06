@@ -1,7 +1,8 @@
 create table chess_game_table
 (
-    id   bigint auto_increment,
-    team varchar(5) not null
+    id   bigint auto_increment primary key,
+    title varchar(255) not null,
+    turn varchar(5) not null
 );
 
 create table board_table

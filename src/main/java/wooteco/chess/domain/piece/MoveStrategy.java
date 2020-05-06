@@ -1,9 +1,9 @@
 package wooteco.chess.domain.piece;
 
+import java.util.List;
+
 import wooteco.chess.domain.board.BoardSituation;
 import wooteco.chess.domain.position.Position;
-
-import java.util.List;
 
 public interface MoveStrategy {
 

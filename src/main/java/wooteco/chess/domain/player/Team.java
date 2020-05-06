@@ -15,8 +15,4 @@ public enum Team {
     public boolean isSameTeam(Team team) {
         return this == team;
     }
-
-    public boolean isWhite() {
-        return this == WHITE;
-    }
 }

@@ -1,5 +1,10 @@
 package wooteco.chess.domain.game;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import wooteco.chess.domain.MoveParameter;
 import wooteco.chess.domain.board.Board;
 import wooteco.chess.domain.piece.PieceState;
@@ -7,29 +12,26 @@ import wooteco.chess.domain.piece.implementation.piece.King;
 import wooteco.chess.domain.player.Team;
 import wooteco.chess.domain.position.Position;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 public class ChessGame {
 
     private Long id;
+    private String title;
     private Board board;
-    private Team turn;
+    private Turn turn;
 
-    private ChessGame(final Long id, final Board board, final Team turn) {
+    private ChessGame(Long id, String title, Board board, Turn turn) {
         this.id = id;
+        this.title = title;
         this.board = board;
         this.turn = turn;
     }
 
-    public static ChessGame of(final Board board, final Team turn) {
-        return new ChessGame(null, board, turn);
+    public static ChessGame of(final String title, final Board board, final Turn turn) {
+        return new ChessGame(null, title, board, turn);
     }
 
-    public static ChessGame of(final Long id, final Board board, final Team turn) {
-        return new ChessGame(id, board, turn);
+    public static ChessGame of(final Long id, String title, final Board board, final Turn turn) {
+        return new ChessGame(id, title, board, turn);
     }
 
     public boolean isEnd() {
@@ -39,7 +41,7 @@ public class ChessGame {
     public void move(MoveParameter moveParameter) {
         if (!isEnd()) {
             board.move(moveParameter.getSource(), moveParameter.getTarget(), turn);
-            switchTurn();
+            turn.switchTurn();
             return;
         }
         throw new UnsupportedOperationException("게임이 종료 되었습니다.");
@@ -54,27 +56,27 @@ public class ChessGame {
     }
 
     public double getScore() {
-        return board.getScores(turn);
+        return board.getScores(turn.getTeam());
     }
 
     public Map<Team, Double> getStatus() {
         return Arrays.stream(Team.values())
-                .collect(Collectors.toMap(
-                        value -> value,
-                        value -> board.getScores(value)
-                ));
+            .collect(Collectors.toMap(
+                value -> value,
+                value -> board.getScores(value)
+            ));
     }
 
     public Team getTurn() {
-        return turn;
+        return turn.getTeam();
     }
 
     public Team getWinner() {
         if (isEnd()) {
             return getBoard().values().stream()
-                    .filter(piece -> piece instanceof King)
-                    .map(PieceState::getTeam)
-                    .findFirst().get();
+                .filter(piece -> piece instanceof King)
+                .map(PieceState::getTeam)
+                .findFirst().get();
         }
         throw new UnsupportedOperationException("게임이 아직 종료되지 않았습니다.");
     }
@@ -83,7 +85,7 @@ public class ChessGame {
         return id;
     }
 
-    private void switchTurn() {
-        turn = turn.toggle();
+    public String getTitle() {
+        return title;
     }
 }

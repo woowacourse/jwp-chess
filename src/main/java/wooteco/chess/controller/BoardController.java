@@ -21,10 +21,10 @@ public class BoardController {
             @PathVariable("room_id") Long roomId,
             @RequestParam String fromPiece,
             @RequestParam String toPiece) {
-            Status status = boardService.movePiece(roomId, fromPiece, toPiece);
-            if (status.isFinish()) {
-                return ResponseEntity.ok().body(boardService.receiveWinner(roomId));
-            }
+        Status status = boardService.movePiece(roomId, fromPiece, toPiece);
+        if (status.isFinish()) {
+            return ResponseEntity.ok().body(boardService.receiveWinner(roomId));
+        }
         return ResponseEntity.ok().body(fromPiece + " " + toPiece);
     }
 

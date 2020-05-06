@@ -52,4 +52,13 @@ public class RoomRepositoryTest {
         }
         assertThat(roomRepository.save(new RoomEntity(1L, "방1", Team.WHITE, pieceEntities))).isNotNull();
     }
+
+    @DisplayName("모든 방의 이름이 제대로 반환되는지")
+    @Test
+    void findAllRoomNamesTest() {
+        roomRepository.save(new RoomEntity("방1", Team.WHITE));
+        roomRepository.save(new RoomEntity("방2", Team.WHITE));
+        assertThat(roomRepository.findAllRoomNames()).contains("방1");
+        assertThat(roomRepository.findAllRoomNames()).contains("방2");
+    }
 }

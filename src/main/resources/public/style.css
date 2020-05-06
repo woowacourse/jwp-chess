@@ -54,6 +54,17 @@ body {
     width: 10px;
 }
 
+.room-list {
+    font-size: 12px;
+}
+
+.room-entity {
+    align-items: center;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+}
+
 /***************************/
 
 .controller {

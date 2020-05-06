@@ -36,13 +36,11 @@ public class WebController {
     }
 
     @PostMapping("/game")
-    public String game(@RequestParam Integer roomId,
-        @RequestParam(defaultValue = "WHITE") String whiteName,
-        @RequestParam(defaultValue = "BLACK") String blackName,
-        Model model) {
+    public String game(@RequestParam Map<String, String> req, Model model) {
+        Integer roomId = Integer.valueOf(req.get("roomId"));
         chessGameService.findProceedGameId(roomId).ifPresent(chessGameService::closeGame);
 
-        Map<Team, String> userNames = makeUserNames(whiteName, blackName);
+        Map<Team, String> userNames = makeUserNames(req);
         Integer gameId = chessGameService.saveNewGameInfo(userNames, roomId);
         chessGameService.saveNewUserNames(userNames);
 
@@ -51,23 +49,19 @@ public class WebController {
     }
 
     @PostMapping("/load")
-    public String loadGame(@RequestParam Integer roomId,
-        @RequestParam(defaultValue = "WHITE") String whiteName,
-        @RequestParam(defaultValue = "BLACK") String blackName,
-        Model model) {
+    public String loadGame(@RequestParam Map<String, String> req, Model model) {
+        Integer roomId = Integer.valueOf(req.get("roomId"));
         model.addAttribute("gameId",
             chessGameService.findProceedGameId(roomId)
                 .orElseGet(() -> chessGameService
-                    .create(roomId, makeUserNames(whiteName, blackName))));
+                    .create(roomId, makeUserNames(req))));
         return "game";
     }
 
     @PostMapping("/game/new")
-    public String newGame(@RequestParam Integer gameId,
-        @RequestParam(defaultValue = "WHITE") String whiteName,
-        @RequestParam(defaultValue = "BLACK") String blackName,
-        Model model) {
-        Map<Team, String> userNames = makeUserNames(whiteName, blackName);
+    public String newGame(@RequestParam Map<String, String> req, Model model) {
+        Integer gameId = Integer.valueOf(req.get("gameId"));
+        Map<Team, String> userNames = makeUserNames(req);
         if (chessGameService.isGameProceed(gameId)) {
             ChessGameEntity chessGameEntity = chessGameService.closeGame(gameId);
             resultService.setGameResult(chessGameEntity);
@@ -86,10 +80,10 @@ public class WebController {
         return "result";
     }
 
-    private Map<Team, String> makeUserNames(String whiteName, String blackName) {
+    private Map<Team, String> makeUserNames(Map<String, String> req) {
         Map<Team, String> userNames = new HashMap<>();
-        userNames.put(Team.BLACK, blackName);
-        userNames.put(Team.WHITE, whiteName);
+        userNames.put(Team.BLACK, req.get("blackName"));
+        userNames.put(Team.WHITE, req.get("whiteName"));
         return userNames;
     }
 }

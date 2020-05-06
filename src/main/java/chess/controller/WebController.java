@@ -6,6 +6,7 @@ import chess.service.ChessGameService;
 import chess.service.ResultService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,9 +82,20 @@ public class WebController {
     }
 
     private Map<Team, String> makeUserNames(Map<String, String> req) {
+        initializeUserNames(req);
+
         Map<Team, String> userNames = new HashMap<>();
         userNames.put(Team.BLACK, req.get("blackName"));
         userNames.put(Team.WHITE, req.get("whiteName"));
         return userNames;
+    }
+
+    private void initializeUserNames(Map<String, String> req) {
+        if (Objects.isNull(req.get("blackName"))) {
+            req.put("blackName", "BLACK");
+        }
+        if (Objects.isNull(req.get("whiteName"))) {
+            req.put("whiteName", "WHITE");
+        }
     }
 }

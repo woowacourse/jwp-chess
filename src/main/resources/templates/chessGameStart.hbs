@@ -11,7 +11,7 @@
     <button type="submit">입장</button>
 </form>
 
-{{#chessRooms}}
+{{#startResponse.chessRooms}}
     <div class="chessRoom">
         <div class="chessRoomId">{{roomId}}</div>
         <div class="chessRoomName">{{roomName}}</div>
@@ -19,7 +19,7 @@
     </div>
 {{else}}
     <div>입장 가능한 방이 없습니다. 새로운 방을 만들어주세요.</div>
-{{/chessRooms}}
+{{/startResponse.chessRooms}}
 </body>
 <script>
     const playLastGame = function (roomId) {

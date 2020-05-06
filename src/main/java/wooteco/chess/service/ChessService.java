@@ -2,9 +2,9 @@ package wooteco.chess.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import wooteco.chess.controller.command.Command;
 import wooteco.chess.domain.ChessManager;
-import wooteco.chess.dto.GameResponse;
+import wooteco.chess.dto.response.MoveResponse;
+import wooteco.chess.dto.response.StartResponse;
 import wooteco.chess.repository.ChessRoom;
 import wooteco.chess.repository.ChessRoomRepository;
 import wooteco.chess.repository.MoveCommand;
@@ -15,7 +15,6 @@ import java.util.Map;
 
 @Service
 public class ChessService {
-    private static final String MOVE_DELIMITER = " ";
 
     @Autowired
     private ChessRoomRepository chessRoomRepository;
@@ -34,14 +33,13 @@ public class ChessService {
         return newRoom.getRoomId();
     }
 
-    public Map<String, Object> playLastGame(Long roomId) throws IllegalArgumentException {
+    public void playLastGame(Long roomId) throws IllegalArgumentException {
         List<MoveCommand> commands = findRoom(roomId).getMoveCommand();
         ChessManager chessManager = chessGames.get(roomId);
         chessManager.start();
         for (MoveCommand command : commands) {
-            Command.MOVE.apply(chessManager, command.getCommand());
+            chessManager.move(command.getSource(), command.getTarget());
         }
-        return makeMoveResponse(roomId);
     }
 
     public void move(String source, String target, Long roomId) {
@@ -66,26 +64,18 @@ public class ChessService {
         chessManager.end();
     }
 
-    public Map<String, Object> makeStartResponse() {
-        Map<String, Object> model = new HashMap<>();
-        model.put("chessRooms", chessRoomRepository.findAll());
-
-        return model;
+    public StartResponse getStartResponse() {
+        return new StartResponse(chessRoomRepository.findAll());
     }
 
-    public Map<String, Object> makeMoveResponse(Long roomId) {
+    public MoveResponse getMoveResponse(Long roomId) {
         ChessManager chessManager = chessGames.get(roomId);
-        Map<String, Object> model = new HashMap<>(new GameResponse(chessManager).get());
-        model.put("winner", chessManager.getWinner());
-        model.put("roomId", roomId);
-        model.put("roomName", findRoom(roomId).getRoomName());
-        return model;
+        return new MoveResponse(chessManager, roomId, findRoom(roomId).getRoomName());
     }
 
     private void saveCommand(String source, String target, Long roomId) {
-        String command = String.join(MOVE_DELIMITER, new String[]{"move", source, target});
         ChessRoom chessRoom = findRoom(roomId);
-        chessRoom.addCommand(new MoveCommand(command));
+        chessRoom.addCommand(new MoveCommand(source, target));
         chessRoomRepository.save(chessRoom);
     }
 

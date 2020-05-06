@@ -1,10 +1,10 @@
-package wooteco.chess.dto;
+package wooteco.chess.dto.request;
 
-public class MoveDto {
+public class MoveRequest {
     private String source;
     private String target;
 
-    protected MoveDto() {
+    protected MoveRequest() {
     }
 
     public String getSource() {

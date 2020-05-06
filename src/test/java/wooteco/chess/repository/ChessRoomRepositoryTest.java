@@ -35,17 +35,22 @@ class ChessRoomRepositoryTest {
     @Test
     void update() {
         ChessRoom room1 = new ChessRoom("1번 방");
-        room1.addCommand(new MoveCommand("move a2 a4"));
+        room1.addCommand(new MoveCommand("a2", "a4"));
         ChessRoom room2 = chessRoomRepository.save(room1);
         List<MoveCommand> commands1 = room2.getMoveCommand();
 
-        assertThat(commands1.get(0).getCommand()).isEqualTo("move a2 a4");
+        assertThat(commands1.get(0).getSource()).isEqualTo("a2");
+        assertThat(commands1.get(0).getTarget()).isEqualTo("a4");
 
-        room2.addCommand(new MoveCommand("move a7 a5"));
+
+        room2.addCommand(new MoveCommand("a7", "a5"));
         ChessRoom room3 = chessRoomRepository.save(room2);
         List<MoveCommand> commands2 = room3.getMoveCommand();
 
-        assertThat(commands2.get(0).getCommand()).isEqualTo("move a2 a4");
-        assertThat(commands2.get(1).getCommand()).isEqualTo("move a7 a5");
+        assertThat(commands2.get(0).getSource()).isEqualTo("a2");
+        assertThat(commands2.get(0).getTarget()).isEqualTo("a4");
+
+        assertThat(commands2.get(1).getSource()).isEqualTo("a7");
+        assertThat(commands2.get(1).getTarget()).isEqualTo("a5");
     }
 }

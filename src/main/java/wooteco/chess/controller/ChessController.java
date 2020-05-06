@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wooteco.chess.dto.MoveDto;
+import wooteco.chess.dto.request.MoveRequest;
+import wooteco.chess.dto.response.MoveResponse;
+import wooteco.chess.dto.response.StartResponse;
 import wooteco.chess.service.ChessService;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class ChessController {
@@ -29,30 +28,33 @@ public class ChessController {
 
     @GetMapping("/")
     public String startGame(Model model) {
-        model.addAllAttributes(chessService.makeStartResponse());
+        StartResponse startResponse = chessService.getStartResponse();
+        model.addAttribute(startResponse);
         return "chessGameStart";
     }
 
     @PostMapping("/")
-    public String playing(@RequestParam("newRoomName") String newRoomName) {
+    public String playNewGame(@RequestParam("newRoomName") String newRoomName) {
         Long newRoomId = chessService.playNewGame(newRoomName);
         return "redirect:/playing/" + newRoomId;
     }
 
     @GetMapping("/playing/{roomId}")
-    public String lastGame(@PathVariable("roomId") Long roomId, Model model) {
-        model.addAllAttributes(chessService.playLastGame(roomId));
+    public String playLastGame(@PathVariable("roomId") Long roomId, Model model) {
+        chessService.playLastGame(roomId);
+        MoveResponse moveResponse = chessService.getMoveResponse(roomId);
+        model.addAttribute(moveResponse);
         return "chessGame";
     }
 
     @PostMapping("/playing/{roomId}")
     @ResponseBody
-    public String move(@PathVariable("roomId") Long roomId, @RequestBody MoveDto moveDto) {
-        chessService.move(moveDto.getSource(), moveDto.getTarget(), roomId);
-        Map<String, Object> model = new HashMap<>(chessService.makeMoveResponse(roomId));
+    public String move(@PathVariable("roomId") Long roomId, @RequestBody MoveRequest moveRequest) {
+        chessService.move(moveRequest.getSource(), moveRequest.getTarget(), roomId);
+        MoveResponse moveResponse = chessService.getMoveResponse(roomId);
         chessService.checkIfPlaying(roomId);
 
-        return GSON.toJson(model);
+        return GSON.toJson(moveResponse);
     }
 
     @GetMapping("/end/{roomId}")

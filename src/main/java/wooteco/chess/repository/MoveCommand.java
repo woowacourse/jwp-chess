@@ -7,20 +7,26 @@ import org.springframework.data.relational.core.mapping.Table;
 public class MoveCommand {
     @Id
     private Long commandId;
-    private String command;
+    private String source;
+    private String target;
 
     protected MoveCommand() {
     }
 
-    public MoveCommand(String command) {
-        this.command = command;
+    public MoveCommand(String source, String target) {
+        this.source = source;
+        this.target = target;
     }
 
     public Long getCommandId() {
         return commandId;
     }
 
-    public String getCommand() {
-        return command;
+    public String getSource() {
+        return source;
+    }
+
+    public String getTarget() {
+        return target;
     }
 }

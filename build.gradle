@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
@@ -23,9 +23,8 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
-	runtimeOnly 'com.h2database:h2'
+	implementation 'com.h2database:h2'
 	implementation 'com.google.code.gson:gson:2.8.6'
-	// 추후 제거할 것
 	compile("mysql:mysql-connector-java:8.0.16")
 }
 

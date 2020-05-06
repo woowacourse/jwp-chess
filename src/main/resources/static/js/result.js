@@ -32,7 +32,7 @@ submit.onclick = () => {
     })
 };
 
-fetch('/api/result/viewUsers').then(res => res.json()).then(data => {
+fetch('/api/result/users').then(res => res.json()).then(data => {
     for (let userName of data.userNames) {
         let opt = document.createElement("option");
         opt.value = userName;

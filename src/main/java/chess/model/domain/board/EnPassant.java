@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 public class EnPassant {
 
-    private static Set<Square> BLACK_EN_PASSANTS;
-    private static Set<Square> WHITE_EN_PASSANTS;
+    private static final Set<Square> BLACK_EN_PASSANTS;
+    private static final Set<Square> WHITE_EN_PASSANTS;
 
     static {
         Set<Square> blackEnPassants = new HashSet<>();
@@ -27,7 +27,7 @@ public class EnPassant {
         WHITE_EN_PASSANTS = Collections.unmodifiableSet(whiteEnPassants);
     }
 
-    private Map<Square, Square> enPassantsToAfterSquares;
+    private final Map<Square, Square> enPassantsToAfterSquares;
 
     public EnPassant() {
         this(new HashMap<>());

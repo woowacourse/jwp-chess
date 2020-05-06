@@ -30,7 +30,7 @@ public enum MoveState {
 
     public Team turnTeam(Team gameTurn) {
         if (this == SUCCESS || this == SUCCESS_PROMOTION) {
-            return gameTurn.nextTurn();
+            return gameTurn.next();
         }
         return gameTurn;
     }

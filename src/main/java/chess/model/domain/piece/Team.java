@@ -35,7 +35,7 @@ public enum Team {
         return directionChanger.apply(directions);
     }
 
-    public Team nextTurn() {
+    public Team next() {
         return of(this.nextTurnName);
     }
 

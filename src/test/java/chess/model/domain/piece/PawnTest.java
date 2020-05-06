@@ -4,6 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.model.domain.board.Square;
+import chess.model.domain.piece.Knight;
+import chess.model.domain.piece.Pawn;
+import chess.model.domain.piece.Piece;
+import chess.model.domain.piece.Team;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

@@ -12,8 +12,8 @@ public class TeamTest {
     @DisplayName("다음 차례 확인")
     @Test
     void nextTurn() {
-        Assertions.assertThat(Team.BLACK.nextTurn()).isEqualTo(Team.WHITE);
-        assertThat(Team.WHITE.nextTurn()).isEqualTo(Team.BLACK);
+        Assertions.assertThat(Team.BLACK.next()).isEqualTo(Team.WHITE);
+        assertThat(Team.WHITE.next()).isEqualTo(Team.BLACK);
     }
 
 }

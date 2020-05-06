@@ -1,39 +1,26 @@
 package chess.model.domain.piece;
 
-import static chess.model.domain.piece.Direction.DOWN;
-import static chess.model.domain.piece.Direction.DOWN_LEFT_L;
-import static chess.model.domain.piece.Direction.DOWN_RIGHT_L;
-import static chess.model.domain.piece.Direction.LEFT;
-import static chess.model.domain.piece.Direction.LEFT_DOWN;
-import static chess.model.domain.piece.Direction.LEFT_DOWN_L;
-import static chess.model.domain.piece.Direction.LEFT_UP;
-import static chess.model.domain.piece.Direction.LEFT_UP_L;
-import static chess.model.domain.piece.Direction.RIGHT;
-import static chess.model.domain.piece.Direction.RIGHT_DOWN;
-import static chess.model.domain.piece.Direction.RIGHT_DOWN_L;
-import static chess.model.domain.piece.Direction.RIGHT_UP;
-import static chess.model.domain.piece.Direction.RIGHT_UP_L;
-import static chess.model.domain.piece.Direction.UP;
-import static chess.model.domain.piece.Direction.UP_LEFT_L;
-import static chess.model.domain.piece.Direction.UP_RIGHT_L;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public enum Type {
     ROOK("rook", 5, true,
-        Arrays.asList(UP, DOWN, LEFT, RIGHT)),
+        Arrays.asList(Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT)),
     KNIGHT("knight", 2.5, true,
-        Arrays.asList(UP_LEFT_L, UP_RIGHT_L, DOWN_LEFT_L, DOWN_RIGHT_L, RIGHT_DOWN_L, RIGHT_UP_L,
-            LEFT_DOWN_L, LEFT_UP_L)),
+        Arrays.asList(
+            Direction.UP_LEFT_L, Direction.UP_RIGHT_L, Direction.DOWN_LEFT_L, Direction.DOWN_RIGHT_L, Direction.RIGHT_DOWN_L, Direction.RIGHT_UP_L,
+            Direction.LEFT_DOWN_L, Direction.LEFT_UP_L)),
     BISHOP("bishop", 3, true,
-        Arrays.asList(LEFT_UP, LEFT_DOWN, RIGHT_UP, RIGHT_DOWN)),
+        Arrays.asList(
+            Direction.LEFT_UP, Direction.LEFT_DOWN, Direction.RIGHT_UP, Direction.RIGHT_DOWN)),
     QUEEN("queen", 9, true,
-        Arrays.asList(UP, DOWN, LEFT, RIGHT, LEFT_UP, LEFT_DOWN, RIGHT_UP, RIGHT_DOWN)),
+        Arrays.asList(
+            Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.LEFT_UP, Direction.LEFT_DOWN, Direction.RIGHT_UP, Direction.RIGHT_DOWN)),
     KING("king", 0, false,
-        Arrays.asList(UP, DOWN, LEFT, RIGHT, LEFT_UP, LEFT_DOWN, RIGHT_UP, RIGHT_DOWN)),
-    PAWN("pawn", 1, false, Collections.singletonList(UP));
+        Arrays.asList(
+            Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.LEFT_UP, Direction.LEFT_DOWN, Direction.RIGHT_UP, Direction.RIGHT_DOWN)),
+    PAWN("pawn", 1, false, Collections.singletonList(Direction.UP));
 
     private final String letter;
     private final double score;

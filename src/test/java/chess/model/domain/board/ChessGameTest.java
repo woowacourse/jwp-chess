@@ -26,7 +26,7 @@ public class ChessGameTest {
     @Test
     void chessBoardSizeCheck() {
         ChessGame chessGame = new ChessGame();
-        Map<Square, Piece> board = chessGame.getChessBoard();
+        Map<Square, Piece> board = chessGame.getBoard();
         assertThat(board.size()).isEqualTo(32);
     }
 
@@ -49,9 +49,9 @@ public class ChessGameTest {
     void move() {
         ChessGame chessGame = new ChessGame();
         chessGame.move(new MoveInfo("a2", "a3"));
-        assertThat(chessGame.getChessBoard().containsKey(Square.of("a2"))).isFalse();
-        assertThat(chessGame.getChessBoard().containsKey(Square.of("a3"))).isTrue();
-        assertThat(chessGame.getChessBoard().get(Square.of("a3")))
+        assertThat(chessGame.getBoard().containsKey(Square.of("a2"))).isFalse();
+        assertThat(chessGame.getBoard().containsKey(Square.of("a3"))).isTrue();
+        assertThat(chessGame.getBoard().get(Square.of("a3")))
             .isEqualTo(Pawn.getInstance(Team.WHITE));
     }
 
@@ -63,16 +63,16 @@ public class ChessGameTest {
 
         Map<Square, Piece> whiteKingBoard = new HashMap<>();
         whiteKingBoard.put(Square.of("a1"), King.getInstance(Team.WHITE));
-        chessGame = new ChessGame(ChessBoard.of(whiteKingBoard), Team.BLACK,
-            CastlingElement.of(new HashSet<>()), new EnPassant());
+        chessGame = new ChessGame(Board.of(whiteKingBoard), Team.BLACK,
+            Castling.of(new HashSet<>()), new EnPassant());
         assertThat(chessGame.isKingCaptured()).isTrue();
         assertThat(chessGame.move(new MoveInfo("d1", "d2")))
             .isEqualTo(MoveState.KING_CAPTURED);
 
         Map<Square, Piece> blackKingBoard = new HashMap<>();
         blackKingBoard.put(Square.of("a1"), King.getInstance(Team.BLACK));
-        chessGame = new ChessGame(ChessBoard.of(blackKingBoard), Team.WHITE,
-            CastlingElement.of(new HashSet<>()), new EnPassant());
+        chessGame = new ChessGame(Board.of(blackKingBoard), Team.WHITE,
+            Castling.of(new HashSet<>()), new EnPassant());
         assertThat(chessGame.isKingCaptured()).isTrue();
         assertThat(chessGame.move(new MoveInfo("d1", "d2")))
             .isEqualTo(MoveState.KING_CAPTURED);
@@ -149,8 +149,8 @@ public class ChessGameTest {
         boardInitial.put(Square.of("h8"), Rook.getInstance(Team.BLACK));
         boardInitial.put(Square.of("a1"), Rook.getInstance(Team.WHITE));
         boardInitial.put(Square.of("h1"), Rook.getInstance(Team.WHITE));
-        ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
-            CastlingElement.createInitial(), new EnPassant());
+        ChessGame chessGame = new ChessGame(Board.of(boardInitial), Team.WHITE,
+            Castling.createInitial(), new EnPassant());
 
         assertThat(chessGame.move(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.SUCCESS);
@@ -174,8 +174,8 @@ public class ChessGameTest {
         boardInitial.put(Square.of("f1"), Knight.getInstance(Team.BLACK));
         boardInitial.put(Square.of("f8"), Knight.getInstance(Team.WHITE));
         boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
-        ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
-            CastlingElement.createInitial(), new EnPassant());
+        ChessGame chessGame = new ChessGame(Board.of(boardInitial), Team.WHITE,
+            Castling.createInitial(), new EnPassant());
 
         assertThat(chessGame.move(new MoveInfo(whiteBefore, whiteAfter)))
             .isEqualTo(MoveState.FAIL_CAN_NOT_MOVE);
@@ -202,8 +202,8 @@ public class ChessGameTest {
         boardInitial.put(Square.of("f1"), Knight.getInstance(Team.BLACK));
         boardInitial.put(Square.of("f8"), Knight.getInstance(Team.WHITE));
         boardInitial.put(Square.of("a2"), Pawn.getInstance(Team.WHITE));
-        ChessGame chessGame = new ChessGame(ChessBoard.of(boardInitial), Team.WHITE,
-            CastlingElement
+        ChessGame chessGame = new ChessGame(Board.of(boardInitial), Team.WHITE,
+            Castling
                 .of(new HashSet<>(Collections.singletonList(CastlingSetting.BLACK_KING_BEFORE))),
             new EnPassant());
 

@@ -30,21 +30,21 @@ public class King extends OneTimeMovePiece {
 
     @Override
     public Set<Square> findMovableAreas(Square square, Map<Square, Piece> board,
-        Set<CastlingSetting> castlingElements) {
+        Set<CastlingSetting> castlings) {
         Set<Square> movableArea = getAllMovableArea(square).stream()
             .filter(s -> !(board.containsKey(s) && isSameTeam(board.get(s))))
             .collect(Collectors.toSet());
-        movableArea.addAll(getCastlingMovableArea(square, board, castlingElements));
+        movableArea.addAll(getCastlingMovableArea(square, board, castlings));
         return movableArea;
     }
 
     private Set<Square> getCastlingMovableArea(Square square,
-        Map<Square, Piece> board, Set<CastlingSetting> castlingElements) {
-        Set<CastlingSetting> sameColorCastlingElements = castlingElements.stream()
-            .filter(castlingElement -> castlingElement.isSameColor(this))
+        Map<Square, Piece> board, Set<CastlingSetting> castlings) {
+        Set<CastlingSetting> sameColorCastlings = castlings.stream()
+            .filter(castling -> castling.isSameColor(this))
             .collect(Collectors.toSet());
         Set<Square> castlingMovableAreas = CastlingSetting
-            .getCastlingMovableAreas(sameColorCastlingElements);
+            .getCastlingMovableAreas(sameColorCastlings);
 
         Set<Square> totalMovableArea = new HashSet<>();
         for (Square castlingMovableArea : castlingMovableAreas) {

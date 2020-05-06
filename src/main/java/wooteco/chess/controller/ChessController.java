@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import wooteco.chess.dto.MoveDto;
 import wooteco.chess.service.ChessService;
 
@@ -23,21 +20,26 @@ public class ChessController {
 
     @GetMapping("/start")
     public String startGame(Model model) {
-        chessService.start();
-        model.addAllAttributes(chessService.makeStartResponse());
+        model.addAttribute("rooms",chessService.findAllRooms());
         return "chessGameStart";
     }
 
-    @GetMapping("/playing/lastGame")
-    public String lastGame(Model model) {
-        chessService.playLastGame();
-        model.addAllAttributes(chessService.makeMoveResponse());
-        return "chessGame";
+    @GetMapping("/playing/lastGame/{id}")
+    public String lastGame(@PathVariable Long id) {
+        chessService.playLastGame(id);
+        return "redirect:/playing/" + chessService.getRoomNumber();
     }
 
     @GetMapping("/playing/newGame")
-    public String newGame(Model model) {
-        chessService.playNewGame();
+    public String newGame(@RequestParam String roomName) {
+        chessService.playNewGame(roomName);
+        return "redirect:/playing/" + chessService.getRoomNumber();
+    }
+
+    @GetMapping("/playing/{id}")
+    public String Game(@PathVariable Long id, Model model) {
+        model.addAttribute("roomNumber", chessService.getRoomNumber());
+        model.addAttribute("roomName",chessService.getRoomName(id));
         model.addAllAttributes(chessService.makeMoveResponse());
         return "chessGame";
     }
@@ -51,7 +53,7 @@ public class ChessController {
     @PostMapping("/playing/move")
     @ResponseBody
     public String move(@RequestBody MoveDto moveDto) {
-        chessService.move(moveDto.getSource(), moveDto.getTarget());
+        chessService.move(moveDto.getRoomNumber(), moveDto.getSource(), moveDto.getTarget());
         return GSON.toJson(chessService.makeMoveResponse());
     }
 }

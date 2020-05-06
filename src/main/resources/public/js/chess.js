@@ -2,6 +2,7 @@ let source = null;
 let target = null;
 
 const tiles = document.getElementsByClassName("tile");
+const roomNumber = document.querySelector("#roomNumber").value;
 for (i = 0; i < tiles.length; i++) {
     tiles.item(i).addEventListener("click", function () {
         changeOpacity(this);
@@ -21,14 +22,17 @@ function checkSourceOrTarget(clickedPosition) {
     }
     if (target == null) {
         target = clickedPosition;
-        move(source, target);
+        move(source, target, roomNumber);
     }
 }
 
-function move(source, target) {
+function move(source, target, roomNumber) {
+    console.log(roomNumber);
+
     let moveDto = {
-        "source": source.id,
-        "target": target.id
+        roomNumber : roomNumber,
+        source: source.id,
+        target: target.id
     };
 
     const moveInformation = {
@@ -56,7 +60,7 @@ function move(source, target) {
             let currentTeamScore = response.body.currentTeamScore;
             let winner = response.body.winner;
             if (winner != null) {
-                alert(winner + "팀이 이겼습니다.");
+                alert(winner + "팀이 이겼습니다!");
                 initialize(source, target);
                 window.location = "http://localhost:8080/start";
                 return;

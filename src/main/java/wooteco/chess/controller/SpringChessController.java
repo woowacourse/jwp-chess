@@ -25,7 +25,7 @@ public class SpringChessController {
 
 	@GetMapping("/")
 	public String index(Model model) {
-		model.addAttribute("gameNames", chessService.showAllGames());
+        model.addAttribute("games", chessService.showAllGames());
 		return "index";
 	}
 
@@ -93,4 +93,5 @@ public class SpringChessController {
 		model.addAttribute("status", chessStatusDtos.getChessStatusDtos());
 		return "result";
 	}
+
 }

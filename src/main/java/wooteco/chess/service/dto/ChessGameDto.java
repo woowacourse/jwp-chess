@@ -1,8 +1,8 @@
 package wooteco.chess.service.dto;
 
-import wooteco.chess.domain.chessGame.ChessGame;
-
 import java.util.Objects;
+
+import wooteco.chess.domain.chessGame.ChessGame;
 
 public class ChessGameDto {
 
@@ -23,17 +23,17 @@ public class ChessGameDto {
 		this.isKingCaught = isKingCaught;
 	}
 
-	public static ChessGameDto of(final Long id, final ChessGame chessGame) {
-		Objects.requireNonNull(chessGame, "체스 게임이 null입니다.");
+    public static ChessGameDto of(final Long id, final ChessGame chessGame) {
+        Objects.requireNonNull(chessGame, "체스 게임이 null입니다.");
 
-		final ChessBoardDto chessBoardDto = ChessBoardDto.of(chessGame.getChessBoard());
-		final PieceColorDto pieceColorDto = PieceColorDto.of(chessGame.getCurrentPieceColor());
-		final ChessStatusDtos chessStatusDtos = ChessStatusDtos.of(chessGame.getChessGameStatus());
-		final boolean isEndStatus = chessGame.isEndState();
-		final boolean isKingCaught = chessGame.isKingCaught();
+        final ChessBoardDto chessBoardDto = ChessBoardDto.of(chessGame.getChessBoard());
+        final PieceColorDto pieceColorDto = PieceColorDto.of(chessGame.getCurrentPieceColor());
+        final ChessStatusDtos chessStatusDtos = ChessStatusDtos.of(chessGame.getChessGameStatus());
+        final boolean isEndStatus = chessGame.isEndState();
+        final boolean isKingCaught = chessGame.isKingCaught();
 
-		return new ChessGameDto(id, chessBoardDto, pieceColorDto, chessStatusDtos, isEndStatus, isKingCaught);
-	}
+        return new ChessGameDto(id, chessBoardDto, pieceColorDto, chessStatusDtos, isEndStatus, isKingCaught);
+    }
 
 	public Long getId() {
 		return id;

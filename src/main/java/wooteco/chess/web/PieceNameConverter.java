@@ -17,7 +17,7 @@ public enum PieceNameConverter {
 	BLACK_PAWN("P", "black-pawn"),
 	WHITE_PAWN("p", "white-pawn");
 
-	private static final String IMAGE_SOURCE_FORMAT = "<img class=\"chessboard\" src=\"./images/%s.png\">";
+	private static final String IMAGE_SOURCE_FORMAT = "<img class=\"chessboard\" src=\"/images/%s.png\">";
 
 	private final String chessPieceName;
 	private final String imageFileName;

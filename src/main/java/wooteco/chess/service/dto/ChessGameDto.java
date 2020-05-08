@@ -1,8 +1,8 @@
 package wooteco.chess.service.dto;
 
-import wooteco.chess.domain.chessGame.ChessGame;
-
 import java.util.Objects;
+
+import wooteco.chess.domain.chessGame.ChessGame;
 
 public class ChessGameDto {
 
@@ -23,7 +23,6 @@ public class ChessGameDto {
 		this.isKingCaught = isKingCaught;
 	}
 
-    // NOTE: 2020/04/28 DTO가 관리해야하는 필드의 종류
     public static ChessGameDto of(final Long id, final ChessGame chessGame) {
         Objects.requireNonNull(chessGame, "체스 게임이 null입니다.");
 

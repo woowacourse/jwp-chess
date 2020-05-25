@@ -7,20 +7,22 @@ const $createForm = document.querySelector(`#create-form`);
 window.onload = async function () {
 	await getRooms();
 
-	const $rooms = document.querySelectorAll(`.room`);
-	$rooms.forEach(room => room.addEventListener('click', onRoomClick));
+	const $roomContainer = document.querySelector(`#room-container`);
+	$roomContainer.addEventListener('click', onRoomClick);
 
 	$createBtn.addEventListener('click', onCreateBtnClick);
 }
 
 function onCreateBtnClick(e) {
 	let roomName = prompt('방 이름을 입력해주세요.');
-	$createInput.setAttribute('value', roomName);
-	$createForm.submit();
+	if (roomName) {
+		$createInput.setAttribute('value', roomName);
+		$createForm.submit();
+	}
 }
 
 function onRoomClick(e) {
-	if (e.target && e.target.nodeName === 'DIV') {
+	if (e.target && e.target.className === 'room') {
 		const roomName = e.target.innerText;
 		location.href = `/room/${roomName}`;
 	}

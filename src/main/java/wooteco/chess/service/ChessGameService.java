@@ -53,11 +53,7 @@ public class ChessGameService {
 	public ChessGameDto create(String roomName) {
 		validateDuplicated(roomName);
 		ChessGame chessGame = ChessGame.start();
-		roomRepository.save(
-				new Room(roomName,
-						BoardConverter.convertToString(chessGame.getBoard()),
-						chessGame.getTurn(),
-						FinishFlag.of(chessGame.isEnd()).getSymbol()));
+		roomRepository.save(new Room(roomName, chessGame));
 		return ChessGameDto.of(roomName, chessGame);
 	}
 

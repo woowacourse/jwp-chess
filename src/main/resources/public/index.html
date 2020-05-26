@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<link href="/index.css" rel="stylesheet" type="text/css">
+	<title>체스</title>
+</head>
+<body>
+<div class="container">
+	<div class="room-container">
+		<div class="room"></div>
+	</div>
+	<div class="side">
+		<button id="create-btn">방 만들기</button>
+		<form id="create-form" action="/room/create" method="post">
+			<input id="create-input" type="hidden" name="name">
+		</form>
+	</div>
+</div>
+<script src="/index.js"></script>
+</body>
+</html>

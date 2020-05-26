@@ -1,48 +1,61 @@
-const BLANK_IMAGE = `<img class="piece-image" src="/img/BLANK.png">`;
-let source;
-let target;
+const $board = document.querySelector('.board');
+const $roomName = document.querySelector('#room-name');
+
+let $sourceDiv;
+let $targetDiv;
+let sourceId;
+let targetId;
+let tempColor;
+let pickFlag = false;
 
 window.onload = function () {
-  const elements = document.querySelectorAll(".cell");
-  [].forEach.call(elements, (elem) => {
-    elem.addEventListener("click", (ev) => {
-      if (source === undefined) {
-        source = elem.id;
-      } else {
-        target = elem.id;
+	$board.addEventListener('click', onClickBoard)
+}
 
-        fetch("/api/move", {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            roomName: document.getElementById('room-name').innerText,
-            source: source,
-            target: target
-          })
-        }).then(async res => {
-          if (res.status !== 200) {
-            source = undefined;
-          } else {
-            renderMovedPiece();
-            renderChangedTurn(await res.json());
-          }
-        })
-      }
-    })
-  })
+async function onClickBoard(e) {
+	if (e.target && e.target.nodeName === 'IMG') {
+		if (!pickFlag) {
+			$sourceDiv = e.target.closest('div');
+			sourceId = $sourceDiv.id;
+
+			tempColor = $sourceDiv.style.backgroundColor;
+			$sourceDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+			pickFlag = !pickFlag;
+		} else {
+			$targetDiv = e.target.closest('div');
+			targetId = $targetDiv.id;
+
+			const movedInfo = await getMovedInfo();
+			renderMovedPiece();
+			renderChangedTurn(movedInfo.turn);
+
+			$sourceDiv.style.backgroundColor = tempColor;
+			pickFlag = !pickFlag;
+		}
+	}
+}
+
+function getMovedInfo() {
+	return fetch('/api/move', {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			roomName: $roomName.innerText,
+			source: sourceId,
+			target: targetId
+		})
+	}).then(res => res.json());
 }
 
 function renderMovedPiece() {
-  const sourceElem = document.querySelector(`#${source}`);
-  const targetElem = document.querySelector(`#${target}`);
-  const tempElem = sourceElem.innerHTML;
-  sourceElem.innerHTML = BLANK_IMAGE;
-  targetElem.innerHTML = tempElem;
+	[$sourceDiv.innerHTML, $targetDiv.innerHTML] = [$targetDiv.innerHTML, $sourceDiv.innerHTML]; // swap
 }
 
-function renderChangedTurn(data) {
-  const turn = document.querySelector(`#turn`);
-  turn.innerText = data.turn;
+function renderChangedTurn(turn) {
+	const $turn = document.querySelector(`#turn`);
+	if (turn) {
+		$turn.innerText = turn;
+	}
 }

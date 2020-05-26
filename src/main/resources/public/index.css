@@ -1,24 +1,36 @@
 body {
-    margin: 0;
+	margin: 0;
 }
 
 .container {
-    width: 100vw;
-    height: 90vh;
-    margin: 5vh 0;
+	width: 100vw;
+	height: 90vh;
+	margin: 5vh 0;
 }
 
 .room-container {
-    display: inline-block;
-    width: calc(70vw - 44px);
-    height: 100%;
-    margin: 0 20px;
+	display: inline-block;
+	width: calc(70vw - 44px);
+	height: 100%;
+	margin: 0 20px;
+}
+
+.room {
+	display: inline-block;
+	width: 22%;
+	height: 10%;
+	margin: 0 10px 20px;
+	font-size: 1.2em;
+	text-align: center;
+	line-height: 75px;
+	background-color: lightyellow;
+	cursor: pointer;
 }
 
 .side {
-    display: inline-block;
-    width: calc(30vw - 45px);
-    height: 100%;
-    margin: 0 20px;
-    vertical-align: top;
+	display: inline-block;
+	width: calc(30vw - 45px);
+	height: 100%;
+	margin: 0 20px;
+	vertical-align: top;
 }

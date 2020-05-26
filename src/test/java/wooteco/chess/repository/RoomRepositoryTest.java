@@ -65,12 +65,12 @@ public class RoomRepositoryTest {
 	@Test
 	public void update() {
 		Room savedRoom = roomRepository.save(new Room(NAME, board, turn, finishFlag));
-		savedRoom.update(board, turn, finishFlag);
+		savedRoom.update(board, Side.BLACK, finishFlag);
 		Room updatedRoom = roomRepository.save(savedRoom);
 
 		Room persistRoom = roomRepository.findByRoomName(updatedRoom.getRoomName()).orElseThrow(RuntimeException::new);
 
-		assertThat(persistRoom.getRoomName()).isEqualTo(NEW_NAME);
+		assertThat(persistRoom.getTurn()).isEqualTo(Side.BLACK);
 	}
 
 	@DisplayName("방 이름으로 조회")

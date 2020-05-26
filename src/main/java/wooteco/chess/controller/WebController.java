@@ -1,23 +1,22 @@
 package wooteco.chess.controller;
 
-import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-import wooteco.chess.dto.ChessGameDto;
 import wooteco.chess.dto.PieceMoveDto;
 import wooteco.chess.dto.RoomNameDto;
 import wooteco.chess.repository.Room;
 import wooteco.chess.service.ChessGameService;
 
-@RestController
+@Controller
 public class WebController {
 	private final ChessGameService chessGameService;
 
@@ -26,8 +25,8 @@ public class WebController {
 	}
 
 	@GetMapping("/")
-	public ModelAndView index() {
-		return new ModelAndView("index");
+	public String index() {
+		return "index.html";
 	}
 
 	@GetMapping("/api/rooms")
@@ -36,22 +35,16 @@ public class WebController {
 		return chessGameService.findAllRooms();
 	}
 
-	@PostMapping("/join")
-	public ModelAndView joinRoom(
-			@RequestParam String name) {
-		ModelAndView modelAndView = new ModelAndView("chess");
-		ChessGameDto chessGameDto = chessGameService.load(name);
-		modelAndView.addObject("chessGame", chessGameDto);
-		return modelAndView;
+	@GetMapping("/room/{roomName}")
+	public String joinRoom(@PathVariable String roomName, Model model) {
+		model.addAttribute("chessGame", chessGameService.load(roomName));
+		return "chess";
 	}
 
-	@PostMapping("/create")
-	public ModelAndView createRoom(
-			@RequestParam String name) {
-		ModelAndView modelAndView = new ModelAndView("chess");
-		ChessGameDto chessGameDto = chessGameService.create(name);
-		modelAndView.addObject("chessGame", chessGameDto);
-		return modelAndView;
+	@PostMapping("/room/create")
+	public String createRoom(@RequestParam String name, Model model) {
+		model.addAttribute("chessGame", chessGameService.create(name));
+		return "chess";
 	}
 
 	@PostMapping("/api/move")
@@ -60,12 +53,9 @@ public class WebController {
 		return chessGameService.move(pieceMoveDto);
 	}
 
-	@PostMapping("/restart")
-	public ModelAndView restart(
-			@RequestParam String name) throws SQLException {
-		ModelAndView modelAndView = new ModelAndView("chess");
-		ChessGameDto chessGameDto = chessGameService.restart(name);
-		modelAndView.addObject("chessGame", chessGameDto);
-		return modelAndView;
+	@PostMapping("/room/restart")
+	public String restart(@RequestParam String name, Model model) {
+		model.addAttribute("chessGame", chessGameService.restart(name));
+		return "chess";
 	}
 }

@@ -3,15 +3,14 @@ package spring.controller;
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.*;
 import spark.ModelAndView;
-import spark.dto.LocationDto;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+import spring.dto.LocationDto;
 import spring.service.ChessService;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO : Controller 분리 기준 알아보자.
 @RestController
 public class SpringChessController {
     private static final HandlebarsTemplateEngine handlebarsTemplateEngine = new HandlebarsTemplateEngine();
@@ -19,7 +18,6 @@ public class SpringChessController {
 
     private final ChessService chessService;
 
-    // TODO : 생성자 주입이 더 나은 이유`
     public SpringChessController(ChessService chessService) {
         this.chessService = chessService;
     }
@@ -27,25 +25,26 @@ public class SpringChessController {
     @GetMapping("/")
     public String main() {
         Map<String, Object> model = new HashMap<>();
+        model.put("games", chessService.findAllGame());
         return render(model, "start.html");
     }
 
-    @GetMapping("/start")
-    public String start() {
+    @GetMapping("/index/{game_id}")
+    public String start(@PathVariable(name = "game_id") Long gameId) {
         Map<String, Object> model = new HashMap<>();
-        // 받았다.
-        // game_id, 혹은 select할 수있는 뭔가;
+        model.put("game_id", gameId);
         return render(model, "index.html");
     }
 
-    @GetMapping("/api/resume")
-    public String resume() throws SQLException {
-        return GSON.toJson(chessService.resumeGame());
+    @GetMapping("/api/game/{game_id}")
+    public String load(@PathVariable(name = "game_id") Long gameId) throws SQLException {
+        return GSON.toJson(chessService.resumeGame(gameId));
     }
 
     @PostMapping("/api/game")
-    public String starts() {
-        return new Gson().toJson(chessService.makeChessBoard());
+    public String starts(@RequestParam(name = "game_name") String gameName) {
+        System.out.println("game name : " + gameName);
+        return GSON.toJson(chessService.makeChessBoard(gameName));
     }
 
     @PutMapping("/api/piece")

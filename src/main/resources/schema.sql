@@ -12,6 +12,7 @@ create table if not exists chessgame2
 (
     id            int auto_increment,
     turn_is_black boolean not null,
+    game_name varchar(244) not null,
     primary key (id)
 );
 

@@ -42,13 +42,20 @@ img {
     color: #fff;
 }
 
-#game {
+.game {
     max-width: 504px;
     max-height: 504px;
     width: 100%;
     height: 100%;
     position: relative;
     margin: 20px auto;
+    text-align: center;
+}
+
+.board {
+    display: none;
+    width: auto;
+    height: auto;
 }
 
 .board {
@@ -325,4 +332,14 @@ img {
 
 #game_id {
     display: none;
+}
+
+.games {
+    width: 504px;
+    height: 100%;
+    border: solid 1px;
+}
+
+th, td {
+    border: solid 1px;
 }

@@ -7,37 +7,33 @@ import chess.location.Location;
 import chess.progress.Progress;
 import chess.team.Team;
 import org.springframework.stereotype.Service;
-import spark.dto.LocationDto;
-import spring.dto.ChessGameDto;
-import spring.dto.ChessGameScoresDto;
-import spring.dto.ChessMoveDto;
-import spring.dto.ChessResultDto;
+import spring.dto.*;
 import spring.entity.ChessGameEntity;
 import spring.entity.repository.ChessGameRepository;
-import spring.entity.repository.PieceRepository;
+import spring.vo.ChessGameVo;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ChessService {
+    private final ChessGameRepository chessGameRepository;
 
-    private PieceRepository pieceRepository;
-    private ChessGameRepository chessGameRepository;
-
-    public ChessService(PieceRepository pieceRepository, ChessGameRepository chessGameRepository) {
-        this.pieceRepository = pieceRepository;
+    public ChessService(ChessGameRepository chessGameRepository) {
         this.chessGameRepository = chessGameRepository;
     }
 
-    public ChessGameDto makeChessBoard() {
+    public ChessGameIdDto makeChessBoard(String gameName) {
         ChessGame chessGame = new ChessGame(ChessBoardCreater.create(), Team.WHITE);
 
-        ChessGameEntity save = chessGameRepository.save(chessGame.toEntity());
+        ChessGameEntity chessGameEntity = chessGame.toEntity();
 
-        ChessGame savedChessGame = save.toChessGame();
+        chessGameEntity.setGameName(gameName);
+        // TODO : Save 확인 로직 필요!
+        ChessGameEntity save = chessGameRepository.save(chessGameEntity);
 
-        return new ChessGameDto(savedChessGame);
+        return new ChessGameIdDto(save.getId());
     }
 
     public ChessMoveDto move(long gameId, LocationDto nowDto, LocationDto destinationDto) throws SQLException {
@@ -62,14 +58,13 @@ public class ChessService {
     private void saveChessGameIfProgressIsNotEnd(ChessGameEntity chessGameEntity, ChessGame chessGame, Progress progress) {
         if (!progress.isError()) {
             chessGame.changeTurn();
-            ChessGameEntity targetChessGameEntity = chessGame.toEntity();
-            targetChessGameEntity.setId(chessGameEntity.getId());
+            ChessGameEntity targetChessGameEntity = chessGame.toEntity(chessGameEntity.getId(), chessGameEntity.getGameName());
             chessGameRepository.save(targetChessGameEntity);
         }
     }
 
-    public ChessGameDto resumeGame() throws SQLException {
-        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(1L);
+    public ChessGameDto resumeGame(Long gameId) throws SQLException {
+        Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(gameId);
 
         ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(
                 () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
@@ -87,13 +82,19 @@ public class ChessService {
         return new ChessResultDto(chessGame.findWinner());
     }
 
+    // deleteById 는 믿을 수 없다. 존재하지 않는 row를 삭제해도 에러를 띄우지 않는다.
     public void endGame(Long gameId) throws SQLException {
-        // deleteById 는 믿을 수 없다. 존재하지 않는 row를 삭제해도 에러를 띄우지 않는다.
         Optional<ChessGameEntity> optionalChessGameEntity = chessGameRepository.findById(gameId);
 
         ChessGameEntity chessGameEntity = optionalChessGameEntity.orElseThrow(
                 () -> new SQLException("game id에 맞는 데이터가 존재하지 않습니다."));
 
         chessGameRepository.delete(chessGameEntity);
+    }
+
+    public List<ChessGameVo> findAllGame() {
+        List<ChessGameEntity> chessGameEntities = chessGameRepository.findAll();
+
+        return new ChessGamesDto(chessGameEntities).getGames();
     }
 }

@@ -19,6 +19,7 @@ build/
 *.iws
 *.iml
 *.ipr
+<<<<<<< HEAD
 out/
 
 ### NetBeans ###
@@ -33,3 +34,6 @@ out/
 
 ### DOCKER ###
 /docker/db/
+=======
+/src/main/node_modules/
+>>>>>>> 10c09156... feat: Dao 생성

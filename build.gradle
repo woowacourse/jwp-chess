@@ -4,9 +4,14 @@ plugins {
     id 'java'
 }
 
+<<<<<<< HEAD
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+=======
+version = '1.0.0'
+sourceCompatibility = 9
+>>>>>>> 94e4ad4f... chore: Java9로 버전업
 
 repositories {
     mavenCentral()

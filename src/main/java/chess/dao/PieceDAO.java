@@ -2,6 +2,7 @@ package chess.dao;
 
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class PieceDAO {
 
     private final ConnectionFactory factory;

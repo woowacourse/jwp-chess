@@ -13,10 +13,13 @@ import chess.exception.NotFoundPlayingChessGameException;
 import chess.view.dto.ChessGameDto;
 import chess.view.dto.ChessGameStatusDto;
 import chess.view.dto.ScoreDto;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ChessGameService {
     private final ChessGameDAO chessGameDAO;
     private final PieceDAO pieceDAO;
@@ -26,6 +29,7 @@ public class ChessGameService {
         this.pieceDAO = pieceDAO;
     }
 
+    @Transactional
     public ChessGameDto createNewChessGame() {
         Optional<ChessGameEntity> latestChessGame = chessGameDAO.findByStateIsBlackTurnOrWhiteTurn();
         if (latestChessGame.isPresent()) {
@@ -40,6 +44,7 @@ public class ChessGameService {
         return new ChessGameDto(chessGame);
     }
 
+    @Transactional
     public ChessGameDto moveChessPiece(final Position source, final Position target) {
         ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
         Long chessGameId = chessGameEntity.getId();
@@ -57,6 +62,7 @@ public class ChessGameService {
         return new ChessGameDto(chessGame);
     }
 
+    @Transactional(readOnly = true)
     public ChessGameStatusDto findLatestChessGameStatus() {
         return chessGameDAO.findIsExistPlayingChessGameStatus();
     }
@@ -67,6 +73,7 @@ public class ChessGameService {
         return new ChessGameDto(chessGame);
     }
 
+    @Transactional
     public ChessGameDto endGame() {
         ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
@@ -76,6 +83,7 @@ public class ChessGameService {
         return new ChessGameDto(chessGame);
     }
 
+    @Transactional(readOnly = true)
     public ScoreDto calculateScores() {
         ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);

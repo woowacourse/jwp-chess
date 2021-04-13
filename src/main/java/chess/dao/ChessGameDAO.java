@@ -2,10 +2,12 @@ package chess.dao;
 
 import chess.domain.game.ChessGameEntity;
 import chess.view.dto.ChessGameStatusDto;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.Optional;
 
+@Repository
 public class ChessGameDAO {
 
     private final ConnectionFactory factory;

@@ -15,7 +15,7 @@ public class ChessRepository {
         String query = "SELECT * FROM HISTORY";
         try (Connection connection = ConnectionManager.makeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery();) {
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             List<History> histories = new ArrayList<>();
             while (resultSet.next()) {
                 History history = generateHistoryFrom(resultSet);

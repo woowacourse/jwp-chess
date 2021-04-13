@@ -67,6 +67,7 @@ public class ChessGameService {
         return chessGameDAO.findIsExistPlayingChessGameStatus();
     }
 
+    @Transactional(readOnly = true)
     public ChessGameDto findLatestPlayingGame() {
         ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);

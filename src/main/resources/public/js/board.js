@@ -91,7 +91,6 @@ async function onMove(event) {
 
     const source = $position[0].id;
     const target = event.target.closest("div").id;
-
     const chessId = getCookie('chessId');
     const moved = await patchMovePiece(chessId, source, target);
     revertSquareColor($position);
@@ -105,9 +104,17 @@ async function onMove(event) {
     const moveResult = await showChessInfo();
     borderCurrentTurn(moveResult.turn);
     if (moveResult.status.includes("KING_DEAD")) {
-        alert("왕이 죽었습니다. 게임을 종료합니다.");
+        alert(`왕이 죽었습니다. \n\n ${winner(moveResult.turn)}의 승리! \n\n 게임을 종료합니다.`);
         window.location.href = "/";
     }
+}
+
+function winner(turn) {
+    if (turn === 'WHITE') {
+        return 'BLACK';
+    }
+
+    return 'WHITE';
 }
 
 async function patchMovePiece(chessId, source, target) {

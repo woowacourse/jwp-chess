@@ -1,5 +1,7 @@
 package chess.controller;
 
+import chess.domain.command.Commands;
+import chess.domain.vo.MoveVo;
 import chess.service.ChessService;
 import chess.view.ModelView;
 import com.google.gson.Gson;
@@ -52,5 +54,22 @@ public class SpringController {
     @GetMapping("/end")
     public String endGame() {
         return "play";
+    }
+
+    @PostMapping(path = "/move")
+    @ResponseBody
+    public String move(@RequestBody MoveVo moveVo) {
+        String command = makeMoveCmd(moveVo.getSource(), moveVo.getTarget());
+        String historyId = moveVo.getGameId();
+        try {
+            chessService.move(historyId, command, new Commands(command));
+            return GSON.toJson(ModelView.moveResponse(chessService.continuedGameInfo(historyId), historyId));
+        } catch (IllegalArgumentException | SQLException e) {
+            return e.getMessage();
+        }
+    }
+
+    private String makeMoveCmd(String source, String target) {
+        return String.join(" ", "move", source, target);
     }
 }

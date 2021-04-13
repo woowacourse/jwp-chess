@@ -20,12 +20,15 @@ function move(source, target) {
     $.ajax({
         type: "POST",
         url: '/play/move',
-        data: {
+        headers : {
+            "Accept" : "application/json",
+            "Content-Type" : "application/json"
+        },
+        data: JSON.stringify({
             "source": source.id,
             "target": target.id,
             "gameId": gameId(),
-        },
-        dataType: "json",
+        }),
         success: update,
         error: showError,
         complete: initialize,

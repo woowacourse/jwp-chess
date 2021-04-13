@@ -11,7 +11,7 @@ import static chess.dao.ChessConnection.getConnection;
 import static spark.Spark.port;
 import static spark.Spark.staticFileLocation;
 
-public class WebUIChessApplication {
+public class SparkUIChessApplication {
     public static void main(String[] args) {
         port(8080);
         staticFileLocation("static");

@@ -9,6 +9,8 @@ import chess.domain.dto.CommandDto;
 import chess.domain.dto.GameInfoDto;
 import chess.domain.dto.HistoryDto;
 import chess.domain.utils.PieceInitializer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import spark.utils.StringUtils;
 
 import java.sql.SQLException;
@@ -16,7 +18,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Service
 public class ChessService {
+
     private CommandDao commandDao;
     private HistoryDao historyDao;
 

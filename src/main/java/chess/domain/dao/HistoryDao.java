@@ -1,12 +1,15 @@
 package chess.domain.dao;
 
 import chess.db.DriveManager;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class HistoryDao {
 
     public Optional<String> insert(String name) throws SQLException {

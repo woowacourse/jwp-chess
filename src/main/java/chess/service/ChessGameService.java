@@ -21,6 +21,7 @@ import java.util.Optional;
 
 @Service
 public class ChessGameService {
+
     private final ChessGameDAO chessGameDAO;
     private final PieceDAO pieceDAO;
 

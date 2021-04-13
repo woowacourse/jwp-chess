@@ -24,4 +24,9 @@ public class SpringChessApiController {
         return chessGameService.moveChessPiece(source, target);
     }
 
+    @GetMapping("/chessgames")
+    public ChessGameDto findChessGame() {
+        return chessGameService.findLatestPlayingGame();
+    }
+
 }

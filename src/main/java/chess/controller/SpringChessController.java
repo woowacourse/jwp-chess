@@ -21,4 +21,5 @@ public class SpringChessController {
         model.addAttribute("status", latestGameStatus);
         return "index";
     }
+
 }

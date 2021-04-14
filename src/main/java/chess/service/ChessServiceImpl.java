@@ -12,11 +12,13 @@ import chess.domain.state.State;
 import chess.domain.state.StateFactory;
 import chess.dto.*;
 import chess.repository.ChessRepository;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class ChessServiceImpl implements ChessService {
     private Round round;
 

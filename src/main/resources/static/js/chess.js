@@ -1,4 +1,5 @@
 const jsonFormatChessBoard = document.getElementById('jsonFormatChessBoard');
+console.log(jsonFormatChessBoard)
 const jsonFormatObject = JSON.parse(jsonFormatChessBoard.innerText);
 
 const file = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];

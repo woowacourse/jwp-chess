@@ -4,11 +4,13 @@ import chess.dto.ChessRequestDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.TurnChangeRequestDto;
 import chess.dto.TurnRequestDto;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public interface ChessRepository {
     void initializePieceStatus(final Map<String, String> board) throws SQLException;
 

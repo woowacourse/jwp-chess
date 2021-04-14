@@ -4,11 +4,13 @@ import chess.domain.piece.Piece;
 import chess.domain.player.Round;
 import chess.domain.position.Position;
 import chess.dto.*;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Queue;
 
+@Service
 public interface ChessService {
     Round makeRound();
 

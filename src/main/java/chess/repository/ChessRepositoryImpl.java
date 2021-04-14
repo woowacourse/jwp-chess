@@ -6,10 +6,13 @@ import chess.dto.ChessRequestDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.TurnChangeRequestDto;
 import chess.dto.TurnRequestDto;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class ChessRepositoryImpl implements ChessRepository {
     private final PieceDao pieceDao;
     private final TurnDao turnDao;

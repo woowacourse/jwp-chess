@@ -37,4 +37,10 @@ public class SpringChessApiController {
         return ResponseEntity.ok(newChessGame);
     }
 
+    @DeleteMapping("/chessgames")
+    public ResponseEntity<ChessGameDto> endChessGame() {
+        ChessGameDto chessGameDto = chessGameService.endGame();
+        return ResponseEntity.ok(chessGameDto);
+    }
+
 }

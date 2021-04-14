@@ -1,5 +1,6 @@
 package chess.domain.piece;
 
+import chess.domain.piece.direction.MoveStrategies;
 import chess.domain.position.Position;
 
 public final class Knight extends GeneralPiece {
@@ -10,4 +11,8 @@ public final class Knight extends GeneralPiece {
         super(color, INITIAL_NAME, position);
     }
 
+    @Override
+    protected MoveStrategies assignMoveStrategies() {
+        return MoveStrategies.knightMoveStrategies();
+    }
 }

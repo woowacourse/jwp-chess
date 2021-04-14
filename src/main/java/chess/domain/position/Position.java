@@ -1,20 +1,20 @@
 package chess.domain.position;
 
 public class Position {
-    private final Rank rank;
     private final File file;
+    private final Rank rank;
 
     public Position(final String rank, final String file) {
-        this(Rank.from(rank).orElseThrow(() -> new IllegalArgumentException("해당하는 Rank 위치를 찾을 수 없습니다.")),
-                File.from(file).orElseThrow(() -> new IllegalArgumentException("해당하는 File 위치를 찾을 수 없습니다.")));
+        this(File.from(file).orElseThrow(() -> new IllegalArgumentException("해당하는 File 위치를 찾을 수 없습니다.")),
+                Rank.from(rank).orElseThrow(() -> new IllegalArgumentException("해당하는 Rank 위치를 찾을 수 없습니다.")));
     }
 
-    public Position(final Rank rank, final File file) {
-        this.rank = rank;
+    public Position(final File file, final Rank rank) {
         this.file = file;
+        this.rank = rank;
     }
 
     public String position() {
-        return rank.symbol() + file.symbol();
+        return file.symbol() + rank.symbol();
     }
 }

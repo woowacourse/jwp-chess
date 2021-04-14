@@ -43,7 +43,7 @@ public class PieceSpringDAO {
                 query,
                 (rs, rowNum) -> {
                     List<PieceDto> pieces = new ArrayList<>();
-                    while (rs.next()) {
+                    do {
                         pieces.add(new PieceDto(
                                 rs.getLong(1),
                                 rs.getBoolean(2),
@@ -51,7 +51,7 @@ public class PieceSpringDAO {
                                 rs.getLong(4),
                                 rs.getString(5)
                         ));
-                    }
+                    } while(rs.next());
                     return pieces;
                 },
                 gridId);

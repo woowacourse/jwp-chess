@@ -2,7 +2,11 @@ package chess.controller;
 
 import chess.domain.ChessGame;
 import chess.domain.Rooms;
+import chess.domain.Team;
 import chess.dto.CreateRoomRequestDTO;
+import chess.dto.PiecesDTO;
+import chess.dto.RoomIdDTO;
+import chess.dto.UsersDTO;
 import chess.service.LogService;
 import chess.service.ResultService;
 import chess.service.RoomService;
@@ -12,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public final class SpringChessGameController {
@@ -60,4 +65,29 @@ public final class SpringChessGameController {
         }
         return "chess";
     }
+
+    @PostMapping(path = "/start")
+    private String startGame(@ModelAttribute RoomIdDTO roomIdDTO, Model model) {
+        ChessGame chessGame = new ChessGame();
+        chessGame.initialize();
+        String roomId = roomIdDTO.getRoomId();
+        rooms.addRoom(roomId, chessGame);
+        logService.initializeByRoomId(roomId);
+        UsersDTO users = userService.usersParticipatedInGame(roomId);
+        gameInformation(rooms.loadGameByRoomId(roomId), model, roomId, users);
+        return "chess";
+    }
+
+    private void gameInformation(final ChessGame chessGame, final Model model,
+                                 final String roomId, final UsersDTO users) {
+        PiecesDTO piecesDTOs = PiecesDTO.create(chessGame.board());
+        model.addAttribute("pieces", piecesDTOs.toList());
+        model.addAttribute("button", "초기화");
+        model.addAttribute("isWhite", Team.WHITE.equals(chessGame.turn()));
+        model.addAttribute("black-score", chessGame.scoreByTeam(Team.BLACK));
+        model.addAttribute("white-score", chessGame.scoreByTeam(Team.WHITE));
+        model.addAttribute("number", roomId);
+        model.addAttribute("users", users);
+    }
+
 }

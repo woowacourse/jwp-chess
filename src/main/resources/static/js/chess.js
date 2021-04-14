@@ -16,10 +16,10 @@ $(".grid-item").click(function (event) {
 function turnCheck(clickedSection) {
     $.ajax({
         url: "/myTurn",
-        data: {
+        data: JSON.stringify({
             roomId: roomId,
             clickedSection: clickedSection
-        },
+        }),
         method: "POST",
         dataType: "json"
     }).done(function (turn) {
@@ -33,7 +33,6 @@ function turnCheck(clickedSection) {
         const errorMessage = response.responseText;
         location.href = "/error?error=" + errorMessage;
     });
-    ;
 }
 
 function getMovablePosition(clickedSection, turn) {

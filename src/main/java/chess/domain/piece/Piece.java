@@ -5,26 +5,21 @@ import chess.domain.piece.movement.Direction;
 import chess.domain.piece.movement.Distance;
 
 import java.util.List;
-import java.util.Objects;
 
 public abstract class Piece {
     private final Owner owner;
     private final List<Direction> ableDirections;
     private final Score score;
     private final Distance ableDistance;
-    private final Symbol symbol;
 
     public Piece(final Owner owner,
                  final Score score,
                  final List<Direction> directions,
-                 final Distance distance,
-                 final Symbol symbol) {
-
+                 final Distance distance){
         this.owner = owner;
         this.score = score;
         this.ableDirections = directions;
         this.ableDistance = distance;
-        this.symbol = symbol;
     }
 
     public final Score score() {
@@ -61,22 +56,5 @@ public abstract class Piece {
 
     public boolean isBlack() {
         return owner.isBlack();
-    }
-
-    public Symbol symbol() {
-        return symbol;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Piece piece = (Piece) o;
-        return owner == piece.owner && symbol == piece.symbol;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(owner, symbol);
     }
 }

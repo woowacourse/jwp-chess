@@ -1,9 +1,8 @@
-package chess.view;
+package chess.domain.piece;
 
 import chess.domain.board.position.Horizontal;
 import chess.domain.board.position.Position;
 import chess.domain.board.position.Vertical;
-import chess.domain.piece.*;
 
 import java.util.Arrays;
 import java.util.Map;

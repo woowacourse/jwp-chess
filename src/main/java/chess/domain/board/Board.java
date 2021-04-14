@@ -6,9 +6,9 @@ import chess.domain.board.position.Vertical;
 import chess.domain.piece.Empty;
 import chess.domain.piece.Owner;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceSymbolMapper;
 import chess.domain.piece.movement.Direction;
 import chess.domain.piece.movement.Distance;
-import chess.view.PieceSymbolMapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

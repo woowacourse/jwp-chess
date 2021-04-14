@@ -6,8 +6,8 @@ import chess.domain.board.position.Horizontal;
 import chess.domain.board.position.Position;
 import chess.domain.board.position.Vertical;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceSymbolMapper;
 import chess.domain.player.Turn;
-import chess.view.PieceSymbolMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

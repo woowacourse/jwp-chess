@@ -4,7 +4,6 @@ import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
 import chess.domain.piece.Team;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 

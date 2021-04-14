@@ -2,7 +2,6 @@ package chess.domain.dao;
 
 import chess.db.DriveManager;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -2,9 +2,7 @@ package chess.domain.dao;
 
 import chess.db.DriveManager;
 import chess.domain.dto.CommandDto;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -27,7 +27,7 @@ public class HistoryRepository {
         return Optional.ofNullable(jdbcTemplate.queryForObject(query, Integer.class, name));
     }
 
-    public int delete(String name){
+    public int delete(String name) {
         final String query = "DELETE FROM History WHERE Name = ?";
         return jdbcTemplate.update(query, name);
     }

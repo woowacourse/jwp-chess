@@ -20,9 +20,9 @@ function move(source, target) {
     $.ajax({
         type: "POST",
         url: '/play/move',
-        headers : {
-            "Accept" : "application/json",
-            "Content-Type" : "application/json"
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
         },
         data: JSON.stringify({
             "source": source.id,

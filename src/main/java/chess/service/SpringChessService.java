@@ -10,8 +10,6 @@ import chess.domain.piece.Piece;
 import chess.repository.SpringChessDAO;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
-
 @Service
 public class SpringChessService {
     private final SpringChessDAO springChessDAO;
@@ -20,14 +18,14 @@ public class SpringChessService {
         this.springChessDAO = springChessDAO;
     }
 
-    public BoardDTO initiateBoard(ChessGame chessGame) throws SQLException {
+    public BoardDTO initiateBoard(ChessGame chessGame) {
         springChessDAO.resetTurnOwner(chessGame.getTurnOwner());
         chessGame.settingBoard();
         springChessDAO.resetBoard(chessGame.getBoard());
         return BoardDTO.of(chessGame.getBoard());
     }
 
-    public BoardDTO getSavedBoardInfo(ChessGame chessGame) throws SQLException {
+    public BoardDTO getSavedBoardInfo(ChessGame chessGame) {
         BoardDTO boardDTO = springChessDAO.getSavedBoardInfo();
         TurnDTO turnDTO = springChessDAO.getSavedTurnOwner();
 
@@ -35,7 +33,7 @@ public class SpringChessService {
         return boardDTO;
     }
 
-    public BoardDTO move(ChessGame chessGame, MoveInfoDTO moveInfoDTO) throws SQLException {
+    public BoardDTO move(ChessGame chessGame, MoveInfoDTO moveInfoDTO) {
         Board board = chessGame.getBoard();
         Position target = Position.convertStringToPosition(moveInfoDTO.getTarget());
 

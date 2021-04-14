@@ -9,7 +9,6 @@ import chess.domain.piece.Team;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class SpringChessDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public BoardDTO getSavedBoardInfo() throws SQLException {
+    public BoardDTO getSavedBoardInfo() {
         String sql = "select position, piece from board;";
         List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
         Map<String, String> boardInfo = new HashMap<>();
@@ -36,7 +35,7 @@ public class SpringChessDAO {
         return BoardDTO.of(boardInfo);
     }
 
-    public TurnDTO getSavedTurnOwner() throws SQLException {
+    public TurnDTO getSavedTurnOwner() {
         String sql = "select * from turn;";
         String turnOwner = jdbcTemplate.queryForObject(sql, String.class);
         return TurnDTO.of(turnOwner);

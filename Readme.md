@@ -2,11 +2,11 @@
 
 ## 기능 구현 목록
 - [x] 메인 페이지(index.html) Spark -> Spring
-- [ ] /move POST
-- [ ] /grid/:roomName GET
-- [ ] /grid/:gridId/start POST
-- [ ] /grid/:gridId/finish POST
-- [ ] /room/:roomId/restart GET
+- [x] /move POST
+- [x] /grid/:roomName GET
+- [x] /grid/:gridId/start POST
+- [x] /grid/:gridId/finish POST
+- [x] /room/:roomId/restart GET
 
 ### JDBC
 - [ ] Spring 내부 DB를 사용하도록 구현 

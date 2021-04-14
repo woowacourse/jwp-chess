@@ -24,4 +24,16 @@ public class Response {
         this.message = message;
         this.data = data;
     }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public ResponseDto getData() {
+        return data;
+    }
 }

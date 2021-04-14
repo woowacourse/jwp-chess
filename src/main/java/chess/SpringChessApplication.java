@@ -1,21 +1,32 @@
 package chess;
 
 import chess.dto.requestdto.MoveRequestDto;
+import chess.dto.requestdto.StartRequestDto;
+import chess.dto.response.Response;
+import chess.dto.response.ResponseCode;
+import chess.dto.responsedto.GridAndPiecesResponseDto;
 import chess.dto.responsedto.TestDto;
+import chess.service.ChessService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.swing.text.html.HTML;
+import java.sql.SQLException;
 
 @SpringBootApplication
 @RestController
 public class SpringChessApplication {
+	private ChessService chessService = new ChessService();
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringChessApplication.class, args);
@@ -28,13 +39,37 @@ public class SpringChessApplication {
 		return modelAndView;
 	}
 
-	// post("/move", (req, res) -> {
-	//            MoveRequestDto moveRequestDto = GSON.fromJson(req.body(), MoveRequestDto.class);
-	//            res.status(OK);
-	//            return chessService.move(moveRequestDto);
-	//        }, GSON::toJson);
 	@PostMapping("/move")
-	public MoveRequestDto move(@RequestBody MoveRequestDto moveRequestDto) {
-		return moveRequestDto;
+	public Response move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
+		return chessService.move(moveRequestDto);
+	}
+
+	@GetMapping("/grid/{roomName}")
+	public Response getRoom(@PathVariable("roomName") String roomName) throws SQLException {
+		StartRequestDto startRequestDto = new StartRequestDto(roomName);
+		GridAndPiecesResponseDto gridAndPiecesResponseDto = chessService.getGridAndPieces(startRequestDto);
+		return new Response(ResponseCode.OK, gridAndPiecesResponseDto);
+	}
+
+	@PostMapping("/grid/{gridId}/start")
+	public Response start(@PathVariable("gridId") String gridId) throws SQLException {
+		chessService.start(Long.parseLong(gridId));
+		return new Response(ResponseCode.NO_CONTENT);
+	}
+
+	@PostMapping("/grid/{gridId}/finish")
+	public Response finish(@PathVariable("gridId") String gridId) throws SQLException {
+		chessService.finish(Long.parseLong(gridId));
+		return new Response(ResponseCode.NO_CONTENT);
+	}
+
+	@GetMapping("/room/{roomId}/restart")
+	public Response restart(@PathVariable("roomId") String roomId) throws SQLException {
+		return new Response(ResponseCode.OK, chessService.restart(Long.parseLong(roomId)));
+	}
+
+	@ExceptionHandler({ Exception.class })
+	public ResponseEntity<Object> handleAll(Exception e) {
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

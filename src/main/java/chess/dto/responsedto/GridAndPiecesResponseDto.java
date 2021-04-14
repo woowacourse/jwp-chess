@@ -14,4 +14,12 @@ public class GridAndPiecesResponseDto implements ResponseDto {
         this.gridDto = gridDto;
         this.piecesResponseDto = new ArrayList<>(piecesResponseDto);
     }
+
+    public GridDto getGridDto() {
+        return gridDto;
+    }
+
+    public List<PieceDto> getPiecesResponseDto() {
+        return piecesResponseDto;
+    }
 }

@@ -1,18 +1,21 @@
 package chess.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import chess.domain.board.BoardDTO;
 import chess.domain.chess.Chess;
 import chess.domain.chess.ChessDAO;
 import chess.domain.chess.ChessDTO;
 import chess.domain.piece.PieceDAO;
 import chess.domain.position.MovePosition;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
     private final ChessDAO chessDAO;
     private final PieceDAO pieceDAO;
 
+    @Autowired
     public ChessService(ChessDAO chessDAO, PieceDAO pieceDAO) {
         this.chessDAO = chessDAO;
         this.pieceDAO = pieceDAO;

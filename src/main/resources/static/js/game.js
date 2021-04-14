@@ -60,10 +60,12 @@ function sendMoveRequest(trimmedMoveCommand) {
             if (http.status === 200) {
                 replaceComponents(http.responseText, sourcePosition, targetPosition)
             } else {
+                console.log(trimmedMoveCommand)
                 alert(sourcePosition + "에서" + targetPosition + "으로 움직일 수 없습니다!")
             }
         }
     }
+
     http.send(trimmedMoveCommand);
 }
 
@@ -88,7 +90,7 @@ function replaceComponents(dom, sourcePosition, targetPosition) {
 
 function saveGame() {
     const params = {
-        room_id: document.querySelector('#room').firstElementChild.className,
+        name: document.querySelector('#room').firstElementChild.className,
         turn: document.querySelector('#turn').firstElementChild.className,
         state: createStateJson(),
     };

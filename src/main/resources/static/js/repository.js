@@ -4,7 +4,7 @@ $div.addEventListener('click', loadGame)
 
 function loadGame(event) {
     const params = {
-        room_id: event.target.value,
+        name: event.target.value,
     };
     const http = new XMLHttpRequest();
     const url = '/game/load';

@@ -19,7 +19,7 @@ public class RoomDAO {
         String query = "INSERT INTO room (room_id, turn, state) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE turn = VALUES(turn), state = VALUES(state)";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
-        pstmt.setString(1, room.getRoomId());
+        pstmt.setString(1, room.getName());
         pstmt.setString(2, room.getTurn());
         pstmt.setString(3, room.getState().toString());
         pstmt.executeUpdate();

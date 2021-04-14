@@ -8,9 +8,9 @@
 <body>
 <h1>저장된 게임 목록</h1>
 <div>
-    {{#rooms}}
-    <input type="button" value="{{{roomId}}}"/><br/>
-    {{/rooms}}
+    {{#roomNames}}
+    <input type="button" value="{{{.}}}"/><br/>
+    {{/roomNames}}
 </div>
 </body>
 <script src="js/repository.js"></script>

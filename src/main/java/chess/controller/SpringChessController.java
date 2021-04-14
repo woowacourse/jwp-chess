@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.database.room.Room;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
 import chess.domain.game.ChessGame;
@@ -13,11 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
@@ -41,15 +38,15 @@ public class SpringChessController {
     }
 
     @PostMapping("/game")
-    public ModelAndView game(@RequestParam("room_id") String room_id, ModelAndView modelAndView) {
-        Optional<ChessGame> chessGameOptional = springChessService.createRoom(room_id);
+    public ModelAndView game(@RequestParam("name") String name, ModelAndView modelAndView) {
+        Optional<ChessGame> chessGameOptional = springChessService.createRoom(name);
         if (chessGameOptional.isPresent()) {
             addChessGame(modelAndView, chessGameOptional.get());
             modelAndView.setViewName("game");
-            modelAndView.addObject("room_id", room_id);
+            modelAndView.addObject("name", name);
             return modelAndView;
         }
-        modelAndView.addObject("alert", room_id + "는 이미 존재하는 방입니다.");
+        modelAndView.addObject("alert", name + "는 이미 존재하는 방입니다.");
         modelAndView.setViewName("index");
         modelAndView.setStatus(HttpStatus.BAD_REQUEST);
         return modelAndView;
@@ -80,5 +77,22 @@ public class SpringChessController {
 
         Result result = chessGame.calculateResult();
         modelAndView.addObject("result", new ResultDTO(result));
+    }
+
+    @GetMapping(value = "/rooms")
+    public ModelAndView rooms(ModelAndView modelAndView) {
+        List<String> roomNames = springChessService.getAllSavedRooms();
+        modelAndView.addObject("roomNames", roomNames);
+        modelAndView.setViewName("repository");
+        return modelAndView;
+    }
+
+    @PostMapping(value = "/game/save")
+    public ResponseEntity save(@RequestBody String room) {
+        boolean result = springChessService.saveRoom(room);
+        if (result) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

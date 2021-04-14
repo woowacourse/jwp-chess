@@ -4,6 +4,7 @@ import chess.controller.Response;
 import chess.controller.StatusCode;
 import chess.database.room.Room;
 import chess.database.room.RoomDAO;
+import chess.database.room.SpringRoomDAO;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
@@ -16,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +25,12 @@ import java.util.Optional;
 @Service
 public class SpringChessService {
     public static final Gson gson = new Gson();
-
-    private final RoomDAO roomDAO = new RoomDAO();
     private ChessGame chessGame;
+    private final SpringRoomDAO roomDAO;
+
+    public SpringChessService(SpringRoomDAO roomDAO) {
+        this.roomDAO = roomDAO;
+    }
 
     public Optional<ChessGame> createRoom(String roomId) {
         try {
@@ -54,39 +59,39 @@ public class SpringChessService {
         chessGame.start(Collections.singletonList("start"));
     }
 
-    public Response saveRoom(String request) {
+    public boolean saveRoom(String request) {
         try {
             Room room = createRoomToSave(request);
             roomDAO.addRoom(room);
-            return new Response(StatusCode.SUCCESSFUL);
+            return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new Response(StatusCode.INTERNAL_SERVER_ERROR);
+            return false;
         }
     }
 
     private Room createRoomToSave(String request) {
         JsonObject roomJson = gson.fromJson(request, JsonObject.class);
-        String id = roomJson.get("room_id").getAsString();
+        String name = roomJson.get("name").getAsString();
         String turn = roomJson.get("turn").getAsString();
         JsonObject state = roomJson.get("state").getAsJsonObject();
-        return new Room(id, turn, state);
+        return new Room(name, turn, state);
     }
 
-    public Response loadRoom(String request) {
-        try {
-            JsonObject roomJson = gson.fromJson(request, JsonObject.class);
-            String roomId = roomJson.get("room_id").getAsString();
-            Room room = roomDAO.findByRoomId(roomId);
-            setChessGame(room);
-            Response response = new Response(chessGame, StatusCode.SUCCESSFUL);
-            response.add("room_id", roomId);
-            return response;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new Response(StatusCode.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    public Response loadRoom(String request) {
+//        try {
+//            JsonObject roomJson = gson.fromJson(request, JsonObject.class);
+//            String roomId = roomJson.get("room_id").getAsString();
+//            Room room = roomDAO.findByRoomId(roomId);
+//            setChessGame(room);
+//            Response response = new Response(chessGame, StatusCode.SUCCESSFUL);
+//            response.add("room_id", roomId);
+//            return response;
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            return new Response(StatusCode.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     private void setChessGame(Room room) {
         ChessBoard chessBoard = new ChessBoard();
@@ -108,15 +113,13 @@ public class SpringChessService {
         return pieceType.createPiece(Position.of(position), Color.convert(color));
     }
 
-    public Response getAllSavedRooms() {
+    public List<String> getAllSavedRooms() {
         try {
-            Response response = new Response(StatusCode.SUCCESSFUL);
-            response.add("rooms", roomDAO.getAllRoom());
-            return response;
+            return roomDAO.getAllRoom();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new Response(StatusCode.BAD_GATEWAY);
+            return new ArrayList<>();
         }
+
     }
 
     public Response resetGameAsReadyState() {

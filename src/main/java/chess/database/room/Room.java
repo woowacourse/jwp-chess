@@ -22,7 +22,7 @@ public class Room {
     public String getTurn() {
         return turn;
     }
-
+    
     public JsonObject getState() {
         return state;
     }

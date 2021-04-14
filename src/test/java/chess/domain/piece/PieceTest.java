@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PieceTest {
     @Test
@@ -16,8 +17,21 @@ class PieceTest {
     }
 
     @Test
+    @DisplayName("정상 위치 생성 확인")
     void position() {
         final Pawn pawn = new Pawn(Color.BLACK, new Position("2", "a"));
         assertThat(pawn.position()).isEqualTo("2a");
+    }
+
+    @Test
+    @DisplayName("없는 위치로 객체를 생성하려 하면 에러 발생")
+    void positionException() {
+        assertThatThrownBy( () ->  new Pawn(Color.BLACK, new Position("9", "a")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당하는 Rank 위치를 찾을 수 없습니다.");
+
+        assertThatThrownBy( () ->  new Pawn(Color.BLACK, new Position("1", "z")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당하는 File 위치를 찾을 수 없습니다.");
     }
 }

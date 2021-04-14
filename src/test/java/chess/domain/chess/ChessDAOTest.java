@@ -1,17 +1,24 @@
 package chess.domain.chess;
 
+import chess.domain.piece.PieceDAO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.service.ChessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 public class ChessDAOTest {
 
-    private final ChessService chessService = new ChessService();
-    private final ChessDAO chessDAO = new ChessDAO();
-    private final Long chessId = chessService.insert();
+    private final ChessDAO chessDAO;
+    private final Long chessId;
+
+    public ChessDAOTest() {
+        this.chessDAO = new ChessDAO();
+        chessId = new ChessService(chessDAO, new PieceDAO()).insert();
+    }
 
     @DisplayName("체스 아이디로 체스 게임 정보 가져오기 테스트")
     @Test

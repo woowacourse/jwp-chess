@@ -10,7 +10,9 @@ import java.util.List;
 
 import chess.domain.ConnectionUtils;
 import chess.domain.piece.PieceDTO;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ChessDAO {
     public Chess findChessById(Long chessId) {
         String query = "SELECT c.status, c.turn FROM chess c WHERE c.chess_id = (?)";

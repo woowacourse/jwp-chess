@@ -11,11 +11,10 @@ import chess.domain.ConnectionUtils;
 import chess.domain.board.BoardDTO;
 import chess.domain.position.MovePosition;
 import chess.domain.position.MovePositionVO;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class PieceDAO {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PieceDAO.class);
-
     public void insert(Long chessId, BoardDTO boardDTO) {
         String query = "INSERT INTO piece (chess_id, position, color, name) VALUES (?, ?, ?, ?)";
         try (Connection connection = ConnectionUtils.getConnection();

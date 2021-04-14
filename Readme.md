@@ -1,7 +1,7 @@
 # Spring을 활용한 체스
 
 ## 기능 구현 목록
-- [ ] 메인 페이지(index.html) Spark -> Spring
+- [x] 메인 페이지(index.html) Spark -> Spring
 - [ ] /move POST
 - [ ] /grid/:roomName GET
 - [ ] /grid/:gridId/start POST

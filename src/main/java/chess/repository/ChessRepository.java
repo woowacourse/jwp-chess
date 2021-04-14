@@ -4,9 +4,12 @@ import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.dao.RoomDao;
 import chess.dao.TeamDao;
+import chess.domain.ChessGame;
+import chess.domain.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessRepository {
@@ -18,4 +21,13 @@ public class ChessRepository {
     TeamDao teamDao;
     @Autowired
     PieceDao pieceDao;
+
+
+    @Transactional
+    public void createRoom(ChessGame chessGame, Room room) {
+        Long gameId = gameDao.create(chessGame);
+        room.setGameId(gameId);
+        roomDao.create(room);
+
+    }
 }

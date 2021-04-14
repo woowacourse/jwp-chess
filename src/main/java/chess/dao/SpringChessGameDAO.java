@@ -1,6 +1,8 @@
 package chess.dao;
 
 import chess.domain.game.ChessGameEntity;
+import chess.view.dto.ChessGameDto;
+import chess.view.dto.ChessGameStatusDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -33,6 +35,16 @@ public class SpringChessGameDAO {
     public void updateState(final Long id, final String state) {
         String query = "UPDATE chess_game SET state = ? WHERE id = ?";
         jdbcTemplate.update(query, state, id);
+    }
+
+    public ChessGameStatusDto findIsExistPlayingChessGameStatus() {
+        String query = "SELECT * FROM chess_game WHERE state in(BlackTurn, WhiteTurn)";
+        ChessGameEntity chessGameEntity = jdbcTemplate.queryForObject(query, ChessGameEntity.class);
+        if (chessGameEntity != null) {
+            return ChessGameStatusDto.exist();
+        }
+
+        return ChessGameStatusDto.isNotExist();
     }
 
 }

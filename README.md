@@ -14,7 +14,7 @@
 - [x] ChessgameDAO#findByStateIsBlackTurnOrWhiteTurn 
 - [x] ChessgameDAO#create
 - [x] ChessgameDAO#updateState
-- [ ] ChessgameDAO#findIsExistPlayingChessGameStatus
+- [x] ChessgameDAO#findIsExistPlayingChessGameStatus
 
 - [ ] PieceDAO#save
 - [ ] PieceDAO#saveAll

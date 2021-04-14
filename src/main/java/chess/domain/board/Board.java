@@ -19,10 +19,6 @@ public class Board {
         this.coordinates = coordinates;
     }
 
-    public Board() {
-        this.coordinates = new LinkedHashMap<>();
-    }
-
     public void putPiece(Piece piece, Position position) {
         coordinates.put(piece, position);
     }

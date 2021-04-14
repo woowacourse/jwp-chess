@@ -21,13 +21,6 @@ public enum Column {
         this.name = name;
     }
 
-    public static Column getColumn(String value) {
-        return Arrays.stream(values())
-            .filter(column -> column.name.equals(value))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 열입니다"));
-    }
-
     public static Column getColumn(int intValue) {
         return Arrays.stream(values())
             .filter(column -> column.value == intValue)

@@ -55,10 +55,6 @@ public class Game {
         this.state = state;
     }
 
-    public boolean isRunning() {
-        return state.isStarted();
-    }
-
     public boolean isFinished() {
         return state.gameOver();
     }
@@ -69,13 +65,5 @@ public class Game {
 
     public PieceColor getTurn() {
         return turn;
-    }
-
-    public Result getResult() {
-        return new Result(board);
-    }
-
-    public String getWinner() {
-        return getResult().findWinner();
     }
 }

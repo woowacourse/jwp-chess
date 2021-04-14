@@ -1,21 +1,14 @@
-package chess.springdao;
+package chess.daospring;
 
-import chess.dao.ConnectionSetup;
 import chess.domain.piece.Piece;
-import chess.dto.GridDto;
 import chess.dto.PieceDto;
-import chess.dto.response.ResponseCode;
-import chess.exception.ChessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PieceDAO {

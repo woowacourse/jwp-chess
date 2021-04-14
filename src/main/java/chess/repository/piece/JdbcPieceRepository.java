@@ -1,7 +1,6 @@
 package chess.repository.piece;
 
 import chess.domain.piece.Piece;
-import chess.repository.ConnectionUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,13 +8,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JdbcPieceRepository implements PieceRepository {
 
-    private final ConnectionUtil connectionUtil;
+    private final DataSource dataSource;
 
-    public JdbcPieceRepository() {
-        this.connectionUtil = new ConnectionUtil();
+    @Autowired
+    public JdbcPieceRepository(final DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class JdbcPieceRepository implements PieceRepository {
         PreparedStatement ps = null;
         try {
             String query = "INSERT INTO pieces (roomid, signature, team, location) VALUES (?, ?, ?, ?)";
-            conn = connectionUtil.getConnection();
+            conn = this.dataSource.getConnection();
             ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(roomIdIdx, roomId);
             ps.setString(signatureIdx, String.valueOf(piece.getSignature()));
@@ -59,7 +63,7 @@ public class JdbcPieceRepository implements PieceRepository {
         PreparedStatement ps = null;
         try {
             String query = "UPDATE pieces SET location = ? WHERE id = ?";
-            conn = connectionUtil.getConnection();
+            conn = this.dataSource.getConnection();
             ps = conn.prepareStatement(query);
             ps.setString(locationIdx, String.valueOf(piece.getX()) + String.valueOf(piece.getY()));
             ps.setLong(2, piece.getId());
@@ -84,7 +88,7 @@ public class JdbcPieceRepository implements PieceRepository {
 
         try {
             String query = "SELECT * FROM pieces WHERE id = " + pieceId;
-            conn = connectionUtil.getConnection();
+            conn = this.dataSource.getConnection();
             ps = conn.createStatement();
             rs = ps.executeQuery(query);
 
@@ -119,7 +123,7 @@ public class JdbcPieceRepository implements PieceRepository {
 
         try {
             String sql = "DELETE FROM pieces WHERE id = " + id;
-            conn = connectionUtil.getConnection();
+            conn = this.dataSource.getConnection();
             ps = conn.prepareStatement(sql);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -141,7 +145,7 @@ public class JdbcPieceRepository implements PieceRepository {
 
         try {
             String sql = "DELETE FROM pieces";
-            conn = connectionUtil.getConnection();
+            conn = this.dataSource.getConnection();
             ps = conn.prepareStatement(sql);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -164,7 +168,7 @@ public class JdbcPieceRepository implements PieceRepository {
 
         try {
             String query = "SELECT COUNT(*) FROM pieces";
-            conn = connectionUtil.getConnection();
+            conn = this.dataSource.getConnection();
             ps = conn.createStatement();
             rs = ps.executeQuery(query);
 
@@ -196,7 +200,7 @@ public class JdbcPieceRepository implements PieceRepository {
 
         try {
             String query = "SELECT * FROM pieces WHERE roomid = " + roomId;
-            conn = connectionUtil.getConnection();
+            conn = this.dataSource.getConnection();
             ps = conn.createStatement();
             rs = ps.executeQuery(query);
 

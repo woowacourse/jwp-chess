@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 
 public class ChessService {
 
-    private final RoomRepository roomRepository = new JdbcRoomRepository();
-    private final PieceRepository pieceRepository = new JdbcPieceRepository();
+    private final RoomRepository roomRepository = new JdbcRoomRepository(null);
+    private final PieceRepository pieceRepository = new JdbcPieceRepository(null);
 
     public MoveResponseDto start(String roomName) throws SQLException {
         Room room = roomRepository.findRoomByRoomName(roomName);

@@ -5,7 +5,6 @@ import chess.domain.game.Room;
 import chess.domain.gamestate.State;
 import chess.domain.piece.Piece;
 import chess.domain.team.Team;
-import chess.repository.ConnectionUtil;
 import chess.utils.BoardUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,13 +13,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JdbcRoomRepository implements RoomRepository {
 
-    private final ConnectionUtil connectionUtil;
+    private final DataSource dataSource;
 
-    public JdbcRoomRepository() {
-        this.connectionUtil = new ConnectionUtil();
+    @Autowired
+    public JdbcRoomRepository(final DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -33,7 +37,7 @@ public class JdbcRoomRepository implements RoomRepository {
         PreparedStatement ps = null;
         try {
             String query = "INSERT INTO rooms (name, state, currentteam) VALUES (?, ?, ?)";
-            conn = connectionUtil.getConnection();
+            conn = this.dataSource.getConnection();
             ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(nameIdx, room.getName());
             ps.setString(stateIdx, room.getState().getValue());
@@ -66,8 +70,8 @@ public class JdbcRoomRepository implements RoomRepository {
         PreparedStatement ps = null;
         try {
             String query = "UPDATE rooms SET state = ?, currentteam = ? WHERE id = ?";
-            conn = connectionUtil.getConnection();
-            ps = conn.prepareStatement(query);
+            conn = this.dataSource.getConnection();
+            ps = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ps.setString(stateIdx, room.getState().getValue());
             ps.setString(currentTeamIdx, room.getCurrentTeam().getValue());
             ps.setLong(idIdx, room.getId());
@@ -92,8 +96,8 @@ public class JdbcRoomRepository implements RoomRepository {
 
         try {
             String query = "SELECT * FROM rooms LEFT OUTER JOIN pieces ON pieces.roomid = rooms.id WHERE rooms.id = " + roomId;
-            conn = connectionUtil.getConnection();
-            ps = conn.createStatement();
+            conn = this.dataSource.getConnection();
+            ps = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             rs = ps.executeQuery(query);
 
             rs.last();
@@ -149,8 +153,8 @@ public class JdbcRoomRepository implements RoomRepository {
 
         try {
             String query = "SELECT * FROM rooms LEFT OUTER JOIN pieces ON pieces.roomid = rooms.id WHERE rooms.name = ?";
-            conn = connectionUtil.getConnection();
-            ps = conn.prepareStatement(query);
+            conn = this.dataSource.getConnection();
+            ps = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ps.setString(1, roomName);
             rs = ps.executeQuery();
 
@@ -206,7 +210,7 @@ public class JdbcRoomRepository implements RoomRepository {
 
         try {
             String query = "SELECT COUNT(*) FROM rooms WHERE name = ?";
-            conn = connectionUtil.getConnection();
+            conn = this.dataSource.getConnection();
             ps = conn.prepareStatement(query);
             ps.setString(1, roomName);
             rs = ps.executeQuery();
@@ -241,7 +245,7 @@ public class JdbcRoomRepository implements RoomRepository {
 
         try {
             String sql = "DELETE FROM rooms";
-            conn = connectionUtil.getConnection();
+            conn = this.dataSource.getConnection();
             ps = conn.prepareStatement(sql);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -264,7 +268,7 @@ public class JdbcRoomRepository implements RoomRepository {
 
         try {
             String query = "SELECT COUNT(*) FROM rooms";
-            conn = connectionUtil.getConnection();
+            conn = this.dataSource.getConnection();
             ps = conn.createStatement();
             rs = ps.executeQuery(query);
 

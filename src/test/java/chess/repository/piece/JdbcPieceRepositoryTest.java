@@ -4,30 +4,44 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.domain.game.Room;
+import chess.domain.gamestate.running.Ready;
 import chess.domain.location.Location;
 import chess.domain.piece.King;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.team.Team;
+import chess.repository.room.JdbcRoomRepository;
+import chess.utils.BoardUtil;
 import java.sql.SQLException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class JdbcPieceRepositoryTest {
 
+    @Autowired
     private JdbcPieceRepository repository;
+
+    @Autowired
+    private JdbcRoomRepository roomRepository;
+
+    private long roomId;
 
     @BeforeEach
     void setUp() throws SQLException {
-        repository = new JdbcPieceRepository();
+        Room room = new Room(1, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
+        roomId = roomRepository.insert(room);
         repository.deleteAll();
     }
 
     @Test
     void insert() throws SQLException {
         // given
-        int roomId = 0;
         Queen piece = Queen.of(Location.of(1, 1), Team.WHITE);
 
         // when
@@ -48,7 +62,6 @@ class JdbcPieceRepositoryTest {
     @Test
     void update() throws SQLException {
         // given
-        int roomId = 0;
         Queen original = Queen.of(Location.of(1, 1), Team.WHITE);
         long pieceId = repository.insert(roomId, original);
 
@@ -65,7 +78,6 @@ class JdbcPieceRepositoryTest {
     @Test
     void findPiecesByRoomId() throws SQLException {
         // given
-        int roomId = 0;
         Queen piece1 = Queen.of(Location.of(1, 1), Team.WHITE);
         King piece2 = King.of(Location.of(1, 2),Team.WHITE);
 
@@ -95,7 +107,7 @@ class JdbcPieceRepositoryTest {
         // given, when
         int zero = repository.count();
 
-        repository.insert(0, Queen.of(Location.of("a1"), Team.WHITE));
+        repository.insert(roomId, Queen.of(Location.of("a1"), Team.WHITE));
         int one = repository.count();
 
         // then
@@ -114,7 +126,7 @@ class JdbcPieceRepositoryTest {
         Queen piece = Queen.of(Location.of(1, 1), Team.WHITE);
 
         // when
-        long id = repository.insert(0, piece);
+        long id = repository.insert(roomId, piece);
         repository.deletePieceById(id);
 
         // then

@@ -1,19 +1,23 @@
 package chess.domain.piece;
 
+import chess.domain.position.Position;
+
 import java.util.Objects;
 
 public abstract class Piece {
 
     private final Color color;
     private final String name;
+    private final Position position;
 
-    public Piece(final Color color, final String initialName) {
+    public Piece(final Color color, final String initialName, final Position position) {
         this.color = color;
+        this.position = position;
         if (color.isBlack()) {
-            name = initialName.toUpperCase();
+            this.name = initialName.toUpperCase();
             return;
         }
-        name = initialName.toLowerCase();
+        this.name = initialName.toLowerCase();
     }
 
     public String name() {
@@ -22,6 +26,10 @@ public abstract class Piece {
 
     public Color team() {
         return color;
+    }
+
+    public String position() {
+        return position.position();
     }
 
     @Override

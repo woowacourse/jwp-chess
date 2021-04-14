@@ -1,10 +1,12 @@
 package chess.domain.piece;
 
+import chess.domain.position.Position;
+
 public final class King extends GeneralPiece {
 
     private static final String INITIAL_NAME = "K";
 
-    public King(final Color color) {
-        super(color, INITIAL_NAME);
+    public King(final Color color, final Position position) {
+        super(color, INITIAL_NAME, position);
     }
 }

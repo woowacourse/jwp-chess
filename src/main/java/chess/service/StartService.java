@@ -6,19 +6,20 @@ import chess.domain.piece.PieceFactory;
 import chess.repository.GameRepository;
 import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
+import org.springframework.stereotype.Service;
 import spark.Response;
 
+@Service
 public class StartService {
 
-    public Object startNewGame(String gameId, Response response) {
-        ChessGame chessGame;
+    private final GameRepository gameRepository;
 
-        try {
-            chessGame = saveGameAndStart(gameId);
-        } catch (RuntimeException e) {
-            response.status(400);
-            return new MessageDto(e.getMessage());
-        }
+    public StartService(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
+    }
+
+    public Object startNewGame(String gameId) {
+        ChessGame chessGame = saveGameAndStart(gameId);
 
         return new GameDto(chessGame);
     }
@@ -27,11 +28,11 @@ public class StartService {
         ChessGame chessGame = new ChessGame(new Board(PieceFactory.createPieces()));
         chessGame.start();
 
-        if (GameRepository.isGameIdExistingInDB(gameId)) {
+        if (gameRepository.isGameIdExistingInDB(gameId)) {
             throw new IllegalArgumentException("이미 존재하는 게임 아이디 입니다.");
         }
 
-        GameRepository.saveToCache(gameId, chessGame);
+        gameRepository.saveToCache(gameId, chessGame);
 
         return chessGame;
     }

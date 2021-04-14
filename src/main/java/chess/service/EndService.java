@@ -3,17 +3,21 @@ package chess.service;
 import chess.domain.game.ChessGame;
 import chess.repository.GameRepository;
 import chess.web.dto.MessageDto;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EndService {
 
-    public Object end(String gameId) {
-        ChessGame chessGame = GameRepository.findByGameIdFromCache(gameId);
+    private final GameRepository gameRepository;
 
-        try {
-            chessGame.end();
-        } catch (RuntimeException e) {
-            return new MessageDto(e.getMessage());
-        }
+    public EndService(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
+    }
+
+    public Object end(String gameId) {
+        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
+
+        chessGame.end();
 
         return new MessageDto("finished");
     }

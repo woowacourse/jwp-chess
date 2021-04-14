@@ -7,28 +7,31 @@ import chess.exception.CommandFormatException;
 import chess.repository.GameRepository;
 import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
+import org.springframework.stereotype.Service;
 import spark.Response;
 
+@Service
 public class MoveService {
     private static final String POSITION_FORMAT = "[a-h][1-8]";
 
-    public Object move(String gameId, Response response, String source, String target) {
-        ChessGame chessGame = GameRepository.findByGameIdFromCache(gameId);
+    private final GameRepository gameRepository;
+
+    public MoveService(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
+    }
+
+    public Object move(String gameId, String source, String target) {
+        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
 
         validateRightInputs(source, target);
         Position sourcePosition = getPositionFromInput(source);
         Position targetPosition = getPositionFromInput(target);
 
-        return executeMove(sourcePosition, targetPosition, chessGame, response);
+        return executeMove(sourcePosition, targetPosition, chessGame);
     }
 
-    private Object executeMove(Position sourcePosition, Position targetPosition, ChessGame chessGame, Response response) {
-        try {
-            chessGame.move(sourcePosition, targetPosition);
-        } catch (RuntimeException e) {
-            response.status(400);
-            return new MessageDto(e.getMessage());
-        }
+    private Object executeMove(Position sourcePosition, Position targetPosition, ChessGame chessGame) {
+        chessGame.move(sourcePosition, targetPosition);
 
         return new GameDto(chessGame);
     }

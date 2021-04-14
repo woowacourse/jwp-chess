@@ -32,13 +32,13 @@ public class SpringChessController {
 
     @GetMapping("/")
     public String home() {
-        return "home.hbs";
+        return "home";
     }
 
     @GetMapping("/start")
     public String start() throws SQLException {
         makeNewGame();
-        return "chess.hbs";
+        return "chess";
     }
 
     @GetMapping("/reset")
@@ -46,7 +46,7 @@ public class SpringChessController {
         chessService.remove();
         chessService.makeRound();
         makeNewGame();
-        return "chess.hbs";
+        return "chess";
     }
 
     @GetMapping("/chess")
@@ -72,7 +72,7 @@ public class SpringChessController {
 
         model.addAttribute("whiteScore", scoreDto.getWhiteScore());
         model.addAttribute("blackScore", scoreDto.getBlackScore());
-        return "chess.hbs";
+        return "chess";
     }
 
     @PostMapping(value = "/move", produces = "application/json")

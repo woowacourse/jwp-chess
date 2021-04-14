@@ -9,7 +9,6 @@ import chess.domain.piece.Team;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

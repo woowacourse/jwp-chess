@@ -10,8 +10,6 @@ import chess.domain.piece.Piece;
 import chess.repository.SpringChessDAO;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
-
 @Service
 public class SpringChessService {
     private final SpringChessDAO springChessDAO;

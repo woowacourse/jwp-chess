@@ -1,4 +1,4 @@
--- drop table board;
+drop table board;
 create table board
 (
     position varchar(12) not null,
@@ -141,7 +141,7 @@ values ('g6', '');
 insert into board (position, piece)
 values ('h6', '');
 
--- drop table turn;
+drop table turn;
 create table turn
 (
     turn_owner varchar(10) not null,

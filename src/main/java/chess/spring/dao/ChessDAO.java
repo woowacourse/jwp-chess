@@ -27,13 +27,13 @@ public class ChessDAO {
         return jdbcTemplate.query(query, ROW_MAPPER);
     }
 
-    public void insert(String source, String destination, String teamType){
-        String sql = "INSERT INTO HISTORY (SOURCE, DESTINATION, TEAM_TYPE) VALUES (?, ?, ?)";
-        this.jdbcTemplate.update(sql,source, destination, teamType);
+    public void insertHistory(String source, String destination, String teamType) {
+        String query = "INSERT INTO HISTORY (SOURCE, DESTINATION, TEAM_TYPE) VALUES (?, ?, ?)";
+        jdbcTemplate.update(query, source, destination, teamType);
     }
 
-    public void deleteAll() {
-        String sql = "TRUNCATE TABLE HISTORY";
-        this.jdbcTemplate.update(sql);
+    public void deleteAllHistories() {
+        String query = "TRUNCATE TABLE HISTORY";
+        jdbcTemplate.update(query);
     }
 }

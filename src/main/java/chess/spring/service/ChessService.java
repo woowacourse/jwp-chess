@@ -7,11 +7,9 @@ import chess.domain.history.Histories;
 import chess.domain.piece.TeamType;
 import chess.domain.result.Result;
 import chess.domain.result.Scores;
-import chess.repository.ChessRepository;
 import chess.spring.dao.ChessDAO;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.Objects;
 
 @Service
@@ -41,7 +39,7 @@ public class ChessService {
     public void move(String current, String destination, String teamType) {
         ChessBoard chessBoard = findChessBoard();
         chessBoard.move(Coordinate.from(current), Coordinate.from(destination), TeamType.valueOf(teamType));
-        chessDAO.insert(current, destination, teamType);
+        chessDAO.insertHistory(current, destination, teamType);
     }
 
     public Result calculateResult() {
@@ -52,6 +50,6 @@ public class ChessService {
     }
 
     public void deleteAllHistories() {
-        chessDAO.deleteAll();
+        chessDAO.deleteAllHistories();
     }
 }

@@ -32,7 +32,7 @@ public class ChessController {
         return BoardDTO.of(chessBoard, teamType);
     }
 
-    @PostMapping(path = "/move", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/move")
     public BoardDTO move(@RequestBody MoveRequestDTO moveRequestDTO) {
         String current = moveRequestDTO.getCurrent();
         String destination = moveRequestDTO.getDestination();
@@ -54,7 +54,7 @@ public class ChessController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handle(RuntimeException runtimeException) {
+    public ResponseEntity<String> handleException(RuntimeException runtimeException) {
         return ResponseEntity.status(500).body(runtimeException.getMessage());
     }
 }

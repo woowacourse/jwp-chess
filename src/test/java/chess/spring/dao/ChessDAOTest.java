@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
 class ChessDAOTest {
@@ -48,14 +47,14 @@ class ChessDAOTest {
     @DisplayName("DB에 History를 insert한다.")
     @Test
     void insertHistory() {
-        chessDAO.insert("a1", "a3", "WHITE");
+        chessDAO.insertHistory("a1", "a3", "WHITE");
         assertThat(chessDAO.findAllHistories()).hasSize(3);
     }
 
     @DisplayName("DB의 Histories를 전부 delete한다.")
     @Test
     void deleteAllHistories() {
-        chessDAO.deleteAll();
+        chessDAO.deleteAllHistories();
         assertThat(chessDAO.findAllHistories()).hasSize(0);
     }
 }

@@ -1,13 +1,21 @@
 package chess.controller;
 
-import com.google.gson.Gson;
-
 import chess.domain.chess.ChessDTO;
 import chess.domain.position.MovePosition;
 import chess.service.ChessService;
-import spark.Request;
-import spark.Response;
+import com.google.gson.Gson;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+@Controller
+@RequestMapping("/chess")
 public class ChessController {
 
     private static final Gson GSON = new Gson();
@@ -18,26 +26,34 @@ public class ChessController {
         this.chessService = new ChessService();
     }
 
-    public String get(Request req, Response res) {
-        Long chessId = Long.valueOf(req.params(":chessId"));
+    @GetMapping("/{chessId}")
+    @ResponseBody
+    public String chessInfo(@PathVariable long chessId) {
         ChessDTO chessDTO = chessService.getChessGame(chessId);
         return GSON.toJson(chessDTO);
     }
 
-    public String insert(Request req, Response res) {
+    @GetMapping("/{chessId}/view")
+    public String chessTemplate(@PathVariable long chessId) {
+        return "/chess.html";
+    }
+
+    @PostMapping("")
+    @ResponseBody
+    public String newChessGame(HttpServletResponse response) {
         Long chessId = chessService.insert();
-        res.cookie("chessId", String.valueOf(chessId));
-        res.status(201);
+
+        Cookie chessIdCookie = new Cookie("chessId", String.valueOf(chessId));
+        chessIdCookie.setMaxAge(60 * 60 * 24 * 30);
+        response.addCookie(chessIdCookie);
+
         return GSON.toJson(chessId);
     }
 
-    public Response move(Request req, Response res) {
-        String source = req.queryParams("source");
-        String target = req.queryParams("target");
-        MovePosition movePosition = new MovePosition(source, target);
-        Long chessId = Long.valueOf(req.params(":chessId"));
+    @PatchMapping("/{chessId}")
+    @ResponseBody
+    public String move(@PathVariable long chessId, MovePosition movePosition) {
         chessService.move(chessId, movePosition);
-        res.status(204);
-        return res;
+        return "OK";
     }
 }

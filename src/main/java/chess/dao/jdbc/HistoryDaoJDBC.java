@@ -1,6 +1,7 @@
-package chess.dao;
+package chess.dao.jdbc;
 
 import chess.controller.web.dto.history.HistoryResponseDto;
+import chess.dao.HistoryDao;
 import chess.domain.history.History;
 import chess.exception.DataAccessException;
 
@@ -11,8 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryDaoJDBC {
+public class HistoryDaoJDBC implements HistoryDao {
 
+    @Override
     public Long saveHistory(final History history, final Long gameId) {
         final String query =
                 "INSERT INTO history(game_id, move_command, turn_owner, turn_number, playing) VALUES (?, ?, ?, ?, ?)";
@@ -31,6 +33,7 @@ public class HistoryDaoJDBC {
         }
     }
 
+    @Override
     public List<HistoryResponseDto> findHistoryByGameId(final Long gameId) {
         final String query = "SELECT * from history where game_id = ? ORDER BY id ASC";
 

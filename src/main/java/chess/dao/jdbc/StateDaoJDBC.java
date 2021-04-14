@@ -1,6 +1,7 @@
-package chess.dao;
+package chess.dao.jdbc;
 
 import chess.controller.web.dto.state.StateResponseDto;
+import chess.dao.StateDao;
 import chess.domain.manager.ChessManager;
 import chess.exception.DataAccessException;
 
@@ -9,8 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class StateDaoJDBC {
+public class StateDaoJDBC implements StateDao {
 
+    @Override
     public Long saveState(final ChessManager chessManager, final Long gameId) {
         final String query = "INSERT INTO state(game_id, turn_owner, turn_number, playing) VALUES (?, ?, ?, ?)";
 
@@ -26,7 +28,7 @@ public class StateDaoJDBC {
         }
     }
 
-    public Long updateState(final ChessManager chessManager, final Long gameId) {
+    @Override public Long updateState(final ChessManager chessManager, final Long gameId) {
         final String query = "UPDATE state SET turn_owner=?, turn_number=?, playing=? WHERE game_id=?";
 
         try (final Connection connection = ConnectionProvider.getConnection();
@@ -41,7 +43,7 @@ public class StateDaoJDBC {
         }
     }
 
-    public StateResponseDto findStateByGameId(final Long gameId) {
+    @Override public StateResponseDto findStateByGameId(final Long gameId) {
         final String query = "SELECT * from state where game_id = ?";
 
         try (Connection connection = ConnectionProvider.getConnection();

@@ -1,13 +1,15 @@
-package chess.dao;
+package chess.dao.jdbc;
 
 import chess.controller.web.dto.game.GameResponseDto;
+import chess.dao.GameDao;
 import chess.domain.game.Game;
 import chess.exception.DataAccessException;
 
 import java.sql.*;
 
-public class GameDaoJDBC {
+public class GameDaoJDBC implements GameDao {
 
+    @Override
     public Long saveGame(final Game game) {
         final String query = "INSERT INTO game(room_name, white_username, black_username) VALUES (?, ?, ?)";
 
@@ -25,6 +27,7 @@ public class GameDaoJDBC {
         }
     }
 
+    @Override
     public GameResponseDto findGameById(final Long gameId) {
         final String query = "SELECT * from game where id = ?";
 

@@ -8,6 +8,7 @@ import chess.controller.web.dto.move.PathResponseDto;
 import chess.controller.web.dto.piece.PieceResponseDto;
 import chess.controller.web.dto.score.ScoreResponseDto;
 import chess.controller.web.dto.state.StateResponseDto;
+import chess.dao.jdbc.*;
 import chess.service.ChessService;
 
 import java.util.List;
@@ -17,7 +18,13 @@ public class WebChessController {
     private final ChessService chessService;
 
     public WebChessController() {
-        this.chessService = new ChessService();
+        this.chessService = new ChessService(
+                new GameDaoJDBC(),
+                new HistoryDaoJDBC(),
+                new PieceDaoJDBC(),
+                new ScoreDaoJDBC(),
+                new StateDaoJDBC()
+        );
     }
 
     public PathResponseDto movablePath(final String source, final Long gameId) {

@@ -1,6 +1,7 @@
-package chess.dao;
+package chess.dao.jdbc;
 
 import chess.controller.web.dto.piece.PieceResponseDto;
+import chess.dao.PieceDao;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
 import chess.exception.DataAccessException;
@@ -13,8 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PieceDaoJDBC {
+public class PieceDaoJDBC implements PieceDao {
 
+    @Override
     public long[] savePieces(final Long gameId, final Map<Position, Piece> pieces) {
         final String query = "INSERT INTO piece(game_id, position, symbol) VALUES (?, ?, ?)";
 
@@ -32,6 +34,7 @@ public class PieceDaoJDBC {
         }
     }
 
+    @Override
     public Long updateSourcePiece(final String source, final Long gameId) {
         final String query = "UPDATE piece SET symbol = ? WHERE game_id=? && position=?";
 
@@ -46,6 +49,7 @@ public class PieceDaoJDBC {
         }
     }
 
+    @Override
     public Long updateTargetPiece(final String target, final Piece sourcePiece, final Long gameId) {
         final String query = "UPDATE piece SET symbol = ? where game_id = ? && position = ?";
 
@@ -60,6 +64,7 @@ public class PieceDaoJDBC {
         }
     }
 
+    @Override
     public List<PieceResponseDto> findPiecesByGameId(final Long gameId) {
         final String query = "SELECT * from piece where game_id = ?";
 

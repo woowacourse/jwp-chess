@@ -1,6 +1,7 @@
-package chess.dao;
+package chess.dao.jdbc;
 
 import chess.controller.web.dto.score.ScoreResponseDto;
+import chess.dao.ScoreDao;
 import chess.domain.manager.GameStatus;
 import chess.exception.DataAccessException;
 
@@ -9,8 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ScoreDaoJDBC {
+public class ScoreDaoJDBC implements ScoreDao {
 
+    @Override
     public Long saveScore(final GameStatus gameStatus, final Long gameId) {
         final String query = "INSERT INTO score(game_id, white_score, black_score) VALUES (?, ?, ?)";
 
@@ -25,6 +27,7 @@ public class ScoreDaoJDBC {
         }
     }
 
+    @Override
     public Long updateScore(final GameStatus gameStatus, final Long gameId) {
         final String query = "UPDATE score SET white_score=?, black_score=? WHERE game_id=?";
 
@@ -39,6 +42,7 @@ public class ScoreDaoJDBC {
         }
     }
 
+    @Override
     public ScoreResponseDto findScoreByGameId(final Long gameId) {
         final String query = "SELECT * from score where game_id = ?";
 

@@ -14,10 +14,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 
-public class GridDAO {
+public class GridSpringDAO {
     private JdbcTemplate jdbcTemplate;
 
-    public GridDAO(JdbcTemplate jdbcTemplate) {
+    public GridSpringDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

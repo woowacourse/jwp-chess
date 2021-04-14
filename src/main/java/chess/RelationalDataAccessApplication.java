@@ -1,6 +1,6 @@
 package chess;
 
-import chess.daospring.GridDAO;
+import chess.daospring.GridSpringDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class RelationalDataAccessApplication implements CommandLineRunner {
         System.out.println("테스트");
         System.out.println(jdbcTemplate);
 
-        System.out.println(new GridDAO(jdbcTemplate).findGridByGridId(10));
+        System.out.println(new GridSpringDAO(jdbcTemplate).findGridByGridId(10));
 
 //        log.info("Creating tables");
 //

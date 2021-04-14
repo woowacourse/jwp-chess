@@ -7,10 +7,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
-public class RoomDAO {
+public class RoomSpringDAO {
     private JdbcTemplate jdbcTemplate;
 
-    public RoomDAO(JdbcTemplate jdbcTemplate) {
+    public RoomSpringDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

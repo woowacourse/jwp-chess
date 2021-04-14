@@ -12,10 +12,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PieceDAO {
+public class PieceSpringDAO {
     private JdbcTemplate jdbcTemplate;
 
-    public PieceDAO(JdbcTemplate jdbcTemplate) {
+    public PieceSpringDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

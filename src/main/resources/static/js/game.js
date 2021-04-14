@@ -117,6 +117,7 @@ function sendMoveRequest(current, destination, teamType) {
         }
     }
     xmlHttp.open('POST', url, true);
+    xmlHttp.setRequestHeader('Content-Type', 'application/json');
     xmlHttp.send(requestData);
 }
 

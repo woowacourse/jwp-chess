@@ -1,37 +1,43 @@
 package chess.repository;
 
 import chess.dao.ChessDAO;
-import chess.dao.DataSource;
 import chess.domain.game.ChessGame;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
 public class GameRepository {
 
-    private static ChessDAO chessDAO = new ChessDAO(new DataSource());
-    private static Map<String, ChessGame> repository = new HashMap<>();
+    private final ChessDAO chessDAO;
+    private final Map<String, ChessGame> repository = new HashMap<>();
 
-    public static void saveToCache(String gameId, ChessGame chessGame) {
+    public GameRepository(JdbcTemplate jdbcTemplate) {
+        this.chessDAO = new ChessDAO(jdbcTemplate);
+    }
+
+    public void saveToCache(String gameId, ChessGame chessGame) {
         repository.put(gameId, chessGame);
     }
 
-    public static void saveToDB(String gameId, ChessGame chessGame) {
+    public void saveToDB(String gameId, ChessGame chessGame) {
         chessDAO.addChessGame(
                 gameId,
                 ChessGameConvertor.chessGameToJson(chessGame)
         );
     }
 
-    public static void updateToDB(String gameId, ChessGame chessGame) {
+    public void updateToDB(String gameId, ChessGame chessGame) {
         chessDAO.updateChessGame(
                 gameId,
                 ChessGameConvertor.chessGameToJson(chessGame)
         );
     }
 
-    public static ChessGame findByGameIdFromCache(String gameId) {
+    public ChessGame findByGameIdFromCache(String gameId) {
         Optional<ChessGame> chessGame = Optional.ofNullable(repository.getOrDefault(gameId, null));
 
         if (!chessGame.isPresent()) {
@@ -41,13 +47,13 @@ public class GameRepository {
         return chessGame.get();
     }
 
-    public static ChessGame findByGameIdFromDB(String gameId) {
+    public ChessGame findByGameIdFromDB(String gameId) {
         String chessGameJson = chessDAO.findChessGameByGameId(gameId);
 
         return ChessGameConvertor.jsonToChessGame(chessGameJson);
     }
 
-    public static boolean isGameIdExistingInDB(String gameId) {
+    public boolean isGameIdExistingInDB(String gameId) {
         return chessDAO.isGameIdExisting(gameId);
     }
 }

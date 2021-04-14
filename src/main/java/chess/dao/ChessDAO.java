@@ -1,13 +1,15 @@
 package chess.dao;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.util.List;
 
 public class ChessDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ChessDAO(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public ChessDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public void addChessGame(String gameId, String data) {

@@ -1,0 +1,6 @@
+2021-04-15 07:00:31 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CHESS" not found; SQL statement:
+SELECT count(*) as count FROM chess WHERE game_id = ? [42102-200]
+2021-04-15 07:01:21 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CHESS" not found; SQL statement:
+SELECT count(*) as count FROM chess WHERE game_id = ? [42102-200]

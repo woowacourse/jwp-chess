@@ -5,6 +5,8 @@ import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
 import chess.web.dto.MoveDto;
 import chess.web.dto.StatusDto;
+import org.eclipse.jetty.http.HttpStatus;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,6 +55,12 @@ public class SpringWebChessController {
     @ExceptionHandler
     public ResponseEntity<MessageDto> handle(RuntimeException e) {
         return ResponseEntity.badRequest().body(new MessageDto(e.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<MessageDto> handle(DataAccessException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR_500)
+                .body(new MessageDto("데이터 베이스 연결에 문제가 발생했습니다."));
     }
 
 }

@@ -7,29 +7,28 @@ import chess.domain.DTO.TurnDTO;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
-import chess.repository.ChessDAO;
+import chess.repository.SparkChessDAO;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 
-@Service
-public class ChessService {
-    private final ChessDAO chessDAO;
+public class SparkChessService {
+    private final SparkChessDAO sparkChessDAO;
 
-    public ChessService() {
-        chessDAO = new ChessDAO();
+    public SparkChessService() {
+        sparkChessDAO = new SparkChessDAO();
     }
 
     public BoardDTO initiateBoard(ChessGame chessGame) throws SQLException {
-        chessDAO.resetTurnOwner(chessGame.getTurnOwner());
+        sparkChessDAO.resetTurnOwner(chessGame.getTurnOwner());
         chessGame.settingBoard();
-        chessDAO.resetBoard(chessGame.getBoard());
+        sparkChessDAO.resetBoard(chessGame.getBoard());
         return BoardDTO.of(chessGame.getBoard());
     }
 
     public BoardDTO getSavedBoardInfo(ChessGame chessGame) throws SQLException {
-        BoardDTO boardDTO = chessDAO.getSavedBoardInfo();
-        TurnDTO turnDTO = chessDAO.getSavedTurnOwner();
+        BoardDTO boardDTO = sparkChessDAO.getSavedBoardInfo();
+        TurnDTO turnDTO = sparkChessDAO.getSavedTurnOwner();
 
         chessGame.loadSavedBoardInfo(boardDTO.getBoardInfo(), turnDTO.getTurn());
         return boardDTO;
@@ -43,8 +42,8 @@ public class ChessService {
 
         chessGame.move(moveInfoDTO.getTarget(), moveInfoDTO.getDestination());
 
-        chessDAO.renewBoardAfterMove(moveInfoDTO.getTarget(), moveInfoDTO.getDestination(), targetPiece);
-        chessDAO.renewTurnOwnerAfterMove(chessGame.getTurnOwner());
+        sparkChessDAO.renewBoardAfterMove(moveInfoDTO.getTarget(), moveInfoDTO.getDestination(), targetPiece);
+        sparkChessDAO.renewTurnOwnerAfterMove(chessGame.getTurnOwner());
         return BoardDTO.of(board);
     }
 }

@@ -48,4 +48,16 @@ public final class SpringChessGameController {
         return true;
     }
 
+    @GetMapping("/enter")
+    public String enterRoom(@RequestParam String id, Model model) {
+        try {
+            model.addAttribute("number", id);
+            model.addAttribute("button", "새로운게임");
+            model.addAttribute("isWhite", true);
+            model.addAttribute("users", userService.usersParticipatedInGame(id));
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        return "chess";
+    }
 }

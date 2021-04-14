@@ -3,6 +3,7 @@ package chess.dao;
 import chess.dto.UserDTO;
 import chess.dto.UsersDTO;
 import chess.exception.DataAccessException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class UserDAO {
+@Repository
+public class UserDAO {
 
     public UsersDTO findByRoomId(final String roomId) {
         try (Connection connection = ConnectDB.getConnection();

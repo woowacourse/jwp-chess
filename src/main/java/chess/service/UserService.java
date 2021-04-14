@@ -2,8 +2,10 @@ package chess.service;
 
 import chess.dao.UserDAO;
 import chess.dto.UsersDTO;
+import org.springframework.stereotype.Service;
 
-public final class UserService {
+@Service
+public class UserService {
     private final UserDAO userDAO;
 
     public UserService(final UserDAO userDAO) {

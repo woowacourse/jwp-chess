@@ -1,13 +1,15 @@
 package chess.dao;
 
 import chess.exception.DataAccessException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public final class ResultDAO {
+@Repository
+public class ResultDAO {
 
     public void saveGameResult(final String roomId, final int winnerId, final int loserId) {
         String query = "INSERT INTO result (game_id, winner, loser) VALUES (?, ?, ?)";

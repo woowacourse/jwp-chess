@@ -2,10 +2,12 @@ package chess.service;
 
 import chess.dao.LogDAO;
 import chess.domain.ChessGame;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public final class LogService {
+@Service
+public class LogService {
     private final LogDAO logDAO;
 
     public LogService(final LogDAO logDAO) {

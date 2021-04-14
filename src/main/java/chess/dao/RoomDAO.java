@@ -2,6 +2,8 @@ package chess.dao;
 
 import chess.dto.RoomDTO;
 import chess.exception.DataAccessException;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class RoomDAO {
+@Repository
+public class RoomDAO {
 
     public void createRoom(final String name) {
         String query = "INSERT INTO room (title, black_user, white_user, status) VALUES (?, ?, ?, ?)";

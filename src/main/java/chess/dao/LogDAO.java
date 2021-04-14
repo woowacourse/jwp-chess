@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.exception.DataAccessException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class LogDAO {
+@Repository
+public class LogDAO {
 
     public void createLog(final String roomId, final String startPoint, final String endPoint) {
         String query = "INSERT INTO log (room_id, start_position, end_position) VALUES (?, ?, ?)";

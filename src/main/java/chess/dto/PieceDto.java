@@ -20,6 +20,14 @@ public class PieceDto {
         return PieceDeserializeTable.deserializeFrom(this.notation, Color.of(this.color));
     }
 
+    public String getNotation() {
+        return notation;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
     @Override
     public String toString() {
         return "PieceDto{" +

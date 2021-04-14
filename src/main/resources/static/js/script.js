@@ -119,7 +119,7 @@ function addEventOnLoadGameButton() {
 
 function updateGameData(responseJsonBody) {
     updateBoard(responseJsonBody.item.chessBoard);
-    if (responseJsonBody.item.isEnd) {
+    if (responseJsonBody.item.end) {
         updateWinner(responseJsonBody);
         updateMessage('게임이 끝났습니다.');
         turnOffPanel();

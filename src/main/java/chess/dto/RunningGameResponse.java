@@ -29,4 +29,24 @@ public class RunningGameResponse {
                 chessGameManager.getStatistics().getMatchResult(),
                 chessGameManager.isEnd());
     }
+
+    public Map<String, PieceDto> getChessBoard() {
+        return chessBoard;
+    }
+
+    public Color getCurrentTurnColor() {
+        return currentTurnColor;
+    }
+
+    public Map<Color, Double> getColorsScore() {
+        return colorsScore;
+    }
+
+    public MatchResult getMatchResult() {
+        return matchResult;
+    }
+
+    public boolean isEnd() {
+        return isEnd;
+    }
 }

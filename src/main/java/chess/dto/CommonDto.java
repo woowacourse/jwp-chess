@@ -10,4 +10,22 @@ public class CommonDto<T> {
         this.message = message;
         this.item = item;
     }
+
+    public CommonDto(int statusCode, String message) {
+        this.statusCode = statusCode;
+        this.message = message;
+        this.item = null;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public T getItem() {
+        return item;
+    }
 }

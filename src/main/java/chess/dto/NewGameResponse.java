@@ -22,4 +22,16 @@ public class NewGameResponse {
                 chessGameManager.getCurrentTurnColor(),
                 chessGameManager.getStatistics().getColorsScore());
     }
+
+    public Color getCurrentTurnColor() {
+        return currentTurnColor;
+    }
+
+    public Map<Color, Double> getColorsScore() {
+        return colorsScore;
+    }
+
+    public Map<String, PieceDto> getChessBoard() {
+        return chessBoard;
+    }
 }

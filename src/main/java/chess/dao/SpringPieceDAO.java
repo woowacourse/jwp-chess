@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class SpringPieceDAO {
@@ -43,6 +44,12 @@ public class SpringPieceDAO {
     public List<Piece> findAllPiecesByChessGameId(Long chessGameId) {
         String query = "SELECT * FROM piece WHERE chess_game_id = ?";
         return jdbcTemplate.queryForList(query, Piece.class, chessGameId);
+    }
+
+    public Optional<Piece> findOneByPosition(final Long chessGameId, final int row, final int col) {
+        String query = "SELECT * FROM piece WHERE chess_game_id = ? AND row = ? AND col = ?";
+        Piece piece = jdbcTemplate.queryForObject(query, Piece.class, chessGameId, row, col);
+        return Optional.ofNullable(piece);
     }
 
 }

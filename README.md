@@ -19,7 +19,7 @@
 - [x] PieceDAO#save
 - [x] PieceDAO#saveAll
 - [x] PieceDAO#findAllPiecesByChessGameId
-- [ ] PieceDAO#findOneByPosition
+- [x] PieceDAO#findOneByPosition
 - [ ] PieceDAO#update
 - [ ] PieceDAO#delete
 

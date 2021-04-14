@@ -61,8 +61,9 @@ public class Players {
     }
 
     public Scores scores(final Board board) {
-        players.stream()
-                .forEach(player -> scores = scores.update(player, player.score(board)));
+        for (Player player : players) {
+            scores = scores.update(player, player.score(board));
+        }
         return scores;
     }
 

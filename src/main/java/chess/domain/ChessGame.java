@@ -57,7 +57,7 @@ public class ChessGame {
     public List<String> reachablePositions(final Position source) {
         if (turn.is(players.ownerOf(source))) {
             return board.reachablePositions(source).stream()
-                    .map(position -> position.parseAsString())
+                    .map(Position::parseAsString)
                     .collect(Collectors.toList());
         }
         return Collections.EMPTY_LIST;
@@ -69,10 +69,6 @@ public class ChessGame {
 
     public String[][] unicodeBoard() {
         return board.parseUnicodeBoard();
-    }
-
-    public void setGameEnd() {
-        isGameEnd = true;
     }
 
     public boolean isGameEnd() {

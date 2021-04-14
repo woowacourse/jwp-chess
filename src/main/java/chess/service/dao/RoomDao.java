@@ -4,9 +4,8 @@ import chess.controller.dto.RoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -19,17 +18,17 @@ public class RoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(final String roomName, final long roomId) throws SQLException {
+    public void save(final String roomName, final long roomId) {
         final String query = "INSERT INTO room_status (room_name, room_id) VALUES (?, ?)";
         jdbcTemplate.update(query, roomName, roomId);
     }
 
-    public void delete(final Long roomId) throws SQLException {
+    public void delete(final Long roomId) {
         final String query = "DELETE FROM room_status WHERE room_id = ?";
         jdbcTemplate.update(query, roomId);
     }
 
-    public List<RoomDto> load() throws SQLException {
+    public List<RoomDto> load() {
         final String query = "SELECT * FROM room_status";
         return jdbcTemplate.query(query, (rs, rowNum) -> makeRoomDto(rs));
     }

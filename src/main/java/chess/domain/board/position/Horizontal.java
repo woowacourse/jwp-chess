@@ -4,7 +4,6 @@ import chess.domain.piece.movement.Direction;
 import chess.domain.piece.movement.Distance;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 public enum Horizontal {
     ONE(1),
@@ -34,12 +33,6 @@ public enum Horizontal {
                 .filter(h -> h.index == index)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
-    }
-
-    public static Horizontal[] reversedValues() {
-        Horizontal[] values = values();
-        Arrays.sort(values, Collections.reverseOrder());
-        return values;
     }
 
     public Horizontal add(final Direction direction, final Distance distance) {

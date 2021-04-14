@@ -3,6 +3,7 @@ package chess.domain.player;
 import chess.domain.board.Board;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
+import chess.domain.piece.Piece;
 import chess.domain.piece.Score;
 
 import java.util.List;
@@ -44,8 +45,8 @@ public class Player {
 
     public boolean isDead(final Board board) {
         return positions.stream()
-                .map(position -> board.of(position))
-                .noneMatch(piece -> piece.isKing());
+                .map(board::of)
+                .noneMatch(Piece::isKing);
     }
 
     public boolean has(final Position position) {

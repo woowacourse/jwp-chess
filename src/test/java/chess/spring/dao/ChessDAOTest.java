@@ -1,6 +1,7 @@
 package chess.spring.dao;
 
 import chess.domain.history.History;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 class ChessDAOTest {
+
     private ChessDAO chessDAO;
 
     @Autowired
@@ -31,9 +33,14 @@ class ChessDAOTest {
                 "TEAM_TYPE VARCHAR(255)," +
                 "PRIMARY KEY (ID)" +
                 ")");
-        String sql = "INSERT INTO HISTORY (SOURCE, DESTINATION, TEAM_TYPE) VALUES(?, ?, ?)";
-        jdbcTemplate.update(sql, "a1", "a2", "WHITE");
-        jdbcTemplate.update(sql, "a6", "b5", "BLACK");
+        String query = "INSERT INTO HISTORY (SOURCE, DESTINATION, TEAM_TYPE) VALUES(?, ?, ?)";
+        jdbcTemplate.update(query, "a1", "a2", "WHITE");
+        jdbcTemplate.update(query, "a6", "b5", "BLACK");
+    }
+
+    @AfterEach
+    void teardown() {
+        jdbcTemplate.update("TRUNCATE TABLE HISTORY");
     }
 
     @DisplayName("DB에 저장된 모든 History들을 조회한다.")
@@ -48,6 +55,7 @@ class ChessDAOTest {
     @Test
     void insertHistory() {
         chessDAO.insertHistory("a1", "a3", "WHITE");
+
         assertThat(chessDAO.findAllHistories()).hasSize(3);
     }
 
@@ -55,6 +63,7 @@ class ChessDAOTest {
     @Test
     void deleteAllHistories() {
         chessDAO.deleteAllHistories();
+
         assertThat(chessDAO.findAllHistories()).hasSize(0);
     }
 }

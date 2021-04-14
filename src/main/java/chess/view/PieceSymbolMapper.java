@@ -1,4 +1,4 @@
-package chess.view.web;
+package chess.view;
 
 import chess.domain.board.position.Horizontal;
 import chess.domain.board.position.Position;

@@ -8,23 +8,24 @@ import chess.domain.piece.Owner;
 import chess.service.GameService;
 import chess.service.RequestHandler;
 import chess.service.RoomService;
-import chess.view.web.OutputView;
+import chess.view.OutputView;
+import org.springframework.stereotype.Controller;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+@Controller
 public class GameController {
 
     private final RoomService roomService;
     private final GameService gameService;
 
-    public GameController(Connection connection) {
-        this.roomService = new RoomService(connection);
-        this.gameService = new GameService(connection);
+    public GameController(RoomService roomService, GameService gameService) {
+        this.roomService = roomService;
+        this.gameService = gameService;
     }
 
     public void mapping() {

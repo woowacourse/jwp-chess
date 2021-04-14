@@ -8,7 +8,7 @@ import chess.domain.piece.Owner;
 import chess.domain.piece.Piece;
 import chess.domain.piece.movement.Direction;
 import chess.domain.piece.movement.Distance;
-import chess.view.web.PieceSymbolMapper;
+import chess.view.PieceSymbolMapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

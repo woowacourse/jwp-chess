@@ -7,7 +7,9 @@ import chess.domain.board.position.Position;
 import chess.domain.board.position.Vertical;
 import chess.domain.piece.Piece;
 import chess.domain.player.Turn;
-import chess.view.web.PieceSymbolMapper;
+import chess.view.PieceSymbolMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.Arrays;
@@ -15,14 +17,47 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Repository
 public class GameDao {
     private static final String COLUMN_LABEL_OF_TURN = "turn";
     private static final String COLUMN_LABEL_OF_BOARD = "board";
     private static final String SEPARATOR_OF_PIECE = ",";
-    private final Connection conn;
 
-    public GameDao(final Connection connection) {
-        this.conn = connection;
+    private final JdbcTemplate jdbcTemplate;
+
+    public GameDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public void save(final long roomId, final Turn turn, final Board board) throws SQLException {
+        final String query = "INSERT INTO game_status (room_id, turn, board) VALUES (?, ?, ?)";
+        jdbcTemplate.update(query, roomId, turn.name(), boardToData(board));
+    }
+
+    public GameDto load(final Long roomId) throws SQLException {
+        final String query = "SELECT * FROM game_status WHERE room_id = (?) ORDER BY id DESC limit 1";
+        return jdbcTemplate.queryForObject(query, (rs, rowNum)
+                -> makeGameDto(rs.getString(COLUMN_LABEL_OF_TURN), rs.getString(COLUMN_LABEL_OF_BOARD)), roomId);
+    }
+
+    private GameDto makeGameDto(final String turn, final String board) {
+        return new GameDto(Turn.of(turn), dataToBoard(board));
+    }
+
+    public void delete(final Long roomId) throws SQLException {
+        final String query = "DELETE FROM game_status WHERE room_id = ?";
+        jdbcTemplate.update(query, roomId);
+    }
+
+    public void update(final Long roomId, final Turn turn, final Board board) throws SQLException {
+        final String query = "UPDATE game_status SET turn = ?,  board= ?  WHERE room_id = ?";
+        jdbcTemplate.update(query, turn.name(), boardToData(board), roomId);
+    }
+
+    public String boardToData(final Board board) {
+        return Arrays.stream(board.parseUnicodeBoard())
+                .flatMap(strings -> Arrays.stream(strings))
+                .collect(Collectors.joining(SEPARATOR_OF_PIECE));
     }
 
     public static Board dataToBoard(final String dataLine) {
@@ -35,53 +70,5 @@ public class GameDao {
             }
         }
         return new Board(board);
-    }
-
-    public void save(final long roomId, final Turn turn, final Board board) throws SQLException {
-        final String query = "INSERT INTO game_status (room_id, turn, board) VALUES (?, ?, ?)";
-        try (final PreparedStatement insertQuery = conn.prepareStatement(query);) {
-            insertQuery.setLong(1, roomId);
-            insertQuery.setString(2, turn.name());
-            insertQuery.setString(3, boardToData(board));
-            insertQuery.executeUpdate();
-        }
-    }
-
-    public GameDto load(final Long roomId) throws SQLException {
-        final String query = "SELECT * FROM game_status WHERE room_id = (?) ORDER BY id DESC limit 1";
-
-        try (final PreparedStatement insertQuery = conn.prepareStatement(query)) {
-            insertQuery.setLong(1, roomId);
-            try (ResultSet rs = insertQuery.executeQuery();) {
-                rs.next();
-                return makeGameDto(rs.getString(COLUMN_LABEL_OF_TURN), rs.getString(COLUMN_LABEL_OF_BOARD));
-            }
-        }
-    }
-
-    private GameDto makeGameDto(final String turn, final String board) {
-        return new GameDto(Turn.of(turn), dataToBoard(board));
-    }
-
-    public void delete(final Long roomId) throws SQLException {
-        try (final Statement statement = conn.createStatement();) {
-            statement.executeUpdate("DELETE FROM game_status WHERE room_id = " + roomId);
-        }
-    }
-
-    public void update(final Long roomId, final Turn turn, final Board board) throws SQLException {
-        final String query = "UPDATE game_status SET turn = ?,  board= ?  WHERE room_id = ?";
-        try (final PreparedStatement insertQuery = conn.prepareStatement(query)) {
-            insertQuery.setString(1, turn.name());
-            insertQuery.setString(2, boardToData(board));
-            insertQuery.setLong(3, roomId);
-            insertQuery.executeUpdate();
-        }
-    }
-
-    public String boardToData(final Board board) {
-        return Arrays.stream(board.parseUnicodeBoard())
-                .flatMap(strings -> Arrays.stream(strings))
-                .collect(Collectors.joining(SEPARATOR_OF_PIECE));
     }
 }

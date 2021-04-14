@@ -1,47 +1,37 @@
 package chess.service.dao;
 
 import chess.controller.dto.RoomDto;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Repository
 public class RoomDao {
     private static final int COLUMN_INDEX_OF_ROOM_NAME = 2;
     private static final int COLUMN_INDEX_OF_ROOM_ID = 3;
-    private final Connection conn;
+    private final JdbcTemplate jdbcTemplate;
 
-    public RoomDao(final Connection conn) {
-        this.conn = conn;
+    public RoomDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public void save(final String roomName, final long roomId) throws SQLException {
         final String query = "INSERT INTO room_status (room_name, room_id) VALUES (?, ?)";
-        try (final PreparedStatement insertQuery = conn.prepareStatement(query);) {
-            insertQuery.setString(1, roomName);
-            insertQuery.setLong(2, roomId);
-            insertQuery.executeUpdate();
-        }
+        jdbcTemplate.update(query, roomName, roomId);
     }
 
     public void delete(final Long roomId) throws SQLException {
-        try (final Statement statement = conn.createStatement()) {
-            statement.executeUpdate("DELETE FROM room_status WHERE room_id = " + roomId);
-        }
+        final String query = "DELETE FROM room_status WHERE room_id = ?";
+        jdbcTemplate.update(query, roomId);
     }
 
     public List<RoomDto> load() throws SQLException {
-        try (final Statement selectQuery = conn.createStatement();
-             final ResultSet rs = selectQuery.executeQuery("SELECT * FROM room_status")) {
-
-            final List<RoomDto> list = new ArrayList<>();
-            while (rs.next()) {
-                list.add(makeRoomDto(rs));
-            }
-            Collections.reverse(list);
-            return list;
-        }
+        final String query = "SELECT * FROM room_status";
+        return jdbcTemplate.query(query, (rs, rowNum) -> makeRoomDto(rs));
     }
 
     private RoomDto makeRoomDto(final ResultSet rs) throws SQLException {
@@ -51,10 +41,7 @@ public class RoomDao {
     }
 
     public String name(final Long roomId) throws SQLException {
-        try (final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery("SELECT * FROM room_status WHERE room_id = " + roomId)) {
-            rs.next();
-            return rs.getString(COLUMN_INDEX_OF_ROOM_NAME);
-        }
+        final String query = "SELECT * FROM room_status WHERE room_id = ?";
+        return jdbcTemplate.queryForObject(query, String.class, roomId);
     }
 }

@@ -1,12 +1,14 @@
 package chess.controller.web;
 
-import chess.view.web.OutputView;
+import chess.view.OutputView;
+import org.springframework.stereotype.Controller;
 
 import java.sql.SQLException;
 
 import static spark.Spark.exception;
 import static spark.Spark.get;
 
+@Controller
 public class MainController {
 
     public MainController() {

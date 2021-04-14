@@ -7,17 +7,19 @@ import chess.domain.ChessGame;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
 import chess.service.dao.GameDao;
+import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class GameService {
 
     private final GameDao gameDao;
 
-    public GameService(Connection connection) {
-        this.gameDao = new GameDao(connection);
+    public GameService(GameDao gameDao) {
+        this.gameDao = gameDao;
     }
 
     public void create(final Long roomId) throws SQLException {

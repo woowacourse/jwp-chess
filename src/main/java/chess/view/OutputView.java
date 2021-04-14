@@ -1,4 +1,4 @@
-package chess.view.web;
+package chess.view;
 
 import chess.controller.dto.*;
 import chess.domain.piece.Owner;

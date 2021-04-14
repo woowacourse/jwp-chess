@@ -2,41 +2,36 @@ package chess.controller.web;
 
 import chess.service.RequestHandler;
 import chess.service.RoomService;
-import chess.view.web.OutputView;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.sql.Connection;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import static spark.Spark.get;
 
+@Controller
 public class RoomController {
     private final RoomService roomService;
 
-    public RoomController(Connection connection) {
-        this.roomService = new RoomService(connection);
+    public RoomController(RoomService roomService) {
+        this.roomService = roomService;
     }
 
-    public void mapping() {
-        loadRoomList();
-        deleteRoom();
-        createRoom();
+    @GetMapping("/main")
+    private ModelAndView loadRoomList() throws SQLException {
+        ModelAndView modelAndView = new ModelAndView("mainPage");
+        modelAndView.addObject(roomService.loadList());
+        return modelAndView;
     }
 
-    private void loadRoomList() {
-        get("/main", (req, res) -> {
-            res.status(200);
-            return OutputView.printRoomList(roomService.loadList());
-        });
-    }
-
-    private void createRoom() {
-        get("/room/create/:roomName", (req, res) -> {
-            final String roomName = RequestHandler.roomName(req);
-            final Long roomId = roomService.save(roomName);
-
-            res.status(200);
-            res.redirect("/game/create/" + roomId);
-            return null;
-        });
+    @GetMapping("/room/create/{roomName}")
+    private void createRoom(@PathVariable String roomName, HttpServletResponse httpServletResponse) throws SQLException, IOException {
+        final Long roomId = roomService.save(roomName);
+        httpServletResponse.sendRedirect("/game/create/" + roomId);
     }
 
     private void deleteRoom() {

@@ -2,17 +2,19 @@ package chess.service;
 
 import chess.controller.dto.RoomDto;
 import chess.service.dao.RoomDao;
+import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class RoomService {
 
     private final RoomDao roomDao;
 
-    public RoomService(final Connection connection) {
-        this.roomDao = new RoomDao(connection);
+    public RoomService(final RoomDao roomDao) {
+        this.roomDao = roomDao;
     }
 
     public Long save(final String roomName) throws SQLException {

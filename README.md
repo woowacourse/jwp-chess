@@ -13,7 +13,7 @@
 ###  Spring JDBC를 활용하여 DB 접근하던 기존 로직을 대체한다.
 - [x] ChessgameDAO#findByStateIsBlackTurnOrWhiteTurn 
 - [x] ChessgameDAO#create
-- [ ] ChessgameDAO#updateState
+- [x] ChessgameDAO#updateState
 - [ ] ChessgameDAO#findIsExistPlayingChessGameStatus
 
 - [ ] PieceDAO#save

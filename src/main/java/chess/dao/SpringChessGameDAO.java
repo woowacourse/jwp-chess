@@ -30,4 +30,9 @@ public class SpringChessGameDAO {
         return (Long) keyHolder.getKey();
     }
 
+    public void updateState(final Long id, final String state) {
+        String query = "UPDATE chess_game SET state = ? WHERE id = ?";
+        jdbcTemplate.update(query, state, id);
+    }
+
 }

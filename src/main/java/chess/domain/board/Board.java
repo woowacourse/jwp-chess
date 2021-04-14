@@ -52,14 +52,13 @@ public class Board {
     }
 
     public boolean confirm(List<Position> positions) {
-        // 목적지를 제외한 값들에 말이 존재하지 않으면
         return positions.stream().noneMatch(chessBoard::containsKey);
     }
 
     public void move(Path path, Team turn) {
         final Piece piece = pieceAt(path.source());
-        piece.confirmTurn(turn); // 제 차례가 아닌 경우 먼저 터뜨림.
-        confirmSameTeamPiece(path.target(), turn); // 목적지에 같은 팀의 말이 있는 경우 터뜨림.
+        piece.confirmTurn(turn);
+        confirmSameTeamPiece(path.target(), turn);
         final List<Position> positions = piece.generate(path, target(path, turn));
         if (!confirm(positions)) {
             throw new IllegalArgumentException("[ERROR] 경로에 말이 존재합니다.");

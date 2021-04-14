@@ -21,7 +21,7 @@ public class WebUIChessApplication {
         staticFiles.location("/public");
 
         Gson gson = new Gson();
-        ChessService service = new ChessService();
+        ChessService service = new ChessService(null, null);
 
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();

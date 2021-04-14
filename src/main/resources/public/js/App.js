@@ -142,6 +142,12 @@ const App = function() {
     }
 
     fetch(`http://localhost:8080/room/${roomName}`)
+      .then(response => {
+        if (!response.ok) {
+          console.log(response);
+          throw new Error(response);
+        }
+      })
       .then(response => response.json())
       .then(result => {
         if (result.status === "ERROR" && result.message === "[ERROR] 존재하지 않는 방입니다.") {
@@ -161,7 +167,7 @@ const App = function() {
         this.renderBoard(result.payload.pieces);
         this.renderMessage(result.payload);
       })
-      .catch(err => alert(err));
+      .catch(err => console.log(err));
   }.bind(this);
 }
 

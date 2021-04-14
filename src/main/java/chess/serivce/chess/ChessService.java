@@ -8,19 +8,28 @@ import chess.domain.gamestate.running.Ready;
 import chess.domain.location.Location;
 import chess.domain.piece.Piece;
 import chess.domain.team.Team;
-import chess.repository.piece.JdbcPieceRepository;
 import chess.repository.piece.PieceRepository;
-import chess.repository.room.JdbcRoomRepository;
 import chess.repository.room.RoomRepository;
 import chess.utils.BoardUtil;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessService {
 
-    private final RoomRepository roomRepository = new JdbcRoomRepository(null);
-    private final PieceRepository pieceRepository = new JdbcPieceRepository(null);
+    private final RoomRepository roomRepository;
+
+    private final PieceRepository pieceRepository;
+
+    @Autowired
+    public ChessService(final RoomRepository roomRepository,
+            final PieceRepository pieceRepository) {
+        this.roomRepository = roomRepository;
+        this.pieceRepository = pieceRepository;
+    }
 
     public MoveResponseDto start(String roomName) throws SQLException {
         Room room = roomRepository.findRoomByRoomName(roomName);

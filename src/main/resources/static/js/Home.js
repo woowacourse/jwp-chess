@@ -1,6 +1,6 @@
 import {getData, postData} from "./utils/FetchUtil.js"
 
-const url = "http://localhost:4567";
+const url = "http://localhost:8080";
 
 window.onload = function () {
   const newGameButton = document.querySelector(".new-game");
@@ -41,11 +41,11 @@ function validateName(whiteName, blackName) {
 }
 
 async function createUserIfNotExistent(userName) {
-  const plainObject = await getData(`${url}/api/user/${userName}`);
-  if (isEmptyObject(plainObject)) {
-    await createUser(userName);
+  const body = {
+    name : userName,
+    password : "123"
   }
-  return plainObject;
+  return await postData(`${url}/users`, body);
 }
 
 function isEmptyObject(object) {

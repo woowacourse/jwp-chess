@@ -2,8 +2,13 @@ package chess.dao;
 
 import chess.entity.UserEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 @Repository
 public class UserDao {
@@ -21,11 +26,19 @@ public class UserDao {
             resultSet.getTimestamp("created_time").toLocalDateTime()
     );
 
-    public void insert(final UserEntity userEntity) {
-         final String sql = "INSERT INTO user(name, password) VALUES (?, ?)";
-
-         jdbcTemplate.update(sql, userEntity.getName(), userEntity.getPassword());
+    public long insert(final UserEntity userEntity) {
+        final String sql = "INSERT INTO user(name, password) VALUES (?, ?)";
+        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        final PreparedStatementCreator preparedStatementCreator = con -> {
+            final PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, userEntity.getName());
+            preparedStatement.setString(2, userEntity.getPassword());
+            return preparedStatement;
+        };
+        jdbcTemplate.update(preparedStatementCreator, keyHolder);
+        return keyHolder.getKey().longValue();
     }
+
 
     public void selectByName(String name) {
         final String sql = "SELECT * FROM user WHERE name = ?";

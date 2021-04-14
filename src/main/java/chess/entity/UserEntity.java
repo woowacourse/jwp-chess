@@ -31,4 +31,14 @@ public class UserEntity {
     public LocalDateTime getCreatedTime() {
         return createdTime;
     }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", createdTime=" + createdTime +
+                '}';
+    }
 }

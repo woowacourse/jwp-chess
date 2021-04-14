@@ -1,22 +1,22 @@
 package chess;
 
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+import chess.controller.web.GameController;
+import chess.controller.web.MainController;
+import chess.controller.web.RoomController;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static spark.Spark.get;
+import java.sql.Connection;
 
 public class SparkChessApplication {
     public static void main(String[] args) {
-        get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(model, "index.hbs");
-        });
-    }
+        final WebConfig webConfig = new WebConfig();
+        final Connection connection = webConfig.getConnection();
 
-    private static String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+        final GameController gameController = new GameController(connection);
+        final RoomController roomController = new RoomController(connection);
+        final MainController mainController = new MainController();
+
+        gameController.mapping();
+        roomController.mapping();
+        mainController.mapping();
     }
 }

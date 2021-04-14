@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 
 @Repository
 public class SpringPieceDAO {
@@ -31,6 +32,12 @@ public class SpringPieceDAO {
         }, keyHolder);
 
         return (Long) keyHolder.getKey();
+    }
+
+    public void saveAll(final Long chessGameId, final List<Piece> pieces) {
+        for (final Piece piece : pieces) {
+            save(chessGameId, piece);
+        }
     }
 
 }

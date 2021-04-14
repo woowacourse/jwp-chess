@@ -17,7 +17,7 @@
 - [x] ChessgameDAO#findIsExistPlayingChessGameStatus
 
 - [x] PieceDAO#save
-- [ ] PieceDAO#saveAll
+- [x] PieceDAO#saveAll
 - [ ] PieceDAO#findAllPiecesByChessGameId
 - [ ] PieceDAO#findOneByPosition
 - [ ] PieceDAO#update

@@ -15,8 +15,8 @@ public class GameRepository {
     private final ChessDAO chessDAO;
     private final Map<String, ChessGame> repository = new HashMap<>();
 
-    public GameRepository(JdbcTemplate jdbcTemplate) {
-        this.chessDAO = new ChessDAO(jdbcTemplate);
+    public GameRepository(ChessDAO chessDAO) {
+        this.chessDAO = chessDAO;
     }
 
     public void saveToCache(String gameId, ChessGame chessGame) {

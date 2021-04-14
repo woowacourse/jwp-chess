@@ -1,8 +1,9 @@
 package chess.controller;
 
 import chess.domain.command.Commands;
+import chess.domain.exception.DataException;
 import chess.domain.vo.MoveVo;
-import chess.service.ChessService;
+import chess.service.SpringChessService;
 import chess.view.ModelView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,14 +18,14 @@ import java.sql.SQLException;
 public class SpringController {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private final ChessService chessService;
+    private final SpringChessService chessService;
 
-    public SpringController(ChessService chessService) {
+    public SpringController(SpringChessService chessService) {
         this.chessService = chessService;
     }
 
     @GetMapping("")
-    public String play(Model model) throws SQLException {
+    public String play(Model model) throws DataException {
         model.addAllAttributes(ModelView.startResponse(chessService.loadHistory()));
         return "play";
     }
@@ -36,7 +37,7 @@ public class SpringController {
     }
 
     @GetMapping("/{name}/new")
-    public String playNewGameWithSave(Model model, @PathVariable String name) throws SQLException {
+    public String playNewGameWithSave(Model model, @PathVariable String name) throws DataException {
         model.addAllAttributes(ModelView.newGameResponse(
                 chessService.initialGameInfo(),
                 chessService.addHistory(name)
@@ -45,7 +46,7 @@ public class SpringController {
     }
 
     @GetMapping("/continue")
-    public String continueGame(Model model, @RequestParam("name") String name) throws SQLException {
+    public String continueGame(Model model, @RequestParam("name") String name) throws DataException {
         final String id = chessService.getIdByName(name);
         model.addAllAttributes(ModelView.commonResponseForm(chessService.continuedGameInfo(id), id));
         return "chessGame";

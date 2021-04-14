@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.SQLException;
-
 @Controller
 public class SpringChessController {
     private final SpringChessService springChessService;
@@ -30,13 +28,13 @@ public class SpringChessController {
 
     @GetMapping("/loadSavedBoard")
     @ResponseBody
-    public BoardDTO loadSavedBoard() throws SQLException {
+    public BoardDTO loadSavedBoard() {
         return springChessService.getSavedBoardInfo(chessGame);
     }
 
     @GetMapping("/resetBoard")
     @ResponseBody
-    public BoardDTO resetBoard() throws SQLException {
+    public BoardDTO resetBoard() {
         return springChessService.initiateBoard(chessGame);
     }
 
@@ -48,7 +46,7 @@ public class SpringChessController {
 
     @PostMapping("/move")
     @ResponseBody
-    public BoardDTO move(@RequestBody MoveInfoDTO moveInfoDTO) throws SQLException {
+    public BoardDTO move(@RequestBody MoveInfoDTO moveInfoDTO) {
         return springChessService.move(chessGame, moveInfoDTO);
     }
 }

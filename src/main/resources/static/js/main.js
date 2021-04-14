@@ -19,12 +19,15 @@ function createRoom() {
 }
 
 function newGame(name) {
+    let data = {
+        "name" : name
+    }
+
     $.ajax({
         url: "/createNewGame",
-        data: {
-            name: name
-        },
+        data: JSON.stringify(data),
         method: "POST",
+        contentType: "application/json",
         dataType: "json"
     }).done(function (success) {
         if (success) {

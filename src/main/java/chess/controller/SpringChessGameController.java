@@ -40,4 +40,12 @@ public final class SpringChessGameController {
         }
         return "index";
     }
+
+    @PostMapping(path = "/createNewGame", consumes = "application/json")
+    @ResponseBody
+    public boolean createNewGame(@RequestBody CreateRoomRequestDTO createRoomRequestDTO) {
+        roomService.createRoom(createRoomRequestDTO.getName());
+        return true;
+    }
+
 }

@@ -1,7 +1,9 @@
 package chess.domain.position;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public enum File {
     A("a", 1),
@@ -31,6 +33,12 @@ public enum File {
         return Arrays.stream(values())
                 .filter(file -> file.value == value)
                 .findFirst();
+    }
+
+    public static List<String> fileSymbols() {
+        return Arrays.stream(values())
+            .map(File::symbol)
+            .collect(Collectors.toList());
     }
 
     public String symbol() {

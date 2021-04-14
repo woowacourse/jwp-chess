@@ -1,6 +1,6 @@
 package chess.domain.position;
 
-public class Position {
+public class Position implements Comparable<Position> {
     private final File file;
     private final Rank rank;
 
@@ -16,5 +16,13 @@ public class Position {
 
     public String position() {
         return file.symbol() + rank.symbol();
+    }
+
+    @Override
+    public int compareTo(Position position) {
+        if (rank == position.rank) {
+            return file.value() - position.file.value();
+        }
+        return position.rank.value() - rank.value();
     }
 }

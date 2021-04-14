@@ -1,7 +1,9 @@
 package chess.domain.position;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public enum Rank {
     ONE("1", 1),
@@ -31,6 +33,12 @@ public enum Rank {
         return Arrays.stream(values())
                 .filter(rank -> value == rank.value)
                 .findFirst();
+    }
+
+    public static List<String> rankSymbols() {
+        return Arrays.stream(values())
+            .map(Rank::symbol)
+            .collect(Collectors.toList());
     }
 
     public String symbol() {

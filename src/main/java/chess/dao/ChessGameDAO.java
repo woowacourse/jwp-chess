@@ -49,7 +49,7 @@ public class ChessGameDAO {
         throw new IllegalArgumentException("ChessGame이 제대로 생성되지 않았습니다");
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id) { // todo: 추후 사용할지 모르니 일단 남겨놓음 나중에 확인
         try (Connection con = factory.getConnection()) {
             String query = "DELETE FROM chess_game WHERE id = ?";
             PreparedStatement preparedStatement = con.prepareStatement(query);

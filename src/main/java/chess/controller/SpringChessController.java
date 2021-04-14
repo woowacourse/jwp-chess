@@ -4,7 +4,7 @@ import chess.domain.ChessGame;
 import chess.domain.DTO.BoardDTO;
 import chess.domain.DTO.MoveInfoDTO;
 import chess.domain.DTO.ScoreDTO;
-import chess.service.ChessService;
+import chess.service.SpringChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +15,11 @@ import java.sql.SQLException;
 
 @Controller
 public class SpringChessController {
-    private final ChessService chessService;
+    private final SpringChessService springChessService;
     private final ChessGame chessGame;
 
-    public SpringChessController(ChessService chessService) {
-        this.chessService = chessService;
+    public SpringChessController(SpringChessService springChessService) {
+        this.springChessService = springChessService;
         this.chessGame = new ChessGame();
     }
 
@@ -31,13 +31,13 @@ public class SpringChessController {
     @GetMapping("/loadSavedBoard")
     @ResponseBody
     public BoardDTO loadSavedBoard() throws SQLException {
-        return chessService.getSavedBoardInfo(chessGame);
+        return springChessService.getSavedBoardInfo(chessGame);
     }
 
     @GetMapping("/resetBoard")
     @ResponseBody
     public BoardDTO resetBoard() throws SQLException {
-        return chessService.initiateBoard(chessGame);
+        return springChessService.initiateBoard(chessGame);
     }
 
     @GetMapping("/scoreStatus")
@@ -49,6 +49,6 @@ public class SpringChessController {
     @PostMapping("/move")
     @ResponseBody
     public BoardDTO move(@RequestBody MoveInfoDTO moveInfoDTO) throws SQLException {
-        return chessService.move(chessGame, moveInfoDTO);
+        return springChessService.move(chessGame, moveInfoDTO);
     }
 }

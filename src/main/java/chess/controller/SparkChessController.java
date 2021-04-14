@@ -5,7 +5,7 @@ import chess.domain.DTO.BoardDTO;
 import chess.domain.DTO.MoveInfoDTO;
 import chess.domain.DTO.ScoreDTO;
 import chess.domain.board.BoardFactory;
-import chess.service.ChessService;
+import chess.service.SparkChessService;
 import com.google.gson.Gson;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
@@ -18,10 +18,10 @@ import static spark.Spark.post;
 
 public class SparkChessController {
     public static final BoardFactory boardFactory = new BoardFactory();
-    public final ChessService chessService;
+    public final SparkChessService sparkChessService;
 
     public SparkChessController() {
-        chessService = new ChessService();
+        sparkChessService = new SparkChessService();
     }
 
     private static String render(Map<String, Object> model, String templatePath) {
@@ -37,12 +37,12 @@ public class SparkChessController {
         });
 
         get("/loadSavedBoard", (req, res) -> {
-            BoardDTO savedBoardInfo = chessService.getSavedBoardInfo(chessGame);
+            BoardDTO savedBoardInfo = sparkChessService.getSavedBoardInfo(chessGame);
             return gson.toJson(savedBoardInfo);
         });
 
         get("/resetBoard", (req, res) -> {
-            BoardDTO boardDTO = chessService.initiateBoard(chessGame);
+            BoardDTO boardDTO = sparkChessService.initiateBoard(chessGame);
             return gson.toJson(boardDTO);
         });
 
@@ -53,7 +53,7 @@ public class SparkChessController {
 
         post("/move", (req, res) -> {
             MoveInfoDTO moveInfoDTO = gson.fromJson(req.body(), MoveInfoDTO.class);
-            BoardDTO boardDTO = chessService.move(chessGame, moveInfoDTO);
+            BoardDTO boardDTO = sparkChessService.move(chessGame, moveInfoDTO);
             return gson.toJson(boardDTO);
         });
     }

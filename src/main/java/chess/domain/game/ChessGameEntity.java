@@ -4,6 +4,9 @@ public class ChessGameEntity {
     private Long id;
     private String state;
 
+    public ChessGameEntity() {
+    }
+
     public ChessGameEntity(final Long id, final String state) {
         this.id = id;
         this.state = state;

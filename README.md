@@ -30,3 +30,4 @@
 
 ## 오류 사항 
 * 특정상황(새로고침 이후 게임을 이어하는 도중에)에 게임을 종료하는 기능 오류  
+    * js파일 toggleStartAndEndButtons 메서드의 start 버튼 'hidden' 속성 추가 및 삭제 기능 오류  

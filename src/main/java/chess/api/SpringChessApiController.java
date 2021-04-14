@@ -1,7 +1,7 @@
 package chess.api;
 
 import chess.domain.piece.Position;
-import chess.service.ChessGameService;
+import chess.service.SpringChessGameService;
 import chess.view.dto.ChessGameDto;
 import chess.view.dto.ScoreDto;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class SpringChessApiController {
 
-    private final ChessGameService chessGameService;
+    private final SpringChessGameService chessGameService;
 
-    public SpringChessApiController(ChessGameService chessGameService) {
+    public SpringChessApiController(SpringChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 

@@ -7,7 +7,6 @@ import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.utils.DBConnector;
-import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,8 +22,8 @@ public class SparkChessDAO extends DBConnector {
         String query = "select * from board;";
         Map<String, String> boardInfo = new HashMap<>();
 
-        try(PreparedStatement pstmt = getConnection().prepareStatement(query);
-            ResultSet savedBoardInfo = pstmt.executeQuery()) {
+        try (PreparedStatement pstmt = getConnection().prepareStatement(query);
+             ResultSet savedBoardInfo = pstmt.executeQuery()) {
             while (savedBoardInfo.next()) {
                 boardInfo.put(savedBoardInfo.getString("position"),
                         savedBoardInfo.getString("piece"));
@@ -37,8 +36,8 @@ public class SparkChessDAO extends DBConnector {
         String query = "select * from turn;";
         String turnOwner = "";
 
-        try(PreparedStatement pstmt = getConnection().prepareStatement(query);
-            ResultSet savedTurnOwner = pstmt.executeQuery()) {
+        try (PreparedStatement pstmt = getConnection().prepareStatement(query);
+             ResultSet savedTurnOwner = pstmt.executeQuery()) {
             while (savedTurnOwner.next()) {
                 turnOwner = savedTurnOwner.getString("turn_owner");
             }
@@ -56,7 +55,7 @@ public class SparkChessDAO extends DBConnector {
     }
 
     private void executeBoardUpdateQuery(String unicode, String position) throws SQLException {
-        try(PreparedStatement pstmt = getConnection().prepareStatement(updateBoardTableQuery)) {
+        try (PreparedStatement pstmt = getConnection().prepareStatement(updateBoardTableQuery)) {
             pstmt.setString(1, unicode);
             pstmt.setString(2, position);
             pstmt.executeUpdate();
@@ -65,8 +64,8 @@ public class SparkChessDAO extends DBConnector {
 
     public void renewBoardAfterMove(String targetPosition, String destinationPosition,
                                     Piece targetPiece) throws SQLException {
-        try(PreparedStatement destinationChangeQuery = getConnection().prepareStatement(updateBoardTableQuery);
-            PreparedStatement targetPositionChangeQuery = getConnection().prepareStatement(updateBoardTableQuery)) {
+        try (PreparedStatement destinationChangeQuery = getConnection().prepareStatement(updateBoardTableQuery);
+             PreparedStatement targetPositionChangeQuery = getConnection().prepareStatement(updateBoardTableQuery)) {
             destinationChangeQuery.setString(1, targetPiece.getUnicode());
             destinationChangeQuery.setString(2, destinationPosition);
             destinationChangeQuery.executeUpdate();
@@ -78,7 +77,7 @@ public class SparkChessDAO extends DBConnector {
     }
 
     public void renewTurnOwnerAfterMove(Team turnOwner) throws SQLException {
-        try(PreparedStatement pstmt = getConnection().prepareStatement(updateTurnTableQuery)) {
+        try (PreparedStatement pstmt = getConnection().prepareStatement(updateTurnTableQuery)) {
             pstmt.setString(1, turnOwner.getTeamString());
             pstmt.setString(2, turnOwner.getOpposite().getTeamString());
             pstmt.executeUpdate();
@@ -86,7 +85,7 @@ public class SparkChessDAO extends DBConnector {
     }
 
     public void resetTurnOwner(Team turnOwner) throws SQLException {
-        try(PreparedStatement pstmt = getConnection().prepareStatement(updateTurnTableQuery)) {
+        try (PreparedStatement pstmt = getConnection().prepareStatement(updateTurnTableQuery)) {
             pstmt.setString(1, "white");
             pstmt.setString(2, turnOwner.getTeamString());
             pstmt.executeUpdate();

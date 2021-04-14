@@ -8,7 +8,6 @@ import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.repository.SparkChessDAO;
-import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 

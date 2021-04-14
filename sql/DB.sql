@@ -1,3 +1,6 @@
+CREATE DATABASE chess DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+use chess;
 
 DROP TABLE IF EXISTS `Command`;
 DROP TABLE IF EXISTS `History`;

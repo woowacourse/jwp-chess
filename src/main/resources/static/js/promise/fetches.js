@@ -32,7 +32,6 @@ function postFetch(url, body = {}) {
 
 function exceptionHandling(errorPromise) {
     errorPromise.then(data => {
-        console.log(data);
         alert(data.errorMsg);
     })
 }

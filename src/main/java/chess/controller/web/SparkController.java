@@ -99,7 +99,7 @@ public class SparkController {
         exception(RuntimeException.class, (e, request, response) -> {
             response.type("application/json; charset=utf-8");
             response.status(HTTP_STATUS_ERROR);
-            response.body(GSON.toJson(new MessageResponseDto(e.getMessage())));
+            response.body(GSON.toJson(new ErrorMessageResponseDto(e.getMessage())));
         });
     }
 }

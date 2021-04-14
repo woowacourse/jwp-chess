@@ -1,16 +1,15 @@
 package chess.domain.piece;
 
-import java.util.Locale;
 import java.util.Objects;
 
 public abstract class Piece {
 
-    private final Team team;
+    private final Color color;
     private final String name;
 
-    public Piece(final Team team, final String initialName) {
-        this.team = team;
-        if (team.isBlackTeam()) {
+    public Piece(final Color color, final String initialName) {
+        this.color = color;
+        if (color.isBlack()) {
             name = initialName.toUpperCase();
             return;
         }
@@ -21,8 +20,8 @@ public abstract class Piece {
         return name;
     }
 
-    public Team team() {
-        return team;
+    public Color team() {
+        return color;
     }
 
     @Override

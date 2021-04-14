@@ -5,9 +5,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Optional;
 
 public class RoomDAO {
     private JdbcTemplate jdbcTemplate;
@@ -16,7 +14,8 @@ public class RoomDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long createRoom(String roomName) throws SQLException {
+    public long createRoom(String roomName) {
+        System.out.println(jdbcTemplate);
         String query = "INSERT INTO room (roomName) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -25,12 +24,12 @@ public class RoomDAO {
             ps.setString(1, roomName);
             return ps;
         }, keyHolder);
-        return (long) keyHolder.getKey();
+        return keyHolder.getKey().longValue();
     }
 
-    public Optional<Long> findRoomIdByName(String roomName) throws SQLException {
-        String query = "SELECT roomId FROM room WHERE roomName = ? ORDER BY roomId DESC";
+    public long findRoomIdByName(String roomName) {
+        String query = "SELECT roomId FROM room WHERE roomName = ? ORDER BY roomId DESC LIMIT 1";
         return jdbcTemplate.queryForObject(query,
-                Optional.class, roomName);
+                Long.class, roomName);
     }
 }

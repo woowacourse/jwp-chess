@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PieceDAO {
@@ -18,7 +19,7 @@ public class PieceDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long createPiece(long gridId, Piece piece) throws SQLException {
+    public long createPiece(long gridId, Piece piece) {
         boolean isBlack = piece.isBlack();
         String position = String.valueOf(piece.position().x()) + String.valueOf(piece.position().y());
         String name = String.valueOf(piece.name());
@@ -33,13 +34,27 @@ public class PieceDAO {
             ps.setString(4, name);
             return ps;
         }, keyHolder);
-        return (long) keyHolder.getKey();
+        return keyHolder.getKey().longValue();
     }
 
-    public List<PieceDto> findPiecesByGridId(long gridId) throws SQLException {
+    public List<PieceDto> findPiecesByGridId(long gridId) {
         String query = "SELECT * FROM piece WHERE gridId = ?";
-        return jdbcTemplate.queryForObject(query,
-                List.class, gridId);
+        return jdbcTemplate.queryForObject(
+                query,
+                (rs, rowNum) -> {
+                    List<PieceDto> pieces = new ArrayList<>();
+                    while (rs.next()) {
+                        pieces.add(new PieceDto(
+                                rs.getLong(1),
+                                rs.getBoolean(2),
+                                rs.getString(3),
+                                rs.getLong(4),
+                                rs.getString(5)
+                        ));
+                    }
+                    return pieces;
+                },
+                gridId);
     }
 
     public void updatePiece(long pieceId, boolean isBlack, char name) throws SQLException {

@@ -45,4 +45,16 @@ public class Pieces {
     public List<Piece> pieces() {
         return Collections.unmodifiableList(pieces);
     }
+
+    public boolean isBlackPieces() {
+        return pieces.stream()
+                .allMatch(Piece::isBlack);
+    }
+
+    public boolean isKingPosition(final Position position) {
+        if (findPiece(position).isPresent()) {
+            return findPiece(position).get().isKing();
+        }
+        return false;
+    }
 }

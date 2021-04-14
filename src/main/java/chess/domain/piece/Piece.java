@@ -40,6 +40,10 @@ public abstract class Piece {
         return this.position.equals(position);
     }
 
+    public boolean isBlack() {
+        return color().isBlack();
+    }
+
     public abstract Piece move(final Target target);
 
     protected boolean isOpponent(final Target target) {

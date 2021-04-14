@@ -1,14 +1,11 @@
-package chess.domain.board;
+package chess.domain.piece.factory;
 
 import chess.domain.piece.Color;
 import chess.domain.piece.Knight;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 public final class KnightInitializer implements LocationInitializer {
 
@@ -17,14 +14,22 @@ public final class KnightInitializer implements LocationInitializer {
     private static final List<String> RANKS_BLACK = Collections.singletonList("8");
 
     @Override
-    public Map<Position, Piece> initialize() {
-        final Map<Position, Piece> chessBoard = new HashMap<>();
+    public List<Piece> whiteInitialize() {
+        List<Piece> pieces = new ArrayList<>();
         for (final String file : FILES) {
             RANKS_WHITE.forEach(
-                rank -> chessBoard.put(new Position(file, rank), new Knight(Color.WHITE, new Position(file, rank))));
-            RANKS_BLACK.forEach(
-                rank -> chessBoard.put(new Position(file, rank), new Knight(Color.BLACK, new Position(file, rank))));
+                    rank -> pieces.add(new Knight(Color.WHITE, new Position(file, rank))));
         }
-        return chessBoard;
+        return pieces;
+    }
+
+    @Override
+    public List<Piece> blackInitialize() {
+        List<Piece> pieces = new ArrayList<>();
+        for (final String file : FILES) {
+            RANKS_BLACK.forEach(
+                    rank -> pieces.add(new Knight(Color.WHITE, new Position(file, rank))));
+        }
+        return pieces;
     }
 }

@@ -22,11 +22,11 @@ public class Board {
     }
 
     public static Board emptyBoard(){
-        return new Board(BoardInitializer.emptyBoard());
+        return new Board(BoardInitializer.emptyBoards());
     }
 
     private static Map<Position, Piece> assignPieces(final Pieces pieces) {
-        final Map<Position, Piece> chessBoard = BoardInitializer.emptyBoard();
+        final Map<Position, Piece> chessBoard = BoardInitializer.emptyBoards();
         final Map<Position, Piece> collect = pieces.unwrap()
                 .stream()
                 .collect(Collectors.toMap(Piece::position, piece -> piece));

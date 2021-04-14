@@ -7,4 +7,14 @@ public interface MoveStrategy {
     Position move(final Position position);
 
     boolean isSameDirection(final int fileDegree, final int rankDegree);
+
+    boolean isNothing();
+
+    boolean isNorth();
+
+    boolean isNorthWest();
+
+    boolean isNorthEast();
+
+    boolean isInitialPawnNorth();
 }

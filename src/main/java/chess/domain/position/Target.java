@@ -1,6 +1,7 @@
 package chess.domain.position;
 
 import chess.domain.piece.Color;
+import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,5 +30,13 @@ public class Target {
 
     public boolean isBlank() {
         return piece.isBlank();
+    }
+
+    public boolean isBlack() {
+        return piece.color().isBlack();
+    }
+
+    public boolean isOpponent(final Source source) {
+        return this.piece.color().isOppositeColor(source.getPiece().color());
     }
 }

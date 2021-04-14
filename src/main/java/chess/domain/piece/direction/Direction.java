@@ -21,4 +21,29 @@ public abstract class Direction implements MoveStrategy {
     public boolean isSameDirection(final int fileDegree, final int rankDegree) {
         return this.fileDegree == fileDegree && this.rankDegree == rankDegree;
     }
+
+    @Override
+    public boolean isNothing() {
+        return false;
+    }
+
+    @Override
+    public boolean isNorth() {
+        return false;
+    }
+
+    @Override
+    public boolean isNorthWest() {
+        return false;
+    }
+
+    @Override
+    public boolean isNorthEast() {
+        return false;
+    }
+
+    @Override
+    public boolean isInitialPawnNorth() {
+        return false;
+    }
 }

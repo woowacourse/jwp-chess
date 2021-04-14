@@ -66,4 +66,5 @@ public abstract class Piece {
     public abstract boolean isBlank();
 
     public abstract boolean isKing();
+
 }

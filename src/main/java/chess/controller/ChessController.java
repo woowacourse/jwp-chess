@@ -17,13 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/chess")
 public class ChessController {
-
     private static final Gson GSON = new Gson();
 
     private final ChessService chessService;
 
-    public ChessController() {
-        this.chessService = new ChessService();
+    public ChessController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
     @GetMapping("/{chessId}")

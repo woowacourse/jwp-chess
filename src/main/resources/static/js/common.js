@@ -49,16 +49,24 @@ const index = {
     move: function (source, target) {
         fetch(`/pieces?source=${source}&target=${target}`)
             .then(data => {
-                return data.json()
+                if (!data.ok) {
+                    throw new Error("잘못된 명령입니다!");
+                }
+                return data.json();
             })
             .then(chessGameDto => {
                 clearBoard();
+                if (chessGameDto.finished) {
+                    winToggleButtons(chessGameDto.finished);
+                    placePieces(chessGameDto.pieceDtos);
+                    return;
+                }
+
                 placePieces(chessGameDto.pieceDtos);
-                winToggleButtons(chessGameDto.finished);
                 changeTurn(chessGameDto.state);
             })
             .catch(error => {
-                alert("잘못된 명령입니다!")
+                alert(error.message);
             });
     },
 
@@ -92,14 +100,18 @@ const index = {
         };
         fetch("/chessgames", option)
             .then(data => {
+                if (!data.ok) {
+                    throw new Error("잘못된 명령입니다!");
+                }
                 clearBoard();
                 return data.json()
             })
             .then(chessGameDto => {
-                toggleStartAndEndButtons(chessGameDto.finished);
+                console.log(chessGameDto);
+                toggleStartAndEndButtons(chessGameDto.state);
             })
             .catch(error => {
-                alert("잘못된 명령입니다!")
+                alert("[end] 잘못된 명령입니다!")
             });
     },
     scores: function () {
@@ -125,7 +137,7 @@ const index = {
                 toggleContinueAndEndButtons(chessGameDto.finished);
             })
             .catch(error => {
-                alert("잘못된 명령입니다!");
+                alert("[continue] 잘못된 명령입니다!");
             });
     }
 }
@@ -179,8 +191,8 @@ winToggleButtons = (finished) => {
     document.querySelector(".turn-info.text").innerText = "승리!";
 }
 
-toggleStartAndEndButtons = (finished) => {
-    if (finished) {
+toggleStartAndEndButtons = (state) => {
+    if (state === "End") {
         document.querySelector(".start").classList.remove("hidden");
         document.querySelector(".chess-status-btn").classList.add("hidden");
         document.querySelector(".chess-end-btn").classList.add("hidden");

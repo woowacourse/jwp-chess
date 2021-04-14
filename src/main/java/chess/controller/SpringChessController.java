@@ -1,41 +1,48 @@
 package chess.controller;
 
+import chess.dto.BoardDto;
 import chess.dto.MovablePositionDto;
 import chess.dto.MoveRequestDto;
 import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class WebController {
+@Controller
+public class SpringChessController {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final ChessService chessService;
 
-    public WebController() {
-        this.chessService = new ChessService();
+    public SpringChessController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
-    public String mainPage(Request request, Response response) {
-        Map<String, Object> model = new HashMap<>();
-        return render(model, "main.hbs");
+    @GetMapping("/")
+    public String mainPage() {
+        return "main";
     }
 
-    public String startGame(Request request, Response response) {
-        Map<String, Object> model = new HashMap<>();
-        model.put("roomId", request.queryParams("room"));
-        return render(model, "index.hbs");
+    @PostMapping("/start")
+    public String startGame(@RequestParam("room") String id, Model model) {
+        model.addAttribute("roomId", id);
+        return "index";
     }
 
-    public String createRoom(Request request, Response response) throws JsonProcessingException {
-        String roomNumber = request.params(":room");
-        return OBJECT_MAPPER.writeValueAsString(chessService.loadRoom(roomNumber));
+    @GetMapping("/create/{id}")
+    @ResponseBody
+    public ResponseEntity<BoardDto> createRoom(@PathVariable("id") String id) {
+        BoardDto boardDto = chessService.loadRoom(id);
+        return ResponseEntity.ok(boardDto);
     }
 
     public String move(Request request, Response response) throws JsonProcessingException {

@@ -14,6 +14,9 @@ public class BoardDto {
     private String turn;
     private String end;
 
+    public BoardDto() {
+    }
+
     public BoardDto(Board board, Team turn) {
         this(board, turn.name(), END_FALSE);
     }

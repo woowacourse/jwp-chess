@@ -3,6 +3,7 @@ package chess.controller.web;
 import chess.service.RequestHandler;
 import chess.service.RoomService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,10 +23,9 @@ public class RoomController {
     }
 
     @GetMapping("/main")
-    private ModelAndView loadRoomList() throws SQLException {
-        ModelAndView modelAndView = new ModelAndView("mainPage");
-        modelAndView.addObject(roomService.loadList());
-        return modelAndView;
+    private String loadRoomList(Model model) throws SQLException {
+        model.addAttribute("list", roomService.loadList());
+        return "mainPage";
     }
 
     @GetMapping("/room/create/{roomName}")
@@ -34,14 +34,9 @@ public class RoomController {
         httpServletResponse.sendRedirect("/game/create/" + roomId);
     }
 
-    private void deleteRoom() {
-        get("/room/delete/:roomId", (req, res) -> {
-            final Long roomId = RequestHandler.roomId(req);
-            roomService.delete(roomId);
-
-            res.status(200);
-            res.redirect("/game/delete/" + roomId);
-            return null;
-        });
+    @GetMapping("/room/delete/{roomId}")
+    private void deleteRoom(@PathVariable Long roomId, HttpServletResponse httpServletResponse) throws SQLException, IOException {
+        roomService.delete(roomId);
+        httpServletResponse.sendRedirect("/room/delete/" + roomId);
     }
 }

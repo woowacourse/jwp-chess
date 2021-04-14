@@ -100,6 +100,7 @@ function show(target) {
         type: "POST",
         data: requestQuery,
         success: function (result) {
+            //[d2, d3]
             if (result !== null && result !== "[]") {
                 const positions = result.slice(1, -1).split(", ");
                 positions.forEach((el) => {

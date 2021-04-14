@@ -34,14 +34,14 @@ public class OutputView {
         model.put("room", room);
         model.put("board", board);
         model.put("scores", scores);
-        return render(model, "chessBoard.html");
+        return render(model, "chessBoard.hbs");
     }
 
     public static String printResult(final List<Owner> winners) {
         final Map<String, Object> model = new HashMap<>();
         final WinnerDto winnerDto = new WinnerDto(decideWinnerName(winners));
         model.put("winner", winnerDto);
-        return render(model, "result.html");
+        return render(model, "result.hbs");
     }
 
     private static String decideWinnerName(final List<Owner> winners) {

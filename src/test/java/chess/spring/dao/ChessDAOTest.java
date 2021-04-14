@@ -1,0 +1,61 @@
+package chess.spring.dao;
+
+import chess.domain.history.History;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
+@JdbcTest
+class ChessDAOTest {
+    private ChessDAO chessDAO;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setup() {
+        chessDAO = new ChessDAO(jdbcTemplate);
+
+        jdbcTemplate.execute("DROP TABLE HISTORY IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE History (" +
+                "ID INT NOT NULL AUTO_INCREMENT," +
+                "SOURCE VARCHAR(255)," +
+                "DESTINATION VARCHAR(255)," +
+                "TEAM_TYPE VARCHAR(255)," +
+                "PRIMARY KEY (ID)" +
+                ")");
+        String sql = "INSERT INTO HISTORY (SOURCE, DESTINATION, TEAM_TYPE) VALUES(?, ?, ?)";
+        jdbcTemplate.update(sql, "a1", "a2", "WHITE");
+        jdbcTemplate.update(sql, "a6", "b5", "BLACK");
+    }
+
+    @DisplayName("DB에 저장된 모든 History들을 조회한다.")
+    @Test
+    void findAllHistories() {
+        List<History> histories = chessDAO.findAllHistories();
+
+        assertThat(histories).hasSize(2);
+    }
+
+    @DisplayName("DB에 History를 insert한다.")
+    @Test
+    void insertHistory() {
+        chessDAO.insert("a1", "a3", "WHITE");
+        assertThat(chessDAO.findAllHistories()).hasSize(3);
+    }
+
+    @DisplayName("DB의 Histories를 전부 delete한다.")
+    @Test
+    void deleteAllHistories() {
+        chessDAO.deleteAll();
+        assertThat(chessDAO.findAllHistories()).hasSize(0);
+    }
+}

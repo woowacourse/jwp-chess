@@ -32,7 +32,7 @@ public class SparkChessApplication {
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             res.status(OK);
-            return render(model, "index.html");
+            return render(model, "index.hbs");
         });
 
         post("/move", (req, res) -> {

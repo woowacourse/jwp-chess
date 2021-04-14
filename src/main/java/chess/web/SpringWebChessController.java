@@ -1,66 +1,53 @@
 package chess.web;
 
 import chess.service.*;
+import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
 import chess.web.dto.MoveDto;
+import chess.web.dto.StatusDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SpringWebChessController {
 
-    private final StartService startService;
-    private final EndService endService;
-    private final MoveService moveService;
-    private final SaveService saveService;
-    private final StatusService statusService;
-    private final LoadService loadService;
+    private final ChessService chessService;
 
-    public SpringWebChessController(StartService startService,
-                                   EndService endService,
-                                   MoveService moveService,
-                                   SaveService saveService,
-                                   StatusService statusService,
-                                   LoadService loadService) {
-        this.startService = startService;
-        this.endService = endService;
-        this.moveService = moveService;
-        this.saveService = saveService;
-        this.statusService = statusService;
-        this.loadService = loadService;
+    public SpringWebChessController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
     @GetMapping("/{gameId}/start")
-    public Object start(@PathVariable String gameId) {
-        return startService.startNewGame(gameId);
+    public GameDto start(@PathVariable String gameId) {
+        return chessService.startNewGame(gameId);
     }
 
     @GetMapping("/{gameId}/load")
-    public Object load(@PathVariable String gameId) {
-        return loadService.loadByGameId(gameId);
+    public GameDto load(@PathVariable String gameId) {
+        return chessService.loadByGameId(gameId);
     }
 
     @PatchMapping("/{gameId}/move")
-    public Object move(@PathVariable String gameId, @RequestBody MoveDto moveDto) {
+    public GameDto move(@PathVariable String gameId, @RequestBody MoveDto moveDto) {
         String source = moveDto.getSource();
         String target = moveDto.getTarget();
 
-        return moveService.move(gameId, source, target);
+        return chessService.move(gameId, source, target);
     }
 
     @PostMapping("/{gameId}/save")
-    public Object save(@PathVariable String gameId) {
-        return saveService.save(gameId);
+    public MessageDto save(@PathVariable String gameId) {
+        return chessService.save(gameId);
     }
 
     @GetMapping("/{gameId}/status")
-    public Object status(@PathVariable String gameId) {
-        return statusService.getStatus(gameId);
+    public StatusDto status(@PathVariable String gameId) {
+        return chessService.getStatus(gameId);
     }
 
     @PatchMapping("/{gameId}/status")
-    public Object end(@PathVariable String gameId) {
-        return endService.end(gameId);
+    public MessageDto end(@PathVariable String gameId) {
+        return chessService.end(gameId);
     }
 
     @ExceptionHandler

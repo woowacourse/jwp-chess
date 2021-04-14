@@ -7,7 +7,6 @@ import chess.domain.DTO.TurnDTO;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
-import chess.repository.SparkChessDAO;
 import chess.repository.SpringChessDAO;
 import org.springframework.stereotype.Service;
 

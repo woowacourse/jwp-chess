@@ -15,8 +15,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Repository
-public class ChessDAO extends DBConnector {
+public class SparkChessDAO extends DBConnector {
     private final String updateBoardTableQuery = "update board set piece = ? where position = ?";
     private final String updateTurnTableQuery = "update turn set turn_owner = ? where turn_owner = ?";
 

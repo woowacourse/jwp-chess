@@ -4,7 +4,7 @@ function initiate() {
     xmlHttp.onreadystatechange = function () {
         if (isValidHttpResponse(this)) {
             const boardDTO = JSON.parse(this.responseText);
-            if (boardDTO.isCheckmate === true) {
+            if (boardDTO.checkmate === true) {
                 window.location.href = 'http://localhost:8080/result/';
                 return;
             }
@@ -103,8 +103,8 @@ function sendMoveRequest(current, destination, teamType) {
         if (isValidHttpResponse(this)) {
             removeOutdatedChessBoard();
             const boardDTO = JSON.parse(this.responseText);
-            if (boardDTO.isCheckmate === true) {
-                window.location.href = '/result';
+            if (boardDTO.checkmate === true) {
+                window.location.href = 'result';
                 return;
             }
             printChessBoard(boardDTO.rows, boardDTO.currentTeamType);

@@ -43,7 +43,7 @@ function addRestartEvent() {
         const url = getBaseUrl() + '/restart';
         xmlHttp.onreadystatechange = function () {
             if (isValidHttpResponse(this)) {
-                window.location = JSON.parse(this.responseText);
+                window.location.replace(this.responseText);
             }
         }
         xmlHttp.open('GET', url, true);

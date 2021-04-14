@@ -51,5 +51,6 @@ public class ChessService {
 
     public void deleteAllHistories() {
         chessDAO.deleteAllHistories();
+        CACHED_CHESS_BOARD = null;
     }
 }

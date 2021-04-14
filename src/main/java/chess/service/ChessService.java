@@ -50,5 +50,6 @@ public class ChessService {
 
     public void deleteAllHistories() throws SQLException {
         chessRepository.deleteAllHistories();
+        CACHED_CHESS_BOARD = null;
     }
 }

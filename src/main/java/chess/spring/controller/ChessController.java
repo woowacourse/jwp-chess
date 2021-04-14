@@ -47,9 +47,9 @@ public class ChessController {
     }
 
     @GetMapping("/restart")
-    public String restart() {
+    public ResponseEntity<String> restart() {
         chessService.deleteAllHistories();
-        return "/";
+        return ResponseEntity.ok().body("/");
     }
 
     @ExceptionHandler(RuntimeException.class)

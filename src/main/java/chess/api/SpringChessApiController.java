@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-
 @RestController
 public class SpringChessApiController {
 
@@ -19,16 +17,18 @@ public class SpringChessApiController {
     }
 
     @GetMapping("/pieces")
-    public ChessGameDto findPieces(@RequestParam(value = "source") String sourcePosition,
-                                   @RequestParam(value = "target") String targetPosition) {
+    public ResponseEntity<ChessGameDto> findPieces(@RequestParam(value = "source") String sourcePosition,
+                                                   @RequestParam(value = "target") String targetPosition) {
         Position source = Position.parseChessPosition(sourcePosition);
         Position target = Position.parseChessPosition(targetPosition);
-        return chessGameService.moveChessPiece(source, target);
+        ChessGameDto chessGameDto = chessGameService.moveChessPiece(source, target);
+        return ResponseEntity.ok(chessGameDto);
     }
 
     @GetMapping("/chessgames")
-    public ChessGameDto findChessGame() {
-        return chessGameService.findLatestPlayingGame();
+    public ResponseEntity<ChessGameDto> findChessGame() {
+        ChessGameDto latestPlayingGame = chessGameService.findLatestPlayingGame();
+        return ResponseEntity.ok(latestPlayingGame);
     }
 
     @PostMapping("/chessgames")

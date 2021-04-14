@@ -6,10 +6,12 @@ import chess.domain.manager.ChessGameManager;
 import chess.domain.manager.ChessGameManagerBundle;
 import chess.domain.manager.ChessGameManagerFactory;
 import chess.domain.manager.NotStartedChessGameManager;
+import org.springframework.stereotype.Service;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
+@Service
 public class ChessGameRepository {
     private final ChessDao chessDao;
 

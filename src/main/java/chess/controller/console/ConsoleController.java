@@ -4,7 +4,7 @@ import chess.controller.console.command.Command;
 import chess.controller.console.command.CommandRouter;
 import chess.domain.manager.ChessGameManager;
 import chess.domain.manager.ChessGameManagerFactory;
-import chess.service.ChessService;
+import chess.service.ChessServiceImpl;
 import chess.util.Repeater;
 import chess.view.InputView;
 import chess.view.OutputView;
@@ -12,10 +12,10 @@ import chess.view.OutputView;
 public class ConsoleController {
     private static final int TEMPORARY_GAME_ID = 0;
 
-    private final ChessService chessService;
+    private final ChessServiceImpl chessServiceImpl;
 
-    public ConsoleController(ChessService chessService) {
-        this.chessService = chessService;
+    public ConsoleController(ChessServiceImpl chessServiceImpl) {
+        this.chessServiceImpl = chessServiceImpl;
     }
 
     public void run() {
@@ -23,7 +23,7 @@ public class ConsoleController {
         ChessGameManager chessGameManager = ChessGameManagerFactory.createNotStartedGameManager(TEMPORARY_GAME_ID);
         do {
             Command command = Repeater.repeatOnError(() -> CommandRouter.findByInputCommand(InputView.getCommand()));
-            chessGameManager = executeCommandOrPassOnError(chessGameManager.getId(), chessService, command);
+            chessGameManager = executeCommandOrPassOnError(chessGameManager.getId(), chessServiceImpl, command);
         } while (chessGameManager.isNotEnd());
 
         if (chessGameManager.isStart()) {
@@ -31,12 +31,12 @@ public class ConsoleController {
         }
     }
 
-    private ChessGameManager executeCommandOrPassOnError(long gameId, ChessService chessService, Command command) {
+    private ChessGameManager executeCommandOrPassOnError(long gameId, ChessServiceImpl chessServiceImpl, Command command) {
         try {
-            return command.execute(chessService, gameId);
+            return command.execute(chessServiceImpl, gameId);
         } catch (RuntimeException e) {
             OutputView.printMessage(e.getMessage());
-            return chessService.findById(gameId);
+            return chessServiceImpl.findById(gameId);
         }
     }
 }

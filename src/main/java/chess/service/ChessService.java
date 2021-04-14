@@ -1,77 +1,32 @@
 package chess.service;
 
 import chess.controller.web.dto.MoveRequestDto;
-import chess.dao.ChessDao;
 import chess.domain.manager.ChessGameManager;
 import chess.domain.manager.ChessGameManagerBundle;
-import chess.domain.manager.ChessGameManagerFactory;
 import chess.domain.piece.attribute.Color;
 import chess.domain.position.Position;
-import chess.domain.repository.ChessGameRepository;
 import chess.domain.statistics.ChessGameStatistics;
 
-public class ChessService {
-    private static final long TEMPORARY_ID = 0;
+public interface ChessService {
+    ChessGameManager start();
 
-    private final ChessGameRepository chessGameRepository;
+    ChessGameManager end(long gameId);
 
-    public ChessService(ChessDao chessDao) {
-        this.chessGameRepository = new ChessGameRepository(chessDao);
-    }
+    ChessGameManagerBundle findRunningGames();
 
-    public ChessGameManager start() {
-        long gameId = chessGameRepository.add(ChessGameManagerFactory.createRunningGame(TEMPORARY_ID));
-        return ChessGameManagerFactory.createRunningGame(gameId);
-    }
+    boolean isKindDead(long gameId);
 
-    public ChessGameManager end(long gameId) {
-        ChessGameManager endGameManager = findById(gameId).end();
-        update(endGameManager);
-        return endGameManager;
-    }
+    ChessGameManager load(long gameId);
 
-    public ChessGameManagerBundle findRunningGames() {
-        return chessGameRepository.findRunningGames();
-    }
+    void move(long gameId, Position from, Position to);
 
-    public boolean isKindDead(long gameId) {
-        return findById(gameId).isKingDead();
-    }
+    void move(MoveRequestDto moveRequestDto);
 
-    private void update(ChessGameManager chessGameManager) {
-        chessGameRepository.update(chessGameManager);
-    }
+    boolean isEnd(long gameId);
 
-    public ChessGameManager load(long gameId) {
-        return chessGameRepository.findById(gameId);
-    }
+    ChessGameManager findById(long gameId);
 
-    public void move(long gameId, Position from, Position to) {
-        ChessGameManager chessGameManager = chessGameRepository.findById(gameId);
-        chessGameManager.move(from, to);
-        if (chessGameManager.isKingDead()) {
-            chessGameManager = chessGameManager.end();
-        }
-        chessGameRepository.update(chessGameManager);
-    }
+    Color nextColor(long gameId);
 
-    public void move(MoveRequestDto moveRequestDto) {
-        move(moveRequestDto.getId(), moveRequestDto.getFromPosition(), moveRequestDto.getToPosition());
-    }
-
-    public boolean isEnd(long gameId) {
-        return chessGameRepository.isEnd(gameId);
-    }
-
-    public ChessGameManager findById(long gameId) {
-        return chessGameRepository.findById(gameId);
-    }
-
-    public Color nextColor(long gameId) {
-        return findById(gameId).nextColor();
-    }
-
-    public ChessGameStatistics getStatistics(long gameId) {
-        return findById(gameId).getStatistics();
-    }
+    ChessGameStatistics getStatistics(long gameId);
 }

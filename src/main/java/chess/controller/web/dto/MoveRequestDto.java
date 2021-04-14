@@ -15,6 +15,14 @@ public class MoveRequestDto {
         this.to = to;
     }
 
+    public String getFrom() {
+        return from;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
     public Position getFromPosition() {
         return Position.of(from);
     }
@@ -25,6 +33,15 @@ public class MoveRequestDto {
 
     public long getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "MoveRequestDto{" +
+                "id=" + id +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                '}';
     }
 
     @Override

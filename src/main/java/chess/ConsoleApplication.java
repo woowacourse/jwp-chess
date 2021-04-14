@@ -3,7 +3,7 @@ package chess;
 import chess.controller.console.ConsoleController;
 import chess.dao.MysqlChessDao;
 import chess.dao.StaticMemoryChessDao;
-import chess.service.ChessService;
+import chess.service.ChessServiceImpl;
 
 import java.util.Objects;
 
@@ -11,13 +11,13 @@ import static chess.dao.ChessConnection.getConnection;
 
 public class ConsoleApplication {
     public static void main(String[] args) {
-        ChessService chessService = new ChessService(new StaticMemoryChessDao());
+        ChessServiceImpl chessServiceImpl = new ChessServiceImpl(new StaticMemoryChessDao());
 
         if (!Objects.isNull(getConnection())) {
-            chessService = new ChessService(new MysqlChessDao());
+            chessServiceImpl = new ChessServiceImpl(new MysqlChessDao());
         }
 
-        ConsoleController chessController = new ConsoleController(chessService);
+        ConsoleController chessController = new ConsoleController(chessServiceImpl);
         chessController.run();
     }
 }

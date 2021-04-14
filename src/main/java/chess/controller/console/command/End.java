@@ -1,7 +1,7 @@
 package chess.controller.console.command;
 
 import chess.domain.manager.ChessGameManager;
-import chess.service.ChessService;
+import chess.service.ChessServiceImpl;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class End implements Command {
     }
 
     @Override
-    public ChessGameManager execute(ChessService chessService, long gameId) {
-        return chessService.end(gameId);
+    public ChessGameManager execute(ChessServiceImpl chessServiceImpl, long gameId) {
+        return chessServiceImpl.end(gameId);
     }
 }

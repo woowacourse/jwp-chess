@@ -27,11 +27,11 @@ async function getPieces(url) {
 
 async function movePiece(from, to) {
     const moveResult = await postFetch("/game/move", {id: chessGameId, from: from, to: to});
-    if (moveResult.hasOwnProperty("isEnd") && moveResult.isEnd === true) {
+    if (moveResult.hasOwnProperty("end") && moveResult.end === true) {
         alert("게임이 종료되었습니다~!");
         findGames();
     }
-    if (moveResult.hasOwnProperty("isEnd") && moveResult.isEnd === false) {
+    if (moveResult.hasOwnProperty("end") && moveResult.end === false) {
         const $to = $chessboard.querySelector("#" + to);
         const $from = $chessboard.querySelector("#" + from);
         const color = $from.classList.contains("BLACK") ? "BLACK" : "WHITE";
@@ -53,7 +53,6 @@ async function findGames() {
 }
 
 async function calculateScore() {
-    console.log(chessGameId);
     const scoreResponseData = await getFetch(`/game/score/${chessGameId}`);
 
     $blackScore.innerText = scoreResponseData.colorsScore.BLACK;

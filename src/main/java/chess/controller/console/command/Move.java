@@ -2,7 +2,7 @@ package chess.controller.console.command;
 
 import chess.domain.manager.ChessGameManager;
 import chess.domain.position.Position;
-import chess.service.ChessService;
+import chess.service.ChessServiceImpl;
 import chess.view.OutputView;
 
 import java.util.List;
@@ -24,12 +24,12 @@ public class Move implements Command {
     }
 
     @Override
-    public ChessGameManager execute(ChessService chessService, long gameId) {
-        chessService.move(gameId, from, to);
-        OutputView.printBoard(chessService.findById(gameId).getBoard());
-        if (chessService.isKindDead(gameId)) {
-            chessService.end(gameId);
+    public ChessGameManager execute(ChessServiceImpl chessServiceImpl, long gameId) {
+        chessServiceImpl.move(gameId, from, to);
+        OutputView.printBoard(chessServiceImpl.findById(gameId).getBoard());
+        if (chessServiceImpl.isKindDead(gameId)) {
+            chessServiceImpl.end(gameId);
         }
-        return chessService.findById(gameId);
+        return chessServiceImpl.findById(gameId);
     }
 }

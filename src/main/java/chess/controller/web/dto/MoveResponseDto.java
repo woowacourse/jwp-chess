@@ -3,16 +3,16 @@ package chess.controller.web.dto;
 import chess.domain.piece.attribute.Color;
 
 public class MoveResponseDto {
-    private final boolean isEnd;
+    private final boolean end;
     private final String nextColor;
 
-    public MoveResponseDto(boolean isEnd, Color nextColor) {
-        this.isEnd = isEnd;
+    public MoveResponseDto(boolean end, Color nextColor) {
+        this.end = end;
         this.nextColor = nextColor.name();
     }
 
     public boolean isEnd() {
-        return isEnd;
+        return end;
     }
 
     public String getNextColor() {

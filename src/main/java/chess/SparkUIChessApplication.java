@@ -1,9 +1,9 @@
 package chess;
 
-import chess.controller.web.WebController;
+import chess.controller.web.SparkController;
 import chess.dao.MysqlChessDao;
 import chess.dao.StaticMemoryChessDao;
-import chess.service.ChessService;
+import chess.service.ChessServiceImpl;
 
 import java.util.Objects;
 
@@ -16,14 +16,14 @@ public class SparkUIChessApplication {
         port(8080);
         staticFileLocation("static");
 
-        ChessService chessService = new ChessService(new StaticMemoryChessDao());
+        ChessServiceImpl chessServiceImpl = new ChessServiceImpl(new StaticMemoryChessDao());
 
         if (!Objects.isNull(getConnection())) {
-            chessService = new ChessService(new MysqlChessDao());
+            chessServiceImpl = new ChessServiceImpl(new MysqlChessDao());
         }
 
-        WebController webController = new WebController(chessService);
-        webController.start();
+        SparkController sparkController = new SparkController(chessServiceImpl);
+        sparkController.start();
     }
 
 }

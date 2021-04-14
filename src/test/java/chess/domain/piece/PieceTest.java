@@ -12,7 +12,7 @@ class PieceTest {
     @DisplayName("색에 따라 이름이 정해지는지 확인")
     void create() {
         final Piece piece = new King(Color.BLACK, new Position("2", "a"));
-        assertThat(piece.team()).isEqualTo(Color.BLACK);
+        assertThat(piece.color()).isEqualTo(Color.BLACK);
         assertThat(piece.name()).isEqualTo("K");
     }
 

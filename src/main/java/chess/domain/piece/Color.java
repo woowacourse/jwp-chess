@@ -14,4 +14,11 @@ public enum Color {
     public boolean isBlack() {
         return this == BLACK;
     }
+
+    public boolean isOppositeColor(final Color color) {
+        if (NOTHING == color) {
+            return true;
+        }
+        return this != color;
+    }
 }

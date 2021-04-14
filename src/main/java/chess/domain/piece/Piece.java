@@ -2,7 +2,6 @@ package chess.domain.piece;
 
 import chess.domain.position.Position;
 import chess.domain.position.Target;
-
 import java.util.Objects;
 
 public abstract class Piece {
@@ -25,11 +24,11 @@ public abstract class Piece {
         return name;
     }
 
-    public Color team() {
+    public Color color() {
         return color;
     }
 
-    public Position position(){
+    public Position position() {
         return position;
     }
 
@@ -54,11 +53,13 @@ public abstract class Piece {
         return Objects.hash(name);
     }
 
-/*
-    public abstract void move(final Target target);
-*/
+//    public abstract void move(final Target target);
 
     public abstract boolean canMove(final Target target);
+
+    protected boolean isOpponent(final Target target) {
+        return color.isOppositeColor(target.color());
+    }
 
     public abstract boolean isPawn();
 

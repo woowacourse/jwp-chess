@@ -4,6 +4,10 @@ public class Position implements Comparable<Position> {
     private final File file;
     private final Rank rank;
 
+    public Position(final String input) {
+        this(input.split("")[0], input.split("")[1]);
+    }
+
     public Position(final String file, final String rank) {
         this(File.from(file).orElseThrow(() -> new IllegalArgumentException("해당하는 File 위치를 찾을 수 없습니다.")),
                 Rank.from(rank).orElseThrow(() -> new IllegalArgumentException("해당하는 Rank 위치를 찾을 수 없습니다.")));

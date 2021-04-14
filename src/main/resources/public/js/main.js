@@ -129,7 +129,7 @@ window.onload = function () {
     ).forEach(tile => {
       document.getElementById(tile)
       .insertAdjacentHTML("beforeend",
-          PIECES[`${realBoard[tile]["pieceColor"]}_${realBoard[tile]["pieceType"]}`]);
+          PIECES[`${realBoard[tile]["name"]}`]);
     });
     await fillScore();
   }

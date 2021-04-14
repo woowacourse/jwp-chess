@@ -78,5 +78,4 @@ public class Game {
     public String getWinner() {
         return getResult().findWinner();
     }
-
 }

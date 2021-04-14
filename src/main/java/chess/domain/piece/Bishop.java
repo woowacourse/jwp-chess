@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.piece.direction.MoveStrategies;
 import chess.domain.position.Position;
+import chess.domain.position.Target;
 
 public final class Bishop extends GeneralPiece {
 
@@ -14,5 +15,10 @@ public final class Bishop extends GeneralPiece {
     @Override
     protected MoveStrategies assignMoveStrategies() {
         return MoveStrategies.diagonalMoveStrategies();
+    }
+
+    @Override
+    public Piece move(final Target target) {
+        return new Bishop(this.color(), target.getPiece().position());
     }
 }

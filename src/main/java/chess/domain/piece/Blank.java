@@ -12,6 +12,11 @@ public final class Blank extends Piece {
     }
 
     @Override
+    public Piece move(Target target) {
+        throw new UnsupportedOperationException("움직일 수 없습니다.");
+    }
+
+    @Override
     public boolean canMove(final Target target) {
         throw new UnsupportedOperationException("비어 있는 칸입니다.");
     }

@@ -22,6 +22,11 @@ public final class Pawn extends Piece {
     }
 
     @Override
+    public Piece move(final Target target) {
+        return new Pawn(this.color(), target.getPiece().position());
+    }
+
+    @Override
     public boolean canMove(final Target target) {
         final List<Integer> result = subtractByTeam(target);
         final MoveStrategy moveStrategy = moveStrategies.strategies().stream()

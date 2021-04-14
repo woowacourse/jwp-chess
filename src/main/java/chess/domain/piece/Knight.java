@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.piece.direction.MoveStrategies;
 import chess.domain.position.Position;
+import chess.domain.position.Target;
 
 public final class Knight extends GeneralPiece {
 
@@ -14,5 +15,10 @@ public final class Knight extends GeneralPiece {
     @Override
     protected MoveStrategies assignMoveStrategies() {
         return MoveStrategies.knightMoveStrategies();
+    }
+
+    @Override
+    public Piece move(final Target target) {
+        return new Knight(this.color(), target.getPiece().position());
     }
 }

@@ -36,6 +36,24 @@ public abstract class Piece {
         return position.position();
     }
 
+    public boolean isSamePosition(final Position position){
+        return this.position.equals(position);
+    }
+
+    public abstract Piece move(final Target target);
+
+    protected boolean isOpponent(final Target target) {
+        return color.isOppositeColor(target.color());
+    }
+
+    public abstract boolean canMove(final Target target);
+
+    public abstract boolean isPawn();
+
+    public abstract boolean isBlank();
+
+    public abstract boolean isKing();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -52,19 +70,4 @@ public abstract class Piece {
     public int hashCode() {
         return Objects.hash(name);
     }
-
-//    public abstract void move(final Target target);
-
-    public abstract boolean canMove(final Target target);
-
-    protected boolean isOpponent(final Target target) {
-        return color.isOppositeColor(target.color());
-    }
-
-    public abstract boolean isPawn();
-
-    public abstract boolean isBlank();
-
-    public abstract boolean isKing();
-
 }

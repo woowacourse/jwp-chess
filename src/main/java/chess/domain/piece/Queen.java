@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.piece.direction.MoveStrategies;
 import chess.domain.position.Position;
+import chess.domain.position.Target;
 
 public final class Queen extends GeneralPiece {
 
@@ -14,5 +15,10 @@ public final class Queen extends GeneralPiece {
     @Override
     protected MoveStrategies assignMoveStrategies() {
         return MoveStrategies.everyMoveStrategies();
+    }
+
+    @Override
+    public Piece move(final Target target) {
+        return new Queen(this.color(), target.getPiece().position());
     }
 }

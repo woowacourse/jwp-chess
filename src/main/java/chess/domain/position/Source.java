@@ -12,14 +12,13 @@ public class Source {
         this.piece = piece;
     }
 
-
     public Piece getPiece() {
         return piece;
     }
 
-//    public void move(final Target target) {
-//        piece.move(target);
-//    }
+    public Piece move(final Target target) {
+        return piece.move(target);
+    }
 
     public List<Integer> subtract(final Target target) {
         List<Integer> result = new ArrayList<>();

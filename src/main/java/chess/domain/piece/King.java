@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.piece.direction.MoveStrategies;
 import chess.domain.position.Position;
+import chess.domain.position.Target;
 
 public final class King extends GeneralPiece {
 
@@ -19,5 +20,10 @@ public final class King extends GeneralPiece {
     @Override
     public boolean isKing() {
         return true;
+    }
+
+    @Override
+    public Piece move(final Target target) {
+        return new King(this.color(), target.getPiece().position());
     }
 }

@@ -19,12 +19,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ChessService {
+public class WebChessService {
 
     private CommandDao commandDao;
     private HistoryDao historyDao;
 
-    public ChessService(CommandDao commandDao, HistoryDao historyDao) {
+    public WebChessService(CommandDao commandDao, HistoryDao historyDao) {
         this.commandDao = commandDao;
         this.historyDao = historyDao;
     }

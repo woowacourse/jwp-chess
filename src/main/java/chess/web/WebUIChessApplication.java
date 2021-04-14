@@ -3,7 +3,7 @@ package chess.web;
 import chess.web.controller.WebController;
 import chess.web.dao.CommandDao;
 import chess.web.dao.HistoryDao;
-import chess.web.service.ChessService;
+import chess.web.service.WebChessService;
 
 import static spark.Spark.*;
 
@@ -21,6 +21,6 @@ public class WebUIChessApplication {
     }
 
     private static WebController initWebController(CommandDao commandDao, HistoryDao historyDao) {
-        return new WebController(new ChessService(commandDao, historyDao));
+        return new WebController(new WebChessService(commandDao, historyDao));
     }
 }

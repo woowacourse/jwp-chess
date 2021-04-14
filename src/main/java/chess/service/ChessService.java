@@ -20,11 +20,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class SpringChessService {
+public class ChessService {
     private CommandRepository commandRepository;
     private HistoryRepository historyRepository;
 
-    public SpringChessService(CommandRepository commandRepository, HistoryRepository historyRepository) {
+    public ChessService(CommandRepository commandRepository, HistoryRepository historyRepository) {
         this.commandRepository = commandRepository;
         this.historyRepository = historyRepository;
     }

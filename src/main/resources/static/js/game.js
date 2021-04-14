@@ -51,7 +51,7 @@ function sendMoveRequest(trimmedMoveCommand) {
     const url = '/game/move';
 
     http.open('POST', url);
-    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    http.setRequestHeader('Content-type', 'text/plain');
     http.onreadystatechange = function () {
         const sourcePosition = trimmedMoveCommand.split(" ")[1]
         const targetPosition = trimmedMoveCommand.split(" ")[2]

@@ -1,5 +1,7 @@
-package chess.controller;
+package chess.service;
 
+import chess.controller.Response;
+import chess.controller.StatusCode;
 import chess.database.room.Room;
 import chess.database.room.RoomDAO;
 import chess.domain.board.ChessBoard;
@@ -12,42 +14,37 @@ import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-public class WebUIChessController {
+@Service
+public class SpringChessService {
     public static final Gson gson = new Gson();
 
     private final RoomDAO roomDAO = new RoomDAO();
     private ChessGame chessGame;
 
-    public Response createRoom(String roomId) {
+    public Optional<ChessGame> createRoom(String roomId) {
         try {
             roomDAO.validateRoomExistence(roomId);
             initializeChessBoard();
-            Response response = new Response(chessGame, StatusCode.SUCCESSFUL);
-            response.add("name", roomId);
-            return response;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            Response response = new Response(StatusCode.CONFLICT);
-            response.add("alert", roomId + "는 이미 존재하는 방입니다.");
-            return response;
+            return Optional.of(chessGame);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new Response(StatusCode.INTERNAL_SERVER_ERROR);
+            return Optional.empty();
         }
     }
 
-    public Response movePiece(List<String> input) {
+    public Optional<ChessGame> movePiece(List<String> input) {
         try {
             chessGame.play(input);
-            return new Response(chessGame, StatusCode.SUCCESSFUL);
+            return Optional.of(chessGame);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new Response(StatusCode.BAD_REQUEST);
+            return Optional.empty();
         }
     }
 
@@ -70,20 +67,20 @@ public class WebUIChessController {
 
     private Room createRoomToSave(String request) {
         JsonObject roomJson = gson.fromJson(request, JsonObject.class);
-        String name = roomJson.get("name").getAsString();
+        String id = roomJson.get("room_id").getAsString();
         String turn = roomJson.get("turn").getAsString();
         JsonObject state = roomJson.get("state").getAsJsonObject();
-        return new Room(name, turn, state);
+        return new Room(id, turn, state);
     }
 
     public Response loadRoom(String request) {
         try {
             JsonObject roomJson = gson.fromJson(request, JsonObject.class);
-            String name = roomJson.get("name").getAsString();
-            Room room = roomDAO.findByRoomId(name);
+            String roomId = roomJson.get("room_id").getAsString();
+            Room room = roomDAO.findByRoomId(roomId);
             setChessGame(room);
             Response response = new Response(chessGame, StatusCode.SUCCESSFUL);
-            response.add("name", name);
+            response.add("room_id", roomId);
             return response;
         } catch (Exception e) {
             System.out.println(e.getMessage());

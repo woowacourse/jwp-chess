@@ -104,7 +104,7 @@ function sendMoveRequest(current, destination, teamType) {
             removeOutdatedChessBoard();
             const boardDTO = JSON.parse(this.responseText);
             if (boardDTO.checkmate === true) {
-                window.location.href = 'result';
+                window.location.href = '/result';
                 return;
             }
             printChessBoard(boardDTO.rows, boardDTO.currentTeamType);

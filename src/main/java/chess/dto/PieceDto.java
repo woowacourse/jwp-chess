@@ -4,11 +4,11 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 
 public class PieceDto {
-    private final String notation;
+    private final String name;
     private final String color;
 
-    private PieceDto(String notation, String color) {
-        this.notation = notation;
+    private PieceDto(String name, String color) {
+        this.name = name;
         this.color = color;
     }
 
@@ -17,11 +17,11 @@ public class PieceDto {
     }
 
     public Piece toPiece() {
-        return PieceDeserializeTable.deserializeFrom(this.notation, Color.of(this.color));
+        return PieceDeserializeTable.deserializeFrom(this.name, Color.of(this.color));
     }
 
-    public String getNotation() {
-        return notation;
+    public String getName() {
+        return name;
     }
 
     public String getColor() {
@@ -31,7 +31,7 @@ public class PieceDto {
     @Override
     public String toString() {
         return "PieceDto{" +
-                "notation='" + notation + '\'' +
+                "notation='" + name + '\'' +
                 ", color='" + color + '\'' +
                 '}';
     }

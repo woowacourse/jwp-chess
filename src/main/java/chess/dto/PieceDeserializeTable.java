@@ -14,17 +14,17 @@ public enum PieceDeserializeTable {
     ROOK("Rook", Rook::new),
     PAWN("Pawn", Pawn::new);
 
-    private final String notation;
+    private final String name;
     private final Function<Color, Piece> constructorFunction;
 
-    PieceDeserializeTable(String notation, Function<Color, Piece> factoryFunction) {
-        this.notation = notation;
+    PieceDeserializeTable(String name, Function<Color, Piece> factoryFunction) {
+        this.name = name;
         this.constructorFunction = factoryFunction;
     }
 
     public static Piece deserializeFrom(String string, Color color) {
         return Arrays.stream(values())
-                .filter(value -> value.notation.equalsIgnoreCase(string))
+                .filter(value -> value.name.equalsIgnoreCase(string))
                 .findAny()
                 .map(value -> value.constructorFunction.apply(color))
                 .orElseThrow(() -> new NoSuchElementException("시스템 에러 - Deserialization이 불가합니다."));

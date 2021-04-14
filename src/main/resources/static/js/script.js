@@ -139,7 +139,7 @@ function updateBoard(piecesMap) {
 
 async function updateSquare(position, piece) {
     const square = document.getElementById(position);
-    square.appendChild(makeImage(piece.color + '-' + piece.notation));
+    square.appendChild(makeImage(piece.color + '-' + piece.name));
 }
 
 function makeImage(imageName) {

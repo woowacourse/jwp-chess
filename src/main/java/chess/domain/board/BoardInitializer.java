@@ -22,13 +22,16 @@ public final class BoardInitializer {
     }
 
     public static Map<Position, Piece> initializeBoard() {
-        final Map<Position, Piece> chessBoard = new TreeMap<>();
-        for (final String file : FILE_RANGE) {
-            RANK_RANGE.forEach(rank -> chessBoard.put(new Position(file, rank), new Blank(new Position(file, rank))));
-        }
+        final Map<Position, Piece> chessBoard = emptyBoard();
         locationInitializers.forEach(initializer -> chessBoard.putAll(initializer.initialize()));
         return chessBoard;
     }
 
-
+    public static Map<Position, Piece> emptyBoard() {
+        final Map<Position, Piece> chessBoard = new TreeMap<>();
+        for (final String file : FILE_RANGE) {
+            RANK_RANGE.forEach(rank -> chessBoard.put(new Position(file, rank), new Blank(new Position(file, rank))));
+        }
+        return chessBoard;
+    }
 }

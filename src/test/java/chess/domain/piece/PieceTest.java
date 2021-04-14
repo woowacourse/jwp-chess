@@ -20,7 +20,7 @@ class PieceTest {
     @DisplayName("정상 위치 생성 확인")
     void position() {
         final Pawn pawn = new Pawn(Color.BLACK, new Position("2", "a"));
-        assertThat(pawn.position()).isEqualTo("2a");
+        assertThat(pawn.positionInfo()).isEqualTo("2a");
     }
 
     @Test

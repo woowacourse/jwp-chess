@@ -28,7 +28,11 @@ public abstract class Piece {
         return color;
     }
 
-    public String position() {
+    public Position position(){
+        return position;
+    }
+
+    public String positionInfo() {
         return position.position();
     }
 

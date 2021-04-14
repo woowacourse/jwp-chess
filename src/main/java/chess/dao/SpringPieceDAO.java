@@ -57,4 +57,9 @@ public class SpringPieceDAO {
         jdbcTemplate.update(query, piece.getRow(), piece.getColor(), piece.getId());
     }
 
+    public void delete(final Long chessGameId, final int row, final int col) {
+        String query = "DELETE FROM piece WHERE chess_game_id = ? AND row = ? AND col = ?";
+        jdbcTemplate.update(query, chessGameId, row, col);
+    }
+
 }

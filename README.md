@@ -21,7 +21,7 @@
 - [x] PieceDAO#findAllPiecesByChessGameId
 - [x] PieceDAO#findOneByPosition
 - [x] PieceDAO#update
-- [ ] PieceDAO#delete
+- [x] PieceDAO#delete
 
 ## to-do list
 * 레벨 1 체스 미션 코드 옮겨오기

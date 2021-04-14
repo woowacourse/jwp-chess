@@ -4,6 +4,7 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.dto.responsedto.ResponseDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PieceDto implements ResponseDto {
     private static final int PIECE_NAME_INDEX = 0;
@@ -27,7 +28,7 @@ public class PieceDto implements ResponseDto {
         return pieceId;
     }
 
-    public boolean isBlack() {
+    public boolean getIsBlack() {
         return isBlack;
     }
 
@@ -45,10 +46,10 @@ public class PieceDto implements ResponseDto {
 
     public Piece toEntity() {
         Color color = null;
-        if (isBlack()) {
+        if (getIsBlack()) {
             color = Color.BLACK;
         }
-        if (!isBlack()) {
+        if (!getIsBlack()) {
             color = Color.WHITE;
         }
         return PieceFactory.from(

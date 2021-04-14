@@ -44,10 +44,10 @@ public class ChessService {
         List<Piece> pieces = requestDto.getPiecesDto().stream()
                 .map(pieceDto -> {
                     Color color = null;
-                    if (pieceDto.isBlack()) {
+                    if (pieceDto.getIsBlack()) {
                         color = Color.BLACK;
                     }
-                    if (!pieceDto.isBlack()) {
+                    if (!pieceDto.getIsBlack()) {
                         color = Color.WHITE;
                     }
                     return PieceFactory.from(
@@ -59,9 +59,9 @@ public class ChessService {
                 .collect(Collectors.toList());
         List<Line> lines = Lines.from(pieces).lines();
 
-        Grid grid = new Grid(new CustomGridStrategy(lines, Color.findColorByTurn(requestDto.getGridDto().isBlackTurn())));
+        Grid grid = new Grid(new CustomGridStrategy(lines, Color.findColorByTurn(requestDto.getGridDto().getIsBlackTurn())));
         grid.move(requestDto.getSourcePosition(), requestDto.getTargetPosition());
-        gridDAO.changeTurn(gridDto.getGridId(), !gridDto.isBlackTurn());
+        gridDAO.changeTurn(gridDto.getGridId(), !gridDto.getIsBlackTurn());
         PieceDto sourcePieceDto = requestDto.getPiecesDto().stream()
                 .filter(pieceDto -> {
                     return pieceDto.getPosition().equals(requestDto.getSourcePosition());
@@ -74,8 +74,8 @@ public class ChessService {
                 })
                 .findFirst()
                 .orElseThrow(() -> new ChessException(ResponseCode.NOT_EXISTING_PIECE));
-        pieceDAO.updatePiece(sourcePieceDto.getPieceId(), sourcePieceDto.isBlack(), EMPTY_PIECE_NAME);
-        pieceDAO.updatePiece(targetPieceDto.getPieceId(), sourcePieceDto.isBlack(), sourcePieceDto.getName().charAt(0));
+        pieceDAO.updatePiece(sourcePieceDto.getPieceId(), sourcePieceDto.getIsBlack(), EMPTY_PIECE_NAME);
+        pieceDAO.updatePiece(targetPieceDto.getPieceId(), sourcePieceDto.getIsBlack(), sourcePieceDto.getName().charAt(0));
         return new Response(ResponseCode.NO_CONTENT);
     }
 

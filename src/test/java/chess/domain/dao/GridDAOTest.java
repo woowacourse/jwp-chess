@@ -40,9 +40,9 @@ public class GridDAOTest {
         GridDto gridDto = gridDao.findGridByGridId(gridId);
         assertThat(gridDto.getGridId()).isEqualTo(gridId);
         assertThat(gridDto.getRoomId()).isEqualTo(roomId);
-        assertThat(gridDto.isBlackTurn()).isEqualTo(false);
-        assertThat(gridDto.isFinished()).isEqualTo(false);
-        assertThat(gridDto.isStarted()).isEqualTo(false);
+        assertThat(gridDto.getIsBlackTurn()).isEqualTo(false);
+        assertThat(gridDto.getIsFinished()).isEqualTo(false);
+        assertThat(gridDto.getIsStarted()).isEqualTo(false);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class GridDAOTest {
     public void changeToStarting() throws SQLException {
         gridDao.changeToStarting(gridId);
         GridDto gridDto = gridDao.findGridByGridId(gridId);
-        assertThat(gridDto.isStarted()).isTrue();
+        assertThat(gridDto.getIsStarted()).isTrue();
     }
 
     @Test
@@ -65,11 +65,11 @@ public class GridDAOTest {
     public void changeTurn() throws SQLException {
         gridDao.changeTurn(gridId, false);
         GridDto gridDto = gridDao.findGridByGridId(gridId);
-        assertThat(gridDto.isBlackTurn()).isFalse();
+        assertThat(gridDto.getIsBlackTurn()).isFalse();
 
         gridDao.changeTurn(gridId, true);
         GridDto gridDto2 = gridDao.findGridByGridId(gridId);
-        assertThat(gridDto2.isBlackTurn()).isTrue();
+        assertThat(gridDto2.getIsBlackTurn()).isTrue();
     }
 
     @Test
@@ -77,6 +77,6 @@ public class GridDAOTest {
     public void changeToFinished() throws SQLException {
         gridDao.changeToFinished(gridId);
         GridDto gridDto = gridDao.findGridByGridId(gridId);
-        assertThat(gridDto.isFinished()).isTrue();
+        assertThat(gridDto.getIsFinished()).isTrue();
     }
 }

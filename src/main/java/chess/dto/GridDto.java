@@ -1,6 +1,7 @@
 package chess.dto;
 
 import chess.dto.responsedto.ResponseDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
@@ -25,11 +26,11 @@ public class GridDto implements ResponseDto {
         return gridId;
     }
 
-    public boolean isBlackTurn() {
+    public boolean getIsBlackTurn() {
         return isBlackTurn;
     }
 
-    public boolean isFinished() {
+    public boolean getIsFinished() {
         return isFinished;
     }
 
@@ -41,7 +42,7 @@ public class GridDto implements ResponseDto {
         return createdAt;
     }
 
-    public boolean isStarted() {
+    public boolean getIsStarted() {
         return isStarted;
     }
 }

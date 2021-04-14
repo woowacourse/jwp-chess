@@ -49,7 +49,7 @@ public class PieceDAOTest {
 
         List<PieceDto> pieceDtoGroup = pieceDao.findPiecesByGridId(gridId);
         PieceDto pieceDto = pieceDtoGroup.get(0);
-        assertThat(pieceDto.isBlack()).isEqualTo(false);
+        assertThat(pieceDto.getIsBlack()).isEqualTo(false);
         assertThat(pieceDto.getName()).isEqualTo("k");
     }
 }

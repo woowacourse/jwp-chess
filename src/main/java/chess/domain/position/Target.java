@@ -1,17 +1,19 @@
 package chess.domain.position;
 
+import chess.domain.piece.Piece;
+
 public class Target {
-    private final Position position;
+    private final Piece piece;
 
-    private Target(final Position position) {
-        this.position = position;
+    private Target(final Piece piece) {
+        this.piece = piece;
     }
 
-    public static Target valueOf(final Source source, final Position target) {
-        return new Target(target);
+    public static Target valueOf(final Piece piece) {
+        return new Target(piece);
     }
 
-    public Position getPosition() {
-        return position;
+    public Piece getPiece() {
+        return piece;
     }
 }

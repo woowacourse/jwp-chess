@@ -1,6 +1,7 @@
 package chess.domain.piece;
 
 import chess.domain.position.Position;
+import chess.domain.position.Target;
 
 import java.util.Objects;
 
@@ -52,4 +53,16 @@ public abstract class Piece {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+/*
+    public abstract void move(final Target target);
+*/
+
+    public abstract boolean canMove(final Target target);
+
+    public abstract boolean isPawn();
+
+    public abstract boolean isBlank();
+
+    public abstract boolean isKing();
 }

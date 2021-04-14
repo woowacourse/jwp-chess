@@ -15,4 +15,9 @@ public final class King extends GeneralPiece {
     protected MoveStrategies assignMoveStrategies() {
         return MoveStrategies.everyMoveStrategies();
     }
+
+    @Override
+    public boolean isKing() {
+        return true;
+    }
 }

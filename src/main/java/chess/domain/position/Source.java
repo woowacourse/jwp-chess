@@ -16,4 +16,12 @@ public class Source {
     public Piece getPiece() {
         return piece;
     }
+
+    public void move(final Target target) {
+        piece.move(target);
+    }
+
+    public boolean canMove(final Target target) {
+        return piece.canMove(target);
+    }
 }

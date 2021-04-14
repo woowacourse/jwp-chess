@@ -10,7 +10,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 
@@ -60,22 +59,22 @@ public class GridSpringDAO {
         };
     }
 
-    public GridDto findRecentGridByRoomId(long roomId) throws SQLException {
+    public GridDto findRecentGridByRoomId(long roomId) {
         String query = "SELECT * FROM grid WHERE roomId = ? ORDER BY createdAt DESC LIMIT 1";
         return jdbcTemplate.queryForObject(query, getGridDtoRowMapper(), roomId);
     }
 
-    public void changeToStarting(long gridId) throws SQLException {
+    public void changeToStarting(long gridId) {
         String query = "UPDATE grid SET isStarted = true WHERE gridId = ?";
         jdbcTemplate.update(query, gridId);
     }
 
-    public void changeTurn(long gridId, boolean isBlackTurn) throws SQLException {
+    public void changeTurn(long gridId, boolean isBlackTurn) {
         String query = "UPDATE grid SET isBlackTurn = ? WHERE gridId = ?";
         jdbcTemplate.update(query, isBlackTurn, gridId);
     }
 
-    public void changeToFinished(long gridId) throws SQLException {
+    public void changeToFinished(long gridId) {
         String query = "UPDATE grid SET isFinished = true WHERE gridId = ?";
         jdbcTemplate.update(query, gridId);
     }

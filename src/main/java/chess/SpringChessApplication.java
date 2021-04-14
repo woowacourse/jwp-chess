@@ -6,10 +6,13 @@ import chess.dto.response.Response;
 import chess.dto.response.ResponseCode;
 import chess.dto.responsedto.GridAndPiecesResponseDto;
 import chess.service.ChessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,11 +25,18 @@ import java.sql.SQLException;
 
 @SpringBootApplication
 @RestController
-public class SpringChessApplication {
-	private ChessService chessService = new ChessService();
-
+public class SpringChessApplication implements CommandLineRunner {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringChessApplication.class, args);
+	}
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	private ChessService chessService;
+
+	@Override
+	public void run(String... strings) {
+		chessService = new ChessService(jdbcTemplate);
 	}
 
 	@GetMapping("/")
@@ -42,7 +52,7 @@ public class SpringChessApplication {
 	}
 
 	@GetMapping("/grid/{roomName}")
-	public Response getRoom(@PathVariable("roomName") String roomName) throws SQLException {
+	public Response getRoom(@PathVariable("roomName") String roomName) {
 		StartRequestDto startRequestDto = new StartRequestDto(roomName);
 		GridAndPiecesResponseDto gridAndPiecesResponseDto = chessService.getGridAndPieces(startRequestDto);
 		return new Response(ResponseCode.OK, gridAndPiecesResponseDto);

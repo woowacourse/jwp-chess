@@ -1,8 +1,8 @@
 package chess.service;
 
-import chess.dao.GridDAO;
-import chess.dao.PieceDAO;
-import chess.dao.RoomDAO;
+import chess.daospring.GridSpringDAO;
+import chess.daospring.PieceSpringDAO;
+import chess.daospring.RoomSpringDAO;
 import chess.domain.grid.Grid;
 import chess.domain.grid.Line;
 import chess.domain.grid.Lines;
@@ -19,6 +19,7 @@ import chess.dto.response.Response;
 import chess.dto.response.ResponseCode;
 import chess.dto.responsedto.GridAndPiecesResponseDto;
 import chess.exception.ChessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -29,14 +30,14 @@ public class ChessService {
 
     private static final char EMPTY_PIECE_NAME = '.';
 
-    private final RoomDAO roomDAO;
-    private final GridDAO gridDAO;
-    private final PieceDAO pieceDAO;
+    private final RoomSpringDAO roomDAO;
+    private final GridSpringDAO gridDAO;
+    private final PieceSpringDAO pieceDAO;
 
-    public ChessService() {
-        roomDAO = new RoomDAO();
-        gridDAO = new GridDAO();
-        pieceDAO = new PieceDAO();
+    public ChessService(JdbcTemplate jdbcTemplate) {
+        roomDAO = new RoomSpringDAO(jdbcTemplate);
+        gridDAO = new GridSpringDAO(jdbcTemplate);
+        pieceDAO = new PieceSpringDAO(jdbcTemplate);
     }
 
     public Response move(MoveRequestDto requestDto) throws SQLException {
@@ -83,7 +84,7 @@ public class ChessService {
         gridDAO.changeToStarting(gridId);
     }
 
-    public GridAndPiecesResponseDto getGridAndPieces(StartRequestDto requestDto) throws SQLException {
+    public GridAndPiecesResponseDto getGridAndPieces(StartRequestDto requestDto) {
         String roomName = requestDto.getRoomName();
         Optional<Long> roomId = roomDAO.findRoomIdByName(roomName);
         if (!roomId.isPresent()) {
@@ -95,15 +96,15 @@ public class ChessService {
         return new GridAndPiecesResponseDto(gridDto, piecesResponseDto);
     }
 
-    public void finish(long gridId) throws SQLException {
+    public void finish(long gridId) {
         gridDAO.changeToFinished(gridId);
     }
 
-    public GridAndPiecesResponseDto restart(long roomId) throws SQLException {
+    public GridAndPiecesResponseDto restart(long roomId) {
         return createGridAndPiece(roomId);
     }
 
-    private GridAndPiecesResponseDto createGridAndPiece(long roomId) throws SQLException {
+    private GridAndPiecesResponseDto createGridAndPiece(long roomId) {
         Grid grid = new Grid(new NormalGridStrategy());
         List<Piece> pieces = grid.pieces();
         long gridId = gridDAO.createGrid(roomId);

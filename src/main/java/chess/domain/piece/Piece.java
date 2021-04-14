@@ -11,9 +11,7 @@ import java.util.Objects;
 public class Piece {
 
     private Long id;
-
     private final Color color;
-
     private final Shape shape;
     private final List<MoveCondition> moveConditions;
     private Position position;

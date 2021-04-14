@@ -18,7 +18,7 @@
 
 - [x] PieceDAO#save
 - [x] PieceDAO#saveAll
-- [ ] PieceDAO#findAllPiecesByChessGameId
+- [x] PieceDAO#findAllPiecesByChessGameId
 - [ ] PieceDAO#findOneByPosition
 - [ ] PieceDAO#update
 - [ ] PieceDAO#delete

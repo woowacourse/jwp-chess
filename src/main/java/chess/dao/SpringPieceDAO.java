@@ -40,4 +40,9 @@ public class SpringPieceDAO {
         }
     }
 
+    public List<Piece> findAllPiecesByChessGameId(Long chessGameId) {
+        String query = "SELECT * FROM piece WHERE chess_game_id = ?";
+        return jdbcTemplate.queryForList(query, Piece.class, chessGameId);
+    }
+
 }

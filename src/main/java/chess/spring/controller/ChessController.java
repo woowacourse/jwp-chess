@@ -8,6 +8,7 @@ import chess.dto.ResultDTO;
 import chess.dto.board.BoardDTO;
 import chess.spring.service.ChessService;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -50,5 +51,10 @@ public class ChessController {
     public String restart() {
         chessService.deleteAllHistories();
         return "/";
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handle(RuntimeException runtimeException) {
+        return ResponseEntity.status(500).body(runtimeException.getMessage());
     }
 }

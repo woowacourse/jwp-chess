@@ -40,9 +40,9 @@ public class UserDao {
     }
 
 
-    public void selectByName(String name) {
+    public UserEntity selectByName(String name) {
         final String sql = "SELECT * FROM user WHERE name = ?";
 
-        jdbcTemplate.queryForObject(sql, userRowMapper, name);
+        return jdbcTemplate.queryForObject(sql, userRowMapper, name);
     }
 }

@@ -23,12 +23,26 @@ async function startNewGame(e) {
   }
 
   try {
-    await createUserIfNotExistent(whiteUserName);
-    await createUserIfNotExistent(blackUserName);
-    await createGame(whiteUserName, blackUserName);
+    let host, guest;
+    if (await isExistentUser(whiteUserName) && await isExistentUser(blackUserName)) {
+      host = await createUser(whiteUserName);
+      guest = await createUser(blackUserName);
+    } else {
+      alert("존재하지 않는 유저가 있습니다.");
+      return;
+    }
+    await createGame(host["id"], guest["id"]);
   } catch (e) {
     alert(e);
   }
+}
+
+async function isExistentUser(userName) {
+  const params = {
+    name : userName
+  }
+  const response = await getData(`${url}/users`, params);
+  return isEmptyObject(response)
 }
 
 function validateName(whiteName, blackName) {
@@ -40,7 +54,7 @@ function validateName(whiteName, blackName) {
   }
 }
 
-async function createUserIfNotExistent(userName) {
+async function createUser(userName) {
   const body = {
     name : userName,
     password : "123"
@@ -52,20 +66,13 @@ function isEmptyObject(object) {
   return Object.keys(object).length === 0;
 }
 
-async function createUser(userName) {
-  const body = {
-    name: userName
-  };
 
-  await postData(`${url}/api/user`, body);
-}
-
-async function createGame(whiteUserName, blackUserName) {
+async function createGame(hostId, guestId) {
   const body = {
-    whiteName: whiteUserName,
-    blackName: blackUserName
+    hostId: hostId,
+    guestId: guestId
   };
-  await postData(`${url}/game`, body);
+  await postData(`${url}/games`, body);
 }
 
 function loadGame() {

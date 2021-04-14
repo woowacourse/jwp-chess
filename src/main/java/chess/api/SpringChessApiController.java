@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
+
 @RestController
 public class SpringChessApiController {
 
@@ -27,6 +29,12 @@ public class SpringChessApiController {
     @GetMapping("/chessgames")
     public ChessGameDto findChessGame() {
         return chessGameService.findLatestPlayingGame();
+    }
+
+    @PostMapping("/chessgames")
+    public ResponseEntity<ChessGameDto> createNewChessGame() {
+        ChessGameDto newChessGame = chessGameService.createNewChessGame();
+        return ResponseEntity.ok(newChessGame);
     }
 
 }

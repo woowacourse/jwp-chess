@@ -1,4 +1,4 @@
-package chess.domain.dao;
+package chess.web.dao;
 
 import chess.domain.dto.CommandDto;
 import org.junit.jupiter.api.BeforeEach;

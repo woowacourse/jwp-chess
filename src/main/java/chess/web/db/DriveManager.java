@@ -1,4 +1,4 @@
-package chess.db;
+package chess.web.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,10 +1,11 @@
-package chess.service;
+package chess.web.service;
 
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.domain.command.Commands;
-import chess.domain.dao.CommandDao;
-import chess.domain.dao.HistoryDao;
+import chess.view.OutputView;
+import chess.web.dao.CommandDao;
+import chess.web.dao.HistoryDao;
 import chess.domain.dto.CommandDto;
 import chess.domain.dto.GameInfoDto;
 import chess.domain.dto.HistoryDto;
@@ -34,6 +35,9 @@ public class ChessService {
 
     public GameInfoDto continuedGameInfo(String id) throws SQLException {
         ChessGame chessGame = gameStateOf(id);
+        if (chessGame.isEnd()) {
+            updateDB(id);
+        }
         return new GameInfoDto(chessGame);
     }
 
@@ -71,9 +75,6 @@ public class ChessService {
     public void updateMoveInfo(String command, String historyId, boolean isEnd) throws SQLException {
         if (!StringUtils.isEmpty(historyId)) {
             flushCommands(command, historyId);
-        }
-        if (isEnd && historyId != null) {
-            updateDB(historyId);
         }
     }
 

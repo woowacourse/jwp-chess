@@ -1,9 +1,9 @@
-package chess;
+package chess.web;
 
-import chess.controller.WebController;
-import chess.domain.dao.CommandDao;
-import chess.domain.dao.HistoryDao;
-import chess.service.ChessService;
+import chess.web.controller.WebController;
+import chess.web.dao.CommandDao;
+import chess.web.dao.HistoryDao;
+import chess.web.service.ChessService;
 
 import static spark.Spark.*;
 

@@ -1,3 +1,5 @@
+
+DROP TABLE IF EXISTS `Command`;
 DROP TABLE IF EXISTS `History`;
 
 CREATE TABLE `History` (
@@ -6,8 +8,6 @@ CREATE TABLE `History` (
                            `is_end` boolean not null default false,
                            PRIMARY KEY (`history_id`)
 ) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS `Command`;
 
 CREATE TABLE `Command` (
                            `command_id` int not null auto_increment,

@@ -38,7 +38,6 @@ public class SpringChessService {
     }
 
     public GameInfoDto continuedGameInfo(String id) {
-        System.out.println("불러오기");
         ChessGame chessGame = gameStateOf(id);
         if (chessGame.isEnd()) {
             updateDB(id);
@@ -53,10 +52,9 @@ public class SpringChessService {
     }
 
     public void move(String id, String command, Commands commands) throws SQLException {
-        System.out.println("이동");
         ChessGame chessGame = gameStateOf(id);
         chessGame.moveAs(commands);
-        updateMoveInfo(command, id, chessGame.isEnd());
+        updateMoveInfo(command, id);
     }
 
     private List<HistoryDto> histories() {
@@ -75,7 +73,7 @@ public class SpringChessService {
         return String.valueOf(id.get());
     }
 
-    public void updateMoveInfo(String command, String historyId, boolean isEnd) throws SQLException {
+    public void updateMoveInfo(String command, String historyId) {
         if (!StringUtils.isEmpty(historyId)) {
             flushCommands(command, historyId);
         }
@@ -86,7 +84,6 @@ public class SpringChessService {
     }
 
     public void flushCommands(String command, String gameId) {
-        System.out.println("flushCommands");
         try {
             commandRepository.insert(new CommandDto(command), Integer.parseInt(gameId));
         } catch (DataAccessException e) {
@@ -96,7 +93,6 @@ public class SpringChessService {
 
     public List<CommandDto> lastState(String id) {
         List<CommandDto> sample = commandRepository.selectAllCommands(id);
-        System.out.println("lastState");
         for (CommandDto commandDto : sample) {
             System.out.println(commandDto.data());
         }

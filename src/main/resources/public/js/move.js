@@ -1,5 +1,7 @@
 let source = null;
 let target = null;
+const url = window.location;
+const baseUrl = url .protocol + "//" + url.host;
 
 const squares = document.getElementsByClassName("square");
 for (let i = 0; i < squares.length; i++) {
@@ -36,6 +38,9 @@ function move(source, target) {
 }
 
 function update(response) {
+    if (typeof response !== "object") {
+        response = JSON.parse(response);
+    }
     const board = response.squares;
     const turn = response.turn;
     const scores = response.scores;
@@ -72,7 +77,7 @@ function update(response) {
     if (winner != null) {
         message += winner + "팀이 이겼습니다.🤭";
         alert(message);
-        window.location = "../";
+        window.location = baseUrl + "/play";
     }
 }
 

@@ -52,4 +52,9 @@ public class SpringPieceDAO {
         return Optional.ofNullable(piece);
     }
 
+    public void update(final Piece piece) {
+        String query = "UPDATE piece SET row = ?, col = ? WHERE id = ?";
+        jdbcTemplate.update(query, piece.getRow(), piece.getColor(), piece.getId());
+    }
+
 }

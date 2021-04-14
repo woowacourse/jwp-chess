@@ -20,7 +20,7 @@
 - [x] PieceDAO#saveAll
 - [x] PieceDAO#findAllPiecesByChessGameId
 - [x] PieceDAO#findOneByPosition
-- [ ] PieceDAO#update
+- [x] PieceDAO#update
 - [ ] PieceDAO#delete
 
 ## to-do list

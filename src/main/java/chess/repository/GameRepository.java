@@ -2,7 +2,6 @@ package chess.repository;
 
 import chess.dao.ChessDAO;
 import chess.domain.game.ChessGame;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;

@@ -1,6 +1,6 @@
 package chess.web;
 
-import chess.service.*;
+import chess.service.ChessService;
 import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
 import chess.web.dto.MoveDto;

@@ -43,4 +43,10 @@ public class SpringChessApiController {
         return ResponseEntity.ok(chessGameDto);
     }
 
+    @GetMapping("/scores")
+    public ResponseEntity<ScoreDto> calculateScores() {
+        ScoreDto scoreDto = chessGameService.calculateScores();
+        return ResponseEntity.ok(scoreDto);
+    }
+
 }

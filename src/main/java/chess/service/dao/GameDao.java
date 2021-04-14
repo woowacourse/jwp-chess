@@ -11,7 +11,6 @@ import chess.view.PieceSymbolMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,12 +28,12 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(final long roomId, final Turn turn, final Board board) throws SQLException {
+    public void save(final long roomId, final Turn turn, final Board board) {
         final String query = "INSERT INTO game_status (room_id, turn, board) VALUES (?, ?, ?)";
         jdbcTemplate.update(query, roomId, turn.name(), boardToData(board));
     }
 
-    public GameDto load(final Long roomId) throws SQLException {
+    public GameDto load(final Long roomId) {
         final String query = "SELECT * FROM game_status WHERE room_id = (?) ORDER BY id DESC limit 1";
         return jdbcTemplate.queryForObject(query, (rs, rowNum)
                 -> makeGameDto(rs.getString(COLUMN_LABEL_OF_TURN), rs.getString(COLUMN_LABEL_OF_BOARD)), roomId);
@@ -44,12 +43,12 @@ public class GameDao {
         return new GameDto(Turn.of(turn), dataToBoard(board));
     }
 
-    public void delete(final Long roomId) throws SQLException {
+    public void delete(final Long roomId) {
         final String query = "DELETE FROM game_status WHERE room_id = ?";
         jdbcTemplate.update(query, roomId);
     }
 
-    public void update(final Long roomId, final Turn turn, final Board board) throws SQLException {
+    public void update(final Long roomId, final Turn turn, final Board board) {
         final String query = "UPDATE game_status SET turn = ?,  board= ?  WHERE room_id = ?";
         jdbcTemplate.update(query, turn.name(), boardToData(board), roomId);
     }

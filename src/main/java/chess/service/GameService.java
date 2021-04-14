@@ -9,7 +9,6 @@ import chess.domain.piece.Owner;
 import chess.service.dao.GameDao;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -22,16 +21,16 @@ public class GameService {
         this.gameDao = gameDao;
     }
 
-    public void create(final Long roomId) throws SQLException {
+    public void create(final Long roomId) {
         final ChessGame chessGame = ChessGame.initNew();
         gameDao.save(roomId, chessGame.turn(), chessGame.board());
     }
 
-    public void delete(final Long roomId) throws SQLException {
+    public void delete(final Long roomId) {
         gameDao.delete(roomId);
     }
 
-    public List<String> show(final Long roomId, final Position source) throws SQLException {
+    public List<String> show(final Long roomId, final Position source) {
         final ChessGame chessGame = loadChessGame(roomId);
         return chessGame.reachablePositions(source);
     }
@@ -42,16 +41,16 @@ public class GameService {
         gameDao.update(roomId, chessGame.turn(), chessGame.board());
     }
 
-    public boolean isGameEnd(final Long roomId) throws SQLException {
+    public boolean isGameEnd(final Long roomId) {
         return loadChessGame(roomId).isGameEnd();
     }
 
-    public ChessGame loadChessGame(final Long roomId) throws SQLException {
+    public ChessGame loadChessGame(final Long roomId) {
         final GameDto gameDto = gameDao.load(roomId);
         return ChessGame.load(gameDto.getBoard(), gameDto.getTurn());
     }
 
-    public ScoresDto scores(final Long roomId) throws SQLException {
+    public ScoresDto scores(final Long roomId) {
         final ChessGame chessGame = loadChessGame(roomId);
         return new ScoresDto(chessGame.score(Owner.BLACK), chessGame.score(Owner.WHITE));
     }
@@ -61,7 +60,7 @@ public class GameService {
         return new BoardDto(chessGame.unicodeBoard());
     }
 
-    public List<Owner> winner(final Long roomId) throws SQLException {
+    public List<Owner> winner(final Long roomId) {
         return loadChessGame(roomId).winner();
     }
 }

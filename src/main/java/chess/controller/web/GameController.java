@@ -1,28 +1,22 @@
 package chess.controller.web;
 
-import chess.controller.dto.BoardDto;
-import chess.controller.dto.RoomDto;
-import chess.controller.dto.ScoresDto;
-import chess.controller.dto.WinnerDto;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
 import chess.service.GameService;
-import chess.service.RequestHandler;
 import chess.service.RoomService;
 import chess.view.OutputView;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.List;
-
-import static spark.Spark.get;
-import static spark.Spark.post;
 
 @Controller
 public class GameController {
@@ -35,6 +29,7 @@ public class GameController {
         this.roomService = roomService;
         this.gameService = gameService;
     }
+
 
     @GetMapping("/game/create/{roomId}")
     private void createGame(@PathVariable final Long roomId, HttpServletResponse httpServletResponse) throws SQLException, IOException {
@@ -56,10 +51,10 @@ public class GameController {
     @ResponseBody
     @PostMapping("/game/show/{roomId}")
     private String show(@PathVariable final Long roomId, HttpServletRequest httpServletRequest) throws SQLException {
-        try{
-           Position source = new Position(httpServletRequest.getParameter("source"));
-           return gameService.show(roomId, source).toString();
-        }catch (Exception e){
+        try {
+            Position source = new Position(httpServletRequest.getParameter("source"));
+            return gameService.show(roomId, source).toString();
+        } catch (Exception e) {
             return null;
         }
     }
@@ -78,8 +73,7 @@ public class GameController {
             roomService.delete(roomId);
             gameService.delete(roomId);
 
-            final WinnerDto winnerDto = new WinnerDto(decideWinnerName(winner));
-            model.addAttribute("winner", winnerDto);
+            model.addAttribute("winner", OutputView.decideWinnerName(winner));
             return "result";
         }
 
@@ -87,13 +81,5 @@ public class GameController {
         model.addAttribute("board", gameService.board(roomId));
         model.addAttribute("scores", gameService.scores(roomId));
         return "chessBoard";
-    }
-
-    private static String decideWinnerName(final List<Owner> winners) {
-        if (winners.size() == SIZE_OF_ONLY_WINNER) {
-            final Owner winner = winners.get(0);
-            return winner.name();
-        }
-        return "무승부";
     }
 }

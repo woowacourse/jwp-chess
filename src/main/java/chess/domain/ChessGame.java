@@ -71,10 +71,6 @@ public class ChessGame {
         return board.parseUnicodeBoard();
     }
 
-    public void setGameEnd() {
-        isGameEnd = true;
-    }
-
     public boolean isGameEnd() {
         return isGameEnd;
     }

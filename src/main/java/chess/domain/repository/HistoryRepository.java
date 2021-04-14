@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public class HistoryRepository {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public HistoryRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

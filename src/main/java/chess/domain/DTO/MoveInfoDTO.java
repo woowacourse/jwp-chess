@@ -4,6 +4,8 @@ public class MoveInfoDTO {
     private String target;
     private String destination;
 
+    public MoveInfoDTO(){}
+
     public MoveInfoDTO(String target, String destination) {
         this.target = target;
         this.destination = destination;

@@ -8,9 +8,11 @@ import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.repository.ChessDAO;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 
+@Service
 public class ChessService {
     private final ChessDAO chessDAO;
 

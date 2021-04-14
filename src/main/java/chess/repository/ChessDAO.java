@@ -7,6 +7,7 @@ import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.utils.DBConnector;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class ChessDAO extends DBConnector {
     private final String updateBoardTableQuery = "update board set piece = ? where position = ?";
     private final String updateTurnTableQuery = "update turn set turn_owner = ? where turn_owner = ?";

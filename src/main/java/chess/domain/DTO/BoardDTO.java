@@ -12,6 +12,8 @@ public class BoardDTO {
     public String gameOverFlag = "false";
     private Map<String, String> boardInfo = new HashMap<>();
 
+    public BoardDTO(){}
+
     private BoardDTO(Map<String, String> boardInfo, String gameOverFlag) {
         this.boardInfo = boardInfo;
         this.gameOverFlag = gameOverFlag;

@@ -1,7 +1,9 @@
 package chess.domain.DTO;
 
 public class TurnDTO {
-    private final String turn;
+    private String turn;
+
+    public TurnDTO(){}
 
     private TurnDTO(String turn) {
         this.turn = turn;

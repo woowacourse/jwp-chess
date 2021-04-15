@@ -76,10 +76,12 @@ function replaceComponents(dom, sourcePosition, targetPosition) {
     let source = xmlDoc.querySelector("#" + sourcePosition);
     let target = xmlDoc.querySelector("#" + targetPosition);
     let turn = xmlDoc.querySelector("#turn")
+    let score = xmlDoc.querySelector("#score")
 
     document.querySelector("#" + sourcePosition).innerHTML = source.innerHTML
     document.querySelector("#" + targetPosition).innerHTML = target.innerHTML
     document.querySelector("#turn").innerHTML = turn.innerHTML
+    document.querySelector("#score").innerHTML = score.innerHTML
 
     const result = xmlDoc.querySelector("#result").textContent
     if (result !== "") {

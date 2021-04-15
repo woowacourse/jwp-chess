@@ -8,10 +8,11 @@
 <body>
 <h1>저장된 게임 목록</h1>
 <div>
+<form id="room" action="/game/load" method="post">
     {{#roomNames}}
-    <input type="button" value="{{{.}}}"/><br/>
+    <input type="submit" name="roomName" value="{{{.}}}"/><br/><br/>
     {{/roomNames}}
+</form>
 </div>
 </body>
-<script src="js/repository.js"></script>
 </html>

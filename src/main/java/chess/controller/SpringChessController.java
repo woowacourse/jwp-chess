@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.database.room.Room;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
 import chess.domain.game.ChessGame;
@@ -8,13 +7,17 @@ import chess.domain.game.Result;
 import chess.domain.piece.Piece;
 import chess.dto.PieceDTO;
 import chess.dto.ResultDTO;
+import chess.dto.ScoreDTO;
 import chess.dto.TurnDTO;
 import chess.service.SpringChessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
@@ -66,19 +69,6 @@ public class SpringChessController {
         return modelAndView;
     }
 
-    private void addChessGame(ModelAndView modelAndView, ChessGame chessGame) {
-        Color turn = chessGame.getTurn();
-        modelAndView.addObject("turn", new TurnDTO(turn));
-
-        Map<Position, Piece> chessBoard = chessGame.getChessBoardAsMap();
-        for (Map.Entry<Position, Piece> entry : chessBoard.entrySet()) {
-            modelAndView.addObject(entry.getKey().getPosition(), new PieceDTO(entry.getValue()));
-        }
-
-        Result result = chessGame.calculateResult();
-        modelAndView.addObject("result", new ResultDTO(result));
-    }
-
     @GetMapping(value = "/rooms")
     public ModelAndView rooms(ModelAndView modelAndView) {
         List<String> roomNames = springChessService.getAllSavedRooms();
@@ -94,5 +84,33 @@ public class SpringChessController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/game/load")
+    public ModelAndView load(@RequestParam("roomName") String roomName, ModelAndView modelAndView) {
+        Optional<ChessGame> chessGameOptional = springChessService.loadRoom(roomName);
+
+        if (chessGameOptional.isPresent()) {
+            addChessGame(modelAndView, chessGameOptional.get());
+            modelAndView.setViewName("game");
+            modelAndView.addObject("name", roomName);
+        }
+        return modelAndView;
+    }
+
+    private void addChessGame(ModelAndView modelAndView, ChessGame chessGame) {
+        Color turn = chessGame.getTurn();
+        modelAndView.addObject("turn", new TurnDTO(turn));
+
+        Map<Position, Piece> chessBoard = chessGame.getChessBoardAsMap();
+        for (Map.Entry<Position, Piece> entry : chessBoard.entrySet()) {
+            modelAndView.addObject(entry.getKey().getPosition(), new PieceDTO(entry.getValue()));
+        }
+
+        Result result = chessGame.calculateResult();
+        modelAndView.addObject("score", new ScoreDTO(result));
+        if (!chessGame.isOngoing()) {
+            modelAndView.addObject("result", new ResultDTO(result));
+        }
     }
 }

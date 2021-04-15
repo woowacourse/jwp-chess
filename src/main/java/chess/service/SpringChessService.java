@@ -1,9 +1,6 @@
 package chess.service;
 
-import chess.controller.Response;
-import chess.controller.StatusCode;
 import chess.database.room.Room;
-import chess.database.room.RoomDAO;
 import chess.database.room.SpringRoomDAO;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
@@ -78,20 +75,16 @@ public class SpringChessService {
         return new Room(name, turn, state);
     }
 
-//    public Response loadRoom(String request) {
-//        try {
-//            JsonObject roomJson = gson.fromJson(request, JsonObject.class);
-//            String roomId = roomJson.get("room_id").getAsString();
-//            Room room = roomDAO.findByRoomId(roomId);
-//            setChessGame(room);
-//            Response response = new Response(chessGame, StatusCode.SUCCESSFUL);
-//            response.add("room_id", roomId);
-//            return response;
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            return new Response(StatusCode.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    public Optional<ChessGame> loadRoom(String name) {
+        try {
+            Room room = roomDAO.findByRoomName(name);
+            setChessGame(room);
+            return Optional.of(chessGame);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return Optional.empty();
+        }
+    }
 
     private void setChessGame(Room room) {
         ChessBoard chessBoard = new ChessBoard();
@@ -120,15 +113,5 @@ public class SpringChessService {
             return new ArrayList<>();
         }
 
-    }
-
-    public Response resetGameAsReadyState() {
-        try {
-            initializeChessBoard();
-            return new Response(StatusCode.SUCCESSFUL);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new Response(StatusCode.INTERNAL_SERVER_ERROR);
-        }
     }
 }

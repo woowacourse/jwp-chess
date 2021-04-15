@@ -3,7 +3,6 @@ package chess.domain.game;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
-import chess.domain.gamestate.Running;
 import chess.domain.gamestate.State;
 import chess.domain.piece.Piece;
 
@@ -78,7 +77,7 @@ public class ChessGame {
     }
 
     public boolean isOngoing() {
-        return state instanceof Running && chessBoard.isOngoing();
+        return chessBoard.isOngoing();
     }
 
     public Result result() {

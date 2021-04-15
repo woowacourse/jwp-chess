@@ -32,7 +32,7 @@ function turnCheck(clickedSection) {
         }
     }).error(function (response) {
         const errorMessage = response.responseText;
-        location.href = "/error?error=" + errorMessage;
+        location.href = "/errorPage?error=" + errorMessage;
     });
 }
 
@@ -54,7 +54,7 @@ function getMovablePosition(clickedSection, turn) {
             startPointCheck = true;
         }).error(function (response) {
             const errorMessage = response.responseText;
-            location.href = "/error?error=" + errorMessage;
+            location.href = "/errorPage?error=" + errorMessage;
         });
     }
 }
@@ -111,7 +111,6 @@ function move() {
         method: "POST",
         dataType: "json"
     }).done(function (currentStatus) {
-        console.log(currentStatus);
         const start = document.getElementById(startPoint);
         const end = document.getElementById(endPoint);
         const image = start.children[0];
@@ -125,7 +124,7 @@ function move() {
         initialize();
     }).error(function (response) {
         const errorMessage = response.responseText;
-        location.href = "/error?error=" + errorMessage;
+        location.href = "/errorPage?error=" + errorMessage;
     });
 }
 
@@ -168,7 +167,7 @@ function gameInitialize(winner, loser) {
         }
     }).error(function (response) {
         const errorMessage = response.responseText;
-        location.href = "/error?error=" + errorMessage;
+        location.href = "/errorPage?error=" + errorMessage;
     });
 }
 

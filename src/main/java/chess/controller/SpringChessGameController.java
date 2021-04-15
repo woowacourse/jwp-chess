@@ -4,6 +4,7 @@ import chess.domain.ChessGame;
 import chess.domain.Rooms;
 import chess.domain.Team;
 import chess.dto.*;
+import chess.exception.DataAccessException;
 import chess.exception.DriverLoadException;
 import chess.service.LogService;
 import chess.service.ResultService;
@@ -16,6 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Controller
 public final class SpringChessGameController {
@@ -79,9 +82,9 @@ public final class SpringChessGameController {
 
     @PostMapping(path = "/continue")
     private String continueGame(@ModelAttribute RoomIdDTO roomIdDTO, Model model) {
-        ChessGame chessGame = new ChessGame();
-        chessGame.initialize();
         String roomId = roomIdDTO.getRoomId();
+        ChessGame chessGame = rooms.loadGameByRoomId(roomId);
+        chessGame.initialize();
         List<String[]> logs = logService.logByRoomId(roomId);
         logService.executeLog(logs, chessGame);
         UsersDTO users = userService.usersParticipatedInGame(roomId);
@@ -140,5 +143,27 @@ public final class SpringChessGameController {
         int loserId = userService.userIdByNickname(loser);
         resultService.saveGameResult(roomId, winnerId, loserId);
         return true;
+    }
+
+    @ExceptionHandler(DriverLoadException.class)
+    @ResponseBody
+    private ResponseEntity driverLoadExceptionHandle() {
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("!! JDBC Driver load 오류");
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    @ResponseBody
+    private ResponseEntity dataAccessExceptionHandle(DataAccessException e) {
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(e.getMessage());
+    }
+
+    @GetMapping(path = "/errorPage")
+    private String errorPage(@RequestParam String error, Model model) {
+        model.addAttribute("error", error);
+        return "error";
     }
 }

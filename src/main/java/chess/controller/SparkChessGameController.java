@@ -63,7 +63,7 @@ public class SparkChessGameController {
             } catch (Exception e) {
                 model.put("error", e.getMessage());
             }
-            return render(model, "index.html");
+            return render(model, "index.hbs");
         });
     }
 
@@ -86,7 +86,7 @@ public class SparkChessGameController {
             } catch (Exception e) {
                 model.put("error", e.getMessage());
             }
-            return render(model, "chess.html");
+            return render(model, "chess.hbs");
         });
     }
 
@@ -104,7 +104,7 @@ public class SparkChessGameController {
             } catch (Exception e) {
                 model.put("error", e.getMessage());
             }
-            return render(model, "chess.html");
+            return render(model, "chess.hbs");
         });
     }
 
@@ -122,7 +122,7 @@ public class SparkChessGameController {
             } catch (Exception e) {
                 model.put("error", e.getMessage());
             }
-            return render(model, "chess.html");
+            return render(model, "chess.hbs");
         });
     }
 
@@ -200,7 +200,7 @@ public class SparkChessGameController {
         get("/error", (request, response) -> {
             Map<String, Object> model = new HashMap<>();
             model.put("error", request.queryParams("error"));
-            return render(model, "error.html");
+            return render(model, "error.hbs");
         });
     }
 

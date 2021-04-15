@@ -35,6 +35,6 @@ function newGame(name) {
         }
     }).error(function (response) {
         const errorMessage = response.responseText;
-        location.href = "/error?error=" + errorMessage;
+        location.href = "/errorPage?error=" + errorMessage;
     });
 }

@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.domain.ChessGame;
+import chess.domain.Position;
 
 public interface ChessService {
 
@@ -11,4 +12,6 @@ public interface ChessService {
     void exitGame(Long gameId);
 
     void saveGame(Long gameId);
+
+    void move(Long gameId, Position currentPosition, Position targetPosition);
 }

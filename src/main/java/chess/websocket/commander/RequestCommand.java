@@ -4,6 +4,7 @@ import chess.websocket.util.TriConsumer;
 import java.io.IOException;
 import java.util.Arrays;
 import org.eclipse.jetty.websocket.api.Session;
+import org.springframework.web.socket.WebSocketSession;
 
 public enum RequestCommand {
 
@@ -13,15 +14,15 @@ public enum RequestCommand {
 
     private static final int COMMAND_INDEX = 1;
     private final String command;
-    private final TriConsumer<RequestCommander, String[], Session> consumer;
+    private final TriConsumer<RequestCommander, String[], WebSocketSession> consumer;
 
-    RequestCommand(String command, TriConsumer<RequestCommander, String[], Session> consumer) {
+    RequestCommand(String command, TriConsumer<RequestCommander, String[], WebSocketSession> consumer) {
 
         this.command = command;
         this.consumer = consumer;
     }
 
-    public static void execute(RequestCommander requestCommander, String[] command, Session session)
+    public static void execute(RequestCommander requestCommander, String[] command, WebSocketSession session)
         throws IOException {
         Arrays.stream(values())
             .filter(value -> value.command.equals(command[COMMAND_INDEX]))

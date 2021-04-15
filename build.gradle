@@ -22,10 +22,15 @@ dependencies {
     implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
     implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.1'
 
+    implementation 'org.sql2o:sql2o:1.5.4'
+    implementation 'com.j2html:j2html:1.2.0'
+    implementation 'org.json:json:20160810'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:3.3.0'
 
-    runtimeOnly 'mysql:mysql-connector-java'
+    runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'com.h2database:h2'
 }
 

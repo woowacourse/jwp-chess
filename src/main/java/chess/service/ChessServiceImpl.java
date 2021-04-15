@@ -4,9 +4,12 @@ import chess.dao.ChessDAO;
 import chess.domain.ChessGame;
 import chess.domain.ChessGameImpl;
 import chess.domain.CurrentGameRoom;
+import chess.domain.Position;
 import chess.exception.InvalidGameException;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessServiceImpl implements ChessService {
 
     private ChessDAO chessDAO;
@@ -47,6 +50,12 @@ public class ChessServiceImpl implements ChessService {
             .orElseThrow(InvalidGameException::new);
 
         chessDAO.saveGame(chessGame, gameId);
+    }
+
+    @Override
+    public void move(Long gameId, Position currentPosition, Position targetPosition) {
+        final ChessGame chessGame = loadChess(gameId);
+        chessGame.movePiece(currentPosition, targetPosition);
     }
 
 

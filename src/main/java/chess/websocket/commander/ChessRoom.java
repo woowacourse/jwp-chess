@@ -9,13 +9,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import org.eclipse.jetty.websocket.api.Session;
+import org.springframework.web.socket.WebSocketSession;
 
 public class ChessRoom {
 
-    private static final Map<Long, List<Session>> ROOMS = new HashMap<>();
+    private static final Map<Long, List<WebSocketSession>> ROOMS = new HashMap<>();
 
-    public TeamColor enter(Long roomId, Session session) {
-        List<Session> players = ROOMS.getOrDefault(roomId, new ArrayList<>());
+    public TeamColor enter(Long roomId, WebSocketSession session) {
+        List<WebSocketSession> players = ROOMS.getOrDefault(roomId, new ArrayList<>());
         if (players.size() >= 2) {
             throw new FullRoomException();
         }
@@ -27,7 +28,7 @@ public class ChessRoom {
         return TeamColor.BLACK;
     }
 
-    public Optional<Session> otherPlayer(Session session) {
+    public Optional<WebSocketSession> otherPlayer(WebSocketSession session) {
         Long roomId = keyBySession(session);
         return ROOMS.get(roomId)
             .stream()
@@ -35,7 +36,7 @@ public class ChessRoom {
             .findAny();
     }
 
-    public Long keyBySession(Session session) {
+    public Long keyBySession(WebSocketSession session) {
         return ROOMS.entrySet()
             .stream()
             .filter(entry -> entry.getValue().contains(session))
@@ -44,7 +45,7 @@ public class ChessRoom {
             .orElseThrow(IllegalArgumentException::new);
     }
 
-    public void remove(Session session) {
+    public void remove(WebSocketSession session) {
         Long gameId = keyBySession(session);
         ROOMS.get(gameId).remove(session);
     }

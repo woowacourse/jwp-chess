@@ -4,16 +4,17 @@ import static j2html.TagCreator.article;
 import static j2html.TagCreator.p;
 
 import java.io.IOException;
-import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 public class ChatSender {
 
-    public void sendMessage(Session session, String name, String message) {
+    public void sendMessage(WebSocketSession session, String name, String message) {
         try {
-            session.getRemote().sendString(String.valueOf(new JSONObject()
+            session.sendMessage(new TextMessage(String.valueOf(new JSONObject()
                 .put("userMessage", createHtmlMessage(name, message))
-            ));
+            )));
         } catch (IOException e) {
             e.printStackTrace();
         }

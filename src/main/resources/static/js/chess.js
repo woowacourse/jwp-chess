@@ -26,7 +26,7 @@ function setGameId({key, target}) {
 }
 
 function createBoard() {
-  fetchService.get(`http://localhost:4567/${gameId}/pieces`)
+  fetchService.get(`http://localhost:8080/${gameId}/pieces`)
   .then(pieces => {
     board.drawBoard(pieces);
     updateRoundStatus();
@@ -34,7 +34,7 @@ function createBoard() {
 }
 
 function updateRoundStatus() {
-  fetchService.get(`http://localhost:4567/${gameId}/roundstatus`)
+  fetchService.get(`http://localhost:8080/${gameId}/roundstatus`)
   .then(result => {
     board.updateBoardStatus(result);
     const score = board.getScore()
@@ -61,7 +61,7 @@ function movePosition(targetBoardItem) {
     targetPosition: targetBoardItem.id
   };
 
-  fetchService.post(`http://localhost:4567/${gameId}/move`, data)
+  fetchService.post(`http://localhost:8080/${gameId}/move`, data)
   .then(result => {
     board.move(targetBoardItem);
     board.updateBoardStatus(result);
@@ -75,12 +75,12 @@ function reload() {
 
 function exit() {
   alert('게임을 종료합니다.');
-  fetchService.delete(`http://localhost:4567/exit/${gameId}`);
+  fetchService.delete(`http://localhost:8080/exit/${gameId}`);
   window.location.reload();
 }
 
 function save() {
   alert(`${gameId} 번 의 게임을 저장합니다.`);
-  fetchService.post(`http://localhost:4567/save/${gameId}`);
+  fetchService.post(`http://localhost:8080/save/${gameId}`);
 }
 

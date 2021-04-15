@@ -11,16 +11,18 @@ import chess.domain.piece.Piece;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
 
-public class ChessDAOImpl implements ChessDAO {
+@Repository
+public class ChessDAOSql2o implements ChessDAO {
 
     private final Sql2o sql2o;
     private final StringPositionConverter converter;
 
-    public ChessDAOImpl() {
+    public ChessDAOSql2o() {
         sql2o = new Sql2o("jdbc:postgresql://localhost:5432/chess", "nabom", "1234");
         converter = new StringPositionConverter();
     }
@@ -43,9 +45,9 @@ public class ChessDAOImpl implements ChessDAO {
 
     private void pieceBulkUpdate(ChessGame chessGame, Long gameId, Connection connection) {
         try (Query query = connection.createQuery(
-            "insert into game(gameid, name, color, position) values(:gameid, :name, :color,:position)")) {
+            "insert into game(gameid, name, color, position) values(:gameId, :name, :color,:position)")) {
             chessGame.pieces().asList().forEach(piece -> {
-                query.addParameter("gameid", gameId)
+                query.addParameter("gameId", gameId)
                     .addParameter("name", piece.name())
                     .addParameter("color", piece.color())
                     .addParameter("position", piece.currentPosition().columnAndRow())
@@ -57,6 +59,8 @@ public class ChessDAOImpl implements ChessDAO {
 
     @Override
     public Optional<ChessGame> loadGame(Long gameId) {
+        System.out.println("-------gameId--------");
+        System.out.println(gameId);
         try (Connection con = sql2o.open()) {
             List<ChessDTO> results = con.createQuery("select * from game where gameid=:gameId")
                 .addParameter("gameId", gameId)

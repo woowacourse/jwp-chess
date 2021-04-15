@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Map;
 
+import static chess.domain.OutputFactory.printCurrentBoard;
+
 class PiecesTest {
 
     @Test
@@ -27,26 +29,4 @@ class PiecesTest {
 
 
     }
-
-    public void printCurrentBoard(final Map<Position, Piece> chessBoard) {
-        System.out.println();
-        int lastVerticalValue = 8;
-        for (final Position position : chessBoard.keySet()) {
-            lastVerticalValue = updateLastVerticalValue(lastVerticalValue, position);
-            System.out.print(chessBoard.get(position).name());
-        }
-        System.out.println(" | " + lastVerticalValue);
-        System.out.println("---------");
-        System.out.println("abcdefgh");
-    }
-
-    private int updateLastVerticalValue(final int before, final Position position) {
-        int newValue = before;
-        if (position.rank().value() != before) {
-            newValue = position.rank().value();
-            System.out.println(" | " + (newValue + 1));
-        }
-        return newValue;
-    }
-
 }

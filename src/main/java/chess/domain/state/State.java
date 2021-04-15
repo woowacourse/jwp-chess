@@ -22,4 +22,6 @@ public interface State {
     boolean isKingPosition(final Position position);
 
     void removePiece(final Position position);
+
+    boolean isBlack();
 }

@@ -28,7 +28,7 @@ public final class RookInitializer implements LocationInitializer {
         List<Piece> pieces = new ArrayList<>();
         for (final String file : FILES) {
             RANKS_BLACK.forEach(
-                    rank -> pieces.add(new Rook(Color.WHITE, new Position(file, rank))));
+                    rank -> pieces.add(new Rook(Color.BLACK, new Position(file, rank))));
         }
         return pieces;
     }

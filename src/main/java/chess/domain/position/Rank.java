@@ -48,4 +48,12 @@ public enum Rank {
     public int value() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "Rank{" +
+                "symbol='" + symbol + '\'' +
+                ", value=" + value +
+                '}';
+    }
 }

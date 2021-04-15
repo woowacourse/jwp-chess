@@ -19,6 +19,6 @@ public final class Rook extends GeneralPiece {
 
     @Override
     public Piece move(final Target target) {
-        return new Rook(this.color(), target.getPiece().position());
+        return new Rook(this.color(), target.piece().position());
     }
 }

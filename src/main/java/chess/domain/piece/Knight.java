@@ -19,6 +19,6 @@ public final class Knight extends GeneralPiece {
 
     @Override
     public Piece move(final Target target) {
-        return new Knight(this.color(), target.getPiece().position());
+        return new Knight(this.color(), target.piece().position());
     }
 }

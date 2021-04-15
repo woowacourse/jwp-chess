@@ -24,6 +24,6 @@ public final class King extends GeneralPiece {
 
     @Override
     public Piece move(final Target target) {
-        return new King(this.color(), target.getPiece().position());
+        return new King(this.color(), target.piece().position());
     }
 }

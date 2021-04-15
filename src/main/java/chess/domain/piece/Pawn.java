@@ -23,7 +23,7 @@ public final class Pawn extends Piece {
 
     @Override
     public Piece move(final Target target) {
-        return new Pawn(this.color(), target.getPiece().position());
+        return new Pawn(this.color(), target.piece().position());
     }
 
     @Override

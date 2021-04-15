@@ -52,4 +52,12 @@ public class Position implements Comparable<Position> {
     public int hashCode() {
         return Objects.hash(file, rank);
     }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "file=" + file +
+                ", rank=" + rank +
+                '}';
+    }
 }

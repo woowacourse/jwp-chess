@@ -28,7 +28,7 @@ public final class KnightInitializer implements LocationInitializer {
         List<Piece> pieces = new ArrayList<>();
         for (final String file : FILES) {
             RANKS_BLACK.forEach(
-                    rank -> pieces.add(new Knight(Color.WHITE, new Position(file, rank))));
+                    rank -> pieces.add(new Knight(Color.BLACK, new Position(file, rank))));
         }
         return pieces;
     }

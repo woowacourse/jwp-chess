@@ -19,6 +19,6 @@ public final class Queen extends GeneralPiece {
 
     @Override
     public Piece move(final Target target) {
-        return new Queen(this.color(), target.getPiece().position());
+        return new Queen(this.color(), target.piece().position());
     }
 }

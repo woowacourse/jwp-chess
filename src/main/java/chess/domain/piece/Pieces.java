@@ -33,12 +33,12 @@ public class Pieces {
     public Optional<Piece> findPiece(final Position position) {
         return this.pieces.stream()
                 .filter(piece -> piece.isSamePosition(position))
-                .findAny();
+                .findFirst();
     }
 
     public void remove(final Position position) {
         if (findPiece(position).isPresent()) {
-            this.pieces.remove(findPiece(position).get());
+            pieces.removeIf(piece -> piece.position().equals(findPiece(position).get().position()));
         }
     }
 

@@ -20,7 +20,7 @@ public class Target {
         return result;
     }
 
-    public Piece getPiece() {
+    public Piece piece() {
         return piece;
     }
 
@@ -38,5 +38,9 @@ public class Target {
 
     public boolean isOpponent(final Source source) {
         return this.piece.color().isOppositeColor(source.getPiece().color());
+    }
+
+    public Position position() {
+        return piece.position();
     }
 }

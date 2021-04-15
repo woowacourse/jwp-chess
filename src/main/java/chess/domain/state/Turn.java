@@ -32,4 +32,9 @@ public abstract class Turn implements State {
     public boolean isKingPosition(final Position position) {
         return pieces.isKingPosition(position);
     }
+
+    @Override
+    public boolean isBlack() {
+        return pieces.isBlackPieces();
+    }
 }

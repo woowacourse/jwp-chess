@@ -74,4 +74,13 @@ public abstract class Piece {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+    @Override
+    public String toString() {
+        return "Piece{" +
+                "color=" + color +
+                ", name='" + name + '\'' +
+                ", position=" + position +
+                '}';
+    }
 }

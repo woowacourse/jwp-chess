@@ -19,6 +19,6 @@ public final class Bishop extends GeneralPiece {
 
     @Override
     public Piece move(final Target target) {
-        return new Bishop(this.color(), target.getPiece().position());
+        return new Bishop(this.color(), target.piece().position());
     }
 }

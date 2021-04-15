@@ -11,8 +11,8 @@ import java.util.*;
 public final class PawnInitializer implements LocationInitializer {
 
     private static final List<String> FILES = File.fileSymbols();
-    private static final List<String> RANKS_WHITE = Collections.singletonList("7");
-    private static final List<String> RANKS_BLACK = Collections.singletonList("2");
+    private static final List<String> RANKS_WHITE = Collections.singletonList("2");
+    private static final List<String> RANKS_BLACK = Collections.singletonList("7");
 
     @Override
     public List<Piece> whiteInitialize() {
@@ -29,7 +29,7 @@ public final class PawnInitializer implements LocationInitializer {
         List<Piece> pieces = new ArrayList<>();
         for (final String file : FILES) {
             RANKS_BLACK.forEach(
-                    rank -> pieces.add(new Pawn(Color.WHITE, new Position(file, rank))));
+                    rank -> pieces.add(new Pawn(Color.BLACK, new Position(file, rank))));
         }
         return pieces;
     }

@@ -48,5 +48,13 @@ public enum File {
     public int value() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "File{" +
+                "symbol='" + symbol + '\'' +
+                ", value=" + value +
+                '}';
+    }
 }
 

@@ -6,10 +6,9 @@ window.onload = function () {
 
     const deleteBtn = document.getElementsByClassName("delete-btn");
     Array.from(deleteBtn).forEach((el) => {
-        el.addEventListener('click', deleteRequest());
+        el.addEventListener('click', deleteRoom());
     })
 }
-
 
 let state = "stay"; // stay, show
 let source = "";
@@ -30,6 +29,25 @@ function enterNewGame() {
 
     document.body.appendChild(form);
     form.submit();
+}
+
+function deleteRoom() {
+    return function (event) {
+        const form = document.createElement("form");
+        form.setAttribute("charset", "UTF-8");
+        form.setAttribute("method", "Post");
+        form.setAttribute("action", "/room/delete");
+
+        const roomId = event.target.id;
+        const roomIdField = document.createElement("input");
+        roomIdField.setAttribute("type", "hidden");
+        roomIdField.setAttribute("name", "roomId");
+        roomIdField.setAttribute("value", roomId);
+        form.appendChild(roomIdField);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
 }
 
 function click() {

@@ -7,6 +7,7 @@ import chess.domain.piece.Owner;
 import chess.service.dao.GameDao;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -28,8 +29,12 @@ public class GameService {
     }
 
     public List<String> show(final Long roomId, final Position source) {
-        final ChessGame chessGame = gameDao.load(roomId);
-        return chessGame.reachablePositions(source);
+        try {
+            final ChessGame chessGame = gameDao.load(roomId);
+            return chessGame.reachablePositions(source);
+        } catch (IllegalArgumentException exception) {
+            return Collections.EMPTY_LIST;
+        }
     }
 
     public void move(final Long roomId, final Position source, final Position target) {

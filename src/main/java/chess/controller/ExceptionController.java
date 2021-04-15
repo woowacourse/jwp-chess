@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class MainController {
+public class ExceptionController {
 
-    public MainController() {
+    public ExceptionController() {
     }
 
     @ExceptionHandler({Exception.class})

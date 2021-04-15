@@ -10,8 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -27,20 +25,15 @@ public class GameController {
     }
 
     @GetMapping("/create/{roomId}")
-    private void createGame(@PathVariable final Long roomId, final HttpServletResponse response) throws IOException {
+    private String createGame(@PathVariable final Long roomId) {
         gameService.create(roomId);
-        response.sendRedirect("/game/load/" + roomId);
+        return "redirect:/game/load/" + roomId;
     }
 
     @GetMapping("/delete/{roomId}")
-    private void deleteGame(@PathVariable final Long roomId, final HttpServletResponse response) throws IOException {
+    private String deleteGame(@PathVariable final Long roomId) {
         gameService.delete(roomId);
-        response.sendRedirect("/room/list");
-    }
-
-    @GetMapping("/load/{roomId}")
-    private String loadGame(@PathVariable final Long roomId, final Model model) throws SQLException {
-        return printGame(roomId, model);
+        return "redirect:/room/list";
     }
 
     @ResponseBody
@@ -54,6 +47,11 @@ public class GameController {
         Position source = new Position(request.getParameter("source"));
         Position target = new Position(request.getParameter("target"));
         gameService.move(roomId, source, target);
+        return printGame(roomId, model);
+    }
+
+    @GetMapping("/load/{roomId}")
+    private String loadGame(@PathVariable final Long roomId, final Model model) throws SQLException {
         return printGame(roomId, model);
     }
 

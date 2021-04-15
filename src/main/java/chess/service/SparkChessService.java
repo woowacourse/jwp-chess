@@ -1,9 +1,9 @@
 package chess.service;
 
-import chess.dao.ChessDataSource;
-import chess.dao.PlayLogDao;
-import chess.dao.RoomDao;
-import chess.dao.UserDao;
+import chess.dao.spark.ChessDataSource;
+import chess.dao.spark.PlayLogDao;
+import chess.dao.spark.RoomDao;
+import chess.dao.spark.UserDao;
 import chess.domain.board.Board;
 import chess.domain.board.Point;
 import chess.domain.board.Team;
@@ -19,7 +19,7 @@ import chess.dto.web.UsersInRoomDto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ChessService {
+public class SparkChessService {
 
     private static final ChessDataSource CHESS_DATA_SOURCE = new ChessDataSource();
     private static final RoomDao ROOM_DAO = new RoomDao(CHESS_DATA_SOURCE);

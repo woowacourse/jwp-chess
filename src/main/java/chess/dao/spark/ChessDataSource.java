@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.dao.spark;
 
 import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;

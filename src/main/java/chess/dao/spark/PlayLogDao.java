@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.dao.spark;
 
 import chess.domain.board.Board;
 import chess.domain.chessgame.ChessGame;

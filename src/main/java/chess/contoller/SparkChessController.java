@@ -6,7 +6,7 @@ import static spark.Spark.post;
 import static spark.Spark.put;
 
 import chess.dto.web.RoomDto;
-import chess.service.ChessService;
+import chess.service.SparkChessService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.util.HashMap;
@@ -15,15 +15,15 @@ import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-public class ChessSparkController {
+public class SparkChessController {
 
     private static final Gson GSON = new Gson();
     private static final HandlebarsTemplateEngine HANDLEBARS_TEMPLATE_ENGINE = new HandlebarsTemplateEngine();
 
-    private final ChessService chessService;
+    private final SparkChessService sparkChessService;
 
-    public ChessSparkController(ChessService chessService) {
-        this.chessService = chessService;
+    public SparkChessController(SparkChessService sparkChessService) {
+        this.sparkChessService = sparkChessService;
     }
 
     public void run() {
@@ -54,12 +54,12 @@ public class ChessSparkController {
 
     private void movablePoints() {
         get("/room/:id/movablePoints/:point", "application/json", (req, res) ->
-            GSON.toJson(chessService.movablePoints(req.params("id"), req.params("point"))));
+            GSON.toJson(sparkChessService.movablePoints(req.params("id"), req.params("point"))));
     }
 
     private void gameStatus() {
         get("/room/:id/getGameStatus", "application/json",
-            (req, res) -> GSON.toJson(chessService.gameStatus(req.params("id"))));
+            (req, res) -> GSON.toJson(sparkChessService.gameStatus(req.params("id"))));
     }
 
     private void movePiece() {
@@ -67,33 +67,33 @@ public class ChessSparkController {
             Map<String, String> body = GSON.fromJson(req.body(), HashMap.class);
 
             return GSON.toJson(
-                chessService.move(req.params("id"), body.get("source"), body.get("destination")));
+                sparkChessService.move(req.params("id"), body.get("source"), body.get("destination")));
         });
     }
 
     private void finishGame() {
         put("/room/:id/exit", (req, res) -> {
-            chessService.exit(req.params("id"));
+            sparkChessService.exit(req.params("id"));
 
             return GSON.toJson("success");
         });
     }
 
     private void startGame() {
-        put("/room/:id/start", (req, res) -> GSON.toJson(chessService.start(req.params(":id"))));
+        put("/room/:id/start", (req, res) -> GSON.toJson(sparkChessService.start(req.params(":id"))));
     }
 
     private void usersInRoom() {
         get("/room/:id/statistics", "application/json",
-            (req, res) -> GSON.toJson(chessService.usersInRoom(req.params("id"))));
+            (req, res) -> GSON.toJson(sparkChessService.usersInRoom(req.params("id"))));
     }
 
     private void joinRoom() {
         get("/room/:id", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            model.put("board", chessService.latestBoard(req.params("id")));
+            model.put("board", sparkChessService.latestBoard(req.params("id")));
             model.put("roomId", req.params("id"));
-            model.put("userInfo", chessService.usersInRoom(req.params("id")));
+            model.put("userInfo", sparkChessService.usersInRoom(req.params("id")));
             return render(model, "index.html");
         });
     }
@@ -101,7 +101,7 @@ public class ChessSparkController {
     private void closeRoom() {
         put("/room", (req, res) -> {
             Map<String, String> body = GSON.fromJson(req.body(), HashMap.class);
-            chessService.close(body.get("id"));
+            sparkChessService.close(body.get("id"));
 
             return GSON.toJson("success");
         });
@@ -112,7 +112,7 @@ public class ChessSparkController {
             RoomDto newRoom = GSON.fromJson(req.body(), RoomDto.class);
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("result", "success");
-            jsonObject.addProperty("roomId", chessService.create(newRoom));
+            jsonObject.addProperty("roomId", sparkChessService.create(newRoom));
             return GSON.toJson(jsonObject);
         });
     }
@@ -120,7 +120,7 @@ public class ChessSparkController {
     private void lobby() {
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            model.put("rooms", chessService.openedRooms());
+            model.put("rooms", sparkChessService.openedRooms());
             return render(model, "lobby.html");
         });
     }

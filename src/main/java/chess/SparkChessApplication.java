@@ -1,12 +1,12 @@
 package chess;
 
-import chess.contoller.ChessSparkController;
-import chess.service.ChessService;
+import chess.contoller.SparkChessController;
+import chess.service.SparkChessService;
 
 public class SparkChessApplication {
 
     public static void main(String[] args) {
-        ChessSparkController chessSparkController = new ChessSparkController(new ChessService());
-        chessSparkController.run();
+        SparkChessController sparkChessController = new SparkChessController(new SparkChessService());
+        sparkChessController.run();
     }
 }

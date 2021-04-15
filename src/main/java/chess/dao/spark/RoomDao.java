@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.dao.spark;
 
 import chess.dto.web.RoomDto;
 import java.sql.Connection;

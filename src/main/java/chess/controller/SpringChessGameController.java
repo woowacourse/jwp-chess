@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public final class SpringChessGameController {
@@ -34,7 +33,7 @@ public final class SpringChessGameController {
     }
 
     @GetMapping("/")
-    public String goHome(Model model) {
+    private String goHome(Model model) {
         try {
             List<String> roomIds = roomService.allRoomsId();
             roomIds.forEach(id -> rooms.addRoom(id, new ChessGame()));
@@ -48,13 +47,13 @@ public final class SpringChessGameController {
 
     @PostMapping(path = "/createNewGame", consumes = "application/json")
     @ResponseBody
-    public boolean createNewGame(@RequestBody CreateRoomRequestDTO createRoomRequestDTO) {
+    private boolean createNewGame(@RequestBody CreateRoomRequestDTO createRoomRequestDTO) {
         roomService.createRoom(createRoomRequestDTO.getName());
         return true;
     }
 
     @GetMapping("/enter")
-    public String enterRoom(@RequestParam String id, Model model) {
+    private String enterRoom(@RequestParam String id, Model model) {
         try {
             model.addAttribute("number", id);
             model.addAttribute("button", "새로운게임");
@@ -78,6 +77,18 @@ public final class SpringChessGameController {
         return "chess";
     }
 
+    @PostMapping(path = "/continue")
+    private String continueGame(@ModelAttribute RoomIdDTO roomIdDTO, Model model) {
+        ChessGame chessGame = new ChessGame();
+        chessGame.initialize();
+        String roomId = roomIdDTO.getRoomId();
+        List<String[]> logs = logService.logByRoomId(roomId);
+        logService.executeLog(logs, chessGame);
+        UsersDTO users = userService.usersParticipatedInGame(roomId);
+        gameInformation(rooms.loadGameByRoomId(roomId), model, roomId, users);
+        return "chess";
+    }
+
     private void gameInformation(final ChessGame chessGame, final Model model,
                                  final String roomId, final UsersDTO users) {
         PiecesDTO piecesDTOs = PiecesDTO.create(chessGame.board());
@@ -89,5 +100,4 @@ public final class SpringChessGameController {
         model.addAttribute("number", roomId);
         model.addAttribute("users", users);
     }
-
 }

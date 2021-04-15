@@ -13,7 +13,11 @@ mainStart.addEventListener("click", () => {
         data: {
             name: result
         }
-    }).then(() => {
+    }).then(response => {
+            if (response.data.statusCode === 400) {
+                alert(response.data.message);
+                return;
+            }
             localStorage.setItem("name", result)
             window.location = basePath + "/games"
         }

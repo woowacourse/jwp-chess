@@ -58,11 +58,15 @@ public class ChessService {
         chessDao.update(chess);
     }
 
-    public GameStatusDto startChess(final ChessSaveRequestDto request) {
-        ChessGame chessGame = ChessGame.newGame();
-        Chess chess = new Chess(request.getName());
-        chessDao.save(chess);
-        return new GameStatusDto(chessGame.pieces(), chessGame.calculateScore(), chessGame.isGameOver(), chess.getWinnerColor());
+    public CommonResponseDto<GameStatusDto> startChess(final ChessSaveRequestDto request) {
+        try {
+            ChessGame chessGame = ChessGame.newGame();
+            Chess chess = new Chess(request.getName());
+            chessDao.save(chess);
+            return new CommonResponseDto<>(new GameStatusDto(chessGame.pieces(), chessGame.calculateScore(), chessGame.isGameOver(), chess.getWinnerColor()), ResponseCode.OK.code(), ResponseCode.OK.message());
+        } catch (RuntimeException exception){
+            return new CommonResponseDto<>(ResponseCode.BAD_REQUEST.code(), exception.getMessage());
+        }
     }
 
     public GameStatusDto loadChess(final String chessName) {

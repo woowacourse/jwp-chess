@@ -43,8 +43,7 @@ public class ChessWebController {
 
         post("/games", (request, response) -> {
             ChessSaveRequestDto requestDto = new Gson().fromJson(request.body(), ChessSaveRequestDto.class);
-            GameStatusDto responseDto = chessService.startChess(requestDto);
-            return toJson(responseDto);
+            return toJson(chessService.startChess(requestDto));
         });
 
         put("/games", (request, response) -> {

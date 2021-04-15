@@ -48,7 +48,7 @@ public class ChessGame {
 
     private void move(final Position sourcePosition, final Position targetPosition, Player player) {
         Source source = new Source(
-            player.findPiece(sourcePosition).orElseThrow(() -> new IllegalArgumentException("현재 위치에 기물이 없습니다.")));
+            player.findPiece(sourcePosition).orElseThrow(() -> new IllegalArgumentException("본인 턴에 맞는 기물을 선택해 주세요.")));
         Target target = new Target(chessBoard.findPiece(targetPosition));
 
         if (chessBoard.checkPath(source, target)) {

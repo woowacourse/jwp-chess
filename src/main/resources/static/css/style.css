@@ -14,7 +14,7 @@ body {
 
 h1 span {
     position: relative;
-    top: 20px;
+    top: 10px;
     display: inline-block;
     animation: bounce .3s ease infinite alternate;
     font-family: 'Titan One', cursive;

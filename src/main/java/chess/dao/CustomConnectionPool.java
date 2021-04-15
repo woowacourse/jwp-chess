@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomConnectionPool implements ConnectionPool {
-    private static final String DEFAULT_SERVER = "jdbc:mysql://localhost:13306"; // 서버 주소
-    private static final String DEFAULT_DATABASE = "woowa_chess"; // DATABASE 이름
+    private static final String DEFAULT_SERVER = "jdbc:mysql://localhost:3306"; // 서버 주소
+    private static final String DEFAULT_DATABASE = "chess"; // DATABASE 이름
     private static final String DEFAULT_OPTION = "?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8"; // DATABASE 옵션
     private static final String DEFAULT_URL = DEFAULT_SERVER + "/" + DEFAULT_DATABASE + DEFAULT_OPTION; // DATABASE 옵션
     private static final String DEFAULT_USER = "root"; // 서버 아이디
-    private static final String DEFAULT_PASSWORD = "root"; // 서버 비밀번호
+    private static final String DEFAULT_PASSWORD = "zeratul1"; // 서버 비밀번호
     private static final int INITIAL_POOL_SIZE = 15;
 
     private String url;

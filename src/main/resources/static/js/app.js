@@ -40,15 +40,19 @@ exit.addEventListener("click", () => {
 const loadGame = () => {
     axios.get(basePath + '/games/' + localStorage.getItem("name"))
         .then(responsePieces => {
-            reRangeBoard(responsePieces)
-            if (responsePieces.data.isGameOver) {
+            if (responsePieces.data.code === 400) {
+                alert(responsePieces.data.message);
+                return;
+            }
+            reRangeBoard(responsePieces.data.body)
+            if (responsePieces.data.body.isGameOver) {
                 let winnerNode = winner.querySelector("strong");
-                if (responsePieces.data.winner === "NOTHING") {
+                if (responsePieces.data.body.winner === "NOTHING") {
                     winnerNode.innerText = "무승부";
                     alert("무승부!");
                 } else {
-                    winnerNode.innerText = responsePieces.data.winner;
-                    alert("승리자는" + responsePieces.data.winner);
+                    winnerNode.innerText = responsePieces.data.body.winner;
+                    alert("승리자는" + responsePieces.data.body.winner);
                 }
                 winner.style.visibility = "visible";
             }
@@ -67,7 +71,7 @@ function reRangeBoard(responsePieces) {
         }
     }
 
-    const pieces = responsePieces.data.pieces;
+    const pieces = responsePieces.pieces;
 
     for (let pieceIdx = 0; pieceIdx < pieces.length; pieceIdx++) {
         for (let idx = 0; idx < tiles.length; idx++) {
@@ -80,9 +84,9 @@ function reRangeBoard(responsePieces) {
             }
         }
     }
-    isEnd = responsePieces.data.isGameOver;
-    whiteCount.innerText = responsePieces.data.scoreDto.whiteScore;
-    blackCount.innerText = responsePieces.data.scoreDto.blackScore;
+    isEnd = responsePieces.isGameOver;
+    whiteCount.innerText = responsePieces.scoreDto.whiteScore;
+    blackCount.innerText = responsePieces.scoreDto.blackScore;
 }
 
 function imageName(pieceName) {

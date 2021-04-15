@@ -49,13 +49,12 @@ public class ChessWebController {
         put("/games", (request, response) -> {
             GameStatusRequestDto requestDto = new Gson().fromJson(request.body(), GameStatusRequestDto.class);
             chessService.changeGameStatus(requestDto);
-            return toJson(requestDto);
+            return toJson(new CommonResponseDto<>(ResponseCode.OK.code(), ResponseCode.OK.message()));
         });
 
         get("/games/:name", (request, response) -> {
             String name = request.params(":name");
-            GameStatusDto responseDto = chessService.loadChess(name);
-            return toJson(responseDto);
+            return toJson(chessService.loadChess(name));
         });
 
         put("/pieces", (request, response) -> {

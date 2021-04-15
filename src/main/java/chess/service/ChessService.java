@@ -69,15 +69,21 @@ public class ChessService {
         }
     }
 
-    public GameStatusDto loadChess(final String chessName) {
-        ChessGame chessGame = ChessGame.newGame();
-        Chess chess = findChessByName(chessName);
-        List<Movement> movements = movementDao.findByChessName(chess.getName());
+    public CommonResponseDto<GameStatusDto> loadChess(final String chessName) {
+        try {
+            ChessGame chessGame = ChessGame.newGame();
+            Chess chess = findChessByName(chessName);
+            List<Movement> movements = movementDao.findByChessName(chess.getName());
 
-        for (Movement movement : movements) {
-            chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
+            for (Movement movement : movements) {
+                chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
+            }
+            return new CommonResponseDto<>(new GameStatusDto(chessGame.pieces(),
+                chessGame.calculateScore(), chessGame.isGameOver(), chess.getWinnerColor()),
+                ResponseCode.OK.code(), ResponseCode.OK.message());
+        } catch (RuntimeException exception) {
+            return new CommonResponseDto<>(ResponseCode.BAD_REQUEST.code(), exception.getMessage());
         }
-        return new GameStatusDto(chessGame.pieces(), chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor());
     }
 
     private Chess findChessByName(final String chessName) {

@@ -42,8 +42,6 @@ public class SpringBoardDao {
     }
 
     public void updateBoard(Board board, String turn, String roomName) {
-        System.out.println("@@@@@@@@@@update" + roomName);
-
         String query = "UPDATE board SET position = ?, pieceName = ?, turn = ? WHERE roomName = ?";
         this.jdbcTemplate.update(query, boardPositionSet(board.getBoard()), boardPieceSet(board.getBoard()), turn, roomName);
     }
@@ -66,10 +64,8 @@ public class SpringBoardDao {
 
     public Side findTurn(String roomName) {
         try {
-            System.out.println("@@@@@@@@@@findTurn" + roomName);
             String query = "SELECT turn FROM board WHERE roomName = ?";
             String side = this.jdbcTemplate.queryForObject(query, String.class, roomName);
-            System.out.println("@@@@@@@@@@findTurn" + side);
 
             return Side.getTurnByName(side);
         } catch (DataAccessException e) {

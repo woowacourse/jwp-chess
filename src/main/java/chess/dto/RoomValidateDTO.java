@@ -4,7 +4,8 @@ public class RoomValidateDTO {
     private String code;
     private String message;
 
-    public RoomValidateDTO(){}
+    public RoomValidateDTO() {
+    }
 
     public RoomValidateDTO(String code, String message) {
         this.code = code;

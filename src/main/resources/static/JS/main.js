@@ -9,16 +9,16 @@ roomTable.addEventListener("dblclick", joinRoom);
 renderRooms();
 
 function joinRoom(event) {
-    if(event.target.closest("td")) {
+    if (event.target.closest("td")) {
         const roomName = getClickedRoom().textContent;
         window.location.href = `/enter/${roomName}`;
     }
 }
 
-async function deleteRoom(){
+async function deleteRoom() {
     const clickedRoom = getClickedRoom();
-    if(clickedRoom) {
-        if(!confirm(clickedRoom.textContent + " 방을 삭제하시겠습니까?")){
+    if (clickedRoom) {
+        if (!confirm(clickedRoom.textContent + " 방을 삭제하시겠습니까?")) {
             return;
         }
         let data = {
@@ -36,7 +36,7 @@ async function deleteRoom(){
 }
 
 function clickRoomName(event) {
-    if(event.target.closest("td")) {
+    if (event.target.closest("td")) {
         const clickRoom = event.target.closest("td");
         const clickedRoom = getClickedRoom();
 

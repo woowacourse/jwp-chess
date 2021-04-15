@@ -64,8 +64,8 @@ public class SpringChessService {
         springBoardDao.updateBoard(Board.getGamingBoard(), "WHITE", roomName);
     }
 
-    public RoomValidateDTO checkDuplicatedRoom(String roomName){
-        if(springBoardDao.checkDuplicateByRoomName(roomName)){
+    public RoomValidateDTO checkDuplicatedRoom(String roomName) {
+        if (springBoardDao.checkDuplicateByRoomName(roomName)) {
             return new RoomValidateDTO(FAIL_CODE, "중복된 방 이름입니다.");
         }
         return new RoomValidateDTO(SUCCEED_CODE, "방 생성 성공!");

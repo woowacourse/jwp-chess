@@ -3,13 +3,11 @@ package chess.service;
 import chess.dao.BoardDao;
 import chess.domain.Side;
 import chess.domain.board.Board;
-import chess.domain.board.BoardInitializer;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.PositionDTO;
 import chess.dto.ResponseDTO;
 import chess.exception.ChessException;
-import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.LinkedHashMap;

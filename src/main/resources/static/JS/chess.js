@@ -13,7 +13,7 @@ scoreButton.addEventListener("click", clickScore);
 
 function getCurrentRoomName() {
     const url = window.location.href.split("/");
-    currentRoomName = url[url.length-1];
+    currentRoomName = url[url.length - 1];
 }
 
 function createChessBoard() {
@@ -78,7 +78,7 @@ async function move(from, to) {
     let data = {
         from: from,
         to: to,
-        roomName:currentRoomName
+        roomName: currentRoomName
     }
     const response = await fetch('/move', {
         method: 'post',
@@ -120,7 +120,7 @@ function changeImage(sourcePosition, targetPosition) {
 
 async function changeTurn() {
     let data = {
-        roomName:currentRoomName
+        roomName: currentRoomName
     }
     const response = await fetch('/currentTurn', {
         method: 'post',
@@ -137,7 +137,7 @@ async function changeTurn() {
 }
 
 function clickStart() {
-    if(confirm("재시작하시겠습니까?")) {
+    if (confirm("재시작하시겠습니까?")) {
         let data = {
             roomName: currentRoomName
         }
@@ -155,14 +155,14 @@ function clickStart() {
 }
 
 async function clickBack() {
-    if(confirm("목록으로 돌아가시겠습니까?")) {
+    if (confirm("목록으로 돌아가시겠습니까?")) {
         window.location.href = "http://localhost:8080/";
     }
 }
 
 async function syncBoard() {
     let data = {
-        roomName:currentRoomName
+        roomName: currentRoomName
     }
     const board = await fetch('/currentBoard', {
         method: 'post',
@@ -193,7 +193,7 @@ async function syncBoard() {
 
 async function clickScore() {
     let data = {
-        roomName:currentRoomName
+        roomName: currentRoomName
     }
     const score = await fetch('/score', {
         method: 'post',
@@ -205,5 +205,5 @@ async function clickScore() {
         return res.json();
     });
 
-    alert("White 점수 : " + score.whiteScore + "\nBlack 점수 : " +score.blackScore);
+    alert("White 점수 : " + score.whiteScore + "\nBlack 점수 : " + score.blackScore);
 }

@@ -15,7 +15,7 @@ import static chess.database.DatabaseConnection.getConnection;
 
 public class RoomDAO {
     public void addRoom(Room room) throws SQLException {
-        String query = "INSERT INTO room (room_id, turn, state) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE turn = VALUES(turn), state = VALUES(state)";
+        String query = "INSERT INTO room (name, turn, state) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE turn = VALUES(turn), state = VALUES(state)";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
         pstmt.setString(1, room.getName());
@@ -62,15 +62,15 @@ public class RoomDAO {
         closeConnection(con);
     }
 
-    public List<Room> getAllRoom() throws SQLException {
-        String query = "SELECT room_id FROM room";
+    public List<String> getAllRoom() throws SQLException {
+        String query = "SELECT name FROM room";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
         ResultSet rs = pstmt.executeQuery();
 
-        List<Room> rooms = new ArrayList<>();
+        List<String> rooms = new ArrayList<>();
         while (rs.next()) {
-            rooms.add(new Room(rs.getString("name"), null, null));
+            rooms.add(rs.getString("name"));
         }
         closeConnection(con);
         return rooms;

@@ -21,17 +21,17 @@ public class WebUIChessController {
     private final RoomDAO roomDAO = new RoomDAO();
     private ChessGame chessGame;
 
-    public Response createRoom(String roomId) {
+    public Response createRoom(String name) {
         try {
-            roomDAO.validateRoomExistence(roomId);
+            roomDAO.validateRoomExistence(name);
             initializeChessBoard();
             Response response = new Response(chessGame, StatusCode.SUCCESSFUL);
-            response.add("name", roomId);
+            response.add("name", name);
             return response;
-        } catch (SQLException e) {
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             Response response = new Response(StatusCode.CONFLICT);
-            response.add("alert", roomId + "는 이미 존재하는 방입니다.");
+            response.add("alert", name + "는 이미 존재하는 방입니다.");
             return response;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -74,10 +74,8 @@ public class WebUIChessController {
         return new Room(name, turn, state);
     }
 
-    public Response loadRoom(String request) {
+    public Response loadRoom(String name) {
         try {
-            JsonObject roomJson = JsonConverter.toJsonObject(request);
-            String name = roomJson.get("name").getAsString();
             Room room = roomDAO.findByRoomId(name);
             setChessGame(room);
             Response response = new Response(chessGame, StatusCode.SUCCESSFUL);
@@ -112,7 +110,7 @@ public class WebUIChessController {
     public Response getAllSavedRooms() {
         try {
             Response response = new Response(StatusCode.SUCCESSFUL);
-            response.add("rooms", roomDAO.getAllRoom());
+            response.add("roomNames", roomDAO.getAllRoom());
             return response;
         } catch (Exception e) {
             System.out.println(e.getMessage());

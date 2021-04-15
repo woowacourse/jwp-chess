@@ -5,8 +5,9 @@ import chess.domain.feature.Color;
 import chess.domain.game.ChessGame;
 import chess.domain.game.Result;
 import chess.domain.piece.Piece;
-import chess.dto.PieceDTO;
 import chess.dto.OutcomeDTO;
+import chess.dto.PieceDTO;
+import chess.dto.ScoreDTO;
 import chess.dto.TurnDTO;
 
 import java.util.HashMap;
@@ -37,7 +38,10 @@ public class Response {
         }
 
         Result result = chessGame.calculateResult();
-        model.put("result", new OutcomeDTO(result));
+        model.put("score", new ScoreDTO(result));
+        if (!chessGame.isOngoing()) {
+            model.put("outcome", new OutcomeDTO(result));
+        }
         return model;
     }
 

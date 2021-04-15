@@ -15,21 +15,21 @@ import static spark.Spark.*;
 
 public class WebUIChessApplication {
     public static void main(String[] args) {
-        staticFiles.location("/public");
+        staticFiles.location("/static");
 
         WebUIChessController webUIChessController = new WebUIChessController();
 
         get("/", (req, res) -> {
             Response response = webUIChessController.resetGameAsReadyState();
-            return render(response.getModel(), "index.html");
+            return render(response.getModel(), "index.hbs");
         });
 
         post("/game", (req, res) -> {
-            String roomId = req.queryParams("room_id");
-            Response response = webUIChessController.createRoom(roomId);
+            String name = req.queryParams("name");
+            Response response = webUIChessController.createRoom(name);
             if (response.isNotSuccessful()) {
                 res.status(response.getHttpStatus());
-                return render(response.getModel(), "index.html");
+                return render(response.getModel(), "index.hbs");
             }
             return render(response.getModel(), "game.hbs");
         });
@@ -43,7 +43,7 @@ public class WebUIChessApplication {
             return render(response.getModel(), "game.hbs");
         });
 
-        get("/save", (req, res) -> {
+        get("/rooms", (req, res) -> {
             Response response = webUIChessController.getAllSavedRooms();
             if (response.isNotSuccessful()) {
                 res.status(response.getHttpStatus());
@@ -51,8 +51,8 @@ public class WebUIChessApplication {
             return render(response.getModel(), "repository.hbs");
         });
 
-        post("/game/load", "application/json", (req, res) -> {
-            Response response = webUIChessController.loadRoom(req.body());
+        post("/game/load", (req, res) -> {
+            Response response = webUIChessController.loadRoom(req.queryParams("roomName"));
             if (response.isNotSuccessful()) {
                 res.status(response.getHttpStatus());
             }

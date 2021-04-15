@@ -1,6 +1,7 @@
 package chess.domain.game;
 
 import chess.domain.board.Board;
+import chess.domain.piece.Color;
 import chess.domain.piece.factory.PieceInitializer;
 import chess.domain.player.BlackPlayer;
 import chess.domain.player.Player;
@@ -14,9 +15,9 @@ import chess.domain.state.StateFactory;
 public class ChessGame {
 
     private Board chessBoard;
-    private Player whitePlayer;
-    private Player blackPlayer;
-    private boolean isGameOver = false;
+    private final Player whitePlayer;
+    private final Player blackPlayer;
+    private Color winner = Color.NOTHING;
 
     public ChessGame(final Player whitePlayer, final Player blackPlayer, final Board chessBoard) {
         this.whitePlayer = whitePlayer;
@@ -36,14 +37,10 @@ public class ChessGame {
         if (whitePlayer.isFinish()) {
             move(sourcePosition, targetPosition, blackPlayer);
             chessBoard = chessBoard.put(whitePlayer.pieces(), blackPlayer().pieces());
-            if (isGameOver) {
-            }
             return;
         }
         move(sourcePosition, targetPosition, whitePlayer);
         chessBoard = chessBoard.put(whitePlayer.pieces(), blackPlayer.pieces());
-        if (isGameOver) {
-        }
     }
 
     private void move(final Position sourcePosition, final Position targetPosition, Player player) {
@@ -70,7 +67,7 @@ public class ChessGame {
 
     private void checkPieces(final State state, final Target target) {
         if (state.isKingPosition(target.position())) {
-            this.isGameOver = true;
+            winner = state.reverseColor();
         }
         if (state.findPiece(target.position()).isPresent()) {
             state.removePiece(target.position());

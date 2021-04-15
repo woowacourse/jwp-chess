@@ -1,5 +1,6 @@
 package chess.domain.state;
 
+import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
@@ -36,5 +37,10 @@ public abstract class Turn implements State {
     @Override
     public boolean isBlack() {
         return pieces.isBlackPieces();
+    }
+
+    @Override
+    public Color reverseColor() {
+        return pieces.reverseColor();
     }
 }

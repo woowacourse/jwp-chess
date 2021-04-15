@@ -57,4 +57,11 @@ public class Pieces {
         }
         return false;
     }
+
+    public Color reverseColor() {
+        if (isBlackPieces()) {
+            return Color.WHITE;
+        }
+        return Color.BLACK;
+    }
 }

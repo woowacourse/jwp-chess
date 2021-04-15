@@ -1,5 +1,6 @@
 package chess.domain.state;
 
+import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
@@ -24,4 +25,6 @@ public interface State {
     void removePiece(final Position position);
 
     boolean isBlack();
+
+    Color reverseColor();
 }

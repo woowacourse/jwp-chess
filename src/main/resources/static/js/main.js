@@ -20,7 +20,7 @@ function createRoom() {
 
 function newGame(name) {
     let data = {
-        "name" : name
+        "name": name
     }
 
     $.ajax({

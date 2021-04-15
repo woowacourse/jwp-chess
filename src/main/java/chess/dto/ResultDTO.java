@@ -1,31 +1,28 @@
 package chess.dto;
 
-public final class ResultDTO implements Comparable {
-    private final String nickname;
-    private final int winCount;
-    private final int loseCount;
+public final class ResultDTO {
+    private String roomId;
+    private String winner;
+    private String loser;
 
-    public ResultDTO(final String nickname, final int winCount, final int loseCount) {
-        this.nickname = nickname;
-        this.winCount = winCount;
-        this.loseCount = loseCount;
+    public ResultDTO() {
     }
 
-    public String getNickname() {
-        return nickname;
+    public ResultDTO(final String roomId, final String winner, final String loser) {
+        this.roomId = roomId;
+        this.winner = winner;
+        this.loser = loser;
     }
 
-    public int getWinCount() {
-        return winCount;
+    public String getRoomId() {
+        return roomId;
     }
 
-    public int getLoseCount() {
-        return loseCount;
+    public String getWinner() {
+        return winner;
     }
 
-    @Override
-    public int compareTo(Object o) {
-        ResultDTO resultDTO = (ResultDTO) o;
-        return Integer.compare(resultDTO.winCount, this.winCount);
+    public String getLoser() {
+        return loser;
     }
 }

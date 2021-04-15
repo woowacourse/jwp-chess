@@ -4,12 +4,12 @@ import chess.domain.ChessGame;
 import chess.domain.Rooms;
 import chess.domain.Team;
 import chess.dto.*;
-import chess.exception.DataAccessException;
 import chess.exception.DriverLoadException;
 import chess.service.LogService;
 import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -51,8 +51,8 @@ public final class SpringChessGameController {
 
     @PostMapping(path = "/createNewGame", consumes = "application/json")
     @ResponseBody
-    private boolean createNewGame(@RequestBody final CreateRoomRequestDTO createRoomRequestDTO) {
-        roomService.createRoom(createRoomRequestDTO.getName());
+    private boolean createNewGame(@RequestBody final RoomNameDTO roomNameDTO) {
+        roomService.createRoom(roomNameDTO.getName());
         return true;
     }
 
@@ -135,10 +135,10 @@ public final class SpringChessGameController {
 
     @PostMapping(path = "/initialize")
     @ResponseBody
-    private boolean initialize(@RequestBody final InitializeDTO initializeDTO) {
-        String roomId = initializeDTO.getRoomId();
-        String winner = initializeDTO.getWinner();
-        String loser = initializeDTO.getLoser();
+    private boolean initialize(@RequestBody final ResultDTO resultDTO) {
+        String roomId = resultDTO.getRoomId();
+        String winner = resultDTO.getWinner();
+        String loser = resultDTO.getLoser();
         roomService.changeStatus(roomId);
         int winnerId = userService.userIdByNickname(winner);
         int loserId = userService.userIdByNickname(loser);
@@ -159,7 +159,7 @@ public final class SpringChessGameController {
     private ResponseEntity dataAccessExceptionHandle(DataAccessException e) {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(e.getMessage());
+                .body("!! Database Access 오류");
     }
 
     @GetMapping(path = "/errorPage")

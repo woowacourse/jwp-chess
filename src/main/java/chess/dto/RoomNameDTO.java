@@ -1,13 +1,12 @@
 package chess.dto;
 
-
-public final class CreateRoomRequestDTO {
+public final class RoomNameDTO {
     private String name;
 
-    public CreateRoomRequestDTO() {
+    public RoomNameDTO() {
     }
 
-    public CreateRoomRequestDTO(final String name) {
+    public RoomNameDTO(final String name) {
         this.name = name;
     }
 

@@ -1,71 +1,53 @@
 package chess.repository;
 
-import static chess.util.Database.closeConnection;
-import static chess.util.Database.getConnection;
-
 import chess.domain.web.Game;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class GameDao {
+    private final JdbcTemplate jdbcTemplate;
+
+    public GameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final RowMapper<Game> gameRowMapper = (resultSet, rowNum) ->
+        new Game(
+            resultSet.getInt("id"),
+            resultSet.getInt("userId"),
+            resultSet.getBoolean("isEnd"),
+            resultSet.getTimestamp("createdTime").toLocalDateTime()
+        );
+
     public int addGame(Game game) {
         String query = "INSERT INTO game(userId, isEnd, createdTime) VALUES (?, ?, ?);";
-        Connection connection = getConnection();
-        int gameId;
-        try {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection
-                .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                .prepareStatement(query, new String[]{"id"});
             preparedStatement.setInt(1, game.getUserId());
             preparedStatement.setBoolean(2, game.isEnd());
             preparedStatement.setTimestamp(3, Timestamp.valueOf(game.getCreatedTime()));
-            preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
-            rs.next();
-            gameId = rs.getInt(1);
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        } finally {
-            closeConnection(connection);
-        }
-        return gameId;
+            return preparedStatement;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     public List<Game> findRunningGamesByUserId(int userId) {
         String query = "SELECT * FROM game g JOIN user u ON g.userId = u.id WHERE g.userId = ?";
-        Connection connection = getConnection();
-        List<Game> games = new ArrayList<>();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, userId);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                games.add(new Game(
-                    rs.getInt("id"),
-                    rs.getInt("userId"),
-                    rs.getBoolean("isEnd"),
-                    rs.getTimestamp("createdTime").toLocalDateTime()
-                ));
-            }
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        } finally {
-            closeConnection(connection);
-        }
-        return games;
+        return jdbcTemplate.query(query, gameRowMapper, userId);
     }
 
-    public void updateGameIsEnd(int gameId) throws SQLException {
+    public void updateGameIsEnd(int gameId) {
         String query = "UPDATE game SET isEnd = true WHERE id = ?";
-        Connection connection = getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setInt(1, gameId);
-        preparedStatement.executeUpdate();
-        closeConnection(connection);
+        jdbcTemplate.update(query, gameId);
     }
 }

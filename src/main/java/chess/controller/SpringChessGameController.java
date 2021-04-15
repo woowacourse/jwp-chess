@@ -3,10 +3,8 @@ package chess.controller;
 import chess.domain.ChessGame;
 import chess.domain.Rooms;
 import chess.domain.Team;
-import chess.dto.CreateRoomRequestDTO;
-import chess.dto.PiecesDTO;
-import chess.dto.RoomIdDTO;
-import chess.dto.UsersDTO;
+import chess.dto.*;
+import chess.exception.DriverLoadException;
 import chess.service.LogService;
 import chess.service.ResultService;
 import chess.service.RoomService;
@@ -99,5 +97,13 @@ public final class SpringChessGameController {
         model.addAttribute("white-score", chessGame.scoreByTeam(Team.WHITE));
         model.addAttribute("number", roomId);
         model.addAttribute("users", users);
+    }
+
+    @PostMapping(path = "/myTurn")
+    @ResponseBody
+    private boolean checkCurrentTurn(@RequestBody SectionDTO sectionDTO) {
+        ChessGame chessGame = rooms.loadGameByRoomId(sectionDTO.getRoomId());
+        return chessGame.checkRightTurn(sectionDTO.getClickedSection());
+
     }
 }

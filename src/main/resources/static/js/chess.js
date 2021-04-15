@@ -20,6 +20,7 @@ function turnCheck(clickedSection) {
             roomId: roomId,
             clickedSection: clickedSection
         }),
+        contentType: "application/json",
         method: "POST",
         dataType: "json"
     }).done(function (turn) {
@@ -39,10 +40,11 @@ function getMovablePosition(clickedSection, turn) {
     if (turn) {
         $.ajax({
             url: "/movablePositions",
-            data: {
+            data: JSON.stringify({
                 roomId: roomId,
                 clickedSection: clickedSection
-            },
+            }),
+            contentType: "application/json",
             method: "POST",
             dataType: "json"
         }).done(function (positions) {
@@ -54,7 +56,6 @@ function getMovablePosition(clickedSection, turn) {
             const errorMessage = response.responseText;
             location.href = "/error?error=" + errorMessage;
         });
-        ;
     }
 }
 
@@ -101,14 +102,16 @@ function moveWhenCanGo(clickedSection) {
 function move() {
     $.ajax({
         url: "/move",
-        data: {
+        data: JSON.stringify({
             roomId: roomId,
             startPoint: startPoint,
             endPoint: endPoint
-        },
+        }),
+        contentType: "application/json",
         method: "POST",
         dataType: "json"
     }).done(function (currentStatus) {
+        console.log(currentStatus);
         const start = document.getElementById(startPoint);
         const end = document.getElementById(endPoint);
         const image = start.children[0];
@@ -151,11 +154,12 @@ function checkEndGame(currentStatus) {
 function gameInitialize(winner, loser) {
     $.ajax({
         url: "/initialize",
-        data: {
+        data: JSON.stringify({
             roomId: roomId,
             winner: winner,
             loser: loser
-        },
+        }),
+        contentType: "application/json",
         method: "POST",
         dataType: "json"
     }).done(function (success) {
@@ -166,7 +170,6 @@ function gameInitialize(winner, loser) {
         const errorMessage = response.responseText;
         location.href = "/error?error=" + errorMessage;
     });
-    ;
 }
 
 function initialize() {

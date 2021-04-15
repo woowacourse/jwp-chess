@@ -13,9 +13,8 @@ $board.addEventListener("click", onclickSquare);
 async function loadBoard() {
     await fetch($url + $gameId + "/load")
         .then(data => {
-            if (data.status === 400) {
+            if (!data.ok) {
                 exceptionHandling(data.json());
-            } else if (!data.ok) {
                 throw new Error(data.status);
             }
             return data.json();
@@ -94,9 +93,8 @@ function onclickSquare(event) {
 
         fetch($url + $gameId + '/move', $option)
             .then(data => {
-                if (data.status === 400) {
+                if (!data.ok) {
                     exceptionHandling(data.json());
-                } else if (!data.ok) {
                     throw new Error(data.status);
                 }
                 return data.json();
@@ -111,8 +109,8 @@ function onclickSquare(event) {
                 afterFinishedChangeState()
             })
             .catch(error => {
-                alert(error);
-            })
+                console.log(error);
+            });
     } else if (!$selectSquare.querySelector(".piece")) {
         if ($selectSquare.classList.contains("movable")) {
             return;
@@ -125,9 +123,8 @@ function onclickSquare(event) {
     } else {
         fetch($url + $gameId + "/path?source=" + $source)
             .then(data => {
-                if (data.status === 400) {
+                if (!data.ok) {
                     exceptionHandling(data.json());
-                } else if (!data.ok) {
                     throw new Error(data.status);
                 }
                 return data.json()
@@ -140,7 +137,6 @@ function onclickSquare(event) {
 
                 let $isCatchableEnemy;
                 for (let i = 0; i < path.length; i++) {
-                    console.log(path[i]);
                     $board.querySelector("#" + path[i]).classList.add("movable")
                     if ($board.querySelector("#" + path[i]).querySelector(".piece")) {
                         $isCatchableEnemy = true;
@@ -152,13 +148,12 @@ function onclickSquare(event) {
                     $movableSquare = "../images/green-take.png"
                 }
                 for (let i = 0; i < path.length; i++) {
-                    console.log(path[i]);
                     $board.querySelector("#" + path[i])
                         .querySelector('.highlight').setAttribute("src", $movableSquare);
                 }
             })
             .catch(error => {
-                alert(error);
+                console.log(error);
             })
     }
 }
@@ -186,9 +181,8 @@ function invalidSquare(id) {
 function score() {
     fetch($url + $gameId + "/score")
         .then(data => {
-            if (data.status === 400) {
+            if (!data.ok) {
                 exceptionHandling(data.json());
-            } else if (!data.ok) {
                 throw new Error(data.status);
             }
             return data.json();
@@ -200,22 +194,20 @@ function score() {
             $sidebar.querySelector("#black-score").innerHTML = $blackScoreText;
         })
         .catch(error => {
-            alert(error);
+            console.log(error);
         })
 }
 
 function state() {
     fetch($url + $gameId + "/state")
         .then(data => {
-            if (data.status === 400) {
+            if (!data.ok) {
                 exceptionHandling(data.json());
-            } else if (!data.ok) {
                 throw new Error(data.status);
             }
             return data.json();
         })
         .then(state => {
-            console.log(state);
             if (!state.playing) {
                 $isPlaying = state.playing;
                 alert("게임이 종료됐습니다!");
@@ -254,9 +246,8 @@ function replacePieceColor(targetImg) {
 function history() {
     fetch($url + $gameId + "/history")
         .then(data => {
-            if (data.status === 400) {
+            if (!data.ok) {
                 exceptionHandling(data.json());
-            } else if (!data.ok) {
                 throw new Error(data.status);
             }
             return data.json();
@@ -267,7 +258,7 @@ function history() {
             }
         })
         .catch(error => {
-            alert(error);
+            console.log(error);
         })
 }
 
@@ -305,7 +296,7 @@ function movePiece(source, target) {
 
 function exceptionHandling(error) {
     error.then(data => {
-        console.log(data);
+        console.log(data.exceptionMessage);
         alert(data.exceptionMessage);
     })
 }

@@ -11,4 +11,16 @@ public class ResponseDTO {
         this.message = message;
         this.turn = turn;
     }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getTurn() {
+        return turn;
+    }
 }

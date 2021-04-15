@@ -104,21 +104,30 @@ function changeImage(sourcePosition, targetPosition) {
 }
 
 async function changeTurn() {
-    const turn = await fetch('/currentTurn', {
+    let data = {
+        roomName:"1"
+    }
+    const response = await fetch('/currentTurn', {
         method: 'post',
+        body: JSON.stringify(data),
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         }
     }).then(res => {
         return res.json();
     });
+
     const currentTurn = document.querySelector('.turn');
-    currentTurn.textContent = turn;
+    currentTurn.textContent = response.turn;
 }
 
 function clickStart() {
+    let data = {
+        roomName:"1"
+    }
     fetch('/restart', {
         method: 'post',
+        body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
         }
@@ -129,8 +138,12 @@ function clickStart() {
 }
 
 async function syncBoard() {
+    let data = {
+        roomName:"1"
+    }
     const board = await fetch('/currentBoard', {
         method: 'post',
+        body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
         }

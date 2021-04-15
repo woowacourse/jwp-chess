@@ -1,6 +1,7 @@
 package chess;
 
 import chess.dto.PositionDTO;
+import chess.service.ChessService;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -15,27 +16,27 @@ public class WebUIChessApplication {
         port(8084);
         JsonTransformer jsonTransformer = new JsonTransformer();
 
-        ChessProgram chessProgram = new ChessProgram();
+        ChessService chessService = new ChessService();
         staticFiles.location("/public");
-        chessProgram.initChessGame();
+        chessService.initChessGame();
 
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             return render(model, "index.html");
         });
         post("/restart", (req, res) -> {
-            chessProgram.initChessGame();
+            chessService.initChessGame();
             return "보드 초기화 성공!";
         }, jsonTransformer);
         post("/move", (req, res) -> {
             PositionDTO positionDTO = jsonTransformer.getGson().fromJson(req.body(), PositionDTO.class);
-            return chessProgram.move(positionDTO);
+            return chessService.move(positionDTO);
         }, jsonTransformer);
         post("/currentBoard", (req, res) -> {
-            return chessProgram.getCurrentBoard();
+            return chessService.getCurrentBoard();
         }, jsonTransformer);
         post("/currentTurn", (req, res) -> {
-            return chessProgram.turnName();
+            return chessService.turnName();
         }, jsonTransformer);
 
     }

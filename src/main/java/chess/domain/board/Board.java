@@ -28,6 +28,9 @@ public class Board {
     }
 
     public void move(Position from, Position to, Side playerSide) {
+        if(isGameSet()) {
+            throw new InvalidMovementException("게임이 종료되었습니다.");
+        }
         Piece piece = board.get(from);
 
         validateIsMyPiece(playerSide, piece);

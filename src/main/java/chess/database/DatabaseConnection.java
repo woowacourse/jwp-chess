@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DatabaseTransaction {
-    public static Connection getConnection() {
-        Connection con = null;
+public class DatabaseConnection {
+    public static java.sql.Connection getConnection() {
+        java.sql.Connection con = null;
         String server = "localhost:13306"; // MySQL 서버 주소
         String database = "test"; // MySQL DATABASE 이름
         String option = "?useSSL=false&serverTimezone=UTC";
@@ -34,7 +34,7 @@ public class DatabaseTransaction {
     }
 
     // 드라이버 연결해제
-    public static void closeConnection(Connection con) {
+    public static void closeConnection(java.sql.Connection con) {
         try {
             if (con != null)
                 con.close();

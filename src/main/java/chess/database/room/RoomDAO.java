@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static chess.controller.WebUIChessController.gson;
-import static chess.database.DatabaseTransaction.closeConnection;
-import static chess.database.DatabaseTransaction.getConnection;
+import static chess.database.DatabaseConnection.closeConnection;
+import static chess.database.DatabaseConnection.getConnection;
 
 public class RoomDAO {
     public void addRoom(Room room) throws SQLException {

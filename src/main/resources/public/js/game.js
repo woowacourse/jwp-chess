@@ -190,8 +190,6 @@ function changeTurn(team) {
 async function clearRoom() {
     clearBoard();
     window.location.href = "/clear/" + $roomId;
-    // await getFetch("clear/" + $roomId).then(data => {
-    // })
 }
 
 document.addEventListener("click", createMoveCommand);

@@ -8,7 +8,6 @@ import chess.controller.web.dto.piece.PieceResponseDtos;
 import chess.controller.web.dto.score.ScoreResponseDto;
 import chess.controller.web.dto.state.StateResponseDto;
 import chess.dao.*;
-import chess.dao.jdbc.*;
 import chess.domain.board.position.Path;
 import chess.domain.board.position.Position;
 import chess.domain.game.Game;
@@ -17,9 +16,11 @@ import chess.domain.manager.ChessManager;
 import chess.domain.movecommand.MoveCommand;
 import chess.domain.piece.Owner;
 import chess.domain.piece.Piece;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ChessService {
 
     private final GameDao gameDao;

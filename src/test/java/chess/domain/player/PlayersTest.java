@@ -38,7 +38,6 @@ class PlayersTest {
         assertThatCode(() -> Players.of(playerListWithAllColors)).doesNotThrowAnyException();
     }
 
-    // todo: 여기 테스트 살짝 아쉬움. assertTrue 말고 다른 거 없을까?
     @DisplayName("Players 객체에 주어진 색을 가진 플레이어가 있는 경우 반환한다.")
     @Test
     void currentPlayer_success() {

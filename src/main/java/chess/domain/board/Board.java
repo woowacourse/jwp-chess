@@ -23,6 +23,10 @@ public class Board {
         coordinates.put(piece, position);
     }
 
+    public Board() {
+        this.coordinates = new LinkedHashMap<>();
+    }
+
     public Piece findPieceBy(Position position) {
         return coordinates.entrySet()
             .stream()

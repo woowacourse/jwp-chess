@@ -21,7 +21,7 @@ CREATE TABLE room (
 	CREATE TABLE team (
 	team_id INTEGER NOT NULL AUTO_INCREMENT,
 	name VARCHAR(21) NOT NULL,
-	is_end BOOLEAN NOT NULL DEFAULT false,
+	is_turn BOOLEAN NOT NULL DEFAULT false,
 	game_id INTEGER NOT NULL,
 	PRIMARY KEY (team_id),
 	FOREIGN KEY (game_id) REFERENCES game (game_id)
@@ -30,9 +30,11 @@ CREATE TABLE room (
 	CREATE TABLE piece (
 	piece_id INTEGER NOT NULL AUTO_INCREMENT,
 	name VARCHAR(21) NOT NULL,
-	team_id INTEGER NOT NULL,
+	color VARCHAR (21) NOT NULL,
+	position VARCHAR (10) NOT NULL,
+	game_id INTEGER NOT NULL,
 	PRIMARY KEY (piece_id),
-	FOREIGN KEY (team_id) REFERENCES team (team_id)
+	FOREIGN KEY (game_id) REFERENCES game (game_id)
 	);
 ```
 

@@ -1,6 +1,5 @@
 package chess.domain.chess;
 
-import chess.domain.piece.PieceDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,9 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import chess.domain.piece.PieceDTO;
 
 @Repository
 public class ChessDAO {
@@ -62,7 +64,8 @@ public class ChessDAO {
     public long insert() {
         try {
             String sql = "INSERT INTO chess (status, turn) VALUES ('RUNNING', 'WHITE')";
-            Connection connection = jdbcTemplate.getDataSource().getConnection();
+            Connection connection = jdbcTemplate.getDataSource()
+                                                .getConnection();
             PreparedStatement preparedStatement = connection
                     .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 

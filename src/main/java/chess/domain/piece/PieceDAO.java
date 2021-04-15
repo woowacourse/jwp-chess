@@ -1,10 +1,11 @@
 package chess.domain.piece;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
 import chess.domain.board.BoardDTO;
 import chess.domain.position.MovePosition;
 import chess.domain.position.MovePositionVO;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class PieceDAO {
@@ -21,7 +22,8 @@ public class PieceDAO {
         jdbcTemplate.batchUpdate(
                 sql,
                 boardDTO.getPieceDTOS(),
-                boardDTO.getPieceDTOS().size(),
+                boardDTO.getPieceDTOS()
+                        .size(),
                 (pstmt, argument) -> {
                     pstmt.setLong(1, chessId);
                     pstmt.setString(2, argument.getPosition());
@@ -48,7 +50,8 @@ public class PieceDAO {
     }
 
     private void updateSourcePosition(Long chessId, MovePositionVO movePositionVO) {
-        String sql = "UPDATE piece SET color = 'BLANK', name = 'BLANK' WHERE position = (?) AND chess_id = (?)";
+        String sql =
+                "UPDATE piece SET color = 'BLANK', name = 'BLANK' WHERE position = (?) AND chess_id = (?)";
         jdbcTemplate.update(sql, movePositionVO.getSource(), chessId);
     }
 }

@@ -1,11 +1,10 @@
 package chess.controller;
 
-import chess.domain.chess.ChessDTO;
-import chess.domain.position.MovePosition;
-import chess.service.ChessService;
-import com.google.gson.Gson;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,6 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import chess.domain.chess.ChessDTO;
+import chess.domain.position.MovePosition;
+import chess.service.ChessService;
 
 @Controller
 @RequestMapping("/chess")

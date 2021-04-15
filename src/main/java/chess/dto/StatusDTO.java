@@ -39,4 +39,28 @@ public final class StatusDTO {
         }
         return "NONE";
     }
+
+    public String getTurn() {
+        return turn;
+    }
+
+    public Double getBlackScore() {
+        return blackScore;
+    }
+
+    public Double getWhiteScore() {
+        return whiteScore;
+    }
+
+    public boolean isEnds() {
+        return ends;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public String getLoser() {
+        return loser;
+    }
 }

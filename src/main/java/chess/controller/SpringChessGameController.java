@@ -113,4 +113,17 @@ public final class SpringChessGameController {
         ChessGame chessGame = rooms.loadGameByRoomId(sectionDTO.getRoomId());
         return chessGame.movablePositionsByStartPoint(sectionDTO.getClickedSection());
     }
+
+    @PostMapping("/move")
+    @ResponseBody
+    private StatusDTO movePiece(@RequestBody MoveDTO moveDTO) {
+        String roomId = moveDTO.getRoomId();
+        String startPoint = moveDTO.getStartPoint();
+        String endPoint = moveDTO.getEndPoint();
+        ChessGame chessGame = rooms.loadGameByRoomId(roomId);
+        chessGame.move(startPoint, endPoint);
+        logService.createLog(roomId, startPoint, endPoint);
+        UsersDTO users = userService.usersParticipatedInGame(roomId);
+        return new StatusDTO(chessGame, users);
+    }
 }

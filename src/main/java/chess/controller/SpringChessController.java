@@ -32,34 +32,6 @@ public class SpringChessController {
         return "index";
     }
 
-    @GetMapping("/create/{id}")
-    @ResponseBody
-    public ResponseEntity<BoardDto> createRoom(@PathVariable("id") String id) {
-        return ResponseEntity.ok(springChessService.loadRoom(id));
-    }
-
-    @PostMapping("/move")
-    @ResponseBody
-    public ResponseEntity<BoardDto> move(@RequestBody MoveRequestDto moveRequestDto) {
-        try {
-            return ResponseEntity.ok(springChessService.move(moveRequestDto));
-        } catch (Exception e) {
-            return ResponseEntity.ok(springChessService.loadRoom(moveRequestDto.getRoomId()));
-        }
-    }
-
-    @PostMapping("/movable")
-    @ResponseBody
-    public ResponseEntity<List<String>> movablePosition(@RequestBody MovablePositionDto movablePositionDto) {
-        return ResponseEntity.ok(springChessService.movablePosition(movablePositionDto));
-    }
-
-    @PostMapping("/score")
-    @ResponseBody
-    public ResponseEntity<BoardStatusDto> score(@RequestBody MovablePositionDto movablePositionDto) throws JsonProcessingException {
-        return ResponseEntity.ok(springChessService.boardStatusDto(movablePositionDto.getRoomId()));
-    }
-
     @GetMapping("/clear/{id}")
     public String clear(@PathVariable String id) {
         springChessService.deleteRoom(id);

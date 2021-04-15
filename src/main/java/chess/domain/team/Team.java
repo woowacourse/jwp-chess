@@ -33,16 +33,25 @@ public abstract class Team {
 
     protected final Map<Position, Piece> piecePosition;
 
-    public Team(String name) {
-        this.name = name;
-        this.isCurrentTurn = false;
-        this.piecePosition = new HashMap<>();
+    protected Team(String name) {
+        this(name, false, new HashMap<>());
     }
 
-    public Team(String name, boolean isCurrentTurn, Map<Position, Piece> piecePosition) {
+    protected Team(String name, boolean isCurrentTurn) {
+        this(name, isCurrentTurn, new HashMap<>());
+    }
+
+    protected Team(String name, boolean isCurrentTurn, Map<Position, Piece> piecePosition) {
         this.name = name;
         this.isCurrentTurn = isCurrentTurn;
         this.piecePosition = new HashMap<>(piecePosition);
+    }
+
+    public static Team of(final String name, final boolean is_turn) {
+        if (WhiteTeam.DEFAULT_NAME.equals(name)) {
+            return new WhiteTeam(is_turn);
+        }
+        return new BlackTeam(is_turn);
     }
 
     protected void initializePawn(final int pawnColumn, final int pawnDirection) {

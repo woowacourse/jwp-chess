@@ -4,6 +4,7 @@ package chess.dao;
 import chess.domain.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -31,14 +32,21 @@ public class RoomDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public List<Room> loadAllRoom() {
-        String sql = "select * from room";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            Long id = resultSet.getLong("room_id");
-            String name = resultSet.getString("name");
-            String pw = resultSet.getString("pw");
-            Long gameId = resultSet.getLong("game_id");
-            return new Room(id, name, pw, gameId);
-        });
+    public Room load(Long roomId) {
+        String sql = "select * from room where room_id = ?";
+        return jdbcTemplate.queryForObject(sql, roomRowMapper, roomId);
     }
+
+    public List<Room> loadAll() {
+        String sql = "select * from room";
+        return jdbcTemplate.query(sql, roomRowMapper);
+    }
+
+    private final RowMapper<Room> roomRowMapper =  (resultSet, rowNum) -> {
+        Long id = resultSet.getLong("room_id");
+        String name = resultSet.getString("name");
+        String pw = resultSet.getString("pw");
+        Long gameId = resultSet.getLong("game_id");
+        return new Room(id, name, pw, gameId);
+    };
 }

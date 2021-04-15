@@ -17,23 +17,23 @@ public class ChessGame {
     private Team currentTurn;
     private boolean isEnd;
 
-    public ChessGame(final BlackTeam blackTeam, final WhiteTeam whiteTeam) {
-        this.blackTeam = blackTeam;
+    public ChessGame(final WhiteTeam whiteTeam, final BlackTeam blackTeam) {
         this.whiteTeam = whiteTeam;
+        this.blackTeam = blackTeam;
 
-        blackTeam.setEnemy(whiteTeam);
         whiteTeam.setEnemy(blackTeam);
+        blackTeam.setEnemy(whiteTeam);
 
         this.currentTurn = this.whiteTeam;
         this.currentTurn.startTurn();
         this.isEnd = false;
     }
 
-    public ChessGame(final BlackTeam blackTeam, final WhiteTeam whiteTeam, Team currentTurn, boolean isEnd) {
-        this.blackTeam = blackTeam;
+    public ChessGame(final WhiteTeam whiteTeam, final BlackTeam blackTeam, boolean isEnd) {
         this.whiteTeam = whiteTeam;
-        this.currentTurn = currentTurn;
+        this.blackTeam = blackTeam;
         this.isEnd = isEnd;
+        setCurrentTurn();
     }
 
     public boolean havePieceInCurrentTurn(final Position position) {
@@ -117,5 +117,14 @@ public class ChessGame {
 
     public WhiteTeam getWhiteTeam() {
         return whiteTeam;
+    }
+
+    private void setCurrentTurn() {
+        if (blackTeam.isCurrentTurn()) {
+            currentTurn = blackTeam;
+            return;
+        }
+
+        currentTurn = whiteTeam;
     }
 }

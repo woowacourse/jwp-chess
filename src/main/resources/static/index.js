@@ -4,7 +4,7 @@ const btnCreate = document.getElementById('btn-game-create')
 getTotalRoom();
 
 function getTotalRoom() {
-    axios.get('/room')
+    axios.get('/api/room')
         .then(function (response) {
             refreshRoomList(response.data)
         }).catch(function (error) {
@@ -25,13 +25,10 @@ btnCreate.addEventListener('click', function (e) {
     });
 })
 
-const roomList = document.getElementById('list-chess-game')
-roomList.addEventListener('click', function (e) {
-    enterGame(e);
-})
 
 function refreshRoomList(data) {
     let list = document.getElementById("list-chess-game");
+    roomListData = data;
     list.innerHTML = "";
     for (let i = 0; i < data.length; i++) {
         let room = data[i];
@@ -39,14 +36,19 @@ function refreshRoomList(data) {
             "<p class=box-chess-game-title> " + room.name + "</p>\n" +
             "</div>\n"
     }
+    const roomList = document.querySelectorAll('.box-chess-game');
+    for (const room of roomList) {
+        room.addEventListener('click', enterGame);
+    }
 }
 
-function enterGame(e) {
-    let idx = e.target.dataset.idx
+function enterGame(event) {
+    let idx = event.target.dataset.idx
     let room = roomListData[idx];
     let pw = prompt("비밀번호를 입력해 주세요");
+    // location.href = '/room/' + room.id;
     if (pw === room.pw) {
-        location.href = '/enterRoom?id=' + room.id;
+        location.href = '/room/' + room.id;
     } else {
         alert('비밀번호가 틀렸습니다.')
     }

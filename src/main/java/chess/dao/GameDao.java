@@ -2,6 +2,7 @@ package chess.dao;
 
 import chess.domain.ChessGame;
 import chess.domain.team.BlackTeam;
+import chess.domain.team.Team;
 import chess.domain.team.WhiteTeam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,5 +28,10 @@ public class GameDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public boolean isEnd(Long gameId) {
+        String sql = "select is_end from game where game_id = ?";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, gameId);
     }
 }

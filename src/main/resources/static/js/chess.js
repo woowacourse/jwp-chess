@@ -91,7 +91,7 @@ currentTurnP.textContent = currentTurn.innerText;
 
 const statusBtn = document.getElementById('status-btn');
 
-statusBtn.addEventListener('click', function() {
+statusBtn.addEventListener('click', function () {
     const whiteScore = document.getElementById('whiteScore');
     const blackScore = document.getElementById('blackScore');
     alert('하얀색 기물 점수는: ' + whiteScore.textContent + '\n' +
@@ -100,7 +100,7 @@ statusBtn.addEventListener('click', function() {
 
 const resetBtn = document.getElementById('reset-btn');
 
-resetBtn.addEventListener('click', function() {
+resetBtn.addEventListener('click', function () {
     window.location.href = '/reset';
 });
 
@@ -135,12 +135,13 @@ function request_move_post(first_click, second_click) {
         is_start_position_clicked = false;
     }
 
-    const xhr = new XMLHttpRequest();
+    const moveXhr = new XMLHttpRequest();
+    const turnXhr = new XMLHttpRequest();
 
-    xhr.open('POST', '/move', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.responseType = 'json';
-    xhr.send(JSON.stringify({
+    moveXhr.open('POST', '/move', true);
+    moveXhr.setRequestHeader('Content-Type', 'application/json');
+    moveXhr.responseType = 'json';
+    moveXhr.send(JSON.stringify({
         source: start_position,
         target: destination
     }));
@@ -149,11 +150,8 @@ function request_move_post(first_click, second_click) {
     destination = null;
     is_start_position_clicked = false;
 
-    xhr.onload = function() {
-        const move_response = xhr.response;
-
-        console.log(move_response);
-        console.log(move_response['moveError']);
+    moveXhr.onload = function () {
+        const move_response = moveXhr.response;
 
         if (move_response['moveError']) {
             alert(move_response['errorMessage']);
@@ -172,14 +170,13 @@ function request_move_post(first_click, second_click) {
             next_turn = 'white';
         }
 
-        xhr.open('POST', '/turn', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.responseType = 'json';
-        xhr.send(JSON.stringify({
+        turnXhr.open('POST', '/turn', true);
+        turnXhr.setRequestHeader('Content-Type', 'application/json');
+        turnXhr.responseType = 'json';
+        turnXhr.send(JSON.stringify({
             currentTurn: current_turn,
             nextTurn: next_turn
         }));
-
         window.location.href = 'http://127.0.0.1:8080/chess';
     };
 }

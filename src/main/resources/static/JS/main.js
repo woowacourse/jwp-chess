@@ -8,9 +8,11 @@ roomTable.addEventListener("dblclick", joinRoom);
 
 renderRooms();
 
-function joinRoom() {
-    const roomName = getClickedRoom().textContent;
-    window.location.href = `/enter/${roomName}`;
+function joinRoom(event) {
+    if(event.target.closest("td")) {
+        const roomName = getClickedRoom().textContent;
+        window.location.href = `/enter/${roomName}`;
+    }
 }
 
 async function deleteRoom(){
@@ -34,15 +36,17 @@ async function deleteRoom(){
 }
 
 function clickRoomName(event) {
-    const clickRoom = event.target.closest("td");
-    const clickedRoom = getClickedRoom();
+    if(event.target.closest("td")) {
+        const clickRoom = event.target.closest("td");
+        const clickedRoom = getClickedRoom();
 
-    if (clickedRoom) {
-        clickedRoom.classList.remove("clickedRoomName");
-        clickedRoom.classList.toggle("clicked");
+        if (clickedRoom) {
+            clickedRoom.classList.remove("clickedRoomName");
+            clickedRoom.classList.toggle("clicked");
+        }
+        clickRoom.classList.toggle("clicked");
+        clickRoom.classList.add("clickedRoomName");
     }
-    clickRoom.classList.toggle("clicked");
-    clickRoom.classList.add("clickedRoomName");
 }
 
 function getClickedRoom() {

@@ -66,7 +66,7 @@ public class SpringChessController {
     @PostMapping(value = "/move")
     @ResponseBody
     public ResponseDTO move(@RequestBody PositionDTO positionDTO) {
-        ResponseDTO responseDTO = springChessService.move(positionDTO,"1");
+        ResponseDTO responseDTO = springChessService.move(positionDTO, positionDTO.roomName());
         return responseDTO;
     }
 

@@ -75,7 +75,8 @@ function getClickedPiece() {
 async function move(from, to) {
     let data = {
         from: from,
-        to: to
+        to: to,
+        roomName:currentRoomName
     }
     const response = await fetch('/move', {
         method: 'post',

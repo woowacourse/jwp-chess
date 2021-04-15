@@ -28,7 +28,8 @@ public class StateDaoJDBC implements StateDao {
         }
     }
 
-    @Override public Long updateState(final ChessManager chessManager, final Long gameId) {
+    @Override
+    public Long updateState(final ChessManager chessManager, final Long gameId) {
         final String query = "UPDATE state SET turn_owner=?, turn_number=?, playing=? WHERE game_id=?";
 
         try (final Connection connection = ConnectionProvider.getConnection();
@@ -43,7 +44,8 @@ public class StateDaoJDBC implements StateDao {
         }
     }
 
-    @Override public StateResponseDto findStateByGameId(final Long gameId) {
+    @Override
+    public StateResponseDto findStateByGameId(final Long gameId) {
         final String query = "SELECT * from state where game_id = ?";
 
         try (Connection connection = ConnectionProvider.getConnection();

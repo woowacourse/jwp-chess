@@ -11,7 +11,7 @@ async function init() {
   this.gameId = url[url.length - 1]
 
   await setBoard()
-  await checkFinished()
+  // await checkFinished()
   await moveHandler()
   await changeTurn(await getTurn())
 }
@@ -109,42 +109,43 @@ function moveHandler() {
     e.preventDefault();
     e.target.style.background = "";
     target = e.target.closest('div').parentNode
-    try {
-      move(await movable(source, target))
+    console.log(source, target)
+    let response = await movable(source, target)
+    if (response.status === 200) {
+      move(source, target)
       await changeTurn(await getTurn())
-    } catch (e) {
-      alert('잘못된 이동입니다.')
+      return
+    }
+    if (response.status === 400) {
+      alert("잘못된 이동입니다.")
     }
   }, false);
 }
 
-function move(response) {
-  if (response.isOver === true) {
-    alert('게임이 종료되었습니다.')
-    toggleFinish()
-  }
-
-  const $source = document.getElementById(response.source.id)
-  const $target = document.getElementById(response.target.id)
-  $source.innerHTML = squareTemplate(response.source.id, response.source.piece)
-  $target.innerHTML = squareTemplate(response.target.id, response.target.piece)
+function move(source, target) {
+  const $source = document.getElementById(source.id)
+  const $target = document.getElementById(target.id)
+  $source.innerHTML = squareTemplate(source.id, source.piece)
+  $target.innerHTML = squareTemplate(target.id, target.piece)
 }
 
 async function movable(source, target) {
+  console.log(source.id)
+  console.log(source.piece)
   return await fetch(
-      `/${this.gameId}/move`,
+      `/move/${this.gameId}`,
       {
         method: 'PUT',
         body: JSON.stringify({
-          source: source.id,
-          target: target.id
+          sourcePosition: source.id,
+          targetPosition: target.id
         }),
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
           'Accept': 'application/json'
         }
       }
-  ).then(res => res.json()).then(data => data).catch(err => err)
+  )
 }
 
 

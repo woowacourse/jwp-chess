@@ -4,12 +4,9 @@ import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceMapper;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ChessGame {
 
@@ -25,32 +22,20 @@ public class ChessGame {
         this.turn = turn;
     }
 
-    public boolean moved(Position source, Position target) {
-        if (validTurn(source) && movable(source, target)) {
-            turn = turn.getOppositeColor();
-            return true;
-        }
-        return false;
+    public void move(Position source, Position target) {
+        validateTurn(source);
+        chessBoard.move(source, target);
+        turn = turn.getOppositeColor();
     }
 
     public boolean isOver() {
         return chessBoard.isOver();
     }
 
-    public boolean movable(Position source, Position target) {
-        try {
-            chessBoard.move(source, target);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean validTurn(Position source) {
+    public void validateTurn(Position source) {
         if (turn != chessBoard.getPiece(source).getColor()) {
             throw new IllegalArgumentException();
         }
-        return true;
     }
 
     public ChessBoard getChessBoard() {

@@ -1,15 +1,12 @@
 package chess.controller;
 
-import chess.dto.ChessBoardDTO;
-import chess.dto.RoomIdDTO;
-import chess.dto.TurnDTO;
+import chess.dto.*;
 import chess.service.ChessService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ChessController {
@@ -26,7 +23,7 @@ public class ChessController {
     }
 
     @GetMapping("/{gameId}")
-    public String chess(@PathVariable int gameId) {
+    public String chess() {
         return "index";
     }
 
@@ -38,14 +35,22 @@ public class ChessController {
 
     @GetMapping("/chessboard/{gameId}")
     @ResponseBody
-    public ChessBoardDTO loadGame(@PathVariable int gameId) {
+    public ChessBoardDTO loadGame(@PathVariable String gameId) {
         return chessService.loadGame(gameId);
     }
 
     @GetMapping("/turn/{gameId}")
     @ResponseBody
-    public TurnDTO turn(@PathVariable int gameId) {
+    public TurnDTO turn(@PathVariable String gameId) {
         return chessService.turn(gameId);
+    }
+
+    @PutMapping(path = "/move/{gameId}", consumes = "application/json")
+    public ResponseEntity move(@PathVariable String gameId, @RequestBody MoveDTO moveDTO){
+//        System.out.println("@@@" + shit);
+//        System.out.println("@@@" + moveDTO.getSource());
+        return chessService.move(gameId, moveDTO);
+//        return null;
     }
 //
 //    @GetMapping
@@ -56,7 +61,6 @@ public class ChessController {
 //    public String {
 //        "/:id/finish", ChessService::finished}
 //
-//    put("/:id/move", "application/json", ChessService::move);
 //
 //    post("/:id/finish", ChessService::finish);
 }

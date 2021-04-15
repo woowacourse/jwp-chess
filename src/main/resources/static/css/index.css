@@ -9,7 +9,7 @@ more pink #d2849e
 
 html {
   background-color: #7A9E7E;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Jua','Open Sans', sans-serif;
 }
 
 .container {
@@ -39,6 +39,7 @@ html {
   -wwebkit-text-stroke: px #DF59F6;
   color: #95d2d7;
   font-style: italic;
+  font-weight: 100;
   text-shadow: 7px 7px 0 #DF59F6,
   -1px -1px 0 #DF59F6,
   1px -1px 0 #000,

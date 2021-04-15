@@ -45,8 +45,7 @@ public class SpringChessService {
             BoardDto boardDto = movePiece(chessGame, moveRequestDto);
             springChessLogDao.addLog(moveRequestDto);
             return boardDto;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return start(chessGame);
         }
     }

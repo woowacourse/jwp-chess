@@ -8,12 +8,12 @@ public class MovablePositionDto {
         return roomId;
     }
 
-    public String getTarget() {
-        return target;
-    }
-
     public void setRoomId(String roomId) {
         this.roomId = roomId;
+    }
+
+    public String getTarget() {
+        return target;
     }
 
     public void setTarget(String target) {

@@ -33,6 +33,10 @@ public class Position {
                 .orElseThrow(RuntimeException::new);
     }
 
+    public static List<Position> getPositions() {
+        return Collections.unmodifiableList(CACHE);
+    }
+
     public int movedHorizontalWeight(int value) {
         return this.horizontal.getWeight() + value;
     }
@@ -47,10 +51,6 @@ public class Position {
 
     public boolean isDifferentVertical(Vertical vertical) {
         return this.vertical != vertical;
-    }
-
-    public static List<Position> getPositions() {
-        return Collections.unmodifiableList(CACHE);
     }
 
     public int getHorizontalWeight() {

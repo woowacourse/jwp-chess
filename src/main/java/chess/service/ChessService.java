@@ -45,8 +45,7 @@ public class ChessService {
             BoardDto boardDto = movePiece(chessGame, moveRequestDto);
             chessLogDao.addLog(moveRequestDto.getRoomId(), moveRequestDto.getTarget(), moveRequestDto.getDestination());
             return boardDto;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return start(chessGame);
         }
     }

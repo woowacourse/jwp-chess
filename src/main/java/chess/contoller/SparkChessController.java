@@ -30,62 +30,24 @@ public class SparkChessController {
         Spark.staticFileLocation("/public");
 
         lobby();
-        createRoom();
-        closeRoom();
         joinRoom();
+        createRoom();
         usersInRoom();
-        startGame();
-        finishGame();
-        movePiece();
         gameStatus();
+        startGame();
+        closeRoom();
+        exitGame();
+        movePiece();
         movablePoints();
         exceptionHandler();
     }
 
-    private void exceptionHandler() {
-        exception(Exception.class, (e, req, res) -> {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("result", "fail");
-            jsonObject.addProperty("message", e.getMessage());
-            res.status(500);
-            res.body(GSON.toJson(jsonObject));
+    private void lobby() {
+        get("/", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            model.put("rooms", sparkChessService.openedRooms());
+            return render(model, "lobby.html");
         });
-    }
-
-    private void movablePoints() {
-        get("/room/:id/movablePoints/:point", "application/json", (req, res) ->
-            GSON.toJson(sparkChessService.movablePoints(req.params("id"), req.params("point"))));
-    }
-
-    private void gameStatus() {
-        get("/room/:id/getGameStatus", "application/json",
-            (req, res) -> GSON.toJson(sparkChessService.gameStatus(req.params("id"))));
-    }
-
-    private void movePiece() {
-        put("/room/:id/move", "application/json", (req, res) -> {
-            Map<String, String> body = GSON.fromJson(req.body(), HashMap.class);
-
-            return GSON.toJson(
-                sparkChessService.move(req.params("id"), body.get("source"), body.get("destination")));
-        });
-    }
-
-    private void finishGame() {
-        put("/room/:id/exit", (req, res) -> {
-            sparkChessService.exit(req.params("id"));
-
-            return GSON.toJson("success");
-        });
-    }
-
-    private void startGame() {
-        put("/room/:id/start", (req, res) -> GSON.toJson(sparkChessService.start(req.params(":id"))));
-    }
-
-    private void usersInRoom() {
-        get("/room/:id/statistics", "application/json",
-            (req, res) -> GSON.toJson(sparkChessService.usersInRoom(req.params("id"))));
     }
 
     private void joinRoom() {
@@ -95,15 +57,6 @@ public class SparkChessController {
             model.put("roomId", req.params("id"));
             model.put("userInfo", sparkChessService.usersInRoom(req.params("id")));
             return render(model, "index.html");
-        });
-    }
-
-    private void closeRoom() {
-        put("/room", (req, res) -> {
-            Map<String, String> body = GSON.fromJson(req.body(), HashMap.class);
-            sparkChessService.close(body.get("id"));
-
-            return GSON.toJson("success");
         });
     }
 
@@ -117,11 +70,58 @@ public class SparkChessController {
         });
     }
 
-    private void lobby() {
-        get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            model.put("rooms", sparkChessService.openedRooms());
-            return render(model, "lobby.html");
+    private void usersInRoom() {
+        get("/room/:id/statistics", "application/json",
+            (req, res) -> GSON.toJson(sparkChessService.usersInRoom(req.params("id"))));
+    }
+
+    private void gameStatus() {
+        get("/room/:id/getGameStatus", "application/json",
+            (req, res) -> GSON.toJson(sparkChessService.gameStatus(req.params("id"))));
+    }
+
+    private void startGame() {
+        put("/room/:id/start", (req, res) -> GSON.toJson(sparkChessService.start(req.params(":id"))));
+    }
+
+    private void closeRoom() {
+        put("/room", (req, res) -> {
+            Map<String, String> body = GSON.fromJson(req.body(), HashMap.class);
+            sparkChessService.close(body.get("id"));
+
+            return GSON.toJson("success");
+        });
+    }
+
+    private void exitGame() {
+        put("/room/:id/exit", (req, res) -> {
+            sparkChessService.exit(req.params("id"));
+
+            return GSON.toJson("success");
+        });
+    }
+
+    private void movePiece() {
+        put("/room/:id/move", "application/json", (req, res) -> {
+            Map<String, String> body = GSON.fromJson(req.body(), HashMap.class);
+
+            return GSON.toJson(
+                sparkChessService.move(req.params("id"), body.get("source"), body.get("destination")));
+        });
+    }
+
+    private void movablePoints() {
+        get("/room/:id/movablePoints/:point", "application/json", (req, res) ->
+            GSON.toJson(sparkChessService.movablePoints(req.params("id"), req.params("point"))));
+    }
+
+    private void exceptionHandler() {
+        exception(Exception.class, (e, req, res) -> {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("result", "fail");
+            jsonObject.addProperty("message", e.getMessage());
+            res.status(500);
+            res.body(GSON.toJson(jsonObject));
         });
     }
 

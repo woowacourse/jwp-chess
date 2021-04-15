@@ -4,10 +4,14 @@ public class RoomDto {
 
     private static final int NAME_COUNT_MIN = 2;
 
-    private final String id;
-    private final String name;
-    private final String white;
-    private final String black;
+    private String id;
+    private String name;
+    private String white;
+    private String black;
+
+    public RoomDto(){
+
+    }
 
     public RoomDto(String id, String name, String white, String black) {
         validateName(name);
@@ -15,6 +19,10 @@ public class RoomDto {
         this.name = name;
         this.white = white;
         this.black = black;
+    }
+
+    public RoomDto(String name, String white, String black) {
+        this("", name, white, black);
     }
 
     private static void validateName(String name) {

@@ -5,7 +5,6 @@ import chess.domain.chessgame.ChessGame;
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
 import com.google.gson.Gson;
-import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -28,37 +27,37 @@ public class PlayLogDao {
     public BoardDto latestBoard(String roomId) {
         String query = "SELECT board FROM play_log WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
 
-        BoardDto result = jdbcTemplate.queryForObject(
-            query,
-            (resultSet, rowNum) -> {
-                String boardJson = resultSet.getString(1);
-                return GSON.fromJson(boardJson, BoardDto.class);
-            },
-            roomId);
-
-        if (Objects.isNull(result)) {
+        try {
+            BoardDto result = jdbcTemplate.queryForObject(
+                query,
+                (resultSet, rowNum) -> {
+                    String boardJson = resultSet.getString(1);
+                    return GSON.fromJson(boardJson, BoardDto.class);
+                },
+                roomId);
+            return result;
+        } catch (Exception e) {
             generateFirstRow(roomId);
             return latestBoard(roomId);
         }
-        return result;
     }
 
     public GameStatusDto latestGameStatus(String roomId) {
         String query = "SELECT game_status FROM play_log WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
 
-        GameStatusDto result = jdbcTemplate.queryForObject(
-            query,
-            (resultSet, rowNum) -> {
-                String statusJson = resultSet.getString(1);
-                return GSON.fromJson(statusJson, GameStatusDto.class);
-            },
-            roomId);
-
-        if (Objects.isNull(result)) {
+        try {
+            GameStatusDto result = jdbcTemplate.queryForObject(
+                query,
+                (resultSet, rowNum) -> {
+                    String statusJson = resultSet.getString(1);
+                    return GSON.fromJson(statusJson, GameStatusDto.class);
+                },
+                roomId);
+            return result;
+        } catch (Exception e) {
             generateFirstRow(roomId);
             return latestGameStatus(roomId);
         }
-        return result;
     }
 
     private void generateFirstRow(String roomId) {

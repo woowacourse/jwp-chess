@@ -63,7 +63,7 @@ public final class Pawn extends Piece {
             return target.isBlank();
         }
         if (moveStrategy.isNorthWest() || moveStrategy.isNorthEast()) {
-            return target.isOpponent(new Source(this));
+            return !target.isBlank() && target.isOpponent(new Source(this));
         }
         if (moveStrategy.isInitialPawnNorth()) {
             return INITIAL_RANKS.contains(rank.value()) && target.isBlank();

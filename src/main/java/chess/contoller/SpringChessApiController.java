@@ -45,7 +45,7 @@ public class SpringChessApiController {
 
     @GetMapping("{id}/getGameStatus")
     @ResponseBody
-    private GameStatusDto gameStatus(@PathVariable String id){
+    private GameStatusDto gameStatus(@PathVariable String id) {
         return springChessService.gameStatus(id);
     }
 
@@ -57,7 +57,7 @@ public class SpringChessApiController {
 
     @PutMapping(value = "{id}/exit", produces = "application/json")
     @ResponseBody
-    private String exitGame(@PathVariable String id){
+    private String exitGame(@PathVariable String id) {
         springChessService.exit(id);
         return "\"success\"";
     }
@@ -65,6 +65,7 @@ public class SpringChessApiController {
     @PutMapping
     @ResponseBody
     private String closeRoom(@RequestBody Map<String, String> body) {
+        //TODO : body 형태로 받는것을 url 형태로 바꾸게 변경
         String id = body.get("id");
         springChessService.close(id);
         return "\"success\"";
@@ -74,5 +75,12 @@ public class SpringChessApiController {
     @ResponseBody
     private List<PointDto> movablePoints(@PathVariable String id, @PathVariable String point) {
         return springChessService.movablePoints(id, point);
+    }
+
+    //TODO : Change to Post
+    @PutMapping("{id}/move")
+    @ResponseBody
+    private BoardDto move(@PathVariable String id, @RequestBody Map<String, String> body) {
+        return springChessService.move(id, body.get("source"), body.get("destination"));
     }
 }

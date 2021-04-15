@@ -37,8 +37,8 @@ public class SparkChessController {
         startGame();
         closeRoom();
         exitGame();
-        movePiece();
         movablePoints();
+        movePiece();
         exceptionHandler();
     }
 
@@ -101,6 +101,11 @@ public class SparkChessController {
         });
     }
 
+    private void movablePoints() {
+        get("/room/:id/movablePoints/:point", "application/json", (req, res) ->
+            GSON.toJson(sparkChessService.movablePoints(req.params("id"), req.params("point"))));
+    }
+
     private void movePiece() {
         put("/room/:id/move", "application/json", (req, res) -> {
             Map<String, String> body = GSON.fromJson(req.body(), HashMap.class);
@@ -108,11 +113,6 @@ public class SparkChessController {
             return GSON.toJson(
                 sparkChessService.move(req.params("id"), body.get("source"), body.get("destination")));
         });
-    }
-
-    private void movablePoints() {
-        get("/room/:id/movablePoints/:point", "application/json", (req, res) ->
-            GSON.toJson(sparkChessService.movablePoints(req.params("id"), req.params("point"))));
     }
 
     private void exceptionHandler() {

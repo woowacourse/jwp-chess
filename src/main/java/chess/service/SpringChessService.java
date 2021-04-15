@@ -5,6 +5,7 @@ import chess.dao.spring.RoomDao;
 import chess.dao.spring.UserDao;
 import chess.domain.board.Board;
 import chess.domain.board.Point;
+import chess.domain.board.Team;
 import chess.domain.chessgame.ChessGame;
 import chess.domain.chessgame.ScoreBoard;
 import chess.domain.chessgame.Turn;
@@ -96,5 +97,17 @@ public class SpringChessService {
         return movablePoints.stream()
             .map(PointDto::new)
             .collect(Collectors.toList());
+    }
+
+    public BoardDto move(String id, String source, String destination) {
+        Board board = boardFromDb(id);
+        ChessGame chessGame = chessGameFromDb(board, id);
+
+        chessGame.move(Point.of(source), Point.of(destination));
+        playLogDao.insert(new BoardDto(board), new GameStatusDto(chessGame), id);
+        if (!chessGame.isOngoing() && chessGame.winner() != Team.NONE) {
+            userDao.updateStatistics(id, chessGame.winner());
+        }
+        return new BoardDto(board);
     }
 }

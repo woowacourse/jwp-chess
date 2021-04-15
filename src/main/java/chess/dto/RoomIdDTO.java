@@ -1,13 +1,13 @@
 package chess.dto;
 
-public class RoomIdDTO {
+public final class RoomIdDTO {
     private String roomId;
 
     public String getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(String roomId) {
+    public void setRoomId(final String roomId) {
         this.roomId = roomId;
     }
 }

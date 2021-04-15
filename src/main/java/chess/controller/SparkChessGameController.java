@@ -22,7 +22,7 @@ import java.util.Map;
 
 import static spark.Spark.*;
 
-public class SparkChessGameController {
+public final class SparkChessGameController {
     private static final HandlebarsTemplateEngine TEMPLATE_ENGINE = new HandlebarsTemplateEngine();
 
     private final RoomService roomService;

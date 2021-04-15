@@ -28,7 +28,8 @@ public final class SpringChessGameController {
     private final UserService userService;
     private final LogService logService;
 
-    public SpringChessGameController(RoomService roomService, ResultService resultService, UserService userService, LogService logService) {
+    public SpringChessGameController(final RoomService roomService, final ResultService resultService,
+                                     final UserService userService, final LogService logService) {
         this.roomService = roomService;
         this.resultService = resultService;
         this.userService = userService;
@@ -36,7 +37,7 @@ public final class SpringChessGameController {
     }
 
     @GetMapping("/")
-    private String goHome(Model model) {
+    private String goHome(final Model model) {
         try {
             List<String> roomIds = roomService.allRoomsId();
             roomIds.forEach(id -> rooms.addRoom(id, new ChessGame()));
@@ -50,13 +51,13 @@ public final class SpringChessGameController {
 
     @PostMapping(path = "/createNewGame", consumes = "application/json")
     @ResponseBody
-    private boolean createNewGame(@RequestBody CreateRoomRequestDTO createRoomRequestDTO) {
+    private boolean createNewGame(@RequestBody final CreateRoomRequestDTO createRoomRequestDTO) {
         roomService.createRoom(createRoomRequestDTO.getName());
         return true;
     }
 
     @GetMapping("/enter")
-    private String enterRoom(@RequestParam String id, Model model) {
+    private String enterRoom(@RequestParam final String id, final Model model) {
         try {
             model.addAttribute("number", id);
             model.addAttribute("button", "새로운게임");
@@ -69,7 +70,7 @@ public final class SpringChessGameController {
     }
 
     @PostMapping(path = "/start")
-    private String startGame(@ModelAttribute RoomIdDTO roomIdDTO, Model model) {
+    private String startGame(@ModelAttribute final RoomIdDTO roomIdDTO, final Model model) {
         ChessGame chessGame = new ChessGame();
         chessGame.initialize();
         String roomId = roomIdDTO.getRoomId();
@@ -81,7 +82,7 @@ public final class SpringChessGameController {
     }
 
     @PostMapping(path = "/continue")
-    private String continueGame(@ModelAttribute RoomIdDTO roomIdDTO, Model model) {
+    private String continueGame(@ModelAttribute final RoomIdDTO roomIdDTO, final Model model) {
         String roomId = roomIdDTO.getRoomId();
         ChessGame chessGame = rooms.loadGameByRoomId(roomId);
         chessGame.initialize();
@@ -106,7 +107,7 @@ public final class SpringChessGameController {
 
     @PostMapping(path = "/myTurn")
     @ResponseBody
-    private boolean checkCurrentTurn(@RequestBody SectionDTO sectionDTO) {
+    private boolean checkCurrentTurn(@RequestBody final SectionDTO sectionDTO) {
         ChessGame chessGame = rooms.loadGameByRoomId(sectionDTO.getRoomId());
         return chessGame.checkRightTurn(sectionDTO.getClickedSection());
 
@@ -114,14 +115,14 @@ public final class SpringChessGameController {
 
     @PostMapping("/movablePositions")
     @ResponseBody
-    private List<String> findMovablePosition(@RequestBody SectionDTO sectionDTO) {
+    private List<String> findMovablePosition(@RequestBody final SectionDTO sectionDTO) {
         ChessGame chessGame = rooms.loadGameByRoomId(sectionDTO.getRoomId());
         return chessGame.movablePositionsByStartPoint(sectionDTO.getClickedSection());
     }
 
     @PostMapping("/move")
     @ResponseBody
-    private StatusDTO movePiece(@RequestBody MoveDTO moveDTO) {
+    private StatusDTO movePiece(@RequestBody final MoveDTO moveDTO) {
         String roomId = moveDTO.getRoomId();
         String startPoint = moveDTO.getStartPoint();
         String endPoint = moveDTO.getEndPoint();
@@ -134,7 +135,7 @@ public final class SpringChessGameController {
 
     @PostMapping(path = "/initialize")
     @ResponseBody
-    private boolean initialize(@RequestBody InitializeDTO initializeDTO) {
+    private boolean initialize(@RequestBody final InitializeDTO initializeDTO) {
         String roomId = initializeDTO.getRoomId();
         String winner = initializeDTO.getWinner();
         String loser = initializeDTO.getLoser();
@@ -162,7 +163,7 @@ public final class SpringChessGameController {
     }
 
     @GetMapping(path = "/errorPage")
-    private String errorPage(@RequestParam String error, Model model) {
+    private String errorPage(@RequestParam final String error, final Model model) {
         model.addAttribute("error", error);
         return "error";
     }

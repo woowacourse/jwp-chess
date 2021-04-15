@@ -7,6 +7,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Spark 용 DB 커넥션
+ */
 public final class ConnectDB {
     private static final String SERVER = "localhost:13306";
     private static final String DATABASE = "chess";

@@ -1,13 +1,13 @@
 package chess.dto;
 
-public class SectionDTO {
+public final class SectionDTO {
     private String roomId;
     private String clickedSection;
 
     public SectionDTO() {
     }
 
-    public SectionDTO(String roomId, String clickedSection) {
+    public SectionDTO(final String roomId, final String clickedSection) {
         this.roomId = roomId;
         this.clickedSection = clickedSection;
     }

@@ -29,7 +29,7 @@ public final class PiecesDTO {
         return new PiecesDTO(pieceDTOs);
     }
 
-    private static void convert(List<PieceDTO> list, Pieces pieces, Team team) {
+    private static void convert(final List<PieceDTO> list, final Pieces pieces, final Team team) {
         list.addAll(pieces.toList().stream()
                 .map(piece -> {
                     Position position = piece.position();

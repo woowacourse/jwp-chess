@@ -1,6 +1,6 @@
 package chess.dto;
 
-public class MoveDTO {
+public final class MoveDTO {
     private String roomId;
     private String startPoint;
     private String endPoint;
@@ -8,7 +8,7 @@ public class MoveDTO {
     public MoveDTO() {
     }
 
-    public MoveDTO(String roomId, String startPoint, String endPoint) {
+    public MoveDTO(final String roomId, final String startPoint, final String endPoint) {
         this.roomId = roomId;
         this.startPoint = startPoint;
         this.endPoint = endPoint;

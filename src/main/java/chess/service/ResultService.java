@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class ResultService {
+public final class ResultService {
     private final ResultDAO resultDAO;
     private final UserDAO userDAO;
 

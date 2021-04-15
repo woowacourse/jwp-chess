@@ -1,6 +1,6 @@
 package chess.dto;
 
-public class InitializeDTO {
+public final class InitializeDTO {
     private String roomId;
     private String winner;
     private String loser;
@@ -8,7 +8,7 @@ public class InitializeDTO {
     public InitializeDTO() {
     }
 
-    public InitializeDTO(String roomId, String winner, String loser) {
+    public InitializeDTO(final String roomId, final String winner, final String loser) {
         this.roomId = roomId;
         this.winner = winner;
         this.loser = loser;

@@ -11,7 +11,7 @@ public final class StatusDTO {
     private final String winner;
     private final String loser;
 
-    public StatusDTO(ChessGame chessGame, UsersDTO users) {
+    public StatusDTO(final ChessGame chessGame, final UsersDTO users) {
         this.turn = chessGame.turn().name();
         this.blackScore = chessGame.scoreByTeam(Team.BLACK);
         this.whiteScore = chessGame.scoreByTeam(Team.WHITE);
@@ -20,7 +20,7 @@ public final class StatusDTO {
         this.loser = loser(users);
     }
 
-    private String winner(Team winner, UsersDTO users) {
+    private String winner(final Team winner, final UsersDTO users) {
         if (Team.WHITE.equals(winner)) {
             return users.getWhiteUser();
         }
@@ -30,7 +30,7 @@ public final class StatusDTO {
         return "NONE";
     }
 
-    private String loser(UsersDTO users) {
+    private String loser(final UsersDTO users) {
         if (users.getBlackUser().equals(winner)) {
             return users.getWhiteUser();
         }

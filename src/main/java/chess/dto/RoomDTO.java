@@ -8,7 +8,8 @@ public final class RoomDTO {
     private final String status;
     private final boolean playing;
 
-    public RoomDTO(int id, String title, String blackUser, String whiteUser, int status, boolean playing) {
+    public RoomDTO(final int id, final String title, final String blackUser, final String whiteUser,
+                   final int status, final boolean playing) {
         this.id = id;
         this.title = title;
         this.blackUser = blackUser;
@@ -17,7 +18,7 @@ public final class RoomDTO {
         this.playing = playing;
     }
 
-    private String status(int status) {
+    private String status(final int status) {
         if (status == 1) {
             return "진행중";
         }

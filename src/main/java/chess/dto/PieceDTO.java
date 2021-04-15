@@ -5,7 +5,7 @@ public final class PieceDTO {
     private final String initial;
     private final String position;
 
-    public PieceDTO(String team, String initial, String position) {
+    public PieceDTO(final String team, final String initial, final String position) {
         this.team = team;
         this.initial = initial;
         this.position = position;

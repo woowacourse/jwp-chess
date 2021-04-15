@@ -11,7 +11,7 @@ public final class RoomService {
 
     private final RoomDAO roomDAO;
 
-    public RoomService(RoomDAO roomDAO) {
+    public RoomService(final RoomDAO roomDAO) {
         this.roomDAO = roomDAO;
     }
 

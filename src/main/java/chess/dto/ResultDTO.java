@@ -5,7 +5,7 @@ public final class ResultDTO implements Comparable {
     private final int winCount;
     private final int loseCount;
 
-    public ResultDTO(String nickname, int winCount, int loseCount) {
+    public ResultDTO(final String nickname, final int winCount, final int loseCount) {
         this.nickname = nickname;
         this.winCount = winCount;
         this.loseCount = loseCount;

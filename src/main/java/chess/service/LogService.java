@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class LogService {
+public final class LogService {
     private final LogDAO logDAO;
 
     public LogService(final LogDAO logDAO) {

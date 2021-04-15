@@ -1,8 +1,11 @@
 package chess.dao;
 
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceFactory;
+import chess.domain.piece.Position;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -17,6 +20,16 @@ public class PieceDao {
     public PieceDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private final RowMapper<Piece> pieceRowMapper = (resultSet, rowNum) -> {
+        int x = resultSet.getInt("x");
+        int y = resultSet.getInt("y");
+        String color = resultSet.getString("color");
+        String shape = resultSet.getString("shape");
+
+        return PieceFactory.createPiece(color, shape, new Position(y, x));
+
+    };
 
     public void insertAll(long gameId, List<Piece> pieces) {
         String sql = "INSERT INTO piece(game_id, x, y, color, shape) VALUES(?,?,?,?,?)";
@@ -37,5 +50,10 @@ public class PieceDao {
                 return pieces.size();
             }
         });
+    }
+
+    public List<Piece> selectAll(long gameId) {
+        String sql = "SELECT * FROM piece WHERE game_id = ?";
+        return jdbcTemplate.query(sql, pieceRowMapper, gameId);
     }
 }

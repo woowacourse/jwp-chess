@@ -1,11 +1,11 @@
 package chess.controller;
 
+import chess.dto.ChessResponseDto;
 import chess.dto.GameRequestDto;
 import chess.service.ChessService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/chess")
 @Controller
@@ -21,6 +21,11 @@ public class ChessController {
     public String initializeChess(@RequestBody final GameRequestDto gameRequestDto) {
         final long id = chessService.initializeChess(gameRequestDto);
         return "redirect:/games/" + id;
+    }
+
+    @GetMapping("/{gameId}")
+    public ResponseEntity<ChessResponseDto> bringGameData(@PathVariable long gameId) {
+        return ResponseEntity.ok().body(chessService.bringGameData(gameId));
     }
 
 }

@@ -45,4 +45,10 @@ public class UserDao {
 
         return jdbcTemplate.queryForObject(sql, userRowMapper, name);
     }
+
+    public User selectById(long id) {
+        final String sql = "SELECT * FROM user WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(sql, userRowMapper, id);
+    }
 }

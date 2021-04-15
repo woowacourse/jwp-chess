@@ -1,8 +1,10 @@
 package chess.dao;
 
+import chess.dto.GameResponseDto;
 import chess.entity.Game;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +20,16 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final RowMapper<Game> gameRowMapper = (resultSet, rowNum) -> new Game(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getLong("host_id"),
+            resultSet.getLong("guest_id"),
+            resultSet.getString("turn"),
+            resultSet.getBoolean("is_finished"),
+            resultSet.getTimestamp("created_time").toLocalDateTime()
+    );
+
     public long insert(Game game) {
         final String sql = "INSERT INTO game(name, host_id, guest_id) VALUES (?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -30,5 +42,10 @@ public class GameDao {
         };
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    public Game findById(long gameId) {
+        final String sql = "SELECT * FROM game WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, gameRowMapper, gameId);
     }
 }

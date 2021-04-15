@@ -1,17 +1,23 @@
 import {Board} from "./board/Board.js"
 import {getData} from "./utils/FetchUtil.js"
 
-const url = "http://localhost:4567";
+const url = "http://localhost:8080";
 
 window.onload = async function () {
   const response = await requestData();
-  initBoard(response);
-  fillInformation(response)
+  console.log("res", response);
+  const pieces = response["pieceDtos"];
+  const host = response["host"];
+  const guest = response["guest"];
+  const game =  response["game"];
+
+  initBoard(pieces);
+  fillInformation(host, guest)
 }
 
 async function requestData() {
   const gameId = findGameIdInUri();
-  return await getData(`${url}/api/game/${gameId}`)
+  return await getData(`${url}/chess/${gameId}`)
 }
 
 function findGameIdInUri() {
@@ -20,29 +26,21 @@ function findGameIdInUri() {
   return gameId;
 }
 
-function initBoard(response) {
-  const pieceDtos = response["pieceDtos"]
-  const board = new Board(pieceDtos);
-  const turn = response["turn"];
-  const isFinished = response["isFinished"];
+function initBoard(pieces) {
+  const board = new Board(pieces);
   addEvent(board);
 }
 
-function fillInformation(response) {
-  const whiteUserDto = response["whiteUserDto"];
-  const blackUserDto = response["blackUserDto"];
-
+function fillInformation(host, guest) {
   const blackNameTag = document.querySelector(".name-tag.black");
-  blackNameTag.innerHTML = blackUserDto["name"];
+  blackNameTag.innerHTML = guest["name"];
   const blackRecordTag = document.querySelector(".record-tag.black");
-  blackRecordTag.innerHTML =
-      `${blackUserDto["winCount"]}승 ${blackUserDto["loseCount"]}패`;
+  blackRecordTag.innerHTML = "검정색 플레이어";
 
   const whiteNameTag = document.querySelector(".name-tag.white");
-  whiteNameTag.innerHTML = whiteUserDto["name"];
+  whiteNameTag.innerHTML = host["name"];
   const whiteRecordTag = document.querySelector(".record-tag.white");
-  whiteRecordTag.innerHTML =
-      `${whiteUserDto["winCount"]}승 ${whiteUserDto["loseCount"]}패`;
+  whiteRecordTag.innerHTML = "흰색 플레이어";
 }
 
 function addEvent(board) {

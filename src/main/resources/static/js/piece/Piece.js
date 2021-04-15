@@ -9,10 +9,10 @@ export class Piece {
   #component
 
   constructor(pieceDto, id) {
-    this.#team = pieceDto["team"];
-    this.#type = pieceDto["pieceLetter"];
-    this.#x = pieceDto["x"];
-    this.#y = pieceDto["y"];
+    this.#team = pieceDto["color"].toLowerCase();
+    this.#type = pieceDto["shape"].toLowerCase();
+    this.#x = parseInt(pieceDto["x"]) + 1;
+    this.#y = parseInt(pieceDto["y"]) + 1 ;
 
     const defaultLocation = document.querySelector(".default-location");
     defaultLocation.insertAdjacentHTML("beforeend", this.makeComponent(id));
@@ -42,7 +42,7 @@ export class Piece {
   }
 
   makeComponent(id) {
-    const imageName = this.#team[0].toLowerCase() + this.#type;
+    const imageName = this.#team[0] + this.#type;
     return `<img class="piece" id="p${id}" src="${SRC_PATH}${imageName}.png">`
   }
 
@@ -84,12 +84,12 @@ export class Piece {
 
   highlight() {
     this.#component.src =
-        `${SRC_PATH}${this.#team[0].toLowerCase()}${this.#type}s.png`;
+        `${SRC_PATH}${this.#team[0]}${this.#type}s.png`;
   }
 
   unhighlight() {
     this.#component.src =
-        `${SRC_PATH}${this.#team[0].toLowerCase()}${this.#type}.png`;
+        `${SRC_PATH}${this.#team[0]}${this.#type}.png`;
   }
 
   remove() {

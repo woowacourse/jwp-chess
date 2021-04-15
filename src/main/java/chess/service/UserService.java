@@ -23,4 +23,8 @@ public class UserService {
         User user = userDao.selectByName(name);
         return UserResponseDto.from(user);
     }
+
+    public UserResponseDto findUserById(long id) {
+        return UserResponseDto.from(userDao.selectById(id));
+    }
 }

@@ -11,10 +11,10 @@
 - style : 들여쓰기 수정 및 기타 수정 사항.
 
 ## 기능 구현 목록
-- [ ] Spring MVC 적용
+- [x] Spring MVC 적용
     - [x] 초기 화면 띄워주기 (GET)
     - [x] 시작하기 버튼을 누르면, 체스 보드 판을 띄우기 (GET)
-    - [ ] 기물을 움직이면, 정상적으로 움직인 후 정보를 반환하여 보여주기 (POST)
+    - [x] 기물을 움직이면, 정상적으로 움직인 후 정보를 반환하여 보여주기 (POST)
 - [ ] Spring JDBC 적용
     - [ ] Spring JDBC에서 제공하는 JdbcTemplate를 이용하여 Connection을 직접 만들어 주는 로직을 대체
 

@@ -6,6 +6,7 @@ import chess.domain.piece.Piece;
 import chess.webdao.ChessGameDAO;
 import chess.webdto.ChessGameDTO;
 import chess.webdto.PieceDTOFormat;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.Map;
 import static chess.service.TeamFormat.BLACK_TEAM;
 import static chess.service.TeamFormat.WHITE_TEAM;
 
+@Service
 public class ChessService {
     private final ChessGameDAO chessGameDAO;
 

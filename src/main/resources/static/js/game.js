@@ -83,9 +83,9 @@ function replaceComponents(dom, sourcePosition, targetPosition) {
     document.querySelector("#turn").innerHTML = turn.innerHTML
     document.querySelector("#score").innerHTML = score.innerHTML
 
-    const result = xmlDoc.querySelector("#result").textContent
-    if (result !== "") {
-        alert("black: " + result[0] + " / white : " + result[1])
+    const outcome = xmlDoc.querySelector("#outcome").textContent
+    if (outcome !== "") {
+        alert("black: " + outcome[0] + " / white : " + outcome[1])
         window.location.replace("/")
     }
 }

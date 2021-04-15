@@ -2,12 +2,11 @@ package chess.dto;
 
 import chess.domain.game.Result;
 
-public class ResultDTO {
-    public static final String NO_OUTCOME = "";
+public class OutcomeDTO {
     private final String blackOutcome;
     private final String whiteOutcome;
 
-    public ResultDTO(Result result) {
+    public OutcomeDTO(Result result) {
         this.blackOutcome = result.getBlackOutcome();
         this.whiteOutcome = result.getWhiteOutcome();
     }

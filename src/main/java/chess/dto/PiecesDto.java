@@ -1,22 +1,22 @@
 package chess.dto;
 
 public class PiecesDto {
-    private final int room_id;
-    private final String piece_name;
+    private final int roomId;
+    private final String pieceName;
     private final String position;
 
-    public PiecesDto(int room_id, String piece_name, String position) {
-        this.room_id = room_id;
-        this.piece_name = piece_name;
+    public PiecesDto(int roomId, String pieceName, String position) {
+        this.roomId = roomId;
+        this.pieceName = pieceName;
         this.position = position;
     }
 
-    public int getRoom_id() {
-        return room_id;
+    public int getRoomId() {
+        return roomId;
     }
 
-    public String getPiece_name() {
-        return piece_name;
+    public String getPieceName() {
+        return pieceName;
     }
 
     public String getPosition() {

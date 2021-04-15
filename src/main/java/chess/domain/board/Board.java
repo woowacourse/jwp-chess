@@ -20,6 +20,10 @@ public class Board implements Serializable {
         board = InitialBoard.emptyBoard();
     }
 
+    public Board(Map<Position, Piece> board) {
+        this.board = board;
+    }
+
     public void initChessPieces() {
         board = InitialBoard.emptyBoard();
         InitialBoard.initChessPieces(board);

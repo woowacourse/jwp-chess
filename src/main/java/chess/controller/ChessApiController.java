@@ -27,7 +27,7 @@ public class ChessApiController {
     }
 
     @GetMapping(value = "/rooms")
-    public RoomsResponseDto getRooms(){
+    public RoomsResponseDto getRooms() {
         return chessService.getRooms();
     }
 
@@ -35,14 +35,15 @@ public class ChessApiController {
     public PiecesResponseDto postPieces(@RequestBody PiecesRequestDto piecesRequestDto) {
         return chessService.postPieces(piecesRequestDto);
     }
+
     @PutMapping(value = "/board")
-    public void putBoard(@RequestBody BoardRequestDto boardRequestDto) {
-        //  retur2n chessService.putBoard(boardRequestDto, chessGame);
+    public PiecesResponseDto putBoard(@RequestBody BoardRequestDto boardRequestDto) {
+        return chessService.putBoard(boardRequestDto);
     }
 
     @GetMapping(value = "/score")
-    public ScoreResponseDto getScore(@RequestParam("color") String colorName) {
-        return chessService.getScore(colorName, chessGame);
+    public ScoreResponseDto getScore(@RequestParam("roomId") int roomId, @RequestParam("color") String colorName) {
+        return chessService.getScore(roomId, colorName);
     }
 
 }

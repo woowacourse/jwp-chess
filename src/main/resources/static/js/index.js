@@ -44,6 +44,7 @@ IndexPage.prototype.addNewRoom = function (newRoomId) {
     }
   }).then(res => res.json())
   .then(data => {
+    localStorage.setItem("roomId", newRoomId);
     localStorage.setItem("pieces", JSON.stringify(data));
     location.href='chess'
   });

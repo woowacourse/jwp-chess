@@ -23,8 +23,18 @@ public class ChessGame implements Serializable {
         isBlackTurn = false;
     }
 
+    public ChessGame(Map<Position, Piece> board, boolean isPlaying ,Color turn) {
+        this.board = new Board(board);
+        this.isBlackTurn = turn.isBlack();
+        this.isPlaying = isPlaying;
+    }
+
     public boolean isPlaying() {
         return isPlaying;
+    }
+
+    public boolean getIsBlackTurn(){
+        return isBlackTurn;
     }
 
     public void move(Position source, Position target) {

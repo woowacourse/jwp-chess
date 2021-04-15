@@ -25,8 +25,8 @@
 
 .chess-game-move-button {
   position: absolute;
-  top: 840px;
-  left: 670px;
+  top: 747px;
+  left: 523px;
 }
 
 .chess-game-start-button {
@@ -35,22 +35,22 @@
   left: 521px;
 }
 
-.chess-game-score-button {
+.chess-game-black-score-button {
   position: absolute;
   top: 803px;
   left: 521px;
 }
 
-.chess-game-exit-button {
+.chess-game-white-score-button {
   position: absolute;
-  top: 840px;
-  left: 521px;
+  top: 802px;
+  left: 699px;
 }
 
-.chess-game-restart-button {
+.chess-game-exit-button {
   position: absolute;
-  top: 876px;
-  left: 521px;
+  top: 747px;
+  left: 1127px;
 }
 
 .chess-game-select-gameId-button {

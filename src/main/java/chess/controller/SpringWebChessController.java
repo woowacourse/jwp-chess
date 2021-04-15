@@ -3,8 +3,7 @@ package chess.controller;
 import chess.dao.GameDAO;
 import chess.domain.ChessGameManager;
 import chess.dto.CommonDto;
-import chess.dto.NewGameResponse;
-import chess.dto.StatusCode;
+import chess.dto.RunningGameResponse;
 import chess.exception.HandledException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,34 +16,36 @@ import java.util.function.Supplier;
 public class SpringWebChessController {
     private final GameDAO gameDAO = new GameDAO();
 
-    private CommonDto<?> handleExpectedException(Supplier<CommonDto<?>> supplier, int statusCodeOnError) {
+    private ResponseEntity<CommonDto<?>> handleExpectedException(Supplier<ResponseEntity<CommonDto<?>>> supplier) {
         try {
             return supplier.get();
         } catch (HandledException e) {
-            return new CommonDto<>(
-                    statusCodeOnError,
-                    e.getMessage());
+            return ResponseEntity.badRequest().body(
+                    new CommonDto<>(
+                            e.getMessage()));
         }
     }
 
     @GetMapping("/newgame")
     public ResponseEntity<CommonDto<?>> newGame() {
-        return ResponseEntity.ok().body(
-                handleExpectedException(() -> {
-                    try {
-                        ChessGameManager chessGameManager = new ChessGameManager();
-                        chessGameManager.start();
-                        int gameId = gameDAO.saveGame(chessGameManager);
-                        return new CommonDto<>(StatusCode.OK,
-                                "게임을 생성했습니다",
-                                NewGameResponse.from(chessGameManager));
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        return new CommonDto<>(StatusCode.INTERNAL_SERVER_ERROR,
-                                "게임을 저장하는데에 문제가 발생했습니다.");
-                    }
-                }, StatusCode.BAD_REQUEST)
-        );
+        return handleExpectedException(() -> {
+            try {
+                ChessGameManager chessGameManager = new ChessGameManager();
+                chessGameManager.start();
+                int gameId = gameDAO.saveGame(chessGameManager);
+                return ResponseEntity.ok().body(
+                        new CommonDto<>(
+                                "새로운 게임이 생성되었습니다.",
+                                RunningGameResponse.from(chessGameManager)
+                        )
+                );
+            } catch (SQLException e) {  // todo try ~ catch 문 코드 중복 해결
+                return ResponseEntity.badRequest().body(
+                        new CommonDto<>(
+                                e.getMessage())
+                );
+            }
+        });
     }
 
 //    @PostMapping("/move")

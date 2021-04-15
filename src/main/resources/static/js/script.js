@@ -13,12 +13,15 @@ addEventOnRegameButton();
 addEventOnSaveGameButton();
 addEventOnLoadGameButton();
 
-function processResponse(responseJsonBody, successScenarioFunction) {
-    updateMessage(responseJsonBody.message);
-    console.log(responseJsonBody.message);
-    if (Math.floor(responseJsonBody.statusCode / 100) === 2) {
-        successScenarioFunction();
-    }
+function processResponse(response) {
+    response.json()
+        .then(responseBody => {
+            updateMessage(responseBody.message);
+            console.log(responseBody.message);
+            if (response.ok) {
+                updateGameData(responseBody);
+            }
+        })
 }
 
 function SquareBuffer() {
@@ -48,8 +51,7 @@ function addAndRequestMove(square) {
                     to: toSquare.id,
                 }),
             })
-                .then(res => res.json())
-                .then(res => processResponse(res, () => updateGameData(res)));
+                .then(res => processResponse(res));
         } catch
             (error) {
             console.error(error.messages);
@@ -69,8 +71,7 @@ async function addEventOnStartButton() {
     await document.getElementById('start-button').addEventListener('click', event => {
         try {
             fetch('/newgame')
-                .then(res => res.json())
-                .then(res => processResponse(res, () => updateGameData(res)));
+                .then(res => processResponse(res));
             turnOnPanel();
         } catch (error) {
             console.error(error.messages);
@@ -82,8 +83,7 @@ async function addEventOnRegameButton() {
     await document.getElementById('regame-button').addEventListener('click', event => {
         try {
             fetch('/newgame')
-                .then(res => res.json())
-                .then(res => processResponse(res, () => updateGameData(res)));
+                .then(res => processResponse(res));
             turnOnPanel();
         } catch (error) {
             console.error(error.messages);
@@ -96,7 +96,7 @@ function addEventOnSaveGameButton() {
         try {
             fetch('/save')
                 .then(res => res.json())
-                .then(res => processResponse(res, () => {}));
+                .then(res => processResponse(res));
             turnOnPanel();
         } catch (error) {
             console.error(error.message);
@@ -109,7 +109,7 @@ function addEventOnLoadGameButton() {
         try {
             fetch('/load')
                 .then(res => res.json())
-                .then(res => processResponse(res, () => updateGameData(res)));
+                .then(res => processResponse(res));
             turnOnPanel();
         } catch (error) {
             console.error(error.message);

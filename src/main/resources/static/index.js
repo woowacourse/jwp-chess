@@ -1,3 +1,4 @@
+alert("sdfasd");
 let roomListData = [];
 const btnCreate = document.getElementById('btn-game-create')
 
@@ -43,14 +44,14 @@ function refreshRoomList(data) {
 }
 
 function enterGame(event) {
-    let idx = event.target.dataset.idx
-    let room = roomListData[idx];
-    let pw = prompt("비밀번호를 입력해 주세요");
-    // location.href = '/room/' + room.id;
-    if (pw === room.pw) {
-        location.href = '/room/' + room.id;
-    } else {
-        alert('비밀번호가 틀렸습니다.')
+    let idx = event.target.dataset.idx;
+    if (idx === undefined) {
+        idx = event.target.parentElement.dataset.idx;
     }
+    console.log(idx)
+    let room = roomListData[idx];
+    console.log(roomListData);
+    console.log(room);
+    location.href = '/room/' + room.id;
 }
 

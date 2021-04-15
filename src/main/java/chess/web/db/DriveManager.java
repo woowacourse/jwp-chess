@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class DriveManager {
     public static Connection getConnection() {
         Connection con = null;
-        String server = "localhost:3306"; // MySQL 서버 주소
+        String server = "localhost:13307"; // MySQL 서버 주소
         String database = "chess"; // MySQL DATABASE 이름
         String option = "?useSSL=false&serverTimezone=UTC";
         String userName = "root"; //  MySQL 서버 아이디

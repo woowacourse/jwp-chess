@@ -19,7 +19,7 @@
     - [ ] Spring JDBC에서 제공하는 JdbcTemplate를 이용하여 Connection을 직접 만들어 주는 로직을 대체
         - [x] CREATE
         - [x] READ
-        - [ ] UPDATE
+        - [x] UPDATE
         - [ ] DELETE
 
 ## 요구사항

@@ -78,6 +78,49 @@ public class SpringChessGameDao {
         }
         return new ChessGame(blackTeam, whiteTeam, blackTeam, isPlaying);
     }
+
+    public void updateChessGame(final ChessGame chessGame, final String currentTurnTeam) {
+        updateTeamInfo(chessGame.currentWhitePiecePosition(), WHITE_TEAM.asDAOFormat());
+        updateTeamInfo(chessGame.currentBlackPiecePosition(), BLACK_TEAM.asDAOFormat());
+        final String query = "UPDATE chess_game SET current_turn_team = (?), is_playing = (?)";
+        this.jdbcTemplate.update(query, currentTurnTeam,chessGame.isPlaying());
+    }
+
+    private void updateTeamInfo(final Map<Position, Piece> teamPiecePosition, final String team) {
+        final String query = "UPDATE team_info SET piece_info = (?) WHERE team = (?)";
+        this.jdbcTemplate.update(query, PiecePositionDAOConverter.asDAO(teamPiecePosition),team);
+    }
+
+    /*
+
+    public void updateChessGame(final ChessGame chessGame, final String currentTurnTeam) throws SQLException {
+        updateTeamInfo(chessGame.currentWhitePiecePosition(), WHITE_TEAM.asDAOFormat());
+        updateTeamInfo(chessGame.currentBlackPiecePosition(), BLACK_TEAM.asDAOFormat());
+        final String query = "UPDATE chess_game SET current_turn_team = (?), is_playing = (?)";
+        final Connection connection = getConnection();
+        PreparedStatement pstmt = connection.prepareStatement(query);
+        pstmt.setString(1, currentTurnTeam);
+        pstmt.setBoolean(2, chessGame.isPlaying());
+        pstmt.executeUpdate();
+        pstmt.close();
+        connection.close();
+    }
+
+
+
+    public void deleteChessGame() throws SQLException {
+        final String deletePiecePositionQuery = "DELETE FROM team_info";
+        final String deleteChessGameQuery = "DELETE FROM chess_game";
+        final Connection connection = getConnection();
+        PreparedStatement pstmt = connection.prepareStatement(deletePiecePositionQuery);
+        pstmt.executeUpdate();
+        pstmt.close();
+        pstmt = connection.prepareStatement(deleteChessGameQuery);
+        pstmt.executeUpdate();
+        pstmt.close();
+        connection.close();
+    }
+     */
 }
 
 class Test {

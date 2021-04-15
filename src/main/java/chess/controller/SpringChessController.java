@@ -35,6 +35,14 @@ public class SpringChessController {
         final String start = moveRequestDTO.getStart();
         final String destination = moveRequestDTO.getDestination();
         chessGame.move(Position.of(start), Position.of(destination));
+        springChessGameDao.updateChessGame(chessGame, converter(chessGame.isWhiteTeamTurn()));
         return chessService.generateChessGameDTO(chessGame);
+    }
+
+    private String converter(boolean whiteTeam) {
+        if (whiteTeam) {
+            return "white";
+        }
+        return "black";
     }
 }

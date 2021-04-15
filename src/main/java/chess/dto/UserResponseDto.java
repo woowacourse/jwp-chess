@@ -1,6 +1,6 @@
 package chess.dto;
 
-import chess.entity.UserEntity;
+import chess.entity.User;
 
 import java.time.LocalDateTime;
 
@@ -16,8 +16,8 @@ public class UserResponseDto {
         this.createdTime = createdTime;
     }
 
-    public static UserResponseDto from(UserEntity userEntity) {
-        return new UserResponseDto(userEntity.getId(), userEntity.getName(), userEntity.getCreatedTime());
+    public static UserResponseDto from(User user) {
+        return new UserResponseDto(user.getId(), user.getName(), user.getCreatedTime());
     }
 
     public long getId() {

@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.entity.UserEntity;
+import chess.entity.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,20 +19,20 @@ public class UserDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<UserEntity> userRowMapper = (resultSet, rowNum) -> new UserEntity(
+    private final RowMapper<User> userRowMapper = (resultSet, rowNum) -> new User(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("password"),
             resultSet.getTimestamp("created_time").toLocalDateTime()
     );
 
-    public long insert(final UserEntity userEntity) {
+    public long insert(final User user) {
         final String sql = "INSERT INTO user(name, password) VALUES (?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         final PreparedStatementCreator preparedStatementCreator = con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, userEntity.getName());
-            preparedStatement.setString(2, userEntity.getPassword());
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getPassword());
             return preparedStatement;
         };
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
@@ -40,7 +40,7 @@ public class UserDao {
     }
 
 
-    public UserEntity selectByName(String name) {
+    public User selectByName(String name) {
         final String sql = "SELECT * FROM user WHERE name = ?";
 
         return jdbcTemplate.queryForObject(sql, userRowMapper, name);

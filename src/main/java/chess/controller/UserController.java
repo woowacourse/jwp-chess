@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.UserResponseDto;
-import chess.entity.UserEntity;
+import chess.entity.User;
 import chess.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,8 +20,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity userEntity){
-        final long id = userService.add(userEntity);
+    public ResponseEntity<User> createUser(@RequestBody User user){
+        final long id = userService.add(user);
         return ResponseEntity.created(URI.create("/users/" + id)).build();
     }
 

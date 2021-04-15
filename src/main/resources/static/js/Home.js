@@ -23,11 +23,9 @@ async function startNewGame(e) {
   }
 
   try {
-    let host, guest;
-    if (await isExistentUser(whiteUserName) && await isExistentUser(blackUserName)) {
-      host = await createUser(whiteUserName);
-      guest = await createUser(blackUserName);
-    } else {
+    const host = await getExistentUser(whiteUserName);
+    const guest = await getExistentUser(blackUserName);
+    if (isEmptyObject(host) || isEmptyObject(guest)) {
       alert("존재하지 않는 유저가 있습니다.");
       return;
     }
@@ -37,12 +35,11 @@ async function startNewGame(e) {
   }
 }
 
-async function isExistentUser(userName) {
+async function getExistentUser(userName) {
   const params = {
     name : userName
   }
-  const response = await getData(`${url}/users`, params);
-  return isEmptyObject(response)
+  return await getData(`${url}/users`, params);
 }
 
 function validateName(whiteName, blackName) {
@@ -69,6 +66,7 @@ function isEmptyObject(object) {
 
 async function createGame(hostId, guestId) {
   const body = {
+    name: "임시 방이름",
     hostId: hostId,
     guestId: guestId
   };

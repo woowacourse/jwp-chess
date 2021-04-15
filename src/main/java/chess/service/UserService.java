@@ -2,7 +2,7 @@ package chess.service;
 
 import chess.dao.UserDao;
 import chess.dto.UserResponseDto;
-import chess.entity.UserEntity;
+import chess.entity.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,12 +14,12 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public long add(UserEntity userEntity) {
-        return userDao.insert(userEntity);
+    public long add(User user) {
+        return userDao.insert(user);
     }
 
     public UserResponseDto findUserByName(String name) {
-        UserEntity userEntity = userDao.selectByName(name);
-        return UserResponseDto.from(userEntity);
+        User user = userDao.selectByName(name);
+        return UserResponseDto.from(user);
     }
 }

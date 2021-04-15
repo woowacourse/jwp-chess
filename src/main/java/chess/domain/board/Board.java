@@ -51,23 +51,19 @@ public class Board {
 
     private List<Position> checkReachableInDirection(final Position source, final Direction direction) {
         final List<Position> positions = new ArrayList<>();
-
         Distance distance = Distance.ONE;
         while (!isBlocked(source, direction, distance) && isValidMovement(source, direction, distance)) {
             positions.add(source.next(direction, distance));
             distance = distance.next();
         }
-
         return positions;
     }
 
     private boolean isBlocked(final Position source, final Direction direction, final Distance distance) {
         try {
             final Position target = source.next(direction, distance);
-
             final Piece sourcePiece = of(source);
             final Piece targetPiece = of(target);
-
             return sourcePiece.isSameTeam(targetPiece) || capturedEnemyAlready(source, direction, distance);
         } catch (IllegalArgumentException e) {
             return true;
@@ -78,7 +74,6 @@ public class Board {
         final Position target = source.next(direction, distance);
         final Piece sourcePiece = of(source);
         final Piece targetPiece = of(target);
-
         return sourcePiece.isReachable(direction, distance, source, targetPiece);
     }
 
@@ -86,11 +81,9 @@ public class Board {
         if (distance.isFirst()) {
             return false;
         }
-
         final Position prevPosition = source.next(direction, distance.pre());
         final Piece sourcePiece = of(source);
         final Piece prevPiece = of(prevPosition);
-
         return sourcePiece.isEnemy(prevPiece);
     }
 

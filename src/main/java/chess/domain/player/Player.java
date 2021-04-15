@@ -20,7 +20,6 @@ public class Player {
         if (isDead(board)) {
             return Score.EMPTY;
         }
-
         final Score score = addAllPiecesScores(board);
         return score.applyPawnPenalty(board.countDuplicatedPawnInLine(owner));
     }

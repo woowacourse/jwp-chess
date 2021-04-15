@@ -17,17 +17,19 @@ public class RoomService {
     }
 
     public Long save(final String roomName) {
-        final boolean isDuplicated = roomDao.load().stream()
-                .map(roomInfoDto -> roomInfoDto.getName())
-                .anyMatch(name -> name.equals(roomName));
-
-        if (isDuplicated) {
+        if(isRoomExist(roomName)){
             throw new IllegalArgumentException("중복된 방 이름입니다.");
         }
 
         final Long roomId = System.currentTimeMillis();
         roomDao.save(roomName, roomId);
         return roomId;
+    }
+
+    private boolean isRoomExist(final String roomName){
+        return roomDao.load().stream()
+                .map(roomInfoDto -> roomInfoDto.getName())
+                .anyMatch(name -> name.equals(roomName));
     }
 
     public void delete(final Long roomId) {

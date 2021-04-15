@@ -37,7 +37,6 @@ public class Players {
     public void move(final Position source, final Position target) {
         final Player turn = player(source);
         final Player other = other(turn);
-
         turn.move(source, target);
         other.captured(target);
     }
@@ -67,7 +66,6 @@ public class Players {
     }
 
     public boolean anyKingDead(final Board board) {
-        return players.stream()
-                .anyMatch(player -> player.isDead(board));
+        return players.stream().anyMatch(player -> player.isDead(board));
     }
 }

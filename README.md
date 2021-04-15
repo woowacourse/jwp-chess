@@ -4,3 +4,4 @@
 - [x] DB 연동 user 생성 및 조회 
 - [x] User get, post 구현
 - [x] game 생성 
+- [x] chess 방 입장

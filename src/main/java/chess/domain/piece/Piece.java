@@ -134,4 +134,12 @@ public class Piece {
                 String.valueOf(position.getRow()),
                 String.valueOf(position.getColumn()));
     }
+
+    public String getColorValue() {
+        return this.color.getColor();
+    }
+
+    public String getShapeValue() {
+        return this.shape.getNotation();
+    }
 }

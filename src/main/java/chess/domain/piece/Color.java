@@ -10,6 +10,10 @@ public enum Color {
         this.color = color;
     }
 
+    public String getColor() {
+        return color;
+    }
+
     @Override
     public String toString() {
         return color;

@@ -28,6 +28,10 @@ public enum Shape {
         return score;
     }
 
+    public String getNotation() {
+        return notation;
+    }
+
     @Override
     public String toString() {
         return notation;

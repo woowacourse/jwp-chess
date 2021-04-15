@@ -7,10 +7,7 @@ import chess.service.RoomService;
 import chess.view.OutputView;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Controller
+@RequestMapping("/game")
 public class GameController {
     private final RoomService roomService;
     private final GameService gameService;
@@ -28,31 +26,30 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/game/create/{roomId}")
+    @GetMapping("/create/{roomId}")
     private void createGame(@PathVariable final Long roomId, final HttpServletResponse response) throws IOException {
         gameService.create(roomId);
         response.sendRedirect("/game/load/" + roomId);
     }
 
-    @GetMapping("/game/delete/{roomId}")
+    @GetMapping("/delete/{roomId}")
     private void deleteGame(@PathVariable final Long roomId, final HttpServletResponse response) throws IOException {
         gameService.delete(roomId);
-        response.sendRedirect("/main");
+        response.sendRedirect("/room/list");
     }
 
-    @GetMapping("/game/load/{roomId}")
+    @GetMapping("/load/{roomId}")
     private String loadGame(@PathVariable final Long roomId, final Model model) throws SQLException {
         return printGame(roomId, model);
     }
 
     @ResponseBody
-    @PostMapping("/game/show/{roomId}")
-    private String show(@PathVariable final Long roomId, final HttpServletRequest request) {
-        final Position source = new Position(request.getParameter("source"));
+    @GetMapping("/show/{roomId}")
+    private String show(@PathVariable final Long roomId, @RequestParam final Position source) {
         return gameService.show(roomId, source).toString();
     }
 
-    @PostMapping("/game/move/{roomId}")
+    @PostMapping("/move/{roomId}")
     private String move(@PathVariable final Long roomId, final HttpServletRequest request, final Model model) throws SQLException {
         Position source = new Position(request.getParameter("source"));
         Position target = new Position(request.getParameter("target"));

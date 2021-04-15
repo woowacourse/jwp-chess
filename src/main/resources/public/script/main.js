@@ -4,11 +4,6 @@ window.onload = function () {
         el.addEventListener('click', click());
     })
 
-    const scores = document.getElementsByClassName("score");
-    Array.from(scores).forEach((el) => {
-        el.addEventListener('change', checkIsEnd());
-    })
-
     const deleteBtn = document.getElementsByClassName("delete-btn");
     Array.from(deleteBtn).forEach((el) => {
         el.addEventListener('click', deleteRequest());
@@ -21,8 +16,20 @@ let source = "";
 let target = "";
 
 function enterNewGame() {
+    const form = document.createElement("form");
+    form.setAttribute("charset", "UTF-8");
+    form.setAttribute("method", "Post");
+    form.setAttribute("action", "/room/create");
+
     const roomName = document.getElementById("game-name-input").value;
-    location.href = "/room/create/" + roomName;
+    const roomNameField = document.createElement("input");
+    roomNameField.setAttribute("type", "hidden");
+    roomNameField.setAttribute("name", "roomName");
+    roomNameField.setAttribute("value", roomName);
+    form.appendChild(roomNameField);
+
+    document.body.appendChild(form);
+    form.submit();
 }
 
 function click() {
@@ -85,19 +92,13 @@ function checkIsValidTarget(target) {
     return target.classList.contains("moveAble");
 }
 
-function checkIsEnd() {
-    return function (event) {
-        console.log(event.target.text);
-    }
-}
-
 function show(target) {
     const roomId = document.getElementById("roomId").innerText;
     const requestQuery = "source=" + target.id;
 
     $.ajax({
         url: "/game/show/" + roomId,
-        type: "POST",
+        type: "GET",
         data: requestQuery,
         success: function (result) {
             //[d2, d3]

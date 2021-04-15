@@ -1,4 +1,4 @@
-package chess.controller.web;
+package chess.controller;
 
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
@@ -20,8 +20,6 @@ import java.util.List;
 
 @Controller
 public class GameController {
-    private static int SIZE_OF_ONLY_WINNER = 1;
-
     private final RoomService roomService;
     private final GameService gameService;
 
@@ -30,39 +28,34 @@ public class GameController {
         this.gameService = gameService;
     }
 
-
     @GetMapping("/game/create/{roomId}")
-    private void createGame(@PathVariable final Long roomId, HttpServletResponse httpServletResponse) throws SQLException, IOException {
+    private void createGame(@PathVariable final Long roomId, final HttpServletResponse response) throws IOException {
         gameService.create(roomId);
-        httpServletResponse.sendRedirect("/game/load/" + roomId);
+        response.sendRedirect("/game/load/" + roomId);
     }
 
     @GetMapping("/game/delete/{roomId}")
-    private void deleteGame(@PathVariable final Long roomId, HttpServletResponse httpServletResponse) throws SQLException, IOException {
+    private void deleteGame(@PathVariable final Long roomId, final HttpServletResponse response) throws IOException {
         gameService.delete(roomId);
-        httpServletResponse.sendRedirect("/main");
+        response.sendRedirect("/main");
     }
 
     @GetMapping("/game/load/{roomId}")
-    private String loadGame(@PathVariable final Long roomId, Model model) throws SQLException {
+    private String loadGame(@PathVariable final Long roomId, final Model model) throws SQLException {
         return printGame(roomId, model);
     }
 
     @ResponseBody
     @PostMapping("/game/show/{roomId}")
-    private String show(@PathVariable final Long roomId, HttpServletRequest httpServletRequest) throws SQLException {
-        try {
-            Position source = new Position(httpServletRequest.getParameter("source"));
-            return gameService.show(roomId, source).toString();
-        } catch (Exception e) {
-            return null;
-        }
+    private String show(@PathVariable final Long roomId, final HttpServletRequest request) {
+        final Position source = new Position(request.getParameter("source"));
+        return gameService.show(roomId, source).toString();
     }
 
     @PostMapping("/game/move/{roomId}")
-    private String move(Model model, @PathVariable final Long roomId, HttpServletRequest httpServletRequest) throws SQLException {
-        Position source = new Position(httpServletRequest.getParameter("source"));
-        Position target = new Position(httpServletRequest.getParameter("target"));
+    private String move(@PathVariable final Long roomId, final HttpServletRequest request, final Model model) throws SQLException {
+        Position source = new Position(request.getParameter("source"));
+        Position target = new Position(request.getParameter("target"));
         gameService.move(roomId, source, target);
         return printGame(roomId, model);
     }

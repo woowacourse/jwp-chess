@@ -35,7 +35,7 @@ public class GameService {
         return chessGame.reachablePositions(source);
     }
 
-    public void move(final Long roomId, final Position source, final Position target) throws SQLException {
+    public void move(final Long roomId, final Position source, final Position target) {
         final ChessGame chessGame = loadChessGame(roomId);
         chessGame.move(source, target);
         gameDao.update(roomId, chessGame.turn(), chessGame.board());

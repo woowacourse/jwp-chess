@@ -2,13 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Error!!</title>
+    <title>Error</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" id="bootstrap-css" rel="stylesheet">
 </head>
+
 <body>
-<div class="container" style="align-content: center">
-    <h3> Error : {{msg}} </h3>
-    <br>
-    <a href="/main" style="font-size: 20px"> -> main </a>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template">
+                <h1>
+                    Oops!</h1>
+                <h2>
+                    Bad Requested</h2>
+                <div class="error-details">
+                    Sorry, an error has occurred, Requested page not found!
+                    {{msg}}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

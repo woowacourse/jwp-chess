@@ -25,7 +25,7 @@ img {
 }
 
 .clickedRoomName {
-    background-color: #3C485E;
+    background-color: greenyellow;
 }
 
 .button {
@@ -79,4 +79,29 @@ div {
     height: 50pt;
     font-size: 40px;
     box-sizing: border-box;
+}
+
+.room-table {
+    border: 2px solid black;
+    margin: auto;
+    align-items: center;
+}
+
+.room-table th {
+    position: sticky;
+    top: 0px;
+    background-color: gray;
+}
+
+.input-name {
+    margin: 0 auto;
+    width: 30%;
+    height: 100%;
+    font-size: 30px;
+}
+
+.delete-button {
+    width:30%;
+    height: 150%;
+    font-size: 30px;
 }

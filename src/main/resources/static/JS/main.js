@@ -124,5 +124,5 @@ function initList() {
 }
 
 function renderRoom(roomName) {
-    roomTable.insertAdjacentHTML("beforeend", `<tr><td>${roomName}</td></tr>`);
+    roomTable.insertAdjacentHTML("beforeend", `<tr><td class="room-name">${roomName}</td></tr>`);
 }

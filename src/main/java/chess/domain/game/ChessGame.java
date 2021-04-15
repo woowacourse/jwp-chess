@@ -17,12 +17,13 @@ public class ChessGame {
     private Board chessBoard;
     private final Player whitePlayer;
     private final Player blackPlayer;
-    private Color winner = Color.NOTHING;
+    private final GameOver gameOver;
 
     public ChessGame(final Player whitePlayer, final Player blackPlayer, final Board chessBoard) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         this.chessBoard = chessBoard;
+        this.gameOver = new GameOver();
     }
 
     public static ChessGame newGame() {
@@ -67,7 +68,7 @@ public class ChessGame {
 
     private void checkPieces(final State state, final Target target) {
         if (state.isKingPosition(target.position())) {
-            winner = state.reverseColor();
+            gameOver.changeGameOver();
         }
         if (state.findPiece(target.position()).isPresent()) {
             state.removePiece(target.position());

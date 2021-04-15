@@ -38,9 +38,4 @@ public abstract class Turn implements State {
     public boolean isBlack() {
         return pieces.isBlackPieces();
     }
-
-    @Override
-    public Color reverseColor() {
-        return pieces.reverseColor();
-    }
 }

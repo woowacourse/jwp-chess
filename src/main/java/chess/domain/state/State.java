@@ -25,6 +25,4 @@ public interface State {
     void removePiece(final Position position);
 
     boolean isBlack();
-
-    Color reverseColor();
 }

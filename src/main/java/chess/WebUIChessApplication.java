@@ -22,7 +22,7 @@ public class WebUIChessApplication {
 
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            return render(model, "index.html");
+            return render(model, "chess.html");
         });
         post("/restart", (req, res) -> {
             chessService.initChessGame();

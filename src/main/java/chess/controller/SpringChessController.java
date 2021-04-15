@@ -24,6 +24,8 @@ public class SpringChessController {
         return "index.html";
     }
 
+
+
     @PostMapping("/currentBoard")
     @ResponseBody
     public Map<String, String> currentBoard(@RequestBody RoomNameDTO roomNameDTO) {

@@ -106,4 +106,11 @@ public final class SpringChessGameController {
         return chessGame.checkRightTurn(sectionDTO.getClickedSection());
 
     }
+
+    @PostMapping("/movablePositions")
+    @ResponseBody
+    private List<String> findMovablePosition(@RequestBody SectionDTO sectionDTO) {
+        ChessGame chessGame = rooms.loadGameByRoomId(sectionDTO.getRoomId());
+        return chessGame.movablePositionsByStartPoint(sectionDTO.getClickedSection());
+    }
 }

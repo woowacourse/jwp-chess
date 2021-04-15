@@ -42,7 +42,7 @@ public class ChessService {
         return generateChessGameDTO(chessGame);
     }
 
-    private ChessGameDTO generateChessGameDTO(final ChessGame chessGame) {
+    public ChessGameDTO generateChessGameDTO(final ChessGame chessGame) {
         final Map<String, Map<String, String>> piecePositionToString = generatePiecePositionToString(chessGame);
         final String currentTurnTeam = currentTurnTeamToString(chessGame);
         final Map<String, Double> teamScore = new HashMap<>();

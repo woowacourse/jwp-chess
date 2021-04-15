@@ -23,7 +23,7 @@ public class SparkChessController {
     }
 
     public void run() {
-        staticFileLocation("/public");
+        staticFileLocation("/static");
 
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();

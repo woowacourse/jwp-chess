@@ -9,6 +9,8 @@ import chess.service.LogService;
 import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -125,5 +127,18 @@ public final class SpringChessGameController {
         logService.createLog(roomId, startPoint, endPoint);
         UsersDTO users = userService.usersParticipatedInGame(roomId);
         return new StatusDTO(chessGame, users);
+    }
+
+    @PostMapping(path = "/initialize")
+    @ResponseBody
+    private boolean initialize(@RequestBody InitializeDTO initializeDTO) {
+        String roomId = initializeDTO.getRoomId();
+        String winner = initializeDTO.getWinner();
+        String loser = initializeDTO.getLoser();
+        roomService.changeStatus(roomId);
+        int winnerId = userService.userIdByNickname(winner);
+        int loserId = userService.userIdByNickname(loser);
+        resultService.saveGameResult(roomId, winnerId, loserId);
+        return true;
     }
 }

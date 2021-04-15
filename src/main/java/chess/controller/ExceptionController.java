@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class MainController {
+public class ExceptionController {
 
-    public MainController() {
+    public ExceptionController() {
     }
 
     @ExceptionHandler({Exception.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handlingException(Exception e, Model model) {
+    public String handlingException(final Exception e, final Model model) {
         return OutputView.printErrorPage(model, e.getMessage());
     }
 }

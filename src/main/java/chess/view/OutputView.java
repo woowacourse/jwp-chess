@@ -19,7 +19,7 @@ public class OutputView {
         return "result";
     }
 
-    public static String printGame(Model model, RoomInfoDto roomInfo, GameInfoDto gameInfo) {
+    public static String printBoardStatus(Model model, RoomInfoDto roomInfo, GameInfoDto gameInfo) {
         model.addAttribute("room", roomInfo);
         model.addAttribute("game", gameInfo);
         return "chessBoard";

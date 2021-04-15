@@ -10,8 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,26 +19,21 @@ public class GameController {
     private final RoomService roomService;
     private final GameService gameService;
 
-    public GameController(RoomService roomService, GameService gameService) {
+    public GameController(final RoomService roomService, final GameService gameService) {
         this.roomService = roomService;
         this.gameService = gameService;
     }
 
     @GetMapping("/create/{roomId}")
-    private void createGame(@PathVariable final Long roomId, final HttpServletResponse response) throws IOException {
+    private String createGame(@PathVariable final Long roomId) {
         gameService.create(roomId);
-        response.sendRedirect("/game/load/" + roomId);
+        return "redirect:/game/load/" + roomId;
     }
 
     @GetMapping("/delete/{roomId}")
-    private void deleteGame(@PathVariable final Long roomId, final HttpServletResponse response) throws IOException {
+    private String deleteGame(@PathVariable final Long roomId) {
         gameService.delete(roomId);
-        response.sendRedirect("/room/list");
-    }
-
-    @GetMapping("/load/{roomId}")
-    private String loadGame(@PathVariable final Long roomId, final Model model) throws SQLException {
-        return printGame(roomId, model);
+        return "redirect:/room/list";
     }
 
     @ResponseBody
@@ -54,16 +47,21 @@ public class GameController {
         Position source = new Position(request.getParameter("source"));
         Position target = new Position(request.getParameter("target"));
         gameService.move(roomId, source, target);
-        return printGame(roomId, model);
+        return printResult(roomId, model);
     }
 
-    private String printGame(final Long roomId, final Model model) throws SQLException {
+    @GetMapping("/load/{roomId}")
+    private String loadGame(@PathVariable final Long roomId, final Model model) throws SQLException {
+        return printResult(roomId, model);
+    }
+
+    private String printResult(final Long roomId, final Model model) throws SQLException {
         if (gameService.isGameEnd(roomId)) {
             final List<Owner> winner = gameService.winner(roomId);
             roomService.delete(roomId);
             gameService.delete(roomId);
             return OutputView.printWinningResult(model, winner);
         }
-        return OutputView.printGame(model, roomService.roomInfo(roomId), gameService.gameInfo(roomId));
+        return OutputView.printBoardStatus(model, roomService.roomInfo(roomId), gameService.gameInfo(roomId));
     }
 }

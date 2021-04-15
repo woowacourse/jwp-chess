@@ -34,4 +34,9 @@ public class GameDao {
         String sql = "select is_end from game where game_id = ?";
         return jdbcTemplate.queryForObject(sql, Boolean.class, gameId);
     }
+
+    public void update(final Long gameId, final boolean isEnd) {
+        String sql = "update game set is_end = ? where game_id = ?";
+        jdbcTemplate.update(sql, isEnd, gameId);
+    }
 }

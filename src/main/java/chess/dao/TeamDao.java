@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.team.Team;
+import chess.domain.team.WhiteTeam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -37,5 +38,10 @@ public class TeamDao {
             boolean is_turn = resultSet.getBoolean("is_turn");
             return Team.of(color, is_turn);
         }, gameId, color);
+    }
+
+    public void update(final Long gameId, final Team team) {
+        String sql = "update team set is_turn = ? where game_id = ? and name = ?";
+        jdbcTemplate.update(sql, team.isCurrentTurn(), gameId, team.getName());
     }
 }

@@ -3,6 +3,7 @@ package chess.dao;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.domain.team.Team;
+import dto.MoveDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -56,4 +57,13 @@ public class PieceDao {
         }, gameId, color);
     }
 
+    public void delete(final Long gameId, MoveDto moveDto) {
+        String sql = "delete from piece where game_id = ? and position = ?";
+        jdbcTemplate.update(sql, gameId, moveDto.getTo());
+    }
+
+    public void update(final Long gameId, MoveDto moveDto) {
+        String sql = "update piece set position = ? where game_id = ? and position = ?";
+        jdbcTemplate.update(sql, moveDto.getTo(), gameId, moveDto.getFrom());
+    }
 }

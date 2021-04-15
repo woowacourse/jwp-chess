@@ -1,4 +1,3 @@
-alert("sdfasd");
 let roomListData = [];
 const btnCreate = document.getElementById('btn-game-create')
 
@@ -48,10 +47,7 @@ function enterGame(event) {
     if (idx === undefined) {
         idx = event.target.parentElement.dataset.idx;
     }
-    console.log(idx)
     let room = roomListData[idx];
-    console.log(roomListData);
-    console.log(room);
     location.href = '/room/' + room.id;
 }
 

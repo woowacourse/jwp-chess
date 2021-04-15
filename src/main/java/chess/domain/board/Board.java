@@ -4,9 +4,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -21,7 +19,7 @@ public class Board {
         this.chessBoard = new TreeMap(chessBoard);
     }
 
-    public static Board emptyBoard(){
+    public static Board emptyBoard() {
         return new Board(BoardInitializer.emptyBoards());
     }
 
@@ -40,5 +38,16 @@ public class Board {
 
     public Board put(final Pieces pieces) {
         return new Board(pieces);
+    }
+
+    public Board put(final Pieces whitePieces, final Pieces blackPieces) {
+        List<Piece> pieces = new ArrayList<>();
+        pieces.addAll(whitePieces.pieces());
+        pieces.addAll(blackPieces.pieces());
+        return new Board(new Pieces(pieces));
+    }
+
+    public Piece findPiece(final Position position) {
+        return chessBoard.get(position);
     }
 }

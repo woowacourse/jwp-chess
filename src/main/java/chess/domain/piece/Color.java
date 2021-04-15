@@ -5,7 +5,7 @@ import java.util.Arrays;
 public enum Color {
     BLACK("BLACK"),
     WHITE("WHITE"),
-    NOTHING("BLANK");
+    NOTHING("NOTHING");
 
     private final String name;
 

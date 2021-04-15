@@ -43,7 +43,7 @@ const loadGame = () => {
             reRangeBoard(responsePieces)
             if (responsePieces.data.isGameOver) {
                 let winnerNode = winner.querySelector("strong");
-                if (responsePieces.data.winner === "BLANK") {
+                if (responsePieces.data.winner === "NOTHING") {
                     winnerNode.innerText = "무승부";
                     alert("무승부!");
                 } else {

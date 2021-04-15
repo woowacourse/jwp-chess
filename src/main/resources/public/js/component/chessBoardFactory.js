@@ -2,6 +2,7 @@ import {store} from "../store.js";
 import * as chessBoard from "./chessBoard.js";
 
 export function createChessBoardAndPieces(gridDto, piecesResponseDto) {
+    showAndHideChessBoardPage();
     store.gridDto = gridDto;
     piecesResponseDto.sort((a, b) => {
         if (a.position[1] > b.position[1]) {
@@ -52,4 +53,9 @@ export function createChessBoardAndPieces(gridDto, piecesResponseDto) {
         table.appendChild(newTr);
     }
     chessBoard.addEvent();
+}
+
+function showAndHideChessBoardPage() {
+    const $chessBoardPage = document.getElementById("layout");
+    $chessBoardPage.classList.toggle("hide");
 }

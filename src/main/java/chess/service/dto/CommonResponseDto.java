@@ -14,4 +14,16 @@ public class CommonResponseDto<T> {
         this.statusCode = statusCode;
         this.message = message;
     }
+
+    public T getBody() {
+        return body;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

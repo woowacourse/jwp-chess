@@ -1,32 +1,41 @@
 const end = document.getElementById("end");
 const exit = document.getElementById("exit");
 const chessBoard = document.querySelector(".chess-board");
-// const sourceKey = document.getElementById("sourceKey");
-// const targetKey = document.getElementById("targetKey");
 const tiles = document.getElementsByClassName("tile");
 const whiteCount = document.querySelector(`#whiteScore strong`);
 const blackCount = document.querySelector(`#blackScore strong`);
 const winner = document.querySelector(`#winner`);
 const basePath = 'http://localhost:4567';
-let isEnd = true;
 
-end.addEventListener("click", () => {
-    if (isEnd === true) {
+end.addEventListener("click", (event) => {
+    const item = event.target;
+    if (item.classList.contains("game_over")) {
         alert("이미 게임끝냤슈!");
         return
     }
     if (window.confirm("정말 끝내려구?")) {
-        isEnd = true;
-        axios({
-            method: 'put',
-            url: basePath + '/games',
-            data: {
-                chessName: localStorage.getItem("name"),
-                isGameOver: isEnd
-            }
-        }).then(() => {
-            loadGame()
-        }).catch(error => console.log(error));
+        if (!item.classList.contains("game_over")) {
+            item.classList.add("game_over");
+            item.classList.remove("run");
+        }
+
+        const data = {
+            chessName: localStorage.getItem("name"),
+            isGameOver: true
+        };
+
+        const option = {
+            method: 'PUT',
+            header: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        };
+
+        fetch(basePath + "/games", option)
+        .then(() => {
+            loadGame();
+        });
         alert("이 게임 끝났습니다.");
     }
 });
@@ -37,27 +46,28 @@ exit.addEventListener("click", () => {
     }
 })
 
-const loadGame = () => {
-    axios.get(basePath + '/games/' + localStorage.getItem("name"))
-        .then(responsePieces => {
-            if (responsePieces.data.code === 400) {
-                alert(responsePieces.data.message);
-                return;
-            }
-            reRangeBoard(responsePieces.data.body)
-            if (responsePieces.data.body.isGameOver) {
-                let winnerNode = winner.querySelector("strong");
-                if (responsePieces.data.body.winner === "NOTHING") {
-                    winnerNode.innerText = "무승부";
-                    alert("무승부!");
-                } else {
-                    winnerNode.innerText = responsePieces.data.body.winner;
-                    alert("승리자는" + responsePieces.data.body.winner);
-                }
-                winner.style.visibility = "visible";
-            }
-        })
-        .catch(error => alert(error));
+const loadGame = async () => {
+    const response = await fetch(
+        basePath + "/games/" + localStorage.getItem("name"))
+    .then(res => res.json());
+
+    if (response.statusCode === 400) {
+        alert(response.message);
+        return;
+    }
+    reRangeBoard(response.body);
+
+    if (response.body.isGameOver) {
+        let winnerNode = winner.querySelector("strong");
+        if (response.body.winner === "NOTHING") {
+            winnerNode.innerText = "무승부";
+            alert("무승부!");
+        } else {
+            winnerNode.innerText = response.body.winner;
+            alert("승리자는" + response.body.winner);
+        }
+        winner.style.visibility = "visible";
+    }
 };
 
 loadGame();
@@ -76,14 +86,18 @@ function reRangeBoard(responsePieces) {
         for (let idx = 0; idx < tiles.length; idx++) {
             if (tiles[idx].id === pieces[pieceIdx].position) {
                 let img = document.createElement("img");
-                img.src = "css/image/" + imageName(pieces[pieceIdx].pieceName) + ".png";
+                img.src = "css/image/" + imageName(pieces[pieceIdx].pieceName)
+                    + ".png";
                 tiles[idx].removeChild(tiles[idx].childNodes[0]);
                 tiles[idx].appendChild(img);
                 break;
             }
         }
     }
-    isEnd = responsePieces.isGameOver;
+    if (responsePieces.isGameOver && !end.classList.contains("game_over")) {
+        end.classList.add("game_over");
+        end.classList.remove("run");
+    }
     whiteCount.innerText = responsePieces.scoreDto.whiteScore;
     blackCount.innerText = responsePieces.scoreDto.blackScore;
 }
@@ -96,8 +110,8 @@ function imageName(pieceName) {
     return "B" + pieceName;
 }
 
-chessBoard.addEventListener("click", (source) => {
-    if (isEnd === true) {
+chessBoard.addEventListener("click", async (source) => {
+    if (end.classList.contains("game_over")) {
         alert("게임 끝났슈!");
         return;
     }
@@ -105,7 +119,7 @@ chessBoard.addEventListener("click", (source) => {
     const nowClickedPiece = source.target.closest("div");
     const pastClickedPiece = decideClickedPiece();
     if (pastClickedPiece === "") {
-        if (nowClickedPiece.childElementCount === 0) {
+        if (!nowClickedPiece.children[0].src) {
             alert("빈 공간은 선택할 수 없습니다!");
             return;
         }
@@ -114,7 +128,7 @@ chessBoard.addEventListener("click", (source) => {
     }
 
     clearClicked();
-    movePiece(pastClickedPiece.id, nowClickedPiece.id);
+    await movePiece(pastClickedPiece.id, nowClickedPiece.id);
 })
 
 function decideClickedPiece() {
@@ -136,20 +150,29 @@ function clearClicked() {
     }
 }
 
-function movePiece(source, target) {
-    axios({
-        method: 'put',
-        url: basePath + '/pieces',
-        data: {
-            chessName: localStorage.getItem("name"),
-            source: source,
-            target: target
-        }
-    }).then(response => {
-        if (response.data.statusCode === 400) {
-            alert(response.data.message);
+function movePiece(sourcePosition, targetPosition) {
+    const data = {
+        chessName: localStorage.getItem("name"),
+        source: sourcePosition,
+        target: targetPosition
+    };
+
+    const option = {
+        method: 'PUT',
+        header: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    };
+
+    fetch(basePath + "/pieces", option)
+    .then(res => res.json())
+    .then(async response => {
+        if (response.statusCode === 400) {
+            alert(response.message);
             return;
         }
-        loadGame()
-    }).catch(error => alert(error));
+        await loadGame();
+    })
 }
+

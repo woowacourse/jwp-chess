@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.JsonTransformer;
 import chess.service.ChessService;
 import chess.service.dto.*;
 import com.google.gson.Gson;
@@ -29,6 +30,8 @@ public class ChessWebController {
     public void run() {
         staticFiles.location("/static");
 
+        final JsonTransformer jsonTransformer = new JsonTransformer();
+
         get("/", (request, response) -> {
             Map<String, Object> model = new HashMap<>();
             return render(model, "main.html");
@@ -43,23 +46,23 @@ public class ChessWebController {
 
         post("/games", (request, response) -> {
             ChessSaveRequestDto requestDto = new Gson().fromJson(request.body(), ChessSaveRequestDto.class);
-            return toJson(chessService.startChess(requestDto));
-        });
+            return chessService.startChess(requestDto);
+        }, jsonTransformer);
 
         put("/games", (request, response) -> {
             GameStatusRequestDto requestDto = new Gson().fromJson(request.body(), GameStatusRequestDto.class);
             chessService.changeGameStatus(requestDto);
-            return toJson(new CommonResponseDto<>(ResponseCode.OK.code(), ResponseCode.OK.message()));
-        });
+            return new CommonResponseDto<>(ResponseCode.OK.code(), ResponseCode.OK.message());
+        }, jsonTransformer);
 
         get("/games/:name", (request, response) -> {
             String name = request.params(":name");
-            return toJson(chessService.loadChess(name));
-        });
+            return chessService.loadChess(name);
+        }, jsonTransformer);
 
         put("/pieces", (request, response) -> {
             MoveRequestDto requestDto = new Gson().fromJson(request.body(), MoveRequestDto.class);
-            return toJson(chessService.movePiece(requestDto));
-        });
+            return chessService.movePiece(requestDto);
+        }, jsonTransformer);
     }
 }

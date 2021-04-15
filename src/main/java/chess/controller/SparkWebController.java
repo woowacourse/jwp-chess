@@ -24,11 +24,11 @@ import spark.Request;
 import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-public class WebController {
+public class SparkWebController {
     private final ChessService chessService;
     private final UserService userService;
 
-    public WebController(ChessService chessService, UserService userService) {
+    public SparkWebController(ChessService chessService, UserService userService) {
         this.chessService = chessService;
         this.userService = userService;
     }

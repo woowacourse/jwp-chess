@@ -1,13 +1,13 @@
-package chess.domain.DTO;
+package chess.domain.dto;
 
-public class MoveInfoDTO {
+public class MoveInfoDto {
     private String target;
     private String destination;
 
-    public MoveInfoDTO() {
+    public MoveInfoDto() {
     }
 
-    public MoveInfoDTO(String target, String destination) {
+    public MoveInfoDto(String target, String destination) {
         this.target = target;
         this.destination = destination;
     }

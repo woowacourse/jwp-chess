@@ -1,9 +1,9 @@
 package chess.controller;
 
 import chess.domain.ChessGame;
-import chess.domain.DTO.BoardDTO;
-import chess.domain.DTO.MoveInfoDTO;
-import chess.domain.DTO.ScoreDTO;
+import chess.domain.dto.BoardDto;
+import chess.domain.dto.MoveInfoDto;
+import chess.domain.dto.ScoreDto;
 import chess.service.SpringChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,25 +28,25 @@ public class SpringChessController {
 
     @GetMapping("/loadSavedBoard")
     @ResponseBody
-    public BoardDTO loadSavedBoard() {
+    public BoardDto loadSavedBoard() {
         return springChessService.getSavedBoardInfo(chessGame);
     }
 
     @GetMapping("/resetBoard")
     @ResponseBody
-    public BoardDTO resetBoard() {
+    public BoardDto resetBoard() {
         return springChessService.initiateBoard(chessGame);
     }
 
     @GetMapping("/scoreStatus")
     @ResponseBody
-    public ScoreDTO scoreStatus() {
-        return ScoreDTO.of(chessGame.scoreStatus());
+    public ScoreDto scoreStatus() {
+        return ScoreDto.of(chessGame.scoreStatus());
     }
 
     @PostMapping("/move")
     @ResponseBody
-    public BoardDTO move(@RequestBody MoveInfoDTO moveInfoDTO) {
+    public BoardDto move(@RequestBody MoveInfoDto moveInfoDTO) {
         return springChessService.move(chessGame, moveInfoDTO);
     }
 }

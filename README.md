@@ -4,5 +4,22 @@
 3. 요청 핸들러 정의
 4. 에러 페이지 매핑
 
-## 추가 변경 사항
-1. Symbol 수정
+## 실행 환경
+- 기본 포트 : 8080
+- 메인 페이지 : "/main"
+- DB Table
+```SQL
+CREATE TABLE game_status(
+    id int not null auto_increment primary key,
+    room_id BIGINT,
+    turn  CHAR(10) not null,
+    board TEXT
+    );
+```
+```SQL
+CREATE TABLE room_status(
+    id int not null auto_increment primary key,
+    room_name CHAR(10) not null,
+    room_id BIGINT
+    );
+```

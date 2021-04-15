@@ -26,13 +26,9 @@ public class TurnDao extends DBConnection {
 
     public void initializeTurn() {
         String query = "INSERT INTO turn (current_turn) VALUE (?)";
-        try (
-                Connection connection = getConnection();
-                PreparedStatement psmt = connection.prepareStatement(query)
-        ) {
-            psmt.setString(1, "white");
-            psmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcTemplate.update(query, "white");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -40,18 +36,14 @@ public class TurnDao extends DBConnection {
     public List<TurnRequestDto> showCurrentTurn() {
         List<TurnRequestDto> turn = new ArrayList<>();
         String query = "SELECT * FROM turn";
-        try (
-                Connection connection = getConnection();
-                PreparedStatement psmt = connection.prepareStatement(query);
-                ResultSet rs = psmt.executeQuery()
-        ) {
-            while (rs.next()) {
-                turn.add(new TurnRequestDto(
-                        rs.getLong("id"),
-                        rs.getString("current_turn")
-                ));
-            }
-        } catch (SQLException e) {
+
+        try {
+            turn = jdbcTemplate.query(
+                    query, (rs, rowNum) -> new TurnRequestDto(
+                            rs.getLong("id"),
+                            rs.getString("current_turn"))
+            );
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return turn;
@@ -59,26 +51,19 @@ public class TurnDao extends DBConnection {
 
     public void changeTurn(final TurnChangeRequestDto turnChangeRequestDto) {
         String query = "UPDATE turn SET current_turn=? WHERE current_turn=?";
-        try (
-                Connection connection = getConnection();
-                PreparedStatement psmt = connection.prepareStatement(query)
-        ) {
-            psmt.setString(1, turnChangeRequestDto.getNextTurn());
-            psmt.setString(2, turnChangeRequestDto.getCurrentTurn());
-            psmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcTemplate.update(query,
+                    turnChangeRequestDto.getNextTurn(), turnChangeRequestDto.getCurrentTurn());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void removeTurn() {
         String query = "DELETE FROM turn";
-        try (
-                Connection connection = getConnection();
-                PreparedStatement pstm = connection.prepareStatement(query)
-        ) {
-            pstm.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            jdbcTemplate.update(query);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

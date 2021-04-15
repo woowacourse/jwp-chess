@@ -35,12 +35,10 @@ public class PieceDao extends DBConnection {
 
         try {
             pieces = jdbcTemplate.query(
-                    query, (rs, rowNum) -> {
-                        return new ChessRequestDto(
-                                rs.getLong("id"),
-                                rs.getString("piece_name"),
-                                rs.getString("piece_position"));
-                    }
+                    query, (rs, rowNum) -> new ChessRequestDto(
+                            rs.getLong("id"),
+                            rs.getString("piece_name"),
+                            rs.getString("piece_position"))
             );
         } catch (Exception e) {
             e.printStackTrace();

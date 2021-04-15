@@ -3,7 +3,9 @@ package chess.service;
 import chess.domain.web.User;
 import chess.repository.UserDao;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserService {
     private final UserDao userDao;
 
@@ -22,5 +24,9 @@ public class UserService {
 
     public boolean isUserExist(int userId) {
         return userDao.findUserById(userId).isPresent();
+    }
+
+    public String findUserNameByUserId(int userId) {
+        return userDao.findUserById(userId).get().getName();
     }
 }

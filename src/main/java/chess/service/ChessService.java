@@ -10,7 +10,9 @@ import chess.util.BoardInitializer;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessService {
     private final GameDao gameDao;
     private final GameHistoryDao gameHistoryDao;

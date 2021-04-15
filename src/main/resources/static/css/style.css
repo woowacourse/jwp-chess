@@ -24,16 +24,16 @@ img {
     background-color: #F5D042;
 }
 
-.start-button {
+.clickedRoomName {
+    background-color: #3C485E;
+}
+
+.button {
     width: 200px;
     height: 70px;
     font-size: 50px;
     margin: auto;
 }
-
-/*.currentTurn {*/
-/*    margin-left: 315px;*/
-/*}*/
 
 .title {
     text-align: center;

@@ -22,6 +22,17 @@ public class SpringChessController {
         return "index.html";
     }
 
+    @GetMapping("/enter/{roomName}")
+    public String enterRoom(@PathVariable String roomName) {
+        return "/chess.html";
+    }
+
+    @PostMapping("/deleteRoom")
+    @ResponseBody
+    public void deleteRoom(@RequestBody RoomNameDTO roomNameDTO) {
+        springChessService.deleteRoom(roomNameDTO.getRoomName());
+    }
+
     @PostMapping("/checkRoomName")
     @ResponseBody
     public RoomValidateDTO checkRoomName(@RequestBody RoomNameDTO roomNameDTO) {
@@ -30,9 +41,8 @@ public class SpringChessController {
 
     @PostMapping("/createRoom")
     @ResponseBody
-    public String createRoom(@RequestBody RoomNameDTO roomNameDTO) {
+    public void createRoom(@RequestBody RoomNameDTO roomNameDTO) {
         springChessService.createRoom(roomNameDTO.getRoomName());
-        return "성공!";
     }
 
     @GetMapping("/rooms")
@@ -62,8 +72,7 @@ public class SpringChessController {
 
     @PostMapping(value = "/restart")
     @ResponseBody
-    public String restart(@RequestBody RoomNameDTO roomNameDTO) {
+    public void restart(@RequestBody RoomNameDTO roomNameDTO) {
         springChessService.newBoard(roomNameDTO.getRoomName());
-        return "성공!";
     }
 }

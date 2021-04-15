@@ -1,6 +1,18 @@
+let currentRoomName;
+
+getCurrentRoomName();
 createChessBoard();
+
 const startButton = document.getElementById("start");
+const backButton = document.getElementById("back");
+
 startButton.addEventListener("click", clickStart);
+backButton.addEventListener("click", clickBack);
+
+function getCurrentRoomName() {
+    const url = window.location.href.split("/");
+    currentRoomName = url[url.length-1];
+}
 
 function createChessBoard() {
     makeTable();
@@ -105,7 +117,7 @@ function changeImage(sourcePosition, targetPosition) {
 
 async function changeTurn() {
     let data = {
-        roomName:"1"
+        roomName:currentRoomName
     }
     const response = await fetch('/currentTurn', {
         method: 'post',
@@ -123,7 +135,7 @@ async function changeTurn() {
 
 function clickStart() {
     let data = {
-        roomName:"1"
+        roomName:currentRoomName
     }
     fetch('/restart', {
         method: 'post',
@@ -137,9 +149,15 @@ function clickStart() {
     });
 }
 
+async function clickBack() {
+    if(confirm("목록으로 돌아가시겠습니까?")) {
+        window.location.href = "http://localhost:8080/";
+    }
+}
+
 async function syncBoard() {
     let data = {
-        roomName:"1"
+        roomName:currentRoomName
     }
     const board = await fetch('/currentBoard', {
         method: 'post',
@@ -163,7 +181,7 @@ async function syncBoard() {
         }
         const piece = document.createElement("img");
 
-        piece.src = "images/" + pieces[i] + ".png";
+        piece.src = "/images/" + pieces[i] + ".png";
         position.appendChild(piece);
     }
 }

@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 @Repository
 public class SpringBoardDao {
 
-    private static final String GameNumber = "1";
-
     private final JdbcTemplate jdbcTemplate;
 
     public SpringBoardDao(JdbcTemplate jdbcTemplate) {
@@ -36,7 +34,6 @@ public class SpringBoardDao {
     }
 
     public Map<Position, Piece> newBoard(String roomName) {
-
         String query = "INSERT INTO board (roomName, position, pieceName, turn) VALUES (?, ?, ?, ?)";
         Board board = Board.getGamingBoard();
         this.jdbcTemplate.update(query, roomName, boardPositionSet(board.getBoard()), boardPieceSet(board.getBoard()), "WHITE");
@@ -45,6 +42,7 @@ public class SpringBoardDao {
     }
 
     public void updateBoard(Board board, String turn, String roomName) {
+        System.out.println("@@@@@@@@@@update" + roomName);
 
         String query = "UPDATE board SET position = ?, pieceName = ?, turn = ? WHERE roomName = ?";
         this.jdbcTemplate.update(query, boardPositionSet(board.getBoard()), boardPieceSet(board.getBoard()), turn, roomName);
@@ -68,8 +66,10 @@ public class SpringBoardDao {
 
     public Side findTurn(String roomName) {
         try {
+            System.out.println("@@@@@@@@@@findTurn" + roomName);
             String query = "SELECT turn FROM board WHERE roomName = ?";
             String side = this.jdbcTemplate.queryForObject(query, String.class, roomName);
+            System.out.println("@@@@@@@@@@findTurn" + side);
 
             return Side.getTurnByName(side);
         } catch (DataAccessException e) {
@@ -126,5 +126,10 @@ public class SpringBoardDao {
         String query = "SELECT roomName FROM board";
         return this.jdbcTemplate.query(query,
                 (resultSet, rowNum) -> resultSet.getString("roomName"));
+    }
+
+    public void deleteRoom(String roomName) {
+        String query = "DELETE FROM board WHERE roomName = ?";
+        this.jdbcTemplate.update(query, roomName);
     }
 }

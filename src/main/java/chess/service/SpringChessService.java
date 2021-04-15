@@ -17,7 +17,6 @@ import java.util.Map;
 
 @Service
 public class SpringChessService {
-    private static final String GAME_NUMBER = "1";
     private static final String SUCCEED_CODE = "200";
     private static final String GAME_SET_CODE = "300";
     private static final String FAIL_CODE = "400";
@@ -42,7 +41,7 @@ public class SpringChessService {
     }
 
     public ResponseDTO move(PositionDTO positionDTO, String roomName) {
-        Board board = new Board(springBoardDao.findBoard(GAME_NUMBER));
+        Board board = new Board(springBoardDao.findBoard(roomName));
         try {
             return moveExecute(positionDTO, board, roomName);
         } catch (ChessException e) {
@@ -95,5 +94,9 @@ public class SpringChessService {
 
     public void createRoom(String roomName) {
         springBoardDao.newBoard(roomName);
+    }
+
+    public void deleteRoom(String roomName) {
+        springBoardDao.deleteRoom(roomName);
     }
 }

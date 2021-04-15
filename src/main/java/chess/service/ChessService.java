@@ -1,17 +1,17 @@
 package chess.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import chess.domain.board.BoardDTO;
 import chess.domain.chess.Chess;
 import chess.domain.chess.ChessDAO;
 import chess.domain.chess.ChessDTO;
 import chess.domain.piece.PieceDAO;
 import chess.domain.position.MovePosition;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
+
     private final ChessDAO chessDAO;
     private final PieceDAO pieceDAO;
 
@@ -27,8 +27,7 @@ public class ChessService {
     }
 
     public Long insert() {
-        final Chess chess = Chess.createWithEmptyBoard()
-                                 .start();
+        final Chess chess = Chess.createWithEmptyBoard().start();
         final BoardDTO boardDTO = BoardDTO.from(chess);
 
         final long chessId = chessDAO.insert();
@@ -38,8 +37,7 @@ public class ChessService {
     }
 
     public void move(Long chessId, MovePosition movePosition) {
-        final Chess chess = chessDAO.findChessById(chessId)
-                                    .move(movePosition);
+        final Chess chess = chessDAO.findChessById(chessId).move(movePosition);
         pieceDAO.move(chessId, movePosition);
         chessDAO.updateChess(chessId, chess.status(), chess.color());
     }

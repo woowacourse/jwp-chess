@@ -1,17 +1,22 @@
 package chess.controller;
 
 import chess.domain.chessgame.ChessGame;
-import chess.dto.BoardRequestDto;
-import chess.dto.PiecesResponseDto;
-import chess.dto.ScoreResponseDto;
+import chess.dto.request.BoardRequestDto;
+import chess.dto.request.PiecesRequestDto;
+import chess.dto.response.PiecesResponseDto;
+import chess.dto.response.RoomsResponseDto;
+import chess.dto.response.ScoreResponseDto;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api")
 public class ChessApiController {
 
     private final ChessService chessService;
@@ -21,18 +26,22 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
-    @GetMapping(value = "/pieces")
-    public PiecesResponseDto getPieces() {
-        return chessService.getPieces(chessGame);
+    @GetMapping(value = "/rooms")
+    public RoomsResponseDto getRooms(){
+        return chessService.getRooms();
     }
 
+    @PostMapping(value = "/pieces")
+    public PiecesResponseDto postPieces(@RequestBody PiecesRequestDto piecesRequestDto) {
+        return chessService.postPieces(piecesRequestDto);
+    }
     @PutMapping(value = "/board")
-    public PiecesResponseDto putBoard(@RequestBody BoardRequestDto boardRequestDto) {
-        return chessService.putBoard(boardRequestDto, chessGame);
+    public void putBoard(@RequestBody BoardRequestDto boardRequestDto) {
+        //  retur2n chessService.putBoard(boardRequestDto, chessGame);
     }
 
     @GetMapping(value = "/score")
-    public ScoreResponseDto getScore(@RequestParam("color") String colorName){
+    public ScoreResponseDto getScore(@RequestParam("color") String colorName) {
         return chessService.getScore(colorName, chessGame);
     }
 

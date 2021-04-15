@@ -1,27 +1,48 @@
-let mainPage;
+let chessPage;
 
 document.addEventListener("DOMContentLoaded", function () {
-  mainPage = new MainPage();
-  mainPage.initMainPage();
+  chessPage = new ChessPage();
+  chessPage.initChessPage();
 });
 
-function MainPage() {
-  this.getPiecesUrl = "http://localhost:8080/api/pieces";
-  this.getScoreUrl = "http://localhost:8080/api/score";
-  this.putPiecesUrl = "http://localhost:8080/api/pieces";
-  this.putChessGameUrl = "http://localhost:8080/api/chessGame";
-  this.imageUrl = "http://localhost:8080/images/";
-  this.isPlaying = false;
-  this.gameId = -1;
+function ChessPage() {
+  // this.getPiecesUrl = "http://localhost:8080/api/pieces";
+  // this.getScoreUrl = "http://localhost:8080/api/score";
+  // this.putPiecesUrl = "http://localhost:8080/api/pieces";
+  // this.putChessGameUrl = "http://localhost:8080/api/chessGame";
+  // this.imageUrl = "http://localhost:8080/images/";
+  // this.isPlaying = false;
+  // this.gameId = -1;
 }
 
-MainPage.prototype.initMainPage = function () {
-  this.registerGameIdSetEvent();
-  this.registerGameStartEvent();
-  this.registerGameExitEvent();
-  this.registerPieceMoveEvent();
-  this.registerGetScoreEvent();
-  this.registerGameRestartEvent();
+ChessPage.prototype.initChessPage = function () {
+  this.templatePieces(JSON.parse(localStorage.getItem("pieces")));
+  // this.registerGameIdSetEvent();
+  // this.registerGameStartEvent();
+  // this.registerGameExitEvent();
+  // this.registerPieceMoveEvent();
+  // this.registerGetScoreEvent();
+  // this.registerGameRestartEvent();
+}
+
+ChessPage.prototype.templatePieces = function (pieces) {
+  for (let i = 0; i < pieces.alivePieces.length; i++) {
+    document.querySelector("." + pieces.alivePieces[i].position)
+    .insertAdjacentHTML("beforeend", chessPage.pieceElement(pieces.alivePieces[i]));
+  }
+}
+
+ChessPage.prototype.pieceElement = function (piece) {
+
+  let color;
+  if (piece.name.charCodeAt(0) >= 97) {
+    color = "w";
+  } else {
+    color = "b";
+  }
+
+  const url = color + piece.name.toUpperCase() + ".png";
+  return `<img src="/images/${url}" class="chess-piece">`;
 }
 
 MainPage.prototype.registerGameIdSetEvent = function () {
@@ -160,31 +181,6 @@ MainPage.prototype.deleteAllPieces = function () {
   document.querySelectorAll('.chess-piece').forEach(item => {
     item.remove();
   });
-}
-
-MainPage.prototype.templatePieces = function (pieces) {
-  mainPage.deleteAllPieces();
-  for (let i = 0; i < pieces.length; i++) {
-    if (pieces[i].name === ".") {
-      continue;
-    }
-
-    document.querySelector("." + pieces[i].coordinate)
-    .insertAdjacentHTML("beforeend", mainPage.pieceElement(pieces[i]));
-  }
-}
-
-MainPage.prototype.pieceElement = function (piece) {
-
-  let color;
-  if (piece.isBlack) {
-    color = "b";
-  } else {
-    color = "w";
-  }
-
-  const url = mainPage.imageUrl + color + piece.name.toUpperCase() + ".png";
-  return `<img src="${url}" class="chess-piece">`;
 }
 
 MainPage.prototype.registerPieceMoveEvent = function () {

@@ -167,3 +167,8 @@ img {
     width: 20px;
     height: 20px;
 }
+
+.clicked {
+    border: 5px solid yellow;
+    box-sizing: border-box;
+}

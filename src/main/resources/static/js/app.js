@@ -103,8 +103,14 @@ chessBoard.addEventListener("click", (source) => {
         return;
     }
 
+    const nowClickedPiece = source.target.closest("div");
     if (isEmpty(sourceKey.value)) {
+        if (!nowClickedPiece.children[0].src) {
+            alert("빈 공간은 클릭할 수 없습니다.")
+            return;
+        }
         sourceKey.value = source.target.parentElement.id;
+        nowClickedPiece.classList.toggle("clicked");
         return;
     }
 
@@ -116,9 +122,19 @@ chessBoard.addEventListener("click", (source) => {
         return;
     }
 
+    clearClicked();
     movePiece();
     clearMoveSource();
 })
+
+function clearClicked() {
+    const divs = document.getElementsByTagName("div");
+    for (let i = 0; i < divs.length; i++) {
+        if (divs[i].classList.contains("clicked")) {
+            divs[i].classList.remove("clicked");
+        }
+    }
+}
 
 function isSamePosition() {
     return sourceKey.value === targetKey.value;

@@ -76,10 +76,8 @@ async function checkFinished() {
 
 async function getTurn() {
   return await fetch(
-      `/${this.gameId}/turn`
+      `/turn/${this.gameId}`
   )
-  .then(res => res.json())
-  .then(data => data)
 }
 
 function moveHandler() {
@@ -158,14 +156,15 @@ function positionColor(position) {
   return position[0].charCodeAt(0) % 2 === 0 ? 'b-black' : 'b-white'
 }
 
-function changeTurn(turn) {
+async function changeTurn(response) {
+  response = await response.json()
   const $blackTurn = document.querySelector('.black-turn')
   const $whiteTurn = document.querySelector('.white-turn')
-  if (turn === 'WHITE') {
+  if (response.turn === 'WHITE') {
     $blackTurn.src = 'images/up.png'
     $whiteTurn.src = 'images/down_turn.png'
   }
-  if (turn === 'BLACK') {
+  if (response.turn === 'BLACK') {
     $blackTurn.src = 'images/up_turn.png'
     $whiteTurn.src = 'images/down.png'
   }

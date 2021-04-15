@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.dto.ChessBoardDTO;
 import chess.dto.RoomIdDTO;
+import chess.dto.TurnDTO;
 import chess.service.ChessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,10 +41,12 @@ public class ChessController {
     public ChessBoardDTO loadGame(@PathVariable int gameId) {
         return chessService.loadGame(gameId);
     }
-//
-//    @GetMapping
-//    public String {
-//        "/:id/turn", ChessService::turn}
+
+    @GetMapping("/turn/{gameId}")
+    @ResponseBody
+    public TurnDTO turn(@PathVariable int gameId) {
+        return chessService.turn(gameId);
+    }
 //
 //    @GetMapping
 //    public String {

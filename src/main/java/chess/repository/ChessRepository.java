@@ -6,6 +6,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceMapper;
 import chess.dto.ChessBoardDTO;
 import chess.dto.RoomIdDTO;
+import chess.dto.TurnDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -35,8 +36,14 @@ public class ChessRepository {
         return chessBoardDTO;
     }
 
+    public TurnDTO turn(int gameId) {
+        String query = "SELECT turn FROM chess_game WHERE id = ?";
+        TurnDTO turnDTO = new TurnDTO(jdbcTemplate.queryForObject(query, String.class, gameId));
+        return turnDTO;
+    }
 
     //질문 여기가 맞는지?
+
     public String serialize(ChessGame chessGame) {
         return chessGame.getChessBoardMap()
                 .entrySet()

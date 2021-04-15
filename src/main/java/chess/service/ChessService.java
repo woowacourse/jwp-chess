@@ -3,6 +3,7 @@ package chess.service;
 import chess.domain.game.ChessGame;
 import chess.dto.ChessBoardDTO;
 import chess.dto.RoomIdDTO;
+import chess.dto.TurnDTO;
 import chess.repository.ChessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,9 @@ public class ChessService {
 
     public ChessBoardDTO loadGame(int gameId) {
         return chessRepository.loadGame(gameId);
+    }
+
+    public TurnDTO turn(int gameId) {
+        return chessRepository.turn(gameId);
     }
 }

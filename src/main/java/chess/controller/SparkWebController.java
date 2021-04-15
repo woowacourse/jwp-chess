@@ -1,7 +1,9 @@
 package chess.controller;
 
 import static spark.Spark.get;
+import static spark.Spark.port;
 import static spark.Spark.post;
+import static spark.Spark.staticFiles;
 
 import chess.domain.ChessGame;
 import chess.domain.dto.GameDto;
@@ -19,12 +21,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringApplicationRunListener;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-public class SparkWebController {
+public class SparkWebController implements ApplicationRunner {
     private final ChessService chessService;
     private final UserService userService;
 
@@ -33,7 +38,10 @@ public class SparkWebController {
         this.userService = userService;
     }
 
-    public void run() {
+    @Override
+    public void run(ApplicationArguments args) {
+        port(8080);
+        staticFiles.location("/public");
         get("/", this::renderLogin);
         get("/games", this::renderGames);
         get("/games/:id", this::renderGame);

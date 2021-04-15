@@ -91,36 +91,13 @@ public class SpringChessGameDao {
         this.jdbcTemplate.update(query, PiecePositionDAOConverter.asDAO(teamPiecePosition),team);
     }
 
-    /*
-
-    public void updateChessGame(final ChessGame chessGame, final String currentTurnTeam) throws SQLException {
-        updateTeamInfo(chessGame.currentWhitePiecePosition(), WHITE_TEAM.asDAOFormat());
-        updateTeamInfo(chessGame.currentBlackPiecePosition(), BLACK_TEAM.asDAOFormat());
-        final String query = "UPDATE chess_game SET current_turn_team = (?), is_playing = (?)";
-        final Connection connection = getConnection();
-        PreparedStatement pstmt = connection.prepareStatement(query);
-        pstmt.setString(1, currentTurnTeam);
-        pstmt.setBoolean(2, chessGame.isPlaying());
-        pstmt.executeUpdate();
-        pstmt.close();
-        connection.close();
-    }
-
-
-
-    public void deleteChessGame() throws SQLException {
+    public void deleteChessGame() {
         final String deletePiecePositionQuery = "DELETE FROM team_info";
         final String deleteChessGameQuery = "DELETE FROM chess_game";
-        final Connection connection = getConnection();
-        PreparedStatement pstmt = connection.prepareStatement(deletePiecePositionQuery);
-        pstmt.executeUpdate();
-        pstmt.close();
-        pstmt = connection.prepareStatement(deleteChessGameQuery);
-        pstmt.executeUpdate();
-        pstmt.close();
-        connection.close();
+
+        this.jdbcTemplate.update(deletePiecePositionQuery);
+        this.jdbcTemplate.update(deleteChessGameQuery);
     }
-     */
 }
 
 class Test {

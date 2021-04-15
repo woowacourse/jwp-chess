@@ -10,15 +10,15 @@ import chess.domain.player.Round;
 import chess.domain.position.Position;
 import chess.domain.state.State;
 import chess.domain.state.StateFactory;
-import chess.dto.*;
+import chess.dto.PiecesDto;
+import chess.dto.PlayerDto;
+import chess.dto.ScoreDto;
 import chess.dto.request.ChessRequestDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.request.TurnRequestDto;
 import chess.dto.response.MoveResponseDto;
 import chess.repository.ChessRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -27,9 +27,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChessServiceImpl implements ChessService {
-    private Round round;
-
     private final ChessRepository chessRepository;
+    private Round round;
 
     public ChessServiceImpl(final ChessRepository chessRepository) {
         this.round = makeRound();

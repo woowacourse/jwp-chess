@@ -52,6 +52,27 @@ public class Position {
         return POSITIONS.get(findRank.getRank() + findFile.getFile());
     }
 
+    public static Position from(final String source) {
+        String reversedSource = reverse(source);
+        if (Objects.isNull(POSITIONS.get(reversedSource))) {
+            throw new IllegalArgumentException("없는 위치입니다!");
+        }
+        return POSITIONS.get(reversedSource);
+    }
+
+    private static String reverse(final String source) {
+        String reversedSource = "";
+        reversedSource += source.charAt(1);
+        reversedSource += source.charAt(0);
+        return reversedSource;
+    }
+
+    public static Position findByString(final String positionString) {
+        return Position.valueOf(
+                Rank.findByRank(positionString.substring(1, 2)),
+                File.findByFile(positionString.substring(0, 1)));
+    }
+
     public Position findTargetPosition(final Direction direction) {
         int targetRank = this.getRankValue() + direction.getRow();
         int targetFile = this.getFileValue() + direction.getColumn();
@@ -122,27 +143,6 @@ public class Position {
 
     private boolean isFileInBound(final int file) {
         return 1 <= file && file <= 8;
-    }
-
-    public static Position from(final String source) {
-        String reversedSource = reverse(source);
-        if (Objects.isNull(POSITIONS.get(reversedSource))) {
-            throw new IllegalArgumentException("없는 위치입니다!");
-        }
-        return POSITIONS.get(reversedSource);
-    }
-
-    private static String reverse(final String source) {
-        String reversedSource = "";
-        reversedSource += source.charAt(1);
-        reversedSource += source.charAt(0);
-        return reversedSource;
-    }
-
-    public static Position findByString(final String positionString) {
-        return Position.valueOf(
-                Rank.findByRank(positionString.substring(1, 2)),
-                File.findByFile(positionString.substring(0, 1)));
     }
 
     public File getFile() {

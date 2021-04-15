@@ -96,7 +96,7 @@ public class PawnMoveStrategy extends OneCellMoveStrategy {
     }
 
     private List<Position> findPawnPositions(final Pieces basePieces, final Pieces targetPieces,
-                                            final Position position, final Direction direction) {
+                                             final Position position, final Direction direction) {
         Position targetPosition = position.findTargetPosition(direction);
         return findPawnPositionByTargetPosition(basePieces, targetPieces, targetPosition);
     }

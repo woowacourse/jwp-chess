@@ -13,13 +13,11 @@ import java.util.Map;
 import java.util.Queue;
 
 public class Round {
+    private static Map<Position, Piece> board;
     private final Player whitePlayer;
     private final Player blackPlayer;
-
     private Command command;
     private boolean isEnd = false;
-
-    private static Map<Position, Piece> board;
 
     public Round(final State white, final State black, final Command command) {
         this(new WhitePlayer(white), new BlackPlayer(black), command);

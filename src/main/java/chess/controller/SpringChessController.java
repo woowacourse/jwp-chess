@@ -2,14 +2,14 @@ package chess.controller;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.*;
+import chess.dto.PiecesDto;
+import chess.dto.PlayerDto;
+import chess.dto.ScoreDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.MoveResponseDto;
 import chess.service.ChessService;
 import com.google.gson.Gson;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.SQLException;
-import java.util.*;
-
-import static spark.Spark.get;
-import static spark.Spark.post;
+import java.util.Map;
 
 @Controller
 public class SpringChessController {

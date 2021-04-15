@@ -10,7 +10,7 @@
     <h3 id="roomName">{{room.name}}</h3>
     <h3 id="roomId" style="display: none">{{room.id}}</h3>
 
-    {{#board}}
+    {{#game}}
     <div class="chessboard">
         <div class="piece white" id="a8">{{{board.7.0}}}</div>
         <div class="piece black" id="b8">{{{board.7.1}}}</div>
@@ -84,10 +84,10 @@
         <div class="piece black" id="g1">{{{board.0.6}}}</div>
         <div class="piece white" id="h1">{{{board.0.7}}}</div>
     </div>
-    {{/board}}
+    {{/game}}
 
-    <div class="score" id="white-score">white score : {{scores.whiteScore}}</div>
-    <div class="score" id="black-score">black score : {{scores.blackScore}}</div>
+    <div class="score" id="white-score">white score : {{game.whiteScore}}</div>
+    <div class="score" id="black-score">black score : {{game.blackScore}}</div>
     <br>
 </div>
 </body>

@@ -67,10 +67,6 @@ public class ChessGame {
         return board;
     }
 
-    public String[][] unicodeBoard() {
-        return board.parseUnicodeBoard();
-    }
-
     public boolean isGameEnd() {
         return isGameEnd;
     }

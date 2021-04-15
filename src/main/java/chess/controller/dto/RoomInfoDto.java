@@ -1,10 +1,10 @@
 package chess.controller.dto;
 
-public class RoomDto {
+public class RoomInfoDto {
     private final Long id;
     private final String name;
 
-    public RoomDto(final Long id, final String name) {
+    public RoomInfoDto(final Long id, final String name) {
         this.id = id;
         this.name = name;
     }

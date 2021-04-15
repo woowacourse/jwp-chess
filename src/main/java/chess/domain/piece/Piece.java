@@ -15,7 +15,7 @@ public abstract class Piece {
     public Piece(final Owner owner,
                  final Score score,
                  final List<Direction> directions,
-                 final Distance distance){
+                 final Distance distance) {
         this.owner = owner;
         this.score = score;
         this.ableDirections = directions;

@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.service.RoomService;
+import chess.view.OutputView;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 
 @Controller
 public class RoomController {
@@ -20,8 +20,7 @@ public class RoomController {
 
     @GetMapping("/main")
     private String loadRoomList(Model model) {
-        model.addAttribute("list", roomService.loadList());
-        return "mainPage";
+        return OutputView.printMainPage(model, roomService.loadList());
     }
 
     @GetMapping("/room/create/{roomName}")

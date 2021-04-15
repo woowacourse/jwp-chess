@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.controller.dto.RoomDto;
+import chess.controller.dto.RoomInfoDto;
 import chess.service.dao.RoomDao;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ public class RoomService {
 
     public Long save(final String roomName) {
         final boolean isDuplicated = roomDao.load().stream()
-                .map(roomDto -> roomDto.getName())
+                .map(roomInfoDto -> roomInfoDto.getName())
                 .anyMatch(name -> name.equals(roomName));
 
         if (isDuplicated) {
@@ -34,11 +34,11 @@ public class RoomService {
         roomDao.delete(roomId);
     }
 
-    public List<RoomDto> loadList() {
+    public List<RoomInfoDto> loadList() {
         return roomDao.load();
     }
 
-    public RoomDto room(final Long roomId) throws SQLException {
-        return new RoomDto(roomId, roomDao.name(roomId));
+    public RoomInfoDto roomInfo(final Long roomId) throws SQLException {
+        return new RoomInfoDto(roomId, roomDao.name(roomId));
     }
 }

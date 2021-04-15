@@ -1,6 +1,6 @@
 package chess.service.dao;
 
-import chess.controller.dto.RoomDto;
+import chess.controller.dto.RoomInfoDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -28,15 +28,15 @@ public class RoomDao {
         jdbcTemplate.update(query, roomId);
     }
 
-    public List<RoomDto> load() {
+    public List<RoomInfoDto> load() {
         final String query = "SELECT * FROM room_status";
         return jdbcTemplate.query(query, (rs, rowNum) -> makeRoomDto(rs));
     }
 
-    private RoomDto makeRoomDto(final ResultSet rs) throws SQLException {
+    private RoomInfoDto makeRoomDto(final ResultSet rs) throws SQLException {
         final Long id = rs.getLong(COLUMN_INDEX_OF_ROOM_ID);
         final String name = rs.getString(COLUMN_INDEX_OF_ROOM_NAME);
-        return new RoomDto(id, name);
+        return new RoomInfoDto(id, name);
     }
 
     public String name(final Long roomId) throws SQLException {

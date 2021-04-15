@@ -3,16 +3,16 @@ package chess.service;
 import chess.dao.SpringBoardDao;
 import chess.domain.Side;
 import chess.domain.board.Board;
-import chess.domain.board.BoardInitializer;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.PositionDTO;
 import chess.dto.ResponseDTO;
+import chess.dto.RoomValidateDTO;
 import chess.exception.ChessException;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -64,6 +64,13 @@ public class SpringChessService {
         springBoardDao.updateBoard(Board.getGamingBoard(), "WHITE", roomName);
     }
 
+    public RoomValidateDTO checkDuplicatedRoom(String roomName){
+        if(springBoardDao.checkDuplicateByRoomName(roomName)){
+            return new RoomValidateDTO(FAIL_CODE, "중복된 방 이름입니다.");
+        }
+        return new RoomValidateDTO(SUCCEED_CODE, "방 생성 성공!");
+    }
+
     private String pieceToName(Piece piece) {
         if (piece.side() == Side.WHITE) {
             return WHITE + piece.getInitial().toUpperCase();
@@ -80,5 +87,13 @@ public class SpringChessService {
 
     private Side currentTurn(String roomName) {
         return springBoardDao.findTurn(roomName);
+    }
+
+    public List<String> rooms() {
+        return springBoardDao.findRooms();
+    }
+
+    public void createRoom(String roomName) {
+        springBoardDao.newBoard(roomName);
     }
 }

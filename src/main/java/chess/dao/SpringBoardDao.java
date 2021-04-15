@@ -5,7 +5,6 @@ import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -31,12 +30,12 @@ public class SpringBoardDao {
         try {
             return findBoard(roomName);
         } catch (DataAccessException e) {
-            addNewBoard(roomName);
+            newBoard(roomName);
             return initBoardTable(roomName);
         }
     }
 
-    public Map<Position, Piece> addNewBoard(String roomName) {
+    public Map<Position, Piece> newBoard(String roomName) {
 
         String query = "INSERT INTO board (roomName, position, pieceName, turn) VALUES (?, ?, ?, ?)";
         Board board = Board.getGamingBoard();
@@ -115,5 +114,17 @@ public class SpringBoardDao {
             board.put(Position.from(position[i]), PieceFactory.createPieceByName(piece[i]));
         }
         return board;
+    }
+
+    public boolean checkDuplicateByRoomName(String roomName) {
+        String query = "SELECT count(*) FROM board WHERE roomName = ?";
+        int count = this.jdbcTemplate.queryForObject(query, Integer.class, roomName);
+        return count != 0;
+    }
+
+    public List<String> findRooms() {
+        String query = "SELECT roomName FROM board";
+        return this.jdbcTemplate.query(query,
+                (resultSet, rowNum) -> resultSet.getString("roomName"));
     }
 }

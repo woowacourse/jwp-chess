@@ -91,7 +91,7 @@ function reRangeBoard(responsePieces) {
 
 function imageName(pieceName) {
     const pattern = /[a-z]/;
-    if(pattern.test(pieceName)){
+    if (pattern.test(pieceName)) {
         return "W" + pieceName.toUpperCase();
     }
     return "B" + pieceName;
@@ -137,7 +137,11 @@ function movePiece() {
             source: sourceKey.value,
             target: targetKey.value
         }
-    }).then(() => {
+    }).then(response => {
+        if (response.data.statusCode === 400) {
+            alert(response.data.message);
+            return;
+        }
         loadGame()
     }).catch(error => alert(error));
 }

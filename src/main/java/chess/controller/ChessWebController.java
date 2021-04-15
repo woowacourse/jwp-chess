@@ -59,8 +59,7 @@ public class ChessWebController {
 
         put("/pieces", (request, response) -> {
             MoveRequestDto requestDto = new Gson().fromJson(request.body(), MoveRequestDto.class);
-            MoveResponseDto responseDto = chessService.movePiece(requestDto);
-            return toJson(responseDto);
+            return toJson(chessService.movePiece(requestDto));
         });
     }
 }

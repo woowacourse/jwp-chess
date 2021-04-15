@@ -24,24 +24,29 @@ public class ChessService {
         return new TilesDto(Board.emptyBoard());
     }
 
-    public MoveResponseDto movePiece(final MoveRequestDto requestDto) {
-        ChessGame chessGame = ChessGame.newGame();
-        List<Movement> movements = movementDao.findByChessName(requestDto.getChessName());
+    public CommonResponseDto<MoveResponseDto> movePiece(final MoveRequestDto requestDto) {
+        try {
+            ChessGame chessGame = ChessGame.newGame();
+            List<Movement> movements = movementDao.findByChessName(requestDto.getChessName());
 
-        for (Movement movement : movements) {
-            chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
+            for (Movement movement : movements) {
+                chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
+            }
+
+            chessGame.moveByTurn(new Position(requestDto.getSource()), new Position(requestDto.getTarget()));
+            Chess chess = findChessByName(requestDto.getChessName());
+            movementDao.save(new Movement(chess.getId(), requestDto.getSource(), requestDto.getTarget()));
+
+            if (chessGame.isGameOver()) {
+                chess.changeRunning(!chessGame.isGameOver());
+                chess.changeWinnerColor(chessGame.findWinner());
+                chessDao.update(chess);
+            }
+            return new CommonResponseDto<>(new MoveResponseDto(requestDto.getSource(), requestDto.getTarget(), chessGame.calculateScore(), !chess.isRunning()),
+                    ResponseCode.OK.code(), ResponseCode.OK.message());
+        } catch (RuntimeException exception) {
+            return new CommonResponseDto<>(ResponseCode.BAD_REQUEST.code(), exception.getMessage());
         }
-
-        chessGame.moveByTurn(new Position(requestDto.getSource()), new Position(requestDto.getTarget()));
-        Chess chess = findChessByName(requestDto.getChessName());
-        movementDao.save(new Movement(chess.getId(), requestDto.getSource(), requestDto.getTarget()));
-
-        if (chessGame.isGameOver()) {
-            chess.changeRunning(!chessGame.isGameOver());
-            chess.changeWinnerColor(chessGame.findWinner());
-            chessDao.update(chess);
-        }
-        return new MoveResponseDto(requestDto.getSource(), requestDto.getTarget(), chessGame.calculateScore(), !chess.isRunning());
     }
 
     public void changeGameStatus(final GameStatusRequestDto requestDto) {
@@ -64,7 +69,7 @@ public class ChessService {
             Chess chess = new Chess(request.getName());
             chessDao.save(chess);
             return new CommonResponseDto<>(new GameStatusDto(chessGame.pieces(), chessGame.calculateScore(), chessGame.isGameOver(), chess.getWinnerColor()), ResponseCode.OK.code(), ResponseCode.OK.message());
-        } catch (RuntimeException exception){
+        } catch (RuntimeException exception) {
             return new CommonResponseDto<>(ResponseCode.BAD_REQUEST.code(), exception.getMessage());
         }
     }
@@ -79,8 +84,8 @@ public class ChessService {
                 chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
             }
             return new CommonResponseDto<>(new GameStatusDto(chessGame.pieces(),
-                chessGame.calculateScore(), chessGame.isGameOver(), chess.getWinnerColor()),
-                ResponseCode.OK.code(), ResponseCode.OK.message());
+                    chessGame.calculateScore(), chessGame.isGameOver(), chess.getWinnerColor()),
+                    ResponseCode.OK.code(), ResponseCode.OK.message());
         } catch (RuntimeException exception) {
             return new CommonResponseDto<>(ResponseCode.BAD_REQUEST.code(), exception.getMessage());
         }

@@ -23,6 +23,11 @@ public final class King extends GeneralPiece {
     }
 
     @Override
+    public boolean canMultiMove() {
+        return false;
+    }
+
+    @Override
     public Piece move(final Target target) {
         return new King(this.color(), target.piece().position());
     }

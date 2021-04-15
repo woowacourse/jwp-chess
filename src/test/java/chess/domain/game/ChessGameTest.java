@@ -39,4 +39,20 @@ class ChessGameTest {
         assertThatThrownBy(() -> chessGame.moveByTurn(new Position("a4"), new Position("a5")))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    @DisplayName("폰 이동 전략에 맞지 않는 곳으로 움직일 때 에러 확인")
+    void pawnMoveStrategyException() {
+        ChessGame chessGame = ChessGame.newGame();
+        assertThatThrownBy(() -> chessGame.moveByTurn(new Position("a2"), new Position("a5")))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("룩 이동 전략에 맞지 않는 곳으로 움직일 때 에러 확인")
+    void rookMoveStrategyException() {
+        ChessGame chessGame = ChessGame.newGame();
+        assertThatThrownBy(() -> chessGame.moveByTurn(new Position("a1"), new Position("a3")))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
 }

@@ -17,4 +17,8 @@ public interface MoveStrategy {
     boolean isNorthEast();
 
     boolean isInitialPawnNorth();
+
+    int fileDegree();
+
+    int rankDegree();
 }

@@ -46,4 +46,14 @@ public abstract class Direction implements MoveStrategy {
     public boolean isInitialPawnNorth() {
         return false;
     }
+
+    @Override
+    public int fileDegree() {
+        return fileDegree;
+    }
+
+    @Override
+    public int rankDegree() {
+        return rankDegree;
+    }
 }

@@ -35,10 +35,18 @@ public enum Rank {
                 .findFirst();
     }
 
+    public int subtract(final Rank rank) {
+        return value - rank.value;
+    }
+
     public static List<String> rankSymbols() {
         return Arrays.stream(values())
             .map(Rank::symbol)
             .collect(Collectors.toList());
+    }
+
+    public int increaseRank(final int degree) {
+        return value + degree;
     }
 
     public String symbol() {

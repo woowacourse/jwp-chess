@@ -35,4 +35,9 @@ public final class Blank extends Piece {
     public boolean isKing() {
         return false;
     }
+
+    @Override
+    public boolean canMultiMove() {
+        return false;
+    }
 }

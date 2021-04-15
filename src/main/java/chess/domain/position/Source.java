@@ -11,8 +11,12 @@ public class Source {
         this.piece = piece;
     }
 
-    public Piece getPiece() {
+    public Piece piece() {
         return piece;
+    }
+
+    public Position position() {
+        return piece.position();
     }
 
     public Piece move(final Target target) {
@@ -26,11 +30,17 @@ public class Source {
         return result;
     }
 
+
+
     public boolean canMove(final Target target) {
         return piece.canMove(target);
     }
 
     public boolean isBlack() {
         return piece.color().isBlack();
+    }
+
+    public boolean hasLinearPath(final Position position) {
+        return piece.position().hasLinearPath(position);
     }
 }

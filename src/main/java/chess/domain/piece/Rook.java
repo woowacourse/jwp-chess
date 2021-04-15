@@ -21,4 +21,9 @@ public final class Rook extends GeneralPiece {
     public Piece move(final Target target) {
         return new Rook(this.color(), target.piece().position());
     }
+
+    @Override
+    public boolean canMultiMove() {
+        return true;
+    }
 }

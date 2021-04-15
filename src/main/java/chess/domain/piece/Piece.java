@@ -58,6 +58,8 @@ public abstract class Piece {
 
     public abstract boolean isKing();
 
+    public abstract boolean canMultiMove();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

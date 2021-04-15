@@ -21,4 +21,9 @@ public final class Queen extends GeneralPiece {
     public Piece move(final Target target) {
         return new Queen(this.color(), target.piece().position());
     }
+
+    @Override
+    public boolean canMultiMove() {
+        return true;
+    }
 }

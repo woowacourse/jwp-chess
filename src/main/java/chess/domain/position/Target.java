@@ -1,7 +1,6 @@
 package chess.domain.position;
 
 import chess.domain.piece.Color;
-import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +14,8 @@ public class Target {
 
     public List<Integer> subtract(final Source source) {
         List<Integer> result = new ArrayList<>();
-        result.add(piece.position().file().value() - source.getPiece().position().file().value());
-        result.add(piece.position().rank().value() - source.getPiece().position().rank().value());
+        result.add(piece.position().file().value() - source.piece().position().file().value());
+        result.add(piece.position().rank().value() - source.piece().position().rank().value());
         return result;
     }
 
@@ -37,7 +36,7 @@ public class Target {
     }
 
     public boolean isOpponent(final Source source) {
-        return this.piece.color().isOppositeColor(source.getPiece().color());
+        return this.piece.color().isOppositeColor(source.piece().color());
     }
 
     public Position position() {

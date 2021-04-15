@@ -26,7 +26,7 @@ public class Pieces {
 
     public void move(final Source source, final Target target) {
         Piece movedPiece = source.move(target);
-        remove(source.getPiece().position());
+        remove(source.piece().position());
         pieces.add(movedPiece);
     }
 

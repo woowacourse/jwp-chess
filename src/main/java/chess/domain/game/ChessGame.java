@@ -12,6 +12,7 @@ import chess.domain.state.State;
 import chess.domain.state.StateFactory;
 
 public class ChessGame {
+
     private Board chessBoard;
     private Player whitePlayer;
     private Player blackPlayer;
@@ -27,7 +28,8 @@ public class ChessGame {
         final Board board = Board.emptyBoard();
         final State whitePlayerState = StateFactory.initialization(PieceInitializer.whitePieces());
         final State blackPlayerState = StateFactory.initialization(PieceInitializer.blackPieces());
-        return new ChessGame(new WhitePlayer(whitePlayerState), new BlackPlayer(blackPlayerState), board.put(whitePlayerState.pieces(), blackPlayerState.pieces()));
+        return new ChessGame(new WhitePlayer(whitePlayerState), new BlackPlayer(blackPlayerState),
+            board.put(whitePlayerState.pieces(), blackPlayerState.pieces()));
     }
 
     public void moveByTurn(final Position sourcePosition, final Position targetPosition) {
@@ -45,12 +47,18 @@ public class ChessGame {
     }
 
     private void move(final Position sourcePosition, final Position targetPosition, Player player) {
-        Source source = new Source(player.findPiece(sourcePosition).orElseThrow(() -> new IllegalArgumentException("현재 위치에 기물이 없습니다.")));
+        Source source = new Source(
+            player.findPiece(sourcePosition).orElseThrow(() -> new IllegalArgumentException("현재 위치에 기물이 없습니다.")));
         Target target = new Target(chessBoard.findPiece(targetPosition));
-        player.move(source,target);
-        Player anotherPlayer = anotherPlayer(player);
-        anotherPlayer.toRunningState(player.state());
-        checkPieces(anotherPlayer.state(), target);
+
+        if (chessBoard.checkPath(source, target)) {
+            player.move(source, target);
+            Player anotherPlayer = anotherPlayer(player);
+            anotherPlayer.toRunningState(player.state());
+            checkPieces(anotherPlayer.state(), target);
+            return;
+        }
+        throw new IllegalArgumentException("해당 위치로 이동할 수 없습니다.");
     }
 
     private Player anotherPlayer(final Player player) {

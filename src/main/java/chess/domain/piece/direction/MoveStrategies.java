@@ -32,6 +32,13 @@ public class MoveStrategies {
         return new MoveStrategies(Arrays.asList(new North(), new Northeast(), new Northwest(), new InitialPawnNorth()));
     }
 
+    public static MoveStrategy matchedMoveStrategy(final int fileDegree, final int rankDegree) {
+        return everyMoveStrategies().moveStrategies.stream()
+            .filter(moveStrategy -> moveStrategy.isSameDirection(fileDegree, rankDegree))
+            .findFirst()
+            .orElse(new Nothing());
+    }
+
     public List<MoveStrategy> strategies() {
         return Collections.unmodifiableList(moveStrategies);
     }

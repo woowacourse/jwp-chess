@@ -21,4 +21,9 @@ public final class Bishop extends GeneralPiece {
     public Piece move(final Target target) {
         return new Bishop(this.color(), target.piece().position());
     }
+
+    @Override
+    public boolean canMultiMove() {
+        return true;
+    }
 }

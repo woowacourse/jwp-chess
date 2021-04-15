@@ -35,10 +35,18 @@ public enum File {
                 .findFirst();
     }
 
+    public int subtract(final File file) {
+        return value - file.value;
+    }
+
     public static List<String> fileSymbols() {
         return Arrays.stream(values())
             .map(File::symbol)
             .collect(Collectors.toList());
+    }
+
+    public int increaseFile(final int degree) {
+        return value + degree;
     }
 
     public String symbol() {

@@ -21,4 +21,9 @@ public final class Knight extends GeneralPiece {
     public Piece move(final Target target) {
         return new Knight(this.color(), target.piece().position());
     }
+
+    @Override
+    public boolean canMultiMove() {
+        return false;
+    }
 }

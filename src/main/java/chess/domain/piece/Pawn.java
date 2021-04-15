@@ -72,4 +72,9 @@ public final class Pawn extends Piece {
     public boolean isKing() {
         return false;
     }
+
+    @Override
+    public boolean canMultiMove() {
+        return true;
+    }
 }

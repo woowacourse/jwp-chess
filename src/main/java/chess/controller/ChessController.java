@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.dto.ChessBoardDTO;
 import chess.dto.RoomIdDTO;
 import chess.service.ChessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +32,14 @@ public class ChessController {
     @GetMapping("/lobby/new")
     @ResponseBody
     public RoomIdDTO newGame(){
-//        return "1";
         return chessService.newGame();
     }
-//
-//    @GetMapping
-//    public String {
-//        "/chessboard/:id", ChessService::loadGame}
+
+    @GetMapping("/chessboard/{gameId}")
+    @ResponseBody
+    public ChessBoardDTO loadGame(@PathVariable int gameId) {
+        return chessService.loadGame(gameId);
+    }
 //
 //    @GetMapping
 //    public String {

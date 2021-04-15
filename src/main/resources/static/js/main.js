@@ -20,17 +20,47 @@ async function getBoard() {
   return await fetch(
       `/chessboard/${this.gameId}`
   )
-  .then(res => res.json())
-  .then(data => data);
 }
 
 async function setBoard() {
   this.$chessBoard.innerHTML = ''
-  this.chessBoard = await getBoard();
-  this.chessBoard.map((board) => {
+  let chessBoard = await getBoard()
+  chessBoard = await chessBoard.json()
+  chessBoard = chessBoard.positionAndPieceName
+  for (const [position, piece] of Object.entries(chessBoard)) {
     this.$chessBoard.insertAdjacentHTML('beforeend',
-        boardTemplate(board.position, board.piece))
-  })
+        boardTemplate(position, piece)
+    )
+  }
+}
+
+function boardTemplate(position, piece) {
+  return `<div id=${position}>
+  ${squareTemplate(position, piece)}
+  </div>`
+}
+
+function squareTemplate(position, piece) {
+  return `<div id=${position} class='square ${positionColor(
+      position)} ${piece}'>
+    <img class='piece' src=${imageMap[piece]} alt=${piece}/>
+    </div>`
+}
+
+imageMap = {
+  "R": './images/rook_black.png',
+  "B": './images/bishop_black.png',
+  "Q": './images/queen_black.png',
+  "N": './images/knight_black.png',
+  "P": './images/pawn_black.png',
+  "K": './images/king_black.png',
+  "r": './images/rook_white.png',
+  "p": './images/pawn_white.png',
+  "b": './images/bishop_white.png',
+  "q": './images/queen_white.png',
+  "n": './images/knight_white.png',
+  "k": './images/king_white.png',
+  ".": './images/blank.png'
 }
 
 async function checkFinished() {
@@ -119,52 +149,13 @@ async function movable(source, target) {
   ).then(res => res.json()).then(data => data).catch(err => err)
 }
 
-function boardTemplate(position, piece) {
-  return `<div id=${position}>
-  ${squareTemplate(position, piece)}
-  </div>`
-}
 
-function squareTemplate(position, piece) {
-  return `<div id=${position} class='square ${positionColor(
-      position)} ${piece.color} ${piece.type}'>
-    <img class='piece' src=${pieceImage(piece)} alt=${piece}/>
-    </div>`
-}
 
 function positionColor(position) {
   if (position[1] % 2 === 0) {
     return position[0].charCodeAt(0) % 2 === 0 ? 'b-white' : 'b-black'
   }
   return position[0].charCodeAt(0) % 2 === 0 ? 'b-black' : 'b-white'
-}
-
-function pieceImage(piece) {
-  if (piece.type === 'r' || piece.type === 'R') {
-    return piece.color === 'WHITE' ? './images/rook_white.png'
-        : './images/rook_black.png'
-  }
-  if (piece.type === 'n' || piece.type === 'N') {
-    return piece.color === 'WHITE' ? './images/knight_white.png'
-        : './images/knight_black.png'
-  }
-  if (piece.type === 'b' || piece.type === 'B') {
-    return piece.color === 'WHITE' ? './images/bishop_white.png'
-        : './images/bishop_black.png'
-  }
-  if (piece.type === 'q' || piece.type === 'Q') {
-    return piece.color === 'WHITE' ? './images/queen_white.png'
-        : './images/queen_black.png'
-  }
-  if (piece.type === 'k' || piece.type === 'K') {
-    return piece.color === 'WHITE' ? './images/king_white.png'
-        : './images/king_black.png'
-  }
-  if (piece.type === 'p' || piece.type === 'P') {
-    return piece.color === 'WHITE' ? './images/pawn_white.png'
-        : './images/pawn_black.png'
-  }
-  return './images/blank.png'
 }
 
 function changeTurn(turn) {

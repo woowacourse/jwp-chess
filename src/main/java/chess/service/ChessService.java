@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.domain.game.ChessGame;
+import chess.dto.ChessBoardDTO;
 import chess.dto.RoomIdDTO;
 import chess.repository.ChessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,10 @@ public class ChessService {
 
     public RoomIdDTO newGame(){
         ChessGame chessGame = new ChessGame();
-        return new RoomIdDTO(chessRepository.addGame(chessGame));
+        return chessRepository.addGame(chessGame);
+    }
+
+    public ChessBoardDTO loadGame(int gameId) {
+        return chessRepository.loadGame(gameId);
     }
 }

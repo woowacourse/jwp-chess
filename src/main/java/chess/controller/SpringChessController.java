@@ -4,6 +4,7 @@ import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.team.Team;
 import chess.service.ChessService;
+import chess.webdao.SpringChessGameDao;
 import chess.webdto.ChessGameDTO;
 import chess.webdto.MoveRequestDTO;
 import org.springframework.http.MediaType;
@@ -14,25 +15,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SpringChessController {
-    private ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
     private ChessService chessService;
+    private SpringChessGameDao springChessGameDao;
 
-    public SpringChessController(ChessService chessService){
+    public SpringChessController(ChessService chessService, SpringChessGameDao springChessGameDao){
         this.chessService = chessService;
+        this.springChessGameDao = springChessGameDao;
     }
 
     @GetMapping(value = "/startNewGame", produces = MediaType.APPLICATION_JSON_VALUE)
     public ChessGameDTO startNewGame() {
-        final ChessGameDTO chessGameDTO = chessService.generateChessGameDTO(chessGame);
-        return chessGameDTO;
+        final ChessGame chessGame = springChessGameDao.createChessGame();
+        return chessService.generateChessGameDTO(chessGame);
     }
 
     @PostMapping(value = "/move", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ChessGameDTO move(@RequestBody MoveRequestDTO moveRequestDTO){
+        final ChessGame chessGame = springChessGameDao.readChessGame();
         final String start = moveRequestDTO.getStart();
         final String destination = moveRequestDTO.getDestination();
         chessGame.move(Position.of(start), Position.of(destination));
         return chessService.generateChessGameDTO(chessGame);
     }
-
 }

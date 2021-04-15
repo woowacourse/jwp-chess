@@ -35,7 +35,7 @@ public class PiecePositionDAOConverter {
         return "false";
     }
 
-    public static Map<Position, Piece> asPiecePosition(final String teamPieceInfo, final String team) throws SQLException {
+    public static Map<Position, Piece> asPiecePosition(final String teamPieceInfo, final String team) {
         final Map<Position, Piece> piecePosition = new HashMap<>();
         final String[] teamPieceInfos = teamPieceInfo.split(PIECE_SEPARATOR);
         for (String singlePieceInfo : teamPieceInfos) {

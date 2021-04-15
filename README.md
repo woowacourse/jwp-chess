@@ -17,6 +17,10 @@
     - [x] 기물을 움직이면, 정상적으로 움직인 후 정보를 반환하여 보여주기 (POST)
 - [ ] Spring JDBC 적용
     - [ ] Spring JDBC에서 제공하는 JdbcTemplate를 이용하여 Connection을 직접 만들어 주는 로직을 대체
+        - [x] CREATE
+        - [x] READ
+        - [ ] UPDATE
+        - [ ] DELETE
 
 ## 요구사항
 - 요구사항

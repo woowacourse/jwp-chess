@@ -16,9 +16,9 @@ public class ChessRepositoryImpl implements ChessRepository {
     private final PieceDao pieceDao;
     private final TurnDao turnDao;
 
-    public ChessRepositoryImpl() {
-        this.pieceDao = new PieceDao();
-        this.turnDao = new TurnDao();
+    public ChessRepositoryImpl(PieceDao pieceDao, TurnDao turnDao) {
+        this.pieceDao = pieceDao;
+        this.turnDao = turnDao;
     }
 
     @Override

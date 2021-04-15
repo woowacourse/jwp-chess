@@ -8,6 +8,7 @@ import chess.domain.position.Position;
 import chess.dto.PositionDTO;
 import chess.dto.ResponseDTO;
 import chess.dto.RoomValidateDTO;
+import chess.dto.ScoreDTO;
 import chess.exception.ChessException;
 import org.springframework.stereotype.Service;
 
@@ -98,5 +99,10 @@ public class SpringChessService {
 
     public void deleteRoom(String roomName) {
         springBoardDao.deleteRoom(roomName);
+    }
+
+    public ScoreDTO score(String roomName) {
+        Board board = new Board(springBoardDao.findBoard(roomName));
+        return new ScoreDTO(String.valueOf(board.score(Side.WHITE)), String.valueOf(board.score(Side.BLACK)));
     }
 }

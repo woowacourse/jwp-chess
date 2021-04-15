@@ -5,9 +5,11 @@ createChessBoard();
 
 const startButton = document.getElementById("start");
 const backButton = document.getElementById("back");
+const scoreButton = document.getElementById("score");
 
 startButton.addEventListener("click", clickStart);
 backButton.addEventListener("click", clickBack);
+scoreButton.addEventListener("click", clickScore);
 
 function getCurrentRoomName() {
     const url = window.location.href.split("/");
@@ -187,4 +189,21 @@ async function syncBoard() {
         piece.src = "/images/" + pieces[i] + ".png";
         position.appendChild(piece);
     }
+}
+
+async function clickScore() {
+    let data = {
+        roomName:currentRoomName
+    }
+    const score = await fetch('/score', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(res => {
+        return res.json();
+    });
+
+    alert("White 점수 : " + score.whiteScore + "\nBlack 점수 : " +score.blackScore);
 }

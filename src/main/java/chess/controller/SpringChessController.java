@@ -27,28 +27,17 @@ public class SpringChessController {
         return "/chess.html";
     }
 
-    @PostMapping("/deleteRoom")
+    @PostMapping(value = "/restart")
     @ResponseBody
-    public void deleteRoom(@RequestBody RoomNameDTO roomNameDTO) {
-        springChessService.deleteRoom(roomNameDTO.getRoomName());
+    public void restart(@RequestBody RoomNameDTO roomNameDTO) {
+        springChessService.newBoard(roomNameDTO.getRoomName());
     }
 
-    @PostMapping("/checkRoomName")
+    @PostMapping(value = "/move")
     @ResponseBody
-    public RoomValidateDTO checkRoomName(@RequestBody RoomNameDTO roomNameDTO) {
-        return springChessService.checkDuplicatedRoom(roomNameDTO.getRoomName());
-    }
-
-    @PostMapping("/createRoom")
-    @ResponseBody
-    public void createRoom(@RequestBody RoomNameDTO roomNameDTO) {
-        springChessService.createRoom(roomNameDTO.getRoomName());
-    }
-
-    @GetMapping("/rooms")
-    @ResponseBody
-    public List<String> roomNames() {
-        return springChessService.rooms();
+    public ResponseDTO move(@RequestBody PositionDTO positionDTO) {
+        ResponseDTO responseDTO = springChessService.move(positionDTO, positionDTO.roomName());
+        return responseDTO;
     }
 
     @PostMapping("/currentBoard")
@@ -63,16 +52,33 @@ public class SpringChessController {
         return new TurnDTO(springChessService.turnName(roomNameDTO.getRoomName()));
     }
 
-    @PostMapping(value = "/move")
+    @PostMapping(value = "/score")
     @ResponseBody
-    public ResponseDTO move(@RequestBody PositionDTO positionDTO) {
-        ResponseDTO responseDTO = springChessService.move(positionDTO, positionDTO.roomName());
-        return responseDTO;
+    public ScoreDTO score(@RequestBody RoomNameDTO roomNameDTO) {
+        return springChessService.score(roomNameDTO.getRoomName());
     }
 
-    @PostMapping(value = "/restart")
+    @GetMapping("/rooms")
     @ResponseBody
-    public void restart(@RequestBody RoomNameDTO roomNameDTO) {
-        springChessService.newBoard(roomNameDTO.getRoomName());
+    public List<String> roomNames() {
+        return springChessService.rooms();
+    }
+
+    @PostMapping("/checkRoomName")
+    @ResponseBody
+    public RoomValidateDTO checkRoomName(@RequestBody RoomNameDTO roomNameDTO) {
+        return springChessService.checkDuplicatedRoom(roomNameDTO.getRoomName());
+    }
+
+    @PostMapping("/createRoom")
+    @ResponseBody
+    public void createRoom(@RequestBody RoomNameDTO roomNameDTO) {
+        springChessService.createRoom(roomNameDTO.getRoomName());
+    }
+
+    @PostMapping("/deleteRoom")
+    @ResponseBody
+    public void deleteRoom(@RequestBody RoomNameDTO roomNameDTO) {
+        springChessService.deleteRoom(roomNameDTO.getRoomName());
     }
 }

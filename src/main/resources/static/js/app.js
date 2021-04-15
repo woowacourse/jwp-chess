@@ -1,8 +1,8 @@
 const end = document.getElementById("end");
 const exit = document.getElementById("exit");
 const chessBoard = document.querySelector(".chess-board");
-const sourceKey = document.getElementById("sourceKey");
-const targetKey = document.getElementById("targetKey");
+// const sourceKey = document.getElementById("sourceKey");
+// const targetKey = document.getElementById("targetKey");
 const tiles = document.getElementsByClassName("tile");
 const whiteCount = document.querySelector(`#whiteScore strong`);
 const blackCount = document.querySelector(`#blackScore strong`);
@@ -72,7 +72,6 @@ function reRangeBoard(responsePieces) {
     }
 
     const pieces = responsePieces.pieces;
-
     for (let pieceIdx = 0; pieceIdx < pieces.length; pieceIdx++) {
         for (let idx = 0; idx < tiles.length; idx++) {
             if (tiles[idx].id === pieces[pieceIdx].position) {
@@ -104,28 +103,29 @@ chessBoard.addEventListener("click", (source) => {
     }
 
     const nowClickedPiece = source.target.closest("div");
-    if (isEmpty(sourceKey.value)) {
-        if (!nowClickedPiece.children[0].src) {
-            alert("빈 공간은 클릭할 수 없습니다.")
+    const pastClickedPiece = decideClickedPiece();
+    if (pastClickedPiece === "") {
+        if (nowClickedPiece.childElementCount === 0) {
+            alert("빈 공간은 선택할 수 없습니다!");
             return;
         }
-        sourceKey.value = source.target.parentElement.id;
         nowClickedPiece.classList.toggle("clicked");
         return;
     }
 
-    targetKey.value = source.target.parentElement.id;
-
-    if (isSamePosition()) {
-        alert("같은 위치의 돌을 선택할 수 없습니다.");
-        clearMoveSource();
-        return;
-    }
-
     clearClicked();
-    movePiece();
-    clearMoveSource();
+    movePiece(pastClickedPiece.id, nowClickedPiece.id);
 })
+
+function decideClickedPiece() {
+    const divs = document.getElementsByTagName("div");
+    for (let i = 0; i < divs.length; i++) {
+        if (divs[i].classList.contains("clicked")) {
+            return divs[i];
+        }
+    }
+    return "";
+}
 
 function clearClicked() {
     const divs = document.getElementsByTagName("div");
@@ -136,22 +136,14 @@ function clearClicked() {
     }
 }
 
-function isSamePosition() {
-    return sourceKey.value === targetKey.value;
-}
-
-function isEmpty(value) {
-    return !value || value === "";
-}
-
-function movePiece() {
+function movePiece(source, target) {
     axios({
         method: 'put',
         url: basePath + '/pieces',
         data: {
             chessName: localStorage.getItem("name"),
-            source: sourceKey.value,
-            target: targetKey.value
+            source: source,
+            target: target
         }
     }).then(response => {
         if (response.data.statusCode === 400) {
@@ -160,9 +152,4 @@ function movePiece() {
         }
         loadGame()
     }).catch(error => alert(error));
-}
-
-function clearMoveSource() {
-    sourceKey.value = "";
-    targetKey.value = "";
 }

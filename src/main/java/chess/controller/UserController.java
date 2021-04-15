@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.dto.UserRequestDto;
 import chess.dto.UserResponseDto;
 import chess.entity.User;
 import chess.service.UserService;
@@ -20,8 +21,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user){
-        final long id = userService.add(user);
+    public ResponseEntity createUser(@RequestBody UserRequestDto userRequestDto){
+        final long id = userService.add(userRequestDto);
         return ResponseEntity.created(URI.create("/users/" + id)).build();
     }
 

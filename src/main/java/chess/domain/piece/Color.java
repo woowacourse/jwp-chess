@@ -1,14 +1,23 @@
 package chess.domain.piece;
 
+import java.util.Arrays;
+
 public enum Color {
-    BLACK("Black"),
-    WHITE("White"),
-    NOTHING("");
+    BLACK("BLACK"),
+    WHITE("WHITE"),
+    NOTHING("BLANK");
 
     private final String name;
 
     Color(final String name) {
         this.name = name;
+    }
+
+    public static Color findByValue(final String value) {
+        return Arrays.stream(values())
+                .filter(targetValue -> targetValue.name.equals(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("없는 색상입니다."));
     }
 
     public boolean isBlack() {
@@ -20,5 +29,9 @@ public enum Color {
             return true;
         }
         return this != color;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -41,8 +41,8 @@ public enum File {
 
     public static List<String> fileSymbols() {
         return Arrays.stream(values())
-            .map(File::symbol)
-            .collect(Collectors.toList());
+                .map(File::symbol)
+                .collect(Collectors.toList());
     }
 
     public int increaseFile(final int degree) {

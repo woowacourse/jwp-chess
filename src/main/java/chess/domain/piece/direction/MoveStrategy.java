@@ -1,7 +1,6 @@
 package chess.domain.piece.direction;
 
 import chess.domain.position.Position;
-import java.util.List;
 
 public interface MoveStrategy {
     Position move(final Position position);

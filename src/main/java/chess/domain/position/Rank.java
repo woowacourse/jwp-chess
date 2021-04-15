@@ -41,8 +41,8 @@ public enum Rank {
 
     public static List<String> rankSymbols() {
         return Arrays.stream(values())
-            .map(Rank::symbol)
-            .collect(Collectors.toList());
+                .map(Rank::symbol)
+                .collect(Collectors.toList());
     }
 
     public int increaseRank(final int degree) {

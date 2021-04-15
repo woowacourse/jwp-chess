@@ -1,7 +1,6 @@
 package chess.domain.piece.direction;
 
 import chess.domain.position.Position;
-import java.util.List;
 
 public abstract class Direction implements MoveStrategy {
     private final int fileDegree;

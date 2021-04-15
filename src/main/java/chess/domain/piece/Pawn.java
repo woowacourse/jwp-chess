@@ -3,10 +3,8 @@ package chess.domain.piece;
 import chess.domain.piece.direction.MoveStrategies;
 import chess.domain.piece.direction.MoveStrategy;
 import chess.domain.piece.direction.Nothing;
-import chess.domain.position.Position;
-import chess.domain.position.Rank;
-import chess.domain.position.Source;
-import chess.domain.position.Target;
+import chess.domain.position.*;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,6 +12,8 @@ public final class Pawn extends Piece {
 
     private static final String INITIAL_NAME = "P";
     private static final List<Integer> INITIAL_RANKS = Arrays.asList(2, 7);
+    private static final double SCORE = 1;
+
     private final MoveStrategies moveStrategies;
 
     public Pawn(final Color color, final Position position) {
@@ -30,11 +30,24 @@ public final class Pawn extends Piece {
     public boolean canMove(final Target target) {
         final List<Integer> result = subtractByTeam(target);
         final MoveStrategy moveStrategy = moveStrategies.strategies().stream()
-            .filter(strategy -> strategy.isSameDirection(result.get(0), result.get(1)))
-            .findAny()
-            .orElse(new Nothing());
+                .filter(strategy -> strategy.isSameDirection(result.get(0), result.get(1)))
+                .findAny()
+                .orElse(new Nothing());
 
         return !moveStrategy.isNothing() && checkPossible(moveStrategy, target, position().rank());
+    }
+
+    @Override
+    public double score(final List<Piece> pieces) {
+        File currentFile = this.position().file();
+        boolean isSameFile = pieces.stream()
+                .filter(Piece::isPawn)
+                .filter(piece -> !this.equals(piece))
+                .anyMatch(piece -> currentFile == piece.position().file());
+        if (isSameFile) {
+            return SCORE / 2;
+        }
+        return SCORE;
     }
 
     private List<Integer> subtractByTeam(final Target target) {

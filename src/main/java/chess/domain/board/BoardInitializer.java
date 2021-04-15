@@ -2,11 +2,10 @@ package chess.domain.board;
 
 import chess.domain.piece.Blank;
 import chess.domain.piece.Piece;
-import chess.domain.piece.factory.*;
 import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;

@@ -2,6 +2,8 @@ package chess.domain.piece;
 
 import chess.domain.position.Position;
 import chess.domain.position.Target;
+
+import java.util.List;
 import java.util.Objects;
 
 public abstract class Piece {
@@ -36,7 +38,7 @@ public abstract class Piece {
         return position.position();
     }
 
-    public boolean isSamePosition(final Position position){
+    public boolean isSamePosition(final Position position) {
         return this.position.equals(position);
     }
 
@@ -59,6 +61,8 @@ public abstract class Piece {
     public abstract boolean isKing();
 
     public abstract boolean canMultiMove();
+
+    public abstract double score(final List<Piece> pieces);
 
     @Override
     public boolean equals(Object o) {

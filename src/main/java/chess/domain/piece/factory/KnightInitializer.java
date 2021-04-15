@@ -5,7 +5,10 @@ import chess.domain.piece.Knight;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public final class KnightInitializer implements LocationInitializer {
 

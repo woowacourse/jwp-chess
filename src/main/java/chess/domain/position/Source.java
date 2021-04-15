@@ -1,6 +1,7 @@
 package chess.domain.position;
 
 import chess.domain.piece.Piece;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,6 @@ public class Source {
         result.add(piece.position().rank().value() - target.piece().position().rank().value());
         return result;
     }
-
 
 
     public boolean canMove(final Target target) {

@@ -2,6 +2,7 @@ package chess.domain.position;
 
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
+
 import java.util.ArrayList;
 import java.util.List;
 

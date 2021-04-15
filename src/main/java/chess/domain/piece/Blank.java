@@ -3,12 +3,19 @@ package chess.domain.piece;
 import chess.domain.position.Position;
 import chess.domain.position.Target;
 
+import java.util.List;
+
 public final class Blank extends Piece {
 
     private static final String INITIAL_NAME = ".";
 
     public Blank(final Position position) {
         super(Color.NOTHING, INITIAL_NAME, position);
+    }
+
+    @Override
+    public double score(List<Piece> pieces) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

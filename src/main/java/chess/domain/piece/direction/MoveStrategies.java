@@ -34,9 +34,9 @@ public class MoveStrategies {
 
     public static MoveStrategy matchedMoveStrategy(final int fileDegree, final int rankDegree) {
         return everyMoveStrategies().moveStrategies.stream()
-            .filter(moveStrategy -> moveStrategy.isSameDirection(fileDegree, rankDegree))
-            .findFirst()
-            .orElse(new Nothing());
+                .filter(moveStrategy -> moveStrategy.isSameDirection(fileDegree, rankDegree))
+                .findFirst()
+                .orElse(new Nothing());
     }
 
     public List<MoveStrategy> strategies() {

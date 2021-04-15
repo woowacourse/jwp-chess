@@ -1,13 +1,12 @@
 package chess.domain.board;
 
-import chess.domain.piece.Blank;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.piece.direction.MoveStrategy;
 import chess.domain.position.Position;
-
 import chess.domain.position.Source;
 import chess.domain.position.Target;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -97,6 +96,6 @@ public class Board {
 
     private boolean hasNoPiecesInPath(final List<Position> paths) {
         return paths.stream()
-            .allMatch(path -> chessBoard.get(path).isBlank());
+                .allMatch(path -> chessBoard.get(path).isBlank());
     }
 }

@@ -32,11 +32,11 @@ public abstract class Player {
         this.state = this.state.move(source, target);
     }
 
-    public final Optional<Piece> findPiece(final Position position){
+    public final Optional<Piece> findPiece(final Position position) {
         return state.findPiece(position);
     }
 
-    public final Pieces pieces(){
+    public final Pieces pieces() {
         return state().pieces();
     }
 

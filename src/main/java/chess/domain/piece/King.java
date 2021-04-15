@@ -4,12 +4,20 @@ import chess.domain.piece.direction.MoveStrategies;
 import chess.domain.position.Position;
 import chess.domain.position.Target;
 
+import java.util.List;
+
 public final class King extends GeneralPiece {
 
     private static final String INITIAL_NAME = "K";
+    private static final double SCORE = 0;
 
     public King(final Color color, final Position position) {
         super(color, INITIAL_NAME, position);
+    }
+
+    @Override
+    public double score(final List<Piece> pieces) {
+        return SCORE;
     }
 
     @Override

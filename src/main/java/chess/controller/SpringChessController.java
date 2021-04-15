@@ -5,6 +5,8 @@ import chess.domain.position.Position;
 import chess.dto.*;
 import chess.service.ChessService;
 import com.google.gson.Gson;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,16 +39,12 @@ public class SpringChessController {
 
     @GetMapping("/start")
     public String start() throws SQLException {
-        makeNewGame();
-        return "chess";
+        return makeNewGame();
     }
 
     @GetMapping("/reset")
     public String reset() throws SQLException {
-        chessService.remove();
-        chessService.makeRound();
-        makeNewGame();
-        return "chess";
+        return makeNewGame();
     }
 
     @GetMapping("/chess")
@@ -76,22 +74,19 @@ public class SpringChessController {
     }
 
     @PostMapping(value = "/move", produces = "application/json")
-
-    public String move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
-
-//        MoveRequestDto moveRequestDto = GSON.fromJson(req.body(), MoveRequestDto.class);
+    public ResponseEntity move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
         Queue<String> commands =
                 new ArrayDeque<>(Arrays.asList("move", moveRequestDto.getSource(), moveRequestDto.getTarget()));
-
-//        res.type("application/json");
-
         try {
             chessService.executeRound(commands);
         } catch (RuntimeException runtimeException) {
-            return "{\"status\":\"500\", \"message\":\"" + runtimeException.getMessage() + "\"}";
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+
+//            return "{\"status\":\"500\", \"message\":\"" + runtimeException.getMessage() + "\"}";
         }
         chessService.movePiece(moveRequestDto);
-        return "{\"status\":\"200\", \"message\":\"성공\"}";
+        return new ResponseEntity(HttpStatus.OK);
+//        return "{\"status\":\"200\", \"message\":\"성공\"}";
     }
 
     @PostMapping("/turn")
@@ -99,9 +94,12 @@ public class SpringChessController {
         chessService.changeTurn(turnChangeRequestDto);
     }
 
-    private void makeNewGame() throws SQLException {
+    private String makeNewGame() throws SQLException {
+        chessService.remove();
+        chessService.makeRound();
         Map<Position, Piece> chessBoard = chessService.chessBoard();
         Map<String, String> filteredChessBoard = chessService.filteredChessBoard(chessBoard);
         chessService.initialize(filteredChessBoard);
+        return "redirect:/chess";
     }
 }

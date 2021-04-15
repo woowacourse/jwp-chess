@@ -1,5 +1,4 @@
 const jsonFormatChessBoard = document.getElementById('jsonFormatChessBoard');
-console.log(jsonFormatChessBoard)
 const jsonFormatObject = JSON.parse(jsonFormatChessBoard.innerText);
 
 const file = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -140,18 +139,23 @@ function request_move_post(first_click, second_click) {
 
     xhr.open('POST', '/move', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.responseType = 'json';
+    xhr.responseType = 'text';
     xhr.send(JSON.stringify({
         source: start_position,
         target: destination
     }));
 
+    console.log(xhr);
+
     start_position = null;
     destination = null;
     is_start_position_clicked = false;
 
-    xhr.onload = function () {
+    xhr.onload = function() {
         const move_response = xhr.response;
+
+        console.log(move_response);
+
         if (move_response['status'] === '500') {
             alert(move_response['message']);
             first_click.style.backgroundColor = '';
@@ -177,6 +181,6 @@ function request_move_post(first_click, second_click) {
             nextTurn: next_turn
         }));
 
-        window.location.href = '/chess';
+        window.location.href = 'http://127.0.0.1:8080/chess';
     };
 }

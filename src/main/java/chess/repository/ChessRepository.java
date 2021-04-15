@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class ChessRepository {
     @Autowired
@@ -22,12 +24,14 @@ public class ChessRepository {
     @Autowired
     PieceDao pieceDao;
 
-
-    @Transactional
     public void createRoom(ChessGame chessGame, Room room) {
         Long gameId = gameDao.create(chessGame);
         room.setGameId(gameId);
         roomDao.create(room);
 
+    }
+
+    public List<Room> loadAllRoom() {
+        return roomDao.loadAllRoom();
     }
 }

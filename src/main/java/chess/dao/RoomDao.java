@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -28,5 +29,16 @@ public class RoomDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public List<Room> loadAllRoom() {
+        String sql = "select * from room";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
+            Long id = resultSet.getLong("room_id");
+            String name = resultSet.getString("name");
+            String pw = resultSet.getString("pw");
+            Long gameId = resultSet.getLong("game_id");
+            return new Room(id, name, pw, gameId);
+        });
     }
 }

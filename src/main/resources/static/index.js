@@ -4,7 +4,7 @@ const btnCreate = document.getElementById('btn-game-create')
 getTotalRoom();
 
 function getTotalRoom() {
-    axios.get('/getTotalRoom')
+    axios.get('/room')
         .then(function (response) {
             refreshRoomList(response.data)
         }).catch(function (error) {
@@ -31,11 +31,10 @@ roomList.addEventListener('click', function (e) {
 })
 
 function refreshRoomList(data) {
-    roomListData = data.roomDTOList;
     let list = document.getElementById("list-chess-game");
     list.innerHTML = "";
-    for (let i = 0; i < roomListData.length; i++) {
-        let room = roomListData[i];
+    for (let i = 0; i < data.length; i++) {
+        let room = data[i];
         list.innerHTML += "<div class = box-chess-game data-idx = " + i + ">\n" +
             "<p class=box-chess-game-title> " + room.name + "</p>\n" +
             "</div>\n"

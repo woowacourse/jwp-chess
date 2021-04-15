@@ -1,11 +1,14 @@
 package chess.dao;
 
+import chess.domain.ChessGameManager;
 import chess.domain.piece.Color;
 import chess.dto.ChessBoardDto;
+import chess.dto.PieceDto;
 import chess.dto.SavedGameData;
 import chess.exception.NoSavedGameException;
 
 import java.sql.*;
+import java.util.Map;
 
 public class GameDAO {
     private static final int UNIQUE_GAME_ID = 1;
@@ -15,7 +18,7 @@ public class GameDAO {
     public Connection getConnection() {
         Connection con = null;
         String server = "localhost:13306";  // hostname:port number
-        String database = "chess_database"; // database 이름
+        String database = "chess_db"; // database 이름
         String option = "?useSSL=false&serverTimezone=UTC";
         String userName = "root";           // db userName
         String password = "root";           // db password
@@ -40,25 +43,39 @@ public class GameDAO {
         return con;
     }
 
-    public void saveGame(ChessBoardDto chessBoardDto, Color currentTurnColor) throws SQLException {
-        deleteAllGame();    // 하나의 row만을 이용하기 위해 삭제합니다.
-        String query = "INSERT INTO game VALUES (?, ?, ?)";
+    public int saveGame(ChessGameManager chessGameManager) throws SQLException {
+        ChessBoardDto chessBoardDto = ChessBoardDto.from(chessGameManager.getBoard());
+        Color currentTurnColor = chessGameManager.getCurrentTurnColor();
+
+        int gameId;
+        String insertGameQuery = "insert into game(turn) values(?)";
+        String findGameIdQuery = "select last_insert_id()";
 
         try (Connection connection = getConnection()) {
-            PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setInt(1, UNIQUE_GAME_ID);    // 하나의 row만을 이용합니다.
-            pstmt.setString(2, serializer.toJson(chessBoardDto));
-            pstmt.setString(3, currentTurnColor.name());
+            PreparedStatement pstmt = connection.prepareStatement(insertGameQuery);
+            pstmt.setString(1, currentTurnColor.name());
             pstmt.executeUpdate();
+            pstmt = connection.prepareStatement(findGameIdQuery);
+            ResultSet rs = pstmt.executeQuery();
+            if (!rs.next()) throw new SQLException();
+            gameId = rs.getInt(1);
         }
-    }
 
-    public void deleteAllGame() throws SQLException {
-        String query = "DELETE FROM game";
-        try (Connection connection = getConnection()) {
-            PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.executeUpdate();
+        Map<String, PieceDto> board = chessBoardDto.board();
+        for (String position : board.keySet()) {
+            String query = "insert into piece(game_id, name, color, position) values(?, ?, ?, ?)";
+            try (Connection connection = getConnection();
+                 PreparedStatement pstmt = connection.prepareStatement(query)) {
+                pstmt.setInt(1, gameId);
+                PieceDto pieceDto = board.get(position);
+                pstmt.setString(2, pieceDto.getName());
+                pstmt.setString(3, pieceDto.getColor());
+                pstmt.setString(4, position);
+                pstmt.executeUpdate();
+            }
         }
+
+        return gameId;
     }
 
     public SavedGameData loadGame() throws SQLException {

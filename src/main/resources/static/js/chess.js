@@ -139,13 +139,11 @@ function request_move_post(first_click, second_click) {
 
     xhr.open('POST', '/move', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.responseType = 'text';
+    xhr.responseType = 'json';
     xhr.send(JSON.stringify({
         source: start_position,
         target: destination
     }));
-
-    console.log(xhr);
 
     start_position = null;
     destination = null;
@@ -155,9 +153,10 @@ function request_move_post(first_click, second_click) {
         const move_response = xhr.response;
 
         console.log(move_response);
+        console.log(move_response['moveError']);
 
-        if (move_response['status'] === '500') {
-            alert(move_response['message']);
+        if (move_response['moveError']) {
+            alert(move_response['errorMessage']);
             first_click.style.backgroundColor = '';
             second_click.style.backgroundColor = '';
             return;

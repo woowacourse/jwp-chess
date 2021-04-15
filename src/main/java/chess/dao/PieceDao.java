@@ -1,8 +1,8 @@
 package chess.dao;
 
 import chess.dao.setting.DBConnection;
-import chess.dto.ChessRequestDto;
-import chess.dto.MoveRequestDto;
+import chess.dto.request.ChessRequestDto;
+import chess.dto.request.MoveRequestDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

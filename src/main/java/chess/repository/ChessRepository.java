@@ -1,9 +1,9 @@
 package chess.repository;
 
-import chess.dto.ChessRequestDto;
-import chess.dto.MoveRequestDto;
-import chess.dto.TurnChangeRequestDto;
-import chess.dto.TurnRequestDto;
+import chess.dto.request.ChessRequestDto;
+import chess.dto.request.MoveRequestDto;
+import chess.dto.request.TurnChangeRequestDto;
+import chess.dto.request.TurnRequestDto;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;

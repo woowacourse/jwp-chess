@@ -4,6 +4,9 @@ import chess.domain.piece.Piece;
 import chess.domain.player.Round;
 import chess.domain.position.Position;
 import chess.dto.*;
+import chess.dto.request.MoveRequestDto;
+import chess.dto.request.TurnChangeRequestDto;
+import chess.dto.response.MoveResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -35,6 +38,8 @@ public interface ChessService {
     ScoreDto scoreDto(final PlayerDto playerDto);
 
     void changeRoundToEnd(final PlayerDto playerDto);
+
+    MoveResponseDto move(final MoveRequestDto moveRequestDto) throws SQLException;
 
     void executeRound(final Queue<String> commands);
 

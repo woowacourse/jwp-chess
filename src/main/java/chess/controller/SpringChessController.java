@@ -3,6 +3,9 @@ package chess.controller;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.*;
+import chess.dto.request.MoveRequestDto;
+import chess.dto.request.TurnChangeRequestDto;
+import chess.dto.response.MoveResponseDto;
 import chess.service.ChessService;
 import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
@@ -12,9 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import spark.ModelAndView;
-import spark.Response;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -74,22 +75,13 @@ public class SpringChessController {
     }
 
     @PostMapping(value = "/move", produces = "application/json")
-    public ResponseEntity move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
-        Queue<String> commands =
-                new ArrayDeque<>(Arrays.asList("move", moveRequestDto.getSource(), moveRequestDto.getTarget()));
-        try {
-            chessService.executeRound(commands);
-        } catch (RuntimeException runtimeException) {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-
-//            return "{\"status\":\"500\", \"message\":\"" + runtimeException.getMessage() + "\"}";
-        }
-        chessService.movePiece(moveRequestDto);
-        return new ResponseEntity(HttpStatus.OK);
-//        return "{\"status\":\"200\", \"message\":\"성공\"}";
+    @ResponseBody
+    public MoveResponseDto move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
+        return chessService.move(moveRequestDto);
     }
 
-    @PostMapping("/turn")
+    @PostMapping(value = "/turn", produces = "application/json")
+    @ResponseBody
     public void turn(@RequestBody TurnChangeRequestDto turnChangeRequestDto) throws SQLException {
         chessService.changeTurn(turnChangeRequestDto);
     }

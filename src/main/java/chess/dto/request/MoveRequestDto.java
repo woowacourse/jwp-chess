@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.request;
 
 public class MoveRequestDto {
     private final String source;

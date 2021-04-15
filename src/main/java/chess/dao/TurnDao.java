@@ -1,8 +1,8 @@
 package chess.dao;
 
 import chess.dao.setting.DBConnection;
-import chess.dto.TurnChangeRequestDto;
-import chess.dto.TurnRequestDto;
+import chess.dto.request.TurnChangeRequestDto;
+import chess.dto.request.TurnRequestDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

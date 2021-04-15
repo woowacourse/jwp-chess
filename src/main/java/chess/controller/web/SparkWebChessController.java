@@ -13,11 +13,11 @@ import chess.service.ChessService;
 
 import java.util.List;
 
-public class WebChessController {
+public class SparkWebChessController {
 
     private final ChessService chessService;
 
-    public WebChessController() {
+    public SparkWebChessController() {
         this.chessService = new ChessService(
                 new GameDaoJDBC(),
                 new HistoryDaoJDBC(),

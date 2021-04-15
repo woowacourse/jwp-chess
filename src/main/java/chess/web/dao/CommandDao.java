@@ -31,18 +31,29 @@ public class CommandDao {
 
     public List<CommandDto> selectAllCommands(String id) throws SQLException {
         List<CommandDto> commands = new ArrayList<>();
-        String query = "SELECT * FROM history H JOIN Command C on H.history_id = C.history_id WHERE H.history_id = ? AND H.is_end = false";
+        String query = "SELECT * FROM history H JOIN Command C on H.history_id = C.history_id "
+            + "WHERE H.history_id = ? AND H.is_end = false";
+
         try (Connection connection = DriveManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, id);
-            try (ResultSet rs = preparedStatement.executeQuery()) {
-                while (rs.next()) {
-                    commands.add(new CommandDto(rs.getString("C.Data")));
-                }
-            }
+            combineOneCommand(commands, preparedStatement);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
         return commands;
+    }
+
+    private void combineOneCommand(List<CommandDto> commands, PreparedStatement preparedStatement)
+        throws SQLException {
+        try (ResultSet rs = preparedStatement.executeQuery()) {
+            insertOneCommand(commands, rs);
+        }
+    }
+
+    private void insertOneCommand(List<CommandDto> commands, ResultSet rs) throws SQLException {
+        while (rs.next()) {
+            commands.add(new CommandDto(rs.getString("C.Data")));
+        }
     }
 }

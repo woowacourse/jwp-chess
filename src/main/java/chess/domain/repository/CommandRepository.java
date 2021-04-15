@@ -20,7 +20,8 @@ public class CommandRepository {
     }
 
     public List<CommandDto> selectAllCommands(String id) {
-        String query = "SELECT * FROM History H JOIN Command C on H.history_id = C.history_id WHERE H.history_id = ? AND H.is_end = false";
+        String query = "SELECT * FROM History H JOIN Command C on H.history_id = C.history_id"
+            + " WHERE H.history_id = ? AND H.is_end = false";
         return jdbcTemplate.query(query,
                 (rs, rowNum) -> {
                     CommandDto commandDto = new CommandDto(rs.getString("data"));

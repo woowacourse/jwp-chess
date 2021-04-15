@@ -18,12 +18,19 @@ public class HistoryDao {
              PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
-            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                resultSet.next();
-                id = Optional.ofNullable(resultSet.getString(1));
-            }
+            id = receiveRawId(preparedStatement);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+        }
+        return id;
+    }
+
+    private Optional<String> receiveRawId(PreparedStatement preparedStatement)
+        throws SQLException {
+        Optional<String> id;
+        try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+            resultSet.next();
+            id = Optional.ofNullable(resultSet.getString(1));
         }
         return id;
     }
@@ -34,12 +41,19 @@ public class HistoryDao {
         try (Connection connection = DriveManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, name);
-            try (ResultSet rs = preparedStatement.executeQuery()) {
-                if (!rs.next()) return id;
-                id = Optional.of(rs.getInt("history_id"));
-            }
+            findRawIdNumber(preparedStatement);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+        }
+        return id;
+    }
+
+    private Optional<Integer> findRawIdNumber(PreparedStatement preparedStatement)
+        throws SQLException {
+        Optional<Integer> id = Optional.empty();
+        try (ResultSet rs = preparedStatement.executeQuery()) {
+            if (!rs.next()) return id;
+            id = Optional.of(rs.getInt("history_id"));
         }
         return id;
     }
@@ -61,12 +75,16 @@ public class HistoryDao {
         try (Connection connection = DriveManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet rs = preparedStatement.executeQuery()) {
-            while (rs.next())
-                names.add(rs.getString("name"));
+            insertActiveHistoryName(names, rs);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
         return names;
+    }
+
+    private void insertActiveHistoryName(List<String> names, ResultSet rs) throws SQLException {
+        while (rs.next())
+            names.add(rs.getString("name"));
     }
 
     public void updateEndState(String historyId) throws SQLException {

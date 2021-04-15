@@ -62,6 +62,7 @@ public class ChessController {
     public String move(@RequestBody MoveVo moveVo) {
         String command = makeMoveCmd(moveVo.getSource(), moveVo.getTarget());
         String historyId = moveVo.getGameId();
+
         try {
             chessService.move(historyId, command, new Commands(command));
             return GSON.toJson(ModelView.moveResponse(chessService.continuedGameInfo(historyId), historyId));

@@ -15,6 +15,8 @@ import java.util.Queue;
 
 @Service
 public interface ChessService {
+    void resetRound();
+
     Round makeRound();
 
     Map<String, String> chessBoardFromDB() throws SQLException;

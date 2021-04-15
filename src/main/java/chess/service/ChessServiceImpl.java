@@ -37,6 +37,11 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
+    public void resetRound() {
+        round = makeRound();
+    }
+
+    @Override
     public Round makeRound() {
         return new Round(StateFactory.initialization(PiecesFactory.whitePieces()),
                 StateFactory.initialization(PiecesFactory.blackPieces()),

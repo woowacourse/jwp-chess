@@ -40,11 +40,15 @@ public class SpringChessController {
 
     @GetMapping("/start")
     public String start() throws SQLException {
+        chessService.remove();
+        chessService.makeRound();
         return makeNewGame();
     }
 
     @GetMapping("/reset")
     public String reset() throws SQLException {
+        chessService.remove();
+        chessService.resetRound();
         return makeNewGame();
     }
 
@@ -87,8 +91,6 @@ public class SpringChessController {
     }
 
     private String makeNewGame() throws SQLException {
-        chessService.remove();
-        chessService.makeRound();
         Map<Position, Piece> chessBoard = chessService.chessBoard();
         Map<String, String> filteredChessBoard = chessService.filteredChessBoard(chessBoard);
         chessService.initialize(filteredChessBoard);

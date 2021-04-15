@@ -5,20 +5,20 @@ import chess.domain.TeamColor;
 import java.util.List;
 import java.util.Map;
 
-public class RoundStatusDTO {
+public class RoundStatusDto {
 
     private Map<String, List<String>> movablePositions;
     private TeamColor currentColor;
-    private ScoreDTO score;
+    private ScoreDto score;
     private boolean checked;
     private boolean isKingDead;
 
-    public RoundStatusDTO(
+    public RoundStatusDto(
         Map<String, List<String>> movablePositions, TeamColor currentColor,
         GameResult score, boolean checked, boolean isKingDead) {
         this.movablePositions = movablePositions;
         this.currentColor = currentColor;
-        this.score = new ScoreDTO(score);
+        this.score = new ScoreDto(score);
         this.checked = checked;
         this.isKingDead = isKingDead;
     }
@@ -31,7 +31,7 @@ public class RoundStatusDTO {
         return currentColor;
     }
 
-    public ScoreDTO getScore() {
+    public ScoreDto getScore() {
         return score;
     }
 

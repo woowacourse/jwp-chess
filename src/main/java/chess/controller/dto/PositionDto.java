@@ -1,6 +1,6 @@
 package chess.controller.dto;
 
-public class PositionDTO {
+public class PositionDto {
 
     private String currentPosition;
     private String targetPosition;

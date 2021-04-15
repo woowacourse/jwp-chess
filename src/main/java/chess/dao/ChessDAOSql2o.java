@@ -11,12 +11,10 @@ import chess.domain.piece.Piece;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
 
-@Repository
 public class ChessDAOSql2o implements ChessDAO {
 
     private final Sql2o sql2o;
@@ -59,12 +57,10 @@ public class ChessDAOSql2o implements ChessDAO {
 
     @Override
     public Optional<ChessGame> loadGame(Long gameId) {
-        System.out.println("-------gameId--------");
-        System.out.println(gameId);
         try (Connection con = sql2o.open()) {
-            List<ChessDTO> results = con.createQuery("select * from game where gameid=:gameId")
+            List<ChessDto> results = con.createQuery("select * from game where gameid=:gameId")
                 .addParameter("gameId", gameId)
-                .executeAndFetch(ChessDTO.class);
+                .executeAndFetch(ChessDto.class);
 
             List<String> color =
                 con.createQuery("select color from current_color where game_id = :gameId")

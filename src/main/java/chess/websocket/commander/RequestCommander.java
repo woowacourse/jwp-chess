@@ -1,8 +1,8 @@
 package chess.websocket.commander;
 
 import chess.controller.ChessController;
-import chess.controller.dto.PieceDTO;
-import chess.controller.dto.RoundStatusDTO;
+import chess.controller.dto.PieceDto;
+import chess.controller.dto.RoundStatusDto;
 import chess.dao.ChessDAOSql2o;
 import chess.domain.TeamColor;
 import chess.service.ChessServiceImpl;
@@ -41,8 +41,8 @@ public class RequestCommander {
         Long gameId = chessRoom.keyBySession(player);
         Optional<WebSocketSession> otherPlayer = chessRoom.otherPlayer(player);
 
-        List<PieceDTO> pieces = chessController.startGame(gameId);
-        ResponseForm<List<PieceDTO>> responseForm = new ResponseForm<>(Form.PIECES, pieces);
+        List<PieceDto> pieces = chessController.startGame(gameId);
+        ResponseForm<List<PieceDto>> responseForm = new ResponseForm<>(Form.PIECES, pieces);
 
         ResourceSender.send(player, responseForm);
         otherPlayer.ifPresent(pl -> ResourceSender.send(pl, responseForm));
@@ -54,8 +54,8 @@ public class RequestCommander {
         Long gameId = chessRoom.keyBySession(player);
         Optional<WebSocketSession> otherPlayer = chessRoom.otherPlayer(player);
 
-        RoundStatusDTO roundStatusDTO = chessController.roundStatus(gameId);
-        ResponseForm<RoundStatusDTO> roundStatus =
+        RoundStatusDto roundStatusDTO = chessController.roundStatus(gameId);
+        ResponseForm<RoundStatusDto> roundStatus =
             new ResponseForm<>(Form.STATUS, roundStatusDTO);
 
         ResourceSender.send(player, roundStatus);

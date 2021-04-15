@@ -3,13 +3,13 @@ package chess.controller.dto;
 import chess.domain.TeamColor;
 import chess.domain.piece.Piece;
 
-public class PieceDTO {
+public class PieceDto {
 
     private final String currentPosition;
     private final String name;
     private final TeamColor teamColor;
 
-    public PieceDTO(Piece piece) {
+    public PieceDto(Piece piece) {
         this.currentPosition = piece.currentPosition().columnAndRow();
         this.name = piece.name();
         this.teamColor = piece.color();

@@ -3,9 +3,9 @@ package chess.controller;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-import chess.controller.dto.PieceDTO;
-import chess.controller.dto.PositionDTO;
-import chess.controller.dto.RoundStatusDTO;
+import chess.controller.dto.PieceDto;
+import chess.controller.dto.PositionDto;
+import chess.controller.dto.RoundStatusDto;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.converter.StringPositionConverter;
@@ -35,17 +35,17 @@ public class ChessApiController {
     }
 
     @GetMapping("/{gameId}/pieces")
-    public List<PieceDTO> pieces(@PathVariable Long gameId) {
+    public List<PieceDto> pieces(@PathVariable Long gameId) {
         return chessService.loadChess(gameId)
             .pieces().asList().stream()
-            .map(PieceDTO::new)
+            .map(PieceDto::new)
             .collect(Collectors.toList());
     }
 
     @GetMapping("/{gameId}/roundstatus")
-    public RoundStatusDTO roundStatus(@PathVariable Long gameId) {
+    public RoundStatusDto roundStatus(@PathVariable Long gameId) {
         final ChessGame chessGame = chessService.loadChess(gameId);
-        return new RoundStatusDTO(
+        return new RoundStatusDto(
             mapMovablePositions(chessGame.currentColorPieces()),
             chessGame.currentColor(),
             chessGame.gameResult(),
@@ -66,7 +66,7 @@ public class ChessApiController {
     }
 
     @PostMapping("/{gameId}/move")
-    public RoundStatusDTO move(@PathVariable Long gameId, @RequestBody PositionDTO position) {
+    public RoundStatusDto move(@PathVariable Long gameId, @RequestBody PositionDto position) {
         chessService.move(
             gameId,
             stringPositionConverter.convert(position.getCurrentPosition()),

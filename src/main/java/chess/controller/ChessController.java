@@ -3,8 +3,8 @@ package chess.controller;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-import chess.controller.dto.PieceDTO;
-import chess.controller.dto.RoundStatusDTO;
+import chess.controller.dto.PieceDto;
+import chess.controller.dto.RoundStatusDto;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.converter.StringPositionConverter;
@@ -23,18 +23,18 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    public List<PieceDTO> startGame(Long id) {
+    public List<PieceDto> startGame(Long id) {
         ChessGame chessGame =
             chessService.loadChess(id);
         return chessGame.pieces().asList().stream()
-            .map(PieceDTO::new)
+            .map(PieceDto::new)
             .collect(toList());
     }
 
-    public RoundStatusDTO roundStatus(Long gameId) {
+    public RoundStatusDto roundStatus(Long gameId) {
         ChessGame chessGame = chessService.loadChess(gameId);
         List<Piece> pieces = chessGame.currentColorPieces();
-        return new RoundStatusDTO(
+        return new RoundStatusDto(
             mapMovablePositions(pieces),
             chessGame.currentColor(),
             chessGame.gameResult(),

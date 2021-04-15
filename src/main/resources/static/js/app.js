@@ -63,7 +63,6 @@ function reRangeBoard(responsePieces) {
         let childNodes = tiles[idx].childNodes;
         for (let childIdx = 0; childIdx < childNodes.length; childIdx++) {
             let img = document.createElement("img");
-            img.src = "css/image/blank.png";
             tiles[idx].replaceChild(img, childNodes[childIdx]);
         }
     }
@@ -74,7 +73,7 @@ function reRangeBoard(responsePieces) {
         for (let idx = 0; idx < tiles.length; idx++) {
             if (tiles[idx].id === pieces[pieceIdx].position) {
                 let img = document.createElement("img");
-                img.src = "css/image/" + pieces[pieceIdx].pieceName + ".png";
+                img.src = "css/image/" + imageName(pieces[pieceIdx].pieceName) + ".png";
                 tiles[idx].removeChild(tiles[idx].childNodes[0]);
                 tiles[idx].appendChild(img);
                 break;
@@ -84,6 +83,14 @@ function reRangeBoard(responsePieces) {
     isEnd = responsePieces.data.isGameOver;
     whiteCount.innerText = responsePieces.data.scoreDto.whiteScore;
     blackCount.innerText = responsePieces.data.scoreDto.blackScore;
+}
+
+function imageName(pieceName) {
+    const pattern = /[a-z]/;
+    if(pattern.test(pieceName)){
+        return "W" + pieceName.toUpperCase();
+    }
+    return "B" + pieceName;
 }
 
 chessBoard.addEventListener("click", (source) => {

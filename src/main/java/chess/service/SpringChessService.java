@@ -10,7 +10,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.gamestate.Ready;
 import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
-import com.google.gson.Gson;
+import chess.util.JsonConverter;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +21,8 @@ import java.util.Optional;
 
 @Service
 public class SpringChessService {
-    public static final Gson gson = new Gson();
-    private ChessGame chessGame;
     private final SpringRoomDAO roomDAO;
+    private ChessGame chessGame;
 
     public SpringChessService(SpringRoomDAO roomDAO) {
         this.roomDAO = roomDAO;
@@ -68,7 +67,7 @@ public class SpringChessService {
     }
 
     private Room createRoomToSave(String request) {
-        JsonObject roomJson = gson.fromJson(request, JsonObject.class);
+        JsonObject roomJson = JsonConverter.toJsonObject(request);
         String name = roomJson.get("name").getAsString();
         String turn = roomJson.get("turn").getAsString();
         JsonObject state = roomJson.get("state").getAsJsonObject();
@@ -98,7 +97,7 @@ public class SpringChessService {
     }
 
     private Piece getPiece(JsonObject stateJson, String position) {
-        JsonObject pieceJson = gson.fromJson(stateJson.get(position), JsonObject.class);
+        JsonObject pieceJson = JsonConverter.toJsonObject(stateJson.get(position));
         String type = pieceJson.get("type").getAsString();
         String color = pieceJson.get("color").getAsString();
 

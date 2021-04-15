@@ -6,7 +6,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.game.Result;
 import chess.domain.piece.Piece;
 import chess.dto.PieceDTO;
-import chess.dto.ResultDTO;
+import chess.dto.OutcomeDTO;
 import chess.dto.ScoreDTO;
 import chess.dto.TurnDTO;
 import chess.service.SpringChessService;
@@ -110,7 +110,7 @@ public class SpringChessController {
         Result result = chessGame.calculateResult();
         modelAndView.addObject("score", new ScoreDTO(result));
         if (!chessGame.isOngoing()) {
-            modelAndView.addObject("result", new ResultDTO(result));
+            modelAndView.addObject("outcome", new OutcomeDTO(result));
         }
     }
 }

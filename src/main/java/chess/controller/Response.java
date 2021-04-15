@@ -6,7 +6,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.game.Result;
 import chess.domain.piece.Piece;
 import chess.dto.PieceDTO;
-import chess.dto.ResultDTO;
+import chess.dto.OutcomeDTO;
 import chess.dto.TurnDTO;
 
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public class Response {
         }
 
         Result result = chessGame.calculateResult();
-        model.put("result", new ResultDTO(result));
+        model.put("result", new OutcomeDTO(result));
         return model;
     }
 

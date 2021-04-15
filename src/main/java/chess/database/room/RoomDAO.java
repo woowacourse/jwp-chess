@@ -1,6 +1,6 @@
 package chess.database.room;
 
-import com.google.gson.JsonObject;
+import chess.util.JsonConverter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static chess.controller.WebUIChessController.gson;
 import static chess.database.DatabaseConnection.closeConnection;
 import static chess.database.DatabaseConnection.getConnection;
 
@@ -26,11 +25,11 @@ public class RoomDAO {
         closeConnection(con);
     }
 
-    public Room findByRoomId(String roomId) throws SQLException {
-        String query = "SELECT * FROM room WHERE room_id = ?";
+    public Room findByRoomId(String name) throws SQLException {
+        String query = "SELECT * FROM room WHERE name = ?";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
-        pstmt.setString(1, roomId);
+        pstmt.setString(1, name);
         ResultSet rs = pstmt.executeQuery();
 
         Room room = Optional.ofNullable(getRoom(rs))
@@ -45,16 +44,16 @@ public class RoomDAO {
         }
 
         return new Room(
-                rs.getString("room_id"),
+                rs.getString("name"),
                 rs.getString("turn"),
-                gson.fromJson(rs.getString("state"), JsonObject.class));
+                JsonConverter.toJsonObject(rs.getString("state")));
     }
 
-    public void validateRoomExistence(String roomId) throws SQLException {
-        String query = "SELECT * FROM room WHERE room_id = ?";
+    public void validateRoomExistence(String name) throws SQLException {
+        String query = "SELECT * FROM room WHERE name = ?";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
-        pstmt.setString(1, roomId);
+        pstmt.setString(1, name);
         ResultSet rs = pstmt.executeQuery();
 
         if (rs.next()) {
@@ -71,7 +70,7 @@ public class RoomDAO {
 
         List<Room> rooms = new ArrayList<>();
         while (rs.next()) {
-            rooms.add(new Room(rs.getString("room_id"), null, null));
+            rooms.add(new Room(rs.getString("name"), null, null));
         }
         closeConnection(con);
         return rooms;

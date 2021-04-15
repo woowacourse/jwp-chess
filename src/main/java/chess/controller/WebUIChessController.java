@@ -10,7 +10,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.gamestate.Ready;
 import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
-import com.google.gson.Gson;
+import chess.util.JsonConverter;
 import com.google.gson.JsonObject;
 
 import java.sql.SQLException;
@@ -18,8 +18,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class WebUIChessController {
-    public static final Gson gson = new Gson();
-
     private final RoomDAO roomDAO = new RoomDAO();
     private ChessGame chessGame;
 
@@ -69,7 +67,7 @@ public class WebUIChessController {
     }
 
     private Room createRoomToSave(String request) {
-        JsonObject roomJson = gson.fromJson(request, JsonObject.class);
+        JsonObject roomJson = JsonConverter.toJsonObject(request);
         String name = roomJson.get("name").getAsString();
         String turn = roomJson.get("turn").getAsString();
         JsonObject state = roomJson.get("state").getAsJsonObject();
@@ -78,7 +76,7 @@ public class WebUIChessController {
 
     public Response loadRoom(String request) {
         try {
-            JsonObject roomJson = gson.fromJson(request, JsonObject.class);
+            JsonObject roomJson = JsonConverter.toJsonObject(request);
             String name = roomJson.get("name").getAsString();
             Room room = roomDAO.findByRoomId(name);
             setChessGame(room);
@@ -103,7 +101,7 @@ public class WebUIChessController {
     }
 
     private Piece getPiece(JsonObject stateJson, String position) {
-        JsonObject pieceJson = gson.fromJson(stateJson.get(position), JsonObject.class);
+        JsonObject pieceJson = JsonConverter.toJsonObject(stateJson.get(position));
         String type = pieceJson.get("type").getAsString();
         String color = pieceJson.get("color").getAsString();
 

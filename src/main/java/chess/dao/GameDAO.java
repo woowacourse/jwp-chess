@@ -1,19 +1,31 @@
 package chess.dao;
 
 import chess.domain.ChessGameManager;
+import chess.domain.board.ChessBoard;
 import chess.domain.piece.Color;
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 import chess.dto.ChessBoardDto;
+import chess.dto.PieceDeserializeTable;
 import chess.dto.PieceDto;
-import chess.dto.SavedGameData;
 import chess.exception.NoSavedGameException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class GameDAO {
-    private static final int UNIQUE_GAME_ID = 1;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    private final Serializer serializer = Serializer.getInstance();
+    public GameDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Connection getConnection() {
         Connection con = null;
@@ -78,19 +90,36 @@ public class GameDAO {
         return gameId;
     }
 
-    public SavedGameData loadGame() throws SQLException {
-        try (Connection connection = getConnection()) {
-            String query = "SELECT * FROM game WHERE game_id = ?";
-            PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setInt(1, UNIQUE_GAME_ID);
-            ResultSet rs = pstmt.executeQuery();
+    private final RowMapper<ChessBoard> chessBoardRowMapper = (resultSet, rowNum) -> {
+        Map<Position, Piece> board = new HashMap<>();
 
-            if (rs.next()) {
-                ChessBoardDto chessBoardDto = serializer.fromJson(rs.getString("board"), ChessBoardDto.class);
-                Color currentTurnColor = serializer.fromJson(rs.getString("turn"), Color.class);
-                return new SavedGameData(chessBoardDto, currentTurnColor);
-            }
-            throw new NoSavedGameException("저장된 게임을 찾을 수 없습니다.");
+        do {
+            Piece piece = PieceDeserializeTable.deserializeFrom(
+                    resultSet.getString("name"),
+                    Color.of(resultSet.getString("color"))
+            );
+            Position position = Position.of(resultSet.getString("position"));
+            board.put(position, piece);
+        } while(resultSet.next());
+        return ChessBoard.from(board);
+    };
+
+    private final RowMapper<Color> colorRowMapper = (resultSet, rowNum) -> {
+        return Color.of(resultSet.getString("turn"));
+    };
+
+    public ChessGameManager loadGame(int gameId) throws SQLException {
+        String gameQuery = "SELECT turn FROM game WHERE game_id = ?";
+        Color currentTurn = this.jdbcTemplate.queryForObject(gameQuery, colorRowMapper, gameId);
+
+        if (currentTurn != null) {
+            String queryPiece = "SELECT * FROM piece WHERE game_id = ?";
+            ChessBoard chessBoard = this.jdbcTemplate.queryForObject(queryPiece, chessBoardRowMapper, gameId);
+
+            ChessGameManager chessGameManager = new ChessGameManager();
+            chessGameManager.load(chessBoard, currentTurn);
+            return chessGameManager;
         }
+        throw new NoSavedGameException("저장된 게임이 없습니다.");
     }
 }

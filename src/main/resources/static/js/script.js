@@ -52,6 +52,7 @@ function addAndRequestMove(square) {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
+                    gameId: gameId,
                     from: fromSquare.id,
                     to: toSquare.id,
                 }),

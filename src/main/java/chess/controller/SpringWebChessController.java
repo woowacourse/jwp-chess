@@ -2,11 +2,17 @@ package chess.controller;
 
 import chess.dao.GameDAO;
 import chess.domain.ChessGameManager;
+import chess.domain.position.Position;
 import chess.dto.CommonDto;
+import chess.dto.MoveRequest;
 import chess.dto.NewGameResponse;
+import chess.dto.RunningGameResponse;
 import chess.exception.HandledException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
@@ -14,7 +20,12 @@ import java.util.function.Supplier;
 
 @RestController
 public class SpringWebChessController {
-    private final GameDAO gameDAO = new GameDAO();
+    private GameDAO gameDAO;
+
+    @Autowired
+    public void setGameDAO(GameDAO gameDAO) {
+        this.gameDAO = gameDAO;
+    }
 
     private ResponseEntity<CommonDto<?>> handleExpectedException(Supplier<ResponseEntity<CommonDto<?>>> supplier) {
         try {
@@ -43,6 +54,28 @@ public class SpringWebChessController {
                 return ResponseEntity.badRequest().body(
                         new CommonDto<>(
                                 e.getMessage())
+                );
+            }
+        });
+    }
+
+    @PostMapping("/move")
+    public ResponseEntity<CommonDto<?>> move(@RequestBody MoveRequest moveRequest) {
+        return handleExpectedException(() -> {
+            try {
+                ChessGameManager chessGameManager = gameDAO.loadGame(moveRequest.getGameId());
+
+                String from = moveRequest.getFrom();
+                String to = moveRequest.getTo();
+                chessGameManager.move(Position.of(from), Position.of(to));
+                return ResponseEntity.ok().body(
+                        new CommonDto<>(
+                                "기물을 이동했습니다.",
+                                RunningGameResponse.from(chessGameManager))
+                );
+            } catch (SQLException e) {
+                return ResponseEntity.badRequest().body(
+                        new CommonDto<>(e.getMessage())
                 );
             }
         });

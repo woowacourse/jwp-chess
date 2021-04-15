@@ -3,7 +3,7 @@ package chess.controller;
 import chess.dao.GameDAO;
 import chess.domain.ChessGameManager;
 import chess.dto.CommonDto;
-import chess.dto.RunningGameResponse;
+import chess.dto.NewGameResponse;
 import chess.exception.HandledException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +36,7 @@ public class SpringWebChessController {
                 return ResponseEntity.ok().body(
                         new CommonDto<>(
                                 "새로운 게임이 생성되었습니다.",
-                                RunningGameResponse.from(chessGameManager)
+                                NewGameResponse.from(chessGameManager, gameId)
                         )
                 );
             } catch (SQLException e) {  // todo try ~ catch 문 코드 중복 해결

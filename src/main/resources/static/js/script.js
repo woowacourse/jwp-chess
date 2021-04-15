@@ -7,6 +7,8 @@ const matchResultTranslationTable = {DRAW: '무승부', WHITE_WIN: '백 승리',
 
 const squareBuffer = new SquareBuffer();
 
+let gameId;
+
 addSelectionEventOnChessBoard();
 addEventOnStartButton();
 addEventOnRegameButton();
@@ -19,6 +21,9 @@ function processResponse(response) {
             updateMessage(responseBody.message);
             console.log(responseBody.message);
             if (response.ok) {
+                if (responseBody.item.gameId !== undefined) {
+                    gameId = responseBody.item.gameId;
+                }
                 updateGameData(responseBody);
             }
         })

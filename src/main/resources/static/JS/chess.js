@@ -135,19 +135,21 @@ async function changeTurn() {
 }
 
 function clickStart() {
-    let data = {
-        roomName:currentRoomName
-    }
-    fetch('/restart', {
-        method: 'post',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
+    if(confirm("재시작하시겠습니까?")) {
+        let data = {
+            roomName: currentRoomName
         }
-    }).then(function () {
-        syncBoard();
-        changeTurn();
-    });
+        fetch('/restart', {
+            method: 'post',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function () {
+            syncBoard();
+            changeTurn();
+        });
+    }
 }
 
 async function clickBack() {

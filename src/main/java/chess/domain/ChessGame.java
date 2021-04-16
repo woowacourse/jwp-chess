@@ -11,10 +11,9 @@ import java.util.Map;
 public class ChessGame {
     private Board board;
     private Team turnOwner;
-    private BoardFactory boardFactory = new BoardFactory();
 
     public void settingBoard() {
-        board = boardFactory.create();
+        board = BoardFactory.create();
         turnOwner = Team.WHITE;
     }
 

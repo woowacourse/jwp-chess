@@ -17,11 +17,11 @@ public class BoardFactory {
         return new Board(board);
     }
 
-    public Board create() {
+    public static Board create() {
         return new Board(createBoard());
     }
 
-    private Map<Position, Piece> createBoard() {
+    private static Map<Position, Piece> createBoard() {
         Map<Position, Piece> board = initialize();
 
         board.put(Position.of(Horizontal.A, Vertical.EIGHT), new Rook(Team.BLACK));
@@ -46,7 +46,7 @@ public class BoardFactory {
         return board;
     }
 
-    private Map<Position, Piece> initialize() {
+    private static Map<Position, Piece> initialize() {
         Map<Position, Piece> board = new LinkedHashMap<>();
 
         for (Position position : Position.getPositions()) {
@@ -56,7 +56,7 @@ public class BoardFactory {
         return board;
     }
 
-    private void setPawn(Map<Position, Piece> board) {
+    private static void setPawn(Map<Position, Piece> board) {
         for (Horizontal horizontal : Horizontal.values()) {
             board.put(Position.of(horizontal, Vertical.SEVEN), new Pawn(Team.BLACK));
             board.put(Position.of(horizontal, Vertical.TWO), new Pawn(Team.WHITE));

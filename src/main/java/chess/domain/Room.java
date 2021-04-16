@@ -6,6 +6,8 @@ public class Room {
     private String pw;
     private Long gameId;
 
+    public Room() {}
+
     public Room(Long id, String name, String pw, Long gameId) {
         this.id = id;
         this.name = name;

@@ -2,10 +2,10 @@ package chess.domain;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-
 import java.util.Map;
 
 public class OutputFactory {
+
     public static void printCurrentBoard(final Map<Position, Piece> chessBoard) {
         System.out.println();
         int lastVerticalValue = 8;

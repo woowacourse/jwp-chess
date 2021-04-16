@@ -1,6 +1,7 @@
 package chess.service.dto;
 
 public class CommonResponseDto<T> {
+
     private T body;
     private int statusCode;
     private String message;

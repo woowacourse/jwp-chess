@@ -3,6 +3,7 @@ package chess.domain.piece.direction;
 import chess.domain.position.Position;
 
 public abstract class Direction implements MoveStrategy {
+
     private final int fileDegree;
     private final int rankDegree;
 

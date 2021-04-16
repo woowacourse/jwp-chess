@@ -2,7 +2,6 @@ package chess.domain.piece;
 
 import chess.domain.position.Position;
 import chess.domain.position.Target;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -84,9 +83,9 @@ public abstract class Piece {
     @Override
     public String toString() {
         return "Piece{" +
-                "color=" + color +
-                ", name='" + name + '\'' +
-                ", position=" + position +
-                '}';
+            "color=" + color +
+            ", name='" + name + '\'' +
+            ", position=" + position +
+            '}';
     }
 }

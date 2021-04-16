@@ -1,12 +1,12 @@
 package chess.entity;
 
 import chess.domain.piece.Color;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Chess {
+
     private String id;
     private String name;
     private Color winnerColor;
@@ -17,7 +17,8 @@ public class Chess {
         this(UUID.randomUUID().toString(), name, Color.NOTHING, true, LocalDateTime.now());
     }
 
-    public Chess(final String id, final String name, final Color winnerColor, final boolean isRunning, final LocalDateTime createdDate) {
+    public Chess(final String id, final String name, final Color winnerColor, final boolean isRunning,
+        final LocalDateTime createdDate) {
         this.id = id;
         this.name = name;
         this.winnerColor = winnerColor;
@@ -55,7 +56,9 @@ public class Chess {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
         Chess chess = (Chess) o;
         return Objects.equals(id, chess.id);
     }

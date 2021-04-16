@@ -14,7 +14,6 @@ import chess.domain.position.Target;
 import chess.domain.state.State;
 import chess.domain.state.StateFactory;
 import chess.service.dto.ScoreDto;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class ChessGame {
         final State whitePlayerState = StateFactory.initialization(PieceInitializer.whitePieces());
         final State blackPlayerState = StateFactory.initialization(PieceInitializer.blackPieces());
         return new ChessGame(new WhitePlayer(whitePlayerState), new BlackPlayer(blackPlayerState),
-                board.put(whitePlayerState.pieces(), blackPlayerState.pieces()));
+            board.put(whitePlayerState.pieces(), blackPlayerState.pieces()));
     }
 
     public void moveByTurn(final Position sourcePosition, final Position targetPosition) {
@@ -63,7 +62,7 @@ public class ChessGame {
 
     private void move(final Position sourcePosition, final Position targetPosition, Player player) {
         Source source = new Source(
-                player.findPiece(sourcePosition).orElseThrow(() -> new IllegalArgumentException("본인 턴에 맞는 기물을 선택해 주세요.")));
+            player.findPiece(sourcePosition).orElseThrow(() -> new IllegalArgumentException("본인 턴에 맞는 기물을 선택해 주세요.")));
         Target target = new Target(chessBoard.findPiece(targetPosition));
 
         if (chessBoard.checkPath(source, target)) {

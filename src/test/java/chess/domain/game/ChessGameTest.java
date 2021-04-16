@@ -1,13 +1,11 @@
 package chess.domain.game;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import chess.domain.OutputFactory;
 import chess.domain.position.Position;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ChessGameTest {
 
@@ -37,7 +35,7 @@ class ChessGameTest {
         OutputFactory.printCurrentBoard(chessGame.chessBoard().chessBoard());
 
         assertThatThrownBy(() -> chessGame.moveByTurn(new Position("a4"), new Position("a5")))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

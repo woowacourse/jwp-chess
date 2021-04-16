@@ -1,11 +1,11 @@
 package chess.domain.position;
 
 import chess.domain.piece.Piece;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Source {
+
     private final Piece piece;
 
     public Source(final Piece piece) {

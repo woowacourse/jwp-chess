@@ -2,12 +2,12 @@ package chess.domain.position;
 
 import chess.domain.piece.direction.MoveStrategies;
 import chess.domain.piece.direction.MoveStrategy;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class Position implements Comparable<Position> {
+
     private final File file;
     private final Rank rank;
 
@@ -17,12 +17,12 @@ public class Position implements Comparable<Position> {
 
     public Position(final int file, final int rank) {
         this(File.from(file).orElseThrow(() -> new IllegalArgumentException("해당하는 File 위치를 찾을 수 없습니다.")),
-                Rank.from(rank).orElseThrow(() -> new IllegalArgumentException("해당하는 Rank 위치를 찾을 수 없습니다.")));
+            Rank.from(rank).orElseThrow(() -> new IllegalArgumentException("해당하는 Rank 위치를 찾을 수 없습니다.")));
     }
 
     public Position(final String file, final String rank) {
         this(File.from(file).orElseThrow(() -> new IllegalArgumentException("해당하는 File 위치를 찾을 수 없습니다.")),
-                Rank.from(rank).orElseThrow(() -> new IllegalArgumentException("해당하는 Rank 위치를 찾을 수 없습니다.")));
+            Rank.from(rank).orElseThrow(() -> new IllegalArgumentException("해당하는 Rank 위치를 찾을 수 없습니다.")));
     }
 
     public Position(final File file, final Rank rank) {
@@ -66,7 +66,7 @@ public class Position implements Comparable<Position> {
 
     public Position nextPosition(final MoveStrategy moveStrategy) {
         return new Position(file.increaseFile(moveStrategy.fileDegree()),
-                rank.increaseRank(moveStrategy.rankDegree()));
+            rank.increaseRank(moveStrategy.rankDegree()));
     }
 
     public File file() {
@@ -91,8 +91,12 @@ public class Position implements Comparable<Position> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Position position = (Position) o;
         return file == position.file && rank == position.rank;
     }
@@ -105,8 +109,8 @@ public class Position implements Comparable<Position> {
     @Override
     public String toString() {
         return "Position{" +
-                "file=" + file +
-                ", rank=" + rank +
-                '}';
+            "file=" + file +
+            ", rank=" + rank +
+            '}';
     }
 }

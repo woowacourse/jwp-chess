@@ -3,10 +3,10 @@ package chess.domain.state;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
-
 import java.util.Optional;
 
 public abstract class Turn implements State {
+
     private final Pieces pieces;
 
     protected Turn(final Pieces pieces) {

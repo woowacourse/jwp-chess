@@ -1,27 +1,31 @@
 package chess.dao;
 
 import chess.entity.Movement;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class DBMovementDao implements MovementDao {
+
     private final ConnectionPool connectionPool;
 
     public DBMovementDao(final ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
 
         String query = "CREATE TABLE IF NOT EXISTS movement ( " +
-                "movement_id VARCHAR(36) NOT NULL," +
-                "chess_id VARCHAR(36) NOT NULL," +
-                "source_position VARCHAR(64) NOT NULL," +
-                "target_position VARCHAR(64) NOT NULL," +
-                "created_date TIMESTAMP," +
-                "PRIMARY KEY (movement_id)," +
-                "FOREIGN KEY (chess_id) REFERENCES chess(chess_id) ON DELETE CASCADE ON UPDATE CASCADE" +
-                ");";
+            "movement_id VARCHAR(36) NOT NULL," +
+            "chess_id VARCHAR(36) NOT NULL," +
+            "source_position VARCHAR(64) NOT NULL," +
+            "target_position VARCHAR(64) NOT NULL," +
+            "created_date TIMESTAMP," +
+            "PRIMARY KEY (movement_id)," +
+            "FOREIGN KEY (chess_id) REFERENCES chess(chess_id) ON DELETE CASCADE ON UPDATE CASCADE" +
+            ");";
 
         Connection connection = connectionPool.getConnection();
         try {
@@ -60,9 +64,9 @@ public class DBMovementDao implements MovementDao {
     @Override
     public List<Movement> findByChessName(final String name) {
         String query = "SELECT * FROM movement as mv" +
-                " JOIN chess as ch on mv.chess_id = ch.chess_id" +
-                " WHERE ch.name = ?" +
-                " ORDER BY mv.created_date";
+            " JOIN chess as ch on mv.chess_id = ch.chess_id" +
+            " WHERE ch.name = ?" +
+            " ORDER BY mv.created_date";
 
         Connection connection = connectionPool.getConnection();
         try {
@@ -74,11 +78,11 @@ public class DBMovementDao implements MovementDao {
             List<Movement> movements = new ArrayList<>();
             while (resultSet.next()) {
                 Movement movement = new Movement(
-                        resultSet.getString("movement_id"),
-                        resultSet.getString("chess_id"),
-                        resultSet.getString("source_position"),
-                        resultSet.getString("target_position"),
-                        resultSet.getTimestamp("created_date").toLocalDateTime()
+                    resultSet.getString("movement_id"),
+                    resultSet.getString("chess_id"),
+                    resultSet.getString("source_position"),
+                    resultSet.getString("target_position"),
+                    resultSet.getTimestamp("created_date").toLocalDateTime()
                 );
                 movements.add(movement);
             }

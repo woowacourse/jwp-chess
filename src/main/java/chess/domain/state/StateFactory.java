@@ -3,6 +3,7 @@ package chess.domain.state;
 import chess.domain.piece.Pieces;
 
 public class StateFactory {
+
     private StateFactory() {
     }
 

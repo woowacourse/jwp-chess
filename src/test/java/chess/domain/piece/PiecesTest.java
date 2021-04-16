@@ -1,15 +1,13 @@
 package chess.domain.piece;
 
+import static chess.domain.OutputFactory.printCurrentBoard;
+
 import chess.domain.board.Board;
 import chess.domain.position.Position;
 import chess.domain.position.Source;
 import chess.domain.position.Target;
-import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
-import java.util.Map;
-
-import static chess.domain.OutputFactory.printCurrentBoard;
+import org.junit.jupiter.api.Test;
 
 class PiecesTest {
 

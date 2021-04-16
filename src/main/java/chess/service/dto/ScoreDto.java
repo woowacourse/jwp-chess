@@ -1,6 +1,7 @@
 package chess.service.dto;
 
 public class ScoreDto {
+
     private final double whiteScore;
     private final double blackScore;
 

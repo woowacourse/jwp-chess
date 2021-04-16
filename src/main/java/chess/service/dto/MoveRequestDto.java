@@ -1,6 +1,7 @@
 package chess.service.dto;
 
 public class MoveRequestDto {
+
     private String chessName;
     private String source;
     private String target;

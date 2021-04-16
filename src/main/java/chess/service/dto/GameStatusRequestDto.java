@@ -1,6 +1,7 @@
 package chess.service.dto;
 
 public class GameStatusRequestDto {
+
     private String chessName;
     private boolean isGameOver;
 

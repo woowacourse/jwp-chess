@@ -3,6 +3,7 @@ package chess.service.dto;
 import chess.domain.piece.Piece;
 
 public class PieceStatusDto {
+
     private final String position;
     private final String pieceName;
 

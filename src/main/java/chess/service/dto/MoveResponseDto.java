@@ -1,6 +1,7 @@
 package chess.service.dto;
 
 public class MoveResponseDto {
+
     private String source;
     private String target;
     private ScoreDto scoreDto;

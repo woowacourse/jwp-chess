@@ -5,6 +5,7 @@ import chess.domain.position.Source;
 import chess.domain.position.Target;
 
 public class Finished extends Turn {
+
     public Finished(final Pieces pieces) {
         super(pieces);
     }

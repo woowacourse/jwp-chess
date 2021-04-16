@@ -4,7 +4,6 @@ import chess.domain.piece.Color;
 import chess.domain.piece.King;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +19,7 @@ public final class KingInitializer implements LocationInitializer {
         List<Piece> pieces = new ArrayList<>();
         for (final String file : FILES) {
             RANKS_WHITE.forEach(
-                    rank -> pieces.add(new King(Color.WHITE, new Position(file, rank))));
+                rank -> pieces.add(new King(Color.WHITE, new Position(file, rank))));
         }
         return pieces;
     }
@@ -30,7 +29,7 @@ public final class KingInitializer implements LocationInitializer {
         List<Piece> pieces = new ArrayList<>();
         for (final String file : FILES) {
             RANKS_BLACK.forEach(
-                    rank -> pieces.add(new King(Color.BLACK, new Position(file, rank))));
+                rank -> pieces.add(new King(Color.BLACK, new Position(file, rank))));
         }
         return pieces;
     }

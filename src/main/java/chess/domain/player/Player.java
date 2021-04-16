@@ -6,10 +6,10 @@ import chess.domain.position.Position;
 import chess.domain.position.Source;
 import chess.domain.position.Target;
 import chess.domain.state.State;
-
 import java.util.Optional;
 
 public abstract class Player {
+
     private State state;
 
     protected Player(final State state) {

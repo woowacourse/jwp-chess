@@ -1,10 +1,10 @@
 package chess.dao;
 
 import chess.entity.Chess;
-
 import java.util.Optional;
 
 public interface ChessDao {
+
     void save(final Chess chess);
 
     Optional<Chess> findByName(final String name);

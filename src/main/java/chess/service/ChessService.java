@@ -7,11 +7,18 @@ import chess.domain.game.ChessGame;
 import chess.domain.position.Position;
 import chess.entity.Chess;
 import chess.entity.Movement;
-import chess.service.dto.*;
-
+import chess.service.dto.ChessSaveRequestDto;
+import chess.service.dto.CommonResponseDto;
+import chess.service.dto.GameStatusDto;
+import chess.service.dto.GameStatusRequestDto;
+import chess.service.dto.MoveRequestDto;
+import chess.service.dto.MoveResponseDto;
+import chess.service.dto.ResponseCode;
+import chess.service.dto.TilesDto;
 import java.util.List;
 
 public class ChessService {
+
     private final ChessDao chessDao;
     private final MovementDao movementDao;
 
@@ -42,8 +49,10 @@ public class ChessService {
                 chess.changeWinnerColor(chessGame.findWinner());
                 chessDao.update(chess);
             }
-            return new CommonResponseDto<>(new MoveResponseDto(requestDto.getSource(), requestDto.getTarget(), chessGame.calculateScore(), !chess.isRunning()),
-                    ResponseCode.OK.code(), ResponseCode.OK.message());
+            return new CommonResponseDto<>(
+                new MoveResponseDto(requestDto.getSource(), requestDto.getTarget(), chessGame.calculateScore(),
+                    !chess.isRunning()),
+                ResponseCode.OK.code(), ResponseCode.OK.message());
         } catch (RuntimeException exception) {
             return new CommonResponseDto<>(ResponseCode.BAD_REQUEST.code(), exception.getMessage());
         }
@@ -68,7 +77,9 @@ public class ChessService {
             ChessGame chessGame = ChessGame.newGame();
             Chess chess = new Chess(request.getName());
             chessDao.save(chess);
-            return new CommonResponseDto<>(new GameStatusDto(chessGame.pieces(), chessGame.calculateScore(), chessGame.isGameOver(), chess.getWinnerColor()), ResponseCode.OK.code(), ResponseCode.OK.message());
+            return new CommonResponseDto<>(
+                new GameStatusDto(chessGame.pieces(), chessGame.calculateScore(), chessGame.isGameOver(),
+                    chess.getWinnerColor()), ResponseCode.OK.code(), ResponseCode.OK.message());
         } catch (RuntimeException exception) {
             return new CommonResponseDto<>(ResponseCode.BAD_REQUEST.code(), exception.getMessage());
         }
@@ -84,8 +95,8 @@ public class ChessService {
                 chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
             }
             return new CommonResponseDto<>(new GameStatusDto(chessGame.pieces(),
-                    chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor()),
-                    ResponseCode.OK.code(), ResponseCode.OK.message());
+                chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor()),
+                ResponseCode.OK.code(), ResponseCode.OK.message());
         } catch (RuntimeException exception) {
             return new CommonResponseDto<>(ResponseCode.BAD_REQUEST.code(), exception.getMessage());
         }

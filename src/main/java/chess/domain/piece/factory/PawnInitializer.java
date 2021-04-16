@@ -5,7 +5,6 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.position.File;
 import chess.domain.position.Position;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +20,7 @@ public final class PawnInitializer implements LocationInitializer {
         List<Piece> pieces = new ArrayList<>();
         for (final String file : FILES) {
             RANKS_WHITE.forEach(
-                    rank -> pieces.add(new Pawn(Color.WHITE, new Position(file, rank))));
+                rank -> pieces.add(new Pawn(Color.WHITE, new Position(file, rank))));
         }
         return pieces;
     }
@@ -31,7 +30,7 @@ public final class PawnInitializer implements LocationInitializer {
         List<Piece> pieces = new ArrayList<>();
         for (final String file : FILES) {
             RANKS_BLACK.forEach(
-                    rank -> pieces.add(new Pawn(Color.BLACK, new Position(file, rank))));
+                rank -> pieces.add(new Pawn(Color.BLACK, new Position(file, rank))));
         }
         return pieces;
     }

@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Movement {
+
     private String id;
     private String chessId;
     private String sourcePosition;
@@ -16,7 +17,8 @@ public class Movement {
         this(UUID.randomUUID().toString(), chessId, sourcePosition, targetPosition, LocalDateTime.now());
     }
 
-    public Movement(final String id, final String chessId, final String sourcePosition, final String targetPosition, final LocalDateTime createdDate) {
+    public Movement(final String id, final String chessId, final String sourcePosition, final String targetPosition,
+        final LocalDateTime createdDate) {
         this.id = id;
         this.chessId = chessId;
         this.sourcePosition = sourcePosition;
@@ -46,8 +48,12 @@ public class Movement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Movement movement = (Movement) o;
         return Objects.equals(id, movement.id);
     }

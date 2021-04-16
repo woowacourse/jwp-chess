@@ -25,24 +25,24 @@ public enum Rank {
 
     public static Optional<Rank> from(final String symbol) {
         return Arrays.stream(values())
-                .filter(rank -> rank.symbol.equals(symbol))
-                .findFirst();
+            .filter(rank -> rank.symbol.equals(symbol))
+            .findFirst();
     }
 
     public static Optional<Rank> from(final int value) {
         return Arrays.stream(values())
-                .filter(rank -> value == rank.value)
-                .findFirst();
-    }
-
-    public int subtract(final Rank rank) {
-        return value - rank.value;
+            .filter(rank -> value == rank.value)
+            .findFirst();
     }
 
     public static List<String> rankSymbols() {
         return Arrays.stream(values())
-                .map(Rank::symbol)
-                .collect(Collectors.toList());
+            .map(Rank::symbol)
+            .collect(Collectors.toList());
+    }
+
+    public int subtract(final Rank rank) {
+        return value - rank.value;
     }
 
     public int increaseRank(final int degree) {
@@ -60,8 +60,8 @@ public enum Rank {
     @Override
     public String toString() {
         return "Rank{" +
-                "symbol='" + symbol + '\'' +
-                ", value=" + value +
-                '}';
+            "symbol='" + symbol + '\'' +
+            ", value=" + value +
+            '}';
     }
 }

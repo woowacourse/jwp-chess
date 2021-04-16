@@ -2,7 +2,6 @@ package chess.domain.piece;
 
 import chess.domain.position.Position;
 import chess.domain.position.Target;
-
 import java.util.List;
 
 public final class Blank extends Piece {

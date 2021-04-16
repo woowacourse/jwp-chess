@@ -1,5 +1,6 @@
-package chess.dao;
+package chess.repository;
 
+import chess.dao.ChessDao;
 import chess.entity.Chess;
 import org.springframework.stereotype.Repository;
 

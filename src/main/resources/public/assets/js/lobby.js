@@ -17,12 +17,8 @@ document.querySelector(".rooms").addEventListener("click", async (event) => {
     const idToBeRemoved = event.target.closest(".room").getAttribute(
         "id").toString();
     console.log(idToBeRemoved)
-    const response = await fetch("./room", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({id: idToBeRemoved})
+    const response = await fetch("./room/" + idToBeRemoved + "/close", {
+      method: "PUT"
     });
     const result = await response.json();
     if (response.ok) {

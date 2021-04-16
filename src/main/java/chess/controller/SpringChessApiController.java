@@ -58,10 +58,8 @@ public class SpringChessApiController {
         return "\"success\"";
     }
 
-    @PutMapping
-    private String closeRoom(@RequestBody Map<String, String> body) {
-        //TODO : body 형태로 받는것을 url 형태로 바꾸게 변경
-        String id = body.get("id");
+    @PutMapping("/{id}/close")
+    private String closeRoom(@PathVariable String id) {
         springChessService.close(id);
         return "\"success\"";
     }

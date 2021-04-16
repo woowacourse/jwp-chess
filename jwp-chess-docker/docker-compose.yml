@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  db:
+    container_name: chess
+    image: mysql:5.7
+    restart: always
+    ports:
+     - 3306:3306
+    volumes:
+     - ./mysql:/etc/mysql/conf.d
+    environment:
+     - MYSQL_ROOT_PASSWORD=root
+     - MYSQL_DATABASE=chess
+     - MYSQL_USER=joy
+     - MYSQL_PASSWORD=joy
+     - TZ=Asia/Seoul

@@ -18,7 +18,7 @@ public class HistoryRepository {
 
     private final RowMapper<HistoryDto> rowMapper = (resultSet, rowNum) ->
             new HistoryDto(resultSet.getString("history_id"), resultSet.getString("name"));
-;
+    ;
 
     public void insert(String name) {
         final String query = "INSERT INTO History (name) VALUES (?)";

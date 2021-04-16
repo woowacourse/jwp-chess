@@ -17,7 +17,7 @@ public class ModelView {
         return model;
     }
 
-    public static Map<String, Object> commonResponseForm(GameInfoDto gameInfoDto, String id) {
+    public static Map<String, Object> gameResponse(GameInfoDto gameInfoDto, String id) {
         Map<String, Object> model = new HashMap<>();
         model.put("squares", gameInfoDto.squares());
         model.put("turn", gameInfoDto.turn());
@@ -26,15 +26,11 @@ public class ModelView {
         return model;
     }
 
-    public static Map<String, Object> startResponse(List<HistoryDto> history) {
+    public static Map<String, Object> historyResponse(List<HistoryDto> history) {
         Map<String, Object> model = new HashMap<>();
         if (!history.isEmpty()) {
             model.put("history", history);
         }
         return model;
-    }
-
-    public static Map<String, Object> newGameResponse(GameInfoDto gameInfoDto, String id) {
-        return commonResponseForm(gameInfoDto, id);
     }
 }

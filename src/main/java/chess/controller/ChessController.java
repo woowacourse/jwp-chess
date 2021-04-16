@@ -1,10 +1,10 @@
 package chess.controller;
 
 import chess.domain.command.Commands;
-import chess.domain.dto.MoveResponseDto;
-import chess.domain.exception.DataException;
 import chess.domain.dto.MoveRequestDto;
 import chess.domain.dto.NameDto;
+import chess.domain.exception.DataException;
+import chess.domain.response.GameResponse;
 import chess.service.ChessService;
 import chess.view.ModelView;
 import com.google.gson.Gson;
@@ -28,7 +28,7 @@ public class ChessController {
 
     @GetMapping("")
     public String play(Model model) throws DataException {
-        model.addAllAttributes(ModelView.startResponse(chessService.loadHistory()));
+        model.addAllAttributes(ModelView.historyResponse(chessService.loadHistory()));
         return "lobby";
     }
 
@@ -40,7 +40,7 @@ public class ChessController {
 
     @GetMapping("/{id}")
     public String play(Model model, @PathVariable String id) throws DataException {
-        model.addAllAttributes(ModelView.newGameResponse(
+        model.addAllAttributes(ModelView.gameResponse(
                 chessService.initialGameInfo(),
                 id
         ));
@@ -49,7 +49,7 @@ public class ChessController {
 
     @GetMapping("/continue/{id}")
     public String continueGame(Model model, @PathVariable String id) throws DataException {
-        model.addAllAttributes(ModelView.commonResponseForm(chessService.continuedGameInfo(id), id));
+        model.addAllAttributes(ModelView.gameResponse(chessService.continuedGameInfo(id), id));
         return "chessGame";
     }
 
@@ -58,14 +58,14 @@ public class ChessController {
         return "lobby";
     }
 
-    @PostMapping( "/move")
+    @PostMapping("/move")
     @ResponseBody
     public String move(@RequestBody MoveRequestDto moveRequestDto) {
         String command = makeMoveCmd(moveRequestDto.getSource(), moveRequestDto.getTarget());
         String id = moveRequestDto.getGameId();
         try {
             chessService.move(id, command, new Commands(command));
-            return GSON.toJson(new MoveResponseDto(chessService.continuedGameInfo(id), id));
+            return GSON.toJson(new GameResponse(chessService.continuedGameInfo(id), id));
         } catch (IllegalArgumentException | SQLException e) {
             return e.getMessage();
         }

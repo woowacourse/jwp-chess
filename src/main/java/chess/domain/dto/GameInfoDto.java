@@ -6,7 +6,7 @@ import chess.domain.board.Team;
 import java.util.List;
 
 public class GameInfoDto {
-//    private List<SquareDto> squares;
+    //    private List<SquareDto> squares;
     private SquaresDto squares;
     private Team turn;
     private ScoresDto scores;

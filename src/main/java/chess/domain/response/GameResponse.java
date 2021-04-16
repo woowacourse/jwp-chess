@@ -1,10 +1,13 @@
-package chess.domain.dto;
+package chess.domain.response;
 
 import chess.domain.board.Team;
+import chess.domain.dto.GameInfoDto;
+import chess.domain.dto.ScoreDto;
+import chess.domain.dto.SquareDto;
 
 import java.util.List;
 
-public class MoveResponseDto {
+public class GameResponse {
 
     private final List<SquareDto> squares;
     private final Team turn;
@@ -12,7 +15,7 @@ public class MoveResponseDto {
     private final String gameId;
     private final Team winner;
 
-    public MoveResponseDto(GameInfoDto gameInfoDto, String gameId) {
+    public GameResponse(GameInfoDto gameInfoDto, String gameId) {
         this.squares = gameInfoDto.squares();
         this.turn = gameInfoDto.turn();
         this.scores = gameInfoDto.scores();

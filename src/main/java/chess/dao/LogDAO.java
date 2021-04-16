@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.Movement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -24,15 +25,15 @@ public class LogDAO {
         jdbcTemplate.update(query, roomId);
     }
 
-    public List<String[]> allLogByRoomId(final String roomId) {
+    public List<Movement> allLogByRoomId(final String roomId) {
         String query = "SELECT start_position, end_position FROM log WHERE room_id = ? ORDER BY register_date";
         return jdbcTemplate.query(query, mapper(), roomId);
     }
 
-    private RowMapper<String[]> mapper() {
-        return (resultSet, rowNum) -> new String[]{
+    private RowMapper<Movement> mapper() {
+        return (resultSet, rowNum) -> new Movement(
                 resultSet.getString("start_position"),
                 resultSet.getString("end_position")
-        };
+        );
     }
 }

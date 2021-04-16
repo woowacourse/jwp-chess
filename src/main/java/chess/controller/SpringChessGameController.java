@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.domain.ChessGame;
+import chess.domain.Movement;
 import chess.domain.Rooms;
 import chess.domain.Team;
 import chess.dto.*;
@@ -86,7 +87,7 @@ public final class SpringChessGameController {
         String roomId = roomIdDTO.getRoomId();
         ChessGame chessGame = rooms.loadGameByRoomId(roomId);
         chessGame.initialize();
-        List<String[]> logs = logService.logByRoomId(roomId);
+        List<Movement> logs = logService.logByRoomId(roomId);
         logService.executeLog(logs, chessGame);
         UsersDTO users = userService.usersParticipatedInGame(roomId);
         gameInformation(rooms.loadGameByRoomId(roomId), model, roomId, users);

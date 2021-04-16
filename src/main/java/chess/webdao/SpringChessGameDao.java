@@ -18,13 +18,6 @@ import static chess.service.TeamFormat.WHITE_TEAM;
 
 @Repository
 public class SpringChessGameDao {
-    private final RowMapper<Test> actorRowMapper = (resultSet, rowNum) -> {
-        Test test = new Test(
-                resultSet.getString("current_turn_team"),
-                resultSet.getBoolean("is_playing")
-        );
-        return test;
-    };
     private JdbcTemplate jdbcTemplate;
 
     public SpringChessGameDao(JdbcTemplate jdbcTemplate) {
@@ -66,9 +59,18 @@ public class SpringChessGameDao {
 
     private ChessGame generateChessGame(final Team blackTeam, final Team whiteTeam) {
         final String chessGameQuery = "SELECT * FROM chess_game";
-        final Test test = this.jdbcTemplate.queryForObject(chessGameQuery, actorRowMapper);
-        return generateChessGameAccordingToDB(blackTeam, whiteTeam, test.getCurrentTurnTeam(), test.getIsPlaying());
+        final ChessGameInfo chessGameInfo = this.jdbcTemplate.queryForObject(chessGameQuery, ChessGameInfoRowMapper);
+        return generateChessGameAccordingToDB(blackTeam, whiteTeam,
+                chessGameInfo.getCurrentTurnTeam(), chessGameInfo.getIsPlaying());
     }
+
+    private final RowMapper<ChessGameInfo> ChessGameInfoRowMapper = (resultSet, rowNum) -> {
+        ChessGameInfo chessGameInfo = new ChessGameInfo(
+                resultSet.getString("current_turn_team"),
+                resultSet.getBoolean("is_playing")
+        );
+        return chessGameInfo;
+    };
 
     private ChessGame generateChessGameAccordingToDB(final Team blackTeam, final Team whiteTeam,
                                                      final String currentTurnTeam, final boolean isPlaying) {
@@ -93,26 +95,7 @@ public class SpringChessGameDao {
     public void deleteChessGame() {
         final String deletePiecePositionQuery = "DELETE FROM team_info";
         final String deleteChessGameQuery = "DELETE FROM chess_game";
-
         this.jdbcTemplate.update(deletePiecePositionQuery);
         this.jdbcTemplate.update(deleteChessGameQuery);
-    }
-}
-
-class Test {
-    private String current_turn_team;
-    private boolean is_playing;
-
-    public Test(String current_turn_team, boolean is_playing) {
-        this.current_turn_team = current_turn_team;
-        this.is_playing = is_playing;
-    }
-
-    public String getCurrentTurnTeam() {
-        return current_turn_team;
-    }
-
-    public boolean getIsPlaying() {
-        return is_playing;
     }
 }

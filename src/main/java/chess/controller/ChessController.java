@@ -57,7 +57,7 @@ public class ChessController {
         return "play";
     }
 
-    @PostMapping(path = "/move")
+    @PostMapping("/move")
     @ResponseBody
     public String move(@RequestBody MoveVo moveVo) {
         String command = makeMoveCmd(moveVo.getSource(), moveVo.getTarget());

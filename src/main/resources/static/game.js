@@ -1,3 +1,7 @@
+let gameInfo = {};
+let source = null;
+
+
 const piecesMap = {
     "P": "♟", "R": "&#9820;", "N": "&#9822;", "B": "&#9821;", "Q": "&#9819;", "K": "&#9818;",
     "p": "&#9817;", "r": "&#9814;", "n": "&#9816;", "b": "&#9815;", "q": "&#9813;", "k": "&#9812;"
@@ -6,7 +10,7 @@ let roomId = "";
 
 window.onload = () => {
     const urls = location.href.split("/");
-    roomId = urls[urls.length-1];
+    roomId = urls[urls.length - 1];
     loadChessGame();
 
 }
@@ -20,12 +24,12 @@ function loadChessGame() {
         .then(function (response) {
             refreshChessBoard(response.data)
         }).catch(function (error) {
-            alert('게임을 로드 할 수 없습니다.')
-            // location.href = "/";
-        });
+        alert('게임을 로드 할 수 없습니다.')
+        location.href = "/";
+    });
 }
 
-const btnStart = document.getElementsByClassName('btn-start')[0];
+/*const btnStart = document.getElementsByClassName('btn-start')[0];
 btnStart.addEventListener('click', function (e) {
     axios.get('/refreshChessGame?id=' + roomId)
         .then(function (response) {
@@ -34,36 +38,59 @@ btnStart.addEventListener('click', function (e) {
         .catch(function (error) {
             alert('게임을 갱신 할 수 없습니다.')
         });
-})
+})*/
 
 const tiles = document.getElementsByClassName('tile');
 for (let i = 0; i < tiles.length; i++) {
     tiles.item(i).addEventListener('click', function (e) {
-        let haveSelected = document.getElementsByClassName('selected-piece').length > 0;
-        if (haveSelected) {
-            movePiece(e.target);
-        } else {
-            selectPiece(e.target);
-        }
+        selectPiece(e.target);
     })
 }
 
+
 function selectPiece(target) {
-    let position = target.getAttribute('id');
-    axios.get('/selectPiece?id=' + roomId + '&position=' + position)
-        .then(function (response) {
-            target.classList.add('selected-piece');
-        })
-        .catch(function (error) {
-            alert('선택할 수 없습니다.');
-        })
+    if (source == null) {
+        if (!target.classList.contains('piece')) {
+            alert('빈 공간을 클릭 할 수 없습니다.')
+            return;
+        }
+        const isWhiteTurn = gameInfo.whiteTeam.turn;
+        const isWhitePiece = target.getAttribute('color') === 'white';
+
+        if (isWhiteTurn ^ isWhitePiece) {
+            alert('상대방 기물을 선택 하셨습니다.')
+            return;
+        }
+        source = target;
+        source.classList.add('selected-piece')
+    } else {
+        if (target.getAttribute('id') === source.getAttribute('id')) {
+            source.classList.remove('selected-piece')
+            source = null;
+            return;
+        }
+        if (source.getAttribute('color') === target.getAttribute('color')) {
+            source.classList.remove('selected-piece')
+            source = target;
+            source.classList.add('selected-piece')
+            return;
+        }
+
+        movePiece(target);
+
+    }
+
 }
 
 function movePiece(target) {
-    console.log('movePiece() called');
-    let selectedPiece = document.getElementsByClassName('selected-piece')[0];
-    axios.get('/movePiece?id=' + roomId + '&selected=' + selectedPiece.id + '&target=' + target.id)
+    const body = {
+        'from' : source.getAttribute('id'),
+        'to' : target.getAttribute('id')
+    }
+    axios.put('/api/room/' + roomId, body)
         .then(function (response) {
+            source.classList.remove('selected-piece')
+            source = null;
             refreshChessBoard(response.data);
         })
         .catch(function (error) {
@@ -82,28 +109,26 @@ function clearSelect() {
 }
 
 function refreshChessBoard(chessGame) {
-    console.log(chessGame);
+    gameInfo = chessGame;
     let isEnd = chessGame.end;
     clearChessBoard();
     if (!isEnd) {
         let blackPieces = chessGame.blackTeam.pieces.pieces;
-        console.log(blackPieces);
         for (let i = 0; i < blackPieces.length; i++) {
             let piece = blackPieces[i]
             let tile = document.getElementById(piece.position);
-            console.log(piece.position);
             tile.classList.add('piece');
+            tile.setAttribute('color', 'black')
             tile.classList.add(piece.piece);
             tile.innerHTML = piecesMap[piece.piece];
         }
 
         let whitePieces = chessGame.whiteTeam.pieces.pieces;
-        console.log(whitePieces);
         for (let i = 0; i < whitePieces.length; i++) {
             let piece = whitePieces[i];
-            console.log(piece.position);
             let tile = document.getElementById(piece.position);
             tile.classList.add('piece');
+            tile.setAttribute('color', 'white')
             tile.classList.add(piece.piece);
             tile.innerHTML = piecesMap[piece.piece];
         }

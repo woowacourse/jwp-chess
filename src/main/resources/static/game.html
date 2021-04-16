@@ -20,6 +20,7 @@
 
         .tile:hover {
             background-color: #F6F686;
+            cursor: pointer;
         }
 
         .black {
@@ -82,20 +83,9 @@
         }
 
         .btn-start:hover:after,
-        .btn-end:hover:after {
-            height: 100%;
-            left: 0;
-            top: 0;
-            width: 100%;
-        }
 
         .btn-start {
             float: left;
-        }
-
-        .btn-end {
-            float: left;
-            margin-left: 5px;
         }
 
         .status-white {
@@ -124,6 +114,10 @@
             color: white;
             padding: 10px;
             text-transform: uppercase;
+        }
+
+        .selected-piece {
+            background-color: yellow;
         }
 
         p {
@@ -210,7 +204,7 @@
         </div>
 
         <div class="sidebar">
-            <button class="btn-start">새로하기</button>
+            <!-- <button class="btn-start">새로하기</button> -->
 
             <div class="status-white">
                 <p id="name-white">WHITE</p>

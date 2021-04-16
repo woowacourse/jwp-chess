@@ -1,15 +1,14 @@
 package chess.service;
 
-import chess.Dto.MoveRequest;
-import chess.Dao.MoveDao;
-import chess.Dto.ScoreDto;
+import chess.dao.MoveDao;
 import chess.domain.Game;
 import chess.domain.board.Board;
 import chess.domain.board.Path;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 import chess.domain.state.Running;
-import java.util.LinkedHashMap;
+import chess.dto.MoveRequest;
+import chess.dto.ScoreDto;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
+
     private final MoveDao moveDao;
 
     public ChessService(MoveDao moveDao) {
@@ -26,14 +26,9 @@ public class ChessService {
     public Game findGame() {
         Game game = new Game();
         game.changeState(new Running());
-        Map<Position, Position> moves = mapPositions(moveDao.getMoves());
-        moves.forEach(game::move);
+        List<MoveRequest> findGame = moveDao.getMoves();
+        findGame.forEach(move -> game.move(move.getFrom(), move.getTo()));
         return game;
-    }
-
-    private Map<Position, Position> mapPositions(List<MoveRequest> moveRequests) {
-        return moveRequests.stream()
-            .collect(Collectors.toMap(MoveRequest::getFrom, MoveRequest::getTo, (p1, p2) -> p1, LinkedHashMap::new));
     }
 
     public Board findBoard() {

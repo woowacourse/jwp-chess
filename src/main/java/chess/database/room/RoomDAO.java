@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static chess.controller.WebUIChessController.gson;
+import static chess.controller.SparkChessController.gson;
 import static chess.database.DatabaseConnection.closeConnection;
 import static chess.database.DatabaseConnection.getConnection;
 

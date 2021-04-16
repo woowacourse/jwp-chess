@@ -27,7 +27,6 @@ import java.util.Optional;
 
 @Controller
 public class SpringChessController {
-
     private final SpringChessService springChessService;
 
     @Autowired
@@ -79,8 +78,8 @@ public class SpringChessController {
 
     @PostMapping(value = "/game/save")
     public ResponseEntity save(@RequestBody String room) {
-        boolean result = springChessService.saveRoom(room);
-        if (result) {
+        boolean isSaved = springChessService.saveRoom(room);
+        if (isSaved) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
@@ -89,7 +88,6 @@ public class SpringChessController {
     @PostMapping("/game/load")
     public ModelAndView load(@RequestParam("roomName") String roomName, ModelAndView modelAndView) {
         Optional<ChessGame> chessGameOptional = springChessService.loadRoom(roomName);
-
         if (chessGameOptional.isPresent()) {
             addChessGame(modelAndView, chessGameOptional.get());
             modelAndView.setViewName("game");

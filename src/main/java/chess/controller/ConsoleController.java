@@ -10,7 +10,7 @@ import chess.view.OutputView;
 
 import java.util.List;
 
-public class Controller {
+public class ConsoleController {
     public void run() {
         ChessBoard chessBoard = new ChessBoard();
         ChessGame chessGame = new ChessGame(chessBoard, Color.WHITE, new Ready());

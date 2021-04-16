@@ -2,7 +2,6 @@ package chess.database.room;
 
 import com.google.gson.JsonObject;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -13,14 +12,6 @@ import static chess.service.SpringChessService.gson;
 
 @Repository
 public class SpringRoomDAO {
-    private final RowMapper<Room> actorRowMapper = (resultSet, rowNum) -> {
-        Room room = new Room(
-                resultSet.getString("name"),
-                resultSet.getString("turn"),
-                gson.fromJson(resultSet.getString("state"), JsonObject.class)
-        );
-        return room;
-    };
     private JdbcTemplate jdbcTemplate;
 
     public SpringRoomDAO(JdbcTemplate jdbcTemplate) {

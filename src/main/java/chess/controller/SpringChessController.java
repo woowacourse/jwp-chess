@@ -1,12 +1,7 @@
 package chess.controller;
 
-import chess.dao.GameDao;
-import chess.domain.ChessGame;
-import chess.domain.Position;
 import chess.domain.Room;
-import chess.domain.team.BlackTeam;
-import chess.domain.team.WhiteTeam;
-import chess.repository.ChessRepository;
+import chess.service.ChessService;
 import dto.ChessGameDto;
 import dto.MoveDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,42 +14,25 @@ import java.util.List;
 @RequestMapping("/api")
 public class SpringChessController {
     @Autowired
-    ChessRepository chessRepository;
+    ChessService chessService;
 
     @GetMapping("/room")
     public ResponseEntity<List<Room>> loadAllRoom() {
-        return ResponseEntity.ok().body(chessRepository.loadAllRoom());
+        return chessService.loadAllRoom();
     }
 
     @PostMapping("/room/{id}")
     public ResponseEntity<ChessGameDto> loadGame(@PathVariable("id") Long roodId, @RequestBody Room room) {
-        Room savedRoom = chessRepository.loadRoom(roodId);
-        if (!savedRoom.checkPassword(room)) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        final ChessGame chessGame = chessRepository.loadGame(roodId);
-        return ResponseEntity.ok().body(new ChessGameDto(chessGame));
+        return chessService.loadGame(roodId, room);
     }
 
     @PostMapping("/room")
     public void createRoom(@RequestBody Room room) {
-        chessRepository.createRoom(new ChessGame(new WhiteTeam(), new BlackTeam()), room);
+        chessService.createRoom(room);
     }
 
     @PutMapping("/room/{id}")
     public ResponseEntity<ChessGameDto> movePiece(@PathVariable("id") Long roodId, @RequestBody MoveDto moveDto) {
-        final ChessGame chessGame = chessRepository.loadGame(roodId);
-        try {
-            if (chessGame.move(Position.of(moveDto.getFrom()), Position.of(moveDto.getTo()))) {
-                // 세이브 로직
-                chessRepository.saveGame(roodId, chessGame, moveDto);
-                return ResponseEntity.ok().body(new ChessGameDto(chessGame));
-            }
-            throw new IllegalArgumentException("이동할 수 없습니다.");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().body(null);
-        }
+        return chessService.movePiece(roodId, moveDto);
     }
 }

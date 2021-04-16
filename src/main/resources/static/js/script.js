@@ -16,18 +16,18 @@ addEventOnLoadGameButton();
 
 addEventOnGameListBox();
 
-function processResponse(response) {
-    response.json()
-        .then(responseBody => {
-            updateMessage(responseBody.message);
-            console.log(responseBody.message);
-            if (response.ok) {
-                if (responseBody.item.gameId !== undefined) {
-                    gameId = responseBody.item.gameId;
-                }
-                updateGameData(responseBody);
-            }
-        })
+async function processResponse(response) {
+    const responseBody = await response.json();
+
+    console.log(responseBody.message);
+    updateMessage(responseBody.message);
+
+    if (response.ok) {
+        if (responseBody.item.gameId !== undefined) {
+            gameId = responseBody.item.gameId;
+        }
+        updateGameData(responseBody);
+    }
 }
 
 function SquareBuffer() {
@@ -42,7 +42,7 @@ async function addEventOnGameListBox() {
     if (response.ok) {
         const responseBody = await response.json();
 
-        updateMessage(responseBody.message);
+        console.log(responseBody.message);
         const gameNumbers = responseBody.item.gamesId;
 
         for (let gameNumber of gameNumbers) {

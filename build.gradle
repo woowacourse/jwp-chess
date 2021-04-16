@@ -28,7 +28,7 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured:3.3.0'
 
     runtimeOnly 'mysql:mysql-connector-java'
-    runtimeOnly 'com.h2database:h2'
+    testImplementation 'com.h2database:h2'
 }
 
 test {

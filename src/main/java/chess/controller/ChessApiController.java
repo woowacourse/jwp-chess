@@ -10,6 +10,7 @@ import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.converter.StringPositionConverter;
 import chess.domain.piece.Piece;
+import chess.exception.ChessException;
 import chess.service.ChessService;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -89,5 +91,10 @@ public class ChessApiController {
     @PostMapping("/save/{gameId}")
     public void save(@PathVariable Long gameId) {
         chessService.saveGame(gameId);
+    }
+
+    @ExceptionHandler(ChessException.class)
+    public ResponseEntity<String> chessException(Exception exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

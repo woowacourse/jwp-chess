@@ -3,7 +3,6 @@ package chess.websocket.commander;
 import chess.websocket.util.TriConsumer;
 import java.io.IOException;
 import java.util.Arrays;
-import org.eclipse.jetty.websocket.api.Session;
 import org.springframework.web.socket.WebSocketSession;
 
 public enum RequestCommand {

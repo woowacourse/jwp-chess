@@ -1,7 +1,5 @@
 package chess.dao;
 
-import chess.domain.ChessGame;
-import chess.domain.CurrentGameRoom;
 import chess.domain.TeamColor;
 import chess.domain.piece.Piece;
 import java.util.List;

@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.domain.ChessGame;
 import chess.domain.TeamColor;
 import chess.domain.piece.Piece;
 import java.util.List;
@@ -15,20 +14,6 @@ public class ChessDAOSql2o implements ChessDAO {
 
     public ChessDAOSql2o() {
         sql2o = new Sql2o("jdbc:postgresql://localhost:5432/chess", "nabom", "1234");
-    }
-
-    private void pieceBulkUpdate(ChessGame chessGame, Long gameId, Connection connection) {
-        try (Query query = connection.createQuery(
-            "insert into game(gameid, name, color, position) values(:gameId, :name, :color,:position)")) {
-            chessGame.pieces().asList().forEach(piece -> {
-                query.addParameter("gameId", gameId)
-                    .addParameter("name", piece.name())
-                    .addParameter("color", piece.color())
-                    .addParameter("position", piece.currentPosition().columnAndRow())
-                    .addToBatch();
-            });
-            query.executeBatch();
-        }
     }
 
     @Override

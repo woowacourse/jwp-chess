@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import org.eclipse.jetty.websocket.api.Session;
 import org.springframework.web.socket.WebSocketSession;
 
 public class ChessRoom {

@@ -1,20 +1,15 @@
 package chess;
 
-import chess.controller.ChessController;
-import chess.dao.ChessDAOJdbc;
-import chess.dao.ChessDAOSql2o;
-import chess.service.ChessServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
 import static spark.Spark.staticFiles;
+
+import chess.controller.ChessController;
+import chess.dao.ChessDAOSql2o;
+import chess.service.ChessServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 
 public class SparkChessApplication {
     public static void main(String[] args) {

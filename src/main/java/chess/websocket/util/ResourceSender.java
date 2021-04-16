@@ -2,7 +2,6 @@ package chess.websocket.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import org.eclipse.jetty.websocket.api.Session;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 

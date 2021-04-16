@@ -2,7 +2,6 @@ package chess.websocket;
 
 import chess.websocket.commander.RequestCommand;
 import chess.websocket.commander.RequestCommander;
-import org.eclipse.jetty.websocket.api.Session;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;

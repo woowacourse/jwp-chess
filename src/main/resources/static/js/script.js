@@ -54,7 +54,7 @@ async function addEventOnGameListBox() {
     }
 }
 
-function addAndRequestMove(square) {
+async function addAndRequestMove(square) {
     this.buffer.push(square);
     if (this.buffer.length === 2) {
         const toSquare = this.buffer.pop();
@@ -117,7 +117,7 @@ async function addEventOnRegameButton() {
     });
 }
 
-function addEventOnLoadGameButton() {
+async function addEventOnLoadGameButton() {
     document.getElementById('load-button').addEventListener('click', event => {
         try {
             const gameListBox = document.getElementById("gameListBox");
@@ -131,7 +131,7 @@ function addEventOnLoadGameButton() {
     })
 }
 
-function updateGameData(responseJsonBody) {
+async function updateGameData(responseJsonBody) {
     updateBoard(responseJsonBody.item.chessBoard);
     if (responseJsonBody.item.end) {
         updateWinner(responseJsonBody);
@@ -141,7 +141,7 @@ function updateGameData(responseJsonBody) {
     updateScoreAndTurn(responseJsonBody);
 }
 
-function updateBoard(piecesMap) {
+async function updateBoard(piecesMap) {
     for (const square of $chessBoard.querySelectorAll('div')) {
         square.innerHTML = '';
     }
@@ -162,25 +162,25 @@ function makeImage(imageName) {
     return img;
 }
 
-function updateScoreAndTurn(responseJsonBody) {
+async function updateScoreAndTurn(responseJsonBody) {
     const blackScore = responseJsonBody.item.colorsScore.BLACK;
     const whiteScore = responseJsonBody.item.colorsScore.WHITE;
     const currentTurn = responseJsonBody.item.currentTurnColor;
     document.getElementById('score-console').innerText = `백: ${whiteScore}점 흑: ${blackScore}점\n현재 순서: ${colorTranslationTable[currentTurn]}`;
 }
 
-function updateWinner(responseJsonBody) {
+async function updateWinner(responseJsonBody) {
     const blackScore = responseJsonBody.item.colorsScore.BLACK;
     const whiteScore = responseJsonBody.item.colorsScore.WHITE;
     const winner = responseJsonBody.item.matchResult;
     document.getElementById('score-console').innerText = `백: ${whiteScore}점 흑: ${blackScore}점\n승: ${matchResultTranslationTable[winner]}`;
 }
 
-function updateMessage(message) {
+async function updateMessage(message) {
     document.getElementById('message-console').innerText = message;
 }
 
-function turnOnPanel() {
+async function turnOnPanel() {
     for (const button of document.getElementById('panel').querySelectorAll('button')) {
         button.style.display = 'none';
     }

@@ -18,6 +18,7 @@ public class ChessDao {
     private final JdbcTemplate jdbcTemplate;
     private final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ?";
     private final String UPDATE_TURN_QUERY = "update turn set turn_owner = ? where turn_owner = ?";
+    private final String SELECT_TURN_QUERY = "select turn_owner from turn";
 
     public ChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -63,7 +64,8 @@ public class ChessDao {
         jdbcTemplate.update(UPDATE_TURN_QUERY, turnOwner.getTeamString(), turnOwner.getOpposite().getTeamString());
     }
 
-    public void resetTurnOwner(Team turnOwner) {
-        jdbcTemplate.update(UPDATE_TURN_QUERY, "white", turnOwner.getTeamString());
+    public void resetTurnOwner() {
+        String turnOwner = jdbcTemplate.query(SELECT_TURN_QUERY, (rs, rowNum) -> rs.getString("turn_owner")).get(0);
+        jdbcTemplate.update(UPDATE_TURN_QUERY, "white", turnOwner);
     }
 }

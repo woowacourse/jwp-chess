@@ -21,7 +21,7 @@ public class ChessController {
 
     @PutMapping("/board")
     public BoardDto resetBoard() {
-        return chessService.initiateBoard();
+        return chessService.resetBoard();
     }
 
     @GetMapping("/score")

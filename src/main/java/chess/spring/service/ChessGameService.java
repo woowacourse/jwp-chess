@@ -33,4 +33,8 @@ public class ChessGameService {
         ChessGameNew chessGame = chessGameRepository.findById(gameId);
         return new GameStatusDto(chessGame);
     }
+
+    public void deleteGame(Long gameId) {
+        chessGameRepository.deleteById(gameId);
+    }
 }

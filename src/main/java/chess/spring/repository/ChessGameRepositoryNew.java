@@ -9,4 +9,6 @@ public interface ChessGameRepositoryNew {
     List<ChessGameNew> findAll();
 
     ChessGameNew findById(Long gameId);
+
+    void deleteById(Long gameId);
 }

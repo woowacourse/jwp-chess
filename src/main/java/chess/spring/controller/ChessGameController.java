@@ -41,10 +41,10 @@ public class ChessGameController {
         model.addAttribute("gameStatusDto", gameStatusDto);
         return "chess-board";
     }
-//
-//    @GetMapping("/delete")
-//    public String deleteRequest(@RequestParam("id") Long gameId) throws SQLException {
-//        chessWebService.deleteGame(gameId);
-//        return "redirect:/";
-//    }
+
+    @PostMapping("/delete")
+    public String delete(@RequestParam Long gameId) {
+        chessGameService.deleteGame(gameId);
+        return "redirect:/";
+    }
 }

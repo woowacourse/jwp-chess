@@ -59,4 +59,10 @@ public class ChessGameDaoNew implements ChessGameRepositoryNew {
         String query = "SELECT * FROM chess_game WHERE chess_game_id = ?";
         return jdbcTemplate.queryForObject(query, chessGameRowMapper, gameId);
     }
+
+    @Override
+    public void deleteById(Long gameId) {
+        String query = "DELETE FROM chess_game WHERE chess_game_id = ?";
+        jdbcTemplate.update(query, gameId);
+    }
 }

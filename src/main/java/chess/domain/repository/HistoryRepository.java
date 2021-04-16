@@ -1,5 +1,6 @@
 package chess.domain.repository;
 
+import chess.domain.dto.HistoryDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,9 @@ public class HistoryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<String> rowMapper = (resultSet, rowNum) -> resultSet.getString("name");
+    private final RowMapper<HistoryDto> rowMapper = (resultSet, rowNum) ->
+            new HistoryDto(resultSet.getString("history_id"), resultSet.getString("name"));
+;
 
     public void insert(String name) {
         final String query = "INSERT INTO History (name) VALUES (?)";
@@ -23,7 +26,8 @@ public class HistoryRepository {
     }
 
     public Optional<Integer> findIdByName(String name) {
-        final String query = "SELECT history_id FROM History WHERE name = ? AND is_end = false";
+        final String query = "SELECT history_id FROM History WHERE name = ? AND is_end = false " +
+                "ORDER BY history_id DESC limit 1";
         return Optional.ofNullable(jdbcTemplate.queryForObject(query, Integer.class, name));
     }
 
@@ -32,7 +36,7 @@ public class HistoryRepository {
         return jdbcTemplate.update(query, name);
     }
 
-    public List<String> selectActive() {
+    public List<HistoryDto> selectActive() {
         final String query = "SELECT * FROM History WHERE is_end = false";
         return jdbcTemplate.query(query, rowMapper);
     }

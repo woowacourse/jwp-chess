@@ -1,5 +1,6 @@
 package chess.domain.repository;
 
+import chess.domain.dto.HistoryDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +53,14 @@ class HistoryRepositoryTest {
         historyRepository.insert("jino");
         historyRepository.insert("pobi");
         historyRepository.insert("jason");
-        final List<String> names = historyRepository.selectActive();
-        assertThat(names).contains("joanne", "jino", "pobi", "jason");
+        final List<HistoryDto> names = historyRepository.selectActive();
+        assertThat(names.size()).isEqualTo(4);
     }
 
     @Test
     void updateEndState() {
         historyRepository.updateEndState(String.valueOf(1));
-        final List<String> names = historyRepository.selectActive();
+        final List<HistoryDto> names = historyRepository.selectActive();
         assertThat(names.size()).isEqualTo(0);
     }
 }

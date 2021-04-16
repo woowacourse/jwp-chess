@@ -1,8 +1,10 @@
 package chess.controller;
 
 import chess.domain.command.Commands;
+import chess.domain.dto.MoveResponseDto;
 import chess.domain.exception.DataException;
-import chess.domain.vo.MoveVo;
+import chess.domain.dto.MoveDto;
+import chess.domain.dto.NameDto;
 import chess.service.ChessService;
 import chess.view.ModelView;
 import com.google.gson.Gson;
@@ -27,44 +29,43 @@ public class ChessController {
     @GetMapping("")
     public String play(Model model) throws DataException {
         model.addAllAttributes(ModelView.startResponse(chessService.loadHistory()));
-        return "play";
+        return "lobby";
     }
 
-    @GetMapping("/new")
-    public String playNewGameWithNoSave(Model model) {
-        model.addAllAttributes(ModelView.newGameResponse(chessService.initialGameInfo()));
-        return "chessGame";
+    @PostMapping("")
+    @ResponseBody
+    public String saveName(@RequestBody NameDto nameDto) {
+        return GSON.toJson(ModelView.idResponse(chessService.addHistory(nameDto.getName())));
     }
 
-    @GetMapping("/{name}/new")
-    public String playNewGameWithSave(Model model, @PathVariable String name) throws DataException {
+    @GetMapping("/{id}")
+    public String play(Model model, @PathVariable String id) throws DataException {
         model.addAllAttributes(ModelView.newGameResponse(
                 chessService.initialGameInfo(),
-                chessService.addHistory(name)
+                id
         ));
         return "chessGame";
     }
 
-    @GetMapping("/continue")
-    public String continueGame(Model model, @RequestParam("name") String name) throws DataException {
-        final String id = chessService.getIdByName(name);
+    @GetMapping("/continue/{id}")
+    public String continueGame(Model model, @PathVariable String id) throws DataException {
         model.addAllAttributes(ModelView.commonResponseForm(chessService.continuedGameInfo(id), id));
         return "chessGame";
     }
 
     @GetMapping("/end")
     public String endGame() {
-        return "play";
+        return "lobby";
     }
 
-    @PostMapping(path = "/move")
+    @PostMapping( "/move")
     @ResponseBody
-    public String move(@RequestBody MoveVo moveVo) {
-        String command = makeMoveCmd(moveVo.getSource(), moveVo.getTarget());
-        String historyId = moveVo.getGameId();
+    public String move(@RequestBody MoveDto moveDto) {
+        String command = makeMoveCmd(moveDto.getSource(), moveDto.getTarget());
+        String id = moveDto.getGameId();
         try {
-            chessService.move(historyId, command, new Commands(command));
-            return GSON.toJson(ModelView.moveResponse(chessService.continuedGameInfo(historyId), historyId));
+            chessService.move(id, command, new Commands(command));
+            return GSON.toJson(new MoveResponseDto(chessService.continuedGameInfo(id), id));
         } catch (IllegalArgumentException | SQLException e) {
             return e.getMessage();
         }

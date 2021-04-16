@@ -6,20 +6,22 @@ import chess.domain.board.Team;
 import java.util.List;
 
 public class GameInfoDto {
-    private List<SquareDto> squares;
+//    private List<SquareDto> squares;
+    private SquaresDto squares;
     private Team turn;
     private ScoresDto scores;
     private Team winner;
 
     public GameInfoDto(ChessGame chessGame) {
-        this.squares = new SquaresDto(chessGame.board()).squares();
+//        this.squares = new SquaresDto(chessGame.board()).squares();
+        this.squares = new SquaresDto(chessGame.board());
         this.turn = chessGame.turn();
         this.scores = new ScoresDto(chessGame.pointDto());
         this.winner = chessGame.winner();
     }
 
     public List<SquareDto> squares() {
-        return squares;
+        return squares.squares();
     }
 
     public Team turn() {

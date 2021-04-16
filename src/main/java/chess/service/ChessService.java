@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import spark.utils.StringUtils;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,10 +59,7 @@ public class ChessService {
     }
 
     private List<HistoryDto> histories() {
-        return historyRepository.selectActive()
-                .stream()
-                .map(HistoryDto::new)
-                .collect(Collectors.toList());
+        return new ArrayList<>(historyRepository.selectActive());
     }
 
     public String addHistory(String name) {
@@ -73,8 +71,8 @@ public class ChessService {
         return String.valueOf(id.get());
     }
 
-    public void updateMoveInfo(String command, String historyId) {
-        if (!StringUtils.isEmpty(historyId)) {
+    private void updateMoveInfo(String command, String historyId) {
+        if (StringUtils.isNotEmpty(historyId)) {
             flushCommands(command, historyId);
         }
     }
@@ -83,7 +81,7 @@ public class ChessService {
         historyRepository.updateEndState(historyId);
     }
 
-    public void flushCommands(String command, String gameId) {
+    private void flushCommands(String command, String gameId) {
         try {
             commandRepository.insert(new CommandDto(command), Integer.parseInt(gameId));
         } catch (DataAccessException e) {
@@ -91,19 +89,7 @@ public class ChessService {
         }
     }
 
-    public List<CommandDto> lastState(String id) {
-        List<CommandDto> sample = commandRepository.selectAllCommands(id);
-        for (CommandDto commandDto : sample) {
-            System.out.println(commandDto.data());
-        }
+    private List<CommandDto> lastState(String id) {
         return commandRepository.selectAllCommands(id);
-    }
-
-    public String getIdByName(String name) {
-        final Optional<Integer> id = historyRepository.findIdByName(name);
-        if (!id.isPresent()) {
-            throw new DataException("[ERROR] 해당 이름의 사용자가 존재하지 않습니다.");
-        }
-        return String.valueOf(id.get());
     }
 }

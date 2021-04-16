@@ -16,7 +16,7 @@
         <div id="historyList">
             {{#history}}
                 <div id="history">
-                    <a class="{{name}}" href="/play/continue?name={{name}}">{{name}}</a>
+                    <a class="{{name}}" href="/play/continue/{{id}}">{{name}}</a>
                 </div>
             {{/history}}
         </div>
@@ -29,8 +29,29 @@
         if (name == null) {
             window.location = "/play";
         } else {
-            window.location = `/play/${name}/new`;
+            $.ajax({
+                type: "POST",
+                url: '/play',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({
+                    "name": name,
+                }),
+                success: redirect,
+                error: showError,
+            })
         }
+    }
+
+    const showError = function (response) {
+        alert(response.responseText);
+    }
+
+    const redirect = function (response) {
+        console.log(response);
+        window.location = `/play/${response.id}`;
     }
 
     const gameHistory = document.getElementById("historyList");

@@ -13,13 +13,14 @@ function getTotalRoom() {
 }
 
 btnCreate.addEventListener('click', function (e) {
-    let name = prompt("사용자 이름을 입력해 주세요.");
+    let name = prompt("방이름을 입력해 주세요.");
     let pw = prompt("비밀번호를 입력해 주세요");
-    axios.post('/createRoom', {
+    axios.post('/api/room', {
         "name": name,
         "pw": pw
     }).then(function (response) {
-        refreshRoomList(response.data)
+        //refreshRoomList(response.data)
+        window.location.reload()
     }).catch(function (error) {
         alert('방을 만들지 못했습니다.');
     });

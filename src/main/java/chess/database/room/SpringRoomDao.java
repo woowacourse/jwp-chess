@@ -10,10 +10,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public class SpringRoomDAO {
+public class SpringRoomDao {
     private JdbcTemplate jdbcTemplate;
 
-    public SpringRoomDAO(JdbcTemplate jdbcTemplate) {
+    public SpringRoomDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -13,7 +13,7 @@ import java.util.Optional;
 import static chess.database.DatabaseConnection.closeConnection;
 import static chess.database.DatabaseConnection.getConnection;
 
-public class RoomDAO {
+public class RoomDao {
     public void addRoom(Room room) throws SQLException {
         String query = "INSERT INTO room (name, turn, state) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE turn = VALUES(turn), state = VALUES(state)";
         Connection con = getConnection();

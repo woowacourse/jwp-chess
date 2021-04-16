@@ -8,23 +8,26 @@ import chess.domain.team.WhiteTeam;
 import chess.repository.ChessRepository;
 import dto.ChessGameDto;
 import dto.MoveDto;
+import dto.RoomDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChessService {
     @Autowired
     ChessRepository chessRepository;
 
-    public ResponseEntity<List<Room>> loadAllRoom() {
-        return ResponseEntity.ok().body(chessRepository.loadAllRoom());
+    public ResponseEntity<List<RoomDto>> loadAllRoom() {
+        final List<RoomDto> rooms = chessRepository.loadAllRoom()
+                .stream()
+                .map(RoomDto::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(rooms);
     }
 
     public ResponseEntity<ChessGameDto> loadGame(Long roodId, Room room) {

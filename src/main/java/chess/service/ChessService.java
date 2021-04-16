@@ -27,7 +27,7 @@ public class ChessService {
         Game game = new Game();
         game.changeState(new Running());
         List<MoveRequest> findGame = moveDao.getMoves();
-        findGame.forEach(move -> game.move(Position.of(move.getFrom()),Position.of(move.getTo())));
+        findGame.forEach(move -> game.move(move.getFrom(), move.getTo()));
         return game;
     }
 

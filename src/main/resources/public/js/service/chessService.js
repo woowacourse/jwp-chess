@@ -38,3 +38,10 @@ export async function movePiece(piecesDto, gridDto, sourcePosition, targetPositi
         }
     });
 }
+
+export async function getRooms() {
+    return await axios({
+        method: 'get',
+        url: `/room`
+    });
+}

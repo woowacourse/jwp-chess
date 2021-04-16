@@ -150,7 +150,7 @@ function clearClicked() {
     }
 }
 
-function movePiece(sourcePosition, targetPosition) {
+async function movePiece(sourcePosition, targetPosition) {
     const data = {
         chessName: localStorage.getItem("name"),
         source: sourcePosition,
@@ -165,14 +165,14 @@ function movePiece(sourcePosition, targetPosition) {
         body: JSON.stringify(data)
     };
 
-    fetch(basePath + "/pieces", option)
-    .then(res => res.json())
-    .then(async response => {
-        if (response.statusCode === 400) {
-            alert(response.message);
-            return;
-        }
-        await loadGame();
-    })
+    const response = await fetch(basePath + "/pieces", option)
+    .then(res => res.json());
+    console.log(response.body);
+
+    if (response.statusCode === 400) {
+        alert(response.message);
+        return;
+    }
+    await loadGame();
 }
 

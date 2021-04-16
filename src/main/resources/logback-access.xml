@@ -1,9 +1,11 @@
 <configuration>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
         <encoder>
-            <pattern>%n[↓↓↓ LOGBACK ACCESS ↓↓↓]%n%n%fullRequest%n%n%fullResponse%n%n[↑↑↑ LOGBACK ACCESS ↑↑↑]%n</pattern>
+            <pattern>%n[↓↓↓ LOGBACK ACCESS ↓↓↓]%n%n%fullRequest%n%n%fullResponse%n%n[↑↑↑ LOGBACK
+                ACCESS ↑↑↑]%n
+            </pattern>
         </encoder>
     </appender>
 
-    <appender-ref ref="STDOUT" />
+    <appender-ref ref="STDOUT"/>
 </configuration>

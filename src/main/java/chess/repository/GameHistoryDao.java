@@ -11,11 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GameHistoryDao {
     private final JdbcTemplate jdbcTemplate;
-
-    public GameHistoryDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private final RowMapper<GameHistory> gameHistoryRowMapper = (resultSet, rowNum) ->
         new GameHistory(
             resultSet.getInt("id"),
@@ -23,6 +18,10 @@ public class GameHistoryDao {
             resultSet.getString("command"),
             resultSet.getTimestamp("createdTime").toLocalDateTime()
         );
+
+    public GameHistoryDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void addGameHistory(GameHistory gameHistory) throws SQLException {
         String query = "INSERT INTO game_history(gameId, command, createdTime) VALUES (?, ?, ?)";

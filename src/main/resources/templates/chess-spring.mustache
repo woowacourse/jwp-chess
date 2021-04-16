@@ -31,34 +31,34 @@
 </head>
 
 {{#em}}
-<body onload="alertError('{{em}}');">
+    <body onload="alertError('{{em}}');">
 {{/em}}
 {{^em}}
-<body>
+    <body>
 {{/em}}
 
 {{#user}}
-<form action="/games" method="get">
-    <button> 게임방 목록 보기</button>
-</form>
-<div>
+    <form action="/games" method="get">
+        <button> 게임방 목록 보기</button>
+    </form>
     <div>
-        <a> 게임번호 - {{gameId}}</a>
+        <div>
+            <a> 게임번호 - {{gameId}}</a>
+        </div>
+        <div>
+            <a> 현재 턴 - {{turn}}</a>
+        </div>
+        <div>
+            {{#winner}}
+                <a> 우승 - {{winner}}</a>
+            {{/winner}}
+        </div>
     </div>
-    <div>
-        <a> 현재 턴 - {{turn}}</a>
-    </div>
-    <div>
-        {{#winner}}
-        <a> 우승 - {{winner}}</a>
-        {{/winner}}
-    </div>
-</div>
 {{/user}}
 {{^user}}
-<form action="/home" method="get">
-    <button> 로그인</button>
-</form>
+    <form action="/home" method="get">
+        <button> 로그인</button>
+    </form>
 {{/user}}
 <br/>
 <form action="/move/{{gameId}}" method="post">

@@ -7,32 +7,32 @@
 <body>
 <ul class="game_list">
     {{#userName}}
-    <form action="/logout" method="post">
-        <button type="submit"> {{userName}}님 로그아웃</button>
-    </form>
+        <form action="/logout" method="post">
+            <button type="submit"> {{userName}}님 로그아웃</button>
+        </form>
     {{/userName}}
     {{^userName}}
-    <form action="/" method="get">
-        <button type="submit"> 로그인</button>
-    </form>
+        <form action="/" method="get">
+            <button type="submit"> 로그인</button>
+        </form>
     {{/userName}}
 
     {{#games}}
-    <form action="/games/{{gameId}}" method="get">
-        {{#end}}
-        {{#gameId}}
-        <button type="submit">이미 종료된 {{gameId}}번 게임</button>
-        {{/gameId}}
-        {{/end}}
-        {{^end}}
-        {{#gameId}}
-        <button type="submit">{{gameId}}번 게임 진행중</button>
-        {{/gameId}}
-        {{/end}}
-    </form>
+        <form action="/games/{{gameId}}" method="get">
+            {{#end}}
+                {{#gameId}}
+                    <button type="submit">이미 종료된 {{gameId}}번 게임</button>
+                {{/gameId}}
+            {{/end}}
+            {{^end}}
+                {{#gameId}}
+                    <button type="submit">{{gameId}}번 게임 진행중</button>
+                {{/gameId}}
+            {{/end}}
+        </form>
     {{/games}}
     {{^games}}
-    <a>진행 중인 게임이 없습니다.</a>
+        <a>진행 중인 게임이 없습니다.</a>
     {{/games}}
 </ul>
 <form action="/start" method="post">

@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.SpringApplicationRunListener;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;

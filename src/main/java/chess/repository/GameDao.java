@@ -13,11 +13,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GameDao {
     private final JdbcTemplate jdbcTemplate;
-
-    public GameDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private final RowMapper<Game> gameRowMapper = (resultSet, rowNum) ->
         new Game(
             resultSet.getInt("id"),
@@ -25,6 +20,10 @@ public class GameDao {
             resultSet.getBoolean("isEnd"),
             resultSet.getTimestamp("createdTime").toLocalDateTime()
         );
+
+    public GameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public int addGame(Game game) {
         String query = "INSERT INTO game(userId, isEnd, createdTime) VALUES (?, ?, ?);";

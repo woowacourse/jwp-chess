@@ -13,13 +13,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserDao {
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<User> userRowMapper = (resultSet, rowNum) ->
+        new User(resultSet.getInt("id"), resultSet.getString("name"));
 
     public UserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-    private final RowMapper<User> userRowMapper = (resultSet, rowNum) ->
-        new User(resultSet.getInt("id"), resultSet.getString("name"));
 
     public int addUser(User user) {
         String query = "INSERT INTO user(name) VALUES (?)";

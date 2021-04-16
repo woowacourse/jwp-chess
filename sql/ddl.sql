@@ -1,6 +1,6 @@
 USE test;
 
-CREATE TABLE room (
+CREATE TABLE rooms (
     room_id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(12) NOT NULL,
     turn VARCHAR(6) NOT NULL,

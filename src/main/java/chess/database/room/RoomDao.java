@@ -15,7 +15,7 @@ import static chess.database.DatabaseConnection.getConnection;
 
 public class RoomDao {
     public void addRoom(Room room) throws SQLException {
-        String query = "INSERT INTO room (name, turn, state) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE turn = VALUES(turn), state = VALUES(state)";
+        String query = "INSERT INTO rooms (name, turn, state) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE turn = VALUES(turn), state = VALUES(state)";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
         pstmt.setString(1, room.getName());
@@ -26,7 +26,7 @@ public class RoomDao {
     }
 
     public Room findByRoomId(String name) throws SQLException {
-        String query = "SELECT * FROM room WHERE name = ?";
+        String query = "SELECT * FROM rooms WHERE name = ?";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
         pstmt.setString(1, name);
@@ -50,7 +50,7 @@ public class RoomDao {
     }
 
     public void validateRoomExistence(String name) throws SQLException {
-        String query = "SELECT * FROM room WHERE name = ?";
+        String query = "SELECT * FROM rooms WHERE name = ?";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
         pstmt.setString(1, name);
@@ -63,7 +63,7 @@ public class RoomDao {
     }
 
     public List<String> getAllRoom() throws SQLException {
-        String query = "SELECT name FROM room";
+        String query = "SELECT name FROM rooms";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
         ResultSet rs = pstmt.executeQuery();

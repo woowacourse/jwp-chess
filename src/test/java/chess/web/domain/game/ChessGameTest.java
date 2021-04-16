@@ -17,8 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.console.controller.dto.request.MoveRequestDTO;
-import chess.console.controller.dto.response.GameStatusResponseDTO;
+import chess.spring.controller.dto.request.MoveRequestDTO;
+import chess.spring.controller.dto.response.GameStatusResponseDTO;
 import chess.web.domain.board.setting.BoardCustomSetting;
 import chess.web.domain.board.setting.BoardDefaultSetting;
 import chess.web.domain.board.setting.BoardSetting;

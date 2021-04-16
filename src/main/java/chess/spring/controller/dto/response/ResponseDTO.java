@@ -1,4 +1,4 @@
-package chess.console.controller.dto.response;
+package chess.spring.controller.dto.response;
 
 public class ResponseDTO {
     private final Long gameId;

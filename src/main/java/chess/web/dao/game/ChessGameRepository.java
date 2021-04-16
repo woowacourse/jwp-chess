@@ -8,17 +8,17 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChessGameRepository {
-    ChessGameEntity save(ChessGameEntity chessRoomEntity) throws SQLException;
+    ChessGameEntity save(ChessGameEntity chessRoomEntity);
 
-    ChessGameEntity findById(Long id) throws SQLException;
+    ChessGameEntity findById(Long id);
 
-    List<ChessGameEntity> findAll() throws SQLException;
+    List<ChessGameEntity> findAll();
 
-    GameStatusEntity findStatusByGameId(Long gameId) throws SQLException;
+    GameStatusEntity findStatusByGameId(Long gameId);
 
-    ChessGameEntity updateCurrentTurnTeamColor(ChessGameEntity chessGameEntity) throws SQLException;
+    ChessGameEntity updateCurrentTurnTeamColor(ChessGameEntity chessGameEntity);
 
-    void remove(Long gameId) throws SQLException;
+    void remove(Long gameId);
 
-    void removeAll() throws SQLException;
+    void removeAll();
 }

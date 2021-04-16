@@ -1,4 +1,4 @@
-package chess.console.controller.dto.request;
+package chess.spring.controller.dto.request;
 
 
 public class MoveRequestDTO {

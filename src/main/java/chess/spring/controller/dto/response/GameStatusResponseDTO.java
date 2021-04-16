@@ -1,4 +1,4 @@
-package chess.console.controller.dto.response;
+package chess.spring.controller.dto.response;
 
 import chess.web.domain.player.type.TeamColor;
 

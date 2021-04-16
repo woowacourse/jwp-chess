@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class PositionsCache {
     private static final List<Position> POSITIONS = new ArrayList<>();
 
@@ -23,7 +23,7 @@ public class PositionsCache {
         this.positionRepository = positionRepository;
     }
 
-    @PostConstruct
+
     private void init() {
         try {
             cachePositions();

@@ -4,7 +4,7 @@ import static chess.utils.TestFixture.TEST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.console.controller.dto.request.MoveRequestDTO;
+import chess.spring.controller.dto.request.MoveRequestDTO;
 import chess.web.domain.board.setting.BoardDefaultSetting;
 import chess.web.domain.game.ChessGame;
 import chess.utils.DBCleaner;

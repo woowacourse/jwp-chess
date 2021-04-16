@@ -1,9 +1,9 @@
 package chess.web.domain.game;
 
-import chess.console.controller.dto.request.MoveRequestDTO;
-import chess.console.controller.dto.response.BoardStatusResponseDTO;
-import chess.console.controller.dto.response.ChessGameResponseDTO;
-import chess.console.controller.dto.response.GameStatusResponseDTO;
+import chess.spring.controller.dto.request.MoveRequestDTO;
+import chess.spring.controller.dto.response.BoardStatusResponseDTO;
+import chess.spring.controller.dto.response.ChessGameResponseDTO;
+import chess.spring.controller.dto.response.GameStatusResponseDTO;
 import chess.web.dao.entity.ChessGameEntity;
 import chess.web.dao.entity.GameStatusEntity;
 import chess.web.dao.game.ChessGameRepository;

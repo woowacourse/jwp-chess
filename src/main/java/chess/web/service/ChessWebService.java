@@ -1,12 +1,12 @@
 package chess.web.service;
 
-import chess.console.controller.dto.request.MoveRequestDTO;
-import chess.console.controller.dto.response.BoardResponseDTO;
-import chess.console.controller.dto.response.BoardStatusResponseDTO;
-import chess.console.controller.dto.response.ChessGameResponseDTO;
-import chess.console.controller.dto.response.GameStatusResponseDTO;
-import chess.console.controller.dto.response.MoveResponseDTO;
-import chess.console.controller.dto.response.ResponseDTO;
+import chess.spring.controller.dto.request.MoveRequestDTO;
+import chess.spring.controller.dto.response.BoardResponseDTO;
+import chess.spring.controller.dto.response.BoardStatusResponseDTO;
+import chess.spring.controller.dto.response.ChessGameResponseDTO;
+import chess.spring.controller.dto.response.GameStatusResponseDTO;
+import chess.spring.controller.dto.response.MoveResponseDTO;
+import chess.spring.controller.dto.response.ResponseDTO;
 import chess.web.domain.board.setting.BoardSetting;
 import chess.web.domain.game.ChessGame;
 import java.sql.SQLException;

@@ -18,7 +18,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class PiecesCache {
     private static final List<Piece> PIECES = new ArrayList<>();
     private static final String PIECE_NOT_FOUND_ERROR_MESSAGE = "존재하지 않는 기물입니다.";
@@ -29,7 +29,7 @@ public class PiecesCache {
         this.pieceRepository = pieceRepository;
     }
 
-    @PostConstruct
+
     private void init() {
         try {
             cachePieces();

@@ -4,7 +4,7 @@ import static chess.web.domain.piece.type.PieceType.KING;
 import static chess.web.domain.player.type.TeamColor.BLACK;
 import static chess.web.domain.player.type.TeamColor.WHITE;
 
-import chess.console.controller.dto.response.BoardStatusResponseDTO;
+import chess.spring.controller.dto.response.BoardStatusResponseDTO;
 import chess.web.dao.entity.GamePiecePositionEntity;
 import chess.web.domain.board.move.MoveChecker;
 import chess.web.domain.board.move.MoveRequest;

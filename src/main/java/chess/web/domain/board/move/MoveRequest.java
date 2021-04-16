@@ -1,6 +1,6 @@
 package chess.web.domain.board.move;
 
-import chess.console.controller.dto.request.MoveRequestDTO;
+import chess.spring.controller.dto.request.MoveRequestDTO;
 import chess.web.domain.piece.type.Direction;
 import chess.web.domain.player.type.TeamColor;
 import chess.web.domain.position.Position;

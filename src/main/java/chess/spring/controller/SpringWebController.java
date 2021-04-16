@@ -1,4 +1,4 @@
-//package chess.web.controller;
+//package chess.spring.controller;
 //
 //
 //import chess.spring.controller.dto.request.MoveRequestDTO;
@@ -18,43 +18,35 @@
 //import org.springframework.web.bind.annotation.RequestParam;
 //import org.springframework.web.bind.annotation.ResponseBody;
 //
-//@Profile("web")
+//
 //@Controller
-//public class WebController {
-//    private static final String ROOT = "/";
-//    private static final String CREATE_CHESS_ROOM = "rooms";
-//    private static final String CHESS_BOARD = "rooms";
-//    private static final String MOVE = "move";
-//    private static final String DELETE = "delete";
-//    private static final String CHESS_BOARD_VIEW = "chess-board";
-//    private static final String HOME_VIEW = "index";
-//    private static final String RESPONSE_DTO = "responseDTO";
+//public class SpringWebController {
 //
 //    private final ChessWebService chessWebService;
 //
-//    public WebController(ChessWebService chessWebService) {
+//    public SpringWebController(ChessWebService chessWebService) {
 //        this.chessWebService = chessWebService;
 //    }
 //
-//    @GetMapping(ROOT)
+//    @GetMapping("/")
 //    public String home(Model model) throws SQLException {
 //        List<ChessGameResponseDTO> allRoomsIdAndTitle = chessWebService.getAllRoomsIdAndTitle();
 //        model.addAttribute("allChessGameRooms", allRoomsIdAndTitle);
-//        return HOME_VIEW;
+//        return "index";
 //    }
 //
-//    @PostMapping(ROOT + CREATE_CHESS_ROOM)
+//    @PostMapping("/rooms")
 //    public String createChessRoomRequest(@RequestParam("room-title") String roomTitle) throws SQLException {
 //        Long createdChessGameId = chessWebService.createNewChessGame(roomTitle);
-//        return "redirect:" + ROOT + CHESS_BOARD + "?id=" + createdChessGameId;
+//        return "redirect:/rooms?id=" + createdChessGameId;
 //    }
 //
-//    @GetMapping(ROOT + CHESS_BOARD)
+//    @GetMapping("/rooms")
 //    public String getChessBoardRequest(@RequestParam("id") Long gameId, Model model) throws SQLException {
 //        ResponseDTO responseDTO = chessWebService.getGameStatus(gameId);
-//        model.addAttribute(RESPONSE_DTO, responseDTO);
+//        model.addAttribute("responseDTO", responseDTO);
 //        putBoardRanksToModel(model, responseDTO.getBoardResponseDTO());
-//        return CHESS_BOARD_VIEW;
+//        return "chess-board";
 //    }
 //
 //    private void putBoardRanksToModel(Model model, BoardResponseDTO boardResponseDTO) {
@@ -68,15 +60,15 @@
 //        model.addAttribute("rank1", boardResponseDTO.getRank1());
 //    }
 //
-//    @PostMapping(ROOT + MOVE)
+//    @PostMapping("/move")
 //    @ResponseBody
 //    public MoveResponseDTO moveRequest(@RequestBody MoveRequestDTO moveRequestDTO) throws SQLException {
 //        return chessWebService.requestMove(moveRequestDTO);
 //    }
 //
-//    @GetMapping(ROOT + DELETE)
+//    @GetMapping("/delete")
 //    public String deleteRequest(@RequestParam("id") Long gameId) throws SQLException {
 //        chessWebService.deleteGame(gameId);
-//        return "redirect:" + ROOT;
+//        return "redirect:/";
 //    }
 //}

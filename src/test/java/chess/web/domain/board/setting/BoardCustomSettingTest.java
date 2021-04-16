@@ -14,7 +14,7 @@ import static chess.utils.TestFixture.TEST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.console.controller.dto.response.BoardStatusResponseDTO;
+import chess.spring.controller.dto.response.BoardStatusResponseDTO;
 import chess.web.domain.game.ChessGame;
 import chess.utils.DBCleaner;
 import java.sql.SQLException;

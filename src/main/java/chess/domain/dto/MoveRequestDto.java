@@ -1,6 +1,6 @@
-package chess.domain.vo;
+package chess.domain.dto;
 
-public class MoveVo {
+public class MoveRequestDto {
     private String source;
     private String target;
     private String gameId;

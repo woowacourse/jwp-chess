@@ -31,7 +31,7 @@ async function applicationStart() {
 }
 
 async function loadSavedBoard() {
-    let savedBoardInformation = await fetch("/loadSavedBoard")
+    let savedBoardInformation = await fetch("/board")
     savedBoardInformation = await savedBoardInformation.json();
     return savedBoardInformation.boardInfo;
 }
@@ -117,13 +117,19 @@ async function renewBoard(boardInfo) {
 }
 
 async function resetBoard() {
-    let initialBoardInformation = await fetch("/resetBoard")
+    let initialBoardInformation = await fetch("/board", {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        }
+    })
     initialBoardInformation = await initialBoardInformation.json();
     return initialBoardInformation.boardInfo;
 }
 
 async function alertScore() {
-    let scoreInformation = await fetch("/scoreStatus")
+    let scoreInformation = await fetch("/score")
     scoreInformation = await scoreInformation.json();
     alert(scoreInformation.scoreMessage);
 }

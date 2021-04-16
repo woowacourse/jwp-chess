@@ -18,17 +18,17 @@ public class ChessController {
         this.chessGame = new ChessGame();
     }
 
-    @GetMapping("/loadSavedBoard")
+    @GetMapping("/board")
     public BoardDto loadSavedBoard() {
         return chessService.getSavedBoardInfo(chessGame);
     }
 
-    @GetMapping("/resetBoard")
+    @PutMapping("/board")
     public BoardDto resetBoard() {
         return chessService.initiateBoard(chessGame);
     }
 
-    @GetMapping("/scoreStatus")
+    @GetMapping("/score")
     public ScoreDto scoreStatus() {
         return ScoreDto.of(chessGame.scoreStatus());
     }

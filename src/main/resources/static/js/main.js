@@ -125,8 +125,9 @@ function moveHandler() {
 function move(source, target) {
   const $source = document.getElementById(source.id)
   const $target = document.getElementById(target.id)
-  $source.innerHTML = squareTemplate(source.id, source.piece)
-  $target.innerHTML = squareTemplate(target.id, target.piece)
+  $target.innerHTML = squareTemplate(target.id, document.getElementById(source.id).firstElementChild.classList.item(2))
+  $source.innerHTML = squareTemplate(source.id, '.')
+
 }
 
 async function movable(source, target) {
@@ -137,8 +138,8 @@ async function movable(source, target) {
       {
         method: 'PUT',
         body: JSON.stringify({
-          sourcePosition: source.id,
-          targetPosition: target.id
+          source: source.id,
+          target: target.id
         }),
         headers: {
           'Content-type': 'application/json; charset=UTF-8',

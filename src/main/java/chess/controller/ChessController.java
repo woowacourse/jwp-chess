@@ -38,7 +38,7 @@ public class ChessController {
     public ChessBoardDTO loadGame(@PathVariable String gameId) {
         return chessService.loadGame(gameId);
     }
-
+//    gameid를 int로 받을지 string으로 받을지
     @GetMapping("/turn/{gameId}")
     @ResponseBody
     public TurnDTO turn(@PathVariable String gameId) {
@@ -47,8 +47,8 @@ public class ChessController {
 
     @PutMapping(path = "/move/{gameId}", consumes = "application/json")
     public ResponseEntity move(@PathVariable String gameId, @RequestBody MoveDTO moveDTO){
-//        System.out.println("@@@" + shit);
-//        System.out.println("@@@" + moveDTO.getSource());
+        System.out.println("@@@" + "shit");
+        System.out.println("@@@" + moveDTO.getSource());
         return chessService.move(gameId, moveDTO);
 //        return null;
     }

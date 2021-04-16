@@ -38,8 +38,8 @@ public class ChessService {
         try {
             ChessGame chessGame = chessRepository.loadGame(gameId);
             System.out.println("position ##############");
-            System.out.println(moveDTO.getSourcePosition());
-            chessGame.move(Position.of(moveDTO.getSourcePosition()), Position.of(moveDTO.getTargetPosition()));
+            System.out.println(moveDTO.getSource());
+            chessGame.move(Position.of(moveDTO.getSource()), Position.of(moveDTO.getTarget()));
             chessRepository.saveGame(gameId, chessGame);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {

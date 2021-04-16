@@ -2,91 +2,65 @@ package chess.dao;
 
 import chess.domain.game.ChessGameEntity;
 import chess.view.dto.ChessGameStatusDto;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class ChessGameDAO {
 
-    private final ConnectionFactory factory;
+    private final JdbcTemplate jdbcTemplate;
 
-    public ChessGameDAO() {
-        factory = new ConnectionFactory();
+    public ChessGameDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Optional<ChessGameEntity> findByStateIsBlackTurnOrWhiteTurn() {
-        try (Connection con = factory.getConnection()) {
-            String query = "SELECT * FROM chess_game WHERE state in(?, ?)";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "BlackTurn");
-            pstmt.setString(2, "WhiteTurn");
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return Optional.of(new ChessGameEntity(rs.getLong("id"), rs.getString("state")));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        String query = "SELECT * FROM chess_game WHERE state in(?, ?)";
+        List<ChessGameEntity> chessGameEntities = jdbcTemplate.query(query
+                , (rs, rowNum) -> new ChessGameEntity(rs.getLong("id"), rs.getString("state"))
+                , "BlackTurn", "WhiteTurn");
+        if (chessGameEntities.isEmpty()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+
+        ChessGameEntity chessGameEntity = DataAccessUtils.nullableSingleResult(chessGameEntities);
+        return Optional.of(chessGameEntity);
     }
 
     public Long create() {
-        try (Connection con = factory.getConnection()) {
-            String query = "INSERT INTO chess_game(state) VALUES(?)";
-            PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO chess_game(state) VALUES(?)";
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, "BlackTurn");
-            preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
-            if (rs.next()) {
-                return rs.getLong(Statement.RETURN_GENERATED_KEYS);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        throw new IllegalArgumentException("ChessGame이 제대로 생성되지 않았습니다");
-    }
-
-    public void deleteById(Long id) { // todo: 추후 사용할지 모르니 일단 남겨놓음 나중에 확인
-        try (Connection con = factory.getConnection()) {
-            String query = "DELETE FROM chess_game WHERE id = ?";
-            PreparedStatement preparedStatement = con.prepareStatement(query);
-            preparedStatement.setLong(1, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            return preparedStatement;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     public void updateState(final Long id, final String state) {
-        try (Connection con = factory.getConnection()) {
-            String query = "UPDATE chess_game SET state = ? WHERE id = ?";
-            PreparedStatement preparedStatement = con.prepareStatement(query);
-            preparedStatement.setString(1, state);
-            preparedStatement.setLong(2, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String query = "UPDATE chess_game SET state = ? WHERE id = ?";
+        jdbcTemplate.update(query, state, id);
     }
 
     public ChessGameStatusDto findIsExistPlayingChessGameStatus() {
-        try (Connection con = factory.getConnection()) {
-            String query = "SELECT * FROM chess_game WHERE state in(?, ?)";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "BlackTurn");
-            pstmt.setString(2, "WhiteTurn");
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return ChessGameStatusDto.exist();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        String query = "SELECT * FROM chess_game WHERE state in(?, ?)";
+        List<ChessGameEntity> chessGameEntities = jdbcTemplate.query(query
+                , (rs, rowNum) -> new ChessGameEntity(rs.getLong("id"), rs.getString("state"))
+                , "BlackTurn", "WhiteTurn");
+        if (chessGameEntities.isEmpty()) {
+            return ChessGameStatusDto.isNotExist();
         }
 
-        return ChessGameStatusDto.isNotExist();
+        return ChessGameStatusDto.exist();
     }
 
 }

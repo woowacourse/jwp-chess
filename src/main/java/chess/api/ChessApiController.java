@@ -8,11 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class SpringChessApiController {
+public class ChessApiController {
 
     private final SpringChessGameService chessGameService;
 
-    public SpringChessApiController(SpringChessGameService chessGameService) {
+    public ChessApiController(SpringChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 

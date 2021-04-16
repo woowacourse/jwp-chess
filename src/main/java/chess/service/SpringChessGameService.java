@@ -1,7 +1,7 @@
 package chess.service;
 
-import chess.dao.SpringChessGameDAO;
-import chess.dao.SpringPieceDAO;
+import chess.dao.ChessGameDAO;
+import chess.dao.PieceDAO;
 import chess.domain.board.Board;
 import chess.domain.game.*;
 import chess.domain.piece.Piece;
@@ -22,10 +22,10 @@ import java.util.Optional;
 @Service
 public class SpringChessGameService {
 
-    private final SpringChessGameDAO chessGameDAO;
-    private final SpringPieceDAO pieceDAO;
+    private final ChessGameDAO chessGameDAO;
+    private final PieceDAO pieceDAO;
 
-    public SpringChessGameService(SpringChessGameDAO chessGameDAO, SpringPieceDAO pieceDAO) {
+    public SpringChessGameService(ChessGameDAO chessGameDAO, PieceDAO pieceDAO) {
         this.chessGameDAO = chessGameDAO;
         this.pieceDAO = pieceDAO;
     }

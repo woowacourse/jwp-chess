@@ -28,26 +28,26 @@ public class ChessService {
     }
 
     public BoardDto getSavedBoardInfo() {
-        BoardDto boardDTO = chessDao.getSavedBoardInfo();
-        TurnDto turnDTO = chessDao.getSavedTurnOwner();
+        BoardDto boardDto = chessDao.getSavedBoardInfo();
+        TurnDto turnDto = chessDao.getSavedTurnOwner();
 
-        chessGame.loadSavedBoardInfo(boardDTO.getBoardInfo(), turnDTO.getTurn());
-        return boardDTO;
+        chessGame.loadSavedBoardInfo(boardDto.getBoardInfo(), turnDto.getTurn());
+        return boardDto;
     }
 
     public String score() {
         return chessGame.scoreStatus();
     }
 
-    public BoardDto move(MoveInfoDto moveInfoDTO) {
+    public BoardDto move(MoveInfoDto moveInfoDto) {
         Board board = chessGame.getBoard();
-        Position target = Position.convertStringToPosition(moveInfoDTO.getTarget());
+        Position target = Position.convertStringToPosition(moveInfoDto.getTarget());
 
         Piece targetPiece = board.getBoard().get(target);
 
-        chessGame.move(moveInfoDTO.getTarget(), moveInfoDTO.getDestination());
+        chessGame.move(moveInfoDto.getTarget(), moveInfoDto.getDestination());
 
-        chessDao.renewBoardAfterMove(moveInfoDTO.getTarget(), moveInfoDTO.getDestination(), targetPiece);
+        chessDao.renewBoardAfterMove(moveInfoDto.getTarget(), moveInfoDto.getDestination(), targetPiece);
         chessDao.renewTurnOwnerAfterMove(chessGame.getTurnOwner());
         return BoardDto.of(board);
     }

@@ -30,7 +30,7 @@ public class ChessController {
     }
 
     @PostMapping("/move")
-    public BoardDto move(@RequestBody MoveInfoDto moveInfoDTO) {
-        return chessService.move(moveInfoDTO);
+    public BoardDto move(@RequestBody MoveInfoDto moveInfoDto) {
+        return chessService.move(moveInfoDto);
     }
 }

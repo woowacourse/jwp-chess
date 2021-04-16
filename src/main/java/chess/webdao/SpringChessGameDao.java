@@ -7,6 +7,7 @@ import chess.domain.team.PieceCaptured;
 import chess.domain.team.PiecePosition;
 import chess.domain.team.Score;
 import chess.domain.team.Team;
+import chess.webdto.ChessGameTableDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -18,12 +19,12 @@ import static chess.service.TeamFormat.WHITE_TEAM;
 
 @Repository
 public class SpringChessGameDao {
-    private final RowMapper<Test> actorRowMapper = (resultSet, rowNum) -> {
-        Test test = new Test(
+    private final RowMapper<ChessGameTableDto> actorRowMapper = (resultSet, rowNum) -> {
+        ChessGameTableDto chessGameTableDto = new ChessGameTableDto(
                 resultSet.getString("current_turn_team"),
                 resultSet.getBoolean("is_playing")
         );
-        return test;
+        return chessGameTableDto;
     };
     private JdbcTemplate jdbcTemplate;
 
@@ -66,8 +67,8 @@ public class SpringChessGameDao {
 
     private ChessGame generateChessGame(final Team blackTeam, final Team whiteTeam) {
         final String chessGameQuery = "SELECT * FROM chess_game";
-        final Test test = this.jdbcTemplate.queryForObject(chessGameQuery, actorRowMapper);
-        return generateChessGameAccordingToDB(blackTeam, whiteTeam, test.getCurrentTurnTeam(), test.getIsPlaying());
+        final ChessGameTableDto chessGameTableDto = this.jdbcTemplate.queryForObject(chessGameQuery, actorRowMapper);
+        return generateChessGameAccordingToDB(blackTeam, whiteTeam, chessGameTableDto.getCurrentTurnTeam(), chessGameTableDto.getIsPlaying());
     }
 
     private ChessGame generateChessGameAccordingToDB(final Team blackTeam, final Team whiteTeam,
@@ -96,23 +97,5 @@ public class SpringChessGameDao {
 
         this.jdbcTemplate.update(deletePiecePositionQuery);
         this.jdbcTemplate.update(deleteChessGameQuery);
-    }
-}
-
-class Test {
-    private String current_turn_team;
-    private boolean is_playing;
-
-    public Test(String current_turn_team, boolean is_playing) {
-        this.current_turn_team = current_turn_team;
-        this.is_playing = is_playing;
-    }
-
-    public String getCurrentTurnTeam() {
-        return current_turn_team;
-    }
-
-    public boolean getIsPlaying() {
-        return is_playing;
     }
 }

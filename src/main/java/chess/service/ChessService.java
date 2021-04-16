@@ -84,7 +84,7 @@ public class ChessService {
                 chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
             }
             return new CommonResponseDto<>(new GameStatusDto(chessGame.pieces(),
-                    chessGame.calculateScore(), chessGame.isGameOver(), chess.getWinnerColor()),
+                    chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor()),
                     ResponseCode.OK.code(), ResponseCode.OK.message());
         } catch (RuntimeException exception) {
             return new CommonResponseDto<>(ResponseCode.BAD_REQUEST.code(), exception.getMessage());

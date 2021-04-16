@@ -19,7 +19,7 @@ public class FirstTurnBlackPawnMoveCondition extends MoveCondition {
     }
 
     private boolean isRightMovePath(final Piece piece, final Position target) {
-        return target.equals(new Position(piece.getRow() + 2, piece.getColumn()));
+        return target.equals(new Position(piece.getRow() - 2, piece.getColumn()));
     }
 
     private boolean isNotExistPieceOnPath(Board board, Piece piece, Position target) {
@@ -32,7 +32,7 @@ public class FirstTurnBlackPawnMoveCondition extends MoveCondition {
 
     private Predicate<Piece> isExistInMoveArea(final Piece piece, final Position target) {
         return pieceOnBoard -> pieceOnBoard.getColumn() == piece.getColumn() &&
-                piece.getRow() < pieceOnBoard.getRow() && pieceOnBoard.getRow() < target.getRow();
+                target.getRow() < pieceOnBoard.getRow() && pieceOnBoard.getRow() < piece.getRow();
     }
 
 }

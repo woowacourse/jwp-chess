@@ -23,7 +23,7 @@ public class Piece {
     }
 
     public static Piece createPawn(Color color, int row, int col) {
-        if (color == Color.BLACK) {
+        if (Color.BLACK.equals(color)) {
             return new Piece(Color.BLACK, Shape.P, new Position(row, col), Arrays.asList(new FirstTurnBlackPawnMoveCondition(),
                     new NormalBlackPawnMoveCondition(), new CatchingPieceBlackPawnMoveCondition()));
         }
@@ -73,6 +73,15 @@ public class Piece {
     }
 
     public boolean isSamePosition(final Position position) {
+//        System.out.println("=====================================");
+//        System.out.println("=====================================");
+//        System.out.println("=====================================");
+//        System.out.println(position.toString());
+//        System.out.println(this.position.toString());
+//        System.out.println(this.position.equals(position));
+//        System.out.println("=====================================");
+//        System.out.println("=====================================");
+//        System.out.println("=====================================");
         return this.position.equals(position);
     }
 

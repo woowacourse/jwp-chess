@@ -17,8 +17,8 @@ public class CatchingPieceWhitePawnMoveCondition extends MoveCondition {
     }
 
     private boolean isRightMovePath(final Piece piece, final Position target) {
-        return target.equals(new Position(piece.getRow() - 1, piece.getColumn() - 1)) ||
-                target.equals(new Position(piece.getRow() - 1, piece.getColumn() + 1));
+        return target.equals(new Position(piece.getRow() + 1, piece.getColumn() - 1)) ||
+                target.equals(new Position(piece.getRow() + 1, piece.getColumn() + 1));
     }
 
     private boolean isEnemyExist(final Board board, final Position target) {

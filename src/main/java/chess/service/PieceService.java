@@ -31,10 +31,14 @@ public class PieceService {
     }
 
     public void move(long gameId, MoveRequestDto moveRequestDto) {
-        pieceDao.update(gameId, new Position(moveRequestDto.getSource()), new Position(moveRequestDto.getTarget()));
+        pieceDao.updatePosition(gameId, new Position(moveRequestDto.getSource()), new Position(moveRequestDto.getTarget()));
     }
 
     public void catchPiece(long gameId, MoveRequestDto moveRequestDto) {
         pieceDao.delete(gameId, new Position(moveRequestDto.getTarget()));
+    }
+
+    public void removeAll(long gameId) {
+        pieceDao.deletePieces(gameId);
     }
 }

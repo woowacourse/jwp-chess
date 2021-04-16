@@ -18,7 +18,7 @@ public class FirstTurnWhitePawnMoveCondition extends MoveCondition {
     }
 
     private boolean isRightMovePath(final Piece piece, final Position target) {
-        return target.equals(new Position(piece.getRow() - 2, piece.getColumn()));
+        return target.equals(new Position(piece.getRow() + 2, piece.getColumn()));
     }
 
     private boolean isNotPieceExistOnPath(Board board, Piece piece, Position target) {
@@ -29,7 +29,7 @@ public class FirstTurnWhitePawnMoveCondition extends MoveCondition {
                 .noneMatch(
                         pieceOnBoard ->
                                 pieceOnBoard.getColumn() == piece.getColumn() &&
-                                        target.getRow() < pieceOnBoard.getRow() && pieceOnBoard.getRow() < piece.getRow()
+                                        piece.getRow() < pieceOnBoard.getRow() && pieceOnBoard.getRow() < target.getRow()
                 );
     }
 

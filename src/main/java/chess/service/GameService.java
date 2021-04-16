@@ -21,4 +21,12 @@ public class GameService {
     public GameResponseDto findById(long gameId) {
         return GameResponseDto.from(gameDao.findById(gameId));
     }
+
+    public void endGame(long gameId, boolean isFinished) {
+        gameDao.updateGameStatus(gameId, isFinished);
+    }
+
+    public void changeTurn(long gameId) {
+        gameDao.updateTurn(gameId);
+    }
 }

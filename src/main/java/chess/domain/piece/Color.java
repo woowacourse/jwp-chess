@@ -1,7 +1,6 @@
 package chess.domain.piece;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 public enum Color {
     WHITE("WHITE"),

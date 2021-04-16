@@ -48,4 +48,14 @@ public class GameDao {
         final String sql = "SELECT * FROM game WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, gameRowMapper, gameId);
     }
+
+    public void updateGameStatus(long id, boolean isFinished) {
+        String sql = "UPDATE game SET isFinished = ? WHERE id = ?";
+        jdbcTemplate.update(sql, isFinished, id);
+    }
+
+    public void updateTurn(long id) {
+        String sql = "UPDATE game SET turn = (CASE WHEN turn = 'BLACK' THEN 'WHITE' ELSE 'BLACK' END) WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

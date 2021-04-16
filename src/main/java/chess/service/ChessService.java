@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.domain.board.Board;
+import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
@@ -40,14 +41,30 @@ public class ChessService {
     }
 
     public boolean checkMovement(long gameId, MoveRequestDto moveRequestDto) {
+        String turn = gameService.findById(gameId).getTurn();
+        if (!turn.equals(moveRequestDto.getColor().toUpperCase())) {
+            return false;
+        }
         Board board = generateBoard(gameId);
 
-        return board.isMovable(moveRequestDto.getColor(),moveRequestDto.getSource(), moveRequestDto.getTarget());
+        return board.isMovable(moveRequestDto.getColor(), moveRequestDto.getSource(), moveRequestDto.getTarget());
     }
 
     public void move(long gameId, MoveRequestDto moveRequestDto) {
+        Board board = generateBoard(gameId);
+        board.moveAndCatchPiece(
+                Color.from(moveRequestDto.getColor()),
+                new Position(moveRequestDto.getSource()),
+                new Position(moveRequestDto.getTarget()));
+
         pieceService.catchPiece(gameId, moveRequestDto);
         pieceService.move(gameId, moveRequestDto);
+        if (board.isKingCatch()) {
+            gameService.endGame(gameId, true);
+            pieceService.removeAll(gameId);
+        }
+        gameService.changeTurn(gameId);
+
     }
 
     private Board generateBoard(long gameId) {
@@ -58,6 +75,7 @@ public class ChessService {
                         piece.getShape(),
                         new Position(piece.getY(), piece.getX())))
                 .collect(Collectors.toList());
+
         return new Board(pieces);
     }
 }

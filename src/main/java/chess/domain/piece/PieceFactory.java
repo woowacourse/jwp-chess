@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class PieceFactory {
 
@@ -9,6 +10,10 @@ public class PieceFactory {
     }
 
     public static Piece createPiece(String color, String shape, Position position) {
+        if ("WHITE".contentEquals(color)) {
+            shape = shape.toLowerCase();
+        }
+
         return new Piece(Color.valueOf(color), Shape.valueOf(shape.toUpperCase()), position, Move.valueOf(shape).getMoveCondition());
     }
 

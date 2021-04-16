@@ -19,6 +19,10 @@ public class GameStatus {
         this.blackScore = blackScore;
     }
 
+    public static GameStatus from(final Score whiteScore, final Score blackScore) {
+        return new GameStatus(whiteScore, blackScore);
+    }
+
     public static GameStatus statusOfBoard(final Board board) {
         return new GameStatus(ownerScore(board, Owner.WHITE), ownerScore(board, Owner.BLACK));
     }

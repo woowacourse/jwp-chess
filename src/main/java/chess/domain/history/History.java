@@ -20,6 +20,10 @@ public class History {
         this.isPlaying = isPlaying;
     }
 
+    public static History of(String moveCommand, String turnOwner, int turnNumber, boolean isPlaying) {
+        return new History(moveCommand, turnOwner, turnNumber, isPlaying);
+    }
+
     public static History of(MoveCommand moveCommand, ChessManager chessManager) {
         return new History(moveCommand.moveCommand(), chessManager.turnOwner().name()
                 , chessManager.turnNumber(), chessManager.isPlaying());

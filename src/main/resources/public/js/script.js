@@ -2,6 +2,7 @@ import {getGridAndPiecesByRoomName} from "./service/chessService.js";
 import * as restartBtn from "./component/restartBtn.js";
 import * as startBtn from "./component/startBtn.js";
 import * as chessBoardFactory from "./component/chessBoardFactory.js"
+import * as roomListPage from "./component/roomListPage.js"
 import {store} from "./store.js";
 
 (function () {
@@ -32,25 +33,4 @@ async function createChessBoard() {
 
 createChessBoard();
 
-async function renderRoomListPage() {
-    const $layoutWrap = document.getElementById("layout-wrap");
-    const div = document.createElement("div");
-    div.innerHTML = `
-<div id="layout">
-    <button class="btn">
-        체스방 만들기
-    </button>
-    <div>
-        <div>
-            <button class="btn">1번방</button>
-        </div>
-        <div>
-            <button class="btn">1번방</button>
-        </div>        
-    </div>
-</div>
-`
-    $layoutWrap.appendChild(div);
-}
-
-renderRoomListPage();
+roomListPage.renderRoomListPage();

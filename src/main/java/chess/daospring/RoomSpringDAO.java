@@ -1,5 +1,6 @@
 package chess.daospring;
 
+import chess.dto.RoomDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -7,6 +8,9 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class RoomSpringDAO {
@@ -40,5 +44,22 @@ public class RoomSpringDAO {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<RoomDto> findAllRooms() {
+        String query = "SELECT * FROM room ORDER BY createdAt DESC";
+        return jdbcTemplate.queryForObject(
+                query,
+                (rs, rowNum) -> {
+                    List<RoomDto> rooms = new ArrayList<>();
+                    do {
+                        rooms.add(new RoomDto(
+                                rs.getLong(1),
+                                rs.getString(2),
+                                rs.getObject(3, LocalDateTime.class)
+                        ));
+                    } while(rs.next());
+                    return rooms;
+                });
     }
 }

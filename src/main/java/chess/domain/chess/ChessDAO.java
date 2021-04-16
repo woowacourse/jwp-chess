@@ -60,14 +60,13 @@ public class ChessDAO {
     }
 
     public long insert() {
-        try {
-            String sql = "INSERT INTO chess (status, turn) VALUES ('RUNNING', 'WHITE')";
-            Connection connection = jdbcTemplate.getDataSource().getConnection();
-            PreparedStatement preparedStatement = connection
-                    .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        String sql = "INSERT INTO chess (status, turn) VALUES ('RUNNING', 'WHITE')";
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection();
+                PreparedStatement preparedStatement = connection
+                        .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ResultSet keys = preparedStatement.getGeneratedKeys()) {
 
             preparedStatement.executeUpdate();
-            ResultSet keys = preparedStatement.getGeneratedKeys();
 
             if (keys.next()) {
                 return keys.getLong(1);

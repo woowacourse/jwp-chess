@@ -2,19 +2,24 @@ const BLOCK_SIZE_PIXEL = 80;
 
 const $chessBoard = document.getElementById('chess-board');
 
-const colorTranslationTable = {BLACK: '흑', WHITE:'백'};
+const colorTranslationTable = {BLACK: '흑', WHITE: '백'};
 const matchResultTranslationTable = {DRAW: '무승부', WHITE_WIN: '백 승리', BLACK_WIN: '흑 승리'};
 
 const squareBuffer = new SquareBuffer();
 
 let gameId;
 
+loadGameListIntoBox();
+
 addSelectionEventOnChessBoard();
 addEventOnStartButton();
 addEventOnRegameButton();
 addEventOnLoadGameButton();
 
-addEventOnGameListBox();
+function SquareBuffer() {
+    this.buffer = [];
+    this.add = addAndRequestMove;
+}
 
 async function processResponse(response) {
     const responseBody = await response.json();
@@ -30,12 +35,7 @@ async function processResponse(response) {
     }
 }
 
-function SquareBuffer() {
-    this.buffer = [];
-    this.add = addAndRequestMove;
-}
-
-async function addEventOnGameListBox() {
+async function loadGameListIntoBox() {
     const gameListBox = document.getElementById("gameListBox");
 
     const response = await fetch("/loadGames");
@@ -78,19 +78,10 @@ async function addAndRequestMove(square) {
                 }),
             })
                 .then(res => processResponse(res));
-        } catch
-            (error) {
+        } catch (error) {
             console.error(error.messages);
         }
     }
-}
-
-async function addSelectionEventOnChessBoard() {
-    $chessBoard.addEventListener('click', event => {
-        const selectedSquare = event.target.closest('div');
-        squareBuffer.add(selectedSquare);
-        selectedSquare.classList.toggle('opaque');
-    })
 }
 
 async function addEventOnStartButton() {
@@ -103,6 +94,14 @@ async function addEventOnStartButton() {
             console.error(error.messages);
         }
     });
+}
+
+async function addSelectionEventOnChessBoard() {
+    $chessBoard.addEventListener('click', event => {
+        const selectedSquare = event.target.closest('div');
+        squareBuffer.add(selectedSquare);
+        selectedSquare.classList.toggle('opaque');
+    })
 }
 
 async function addEventOnRegameButton() {

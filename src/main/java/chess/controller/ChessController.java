@@ -38,7 +38,7 @@ public class ChessController {
     @GetMapping("/score")
     @ResponseBody
     public ScoreDto scoreStatus() {
-        return ScoreDto.of(chessGame.scoreStatus());
+        return chessGame.scoreStatus();
     }
 
     @PostMapping("/move")

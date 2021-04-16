@@ -3,6 +3,7 @@ package chess.domain;
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
+import chess.domain.dto.ScoreDto;
 import chess.domain.piece.Team;
 
 import java.util.Map;
@@ -23,11 +24,11 @@ public class ChessGame {
                 convertStringToPosition(destination), turnOwner);
     }
 
-    public String scoreStatus() {
+    public ScoreDto scoreStatus() {
         boardInitializeCheck();
         double whiteScore = board.calculateScore(Team.WHITE);
         double blackScore = board.calculateScore(Team.BLACK);
-        return "백 : " + whiteScore + "  흑 : " + blackScore;
+        return new ScoreDto(whiteScore, blackScore);
     }
 
     private Position convertStringToPosition(String input) {

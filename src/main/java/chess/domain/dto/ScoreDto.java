@@ -1,20 +1,22 @@
 package chess.domain.dto;
 
 public class ScoreDto {
-    private String scoreMessage;
+    private String whiteScore;
+    private String blackScore;
 
     public ScoreDto() {
     }
 
-    private ScoreDto(String scoreMessage) {
-        this.scoreMessage = scoreMessage;
+    public ScoreDto(Double whiteScore, Double blackScore) {
+        this.whiteScore = Double.toString(whiteScore);
+        this.blackScore = Double.toString(blackScore);
     }
 
-    public static ScoreDto of(String scoreMessage) {
-        return new ScoreDto(scoreMessage);
+    public String getWhiteScore() {
+        return whiteScore;
     }
 
-    public String getScoreMessage() {
-        return scoreMessage;
+    public String getBlackScore() {
+        return blackScore;
     }
 }

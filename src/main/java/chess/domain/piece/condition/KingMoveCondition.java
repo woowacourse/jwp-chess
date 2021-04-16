@@ -30,7 +30,7 @@ public class KingMoveCondition extends MoveCondition {
     public boolean isNotExistSameColorPieceOnPath(Board board, Piece piece, Position target) {
         return board.isNoneMatchByFilteredPieces(pieceOnBoard -> true,
                 pieceOnBoard -> pieceOnBoard.isSamePosition(target) &&
-                        pieceOnBoard.isSameColor(pieceOnBoard.getColor()));
+                        piece.isSameColor(pieceOnBoard.getColor()));
     }
 
 }

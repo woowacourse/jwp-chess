@@ -12,7 +12,6 @@ let gameId;
 addSelectionEventOnChessBoard();
 addEventOnStartButton();
 addEventOnRegameButton();
-addEventOnSaveGameButton();
 addEventOnLoadGameButton();
 
 function processResponse(response) {
@@ -97,19 +96,6 @@ async function addEventOnRegameButton() {
     });
 }
 
-function addEventOnSaveGameButton() {
-    document.getElementById('save-button').addEventListener('click', event => {
-        try {
-            fetch('/save')
-                .then(res => res.json())
-                .then(res => processResponse(res));
-            turnOnPanel();
-        } catch (error) {
-            console.error(error.message);
-        }
-    })
-}
-
 function addEventOnLoadGameButton() {
     document.getElementById('load-button').addEventListener('click', event => {
         try {
@@ -128,7 +114,6 @@ function updateGameData(responseJsonBody) {
     if (responseJsonBody.item.end) {
         updateWinner(responseJsonBody);
         updateMessage('게임이 끝났습니다.');
-        turnOffPanel();
         return;
     }
     updateScoreAndTurn(responseJsonBody);
@@ -177,12 +162,8 @@ function turnOnPanel() {
     for (const button of document.getElementById('middle-panel').querySelectorAll('button')) {
         button.style.display = 'none';
     }
-    document.getElementById('save-button').style.display = 'block';
     document.getElementById('regame-button').style.display = 'block';
     document.getElementById('message-console').style.display = 'block';
     document.getElementById('score-console').style.display = 'block';
 }
 
-function turnOffPanel() {
-    document.getElementById('save-button').style.display = 'none';
-}

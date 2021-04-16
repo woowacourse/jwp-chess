@@ -48,7 +48,7 @@ function addEventOnGameListBox() {
 
                         for (let gameNumber of gameNumbers) {
                             let option = document.createElement("option");
-                            option.text = gameNumber;
+                            option.text = `${gameNumber}번 게임`;
                             option.setAttribute("value", gameNumber);
                             gameListBox.add(option);
                         }

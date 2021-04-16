@@ -12,10 +12,14 @@ span {
 }
 
 select {
-    color: cornsilk;
+    text-align-last: center;
 }
 
 option {
+    color: cornsilk;
+}
+
+.game-select {
     color: cornsilk;
 }
 

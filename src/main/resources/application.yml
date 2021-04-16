@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: real
 
 ---
 spring:
@@ -17,7 +17,3 @@ handlebars:
   prefix: classpath:templates/
   suffix: .html
 ---
-
-spring:
-  profiles:
-    include: real

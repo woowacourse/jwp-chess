@@ -7,11 +7,11 @@ import chess.domain.piece.Team;
 
 import java.util.Map;
 
-import static chess.controller.SparkChessController.boardFactory;
 
 public class ChessGame {
     private Board board;
     private Team turnOwner;
+    private BoardFactory boardFactory = new BoardFactory();
 
     public void settingBoard() {
         board = boardFactory.create();

@@ -4,7 +4,7 @@ import chess.domain.ChessGame;
 import chess.domain.dto.BoardDto;
 import chess.domain.dto.MoveInfoDto;
 import chess.domain.dto.ScoreDto;
-import chess.service.SpringChessService;
+import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class SpringChessController {
-    private final SpringChessService springChessService;
+public class ChessController {
+    private final ChessService chessService;
     private final ChessGame chessGame;
 
-    public SpringChessController(SpringChessService springChessService) {
-        this.springChessService = springChessService;
+    public ChessController(ChessService chessService) {
+        this.chessService = chessService;
         this.chessGame = new ChessGame();
     }
 
@@ -29,13 +29,13 @@ public class SpringChessController {
     @GetMapping("/loadSavedBoard")
     @ResponseBody
     public BoardDto loadSavedBoard() {
-        return springChessService.getSavedBoardInfo(chessGame);
+        return chessService.getSavedBoardInfo(chessGame);
     }
 
     @GetMapping("/resetBoard")
     @ResponseBody
     public BoardDto resetBoard() {
-        return springChessService.initiateBoard(chessGame);
+        return chessService.initiateBoard(chessGame);
     }
 
     @GetMapping("/scoreStatus")
@@ -47,6 +47,6 @@ public class SpringChessController {
     @PostMapping("/move")
     @ResponseBody
     public BoardDto move(@RequestBody MoveInfoDto moveInfoDTO) {
-        return springChessService.move(chessGame, moveInfoDTO);
+        return chessService.move(chessGame, moveInfoDTO);
     }
 }

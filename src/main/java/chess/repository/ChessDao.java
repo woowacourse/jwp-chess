@@ -1,9 +1,9 @@
 package chess.repository;
 
-import chess.domain.dto.BoardDto;
-import chess.domain.dto.TurnDto;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
+import chess.domain.dto.BoardDto;
+import chess.domain.dto.TurnDto;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class SpringChessDao {
+public class ChessDao {
     private final JdbcTemplate jdbcTemplate;
     private final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ?";
     private final String UPDATE_TURN_QUERY = "update turn set turn_owner = ? where turn_owner = ?";
 
-    public SpringChessDao(JdbcTemplate jdbcTemplate) {
+    public ChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

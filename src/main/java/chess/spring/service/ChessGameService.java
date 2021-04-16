@@ -1,6 +1,7 @@
 package chess.spring.service;
 
 import chess.spring.controller.dto.response.ChessGameDtoNew;
+import chess.spring.controller.dto.response.GameStatusDto;
 import chess.spring.domain.ChessGameNew;
 import chess.spring.repository.ChessGameRepositoryNew;
 import java.util.List;
@@ -26,5 +27,10 @@ public class ChessGameService {
     public Long createNewChessGame(String roomTitle) {
         ChessGameNew chessGame = new ChessGameNew(roomTitle);
         return chessGameRepository.save(chessGame);
+    }
+
+    public GameStatusDto getGameStatus(Long gameId) {
+        ChessGameNew chessGame = chessGameRepository.findById(gameId);
+        return new GameStatusDto(chessGame);
     }
 }

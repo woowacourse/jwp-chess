@@ -1,5 +1,7 @@
 package chess.spring.domain;
 
+import chess.web.domain.player.type.TeamColor;
+
 public class ChessGameNew {
 
     private static final String INITIAL_BOARD_STATUS = ""
@@ -16,7 +18,7 @@ public class ChessGameNew {
     private Long id;
     private final String title;
     private final String boardStatus;
-    private final String currentTurnTeamColor;
+    private final TeamColor currentTurnTeamColor;
     private final double whitePlayerScore;
     private final double blackPlayerScore;
 
@@ -24,7 +26,7 @@ public class ChessGameNew {
         this.id = id;
         this.title = title;
         this.boardStatus = boardStatus;
-        this.currentTurnTeamColor = currentTurnTeamColor;
+        this.currentTurnTeamColor = TeamColor.of(currentTurnTeamColor);
         this.whitePlayerScore = whitePlayerScore;
         this.blackPlayerScore = blackPlayerScore;
     }
@@ -32,7 +34,7 @@ public class ChessGameNew {
     public ChessGameNew(String title) {
         this.title = title;
         this.boardStatus = INITIAL_BOARD_STATUS;
-        this.currentTurnTeamColor = "white";
+        this.currentTurnTeamColor = TeamColor.WHITE;
         this.whitePlayerScore = INITIAL_SCORE;
         this.blackPlayerScore = INITIAL_SCORE;
     }
@@ -49,7 +51,7 @@ public class ChessGameNew {
         return boardStatus;
     }
 
-    public String getCurrentTurnTeamColor() {
+    public TeamColor getCurrentTurnTeamColor() {
         return currentTurnTeamColor;
     }
 
@@ -59,5 +61,9 @@ public class ChessGameNew {
 
     public double getBlackPlayerScore() {
         return blackPlayerScore;
+    }
+
+    public boolean isKingDead() {
+        return false;
     }
 }

@@ -2,11 +2,13 @@ package chess.spring.controller;
 
 
 import chess.spring.controller.dto.response.ChessGameDtoNew;
+import chess.spring.controller.dto.response.GameStatusDto;
 import chess.spring.service.ChessGameService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,16 +32,15 @@ public class ChessGameController {
     @PostMapping("/games")
     public String createChessGame(@RequestParam String roomTitle) {
         Long createdChessGameId = chessGameService.createNewChessGame(roomTitle);
-        return "redirect:/games?id=" + createdChessGameId;
+        return "redirect:/games/" + createdChessGameId;
     }
 
-//    @GetMapping("/rooms")
-//    public String getChessBoardRequest(@RequestParam("id") Long gameId, Model model) throws SQLException {
-//        ResponseDTO responseDTO = chessWebService.getGameStatus(gameId);
-//        model.addAttribute("responseDTO", responseDTO);
-//        putBoardRanksToModel(model, responseDTO.getBoardResponseDTO());
-//        return "chess-board";
-//    }
+    @GetMapping("/games/{gameId}")
+    public String chessBoard(@PathVariable Long gameId, Model model) {
+        GameStatusDto gameStatusDto = chessGameService.getGameStatus(gameId);
+        model.addAttribute("gameStatusDto", gameStatusDto);
+        return "chess-board";
+    }
 //
 //    @GetMapping("/delete")
 //    public String deleteRequest(@RequestParam("id") Long gameId) throws SQLException {

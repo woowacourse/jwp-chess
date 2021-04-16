@@ -1,5 +1,6 @@
 package chess.spring.dao;
 
+
 import chess.spring.domain.ChessGameNew;
 import chess.spring.repository.ChessGameRepositoryNew;
 import java.sql.PreparedStatement;
@@ -22,7 +23,7 @@ public class ChessGameDaoNew implements ChessGameRepositoryNew {
 
     private final RowMapper<ChessGameNew> chessGameRowMapper = (resultSet, rowNum) ->
         new ChessGameNew(
-            resultSet.getLong("id"),
+            resultSet.getLong("chess_game_id"),
             resultSet.getString("title"),
             resultSet.getString("board_status"),
             resultSet.getString("current_turn_team_color"),
@@ -36,10 +37,10 @@ public class ChessGameDaoNew implements ChessGameRepositoryNew {
             + "VALUES (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"chess_game_id"});
             ps.setString(1, chessGame.getTitle());
             ps.setString(2, chessGame.getBoardStatus());
-            ps.setString(3, chessGame.getCurrentTurnTeamColor());
+            ps.setString(3, chessGame.getCurrentTurnTeamColor().getValue());
             ps.setDouble(4, chessGame.getWhitePlayerScore());
             ps.setDouble(5, chessGame.getBlackPlayerScore());
             return ps;
@@ -51,5 +52,11 @@ public class ChessGameDaoNew implements ChessGameRepositoryNew {
     public List<ChessGameNew> findAll() {
         String query = "SELECT * FROM chess_game";
         return jdbcTemplate.query(query, chessGameRowMapper);
+    }
+
+    @Override
+    public ChessGameNew findById(Long gameId) {
+        String query = "SELECT * FROM chess_game WHERE chess_game_id = ?";
+        return jdbcTemplate.queryForObject(query, chessGameRowMapper, gameId);
     }
 }

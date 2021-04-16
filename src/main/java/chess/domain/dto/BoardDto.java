@@ -9,13 +9,13 @@ import java.util.Map;
 import java.util.Objects;
 
 public class BoardDto {
-    public String gameOverFlag = "false";
+    public boolean gameOverFlag = false;
     private Map<String, String> boardInfo = new HashMap<>();
 
     public BoardDto() {
     }
 
-    private BoardDto(Map<String, String> boardInfo, String gameOverFlag) {
+    private BoardDto(Map<String, String> boardInfo, Boolean gameOverFlag) {
         this.boardInfo = boardInfo;
         this.gameOverFlag = gameOverFlag;
     }
@@ -29,19 +29,16 @@ public class BoardDto {
                 boardInfo.put(info.getKey().convertToString(), info.getValue().getUnicode());
             }
         }
-        String gameOverFlag = getGameOverFlag(board);
+        Boolean gameOverFlag = getGameOverFlag(board);
         return new BoardDto(boardInfo, gameOverFlag);
     }
 
-    private static String getGameOverFlag(Board board) {
-        if (board.isAnyKingDead()) {
-            return "true";
-        }
-        return "false";
+    private static Boolean getGameOverFlag(Board board) {
+        return board.isAnyKingDead();
     }
 
     public static BoardDto of(Map<String, String> boardInfo) {
-        return new BoardDto(boardInfo, "true");
+        return new BoardDto(boardInfo, true);
     }
 
     public Map<String, String> getBoardInfo() {

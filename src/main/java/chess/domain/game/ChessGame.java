@@ -42,7 +42,7 @@ public class ChessGame {
     public void moveByTurn(final Position sourcePosition, final Position targetPosition) {
         if (whitePlayer.isFinish()) {
             move(sourcePosition, targetPosition, blackPlayer);
-            chessBoard = chessBoard.put(whitePlayer.pieces(), blackPlayer().pieces());
+            chessBoard = chessBoard.put(whitePlayer.pieces(), blackPlayer.pieces());
             return;
         }
         move(sourcePosition, targetPosition, whitePlayer);
@@ -89,14 +89,6 @@ public class ChessGame {
         if (state.findPiece(target.position()).isPresent()) {
             state.removePiece(target.position());
         }
-    }
-
-    public Player whitePlayer() {
-        return whitePlayer;
-    }
-
-    public Player blackPlayer() {
-        return blackPlayer;
     }
 
     public Board chessBoard() {

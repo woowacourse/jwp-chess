@@ -57,10 +57,8 @@ public class ChessGame {
     }
 
     private boolean validateMovable(final Position current, final Position destination, final Piece chosenPiece) {
-        if (currentTurn.havePiece(destination) || !chosenPiece.isMovable(current, destination, generateChessBoard())) {
-            return false;
-        }
-        return true;
+        return !currentTurn.havePiece(destination) && chosenPiece
+            .isMovable(current, destination, generateChessBoard());
     }
 
 

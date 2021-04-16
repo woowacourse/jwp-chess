@@ -32,7 +32,7 @@ public class SpringChessController {
         chessService.createRoom(room);
     }
 
-    @PutMapping("/room/{id}")
+    @PutMapping("/room/{id}/piece")
     public ResponseEntity<ChessGameDto> movePiece(@PathVariable("id") Long roodId, @RequestBody MoveDto moveDto) {
         return chessService.movePiece(roodId, moveDto);
     }

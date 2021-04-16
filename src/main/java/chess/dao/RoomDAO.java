@@ -30,11 +30,8 @@ public class RoomDAO {
 
     private RowMapper<RoomDTO> mapper() {
         return (resultSet, rowNum) -> {
-            boolean playing = false;
             int status = resultSet.getInt("status");
-            if (status == 1) {
-                playing = true;
-            }
+            boolean playing = (status == 1);
             return new RoomDTO(
                     resultSet.getInt("id"),
                     resultSet.getString("title"),

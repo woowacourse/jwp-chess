@@ -16,6 +16,7 @@ import chess.domain.manager.ChessManager;
 import chess.domain.movecommand.MoveCommand;
 import chess.domain.piece.Owner;
 import chess.domain.piece.Piece;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class ChessService {
     private final ScoreDao scoreDao;
     private final StateDao stateDao;
 
+    @Autowired
     public ChessService(GameDao gameDao, HistoryDao historyDao, PieceDao pieceDao, ScoreDao scoreDao, StateDao stateDao) {
         this.gameDao = gameDao;
         this.historyDao = historyDao;

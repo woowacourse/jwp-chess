@@ -1,7 +1,6 @@
 package chess.controller;
 
 import chess.domain.piece.PieceColor;
-import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.MoveRequest;
 import chess.dto.PathDto;
@@ -46,11 +45,11 @@ public class BoardController {
 
     @PostMapping(path = "/path")
     public List<String> movablePath(@RequestBody PathDto dto) {
-        return service.findPath(Position.of(dto.getFrom()));
+        return service.findPath(dto.getFrom());
     }
 
     @PostMapping(path = "/move")
     public boolean move(@RequestBody MoveRequest dto) {
-        return service.addMove(Position.of(dto.getFrom()), Position.of(dto.getTo()));
+        return service.addMove(dto.getFrom(), dto.getTo());
     }
 }

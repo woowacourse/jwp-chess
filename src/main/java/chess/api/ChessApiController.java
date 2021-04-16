@@ -3,16 +3,16 @@ package chess.api;
 import chess.domain.piece.Position;
 import chess.dto.ChessGameDto;
 import chess.dto.ScoreDto;
-import chess.service.SpringChessGameService;
+import chess.service.ChessGameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ChessApiController {
 
-    private final SpringChessGameService chessGameService;
+    private final ChessGameService chessGameService;
 
-    public ChessApiController(SpringChessGameService chessGameService) {
+    public ChessApiController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 

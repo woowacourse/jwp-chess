@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.ChessGameStatusDto;
-import chess.service.SpringChessGameService;
+import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ChessController {
 
-    private final SpringChessGameService chessGameService;
+    private final ChessGameService chessGameService;
 
-    public ChessController(SpringChessGameService chessGameService) {
+    public ChessController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 

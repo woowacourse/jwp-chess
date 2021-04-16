@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SpringChessGameService {
+public class ChessGameService {
 
     private final ChessGameDAO chessGameDAO;
     private final PieceDAO pieceDAO;
 
-    public SpringChessGameService(ChessGameDAO chessGameDAO, PieceDAO pieceDAO) {
+    public ChessGameService(ChessGameDAO chessGameDAO, PieceDAO pieceDAO) {
         this.chessGameDAO = chessGameDAO;
         this.pieceDAO = pieceDAO;
     }

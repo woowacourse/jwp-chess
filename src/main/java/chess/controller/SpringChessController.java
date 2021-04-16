@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
@@ -28,6 +25,7 @@ import java.util.Optional;
 @Controller
 public class SpringChessController {
 
+    private static final String SPACE = " ";
     private final SpringChessService springChessService;
 
     @Autowired
@@ -57,7 +55,7 @@ public class SpringChessController {
 
     @PostMapping(value = "/game/move", consumes = "text/plain")
     public ModelAndView move(@RequestBody String command, ModelAndView modelAndView) {
-        List<String> commands = Arrays.asList(command.split(" "));
+        List<String> commands = Arrays.asList(command.split(SPACE));
         Optional<ChessGame> chessGameOptional = springChessService.movePiece(commands);
         if (chessGameOptional.isPresent()) {
             addChessGame(modelAndView, chessGameOptional.get());
@@ -78,12 +76,13 @@ public class SpringChessController {
     }
 
     @PostMapping(value = "/game/save")
-    public ResponseEntity save(@RequestBody String room) {
+    public ResponseEntity<String> save(@RequestBody String room) {
         boolean isSaved = springChessService.saveRoom(room);
+        String response = Boolean.toString(isSaved);
         if (isSaved) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(response);
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.badRequest().body(response);
     }
 
     @PostMapping("/game/load")

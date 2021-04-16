@@ -2,6 +2,7 @@ package chess.database.room;
 
 import chess.util.JsonConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -32,13 +33,10 @@ public class SpringRoomDAO {
         String query = "SELECT * FROM room WHERE name = ?";
         return jdbcTemplate.queryForObject(
                 query,
-                (resultSet, rowNum) -> {
-                    Room room = new Room(
-                            resultSet.getString("name"),
-                            resultSet.getString("turn"),
-                            JsonConverter.toJsonObject(resultSet.getString("state")));
-                    return room;
-                },
+                (resultSet, rowNum) -> new Room(
+                        resultSet.getString("name"),
+                        resultSet.getString("turn"),
+                        JsonConverter.toJsonObject(resultSet.getString("state"))),
                 name);
     }
 

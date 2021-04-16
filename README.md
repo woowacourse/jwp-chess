@@ -1,9 +1,9 @@
 ## 기능 구현 목록
 
-### Spring 기능 관련
+### Spring 프레임워크로 전환하는 데 필요한 요소
 - controller
 - service
-- jdbcTemplate
+- repository (DAO, jdbcTemplate 사용)
 
 #### UI
 - [x] 메인화면, 저장된 게임 목록 화면, 게임 방 화면 만들기

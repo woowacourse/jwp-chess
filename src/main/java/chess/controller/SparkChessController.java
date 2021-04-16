@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
-public class WebUIChessController {
+public class SparkChessController {
     private final RoomDAO roomDAO = new RoomDAO();
     private ChessGame chessGame;
 

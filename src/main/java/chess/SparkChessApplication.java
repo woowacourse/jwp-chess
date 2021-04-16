@@ -1,7 +1,7 @@
 package chess;
 
 import chess.controller.Response;
-import chess.controller.WebUIChessController;
+import chess.controller.SparkChessController;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -13,20 +13,20 @@ import java.util.stream.Collectors;
 import static chess.view.InputView.SPACE;
 import static spark.Spark.*;
 
-public class WebUIChessApplication {
+public class SparkChessApplication {
     public static void main(String[] args) {
         staticFiles.location("/static");
 
-        WebUIChessController webUIChessController = new WebUIChessController();
+        SparkChessController sparkChessController = new SparkChessController();
 
         get("/", (req, res) -> {
-            Response response = webUIChessController.resetGameAsReadyState();
+            Response response = sparkChessController.resetGameAsReadyState();
             return render(response.getModel(), "index.hbs");
         });
 
         post("/game", (req, res) -> {
             String name = req.queryParams("name");
-            Response response = webUIChessController.createRoom(name);
+            Response response = sparkChessController.createRoom(name);
             if (response.isNotSuccessful()) {
                 res.status(response.getHttpStatus());
                 return render(response.getModel(), "index.hbs");
@@ -36,7 +36,7 @@ public class WebUIChessApplication {
 
         post("/game/move", (req, res) -> {
             List<String> moveCommand = getMoveCommand(req);
-            Response response = webUIChessController.movePiece(moveCommand);
+            Response response = sparkChessController.movePiece(moveCommand);
             if (response.isNotSuccessful()) {
                 res.status(response.getHttpStatus());
             }
@@ -44,7 +44,7 @@ public class WebUIChessApplication {
         });
 
         get("/rooms", (req, res) -> {
-            Response response = webUIChessController.getAllSavedRooms();
+            Response response = sparkChessController.getAllSavedRooms();
             if (response.isNotSuccessful()) {
                 res.status(response.getHttpStatus());
             }
@@ -52,7 +52,7 @@ public class WebUIChessApplication {
         });
 
         post("/game/load", (req, res) -> {
-            Response response = webUIChessController.loadRoom(req.queryParams("roomName"));
+            Response response = sparkChessController.loadRoom(req.queryParams("roomName"));
             if (response.isNotSuccessful()) {
                 res.status(response.getHttpStatus());
             }
@@ -60,7 +60,7 @@ public class WebUIChessApplication {
         });
 
         post("/game/save", "application/json", (req, res) -> {
-            Response response = webUIChessController.saveRoom(req.body());
+            Response response = sparkChessController.saveRoom(req.body());
             if (response.isNotSuccessful()) {
                 res.status(response.getHttpStatus());
             }

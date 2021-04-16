@@ -1,8 +1,9 @@
 package chess.dto;
 
 public class MoveDTO {
-    String source;
-    String target;
+
+    private String source;
+    private String target;
 
     public MoveDTO() {
 

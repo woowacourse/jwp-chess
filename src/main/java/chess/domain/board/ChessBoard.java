@@ -111,16 +111,17 @@ public class ChessBoard {
     }
 
     public boolean isOver() {
-        long kingCount = chessBoard.values()
-                .stream()
-                .filter(Piece::isKing)
-                .count();
+        long kingCount = kingCount();
         return kingCount < NUMBER_OF_KINGS;
     }
 
     public double score(Color color) {
         double score = normalScore(color);
         Map<Column, Long> pawnCount = pawnCount(color);
+        long kingCount = kingCount(color);
+        if (kingCount == 0) {
+            return 0;
+        }
         double punishmentScore = pawnScore(pawnCount);
         return score - punishmentScore;
     }
@@ -139,6 +140,21 @@ public class ChessBoard {
                 .filter(piece -> piece.getValue().isSameColor(color))
                 .collect(Collectors
                         .groupingBy(position -> position.getKey().getColumn(), Collectors.counting()));
+    }
+
+    private long kingCount(Color color) {
+        return chessBoard.values()
+                .stream()
+                .filter(Piece::isKing)
+                .filter(piece -> piece.isSameColor(color))
+                .count();
+    }
+
+    private long kingCount() {
+        return chessBoard.values()
+                .stream()
+                .filter(Piece::isKing)
+                .count();
     }
 
     private double pawnScore(Map<Column, Long> pawnCount) {

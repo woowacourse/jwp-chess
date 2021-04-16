@@ -1,9 +1,6 @@
 package chess.controller;
 
-import chess.dto.ChessBoardDTO;
-import chess.dto.FinishDTO;
-import chess.dto.MoveDTO;
-import chess.dto.TurnDTO;
+import chess.dto.*;
 import chess.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,10 +39,7 @@ public class GameController {
     public ResponseEntity move(@PathVariable String gameId, @RequestBody MoveDTO moveDTO) {
         return gameService.move(gameId, moveDTO);
     }
-    //    @GetMapping
-//    public String {
-//        "/:id/result", ChessService::result}
-//
+
     @GetMapping("/finish/{gameId}")
     @ResponseBody
     public FinishDTO isFinished(@PathVariable String gameId) {
@@ -56,5 +50,11 @@ public class GameController {
     public ResponseEntity finish(@PathVariable String gameId) {
         gameService.finish(gameId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/result/{gameId}")
+    @ResponseBody
+    public ResultDTO result(@PathVariable String gameId) {
+        return gameService.result(gameId);
     }
 }

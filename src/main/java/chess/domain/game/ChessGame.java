@@ -54,10 +54,7 @@ public class ChessGame {
         return turn.toString();
     }
 
-    public Result getResult() {
-        Result result = new Result();
-        result.add(Color.BLACK, chessBoard.score(Color.BLACK));
-        result.add(Color.WHITE, chessBoard.score(Color.WHITE));
-        return result;
+    public double getResult(Color color) {
+        return chessBoard.score(color);
     }
 }

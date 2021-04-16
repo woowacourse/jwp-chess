@@ -2,10 +2,8 @@ package chess.service;
 
 import chess.domain.board.Position;
 import chess.domain.game.ChessGame;
-import chess.dto.ChessBoardDTO;
-import chess.dto.FinishDTO;
-import chess.dto.MoveDTO;
-import chess.dto.TurnDTO;
+import chess.domain.piece.Color;
+import chess.dto.*;
 import chess.repository.ChessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,8 +41,8 @@ public class GameService {
         }
     }
 
-    private void checkGameOver(String gameId, ChessGame chessGame){
-        if(chessGame.isOver()){
+    private void checkGameOver(String gameId, ChessGame chessGame) {
+        if (chessGame.isOver()) {
             finish(gameId);
         }
     }
@@ -53,7 +51,12 @@ public class GameService {
         return chessRepository.isFinished(gameId);
     }
 
-    public void finish(String gameId){
+    public void finish(String gameId) {
         chessRepository.finish(gameId);
+    }
+
+    public ResultDTO result(String gameId) {
+        ChessGame chessGame = chessRepository.loadGame(gameId);
+        return new ResultDTO(chessGame.getResult(Color.BLACK), chessGame.getResult(Color.WHITE));
     }
 }

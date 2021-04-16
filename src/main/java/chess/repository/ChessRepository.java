@@ -6,10 +6,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceMapper;
-import chess.dto.ChessBoardDTO;
-import chess.dto.FinishDTO;
-import chess.dto.RoomIdDTO;
-import chess.dto.TurnDTO;
+import chess.dto.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

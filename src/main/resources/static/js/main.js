@@ -25,16 +25,14 @@ async function init() {
     this.$controller.addEventListener('click', btnHandler)
     this.$blackResult = document.getElementById('BLACK')
     this.$whiteResult = document.getElementById('WHITE')
-    this.$whiteResult.style.display = "none";
-    this.$blackResult.style.display = "none";
     const url = window.location.href.split('/')
 
     this.gameId = url[url.length - 1]
     await initBoard()
-    await finishHandler()
     await moveHandler()
     await changeTurn()
-
+    await result()
+    await finishHandler()
 }
 
 async function initBoard() {
@@ -57,6 +55,29 @@ function insertPiece(position, piece) {
             </div>`
 }
 
+async function toggleAvatar() {
+    const blackScore = this.$blackResult.querySelector('.score').textContent
+    const whiteScore = this.$whiteResult.querySelector('.score').textContent
+
+     if (blackScore > whiteScore) {
+         this.$blackResult.getElementsByTagName(
+            'img')[0].src = "./images/player_win.png"
+         removeTurn()
+        return
+    }
+    if (whiteScore > blackScore) {
+        this.$whiteResult.getElementsByTagName(
+            'img')[0].src = "./images/player_win.png"
+        removeTurn()
+        return
+    }
+}
+
+function removeTurn() {
+    document.querySelector('.black-turn').src = './images/up.png'
+    document.querySelector('.white-turn').src = './images/down.png'
+}
+
 async function finishHandler() {
     let response = await fetch(
         `/finish/${this.gameId}`
@@ -65,9 +86,11 @@ async function finishHandler() {
     if (response.finished === true) {
         await deactivateDrag()
         alert('게임이 종료되었습니다.')
-        toggleFinish()
+        await toggleFinish()
+        await toggleAvatar()
     }
 }
+
 
 function deactivateDrag() {
     document.querySelector('.chessBoard').removeEventListener("drag", drag);
@@ -105,36 +128,16 @@ async function changeTurn() {
 
 async function result() {
     let response = await fetch(
-        `/${this.gameId}/result`
+        `/result/${this.gameId}`
     )
     response = await response.json()
+    const blackScore = response.blackScore
+    const whiteScore = response.whiteScore
 
-    const blackResult = response.black
-    const whiteResult = response.white
-
-    this.$blackResult.getElementsByClassName(
-        'score')[0].innerHTML = `<span>${blackResult.score}</span>`
-    this.$whiteResult.getElementsByClassName(
-        'score')[0].innerHTML = `<span>${whiteResult.score}</span>`
-
-    if (blackResult.outcome === '승') {
-        this.$blackResult.getElementsByTagName(
-            'img')[0].src = "./images/player_win.png"
-        this.$whiteResult.getElementsByTagName(
-            'img')[0].src = "./images/player_lose.png"
-        return
-    }
-    if (blackResult.outcome === '패') {
-        this.$blackResult.getElementsByTagName(
-            'img')[0].src = "./images/player_lose.png"
-        this.$whiteResult.getElementsByTagName(
-            'img')[0].src = "./images/player_win.png"
-        return
-    }
-    this.$blackResult.getElementsByTagName(
-        'img')[0].src = "./images/player_lose.png"
-    this.$whiteResult.getElementsByTagName(
-        'img')[0].src = "./images/player_lose.png"
+    this.$blackResult.querySelector(
+        '.score').textContent = blackScore
+    this.$whiteResult.querySelector(
+        '.score').textContent = whiteScore
 }
 
 async function btnHandler({target}) {
@@ -170,8 +173,6 @@ function toggleFinish() {
 }
 
 function moveHandler() {
-    let source
-    let target
     this.$chessBoard.addEventListener("drag", drag, false);
     this.$chessBoard.addEventListener("dragstart", dragstart, false);
     this.$chessBoard.addEventListener("dragend", dragend, false);
@@ -199,6 +200,7 @@ async function move(source, target) {
     if (response.status === 200) {
         assignPieceImage(source, target)
         await changeTurn()
+        await result()
         await finishHandler()
         return
     }
@@ -234,4 +236,5 @@ drop = async function (e) {
     e.target.style.background = "";
     target = e.target.closest('div')
     await move(source, target)
+    await result()
 }

@@ -2,7 +2,6 @@ package chess.dao;
 
 import chess.domain.Position;
 import chess.domain.piece.Piece;
-import chess.domain.team.Team;
 import dto.MoveDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -42,7 +42,7 @@ public class RoomDao {
         return jdbcTemplate.query(sql, roomRowMapper);
     }
 
-    private final RowMapper<Room> roomRowMapper =  (resultSet, rowNum) -> {
+    private final RowMapper<Room> roomRowMapper = (resultSet, rowNum) -> {
         Long id = resultSet.getLong("room_id");
         String name = resultSet.getString("name");
         String pw = resultSet.getString("pw");

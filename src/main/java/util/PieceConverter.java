@@ -3,7 +3,6 @@ package util;
 import chess.domain.piece.*;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class PieceConverter {

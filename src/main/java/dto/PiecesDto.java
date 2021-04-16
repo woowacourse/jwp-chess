@@ -12,7 +12,7 @@ public class PiecesDto {
     private List<PieceDto> pieces;
 
     private PiecesDto(List<PieceDto> pieces) {
-       this.pieces = pieces;
+        this.pieces = pieces;
     }
 
     public static PiecesDto of(Map<Position, Piece> pieces, String color) {
@@ -21,7 +21,7 @@ public class PiecesDto {
         for (Map.Entry<Position, Piece> piece : pieces.entrySet()) {
             pieceList.add(
                     new PieceDto(piece.getKey().getKey(),
-                    PieceConverter.convertToPieceName(color, piece.getValue()))
+                            PieceConverter.convertToPieceName(color, piece.getValue()))
             );
         }
 

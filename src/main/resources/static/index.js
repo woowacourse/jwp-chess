@@ -9,7 +9,7 @@ function getTotalRoom() {
             refreshRoomList(response.data)
         }).catch(function (error) {
         alert('방 정보를 갱신하지 못했습니다.');
-        });
+    });
 }
 
 btnCreate.addEventListener('click', function (e) {

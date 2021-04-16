@@ -4,6 +4,7 @@ import chess.domain.Room;
 import chess.service.ChessService;
 import dto.ChessGameDto;
 import dto.MoveDto;
+import dto.RoomDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class SpringChessController {
     ChessService chessService;
 
     @GetMapping("/room")
-    public ResponseEntity<List<Room>> loadAllRoom() {
+    public ResponseEntity<List<RoomDto>> loadAllRoom() {
         return chessService.loadAllRoom();
     }
 

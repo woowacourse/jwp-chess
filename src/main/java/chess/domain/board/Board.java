@@ -19,12 +19,12 @@ public class Board {
         this.coordinates = coordinates;
     }
 
-    public void putPiece(Piece piece, Position position) {
-        coordinates.put(piece, position);
-    }
-
     public Board() {
         this.coordinates = new LinkedHashMap<>();
+    }
+
+    public void putPiece(Piece piece, Position position) {
+        coordinates.put(piece, position);
     }
 
     public Piece findPieceBy(Position position) {

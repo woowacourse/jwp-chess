@@ -1,9 +1,9 @@
 package chess.controller;
 
-import chess.Dto.BoardDto;
-import chess.Dto.MoveRequest;
-import chess.Dto.PathDto;
 import chess.domain.piece.PieceColor;
+import chess.dto.BoardDto;
+import chess.dto.MoveRequest;
+import chess.dto.PathDto;
 import chess.service.ChessService;
 import java.util.List;
 import java.util.Map;
@@ -23,18 +23,18 @@ public class BoardController {
         this.service = service;
     }
 
-    @GetMapping(value = {"","/restart"})
+    @GetMapping(value = {"", "/restart"})
     public BoardDto getNewBoard() {
         return new BoardDto(service.restartBoard());
     }
 
     @GetMapping("/status")
-    public boolean isEnd(){
+    public boolean isEnd() {
         return service.endGame();
     }
 
     @GetMapping("/turn")
-    public PieceColor getTurn(){
+    public PieceColor getTurn() {
         return service.findTurn();
     }
 
@@ -44,12 +44,12 @@ public class BoardController {
     }
 
     @PostMapping(path = "/path")
-    public List<String> movablePath(@RequestBody PathDto dto){
+    public List<String> movablePath(@RequestBody PathDto dto) {
         return service.findPath(dto.getFrom());
     }
 
     @PostMapping(path = "/move")
-    public boolean move(@RequestBody MoveRequest dto){
+    public boolean move(@RequestBody MoveRequest dto) {
         return service.addMove(dto.getFrom(), dto.getTo());
     }
 }

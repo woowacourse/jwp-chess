@@ -7,7 +7,6 @@ import chess.domain.piece.PieceColor;
 import chess.domain.player.Player;
 import chess.domain.player.Players;
 import chess.domain.position.Position;
-import chess.domain.result.Result;
 import chess.domain.state.End;
 import chess.domain.state.Ready;
 import chess.domain.state.State;

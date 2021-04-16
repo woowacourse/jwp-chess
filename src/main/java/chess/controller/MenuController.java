@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.Dto.BoardDto;
+import chess.dto.BoardDto;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,15 +17,15 @@ public class MenuController {
         this.service = service;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public String renderInitBoard() {
         return "index.html";
     }
 
     @ResponseBody
     @GetMapping("/load")
-    public BoardDto loadBoard() {
-        return new BoardDto(service.findBoard());
+    public ResponseEntity<BoardDto> loadBoard() {
+        return ResponseEntity.ok(new BoardDto(service.findBoard()));
     }
 
     @ExceptionHandler(RuntimeException.class)

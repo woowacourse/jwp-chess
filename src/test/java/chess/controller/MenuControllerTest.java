@@ -2,11 +2,9 @@ package chess.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.*;
 
 import chess.service.ChessService;
 import io.restassured.RestAssured;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -5,9 +5,9 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import chess.Dto.MoveRequest;
-import chess.Dto.PathDto;
 import chess.domain.piece.PieceColor;
+import chess.dto.MoveRequest;
+import chess.dto.PathDto;
 import chess.service.ChessService;
 import io.restassured.RestAssured;
 import java.util.Arrays;
@@ -53,14 +53,14 @@ class BoardControllerTest {
     @DisplayName("게임 종료 여부를 boolean 타입으로 가져온다. - GET")
     @Test
     void isEnd() {
-       Boolean response =  RestAssured.given().log().all()
+        Boolean response = RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when().get("/board/status")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(Boolean.TYPE);
 
-       assertFalse(response);
+        assertFalse(response);
     }
 
     @DisplayName("플레이어 차례를 가져온다. - GET")

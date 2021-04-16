@@ -14,8 +14,7 @@ function getCookie(name) {
 }
 
 const moveToChessView = function () {
-    const chessId = getCookie("chessId");
-    window.location.href = '/chess/' + chessId + "/view";
+    window.location.href = '/chess/view';
 }
 
 async function onNewGame() {

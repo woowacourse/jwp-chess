@@ -3,8 +3,8 @@ package chess.controller;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,7 +20,6 @@ import chess.service.ChessService;
 @Controller
 @RequestMapping("/chess")
 public class ChessController {
-    private static final Gson GSON = new Gson();
 
     private final ChessService chessService;
 
@@ -28,34 +27,34 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/{chessId}")
-    @ResponseBody
-    public String chessInfo(@PathVariable long chessId) {
-        ChessDTO chessDTO = chessService.getChessGame(chessId);
-        return GSON.toJson(chessDTO);
+    @GetMapping("/view")
+    public String chessTemplate() {
+        return "/chess.html";
     }
 
-    @GetMapping("/{chessId}/view")
-    public String chessTemplate(@PathVariable long chessId) {
-        return "/chess.html";
+    @GetMapping("/{chessId}")
+    @ResponseBody
+    public ResponseEntity<ChessDTO> chessInfo(@PathVariable long chessId) {
+        ChessDTO chessDTO = chessService.getChessGame(chessId);
+        return new ResponseEntity<>(chessDTO, HttpStatus.OK);
     }
 
     @PostMapping("")
     @ResponseBody
-    public String newChessGame(HttpServletResponse response) {
+    public ResponseEntity<Long> newChessGame(HttpServletResponse response) {
         Long chessId = chessService.insert();
 
         Cookie chessIdCookie = new Cookie("chessId", String.valueOf(chessId));
         chessIdCookie.setMaxAge(60 * 60 * 24 * 30);
         response.addCookie(chessIdCookie);
 
-        return GSON.toJson(chessId);
+        return new ResponseEntity<>(chessId, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{chessId}")
     @ResponseBody
-    public String move(@PathVariable long chessId, MovePosition movePosition) {
+    public HttpStatus move(@PathVariable long chessId, MovePosition movePosition) {
         chessService.move(chessId, movePosition);
-        return "OK";
+        return HttpStatus.NO_CONTENT;
     }
 }

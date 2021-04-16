@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: dev
+
+---
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url:
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+handlebars:
+  prefix: classpath:templates/
+  suffix: .html
+---
+
+spring:
+  profiles:
+    include: real

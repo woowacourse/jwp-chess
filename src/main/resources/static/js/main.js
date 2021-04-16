@@ -1,6 +1,6 @@
 const mainStart = document.querySelector("#main-start");
 const mainLoad = document.querySelector("#main-load");
-const basePath = 'http://localhost:4567';
+const basePath = 'http://localhost:8080';
 
 mainStart.addEventListener("click", async () => {
     let result = window.prompt("게임 이름을 입력해주세요");
@@ -20,7 +20,7 @@ mainStart.addEventListener("click", async () => {
         body: JSON.stringify(data)
     };
 
-    const response = await fetch(basePath + "/games", option)
+    const response = await fetch(basePath + "/api/games", option)
     .then(res => res.json());
 
     if (response.statusCode === 400) {
@@ -37,7 +37,7 @@ mainLoad.addEventListener("click", async () => {
         return;
     }
 
-    const response = await fetch(basePath + "/games/" + result)
+    const response = await fetch(basePath + "/api/games/" + result)
     .then(res => res.json());
 
     if (response.statusCode === 400) {

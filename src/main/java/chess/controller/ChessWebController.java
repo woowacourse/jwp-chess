@@ -52,23 +52,23 @@ public class ChessWebController {
             return render(model, "board.html");
         });
 
-        post("/games", (request, response) -> {
+        post("/api/games", (request, response) -> {
             ChessSaveRequestDto requestDto = new Gson().fromJson(request.body(), ChessSaveRequestDto.class);
             return chessService.startChess(requestDto);
         }, jsonTransformer);
 
-        put("/games", (request, response) -> {
+        put("/api/games", (request, response) -> {
             GameStatusRequestDto requestDto = new Gson().fromJson(request.body(), GameStatusRequestDto.class);
             chessService.changeGameStatus(requestDto);
             return new CommonResponseDto<>(ResponseCode.OK.code(), ResponseCode.OK.message());
         }, jsonTransformer);
 
-        get("/games/:name", (request, response) -> {
+        get("/api/games/:name", (request, response) -> {
             String name = request.params(":name");
             return chessService.loadChess(name);
         }, jsonTransformer);
 
-        put("/pieces", (request, response) -> {
+        put("/api/pieces", (request, response) -> {
             MoveRequestDto requestDto = new Gson().fromJson(request.body(), MoveRequestDto.class);
             return chessService.movePiece(requestDto);
         }, jsonTransformer);

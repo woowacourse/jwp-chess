@@ -15,8 +15,13 @@ import chess.service.dto.MoveRequestDto;
 import chess.service.dto.MoveResponseDto;
 import chess.service.dto.ResponseCode;
 import chess.service.dto.TilesDto;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
+@Service
+@Transactional(readOnly = true)
 public class ChessService {
 
     private final ChessDao chessDao;
@@ -31,6 +36,7 @@ public class ChessService {
         return new TilesDto(Board.emptyBoard());
     }
 
+    @Transactional
     public CommonResponseDto<MoveResponseDto> movePiece(final MoveRequestDto requestDto) {
         try {
             ChessGame chessGame = ChessGame.newGame();
@@ -58,6 +64,7 @@ public class ChessService {
         }
     }
 
+    @Transactional
     public void changeGameStatus(final GameStatusRequestDto requestDto) {
         ChessGame chessGame = ChessGame.newGame();
         Chess chess = findChessByName(requestDto.getChessName());
@@ -72,6 +79,7 @@ public class ChessService {
         chessDao.update(chess);
     }
 
+    @Transactional
     public CommonResponseDto<GameStatusDto> startChess(final ChessSaveRequestDto request) {
         try {
             ChessGame chessGame = ChessGame.newGame();

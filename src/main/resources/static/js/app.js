@@ -5,7 +5,7 @@ const tiles = document.getElementsByClassName("tile");
 const whiteCount = document.querySelector(`#whiteScore strong`);
 const blackCount = document.querySelector(`#blackScore strong`);
 const winner = document.querySelector(`#winner`);
-const basePath = 'http://localhost:4567';
+const basePath = 'http://localhost:8080';
 
 end.addEventListener("click", (event) => {
     const item = event.target;
@@ -32,7 +32,7 @@ end.addEventListener("click", (event) => {
             body: JSON.stringify(data)
         };
 
-        fetch(basePath + "/games", option)
+        fetch(basePath + "/api/games", option)
         .then(async () => {
             await loadGame();
         });
@@ -48,7 +48,7 @@ exit.addEventListener("click", () => {
 
 const loadGame = async () => {
     const response = await fetch(
-        basePath + "/games/" + localStorage.getItem("name"))
+        basePath + "/api/games/" + localStorage.getItem("name"))
     .then(res => res.json());
 
     if (response.statusCode === 400) {
@@ -165,7 +165,7 @@ async function movePiece(sourcePosition, targetPosition) {
         body: JSON.stringify(data)
     };
 
-    const response = await fetch(basePath + "/pieces", option)
+    const response = await fetch(basePath + "/api/pieces", option)
     .then(res => res.json());
     console.log(response.body);
 

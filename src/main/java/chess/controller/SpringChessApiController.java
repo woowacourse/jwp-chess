@@ -29,7 +29,6 @@ public class SpringChessApiController {
     }
 
     @PostMapping
-    @ResponseBody
     private Map<String, String> createRoom(@RequestBody RoomDto roomDto) {
         Map<String, String> result = new HashMap<>();
         result.put("result", "success");
@@ -38,19 +37,16 @@ public class SpringChessApiController {
     }
 
     @GetMapping("{id}/statistics")
-    @ResponseBody
     private UsersInRoomDto usersInRoom(@PathVariable String id) {
         return springChessService.usersInRoom(id);
     }
 
     @GetMapping("{id}/getGameStatus")
-    @ResponseBody
     private GameStatusDto gameStatus(@PathVariable String id) {
         return springChessService.gameStatus(id);
     }
 
     @PutMapping("{id}/start")
-    @ResponseBody
     private BoardDto startGame(@PathVariable String id) {
         return springChessService.start(id);
     }
@@ -63,7 +59,6 @@ public class SpringChessApiController {
     }
 
     @PutMapping
-    @ResponseBody
     private String closeRoom(@RequestBody Map<String, String> body) {
         //TODO : body 형태로 받는것을 url 형태로 바꾸게 변경
         String id = body.get("id");
@@ -72,14 +67,12 @@ public class SpringChessApiController {
     }
 
     @GetMapping("/{id}/movablePoints/{point}")
-    @ResponseBody
     private List<PointDto> movablePoints(@PathVariable String id, @PathVariable String point) {
         return springChessService.movablePoints(id, point);
     }
 
     //TODO : Change to Post
     @PutMapping("{id}/move")
-    @ResponseBody
     private BoardDto move(@PathVariable String id, @RequestBody Map<String, String> body) {
         return springChessService.move(id, body.get("source"), body.get("destination"));
     }

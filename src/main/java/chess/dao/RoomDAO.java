@@ -17,7 +17,7 @@ public class RoomDAO {
 
     public void createRoom(final String name) {
         String query = "INSERT INTO room (title, black_user, white_user, status) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(query, name, 1, 2, 1);
+        jdbcTemplate.update(query, name, 1, 2, 1); // (이름, default_black_user_id(1), default_white_user_id(2), 상태(진행중: 1 / 종료됨: 0))
     }
 
     public List<RoomDTO> allRooms() {

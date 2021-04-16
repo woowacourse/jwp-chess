@@ -34,9 +34,9 @@ public enum Color {
 
     public static Color of(String name) {
         return Arrays.stream(values())
-            .filter(value -> value.name().equals(name))
-            .findAny()
-            .orElseThrow(() -> new IllegalArgumentException("매칭되는 컬러가 없습니다."));
+                .filter(value -> value.name().equals(name))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("매칭되는 컬러가 없습니다."));
     }
 
     @Override

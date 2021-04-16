@@ -4,6 +4,7 @@ import chess.domain.board.ChessBoard;
 import chess.domain.board.Direction;
 import chess.domain.board.Position;
 import chess.domain.piece.movestrategy.MoveStrategy;
+
 import java.util.List;
 
 public abstract class Piece {
@@ -26,9 +27,9 @@ public abstract class Piece {
     }
 
     public boolean isMovable(
-        ChessBoard chessBoard,
-        Position sourcePosition,
-        Position targetPosition
+            ChessBoard chessBoard,
+            Position sourcePosition,
+            Position targetPosition
     ) {
         return moveStrategy.movable(chessBoard, sourcePosition, targetPosition, this);
     }

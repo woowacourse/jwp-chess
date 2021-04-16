@@ -54,7 +54,7 @@ public class ChessRepository {
         return turnDTO;
     }
 
-    public void saveGame(String gameId, ChessGame chessGame){
+    public void saveGame(String gameId, ChessGame chessGame) {
         String saveQuery = "UPDATE chess_game SET turn = ?, finished = ?, board = ? WHERE id = ?";
         jdbcTemplate.update(saveQuery, chessGame.getTurn(), chessGame.isOver(), serialize(chessGame), gameId);
     }

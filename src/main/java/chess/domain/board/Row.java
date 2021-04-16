@@ -23,16 +23,16 @@ public enum Row {
 
     public static Row findRow(char input) {
         return Arrays.stream(values())
-            .filter(value -> value.row == input)
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+                .filter(value -> value.row == input)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public static Row findRowByIndex(int input) {
         return Arrays.stream(values())
-            .filter(value -> value.index == input)
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+                .filter(value -> value.index == input)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public int getIndex() {

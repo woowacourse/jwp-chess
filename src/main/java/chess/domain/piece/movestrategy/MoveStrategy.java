@@ -7,9 +7,9 @@ import chess.domain.piece.Piece;
 public interface MoveStrategy {
 
     boolean movable(
-        ChessBoard chessBoard,
-        Position sourcePosition,
-        Position targetPosition,
-        Piece sourcePiece
+            ChessBoard chessBoard,
+            Position sourcePosition,
+            Position targetPosition,
+            Piece sourcePiece
     );
 }

@@ -22,9 +22,9 @@ public enum PieceMapper {
 
     public static Piece of(final char name) {
         return Arrays.stream(values())
-            .filter(mapper -> mapper.name == Character.toLowerCase(name))
-            .findAny()
-            .map(pieceMapper -> pieceMapper.builder.apply(Color.of(name), name))
-            .orElseThrow(() -> new IllegalArgumentException("매칭 되는 피스가 존재하지 않습니다."));
+                .filter(mapper -> mapper.name == Character.toLowerCase(name))
+                .findAny()
+                .map(pieceMapper -> pieceMapper.builder.apply(Color.of(name), name))
+                .orElseThrow(() -> new IllegalArgumentException("매칭 되는 피스가 존재하지 않습니다."));
     }
 }

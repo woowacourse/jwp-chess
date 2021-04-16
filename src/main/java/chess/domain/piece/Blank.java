@@ -4,6 +4,7 @@ import chess.domain.board.ChessBoard;
 import chess.domain.board.Direction;
 import chess.domain.board.Position;
 import chess.domain.piece.movestrategy.MoveStrategy;
+
 import java.util.List;
 
 public class Blank extends Piece {
@@ -14,7 +15,7 @@ public class Blank extends Piece {
         super(color, new MoveStrategy() {
             @Override
             public boolean movable(ChessBoard chessBoard, Position sourcePosition,
-                Position targetPosition, Piece sourcePiece) {
+                                   Position targetPosition, Piece sourcePiece) {
                 throw new UnsupportedOperationException(BLANK_ERROR);
             }
         });

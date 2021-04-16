@@ -11,30 +11,30 @@ public class PawnMoveStrategy implements MoveStrategy {
 
     @Override
     public boolean movable(
-        ChessBoard chessBoard,
-        Position sourcePosition,
-        Position targetPosition,
-        Piece sourcePiece
+            ChessBoard chessBoard,
+            Position sourcePosition,
+            Position targetPosition,
+            Piece sourcePiece
     ) {
         Direction direction = Direction.findDirection(sourcePosition, targetPosition);
         sourcePiece.validateDirection(direction);
 
         if (direction.getXDegree() == LINEAR_DIRECTION_DEGREE) {
             return linearPawnMove(chessBoard, sourcePosition, targetPosition, sourcePiece,
-                direction);
+                    direction);
         }
         Position nextPosition = sourcePosition.nextPosition(direction);
         return !chessBoard.isBlank(nextPosition)
-            && !sourcePiece.isSameColor(chessBoard.getPiece(nextPosition))
-            && nextPosition.equals(targetPosition);
+                && !sourcePiece.isSameColor(chessBoard.getPiece(nextPosition))
+                && nextPosition.equals(targetPosition);
     }
 
     private static boolean linearPawnMove(
-        ChessBoard chessBoard,
-        Position sourcePosition,
-        Position targetPosition,
-        Piece sourcePiece,
-        Direction direction
+            ChessBoard chessBoard,
+            Position sourcePosition,
+            Position targetPosition,
+            Piece sourcePiece,
+            Direction direction
     ) {
         Position nextPosition = sourcePosition.nextPosition(direction);
         if (!chessBoard.isBlank(nextPosition)) {

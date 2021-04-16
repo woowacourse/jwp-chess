@@ -23,16 +23,16 @@ public enum Column {
 
     public static Column findColumn(char input) {
         return Arrays.stream(values())
-            .filter(value -> value.column == input)
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+                .filter(value -> value.column == input)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public static Column findColumnByIndex(int input) {
         return Arrays.stream(values())
-            .filter(value -> value.index == input)
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+                .filter(value -> value.index == input)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public int getIndex() {

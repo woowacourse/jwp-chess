@@ -9,16 +9,16 @@ public class NonIterableMoveStrategy implements MoveStrategy {
 
     @Override
     public boolean movable(
-        ChessBoard chessBoard,
-        Position sourcePosition,
-        Position targetPosition,
-        Piece sourcePiece
+            ChessBoard chessBoard,
+            Position sourcePosition,
+            Position targetPosition,
+            Piece sourcePiece
     ) {
         Direction direction = Direction.findDirection(sourcePosition, targetPosition);
         sourcePiece.validateDirection(direction);
 
         Position nextPosition = sourcePosition.nextPosition(direction);
         return !sourcePiece.isSameColor(chessBoard.getPiece(nextPosition))
-            && nextPosition.equals(targetPosition);
+                && nextPosition.equals(targetPosition);
     }
 }

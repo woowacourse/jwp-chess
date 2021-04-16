@@ -1,14 +1,7 @@
 package chess.domain.board;
 
-import chess.domain.piece.Bishop;
-import chess.domain.piece.Blank;
-import chess.domain.piece.Color;
-import chess.domain.piece.King;
-import chess.domain.piece.Knight;
-import chess.domain.piece.Pawn;
-import chess.domain.piece.Piece;
-import chess.domain.piece.Queen;
-import chess.domain.piece.Rook;
+import chess.domain.piece.*;
+
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -103,10 +96,10 @@ public class ChessBoard {
 
     public Position getPosition(Position target) {
         return chessBoard.keySet()
-            .stream()
-            .filter(position -> position.equals(target))
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+                .stream()
+                .filter(position -> position.equals(target))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public Piece getPiece(Position position) {
@@ -119,9 +112,9 @@ public class ChessBoard {
 
     public boolean isOver() {
         long kingCount = chessBoard.values()
-            .stream()
-            .filter(Piece::isKing)
-            .count();
+                .stream()
+                .filter(Piece::isKing)
+                .count();
         return kingCount < NUMBER_OF_KINGS;
     }
 
@@ -134,24 +127,24 @@ public class ChessBoard {
 
     private double normalScore(Color color) {
         return chessBoard.values().stream()
-            .filter(piece -> piece.isSameColor(color))
-            .mapToDouble(Piece::score)
-            .sum();
+                .filter(piece -> piece.isSameColor(color))
+                .mapToDouble(Piece::score)
+                .sum();
     }
 
     private Map<Column, Long> pawnCount(Color color) {
         return chessBoard.entrySet()
-            .stream()
-            .filter(piece -> piece.getValue().isPawn())
-            .filter(piece -> piece.getValue().isSameColor(color))
-            .collect(Collectors
-                .groupingBy(position -> position.getKey().getColumn(), Collectors.counting()));
+                .stream()
+                .filter(piece -> piece.getValue().isPawn())
+                .filter(piece -> piece.getValue().isSameColor(color))
+                .collect(Collectors
+                        .groupingBy(position -> position.getKey().getColumn(), Collectors.counting()));
     }
 
     private double pawnScore(Map<Column, Long> pawnCount) {
         return pawnCount.values().stream()
-            .filter(count -> count >= COLUMN_NEIGHBOR_PAWN)
-            .mapToDouble(count -> count * PAWN_SCORE_PUNISHMENT_RATIO)
-            .sum();
+                .filter(count -> count >= COLUMN_NEIGHBOR_PAWN)
+                .mapToDouble(count -> count * PAWN_SCORE_PUNISHMENT_RATIO)
+                .sum();
     }
 }

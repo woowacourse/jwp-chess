@@ -9,10 +9,10 @@ public class IterableMoveStrategy implements MoveStrategy {
 
     @Override
     public boolean movable(
-        ChessBoard chessBoard,
-        Position sourcePosition,
-        Position targetPosition,
-        Piece sourcePiece
+            ChessBoard chessBoard,
+            Position sourcePosition,
+            Position targetPosition,
+            Piece sourcePiece
     ) {
         Direction direction = Direction.findDirection(sourcePosition, targetPosition);
         sourcePiece.validateDirection(direction);

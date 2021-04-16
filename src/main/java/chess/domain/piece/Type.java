@@ -6,6 +6,7 @@ import chess.domain.piece.movestrategy.IterableMoveStrategy;
 import chess.domain.piece.movestrategy.MoveStrategy;
 import chess.domain.piece.movestrategy.NonIterableMoveStrategy;
 import chess.domain.piece.movestrategy.PawnMoveStrategy;
+
 import java.util.Arrays;
 
 public enum Type {
@@ -19,7 +20,7 @@ public enum Type {
     BLANK(".", 0, new MoveStrategy() {
         @Override
         public boolean movable(ChessBoard chessBoard, Position sourcePosition,
-            Position targetPosition, Piece sourcePiece) {
+                               Position targetPosition, Piece sourcePiece) {
             throw new UnsupportedOperationException(Blank.BLANK_ERROR);
         }
     });
@@ -44,9 +45,9 @@ public enum Type {
     public static Type of(char piece) {
         System.out.println(piece);
         return Arrays.stream(values())
-            .filter(value -> value.name.equals(String.valueOf(piece).toUpperCase()))
-            .findAny()
-            .orElseThrow(() -> new IllegalArgumentException("해당 피스 없음."));
+                .filter(value -> value.name.equals(String.valueOf(piece).toUpperCase()))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("해당 피스 없음."));
     }
 
     public MoveStrategy getMoveStrategy() {

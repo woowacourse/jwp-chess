@@ -1,6 +1,7 @@
 package chess.domain.board;
 
 import chess.domain.piece.Color;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -35,19 +36,19 @@ public class Position {
     public static Position of(Row row, Column column) {
         String key = generateKey(row, column);
         return Optional.ofNullable(cache.get(key))
-            .orElseThrow(() -> new IllegalArgumentException(OUT_OF_BOUND_MESSAGE));
+                .orElseThrow(() -> new IllegalArgumentException(OUT_OF_BOUND_MESSAGE));
     }
 
     public static Position of(int row, int column) {
         String key = generateKey(Row.findRowByIndex(row), Column.findColumnByIndex(column));
         return Optional.ofNullable(cache.get(key))
-            .orElseThrow(() -> new IllegalArgumentException(OUT_OF_BOUND_MESSAGE));
+                .orElseThrow(() -> new IllegalArgumentException(OUT_OF_BOUND_MESSAGE));
     }
 
     public static Position of(String input) {
         String key = generateKey(Row.findRow(input.charAt(1)), Column.findColumn(input.charAt(0)));
         return Optional.ofNullable(cache.get(key))
-            .orElseThrow(() -> new IllegalArgumentException(OUT_OF_BOUND_MESSAGE));
+                .orElseThrow(() -> new IllegalArgumentException(OUT_OF_BOUND_MESSAGE));
     }
 
     private static String generateKey(Row row, Column column) {
@@ -72,7 +73,7 @@ public class Position {
 
     public Position nextPosition(Direction direction) {
         return Position.of(this.row.getIndex() + direction.getYDegree(),
-            this.column.getIndex() + direction.getXDegree());
+                this.column.getIndex() + direction.getXDegree());
     }
 
     public boolean isStartingPosition(Color color) {

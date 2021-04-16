@@ -86,9 +86,9 @@ public enum Direction {
         int finalXGap = xGap;
         int finalYGap = yGap;
         return Arrays.stream(Direction.values())
-            .filter(direction -> direction.is(finalXGap, finalYGap))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(NOT_MOVABLE_DIRECTION));
+                .filter(direction -> direction.is(finalXGap, finalYGap))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(NOT_MOVABLE_DIRECTION));
     }
 
     private static int gap(int source, int target) {

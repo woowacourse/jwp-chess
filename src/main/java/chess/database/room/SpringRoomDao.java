@@ -2,11 +2,9 @@ package chess.database.room;
 
 import chess.util.JsonConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -17,7 +15,7 @@ public class SpringRoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addRoom(Room room) throws SQLException {
+    public void addRoom(Room room) {
         String query = "INSERT INTO room (name, turn, state) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE turn = VALUES(turn), state = VALUES(state)";
 
         jdbcTemplate.update(connection -> {
@@ -29,7 +27,7 @@ public class SpringRoomDao {
         });
     }
 
-    public Room findByRoomName(String name) throws SQLException {
+    public Room findByRoomName(String name) {
         String query = "SELECT * FROM room WHERE name = ?";
         return jdbcTemplate.queryForObject(
                 query,
@@ -40,7 +38,7 @@ public class SpringRoomDao {
                 name);
     }
 
-    public void validateRoomExistence(String name) throws SQLException {
+    public void validateRoomExistence(String name) {
         String query = "SELECT COUNT(*) FROM room WHERE name = ?";
         int result = jdbcTemplate.queryForObject(query, Integer.class, name);
         if (result == 1) {
@@ -48,7 +46,7 @@ public class SpringRoomDao {
         }
     }
 
-    public List<String> getAllRoom() throws SQLException {
+    public List<String> getAllRoom() {
         String query = "SELECT name FROM room";
         return jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getString("name"));
     }

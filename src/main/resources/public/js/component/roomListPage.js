@@ -1,12 +1,13 @@
 import { getRooms } from "../service/chessService.js";
 import * as chessPage from "./chessPage.js";
+import {store} from "../store.js";
 
 export async function renderRoomListPage() {
     const $layoutWrap = document.getElementById("layout-wrap");
     const div = document.createElement("div");
     div.innerHTML = `
 <div id="layout" class="room-list-page">
-    <button class="btn">
+    <button class="btn" id="createChessRoomBtn">
         체스방 만들기
     </button>
     <div id="room-list">
@@ -32,10 +33,23 @@ async function createRoomListElement() {
 function addEvent() {
     const $roomList = document.getElementById("room-list");
     $roomList.addEventListener("click", enterRoom);
+
+    const $createChessRoomBtn = document.getElementById("createChessRoomBtn");
+    $createChessRoomBtn.addEventListener("click", createRoom);
 }
 
 function enterRoom(event) {
     const $clickedButton = event.target.closest("button");
     const roomName = $clickedButton.textContent;
+    store.roomName = roomName;
     chessPage.createChessBoard(roomName);
+}
+
+function createRoom() {
+    let roomName;
+    do {
+        roomName = prompt('입장할 방의 이름을 입력해주세요.');
+        store.roomName = roomName;
+        chessPage.createChessBoard(roomName);
+    } while (!roomName)
 }

@@ -33,8 +33,8 @@ end.addEventListener("click", (event) => {
         };
 
         fetch(basePath + "/games", option)
-        .then(() => {
-            loadGame();
+        .then(async () => {
+            await loadGame();
         });
         alert("이 게임 끝났습니다.");
     }

@@ -23,13 +23,13 @@ public class GameDaoTemplate implements GameDao {
     private RowMapper<GameResponseDto> actorRowMapper = (resultSet, rowNum) ->
             new GameResponseDto(
                     resultSet.getLong("id"),
-                    resultSet.getString("room_name"),
                     resultSet.getString("white_username"),
-                    resultSet.getString("black_username")
-            );
+                    resultSet.getString("black_username"),
+                    resultSet.getString("room_name")
+                    );
 
     @Override
-    public Long saveGame(Game game) {
+    public Long saveGame(final Game game) {
         String sql = "INSERT INTO game(room_name, white_username, black_username) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -43,7 +43,7 @@ public class GameDaoTemplate implements GameDao {
     }
 
     @Override
-    public GameResponseDto findGameById(Long gameId) {
+    public GameResponseDto findGameById(final Long gameId) {
         String sql = "SELECT * from game where id = ?";
         return jdbcTemplate.queryForObject(sql, actorRowMapper, gameId);
     }

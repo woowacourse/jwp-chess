@@ -4,9 +4,9 @@ import chess.controller.web.dto.score.ScoreResponseDto;
 import chess.domain.manager.GameStatus;
 
 public interface ScoreDao {
-    Long saveScore(GameStatus gameStatus, Long gameId);
+    Long saveScore(final GameStatus gameStatus, final Long gameId);
 
-    Long updateScore(GameStatus gameStatus, Long gameId);
+    Long updateScore(final GameStatus gameStatus, final Long gameId);
 
-    ScoreResponseDto findScoreByGameId(Long gameId);
+    ScoreResponseDto findScoreByGameId(final Long gameId);
 }

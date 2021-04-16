@@ -29,7 +29,7 @@ public class PieceDaoTemplate implements PieceDao {
             );
 
     @Override
-    public long[] savePieces(Long gameId, Map<Position, Piece> pieces) {
+    public long[] savePieces(final Long gameId, final Map<Position, Piece> pieces) {
         String sql = "INSERT INTO piece(game_id, position, symbol) VALUES (?, ?, ?)";
         List<Object[]> collect = pieces.entrySet()
                 .stream()
@@ -40,19 +40,19 @@ public class PieceDaoTemplate implements PieceDao {
     }
 
     @Override
-    public Long updateSourcePiece(String source, Long gameId) {
-        String sql = "UPDATE piece SET symbol = ? WHERE game_id=? && position=?";
+    public Long updateSourcePiece(final String source, final Long gameId) {
+        String sql = "UPDATE piece SET symbol = ? WHERE game_id=? AND position=?";
         return (long) jdbcTemplate.update(sql, ".", gameId, source);
     }
 
     @Override
-    public Long updateTargetPiece(String target, Piece sourcePiece, Long gameId) {
-        String sql = "UPDATE piece SET symbol = ? where game_id = ? && position = ?";
+    public Long updateTargetPiece(final String target, final Piece sourcePiece, final Long gameId) {
+        String sql = "UPDATE piece SET symbol = ? where game_id = ? AND position = ?";
         return (long) jdbcTemplate.update(sql, sourcePiece.getSymbol(), gameId, target);
     }
 
     @Override
-    public List<PieceResponseDto> findPiecesByGameId(Long gameId) {
+    public List<PieceResponseDto> findPiecesByGameId(final Long gameId) {
         String sql = "SELECT * from piece where game_id = ?";
         return jdbcTemplate.query(sql, actorRowMapper, gameId);
     }

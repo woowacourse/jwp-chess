@@ -24,19 +24,19 @@ public class StateDaoTemplate implements StateDao {
             );
 
     @Override
-    public Long saveState(ChessManager chessManager, Long gameId) {
+    public Long saveState(final ChessManager chessManager, final Long gameId) {
         String sql = "INSERT INTO state(game_id, turn_owner, turn_number, playing) VALUES (?, ?, ?, ?)";
         return (long) jdbcTemplate.update(sql, gameId, chessManager.turnOwner().name(), chessManager.turnNumber(), chessManager.isPlaying());
     }
 
     @Override
-    public Long updateState(ChessManager chessManager, Long gameId) {
+    public Long updateState(final ChessManager chessManager, final Long gameId) {
         String sql = "UPDATE state SET turn_owner=?, turn_number=?, playing=? WHERE game_id=?";
         return (long) jdbcTemplate.update(sql, chessManager.turnOwner().name(), chessManager.turnNumber(), chessManager.isPlaying(), gameId);
     }
 
     @Override
-    public StateResponseDto findStateByGameId(Long gameId) {
+    public StateResponseDto findStateByGameId(final Long gameId) {
         String sql = "SELECT * from state where game_id = ?";
         return jdbcTemplate.queryForObject(sql, actorRowMapper, gameId);
     }

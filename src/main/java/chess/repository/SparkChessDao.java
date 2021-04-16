@@ -1,7 +1,7 @@
 package chess.repository;
 
-import chess.domain.DTO.BoardDTO;
-import chess.domain.DTO.TurnDTO;
+import chess.domain.dto.BoardDto;
+import chess.domain.dto.TurnDto;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
@@ -14,11 +14,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SparkChessDAO extends DBConnector {
+public class SparkChessDao extends DBConnector {
     private final String updateBoardTableQuery = "update board set piece = ? where position = ?";
     private final String updateTurnTableQuery = "update turn set turn_owner = ? where turn_owner = ?";
 
-    public BoardDTO getSavedBoardInfo() throws SQLException {
+    public BoardDto getSavedBoardInfo() throws SQLException {
         String query = "select * from board;";
         Map<String, String> boardInfo = new HashMap<>();
 
@@ -29,10 +29,10 @@ public class SparkChessDAO extends DBConnector {
                         savedBoardInfo.getString("piece"));
             }
         }
-        return BoardDTO.of(boardInfo);
+        return BoardDto.of(boardInfo);
     }
 
-    public TurnDTO getSavedTurnOwner() throws SQLException {
+    public TurnDto getSavedTurnOwner() throws SQLException {
         String query = "select * from turn;";
         String turnOwner = "";
 
@@ -42,7 +42,7 @@ public class SparkChessDAO extends DBConnector {
                 turnOwner = savedTurnOwner.getString("turn_owner");
             }
         }
-        return TurnDTO.of(turnOwner);
+        return TurnDto.of(turnOwner);
     }
 
     public void resetBoard(Board board) throws SQLException {

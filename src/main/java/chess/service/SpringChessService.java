@@ -1,39 +1,39 @@
 package chess.service;
 
 import chess.domain.ChessGame;
-import chess.domain.DTO.BoardDTO;
-import chess.domain.DTO.MoveInfoDTO;
-import chess.domain.DTO.TurnDTO;
+import chess.domain.dto.BoardDto;
+import chess.domain.dto.MoveInfoDto;
+import chess.domain.dto.TurnDto;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
-import chess.repository.SpringChessDAO;
+import chess.repository.SpringChessDao;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SpringChessService {
-    private final SpringChessDAO springChessDAO;
+    private final SpringChessDao springChessDAO;
 
-    public SpringChessService(SpringChessDAO springChessDAO) {
+    public SpringChessService(SpringChessDao springChessDAO) {
         this.springChessDAO = springChessDAO;
     }
 
-    public BoardDTO initiateBoard(ChessGame chessGame) {
+    public BoardDto initiateBoard(ChessGame chessGame) {
         springChessDAO.resetTurnOwner(chessGame.getTurnOwner());
         chessGame.settingBoard();
         springChessDAO.resetBoard(chessGame.getBoard());
-        return BoardDTO.of(chessGame.getBoard());
+        return BoardDto.of(chessGame.getBoard());
     }
 
-    public BoardDTO getSavedBoardInfo(ChessGame chessGame) {
-        BoardDTO boardDTO = springChessDAO.getSavedBoardInfo();
-        TurnDTO turnDTO = springChessDAO.getSavedTurnOwner();
+    public BoardDto getSavedBoardInfo(ChessGame chessGame) {
+        BoardDto boardDTO = springChessDAO.getSavedBoardInfo();
+        TurnDto turnDTO = springChessDAO.getSavedTurnOwner();
 
         chessGame.loadSavedBoardInfo(boardDTO.getBoardInfo(), turnDTO.getTurn());
         return boardDTO;
     }
 
-    public BoardDTO move(ChessGame chessGame, MoveInfoDTO moveInfoDTO) {
+    public BoardDto move(ChessGame chessGame, MoveInfoDto moveInfoDTO) {
         Board board = chessGame.getBoard();
         Position target = Position.convertStringToPosition(moveInfoDTO.getTarget());
 
@@ -43,6 +43,6 @@ public class SpringChessService {
 
         springChessDAO.renewBoardAfterMove(moveInfoDTO.getTarget(), moveInfoDTO.getDestination(), targetPiece);
         springChessDAO.renewTurnOwnerAfterMove(chessGame.getTurnOwner());
-        return BoardDTO.of(board);
+        return BoardDto.of(board);
     }
 }

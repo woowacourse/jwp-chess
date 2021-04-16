@@ -1,4 +1,4 @@
-package chess.domain.DTO;
+package chess.domain.dto;
 
 import chess.domain.board.Board;
 import chess.domain.board.Position;
@@ -8,19 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class BoardDTO {
+public class BoardDto {
     public String gameOverFlag = "false";
     private Map<String, String> boardInfo = new HashMap<>();
 
-    public BoardDTO() {
+    public BoardDto() {
     }
 
-    private BoardDTO(Map<String, String> boardInfo, String gameOverFlag) {
+    private BoardDto(Map<String, String> boardInfo, String gameOverFlag) {
         this.boardInfo = boardInfo;
         this.gameOverFlag = gameOverFlag;
     }
 
-    public static BoardDTO of(Board board) {
+    public static BoardDto of(Board board) {
         Map<String, String> boardInfo = new HashMap<>();
         for (Map.Entry<Position, Piece> info : board.getBoard().entrySet()) {
             if (Objects.equals(info.getValue(), null)) {
@@ -30,7 +30,7 @@ public class BoardDTO {
             }
         }
         String gameOverFlag = getGameOverFlag(board);
-        return new BoardDTO(boardInfo, gameOverFlag);
+        return new BoardDto(boardInfo, gameOverFlag);
     }
 
     private static String getGameOverFlag(Board board) {
@@ -40,8 +40,8 @@ public class BoardDTO {
         return "false";
     }
 
-    public static BoardDTO of(Map<String, String> boardInfo) {
-        return new BoardDTO(boardInfo, "true");
+    public static BoardDto of(Map<String, String> boardInfo) {
+        return new BoardDto(boardInfo, "true");
     }
 
     public Map<String, String> getBoardInfo() {

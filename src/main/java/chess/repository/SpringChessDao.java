@@ -1,7 +1,7 @@
 package chess.repository;
 
-import chess.domain.DTO.BoardDTO;
-import chess.domain.DTO.TurnDTO;
+import chess.domain.dto.BoardDto;
+import chess.domain.dto.TurnDto;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
@@ -14,16 +14,16 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class SpringChessDAO {
+public class SpringChessDao {
     private final JdbcTemplate jdbcTemplate;
     private final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ?";
     private final String UPDATE_TURN_QUERY = "update turn set turn_owner = ? where turn_owner = ?";
 
-    public SpringChessDAO(JdbcTemplate jdbcTemplate) {
+    public SpringChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public BoardDTO getSavedBoardInfo() {
+    public BoardDto getSavedBoardInfo() {
         String sql = "select position, piece from board;";
         List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
         Map<String, String> boardInfo = new HashMap<>();
@@ -32,13 +32,13 @@ public class SpringChessDAO {
             String piece = (String) result.get("piece");
             boardInfo.put(position, piece);
         }
-        return BoardDTO.of(boardInfo);
+        return BoardDto.of(boardInfo);
     }
 
-    public TurnDTO getSavedTurnOwner() {
+    public TurnDto getSavedTurnOwner() {
         String sql = "select * from turn;";
         String turnOwner = jdbcTemplate.queryForObject(sql, String.class);
-        return TurnDTO.of(turnOwner);
+        return TurnDto.of(turnOwner);
     }
 
     public void resetBoard(Board board) {

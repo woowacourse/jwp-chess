@@ -1,9 +1,9 @@
 package chess.controller;
 
 import chess.domain.ChessGame;
-import chess.domain.DTO.BoardDTO;
-import chess.domain.DTO.MoveInfoDTO;
-import chess.domain.DTO.ScoreDTO;
+import chess.domain.dto.BoardDto;
+import chess.domain.dto.MoveInfoDto;
+import chess.domain.dto.ScoreDto;
 import chess.domain.board.BoardFactory;
 import chess.service.SparkChessService;
 import com.google.gson.Gson;
@@ -37,23 +37,23 @@ public class SparkChessController {
         });
 
         get("/loadSavedBoard", (req, res) -> {
-            BoardDTO savedBoardInfo = sparkChessService.getSavedBoardInfo(chessGame);
+            BoardDto savedBoardInfo = sparkChessService.getSavedBoardInfo(chessGame);
             return gson.toJson(savedBoardInfo);
         });
 
         get("/resetBoard", (req, res) -> {
-            BoardDTO boardDTO = sparkChessService.initiateBoard(chessGame);
+            BoardDto boardDTO = sparkChessService.initiateBoard(chessGame);
             return gson.toJson(boardDTO);
         });
 
         get("/scoreStatus", (req, res) -> {
-            ScoreDTO scoreDTO = ScoreDTO.of(chessGame.scoreStatus());
+            ScoreDto scoreDTO = ScoreDto.of(chessGame.scoreStatus());
             return gson.toJson(scoreDTO);
         });
 
         post("/move", (req, res) -> {
-            MoveInfoDTO moveInfoDTO = gson.fromJson(req.body(), MoveInfoDTO.class);
-            BoardDTO boardDTO = sparkChessService.move(chessGame, moveInfoDTO);
+            MoveInfoDto moveInfoDTO = gson.fromJson(req.body(), MoveInfoDto.class);
+            BoardDto boardDTO = sparkChessService.move(chessGame, moveInfoDTO);
             return gson.toJson(boardDTO);
         });
     }

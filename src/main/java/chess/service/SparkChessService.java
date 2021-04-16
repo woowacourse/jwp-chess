@@ -12,37 +12,37 @@ import chess.repository.SparkChessDao;
 import java.sql.SQLException;
 
 public class SparkChessService {
-    private final SparkChessDao sparkChessDAO;
+    private final SparkChessDao sparkChessDao;
 
     public SparkChessService() {
-        sparkChessDAO = new SparkChessDao();
+        sparkChessDao = new SparkChessDao();
     }
 
     public BoardDto initiateBoard(ChessGame chessGame) throws SQLException {
-        sparkChessDAO.resetTurnOwner(chessGame.getTurnOwner());
+        sparkChessDao.resetTurnOwner(chessGame.getTurnOwner());
         chessGame.settingBoard();
-        sparkChessDAO.resetBoard(chessGame.getBoard());
+        sparkChessDao.resetBoard(chessGame.getBoard());
         return BoardDto.of(chessGame.getBoard());
     }
 
     public BoardDto getSavedBoardInfo(ChessGame chessGame) throws SQLException {
-        BoardDto boardDTO = sparkChessDAO.getSavedBoardInfo();
-        TurnDto turnDTO = sparkChessDAO.getSavedTurnOwner();
+        BoardDto boardDto = sparkChessDao.getSavedBoardInfo();
+        TurnDto turnDto = sparkChessDao.getSavedTurnOwner();
 
-        chessGame.loadSavedBoardInfo(boardDTO.getBoardInfo(), turnDTO.getTurn());
-        return boardDTO;
+        chessGame.loadSavedBoardInfo(boardDto.getBoardInfo(), turnDto.getTurn());
+        return boardDto;
     }
 
-    public BoardDto move(ChessGame chessGame, MoveInfoDto moveInfoDTO) throws SQLException {
+    public BoardDto move(ChessGame chessGame, MoveInfoDto moveInfoDto) throws SQLException {
         Board board = chessGame.getBoard();
-        Position target = Position.convertStringToPosition(moveInfoDTO.getTarget());
+        Position target = Position.convertStringToPosition(moveInfoDto.getTarget());
 
         Piece targetPiece = board.getBoard().get(target);
 
-        chessGame.move(moveInfoDTO.getTarget(), moveInfoDTO.getDestination());
+        chessGame.move(moveInfoDto.getTarget(), moveInfoDto.getDestination());
 
-        sparkChessDAO.renewBoardAfterMove(moveInfoDTO.getTarget(), moveInfoDTO.getDestination(), targetPiece);
-        sparkChessDAO.renewTurnOwnerAfterMove(chessGame.getTurnOwner());
+        sparkChessDao.renewBoardAfterMove(moveInfoDto.getTarget(), moveInfoDto.getDestination(), targetPiece);
+        sparkChessDao.renewTurnOwnerAfterMove(chessGame.getTurnOwner());
         return BoardDto.of(board);
     }
 }

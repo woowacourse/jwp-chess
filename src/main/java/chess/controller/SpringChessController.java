@@ -46,7 +46,7 @@ public class SpringChessController {
 
     @PostMapping("/move")
     @ResponseBody
-    public BoardDto move(@RequestBody MoveInfoDto moveInfoDTO) {
-        return springChessService.move(chessGame, moveInfoDTO);
+    public BoardDto move(@RequestBody MoveInfoDto moveInfoDto) {
+        return springChessService.move(chessGame, moveInfoDto);
     }
 }

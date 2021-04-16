@@ -1,6 +1,6 @@
 package chess.domain.piece;
 
-import chess.Strategy.RookMoveStrategy;
+import chess.strategy.RookMoveStrategy;
 
 public class Rook extends Piece {
     private static final String ROOK_NAME = "R";

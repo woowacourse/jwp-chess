@@ -1,6 +1,6 @@
 package chess.domain.piece;
 
-import chess.Strategy.KingMoveStrategy;
+import chess.strategy.KingMoveStrategy;
 
 public class King extends Piece {
     private static final String KING_NAME = "K";

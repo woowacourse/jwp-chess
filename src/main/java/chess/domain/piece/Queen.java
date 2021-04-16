@@ -1,6 +1,6 @@
 package chess.domain.piece;
 
-import chess.Strategy.QueenMoveStrategy;
+import chess.strategy.QueenMoveStrategy;
 
 public class Queen extends Piece {
     private static final String QUEEN_NAME = "Q";

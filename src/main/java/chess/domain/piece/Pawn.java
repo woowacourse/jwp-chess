@@ -1,6 +1,6 @@
 package chess.domain.piece;
 
-import chess.Strategy.PawnMoveStrategy;
+import chess.strategy.PawnMoveStrategy;
 
 public class Pawn extends Piece {
     private static final String PAWN_NAME = "P";

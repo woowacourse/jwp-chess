@@ -42,19 +42,19 @@ public class SparkChessController {
         });
 
         get("/resetBoard", (req, res) -> {
-            BoardDto boardDTO = sparkChessService.initiateBoard(chessGame);
-            return gson.toJson(boardDTO);
+            BoardDto boardDto = sparkChessService.initiateBoard(chessGame);
+            return gson.toJson(boardDto);
         });
 
         get("/scoreStatus", (req, res) -> {
-            ScoreDto scoreDTO = ScoreDto.of(chessGame.scoreStatus());
-            return gson.toJson(scoreDTO);
+            ScoreDto scoreDto = ScoreDto.of(chessGame.scoreStatus());
+            return gson.toJson(scoreDto);
         });
 
         post("/move", (req, res) -> {
-            MoveInfoDto moveInfoDTO = gson.fromJson(req.body(), MoveInfoDto.class);
-            BoardDto boardDTO = sparkChessService.move(chessGame, moveInfoDTO);
-            return gson.toJson(boardDTO);
+            MoveInfoDto moveInfoDto = gson.fromJson(req.body(), MoveInfoDto.class);
+            BoardDto boardDto = sparkChessService.move(chessGame, moveInfoDto);
+            return gson.toJson(boardDto);
         });
     }
 }

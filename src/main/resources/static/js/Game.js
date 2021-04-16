@@ -5,7 +5,6 @@ const url = "http://localhost:8080";
 
 window.onload = async function () {
   const response = await requestData();
-  console.log("res", response);
   const pieces = response["pieceDtos"];
   const host = response["host"];
   const guest = response["guest"];

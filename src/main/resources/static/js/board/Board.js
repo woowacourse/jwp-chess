@@ -141,15 +141,19 @@ export class Board {
   async #requestMove(piece, targetTile, body, gameId) {
     const response = await putData(
         `${url}/chess/${gameId}/move`, body);
+
+    if (!response["success"]) {
+      return;
+    }
     this.#pieces.move(piece, targetTile)
-    // const isFinished = response["isFinished"]
-    // if (isFinished) {
-    //   const winner = response["winner"];
-    //   const back = confirm(`${winner}가 이겼습니다. 확인을 누르면 홈으로 돌아갑니다.`)
-    //   if (back) {
-    //     window.location.href = "/";
-    //   }
-    // }
+    if (response["finished"]) {
+      // const winner = response["winner"];
+      const back = confirm(`게임이 끝났습니다. 확인을 누르면 홈으로 돌아갑니다.`)
+      // const back = confirm(`${winner}가 이겼습니다. 확인을 누르면 홈으로 돌아갑니다.`)
+      if (back) {
+        window.location.href = "/";
+      }
+    }
   }
 
   #unhighlight(target) {

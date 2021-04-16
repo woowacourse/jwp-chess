@@ -50,7 +50,7 @@ public class GameDao {
     }
 
     public void updateGameStatus(long id, boolean isFinished) {
-        String sql = "UPDATE game SET isFinished = ? WHERE id = ?";
+        String sql = "UPDATE game SET is_finished = ? WHERE id = ?";
         jdbcTemplate.update(sql, isFinished, id);
     }
 

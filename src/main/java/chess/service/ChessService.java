@@ -50,7 +50,7 @@ public class ChessService {
         return board.isMovable(moveRequestDto.getColor(), moveRequestDto.getSource(), moveRequestDto.getTarget());
     }
 
-    public void move(long gameId, MoveRequestDto moveRequestDto) {
+    public MoveResponseDto move(long gameId, MoveRequestDto moveRequestDto) {
         Board board = generateBoard(gameId);
         board.moveAndCatchPiece(
                 Color.from(moveRequestDto.getColor()),
@@ -62,8 +62,10 @@ public class ChessService {
         if (board.isKingCatch()) {
             gameService.endGame(gameId, true);
             pieceService.removeAll(gameId);
+            return new MoveResponseDto(true, true);
         }
         gameService.changeTurn(gameId);
+        return new MoveResponseDto(false, true);
 
     }
 

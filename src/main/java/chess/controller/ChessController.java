@@ -3,6 +3,7 @@ package chess.controller;
 import chess.dto.ChessResponseDto;
 import chess.dto.GameRequestDto;
 import chess.dto.MoveRequestDto;
+import chess.dto.MoveResponseDto;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,9 +40,8 @@ public class ChessController {
     }
 
     @PutMapping("/{gameId}/move")
-    public ResponseEntity<Map<String, Boolean>> move(@PathVariable long gameId, @RequestBody MoveRequestDto moveRequestDto) {
-        chessService.move(gameId, moveRequestDto);
-        return ResponseEntity.ok().body(Collections.singletonMap("success", true));
+    public ResponseEntity<MoveResponseDto> move(@PathVariable long gameId, @RequestBody MoveRequestDto moveRequestDto) {
+        return ResponseEntity.ok().body(chessService.move(gameId, moveRequestDto));
     }
 
 }

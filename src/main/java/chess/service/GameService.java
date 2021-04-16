@@ -3,6 +3,7 @@ package chess.service;
 import chess.domain.board.Position;
 import chess.domain.game.ChessGame;
 import chess.dto.ChessBoardDTO;
+import chess.dto.FinishDTO;
 import chess.dto.MoveDTO;
 import chess.dto.TurnDTO;
 import chess.repository.ChessRepository;
@@ -31,11 +32,28 @@ public class GameService {
     public ResponseEntity move(String gameId, MoveDTO moveDTO) {
         try {
             ChessGame chessGame = chessRepository.loadGame(gameId);
-            chessGame.move(Position.of(moveDTO.getSource()), Position.of(moveDTO.getTarget()));
+            Position sourcePosition = Position.of(moveDTO.getSource());
+            Position targetPosition = Position.of(moveDTO.getTarget());
+            chessGame.move(sourcePosition, targetPosition);
+            checkGameOver(gameId, chessGame);
             chessRepository.saveGame(gameId, chessGame);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private void checkGameOver(String gameId, ChessGame chessGame){
+        if(chessGame.isOver()){
+            finish(gameId);
+        }
+    }
+
+    public FinishDTO isFinished(String gameId) {
+        return chessRepository.isFinished(gameId);
+    }
+
+    public void finish(String gameId){
+        chessRepository.finish(gameId);
     }
 }

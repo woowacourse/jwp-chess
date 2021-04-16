@@ -7,6 +7,7 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceMapper;
 import chess.dto.ChessBoardDTO;
+import chess.dto.FinishDTO;
 import chess.dto.RoomIdDTO;
 import chess.dto.TurnDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -56,8 +57,8 @@ public class ChessRepository {
     }
 
     public void saveGame(String gameId, ChessGame chessGame) {
-        String savingGameQuery = "UPDATE chess_game SET turn = ?, finished = ?, board = ? WHERE id = ?";
-        jdbcTemplate.update(savingGameQuery, chessGame.getTurn(), chessGame.isOver(), serialize(chessGame), gameId);
+        String savingGameQuery = "UPDATE chess_game SET turn = ?, board = ? WHERE id = ?";
+        jdbcTemplate.update(savingGameQuery, chessGame.getTurn(), serialize(chessGame), gameId);
     }
 
     //질문 여기가 맞는지?
@@ -89,5 +90,16 @@ public class ChessRepository {
             chessBoard.put(position, name);
         }
         return new ChessBoardDTO(chessBoard);
+    }
+
+    public FinishDTO isFinished(String gameId) {
+        String finishedQuery = "SELECT finished FROM chess_game WHERE id = ?";
+        FinishDTO finishDTO = new FinishDTO(jdbcTemplate.queryForObject(finishedQuery, Boolean.class, gameId));
+        return finishDTO;
+    }
+
+    public void finish(String gameId) {
+        String savingGameQuery = "UPDATE chess_game SET finished = ? WHERE id = ?";
+        jdbcTemplate.update(savingGameQuery, true, gameId);
     }
 }

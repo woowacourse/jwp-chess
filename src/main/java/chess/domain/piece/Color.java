@@ -26,10 +26,13 @@ public enum Color {
     }
 
     public static Color of(char name) {
+        if (Character.isUpperCase(name)){
+            return Color.BLACK;
+        }
         if (Character.isLowerCase(name)) {
             return Color.WHITE;
         }
-        return Color.BLACK;
+        return Color.NONE;
     }
 
     public static Color of(String name) {

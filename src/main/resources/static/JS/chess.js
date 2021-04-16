@@ -13,7 +13,7 @@ scoreButton.addEventListener("click", clickScore);
 
 function getCurrentRoomName() {
     const url = window.location.href.split("/");
-    currentRoomName = url[url.length - 1];
+    currentRoomName = decodeURI(url[url.length - 1]);
 }
 
 function createChessBoard() {

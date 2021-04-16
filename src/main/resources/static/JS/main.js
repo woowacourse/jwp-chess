@@ -6,12 +6,17 @@ roomTable.addEventListener("click", clickRoomName);
 deleteButton.addEventListener("click", deleteRoom);
 roomTable.addEventListener("dblclick", joinRoom);
 
-renderRooms();
+window.onload = function () {
+    renderRooms();
+}
+
 
 function joinRoom(event) {
     if (event.target.closest("td")) {
         const roomName = getClickedRoom().textContent;
-        window.location.href = `/enter/${roomName}`;
+        const encoded = encodeURI(roomName);
+        console.log(encoded);
+        window.location.href = `/enter/${encoded}`;
     }
 }
 
@@ -83,8 +88,8 @@ async function addRoom(event) {
         }
         alert(response.message);
         event.target.value = '';
+        renderRooms();
     }
-    renderRooms();
 }
 
 async function renderRooms() {
@@ -97,7 +102,7 @@ async function renderRooms() {
         }
     }).then(res => {
         return res.json();
-    });
+    })
 
     for (let i = 0; i < response.length; i++) {
         renderRoom(response[i]);

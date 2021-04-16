@@ -61,9 +61,9 @@ public class QueenMoveCondition extends MoveCondition {
     }
 
     private Predicate<Piece> hasSameGradientWithSourceAndTarget(final Piece piece, final Position target) {
-        return selectedPiece ->
-                piece.calculateGradient(target) ==
-                        piece.calculateGradient(selectedPiece.getPosition());
+        return selectedPiece -> !selectedPiece.isSamePosition(target) &&
+                (piece.calculateGradient(target) ==
+                        piece.calculateGradient(selectedPiece.getPosition()));
     }
 
 }

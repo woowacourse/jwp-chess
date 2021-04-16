@@ -1,8 +1,8 @@
 package chess.service;
 
-import chess.daospring.GridSpringDAO;
-import chess.daospring.PieceSpringDAO;
-import chess.daospring.RoomSpringDAO;
+import chess.dao.GridDAO;
+import chess.dao.PieceDAO;
+import chess.dao.RoomDAO;
 import chess.domain.grid.Grid;
 import chess.domain.grid.Line;
 import chess.domain.grid.Lines;
@@ -31,14 +31,14 @@ public class ChessService {
 
     private static final char EMPTY_PIECE_NAME = '.';
 
-    private final RoomSpringDAO roomDAO;
-    private final GridSpringDAO gridDAO;
-    private final PieceSpringDAO pieceDAO;
+    private final RoomDAO roomDAO;
+    private final GridDAO gridDAO;
+    private final PieceDAO pieceDAO;
 
     public ChessService(JdbcTemplate jdbcTemplate) {
-        roomDAO = new RoomSpringDAO(jdbcTemplate);
-        gridDAO = new GridSpringDAO(jdbcTemplate);
-        pieceDAO = new PieceSpringDAO(jdbcTemplate);
+        roomDAO = new RoomDAO(jdbcTemplate);
+        gridDAO = new GridDAO(jdbcTemplate);
+        pieceDAO = new PieceDAO(jdbcTemplate);
     }
 
     public Response move(MoveRequestDto requestDto) throws SQLException {

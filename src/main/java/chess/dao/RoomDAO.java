@@ -1,52 +1,65 @@
 package chess.dao;
 
-import chess.dto.response.ResponseCode;
-import chess.exception.ChessException;
+import chess.dto.RoomDto;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class RoomDAO {
-    private static final int FIRST_PARAMETER_INDEX = 1;
-    private static final int FIRST_COLUMN = 1;
-    private static final String ROOM_ID_COLUMN_NAME = "roomId";
+    private JdbcTemplate jdbcTemplate;
 
-    private final ConnectionSetup con;
-
-    public RoomDAO() {
-        con = new ConnectionSetup();
+    public RoomDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long createRoom(String roomName) throws SQLException {
-        try (Connection connection = con.getConnection()) {
-            String query = "INSERT INTO room (roomName) VALUES (?)";
-            PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(FIRST_PARAMETER_INDEX, roomName);
-            pstmt.executeUpdate();
-            ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()) {
-                long roomId = rs.getLong(FIRST_COLUMN);
-                return roomId;
-            }
-            throw new ChessException(ResponseCode.WRONG_ARGUMENTS_INSERT_ERROR);
+    public long createRoom(String roomName) {
+        String query = "INSERT INTO room (roomName) VALUES (?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query,
+                    Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, roomName);
+            return ps;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
+    }
+
+    public Optional<Long> findRoomIdByName(String roomName) {
+        try {
+            String query = "SELECT roomId FROM room WHERE roomName = ? ORDER BY roomId DESC LIMIT 1";
+            return jdbcTemplate.queryForObject(
+                    query,
+                    (resultSet, rowNum) -> {
+                        return Optional.ofNullable(resultSet.getLong(1));
+                    },
+                    roomName);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 
-    public Optional<Long> findRoomIdByName(String roomName) throws SQLException {
-        try (Connection connection = con.getConnection()) {
-            String query = "SELECT roomId FROM room WHERE roomName = ? ORDER BY roomId DESC";
-            PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setString(FIRST_PARAMETER_INDEX, roomName);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (!rs.next()) {
-                return Optional.empty();
-            }
-            return Optional.ofNullable(rs.getLong(ROOM_ID_COLUMN_NAME));
-        }
+    public List<RoomDto> findAllRooms() {
+        String query = "SELECT * FROM room ORDER BY createdAt DESC";
+        return jdbcTemplate.queryForObject(
+                query,
+                (rs, rowNum) -> {
+                    List<RoomDto> rooms = new ArrayList<>();
+                    do {
+                        rooms.add(new RoomDto(
+                                rs.getLong(1),
+                                rs.getString(2),
+                                rs.getObject(3, LocalDateTime.class)
+                        ));
+                    } while(rs.next());
+                    return rooms;
+                });
     }
 }

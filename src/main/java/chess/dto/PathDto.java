@@ -1,17 +1,15 @@
 package chess.dto;
 
 import chess.domain.position.Position;
+import java.beans.ConstructorProperties;
 
 public class PathDto {
 
-    private String from;
+    private final String from;
 
-    //deserialization purpose
+    @ConstructorProperties({"from"})
     public PathDto(final String from) {
         this.from = from;
-    }
-
-    protected PathDto() {
     }
 
     public Position getFrom() {

@@ -7,6 +7,7 @@ import chess.domain.team.PieceCaptured;
 import chess.domain.team.PiecePosition;
 import chess.domain.team.Score;
 import chess.domain.team.Team;
+import chess.webdto.ChessGameTableDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -59,17 +60,17 @@ public class SpringChessGameDao {
 
     private ChessGame generateChessGame(final Team blackTeam, final Team whiteTeam) {
         final String chessGameQuery = "SELECT * FROM chess_game";
-        final ChessGameInfo chessGameInfo = this.jdbcTemplate.queryForObject(chessGameQuery, ChessGameInfoRowMapper);
+        final ChessGameTableDTO chessGameTableDTO = this.jdbcTemplate.queryForObject(chessGameQuery, ChessGameInfoRowMapper);
         return generateChessGameAccordingToDB(blackTeam, whiteTeam,
-                chessGameInfo.getCurrentTurnTeam(), chessGameInfo.getIsPlaying());
+                chessGameTableDTO.getCurrentTurnTeam(), chessGameTableDTO.getIsPlaying());
     }
 
-    private final RowMapper<ChessGameInfo> ChessGameInfoRowMapper = (resultSet, rowNum) -> {
-        ChessGameInfo chessGameInfo = new ChessGameInfo(
+    private final RowMapper<ChessGameTableDTO> ChessGameInfoRowMapper = (resultSet, rowNum) -> {
+        ChessGameTableDTO chessGameTableDTO = new ChessGameTableDTO(
                 resultSet.getString("current_turn_team"),
                 resultSet.getBoolean("is_playing")
         );
-        return chessGameInfo;
+        return chessGameTableDTO;
     };
 
     private ChessGame generateChessGameAccordingToDB(final Team blackTeam, final Team whiteTeam,

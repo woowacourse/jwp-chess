@@ -1,6 +1,6 @@
 package chess.controller.web.dto;
 
-import chess.domain.position.Position;
+import chess.chessgame.domain.position.Position;
 
 import java.util.Objects;
 

@@ -1,6 +1,6 @@
 package chess.controller.web.dto;
 
-import chess.domain.statistics.ChessGameStatistics;
+import chess.chessgame.domain.statistics.ChessGameStatistics;
 
 import java.util.Map;
 

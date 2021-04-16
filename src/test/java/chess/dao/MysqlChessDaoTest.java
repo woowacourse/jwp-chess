@@ -1,12 +1,12 @@
 package chess.dao;
 
 import chess.dao.dto.ChessGame;
-import chess.domain.board.Square;
-import chess.domain.manager.ChessGameManager;
-import chess.domain.manager.ChessGameManagerFactory;
-import chess.domain.piece.Pawn;
-import chess.domain.piece.attribute.Color;
-import chess.domain.position.Position;
+import chess.chessgame.domain.board.Square;
+import chess.chessgame.domain.manager.ChessGameManager;
+import chess.chessgame.domain.manager.ChessGameManagerFactory;
+import chess.chessgame.domain.piece.Pawn;
+import chess.chessgame.domain.piece.attribute.Color;
+import chess.chessgame.domain.position.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +17,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import static chess.domain.piece.attribute.Color.BLACK;
-import static chess.domain.piece.attribute.Color.WHITE;
+import static chess.chessgame.domain.piece.attribute.Color.BLACK;
+import static chess.chessgame.domain.piece.attribute.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MysqlChessDaoTest {

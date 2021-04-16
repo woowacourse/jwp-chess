@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.dao.dto.ChessGame;
-import chess.domain.piece.attribute.Color;
+import chess.chessgame.domain.piece.attribute.Color;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

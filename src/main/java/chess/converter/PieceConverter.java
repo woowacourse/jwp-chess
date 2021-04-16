@@ -1,7 +1,7 @@
 package chess.converter;
 
-import chess.domain.piece.*;
-import chess.domain.piece.attribute.Color;
+import chess.chessgame.domain.piece.*;
+import chess.chessgame.domain.piece.attribute.Color;
 
 import java.util.Arrays;
 import java.util.function.Function;

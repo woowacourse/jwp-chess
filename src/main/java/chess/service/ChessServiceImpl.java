@@ -2,13 +2,13 @@ package chess.service;
 
 import chess.controller.web.dto.MoveRequestDto;
 import chess.dao.ChessDao;
-import chess.domain.manager.ChessGameManager;
-import chess.domain.manager.ChessGameManagerBundle;
-import chess.domain.manager.ChessGameManagerFactory;
-import chess.domain.piece.attribute.Color;
-import chess.domain.position.Position;
-import chess.domain.repository.ChessGameRepository;
-import chess.domain.statistics.ChessGameStatistics;
+import chess.chessgame.domain.manager.ChessGameManager;
+import chess.chessgame.domain.manager.ChessGameManagerBundle;
+import chess.chessgame.domain.manager.ChessGameManagerFactory;
+import chess.chessgame.domain.piece.attribute.Color;
+import chess.chessgame.domain.position.Position;
+import chess.chessgame.repository.ChessGameRepository;
+import chess.chessgame.domain.statistics.ChessGameStatistics;
 import org.springframework.stereotype.Service;
 
 @Service

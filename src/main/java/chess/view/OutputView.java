@@ -1,12 +1,12 @@
 package chess.view;
 
-import chess.domain.board.Board;
-import chess.domain.board.Square;
-import chess.domain.piece.attribute.Color;
-import chess.domain.position.File;
-import chess.domain.position.Position;
-import chess.domain.position.Rank;
-import chess.domain.statistics.ChessGameStatistics;
+import chess.chessgame.domain.board.Board;
+import chess.chessgame.domain.board.Square;
+import chess.chessgame.domain.piece.attribute.Color;
+import chess.chessgame.domain.position.File;
+import chess.chessgame.domain.position.Position;
+import chess.chessgame.domain.position.Rank;
+import chess.chessgame.domain.statistics.ChessGameStatistics;
 
 import java.util.Arrays;
 import java.util.Map;

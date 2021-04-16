@@ -1,8 +1,13 @@
 package chess.controller.web;
 
-import chess.controller.web.dto.*;
-import chess.domain.manager.ChessGameManager;
-import chess.domain.manager.ChessGameManagerBundle;
+import chess.chessgame.domain.manager.ChessGameManager;
+import chess.chessgame.domain.manager.ChessGameManagerBundle;
+import chess.controller.web.dto.ChessGameResponseDto;
+import chess.controller.web.dto.ErrorMessageResponseDto;
+import chess.controller.web.dto.MoveRequestDto;
+import chess.controller.web.dto.MoveResponseDto;
+import chess.controller.web.dto.RunningGameResponseDto;
+import chess.controller.web.dto.ScoreResponseDto;
 import chess.service.ChessServiceImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

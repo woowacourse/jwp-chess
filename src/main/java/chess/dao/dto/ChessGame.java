@@ -1,8 +1,8 @@
 package chess.dao.dto;
 
 import chess.converter.PiecesConverter;
-import chess.domain.manager.ChessGameManager;
-import chess.domain.piece.attribute.Color;
+import chess.chessgame.domain.manager.ChessGameManager;
+import chess.chessgame.domain.piece.attribute.Color;
 
 public class ChessGame {
     private final long id;

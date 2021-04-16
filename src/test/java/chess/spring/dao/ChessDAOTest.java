@@ -2,7 +2,6 @@ package chess.spring.dao;
 
 import chess.domain.history.History;
 import chess.repository.spring.ChessDAO;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,8 +25,7 @@ class ChessDAOTest {
     void setup() {
         chessDAO = new ChessDAO(jdbcTemplate);
 
-        jdbcTemplate.execute("DROP TABLE HISTORY IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE History (" +
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS History (" +
                 "ID INT NOT NULL AUTO_INCREMENT," +
                 "SOURCE VARCHAR(255)," +
                 "DESTINATION VARCHAR(255)," +
@@ -37,11 +35,6 @@ class ChessDAOTest {
         String query = "INSERT INTO HISTORY (SOURCE, DESTINATION, TEAM_TYPE) VALUES(?, ?, ?)";
         jdbcTemplate.update(query, "a1", "a2", "WHITE");
         jdbcTemplate.update(query, "a6", "b5", "BLACK");
-    }
-
-    @AfterEach
-    void teardown() {
-        jdbcTemplate.update("TRUNCATE TABLE HISTORY");
     }
 
     @DisplayName("DB에 저장된 모든 History들을 조회한다.")

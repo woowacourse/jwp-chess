@@ -1,9 +1,8 @@
 package chess.Dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-import chess.Dto.MoveRequest;
+import chess.dto.MoveRequest;
 import chess.domain.position.Position;
 import java.util.Arrays;
 import java.util.List;

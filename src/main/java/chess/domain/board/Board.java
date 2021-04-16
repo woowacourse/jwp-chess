@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class Board {
 
     private static final Piece EMPTY_PIECE = new Empty();
+
     private final Map<Piece, Position> coordinates;
 
     public Board(Map<Piece, Position> coordinates) {
@@ -20,7 +21,7 @@ public class Board {
     }
 
     public Board() {
-        this.coordinates = new LinkedHashMap<>();
+        this(new LinkedHashMap<>());
     }
 
     public void putPiece(Piece piece, Position position) {

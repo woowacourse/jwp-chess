@@ -4,7 +4,6 @@ import chess.dto.BoardDto;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -27,10 +26,4 @@ public class MenuController {
     public ResponseEntity<BoardDto> loadBoard() {
         return ResponseEntity.ok(new BoardDto(service.findBoard()));
     }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<RuntimeException> handle(RuntimeException e) {
-        return ResponseEntity.badRequest().body(new RuntimeException(e.getMessage()));
-    }
-
 }

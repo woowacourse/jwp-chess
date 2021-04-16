@@ -13,19 +13,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessService {
     private final ChessDao chessDao;
+    private final ChessGame chessGame;
 
     public ChessService(ChessDao chessDao) {
         this.chessDao = chessDao;
+        this.chessGame = new ChessGame();
     }
 
-    public BoardDto initiateBoard(ChessGame chessGame) {
+    public BoardDto initiateBoard() {
         chessDao.resetTurnOwner(chessGame.getTurnOwner());
         chessGame.settingBoard();
         chessDao.resetBoard(chessGame.getBoard());
         return BoardDto.of(chessGame.getBoard());
     }
 
-    public BoardDto getSavedBoardInfo(ChessGame chessGame) {
+    public BoardDto getSavedBoardInfo() {
         BoardDto boardDTO = chessDao.getSavedBoardInfo();
         TurnDto turnDTO = chessDao.getSavedTurnOwner();
 
@@ -33,7 +35,11 @@ public class ChessService {
         return boardDTO;
     }
 
-    public BoardDto move(ChessGame chessGame, MoveInfoDto moveInfoDTO) {
+    public String score() {
+        return chessGame.scoreStatus();
+    }
+
+    public BoardDto move(MoveInfoDto moveInfoDTO) {
         Board board = chessGame.getBoard();
         Position target = Position.convertStringToPosition(moveInfoDTO.getTarget());
 

@@ -1,4 +1,4 @@
-package chess.contoller;
+package chess.controller;
 
 import chess.service.SpringChessService;
 import org.springframework.stereotype.Controller;

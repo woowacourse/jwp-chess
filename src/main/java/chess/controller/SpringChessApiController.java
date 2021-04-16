@@ -1,4 +1,4 @@
-package chess.contoller;
+package chess.controller;
 
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;

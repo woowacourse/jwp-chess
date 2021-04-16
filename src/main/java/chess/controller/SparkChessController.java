@@ -1,4 +1,4 @@
-package chess.contoller;
+package chess.controller;
 
 import static spark.Spark.exception;
 import static spark.Spark.get;

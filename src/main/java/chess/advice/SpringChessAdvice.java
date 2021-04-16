@@ -1,7 +1,7 @@
 package chess.advice;
 
-import chess.contoller.SpringChessApiController;
-import chess.contoller.SpringChessController;
+import chess.controller.SpringChessApiController;
+import chess.controller.SpringChessController;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;

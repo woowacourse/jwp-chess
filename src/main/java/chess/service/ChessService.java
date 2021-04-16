@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+import static chess.domain.board.Position.convertStringToPosition;
+
 @Service
 public class ChessService {
     private final ChessDao chessDao;
-    private final ChessGame chessGame;
 
     public ChessService(ChessDao chessDao) {
         this.chessDao = chessDao;
-        this.chessGame = new ChessGame();
     }
 
     public BoardDto resetBoard() {
@@ -44,44 +44,24 @@ public class ChessService {
     }
 
     public BoardDto move(MoveInfoDto moveInfoDto) {
-        Board board = chessGame.getBoard();
-        Position target = Position.convertStringToPosition(moveInfoDto.getTarget());
+        BoardDto boardDto = getSavedBoardInfo();
+        Board board = BoardFactory.loadSavedBoardInfo(boardDto.getBoardInfo());
+
+        Position target = convertStringToPosition(moveInfoDto.getTarget());
 
         Piece targetPiece = board.getBoard().get(target);
+        TurnDto savedTurnOwner = chessDao.getSavedTurnOwner();
+        Team savedTurnOwner2 = Team.convertStringToTeam(savedTurnOwner.getTurn());
 
-        chessGame.move(moveInfoDto.getTarget(), moveInfoDto.getDestination());
+        Team turnOwner = chessGameMove(board, savedTurnOwner2, moveInfoDto.getTarget(), moveInfoDto.getDestination());
 
         chessDao.renewBoardAfterMove(moveInfoDto.getTarget(), moveInfoDto.getDestination(), targetPiece);
-        chessDao.renewTurnOwnerAfterMove(chessGame.getTurnOwner());
+        chessDao.renewTurnOwnerAfterMove(turnOwner);
         return BoardDto.of(board);
     }
-    ////
 
-//    public void move(String target, String destination) {
-//        boardInitializeCheck();
-//        turnOwner = board.movePiece(convertStringToPosition(target),
-//                convertStringToPosition(destination), turnOwner);
-//    }
-//
-//    public String scoreStatus() {
-//        boardInitializeCheck();
-//        double whiteScore = board.calculateScore(Team.WHITE);
-//        double blackScore = board.calculateScore(Team.BLACK);
-//        return "백 : " + whiteScore + "  흑 : " + blackScore;
-//    }
-//
-//    private Position convertStringToPosition(String input) {
-//        return Position.convertStringToPosition(input);
-//    }
-//
-//    private void boardInitializeCheck() {
-//        if (board == null) {
-//            throw new IllegalArgumentException("보드가 세팅되지 않았습니다. start 명령어를 입력해주세요.");
-//        }
-//    }
-//
-//    public void loadSavedBoardInfo(Map<String, String> boardInfo, String turnOwner) {
-//        board = BoardFactory.loadSavedBoardInfo(boardInfo);
-//        this.turnOwner = Team.convertStringToTeam(turnOwner);
-//    }
+    public Team chessGameMove(Board board, Team turnOwner, String target, String destination) {
+        return board.movePiece(convertStringToPosition(target),
+                convertStringToPosition(destination), turnOwner);
+    }
 }

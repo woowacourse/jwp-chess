@@ -9,7 +9,7 @@ function showResult() {
         }
         if (isGameNotFinished(this)) {
             alert('게임이 아직 종료되지 않았습니다.');
-            window.location = 'http://localhost:8080/';
+            window.location = 'http://localhost:8080';
         }
     }
     xmlHttp.open('GET', url, true);
@@ -40,13 +40,13 @@ function addRestartEvent() {
     const restartButton = document.getElementById('restart-button');
     restartButton.addEventListener('click', function (event) {
         const xmlHttp = new XMLHttpRequest();
-        const url = getBaseUrl() + '/restart';
+        const url = getBaseUrl() + '/histories';
         xmlHttp.onreadystatechange = function () {
             if (isValidHttpResponse(this)) {
                 window.location.replace(this.responseText);
             }
         }
-        xmlHttp.open('GET', url, true);
+        xmlHttp.open('DELETE', url, true);
         xmlHttp.send();
     });
 }

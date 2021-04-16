@@ -21,8 +21,9 @@ public class ChessController {
     }
 
     @GetMapping("/chessboard")
-    public BoardDTO showChessBoard() {
-        return findChessBoard();
+    public ResponseEntity<BoardDTO> showChessBoard() {
+        BoardDTO chessBoardDTO = findChessBoard();
+        return writeResponse(chessBoardDTO);
     }
 
     private BoardDTO findChessBoard() {
@@ -31,25 +32,32 @@ public class ChessController {
         return BoardDTO.of(chessBoard, teamType);
     }
 
+    private <T> ResponseEntity<T> writeResponse(T t) {
+        return ResponseEntity.ok().body(t);
+    }
+
     @PutMapping("/chessboard")
-    public BoardDTO move(@RequestBody MoveRequestDTO moveRequestDTO) {
+    public ResponseEntity<BoardDTO> move(@RequestBody MoveRequestDTO moveRequestDTO) {
         String current = moveRequestDTO.getCurrent();
         String destination = moveRequestDTO.getDestination();
         String teamType = moveRequestDTO.getTeamType();
         chessService.move(current, destination, teamType);
-        return findChessBoard();
+        BoardDTO chessBoardDTO = findChessBoard();
+        return writeResponse(chessBoardDTO);
     }
 
     @GetMapping("/result")
-    public ResultDTO showResult() {
+    public ResponseEntity<ResultDTO> showResult() {
         Result result = chessService.calculateResult();
-        return ResultDTO.from(result);
+        ResultDTO resultDTO = ResultDTO.from(result);
+        return writeResponse(resultDTO);
     }
 
     @DeleteMapping("/histories")
     public ResponseEntity<String> restart() {
         chessService.deleteAllHistories();
-        return ResponseEntity.ok().body("/");
+        String location = "/";
+        return writeResponse(location);
     }
 
     @ExceptionHandler(RuntimeException.class)

@@ -5,7 +5,7 @@ function initiate() {
         if (isValidHttpResponse(this)) {
             const boardDTO = JSON.parse(this.responseText);
             if (boardDTO.checkmate === true) {
-                window.location.href = 'http://localhost:8080/result/';
+                window.location.href = '/result';
                 return;
             }
             printChessBoard(boardDTO.rows, boardDTO.currentTeamType);

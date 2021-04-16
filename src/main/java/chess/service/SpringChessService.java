@@ -1,7 +1,7 @@
 package chess.service;
 
 import chess.database.room.Room;
-import chess.database.room.SpringRoomDAO;
+import chess.database.room.SpringRoomDao;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
@@ -14,17 +14,16 @@ import chess.util.JsonConverter;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class SpringChessService {
-    private final SpringRoomDAO roomDAO;
+    private static final String SPACE = " ";
+
+    private final SpringRoomDao roomDAO;
     private ChessGame chessGame;
 
-    public SpringChessService(SpringRoomDAO roomDAO) {
+    public SpringChessService(SpringRoomDao roomDAO) {
         this.roomDAO = roomDAO;
     }
 
@@ -39,9 +38,10 @@ public class SpringChessService {
         }
     }
 
-    public Optional<ChessGame> movePiece(List<String> input) {
+    public Optional<ChessGame> movePiece(String command) {
         try {
-            chessGame.play(input);
+            List<String> commands = Arrays.asList(command.split(SPACE));
+            chessGame.play(commands);
             return Optional.of(chessGame);
         } catch (Exception e) {
             System.out.println(e.getMessage());

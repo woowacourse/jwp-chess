@@ -5,27 +5,27 @@ import chess.domain.feature.Color;
 import chess.domain.game.ChessGame;
 import chess.domain.game.Result;
 import chess.domain.piece.Piece;
-import chess.dto.PieceDTO;
-import chess.dto.OutcomeDTO;
-import chess.dto.ScoreDTO;
-import chess.dto.TurnDTO;
+import chess.dto.OutcomeDto;
+import chess.dto.PieceDto;
+import chess.dto.ScoreDto;
+import chess.dto.TurnDto;
 import chess.service.SpringChessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Controller
 public class SpringChessController {
-
-    private static final String SPACE = " ";
     private final SpringChessService springChessService;
 
     @Autowired
@@ -55,8 +55,7 @@ public class SpringChessController {
 
     @PostMapping(value = "/game/move", consumes = "text/plain")
     public ModelAndView move(@RequestBody String command, ModelAndView modelAndView) {
-        List<String> commands = Arrays.asList(command.split(SPACE));
-        Optional<ChessGame> chessGameOptional = springChessService.movePiece(commands);
+        Optional<ChessGame> chessGameOptional = springChessService.movePiece(command);
         if (chessGameOptional.isPresent()) {
             addChessGame(modelAndView, chessGameOptional.get());
             modelAndView.setViewName("game");
@@ -98,17 +97,17 @@ public class SpringChessController {
 
     private void addChessGame(ModelAndView modelAndView, ChessGame chessGame) {
         Color turn = chessGame.getTurn();
-        modelAndView.addObject("turn", new TurnDTO(turn));
+        modelAndView.addObject("turn", new TurnDto(turn));
 
         Map<Position, Piece> chessBoard = chessGame.getChessBoardAsMap();
         for (Map.Entry<Position, Piece> entry : chessBoard.entrySet()) {
-            modelAndView.addObject(entry.getKey().getPosition(), new PieceDTO(entry.getValue()));
+            modelAndView.addObject(entry.getKey().getPosition(), new PieceDto(entry.getValue()));
         }
 
         Result result = chessGame.calculateResult();
-        modelAndView.addObject("score", new ScoreDTO(result));
+        modelAndView.addObject("score", new ScoreDto(result));
         if (!chessGame.isOngoing()) {
-            modelAndView.addObject("outcome", new OutcomeDTO(result));
+            modelAndView.addObject("outcome", new OutcomeDto(result));
         }
     }
 }

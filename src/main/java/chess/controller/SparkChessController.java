@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.database.room.Room;
-import chess.database.room.RoomDAO;
+import chess.database.room.RoomDao;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
@@ -13,12 +13,11 @@ import chess.domain.piece.Piece;
 import chess.util.JsonConverter;
 import com.google.gson.JsonObject;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
 public class SparkChessController {
-    private final RoomDAO roomDAO = new RoomDAO();
+    private final RoomDao roomDAO = new RoomDao();
     private ChessGame chessGame;
 
     public Response createRoom(String name) {

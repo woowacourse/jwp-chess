@@ -36,7 +36,7 @@
     
 
 ## DB 테이블 구조
-![table_structure](./img/table_structure.PNG)
+![table_structure](./img/table_structure.png)
 ```sql
 CREATE DATABASE chess_db;
 

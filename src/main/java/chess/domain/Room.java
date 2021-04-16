@@ -33,6 +33,10 @@ public class Room {
         this.gameId = gameId;
     }
 
+    public boolean checkPassword(Room room) {
+        return room.getPw().equals(pw);
+    }
+
     @Override
     public String toString() {
         return "Room{" +

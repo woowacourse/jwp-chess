@@ -28,10 +28,13 @@ public class SpringChessController {
 
     @PostMapping("/room/{id}")
     public ResponseEntity<ChessGameDto> loadGame(@PathVariable("id") Long roodId, @RequestBody Room room) {
-        // 비밀번호 검증 성공
+        Room savedRoom = chessRepository.loadRoom(roodId);
+        if (!savedRoom.checkPassword(room)) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
         final ChessGame chessGame = chessRepository.loadGame(roodId);
         return ResponseEntity.ok().body(new ChessGameDto(chessGame));
-        // 실패하면 400 배드 리퀘스트
     }
 
     @PostMapping("/room")

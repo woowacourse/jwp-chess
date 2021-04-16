@@ -44,6 +44,10 @@ public class ChessRepository {
         roomDao.create(room);
     }
 
+    public Room loadRoom(Long roomId) {
+        return roomDao.load(roomId);
+    }
+
     public List<Room> loadAllRoom() {
         return roomDao.loadAll();
     }

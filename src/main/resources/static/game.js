@@ -24,8 +24,12 @@ function loadChessGame() {
         .then(function (response) {
             refreshChessBoard(response.data)
         }).catch(function (error) {
-        alert('게임을 로드 할 수 없습니다.')
-        location.href = "/";
+            if (error.response.status === 400) {
+                alert('비밀번호가 틀렸습니다.');
+            } else {
+                alert('게임을 로드 할 수 없습니다.');
+            }
+            location.href = "/";
     });
 }
 

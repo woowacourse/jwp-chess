@@ -35,27 +35,23 @@ function SquareBuffer() {
     this.add = addAndRequestMove;
 }
 
-function addEventOnGameListBox() {
+async function addEventOnGameListBox() {
     const gameListBox = document.getElementById("gameListBox");
 
-    fetch("/loadGames")
-        .then(res => {
-            if (res.ok) {
-                res.json()
-                    .then(responseBody => {
-                        updateMessage(responseBody.message);
-                        const gameNumbers = responseBody.item.gamesId;
+    const response = await fetch("/loadGames");
+    if (response.ok) {
+        const responseBody = await response.json();
 
-                        for (let gameNumber of gameNumbers) {
-                            let option = document.createElement("option");
-                            option.text = `${gameNumber}번 게임`;
-                            option.setAttribute("value", gameNumber);
-                            gameListBox.add(option);
-                        }
-                    })
-            }
-        });
+        updateMessage(responseBody.message);
+        const gameNumbers = responseBody.item.gamesId;
 
+        for (let gameNumber of gameNumbers) {
+            let option = document.createElement("option");
+            option.text = `${gameNumber}번 게임`;
+            option.setAttribute("value", gameNumber);
+            gameListBox.add(option);
+        }
+    }
 }
 
 function addAndRequestMove(square) {

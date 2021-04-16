@@ -20,7 +20,7 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/show")
+    @GetMapping("/chessboard")
     public BoardDTO showChessBoard() {
         return findChessBoard();
     }
@@ -31,7 +31,7 @@ public class ChessController {
         return BoardDTO.of(chessBoard, teamType);
     }
 
-    @PostMapping(path = "/move")
+    @PutMapping("/chessboard")
     public BoardDTO move(@RequestBody MoveRequestDTO moveRequestDTO) {
         String current = moveRequestDTO.getCurrent();
         String destination = moveRequestDTO.getDestination();
@@ -40,13 +40,13 @@ public class ChessController {
         return findChessBoard();
     }
 
-    @GetMapping("/show/result")
+    @GetMapping("/result")
     public ResultDTO showResult() {
         Result result = chessService.calculateResult();
         return ResultDTO.from(result);
     }
 
-    @GetMapping("/restart")
+    @DeleteMapping("/histories")
     public ResponseEntity<String> restart() {
         chessService.deleteAllHistories();
         return ResponseEntity.ok().body("/");

@@ -47,7 +47,7 @@ class ChessControllerTest {
     void showBoard() throws JsonProcessingException {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/chessgame/show")
+                .when().get("/chessgame/chessboard")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(3))
@@ -61,7 +61,7 @@ class ChessControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveRequestDTO)
-                .when().post("/chessgame/move")
+                .when().put("/chessgame/chessboard")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(3))
@@ -79,7 +79,7 @@ class ChessControllerTest {
     @Test
     void restart() {
         RestAssured.given().log().all()
-                .when().get("/chessgame/restart")
+                .when().delete("/chessgame/histories")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(is("/"));
@@ -89,7 +89,7 @@ class ChessControllerTest {
     @Test
     void handleException() {
         RestAssured.given().log().all()
-                .when().get("/chessgame/show/result")
+                .when().get("/chessgame/result")
                 .then().log().all()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body(is("승리한 팀을 찾을 수 없습니다."));

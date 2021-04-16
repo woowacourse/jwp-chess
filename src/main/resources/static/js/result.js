@@ -1,6 +1,6 @@
 function showResult() {
     const xmlHttp = new XMLHttpRequest();
-    const url = getBaseUrl() + '/show/result';
+    const url = getBaseUrl() + '/result';
     xmlHttp.onreadystatechange = function () {
         if (isValidHttpResponse(this)) {
             const resultDTO = JSON.parse(this.responseText);
@@ -9,7 +9,7 @@ function showResult() {
         }
         if (isGameNotFinished(this)) {
             alert('게임이 아직 종료되지 않았습니다.');
-            window.location = getBaseUrl();
+            window.location = 'http://localhost:8080/';
         }
     }
     xmlHttp.open('GET', url, true);

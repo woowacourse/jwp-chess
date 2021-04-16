@@ -1,6 +1,6 @@
 function initiate() {
     const xmlHttp = new XMLHttpRequest();
-    const url = getBaseUrl() + '/show';
+    const url = getBaseUrl() + '/chessboard';
     xmlHttp.onreadystatechange = function () {
         if (isValidHttpResponse(this)) {
             const boardDTO = JSON.parse(this.responseText);
@@ -93,7 +93,7 @@ function isPieceChosenAlready(piece) {
 
 function sendMoveRequest(current, destination, teamType) {
     const xmlHttp = new XMLHttpRequest();
-    const url = getBaseUrl() + '/move';
+    const url = getBaseUrl() + '/chessboard'
     const requestData = JSON.stringify({
         "current": current,
         "destination": destination,
@@ -116,7 +116,7 @@ function sendMoveRequest(current, destination, teamType) {
             currentPiece.style.border = '1px solid black';
         }
     }
-    xmlHttp.open('POST', url, true);
+    xmlHttp.open('PUT', url, true);
     xmlHttp.setRequestHeader('Content-Type', 'application/json');
     xmlHttp.send(requestData);
 }

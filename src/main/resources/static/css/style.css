@@ -11,6 +11,14 @@ span {
     text-align: center;
 }
 
+select {
+    color: cornsilk;
+}
+
+option {
+    color: cornsilk;
+}
+
 .main {
     display: flex;
     height: 100%;
@@ -97,3 +105,4 @@ span {
     font-size: 1.0em;
     color: cornsilk;
 }
+

@@ -14,6 +14,8 @@ addEventOnStartButton();
 addEventOnRegameButton();
 addEventOnLoadGameButton();
 
+addEventOnGameListBox();
+
 function processResponse(response) {
     response.json()
         .then(responseBody => {
@@ -31,6 +33,29 @@ function processResponse(response) {
 function SquareBuffer() {
     this.buffer = [];
     this.add = addAndRequestMove;
+}
+
+function addEventOnGameListBox() {
+    const gameListBox = document.getElementById("gameListBox");
+
+    fetch("/loadGames")
+        .then(res => {
+            if (res.ok) {
+                res.json()
+                    .then(responseBody => {
+                        updateMessage(responseBody.message);
+                        const gameNumbers = responseBody.item.gamesId;
+
+                        for (let gameNumber of gameNumbers) {
+                            let option = document.createElement("option");
+                            option.text = gameNumber;
+                            option.setAttribute("value", gameNumber);
+                            gameListBox.add(option);
+                        }
+                    })
+            }
+        });
+
 }
 
 function addAndRequestMove(square) {
@@ -99,8 +124,9 @@ async function addEventOnRegameButton() {
 function addEventOnLoadGameButton() {
     document.getElementById('load-button').addEventListener('click', event => {
         try {
-            fetch('/load')
-                .then(res => res.json())
+            const gameListBox = document.getElementById("gameListBox");
+            gameId = gameListBox.options[gameListBox.selectedIndex].value;
+            fetch(`/load/${gameId}`)
                 .then(res => processResponse(res));
             turnOnPanel();
         } catch (error) {
@@ -159,9 +185,11 @@ function updateMessage(message) {
 }
 
 function turnOnPanel() {
-    for (const button of document.getElementById('middle-panel').querySelectorAll('button')) {
+    for (const button of document.getElementById('panel').querySelectorAll('button')) {
         button.style.display = 'none';
     }
+    document.getElementById('gameListBox').style.display = 'none';
+
     document.getElementById('regame-button').style.display = 'block';
     document.getElementById('message-console').style.display = 'block';
     document.getElementById('score-console').style.display = 'block';

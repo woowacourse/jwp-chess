@@ -4,19 +4,17 @@ import chess.dao.dto.ChessGame;
 import chess.domain.piece.attribute.Color;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
+import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository
 public class JdbcTemplateChessDao implements ChessDao {
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert insertAction;
 
     private final RowMapper<ChessGame> chessGameRowMapper = (rs, rownum) -> {
         long gameId = rs.getLong("id");
@@ -26,21 +24,29 @@ public class JdbcTemplateChessDao implements ChessDao {
         return new ChessGame(gameId, Color.of(nextTurn), running, pieces);
     };
 
-    public JdbcTemplateChessDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public JdbcTemplateChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.insertAction = new SimpleJdbcInsert(dataSource)
-                .withTableName("CHESSGAME")
-                .usingGeneratedKeyColumns("id");
     }
 
     @Override
     public long save(ChessGame entity) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("pieces", entity.getPieces());
-        parameters.put("running", entity.isRunning());
-        parameters.put("next_turn", entity.getNextTurn());
+        String query =
+                "INSERT INTO CHESSGAME (pieces, running, next_turn) VALUES " +
+                        "(?, ?, ?)";
 
-        return insertAction.executeAndReturnKey(parameters).longValue();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection ->
+                {
+                    PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
+                    ps.setString(1, entity.getPieces());
+                    ps.setBoolean(2, entity.isRunning());
+                    ps.setString(3, entity.getNextTurn().name());
+                    return ps;
+                }
+                , keyHolder
+        );
+
+        return keyHolder.getKey().longValue();
     }
 
     @Override

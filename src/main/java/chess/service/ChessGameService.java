@@ -95,7 +95,7 @@ public class ChessGameService {
 
     private ChessGameEntity findStateIsBlackAndWhiteTurnGame() {
         return chessGameDAO.findByStateIsBlackTurnOrWhiteTurn()
-                .orElseThrow(() -> new NotFoundPlayingChessGameException());
+                .orElseThrow(NotFoundPlayingChessGameException::new);
     }
 
     private ChessGame findChessGameByChessGameId(final ChessGameEntity chessGameEntity) {

@@ -32,15 +32,15 @@ public class ChessService {
     }
 
     public BoardDto getSavedBoardInfo() {
-        BoardDto boardDto = chessDao.getSavedBoardInfo();
-        TurnDto turnDto = chessDao.getSavedTurnOwner();
-
-        chessGame.loadSavedBoardInfo(boardDto.getBoardInfo(), turnDto.getTurn());
-        return boardDto;
+        return chessDao.getSavedBoardInfo();
     }
 
     public String score() {
-        return chessGame.scoreStatus();
+        BoardDto boardDto = getSavedBoardInfo();
+        Board board = BoardFactory.loadSavedBoardInfo(boardDto.getBoardInfo());
+        double whiteScore = board.calculateScore(Team.WHITE);
+        double blackScore = board.calculateScore(Team.BLACK);
+        return "백 : " + whiteScore + "  흑 : " + blackScore;
     }
 
     public BoardDto move(MoveInfoDto moveInfoDto) {

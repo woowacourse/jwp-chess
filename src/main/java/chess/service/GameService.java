@@ -27,6 +27,7 @@ public class GameService {
         return chessRepository.turn(gameId);
     }
 
+    //controller 에 트라이캐치
     public ResponseEntity move(String gameId, MoveDTO moveDTO) {
         try {
             ChessGame chessGame = chessRepository.loadGame(gameId);
@@ -58,5 +59,11 @@ public class GameService {
     public ResultDTO result(String gameId) {
         ChessGame chessGame = chessRepository.loadGame(gameId);
         return new ResultDTO(chessGame.getResult(Color.BLACK), chessGame.getResult(Color.WHITE));
+    }
+
+    public ChessBoardDTO restart(String gameId) {
+        ChessGame chessGame = new ChessGame();
+        chessRepository.restart(gameId, chessGame);
+        return chessRepository.loadGameAsDTO(gameId);
     }
 }

@@ -24,6 +24,7 @@ public class ChessRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+
     public RoomIdDTO addGame(ChessGame chessGame) {
         String addingGameQuery = "INSERT INTO chess_game (turn, finished, board) VALUES (?, ?, ?)";
         jdbcTemplate.update(addingGameQuery, chessGame.getTurn(), chessGame.isOver(), serialize(chessGame));
@@ -31,12 +32,13 @@ public class ChessRepository {
         return new RoomIdDTO(jdbcTemplate.queryForObject(findingGameQuery, String.class));
     }
 
+    //DTO 를 컨트롤러에서 만든다.
     public ChessBoardDTO loadGameAsDTO(String gameId) {
         String loadingGameQuery = "SELECT board FROM chess_game WHERE id= ?";
         ChessBoardDTO chessBoardDTO = deserializeAsDTO(jdbcTemplate.queryForObject(loadingGameQuery, String.class, gameId));
         return chessBoardDTO;
     }
-
+    //체스게임을 리턴한다, 디티오 말고.
     public ChessGame loadGame(String gameId) {
         String findingGameQuery = "SELECT board, turn FROM chess_game WHERE id= ?";
         return jdbcTemplate.queryForObject(findingGameQuery, (resultSet, rowNum) -> {
@@ -66,7 +68,7 @@ public class ChessRepository {
                 .map(entry -> entry.getValue().getName() + entry.getKey().getStringPosition())
                 .collect(Collectors.joining());
     }
-
+    //얘도 서비스로 ㄲㄲ
     public ChessBoard deserialize(String response) {
         Map<Position, Piece> chessBoard = new LinkedHashMap<>();
         for (int i = 0; i < response.length(); i += LAST_INDEX_OF_EACH_PIECE) {
@@ -98,5 +100,10 @@ public class ChessRepository {
     public void finish(String gameId) {
         String savingGameQuery = "UPDATE chess_game SET finished = ? WHERE id = ?";
         jdbcTemplate.update(savingGameQuery, true, gameId);
+    }
+
+    public void restart(String gameId, ChessGame chessGame) {
+        String restartQuery = "UPDATE chess_game SET turn = ?, finished = ?, board = ? WHERE id = ?";
+        jdbcTemplate.update(restartQuery, chessGame.getTurn(), chessGame.isOver(), serialize(chessGame), gameId);
     }
 }

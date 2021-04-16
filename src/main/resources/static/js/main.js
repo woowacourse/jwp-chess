@@ -28,18 +28,15 @@ async function init() {
     const url = window.location.href.split('/')
 
     this.gameId = url[url.length - 1]
-    await initBoard()
+    await initBoard(await start())
     await moveHandler()
     await changeTurn()
     await result()
     await finishHandler()
 }
 
-async function initBoard() {
+async function initBoard(chessBoard) {
     this.$chessBoard.innerHTML = ''
-    let chessBoard = await fetch(
-        `/chessboard/${this.gameId}`
-    )
     chessBoard = await chessBoard.json()
     chessBoard = chessBoard.positionAndPieceName
     for (const [position, piece] of Object.entries(chessBoard)) {
@@ -47,6 +44,12 @@ async function initBoard() {
             insertPiece(position, piece)
         )
     }
+}
+
+async function start() {
+    return await fetch(
+        `/chessboard/${this.gameId}`
+    )
 }
 
 function insertPiece(position, piece) {
@@ -141,8 +144,25 @@ async function result() {
 }
 
 async function btnHandler({target}) {
+    const url = window.location.href.split('/')
+    const gameId = url[url.length - 1]
+    if (target.id === 'home') {
+        window.location.href = '/'
+        return
+    }
+
     if (target.id === 'restart') {
-        await newGame()
+        const response = await fetch(
+            `/restart/${gameId}`,
+            {
+                method: 'POST'
+            }
+        )
+        await initBoard(response)
+        await moveHandler()
+        await changeTurn()
+        await result()
+        await finishHandler()
     }
     if (target.id === "finish") {
         const response = await finish()

@@ -35,6 +35,7 @@ public class GameController {
         return gameService.turn(gameId);
     }
 
+    //여기서 DTO요리
     @PutMapping(path = "/move/{gameId}")
     public ResponseEntity move(@PathVariable String gameId, @RequestBody MoveDTO moveDTO) {
         return gameService.move(gameId, moveDTO);
@@ -56,5 +57,11 @@ public class GameController {
     @ResponseBody
     public ResultDTO result(@PathVariable String gameId) {
         return gameService.result(gameId);
+    }
+
+    @PostMapping("/restart/{gameId}")
+    @ResponseBody
+    public ChessBoardDTO restart(@PathVariable String gameId) {
+        return gameService.restart(gameId);
     }
 }

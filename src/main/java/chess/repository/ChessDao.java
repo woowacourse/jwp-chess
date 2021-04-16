@@ -24,7 +24,7 @@ public class ChessDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public BoardDto getSavedBoardInfo() {
+    public BoardDto getSavedBoard() {
         String sql = "select position, piece from board;";
         List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
         Map<String, String> boardInfo = new HashMap<>();

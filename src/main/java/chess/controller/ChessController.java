@@ -16,7 +16,7 @@ public class ChessController {
 
     @GetMapping("/board")
     public BoardDto loadSavedBoard() {
-        return chessService.getSavedBoardInfo();
+        return chessService.getSavedBoard();
     }
 
     @PutMapping("/board")

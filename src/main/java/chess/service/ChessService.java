@@ -1,6 +1,5 @@
 package chess.service;
 
-import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
@@ -12,9 +11,8 @@ import chess.domain.piece.Team;
 import chess.repository.ChessDao;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
 import static chess.domain.board.Position.convertStringToPosition;
+import static chess.domain.piece.Team.*;
 
 @Service
 public class ChessService {
@@ -31,37 +29,43 @@ public class ChessService {
         return BoardDto.of(initiatedBoard);
     }
 
-    public BoardDto getSavedBoardInfo() {
-        return chessDao.getSavedBoardInfo();
+    public BoardDto getSavedBoard() {
+        return chessDao.getSavedBoard();
     }
 
     public String score() {
-        BoardDto boardDto = getSavedBoardInfo();
-        Board board = BoardFactory.loadSavedBoardInfo(boardDto.getBoardInfo());
-        double whiteScore = board.calculateScore(Team.WHITE);
-        double blackScore = board.calculateScore(Team.BLACK);
+        Board board = convertBoardDtoToBoard(getSavedBoard());
+        double whiteScore = board.calculateScore(WHITE);
+        double blackScore = board.calculateScore(BLACK);
         return "백 : " + whiteScore + "  흑 : " + blackScore;
     }
 
     public BoardDto move(MoveInfoDto moveInfoDto) {
-        BoardDto boardDto = getSavedBoardInfo();
-        Board board = BoardFactory.loadSavedBoardInfo(boardDto.getBoardInfo());
-
-        Position target = convertStringToPosition(moveInfoDto.getTarget());
-
-        Piece targetPiece = board.getBoard().get(target);
-        TurnDto savedTurnOwner = chessDao.getSavedTurnOwner();
-        Team savedTurnOwner2 = Team.convertStringToTeam(savedTurnOwner.getTurn());
-
-        Team turnOwner = chessGameMove(board, savedTurnOwner2, moveInfoDto.getTarget(), moveInfoDto.getDestination());
+        Board board = convertBoardDtoToBoard(getSavedBoard());
+        Piece targetPiece = getTargetPiece(moveInfoDto, board);
+        Team turnOwnerAfterMove = chessGameMove(board, moveInfoDto.getTarget(), moveInfoDto.getDestination());
 
         chessDao.renewBoardAfterMove(moveInfoDto.getTarget(), moveInfoDto.getDestination(), targetPiece);
-        chessDao.renewTurnOwnerAfterMove(turnOwner);
+        chessDao.renewTurnOwnerAfterMove(turnOwnerAfterMove);
         return BoardDto.of(board);
     }
 
-    public Team chessGameMove(Board board, Team turnOwner, String target, String destination) {
+    private Piece getTargetPiece(MoveInfoDto moveInfoDto, Board board) {
+        Position target = convertStringToPosition(moveInfoDto.getTarget());
+        return board.getBoard().get(target);
+    }
+
+    private Team getSavedTurnOwner() {
+        TurnDto savedTurnOwner = chessDao.getSavedTurnOwner();
+        return convertStringToTeam(savedTurnOwner.getTurn());
+    }
+
+    public Team chessGameMove(Board board, String target, String destination) {
         return board.movePiece(convertStringToPosition(target),
-                convertStringToPosition(destination), turnOwner);
+                convertStringToPosition(destination), getSavedTurnOwner());
+    }
+
+    private Board convertBoardDtoToBoard(BoardDto boardDto) {
+        return BoardFactory.loadSavedBoardInfo(boardDto.getBoardInfo());
     }
 }

@@ -24,8 +24,8 @@ public class ChessGameService {
             .collect(Collectors.toList());
     }
 
-    public Long createNewChessGame(String roomTitle) {
-        ChessGameNew chessGame = new ChessGameNew(roomTitle);
+    public Long createNewChessGame(String gameTitle) {
+        ChessGameNew chessGame = new ChessGameNew(gameTitle);
         return chessGameRepository.save(chessGame);
     }
 

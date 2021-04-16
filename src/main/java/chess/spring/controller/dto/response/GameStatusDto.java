@@ -9,7 +9,7 @@ public class GameStatusDto {
     private final String title;
     private final String beforeTurnTeamColorName;
     private final String currentTurnTeamColorName;
-    private final List<String> boardStatus;
+    private final String boardStatus;
     private final double whitePlayerScore;
     private final double blackPlayerScore;
     private final boolean isKingDead;
@@ -19,18 +19,10 @@ public class GameStatusDto {
         this.title = chessGame.getTitle();
         this.beforeTurnTeamColorName = chessGame.getCurrentTurnTeamColor().oppositeTeamColorName();
         this.currentTurnTeamColorName = chessGame.getCurrentTurnTeamColor().getName();
-        this.boardStatus = getConvertedBoardStatus(chessGame.getBoardStatus());
+        this.boardStatus = chessGame.getBoardStatus();
         this.whitePlayerScore = chessGame.getWhitePlayerScore();
         this.blackPlayerScore = chessGame.getBlackPlayerScore();
         this.isKingDead = chessGame.isKingDead();
-    }
-
-    private List<String> getConvertedBoardStatus(String boardStatus) {
-        List<String> boardStatusTemp = new ArrayList<>();
-        for (int i = 0; i < boardStatus.length(); i++) {
-            boardStatusTemp.add(String.valueOf(boardStatus.charAt(i)));
-        }
-        return boardStatusTemp;
     }
 
     public Long getGameId() {
@@ -49,7 +41,7 @@ public class GameStatusDto {
         return currentTurnTeamColorName;
     }
 
-    public List<String> getBoardStatus() {
+    public String getBoardStatus() {
         return boardStatus;
     }
 

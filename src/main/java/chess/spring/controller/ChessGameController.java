@@ -30,8 +30,8 @@ public class ChessGameController {
     }
 
     @PostMapping("/games")
-    public String createChessGame(@RequestParam String roomTitle) {
-        Long createdChessGameId = chessGameService.createNewChessGame(roomTitle);
+    public String createChessGame(@RequestParam String gameTitle) {
+        Long createdChessGameId = chessGameService.createNewChessGame(gameTitle);
         return "redirect:/games/" + createdChessGameId;
     }
 
@@ -39,12 +39,6 @@ public class ChessGameController {
     public String chessBoard(@PathVariable Long gameId, Model model) {
         GameStatusDto gameStatusDto = chessGameService.getGameStatus(gameId);
         model.addAttribute("gameStatusDto", gameStatusDto);
-        return "chess-board";
-    }
-
-    @PostMapping("/delete")
-    public String delete(@RequestParam Long gameId) {
-        chessGameService.deleteGame(gameId);
-        return "redirect:/";
+        return "chess-game";
     }
 }

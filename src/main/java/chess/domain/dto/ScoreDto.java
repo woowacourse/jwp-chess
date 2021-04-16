@@ -13,4 +13,8 @@ public class ScoreDto {
     public static ScoreDto of(String scoreMessage) {
         return new ScoreDto(scoreMessage);
     }
+
+    public String getScoreMessage() {
+        return scoreMessage;
+    }
 }

@@ -7,10 +7,9 @@ import chess.domain.piece.Team;
 
 import java.util.Map;
 
-import static chess.controller.SparkChessController.boardFactory;
-
 public class ChessGame {
     private Board board;
+    private final BoardFactory boardFactory = new BoardFactory();
     private Team turnOwner;
 
     public void settingBoard() {

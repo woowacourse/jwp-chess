@@ -1,9 +1,5 @@
 package chess.dto.responsedto;
 
-import org.springframework.boot.autoconfigure.quartz.QuartzProperties;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-
 public class TestDto {
 
     private String name;

@@ -65,13 +65,13 @@ public class SpringChessApplication implements CommandLineRunner {
 	}
 
 	@PostMapping("/grid/{gridId}/finish")
-	public Response finish(@PathVariable("gridId") String gridId) throws SQLException {
+	public Response finish(@PathVariable("gridId") String gridId) {
 		chessService.finish(Long.parseLong(gridId));
 		return new Response(ResponseCode.NO_CONTENT);
 	}
 
 	@GetMapping("/room/{roomId}/restart")
-	public Response restart(@PathVariable("roomId") String roomId) throws SQLException {
+	public Response restart(@PathVariable("roomId") String roomId) {
 		return new Response(ResponseCode.OK, chessService.restart(Long.parseLong(roomId)));
 	}
 

@@ -4,7 +4,6 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.dto.responsedto.ResponseDto;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PieceDto implements ResponseDto {
     private static final int PIECE_NAME_INDEX = 0;

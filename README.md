@@ -33,3 +33,23 @@
     - @Controller나 @RestController를 활용하여 요청을 받아야 한다.
     - Spring JDBC에서 제공하는 JdbcTemplate를 이용하여 Connection을 직접 만들어 주는 로직을 대체한다.
     - JdbcTemplate는 매번 새로 생성하지 않고 빈 주입을 받아서 사용한다.
+    
+
+## DB 테이블 구조
+![table_structure](./img/table_structure.PNG)
+```sql
+CREATE DATABASE chess_db;
+
+USE chess_db;
+
+CREATE TABLE chess_game (
+    current_turn_team VARCHAR(5) NOT NULL,
+    is_playing boolean NOT NULL
+);
+
+CREATE TABLE team_info (
+    team VARCHAR(5) NOT NULL,
+    piece_info VARCHAR(400) NOT NULL,
+    primary key (team)
+);
+```       

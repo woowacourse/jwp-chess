@@ -4,7 +4,6 @@ import chess.domain.board.Position;
 import chess.domain.game.ChessGame;
 import chess.dto.ChessBoardDTO;
 import chess.dto.MoveDTO;
-import chess.dto.RoomIdDTO;
 import chess.dto.TurnDTO;
 import chess.repository.ChessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ChessService {
+public class GameService {
     private final ChessRepository chessRepository;
 
     @Autowired
-    public ChessService(ChessRepository chessRepository) {
+    public GameService(ChessRepository chessRepository) {
         this.chessRepository = chessRepository;
-    }
-
-    public RoomIdDTO newGame() {
-        ChessGame chessGame = new ChessGame();
-        return chessRepository.addGame(chessGame);
     }
 
     public ChessBoardDTO loadGame(String gameId) {
@@ -37,14 +31,10 @@ public class ChessService {
     public ResponseEntity move(String gameId, MoveDTO moveDTO) {
         try {
             ChessGame chessGame = chessRepository.loadGame(gameId);
-            System.out.println("position ##############");
-            System.out.println(moveDTO.getSource());
             chessGame.move(Position.of(moveDTO.getSource()), Position.of(moveDTO.getTarget()));
             chessRepository.saveGame(gameId, chessGame);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("@@@@@");
-            System.out.println(e.getMessage());
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }

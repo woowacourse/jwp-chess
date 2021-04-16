@@ -18,6 +18,13 @@ import static chess.service.TeamFormat.WHITE_TEAM;
 
 @Repository
 public class SpringChessGameDao {
+    private final RowMapper<Test> actorRowMapper = (resultSet, rowNum) -> {
+        Test test = new Test(
+                resultSet.getString("current_turn_team"),
+                resultSet.getBoolean("is_playing")
+        );
+        return test;
+    };
     private JdbcTemplate jdbcTemplate;
 
     public SpringChessGameDao(JdbcTemplate jdbcTemplate) {
@@ -57,14 +64,6 @@ public class SpringChessGameDao {
         return new Team(PiecePositionByTeam, new PieceCaptured(), new Score());
     }
 
-    private final RowMapper<Test> actorRowMapper = (resultSet, rowNum) -> {
-        Test test = new Test(
-                resultSet.getString("current_turn_team"),
-                resultSet.getBoolean("is_playing")
-        );
-        return test;
-    };
-
     private ChessGame generateChessGame(final Team blackTeam, final Team whiteTeam) {
         final String chessGameQuery = "SELECT * FROM chess_game";
         final Test test = this.jdbcTemplate.queryForObject(chessGameQuery, actorRowMapper);
@@ -83,12 +82,12 @@ public class SpringChessGameDao {
         updateTeamInfo(chessGame.currentWhitePiecePosition(), WHITE_TEAM.asDAOFormat());
         updateTeamInfo(chessGame.currentBlackPiecePosition(), BLACK_TEAM.asDAOFormat());
         final String query = "UPDATE chess_game SET current_turn_team = (?), is_playing = (?)";
-        this.jdbcTemplate.update(query, currentTurnTeam,chessGame.isPlaying());
+        this.jdbcTemplate.update(query, currentTurnTeam, chessGame.isPlaying());
     }
 
     private void updateTeamInfo(final Map<Position, Piece> teamPiecePosition, final String team) {
         final String query = "UPDATE team_info SET piece_info = (?) WHERE team = (?)";
-        this.jdbcTemplate.update(query, PiecePositionDAOConverter.asDAO(teamPiecePosition),team);
+        this.jdbcTemplate.update(query, PiecePositionDAOConverter.asDAO(teamPiecePosition), team);
     }
 
     public void deleteChessGame() {

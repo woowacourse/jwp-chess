@@ -3,7 +3,6 @@ package chess.webdao;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 

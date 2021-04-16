@@ -26,7 +26,7 @@ public class GameDaoTemplate implements GameDao {
                     resultSet.getString("white_username"),
                     resultSet.getString("black_username"),
                     resultSet.getString("room_name")
-                    );
+            );
 
     @Override
     public Long saveGame(final Game game) {

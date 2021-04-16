@@ -44,8 +44,10 @@ CREATE TABLE piece
     position VARCHAR(45) NOT NULL,
     symbol   VARCHAR(45) NOT NULL
 );
-CREATE INDEX piece_id ON piece (id);
-ALTER TABLE piece ADD CONSTRAINT fk_game_piece FOREIGN KEY (game_id) REFERENCES game (id);
+CREATE
+INDEX piece_id ON piece (id);
+ALTER TABLE piece
+    ADD CONSTRAINT fk_game_piece FOREIGN KEY (game_id) REFERENCES game (id);
 
 -- -----------------------------------------------------
 -- Table `score`
@@ -57,8 +59,10 @@ CREATE TABLE score
     white_score DOUBLE  NOT NULL,
     black_score DOUBLE  NOT NULL
 );
-CREATE INDEX score_id ON score (id);
-ALTER TABLE score ADD CONSTRAINT fk_game_score FOREIGN KEY (game_id) REFERENCES game (id);
+CREATE
+INDEX score_id ON score (id);
+ALTER TABLE score
+    ADD CONSTRAINT fk_game_score FOREIGN KEY (game_id) REFERENCES game (id);
 
 
 -- -----------------------------------------------------
@@ -72,5 +76,7 @@ CREATE TABLE state
     turn_number INTEGER     NOT NULL,
     playing     BIT         NOT NULL
 );
-CREATE INDEX state_id ON state (id);
-ALTER TABLE state ADD CONSTRAINT fk_game_state FOREIGN KEY (game_id) REFERENCES game (id);
+CREATE
+INDEX state_id ON state (id);
+ALTER TABLE state
+    ADD CONSTRAINT fk_game_state FOREIGN KEY (game_id) REFERENCES game (id);

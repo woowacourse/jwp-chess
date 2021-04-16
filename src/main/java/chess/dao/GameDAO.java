@@ -61,6 +61,8 @@ public class GameDAO {
 
         int gameId;
         String insertGameQuery = "insert into game(turn) values(?)";
+        this.jdbcTemplate.update(insertGameQuery,currentTurnColor.name());
+
         String findGameIdQuery = "select last_insert_id()";
 
         try (Connection connection = getConnection()) {
@@ -100,7 +102,7 @@ public class GameDAO {
             );
             Position position = Position.of(resultSet.getString("position"));
             board.put(position, piece);
-        } while(resultSet.next());
+        } while (resultSet.next());
         return ChessBoard.from(board);
     };
 
@@ -121,5 +123,24 @@ public class GameDAO {
             return chessGameManager;
         }
         throw new NoSavedGameException("저장된 게임이 없습니다.");
+    }
+
+    public void updatePiecesByGameId(ChessGameManager chessGameManager, int gameId) {
+        String deletePiecesQuery = "DELETE FROM piece WHERE game_id = ?";
+        this.jdbcTemplate.update(deletePiecesQuery, gameId);
+
+        Map<String, PieceDto> board = ChessBoardDto.from(chessGameManager.getBoard()).board();
+        for (String position : board.keySet()) {
+            String query = "insert into piece(game_id, name, color, position) values(?, ?, ?, ?)";
+
+            PieceDto piece = board.get(position);
+            this.jdbcTemplate.update(query, gameId, piece.getName(), piece.getColor(), position);
+        }
+    }
+
+    public void updateTurnByGameId(ChessGameManager chessGameManager, int gameId) {
+        Color currentTurnColor = chessGameManager.getCurrentTurnColor();
+        String query = "UPDATE game set turn=? WHERE game_id = ?";
+        this.jdbcTemplate.update(query, currentTurnColor.name(), gameId);
     }
 }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -51,17 +50,20 @@ public class SpringChessApiController {
         return springChessService.start(id);
     }
 
-    @PutMapping(value = "{id}/exit", produces = "application/json")
-    @ResponseBody
-    private String exitGame(@PathVariable String id) {
+    @PutMapping( "{id}/exit")
+    private Map<String, String> exitGame(@PathVariable String id) {
+        Map<String, String> result = new HashMap<>();
         springChessService.exit(id);
-        return "\"success\"";
+        result.put("result", "success");
+        return result;
     }
 
     @PutMapping("/{id}/close")
-    private String closeRoom(@PathVariable String id) {
+    private Map<String, String> closeRoom(@PathVariable String id) {
+        Map<String, String> result =  new HashMap<>();
         springChessService.close(id);
-        return "\"success\"";
+        result.put("result", "success");
+        return result;
     }
 
     @GetMapping("/{id}/movablePoints/{point}")

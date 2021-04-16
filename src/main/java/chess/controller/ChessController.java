@@ -1,7 +1,7 @@
 package chess.controller;
 
+import chess.dto.ChessGameStatusDto;
 import chess.service.SpringChessGameService;
-import chess.view.dto.ChessGameStatusDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

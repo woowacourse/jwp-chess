@@ -1,9 +1,9 @@
 package chess.api;
 
 import chess.domain.piece.Position;
+import chess.dto.ChessGameDto;
+import chess.dto.ScoreDto;
 import chess.service.SpringChessGameService;
-import chess.view.dto.ChessGameDto;
-import chess.view.dto.ScoreDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

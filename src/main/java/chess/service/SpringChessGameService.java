@@ -7,12 +7,12 @@ import chess.domain.game.*;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
+import chess.dto.ChessGameDto;
+import chess.dto.ChessGameStatusDto;
+import chess.dto.ScoreDto;
 import chess.exception.AlreadyPlayingChessGameException;
 import chess.exception.NoSuchPermittedChessPieceException;
 import chess.exception.NotFoundPlayingChessGameException;
-import chess.view.dto.ChessGameDto;
-import chess.view.dto.ChessGameStatusDto;
-import chess.view.dto.ScoreDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

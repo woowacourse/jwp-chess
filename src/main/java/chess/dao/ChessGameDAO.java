@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.domain.game.ChessGameEntity;
-import chess.view.dto.ChessGameStatusDto;
+import chess.dto.ChessGameStatusDto;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

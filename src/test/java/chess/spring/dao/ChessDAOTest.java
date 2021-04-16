@@ -1,6 +1,7 @@
 package chess.spring.dao;
 
 import chess.domain.history.History;
+import chess.repository.spring.ChessDAO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

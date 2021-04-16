@@ -4,7 +4,7 @@ import chess.domain.board.ChessBoard;
 import chess.domain.piece.TeamType;
 import chess.dto.MoveRequestDTO;
 import chess.dto.board.BoardDTO;
-import chess.spring.service.ChessService;
+import chess.service.spring.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;

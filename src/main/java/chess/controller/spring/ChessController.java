@@ -1,4 +1,4 @@
-package chess.spring.controller;
+package chess.controller.spring;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.piece.TeamType;
@@ -6,7 +6,7 @@ import chess.domain.result.Result;
 import chess.dto.MoveRequestDTO;
 import chess.dto.ResultDTO;
 import chess.dto.board.BoardDTO;
-import chess.spring.service.ChessService;
+import chess.service.spring.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,10 +1,10 @@
 package chess;
 
-import chess.repository.ChessRepository;
-import chess.service.ChessService;
-import chess.web.ChessController;
-import chess.web.ExceptionHandler;
-import chess.web.MoveController;
+import chess.controller.spark.ChessController;
+import chess.controller.spark.ExceptionHandler;
+import chess.controller.spark.MoveController;
+import chess.repository.spark.ChessRepository;
+import chess.service.spark.ChessService;
 
 import static spark.Spark.*;
 
@@ -12,7 +12,6 @@ public class SparkChessApplication {
 
     public static void main(String[] args) {
         ChessController chessController = initializeChessController();
-
         setConfiguration();
         get("/", MoveController::moveToGamePage);
         get("/result", MoveController::moveToResultPage);

@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.repository.spark;
 
 import chess.domain.history.History;
 

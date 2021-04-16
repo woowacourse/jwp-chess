@@ -1,4 +1,4 @@
-package chess.spring.dao;
+package chess.repository.spring;
 
 import chess.domain.history.History;
 import org.springframework.jdbc.core.JdbcTemplate;

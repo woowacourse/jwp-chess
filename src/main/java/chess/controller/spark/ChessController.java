@@ -1,4 +1,4 @@
-package chess.web;
+package chess.controller.spark;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.piece.TeamType;
@@ -6,7 +6,7 @@ import chess.domain.result.Result;
 import chess.dto.MoveRequestDTO;
 import chess.dto.ResultDTO;
 import chess.dto.board.BoardDTO;
-import chess.service.ChessService;
+import chess.service.spark.ChessService;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import spark.Request;

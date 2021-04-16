@@ -1,4 +1,4 @@
-package chess.Dto;
+package chess.dto;
 
 import chess.domain.board.Board;
 import chess.domain.piece.PieceColor;
@@ -9,10 +9,11 @@ import java.util.Map;
 public class ScoreDto {
 
     private final Result result;
-    private final Map<PieceColor, Double> scores = new LinkedHashMap<>();
+    private final Map<PieceColor, Double> scores;
 
     public ScoreDto(Board board) {
         this.result = new Result(board);
+        this.scores = new LinkedHashMap<>();
         putScores();
     }
 

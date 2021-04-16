@@ -1,4 +1,4 @@
-package chess.Dto;
+package chess.dto;
 
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class BoardDto {
 
-    Map<Position, Piece> board;
+    private final Map<Position, Piece> board;
 
     public BoardDto(final Board board) {
         this.board = Position.getPositionCache()

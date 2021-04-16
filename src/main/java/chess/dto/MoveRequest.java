@@ -1,4 +1,4 @@
-package chess.Dto;
+package chess.dto;
 
 
 import chess.domain.position.Position;

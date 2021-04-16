@@ -27,7 +27,7 @@ export async function getBoardAfterMove(source, destination, roomId) {
         headers: {
           "Content-Type": "application/json"
         },
-        method: "PUT",
+        method: "POST",
         body: JSON.stringify({
           "source": source,
           "destination": destination

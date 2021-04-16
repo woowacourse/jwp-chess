@@ -71,8 +71,7 @@ public class SpringChessApiController {
         return springChessService.movablePoints(id, point);
     }
 
-    //TODO : Change to Post
-    @PutMapping("{id}/move")
+    @PostMapping("{id}/move")
     private BoardDto move(@PathVariable String id, @RequestBody Map<String, String> body) {
         return springChessService.move(id, body.get("source"), body.get("destination"));
     }

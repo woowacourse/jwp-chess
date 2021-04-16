@@ -1,8 +1,8 @@
 package chess.utils;
 
-import chess.dao.game.ChessGameRepository;
-import chess.dao.player.PlayerRepository;
-import chess.dao.playerpieceposition.PlayerPiecePositionRepository;
+import chess.web.dao.game.ChessGameRepository;
+import chess.web.dao.player.PlayerRepository;
+import chess.web.dao.playerpieceposition.PlayerPiecePositionRepository;
 import java.sql.SQLException;
 import org.springframework.stereotype.Component;
 

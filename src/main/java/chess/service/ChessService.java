@@ -5,6 +5,7 @@ import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
 import chess.domain.dto.BoardDto;
 import chess.domain.dto.MoveInfoDto;
+import chess.domain.dto.ScoreDto;
 import chess.domain.dto.TurnDto;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
@@ -33,11 +34,11 @@ public class ChessService {
         return chessDao.getSavedBoard();
     }
 
-    public String score() {
+    public ScoreDto score() {
         Board board = convertBoardDtoToBoard(getSavedBoard());
         double whiteScore = board.calculateScore(WHITE);
         double blackScore = board.calculateScore(BLACK);
-        return "백 : " + whiteScore + "  흑 : " + blackScore;
+        return ScoreDto.of(whiteScore, blackScore);
     }
 
     public BoardDto move(MoveInfoDto moveInfoDto) {

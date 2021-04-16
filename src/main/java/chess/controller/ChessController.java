@@ -26,7 +26,7 @@ public class ChessController {
 
     @GetMapping("/score")
     public ScoreDto scoreStatus() {
-        return ScoreDto.of(chessService.score());
+        return chessService.score();
     }
 
     @PostMapping("/move")

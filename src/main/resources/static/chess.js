@@ -131,5 +131,5 @@ async function resetBoard() {
 async function alertScore() {
     let scoreInformation = await fetch("/score")
     scoreInformation = await scoreInformation.json();
-    alert(scoreInformation.scoreMessage);
+    alert("백: " + scoreInformation.whiteScore + " 흑: " + scoreInformation.blackScore);
 }

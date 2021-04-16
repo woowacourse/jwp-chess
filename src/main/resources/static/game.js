@@ -49,6 +49,11 @@ for (let i = 0; i < tiles.length; i++) {
 
 
 function selectPiece(target) {
+    if (gameInfo.end) {
+        askExit();
+        return;
+    }
+
     if (source == null) {
         if (!target.classList.contains('piece')) {
             alert('빈 공간을 클릭 할 수 없습니다.')
@@ -84,8 +89,8 @@ function selectPiece(target) {
 
 function movePiece(target) {
     const body = {
-        'from' : source.getAttribute('id'),
-        'to' : target.getAttribute('id')
+        'from': source.getAttribute('id'),
+        'to': target.getAttribute('id')
     }
     axios.put('/api/room/' + roomId, body)
         .then(function (response) {
@@ -111,43 +116,51 @@ function clearSelect() {
 function refreshChessBoard(chessGame) {
     gameInfo = chessGame;
     let isEnd = chessGame.end;
+
     clearChessBoard();
-    if (!isEnd) {
-        let blackPieces = chessGame.blackTeam.pieces.pieces;
-        for (let i = 0; i < blackPieces.length; i++) {
-            let piece = blackPieces[i]
-            let tile = document.getElementById(piece.position);
-            tile.classList.add('piece');
-            tile.setAttribute('color', 'black')
-            tile.classList.add(piece.piece);
-            tile.innerHTML = piecesMap[piece.piece];
-        }
+    let blackPieces = chessGame.blackTeam.pieces.pieces;
+    for (let i = 0; i < blackPieces.length; i++) {
+        let piece = blackPieces[i]
+        let tile = document.getElementById(piece.position);
+        tile.classList.add('piece');
+        tile.setAttribute('color', 'black')
+        tile.classList.add(piece.piece);
+        tile.innerHTML = piecesMap[piece.piece];
+    }
 
-        let whitePieces = chessGame.whiteTeam.pieces.pieces;
-        for (let i = 0; i < whitePieces.length; i++) {
-            let piece = whitePieces[i];
-            let tile = document.getElementById(piece.position);
-            tile.classList.add('piece');
-            tile.setAttribute('color', 'white')
-            tile.classList.add(piece.piece);
-            tile.innerHTML = piecesMap[piece.piece];
-        }
+    let whitePieces = chessGame.whiteTeam.pieces.pieces;
+    for (let i = 0; i < whitePieces.length; i++) {
+        let piece = whitePieces[i];
+        let tile = document.getElementById(piece.position);
+        tile.classList.add('piece');
+        tile.setAttribute('color', 'white')
+        tile.classList.add(piece.piece);
+        tile.innerHTML = piecesMap[piece.piece];
+    }
 
-        let blackScore = chessGame.blackTeam.score;
-        let whiteScore = chessGame.whiteTeam.score;
-        document.getElementById('score-white').innerHTML = whiteScore;
-        document.getElementById('score-black').innerHTML = blackScore;
+    let blackScore = chessGame.blackTeam.score;
+    let whiteScore = chessGame.whiteTeam.score;
+    document.getElementById('score-white').innerHTML = whiteScore;
+    document.getElementById('score-black').innerHTML = blackScore;
 
 
-        if (chessGame.blackTeam.turn) {
-            document.getElementById('name-black').innerHTML = chessGame.blackTeam.name + "♟";
-            document.getElementById('name-white').innerHTML = chessGame.whiteTeam.name;
-        } else if (chessGame.whiteTeam.turn) {
-            document.getElementById('name-black').innerHTML = chessGame.blackTeam.name;
-            document.getElementById('name-white').innerHTML = chessGame.whiteTeam.name + "&#9817;";
-        }
-    } else {
-        alert('게임이 종료 되었습니다.')
+    if (chessGame.blackTeam.turn) {
+        document.getElementById('name-black').innerHTML = chessGame.blackTeam.name + "♟";
+        document.getElementById('name-white').innerHTML = chessGame.whiteTeam.name;
+    } else if (chessGame.whiteTeam.turn) {
+        document.getElementById('name-black').innerHTML = chessGame.blackTeam.name;
+        document.getElementById('name-white').innerHTML = chessGame.whiteTeam.name + "&#9817;";
+    }
+
+    if (isEnd) {
+        askExit();
+    }
+}
+
+
+function askExit() {
+    if (confirm('게임이 끝났습니다. 나가시겠습니까?')) {
+        location.href = "/";
     }
 }
 

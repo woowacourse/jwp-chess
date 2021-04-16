@@ -1,4 +1,4 @@
-package Application;
+package chess;
 
 import chess.JsonTransformer;
 import chess.dto.PositionDTO;

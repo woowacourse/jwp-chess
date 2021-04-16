@@ -1,4 +1,4 @@
-package Application;
+package chess;
 
 import chess.controller.ChessController;
 

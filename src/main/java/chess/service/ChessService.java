@@ -18,6 +18,7 @@ import chess.dto.requestdto.StartRequestDto;
 import chess.dto.response.Response;
 import chess.dto.response.ResponseCode;
 import chess.dto.responsedto.GridAndPiecesResponseDto;
+import chess.dto.responsedto.RoomsResponseDto;
 import chess.exception.ChessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -114,5 +115,9 @@ public class ChessService {
         GridDto gridDto = gridDAO.findGridByGridId(gridId);
         List<PieceDto> piecesResponseDto = pieceDAO.findPiecesByGridId(gridId);
         return new GridAndPiecesResponseDto(gridDto, piecesResponseDto);
+    }
+
+    public RoomsResponseDto getAllRooms() {
+        return new RoomsResponseDto(roomDAO.findAllRooms());
     }
 }

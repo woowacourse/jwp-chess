@@ -75,6 +75,11 @@ public class SpringChessApplication implements CommandLineRunner {
 		return new Response(ResponseCode.OK, chessService.restart(Long.parseLong(roomId)));
 	}
 
+	@GetMapping("/room")
+	public Response getRooms() {
+		return new Response(ResponseCode.OK, chessService.getAllRooms());
+	}
+
 	@ExceptionHandler({ Exception.class })
 	public ResponseEntity<Object> handleAll(Exception e) {
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

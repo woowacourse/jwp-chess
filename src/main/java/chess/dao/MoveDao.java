@@ -1,19 +1,20 @@
-package chess.Dao;
+package chess.dao;
 
-import chess.Dto.MoveRequest;
 import chess.domain.position.Position;
+import chess.dto.MoveRequest;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MoveDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final MoveRequestMapper mapper;
 
     public MoveDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.mapper = new MoveRequestMapper();
     }
 
     public void addMove(final Position from, final Position to) {
@@ -23,14 +24,8 @@ public class MoveDao {
 
     public List<MoveRequest> getMoves() {
         String query = "select * from move";
-        return jdbcTemplate.query(query, ROW_MAPPER);
+        return jdbcTemplate.query(query, mapper);
     }
-
-    private final RowMapper<MoveRequest> ROW_MAPPER = (resultSet, rowNumber) -> {
-        String start = resultSet.getString("start");
-        String end = resultSet.getString("end");
-        return new MoveRequest(start, end);
-    };
 
     public void deleteAll() {
         String query = "delete from move";

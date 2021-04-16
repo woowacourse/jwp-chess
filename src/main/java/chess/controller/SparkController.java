@@ -2,7 +2,8 @@ package chess.controller;
 
 import chess.dto.MovablePositionDto;
 import chess.dto.MoveRequestDto;
-import chess.service.ChessService;
+import chess.service.SparkChessService;
+import chess.service.SpringChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import spark.ModelAndView;
@@ -13,13 +14,13 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WebController {
+public class SparkController {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private final ChessService chessService;
+    private final SparkChessService chessService;
 
-    public WebController() {
-        this.chessService = new ChessService();
+    public SparkController() {
+        this.chessService = new SparkChessService();
     }
 
     private static String render(Map<String, Object> model, String templatePath) {

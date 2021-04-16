@@ -43,7 +43,6 @@ public class SpringChessService {
 
         try {
             BoardDto boardDto = movePiece(chessGame, moveRequestDto);
-            springChessLogDao.addLog(moveRequestDto);
             return boardDto;
         } catch (Exception e) {
             return start(chessGame);
@@ -56,7 +55,10 @@ public class SpringChessService {
     }
 
     private BoardDto movePiece(ChessGame chessGame, MoveRequestDto moveRequestDto) {
-        chessGame.move(moveRequestDto.getTarget(), moveRequestDto.getDestination());
+        if (chessGame.move(moveRequestDto.getTarget(), moveRequestDto.getDestination())) {
+            springChessLogDao.addLog(moveRequestDto);
+        }
+
         if (chessGame.isBeforeEnd()) {
             return new BoardDto(chessGame.getBoard(), chessGame.turn());
         }

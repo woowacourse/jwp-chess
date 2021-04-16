@@ -1,4 +1,4 @@
-CREATE TABLE chessgame
+CREATE TABLE IF NOT EXISTS chessgame
 (
     command_log  INT         NOT NULL AUTO_INCREMENT,
     room_id      INT         NOT NULL,

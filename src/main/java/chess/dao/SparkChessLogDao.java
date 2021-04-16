@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChessLogDao {
+public class SparkChessLogDao {
     private static final String MOVE = "move ";
     private static final String DELIMITER = " ";
 

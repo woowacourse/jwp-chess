@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dao.ChessLogDao;
+import chess.dao.SparkChessLogDao;
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.dto.BoardDto;
@@ -13,13 +13,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Service
-public class ChessService {
+public class SparkChessService {
     private static final String END_TRUE = "true";
 
-    private final ChessLogDao chessLogDao;
+    private final SparkChessLogDao sparkChessLogDao;
 
-    public ChessService() {
-        this.chessLogDao = new ChessLogDao();
+    public SparkChessService() {
+        this.sparkChessLogDao = new SparkChessLogDao();
     }
 
     public BoardDto loadRoom(String roomNumber) {
@@ -27,7 +27,7 @@ public class ChessService {
     }
 
     private ChessGame loadChessGame(String roomNumber) {
-        List<String> commands = chessLogDao.applyCommand(roomNumber);
+        List<String> commands = sparkChessLogDao.applyCommand(roomNumber);
         ChessGame chessGame = new ChessGame();
         chessGame.settingBoard();
 
@@ -43,7 +43,7 @@ public class ChessService {
 
         try {
             BoardDto boardDto = movePiece(chessGame, moveRequestDto);
-            chessLogDao.addLog(moveRequestDto.getRoomId(), moveRequestDto.getTarget(), moveRequestDto.getDestination());
+            sparkChessLogDao.addLog(moveRequestDto.getRoomId(), moveRequestDto.getTarget(), moveRequestDto.getDestination());
             return boardDto;
         } catch (Exception e) {
             return start(chessGame);
@@ -72,6 +72,6 @@ public class ChessService {
     }
 
     public void deleteRoom(String roomNumber) {
-        chessLogDao.deleteLog(roomNumber);
+        sparkChessLogDao.deleteLog(roomNumber);
     }
 }

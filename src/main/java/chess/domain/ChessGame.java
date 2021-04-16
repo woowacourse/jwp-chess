@@ -39,12 +39,14 @@ public class ChessGame {
         end = board.isGameOver();
     }
 
-    public void move(String target, String destination) {
-        board.movePiece(convertStringToPosition(target)
-                , convertStringToPosition(destination));
+    public boolean move(String target, String destination) {
+        if (!board.movePiece(convertStringToPosition(target), convertStringToPosition(destination))) {
+            return false;
+        }
         board.applyStatus();
 
         end = board.isGameOver();
+        return true;
     }
 
     public List<String> findMovablePosition(String target) {

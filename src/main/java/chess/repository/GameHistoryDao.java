@@ -23,7 +23,7 @@ public class GameHistoryDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addGameHistory(GameHistory gameHistory) throws SQLException {
+    public void addGameHistory(GameHistory gameHistory) {
         String query = "INSERT INTO game_history(gameId, command, createdTime) VALUES (?, ?, ?)";
         jdbcTemplate.update(query, gameHistory.getGameId(), gameHistory.getCommand(),
             Timestamp.valueOf(gameHistory.getCreatedTime()));

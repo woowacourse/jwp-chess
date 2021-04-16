@@ -6,3 +6,4 @@
 - [x] game 생성 
 - [x] chess 방 입장
 - [x] chess 판 초기화
+- [x] chess 말 이동

@@ -77,14 +77,19 @@ public class Piece {
     }
 
     public void move(final Position target, final Board board) {
+        if (!isMovable(target, board)) {
+            throw new IllegalArgumentException("해당 위치로는 이동할 수 없습니다.");
+        }
+        position = target;
+    }
+
+    public boolean isMovable(final Position target, final Board board) {
         for (final MoveCondition moveCondition : moveConditions) {
             if (moveCondition.isSatisfyBy(board, this, target)) {
-                position = target;
-                return;
+                return true;
             }
         }
-
-        throw new IllegalArgumentException("해당 위치로는 이동할 수 없습니다.");
+        return false;
     }
 
     public Color getColor() {
@@ -136,7 +141,7 @@ public class Piece {
     }
 
     public String getColorValue() {
-        return this.color.getColor();
+        return this.color.getValue();
     }
 
     public String getShapeValue() {

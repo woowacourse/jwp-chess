@@ -4,6 +4,7 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.piece.Position;
+import chess.dto.MoveRequestDto;
 
 import java.util.List;
 
@@ -25,6 +26,11 @@ public class Board {
         Piece sourcePiece = pieces.findPieceByPosition(color, source);
         sourcePiece.move(target, this);
         pieces.catchPiece(color);
+    }
+
+    public boolean isMovable(String color, String source, String target) {
+        Piece sourcePiece = pieces.findPieceByPosition(Color.from(color), new Position(source));
+        return sourcePiece.isMovable(new Position(target), this);
     }
 
     public int getRow() {
@@ -51,4 +57,5 @@ public class Board {
     public boolean isKingCatch() {
         return pieces.isKingCatch();
     }
+
 }

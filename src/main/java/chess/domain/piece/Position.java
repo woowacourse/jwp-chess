@@ -24,7 +24,7 @@ public class Position {
     }
 
     private static int makeRow(String str) {
-        return 8 - Integer.parseInt(str.split("")[1]);
+        return Integer.parseInt(str.split("")[1]) - 1;
     }
 
     public int getRow() {

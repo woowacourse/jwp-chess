@@ -1,8 +1,8 @@
 import {Tiles} from "../tile/Tiles.js"
 import {Pieces} from "../piece/Pieces.js"
-import {getData, postData} from "../utils/FetchUtil.js"
+import {getData, putData} from "../utils/FetchUtil.js"
 
-const url = "http://localhost:4567/api";
+const url = "http://localhost:8080";
 
 export class Board {
   #tiles
@@ -77,13 +77,13 @@ export class Board {
     const params = {
       source: board.#sourceTile.component.id,
       target: targetTile.component.id,
-      team: this.#pieces.findByPosition(sourceTile.x, sourceTile.y).team
+      color: this.#pieces.findByPosition(sourceTile.x, sourceTile.y).team
     }
 
     const gameId = this.#findGameIdInUri();
     try {
       const response = await getData(
-          `${url}/game/${gameId}/piece`, params
+          `${url}/chess/${gameId}/move/check`, params
       );
       targetTile.highlight(response["isMovable"]);
     } catch (e) {
@@ -124,11 +124,11 @@ export class Board {
     const params = {
       source: sourceTile.component.id,
       target: targetTile.component.id,
-      team: piece.team
+      color: piece.team
     }
     const gameId = this.#findGameIdInUri();
     const response = await getData(
-        `${url}/game/${gameId}/piece`, params);
+        `${url}/chess/${gameId}/move/check`, params);
     const isMovable = response["isMovable"]
     if (isMovable) {
       await this.#requestMove(piece, targetTile, params, gameId);
@@ -139,17 +139,17 @@ export class Board {
   }
 
   async #requestMove(piece, targetTile, body, gameId) {
-    const response = await postData(
-        `${url}/game/${gameId}/piece`, body);
+    const response = await putData(
+        `${url}/chess/${gameId}/move`, body);
     this.#pieces.move(piece, targetTile)
-    const isFinished = response["isFinished"]
-    if (isFinished) {
-      const winner = response["winner"];
-      const back = confirm(`${winner}가 이겼습니다. 확인을 누르면 홈으로 돌아갑니다.`)
-      if (back) {
-        window.location.href = "/";
-      }
-    }
+    // const isFinished = response["isFinished"]
+    // if (isFinished) {
+    //   const winner = response["winner"];
+    //   const back = confirm(`${winner}가 이겼습니다. 확인을 누르면 홈으로 돌아갑니다.`)
+    //   if (back) {
+    //     window.location.href = "/";
+    //   }
+    // }
   }
 
   #unhighlight(target) {

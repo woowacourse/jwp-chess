@@ -31,4 +31,19 @@ class FetchService {
       }
     });
   }
+
+  put(url, data) {
+    return fetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(res => res.json())
+    .then(function (jsonData) {
+      let jsonString = JSON.stringify(jsonData);
+      return JSON.parse(jsonString);
+    })
+  }
 }

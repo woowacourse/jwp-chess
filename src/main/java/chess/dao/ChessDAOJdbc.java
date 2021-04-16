@@ -21,7 +21,7 @@ public class ChessDAOJdbc implements ChessDAO {
     public void savePieces(Long gameId, List<Piece> pieces) {
         String sql = "insert into game(gameid, name, color, position) values(?,?,?,?)";
         List<Object[]> data = pieces.stream()
-            .map(piece -> new Object[]{gameId, piece.name(), piece.color(),
+            .map(piece -> new Object[]{gameId, piece.name(), piece.color().name(),
                 piece.currentPosition().columnAndRow()})
             .collect(Collectors.toList());
 
@@ -31,7 +31,7 @@ public class ChessDAOJdbc implements ChessDAO {
     @Override
     public Long saveCurrentColor(Long gameId, TeamColor currentColor) {
         String sql = "insert into current_color(game_id, color) values(?,?)";
-        jdbcTemplate.update(sql, gameId, currentColor);
+        jdbcTemplate.update(sql, gameId, currentColor.name());
         return gameId;
     }
 

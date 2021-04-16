@@ -81,6 +81,6 @@ function exit() {
 
 function save() {
   alert(`${gameId} 번 의 게임을 저장합니다.`);
-  fetchService.post(`http://localhost:8080/save/${gameId}`);
+  fetchService.put(`http://localhost:8080/save/${gameId}`);
 }
 

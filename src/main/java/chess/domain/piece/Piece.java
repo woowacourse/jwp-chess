@@ -65,20 +65,12 @@ public class Piece {
         this.id = id;
     }
 
-    public String getNotation() {
-        return shape.getNotation(color);
-    }
-
-    public int getColumn() {
-        return position.getColumn();
-    }
-
-    public int getRow() {
-        return position.getRow();
-    }
-
     public boolean isSamePosition(final Position position) {
         return this.position.equals(position);
+    }
+
+    public String getNotation() {
+        return shape.getNotation(color);
     }
 
     public void move(final Position target, final Board board) {
@@ -90,6 +82,18 @@ public class Piece {
         }
 
         throw new IllegalArgumentException("해당 위치로는 이동할 수 없습니다.");
+    }
+
+    public double calculateGradient(final Position target) {
+        return position.calculateGradient(target);
+    }
+
+    public int getColumn() {
+        return position.getColumn();
+    }
+
+    public int getRow() {
+        return position.getRow();
     }
 
     public Color getColor() {
@@ -106,6 +110,23 @@ public class Piece {
 
     public boolean isPawn() {
         return shape == Shape.PAWN;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Shape getShape() {
+        return shape;
+    }
+
+    public void setPosition(final Position target) {
+        this.position = target;
+    }
+
+    public Object[] parseObjects(Long chessGameId) {
+        return new Object[]{color.toString(), shape.toString(), chessGameId,
+                position.getRow(), position.getColumn()};
     }
 
     @Override
@@ -126,22 +147,6 @@ public class Piece {
         result = 31 * result + (shape != null ? shape.hashCode() : 0);
         result = 31 * result + (position != null ? position.hashCode() : 0);
         return result;
-    }
-
-    public double calculateGradient(final Position target) {
-        return position.calculateGradient(target);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Shape getShape() {
-        return shape;
-    }
-
-    public void setPosition(final Position target) {
-        this.position = target;
     }
 
 }

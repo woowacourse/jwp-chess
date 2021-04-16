@@ -107,4 +107,5 @@ public class SpringChessGameService {
 
         return chessGame;
     }
+
 }

@@ -5,14 +5,11 @@ import chess.domain.piece.PieceFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class PieceDAO {
@@ -23,26 +20,12 @@ public class PieceDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(Long chessGameId, Piece piece) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "INSERT INTO piece(color, shape, chess_game_id, row, col) VALUES(?, ?, ?, ?, ?)";
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, piece.getColor().toString());
-            ps.setString(2, piece.getShape().toString());
-            ps.setLong(3, chessGameId);
-            ps.setInt(4, piece.getRow());
-            ps.setInt(5, piece.getColumn());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().longValue();
-    }
-
     public void saveAll(final Long chessGameId, final List<Piece> pieces) {
-        for (final Piece piece : pieces) {
-            save(chessGameId, piece);
-        }
+        String query = "INSERT INTO piece(color, shape, chess_game_id, row, col) VALUES(?, ?, ?, ?, ?)";
+        List<Object[]> params = pieces.stream()
+                .map(piece -> piece.parseObjects(chessGameId))
+                .collect(Collectors.toList());
+        jdbcTemplate.batchUpdate(query, params);
     }
 
     public List<Piece> findAllPiecesByChessGameId(Long chessGameId) {

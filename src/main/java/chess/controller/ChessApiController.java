@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,23 +36,23 @@ public class ChessApiController {
     }
 
     @GetMapping("/{gameId}/pieces")
-    public List<PieceDto> pieces(@PathVariable Long gameId) {
-        return chessService.loadChess(gameId)
+    public ResponseEntity<List<PieceDto>> pieces(@PathVariable Long gameId) {
+        return ResponseEntity.ok(chessService.loadChess(gameId)
             .pieces().asList().stream()
             .map(PieceDto::new)
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()));
     }
 
     @GetMapping("/{gameId}/roundstatus")
-    public RoundStatusDto roundStatus(@PathVariable Long gameId) {
+    public ResponseEntity<RoundStatusDto> roundStatus(@PathVariable Long gameId) {
         final ChessGame chessGame = chessService.loadChess(gameId);
-        return new RoundStatusDto(
+        return ResponseEntity.ok(new RoundStatusDto(
             mapMovablePositions(chessGame.currentColorPieces()),
             chessGame.currentColor(),
             chessGame.gameResult(),
             chessGame.isChecked(),
             chessGame.isKingDead()
-        );
+        ));
     }
 
     private Map<String, List<String>> mapMovablePositions(List<Piece> pieces) {
@@ -66,7 +67,7 @@ public class ChessApiController {
     }
 
     @PostMapping("/{gameId}/move")
-    public RoundStatusDto move(@PathVariable Long gameId, @RequestBody PositionDto position) {
+    public ResponseEntity<RoundStatusDto> move(@PathVariable Long gameId, @RequestBody PositionDto position) {
         chessService.move(
             gameId,
             stringPositionConverter.convert(position.getCurrentPosition()),

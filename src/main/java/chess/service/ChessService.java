@@ -12,22 +12,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
-    private final ChessDao chessDAO;
+    private final ChessDao chessDao;
 
-    public ChessService(ChessDao chessDAO) {
-        this.chessDAO = chessDAO;
+    public ChessService(ChessDao chessDao) {
+        this.chessDao = chessDao;
     }
 
     public BoardDto initiateBoard(ChessGame chessGame) {
-        chessDAO.resetTurnOwner(chessGame.getTurnOwner());
+        chessDao.resetTurnOwner(chessGame.getTurnOwner());
         chessGame.settingBoard();
-        chessDAO.resetBoard(chessGame.getBoard());
+        chessDao.resetBoard(chessGame.getBoard());
         return BoardDto.of(chessGame.getBoard());
     }
 
     public BoardDto getSavedBoardInfo(ChessGame chessGame) {
-        BoardDto boardDTO = chessDAO.getSavedBoardInfo();
-        TurnDto turnDTO = chessDAO.getSavedTurnOwner();
+        BoardDto boardDTO = chessDao.getSavedBoardInfo();
+        TurnDto turnDTO = chessDao.getSavedTurnOwner();
 
         chessGame.loadSavedBoardInfo(boardDTO.getBoardInfo(), turnDTO.getTurn());
         return boardDTO;
@@ -41,8 +41,8 @@ public class ChessService {
 
         chessGame.move(moveInfoDTO.getTarget(), moveInfoDTO.getDestination());
 
-        chessDAO.renewBoardAfterMove(moveInfoDTO.getTarget(), moveInfoDTO.getDestination(), targetPiece);
-        chessDAO.renewTurnOwnerAfterMove(chessGame.getTurnOwner());
+        chessDao.renewBoardAfterMove(moveInfoDTO.getTarget(), moveInfoDTO.getDestination(), targetPiece);
+        chessDao.renewTurnOwnerAfterMove(chessGame.getTurnOwner());
         return BoardDto.of(board);
     }
 }

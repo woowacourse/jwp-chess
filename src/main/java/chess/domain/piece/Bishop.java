@@ -1,6 +1,6 @@
 package chess.domain.piece;
 
-import chess.Strategy.BishopMoveStrategy;
+import chess.strategy.BishopMoveStrategy;
 
 public class Bishop extends Piece {
     private static final String BISHOP_NAME = "B";

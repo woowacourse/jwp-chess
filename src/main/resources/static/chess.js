@@ -37,7 +37,6 @@ async function loadSavedBoard() {
 }
 
 async function reStartGame() {
-    console.log("restartGame method");
     const boardInfo = await resetBoard();
     renewBoard(boardInfo);
 }

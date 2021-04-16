@@ -10,7 +10,7 @@ import chess.domain.position.MovePositionVO;
 @Repository
 public class PieceDAO {
 
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public PieceDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

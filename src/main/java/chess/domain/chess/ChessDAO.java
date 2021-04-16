@@ -17,7 +17,7 @@ import chess.domain.piece.PieceDTO;
 @Repository
 public class ChessDAO {
 
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public ChessDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -26,7 +26,7 @@ public class ChessDAO {
     public Chess findChessById(Long chessId) {
         String sql = "SELECT c.status, c.turn, p.position, p.color, p.name "
                 + "FROM chess c LEFT JOIN piece p ON c.chess_id = p.chess_id "
-                + "WHERE c.chess_id = (?)"; // AND p.position IS NOT NULL
+                + "WHERE c.chess_id = (?)";
 
         return jdbcTemplate.queryForObject(sql, chessMapper(), chessId);
     }

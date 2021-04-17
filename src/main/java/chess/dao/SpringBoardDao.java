@@ -18,6 +18,10 @@ import java.util.stream.Collectors;
 @Repository
 public class SpringBoardDao {
 
+    private final String COMMA = ",";
+    private final String WHITE_INITIAL = "W";
+    private final String BLACK_INITIAL = "B";
+
     private final JdbcTemplate jdbcTemplate;
 
     public SpringBoardDao(JdbcTemplate jdbcTemplate) {
@@ -78,7 +82,7 @@ public class SpringBoardDao {
         return board.keySet()
                 .stream()
                 .map(Position::positionName)
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(COMMA));
     }
 
     private String boardPieceSet(Map<Position, Piece> board) {
@@ -86,16 +90,16 @@ public class SpringBoardDao {
         for (Piece piece : board.values()) {
             pieceNames.add(pieceToName(piece));
         }
-        return String.join(",", pieceNames);
+        return String.join(COMMA, pieceNames);
     }
 
     private String pieceToName(Piece piece) {
         String pieceName = piece.getInitial();
         if (piece.side() == Side.WHITE) {
-            return "W" + pieceName.toUpperCase();
+            return WHITE_INITIAL + pieceName.toUpperCase();
         }
         if (piece.side() == Side.BLACK) {
-            return "B" + pieceName.toUpperCase();
+            return BLACK_INITIAL + pieceName.toUpperCase();
         }
         return pieceName;
     }
@@ -103,8 +107,8 @@ public class SpringBoardDao {
     private Map<Position, Piece> daoToBoard(String positions, String pieces) {
         Map<Position, Piece> board = new LinkedHashMap<>();
 
-        String[] position = positions.split(",");
-        String[] piece = pieces.split(",");
+        String[] position = positions.split(COMMA);
+        String[] piece = pieces.split(COMMA);
 
         for (int i = 0; i < position.length; i++) {
             board.put(Position.from(position[i]), PieceFactory.createPieceByName(piece[i]));

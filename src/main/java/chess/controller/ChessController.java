@@ -1,5 +1,7 @@
 package chess.controller;
 
+import chess.domain.dto.ResponseDto;
+import chess.domain.dto.RoomDto;
 import chess.domain.dto.move.MoveRequestDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.serivce.chess.ChessService;
@@ -27,7 +29,7 @@ public class ChessController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity exceptionHandler(RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.ok().body(ResponseDto.error(e.getMessage()));
     }
 
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
@@ -39,7 +41,7 @@ public class ChessController {
     @ResponseBody
     public ResponseEntity createRoom(@PathVariable("name") String roomName) throws SQLException {
         service.createRoom(roomName);
-        return ResponseEntity.ok().body(roomName);
+        return ResponseEntity.ok().body(new RoomDto(roomName));
     }
 
     @GetMapping(value = "/room/{name}")

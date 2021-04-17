@@ -4,6 +4,7 @@ import chess.domain.board.Board;
 import chess.domain.dto.PieceDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.domain.game.Room;
+import chess.domain.gamestate.State;
 import chess.domain.gamestate.running.Ready;
 import chess.domain.location.Location;
 import chess.domain.piece.Piece;
@@ -14,8 +15,8 @@ import chess.utils.BoardUtil;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessService {
@@ -24,7 +25,6 @@ public class ChessService {
 
     private final PieceRepository pieceRepository;
 
-    @Autowired
     public ChessService(final RoomRepository roomRepository,
             final PieceRepository pieceRepository) {
         this.roomRepository = roomRepository;
@@ -32,15 +32,12 @@ public class ChessService {
     }
 
     public MoveResponseDto start(String roomName) throws SQLException {
-        Room room = roomRepository.findRoomByRoomName(roomName);
+        Room room = findRoomByRoomName(roomName);
 
         room.play("start");
         roomRepository.update(room);
 
         Board board = room.getBoard();
-        for (Piece piece : board.getPieces()) {
-            pieceRepository.insert(room.getId(), piece);
-        }
 
         List<PieceDto> pieceDtos = board.getPieces()
             .stream()
@@ -54,7 +51,7 @@ public class ChessService {
     }
 
     public MoveResponseDto end(String roomName) throws SQLException {
-        Room room = roomRepository.findRoomByRoomName(roomName);
+        Room room = findRoomByRoomName(roomName);
 
         room.play("end");
         roomRepository.update(room);
@@ -72,7 +69,7 @@ public class ChessService {
     }
 
     public MoveResponseDto move(String roomName, String source, String target) throws SQLException {
-        Room room = roomRepository.findRoomByRoomName(roomName);
+        Room room = findRoomByRoomName(roomName);
         Board board = room.getBoard();
         Piece sourcePiece = board.find(Location.of(source));
         List<Piece> beforeMovePieces = board.getPieces();
@@ -107,7 +104,7 @@ public class ChessService {
     }
 
     public MoveResponseDto findPiecesByRoomName(String roomName) throws SQLException {
-        Room room = roomRepository.findRoomByRoomName(roomName);
+        Room room = findRoomByRoomName(roomName);
 
         List<PieceDto> pieceDtos = pieceRepository.findPiecesByRoomId(room.getId())
             .stream()
@@ -126,6 +123,23 @@ public class ChessService {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 방입니다. 다른 이름을 사용해주세요.");
         }
 
-        roomRepository.insert(new Room(0, roomName, new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
+        long roomId = roomRepository.insert(new Room(0, roomName, new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
+        Board board = BoardUtil.generateInitialBoard();
+        for (Piece piece : board.getPieces()) {
+            pieceRepository.insert(roomId, piece);
+        }
+    }
+
+    private Room findRoomByRoomName(String roomName) throws SQLException {
+        if (roomRepository.isExistRoomName(roomName)) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다.");
+        }
+        Room room = roomRepository.findRoomByRoomName(roomName);
+        List<Piece> pieces = pieceRepository.findPiecesByRoomId(room.getId());
+        return new Room(
+                room.getId(),
+                roomName,
+                State.generateState(room.getState().getValue(), Board.of(pieces)),
+                room.getCurrentTeam());
     }
 }

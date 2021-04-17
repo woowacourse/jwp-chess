@@ -1,234 +1,95 @@
 package chess.repository.piece;
 
 import chess.domain.piece.Piece;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class JdbcPieceRepository implements PieceRepository {
 
-    private final DataSource dataSource;
+    private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public JdbcPieceRepository(final DataSource dataSource) {
-        this.dataSource = dataSource;
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
-    public long insert(long roomId, Piece piece) throws SQLException {
-        int roomIdIdx = 1;
-        int signatureIdx = 2;
-        int teamIdx = 3;
-        int locationIdx = 4;
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            String query = "INSERT INTO pieces (roomid, signature, team, location) VALUES (?, ?, ?, ?)";
-            conn = this.dataSource.getConnection();
-            ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setLong(roomIdIdx, roomId);
-            ps.setString(signatureIdx, String.valueOf(piece.getSignature()));
-            ps.setString(teamIdx, piece.getTeam().getValue());
-            ps.setString(locationIdx, String.valueOf(piece.getX()) + String.valueOf(piece.getY()));
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                return rs.getLong(1);
-            }
-            throw new IllegalArgumentException("[ERROR] insert - Piece정보를 DB에 저장하지 못했습니다.");
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-        }
+    public long insert(long roomId, Piece piece) {
+        String sql = "INSERT INTO pieces (roomid, signature, team, location) VALUES (?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        this.jdbcTemplate.update((con) -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setLong(1, roomId);
+            ps.setString(2, String.valueOf(piece.getSignature()));
+            ps.setString(3, piece.getTeam().getValue());
+            ps.setString(4, String.valueOf(piece.getX()) + String.valueOf(piece.getY()));
+            return ps;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     @Override
-    public void update(Piece piece) throws SQLException {
-        int locationIdx = 1;
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            String query = "UPDATE pieces SET location = ? WHERE id = ?";
-            conn = this.dataSource.getConnection();
-            ps = conn.prepareStatement(query);
-            ps.setString(locationIdx, String.valueOf(piece.getX()) + String.valueOf(piece.getY()));
-            ps.setLong(2, piece.getId());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-        }
+    public void update(Piece piece) {
+        String sql = "UPDATE pieces SET location = ? WHERE id = ?";
+        this.jdbcTemplate.update(
+                sql,
+                String.valueOf(piece.getX()) + String.valueOf(piece.getY()),
+                piece.getId());
     }
 
     @Override
-    public Piece findPieceById(long pieceId) throws SQLException {
-        Connection conn = null;
-        Statement ps = null;
-        ResultSet rs = null;
-
-        try {
-            String query = "SELECT * FROM pieces WHERE id = " + pieceId;
-            conn = this.dataSource.getConnection();
-            ps = conn.createStatement();
-            rs = ps.executeQuery(query);
-
-            if (rs.next()) {
-                long id = rs.getLong("id");
-                long roomId = rs.getLong("roomid");
-                char signature = rs.getString("signature").charAt(0);
-                String team = rs.getString("team");
-                String location = rs.getString("location");
-                return Piece.generatePiece(id, roomId, signature, team, location);
-            }
-            throw new IllegalArgumentException("[ERROR] findPieceById - DB로부터 Piece정보를 가져오지 못했습니다.");
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-            if (rs != null) {
-                rs.close();
-            }
-        }
+    public Piece findPieceById(long pieceId) {
+        String sql = "SELECT * FROM pieces WHERE id = ?";
+        return this.jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> Piece.generatePiece(
+                        resultSet.getLong("id"),
+                        resultSet.getLong("roomid"),
+                        resultSet.getString("signature").charAt(0),
+                        resultSet.getString("team"),
+                        resultSet.getString("location")
+                ),
+                pieceId
+        );
     }
 
     @Override
-    public void deletePieceById(long id) throws SQLException {
-        Connection conn = null;
-        PreparedStatement ps = null;
-
-        try {
-            String sql = "DELETE FROM pieces WHERE id = " + id;
-            conn = this.dataSource.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-        }
+    public void deletePieceById(long id) {
+        String sql = "DELETE FROM pieces WHERE id = ?";
+        this.jdbcTemplate.update(sql, Long.valueOf(id));
     }
 
     @Override
-    public void deleteAll() throws SQLException {
-        Connection conn = null;
-        PreparedStatement ps = null;
-
-        try {
-            String sql = "DELETE FROM pieces";
-            conn = this.dataSource.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-        }
+    public void deleteAll() {
+        String sql = "DELETE FROM pieces";
+        this.jdbcTemplate.update(sql);
     }
 
     @Override
-    public int count() throws SQLException {
-        Connection conn = null;
-        Statement ps = null;
-        ResultSet rs = null;
-
-        try {
-            String query = "SELECT COUNT(*) FROM pieces";
-            conn = this.dataSource.getConnection();
-            ps = conn.createStatement();
-            rs = ps.executeQuery(query);
-
-            if (rs.next()) {
-                int count = rs.getInt(1);
-                return count;
-            }
-            throw new IllegalArgumentException("[ERROR] count - DB에 저장된 모든 Piece의 개수를 가져오지 못했습니다.");
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-            if (rs != null) {
-                rs.close();
-            }
-        }
+    public int count() {
+        String sql = "SELECT COUNT(*) FROM pieces";
+        return this.jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
     @Override
-    public List<Piece> findPiecesByRoomId(long roomId) throws SQLException {
-        Connection conn = null;
-        Statement ps = null;
-        ResultSet rs = null;
-
-        try {
-            String query = "SELECT * FROM pieces WHERE roomid = " + roomId;
-            conn = this.dataSource.getConnection();
-            ps = conn.createStatement();
-            rs = ps.executeQuery(query);
-
-            List<Piece> result = new ArrayList<>();
-            while (rs.next()) {
-                long id = rs.getLong("id");
-                long roomid = rs.getLong("roomid");
-                char signature = rs.getString("signature").charAt(0);
-                String team = rs.getString("team");
-                String location = rs.getString("location");
-                result.add(Piece.generatePiece(id, roomid, signature, team, location));
-            }
-            if (result.size() == 0) {
-                throw new IllegalArgumentException("[ERROR] 아직 시작되지 않은 방입니다.");
-            }
-            return result;
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-            if (rs != null) {
-                rs.close();
-            }
-        }
+    public List<Piece> findPiecesByRoomId(long roomId) {
+        String sql = "SELECT * FROM pieces WHERE roomid = ?";
+        return this.jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> Piece.generatePiece(
+                        resultSet.getLong("id"),
+                        resultSet.getLong("roomid"),
+                        resultSet.getString("signature").charAt(0),
+                        resultSet.getString("team"),
+                        resultSet.getString("location")
+                ),
+                roomId
+        );
     }
 }

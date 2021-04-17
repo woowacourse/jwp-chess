@@ -82,6 +82,24 @@ class JdbcRoomRepositoryTest {
     }
 
     @Test
+    void findRoomByRoomName() {
+        // given
+        Room room = new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
+        long roomId = repository.insert(room);
+
+        // when
+        Room foundRoom = repository.findRoomByRoomName(room.getName());
+
+        // then
+        assertAll(
+                () -> assertThat(foundRoom.getId()).isEqualTo(roomId),
+                () -> assertThat(foundRoom.getName()).isEqualTo(room.getName()),
+                () -> assertThat(foundRoom.getState().getValue()).isEqualTo(room.getState().getValue()),
+                () -> assertThat(foundRoom.getCurrentTeam()).isEqualTo(room.getCurrentTeam())
+        );
+    }
+
+    @Test
     void isExistRoomName() throws SQLException {
         // given, when
         long roomId = repository.insert(new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));

@@ -93,8 +93,8 @@ const App = function() {
         alert(result.message);
         return;
       }
-      this.renderBoard(result.payload.pieces);
-      this.renderMessage(result.payload);
+      this.renderBoard(result.pieces);
+      this.renderMessage(result);
     })
     .catch(err => alert(err));
   }.bind(this);
@@ -110,8 +110,8 @@ const App = function() {
           alert(result.message);
           return;
         }
-        this.renderBoard(result.payload.pieces);
-        this.renderMessage(result.payload);
+        this.renderBoard(result.pieces);
+        this.renderMessage(result);
       })
       .catch(err => alert(err));
   })
@@ -126,8 +126,8 @@ const App = function() {
           alert(result.message);
           return;
         }
-        this.renderBoard(result.payload.pieces);
-        this.renderMessage(result.payload);
+        this.renderBoard(result.pieces);
+        this.renderMessage(result);
       })
       .catch(err => alert(err));
   })
@@ -142,12 +142,6 @@ const App = function() {
     }
 
     fetch(`http://localhost:8080/room/${roomName}`)
-      .then(response => {
-        if (!response.ok) {
-          console.log(response);
-          throw new Error(response);
-        }
-      })
       .then(response => response.json())
       .then(result => {
         if (result.status === "ERROR" && result.message === "[ERROR] 존재하지 않는 방입니다.") {
@@ -164,10 +158,10 @@ const App = function() {
           return;
         }
         this.roomName = roomName;
-        this.renderBoard(result.payload.pieces);
-        this.renderMessage(result.payload);
+        this.renderBoard(result.pieces);
+        this.renderMessage(result);
       })
-      .catch(err => console.log(err));
+      .catch(err => alert(err));
   }.bind(this);
 }
 

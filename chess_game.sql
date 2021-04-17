@@ -16,4 +16,4 @@ CREATE TABLE chess_game (
     `white_player_score` DECIMAL(7,3) NOT NULL,
     `black_player_score` DECIMAL(7,3) NOT NULL,
     PRIMARY KEY (`chess_game_id`)
-) ENGINE = InnoDB;
+);

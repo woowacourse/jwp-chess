@@ -8,12 +8,11 @@ window.onload = async function () {
     const pieces = response["pieceDtos"];
     const host = response["host"];
     const guest = response["guest"];
-    const game = response["gameResponseDto"];
     const blackScore = response["blackScore"];
     const whiteScore = response["whiteScore"];
 
     initBoard(pieces);
-    fillInformation(host, guest, game, blackScore, whiteScore)
+    fillInformation(host, guest, blackScore, whiteScore)
 }
 
 async function requestData() {
@@ -32,7 +31,7 @@ function initBoard(pieces) {
     addEvent(board);
 }
 
-function fillInformation(host, guest, game, blackScore, whiteScore) {
+function fillInformation(host, guest, blackScore, whiteScore) {
     const blackNameTag = document.querySelector(".name-tag.black");
     blackNameTag.innerHTML = guest["name"];
     const blackRecordTag = document.querySelector(".record-tag.black");
@@ -47,12 +46,11 @@ function fillInformation(host, guest, game, blackScore, whiteScore) {
     const whiteScoreTag = document.querySelector(".status-tag.white");
     whiteScoreTag.innerHTML = whiteScore + " 점";
 
-    fillTurnInfo(game)
+    changeColor()
 }
 
-function fillTurnInfo(game) {
-    document.getElementById("turn").innerHTML = game["turn"] + " 턴 입니다"
-
+function changeColor() {
+    document.querySelector('.bear-piece.white').setAttribute("src", "/img/whiteBear-blue.png")
 }
 
 function addEvent(board) {
@@ -69,5 +67,5 @@ function dropPiece(e, board) {
     const sourcePosition = e.dataTransfer.getData("sourcePosition");
     const piece = board.findPieceBySourcePosition(sourcePosition);
     piece.unhighlight();
-    fillTurnInfo()
+    changeColor()
 }

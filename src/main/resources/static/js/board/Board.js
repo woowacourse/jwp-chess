@@ -145,7 +145,15 @@ export class Board {
             return;
         }
         this.#pieces.move(piece, targetTile)
-        document.getElementById("turn").innerHTML = response["turn"] + " 턴 입니다";
+        if(response["turn"] == "BLACK") {
+            document.querySelector(".bear-piece.white").setAttribute("src", "/img/white-bear-piece.png");
+            document.querySelector(".bear-piece.black").setAttribute("src", "/img/blackBear-blue.png");
+        }else{
+            document.querySelector(".bear-piece.black").setAttribute("src", "/img/black-bear-piece.png");
+            document.querySelector(".bear-piece.white").setAttribute("src", "/img/whiteBear-blue.png")
+        }
+
+
         document.querySelector(".status-tag.black").innerHTML = response["blackScore"] + " 점";
         document.querySelector(".status-tag.white").innerHTML = response["whiteScore"] + " 점";
         if (response["finished"]) {

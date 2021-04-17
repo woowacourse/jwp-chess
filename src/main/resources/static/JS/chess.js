@@ -109,7 +109,7 @@ async function move(from, to) {
     }
 
     if(status === 400) {
-        alert("잘못된 접근입니다!");
+        alert(response.text());
     }
 }
 
@@ -140,7 +140,7 @@ async function changeTurn() {
     }
 
     if(rstatus === 400) {
-        alert("잘못된 접근입니다.");
+        alert(response.text());
     }
 }
 
@@ -207,7 +207,7 @@ async function clickScore() {
     }
 
     if(status === 400) {
-        alert("잘못된 접근입니다!");
+        alert(score.text());
     }
 }
 

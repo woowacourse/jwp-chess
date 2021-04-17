@@ -31,4 +31,5 @@ public class GameRequestDto {
     public long getGuestId() {
         return guestId;
     }
+
 }

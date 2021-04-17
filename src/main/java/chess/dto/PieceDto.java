@@ -35,4 +35,5 @@ public class PieceDto {
     public String getShape() {
         return shape;
     }
+
 }

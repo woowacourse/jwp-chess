@@ -4,7 +4,6 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.piece.Position;
-import chess.dto.MoveRequestDto;
 
 import java.util.List;
 

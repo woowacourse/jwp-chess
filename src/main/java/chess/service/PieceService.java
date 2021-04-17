@@ -41,4 +41,5 @@ public class PieceService {
     public void removeAll(long gameId) {
         pieceDao.deletePieces(gameId);
     }
+
 }

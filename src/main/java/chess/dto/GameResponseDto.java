@@ -35,4 +35,5 @@ public class GameResponseDto {
     public long getGuestId() {
         return guestId;
     }
+
 }

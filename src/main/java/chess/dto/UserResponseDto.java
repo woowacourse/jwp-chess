@@ -31,4 +31,5 @@ public class UserResponseDto {
     public LocalDateTime getCreatedTime() {
         return createdTime;
     }
+
 }

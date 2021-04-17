@@ -38,4 +38,5 @@ public class GameService {
     public RoomResponseDto getRoomNumber() {
         return RoomResponseDto.from(gameDao.getRoomNumbers());
     }
+
 }

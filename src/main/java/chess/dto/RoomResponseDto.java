@@ -21,4 +21,5 @@ public class RoomResponseDto {
     public String getRoomNumbers() {
         return roomNumbers;
     }
+
 }

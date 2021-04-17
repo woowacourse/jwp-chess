@@ -31,4 +31,5 @@ public enum Move {
     public List<MoveCondition> getMoveCondition() {
         return moveConditions;
     }
+
 }

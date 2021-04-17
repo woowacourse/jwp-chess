@@ -27,4 +27,5 @@ public class UserService {
     public UserResponseDto findUserById(long id) {
         return UserResponseDto.from(userDao.selectById(id));
     }
+
 }

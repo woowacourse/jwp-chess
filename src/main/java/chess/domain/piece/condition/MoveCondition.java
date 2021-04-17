@@ -20,4 +20,5 @@ public abstract class MoveCondition {
                                 pieceOnBoard.isSameColor(source.getColor())
                 );
     }
+
 }

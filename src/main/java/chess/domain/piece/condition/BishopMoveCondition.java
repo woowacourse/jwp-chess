@@ -18,7 +18,6 @@ public class BishopMoveCondition extends MoveCondition {
                 isNotChessPieceOutOfBoard(board, target);
     }
 
-
     private boolean isRightMovePath(final Piece piece, final Position target) {
         return Math.abs(piece.getColumn() - target.getColumn())
                 == Math.abs(piece.getRow() - target.getRow());

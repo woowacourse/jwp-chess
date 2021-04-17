@@ -23,4 +23,5 @@ public class MoveRequestDto {
     public String getTarget() {
         return target;
     }
+
 }

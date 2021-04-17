@@ -5,173 +5,173 @@ import {getData, putData} from "../utils/FetchUtil.js"
 const url = "http://localhost:8080";
 
 export class Board {
-  #tiles
-  #pieces
-  #component
-  #sourceTile
+    #tiles
+    #pieces
+    #component
+    #sourceTile
 
-  constructor(pieceDtos) {
-    this.#tiles = new Tiles();
-    this.#pieces = new Pieces(pieceDtos);
-    this.#component = document.querySelector(".grid");
-    this.#sourceTile = null;
-    this.#addEvent()
-  }
-
-  get tiles() {
-    return this.#tiles;
-  }
-
-  get pieces() {
-    return this.#pieces;
-  }
-
-  get component() {
-    return this.#component;
-  }
-
-  get sourceTile() {
-    return this.#sourceTile;
-  }
-
-  #addEvent() {
-    this.#component.addEventListener("dragover", this.#allowDrop);
-    this.#component.addEventListener("dragstart",
-        e => this.#markSourceTile(e, this));
-    this.#component.addEventListener("dragEnd",
-        e => this.#unmarkSourceTile(e, this));
-    this.#component.addEventListener("dragenter",
-        e => this.#enterPiece(e, this));
-    this.#component.addEventListener("dragleave",
-        e => this.#leavePiece(e, this));
-    this.#component.addEventListener("drop", e => this.#dropPiece(e, this));
-  }
-
-  #allowDrop(e) {
-    e.preventDefault()
-  }
-
-  #markSourceTile(e, board) {
-    board.#sourceTile = board.#findTileByPieceComponent(e.target);
-  }
-
-  #findTileByPieceComponent(component) {
-    const piece = this.#pieces.findByComponent(component);
-    return this.#tiles.findByPosition(piece.x, piece.y);
-  }
-
-  #unmarkSourceTile(e, board) {
-    board.#sourceTile = null;
-  }
-
-  async #enterPiece(e, board) {
-    if (!e.target.classList.contains("tile") &&
-        !e.target.classList.contains("piece")) {
-      return;
-    }
-    const targetTile = this.#getTargetTile(e.target, board);
-    const sourceTile = board.#sourceTile;
-    if (sourceTile.same(targetTile)) {
-      return;
-    }
-    const params = {
-      source: board.#sourceTile.component.id,
-      target: targetTile.component.id,
-      color: this.#pieces.findByPosition(sourceTile.x, sourceTile.y).team
+    constructor(pieceDtos) {
+        this.#tiles = new Tiles();
+        this.#pieces = new Pieces(pieceDtos);
+        this.#component = document.querySelector(".grid");
+        this.#sourceTile = null;
+        this.#addEvent()
     }
 
-    const gameId = this.#findGameIdInUri();
-    try {
-      const response = await getData(
-          `${url}/chess/${gameId}/move/check`, params
-      );
-      targetTile.highlight(response["isMovable"]);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  #findGameIdInUri() {
-    const path = window.location.pathname
-    const gameId = path.substr(path.lastIndexOf("/") + 1);
-    return gameId;
-  }
-
-  #getTargetTile(target, board) {
-    if (target.classList.contains("tile")) {
-      return board.#tiles.findByComponent(target);
-    }
-    if (target.classList.contains("piece")) {
-      return board.#findTileByPieceComponent(target);
-    }
-  }
-
-  #leavePiece(e, board) {
-    const copy = e.target;
-    board.#unhighlight(copy);
-  }
-
-  async #dropPiece(e, board) {
-    const sourcePosition = e.dataTransfer.getData("sourcePosition");
-    const piece = board.#pieces.findBySourcePosition(sourcePosition);
-    const sourceTile = board.#tiles.findByPosition(piece.x, piece.y);
-    const targetTile = this.#getTargetTile(e.target, board);
-    if (sourceTile.same(targetTile)) {
-      piece.unhighlight();
-      return;
+    get tiles() {
+        return this.#tiles;
     }
 
-    const params = {
-      source: sourceTile.component.id,
-      target: targetTile.component.id,
-      color: piece.team
+    get pieces() {
+        return this.#pieces;
     }
-    const gameId = this.#findGameIdInUri();
-    const response = await getData(
-        `${url}/chess/${gameId}/move/check`, params);
-    const isMovable = response["isMovable"]
-    if (isMovable) {
-      await this.#requestMove(piece, targetTile, params, gameId);
-    } else {
-      piece.unhighlight();
-    }
-    targetTile.unhighlight();
-  }
 
-  async #requestMove(piece, targetTile, body, gameId) {
-    const response = await putData(
-        `${url}/chess/${gameId}/move`, body);
-    if (!response["success"]) {
-      return;
+    get component() {
+        return this.#component;
     }
-    this.#pieces.move(piece, targetTile)
-    document.getElementById("turn").innerHTML = response["turn"] + " 턴 입니다";
-    document.querySelector(".status-tag.black").innerHTML = response["blackScore"] + " 점";
-    document.querySelector(".status-tag.white").innerHTML = response["whiteScore"] + " 점";
-    if (response["finished"]) {
-      const back = confirm(`게임이 끝났습니다. 확인을 누르면 홈으로 돌아갑니다.`)
-      if (back) {
-        window.location.href = "/";
-      }
-    }
-  }
 
-  #unhighlight(target) {
-    if (target.classList.contains("tile")) {
-      const tile = this.#tiles.findById(target.id);
-      window.setTimeout(function () {
-        tile.unhighlight.call(tile);
-      }, 50);
+    get sourceTile() {
+        return this.#sourceTile;
     }
-    if (target.classList.contains("piece")) {
-      const tile = this.#findTileByPieceComponent(target);
-      window.setTimeout(function () {
-        tile.unhighlight.call(tile);
-      }, 50);
-    }
-  }
 
-  findPieceBySourcePosition(sourcePosition) {
-    return this.#pieces.findBySourcePosition(sourcePosition);
-  }
+    #addEvent() {
+        this.#component.addEventListener("dragover", this.#allowDrop);
+        this.#component.addEventListener("dragstart",
+            e => this.#markSourceTile(e, this));
+        this.#component.addEventListener("dragEnd",
+            e => this.#unmarkSourceTile(e, this));
+        this.#component.addEventListener("dragenter",
+            e => this.#enterPiece(e, this));
+        this.#component.addEventListener("dragleave",
+            e => this.#leavePiece(e, this));
+        this.#component.addEventListener("drop", e => this.#dropPiece(e, this));
+    }
+
+    #allowDrop(e) {
+        e.preventDefault()
+    }
+
+    #markSourceTile(e, board) {
+        board.#sourceTile = board.#findTileByPieceComponent(e.target);
+    }
+
+    #findTileByPieceComponent(component) {
+        const piece = this.#pieces.findByComponent(component);
+        return this.#tiles.findByPosition(piece.x, piece.y);
+    }
+
+    #unmarkSourceTile(e, board) {
+        board.#sourceTile = null;
+    }
+
+    async #enterPiece(e, board) {
+        if (!e.target.classList.contains("tile") &&
+            !e.target.classList.contains("piece")) {
+            return;
+        }
+        const targetTile = this.#getTargetTile(e.target, board);
+        const sourceTile = board.#sourceTile;
+        if (sourceTile.same(targetTile)) {
+            return;
+        }
+        const params = {
+            source: board.#sourceTile.component.id,
+            target: targetTile.component.id,
+            color: this.#pieces.findByPosition(sourceTile.x, sourceTile.y).team
+        }
+
+        const gameId = this.#findGameIdInUri();
+        try {
+            const response = await getData(
+                `${url}/chess/${gameId}/move/check`, params
+            );
+            targetTile.highlight(response["isMovable"]);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    #findGameIdInUri() {
+        const path = window.location.pathname
+        const gameId = path.substr(path.lastIndexOf("/") + 1);
+        return gameId;
+    }
+
+    #getTargetTile(target, board) {
+        if (target.classList.contains("tile")) {
+            return board.#tiles.findByComponent(target);
+        }
+        if (target.classList.contains("piece")) {
+            return board.#findTileByPieceComponent(target);
+        }
+    }
+
+    #leavePiece(e, board) {
+        const copy = e.target;
+        board.#unhighlight(copy);
+    }
+
+    async #dropPiece(e, board) {
+        const sourcePosition = e.dataTransfer.getData("sourcePosition");
+        const piece = board.#pieces.findBySourcePosition(sourcePosition);
+        const sourceTile = board.#tiles.findByPosition(piece.x, piece.y);
+        const targetTile = this.#getTargetTile(e.target, board);
+        if (sourceTile.same(targetTile)) {
+            piece.unhighlight();
+            return;
+        }
+
+        const params = {
+            source: sourceTile.component.id,
+            target: targetTile.component.id,
+            color: piece.team
+        }
+        const gameId = this.#findGameIdInUri();
+        const response = await getData(
+            `${url}/chess/${gameId}/move/check`, params);
+        const isMovable = response["isMovable"]
+        if (isMovable) {
+            await this.#requestMove(piece, targetTile, params, gameId);
+        } else {
+            piece.unhighlight();
+        }
+        targetTile.unhighlight();
+    }
+
+    async #requestMove(piece, targetTile, body, gameId) {
+        const response = await putData(
+            `${url}/chess/${gameId}/move`, body);
+        if (!response["success"]) {
+            return;
+        }
+        this.#pieces.move(piece, targetTile)
+        document.getElementById("turn").innerHTML = response["turn"] + " 턴 입니다";
+        document.querySelector(".status-tag.black").innerHTML = response["blackScore"] + " 점";
+        document.querySelector(".status-tag.white").innerHTML = response["whiteScore"] + " 점";
+        if (response["finished"]) {
+            const back = confirm(`게임이 끝났습니다. 확인을 누르면 홈으로 돌아갑니다.`)
+            if (back) {
+                window.location.href = "/";
+            }
+        }
+    }
+
+    #unhighlight(target) {
+        if (target.classList.contains("tile")) {
+            const tile = this.#tiles.findById(target.id);
+            window.setTimeout(function () {
+                tile.unhighlight.call(tile);
+            }, 50);
+        }
+        if (target.classList.contains("piece")) {
+            const tile = this.#findTileByPieceComponent(target);
+            window.setTimeout(function () {
+                tile.unhighlight.call(tile);
+            }, 50);
+        }
+    }
+
+    findPieceBySourcePosition(sourcePosition) {
+        return this.#pieces.findBySourcePosition(sourcePosition);
+    }
 }

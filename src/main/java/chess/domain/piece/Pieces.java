@@ -3,7 +3,6 @@ package chess.domain.piece;
 import chess.domain.board.Board;
 import chess.domain.exception.NoSuchPermittedChessPieceException;
 
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;

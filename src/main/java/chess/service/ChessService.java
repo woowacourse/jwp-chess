@@ -64,7 +64,7 @@ public class ChessService {
         if (board.isKingCatch()) {
             gameService.endGame(gameId, true);
             pieceService.removeAll(gameId);
-            return new MoveResponseDto(true, true, gameService.getTurn(gameId),board.getBlackScore(), board.getWhiteScore());
+            return new MoveResponseDto(true, true, gameService.getTurn(gameId), board.getBlackScore(), board.getWhiteScore());
         }
         gameService.changeTurn(gameId);
 
@@ -83,4 +83,5 @@ public class ChessService {
 
         return new Board(pieces);
     }
+
 }

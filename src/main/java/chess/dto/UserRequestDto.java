@@ -25,4 +25,5 @@ public class UserRequestDto {
     public User toEntity() {
         return new User(0L, name, password, LocalDateTime.now());
     }
+
 }

@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.dto.GameResponseDto;
 import chess.entity.Game;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;

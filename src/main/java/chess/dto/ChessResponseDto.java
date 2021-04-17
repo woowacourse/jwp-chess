@@ -43,4 +43,5 @@ public class ChessResponseDto {
     public double getWhiteScore() {
         return whiteScore;
     }
+
 }

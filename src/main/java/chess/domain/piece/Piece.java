@@ -73,15 +73,6 @@ public class Piece {
     }
 
     public boolean isSamePosition(final Position position) {
-//        System.out.println("=====================================");
-//        System.out.println("=====================================");
-//        System.out.println("=====================================");
-//        System.out.println(position.toString());
-//        System.out.println(this.position.toString());
-//        System.out.println(this.position.equals(position));
-//        System.out.println("=====================================");
-//        System.out.println("=====================================");
-//        System.out.println("=====================================");
         return this.position.equals(position);
     }
 
@@ -139,14 +130,6 @@ public class Piece {
         result = 31 * result + (shape != null ? shape.hashCode() : 0);
         result = 31 * result + (position != null ? position.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return String.join(":",
-                shape.getNotation(color),
-                String.valueOf(position.getRow()),
-                String.valueOf(position.getColumn()));
     }
 
     public String getColorValue() {

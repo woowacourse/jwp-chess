@@ -26,4 +26,5 @@ public class GameController {
     public ResponseEntity<RoomResponseDto> getRooms() {
         return ResponseEntity.ok(gameService.getRoomNumber());
     }
+
 }

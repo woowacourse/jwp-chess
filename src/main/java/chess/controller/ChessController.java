@@ -35,12 +35,15 @@ public class ChessController {
 
     @GetMapping("/{gameId}/move/check")
     public ResponseEntity<Map<String, Boolean>> checkMovement(@PathVariable long gameId, MoveRequestDto moveRequestDto) {
-        final Map<String, Boolean> responseData = Collections.singletonMap("isMovable", chessService.checkMovement(gameId, moveRequestDto));
+        final Map<String, Boolean> responseData =
+                Collections.singletonMap("isMovable", chessService.checkMovement(gameId, moveRequestDto));
         return ResponseEntity.ok().body(responseData);
     }
 
     @PutMapping("/{gameId}/move")
-    public ResponseEntity<MoveResponseDto> move(@PathVariable long gameId, @RequestBody MoveRequestDto moveRequestDto) {
+    public ResponseEntity<MoveResponseDto> move(
+            @PathVariable long gameId,
+            @RequestBody MoveRequestDto moveRequestDto) {
         return ResponseEntity.ok().body(chessService.move(gameId, moveRequestDto));
     }
 

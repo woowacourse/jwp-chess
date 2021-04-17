@@ -137,9 +137,9 @@ function updateStatus(currentStatus) {
     whiteScore.innerText = currentStatus.whiteScore;
     turn.removeChild(turn.children[0]);
     if (currentStatus.turn === "BLACK") {
-        turn.insertAdjacentHTML("beforeend", "<img src=\"./img/black_turn.png\">");
+        turn.insertAdjacentHTML("beforeend", "<img src=\"../img/black_turn.png\">");
     } else {
-        turn.insertAdjacentHTML("beforeend", "<img src=\"./img/white_turn.png\">");
+        turn.insertAdjacentHTML("beforeend", "<img src=\"../img/white_turn.png\">");
     }
 }
 

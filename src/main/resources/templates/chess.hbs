@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Woowa Kingdom Chess</title>
-    <link rel="stylesheet" type="text/css" href="css/chess.css">
+    <link rel="stylesheet" type="text/css" href="/css/chess.css">
 </head>
 <body>
 <div id="total">
-    <input id="room-id" type="hidden" value={{number}}>
+    <input id="room-id" type="hidden" value={{id}}>
     <div id="top">
         <p>Woowa Kingdom Chess</p>
         <p style="color: red">{{error}}</p>
@@ -90,7 +90,7 @@
         </div>
         <div id="status">
             <div class="score">
-                <img src="./img/black_team.png">
+                <img src="/img/black_team.png">
                 <div class="information">
                     <p class="nickname">
                         {{users.blackUser}}
@@ -102,13 +102,13 @@
             </div>
             <div id="turn">
                 {{#if isWhite}}
-                <img src="./img/white_turn.png">
+                <img src="/img/white_turn.png">
                 {{else}}
-                <img src="./img/black_turn.png">
+                <img src="/img/black_turn.png">
                 {{/if}}
             </div>
             <div class="score">
-                <img src="./img/white_team.png">
+                <img src="/img/white_team.png">
                 <div class="information">
                     <p class="nickname">
                         {{users.whiteUser}}
@@ -119,27 +119,19 @@
                 </div>
             </div>
             <div id="bottom">
-                <form action="/" method="get">
-                    <input type="submit" value="나가기">
-                </form>
-                <form action="start" method="post">
-                    <input type="hidden" name="roomId" value={{number}}>
-                    <input id="init-button" type="submit" value={{button}}>
-                </form>
-                <form action="continue" method="post">
-                    <input type="hidden" name="roomId" value={{number}}>
-                    <input type="submit" value="이어하기">
-                </form>
+                <button onclick="location.href='/'">나가기</button>
+                <button onclick="location.href='/start/' + {{id}}">{{button}}</button>
+                <button onclick="location.href='/continue/' + {{id}}">이어하기</button>
             </div>
         </div>
     </div>
 </div>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript" src="js/chess.js"></script>
+<script type="text/javascript" src="/js/chess.js"></script>
 <script type="text/javascript">
     {{#pieces}}
     document.getElementById("{{position}}")
-        .insertAdjacentHTML("beforeend", "<img src=./img/pieces/{{team}}_{{initial}}.png>");
+        .insertAdjacentHTML("beforeend", "<img src=/img/pieces/{{team}}_{{initial}}.png>");
     {{/pieces}}
 </script>
 </body>

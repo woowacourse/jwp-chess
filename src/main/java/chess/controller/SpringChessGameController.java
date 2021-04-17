@@ -57,8 +57,8 @@ public final class SpringChessGameController {
         return true;
     }
 
-    @GetMapping("/enter")
-    private String enterRoom(@RequestParam final String id, final Model model) {
+    @GetMapping("/enter/{id}")
+    private String enterRoom(@PathVariable final String id, final Model model) {
         try {
             model.addAttribute("number", id);
             model.addAttribute("button", "새로운게임");
@@ -70,27 +70,25 @@ public final class SpringChessGameController {
         return "chess";
     }
 
-    @PostMapping(path = "/start")
-    private String startGame(@ModelAttribute final RoomIdDTO roomIdDTO, final Model model) {
+    @GetMapping(path = "/start/{id}")
+    private String startGame(@PathVariable final String id, final Model model) {
         ChessGame chessGame = new ChessGame();
         chessGame.initialize();
-        String roomId = roomIdDTO.getRoomId();
-        rooms.addRoom(roomId, chessGame);
-        logService.initializeByRoomId(roomId);
-        UsersDTO users = userService.usersParticipatedInGame(roomId);
-        gameInformation(rooms.loadGameByRoomId(roomId), model, roomId, users);
+        rooms.addRoom(id, chessGame);
+        logService.initializeByRoomId(id);
+        UsersDTO users = userService.usersParticipatedInGame(id);
+        gameInformation(rooms.loadGameByRoomId(id), model, id, users);
         return "chess";
     }
 
-    @PostMapping(path = "/continue")
-    private String continueGame(@ModelAttribute final RoomIdDTO roomIdDTO, final Model model) {
-        String roomId = roomIdDTO.getRoomId();
-        ChessGame chessGame = rooms.loadGameByRoomId(roomId);
+    @GetMapping(path = "/continue/{id}")
+    private String continueGame(@PathVariable final String id, final Model model) {
+        ChessGame chessGame = rooms.loadGameByRoomId(id);
         chessGame.initialize();
-        List<Movement> logs = logService.logByRoomId(roomId);
+        List<Movement> logs = logService.logByRoomId(id);
         logService.executeLog(logs, chessGame);
-        UsersDTO users = userService.usersParticipatedInGame(roomId);
-        gameInformation(rooms.loadGameByRoomId(roomId), model, roomId, users);
+        UsersDTO users = userService.usersParticipatedInGame(id);
+        gameInformation(rooms.loadGameByRoomId(id), model, id, users);
         return "chess";
     }
 
@@ -102,7 +100,7 @@ public final class SpringChessGameController {
         model.addAttribute("isWhite", Team.WHITE.equals(chessGame.turn()));
         model.addAttribute("black-score", chessGame.scoreByTeam(Team.BLACK));
         model.addAttribute("white-score", chessGame.scoreByTeam(Team.WHITE));
-        model.addAttribute("number", roomId);
+        model.addAttribute("id", roomId);
         model.addAttribute("users", users);
     }
 
@@ -156,7 +154,6 @@ public final class SpringChessGameController {
     }
 
     @ExceptionHandler(DataAccessException.class)
-    @ResponseBody
     private ResponseEntity dataAccessExceptionHandle(DataAccessException e) {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)

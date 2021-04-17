@@ -181,11 +181,11 @@
     const img = document.createElement('img');
     img.addEventListener('click', (event) => {
       if (!is_start_position_clicked) {
-        start_position = event.target.id;
+        start_position = event.target.parentElement.id;
         is_start_position_clicked = true;
         return;
       }
-      destination = event.target.id;
+      destination = event.target.parentElement.id;
       request_move_post();
     });
     img.style.width = '100%';

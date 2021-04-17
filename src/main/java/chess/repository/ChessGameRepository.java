@@ -1,6 +1,6 @@
 package chess.repository;
 
-import chess.domain.ChessGame;
+import chess.domain.game.ChessGame;
 import java.util.List;
 
 public interface ChessGameRepository {

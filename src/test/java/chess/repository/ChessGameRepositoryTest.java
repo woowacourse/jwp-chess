@@ -3,7 +3,7 @@ package chess.repository;
 import static chess.utils.TestFixture.TEST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.domain.ChessGame;
+import chess.domain.game.ChessGame;
 import chess.domain.color.type.TeamColor;
 import chess.domain.position.Position;
 import java.util.List;

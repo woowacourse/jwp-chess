@@ -1,6 +1,7 @@
 package chess.controller.dto.response;
 
-import chess.domain.ChessGame;
+import chess.domain.board.score.Scores;
+import chess.domain.game.ChessGame;
 
 public class GameStatusResponseDto {
 
@@ -19,8 +20,9 @@ public class GameStatusResponseDto {
         this.beforeTurnTeamColorName = chessGame.getOppositeTurnTeamColorName();
         this.currentTurnTeamColorName = chessGame.getCurrentTurnTeamColorName();
         this.boardStatus = chessGame.getBoardStatus();
-        this.whitePlayerScore = chessGame.getWhitePlayerScore();
-        this.blackPlayerScore = chessGame.getBlackPlayerScore();
+        Scores scores = chessGame.getScores();
+        this.whitePlayerScore = scores.getWhitePlayerScore();
+        this.blackPlayerScore = scores.getBlackPlayerScore();
         this.isKingDead = chessGame.isKingDead();
     }
 

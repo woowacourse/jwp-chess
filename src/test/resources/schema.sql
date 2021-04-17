@@ -5,7 +5,5 @@ CREATE TABLE chess_game (
     `title` VARCHAR(255) NOT NULL,
     `board_status` VARCHAR(255) NOT NULL,
     `current_turn_team_color` VARCHAR(255) NOT NULL,
-    `white_player_score` DECIMAL(7,3) NOT NULL,
-    `black_player_score` DECIMAL(7,3) NOT NULL,
     PRIMARY KEY (`chess_game_id`)
 );

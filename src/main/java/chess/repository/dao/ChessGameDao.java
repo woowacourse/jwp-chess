@@ -1,7 +1,7 @@
 package chess.repository.dao;
 
 
-import chess.domain.ChessGame;
+import chess.domain.game.ChessGame;
 import chess.repository.ChessGameRepository;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -33,16 +33,14 @@ public class ChessGameDao implements ChessGameRepository {
     @Override
     public Long save(ChessGame chessGame) {
         String query = "INSERT INTO chess_game "
-            + "(title, board_status, current_turn_team_color, white_player_score, black_player_score) "
-            + "VALUES (?, ?, ?, ?, ?)";
+            + "(title, board_status, current_turn_team_color) "
+            + "VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, new String[]{"chess_game_id"});
             ps.setString(1, chessGame.getTitle());
             ps.setString(2, chessGame.getBoardStatus());
             ps.setString(3, chessGame.getCurrentTurnTeamColor().getValue());
-            ps.setDouble(4, chessGame.getWhitePlayerScore());
-            ps.setDouble(5, chessGame.getBlackPlayerScore());
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -65,15 +63,11 @@ public class ChessGameDao implements ChessGameRepository {
         String query = "UPDATE chess_game "
             + "SET "
             + "board_status = ?, "
-            + "current_turn_team_color = ?, "
-            + "white_player_score = ?, "
-            + "black_player_score = ? "
+            + "current_turn_team_color = ? "
             + "WHERE chess_game_id = ?";
         jdbcTemplate.update(query,
             chessGame.getBoardStatus(),
             chessGame.getCurrentTurnTeamColorValue(),
-            chessGame.getWhitePlayerScore(),
-            chessGame.getBlackPlayerScore(),
             chessGame.getId());
     }
 

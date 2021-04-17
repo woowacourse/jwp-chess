@@ -1,7 +1,7 @@
 package chess.controller.dto.response;
 
 
-import chess.domain.ChessGame;
+import chess.domain.game.ChessGame;
 
 public class ChessGameResponseDto {
 

@@ -1,4 +1,4 @@
-package chess.domain;
+package chess.domain.game;
 
 import chess.domain.board.Board;
 import chess.domain.board.move.MoveRequest;
@@ -24,8 +24,6 @@ public class ChessGame {
     private final String title;
     private String boardStatus;
     private TeamColor currentTurnTeamColor;
-    private double whitePlayerScore;
-    private double blackPlayerScore;
     private final Board board;
 
     public ChessGame(Long id, String title, String boardStatus, String currentTurnTeamColor, double whitePlayerScore, double blackPlayerScore) {
@@ -33,8 +31,6 @@ public class ChessGame {
         this.title = title;
         this.boardStatus = boardStatus;
         this.currentTurnTeamColor = TeamColor.of(currentTurnTeamColor);
-        this.whitePlayerScore = whitePlayerScore;
-        this.blackPlayerScore = blackPlayerScore;
         this.board = new Board(boardStatus);
     }
 
@@ -54,34 +50,23 @@ public class ChessGame {
         return boardStatus;
     }
 
+    public void movePiece(Position startPosition, Position destination) {
+        MoveRequest moveRequest = new MoveRequest(currentTurnTeamColor, startPosition, destination);
+        board.movePiece(moveRequest);
+        boardStatus = board.getBoardStatus();
+        currentTurnTeamColor = currentTurnTeamColor.oppositeTeamColor();
+    }
+
     public TeamColor getCurrentTurnTeamColor() {
         return currentTurnTeamColor;
-    }
-
-    public double getWhitePlayerScore() {
-        return whitePlayerScore;
-    }
-
-    public double getBlackPlayerScore() {
-        return blackPlayerScore;
     }
 
     public boolean isKingDead() {
         return board.isKingDead();
     }
 
-    public void movePiece(Position startPosition, Position destination) {
-        MoveRequest moveRequest = new MoveRequest(currentTurnTeamColor, startPosition, destination);
-        board.movePiece(moveRequest);
-        updateScores();
-        boardStatus = board.getBoardStatus();
-        currentTurnTeamColor = currentTurnTeamColor.oppositeTeamColor();
-    }
-
-    private void updateScores() {
-        Scores scores = board.getScores();
-        whitePlayerScore = scores.getWhitePlayerScore();
-        blackPlayerScore = scores.getBlackPlayerScore();
+    public Scores getScores() {
+        return board.getScores();
     }
 
     public String getCurrentTurnTeamColorValue() {

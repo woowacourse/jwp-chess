@@ -4,7 +4,7 @@ import chess.controller.dto.request.MoveRequestDTO;
 import chess.controller.dto.response.ChessGameResponseDto;
 import chess.controller.dto.response.GameStatusResponseDto;
 import chess.controller.dto.response.MoveResponseDto;
-import chess.domain.ChessGame;
+import chess.domain.game.ChessGame;
 import chess.domain.position.Position;
 import chess.repository.ChessGameRepository;
 import java.util.List;

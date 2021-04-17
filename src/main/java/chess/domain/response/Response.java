@@ -1,8 +1,5 @@
 package chess.domain.response;
 
-import java.util.Collection;
-import java.util.List;
-
 public class Response {
     private StatusEnum status;
     private Object data;

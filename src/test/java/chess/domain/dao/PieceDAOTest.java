@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,7 +48,7 @@ public class PieceDAOTest {
 
     @Test
     @DisplayName("체스 말의 정보를 정상적으로 업데이트 하는 지 테스트")
-    public void updatePiece() throws SQLException {
+    public void updatePiece() {
         long gridId = 1L;
         Piece piece = new Pawn(Color.BLACK, 'a', '3');
         long pieceId = pieceDao.createPiece(gridId, piece);

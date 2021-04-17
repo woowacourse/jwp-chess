@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +56,7 @@ public class PieceDAO {
                 gridId);
     }
 
-    public void updatePiece(long pieceId, boolean isBlack, char name) throws SQLException {
+    public void updatePiece(long pieceId, boolean isBlack, char name) {
         String query = "UPDATE piece SET isBlack = ?, name = ?  WHERE pieceId = ?";
         jdbcTemplate.update(query, isBlack, String.valueOf(name), pieceId);
     }

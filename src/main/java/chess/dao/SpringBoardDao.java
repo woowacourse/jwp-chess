@@ -28,12 +28,12 @@ public class SpringBoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Map<Position, Piece> initBoardTable(String roomName) {
+    public Board initBoard(String roomName) {
         try {
             return findBoard(roomName);
         } catch (DataAccessException e) {
             newBoard(roomName);
-            return initBoardTable(roomName);
+            return initBoard(roomName);
         }
     }
 
@@ -50,16 +50,16 @@ public class SpringBoardDao {
         this.jdbcTemplate.update(query, boardPositionSet(board.getBoard()), boardPieceSet(board.getBoard()), turn, roomName);
     }
 
-    public Map<Position, Piece> findBoard(String roomName) {
+    public Board findBoard(String roomName) {
         String query = "select * from board where roomName=?";
         try {
-            return this.jdbcTemplate.queryForObject(
+            return new Board(this.jdbcTemplate.queryForObject(
                     query,
                     (resultSet, rowNum) -> daoToBoard(
                             resultSet.getString("position"),
                             resultSet.getString("pieceName")
                     ),
-                    roomName);
+                    roomName));
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
             return null;

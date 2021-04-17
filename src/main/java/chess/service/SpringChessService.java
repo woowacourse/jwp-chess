@@ -32,7 +32,7 @@ public class SpringChessService {
     }
 
     public Map<String, String> currentBoardByRoomName(String roomName) {
-        Map<Position, Piece> board = springBoardDao.initBoardTable(roomName);
+        Map<Position, Piece> board = springBoardDao.initBoard(roomName).getBoard();
         Map<String, String> boardName = new LinkedHashMap<>();
         for (Position position : board.keySet()) {
             String positionName = position.positionName();
@@ -42,7 +42,7 @@ public class SpringChessService {
     }
 
     public ResponseDTO move(PositionDTO positionDTO, String roomName) {
-        Board board = new Board(springBoardDao.findBoard(roomName));
+        Board board = springBoardDao.findBoard(roomName);
         try {
             return moveExecute(positionDTO, board, roomName);
         } catch (ChessException e) {
@@ -102,7 +102,7 @@ public class SpringChessService {
     }
 
     public ScoreDTO score(String roomName) {
-        Board board = new Board(springBoardDao.findBoard(roomName));
+        Board board = springBoardDao.findBoard(roomName);
         return new ScoreDTO(String.valueOf(board.score(Side.WHITE)), String.valueOf(board.score(Side.BLACK)));
     }
 }

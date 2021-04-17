@@ -62,15 +62,16 @@ public abstract class AbstractPiece implements Piece {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof AbstractPiece)) {
             return false;
         }
         AbstractPiece that = (AbstractPiece) o;
-        return color == that.color;
+        return getColor() == that.getColor() &&
+                Objects.equals(directionGroup, that.directionGroup);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(color);
+        return Objects.hash(getColor(), directionGroup);
     }
 }

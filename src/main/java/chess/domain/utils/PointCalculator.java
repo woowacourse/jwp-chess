@@ -11,7 +11,8 @@ import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 public class PointCalculator {
-    private PointCalculator() {}
+    private PointCalculator() {
+    }
 
     public static double calculate(Map<Position, Piece> chessBoard, Team team) {
         return chessBoard.values().stream()

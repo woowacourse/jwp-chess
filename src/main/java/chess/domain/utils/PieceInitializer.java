@@ -42,7 +42,8 @@ public class PieceInitializer {
         initPieceExceptPawn(PIECE_INFO);
     }
 
-    private PieceInitializer() {}
+    private PieceInitializer() {
+    }
 
     public static Map<Position, Piece> pieceInfo() {
         return new LinkedHashMap<>(PIECE_INFO);

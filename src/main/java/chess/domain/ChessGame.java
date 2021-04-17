@@ -4,12 +4,10 @@ import chess.domain.board.Board;
 import chess.domain.board.Path;
 import chess.domain.board.Team;
 import chess.domain.command.Commands;
-import chess.dto.BoardDto;
-import chess.dto.CommandDto;
-import chess.dto.PointDto;
 import chess.domain.state.Ready;
 import chess.domain.state.Running;
 import chess.domain.state.State;
+import chess.dto.CommandDto;
 import chess.view.OutputView;
 
 import java.util.EnumMap;

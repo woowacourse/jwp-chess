@@ -2,13 +2,10 @@ package chess.controller.web;
 
 import chess.chessgame.domain.manager.ChessGameManager;
 import chess.controller.web.dto.ChessGameResponseDto;
-import chess.controller.web.dto.ErrorMessageResponseDto;
 import chess.controller.web.dto.MoveRequestDto;
 import chess.controller.web.dto.MoveResponseDto;
 import chess.controller.web.dto.ScoreResponseDto;
 import chess.service.ChessService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,10 +42,5 @@ public class GameController {
     public MoveResponseDto movePiece(@RequestBody MoveRequestDto moveMessage) {
         chessService.move(moveMessage);
         return new MoveResponseDto(chessService.isEnd(moveMessage.getGameId()), chessService.nextColor(moveMessage.getGameId()));
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorMessageResponseDto> handle(RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ErrorMessageResponseDto(e.getMessage()));
     }
 }

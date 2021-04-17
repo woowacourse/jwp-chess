@@ -1,4 +1,4 @@
-package chess;
+package chess.domain.board;
 
 public enum BoardSize {
     BOUND(0, 7);

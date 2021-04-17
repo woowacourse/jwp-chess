@@ -1,16 +1,15 @@
 package chess.controller;
 
-import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
+import java.util.stream.Stream;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 class CommandTest {
 
@@ -42,12 +41,9 @@ class CommandTest {
         // given
         String command = "test";
 
-        // when
-        ThrowableAssert.ThrowingCallable callable =
-                () -> Command.findCommandByInputCommand(command);
-
         // then
-        assertThatIllegalArgumentException().isThrownBy(callable)
-                                            .withMessage("메뉴에 없는 커맨드입니다. 다시 입력해주세요.");
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> Command.findCommandByInputCommand(command))
+                .withMessage("메뉴에 없는 커맨드입니다. 다시 입력해주세요.");
     }
 }

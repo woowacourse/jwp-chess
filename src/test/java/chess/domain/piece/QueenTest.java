@@ -1,9 +1,5 @@
 package chess.domain.piece;
 
-import org.assertj.core.api.ThrowableAssert;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -12,14 +8,14 @@ import chess.domain.board.Board;
 import chess.domain.chess.Chess;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class QueenTest {
 
     private final Queen queen = Queen.WHITE_INSTANCE;
     private final Position sourcePosition = Position.from("d1");
-    private final Board board = Chess.createWithEmptyBoard()
-                                     .start()
-                                     .getBoard();
+    private final Board board = Chess.createWithEmptyBoard().start().getBoard();
 
     @Test
     @DisplayName("대각선 1칸 이동 검사")
@@ -30,12 +26,9 @@ public class QueenTest {
         final Board newBoard = BoardUtils.put(board, targetPosition, Blank.INSTANCE);
         final MovePosition movePosition = new MovePosition(sourcePosition, targetPosition);
 
-        // when
-        ThrowableAssert.ThrowingCallable callable =
-                () -> queen.checkToMoveToTargetPosition(movePosition, newBoard);
-
         // then
-        assertThatCode(callable).doesNotThrowAnyException();
+        assertThatCode(() -> queen.checkToMoveToTargetPosition(movePosition, newBoard))
+                .doesNotThrowAnyException();
     }
 
     @Test
@@ -47,12 +40,9 @@ public class QueenTest {
         final Position targetPosition = Position.from("a4");
         final MovePosition movePosition = new MovePosition(sourcePosition, targetPosition);
 
-        // when
-        ThrowableAssert.ThrowingCallable callable =
-                () -> queen.checkToMoveToTargetPosition(movePosition, newBoard);
-
         // then
-        assertThatCode(callable).doesNotThrowAnyException();
+        assertThatCode(() -> queen.checkToMoveToTargetPosition(movePosition, newBoard))
+                .doesNotThrowAnyException();
     }
 
 
@@ -65,12 +55,9 @@ public class QueenTest {
         final Board newBoard = BoardUtils.put(board, targetPosition, Blank.INSTANCE);
         final MovePosition movePosition = new MovePosition(sourcePosition, targetPosition);
 
-        // when
-        ThrowableAssert.ThrowingCallable callable =
-                () -> queen.checkToMoveToTargetPosition(movePosition, newBoard);
-
         // then
-        assertThatCode(callable).doesNotThrowAnyException();
+        assertThatCode(() -> queen.checkToMoveToTargetPosition(movePosition, newBoard))
+                .doesNotThrowAnyException();
     }
 
     @Test
@@ -82,12 +69,9 @@ public class QueenTest {
         final Position targetPosition = Position.from("d4");
         final MovePosition movePosition = new MovePosition(sourcePosition, targetPosition);
 
-        // when
-        ThrowableAssert.ThrowingCallable callable =
-                () -> queen.checkToMoveToTargetPosition(movePosition, newBoard);
-
         // then
-        assertThatCode(callable).doesNotThrowAnyException();
+        assertThatCode(() -> queen.checkToMoveToTargetPosition(movePosition, newBoard))
+                .doesNotThrowAnyException();
     }
 
     @Test
@@ -98,13 +82,9 @@ public class QueenTest {
         final Position targetPosition = Position.from("b2");
         final MovePosition movePosition = new MovePosition(sourcePosition, targetPosition);
 
-        // when
-        ThrowableAssert.ThrowingCallable callable =
-                () -> queen.checkToMoveToTargetPosition(movePosition, board);
-
-
         // then
-        assertThatIllegalArgumentException().isThrownBy(callable);
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> queen.checkToMoveToTargetPosition(movePosition, board));
     }
 
     @Test
@@ -115,14 +95,10 @@ public class QueenTest {
         final Position targetPosition = Position.from("d3");
         final MovePosition movePosition = new MovePosition(sourcePosition, targetPosition);
 
-        // when
-        ThrowableAssert.ThrowingCallable callable =
-                () -> queen.checkToMoveToTargetPosition(movePosition, board);
-
-
         // then
-        assertThatIllegalArgumentException().isThrownBy(callable)
-                                            .withMessage("이동하는 경로 사이에 기물이 있습니다.");
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> queen.checkToMoveToTargetPosition(movePosition, board))
+                .withMessage("이동하는 경로 사이에 기물이 있습니다.");
     }
 
     @Test

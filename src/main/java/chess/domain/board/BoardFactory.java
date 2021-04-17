@@ -1,8 +1,5 @@
 package chess.domain.board;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import chess.domain.chess.Color;
 import chess.domain.piece.Bishop;
 import chess.domain.piece.Blank;
@@ -13,6 +10,8 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
 import chess.domain.position.Position;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BoardFactory {
 
@@ -25,7 +24,8 @@ public class BoardFactory {
     private static final int BLANK_START_INDEX = 2;
     private static final int BLANK_END_INDEX = 5;
 
-    private BoardFactory() {}
+    private BoardFactory() {
+    }
 
     private static void createBlanks(Map<Position, Piece> board, int minIndex, int maxIndex) {
         for (int yPoint = minIndex; yPoint <= maxIndex; yPoint++) {
@@ -40,6 +40,7 @@ public class BoardFactory {
     }
 
     public static class InitializedBoard {
+
         public static Board create() {
             final Map<Position, Piece> board = new HashMap<>();
             createNonPawns(board, MIN_INDEX, Color.WHITE);
@@ -69,6 +70,7 @@ public class BoardFactory {
     }
 
     public static class EmptyBoard {
+
         public static Board create() {
             final Map<Position, Piece> board = new HashMap<>();
             createBlanks(board, MIN_INDEX, MAX_INDEX);

@@ -1,9 +1,5 @@
 package chess.domain.piece;
 
-import org.assertj.core.api.ThrowableAssert;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -11,6 +7,9 @@ import chess.domain.board.Board;
 import chess.domain.chess.Chess;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
+import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class BlankTest {
 
@@ -23,8 +22,8 @@ class BlankTest {
         Position sourcePosition = Position.from("a3");
         Position targetPosition = Position.from("a4");
         Board board = Chess.createWithEmptyBoard()
-                           .start()
-                           .getBoard();
+                .start()
+                .getBoard();
 
         final MovePosition movePosition = new MovePosition(sourcePosition, targetPosition);
 
@@ -34,7 +33,7 @@ class BlankTest {
 
         // then
         assertThatThrownBy(callable).isInstanceOf(UnsupportedOperationException.class)
-                                    .hasMessage("선택한 위치는 빈 칸입니다.");
+                .hasMessage("선택한 위치는 빈 칸입니다.");
     }
 
     @Test

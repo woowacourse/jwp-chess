@@ -1,9 +1,5 @@
 package chess.domain.piece;
 
-import org.assertj.core.api.ThrowableAssert;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -12,14 +8,17 @@ import chess.domain.board.Board;
 import chess.domain.chess.Chess;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
+import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class KingTest {
 
     private final King king = King.WHITE_INSTANCE;
     private final Position sourcePosition = Position.from("e1");
     private final Board board = Chess.createWithEmptyBoard()
-                                     .start()
-                                     .getBoard();
+            .start()
+            .getBoard();
 
     @Test
     @DisplayName("대각선 1칸 이동 검사")
@@ -53,7 +52,7 @@ class KingTest {
 
         // then
         assertThatIllegalArgumentException().isThrownBy(callable)
-                                            .withMessage("기물이 이동할 수 없는 위치입니다.");
+                .withMessage("기물이 이동할 수 없는 위치입니다.");
     }
 
     @Test
@@ -88,7 +87,7 @@ class KingTest {
 
         // then
         assertThatIllegalArgumentException().isThrownBy(callable)
-                                            .withMessage("기물이 이동할 수 없는 위치입니다.");
+                .withMessage("기물이 이동할 수 없는 위치입니다.");
     }
 
     @Test
@@ -105,7 +104,7 @@ class KingTest {
 
         // then
         assertThatIllegalArgumentException().isThrownBy(callable)
-                                            .withMessage("기물이 이동할 수 없는 위치입니다.");
+                .withMessage("기물이 이동할 수 없는 위치입니다.");
     }
 
     @Test

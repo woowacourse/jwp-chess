@@ -1,5 +1,6 @@
-package chess.controller;
+package chess;
 
+import chess.controller.Command;
 import chess.domain.chess.Chess;
 import chess.domain.chess.Color;
 import chess.domain.position.MovePosition;
@@ -7,6 +8,7 @@ import chess.view.InputView;
 import chess.view.OutputView;
 
 public class ConsoleChessApplication {
+
     public static void main(String[] args) {
         OutputView.printStart();
 

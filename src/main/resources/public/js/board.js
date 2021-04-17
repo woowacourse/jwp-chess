@@ -28,7 +28,8 @@ const PATCH = {
 async function buildBoard() {
     let $board = document.getElementById("board");
     if ($board == null) {
-        document.querySelector("body").insertAdjacentHTML("afterbegin", build());
+        document.querySelector("body")
+        .insertAdjacentHTML("afterbegin", build());
         $board = document.getElementById("board");
     }
     $board.addEventListener("click", onMove);
@@ -36,10 +37,10 @@ async function buildBoard() {
     $board.addEventListener("mouseout", onRevertSquareColor);
 
     const data = await showChessInfo();
-    const boardDTO = data.boardDTO;
-    inputImageAtBoard(boardDTO.pieceDTOS);
-    $blackScore.textContent = boardDTO.blackScore;
-    $whiteScore.textContent = boardDTO.whiteScore;
+    const boardDto = data.boardDto;
+    inputImageAtBoard(boardDto.pieceDtos);
+    $blackScore.textContent = boardDto.blackScore;
+    $whiteScore.textContent = boardDto.whiteScore;
     borderCurrentTurn(data.turn);
 }
 
@@ -64,17 +65,20 @@ async function showChessInfo() {
 }
 
 function getCookie(name) {
-    return document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1];
+    return document.cookie
+    .split("; ")
+    .find(row => row.startsWith(name))
+    .split("=")[1];
 }
 
 function inputImageAtBoard(pieces) {
     Array.from(pieces)
-        .filter(piece => piece.name !== "BLANK")
-        .forEach(piece => {
-            const position = piece.position;
-            const pieceName = piece.color + "_" + piece.name;
-            document.getElementById(position).innerHTML = PIECES[pieceName];
-        });
+    .filter(piece => piece.name !== "BLANK")
+    .forEach(piece => {
+        const position = piece.position;
+        const pieceName = piece.color + "_" + piece.name;
+        document.getElementById(position).innerHTML = PIECES[pieceName];
+    });
 }
 
 async function onMove(event) {
@@ -118,7 +122,9 @@ function winner(turn) {
 }
 
 async function patchMovePiece(chessId, source, target) {
-    const response = await fetch('/chess/' + chessId + '?source=' + source + '&target=' + target, PATCH);
+    const response = await fetch(
+            '/chess/' + chessId + '?source=' + source + '&target=' + target,
+            PATCH);
     return response.ok;
 }
 

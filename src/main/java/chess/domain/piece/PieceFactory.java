@@ -1,9 +1,8 @@
 package chess.domain.piece;
 
+import chess.domain.chess.Color;
 import java.util.Arrays;
 import java.util.function.Function;
-
-import chess.domain.chess.Color;
 
 public enum PieceFactory {
     BISHOP("BISHOP", Bishop::from),
@@ -17,8 +16,7 @@ public enum PieceFactory {
     private final String name;
     private final Function<Color, Piece> pieceFunction;
 
-    PieceFactory(String name,
-                 Function<Color, Piece> pieceFunction) {
+    PieceFactory(String name, Function<Color, Piece> pieceFunction) {
         this.name = name;
         this.pieceFunction = pieceFunction;
     }
@@ -30,8 +28,8 @@ public enum PieceFactory {
 
     private static PieceFactory findPieceFactoryByName(String name) {
         return Arrays.stream(PieceFactory.values())
-                     .filter(pieceFactory -> pieceFactory.name.equals(name))
-                     .findAny()
-                     .orElseThrow(() -> new IllegalArgumentException("잘못된 피스의 이름입니다."));
+                .filter(pieceFactory -> pieceFactory.name.equals(name))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 피스의 이름입니다."));
     }
 }

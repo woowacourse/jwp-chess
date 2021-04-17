@@ -1,8 +1,7 @@
 package chess.domain.position;
 
+import chess.domain.board.BoardSize;
 import java.util.Objects;
-
-import chess.BoardSize;
 
 public class Point {
 

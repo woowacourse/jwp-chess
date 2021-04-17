@@ -1,10 +1,5 @@
 package chess.domain.piece;
 
-import org.assertj.core.api.ThrowableAssert;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -13,6 +8,10 @@ import chess.domain.board.Board;
 import chess.domain.chess.Chess;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
+import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class BishopTest {
 
@@ -23,8 +22,8 @@ class BishopTest {
     @BeforeEach
     void setUp() {
         board = Chess.createWithEmptyBoard()
-                     .start()
-                     .getBoard();
+                .start()
+                .getBoard();
     }
 
     @Test
@@ -75,7 +74,7 @@ class BishopTest {
 
         // then
         assertThatIllegalArgumentException().isThrownBy(callable)
-                                            .withMessage("기물이 이동할 수 없는 위치입니다.");
+                .withMessage("기물이 이동할 수 없는 위치입니다.");
     }
 
     @Test

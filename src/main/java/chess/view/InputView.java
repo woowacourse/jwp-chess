@@ -14,6 +14,6 @@ public class InputView {
 
     public static String[] askPositions() {
         return SCANNER.nextLine()
-                      .split(BLANK);
+                .split(BLANK);
     }
 }

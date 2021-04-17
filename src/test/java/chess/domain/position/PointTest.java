@@ -1,11 +1,11 @@
 package chess.domain.position;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 class PointTest {
 
@@ -29,6 +29,6 @@ class PointTest {
 
         // then
         assertThatIllegalArgumentException().isThrownBy(callable)
-                                            .withMessage("인덱스는 0이상 7이하이어야 합니다.");
+                .withMessage("인덱스는 0이상 7이하이어야 합니다.");
     }
 }

@@ -1,11 +1,12 @@
 package chess.domain.piece;
 
-public class PieceDTO {
+public class PieceDto {
+
     private final String position;
     private final String color;
     private final String name;
 
-    public PieceDTO(String position, String color, String name) {
+    public PieceDto(String position, String color, String name) {
         this.position = position;
         this.color = color;
         this.name = name;

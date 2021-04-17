@@ -1,22 +1,21 @@
 package chess.domain.chess;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import chess.service.ChessService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import chess.service.ChessService;
-
 @SpringBootTest
-public class ChessDAOTest {
+public class ChessDaoTest {
 
-    private final ChessDAO chessDAO;
+    private final ChessDao chessDAO;
     private final Long chessId;
 
     @Autowired
-    public ChessDAOTest(ChessDAO chessDAO, ChessService chessService) {
+    public ChessDaoTest(ChessDao chessDAO, ChessService chessService) {
         this.chessDAO = chessDAO;
         chessId = chessService.insert();
     }
@@ -27,14 +26,14 @@ public class ChessDAOTest {
 
         // when
         final Chess chess = chessDAO.findChessById(chessId);
-        final ChessDTO chessDTO = new ChessDTO(chess);
+        final ChessDto chessDTO = new ChessDto(chess);
 
         // then
         assertThat(chessDTO.getStatus()).isEqualTo("RUNNING");
         assertThat(chessDTO.getTurn()).isEqualTo("WHITE");
-        assertThat(chessDTO.getBoardDTO()
-                           .getPieceDTOS()).size()
-                                           .isEqualTo(64);
+        assertThat(chessDTO.getBoarDto()
+                .getPieceDtos()).size()
+                .isEqualTo(64);
     }
 
     @DisplayName("초기 체스판 삽입 테스트")
@@ -57,7 +56,7 @@ public class ChessDAOTest {
 
         // then
         final Chess chess = chessDAO.findChessById(chessId);
-        final ChessDTO chessDTO = new ChessDTO(chess);
+        final ChessDto chessDTO = new ChessDto(chess);
         assertThat(chessDTO.getStatus()).isEqualTo("KING_DEAD");
         assertThat(chessDTO.getTurn()).isEqualTo("BLACK");
     }

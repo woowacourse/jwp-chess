@@ -1,11 +1,5 @@
 package chess.domain.board;
 
-import java.util.Map;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.chess.Chess;
@@ -16,6 +10,10 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class BoardTest {
 
@@ -25,8 +23,7 @@ public class BoardTest {
 
     @BeforeEach
     void setUp() {
-        chess = Chess.createWithEmptyBoard()
-                     .start();
+        chess = Chess.createWithEmptyBoard().start();
         board = chess.getBoard();
     }
 

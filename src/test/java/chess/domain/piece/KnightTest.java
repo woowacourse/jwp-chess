@@ -1,9 +1,5 @@
 package chess.domain.piece;
 
-import org.assertj.core.api.ThrowableAssert;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -12,13 +8,17 @@ import chess.domain.board.Board;
 import chess.domain.chess.Chess;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
+import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class KnightTest {
+
     private final Knight knight = Knight.WHITE_INSTANCE;
     private final Position sourcePosition = Position.from("b1");
     private final Board board = Chess.createWithEmptyBoard()
-                                     .start()
-                                     .getBoard();
+            .start()
+            .getBoard();
 
     @Test
     @DisplayName("이동 검사")
@@ -47,7 +47,6 @@ class KnightTest {
         // when
         ThrowableAssert.ThrowingCallable callable =
                 () -> knight.checkToMoveToTargetPosition(movePosition, board);
-
 
         // then
         assertThatIllegalArgumentException().isThrownBy(callable);

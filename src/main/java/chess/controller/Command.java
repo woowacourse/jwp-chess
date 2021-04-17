@@ -1,9 +1,9 @@
 package chess.controller;
 
+import chess.ConsoleChessApplication;
+import chess.domain.chess.Chess;
 import java.util.Arrays;
 import java.util.function.UnaryOperator;
-
-import chess.domain.chess.Chess;
 
 public enum Command {
     START("start", ConsoleChessApplication::start),
@@ -24,9 +24,9 @@ public enum Command {
 
     public static Command findCommandByInputCommand(String inputCommand) {
         return Arrays.stream(Command.values())
-                     .filter(commandMenu -> commandMenu.command.equals(inputCommand))
-                     .findAny()
-                     .orElseThrow(() -> new IllegalArgumentException(ERROR_COMMAND_CANNOT_FIND));
+                .filter(commandMenu -> commandMenu.command.equals(inputCommand))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException(ERROR_COMMAND_CANNOT_FIND));
     }
 
     public Chess execute(Chess chess) {

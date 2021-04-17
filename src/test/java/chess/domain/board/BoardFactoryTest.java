@@ -1,15 +1,5 @@
 package chess.domain.board;
 
-import java.util.Map;
-import java.util.stream.Stream;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.piece.Bishop;
@@ -21,6 +11,14 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
 import chess.domain.position.Position;
+import java.util.Map;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class BoardFactoryTest {
 
@@ -33,8 +31,7 @@ public class BoardFactoryTest {
         final int whiteRow = 8;
 
         // when
-        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create()
-                                                                            .getBoard();
+        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create().getBoard();
 
         // then
         assertThat(chessBord.get(Position.from(file + blackRow))).isInstanceOf(pieceClass);
@@ -59,8 +56,7 @@ public class BoardFactoryTest {
     void initializedPawnTest() {
 
         // when
-        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create()
-                                                                            .getBoard();
+        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create().getBoard();
 
         // then
         for (int i = 0; i < 8; i++) {
@@ -79,8 +75,7 @@ public class BoardFactoryTest {
     void initializedBlankTest(int rank) {
 
         // when
-        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create()
-                                                                            .getBoard();
+        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create().getBoard();
 
         // then
         for (int i = 0; i < 8; i++) {
@@ -94,8 +89,7 @@ public class BoardFactoryTest {
     void initializedBlankTest() {
 
         // when
-        final Map<Position, Piece> chessBord = BoardFactory.EmptyBoard.create()
-                                                                      .getBoard();
+        final Map<Position, Piece> chessBord = BoardFactory.EmptyBoard.create().getBoard();
 
         // then
         for (int i = 0; i < 8; i++) {

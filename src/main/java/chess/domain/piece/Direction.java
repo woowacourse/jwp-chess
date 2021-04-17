@@ -1,9 +1,8 @@
 package chess.domain.piece;
 
+import chess.domain.position.Position;
 import java.util.Arrays;
 import java.util.List;
-
-import chess.domain.position.Position;
 
 public enum Direction {
     NORTH(0, 1), NORTHEAST(1, 1),

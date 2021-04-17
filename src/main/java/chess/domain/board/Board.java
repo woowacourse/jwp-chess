@@ -1,9 +1,5 @@
 package chess.domain.board;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
@@ -11,10 +7,13 @@ import chess.domain.chess.Color;
 import chess.domain.chess.Status;
 import chess.domain.piece.Blank;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceDTO;
+import chess.domain.piece.PieceDto;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Board {
 
@@ -31,12 +30,12 @@ public class Board {
         this.board = board;
     }
 
-    public static Board from(List<PieceDTO> pieceDTOS) {
+    public static Board from(List<PieceDto> pieceDtos) {
         final Map<Position, Piece> board = new HashMap<>();
-        for (PieceDTO pieceDTO : pieceDTOS) {
-            Color color = Color.valueOf(pieceDTO.getColor());
-            Position position = Position.from(pieceDTO.getPosition());
-            Piece piece = PieceFactory.create(pieceDTO.getName(), color);
+        for (PieceDto pieceDto : pieceDtos) {
+            Color color = Color.valueOf(pieceDto.getColor());
+            Position position = Position.from(pieceDto.getPosition());
+            Piece piece = PieceFactory.create(pieceDto.getName(), color);
             board.put(position, piece);
         }
         return new Board(board);
@@ -91,18 +90,18 @@ public class Board {
 
     private double sumDefaultScoresOfBoard(Color color) {
         return board.values()
-                    .stream()
-                    .filter(piece -> piece.isSameColorAs(color))
-                    .mapToDouble(Piece::getScore)
-                    .sum();
+                .stream()
+                .filter(piece -> piece.isSameColorAs(color))
+                .mapToDouble(Piece::getScore)
+                .sum();
     }
 
     private double sumOptionScoresOfPawns(Color color) {
         return countPawnAtColumn(color).values()
-                                       .stream()
-                                       .filter(this::isSeveralPawnExist)
-                                       .mapToDouble(this::changePawnScoreToHalf)
-                                       .reduce(DEFAULT_SUM_OF_PAWN_OPTION_SCORE, Double::sum);
+                .stream()
+                .filter(this::isSeveralPawnExist)
+                .mapToDouble(this::changePawnScoreToHalf)
+                .reduce(DEFAULT_SUM_OF_PAWN_OPTION_SCORE, Double::sum);
     }
 
     private boolean isSeveralPawnExist(Long pawnCont) {
@@ -115,10 +114,10 @@ public class Board {
 
     private Map<Integer, Long> countPawnAtColumn(Color color) {
         return board.entrySet()
-                    .stream()
-                    .filter(entry -> isPawnOfColor(color, entry.getValue()))
-                    .collect(groupingBy(entry -> entry.getKey()
-                                                      .getX(), counting()));
+                .stream()
+                .filter(entry -> isPawnOfColor(color, entry.getValue()))
+                .collect(groupingBy(entry -> entry.getKey()
+                        .getX(), counting()));
     }
 
     private boolean isPawnOfColor(Color Color, Piece piece) {

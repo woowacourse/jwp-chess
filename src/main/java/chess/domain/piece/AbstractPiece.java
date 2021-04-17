@@ -1,11 +1,10 @@
 package chess.domain.piece;
 
-import java.util.Objects;
-
 import chess.domain.board.Board;
 import chess.domain.chess.Color;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
+import java.util.Objects;
 
 public abstract class AbstractPiece implements Piece {
 
@@ -35,7 +34,7 @@ public abstract class AbstractPiece implements Piece {
     }
 
     protected void checkObstacleExistsAtDirection(MovePosition movePosition, Direction direction,
-                                                  Board board) {
+            Board board) {
         Position sourcePosition = movePosition.getSourcePosition();
         sourcePosition = direction.addDegreeTo(sourcePosition);
         while (sourcePosition.isInRange() && !movePosition.isArrived(sourcePosition)) {

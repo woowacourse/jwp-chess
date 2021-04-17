@@ -1,9 +1,5 @@
 package chess.domain.piece;
 
-import org.assertj.core.api.ThrowableAssert;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -12,13 +8,17 @@ import chess.domain.board.Board;
 import chess.domain.chess.Chess;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
+import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class PawnTest {
+
     private final Pawn pawn = Pawn.WHITE_INSTANCE;
     private final Position sourcePosition = Position.from("a2");
     private final Board board = Chess.createWithEmptyBoard()
-                                     .start()
-                                     .getBoard();
+            .start()
+            .getBoard();
 
     @Test
     @DisplayName("1칸 전진 테스트")
@@ -154,7 +154,7 @@ class PawnTest {
 
         // then
         assertThatIllegalArgumentException().isThrownBy(callable)
-                                            .withMessage("이동하는 경로 사이에 기물이 있습니다.");
+                .withMessage("이동하는 경로 사이에 기물이 있습니다.");
     }
 
     @Test

@@ -1,18 +1,16 @@
 package chess.domain.board;
 
-import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.domain.chess.Chess;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import chess.domain.chess.Chess;
-
-class SymbolBoardDTOTest {
+class SymbolBoardDtoTest {
 
     @ParameterizedTest(name = "폰이 아닌 기물의 심볼 보드 테스트")
     @MethodSource("generateNonPawnSource")
@@ -20,13 +18,13 @@ class SymbolBoardDTOTest {
 
         // given
         Chess chess = Chess.createWithEmptyBoard()
-                           .start();
+                .start();
         final int blackRow = 7;
         final int whiteRow = 0;
 
         // when
-        final String[][] board = SymbolBoardDTO.from(chess)
-                                               .getBoard();
+        final String[][] board = SymbolBoardDto.from(chess)
+                .getBoard();
 
         // then
         assertThat(board[file][blackRow]).isEqualTo(symbol.toUpperCase());
@@ -52,13 +50,13 @@ class SymbolBoardDTOTest {
 
         // given
         Chess chess = Chess.createWithEmptyBoard()
-                           .start();
+                .start();
         final int blackRow = 6;
         final int whiteRow = 1;
 
         // when
-        final String[][] board = SymbolBoardDTO.from(chess)
-                                               .getBoard();
+        final String[][] board = SymbolBoardDto.from(chess)
+                .getBoard();
 
         // then
         for (int i = 0; i < 8; i++) {
@@ -78,8 +76,8 @@ class SymbolBoardDTOTest {
         Chess chess = Chess.createWithEmptyBoard();
 
         // when
-        final String[][] board = SymbolBoardDTO.from(chess)
-                                               .getBoard();
+        final String[][] board = SymbolBoardDto.from(chess)
+                .getBoard();
 
         // then
         for (int i = 0; i < 8; i++) {

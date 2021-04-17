@@ -1,9 +1,9 @@
 package chess.domain.piece;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import chess.domain.position.MovePosition;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DirectionGroup {
 
@@ -18,13 +18,13 @@ public class DirectionGroup {
     }
 
     public static DirectionGroup empty() {
-        return new DirectionGroup(new ArrayList<>(), 0);
+        return new DirectionGroup(Collections.emptyList(), 0);
     }
 
     public Direction findDirection(MovePosition movePosition) {
         return directionGroup.stream()
-                             .filter(direction -> movePosition.canMove(direction, movableLength))
-                             .findAny()
-                             .orElseThrow(() -> new IllegalArgumentException(ERROR_CAN_NOT_MOVE));
+                .filter(direction -> movePosition.canMove(direction, movableLength))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException(ERROR_CAN_NOT_MOVE));
     }
 }

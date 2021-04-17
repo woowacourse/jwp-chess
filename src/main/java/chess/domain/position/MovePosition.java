@@ -1,11 +1,10 @@
 package chess.domain.position;
 
+import chess.domain.chess.Color;
+import chess.domain.piece.Direction;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import chess.domain.chess.Color;
-import chess.domain.piece.Direction;
 
 public class MovePosition {
 
@@ -57,9 +56,9 @@ public class MovePosition {
 
     private static List<String> trimAndExceptBlank(String[] input) {
         return Arrays.stream(input)
-                     .filter(position -> !isBlank(position))
-                     .map(String::trim)
-                     .collect(Collectors.toList());
+                .filter(position -> !isBlank(position))
+                .map(String::trim)
+                .collect(Collectors.toList());
     }
 
     private static boolean isSizeMismatch(List<String> positions) {

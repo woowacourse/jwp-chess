@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.domain.chess.ChessDTO;
+import chess.domain.chess.ChessDto;
 import chess.domain.position.MovePosition;
 import chess.service.ChessService;
 import com.google.gson.Gson;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/chess")
 public class ChessController {
+
     private static final Gson GSON = new Gson();
 
     private final ChessService chessService;
@@ -28,8 +29,8 @@ public class ChessController {
     @GetMapping("/{chessId}")
     @ResponseBody
     public String chessInfo(@PathVariable long chessId) {
-        ChessDTO chessDTO = chessService.getChessGame(chessId);
-        return GSON.toJson(chessDTO);
+        ChessDto chessDto = chessService.getChessGame(chessId);
+        return GSON.toJson(chessDto);
     }
 
     @GetMapping("/{chessId}/view")
@@ -37,7 +38,7 @@ public class ChessController {
         return "/chess.html";
     }
 
-    @PostMapping("")
+    @PostMapping
     @ResponseBody
     public String newChessGame(HttpServletResponse response) {
         Long chessId = chessService.insert();

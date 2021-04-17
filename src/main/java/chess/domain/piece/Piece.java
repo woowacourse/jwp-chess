@@ -5,6 +5,7 @@ import chess.domain.chess.Color;
 import chess.domain.position.MovePosition;
 
 public interface Piece {
+
     void checkToMoveToTargetPosition(MovePosition movePosition, Board board);
 
     boolean isSameColorAs(Color color);

@@ -1,13 +1,12 @@
 package chess.domain.piece;
 
-import org.assertj.core.api.ThrowableAssert;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 import chess.domain.position.MovePosition;
+import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class DirectionGroupTest {
 
@@ -19,7 +18,7 @@ class DirectionGroupTest {
     void findDirection() {
 
         // given
-        MovePosition movePosition = MovePosition.from(new String[] {"e1", "e2"});
+        MovePosition movePosition = MovePosition.from(new String[]{"e1", "e2"});
 
         // when
         final Direction direction = directionGroupOfKing.findDirection(movePosition);
@@ -33,7 +32,7 @@ class DirectionGroupTest {
     void findDirection_CannotMove_ExceptionThrown() {
 
         // given
-        MovePosition movePosition = MovePosition.from(new String[] {"e1", "e3"});
+        MovePosition movePosition = MovePosition.from(new String[]{"e1", "e3"});
 
         // when
         ThrowableAssert.ThrowingCallable callable =
@@ -41,6 +40,6 @@ class DirectionGroupTest {
 
         // then
         assertThatIllegalArgumentException().isThrownBy(callable)
-                                            .withMessage("기물이 이동할 수 없는 위치입니다.");
+                .withMessage("기물이 이동할 수 없는 위치입니다.");
     }
 }

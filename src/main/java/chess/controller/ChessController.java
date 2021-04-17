@@ -3,6 +3,7 @@ package chess.controller;
 import chess.domain.ChessGame;
 import chess.domain.dto.BoardDto;
 import chess.domain.dto.MoveInfoDto;
+import chess.domain.dto.ResponseDto;
 import chess.domain.dto.ScoreDto;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
@@ -43,7 +44,13 @@ public class ChessController {
 
     @PostMapping("/move")
     @ResponseBody
-    public BoardDto move(@RequestBody MoveInfoDto moveInfoDto) {
+    public ResponseDto move(@RequestBody MoveInfoDto moveInfoDto) {
         return chessService.move(chessGame, moveInfoDto);
+    }
+
+    @GetMapping("/move")
+    @ResponseBody
+    public BoardDto getCurrentBoard() {
+        return chessService.getCurrentBoard(chessGame);
     }
 }

@@ -61,9 +61,7 @@ function clickDiv(e) {
 }
 
 async function movePiece(targetPosition, destinationPosition) {
-    const boardInfo = await sendMoveInformation(targetPosition, destinationPosition);
-    checkGameOver(boardInfo.gameOverFlag);
-    renewBoard(boardInfo.boardInfo);
+    await sendMoveInformation(targetPosition, destinationPosition);
 }
 
 function checkGameOver(gameOverFlag) {
@@ -79,17 +77,37 @@ async function sendMoveInformation(targetPosition, destinationPosition) {
         target: targetPosition,
         destination: destinationPosition
     }
+    await moveInformation(bodyValue);
+}
 
-    let boardInformation = await fetch("/move", {
+async function moveInformation(bodyValue) {
+    const response = await fetch("/move", {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Accept': 'application/json'
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(bodyValue)
-    })
-    boardInformation = await boardInformation.json();
-    return boardInformation;
+    }).then(res => res.json());
+
+    if (response.code === "400") {
+        alert(response.message);
+        return;
+    }
+
+    if (response.code === "200") {
+        const board = await fetch("/move"
+        ).then(res => res.json());
+
+        checkGameOver(board.gameOverFlag);
+        renewBoard(board.boardInfo);
+    }
+}
+
+function renewBoard(boardInfo) {
+    Object.keys(boardInfo).forEach(function (value) {
+        let eachDiv = document.querySelector("#" + value);
+        eachDiv.innerHTML = boardInfo[value];
+    });
 }
 
 function getBoardColor(index, color) {
@@ -107,13 +125,6 @@ function getBoardColor(index, color) {
         resultColor = white;
     }
     return resultColor;
-}
-
-async function renewBoard(boardInfo) {
-    Object.keys(boardInfo).forEach(function (value) {
-        let eachDiv = document.querySelector("#" + value);
-        eachDiv.innerHTML = boardInfo[value];
-    });
 }
 
 async function resetBoard() {

@@ -29,12 +29,16 @@ public class BoardDto {
                 boardInfo.put(info.getKey().convertToString(), info.getValue().getUnicode());
             }
         }
-        Boolean gameOverFlag = getGameOverFlag(board);
+        Boolean gameOverFlag = checkGameOverFlag(board);
         return new BoardDto(boardInfo, gameOverFlag);
     }
 
-    private static Boolean getGameOverFlag(Board board) {
+    private static Boolean checkGameOverFlag(Board board) {
         return board.isAnyKingDead();
+    }
+
+    public boolean getGameOverFlag() {
+        return gameOverFlag;
     }
 
     public static BoardDto of(Map<String, String> boardInfo) {

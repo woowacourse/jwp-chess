@@ -65,7 +65,7 @@ public class ChessServiceImpl implements ChessService {
 
     @Override
     public void move(MoveRequestDto moveRequestDto) {
-        move(moveRequestDto.getId(), moveRequestDto.getFromPosition(), moveRequestDto.getToPosition());
+        move(moveRequestDto.getGameId(), moveRequestDto.getFromPosition(), moveRequestDto.getToPosition());
     }
 
     @Override

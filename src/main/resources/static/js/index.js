@@ -18,7 +18,7 @@ $loadBtn.addEventListener("click", onClickLoadBtn);
 
 async function getPieces(url) {
     const piecesData = await getFetch(url, chessGameId);
-    chessGameId = piecesData.id;
+    chessGameId = piecesData.gameId;
     await findGames();
     await calculateScore();
     setBoard(piecesData.piecesAndPositions);
@@ -26,7 +26,7 @@ async function getPieces(url) {
 }
 
 async function movePiece(from, to) {
-    const moveResult = await postFetch("/game/move", {id: chessGameId, from: from, to: to});
+    const moveResult = await postFetch("/game/move", {gameId: chessGameId, from: from, to: to});
     if (moveResult.hasOwnProperty("end") && moveResult.end === true) {
         alert("게임이 종료되었습니다~!");
         findGames();

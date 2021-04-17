@@ -1,16 +1,16 @@
 package chess.controller.web.dto;
 
 public class SaveRequestDto {
-    private final long id;
+    private final long gameId;
     private final String pieces;
 
-    public SaveRequestDto(long id, String pieces) {
-        this.id = id;
+    public SaveRequestDto(long gameId, String pieces) {
+        this.gameId = gameId;
         this.pieces = pieces;
     }
 
-    public long getId() {
-        return id;
+    public long getGameId() {
+        return gameId;
     }
 
     public String getPieces() {

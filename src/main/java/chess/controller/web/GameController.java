@@ -30,14 +30,14 @@ public class GameController {
         return new ChessGameResponseDto(chessService.start());
     }
 
-    @GetMapping("/score/{id}")
-    public ScoreResponseDto getScore(@PathVariable long id) {
-        return new ScoreResponseDto(chessService.getStatistics(id));
+    @GetMapping("/score/{gameId}")
+    public ScoreResponseDto getScore(@PathVariable long gameId) {
+        return new ScoreResponseDto(chessService.getStatistics(gameId));
     }
 
-    @GetMapping("/load/{id:[\\d]+}")
-    public ChessGameResponseDto loadGame(@PathVariable long id) {
-        ChessGameManager load = chessService.load(id);
+    @GetMapping("/load/{gameId:[\\d]+}")
+    public ChessGameResponseDto loadGame(@PathVariable long gameId) {
+        ChessGameManager load = chessService.load(gameId);
         return new ChessGameResponseDto(load);
     }
 

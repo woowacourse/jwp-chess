@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class SpringChessController {
     @Autowired
-    ChessService chessService;
+    private ChessService chessService;
 
     @GetMapping("/room")
     public ResponseEntity<List<RoomDto>> loadAllRoom() {

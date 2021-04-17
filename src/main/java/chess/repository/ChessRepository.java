@@ -21,13 +21,13 @@ import java.util.Map;
 @Service
 public class ChessRepository {
     @Autowired
-    RoomDao roomDao;
+    private RoomDao roomDao;
     @Autowired
-    GameDao gameDao;
+    private GameDao gameDao;
     @Autowired
-    TeamDao teamDao;
+    private TeamDao teamDao;
     @Autowired
-    PieceDao pieceDao;
+    private PieceDao pieceDao;
 
     public void createRoom(final ChessGame chessGame, final Room room) {
         Long gameId = gameDao.create(chessGame);

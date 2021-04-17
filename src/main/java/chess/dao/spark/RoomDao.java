@@ -18,7 +18,7 @@ public class RoomDao {
     }
 
     public String insert(RoomDto roomDto) {
-        String query = "INSERT INTO room (name, is_opened, white, black) VALUES(?, true, ?, ?)";
+        String query = "INSERT INTO rooms (name, is_opened, white, black) VALUES(?, true, ?, ?)";
 
         try (Connection connection = chessDataSource.connection();
             PreparedStatement pstmt = connection
@@ -38,7 +38,7 @@ public class RoomDao {
     }
 
     public List<RoomDto> openedRooms() {
-        String query = "SELECT id, name, white, black FROM room WHERE is_opened = true";
+        String query = "SELECT id, name, white, black FROM rooms WHERE is_opened = true";
 
         try (Connection connection = chessDataSource.connection();
             PreparedStatement pstmt = connection.prepareStatement(query);
@@ -56,7 +56,7 @@ public class RoomDao {
     }
 
     public void close(String roomId) {
-        String query = "UPDATE room SET is_opened = false WHERE id = (?)";
+        String query = "UPDATE rooms SET is_opened = false WHERE id = (?)";
 
         try (Connection connection = chessDataSource.connection();
             PreparedStatement pstmt = connection.prepareStatement(query);) {

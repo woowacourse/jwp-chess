@@ -21,7 +21,7 @@ public class PlayLogDao {
     }
 
     public void insert(BoardDto boardDto, GameStatusDto gameStatusDto, String roomId) {
-        String query = "INSERT INTO play_log (board, game_status, room_id) VALUES (?, ?, ?)";
+        String query = "INSERT INTO play_logs (board, game_status, room_id) VALUES (?, ?, ?)";
 
         try (Connection connection = chessDataSource.connection();
             PreparedStatement pstmt = connection.prepareStatement(query);) {
@@ -35,7 +35,7 @@ public class PlayLogDao {
     }
 
     public BoardDto latestBoard(String roomId) {
-        String query = "SELECT board FROM play_log WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
+        String query = "SELECT board FROM play_logs WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
 
         try (Connection connection = chessDataSource.connection();
             PreparedStatement pstmt = connection.prepareStatement(query);) {
@@ -54,7 +54,7 @@ public class PlayLogDao {
     }
 
     public GameStatusDto latestGameStatus(String roomId) {
-        String query = "SELECT game_status FROM play_log WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
+        String query = "SELECT game_status FROM play_logs WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
 
         try (Connection connection = chessDataSource.connection();
             PreparedStatement pstmt = connection.prepareStatement(query);) {

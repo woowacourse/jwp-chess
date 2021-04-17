@@ -39,7 +39,7 @@ public class UserDao {
             + " black_user.win AS blackWin,"
             + " black_user.lose AS blackLose "
             + "FROM"
-            + " room AS r"
+            + " rooms AS r"
             + " INNER JOIN users AS black_user ON r.black = black_user.name"
             + " INNER JOIN users AS white_user ON r.white = white_user.name "
             + "WHERE r.id = ?;";

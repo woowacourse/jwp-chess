@@ -52,4 +52,10 @@ public class Path {
     public boolean targetEquals(Position position) {
         return target.equals(position);
     }
+
+    public void validateSourceLocatedAtStartLine() {
+        if (!source.isLocatedAtStartLine()) {
+            throw new IllegalArgumentException("[ERROR] 폰은 처음에만 두 칸 이동할 수 있습니다.");
+        }
+    }
 }

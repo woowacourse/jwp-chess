@@ -1,7 +1,6 @@
 package chess.domain.piece;
 
 import chess.domain.board.*;
-import chess.domain.utils.MoveValidator;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +42,9 @@ public abstract class AbstractPiece implements Piece {
         final Strategy strategy = strategy();
         strategy.moveTowards(direction);
         final int distance = path.computeDistance();
-        MoveValidator.validateDistance(distance, strategy.moveRange());
+        if (distance > strategy.moveRange()) {
+            throw new IllegalArgumentException("[ERROR] 이동할 수 있는 거리를 벗어났습니다.");
+        }
         return generatePaths(path, direction, distance);
     }
 

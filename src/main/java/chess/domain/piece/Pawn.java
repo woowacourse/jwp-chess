@@ -1,7 +1,6 @@
 package chess.domain.piece;
 
 import chess.domain.board.*;
-import chess.domain.utils.MoveValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,22 +54,35 @@ public class Pawn extends AbstractPiece {
     public List<Position> generate(Path path, boolean target) {
         final Direction direction = path.computeDirection();
         final Strategy strategy = strategy();
-        strategy.moveTowards(direction); // 전략 상 갈 수 있는 방향인지 확인함.
+        strategy.moveTowards(direction);
         final int distance = path.computeDistance();
-
-        if (path.isDiagonal()) { // 대각 방향이면서 목적지에 상대팀의 말이 존재하는 경우
-            // 이동가능한지 확인 -> 불가능하면 터뜨린다.
-            MoveValidator.validateDiagonalMove(distance, Pawn.DIAGONAL_MOVE_RANGE, target);
-            // 이동 가능하면 그냥 빈 배열을 전달한다.
+        if (path.isDiagonal()) {
+            validateDiagonalMove(target, strategy, distance);
             return new ArrayList<>();
         }
-
-        // 2칸 초과인지 확인.
-        MoveValidator.validateStraightMove(distance);
+        validateMoveRange(distance);
         if (distance == Pawn.MOVE_FIRST_RANGE) {
-            MoveValidator.validatePawnLocation(path.source());
+            path.validateSourceLocatedAtStartLine();
         }
         return super.generatePaths(path, direction, distance + 2);
     }
 
+    private void validateMoveRange(int distance) {
+        if (distance > Pawn.MOVE_FIRST_RANGE) {
+            throw new IllegalArgumentException("[ERROR] 폰은 두 칸 초과 움직일 수 없습니다.");
+        }
+    }
+
+    private void validateDiagonalMove(boolean target, Strategy strategy, int distance) {
+        if (!target) {
+            throw new IllegalArgumentException("[ERROR] 폰은 대각선에 상대팀의 말이 있는 경우 한 칸 이동할 수 있습니다.");
+        }
+        validateDistance(distance, strategy.moveRange());
+    }
+
+    private void validateDistance(int distance, int moveRange) {
+        if (distance > moveRange) {
+            throw new IllegalArgumentException("[ERROR] 이동할 수 있는 거리를 벗어났습니다.");
+        }
+    }
 }

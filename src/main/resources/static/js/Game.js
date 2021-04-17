@@ -9,9 +9,11 @@ window.onload = async function () {
   const host = response["host"];
   const guest = response["guest"];
   const game =  response["gameResponseDto"];
+  const blackScore = response["blackScore"];
+  const whiteScore = response["whiteScore"];
 
   initBoard(pieces);
-  fillInformation(host, guest, game)
+  fillInformation(host, guest, game, blackScore, whiteScore)
 }
 
 async function requestData() {
@@ -30,16 +32,21 @@ function initBoard(pieces) {
   addEvent(board);
 }
 
-function fillInformation(host, guest, game) {
+function fillInformation(host, guest, game, blackScore, whiteScore) {
   const blackNameTag = document.querySelector(".name-tag.black");
   blackNameTag.innerHTML = guest["name"];
   const blackRecordTag = document.querySelector(".record-tag.black");
   blackRecordTag.innerHTML = "검정색 플레이어";
+  const blackScoreTag = document.querySelector(".status-tag.black");
+  blackScoreTag.innerHTML = blackScore + " 점";
 
   const whiteNameTag = document.querySelector(".name-tag.white");
   whiteNameTag.innerHTML = host["name"];
   const whiteRecordTag = document.querySelector(".record-tag.white");
   whiteRecordTag.innerHTML = "흰색 플레이어";
+  const whiteScoreTag = document.querySelector(".status-tag.white");
+  whiteScoreTag.innerHTML = whiteScore + " 점";
+
   fillTurnInfo(game)
 }
 

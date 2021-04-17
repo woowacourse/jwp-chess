@@ -33,11 +33,13 @@ public class ChessService {
     }
 
     public ChessResponseDto bringGameData(long gameId) {
+        Board board = generateBoard(gameId);
         List<PieceDto> pieceDtos = pieceService.findPiecesByGameId(gameId);
         GameResponseDto gameResponseDto = gameService.findById(gameId);
         UserResponseDto host = userService.findUserById(gameResponseDto.getHostId());
         UserResponseDto guest = userService.findUserById(gameResponseDto.getGuestId());
-        return new ChessResponseDto(pieceDtos, host, guest, gameResponseDto);
+
+        return new ChessResponseDto(pieceDtos, host, guest, gameResponseDto, board.getBlackScore(), board.getWhiteScore());
     }
 
     public boolean checkMovement(long gameId, MoveRequestDto moveRequestDto) {
@@ -62,11 +64,11 @@ public class ChessService {
         if (board.isKingCatch()) {
             gameService.endGame(gameId, true);
             pieceService.removeAll(gameId);
-            return new MoveResponseDto(true, true, gameService.getTurn(gameId));
+            return new MoveResponseDto(true, true, gameService.getTurn(gameId),board.getBlackScore(), board.getWhiteScore());
         }
         gameService.changeTurn(gameId);
 
-        return new MoveResponseDto(false, true, gameService.getTurn(gameId));
+        return new MoveResponseDto(false, true, gameService.getTurn(gameId), board.getBlackScore(), board.getWhiteScore());
 
     }
 

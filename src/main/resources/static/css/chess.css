@@ -102,6 +102,10 @@ body {
     font-size: 5vw;
 }
 
+.status-tag {
+    font-size: 4vw;
+}
+
 .bear-piece {
     height: 100%;
 }
@@ -124,7 +128,7 @@ body {
 
 .chat-box {
     width: 100%;
-    height: 24vw;
+    height: 15vw;
     resize: none;
     margin: 0 auto;
     box-sizing: border-box;

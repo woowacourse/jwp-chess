@@ -145,7 +145,9 @@ export class Board {
       return;
     }
     this.#pieces.move(piece, targetTile)
-    document.getElementById("turn").innerHTML = response["turn"] + " 턴 입니다"
+    document.getElementById("turn").innerHTML = response["turn"] + " 턴 입니다";
+    document.querySelector(".status-tag.black").innerHTML = response["blackScore"] + " 점";
+    document.querySelector(".status-tag.white").innerHTML = response["whiteScore"] + " 점";
     if (response["finished"]) {
       const back = confirm(`게임이 끝났습니다. 확인을 누르면 홈으로 돌아갑니다.`)
       if (back) {

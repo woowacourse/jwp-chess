@@ -59,7 +59,7 @@ public class UserDao {
     private void updateWinner(String roomId, String winner) {
         String updateWinnerQuery = "UPDATE users "
             + "SET users.win = users.win + 1 "
-            + "WHERE users.name = (SELECT " + winner + " FROM room WHERE id = ?)";
+            + "WHERE users.name = (SELECT " + winner + " FROM rooms WHERE id = ?)";
 
         jdbcTemplate.update(updateWinnerQuery, roomId);
     }
@@ -67,7 +67,7 @@ public class UserDao {
     private void updateLoser(String roomId, String loser) {
         String updateLoserQuery = "UPDATE users "
             + "SET users.lose = users.lose + 1 "
-            + "WHERE users.name = (SELECT " + loser + " FROM room WHERE id = ?);";
+            + "WHERE users.name = (SELECT " + loser + " FROM rooms WHERE id = ?);";
 
         jdbcTemplate.update(updateLoserQuery, roomId);
     }

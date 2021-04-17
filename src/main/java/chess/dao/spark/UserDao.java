@@ -75,7 +75,7 @@ public class UserDao {
     private void updateWinner(String roomId, String winner) {
         String updateWinnerQueryForm = "UPDATE users "
             + "SET users.win = users.win + 1 "
-            + "WHERE users.name = (SELECT %s FROM room WHERE id = ?);";
+            + "WHERE users.name = (SELECT %s FROM rooms WHERE id = ?);";
 
         try (Connection connection = chessDataSource.connection();
             PreparedStatement pstmt = connection
@@ -90,7 +90,7 @@ public class UserDao {
     private void updateLoser(String roomId, String loser) {
         String updateLoserQuery = "UPDATE users "
             + "SET users.lose = users.lose + 1 "
-            + "WHERE users.name = (SELECT %s FROM room WHERE id = ?);";
+            + "WHERE users.name = (SELECT %s FROM rooms WHERE id = ?);";
 
         try (Connection connection = chessDataSource.connection();
             PreparedStatement pstmt = connection

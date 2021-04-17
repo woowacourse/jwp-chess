@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function ChessPage() {
   this.roomId = parseInt(localStorage.getItem("roomId"));
   this.getScoreUrl = "http://localhost:8080/api/score";
-  this.putBoardUrl = "http://localhost:8080/api/board";
+  this.putBoardUrl = "http://localhost:8080/api/pieces";
 }
 
 ChessPage.prototype.initChessPage = function () {

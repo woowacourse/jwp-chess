@@ -37,9 +37,9 @@ public class ChessApiController {
         return chessService.postPieces(piecesRequestDto);
     }
 
-    @PutMapping(value = "/board")
-    public PiecesResponseDto putBoard(@RequestBody BoardRequestDto boardRequestDto) {
-        return chessService.putBoard(boardRequestDto);
+    @PutMapping(value = "/pieces")
+    public PiecesResponseDto putPieces(@RequestBody BoardRequestDto boardRequestDto) {
+        return chessService.putPieces(boardRequestDto);
     }
 
     @GetMapping(value = "/score")

@@ -57,7 +57,7 @@ public class ChessService {
     }
 
     @Transactional
-    public PiecesResponseDto putBoard(BoardRequestDto boardRequestDto) {
+    public PiecesResponseDto putPieces(BoardRequestDto boardRequestDto) {
         int roomId = boardRequestDto.getRoomId();
         ChessGame chessGame = makeChessGame(roomId);
         chessGame.move(new Position(boardRequestDto.getSource()),

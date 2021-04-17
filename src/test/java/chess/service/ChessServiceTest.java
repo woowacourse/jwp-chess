@@ -64,7 +64,7 @@ public class ChessServiceTest {
     void putBoardTest() {
         PiecesRequestDto piecesRequestDto = new PiecesRequestDto(1);
         chessService.postPieces(piecesRequestDto);
-        PiecesResponseDto piecesResponseDto = chessService.putBoard(new BoardRequestDto(1, "a2", "a4"));
+        PiecesResponseDto piecesResponseDto = chessService.putPieces(new BoardRequestDto(1, "a2", "a4"));
 
         for (PieceResponseDto pieceResponseDto : piecesResponseDto.getAlivePieces()) {
             if (pieceResponseDto.getPosition().equals("a4")) {

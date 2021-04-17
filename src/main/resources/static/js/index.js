@@ -5,19 +5,26 @@ document.addEventListener("DOMContentLoaded", function () {
   indexPage.initIndexPage();
 });
 
-document.querySelector(".make-room-button").addEventListener("click", function () {
-  let newRoomId = document.querySelector(".newRoomId").value;
-  indexPage.addNewRoom(newRoomId);
-});
-
 function IndexPage() {
   this.getRoomsUrl = "http://localhost:8080/api/rooms";
   this.postPiecesUrl = "http://localhost:8080/api/pieces";
 }
 
 IndexPage.prototype.initIndexPage = function () {
-  const roomList = document.querySelector(".room-list");
+  this.getRooms();
+  this.registerMakeRoomButtonEvent();
+}
 
+IndexPage.prototype.registerMakeRoomButtonEvent = function () {
+  document.querySelector(".make-room-button").addEventListener("click",
+      function () {
+        let newRoomId = document.querySelector(".newRoomId").value;
+        indexPage.addNewRoom(newRoomId);
+      });
+}
+
+IndexPage.prototype.getRooms = function () {
+  const roomList = document.querySelector(".room-list");
   fetch(indexPage.getRoomsUrl, {
     method: 'GET'
   }).then(res => res.json())
@@ -40,12 +47,12 @@ IndexPage.prototype.addNewRoom = function (newRoomId) {
       roomId: newRoomId
     }),
     headers: {
-    'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
     }
   }).then(res => res.json())
   .then(data => {
     localStorage.setItem("roomId", newRoomId);
     localStorage.setItem("pieces", JSON.stringify(data));
-    location.href='chess'
+    location.href = 'chess'
   });
 }

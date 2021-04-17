@@ -1,7 +1,6 @@
 package chess.dto;
 
 
-import chess.domain.position.Position;
 import java.beans.ConstructorProperties;
 
 public class MoveRequest {
@@ -15,11 +14,11 @@ public class MoveRequest {
         this.to = to;
     }
 
-    public Position getFrom() {
-        return Position.of(from);
+    public String getFrom() {
+        return from;
     }
 
-    public Position getTo() {
-        return Position.of(to);
+    public String getTo() {
+        return to;
     }
 }

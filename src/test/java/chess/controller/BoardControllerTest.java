@@ -89,7 +89,6 @@ class BoardControllerTest {
         assertThat(scores.containsValue(38.0));
     }
 
-    // TODO: 400 Bad Request 해결(1)
     @DisplayName("움직일 말이 갈 수 있는 경로를 가져온다. - POST")
     @Test
     void movablePath() {
@@ -101,13 +100,12 @@ class BoardControllerTest {
             .body(dto)
             .when().post("/board/path")
             .then().log().all()
-            .statusCode(HttpStatus.CREATED.value())
+            .statusCode(HttpStatus.OK.value())
             .extract().response().as(List.class);
 
         assertThat(paths).isEqualTo(expected);
     }
 
-    // TODO: 400 Bad Request 해결(2)
     @DisplayName("움직일 말이 지정한 곳으로 움직일 수 있는지 여부를 가져온다. - POST")
     @Test
     void move() {

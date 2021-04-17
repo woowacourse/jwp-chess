@@ -9,7 +9,7 @@ public class PositionConverter {
     private static final int RANK_INDEX = 1;
     private static final int RANK_SIZE = 8;
 
-    public static int convertToCellsStatusIndex(String position) {
+    public static int convertToBoardStatusIndex(String position) {
         String rankValue = String.valueOf(position.charAt(RANK_INDEX));
         String fileValue = String.valueOf(position.charAt(FILE_INDEX));
         Rank rank = Rank.of(rankValue);

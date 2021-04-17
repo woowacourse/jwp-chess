@@ -24,12 +24,12 @@ public class PositionConverterTest {
 
         String boardStatus = board.getBoardStatus();
 
-        int cellIndexOfBlackPawn = PositionConverter.convertToCellsStatusIndex("a7");
-        int cellIndexOfBlackKing = PositionConverter.convertToCellsStatusIndex("b8");
-        int cellIndexOfEmpty1 = PositionConverter.convertToCellsStatusIndex("b7");
-        int cellIndexOfWhiteKnight = PositionConverter.convertToCellsStatusIndex("f4");
-        int cellIndexOfWhiteQueen = PositionConverter.convertToCellsStatusIndex("g4");
-        int cellIndexOfEmpty2 = PositionConverter.convertToCellsStatusIndex("g3");
+        int cellIndexOfBlackPawn = PositionConverter.convertToBoardStatusIndex("a7");
+        int cellIndexOfBlackKing = PositionConverter.convertToBoardStatusIndex("b8");
+        int cellIndexOfEmpty1 = PositionConverter.convertToBoardStatusIndex("b7");
+        int cellIndexOfWhiteKnight = PositionConverter.convertToBoardStatusIndex("f4");
+        int cellIndexOfWhiteQueen = PositionConverter.convertToBoardStatusIndex("g4");
+        int cellIndexOfEmpty2 = PositionConverter.convertToBoardStatusIndex("g3");
 
         assertThat(String.valueOf(boardStatus.charAt(cellIndexOfBlackPawn))).isEqualTo("P");
         assertThat(String.valueOf(boardStatus.charAt(cellIndexOfBlackKing))).isEqualTo("K");

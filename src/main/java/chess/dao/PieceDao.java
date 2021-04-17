@@ -18,14 +18,12 @@ import java.util.Objects;
 
 @Repository
 public class PieceDao {
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public Long create(Map<Position, Piece> pieces, String color, Long gameId) {
+    public void create(Map<Position, Piece> pieces, String color, Long gameId) {
         String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
         for (Position position : pieces.keySet()) {
             jdbcTemplate.update(con -> {
                 Piece piece = pieces.get(position);
@@ -35,10 +33,8 @@ public class PieceDao {
                 preparedStatement.setString(3, position.getKey());
                 preparedStatement.setLong(4, gameId);
                 return preparedStatement;
-            }, keyHolder);
+            });
         }
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public Map<Position, Piece> load(Long gameId, String color) {

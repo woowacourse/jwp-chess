@@ -32,7 +32,7 @@ export async function postData(url = '', data = {}) {
     if (!response.ok) {
       throw new Error(response.status);
     }
-    return response.json()
+    return response;
   })
   .catch(error => console.error('Error:', error));
 }

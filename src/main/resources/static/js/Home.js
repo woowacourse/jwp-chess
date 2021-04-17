@@ -5,10 +5,12 @@ const url = "http://localhost:8080";
 window.onload = function () {
   const newGameButton = document.querySelector(".new-game");
   const loadGameButton = document.querySelector(".load-game")
-  const searchRecordButton = document.querySelector(".search-record")
+  //const searchRecordButton = document.querySelector(".search-record")
+  const registerUserButton = document.querySelector(".register-user");
 
   newGameButton.addEventListener("click", startNewGame);
   loadGameButton.addEventListener("click", loadGame);
+  registerUserButton.addEventListener("click", createUser);
 }
 
 async function startNewGame(e) {
@@ -51,7 +53,8 @@ function validateName(whiteName, blackName) {
   }
 }
 
-async function createUser(userName) {
+async function createUser(e) {
+  const userName = prompt("아이디를 입력하세요. ");
   const body = {
     name : userName,
     password : "123"

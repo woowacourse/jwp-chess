@@ -7,3 +7,4 @@
 - [x] chess 방 입장
 - [x] chess 판 초기화
 - [x] chess 말 이동
+- [x] user 회원가입 기능 구현

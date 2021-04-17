@@ -1,13 +1,14 @@
 package chess.domain.board;
 
+import java.util.Collections;
+import java.util.Map;
+
 import chess.domain.piece.Color;
 import chess.domain.piece.EmptyPiece;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.exception.AllyPiecePositionException;
 import chess.exception.SourcePositionException;
-import java.util.Collections;
-import java.util.Map;
 
 public class Board {
 

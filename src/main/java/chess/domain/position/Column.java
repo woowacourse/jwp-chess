@@ -1,12 +1,12 @@
 package chess.domain.position;
 
-import static chess.domain.position.Position.CHESS_BOARD_END_RANGE;
-import static chess.domain.position.Position.CHESS_BOARD_START_RANGE;
+import static chess.domain.position.Position.*;
 
-import chess.exception.IllegalPositionException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import chess.exception.IllegalPositionException;
 
 public class Column {
 
@@ -65,7 +65,7 @@ public class Column {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Column that = (Column) o;
+        Column that = (Column)o;
         return value == that.value;
     }
 

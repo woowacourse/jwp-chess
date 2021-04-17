@@ -1,7 +1,6 @@
 package chess.domain.position;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,6 @@ class PositionTest {
         Position position = new Position("h1");
         assertThat(position.isChessBoardPosition()).isTrue();
     }
-
 
     @DisplayName("두 포지션은 수평 또는 수직이 아니다.")
     @Test

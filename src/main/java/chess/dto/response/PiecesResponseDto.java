@@ -1,11 +1,11 @@
 package chess.dto.response;
 
-import chess.domain.piece.Color;
-import chess.dto.PieceDto;
-import chess.dto.PiecesDto;
 import java.util.ArrayList;
 import java.util.List;
 
+import chess.domain.piece.Color;
+import chess.dto.PieceDto;
+import chess.dto.PiecesDto;
 
 public class PiecesResponseDto {
 

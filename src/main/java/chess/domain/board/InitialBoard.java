@@ -1,7 +1,9 @@
 package chess.domain.board;
 
+import static chess.domain.board.Board.*;
 
-import static chess.domain.board.Board.CHESS_BOARD_SIZE;
+import java.util.HashMap;
+import java.util.Map;
 
 import chess.domain.piece.Bishop;
 import chess.domain.piece.Color;
@@ -13,9 +15,6 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
 import chess.domain.position.Position;
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class InitialBoard {
 

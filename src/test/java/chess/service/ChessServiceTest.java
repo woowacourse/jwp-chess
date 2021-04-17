@@ -1,21 +1,22 @@
 package chess.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-import chess.dao.PiecesDao;
-import chess.domain.piece.Color;
-import chess.dto.request.BoardRequestDto;
-import chess.dto.request.PiecesRequestDto;
-import chess.dto.response.PieceResponseDto;
-import chess.dto.response.PiecesResponseDto;
 import java.util.Arrays;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import chess.dao.ChessDao;
+import chess.domain.piece.Color;
+import chess.dto.request.BoardRequestDto;
+import chess.dto.request.PiecesRequestDto;
+import chess.dto.response.PieceResponseDto;
+import chess.dto.response.PiecesResponseDto;
 
 @JdbcTest
 public class ChessServiceTest {
@@ -27,7 +28,7 @@ public class ChessServiceTest {
 
     @BeforeEach
     void setUp() {
-        chessService = new ChessService(new PiecesDao(jdbcTemplate));
+        chessService = new ChessService(new ChessDao(jdbcTemplate));
         jdbcTemplate.execute("DROP TABLE pieces IF EXISTS");
         jdbcTemplate.execute("DROP TABLE room IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE pieces(room_id bigint(20), piece_name char(1), position char(2))");
@@ -35,7 +36,7 @@ public class ChessServiceTest {
     }
 
     @Test
-    @DisplayName("체스 게임 방이 없는 경우, 방을 만들고 DB에 해당 방의 정보와 기물 정보 저장")
+    @DisplayName("체스 게임 방이 없는 경우, 방을 만들고 DB에 해당 방의 정보와 기물 정보를 저장한다.")
     void addRoomTest1() {
         PiecesRequestDto piecesRequestDto = new PiecesRequestDto(2);
         PiecesResponseDto piecesResponseDto = chessService.postPieces(piecesRequestDto);

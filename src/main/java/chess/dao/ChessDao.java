@@ -1,19 +1,21 @@
 package chess.dao;
 
+import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
 import chess.domain.piece.Color;
 import chess.dto.PieceDto;
 import chess.dto.PiecesDto;
 import chess.dto.RoomIdDto;
-import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
 @Repository
-public class PiecesDao {
+public class ChessDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public PiecesDao(JdbcTemplate jdbcTemplate) {
+    public ChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

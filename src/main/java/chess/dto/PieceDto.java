@@ -1,8 +1,9 @@
 package chess.dto;
 
+import java.util.Map.Entry;
+
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import java.util.Map.Entry;
 
 public class PieceDto {
 

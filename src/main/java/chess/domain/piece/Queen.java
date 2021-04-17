@@ -1,10 +1,10 @@
 package chess.domain.piece;
 
+import java.util.Map;
 
 import chess.domain.board.Score;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
-import java.util.Map;
 
 public class Queen extends Piece {
 

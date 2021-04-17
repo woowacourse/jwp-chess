@@ -1,9 +1,10 @@
 package chess.domain.piece;
 
+import java.util.Map;
+
 import chess.domain.board.Score;
 import chess.domain.position.Position;
 import chess.exception.IllegalMoveException;
-import java.util.Map;
 
 public abstract class Piece {
 

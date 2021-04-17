@@ -1,12 +1,5 @@
 package chess.controller;
 
-import chess.dto.request.BoardRequestDto;
-import chess.dto.request.PiecesRequestDto;
-import chess.dto.response.PiecesResponseDto;
-import chess.dto.response.RoomsResponseDto;
-import chess.dto.response.ScoreResponseDto;
-import chess.exception.PieceMoveException;
-import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +9,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import chess.dto.request.BoardRequestDto;
+import chess.dto.request.PiecesRequestDto;
+import chess.dto.response.PiecesResponseDto;
+import chess.dto.response.RoomsResponseDto;
+import chess.dto.response.ScoreResponseDto;
+import chess.exception.PieceMoveException;
+import chess.service.ChessService;
 
 @RestController
 @RequestMapping("/api")

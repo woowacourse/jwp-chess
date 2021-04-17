@@ -1,9 +1,10 @@
 package chess.dto.response;
 
-import chess.dto.PieceDto;
-import chess.dto.PiecesDto;
 import java.util.ArrayList;
 import java.util.List;
+
+import chess.dto.PieceDto;
+import chess.dto.PiecesDto;
 
 public class PiecesResponsesDto {
 

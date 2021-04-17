@@ -1,16 +1,15 @@
 package chess.domain.board;
 
+import static chess.domain.board.Board.*;
 
-import static chess.domain.board.Board.CHESS_BOARD_SIZE;
-import static chess.domain.board.Board.PAWN_ALLY_COUNT_CONDITION;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 public class BoardResult {
 
@@ -47,7 +46,7 @@ public class BoardResult {
     }
 
     private int rowAllyPawnCount(int column, Color color) {
-        int count = (int) pieces(color).entrySet()
+        int count = (int)pieces(color).entrySet()
             .stream()
             .filter(entry -> entry.getValue().isPawn()
                 && entry.getKey().isColumnEquals(new Column(column)))

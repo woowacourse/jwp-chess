@@ -1,13 +1,14 @@
 package chess.domain.chessgame;
 
+import java.util.Map;
+import java.util.Objects;
+
 import chess.domain.board.Board;
 import chess.domain.board.Score;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.exception.IllegalTurnException;
-import java.util.Map;
-import java.util.Objects;
 
 public class ChessGame {
 
@@ -22,7 +23,7 @@ public class ChessGame {
         isBlackTurn = false;
     }
 
-    public ChessGame(Map<Position, Piece> board, boolean isPlaying ,Color turn) {
+    public ChessGame(Map<Position, Piece> board, boolean isPlaying, Color turn) {
         this.board = new Board(board);
         this.isBlackTurn = turn.isBlack();
         this.isPlaying = isPlaying;
@@ -32,7 +33,7 @@ public class ChessGame {
         return isPlaying;
     }
 
-    public boolean getIsBlackTurn(){
+    public boolean getIsBlackTurn() {
         return isBlackTurn;
     }
 
@@ -85,7 +86,7 @@ public class ChessGame {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ChessGame chessGame = (ChessGame) o;
+        ChessGame chessGame = (ChessGame)o;
         return isPlaying == chessGame.isPlaying && isBlackTurn == chessGame.isBlackTurn
             && Objects.equals(board, chessGame.board);
     }

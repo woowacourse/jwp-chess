@@ -1,7 +1,11 @@
 package chess.domain.board;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import chess.domain.piece.Bishop;
 import chess.domain.piece.Color;
@@ -11,10 +15,6 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
 import chess.domain.position.Position;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 class BoardTest {
 
@@ -132,7 +132,6 @@ class BoardTest {
         assertThat(board.piecesScore(Color.BLACK)).isEqualTo(new Score(20));
         assertThat(board.piecesScore(Color.WHITE)).isEqualTo(new Score(19.5));
     }
-
 
     @DisplayName("기물은 같은 팀이 있는 곳으로 이동할 수 없다.")
     @Test

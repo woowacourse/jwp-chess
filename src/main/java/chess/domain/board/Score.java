@@ -37,7 +37,7 @@ public class Score {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Score score = (Score) o;
+        Score score = (Score)o;
         return Double.compare(score.value, value) == 0;
     }
 

@@ -1,12 +1,12 @@
 package chess.domain.piece;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import chess.domain.board.Score;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class Pawn extends Piece {
 

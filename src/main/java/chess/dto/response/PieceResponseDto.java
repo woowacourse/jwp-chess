@@ -3,6 +3,7 @@ package chess.dto.response;
 import chess.dto.PieceDto;
 
 public class PieceResponseDto {
+
     private final String position;
     private final String name;
 

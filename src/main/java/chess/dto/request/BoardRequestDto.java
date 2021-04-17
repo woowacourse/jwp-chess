@@ -6,14 +6,14 @@ public class BoardRequestDto {
     private final String source;
     private final String target;
 
-    public int getRoomId() {
-        return roomId;
-    }
-
     public BoardRequestDto(int roomId, String source, String target) {
         this.roomId = roomId;
         this.source = source;
         this.target = target;
+    }
+
+    public int getRoomId() {
+        return roomId;
     }
 
     public String getSource() {

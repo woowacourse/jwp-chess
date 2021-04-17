@@ -1,7 +1,8 @@
 package chess.domain.piece;
 
-import chess.domain.position.Position;
 import java.util.Map;
+
+import chess.domain.position.Position;
 
 public class EmptyPiece extends Piece {
 

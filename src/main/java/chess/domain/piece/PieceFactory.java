@@ -1,7 +1,6 @@
 package chess.domain.piece;
 
-import static chess.domain.piece.Color.BLACK;
-import static chess.domain.piece.Color.WHITE;
+import static chess.domain.piece.Color.*;
 
 import java.util.Arrays;
 import java.util.List;

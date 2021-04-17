@@ -6,18 +6,14 @@ import chess.domain.board.Row;
 import chess.domain.board.Team;
 import chess.domain.chessgame.Turn;
 import chess.domain.piece.Piece;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Ready implements GameState {
 
     private static final IllegalArgumentException EXCEPTION
-        = new IllegalArgumentException("올바르지 않은 입력입니다.");
+            = new IllegalArgumentException("올바르지 않은 입력입니다.");
     private static final Map<Piece, List<Point>> WHITE_INITIAL_POINTS = new HashMap<>();
 
     static {
@@ -27,10 +23,10 @@ public class Ready implements GameState {
         WHITE_INITIAL_POINTS.put(Piece.BISHOP, Arrays.asList(Point.of("c1"), Point.of("f1")));
         WHITE_INITIAL_POINTS.put(Piece.KNIGHT, Arrays.asList(Point.of("b1"), Point.of("g1")));
         WHITE_INITIAL_POINTS.put(
-            Piece.PAWN,
-            Point.allPoints().stream()
-                .filter(point -> point.isLocatedIn(Row.TWO))
-                .collect(Collectors.toList())
+                Piece.PAWN,
+                Point.allPoints().stream()
+                        .filter(point -> point.isLocatedIn(Row.TWO))
+                        .collect(Collectors.toList())
         );
     }
 
@@ -44,13 +40,13 @@ public class Ready implements GameState {
     public GameState start() {
         board.clear();
         WHITE_INITIAL_POINTS.keySet()
-            .forEach(this::initializePiece);
+                .forEach(this::initializePiece);
         return new Running(board);
     }
 
     private void initializePiece(Piece piece) {
         WHITE_INITIAL_POINTS.get(piece)
-            .forEach(point -> board.putSymmetrically(piece, point));
+                .forEach(point -> board.putSymmetrically(piece, point));
     }
 
     @Override

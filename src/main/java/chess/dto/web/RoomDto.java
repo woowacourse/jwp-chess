@@ -9,9 +9,7 @@ public class RoomDto {
     private String white;
     private String black;
 
-    public RoomDto(){
-
-    }
+    public RoomDto() { }
 
     public RoomDto(String id, String name, String white, String black) {
         validateName(name);

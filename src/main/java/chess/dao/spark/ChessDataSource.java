@@ -1,6 +1,7 @@
 package chess.dao.spark;
 
 import com.zaxxer.hikari.HikariDataSource;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 

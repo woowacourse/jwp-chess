@@ -2,6 +2,7 @@ package chess.domain.board;
 
 import chess.domain.piece.MoveVector;
 import chess.domain.piece.Piece;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ public class Board {
 
     public void clear() {
         Point.allPoints()
-            .forEach(point -> squares.put(point, SquareState.of(Piece.EMPTY, Team.NONE)));
+                .forEach(point -> squares.put(point, SquareState.of(Piece.EMPTY, Team.NONE)));
     }
 
     public void putSymmetrically(Piece piece, Point point) {
@@ -81,16 +82,16 @@ public class Board {
 
     public long pawnCountInColumn(Team team, Column column) {
         return squares.keySet().stream()
-            .filter(point -> point.isLocatedIn(column))
-            .map(squares::get)
-            .filter(square -> square.isOnTeam(team) && square.isPieceTypeOf(Piece.PAWN))
-            .count();
+                .filter(point -> point.isLocatedIn(column))
+                .map(squares::get)
+                .filter(square -> square.isOnTeam(team) && square.isPieceTypeOf(Piece.PAWN))
+                .count();
     }
 
     public List<SquareState> AllSquaresFrom(Team team) {
         return squares.values().stream()
-            .filter(state -> state.isOnTeam(team))
-            .collect(Collectors.toList());
+                .filter(state -> state.isOnTeam(team))
+                .collect(Collectors.toList());
     }
 
     public Map<Point, SquareState> squares() {

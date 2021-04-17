@@ -5,6 +5,7 @@ import chess.domain.board.Point;
 import chess.domain.board.Team;
 import chess.domain.gamestate.GameState;
 import chess.domain.gamestate.Ready;
+
 import java.util.List;
 
 public class ChessGame {

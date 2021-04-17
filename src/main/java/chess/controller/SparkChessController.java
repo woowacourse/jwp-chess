@@ -1,19 +1,17 @@
 package chess.controller;
 
-import static spark.Spark.exception;
-import static spark.Spark.get;
-import static spark.Spark.post;
-import static spark.Spark.put;
-
 import chess.dto.web.RoomDto;
 import chess.service.SparkChessService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import java.util.HashMap;
-import java.util.Map;
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static spark.Spark.*;
 
 public class SparkChessController {
 
@@ -72,12 +70,12 @@ public class SparkChessController {
 
     private void usersInRoom() {
         get("/room/:id/statistics", "application/json",
-            (req, res) -> GSON.toJson(sparkChessService.usersInRoom(req.params("id"))));
+                (req, res) -> GSON.toJson(sparkChessService.usersInRoom(req.params("id"))));
     }
 
     private void gameStatus() {
         get("/room/:id/getGameStatus", "application/json",
-            (req, res) -> GSON.toJson(sparkChessService.gameStatus(req.params("id"))));
+                (req, res) -> GSON.toJson(sparkChessService.gameStatus(req.params("id"))));
     }
 
     private void startGame() {
@@ -103,7 +101,7 @@ public class SparkChessController {
 
     private void movablePoints() {
         get("/room/:id/movablePoints/:point", "application/json", (req, res) ->
-            GSON.toJson(sparkChessService.movablePoints(req.params("id"), req.params("point"))));
+                GSON.toJson(sparkChessService.movablePoints(req.params("id"), req.params("point"))));
     }
 
     private void movePiece() {
@@ -111,7 +109,7 @@ public class SparkChessController {
             Map<String, String> body = GSON.fromJson(req.body(), HashMap.class);
 
             return GSON.toJson(
-                sparkChessService.move(req.params("id"), body.get("source"), body.get("destination")));
+                    sparkChessService.move(req.params("id"), body.get("source"), body.get("destination")));
         });
     }
 

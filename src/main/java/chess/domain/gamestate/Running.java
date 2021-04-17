@@ -6,12 +6,13 @@ import chess.domain.board.Team;
 import chess.domain.chessgame.PieceMovementRule;
 import chess.domain.chessgame.Turn;
 import chess.domain.piece.Piece;
+
 import java.util.List;
 
 public class Running implements GameState {
 
     private static final IllegalArgumentException EXCEPTION =
-        new IllegalArgumentException("올바르지 않은 입력입니다.");
+            new IllegalArgumentException("올바르지 않은 입력입니다.");
 
     private final Board board;
     private final PieceMovementRule pieceMovementRule;

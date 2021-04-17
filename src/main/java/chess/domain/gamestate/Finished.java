@@ -4,13 +4,14 @@ import chess.domain.board.Board;
 import chess.domain.board.Point;
 import chess.domain.board.Team;
 import chess.domain.chessgame.Turn;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Finished implements GameState {
 
     private static final IllegalArgumentException EXCEPTION =
-        new IllegalArgumentException("올바르지 않은 입력입니다.");
+            new IllegalArgumentException("올바르지 않은 입력입니다.");
 
     private final Team winner;
     private final Board board;

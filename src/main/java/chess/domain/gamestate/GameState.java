@@ -3,6 +3,7 @@ package chess.domain.gamestate;
 import chess.domain.board.Point;
 import chess.domain.board.Team;
 import chess.domain.chessgame.Turn;
+
 import java.util.List;
 
 public interface GameState {

@@ -30,9 +30,9 @@ public enum Column {
 
     public static Column columnByIndex(int index) {
         return Arrays.stream(Column.values())
-            .filter(column -> column.index() == index)
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+                .filter(column -> column.index() == index)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public static List<Column> columns() {

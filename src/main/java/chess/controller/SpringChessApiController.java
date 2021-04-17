@@ -1,21 +1,12 @@
 package chess.controller;
 
-import chess.dto.web.BoardDto;
-import chess.dto.web.GameStatusDto;
-import chess.dto.web.PointDto;
-import chess.dto.web.RoomDto;
-import chess.dto.web.UsersInRoomDto;
+import chess.dto.web.*;
 import chess.service.SpringChessService;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/room")
@@ -50,7 +41,7 @@ public class SpringChessApiController {
         return springChessService.start(id);
     }
 
-    @PutMapping( "{id}/exit")
+    @PutMapping("{id}/exit")
     private Map<String, String> exitGame(@PathVariable String id) {
         Map<String, String> result = new HashMap<>();
         springChessService.exit(id);
@@ -60,7 +51,7 @@ public class SpringChessApiController {
 
     @PutMapping("/{id}/close")
     private Map<String, String> closeRoom(@PathVariable String id) {
-        Map<String, String> result =  new HashMap<>();
+        Map<String, String> result = new HashMap<>();
         springChessService.close(id);
         result.put("result", "success");
         return result;

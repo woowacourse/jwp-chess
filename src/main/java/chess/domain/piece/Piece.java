@@ -1,14 +1,8 @@
 package chess.domain.piece;
 
 import chess.domain.board.Point;
-import chess.domain.piece.movementStrategy.BishopMovementStrategy;
-import chess.domain.piece.movementStrategy.EmptyMovementStrategy;
-import chess.domain.piece.movementStrategy.KingMovementStrategy;
-import chess.domain.piece.movementStrategy.KnightMovementStrategy;
-import chess.domain.piece.movementStrategy.MovementStrategy;
-import chess.domain.piece.movementStrategy.PawnMovementStrategy;
-import chess.domain.piece.movementStrategy.QueenMovementStrategy;
-import chess.domain.piece.movementStrategy.RookMovementStrategy;
+import chess.domain.piece.movementStrategy.*;
+
 import java.util.Arrays;
 
 public enum Piece {
@@ -32,9 +26,9 @@ public enum Piece {
 
     public static Piece pieceByName(String name) {
         return Arrays.stream(values())
-            .filter(piece -> piece.pieceName.equals(name))
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+                .filter(piece -> piece.pieceName.equals(name))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public MoveVector movableVector(Point source, Point destination) {

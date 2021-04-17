@@ -16,32 +16,32 @@ public class UserDao {
 
     public void insert(String userName) {
         String query = "INSERT INTO users (name) "
-            + "SELECT * FROM (SELECT ?) AS tmp "
-            + "WHERE NOT EXISTS (SELECT * FROM users WHERE name = ?)";
+                + "SELECT * FROM (SELECT ?) AS tmp "
+                + "WHERE NOT EXISTS (SELECT * FROM users WHERE name = ?)";
         jdbcTemplate.update(query, userName, userName);
     }
 
     public UsersInRoomDto usersInRoom(String roomId) {
         String query = "SELECT"
-            + " white_user.name AS whiteName,"
-            + " white_user.win AS whiteWin,"
-            + " white_user.lose AS whiteLose,"
-            + " black_user.name AS blackName,"
-            + " black_user.win AS blackWin,"
-            + " black_user.lose AS blackLose "
-            + "FROM"
-            + " room AS r"
-            + " INNER JOIN users AS black_user ON r.black = black_user.name"
-            + " INNER JOIN users AS white_user ON r.white = white_user.name "
-            + "WHERE r.id = ?";
+                + " white_user.name AS whiteName,"
+                + " white_user.win AS whiteWin,"
+                + " white_user.lose AS whiteLose,"
+                + " black_user.name AS blackName,"
+                + " black_user.win AS blackWin,"
+                + " black_user.lose AS blackLose "
+                + "FROM"
+                + " room AS r"
+                + " INNER JOIN users AS black_user ON r.black = black_user.name"
+                + " INNER JOIN users AS white_user ON r.white = white_user.name "
+                + "WHERE r.id = ?";
 
         return jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> new UsersInRoomDto(
-            resultSet.getString("whiteName"),
-            resultSet.getString("whiteWin"),
-            resultSet.getString("whiteLose"),
-            resultSet.getString("blackName"),
-            resultSet.getString("blackWin"),
-            resultSet.getString("blackLose")
+                resultSet.getString("whiteName"),
+                resultSet.getString("whiteWin"),
+                resultSet.getString("whiteLose"),
+                resultSet.getString("blackName"),
+                resultSet.getString("blackWin"),
+                resultSet.getString("blackLose")
         ), roomId);
     }
 
@@ -58,16 +58,16 @@ public class UserDao {
 
     private void updateWinner(String roomId, String winner) {
         String updateWinnerQuery = "UPDATE users "
-            + "SET users.win = users.win + 1 "
-            + "WHERE users.name = (SELECT "+ winner +" FROM room WHERE id = ?)";
+                + "SET users.win = users.win + 1 "
+                + "WHERE users.name = (SELECT " + winner + " FROM room WHERE id = ?)";
 
         jdbcTemplate.update(updateWinnerQuery, roomId);
     }
 
     private void updateLoser(String roomId, String loser) {
         String updateLoserQuery = "UPDATE users "
-            + "SET users.lose = users.lose + 1 "
-            + "WHERE users.name = (SELECT " + loser + " FROM room WHERE id = ?);";
+                + "SET users.lose = users.lose + 1 "
+                + "WHERE users.name = (SELECT " + loser + " FROM room WHERE id = ?);";
 
         jdbcTemplate.update(updateLoserQuery, roomId);
     }

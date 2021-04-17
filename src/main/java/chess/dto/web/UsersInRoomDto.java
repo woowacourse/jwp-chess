@@ -10,7 +10,7 @@ public class UsersInRoomDto {
     private final String blackLose;
 
     public UsersInRoomDto(String whiteName, String whiteWin, String whiteLose, String blackName,
-        String blackWin, String blackLose) {
+                          String blackWin, String blackLose) {
         this.whiteName = whiteName;
         this.whiteWin = whiteWin;
         this.whiteLose = whiteLose;

@@ -1,6 +1,7 @@
 package chess.domain.board;
 
 import chess.domain.piece.MoveVector;
+
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,8 +16,8 @@ public class Point {
 
     static {
         POINT_POOL = Arrays.stream(Row.values())
-            .flatMap(Point::pointPoolByRow)
-            .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
+                .flatMap(Point::pointPoolByRow)
+                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
     }
 
     private final Column column;
@@ -29,8 +30,8 @@ public class Point {
 
     private static Stream<SimpleEntry<String, Point>> pointPoolByRow(Row row) {
         return Arrays.stream(Column.values())
-            .map(column -> new SimpleEntry<>(column.coordinate() + row.coordinate(),
-                new Point(column, row)));
+                .map(column -> new SimpleEntry<>(column.coordinate() + row.coordinate(),
+                        new Point(column, row)));
     }
 
     public static Point of(String point) {
@@ -54,7 +55,7 @@ public class Point {
 
     public Point originSymmetricPoint() {
         return Point
-            .of(this.column.opposingColumn().coordinate() + this.row.opposingRow().coordinate());
+                .of(this.column.opposingColumn().coordinate() + this.row.opposingRow().coordinate());
     }
 
     public int columnDifference(Point source) {
@@ -71,7 +72,7 @@ public class Point {
 
     private String movedPointCoordinate(MoveVector moveVector) {
         return Column.columnByIndex(movedXIndex(moveVector)).coordinate() +
-            Row.rowByIndex(movedYIndex(moveVector)).coordinate();
+                Row.rowByIndex(movedYIndex(moveVector)).coordinate();
     }
 
     private int movedYIndex(MoveVector moveVector) {

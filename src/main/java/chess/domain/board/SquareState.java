@@ -2,6 +2,7 @@ package chess.domain.board;
 
 import chess.domain.piece.MoveVector;
 import chess.domain.piece.Piece;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -13,7 +14,7 @@ public class SquareState {
 
     static {
         SQUARE_STATE_POOL = Arrays.stream(Piece.values())
-            .collect(Collectors.toMap(piece -> piece, SquareState::squareStateMapByPiece));
+                .collect(Collectors.toMap(piece -> piece, SquareState::squareStateMapByPiece));
     }
 
     private final Piece piece;
@@ -26,7 +27,7 @@ public class SquareState {
 
     private static Map<Team, SquareState> squareStateMapByPiece(Piece piece) {
         return Arrays.stream(Team.values())
-            .collect(Collectors.toMap(team -> team, team -> new SquareState(piece, team)));
+                .collect(Collectors.toMap(team -> team, team -> new SquareState(piece, team)));
     }
 
     public static SquareState of(Piece piece, Team team) {
@@ -36,8 +37,8 @@ public class SquareState {
     public MoveVector movableVector(Point source, Point destination) {
         if (team.isBlack()) {
             return piece
-                .movableVector(source.originSymmetricPoint(), destination.originSymmetricPoint())
-                .oppositeVector();
+                    .movableVector(source.originSymmetricPoint(), destination.originSymmetricPoint())
+                    .oppositeVector();
         }
         return piece.movableVector(source, destination);
     }
@@ -45,7 +46,7 @@ public class SquareState {
     public boolean hasMovableVector(Point source, Point destination) {
         if (team.isBlack()) {
             return piece.hasMovableVector(source.originSymmetricPoint(),
-                destination.originSymmetricPoint());
+                    destination.originSymmetricPoint());
         }
         return piece.hasMovableVector(source, destination);
     }

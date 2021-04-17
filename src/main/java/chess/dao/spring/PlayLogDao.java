@@ -29,12 +29,12 @@ public class PlayLogDao {
 
         try {
             BoardDto result = jdbcTemplate.queryForObject(
-                query,
-                (resultSet, rowNum) -> {
-                    String boardJson = resultSet.getString(1);
-                    return GSON.fromJson(boardJson, BoardDto.class);
-                },
-                roomId);
+                    query,
+                    (resultSet, rowNum) -> {
+                        String boardJson = resultSet.getString(1);
+                        return GSON.fromJson(boardJson, BoardDto.class);
+                    },
+                    roomId);
             return result;
         } catch (Exception e) {
             generateFirstRow(roomId);
@@ -47,12 +47,12 @@ public class PlayLogDao {
 
         try {
             GameStatusDto result = jdbcTemplate.queryForObject(
-                query,
-                (resultSet, rowNum) -> {
-                    String statusJson = resultSet.getString(1);
-                    return GSON.fromJson(statusJson, GameStatusDto.class);
-                },
-                roomId);
+                    query,
+                    (resultSet, rowNum) -> {
+                        String statusJson = resultSet.getString(1);
+                        return GSON.fromJson(statusJson, GameStatusDto.class);
+                    },
+                    roomId);
             return result;
         } catch (Exception e) {
             generateFirstRow(roomId);

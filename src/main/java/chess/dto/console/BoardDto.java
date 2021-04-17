@@ -1,10 +1,7 @@
 package chess.dto.console;
 
-import chess.domain.board.Board;
-import chess.domain.board.Column;
-import chess.domain.board.Point;
-import chess.domain.board.Row;
-import chess.domain.board.SquareState;
+import chess.domain.board.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

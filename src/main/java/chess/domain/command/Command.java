@@ -2,6 +2,7 @@ package chess.domain.command;
 
 import chess.domain.board.Point;
 import chess.domain.chessgame.ChessGame;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -10,7 +11,7 @@ public enum Command {
     START("start", 0, (chessGame, arguments) -> chessGame.start()),
     END("end", 0, (chessGame, arguments) -> chessGame.end()),
     MOVE("move", 2, (chessGame, arguments) ->
-        chessGame.move(Point.of(arguments.get(0)), Point.of(arguments.get(1)))),
+            chessGame.move(Point.of(arguments.get(0)), Point.of(arguments.get(1)))),
     STATUS("status", 0, (chessGame, arguments) -> chessGame.status());
 
     private static final int ARGUMENT_START_INDEX = 1;
@@ -33,10 +34,10 @@ public enum Command {
         int inputArgumentsCount = splitInputs.size() - 1;
 
         return Arrays.stream(Command.values())
-            .filter(command -> command.operator.equalsIgnoreCase(firstInput)
-                && command.argumentCount == inputArgumentsCount)
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 입력입니다."));
+                .filter(command -> command.operator.equalsIgnoreCase(firstInput)
+                        && command.argumentCount == inputArgumentsCount)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 입력입니다."));
     }
 
     public static List<String> arguments(String input) {

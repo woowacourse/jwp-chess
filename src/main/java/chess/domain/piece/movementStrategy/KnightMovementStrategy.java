@@ -1,6 +1,7 @@
 package chess.domain.piece.movementStrategy;
 
 import chess.domain.piece.MoveVector;
+
 import java.util.List;
 
 public class KnightMovementStrategy extends AbstractMovementStrategy {

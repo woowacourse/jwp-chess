@@ -52,10 +52,10 @@ public enum MoveVector {
 
     public static MoveVector moveVectorByValues(int horizontal, int vertical) {
         return Arrays.stream(MoveVector.values())
-            .filter(vector -> (vector.horizontal == horizontal)
-                && (vector.vertical == vertical))
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+                .filter(vector -> (vector.horizontal == horizontal)
+                        && (vector.vertical == vertical))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public boolean isDiagonalVector() {

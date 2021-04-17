@@ -4,6 +4,7 @@ import chess.domain.board.Board;
 import chess.domain.board.Column;
 import chess.domain.board.SquareState;
 import chess.domain.board.Team;
+
 import java.util.Arrays;
 
 public class ScoreBoard {
@@ -22,14 +23,14 @@ public class ScoreBoard {
 
     private long pawnCountInSameColumn(Team team) {
         return Arrays.stream(Column.values()).mapToLong(column ->
-            board.pawnCountInColumn(team, column))
-            .filter(count -> count >= 2)
-            .sum();
+                board.pawnCountInColumn(team, column))
+                .filter(count -> count >= 2)
+                .sum();
     }
 
     private double scoreSum(Team team) {
         return board.AllSquaresFrom(team).stream()
-            .mapToDouble(SquareState::score)
-            .sum();
+                .mapToDouble(SquareState::score)
+                .sum();
     }
 }

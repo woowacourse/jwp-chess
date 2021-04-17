@@ -1,11 +1,8 @@
 package chess.dao.spark;
 
 import chess.dto.web.RoomDto;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +18,8 @@ public class RoomDao {
         String query = "INSERT INTO room (name, is_opened, white, black) VALUES(?, true, ?, ?)";
 
         try (Connection connection = chessDataSource.connection();
-            PreparedStatement pstmt = connection
-                .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
+             PreparedStatement pstmt = connection
+                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
             pstmt.setString(1, roomDto.getName());
             pstmt.setString(2, roomDto.getWhite());
             pstmt.setString(3, roomDto.getBlack());
@@ -41,13 +38,13 @@ public class RoomDao {
         String query = "SELECT id, name, white, black FROM room WHERE is_opened = true";
 
         try (Connection connection = chessDataSource.connection();
-            PreparedStatement pstmt = connection.prepareStatement(query);
-            ResultSet rs = pstmt.executeQuery();) {
+             PreparedStatement pstmt = connection.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery();) {
             List<RoomDto> result = new ArrayList<>();
 
             while (rs.next()) {
                 result.add(new RoomDto(rs.getString(1), rs.getString(2),
-                    rs.getString(3), rs.getString(4)));
+                        rs.getString(3), rs.getString(4)));
             }
             return result;
         } catch (SQLException e) {
@@ -59,7 +56,7 @@ public class RoomDao {
         String query = "UPDATE room SET is_opened = false WHERE id = (?)";
 
         try (Connection connection = chessDataSource.connection();
-            PreparedStatement pstmt = connection.prepareStatement(query);) {
+             PreparedStatement pstmt = connection.prepareStatement(query);) {
             pstmt.setString(1, roomId);
             pstmt.executeUpdate();
         } catch (SQLException e) {

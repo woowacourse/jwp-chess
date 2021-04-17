@@ -3,6 +3,7 @@ package chess.dto.web;
 import chess.domain.board.Board;
 import chess.domain.board.Point;
 import chess.domain.board.SquareState;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +17,8 @@ public class BoardDto {
         Map<Point, SquareState> squares = board.squares();
 
         this.board = squares.keySet().stream()
-            .map(point -> pieceDtoByPoint(point, squares))
-            .collect(Collectors.toList());
+                .map(point -> pieceDtoByPoint(point, squares))
+                .collect(Collectors.toList());
     }
 
     private PieceDto pieceDtoByPoint(Point point, Map<Point, SquareState> squares) {

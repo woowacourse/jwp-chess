@@ -29,9 +29,9 @@ public enum Row {
 
     public static Row rowByIndex(int index) {
         return Arrays.stream(Row.values())
-            .filter(row -> row.index() == index)
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+                .filter(row -> row.index() == index)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public static List<Row> reversedRows() {

@@ -1,13 +1,14 @@
 package chess.dao.spring;
 
 import chess.dto.web.RoomDto;
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class RoomDao {
@@ -22,7 +23,7 @@ public class RoomDao {
         String query = "INSERT INTO room (name, is_opened, white, black) VALUES(?, true, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection ->{
+        jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
             preparedStatement.setString(1, roomDto.getName());
             preparedStatement.setString(2, roomDto.getWhite());
@@ -36,13 +37,13 @@ public class RoomDao {
     public List<RoomDto> openedRooms() {
         String query = "SELECT id, name, white, black FROM room WHERE is_opened = true";
         return jdbcTemplate.query(
-            query,
-            (resultSet, rowNum) -> new RoomDto(
-                resultSet.getString(1),
-                resultSet.getString(2),
-                resultSet.getString(3),
-                resultSet.getString(4)
-            ));
+                query,
+                (resultSet, rowNum) -> new RoomDto(
+                        resultSet.getString(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4)
+                ));
     }
 
     public void close(String roomId) {

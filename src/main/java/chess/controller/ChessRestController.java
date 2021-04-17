@@ -20,13 +20,11 @@ public class ChessRestController {
     }
 
     @PostMapping
-    @ResponseBody
     public ResponseEntity<Response> saveName(@RequestBody NameDto nameDto) {
         return ResponseEntity.ok(new Response(chessService.addHistory(nameDto.getName())));
     }
 
     @PostMapping("/move")
-    @ResponseBody
     public ResponseEntity<Response> move(@RequestBody MoveRequestDto moveRequestDto) {
         String command = makeMoveCmd(moveRequestDto.getSource(), moveRequestDto.getTarget());
         String id = moveRequestDto.getGameId();

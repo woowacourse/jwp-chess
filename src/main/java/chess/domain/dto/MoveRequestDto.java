@@ -9,23 +9,11 @@ public class MoveRequestDto {
         return source;
     }
 
-    public void setSource(String source) {
-        this.source = source;
-    }
-
     public String getTarget() {
         return target;
     }
 
-    public void setTarget(String target) {
-        this.target = target;
-    }
-
     public String getGameId() {
         return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
     }
 }

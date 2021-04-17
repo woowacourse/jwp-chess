@@ -30,11 +30,8 @@ function drop_handler(event) {
 // move, save, exit setting
 
 const $move = document.querySelector('input[class="move"]')
-const $save = document.querySelector('input[value="save"]')
 
 $move.addEventListener('keyup', movePiece);
-$save.addEventListener('click', saveGame);
-
 
 function movePiece(event) {
     const moveCommand = event.target.value;
@@ -89,38 +86,4 @@ function replaceComponents(dom, sourcePosition, targetPosition) {
         alert("black: " + result[0] + " / white : " + result[1])
         window.location.replace("/")
     }
-}
-
-async function saveGame() {
-    const params = {
-        name: document.querySelector('#room').firstElementChild.nextElementSibling.className,
-        turn: document.querySelector('#turn').firstElementChild.className,
-        state: createStateJson(),
-    };
-    let response = await fetch('/game/save', {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify(params)
-    });
-    if (!response.ok) {
-       alert('저장할 수 없습니다.');
-    }
-}
-
-function createStateJson() {
-    const status = document.querySelectorAll('td')
-    let state = {};
-    for (let i = 0; i < status.length; i++) {
-        const position = status[i].id;
-        const img = status[i].querySelector('img');
-        const color = img.id.split("_")[0]
-        const type = img.id.split("_")[1]
-        state[position] = {
-            color: color,
-            type: type,
-        }
-    }
-    return state
 }

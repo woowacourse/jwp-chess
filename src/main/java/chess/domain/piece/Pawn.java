@@ -29,7 +29,7 @@ public class Pawn extends AbstractPiece {
     }
 
     @Override
-    public String getName() {
+    public String getCharName() {
         if (isBlackTeam()) {
             return "P";
         }

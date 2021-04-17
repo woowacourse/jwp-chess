@@ -19,7 +19,7 @@ public class Knight extends AbstractPiece {
     }
 
     @Override
-    public String getName() {
+    public String getCharName() {
         if (isBlackTeam()) {
             return "N";
         }

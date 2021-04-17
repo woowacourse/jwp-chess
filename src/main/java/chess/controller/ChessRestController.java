@@ -4,13 +4,16 @@ import chess.domain.command.Commands;
 import chess.domain.dto.MoveRequestDto;
 import chess.domain.dto.NameDto;
 import chess.domain.response.GameResponse;
+import chess.domain.response.Response;
 import chess.service.ChessService;
 import chess.view.ModelView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/play")
@@ -25,21 +28,17 @@ public class ChessRestController {
 
     @PostMapping
     @ResponseBody
-    public String saveName(@RequestBody NameDto nameDto) {
-        return GSON.toJson(ModelView.idResponse(chessService.addHistory(nameDto.getName())));
+    public ResponseEntity<Response> saveName(@RequestBody NameDto nameDto) {
+        return ResponseEntity.ok(new Response(chessService.addHistory(nameDto.getName())));
     }
 
     @PostMapping("/move")
     @ResponseBody
-    public String move(@RequestBody MoveRequestDto moveRequestDto) {
+    public ResponseEntity<Response> move(@RequestBody MoveRequestDto moveRequestDto) {
         String command = makeMoveCmd(moveRequestDto.getSource(), moveRequestDto.getTarget());
         String id = moveRequestDto.getGameId();
-        try {
-            chessService.move(id, command, new Commands(command));
-            return GSON.toJson(new GameResponse(chessService.continuedGameInfo(id), id));
-        } catch (IllegalArgumentException | SQLException e) {
-            return e.getMessage();
-        }
+        chessService.move(id, command, new Commands(command));
+        return ResponseEntity.ok(new Response(new GameResponse(chessService.continuedGameInfo(id),id)));
     }
 
     private String makeMoveCmd(String source, String target) {

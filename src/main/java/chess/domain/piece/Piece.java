@@ -9,9 +9,11 @@ import java.util.List;
 
 public interface Piece {
 
+    String getName();
+
     Strategy strategy();
 
-    String getName();
+    String getCharName();
 
     Team getTeam();
 

@@ -20,7 +20,7 @@ public class Bishop extends AbstractPiece {
     }
 
     @Override
-    public String getName() {
+    public String getCharName() {
         if (isBlackTeam()) {
             return "B";
         }

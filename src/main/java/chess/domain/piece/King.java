@@ -21,7 +21,7 @@ public class King extends AbstractPiece {
     }
 
     @Override
-    public String getName() {
+    public String getCharName() {
         if (isBlackTeam()) {
             return "K";
         }

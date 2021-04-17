@@ -50,8 +50,7 @@
     }
 
     const redirect = function (response) {
-        console.log(response);
-        window.location = `/play/${response.id}`;
+        window.location = `/play/${response.data}`;
     }
 
     const gameHistory = document.getElementById("historyList");

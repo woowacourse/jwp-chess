@@ -51,7 +51,7 @@ public class ChessService {
         return chessGame;
     }
 
-    public void move(String id, String command, Commands commands) throws SQLException {
+    public void move(String id, String command, Commands commands) {
         ChessGame chessGame = gameStateOf(id);
         chessGame.moveAs(commands);
         updateMoveInfo(command, id);

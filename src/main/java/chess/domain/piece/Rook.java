@@ -19,7 +19,7 @@ public class Rook extends AbstractPiece {
     }
 
     @Override
-    public String getName() {
+    public String getCharName() {
         if (isBlackTeam()) {
             return "R";
         }

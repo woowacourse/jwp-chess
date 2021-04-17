@@ -40,7 +40,7 @@ public class OutputView {
             }
 
             Piece piece = board.pieceAt(position);
-            System.out.print(piece.getName());
+            System.out.print(piece.getCharName());
         }
     }
 

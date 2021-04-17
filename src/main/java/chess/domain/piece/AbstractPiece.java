@@ -55,4 +55,9 @@ public abstract class AbstractPiece implements Piece {
     public String toString() {
         return name + "_" + team.toString();
     }
+
+    @Override
+    public String getName() {
+        return name;
+    }
 }

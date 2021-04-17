@@ -13,6 +13,6 @@ const moveToChessView = function () {
 }
 
 async function onRestart() {
-    await fetch('/chess', POST);
+    await fetch('/api/chess', POST);
     moveToChessView();
 }

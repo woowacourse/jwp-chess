@@ -13,13 +13,13 @@ function getCookie(name) {
     return document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1];
 }
 
-const moveToChessView = function () {
-    window.location.href = '/chess/view';
+const moveToChessView = function (response) {
+    window.location.href = response.headers.get('location');
 }
 
 async function onNewGame() {
-    await fetch('/chess', POST);
-    moveToChessView();
+    const response = await fetch('/api/chess', POST);
+    moveToChessView(response);
 }
 
 async function onContinue() {
@@ -29,12 +29,13 @@ async function onContinue() {
     }
 
     const chessId = getCookie("chessId");
-    const response = await fetch("/chess/" + chessId);
+    const response = await fetch("/api/chess/" + chessId);
+    console.log(response);
     const data = await response.json();
     if (!data.status.includes("RUNNING")) {
         alert("진행 중인 게임이 없습니다.");
         return;
     }
 
-    moveToChessView();
+    moveToChessView(response);
 }

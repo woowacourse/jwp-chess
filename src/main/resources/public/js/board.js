@@ -59,7 +59,7 @@ const $blackScore = document.getElementById("black-score");
 
 async function showChessInfo() {
     const chessId = getCookie("chessId");
-    const response = await fetch('/chess/' + chessId);
+    const response = await fetch('/api/chess/' + chessId);
     return await response.json();
 }
 
@@ -118,7 +118,7 @@ function winner(turn) {
 }
 
 async function patchMovePiece(chessId, source, target) {
-    const response = await fetch('/chess/' + chessId + '?source=' + source + '&target=' + target, PATCH);
+    const response = await fetch('/api/chess/' + chessId + '?source=' + source + '&target=' + target, PATCH);
     return response.ok;
 }
 

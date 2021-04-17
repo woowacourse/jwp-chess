@@ -5,6 +5,8 @@ import chess.domain.board.Position;
 import chess.domain.piece.Pawn;
 
 public class MoveValidator {
+    private MoveValidator() {}
+
     public static void isPieceExist(Board board, Position position) {
         if (board.containsPosition(position)) {
             throw new IllegalArgumentException("[ERROR] 말이 존재합니다.");

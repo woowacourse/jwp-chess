@@ -11,13 +11,14 @@ import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 public class PointCalculator {
+    private PointCalculator() {}
+
     public static double calculate(Map<Position, Piece> chessBoard, Team team) {
         return chessBoard.values().stream()
                 .filter(piece -> piece != null && piece.getTeam() == team)
                 .mapToDouble(Piece::getPoint)
                 .sum();
     }
-
 
     public static double calculatePawn(Map<Position, Piece> chessBoard, Team team) {
         Map<Integer, Long> collect = groupFileAndPawnCount(chessBoard, team);

@@ -8,6 +8,7 @@ import chess.domain.piece.*;
 import java.util.*;
 
 public class PieceInitializer {
+
     private static final int BLACK_OTHER_PIECE_START_LINE = 8;
     private static final int WHITE_OTHER_PIECE_START_LINE = 1;
 
@@ -40,6 +41,8 @@ public class PieceInitializer {
         initPawn(PIECE_INFO);
         initPieceExceptPawn(PIECE_INFO);
     }
+
+    private PieceInitializer() {}
 
     public static Map<Position, Piece> pieceInfo() {
         return new LinkedHashMap<>(PIECE_INFO);

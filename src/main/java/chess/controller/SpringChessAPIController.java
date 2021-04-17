@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class SpringChessController {
+public class SpringChessAPIController {
     @Autowired
     private ChessService chessService;
 

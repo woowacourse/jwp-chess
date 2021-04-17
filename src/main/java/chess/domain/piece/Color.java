@@ -1,8 +1,6 @@
 package chess.domain.piece;
 
-import java.io.Serializable;
-
-public enum Color implements Serializable {
+public enum Color {
 
     BLACK("검은색"),
     WHITE("흰색"),
@@ -17,5 +15,4 @@ public enum Color implements Serializable {
     public boolean isBlack() {
         return Color.BLACK.equals(this);
     }
-
 }

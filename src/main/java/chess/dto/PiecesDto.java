@@ -1,25 +1,35 @@
 package chess.dto;
 
-public class PiecesDto {
-    private final int roomId;
-    private final String pieceName;
-    private final String position;
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-    public PiecesDto(int roomId, String pieceName, String position) {
+public class PiecesDto {
+
+    private final int roomId;
+    private final List<PieceDto> pieceDtos;
+
+    public PiecesDto(int roomId, Map<Position, Piece> pieces){
         this.roomId = roomId;
-        this.pieceName = pieceName;
-        this.position = position;
+        this.pieceDtos = new ArrayList<>();
+        for(Entry<Position, Piece> entry : pieces.entrySet()){
+            pieceDtos.add(new PieceDto(roomId, entry.getValue().getName(), entry.getKey().chessCoordinate()));
+        }
+    }
+
+    public PiecesDto(List<PieceDto> pieceDtos) {
+        this.roomId = -1;
+        this.pieceDtos = pieceDtos;
+    }
+
+    public List<PieceDto> getPieceDtos() {
+        return new ArrayList<>(pieceDtos);
     }
 
     public int getRoomId() {
         return roomId;
-    }
-
-    public String getPieceName() {
-        return pieceName;
-    }
-
-    public String getPosition() {
-        return position;
     }
 }

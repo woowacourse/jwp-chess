@@ -77,9 +77,8 @@ ChessPage.prototype.putPieces = function () {
     }
     response.text().then(function (data) {
       alert(data);
-
-      throw new Error(data);
     })
+    throw Error();
   })
   .then(function (data) {
     chessPage.deleteAllPieces();

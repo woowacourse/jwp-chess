@@ -3,10 +3,9 @@ package chess.domain.piece;
 import chess.domain.board.Score;
 import chess.domain.position.Position;
 import chess.exception.IllegalMoveException;
-import java.io.Serializable;
 import java.util.Map;
 
-public abstract class Piece implements Serializable {
+public abstract class Piece {
 
     private final String name;
     private final Color color;

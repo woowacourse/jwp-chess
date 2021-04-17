@@ -6,11 +6,10 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.exception.IllegalTurnException;
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
-public class ChessGame implements Serializable {
+public class ChessGame {
 
     private final Board board;
     private boolean isPlaying;
@@ -58,10 +57,6 @@ public class ChessGame implements Serializable {
         }
     }
 
-    public void start() {
-        isPlaying = true;
-    }
-
     public Board board() {
         return board;
     }
@@ -80,24 +75,6 @@ public class ChessGame implements Serializable {
 
     public boolean isKingAlive(Color color) {
         return board.isKingAlive(color);
-    }
-
-    public void operate(boolean isRestart, boolean isPlaying) {
-        if (isRestart) {
-            restart();
-            return;
-        }
-        if (isPlaying) {
-            this.isPlaying = true;
-            return;
-        }
-        exit();
-    }
-
-    private void restart() {
-        board.initChessPieces();
-        isPlaying = true;
-        isBlackTurn = false;
     }
 
     @Override

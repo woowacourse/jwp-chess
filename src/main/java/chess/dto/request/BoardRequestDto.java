@@ -2,9 +2,9 @@ package chess.dto.request;
 
 public class BoardRequestDto {
 
-    private int roomId;
-    private String source;
-    private String target;
+    private final int roomId;
+    private final String source;
+    private final String target;
 
     public int getRoomId() {
         return roomId;
@@ -16,12 +16,12 @@ public class BoardRequestDto {
         this.target = target;
     }
 
-    public String getTarget() {
-        return target;
-    }
-
     public String getSource() {
         return source;
+    }
+
+    public String getTarget() {
+        return target;
     }
 
 }

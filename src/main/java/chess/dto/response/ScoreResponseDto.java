@@ -4,7 +4,7 @@ import chess.domain.board.Score;
 
 public class ScoreResponseDto {
 
-    private double score;
+    private final double score;
 
     public ScoreResponseDto(Score score) {
         this.score = score.getValue();

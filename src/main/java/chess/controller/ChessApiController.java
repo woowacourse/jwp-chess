@@ -1,12 +1,14 @@
 package chess.controller;
 
-import chess.domain.chessgame.ChessGame;
 import chess.dto.request.BoardRequestDto;
 import chess.dto.request.PiecesRequestDto;
 import chess.dto.response.PiecesResponseDto;
 import chess.dto.response.RoomsResponseDto;
 import chess.dto.response.ScoreResponseDto;
+import chess.exception.PieceMoveException;
 import chess.service.ChessService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChessApiController {
 
     private final ChessService chessService;
-    private ChessGame chessGame = new ChessGame();
 
     public ChessApiController(ChessService chessService) {
         this.chessService = chessService;
@@ -42,8 +43,14 @@ public class ChessApiController {
     }
 
     @GetMapping(value = "/score")
-    public ScoreResponseDto getScore(@RequestParam("roomId") int roomId, @RequestParam("color") String colorName) {
+    public ScoreResponseDto getScore(@RequestParam("roomId") int roomId,
+        @RequestParam("color") String colorName) {
         return chessService.getScore(roomId, colorName);
+    }
+
+    @ExceptionHandler(PieceMoveException.class)
+    public ResponseEntity<String> exceptionHandle(PieceMoveException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
 }

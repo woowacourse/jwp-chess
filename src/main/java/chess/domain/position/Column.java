@@ -4,12 +4,11 @@ import static chess.domain.position.Position.CHESS_BOARD_END_RANGE;
 import static chess.domain.position.Position.CHESS_BOARD_START_RANGE;
 
 import chess.exception.IllegalPositionException;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Column implements Serializable {
+public class Column {
 
     private static final List<String> chessColumns = Arrays
         .asList("a", "b", "c", "d", "e", "f", "g", "h");

@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.piece.Color;
+import chess.dto.PieceDto;
 import chess.dto.PiecesDto;
 import chess.dto.RoomIdDto;
 import java.util.List;
@@ -10,87 +11,77 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PiecesDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public PiecesDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<PiecesDto> findPiecesByRoomId(int id) {
+    public List<PieceDto> findPiecesByRoomId(RoomIdDto roomIdDto) {
         String sql = "select * from pieces where room_id=?";
 
         return jdbcTemplate.query(
             sql,
-            (resultSet, rowNum) -> {
-                PiecesDto piecesDto = new PiecesDto(
-                    resultSet.getInt("room_id"),
-                    resultSet.getString("piece_name"),
-                    resultSet.getString("position")
-                );
-                return piecesDto;
-            }, id);
+            (resultSet, rowNum) -> new PieceDto(
+                resultSet.getInt("room_id"),
+                resultSet.getString("piece_name"),
+                resultSet.getString("position")
+            ), roomIdDto.getId());
     }
 
     public List<RoomIdDto> findAllRoomId() {
         String sql = "select id from room";
 
-        return jdbcTemplate.query(
-            sql,
-            (resultSet, rowNum) -> {
-                RoomIdDto roomIdDto = new RoomIdDto(resultSet.getInt("id"));
-                return roomIdDto;
-            });
+        return jdbcTemplate.query(sql,
+            (resultSet, rowNum) -> new RoomIdDto(resultSet.getInt("id")));
     }
 
-    public void insertRoom(int roomId) {
+    public void insertRoom(RoomIdDto roomIdDto) {
         String sql = "insert into room (id, turn, playing_flag) values (?, 'WHITE', true)";
-        jdbcTemplate.update(sql, roomId);
+        jdbcTemplate.update(sql, roomIdDto.getId());
     }
 
-    public Color findTurnByRoomId(int id) {
+    public String findTurnByRoomId(RoomIdDto roomIdDto) {
         String sql = "select turn from room where id=?";
-        System.out.println("####id : " + id);
-        return Color.valueOf(jdbcTemplate.queryForObject(sql, String.class, id));
+        return jdbcTemplate.queryForObject(sql, String.class, roomIdDto.getId());
     }
 
-    public boolean findPlayingFlagByRoomId(int id) {
+    public boolean findPlayingFlagByRoomId(RoomIdDto roomIdDto) {
         String sql = "select playing_flag from room where id=?";
-
-        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
+        return jdbcTemplate.queryForObject(sql, Boolean.class, roomIdDto.getId());
     }
 
     public void updateRoom(int roomId, boolean isBlackTurn, boolean playing) {
         String sql = "update room set turn = ?, playing_flag = ? where id=?";
 
-        Color color;
         if (isBlackTurn) {
-            color = Color.BLACK;
-            jdbcTemplate.update(sql, color.name(), playing, roomId);
+            jdbcTemplate.update(sql, Color.BLACK.name(), playing, roomId);
             return;
         }
-        color = Color.WHITE;
-        jdbcTemplate.update(sql, color.name(), playing, roomId);
+
+        jdbcTemplate.update(sql, Color.WHITE.name(), playing, roomId);
     }
 
-    public void updatePiecesByRoomId(List<PiecesDto> piecesDtos) {
-        deleteAllPiecesByRoomId(piecesDtos.get(0).getRoomId());
-        for (PiecesDto piecesDto : piecesDtos) {
-            insertPieceByRoomId(piecesDto);
+    public void updatePiecesByRoomId(PiecesDto piecesDto) {
+        deleteAllPiecesByRoomId(new RoomIdDto(piecesDto.getRoomId()));
+        for (PieceDto pieceDto : piecesDto.getPieceDtos()) {
+            insertPieceByRoomId(pieceDto);
         }
     }
 
-    public void deleteAllPiecesByRoomId(int id) {
+    public void deleteAllPiecesByRoomId(RoomIdDto roomIdDto) {
         String sql = "delete from pieces where room_id=?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, roomIdDto.getId());
     }
 
-    public void insertPieceByRoomId(PiecesDto piecesDto) {
+    public void insertPieceByRoomId(PieceDto pieceDto) {
         String sql = "insert into pieces (room_id, piece_name, position) values(?,?,?)";
-        jdbcTemplate.update(sql, piecesDto.getRoomId(), piecesDto.getPieceName(), piecesDto.getPosition());
+        jdbcTemplate
+            .update(sql, pieceDto.getRoomId(), pieceDto.getPieceName(), pieceDto.getPosition());
     }
 
-    public void deleteRoomById(int id) {
+    public void deleteRoomById(RoomIdDto roomIdDto) {
         String sql = "delete from room where id=?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, roomIdDto.getId());
     }
 }

@@ -1,25 +1,31 @@
 package chess.dto.response;
 
 import chess.domain.piece.Color;
+import chess.dto.PieceDto;
+import chess.dto.PiecesDto;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class PiecesResponseDto {
 
-    private Color winnerColor;
-    private boolean isPlaying;
-    private List<PieceResponseDto> alivePieces;
+    private final Color winnerColor;
+    private final boolean isPlaying;
+    private final List<PieceResponseDto> alivePieces;
 
-    public PiecesResponseDto(List<PieceResponseDto> alivePieces) {
-        this.winnerColor = Color.NONE;
-        this.isPlaying = true;
-        this.alivePieces = alivePieces;
-    }
-
-    public PiecesResponseDto(Color winnerColor, boolean isPlaying, List<PieceResponseDto> alivePieces) {
+    public PiecesResponseDto(Color winnerColor, boolean isPlaying, PiecesDto piecesDtos) {
         this.winnerColor = winnerColor;
         this.isPlaying = isPlaying;
-        this.alivePieces = alivePieces;
+        this.alivePieces = new ArrayList<>();
+        for (PieceDto movedPiece : piecesDtos.getPieceDtos()) {
+            alivePieces.add(new PieceResponseDto(movedPiece));
+        }
+    }
+
+    public PiecesResponseDto(PiecesResponsesDto piecesResponsesDto) {
+        this.winnerColor = Color.NONE;
+        this.isPlaying = true;
+        this.alivePieces = piecesResponsesDto.getPieceResponseDtos();
     }
 
     public Color getWinnerColor() {

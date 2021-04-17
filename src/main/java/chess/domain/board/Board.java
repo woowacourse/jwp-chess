@@ -6,11 +6,10 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.exception.AllyPiecePositionException;
 import chess.exception.SourcePositionException;
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
-public class Board implements Serializable {
+public class Board {
 
     public static final int CHESS_BOARD_SIZE = 8;
     public static final int PAWN_ALLY_COUNT_CONDITION = 2;

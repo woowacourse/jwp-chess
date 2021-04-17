@@ -1,9 +1,8 @@
 package chess.domain.board;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Score implements Serializable {
+public class Score {
 
     private final double value;
 

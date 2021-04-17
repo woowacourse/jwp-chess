@@ -5,12 +5,11 @@ import static chess.domain.position.Position.CHESS_BOARD_END_RANGE;
 import static chess.domain.position.Position.CHESS_BOARD_START_RANGE;
 
 import chess.exception.IllegalPositionException;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Row implements Serializable {
+public class Row {
 
     private static final List<String> chessRows = Arrays
         .asList("8", "7", "6", "5", "4", "3", "2", "1");

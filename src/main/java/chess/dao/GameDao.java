@@ -65,7 +65,7 @@ public class GameDao {
     }
 
     public List<String> getRoomNumbers() {
-        String sql = "SELECT id FROM game";
+        String sql = "SELECT id FROM game WHERE is_finished = 0";
         return jdbcTemplate.queryForList(sql, String.class);
     }
 }

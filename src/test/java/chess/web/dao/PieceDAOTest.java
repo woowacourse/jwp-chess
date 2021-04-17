@@ -3,9 +3,9 @@ package chess.web.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.web.dao.piece.PieceRepository;
-import chess.web.domain.piece.Piece;
-import chess.web.domain.piece.type.PieceType;
-import chess.web.domain.player.type.TeamColor;
+import chess.domain.piece.Piece;
+import chess.domain.piece.type.PieceType;
+import chess.domain.color.type.TeamColor;
 import java.sql.SQLException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

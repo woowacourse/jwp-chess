@@ -34,8 +34,7 @@ public class ChessService {
 
     @Transactional
     public PiecesResponseDto postPieces(PiecesRequestDto piecesRequestDto) {
-        PiecesDto piecesDto = new PiecesDto(
-            piecesDao.findPiecesByRoomId(new RoomIdDto(piecesRequestDto.getRoomId())));
+        PiecesDto piecesDto = new PiecesDto(piecesDao.findPiecesByRoomId(new RoomIdDto(piecesRequestDto.getRoomId())));
         PiecesResponsesDto piecesResponsesDto = new PiecesResponsesDto(piecesDto);
 
         if (piecesDto.getPieceDtos().size() == 0) {
@@ -79,18 +78,21 @@ public class ChessService {
             piecesDao.deleteAllPiecesByRoomId(roomIdDto);
             piecesDao.deleteRoomById(roomIdDto);
         }
+
         return winnerColor;
     }
 
     @Transactional
     public ScoreResponseDto getScore(int roomId, String colorName) {
         ChessGame chessGame = makeChessGame(roomId);
+
         return new ScoreResponseDto(chessGame.score(Color.valueOf(colorName)));
     }
 
     @Transactional
     public RoomsResponseDto getRooms() {
         List<RoomIdDto> roomIdDtos = piecesDao.findAllRoomId();
+
         return new RoomsResponseDto(roomIdDtos.stream()
             .map(RoomIdDto::getId)
             .collect(Collectors.toList())

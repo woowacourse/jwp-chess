@@ -12,10 +12,10 @@ public class PiecesDto {
     private final int roomId;
     private final List<PieceDto> pieceDtos;
 
-    public PiecesDto(int roomId, Map<Position, Piece> pieces){
+    public PiecesDto(int roomId, Map<Position, Piece> pieces) {
         this.roomId = roomId;
         this.pieceDtos = new ArrayList<>();
-        for(Entry<Position, Piece> entry : pieces.entrySet()){
+        for (Entry<Position, Piece> entry : pieces.entrySet()) {
             pieceDtos.add(new PieceDto(roomId, entry.getValue().getName(), entry.getKey().chessCoordinate()));
         }
     }

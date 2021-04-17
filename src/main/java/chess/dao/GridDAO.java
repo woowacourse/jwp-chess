@@ -4,21 +4,21 @@ import chess.domain.grid.Grid;
 import chess.domain.grid.gridStrategy.NormalGridStrategy;
 import chess.domain.piece.Color;
 import chess.dto.GridDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 
+@Repository
 public class GridDAO {
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    public GridDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public long createGrid(long roomId) {
         Grid grid = new Grid(new NormalGridStrategy());

@@ -16,6 +16,7 @@ public class GridDAOTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private GridDAO gridDao;
     private long roomId;
     private long gridId;
@@ -25,7 +26,6 @@ public class GridDAOTest {
         jdbcTemplate.execute("TRUNCATE TABLE piece");
         jdbcTemplate.execute("TRUNCATE TABLE grid");
         jdbcTemplate.execute("TRUNCATE TABLE room");
-        gridDao = new GridDAO(jdbcTemplate);
         roomId = 1L;
         gridId = gridDao.createGrid(roomId);
     }

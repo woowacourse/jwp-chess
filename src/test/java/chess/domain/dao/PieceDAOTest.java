@@ -22,6 +22,7 @@ public class PieceDAOTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private PieceDAO pieceDao;
 
     @BeforeEach
@@ -29,7 +30,6 @@ public class PieceDAOTest {
         jdbcTemplate.execute("TRUNCATE TABLE piece");
         jdbcTemplate.execute("TRUNCATE TABLE grid");
         jdbcTemplate.execute("TRUNCATE TABLE room");
-        pieceDao = new PieceDAO(jdbcTemplate);
     }
 
     @Test

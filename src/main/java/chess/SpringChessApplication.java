@@ -7,7 +7,6 @@ import chess.dto.response.ResponseCode;
 import chess.dto.responsedto.GridAndPiecesResponseDto;
 import chess.service.ChessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -25,19 +24,15 @@ import java.sql.SQLException;
 
 @SpringBootApplication
 @RestController
-public class SpringChessApplication implements CommandLineRunner {
+public class SpringChessApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringChessApplication.class, args);
 	}
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	@Autowired
 	private ChessService chessService;
-
-	@Override
-	public void run(String... strings) {
-		chessService = new ChessService(jdbcTemplate);
-	}
 
 	@GetMapping("/")
 	public ModelAndView index() {

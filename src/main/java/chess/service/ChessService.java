@@ -20,26 +20,24 @@ import chess.dto.response.ResponseCode;
 import chess.dto.responsedto.GridAndPiecesResponseDto;
 import chess.dto.responsedto.RoomsResponseDto;
 import chess.exception.ChessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Service
 public class ChessService {
-
     private static final char EMPTY_PIECE_NAME = '.';
 
-    private final RoomDAO roomDAO;
-    private final GridDAO gridDAO;
-    private final PieceDAO pieceDAO;
-
-    public ChessService(JdbcTemplate jdbcTemplate) {
-        roomDAO = new RoomDAO(jdbcTemplate);
-        gridDAO = new GridDAO(jdbcTemplate);
-        pieceDAO = new PieceDAO(jdbcTemplate);
-    }
+    @Autowired
+    private RoomDAO roomDAO;
+    @Autowired
+    private GridDAO gridDAO;
+    @Autowired
+    private PieceDAO pieceDAO;
 
     public Response move(MoveRequestDto requestDto) throws SQLException {
         GridDto gridDto = requestDto.getGridDto();

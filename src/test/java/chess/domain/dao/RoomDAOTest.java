@@ -17,10 +17,12 @@ public class RoomDAOTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private RoomDAO roomDao;
+
     @Test
     @DisplayName("방을 정상적으로 조회 및 추가를 하는 지 테스트")
     public void createAndFindRoom() {
-        RoomDAO roomDao = new RoomDAO(jdbcTemplate);
         String roomName = "abcd";
         long roomId = roomDao.createRoom(roomName);
         Object foundRoomId = roomDao.findRoomIdByName(roomName);

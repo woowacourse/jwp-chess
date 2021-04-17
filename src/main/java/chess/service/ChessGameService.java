@@ -37,7 +37,7 @@ public class ChessGameService {
             throw new AlreadyPlayingChessGameException();
         }
 
-        Long chessGameId = chessGameDAO.create();
+        Long chessGameId = chessGameDAO.save();
         List<Piece> pieces = PieceFactory.createPieces();
         pieceDAO.saveAll(chessGameId, pieces);
         ChessGame chessGame = new ChessGame(new Board(pieces));

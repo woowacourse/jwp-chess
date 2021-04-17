@@ -35,7 +35,7 @@ public class ChessGameDAO {
         return Optional.of(chessGameEntity);
     }
 
-    public Long create() {
+    public Long save() {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO chess_game(state) VALUES(?)";
         jdbcTemplate.update(connection -> {

@@ -439,6 +439,6 @@ class ChessGameTest {
         PointDto resultDto = new PointDto(result);
 
         chessGame.initBoard(Board.of(PieceInitializer.pieceInfo()));
-        assertThat(chessGame.pointDto()).isEqualTo(resultDto);
+        assertThat(new PointDto(chessGame.calculatePoint())).isEqualTo(resultDto);
     }
 }

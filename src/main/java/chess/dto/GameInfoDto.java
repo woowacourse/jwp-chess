@@ -14,7 +14,7 @@ public class GameInfoDto {
     public GameInfoDto(ChessGame chessGame) {
         this.squares = new SquaresDto(chessGame.board());
         this.turn = chessGame.turn();
-        this.scores = new ScoresDto(chessGame.pointDto());
+        this.scores = new ScoresDto(new PointDto(chessGame.calculatePoint()));
         this.winner = chessGame.winner();
     }
 

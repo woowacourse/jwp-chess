@@ -1,7 +1,6 @@
 package chess.domain.piece;
 
 import chess.domain.position.MovePosition;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

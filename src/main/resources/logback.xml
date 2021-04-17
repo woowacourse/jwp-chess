@@ -14,11 +14,11 @@
     <appender-ref ref="CONSOLE"/>
   </logger>
 
-  <logger name="src.main.java.chess.view" level="debug" additivity="false">
+  <logger name="src.main.java.chess.console.view" level="debug" additivity="false">
     <appender-ref ref="CONSOLE"/>
   </logger>
 
-  <logger name="src.main.java.chess.controller" level="debug" additivity="false">
+  <logger name="src.main.java.chess.web.controller" level="debug" additivity="false">
     <appender-ref ref="CONSOLE"/>
   </logger>
 </configuration>

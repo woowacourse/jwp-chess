@@ -1,15 +1,15 @@
-package chess.domain.piece;
+package chess.web.dao;
 
-import chess.domain.board.BoardDto;
 import chess.domain.position.MovePosition;
 import chess.domain.position.MovePositionVo;
+import chess.web.dto.BoardDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class PieceDao {
 
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public PieceDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

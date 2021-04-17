@@ -1,11 +1,11 @@
-package chess.service;
+package chess.web.service;
 
-import chess.domain.board.BoardDto;
 import chess.domain.chess.Chess;
-import chess.domain.chess.ChessDao;
-import chess.domain.chess.ChessDto;
-import chess.domain.piece.PieceDao;
 import chess.domain.position.MovePosition;
+import chess.web.dao.ChessDao;
+import chess.web.dao.PieceDao;
+import chess.web.dto.BoardDto;
+import chess.web.dto.ChessDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

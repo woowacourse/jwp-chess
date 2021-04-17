@@ -2,8 +2,8 @@ package chess.domain.chess;
 
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
-import chess.domain.piece.PieceDto;
 import chess.domain.position.MovePosition;
+import chess.web.dto.PieceDto;
 import java.util.List;
 
 public class Chess {

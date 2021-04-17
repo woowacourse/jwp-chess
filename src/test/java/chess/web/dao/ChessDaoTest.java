@@ -1,8 +1,12 @@
-package chess.domain.chess;
+package chess.web.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.service.ChessService;
+import chess.domain.chess.Chess;
+import chess.domain.chess.Color;
+import chess.domain.chess.Status;
+import chess.web.dto.ChessDto;
+import chess.web.service.ChessService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

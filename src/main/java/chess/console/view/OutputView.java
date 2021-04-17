@@ -1,9 +1,9 @@
-package chess.view;
+package chess.console.view;
 
 import chess.domain.board.BoardSize;
-import chess.domain.board.SymbolBoardDto;
 import chess.domain.chess.Chess;
 import chess.domain.chess.Color;
+import chess.web.dto.SymbolBoardDto;
 
 public class OutputView {
 

@@ -1,6 +1,6 @@
-package chess.domain.chess;
+package chess.web.dto;
 
-import chess.domain.board.BoardDto;
+import chess.domain.chess.Chess;
 
 public class ChessDto {
 

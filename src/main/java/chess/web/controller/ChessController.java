@@ -1,8 +1,8 @@
-package chess.controller;
+package chess.web.controller;
 
-import chess.domain.chess.ChessDto;
 import chess.domain.position.MovePosition;
-import chess.service.ChessService;
+import chess.web.dto.ChessDto;
+import chess.web.service.ChessService;
 import com.google.gson.Gson;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;

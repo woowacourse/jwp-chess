@@ -1,13 +1,16 @@
-package chess.domain.piece;
+package chess.web.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.domain.board.BoardDto;
+import chess.domain.piece.Pawn;
+import chess.web.dao.PieceDao;
+import chess.web.dto.BoardDto;
 import chess.domain.chess.Chess;
-import chess.domain.chess.ChessDao;
-import chess.domain.chess.ChessDto;
+import chess.web.dao.ChessDao;
+import chess.web.dto.ChessDto;
 import chess.domain.chess.Color;
 import chess.domain.position.MovePosition;
+import chess.web.dto.PieceDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

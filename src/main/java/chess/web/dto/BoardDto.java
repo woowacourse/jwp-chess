@@ -1,9 +1,9 @@
-package chess.domain.board;
+package chess.web.dto;
 
+import chess.domain.board.Board;
 import chess.domain.chess.Chess;
 import chess.domain.chess.Color;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceDto;
 import chess.domain.position.Position;
 import java.util.ArrayList;
 import java.util.List;

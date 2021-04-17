@@ -1,4 +1,4 @@
-package chess.domain.piece;
+package chess.web.dto;
 
 public class PieceDto {
 

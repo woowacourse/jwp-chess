@@ -1,11 +1,10 @@
-package chess;
+package chess.console.controller;
 
-import chess.controller.Command;
+import chess.console.view.InputView;
+import chess.console.view.OutputView;
 import chess.domain.chess.Chess;
 import chess.domain.chess.Color;
 import chess.domain.position.MovePosition;
-import chess.view.InputView;
-import chess.view.OutputView;
 
 public class ConsoleChessApplication {
 

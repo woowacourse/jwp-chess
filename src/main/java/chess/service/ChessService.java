@@ -33,6 +33,16 @@ public class ChessService {
     }
 
     @Transactional
+    public RoomsResponseDto getRooms() {
+        List<RoomIdDto> roomIdDtos = piecesDao.findAllRoomId();
+
+        return new RoomsResponseDto(roomIdDtos.stream()
+            .map(RoomIdDto::getId)
+            .collect(Collectors.toList())
+        );
+    }
+
+    @Transactional
     public PiecesResponseDto postPieces(PiecesRequestDto piecesRequestDto) {
         PiecesDto piecesDto = new PiecesDto(piecesDao.findPiecesByRoomId(new RoomIdDto(piecesRequestDto.getRoomId())));
         PiecesResponsesDto piecesResponsesDto = new PiecesResponsesDto(piecesDto);
@@ -69,6 +79,20 @@ public class ChessService {
             new PiecesDto(piecesDao.findPiecesByRoomId(new RoomIdDto(roomId))));
     }
 
+    private ChessGame makeChessGame(int roomId) {
+        PiecesDto piecesDtos = new PiecesDto(piecesDao.findPiecesByRoomId(new RoomIdDto(roomId)));
+        Map<Position, Piece> board = new HashMap<>();
+        Color turn = Color.valueOf(piecesDao.findTurnByRoomId(new RoomIdDto(roomId)));
+        boolean isPlaying = piecesDao.findPlayingFlagByRoomId(new RoomIdDto(roomId));
+
+        for (PieceDto pieceDto : piecesDtos.getPieceDtos()) {
+            board.put(new Position(pieceDto.getPosition()),
+                PieceFactory.of(pieceDto.getPieceName()));
+        }
+
+        return new ChessGame(board, isPlaying, turn);
+    }
+
     private Color makeWinnerColor(int roomId, ChessGame chessGame) {
         Color winnerColor = Color.NONE;
 
@@ -87,30 +111,6 @@ public class ChessService {
         ChessGame chessGame = makeChessGame(roomId);
 
         return new ScoreResponseDto(chessGame.score(Color.valueOf(colorName)));
-    }
-
-    @Transactional
-    public RoomsResponseDto getRooms() {
-        List<RoomIdDto> roomIdDtos = piecesDao.findAllRoomId();
-
-        return new RoomsResponseDto(roomIdDtos.stream()
-            .map(RoomIdDto::getId)
-            .collect(Collectors.toList())
-        );
-    }
-
-    private ChessGame makeChessGame(int roomId) {
-        PiecesDto piecesDtos = new PiecesDto(piecesDao.findPiecesByRoomId(new RoomIdDto(roomId)));
-        Map<Position, Piece> board = new HashMap<>();
-        Color turn = Color.valueOf(piecesDao.findTurnByRoomId(new RoomIdDto(roomId)));
-        boolean isPlaying = piecesDao.findPlayingFlagByRoomId(new RoomIdDto(roomId));
-
-        for (PieceDto pieceDto : piecesDtos.getPieceDtos()) {
-            board.put(new Position(pieceDto.getPosition()),
-                PieceFactory.of(pieceDto.getPieceName()));
-        }
-
-        return new ChessGame(board, isPlaying, turn);
     }
 
 }

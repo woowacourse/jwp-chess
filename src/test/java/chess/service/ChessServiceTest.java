@@ -35,8 +35,20 @@ public class ChessServiceTest {
     }
 
     @Test
-    @DisplayName("체스 게임 방이 없는 경우, 방을 만들고 DB에 해당 방의 정보와 기물 정보 저장")
-    void addRoomTest1() {
+    @DisplayName("체스 게임 방 목록을 구한다.")
+    void getRoomsTest() {
+        chessService.postPieces(new PiecesRequestDto(1));
+        chessService.postPieces(new PiecesRequestDto(2));
+        chessService.postPieces(new PiecesRequestDto(3));
+        chessService.postPieces(new PiecesRequestDto(4));
+        chessService.postPieces(new PiecesRequestDto(5));
+
+        assertEquals(Arrays.asList(1, 2, 3, 4, 5), chessService.getRooms().getRoomIds());
+    }
+
+    @Test
+    @DisplayName("체스 게임 방이 없는 경우, 방을 만들고 DB에 해당 방 정보와 기물 정보 저장하고 방 정보를 리턴한다.")
+    void postPiecesTestIfChessGameRoomNotExist() {
         PiecesRequestDto piecesRequestDto = new PiecesRequestDto(2);
         PiecesResponseDto piecesResponseDto = chessService.postPieces(piecesRequestDto);
 
@@ -46,8 +58,8 @@ public class ChessServiceTest {
     }
 
     @Test
-    @DisplayName("체스 게임 방이 이미 존재하는 경우, 해당 방 정보와 기물 정보를 가져온다.")
-    void addRoomTest2() {
+    @DisplayName("체스 게임 방이 이미 존재하는 경우, DB에 저장된 해당 방 정보와 기물 정보를 리턴한다.")
+    void postPiecesTestIfChessGameRoomExist() {
         jdbcTemplate.update("INSERT INTO room (id, turn, playing_flag) VALUES (?, ?, ?)", 1, "BLACK", true);
         jdbcTemplate.update("INSERT INTO pieces (room_id, piece_name, position) VALUES (?, ?, ?)", 1, "p", "a2");
 
@@ -60,8 +72,8 @@ public class ChessServiceTest {
     }
 
     @Test
-    @DisplayName("기물을 이동시키고 기물 정보 데이터를 업데이트 한다.")
-    void putBoardTest() {
+    @DisplayName("기물을 이동시키고 db에 저장된 기물 정보 데이터를 업데이트 한다.")
+    void putPiecesTest() {
         PiecesRequestDto piecesRequestDto = new PiecesRequestDto(1);
         chessService.postPieces(piecesRequestDto);
         PiecesResponseDto piecesResponseDto = chessService.putPieces(new BoardRequestDto(1, "a2", "a4"));
@@ -84,18 +96,6 @@ public class ChessServiceTest {
 
         assertEquals(38, chessService.getScore(1, "BLACK").getScore());
         assertEquals(38, chessService.getScore(1, "WHITE").getScore());
-    }
-
-    @Test
-    @DisplayName("체스 게임 방 목록을 구한다.")
-    void getRoomsTest() {
-        chessService.postPieces(new PiecesRequestDto(1));
-        chessService.postPieces(new PiecesRequestDto(2));
-        chessService.postPieces(new PiecesRequestDto(3));
-        chessService.postPieces(new PiecesRequestDto(4));
-        chessService.postPieces(new PiecesRequestDto(5));
-
-        assertEquals(Arrays.asList(1, 2, 3, 4, 5), chessService.getRooms().getRoomIds());
     }
 
 }

@@ -90,15 +90,6 @@ public class Piece {
     }
 
     public boolean isSamePosition(final Position position) {
-//        System.out.println("=====================================");
-//        System.out.println("=====================================");
-//        System.out.println("=====================================");
-//        System.out.println(position.toString());
-//        System.out.println(this.position.toString());
-//        System.out.println(this.position.equals(position));
-//        System.out.println("=====================================");
-//        System.out.println("=====================================");
-//        System.out.println("=====================================");
         return this.position.equals(position);
     }
 

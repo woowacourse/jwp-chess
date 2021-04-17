@@ -96,7 +96,7 @@ public class SparkController {
             MoveRequestDto moveRequestDto = GSON.fromJson(request.body(), MoveRequestDto.class);
             chessServiceImpl.move(moveRequestDto);
             response.type("application/json; charset=utf-8");
-            return new MoveResponseDto(chessServiceImpl.isEnd(moveRequestDto.getId()), chessServiceImpl.nextColor(moveRequestDto.getId()));
+            return new MoveResponseDto(chessServiceImpl.isEnd(moveRequestDto.getGameId()), chessServiceImpl.nextColor(moveRequestDto.getGameId()));
         };
     }
 

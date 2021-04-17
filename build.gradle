@@ -29,6 +29,8 @@ dependencies {
 
     runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'com.h2database:h2'
+
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '3.0.0'
 }
 
 test {

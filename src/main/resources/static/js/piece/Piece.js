@@ -1,5 +1,6 @@
 const SPEED = 0.5;
 const SRC_PATH = "/img/";
+const MOVE_SOUND = document.querySelector(".move-sound");
 
 export class Piece {
   #x
@@ -58,6 +59,7 @@ export class Piece {
     this.#component.style.transition = `${SPEED * weight}s`
     this.#x = targetX;
     this.#y = targetY;
+    MOVE_SOUND.play();
     this.#setPosition(targetX, targetY);
   }
 

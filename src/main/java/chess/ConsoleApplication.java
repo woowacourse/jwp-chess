@@ -1,4 +1,4 @@
-package chess.console;
+package chess;
 
 import chess.console.controller.ConsoleController;
 

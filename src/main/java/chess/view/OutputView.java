@@ -1,7 +1,7 @@
 package chess.view;
 
 import chess.BoardSize;
-import chess.domain.board.SymbolBoardDTO;
+import chess.domain.board.SymbolBoardDto;
 import chess.domain.chess.Chess;
 import chess.domain.chess.Color;
 
@@ -45,7 +45,7 @@ public class OutputView {
     }
 
     public static void printBoard(Chess chess) {
-        final String[][] board = SymbolBoardDTO.from(chess)
+        final String[][] board = SymbolBoardDto.from(chess)
                                                .getBoard();
         for (int j = BoardSize.BOUND.getMaxIndex(); j >= BoardSize.BOUND.getMinIndex(); j--) {
             printRankAt(board, j);

@@ -4,7 +4,7 @@ import java.util.List;
 
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
-import chess.domain.piece.PieceDTO;
+import chess.domain.piece.PieceDto;
 import chess.domain.position.MovePosition;
 
 public class Chess {
@@ -29,8 +29,8 @@ public class Chess {
         return new Chess(BoardFactory.EmptyBoard.create(), Status.STOP, Color.WHITE);
     }
 
-    public static Chess of(List<PieceDTO> pieceDTOS, String status, String turn) {
-        Board board = Board.from(pieceDTOS);
+    public static Chess of(List<PieceDto> pieceDtos, String status, String turn) {
+        Board board = Board.from(pieceDtos);
         return new Chess(board, Status.valueOf(status), Color.valueOf(turn));
     }
 

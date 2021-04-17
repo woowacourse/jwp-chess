@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import chess.domain.chess.ChessDTO;
+import chess.domain.chess.ChessDto;
 import chess.domain.position.MovePosition;
 import chess.service.ChessService;
 
@@ -27,9 +27,9 @@ public class ChessController {
     }
 
     @GetMapping("/{chessId}")
-    public ResponseEntity<ChessDTO> chessInfo(@PathVariable long chessId) {
-        ChessDTO chessDTO = chessService.getChessGame(chessId);
-        return ResponseEntity.ok(chessDTO);
+    public ResponseEntity<ChessDto> chessInfo(@PathVariable long chessId) {
+        ChessDto chessDto = chessService.getChessGame(chessId);
+        return ResponseEntity.ok(chessDto);
     }
 
     @PostMapping("")

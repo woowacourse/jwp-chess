@@ -11,7 +11,7 @@ import chess.domain.chess.Color;
 import chess.domain.chess.Status;
 import chess.domain.piece.Blank;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceDTO;
+import chess.domain.piece.PieceDto;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
@@ -31,12 +31,12 @@ public class Board {
         this.board = board;
     }
 
-    public static Board from(List<PieceDTO> pieceDTOS) {
+    public static Board from(List<PieceDto> pieceDtos) {
         final Map<Position, Piece> board = new HashMap<>();
-        for (PieceDTO pieceDTO : pieceDTOS) {
-            Color color = Color.valueOf(pieceDTO.getColor());
-            Position position = Position.from(pieceDTO.getPosition());
-            Piece piece = PieceFactory.create(pieceDTO.getName(), color);
+        for (PieceDto pieceDto : pieceDtos) {
+            Color color = Color.valueOf(pieceDto.getColor());
+            Position position = Position.from(pieceDto.getPosition());
+            Piece piece = PieceFactory.create(pieceDto.getName(), color);
             board.put(position, piece);
         }
         return new Board(board);

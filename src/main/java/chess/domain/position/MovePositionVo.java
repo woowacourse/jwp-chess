@@ -1,6 +1,6 @@
 package chess.domain.position;
 
-public class MovePositionVO {
+public class MovePositionVo {
 
     private static final char START_FILE_CHARACTER = 'a';
     private static final char START_RANK_CHARACTER = '1';
@@ -8,15 +8,15 @@ public class MovePositionVO {
     private final String source;
     private final String target;
 
-    public MovePositionVO(String source, String target) {
+    public MovePositionVo(String source, String target) {
         this.source = source;
         this.target = target;
     }
 
-    public static MovePositionVO from(MovePosition movePosition) {
+    public static MovePositionVo from(MovePosition movePosition) {
         final String source = toRankAndFile(movePosition.getSourcePosition());
         final String target = toRankAndFile(movePosition.getTargetPosition());
-        return new MovePositionVO(source, target);
+        return new MovePositionVo(source, target);
     }
 
     private static String toRankAndFile(Position position) {

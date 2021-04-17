@@ -12,14 +12,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import chess.domain.piece.PieceDTO;
+import chess.domain.piece.PieceDto;
 
 @Repository
-public class ChessDAO {
+public class ChessDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ChessDAO(JdbcTemplate jdbcTemplate) {
+    public ChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -35,18 +35,18 @@ public class ChessDAO {
         return (resultSet, rowNum) -> {
             final String status = resultSet.getString("c.status");
             final String turn = resultSet.getString("c.turn");
-            final List<PieceDTO> pieceDTOS = pieceDTOSFromResultSet(resultSet);
+            final List<PieceDto> pieceDtos = pieceDtoSFromResultSet(resultSet);
 
-            return Chess.of(pieceDTOS, status, turn);
+            return Chess.of(pieceDtos, status, turn);
         };
     }
 
-    private List<PieceDTO> pieceDTOSFromResultSet(ResultSet resultSet) throws SQLException {
-        List<PieceDTO> pieceDTOS = new ArrayList<>();
+    private List<PieceDto> pieceDtoSFromResultSet(ResultSet resultSet) throws SQLException {
+        List<PieceDto> pieceDtos = new ArrayList<>();
 
         resultSet.last();
         if (resultSet.getRow() == 1) {
-            return pieceDTOS;
+            return pieceDtos;
         }
 
         resultSet.beforeFirst();
@@ -55,10 +55,10 @@ public class ChessDAO {
             final String color = resultSet.getString("color");
             final String name = resultSet.getString("name");
 
-            pieceDTOS.add(new PieceDTO(position, color, name));
+            pieceDtos.add(new PieceDto(position, color, name));
         }
 
-        return pieceDTOS;
+        return pieceDtos;
     }
 
     public long insert() {

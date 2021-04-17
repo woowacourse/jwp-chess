@@ -7,26 +7,26 @@ import java.util.Map;
 import chess.domain.chess.Chess;
 import chess.domain.chess.Color;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceDTO;
+import chess.domain.piece.PieceDto;
 import chess.domain.position.Position;
 
-public class BoardDTO {
+public class BoardDto {
 
     private static final char START_FILE_CHARACTER = 'a';
 
     private final double blackScore;
     private final double whiteScore;
-    private final List<PieceDTO> pieceDTOS;
+    private final List<PieceDto> pieceDtos;
 
-    public BoardDTO(double blackScore, double whiteScore,
-                    List<PieceDTO> pieceDTOS) {
+    public BoardDto(double blackScore, double whiteScore,
+                    List<PieceDto> pieceDtos) {
         this.blackScore = blackScore;
         this.whiteScore = whiteScore;
-        this.pieceDTOS = pieceDTOS;
+        this.pieceDtos = pieceDtos;
     }
 
-    public static BoardDTO from(Chess chess) {
-        final List<PieceDTO> pieceDTOS = new ArrayList<>();
+    public static BoardDto from(Chess chess) {
+        final List<PieceDto> pieceDtos = new ArrayList<>();
         final Map<Position, Piece> boardMap = chess.getBoard()
                                                    .getBoard();
         for (Map.Entry<Position, Piece> entry : boardMap.entrySet()) {
@@ -36,15 +36,15 @@ public class BoardDTO {
                                 .name();
             String name = entry.getValue()
                                .getName();
-            pieceDTOS.add(new PieceDTO(position, color, name));
+            pieceDtos.add(new PieceDto(position, color, name));
         }
 
-        return from(pieceDTOS);
+        return from(pieceDtos);
     }
 
-    public static BoardDTO from(final List<PieceDTO> pieceDTOS) {
-        Board board = Board.from(pieceDTOS);
-        return new BoardDTO(board.score(Color.WHITE), board.score(Color.BLACK), pieceDTOS);
+    public static BoardDto from(final List<PieceDto> pieceDtos) {
+        Board board = Board.from(pieceDtos);
+        return new BoardDto(board.score(Color.WHITE), board.score(Color.BLACK), pieceDtos);
     }
 
     private static String getPosition(Map.Entry<Position, Piece> entry) {
@@ -63,7 +63,7 @@ public class BoardDTO {
         return whiteScore;
     }
 
-    public List<PieceDTO> getPieceDTOS() {
-        return pieceDTOS;
+    public List<PieceDto> getPieceDtos() {
+        return pieceDtos;
     }
 }

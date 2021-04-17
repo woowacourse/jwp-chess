@@ -3,26 +3,26 @@ package chess.domain.piece;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import chess.domain.board.BoardDTO;
+import chess.domain.board.BoardDto;
 import chess.domain.position.MovePosition;
-import chess.domain.position.MovePositionVO;
+import chess.domain.position.MovePositionVo;
 
 @Repository
-public class PieceDAO {
+public class PieceDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public PieceDAO(JdbcTemplate jdbcTemplate) {
+    public PieceDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insert(Long chessId, BoardDTO boardDTO) {
+    public void insert(Long chessId, BoardDto boardDto) {
         String sql = "INSERT INTO piece (chess_id, position, color, name) VALUES (?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(
                 sql,
-                boardDTO.getPieceDTOS(),
-                boardDTO.getPieceDTOS()
+                boardDto.getPieceDtos(),
+                boardDto.getPieceDtos()
                         .size(),
                 (pstmt, argument) -> {
                     pstmt.setLong(1, chessId);
@@ -33,12 +33,12 @@ public class PieceDAO {
     }
 
     public void move(Long chessId, MovePosition movePosition) {
-        MovePositionVO movePositionVO = MovePositionVO.from(movePosition);
+        MovePositionVo movePositionVO = MovePositionVo.from(movePosition);
         updateTargetPosition(chessId, movePositionVO);
         updateSourcePosition(chessId, movePositionVO);
     }
 
-    private void updateTargetPosition(Long chessId, MovePositionVO movePositionVO) {
+    private void updateTargetPosition(Long chessId, MovePositionVo movePositionVO) {
         String sql =
                 "UPDATE piece AS target, (SELECT color, name FROM piece WHERE position = (?) AND chess_id = (?)) AS source "
                         +
@@ -49,7 +49,7 @@ public class PieceDAO {
                 chessId);
     }
 
-    private void updateSourcePosition(Long chessId, MovePositionVO movePositionVO) {
+    private void updateSourcePosition(Long chessId, MovePositionVo movePositionVO) {
         String sql =
                 "UPDATE piece SET color = 'BLANK', name = 'BLANK' WHERE position = (?) AND chess_id = (?)";
         jdbcTemplate.update(sql, movePositionVO.getSource(), chessId);

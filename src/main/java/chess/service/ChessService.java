@@ -1,38 +1,37 @@
 package chess.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import chess.domain.board.BoardDTO;
+import chess.domain.board.BoardDto;
 import chess.domain.chess.Chess;
-import chess.domain.chess.ChessDAO;
-import chess.domain.chess.ChessDTO;
-import chess.domain.piece.PieceDAO;
+import chess.domain.chess.ChessDao;
+import chess.domain.chess.ChessDto;
+import chess.domain.piece.PieceDao;
 import chess.domain.position.MovePosition;
 
 @Service
 public class ChessService {
 
-    private final ChessDAO chessDAO;
-    private final PieceDAO pieceDAO;
+    private final ChessDao chessDAO;
+    private final PieceDao pieceDAO;
 
-    public ChessService(ChessDAO chessDAO, PieceDAO pieceDAO) {
+    public ChessService(ChessDao chessDAO, PieceDao pieceDAO) {
         this.chessDAO = chessDAO;
         this.pieceDAO = pieceDAO;
     }
 
-    public ChessDTO getChessGame(Long chessId) {
+    public ChessDto getChessGame(Long chessId) {
         final Chess chess = chessDAO.findChessById(chessId);
-        return new ChessDTO(chess);
+        return new ChessDto(chess);
     }
 
     public Long insert() {
         final Chess chess = Chess.createWithEmptyBoard()
                                  .start();
-        final BoardDTO boardDTO = BoardDTO.from(chess);
+        final BoardDto boardDto = BoardDto.from(chess);
 
         final long chessId = chessDAO.insert();
-        pieceDAO.insert(chessId, boardDTO);
+        pieceDAO.insert(chessId, boardDto);
 
         return chessId;
     }

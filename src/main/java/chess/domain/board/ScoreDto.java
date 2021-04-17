@@ -2,15 +2,15 @@ package chess.domain.board;
 
 import chess.domain.chess.Color;
 
-public class ScoreDTO {
+public class ScoreDto {
     private final double blackScore;
     private final double whiteScore;
 
-    public ScoreDTO(Board board) {
+    public ScoreDto(Board board) {
         this(board.score(Color.BLACK), board.score(Color.WHITE));
     }
 
-    public ScoreDTO(double blackScore, double whiteScore) {
+    public ScoreDto(double blackScore, double whiteScore) {
         this.blackScore = blackScore;
         this.whiteScore = whiteScore;
     }

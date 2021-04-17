@@ -10,13 +10,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.service.ChessService;
 
 @SpringBootTest
-public class ChessDAOTest {
+public class ChessDaoTest {
 
-    private final ChessDAO chessDAO;
+    private final ChessDao chessDAO;
     private final Long chessId;
 
     @Autowired
-    public ChessDAOTest(ChessDAO chessDAO, ChessService chessService) {
+    public ChessDaoTest(ChessDao chessDAO, ChessService chessService) {
         this.chessDAO = chessDAO;
         chessId = chessService.insert();
     }
@@ -27,13 +27,13 @@ public class ChessDAOTest {
 
         // when
         final Chess chess = chessDAO.findChessById(chessId);
-        final ChessDTO chessDTO = new ChessDTO(chess);
+        final ChessDto chessDTO = new ChessDto(chess);
 
         // then
         assertThat(chessDTO.getStatus()).isEqualTo("RUNNING");
         assertThat(chessDTO.getTurn()).isEqualTo("WHITE");
         assertThat(chessDTO.getBoardDTO()
-                           .getPieceDTOS()).size()
+                           .getPieceDtos()).size()
                                            .isEqualTo(64);
     }
 
@@ -57,7 +57,7 @@ public class ChessDAOTest {
 
         // then
         final Chess chess = chessDAO.findChessById(chessId);
-        final ChessDTO chessDTO = new ChessDTO(chess);
+        final ChessDto chessDTO = new ChessDto(chess);
         assertThat(chessDTO.getStatus()).isEqualTo("KING_DEAD");
         assertThat(chessDTO.getTurn()).isEqualTo("BLACK");
     }

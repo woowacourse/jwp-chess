@@ -6,17 +6,17 @@ import chess.domain.chess.Chess;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 
-public class SymbolBoardDTO {
+public class SymbolBoardDto {
 
     private static final int BOARD_SIZE = 8;
 
     private final String[][] board;
 
-    private SymbolBoardDTO(String[][] board) {
+    private SymbolBoardDto(String[][] board) {
         this.board = board;
     }
 
-    public static SymbolBoardDTO from(Chess chess) {
+    public static SymbolBoardDto from(Chess chess) {
         final Map<Position, Piece> pieceBoard = chess.getBoard()
                                                      .getBoard();
         final String[][] board = new String[BOARD_SIZE][BOARD_SIZE];
@@ -29,7 +29,7 @@ public class SymbolBoardDTO {
                                .getSymbol();
         }
 
-        return new SymbolBoardDTO(board);
+        return new SymbolBoardDto(board);
     }
 
     public String[][] getBoard() {

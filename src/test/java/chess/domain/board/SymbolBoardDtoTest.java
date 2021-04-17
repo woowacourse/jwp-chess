@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.chess.Chess;
 
-class SymbolBoardDTOTest {
+class SymbolBoardDtoTest {
 
     @ParameterizedTest(name = "폰이 아닌 기물의 심볼 보드 테스트")
     @MethodSource("generateNonPawnSource")
@@ -25,7 +25,7 @@ class SymbolBoardDTOTest {
         final int whiteRow = 0;
 
         // when
-        final String[][] board = SymbolBoardDTO.from(chess)
+        final String[][] board = SymbolBoardDto.from(chess)
                                                .getBoard();
 
         // then
@@ -57,7 +57,7 @@ class SymbolBoardDTOTest {
         final int whiteRow = 1;
 
         // when
-        final String[][] board = SymbolBoardDTO.from(chess)
+        final String[][] board = SymbolBoardDto.from(chess)
                                                .getBoard();
 
         // then
@@ -78,7 +78,7 @@ class SymbolBoardDTOTest {
         Chess chess = Chess.createWithEmptyBoard();
 
         // when
-        final String[][] board = SymbolBoardDTO.from(chess)
+        final String[][] board = SymbolBoardDto.from(chess)
                                                .getBoard();
 
         // then

@@ -7,22 +7,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.domain.board.BoardDTO;
+import chess.domain.board.BoardDto;
 import chess.domain.chess.Chess;
-import chess.domain.chess.ChessDAO;
-import chess.domain.chess.ChessDTO;
+import chess.domain.chess.ChessDao;
+import chess.domain.chess.ChessDto;
 import chess.domain.chess.Color;
 import chess.domain.position.MovePosition;
 
 @SpringBootTest
-public class PieceDAOTest {
+public class PieceDaoTest {
 
-    private final ChessDAO chessDAO;
-    private final PieceDAO pieceDAO;
+    private final ChessDao chessDAO;
+    private final PieceDao pieceDAO;
     private final long chessId;
 
     @Autowired
-    public PieceDAOTest(ChessDAO chessDAO, PieceDAO pieceDAO) {
+    public PieceDaoTest(ChessDao chessDAO, PieceDao pieceDAO) {
         this.chessDAO = chessDAO;
         this.pieceDAO = pieceDAO;
         chessId = chessDAO.insert();
@@ -34,22 +34,22 @@ public class PieceDAOTest {
 
         // given
         final Chess chess = chessDAO.findChessById(chessId);
-        final ChessDTO chessDTO = new ChessDTO(chess);
+        final ChessDto chessDTO = new ChessDto(chess);
         assertThat(chessDTO.getBoardDTO()
-                           .getPieceDTOS()).size()
+                           .getPieceDtos()).size()
                                            .isEqualTo(0);
 
         // when
         final Chess newChess = Chess.createWithEmptyBoard()
                                     .start();
-        final BoardDTO boardDTO = BoardDTO.from(newChess);
+        final BoardDto boardDTO = BoardDto.from(newChess);
         pieceDAO.insert(chessId, boardDTO);
 
         // then
         final Chess insertedChess = chessDAO.findChessById(chessId);
-        final ChessDTO insertedChessDTO = new ChessDTO(insertedChess);
-        assertThat(insertedChessDTO.getBoardDTO()
-                                   .getPieceDTOS()).size()
+        final ChessDto insertedChessDto = new ChessDto(insertedChess);
+        assertThat(insertedChessDto.getBoardDTO()
+                                   .getPieceDtos()).size()
                                                    .isEqualTo(64);
     }
 
@@ -64,16 +64,16 @@ public class PieceDAOTest {
 
         final Chess newChess = Chess.createWithEmptyBoard()
                                     .start();
-        pieceDAO.insert(chessId, BoardDTO.from(newChess));
+        pieceDAO.insert(chessId, BoardDto.from(newChess));
 
         // when
         pieceDAO.move(chessId, movePosition);
 
         // then
         final Chess chess = chessDAO.findChessById(chessId);
-        final ChessDTO chessDTO = new ChessDTO(chess);
-        for (PieceDTO pieceDTO : chessDTO.getBoardDTO()
-                                         .getPieceDTOS()) {
+        final ChessDto chessDTO = new ChessDto(chess);
+        for (PieceDto pieceDTO : chessDTO.getBoardDTO()
+                                         .getPieceDtos()) {
             if (pieceDTO.getPosition()
                         .equals(source)) {
                 assertThat(pieceDTO.getPosition()).isEqualTo(source);

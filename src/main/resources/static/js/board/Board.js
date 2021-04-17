@@ -1,5 +1,6 @@
 import {Tiles} from "../tile/Tiles.js"
 import {Pieces} from "../piece/Pieces.js"
+import {Turn} from "./Turn.js"
 import {getData, putData} from "../utils/FetchUtil.js"
 
 const url = "http://localhost:8080";
@@ -9,12 +10,14 @@ export class Board {
   #pieces
   #component
   #sourceTile
+  #turn
 
-  constructor(pieceDtos) {
+  constructor(pieceDtos, turn) {
     this.#tiles = new Tiles();
     this.#pieces = new Pieces(pieceDtos);
     this.#component = document.querySelector(".grid");
     this.#sourceTile = null;
+    this.#turn = new Turn(turn);
     this.#addEvent()
   }
 
@@ -146,6 +149,7 @@ export class Board {
       return;
     }
     this.#pieces.move(piece, targetTile)
+    this.#turn.changeTurn();
     if (response["finished"]) {
       // const winner = response["winner"];
       const back = confirm(`게임이 끝났습니다. 확인을 누르면 홈으로 돌아갑니다.`)
@@ -174,4 +178,5 @@ export class Board {
   findPieceBySourcePosition(sourcePosition) {
     return this.#pieces.findBySourcePosition(sourcePosition);
   }
+
 }

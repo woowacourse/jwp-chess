@@ -8,9 +8,9 @@ window.onload = async function () {
   const pieces = response["pieceDtos"];
   const host = response["host"];
   const guest = response["guest"];
-  const game = response["game"];
+  const game = response["gameResponseDto"];
 
-  initBoard(pieces);
+  initBoard(pieces, game["turn"]);
   fillInformation(host, guest)
 }
 
@@ -25,8 +25,8 @@ function findGameIdInUri() {
   return gameId;
 }
 
-function initBoard(pieces) {
-  const board = new Board(pieces);
+function initBoard(pieces, turn) {
+  const board = new Board(pieces, turn);
   addEvent(board);
 }
 

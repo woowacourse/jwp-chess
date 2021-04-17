@@ -305,209 +305,169 @@ class BoardTest {
                 }
             }
 
-//            @DisplayName("Bishop 이동")
-//            @Nested
-//            class Bishop {
-//                @DisplayName("유효하지 않은 경로로 이동할 수 없다.")
-//                @ParameterizedTest
-//                @ValueSource(strings = {"b5", "e7", "g1"})
-//                void cannotMoveInvalidRoute(String destinationInput) {
-//                    BoardSetting customBoardSetting = new BoardCustomSetting(
-//                        Arrays.asList(
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, B_BP, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null)
-//                    );
-//
-//                    
-//
-//                    
-//
-//                    String startPositionInput = "d5";
-//
-//                    assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
-//                }
-//
-//                @DisplayName("왼쪽 위 대각선 방향으로 이동")
-//                @Test
-//                void moveLeftUpDiagonal() {
-//                    BoardSetting customBoardSetting = new BoardCustomSetting(
-//                        Arrays.asList(
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, B_BP, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null)
-//                    );
-//
-//                    
-//
-//                    
-//
-//                    String startPositionInput = "d5";
-//                    String destinationInput = "a8";
-//
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
-//                }
-//
-//                @DisplayName("왼쪽 아래 대각선 방향으로 이동")
-//                @Test
-//                void moveLeftDownDiagonal() {
-//                    BoardSetting customBoardSetting = new BoardCustomSetting(
-//                        Arrays.asList(
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, B_BP, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null)
-//                    );
-//
-//                    
-//
-//                    
-//
-//                    String startPositionInput = "d5";
-//                    String destinationInput = "a2";
-//
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
-//                }
-//
-//                @DisplayName("오른쪽 위 대각선 방향으로 이동")
-//                @Test
-//                void moveRightUpDiagonal() {
-//                    BoardSetting customBoardSetting = new BoardCustomSetting(
-//                        Arrays.asList(
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, B_BP, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null)
-//                    );
-//
-//                    
-//
-//                    
-//
-//                    String startPositionInput = "d5";
-//                    String destinationInput = "g8";
-//
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
-//                }
-//
-//                @DisplayName("오른쪽 아래 대각선 방향으로 이동")
-//                @Test
-//                void moveRightDownDiagonal() {
-//                    BoardSetting customBoardSetting = new BoardCustomSetting(
-//                        Arrays.asList(
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, B_BP, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null)
-//                    );
-//
-//                    
-//
-//                    
-//
-//                    String startPositionInput = "d5";
-//                    String destinationInput = "h1";
-//
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
-//                }
-//
-//                @DisplayName("이동경로 중간에 기물이 존재하면, 이동할 수 없다.")
-//                @Test
-//                void cannotMoveWhenPieceExistsOnRoute() {
-//                    BoardSetting customBoardSetting = new BoardCustomSetting(
-//                        Arrays.asList(
-//                            null, null, null, null, null, null, null, null,
-//                            null, W_BP, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, B_BP, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null)
-//                    );
-//
-//                    
-//
-//                    
-//
-//                    String startPositionInput = "d5";
-//                    String destinationInput = "a8";
-//
-//                    assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
-//                }
-//
-//                @DisplayName("도착위치에 아군 기물이 존재하면, 이동할 수 없다.")
-//                @Test
-//                void cannotMoveWhenMyPieceExistsAtDestination() {
-//                    BoardSetting customBoardSetting = new BoardCustomSetting(
-//                        Arrays.asList(
-//                            B_PN, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, B_BP, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null)
-//                    );
-//
-//                    
-//
-//                    
-//
-//                    String startPositionInput = "d5";
-//                    String destinationInput = "a8";
-//
-//                    assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
-//                }
-//
-//                @DisplayName("도착위치에 적 기물이 존재하면, 이동할 수 있다.")
-//                @Test
-//                void canMoveWhenEnemyPieceExistsAtDestination() {
-//                    BoardSetting customBoardSetting = new BoardCustomSetting(
-//                        Arrays.asList(
-//                            W_BP, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, B_BP, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null)
-//                    );
-//
-//                    
-//
-//                    
-//
-//                    String startPositionInput = "d5";
-//                    String destinationInput = "a8";
-//
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
-//                }
-//            }
+            @DisplayName("Bishop 이동")
+            @Nested
+            class Bishop {
+                @DisplayName("유효하지 않은 경로로 이동할 수 없다.")
+                @ParameterizedTest
+                @ValueSource(strings = {"b5", "e7", "g1"})
+                void cannotMoveInvalidRoute(String destinationInput) {
+                    Board board = new Board(""
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "...B...."
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "........"
+                    );
+
+                    String startPositionInput = "d5";
+
+                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
+                }
+
+                @DisplayName("왼쪽 위 대각선 방향으로 이동")
+                @Test
+                void moveLeftUpDiagonal() {
+                    Board board = new Board(""
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "...B...."
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "........"
+                    );
+
+                    String startPositionInput = "d5";
+                    String destinationInput = "a8";
+
+                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
+                }
+
+                @DisplayName("왼쪽 아래 대각선 방향으로 이동")
+                @Test
+                void moveLeftDownDiagonal() {
+                    Board board = new Board(""
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "...B...."
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "........"
+                    );
+
+                    String startPositionInput = "d5";
+                    String destinationInput = "a2";
+
+                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
+                }
+
+                @DisplayName("오른쪽 위 대각선 방향으로 이동")
+                @Test
+                void moveRightUpDiagonal() {
+                    Board board = new Board(""
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "...B...."
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "........"
+                    );
+
+                    String startPositionInput = "d5";
+                    String destinationInput = "g8";
+
+                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
+                }
+
+                @DisplayName("오른쪽 아래 대각선 방향으로 이동")
+                @Test
+                void moveRightDownDiagonal() {
+                    Board board = new Board(""
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "...B...."
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "........"
+                    );
+
+                    String startPositionInput = "d5";
+                    String destinationInput = "h1";
+
+                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
+                }
+
+                @DisplayName("이동경로 중간에 기물이 존재하면, 이동할 수 없다.")
+                @Test
+                void cannotMoveWhenPieceExistsOnRoute() {
+                    Board board = new Board(""
+                        + "........"
+                        + ".b......"
+                        + "........"
+                        + "...B...."
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "........"
+                    );
+
+                    String startPositionInput = "d5";
+                    String destinationInput = "a8";
+
+                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
+                }
+
+                @DisplayName("도착위치에 아군 기물이 존재하면, 이동할 수 없다.")
+                @Test
+                void cannotMoveWhenMyPieceExistsAtDestination() {
+                    Board board = new Board(""
+                        + "P......."
+                        + "........"
+                        + "........"
+                        + "...B...."
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "........"
+                    );
+
+                    String startPositionInput = "d5";
+                    String destinationInput = "a8";
+
+                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
+                }
+
+                @DisplayName("도착위치에 적 기물이 존재하면, 이동할 수 있다.")
+                @Test
+                void canMoveWhenEnemyPieceExistsAtDestination() {
+                    Board board = new Board(""
+                        + "p......."
+                        + "........"
+                        + "........"
+                        + "...B...."
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "........"
+                    );
+
+                    String startPositionInput = "d5";
+                    String destinationInput = "a8";
+
+                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
+                }
+            }
 //
 //            @DisplayName("Queen 이동")
 //            @Nested
@@ -534,7 +494,7 @@ class BoardTest {
 //
 //                    String startPositionInput = "d5";
 //
-//                    assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("위 방향으로 이동")
@@ -559,7 +519,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "d8";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("아래 방향으로 이동")
@@ -584,7 +544,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "d1";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("오른쪽 방향으로 이동")
@@ -609,7 +569,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "h5";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("왼쪽 방향으로 이동")
@@ -634,7 +594,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "a5";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("왼쪽 위 대각선 방향으로 이동")
@@ -659,7 +619,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "a8";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("왼쪽 아래 대각선 방향으로 이동")
@@ -684,7 +644,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "a2";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("오른쪽 위 대각선 방향으로 이동")
@@ -709,7 +669,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "g8";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("오른쪽 아래 대각선 방향으로 이동")
@@ -734,7 +694,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "h1";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("이동경로 중간에 기물이 존재하면, 이동할 수 없다.")
@@ -759,7 +719,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "a8";
 //
-//                    assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("도착위치에 아군 기물이 존재하면, 이동할 수 없다.")
@@ -784,7 +744,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "a8";
 //
-//                    assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("도착위치에 적 기물이 존재하면, 이동할 수 있다.")
@@ -809,7 +769,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "a8";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //            }
 //
@@ -838,7 +798,7 @@ class BoardTest {
 //
 //                    String startPositionInput = "d5";
 //
-//                    assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("위 방향으로 한 칸 이동")
@@ -863,7 +823,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "d6";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("아래 방향으로 한 칸 이동")
@@ -888,7 +848,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "d4";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("오른쪽 방향으로 한 칸 이동")
@@ -912,7 +872,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "e5";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("왼쪽 방향으로 한 칸 이동")
@@ -937,7 +897,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "c5";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("왼쪽 위 대각선 방향으로 한 칸 이동")
@@ -962,7 +922,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "c6";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("왼쪽 아래 대각선 방향으로 한 칸 이동")
@@ -987,7 +947,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "c4";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("오른쪽 위 대각선 방향으로 한 칸 이동")
@@ -1012,7 +972,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "e6";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("오른쪽 아래 대각선 방향으로 한 칸 이동")
@@ -1037,7 +997,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "e4";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("도착위치에 아군 기물이 존재하면, 이동할 수 없다.")
@@ -1062,7 +1022,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "c6";
 //
-//                    assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("도착위치에 적 기물이 존재하면, 이동할 수 있다.")
@@ -1087,7 +1047,7 @@ class BoardTest {
 //                    String startPositionInput = "d5";
 //                    String destinationInput = "c6";
 //
-//                    assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //            }
         }
@@ -1118,7 +1078,7 @@ class BoardTest {
 //
 //                String startPositionInput = "d5";
 //
-//                assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //
 //            @DisplayName("왼쪽 왼쪽 위 방향으로 한 번 이동")
@@ -1143,7 +1103,7 @@ class BoardTest {
 //                String startPositionInput = "d5";
 //                String destinationInput = "b6";
 //
-//                assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //
 //            @DisplayName("왼쪽 왼쪽 아래 방향으로 한 번 이동")
@@ -1168,7 +1128,7 @@ class BoardTest {
 //                String startPositionInput = "d5";
 //                String destinationInput = "c3";
 //
-//                assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //
 //            @DisplayName("왼쪽 위 위 방향으로 한 번 이동")
@@ -1193,7 +1153,7 @@ class BoardTest {
 //                String startPositionInput = "d5";
 //                String destinationInput = "c7";
 //
-//                assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //
 //            @DisplayName("왼쪽 아래 아래 방향으로 한 번 이동")
@@ -1218,7 +1178,7 @@ class BoardTest {
 //                String startPositionInput = "d5";
 //                String destinationInput = "c3";
 //
-//                assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //
 //            @DisplayName("오른쪽 오른쪽 위 방향으로 한 번 이동")
@@ -1243,7 +1203,7 @@ class BoardTest {
 //                String startPositionInput = "d5";
 //                String destinationInput = "f6";
 //
-//                assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //
 //            @DisplayName("오른쪽 오른쪽 아래 방향으로 한 번 이동")
@@ -1268,7 +1228,7 @@ class BoardTest {
 //                String startPositionInput = "d5";
 //                String destinationInput = "f4";
 //
-//                assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //
 //            @DisplayName("오른쪽 위 위 방향으로 한 번 이동")
@@ -1293,7 +1253,7 @@ class BoardTest {
 //                String startPositionInput = "d5";
 //                String destinationInput = "e7";
 //
-//                assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //
 //            @DisplayName("오른쪽 아래 아래 방향으로 한 번 이동")
@@ -1318,7 +1278,7 @@ class BoardTest {
 //                String startPositionInput = "d5";
 //                String destinationInput = "e3";
 //
-//                assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //
 //            @DisplayName("도착위치에 아군 기물이 존재하면, 이동할 수 없다.")
@@ -1343,7 +1303,7 @@ class BoardTest {
 //                String startPositionInput = "d5";
 //                String destinationInput = "c7";
 //
-//                assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //
 //            @DisplayName("이동 경로 중간에 적 기물이 존재해도, 이동할 수 있다.")
@@ -1368,7 +1328,7 @@ class BoardTest {
 //                String startPositionInput = "d5";
 //                String destinationInput = "c7";
 //
-//                assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //
 //            @DisplayName("도착위치에 적 기물이 존재하면, 이동할 수 있다.")
@@ -1393,7 +1353,7 @@ class BoardTest {
 //                String startPositionInput = "d5";
 //                String destinationInput = "c7";
 //
-//                assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //            }
 //        }
 //
@@ -1426,7 +1386,7 @@ class BoardTest {
 //
 //                    String startPositionInput = "d5";
 //
-//                    assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("한 칸 전진")
@@ -1454,7 +1414,7 @@ class BoardTest {
 //                        String startPositionInput = "d5";
 //                        String destinationInput = "d4";
 //
-//                        assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("도착위치에 기물이 존재하면, 이동할 수 없다.")
@@ -1479,7 +1439,7 @@ class BoardTest {
 //                        String startPositionInput = "d5";
 //                        String destinationInput = "d4";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("위 방향으로 이동할 수 없다.")
@@ -1504,7 +1464,7 @@ class BoardTest {
 //                        String startPositionInput = "d5";
 //                        String destinationInput = "d6";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("처음 위치가 아닌 곳에서 앞으로 두 칸 전진할 수 없다.")
@@ -1529,7 +1489,7 @@ class BoardTest {
 //                        String startPositionInput = "d5";
 //                        String destinationInput = "d3";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //                }
 //
@@ -1558,7 +1518,7 @@ class BoardTest {
 //                        String startPositionInput = "d7";
 //                        String destinationInput = "d5";
 //
-//                        assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("도착위치에 기물이 존재하면, 이동할 수 없다.")
@@ -1583,7 +1543,7 @@ class BoardTest {
 //                        String startPositionInput = "d7";
 //                        String destinationInput = "d5";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("이동 경로 중간에 기물이 존재하면, 이동할 수 없다.")
@@ -1608,7 +1568,7 @@ class BoardTest {
 //                        String startPositionInput = "d7";
 //                        String destinationInput = "d5";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("위 방향으로 이동할 수 없다.")
@@ -1633,7 +1593,7 @@ class BoardTest {
 //                        String startPositionInput = "d5";
 //                        String destinationInput = "d7";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //                }
 //
@@ -1662,7 +1622,7 @@ class BoardTest {
 //                        String startPositionInput = "d7";
 //                        String destinationInput = "c6";
 //
-//                        assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("적이 오른쪽 대각선에 있을 때, 이동 가능")
@@ -1687,7 +1647,7 @@ class BoardTest {
 //                        String startPositionInput = "d7";
 //                        String destinationInput = "e6";
 //
-//                        assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("도착위치에 적이 존재하지 않을 때, 왼쪽 대각선 이동 불가능")
@@ -1713,7 +1673,7 @@ class BoardTest {
 //                        String startPositionInput = "d7";
 //                        String destinationInput = "c6";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("도착위치에 적이 존재하지 않을 때, 오른쪽 대각선 이동 불가능")
@@ -1739,7 +1699,7 @@ class BoardTest {
 //                        String startPositionInput = "d7";
 //                        String destinationInput = "e6";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //                }
 //            }
@@ -1768,7 +1728,7 @@ class BoardTest {
 //
 //                    String startPositionInput = "d5";
 //
-//                    assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                }
 //
 //                @DisplayName("한 칸 전진")
@@ -1794,7 +1754,7 @@ class BoardTest {
 //                        String startPositionInput = "d5";
 //                        String destinationInput = "d6";
 //
-//                        assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("도착위치에 기물이 존재하면, 이동할 수 없다.")
@@ -1817,7 +1777,7 @@ class BoardTest {
 //                        String startPositionInput = "d5";
 //                        String destinationInput = "d6";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("아래 방향으로 이동할 수 없다.")
@@ -1840,7 +1800,7 @@ class BoardTest {
 //                        String startPositionInput = "d5";
 //                        String destinationInput = "d4";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("처음 위치가 아닌 곳에서 앞으로 두 칸 전진할 수 없다.")
@@ -1863,7 +1823,7 @@ class BoardTest {
 //                        String startPositionInput = "d5";
 //                        String destinationInput = "d7";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //                }
 //
@@ -1890,7 +1850,7 @@ class BoardTest {
 //                        String startPositionInput = "d2";
 //                        String destinationInput = "d4";
 //
-//                        assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("도착위치에 기물이 존재하면, 이동할 수 없다.")
@@ -1913,7 +1873,7 @@ class BoardTest {
 //                        String startPositionInput = "d2";
 //                        String destinationInput = "d4";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("이동 경로 중간에 기물이 존재하면, 이동할 수 없다.")
@@ -1936,7 +1896,7 @@ class BoardTest {
 //                        String startPositionInput = "d2";
 //                        String destinationInput = "d4";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("아래 방향으로 이동할 수 없다.")
@@ -1959,7 +1919,7 @@ class BoardTest {
 //                        String startPositionInput = "d3";
 //                        String destinationInput = "d1";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //                }
 //
@@ -1986,7 +1946,7 @@ class BoardTest {
 //                        String startPositionInput = "d2";
 //                        String destinationInput = "c3";
 //
-//                        assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("적이 오른쪽 대각선에 있을 때, 이동 가능")
@@ -2009,7 +1969,7 @@ class BoardTest {
 //                        String startPositionInput = "d2";
 //                        String destinationInput = "e3";
 //
-//                        assertCanMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("도착위치에 적이 존재하지 않을 때, 왼쪽 대각선 이동 불가능")
@@ -2033,7 +1993,7 @@ class BoardTest {
 //                        String startPositionInput = "d2";
 //                        String destinationInput = "c3";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //
 //                    @DisplayName("도착위치에 적이 존재하지 않을 때, 오른쪽 대각선 이동 불가능")
@@ -2057,7 +2017,7 @@ class BoardTest {
 //                        String startPositionInput = "d2";
 //                        String destinationInput = "e3";
 //
-//                        assertCannotMove(chessGame, gameId, startPositionInput, destinationInput);
+//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
 //                    }
 //                }
 //            }

@@ -26,7 +26,6 @@ async function init() {
     this.$blackResult = document.getElementById('BLACK')
     this.$whiteResult = document.getElementById('WHITE')
     const url = window.location.href.split('/')
-
     this.gameId = url[url.length - 1]
     await initBoard(await start())
     await moveHandler()
@@ -170,10 +169,6 @@ async function btnHandler({target}) {
             await finishHandler()
         }
     }
-    if (target.id === "status") {
-        await result()
-        target.disabled = true;
-    }
 }
 
 async function finish() {
@@ -189,7 +184,6 @@ async function finish() {
 
 function toggleFinish() {
     document.querySelector('#finish').disabled = true
-    document.querySelector('#status').disabled = false
 }
 
 function moveHandler() {

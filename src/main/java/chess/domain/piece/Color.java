@@ -26,7 +26,7 @@ public enum Color {
     }
 
     public static Color of(char name) {
-        if (Character.isUpperCase(name)){
+        if (Character.isUpperCase(name)) {
             return Color.BLACK;
         }
         if (Character.isLowerCase(name)) {

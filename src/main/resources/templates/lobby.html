@@ -15,6 +15,15 @@
         <button id="load" class="control-btn">LOAD</button>
     </div>
 </div>
+<div class="modal-background">
+    <div class="modal lobby" style="display: none">
+        <label>입장하실 방 이름을 입력해주세요.</label>
+        <input id="room-name" type="text"/>
+        <span class="error-msg" id="name-length" style="display: none"></span>
+        <span class="error-msg" id="name-duplicate" style="display: none">이미 존재하는 방 이름입니다.</span>
+        <button id="enter" class="modal-btn">ENTER</button>
+    </div>
+</div>
 <script src="./js/lobby.js"></script>
 </body>
 </html>

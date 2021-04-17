@@ -41,10 +41,7 @@ html {
     font-style: italic;
     font-weight: 100;
     text-shadow: 7px 7px 0 #DF59F6,
-    -1px -1px 0 #DF59F6,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
+    -1px -1px 0 #DF59F6;
     animation: title 5s infinite;
 }
 
@@ -167,6 +164,10 @@ html {
     text-shadow: 1px 1px #935471;
 }
 
+.control-btn:focus {
+    outline: none;
+}
+
 .control-btn:active {
     color: #935471;
     text-shadow: 1px 1px #f389ba;
@@ -185,4 +186,46 @@ html {
     0 0 0 4px #6c6c6c, 1px 1px 1px white,
     inset 2px 2px 2px #4f4e4e,
     inset 0.5rem 0.5rem 0.25rem #7d7d7d;
+}
+
+.modal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background: white;
+    width: 20rem;
+    height: 15rem;
+    border-radius: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.1rem;
+    color: #242424;
+    text-shadow: 1px 1px #0e1111;
+}
+
+.modal > span {
+    font-size: 1.4rem;
+    margin: 3rem;
+}
+
+.modal-btn{
+    padding: 7px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.1rem;
+    color: #242424;
+    background: #a4b8a7;
+    border: 0;
+    border-radius: 20px;
+    text-shadow: 1px 1px #0e1111;
+    cursor: pointer;
+    margin: 6px 6px;
+    letter-spacing: .1em;
+    transition: all 200ms ease;
 }

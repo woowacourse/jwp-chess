@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+//TODO: chessGame 필드에서 없애고 db에서 매번 가져오는 식으로 리팩토링 (매 수 둘 때마다 항상 저장해야함)
 @Service
 public class SpringChessService {
     private static final String SPACE = " ";
@@ -27,9 +28,9 @@ public class SpringChessService {
         this.roomDAO = roomDAO;
     }
 
-    public Optional<ChessGame> createRoom(String roomId) {
+    public Optional<ChessGame> createRoom(String roomName) {
         try {
-            roomDAO.validateRoomExistence(roomId);
+            roomDAO.validateRoomExistence(roomName);
             initializeChessBoard();
             return Optional.of(chessGame);
         } catch (Exception e) {
@@ -55,9 +56,8 @@ public class SpringChessService {
         chessGame.start(Collections.singletonList("start"));
     }
 
-    public boolean saveRoom(String request) {
+    public boolean saveRoom(Room room) {
         try {
-            Room room = createRoomToSave(request);
             roomDAO.addRoom(room);
             return true;
         } catch (Exception e) {
@@ -66,18 +66,10 @@ public class SpringChessService {
         }
     }
 
-    private Room createRoomToSave(String request) {
-        JsonObject roomJson = JsonConverter.toJsonObject(request);
-        String name = roomJson.get("name").getAsString();
-        String turn = roomJson.get("turn").getAsString();
-        JsonObject state = roomJson.get("state").getAsJsonObject();
-        return new Room(name, turn, state);
-    }
-
     public Optional<ChessGame> loadRoom(String name) {
         try {
             Room room = roomDAO.findByRoomName(name);
-            setChessGame(room);
+            createChessGame(room);
             return Optional.of(chessGame);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -85,7 +77,7 @@ public class SpringChessService {
         }
     }
 
-    private void setChessGame(Room room) {
+    private void createChessGame(Room room) {
         ChessBoard chessBoard = new ChessBoard();
         Color turn = Color.convert(room.getTurn());
         JsonObject stateJson = room.getState();

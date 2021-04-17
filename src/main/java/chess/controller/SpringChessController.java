@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.config.ChessRoom;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
 import chess.domain.game.ChessGame;
@@ -9,6 +10,7 @@ import chess.dto.OutcomeDto;
 import chess.dto.PieceDto;
 import chess.dto.ScoreDto;
 import chess.dto.TurnDto;
+import chess.repository.room.Room;
 import chess.service.SpringChessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,7 +64,6 @@ public class SpringChessController {
             return modelAndView;
         }
         modelAndView.setStatus(HttpStatus.BAD_REQUEST);
-        modelAndView.setViewName("game");
         return modelAndView;
     }
 
@@ -75,7 +76,7 @@ public class SpringChessController {
     }
 
     @PostMapping(value = "/game/save")
-    public ResponseEntity<String> save(@RequestBody String room) {
+    public ResponseEntity<String> save(@ChessRoom Room room) {
         boolean isSaved = springChessService.saveRoom(room);
         String response = Boolean.toString(isSaved);
         if (isSaved) {

@@ -4,6 +4,7 @@ import chess.domain.position.type.File;
 import chess.domain.position.type.Rank;
 
 public class PositionConverter {
+
     private static final int FILE_INDEX = 0;
     private static final int RANK_INDEX = 1;
     private static final int RANK_SIZE = 8;

@@ -1,8 +1,6 @@
 package chess.domain.utils;
 
 import chess.domain.exception.DataException;
-import chess.domain.response.Response;
-import chess.domain.response.StatusEnum;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,13 +12,12 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody
-    public ResponseEntity<Response> passDetailError(IllegalArgumentException e) {
-        final Response response = new Response(StatusEnum.BAD_REQUEST, e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> passDetailError(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
     @ExceptionHandler(DataException.class)
-    public String passDataExceptionError(DataException e) {
-        return "lobby";
+    public ResponseEntity<String> passDataExceptionError(DataException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 }

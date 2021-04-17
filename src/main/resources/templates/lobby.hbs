@@ -46,11 +46,11 @@
     }
 
     const showError = function (response) {
-        alert(response.responseText);
+        alert(response);
     }
 
     const redirect = function (response) {
-        window.location = `/play/${response.data}`;
+        window.location = `/play/${response}`;
     }
 
     const gameHistory = document.getElementById("historyList");

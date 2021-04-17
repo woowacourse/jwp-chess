@@ -38,9 +38,10 @@ function move(source, target) {
 }
 
 function update(response) {
-    const board = response.data.squares;
-    const turn = response.data.turn;
-    const scores = response.data.scores;
+    const board = response.squares;
+    const turn = response.turn;
+    const scores = response.scores;
+    const winner = response.winner;
 
     for (let i = 0; i < board.length; i++) {
         let pieceId = board[i].position.file + board[i].position.rank;
@@ -70,7 +71,6 @@ function update(response) {
         message += getInnerText(team, scores[i]) + "\n";
     }
 
-    const winner = response.data.winner;
     if (winner != null) {
         message += winner + "팀이 이겼습니다.🤭";
         alert(message);
@@ -79,7 +79,7 @@ function update(response) {
 }
 
 function showError(response) {
-    alert(response.responseJSON.data);
+    alert(response.responseText);
 }
 
 function initialize() {

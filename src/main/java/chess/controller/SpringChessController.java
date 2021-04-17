@@ -1,28 +1,14 @@
 package chess.controller;
 
-import chess.domain.board.Position;
-import chess.domain.feature.Color;
-import chess.domain.game.ChessGame;
-import chess.domain.game.Result;
-import chess.domain.piece.Piece;
-import chess.dto.PieceDTO;
-import chess.dto.ResultDTO;
-import chess.dto.ScoreDTO;
-import chess.dto.TurnDTO;
+import chess.dto.*;
 import chess.service.SpringChessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -39,76 +25,72 @@ public class SpringChessController {
         return "index";
     }
 
-    @PostMapping("/game")
-    public ModelAndView game(@RequestParam("name") String name, ModelAndView modelAndView) {
-        Optional<ChessGame> chessGameOptional = springChessService.createRoom(name);
-        if (chessGameOptional.isPresent()) {
-            addChessGame(modelAndView, chessGameOptional.get());
+    @GetMapping("/create")
+    public String createRoom(@RequestParam("roomName") String roomName) {
+        Optional<Integer> roomNo = springChessService.createRoom(roomName);
+        if (roomNo.isPresent()) {
+            return "redirect:/game/" + roomNo.get();
+        }
+        return "redirect:/";
+    }
+
+    @GetMapping("/game/{roomNo}")
+    public ModelAndView startGame(@PathVariable int roomNo, ModelAndView modelAndView) {
+        Optional<ChessGameDTO> optionalChessGameDTO = springChessService.loadRoom(roomNo);
+        if (optionalChessGameDTO.isPresent()) {
             modelAndView.setViewName("game");
-            modelAndView.addObject("name", name);
+            modelAndView.addObject("chessGame", optionalChessGameDTO.get());
             return modelAndView;
         }
-        modelAndView.addObject("alert", name + "는 이미 존재하는 방입니다.");
-        modelAndView.setViewName("index");
+        modelAndView.setViewName("redirect:/");
         modelAndView.setStatus(HttpStatus.BAD_REQUEST);
         return modelAndView;
     }
 
-    @PostMapping(value = "/game/move", consumes = "text/plain")
-    public ModelAndView move(@RequestBody String command, ModelAndView modelAndView) {
-        List<String> commands = Arrays.asList(command.split(" "));
-        Optional<ChessGame> chessGameOptional = springChessService.movePiece(commands);
-        if (chessGameOptional.isPresent()) {
-            addChessGame(modelAndView, chessGameOptional.get());
-            modelAndView.setViewName("game");
+    @PostMapping(value = "/game/move")
+    public ModelAndView move(@RequestBody String param, ModelAndView modelAndView) {
+        Optional<ChessGameDTO> optionalChessGameDTO = springChessService.movePiece(param);
+        modelAndView.setViewName("game");
+        if (optionalChessGameDTO.isPresent()) {
+            checkGameEnd(param, modelAndView);
+            modelAndView.addObject("chessGame", optionalChessGameDTO.get());
             return modelAndView;
         }
         modelAndView.setStatus(HttpStatus.BAD_REQUEST);
-        modelAndView.setViewName("game");
         return modelAndView;
+    }
+
+    private void checkGameEnd(String param, ModelAndView modelAndView) {
+        if (springChessService.isGameEnd(param)) {
+            addResult(param, modelAndView);
+            springChessService.deleteGame(param);
+        }
+    }
+
+    private void addResult(String param, ModelAndView modelAndView) {
+        if (springChessService.getResult(param).isPresent()) {
+            modelAndView.addObject("result", springChessService.getResult(param).get());
+        }
     }
 
     @GetMapping(value = "/rooms")
     public ModelAndView rooms(ModelAndView modelAndView) {
-        List<String> roomNames = springChessService.getAllSavedRooms();
-        modelAndView.addObject("roomNames", roomNames);
+        List<RoomDTO> rooms = springChessService.getAllSavedRooms();
+        modelAndView.addObject("rooms", rooms);
         modelAndView.setViewName("repository");
         return modelAndView;
     }
 
-    @PostMapping(value = "/game/save")
-    public ResponseEntity save(@RequestBody String room) {
-        boolean isSaved = springChessService.saveRoom(room);
-        if (isSaved) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
-    }
-
-    @PostMapping("/game/load")
-    public ModelAndView load(@RequestParam("roomName") String roomName, ModelAndView modelAndView) {
-        Optional<ChessGame> chessGameOptional = springChessService.loadRoom(roomName);
-        if (chessGameOptional.isPresent()) {
-            addChessGame(modelAndView, chessGameOptional.get());
+    @GetMapping("/game/load")
+    public ModelAndView load(@RequestParam("roomNo") int roomNo, ModelAndView modelAndView) {
+        Optional<ChessGameDTO> optionalChessGameDTO = springChessService.loadRoom(roomNo);
+        if (optionalChessGameDTO.isPresent()) {
             modelAndView.setViewName("game");
-            modelAndView.addObject("name", roomName);
+            modelAndView.addObject("chessGame", optionalChessGameDTO.get());
+            return modelAndView;
         }
+        modelAndView.setViewName("redirect:/rooms");
+        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
         return modelAndView;
-    }
-
-    private void addChessGame(ModelAndView modelAndView, ChessGame chessGame) {
-        Color turn = chessGame.getTurn();
-        modelAndView.addObject("turn", new TurnDTO(turn));
-
-        Map<Position, Piece> chessBoard = chessGame.getChessBoardAsMap();
-        for (Map.Entry<Position, Piece> entry : chessBoard.entrySet()) {
-            modelAndView.addObject(entry.getKey().getPosition(), new PieceDTO(entry.getValue()));
-        }
-
-        Result result = chessGame.calculateResult();
-        modelAndView.addObject("score", new ScoreDTO(result));
-        if (!chessGame.isOngoing()) {
-            modelAndView.addObject("result", new ResultDTO(result));
-        }
     }
 }

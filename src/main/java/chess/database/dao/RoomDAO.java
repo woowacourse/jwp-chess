@@ -1,5 +1,6 @@
-package chess.database.room;
+package chess.database.dao;
 
+import chess.dto.SparkRoomDTO;
 import com.google.gson.JsonObject;
 
 import java.sql.Connection;
@@ -15,36 +16,36 @@ import static chess.database.DatabaseConnection.closeConnection;
 import static chess.database.DatabaseConnection.getConnection;
 
 public class RoomDAO {
-    public void addRoom(Room room) throws SQLException {
+    public void addRoom(SparkRoomDTO sparkRoomDTO) throws SQLException {
         String query = "INSERT INTO room (room_id, turn, state) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE turn = VALUES(turn), state = VALUES(state)";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
-        pstmt.setString(1, room.getName());
-        pstmt.setString(2, room.getTurn());
-        pstmt.setString(3, room.getState().toString());
+        pstmt.setString(1, sparkRoomDTO.getName());
+        pstmt.setString(2, sparkRoomDTO.getTurn());
+        pstmt.setString(3, sparkRoomDTO.getState().toString());
         pstmt.executeUpdate();
         closeConnection(con);
     }
 
-    public Room findByRoomId(String roomId) throws SQLException {
+    public SparkRoomDTO findByRoomId(String roomId) throws SQLException {
         String query = "SELECT * FROM room WHERE room_id = ?";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
         pstmt.setString(1, roomId);
         ResultSet rs = pstmt.executeQuery();
 
-        Room room = Optional.ofNullable(getRoom(rs))
+        SparkRoomDTO sparkRoomDTO = (SparkRoomDTO) Optional.ofNullable(getRoom(rs))
                 .orElseThrow(IllegalArgumentException::new);
         closeConnection(con);
-        return room;
+        return sparkRoomDTO;
     }
 
-    private Room getRoom(ResultSet rs) throws SQLException {
+    private SparkRoomDTO getRoom(ResultSet rs) throws SQLException {
         if (!rs.next()) {
             return null;
         }
 
-        return new Room(
+        return new SparkRoomDTO(
                 rs.getString("room_id"),
                 rs.getString("turn"),
                 gson.fromJson(rs.getString("state"), JsonObject.class));
@@ -63,17 +64,17 @@ public class RoomDAO {
         closeConnection(con);
     }
 
-    public List<Room> getAllRoom() throws SQLException {
+    public List<SparkRoomDTO> getAllRoom() throws SQLException {
         String query = "SELECT room_id FROM room";
         Connection con = getConnection();
         PreparedStatement pstmt = con.prepareStatement(query);
         ResultSet rs = pstmt.executeQuery();
 
-        List<Room> rooms = new ArrayList<>();
+        List<SparkRoomDTO> sparkRoomDTORequestDTOS = new ArrayList<>();
         while (rs.next()) {
-            rooms.add(new Room(rs.getString("room_id"), null, null));
+            sparkRoomDTORequestDTOS.add(new SparkRoomDTO(rs.getString("room_id"), null, null));
         }
         closeConnection(con);
-        return rooms;
+        return sparkRoomDTORequestDTOS;
     }
 }

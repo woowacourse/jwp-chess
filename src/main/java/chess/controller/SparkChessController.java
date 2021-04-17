@@ -1,7 +1,6 @@
 package chess.controller;
 
-import chess.database.room.Room;
-import chess.database.room.RoomDAO;
+import chess.database.dao.RoomDAO;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
@@ -10,6 +9,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.gamestate.Ready;
 import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
+import chess.dto.SparkRoomDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -59,8 +59,8 @@ public class SparkChessController {
 
     public Response saveRoom(String request) {
         try {
-            Room room = createRoomToSave(request);
-            roomDAO.addRoom(room);
+            SparkRoomDTO sparkRoomDTO = createRoomToSave(request);
+            roomDAO.addRoom(sparkRoomDTO);
             return new Response(StatusCode.SUCCESSFUL);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -68,20 +68,20 @@ public class SparkChessController {
         }
     }
 
-    private Room createRoomToSave(String request) {
+    private SparkRoomDTO createRoomToSave(String request) {
         JsonObject roomJson = gson.fromJson(request, JsonObject.class);
         String name = roomJson.get("name").getAsString();
         String turn = roomJson.get("turn").getAsString();
         JsonObject state = roomJson.get("state").getAsJsonObject();
-        return new Room(name, turn, state);
+        return new SparkRoomDTO(name, turn, state);
     }
 
     public Response loadRoom(String request) {
         try {
             JsonObject roomJson = gson.fromJson(request, JsonObject.class);
             String name = roomJson.get("name").getAsString();
-            Room room = roomDAO.findByRoomId(name);
-            setChessGame(room);
+            SparkRoomDTO sparkRoomDTO = roomDAO.findByRoomId(name);
+            setChessGame(sparkRoomDTO);
             Response response = new Response(chessGame, StatusCode.SUCCESSFUL);
             response.add("name", name);
             return response;
@@ -91,10 +91,10 @@ public class SparkChessController {
         }
     }
 
-    private void setChessGame(Room room) {
+    private void setChessGame(SparkRoomDTO sparkRoomDTO) {
         ChessBoard chessBoard = new ChessBoard();
-        Color turn = Color.convert(room.getTurn());
-        JsonObject stateJson = room.getState();
+        Color turn = Color.convert(sparkRoomDTO.getTurn());
+        JsonObject stateJson = sparkRoomDTO.getState();
         for (String position : stateJson.keySet()) {
             Piece piece = getPiece(stateJson, position);
             chessBoard.replace(Position.of(position), piece);

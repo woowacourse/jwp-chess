@@ -1,15 +1,15 @@
-package chess.database.room;
+package chess.dto;
 
 import com.google.gson.JsonObject;
 
 import java.util.Objects;
 
-public class Room {
+public class SparkRoomDTO {
     private final String name;
     private final String turn;
     private final JsonObject state;
 
-    public Room(String name, String turn, JsonObject state) {
+    public SparkRoomDTO(String name, String turn, JsonObject state) {
         this.name = name;
         this.turn = turn;
         this.state = state;
@@ -31,8 +31,8 @@ public class Room {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Room room = (Room) o;
-        return Objects.equals(name, room.name) && Objects.equals(turn, room.turn) && Objects.equals(state, room.state);
+        SparkRoomDTO sparkRoomDTO = (SparkRoomDTO) o;
+        return Objects.equals(name, sparkRoomDTO.name) && Objects.equals(turn, sparkRoomDTO.turn) && Objects.equals(state, sparkRoomDTO.state);
     }
 
     @Override

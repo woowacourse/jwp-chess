@@ -8,10 +8,14 @@
 <body>
 <h1>저장된 게임 목록</h1>
 <div>
-<form id="room" action="/game/load" method="post">
-    {{#roomNames}}
-    <input type="submit" name="roomName" value="{{{.}}}"/><br/><br/>
-    {{/roomNames}}
+<form id="room" action="/game/load" method="get">
+    {{#rooms}}
+    <div style="margin-bottom:10px;">
+        <input type="submit" name="roomNo" value="{{{roomNo}}}"/>
+        <label>{{{roomName}}}</label>
+        <label>현재 턴: {{{turn}}}</label>
+    </div>
+    {{/rooms}}
 </form>
 </div>
 </body>

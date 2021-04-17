@@ -1,17 +1,16 @@
 package chess.database;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
     public static java.sql.Connection getConnection() {
         java.sql.Connection con = null;
-        String server = "localhost:13306"; // MySQL 서버 주소
-        String database = "test"; // MySQL DATABASE 이름
+        String server = "localhost:3306"; // MySQL 서버 주소
+        String database = "chess"; // MySQL DATABASE 이름
         String option = "?useSSL=false&serverTimezone=UTC";
         String userName = "root"; //  MySQL 서버 아이디
-        String password = "root"; // MySQL 서버 비밀번호
+        String password = "1004"; // MySQL 서버 비밀번호
 
         // 드라이버 로딩
         try {

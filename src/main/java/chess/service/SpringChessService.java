@@ -1,7 +1,9 @@
 package chess.service;
 
-import chess.database.room.Room;
-import chess.database.room.SpringRoomDAO;
+import chess.dto.ChessGameDTO;
+import chess.dto.ResultDTO;
+import chess.dto.RoomDTO;
+import chess.database.dao.SpringRoomDAO;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
@@ -10,108 +12,127 @@ import chess.domain.game.ChessGame;
 import chess.domain.gamestate.Ready;
 import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
+import chess.dto.SaveRoomDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class SpringChessService {
     public static final Gson gson = new Gson();
-    private ChessGame chessGame;
     private final SpringRoomDAO roomDAO;
 
     public SpringChessService(SpringRoomDAO roomDAO) {
         this.roomDAO = roomDAO;
     }
 
-    public Optional<ChessGame> createRoom(String roomId) {
+    public Optional<Integer> createRoom(String name) {
         try {
-            roomDAO.validateRoomExistence(roomId);
-            initializeChessBoard();
-            return Optional.of(chessGame);
+            ChessGame chessGame = initializeChessBoard();
+            chessGame.start(Collections.singletonList("start"));
+            roomDAO.addRoom(new SaveRoomDTO(name, chessGame));
+            return Optional.of(roomDAO.getLastInsertId());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Optional.empty();
         }
     }
 
-    public Optional<ChessGame> movePiece(List<String> input) {
+    public Optional<ChessGameDTO> movePiece(String param) {
         try {
+            JsonObject paramJson = gson.fromJson(param, JsonObject.class);
+            int roomNo = paramJson.get("roomNo").getAsInt();
+            RoomDTO roomDTO = roomDAO.findRoomByRoomNo(roomNo);
+            List<String> input = Arrays.asList(paramJson.get("command").getAsString().split(" "));
+            ChessGame chessGame = setChessGame(roomDTO);
             chessGame.play(input);
-            return Optional.of(chessGame);
+            roomDAO.updateRoom(new RoomDTO(roomNo, roomDTO.getRoomName(), chessGame));
+            return Optional.of(new ChessGameDTO(roomNo, roomDTO.getRoomName(), chessGame));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Optional.empty();
         }
     }
 
-    private void initializeChessBoard() {
+    private ChessGame initializeChessBoard() {
         ChessBoard chessBoard = new ChessBoard();
-        chessGame = new ChessGame(chessBoard, Color.WHITE, new Ready());
-        chessGame.start(Collections.singletonList("start"));
+        return new ChessGame(chessBoard, Color.WHITE, new Ready());
     }
 
-    public boolean saveRoom(String request) {
+    public Optional<ChessGameDTO> loadRoom(int roomNo) {
         try {
-            Room room = createRoomToSave(request);
-            roomDAO.addRoom(room);
-            return true;
+            RoomDTO roomDTO = roomDAO.findRoomByRoomNo(roomNo);
+            ChessGame chessGame = setChessGame(roomDTO);
+            return Optional.of(new ChessGameDTO(roomNo, roomDTO.getRoomName(), chessGame));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    private ChessGame setChessGame(RoomDTO roomDTO) {
+        ChessBoard chessBoard = new ChessBoard();
+        Color turn = Color.convert(roomDTO.getTurn());
+        String[] splitBoard = roomDTO.getBoard().split(",");
+        for (String board : splitBoard) {
+            String[] pieceInfo = board.split(" ");
+            Piece piece = getPiece(pieceInfo);
+            chessBoard.replace(Position.of(pieceInfo[0]), piece);
+        }
+        return new ChessGame(chessBoard, turn, new Running());
+    }
+
+    private Piece getPiece(String[] pieceInfo) {
+        String type = pieceInfo[1];
+        String color = pieceInfo[2];
+
+        Type pieceType = Type.convert(type);
+        return pieceType.createPiece(Position.of(pieceInfo[0]), Color.convert(color));
+    }
+
+    public List<RoomDTO> getAllSavedRooms() {
+        try {
+            return roomDAO.getAllRoom();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public boolean isGameEnd(String param){
+        try {
+            JsonObject paramJson = gson.fromJson(param, JsonObject.class);
+            int roomNo = paramJson.get("roomNo").getAsInt();
+            RoomDTO roomDTO = roomDAO.findRoomByRoomNo(roomNo);
+            ChessGame chessGame = setChessGame(roomDTO);
+            return !chessGame.isOngoing();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }
     }
 
-    private Room createRoomToSave(String request) {
-        JsonObject roomJson = gson.fromJson(request, JsonObject.class);
-        String name = roomJson.get("name").getAsString();
-        String turn = roomJson.get("turn").getAsString();
-        JsonObject state = roomJson.get("state").getAsJsonObject();
-        return new Room(name, turn, state);
+    public void deleteGame(String param) {
+        try {
+            JsonObject paramJson = gson.fromJson(param, JsonObject.class);
+            int roomNo = paramJson.get("roomNo").getAsInt();
+            roomDAO.deleteRoomByRoomNo(roomNo);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    public Optional<ChessGame> loadRoom(String name) {
+    public Optional<ResultDTO> getResult(String param) {
         try {
-            Room room = roomDAO.findByRoomName(name);
-            setChessGame(room);
-            return Optional.of(chessGame);
+            JsonObject paramJson = gson.fromJson(param, JsonObject.class);
+            int roomNo = paramJson.get("roomNo").getAsInt();
+            RoomDTO roomDTO = roomDAO.findRoomByRoomNo(roomNo);
+            ChessGame chessGame = setChessGame(roomDTO);
+            return Optional.of(new ResultDTO(chessGame.result()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Optional.empty();
         }
-    }
-
-    private void setChessGame(Room room) {
-        ChessBoard chessBoard = new ChessBoard();
-        Color turn = Color.convert(room.getTurn());
-        JsonObject stateJson = room.getState();
-        for (String position : stateJson.keySet()) {
-            Piece piece = getPiece(stateJson, position);
-            chessBoard.replace(Position.of(position), piece);
-        }
-        chessGame = new ChessGame(chessBoard, turn, new Running());
-    }
-
-    private Piece getPiece(JsonObject stateJson, String position) {
-        JsonObject pieceJson = gson.fromJson(stateJson.get(position), JsonObject.class);
-        String type = pieceJson.get("type").getAsString();
-        String color = pieceJson.get("color").getAsString();
-
-        Type pieceType = Type.convert(type);
-        return pieceType.createPiece(Position.of(position), Color.convert(color));
-    }
-
-    public List<String> getAllSavedRooms() {
-        try {
-            return roomDAO.getAllRoom();
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
-
     }
 }

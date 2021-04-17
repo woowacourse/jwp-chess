@@ -35,6 +35,7 @@ const $save = document.querySelector('input[value="save"]')
 $move.addEventListener('keyup', movePiece);
 $save.addEventListener('click', saveGame);
 
+
 function movePiece(event) {
     const moveCommand = event.target.value;
     if (event.key === "Enter" && moveCommand !== "") {
@@ -46,27 +47,27 @@ function movePiece(event) {
     }
 }
 
-function sendMoveRequest(trimmedMoveCommand) {
-    const http = new XMLHttpRequest();
-    const url = '/game/move';
+async function sendMoveRequest(trimmedMoveCommand) {
 
-    http.open('POST', url);
-    http.setRequestHeader('Content-type', 'text/plain');
-    http.onreadystatechange = function () {
-        const sourcePosition = trimmedMoveCommand.split(" ")[1]
-        const targetPosition = trimmedMoveCommand.split(" ")[2]
-
-        if (http.readyState === XMLHttpRequest.DONE) {
-            if (http.status === 200) {
-                replaceComponents(http.responseText, sourcePosition, targetPosition)
-            } else {
-                console.log(trimmedMoveCommand)
-                alert(sourcePosition + "에서" + targetPosition + "으로 움직일 수 없습니다!")
-            }
-        }
+    const data = {
+        command: trimmedMoveCommand,
+        roomNo: document.querySelector('#room').firstElementChild.className
+    };
+    const sourcePosition = trimmedMoveCommand.split(" ")[1]
+    const targetPosition = trimmedMoveCommand.split(" ")[2]
+    let response = await fetch('/game/move', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(data)
+    });
+    if (response.ok) {
+        response = await response.text();
+        replaceComponents(response, sourcePosition, targetPosition)
+    } else {
+        alert(sourcePosition + "에서" + targetPosition + "으로 움직일 수 없습니다!")
     }
-
-    http.send(trimmedMoveCommand);
 }
 
 function replaceComponents(dom, sourcePosition, targetPosition) {
@@ -90,27 +91,22 @@ function replaceComponents(dom, sourcePosition, targetPosition) {
     }
 }
 
-function saveGame() {
+async function saveGame() {
     const params = {
-        name: document.querySelector('#room').firstElementChild.className,
+        name: document.querySelector('#room').firstElementChild.nextElementSibling.className,
         turn: document.querySelector('#turn').firstElementChild.className,
         state: createStateJson(),
     };
-    const http = new XMLHttpRequest();
-    const url = '/game/save';
-
-    http.open('POST', url);
-    http.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
-    http.onreadystatechange = function () {
-        if (http.readyState === XMLHttpRequest.DONE) {
-            if (http.status === 200) {
-                alert("성공적으로 저장되었습니다.")
-            } else {
-                alert("저장할 수 없습니다.")
-            }
-        }
-    };
-    http.send(JSON.stringify(params));
+    let response = await fetch('/game/save', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(params)
+    });
+    if (!response.ok) {
+       alert('저장할 수 없습니다.');
+    }
 }
 
 function createStateJson() {

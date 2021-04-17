@@ -12,10 +12,8 @@ import java.util.Objects;
 
 @Repository
 public class TeamDao {
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
 
     public Long create(Team team, Long teamId) {
         String sql = "insert into team (name, is_turn, game_id) values (?, ?, ?)";

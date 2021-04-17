@@ -4,8 +4,8 @@ package chess.web.controller.dto.request;
 public class MoveRequestDTO {
 
     private Long gameId;
-    private String startPosition;
-    private String destination;
+    private String startPositionInput;
+    private String destinationInput;
 
     public Long getGameId() {
         return gameId;
@@ -15,19 +15,19 @@ public class MoveRequestDTO {
         this.gameId = gameId;
     }
 
-    public String getStartPosition() {
-        return startPosition;
+    public String getStartPositionInput() {
+        return startPositionInput;
     }
 
-    public void setStartPosition(String startPosition) {
-        this.startPosition = startPosition;
+    public void setStartPositionInput(String startPositionInput) {
+        this.startPositionInput = startPositionInput;
     }
 
-    public String getDestination() {
-        return destination;
+    public String getDestinationInput() {
+        return destinationInput;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setDestinationInput(String destinationInput) {
+        this.destinationInput = destinationInput;
     }
 }

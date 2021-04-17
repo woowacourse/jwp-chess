@@ -5,7 +5,6 @@ import chess.web.controller.dto.response.ChessGameResponseDto;
 import chess.web.controller.dto.response.GameStatusResponseDto;
 import chess.web.controller.dto.response.MoveResponseDto;
 import chess.domain.game.ChessGame;
-import chess.domain.position.Position;
 import chess.web.repository.ChessGameRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,10 +42,10 @@ public class ChessGameService {
 
     public MoveResponseDto movePiece(MoveRequestDTO moveRequestDTO) {
         ChessGame chessGame = chessGameRepository.findById(moveRequestDTO.getGameId());
-        Position startPosition = Position.of(moveRequestDTO.getStartPosition());
-        Position destination = Position.of(moveRequestDTO.getDestination());
+        String startPositionInput = moveRequestDTO.getStartPositionInput();
+        String destinationInput = moveRequestDTO.getDestinationInput();
         try {
-            chessGame.movePiece(startPosition, destination);
+            chessGame.movePiece(startPositionInput, destinationInput);
         } catch (IllegalArgumentException e) {
             return new MoveResponseDto(true, e.getMessage());
         }

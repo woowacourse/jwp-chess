@@ -10,10 +10,10 @@ public class MoveRequest {
     private final Position startPosition;
     private final Position destination;
 
-    public MoveRequest(TeamColor currentTurnTeamColor, Position startPosition, Position destination) {
+    public MoveRequest(TeamColor currentTurnTeamColor, String startPositionInput, String destinationInput) {
         this.currentTurnTeamColor = currentTurnTeamColor;
-        this.startPosition = startPosition;
-        this.destination = destination;
+        this.startPosition = Position.of(startPositionInput);
+        this.destination = Position.of(destinationInput);
     }
 
     public TeamColor getCurrentTurnTeamColor() {

@@ -38,6 +38,10 @@ public class ChessGame {
         this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE);
     }
 
+    public ChessGame() {
+        this(null, null, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE);
+    }
+
     public Long getId() {
         return id;
     }
@@ -50,8 +54,8 @@ public class ChessGame {
         return boardStatus;
     }
 
-    public void movePiece(Position startPosition, Position destination) {
-        MoveRequest moveRequest = new MoveRequest(currentTurnTeamColor, startPosition, destination);
+    public void movePiece(String startPositionInput, String destinationInput) {
+        MoveRequest moveRequest = new MoveRequest(currentTurnTeamColor, startPositionInput, destinationInput);
         board.movePiece(moveRequest);
         boardStatus = board.getBoardStatus();
         currentTurnTeamColor = currentTurnTeamColor.oppositeTeamColor();

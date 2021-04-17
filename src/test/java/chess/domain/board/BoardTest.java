@@ -32,9 +32,9 @@ class BoardTest {
     void cannotMovePieceWhenStartPositionEmpty() {
         Board board = new Board(INITIAL_BOARD_STATUS);
         TeamColor currentTurnTeamColor = TeamColor.WHITE;
-        Position startPosition = Position.of("a3");
-        Position destination = Position.of("a4");
-        MoveRequest moveRequest = new MoveRequest(currentTurnTeamColor, startPosition, destination);
+        String startPositionInput = "a3";
+        String destinationInput = "a4";
+        MoveRequest moveRequest = new MoveRequest(currentTurnTeamColor, startPositionInput, destinationInput);
 
         assertThatThrownBy(() -> board.movePiece(moveRequest))
             .isInstanceOf(IllegalArgumentException.class)
@@ -46,9 +46,9 @@ class BoardTest {
     void cannotMovePieceWhenStartPositionEnemyPiece() {
         Board board = new Board(INITIAL_BOARD_STATUS);
         TeamColor currentTurnTeamColor = TeamColor.WHITE;
-        Position startPosition = Position.of("d7");
-        Position destination = Position.of("d6");
-        MoveRequest moveRequest = new MoveRequest(currentTurnTeamColor, startPosition, destination);
+        String startPositionInput = "d7";
+        String destinationInput = "d6";
+        MoveRequest moveRequest = new MoveRequest(currentTurnTeamColor, startPositionInput, destinationInput);
 
         assertThatThrownBy(() -> board.movePiece(moveRequest))
             .isInstanceOf(IllegalArgumentException.class)
@@ -1742,23 +1742,23 @@ class BoardTest {
         }
     }
 
-    private void assertCanMove(Board board, String startPosition, String destination, TeamColor pieceColor) {
+    private void assertCanMove(Board board, String startPositionInput, String destinationInput, TeamColor pieceColor) {
         String boardStatusBeforeMove = board.getBoardStatus();
-        int startPositionBoardStatusIndex = PositionConverter.convertToBoardStatusIndex(startPosition);
+        int startPositionBoardStatusIndex = PositionConverter.convertToBoardStatusIndex(startPositionInput);
         String pieceValueToMove = String.valueOf(boardStatusBeforeMove.charAt(startPositionBoardStatusIndex));
-        MoveRequest moveRequest = new MoveRequest(pieceColor, Position.of(startPosition), Position.of(destination));
+        MoveRequest moveRequest = new MoveRequest(pieceColor, startPositionInput, destinationInput);
         assertThatCode(() -> board.movePiece(moveRequest))
             .doesNotThrowAnyException();
         String boardStatusAfterMove = board.getBoardStatus();
         assertThat(boardStatusAfterMove).isNotEqualTo(boardStatusBeforeMove);
         assertThat(String.valueOf(boardStatusAfterMove.charAt(startPositionBoardStatusIndex))).isEqualTo(".");
-        int destinationBoardStatusIndex = PositionConverter.convertToBoardStatusIndex(destination);
+        int destinationBoardStatusIndex = PositionConverter.convertToBoardStatusIndex(destinationInput);
         assertThat(String.valueOf(boardStatusAfterMove.charAt(destinationBoardStatusIndex))).isEqualTo(pieceValueToMove);
     }
 
-    private void assertCannotMove(Board board, String startPosition, String destination, TeamColor pieceColor) {
+    private void assertCannotMove(Board board, String startPositionInput, String destinationInput, TeamColor pieceColor) {
         String boardStatusBeforeMove = board.getBoardStatus();
-        MoveRequest moveRequest = new MoveRequest(pieceColor, Position.of(startPosition), Position.of(destination));
+        MoveRequest moveRequest = new MoveRequest(pieceColor, startPositionInput, destinationInput);
         assertThatCode(() -> board.movePiece(moveRequest))
             .isInstanceOf(IllegalArgumentException.class);
         assertThat(board.getBoardStatus()).isEqualTo(boardStatusBeforeMove);

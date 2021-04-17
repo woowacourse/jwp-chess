@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class GameDao {
@@ -62,5 +63,10 @@ public class GameDao {
     public String getTurn(long id) {
         String sql = "SELECT turn FROM game WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
+
+    public List<String> getRoomNumbers() {
+        String sql = "SELECT id FROM game";
+        return jdbcTemplate.queryForList(sql, String.class);
     }
 }

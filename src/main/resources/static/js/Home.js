@@ -76,7 +76,8 @@ async function createGame(hostId, guestId) {
   await postData(`${url}/chess/creation`, body);
 }
 
-function loadGame() {
-  const gameId = prompt("이동할 방번호를 입력하세요.");
-  window.location.href = `${url}/game/${gameId}`
+async function loadGame() {
+  const roomNumbers = await getData(`${url}/games/room`);
+  const gameId = prompt("이동할 방번호를 입력하세요. \n" + "저장되어 있는 방 번호입니다 : " + roomNumbers["roomNumbers"]);
+  window.location.href = `${url}/games/${gameId}`
 }

@@ -1,6 +1,8 @@
 package chess.controller;
 
+import chess.dto.RoomResponseDto;
 import chess.service.GameService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,4 +22,8 @@ public class GameController {
         return "chess";
     }
 
+    @GetMapping("/room")
+    public ResponseEntity<RoomResponseDto> getRooms() {
+        return ResponseEntity.ok(gameService.getRoomNumber());
+    }
 }

@@ -3,6 +3,7 @@ package chess.service;
 import chess.dao.GameDao;
 import chess.dto.GameRequestDto;
 import chess.dto.GameResponseDto;
+import chess.dto.RoomResponseDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,5 +33,9 @@ public class GameService {
 
     public String getTurn(long gameId) {
         return gameDao.getTurn(gameId);
+    }
+
+    public RoomResponseDto getRoomNumber() {
+        return RoomResponseDto.from(gameDao.getRoomNumbers());
     }
 }

@@ -14,7 +14,7 @@
 //
 //import chess.domain.board.setting.BoardCustomSetting;
 //import chess.domain.board.setting.BoardSetting;
-//import chess.web.domain.game.ChessGame;
+//import chess.domain.game.ChessGame;
 //import chess.utils.DBCleaner;
 //import java.sql.SQLException;
 //import java.util.Arrays;

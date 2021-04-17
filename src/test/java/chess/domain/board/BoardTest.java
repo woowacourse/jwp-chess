@@ -6,7 +6,7 @@
 //
 //import chess.controller.dto.request.MoveRequestDTO;
 //import chess.domain.board.setting.BoardDefaultSetting;
-//import chess.web.domain.game.ChessGame;
+//import chess.domain.game.ChessGame;
 //import chess.utils.DBCleaner;
 //import chess.utils.position.converter.PositionConverter;
 //import java.sql.SQLException;

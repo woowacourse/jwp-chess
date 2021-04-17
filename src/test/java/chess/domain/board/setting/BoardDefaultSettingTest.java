@@ -3,7 +3,7 @@
 //import static chess.utils.TestFixture.TEST_TITLE;
 //import static org.assertj.core.api.Assertions.assertThat;
 //
-//import chess.web.domain.game.ChessGame;
+//import chess.domain.game.ChessGame;
 //import chess.domain.position.type.File;
 //import chess.utils.DBCleaner;
 //import chess.utils.position.converter.PositionConverter;

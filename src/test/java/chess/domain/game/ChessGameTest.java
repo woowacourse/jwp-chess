@@ -1,4 +1,4 @@
-//package chess.web.domain.game;
+//package chess.domain.game;
 //
 //import static chess.domain.piece.type.PieceWithColorType.B_BP;
 //import static chess.domain.piece.type.PieceWithColorType.B_KG;

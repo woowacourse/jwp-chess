@@ -15,7 +15,7 @@
 //import static org.assertj.core.api.Assertions.assertThatThrownBy;
 //
 //import chess.controller.dto.response.BoardStatusResponseDTO;
-//import chess.web.domain.game.ChessGame;
+//import chess.domain.game.ChessGame;
 //import chess.utils.DBCleaner;
 //import java.sql.SQLException;
 //import java.util.Arrays;

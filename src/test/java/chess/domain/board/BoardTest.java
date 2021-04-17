@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import chess.controller.dto.request.MoveRequestDTO;
 import chess.domain.board.move.MoveRequest;
+import chess.domain.board.score.Scores;
 import chess.domain.color.type.TeamColor;
 import chess.domain.position.Position;
 import java.sql.SQLException;
@@ -106,6 +108,29 @@ class BoardTest {
             );
 
             assertThat(board.isKingDead()).isFalse();
+        }
+    }
+
+    @DisplayName("점수 계산")
+    @Nested
+    class ScoreCalculate {
+        @DisplayName("Pawn이 한 File에 2개 이상 존재하는 경우")
+        @Test
+        void scores() {
+            Board board = new Board(""
+                + ".KR....."
+                + "P.PB...."
+                + ".P..Q..."
+                + "........"
+                + ".....nq."
+                + ".....p.p"
+                + ".....pp."
+                + "....rk.."
+            );
+
+            Scores scores = board.getScores();
+            assertThat(scores.getWhitePlayerScore()).isEqualTo(19.5);
+            assertThat(scores.getBlackPlayerScore()).isEqualTo(20);
         }
     }
 }

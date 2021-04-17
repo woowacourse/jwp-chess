@@ -1,4 +1,4 @@
-package chess.database;
+package chess.repository;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;

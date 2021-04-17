@@ -1,4 +1,4 @@
-package chess.database.room;
+package chess.repository.room;
 
 import com.google.gson.JsonObject;
 

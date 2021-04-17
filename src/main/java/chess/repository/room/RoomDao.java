@@ -1,4 +1,4 @@
-package chess.database.room;
+package chess.repository.room;
 
 import chess.util.JsonConverter;
 
@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static chess.database.DatabaseConnection.closeConnection;
-import static chess.database.DatabaseConnection.getConnection;
+import static chess.repository.DatabaseConnection.closeConnection;
+import static chess.repository.DatabaseConnection.getConnection;
 
 public class RoomDao {
     public void addRoom(Room room) throws SQLException {

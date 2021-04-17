@@ -1,7 +1,5 @@
 package chess.service;
 
-import chess.database.room.Room;
-import chess.database.room.SpringRoomDao;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
@@ -10,6 +8,8 @@ import chess.domain.game.ChessGame;
 import chess.domain.gamestate.Ready;
 import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
+import chess.repository.room.Room;
+import chess.repository.room.SpringRoomDao;
 import chess.util.JsonConverter;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;

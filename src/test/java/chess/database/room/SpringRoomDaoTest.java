@@ -1,5 +1,7 @@
 package chess.database.room;
 
+import chess.repository.room.Room;
+import chess.repository.room.SpringRoomDao;
 import chess.util.JsonConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static chess.database.room.SpringRoomDao.NO_SUCH_ROOM_NAME_ERROR;
+import static chess.repository.room.SpringRoomDao.NO_SUCH_ROOM_NAME_ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

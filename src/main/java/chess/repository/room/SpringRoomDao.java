@@ -1,4 +1,4 @@
-package chess.database.room;
+package chess.repository.room;
 
 import chess.util.JsonConverter;
 import org.springframework.jdbc.core.JdbcTemplate;

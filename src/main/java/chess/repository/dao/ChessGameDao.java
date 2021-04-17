@@ -49,6 +49,18 @@ public class ChessGameDao implements ChessGameRepository {
     }
 
     @Override
+    public ChessGame findById(Long gameId) {
+        String query = "SELECT * FROM chess_game WHERE chess_game_id = ?";
+        return jdbcTemplate.queryForObject(query, chessGameRowMapper, gameId);
+    }
+
+    @Override
+    public List<ChessGame> findAll() {
+        String query = "SELECT * FROM chess_game";
+        return jdbcTemplate.query(query, chessGameRowMapper);
+    }
+
+    @Override
     public void update(ChessGame chessGame) {
         String query = "UPDATE chess_game "
             + "SET "
@@ -63,18 +75,6 @@ public class ChessGameDao implements ChessGameRepository {
             chessGame.getWhitePlayerScore(),
             chessGame.getBlackPlayerScore(),
             chessGame.getId());
-    }
-
-    @Override
-    public List<ChessGame> findAll() {
-        String query = "SELECT * FROM chess_game";
-        return jdbcTemplate.query(query, chessGameRowMapper);
-    }
-
-    @Override
-    public ChessGame findById(Long gameId) {
-        String query = "SELECT * FROM chess_game WHERE chess_game_id = ?";
-        return jdbcTemplate.queryForObject(query, chessGameRowMapper, gameId);
     }
 
     @Override

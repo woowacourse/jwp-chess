@@ -2,9 +2,11 @@ package chess.controller;
 
 import chess.dto.*;
 import chess.service.SpringChessService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +25,16 @@ public class SpringChessController {
     }
 
     @GetMapping("/enter/{roomName}")
-    public String enterRoom(@PathVariable String roomName) {
+    public String enterRoom(@PathVariable String roomName, HttpSession httpSession) {
+        httpSession.setAttribute("roomName", roomName);
         return "/chess.html";
+    }
+
+    @GetMapping("/currentRoom")
+    @ResponseBody
+    public ResponseEntity currentRoom(HttpSession httpSession) {
+        String roomName = (String) httpSession.getAttribute("roomName");
+        return ResponseEntity.ok().body(new RoomNameDTO(roomName));
     }
 
     @PostMapping(value = "/restart")

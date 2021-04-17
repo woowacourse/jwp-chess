@@ -1,5 +1,5 @@
 let currentRoomName;
-
+renderRoomName();
 getCurrentRoomName();
 createChessBoard();
 
@@ -13,7 +13,7 @@ scoreButton.addEventListener("click", clickScore);
 
 function getCurrentRoomName() {
     const url = window.location.href.split("/");
-    currentRoomName = url[url.length - 1];
+    currentRoomName = decodeURI(url[url.length - 1]);
 }
 
 function createChessBoard() {
@@ -206,4 +206,16 @@ async function clickScore() {
     });
 
     alert("White 점수 : " + score.whiteScore + "\nBlack 점수 : " + score.blackScore);
+}
+
+async function renderRoomName() {
+    const roomName = await fetch('/currentRoom', {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(res => res.json());
+
+    const title = document.querySelector(".title");
+    title.textContent = "Chess Game : " + roomName.roomName;
 }

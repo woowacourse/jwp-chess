@@ -92,12 +92,8 @@ async function addRoom(event) {
 async function renderRooms() {
     initList();
     roomTable.insertAdjacentHTML("beforeend", `<tr><th>방 이름</th></tr>`);
-    const response = await fetch('/rooms', {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(res => {
+    const response = await fetch('/rooms')
+        .then(res => {
         return res.json();
     });
 

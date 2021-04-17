@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 @Repository
 public class SpringBoardDao {
 
-    private final String COMMA = ",";
-    private final String WHITE_INITIAL = "W";
-    private final String BLACK_INITIAL = "B";
+    private final static String COMMA = ",";
+    private final static String WHITE_INITIAL = "W";
+    private final static String BLACK_INITIAL = "B";
 
     private final JdbcTemplate jdbcTemplate;
 

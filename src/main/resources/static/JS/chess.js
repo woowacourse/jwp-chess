@@ -160,12 +160,8 @@ async function clickBack() {
 }
 
 async function syncBoard() {
-    const board = await fetch('/currentBoard', {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(res => {
+    const board = await fetch('/currentBoard')
+        .then(res => {
         return res.json();
     });
 
@@ -200,12 +196,8 @@ async function clickScore() {
 }
 
 async function renderRoomName() {
-    const roomName = await fetch('/currentRoom', {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(res => res.json());
+    const roomName = await fetch('/currentRoom')
+        .then(res => res.json());
 
     const title = document.querySelector(".title");
     title.textContent = "Chess Game : " + roomName.roomName;

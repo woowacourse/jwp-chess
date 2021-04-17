@@ -141,11 +141,12 @@ export class Board {
   async #requestMove(piece, targetTile, body, gameId) {
     const response = await putData(
         `${url}/chess/${gameId}/move`, body);
-
+    console.log(response);
     if (!response["success"]) {
       return;
     }
     this.#pieces.move(piece, targetTile)
+    document.getElementById("turn").innerHTML = response["turn"] + " 턴 입니다"
     if (response["finished"]) {
       // const winner = response["winner"];
       const back = confirm(`게임이 끝났습니다. 확인을 누르면 홈으로 돌아갑니다.`)

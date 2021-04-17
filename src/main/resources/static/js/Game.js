@@ -8,10 +8,10 @@ window.onload = async function () {
   const pieces = response["pieceDtos"];
   const host = response["host"];
   const guest = response["guest"];
-  const game =  response["game"];
+  const game =  response["gameResponseDto"];
 
   initBoard(pieces);
-  fillInformation(host, guest)
+  fillInformation(host, guest, game)
 }
 
 async function requestData() {
@@ -30,7 +30,7 @@ function initBoard(pieces) {
   addEvent(board);
 }
 
-function fillInformation(host, guest) {
+function fillInformation(host, guest, game) {
   const blackNameTag = document.querySelector(".name-tag.black");
   blackNameTag.innerHTML = guest["name"];
   const blackRecordTag = document.querySelector(".record-tag.black");
@@ -40,6 +40,12 @@ function fillInformation(host, guest) {
   whiteNameTag.innerHTML = host["name"];
   const whiteRecordTag = document.querySelector(".record-tag.white");
   whiteRecordTag.innerHTML = "흰색 플레이어";
+  fillTurnInfo(game)
+}
+
+function fillTurnInfo(game) {
+  document.getElementById("turn").innerHTML = game["turn"] + " 턴 입니다"
+
 }
 
 function addEvent(board) {
@@ -56,4 +62,5 @@ function dropPiece(e, board) {
   const sourcePosition = e.dataTransfer.getData("sourcePosition");
   const piece = board.findPieceBySourcePosition(sourcePosition);
   piece.unhighlight();
+  fillTurnInfo()
 }

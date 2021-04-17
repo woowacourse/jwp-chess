@@ -29,4 +29,8 @@ public class GameService {
     public void changeTurn(long gameId) {
         gameDao.updateTurn(gameId);
     }
+
+    public String getTurn(long gameId) {
+        return gameDao.getTurn(gameId);
+    }
 }

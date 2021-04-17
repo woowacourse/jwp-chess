@@ -58,4 +58,9 @@ public class GameDao {
         String sql = "UPDATE game SET turn = (CASE WHEN turn = 'BLACK' THEN 'WHITE' ELSE 'BLACK' END) WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    public String getTurn(long id) {
+        String sql = "SELECT turn FROM game WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
 }

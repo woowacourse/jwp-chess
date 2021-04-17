@@ -5,6 +5,7 @@ import chess.domain.ChessGameManager;
 import chess.domain.position.Position;
 import chess.dto.*;
 import chess.exception.HandledException;
+import chess.service.ChessGameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,12 @@ import java.util.function.Supplier;
 @RestController
 public class SpringWebChessController {
     private GameDAO gameDAO;
+    private ChessGameService chessGameService;
 
     @Autowired
-    public SpringWebChessController(GameDAO gameDAO) {
+    public SpringWebChessController(GameDAO gameDAO, ChessGameService chessGameService) {
         this.gameDAO = gameDAO;
+        this.chessGameService = chessGameService;
     }
 
     private ResponseEntity<CommonDto<?>> handleExpectedException(Supplier<ResponseEntity<CommonDto<?>>> supplier) {
@@ -32,17 +35,14 @@ public class SpringWebChessController {
 
     @GetMapping("/newgame")
     public ResponseEntity<CommonDto<?>> newGame() {
-        return handleExpectedException(() -> {
-            ChessGameManager chessGameManager = new ChessGameManager();
-            chessGameManager.start();
-            int gameId = gameDAO.saveGame(chessGameManager);
-            return ResponseEntity.ok().body(
-                    new CommonDto<>(
-                            "새로운 게임이 생성되었습니다.",
-                            NewGameResponse.from(chessGameManager, gameId)
-                    )
-            );
-        });
+        return handleExpectedException(() ->
+                ResponseEntity.ok().body(
+                        new CommonDto<>(
+                                "새로운 게임이 생성되었습니다.",
+                                chessGameService.createNewGame()
+                        )
+                )
+        );
     }
 
     @PostMapping("/move")

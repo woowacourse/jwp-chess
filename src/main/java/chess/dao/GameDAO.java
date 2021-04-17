@@ -27,7 +27,7 @@ public class GameDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int saveGame(ChessGameManager chessGameManager) {
+    public int saveNewGame(ChessGameManager chessGameManager) {
         Color currentTurnColor = chessGameManager.getCurrentTurnColor();
 
         String insertGameQuery = "insert into game(turn) values(?)";

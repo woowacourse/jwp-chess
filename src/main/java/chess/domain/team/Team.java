@@ -17,8 +17,9 @@ import static chess.domain.piece.Rook.SCORE_ROOK;
 
 public abstract class Team {
     private static final Map<Piece, Double> scoreByPiece = new HashMap<>();
+
     private Team enemy;
-    private String name;
+    private final String name;
     private boolean isCurrentTurn;
 
     static {
@@ -47,11 +48,11 @@ public abstract class Team {
         this.piecePosition = new HashMap<>(piecePosition);
     }
 
-    public static Team of(final String name, final boolean is_turn) {
+    public static Team of(final String name, final boolean isTurn) {
         if (WhiteTeam.DEFAULT_NAME.equals(name)) {
-            return new WhiteTeam(is_turn);
+            return new WhiteTeam(isTurn);
         }
-        return new BlackTeam(is_turn);
+        return new BlackTeam(isTurn);
     }
 
     protected void initializePawn(final int pawnColumn, final int pawnDirection) {

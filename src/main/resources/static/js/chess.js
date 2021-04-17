@@ -31,8 +31,7 @@ function turnCheck(clickedSection) {
             moveOrCancle(clickedSection);
         }
     }).error(function (response) {
-        const errorMessage = response.responseText;
-        location.href = "/errorPage?error=" + errorMessage;
+        location.href = "/errorPage/" + response.status;
     });
 }
 
@@ -53,8 +52,7 @@ function getMovablePosition(clickedSection, turn) {
             startPoint = clickedSection;
             startPointCheck = true;
         }).error(function (response) {
-            const errorMessage = response.responseText;
-            location.href = "/errorPage?error=" + errorMessage;
+            location.href = "/errorPage/" + response.status;
         });
     }
 }
@@ -123,8 +121,7 @@ function move() {
         checkEndGame(currentStatus);
         initialize();
     }).error(function (response) {
-        const errorMessage = response.responseText;
-        location.href = "/errorPage?error=" + errorMessage;
+        location.href = "/errorPage/" + response.status;
     });
 }
 
@@ -166,8 +163,7 @@ function gameInitialize(winner, loser) {
             window.location.href = "/";
         }
     }).error(function (response) {
-        const errorMessage = response.responseText;
-        location.href = "/errorPage?error=" + errorMessage;
+        location.href = "/errorPage/" + response.status;
     });
 }
 

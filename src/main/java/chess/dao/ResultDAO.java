@@ -1,5 +1,7 @@
 package chess.dao;
 
+import chess.exception.InitialSettingDataException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -17,12 +19,20 @@ public class ResultDAO {
     }
 
     public int winCountByUserId(final int id) {
-        String query = "SELECT COUNT(*) FROM result WHERE winner = ?";
-        return jdbcTemplate.queryForObject(query, Integer.class, id);
+        try {
+            String query = "SELECT COUNT(*) FROM result WHERE winner = ?";
+            return jdbcTemplate.queryForObject(query, Integer.class, id);
+        } catch (DataAccessException e) {
+            throw new InitialSettingDataException();
+        }
     }
 
     public int loseCountByUserId(final int id) {
-        String query = "SELECT COUNT(*) FROM result WHERE loser = ?";
-        return jdbcTemplate.queryForObject(query, Integer.class, id);
+        try {
+            String query = "SELECT COUNT(*) FROM result WHERE loser = ?";
+            return jdbcTemplate.queryForObject(query, Integer.class, id);
+        } catch (DataAccessException e) {
+            throw new InitialSettingDataException();
+        }
     }
 }

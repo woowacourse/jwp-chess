@@ -2,6 +2,10 @@ package chess.dao;
 
 import chess.dto.UserDTO;
 import chess.dto.UsersDTO;
+import chess.exception.InitialSettingDataException;
+import chess.exception.NotEnoughPlayerException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -16,12 +20,16 @@ public class UserDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public UsersDTO findByRoomId(final String roomId) {
-        String query = "SELECT black.nickname AS black_user, white.nickname AS white_user " +
-                "FROM room JOIN user as black on black.id = room.black_user " +
-                "JOIN user as white on white.id = room.white_user " +
-                "WHERE room.id = ?";
-        return jdbcTemplate.queryForObject(query, mapper(), roomId);
+    public UsersDTO findUsersByRoomId(final String roomId) {
+        try {
+            String query = "SELECT black.nickname AS black_user, white.nickname AS white_user " +
+                    "FROM room JOIN user as black on black.id = room.black_user " +
+                    "JOIN user as white on white.id = room.white_user " +
+                    "WHERE room.id = ?";
+            return jdbcTemplate.queryForObject(query, mapper(), roomId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotEnoughPlayerException(roomId);
+        }
     }
 
     private RowMapper<UsersDTO> mapper() {
@@ -37,8 +45,12 @@ public class UserDAO {
     }
 
     public List<UserDTO> findAll() {
-        String query = "SELECT * from user";
-        return jdbcTemplate.query(query, findAllMapper());
+        try {
+            String query = "SELECT * from user";
+            return jdbcTemplate.query(query, findAllMapper());
+        } catch (DataAccessException e) {
+            throw new InitialSettingDataException();
+        }
     }
 
     private RowMapper<UserDTO> findAllMapper() {
@@ -49,7 +61,35 @@ public class UserDAO {
     }
 
     public String findNicknameById(final int id) {
-        String query = "SELECT nickname FROM user WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, String.class, id);
+        try {
+            String query = "SELECT nickname FROM user WHERE id = ?";
+            return jdbcTemplate.queryForObject(query, String.class, id);
+        } catch (DataAccessException e) {
+            throw new InitialSettingDataException();
+        }
+    }
+
+    public String findBlackUserByRoomId(final String roomId) {
+        String query = "SELECT black.nickname AS black_user " +
+                "FROM room JOIN user as black on black.id = room.black_user " +
+                "WHERE room.id = ?";
+        return findUserByRoomId(query, roomId);
+    }
+
+    public String findWhiteUserByRoomId(final String roomId) {
+        String query = "SELECT white.nickname AS white_user " +
+                "FROM room JOIN user as white on white.id = room.white_user " +
+                "WHERE room.id = ?";
+        return findUserByRoomId(query, roomId);
+    }
+
+    public String findUserByRoomId(final String query, final String roomId) {
+        try {
+            return jdbcTemplate.queryForObject(query, String.class, roomId);
+        } catch (EmptyResultDataAccessException e) {
+            return "no User";
+        } catch (DataAccessException e) {
+            throw new InitialSettingDataException();
+        }
     }
 }

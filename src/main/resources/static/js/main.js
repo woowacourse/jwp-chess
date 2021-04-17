@@ -34,7 +34,6 @@ function newGame(name) {
             location.reload();
         }
     }).error(function (response) {
-        const errorMessage = response.responseText;
-        location.href = "/errorPage?error=" + errorMessage;
+        location.href = "/errorPage/" + response.status;
     });
 }

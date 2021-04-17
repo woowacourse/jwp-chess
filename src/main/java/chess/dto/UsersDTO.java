@@ -1,8 +1,11 @@
 package chess.dto;
 
 public final class UsersDTO {
-    private final String blackUser;
-    private final String whiteUser;
+    private String blackUser;
+    private String whiteUser;
+
+    public UsersDTO() {
+    }
 
     public UsersDTO(final String blackUser, final String whiteUser) {
         this.blackUser = blackUser;
@@ -15,5 +18,13 @@ public final class UsersDTO {
 
     public String getWhiteUser() {
         return whiteUser;
+    }
+
+    public void setBlackUser(String blackUser) {
+        this.blackUser = blackUser;
+    }
+
+    public void setWhiteUser(String whiteUser) {
+        this.whiteUser = whiteUser;
     }
 }

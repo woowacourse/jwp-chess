@@ -1,6 +1,8 @@
 package chess.dao;
 
 import chess.dto.RoomDTO;
+import chess.exception.InitialSettingDataException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -21,11 +23,15 @@ public class RoomDAO {
     }
 
     public List<RoomDTO> allRooms() {
-        String query = "SELECT room.id, room.title, black.nickname AS black_user, white.nickname AS white_user, room.status " +
-                "FROM room JOIN user as black on black.id = room.black_user " +
-                "JOIN user as white on white.id = room.white_user ORDER BY room.status DESC, room.id DESC";
+        try {
+            String query = "SELECT room.id, room.title, black.nickname AS black_user, white.nickname AS white_user, room.status " +
+                    "FROM room JOIN user as black on black.id = room.black_user " +
+                    "JOIN user as white on white.id = room.white_user ORDER BY room.status DESC, room.id DESC";
 
-        return jdbcTemplate.query(query, mapper());
+            return jdbcTemplate.query(query, mapper());
+        } catch (DataAccessException e) {
+            throw new InitialSettingDataException();
+        }
     }
 
     private RowMapper<RoomDTO> mapper() {
@@ -49,9 +55,13 @@ public class RoomDAO {
     }
 
     public List<String> allRoomIds() {
-        RowMapper<String> rowMapper = (resultSet, rowNum) -> resultSet.getString("id");
+        try {
+            RowMapper<String> rowMapper = (resultSet, rowNum) -> resultSet.getString("id");
 
-        String query = "SELECT id FROM room";
-        return jdbcTemplate.query(query, rowMapper);
+            String query = "SELECT id FROM room";
+            return jdbcTemplate.query(query, rowMapper);
+        } catch (DataAccessException e) {
+            throw new InitialSettingDataException();
+        }
     }
 }

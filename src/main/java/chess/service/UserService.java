@@ -13,10 +13,25 @@ public final class UserService {
     }
 
     public UsersDTO usersParticipatedInGame(final String roomId) {
-        return userDAO.findByRoomId(roomId);
+        return userDAO.findUsersByRoomId(roomId);
     }
 
     public int userIdByNickname(final String nickname) {
         return userDAO.findUserIdByNickname(nickname);
+    }
+
+    public UsersDTO participatedUsers(String id) {
+        UsersDTO usersDTO = new UsersDTO();
+        usersDTO.setBlackUser(blackUserParticipatedInGame(id));
+        usersDTO.setWhiteUser(whiteUserParticipatedInGame(id));
+        return usersDTO;
+    }
+
+    public String blackUserParticipatedInGame(final String roomId) {
+        return userDAO.findBlackUserByRoomId(roomId);
+    }
+
+    public String whiteUserParticipatedInGame(final String roomId) {
+        return userDAO.findWhiteUserByRoomId(roomId);
     }
 }

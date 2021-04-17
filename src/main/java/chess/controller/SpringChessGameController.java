@@ -5,8 +5,7 @@ import chess.domain.Movement;
 import chess.domain.Rooms;
 import chess.domain.Team;
 import chess.dto.*;
-import chess.exception.DriverLoadException;
-import chess.exception.NoLogsException;
+import chess.exception.*;
 import chess.service.LogService;
 import chess.service.ResultService;
 import chess.service.RoomService;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Controller
@@ -40,34 +40,29 @@ public final class SpringChessGameController {
 
     @GetMapping("/")
     private String goHome(final Model model) {
-        try {
-            List<String> roomIds = roomService.allRoomsId();
-            roomIds.forEach(id -> rooms.addRoom(id, new ChessGame()));
-            model.addAttribute("rooms", roomService.allRooms());
-            model.addAttribute("results", resultService.allUserResult());
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-        }
+        List<String> roomIds = roomService.allRoomsId();
+        roomIds.forEach(id -> rooms.addRoom(id, new ChessGame()));
+        model.addAttribute("rooms", roomService.allRooms());
+        model.addAttribute("results", resultService.allUserResult());
         return "index";
     }
 
     @PostMapping(path = "/createNewGame", consumes = "application/json")
     @ResponseBody
     private boolean createNewGame(@RequestBody final RoomNameDTO roomNameDTO) {
+        if (roomNameDTO.isEmpty()) {
+            throw new ClientException();
+        }
         roomService.createRoom(roomNameDTO.getName());
         return true;
     }
 
     @GetMapping("/enter/{id}")
     private String enterRoom(@PathVariable final String id, final Model model) {
-        try {
-            model.addAttribute("number", id);
-            model.addAttribute("button", "새로운게임");
-            model.addAttribute("isWhite", true);
-            model.addAttribute("users", userService.usersParticipatedInGame(id));
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-        }
+        model.addAttribute("number", id);
+        model.addAttribute("button", "새로운게임");
+        model.addAttribute("isWhite", true);
+        model.addAttribute("users", userService.participatedUsers(id));
         return "chess";
     }
 
@@ -110,7 +105,6 @@ public final class SpringChessGameController {
     private boolean checkCurrentTurn(@RequestBody final SectionDTO sectionDTO) {
         ChessGame chessGame = rooms.loadGameByRoomId(sectionDTO.getRoomId());
         return chessGame.checkRightTurn(sectionDTO.getClickedSection());
-
     }
 
     @PostMapping("/movablePositions")
@@ -146,31 +140,35 @@ public final class SpringChessGameController {
         return true;
     }
 
-    @ExceptionHandler(DriverLoadException.class)
-    @ResponseBody
-    private ResponseEntity driverLoadExceptionHandle() {
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("!! JDBC Driver load 오류");
+    @GetMapping(path = "/errorPage/{code}")
+    private String errorPage(@PathVariable final String code) {
+        return "/error/" + code + ".html";
     }
 
-    @GetMapping(path = "/errorPage")
-    private String errorPage(@RequestParam final String error, final Model model) {
-        model.addAttribute("error", error);
-        return "error";
+    @ExceptionHandler(ClientException.class)
+    private ResponseEntity<String> clientException() {
+        return ResponseEntity.status(BAD_REQUEST)
+                .body("client error");
+    }
+
+    @ExceptionHandler(InitialSettingDataException.class)
+    private String initSettingException() {
+        return "/error/500.html";
     }
 
     @ExceptionHandler(DataAccessException.class)
-    private ResponseEntity dataAccessExceptionHandle() {
+    private ResponseEntity<String> dataAccessExceptionHandle() {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("!! Database Access 오류");
     }
 
-    @ExceptionHandler(NoLogsException.class)
-    private String notExistLog(final NoLogsException e, final Model model) {
-        model.addAttribute("id", e.getRoomId());
+    @ExceptionHandler({NoLogsException.class, NotEnoughPlayerException.class})
+    private String notExistLog(final RoomException e, final Model model) {
+        String roomId = e.getRoomId();
+        model.addAttribute("id", roomId);
         model.addAttribute("button", "새로운게임");
+        model.addAttribute("users", userService.participatedUsers(roomId));
         model.addAttribute("error", e.getMessage());
         return "chess";
     }

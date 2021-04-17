@@ -13,4 +13,8 @@ public final class RoomNameDTO {
     public String getName() {
         return name;
     }
+
+    public boolean isEmpty() {
+        return name.isEmpty();
+    }
 }

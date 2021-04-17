@@ -5,7 +5,6 @@ const url = "http://localhost:8080";
 window.onload = function () {
   const newGameButton = document.querySelector(".new-game");
   const loadGameButton = document.querySelector(".load-game")
-  //const searchRecordButton = document.querySelector(".search-record")
   const registerUserButton = document.querySelector(".register-user");
 
   newGameButton.addEventListener("click", startNewGame);

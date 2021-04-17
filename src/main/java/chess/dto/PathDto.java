@@ -1,6 +1,5 @@
 package chess.dto;
 
-import chess.domain.position.Position;
 import java.beans.ConstructorProperties;
 
 public class PathDto {
@@ -12,7 +11,7 @@ public class PathDto {
         this.from = from;
     }
 
-    public Position getFrom() {
-        return Position.of(from);
+    public String getFrom() {
+        return from;
     }
 }

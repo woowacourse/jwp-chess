@@ -52,8 +52,8 @@ class MoveDaoTest {
     @Test
     void getMoves() {
         MoveRequest move = moveDao.getMoves().get(0);
-        assertThat(move.getFrom()).isEqualTo(Position.of("a2"));
-        assertThat(move.getTo()).isEqualTo(Position.of("a3"));
+        assertThat(Position.of(move.getFrom())).isEqualTo(Position.of("a2"));
+        assertThat(Position.of(move.getTo())).isEqualTo(Position.of("a3"));
     }
 
     @DisplayName("새로 게임을 시작하면 이동 이력을 모두 삭제한다.")

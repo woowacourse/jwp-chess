@@ -27,7 +27,7 @@ async function deleteRoom() {
             roomName: clickedRoom.textContent
         }
         await fetch('/deleteRoom/', {
-            method: 'post',
+            method: 'delete',
             body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json'

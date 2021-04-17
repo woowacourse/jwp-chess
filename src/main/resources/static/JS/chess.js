@@ -78,7 +78,6 @@ async function move(from, to) {
     let data = {
         from: from,
         to: to,
-        roomName: currentRoomName
     }
     const response = await fetch('/move', {
         method: 'post',
@@ -161,12 +160,8 @@ async function clickBack() {
 }
 
 async function syncBoard() {
-    let data = {
-        roomName: currentRoomName
-    }
     const board = await fetch('/currentBoard', {
-        method: 'post',
-        body: JSON.stringify(data),
+        method: 'get',
         headers: {
             'Content-Type': 'application/json'
         }
@@ -192,12 +187,8 @@ async function syncBoard() {
 }
 
 async function clickScore() {
-    let data = {
-        roomName: currentRoomName
-    }
     const score = await fetch('/score', {
         method: 'post',
-        body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
         }

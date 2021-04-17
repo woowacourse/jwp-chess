@@ -1,8 +1,8 @@
 package chess.view;
 
 import chess.domain.board.*;
-import chess.domain.dto.BoardDto;
-import chess.domain.dto.PointDto;
+import chess.dto.BoardDto;
+import chess.dto.PointDto;
 import chess.domain.piece.Piece;
 
 import java.util.Map;

@@ -1,6 +1,6 @@
-package chess.domain.repository;
+package chess.repository;
 
-import chess.domain.dto.HistoryDto;
+import chess.dto.HistoryDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

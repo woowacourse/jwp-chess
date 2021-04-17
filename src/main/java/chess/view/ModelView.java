@@ -1,7 +1,7 @@
 package chess.view;
 
-import chess.domain.dto.GameInfoDto;
-import chess.domain.dto.HistoryDto;
+import chess.dto.GameInfoDto;
+import chess.dto.HistoryDto;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,6 +1,6 @@
-package chess.domain.repository;
+package chess.repository;
 
-import chess.domain.dto.HistoryDto;
+import chess.dto.HistoryDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

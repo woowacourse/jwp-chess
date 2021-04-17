@@ -1,8 +1,8 @@
 package chess.controller;
 
 import chess.domain.command.Commands;
-import chess.domain.dto.MoveRequestDto;
-import chess.domain.dto.NameDto;
+import chess.dto.MoveRequestDto;
+import chess.dto.NameDto;
 import chess.domain.response.GameResponse;
 import chess.domain.response.Response;
 import chess.service.ChessService;

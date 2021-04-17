@@ -1,9 +1,9 @@
 package chess.domain.response;
 
 import chess.domain.board.Team;
-import chess.domain.dto.GameInfoDto;
-import chess.domain.dto.ScoreDto;
-import chess.domain.dto.SquareDto;
+import chess.dto.GameInfoDto;
+import chess.dto.ScoreDto;
+import chess.dto.SquareDto;
 
 import java.util.List;
 

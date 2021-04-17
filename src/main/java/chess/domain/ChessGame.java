@@ -4,9 +4,9 @@ import chess.domain.board.Board;
 import chess.domain.board.Path;
 import chess.domain.board.Team;
 import chess.domain.command.Commands;
-import chess.domain.dto.BoardDto;
-import chess.domain.dto.CommandDto;
-import chess.domain.dto.PointDto;
+import chess.dto.BoardDto;
+import chess.dto.CommandDto;
+import chess.dto.PointDto;
 import chess.domain.state.Ready;
 import chess.domain.state.Running;
 import chess.domain.state.State;
@@ -74,7 +74,7 @@ public class ChessGame {
         }
     }
 
-    private EnumMap<Team, Double> calculatePoint() {
+    public EnumMap<Team, Double> calculatePoint() {
         EnumMap<Team, Double> result = new EnumMap<>(Team.class);
         calculateEachTeamPoint(result, Team.BLACK);
         calculateEachTeamPoint(result, Team.WHITE);
@@ -120,13 +120,5 @@ public class ChessGame {
 
     public Team turn() {
         return turn;
-    }
-
-    public BoardDto boardDto() {
-        return new BoardDto(board, turn);
-    }
-
-    public PointDto pointDto() {
-        return new PointDto(calculatePoint());
     }
 }

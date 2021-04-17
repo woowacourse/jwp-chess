@@ -1,6 +1,6 @@
-package chess.domain.repository;
+package chess.repository;
 
-import chess.domain.dto.CommandDto;
+import chess.dto.CommandDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

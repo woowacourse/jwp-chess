@@ -3,7 +3,7 @@ package chess.domain;
 import chess.domain.board.Board;
 import chess.domain.board.Team;
 import chess.domain.command.Commands;
-import chess.domain.dto.PointDto;
+import chess.dto.PointDto;
 import chess.domain.utils.PieceInitializer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

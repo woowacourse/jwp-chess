@@ -25,4 +25,9 @@ public class RoomDAO {
         String query = "SELECT * FROM ROOM";
         return jdbcTemplate.query(query, ROW_MAPPER);
     }
+
+    public void insertRoom(String name) {
+        String query = "INSERT INTO ROOM (NAME) VALUES (?)";
+        jdbcTemplate.update(query, name);
+    }
 }

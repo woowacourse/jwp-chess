@@ -41,4 +41,14 @@ class RoomDAOTest {
 
         assertThat(rooms).hasSize(2);
     }
+
+    @DisplayName("방을 추가한다.")
+    @Test
+    void insertRoom() {
+        roomDAO.insertRoom("room3");
+
+        List<Room> rooms = roomDAO.findAllRooms();
+
+        assertThat(rooms).hasSize(3);
+    }
 }

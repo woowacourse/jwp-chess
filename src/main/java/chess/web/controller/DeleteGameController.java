@@ -1,7 +1,7 @@
-package chess.controller;
+package chess.web.controller;
 
-import chess.controller.dto.request.GameDeleteRequestDto;
-import chess.service.ChessGameService;
+import chess.web.controller.dto.request.GameDeleteRequestDto;
+import chess.web.service.ChessGameService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;

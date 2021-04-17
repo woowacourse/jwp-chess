@@ -1,12 +1,12 @@
-package chess.service;
+package chess.web.service;
 
-import chess.controller.dto.request.MoveRequestDTO;
-import chess.controller.dto.response.ChessGameResponseDto;
-import chess.controller.dto.response.GameStatusResponseDto;
-import chess.controller.dto.response.MoveResponseDto;
+import chess.web.controller.dto.request.MoveRequestDTO;
+import chess.web.controller.dto.response.ChessGameResponseDto;
+import chess.web.controller.dto.response.GameStatusResponseDto;
+import chess.web.controller.dto.response.MoveResponseDto;
 import chess.domain.game.ChessGame;
 import chess.domain.position.Position;
-import chess.repository.ChessGameRepository;
+import chess.web.repository.ChessGameRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

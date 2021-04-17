@@ -1,9 +1,9 @@
-package chess.controller;
+package chess.web.controller;
 
 
-import chess.controller.dto.request.MoveRequestDTO;
-import chess.controller.dto.response.MoveResponseDto;
-import chess.service.ChessGameService;
+import chess.web.controller.dto.request.MoveRequestDTO;
+import chess.web.controller.dto.response.MoveResponseDto;
+import chess.web.service.ChessGameService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

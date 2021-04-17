@@ -1,9 +1,9 @@
-package chess.controller;
+package chess.web.controller;
 
 
-import chess.controller.dto.response.ChessGameResponseDto;
-import chess.controller.dto.response.GameStatusResponseDto;
-import chess.service.ChessGameService;
+import chess.web.controller.dto.response.ChessGameResponseDto;
+import chess.web.controller.dto.response.GameStatusResponseDto;
+import chess.web.service.ChessGameService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,4 +1,4 @@
-package chess.controller.dto.response;
+package chess.web.controller.dto.response;
 
 public class MoveResponseDto {
 

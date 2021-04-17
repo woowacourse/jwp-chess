@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.web.repository;
 
 import chess.domain.game.ChessGame;
 import java.util.List;

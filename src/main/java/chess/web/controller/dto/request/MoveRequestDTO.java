@@ -1,4 +1,4 @@
-package chess.controller.dto.request;
+package chess.web.controller.dto.request;
 
 
 public class MoveRequestDTO {

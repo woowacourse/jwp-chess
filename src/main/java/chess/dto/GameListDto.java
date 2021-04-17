@@ -9,6 +9,10 @@ public class GameListDto {
         this.gamesId = gamesId;
     }
 
+    public static GameListDto from(List<Integer> loadGames) {
+        return new GameListDto(loadGames);
+    }
+
     public List<Integer> getGamesId() {
         return gamesId;
     }

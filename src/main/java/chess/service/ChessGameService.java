@@ -3,6 +3,7 @@ package chess.service;
 import chess.dao.GameDAO;
 import chess.domain.ChessGameManager;
 import chess.domain.position.Position;
+import chess.dto.GameListDto;
 import chess.dto.NewGameResponse;
 import chess.dto.RunningGameResponse;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,9 @@ public class ChessGameService {
         gameDAO.updatePiecesByGameId(chessGameManager, gameId);
 
         return RunningGameResponse.from(chessGameManager);
+    }
+
+    public GameListDto loadAllGames() {
+        return GameListDto.from(gameDAO.loadGames());
     }
 }

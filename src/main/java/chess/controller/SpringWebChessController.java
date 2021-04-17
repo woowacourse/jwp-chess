@@ -63,14 +63,14 @@ public class SpringWebChessController {
 
     @GetMapping("/loadGames")
     public ResponseEntity<CommonDto<?>> loadGames() {
-        return handleExpectedException(() -> {
-            return ResponseEntity.ok().body(
-                    new CommonDto<>(
-                            "게임 목록을 불러왔습니다.",
-                            new GameListDto(gameDAO.loadGames())
-                    )
-            );
-        });
+        return handleExpectedException(() ->
+                ResponseEntity.ok().body(
+                        new CommonDto<>(
+                                "게임 목록을 불러왔습니다.",
+                                chessGameService.loadAllGames()
+                        )
+                )
+        );
     }
 
     @GetMapping("/load/{id}")

@@ -4,7 +4,8 @@ public class Response {
     private StatusEnum status;
     private Object data;
 
-    public Response() {}
+    public Response() {
+    }
 
     public Response(final StatusEnum status, final Object data) {
         this.status = status;

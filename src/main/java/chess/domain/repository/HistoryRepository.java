@@ -23,7 +23,6 @@ public class HistoryRepository {
 
     private final RowMapper<HistoryDto> rowMapper = (resultSet, rowNum) ->
             new HistoryDto(resultSet.getString("history_id"), resultSet.getString("name"));
-    ;
 
     public int insert(String name) {
         final KeyHolder keyHolder = new GeneratedKeyHolder();

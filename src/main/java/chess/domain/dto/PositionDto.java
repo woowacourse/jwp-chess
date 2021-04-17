@@ -5,8 +5,8 @@ import chess.domain.board.Position;
 import java.util.Objects;
 
 public class PositionDto {
-    private String file;
-    private String rank;
+    private final String file;
+    private final String rank;
 
     public PositionDto(Position position) {
         this.file = position.getFile();

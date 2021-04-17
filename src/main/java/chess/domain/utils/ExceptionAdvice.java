@@ -3,12 +3,11 @@ package chess.domain.utils;
 import chess.domain.exception.DataException;
 import chess.domain.response.Response;
 import chess.domain.response.StatusEnum;
-import com.google.common.net.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @RestControllerAdvice
 public class ExceptionAdvice {

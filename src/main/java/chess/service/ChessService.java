@@ -6,7 +6,6 @@ import chess.domain.command.Commands;
 import chess.domain.dto.CommandDto;
 import chess.domain.dto.GameInfoDto;
 import chess.domain.dto.HistoryDto;
-import chess.domain.exception.DataException;
 import chess.domain.repository.CommandRepository;
 import chess.domain.repository.HistoryRepository;
 import chess.domain.utils.PieceInitializer;
@@ -14,15 +13,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import spark.utils.StringUtils;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ChessService {
-    private CommandRepository commandRepository;
-    private HistoryRepository historyRepository;
+    private final CommandRepository commandRepository;
+    private final HistoryRepository historyRepository;
 
     public ChessService(CommandRepository commandRepository, HistoryRepository historyRepository) {
         this.commandRepository = commandRepository;

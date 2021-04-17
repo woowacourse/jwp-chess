@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Strategy {
     private final List<Direction> directions;
-    private int moveRange;
+    private final int moveRange;
 
     public Strategy(List<Direction> directions, int moveRange) {
         this.directions = directions;

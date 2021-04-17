@@ -1,12 +1,11 @@
 package chess.controller;
 
-import chess.dao.GameDAO;
-import chess.domain.ChessGameManager;
 import chess.domain.position.Position;
-import chess.dto.*;
+import chess.dto.CommonDto;
+import chess.dto.MoveRequest;
+import chess.dto.RunningGameResponse;
 import chess.exception.HandledException;
 import chess.service.ChessGameService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,12 +13,9 @@ import java.util.function.Supplier;
 
 @RestController
 public class SpringWebChessController {
-    private GameDAO gameDAO;
     private ChessGameService chessGameService;
 
-    @Autowired
-    public SpringWebChessController(GameDAO gameDAO, ChessGameService chessGameService) {
-        this.gameDAO = gameDAO;
+    public SpringWebChessController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 
@@ -75,14 +71,13 @@ public class SpringWebChessController {
 
     @GetMapping("/load/{id}")
     public ResponseEntity<CommonDto<?>> loadGame(@PathVariable int id) {
-        return handleExpectedException(() -> {
-            ChessGameManager chessGameManager = gameDAO.loadGame(id);
-            return ResponseEntity.ok().body(
-                    new CommonDto<>(
-                            "게임을 불러왔습니다",
-                            RunningGameResponse.from(chessGameManager)
-                    )
-            );
-        });
+        return handleExpectedException(() ->
+                ResponseEntity.ok().body(
+                        new CommonDto<>(
+                                "게임을 불러왔습니다",
+                                RunningGameResponse.from(chessGameService.loadChessGameById(id))
+                        )
+                )
+        );
     }
 }

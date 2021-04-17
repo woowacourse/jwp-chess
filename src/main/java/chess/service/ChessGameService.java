@@ -37,4 +37,8 @@ public class ChessGameService {
     public GameListDto loadAllGames() {
         return GameListDto.from(gameDAO.loadGames());
     }
+
+    public ChessGameManager loadChessGameById(int id) {
+        return gameDAO.loadGame(id);
+    }
 }

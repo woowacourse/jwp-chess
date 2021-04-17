@@ -4,17 +4,14 @@ import static chess.domain.color.type.TeamColor.BLACK;
 import static chess.domain.position.type.Rank.SEVEN;
 import static chess.domain.position.type.Rank.TWO;
 
-import chess.domain.piece.type.Direction;
 import chess.domain.color.type.TeamColor;
+import chess.domain.piece.type.Direction;
 import chess.domain.position.cache.PositionsCache;
 import chess.domain.position.type.File;
 import chess.domain.position.type.Rank;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Position {
 

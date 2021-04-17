@@ -1,7 +1,7 @@
 package chess.domain.board.move;
 
-import chess.domain.piece.type.Direction;
 import chess.domain.color.type.TeamColor;
+import chess.domain.piece.type.Direction;
 import chess.domain.position.Position;
 
 public class MoveRequest {

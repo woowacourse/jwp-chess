@@ -1,8 +1,8 @@
 package chess.domain.piece;
 
+import chess.domain.color.type.TeamColor;
 import chess.domain.piece.type.Direction;
 import chess.domain.piece.type.PieceType;
-import chess.domain.color.type.TeamColor;
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Objects;

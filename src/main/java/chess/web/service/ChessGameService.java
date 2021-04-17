@@ -1,10 +1,10 @@
 package chess.web.service;
 
+import chess.domain.game.ChessGame;
 import chess.web.controller.dto.request.MoveRequestDTO;
 import chess.web.controller.dto.response.ChessGameResponseDto;
 import chess.web.controller.dto.response.GameStatusResponseDto;
 import chess.web.controller.dto.response.MoveResponseDto;
-import chess.domain.game.ChessGame;
 import chess.web.repository.ChessGameRepository;
 import java.util.List;
 import java.util.stream.Collectors;

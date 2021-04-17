@@ -1,8 +1,8 @@
 package chess.domain.board;
 
+import chess.domain.color.type.TeamColor;
 import chess.domain.piece.Piece;
 import chess.domain.piece.type.PieceType;
-import chess.domain.color.type.TeamColor;
 
 public class Cell {
 

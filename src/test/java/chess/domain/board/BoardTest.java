@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.board.move.MoveRequest;
 import chess.domain.board.score.Scores;
 import chess.domain.color.type.TeamColor;
-import chess.domain.position.Position;
 import chess.utils.position.converter.PositionConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

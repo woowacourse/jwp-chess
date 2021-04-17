@@ -3,9 +3,8 @@ package chess.web.repository;
 import static chess.utils.TestFixture.TEST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.domain.game.ChessGame;
 import chess.domain.color.type.TeamColor;
-import chess.domain.position.Position;
+import chess.domain.game.ChessGame;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;

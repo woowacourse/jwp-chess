@@ -4,7 +4,6 @@ import chess.domain.board.Board;
 import chess.domain.board.move.MoveRequest;
 import chess.domain.board.score.Scores;
 import chess.domain.color.type.TeamColor;
-import chess.domain.position.Position;
 
 public class ChessGame {
 

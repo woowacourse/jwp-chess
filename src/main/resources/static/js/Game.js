@@ -8,7 +8,7 @@ window.onload = async function () {
   const pieces = response["pieceDtos"];
   const host = response["host"];
   const guest = response["guest"];
-  const game =  response["game"];
+  const game = response["game"];
 
   initBoard(pieces);
   fillInformation(host, guest)

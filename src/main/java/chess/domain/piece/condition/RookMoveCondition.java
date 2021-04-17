@@ -3,7 +3,6 @@ package chess.domain.piece.condition;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
-
 import java.util.function.Predicate;
 
 public class RookMoveCondition extends MoveCondition {
@@ -11,21 +10,21 @@ public class RookMoveCondition extends MoveCondition {
     @Override
     public boolean isSatisfyBy(final Board board, final Piece piece, final Position target) {
         return !piece.isSamePosition(target) &&
-                isRightMovable(piece, target) &&
-                isNotExistObstacleOnCrossPath(board, piece, target) &&
-                isNotSameColorOnTarget(board, piece, target) &&
-                isNotChessPieceOutOfBoard(board, target);
+            isRightMovable(piece, target) &&
+            isNotExistObstacleOnCrossPath(board, piece, target) &&
+            isNotSameColorOnTarget(board, piece, target) &&
+            isNotChessPieceOutOfBoard(board, target);
     }
 
     private boolean isRightMovable(final Piece piece, final Position target) {
         return piece.getRow() == target.getRow() ||
-                piece.getColumn() == target.getColumn();
+            piece.getColumn() == target.getColumn();
     }
 
     private boolean isNotExistObstacleOnCrossPath(Board board, Piece piece, Position target) {
         return board.getPieces().stream()
-                .filter(pieceOnBoard -> !pieceOnBoard.equals(piece))
-                .noneMatch(isExistObstacleOnCrossPath(piece, target));
+            .filter(pieceOnBoard -> !pieceOnBoard.equals(piece))
+            .noneMatch(isExistObstacleOnCrossPath(piece, target));
     }
 
     private Predicate<Piece> isExistObstacleOnCrossPath(final Piece piece, final Position target) {
@@ -35,8 +34,8 @@ public class RookMoveCondition extends MoveCondition {
         int minRow = Math.min(piece.getRow(), target.getRow());
 
         return pieceOnBoard ->
-                (minRow < pieceOnBoard.getRow()) && (pieceOnBoard.getRow() < maxRow) &&
-                        (minCol < pieceOnBoard.getColumn() && pieceOnBoard.getColumn() < maxCol);
+            (minRow < pieceOnBoard.getRow()) && (pieceOnBoard.getRow() < maxRow) &&
+                (minCol < pieceOnBoard.getColumn() && pieceOnBoard.getColumn() < maxCol);
     }
 
 }

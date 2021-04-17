@@ -12,7 +12,8 @@ public class Game {
     private final boolean isFinished;
     private final LocalDateTime createdTime;
 
-    public Game(long id, String name, long hostId, long guestId, String turn, boolean isFinished, LocalDateTime createdTime) {
+    public Game(long id, String name, long hostId, long guestId, String turn, boolean isFinished,
+        LocalDateTime createdTime) {
         this.id = id;
         this.name = name;
         this.hostId = hostId;

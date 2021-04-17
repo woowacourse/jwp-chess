@@ -3,11 +3,14 @@ package chess.controller;
 import chess.dto.UserRequestDto;
 import chess.dto.UserResponseDto;
 import chess.service.UserService;
+import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/users")
 @Controller
@@ -28,7 +31,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<UserResponseDto> findUserByName(@RequestParam String name) {
         return ResponseEntity.ok()
-                .body(userService.findUserByName(name));
+            .body(userService.findUserByName(name));
     }
 
 }

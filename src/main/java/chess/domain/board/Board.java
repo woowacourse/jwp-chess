@@ -4,11 +4,10 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.piece.Position;
-import chess.dto.MoveRequestDto;
-
 import java.util.List;
 
 public class Board {
+
     public static final int ROW = 8;
     public static final int COLUMN = 8;
 

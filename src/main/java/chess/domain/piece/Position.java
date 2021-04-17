@@ -3,6 +3,7 @@ package chess.domain.piece;
 import java.util.Objects;
 
 public class Position {
+
     private final int row;
     private final int column;
 
@@ -15,16 +16,16 @@ public class Position {
         this.column = column;
     }
 
-    public double calculateGradient(Position position) {
-        return (position.row - row) / (double) (position.column - column);
-    }
-
     private static int makeColumn(String str) {
         return str.split("")[0].toCharArray()[0] - 'a';
     }
 
     private static int makeRow(String str) {
         return Integer.parseInt(str.split("")[1]) - 1;
+    }
+
+    public double calculateGradient(Position position) {
+        return (position.row - row) / (double) (position.column - column);
     }
 
     public int getRow() {
@@ -37,8 +38,12 @@ public class Position {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Position position = (Position) o;
         return row == position.row && column == position.column;
     }

@@ -1,7 +1,6 @@
 package chess.dto;
 
 import chess.entity.Game;
-
 import java.time.LocalDateTime;
 
 public class GameRequestDto {

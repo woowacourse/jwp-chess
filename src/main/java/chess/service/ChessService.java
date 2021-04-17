@@ -5,12 +5,17 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
-import chess.dto.*;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import chess.dto.ChessResponseDto;
+import chess.dto.GameRequestDto;
+import chess.dto.GameResponseDto;
+import chess.dto.MoveRequestDto;
+import chess.dto.MoveResponseDto;
+import chess.dto.PieceDto;
+import chess.dto.UserResponseDto;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
@@ -20,7 +25,8 @@ public class ChessService {
     private final PieceService pieceService;
     private final UserService userService;
 
-    public ChessService(GameService gameService, PieceService pieceService, UserService userService) {
+    public ChessService(GameService gameService, PieceService pieceService,
+        UserService userService) {
         this.gameService = gameService;
         this.pieceService = pieceService;
         this.userService = userService;
@@ -47,15 +53,16 @@ public class ChessService {
         }
         Board board = generateBoard(gameId);
 
-        return board.isMovable(moveRequestDto.getColor(), moveRequestDto.getSource(), moveRequestDto.getTarget());
+        return board.isMovable(moveRequestDto.getColor(), moveRequestDto.getSource(),
+            moveRequestDto.getTarget());
     }
 
     public MoveResponseDto move(long gameId, MoveRequestDto moveRequestDto) {
         Board board = generateBoard(gameId);
         board.moveAndCatchPiece(
-                Color.from(moveRequestDto.getColor()),
-                new Position(moveRequestDto.getSource()),
-                new Position(moveRequestDto.getTarget()));
+            Color.from(moveRequestDto.getColor()),
+            new Position(moveRequestDto.getSource()),
+            new Position(moveRequestDto.getTarget()));
 
         pieceService.catchPiece(gameId, moveRequestDto);
         pieceService.move(gameId, moveRequestDto);
@@ -71,12 +78,12 @@ public class ChessService {
 
     private Board generateBoard(long gameId) {
         List<Piece> pieces = pieceService.findPiecesByGameId(gameId)
-                .stream()
-                .map(piece -> PieceFactory.createPiece(
-                        piece.getColor(),
-                        piece.getShape(),
-                        new Position(piece.getY(), piece.getX())))
-                .collect(Collectors.toList());
+            .stream()
+            .map(piece -> PieceFactory.createPiece(
+                piece.getColor(),
+                piece.getShape(),
+                new Position(piece.getY(), piece.getX())))
+            .collect(Collectors.toList());
 
         return new Board(pieces);
     }

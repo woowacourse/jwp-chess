@@ -5,12 +5,16 @@ import chess.dto.GameRequestDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.MoveResponseDto;
 import chess.service.ChessService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.Collections;
 import java.util.Map;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/chess")
 @Controller
@@ -34,13 +38,16 @@ public class ChessController {
     }
 
     @GetMapping("/{gameId}/move/check")
-    public ResponseEntity<Map<String, Boolean>> checkMovement(@PathVariable long gameId, MoveRequestDto moveRequestDto) {
-        final Map<String, Boolean> responseData = Collections.singletonMap("isMovable", chessService.checkMovement(gameId, moveRequestDto));
+    public ResponseEntity<Map<String, Boolean>> checkMovement(@PathVariable long gameId,
+        MoveRequestDto moveRequestDto) {
+        final Map<String, Boolean> responseData = Collections
+            .singletonMap("isMovable", chessService.checkMovement(gameId, moveRequestDto));
         return ResponseEntity.ok().body(responseData);
     }
 
     @PutMapping("/{gameId}/move")
-    public ResponseEntity<MoveResponseDto> move(@PathVariable long gameId, @RequestBody MoveRequestDto moveRequestDto) {
+    public ResponseEntity<MoveResponseDto> move(@PathVariable long gameId,
+        @RequestBody MoveRequestDto moveRequestDto) {
         return ResponseEntity.ok().body(chessService.move(gameId, moveRequestDto));
     }
 

@@ -37,7 +37,7 @@ async function startNewGame(e) {
 
 async function getExistentUser(userName) {
   const params = {
-    name : userName
+    name: userName
   }
   return await getData(`${url}/users`, params);
 }
@@ -53,8 +53,8 @@ function validateName(whiteName, blackName) {
 
 async function createUser(userName) {
   const body = {
-    name : userName,
-    password : "123"
+    name: userName,
+    password: "123"
   }
   return await postData(`${url}/users`, body);
 }
@@ -62,7 +62,6 @@ async function createUser(userName) {
 function isEmptyObject(object) {
   return Object.keys(object).length === 0;
 }
-
 
 async function createGame(hostId, guestId) {
   const body = {

@@ -1,8 +1,18 @@
 package chess.domain.piece;
 
 import chess.domain.board.Board;
-import chess.domain.piece.condition.*;
-
+import chess.domain.piece.condition.BishopMoveCondition;
+import chess.domain.piece.condition.CatchingPieceBlackPawnMoveCondition;
+import chess.domain.piece.condition.CatchingPieceWhitePawnMoveCondition;
+import chess.domain.piece.condition.FirstTurnBlackPawnMoveCondition;
+import chess.domain.piece.condition.FirstTurnWhitePawnMoveCondition;
+import chess.domain.piece.condition.KingMoveCondition;
+import chess.domain.piece.condition.KnightMoveCondition;
+import chess.domain.piece.condition.MoveCondition;
+import chess.domain.piece.condition.NormalBlackPawnMoveCondition;
+import chess.domain.piece.condition.NormalWhitePawnMoveCondition;
+import chess.domain.piece.condition.QueenMoveCondition;
+import chess.domain.piece.condition.RookMoveCondition;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -24,32 +34,39 @@ public class Piece {
 
     public static Piece createPawn(Color color, int row, int col) {
         if (Color.BLACK.equals(color)) {
-            return new Piece(Color.BLACK, Shape.P, new Position(row, col), Arrays.asList(new FirstTurnBlackPawnMoveCondition(),
+            return new Piece(Color.BLACK, Shape.P, new Position(row, col),
+                Arrays.asList(new FirstTurnBlackPawnMoveCondition(),
                     new NormalBlackPawnMoveCondition(), new CatchingPieceBlackPawnMoveCondition()));
         }
 
-        return new Piece(Color.WHITE, Shape.P, new Position(row, col), Arrays.asList(new FirstTurnWhitePawnMoveCondition(),
+        return new Piece(Color.WHITE, Shape.P, new Position(row, col),
+            Arrays.asList(new FirstTurnWhitePawnMoveCondition(),
                 new NormalWhitePawnMoveCondition(), new CatchingPieceWhitePawnMoveCondition()));
     }
 
     public static Piece createKing(Color color, int row, int col) {
-        return new Piece(color, Shape.K, new Position(row, col), Collections.singletonList(new KingMoveCondition()));
+        return new Piece(color, Shape.K, new Position(row, col),
+            Collections.singletonList(new KingMoveCondition()));
     }
 
     public static Piece createQueen(Color color, int row, int col) {
-        return new Piece(color, Shape.Q, new Position(row, col), Collections.singletonList(new QueenMoveCondition()));
+        return new Piece(color, Shape.Q, new Position(row, col),
+            Collections.singletonList(new QueenMoveCondition()));
     }
 
     public static Piece createRook(Color color, int row, int col) {
-        return new Piece(color, Shape.R, new Position(row, col), Collections.singletonList(new RookMoveCondition()));
+        return new Piece(color, Shape.R, new Position(row, col),
+            Collections.singletonList(new RookMoveCondition()));
     }
 
     public static Piece createKnight(Color color, int row, int col) {
-        return new Piece(color, Shape.N, new Position(row, col), Collections.singletonList(new KnightMoveCondition()));
+        return new Piece(color, Shape.N, new Position(row, col),
+            Collections.singletonList(new KnightMoveCondition()));
     }
 
     public static Piece createBishop(Color color, int row, int col) {
-        return new Piece(color, Shape.B, new Position(row, col), Collections.singletonList(new BishopMoveCondition()));
+        return new Piece(color, Shape.B, new Position(row, col),
+            Collections.singletonList(new BishopMoveCondition()));
     }
 
     public boolean isSameColor(Color color) {
@@ -119,13 +136,21 @@ public class Piece {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Piece)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Piece)) {
+            return false;
+        }
 
         final Piece piece = (Piece) o;
 
-        if (color != piece.color) return false;
-        if (shape != piece.shape) return false;
+        if (color != piece.color) {
+            return false;
+        }
+        if (shape != piece.shape) {
+            return false;
+        }
         return Objects.equals(position, piece.position);
     }
 
@@ -144,9 +169,9 @@ public class Piece {
     @Override
     public String toString() {
         return String.join(":",
-                shape.getNotation(color),
-                String.valueOf(position.getRow()),
-                String.valueOf(position.getColumn()));
+            shape.getNotation(color),
+            String.valueOf(position.getRow()),
+            String.valueOf(position.getColumn()));
     }
 
     public String getColorValue() {

@@ -17,7 +17,8 @@ public class GameResponseDto {
     }
 
     public static GameResponseDto from(Game game) {
-        return new GameResponseDto(game.getName(), game.getTurn(), game.getHostId(), game.getGuestId());
+        return new GameResponseDto(game.getName(), game.getTurn(), game.getHostId(),
+            game.getGuestId());
     }
 
     public String getName() {

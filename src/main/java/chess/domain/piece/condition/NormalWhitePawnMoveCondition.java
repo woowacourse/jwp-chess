@@ -9,10 +9,10 @@ public class NormalWhitePawnMoveCondition extends MoveCondition {
     @Override
     public boolean isSatisfyBy(final Board board, final Piece piece, final Position target) {
         return !piece.isSamePosition(target) &&
-                isMovablePath(piece, target) &&
-                isNotExistPieceOnPath(board, target) &&
-                isNotSameColorOnTarget(board, piece, target) &&
-                isNotChessPieceOutOfBoard(board, target);
+            isMovablePath(piece, target) &&
+            isNotExistPieceOnPath(board, target) &&
+            isNotSameColorOnTarget(board, piece, target) &&
+            isNotChessPieceOutOfBoard(board, target);
     }
 
     private boolean isMovablePath(final Piece piece, final Position target) {
@@ -21,7 +21,7 @@ public class NormalWhitePawnMoveCondition extends MoveCondition {
 
     private boolean isNotExistPieceOnPath(Board board, Position target) {
         return board.getPieces().stream()
-                .noneMatch(piece -> piece.isSamePosition(target));
+            .noneMatch(piece -> piece.isSamePosition(target));
     }
 
 }

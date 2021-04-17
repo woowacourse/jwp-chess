@@ -12,7 +12,7 @@ export class Piece {
     this.#team = pieceDto["color"].toLowerCase();
     this.#type = pieceDto["shape"].toLowerCase();
     this.#x = parseInt(pieceDto["x"]) + 1;
-    this.#y = parseInt(pieceDto["y"]) + 1 ;
+    this.#y = parseInt(pieceDto["y"]) + 1;
 
     const defaultLocation = document.querySelector(".default-location");
     defaultLocation.insertAdjacentHTML("beforeend", this.makeComponent(id));

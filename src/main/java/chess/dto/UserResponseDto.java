@@ -1,7 +1,6 @@
 package chess.dto;
 
 import chess.entity.User;
-
 import java.time.LocalDateTime;
 
 public class UserResponseDto {

@@ -17,7 +17,8 @@ public class PieceDto {
     }
 
     public static PieceDto from(Piece piece) {
-        return new PieceDto(piece.getColumn(), piece.getRow(), piece.getColorValue(), piece.getShapeValue());
+        return new PieceDto(piece.getColumn(), piece.getRow(), piece.getColorValue(),
+            piece.getShapeValue());
     }
 
     public int getX() {

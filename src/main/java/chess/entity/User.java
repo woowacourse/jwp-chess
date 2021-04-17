@@ -35,10 +35,10 @@ public class User {
     @Override
     public String toString() {
         return "UserEntity{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", createdTime=" + createdTime +
-                '}';
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", password='" + password + '\'' +
+            ", createdTime=" + createdTime +
+            '}';
     }
 }

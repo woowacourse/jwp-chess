@@ -3,7 +3,6 @@ package chess.domain.piece.condition;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
-
 import java.util.List;
 
 public class FirstTurnWhitePawnMoveCondition extends MoveCondition {
@@ -11,10 +10,10 @@ public class FirstTurnWhitePawnMoveCondition extends MoveCondition {
     @Override
     public boolean isSatisfyBy(final Board board, final Piece piece, final Position target) {
         return !piece.isSamePosition(target) &&
-                isRightMovePath(piece, target) &&
-                isNotPieceExistOnPath(board, piece, target) &&
-                isNotSameColorOnTarget(board, piece, target) &&
-                isNotChessPieceOutOfBoard(board, target);
+            isRightMovePath(piece, target) &&
+            isNotPieceExistOnPath(board, piece, target) &&
+            isNotSameColorOnTarget(board, piece, target) &&
+            isNotChessPieceOutOfBoard(board, target);
     }
 
     private boolean isRightMovePath(final Piece piece, final Position target) {
@@ -25,12 +24,13 @@ public class FirstTurnWhitePawnMoveCondition extends MoveCondition {
         List<Piece> pieces = board.getPieces();
 
         return pieces.stream()
-                .filter(pieceOnBoard -> !pieceOnBoard.equals(piece))
-                .noneMatch(
-                        pieceOnBoard ->
-                                pieceOnBoard.getColumn() == piece.getColumn() &&
-                                        piece.getRow() < pieceOnBoard.getRow() && pieceOnBoard.getRow() < target.getRow()
-                );
+            .filter(pieceOnBoard -> !pieceOnBoard.equals(piece))
+            .noneMatch(
+                pieceOnBoard ->
+                    pieceOnBoard.getColumn() == piece.getColumn() &&
+                        piece.getRow() < pieceOnBoard.getRow() && pieceOnBoard.getRow() < target
+                        .getRow()
+            );
     }
 
 }

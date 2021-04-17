@@ -14,9 +14,9 @@ public enum Color {
 
     public static Color from(final String value) {
         return Arrays.stream(values())
-                .filter(color -> color.value.equals(value.toUpperCase()))
-                .findAny()
-                .orElseThrow(() -> new RuntimeException("없는 Color 입니다."));
+            .filter(color -> color.value.equals(value.toUpperCase()))
+            .findAny()
+            .orElseThrow(() -> new RuntimeException("없는 Color 입니다."));
     }
 
     public String getValue() {

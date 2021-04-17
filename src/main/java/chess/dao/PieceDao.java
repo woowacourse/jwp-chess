@@ -3,24 +3,18 @@ package chess.dao;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
-
 @Repository
 public class PieceDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public PieceDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private final RowMapper<Piece> pieceRowMapper = (resultSet, rowNum) -> {
         int x = resultSet.getInt("x");
         int y = resultSet.getInt("y");
@@ -30,6 +24,10 @@ public class PieceDao {
         return PieceFactory.createPiece(color, shape, new Position(y, x));
 
     };
+
+    public PieceDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void insertAll(long gameId, List<Piece> pieces) {
         String sql = "INSERT INTO piece(game_id, x, y, color, shape) VALUES(?,?,?,?,?)";
@@ -64,7 +62,8 @@ public class PieceDao {
 
     public void updatePosition(long gameId, Position source, Position target) {
         String sql = "UPDATE piece SET x = ?, y = ? WHERE game_id = ? AND x = ? AND y = ?";
-        jdbcTemplate.update(sql, target.getColumn(), target.getRow(), gameId, source.getColumn(), source.getRow());
+        jdbcTemplate.update(sql, target.getColumn(), target.getRow(), gameId, source.getColumn(),
+            source.getRow());
     }
 
     public void deletePieces(long gameId) {

@@ -9,7 +9,8 @@ public class ChessResponseDto {
     private final UserResponseDto guest;
     private final GameResponseDto gameResponseDto;
 
-    public ChessResponseDto(List<PieceDto> pieceDtos, UserResponseDto host, UserResponseDto guest, GameResponseDto gameResponseDto) {
+    public ChessResponseDto(List<PieceDto> pieceDtos, UserResponseDto host, UserResponseDto guest,
+        GameResponseDto gameResponseDto) {
         this.pieceDtos = pieceDtos;
         this.host = host;
         this.guest = guest;

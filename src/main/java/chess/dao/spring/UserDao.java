@@ -59,7 +59,7 @@ public class UserDao {
     private void updateWinner(String roomId, String winner) {
         String updateWinnerQuery = "UPDATE users "
             + "SET users.win = users.win + 1 "
-            + "WHERE users.name = (SELECT "+ winner +" FROM room WHERE id = ?)";
+            + "WHERE users.name = (SELECT " + winner + " FROM room WHERE id = ?)";
 
         jdbcTemplate.update(updateWinnerQuery, roomId);
     }

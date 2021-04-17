@@ -26,6 +26,10 @@ public class SparkChessController {
         this.sparkChessService = sparkChessService;
     }
 
+    private static String render(Map<String, Object> model, String viewName) {
+        return HANDLEBARS_TEMPLATE_ENGINE.render(new ModelAndView(model, viewName));
+    }
+
     public void run() {
         Spark.staticFileLocation("/public");
 
@@ -81,7 +85,8 @@ public class SparkChessController {
     }
 
     private void startGame() {
-        put("/room/:id/start", (req, res) -> GSON.toJson(sparkChessService.start(req.params(":id"))));
+        put("/room/:id/start",
+            (req, res) -> GSON.toJson(sparkChessService.start(req.params(":id"))));
     }
 
     private void closeRoom() {
@@ -111,7 +116,8 @@ public class SparkChessController {
             Map<String, String> body = GSON.fromJson(req.body(), HashMap.class);
 
             return GSON.toJson(
-                sparkChessService.move(req.params("id"), body.get("source"), body.get("destination")));
+                sparkChessService
+                    .move(req.params("id"), body.get("source"), body.get("destination")));
         });
     }
 
@@ -123,9 +129,5 @@ public class SparkChessController {
             res.status(500);
             res.body(GSON.toJson(jsonObject));
         });
-    }
-
-    private static String render(Map<String, Object> model, String viewName) {
-        return HANDLEBARS_TEMPLATE_ENGINE.render(new ModelAndView(model, viewName));
     }
 }

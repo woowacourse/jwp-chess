@@ -6,6 +6,7 @@ import chess.domain.Rooms;
 import chess.domain.Team;
 import chess.dto.*;
 import chess.exception.DriverLoadException;
+import chess.exception.NoLogsException;
 import chess.service.LogService;
 import chess.service.ResultService;
 import chess.service.RoomService;
@@ -153,16 +154,24 @@ public final class SpringChessGameController {
                 .body("!! JDBC Driver load 오류");
     }
 
+    @GetMapping(path = "/errorPage")
+    private String errorPage(@RequestParam final String error, final Model model) {
+        model.addAttribute("error", error);
+        return "error";
+    }
+
     @ExceptionHandler(DataAccessException.class)
-    private ResponseEntity dataAccessExceptionHandle(DataAccessException e) {
+    private ResponseEntity dataAccessExceptionHandle() {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("!! Database Access 오류");
     }
 
-    @GetMapping(path = "/errorPage")
-    private String errorPage(@RequestParam final String error, final Model model) {
-        model.addAttribute("error", error);
-        return "error";
+    @ExceptionHandler(NoLogsException.class)
+    private String notExistLog(final NoLogsException e, final Model model) {
+        model.addAttribute("id", e.getRoomId());
+        model.addAttribute("button", "새로운게임");
+        model.addAttribute("error", e.getMessage());
+        return "chess";
     }
 }

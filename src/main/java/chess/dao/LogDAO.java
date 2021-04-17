@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.Movement;
+import chess.exception.NoLogsException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,11 @@ public class LogDAO {
 
     public List<Movement> allLogByRoomId(final String roomId) {
         String query = "SELECT start_position, end_position FROM log WHERE room_id = ? ORDER BY register_date";
-        return jdbcTemplate.query(query, mapper(), roomId);
+        List<Movement> logs = jdbcTemplate.query(query, mapper(), roomId);
+        if (logs.isEmpty()) {
+            throw new NoLogsException(roomId);
+        }
+        return logs;
     }
 
     private RowMapper<Movement> mapper() {

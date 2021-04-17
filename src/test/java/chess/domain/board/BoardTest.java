@@ -1462,324 +1462,283 @@ class BoardTest {
                     }
                 }
             }
-//
-//            @DisplayName("백 팀인 경우")
-//            @Nested
-//            class WhiteTeam {
-//
-//                @DisplayName("유효하지 않은 경로로 이동할 수 없다.")
-//                @ParameterizedTest
-//                @ValueSource(strings = {"d8", "e7", "a8"})
-//                void cannotMoveInvalidRoute(String destinationInput) {
-//                    BoardSetting customBoardSetting = new BoardCustomSetting(
-//                        Arrays.asList(
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, W_PN, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null,
-//                            null, null, null, null, null, null, null, null)
-//                    );
-//
-//                    
-//
-//                    String startPositionInput = "d5";
-//
-//                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                }
-//
-//                @DisplayName("한 칸 전진")
-//                @Nested
-//                class MoveForwardOneCell {
-//                    @DisplayName("위 방향으로 한 칸 이동")
-//                    @Test
-//                    void moveForwardOneCell() {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d5";
-//                        String destinationInput = "d6";
-//
-//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//
-//                    @DisplayName("도착위치에 기물이 존재하면, 이동할 수 없다.")
-//                    @Test
-//                    void cannotMoveWhenPieceExistsAtDestination() {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, B_BP, null, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d5";
-//                        String destinationInput = "d6";
-//
-//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//
-//                    @DisplayName("아래 방향으로 이동할 수 없다.")
-//                    @Test
-//                    void cannotMoveBackwardOneCell() {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d5";
-//                        String destinationInput = "d4";
-//
-//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//
-//                    @DisplayName("처음 위치가 아닌 곳에서 앞으로 두 칸 전진할 수 없다.")
-//                    @Test
-//                    void cannotMoveForwardTwoCellWhenNotAtFirstPosition() {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d5";
-//                        String destinationInput = "d7";
-//
-//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//                }
-//
-//                @DisplayName("두 칸 전진")
-//                @Nested
-//                class MoveForwardTwoCells {
-//                    @DisplayName("처음 위치에 있을 때, 앞으로 두 칸 전진 이동")
-//                    @Test
-//                    void moveForwardTwoCellWhenAtFirstPosition() {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d2";
-//                        String destinationInput = "d4";
-//
-//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//
-//                    @DisplayName("도착위치에 기물이 존재하면, 이동할 수 없다.")
-//                    @Test
-//                    void cannotMoveWhenPieceExistsAtDestination() {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, B_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d2";
-//                        String destinationInput = "d4";
-//
-//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//
-//                    @DisplayName("이동 경로 중간에 기물이 존재하면, 이동할 수 없다.")
-//                    @Test
-//                    void cannotMoveWhenPieceExistsOnRoute() {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, B_PN, null, null, null, null,
-//                                null, null, null, B_PN, null, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d2";
-//                        String destinationInput = "d4";
-//
-//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//
-//                    @DisplayName("아래 방향으로 이동할 수 없다.")
-//                    @Test
-//                    void moveBackwardTwoCell() {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d3";
-//                        String destinationInput = "d1";
-//
-//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//                }
-//
-//                @DisplayName("대각선 한 칸 이동")
-//                @Nested
-//                class MoveDiagonalOneCell {
-//                    @DisplayName("적이 왼쪽 대각선에 있을 때, 이동 가능")
-//                    @Test
-//                    void moveDiagonalLeftWhenEnemyPieceExists() {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, B_PN, null, null, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d2";
-//                        String destinationInput = "c3";
-//
-//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//
-//                    @DisplayName("적이 오른쪽 대각선에 있을 때, 이동 가능")
-//                    @Test
-//                    void moveDiagonalRightWhenEnemyPieceExists() {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, B_PN, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d2";
-//                        String destinationInput = "e3";
-//
-//                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//
-//                    @DisplayName("도착위치에 적이 존재하지 않을 때, 왼쪽 대각선 이동 불가능")
-//                    @Test
-//                    void cannotMoveDiagonalLeftWhenEnemyPieceNotExistsAtDestination()
-//                        {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d2";
-//                        String destinationInput = "c3";
-//
-//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//
-//                    @DisplayName("도착위치에 적이 존재하지 않을 때, 오른쪽 대각선 이동 불가능")
-//                    @Test
-//                    void cannotMoveDiagonalRightWhenEnemyPieceNotExistsAtDestination()
-//                        {
-//                        BoardSetting customBoardSetting = new BoardCustomSetting(
-//                            Arrays.asList(
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, null, null, null, null, null,
-//                                null, null, null, W_PN, null, null, null, null,
-//                                null, null, null, null, null, null, null, null)
-//                        );
-//
-//                        
-//
-//                        String startPositionInput = "d2";
-//                        String destinationInput = "e3";
-//
-//                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.BLACK);
-//                    }
-//                }
-//            }
+
+            @DisplayName("백 팀인 경우")
+            @Nested
+            class WhiteTeam {
+
+                @DisplayName("유효하지 않은 경로로 이동할 수 없다.")
+                @ParameterizedTest
+                @ValueSource(strings = {"d8", "e7", "a8"})
+                void cannotMoveInvalidRoute(String destinationInput) {
+                    Board board = new Board(""
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "...p...."
+                        + "........"
+                        + "........"
+                        + "........"
+                        + "........"
+                    );
+
+                    String startPositionInput = "d5";
+
+                    assertCannotMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                }
+
+                @DisplayName("한 칸 전진")
+                @Nested
+                class MoveForwardOneCell {
+                    @DisplayName("위 방향으로 한 칸 이동")
+                    @Test
+                    void moveForwardOneCell() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "...p...."
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                        );
+
+                        String startPositionInput = "d5";
+                        String destinationInput = "d6";
+
+                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+
+                    @DisplayName("도착위치에 기물이 존재하면, 이동할 수 없다.")
+                    @Test
+                    void cannotMoveWhenPieceExistsAtDestination() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "...B...."
+                            + "...p...."
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                        );
+
+                        String startPositionInput = "d5";
+                        String destinationInput = "d6";
+
+                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+
+                    @DisplayName("아래 방향으로 이동할 수 없다.")
+                    @Test
+                    void cannotMoveBackwardOneCell() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "...p...."
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                        );
+
+                        String startPositionInput = "d5";
+                        String destinationInput = "d4";
+
+                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+
+                    @DisplayName("처음 위치가 아닌 곳에서 앞으로 두 칸 전진할 수 없다.")
+                    @Test
+                    void cannotMoveForwardTwoCellWhenNotAtFirstPosition() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "...p...."
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                        );
+
+                        String startPositionInput = "d5";
+                        String destinationInput = "d7";
+
+                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+                }
+
+                @DisplayName("두 칸 전진")
+                @Nested
+                class MoveForwardTwoCells {
+                    @DisplayName("처음 위치에 있을 때, 앞으로 두 칸 전진 이동")
+                    @Test
+                    void moveForwardTwoCellWhenAtFirstPosition() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "...p...."
+                            + "........"
+                        );
+
+                        String startPositionInput = "d2";
+                        String destinationInput = "d4";
+
+                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+
+                    @DisplayName("도착위치에 기물이 존재하면, 이동할 수 없다.")
+                    @Test
+                    void cannotMoveWhenPieceExistsAtDestination() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "...P...."
+                            + "........"
+                            + "...p...."
+                            + "........"
+                        );
+
+                        String startPositionInput = "d2";
+                        String destinationInput = "d4";
+
+                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+
+                    @DisplayName("이동 경로 중간에 기물이 존재하면, 이동할 수 없다.")
+                    @Test
+                    void cannotMoveWhenPieceExistsOnRoute() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "...P...."
+                            + "...p...."
+                            + "........"
+                        );
+
+                        String startPositionInput = "d2";
+                        String destinationInput = "d4";
+
+                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+
+                    @DisplayName("아래 방향으로 이동할 수 없다.")
+                    @Test
+                    void moveBackwardTwoCell() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "...p...."
+                            + "........"
+                        );
+
+                        String startPositionInput = "d3";
+                        String destinationInput = "d1";
+
+                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+                }
+
+                @DisplayName("대각선 한 칸 이동")
+                @Nested
+                class MoveDiagonalOneCell {
+                    @DisplayName("적이 왼쪽 대각선에 있을 때, 이동 가능")
+                    @Test
+                    void moveDiagonalLeftWhenEnemyPieceExists() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "..P....."
+                            + "...p...."
+                            + "........"
+                        );
+
+                        String startPositionInput = "d2";
+                        String destinationInput = "c3";
+
+                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+
+                    @DisplayName("적이 오른쪽 대각선에 있을 때, 이동 가능")
+                    @Test
+                    void moveDiagonalRightWhenEnemyPieceExists() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "....P..."
+                            + "...p...."
+                            + "........"
+                        );
+
+                        String startPositionInput = "d2";
+                        String destinationInput = "e3";
+
+                        assertCanMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+
+                    @DisplayName("도착위치에 적이 존재하지 않을 때, 왼쪽 대각선 이동 불가능")
+                    @Test
+                    void cannotMoveDiagonalLeftWhenEnemyPieceNotExistsAtDestination() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "...p...."
+                            + "........"
+                        );
+
+                        String startPositionInput = "d2";
+                        String destinationInput = "c3";
+
+                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+
+                    @DisplayName("도착위치에 적이 존재하지 않을 때, 오른쪽 대각선 이동 불가능")
+                    @Test
+                    void cannotMoveDiagonalRightWhenEnemyPieceNotExistsAtDestination() {
+                        Board board = new Board(""
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "........"
+                            + "...p...."
+                            + "........"
+                        );
+
+                        String startPositionInput = "d2";
+                        String destinationInput = "e3";
+
+                        assertCannotMove(board, startPositionInput, destinationInput, TeamColor.WHITE);
+                    }
+                }
+            }
         }
     }
 

@@ -1,9 +1,8 @@
 package chess.controller;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,14 +40,15 @@ public class ChessController {
 
     @PostMapping("")
     @ResponseBody
-    public ResponseEntity<Long> newChessGame(HttpServletResponse response) {
+    public ResponseEntity<Long> newChessGame() {
         Long chessId = chessService.insert();
+        ResponseCookie cookie = ResponseCookie.from("chessId", String.valueOf(chessId))
+                                              .path("/")
+                                              .build();
 
-        Cookie chessIdCookie = new Cookie("chessId", String.valueOf(chessId));
-        chessIdCookie.setMaxAge(60 * 60 * 24 * 30);
-        response.addCookie(chessIdCookie);
-
-        return new ResponseEntity<>(chessId, HttpStatus.CREATED);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
+        return new ResponseEntity<>(chessId, headers, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{chessId}")

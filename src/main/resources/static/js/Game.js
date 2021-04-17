@@ -10,6 +10,12 @@ window.onload = async function () {
   const guest = response["guest"];
   const game = response["gameResponseDto"];
 
+  if (game["finished"]) {
+    alert("이미 끝난 게임입니다. 홈으로 돌아갑니다.")
+    history.back();
+    return;
+  }
+
   initBoard(pieces, game["turn"]);
   fillInformation(host, guest)
 }

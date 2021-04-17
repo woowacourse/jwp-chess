@@ -74,5 +74,5 @@ async function createGame(hostId, guestId) {
 
 function loadGame() {
   const gameId = prompt("이동할 방번호를 입력하세요.");
-  window.location.href = `${url}/game/${gameId}`
+  window.location.href = `${url}/games/${gameId}`
 }

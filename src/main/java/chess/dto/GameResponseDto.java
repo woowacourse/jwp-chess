@@ -8,17 +8,20 @@ public class GameResponseDto {
     private final String turn;
     private final long hostId;
     private final long guestId;
+    private final boolean isFinished;
 
-    private GameResponseDto(String name, String turn, long hostId, long guestId) {
+    public GameResponseDto(final String name, final String turn, final long hostId,
+        final long guestId, final boolean isFinished) {
         this.name = name;
         this.turn = turn;
         this.hostId = hostId;
         this.guestId = guestId;
+        this.isFinished = isFinished;
     }
 
     public static GameResponseDto from(Game game) {
         return new GameResponseDto(game.getName(), game.getTurn(), game.getHostId(),
-            game.getGuestId());
+            game.getGuestId(), game.isFinished());
     }
 
     public String getName() {
@@ -35,5 +38,9 @@ public class GameResponseDto {
 
     public long getGuestId() {
         return guestId;
+    }
+
+    public boolean isFinished() {
+        return isFinished;
     }
 }

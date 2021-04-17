@@ -1,6 +1,4 @@
-let currentRoomName;
 renderRoomName();
-getCurrentRoomName();
 createChessBoard();
 
 const startButton = document.getElementById("start");
@@ -10,11 +8,6 @@ const scoreButton = document.getElementById("score");
 startButton.addEventListener("click", clickStart);
 backButton.addEventListener("click", clickBack);
 scoreButton.addEventListener("click", clickScore);
-
-function getCurrentRoomName() {
-    const url = window.location.href.split("/");
-    currentRoomName = decodeURI(url[url.length - 1]);
-}
 
 function createChessBoard() {
     makeTable();
@@ -146,12 +139,8 @@ async function changeTurn() {
 
 function clickStart() {
     if (confirm("재시작하시겠습니까?")) {
-        let data = {
-            roomName: currentRoomName
-        }
         fetch('/restart', {
             method: 'post',
-            body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json'
             }

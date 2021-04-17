@@ -38,8 +38,8 @@ public class SpringChessController {
     }
 
     @PostMapping(value = "/restart")
-    public void restart(@RequestBody RoomNameDTO roomNameDTO) {
-        springChessService.newBoard(roomNameDTO.getRoomName());
+    public void restart(@SessionAttribute String roomName) {
+        springChessService.newBoard(roomName);
     }
 
     @PostMapping(value = "/move")

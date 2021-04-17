@@ -25,6 +25,7 @@ public class SpringChessService {
     private static final String BLACK = "B";
     private static final String BLANK = ".";
 
+
     private SpringBoardDao springBoardDao;
 
     public SpringChessService(SpringBoardDao springBoardDao) {
@@ -42,7 +43,7 @@ public class SpringChessService {
     }
 
     public ResponseDTO move(PositionDTO positionDTO, String roomName) {
-        Board board = springBoardDao.findBoard(roomName);
+        Board board = springBoardDao.findBoard(roomName).orElseThrow(IllegalArgumentException::new);
         try {
             return moveExecute(positionDTO, board, roomName);
         } catch (ChessException e) {
@@ -86,7 +87,7 @@ public class SpringChessService {
     }
 
     private Side currentTurn(String roomName) {
-        return springBoardDao.findTurn(roomName);
+        return springBoardDao.findTurn(roomName).orElseThrow(IllegalArgumentException::new);
     }
 
     public List<String> rooms() {
@@ -102,7 +103,7 @@ public class SpringChessService {
     }
 
     public ScoreDTO score(String roomName) {
-        Board board = springBoardDao.findBoard(roomName);
+        Board board = springBoardDao.findBoard(roomName).orElseThrow(IllegalArgumentException::new);
         return new ScoreDTO(String.valueOf(board.score(Side.WHITE)), String.valueOf(board.score(Side.BLACK)));
     }
 }

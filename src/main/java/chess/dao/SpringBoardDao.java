@@ -9,10 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -29,12 +26,10 @@ public class SpringBoardDao {
     }
 
     public Board initBoard(String roomName) {
-        try {
-            return findBoard(roomName);
-        } catch (DataAccessException e) {
+        return findBoard(roomName).orElseGet(() -> {
             newBoard(roomName);
             return initBoard(roomName);
-        }
+        });
     }
 
     public Map<Position, Piece> newBoard(String roomName) {
@@ -50,32 +45,21 @@ public class SpringBoardDao {
         this.jdbcTemplate.update(query, boardPositionSet(board.getBoard()), boardPieceSet(board.getBoard()), turn, roomName);
     }
 
-    public Board findBoard(String roomName) {
+    public Optional<Board> findBoard(String roomName) throws DataAccessException {
         String query = "select * from board where roomName=?";
-        try {
-            return new Board(this.jdbcTemplate.queryForObject(
-                    query,
-                    (resultSet, rowNum) -> daoToBoard(
-                            resultSet.getString("position"),
-                            resultSet.getString("pieceName")
-                    ),
-                    roomName));
-        } catch (DataAccessException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        return this.jdbcTemplate.query(
+                query,
+                (resultSet, rowNum) -> daoToBoard(
+                        resultSet.getString("position"),
+                        resultSet.getString("pieceName")
+                ),
+                roomName).stream().findAny().map(Board::new);
     }
 
-    public Side findTurn(String roomName) {
-        try {
-            String query = "SELECT turn FROM board WHERE roomName = ?";
-            String side = this.jdbcTemplate.queryForObject(query, String.class, roomName);
-
-            return Side.getTurnByName(side);
-        } catch (DataAccessException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+    public Optional<Side> findTurn(String roomName) throws DataAccessException {
+        String query = "SELECT turn FROM board WHERE roomName = ?";
+        return jdbcTemplate.queryForList(query, String.class, roomName)
+        .stream().findAny().map(Side::getTurnByName);
     }
 
     private String boardPositionSet(Map<Position, Piece> board) {

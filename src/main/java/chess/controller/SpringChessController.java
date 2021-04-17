@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class SpringChessController {
 
+    private static final String DB_ERROR_MESSAGE = "DB 접근 오류";
 
     private SpringChessService springChessService;
 
@@ -44,7 +45,11 @@ public class SpringChessController {
     @PostMapping(value = "/move")
     @ResponseBody
     public ResponseEntity move(@RequestBody PositionDTO positionDTO, @SessionAttribute String roomName) {
-        return ResponseEntity.ok().body(springChessService.move(positionDTO, roomName));
+        try {
+            return ResponseEntity.ok().body(springChessService.move(positionDTO, roomName));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(DB_ERROR_MESSAGE);
+        }
     }
 
     @GetMapping("/currentBoard")
@@ -54,12 +59,20 @@ public class SpringChessController {
 
     @PostMapping(value = "/currentTurn")
     public ResponseEntity currentTurn(@SessionAttribute String roomName) {
-        return ResponseEntity.ok().body(new TurnDTO(springChessService.turnName(roomName)));
+        try {
+            return ResponseEntity.ok().body(new TurnDTO(springChessService.turnName(roomName)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(DB_ERROR_MESSAGE);
+        }
     }
 
     @PostMapping(value = "/score")
     public ResponseEntity score(@SessionAttribute String roomName) {
-        return ResponseEntity.ok().body(springChessService.score(roomName));
+        try {
+            return ResponseEntity.ok().body(springChessService.score(roomName));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(DB_ERROR_MESSAGE);
+        }
     }
 
     @GetMapping("/rooms")

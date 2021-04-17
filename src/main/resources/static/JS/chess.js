@@ -79,31 +79,37 @@ async function move(from, to) {
         from: from,
         to: to,
     }
-    const response = await fetch('/move', {
+    let response = await fetch('/move', {
         method: 'post',
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
         }
-    }).then(res => {
-        return res.json();
     });
+    const status = response.status;
+    response = await response.json();
 
-    if (response.code === "200") {
-        changeImage(from, to);
-        await changeTurn();
-        return;
+    if(status === 200) {
+        if (response.code === "200") {
+            changeImage(from, to);
+            await changeTurn();
+            return;
+        }
+        if (response.code === "300") {
+            changeImage(from, to);
+            const currentTurn = document.querySelector('.turn');
+            currentTurn.textContent = response.turn;
+            alert(response.message + "가 승리했습니다!");
+            return;
+        }
+        if (response.code === "400") {
+            alert(response.message);
+            return;
+        }
     }
-    if (response.code === "300") {
-        changeImage(from, to);
-        const currentTurn = document.querySelector('.turn');
-        currentTurn.textContent = response.turn;
-        alert(response.message + "가 승리했습니다!");
-        return;
-    }
-    if (response.code === "400") {
-        alert(response.message);
-        return;
+
+    if(status === 400) {
+        alert("잘못된 접근입니다!");
     }
 }
 
@@ -118,21 +124,24 @@ function changeImage(sourcePosition, targetPosition) {
 }
 
 async function changeTurn() {
-    let data = {
-        roomName: currentRoomName
-    }
-    const response = await fetch('/currentTurn', {
+    let response = await fetch('/currentTurn', {
         method: 'post',
-        body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json',
         }
-    }).then(res => {
-        return res.json();
     });
 
-    const currentTurn = document.querySelector('.turn');
-    currentTurn.textContent = response.turn;
+    const status = response.status;
+    response = await response.json();
+    if(status === 200) {
+        const currentTurn = document.querySelector('.turn');
+        currentTurn.textContent = response.turn;
+        return;
+    }
+
+    if(rstatus === 400) {
+        alert("잘못된 접근입니다.");
+    }
 }
 
 function clickStart() {
@@ -183,16 +192,23 @@ async function syncBoard() {
 }
 
 async function clickScore() {
-    const score = await fetch('/score', {
+    let score = await fetch('/score', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
         }
-    }).then(res => {
-        return res.json();
     });
 
-    alert("White 점수 : " + score.whiteScore + "\nBlack 점수 : " + score.blackScore);
+    const status = score.status;
+    score = await score.json();
+    if(status === 200) {
+        alert("White 점수 : " + score.whiteScore + "\nBlack 점수 : " + score.blackScore);
+        return;
+    }
+
+    if(status === 400) {
+        alert("잘못된 접근입니다!");
+    }
 }
 
 async function renderRoomName() {

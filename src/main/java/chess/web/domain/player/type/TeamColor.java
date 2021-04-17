@@ -21,6 +21,13 @@ public enum TeamColor {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀 색깔 입니다."));
     }
 
+    public static TeamColor findByPieceValue(String pieceValue) {
+        if (pieceValue.toUpperCase().equals(pieceValue)) {
+            return BLACK;
+        }
+        return WHITE;
+    }
+
     public TeamColor oppositeTeamColor() {
         if (this == WHITE) {
             return BLACK;

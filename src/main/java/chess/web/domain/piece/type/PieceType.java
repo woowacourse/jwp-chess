@@ -28,6 +28,17 @@ public enum PieceType {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기물 타입입니다."));
     }
 
+    public static PieceType findByPieceValue(String pieceValue) {
+        return Arrays.stream(PieceType.values())
+            .filter(pieceType -> pieceType.getName().equals(pieceValue.toUpperCase()))
+            .findAny()
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기물 타입입니다."));
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public String getName(TeamColor teamColor) {
         if (teamColor == WHITE) {
             return name.toLowerCase();

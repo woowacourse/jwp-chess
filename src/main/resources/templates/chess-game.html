@@ -252,7 +252,7 @@
         alert(move_response['errorMessage']);
         return;
       }
-      window.location.href = HOME + '/games?id=' + game_id;
+      window.location.href = HOME + '/games/' + game_id;
     };
   }
 
@@ -269,8 +269,9 @@
     }));
     xhr.onload = function () {
       const delete_response = xhr.response;
-      console.log(delete_response);
-      window.location.href = HOME;
+      if (delete_response === 'OK') {
+        window.location.href = HOME;
+      }
     };
   }
 

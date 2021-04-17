@@ -1,18 +1,15 @@
 package chess.spring.controller.dto.response;
 
-public class MoveResponseDTO {
+public class MoveResponseDto {
     private boolean isMoveError;
     private String errorMessage;
 
-    public MoveResponseDTO() {
-    }
-
-    public MoveResponseDTO(boolean isMoveError, String errorMessage) {
+    public MoveResponseDto(boolean isMoveError, String errorMessage) {
         this.isMoveError = isMoveError;
         this.errorMessage = errorMessage;
     }
 
-    public MoveResponseDTO(boolean isMoveError) {
+    public MoveResponseDto(boolean isMoveError) {
         this(isMoveError, null);
     }
 

@@ -14,13 +14,11 @@ import chess.web.domain.position.Position;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.springframework.stereotype.Component;
 
-@Component
 public class MoveChecker {
     private static final String CANNOT_MOVE_TO_DESTINATION_ERROR_MESSAGE = "이동할 수 없는 도착위치 입니다.";
 
-    public void validateMoving(MoveRequest moveRequest, Map<Position, Cell> cells) {
+    public void validateMove(MoveRequest moveRequest, Map<Position, Cell> cells) {
         PieceType pieceTypeToMove = getPieceTypeToMove(moveRequest, cells);
         if (isPieceTypeMoveByDefaultStrategy(pieceTypeToMove)) {
             validateDefaultMoving(moveRequest, cells);
@@ -126,7 +124,7 @@ public class MoveChecker {
 
     private Piece getStartPositionPiece(Map<Position, Cell> cells, MoveRequest moveRequest) {
         Cell startPositionCell = cells.get(moveRequest.getStartPosition());
-        return startPositionCell.getPieceEntity();
+        return startPositionCell.getPiece();
     }
 
     public boolean isOwnPieceExistsInDestination(Map<Position, Cell> cells, MoveRequest moveRequest) {

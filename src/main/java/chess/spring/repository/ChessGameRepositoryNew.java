@@ -11,4 +11,6 @@ public interface ChessGameRepositoryNew {
     ChessGameNew findById(Long gameId);
 
     void deleteById(Long gameId);
+
+    void update(ChessGameNew chessGame);
 }

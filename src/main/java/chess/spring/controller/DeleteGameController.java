@@ -1,6 +1,6 @@
 package chess.spring.controller;
 
-import chess.spring.controller.dto.request.GameDeleteDto;
+import chess.spring.controller.dto.request.GameDeleteRequestDto;
 import chess.spring.service.ChessGameService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,8 @@ public class DeleteGameController {
     }
 
     @PostMapping("/delete")
-    public HttpEntity<HttpStatus> deleteGame(@RequestBody GameDeleteDto gameDeleteDto) {
-        chessGameService.deleteGame(gameDeleteDto.getGameId());
+    public HttpEntity<HttpStatus> deleteGame(@RequestBody GameDeleteRequestDto gameDeleteRequestDto) {
+        chessGameService.deleteGame(gameDeleteRequestDto.getGameId());
         return new HttpEntity<>(HttpStatus.OK);
     }
 }

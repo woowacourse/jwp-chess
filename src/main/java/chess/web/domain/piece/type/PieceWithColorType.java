@@ -45,6 +45,10 @@ public enum PieceWithColorType {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 색깔기물 타입입니다."));
     }
 
+    public static void of(String pieceValue) {
+
+    }
+
     public PieceType getPieceType() {
         return pieceType;
     }

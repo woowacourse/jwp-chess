@@ -1,7 +1,6 @@
 package chess.web.domain.piece;
 
 import chess.web.dao.entity.PieceEntity;
-import chess.web.domain.piece.cache.PiecesCache;
 import chess.web.domain.piece.type.Direction;
 import chess.web.domain.piece.type.PieceType;
 import chess.web.domain.piece.type.PieceWithColorType;
@@ -44,19 +43,28 @@ public abstract class Piece {
         }
     }
 
-    public static Piece of(PieceWithColorType pieceWithColorType) {
-        if (pieceWithColorType == null) {
-            return null;
+//    public static Piece of(PieceWithColorType pieceWithColorType) {
+//        if (pieceWithColorType == null) {
+//            return null;
+//        }
+//        return PiecesCache.find(pieceWithColorType.getPieceType(), pieceWithColorType.getTeamColor());
+//    }
+
+//    public static Piece of(PieceType pieceType, TeamColor teamColor) {
+//        return PiecesCache.find(pieceType, teamColor);
+//    }
+
+    public static Piece of(String pieceValue) {
+        TeamColor teamColor = TeamColor.findByPieceValue(pieceValue);
+        PieceType pieceType = PieceType.findByPieceValue(pieceValue);
+        try {
+            String className = PieceType.getClassNameByPieceType(pieceType);
+            Class<Piece> pieceClass = (Class<Piece>) Class.forName(className);
+            Constructor<?> constructor = pieceClass.getConstructor(TeamColor.class);
+            return (Piece) constructor.newInstance(teamColor);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Piece 구현 객체 생성에 실패했습니다.");
         }
-        return PiecesCache.find(pieceWithColorType.getPieceType(), pieceWithColorType.getTeamColor());
-    }
-
-    public static Piece of(PieceType pieceType, TeamColor teamColor) {
-        return PiecesCache.find(pieceType, teamColor);
-    }
-
-    public static Piece of(Long pieceId) {
-        return PiecesCache.findById(pieceId);
     }
 
     public Long getId() {

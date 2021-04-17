@@ -9,7 +9,12 @@ import chess.web.domain.player.type.TeamColor;
 import chess.web.domain.position.cache.PositionsCache;
 import chess.web.domain.position.type.File;
 import chess.web.domain.position.type.Rank;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Position {
     private static final int FILE_INDEX = 0;
@@ -39,10 +44,6 @@ public class Position {
         String file = String.valueOf(position.charAt(FILE_INDEX));
         String rank = String.valueOf(position.charAt(RANK_INDEX));
         return Position.of(File.of(file), Rank.of(rank));
-    }
-
-    public static Position of(Long positionId) {
-        return PositionsCache.findById(positionId);
     }
 
     public Direction calculateDirection(Position destination) {
@@ -78,6 +79,23 @@ public class Position {
 
     public Rank getRank() {
         return rank;
+    }
+
+    public static List<Position> getAllPositionsInOrder() {
+        List<Position> positions = new ArrayList<>();
+        List<Rank> reversedRanks = Arrays.stream(Rank.values())
+            .sorted(Comparator.reverseOrder())
+            .collect(Collectors.toList());
+        for (Rank rank : reversedRanks) {
+            addPositionOfRank(positions, rank);
+        }
+        return positions;
+    }
+
+    private static void addPositionOfRank(List<Position> positions, Rank rank) {
+        for (File file : File.values()) {
+            positions.add(Position.of(file, rank));
+        }
     }
 
     @Override

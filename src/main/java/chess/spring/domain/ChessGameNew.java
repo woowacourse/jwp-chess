@@ -1,6 +1,9 @@
 package chess.spring.domain;
 
+import chess.web.domain.board.move.MoveRequest;
+import chess.web.domain.player.score.Scores;
 import chess.web.domain.player.type.TeamColor;
+import chess.web.domain.position.Position;
 
 public class ChessGameNew {
 
@@ -14,13 +17,15 @@ public class ChessGameNew {
         + "pppppppp"
         + "rnbqkbnr";
     private static final double INITIAL_SCORE = 38.0;
+    private static final String INITIAL_TURN_TEAM_COLOR_VALUE = "white";
 
     private Long id;
     private final String title;
-    private final String boardStatus;
-    private final TeamColor currentTurnTeamColor;
-    private final double whitePlayerScore;
-    private final double blackPlayerScore;
+    private String boardStatus;
+    private TeamColor currentTurnTeamColor;
+    private double whitePlayerScore;
+    private double blackPlayerScore;
+    private final BoardNew board;
 
     public ChessGameNew(Long id, String title, String boardStatus, String currentTurnTeamColor, double whitePlayerScore, double blackPlayerScore) {
         this.id = id;
@@ -29,14 +34,11 @@ public class ChessGameNew {
         this.currentTurnTeamColor = TeamColor.of(currentTurnTeamColor);
         this.whitePlayerScore = whitePlayerScore;
         this.blackPlayerScore = blackPlayerScore;
+        this.board = new BoardNew(boardStatus);
     }
 
     public ChessGameNew(String title) {
-        this.title = title;
-        this.boardStatus = INITIAL_BOARD_STATUS;
-        this.currentTurnTeamColor = TeamColor.WHITE;
-        this.whitePlayerScore = INITIAL_SCORE;
-        this.blackPlayerScore = INITIAL_SCORE;
+        this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE, INITIAL_SCORE, INITIAL_SCORE);
     }
 
     public Long getId() {
@@ -64,6 +66,24 @@ public class ChessGameNew {
     }
 
     public boolean isKingDead() {
-        return false;
+        return board.isKingDead();
+    }
+
+    public void movePiece(Position startPosition, Position destination) {
+        MoveRequest moveRequest = new MoveRequest(currentTurnTeamColor, startPosition, destination);
+        board.movePiece(moveRequest);
+        updateScores();
+        boardStatus = board.getBoardStatus();
+        currentTurnTeamColor = currentTurnTeamColor.oppositeTeamColor();
+    }
+
+    private void updateScores() {
+        Scores scores = board.getScores();
+        whitePlayerScore = scores.getWhitePlayerScore();
+        blackPlayerScore = scores.getBlackPlayerScore();
+    }
+
+    public String getCurrentTurnTeamColorValue() {
+        return currentTurnTeamColor.getValue();
     }
 }

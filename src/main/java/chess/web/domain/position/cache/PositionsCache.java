@@ -15,24 +15,16 @@ import org.springframework.stereotype.Component;
 
 
 public class PositionsCache {
-    private static final List<Position> POSITIONS = new ArrayList<>();
+    private static final List<Position> positions = new ArrayList<>();
 
-    private final PositionRepository positionRepository;
-
-    private PositionsCache(PositionRepository positionRepository) {
-        this.positionRepository = positionRepository;
+    private PositionsCache() {
     }
 
-
-    private void init() {
-        try {
-            cachePositions();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    static {
+        cachePositions();
     }
 
-    private void cachePositions() throws SQLException {
+    private static void cachePositions() {
         List<Rank> ranks = Arrays.asList(Rank.values());
         List<Rank> reversedRanks = ranks.stream()
             .sorted(Comparator.reverseOrder())
@@ -43,28 +35,20 @@ public class PositionsCache {
         }
     }
 
-    private void cachingPositionsOfRank(Rank rank) throws SQLException {
+    private static void cachingPositionsOfRank(Rank rank) {
         for (File file : File.values()) {
-            Position position = positionRepository.findByFileAndRank(file, rank);
-            POSITIONS.add(position);
+            positions.add(new Position(file, rank));
         }
     }
 
     public static Position find(File file, Rank rank) {
-        return POSITIONS.stream()
+        return positions.stream()
             .filter(position -> position.getFile() == file && position.getRank() == rank)
             .findAny()
             .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 위치 입니다."));
     }
 
-    public static Position findById(Long positionId) {
-        return POSITIONS.stream()
-            .filter(position -> position.getId().equals(positionId))
-            .findAny()
-            .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 위치 입니다."));
-    }
-
     public static Position get(int index) {
-        return POSITIONS.get(index);
+        return positions.get(index);
     }
 }

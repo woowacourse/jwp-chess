@@ -1,6 +1,6 @@
 package chess.spring.controller.dto.request;
 
-public class GameDeleteDto {
+public class GameDeleteRequestDto {
 
     private Long gameId;
 

@@ -13,6 +13,10 @@ public class Cell {
         this.piece = piece;
     }
 
+    public Cell() {
+        this(null);
+    }
+
     public TeamColor getTeamColor() {
         return piece.getTeamColor();
     }
@@ -25,7 +29,7 @@ public class Cell {
         return piece.getPieceType();
     }
 
-    public Piece getPieceEntity() {
+    public Piece getPiece() {
         return piece;
     }
 
@@ -34,5 +38,12 @@ public class Cell {
             return piece.getName();
         }
         return EMPTY_STATUS;
+    }
+
+    public boolean containsPieceColorOf(TeamColor teamColor) {
+        if (isEmpty()) {
+            return false;
+        }
+        return getTeamColor() == teamColor;
     }
 }

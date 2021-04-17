@@ -49,6 +49,23 @@ public class ChessGameDaoNew implements ChessGameRepositoryNew {
     }
 
     @Override
+    public void update(ChessGameNew chessGame) {
+        String query = "UPDATE chess_game "
+            + "SET "
+            + "board_status = ?, "
+            + "current_turn_team_color = ?, "
+            + "white_player_score = ?, "
+            + "black_player_score = ? "
+            + "WHERE chess_game_id = ?";
+        jdbcTemplate.update(query,
+            chessGame.getBoardStatus(),
+            chessGame.getCurrentTurnTeamColorValue(),
+            chessGame.getWhitePlayerScore(),
+            chessGame.getBlackPlayerScore(),
+            chessGame.getId());
+    }
+
+    @Override
     public List<ChessGameNew> findAll() {
         String query = "SELECT * FROM chess_game";
         return jdbcTemplate.query(query, chessGameRowMapper);

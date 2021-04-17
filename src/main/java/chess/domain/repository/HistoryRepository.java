@@ -3,9 +3,14 @@ package chess.domain.repository;
 import chess.domain.dto.HistoryDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -20,9 +25,17 @@ public class HistoryRepository {
             new HistoryDto(resultSet.getString("history_id"), resultSet.getString("name"));
     ;
 
-    public void insert(String name) {
+    public int insert(String name) {
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
         final String query = "INSERT INTO History (name) VALUES (?)";
-        jdbcTemplate.update(query, name);
+        jdbcTemplate.update((Connection con) -> {
+            PreparedStatement pstmt = con.prepareStatement(
+                    query,
+                    new String[]{"history_id"});
+            pstmt.setString(1, name);
+            return pstmt;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
     public Optional<Integer> findIdByName(String name) {

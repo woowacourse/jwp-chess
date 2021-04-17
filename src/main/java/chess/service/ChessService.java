@@ -62,12 +62,8 @@ public class ChessService {
     }
 
     public String addHistory(String name) {
-        historyRepository.insert(name);
-        final Optional<Integer> id = historyRepository.findIdByName(name);
-        if (!id.isPresent()) {
-            throw new DataException("[ERROR] id 값을 불러올 수 없습니다.");
-        }
-        return String.valueOf(id.get());
+        final int id = historyRepository.insert(name);
+        return String.valueOf(id);
     }
 
     private void updateMoveInfo(String command, String historyId) {

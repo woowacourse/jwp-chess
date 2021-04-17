@@ -33,7 +33,8 @@ class HistoryRepositoryTest {
 
     @Test
     void insert() {
-        historyRepository.insert("whybe");
+        final int id = historyRepository.insert("whybe");
+        assertThat(id).isEqualTo(2);
     }
 
     @Test

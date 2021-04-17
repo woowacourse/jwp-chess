@@ -48,20 +48,15 @@ public class SpringWebChessController {
     @PostMapping("/move")
     public ResponseEntity<CommonDto<?>> move(@RequestBody MoveRequest moveRequest) {
         return handleExpectedException(() -> {
-            ChessGameManager chessGameManager = gameDAO.loadGame(moveRequest.getGameId());
 
             int gameId = moveRequest.getGameId();
-            String from = moveRequest.getFrom();
-            String to = moveRequest.getTo();
-            chessGameManager.move(Position.of(from), Position.of(to));
-
-            gameDAO.updateTurnByGameId(chessGameManager, gameId);
-            gameDAO.updatePiecesByGameId(chessGameManager, gameId);
+            Position from = Position.of(moveRequest.getFrom());
+            Position to = Position.of(moveRequest.getTo());
 
             return ResponseEntity.ok().body(
                     new CommonDto<>(
                             "기물을 이동했습니다.",
-                            RunningGameResponse.from(chessGameManager))
+                            chessGameService.move(gameId, from, to))
             );
         });
     }

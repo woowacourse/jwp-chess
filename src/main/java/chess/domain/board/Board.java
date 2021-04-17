@@ -46,7 +46,7 @@ public class Board {
         movePieceFromStartPositionCellToDestinationCell(moveRequest);
     }
 
-    public void validate(MoveRequest moveRequest) {
+    private void validate(MoveRequest moveRequest) {
         Cell startPositionCell = cells.get(moveRequest.getStartPosition());
         validateOwnPiece(startPositionCell, moveRequest.getCurrentTurnTeamColor());
         validateMoveRoute(moveRequest);

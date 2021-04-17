@@ -1,8 +1,8 @@
-package chess.web.repository.dao;
+package chess.repository.dao;
 
 
 import chess.domain.game.ChessGame;
-import chess.web.repository.ChessGameRepository;
+import chess.repository.ChessGameRepository;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;

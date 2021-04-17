@@ -5,7 +5,7 @@ import chess.web.controller.dto.request.MoveRequestDTO;
 import chess.web.controller.dto.response.ChessGameResponseDto;
 import chess.web.controller.dto.response.GameStatusResponseDto;
 import chess.web.controller.dto.response.MoveResponseDto;
-import chess.web.repository.ChessGameRepository;
+import chess.repository.ChessGameRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

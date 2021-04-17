@@ -1,4 +1,4 @@
-package chess.web.repository;
+package chess.repository;
 
 import static chess.utils.TestFixture.TEST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;

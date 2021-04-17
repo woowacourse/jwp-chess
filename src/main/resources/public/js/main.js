@@ -1,12 +1,12 @@
 import {
-  getBoard,
-  getPath,
-  getScores,
-  getStatus,
-  getTurn,
-  loadBoard,
-  move,
-  restart
+    getBoard,
+    getPath,
+    getScores,
+    getStatus,
+    getTurn,
+    loadBoard,
+    move,
+    restart
 } from "./fetch.js"
 import {PIECES, SCORE_TEMPLATE} from "./constant.js";
 

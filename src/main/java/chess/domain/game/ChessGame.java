@@ -17,7 +17,7 @@ public class ChessGame {
         + "........"
         + "pppppppp"
         + "rnbqkbnr";
-    private static final double INITIAL_SCORE = 38.0;
+
     private static final String INITIAL_TURN_TEAM_COLOR_VALUE = "white";
 
     private final Long id;
@@ -26,7 +26,7 @@ public class ChessGame {
     private TeamColor currentTurnTeamColor;
     private final Board board;
 
-    public ChessGame(Long id, String title, String boardStatus, String currentTurnTeamColor, double whitePlayerScore, double blackPlayerScore) {
+    public ChessGame(Long id, String title, String boardStatus, String currentTurnTeamColor) {
         this.id = id;
         this.title = title;
         this.boardStatus = boardStatus;
@@ -35,7 +35,7 @@ public class ChessGame {
     }
 
     public ChessGame(String title) {
-        this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE, INITIAL_SCORE, INITIAL_SCORE);
+        this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE);
     }
 
     public Long getId() {

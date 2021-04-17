@@ -26,9 +26,7 @@ public class ChessGameDao implements ChessGameRepository {
             resultSet.getLong("chess_game_id"),
             resultSet.getString("title"),
             resultSet.getString("board_status"),
-            resultSet.getString("current_turn_team_color"),
-            resultSet.getDouble("white_player_score"),
-            resultSet.getDouble("black_player_score"));
+            resultSet.getString("current_turn_team_color"));
 
     @Override
     public Long save(ChessGame chessGame) {

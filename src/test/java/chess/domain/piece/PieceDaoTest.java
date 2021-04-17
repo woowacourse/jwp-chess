@@ -17,15 +17,15 @@ import chess.domain.position.MovePosition;
 @SpringBootTest
 public class PieceDaoTest {
 
-    private final ChessDao chessDAO;
-    private final PieceDao pieceDAO;
+    private final ChessDao chessDao;
+    private final PieceDao pieceDao;
     private final long chessId;
 
     @Autowired
-    public PieceDaoTest(ChessDao chessDAO, PieceDao pieceDAO) {
-        this.chessDAO = chessDAO;
-        this.pieceDAO = pieceDAO;
-        chessId = chessDAO.insert();
+    public PieceDaoTest(ChessDao chessDao, PieceDao pieceDao) {
+        this.chessDao = chessDao;
+        this.pieceDao = pieceDao;
+        chessId = chessDao.insert();
     }
 
     @DisplayName("초기 기물 삽입 테스트")
@@ -33,22 +33,22 @@ public class PieceDaoTest {
     void insertTest() {
 
         // given
-        final Chess chess = chessDAO.findChessById(chessId);
-        final ChessDto chessDTO = new ChessDto(chess);
-        assertThat(chessDTO.getBoardDTO()
+        final Chess chess = chessDao.findChessById(chessId);
+        final ChessDto chessDto = new ChessDto(chess);
+        assertThat(chessDto.getBoardDto()
                            .getPieceDtos()).size()
                                            .isEqualTo(0);
 
         // when
         final Chess newChess = Chess.createWithEmptyBoard()
                                     .start();
-        final BoardDto boardDTO = BoardDto.from(newChess);
-        pieceDAO.insert(chessId, boardDTO);
+        final BoardDto boardDto = BoardDto.from(newChess);
+        pieceDao.insert(chessId, boardDto);
 
         // then
-        final Chess insertedChess = chessDAO.findChessById(chessId);
+        final Chess insertedChess = chessDao.findChessById(chessId);
         final ChessDto insertedChessDto = new ChessDto(insertedChess);
-        assertThat(insertedChessDto.getBoardDTO()
+        assertThat(insertedChessDto.getBoardDto()
                                    .getPieceDtos()).size()
                                                    .isEqualTo(64);
     }
@@ -64,28 +64,28 @@ public class PieceDaoTest {
 
         final Chess newChess = Chess.createWithEmptyBoard()
                                     .start();
-        pieceDAO.insert(chessId, BoardDto.from(newChess));
+        pieceDao.insert(chessId, BoardDto.from(newChess));
 
         // when
-        pieceDAO.move(chessId, movePosition);
+        pieceDao.move(chessId, movePosition);
 
         // then
-        final Chess chess = chessDAO.findChessById(chessId);
-        final ChessDto chessDTO = new ChessDto(chess);
-        for (PieceDto pieceDTO : chessDTO.getBoardDTO()
+        final Chess chess = chessDao.findChessById(chessId);
+        final ChessDto chessDto = new ChessDto(chess);
+        for (PieceDto pieceDto : chessDto.getBoardDto()
                                          .getPieceDtos()) {
-            if (pieceDTO.getPosition()
+            if (pieceDto.getPosition()
                         .equals(source)) {
-                assertThat(pieceDTO.getPosition()).isEqualTo(source);
-                assertThat(pieceDTO.getColor()).isEqualTo(Color.BLANK.name());
-                assertThat(pieceDTO.getName()).isEqualTo(Color.BLANK.name());
+                assertThat(pieceDto.getPosition()).isEqualTo(source);
+                assertThat(pieceDto.getColor()).isEqualTo(Color.BLANK.name());
+                assertThat(pieceDto.getName()).isEqualTo(Color.BLANK.name());
             }
 
-            if (pieceDTO.getPosition()
+            if (pieceDto.getPosition()
                         .equals(target)) {
-                assertThat(pieceDTO.getPosition()).isEqualTo(target);
-                assertThat(pieceDTO.getColor()).isEqualTo(Color.WHITE.name());
-                assertThat(pieceDTO.getName()).isEqualTo(Pawn.WHITE_INSTANCE.getName());
+                assertThat(pieceDto.getPosition()).isEqualTo(target);
+                assertThat(pieceDto.getColor()).isEqualTo(Color.WHITE.name());
+                assertThat(pieceDto.getName()).isEqualTo(Pawn.WHITE_INSTANCE.getName());
             }
         }
     }

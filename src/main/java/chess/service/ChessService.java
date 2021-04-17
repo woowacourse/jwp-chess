@@ -12,16 +12,16 @@ import chess.domain.position.MovePosition;
 @Service
 public class ChessService {
 
-    private final ChessDao chessDAO;
-    private final PieceDao pieceDAO;
+    private final ChessDao chessDao;
+    private final PieceDao pieceDao;
 
-    public ChessService(ChessDao chessDAO, PieceDao pieceDAO) {
-        this.chessDAO = chessDAO;
-        this.pieceDAO = pieceDAO;
+    public ChessService(ChessDao chessDao, PieceDao pieceDao) {
+        this.chessDao = chessDao;
+        this.pieceDao = pieceDao;
     }
 
     public ChessDto getChessGame(Long chessId) {
-        final Chess chess = chessDAO.findChessById(chessId);
+        final Chess chess = chessDao.findChessById(chessId);
         return new ChessDto(chess);
     }
 
@@ -30,16 +30,16 @@ public class ChessService {
                                  .start();
         final BoardDto boardDto = BoardDto.from(chess);
 
-        final long chessId = chessDAO.insert();
-        pieceDAO.insert(chessId, boardDto);
+        final long chessId = chessDao.insert();
+        pieceDao.insert(chessId, boardDto);
 
         return chessId;
     }
 
     public void move(Long chessId, MovePosition movePosition) {
-        final Chess chess = chessDAO.findChessById(chessId)
+        final Chess chess = chessDao.findChessById(chessId)
                                     .move(movePosition);
-        pieceDAO.move(chessId, movePosition);
-        chessDAO.updateChess(chessId, chess.status(), chess.color());
+        pieceDao.move(chessId, movePosition);
+        chessDao.updateChess(chessId, chess.status(), chess.color());
     }
 }

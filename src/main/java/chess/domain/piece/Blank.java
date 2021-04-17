@@ -19,8 +19,8 @@ public class Blank extends AbstractPiece {
 
     private static final String ERROR_SQUARE_IS_BLANK = "선택한 위치는 빈 칸입니다.";
 
-    public Blank(Color color, DirectionGroup DIRECTION_GROUP) {
-        super(color, DIRECTION_GROUP);
+    public Blank(Color color, DirectionGroup directionGroup) {
+        super(color, directionGroup);
     }
 
     @Override

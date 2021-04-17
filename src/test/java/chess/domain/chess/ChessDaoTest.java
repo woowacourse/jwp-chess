@@ -12,12 +12,12 @@ import chess.service.ChessService;
 @SpringBootTest
 public class ChessDaoTest {
 
-    private final ChessDao chessDAO;
+    private final ChessDao chessDao;
     private final Long chessId;
 
     @Autowired
-    public ChessDaoTest(ChessDao chessDAO, ChessService chessService) {
-        this.chessDAO = chessDAO;
+    public ChessDaoTest(ChessDao chessDao, ChessService chessService) {
+        this.chessDao = chessDao;
         chessId = chessService.insert();
     }
 
@@ -26,13 +26,13 @@ public class ChessDaoTest {
     void findChessByIdTest() {
 
         // when
-        final Chess chess = chessDAO.findChessById(chessId);
-        final ChessDto chessDTO = new ChessDto(chess);
+        final Chess chess = chessDao.findChessById(chessId);
+        final ChessDto chessDto = new ChessDto(chess);
 
         // then
-        assertThat(chessDTO.getStatus()).isEqualTo("RUNNING");
-        assertThat(chessDTO.getTurn()).isEqualTo("WHITE");
-        assertThat(chessDTO.getBoardDTO()
+        assertThat(chessDto.getStatus()).isEqualTo("RUNNING");
+        assertThat(chessDto.getTurn()).isEqualTo("WHITE");
+        assertThat(chessDto.getBoardDto()
                            .getPieceDtos()).size()
                                            .isEqualTo(64);
     }
@@ -42,7 +42,7 @@ public class ChessDaoTest {
     void insertTest() {
 
         // when
-        Long newChessId = chessDAO.insert();
+        Long newChessId = chessDao.insert();
 
         // then
         assertThat(newChessId).isNotEqualTo(chessId);
@@ -53,12 +53,12 @@ public class ChessDaoTest {
     void updateChessTest() {
 
         // when
-        chessDAO.updateChess(chessId, Status.KING_DEAD.name(), Color.BLACK.name());
+        chessDao.updateChess(chessId, Status.KING_DEAD.name(), Color.BLACK.name());
 
         // then
-        final Chess chess = chessDAO.findChessById(chessId);
-        final ChessDto chessDTO = new ChessDto(chess);
-        assertThat(chessDTO.getStatus()).isEqualTo("KING_DEAD");
-        assertThat(chessDTO.getTurn()).isEqualTo("BLACK");
+        final Chess chess = chessDao.findChessById(chessId);
+        final ChessDto chessDto = new ChessDto(chess);
+        assertThat(chessDto.getStatus()).isEqualTo("KING_DEAD");
+        assertThat(chessDto.getTurn()).isEqualTo("BLACK");
     }
 }

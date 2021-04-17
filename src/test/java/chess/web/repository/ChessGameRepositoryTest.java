@@ -63,7 +63,7 @@ class ChessGameRepositoryTest {
         ChessGame savedChessGame = chessGameRepository.findById(savedGameId);
         assertThat(savedChessGame.getCurrentTurnTeamColor()).isSameAs(TeamColor.WHITE);
 
-        savedChessGame.movePiece(Position.of("b2"), Position.of("b4"));
+        savedChessGame.movePiece("b2", "b4");
         chessGameRepository.update(savedChessGame);
 
         ChessGame updatedChessGame = chessGameRepository.findById(savedGameId);

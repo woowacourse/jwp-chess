@@ -31,10 +31,10 @@ public class ChessGameTest {
         assertThat(chessGame.getBoardStatus()).isEqualTo(INITIAL_BOARD_STATUS);
         assertThat(chessGame.getCurrentTurnTeamColor()).isEqualTo(TeamColor.WHITE);
 
-        Position startPosition = Position.of("c2");
-        Position destination = Position.of("c4");
+        String startPositionInput = "c2";
+        String destinationInput = "c4";
 
-        chessGame.movePiece(startPosition, destination);
+        chessGame.movePiece(startPositionInput, destinationInput);
 
         assertThat(chessGame.getTitle()).isEqualTo(TEST_TITLE);
         assertThat(chessGame.getBoardStatus()).isEqualTo(""

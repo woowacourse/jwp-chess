@@ -68,11 +68,14 @@ function getClickedPiece() {
 }
 
 async function move(from, to) {
+
+    const roomName = await currentRoomName();
+
     let data = {
         from: from,
         to: to,
     }
-    let response = await fetch('/move', {
+    let response = await fetch(`/move/${roomName}`, {
         method: 'post',
         body: JSON.stringify(data),
         headers: {
@@ -117,7 +120,8 @@ function changeImage(sourcePosition, targetPosition) {
 }
 
 async function changeTurn() {
-    let response = await fetch('/currentTurn', {
+    const roomName = await currentRoomName();
+    let response = await fetch(`/currentTurn/${roomName}`, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
@@ -132,14 +136,15 @@ async function changeTurn() {
         return;
     }
 
-    if(rstatus === 400) {
+    if(status === 400) {
         alert(response.text());
     }
 }
 
-function clickStart() {
+async function clickStart() {
+    const roomName = await currentRoomName();
     if (confirm("재시작하시겠습니까?")) {
-        fetch('/restart', {
+        fetch(`/restart/${roomName}`, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -158,7 +163,8 @@ async function clickBack() {
 }
 
 async function syncBoard() {
-    const board = await fetch('/currentBoard')
+    const roomName = await currentRoomName();
+    const board = await fetch(`/currentBoard/${roomName}`)
         .then(res => {
         return res.json();
     });
@@ -181,7 +187,8 @@ async function syncBoard() {
 }
 
 async function clickScore() {
-    let score = await fetch('/score', {
+    const roomName = await currentRoomName();
+    let score = await fetch(`/score/${roomName}`, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
@@ -201,9 +208,12 @@ async function clickScore() {
 }
 
 async function renderRoomName() {
+    const title = document.querySelector(".title");
+    title.textContent = "Chess Game : " + await currentRoomName();
+}
+
+async function currentRoomName() {
     const roomName = await fetch('/currentRoom')
         .then(res => res.json());
-
-    const title = document.querySelector(".title");
-    title.textContent = "Chess Game : " + roomName.roomName;
+    return roomName.roomName;
 }

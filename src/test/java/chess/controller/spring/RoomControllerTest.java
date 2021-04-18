@@ -5,7 +5,9 @@ import chess.service.spring.RoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -19,10 +21,8 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RoomControllerTest {
 
     @LocalServerPort
@@ -50,7 +50,6 @@ class RoomControllerTest {
 
     @DisplayName("방 목록을 조회한다.")
     @Test
-    @Order(1)
     void findAllRooms() throws JsonProcessingException {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -68,7 +67,6 @@ class RoomControllerTest {
 
     @DisplayName("방을 추가한다.")
     @Test
-    @Order(2)
     void addRoom() throws JsonProcessingException {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

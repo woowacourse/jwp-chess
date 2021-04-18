@@ -31,7 +31,7 @@ CREATE TABLE `piece` (
   PRIMARY KEY (`piece_id`),
   KEY `game_id` (`game_id`),
   CONSTRAINT `piece_ibfk_1` FOREIGN KEY (`game_id`) REFERENCES `game` (`game_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1991 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-17 19:51:06
+-- Dump completed on 2021-04-18 13:03:02

@@ -1,5 +1,6 @@
 package chess.controller.spring;
 
+import chess.domain.room.Room;
 import chess.dto.RoomDTO;
 import chess.service.spring.RoomService;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +29,10 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity addRoom(@RequestBody String name) {
+    public ResponseEntity<RoomDTO> addRoom(@RequestBody String name) {
         roomService.addRoom(name);
-        return ResponseEntity.ok().build();
+        Room room = roomService.findLastRoom();
+        RoomDTO roomDTO = RoomDTO.from(room);
+        return ResponseEntity.ok().body(roomDTO);
     }
 }

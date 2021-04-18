@@ -22,4 +22,8 @@ public class RoomService {
     public void addRoom(String name) {
         roomDAO.insertRoom(name);
     }
+
+    public Room findLastRoom() {
+        return roomDAO.findLastRoom();
+    }
 }

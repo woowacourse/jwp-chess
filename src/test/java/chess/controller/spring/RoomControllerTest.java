@@ -58,12 +58,14 @@ class RoomControllerTest {
     @DisplayName("방을 추가한다.")
     @Test
     @Order(2)
-    void addRoom() {
+    void addRoom() throws JsonProcessingException {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("test3")
                 .when().post("/rooms")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(2))
+                .body(is(new ObjectMapper().writeValueAsString(new RoomDTO(3, "test3"))));
     }
 }

@@ -62,12 +62,13 @@ public class ChessService {
         board.moveAndCatchPiece(
             Color.from(moveRequestDto.getColor()),
             new Position(moveRequestDto.getSource()),
-            new Position(moveRequestDto.getTarget()));
+            new Position(moveRequestDto.getTarget())
+        );
 
         pieceService.catchPiece(gameId, moveRequestDto);
         pieceService.move(gameId, moveRequestDto);
         if (board.isKingCatch()) {
-            gameService.endGame(gameId, true);
+            gameService.endGame(gameId);
             pieceService.removeAll(gameId);
             return new MoveResponseDto(true, true);
         }

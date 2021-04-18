@@ -20,7 +20,6 @@ public class PieceDao {
         int y = resultSet.getInt("y");
         String color = resultSet.getString("color");
         String shape = resultSet.getString("shape");
-
         return PieceFactory.createPiece(color, shape, new Position(y, x));
 
     };

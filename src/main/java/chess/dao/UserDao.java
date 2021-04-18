@@ -41,13 +41,11 @@ public class UserDao {
 
     public User selectByName(String name) {
         final String sql = "SELECT * FROM user WHERE name = ?";
-
         return jdbcTemplate.queryForObject(sql, userRowMapper, name);
     }
 
     public User selectById(long id) {
         final String sql = "SELECT * FROM user WHERE id = ?";
-
         return jdbcTemplate.queryForObject(sql, userRowMapper, id);
     }
 }

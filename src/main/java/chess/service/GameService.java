@@ -22,8 +22,8 @@ public class GameService {
         return GameResponseDto.from(gameDao.findById(gameId));
     }
 
-    public void endGame(long gameId, boolean isFinished) {
-        gameDao.updateGameStatus(gameId, isFinished);
+    public void endGame(long gameId) {
+        gameDao.updateGameStatus(gameId, true);
     }
 
     public void changeTurn(long gameId) {

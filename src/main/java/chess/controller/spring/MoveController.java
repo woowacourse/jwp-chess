@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MoveController {
 
     @GetMapping("/")
+    public String moveToMainPage() {
+        return "index.html";
+    }
+
+    @GetMapping("/chessgame")
     public String moveToGamePage() {
         return "game.html";
     }

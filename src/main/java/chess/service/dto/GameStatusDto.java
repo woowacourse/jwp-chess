@@ -7,10 +7,10 @@ import java.util.stream.Collectors;
 
 public class GameStatusDto {
 
-    private final List<PieceStatusDto> pieces;
-    private final ScoreDto scoreDto;
-    private final boolean isGameOver;
-    private final Color winner;
+    private List<PieceStatusDto> pieces;
+    private ScoreDto scoreDto;
+    private boolean isGameOver;
+    private Color winner;
 
     public GameStatusDto(final Pieces pieces, final ScoreDto scoreDto, final boolean isGameOver, final Color winner) {
         this.pieces = pieces.pieces()

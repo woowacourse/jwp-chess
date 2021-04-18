@@ -10,11 +10,11 @@ public class GameStatusRequestDto {
         this.chessName = chessName;
     }
 
-    public boolean isGameOver() {
-        return isGameOver;
-    }
-
     public String getChessName() {
         return chessName;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
     }
 }

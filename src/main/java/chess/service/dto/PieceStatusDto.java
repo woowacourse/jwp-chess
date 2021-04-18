@@ -4,8 +4,8 @@ import chess.domain.piece.Piece;
 
 public class PieceStatusDto {
 
-    private final String position;
-    private final String pieceName;
+    private String position;
+    private String pieceName;
 
     public PieceStatusDto(final Piece piece) {
         this.position = piece.positionInfo();

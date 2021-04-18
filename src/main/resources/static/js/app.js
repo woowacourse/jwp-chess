@@ -26,7 +26,7 @@ end.addEventListener("click", (event) => {
 
         const option = {
             method: 'PUT',
-            header: {
+            headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
@@ -57,7 +57,7 @@ const loadGame = async () => {
     }
     reRangeBoard(response.body);
 
-    if (response.body.isGameOver) {
+    if (response.body.gameOver) {
         let winnerNode = winner.querySelector("strong");
         if (response.body.winner === "NOTHING") {
             winnerNode.innerText = "무승부";
@@ -159,13 +159,13 @@ async function movePiece(sourcePosition, targetPosition) {
 
     const option = {
         method: 'PUT',
-        header: {
+        headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     };
 
-    const response = await fetch(basePath + "/api/pieces", option)
+    const response = await fetch(basePath + "/api/games/pieces", option)
     .then(res => res.json());
     console.log(response.body);
 

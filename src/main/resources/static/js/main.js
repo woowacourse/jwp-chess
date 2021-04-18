@@ -2,7 +2,7 @@ const mainStart = document.querySelector("#main-start");
 const mainLoad = document.querySelector("#main-load");
 const basePath = 'http://localhost:8080';
 
-mainStart.addEventListener("click", async () => {
+mainStart.addEventListener("click",  async () => {
     let result = window.prompt("게임 이름을 입력해주세요");
     if (result === '' || result === null) {
         return;
@@ -14,8 +14,8 @@ mainStart.addEventListener("click", async () => {
 
     const option = {
         method: 'POST',
-        header: {
-            'Content-Type': 'application/json'
+        headers: {
+            'content-type': 'application/json;charset=UTF-8',
         },
         body: JSON.stringify(data)
     };

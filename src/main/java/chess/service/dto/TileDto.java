@@ -4,8 +4,10 @@ import chess.domain.piece.Piece;
 
 public class TileDto {
 
-    private final String position;
-    private final String piece;
+    private String position;
+    private String piece;
+
+    public TileDto(){}
 
     public TileDto(final Piece piece) {
         this.position = piece.positionInfo();

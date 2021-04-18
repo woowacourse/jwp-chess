@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 
 public class TilesDto {
 
-    private final List<TileDto> tiles;
+    private List<TileDto> tiles;
+
+    public TilesDto(){}
 
     public TilesDto(final Board board) {
         this.tiles = board.chessBoard()

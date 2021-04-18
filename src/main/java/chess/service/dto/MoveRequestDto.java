@@ -23,4 +23,16 @@ public class MoveRequestDto {
     public String getTarget() {
         return target;
     }
+
+    public void setChessName(String chessName) {
+        this.chessName = chessName;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
 }

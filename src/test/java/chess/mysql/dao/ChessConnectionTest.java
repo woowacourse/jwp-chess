@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.mysql.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

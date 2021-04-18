@@ -6,7 +6,7 @@ import chess.chessgame.domain.board.LoadBoardInitializer;
 import chess.chessgame.domain.piece.attribute.Color;
 import chess.chessgame.domain.statistics.ChessGameStatistics;
 import chess.converter.PiecesConverter;
-import chess.dao.dto.ChessGame;
+import chess.mysql.dao.dto.ChessGame;
 
 import static chess.chessgame.domain.piece.attribute.Color.WHITE;
 import static chess.converter.PiecesConverter.convertSquares;

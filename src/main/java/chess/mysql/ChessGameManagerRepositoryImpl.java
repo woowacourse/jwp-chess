@@ -1,30 +1,32 @@
-package chess.chessgame.repository;
+package chess.mysql;
 
-import chess.dao.ChessDao;
-import chess.dao.dto.ChessGame;
 import chess.chessgame.domain.manager.ChessGameManager;
 import chess.chessgame.domain.manager.ChessGameManagerBundle;
 import chess.chessgame.domain.manager.ChessGameManagerFactory;
 import chess.chessgame.domain.manager.NotStartedChessGameManager;
+import chess.chessgame.repository.ChessGameManagerRepository;
+import chess.mysql.dao.ChessDao;
+import chess.mysql.dao.dto.ChessGame;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
 @Repository
-public class ChessGameRepository {
+public class ChessGameManagerRepositoryImpl implements ChessGameManagerRepository {
     private final ChessDao chessDao;
 
-    public ChessGameRepository(ChessDao chessDao) {
+    public ChessGameManagerRepositoryImpl(ChessDao chessDao) {
         this.chessDao = chessDao;
     }
 
+    @Override
     public ChessGameManager findById(long id) {
         return chessDao.findById(id).map(ChessGameManagerFactory::loadingGame)
                 .orElseGet(() -> new NotStartedChessGameManager(id));
     }
 
+    @Override
     public ChessGameManagerBundle findRunningGames() {
         return chessDao.findAllOnRunning().stream()
                 .map(this::createFromEntity)
@@ -35,19 +37,24 @@ public class ChessGameRepository {
         return ChessGameManagerFactory.loadingGame(chessGame);
     }
 
+    @Override
     public long add(ChessGameManager chessGameManager) {
         return chessDao.save(new ChessGame(chessGameManager));
     }
 
+    @Override
     public void update(ChessGameManager chessGameManager) {
         chessDao.update(new ChessGame(chessGameManager));
     }
 
+    @Override
     public void delete(long id) {
         chessDao.delete(id);
     }
 
+    @Override
     public boolean isEnd(long gameId) {
         return findById(gameId).isEnd();
     }
+
 }

@@ -1,6 +1,6 @@
-package chess.dao;
+package chess.mysql.dao;
 
-import chess.dao.dto.ChessGame;
+import chess.mysql.dao.dto.ChessGame;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static chess.dao.DbConnectionTemplate.executeQuery;
-import static chess.dao.DbConnectionTemplate.executeQueryWithGenerateKey;
+import static chess.mysql.dao.DbConnectionTemplate.executeQuery;
+import static chess.mysql.dao.DbConnectionTemplate.executeQueryWithGenerateKey;
 
 public class MysqlChessDao implements ChessDao {
     @Override

@@ -19,7 +19,7 @@ public class GridController {
     private ChessService chessService;
 
     @GetMapping("/grid/{roomName}")
-    public Response getRoom(@PathVariable("roomName") String roomName) {
+    public Response<GridAndPiecesResponseDto> getRoom(@PathVariable("roomName") String roomName) {
         StartRequestDto startRequestDto = new StartRequestDto(roomName);
         GridAndPiecesResponseDto gridAndPiecesResponseDto = chessService.getGridAndPieces(startRequestDto);
         return new Response(ResponseCode.OK, gridAndPiecesResponseDto);

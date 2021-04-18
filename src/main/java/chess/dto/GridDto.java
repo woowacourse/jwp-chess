@@ -1,10 +1,8 @@
 package chess.dto;
 
-import chess.dto.responsedto.ResponseDto;
-
 import java.time.LocalDateTime;
 
-public class GridDto implements ResponseDto {
+public class GridDto {
     private final Long gridId;
     private final boolean isBlackTurn;
     private final boolean isFinished;

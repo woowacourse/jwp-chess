@@ -16,7 +16,7 @@ public class MoveController {
     private ChessService chessService;
 
     @PostMapping("/move")
-    public Response move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
+    public Response<MoveRequestDto> move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
         return chessService.move(moveRequestDto);
     }
 }

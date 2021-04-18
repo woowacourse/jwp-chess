@@ -1,17 +1,15 @@
 package chess.dto.response;
 
-import chess.dto.responsedto.ResponseDto;
-
-public class Response {
+public class Response<T> {
     private final int code;
     private final String message;
-    private final ResponseDto data;
+    private final T data;
 
     public Response(ResponseCode responseCode) {
         this(responseCode, null);
     }
 
-    public Response(ResponseCode responseCode, ResponseDto data) {
+    public Response(ResponseCode responseCode, T data) {
         this(responseCode.getCode(), responseCode.getMessage(), data);
     }
 
@@ -19,7 +17,7 @@ public class Response {
         this(code, message, null);
     }
 
-    public Response(int code, String message, ResponseDto data) {
+    public Response(int code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;
@@ -33,7 +31,7 @@ public class Response {
         return message;
     }
 
-    public ResponseDto getData() {
+    public T getData() {
         return data;
     }
 }

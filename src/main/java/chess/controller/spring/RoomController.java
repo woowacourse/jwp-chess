@@ -2,6 +2,8 @@ package chess.controller.spring;
 
 import chess.dto.response.Response;
 import chess.dto.response.ResponseCode;
+import chess.dto.responsedto.GridAndPiecesResponseDto;
+import chess.dto.responsedto.RoomsResponseDto;
 import chess.service.ChessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +17,12 @@ public class RoomController {
     private ChessService chessService;
 
     @PostMapping("/room/{roomId}/restart")
-    public Response restart(@PathVariable("roomId") String roomId) {
+    public Response<GridAndPiecesResponseDto> restart(@PathVariable("roomId") String roomId) {
         return new Response(ResponseCode.OK, chessService.restart(Long.parseLong(roomId)));
     }
 
     @GetMapping("/room")
-    public Response getRooms() {
+    public Response<RoomsResponseDto> getRooms() {
         return new Response(ResponseCode.OK, chessService.getAllRooms());
     }
 }

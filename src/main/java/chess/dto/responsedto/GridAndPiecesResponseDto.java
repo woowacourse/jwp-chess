@@ -6,7 +6,7 @@ import chess.dto.PieceDto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridAndPiecesResponseDto implements ResponseDto {
+public class GridAndPiecesResponseDto {
     private final GridDto gridDto;
     private final List<PieceDto> piecesResponseDto;
 

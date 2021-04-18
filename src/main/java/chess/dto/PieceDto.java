@@ -3,9 +3,8 @@ package chess.dto;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
-import chess.dto.responsedto.ResponseDto;
 
-public class PieceDto implements ResponseDto {
+public class PieceDto {
     private static final int PIECE_NAME_INDEX = 0;
     private static final int Y_POSITION_INDEX = 1;
     private static final int X_POSITION_INDEX = 0;

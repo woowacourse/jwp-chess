@@ -30,7 +30,6 @@ public class ChessService {
     private final ScoreDao scoreDao;
     private final StateDao stateDao;
 
-    @Autowired
     public ChessService(GameDao gameDao, HistoryDao historyDao, PieceDao pieceDao, ScoreDao scoreDao, StateDao stateDao) {
         this.gameDao = gameDao;
         this.historyDao = historyDao;
@@ -46,7 +45,6 @@ public class ChessService {
         scoreDao.saveScore(chessManager.gameStatus(), gameId);
         pieceDao.savePieces(gameId, chessManager.boardToMap());
         return gameId;
-
     }
 
     public List<PieceResponseDto> findPiecesById(final Long gameId) {

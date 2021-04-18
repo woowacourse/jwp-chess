@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.controller.dto.RoomDto;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
 import chess.service.GameService;

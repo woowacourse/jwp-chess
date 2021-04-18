@@ -6,6 +6,7 @@ import chess.domain.game.BoardFactory;
 import chess.domain.game.Game;
 import chess.domain.location.Position;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,11 +26,10 @@ public class ChessService {
         commandDao.insert(roomId, from, to);
     }
 
-    public Map<String, Object> load(Long roomId) {
+    public void load(Long roomId, Model model) {
         Game game = newGame(roomId);
-        Map<String, Object> model = makeChessModel(game);
-        model.put("room", new RoomDto(roomId, ""));
-        return model;
+        makeChessModel(game, model);
+        model.addAttribute("room", new RoomDto(roomId, ""));
     }
 
     private Game newGame(Long roomId) {
@@ -41,28 +41,26 @@ public class ChessService {
         return game;
     }
 
-    private Map<String, Object> makeChessModel(Game game) {
-        Map<String, Object> model = new HashMap<>();
+    private void makeChessModel(Game game, Model model) {
         setBoard(new BoardDto(game.allBoard()).getMaps(), model);
         setGameInformation(new ScoreDtos(game.score()).getScoreDtos(), new ColorDto(game.currentPlayer()), game.isEnd(), model);
-        return model;
     }
 
-    private void setBoard(Map<PositionDto, PieceDto> board, Map<String, Object> model) {
+    private void setBoard(Map<PositionDto, PieceDto> board, Model model) {
         for (PositionDto positionDTO : board.keySet()) {
-            model.put(positionDTO.getKey(), board.get(positionDTO));
+            model.addAttribute(positionDTO.getKey(), board.get(positionDTO));
         }
     }
 
     private void setGameInformation(List<ScoreDto> score,
                                     ColorDto color,
                                     boolean isFinished,
-                                    Map<String, Object> model) {
-        model.put("scores", score);
-        model.put("turn", color);
+                                    Model model) {
+        model.addAttribute("scores", score);
+        model.addAttribute("turn", color);
 
         if (isFinished) {
-            model.put("winner", color);
+            model.addAttribute("winner", color);
         }
     }
 }

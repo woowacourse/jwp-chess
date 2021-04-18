@@ -23,19 +23,11 @@ public class SparkChessController {
     }
 
     public void run() {
-        get("/", this::mainPage);
         get("/create", this::createRoom);
         get("/delete/:roomId", this::deleteRoom);
-        get("/game/:roomId", this::loadGame);
         post("/game/:roomId/move", this::move);
         exception(IllegalArgumentException.class, this::handleException);
         exception(DataAccessException.class, this::handleException);
-    }
-
-    private Object mainPage(Request request, Response response) {
-        Map<String, Object> model = new HashMap<>();
-        model.put("roomList", roomService.load());
-        return null;
     }
 
     private Object createRoom(Request request, Response response) {
@@ -49,12 +41,6 @@ public class SparkChessController {
         roomService.delete(roomId);
         response.redirect("/");
         return null;
-    }
-
-    private Object loadGame(Request request, Response response) {
-        Long roomId = Long.parseLong(request.params(":roomId"));
-        Map<String, Object> model = chessService.load(roomId);
-        return render(model, "chessboard.html");
     }
 
     private Object move(Request request, Response response) {

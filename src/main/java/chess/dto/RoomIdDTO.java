@@ -3,7 +3,7 @@ package chess.dto;
 public class RoomIdDTO {
     private final String roomId;
 
-    public RoomIdDTO(String roomId) {
+    public RoomIdDTO(final String roomId) {
         this.roomId = roomId;
     }
 

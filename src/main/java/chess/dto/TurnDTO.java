@@ -6,7 +6,7 @@ public class TurnDTO {
 
     private final Color turn;
 
-    public TurnDTO(String turn) {
+    public TurnDTO(final String turn) {
         this.turn = Color.of(turn);
     }
 

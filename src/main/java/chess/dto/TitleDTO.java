@@ -10,7 +10,7 @@ public class TitleDTO {
 
     }
 
-    public TitleDTO(String title) {
+    public TitleDTO(final String title) {
         this.title = title;
     }
 

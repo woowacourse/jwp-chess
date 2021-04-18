@@ -1,9 +1,9 @@
 package chess.dto;
 
 public class DuplicateDTO {
-    private boolean isDuplicate;
+    private final boolean isDuplicate;
 
-    public DuplicateDTO(boolean isDuplicate) {
+    public DuplicateDTO(final boolean isDuplicate) {
         this.isDuplicate = isDuplicate;
     }
 

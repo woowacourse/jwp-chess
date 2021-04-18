@@ -6,7 +6,7 @@ public class ChessBoardDTO {
 
     private final Map<String, String> positionAndPieceName;
 
-    public ChessBoardDTO(Map<String, String> positionAndPieceName) {
+    public ChessBoardDTO(final Map<String, String> positionAndPieceName) {
         this.positionAndPieceName = positionAndPieceName;
     }
 

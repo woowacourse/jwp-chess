@@ -2,9 +2,9 @@ package chess.dto;
 
 public class FinishDTO {
 
-    private boolean isFinished;
+    private final boolean isFinished;
 
-    public FinishDTO(boolean isFinished) {
+    public FinishDTO(final boolean isFinished) {
         this.isFinished = isFinished;
     }
 

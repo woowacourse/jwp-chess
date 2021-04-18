@@ -27,7 +27,7 @@ public class LobbyService {
 
     public Boolean isDuplicate(String title) {
         Optional<String> foundRoom = chessRepository.findRoomId(title);
-        if(foundRoom.isPresent()) {
+        if (foundRoom.isPresent()) {
             return true;
         }
         return false;

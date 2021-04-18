@@ -61,10 +61,10 @@ async function toggleAvatar() {
     const blackScore = this.$blackResult.querySelector('.score').textContent
     const whiteScore = this.$whiteResult.querySelector('.score').textContent
 
-     if (blackScore > whiteScore) {
-         this.$blackResult.getElementsByTagName(
+    if (blackScore > whiteScore) {
+        this.$blackResult.getElementsByTagName(
             'img')[0].src = "./images/player_win.png"
-         removeTurn()
+        removeTurn()
         return
     }
     if (whiteScore > blackScore) {

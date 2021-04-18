@@ -1,4 +1,5 @@
-CREATE DATABASE chess_db DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE
+DATABASE chess_db DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `chess_game`
 (

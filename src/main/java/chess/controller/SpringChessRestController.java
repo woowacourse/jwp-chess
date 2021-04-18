@@ -28,7 +28,7 @@ public class SpringChessRestController {
         try {
             return ResponseEntity.ok(springChessService.move(moveRequestDto));
         } catch (Exception e) {
-            return ResponseEntity.ok(springChessService.loadRoom(moveRequestDto.getRoomId()));
+            return ResponseEntity.status(400).body(springChessService.loadRoom(moveRequestDto.getRoomId()));
         }
     }
 

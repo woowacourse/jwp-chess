@@ -37,12 +37,12 @@ public class BoardDto {
         return board.isAnyKingDead();
     }
 
-    public boolean getGameOverFlag() {
-        return gameOverFlag;
-    }
-
     public static BoardDto of(Map<String, String> boardInfo) {
         return new BoardDto(boardInfo, true);
+    }
+
+    public boolean getGameOverFlag() {
+        return gameOverFlag;
     }
 
     public Map<String, String> getBoardInfo() {

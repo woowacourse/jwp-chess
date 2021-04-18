@@ -9,8 +9,8 @@ import chess.domain.piece.Team;
 import java.util.Map;
 
 public class ChessGame {
-    private Board board;
     private final BoardFactory boardFactory = new BoardFactory();
+    private Board board;
     private Team turnOwner;
 
     public void settingBoard() {

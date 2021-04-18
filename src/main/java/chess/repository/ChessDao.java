@@ -1,9 +1,9 @@
 package chess.repository;
 
-import chess.domain.dto.BoardDto;
-import chess.domain.dto.TurnDto;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
+import chess.domain.dto.BoardDto;
+import chess.domain.dto.TurnDto;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import org.springframework.jdbc.core.JdbcTemplate;

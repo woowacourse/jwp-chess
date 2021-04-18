@@ -60,10 +60,6 @@ function clickDiv(e) {
     return e.target;
 }
 
-async function movePiece(targetPosition, destinationPosition) {
-    await sendMoveInformation(targetPosition, destinationPosition);
-}
-
 function checkGameOver(gameOverFlag) {
     if (gameOverFlag === "true") {
         alert("게임이 종료되었습니다. 체스판을 초기화 합니다.");
@@ -72,15 +68,15 @@ function checkGameOver(gameOverFlag) {
     }
 }
 
-async function sendMoveInformation(targetPosition, destinationPosition) {
+async function movePiece(targetPosition, destinationPosition) {
     const bodyValue = {
         target: targetPosition,
         destination: destinationPosition
     }
-    await moveInformation(bodyValue);
+    await sendMoveInformation(bodyValue);
 }
 
-async function moveInformation(bodyValue) {
+async function sendMoveInformation(bodyValue) {
     const response = await fetch("/move", {
         method: 'POST',
         headers: {

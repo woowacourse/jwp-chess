@@ -1,8 +1,8 @@
 package chess.domain.piece;
 
-import chess.strategy.MoveStrategy;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
+import chess.strategy.MoveStrategy;
 
 import java.util.List;
 import java.util.Objects;

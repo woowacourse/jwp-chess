@@ -55,6 +55,12 @@ function loadPrevGame() {
     fetch("/game/saved")
         .then(response => {
             if (!response.ok) {
+                console.log(response.status);
+                if (response.status === 404) {
+                    alert("현재 저장된 게임이 없습니다.");
+                } else {
+                    alert("서버와의 통신이 실패하였습니다.");
+                }
                 throw new Error(response.status);
             }
             return response.json();
@@ -64,8 +70,6 @@ function loadPrevGame() {
             checkIsPlaying(data);
         })
         .catch(error => {
-            console.log(error)
-            alert("서버와의 통신이 실패하였습니다.");
         })
 }
 

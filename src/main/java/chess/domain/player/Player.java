@@ -37,12 +37,12 @@ public abstract class Player {
     }
 
     public final Pieces pieces() {
-        return state().pieces();
+        return state.pieces();
     }
 
-/*    public final double calculateScore() {
-        return state.pieces().calculateScore();
-    }*/
+    public boolean isKingDead() {
+        return pieces().isKingDead();
+    }
 
     public final void toRunningState(final State anotherState) {
         this.state = this.state.toRunningState(anotherState);

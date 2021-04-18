@@ -58,6 +58,11 @@ public class Pieces {
         return false;
     }
 
+    public boolean isKingDead() {
+        return pieces.stream()
+            .noneMatch(Piece::isKing);
+    }
+
     public double calculateScore() {
         return this.pieces.stream()
             .mapToDouble(piece -> piece.score(pieces))

@@ -104,11 +104,11 @@ public class ChessGame {
         double whiteScore = score(whitePlayer.pieces());
         double blackScore = score(blackPlayer.pieces());
 
-        if (whiteScore > blackScore) {
+        if (blackPlayer.isKingDead() || whiteScore > blackScore) {
             return Color.WHITE;
         }
 
-        if (whiteScore < blackScore) {
+        if (whitePlayer.isKingDead() || whiteScore < blackScore) {
             return Color.BLACK;
         }
         return Color.NOTHING;

@@ -92,6 +92,10 @@ public class ChessGame {
         return turn;
     }
 
+    public String getTurnAsString() {
+        return turn.getColor();
+    }
+
     public State getState() {
         return state;
     }

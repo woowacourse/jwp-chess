@@ -46,7 +46,7 @@ public class RoomDao {
         return new Room(
                 rs.getString("name"),
                 rs.getString("turn"),
-                JsonConverter.toJsonObject(rs.getString("state")));
+                JsonConverter.fromJson(rs.getString("state")));
     }
 
     public void validateRoomExistence(String name) throws SQLException {

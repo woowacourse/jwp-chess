@@ -37,7 +37,7 @@ public class SpringRoomDao {
                         return new Room(
                                 resultSet.getString("name"),
                                 resultSet.getString("turn"),
-                                JsonConverter.toJsonObject(resultSet.getString("state")));
+                                JsonConverter.fromJson(resultSet.getString("state")));
                     },
                     name);
         } catch (Exception e) {

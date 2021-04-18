@@ -1,21 +1,15 @@
 package chess.controller;
 
-import chess.config.ChessRoom;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
 import chess.domain.game.ChessGame;
 import chess.domain.game.Result;
 import chess.domain.piece.Piece;
-import chess.dto.OutcomeDto;
-import chess.dto.PieceDto;
-import chess.dto.ScoreDto;
-import chess.dto.TurnDto;
+import chess.dto.*;
 import chess.repository.room.DuplicateRoomNameException;
 import chess.repository.room.NoSuchRoomNameException;
-import chess.repository.room.Room;
 import chess.service.SpringChessService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -39,16 +33,16 @@ public class SpringChessController {
 
     @PostMapping("/game")
     public ModelAndView game(@RequestParam("name") String name, ModelAndView modelAndView) {
-        ChessGame chessGame = springChessService.createRoom(name);
+        ChessGame chessGame = springChessService.initializeRoom(name);
         addChessGame(modelAndView, chessGame);
         modelAndView.setViewName("game");
         modelAndView.addObject("name", name);
         return modelAndView;
     }
 
-    @PostMapping(value = "/game/move", consumes = "text/plain")
-    public ModelAndView move(@RequestBody String command, ModelAndView modelAndView) {
-        ChessGame chessGame = springChessService.movePiece(command);
+    @PostMapping(value = "/game/move", consumes = "application/json")
+    public ModelAndView move(@RequestBody MoveRequestDto moveRequestDto, ModelAndView modelAndView) {
+        ChessGame chessGame = springChessService.movePiece(moveRequestDto);
         addChessGame(modelAndView, chessGame);
         modelAndView.setViewName("game");
         return modelAndView;
@@ -60,16 +54,6 @@ public class SpringChessController {
         modelAndView.addObject("roomNames", roomNames);
         modelAndView.setViewName("repository");
         return modelAndView;
-    }
-
-    @PostMapping(value = "/game/save")
-    public ResponseEntity<String> save(@ChessRoom Room room) {
-        boolean isSaved = springChessService.saveRoom(room);
-        String response = Boolean.toString(isSaved);
-        if (isSaved) {
-            return ResponseEntity.ok().body(response);
-        }
-        return ResponseEntity.badRequest().body(response);
     }
 
     @PostMapping("/game/load")

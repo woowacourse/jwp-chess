@@ -66,7 +66,7 @@ public class SparkChessController {
     }
 
     private Room createRoomToSave(String request) {
-        JsonObject roomJson = JsonConverter.toJsonObject(request);
+        JsonObject roomJson = JsonConverter.fromJson(request);
         String name = roomJson.get("name").getAsString();
         String turn = roomJson.get("turn").getAsString();
         JsonObject state = roomJson.get("state").getAsJsonObject();
@@ -98,7 +98,7 @@ public class SparkChessController {
     }
 
     private Piece getPiece(JsonObject stateJson, String position) {
-        JsonObject pieceJson = JsonConverter.toJsonObject(stateJson.get(position));
+        JsonObject pieceJson = JsonConverter.fromJson(stateJson.get(position));
         String type = pieceJson.get("type").getAsString();
         String color = pieceJson.get("color").getAsString();
 

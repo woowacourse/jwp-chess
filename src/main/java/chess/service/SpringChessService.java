@@ -5,9 +5,9 @@ import chess.domain.board.Position;
 import chess.domain.feature.Color;
 import chess.domain.feature.Type;
 import chess.domain.game.ChessGame;
-import chess.domain.gamestate.Ready;
 import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
+import chess.dto.MoveRequestDto;
 import chess.repository.room.Room;
 import chess.repository.room.SpringRoomDao;
 import chess.util.JsonConverter;
@@ -16,57 +16,60 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-//TODO: chessGame 필드에서 없애고 db에서 매번 가져오는 식으로 리팩토링 (매 수 둘 때마다 항상 저장해야함)
 @Service
 public class SpringChessService {
     private static final String SPACE = " ";
-    private static final String START = "start";
 
-    private final SpringRoomDao roomDAO;
-    private ChessGame chessGame;
+    private final SpringRoomDao roomDao;
 
-    public SpringChessService(SpringRoomDao roomDAO) {
-        this.roomDAO = roomDAO;
+    public SpringChessService(SpringRoomDao roomDao) {
+        this.roomDao = roomDao;
     }
 
-    public ChessGame createRoom(String roomName) {
-        roomDAO.validateRoomExistence(roomName);
-        initializeChessBoard();
+    public ChessGame initializeRoom(String roomName) {
+        roomDao.validateRoomExistence(roomName);
+        ChessGame chessGame = initializeChessBoard();
+        Room room = createRoom(roomName, chessGame);
+        roomDao.addRoom(room);
         return chessGame;
     }
 
-    public ChessGame movePiece(String command) {
-        List<String> commands = Arrays.asList(command.split(SPACE));
-        chessGame.play(commands);
-        return chessGame;
-    }
-
-    private void initializeChessBoard() {
+    private ChessGame initializeChessBoard() {
         ChessBoard chessBoard = new ChessBoard();
-        chessGame = new ChessGame(chessBoard, Color.WHITE, new Ready());
-        chessGame.start(Collections.singletonList(START));
+        Running gameState = new Running();
+        return new ChessGame(chessBoard, Color.WHITE, gameState);
     }
 
-    public boolean saveRoom(Room room) {
-        try {
-            roomDAO.addRoom(room);
-            return true;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
+    public ChessGame movePiece(MoveRequestDto moveRequestDto) {
+        String roomName = moveRequestDto.getRoomName();
+        Room room = roomDao.findByRoomName(roomName);
+
+        ChessGame chessGame = createChessGame(room);
+        List<String> commands = Arrays.asList(moveRequestDto.getCommand().split(SPACE));
+        chessGame.play(commands);
+
+        room = createRoom(roomName, chessGame);
+        roomDao.addRoom(room);
+
+        return chessGame;
     }
 
     public ChessGame loadRoom(String name) {
-        Room room = roomDAO.findByRoomName(name);
-        createChessGame(room);
-        return chessGame;
+        Room room = roomDao.findByRoomName(name);
+        return createChessGame(room);
     }
 
-    private void createChessGame(Room room) {
+    private Room createRoom(String roomName, ChessGame chessGame) {
+        String turn = chessGame.getTurnAsString();
+        Map<Position, Piece> chessBoard = chessGame.getChessBoardAsMap();
+        JsonObject state = JsonConverter.toJsonObject(chessBoard);
+        return new Room(roomName, turn, state);
+    }
+
+    private ChessGame createChessGame(Room room) {
         ChessBoard chessBoard = new ChessBoard();
         Color turn = Color.convert(room.getTurn());
         JsonObject stateJson = room.getState();
@@ -74,11 +77,11 @@ public class SpringChessService {
             Piece piece = getPiece(stateJson, position);
             chessBoard.replace(Position.of(position), piece);
         }
-        chessGame = new ChessGame(chessBoard, turn, new Running());
+        return new ChessGame(chessBoard, turn, new Running());
     }
 
     private Piece getPiece(JsonObject stateJson, String position) {
-        JsonObject pieceJson = JsonConverter.toJsonObject(stateJson.get(position));
+        JsonObject pieceJson = JsonConverter.fromJson(stateJson.get(position));
         String type = pieceJson.get("type").getAsString();
         String color = pieceJson.get("color").getAsString();
 
@@ -88,7 +91,7 @@ public class SpringChessService {
 
     public List<String> getAllSavedRooms() {
         try {
-            return roomDAO.getAllRoom();
+            return roomDao.getAllRoom();
         } catch (Exception e) {
             return new ArrayList<>();
         }

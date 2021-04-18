@@ -26,7 +26,7 @@ public class RoomResolver implements HandlerMethodArgumentResolver {
 
         String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 
-        JsonObject roomJson = JsonConverter.toJsonObject(body);
+        JsonObject roomJson = JsonConverter.fromJson(body);
         String name = roomJson.get("name").getAsString();
         String turn = roomJson.get("turn").getAsString();
         JsonObject state = roomJson.get("state").getAsJsonObject();

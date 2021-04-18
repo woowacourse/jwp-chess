@@ -49,7 +49,7 @@ class SpringRoomDaoTest {
     @Test
     void findByRoomName() {
         Room sakjungRoom = springRoomDao.findByRoomName("삭정방");
-        assertThat(sakjungRoom).isEqualTo(new Room("삭정방", "black", JsonConverter.toJsonObject("{b1:pieceInfo2}")));
+        assertThat(sakjungRoom).isEqualTo(new Room("삭정방", "black", JsonConverter.fromJson("{b1:pieceInfo2}")));
     }
 
     @DisplayName("존재하지 않는 방 이름일 경우 제대로된 에러를 반환 하는지")
@@ -64,26 +64,26 @@ class SpringRoomDaoTest {
     void addRoom() {
         Room room = new Room("씨유방",
                 "white",
-                JsonConverter.toJsonObject("{e1:pieceInfo5}"));
+                JsonConverter.fromJson("{e1:pieceInfo5}"));
         springRoomDao.addRoom(room);
 
         Room cuRoom = springRoomDao.findByRoomName("씨유방");
-        assertThat(cuRoom).isEqualTo(new Room("씨유방", "white", JsonConverter.toJsonObject("{e1:pieceInfo5}")));
+        assertThat(cuRoom).isEqualTo(new Room("씨유방", "white", JsonConverter.fromJson("{e1:pieceInfo5}")));
     }
 
     @DisplayName("존재하는 데이터가 있을 때 데이터를 덮어 씌우는지")
     @Test
     void addRoomOn() {
         Room nickRoom = springRoomDao.findByRoomName("닉방");
-        assertThat(nickRoom).isEqualTo(new Room("닉방", "white", JsonConverter.toJsonObject("{d1:pieceInfo4}")));
+        assertThat(nickRoom).isEqualTo(new Room("닉방", "white", JsonConverter.fromJson("{d1:pieceInfo4}")));
 
         Room room = new Room("닉방",
                 "black",
-                JsonConverter.toJsonObject("{a2:pieceInfo1}"));
+                JsonConverter.fromJson("{a2:pieceInfo1}"));
         springRoomDao.addRoom(room);
 
         nickRoom = springRoomDao.findByRoomName("닉방");
-        assertThat(nickRoom).isEqualTo(new Room("닉방", "black", JsonConverter.toJsonObject("{a2:pieceInfo1}")));
+        assertThat(nickRoom).isEqualTo(new Room("닉방", "black", JsonConverter.fromJson("{a2:pieceInfo1}")));
     }
 
     @Test

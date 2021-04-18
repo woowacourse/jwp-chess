@@ -30,10 +30,8 @@ function drop_handler(event) {
 // move, save, exit setting
 
 const $move = document.querySelector('input[class="move"]')
-const $save = document.querySelector('input[value="save"]')
 
 $move.addEventListener('keyup', movePiece);
-$save.addEventListener('click', saveGame);
 
 function movePiece(event) {
     const moveCommand = event.target.value;
@@ -47,11 +45,16 @@ function movePiece(event) {
 }
 
 function sendMoveRequest(trimmedMoveCommand) {
+    const params = {
+        roomName: document.querySelector('#room').firstElementChild.className,
+        command: trimmedMoveCommand
+    };
+
     const http = new XMLHttpRequest();
     const url = '/game/move';
 
     http.open('POST', url);
-    http.setRequestHeader('Content-type', 'text/plain');
+    http.setRequestHeader('Content-type', 'application/json');
     http.onreadystatechange = function () {
         const sourcePosition = trimmedMoveCommand.split(" ")[1]
         const targetPosition = trimmedMoveCommand.split(" ")[2]
@@ -66,7 +69,7 @@ function sendMoveRequest(trimmedMoveCommand) {
         }
     }
 
-    http.send(trimmedMoveCommand);
+    http.send(JSON.stringify(params));
 }
 
 function replaceComponents(dom, sourcePosition, targetPosition) {
@@ -88,43 +91,4 @@ function replaceComponents(dom, sourcePosition, targetPosition) {
         alert("black: " + outcome[0] + " / white : " + outcome[1])
         window.location.replace("/")
     }
-}
-
-function saveGame() {
-    const params = {
-        name: document.querySelector('#room').firstElementChild.className,
-        turn: document.querySelector('#turn').firstElementChild.className,
-        state: createStateJson(),
-    };
-    const http = new XMLHttpRequest();
-    const url = '/game/save';
-
-    http.open('POST', url);
-    http.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
-    http.onreadystatechange = function () {
-        if (http.readyState === XMLHttpRequest.DONE) {
-            if (http.status === 200) {
-                alert("성공적으로 저장되었습니다.")
-            } else {
-                alert("저장할 수 없습니다.")
-            }
-        }
-    };
-    http.send(JSON.stringify(params));
-}
-
-function createStateJson() {
-    const status = document.querySelectorAll('td')
-    let state = {};
-    for (let i = 0; i < status.length; i++) {
-        const position = status[i].id;
-        const img = status[i].querySelector('img');
-        const color = img.id.split("_")[0]
-        const type = img.id.split("_")[1]
-        state[position] = {
-            color: color,
-            type: type,
-        }
-    }
-    return state
 }

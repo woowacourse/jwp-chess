@@ -4,12 +4,10 @@ import chess.service.SpringChessService;
 import chess.webdto.ChessGameDto;
 import chess.webdto.MoveRequestDto;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.sql.SQLException;
-
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SpringChessController {
@@ -34,15 +32,5 @@ public class SpringChessController {
         final String start = moveRequestDto.getStart();
         final String destination = moveRequestDto.getDestination();
         return springChessService.move(start, destination);
-    }
-
-    @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<String> handleIllegalArgumentException() {
-        return ResponseEntity.badRequest().body("unavailable");
-    }
-
-    @ExceptionHandler({SQLException.class})
-    public ResponseEntity<String> handleSQLException() {
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body("fail");
     }
 }

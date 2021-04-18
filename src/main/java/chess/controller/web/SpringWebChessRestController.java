@@ -8,6 +8,7 @@ import chess.controller.web.dto.piece.PieceResponseDto;
 import chess.controller.web.dto.score.ScoreResponseDto;
 import chess.controller.web.dto.state.StateResponseDto;
 import chess.service.ChessService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,37 +24,38 @@ public class SpringWebChessRestController {
     }
 
     @PostMapping("")
-    public GameIdDto saveGame(@RequestBody GameRequestDto gameRequestDto) {
-        return new GameIdDto(chessService.saveGame(gameRequestDto.toGame()));
+    public ResponseEntity<GameIdDto> saveGame(@RequestBody GameRequestDto gameRequestDto) {
+        GameIdDto gameIdDto = new GameIdDto(chessService.saveGame(gameRequestDto.toGame()));
+        return ResponseEntity.ok().body(gameIdDto);
     }
 
     @GetMapping("/{id}/load")
-    public List<PieceResponseDto> findPiecesByGameId(@PathVariable Long id) {
-        return chessService.findPiecesById(id);
+    public ResponseEntity<List<PieceResponseDto>> findPiecesByGameId(@PathVariable Long id) {
+        return ResponseEntity.ok().body(chessService.findPiecesById(id));
     }
 
     @GetMapping("/{id}/score")
-    public ScoreResponseDto findScoreByGameId(@PathVariable Long id) {
-        return chessService.findScoreByGameId(id);
+    public ResponseEntity<ScoreResponseDto> findScoreByGameId(@PathVariable Long id) {
+        return ResponseEntity.ok().body(chessService.findScoreByGameId(id));
     }
 
     @GetMapping("/{id}/state")
-    public StateResponseDto findStateByGameId(@PathVariable Long id) {
-        return chessService.findStateByGameId(id);
+    public ResponseEntity<StateResponseDto> findStateByGameId(@PathVariable Long id) {
+        return ResponseEntity.ok().body(chessService.findStateByGameId(id));
     }
 
     @GetMapping("/{id}/history")
-    public List<HistoryResponseDto> findHistoryByGameId(@PathVariable Long id) {
-        return chessService.findHistoryByGameId(id);
+    public ResponseEntity<List<HistoryResponseDto>> findHistoryByGameId(@PathVariable Long id) {
+        return ResponseEntity.ok().body(chessService.findHistoryByGameId(id));
     }
 
     @GetMapping("/{id}/path")
-    public List<String> movablePath(@PathVariable Long id, @RequestParam String source) {
-        return chessService.movablePath(source, id).getPath();
+    public ResponseEntity<List<String>> movablePath(@PathVariable Long id, @RequestParam String source) {
+        return ResponseEntity.ok().body(chessService.movablePath(source, id).getPath());
     }
 
     @PostMapping("/{id}/move")
-    public HistoryResponseDto move(@PathVariable Long id, @RequestBody MoveRequestDto moveRequestDto) {
-        return chessService.move(moveRequestDto.toMoveCommand(), id);
+    public ResponseEntity<HistoryResponseDto> move(@PathVariable Long id, @RequestBody MoveRequestDto moveRequestDto) {
+        return ResponseEntity.ok().body(chessService.move(moveRequestDto.toMoveCommand(), id));
     }
 }

@@ -3,6 +3,7 @@ package chess.controller.web;
 import chess.chessgame.domain.manager.ChessGameManagerBundle;
 import chess.controller.web.dto.RunningGameResponseDto;
 import chess.service.ChessService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,8 +16,8 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public RunningGameResponseDto getGames() {
+    public ResponseEntity<RunningGameResponseDto> getGames() {
         ChessGameManagerBundle runningGames = chessService.findRunningGames();
-        return new RunningGameResponseDto(runningGames.getIdAndNextTurn());
+        return ResponseEntity.ok(new RunningGameResponseDto(runningGames.getIdAndNextTurn()));
     }
 }

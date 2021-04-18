@@ -21,6 +21,7 @@ import chess.dto.responsedto.GridAndPiecesResponseDto;
 import chess.dto.responsedto.RoomsResponseDto;
 import chess.exception.ChessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -76,7 +77,7 @@ public class ChessService {
                 .orElseThrow(() -> new ChessException(ResponseCode.NOT_EXISTING_PIECE));
         pieceDAO.updatePiece(sourcePieceDto.getPieceId(), sourcePieceDto.getIsBlack(), EMPTY_PIECE_NAME);
         pieceDAO.updatePiece(targetPieceDto.getPieceId(), sourcePieceDto.getIsBlack(), sourcePieceDto.getName().charAt(0));
-        return new Response(ResponseCode.NO_CONTENT);
+        return new Response(HttpStatus.NO_CONTENT);
     }
 
     public void start(long gridId) throws SQLException {

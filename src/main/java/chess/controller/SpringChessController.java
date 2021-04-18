@@ -1,13 +1,12 @@
 package chess.controller;
 
+import chess.exception.DataAccessException;
 import chess.service.ChessService;
 import chess.service.RoomService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class SpringChessController {
@@ -49,5 +48,15 @@ public class SpringChessController {
                         @RequestParam("to") String to) {
         chessService.move(roomId, from, to);
         return "redirect:/game/" + roomId;
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handle(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<String> handle(DataAccessException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

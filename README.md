@@ -34,6 +34,13 @@
     - Spring JDBC에서 제공하는 JdbcTemplate를 이용하여 Connection을 직접 만들어 주는 로직을 대체한다.
     - JdbcTemplate는 매번 새로 생성하지 않고 빈 주입을 받아서 사용한다.
     
+## 리팩토링 중점 사안
+- [x] REST API 설계 원칙에 맞게 URI, HTTP method 변경하기
+- [ ] produce, consumes 에서 JSON 타입이 꼭 필요한지 확인해보기
+- [x] @ControllerAdvice 적용해보기
+- [x] 생성자 주입을 통해 받은 필드는 final 처리하기
+- [ ] entrySet을 활용한 리팩토링
+- [ ] Controller/Service 테스트 케이스 작성
 
 ## DB 테이블 구조
 ![table_structure](./img/table_structure.png)

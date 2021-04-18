@@ -14,7 +14,7 @@ function loadFirstPage() {
 }
 
 function startNewGame() {
-    fetch("/startNewGame")
+    fetch("/game/new")
         .then(response => {
             return response.json();
         })
@@ -52,7 +52,7 @@ function forceNewGame() {
 }
 
 function loadPrevGame() {
-    fetch("/loadPrevGame")
+    fetch("/game/saved")
         .then(response => {
             if (!response.ok) {
                 throw new Error(response.status);

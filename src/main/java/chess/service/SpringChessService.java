@@ -28,7 +28,7 @@ public class SpringChessService {
         return generateChessGameDto(chessGame);
     }
 
-    public ChessGameDto loadPreviousGame() {
+    public ChessGameDto loadSavedGame() {
         final ChessGame chessGame = springChessGameDao.readChessGame();
         return generateChessGameDto(chessGame);
     }

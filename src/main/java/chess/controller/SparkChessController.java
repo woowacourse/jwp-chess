@@ -23,17 +23,10 @@ public class SparkChessController {
     }
 
     public void run() {
-        post("/game/:roomId/move", this::move);
         exception(IllegalArgumentException.class, this::handleException);
         exception(DataAccessException.class, this::handleException);
     }
 
-    private Object move(Request request, Response response) {
-        Long roomId = Long.parseLong(request.params(":roomId"));
-        chessService.move(roomId, request.queryParams("from"), request.queryParams("to"));
-        response.redirect("/game/" + roomId);
-        return null;
-    }
 
     private void handleException(RuntimeException e, Request req, Response res) {
         res.status(404);

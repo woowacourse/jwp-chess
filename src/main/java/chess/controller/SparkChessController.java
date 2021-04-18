@@ -35,7 +35,7 @@ public class SparkChessController {
     private Object mainPage(Request request, Response response) {
         Map<String, Object> model = new HashMap<>();
         model.put("roomList", roomService.load());
-        return render(model, "index.html");
+        return null;
     }
 
     private Object createRoom(Request request, Response response) {

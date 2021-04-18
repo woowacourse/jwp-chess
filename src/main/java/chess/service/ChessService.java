@@ -5,11 +5,13 @@ import chess.dao.CommandDao;
 import chess.domain.game.BoardFactory;
 import chess.domain.game.Game;
 import chess.domain.location.Position;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class ChessService {
     private final CommandDao commandDao;
 

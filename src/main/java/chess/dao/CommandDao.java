@@ -2,6 +2,7 @@ package chess.dao;
 
 import chess.controller.dto.MoveDto;
 import chess.exception.DataAccessException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import static chess.dao.DBConnection.getConnection;
 
+@Repository
 public class CommandDao {
     public void insert(Long roomId, String move_from, String move_to) {
         String query = "INSERT INTO command (room_id, move_from, move_to) VALUES (?, ?, ?)";

@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.controller.dto.RoomDto;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import static chess.dao.DBConnection.getConnection;
 
+@Repository
 public class RoomDao {
     public long insert(String roomName) {
         String query = "INSERT INTO room (room_name) VALUES (?)";

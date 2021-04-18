@@ -2,9 +2,10 @@ package chess.service;
 
 import chess.controller.dto.RoomDto;
 import chess.dao.RoomDao;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class RoomService {
     private final RoomDao roomDao;
 

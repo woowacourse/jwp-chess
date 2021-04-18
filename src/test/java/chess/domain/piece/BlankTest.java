@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static chess.domain.piece.Blank.BLANK_MOVE_ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -37,23 +36,20 @@ public class BlankTest {
     @Test
     void move() {
         assertThatThrownBy(() -> blank.move(chessBoard, direction, targetPosition))
-                .isInstanceOf(UnsupportedOperationException.class)
-                .hasMessage(BLANK_MOVE_ERROR);
+                .isInstanceOf(BlankMoveException.class);
     }
 
     @DisplayName("blank에게 이동 가능 여부를 물어보려고 하면 에러를 반환하는지")
     @Test
     void isMovable() {
         assertThatThrownBy(() -> blank.isMovable(chessBoard, direction, targetPosition))
-                .isInstanceOf(UnsupportedOperationException.class)
-                .hasMessage(BLANK_MOVE_ERROR);
+                .isInstanceOf(BlankMoveException.class);
     }
 
     @DisplayName("blank에게 갈 수 있는 방향을 물어보면 에러를 반환하는지")
     @Test
     void directions() {
         assertThatThrownBy(() -> blank.directions())
-                .isInstanceOf(UnsupportedOperationException.class)
-                .hasMessage(BLANK_MOVE_ERROR);
+                .isInstanceOf(BlankMoveException.class);
     }
 }

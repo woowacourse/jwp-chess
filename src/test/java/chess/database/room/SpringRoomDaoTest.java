@@ -1,5 +1,7 @@
 package chess.database.room;
 
+import chess.repository.room.DuplicateRoomNameException;
+import chess.repository.room.NoSuchRoomNameException;
 import chess.repository.room.Room;
 import chess.repository.room.SpringRoomDao;
 import chess.util.JsonConverter;
@@ -14,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static chess.repository.room.SpringRoomDao.NO_SUCH_ROOM_NAME_ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -51,6 +52,13 @@ class SpringRoomDaoTest {
         assertThat(sakjungRoom).isEqualTo(new Room("삭정방", "black", JsonConverter.toJsonObject("{b1:pieceInfo2}")));
     }
 
+    @DisplayName("존재하지 않는 방 이름일 경우 제대로된 에러를 반환 하는지")
+    @Test
+    void findByRoomName_NotExistingRoomName_throwError() {
+        assertThatThrownBy(() -> springRoomDao.findByRoomName("워니방"))
+                .isInstanceOf(NoSuchRoomNameException.class);
+    }
+
     @DisplayName("방 상태 저장 제대로 하는지")
     @Test
     void addRoom() {
@@ -81,8 +89,7 @@ class SpringRoomDaoTest {
     @Test
     void validateRoomExistence() {
         assertThatThrownBy(() -> springRoomDao.validateRoomExistence("오즈방"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(NO_SUCH_ROOM_NAME_ERROR);
+                .isInstanceOf(DuplicateRoomNameException.class);
     }
 
     @Test

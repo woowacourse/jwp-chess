@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static chess.domain.game.ChessGame.NO_MOVEMENT_ERROR;
-import static chess.domain.game.ChessGame.TURN_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -39,8 +37,7 @@ public class ChessGameTest {
     @Test
     void validate_noMovement_throwError() {
         AssertionsForClassTypes.assertThatThrownBy(() -> chessGame.movePiece(Arrays.asList("move", "b2", "b2")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(NO_MOVEMENT_ERROR);
+                .isInstanceOf(NoMovementException.class);
     }
 
     @Test
@@ -49,7 +46,6 @@ public class ChessGameTest {
         ChessGame chessGame = new ChessGame(new ChessBoard(), Color.WHITE, new Ready());
         chessGame.initBoard();
         assertThatThrownBy(() -> chessGame.movePiece(Arrays.asList("move", "b7", "b6")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(String.format(TURN_MESSAGE, Color.WHITE));
+                .isInstanceOf(InvalidTurnException.class);
     }
 }

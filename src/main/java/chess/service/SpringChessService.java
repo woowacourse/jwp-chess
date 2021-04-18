@@ -14,12 +14,16 @@ import chess.util.JsonConverter;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 //TODO: chessGame 필드에서 없애고 db에서 매번 가져오는 식으로 리팩토링 (매 수 둘 때마다 항상 저장해야함)
 @Service
 public class SpringChessService {
     private static final String SPACE = " ";
+    private static final String START = "start";
 
     private final SpringRoomDao roomDAO;
     private ChessGame chessGame;
@@ -28,32 +32,22 @@ public class SpringChessService {
         this.roomDAO = roomDAO;
     }
 
-    public Optional<ChessGame> createRoom(String roomName) {
-        try {
-            roomDAO.validateRoomExistence(roomName);
-            initializeChessBoard();
-            return Optional.of(chessGame);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return Optional.empty();
-        }
+    public ChessGame createRoom(String roomName) {
+        roomDAO.validateRoomExistence(roomName);
+        initializeChessBoard();
+        return chessGame;
     }
 
-    public Optional<ChessGame> movePiece(String command) {
-        try {
-            List<String> commands = Arrays.asList(command.split(SPACE));
-            chessGame.play(commands);
-            return Optional.of(chessGame);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return Optional.empty();
-        }
+    public ChessGame movePiece(String command) {
+        List<String> commands = Arrays.asList(command.split(SPACE));
+        chessGame.play(commands);
+        return chessGame;
     }
 
     private void initializeChessBoard() {
         ChessBoard chessBoard = new ChessBoard();
         chessGame = new ChessGame(chessBoard, Color.WHITE, new Ready());
-        chessGame.start(Collections.singletonList("start"));
+        chessGame.start(Collections.singletonList(START));
     }
 
     public boolean saveRoom(Room room) {
@@ -66,15 +60,10 @@ public class SpringChessService {
         }
     }
 
-    public Optional<ChessGame> loadRoom(String name) {
-        try {
-            Room room = roomDAO.findByRoomName(name);
-            createChessGame(room);
-            return Optional.of(chessGame);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return Optional.empty();
-        }
+    public ChessGame loadRoom(String name) {
+        Room room = roomDAO.findByRoomName(name);
+        createChessGame(room);
+        return chessGame;
     }
 
     private void createChessGame(Room room) {

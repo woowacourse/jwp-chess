@@ -10,21 +10,19 @@ import chess.dto.OutcomeDto;
 import chess.dto.PieceDto;
 import chess.dto.ScoreDto;
 import chess.dto.TurnDto;
+import chess.repository.room.DuplicateRoomNameException;
+import chess.repository.room.NoSuchRoomNameException;
 import chess.repository.room.Room;
 import chess.service.SpringChessService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 public class SpringChessController {
@@ -41,28 +39,18 @@ public class SpringChessController {
 
     @PostMapping("/game")
     public ModelAndView game(@RequestParam("name") String name, ModelAndView modelAndView) {
-        Optional<ChessGame> chessGameOptional = springChessService.createRoom(name);
-        if (chessGameOptional.isPresent()) {
-            addChessGame(modelAndView, chessGameOptional.get());
-            modelAndView.setViewName("game");
-            modelAndView.addObject("name", name);
-            return modelAndView;
-        }
-        modelAndView.addObject("alert", name + "는 이미 존재하는 방입니다.");
-        modelAndView.setViewName("index");
-        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
+        ChessGame chessGame = springChessService.createRoom(name);
+        addChessGame(modelAndView, chessGame);
+        modelAndView.setViewName("game");
+        modelAndView.addObject("name", name);
         return modelAndView;
     }
 
     @PostMapping(value = "/game/move", consumes = "text/plain")
     public ModelAndView move(@RequestBody String command, ModelAndView modelAndView) {
-        Optional<ChessGame> chessGameOptional = springChessService.movePiece(command);
-        if (chessGameOptional.isPresent()) {
-            addChessGame(modelAndView, chessGameOptional.get());
-            modelAndView.setViewName("game");
-            return modelAndView;
-        }
-        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
+        ChessGame chessGame = springChessService.movePiece(command);
+        addChessGame(modelAndView, chessGame);
+        modelAndView.setViewName("game");
         return modelAndView;
     }
 
@@ -86,12 +74,10 @@ public class SpringChessController {
 
     @PostMapping("/game/load")
     public ModelAndView load(@RequestParam("roomName") String roomName, ModelAndView modelAndView) {
-        Optional<ChessGame> chessGameOptional = springChessService.loadRoom(roomName);
-        if (chessGameOptional.isPresent()) {
-            addChessGame(modelAndView, chessGameOptional.get());
-            modelAndView.setViewName("game");
-            modelAndView.addObject("name", roomName);
-        }
+        ChessGame chessGame = springChessService.loadRoom(roomName);
+        addChessGame(modelAndView, chessGame);
+        modelAndView.setViewName("game");
+        modelAndView.addObject("name", roomName);
         return modelAndView;
     }
 
@@ -109,5 +95,19 @@ public class SpringChessController {
         if (!chessGame.isOngoing()) {
             modelAndView.addObject("outcome", new OutcomeDto(result));
         }
+    }
+
+    @ExceptionHandler(DuplicateRoomNameException.class)
+    public ModelAndView gameHandleError(HttpServletRequest req) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("alert", req.getParameter("name") + "는 이미 존재하는 방입니다.");
+        modelAndView.setViewName("index");
+        modelAndView.setStatus(HttpStatus.CONFLICT);
+        return modelAndView;
+    }
+
+    @ExceptionHandler(NoSuchRoomNameException.class)
+    public String loadHandleError() {
+        return "repository";
     }
 }

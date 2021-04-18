@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class Piece {
-    public static final String NOT_MOVABLE_POSITION_ERROR = "이동할 수 없는 위치입니다.";
-    public static final String NO_COLOR_ERROR = "색깔은 흑이나 백이어야 합니다.";
-
     private final Color color;
     protected Type type;
     private Position position;
@@ -70,7 +67,7 @@ public abstract class Piece {
             chessBoard.replace(targetPosition, this);
             return;
         }
-        throw new IllegalArgumentException(NOT_MOVABLE_POSITION_ERROR);
+        throw new NotMovablePositionError();
     }
 
     public Position nextPosition(Direction direction) {

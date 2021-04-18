@@ -10,6 +10,9 @@ import java.util.List;
 public class Rook extends FlexibleDistancePiece {
     public Rook(Color color, Position position) {
         super(color, position);
+        if (color.equals(Color.NO_COLOR)) {
+            throw new MovablePieceColorException();
+        }
         this.type = Type.ROOK;
     }
 

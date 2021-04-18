@@ -28,7 +28,7 @@ public enum Color {
         if (this.isWhite()) {
             return Color.BLACK;
         }
-        throw new IllegalArgumentException();
+        throw new NoOppositeColorException();
     }
 
     public static Color convert(String color) {

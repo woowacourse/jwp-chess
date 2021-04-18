@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ChessGame {
-    public static final String TURN_MESSAGE = "%s의 차례입니다.";
-    public static final String NO_MOVEMENT_ERROR = "현재 위치와 동일한 곳으로 이동할 수 없습니다.";
-    public static final String INVALID_RUNNING_COMMAND_ERROR = "move source target 혹은 status 커맨드만 입력 가능합니다.";
     private static final int SOURCE_INDEX = 1;
     private static final int TARGET_INDEX = 2;
 
@@ -46,7 +43,7 @@ public class ChessGame {
         validateCommandSize(input);
         Position sourcePosition = Position.of(input.get(SOURCE_INDEX));
         Position targetPosition = Position.of(input.get(TARGET_INDEX));
-        validateMovement(sourcePosition, targetPosition);
+        validateNoMovement(sourcePosition, targetPosition);
         validateTurn(sourcePosition);
 
         chessBoard.move(sourcePosition, targetPosition);
@@ -55,20 +52,20 @@ public class ChessGame {
 
     private void validateCommandSize(List<String> input) {
         if (input.size() != 3) {
-            throw new IllegalArgumentException(INVALID_RUNNING_COMMAND_ERROR);
+            throw new InvalidMoveCommandSizeException();
         }
     }
 
-    private void validateMovement(Position sourcePosition, Position targetPosition) {
+    private void validateNoMovement(Position sourcePosition, Position targetPosition) {
         if (sourcePosition.equals(targetPosition)) {
-            throw new IllegalArgumentException(NO_MOVEMENT_ERROR);
+            throw new NoMovementException();
         }
     }
 
     private void validateTurn(Position position) {
         Piece sourcePiece = chessBoard.getPiece(position);
         if (!sourcePiece.isSameColor(turn)) {
-            throw new IllegalArgumentException(String.format(TURN_MESSAGE, turn.name()));
+            throw new InvalidTurnException(turn.getColor());
         }
     }
 

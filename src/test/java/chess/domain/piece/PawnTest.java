@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static chess.domain.piece.Piece.NOT_MOVABLE_POSITION_ERROR;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -32,13 +31,11 @@ public class PawnTest {
     void movePawn_nonBlankDestination_throwError() {
         chessBoard.replace(Position.of("c3"), new Pawn(Color.BLACK, Position.of("c3")));
         assertThatThrownBy(() -> chessBoard.move(Position.of("c3"), Position.of("c2")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(NOT_MOVABLE_POSITION_ERROR);
+                .isInstanceOf(NotMovablePositionError.class);
 
         chessBoard.replace(Position.of("c6"), new Pawn(Color.BLACK, Position.of("c6")));
         assertThatThrownBy(() -> chessBoard.move(Position.of("c7"), Position.of("c6")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(NOT_MOVABLE_POSITION_ERROR);
+                .isInstanceOf(NotMovablePositionError.class);
     }
 
     @DisplayName("폰이 시작지점에 있고 빈 공간으로 두칸 전진시킬 때 제대로 가는지")
@@ -53,19 +50,16 @@ public class PawnTest {
     void movePawnAtStartingPosition_twoStepsWithNonBlankOnPathAndDestination_throwError() {
         chessBoard.replace(Position.of("b3"), new Knight(Color.WHITE, Position.of("b3")));
         assertThatThrownBy(() -> chessBoard.move(Position.of("b2"), Position.of("b4")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(NOT_MOVABLE_POSITION_ERROR);
+                .isInstanceOf(NotMovablePositionError.class);
 
         chessBoard.replace(Position.of("b3"), new Blank(Position.of("b3")));
         chessBoard.replace(Position.of("b4"), new Knight(Color.WHITE, Position.of("b4"))); // 아군
         assertThatThrownBy(() -> chessBoard.move(Position.of("b2"), Position.of("b4")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(NOT_MOVABLE_POSITION_ERROR);
+                .isInstanceOf(NotMovablePositionError.class);
 
         chessBoard.replace(Position.of("b4"), new Knight(Color.BLACK, Position.of("b4"))); // 적군
         assertThatThrownBy(() -> chessBoard.move(Position.of("b2"), Position.of("b4")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(NOT_MOVABLE_POSITION_ERROR);
+                .isInstanceOf(NotMovablePositionError.class);
     }
 
     @DisplayName("폰이 대각선에 적이 있을 때 공격을 제대로 하는지")
@@ -84,11 +78,9 @@ public class PawnTest {
     @Test
     void movePawn_noEnemyAtDiagonalDestination_throwError() {
         assertThatThrownBy(() -> chessBoard.move(Position.of("b2"), Position.of("c3")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(NOT_MOVABLE_POSITION_ERROR);
+                .isInstanceOf(NotMovablePositionError.class);
         chessBoard.replace(Position.of("c3"), new Queen(Color.WHITE, Position.of("c3")));
         assertThatThrownBy(() -> chessBoard.move(Position.of("b2"), Position.of("c3")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(NOT_MOVABLE_POSITION_ERROR);
+                .isInstanceOf(NotMovablePositionError.class);
     }
 }

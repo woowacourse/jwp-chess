@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Position {
-    public static final String OUT_OF_BOUND_MESSAGE = "존재하지 않는 위치입니다.";
-
     private static final Map<String, Position> cache = new HashMap<>();
 
     static {
@@ -30,14 +28,14 @@ public class Position {
     public static Position of(Row row, Column column) {
         String key = generateKey(row, column);
         return cache.computeIfAbsent(key, v -> {
-            throw new IllegalArgumentException(OUT_OF_BOUND_MESSAGE);
+            throw new PositionOutOfBoundsException();
         });
     }
 
     public static Position of(int row, int column) {
         String key = generateKey(Row.findRowByIndex(row), Column.findColumnByIndex(column));
         return cache.computeIfAbsent(key, v -> {
-            throw new IllegalArgumentException(OUT_OF_BOUND_MESSAGE);
+            throw new PositionOutOfBoundsException();
         });
     }
 
@@ -45,7 +43,7 @@ public class Position {
         validatePositionSize(input);
         String key = generateKey(Row.findRow(input.charAt(1)), Column.findColumn(input.charAt(0)));
         return cache.computeIfAbsent(key, v -> {
-            throw new IllegalArgumentException(OUT_OF_BOUND_MESSAGE);
+            throw new PositionOutOfBoundsException();
         });
     }
 
@@ -55,7 +53,7 @@ public class Position {
 
     private static void validatePositionSize(String input) {
         if (input.length() != 2) {
-            throw new IllegalArgumentException(OUT_OF_BOUND_MESSAGE);
+            throw new PositionOutOfBoundsException();
         }
     }
 

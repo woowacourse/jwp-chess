@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public class SpringRoomDao {
-    public static final String NO_SUCH_ROOM_NAME_ERROR = "존재하지 않는 방 이름입니다.";
     private JdbcTemplate jdbcTemplate;
 
     public SpringRoomDao(JdbcTemplate jdbcTemplate) {
@@ -30,23 +29,27 @@ public class SpringRoomDao {
 
     public Room findByRoomName(String name) {
         String query = "SELECT * FROM rooms WHERE name = ?";
-        return jdbcTemplate.queryForObject(
-                query,
-                (resultSet, rowNum) -> {
-                    System.out.println(resultSet.getString("state"));
-                    return new Room(
-                            resultSet.getString("name"),
-                            resultSet.getString("turn"),
-                            JsonConverter.toJsonObject(resultSet.getString("state")));
-                },
-                name);
+        try {
+            return jdbcTemplate.queryForObject(
+                    query,
+                    (resultSet, rowNum) -> {
+                        System.out.println(resultSet.getString("state"));
+                        return new Room(
+                                resultSet.getString("name"),
+                                resultSet.getString("turn"),
+                                JsonConverter.toJsonObject(resultSet.getString("state")));
+                    },
+                    name);
+        } catch (Exception e) {
+            throw new NoSuchRoomNameException();
+        }
     }
 
     public void validateRoomExistence(String name) {
         String query = "SELECT COUNT(*) FROM rooms WHERE name = ?";
         int result = jdbcTemplate.queryForObject(query, Integer.class, name);
-        if (result == 1) {
-            throw new IllegalArgumentException(NO_SUCH_ROOM_NAME_ERROR);
+        if (1 <= result) {
+            throw new DuplicateRoomNameException();
         }
     }
 

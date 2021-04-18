@@ -10,6 +10,9 @@ import java.util.List;
 public class Queen extends FlexibleDistancePiece {
     public Queen(Color color, Position position) {
         super(color, position);
+        if (color.equals(Color.NO_COLOR)) {
+            throw new MovablePieceColorException();
+        }
         this.type = Type.QUEEN;
     }
 

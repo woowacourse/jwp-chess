@@ -10,6 +10,9 @@ import java.util.List;
 public class King extends FixedDistancePiece {
     public King(Color color, Position position) {
         super(color, position);
+        if (color.equals(Color.NO_COLOR)) {
+            throw new MovablePieceColorException();
+        }
         this.type = Type.KING;
     }
 

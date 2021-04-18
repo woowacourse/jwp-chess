@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static chess.domain.piece.Piece.NOT_MOVABLE_POSITION_ERROR;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -39,7 +38,6 @@ public class KnightTest {
     @Test
     void moveKnight_allyAtDestination_throwError() {
         assertThatThrownBy(() -> chessBoard.move(Position.of("b1"), Position.of("d2")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(NOT_MOVABLE_POSITION_ERROR);
+                .isInstanceOf(NotMovablePositionError.class);
     }
 }

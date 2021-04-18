@@ -15,7 +15,6 @@ public class ExceptionController {
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity emptyResultDataAccessException(EmptyResultDataAccessException error) {
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@");
         return ResponseEntity.badRequest().build();
     }
 }

@@ -27,13 +27,13 @@ public class RoomController {
     }
 
     @PostMapping("/create")
-    private String createRoom(@RequestParam final String roomName) {
+    private String createRoom(final String roomName) {
         final Long roomId = roomService.save(roomName);
         return "redirect:/game/create/" + roomId;
     }
 
     @PostMapping("/delete")
-    private String deleteRoom(@RequestParam final Long roomId) {
+    private String deleteRoom(final Long roomId) {
         roomService.delete(roomId);
         gameService.delete(roomId);
         return "redirect:/room/list";

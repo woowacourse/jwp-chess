@@ -43,9 +43,10 @@ public class GameController {
     }
 
     @PostMapping("/move/{roomId}")
-    private String move(@PathVariable final Long roomId, final HttpServletRequest request, final Model model) throws SQLException {
-        Position source = new Position(request.getParameter("source"));
-        Position target = new Position(request.getParameter("target"));
+    private String move(@PathVariable final Long roomId,
+                        @RequestParam final Position source,
+                        @RequestParam final Position target,
+                        final Model model) throws SQLException {
         gameService.move(roomId, source, target);
         return printResult(roomId, model);
     }

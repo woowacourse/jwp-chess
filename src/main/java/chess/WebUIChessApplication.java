@@ -1,6 +1,5 @@
 package chess;
 
-import chess.JsonTransformer;
 import chess.dto.PositionDTO;
 import chess.service.ChessService;
 import spark.ModelAndView;

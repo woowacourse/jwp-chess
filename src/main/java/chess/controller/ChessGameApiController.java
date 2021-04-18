@@ -20,7 +20,6 @@ public class ChessGameApiController {
         return chessService.saveChess(requestDto);
     }
 
-
     @PutMapping
     public CommonResponseDto<Object> finishChess(@RequestBody final GameStatusRequestDto requestDto) {
         chessService.changeGameStatus(requestDto);

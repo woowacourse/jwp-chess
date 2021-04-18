@@ -3,10 +3,7 @@ package chess.service;
 import chess.dao.SpringChessLogDao;
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
-import chess.dto.BoardDto;
-import chess.dto.BoardStatusDto;
-import chess.dto.MovablePositionDto;
-import chess.dto.MoveRequestDto;
+import chess.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -27,11 +24,11 @@ public class SpringChessService {
     }
 
     private ChessGame loadChessGame(String roomNumber) {
-        List<MoveRequestDto> commands = springChessLogDao.applyCommand(roomNumber);
+        List<CommandDto> commands = springChessLogDao.applyCommand(roomNumber);
         ChessGame chessGame = new ChessGame();
         chessGame.settingBoard();
 
-        for (MoveRequestDto command : commands) {
+        for (CommandDto command : commands) {
             chessGame.move(command.getTarget(), command.getDestination());
         }
 

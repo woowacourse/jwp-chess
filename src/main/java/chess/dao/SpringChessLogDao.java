@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dto.CommandDto;
 import chess.dto.MoveRequestDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -27,17 +28,17 @@ public class SpringChessLogDao {
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<MoveRequestDto> applyCommand(String roomId) {
+    public List<CommandDto> applyCommand(String roomId) {
         String query = "select target, destination from chessgame where room_id = ? ORDER BY command_date ASC;";
         return jdbcTemplate.query(
                 query,
                 (resultSet, rowNum) -> {
-                    MoveRequestDto moveRequestDto = new MoveRequestDto(
+                    CommandDto commandDto = new CommandDto(
                             roomId,
                             resultSet.getString("target"),
                             resultSet.getString("destination")
                     );
-                    return moveRequestDto;
+                    return commandDto;
                 }, roomId);
     }
 

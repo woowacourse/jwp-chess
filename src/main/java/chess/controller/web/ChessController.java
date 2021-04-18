@@ -35,7 +35,7 @@ public class ChessController {
 
     @GetMapping("/game/load/{id:[\\d]+}")
     public ChessGameResponseDto loadGame(@PathVariable long id) {
-        ChessGameManager load = chessService.load(id);
+        ChessGameManager load = chessService.findById(id);
         return new ChessGameResponseDto(load);
     }
 

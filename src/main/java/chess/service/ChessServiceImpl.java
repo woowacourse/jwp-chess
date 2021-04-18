@@ -2,28 +2,33 @@ package chess.service;
 
 import chess.controller.web.dto.MoveRequestDto;
 import chess.dao.ChessDao;
+import chess.dao.dto.ChessGame;
 import chess.domain.manager.ChessGameManager;
 import chess.domain.manager.ChessGameManagerBundle;
 import chess.domain.manager.ChessGameManagerFactory;
+import chess.domain.manager.NotStartedChessGameManager;
 import chess.domain.piece.attribute.Color;
 import chess.domain.position.Position;
-import chess.domain.repository.ChessGameRepository;
 import chess.domain.statistics.ChessGameStatistics;
 import org.springframework.stereotype.Service;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ChessServiceImpl implements ChessService {
     private static final long TEMPORARY_ID = 0;
 
-    private final ChessGameRepository chessGameRepository;
+    private final ChessDao chessDao;
 
     public ChessServiceImpl(ChessDao chessDao) {
-        this.chessGameRepository = new ChessGameRepository(chessDao);
+        this.chessDao = chessDao;
     }
 
     @Override
     public ChessGameManager start() {
-        long gameId = chessGameRepository.add(ChessGameManagerFactory.createRunningGame(TEMPORARY_ID));
+        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(TEMPORARY_ID);
+        long gameId = chessDao.save(new ChessGame(chessGameManager));
         return ChessGameManagerFactory.createRunningGame(gameId);
     }
 
@@ -36,7 +41,14 @@ public class ChessServiceImpl implements ChessService {
 
     @Override
     public ChessGameManagerBundle findRunningGames() {
-        return chessGameRepository.findRunningGames();
+        return chessDao.findAllOnRunning()
+                .stream()
+                .map(this::createFromEntity)
+                .collect(collectingAndThen(toList(), ChessGameManagerBundle::new));
+    }
+
+    private ChessGameManager createFromEntity(ChessGame chessGame) {
+        return ChessGameManagerFactory.loadingGame(chessGame);
     }
 
     @Override
@@ -45,22 +57,24 @@ public class ChessServiceImpl implements ChessService {
     }
 
     private void update(ChessGameManager chessGameManager) {
-        chessGameRepository.update(chessGameManager);
+        chessDao.update(new ChessGame(chessGameManager));
     }
 
     @Override
     public ChessGameManager load(long gameId) {
-        return chessGameRepository.findById(gameId);
+        return chessDao.findById(gameId)
+                .map(ChessGameManagerFactory::loadingGame)
+                .orElseGet(() -> new NotStartedChessGameManager(gameId));
     }
 
     @Override
     public void move(long gameId, Position from, Position to) {
-        ChessGameManager chessGameManager = chessGameRepository.findById(gameId);
+        ChessGameManager chessGameManager = findById(gameId);
         chessGameManager.move(from, to);
         if (chessGameManager.isKingDead()) {
             chessGameManager = chessGameManager.end();
         }
-        chessGameRepository.update(chessGameManager);
+        update(chessGameManager);
     }
 
     @Override
@@ -70,12 +84,14 @@ public class ChessServiceImpl implements ChessService {
 
     @Override
     public boolean isEnd(long gameId) {
-        return chessGameRepository.isEnd(gameId);
+        return findById(gameId).isEnd();
     }
 
     @Override
     public ChessGameManager findById(long gameId) {
-        return chessGameRepository.findById(gameId);
+        return chessDao.findById(gameId)
+                .map(ChessGameManagerFactory::loadingGame)
+                .orElseGet(() -> new NotStartedChessGameManager(gameId));
     }
 
     @Override

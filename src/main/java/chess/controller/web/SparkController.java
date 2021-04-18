@@ -78,7 +78,7 @@ public class SparkController {
         return (request, response) -> {
             try {
                 long id = Long.parseLong(request.params("id"));
-                ChessGameManager load = chessServiceImpl.load(id);
+                ChessGameManager load = chessServiceImpl.findById(id);
                 return new ChessGameResponseDto(load);
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("게임 id는 숫자값이어야 합니다.");

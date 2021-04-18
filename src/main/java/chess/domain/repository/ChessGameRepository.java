@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
-@Service
+
 public class ChessGameRepository {
     private final ChessDao chessDao;
 

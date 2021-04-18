@@ -1,5 +1,6 @@
 package chess.dao.spark;
 
+import chess.dao.PlayLogDao;
 import chess.domain.board.Board;
 import chess.domain.chessgame.ChessGame;
 import chess.dto.web.BoardDto;
@@ -10,16 +11,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PlayLogDao {
+public class SparkPlayLogDao implements PlayLogDao {
 
     private static final Gson GSON = new Gson();
 
     private final ChessDataSource chessDataSource;
 
-    public PlayLogDao(ChessDataSource chessDataSource) {
+    public SparkPlayLogDao(ChessDataSource chessDataSource) {
         this.chessDataSource = chessDataSource;
     }
 
+    @Override
     public void insert(BoardDto boardDto, GameStatusDto gameStatusDto, String roomId) {
         String query = "INSERT INTO play_logs (board, game_status, room_id) VALUES (?, ?, ?)";
 
@@ -34,6 +36,7 @@ public class PlayLogDao {
         }
     }
 
+    @Override
     public BoardDto latestBoard(String roomId) {
         String query = "SELECT board FROM play_logs WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
 
@@ -53,6 +56,7 @@ public class PlayLogDao {
         }
     }
 
+    @Override
     public GameStatusDto latestGameStatus(String roomId) {
         String query = "SELECT game_status FROM play_logs WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
 

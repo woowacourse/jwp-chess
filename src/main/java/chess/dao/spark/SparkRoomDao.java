@@ -1,5 +1,6 @@
 package chess.dao.spark;
 
+import chess.dao.RoomDao;
 import chess.dto.web.RoomDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,14 +10,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomDao {
+public class SparkRoomDao implements RoomDao {
 
     private final ChessDataSource chessDataSource;
 
-    public RoomDao(ChessDataSource chessDataSource) {
+    public SparkRoomDao(ChessDataSource chessDataSource) {
         this.chessDataSource = chessDataSource;
     }
 
+    @Override
     public String insert(RoomDto roomDto) {
         String query = "INSERT INTO rooms (name, is_opened, white, black) VALUES(?, true, ?, ?)";
 
@@ -37,6 +39,7 @@ public class RoomDao {
         }
     }
 
+    @Override
     public List<RoomDto> openedRooms() {
         String query = "SELECT id, name, white, black FROM rooms WHERE is_opened = true";
 
@@ -55,6 +58,7 @@ public class RoomDao {
         }
     }
 
+    @Override
     public void close(String roomId) {
         String query = "UPDATE rooms SET is_opened = false WHERE id = (?)";
 

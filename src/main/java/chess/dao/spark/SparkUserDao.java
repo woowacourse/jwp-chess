@@ -1,5 +1,6 @@
 package chess.dao.spark;
 
+import chess.dao.UserDao;
 import chess.domain.board.Team;
 import chess.dto.web.UsersInRoomDto;
 import java.sql.Connection;
@@ -7,14 +8,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDao {
+public class SparkUserDao implements UserDao {
 
     private final ChessDataSource chessDataSource;
 
-    public UserDao(ChessDataSource chessDataSource) {
+    public SparkUserDao(ChessDataSource chessDataSource) {
         this.chessDataSource = chessDataSource;
     }
 
+    @Override
     public void insert(String userName) {
         String query = "INSERT INTO users (name) "
             + "SELECT * FROM (SELECT ?) AS tmp "
@@ -30,6 +32,7 @@ public class UserDao {
         }
     }
 
+    @Override
     public UsersInRoomDto usersInRoom(String roomId) {
         String query = "SELECT"
             + " white_user.name AS whiteName,"
@@ -61,6 +64,7 @@ public class UserDao {
         }
     }
 
+    @Override
     public void updateStatistics(String roomId, Team winnerTeam) {
         String winner = "white";
         String loser = "black";

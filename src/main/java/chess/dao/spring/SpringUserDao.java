@@ -1,16 +1,17 @@
 package chess.dao.spring;
 
+import chess.dao.UserDao;
 import chess.domain.board.Team;
 import chess.dto.web.UsersInRoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserDao {
+public class SpringUserDao implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public UserDao(JdbcTemplate jdbcTemplate) {
+    public SpringUserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

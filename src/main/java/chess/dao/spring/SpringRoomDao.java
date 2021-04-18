@@ -1,5 +1,6 @@
 package chess.dao.spring;
 
+import chess.dao.RoomDao;
 import chess.dto.web.RoomDto;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -10,11 +11,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RoomDao {
+public class SpringRoomDao implements RoomDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    public RoomDao(JdbcTemplate jdbcTemplate) {
+    public SpringRoomDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

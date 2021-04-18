@@ -1,5 +1,6 @@
 package chess.dao.spring;
 
+import chess.dao.PlayLogDao;
 import chess.domain.board.Board;
 import chess.domain.chessgame.ChessGame;
 import chess.dto.web.BoardDto;
@@ -9,13 +10,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PlayLogDao {
+public class SpringPlayLogDao implements PlayLogDao {
 
     private static final Gson GSON = new Gson();
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    public PlayLogDao(JdbcTemplate jdbcTemplate) {
+    public SpringPlayLogDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

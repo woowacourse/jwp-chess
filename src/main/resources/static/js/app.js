@@ -47,6 +47,7 @@ exit.addEventListener("click", () => {
 })
 
 const loadGame = async () => {
+    rawBoard();
     const response = await fetch(
         basePath + "/api/games/" + localStorage.getItem("name"))
     .then(res => res.json());
@@ -56,7 +57,6 @@ const loadGame = async () => {
         return;
     }
     reRangeBoard(response.body);
-    console.log(response.body);
 
     if (response.body.gameOver) {
         let winnerNode = winner.querySelector("strong");
@@ -73,7 +73,7 @@ const loadGame = async () => {
 
 loadGame();
 
-function reRangeBoard(responsePieces) {
+function rawBoard() {
     for (let idx = 0; idx < tiles.length; idx++) {
         let childNodes = tiles[idx].childNodes;
         for (let childIdx = 0; childIdx < childNodes.length; childIdx++) {
@@ -81,7 +81,9 @@ function reRangeBoard(responsePieces) {
             tiles[idx].replaceChild(img, childNodes[childIdx]);
         }
     }
+}
 
+function reRangeBoard(responsePieces) {
     const pieces = responsePieces.pieces;
     for (let pieceIdx = 0; pieceIdx < pieces.length; pieceIdx++) {
         for (let idx = 0; idx < tiles.length; idx++) {
@@ -168,7 +170,6 @@ async function movePiece(sourcePosition, targetPosition) {
 
     const response = await fetch(basePath + "/api/games/pieces", option)
     .then(res => res.json());
-    console.log(response.body);
 
     if (response.statusCode === 400) {
         alert(response.message);

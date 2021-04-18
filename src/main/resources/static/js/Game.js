@@ -5,13 +5,19 @@ const url = "http://localhost:8080";
 
 window.onload = async function () {
   const response = await requestData();
+  console.log(response);
+  if (!response) {
+    alert("게임을 불러올 수 없습니다. 홈으로 돌아갑니다.");
+    history.back();
+    return;
+  }
   const pieces = response["pieceDtos"];
   const host = response["host"];
   const guest = response["guest"];
   const game = response["gameResponseDto"];
 
   if (game["finished"]) {
-    alert("이미 끝난 게임입니다. 홈으로 돌아갑니다.")
+    alert("이미 끝난 게임입니다. 홈으로 돌아갑니다.");
     history.back();
     return;
   }

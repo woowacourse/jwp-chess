@@ -5,10 +5,12 @@ const url = "http://localhost:8080";
 window.onload = function () {
   const newGameButton = document.querySelector(".new-game");
   const loadGameButton = document.querySelector(".load-game")
+  const registerMemberButton = document.querySelector(".register-member")
   const searchRecordButton = document.querySelector(".search-record")
 
   newGameButton.addEventListener("click", startNewGame);
   loadGameButton.addEventListener("click", loadGame);
+  registerMemberButton.addEventListener("click", registerMember);
 }
 
 async function startNewGame(e) {
@@ -74,5 +76,31 @@ async function createGame(hostId, guestId) {
 
 function loadGame() {
   const gameId = prompt("이동할 방번호를 입력하세요.");
-  window.location.href = `${url}/games/${gameId}`
+  if (gameId) {
+    window.location.href = `${url}/games/${gameId}`
+  }
+}
+
+async function registerMember() {
+  const name = prompt("원하는 이름을 입력하세요.");
+  if (!name) {
+    alert("이름을 입력하지 않았습니다.");
+    return;
+  }
+  const response = await getData(`${url}/users`, {name: name});
+  if (response) {
+    alert("이미 존재하는 이름입니다.");
+    return;
+  }
+  const password = prompt("원하는 비밀번호를 입력하세요.");
+  if (!password) {
+    alert("비밀번호를 입력하지 않았습니다.");
+    return;
+  }
+  const body = {
+    name: name,
+    password: password
+  };
+  await postData(`${url}/users`, body);
+  alert("회원가입 완료!")
 }

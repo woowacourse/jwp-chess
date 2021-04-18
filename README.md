@@ -40,7 +40,7 @@
 - [x] @ControllerAdvice 적용해보기
 - [x] 생성자 주입을 통해 받은 필드는 final 처리하기
 - [x] entrySet을 활용한 리팩토링
-- [ ] Controller/Service 테스트 케이스 작성
+- [x] DAO/Service 테스트 케이스 작성
 
 ## DB 테이블 구조
 ![table_structure](./img/table_structure.png)

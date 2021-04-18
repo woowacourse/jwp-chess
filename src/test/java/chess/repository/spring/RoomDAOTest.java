@@ -51,4 +51,12 @@ class RoomDAOTest {
 
         assertThat(rooms).hasSize(3);
     }
+
+    @DisplayName("가장 마지막에 생성된 방을 조회한다.")
+    @Test
+    void findLastRoom() {
+        Room room = roomDAO.findLastRoom();
+
+        assertThat(room.getName()).isEqualTo("room2");
+    }
 }

@@ -30,4 +30,9 @@ public class RoomDAO {
         String query = "INSERT INTO ROOM (NAME) VALUES (?)";
         jdbcTemplate.update(query, name);
     }
+
+    public Room findLastRoom() {
+        String query = "SELECT * FROM ROOM ORDER BY ID DESC LIMIT 1";
+        return jdbcTemplate.query(query, ROW_MAPPER).get(0);
+    }
 }

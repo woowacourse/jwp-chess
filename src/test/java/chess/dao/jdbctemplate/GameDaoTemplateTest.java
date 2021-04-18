@@ -6,12 +6,11 @@ import chess.domain.game.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,13 +27,11 @@ public class GameDaoTemplateTest {
     private final JdbcTemplate jdbcTemplate;
     private final GameDao gameDao;
 
-    @Autowired
     public GameDaoTemplateTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         gameDao = new GameDaoTemplate(jdbcTemplate);
     }
 
-    @Transactional
     @BeforeEach
     void setUp() {
         List<Object[]> splitsGameInfos = Stream.of(

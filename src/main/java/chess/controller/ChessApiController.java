@@ -1,4 +1,4 @@
-package chess.api;
+package chess.controller;
 
 import chess.domain.piece.Position;
 import chess.dto.ChessGameDto;

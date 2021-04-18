@@ -1,7 +1,5 @@
 package chess.controller.web.dto;
 
-import chess.chessgame.domain.position.Position;
-
 import java.beans.ConstructorProperties;
 import java.util.Objects;
 
@@ -17,24 +15,16 @@ public class MoveRequestDto {
         this.to = to;
     }
 
+    public long getGameId() {
+        return gameId;
+    }
+
     public String getFrom() {
         return from;
     }
 
     public String getTo() {
         return to;
-    }
-
-    public Position getFromPosition() {
-        return Position.of(from);
-    }
-
-    public Position getToPosition() {
-        return Position.of(to);
-    }
-
-    public long getGameId() {
-        return gameId;
     }
 
     @Override

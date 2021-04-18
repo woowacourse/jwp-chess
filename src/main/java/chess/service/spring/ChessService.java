@@ -10,11 +10,12 @@ import chess.domain.result.Scores;
 import chess.repository.spring.ChessDAO;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class ChessService {
-    private static ChessBoard CACHED_CHESS_BOARD = null;
+    private static Map<Integer, ChessBoard> CACHED_CHESS_BOARDS = new HashMap<>();
 
     private final ChessDAO chessDAO;
 
@@ -22,35 +23,36 @@ public class ChessService {
         this.chessDAO = chessDAO;
     }
 
-    public ChessBoard findChessBoard() {
-        if (Objects.isNull(CACHED_CHESS_BOARD)) {
-            CACHED_CHESS_BOARD = new ChessBoard(ChessBoardGenerator.generateDefaultChessBoard());
-            Histories histories = new Histories(chessDAO.findAllHistories());
-            histories.restoreChessBoardAsLatest(CACHED_CHESS_BOARD);
-        }
-        return CACHED_CHESS_BOARD;
+    public ChessBoard findChessBoardByRoomId(int id) {
+        return CACHED_CHESS_BOARDS.computeIfAbsent(id, (key) -> {
+            ChessBoard chessBoard = new ChessBoard(ChessBoardGenerator.generateDefaultChessBoard());
+            Histories histories = new Histories(chessDAO.findAllHistoriesByRoomId(id));
+            histories.restoreChessBoardAsLatest(chessBoard);
+            CACHED_CHESS_BOARDS.put(id, chessBoard);
+            return chessBoard;
+        });
     }
 
-    public TeamType findCurrentTeamType() {
-        Histories histories = new Histories(chessDAO.findAllHistories());
+    public TeamType findCurrentTeamTypeByRoomId(int id) {
+        Histories histories = new Histories(chessDAO.findAllHistoriesByRoomId(id));
         return histories.findNextTeamType();
     }
 
-    public void move(String current, String destination, String teamType) {
-        ChessBoard chessBoard = findChessBoard();
+    public void moveByRoomId(String current, String destination, String teamType, int id) {
+        ChessBoard chessBoard = findChessBoardByRoomId(id);
         chessBoard.move(Coordinate.from(current), Coordinate.from(destination), TeamType.valueOf(teamType));
-        chessDAO.insertHistory(current, destination, teamType);
+        chessDAO.insertHistoryByRoomId(current, destination, teamType, id);
     }
 
-    public Result calculateResult() {
-        ChessBoard chessBoard = findChessBoard();
+    public Result calculateResultByRoomId(int id) {
+        ChessBoard chessBoard = findChessBoardByRoomId(id);
         Scores scores = chessBoard.calculateScores();
         TeamType winnerTeamType = chessBoard.findWinnerTeam();
         return new Result(scores, winnerTeamType);
     }
 
-    public void deleteAllHistories() {
-        chessDAO.deleteAllHistories();
-        CACHED_CHESS_BOARD = null;
+    public void deleteAllHistoriesByRoomId(int id) {
+        chessDAO.deleteAllHistoriesByRoomId(id);
+        CACHED_CHESS_BOARDS.remove(id);
     }
 }

@@ -33,14 +33,15 @@ class RoomControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        roomService.addRoom("test1");
-        roomService.addRoom("test2");
     }
 
     @DisplayName("방 목록을 조회한다.")
     @Test
     @Order(1)
     void findAllRooms() throws JsonProcessingException {
+        roomService.addRoom("test1");
+        roomService.addRoom("test2");
+
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/rooms")

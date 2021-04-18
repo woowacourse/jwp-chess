@@ -20,15 +20,15 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/chessboard")
-    public ResponseEntity<BoardDTO> showChessBoard() {
-        BoardDTO chessBoardDTO = findChessBoard();
+    @GetMapping("/{id}/chessboard")
+    public ResponseEntity<BoardDTO> showChessBoard(@PathVariable int id) {
+        BoardDTO chessBoardDTO = findChessBoard(id);
         return writeResponse(chessBoardDTO);
     }
 
-    private BoardDTO findChessBoard() {
-        ChessBoard chessBoard = chessService.findChessBoard();
-        TeamType teamType = chessService.findCurrentTeamType();
+    private BoardDTO findChessBoard(int id) {
+        ChessBoard chessBoard = chessService.findChessBoardByRoomId(id);
+        TeamType teamType = chessService.findCurrentTeamTypeByRoomId(id);
         return BoardDTO.of(chessBoard, teamType);
     }
 
@@ -36,26 +36,26 @@ public class ChessController {
         return ResponseEntity.ok().body(t);
     }
 
-    @PutMapping("/chessboard")
-    public ResponseEntity<BoardDTO> move(@RequestBody MoveRequestDTO moveRequestDTO) {
+    @PutMapping("/{id}/chessboard")
+    public ResponseEntity<BoardDTO> move(@PathVariable int id, @RequestBody MoveRequestDTO moveRequestDTO) {
         String current = moveRequestDTO.getCurrent();
         String destination = moveRequestDTO.getDestination();
         String teamType = moveRequestDTO.getTeamType();
-        chessService.move(current, destination, teamType);
-        BoardDTO chessBoardDTO = findChessBoard();
+        chessService.moveByRoomId(current, destination, teamType, id);
+        BoardDTO chessBoardDTO = findChessBoard(id);
         return writeResponse(chessBoardDTO);
     }
 
-    @GetMapping("/result")
-    public ResponseEntity<ResultDTO> showResult() {
-        Result result = chessService.calculateResult();
+    @GetMapping("/{id}/result")
+    public ResponseEntity<ResultDTO> showResult(@PathVariable int id) {
+        Result result = chessService.calculateResultByRoomId(id);
         ResultDTO resultDTO = ResultDTO.from(result);
         return writeResponse(resultDTO);
     }
 
-    @DeleteMapping("/histories")
-    public ResponseEntity<String> restart() {
-        chessService.deleteAllHistories();
+    @DeleteMapping("/{id}/histories")
+    public ResponseEntity<String> restart(@PathVariable int id) {
+        chessService.deleteAllHistoriesByRoomId(id);
         String location = "/";
         return writeResponse(location);
     }

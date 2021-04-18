@@ -22,21 +22,6 @@ public class ChessDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<History> findAllHistories() {
-        String query = "SELECT * FROM HISTORY";
-        return jdbcTemplate.query(query, ROW_MAPPER);
-    }
-
-    public void insertHistory(String source, String destination, String teamType) {
-        String query = "INSERT INTO HISTORY (SOURCE, DESTINATION, TEAM_TYPE) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query, source, destination, teamType);
-    }
-
-    public void deleteAllHistories() {
-        String query = "TRUNCATE TABLE HISTORY";
-        jdbcTemplate.update(query);
-    }
-
     public List<History> findAllHistoriesByRoomId(int id) {
         String query = "SELECT * FROM HISTORY WHERE ROOM_ID = ?";
         return jdbcTemplate.query(query, ROW_MAPPER, id);

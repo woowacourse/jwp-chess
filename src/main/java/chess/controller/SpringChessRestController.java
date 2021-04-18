@@ -37,8 +37,8 @@ public class SpringChessRestController {
         return ResponseEntity.ok(springChessService.movablePosition(movablePositionDto));
     }
 
-    @PostMapping("/score")
-    public ResponseEntity<BoardStatusDto> score(@RequestBody MovablePositionDto movablePositionDto) {
-        return ResponseEntity.ok(springChessService.boardStatusDto(movablePositionDto.getRoomId()));
+    @GetMapping("/score/{id}")
+    public ResponseEntity<BoardStatusDto> score(@PathVariable("id") String id) {
+        return ResponseEntity.ok(springChessService.boardStatusDto(id));
     }
 }

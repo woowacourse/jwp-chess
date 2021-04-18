@@ -18,7 +18,7 @@ public class WebUIChessApplication {
         get("/create/:room", webController::createRoom);
         post("/move", webController::move);
         post("/movable", webController::movablePosition);
-        post("/score", webController::score);
+        get("/score/:room", webController::score);
         get("/clear/:room", webController::clear);
     }
 }

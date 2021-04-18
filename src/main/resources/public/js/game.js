@@ -72,7 +72,7 @@ function showMovablePosition() {
 }
 
 async function findScore() {
-    await postFetchPath("score").then(data => {
+    await getFetch("score/" + $roomId).then(data => {
         $status = data;
     });
     showScore();

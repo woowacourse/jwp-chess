@@ -18,10 +18,6 @@ public class PieceDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public PieceDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     public long createPiece(long gridId, Piece piece) {
         boolean isBlack = piece.isBlack();
         String position = String.valueOf(piece.position().x()) + String.valueOf(piece.position().y());

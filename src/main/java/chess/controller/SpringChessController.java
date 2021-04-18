@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestController
 public class SpringChessController {
-    private SpringChessService springChessService;
+    private final SpringChessService springChessService;
 
     public SpringChessController(SpringChessService springChessService) {
         this.springChessService = springChessService;

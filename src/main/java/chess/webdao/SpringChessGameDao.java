@@ -19,7 +19,7 @@ import static chess.service.TeamFormat.WHITE_TEAM;
 
 @Repository
 public class SpringChessGameDao {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public SpringChessGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

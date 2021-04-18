@@ -1,6 +1,7 @@
 package chess.domain.piece;
 
 import chess.domain.board.Board;
+import chess.exception.NotMoveToTargetPosition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -62,7 +63,7 @@ class PieceTest {
 
         //when //then
         assertThatThrownBy(() -> piece.move(target, board))
-                .isExactlyInstanceOf(IllegalArgumentException.class);
+                .isExactlyInstanceOf(NotMoveToTargetPosition.class);
     }
 
 }

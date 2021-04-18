@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.board.Board;
 import chess.domain.piece.condition.*;
+import chess.exception.NotMoveToTargetPosition;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -81,7 +82,7 @@ public class Piece {
             }
         }
 
-        throw new IllegalArgumentException("해당 위치로는 이동할 수 없습니다.");
+        throw new NotMoveToTargetPosition();
     }
 
     public double calculateGradient(final Position target) {

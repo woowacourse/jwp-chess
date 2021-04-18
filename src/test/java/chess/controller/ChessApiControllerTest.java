@@ -51,9 +51,9 @@ class ChessApiControllerTest {
         jdbcTemplate.execute("DELETE FROM chess_game");
     }
 
-    @DisplayName("피스들을 조회하는 API 요청")
+    @DisplayName("피스를 움직이는 API 요청")
     @Test
-    void testFindPieces() {
+    void testMovePiece() {
         //given
         chessGameService.createNewChessGame();
         String source = "a7";
@@ -68,6 +68,57 @@ class ChessApiControllerTest {
                 .body("pieceDtos.size()", is(32))
                 .body("state", is("WhiteTurn"))
                 .body("finished", is(false));
+    }
+
+    @DisplayName("허용된 피스를 찾지못했을 때, 피스를 움직이는 API 요청")
+    @Test
+    void testMovePieceIfNoSuchPermittedChessPieceException() {
+        //given
+        chessGameService.createNewChessGame();
+        String source = "a2";
+        String target = "a3";
+
+        //when //then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/pieces?source={source}&target={target}", source, target)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("허용된 체스 말을 찾을 수 없습니다."));
+    }
+
+    @DisplayName("존재하지 않는 체스 위치로 피스를 선택하거나 또는 그 위치로 움직이는 API 요청")
+    @Test
+    void testMovePieceIfNotPermittedChessPosition() {
+        //given
+        chessGameService.createNewChessGame();
+        String source = "a9";
+        String target = "b7";
+
+        //when //then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/pieces?source={source}&target={target}", source, target)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("허용되지 않는 체스 위치입니다."));
+    }
+
+    @DisplayName("움직일 수 없는 위치로 움직이는 API 요청")
+    @Test
+    void testMovePieceIfNotMoveToTargetPosition() {
+        //given
+        chessGameService.createNewChessGame();
+        String source = "a7";
+        String target = "b6";
+
+        //when //then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/pieces?source={source}&target={target}", source, target)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("해당 위치로는 이동할 수 없습니다."));
     }
 
     @DisplayName("체스게임을 조회하는 API 요청 ")
@@ -87,6 +138,23 @@ class ChessApiControllerTest {
                 .body("finished", is(false));
     }
 
+    @DisplayName("진행중인 게임이 없을 때, 체스게임을 조회하는 API 요청 ")
+    @Test
+    void testFindChessGameIfNotExistPlayingChessGame() {
+        //given
+        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
+        chessGameDAO.updateState(newChessGame.getChessGameId(), "End");
+
+        //when //then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/chessgames")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("진행중인 게임이 없습니다."));
+    }
+
+
     @DisplayName("새로운 체스 게임을 만드는 API 요청")
     @Test
     void testCreateNewChessGame() {
@@ -99,6 +167,21 @@ class ChessApiControllerTest {
                 .body("pieceDtos.size()", is(32))
                 .body("state", is("BlackTurn"))
                 .body("finished", is(false));
+    }
+
+    @DisplayName("진행중인 게임이 이미 있을 때, 새로운 체스 게임을 만드는 API 요청")
+    @Test
+    void testCreateNewChessGameIfAlreadyExistPlayingChessGame() {
+        //given
+        chessGameService.createNewChessGame();
+
+        //when //then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/chessgames")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("아직 끝나지 않은 게임이 있습니다."));
     }
 
     @DisplayName("체스 게임을 종료하는 요청을 ")

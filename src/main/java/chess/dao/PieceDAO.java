@@ -23,7 +23,7 @@ public class PieceDAO {
     public void saveAll(final Long chessGameId, final List<Piece> pieces) {
         String query = "INSERT INTO piece(color, shape, chess_game_id, row_index, col_index) VALUES(?, ?, ?, ?, ?)";
         List<Object[]> params = pieces.stream()
-                .map(piece -> piece.parseObjects(chessGameId))
+                .map(piece -> parseObjects(chessGameId, piece))
                 .collect(Collectors.toList());
         jdbcTemplate.batchUpdate(query, params);
     }
@@ -64,6 +64,11 @@ public class PieceDAO {
             piece.setId(id);
             return piece;
         };
+    }
+
+    private Object[] parseObjects(Long chessGameId, Piece piece) {
+        return new Object[]{piece.getColor().toString(), piece.getShape().toString(), chessGameId,
+                piece.getRow(), piece.getColumn()};
     }
 
 }

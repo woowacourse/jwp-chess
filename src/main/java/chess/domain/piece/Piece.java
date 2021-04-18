@@ -124,11 +124,6 @@ public class Piece {
         this.position = target;
     }
 
-    public Object[] parseObjects(Long chessGameId) {
-        return new Object[]{color.toString(), shape.toString(), chessGameId,
-                position.getRow(), position.getColumn()};
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

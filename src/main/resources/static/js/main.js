@@ -82,7 +82,7 @@ function removeTurn() {
 
 async function finishHandler() {
     let response = await fetch(
-        `/finish/${this.gameId}`
+        `/finishById/${this.gameId}`
     )
     response = await response.json()
     if (response.finished === true) {
@@ -130,7 +130,7 @@ async function changeTurn() {
 
 async function result() {
     let response = await fetch(
-        `/result/${this.gameId}`
+        `/scoreById/${this.gameId}`
     )
     response = await response.json()
     const blackScore = response.blackScore

@@ -41,7 +41,7 @@ public class GameController {
         return gameService.move(gameId, moveDTO);
     }
 
-    @GetMapping("/finish/{gameId}")
+    @GetMapping("/finishById/{gameId}")
     @ResponseBody
     public FinishDTO isFinished(@PathVariable String gameId) {
         return gameService.isFinished(gameId);
@@ -53,10 +53,10 @@ public class GameController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/result/{gameId}")
+    @GetMapping("/scoreById/{gameId}")
     @ResponseBody
-    public ResultDTO result(@PathVariable String gameId) {
-        return gameService.result(gameId);
+    public ScoreDTO score(@PathVariable String gameId) {
+        return gameService.score(gameId);
     }
 
     @PostMapping("/restart/{gameId}")

@@ -31,7 +31,7 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 3rem;
+    padding: 2rem;
 }
 
 .title span {
@@ -188,6 +188,11 @@ html {
     inset 0.5rem 0.5rem 0.25rem #7d7d7d;
 }
 
+.modal-background {
+    width: 25%;
+    margin: 3%;
+}
+
 .modal {
     position: fixed;
     left: 50%;
@@ -210,9 +215,16 @@ html {
     text-shadow: 1px 1px #0e1111;
 }
 
-.modal > span {
-    font-size: 1.4rem;
-    margin: 3rem;
+.modal > label {
+    font-size: 1.2rem;
+    margin: 1.5rem;
+}
+
+.modal > .error-msg {
+    font-size: 0.9rem;
+    color: #b74040;
+    text-shadow: none;
+    margin: 1rem;
 }
 
 .modal-btn {
@@ -228,4 +240,27 @@ html {
     margin: 6px 6px;
     letter-spacing: .1em;
     transition: all 200ms ease;
+}
+
+input {
+    width: 70%;
+    height: 10%;
+    font-size: 1.1rem;
+}
+
+input:focus {
+    font-size: 1.1rem;
+}
+
+.modal-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.room-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }

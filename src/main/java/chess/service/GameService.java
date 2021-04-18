@@ -30,7 +30,7 @@ public class GameService {
     //controller 에 트라이캐치
     public ResponseEntity move(String gameId, MoveDTO moveDTO) {
         try {
-            ChessGame chessGame = chessRepository.loadGame(gameId);
+            ChessGame chessGame = chessRepository.loadGameById(gameId);
             Position sourcePosition = Position.of(moveDTO.getSource());
             Position targetPosition = Position.of(moveDTO.getTarget());
             chessGame.move(sourcePosition, targetPosition);
@@ -49,16 +49,16 @@ public class GameService {
     }
 
     public FinishDTO isFinished(String gameId) {
-        return chessRepository.isFinished(gameId);
+        return chessRepository.isFinishedById(gameId);
     }
 
     public void finish(String gameId) {
         chessRepository.finish(gameId);
     }
 
-    public ResultDTO result(String gameId) {
-        ChessGame chessGame = chessRepository.loadGame(gameId);
-        return new ResultDTO(chessGame.getResult(Color.BLACK), chessGame.getResult(Color.WHITE));
+    public ScoreDTO score(String gameId) {
+        ChessGame chessGame = chessRepository.loadGameById(gameId);
+        return new ScoreDTO(chessGame.getScore(Color.BLACK), chessGame.getScore(Color.WHITE));
     }
 
     public ChessBoardDTO restart(String gameId) {

@@ -14,14 +14,32 @@
         <button id="start" class="control-btn">START</button>
         <button id="load" class="control-btn">LOAD</button>
     </div>
-</div>
-<div class="modal-background">
-    <div class="modal lobby" style="display: none">
-        <label>입장하실 방 이름을 입력해주세요.</label>
-        <input id="room-name" type="text"/>
-        <span class="error-msg" id="name-length" style="display: none"></span>
-        <span class="error-msg" id="name-duplicate" style="display: none">이미 존재하는 방 이름입니다.</span>
-        <button id="enter" class="modal-btn">ENTER</button>
+    <div class="modal-background">
+        <img id="chess-image" src="../images/lobby_chess.png" style="max-width: 100%"/>
+        <div class="modal lobby" style="display: none">
+            <label>입장하실 방 이름을 입력해주세요.</label>
+            <input id="room-name" type="text"/>
+            <span class="error-msg" id="blank"></span>
+            <span class="error-msg" id="name-length" style="display: none"></span>
+            <span class="error-msg" id="name-duplicate" style="display: none"></span>
+            <div class="modal-btn-wrapper">
+                <button id="enter" class="modal-btn">ENTER</button>
+                <button id="cancel" class="modal-btn">CANCEL</button>
+            </div>
+        </div>
+    </div>
+    <div class="room-list">
+        <div class="room-select">
+            <select>
+                <option value="none">입장하실 방을 선택해주세요.</option>
+            </select>
+        </div>
+        <div class="room-info" style="display: none">
+            <span id="black-score"></span>
+            <span id="white-score"></span>
+            <span id="status"></span>
+            <button type="button">입장하기</button>
+        </div>
     </div>
 </div>
 <script src="./js/lobby.js"></script>

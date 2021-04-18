@@ -1,18 +1,15 @@
 package chess.controller;
 
-import chess.dto.DuplicateDTO;
-import chess.dto.RoomIdDTO;
-import chess.dto.TitleDTO;
+import chess.domain.game.ChessGame;
+import chess.domain.piece.Color;
+import chess.dto.*;
 import chess.service.LobbyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -54,5 +51,24 @@ public class LobbyController {
     @ResponseBody
     public ResponseEntity isDuplicate(@RequestBody TitleDTO titleDTO) {
         return ResponseEntity.ok(new DuplicateDTO(lobbyService.isDuplicate(titleDTO.getTitle())));
+    }
+
+    @GetMapping("/rooms")
+    @ResponseBody
+    public RoomListDTO findAllRooms() {
+        return new RoomListDTO(lobbyService.findAllRooms());
+    }
+
+    @GetMapping("/finishByName/{roomName}")
+    @ResponseBody
+    public FinishDTO isFinished(@PathVariable String roomName) {
+        return new FinishDTO(lobbyService.isFinished(roomName));
+    }
+
+    @GetMapping("/scoreByName/{roomName}")
+    @ResponseBody
+    public ScoreDTO score(@PathVariable String roomName) {
+        ChessGame chessGame = lobbyService.loadGame(roomName);
+        return new ScoreDTO(chessGame.getScore(Color.BLACK), chessGame.getScore(Color.WHITE));
     }
 }

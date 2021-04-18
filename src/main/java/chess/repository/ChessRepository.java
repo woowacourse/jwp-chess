@@ -8,7 +8,9 @@ import chess.dto.TurnDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class ChessRepository {
@@ -19,7 +21,7 @@ public class ChessRepository {
     }
 
     public Optional<String> findRoomId(String title) {
-        String findTitleQuery = "SELECT id FROM chess_game WHERE title = ?";
+        String findTitleQuery = "SELECT id FROM chess_game WHERE BINARY title = ?";
         return jdbcTemplate.queryForList(findTitleQuery, String.class, title)
                 .stream()
                 .findAny();
@@ -43,15 +45,24 @@ public class ChessRepository {
     }
 
     //체스게임을 리턴한다, 디티오 말고.
-    public ChessGame loadGame(String gameId) {
+    public ChessGame loadGameById(String gameId) {
         String findingGameQuery = "SELECT board, turn FROM chess_game WHERE id= ?";
         return jdbcTemplate.queryForObject(findingGameQuery, (resultSet, rowNum) -> {
-            ChessGame chessGame = new ChessGame(
+            return new ChessGame(
                     Serializer.deserialize(resultSet.getString("board")),
                     Color.of(resultSet.getString("turn")));
-            return chessGame;
         }, gameId);
     }
+
+    public ChessGame loadGameByName(String roomName) {
+        String findingGameQuery = "SELECT board, turn FROM chess_game WHERE BINARY title = ?";
+        return jdbcTemplate.queryForObject(findingGameQuery, (resultSet, rowNum) -> {
+            return new ChessGame(
+                    Serializer.deserialize(resultSet.getString("board")),
+                    Color.of(resultSet.getString("turn")));
+        }, roomName);
+    }
+
 
     public TurnDTO turn(String gameId) {
         String findingTurnQuery = "SELECT turn FROM chess_game WHERE id = ?";
@@ -64,10 +75,15 @@ public class ChessRepository {
         jdbcTemplate.update(savingGameQuery, chessGame.getTurn(), Serializer.serialize(chessGame), gameId);
     }
 
-    public FinishDTO isFinished(String gameId) {
+    public FinishDTO isFinishedById(String gameId) {
         String finishedQuery = "SELECT finished FROM chess_game WHERE id = ?";
         FinishDTO finishDTO = new FinishDTO(jdbcTemplate.queryForObject(finishedQuery, Boolean.class, gameId));
         return finishDTO;
+    }
+
+    public boolean isFinishedByName(String roomName) {
+        String finishedQuery = "SELECT finished FROM chess_game WHERE BINARY title = ?";
+        return jdbcTemplate.queryForObject(finishedQuery, Boolean.class, roomName);
     }
 
     public void finish(String gameId) {
@@ -79,5 +95,14 @@ public class ChessRepository {
         String restartQuery = "UPDATE chess_game SET turn = ?, finished = ?, board = ? WHERE id = ?";
         jdbcTemplate.update(restartQuery, chessGame.getTurn(), chessGame.isOver(), Serializer.serialize(chessGame),
                 gameId);
+    }
+
+    public Map<String, String> findAllRooms() {
+        String findAllQuery = "SELECT id, title FROM chess_game";
+
+        return jdbcTemplate
+                .queryForList(findAllQuery)
+                .stream()
+                .collect(Collectors.toMap(room -> room.get("id").toString(), room -> room.get("title").toString()));
     }
 }

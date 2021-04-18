@@ -5,6 +5,7 @@ import chess.repository.ChessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -14,6 +15,10 @@ public class LobbyService {
     @Autowired
     public LobbyService(ChessRepository chessRepository) {
         this.chessRepository = chessRepository;
+    }
+
+    public Map<String, String> findAllRooms() {
+        return chessRepository.findAllRooms();
     }
 
     public String newGame(String title) {
@@ -31,5 +36,13 @@ public class LobbyService {
             return true;
         }
         return false;
+    }
+
+    public ChessGame loadGame(String roomName) {
+        return chessRepository.loadGameByName(roomName);
+    }
+
+    public boolean isFinished(String roomName) {
+        return chessRepository.isFinishedByName(roomName);
     }
 }

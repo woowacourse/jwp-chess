@@ -21,7 +21,7 @@ export async function finishGameByGridId(gridId) {
 
 export async function restartGameByRoomId(roomId) {
     return await axios({
-        method: 'get',
+        method: 'post',
         url: `/room/${roomId}/restart`
     })
 }

@@ -14,9 +14,6 @@ public class BoardDto {
     private String turn;
     private String end;
 
-    public BoardDto() {
-    }
-
     public BoardDto(Board board, Team turn) {
         this(board, turn.name(), END_FALSE);
     }
@@ -42,15 +39,7 @@ public class BoardDto {
         return turn;
     }
 
-    public void setTurn(String turn) {
-        this.turn = turn;
-    }
-
     public String getEnd() {
         return end;
-    }
-
-    public void setEnd(String end) {
-        this.end = end;
     }
 }

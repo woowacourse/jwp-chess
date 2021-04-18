@@ -18,27 +18,19 @@ public class BoardStatusDto {
         this.whiteScore = boardStatus.getWhiteScore().getScore() + SCORE;
     }
 
-    public String getLastTurn() {
-        return lastTurn;
+    public static String getSCORE() {
+        return SCORE;
     }
 
-    public void setLastTurn(String lastTurn) {
-        this.lastTurn = lastTurn;
+    public String getLastTurn() {
+        return lastTurn;
     }
 
     public String getBlackScore() {
         return blackScore;
     }
 
-    public void setBlackScore(String blackScore) {
-        this.blackScore = blackScore;
-    }
-
     public String getWhiteScore() {
         return whiteScore;
-    }
-
-    public void setWhiteScore(String whiteScore) {
-        this.whiteScore = whiteScore;
     }
 }

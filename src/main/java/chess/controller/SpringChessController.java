@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class SpringChessController {
@@ -24,8 +25,14 @@ public class SpringChessController {
     }
 
     @GetMapping("/game/{roomId}")
-    private Object loadGame(@PathVariable Long roomId, Model model) {
+    private String loadGame(@PathVariable Long roomId, Model model) {
         chessService.load(roomId, model);
         return "chessboard";
+    }
+
+    @GetMapping("/create")
+    private String create(@RequestParam("roomName") String roomName, Model model) {
+        Long roomId = roomService.create(roomName);
+        return "redirect:game/" + roomId;
     }
 }

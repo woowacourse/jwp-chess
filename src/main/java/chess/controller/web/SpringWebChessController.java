@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
-public class SpringWebChessContoller {
+public class SpringWebChessController {
 
     private final ChessService chessService;
 
-    public SpringWebChessContoller(ChessService chessService) {
+    public SpringWebChessController(ChessService chessService) {
         this.chessService = chessService;
     }
 

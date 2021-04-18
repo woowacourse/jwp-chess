@@ -24,7 +24,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFOR
 @DataJdbcTest
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 @TestPropertySource("classpath:application-test.properties")
-public class HistoryDaoTemplateTest {
+class HistoryDaoTemplateTest {
 
     private final JdbcTemplate jdbcTemplate;
     private final HistoryDao historyDao;

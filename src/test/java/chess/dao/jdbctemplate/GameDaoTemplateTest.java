@@ -23,7 +23,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFOR
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @TestPropertySource("classpath:application-test.properties")
-public class GameDaoTemplateTest {
+class GameDaoTemplateTest {
 
     private final JdbcTemplate jdbcTemplate;
     private final GameDao gameDao;

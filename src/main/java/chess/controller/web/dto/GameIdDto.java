@@ -10,8 +10,4 @@ public class GameIdDto {
     public Long getGameId() {
         return gameId;
     }
-
-    public void setGameId(Long gameId) {
-        this.gameId = gameId;
-    }
 }

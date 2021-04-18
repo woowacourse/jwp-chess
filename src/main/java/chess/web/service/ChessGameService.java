@@ -1,7 +1,7 @@
 package chess.web.service;
 
 import chess.domain.game.ChessGame;
-import chess.web.controller.dto.request.MoveRequestDTO;
+import chess.web.controller.dto.request.MoveRequestDto;
 import chess.web.controller.dto.response.ChessGameResponseDto;
 import chess.web.controller.dto.response.GameStatusResponseDto;
 import chess.web.controller.dto.response.MoveResponseDto;
@@ -40,7 +40,7 @@ public class ChessGameService {
         chessGameRepository.deleteById(gameId);
     }
 
-    public MoveResponseDto movePiece(MoveRequestDTO moveRequestDTO) {
+    public MoveResponseDto movePiece(MoveRequestDto moveRequestDTO) {
         ChessGame chessGame = chessGameRepository.findById(moveRequestDTO.getGameId());
         String startPositionInput = moveRequestDTO.getStartPositionInput();
         String destinationInput = moveRequestDTO.getDestinationInput();

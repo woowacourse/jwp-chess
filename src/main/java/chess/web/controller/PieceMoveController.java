@@ -1,7 +1,7 @@
 package chess.web.controller;
 
 
-import chess.web.controller.dto.request.MoveRequestDTO;
+import chess.web.controller.dto.request.MoveRequestDto;
 import chess.web.controller.dto.response.MoveResponseDto;
 import chess.web.service.ChessGameService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ public class PieceMoveController {
     }
 
     @PostMapping("/move")
-    public MoveResponseDto movePiece(@RequestBody MoveRequestDTO moveRequestDTO) {
-        return chessGameService.movePiece(moveRequestDTO);
+    public MoveResponseDto movePiece(@RequestBody MoveRequestDto moveRequestDto) {
+        return chessGameService.movePiece(moveRequestDto);
     }
 }

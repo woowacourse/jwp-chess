@@ -1,7 +1,7 @@
 package chess.web.controller.dto.request;
 
 
-public class MoveRequestDTO {
+public class MoveRequestDto {
 
     private Long gameId;
     private String startPositionInput;
@@ -11,23 +11,11 @@ public class MoveRequestDTO {
         return gameId;
     }
 
-    public void setGameId(Long gameId) {
-        this.gameId = gameId;
-    }
-
     public String getStartPositionInput() {
         return startPositionInput;
     }
 
-    public void setStartPositionInput(String startPositionInput) {
-        this.startPositionInput = startPositionInput;
-    }
-
     public String getDestinationInput() {
         return destinationInput;
-    }
-
-    public void setDestinationInput(String destinationInput) {
-        this.destinationInput = destinationInput;
     }
 }

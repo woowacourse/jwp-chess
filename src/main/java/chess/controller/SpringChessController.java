@@ -31,8 +31,14 @@ public class SpringChessController {
     }
 
     @GetMapping("/create")
-    private String create(@RequestParam("roomName") String roomName, Model model) {
+    private String createRoom(@RequestParam("roomName") String roomName) {
         Long roomId = roomService.create(roomName);
         return "redirect:game/" + roomId;
+    }
+
+    @GetMapping("/delete/{roomId}")
+    private String deleteRoom(@PathVariable("roomId") Long roomId) {
+        roomService.delete(roomId);
+        return "redirect:/";
     }
 }

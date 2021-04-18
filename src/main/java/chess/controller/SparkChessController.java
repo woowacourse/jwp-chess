@@ -23,17 +23,9 @@ public class SparkChessController {
     }
 
     public void run() {
-        get("/delete/:roomId", this::deleteRoom);
         post("/game/:roomId/move", this::move);
         exception(IllegalArgumentException.class, this::handleException);
         exception(DataAccessException.class, this::handleException);
-    }
-
-    private Object deleteRoom(Request request, Response response) {
-        Long roomId = Long.parseLong(request.params(":roomId"));
-        roomService.delete(roomId);
-        response.redirect("/");
-        return null;
     }
 
     private Object move(Request request, Response response) {

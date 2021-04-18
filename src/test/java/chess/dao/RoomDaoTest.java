@@ -2,15 +2,16 @@ package chess.dao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RoomDaoTest {
+    @Autowired
     private RoomDao roomDao;
 
     @BeforeEach
     public void setup() {
-        roomDao = new RoomDao();
     }
 
     @Test

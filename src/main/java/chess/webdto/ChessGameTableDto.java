@@ -1,10 +1,10 @@
 package chess.webdto;
 
-public class ChessGameTableDTO {
+public class ChessGameTableDto {
     private String current_turn_team;
     private boolean is_playing;
 
-    public ChessGameTableDTO(String current_turn_team, boolean is_playing) {
+    public ChessGameTableDto(String current_turn_team, boolean is_playing) {
         this.current_turn_team = current_turn_team;
         this.is_playing = is_playing;
     }

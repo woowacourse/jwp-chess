@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public enum DAOtoPiece {
+public enum DaoToPiece {
     WHITE_PAWN("white", "Pawn", (isFirstMove) -> new Pawn(isFirstMove, 1)),
     BLACK_PAWN("black", "Pawn", (isFirstMove) -> new Pawn(isFirstMove, -1)),
     WHITE_KNIGHT("white", "Knight", Knight::new),
@@ -24,14 +24,14 @@ public enum DAOtoPiece {
     private final String pieceAsString;
     private final Function<Boolean, Piece> pieceFunction;
 
-    DAOtoPiece(final String team, final String pieceAsString, final Function<Boolean, Piece> pieceFunction) {
+    DaoToPiece(final String team, final String pieceAsString, final Function<Boolean, Piece> pieceFunction) {
         this.team = team;
         this.pieceAsString = pieceAsString;
         this.pieceFunction = pieceFunction;
     }
 
     public static Piece generatePiece(final String team, final String pieceAsString, final boolean isFirstMove) {
-        final DAOtoPiece request = Stream.of(values())
+        final DaoToPiece request = Stream.of(values())
                 .filter(piece -> piece.team.equals(team))
                 .filter(piece -> piece.pieceAsString.equals(pieceAsString))
                 .findAny()

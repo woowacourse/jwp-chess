@@ -4,8 +4,8 @@ import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.webdao.SpringChessGameDao;
-import chess.webdto.ChessGameDTO;
-import chess.webdto.PieceDTOFormat;
+import chess.webdto.ChessGameDto;
+import chess.webdto.PieceDtoFormat;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -22,39 +22,39 @@ public class SpringChessService {
         this.springChessGameDao = springChessGameDao;
     }
 
-    public ChessGameDTO startNewGame() {
+    public ChessGameDto startNewGame() {
         springChessGameDao.deleteChessGame();
         ChessGame chessGame = springChessGameDao.createChessGame();
-        return generateChessGameDTO(chessGame);
+        return generateChessGameDto(chessGame);
     }
 
-    public ChessGameDTO loadPreviousGame() {
+    public ChessGameDto loadPreviousGame() {
         final ChessGame chessGame = springChessGameDao.readChessGame();
-        return generateChessGameDTO(chessGame);
+        return generateChessGameDto(chessGame);
     }
 
-    public ChessGameDTO move(final String start, final String destination) {
+    public ChessGameDto move(final String start, final String destination) {
         final ChessGame chessGame = springChessGameDao.readChessGame();
         chessGame.move(Position.of(start), Position.of(destination));
         springChessGameDao.updateChessGame(chessGame, currentTurnTeamToString(chessGame));
-        return generateChessGameDTO(chessGame);
+        return generateChessGameDto(chessGame);
     }
 
-    private ChessGameDTO generateChessGameDTO(final ChessGame chessGame) {
+    private ChessGameDto generateChessGameDto(final ChessGame chessGame) {
         final Map<String, Map<String, String>> piecePositionToString = generatePiecePositionToString(chessGame);
         final String currentTurnTeam = currentTurnTeamToString(chessGame);
         final Map<String, Double> teamScore = new HashMap<>();
-        teamScore.put(WHITE_TEAM.asDTOFormat(), chessGame.calculateWhiteTeamScore());
-        teamScore.put(BLACK_TEAM.asDTOFormat(), chessGame.calculateBlackTeamScore());
+        teamScore.put(WHITE_TEAM.asDtoFormat(), chessGame.calculateWhiteTeamScore());
+        teamScore.put(BLACK_TEAM.asDtoFormat(), chessGame.calculateBlackTeamScore());
         final boolean isPlaying = chessGame.isPlaying();
-        return new ChessGameDTO(piecePositionToString, currentTurnTeam, teamScore, isPlaying);
+        return new ChessGameDto(piecePositionToString, currentTurnTeam, teamScore, isPlaying);
     }
 
 
     private Map<String, Map<String, String>> generatePiecePositionToString(final ChessGame chessGame) {
         final Map<String, Map<String, String>> piecePosition = new HashMap<>();
-        piecePosition.put(WHITE_TEAM.asDTOFormat(), generatePiecePositionByTeamToString(chessGame.currentWhitePiecePosition()));
-        piecePosition.put(BLACK_TEAM.asDTOFormat(), generatePiecePositionByTeamToString(chessGame.currentBlackPiecePosition()));
+        piecePosition.put(WHITE_TEAM.asDtoFormat(), generatePiecePositionByTeamToString(chessGame.currentWhitePiecePosition()));
+        piecePosition.put(BLACK_TEAM.asDtoFormat(), generatePiecePositionByTeamToString(chessGame.currentBlackPiecePosition()));
         return piecePosition;
     }
 
@@ -63,7 +63,7 @@ public class SpringChessService {
         for (Position position : piecePosition.keySet()) {
             final String positionInitial = position.getPositionInitial();
             final Piece chosenPiece = piecePosition.get(position);
-            final String pieceString = PieceDTOFormat.convert(chosenPiece);
+            final String pieceString = PieceDtoFormat.convert(chosenPiece);
             piecePositionConverted.put(positionInitial, pieceString);
         }
         return piecePositionConverted;
@@ -71,8 +71,8 @@ public class SpringChessService {
 
     private String currentTurnTeamToString(final ChessGame chessGame) {
         if (chessGame.isWhiteTeamTurn()) {
-            return WHITE_TEAM.asDAOFormat();
+            return WHITE_TEAM.asDaoFormat();
         }
-        return BLACK_TEAM.asDAOFormat();
+        return BLACK_TEAM.asDaoFormat();
     }
 }

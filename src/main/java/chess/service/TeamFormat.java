@@ -4,19 +4,19 @@ public enum TeamFormat {
     WHITE_TEAM("white", "white"),
     BLACK_TEAM("black", "black");
 
-    private final String DTOFormat;
-    private final String DAOFormat;
+    private final String DtoFormat;
+    private final String DaoFormat;
 
-    TeamFormat(final String DTOFormat, final String DAOFormat) {
-        this.DTOFormat = DTOFormat;
-        this.DAOFormat = DAOFormat;
+    TeamFormat(final String DtoFormat, final String DaoFormat) {
+        this.DtoFormat = DtoFormat;
+        this.DaoFormat = DaoFormat;
     }
 
-    public String asDTOFormat() {
-        return DTOFormat;
+    public String asDtoFormat() {
+        return DtoFormat;
     }
 
-    public String asDAOFormat() {
-        return DAOFormat;
+    public String asDaoFormat() {
+        return DaoFormat;
     }
 }

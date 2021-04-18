@@ -4,7 +4,8 @@ public class ChessSaveRequestDto {
 
     private String name;
 
-    public ChessSaveRequestDto(){}
+    public ChessSaveRequestDto() {
+    }
 
     public ChessSaveRequestDto(final String name) {
         this.name = name;

@@ -5,7 +5,8 @@ public class ScoreDto {
     private double whiteScore;
     private double blackScore;
 
-    public ScoreDto(){}
+    public ScoreDto() {
+    }
 
     public ScoreDto(final double whiteScore, final double blackScore) {
         this.whiteScore = whiteScore;

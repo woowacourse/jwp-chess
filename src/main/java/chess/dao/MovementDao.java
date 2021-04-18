@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.entity.Movement;
-
 import java.util.List;
 
 public interface MovementDao {

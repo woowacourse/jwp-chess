@@ -17,12 +17,12 @@ public class GameStatusRequestDto {
         return chessName;
     }
 
-    public boolean isGameOver() {
-        return isGameOver;
-    }
-
     public void setChessName(String chessName) {
         this.chessName = chessName;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
     }
 
     public void setGameOver(boolean gameOver) {

@@ -7,11 +7,17 @@ import chess.domain.game.ChessGame;
 import chess.domain.position.Position;
 import chess.entity.Chess;
 import chess.entity.Movement;
-import chess.service.dto.*;
+import chess.service.dto.ChessSaveRequestDto;
+import chess.service.dto.CommonResponseDto;
+import chess.service.dto.GameStatusDto;
+import chess.service.dto.GameStatusRequestDto;
+import chess.service.dto.MoveRequestDto;
+import chess.service.dto.MoveResponseDto;
+import chess.service.dto.ResponseCode;
+import chess.service.dto.TilesDto;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -43,9 +49,9 @@ public class SpringChessService {
         }
 
         return new CommonResponseDto<>(
-                new MoveResponseDto(requestDto.getSource(), requestDto.getTarget(), chessGame.calculateScore(),
-                        !chess.isRunning()),
-                ResponseCode.OK.code(), ResponseCode.OK.message());
+            new MoveResponseDto(requestDto.getSource(), requestDto.getTarget(), chessGame.calculateScore(),
+                !chess.isRunning()),
+            ResponseCode.OK.code(), ResponseCode.OK.message());
     }
 
     @Transactional
@@ -75,8 +81,8 @@ public class SpringChessService {
         Chess chess = movedChess(chessGame, name);
 
         return new CommonResponseDto<>(new GameStatusDto(chessGame.pieces(),
-                chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor()),
-                ResponseCode.OK.code(), ResponseCode.OK.message());
+            chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor()),
+            ResponseCode.OK.code(), ResponseCode.OK.message());
     }
 
     private Chess movedChess(final ChessGame chessGame, final String name) {

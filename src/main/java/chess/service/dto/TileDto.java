@@ -7,7 +7,8 @@ public class TileDto {
     private String position;
     private String piece;
 
-    public TileDto(){}
+    public TileDto() {
+    }
 
     public TileDto(final Piece piece) {
         this.position = piece.positionInfo();

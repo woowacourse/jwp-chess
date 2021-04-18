@@ -8,7 +8,8 @@ public class TilesDto {
 
     private List<TileDto> tiles;
 
-    public TilesDto(){}
+    public TilesDto() {
+    }
 
     public TilesDto(final Board board) {
         this.tiles = board.chessBoard()

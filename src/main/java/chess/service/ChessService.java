@@ -8,7 +8,6 @@ import chess.domain.location.Position;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class ChessService {
 
     private Game newGame(Long roomId) {
         Game game = new Game(BoardFactory.create());
-        List<MoveDto> moves = commandDao.selectOf(roomId);
+        List<MoveDto> moves = commandDao.findAllCommandOf(roomId);
         for (MoveDto move : moves) {
             game.move(Position.from(move.getFrom()), Position.from(move.getTo()));
         }

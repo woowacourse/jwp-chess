@@ -1,62 +1,33 @@
 package chess.dao;
 
 import chess.controller.dto.MoveDto;
-import chess.exception.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-
-import static chess.dao.DBConnection.getConnection;
 
 @Repository
 public class CommandDao {
+    private JdbcTemplate jdbcTemplate;
+
+    public CommandDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final RowMapper<MoveDto> commandRowMapper = (resultSet, rowNum) -> new MoveDto(
+            resultSet.getLong("room_id"),
+            resultSet.getString("move_from"),
+            resultSet.getString("move_to")
+    );
+
     public void insert(Long roomId, String move_from, String move_to) {
         String query = "INSERT INTO command (room_id, move_from, move_to) VALUES (?, ?, ?)";
-
-        try (Connection connection = getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, roomId);
-            pstmt.setString(2, move_from);
-            pstmt.setString(3, move_to);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataAccessException(e);
-        }
+        jdbcTemplate.update(query, roomId, move_from, move_to);
     }
 
-    public List<MoveDto> selectOf(Long roomId) {
-        String query = "SELECT move_from, move_to FROM command WHERE room_id = (?)";
-
-        try (Connection connection = getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, roomId);
-            ResultSet rs = pstmt.executeQuery();
-            return collectMoves(rs);
-        } catch (SQLException e) {
-            throw new DataAccessException(e);
-        }
-    }
-
-    private List<MoveDto> collectMoves(ResultSet rs) throws SQLException {
-        List<MoveDto> moves = new ArrayList<>();
-        while (rs.next()) {
-            moves.add(new MoveDto(rs.getString("move_from"), rs.getString("move_to")));
-        }
-        return moves;
-    }
-
-    public void deleteAll() {
-        String query = "DELETE FROM command";
-        try (Connection connection = getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("delete All Error");
-        }
+    public List<MoveDto> findAllCommandOf(Long roomId) {
+        String query = "SELECT room_id, move_from, move_to FROM command WHERE room_id = (?)";
+        return jdbcTemplate.query(query, commandRowMapper, roomId);
     }
 }

@@ -6,6 +6,9 @@ public class MoveRequestDto {
     private String source;
     private String target;
 
+    public MoveRequestDto() {
+    }
+
     public MoveRequestDto(final String chessName, final String source, final String target) {
         this.chessName = chessName;
         this.source = source;

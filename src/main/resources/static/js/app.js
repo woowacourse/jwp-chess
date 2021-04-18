@@ -21,7 +21,7 @@ end.addEventListener("click", (event) => {
 
         const data = {
             chessName: localStorage.getItem("name"),
-            isGameOver: true
+            gameOver: true
         };
 
         const option = {
@@ -56,6 +56,7 @@ const loadGame = async () => {
         return;
     }
     reRangeBoard(response.body);
+    console.log(response.body);
 
     if (response.body.gameOver) {
         let winnerNode = winner.querySelector("strong");
@@ -94,7 +95,7 @@ function reRangeBoard(responsePieces) {
             }
         }
     }
-    if (responsePieces.isGameOver && !end.classList.contains("game_over")) {
+    if (responsePieces.gameOver && !end.classList.contains("game_over")) {
         end.classList.add("game_over");
         end.classList.remove("run");
     }

@@ -6,6 +6,10 @@ public class CommonResponseDto<T> {
     private int statusCode;
     private String message;
 
+    public CommonResponseDto(T body) {
+        this.body = body;
+    }
+
     public CommonResponseDto(final int statusCode, final String message) {
         this(null, statusCode, message);
     }

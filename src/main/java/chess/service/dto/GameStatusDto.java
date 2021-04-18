@@ -12,6 +12,9 @@ public class GameStatusDto {
     private boolean isGameOver;
     private Color winner;
 
+    public GameStatusDto() {
+    }
+
     public GameStatusDto(final Pieces pieces, final ScoreDto scoreDto, final boolean isGameOver, final Color winner) {
         this.pieces = pieces.pieces()
             .stream()

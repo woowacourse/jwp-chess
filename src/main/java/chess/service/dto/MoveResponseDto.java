@@ -7,6 +7,9 @@ public class MoveResponseDto {
     private ScoreDto scoreDto;
     private boolean isGameOver;
 
+    public MoveResponseDto() {
+    }
+
     public MoveResponseDto(final String source, final String target, final ScoreDto scoreDto, final boolean isGameOver) {
         this.source = source;
         this.target = target;

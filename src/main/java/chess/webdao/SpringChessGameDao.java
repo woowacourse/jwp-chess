@@ -21,6 +21,14 @@ import static chess.service.TeamFormat.WHITE_TEAM;
 public class SpringChessGameDao {
     private final JdbcTemplate jdbcTemplate;
 
+    private final RowMapper<ChessGameTableDto> ChessGameInfoRowMapper = (resultSet, rowNum) -> {
+        ChessGameTableDto chessGameTableDTO = new ChessGameTableDto(
+                resultSet.getString("current_turn_team"),
+                resultSet.getBoolean("is_playing")
+        );
+        return chessGameTableDTO;
+    };
+
     public SpringChessGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -64,14 +72,6 @@ public class SpringChessGameDao {
         return generateChessGameAccordingToDB(blackTeam, whiteTeam,
                 chessGameTableDTO.getCurrentTurnTeam(), chessGameTableDTO.getIsPlaying());
     }
-
-    private final RowMapper<ChessGameTableDto> ChessGameInfoRowMapper = (resultSet, rowNum) -> {
-        ChessGameTableDto chessGameTableDTO = new ChessGameTableDto(
-                resultSet.getString("current_turn_team"),
-                resultSet.getBoolean("is_playing")
-        );
-        return chessGameTableDTO;
-    };
 
     private ChessGame generateChessGameAccordingToDB(final Team blackTeam, final Team whiteTeam,
                                                      final String currentTurnTeam, final boolean isPlaying) {

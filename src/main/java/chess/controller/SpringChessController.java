@@ -30,7 +30,6 @@ import java.util.Optional;
 public class SpringChessController {
     private final SpringChessService springChessService;
 
-    @Autowired
     public SpringChessController(SpringChessService springChessService) {
         this.springChessService = springChessService;
     }

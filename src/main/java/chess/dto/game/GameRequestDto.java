@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.game;
 
 import chess.entity.Game;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.user;
 
 import chess.entity.User;
 import java.time.LocalDateTime;

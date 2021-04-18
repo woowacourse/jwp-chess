@@ -1,5 +1,8 @@
-package chess.dto;
+package chess.dto.chess;
 
+import chess.dto.game.GameResponseDto;
+import chess.dto.piece.PieceDto;
+import chess.dto.user.UserResponseDto;
 import java.util.List;
 
 public class ChessResponseDto {

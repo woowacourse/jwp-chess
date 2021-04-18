@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.chess;
 
 public class MoveRequestDto {
 

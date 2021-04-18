@@ -1,8 +1,8 @@
 package chess.service;
 
 import chess.dao.GameDao;
-import chess.dto.GameRequestDto;
-import chess.dto.GameResponseDto;
+import chess.dto.game.GameRequestDto;
+import chess.dto.game.GameResponseDto;
 import org.springframework.stereotype.Service;
 
 @Service

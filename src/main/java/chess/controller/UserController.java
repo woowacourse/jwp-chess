@@ -1,7 +1,7 @@
 package chess.controller;
 
-import chess.dto.UserRequestDto;
-import chess.dto.UserResponseDto;
+import chess.dto.user.UserRequestDto;
+import chess.dto.user.UserResponseDto;
 import chess.service.UserService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,8 @@
 package chess.service;
 
 import chess.dao.UserDao;
-import chess.dto.UserRequestDto;
-import chess.dto.UserResponseDto;
+import chess.dto.user.UserRequestDto;
+import chess.dto.user.UserResponseDto;
 import chess.entity.User;
 import org.springframework.stereotype.Service;
 

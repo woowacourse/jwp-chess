@@ -24,7 +24,6 @@ class ChessDAOTest {
     @BeforeEach
     void setup() {
         chessDAO = new ChessDAO(jdbcTemplate);
-
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS History (" +
                 "ID INT NOT NULL AUTO_INCREMENT," +
                 "SOURCE VARCHAR(255)," +

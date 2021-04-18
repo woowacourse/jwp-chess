@@ -60,6 +60,7 @@ class ChessControllerTest {
         MoveRequestDTO moveRequestDTO = new MoveRequestDTO("a2", "a3", "WHITE");
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveRequestDTO)
                 .when().put("/chessgame/chessboard")
                 .then().log().all()

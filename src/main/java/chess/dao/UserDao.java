@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.entity.User;
+import chess.domain.user.User;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import org.springframework.jdbc.core.JdbcTemplate;

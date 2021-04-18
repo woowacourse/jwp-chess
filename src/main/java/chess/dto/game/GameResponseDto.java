@@ -1,6 +1,6 @@
 package chess.dto.game;
 
-import chess.entity.Game;
+import chess.domain.game.Game;
 
 public class GameResponseDto {
 

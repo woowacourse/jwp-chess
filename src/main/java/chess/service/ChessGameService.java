@@ -8,6 +8,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
 import chess.dto.ChessGameDto;
+import chess.dto.ChessGameResponseDto;
 import chess.dto.ChessGameStatusDto;
 import chess.dto.ScoreDto;
 import chess.exception.AlreadyPlayingChessGameException;
@@ -31,7 +32,7 @@ public class ChessGameService {
     }
 
     @Transactional
-    public ChessGameDto createNewChessGame() {
+    public ChessGameResponseDto createNewChessGame() {
         Optional<ChessGameEntity> latestChessGame = chessGameDAO.findByStateIsBlackTurnOrWhiteTurn();
         if (latestChessGame.isPresent()) {
             throw new AlreadyPlayingChessGameException();
@@ -42,7 +43,7 @@ public class ChessGameService {
         pieceDAO.saveAll(chessGameId, pieces);
         ChessGame chessGame = new ChessGame(new Board(pieces));
         chessGame.changeState(new BlackTurn(chessGame));
-        return new ChessGameDto(chessGame);
+        return new ChessGameResponseDto(chessGameId, chessGame);
     }
 
     @Transactional

@@ -3,9 +3,7 @@ package chess.controller.spring;
 import chess.dto.RoomDTO;
 import chess.service.spring.RoomService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,5 +25,11 @@ public class RoomController {
                 .map(RoomDTO::from)
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(allRooms);
+    }
+
+    @PostMapping
+    public ResponseEntity addRoom(@RequestBody String name) {
+        roomService.addRoom(name);
+        return ResponseEntity.ok().build();
     }
 }

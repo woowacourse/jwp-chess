@@ -54,4 +54,15 @@ class RoomControllerTest {
         List<RoomDTO> rooms = Arrays.asList(new RoomDTO(1, "test1"), new RoomDTO(2, "test2"));
         return new ObjectMapper().writeValueAsString(rooms);
     }
+
+    @DisplayName("방을 추가한다.")
+    @Test
+    void addRoom() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("test3")
+                .when().post("/rooms")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
 }

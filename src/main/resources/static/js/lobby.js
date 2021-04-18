@@ -233,7 +233,6 @@ async function showRoomInfo(roomName) {
 }
 
 
-
 window.onload = () => {
     init()
 }

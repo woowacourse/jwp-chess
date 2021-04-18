@@ -264,3 +264,75 @@ input:focus {
     align-items: center;
     flex-direction: column;
 }
+
+select {
+    font-family:  'Open Sans', sans-serif;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    outline: 0;
+    box-shadow: none;
+    border: 0 !important;
+    background: #2c3e50;
+    background-image: none;
+    font-size: 0.9rem;
+}
+/* Remove IE arrow */
+select::-ms-expand {
+    display: none;
+}
+/* Custom Select */
+.room-select {
+    position: relative;
+    display: flex;
+    width: 14rem;
+    height: 2.3rem;
+    font-size: 0.9rem;
+    line-height: 3;
+    background: #4c684d;
+    overflow: hidden;
+    border-radius: .25em;
+    color: #dddbdb;
+}
+select {
+    flex: 1;
+    padding: 0 .5em;
+    color: #efefef;
+    cursor: pointer;
+    text-shadow: 1px 1px #2b422d;
+    background: #628265;
+}
+
+/* Arrow */
+.room-select::after {
+    content: '\25BC';
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0 1em;
+    background: #4c684d;
+    cursor: pointer;
+    pointer-events: none;
+    -webkit-transition: .25s all ease;
+    -o-transition: .25s all ease;
+    transition: .25s all ease;
+}
+/* Transition */
+.room-select:hover::after {
+    color: white;
+}
+
+.room-info {
+    width: 14rem;
+    background: #638264;
+    border-top: 1px solid #4c684c;
+}
+
+.room-info-item {
+    font-family:  'Open Sans', sans-serif;
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0.4rem 0.4rem;
+    color: #efefef;
+    text-shadow: 1px 1px #2b422d;
+}

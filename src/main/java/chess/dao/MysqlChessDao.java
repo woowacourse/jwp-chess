@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.dao.dto.ChessGame;
-import chess.chessgame.domain.piece.attribute.Color;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,14 +15,14 @@ public class MysqlChessDao implements ChessDao {
     @Override
     public long save(ChessGame entity) {
         String query =
-                "INSERT INTO CHESSGAME " +
+                "INSERT INTO chessgame " +
                         "(pieces, running, next_turn) " +
                         "VALUES (?, ?, ?)";
 
         return executeQueryWithGenerateKey(query, ps -> {
             ps.setString(1, entity.getPieces());
             ps.setBoolean(2, entity.isRunning());
-            ps.setString(3, entity.getNextTurn().name());
+            ps.setString(3, entity.getNextTurn());
         }, rs -> rs.getLong(1));
     }
 
@@ -31,7 +30,7 @@ public class MysqlChessDao implements ChessDao {
     public Optional<ChessGame> findById(long id) {
         String query =
                 "SELECT * " +
-                        "FROM CHESSGAME " +
+                        "FROM chessgame " +
                         "WHERE id = ?";
 
         return executeQuery(query,
@@ -43,14 +42,14 @@ public class MysqlChessDao implements ChessDao {
     @Override
     public void update(ChessGame entity) {
         String query =
-                "UPDATE CHESSGAME " +
+                "UPDATE chessgame " +
                         "SET pieces = ?, running = ? , next_turn = ?" +
                         "WHERE id = ?";
 
         executeQuery(query, ps -> {
             ps.setString(1, entity.getPieces());
             ps.setBoolean(2, entity.isRunning());
-            ps.setString(3, entity.getNextTurn().name());
+            ps.setString(3, entity.getNextTurn());
             ps.setLong(4, entity.getId());
         });
     }
@@ -59,7 +58,7 @@ public class MysqlChessDao implements ChessDao {
     public List<ChessGame> findAllOnRunning() {
         String query =
                 "SELECT * " +
-                        "FROM CHESSGAME " +
+                        "FROM chessgame " +
                         "WHERE running = ?";
 
         return executeQuery(query,
@@ -69,7 +68,7 @@ public class MysqlChessDao implements ChessDao {
 
     @Override
     public void delete(long id) {
-        String query = "DELETE FROM CHESSGAME " +
+        String query = "DELETE FROM chessgame " +
                 "WHERE id = ?";
 
         executeQuery(query, ps -> ps.setLong(1, id));
@@ -84,7 +83,7 @@ public class MysqlChessDao implements ChessDao {
             Long rowId = rs.getLong("id");
             boolean isRunning = rs.getBoolean("running");
             String pieces = rs.getString("pieces");
-            Color nextTurn = Color.of(rs.getString("next_turn"));
+            String nextTurn = rs.getString("next_turn");
 
             return Optional.of(new ChessGame(rowId, nextTurn, isRunning, pieces));
         } catch (SQLException e) {
@@ -99,7 +98,7 @@ public class MysqlChessDao implements ChessDao {
                 long id = rs.getLong("id");
                 String pieces = rs.getString("pieces");
                 boolean isRunning = rs.getBoolean("running");
-                Color nextTurn = Color.of(rs.getString("next_turn"));
+                String nextTurn = rs.getString("next_turn");
                 chessGames.add(new ChessGame(id, nextTurn, isRunning, pieces));
             }
             return chessGames;

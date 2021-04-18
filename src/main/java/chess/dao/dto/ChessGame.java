@@ -6,18 +6,18 @@ import chess.chessgame.domain.piece.attribute.Color;
 
 public class ChessGame {
     private final long id;
-    private final Color nextTurn;
+    private final String nextTurn;
     private final boolean running;
     private final String pieces;
 
     public ChessGame(ChessGameManager chessGameManager) {
         this.id = chessGameManager.getId();
-        this.nextTurn = chessGameManager.nextColor();
+        this.nextTurn = chessGameManager.nextColor().name();
         this.running = chessGameManager.isStart() && chessGameManager.isNotEnd();
         this.pieces = PiecesConverter.convertString(chessGameManager.getBoard());
     }
 
-    public ChessGame(long id, Color nextTurn, boolean running, String pieces) {
+    public ChessGame(long id, String nextTurn, boolean running, String pieces) {
         this.id = id;
         this.nextTurn = nextTurn;
         this.running = running;
@@ -28,7 +28,7 @@ public class ChessGame {
         return id;
     }
 
-    public Color getNextTurn() {
+    public String getNextTurn() {
         return nextTurn;
     }
 

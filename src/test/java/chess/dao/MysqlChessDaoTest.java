@@ -28,7 +28,7 @@ class MysqlChessDaoTest {
     @BeforeEach
     void dbSetup() throws SQLException {
         String sample = "RKBQKBKRPPPPPPPP........................p........ppppppprkbqkbkr"; // move a2 a3 한 번 진행
-        sampleGame = ChessGameManagerFactory.loadingGame(new ChessGame(0, BLACK, true, sample));
+        sampleGame = ChessGameManagerFactory.loadingGame(new ChessGame(0, "BLACK", true, sample));
     }
 
     @DisplayName("DB에 체스보드 내용이 저장되는지 확인")
@@ -76,7 +76,7 @@ class MysqlChessDaoTest {
     }
 
     private Optional<ChessGameManager> getRecentGame() throws SQLException {
-        String query = "SELECT * FROM CHESSGAME ORDER BY ID DESC LIMIT 1";
+        String query = "SELECT * FROM chessgame ORDER BY ID DESC LIMIT 1";
         try (Connection connection = ChessConnection.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(query)) {
             ResultSet resultSet = pstmt.executeQuery();
@@ -84,7 +84,7 @@ class MysqlChessDaoTest {
                 Long rowId = resultSet.getLong("id");
                 boolean isRunning = resultSet.getBoolean("running");
                 String pieces = resultSet.getString("pieces");
-                Color nextTurn = Color.of(resultSet.getString("next_turn"));
+                String nextTurn = resultSet.getString("next_turn");
 
                 return Optional.of(ChessGameManagerFactory.loadingGame(new ChessGame(rowId, nextTurn, isRunning, pieces)));
             }

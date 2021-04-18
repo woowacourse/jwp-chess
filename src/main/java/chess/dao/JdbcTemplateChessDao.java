@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.dao.dto.ChessGame;
-import chess.chessgame.domain.piece.attribute.Color;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,7 +20,7 @@ public class JdbcTemplateChessDao implements ChessDao {
         String nextTurn = rs.getString("next_turn");
         boolean running = rs.getBoolean("running");
         String pieces = rs.getString("pieces");
-        return new ChessGame(gameId, Color.of(nextTurn), running, pieces);
+        return new ChessGame(gameId, nextTurn, running, pieces);
     };
 
     public JdbcTemplateChessDao(JdbcTemplate jdbcTemplate) {
@@ -31,7 +30,7 @@ public class JdbcTemplateChessDao implements ChessDao {
     @Override
     public long save(ChessGame entity) {
         String query =
-                "INSERT INTO CHESSGAME (pieces, running, next_turn) VALUES " +
+                "INSERT INTO chess.chessgame (pieces, running, next_turn) VALUES " +
                         "(?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -40,7 +39,7 @@ public class JdbcTemplateChessDao implements ChessDao {
                     PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
                     ps.setString(1, entity.getPieces());
                     ps.setBoolean(2, entity.isRunning());
-                    ps.setString(3, entity.getNextTurn().name());
+                    ps.setString(3, entity.getNextTurn());
                     return ps;
                 }
                 , keyHolder
@@ -53,29 +52,29 @@ public class JdbcTemplateChessDao implements ChessDao {
     public Optional<ChessGame> findById(long id) {
         String query =
                 "SELECT * " +
-                        "FROM CHESSGAME " +
+                        "FROM chess.chessgame " +
                         "WHERE id = ?";
 
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, chessGameRowMapper, id));
+        return jdbcTemplate.query(query, chessGameRowMapper, id).stream().findAny();
     }
 
 
     @Override
     public void update(ChessGame entity) {
         String query =
-                "UPDATE CHESSGAME " +
+                "UPDATE chess.chessgame " +
                         "SET pieces = ?, running = ? , next_turn = ?" +
                         "WHERE id = ?";
 
         jdbcTemplate.update(query, entity.getPieces(), entity.isRunning(),
-                entity.getNextTurn().name(), entity.getId());
+                entity.getNextTurn(), entity.getId());
     }
 
     @Override
     public List<ChessGame> findAllOnRunning() {
         String query =
                 "SELECT * " +
-                        "FROM CHESSGAME " +
+                        "FROM chess.chessgame " +
                         "WHERE running = ?";
 
         return jdbcTemplate.query(query, chessGameRowMapper, true);
@@ -83,7 +82,7 @@ public class JdbcTemplateChessDao implements ChessDao {
 
     @Override
     public void delete(long id) {
-        String query = "DELETE FROM CHESSGAME " +
+        String query = "DELETE FROM chess.chessgame " +
                 "WHERE id = ?";
 
         jdbcTemplate.update(query, id);

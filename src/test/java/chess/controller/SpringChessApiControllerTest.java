@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class SpringChessApiControllerTest {
 
-    private MockChessService mockChessService = new MockChessService();
+    private final MockChessService mockChessService = new MockChessService();
 
     private MockMvc mockMvc;
 

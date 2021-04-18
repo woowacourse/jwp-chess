@@ -32,8 +32,10 @@ public class SpringRoomDaoTest {
             + " white varchar(255) NOT NULL,"
             + " black varchar(255) NOT NULL)");
 
-        jdbcTemplate.execute("INSERT INTO rooms (id, name, is_opened, white, black) VALUES (1, 'room1', true, 'white1', 'black1')");
-        jdbcTemplate.execute("INSERT INTO rooms (id, name, is_opened, white, black) VALUES (2, 'room2', false , 'white2', 'black2')");
+        jdbcTemplate.execute(
+            "INSERT INTO rooms (id, name, is_opened, white, black) VALUES (1, 'room1', true, 'white1', 'black1')");
+        jdbcTemplate.execute(
+            "INSERT INTO rooms (id, name, is_opened, white, black) VALUES (2, 'room2', false , 'white2', 'black2')");
 
         springRoomDao = new SpringRoomDao(jdbcTemplate);
     }
@@ -56,7 +58,9 @@ public class SpringRoomDaoTest {
 
         List<RoomDto> openedRooms = springRoomDao.openedRooms();
 
-        assertThat(openedRooms.stream().filter(roomDto -> roomDto.getName().equals("room3")).count()).isEqualTo(1);
+        assertThat(
+            openedRooms.stream().filter(roomDto -> roomDto.getName().equals("room3")).count())
+            .isEqualTo(1);
     }
 
     @DisplayName("방 삭제 기능")

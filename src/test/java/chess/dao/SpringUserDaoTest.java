@@ -40,7 +40,8 @@ public class SpringUserDaoTest {
 
         jdbcTemplate.execute("INSERT INTO users (name) VALUES ('white')");
         jdbcTemplate.execute("INSERT INTO users (name) VALUES ('black')");
-        jdbcTemplate.execute("INSERT INTO rooms (id, name, is_opened, white, black) VALUES (1, 'testRoom', true, 'white', 'black')");
+        jdbcTemplate.execute(
+            "INSERT INTO rooms (id, name, is_opened, white, black) VALUES (1, 'testRoom', true, 'white', 'black')");
 
         springUserDao = new SpringUserDao(jdbcTemplate);
     }
@@ -52,8 +53,8 @@ public class SpringUserDaoTest {
         springUserDao.insert("testUser");
         jdbcTemplate.query("SELECT count(*) FROM users WHERE name = ?",
             (resultSet, rowNum) ->
-            assertThat(resultSet.getInt(1)).isEqualTo(1)
-        , "testUser");
+                assertThat(resultSet.getInt(1)).isEqualTo(1)
+            , "testUser");
     }
 
     @DisplayName("방에 있는 유저들의 전적 반환")

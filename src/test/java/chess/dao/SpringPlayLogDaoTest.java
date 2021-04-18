@@ -103,7 +103,8 @@ public class SpringPlayLogDaoTest {
 
         Board board = boardDto.toEntity();
 
-        ChessGame chessGame = new ChessGame(gameStatusDto.toTurnEntity(), new ScoreBoard(board), gameStatusDto.toGameStateEntity(board));
+        ChessGame chessGame = new ChessGame(gameStatusDto.toTurnEntity(), new ScoreBoard(board),
+            gameStatusDto.toGameStateEntity(board));
 
         chessGame.start();
         chessGame.move(Point.of("a2"), Point.of("a4"));
@@ -112,7 +113,7 @@ public class SpringPlayLogDaoTest {
 
         jdbcTemplate.query("SELECT COUNT(*) FROM play_logs WHERE room_id = 1",
             (resultSet, rowNum) ->
-            assertThat(resultSet.getInt(1)).isEqualTo(2)
+                assertThat(resultSet.getInt(1)).isEqualTo(2)
         );
     }
 }

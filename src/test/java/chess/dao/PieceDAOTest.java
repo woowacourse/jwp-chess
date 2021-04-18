@@ -34,18 +34,12 @@ class PieceDAOTest {
     void setUp() {
         pieceDAO = new PieceDAO(jdbcTemplate);
         chessGameDAO = new ChessGameDAO(jdbcTemplate);
-
-        jdbcTemplate.execute("CREATE TABLE chess_game (" +
-                " id IDENTITY, state VARCHAR(64) NOT NULL, PRIMARY KEY (id))");
-        jdbcTemplate.execute("CREATE TABLE piece (" +
-                " id IDENTITY, color VARCHAR(255) NOT NULL, shape VARCHAR(255) NOT NULL, chess_game_id BIGINT," +
-                " row_index INT NOT NULL, col_index INT NOT NULL, FOREIGN KEY(chess_game_id) REFERENCES chess_game(id), PRIMARY KEY (id))");
     }
 
     @AfterEach
     void tearDown() {
-        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE chess_game IF EXISTS");
+        jdbcTemplate.execute("DELETE FROM piece");
+        jdbcTemplate.execute("DELETE FROM chess_game");
     }
 
     @DisplayName("piece들을 저장하고 조회하는 기능을 테스트한다")
@@ -62,7 +56,7 @@ class PieceDAOTest {
         pieceDAO.saveAll(chessGameId, pieces);
 
         //then
-        List<Piece> findPieces = pieceDAO.findAllPiecesByChessGameId(1L);
+        List<Piece> findPieces = pieceDAO.findAllPiecesByChessGameId(chessGameId);
         assertAll(
                 () -> assertThat(findPieces).hasSize(2),
                 () -> assertThat(findPieces).containsExactlyInAnyOrder(
@@ -82,7 +76,7 @@ class PieceDAOTest {
         pieceDAO.saveAll(chessGameId, pieces);
 
         //when
-        Piece findPiece = pieceDAO.findOneByPosition(1L, 7, 0).get();
+        Piece findPiece = pieceDAO.findOneByPosition(chessGameId, 7, 0).get();
 
         //then
         assertThat(findPiece).isEqualTo(piece);

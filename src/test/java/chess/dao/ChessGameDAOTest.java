@@ -26,13 +26,12 @@ class ChessGameDAOTest {
     @BeforeEach
     void setUp() {
         chessGameDAO = new ChessGameDAO(jdbcTemplate);
-        jdbcTemplate.execute("CREATE TABLE chess_game (" +
-                " id BIGINT(255) NOT NULL AUTO_INCREMENT, state VARCHAR(64) NOT NULL, PRIMARY KEY (id))");
     }
 
     @AfterEach
     void tearDown() {
-        jdbcTemplate.execute("DROP TABLE chess_game IF EXISTS");
+        jdbcTemplate.execute("DELETE FROM piece");
+        jdbcTemplate.execute("DELETE FROM chess_game");
     }
 
     @DisplayName("상태가 BlackTurn 또는 WhiteTurn인 체스 게임을 찾는다")
@@ -59,7 +58,6 @@ class ChessGameDAOTest {
 
         //then
         assertThat(createdId).isNotNull();
-        assertThat(createdId).isEqualTo(1L);
     }
 
     @DisplayName("체스게임의 상태를 업데이트 하는 기능을 테스트한다")

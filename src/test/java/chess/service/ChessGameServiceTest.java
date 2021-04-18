@@ -37,21 +37,15 @@ class ChessGameServiceTest {
 
     @BeforeEach
     void setUp() {
-        chessGameDAO = new ChessGameDAO(jdbcTemplate);
         pieceDAO = new PieceDAO(jdbcTemplate);
+        chessGameDAO = new ChessGameDAO(jdbcTemplate);
         chessGameService = new ChessGameService(chessGameDAO, pieceDAO);
-
-        jdbcTemplate.execute("CREATE TABLE chess_game (" +
-                " id IDENTITY, state VARCHAR(64) NOT NULL, PRIMARY KEY (id))");
-        jdbcTemplate.execute("CREATE TABLE piece (" +
-                " id IDENTITY, color VARCHAR(255) NOT NULL, shape VARCHAR(255) NOT NULL, chess_game_id BIGINT," +
-                " row_index INT NOT NULL, col_index INT NOT NULL, FOREIGN KEY(chess_game_id) REFERENCES chess_game(id), PRIMARY KEY (id))");
     }
 
     @AfterEach
     void tearDown() {
-        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE chess_game IF EXISTS");
+        jdbcTemplate.execute("DELETE FROM piece");
+        jdbcTemplate.execute("DELETE FROM chess_game");
     }
 
     @DisplayName("새 체스 게임을 생성하는 기능을 테스트한다")

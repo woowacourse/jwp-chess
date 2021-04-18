@@ -52,21 +52,18 @@ public class SpringChessService {
 
     private Map<String, Map<String, String>> generatePiecePositionAsString(final ChessGame chessGame) {
         final Map<String, Map<String, String>> piecePosition = new HashMap<>();
-        final Map<Position, Piece> whitePiecePosition = chessGame.currentWhitePiecePosition();
-        piecePosition.put(WHITE_TEAM.asDtoFormat(), generateTeamPiecePositionAsString(whitePiecePosition));
-        final Map<Position, Piece> blackPiecePosition = chessGame.currentBlackPiecePosition();
-        piecePosition.put(BLACK_TEAM.asDtoFormat(), generateTeamPiecePositionAsString(blackPiecePosition));
+        piecePosition.put(WHITE_TEAM.asDtoFormat(), generateTeamPiecePositionAsString(chessGame.currentWhitePiecePosition()));
+        piecePosition.put(BLACK_TEAM.asDtoFormat(), generateTeamPiecePositionAsString(chessGame.currentBlackPiecePosition()));
         return piecePosition;
     }
 
     private Map<String, String> generateTeamPiecePositionAsString(final Map<Position, Piece> piecePosition) {
         final Map<String, String> piecePositionConverted = new HashMap<>();
-        for (Position position : piecePosition.keySet()) {
+        piecePosition.forEach((position, chosenPiece) -> {
             final String positionInitial = position.getPositionInitial();
-            final Piece chosenPiece = piecePosition.get(position);
-            final String pieceString = PieceDtoFormat.convert(chosenPiece);
-            piecePositionConverted.put(positionInitial, pieceString);
-        }
+            final String pieceAsString = PieceDtoFormat.convert(chosenPiece);
+            piecePositionConverted.put(positionInitial, pieceAsString);
+        });
         return piecePositionConverted;
     }
 

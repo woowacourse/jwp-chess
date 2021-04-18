@@ -2,6 +2,7 @@ package chess.controller.web.dto;
 
 import chess.chessgame.domain.position.Position;
 
+import java.beans.ConstructorProperties;
 import java.util.Objects;
 
 public class MoveRequestDto {
@@ -9,6 +10,7 @@ public class MoveRequestDto {
     private final String from;
     private final String to;
 
+    @ConstructorProperties({"gameId", "from", "to"})
     public MoveRequestDto(long gameId, String from, String to) {
         this.gameId = gameId;
         this.from = from;

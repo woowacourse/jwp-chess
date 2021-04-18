@@ -1,4 +1,4 @@
-package chess.spring.controller;
+package chess.controller.spring;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.piece.TeamType;
@@ -9,7 +9,6 @@ import chess.service.spring.RoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.hamcrest.core.Is.is;
@@ -35,15 +35,29 @@ class ChessControllerTest {
     @Autowired
     private RoomService roomService;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        roomService.addRoom("room1");
-    }
-
-    @AfterEach
-    void tearDown() {
-        chessService.deleteAllHistoriesByRoomId(1);
+        jdbcTemplate.execute("DROP TABLE HISTORY IF EXISTS");
+        jdbcTemplate.execute("DROP TABLE ROOM IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS ROOM" +
+                "(ID   INT NOT NULL AUTO_INCREMENT," +
+                "NAME VARCHAR(255)," +
+                "PRIMARY KEY (ID)" +
+                ");");
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS History (" +
+                "ID INT NOT NULL AUTO_INCREMENT," +
+                "SOURCE VARCHAR(255)," +
+                "DESTINATION VARCHAR(255)," +
+                "TEAM_TYPE VARCHAR(255)," +
+                "ROOM_ID INT NOT NULL," +
+                "PRIMARY KEY (ID)," +
+                "CONSTRAINT ROOM_FK FOREIGN KEY (ROOM_ID) REFERENCES ROOM (ID)" +
+                ")");
+        roomService.addRoom("test1");
     }
 
     @DisplayName("보드를 조회한다.")
@@ -73,10 +87,9 @@ class ChessControllerTest {
                 .body(is(parseExpectedResponse()));
     }
 
-
     @DisplayName("현재 턴이 아닌 기물을 조작시 예외가 발생한다.")
     @Test
-    void cannotMove() throws JsonProcessingException {
+    void cannotMove() {
         MoveRequestDTO moveRequestDTO = new MoveRequestDTO("a2", "a3", "BLACK");
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

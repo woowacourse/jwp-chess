@@ -23,7 +23,8 @@ class RoomDAOTest {
     @BeforeEach
     void setup() {
         roomDAO = new RoomDAO(jdbcTemplate);
-
+        jdbcTemplate.execute("DROP TABLE HISTORY IF EXISTS");
+        jdbcTemplate.execute("DROP TABLE ROOM IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS ROOM" +
                 "(ID   INT NOT NULL AUTO_INCREMENT," +
                 "NAME VARCHAR(255)," +

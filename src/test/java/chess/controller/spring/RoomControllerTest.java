@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
@@ -30,18 +31,27 @@ class RoomControllerTest {
     @Autowired
     private RoomService roomService;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        jdbcTemplate.execute("DROP TABLE HISTORY IF EXISTS");
+        jdbcTemplate.execute("DROP TABLE ROOM IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS ROOM" +
+                "(ID   INT NOT NULL AUTO_INCREMENT," +
+                "NAME VARCHAR(255)," +
+                "PRIMARY KEY (ID)" +
+                ");");
+        roomService.addRoom("test1");
+        roomService.addRoom("test2");
     }
 
     @DisplayName("방 목록을 조회한다.")
     @Test
     @Order(1)
     void findAllRooms() throws JsonProcessingException {
-        roomService.addRoom("test1");
-        roomService.addRoom("test2");
-
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/rooms")

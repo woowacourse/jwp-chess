@@ -21,6 +21,7 @@ public enum ResponseCode {
     ResponseCode(int code, String message) {
         this.code = code;
         this.message = message;
+
     }
 
     public int getCode() {

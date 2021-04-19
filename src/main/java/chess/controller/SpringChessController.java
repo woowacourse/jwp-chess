@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Objects;
 
-@Controller
+@Controller("/chess")
 public class SpringChessController {
     private static final int ROOM_NOT_EXIST = -1;
     private static final int ROOM_ALREADY_EXIST = -2;

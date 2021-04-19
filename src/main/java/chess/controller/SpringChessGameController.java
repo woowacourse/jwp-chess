@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @Controller
 public final class SpringChessGameController {
@@ -49,12 +48,11 @@ public final class SpringChessGameController {
 
     @PostMapping(path = "/createNewGame", consumes = "application/json")
     @ResponseBody
-    private boolean createNewGame(@RequestBody final RoomNameDTO roomNameDTO) {
-        if (roomNameDTO.isEmpty()) {
-            throw new ClientException();
-        }
-        roomService.createRoom(roomNameDTO.getName());
-        return true;
+    private ResponseEntity<Boolean> createNewGame(@RequestBody final RoomNameDTO roomNameDTO) {
+        String roomName = roomNameDTO.getName();
+        roomService.isEmptyName(roomName);
+        roomService.createRoom(roomName);
+        return ResponseEntity.status(OK).body(true);
     }
 
     @GetMapping("/enter/{id}")

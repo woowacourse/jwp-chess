@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class JdbcPieceRepositoryTest {
@@ -131,6 +132,6 @@ class JdbcPieceRepositoryTest {
 
         // then
         assertThatThrownBy(() -> repository.findPieceById(id))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

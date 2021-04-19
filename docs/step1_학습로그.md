@@ -27,9 +27,24 @@
 
 # [REST] http 메소드 - 3
 ## 내용
-- post: insert 의 개념
-- put: update 의 개념 (전체)
-- patch: 일부를 update 의 개념
+- post: DB에 insert 의 개념
+- put: DB에 update 의 개념 (전체)
+- patch: DB에 일부를 update 의 개념
 
 ## 링크
 - [http 메소드 관련 글](https://javaplant.tistory.com/18)
+
+# [Spring] GetMapping, PostMapping - 4
+## 내용
+- `@PostMapping(path="/home", consumes="application/json")`
+- consumes 는 `Content-Type` 헤더에 기반한다.
+- `@GetMapping(path = "/pets/{petId}", produces = "application/json")`
+- produces 는 `Accept` 헤더에 기반한다.
+- `Content-Type`은 해당 바디의 타입이 무엇인지를 나타내며 `Accept`는 받을 수 있는 타입을 나타낸다.
+- 명시하지 않으면 기본적으로 json 타입이 적용되는 듯 하다. 
+- MediaType 클래스의 상수인 `APPLICATION_JSON_VALUE`, `APPLICATION_XML_VALUE`를 많이 사용한다.
+
+## 링크
+- [스프링 공식문서 ~Mapping](https://docs.spring.io/spring-framework/docs/5.2.5.RELEASE/spring-framework-reference/web.html#mvc-ann-requestmapping)
+- [mdn 문서 Content-Type](https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Content-Type)
+- [mdn 문서 Accept](https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Accept)

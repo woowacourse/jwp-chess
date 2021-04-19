@@ -32,7 +32,7 @@
 - [ ] 학습로그 정리하기
     - [x] @Controller, @RestController의 차이
     - [ ] Spring 어노테이션의 전체적인 정리
-    - [ ] produces, consumes 정리
+    - [x] produces, consumes 정리
     - [ ] Spring 간단한 동작원리 정리
     - [ ] http 메소드와 사용 상황 정리    
 

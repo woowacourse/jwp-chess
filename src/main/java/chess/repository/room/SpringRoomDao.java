@@ -49,7 +49,11 @@ public class SpringRoomDao {
     }
 
     public void deleteRoom(String roomName) {
-        String query = "DELETE FROM rooms WHERE name = ?";
-        jdbcTemplate.update(query, roomName);
+        try {
+            String query = "DELETE FROM rooms WHERE name = ?";
+            jdbcTemplate.update(query, roomName);
+        } catch (Exception e) {
+            throw new InvalidRoomDeleteException();
+        }
     }
 }

@@ -68,3 +68,16 @@ img.chessboard {
 label.alert {
     color: #FF0000;
 }
+<<<<<<< HEAD
+=======
+
+.rooms li .destroy {
+    display: inline-block;
+    position: absolute;
+    padding: .5rem .8rem;
+    transition: all .2s ease-out;
+    width: 5px;
+    height: 5px;
+    cursor: pointer;
+}
+>>>>>>> step1

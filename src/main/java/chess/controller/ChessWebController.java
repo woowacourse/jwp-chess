@@ -68,9 +68,9 @@ public class ChessWebController {
             return chessService.loadChess(name);
         }, jsonTransformer);
 
-        put("/api/games/pieces", (request, response) -> {
+        put("/api/games/:name/pieces", (request, response) -> {
             MoveRequestDto requestDto = new Gson().fromJson(request.body(), MoveRequestDto.class);
-            return chessService.movePiece(requestDto);
+            return chessService.movePiece(request.params(":name"), requestDto);
         }, jsonTransformer);
     }
 }

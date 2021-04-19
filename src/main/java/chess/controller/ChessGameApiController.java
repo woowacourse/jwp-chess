@@ -42,14 +42,15 @@ public class ChessGameApiController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<CommonResponseDto<GameStatusDto>> loadChess(@PathVariable("name") final String name) {
+    public ResponseEntity<CommonResponseDto<GameStatusDto>> loadChess(@PathVariable final String name) {
         return ResponseEntity.status(HttpStatus.OK)
             .body(new CommonResponseDto<>(chessService.loadChess(name), HttpStatus.OK.value()));
     }
 
-    @PutMapping("/pieces")
-    public ResponseEntity<CommonResponseDto<MoveResponseDto>> movePieces(@RequestBody final MoveRequestDto requestDto) {
+    @PutMapping("/{name}/pieces")
+    public ResponseEntity<CommonResponseDto<MoveResponseDto>> movePieces(@PathVariable("name") final String gameName, @RequestBody final MoveRequestDto requestDto) {
+        System.out.println("오다 주웠다.~~ ");
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new CommonResponseDto<>(chessService.movePiece(requestDto), HttpStatus.OK.value()));
+            .body(new CommonResponseDto<>(chessService.movePiece(gameName, requestDto), HttpStatus.OK.value()));
     }
 }

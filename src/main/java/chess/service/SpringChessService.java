@@ -36,9 +36,9 @@ public class SpringChessService {
     }
 
     @Transactional
-    public MoveResponseDto movePiece(final MoveRequestDto requestDto) {
+    public MoveResponseDto movePiece(final String gameName, final MoveRequestDto requestDto) {
         ChessGame chessGame = ChessGame.newGame();
-        Chess chess = movedChess(chessGame, requestDto.getChessName());
+        Chess chess = movedChess(chessGame, gameName);
         chessGame.moveByTurn(new Position(requestDto.getSource()), new Position(requestDto.getTarget()));
         movementDao.save(new Movement(chess.getId(), requestDto.getSource(), requestDto.getTarget()));
 

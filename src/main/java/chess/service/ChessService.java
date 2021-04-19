@@ -31,17 +31,17 @@ public class ChessService {
         return new TilesDto(Board.emptyBoard());
     }
 
-    public CommonResponseDto<MoveResponseDto> movePiece(final MoveRequestDto requestDto) {
+    public CommonResponseDto<MoveResponseDto> movePiece(final String gameName, final MoveRequestDto requestDto) {
         try {
             ChessGame chessGame = ChessGame.newGame();
-            List<Movement> movements = movementDao.findByChessName(requestDto.getChessName());
+            List<Movement> movements = movementDao.findByChessName(gameName);
 
             for (Movement movement : movements) {
                 chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
             }
 
             chessGame.moveByTurn(new Position(requestDto.getSource()), new Position(requestDto.getTarget()));
-            Chess chess = findChessByName(requestDto.getChessName());
+            Chess chess = findChessByName(gameName);
             movementDao.save(new Movement(chess.getId(), requestDto.getSource(), requestDto.getTarget()));
 
             if (chessGame.isGameOver()) {

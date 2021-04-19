@@ -2,25 +2,15 @@ package chess.service.dto;
 
 public class MoveRequestDto {
 
-    private String chessName;
     private String source;
     private String target;
 
     public MoveRequestDto() {
     }
 
-    public MoveRequestDto(final String chessName, final String source, final String target) {
-        this.chessName = chessName;
+    public MoveRequestDto(final String source, final String target) {
         this.source = source;
         this.target = target;
-    }
-
-    public String getChessName() {
-        return chessName;
-    }
-
-    public void setChessName(String chessName) {
-        this.chessName = chessName;
     }
 
     public String getSource() {

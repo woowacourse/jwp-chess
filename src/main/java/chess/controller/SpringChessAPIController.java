@@ -26,12 +26,12 @@ public class SpringChessAPIController {
 
     @GetMapping("/rooms")
     public ResponseEntity<List<RoomDto>> loadAllRoom() {
-        return ResponseEntity.ok().body(chessService.loadAllRoom());
+        return ResponseEntity.ok(chessService.loadAllRoom());
     }
 
     @PostMapping("/rooms/{id}")
-    public ResponseEntity<ChessGameDto> loadGame(@PathVariable("id") long roodId, @RequestBody Room room) {
-        return ResponseEntity.ok().body(chessService.loadGame(roodId, room));
+    public ResponseEntity<ChessGameDto> loadGame(@PathVariable("id") long roomId, @RequestBody Room room) {
+        return ResponseEntity.ok(chessService.loadGame(roomId, room));
     }
 
     @PostMapping("/rooms")
@@ -42,6 +42,6 @@ public class SpringChessAPIController {
     @PutMapping("/rooms/{id}/pieces/{position}")
     public ResponseEntity<ChessGameDto> movePiece(@PathVariable("id") long roodId, @PathVariable("position") String from, @RequestBody MoveDto moveDto) {
         moveDto.setFrom(from);
-        return ResponseEntity.ok().body(chessService.movePiece(roodId, moveDto));
+        return ResponseEntity.ok(chessService.movePiece(roodId, moveDto));
     }
 }

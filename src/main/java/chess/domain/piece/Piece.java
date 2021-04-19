@@ -18,8 +18,15 @@ public abstract class Piece {
     private Position position;
 
     protected Piece(Color color, Position position) {
+        validationColor(color);
         this.color = color;
         this.position = position;
+    }
+
+    private void validationColor(Color color) {
+        if (color == Color.NO_COLOR) {
+            throw new IllegalArgumentException(NO_COLOR_ERROR);
+        }
     }
 
     protected Piece(Position position) {

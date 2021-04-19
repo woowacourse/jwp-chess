@@ -1,11 +1,17 @@
 package chess.webdto;
 
-public class MoveRequestDTO {
-    private final String start;
-    private final String destination;
+import org.springframework.stereotype.Component;
 
-    public MoveRequestDTO(String start, String destination) {
+@Component
+public class MoveRequestDTO {
+    private  String start;
+    private  String destination;
+
+    public void setStart(String start) {
         this.start = start;
+    }
+
+    public void setDestination(String destination){
         this.destination = destination;
     }
 

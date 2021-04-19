@@ -157,6 +157,8 @@ async function btnHandler({target}) {
                 method: 'POST'
             }
         )
+        alert('게임을 초기화합니다.')
+        document.querySelector('#finish').disabled = false
         await initBoard(response)
         await moveHandler()
         await changeTurn()

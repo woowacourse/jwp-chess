@@ -11,7 +11,6 @@ import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.MoveResponseDto;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.Map;
 import java.util.Queue;
 
@@ -21,19 +20,19 @@ public interface ChessService {
 
     Round makeRound();
 
-    Map<String, String> chessBoardFromDB() throws SQLException;
+    Map<String, String> chessBoardFromDB();
 
-    Map<Position, Piece> chessBoard(final Map<String, String> chessBoardFromDB) throws SQLException;
+    Map<Position, Piece> chessBoard(final Map<String, String> chessBoardFromDB);
 
     Map<Position, Piece> chessBoard();
 
-    Map<String, String> stringChessBoard(final Map<Position, Piece> chessBoard) throws SQLException;
+    Map<String, String> stringChessBoard(final Map<Position, Piece> chessBoard);
 
     PiecesDto piecesDto(final Map<Position, Piece> chessBoard);
 
     void updateRound(final PiecesDto piecesDto);
 
-    String currentTurn() throws SQLException;
+    String currentTurn();
 
     void changeRoundState(final String currentTurn);
 
@@ -43,17 +42,17 @@ public interface ChessService {
 
     void changeRoundToEnd(final PlayerDto playerDto);
 
-    MoveResponseDto move(final MoveRequestDto moveRequestDto) throws SQLException;
+    MoveResponseDto move(final MoveRequestDto moveRequestDto);
 
     void executeRound(final Queue<String> commands);
 
-    void movePiece(final MoveRequestDto moveRequestDto) throws SQLException;
+    void movePiece(final MoveRequestDto moveRequestDto);
 
-    void changeTurn(final TurnChangeRequestDto turnChangeRequestDto) throws SQLException;
+    void changeTurn(final TurnChangeRequestDto turnChangeRequestDto);
 
-    void remove() throws SQLException;
+    void remove();
 
     Map<String, String> filteredChessBoard(final Map<Position, Piece> chessBoard);
 
-    void initialize(final Map<String, String> filteredChessBoard) throws SQLException;
+    void initialize(final Map<String, String> filteredChessBoard);
 }

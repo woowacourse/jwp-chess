@@ -21,7 +21,6 @@ import chess.dto.response.MoveResponseDto;
 import chess.repository.ChessRepository;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,7 +47,7 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public Map<String, String> chessBoardFromDB() throws SQLException {
+    public Map<String, String> chessBoardFromDB() {
         Map<String, String> chessBoardFromDB = new LinkedHashMap<>();
         List<ChessRequestDto> pieces = chessRepository.showAllPieces();
         for (ChessRequestDto piece : pieces) {
@@ -69,7 +68,7 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public Map<String, String> stringChessBoard(final Map<Position, Piece> chessBoard) throws SQLException {
+    public Map<String, String> stringChessBoard(final Map<Position, Piece> chessBoard) {
         Map<String, String> stringChessBoard = new LinkedHashMap<>();
         for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.entrySet()) {
             stringChessBoard.put(chessBoardEntry.getKey().toString(), chessBoardEntry.getValue().getPiece());
@@ -100,7 +99,7 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public String currentTurn() throws SQLException {
+    public String currentTurn() {
         List<TurnRequestDto> turns = chessRepository.showCurrentTurn();
         return turns.stream()
                 .map(TurnRequestDto::getCurrentTurn)
@@ -150,7 +149,7 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public MoveResponseDto move(final MoveRequestDto moveRequestDto) throws SQLException {
+    public MoveResponseDto move(final MoveRequestDto moveRequestDto) {
         Queue<String> commands =
                 new ArrayDeque<>(Arrays.asList("move", moveRequestDto.getSource(), moveRequestDto.getTarget()));
         try {
@@ -168,18 +167,18 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public void movePiece(final MoveRequestDto moveRequestDto) throws SQLException {
+    public void movePiece(final MoveRequestDto moveRequestDto) {
         chessRepository.removePiece(moveRequestDto);
         chessRepository.movePiece(moveRequestDto);
     }
 
     @Override
-    public void changeTurn(final TurnChangeRequestDto turnChangeRequestDto) throws SQLException {
+    public void changeTurn(final TurnChangeRequestDto turnChangeRequestDto) {
         chessRepository.changeTurn(turnChangeRequestDto);
     }
 
     @Override
-    public void remove() throws SQLException {
+    public void remove() {
         chessRepository.removeAllPieces();
         chessRepository.removeTurn();
     }
@@ -197,7 +196,7 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public void initialize(final Map<String, String> filteredChessBoard) throws SQLException {
+    public void initialize(final Map<String, String> filteredChessBoard) {
         chessRepository.initializePieceStatus(filteredChessBoard);
         chessRepository.initializeTurn();
     }

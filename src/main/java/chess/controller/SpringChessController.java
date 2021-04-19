@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 @Controller
@@ -37,21 +36,21 @@ public class SpringChessController {
     }
 
     @GetMapping("/start")
-    public String start() throws SQLException {
+    public String start() {
         chessService.remove();
         chessService.makeRound();
         return makeNewGame();
     }
 
     @GetMapping("/reset")
-    public String reset() throws SQLException {
+    public String reset() {
         chessService.remove();
         chessService.resetRound();
         return makeNewGame();
     }
 
     @GetMapping("/chess")
-    public String chess(final Model model) throws SQLException {
+    public String chess(final Model model) {
         Map<String, String> chessBoardFromDB = chessService.chessBoardFromDB();
         Map<Position, Piece> chessBoard = chessService.chessBoard(chessBoardFromDB);
         Map<String, String> stringChessBoard = chessService.stringChessBoard(chessBoard);
@@ -78,17 +77,17 @@ public class SpringChessController {
 
     @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public MoveResponseDto move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
+    public MoveResponseDto move(@RequestBody MoveRequestDto moveRequestDto) {
         return chessService.move(moveRequestDto);
     }
 
     @PostMapping(value = "/turn", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void turn(@RequestBody TurnChangeRequestDto turnChangeRequestDto) throws SQLException {
+    public void turn(@RequestBody TurnChangeRequestDto turnChangeRequestDto) {
         chessService.changeTurn(turnChangeRequestDto);
     }
 
-    private String makeNewGame() throws SQLException {
+    private String makeNewGame() {
         Map<Position, Piece> chessBoard = chessService.chessBoard();
         Map<String, String> filteredChessBoard = chessService.filteredChessBoard(chessBoard);
         chessService.initialize(filteredChessBoard);

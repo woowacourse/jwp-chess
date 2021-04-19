@@ -21,17 +21,17 @@ public class RoomController {
 
     @GetMapping
     public ResponseEntity<List<RoomDTO>> showRooms() {
-        List<RoomDTO> allRooms = roomService.findAllRooms()
+        List<RoomDTO> roomDTOS = roomService.findAllRooms()
                 .stream()
                 .map(RoomDTO::from)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(allRooms);
+        return ResponseEntity.ok().body(roomDTOS);
     }
 
     @PostMapping
     public ResponseEntity<RoomDTO> addRoom(@RequestBody String name) {
         roomService.addRoom(name);
-        Room room = roomService.findLastRoom();
+        Room room = roomService.findLastAddedRoom();
         RoomDTO roomDTO = RoomDTO.from(room);
         return ResponseEntity.ok().body(roomDTO);
     }

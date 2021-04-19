@@ -23,7 +23,7 @@ public class RoomService {
         roomDAO.insertRoom(name);
     }
 
-    public Room findLastRoom() {
-        return roomDAO.findLastRoom();
+    public Room findLastAddedRoom() {
+        return roomDAO.findLastAddedRoom();
     }
 }

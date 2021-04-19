@@ -31,7 +31,7 @@ public class RoomDAO {
         jdbcTemplate.update(query, name);
     }
 
-    public Room findLastRoom() {
+    public Room findLastAddedRoom() {
         String query = "SELECT * FROM ROOM ORDER BY ID DESC LIMIT 1";
         return jdbcTemplate.query(query, ROW_MAPPER).get(0);
     }

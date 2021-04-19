@@ -10,10 +10,10 @@ import chess.domain.manager.ChessManager;
 import chess.domain.piece.Owner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,6 +21,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFOR
 
 @DataJdbcTest
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @TestPropertySource("classpath:application-test.properties")
 class StateDaoTemplateTest {
 
@@ -29,7 +30,6 @@ class StateDaoTemplateTest {
     private GameDao gameDao;
     private Long newGameId;
 
-    @Autowired
     public StateDaoTemplateTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.stateDao = new StateDaoTemplate(jdbcTemplate);

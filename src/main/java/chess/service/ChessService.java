@@ -20,7 +20,7 @@ public interface ChessService {
 
     void move(long gameId, Position from, Position to);
 
-    void move(MoveRequestDto moveRequestDto);
+    void move(long gameId, MoveRequestDto moveRequestDto);
 
     boolean isEnd(long gameId);
 

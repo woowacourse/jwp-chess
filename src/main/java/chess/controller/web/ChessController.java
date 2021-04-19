@@ -36,9 +36,9 @@ public class ChessController {
         return new ChessGameResponseDto(load);
     }
 
-    @PostMapping("/game/move")
+    @PostMapping("/game/{id:[\\d]+}/move")
     public MoveResponseDto movePiece(@PathVariable long id, @RequestBody MoveRequestDto moveMessage) {
-        chessService.move(moveMessage);
-        return new MoveResponseDto(chessService.isEnd(moveMessage.getId()), chessService.nextColor(moveMessage.getId()));
+        chessService.move(id, moveMessage);
+        return new MoveResponseDto(chessService.isEnd(id), chessService.nextColor(id));
     }
 }

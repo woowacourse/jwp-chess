@@ -26,7 +26,7 @@ async function getPieces(url) {
 }
 
 async function movePiece(from, to) {
-    const moveResult = await postFetch("/game/move", {id: chessGameId, from: from, to: to});
+    const moveResult = await postFetch(`/game/${chessGameId}/move`, {from: from, to: to});
     if (moveResult.hasOwnProperty("end") && moveResult.end === true) {
         alert("게임이 종료되었습니다~!");
         findGames();
@@ -46,7 +46,7 @@ async function movePiece(from, to) {
 }
 
 async function findGames() {
-    const responseData = await getFetch("/user");
+    const responseData = await getFetch("/games");
     const games = responseData.runningGames;
     $games.innerHTML = "";
     Object.keys(games).forEach(ele => $games.insertAdjacentHTML("beforeend", `<li>ID:${ele} , 다음순서:${games[ele]}`));

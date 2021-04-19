@@ -2,7 +2,7 @@ package chess.controller;
 
 import chess.service.SpringChessService;
 import chess.webdto.ChessGameDTO;
-import chess.webdto.MoveRequestDTO;
+import chess.webdto.MoveRequestDto;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +30,7 @@ public class SpringChessController {
     }
 
     @PostMapping(value = "/move", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ChessGameDTO move(@RequestBody MoveRequestDTO moveRequestDTO) {
+    public ChessGameDTO move(@RequestBody MoveRequestDto moveRequestDTO) {
         final String start = moveRequestDTO.getStart();
         final String destination = moveRequestDTO.getDestination();
         return springChessService.move(start, destination);

@@ -5,7 +5,9 @@ import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.webdao.SpringChessGameDao;
 import chess.webdto.ChessGameDTO;
+import chess.webdto.ChessGameTableDto;
 import chess.webdto.PieceDto;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -40,6 +42,7 @@ public class SpringChessService {
         return generateChessGameDTO(chessGame);
     }
 
+
     private ChessGameDTO generateChessGameDTO(final ChessGame chessGame) {
         final Map<String, Map<String, String>> piecePositionToString = generatePiecePositionToString(chessGame);
         final String currentTurnTeam = currentTurnTeamToString(chessGame);
@@ -49,7 +52,6 @@ public class SpringChessService {
         final boolean isPlaying = chessGame.isPlaying();
         return new ChessGameDTO(piecePositionToString, currentTurnTeam, teamScore, isPlaying);
     }
-
 
     private Map<String, Map<String, String>> generatePiecePositionToString(final ChessGame chessGame) {
         final Map<String, Map<String, String>> piecePosition = new HashMap<>();

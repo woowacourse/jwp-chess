@@ -33,6 +33,13 @@ public class ChessService {
         return histories();
     }
 
+    private List<HistoryDto> histories() {
+        return historyRepository.selectActive()
+            .stream()
+            .map(HistoryDto::new)
+            .collect(Collectors.toList());
+    }
+
     public GameInfoDto initialGameInfo() {
         return new GameInfoDto(new ChessGame(Board.of(PieceInitializer.pieceInfo())));
     }
@@ -45,10 +52,8 @@ public class ChessService {
         return new GameInfoDto(chessGame);
     }
 
-    private ChessGame gameStateOf(String id) {
-        ChessGame chessGame = new ChessGame(Board.of(PieceInitializer.pieceInfo()));
-        chessGame.makeBoardStateOf(lastState(id));
-        return chessGame;
+    private void updateDB(String historyId) {
+        historyRepository.updateEndState(historyId);
     }
 
     public void move(String id, String command, Commands commands) throws SQLException {
@@ -57,11 +62,20 @@ public class ChessService {
         updateMoveInfo(command, id);
     }
 
-    private List<HistoryDto> histories() {
-        return historyRepository.selectActive()
-                .stream()
-                .map(HistoryDto::new)
-                .collect(Collectors.toList());
+    private ChessGame gameStateOf(String id) {
+        ChessGame chessGame = new ChessGame(Board.of(PieceInitializer.pieceInfo()));
+        chessGame.makeBoardStateOf(lastState(id));
+        return chessGame;
+    }
+
+    private List<CommandDto> lastState(String id) {
+        return commandRepository.selectAllCommands(id);
+    }
+
+    private void updateMoveInfo(String command, String historyId) {
+        if (!StringUtils.isEmpty(historyId)) {
+            flushCommands(command, historyId);
+        }
     }
 
     public String addHistory(String name) {
@@ -73,30 +87,12 @@ public class ChessService {
         return String.valueOf(id.get());
     }
 
-    public void updateMoveInfo(String command, String historyId) {
-        if (!StringUtils.isEmpty(historyId)) {
-            flushCommands(command, historyId);
-        }
-    }
-
-    private void updateDB(String historyId) {
-        historyRepository.updateEndState(historyId);
-    }
-
     public void flushCommands(String command, String gameId) {
         try {
             commandRepository.insert(new CommandDto(command), Integer.parseInt(gameId));
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    public List<CommandDto> lastState(String id) {
-        List<CommandDto> sample = commandRepository.selectAllCommands(id);
-        for (CommandDto commandDto : sample) {
-            System.out.println(commandDto.data());
-        }
-        return commandRepository.selectAllCommands(id);
     }
 
     public String getIdByName(String name) {

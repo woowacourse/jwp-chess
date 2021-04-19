@@ -37,8 +37,8 @@ public class SpringPlayLogDaoTest {
 
         jdbcTemplate.update("CREATE TABLE play_logs ("
             + " id int NOT NULL PRIMARY KEY AUTO_INCREMENT,"
-            + " board json NOT NULL,"
-            + " game_status json NOT NULL,"
+            + " board clob NOT NULL,"
+            + " game_status clob NOT NULL,"
             + " room_id int NOT NULL,"
             + " last_played_time timestamp default NOW()"
             + ")");

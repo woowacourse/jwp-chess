@@ -17,7 +17,7 @@ public class SpringUserDao implements UserDao {
 
     public void insert(String userName) {
         String query = "INSERT INTO users (name) "
-            + "SELECT * FROM (SELECT ?) AS tmp "
+            + "SELECT (?) "
             + "WHERE NOT EXISTS (SELECT * FROM users WHERE name = ?)";
         jdbcTemplate.update(query, userName, userName);
     }

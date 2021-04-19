@@ -3,6 +3,7 @@ package chess.domain.piece;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Direction;
 import chess.domain.board.Position;
+import chess.domain.board.Row;
 import chess.domain.feature.Color;
 import chess.domain.feature.Type;
 
@@ -38,7 +39,14 @@ public class Pawn extends Piece {
         }
         Position twoStepNextPosition = nextPosition.nextPosition(direction);
         Piece twoStepNextPiece = chessBoard.getPiece(twoStepNextPosition);
-        return twoStepNextPosition.equals(targetPosition) && twoStepNextPiece.isBlank() && nextPiece.isBlank();
+        return twoStepNextPosition.equals(targetPosition) && twoStepNextPiece.isBlank() && nextPiece.isBlank() && isFirstTurn();
+    }
+
+    private boolean isFirstTurn() {
+        if (isBlack()) {
+            return this.getPosition().charAt(1) == Row.SEVEN.getRow();
+        }
+        return this.getPosition().charAt(1) == Row.TWO.getRow();
     }
 
     private boolean isDiagonalMovable(ChessBoard chessBoard, Direction direction, Position targetPosition) {

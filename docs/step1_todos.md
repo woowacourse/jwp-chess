@@ -19,14 +19,15 @@
     - [ ] 맵 활용 이유?! ScoreDto 활용은 어떤지 고려하기
     
 ## 개인 todos
-- [ ] 코드 내용 파악하기
+- [x] 코드 내용 파악하기
     - [x] domain 구조 파악
     - [x] js 관련 내용 파악
-    - [ ] db 관련 구조 파악 (dto, dao, service, controller 등)
+    - [x] db 관련 구조 파악 (dto, dao, service, controller 등)
 - [x] 테스트 코드 가져오기
 - [ ] 코드 도메인 구성 변경해보기
 - [ ] 코드 Dto 구성 변경해보기
 - [ ] 코드 테이블 구조 변경해보기
+    - [ ] 바로 테이블 매핑이 가능한 방안? (RowMapper 사용가능한 방안으로)
 - [ ] 클래스 이름 통일하기 (카멜케이스) 
 - [ ] 학습로그 정리하기
     - [ ] @Controller, @RestController의 차이

@@ -1,31 +1,10 @@
-function showResult() {
-    const xmlHttp = new XMLHttpRequest();
-    const url = getBaseUrl() + '/result';
-    xmlHttp.onreadystatechange = function () {
-        if (isValidHttpResponse(this)) {
-            const resultDTO = JSON.parse(this.responseText);
-            printResult(resultDTO);
-            return;
-        }
-        if (isGameNotFinished(this)) {
-            alert('게임이 아직 종료되지 않았습니다.');
-            window.location = getBaseUrl();
-        }
-    }
-    xmlHttp.open('GET', url, true);
-    xmlHttp.send();
-}
-
-function getBaseUrl() {
-    return 'http://localhost:8080/chessgame/' + roomId;
-}
-
-function isValidHttpResponse(xmlHttp) {
-    return xmlHttp.readyState === 4 && xmlHttp.status === 200;
-}
-
-function isGameNotFinished(xmlHttp) {
-    return xmlHttp.readyState === 4 && xmlHttp.status === 500;
+async function showResult() {
+    await axios.get('/chessgame/' + roomId + '/result')
+        .then(response => printResult(response.data))
+        .catch(error => {
+            alert(error.response.data);
+            window.location = '/chessgame/' + roomId;
+        });
 }
 
 function printResult(resultDTO) {
@@ -37,18 +16,14 @@ function printResult(resultDTO) {
 }
 
 function addRestartEvent() {
-    const restartButton = document.getElementById('restart-button');
-    restartButton.addEventListener('click', function (event) {
-        const xmlHttp = new XMLHttpRequest();
-        const url = getBaseUrl() + '/histories';
-        xmlHttp.onreadystatechange = function () {
-            if (isValidHttpResponse(this)) {
-                window.location.replace(this.responseText);
-            }
-        }
-        xmlHttp.open('DELETE', url, true);
-        xmlHttp.send();
-    });
+    const $restartButton = document.getElementById('restart-button');
+    $restartButton.addEventListener('click', requestRestart);
+}
+
+const requestRestart = async () => {
+    await axios.delete('/chessgame/' + roomId + '/histories')
+        .then(response => window.location.replace(response.data))
+        .catch(error => alert(error.response.data));
 }
 
 showResult();

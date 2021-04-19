@@ -31,7 +31,7 @@ public class ChessRepository {
     }
 
     public void createRoom(final ChessGame chessGame, final Room room) {
-        Long gameId = gameDao.create(chessGame);
+        long gameId = gameDao.create(chessGame);
 
         WhiteTeam whiteTeam = chessGame.getWhiteTeam();
         teamDao.create(whiteTeam, gameId);
@@ -45,7 +45,7 @@ public class ChessRepository {
         roomDao.create(room);
     }
 
-    public Room loadRoom(Long roomId) {
+    public Room loadRoom(long roomId) {
         return roomDao.load(roomId);
     }
 
@@ -53,9 +53,9 @@ public class ChessRepository {
         return roomDao.loadAll();
     }
 
-    public ChessGame loadGame(final Long roomId) {
+    public ChessGame loadGame(final long roomId) {
         Room room = roomDao.load(roomId);
-        Long gameId = room.getGameId();
+        long gameId = room.getGameId();
         boolean isEnd = gameDao.isEnd(gameId);
 
         Team team = teamDao.load(gameId, WhiteTeam.DEFAULT_NAME);
@@ -72,9 +72,9 @@ public class ChessRepository {
         return new ChessGame(whiteTeam, blackTeam, isEnd);
     }
 
-    public void saveGame(final Long roomId, final ChessGame chessGame, MoveDto moveDto) {
+    public void saveGame(final long roomId, final ChessGame chessGame, MoveDto moveDto) {
         Room room = roomDao.load(roomId);
-        Long gameId = room.getGameId();
+        long gameId = room.getGameId();
 
         if (chessGame.isEnd()) {
             gameDao.update(gameId, true);

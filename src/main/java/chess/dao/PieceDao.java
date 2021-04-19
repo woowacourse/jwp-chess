@@ -23,7 +23,7 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void create(Map<Position, Piece> pieces, String color, Long gameId) {
+    public void create(Map<Position, Piece> pieces, String color, long gameId) {
         String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";
         List<Position> positions = new ArrayList<>(pieces.keySet());
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -43,7 +43,7 @@ public class PieceDao {
         });
     }
 
-    public Map<Position, Piece> load(Long gameId, String color) {
+    public Map<Position, Piece> load(long gameId, String color) {
         String sql = "select * from piece where game_id = ? and color = ?";
 
         return jdbcTemplate.query(sql, (ResultSet resultSet) -> {
@@ -58,12 +58,12 @@ public class PieceDao {
         }, gameId, color);
     }
 
-    public void delete(final Long gameId, MoveDto moveDto) {
+    public void delete(final long gameId, MoveDto moveDto) {
         String sql = "delete from piece where game_id = ? and position = ?";
         jdbcTemplate.update(sql, gameId, moveDto.getTo());
     }
 
-    public void update(final Long gameId, MoveDto moveDto) {
+    public void update(final long gameId, MoveDto moveDto) {
         String sql = "update piece set position = ? where game_id = ? and position = ?";
         jdbcTemplate.update(sql, moveDto.getTo(), gameId, moveDto.getFrom());
     }

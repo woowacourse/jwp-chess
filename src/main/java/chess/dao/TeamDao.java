@@ -16,21 +16,18 @@ public class TeamDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long create(Team team, Long teamId) {
+    public void create(Team team, long teamId) {
         String sql = "insert into team (name, is_turn, game_id) values (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"team_id"});
             preparedStatement.setString(1, team.getName());
             preparedStatement.setBoolean(2, team.isCurrentTurn());
             preparedStatement.setLong(3, teamId);
             return preparedStatement;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        });
     }
 
-    public Team load(Long gameId, String color) {
+    public Team load(long gameId, String color) {
         String sql = "select is_turn from team where game_id = ? and name = ?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
             boolean is_turn = resultSet.getBoolean("is_turn");
@@ -38,7 +35,7 @@ public class TeamDao {
         }, gameId, color);
     }
 
-    public void update(final Long gameId, final Team team) {
+    public void update(final long gameId, final Team team) {
         String sql = "update team set is_turn = ? where game_id = ? and name = ?";
         jdbcTemplate.update(sql, team.isCurrentTurn(), gameId, team.getName());
     }

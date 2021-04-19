@@ -19,7 +19,7 @@ public class RoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long create(Room room) {
+    public long create(Room room) {
         String sql = "insert into room (name, pw, game_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -33,7 +33,7 @@ public class RoomDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Room load(Long roomId) {
+    public Room load(long roomId) {
         String sql = "select * from room where room_id = ?";
         return jdbcTemplate.queryForObject(sql, roomRowMapper, roomId);
     }
@@ -44,10 +44,10 @@ public class RoomDao {
     }
 
     private final RowMapper<Room> roomRowMapper = (resultSet, rowNum) -> {
-        Long id = resultSet.getLong("room_id");
+        long id = resultSet.getLong("room_id");
         String name = resultSet.getString("name");
         String pw = resultSet.getString("pw");
-        Long gameId = resultSet.getLong("game_id");
+        long gameId = resultSet.getLong("game_id");
         return new Room(id, name, pw, gameId);
     };
 }

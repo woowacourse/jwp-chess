@@ -29,7 +29,7 @@ public class ChessService {
             .collect(Collectors.toList());
     }
 
-    public ChessGameDto loadGame(Long roodId, Room room) {
+    public ChessGameDto loadGame(long roodId, Room room) {
         Room savedRoom = chessRepository.loadRoom(roodId);
         if (!savedRoom.checkPassword(room)) {
             throw new IllegalArgumentException("비밀번호가 다릅니다.");
@@ -42,7 +42,7 @@ public class ChessService {
         chessRepository.createRoom(new ChessGame(new WhiteTeam(), new BlackTeam()), room);
     }
 
-    public ChessGameDto movePiece(Long roodId, MoveDto moveDto) {
+    public ChessGameDto movePiece(long roodId, MoveDto moveDto) {
         final ChessGame chessGame = chessRepository.loadGame(roodId);
         chessGame.move(Position.of(moveDto.getFrom()), Position.of(moveDto.getTo()));
         chessRepository.saveGame(roodId, chessGame, moveDto);

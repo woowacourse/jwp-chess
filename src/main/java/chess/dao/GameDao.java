@@ -16,7 +16,7 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long create(ChessGame chessGame) {
+    public long create(ChessGame chessGame) {
         String sql = "insert into game (is_end) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -28,12 +28,12 @@ public class GameDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public boolean isEnd(Long gameId) {
+    public boolean isEnd(long gameId) {
         String sql = "select is_end from game where game_id = ?";
         return jdbcTemplate.queryForObject(sql, Boolean.class, gameId);
     }
 
-    public void update(final Long gameId, final boolean isEnd) {
+    public void update(final long gameId, final boolean isEnd) {
         String sql = "update game set is_end = ? where game_id = ?";
         jdbcTemplate.update(sql, isEnd, gameId);
     }

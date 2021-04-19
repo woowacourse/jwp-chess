@@ -33,20 +33,20 @@ function enterNewGame() {
 
 function deleteRoom() {
     return function (event) {
-        const form = document.createElement("form");
-        form.setAttribute("charset", "UTF-8");
-        form.setAttribute("method", "Post");
-        form.setAttribute("action", "/room/delete");
-
         const roomId = event.target.id;
-        const roomIdField = document.createElement("input");
-        roomIdField.setAttribute("type", "hidden");
-        roomIdField.setAttribute("name", "roomId");
-        roomIdField.setAttribute("value", roomId);
-        form.appendChild(roomIdField);
-
-        document.body.appendChild(form);
-        form.submit();
+        const requestQuery = "roomId=" + roomId;
+        $.ajax({
+            url: "/room",
+            type: "DELETE",
+            data: requestQuery,
+            success: function () {
+                alert("삭제 완료");
+                location.href="/room/list";
+            },
+            error: function () {
+                alert("에러 발생");
+            }
+        })
     }
 }
 
@@ -67,6 +67,31 @@ function click() {
             return;
         }
     }
+}
+
+function show(target) {
+    const roomId = document.getElementById("roomId").innerText;
+    const requestQuery = "source=" + target.id;
+
+    $.ajax({
+        url: "/game/reachable/" + roomId,
+        type: "GET",
+        data: requestQuery,
+        success: function (result) {
+            //[d2, d3]
+            if (result !== null && result !== "[]") {
+                const positions = result.slice(1, -1).split(", ");
+                positions.forEach((el) => {
+                    const piece = document.getElementById(el);
+                    piece.classList.add("moveAble");
+                    piece.style.backgroundColor = "skyblue";
+                });
+            }
+        },
+        error: function (result) {
+            alert("에러 발생");
+        }
+    })
 }
 
 function clickWhereToMove(eventTarget) {
@@ -108,29 +133,4 @@ function submitMove(src, tar) {
 
 function checkIsValidTarget(target) {
     return target.classList.contains("moveAble");
-}
-
-function show(target) {
-    const roomId = document.getElementById("roomId").innerText;
-    const requestQuery = "source=" + target.id;
-
-    $.ajax({
-        url: "/game/reachable/" + roomId,
-        type: "GET",
-        data: requestQuery,
-        success: function (result) {
-            //[d2, d3]
-            if (result !== null && result !== "[]") {
-                const positions = result.slice(1, -1).split(", ");
-                positions.forEach((el) => {
-                    const piece = document.getElementById(el);
-                    piece.classList.add("moveAble");
-                    piece.style.backgroundColor = "skyblue";
-                });
-            }
-        },
-        error: function (result) {
-            alert("에러 발생");
-        }
-    })
 }

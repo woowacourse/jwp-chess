@@ -1,14 +1,11 @@
 package chess.controller;
 
 import chess.controller.dto.RoomDto;
-import chess.service.GameService;
 import chess.service.RoomService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -16,11 +13,9 @@ import javax.validation.Valid;
 @RequestMapping("/room")
 public class RoomController {
     private final RoomService roomService;
-    private final GameService gameService;
 
-    public RoomController(final RoomService roomService, final GameService gameService) {
+    public RoomController(final RoomService roomService) {
         this.roomService = roomService;
-        this.gameService = gameService;
     }
 
     @GetMapping("/list")
@@ -39,9 +34,9 @@ public class RoomController {
         return "redirect:/game/load/" + roomId;
     }
 
-    @PostMapping("/delete")
-    public String deleteRoom(final Long roomId) {
+    @ResponseBody
+    @DeleteMapping
+    public void deleteRoom(final long roomId) {
         roomService.delete(roomId);
-        return "redirect:/room/list";
     }
 }

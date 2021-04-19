@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Repository
 public class SpringBoardDao {
 
+    public static final String COMMA = ",";
     private final JdbcTemplate jdbcTemplate;
 
     public SpringBoardDao(JdbcTemplate jdbcTemplate) {
@@ -48,37 +49,28 @@ public class SpringBoardDao {
 
     public Map<Position, Piece> findBoard(String roomName) {
         String query = "select * from board where roomName=?";
-        try {
-            return this.jdbcTemplate.queryForObject(
-                    query,
-                    (resultSet, rowNum) -> daoToBoard(
-                            resultSet.getString("position"),
-                            resultSet.getString("pieceName")
-                    ),
-                    roomName);
-        } catch (DataAccessException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+
+        return this.jdbcTemplate.queryForObject(
+                query,
+                (resultSet, rowNum) -> daoToBoard(
+                        resultSet.getString("position"),
+                        resultSet.getString("pieceName")
+                ),
+                roomName);
     }
 
     public Side findTurn(String roomName) {
-        try {
-            String query = "SELECT turn FROM board WHERE roomName = ?";
-            String side = this.jdbcTemplate.queryForObject(query, String.class, roomName);
+        String query = "SELECT turn FROM board WHERE roomName = ?";
+        String side = this.jdbcTemplate.queryForObject(query, String.class, roomName);
 
-            return Side.getTurnByName(side);
-        } catch (DataAccessException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        return Side.getTurnByName(side);
     }
 
     private String boardPositionSet(Map<Position, Piece> board) {
         return board.keySet()
                 .stream()
                 .map(Position::positionName)
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(COMMA));
     }
 
     private String boardPieceSet(Map<Position, Piece> board) {
@@ -86,7 +78,7 @@ public class SpringBoardDao {
         for (Piece piece : board.values()) {
             pieceNames.add(pieceToName(piece));
         }
-        return String.join(",", pieceNames);
+        return String.join(COMMA, pieceNames);
     }
 
     private String pieceToName(Piece piece) {
@@ -98,18 +90,6 @@ public class SpringBoardDao {
             return "B" + pieceName.toUpperCase();
         }
         return pieceName;
-    }
-
-    private Map<Position, Piece> daoToBoard(String positions, String pieces) {
-        Map<Position, Piece> board = new LinkedHashMap<>();
-
-        String[] position = positions.split(",");
-        String[] piece = pieces.split(",");
-
-        for (int i = 0; i < position.length; i++) {
-            board.put(Position.from(position[i]), PieceFactory.createPieceByName(piece[i]));
-        }
-        return board;
     }
 
     public boolean checkDuplicateByRoomName(String roomName) {
@@ -127,5 +107,17 @@ public class SpringBoardDao {
     public void deleteRoom(String roomName) {
         String query = "DELETE FROM board WHERE roomName = ?";
         this.jdbcTemplate.update(query, roomName);
+    }
+
+    private Map<Position, Piece> daoToBoard(String positions, String pieces) {
+        Map<Position, Piece> board = new LinkedHashMap<>();
+
+        String[] position = positions.split(",");
+        String[] piece = pieces.split(",");
+
+        for (int i = 0; i < position.length; i++) {
+            board.put(Position.from(position[i]), PieceFactory.createPieceByName(piece[i]));
+        }
+        return board;
     }
 }

@@ -13,10 +13,8 @@ window.onload = function () {
 
 function joinRoom(event) {
     if (event.target.closest("td")) {
-        const roomName = getClickedRoom().textContent;
-        const encoded = encodeURI(roomName);
-        console.log(encoded);
-        window.location.href = `/enter/${encoded}`;
+        const roomName = encodeURI(getClickedRoom().textContent);
+        window.location.href = `/${roomName}/enter`;
     }
 }
 

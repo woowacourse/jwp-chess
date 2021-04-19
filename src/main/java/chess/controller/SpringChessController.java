@@ -22,8 +22,8 @@ public class SpringChessController {
         return "index.html";
     }
 
-    @GetMapping("/enter/{roomName}")
-    public String enterRoom(@PathVariable String roomName) {
+    @GetMapping("/{roomName}/enter")
+    public String enterRoom() {
         return "/chess.html";
     }
 

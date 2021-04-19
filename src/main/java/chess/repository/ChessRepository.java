@@ -1,5 +1,7 @@
 package chess.repository;
 
+import chess.dao.PieceDao;
+import chess.dao.TurnDao;
 import chess.dto.request.ChessRequestDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
@@ -10,22 +12,50 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface ChessRepository {
-    void initializePieceStatus(final Map<String, String> board);
+public class ChessRepository {
+    private final PieceDao pieceDao;
+    private final TurnDao turnDao;
 
-    void initializeTurn();
+    public ChessRepository(PieceDao pieceDao, TurnDao turnDao) {
+        this.pieceDao = pieceDao;
+        this.turnDao = turnDao;
+    }
 
-    List<ChessRequestDto> showAllPieces();
+    public void initializePieceStatus(final Map<String, String> board) {
+        for (Map.Entry<String, String> boardStatus : board.entrySet()) {
+            pieceDao.initializePieceStatus(boardStatus.getValue(), boardStatus.getKey());
+        }
+    }
 
-    List<TurnRequestDto> showCurrentTurn();
+    public void initializeTurn() {
+        turnDao.initializeTurn();
+    }
 
-    void movePiece(final MoveRequestDto moveRequestDto);
+    public List<ChessRequestDto> showAllPieces() {
+        return pieceDao.showAllPieces();
+    }
 
-    void changeTurn(final TurnChangeRequestDto turnChangeRequestDto);
+    public List<TurnRequestDto> showCurrentTurn() {
+        return turnDao.showCurrentTurn();
+    }
 
-    void removeAllPieces();
+    public void movePiece(final MoveRequestDto moveRequestDto) {
+        pieceDao.movePiece(moveRequestDto);
+    }
 
-    void removeTurn();
+    public void changeTurn(final TurnChangeRequestDto turnChangeRequestDto) {
+        turnDao.changeTurn(turnChangeRequestDto);
+    }
 
-    void removePiece(final MoveRequestDto moveRequestDto);
+    public void removeAllPieces() {
+        pieceDao.removeAllPieces();
+    }
+
+    public void removeTurn() {
+        turnDao.removeTurn();
+    }
+
+    public void removePiece(final MoveRequestDto moveRequestDto) {
+        pieceDao.removePiece(moveRequestDto);
+    }
 }

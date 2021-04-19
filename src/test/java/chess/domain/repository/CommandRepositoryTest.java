@@ -1,6 +1,7 @@
 package chess.domain.repository;
 
 import chess.domain.dto.CommandDto;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JdbcTest
 class CommandRepositoryTest {
     private CommandRepository commandRepository;
+    private HistoryRepository historyRepository;
     private String keyId;
 
     @Autowired
@@ -22,24 +24,22 @@ class CommandRepositoryTest {
     @BeforeEach
     void setUp() {
         keyId = String.valueOf(1);
-        jdbcTemplate.execute("DROP TABLE Command IF EXISTS ");
-        jdbcTemplate.execute("DROP TABLE History IF EXISTS ");
-        jdbcTemplate.execute("CREATE TABLE History (" +
-                "                           history_id int not null auto_increment," +
-                "                           name varchar(100) not null," +
-                "                           is_end boolean not null default false," +
-                "                           PRIMARY KEY (history_id))");
+        historyRepository = new HistoryRepository(jdbcTemplate);
         jdbcTemplate.update("INSERT INTO History(name, is_end) VALUES(?, ?)", "joanne", "false");
 
         commandRepository = new CommandRepository(jdbcTemplate);
-        jdbcTemplate.execute("CREATE TABLE Command (" +
-                "                           command_id int not null auto_increment," +
-                "                           data text not null," +
-                "                           history_id int not null," +
-                "                           PRIMARY KEY (command_id)," +
-                "                           FOREIGN KEY (history_id) REFERENCES History(history_id))");
         jdbcTemplate.update("INSERT INTO Command(data, history_id) VALUES(?, ?)", "move a1 a2", "1");
         jdbcTemplate.update("INSERT INTO Command(data, history_id) VALUES(?, ?)", "move a7 a6", "1");
+    }
+
+    @AfterEach
+    void reset() {
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
+        jdbcTemplate.update("TRUNCATE TABLE Command");
+        jdbcTemplate.update("TRUNCATE TABLE History");
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
+        jdbcTemplate.update("ALTER TABLE Command ALTER COLUMN command_id RESTART WITH 1");
+        jdbcTemplate.update("ALTER TABLE History ALTER COLUMN history_id RESTART WITH 1");
     }
 
     @Test
@@ -56,5 +56,4 @@ class CommandRepositoryTest {
         assertThat(commandDtos.get(0).data()).isEqualTo("move a1 a2");
         assertThat(commandDtos.get(1).data()).isEqualTo("move a7 a6");
     }
-
 }

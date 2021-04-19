@@ -1,5 +1,6 @@
 package chess.domain.repository;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,18 @@ class HistoryRepositoryTest {
     @BeforeEach
     void setUp() {
         historyRepository = new HistoryRepository(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE History IF EXISTS ");
-        jdbcTemplate.execute("CREATE TABLE History (" +
-                "                           history_id int not null auto_increment," +
-                "                           name varchar(100) not null," +
-                "                           is_end boolean not null default false," +
-                "                           PRIMARY KEY (history_id))");
+
         jdbcTemplate.update("INSERT INTO History(name, is_end) VALUES(?, ?)", "joanne", "false");
+    }
+
+    @AfterEach
+    void reset() {
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
+        jdbcTemplate.update("TRUNCATE TABLE Command");
+        jdbcTemplate.update("TRUNCATE TABLE History");
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
+        jdbcTemplate.update("ALTER TABLE Command ALTER COLUMN command_id RESTART WITH 1");
+        jdbcTemplate.update("ALTER TABLE History ALTER COLUMN history_id RESTART WITH 1");
     }
 
     @Test

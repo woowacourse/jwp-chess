@@ -1,11 +1,10 @@
 package chess.web.controller;
 
-import chess.web.controller.dto.request.GameDeleteRequestDto;
 import chess.web.service.ChessGameService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,9 +16,9 @@ public class EndGameController {
         this.chessGameService = chessGameService;
     }
 
-    @PostMapping("/delete")
-    public HttpEntity<HttpStatus> deleteGame(@RequestBody GameDeleteRequestDto gameDeleteRequestDto) {
-        chessGameService.deleteGame(gameDeleteRequestDto.getGameId());
+    @DeleteMapping("/games/{gameId}")
+    public HttpEntity<HttpStatus> deleteGame(@PathVariable Long gameId) {
+        chessGameService.endGame(gameId);
         return new HttpEntity<>(HttpStatus.OK);
     }
 }

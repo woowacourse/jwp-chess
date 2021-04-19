@@ -262,12 +262,10 @@
     const before_turn_team_name = document.getElementById('before-turn-team-name');
     alert(before_turn_team_name.innerText + ' 팀이 이겼습니다.');
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/delete', true);
+    xhr.open('DELETE', '/games/' + game_id, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.responseType = 'json';
-    xhr.send(JSON.stringify({
-      gameId: game_id,
-    }));
+    xhr.send();
     xhr.onload = function () {
       const delete_response = xhr.response;
       if (delete_response === 'OK') {

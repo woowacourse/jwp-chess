@@ -36,7 +36,7 @@ public class ChessGameService {
         return new GameStatusResponseDto(chessGame);
     }
 
-    public void deleteGame(Long gameId) {
+    public void endGame(Long gameId) {
         chessGameRepository.deleteById(gameId);
     }
 

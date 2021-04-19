@@ -7,20 +7,48 @@ import chess.domain.chess.Color;
 import chess.domain.chess.Status;
 import chess.web.dto.ChessDto;
 import chess.web.service.ChessService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
+@TestPropertySource("classpath:application-test.properties")
 public class ChessDaoTest {
 
-    private final ChessDao chessDAO;
-    private final Long chessId;
+    @Autowired
+    private ChessDao chessDAO;
 
     @Autowired
-    public ChessDaoTest(ChessDao chessDAO, ChessService chessService) {
-        this.chessDAO = chessDAO;
+    private ChessService chessService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private Long chessId;
+
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.execute("DROP TABLE IF EXISTS piece");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS chess;");
+
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS chess (" +
+                "                           chess_id BIGINT AUTO_INCREMENT," +
+                "                           status   varchar(10)," +
+                "                           turn     varchar(10)," +
+                "                           PRIMARY KEY (chess_id))");
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS piece (" +
+                "                           piece_id BIGINT AUTO_INCREMENT," +
+                "                           chess_id BIGINT," +
+                "                           position varchar(10)," +
+                "                           color    varchar(10)," +
+                "                           name     varchar(10)," +
+                "                           PRIMARY KEY (piece_id)," +
+                "                           FOREIGN KEY (chess_id) REFERENCES chess (chess_id));");
+
         chessId = chessService.insert();
     }
 

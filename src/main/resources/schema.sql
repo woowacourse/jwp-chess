@@ -1,5 +1,3 @@
-USE chess;
-
 CREATE TABLE IF NOT EXISTS chess
 (
     chess_id BIGINT AUTO_INCREMENT,

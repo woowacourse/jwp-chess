@@ -33,7 +33,7 @@ public class GameController {
     }
 
     @GetMapping("/result/{roomId}")
-    public String printResult(@PathVariable final Long roomId, final Model model){
+    public String printResult(@PathVariable final Long roomId, final Model model) {
         model.addAttribute("winner", OutputView.decideWinnerName(gameService.winner(roomId)));
         roomService.delete(roomId);
         return "winningResultPage";
@@ -41,11 +41,11 @@ public class GameController {
 
     @PostMapping("/move/{roomId}")
     public String move(@PathVariable final Long roomId,
-                        @RequestParam final Position source, @RequestParam final Position target) {
+                       @RequestParam final Position source, @RequestParam final Position target) {
         gameService.move(roomId, source, target);
         if (gameService.isGameEnd(roomId)) {
-            return "redirect:/game/result/"+roomId;
+            return "redirect:/game/result/" + roomId;
         }
-        return "redirect:/game/load/"+roomId;
+        return "redirect:/game/load/" + roomId;
     }
 }

@@ -28,6 +28,18 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public static Board dataToBoard(final String dataLine) {
+        final Map<Position, Piece> board = new HashMap<>();
+        final String[] pieces = dataLine.split(SEPARATOR_OF_PIECE);
+        int index = 0;
+        for (final Horizontal h : Horizontal.values()) {
+            for (final Vertical v : Vertical.values()) {
+                board.put(new Position(v, h), PieceSymbolMapper.parseToPiece(pieces[index++]));
+            }
+        }
+        return new Board(board);
+    }
+
     public void save(final long roomId, final Turn turn, final Board board) {
         final String query = "INSERT INTO game_status (room_id, turn, board) VALUES (?, ?, ?)";
         jdbcTemplate.update(query, roomId, turn.name(), boardToData(board));
@@ -56,17 +68,5 @@ public class GameDao {
         return Arrays.stream(board.parseUnicodeBoard())
                 .flatMap(strings -> Arrays.stream(strings))
                 .collect(Collectors.joining(SEPARATOR_OF_PIECE));
-    }
-
-    public static Board dataToBoard(final String dataLine) {
-        final Map<Position, Piece> board = new HashMap<>();
-        final String[] pieces = dataLine.split(SEPARATOR_OF_PIECE);
-        int index = 0;
-        for (final Horizontal h : Horizontal.values()) {
-            for (final Vertical v : Vertical.values()) {
-                board.put(new Position(v, h), PieceSymbolMapper.parseToPiece(pieces[index++]));
-            }
-        }
-        return new Board(board);
     }
 }

@@ -19,8 +19,17 @@ public class RoomDao {
     }
 
     public void save(final String roomName, final long roomId) {
+        if (isRoomNameExist(roomName)) {
+            throw new IllegalArgumentException("중복된 방 이름입니다.");
+        }
+
         final String query = "INSERT INTO room_status (room_name, room_id) VALUES (?, ?)";
         jdbcTemplate.update(query, roomName, roomId);
+    }
+
+    private boolean isRoomNameExist(final String roomName) {
+        final String query = "SELECT EXISTS (SELECT * FROM room_status WHERE room_name = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, roomName);
     }
 
     public void delete(final Long roomId) {

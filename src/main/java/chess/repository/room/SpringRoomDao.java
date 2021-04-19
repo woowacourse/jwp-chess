@@ -2,9 +2,13 @@ package chess.repository.room;
 
 import chess.util.JsonConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class SpringRoomDao {
@@ -48,8 +52,20 @@ public class SpringRoomDao {
         return jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getString("name"));
     }
 
-    public void deleteRoom(String roomName) {
-        String query = "DELETE FROM rooms WHERE name = ?";
-        jdbcTemplate.update(query, roomName);
+    public long deleteRoom(String roomName) {
+        try {
+            String query = "DELETE FROM rooms WHERE name = ?";
+
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(query, new String[]{"room_id"});
+                ps.setString(1, roomName);
+                return ps;
+            }, keyHolder);
+
+            return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        } catch (Exception e) {
+            throw new InvalidRoomDeleteException();
+        }
     }
 }

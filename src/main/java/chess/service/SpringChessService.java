@@ -100,7 +100,7 @@ public class SpringChessService {
 
     }
 
-    public void deleteRoom(String roomName) {
-        roomDao.deleteRoom(roomName);
+    public long deleteRoom(String roomName) {
+        return roomDao.deleteRoom(roomName);
     }
 }

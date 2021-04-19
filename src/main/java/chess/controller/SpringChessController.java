@@ -8,8 +8,10 @@ import chess.domain.piece.Piece;
 import chess.dto.*;
 import chess.repository.room.DuplicateRoomNameException;
 import chess.repository.room.NoSuchRoomNameException;
+import chess.repository.room.InvalidRoomDeleteException;
 import chess.service.SpringChessService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -73,10 +75,12 @@ public class SpringChessController {
         return modelAndView;
     }
 
-    @DeleteMapping("/game/delete")
-    public String delete(@RequestParam("roomName") String roomName) {
-        springChessService.deleteRoom(roomName);
-        return "redirect:/";
+    @DeleteMapping(value = "/delete/{roomName}")
+    @ResponseBody
+    public ResponseEntity<DeleteDto> delete(@PathVariable("roomName") String roomName) {
+        long roomId = springChessService.deleteRoom(roomName);
+        DeleteDto deleteDto = new DeleteDto(roomId, true);
+        return ResponseEntity.ok().body(deleteDto);
     }
 
     private void addChessGame(ModelAndView modelAndView, ChessGame chessGame) {
@@ -107,5 +111,12 @@ public class SpringChessController {
     @ExceptionHandler(NoSuchRoomNameException.class)
     public String loadHandleError() {
         return "repository";
+    }
+
+    @ExceptionHandler(InvalidRoomDeleteException.class)
+    @ResponseBody
+    public ResponseEntity<DeleteDto> deleteHandleError() {
+        DeleteDto deleteDto = new DeleteDto(0, false);
+        return ResponseEntity.badRequest().body(deleteDto);
     }
 }

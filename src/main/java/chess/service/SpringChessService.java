@@ -36,7 +36,7 @@ public class SpringChessService {
     }
 
     @Transactional
-    public CommonResponseDto<MoveResponseDto> movePiece(final MoveRequestDto requestDto) {
+    public MoveResponseDto movePiece(final MoveRequestDto requestDto) {
         ChessGame chessGame = ChessGame.newGame();
         Chess chess = movedChess(chessGame, requestDto.getChessName());
         chessGame.moveByTurn(new Position(requestDto.getSource()), new Position(requestDto.getTarget()));
@@ -48,14 +48,12 @@ public class SpringChessService {
             chessDao.update(chess);
         }
 
-        return new CommonResponseDto<>(
-            new MoveResponseDto(requestDto.getSource(), requestDto.getTarget(), chessGame.calculateScore(),
-                !chess.isRunning()),
-            ResponseCode.OK.code(), ResponseCode.OK.message());
+        return new MoveResponseDto(requestDto.getSource(), requestDto.getTarget(),
+            chessGame.calculateScore(), !chess.isRunning());
     }
 
     @Transactional
-    public CommonResponseDto<GameStatusDto> saveChess(final ChessSaveRequestDto requestDto) {
+    public void saveChess(final ChessSaveRequestDto requestDto) {
         Chess chess = new Chess(requestDto.getName());
 
         if (chessDao.findByName(requestDto.getName()).isPresent()) {
@@ -63,7 +61,6 @@ public class SpringChessService {
         }
 
         chessDao.save(chess);
-        return new CommonResponseDto<>(ResponseCode.OK.code(), ResponseCode.OK.message());
     }
 
     @Transactional
@@ -76,13 +73,12 @@ public class SpringChessService {
         chessDao.update(chess);
     }
 
-    public CommonResponseDto<GameStatusDto> loadChess(final String name) {
+    public GameStatusDto loadChess(final String name) {
         ChessGame chessGame = ChessGame.newGame();
         Chess chess = movedChess(chessGame, name);
 
-        return new CommonResponseDto<>(new GameStatusDto(chessGame.pieces(),
-            chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor()),
-            ResponseCode.OK.code(), ResponseCode.OK.message());
+        return new GameStatusDto(chessGame.pieces(),
+            chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor());
     }
 
     private Chess movedChess(final ChessGame chessGame, final String name) {

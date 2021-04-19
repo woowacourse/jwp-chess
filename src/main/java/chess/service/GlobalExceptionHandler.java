@@ -1,9 +1,10 @@
 package chess.service;
 
 import chess.service.dto.CommonResponseDto;
-import chess.service.dto.ResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -13,9 +14,10 @@ public class GlobalExceptionHandler {
     Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(RuntimeException.class)
-    public CommonResponseDto handleRuntimeException(RuntimeException exception) {
+    public ResponseEntity handleRuntimeException(RuntimeException exception) {
         logger.info(exception.getMessage());
-        return new CommonResponseDto<>(ResponseCode.BAD_REQUEST.code(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(new CommonResponseDto(HttpStatus.BAD_REQUEST.value(), exception.getMessage()));
     }
 
 }

@@ -7,7 +7,8 @@ import chess.service.dto.GameStatusDto;
 import chess.service.dto.GameStatusRequestDto;
 import chess.service.dto.MoveRequestDto;
 import chess.service.dto.MoveResponseDto;
-import chess.service.dto.ResponseCode;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,25 +27,29 @@ public class ChessGameApiController {
         this.chessService = chessService;
     }
 
-
     @PostMapping
-    public CommonResponseDto<GameStatusDto> saveChess(@RequestBody final ChessSaveRequestDto requestDto) {
-        return chessService.saveChess(requestDto);
+    public ResponseEntity<CommonResponseDto<Object>> saveChess(@RequestBody final ChessSaveRequestDto requestDto) {
+        chessService.saveChess(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(new CommonResponseDto<>(HttpStatus.CREATED.value()));
     }
 
     @PutMapping
-    public CommonResponseDto<Object> finishChess(@RequestBody final GameStatusRequestDto requestDto) {
+    public ResponseEntity<CommonResponseDto<Object>> finishChess(@RequestBody final GameStatusRequestDto requestDto) {
         chessService.changeGameStatus(requestDto);
-        return new CommonResponseDto<>(ResponseCode.OK.code(), ResponseCode.OK.message());
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(new CommonResponseDto<>(HttpStatus.OK.value()));
     }
 
     @GetMapping("/{name}")
-    public CommonResponseDto<GameStatusDto> loadChess(@PathVariable("name") final String name) {
-        return chessService.loadChess(name);
+    public ResponseEntity<CommonResponseDto<GameStatusDto>> loadChess(@PathVariable("name") final String name) {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(new CommonResponseDto<>(chessService.loadChess(name), HttpStatus.OK.value()));
     }
 
     @PutMapping("/pieces")
-    public CommonResponseDto<MoveResponseDto> movePieces(@RequestBody final MoveRequestDto requestDto) {
-        return chessService.movePiece(requestDto);
+    public ResponseEntity<CommonResponseDto<MoveResponseDto>> movePieces(@RequestBody final MoveRequestDto requestDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(new CommonResponseDto<>(chessService.movePiece(requestDto), HttpStatus.OK.value()));
     }
 }

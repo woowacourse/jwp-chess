@@ -25,18 +25,18 @@ public class ChessController {
         return new ChessGameResponseDto(chessService.start());
     }
 
-    @GetMapping("/game/{id:[\\d]+}/score")
+    @GetMapping("/games/{id:[\\d]+}/score")
     public ScoreResponseDto getScore(@PathVariable long id) {
         return new ScoreResponseDto(chessService.getStatistics(id));
     }
 
-    @GetMapping("/game/{id:[\\d]+}/load")
+    @GetMapping("/games/{id:[\\d]+}/load")
     public ChessGameResponseDto loadGame(@PathVariable long id) {
         ChessGameManager load = chessService.findById(id);
         return new ChessGameResponseDto(load);
     }
 
-    @PostMapping("/game/{id:[\\d]+}/move")
+    @PostMapping("/games/{id:[\\d]+}/move")
     public MoveResponseDto movePiece(@PathVariable long id, @RequestBody MoveRequestDto moveMessage) {
         chessService.move(id, moveMessage);
         return new MoveResponseDto(chessService.isEnd(id), chessService.nextColor(id));

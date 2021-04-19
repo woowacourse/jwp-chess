@@ -1,6 +1,5 @@
 package chess.controller.dto;
 
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 public class RoomDto {

@@ -129,7 +129,7 @@ function show(target) {
                 });
             }
         },
-        error: function () {
+        error: function (result) {
             alert("에러 발생");
         }
     })

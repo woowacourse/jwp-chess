@@ -25,25 +25,24 @@ public class RoomController {
     }
 
     @GetMapping("/list")
-    private String loadRoomList(final Model model) {
+    public String loadRoomList(final Model model) {
         model.addAttribute("list", roomService.loadList());
         return "mainPage";
     }
 
     @PostMapping("/create")
-    private String createRoom(@Valid final RoomDto roomDto, final BindingResult bindingResult) {
+    public String createRoom(@Valid final RoomDto roomDto, final BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
             throw new IllegalArgumentException("방 길이는 3 ~ 12 글자 입니다.");
         }
 
         final Long roomId = roomService.save(roomDto.getRoomName());
-        return "redirect:/game/create/" + roomId;
+        return "redirect:/game/load/" + roomId;
     }
 
     @PostMapping("/delete")
-    private String deleteRoom(final Long roomId) {
+    public String deleteRoom(final Long roomId) {
         roomService.delete(roomId);
-        gameService.delete(roomId);
         return "redirect:/room/list";
     }
 }

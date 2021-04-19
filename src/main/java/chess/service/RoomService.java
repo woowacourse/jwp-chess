@@ -10,10 +10,12 @@ import java.util.List;
 @Service
 public class RoomService {
 
+    private final GameService gameService;
     private final RoomDao roomDao;
 
-    public RoomService(final RoomDao roomDao) {
+    public RoomService(final RoomDao roomDao, final GameService gameService) {
         this.roomDao = roomDao;
+        this.gameService = gameService;
     }
 
     public Long save(final String roomName) {
@@ -23,6 +25,7 @@ public class RoomService {
 
         final Long roomId = System.currentTimeMillis();
         roomDao.save(roomName, roomId);
+        gameService.create(roomId);
         return roomId;
     }
 
@@ -33,6 +36,7 @@ public class RoomService {
     }
 
     public void delete(final Long roomId) {
+        gameService.delete(roomId);
         roomDao.delete(roomId);
     }
 

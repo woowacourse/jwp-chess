@@ -2,6 +2,7 @@ package chess.service;
 
 import chess.domain.board.ChessBoardFactory;
 import chess.domain.command.CommandFactory;
+import chess.domain.command.Move;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.piece.PiecesFactory;
@@ -140,8 +141,8 @@ public class ChessService {
                 new ArrayDeque<>(Arrays.asList("move", moveRequestDto.getSource(), moveRequestDto.getTarget()));
         try {
             executeRound(commands);
-        } catch (RuntimeException runtimeException) {
-            return new MoveResponseDto(false, runtimeException.getMessage());
+        } catch (final RuntimeException runtimeException) {
+            throw new RuntimeException(runtimeException.getMessage());
         }
         movePiece(moveRequestDto);
         return new MoveResponseDto(true);

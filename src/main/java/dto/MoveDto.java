@@ -16,4 +16,8 @@ public class MoveDto {
     public String getTo() {
         return to;
     }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
 }

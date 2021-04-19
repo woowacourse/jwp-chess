@@ -31,10 +31,7 @@ public class ChessService {
 
     public ChessGameDto loadGame(long roodId, Room room) {
         Room savedRoom = chessRepository.loadRoom(roodId);
-        if (!savedRoom.checkPassword(room)) {
-            throw new IllegalArgumentException("비밀번호가 다릅니다.");
-        }
-
+        savedRoom.checkPassword(room);
         return new ChessGameDto(chessRepository.loadGame(roodId));
     }
 

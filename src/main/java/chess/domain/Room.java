@@ -35,8 +35,10 @@ public class Room {
         this.gameId = gameId;
     }
 
-    public boolean checkPassword(Room room) {
-        return room.getPw().equals(pw);
+    public void checkPassword(Room room) {
+        if (!room.getPw().equals(pw)) {
+            throw new IllegalArgumentException("비밀번호가 다릅니다.");
+        }
     }
 
     @Override

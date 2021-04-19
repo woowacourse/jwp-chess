@@ -3,7 +3,9 @@ package chess.domain.piece;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,7 +16,8 @@ import chess.domain.chess.ChessDto;
 import chess.domain.chess.Color;
 import chess.domain.position.MovePosition;
 
-@SpringBootTest
+@JdbcTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class PieceDaoTest {
 
     private final ChessDao chessDao;
@@ -22,9 +25,9 @@ public class PieceDaoTest {
     private final long chessId;
 
     @Autowired
-    public PieceDaoTest(ChessDao chessDao, PieceDao pieceDao) {
-        this.chessDao = chessDao;
-        this.pieceDao = pieceDao;
+    public PieceDaoTest(JdbcTemplate jdbcTemplate) {
+        this.chessDao = new ChessDao(jdbcTemplate);
+        this.pieceDao = new PieceDao(jdbcTemplate);
         chessId = chessDao.insert();
     }
 

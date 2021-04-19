@@ -1,22 +1,26 @@
 package chess;
 
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+import chess.controller.SparkController;
+import chess.domain.dao.CommandDao;
+import chess.domain.dao.HistoryDao;
+import chess.service.SparkChessService;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static spark.Spark.get;
+import static spark.Spark.*;
 
 public class SparkChessApplication {
     public static void main(String[] args) {
-        get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(model, "index.hbs");
-        });
+        staticFiles.location("/public");
+        final SparkController sparkController = initWebController(new CommandDao(), new HistoryDao());
+
+        get("/play", sparkController::moveToMainPage);
+        get("/play/new", sparkController::playNewGameWithNoSave);
+        get("/play/:name/new", sparkController::playNewGameWithSave);
+        post("/play/move", sparkController::movePiece);
+        get("/play/continue", sparkController::continueGame);
+        get("/play/end", sparkController::endGame);
     }
 
-    private static String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+    private static SparkController initWebController(CommandDao commandDao, HistoryDao historyDao) {
+        return new SparkController(new SparkChessService(commandDao, historyDao));
     }
 }

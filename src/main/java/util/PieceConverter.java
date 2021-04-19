@@ -1,7 +1,12 @@
 package util;
 
-import chess.domain.piece.*;
-
+import chess.domain.piece.Bishop;
+import chess.domain.piece.King;
+import chess.domain.piece.Knight;
+import chess.domain.piece.Pawn;
+import chess.domain.piece.Piece;
+import chess.domain.piece.Queen;
+import chess.domain.piece.Rook;
 import java.util.HashMap;
 import java.util.Map;
 

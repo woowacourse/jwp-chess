@@ -1,19 +1,26 @@
 package chess.domain.team;
 
-import chess.domain.Position;
-import chess.domain.piece.*;
+import static chess.domain.piece.Bishop.SCORE_BISHOP;
+import static chess.domain.piece.King.SCORE_KING;
+import static chess.domain.piece.Knight.SCORE_KNIGHT;
+import static chess.domain.piece.Pawn.DIRECTION_BLACK;
+import static chess.domain.piece.Pawn.DIRECTION_WHITE;
+import static chess.domain.piece.Pawn.SCORE_PAWN;
+import static chess.domain.piece.Queen.SCORE_QUEEN;
+import static chess.domain.piece.Rook.SCORE_ROOK;
 
+import chess.domain.Position;
+import chess.domain.piece.Bishop;
+import chess.domain.piece.King;
+import chess.domain.piece.Knight;
+import chess.domain.piece.Pawn;
+import chess.domain.piece.Piece;
+import chess.domain.piece.Queen;
+import chess.domain.piece.Rook;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static chess.domain.piece.Bishop.SCORE_BISHOP;
-import static chess.domain.piece.King.SCORE_KING;
-import static chess.domain.piece.Knight.SCORE_KNIGHT;
-import static chess.domain.piece.Pawn.*;
-import static chess.domain.piece.Queen.SCORE_QUEEN;
-import static chess.domain.piece.Rook.SCORE_ROOK;
 
 public abstract class Team {
     private static final Map<Piece, Double> scoreByPiece = new HashMap<>();

@@ -2,7 +2,6 @@ package chess.domain.team;
 
 import chess.domain.Position;
 import chess.domain.piece.Piece;
-
 import java.util.Map;
 
 public class WhiteTeam extends Team {

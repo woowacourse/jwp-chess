@@ -4,7 +4,6 @@ import chess.domain.piece.Piece;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.Team;
 import chess.domain.team.WhiteTeam;
-
 import java.util.Collections;
 import java.util.Map;
 

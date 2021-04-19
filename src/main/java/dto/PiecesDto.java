@@ -2,11 +2,10 @@ package dto;
 
 import chess.domain.Position;
 import chess.domain.piece.Piece;
-import util.PieceConverter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import util.PieceConverter;
 
 public class PiecesDto {
     private List<PieceDto> pieces;

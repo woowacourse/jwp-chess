@@ -1,12 +1,11 @@
 package chess.domain.piece;
 
-import chess.domain.Position;
-
-import java.util.List;
-import java.util.Map;
-
 import static chess.domain.team.BlackTeam.BLACK_PAWN_COLUMN;
 import static chess.domain.team.WhiteTeam.WHITE_PAWN_COLUMN;
+
+import chess.domain.Position;
+import java.util.List;
+import java.util.Map;
 
 public class Pawn extends Piece {
     private static final int UNICODE_DECIMAL = 9817;

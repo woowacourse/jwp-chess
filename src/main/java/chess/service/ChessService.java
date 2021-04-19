@@ -141,10 +141,10 @@ public class ChessService {
         try {
             executeRound(commands);
         } catch (RuntimeException runtimeException) {
-            return new MoveResponseDto(true, runtimeException.getMessage());
+            return new MoveResponseDto(false, runtimeException.getMessage());
         }
         movePiece(moveRequestDto);
-        return new MoveResponseDto(false);
+        return new MoveResponseDto(true);
     }
 
     public void executeRound(final Queue<String> commands) {

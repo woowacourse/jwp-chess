@@ -153,7 +153,7 @@ function request_move_post(first_click, second_click) {
     moveXhr.onload = function () {
         const move_response = moveXhr.response;
 
-        if (move_response['moveError']) {
+        if (!move_response['movable']) {
             alert(move_response['errorMessage']);
             first_click.style.backgroundColor = '';
             second_click.style.backgroundColor = '';

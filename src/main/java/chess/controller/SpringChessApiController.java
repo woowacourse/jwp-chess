@@ -1,15 +1,13 @@
 package chess.controller;
 
-import chess.domain.Game;
+import chess.domain.exceptions.DatabaseException;
 import chess.dto.GameResponseDto;
 import chess.dto.MovedInfoDto;
 import chess.dto.StatusDto;
 import chess.service.ChessService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SpringChessApiController {
@@ -22,47 +20,36 @@ public class SpringChessApiController {
 
     @PostMapping("/game")
     public GameResponseDto game(@RequestParam String roomName) {
-        Game currentGame = chessService.currentGame(roomName);
-        return GameResponseDto.of(currentGame);
+        return GameResponseDto.of(chessService.currentGame(roomName));
     }
 
-    @PostMapping("/restart")
+    @GetMapping("/restart")
     public GameResponseDto restart(@RequestParam String roomName) {
-        Game currentGame = chessService.currentGame(roomName);
-        currentGame.init();
-        return GameResponseDto.of(currentGame);
-
+        return GameResponseDto.of(chessService.restartGame(roomName));
     }
 
     @PostMapping("/move")
     public MovedInfoDto move(@RequestParam String roomName, @RequestParam String source, @RequestParam String target) {
-        Game currentGame = chessService.currentGame(roomName);
-        currentGame.move(source, target);
-        if (currentGame.isEnd()) {
-            chessService.deleteRoom(roomName);
-            return new MovedInfoDto(source, target, currentGame.winnerColor().getSymbol());
-        }
-
-        return new MovedInfoDto(source, target, currentGame.turnColor().getName());
+        return chessService.move(roomName, source, target);
     }
 
-    @PostMapping("/status")
+    @GetMapping("/status")
     public StatusDto status(@RequestParam String roomName) {
-        Game currentGame = chessService.currentGame(roomName);
-        return new StatusDto(currentGame);
+        return new StatusDto(chessService.currentGame(roomName));
     }
 
     @PostMapping("/end")
     public void end(@RequestParam String roomName) {
-        Game currentGame = chessService.currentGame(roomName);
-        chessService.savePlayingBoard(roomName,
-            currentGame.getBoard(),
-            currentGame.turnColor()
-        );
+        chessService.savePlayingBoard(roomName);
     }
 
-    @ExceptionHandler({RuntimeException.class})
-    public ResponseEntity<String> error(RuntimeException e) {
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<String> error(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler({DatabaseException.class})
+    public ResponseEntity<String> error(DatabaseException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 }

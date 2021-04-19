@@ -7,7 +7,7 @@ import chess.domain.Rooms;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceColor;
+import chess.dto.MovedInfoDto;
 import chess.dto.RoomNameDto;
 import chess.dto.SquareDto;
 import org.springframework.stereotype.Service;
@@ -31,30 +31,30 @@ public class ChessService {
         this.rooms = new Rooms();
     }
 
-    public void savePlayingBoard(String name, Board board, PieceColor turnColor) {
-        backupBoardDao.deleteExistingBoard(name);
-        roomDao.deleteRoom(name);
-        roomDao.addRoom(name, turnColor);
-        backupBoardDao.addPlayingBoard(name, board);
+    public Game restartGame(String name) {
+        Game currentGame = currentGame(name);
+        currentGame.init();
+        return currentGame;
     }
 
     public Game currentGame(String name) {
         Optional<Game> game = rooms.findGame(name);
-        if (!game.isPresent()) {
-            if (roomDao.existsRoom(name)) {
-                Game findGame = Game.game(new Board(playingBoard(name)), roomDao.findRoomTurnColor(name));
-                rooms.addRoom(name, findGame);
-                return findGame;
-            }
-
-            Game newGame = Game.newGame();
-            rooms.addRoom(name, newGame);
-            return newGame;
-        }
-        return game.get();
+        return game.orElseGet(() -> getGame(name));
     }
 
-    public Map<Position, Piece> playingBoard(String name) {
+    private Game getGame(String name) {
+        if (roomDao.existsRoom(name)) {
+            Game findGame = Game.game(new Board(playingBoard(name)), roomDao.findRoomTurnColor(name));
+            rooms.addRoom(name, findGame);
+            return findGame;
+        }
+
+        Game newGame = Game.newGame();
+        rooms.addRoom(name, newGame);
+        return newGame;
+    }
+
+    private Map<Position, Piece> playingBoard(String name) {
         List<SquareDto> boardInfo = backupBoardDao.findPlayingBoardByRoom(name);
 
         return boardInfo.stream()
@@ -67,8 +67,28 @@ public class ChessService {
 
     private Piece piece(SquareDto squareDto) {
         List<String> pieceInfo = Arrays.asList(squareDto.getPiece().split(("_")));
-
         return new Piece(pieceInfo.get(1), pieceInfo.get(0));
+    }
+
+    public MovedInfoDto move(String name, String source, String target) {
+        Game currentGame = currentGame(name);
+        currentGame.move(source, target);
+        if (currentGame.isEnd()) {
+            deleteRoom(name);
+            return new MovedInfoDto(source, target,
+                currentGame.winnerColor().getSymbol());
+        }
+
+        return new MovedInfoDto(source, target,
+            currentGame.turnColor().getName());
+    }
+
+    public void savePlayingBoard(String name) {
+        Game currentGame = currentGame(name);
+        backupBoardDao.deleteExistingBoard(name);
+        roomDao.deleteRoom(name);
+        roomDao.addRoom(name, currentGame.turnColor());
+        backupBoardDao.addPlayingBoard(name, currentGame.getBoard());
     }
 
     public void deleteRoom(String roomName) {

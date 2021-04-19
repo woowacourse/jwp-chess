@@ -37,6 +37,7 @@ async function init() {
     await changeTurn()
     await result()
     await finishHandler()
+    await toggleAvatar()
 }
 
 async function initBoard(chessBoard) {
@@ -69,14 +70,16 @@ async function toggleAvatar() {
     if (blackScore > whiteScore) {
         this.$blackResult.getElementsByTagName(
             'img')[0].src = "./images/player_win.png"
-        removeTurn()
-        return
     }
     if (whiteScore > blackScore) {
         this.$whiteResult.getElementsByTagName(
             'img')[0].src = "./images/player_win.png"
-        removeTurn()
-        return
+    }
+    if (blackScore === whiteScore) {
+        this.$blackResult.getElementsByTagName(
+            'img')[0].src = './images/player_lose.png'
+        this.$whiteResult.getElementsByTagName(
+            'img')[0].src = './images/player_lose.png'
     }
 }
 
@@ -101,6 +104,7 @@ async function finishHandler() {
         await deactivateDrag()
         await toggleFinish()
         await toggleAvatar()
+        removeTurn()
     }
 }
 
@@ -180,11 +184,13 @@ async function btnHandler({target}) {
         await changeTurn()
         await result()
         await finishHandler()
+        await toggleAvatar()
     }
     if (target.id === "finish") {
         const response = await finish()
         if (response.status === 200) {
             await finishHandler()
+            removeTurn()
         }
     }
 }

@@ -21,7 +21,7 @@ import static chess.domain.piece.attribute.Color.BLACK;
 import static chess.domain.piece.attribute.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MysqlChessDaRoTest {
+class MysqlChessDaoTest {
     MysqlChessDao dao = new MysqlChessDao();
     ChessGameManager sampleGame;
 

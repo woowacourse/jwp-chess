@@ -3,8 +3,6 @@ package chess.domain.piece;
 import chess.domain.board.Position;
 import chess.domain.piece.strategy.MoveDirection;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 public class Piece {

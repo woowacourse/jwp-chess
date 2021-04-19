@@ -14,21 +14,14 @@ public class Position {
 
     private static final Map<String, Position> CACHE = new LinkedHashMap<>();
 
-    private final XPosition xPosition;
-    private final YPosition yPosition;
-
     static {
         for (XPosition xposition : XPosition.values()) {
             putPositionWithY(xposition);
         }
     }
 
-    private static void putPositionWithY(XPosition xposition) {
-        for (YPosition yPosition : YPosition.values()) {
-            String positionKey = positionKey(xposition.getValue(), yPosition.getValue());
-            CACHE.put(positionKey, new Position(xposition, yPosition));
-        }
-    }
+    private final XPosition xPosition;
+    private final YPosition yPosition;
 
     public Position(Position position) {
         this.xPosition = position.xPosition;
@@ -38,6 +31,13 @@ public class Position {
     private Position(XPosition xPosition, YPosition yPosition) {
         this.xPosition = xPosition;
         this.yPosition = yPosition;
+    }
+
+    private static void putPositionWithY(XPosition xposition) {
+        for (YPosition yPosition : YPosition.values()) {
+            String positionKey = positionKey(xposition.getValue(), yPosition.getValue());
+            CACHE.put(positionKey, new Position(xposition, yPosition));
+        }
     }
 
     public static Position from(String positionKey) {

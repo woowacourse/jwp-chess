@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 @Service
 public class ChessService {
 
-    private RoomDao roomDao;
-    private BackupBoardDao backupBoardDao;
-    private Rooms rooms;
+    private final RoomDao roomDao;
+    private final BackupBoardDao backupBoardDao;
+    private final Rooms rooms;
 
     public ChessService(RoomDao roomDao, BackupBoardDao backupBoardDao) {
         this.roomDao = roomDao;

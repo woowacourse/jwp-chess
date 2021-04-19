@@ -34,3 +34,11 @@
     - [ ] produces, consumes 정리
     - [ ] Spring 간단한 동작원리 정리
     - [ ] http 메소드와 사용 상황 정리    
+
+## 임시 checkPoints
+- Piece interface 만들기
+- Dao interface
+- Service interface
+- CapturedPieces 삭제
+- Piece의 moved -> isFisrtMoved로 변경
+- (0,0)의 위치정보를 "a1"등의 문자열 형태로 변경해주는 내용 수정

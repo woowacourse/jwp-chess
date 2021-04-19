@@ -1,7 +1,7 @@
 package chess.database.dao;
 
-import chess.dto.RoomDTO;
-import chess.dto.SaveRoomDTO;
+import chess.dto.RoomDto;
+import chess.dto.SaveRoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -9,21 +9,21 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class SpringRoomDAO {
+public class SpringRoomDao {
     private JdbcTemplate jdbcTemplate;
 
-    public SpringRoomDAO(JdbcTemplate jdbcTemplate) {
+    public SpringRoomDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addRoom(SaveRoomDTO saveRoomDTO) {
+    public void addRoom(SaveRoomDto saveRoomDto) {
         String query = "INSERT INTO chess_room (room_name, turn, board) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, saveRoomDTO.getRoomName());
-            ps.setString(2, saveRoomDTO.getTurn());
-            ps.setString(3, saveRoomDTO.getChessBoard());
+            ps.setString(1, saveRoomDto.getRoomName());
+            ps.setString(2, saveRoomDto.getTurn());
+            ps.setString(3, saveRoomDto.getChessBoard());
             return ps;
         });
     }
@@ -33,44 +33,44 @@ public class SpringRoomDAO {
         return jdbcTemplate.queryForObject(query, Integer.class);
     }
 
-    public void updateRoom(RoomDTO roomDTO) {
+    public void updateRoom(RoomDto roomDto) {
         String query = "UPDATE chess_room SET turn = ?, board = ? where room_no = ?";
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, roomDTO.getTurn());
-            ps.setString(2, roomDTO.getBoard());
-            ps.setInt(3, roomDTO.getRoomNo());
+            ps.setString(1, roomDto.getTurn());
+            ps.setString(2, roomDto.getBoard());
+            ps.setInt(3, roomDto.getRoomNo());
             return ps;
         });
     }
 
-    public RoomDTO findRoomByRoomNo(int roomNo) {
+    public RoomDto findRoomByRoomNo(int roomNo) {
         String query = "SELECT * FROM chess_room WHERE room_no = ?";
         return jdbcTemplate.queryForObject(
                 query,
                 (resultSet, rowNum) -> {
-                    RoomDTO roomDTO = new RoomDTO(
+                    RoomDto roomDto = new RoomDto(
                             resultSet.getInt("room_no"),
                             resultSet.getString("room_name"),
                             resultSet.getString("turn"),
                             resultSet.getString("board"));
-                    return roomDTO;
+                    return roomDto;
                 },
                 roomNo);
     }
 
-    public List<RoomDTO> getAllRoom() {
+    public List<RoomDto> getAllRoom() {
         String query = "SELECT * FROM chess_room";
         return jdbcTemplate.query(
                 query,
                 (resultSet, rowNum) -> {
-                    RoomDTO roomDTO = new RoomDTO(
+                    RoomDto roomDto = new RoomDto(
                             resultSet.getInt("room_no"),
                             resultSet.getString("room_name"),
                             resultSet.getString("turn"),
                             resultSet.getString("board"));
-                    return roomDTO;
+                    return roomDto;
                 });
     }
 

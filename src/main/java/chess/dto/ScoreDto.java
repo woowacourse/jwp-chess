@@ -2,11 +2,11 @@ package chess.dto;
 
 import chess.domain.game.Result;
 
-public class ScoreDTO {
+public class ScoreDto {
     private final double blackScore;
     private final double whiteScore;
 
-    public ScoreDTO(Result result) {
+    public ScoreDto(Result result) {
         this.blackScore = result.getBlackScore();
         this.whiteScore = result.getWhiteScore();
     }

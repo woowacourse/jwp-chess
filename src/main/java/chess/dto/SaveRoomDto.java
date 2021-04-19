@@ -7,31 +7,18 @@ import chess.domain.piece.Piece;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class RoomDTO {
-    private final int roomNo;
+public class SaveRoomDto {
     private final String roomName;
     private final String turn;
-    private final String board;
+    private final String chessBoard;
 
-    public RoomDTO(int roomNo, String roomName, String turn, String board) {
-        this.roomNo = roomNo;
-        this.roomName = roomName;
-        this.turn = turn;
-        this.board = board;
-    }
-
-    public RoomDTO(int roomNo, String roomName, ChessGame chessGame) {
-        this.roomNo = roomNo;
+    public SaveRoomDto(String roomName, ChessGame chessGame) {
         this.roomName = roomName;
         this.turn = chessGame.getTurn().getColor();
         Map<Position, Piece> chessBoard = chessGame.getChessBoardAsMap();
-        this.board = chessBoard.keySet().stream()
+        this.chessBoard = chessBoard.keySet().stream()
                 .map(position -> position.getPosition() + " " + chessBoard.get(position).getType() + " " + chessBoard.get(position).getColor())
                 .collect(Collectors.joining(","));
-    }
-
-    public int getRoomNo() {
-        return roomNo;
     }
 
     public String getRoomName() {
@@ -42,7 +29,7 @@ public class RoomDTO {
         return turn;
     }
 
-    public String getBoard() {
-        return board;
+    public String getChessBoard() {
+        return chessBoard;
     }
 }

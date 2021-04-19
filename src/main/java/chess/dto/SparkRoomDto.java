@@ -4,12 +4,12 @@ import com.google.gson.JsonObject;
 
 import java.util.Objects;
 
-public class SparkRoomDTO {
+public class SparkRoomDto {
     private final String name;
     private final String turn;
     private final JsonObject state;
 
-    public SparkRoomDTO(String name, String turn, JsonObject state) {
+    public SparkRoomDto(String name, String turn, JsonObject state) {
         this.name = name;
         this.turn = turn;
         this.state = state;
@@ -31,7 +31,7 @@ public class SparkRoomDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SparkRoomDTO sparkRoomDTO = (SparkRoomDTO) o;
+        SparkRoomDto sparkRoomDTO = (SparkRoomDto) o;
         return Objects.equals(name, sparkRoomDTO.name) && Objects.equals(turn, sparkRoomDTO.turn) && Objects.equals(state, sparkRoomDTO.state);
     }
 

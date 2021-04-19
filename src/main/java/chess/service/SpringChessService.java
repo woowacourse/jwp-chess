@@ -1,7 +1,7 @@
 package chess.service;
 
 import chess.dto.*;
-import chess.database.dao.SpringRoomDAO;
+import chess.database.dao.SpringRoomDao;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
 import chess.domain.feature.Color;
@@ -16,33 +16,33 @@ import java.util.*;
 
 @Service
 public class SpringChessService {
-    private final SpringRoomDAO roomDAO;
+    private final SpringRoomDao roomDao;
 
-    public SpringChessService(SpringRoomDAO roomDAO) {
-        this.roomDAO = roomDAO;
+    public SpringChessService(SpringRoomDao roomDao) {
+        this.roomDao = roomDao;
     }
 
     public Optional<Integer> createRoom(String name) {
         try {
             ChessGame chessGame = initializeChessBoard();
             chessGame.start(Collections.singletonList("start"));
-            roomDAO.addRoom(new SaveRoomDTO(name, chessGame));
-            return Optional.of(roomDAO.getLastInsertId());
+            roomDao.addRoom(new SaveRoomDto(name, chessGame));
+            return Optional.of(roomDao.getLastInsertId());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Optional.empty();
         }
     }
 
-    public Optional<ChessGameDTO> movePiece(MoveRequestDto moveRequestDto) {
+    public Optional<ChessGameDto> movePiece(MoveRequestDto moveRequestDto) {
         try {
             int roomNo = moveRequestDto.getRoomNo();
-            RoomDTO roomDTO = roomDAO.findRoomByRoomNo(roomNo);
+            RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
             List<String> input = Arrays.asList(moveRequestDto.getCommand().split(" "));
-            ChessGame chessGame = setChessGame(roomDTO);
+            ChessGame chessGame = setChessGame(roomDto);
             chessGame.play(input);
-            roomDAO.updateRoom(new RoomDTO(roomNo, roomDTO.getRoomName(), chessGame));
-            return Optional.of(new ChessGameDTO(roomNo, roomDTO.getRoomName(), chessGame));
+            roomDao.updateRoom(new RoomDto(roomNo, roomDto.getRoomName(), chessGame));
+            return Optional.of(new ChessGameDto(roomNo, roomDto.getRoomName(), chessGame));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Optional.empty();
@@ -54,21 +54,21 @@ public class SpringChessService {
         return new ChessGame(chessBoard, Color.WHITE, new Ready());
     }
 
-    public Optional<ChessGameDTO> loadRoom(int roomNo) {
+    public Optional<ChessGameDto> loadRoom(int roomNo) {
         try {
-            RoomDTO roomDTO = roomDAO.findRoomByRoomNo(roomNo);
-            ChessGame chessGame = setChessGame(roomDTO);
-            return Optional.of(new ChessGameDTO(roomNo, roomDTO.getRoomName(), chessGame));
+            RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
+            ChessGame chessGame = setChessGame(roomDto);
+            return Optional.of(new ChessGameDto(roomNo, roomDto.getRoomName(), chessGame));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Optional.empty();
         }
     }
 
-    private ChessGame setChessGame(RoomDTO roomDTO) {
+    private ChessGame setChessGame(RoomDto roomDto) {
         ChessBoard chessBoard = new ChessBoard();
-        Color turn = Color.convert(roomDTO.getTurn());
-        String[] splitBoard = roomDTO.getBoard().split(",");
+        Color turn = Color.convert(roomDto.getTurn());
+        String[] splitBoard = roomDto.getBoard().split(",");
         for (String board : splitBoard) {
             String[] pieceInfo = board.split(" ");
             Piece piece = getPiece(pieceInfo);
@@ -85,9 +85,9 @@ public class SpringChessService {
         return pieceType.createPiece(Position.of(pieceInfo[0]), Color.convert(color));
     }
 
-    public List<RoomDTO> getAllSavedRooms() {
+    public List<RoomDto> getAllSavedRooms() {
         try {
-            return roomDAO.getAllRoom();
+            return roomDao.getAllRoom();
         } catch (Exception e) {
             return new ArrayList<>();
         }
@@ -95,8 +95,8 @@ public class SpringChessService {
 
     public boolean isGameEnd(int roomNo){
         try {
-            RoomDTO roomDTO = roomDAO.findRoomByRoomNo(roomNo);
-            ChessGame chessGame = setChessGame(roomDTO);
+            RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
+            ChessGame chessGame = setChessGame(roomDto);
             return !chessGame.isOngoing();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -106,17 +106,17 @@ public class SpringChessService {
 
     public void deleteGame(int roomNo) {
         try {
-            roomDAO.deleteRoomByRoomNo(roomNo);
+            roomDao.deleteRoomByRoomNo(roomNo);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public Optional<ResultDTO> getResult(int roomNo) {
+    public Optional<ResultDto> getResult(int roomNo) {
         try {
-            RoomDTO roomDTO = roomDAO.findRoomByRoomNo(roomNo);
-            ChessGame chessGame = setChessGame(roomDTO);
-            return Optional.of(new ResultDTO(chessGame.result()));
+            RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
+            ChessGame chessGame = setChessGame(roomDto);
+            return Optional.of(new ResultDto(chessGame.result()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return Optional.empty();

@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class DeleteGameController {
+public class EndGameController {
 
     private final ChessGameService chessGameService;
 
-    public DeleteGameController(ChessGameService chessGameService) {
+    public EndGameController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 

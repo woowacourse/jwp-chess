@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 public abstract class Team {
     private static final Map<Piece, Double> scoreByPiece = new HashMap<>();
+    private static final int CHESS_SIZE = 8;
 
     private Team enemy;
     private final String name;
@@ -63,7 +64,7 @@ public abstract class Team {
     }
 
     protected void initializePawn(final int pawnColumn, final int pawnDirection) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < CHESS_SIZE; i++) {
             piecePosition.put(new Position(i, pawnColumn), new Pawn(pawnDirection));
         }
     }
@@ -130,7 +131,7 @@ public abstract class Team {
 
     public double calculateTotalScore() {
         double totalScore = 0;
-        for (int x = 0; x < 8; x++) {
+        for (int x = 0; x < CHESS_SIZE; x++) {
             List<Piece> pieces = getPiecesInYaxis(x);
             totalScore += calculateScore(pieces);
         }
@@ -147,17 +148,16 @@ public abstract class Team {
     private double calculateScore(final List<Piece> pieces) {
         final double scoreWithoutPawn = calculateScoreByIsPawn(pieces, false);
         final double pawnScore = calculateScoreByIsPawn(pieces, true);
-        if (pawnScore > 1.0) {
+        if (pawnScore > SCORE_PAWN) {
             return scoreWithoutPawn + (pawnScore / 2.0);
         }
         return scoreWithoutPawn + pawnScore;
     }
 
     private double calculateScoreByIsPawn(final List<Piece> pieces, final boolean isPawn) {
-        final double score = pieces.stream()
+        return pieces.stream()
                 .filter(piece -> piece.isPawn() == isPawn)
                 .mapToDouble(scoreByPiece::get)
                 .sum();
-        return score;
     }
 }

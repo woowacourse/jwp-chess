@@ -20,12 +20,11 @@ import chess.dto.response.ResponseCode;
 import chess.dto.responsedto.GridAndPiecesResponseDto;
 import chess.dto.responsedto.RoomsResponseDto;
 import chess.exception.ChessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class ChessService {
 
@@ -44,44 +43,47 @@ public class ChessService {
     public Response move(MoveRequestDto requestDto) throws SQLException {
         GridDto gridDto = requestDto.getGridDto();
         List<Piece> pieces = requestDto.getPiecesDto().stream()
-                .map(pieceDto -> {
-                    Color color = null;
-                    if (pieceDto.getIsBlack()) {
-                        color = Color.BLACK;
-                    }
-                    if (!pieceDto.getIsBlack()) {
-                        color = Color.WHITE;
-                    }
-                    return PieceFactory.from(
-                            pieceDto.getName().charAt(0),
-                            color, pieceDto.getPosition().charAt(0),
-                            pieceDto.getPosition().charAt(1)
-                    );
-                })
-                .collect(Collectors.toList());
+            .map(pieceDto -> {
+                Color color = null;
+                if (pieceDto.getIsBlack()) {
+                    color = Color.BLACK;
+                }
+                if (!pieceDto.getIsBlack()) {
+                    color = Color.WHITE;
+                }
+                return PieceFactory.from(
+                    pieceDto.getName().charAt(0),
+                    color, pieceDto.getPosition().charAt(0),
+                    pieceDto.getPosition().charAt(1)
+                );
+            })
+            .collect(Collectors.toList());
         List<Line> lines = Lines.from(pieces).lines();
 
-        Grid grid = new Grid(new CustomGridStrategy(lines, Color.findColorByTurn(requestDto.getGridDto().getIsBlackTurn())));
+        Grid grid = new Grid(new CustomGridStrategy(lines,
+            Color.findColorByTurn(requestDto.getGridDto().getIsBlackTurn())));
         grid.move(requestDto.getSourcePosition(), requestDto.getTargetPosition());
         gridDAO.changeTurn(gridDto.getGridId(), !gridDto.getIsBlackTurn());
         PieceDto sourcePieceDto = requestDto.getPiecesDto().stream()
-                .filter(pieceDto -> {
-                    return pieceDto.getPosition().equals(requestDto.getSourcePosition());
-                })
-                .findFirst()
-                .orElseThrow(() -> new ChessException(ResponseCode.NOT_EXISTING_PIECE));
+            .filter(pieceDto -> {
+                return pieceDto.getPosition().equals(requestDto.getSourcePosition());
+            })
+            .findFirst()
+            .orElseThrow(() -> new ChessException(ResponseCode.NOT_EXISTING_PIECE));
         PieceDto targetPieceDto = requestDto.getPiecesDto().stream()
-                .filter(pieceDto -> {
-                    return pieceDto.getPosition().equals(requestDto.getTargetPosition());
-                })
-                .findFirst()
-                .orElseThrow(() -> new ChessException(ResponseCode.NOT_EXISTING_PIECE));
-        pieceDAO.updatePiece(sourcePieceDto.getPieceId(), sourcePieceDto.getIsBlack(), EMPTY_PIECE_NAME);
-        pieceDAO.updatePiece(targetPieceDto.getPieceId(), sourcePieceDto.getIsBlack(), sourcePieceDto.getName().charAt(0));
+            .filter(pieceDto -> {
+                return pieceDto.getPosition().equals(requestDto.getTargetPosition());
+            })
+            .findFirst()
+            .orElseThrow(() -> new ChessException(ResponseCode.NOT_EXISTING_PIECE));
+        pieceDAO.updatePiece(sourcePieceDto.getPieceId(), sourcePieceDto.getIsBlack(),
+            EMPTY_PIECE_NAME);
+        pieceDAO.updatePiece(targetPieceDto.getPieceId(), sourcePieceDto.getIsBlack(),
+            sourcePieceDto.getName().charAt(0));
         return new Response(ResponseCode.NO_CONTENT);
     }
 
-    public void start(long gridId) throws SQLException {
+    public void start(long gridId) {
         gridDAO.changeToStarting(gridId);
     }
 

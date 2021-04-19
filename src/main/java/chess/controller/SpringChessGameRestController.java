@@ -36,9 +36,7 @@ public class SpringChessGameRestController {
 
     @PostMapping(path = "/createNewGame", consumes = "application/json")
     private ResponseEntity<Boolean> createNewGame(@RequestBody final RoomNameDTO roomNameDTO) {
-        String roomName = roomNameDTO.getName();
-        roomService.isEmptyName(roomName);
-        roomService.createRoom(roomName);
+        roomService.createRoom(roomNameDTO.getName());
         return ResponseEntity.status(OK).body(true);
     }
 

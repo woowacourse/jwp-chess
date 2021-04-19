@@ -7,11 +7,6 @@ public final class SectionDTO {
     public SectionDTO() {
     }
 
-    public SectionDTO(final String roomId, final String clickedSection) {
-        this.roomId = roomId;
-        this.clickedSection = clickedSection;
-    }
-
     public String getRoomId() {
         return roomId;
     }

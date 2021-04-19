@@ -24,6 +24,7 @@ public final class RoomService {
     }
 
     public void createRoom(final String name) {
+        isEmptyName(name);
         roomDAO.createRoom(name);
     }
 

@@ -12,9 +12,13 @@ public abstract class Piece {
 
     public abstract boolean checkPositionRule(final Position current, final Position destination);
 
-    public abstract boolean isKing();
+    public boolean isKing() {
+        return false;
+    }
 
-    public abstract boolean isPawn();
+    public boolean isPawn() {
+        return false;
+    }
 
     public final boolean checkEmptyPath(final List<Position> path, final Map<Position, Piece> chessBoard) {
         for (Position position : path) {

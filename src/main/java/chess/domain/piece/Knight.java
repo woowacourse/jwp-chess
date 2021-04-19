@@ -23,16 +23,6 @@ public class Knight extends Piece {
     }
 
     @Override
-    public boolean isKing() {
-        return false;
-    }
-
-    @Override
-    public boolean isPawn() {
-        return false;
-    }
-
-    @Override
     public int hashCode() {
         return UNICODE_DECIMAL;
     }

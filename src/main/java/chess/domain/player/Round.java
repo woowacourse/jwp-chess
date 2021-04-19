@@ -13,9 +13,10 @@ import java.util.Map;
 import java.util.Queue;
 
 public class Round {
-    private static Map<Position, Piece> board;
     private final Player whitePlayer;
     private final Player blackPlayer;
+
+    private Map<Position, Piece> board;
     private Command command;
     private boolean isEnd = false;
 

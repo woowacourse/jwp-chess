@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>방 목록</title>
+</head>
+<body>
+<tr th:each="room : ${roomList}">
+    <td th:text="${room.value}"></td>
+    <br/>
+</tr>
+<form th:action="@{/room}" method="post">
+    <input type="text" th:name="roomName"/>
+    <button type="submit">방 생성하기</button>
+</form>
+</body>
+</html>

@@ -17,6 +17,7 @@ dependencies {
     implementation 'com.sparkjava:spark-core:2.9.3'
     implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
 
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 

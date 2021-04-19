@@ -3,6 +3,7 @@ package chess.repository;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.dto.BoardDto;
+import chess.domain.dto.RoomListDto;
 import chess.domain.dto.TurnDto;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
@@ -49,6 +50,17 @@ public class ChessDao {
             String unicode = piece != null ? piece.getUnicode() : "";
             executeBoardUpdateQuery(unicode, position.convertToString());
         }
+    }
+
+    public RoomListDto getRoomList() {
+        String sql = "select * from room;";
+        List<String> roomNames = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("room_name"));
+        return new RoomListDto(roomNames);
+    }
+
+    public void addRoom(String roomName) {
+        String sql = "insert into room(room_name) values (?);";
+        jdbcTemplate.update(sql, roomName);
     }
 
     private void executeBoardUpdateQuery(String unicode, String position) {

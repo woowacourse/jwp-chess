@@ -3,10 +3,7 @@ package chess.service;
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
-import chess.domain.dto.BoardDto;
-import chess.domain.dto.MoveInfoDto;
-import chess.domain.dto.ScoreDto;
-import chess.domain.dto.TurnDto;
+import chess.domain.dto.*;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.repository.ChessDao;
@@ -49,6 +46,14 @@ public class ChessService {
         chessDao.renewBoardAfterMove(moveInfoDto.getTarget(), moveInfoDto.getDestination(), targetPiece);
         chessDao.renewTurnOwnerAfterMove(turnOwnerAfterMove);
         return BoardDto.of(board);
+    }
+
+    public RoomListDto getRoomList() {
+        return chessDao.getRoomList();
+    }
+
+    public void addRoom(String roomName) {
+        chessDao.addRoom(roomName);
     }
 
     private Piece getTargetPiece(MoveInfoDto moveInfoDto, Board board) {

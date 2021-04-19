@@ -6,10 +6,11 @@
 </head>
 <body>
 <tr th:each="room : ${roomList}">
-    <td th:text="${room.value}"></td>
-    <br/>
+    <td>
+        <a th:text="${room}" style="text-decoration: none" th:href="@{/chess/{roomName}(roomName=${room})}"></a><br/>
+    </td>
 </tr>
-<form th:action="@{/room}" method="post">
+<form th:action="@{/}" method="post">
     <input type="text" th:name="roomName"/>
     <button type="submit">방 생성하기</button>
 </form>

@@ -7,6 +7,7 @@ import chess.service.ChessService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/chess")
 public class ChessController {
     private final ChessService chessService;
 

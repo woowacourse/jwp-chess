@@ -1,5 +1,7 @@
 package chess.controller;
 
+import chess.domain.dto.RoomListDto;
+import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,25 +14,26 @@ import java.util.Map;
 
 @Controller
 public class ViewController {
+    private final ChessService chessService;
+
+    public ViewController(ChessService chessService) {
+        this.chessService = chessService;
+    }
+
     @GetMapping("/")
     public ModelAndView mainView() {
-        System.out.println("roomList get method enter");
         ModelAndView mv = new ModelAndView();
-        Map<String, String> map = new HashMap<>();
-        map.put("asdf", "adsf");
-        map.put("zxcv", "zxcv");
-        map.put("qewr", "qwer");
+        RoomListDto roomListDto = chessService.getRoomList();
         mv.setViewName("roomList");
-        mv.addObject("roomList", map);
+        mv.addObject("roomList", roomListDto.getRoomList());
         return mv;
     }
 
-    @PostMapping("/room")
+    @PostMapping("/")
     public String roomList(Model model, @RequestParam("roomName") String roomName) {
-        System.out.println("roomList post method enter");
-        Map<String, String> map = new HashMap<>();
-        map.put("roo", roomName);
-        model.addAttribute("roomList", map);
+        chessService.addRoom(roomName);
+        RoomListDto roomListDto = chessService.getRoomList();
+        model.addAttribute("roomList", roomListDto.getRoomList());
         return "roomList";
     }
 }

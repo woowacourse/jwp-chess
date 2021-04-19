@@ -19,12 +19,12 @@ class FirstTurnWhitePawnMoveConditionTest {
     void isSatisfyBy() {
         FirstTurnWhitePawnMoveCondition condition = new FirstTurnWhitePawnMoveCondition();
         Board board = new Board(Collections.singletonList(
-                Piece.createPawn(Color.WHITE, 7, 0)
+                Piece.createPawn(Color.WHITE, 6, 0)
         ));
-        boolean rightActual = condition.isSatisfyBy(board, Piece.createPawn(Color.WHITE, 7, 0),
-                new Position(5, 0));
-        boolean falseActual = condition.isSatisfyBy(board, Piece.createPawn(Color.WHITE, 7, 0),
+        boolean rightActual = condition.isSatisfyBy(board, Piece.createPawn(Color.WHITE, 6, 0),
                 new Position(4, 0));
+        boolean falseActual = condition.isSatisfyBy(board, Piece.createPawn(Color.WHITE, 6, 0),
+                new Position(3, 0));
 
         assertThat(rightActual).isTrue();
         assertThat(falseActual).isFalse();

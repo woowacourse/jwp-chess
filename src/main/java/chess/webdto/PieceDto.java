@@ -1,12 +1,9 @@
 package chess.webdto;
 
 import chess.domain.piece.*;
-import chess.webdao.DAOtoPiece;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 public class PieceDto {
     private static final Map<Piece, String> pieceFormat = new HashMap<>();

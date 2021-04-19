@@ -5,7 +5,7 @@
 ## 내용
 - @SpringBootApplication 는 Spring 의 기본 설정을 선언해준다.
 - `main`이 들어있는 클래스 상단에 붙여준다.
-```java
+```
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -24,3 +24,12 @@
 
 ## 내용
 - `@RestController`는 `@Controller`에 `@ResponseBody`가 포함되는 개념
+
+# [REST] http 메소드 - 3
+## 내용
+- post: insert 의 개념
+- put: update 의 개념 (전체)
+- patch: 일부를 update 의 개념
+
+## 링크
+- [http 메소드 관련 글](https://javaplant.tistory.com/18)

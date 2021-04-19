@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestController
 public class SpringChessController {
-    private SpringChessService springChessService;
+    private final SpringChessService springChessService;
 
     public SpringChessController(SpringChessService springChessService) {
         this.springChessService = springChessService;
@@ -29,7 +29,7 @@ public class SpringChessController {
         return springChessService.loadPreviousGame();
     }
 
-    @PostMapping(value = "/move", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/move", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ChessGameDTO move(@RequestBody MoveRequestDto moveRequestDTO) {
         final String start = moveRequestDTO.getStart();
         final String destination = moveRequestDTO.getDestination();

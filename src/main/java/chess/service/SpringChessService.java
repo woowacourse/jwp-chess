@@ -5,9 +5,7 @@ import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.webdao.SpringChessGameDao;
 import chess.webdto.ChessGameDTO;
-import chess.webdto.ChessGameTableDto;
 import chess.webdto.PieceDto;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

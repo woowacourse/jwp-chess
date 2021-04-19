@@ -1,5 +1,6 @@
 package chess.domain.piece;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,16 @@ public class PieceDaoTest {
 
     private final ChessDao chessDao;
     private final PieceDao pieceDao;
-    private final long chessId;
+    private long chessId;
 
     @Autowired
     public PieceDaoTest(JdbcTemplate jdbcTemplate) {
         this.chessDao = new ChessDao(jdbcTemplate);
         this.pieceDao = new PieceDao(jdbcTemplate);
+    }
+
+    @BeforeEach
+    void setUp() {
         chessId = chessDao.insert();
     }
 

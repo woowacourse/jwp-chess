@@ -1,11 +1,11 @@
 package chess.domain.chess;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,13 +17,19 @@ import chess.service.ChessService;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ChessDaoTest {
 
+    private final ChessService chessService;
     private final ChessDao chessDao;
-    private final Long chessId;
+    private Long chessId;
 
     @Autowired
     public ChessDaoTest(JdbcTemplate jdbcTemplate) {
         this.chessDao = new ChessDao(jdbcTemplate);
-        this.chessId = new ChessService(chessDao, new PieceDao(jdbcTemplate)).insert();
+        this.chessService = new ChessService(chessDao, new PieceDao(jdbcTemplate));
+    }
+
+    @BeforeEach
+    void setUp() {
+        this.chessId = chessService.insert();
     }
 
     @DisplayName("체스 아이디로 체스 게임 정보 가져오기 테스트")

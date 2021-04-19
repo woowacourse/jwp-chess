@@ -27,7 +27,7 @@ public class ChessRepository {
 
     public String addGame(ChessGame chessGame, String title) {
         String addingGameQuery = "INSERT INTO chess_game (turn, finished, board, title) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(addingGameQuery, chessGame.getTurn(), chessGame.isOver(), Serializer.serialize(chessGame)
+        jdbcTemplate.update(addingGameQuery, chessGame.getTurn(), chessGame.isOver(), Serializer.serializeGame(chessGame)
                 , title);
         String findingGameQuery = "SELECT MAX(id) FROM chess_game";
         return jdbcTemplate.queryForObject(findingGameQuery, String.class);
@@ -44,7 +44,7 @@ public class ChessRepository {
         String findingGameQuery = "SELECT board, turn FROM chess_game WHERE id= ?";
         return jdbcTemplate.queryForObject(findingGameQuery, (resultSet, rowNum) -> {
             return new ChessGame(
-                    Serializer.deserialize(resultSet.getString("board")),
+                    Serializer.deserializeGame(resultSet.getString("board")),
                     Color.of(resultSet.getString("turn")));
         }, gameId);
     }
@@ -53,7 +53,7 @@ public class ChessRepository {
         String findingGameQuery = "SELECT board, turn FROM chess_game WHERE BINARY title = ?";
         return jdbcTemplate.queryForObject(findingGameQuery, (resultSet, rowNum) -> {
             return new ChessGame(
-                    Serializer.deserialize(resultSet.getString("board")),
+                    Serializer.deserializeGame(resultSet.getString("board")),
                     Color.of(resultSet.getString("turn")));
         }, roomName);
     }
@@ -66,7 +66,7 @@ public class ChessRepository {
 
     public void saveGame(String gameId, ChessGame chessGame) {
         String savingGameQuery = "UPDATE chess_game SET turn = ?, board = ? WHERE id = ?";
-        jdbcTemplate.update(savingGameQuery, chessGame.getTurn(), Serializer.serialize(chessGame), gameId);
+        jdbcTemplate.update(savingGameQuery, chessGame.getTurn(), Serializer.serializeGame(chessGame), gameId);
     }
 
     public boolean isFinishedById(String gameId) {
@@ -86,7 +86,7 @@ public class ChessRepository {
 
     public void restart(String gameId, ChessGame chessGame) {
         String restartQuery = "UPDATE chess_game SET turn = ?, finished = ?, board = ? WHERE id = ?";
-        jdbcTemplate.update(restartQuery, chessGame.getTurn(), chessGame.isOver(), Serializer.serialize(chessGame),
+        jdbcTemplate.update(restartQuery, chessGame.getTurn(), chessGame.isOver(), Serializer.serializeGame(chessGame),
                 gameId);
     }
 

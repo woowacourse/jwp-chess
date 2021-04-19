@@ -19,7 +19,7 @@ public class Serializer {
     private static final int STARTING_INDEX_OF_POSITION = 1;
 
     // 얘는 서비스로 가야할거 같은데..
-    public static String serialize(ChessGame chessGame) {
+    public static String serializeGame(ChessGame chessGame) {
         return chessGame.getChessBoardMap()
                 .entrySet()
                 .stream()
@@ -28,7 +28,7 @@ public class Serializer {
     }
 
     // 얘는 서비스로 가야할거 같은데..
-    public static ChessBoard deserialize(String response) {
+    public static ChessBoard deserializeGame(String response) {
         Map<Position, Piece> chessBoard = new LinkedHashMap<>();
         for (int i = 0; i < response.length(); i += LAST_INDEX_OF_EACH_PIECE) {
             char name = response.charAt(i);
@@ -41,7 +41,7 @@ public class Serializer {
     }
 
     // 얘는 DTO로 변환이라 컨트롤러로 가야하는 것인가..
-    public static ChessBoardDTO deserializeAsDTO(String response) {
+    public static ChessBoardDTO deserializeGameAsDTO(String response) {
         Map<String, String> chessBoard = new LinkedHashMap<>();
         for (int i = 0; i < response.length(); i += LAST_INDEX_OF_EACH_PIECE) {
             String name = response.substring(i, i + STARTING_INDEX_OF_POSITION);

@@ -55,20 +55,20 @@ public class LobbyController {
 
     @GetMapping("/rooms")
     @ResponseBody
-    public RoomListDTO findAllRooms() {
-        return new RoomListDTO(lobbyService.findAllRooms());
+    public ResponseEntity findAllRooms() {
+        return ResponseEntity.ok(new RoomListDTO(lobbyService.findAllRooms()));
     }
 
     @GetMapping("/finishByName/{roomName}")
     @ResponseBody
-    public FinishDTO isFinished(@PathVariable String roomName) {
-        return new FinishDTO(lobbyService.isFinished(roomName));
+    public ResponseEntity isFinished(@PathVariable String roomName) {
+        return ResponseEntity.ok(new FinishDTO(lobbyService.isFinished(roomName)));
     }
 
     @GetMapping("/scoreByName/{roomName}")
     @ResponseBody
-    public ScoreDTO score(@PathVariable String roomName) {
+    public ResponseEntity score(@PathVariable String roomName) {
         ChessGame chessGame = lobbyService.loadGame(roomName);
-        return new ScoreDTO(chessGame.getScore(Color.BLACK), chessGame.getScore(Color.WHITE));
+        return ResponseEntity.ok(new ScoreDTO(chessGame.getScore(Color.BLACK), chessGame.getScore(Color.WHITE)));
     }
 }

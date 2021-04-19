@@ -40,10 +40,9 @@ public class PieceDao {
 
     private void updateTargetPosition(Long chessId, MovePositionVo movePositionVO) {
         String sql =
-                "UPDATE piece AS target, (SELECT color, name FROM piece WHERE position = (?) AND chess_id = (?)) AS source "
-                        +
+                "UPDATE piece AS target, (SELECT color, name FROM piece WHERE position = ? AND chess_id = ?) AS source " +
                         "SET target.color = source.color, target.name = source.name " +
-                        "WHERE target.position = (?) AND target.chess_id = (?)";
+                        "WHERE target.position = ? AND target.chess_id = ?";
 
         jdbcTemplate.update(sql, movePositionVO.getSource(), chessId, movePositionVO.getTarget(),
                 chessId);
@@ -51,7 +50,7 @@ public class PieceDao {
 
     private void updateSourcePosition(Long chessId, MovePositionVo movePositionVO) {
         String sql =
-                "UPDATE piece SET color = 'BLANK', name = 'BLANK' WHERE position = (?) AND chess_id = (?)";
+                "UPDATE piece SET color = 'BLANK', name = 'BLANK' WHERE position = ? AND chess_id = ?";
         jdbcTemplate.update(sql, movePositionVO.getSource(), chessId);
     }
 }

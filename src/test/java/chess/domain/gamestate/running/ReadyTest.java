@@ -36,22 +36,9 @@ class ReadyTest {
         assertThat(state).isInstanceOf(Start.class);
     }
 
-    @DisplayName("상태 변경 - ready 상태에서 end로 변경가능하다.")
-    @Test
-    void changeState_2() {
-        // given
-        CommandType end = CommandType.END;
-
-        // when
-        state = state.changeCommand(end);
-
-        // then
-        assertThat(state).isInstanceOf(End.class);
-    }
-
     @DisplayName("상태 변경 - ready 상태에서 move 상태로 변경 불가능하다.")
     @Test
-    void changeState_3() {
+    void changeState_2() {
         // given
         CommandType move = CommandType.MOVE;
 
@@ -62,7 +49,7 @@ class ReadyTest {
 
     @DisplayName("상태 변경 - ready 상태에서 status 상태로 변경 불가능하다.")
     @Test
-    void changeState_4() {
+    void changeState_3() {
         // given
         CommandType status = CommandType.STATUS;
 

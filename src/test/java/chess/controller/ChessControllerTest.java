@@ -2,6 +2,7 @@ package chess.controller;
 
 import static org.hamcrest.core.Is.is;
 
+import com.google.gson.JsonObject;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,22 +33,15 @@ class ChessControllerTest {
     }
 
     @Test
-    void createRoom() {
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/createroom/1")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body(is("1"));
-    }
+    void createRoom()  {
+        JsonObject responseBody = new JsonObject();
+        responseBody.addProperty("roomName", "방생성테스트");
 
-    @Test
-    void enterRoom() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/room/1")
+                .when().get("/createroom/방생성테스트")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body(is("1"));
+                .body(is(responseBody.toString()));
     }
 }

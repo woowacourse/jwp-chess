@@ -21,12 +21,12 @@ class JdbcRoomRepositoryTest {
     JdbcRoomRepository repository;
 
     @BeforeEach
-    void setUp() throws SQLException {
+    void setUp() {
         repository.deleteAll();
     }
 
     @Test
-    void insert() throws SQLException {
+    void insert() {
         // given
         Room room = new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
 
@@ -44,7 +44,7 @@ class JdbcRoomRepositoryTest {
     }
 
     @Test
-    void update() throws SQLException {
+    void update() {
         // given
         long roomId = repository.insert(new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
         Room foundRoom = repository.findRoomById(roomId);
@@ -64,7 +64,7 @@ class JdbcRoomRepositoryTest {
     }
 
     @Test
-    void findRoomById() throws SQLException {
+    void findRoomById() {
         // given
         Room room = new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
         long roomId = repository.insert(room);
@@ -100,7 +100,7 @@ class JdbcRoomRepositoryTest {
     }
 
     @Test
-    void isExistRoomName() throws SQLException {
+    void isExistRoomName() {
         // given, when
         long roomId = repository.insert(new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
 

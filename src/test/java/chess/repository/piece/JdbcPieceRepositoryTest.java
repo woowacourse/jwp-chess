@@ -34,14 +34,14 @@ class JdbcPieceRepositoryTest {
     private long roomId;
 
     @BeforeEach
-    void setUp() throws SQLException {
+    void setUp() {
         Room room = new Room(1, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
         roomId = roomRepository.insert(room);
         repository.deleteAll();
     }
 
     @Test
-    void insert() throws SQLException {
+    void insert() {
         // given
         Queen piece = Queen.of(Location.of(1, 1), Team.WHITE);
 
@@ -61,7 +61,7 @@ class JdbcPieceRepositoryTest {
     }
 
     @Test
-    void update() throws SQLException {
+    void update() {
         // given
         Queen original = Queen.of(Location.of(1, 1), Team.WHITE);
         long pieceId = repository.insert(roomId, original);
@@ -77,7 +77,7 @@ class JdbcPieceRepositoryTest {
     }
 
     @Test
-    void findPiecesByRoomId() throws SQLException {
+    void findPiecesByRoomId() {
         // given
         Queen piece1 = Queen.of(Location.of(1, 1), Team.WHITE);
         King piece2 = King.of(Location.of(1, 2),Team.WHITE);
@@ -104,7 +104,7 @@ class JdbcPieceRepositoryTest {
     }
 
     @Test
-    void count() throws SQLException {
+    void count() {
         // given, when
         int zero = repository.count();
 
@@ -117,12 +117,12 @@ class JdbcPieceRepositoryTest {
     }
 
     @Test
-    void deleteAll() throws SQLException {
+    void deleteAll() {
         assertThat(repository.count()).isEqualTo(0);
     }
 
     @Test
-    void deletePieceById() throws SQLException {
+    void deletePieceById() {
         // given
         Queen piece = Queen.of(Location.of(1, 1), Team.WHITE);
 

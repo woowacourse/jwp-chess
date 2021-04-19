@@ -1,11 +1,9 @@
 function init() {
     const $startBtn = document.getElementById('start')
-    const $loadBtn = document.getElementById('load')
     const $modalBtn = document.getElementById('enter')
     const $modalExitBtn = document.getElementById('cancel')
     const $roomList = document.querySelector('.room-select > select')
     $startBtn.addEventListener('click', modalHandler)
-    $loadBtn.addEventListener('click', modalHandler)
     $modalBtn.addEventListener('click', enterHandler)
     $modalExitBtn.addEventListener('click', cancelHandler)
     $roomList.addEventListener('change', selectHandler)
@@ -115,62 +113,6 @@ async function enterHandler(e) {
             $nameLength.style.display = "none"
             $blank.style.display = "none"
             document.querySelector('#room-name').value = ''
-            return;
-        }
-    }
-
-    if (action === 'load') {
-        let response = await fetch(
-            '/isDuplicate',
-            {
-                method: 'POST',
-                body: JSON.stringify({
-                    'title': roomName
-                }),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
-                    'Accept': 'application/json'
-                }
-            }
-        )
-
-        response = await response.json()
-        if (response.duplicate === false) {
-            $nameDuplicate.style.display = null
-            $nameDuplicate.textContent = '존재하지 않는 방 이름입니다.'
-            $nameLength.style.display = "none"
-            $blank.style.display = "none"
-            document.querySelector('#room-name').value = ''
-            return;
-        }
-
-        if (response.duplicate === true) {
-            response = await fetch(
-                '/findRoomId',
-                {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        'title': roomName
-                    }),
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8',
-                        'Accept': 'application/json'
-                    }
-                }
-            )
-
-            if (response.status === 400) {
-                response = await response.text()
-                $nameLength.textContent = response
-                $nameDuplicate.style.display = "none"
-                $blank.style.display = "none"
-                $nameLength.style.display = null
-                document.querySelector('#room-name').value = ''
-                return;
-            }
-
-            response = await response.json()
-            window.location.href = `/${response.roomId}`
             return;
         }
     }

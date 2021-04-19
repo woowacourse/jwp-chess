@@ -101,7 +101,7 @@ function move() {
             target: document.getElementsByClassName("target")[0].id,
             roomName:  getParameterByName('roomName')
         },
-        dataType: "text",
+        dataType: "json",
         success: switchPiece,
         error: errorMessage,
         complete: clearSelect()
@@ -109,20 +109,18 @@ function move() {
 }
 
 function switchPiece(res) {
-    let result = res.split(" ");
-
-    let sourceElement = document.getElementById(result[0]).firstElementChild;
-    let targetElement = document.getElementById(result[1]).firstElementChild;
+    let sourceElement = document.getElementById(res.source).firstElementChild;
+    let targetElement = document.getElementById(res.target).firstElementChild;
     let blankImgUrl = "./img/Blank.png";
 
     targetElement.src = sourceElement.src;
     sourceElement.src = blankImgUrl;
 
-    if (result[2] === "흑" || result[2] === "백") {
-        alert(result[2] + " 이 이겼습니다.");
+    if (res.color === "흑" || res.color === "백") {
+        alert(res.color + " 이 이겼습니다.");
         goHome();
     } else {
-        turnSetting(result[2]);
+        turnSetting(res.color);
         status();
     }
 }
@@ -168,9 +166,8 @@ function clearSelect() {
 }
 
 function printStatus(res) {
-    let twoStatus = res.split(" ");
-    let whiteScore = twoStatus[0];
-    let blackScore = twoStatus[1];
+    let whiteScore = res.whitePoint;
+    let blackScore = res.blackPoint;
 
     let whiteScoreBoard = document.getElementById("white");
     let blackScoreBoard = document.getElementById("black");

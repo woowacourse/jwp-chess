@@ -13,7 +13,7 @@ public class Blank extends Piece {
     public static final String BLANK_COLOR_ERROR = "공백은 " + Color.NO_COLOR.name() + "여야 합니다.";
 
     public Blank(Color color, Position position) {
-        super(Color.NO_COLOR, position);
+        super(position);
         if (!color.equals(Color.NO_COLOR)) {
             throw new IllegalArgumentException(BLANK_COLOR_ERROR);
         }

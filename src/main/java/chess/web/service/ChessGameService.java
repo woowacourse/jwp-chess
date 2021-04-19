@@ -40,16 +40,11 @@ public class ChessGameService {
         chessGameRepository.deleteById(gameId);
     }
 
-    public MoveResponseDto movePiece(MoveRequestDto moveRequestDTO) {
+    public void movePiece(MoveRequestDto moveRequestDTO) {
         ChessGame chessGame = chessGameRepository.findById(moveRequestDTO.getGameId());
         String startPositionInput = moveRequestDTO.getStartPositionInput();
         String destinationInput = moveRequestDTO.getDestinationInput();
-        try {
-            chessGame.movePiece(startPositionInput, destinationInput);
-        } catch (IllegalArgumentException e) {
-            return new MoveResponseDto(true, e.getMessage());
-        }
+        chessGame.movePiece(startPositionInput, destinationInput);
         chessGameRepository.update(chessGame);
-        return new MoveResponseDto(false);
     }
 }

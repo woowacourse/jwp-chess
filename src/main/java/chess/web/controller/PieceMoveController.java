@@ -20,6 +20,7 @@ public class PieceMoveController {
 
     @PostMapping("/move")
     public MoveResponseDto movePiece(@RequestBody MoveRequestDto moveRequestDto) {
-        return chessGameService.movePiece(moveRequestDto);
+        chessGameService.movePiece(moveRequestDto);
+        return new MoveResponseDto(false);
     }
 }

@@ -1,6 +1,6 @@
 package chess.dao.dto;
 
-import chess.converter.PiecesConverter;
+import chess.domain.converter.PiecesConverter;
 import chess.domain.manager.ChessGameManager;
 import chess.domain.piece.attribute.Color;
 

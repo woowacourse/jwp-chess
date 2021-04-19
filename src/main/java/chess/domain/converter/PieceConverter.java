@@ -1,4 +1,4 @@
-package chess.converter;
+package chess.domain.converter;
 
 import chess.domain.piece.*;
 import chess.domain.piece.attribute.Color;

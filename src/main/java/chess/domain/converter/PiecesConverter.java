@@ -1,4 +1,4 @@
-package chess.converter;
+package chess.domain.converter;
 
 import chess.domain.board.Board;
 import chess.domain.board.Square;

@@ -1,13 +1,13 @@
 package chess.domain.manager;
 
-import chess.converter.PiecesConverter;
+import chess.domain.converter.PiecesConverter;
 import chess.dao.dto.ChessGame;
 import chess.domain.board.Board;
 import chess.domain.board.InitBoardInitializer;
 import chess.domain.board.LoadBoardInitializer;
 import chess.domain.statistics.ChessGameStatistics;
 
-import static chess.converter.PiecesConverter.convertSquares;
+import static chess.domain.converter.PiecesConverter.convertSquares;
 import static chess.domain.piece.attribute.Color.WHITE;
 
 public class ChessGameManagerFactory {

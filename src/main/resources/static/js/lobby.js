@@ -1,13 +1,14 @@
 function init() {
     const $startBtn = document.getElementById('start')
+    const $loadBtn = document.getElementById('load')
+    const $exitBtn = document.getElementById('exit')
     const $modalBtn = document.getElementById('enter')
     const $modalExitBtn = document.getElementById('cancel')
-    const $roomList = document.querySelector('.room-select > select')
     $startBtn.addEventListener('click', modalHandler)
+    $loadBtn.addEventListener('click', loadHandler)
+    $exitBtn.addEventListener('click', exitHandler)
     $modalBtn.addEventListener('click', enterHandler)
     $modalExitBtn.addEventListener('click', cancelHandler)
-    $roomList.addEventListener('change', selectHandler)
-
 
     this.roomId = 0;
 
@@ -15,7 +16,7 @@ function init() {
 }
 
 async function showRoomList() {
-    const $roomList = document.querySelector('.room-select > select')
+    const $roomList = document.querySelector('.room-list ')
     let response = await fetch(
         '/rooms'
     )
@@ -23,16 +24,74 @@ async function showRoomList() {
     rooms = response.roomList
     for (const [id, name] of Object.entries(rooms)) {
         $roomList.insertAdjacentHTML('beforeend',
-            roomTemplate(id, name)
+            await roomTemplate(id, name)
         )
+
     }
 }
 
-function roomTemplate(id, name) {
-    return `<option id=${id} value=${parseRoomName(name)}>${name}</option>`
+async function roomTemplate(id, name) {
+    score = await roomScore(name)
+    isFinished = await roomFinished(name)
+    id = await findRoomId(name)
+
+    return `<div class="room-info-item">
+                <div class="room-info">
+                    <div class="room-status">
+                        <img style="max-width: 2rem" alt="black-score" src="../images/pawn_black.png"/>
+                        <span>${score.blackScore}</span>
+                        <img style="max-width: 2rem" alt="white-score" src="../images/pawn_white.png"/>
+                        <span style="margin-right: 1rem">${score.whiteScore}</span>
+                        <img class="playing" style="max-width: 2rem" alt="playing" src="../images/chess_clock.png"/>
+                        <span class="${isFinished.finished ? "finished" : "playing"}">
+                            ${isFinished.finished ? 'FINISHED' : 'PLAYING'}
+                        </span>
+                    </div>
+                    <div class="room-name">
+                        <span class="room-name">${name}</span>     
+                    </div> 
+                </div>
+                <button style="display: block" class="room-btn" onclick="routeToRoom(${id})">
+                    <i class="fas fa-play"></i>
+                </button>     
+            </div>`
 }
 
-function parseRoomName(name){
+async function roomScore(roomName) {
+    let score = await fetch(
+        `/scoreByName/${roomName}`
+    )
+    score = await score.json()
+    return score
+}
+
+async function roomFinished(roomName) {
+    let finished = await fetch(
+        `/finishByName/${roomName}`
+    )
+    finished = await finished.json()
+    return finished
+}
+
+async function findRoomId(roomName) {
+    let response = await fetch(
+        `/findRoomId`,
+        {
+            method: 'POST',
+            body: JSON.stringify({
+                'title': roomName
+            }),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                'Accept': 'application/json'
+            }
+        }
+    )
+    response = await response.json()
+    return response.roomId
+}
+
+function parseRoomName(name) {
     return name.replaceAll(' ', '%20')
 }
 
@@ -134,46 +193,15 @@ async function selectHandler(e) {
     await showRoomInfo(roomName)
 }
 
-async function showRoomInfo(roomName) {
-    const $roomInfo = document.querySelector('.room-info')
-    const $roomBtn = $roomInfo.querySelector('button')
-    $roomInfo.style.display = null
+function loadHandler() {
+    document.querySelector('.main').style.display = 'none'
+    document.querySelector('.list').style.display = 'flex'
 
-    let score = await fetch(
-        `/scoreByName/${roomName}`
-    )
-    score = await score.json()
-    let finished = await fetch(
-        `/finishByName/${roomName}`
-    )
-    finished = await finished.json()
+}
 
-    const blackScore = score.blackScore
-    const whiteScore = score.whiteScore
-    const isFinished = finished.finished
-    let response = await fetch(
-        `/findRoomId`,
-        {
-            method: 'POST',
-            body: JSON.stringify({
-                'title': roomName
-            }),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-                'Accept': 'application/json'
-            }
-        }
-    )
-
-    response = await response.json()
-    roomId = response.roomId
-
-    $roomInfo.querySelector('#black-score').textContent = `BLACK: ${blackScore}`
-    $roomInfo.querySelector('#white-score').textContent = `WHITE: ${whiteScore}`
-    $roomInfo.querySelector('#status').textContent = `STATUS: ${isFinished ? 'FINISHED' : 'ONGOING'}`
-    $roomBtn.onclick = function () {
-        window.location.href = `/${roomId}`
-    }
+function exitHandler() {
+    document.querySelector('.main').style.display = 'flex'
+    document.querySelector('.list').style.display = 'none'
 }
 
 

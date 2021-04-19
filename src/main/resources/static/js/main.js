@@ -21,12 +21,17 @@ imageMap = {
 async function init() {
     this.$chessBoard = document.querySelector('.chessBoard')
     this.$controller = document.querySelector('.controller')
-
     this.$controller.addEventListener('click', btnHandler)
     this.$blackResult = document.getElementById('BLACK')
     this.$whiteResult = document.getElementById('WHITE')
+    const $home = document.getElementById('home')
     const url = window.location.href.split('/')
     this.gameId = url[url.length - 1]
+
+    $home.addEventListener('click', function() {
+            window.location.href = '/'
+    })
+
     await initBoard(await start())
     await moveHandler()
     await changeTurn()

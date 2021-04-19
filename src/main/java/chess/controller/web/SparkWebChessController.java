@@ -9,6 +9,8 @@ import chess.controller.web.dto.piece.PieceResponseDto;
 import chess.controller.web.dto.score.ScoreResponseDto;
 import chess.controller.web.dto.state.StateResponseDto;
 import chess.dao.jdbc.*;
+import chess.domain.game.Game;
+import chess.domain.movecommand.MoveCommand;
 import chess.service.ChessService;
 
 import java.util.List;
@@ -32,11 +34,15 @@ public class SparkWebChessController {
     }
 
     public HistoryResponseDto move(final MoveRequestDto moveRequestDto, final Long gameId) {
-        return chessService.move(moveRequestDto.toMoveCommand(), gameId);
+        MoveCommand moveCommand = new MoveCommand(moveRequestDto.getSource(), moveRequestDto.getTarget());
+        return chessService.move(moveCommand, gameId);
     }
 
     public Long newGame(final GameRequestDto gameRequestDto) {
-        return chessService.saveGame(gameRequestDto.toGame());
+        Game game = Game.of(gameRequestDto.getRoomName(),
+                gameRequestDto.getWhiteUsername(),
+                gameRequestDto.getBlackUsername());
+        return chessService.saveGame(game);
     }
 
     public List<PieceResponseDto> findPiecesByGameId(final Long gameId) {

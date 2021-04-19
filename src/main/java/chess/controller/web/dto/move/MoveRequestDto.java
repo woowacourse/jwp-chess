@@ -1,7 +1,5 @@
 package chess.controller.web.dto.move;
 
-import chess.domain.movecommand.MoveCommand;
-
 public class MoveRequestDto {
 
     private final String source;
@@ -10,10 +8,6 @@ public class MoveRequestDto {
     public MoveRequestDto(final String source, final String target) {
         this.source = source;
         this.target = target;
-    }
-
-    public MoveCommand toMoveCommand() {
-        return new MoveCommand(source, target);
     }
 
     public String getSource() {

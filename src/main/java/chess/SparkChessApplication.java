@@ -1,7 +1,7 @@
 package chess;
 
 import chess.controller.web.SparkWebChessController;
-import chess.controller.web.dto.ExceptionMessageResponseDto;
+import chess.controller.web.dto.exception.ExceptionMessageResponseDto;
 import chess.controller.web.dto.game.GameRequestDto;
 import chess.controller.web.dto.game.GameResponseDto;
 import chess.controller.web.dto.move.MoveRequestDto;

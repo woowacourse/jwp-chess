@@ -1,6 +1,6 @@
 package chess.controller.web.advice;
 
-import chess.controller.web.dto.ExceptionMessageResponseDto;
+import chess.controller.web.dto.exception.ExceptionMessageResponseDto;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

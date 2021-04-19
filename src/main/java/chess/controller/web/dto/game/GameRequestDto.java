@@ -14,10 +14,6 @@ public class GameRequestDto {
         this.roomName = roomName;
     }
 
-    public Game toGame() {
-        return Game.of(this.roomName, this.whiteUsername, this.blackUsername);
-    }
-
     public String getWhiteUsername() {
         return whiteUsername;
     }

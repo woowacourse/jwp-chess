@@ -16,7 +16,6 @@ import chess.domain.manager.ChessManager;
 import chess.domain.movecommand.MoveCommand;
 import chess.domain.piece.Owner;
 import chess.domain.piece.Piece;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

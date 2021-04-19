@@ -1,9 +1,9 @@
-package chess.controller.web.dto;
+package chess.controller.web.dto.game;
 
-public class GameIdDto {
+public class GameIdResponseDto {
     private Long gameId;
 
-    public GameIdDto(Long gameId) {
+    public GameIdResponseDto(Long gameId) {
         this.gameId = gameId;
     }
 

@@ -40,7 +40,7 @@ public class RoomService {
         return roomDao.load();
     }
 
-    public RoomInfoDto roomInfo(final Long roomId) throws SQLException {
+    public RoomInfoDto roomInfo(final Long roomId) {
         return new RoomInfoDto(roomId, roomDao.name(roomId));
     }
 }

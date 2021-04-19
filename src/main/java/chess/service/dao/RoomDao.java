@@ -39,7 +39,7 @@ public class RoomDao {
         return new RoomInfoDto(id, name);
     }
 
-    public String name(final Long roomId) throws SQLException {
+    public String name(final Long roomId) {
         final String query = "SELECT room_name FROM room_status WHERE room_id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
     }

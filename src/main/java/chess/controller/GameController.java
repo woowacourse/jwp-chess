@@ -46,17 +46,17 @@ public class GameController {
     private String move(@PathVariable final Long roomId,
                         @RequestParam final Position source,
                         @RequestParam final Position target,
-                        final Model model) throws SQLException {
+                        final Model model) {
         gameService.move(roomId, source, target);
         return printResult(roomId, model);
     }
 
     @GetMapping("/load/{roomId}")
-    private String loadGame(@PathVariable final Long roomId, final Model model) throws SQLException {
+    private String loadGame(@PathVariable final Long roomId, final Model model) {
         return printResult(roomId, model);
     }
 
-    private String printResult(final Long roomId, final Model model) throws SQLException {
+    private String printResult(final Long roomId, final Model model) {
         if (gameService.isGameEnd(roomId)) {
             final List<Owner> winner = gameService.winner(roomId);
             roomService.delete(roomId);

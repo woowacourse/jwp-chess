@@ -18,7 +18,7 @@ public class QueenMoveCondition extends MoveCondition {
     }
 
     private boolean isNotExistObstacleOnPath(Board board, Piece piece, Position target) {
-        return isNotExistObstacleOnCrossPath(board, piece, target) &&
+        return isNotExistObstacleOnCrossPath(board, piece, target) ||
                 isNotExistObstacleOnXPath(board, piece, target);
     }
 

@@ -11,10 +11,15 @@ public class FirstTurnWhitePawnMoveCondition extends MoveCondition {
     @Override
     public boolean isSatisfyBy(final Board board, final Piece piece, final Position target) {
         return !piece.isSamePosition(target) &&
+                isFirstPosition(piece) &&
                 isRightMovePath(piece, target) &&
                 isNotPieceExistOnPath(board, piece, target) &&
                 isNotSameColorOnTarget(board, piece, target) &&
                 isNotChessPieceOutOfBoard(board, target);
+    }
+
+    private boolean isFirstPosition(Piece piece) {
+        return piece.getRow() == 1;
     }
 
     private boolean isRightMovePath(final Piece piece, final Position target) {

@@ -2,7 +2,7 @@
 
 ## 1차 피드백
 - SpringChessApplication
-    - [ ] Controller 어노테이션의 역할? RestController
+    - [x] Controller 어노테이션의 역할? RestController
     
 - SpringChessController
     - [ ] 각 상황에 맞는 메소드 활용 (http 메소드가 각 어떤 상황에서 활용되는지): line22

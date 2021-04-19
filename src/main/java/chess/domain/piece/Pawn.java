@@ -9,6 +9,10 @@ import chess.domain.feature.Type;
 import java.util.List;
 
 public class Pawn extends Piece {
+    private static final char BLACK_PAWN_START_ROW = '7';
+    private static final char WHITE_PAWN_START_ROW = '2';
+    private static final int ROW_INDEX = 1;
+
     public Pawn(Color color, Position position) {
         super(color, position);
         if (color.equals(Color.NO_COLOR)) {
@@ -41,7 +45,14 @@ public class Pawn extends Piece {
         }
         Position twoStepNextPosition = nextPosition.nextPosition(direction);
         Piece twoStepNextPiece = chessBoard.getPiece(twoStepNextPosition);
-        return twoStepNextPosition.equals(targetPosition) && twoStepNextPiece.isBlank() && nextPiece.isBlank();
+        return isStartPosition() && twoStepNextPosition.equals(targetPosition) && twoStepNextPiece.isBlank() && nextPiece.isBlank();
+    }
+
+    private boolean isStartPosition() {
+        if (isBlack()) {
+            return getPosition().charAt(ROW_INDEX) == BLACK_PAWN_START_ROW;
+        }
+        return getPosition().charAt(ROW_INDEX) == WHITE_PAWN_START_ROW;
     }
 
     private boolean isDiagonalMovable(ChessBoard chessBoard, Direction direction, Position targetPosition) {

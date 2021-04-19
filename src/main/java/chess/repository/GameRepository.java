@@ -2,6 +2,7 @@ package chess.repository;
 
 import chess.dao.ChessDAO;
 import chess.domain.game.ChessGame;
+import chess.exception.NoGameIdExistenceException;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public class GameRepository {
         Optional<ChessGame> chessGame = Optional.ofNullable(repository.getOrDefault(gameId, null));
 
         if (!chessGame.isPresent()) {
-            throw new IllegalArgumentException("게임 ID가 존재하지 않습니다.");
+            throw new NoGameIdExistenceException();
         }
 
         return chessGame.get();

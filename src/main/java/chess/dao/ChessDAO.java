@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.exception.NoDataExistenceException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -32,7 +33,7 @@ public class ChessDAO {
         List<String> data = jdbcTemplate.query(query, (rs, i) -> rs.getString("data"), gameId);
 
         if (data.size() == 0) {
-            throw new IllegalArgumentException("데이터가 존재하지 않습니다.");
+            throw new NoDataExistenceException();
         }
 
         return data.get(0);

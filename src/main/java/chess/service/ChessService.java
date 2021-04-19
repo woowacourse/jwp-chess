@@ -4,6 +4,7 @@ import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
+import chess.exception.AlreadyExistingGameIdException;
 import chess.repository.GameRepository;
 import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
@@ -54,7 +55,7 @@ public class ChessService {
         chessGame.start();
 
         if (gameRepository.isGameIdExistingInDB(gameId)) {
-            throw new IllegalArgumentException("이미 존재하는 게임 아이디 입니다.");
+            throw new AlreadyExistingGameIdException();
         }
 
         gameRepository.saveToCache(gameId, chessGame);
@@ -93,7 +94,5 @@ public class ChessService {
 
         return new GameDto(chessGame);
     }
-
-
 
 }

@@ -7,11 +7,11 @@
 ## 실행 환경
 - 기본 포트 : 8080
 - 메인 페이지 : "/room/list"
-- DB Table
+- DB Table (DATABASE : web_chess)
 ```SQL
 CREATE TABLE game_status(
     id int not null auto_increment primary key,
-    room_id BIGINT,
+    room_id int,
     turn  CHAR(10) not null,
     board TEXT
     );
@@ -19,7 +19,6 @@ CREATE TABLE game_status(
 ```SQL
 CREATE TABLE room_status(
     id int not null auto_increment primary key,
-    room_name CHAR(10) not null,
-    room_id BIGINT
+    room_name CHAR(10) not null
     );
 ```

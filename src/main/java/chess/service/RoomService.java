@@ -18,8 +18,7 @@ public class RoomService {
     }
 
     public long save(final String roomName) {
-        final long roomId = System.currentTimeMillis();
-        roomDao.save(roomName, roomId);
+        final long roomId = roomDao.save(roomName);
         gameService.create(roomId);
         return roomId;
     }

@@ -4,7 +4,7 @@ import chess.domain.command.Commands;
 import chess.domain.dto.MoveResponseDto;
 import chess.domain.exception.DataException;
 import chess.domain.dto.MoveDto;
-import chess.service.ChessService;
+import chess.service.SpringChessService;
 import chess.view.ModelView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,37 +19,37 @@ import java.sql.SQLException;
 public class ChessController {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private final ChessService chessService;
+    private final SpringChessService springChessService;
 
-    public ChessController(ChessService chessService) {
-        this.chessService = chessService;
+    public ChessController(SpringChessService springChessService) {
+        this.springChessService = springChessService;
     }
 
     @GetMapping("")
     public String play(Model model) throws DataException {
-        model.addAllAttributes(ModelView.startResponse(chessService.loadHistory()));
+        model.addAllAttributes(ModelView.startResponse(springChessService.loadHistory()));
         return "play";
     }
 
     @GetMapping("/new")
     public String playNewGameWithNoSave(Model model) {
-        model.addAllAttributes(ModelView.newGameResponse(chessService.initialGameInfo()));
+        model.addAllAttributes(ModelView.newGameResponse(springChessService.initialGameInfo()));
         return "chessGame";
     }
 
     @GetMapping("/{name}/new")
     public String playNewGameWithSave(Model model, @PathVariable String name) throws DataException {
         model.addAllAttributes(ModelView.newGameResponse(
-                chessService.initialGameInfo(),
-                chessService.addHistory(name)
+                springChessService.initialGameInfo(),
+                springChessService.addHistory(name)
         ));
         return "chessGame";
     }
 
     @GetMapping("/continue")
     public String continueGame(Model model, @RequestParam("name") String name) throws DataException {
-        final String id = chessService.getIdByName(name);
-        model.addAllAttributes(ModelView.commonResponseForm(chessService.continuedGameInfo(id), id));
+        final String id = springChessService.getIdByName(name);
+        model.addAllAttributes(ModelView.commonResponseForm(springChessService.continuedGameInfo(id), id));
         return "chessGame";
     }
 
@@ -65,8 +65,8 @@ public class ChessController {
         String historyId = moveDto.getGameId();
 
         try {
-            chessService.move(historyId, command, new Commands(command));
-            return ModelView.moveResponse(chessService.continuedGameInfo(historyId), historyId);
+            springChessService.move(historyId, command, new Commands(command));
+            return ModelView.moveResponse(springChessService.continuedGameInfo(historyId), historyId);
         } catch (IllegalArgumentException | SQLException e) {
             return new MoveResponseDto(e.getMessage());
         }

@@ -1,11 +1,10 @@
-package chess.web.service;
+package chess.service;
 
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.domain.command.Commands;
-import chess.view.OutputView;
-import chess.web.dao.CommandDao;
-import chess.web.dao.HistoryDao;
+import chess.domain.dao.CommandDao;
+import chess.domain.dao.HistoryDao;
 import chess.domain.dto.CommandDto;
 import chess.domain.dto.GameInfoDto;
 import chess.domain.dto.HistoryDto;
@@ -19,12 +18,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class WebChessService {
+public class SparkChessService {
 
     private CommandDao commandDao;
     private HistoryDao historyDao;
 
-    public WebChessService(CommandDao commandDao, HistoryDao historyDao) {
+    public SparkChessService(CommandDao commandDao, HistoryDao historyDao) {
         this.commandDao = commandDao;
         this.historyDao = historyDao;
     }

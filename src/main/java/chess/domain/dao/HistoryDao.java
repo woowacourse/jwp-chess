@@ -1,6 +1,5 @@
-package chess.web.dao;
+package chess.domain.dao;
 
-import chess.web.db.DriveManager;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;

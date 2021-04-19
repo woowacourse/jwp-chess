@@ -8,10 +8,13 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class SpringChessLogDao {
+    private static final String DELIMITER = ",";
     private SimpleJdbcInsert simpleJdbcInsert;
     private JdbcTemplate jdbcTemplate;
 
@@ -22,23 +25,21 @@ public class SpringChessLogDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addLog(MoveRequestDto moveRequestDto) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(moveRequestDto);
-        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
+    public void addLog(String roomId, String target, String destination) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("room_id", roomId);
+        parameters.put("target", target);
+        parameters.put("destination", destination);
+        simpleJdbcInsert.execute(parameters);
     }
 
-    public List<MoveRequestDto> applyCommand(String roomId) {
+    public List<String> applyCommand(String roomId) {
         String query = "select target, destination from chessgame where room_id = ? ORDER BY command_date ASC;";
         return jdbcTemplate.query(
                 query,
-                (resultSet, rowNum) -> {
-                    MoveRequestDto moveRequestDto = new MoveRequestDto(
-                            roomId,
-                            resultSet.getString("target"),
+                (resultSet, rowNum) -> resultSet.getString("target") + DELIMITER +
                             resultSet.getString("destination")
-                    );
-                    return moveRequestDto;
-                }, roomId);
+                , roomId);
     }
 
     public void deleteLog(String roomId) {

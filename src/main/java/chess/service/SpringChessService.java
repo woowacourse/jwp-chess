@@ -27,12 +27,15 @@ public class SpringChessService {
     }
 
     private ChessGame loadChessGame(String roomNumber) {
-        List<MoveRequestDto> commands = springChessLogDao.applyCommand(roomNumber);
+        List<String> commands = springChessLogDao.applyCommand(roomNumber);
         ChessGame chessGame = new ChessGame();
         chessGame.settingBoard();
 
-        for (MoveRequestDto command : commands) {
-            chessGame.move(command.getTarget(), command.getDestination());
+        for (String command : commands) {
+            String[] movePositions = command.split(",");
+            String target = movePositions[0];
+            String destination = movePositions[1];
+            chessGame.move(target, destination);
         }
 
         return chessGame;
@@ -52,7 +55,7 @@ public class SpringChessService {
 
     private BoardDto movePiece(ChessGame chessGame, MoveRequestDto moveRequestDto) {
         chessGame.move(moveRequestDto.getTarget(), moveRequestDto.getDestination());
-        springChessLogDao.addLog(moveRequestDto);
+        springChessLogDao.addLog(moveRequestDto.getRoomId(), moveRequestDto.getTarget(), moveRequestDto.getDestination());
 
         if (chessGame.isBeforeEnd()) {
             return new BoardDto(chessGame.getBoard(), chessGame.turn());

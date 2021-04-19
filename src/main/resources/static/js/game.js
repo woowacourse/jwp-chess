@@ -5,7 +5,7 @@ function initiate() {
         if (isValidHttpResponse(this)) {
             const boardDTO = JSON.parse(this.responseText);
             if (boardDTO.checkmate === true) {
-                window.location.href = '/result';
+                window.location.href = '/result/' + roomId;
                 return;
             }
             printChessBoard(boardDTO.rows, boardDTO.currentTeamType);
@@ -16,7 +16,7 @@ function initiate() {
 }
 
 function getBaseUrl() {
-    return 'http://localhost:8080/chessgame';
+    return 'http://localhost:8080/chessgame/' + roomId;
 }
 
 function isValidHttpResponse(xmlHttp) {
@@ -104,7 +104,7 @@ function sendMoveRequest(current, destination, teamType) {
             removeOutdatedChessBoard();
             const boardDTO = JSON.parse(this.responseText);
             if (boardDTO.checkmate === true) {
-                window.location.href = '/result';
+                window.location.href = '/result/' + roomId;
                 return;
             }
             printChessBoard(boardDTO.rows, boardDTO.currentTeamType);

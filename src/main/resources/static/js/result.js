@@ -9,7 +9,7 @@ function showResult() {
         }
         if (isGameNotFinished(this)) {
             alert('게임이 아직 종료되지 않았습니다.');
-            window.location = 'http://localhost:8080';
+            window.location = getBaseUrl();
         }
     }
     xmlHttp.open('GET', url, true);
@@ -17,7 +17,7 @@ function showResult() {
 }
 
 function getBaseUrl() {
-    return 'http://localhost:8080/chessgame';
+    return 'http://localhost:8080/chessgame/' + roomId;
 }
 
 function isValidHttpResponse(xmlHttp) {

@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QueenTest {
-    Board board;
-    Map<Position, Piece> testBoard = new LinkedHashMap<>();
+    private Board board;
+    private Map<Position, Piece> testBoard = new LinkedHashMap<>();
 
     @BeforeEach
     void setUp() {

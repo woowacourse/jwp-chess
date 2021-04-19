@@ -14,9 +14,9 @@ import chess.domain.team.WhiteTeam;
 import dto.MoveDto;
 import java.util.List;
 import java.util.Map;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
+@Repository
 public class ChessRepository {
     private final RoomDao roomDao;
     private final GameDao gameDao;

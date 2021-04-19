@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
-public class PieceCapturedTest {
+public class CapturedPiecesTest {
     @Test
     @DisplayName("기물을 잡는 것이 정상 작동한다.")
     void add_test() {
-        final PieceCaptured pieceCaptured = new PieceCaptured();
-        assertThatCode(() -> pieceCaptured.add(new Queen()))
+        final CapturedPieces capturedPieces = new CapturedPieces();
+        assertThatCode(() -> capturedPieces.add(new Queen()))
                 .doesNotThrowAnyException();
     }
 }

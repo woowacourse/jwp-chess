@@ -6,7 +6,7 @@ import chess.domain.piece.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class PiecePosition {
+public final class PiecePositions {
     private static final int BLACK_PAWN_COLUMN = 6;
     private static final int BLACK_PAWN_DIRECTION = -1;
     private static final int BLACK_PIECE_COLUMN = 7;
@@ -17,22 +17,22 @@ public final class PiecePosition {
 
     private final Map<Position, Piece> piecePosition;
 
-    public PiecePosition(final Map<Position, Piece> piecePosition) {
+    public PiecePositions(final Map<Position, Piece> piecePosition) {
         this.piecePosition = new HashMap<>(piecePosition);
     }
 
-    private PiecePosition(final int pawnColumn, final int pawnDirection, final int pieceColumn) {
+    private PiecePositions(final int pawnColumn, final int pawnDirection, final int pieceColumn) {
         piecePosition = new HashMap<>();
         initializePawn(pawnColumn, pawnDirection);
         initializePiece(pieceColumn);
     }
 
-    public static PiecePosition initBlackPosition() {
-        return new PiecePosition(BLACK_PAWN_COLUMN, BLACK_PAWN_DIRECTION, BLACK_PIECE_COLUMN);
+    public static PiecePositions initBlackPosition() {
+        return new PiecePositions(BLACK_PAWN_COLUMN, BLACK_PAWN_DIRECTION, BLACK_PIECE_COLUMN);
     }
 
-    public static PiecePosition initWhitePosition() {
-        return new PiecePosition(WHITE_PAWN_COLUMN, WHITE_PAWN_DIRECTION, WHITE_PIECE_COLUMN);
+    public static PiecePositions initWhitePosition() {
+        return new PiecePositions(WHITE_PAWN_COLUMN, WHITE_PAWN_DIRECTION, WHITE_PIECE_COLUMN);
     }
 
     private void initializePawn(final int pawnColumn, final int pawnDirection) {

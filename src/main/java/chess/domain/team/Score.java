@@ -34,11 +34,11 @@ public final class Score {
     public Score() {
     }
 
-    public double calculateScore(final Map<Position, Piece> piecePosition) {
+    public double calculateScoreOnLine(final Map<Position, Piece> piecePosition) {
         double totalScore = 0;
         for (int column = MIN_COLUMN; column <= MAX_COLUMN; column++) {
             final List<Piece> pieceInSameColumn = collectPieceInSameColumn(piecePosition, column);
-            totalScore += calculateScore(pieceInSameColumn);
+            totalScore += calculateScoreOnLine(pieceInSameColumn);
         }
         return totalScore;
     }
@@ -50,7 +50,7 @@ public final class Score {
                 .collect(Collectors.toList());
     }
 
-    private double calculateScore(final List<Piece> pieces) {
+    private double calculateScoreOnLine(final List<Piece> pieces) {
         final double scoreExceptPawn = calculateScoreExceptPawn(pieces);
         final double pawnScore = calculatePawnScore(pieces);
         if (pawnScore > SINGLE_PAWN_SCORE) {

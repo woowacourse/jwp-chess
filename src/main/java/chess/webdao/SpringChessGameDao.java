@@ -3,8 +3,8 @@ package chess.webdao;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
-import chess.domain.team.PieceCaptured;
-import chess.domain.team.PiecePosition;
+import chess.domain.team.CapturedPieces;
+import chess.domain.team.PiecePositions;
 import chess.domain.team.Score;
 import chess.domain.team.Team;
 import chess.webdto.ChessGameTableDto;
@@ -61,8 +61,8 @@ public class SpringChessGameDao {
     private Team generateTeam(final String teamPieceInfo, final String team) {
         Map<Position, Piece> piecePosition;
         piecePosition = PiecePositionDAOConverter.asPiecePosition(teamPieceInfo, team);
-        final PiecePosition PiecePositionByTeam = new PiecePosition(piecePosition);
-        return new Team(PiecePositionByTeam, new PieceCaptured(), new Score());
+        final PiecePositions piecePositionsByTeam = new PiecePositions(piecePosition);
+        return new Team(piecePositionsByTeam, new CapturedPieces(), new Score());
     }
 
     private ChessGame generateChessGame(final Team blackTeam, final Team whiteTeam) {

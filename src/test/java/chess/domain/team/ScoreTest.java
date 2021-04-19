@@ -21,7 +21,7 @@ public class ScoreTest {
         piecePosition.put(Position.of("a3"), new Knight());
         piecePosition.put(Position.of("a4"), new Queen());
 
-        assertThat(score.calculateScore(piecePosition)).isEqualTo(19.5);
+        assertThat(score.calculateScoreOnLine(piecePosition)).isEqualTo(19.5);
     }
 
     @Test
@@ -30,12 +30,12 @@ public class ScoreTest {
         final Score score = new Score();
         final Map<Position, Piece> piecePosition = new HashMap<>();
         piecePosition.put(Position.of("a1"), new Pawn(1));
-        assertThat(score.calculateScore(piecePosition)).isEqualTo(1.0);
+        assertThat(score.calculateScoreOnLine(piecePosition)).isEqualTo(1.0);
 
         piecePosition.put(Position.of("a2"), new Pawn(1));
-        assertThat(score.calculateScore(piecePosition)).isEqualTo(1.0);
+        assertThat(score.calculateScoreOnLine(piecePosition)).isEqualTo(1.0);
 
         piecePosition.put(Position.of("a3"), new Pawn(1));
-        assertThat(score.calculateScore(piecePosition)).isEqualTo(1.5);
+        assertThat(score.calculateScoreOnLine(piecePosition)).isEqualTo(1.5);
     }
 }

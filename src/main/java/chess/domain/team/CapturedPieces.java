@@ -5,10 +5,10 @@ import chess.domain.piece.Piece;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class PieceCaptured {
+public final class CapturedPieces {
     private final List<Piece> pieceCaptured;
 
-    public PieceCaptured() {
+    public CapturedPieces() {
         pieceCaptured = new ArrayList<>();
     }
 

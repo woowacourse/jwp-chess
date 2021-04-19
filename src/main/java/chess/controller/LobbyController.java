@@ -39,10 +39,11 @@ public class LobbyController {
     @PostMapping("/findRoomId")
     @ResponseBody
     public ResponseEntity findRoomId(@RequestBody @Valid TitleDTO titleDTO, BindingResult error) {
+        String title = titleDTO.getTitle().replaceAll("%20", " ");
         if (error.hasErrors()) {
             return ResponseEntity.badRequest().body(error.getAllErrors().get(0).getDefaultMessage());
         }
-        return ResponseEntity.ok(new RoomIdDTO(lobbyService.findRoomId(titleDTO.getTitle()).orElseThrow(() -> new EmptyResultDataAccessException(0))));
+        return ResponseEntity.ok(new RoomIdDTO(lobbyService.findRoomId(title).orElseThrow(() -> new EmptyResultDataAccessException(0))));
     }
 
     @PostMapping("/isDuplicate")

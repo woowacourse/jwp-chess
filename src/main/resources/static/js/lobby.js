@@ -31,7 +31,11 @@ async function showRoomList() {
 }
 
 function roomTemplate(id, name) {
-    return `<option id=${id} value=${name}>${name}</option>`
+    return `<option id=${id} value=${parseRoomName(name)}>${name}</option>`
+}
+
+function parseRoomName(name){
+    return name.replaceAll(' ', '%20')
 }
 
 function routeToRoom(id) {
@@ -205,7 +209,6 @@ async function showRoomInfo(roomName) {
     const blackScore = score.blackScore
     const whiteScore = score.whiteScore
     const isFinished = finished.finished
-
     let response = await fetch(
         `/findRoomId`,
         {

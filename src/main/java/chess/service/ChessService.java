@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ChessService {
 
     private static final char EMPTY_PIECE_NAME = '.';

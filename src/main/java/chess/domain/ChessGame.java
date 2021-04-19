@@ -39,14 +39,13 @@ public class ChessGame {
         end = board.isGameOver();
     }
 
-    public boolean move(String target, String destination) {
+    public void move(String target, String destination) {
         if (!board.movePiece(convertStringToPosition(target), convertStringToPosition(destination))) {
-            return false;
+            throw new IllegalArgumentException("이동할 수 없는 위치입니다.");
         }
         board.applyStatus();
 
         end = board.isGameOver();
-        return true;
     }
 
     public List<String> findMovablePosition(String target) {

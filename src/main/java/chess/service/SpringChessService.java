@@ -41,12 +41,8 @@ public class SpringChessService {
     public BoardDto move(MoveRequestDto moveRequestDto) throws SQLException {
         ChessGame chessGame = loadChessGame(moveRequestDto.getRoomId());
 
-        try {
-            BoardDto boardDto = movePiece(chessGame, moveRequestDto);
-            return boardDto;
-        } catch (Exception e) {
-            return start(chessGame);
-        }
+        BoardDto boardDto = movePiece(chessGame, moveRequestDto);
+        return boardDto;
     }
 
     private BoardDto start(ChessGame chessGame) {
@@ -55,9 +51,8 @@ public class SpringChessService {
     }
 
     private BoardDto movePiece(ChessGame chessGame, MoveRequestDto moveRequestDto) {
-        if (chessGame.move(moveRequestDto.getTarget(), moveRequestDto.getDestination())) {
-            springChessLogDao.addLog(moveRequestDto);
-        }
+        chessGame.move(moveRequestDto.getTarget(), moveRequestDto.getDestination());
+        springChessLogDao.addLog(moveRequestDto);
 
         if (chessGame.isBeforeEnd()) {
             return new BoardDto(chessGame.getBoard(), chessGame.turn());

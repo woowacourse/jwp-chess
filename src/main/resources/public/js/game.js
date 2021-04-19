@@ -41,10 +41,9 @@ function postFetch(url, bodyData) {
         },
         body: bodyData
     }).then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-    });
+        console.log(response)
+        return response.json();
+    })
 }
 
 function postFetchScore(url) {

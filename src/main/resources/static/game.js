@@ -12,7 +12,6 @@ window.onload = () => {
     const urls = location.href.split("/");
     roomId = urls[urls.length - 1];
     loadChessGame();
-
 }
 
 function loadChessGame() {
@@ -94,16 +93,6 @@ function movePiece(target) {
         .catch(function (error) {
             alert('움직일 수 없습니다.');
         })
-        .then(function () {
-            clearSelect();
-        })
-}
-
-function clearSelect() {
-    let selectedPiece = document.getElementsByClassName('selected-piece');
-    for (let i = 0; i < selectedPiece.length; i++) {
-        selectedPiece[i].classList.remove('selected-piece');
-    }
 }
 
 function refreshChessBoard(chessGame) {

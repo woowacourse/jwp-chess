@@ -57,7 +57,7 @@ public class GameController {
     @PostMapping("/finish/{gameId}")
     public ResponseEntity finish(@PathVariable String gameId) {
         gameService.finish(gameId);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/scoreById/{gameId}")

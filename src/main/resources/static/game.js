@@ -33,17 +33,6 @@ function loadChessGame() {
     });
 }
 
-/*const btnStart = document.getElementsByClassName('btn-start')[0];
-btnStart.addEventListener('click', function (e) {
-    axios.get('/refreshChessGame?id=' + roomId)
-        .then(function (response) {
-            refreshChessBoard(response.data);
-        })
-        .catch(function (error) {
-            alert('게임을 갱신 할 수 없습니다.')
-        });
-})*/
-
 const tiles = document.getElementsByClassName('tile');
 for (let i = 0; i < tiles.length; i++) {
     tiles.item(i).addEventListener('click', function (e) {

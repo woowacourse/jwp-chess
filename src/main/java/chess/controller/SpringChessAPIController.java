@@ -14,8 +14,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class SpringChessAPIController {
-    @Autowired
-    private ChessService chessService;
+    private final ChessService chessService;
+
+    public SpringChessAPIController(final ChessService chessService) {
+        this.chessService = chessService;
+    }
 
     @GetMapping("/rooms")
     public ResponseEntity<List<RoomDto>> loadAllRoom() {

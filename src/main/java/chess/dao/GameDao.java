@@ -1,19 +1,20 @@
 package chess.dao;
 
 import chess.domain.ChessGame;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.PreparedStatement;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.util.Objects;
-
 @Repository
 public class GameDao {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public GameDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Long create(ChessGame chessGame) {
         String sql = "insert into game (is_end) values (?)";

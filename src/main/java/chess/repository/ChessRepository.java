@@ -12,22 +12,23 @@ import chess.domain.team.BlackTeam;
 import chess.domain.team.Team;
 import chess.domain.team.WhiteTeam;
 import dto.MoveDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ChessRepository {
-    @Autowired
-    private RoomDao roomDao;
-    @Autowired
-    private GameDao gameDao;
-    @Autowired
-    private TeamDao teamDao;
-    @Autowired
-    private PieceDao pieceDao;
+    private final RoomDao roomDao;
+    private final GameDao gameDao;
+    private final TeamDao teamDao;
+    private final PieceDao pieceDao;
+
+    public ChessRepository(RoomDao roomDao, GameDao gameDao, TeamDao teamDao, PieceDao pieceDao) {
+        this.roomDao = roomDao;
+        this.gameDao = gameDao;
+        this.teamDao = teamDao;
+        this.pieceDao = pieceDao;
+    }
 
     public void createRoom(final ChessGame chessGame, final Room room) {
         Long gameId = gameDao.create(chessGame);
@@ -75,9 +76,8 @@ public class ChessRepository {
         Room room = roomDao.load(roomId);
         Long gameId = room.getGameId();
 
-        boolean isEnd = chessGame.isEnd();
-        if (isEnd) {
-            gameDao.update(gameId, isEnd);
+        if (chessGame.isEnd()) {
+            gameDao.update(gameId, true);
         }
 
         WhiteTeam whiteTeam = chessGame.getWhiteTeam();
@@ -88,6 +88,5 @@ public class ChessRepository {
 
         pieceDao.delete(gameId, moveDto);
         pieceDao.update(gameId, moveDto);
-
     }
 }

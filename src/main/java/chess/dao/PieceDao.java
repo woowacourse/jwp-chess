@@ -3,23 +3,21 @@ package chess.dao;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 import dto.MoveDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-import util.PieceConverter;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import util.PieceConverter;
 
 @Repository
 public class PieceDao {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public PieceDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void create(Map<Position, Piece> pieces, String color, Long gameId) {
         String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";

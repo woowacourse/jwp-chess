@@ -9,18 +9,19 @@ import chess.repository.ChessRepository;
 import dto.ChessGameDto;
 import dto.MoveDto;
 import dto.RoomDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class ChessService {
-    @Autowired
-    ChessRepository chessRepository;
+    private final ChessRepository chessRepository;
+
+    public ChessService(final ChessRepository chessRepository) {
+        this.chessRepository = chessRepository;
+    }
 
     public ResponseEntity<List<RoomDto>> loadAllRoom() {
         final List<RoomDto> rooms = chessRepository.loadAllRoom()

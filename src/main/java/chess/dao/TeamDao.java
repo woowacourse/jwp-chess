@@ -1,19 +1,20 @@
 package chess.dao;
 
 import chess.domain.team.Team;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.PreparedStatement;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.util.Objects;
-
 @Repository
 public class TeamDao {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public TeamDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Long create(Team team, Long teamId) {
         String sql = "insert into team (name, is_turn, game_id) values (?, ?, ?)";

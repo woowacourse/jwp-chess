@@ -10,6 +10,7 @@ import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.MoveResponseDto;
 import chess.service.ChessService;
 import com.google.gson.Gson;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,13 +76,13 @@ public class SpringChessController {
         return "chess";
     }
 
-    @PostMapping(value = "/move", produces = "application/json")
+    @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public MoveResponseDto move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
         return chessService.move(moveRequestDto);
     }
 
-    @PostMapping(value = "/turn", produces = "application/json")
+    @PostMapping(value = "/turn", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void turn(@RequestBody TurnChangeRequestDto turnChangeRequestDto) throws SQLException {
         chessService.changeTurn(turnChangeRequestDto);

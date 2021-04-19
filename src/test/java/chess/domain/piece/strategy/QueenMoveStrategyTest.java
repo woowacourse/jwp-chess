@@ -20,11 +20,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class QueenMoveStrategyTest {
     private Board board;
 
-    @BeforeEach
-    void setUp() {
-        board = InitBoardInitializer.getBoard();
-    }
-
     private static Stream<Arguments> queenCanMoveTest() {
         return Stream.of(
                 Arguments.of(Position.of("a3"), Position.of("b4"), true),   // 한 대각선 이동
@@ -34,6 +29,11 @@ public class QueenMoveStrategyTest {
                 Arguments.of(Position.of("a3"), Position.of("h3"), true),   // 다수의 File 이동
                 Arguments.of(Position.of("a3"), Position.of("a6"), true)   // 다수의 Rank 이동외
         );
+    }
+
+    @BeforeEach
+    void setUp() {
+        board = InitBoardInitializer.getBoard();
     }
 
     @DisplayName("의 이동 가능한 경우 테스트")

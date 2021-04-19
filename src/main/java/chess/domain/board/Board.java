@@ -20,9 +20,8 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.*;
 
 public class Board {
-    private static final int PAWN_SCORE_DISADVANTAGE_SIZE = 2;
     public static final int ALL_KING_ALIVE_COUNT = 2;
-
+    private static final int PAWN_SCORE_DISADVANTAGE_SIZE = 2;
     private final List<Square> board;
 
     private Board(List<Square> board) {

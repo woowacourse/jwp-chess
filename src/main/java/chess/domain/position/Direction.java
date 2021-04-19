@@ -24,8 +24,8 @@ public enum Direction {
     WWN(-2, 1),
     WWS(-2, -1);
 
-    private int xDegree;
-    private int yDegree;
+    private final int xDegree;
+    private final int yDegree;
 
     Direction(int xDegree, int yDegree) {
         this.xDegree = xDegree;

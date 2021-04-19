@@ -1,7 +1,7 @@
 package chess.domain.piece.attribute;
 
 public class Score {
-    private double score;
+    private final double score;
 
     public Score(double score) {
         this.score = score;

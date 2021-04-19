@@ -15,9 +15,6 @@ import java.util.Optional;
 
 @Repository
 public class JdbcTemplateChessDao implements ChessDao {
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert insertAction;
-
     private final RowMapper<ChessGame> chessGameRowMapper = (rs, rownum) -> {
         long gameId = rs.getLong("id");
         String nextTurn = rs.getString("next_turn");
@@ -25,6 +22,8 @@ public class JdbcTemplateChessDao implements ChessDao {
         String pieces = rs.getString("pieces");
         return new ChessGame(gameId, Color.of(nextTurn), running, pieces);
     };
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertAction;
 
     public JdbcTemplateChessDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;

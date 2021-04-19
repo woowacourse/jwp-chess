@@ -28,8 +28,8 @@ class JdbcTemplateChessDaoTest {
     ChessGame chessGame;
     ChessGameManager sampleGame;
 
-    private JdbcTemplate jdbcTemplate;
-    private JdbcTemplateChessDao jdbcTemplateChessDao;
+    private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplateChessDao jdbcTemplateChessDao;
 
     @Autowired
     public JdbcTemplateChessDaoTest(JdbcTemplate jdbcTemplate, @Qualifier("dataSource") DataSource dataSource) {

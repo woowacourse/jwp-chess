@@ -18,7 +18,7 @@ import static chess.domain.position.Rank.*;
 import static java.util.stream.Collectors.toList;
 
 public class InitBoardInitializer implements BoardInitializer {
-    private static InitBoardInitializer boardInitializer = new InitBoardInitializer();
+    private static final InitBoardInitializer boardInitializer = new InitBoardInitializer();
 
     private InitBoardInitializer() {
     }

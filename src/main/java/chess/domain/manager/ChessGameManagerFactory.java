@@ -1,10 +1,10 @@
 package chess.domain.manager;
 
-import chess.domain.converter.PiecesConverter;
 import chess.dao.dto.ChessGame;
 import chess.domain.board.Board;
 import chess.domain.board.InitBoardInitializer;
 import chess.domain.board.LoadBoardInitializer;
+import chess.domain.converter.PiecesConverter;
 import chess.domain.statistics.ChessGameStatistics;
 
 import static chess.domain.converter.PiecesConverter.convertSquares;

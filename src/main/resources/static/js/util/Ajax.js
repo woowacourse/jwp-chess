@@ -8,7 +8,7 @@ export class Ajax {
     }
 
     getURL(gameId) {
-        return Ajax.#URL + gameId + "/"
+        return Ajax.#URL + "/game/" + gameId + "/"
     }
 
     async get(gameId, uri) {
@@ -62,6 +62,5 @@ export class Ajax {
 
         throw await result.json()
     }
-
 
 }

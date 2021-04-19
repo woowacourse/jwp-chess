@@ -6,8 +6,6 @@ import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
 import chess.web.dto.MoveDto;
 import chess.web.dto.StatusDto;
-import org.eclipse.jetty.http.HttpStatus;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,17 +18,17 @@ public class SpringWebChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/{gameId}/start")
+    @GetMapping("/game/{gameId}/start")
     public GameDto start(@PathVariable String gameId) {
         return chessService.startNewGame(gameId);
     }
 
-    @GetMapping("/{gameId}/load")
+    @GetMapping("/game/{gameId}")
     public GameDto load(@PathVariable String gameId) {
         return chessService.loadByGameId(gameId);
     }
 
-    @PatchMapping("/{gameId}/move")
+    @PatchMapping("/game/{gameId}/position")
     public GameDto move(@PathVariable String gameId, @RequestBody MoveDto moveDto) {
         String source = moveDto.getSource();
         String target = moveDto.getTarget();
@@ -38,17 +36,17 @@ public class SpringWebChessController {
         return chessService.move(gameId, source, target);
     }
 
-    @PostMapping("/{gameId}/save")
+    @PostMapping("/game/{gameId}")
     public MessageDto save(@PathVariable String gameId) {
         return chessService.save(gameId);
     }
 
-    @GetMapping("/{gameId}/status")
+    @GetMapping("/game/{gameId}/status")
     public StatusDto status(@PathVariable String gameId) {
         return chessService.getStatus(gameId);
     }
 
-    @PatchMapping("/{gameId}/status")
+    @PatchMapping("/game/{gameId}/end")
     public MessageDto end(@PathVariable String gameId) {
         return chessService.end(gameId);
     }

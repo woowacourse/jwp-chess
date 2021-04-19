@@ -42,7 +42,7 @@ export class ChessController {
 
         let result
         try {
-            result = await this.#ajax.get(gameId, 'load')
+            result = await this.#ajax.get(gameId, '')
         } catch (e) {
             alert(e.message)
             return
@@ -77,7 +77,7 @@ export class ChessController {
     async #save() {
 
         try {
-            await this.#ajax.post(this.#chessGame.gameId, 'save', '')
+            await this.#ajax.post(this.#chessGame.gameId, '', '')
         } catch (e) {
             alert(e.message)
             return
@@ -139,7 +139,7 @@ export class ChessController {
 
 
     async #sendMoveRequest(source, target) {
-        return await this.#ajax.patch(this.#chessGame.gameId, 'move', `
+        return await this.#ajax.patch(this.#chessGame.gameId, 'position', `
                 {
                     "source" : "${source}",
                     "target" : "${target}"

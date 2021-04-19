@@ -2,6 +2,7 @@ package chess.webdao;
 
 import chess.domain.Position;
 import chess.domain.piece.Piece;
+import chess.webdto.PieceDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class PiecePositionDAOConverter {
             pieceInfo.append(position.getPositionInitial());
             pieceInfo.append(FIELD_SEPARATOR);
             final Piece piece = teamPiecePosition.get(position);
-            pieceInfo.append(PieceToDAO.convert(piece));
+            pieceInfo.append(PieceDto.convert(piece));
             pieceInfo.append(FIELD_SEPARATOR);
             pieceInfo.append(booleanToString(piece.isFirstMove()));
             pieceInfo.append(PIECE_SEPARATOR);

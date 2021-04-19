@@ -14,8 +14,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 
-import static chess.service.TeamFormat.BLACK_TEAM;
-import static chess.service.TeamFormat.WHITE_TEAM;
+import static chess.webdto.TeamDto.BLACK_TEAM;
+import static chess.webdto.TeamDto.WHITE_TEAM;
 
 @Repository
 public class SpringChessGameDao {
@@ -35,9 +35,9 @@ public class SpringChessGameDao {
     public ChessGame createChessGame() {
         String sql = "INSERT INTO chess_game (current_turn_team, is_playing) VALUES (?, ?)";
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
-        createTeamInfo(WHITE_TEAM.asDAOFormat(), chessGame.currentWhitePiecePosition());
-        createTeamInfo(BLACK_TEAM.asDAOFormat(), chessGame.currentBlackPiecePosition());
-        this.jdbcTemplate.update(sql, WHITE_TEAM.asDAOFormat(), chessGame.isPlaying());
+        createTeamInfo(WHITE_TEAM.team(), chessGame.currentWhitePiecePosition());
+        createTeamInfo(BLACK_TEAM.team(), chessGame.currentBlackPiecePosition());
+        this.jdbcTemplate.update(sql, WHITE_TEAM.team(), chessGame.isPlaying());
         return chessGame;
     }
 
@@ -47,8 +47,8 @@ public class SpringChessGameDao {
     }
 
     public ChessGame readChessGame() {
-        final Team blackTeam = readTeamInfo(BLACK_TEAM.asDAOFormat());
-        final Team whiteTeam = readTeamInfo(WHITE_TEAM.asDAOFormat());
+        final Team blackTeam = readTeamInfo(BLACK_TEAM.team());
+        final Team whiteTeam = readTeamInfo(WHITE_TEAM.team());
         return generateChessGame(blackTeam, whiteTeam);
     }
 
@@ -73,15 +73,15 @@ public class SpringChessGameDao {
 
     private ChessGame generateChessGameAccordingToDB(final Team blackTeam, final Team whiteTeam,
                                                      final String currentTurnTeam, final boolean isPlaying) {
-        if (WHITE_TEAM.asDAOFormat().equals(currentTurnTeam)) {
+        if (WHITE_TEAM.team().equals(currentTurnTeam)) {
             return new ChessGame(blackTeam, whiteTeam, whiteTeam, isPlaying);
         }
         return new ChessGame(blackTeam, whiteTeam, blackTeam, isPlaying);
     }
 
     public void updateChessGame(final ChessGame chessGame, final String currentTurnTeam) {
-        updateTeamInfo(chessGame.currentWhitePiecePosition(), WHITE_TEAM.asDAOFormat());
-        updateTeamInfo(chessGame.currentBlackPiecePosition(), BLACK_TEAM.asDAOFormat());
+        updateTeamInfo(chessGame.currentWhitePiecePosition(), WHITE_TEAM.team());
+        updateTeamInfo(chessGame.currentBlackPiecePosition(), BLACK_TEAM.team());
         final String query = "UPDATE chess_game SET current_turn_team = (?), is_playing = (?)";
         this.jdbcTemplate.update(query, currentTurnTeam, chessGame.isPlaying());
     }

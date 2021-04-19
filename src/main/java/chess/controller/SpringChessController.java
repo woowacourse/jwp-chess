@@ -46,11 +46,4 @@ public class SpringChessController {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body("fail");
     }
 
-
-    private String converter(boolean whiteTeam) {
-        if (whiteTeam) {
-            return "white";
-        }
-        return "black";
-    }
 }

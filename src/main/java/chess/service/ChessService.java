@@ -21,7 +21,6 @@ import chess.dto.response.MoveResponseDto;
 import chess.repository.ChessRepository;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,17 +34,45 @@ public class ChessService {
         this.chessRepository = chessRepository;
     }
 
-    public void resetRound() {
-        round = makeRound();
-    }
-
     public Round makeRound() {
         return new Round(StateFactory.initialization(PiecesFactory.whitePieces()),
                 StateFactory.initialization(PiecesFactory.blackPieces()),
                 CommandFactory.initialCommand("start"));
     }
 
-    public Map<String, String> chessBoardFromDB() throws SQLException {
+    public void start() {
+        remove();
+        initialize(filteredChessBoard(round.getBoard()));
+    }
+
+    public void remove() {
+        chessRepository.removeAllPieces();
+        chessRepository.removeTurn();
+    }
+
+    public Map<String, String> filteredChessBoard(final Map<Position, Piece> chessBoard) {
+        Map<String, String> filteredChessBoard = new LinkedHashMap<>();
+        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.entrySet()) {
+            if (chessBoardEntry.getValue() != null) {
+                filteredChessBoard.put(chessBoardEntry.getKey().toString(),
+                        chessBoardEntry.getValue().getPiece());
+            }
+        }
+        return filteredChessBoard;
+    }
+
+    public void initialize(final Map<String, String> filteredChessBoard) {
+        chessRepository.initializePieceStatus(filteredChessBoard);
+        chessRepository.initializeTurn();
+    }
+
+    public void reset() {
+        remove();
+        initialize(filteredChessBoard(round.getBoard()));
+        round = makeRound();
+    }
+
+    public Map<String, String> chessBoardFromDB() {
         Map<String, String> chessBoardFromDB = new LinkedHashMap<>();
         List<ChessRequestDto> pieces = chessRepository.showAllPieces();
         for (ChessRequestDto piece : pieces) {
@@ -55,15 +82,14 @@ public class ChessService {
         return chessBoardFromDB;
     }
 
-    public Map<Position, Piece> chessBoard(final Map<String, String> chessBoardFromDB) {
-        return round.getBoard(ChessBoardFactory.loadBoard(chessBoardFromDB));
+    public Map<String, String> getStoredBoard() {
+        Map<Position, Piece> loadedBoard = ChessBoardFactory.createStoredBoard(chessBoardFromDB());
+        round.updateBoard(loadedBoard);
+        updateRound(piecesDto(loadedBoard));
+        return stringChessBoard(loadedBoard);
     }
 
-    public Map<Position, Piece> chessBoard() {
-        return round.getBoard();
-    }
-
-    public Map<String, String> stringChessBoard(final Map<Position, Piece> chessBoard) throws SQLException {
+    public Map<String, String> stringChessBoard(final Map<Position, Piece> chessBoard) {
         Map<String, String> stringChessBoard = new LinkedHashMap<>();
         for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.entrySet()) {
             stringChessBoard.put(chessBoardEntry.getKey().toString(), chessBoardEntry.getValue().getPiece());
@@ -91,11 +117,13 @@ public class ChessService {
                 CommandFactory.initialCommand("start"));
     }
 
-    public String currentTurn() throws SQLException {
+    public String getCurrentTurn() {
         List<TurnRequestDto> turns = chessRepository.showCurrentTurn();
-        return turns.stream()
+        String currentTurn = turns.stream()
                 .map(TurnRequestDto::getCurrentTurn)
                 .collect(Collectors.joining());
+        changeRoundState(currentTurn);
+        return currentTurn;
     }
 
     public void changeRoundState(final String currentTurn) {
@@ -136,7 +164,7 @@ public class ChessService {
         }
     }
 
-    public MoveResponseDto move(final MoveRequestDto moveRequestDto) throws SQLException {
+    public MoveResponseDto move(final MoveRequestDto moveRequestDto) {
         Queue<String> commands =
                 new ArrayDeque<>(Arrays.asList("move", moveRequestDto.getSource(), moveRequestDto.getTarget()));
         try {
@@ -152,33 +180,12 @@ public class ChessService {
         round.execute(commands);
     }
 
-    public void movePiece(final MoveRequestDto moveRequestDto) throws SQLException {
+    public void movePiece(final MoveRequestDto moveRequestDto) {
         chessRepository.removePiece(moveRequestDto);
         chessRepository.movePiece(moveRequestDto);
     }
 
-    public void changeTurn(final TurnChangeRequestDto turnChangeRequestDto) throws SQLException {
+    public void changeTurn(final TurnChangeRequestDto turnChangeRequestDto) {
         chessRepository.changeTurn(turnChangeRequestDto);
-    }
-
-    public void remove() throws SQLException {
-        chessRepository.removeAllPieces();
-        chessRepository.removeTurn();
-    }
-
-    public Map<String, String> filteredChessBoard(final Map<Position, Piece> chessBoard) {
-        Map<String, String> filteredChessBoard = new LinkedHashMap<>();
-        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.entrySet()) {
-            if (chessBoardEntry.getValue() != null) {
-                filteredChessBoard.put(chessBoardEntry.getKey().toString(),
-                        chessBoardEntry.getValue().getPiece());
-            }
-        }
-        return filteredChessBoard;
-    }
-
-    public void initialize(final Map<String, String> filteredChessBoard) throws SQLException {
-        chessRepository.initializePieceStatus(filteredChessBoard);
-        chessRepository.initializeTurn();
     }
 }

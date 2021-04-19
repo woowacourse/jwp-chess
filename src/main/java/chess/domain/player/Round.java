@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Queue;
 
 public class Round {
-    private static Map<Position, Piece> board;
+    private Map<Position, Piece> board;
     private final Player whitePlayer;
     private final Player blackPlayer;
     private Command command;
@@ -83,9 +83,8 @@ public class Round {
         return board;
     }
 
-    public Map<Position, Piece> getBoard(final Map<Position, Piece> loadBoard) {
-        board = loadBoard;
-        return board;
+    public void updateBoard(Map<Position, Piece> loadedBoard) {
+        board = loadedBoard;
     }
 
     public boolean isPlaying() {

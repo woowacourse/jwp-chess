@@ -95,12 +95,10 @@
 {{#currentTurn}}
     <div id="currentTurn" style="display: none">{{.}}</div>
 {{/currentTurn}}
-{{#whiteScore}}
-    <div id="whiteScore" style="display: none">{{.}}</div>
-{{/whiteScore}}
-{{#blackScore}}
-    <div id="blackScore" style="display: none">{{.}}</div>
-{{/blackScore}}
+{{#score}}
+    <div id="whiteScore" style="display: none">{{score.whiteScore}}</div>
+    <div id="blackScore" style="display: none">{{score.blackScore}}</div>
+{{/score}}
 <script type="text/javascript" src="/js/chess.js"></script>
 </body>
 </html>

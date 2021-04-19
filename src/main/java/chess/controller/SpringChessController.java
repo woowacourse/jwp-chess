@@ -1,8 +1,5 @@
 package chess.controller;
 
-import chess.domain.piece.Piece;
-import chess.domain.position.Position;
-import chess.dto.PiecesDto;
 import chess.dto.PlayerDto;
 import chess.dto.ScoreDto;
 import chess.dto.request.MoveRequestDto;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 @Controller
@@ -36,61 +32,44 @@ public class SpringChessController {
     }
 
     @GetMapping("/start")
-    public String start() throws SQLException {
-        chessService.remove();
-        chessService.makeRound();
-        return makeNewGame();
+    public String start() {
+        chessService.start();
+        return "redirect:/chess";
     }
 
     @GetMapping("/reset")
-    public String reset() throws SQLException {
-        chessService.remove();
-        chessService.resetRound();
-        return makeNewGame();
+    public String reset() {
+        chessService.reset();
+        return "redirect:/chess";
     }
 
     @GetMapping("/chess")
-    public String chess(final Model model) throws SQLException {
-        Map<String, String> chessBoardFromDB = chessService.chessBoardFromDB();
-        Map<Position, Piece> chessBoard = chessService.chessBoard(chessBoardFromDB);
-        Map<String, String> stringChessBoard = chessService.stringChessBoard(chessBoard);
-        PiecesDto piecesDto = chessService.piecesDto(chessBoard);
+    public String chess(final Model model) {
+        Map<String, String> loadedBoard = chessService.getStoredBoard();
 
-        String jsonFormatChessBoard = GSON.toJson(stringChessBoard);
+        String jsonFormatChessBoard = GSON.toJson(loadedBoard);
         model.addAttribute("jsonFormatChessBoard", jsonFormatChessBoard);
 
-        chessService.updateRound(piecesDto);
-
-        String currentTurn = chessService.currentTurn();
+        String currentTurn = chessService.getCurrentTurn();
         model.addAttribute("currentTurn", currentTurn);
 
-        chessService.changeRoundState(currentTurn);
-
         PlayerDto playerDto = chessService.playerDto();
-        ScoreDto scoreDto = chessService.scoreDto(playerDto);
         chessService.changeRoundToEnd(playerDto);
 
-        model.addAttribute("whiteScore", scoreDto.getWhiteScore());
-        model.addAttribute("blackScore", scoreDto.getBlackScore());
+        ScoreDto scoreDto = chessService.scoreDto(playerDto);
+        model.addAttribute("score", scoreDto);
         return "chess";
     }
 
     @PostMapping(value = "/move", produces = "application/json")
     @ResponseBody
-    public MoveResponseDto move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
+    public MoveResponseDto move(@RequestBody MoveRequestDto moveRequestDto) {
         return chessService.move(moveRequestDto);
     }
 
     @PostMapping(value = "/turn", produces = "application/json")
     @ResponseBody
-    public void turn(@RequestBody TurnChangeRequestDto turnChangeRequestDto) throws SQLException {
+    public void turn(@RequestBody TurnChangeRequestDto turnChangeRequestDto) {
         chessService.changeTurn(turnChangeRequestDto);
-    }
-
-    private String makeNewGame() throws SQLException {
-        Map<Position, Piece> chessBoard = chessService.chessBoard();
-        Map<String, String> filteredChessBoard = chessService.filteredChessBoard(chessBoard);
-        chessService.initialize(filteredChessBoard);
-        return "redirect:/chess";
     }
 }

@@ -18,7 +18,7 @@ public class ChessBoardFactory {
         return board;
     }
 
-    public static Map<Position, Piece> loadBoard(final Map<String, String> boardFromDB) {
+    public static Map<Position, Piece> createStoredBoard(final Map<String, String> boardFromDB) {
         Map<Position, Piece> board = new LinkedHashMap<>();
         for (Map.Entry<String, String> boardFromDBEntry : boardFromDB.entrySet()) {
             board.put(Position.findByString(

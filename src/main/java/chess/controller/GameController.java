@@ -61,8 +61,13 @@ public class GameController {
             final List<Owner> winner = gameService.winner(roomId);
             roomService.delete(roomId);
             gameService.delete(roomId);
-            return OutputView.printWinningResult(model, winner);
+
+            model.addAttribute("winner", OutputView.decideWinnerName(winner));
+            return "result";
         }
-        return OutputView.printBoardStatus(model, roomService.roomInfo(roomId), gameService.gameInfo(roomId));
+
+        model.addAttribute("room", roomService.roomInfo(roomId));
+        model.addAttribute("game", gameService.gameInfo(roomId));
+        return "chessBoard";
     }
 }

@@ -16,6 +16,7 @@ public class ExceptionController {
     @ExceptionHandler({Exception.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handlingException(final Exception e, final Model model) {
-        return OutputView.printErrorPage(model, e.getMessage());
+        model.addAttribute("msg", e.getMessage());
+        return "errorPage";
     }
 }

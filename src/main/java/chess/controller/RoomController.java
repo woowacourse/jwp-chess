@@ -26,7 +26,8 @@ public class RoomController {
 
     @GetMapping("/list")
     private String loadRoomList(final Model model) {
-        return OutputView.printMainPage(model, roomService.loadList());
+        model.addAttribute("list", roomService.loadList());
+        return "mainPage";
     }
 
     @PostMapping("/create")

@@ -8,9 +8,6 @@ import java.util.Collections;
 import java.util.Map;
 
 public class ChessGame {
-    public static final int BLACK_TEAM = 0;
-    public static final int WHITE_TEAM = 1;
-
     private final BlackTeam blackTeam;
     private final WhiteTeam whiteTeam;
     private Team currentTurn;
@@ -35,15 +32,9 @@ public class ChessGame {
         setCurrentTurn();
     }
 
-    public boolean havePieceInCurrentTurn(final Position position) {
-        return currentTurn.havePiece(position);
-    }
-
-    public boolean move(final Position current, final Position destination) {
+    public void move(final Position current, final Position destination) {
         final Piece chosenPiece = currentTurn.choosePiece(current);
-        if (!validateMovable(current, destination, chosenPiece)) {
-            return false;
-        }
+        validateMovable(current, destination, chosenPiece);
 
         Team enemy = currentTurn.getEnemy();
         if (enemy.havePiece(destination)) {
@@ -52,14 +43,13 @@ public class ChessGame {
 
         currentTurn.move(current, destination);
         changeTurn();
-        return true;
     }
 
-    private boolean validateMovable(final Position current, final Position destination, final Piece chosenPiece) {
-        return !currentTurn.havePiece(destination) && chosenPiece
-            .isMovable(current, destination, generateChessBoard());
+    private void validateMovable(final Position current, final Position destination, final Piece chosenPiece) {
+        if (currentTurn.havePiece(destination) || !chosenPiece.isMovable(current, destination, generateChessBoard())) {
+            throw new IllegalArgumentException("이동할 수 없습니다.");
+        }
     }
-
 
     private void killEnemyPiece(Position destination, Team enemy) {
         Piece piece = enemy.killPiece(destination);
@@ -70,10 +60,6 @@ public class ChessGame {
         if (piece.isKing()) {
             finish();
         }
-    }
-
-    public Team getCurrentTurn() {
-        return currentTurn;
     }
 
     public void finish() {
@@ -94,18 +80,6 @@ public class ChessGame {
         final Map<Position, Piece> chessBoard = blackTeam.getPiecePosition();
         chessBoard.putAll(whiteTeam.getPiecePosition());
         return Collections.unmodifiableMap(chessBoard);
-    }
-
-    public double calculateScoreByTeam(final int team) {
-        if (team == BLACK_TEAM) {
-            return blackTeam.calculateTotalScore();
-        }
-
-        if (team == WHITE_TEAM) {
-            return whiteTeam.calculateTotalScore();
-        }
-
-        return 0;
     }
 
     public BlackTeam getBlackTeam() {

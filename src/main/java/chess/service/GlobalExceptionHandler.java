@@ -25,11 +25,11 @@ public class GlobalExceptionHandler {
             .body(new CommonResponseDto<>(HttpStatus.BAD_REQUEST.value(), exception.getMessage()));
     }
 
-    @ExceptionHandler({RuntimeException.class})
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<CommonResponseDto<Object>> handleException(RuntimeException exception) {
         logger.info(exception.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(new CommonResponseDto<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage()));
+            .body(new CommonResponseDto<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 에러입니다. "));
     }
 
 }

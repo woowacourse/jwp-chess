@@ -52,7 +52,7 @@ const loadGame = async () => {
         basePath + "/api/games/" + localStorage.getItem("name"))
     .then(res => res.json());
 
-    if (response.statusCode === 400) {
+    if (response.statusCode === 400 || response.statusCode === 500) {
         alert(response.message);
         return;
     }
@@ -170,10 +170,11 @@ async function movePiece(sourcePosition, targetPosition) {
     const response = await fetch(basePath + "/api/games/" + localStorage.getItem("name") + "/pieces", option)
     .then(res => res.json());
 
-    if (response.statusCode === 400) {
+    if (response.statusCode === 400 || response.statusCode === 500) {
         alert(response.message);
         return;
     }
+
     await loadGame();
 }
 

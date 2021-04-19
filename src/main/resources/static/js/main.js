@@ -23,7 +23,7 @@ mainStart.addEventListener("click", async () => {
     const response = await fetch(basePath + "/api/games", option)
     .then(res => res.json());
 
-    if (response.statusCode === 400) {
+    if (response.statusCode === 400 || response.statusCode === 500) {
         alert(response.message);
         return;
     }
@@ -40,7 +40,7 @@ mainLoad.addEventListener("click", async () => {
     const response = await fetch(basePath + "/api/games/" + result)
     .then(res => res.json());
 
-    if (response.statusCode === 400) {
+    if (response.statusCode === 400 || response.statusCode === 500) {
         alert(response.message);
         return;
     }

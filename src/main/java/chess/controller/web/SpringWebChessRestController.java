@@ -10,6 +10,7 @@ import chess.controller.web.dto.state.StateResponseDto;
 import chess.domain.game.Game;
 import chess.domain.movecommand.MoveCommand;
 import chess.service.ChessService;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +21,11 @@ import java.util.List;
 public class SpringWebChessRestController {
 
     private final ChessService chessService;
+    private final ModelMapper modelMapper;
 
-    public SpringWebChessRestController(ChessService chessService) {
+    public SpringWebChessRestController(ChessService chessService, ModelMapper modelMapper) {
         this.chessService = chessService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("")

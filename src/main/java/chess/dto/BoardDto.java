@@ -34,23 +34,11 @@ public class BoardDto {
         return board;
     }
 
-    public void setBoard(Map<String, PieceDto> board) {
-        this.board = board;
-    }
-
     public String getTurn() {
         return turn;
     }
 
-    public void setTurn(String turn) {
-        this.turn = turn;
-    }
-
     public String getEnd() {
         return end;
-    }
-
-    public void setEnd(String end) {
-        this.end = end;
     }
 }

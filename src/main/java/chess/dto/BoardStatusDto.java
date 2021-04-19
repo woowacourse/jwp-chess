@@ -9,9 +9,6 @@ public class BoardStatusDto {
     private String blackScore;
     private String whiteScore;
 
-    public BoardStatusDto() {
-    }
-
     public BoardStatusDto(BoardStatus boardStatus) {
         this.lastTurn = boardStatus.getLastTurn().name();
         this.blackScore = boardStatus.getBlackScore().getScore() + SCORE;
@@ -22,23 +19,11 @@ public class BoardStatusDto {
         return lastTurn;
     }
 
-    public void setLastTurn(String lastTurn) {
-        this.lastTurn = lastTurn;
-    }
-
     public String getBlackScore() {
         return blackScore;
     }
 
-    public void setBlackScore(String blackScore) {
-        this.blackScore = blackScore;
-    }
-
     public String getWhiteScore() {
         return whiteScore;
-    }
-
-    public void setWhiteScore(String whiteScore) {
-        this.whiteScore = whiteScore;
     }
 }

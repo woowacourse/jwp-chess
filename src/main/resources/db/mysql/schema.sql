@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS chess (
     name VARCHAR(64) NOT NULL,
     winner_color VARCHAR(64) NOT NULL,
     is_running BOOLEAN NOT NULL DEFAULT FALSE,
-    created_date TIME(6),
+    created_date TIMESTAMP(6),
     PRIMARY KEY (chess_id)
 );
 

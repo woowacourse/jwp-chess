@@ -70,6 +70,10 @@ public class SpringChessService {
         return new BoardStatusDto(loadChessGame(roomId).boardStatus());
     }
 
+    public String findRoomByRoomId(String roomId) {
+        return springChessLogDao.findRoomByRoomId(roomId);
+    }
+
     public void deleteRoom(String roomNumber) {
         springChessLogDao.deleteLog(roomNumber);
     }

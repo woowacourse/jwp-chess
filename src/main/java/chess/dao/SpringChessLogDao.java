@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class SpringChessLogDao {
@@ -45,5 +46,18 @@ public class SpringChessLogDao {
     public void deleteLog(String roomId) {
         String query = "DELETE FROM chessgame WHERE room_id = ?";
         this.jdbcTemplate.update(query, roomId);
+    }
+
+    public String findRoomByRoomId(String roomId) {
+        String query = "select room_id from chessgame where room_id = ?";
+        List<String> roomLog = jdbcTemplate.query(
+                query,
+                (resultSet, rowNum) -> resultSet.getString("room_id")
+                , roomId);
+
+        if (Objects.isNull(roomLog)) {
+            return null;
+        }
+        return roomId;
     }
 }

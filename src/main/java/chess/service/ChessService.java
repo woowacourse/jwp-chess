@@ -11,52 +11,41 @@ import dto.MoveDto;
 import dto.RoomDto;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class ChessService {
+
     private final ChessRepository chessRepository;
 
     public ChessService(final ChessRepository chessRepository) {
         this.chessRepository = chessRepository;
     }
 
-    public ResponseEntity<List<RoomDto>> loadAllRoom() {
-        final List<RoomDto> rooms = chessRepository.loadAllRoom()
-                .stream()
-                .map(RoomDto::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(rooms);
+    public List<RoomDto> loadAllRoom() {
+        return chessRepository.loadAllRoom()
+            .stream()
+            .map(RoomDto::new)
+            .collect(Collectors.toList());
     }
 
-    public ResponseEntity<ChessGameDto> loadGame(Long roodId, Room room) {
+    public ChessGameDto loadGame(Long roodId, Room room) {
         Room savedRoom = chessRepository.loadRoom(roodId);
         if (!savedRoom.checkPassword(room)) {
-            return ResponseEntity.badRequest().body(null);
+            throw new IllegalArgumentException("비밀번호가 다릅니다.");
         }
 
-        final ChessGame chessGame = chessRepository.loadGame(roodId);
-        return ResponseEntity.ok().body(new ChessGameDto(chessGame));
+        return new ChessGameDto(chessRepository.loadGame(roodId));
     }
 
-    public void createRoom(@RequestBody Room room) {
+    public void createRoom(Room room) {
         chessRepository.createRoom(new ChessGame(new WhiteTeam(), new BlackTeam()), room);
     }
 
-    public ResponseEntity<ChessGameDto> movePiece(Long roodId, MoveDto moveDto) {
+    public ChessGameDto movePiece(Long roodId, MoveDto moveDto) {
         final ChessGame chessGame = chessRepository.loadGame(roodId);
-        try {
-            if (chessGame.move(Position.of(moveDto.getFrom()), Position.of(moveDto.getTo()))) {
-                chessRepository.saveGame(roodId, chessGame, moveDto);
-                return ResponseEntity.ok().body(new ChessGameDto(chessGame));
-            }
-            throw new IllegalArgumentException("이동할 수 없습니다.");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().body(null);
-        }
+        chessGame.move(Position.of(moveDto.getFrom()), Position.of(moveDto.getTo()));
+        chessRepository.saveGame(roodId, chessGame, moveDto);
+        return new ChessGameDto(chessGame);
     }
-
 }

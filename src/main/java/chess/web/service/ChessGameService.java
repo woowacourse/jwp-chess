@@ -4,7 +4,6 @@ import chess.domain.game.ChessGame;
 import chess.web.controller.dto.request.MoveRequestDto;
 import chess.web.controller.dto.response.ChessGameResponseDto;
 import chess.web.controller.dto.response.GameStatusResponseDto;
-import chess.web.controller.dto.response.MoveResponseDto;
 import chess.repository.ChessGameRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,9 +18,9 @@ public class ChessGameService {
         this.chessGameRepository = chessGameRepository;
     }
 
-    public List<ChessGameResponseDto> getAllGames() {
-        List<ChessGame> allChessGames = chessGameRepository.findAll();
-        return allChessGames.stream()
+    public List<ChessGameResponseDto> getNotFulledChessGames() {
+        List<ChessGame> notFulledChessGames = chessGameRepository.findAllBlackPlayerPasswordIsNull();
+        return notFulledChessGames.stream()
             .map(ChessGameResponseDto::new)
             .collect(Collectors.toList());
     }

@@ -24,8 +24,8 @@ public class ChessGameController {
 
     @GetMapping("/")
     public String home(Model model) {
-        List<ChessGameResponseDto> allChessGames = chessGameService.getAllGames();
-        model.addAttribute("allChessGames", allChessGames);
+        List<ChessGameResponseDto> notFulledChessGames = chessGameService.getNotFulledChessGames();
+        model.addAttribute("notFulledChessGames", notFulledChessGames);
         return "index";
     }
 

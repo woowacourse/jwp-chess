@@ -6,6 +6,7 @@ import chess.repository.ChessGameRepository;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -26,19 +27,23 @@ public class ChessGameDao implements ChessGameRepository {
             resultSet.getLong("chess_game_id"),
             resultSet.getString("title"),
             resultSet.getString("board_status"),
-            resultSet.getString("current_turn_team_color"));
+            resultSet.getString("current_turn_team_color"),
+            resultSet.getString("white_player_password"),
+            resultSet.getString("black_player_password"));
 
     @Override
     public Long save(ChessGame chessGame) {
         String query = "INSERT INTO chess_game "
-            + "(title, board_status, current_turn_team_color) "
-            + "VALUES (?, ?, ?)";
+            + "(title, board_status, current_turn_team_color, white_player_password, black_player_password) "
+            + "VALUES (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, new String[]{"chess_game_id"});
             ps.setString(1, chessGame.getTitle());
             ps.setString(2, chessGame.getBoardStatus());
             ps.setString(3, chessGame.getCurrentTurnTeamColor().getValue());
+            ps.setString(4, chessGame.getEncryptedWhitePlayerPassword());
+            ps.setString(5, chessGame.getEncryptedBlackPlayerPassword());
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -47,7 +52,11 @@ public class ChessGameDao implements ChessGameRepository {
     @Override
     public ChessGame findById(Long gameId) {
         String query = "SELECT * FROM chess_game WHERE chess_game_id = ?";
-        return jdbcTemplate.queryForObject(query, chessGameRowMapper, gameId);
+        try {
+            return jdbcTemplate.queryForObject(query, chessGameRowMapper, gameId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
@@ -57,15 +66,23 @@ public class ChessGameDao implements ChessGameRepository {
     }
 
     @Override
+    public List<ChessGame> findAllBlackPlayerPasswordIsNull() {
+        String query = "SELECT * FROM chess_game WHERE black_player_password is NULL";
+        return jdbcTemplate.query(query, chessGameRowMapper);
+    }
+
+    @Override
     public void update(ChessGame chessGame) {
         String query = "UPDATE chess_game "
             + "SET "
             + "board_status = ?, "
-            + "current_turn_team_color = ? "
+            + "current_turn_team_color = ?, "
+            + "black_player_password = ? "
             + "WHERE chess_game_id = ?";
         jdbcTemplate.update(query,
             chessGame.getBoardStatus(),
             chessGame.getCurrentTurnTeamColorValue(),
+            chessGame.getEncryptedBlackPlayerPassword(),
             chessGame.getId());
     }
 
@@ -73,5 +90,11 @@ public class ChessGameDao implements ChessGameRepository {
     public void deleteById(Long gameId) {
         String query = "DELETE FROM chess_game WHERE chess_game_id = ?";
         jdbcTemplate.update(query, gameId);
+    }
+
+    @Override
+    public void deleteAll() {
+        String query = "DELETE FROM chess_game";
+        jdbcTemplate.update(query);
     }
 }

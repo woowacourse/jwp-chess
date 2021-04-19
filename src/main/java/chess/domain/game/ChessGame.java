@@ -4,6 +4,7 @@ import chess.domain.board.Board;
 import chess.domain.board.move.MoveRequest;
 import chess.domain.board.score.Scores;
 import chess.domain.color.type.TeamColor;
+import chess.domain.password.PasswordEncoder;
 
 public class ChessGame {
 
@@ -24,21 +25,32 @@ public class ChessGame {
     private String boardStatus;
     private TeamColor currentTurnTeamColor;
     private final Board board;
+    private final String encryptedWhitePlayerPassword;
+    private String encryptedBlackPlayerPassword;
 
-    public ChessGame(Long id, String title, String boardStatus, String currentTurnTeamColor) {
+    public ChessGame(Long id, String title, String boardStatus, String currentTurnTeamColor, String encryptedWhitePlayerPassword, String encryptedBlackPlayerPassword) {
         this.id = id;
         this.title = title;
         this.boardStatus = boardStatus;
         this.currentTurnTeamColor = TeamColor.of(currentTurnTeamColor);
         this.board = new Board(boardStatus);
+        this.encryptedWhitePlayerPassword = encryptedWhitePlayerPassword;
+        this.encryptedBlackPlayerPassword = encryptedBlackPlayerPassword;
+    }
+
+    public ChessGame(String title, String rawWhitePlayerPassword) {
+        this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE, PasswordEncoder.encrypt(rawWhitePlayerPassword), null);
+    }
+    public ChessGame(String title, String encryptedWhitePlayerPassword, String encryptedBlackPlayerPassword) {
+        this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE, encryptedWhitePlayerPassword, encryptedBlackPlayerPassword);
     }
 
     public ChessGame(String title) {
-        this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE);
+        this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE, null, null);
     }
 
     public ChessGame() {
-        this(null, null, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE);
+        this(null, "title", INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE, null, null);
     }
 
     public Long getId() {
@@ -82,5 +94,17 @@ public class ChessGame {
 
     public String getOppositeTurnTeamColorName() {
         return currentTurnTeamColor.getOppositeTeamColorName();
+    }
+
+    public String getEncryptedWhitePlayerPassword() {
+        return encryptedWhitePlayerPassword;
+    }
+
+    public String getEncryptedBlackPlayerPassword() {
+        return encryptedBlackPlayerPassword;
+    }
+
+    public void joinBlackPlayerWithPassword(String rawBlackPlayerPassword) {
+        encryptedBlackPlayerPassword = PasswordEncoder.encrypt(rawBlackPlayerPassword);
     }
 }

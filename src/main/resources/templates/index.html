@@ -13,7 +13,7 @@
 
 <h1 class="display-4 text-center" style="margin-top: 80px;margin-bottom: 40px;">인비의 체스 게임</h1>
 
-<ul class="list-group text-center" th:each="chessGame,index : ${allChessGames}" style="width: 400px; margin-left: auto; margin-right: auto">
+<ul class="list-group text-center" th:each="chessGame,index : ${notFulledChessGames}" style="width: 400px; margin-left: auto; margin-right: auto">
   <li th:id="${chessGame.getGameId()}" class="list-group-item" style="display: flex">
     <a type="button" th:href="@{/games/{gameId}(gameId=${chessGame.getGameId()})}" class="btn btn-light" style="width: 100%" th:text="${chessGame.getTitle()}" ></a>
   </li>

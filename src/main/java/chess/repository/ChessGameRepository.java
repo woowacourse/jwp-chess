@@ -6,11 +6,15 @@ import java.util.List;
 public interface ChessGameRepository {
     Long save(ChessGame chessGame);
 
+    ChessGame findById(Long gameId);
+
     List<ChessGame> findAll();
 
-    ChessGame findById(Long gameId);
+    List<ChessGame> findAllBlackPlayerPasswordIsNull();
+
+    void update(ChessGame chessGame);
 
     void deleteById(Long gameId);
 
-    void update(ChessGame chessGame);
+    void deleteAll();
 }

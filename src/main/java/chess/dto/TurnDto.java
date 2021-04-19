@@ -1,12 +1,12 @@
 package chess.dto;
 
-public class TurnDTO {
+public class TurnDto {
     private String turn;
 
-    public TurnDTO() {
+    public TurnDto() {
     }
 
-    public TurnDTO(String turn) {
+    public TurnDto(String turn) {
         this.turn = turn;
     }
 

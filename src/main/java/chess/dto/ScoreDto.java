@@ -1,10 +1,10 @@
 package chess.dto;
 
-public class ScoreDTO {
+public class ScoreDto {
     private String whiteScore;
     private String blackScore;
 
-    public ScoreDTO(String whiteScore, String blackScore) {
+    public ScoreDto(String whiteScore, String blackScore) {
         this.whiteScore = whiteScore;
         this.blackScore = blackScore;
     }

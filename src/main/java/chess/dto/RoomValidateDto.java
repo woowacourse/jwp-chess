@@ -1,13 +1,13 @@
 package chess.dto;
 
-public class RoomValidateDTO {
+public class RoomValidateDto {
     private String code;
     private String message;
 
-    public RoomValidateDTO() {
+    public RoomValidateDto() {
     }
 
-    public RoomValidateDTO(String code, String message) {
+    public RoomValidateDto(String code, String message) {
         this.code = code;
         this.message = message;
     }

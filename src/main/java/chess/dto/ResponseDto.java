@@ -1,12 +1,12 @@
 package chess.dto;
 
-public class ResponseDTO {
+public class ResponseDto {
 
     private final String code;
     private final String message;
     private final String turn;
 
-    public ResponseDTO(String code, String message, String turn) {
+    public ResponseDto(String code, String message, String turn) {
         this.code = code;
         this.message = message;
         this.turn = turn;

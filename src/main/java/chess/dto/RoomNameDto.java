@@ -1,12 +1,12 @@
 package chess.dto;
 
-public class RoomNameDTO {
+public class RoomNameDto {
     private String roomName;
 
-    public RoomNameDTO() {
+    public RoomNameDto() {
     }
 
-    public RoomNameDTO(String roomName) {
+    public RoomNameDto(String roomName) {
         this.roomName = roomName;
     }
 

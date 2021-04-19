@@ -74,17 +74,16 @@ function selectPiece(target) {
         }
 
         movePiece(target);
-
     }
 
 }
 
 function movePiece(target) {
     const body = {
-        'from': source.getAttribute('id'),
         'to': target.getAttribute('id')
     }
-    axios.put('/api/rooms/' + roomId + '/pieces', body)
+    const from = source.getAttribute('id');
+    axios.put('/api/rooms/' + roomId + '/pieces/' + from, body)
         .then(function (response) {
             source.classList.remove('selected-piece')
             source = null;
@@ -112,16 +111,16 @@ function refreshChessBoard(chessGame) {
 
     let whitePieces = chessGame.whiteTeam.pieces.pieces;
     for (let i = 0; i < whitePieces.length; i++) {
-        let piece = whitePieces[i];
-        let tile = document.getElementById(piece.position);
+        const piece = whitePieces[i];
+        const tile = document.getElementById(piece.position);
         tile.classList.add('piece');
         tile.setAttribute('color', 'white')
         tile.classList.add(piece.piece);
         tile.innerHTML = piecesMap[piece.piece];
     }
 
-    let blackScore = chessGame.blackTeam.score;
-    let whiteScore = chessGame.whiteTeam.score;
+    const blackScore = chessGame.blackTeam.score;
+    const whiteScore = chessGame.whiteTeam.score;
     document.getElementById('score-white').innerHTML = whiteScore;
     document.getElementById('score-black').innerHTML = blackScore;
 

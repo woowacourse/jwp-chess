@@ -1,6 +1,8 @@
 package chess.dao;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -9,11 +11,17 @@ public class ChessLogDao {
     private static final String MOVE = "move ";
     private static final String DELIMITER = " ";
 
-    public Connection getConnection() {
-        Connection con = null;
+    private DBConnection dbConnection;
+
+    public ChessLogDao(DBConnection dbConnection) {
+        this.dbConnection = dbConnection;
+    }
+
+    public java.sql.Connection getConnection() {
+        java.sql.Connection con = null;
 
         loading();
-        return connection(con);
+        return dbConnection.connection(con);
     }
 
     private void loading() {
@@ -25,25 +33,7 @@ public class ChessLogDao {
         }
     }
 
-    private Connection connection(Connection connection) {
-        String server = "localhost:13306"; // MySQL 서버 주소
-        String database = "chess"; // MySQL DATABASE 이름
-        String option = "?useSSL=false&serverTimezone=UTC";
-        String userName = "root"; //  MySQL 서버 아이디
-        String password = "root"; // MySQL 서버 비밀번호
-
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://" + server + "/" + database + option, userName, password);
-            System.out.println("정상적으로 연결되었습니다.");
-        } catch (SQLException e) {
-            Logger.getLogger("연결 오류:" + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return connection;
-    }
-
-    public void closeConnection(Connection con) {
+    public void closeConnection(java.sql.Connection con) {
         try {
             if (con != null)
                 con.close();
@@ -53,7 +43,7 @@ public class ChessLogDao {
     }
 
     public void addLog(String roomId, String target, String destination) {
-        Connection connection = getConnection();
+        java.sql.Connection connection = getConnection();
         String query = "INSERT INTO chessgame (room_id, target, destination) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query);) {
             pstmt.setString(1, roomId);
@@ -70,7 +60,7 @@ public class ChessLogDao {
     }
 
     public List<String> applyCommand(String userId) {
-        Connection connection = getConnection();
+        java.sql.Connection connection = getConnection();
         String query = "SELECT target, destination FROM chess.chessgame WHERE room_id = ? ORDER BY command_date ASC;";
         try (PreparedStatement pstmt = connection.prepareStatement(query);) {
             pstmt.setString(1, userId);
@@ -93,7 +83,7 @@ public class ChessLogDao {
     }
 
     public void deleteLog(String roomId) {
-        Connection connection = getConnection();
+        java.sql.Connection connection = getConnection();
         String query = "DELETE FROM chess.chessgame WHERE room_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query);) {

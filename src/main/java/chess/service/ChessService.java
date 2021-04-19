@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.ChessLogDao;
+import chess.dao.DBConnection;
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.dto.BoardDto;
@@ -19,7 +20,7 @@ public class ChessService {
     private final ChessLogDao chessLogDao;
 
     public ChessService() {
-        this.chessLogDao = new ChessLogDao();
+        this.chessLogDao = new ChessLogDao(new DBConnection());
     }
 
     public BoardDto loadRoom(String roomNumber) {

@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.utils;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
@@ -11,10 +11,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * 이게 어디로 가야 될지...?
+ */
 public class Serializer {
     private static final int LAST_INDEX_OF_EACH_PIECE = 3;
     private static final int STARTING_INDEX_OF_POSITION = 1;
 
+    // 얘는 서비스로 가야할거 같은데..
     public static String serialize(ChessGame chessGame) {
         return chessGame.getChessBoardMap()
                 .entrySet()
@@ -23,7 +27,7 @@ public class Serializer {
                 .collect(Collectors.joining());
     }
 
-    //얘도 서비스로 ㄲㄲ
+    // 얘는 서비스로 가야할거 같은데..
     public static ChessBoard deserialize(String response) {
         Map<Position, Piece> chessBoard = new LinkedHashMap<>();
         for (int i = 0; i < response.length(); i += LAST_INDEX_OF_EACH_PIECE) {
@@ -36,6 +40,7 @@ public class Serializer {
         return new ChessBoard(chessBoard);
     }
 
+    // 얘는 DTO로 변환이라 컨트롤러로 가야하는 것인가..
     public static ChessBoardDTO deserializeAsDTO(String response) {
         Map<String, String> chessBoard = new LinkedHashMap<>();
         for (int i = 0; i < response.length(); i += LAST_INDEX_OF_EACH_PIECE) {

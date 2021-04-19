@@ -54,7 +54,6 @@ async function modalHandler(e) {
 }
 
 async function enterHandler(e) {
-    console.log(e)
     const roomName = document.querySelector('#room-name').value
     const $nameDuplicate = document.querySelector('#name-duplicate')
     const $nameLength = document.querySelector('#name-length')

@@ -2,9 +2,7 @@ package chess.repository;
 
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
-import chess.dto.ChessBoardDTO;
-import chess.dto.FinishDTO;
-import chess.dto.TurnDTO;
+import chess.utils.Serializer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -36,12 +34,9 @@ public class ChessRepository {
     }
 
     //DTO 를 컨트롤러에서 만든다.
-    public ChessBoardDTO loadGameAsDTO(String gameId) {
+    public String loadGame(String gameId) {
         String loadingGameQuery = "SELECT board FROM chess_game WHERE id= ?";
-        ChessBoardDTO chessBoardDTO = Serializer.deserializeAsDTO(jdbcTemplate.queryForObject(loadingGameQuery,
-                String.class,
-                gameId));
-        return chessBoardDTO;
+        return jdbcTemplate.queryForObject(loadingGameQuery, String.class, gameId);
     }
 
     //체스게임을 리턴한다, 디티오 말고.
@@ -64,10 +59,9 @@ public class ChessRepository {
     }
 
 
-    public TurnDTO turn(String gameId) {
+    public String turn(String gameId) {
         String findingTurnQuery = "SELECT turn FROM chess_game WHERE id = ?";
-        TurnDTO turnDTO = new TurnDTO(jdbcTemplate.queryForObject(findingTurnQuery, String.class, gameId));
-        return turnDTO;
+        return jdbcTemplate.queryForObject(findingTurnQuery, String.class, gameId);
     }
 
     public void saveGame(String gameId, ChessGame chessGame) {
@@ -75,10 +69,9 @@ public class ChessRepository {
         jdbcTemplate.update(savingGameQuery, chessGame.getTurn(), Serializer.serialize(chessGame), gameId);
     }
 
-    public FinishDTO isFinishedById(String gameId) {
+    public boolean isFinishedById(String gameId) {
         String finishedQuery = "SELECT finished FROM chess_game WHERE id = ?";
-        FinishDTO finishDTO = new FinishDTO(jdbcTemplate.queryForObject(finishedQuery, Boolean.class, gameId));
-        return finishDTO;
+        return jdbcTemplate.queryForObject(finishedQuery, Boolean.class, gameId);
     }
 
     public boolean isFinishedByName(String roomName) {

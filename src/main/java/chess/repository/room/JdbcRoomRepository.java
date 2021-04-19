@@ -4,8 +4,11 @@ import chess.domain.game.Room;
 import chess.domain.gamestate.State;
 import chess.domain.team.Team;
 import chess.utils.BoardUtil;
+import java.sql.PreparedStatement;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,12 +23,15 @@ public class JdbcRoomRepository implements RoomRepository {
     @Override
     public long insert(Room room) {
         String sql = "INSERT INTO rooms (name, state, currentteam) VALUES (?, ?, ?)";
-        return this.jdbcTemplate.update(
-                sql,
-                room.getName(),
-                room.getState().getValue(),
-                room.getCurrentTeam().getValue()
-        );
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        this.jdbcTemplate.update((con) -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, room.getName());
+            ps.setString(2, room.getState().getValue());
+            ps.setString(3, room.getCurrentTeam().getValue());
+            return ps;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     @Override

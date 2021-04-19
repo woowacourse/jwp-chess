@@ -37,8 +37,7 @@ class ChessControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/createroom/1")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body(is("1"));
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -47,7 +46,6 @@ class ChessControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/room/1")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body(is("1"));
+                .statusCode(HttpStatus.OK.value());
     }
 }

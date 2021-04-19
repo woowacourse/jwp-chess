@@ -15,7 +15,6 @@ import java.util.Optional;
 public class SpringChessController {
     private final SpringChessService springChessService;
 
-    @Autowired
     public SpringChessController(SpringChessService springChessService) {
         this.springChessService = springChessService;
     }
@@ -48,11 +47,11 @@ public class SpringChessController {
     }
 
     @PostMapping(value = "/game/move")
-    public ModelAndView move(@RequestBody String param, ModelAndView modelAndView) {
-        Optional<ChessGameDTO> optionalChessGameDTO = springChessService.movePiece(param);
+    public ModelAndView move(@RequestBody MoveRequestDto moveRequestDto, ModelAndView modelAndView) {
+        Optional<ChessGameDTO> optionalChessGameDTO = springChessService.movePiece(moveRequestDto);
         modelAndView.setViewName("game");
         if (optionalChessGameDTO.isPresent()) {
-            checkGameEnd(param, modelAndView);
+            checkGameEnd(moveRequestDto.getRoomNo(), modelAndView);
             modelAndView.addObject("chessGame", optionalChessGameDTO.get());
             return modelAndView;
         }
@@ -60,16 +59,16 @@ public class SpringChessController {
         return modelAndView;
     }
 
-    private void checkGameEnd(String param, ModelAndView modelAndView) {
-        if (springChessService.isGameEnd(param)) {
-            addResult(param, modelAndView);
-            springChessService.deleteGame(param);
+    private void checkGameEnd(int roomNo, ModelAndView modelAndView) {
+        if (springChessService.isGameEnd(roomNo)) {
+            addResult(roomNo, modelAndView);
+            springChessService.deleteGame(roomNo);
         }
     }
 
-    private void addResult(String param, ModelAndView modelAndView) {
-        if (springChessService.getResult(param).isPresent()) {
-            modelAndView.addObject("result", springChessService.getResult(param).get());
+    private void addResult(int roomNo, ModelAndView modelAndView) {
+        if (springChessService.getResult(roomNo).isPresent()) {
+            modelAndView.addObject("result", springChessService.getResult(roomNo).get());
         }
     }
 

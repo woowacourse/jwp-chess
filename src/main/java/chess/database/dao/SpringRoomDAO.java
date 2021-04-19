@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -17,7 +16,7 @@ public class SpringRoomDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addRoom(SaveRoomDTO saveRoomDTO) throws SQLException {
+    public void addRoom(SaveRoomDTO saveRoomDTO) {
         String query = "INSERT INTO chess_room (room_name, turn, board) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(connection -> {
@@ -46,7 +45,7 @@ public class SpringRoomDAO {
         });
     }
 
-    public RoomDTO findRoomByRoomNo(int roomNo) throws SQLException {
+    public RoomDTO findRoomByRoomNo(int roomNo) {
         String query = "SELECT * FROM chess_room WHERE room_no = ?";
         return jdbcTemplate.queryForObject(
                 query,
@@ -61,7 +60,7 @@ public class SpringRoomDAO {
                 roomNo);
     }
 
-    public List<RoomDTO> getAllRoom() throws SQLException {
+    public List<RoomDTO> getAllRoom() {
         String query = "SELECT * FROM chess_room";
         return jdbcTemplate.query(
                 query,

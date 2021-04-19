@@ -1,8 +1,6 @@
 package chess.service;
 
-import chess.dto.ChessGameDTO;
-import chess.dto.ResultDTO;
-import chess.dto.RoomDTO;
+import chess.dto.*;
 import chess.database.dao.SpringRoomDAO;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
@@ -12,16 +10,12 @@ import chess.domain.game.ChessGame;
 import chess.domain.gamestate.Ready;
 import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
-import chess.dto.SaveRoomDTO;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class SpringChessService {
-    public static final Gson gson = new Gson();
     private final SpringRoomDAO roomDAO;
 
     public SpringChessService(SpringRoomDAO roomDAO) {
@@ -40,12 +34,11 @@ public class SpringChessService {
         }
     }
 
-    public Optional<ChessGameDTO> movePiece(String param) {
+    public Optional<ChessGameDTO> movePiece(MoveRequestDto moveRequestDto) {
         try {
-            JsonObject paramJson = gson.fromJson(param, JsonObject.class);
-            int roomNo = paramJson.get("roomNo").getAsInt();
+            int roomNo = moveRequestDto.getRoomNo();
             RoomDTO roomDTO = roomDAO.findRoomByRoomNo(roomNo);
-            List<String> input = Arrays.asList(paramJson.get("command").getAsString().split(" "));
+            List<String> input = Arrays.asList(moveRequestDto.getCommand().split(" "));
             ChessGame chessGame = setChessGame(roomDTO);
             chessGame.play(input);
             roomDAO.updateRoom(new RoomDTO(roomNo, roomDTO.getRoomName(), chessGame));
@@ -100,10 +93,8 @@ public class SpringChessService {
         }
     }
 
-    public boolean isGameEnd(String param){
+    public boolean isGameEnd(int roomNo){
         try {
-            JsonObject paramJson = gson.fromJson(param, JsonObject.class);
-            int roomNo = paramJson.get("roomNo").getAsInt();
             RoomDTO roomDTO = roomDAO.findRoomByRoomNo(roomNo);
             ChessGame chessGame = setChessGame(roomDTO);
             return !chessGame.isOngoing();
@@ -113,20 +104,16 @@ public class SpringChessService {
         }
     }
 
-    public void deleteGame(String param) {
+    public void deleteGame(int roomNo) {
         try {
-            JsonObject paramJson = gson.fromJson(param, JsonObject.class);
-            int roomNo = paramJson.get("roomNo").getAsInt();
             roomDAO.deleteRoomByRoomNo(roomNo);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public Optional<ResultDTO> getResult(String param) {
+    public Optional<ResultDTO> getResult(int roomNo) {
         try {
-            JsonObject paramJson = gson.fromJson(param, JsonObject.class);
-            int roomNo = paramJson.get("roomNo").getAsInt();
             RoomDTO roomDTO = roomDAO.findRoomByRoomNo(roomNo);
             ChessGame chessGame = setChessGame(roomDTO);
             return Optional.of(new ResultDTO(chessGame.result()));

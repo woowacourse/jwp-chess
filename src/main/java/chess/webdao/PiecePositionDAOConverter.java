@@ -22,17 +22,10 @@ public class PiecePositionDAOConverter {
             final Piece piece = teamPiecePosition.get(position);
             pieceInfo.append(PieceDto.convert(piece));
             pieceInfo.append(FIELD_SEPARATOR);
-            pieceInfo.append(booleanToString(piece.isFirstMove()));
+            pieceInfo.append(Boolean.valueOf(piece.isFirstMove()));
             pieceInfo.append(PIECE_SEPARATOR);
         }
         return pieceInfo.toString();
-    }
-
-    private static String booleanToString(final boolean value) {
-        if (value) {
-            return "true";
-        }
-        return "false";
     }
 
     public static Map<Position, Piece> asPiecePosition(final String teamPieceInfo, final String team) {
@@ -41,13 +34,10 @@ public class PiecePositionDAOConverter {
         for (String singlePieceInfo : teamPieceInfos) {
             final String[] SinglePieceInfos = singlePieceInfo.split(FIELD_SEPARATOR);
             final Position position = Position.of(SinglePieceInfos[0]);
-            final Piece piece = DAOtoPiece.generatePiece(team, SinglePieceInfos[1], stringToBoolean(SinglePieceInfos[2]));
+            final Piece piece = DAOtoPiece.generatePiece(team, SinglePieceInfos[1], Boolean.valueOf(SinglePieceInfos[2]));
             piecePosition.put(position, piece);
         }
         return piecePosition;
     }
 
-    private static boolean stringToBoolean(final String value) {
-        return "true".equals(value);
-    }
 }

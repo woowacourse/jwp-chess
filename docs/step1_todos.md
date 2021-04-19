@@ -10,7 +10,7 @@
     - [ ] final 선언: line 16
     
 - PiecePositionDaoConvertor
-    - [ ] String.valueOf, Boolean.valueOf 활용하기
+    - [x] String.valueOf, Boolean.valueOf 활용하기
     
 - SpringChessGameDao
     - [ ] 만약 검색되는 게임이 없다면..?!

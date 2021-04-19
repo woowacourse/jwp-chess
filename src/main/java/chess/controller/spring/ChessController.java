@@ -62,6 +62,6 @@ public class ChessController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleException(RuntimeException runtimeException) {
-        return ResponseEntity.status(500).body(runtimeException.getMessage());
+        return ResponseEntity.status(400).body(runtimeException.getMessage());
     }
 }

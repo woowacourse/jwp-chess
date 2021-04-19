@@ -20,9 +20,9 @@ public class GameController {
     }
 
     @ResponseBody
-    @GetMapping("/show/{roomId}")
-    public String show(@PathVariable final Long roomId, @RequestParam final Position source) {
-        return gameService.show(roomId, source).toString();
+    @GetMapping("/reachable/{roomId}")
+    public String reachable(@PathVariable final Long roomId, @RequestParam final Position source) {
+        return gameService.reachable(roomId, source).toString();
     }
 
     @GetMapping("/load/{roomId}")

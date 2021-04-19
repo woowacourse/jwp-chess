@@ -115,7 +115,7 @@ function show(target) {
     const requestQuery = "source=" + target.id;
 
     $.ajax({
-        url: "/game/show/" + roomId,
+        url: "/game/reachable/" + roomId,
         type: "GET",
         data: requestQuery,
         success: function (result) {

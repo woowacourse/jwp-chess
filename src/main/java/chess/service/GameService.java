@@ -28,7 +28,7 @@ public class GameService {
         gameDao.delete(roomId);
     }
 
-    public List<String> show(final long roomId, final Position source) {
+    public List<String> reachable(final long roomId, final Position source) {
         try {
             final ChessGame chessGame = gameDao.load(roomId);
             return chessGame.reachablePositions(source);

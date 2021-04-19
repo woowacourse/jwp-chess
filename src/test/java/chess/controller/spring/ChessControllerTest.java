@@ -48,7 +48,7 @@ class ChessControllerTest {
     @DisplayName("보드를 조회한다.")
     @Test
     void showBoard() throws JsonProcessingException {
-        String expectedResponseBody = writeResponse();
+        String expectedResponseBody = writeResponseBody();
 
         Response response = RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -57,7 +57,7 @@ class ChessControllerTest {
         assertResponse(response, HttpStatus.OK, expectedResponseBody);
     }
 
-    private String writeResponse() throws JsonProcessingException {
+    private String writeResponseBody() throws JsonProcessingException {
         ChessBoard chessBoard = chessService.findChessBoardByRoomId(1);
         TeamType currentTeamType = chessService.findCurrentTeamTypeByRoomId(1);
         BoardDTO boardDTO = BoardDTO.of(chessBoard, currentTeamType);
@@ -80,7 +80,7 @@ class ChessControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveRequestDTO)
                 .when().put("/chessgame/1/chessboard");
-        String expectedResponseBody = writeResponse();
+        String expectedResponseBody = writeResponseBody();
 
         assertResponse(response, HttpStatus.OK, expectedResponseBody);
     }

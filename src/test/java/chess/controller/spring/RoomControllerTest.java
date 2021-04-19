@@ -44,7 +44,7 @@ class RoomControllerTest {
     void findAllRooms() throws JsonProcessingException {
         roomService.addRoom("room1");
         roomService.addRoom("room2");
-        String expectedResponseBody = writeResponse(Arrays.asList(new RoomDTO(1, "room1"), new RoomDTO(2, "room2")));
+        String expectedResponseBody = writeResponseBody(Arrays.asList(new RoomDTO(1, "room1"), new RoomDTO(2, "room2")));
 
         Response response = RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -53,7 +53,7 @@ class RoomControllerTest {
         assertResponse(response, expectedResponseBody);
     }
 
-    private String writeResponse(Object object) throws JsonProcessingException {
+    private String writeResponseBody(Object object) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(object);
     }
 
@@ -67,7 +67,7 @@ class RoomControllerTest {
     @Order(2)
     @Test
     void addRoom() throws JsonProcessingException {
-        String expectedResponseBody = writeResponse(new RoomDTO(3, "room3"));
+        String expectedResponseBody = writeResponseBody(new RoomDTO(3, "room3"));
 
         Response response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

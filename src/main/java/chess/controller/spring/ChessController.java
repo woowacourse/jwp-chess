@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/chessgame")
+@RequestMapping("/chessgame/{id}")
 public class ChessController {
 
     private final ChessService chessService;
@@ -20,7 +20,7 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/{id}/chessboard")
+    @GetMapping("/chessboard")
     public ResponseEntity<BoardDTO> showChessBoard(@PathVariable int id) {
         BoardDTO chessBoardDTO = findChessBoard(id);
         return writeResponse(chessBoardDTO);
@@ -36,7 +36,7 @@ public class ChessController {
         return ResponseEntity.ok().body(t);
     }
 
-    @PutMapping("/{id}/chessboard")
+    @PutMapping("/chessboard")
     public ResponseEntity<BoardDTO> move(@PathVariable int id, @RequestBody MoveRequestDTO moveRequestDTO) {
         String current = moveRequestDTO.getCurrent();
         String destination = moveRequestDTO.getDestination();
@@ -46,14 +46,14 @@ public class ChessController {
         return writeResponse(chessBoardDTO);
     }
 
-    @GetMapping("/{id}/result")
+    @GetMapping("/result")
     public ResponseEntity<ResultDTO> showResult(@PathVariable int id) {
         Result result = chessService.calculateResultByRoomId(id);
         ResultDTO resultDTO = ResultDTO.from(result);
         return writeResponse(resultDTO);
     }
 
-    @DeleteMapping("/{id}/histories")
+    @DeleteMapping("/histories")
     public ResponseEntity<String> restart(@PathVariable int id) {
         chessService.deleteAllHistoriesByRoomId(id);
         String location = "/";

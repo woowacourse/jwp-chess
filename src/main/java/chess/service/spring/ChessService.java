@@ -24,7 +24,7 @@ public class ChessService {
     }
 
     public ChessBoard findChessBoardByRoomId(int id) {
-        return CACHED_CHESS_BOARDS.computeIfAbsent(id, (key) -> {
+        return CACHED_CHESS_BOARDS.computeIfAbsent(id, key -> {
             ChessBoard chessBoard = new ChessBoard(ChessBoardGenerator.generateDefaultChessBoard());
             Histories histories = new Histories(chessDAO.findAllHistoriesByRoomId(id));
             histories.restoreChessBoardAsLatest(chessBoard);

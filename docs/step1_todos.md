@@ -30,7 +30,7 @@
     - [ ] 바로 테이블 매핑이 가능한 방안? (RowMapper 사용가능한 방안으로)
 - [ ] 클래스 이름 통일하기 (카멜케이스) 
 - [ ] 학습로그 정리하기
-    - [ ] @Controller, @RestController의 차이
+    - [x] @Controller, @RestController의 차이
     - [ ] Spring 어노테이션의 전체적인 정리
     - [ ] produces, consumes 정리
     - [ ] Spring 간단한 동작원리 정리
@@ -41,5 +41,5 @@
 - Dao interface
 - Service interface
 - CapturedPieces 삭제
-- Piece의 moved -> isFisrtMoved로 변경
+- Piece의 moved -> isFirstMoved로 변경
 - (0,0)의 위치정보를 "a1"등의 문자열 형태로 변경해주는 내용 수정

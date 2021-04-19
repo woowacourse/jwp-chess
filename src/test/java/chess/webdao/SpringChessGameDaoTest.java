@@ -4,6 +4,7 @@ import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,11 @@ class SpringChessGameDaoTest {
 
     @Autowired
     SpringChessGameDao springChessGameDao;
+
+    @BeforeEach
+    void setUp() {
+        springChessGameDao.deleteChessGame();
+    }
 
     @Test
     void createChessGame() {

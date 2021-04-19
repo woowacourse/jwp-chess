@@ -32,37 +32,51 @@ public class SpringChessController {
     }
 
     @PostMapping("/game")
-    public ModelAndView game(@RequestParam("name") String name, ModelAndView modelAndView) {
-        ChessGame chessGame = springChessService.initializeRoom(name);
+    public ModelAndView game(@RequestParam("roomName") String roomName) {
+        ChessGame chessGame = springChessService.initializeRoom(roomName);
+
+        ModelAndView modelAndView = new ModelAndView();
         addChessGame(modelAndView, chessGame);
         modelAndView.setViewName("game");
-        modelAndView.addObject("name", name);
+        modelAndView.addObject("roomName", roomName);
         return modelAndView;
     }
 
     @PostMapping(value = "/game/move", consumes = "application/json")
-    public ModelAndView move(@RequestBody MoveRequestDto moveRequestDto, ModelAndView modelAndView) {
+    public ModelAndView move(@RequestBody MoveRequestDto moveRequestDto) {
         ChessGame chessGame = springChessService.movePiece(moveRequestDto);
+
+        ModelAndView modelAndView = new ModelAndView();
         addChessGame(modelAndView, chessGame);
         modelAndView.setViewName("game");
         return modelAndView;
     }
 
     @GetMapping(value = "/rooms")
-    public ModelAndView rooms(ModelAndView modelAndView) {
+    public ModelAndView rooms() {
         List<String> roomNames = springChessService.getAllSavedRooms();
+
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("roomNames", roomNames);
         modelAndView.setViewName("repository");
         return modelAndView;
     }
 
     @PostMapping("/game/load")
-    public ModelAndView load(@RequestParam("roomName") String roomName, ModelAndView modelAndView) {
+    public ModelAndView load(@RequestParam("roomName") String roomName) {
         ChessGame chessGame = springChessService.loadRoom(roomName);
+
+        ModelAndView modelAndView = new ModelAndView();
         addChessGame(modelAndView, chessGame);
         modelAndView.setViewName("game");
-        modelAndView.addObject("name", roomName);
+        modelAndView.addObject("roomName", roomName);
         return modelAndView;
+    }
+
+    @DeleteMapping("/game/delete")
+    public String delete(@RequestParam("roomName") String roomName) {
+        springChessService.deleteRoom(roomName);
+        return "redirect:/";
     }
 
     private void addChessGame(ModelAndView modelAndView, ChessGame chessGame) {
@@ -84,7 +98,7 @@ public class SpringChessController {
     @ExceptionHandler(DuplicateRoomNameException.class)
     public ModelAndView gameHandleError(HttpServletRequest req) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("alert", req.getParameter("name") + "는 이미 존재하는 방입니다.");
+        modelAndView.addObject("alert", req.getParameter("roomName") + "는 이미 존재하는 방입니다.");
         modelAndView.setViewName("index");
         modelAndView.setStatus(HttpStatus.CONFLICT);
         return modelAndView;

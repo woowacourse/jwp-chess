@@ -5,6 +5,7 @@ import chess.domain.board.Position;
 import chess.domain.feature.Color;
 import chess.domain.feature.Type;
 import chess.domain.game.ChessGame;
+import chess.domain.gamestate.Ready;
 import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
 import chess.dto.MoveRequestDto;
@@ -14,14 +15,12 @@ import chess.util.JsonConverter;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SpringChessService {
     private static final String SPACE = " ";
+    private static final String START = "start";
 
     private final SpringRoomDao roomDao;
 
@@ -39,8 +38,11 @@ public class SpringChessService {
 
     private ChessGame initializeChessBoard() {
         ChessBoard chessBoard = new ChessBoard();
-        Running gameState = new Running();
-        return new ChessGame(chessBoard, Color.WHITE, gameState);
+        Ready gameState = new Ready();
+
+        ChessGame chessGame = new ChessGame(chessBoard, Color.WHITE, gameState);
+        chessGame.start(Collections.singletonList(START));
+        return chessGame;
     }
 
     public ChessGame movePiece(MoveRequestDto moveRequestDto) {
@@ -48,8 +50,8 @@ public class SpringChessService {
         Room room = roomDao.findByRoomName(roomName);
 
         ChessGame chessGame = createChessGame(room);
-        List<String> commands = Arrays.asList(moveRequestDto.getCommand().split(SPACE));
-        chessGame.play(commands);
+        List<String> command = Arrays.asList(moveRequestDto.getCommand().split(SPACE));
+        chessGame.play(command);
 
         room = createRoom(roomName, chessGame);
         roomDao.addRoom(room);
@@ -96,5 +98,9 @@ public class SpringChessService {
             return new ArrayList<>();
         }
 
+    }
+
+    public void deleteRoom(String roomName) {
+        roomDao.deleteRoom(roomName);
     }
 }

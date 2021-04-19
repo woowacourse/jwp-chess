@@ -17,14 +17,14 @@ public class RoomService {
         this.gameService = gameService;
     }
 
-    public Long save(final String roomName) {
-        final Long roomId = System.currentTimeMillis();
+    public long save(final String roomName) {
+        final long roomId = System.currentTimeMillis();
         roomDao.save(roomName, roomId);
         gameService.create(roomId);
         return roomId;
     }
 
-    public void delete(final Long roomId) {
+    public void delete(final long roomId) {
         gameService.delete(roomId);
         roomDao.delete(roomId);
     }
@@ -33,7 +33,7 @@ public class RoomService {
         return roomDao.load();
     }
 
-    public RoomInfoDto roomInfo(final Long roomId) {
+    public RoomInfoDto roomInfo(final long roomId) {
         return new RoomInfoDto(roomId, roomDao.name(roomId));
     }
 }

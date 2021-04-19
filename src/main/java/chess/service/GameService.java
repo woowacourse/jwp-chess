@@ -19,16 +19,16 @@ public class GameService {
         this.gameDao = gameDao;
     }
 
-    public void create(final Long roomId) {
+    public void create(final long roomId) {
         final ChessGame chessGame = ChessGame.initNew();
         gameDao.save(roomId, chessGame.turn(), chessGame.board());
     }
 
-    public void delete(final Long roomId) {
+    public void delete(final long roomId) {
         gameDao.delete(roomId);
     }
 
-    public List<String> show(final Long roomId, final Position source) {
+    public List<String> show(final long roomId, final Position source) {
         try {
             final ChessGame chessGame = gameDao.load(roomId);
             return chessGame.reachablePositions(source);
@@ -37,23 +37,23 @@ public class GameService {
         }
     }
 
-    public void move(final Long roomId, final Position source, final Position target) {
+    public void move(final long roomId, final Position source, final Position target) {
         final ChessGame chessGame = gameDao.load(roomId);
         chessGame.move(source, target);
         gameDao.update(roomId, chessGame.turn(), chessGame.board());
     }
 
-    public boolean isGameEnd(final Long roomId) {
+    public boolean isGameEnd(final long roomId) {
         final ChessGame chessGame = gameDao.load(roomId);
         return chessGame.isGameEnd();
     }
 
-    public GameInfoDto gameInfo(final Long roomId) {
+    public GameInfoDto gameInfo(final long roomId) {
         final ChessGame chessGame = gameDao.load(roomId);
         return new GameInfoDto(chessGame.board(), chessGame.score(Owner.BLACK), chessGame.score(Owner.WHITE));
     }
 
-    public List<Owner> winner(final Long roomId) {
+    public List<Owner> winner(final long roomId) {
         final ChessGame chessGame = gameDao.load(roomId);
         return chessGame.winner();
     }

@@ -32,7 +32,7 @@ public class RoomDao {
         return jdbcTemplate.queryForObject(query, Boolean.class, roomName);
     }
 
-    public void delete(final Long roomId) {
+    public void delete(final long roomId) {
         final String query = "DELETE FROM room_status WHERE room_id = ?";
         jdbcTemplate.update(query, roomId);
     }
@@ -43,12 +43,12 @@ public class RoomDao {
     }
 
     private RoomInfoDto makeRoomDto(final ResultSet rs) throws SQLException {
-        final Long id = rs.getLong(COLUMN_INDEX_OF_ROOM_ID);
+        final long id = rs.getLong(COLUMN_INDEX_OF_ROOM_ID);
         final String name = rs.getString(COLUMN_INDEX_OF_ROOM_NAME);
         return new RoomInfoDto(id, name);
     }
 
-    public String name(final Long roomId) {
+    public String name(final long roomId) {
         final String query = "SELECT room_name FROM room_status WHERE room_id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
     }

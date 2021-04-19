@@ -28,6 +28,36 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void save(final long roomId, final Turn turn, final Board board) {
+        final String query = "INSERT INTO game_status (room_id, turn, board) VALUES (?, ?, ?)";
+        jdbcTemplate.update(query, roomId, turn.name(), boardToData(board));
+    }
+
+    public ChessGame load(final long roomId) {
+        final String query = "SELECT * FROM game_status WHERE room_id = (?) ORDER BY id DESC limit 1";
+        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> {
+            final String board = rs.getString(COLUMN_LABEL_OF_BOARD);
+            final String turn = rs.getString(COLUMN_LABEL_OF_TURN);
+            return ChessGame.load(dataToBoard(board), Turn.of(turn));
+        }, roomId);
+    }
+
+    public void delete(final long roomId) {
+        final String query = "DELETE FROM game_status WHERE room_id = ?";
+        jdbcTemplate.update(query, roomId);
+    }
+
+    public void update(final long roomId, final Turn turn, final Board board) {
+        final String query = "UPDATE game_status SET turn = ?,  board= ?  WHERE room_id = ?";
+        jdbcTemplate.update(query, turn.name(), boardToData(board), roomId);
+    }
+
+    public String boardToData(final Board board) {
+        return Arrays.stream(board.parseUnicodeBoard())
+                .flatMap(strings -> Arrays.stream(strings))
+                .collect(Collectors.joining(SEPARATOR_OF_PIECE));
+    }
+
     public static Board dataToBoard(final String dataLine) {
         final Map<Position, Piece> board = new HashMap<>();
         final String[] pieces = dataLine.split(SEPARATOR_OF_PIECE);
@@ -38,35 +68,5 @@ public class GameDao {
             }
         }
         return new Board(board);
-    }
-
-    public void save(final long roomId, final Turn turn, final Board board) {
-        final String query = "INSERT INTO game_status (room_id, turn, board) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query, roomId, turn.name(), boardToData(board));
-    }
-
-    public ChessGame load(final Long roomId) {
-        final String query = "SELECT * FROM game_status WHERE room_id = (?) ORDER BY id DESC limit 1";
-        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> {
-            final String board = rs.getString(COLUMN_LABEL_OF_BOARD);
-            final String turn = rs.getString(COLUMN_LABEL_OF_TURN);
-            return ChessGame.load(dataToBoard(board), Turn.of(turn));
-        }, roomId);
-    }
-
-    public void delete(final Long roomId) {
-        final String query = "DELETE FROM game_status WHERE room_id = ?";
-        jdbcTemplate.update(query, roomId);
-    }
-
-    public void update(final Long roomId, final Turn turn, final Board board) {
-        final String query = "UPDATE game_status SET turn = ?,  board= ?  WHERE room_id = ?";
-        jdbcTemplate.update(query, turn.name(), boardToData(board), roomId);
-    }
-
-    public String boardToData(final Board board) {
-        return Arrays.stream(board.parseUnicodeBoard())
-                .flatMap(strings -> Arrays.stream(strings))
-                .collect(Collectors.joining(SEPARATOR_OF_PIECE));
     }
 }

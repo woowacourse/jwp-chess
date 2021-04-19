@@ -5,34 +5,22 @@ import chess.domain.position.Position;
 import chess.dto.PiecesDto;
 import chess.dto.PlayerDto;
 import chess.dto.ScoreDto;
-import chess.dto.request.MoveRequestDto;
-import chess.dto.request.TurnChangeRequestDto;
-import chess.dto.response.MoveResponseDto;
 import chess.service.ChessService;
 import com.google.gson.Gson;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
 
 @Controller
-public class SpringChessController {
+public class ViewController {
     public static final Gson GSON = new Gson();
 
     private final ChessService chessService;
 
-    public SpringChessController(final ChessService chessService) {
+    public ViewController(final ChessService chessService) {
         this.chessService = chessService;
-    }
-
-    @GetMapping("/")
-    public String home() {
-        return "home";
     }
 
     @GetMapping("/start")
@@ -73,18 +61,6 @@ public class SpringChessController {
         model.addAttribute("whiteScore", scoreDto.getWhiteScore());
         model.addAttribute("blackScore", scoreDto.getBlackScore());
         return "chess";
-    }
-
-    @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public MoveResponseDto move(@RequestBody MoveRequestDto moveRequestDto) {
-        return chessService.move(moveRequestDto);
-    }
-
-    @PostMapping(value = "/turn", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public void turn(@RequestBody TurnChangeRequestDto turnChangeRequestDto) {
-        chessService.changeTurn(turnChangeRequestDto);
     }
 
     private String makeNewGame() {

@@ -55,14 +55,16 @@ class ChessApiControllerTest {
     @Test
     void testMovePiece() {
         //given
-        chessGameService.createNewChessGame();
+        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
         String source = "a7";
         String target = "a5";
 
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/pieces?source={source}&target={target}", source, target)
+                .when()
+                .put("/chessgames/{chessGameId}/pieces?source={source}&target={target}",
+                        newChessGame.getChessGameId(), source, target)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("pieceDtos.size()", is(32))
@@ -74,14 +76,16 @@ class ChessApiControllerTest {
     @Test
     void testMovePieceIfNoSuchPermittedChessPieceException() {
         //given
-        chessGameService.createNewChessGame();
+        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
         String source = "a2";
         String target = "a3";
 
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/pieces?source={source}&target={target}", source, target)
+                .when()
+                .put("/chessgames/{chessGameId}/pieces?source={source}&target={target}",
+                        newChessGame.getChessGameId(), source, target)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("허용된 체스 말을 찾을 수 없습니다."));
@@ -91,14 +95,16 @@ class ChessApiControllerTest {
     @Test
     void testMovePieceIfNotPermittedChessPosition() {
         //given
-        chessGameService.createNewChessGame();
+        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
         String source = "a9";
         String target = "b7";
 
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/pieces?source={source}&target={target}", source, target)
+                .when()
+                .put("/chessgames/{chessGameId}/pieces?source={source}&target={target}",
+                        newChessGame.getChessGameId(), source, target)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("허용되지 않는 체스 위치입니다."));
@@ -108,14 +114,16 @@ class ChessApiControllerTest {
     @Test
     void testMovePieceIfNotMoveToTargetPosition() {
         //given
-        chessGameService.createNewChessGame();
+        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
         String source = "a7";
         String target = "b6";
 
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/pieces?source={source}&target={target}", source, target)
+                .when()
+                .put("/chessgames/{chessGameId}/pieces?source={source}&target={target}",
+                        newChessGame.getChessGameId(), source, target)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(is("해당 위치로는 이동할 수 없습니다."));
@@ -125,12 +133,12 @@ class ChessApiControllerTest {
     @Test
     void testFindChessGame() {
         //given
-        chessGameService.createNewChessGame();
+        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
 
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/chessgames")
+                .when().get("/chessgames/{chessGameId}", newChessGame.getChessGameId())
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("pieceDtos.size()", is(32))
@@ -138,7 +146,7 @@ class ChessApiControllerTest {
                 .body("finished", is(false));
     }
 
-    @DisplayName("진행중인 게임이 없을 때, 체스게임을 조회하는 API 요청 ")
+    @DisplayName("존재하지 않는 체스게임을 조회하는 API 요청 ")
     @Test
     void testFindChessGameIfNotExistPlayingChessGame() {
         //given
@@ -148,12 +156,11 @@ class ChessApiControllerTest {
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/chessgames")
+                .when().get("/chessgames/{chessGameId}", newChessGame.getChessGameId() + 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("진행중인 게임이 없습니다."));
+                .body(is("존재하지 않는 체스 게임입니다."));
     }
-
 
     @DisplayName("새로운 체스 게임을 만드는 API 요청")
     @Test
@@ -188,12 +195,12 @@ class ChessApiControllerTest {
     @Test
     void testEndChessGame() {
         //given
-        chessGameService.createNewChessGame();
+        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
 
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/chessgames")
+                .when().delete("/chessgames/{chessGameId}", newChessGame.getChessGameId())
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("pieceDtos.size()", is(32))
@@ -212,7 +219,7 @@ class ChessApiControllerTest {
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/chessgames")
+                .when().get("/chessgames/{chessGameId}/scores", newChessGame.getChessGameId())
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

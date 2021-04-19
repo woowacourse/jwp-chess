@@ -31,7 +31,7 @@ class ChessControllerTest {
     @Test
     void testIndexIfExistPlayingGame() throws Exception {
         //given
-        ChessGameStatusDto existChessGameStatus = ChessGameStatusDto.exist();
+        ChessGameStatusDto existChessGameStatus = ChessGameStatusDto.exist(1L);
         when(chessGameService.findLatestChessGameStatus())
                 .thenReturn(existChessGameStatus);
 
@@ -40,7 +40,7 @@ class ChessControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("status"))
-                .andExpect(model().attribute("status",existChessGameStatus))
+                .andExpect(model().attribute("chessGameStatus",existChessGameStatus))
                 .andExpect(view().name("index"));
     }
 
@@ -56,8 +56,8 @@ class ChessControllerTest {
         this.mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("status"))
-                .andExpect(model().attribute("status", notExistChessGameStatus))
+                .andExpect(model().attributeExists("chessGameStatus"))
+                .andExpect(model().attribute("chessGameStatus", notExistChessGameStatus))
                 .andExpect(view().name("index"));
     }
 

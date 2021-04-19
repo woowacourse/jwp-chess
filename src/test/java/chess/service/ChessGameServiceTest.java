@@ -69,7 +69,8 @@ class ChessGameServiceTest {
         ChessGameResponseDto chessGameDto = chessGameService.createNewChessGame();
 
         //when
-        chessGameService.moveChessPiece(new Position(1, 0), new Position(3, 0));
+        chessGameService.moveChessPiece(chessGameDto.getChessGameId(),
+                new Position(1, 0), new Position(3, 0));
 
         //then
         Piece findPiece = pieceDAO.findOneByPosition(chessGameDto.getChessGameId(), 3, 0).get();
@@ -93,43 +94,14 @@ class ChessGameServiceTest {
         assertThat(chessGameStatus.isExist()).isEqualTo(expected);
     }
 
-    @DisplayName("최근 진행중인 게임이 있을 때, 가장 최근 진행중인 게임을 찾는 기능을 테스트한다")
-    @Test
-    void testFindLatestPlayingGameIfPlayingGameExist() {
-        //given
-        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
-
-        //when
-        ChessGameDto chessGameDto = chessGameService.findLatestPlayingGame();
-
-        //then
-        assertAll(
-                () -> assertThat(chessGameDto.isFinished()).isFalse(),
-                () -> assertThat(chessGameDto.getPieceDtos()).hasSize(32),
-                () -> assertThat(chessGameDto.getState()).isEqualTo("BlackTurn")
-        );
-    }
-
-    @DisplayName("최근 진행중인 게임이 없을 때, 가장 최근 진행중인 게임을 찾으면 예외를 던진다")
-    @Test
-    void testFindLatestPlayingGameIfPlayingGameNotExist() {
-        //given
-        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
-        chessGameDAO.updateState(newChessGame.getChessGameId(), "End");
-
-        //when //then
-        assertThatThrownBy(() -> chessGameService.findLatestPlayingGame())
-                .isExactlyInstanceOf(NotFoundPlayingChessGameException.class);
-    }
-
     @DisplayName("체스 게임을 종료하는 기능을 테스트한다")
     @Test
     void testEndGame() {
         //given
-        chessGameDAO.save();
+        Long id = chessGameDAO.save();
 
         //when
-        chessGameService.endGame();
+        chessGameService.endGame(id);
 
         //then
         ChessGameStatusDto chessGameStatusDto = chessGameDAO.findIsExistPlayingChessGameStatus();
@@ -144,7 +116,7 @@ class ChessGameServiceTest {
         pieceDAO.delete(chessGame.getChessGameId(), 1, 0);
 
         //when
-        ScoreDto scoreDto = chessGameService.calculateScores();
+        ScoreDto scoreDto = chessGameService.calculateScores(chessGame.getChessGameId());
 
         //then
         assertAll(

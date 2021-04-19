@@ -2,8 +2,10 @@ package chess.dao;
 
 import chess.domain.game.ChessGameEntity;
 import chess.dto.ChessGameStatusDto;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -52,15 +54,27 @@ public class ChessGameDAO {
     }
 
     public ChessGameStatusDto findIsExistPlayingChessGameStatus() {
-        String query = "SELECT * FROM chess_game WHERE state in(?, ?)";
-        List<ChessGameEntity> chessGameEntities = jdbcTemplate.query(query
-                , (rs, rowNum) -> new ChessGameEntity(rs.getLong("id"), rs.getString("state"))
-                , "BlackTurn", "WhiteTurn");
-        if (chessGameEntities.isEmpty()) {
+        String query = "SELECT * FROM chess_game WHERE state in(?, ?) ORDER BY ID DESC ";
+        try {
+            ChessGameEntity chessGameEntity = jdbcTemplate.queryForObject(query, chessGameEntityRowMapper(),
+                    "BlackTurn", "WhiteTurn");
+            return ChessGameStatusDto.exist(chessGameEntity.getId());
+        } catch (EmptyResultDataAccessException e) {
             return ChessGameStatusDto.isNotExist();
         }
-
-        return ChessGameStatusDto.exist();
     }
 
+    public Optional<ChessGameEntity> findById(Long chessGameId) {
+        String query = "SELECT * FROM chess_game WHERE id = ?";
+        try {
+            ChessGameEntity chessGameEntity = jdbcTemplate.queryForObject(query, chessGameEntityRowMapper(), chessGameId);
+            return Optional.of(chessGameEntity);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    private RowMapper<ChessGameEntity> chessGameEntityRowMapper() {
+        return (rs, rowNum) -> new ChessGameEntity(rs.getLong("id"), rs.getString("state"));
+    }
 }

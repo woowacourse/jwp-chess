@@ -13,6 +13,7 @@ import chess.dto.ChessGameStatusDto;
 import chess.dto.ScoreDto;
 import chess.exception.AlreadyPlayingChessGameException;
 import chess.exception.NoSuchPermittedChessPieceException;
+import chess.exception.NotFoundChessGame;
 import chess.exception.NotFoundPlayingChessGameException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,9 +48,9 @@ public class ChessGameService {
     }
 
     @Transactional
-    public ChessGameDto moveChessPiece(final Position source, final Position target) {
-        ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
-        Long chessGameId = chessGameEntity.getId();
+    public ChessGameDto moveChessPiece(Long chessGameId, final Position source, final Position target) {
+        ChessGameEntity chessGameEntity = chessGameDAO.findById(chessGameId)
+                .orElseThrow(NotFoundPlayingChessGameException::new);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
         Piece sourcePiece = pieceDAO.findOneByPosition(chessGameId, source.getRow(), source.getColumn())
                 .orElseThrow(NoSuchPermittedChessPieceException::new);
@@ -69,34 +70,33 @@ public class ChessGameService {
         return chessGameDAO.findIsExistPlayingChessGameStatus();
     }
 
-    @Transactional(readOnly = true)
-    public ChessGameDto findLatestPlayingGame() {
-        ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
-        ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
-        return new ChessGameDto(chessGame);
-    }
-
     @Transactional
-    public ChessGameDto endGame() {
-        ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
+    public ChessGameDto endGame(Long chessGameId) {
+        ChessGameEntity chessGameEntity = chessGameDAO.findById(chessGameId)
+                .orElseThrow(NotFoundChessGame::new);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
         chessGame.end();
-        chessGameDAO.updateState(chessGameEntity.getId(), chessGame.getState().getValue());
+        chessGameDAO.updateState(chessGameId, chessGame.getState().getValue());
 
         return new ChessGameDto(chessGame);
     }
 
     @Transactional(readOnly = true)
-    public ScoreDto calculateScores() {
-        ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
+    public ScoreDto calculateScores(Long chessGameId) {
+        ChessGameEntity chessGameEntity = chessGameDAO.findById(chessGameId)
+                .orElseThrow(NotFoundChessGame::new);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
 
         return new ScoreDto(chessGame);
     }
 
-    private ChessGameEntity findStateIsBlackAndWhiteTurnGame() {
-        return chessGameDAO.findByStateIsBlackTurnOrWhiteTurn()
-                .orElseThrow(NotFoundPlayingChessGameException::new);
+    @Transactional(readOnly = true)
+    public ChessGameDto findChessGameById(Long chessGameId) {
+        ChessGameEntity chessGameEntity = chessGameDAO.findById(chessGameId)
+                .orElseThrow(NotFoundChessGame::new);
+        ;
+        ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
+        return new ChessGameDto(chessGame);
     }
 
     private ChessGame findChessGameByChessGameId(final ChessGameEntity chessGameEntity) {

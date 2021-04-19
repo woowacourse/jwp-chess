@@ -47,7 +47,14 @@ const index = {
     },
 
     move: function (source, target) {
-        fetch(`/pieces?source=${source}&target=${target}`)
+        const chessGameId = document.querySelector(".chess-board").id;
+        const option = {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        fetch(`/chessgames/${chessGameId}/pieces?source=${source}&target=${target}`, option)
             .then(data => {
                 if (!data.ok) {
                     throw new Error("잘못된 명령입니다!");
@@ -83,6 +90,7 @@ const index = {
                 return data.json()
             })
             .then(chessGameDto => {
+                enrollChessGameId(chessGameDto.chessGameId);
                 placePieces(chessGameDto.pieceDtos);
                 toggleStartAndEndButtons(chessGameDto.finished);
                 changeTurn(chessGameDto.state);
@@ -98,7 +106,8 @@ const index = {
                 'Content-Type': 'application/json'
             }
         };
-        fetch("/chessgames", option)
+        const chessGameId = document.querySelector(".chess-board").id;
+        fetch(`/chessgames/${chessGameId}`, option)
             .then(data => {
                 if (!data.ok) {
                     throw new Error("잘못된 명령입니다!");
@@ -109,13 +118,15 @@ const index = {
             .then(chessGameDto => {
                 console.log(chessGameDto);
                 toggleStartAndEndButtons(chessGameDto.state);
+                document.querySelector(".chess-board").id = '';
             })
             .catch(error => {
                 alert("[end] 잘못된 명령입니다!")
             });
     },
     scores: function () {
-        fetch("/scores")
+        const chessGameId = document.querySelector('.chess-board').id;
+        fetch(`/chessgames/${chessGameId}/scores`)
             .then(data => {
                 return data.json()
             })
@@ -127,11 +138,13 @@ const index = {
             });
     },
     continue: function () {
-        fetch("/chessgames")
+        const chessGameId = parseInt(document.querySelector(".chess-game-id").id);
+        fetch(`/chessgames/${chessGameId}`)
             .then(data => {
                 return data.json()
             })
             .then(chessGameDto => {
+                enrollChessGameId(chessGameId);
                 placePieces(chessGameDto.pieceDtos);
                 changeTurn(chessGameDto.state);
                 toggleContinueAndEndButtons(chessGameDto.finished);
@@ -140,6 +153,10 @@ const index = {
                 alert("[continue] 잘못된 명령입니다!");
             });
     }
+}
+
+enrollChessGameId = (chessGameId) => {
+    document.querySelector(".chess-board").id = chessGameId;
 }
 
 decideClickedPosition = (target) => {

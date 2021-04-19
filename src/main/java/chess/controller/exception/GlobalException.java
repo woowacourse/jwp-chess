@@ -34,6 +34,11 @@ public class GlobalException {
         return badRequest(e);
     }
 
+    @ExceptionHandler(NotFoundChessGame.class)
+    public ResponseEntity<String> handleNotFoundChessGame(NotFoundChessGame e) {
+        return badRequest(e);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

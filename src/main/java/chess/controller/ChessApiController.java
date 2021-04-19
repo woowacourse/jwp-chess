@@ -19,18 +19,19 @@ public class ChessApiController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping("/pieces")
-    public ResponseEntity<ChessGameDto> movePiece(@RequestParam(value = "source") String sourcePosition,
-                                                   @RequestParam(value = "target") String targetPosition) {
+    @PutMapping("/chessgames/{chessGameId}/pieces")
+    public ResponseEntity<ChessGameDto> movePiece(@PathVariable("chessGameId") Long chessGameId,
+                                                  @RequestParam(value = "source") String sourcePosition,
+                                                  @RequestParam(value = "target") String targetPosition) {
         Position source = Position.parseChessPosition(sourcePosition);
         Position target = Position.parseChessPosition(targetPosition);
-        ChessGameDto chessGameDto = chessGameService.moveChessPiece(source, target);
+        ChessGameDto chessGameDto = chessGameService.moveChessPiece(chessGameId, source, target);
         return ResponseEntity.ok(chessGameDto);
     }
 
-    @GetMapping("/chessgames")
-    public ResponseEntity<ChessGameDto> findChessGame() {
-        ChessGameDto latestPlayingGame = chessGameService.findLatestPlayingGame();
+    @GetMapping("/chessgames/{chessGameId}")
+    public ResponseEntity<ChessGameDto> findChessGame(@PathVariable("chessGameId") Long id) {
+        ChessGameDto latestPlayingGame = chessGameService.findChessGameById(id);
         return ResponseEntity.ok(latestPlayingGame);
     }
 
@@ -40,15 +41,15 @@ public class ChessApiController {
         return ResponseEntity.created(URI.create("/chessgames/" + newChessGame.getChessGameId())).body(newChessGame);
     }
 
-    @DeleteMapping("/chessgames")
-    public ResponseEntity<ChessGameDto> endChessGame() {
-        ChessGameDto chessGameDto = chessGameService.endGame();
+    @DeleteMapping("/chessgames/{chessGameId}")
+    public ResponseEntity<ChessGameDto> endChessGame(@PathVariable("chessGameId") Long chessGameId) {
+        ChessGameDto chessGameDto = chessGameService.endGame(chessGameId);
         return ResponseEntity.ok(chessGameDto);
     }
 
-    @GetMapping("/scores")
-    public ResponseEntity<ScoreDto> calculateScores() {
-        ScoreDto scoreDto = chessGameService.calculateScores();
+    @GetMapping("/chessgames/{chessGameId}/scores")
+    public ResponseEntity<ScoreDto> calculateScores(@PathVariable("chessGameId") Long chessGameId) {
+        ScoreDto scoreDto = chessGameService.calculateScores(chessGameId);
         return ResponseEntity.ok(scoreDto);
     }
 

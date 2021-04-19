@@ -17,8 +17,8 @@ public class ChessController {
 
     @GetMapping("/")
     public String index(Model model) {
-        ChessGameStatusDto latestGameStatus = chessGameService.findLatestChessGameStatus();
-        model.addAttribute("status", latestGameStatus);
+        ChessGameStatusDto chessGameStatus = chessGameService.findLatestChessGameStatus();
+        model.addAttribute("chessGameStatus", chessGameStatus);
         return "index";
     }
 

@@ -1,7 +1,6 @@
 package chess.config;
 
 import chess.websocket.SpringSocketHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -15,8 +14,12 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @Profile("socket")
 public class SocketWebConfiguration implements WebMvcConfigurer, WebSocketConfigurer {
 
-    @Autowired
-    private SpringSocketHandler springSocketHandler;
+
+    private final SpringSocketHandler springSocketHandler;
+
+    public SocketWebConfiguration(SpringSocketHandler springSocketHandler) {
+        this.springSocketHandler = springSocketHandler;
+    }
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {

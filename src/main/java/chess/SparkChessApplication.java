@@ -7,14 +7,14 @@ import static spark.Spark.staticFiles;
 
 import chess.controller.ChessController;
 import chess.dao.ChessDAOSql2o;
-import chess.service.ChessServiceImpl;
+import chess.service.ChessService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 
 public class SparkChessApplication {
     public static void main(String[] args) {
         staticFiles.location("/static");
-        ChessController chessController = new ChessController(new ChessServiceImpl(new ChessDAOSql2o()));
+        ChessController chessController = new ChessController(new ChessService(new ChessDAOSql2o()));
         ObjectMapper objectMapper = new ObjectMapper();
 
         get("/", (req, res) -> {

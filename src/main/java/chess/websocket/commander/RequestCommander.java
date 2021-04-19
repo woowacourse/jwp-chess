@@ -5,7 +5,7 @@ import chess.controller.dto.PieceDto;
 import chess.controller.dto.RoundStatusDto;
 import chess.dao.ChessDAOSql2o;
 import chess.domain.TeamColor;
-import chess.service.ChessServiceImpl;
+import chess.service.ChessService;
 import chess.websocket.ResponseForm;
 import chess.websocket.ResponseForm.Form;
 import chess.websocket.exception.FullRoomException;
@@ -17,9 +17,9 @@ import org.springframework.web.socket.WebSocketSession;
 
 public class RequestCommander {
 
-    private ChessRoom chessRoom = new ChessRoom();
-    private ChatSender chatSender = new ChatSender();
-    ChessController chessController = new ChessController(new ChessServiceImpl(new ChessDAOSql2o()));
+    private final ChessRoom chessRoom = new ChessRoom();
+    private final ChatSender chatSender = new ChatSender();
+    private final ChessController chessController = new ChessController(new ChessService(new ChessDAOSql2o()));
 
     public void enterRoom(String[] contents, WebSocketSession player) {
         try {

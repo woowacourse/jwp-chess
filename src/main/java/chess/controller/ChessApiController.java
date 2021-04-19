@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.dto.request.BoardRequestDto;
 import chess.dto.request.PiecesRequestDto;
 import chess.dto.response.PiecesResponseDto;
 import chess.dto.response.RoomsResponseDto;
@@ -35,8 +34,8 @@ public class ChessApiController {
     }
 
     @PutMapping(value = "/pieces")
-    public PiecesResponseDto putPieces(@RequestBody BoardRequestDto boardRequestDto) {
-        return chessService.putPieces(boardRequestDto);
+    public PiecesResponseDto putPieces(@RequestBody PiecesRequestDto piecesRequestDto) {
+        return chessService.putPieces(piecesRequestDto);
     }
 
     @GetMapping(value = "/score")

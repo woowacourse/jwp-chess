@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import chess.dao.PiecesDao;
 import chess.domain.piece.Color;
-import chess.dto.request.BoardRequestDto;
 import chess.dto.request.PiecesRequestDto;
 import chess.dto.response.PieceResponseDto;
 import chess.dto.response.PiecesResponseDto;
@@ -30,8 +29,10 @@ public class ChessServiceTest {
         chessService = new ChessService(new PiecesDao(jdbcTemplate));
         jdbcTemplate.execute("DROP TABLE pieces IF EXISTS");
         jdbcTemplate.execute("DROP TABLE room IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE pieces(room_id bigint(20), piece_name char(1), position char(2))");
-        jdbcTemplate.execute("CREATE TABLE room(id bigint(20), turn char(5), playing_flag boolean)");
+        jdbcTemplate.execute(
+            "CREATE TABLE pieces(room_id bigint(20), piece_name char(1), position char(2))");
+        jdbcTemplate
+            .execute("CREATE TABLE room(id bigint(20), turn char(5), playing_flag boolean)");
     }
 
     @Test
@@ -60,8 +61,11 @@ public class ChessServiceTest {
     @Test
     @DisplayName("체스 게임 방이 이미 존재하는 경우, DB에 저장된 해당 방 정보와 기물 정보를 리턴한다.")
     void postPiecesTestIfChessGameRoomExist() {
-        jdbcTemplate.update("INSERT INTO room (id, turn, playing_flag) VALUES (?, ?, ?)", 1, "BLACK", true);
-        jdbcTemplate.update("INSERT INTO pieces (room_id, piece_name, position) VALUES (?, ?, ?)", 1, "p", "a2");
+        jdbcTemplate
+            .update("INSERT INTO room (id, turn, playing_flag) VALUES (?, ?, ?)", 1, "BLACK", true);
+        jdbcTemplate
+            .update("INSERT INTO pieces (room_id, piece_name, position) VALUES (?, ?, ?)", 1, "p",
+                "a2");
 
         PiecesRequestDto piecesRequestDto = new PiecesRequestDto(1);
         PiecesResponseDto piecesResponseDto = chessService.postPieces(piecesRequestDto);
@@ -76,7 +80,8 @@ public class ChessServiceTest {
     void putPiecesTest() {
         PiecesRequestDto piecesRequestDto = new PiecesRequestDto(1);
         chessService.postPieces(piecesRequestDto);
-        PiecesResponseDto piecesResponseDto = chessService.putPieces(new BoardRequestDto(1, "a2", "a4"));
+        PiecesResponseDto piecesResponseDto = chessService
+            .putPieces(new PiecesRequestDto(1, "a2", "a4"));
 
         for (PieceResponseDto pieceResponseDto : piecesResponseDto.getAlivePieces()) {
             if (pieceResponseDto.getPosition().equals("a4")) {

@@ -9,7 +9,6 @@ import chess.domain.position.Position;
 import chess.dto.PieceDto;
 import chess.dto.PiecesDto;
 import chess.dto.RoomIdDto;
-import chess.dto.request.BoardRequestDto;
 import chess.dto.request.PiecesRequestDto;
 import chess.dto.response.PiecesResponseDto;
 import chess.dto.response.PiecesResponsesDto;
@@ -66,7 +65,7 @@ public class ChessService {
     }
 
     @Transactional
-    public PiecesResponseDto putPieces(BoardRequestDto boardRequestDto) {
+    public PiecesResponseDto putPieces(PiecesRequestDto boardRequestDto) {
         int roomId = boardRequestDto.getRoomId();
         ChessGame chessGame = makeChessGame(roomId);
         chessGame.move(new Position(boardRequestDto.getSource()),

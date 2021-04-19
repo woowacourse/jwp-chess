@@ -8,7 +8,8 @@ public class MoveRequestDto {
     public MoveRequestDto(String roomId, String target, String destination) {
         this.roomId = roomId;
         this.target = target;
-        this.destination = destination;    }
+        this.destination = destination;
+    }
 
     public String getRoomId() {
         return roomId;

@@ -3,7 +3,6 @@ package chess.controller;
 import chess.dto.MovablePositionDto;
 import chess.dto.MoveRequestDto;
 import chess.service.SparkChessService;
-import chess.service.SpringChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import spark.ModelAndView;

@@ -1,9 +1,6 @@
 package chess.dao;
 
-import chess.dto.MoveRequestDto;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -38,7 +35,7 @@ public class SpringChessLogDao {
         return jdbcTemplate.query(
                 query,
                 (resultSet, rowNum) -> resultSet.getString("target") + DELIMITER +
-                            resultSet.getString("destination")
+                        resultSet.getString("destination")
                 , roomId);
     }
 

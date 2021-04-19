@@ -7,7 +7,6 @@ import chess.dto.BoardDto;
 import chess.dto.BoardStatusDto;
 import chess.dto.MovablePositionDto;
 import chess.dto.MoveRequestDto;
-import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;

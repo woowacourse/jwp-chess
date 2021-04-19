@@ -47,7 +47,7 @@ class BoardTest {
     void movePieceExceptionTest() {
         Board board = BoardFactory.create();
         assertThat(board.movePiece(Position.of(Horizontal.A, Vertical.TWO),
-                        Position.of(Horizontal.A, Vertical.FIVE)))
+                Position.of(Horizontal.A, Vertical.FIVE)))
                 .isEqualTo(false);
     }
 }

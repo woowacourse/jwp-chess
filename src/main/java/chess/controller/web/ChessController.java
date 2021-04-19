@@ -4,10 +4,7 @@ import chess.controller.web.dto.*;
 import chess.domain.manager.ChessGameManager;
 import chess.domain.manager.ChessGameManagerBundle;
 import chess.service.ChessService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 
 @RestController
 public class ChessController {
@@ -43,10 +40,5 @@ public class ChessController {
     public MoveResponseDto movePiece(@RequestBody MoveRequestDto moveMessage) {
         chessService.move(moveMessage);
         return new MoveResponseDto(chessService.isEnd(moveMessage.getId()), chessService.nextColor(moveMessage.getId()));
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorMessageResponseDto> handle(RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ErrorMessageResponseDto(e.getMessage()));
     }
 }

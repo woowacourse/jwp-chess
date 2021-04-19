@@ -41,15 +41,6 @@ public class ChessService {
         return new GameDto(chessGame);
     }
 
-    public StatusDto getStatus(String gameId) {
-        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
-
-        double whiteScore = chessGame.getWhiteScore();
-        double blackScore = chessGame.getBlackScore();
-
-        return new StatusDto(whiteScore, blackScore);
-    }
-
     private ChessGame saveGameAndStart(String gameId) {
         ChessGame chessGame = new ChessGame(new Board(PieceFactory.createPieces()));
         chessGame.start();
@@ -61,6 +52,15 @@ public class ChessService {
         gameRepository.saveToCache(gameId, chessGame);
 
         return chessGame;
+    }
+
+    public StatusDto getStatus(String gameId) {
+        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
+
+        double whiteScore = chessGame.getWhiteScore();
+        double blackScore = chessGame.getBlackScore();
+
+        return new StatusDto(whiteScore, blackScore);
     }
 
     public MessageDto save(String gameId) {

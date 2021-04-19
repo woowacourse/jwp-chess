@@ -1,22 +1,19 @@
 package chess.controller.dto;
 
-import chess.domain.board.Board;
-import chess.domain.player.Turn;
-
 public class GameDto {
-    private final Turn turn;
-    private final Board board;
+    private final String turn;
+    private final String board;
 
-    public GameDto(final Turn turn, final Board board) {
+    public GameDto(final String turn, final String board) {
         this.board = board;
         this.turn = turn;
     }
 
-    public Board getBoard() {
+    public String getBoard() {
         return board;
     }
 
-    public Turn getTurn() {
+    public String getTurn() {
         return turn;
     }
 }

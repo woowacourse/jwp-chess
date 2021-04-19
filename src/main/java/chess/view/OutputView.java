@@ -6,7 +6,7 @@ import java.util.List;
 
 public class OutputView {
 
-    private static int SIZE_OF_ONLY_WINNER = 1;
+    private static final int SIZE_OF_ONLY_WINNER = 1;
 
     private OutputView() {
     }

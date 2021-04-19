@@ -3,18 +3,13 @@ package chess.service.dao;
 import chess.controller.dto.GameDto;
 import chess.domain.board.Board;
 import chess.domain.board.position.Horizontal;
-import chess.domain.board.position.Position;
 import chess.domain.board.position.Vertical;
-import chess.domain.piece.Piece;
 import chess.domain.player.Turn;
-import chess.view.PieceSymbolMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class GameDao {
@@ -34,13 +29,13 @@ public class GameDao {
     }
 
     public GameDto load(final Long roomId) {
-        final String query = "SELECT * FROM game_status WHERE room_id = (?) ORDER BY id DESC limit 1";
+        final String query = "SELECT * FROM game_status WHERE room_id = ?";
         return jdbcTemplate.queryForObject(query, (rs, rowNum)
                 -> makeGameDto(rs.getString(COLUMN_LABEL_OF_TURN), rs.getString(COLUMN_LABEL_OF_BOARD)), roomId);
     }
 
     private GameDto makeGameDto(final String turn, final String board) {
-        return new GameDto(Turn.of(turn), dataToBoard(board));
+        return new GameDto(turn, board);
     }
 
     public void delete(final Long roomId) {
@@ -54,20 +49,22 @@ public class GameDao {
     }
 
     public String boardToData(final Board board) {
-        return Arrays.stream(board.parseUnicodeBoard())
-                .flatMap(strings -> Arrays.stream(strings))
-                .collect(Collectors.joining(SEPARATOR_OF_PIECE));
+        List<String> boardData = new ArrayList<>();
+        convertBoardToData(board, boardData);
+        return String.join(SEPARATOR_OF_PIECE, boardData);
     }
 
-    public static Board dataToBoard(final String dataLine) {
-        final Map<Position, Piece> board = new HashMap<>();
-        final String[] pieces = dataLine.split(SEPARATOR_OF_PIECE);
-        int index = 0;
-        for (final Horizontal h : Horizontal.values()) {
-            for (final Vertical v : Vertical.values()) {
-                board.put(new Position(v, h), PieceSymbolMapper.parseToPiece(pieces[index++]));
-            }
+    private void convertBoardToData(Board board, List<String> boardData) {
+        for (Vertical v : Vertical.values()) {
+            convertToData(board, boardData, v);
         }
-        return new Board(board);
+    }
+
+    private void convertToData(Board board, List<String> boardData, Vertical v) {
+        for (Horizontal h : Horizontal.values()) {
+            String position = v.getVertical() + h.getHorizontal();
+            String pieceCode = board.toBoardDto().get(position);
+            boardData.add(pieceCode);
+        }
     }
 }

@@ -2,10 +2,7 @@ package chess.service;
 
 import chess.dao.LogDAO;
 import chess.domain.ChessGame;
-import chess.domain.Movement;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public final class LogService {
@@ -19,15 +16,16 @@ public final class LogService {
         logDAO.deleteLogByRoomId(roomId);
     }
 
-    public List<Movement> logByRoomId(final String roomId) {
-        return logDAO.allLogByRoomId(roomId);
-    }
-
-    public void executeLog(final List<Movement> logs, final ChessGame chessGame) {
-        logs.forEach(positions -> chessGame.move(positions.getStartPoint(), positions.getEndPoint()));
-    }
-
     public void createLog(final String roomId, final String startPoint, final String endPoint) {
         logDAO.createLog(roomId, startPoint, endPoint);
+    }
+
+    public void continueGame(final String id, final ChessGame chessGame) {
+        logDAO.allLogByRoomId(id).forEach(
+                positions -> chessGame.move(
+                        positions.getStartPoint(),
+                        positions.getEndPoint()
+                )
+        );
     }
 }

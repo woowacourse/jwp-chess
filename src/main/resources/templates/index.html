@@ -19,11 +19,18 @@
   </li>
 </ul>
 
-<form action="/games" method="post" style="width: 400px; margin-top: 40px; margin-left: auto; margin-right: auto" onsubmit="return create_game_check();">
-  <div class="input-group">
-    <input id="new_game_title" name="gameTitle" type="text" class="form-control" placeholder="방 제목을 입력하세요">
-    <input class="btn btn-outline-secondary" type="submit" id="create_game_button" value="방 생성"/>
+<form action="/games" method="post" style="width: 260px; margin-top: 40px; margin-left: auto; margin-right: auto" onsubmit="return create_room_check();">
+  <div class="row mb-3">
+    <div>
+      <input type="text" class="form-control" id="new_game_title" name="gameTitle" placeholder="방 제목을 입력하세요">
+    </div>
   </div>
+  <div class="row mb-3">
+    <div>
+      <input type="password" class="form-control" id="white-player-password" name="whitePlayerPassword" placeholder="비밀번호를 입력하세요">
+    </div>
+  </div>
+  <input class="btn btn-outline-primary" type="submit" id="create_room_button" value="방 생성" style="width: 100%"/>
 </form>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"

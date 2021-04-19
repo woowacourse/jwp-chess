@@ -5,8 +5,12 @@ import chess.domain.piece.Piece;
 import dto.MoveDto;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import util.PieceConverter;
@@ -21,18 +25,22 @@ public class PieceDao {
 
     public void create(Map<Position, Piece> pieces, String color, Long gameId) {
         String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";
+        List<Position> positions = new ArrayList<>(pieces.keySet());
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                Piece piece = pieces.get(positions.get(i));
+                ps.setString(1, PieceConverter.convertToPieceName(color, piece));
+                ps.setString(2, color);
+                ps.setString(3, positions.get(i).getKey());
+                ps.setLong(4, gameId);
+            }
 
-        for (Position position : pieces.keySet()) {
-            jdbcTemplate.update(con -> {
-                Piece piece = pieces.get(position);
-                PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"team_id"});
-                preparedStatement.setString(1, PieceConverter.convertToPieceName(color, piece));
-                preparedStatement.setString(2, color);
-                preparedStatement.setString(3, position.getKey());
-                preparedStatement.setLong(4, gameId);
-                return preparedStatement;
-            });
-        }
+            @Override
+            public int getBatchSize() {
+                return pieces.size();
+            }
+        });
     }
 
     public Map<Position, Piece> load(Long gameId, String color) {

@@ -3,9 +3,9 @@ package chess.web.controller;
 import chess.domain.position.MovePosition;
 import chess.web.dto.ChessDto;
 import chess.web.service.ChessService;
-import com.google.gson.Gson;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/chess")
 public class ChessController {
 
-    private static final Gson GSON = new Gson();
-
     private final ChessService chessService;
 
     public ChessController(ChessService chessService) {
@@ -28,9 +26,9 @@ public class ChessController {
 
     @GetMapping("/{chessId}")
     @ResponseBody
-    public String chessInfo(@PathVariable long chessId) {
+    public ResponseEntity<ChessDto> chessInfo(@PathVariable long chessId) {
         ChessDto chessDto = chessService.getChessGame(chessId);
-        return GSON.toJson(chessDto);
+        return ResponseEntity.ok(chessDto);
     }
 
     @GetMapping("/{chessId}/view")
@@ -40,14 +38,14 @@ public class ChessController {
 
     @PostMapping
     @ResponseBody
-    public String newChessGame(HttpServletResponse response) {
+    public Object newChessGame(HttpServletResponse response) {
         Long chessId = chessService.insert();
 
         Cookie chessIdCookie = new Cookie("chessId", String.valueOf(chessId));
         chessIdCookie.setMaxAge(60 * 60 * 24 * 30);
         response.addCookie(chessIdCookie);
 
-        return GSON.toJson(chessId);
+        return chessId;
     }
 
     @PatchMapping("/{chessId}")

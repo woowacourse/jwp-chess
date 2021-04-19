@@ -2,6 +2,7 @@ package chess.domain.game;
 
 import static chess.utils.TestFixture.TEST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import chess.domain.board.score.Scores;
 import chess.domain.color.type.TeamColor;
@@ -66,5 +67,31 @@ public class ChessGameTest {
 
         assertThat(chessGame.getEncryptedWhitePlayerPassword()).isEqualTo(encryptedWhitePlayerPassword);
         assertThat(chessGame.getEncryptedBlackPlayerPassword()).isEqualTo(encryptedBlackPlayerPassword);
+    }
+
+    @DisplayName("비밀번호 일치 검사 - 백 팀의 차례일 때")
+    @Test
+    void validatePasswordWhenWhiteTurn() {
+        String correctPassword = "correctPassword";
+
+        ChessGame chessGame = new ChessGame(TEST_TITLE, correctPassword);
+
+        String incorrectPassword = PasswordEncoder.encrypt(correctPassword) + "a";
+
+        assertThatCode(() -> chessGame.validatePassword(incorrectPassword))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("비밀번호 일치 검사 - 흑 팀의 차례일 때")
+    @Test
+    void validatePasswordWhenBlackTurn() {
+        String correctPassword = "correctPassword";
+
+        ChessGame chessGame = new ChessGame(TEST_TITLE, TeamColor.BLACK, null, correctPassword);
+
+        String incorrectPassword = PasswordEncoder.encrypt(correctPassword) + "a";
+
+        assertThatCode(() -> chessGame.validatePassword(incorrectPassword))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

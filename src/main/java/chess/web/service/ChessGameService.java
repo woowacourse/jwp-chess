@@ -52,6 +52,7 @@ public class ChessGameService {
 
     public void movePiece(MoveRequestDto moveRequestDTO) {
         ChessGame chessGame = chessGameRepository.findById(moveRequestDTO.getGameId());
+        chessGame.validatePassword(moveRequestDTO.getEncryptedPassword());
         String startPositionInput = moveRequestDTO.getStartPositionInput();
         String destinationInput = moveRequestDTO.getDestinationInput();
         chessGame.movePiece(startPositionInput, destinationInput);

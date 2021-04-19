@@ -20,6 +20,7 @@ public class ChessGame {
         + "rnbqkbnr";
 
     private static final String INITIAL_TURN_TEAM_COLOR_VALUE = "white";
+    private static final String NOT_CORRECT_PASSWORD_ERROR_MESSAGE = "비밀번호가 일치하지 않습니다.";
 
     private final Long id;
     private final String title;
@@ -39,11 +40,15 @@ public class ChessGame {
         this.encryptedBlackPlayerPassword = encryptedBlackPlayerPassword;
     }
 
-    public ChessGame(String title, String rawWhitePlayerPassword) {
-        this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE, PasswordEncoder.encrypt(rawWhitePlayerPassword), null);
-    }
     public ChessGame(String title, String encryptedWhitePlayerPassword, String encryptedBlackPlayerPassword) {
         this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE, encryptedWhitePlayerPassword, encryptedBlackPlayerPassword);
+    }
+    public ChessGame(String title, TeamColor currentTurnTeamColor, String encryptedWhitePlayerPassword, String encryptedBlackPlayerPassword) {
+        this(null, title, INITIAL_BOARD_STATUS, currentTurnTeamColor.getValue(), encryptedWhitePlayerPassword, encryptedBlackPlayerPassword);
+    }
+
+    public ChessGame(String title, String rawWhitePlayerPassword) {
+        this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE, PasswordEncoder.encrypt(rawWhitePlayerPassword), null);
     }
 
     public ChessGame(String title) {
@@ -111,5 +116,25 @@ public class ChessGame {
 
     public void joinBlackPlayerWithPassword(String rawBlackPlayerPassword) {
         encryptedBlackPlayerPassword = PasswordEncoder.encrypt(rawBlackPlayerPassword);
+    }
+
+    public void validatePassword(String encryptedPassword) {
+        if (currentTurnTeamColor == TeamColor.WHITE) {
+            validateWhitePlayerPassword(encryptedPassword);
+            return;
+        }
+        validateBlackPlayerPassword(encryptedPassword);
+    }
+
+    private void validateWhitePlayerPassword(String encryptedPassword) {
+        if (!encryptedWhitePlayerPassword.equals(encryptedPassword)) {
+            throw new IllegalArgumentException(NOT_CORRECT_PASSWORD_ERROR_MESSAGE);
+        }
+    }
+
+    private void validateBlackPlayerPassword(String encryptedPassword) {
+        if (!encryptedBlackPlayerPassword.equals(encryptedPassword)) {
+            throw new IllegalArgumentException(NOT_CORRECT_PASSWORD_ERROR_MESSAGE);
+        }
     }
 }

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class ChessGameController {
 
+    protected static final String ENCRYPTED_PASSWORD = "encryptedPassword";
     private final ChessGameService chessGameService;
 
     public ChessGameController(ChessGameService chessGameService) {
@@ -41,7 +42,7 @@ public class ChessGameController {
     @PostMapping("/games")
     public String createGame(@ModelAttribute CreateGameRequestDto createGameRequestDto, HttpServletResponse response) {
         CreateGameResponseDto createGameResponseDto = chessGameService.createNewChessGame(createGameRequestDto);
-        Cookie cookie = new Cookie("encryptedWhitePlayerPassword", createGameResponseDto.getEncryptedWhitePlayerPassword());
+        Cookie cookie = new Cookie(ENCRYPTED_PASSWORD, createGameResponseDto.getEncryptedWhitePlayerPassword());
         response.addCookie(cookie);
         return "redirect:/games/" + createGameResponseDto.getGameId();
     }
@@ -49,7 +50,7 @@ public class ChessGameController {
     @PostMapping("/join")
     public ResponseEntity<String> joinGame(@RequestBody JoinGameRequestDto joinGameRequestDto, HttpServletResponse response) {
         String encryptedBlackPlayerPassword = chessGameService.joinGame(joinGameRequestDto);
-        Cookie cookie = new Cookie("encryptedBlackPlayerPassword", encryptedBlackPlayerPassword);
+        Cookie cookie = new Cookie(ENCRYPTED_PASSWORD, encryptedBlackPlayerPassword);
         response.addCookie(cookie);
         return new ResponseEntity<>(HttpStatus.OK);
     }

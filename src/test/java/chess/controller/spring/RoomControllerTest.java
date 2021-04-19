@@ -5,6 +5,7 @@ import chess.service.spring.RoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -16,7 +17,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 
@@ -42,33 +42,38 @@ class RoomControllerTest {
     @Order(1)
     @Test
     void findAllRooms() throws JsonProcessingException {
-        roomService.addRoom("test1");
-        roomService.addRoom("test2");
-        RestAssured.given().log().all()
+        roomService.addRoom("room1");
+        roomService.addRoom("room2");
+        String expectedResponseBody = writeResponse(Arrays.asList(new RoomDTO(1, "room1"), new RoomDTO(2, "room2")));
+
+        Response response = RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/rooms")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2))
-                .body(is(parseExpectedResponse()));
+                .when().get("/rooms");
+
+        assertResponse(response, expectedResponseBody);
     }
 
-    private String parseExpectedResponse() throws JsonProcessingException {
-        List<RoomDTO> rooms = Arrays.asList(new RoomDTO(1, "test1"), new RoomDTO(2, "test2"));
-        return new ObjectMapper().writeValueAsString(rooms);
+    private String writeResponse(Object object) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(object);
+    }
+
+    private void assertResponse(Response response, String expectedResponseBody) {
+        response.then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(is(expectedResponseBody));
     }
 
     @DisplayName("방을 추가한다.")
     @Order(2)
     @Test
     void addRoom() throws JsonProcessingException {
-        RestAssured.given().log().all()
+        String expectedResponseBody = writeResponse(new RoomDTO(3, "room3"));
+
+        Response response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("test3")
-                .when().post("/rooms")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2))
-                .body(is(new ObjectMapper().writeValueAsString(new RoomDTO(3, "test3"))));
+                .body("room3")
+                .when().post("/rooms");
+
+        assertResponse(response, expectedResponseBody);
     }
 }

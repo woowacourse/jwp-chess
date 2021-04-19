@@ -118,7 +118,7 @@ function changeImage(sourcePosition, targetPosition) {
 }
 
 async function changeTurn() {
-    const response = await fetch(currentRoomName + '/currentTurn', {
+    const response = await fetch(currentRoomName + '/current-turn', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
@@ -155,7 +155,7 @@ async function syncBoard() {
     let data = {
         roomName: currentRoomName
     }
-    const board = await fetch(currentRoomName + '/currentBoard', {
+    const board = await fetch(currentRoomName + '/current-board', {
         method: 'post',
         body: JSON.stringify(data),
         headers: {

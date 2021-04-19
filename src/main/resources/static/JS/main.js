@@ -96,7 +96,7 @@ async function addRoom(event) {
         let data = {
             roomName: roomName
         }
-        const response = await fetch('/checkRoomName', {
+        const response = await fetch('/check-room-name', {
             method: 'post',
             body: JSON.stringify(data),
             headers: {
@@ -118,7 +118,7 @@ async function createRoom(roomName) {
     let data = {
         roomName: roomName
     }
-    await fetch('/createRoom', {
+    await fetch('/create', {
         method: 'post',
         body: JSON.stringify(data),
         headers: {

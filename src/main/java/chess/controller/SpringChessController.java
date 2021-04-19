@@ -33,7 +33,7 @@ public class SpringChessController {
         return "/chess.html";
     }
 
-    @PostMapping("/createRoom")
+    @PostMapping("/create")
     @ResponseBody
     public void createRoom(@RequestBody RoomNameDto roomNameDTO) {
         springChessService.createRoom(roomNameDTO.getRoomName());
@@ -46,13 +46,13 @@ public class SpringChessController {
         return responseDto;
     }
 
-    @PostMapping("/rooms/{roomName}/currentBoard")
+    @PostMapping("/rooms/{roomName}/current-board")
     @ResponseBody
     public Map<String, String> currentBoard(@PathVariable RoomNameDto roomName) {
         return springChessService.currentBoardByRoomName(roomName.getRoomName());
     }
 
-    @PostMapping(value = "/rooms/{roomName}/currentTurn")
+    @PostMapping(value = "/rooms/{roomName}/current-turn")
     @ResponseBody
     public TurnDto currentTurn(@PathVariable RoomNameDto roomName) {
         return new TurnDto(springChessService.turnName(roomName.getRoomName()));
@@ -70,7 +70,7 @@ public class SpringChessController {
         return springChessService.score(roomName.getRoomName());
     }
 
-    @PostMapping("/checkRoomName")
+    @PostMapping("/check-room-name")
     @ResponseBody
     public RoomValidateDto checkRoomName(@RequestBody RoomNameDto roomName) {
         return springChessService.checkDuplicatedRoom(roomName.getRoomName());

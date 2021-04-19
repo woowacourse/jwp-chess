@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static spark.Spark.*;
-import static spark.Spark.post;
 
 public class SparkChessApplication {
     public static void main(String[] args) {

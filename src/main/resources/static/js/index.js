@@ -53,7 +53,7 @@ async function findGames() {
 }
 
 async function calculateScore() {
-    const scoreResponseData = await getFetch(`/game/score/${chessGameId}`);
+    const scoreResponseData = await getFetch(`/game/${chessGameId}/score`);
 
     $blackScore.innerText = scoreResponseData.colorsScore.BLACK;
     $whiteScore.innerText = scoreResponseData.colorsScore.WHITE;
@@ -95,7 +95,7 @@ function onClickLoadBtn(e) {
     if (e.target && e.target.id === "loadBtn") {
         const loadGameId = prompt("로드할 게임 ID를 입력해주세요.");
         if (loadGameId) {
-            getPieces("/game/load/" + loadGameId);
+            getPieces(`/game/${loadGameId}/load/`);
         }
     }
 }

@@ -14,7 +14,7 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/user")
+    @GetMapping("/games")
     public RunningGameResponseDto getGames() {
         ChessGameManagerBundle runningGames = chessService.findRunningGames();
         return new RunningGameResponseDto(runningGames.getIdAndNextTurn());
@@ -25,19 +25,19 @@ public class ChessController {
         return new ChessGameResponseDto(chessService.start());
     }
 
-    @GetMapping("/game/score/{id}")
+    @GetMapping("/game/{id:[\\d]+}/score")
     public ScoreResponseDto getScore(@PathVariable long id) {
         return new ScoreResponseDto(chessService.getStatistics(id));
     }
 
-    @GetMapping("/game/load/{id:[\\d]+}")
+    @GetMapping("/game/{id:[\\d]+}/load")
     public ChessGameResponseDto loadGame(@PathVariable long id) {
         ChessGameManager load = chessService.findById(id);
         return new ChessGameResponseDto(load);
     }
 
     @PostMapping("/game/move")
-    public MoveResponseDto movePiece(@RequestBody MoveRequestDto moveMessage) {
+    public MoveResponseDto movePiece(@PathVariable long id, @RequestBody MoveRequestDto moveMessage) {
         chessService.move(moveMessage);
         return new MoveResponseDto(chessService.isEnd(moveMessage.getId()), chessService.nextColor(moveMessage.getId()));
     }

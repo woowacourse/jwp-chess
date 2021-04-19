@@ -3,6 +3,8 @@ package chess.domain.state;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Source;
 import chess.domain.position.Target;
+import chess.exception.FinishException;
+import chess.exception.ValidTurnException;
 
 public class Finished extends Turn {
 
@@ -12,7 +14,7 @@ public class Finished extends Turn {
 
     @Override
     public final State move(final Source source, final Target target) {
-        throw new UnsupportedOperationException("끝난 상태에서는 기물을 움직일 수 없습니다.");
+        throw new FinishException();
     }
 
     @Override
@@ -25,6 +27,6 @@ public class Finished extends Turn {
         if (anotherState.isFinish()) {
             return new Running(pieces());
         }
-        throw new IllegalStateException("상태방 차례입니다.");
+        throw new ValidTurnException();
     }
 }

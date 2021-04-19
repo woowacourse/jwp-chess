@@ -7,6 +7,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.position.Position;
 import chess.entity.Chess;
 import chess.entity.Movement;
+import chess.exception.NotExistRoomException;
 import chess.service.dto.ChessSaveRequestDto;
 import chess.service.dto.CommonResponseDto;
 import chess.service.dto.GameStatusDto;
@@ -103,6 +104,6 @@ public class ChessService {
     }
 
     private Chess findChessByName(final String chessName) {
-        return chessDao.findByName(chessName).orElseThrow(() -> new IllegalArgumentException("없는 게임 이름입니다"));
+        return chessDao.findByName(chessName).orElseThrow(NotExistRoomException::new);
     }
 }

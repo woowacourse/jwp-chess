@@ -2,6 +2,7 @@ package chess.domain.position;
 
 import chess.domain.piece.direction.MoveStrategies;
 import chess.domain.piece.direction.MoveStrategy;
+import chess.exception.InvalidDirectionException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +56,7 @@ public class Position implements Comparable<Position> {
             final Difference difference = directionMatcher(target);
             return MoveStrategies.matchedMoveStrategy(difference.fileDegree(), difference.rankDegree());
         }
-        throw new IllegalArgumentException("유효하지 않은 방향입니다.");
+        throw new InvalidDirectionException();
     }
 
     private Difference directionMatcher(final Position target) {

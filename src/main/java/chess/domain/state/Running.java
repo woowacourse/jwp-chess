@@ -3,6 +3,7 @@ package chess.domain.state;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Source;
 import chess.domain.position.Target;
+import chess.exception.RunningStateException;
 
 public class Running extends Turn {
 
@@ -24,6 +25,6 @@ public class Running extends Turn {
 
     @Override
     public State toRunningState(final State anotherState) {
-        throw new UnsupportedOperationException("이미 진행중인 상태입니다.");
+        throw new RunningStateException();
     }
 }

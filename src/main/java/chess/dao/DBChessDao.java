@@ -2,6 +2,7 @@ package chess.dao;
 
 import chess.domain.piece.Color;
 import chess.entity.Chess;
+import chess.exception.DuplicateRoomException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,7 +44,7 @@ public class DBChessDao implements ChessDao {
         String query = "INSERT INTO chess VALUES (?, ?, ?, ?, ?)";
 
         if (findByName(chess.getName()).isPresent()) {
-            throw new IllegalStateException("이미 존재하는 방입니당");
+            throw new DuplicateRoomException();
         }
 
         Connection connection = connectionPool.getConnection();

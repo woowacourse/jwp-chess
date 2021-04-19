@@ -3,6 +3,7 @@ package chess.repository;
 import chess.dao.ChessDao;
 import chess.domain.piece.Color;
 import chess.entity.Chess;
+import chess.exception.DuplicateRoomException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,7 +30,7 @@ public class JDBCChessDao implements ChessDao {
     @Override
     public void save(Chess chess) {
         if (findByName(chess.getName()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 방 이름입니다.");
+            throw new DuplicateRoomException();
         }
 
         jdbcTemplate.update("INSERT INTO chess VALUES (?, ?, ?, ?, ?)",

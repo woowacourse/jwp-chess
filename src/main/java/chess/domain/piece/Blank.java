@@ -2,6 +2,8 @@ package chess.domain.piece;
 
 import chess.domain.position.Position;
 import chess.domain.position.Target;
+import chess.exception.BlankMoveException;
+import chess.exception.EmptyPositionException;
 import java.util.List;
 
 public final class Blank extends Piece {
@@ -13,18 +15,18 @@ public final class Blank extends Piece {
     }
 
     @Override
-    public double score(List<Piece> pieces) {
+    public double score(final List<Piece> pieces) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Piece move(Target target) {
-        throw new UnsupportedOperationException("움직일 수 없습니다.");
+    public Piece move(final Target target) {
+        throw new BlankMoveException();
     }
 
     @Override
     public boolean canMove(final Target target) {
-        throw new UnsupportedOperationException("비어 있는 칸입니다.");
+        throw new EmptyPositionException();
     }
 
     @Override

@@ -7,6 +7,8 @@ import chess.domain.game.ChessGame;
 import chess.domain.position.Position;
 import chess.entity.Chess;
 import chess.entity.Movement;
+import chess.exception.DuplicateRoomException;
+import chess.exception.NotExistRoomException;
 import chess.service.dto.ChessSaveRequestDto;
 import chess.service.dto.CommonResponseDto;
 import chess.service.dto.GameStatusDto;
@@ -57,7 +59,7 @@ public class SpringChessService {
         Chess chess = new Chess(requestDto.getName());
 
         if (chessDao.findByName(requestDto.getName()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 방 이름입니다.");
+            throw new DuplicateRoomException();
         }
 
         chessDao.save(chess);
@@ -92,6 +94,6 @@ public class SpringChessService {
     }
 
     private Chess findChessByName(final String chessName) {
-        return chessDao.findByName(chessName).orElseThrow(() -> new IllegalArgumentException("없는 게임 이름입니다"));
+        return chessDao.findByName(chessName).orElseThrow(NotExistRoomException::new);
     }
 }

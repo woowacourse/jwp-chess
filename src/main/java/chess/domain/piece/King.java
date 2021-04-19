@@ -43,4 +43,9 @@ public class King extends AbstractPiece {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return getName() + "_" + rawTeamColor();
+    }
+
 }

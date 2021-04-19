@@ -42,7 +42,7 @@ public class WebController {
         final String historyId = moveDto.getGameId();
         try {
             webChessService.move(historyId, command, new Commands(command));
-            return GSON.toJson(ModelView.moveResponse(webChessService.continuedGameInfo(historyId), historyId));
+            return GSON.toJson(ModelView.moveSparkResponse(webChessService.continuedGameInfo(historyId), historyId));
         } catch (IllegalArgumentException | SQLException e) {
             response.status(400);
             return e.getMessage();

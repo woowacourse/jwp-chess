@@ -41,4 +41,9 @@ public class Bishop extends AbstractPiece {
     public double getPoint() {
         return POINT;
     }
+
+    @Override
+    public String toString() {
+        return getName() + "_" + rawTeamColor();
+    }
 }

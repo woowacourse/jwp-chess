@@ -41,6 +41,12 @@ function update(response) {
     if (typeof response !== "object") {
         response = JSON.parse(response);
     }
+
+    if (response.errorMessage != null) {
+        alert(response.errorMessage);
+        return;
+    }
+
     const board = response.squares;
     const turn = response.turn;
     const scores = response.scores;
@@ -82,7 +88,8 @@ function update(response) {
 }
 
 function showError(response) {
-    alert(response.responseText);
+    alert(response.errorMessage);
+    return;
 }
 
 function initialize() {

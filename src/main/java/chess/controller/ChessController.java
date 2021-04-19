@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.domain.command.Commands;
+import chess.domain.dto.MoveResponseDto;
 import chess.domain.exception.DataException;
 import chess.domain.dto.MoveDto;
 import chess.service.ChessService;
@@ -59,15 +60,15 @@ public class ChessController {
 
     @PostMapping("/move")
     @ResponseBody
-    public String move(@RequestBody MoveDto moveDto) {
+    public MoveResponseDto move(@RequestBody MoveDto moveDto) {
         String command = makeMoveCmd(moveDto.getSource(), moveDto.getTarget());
         String historyId = moveDto.getGameId();
 
         try {
             chessService.move(historyId, command, new Commands(command));
-            return GSON.toJson(ModelView.moveResponse(chessService.continuedGameInfo(historyId), historyId));
+            return ModelView.moveResponse(chessService.continuedGameInfo(historyId), historyId);
         } catch (IllegalArgumentException | SQLException e) {
-            return e.getMessage();
+            return new MoveResponseDto(e.getMessage());
         }
     }
 

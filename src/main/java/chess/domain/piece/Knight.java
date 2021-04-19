@@ -41,4 +41,9 @@ public class Knight extends AbstractPiece {
         return POINT;
     }
 
+    @Override
+    public String toString() {
+        return getName() + "_" + rawTeamColor();
+    }
+
 }

@@ -73,4 +73,9 @@ public class Pawn extends AbstractPiece {
         return super.generatePaths(path, direction, distance + 2);
     }
 
+    @Override
+    public String toString() {
+        return getName() + "_" + rawTeamColor();
+    }
+
 }

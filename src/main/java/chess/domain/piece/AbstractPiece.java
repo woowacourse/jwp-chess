@@ -51,8 +51,13 @@ public abstract class AbstractPiece implements Piece {
         return IntStream.range(1, distance - 1).mapToObj(i -> path.move(direction, i)).collect(Collectors.toList());
     }
 
-    @Override
-    public String toString() {
-        return name + "_" + team.toString();
+    protected String rawTeamColor() {
+        if (isBlackTeam()) {
+            return "black";
+        }
+        return "white";
     }
+
+    @Override
+    abstract public String toString();
 }

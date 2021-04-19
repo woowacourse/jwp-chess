@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.util.List;
 
-@Service("/chess")
+@Service
 public class SpringChessService {
     private static final String END_TRUE = "true";
 

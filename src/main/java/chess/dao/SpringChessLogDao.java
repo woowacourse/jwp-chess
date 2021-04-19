@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Objects;
 
-@Repository("/chess")
+@Repository
 public class SpringChessLogDao {
     private SimpleJdbcInsert simpleJdbcInsert;
     private JdbcTemplate jdbcTemplate;

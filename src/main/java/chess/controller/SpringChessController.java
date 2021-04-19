@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Objects;
 
-@Controller("/chess")
+@Controller
 public class SpringChessController {
     private static final int ROOM_NOT_EXIST = -1;
     private static final int ROOM_ALREADY_EXIST = -2;
@@ -25,7 +25,7 @@ public class SpringChessController {
         return "main";
     }
 
-    @GetMapping("/start")
+    @GetMapping("/chess/start")
     public ModelAndView startGame(@RequestParam("room") String id) {
         if (Objects.nonNull(springChessService.findRoomByRoomId(id))) {
             final ModelAndView modelAndView = new ModelAndView("main");
@@ -39,7 +39,7 @@ public class SpringChessController {
         return modelAndView;
     }
 
-    @GetMapping("/enter")
+    @GetMapping("/chess/enter")
     public ModelAndView enterGame(@RequestParam("room") String id) {
         if (Objects.isNull(springChessService.findRoomByRoomId(id))) {
             final ModelAndView modelAndView = new ModelAndView("main");
@@ -53,7 +53,7 @@ public class SpringChessController {
         return modelAndView;
     }
 
-    @GetMapping("/clear/{id}")
+    @GetMapping("/chess/clear/{id}")
     public String clear(@PathVariable String id) {
         springChessService.deleteRoom(id);
         return "redirect:/";

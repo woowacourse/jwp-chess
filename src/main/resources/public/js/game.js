@@ -48,7 +48,7 @@ function postFetch(url, bodyData) {
 }
 
 async function moveBoard() {
-    await postFetchMove("move").then(data => {
+    await postFetchMove("/chess/move").then(data => {
         $board = data;
         refreshBoard();
         createBoard();
@@ -58,7 +58,7 @@ async function moveBoard() {
 async function findPath() {
     clearMovablePosition();
 
-    await postFetchPath("movable").then(data => {
+    await postFetchPath("/chess/movable").then(data => {
         $path = data;
     });
     showMovablePosition();
@@ -72,7 +72,7 @@ function showMovablePosition() {
 }
 
 async function findScore() {
-    await getFetch("score/" + $roomId).then(data => {
+    await getFetch("/chess/score/" + $roomId).then(data => {
         $status = data;
     });
     showScore();
@@ -102,7 +102,7 @@ function clearMovablePosition() {
 
 async function createBoard() {
     clearBoard();
-    await getFetch("create/" + $roomId).then(data => {
+    await getFetch("/chess/create/" + $roomId).then(data => {
         $board = data;
     })
     refreshBoard();
@@ -189,7 +189,7 @@ function changeTurn(team) {
 
 async function clearRoom() {
     clearBoard();
-    window.location.href = "/clear/" + $roomId;
+    window.location.href = "/chess/clear/" + $roomId;
 }
 
 document.addEventListener("click", createMoveCommand);

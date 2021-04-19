@@ -31,43 +31,33 @@ public class ChessService {
         this.pieceRepository = pieceRepository;
     }
 
+    @Transactional
     public MoveResponseDto start(String roomName) throws SQLException {
         Room room = findRoomByRoomName(roomName);
 
         room.play("start");
         roomRepository.update(room);
-
-        Board board = room.getBoard();
-
-        List<PieceDto> pieceDtos = board.getPieces()
-            .stream()
-            .map(piece -> PieceDto.from(piece))
-            .collect(Collectors.toList());
         return new MoveResponseDto(
-            pieceDtos,
+            pieceDtos(room.getBoard()),
             room.getCurrentTeam().getValue(),
             room.judgeResult()
         );
     }
 
+    @Transactional
     public MoveResponseDto end(String roomName) throws SQLException {
         Room room = findRoomByRoomName(roomName);
 
         room.play("end");
         roomRepository.update(room);
-
-        Board board = room.getBoard();
-        List<PieceDto> pieceDtos = board.getPieces()
-            .stream()
-            .map(piece -> PieceDto.from(piece))
-            .collect(Collectors.toList());
         return new MoveResponseDto(
-            pieceDtos,
+            pieceDtos(room.getBoard()),
             room.getCurrentTeam().getValue(),
             room.judgeResult()
         );
     }
 
+    @Transactional
     public MoveResponseDto move(String roomName, String source, String target) throws SQLException {
         Room room = findRoomByRoomName(roomName);
         Board board = room.getBoard();
@@ -91,28 +81,18 @@ public class ChessService {
         for (Piece piece : board.getPieces()) {
             pieceRepository.update(piece);
         }
-
-        List<PieceDto> pieceDtos = board.getPieces()
-            .stream()
-            .map(piece -> PieceDto.from(piece))
-            .collect(Collectors.toList());
         return new MoveResponseDto(
-            pieceDtos,
+            pieceDtos(room.getBoard()),
             room.getCurrentTeam().getValue(),
             room.judgeResult()
         );
     }
 
+    @Transactional
     public MoveResponseDto findPiecesByRoomName(String roomName) throws SQLException {
         Room room = findRoomByRoomName(roomName);
-
-        List<PieceDto> pieceDtos = pieceRepository.findPiecesByRoomId(room.getId())
-            .stream()
-            .map(piece -> PieceDto.from(piece))
-            .collect(Collectors.toList());
-
         return new MoveResponseDto(
-            pieceDtos,
+            pieceDtos(room.getBoard()),
             room.getCurrentTeam().getValue(),
             room.judgeResult()
         );
@@ -141,5 +121,13 @@ public class ChessService {
                 roomName,
                 State.generateState(room.getState().getValue(), Board.of(pieces)),
                 room.getCurrentTeam());
+    }
+
+
+    private List<PieceDto> pieceDtos(Board board) {
+        return board.getPieces()
+                .stream()
+                .map(piece -> PieceDto.from(piece))
+                .collect(Collectors.toList());
     }
 }

@@ -22,31 +22,20 @@ public class SpringChessService {
         this.roomDao = roomDao;
     }
 
-    public Optional<Integer> createRoom(String name) {
-        try {
-            ChessGame chessGame = initializeChessBoard();
-            chessGame.start(Collections.singletonList("start"));
-            roomDao.addRoom(new SaveRoomDto(name, chessGame));
-            return Optional.of(roomDao.getLastInsertId());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return Optional.empty();
-        }
+    public int createRoom(String name) {
+        ChessGame chessGame = initializeChessBoard();
+        chessGame.start(Collections.singletonList("start"));
+        roomDao.addRoom(new SaveRoomDto(name, chessGame));
+        return roomDao.getLastInsertId();
     }
 
-    public Optional<ChessGameDto> movePiece(MoveRequestDto moveRequestDto) {
-        try {
-            int roomNo = moveRequestDto.getRoomNo();
-            RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
-            List<String> input = Arrays.asList(moveRequestDto.getCommand().split(" "));
-            ChessGame chessGame = setChessGame(roomDto);
-            chessGame.play(input);
-            roomDao.updateRoom(new RoomDto(roomNo, roomDto.getRoomName(), chessGame));
-            return Optional.of(new ChessGameDto(roomNo, roomDto.getRoomName(), chessGame));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return Optional.empty();
-        }
+    public ChessGameDto movePiece(int roomNo, MoveRequestDto moveRequestDto) {
+        RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
+        List<String> input = Arrays.asList(moveRequestDto.getCommand().split(" "));
+        ChessGame chessGame = setChessGame(roomDto);
+        chessGame.play(input);
+        roomDao.updateRoom(new RoomDto(roomNo, roomDto.getRoomName(), chessGame));
+        return new ChessGameDto(roomNo, roomDto.getRoomName(), chessGame);
     }
 
     private ChessGame initializeChessBoard() {
@@ -54,15 +43,10 @@ public class SpringChessService {
         return new ChessGame(chessBoard, Color.WHITE, new Ready());
     }
 
-    public Optional<ChessGameDto> loadRoom(int roomNo) {
-        try {
-            RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
-            ChessGame chessGame = setChessGame(roomDto);
-            return Optional.of(new ChessGameDto(roomNo, roomDto.getRoomName(), chessGame));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return Optional.empty();
-        }
+    public ChessGameDto loadRoom(int roomNo) {
+        RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
+        ChessGame chessGame = setChessGame(roomDto);
+        return new ChessGameDto(roomNo, roomDto.getRoomName(), chessGame);
     }
 
     private ChessGame setChessGame(RoomDto roomDto) {
@@ -86,40 +70,10 @@ public class SpringChessService {
     }
 
     public List<RoomDto> getAllSavedRooms() {
-        try {
-            return roomDao.getAllRoom();
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
+        return roomDao.getAllRoom();
     }
 
-    public boolean isGameEnd(int roomNo){
-        try {
-            RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
-            ChessGame chessGame = setChessGame(roomDto);
-            return !chessGame.isOngoing();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
-
-    public void deleteGame(int roomNo) {
-        try {
-            roomDao.deleteRoomByRoomNo(roomNo);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public Optional<ResultDto> getResult(int roomNo) {
-        try {
-            RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
-            ChessGame chessGame = setChessGame(roomDto);
-            return Optional.of(new ResultDto(chessGame.result()));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return Optional.empty();
-        }
+    public void deleteRoom(int roomNo) {
+        roomDao.deleteRoomByRoomNo(roomNo);
     }
 }

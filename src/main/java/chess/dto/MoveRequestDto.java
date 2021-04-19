@@ -1,19 +1,16 @@
 package chess.dto;
 
+import java.beans.ConstructorProperties;
+
 public class MoveRequestDto {
     private final String command;
-    private final int roomNo;
 
-    public MoveRequestDto(String command, int roomNo) {
+    @ConstructorProperties({"command"})
+    public MoveRequestDto(String command) {
         this.command = command;
-        this.roomNo = roomNo;
     }
 
     public String getCommand() {
         return command;
-    }
-
-    public int getRoomNo() {
-        return roomNo;
     }
 }

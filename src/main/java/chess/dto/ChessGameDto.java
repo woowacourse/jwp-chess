@@ -13,6 +13,7 @@ public class ChessGameDto {
     private final String turn;
     private final Map<String, PieceDto> chessBoard;
     private final ScoreDto scoreDto;
+    private final boolean isOngoing;
 
     public ChessGameDto(int roomNo, String roomName, ChessGame chessGame) {
         this.roomNo = roomNo;
@@ -22,6 +23,7 @@ public class ChessGameDto {
         this.chessBoard = chessBoard.keySet().stream()
                 .collect(Collectors.toMap(position -> position.getPosition(), position -> new PieceDto(chessBoard.get(position))));
         this.scoreDto = new ScoreDto(chessGame.calculateResult());
+        this.isOngoing = chessGame.isOngoing();
     }
 
     public String getTurn() {
@@ -42,5 +44,9 @@ public class ChessGameDto {
 
     public String getRoomName() {
         return roomName;
+    }
+
+    public boolean isOngoing() {
+        return isOngoing;
     }
 }

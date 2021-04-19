@@ -2,13 +2,12 @@ package chess.controller;
 
 import chess.dto.*;
 import chess.service.SpringChessService;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class SpringChessController {
@@ -23,72 +22,52 @@ public class SpringChessController {
         return "index";
     }
 
-    @GetMapping("/create")
+    @PostMapping("/create")
     public String createRoom(@RequestParam("roomName") String roomName) {
-        Optional<Integer> roomNo = springChessService.createRoom(roomName);
-        if (roomNo.isPresent()) {
-            return "redirect:/game/" + roomNo.get();
-        }
-        return "redirect:/";
+        int roomNo = springChessService.createRoom(roomName);
+        return "redirect:/game/" + roomNo;
     }
 
     @GetMapping("/game/{roomNo}")
-    public ModelAndView startGame(@PathVariable int roomNo, ModelAndView modelAndView) {
-        Optional<ChessGameDto> optionalChessGameDto = springChessService.loadRoom(roomNo);
-        if (optionalChessGameDto.isPresent()) {
-            modelAndView.setViewName("game");
-            modelAndView.addObject("chessGame", optionalChessGameDto.get());
-            return modelAndView;
-        }
-        modelAndView.setViewName("redirect:/");
-        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
-        return modelAndView;
-    }
-
-    @PostMapping(value = "/game/move")
-    public ModelAndView move(@RequestBody MoveRequestDto moveRequestDto, ModelAndView modelAndView) {
-        Optional<ChessGameDto> optionalChessGameDto = springChessService.movePiece(moveRequestDto);
+    public ModelAndView enterRoom(@PathVariable("roomNo") int roomNo) {
+        ChessGameDto chessGameDto = springChessService.loadRoom(roomNo);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("chessGame", chessGameDto);
         modelAndView.setViewName("game");
-        if (optionalChessGameDto.isPresent()) {
-            checkGameEnd(moveRequestDto.getRoomNo(), modelAndView);
-            modelAndView.addObject("chessGame", optionalChessGameDto.get());
-            return modelAndView;
-        }
-        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
         return modelAndView;
     }
 
-    private void checkGameEnd(int roomNo, ModelAndView modelAndView) {
-        if (springChessService.isGameEnd(roomNo)) {
-            addResult(roomNo, modelAndView);
-            springChessService.deleteGame(roomNo);
-        }
-    }
-
-    private void addResult(int roomNo, ModelAndView modelAndView) {
-        if (springChessService.getResult(roomNo).isPresent()) {
-            modelAndView.addObject("result", springChessService.getResult(roomNo).get());
-        }
+    @PutMapping(value = "/game/{roomNo}/move")
+    @ResponseBody
+    public ChessGameDto movePiece(@PathVariable("roomNo") int roomNo, @RequestBody MoveRequestDto moveRequestDto) {
+        System.out.println(roomNo);
+        System.out.println(moveRequestDto.getCommand());
+        ChessGameDto chessGameDto = springChessService.movePiece(roomNo, moveRequestDto);
+        return chessGameDto;
     }
 
     @GetMapping(value = "/rooms")
-    public ModelAndView rooms(ModelAndView modelAndView) {
+    public ModelAndView showRooms() {
         List<RoomDto> rooms = springChessService.getAllSavedRooms();
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("rooms", rooms);
         modelAndView.setViewName("repository");
         return modelAndView;
     }
 
-    @GetMapping("/game/load")
-    public ModelAndView load(@RequestParam("roomNo") int roomNo, ModelAndView modelAndView) {
-        Optional<ChessGameDto> optionalChessGameDto = springChessService.loadRoom(roomNo);
-        if (optionalChessGameDto.isPresent()) {
-            modelAndView.setViewName("game");
-            modelAndView.addObject("chessGame", optionalChessGameDto.get());
-            return modelAndView;
-        }
-        modelAndView.setViewName("redirect:/rooms");
-        modelAndView.setStatus(HttpStatus.BAD_REQUEST);
-        return modelAndView;
+    @GetMapping("/load")
+    public String loadRoom(@RequestParam("roomNo") int roomNo) {
+        return "redirect:/game/" + roomNo;
+    }
+
+    @DeleteMapping("/exit/{roomNo}")
+    public ResponseEntity deleteRoom(@PathVariable("roomNo") int roomNo) {
+        springChessService.deleteRoom(roomNo);
+        return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> exceptionHandle(Exception e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

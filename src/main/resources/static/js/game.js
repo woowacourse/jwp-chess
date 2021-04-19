@@ -1,6 +1,15 @@
-// draggable setting
-
+const roomNo = document.querySelector('#room').firstElementChild.className;
+const $blackScore = document.querySelector("#blackScore");
+const $whiteScore = document.querySelector("#whiteScore");
+const $turn = document.querySelector("#turn");
+const $homeButton = document.getElementById('home');
+const $exitButton = document.getElementById('exit');
 const $squares = document.querySelectorAll("td[class=chessboard]");
+
+$homeButton.addEventListener('click', goHome);
+$exitButton.addEventListener('click', exitChessRoom);
+
+// draggable setting
 
 for (let i = 0; i < $squares.length; i++) {
     $squares[i].addEventListener("dragstart", dragstart_handler)
@@ -27,63 +36,72 @@ function drop_handler(event) {
     sendMoveRequest(moveCommand)
 }
 
-// move, save, exit setting
-
-const $move = document.querySelector('input[class="move"]')
-
-$move.addEventListener('keyup', movePiece);
-
-function movePiece(event) {
-    const moveCommand = event.target.value;
-    if (event.key === "Enter" && moveCommand !== "") {
-        event.target.value = "";
-        const trimmedMoveCommand = moveCommand
-            .replace(/\s+/g, ' ')
-            .trim()
-        sendMoveRequest(trimmedMoveCommand)
-    }
-}
 
 async function sendMoveRequest(trimmedMoveCommand) {
-
     const data = {
-        command: trimmedMoveCommand,
-        roomNo: document.querySelector('#room').firstElementChild.className
+        command: trimmedMoveCommand
     };
     const sourcePosition = trimmedMoveCommand.split(" ")[1]
     const targetPosition = trimmedMoveCommand.split(" ")[2]
-    let response = await fetch('/game/move', {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify(data)
+    try {
+        let response = await fetch(`/game/${roomNo}/move`, {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        });
+        if (response.ok) {
+            response = await response.json();
+            replaceComponents(response, sourcePosition, targetPosition);
+            return;
+        }
+        throw await response.text();
+    } catch (err) {
+        alert(err);
+    }
+    ;
+}
+
+function replaceComponents(response, sourcePosition, targetPosition) {
+    const nowTurn = $turn.className;
+    if (!response.ongoing) {
+        alert(nowTurn + " 승!");
+        requestDelete();
+        return;
+    }
+    $turn.className = response.turn;
+    $turn.innerText = response.turn;
+    document.querySelector("#" + sourcePosition).firstElementChild.src =
+        '/images/' + response.chessBoard[sourcePosition].color + response.chessBoard[sourcePosition].type + '.png';
+    document.querySelector("#" + targetPosition).firstElementChild.src =
+        '/images/' + response.chessBoard[targetPosition].color + response.chessBoard[targetPosition].type + '.png';
+    $blackScore.innerText = response.scoreDto.blackScore;
+    $whiteScore.innerText = response.scoreDto.whiteScore;
+}
+
+
+function goHome() {
+    window.location.replace("/");
+}
+
+function exitChessRoom() {
+    const result = confirm('방을 나가면 다시 들어올 수 없습니다. 그래도 나가시겠습니까?');
+    if (result) {
+        requestDelete();
+    }
+}
+
+async function requestDelete() {
+    let response = await fetch(`/exit/${roomNo}`, {
+        method: 'DELETE'
     });
-    if (response.ok) {
-        response = await response.text();
-        replaceComponents(response, sourcePosition, targetPosition)
-    } else {
-        alert(sourcePosition + "에서" + targetPosition + "으로 움직일 수 없습니다!")
+    if (!response.ok) {
+        alert('방 삭제 중 오류가 발생했습니다.');
+        return;
     }
+    window.location.replace("/");
 }
 
-function replaceComponents(dom, sourcePosition, targetPosition) {
-    let parser = new DOMParser();
-    let xmlDoc = parser.parseFromString(dom, "text/html");
 
-    let source = xmlDoc.querySelector("#" + sourcePosition);
-    let target = xmlDoc.querySelector("#" + targetPosition);
-    let turn = xmlDoc.querySelector("#turn")
-    let score = xmlDoc.querySelector("#score")
 
-    document.querySelector("#" + sourcePosition).innerHTML = source.innerHTML
-    document.querySelector("#" + targetPosition).innerHTML = target.innerHTML
-    document.querySelector("#turn").innerHTML = turn.innerHTML
-    document.querySelector("#score").innerHTML = score.innerHTML
-
-    const result = xmlDoc.querySelector("#result").textContent
-    if (result !== "") {
-        alert("black: " + result[0] + " / white : " + result[1])
-        window.location.replace("/")
-    }
-}

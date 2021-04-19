@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAll(Exception e) {
+        System.out.println(e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -33,14 +33,4 @@ public class MoveRequestDto {
     public GridDto getGridDto() {
         return gridDto;
     }
-
-    @Override
-    public String toString() {
-        return "MoveRequestDto{" +
-                "piecesDto=" + piecesDto +
-                ", sourcePosition='" + sourcePosition + '\'' +
-                ", targetPosition='" + targetPosition + '\'' +
-                ", gridDto=" + gridDto +
-                '}';
-    }
 }

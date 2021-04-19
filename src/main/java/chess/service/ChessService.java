@@ -40,7 +40,7 @@ public class ChessService {
     @Autowired
     private PieceDAO pieceDAO;
 
-    public Response move(MoveRequestDto requestDto) throws SQLException {
+    public Response<MoveRequestDto> move(MoveRequestDto requestDto) {
         GridDto gridDto = requestDto.getGridDto();
         List<Piece> pieces = requestDto.getPiecesDto().stream()
                 .map(pieceDto -> {

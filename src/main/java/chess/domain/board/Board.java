@@ -1,9 +1,6 @@
 package chess.domain.board;
 
-import chess.domain.exceptions.InvalidMoveException;
-import chess.domain.exceptions.SameTeamException;
-import chess.domain.exceptions.UnableCrossException;
-import chess.domain.exceptions.UnableMoveTypeException;
+import chess.domain.exceptions.*;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceKind;
@@ -125,7 +122,7 @@ public class Board {
 
     public void checkTurn(Piece piece, PieceColor turnColor) {
         if (!piece.isSameColor(turnColor)) {
-            throw new RuntimeException("해당 턴이 아닙니다.");
+            throw new WrongTurnException();
         }
     }
 

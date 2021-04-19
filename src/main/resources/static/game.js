@@ -40,7 +40,7 @@ document.getElementById("restart").addEventListener("click", restartGame);
 
 function restartGame() {
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: "/restart",
         data: {
             roomName: getParameterByName('roomName')
@@ -139,7 +139,7 @@ function turnSetting(turn) {
 
 function status() {
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: "/status",
         data: {
             roomName: getParameterByName('roomName')

@@ -17,10 +17,7 @@ public class Rooms {
     }
 
     public Optional<Game> findGame(String name) {
-        if (rooms.containsKey(name)) {
-            return Optional.of(rooms.get(name));
-        }
-        return Optional.empty();
+        return Optional.ofNullable(rooms.get(name));
     }
 
     public void deleteRoom(String roomName) {

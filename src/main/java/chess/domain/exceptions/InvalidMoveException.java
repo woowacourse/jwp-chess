@@ -1,6 +1,6 @@
 package chess.domain.exceptions;
 
-public class InvalidMoveException extends RuntimeException {
+public class InvalidMoveException extends IllegalArgumentException {
 
     public InvalidMoveException() {
 

@@ -34,6 +34,10 @@ public class Position {
         return new Position(vertical.add(direction, distance), horizontal.add(direction, distance));
     }
 
+    public String getPosition() {
+        return vertical().getVertical() + horizontal().getHorizontal();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

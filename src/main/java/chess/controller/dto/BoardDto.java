@@ -1,14 +1,16 @@
 package chess.controller.dto;
 
+import java.util.Map;
+
 public class BoardDto {
 
-    private final String[][] board;
+    private final Map<String, String> board;
 
-    public BoardDto(final String[][] board) {
+    public BoardDto(final Map<String, String> board) {
         this.board = board;
     }
 
-    public String[][] getBoard() {
+    public Map<String, String> getBoard() {
         return board;
     }
 }

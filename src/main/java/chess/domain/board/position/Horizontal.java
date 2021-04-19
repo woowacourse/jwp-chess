@@ -6,19 +6,21 @@ import chess.domain.piece.movement.Distance;
 import java.util.Arrays;
 
 public enum Horizontal {
-    ONE(1),
-    TWO(2),
-    THREE(3),
-    FOUR(4),
-    FIVE(5),
-    SIX(6),
-    SEVEN(7),
-    EIGHT(8);
+    ONE(1, "1"),
+    TWO(2, "2"),
+    THREE(3, "3"),
+    FOUR(4, "4"),
+    FIVE(5, "5"),
+    SIX(6, "6"),
+    SEVEN(7, "7"),
+    EIGHT(8, "8");
 
     private final int index;
+    private final String horizontal;
 
-    Horizontal(final int index) {
+    Horizontal(final int index, String horizontal) {
         this.index = index;
+        this.horizontal = horizontal;
     }
 
     public static Horizontal parse(final String number) {
@@ -41,5 +43,9 @@ public enum Horizontal {
 
     public int getIndex() {
         return index;
+    }
+
+    public String getHorizontal() {
+        return horizontal;
     }
 }

@@ -7,19 +7,21 @@ import java.util.Arrays;
 import java.util.Locale;
 
 public enum Vertical {
-    a(1),
-    b(2),
-    c(3),
-    d(4),
-    e(5),
-    f(6),
-    g(7),
-    h(8);
+    a(1, "a"),
+    b(2, "b"),
+    c(3, "c"),
+    d(4, "d"),
+    e(5, "e"),
+    f(6, "f"),
+    g(7, "g"),
+    h(8, "h");
 
     private final int index;
+    private final String vertical;
 
-    Vertical(final int index) {
+    Vertical(final int index, final String vertical) {
         this.index = index;
+        this.vertical = vertical;
     }
 
     public static Vertical parse(final String symbol) {
@@ -39,5 +41,9 @@ public enum Vertical {
 
     public int getIndex() {
         return index;
+    }
+
+    public String getVertical() {
+        return vertical;
     }
 }

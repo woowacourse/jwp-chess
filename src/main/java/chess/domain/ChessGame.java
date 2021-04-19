@@ -10,6 +10,7 @@ import chess.domain.player.Turn;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ChessGame {
@@ -67,8 +68,8 @@ public class ChessGame {
         return board;
     }
 
-    public String[][] unicodeBoard() {
-        return board.parseUnicodeBoard();
+    public Map<String, String> boardDto() {
+        return board.toBoardDto();
     }
 
     public boolean isGameEnd() {

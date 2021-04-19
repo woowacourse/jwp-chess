@@ -10,10 +10,7 @@ import chess.domain.piece.movement.Direction;
 import chess.domain.piece.movement.Distance;
 import chess.view.PieceSymbolMapper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -45,7 +42,7 @@ public class Board {
     public List<Position> reachablePositions(final Position source) {
         return Arrays.stream(Direction.values())
                 .map(direction -> checkReachableInDirection(source, direction))
-                .flatMap(positions -> positions.stream())
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
@@ -107,7 +104,7 @@ public class Board {
                 .count();
     }
 
-    public String[][] parseUnicodeBoard() {
-        return PieceSymbolMapper.parseBoardAsUnicode(board);
+    public Map<String, String> toBoardDto() {
+        return PieceSymbolMapper.parseBoardAsBoardDto(board);
     }
 }

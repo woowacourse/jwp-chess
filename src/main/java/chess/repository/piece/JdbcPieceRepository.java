@@ -2,7 +2,6 @@ package chess.repository.piece;
 
 import chess.domain.piece.Piece;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;

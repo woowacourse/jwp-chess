@@ -3,6 +3,7 @@ package chess.domain.gamestate.running;
 import chess.domain.board.Board;
 import chess.domain.gamestate.CommandType;
 import chess.domain.gamestate.State;
+import chess.domain.gamestate.finished.End;
 import chess.domain.team.Team;
 
 public class Start extends Running {
@@ -17,15 +18,15 @@ public class Start extends Running {
         if (command == CommandType.MOVE) {
             return new Move(board);
         }
+        if (command == CommandType.END) {
+            return new End(board);
+        }
         throw new IllegalArgumentException("[ERROR] MOVE 명령만 가능합니다.");
     }
 
     private void validateCommand(CommandType command) {
         if (command == CommandType.START) {
             throw new IllegalArgumentException("[ERROR] 이미 게임이 시작되었습니다. 다시 시작할 수 없습니다.");
-        }
-        if (command == CommandType.END) {
-            throw new IllegalArgumentException("[ERROR] 방금 시작된 게임입니다. 지금은 종료할 수 없습니다.");
         }
     }
 

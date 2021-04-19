@@ -43,30 +43,33 @@ public class SpringChessGameRestController {
     }
 
     @PostMapping(path = "/myTurn")
-    private boolean checkCurrentTurn(@RequestBody final SectionDTO sectionDTO) {
+    private ResponseEntity<Boolean> checkCurrentTurn(@RequestBody final SectionDTO sectionDTO) {
         ChessGame chessGame = roomService.loadChessGameById(sectionDTO.getRoomId());
-        return chessGame.checkRightTurn(sectionDTO.getClickedSection());
+        return ResponseEntity.status(OK)
+                .body(chessGame.checkRightTurn(sectionDTO.getClickedSection()));
     }
 
     @PostMapping("/movablePositions")
-    private List<String> findMovablePosition(@RequestBody final SectionDTO sectionDTO) {
+    private ResponseEntity<List<String>> findMovablePosition(@RequestBody final SectionDTO sectionDTO) {
         ChessGame chessGame = roomService.loadChessGameById(sectionDTO.getRoomId());
-        return chessGame.movablePositionsByStartPoint(sectionDTO.getClickedSection());
+        return ResponseEntity.status(OK)
+                .body(chessGame.movablePositionsByStartPoint(sectionDTO.getClickedSection()));
     }
 
     @PostMapping("/move")
-    private StatusDTO movePiece(@RequestBody final MoveDTO moveDTO) {
+    private ResponseEntity<StatusDTO> movePiece(@RequestBody final MoveDTO moveDTO) {
         String roomId = moveDTO.getRoomId();
         String startPoint = moveDTO.getStartPoint();
         String endPoint = moveDTO.getEndPoint();
         ChessGame chessGame = roomService.movePiece(roomId, startPoint, endPoint);
         logService.createLog(roomId, startPoint, endPoint);
         UsersDTO users = userService.usersParticipatedInGame(roomId);
-        return new StatusDTO(chessGame, users);
+        return ResponseEntity.status(OK)
+                .body(new StatusDTO(chessGame, users));
     }
 
     @PostMapping(path = "/initialize")
-    private boolean initialize(@RequestBody final ResultDTO resultDTO) {
+    private ResponseEntity<Boolean> initialize(@RequestBody final ResultDTO resultDTO) {
         String roomId = resultDTO.getRoomId();
         String winner = resultDTO.getWinner();
         String loser = resultDTO.getLoser();
@@ -74,7 +77,7 @@ public class SpringChessGameRestController {
         int winnerId = userService.userIdByNickname(winner);
         int loserId = userService.userIdByNickname(loser);
         resultService.saveGameResult(roomId, winnerId, loserId);
-        return true;
+        return ResponseEntity.status(OK).body(true);
     }
 
     @ExceptionHandler(ClientException.class)

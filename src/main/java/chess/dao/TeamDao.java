@@ -2,10 +2,7 @@ package chess.dao;
 
 import chess.domain.team.Team;
 import java.sql.PreparedStatement;
-import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository

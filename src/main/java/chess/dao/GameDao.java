@@ -24,7 +24,6 @@ public class GameDao {
             preparedStatement.setBoolean(1, chessGame.isEnd());
             return preparedStatement;
         }, keyHolder);
-
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 

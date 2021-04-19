@@ -214,9 +214,9 @@ html {
     animation: 1s -0.3s 1 paused opacify;
     backdrop-filter: blur(1.5rem);
     border: 1px solid rgba(255, 255, 255, .2);
-    box-shadow: -0.25rem -0.25rem 0.5rem rgba(255, 255, 255,  .03),
-    0.25rem 0.25rem 0.5rem rgba(0, 0, 0,  .07),
-    -0.75rem -0.75rem 1.75rem rgba(255, 255, 255,  .06),
+    box-shadow: -0.25rem -0.25rem 0.5rem rgba(255, 255, 255, .03),
+    0.25rem 0.25rem 0.5rem rgba(0, 0, 0, .07),
+    -0.75rem -0.75rem 1.75rem rgba(255, 255, 255, .06),
     0.75rem 0.75rem 1.75rem rgba(0, 0, 0, .12),
     inset 8rem 8rem 8rem rgba(0, 0, 0, 0),
     inset -8rem -8rem 8rem rgba(255, 255, 255, 0);
@@ -386,12 +386,12 @@ select::-ms-expand {
 
 @keyframes slide-in {
     from {
-        opacity : 0;
-        left : -200px;
+        opacity: 0;
+        left: -200px;
     }
     to {
-        opacity : 1;
-        left : 0;
+        opacity: 1;
+        left: 0;
     }
 }
 
@@ -420,7 +420,7 @@ select::-ms-expand {
     margin-right: 0.4rem;
 }
 
-.room-status > img.playing  {
+.room-status > img.playing {
     margin-right: 0.6rem;
 }
 
@@ -494,5 +494,5 @@ select::-ms-expand {
 }
 
 i {
-   padding: 0.2rem 0.1rem 0.2rem 0.3rem;
+    padding: 0.2rem 0.1rem 0.2rem 0.3rem;
 }

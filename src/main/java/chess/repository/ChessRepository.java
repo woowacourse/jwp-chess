@@ -33,13 +33,11 @@ public class ChessRepository {
         return jdbcTemplate.queryForObject(findingGameQuery, String.class);
     }
 
-    //DTO 를 컨트롤러에서 만든다.
     public String loadGame(String gameId) {
         String loadingGameQuery = "SELECT board FROM chess_game WHERE id= ?";
         return jdbcTemplate.queryForObject(loadingGameQuery, String.class, gameId);
     }
 
-    //체스게임을 리턴한다, 디티오 말고.
     public ChessGame loadGameById(String gameId) {
         String findingGameQuery = "SELECT board, turn FROM chess_game WHERE id= ?";
         return jdbcTemplate.queryForObject(findingGameQuery, (resultSet, rowNum) -> {
@@ -57,7 +55,6 @@ public class ChessRepository {
                     Color.of(resultSet.getString("turn")));
         }, roomName);
     }
-
 
     public String turn(String gameId) {
         String findingTurnQuery = "SELECT turn FROM chess_game WHERE id = ?";
@@ -92,7 +89,6 @@ public class ChessRepository {
 
     public Map<String, String> findAllRooms() {
         String findAllQuery = "SELECT id, title FROM chess_game";
-
         return jdbcTemplate
                 .queryForList(findAllQuery)
                 .stream()

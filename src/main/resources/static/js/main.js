@@ -28,8 +28,8 @@ async function init() {
     const url = window.location.href.split('/')
     this.gameId = url[url.length - 1]
 
-    $home.addEventListener('click', function() {
-            window.location.href = '/'
+    $home.addEventListener('click', function () {
+        window.location.href = '/'
     })
 
     await initBoard(await start())

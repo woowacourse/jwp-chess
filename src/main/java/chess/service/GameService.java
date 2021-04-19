@@ -4,7 +4,6 @@ import chess.domain.board.Position;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
 import chess.dto.MoveDTO;
-import chess.dto.ScoreDTO;
 import chess.repository.ChessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

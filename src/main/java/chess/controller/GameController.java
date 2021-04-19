@@ -1,10 +1,12 @@
 package chess.controller;
 
-import chess.dto.*;
-import chess.utils.Serializer;
+import chess.dto.FinishDTO;
+import chess.dto.MoveDTO;
+import chess.dto.ScoreDTO;
+import chess.dto.TurnDTO;
 import chess.service.GameService;
+import chess.utils.Serializer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

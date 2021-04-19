@@ -12,8 +12,8 @@ spring:
     username: root
     password: root
     driver-class-name: org.h2.Driver
-    schema: classpath*:db/mariadb/schema.sql
-    initialization-mode: never
+    schema: classpath*:db/mysql/schema.sql
+    initialization-mode: always
 
 handlebars:
   prefix: classpath:templates/

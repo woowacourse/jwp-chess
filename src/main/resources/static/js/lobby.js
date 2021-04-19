@@ -105,10 +105,13 @@ async function modalHandler(e) {
     const $nameLength = document.querySelector('#name-length')
     const $blank = document.querySelector('#blank')
     const $chessImage = document.querySelector('#chess-image')
+    const $controller = document.querySelector('.controller')
     $nameDuplicate.style.display = 'none'
     $nameLength.style.display = 'none'
     $blank.style.display = null
     $chessImage.style.opacity = '.4'
+    $controller.style.opacity = '.4'
+    $controller.childNodes.forEach(ctrl => ctrl.disabled = true)
 
     $modal.id = e.target.id
     $modal.style.display = 'flex'
@@ -180,8 +183,11 @@ async function enterHandler(e) {
 function cancelHandler() {
     const $modal = document.querySelector('.modal')
     const $chessImage = document.querySelector('#chess-image')
+    const $controller = document.querySelector('.controller')
     $modal.style.display = 'none'
     $chessImage.style.opacity = '1'
+    $controller.style.opacity = '1'
+    $controller.childNodes.forEach(ctrl => ctrl.disabled = false)
 }
 
 async function selectHandler(e) {

@@ -25,6 +25,7 @@ html {
     align-items: center;
     width: 65rem;
     margin-top: 2rem;
+    position: relative;
 }
 
 .title {
@@ -128,7 +129,7 @@ html {
 .control-btn {
     appearance: none;
     box-sizing: border-box;
-    padding: 7px;
+    padding: 0.7rem 0.8rem;
     font-size: 1.7rem;
     font-family: 'Open Sans', sans-serif;
     color: #935471;
@@ -189,12 +190,13 @@ html {
 }
 
 .modal-background {
+    position: relative;
     width: 35rem;
     margin: 0 3rem 3rem 3rem;
 }
 
 .modal {
-    position: fixed;
+    position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -209,10 +211,26 @@ html {
     align-items: center;
     flex-direction: column;
 
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.1rem;
-    color: #242424;
-    text-shadow: 1px 1px #0e1111;
+    animation: 1s -0.3s 1 paused opacify;
+    backdrop-filter: blur(1.5rem);
+    border: 1px solid rgba(255, 255, 255, .2);
+    box-shadow: -0.25rem -0.25rem 0.5rem rgba(255, 255, 255,  .03),
+    0.25rem 0.25rem 0.5rem rgba(0, 0, 0,  .07),
+    -0.75rem -0.75rem 1.75rem rgba(255, 255, 255,  .06),
+    0.75rem 0.75rem 1.75rem rgba(0, 0, 0, .12),
+    inset 8rem 8rem 8rem rgba(0, 0, 0, 0),
+    inset -8rem -8rem 8rem rgba(255, 255, 255, 0);
+}
+
+.game {
+    left: 35%;
+}
+
+
+@keyframes opacify {
+    to {
+        background: transparent;
+    }
 }
 
 .modal > label {
@@ -228,33 +246,57 @@ html {
 }
 
 .modal-btn {
-    padding: 7px;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.1rem;
-    color: #242424;
-    background: #a4b8a7;
+    appearance: none;
+    box-sizing: border-box;
+    padding: 5px;
+    color: #506d82;
+    background: #94bcd7;
+    border-radius: 50px;
     border: 0;
-    border-radius: 20px;
-    text-shadow: 1px 1px #0e1111;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-shadow: 1px 1px #96b5ca;
     cursor: pointer;
+    padding: 0.5rem;
     margin: 6px 6px;
     letter-spacing: .1em;
     transition: all 200ms ease;
+    box-shadow: 1px 1px 1px #b6cede,
+    0 0 0 0 #4c738e,
+    1px 1px 1px white,
+    inset -2px -2px 2px #304e62,
+    inset -0.5rem -0.5rem 0.25rem -0.2rem #457ea6;
+}
+
+.modal-btn:hover {
+    color: #d9efff;
+    text-shadow: 1px 1px #355f79;
+}
+
+.modal-btn:focus {
+    outline: 0;
+}
+
+.modal-btn:active {
+    outline: 0;
 }
 
 input {
     width: 70%;
     height: 10%;
     font-size: 1.1rem;
+    border: none;
 }
 
 input:focus {
     font-size: 1.1rem;
+    outline: none;
 }
 
 .modal-btn-wrapper {
+    width: 60%;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 }
 
@@ -310,11 +352,12 @@ select::-ms-expand {
 
 .ctrl-board {
     justify-content: space-between;
-    width: 12.5rem;
+    width: 13rem;
 }
 
 .ctrl-board > .control-btn {
     font-size: 1.3rem;
+    padding: 0.6rem;
 }
 
 .room-list {
@@ -429,10 +472,27 @@ select::-ms-expand {
     inset -0.5rem -0.5rem 0.25rem -0.2rem #c57096;
 }
 
+.room-btn:focus {
+    outline: 0;
+}
+
+.room-btn:active {
+    outline: 0;
+}
+
+.room-btn:hover {
+    color: #f389ba;
+    text-shadow: 1px 1px #935471;
+}
+
 .right-wrapper {
     height: 40.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+}
+
+i {
+   padding: 0.2rem 0.1rem 0.2rem 0.3rem;
 }

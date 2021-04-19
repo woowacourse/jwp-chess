@@ -91,8 +91,14 @@ async function finishHandler() {
     )
     response = await response.json()
     if (response.finished === true) {
+        const $modal = document.querySelector('.game')
+        $modal.style.display = null
+        $modal.querySelector('label').textContent = '게임이 종료되었습니다.'
+        document.querySelector('#finish').disabled = false
+        setTimeout(() => {
+            $modal.style.display = 'none'
+        }, 1500)
         await deactivateDrag()
-        alert('게임이 종료되었습니다.')
         await toggleFinish()
         await toggleAvatar()
     }
@@ -162,8 +168,13 @@ async function btnHandler({target}) {
                 method: 'POST'
             }
         )
-        alert('게임을 초기화합니다.')
+        const $modal = document.querySelector('.game')
+        $modal.style.display = null
+        $modal.querySelector('label').textContent = '게임을 초기화합니다.'
         document.querySelector('#finish').disabled = false
+        setTimeout(() => {
+            $modal.style.display = 'none'
+        }, 1500)
         await initBoard(response)
         await moveHandler()
         await changeTurn()
@@ -225,7 +236,13 @@ async function move(source, target) {
         await finishHandler()
         return
     }
-    alert("잘못된 이동입니다.")
+    const $modal = document.querySelector('.game')
+    $modal.style.display = null
+    $modal.querySelector('label').textContent = '잘못된 이동입니다.'
+    document.querySelector('#finish').disabled = false
+    setTimeout(() => {
+        $modal.style.display = 'none'
+    }, 1000)
 }
 
 function assignPieceImage(source, target) {

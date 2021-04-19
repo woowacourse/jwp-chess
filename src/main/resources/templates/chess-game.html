@@ -14,37 +14,28 @@
         padding: 0px;
         border: 1px solid black;
     }
-
     .cell:hover {
         filter: brightness(85%);
         cursor: pointer;
     }
-
     .row {
         width: 400px;
         margin-left: auto;
         margin-right: auto;
     }
-
     .status {
         height: 50px;
     }
-
     .content {
         display: table-cell;
         vertical-align: middle;
     }
-
     #current-turn-team-name {
         margin-bottom: 28px;
     }
-
-    #exit_form {
-        margin-top: 16px;
-    }
-
     #exit_button {
         width: 400px;
+        margin-top: 22px;
     }
 </style>
 <body>
@@ -144,9 +135,9 @@
     </div>
   </div>
 
-  <form id="exit_form" action="/" onsubmit="return endConfirm();">
-    <input id="exit_button" type="submit" class="btn btn-outline-danger" value="방 나가기">
-  </form>
+  <div style="text-align: center">
+    <button id="exit_button" class="btn btn-outline-danger" onclick="exitConfirm();">게임 나가기</button>
+  </div>
 </div>
 
 <div id="board-status" style="display: none" th:text="${gameStatusDto.getBoardStatus()}"></div>
@@ -258,9 +249,14 @@
   }
 
   const is_king_dead = document.getElementById('is-king-dead');
+
   if (is_king_dead.innerText === "true") {
     const before_turn_team_name = document.getElementById('before-turn-team-name');
     alert(before_turn_team_name.innerText + ' 팀이 이겼습니다.');
+    exitAndDeleteGame();
+  }
+
+  function exitAndDeleteGame() {
     const xhr = new XMLHttpRequest();
     xhr.open('DELETE', '/games/' + game_id, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -274,8 +270,12 @@
     };
   }
 
-  function endConfirm() {
-    return confirm('정말 나가시겠습니까?');
+  function exitConfirm() {
+    const is_exit = confirm('게임을 나가면 이 게임은 삭제됩니다. 정말 나가시겠습니까?');
+    if (!is_exit) {
+      return false;
+    }
+    exitAndDeleteGame();
   }
 </script>
 </body>

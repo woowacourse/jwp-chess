@@ -5,8 +5,8 @@ import chess.domain.Side;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.PositionDTO;
-import chess.dto.ResponseDTO;
+import chess.dto.PositionDto;
+import chess.dto.ResponseDto;
 import chess.exception.ChessException;
 
 import java.sql.SQLException;
@@ -31,23 +31,23 @@ public class ChessService {
         boardDAO.addBoard(Board.getGamingBoard(), Side.WHITE.name());
     }
 
-    public ResponseDTO move(PositionDTO positionDTO) throws SQLException {
+    public ResponseDto move(PositionDto positionDTO) throws SQLException {
         Board board = new Board(boardDAO.findBoard(GAME_NUMBER));
         try {
             return moveExecute(positionDTO, board);
         } catch (ChessException e) {
-            return new ResponseDTO(FAIL_CODE, e.getMessage(), currentTurn().name());
+            return new ResponseDto(FAIL_CODE, e.getMessage(), currentTurn().name());
         }
     }
 
-    private ResponseDTO moveExecute(PositionDTO positionDTO, Board board) {
+    private ResponseDto moveExecute(PositionDto positionDTO, Board board) {
         board.move(Position.from(positionDTO.from()), Position.from(positionDTO.to()), currentTurn());
         boardDAO.updateBoard(board, currentTurn().changeTurn().name());
         if (board.isGameSet()) {
             Side side = board.winner();
-            return new ResponseDTO(GAME_SET_CODE, side.name(), "게임 종료(" + side.name() + " 승리)");
+            return new ResponseDto(GAME_SET_CODE, side.name(), "게임 종료(" + side.name() + " 승리)");
         }
-        return new ResponseDTO(SUCCEED_CODE, "Succeed", currentTurn().name());
+        return new ResponseDto(SUCCEED_CODE, "Succeed", currentTurn().name());
     }
 
     public Map<String, String> getCurrentBoard() {

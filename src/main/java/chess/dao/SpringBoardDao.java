@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 @Repository
 public class SpringBoardDao {
 
-    public static final String COMMA = ",";
+    private static final String COMMA = ",";
+
     private final JdbcTemplate jdbcTemplate;
 
     public SpringBoardDao(JdbcTemplate jdbcTemplate) {

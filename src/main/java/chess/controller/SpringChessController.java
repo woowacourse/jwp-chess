@@ -22,63 +22,63 @@ public class SpringChessController {
         return "index.html";
     }
 
-    @GetMapping("/{roomName}/enter")
-    public String enterRoom() {
-        return "/chess.html";
-    }
-
-    @PostMapping(value = "/restart")
-    @ResponseBody
-    public void restart(@RequestBody RoomNameDTO roomNameDTO) {
-        springChessService.newBoard(roomNameDTO.getRoomName());
-    }
-
-    @PostMapping(value = "/move")
-    @ResponseBody
-    public ResponseDTO move(@RequestBody PositionDTO positionDTO) {
-        ResponseDTO responseDTO = springChessService.move(positionDTO, positionDTO.roomName());
-        return responseDTO;
-    }
-
-    @PostMapping("/currentBoard")
-    @ResponseBody
-    public Map<String, String> currentBoard(@RequestBody RoomNameDTO roomNameDTO) {
-        return springChessService.currentBoardByRoomName(roomNameDTO.getRoomName());
-    }
-
-    @PostMapping(value = "/currentTurn")
-    @ResponseBody
-    public TurnDTO currentTurn(@RequestBody RoomNameDTO roomNameDTO) {
-        return new TurnDTO(springChessService.turnName(roomNameDTO.getRoomName()));
-    }
-
-    @PostMapping(value = "/score")
-    @ResponseBody
-    public ScoreDTO score(@RequestBody RoomNameDTO roomNameDTO) {
-        return springChessService.score(roomNameDTO.getRoomName());
-    }
-
     @GetMapping("/rooms")
     @ResponseBody
     public List<String> roomNames() {
         return springChessService.rooms();
     }
 
-    @PostMapping("/checkRoomName")
-    @ResponseBody
-    public RoomValidateDTO checkRoomName(@RequestBody RoomNameDTO roomNameDTO) {
-        return springChessService.checkDuplicatedRoom(roomNameDTO.getRoomName());
+    @GetMapping("/rooms/{roomName}")
+    public String enterRoom() {
+        return "/chess.html";
     }
 
     @PostMapping("/createRoom")
     @ResponseBody
-    public void createRoom(@RequestBody RoomNameDTO roomNameDTO) {
+    public void createRoom(@RequestBody RoomNameDto roomNameDTO) {
         springChessService.createRoom(roomNameDTO.getRoomName());
     }
 
-    @PostMapping("/deleteRoom")
+    @PostMapping(value = "/rooms/{roomName}/move")
     @ResponseBody
-    public void deleteRoom(@RequestBody RoomNameDTO roomNameDTO) {
-        springChessService.deleteRoom(roomNameDTO.getRoomName());
+    public ResponseDto move(@RequestBody PositionDto positionDto, @PathVariable RoomNameDto roomName) {
+        ResponseDto responseDto = springChessService.move(positionDto, roomName.getRoomName());
+        return responseDto;
+    }
+
+    @PostMapping("/rooms/{roomName}/currentBoard")
+    @ResponseBody
+    public Map<String, String> currentBoard(@PathVariable RoomNameDto roomName) {
+        return springChessService.currentBoardByRoomName(roomName.getRoomName());
+    }
+
+    @PostMapping(value = "/rooms/{roomName}/currentTurn")
+    @ResponseBody
+    public TurnDto currentTurn(@PathVariable RoomNameDto roomName) {
+        return new TurnDto(springChessService.turnName(roomName.getRoomName()));
+    }
+
+    @PostMapping(value = "/rooms/{roomName}/restart")
+    @ResponseBody
+    public void restart(@PathVariable RoomNameDto roomName) {
+        springChessService.newBoard(roomName.getRoomName());
+    }
+
+    @PostMapping(value = "/rooms/{roomName}/score")
+    @ResponseBody
+    public ScoreDto score(@PathVariable RoomNameDto roomName) {
+        return springChessService.score(roomName.getRoomName());
+    }
+
+    @PostMapping("/checkRoomName")
+    @ResponseBody
+    public RoomValidateDto checkRoomName(@RequestBody RoomNameDto roomName) {
+        return springChessService.checkDuplicatedRoom(roomName.getRoomName());
+    }
+
+    @DeleteMapping("/rooms/{roomName}")
+    @ResponseBody
+    public void deleteRoom(@PathVariable RoomNameDto roomName) {
+        springChessService.deleteRoom(roomName.getRoomName());
     }
 }

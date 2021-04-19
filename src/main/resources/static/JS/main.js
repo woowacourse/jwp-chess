@@ -10,11 +10,37 @@ window.onload = function () {
     renderRooms();
 }
 
+async function renderRooms() {
+    initList();
+    roomTable.insertAdjacentHTML("beforeend", `<tr><th>방 이름</th></tr>`);
+    const response = await fetch('/rooms', {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(res => {
+        return res.json();
+    })
+
+    for (let i = 0; i < response.length; i++) {
+        renderRoom(response[i]);
+    }
+}
+
+function initList() {
+    while (roomTable.hasChildNodes()) {
+        roomTable.removeChild(roomTable.firstChild);
+    }
+}
+
+function renderRoom(roomName) {
+    roomTable.insertAdjacentHTML("beforeend", `<tr><td class="room-name">${roomName}</td></tr>`);
+}
 
 function joinRoom(event) {
     if (event.target.closest("td")) {
         const roomName = encodeURI(getClickedRoom().textContent);
-        window.location.href = `/${roomName}/enter`;
+        window.location.href = `/rooms/${roomName}`;
     }
 }
 
@@ -24,12 +50,10 @@ async function deleteRoom() {
         if (!confirm(clickedRoom.textContent + " 방을 삭제하시겠습니까?")) {
             return;
         }
-        let data = {
-            roomName: clickedRoom.textContent
-        }
-        await fetch('/deleteRoom/', {
-            method: 'post',
-            body: JSON.stringify(data),
+        let roomName = decodeURI(clickedRoom.textContent);
+
+        await fetch('/rooms/' + roomName, {
+            method: 'delete',
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -90,23 +114,6 @@ async function addRoom(event) {
     }
 }
 
-async function renderRooms() {
-    initList();
-    roomTable.insertAdjacentHTML("beforeend", `<tr><th>방 이름</th></tr>`);
-    const response = await fetch('/rooms', {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(res => {
-        return res.json();
-    })
-
-    for (let i = 0; i < response.length; i++) {
-        renderRoom(response[i]);
-    }
-}
-
 async function createRoom(roomName) {
     let data = {
         roomName: roomName
@@ -118,14 +125,4 @@ async function createRoom(roomName) {
             'Content-Type': 'application/json'
         }
     });
-}
-
-function initList() {
-    while (roomTable.hasChildNodes()) {
-        roomTable.removeChild(roomTable.firstChild);
-    }
-}
-
-function renderRoom(roomName) {
-    roomTable.insertAdjacentHTML("beforeend", `<tr><td class="room-name">${roomName}</td></tr>`);
 }

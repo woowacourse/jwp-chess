@@ -13,7 +13,7 @@ scoreButton.addEventListener("click", clickScore);
 
 function getCurrentRoomName() {
     const url = window.location.href.split("/");
-    currentRoomName = decodeURI(url[url.length - 2]);
+    currentRoomName = decodeURI(url[url.length - 1]);
 }
 
 function createChessBoard() {
@@ -77,10 +77,9 @@ function getClickedPiece() {
 async function move(from, to) {
     let data = {
         from: from,
-        to: to,
-        roomName: currentRoomName
+        to: to
     }
-    const response = await fetch('/move', {
+    const response = await fetch(currentRoomName + '/move', {
         method: 'post',
         body: JSON.stringify(data),
         headers: {
@@ -119,12 +118,8 @@ function changeImage(sourcePosition, targetPosition) {
 }
 
 async function changeTurn() {
-    let data = {
-        roomName: currentRoomName
-    }
-    const response = await fetch('/currentTurn', {
+    const response = await fetch(currentRoomName + '/currentTurn', {
         method: 'post',
-        body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json',
         }
@@ -138,12 +133,8 @@ async function changeTurn() {
 
 function clickStart() {
     if (confirm("재시작하시겠습니까?")) {
-        let data = {
-            roomName: currentRoomName
-        }
-        fetch('/restart', {
+        fetch(currentRoomName + '/restart', {
             method: 'post',
-            body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -164,7 +155,7 @@ async function syncBoard() {
     let data = {
         roomName: currentRoomName
     }
-    const board = await fetch('/currentBoard', {
+    const board = await fetch(currentRoomName + '/currentBoard', {
         method: 'post',
         body: JSON.stringify(data),
         headers: {
@@ -192,12 +183,8 @@ async function syncBoard() {
 }
 
 async function clickScore() {
-    let data = {
-        roomName: currentRoomName
-    }
-    const score = await fetch('/score', {
+    const score = await fetch(currentRoomName + '/score', {
         method: 'post',
-        body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
         }

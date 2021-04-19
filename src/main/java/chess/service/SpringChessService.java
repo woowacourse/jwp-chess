@@ -5,10 +5,10 @@ import chess.domain.Side;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.PositionDTO;
-import chess.dto.ResponseDTO;
-import chess.dto.RoomValidateDTO;
-import chess.dto.ScoreDTO;
+import chess.dto.PositionDto;
+import chess.dto.ResponseDto;
+import chess.dto.RoomValidateDto;
+import chess.dto.ScoreDto;
 import chess.exception.ChessException;
 import org.springframework.stereotype.Service;
 
@@ -41,34 +41,34 @@ public class SpringChessService {
         return boardName;
     }
 
-    public ResponseDTO move(PositionDTO positionDTO, String roomName) {
+    public ResponseDto move(PositionDto positionDTO, String roomName) {
         Board board = new Board(springBoardDao.findBoard(roomName));
         try {
             return moveExecute(positionDTO, board, roomName);
         } catch (ChessException e) {
-            return new ResponseDTO(FAIL_CODE, e.getMessage(), currentTurn(roomName).name());
+            return new ResponseDto(FAIL_CODE, e.getMessage(), currentTurn(roomName).name());
         }
     }
 
-    private ResponseDTO moveExecute(PositionDTO positionDTO, Board board, String roomName) {
+    private ResponseDto moveExecute(PositionDto positionDTO, Board board, String roomName) {
         board.move(Position.from(positionDTO.from()), Position.from(positionDTO.to()), currentTurn(roomName));
         springBoardDao.updateBoard(board, currentTurn(roomName).changeTurn().name(), roomName);
         if (board.isGameSet()) {
             Side side = board.winner();
-            return new ResponseDTO(GAME_SET_CODE, side.name(), "게임 종료(" + side.name() + " 승리)");
+            return new ResponseDto(GAME_SET_CODE, side.name(), "게임 종료(" + side.name() + " 승리)");
         }
-        return new ResponseDTO(SUCCEED_CODE, "Succeed", currentTurn(roomName).name());
+        return new ResponseDto(SUCCEED_CODE, "Succeed", currentTurn(roomName).name());
     }
 
     public void newBoard(String roomName) {
         springBoardDao.updateBoard(Board.getGamingBoard(), "WHITE", roomName);
     }
 
-    public RoomValidateDTO checkDuplicatedRoom(String roomName) {
+    public RoomValidateDto checkDuplicatedRoom(String roomName) {
         if (springBoardDao.checkDuplicateByRoomName(roomName)) {
-            return new RoomValidateDTO(FAIL_CODE, "중복된 방 이름입니다.");
+            return new RoomValidateDto(FAIL_CODE, "중복된 방 이름입니다.");
         }
-        return new RoomValidateDTO(SUCCEED_CODE, "방 생성 성공!");
+        return new RoomValidateDto(SUCCEED_CODE, "방 생성 성공!");
     }
 
     private String pieceToName(Piece piece) {
@@ -101,8 +101,8 @@ public class SpringChessService {
         springBoardDao.deleteRoom(roomName);
     }
 
-    public ScoreDTO score(String roomName) {
+    public ScoreDto score(String roomName) {
         Board board = new Board(springBoardDao.findBoard(roomName));
-        return new ScoreDTO(String.valueOf(board.score(Side.WHITE)), String.valueOf(board.score(Side.BLACK)));
+        return new ScoreDto(String.valueOf(board.score(Side.WHITE)), String.valueOf(board.score(Side.BLACK)));
     }
 }

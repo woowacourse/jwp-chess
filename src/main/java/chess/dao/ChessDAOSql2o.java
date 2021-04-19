@@ -30,7 +30,7 @@ public class ChessDAOSql2o implements ChessDAO {
     }
 
     @Override
-    public Optional<TeamColor> currentTurnByGameId(Long gameId) {
+    public Optional<TeamColor> findCurrentTurn(Long gameId) {
         try (Connection con = sql2o.open()) {
             List<String> colors =
                 con.createQuery("select color from current_color where game_id = :gameId")
@@ -45,7 +45,7 @@ public class ChessDAOSql2o implements ChessDAO {
     }
 
     @Override
-    public List<ChessDto> chessByGameId(Long gameId) {
+    public List<ChessDto> findChess(Long gameId) {
         try (Connection con = sql2o.open()) {
             return con.createQuery("select * from game where gameid=:gameId")
                 .addParameter("gameId", gameId)

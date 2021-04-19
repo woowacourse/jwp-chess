@@ -42,8 +42,8 @@ public class ChessService {
     }
 
     private ChessGame chessGame(Long gameId) {
-        final List<ChessDto> foundChess = chessDAO.chessByGameId(gameId);
-        final Optional<TeamColor> foundTurnColor = chessDAO.currentTurnByGameId(gameId);
+        final List<ChessDto> foundChess = chessDAO.findChess(gameId);
+        final Optional<TeamColor> foundTurnColor = chessDAO.findCurrentTurn(gameId);
         if (foundChess.isEmpty() || foundTurnColor.isEmpty()) {
             return ChessGameImpl.initialGame();
         }

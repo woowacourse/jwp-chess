@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface ChessDAO {
     void deleteAllByGameId(Long gameId);
 
-    Optional<TeamColor> currentTurnByGameId(Long gameId);
+    Optional<TeamColor> findCurrentTurn(Long gameId);
 
-    List<ChessDto> chessByGameId(Long gameId);
+    List<ChessDto> findChess(Long gameId);
 
     void savePieces(Long gameId, List<Piece> pieces);
 

@@ -36,13 +36,13 @@ public class ChessDAOJdbc implements ChessDAO {
     }
 
     @Override
-    public List<ChessDto> chessByGameId(Long gameId) {
+    public List<ChessDto> findChess(Long gameId) {
         String sql = "select * from game where gameid=?";
         return jdbcTemplate.queryForList(sql, ChessDto.class, gameId);
     }
 
     @Override
-    public Optional<TeamColor> currentTurnByGameId(Long gameId) {
+    public Optional<TeamColor> findCurrentTurn(Long gameId) {
         String sql = "select color from current_color where game_id = ?";
         final List<String> colors = jdbcTemplate.queryForList(sql, String.class, gameId);
         if(colors.isEmpty()) {

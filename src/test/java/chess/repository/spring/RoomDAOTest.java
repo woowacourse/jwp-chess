@@ -23,13 +23,9 @@ class RoomDAOTest {
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         roomDAO = new RoomDAO(jdbcTemplate);
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS ROOM" +
-                "(ID   INT NOT NULL AUTO_INCREMENT," +
-                "NAME VARCHAR(255)," +
-                "PRIMARY KEY (ID)" +
-                ");");
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS ROOM (ID INT NOT NULL AUTO_INCREMENT, NAME VARCHAR(255), PRIMARY KEY (ID))");
         String query = "INSERT INTO ROOM (NAME) VALUES (?)";
         jdbcTemplate.update(query, "room1");
         jdbcTemplate.update(query, "room2");

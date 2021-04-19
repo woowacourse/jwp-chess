@@ -23,27 +23,15 @@ class ChessDAOTest {
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         chessDAO = new ChessDAO(jdbcTemplate);
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS ROOM" +
-                "(ID   INT NOT NULL AUTO_INCREMENT," +
-                "NAME VARCHAR(255)," +
-                "PRIMARY KEY (ID)" +
-                ");");
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS ROOM (ID INT NOT NULL AUTO_INCREMENT, NAME VARCHAR(255), PRIMARY KEY (ID))");
         String roomQuery = "INSERT INTO ROOM (NAME) VALUES (?)";
         jdbcTemplate.update(roomQuery, "room1");
         jdbcTemplate.update(roomQuery, "room2");
-
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS History (" +
-                "ID INT NOT NULL AUTO_INCREMENT," +
-                "SOURCE VARCHAR(255)," +
-                "DESTINATION VARCHAR(255)," +
-                "TEAM_TYPE VARCHAR(255)," +
-                "ROOM_ID INT NOT NULL," +
-                "PRIMARY KEY (ID)," +
-                "CONSTRAINT ROOM_FK FOREIGN KEY (ROOM_ID) REFERENCES ROOM (ID)" +
-                ")");
-
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS History (ID INT NOT NULL AUTO_INCREMENT, SOURCE VARCHAR(255)," +
+                "DESTINATION VARCHAR(255), TEAM_TYPE VARCHAR(255), ROOM_ID INT NOT NULL, PRIMARY KEY (ID)," +
+                "CONSTRAINT ROOM_FK FOREIGN KEY (ROOM_ID) REFERENCES ROOM (ID))");
         String historyQuery = "INSERT INTO HISTORY (SOURCE, DESTINATION, TEAM_TYPE, ROOM_ID) VALUES(?, ?, ?, ?)";
         jdbcTemplate.update(historyQuery, "a1", "a2", "WHITE", 1);
         jdbcTemplate.update(historyQuery, "a6", "b5", "BLACK", 1);

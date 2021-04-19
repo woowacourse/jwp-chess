@@ -13,16 +13,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase
+@DirtiesContext
 @ActiveProfiles("test")
 class ChessControllerTest {
 
@@ -35,28 +38,9 @@ class ChessControllerTest {
     @Autowired
     private RoomService roomService;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        jdbcTemplate.execute("DROP TABLE HISTORY IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE ROOM IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS ROOM" +
-                "(ID   INT NOT NULL AUTO_INCREMENT," +
-                "NAME VARCHAR(255)," +
-                "PRIMARY KEY (ID)" +
-                ");");
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS History (" +
-                "ID INT NOT NULL AUTO_INCREMENT," +
-                "SOURCE VARCHAR(255)," +
-                "DESTINATION VARCHAR(255)," +
-                "TEAM_TYPE VARCHAR(255)," +
-                "ROOM_ID INT NOT NULL," +
-                "PRIMARY KEY (ID)," +
-                "CONSTRAINT ROOM_FK FOREIGN KEY (ROOM_ID) REFERENCES ROOM (ID)" +
-                ")");
         roomService.addRoom("test1");
     }
 

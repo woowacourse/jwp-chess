@@ -5,15 +5,14 @@ import chess.service.spring.RoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
@@ -22,6 +21,9 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase
+@DirtiesContext
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
 class RoomControllerTest {
 
@@ -31,26 +33,17 @@ class RoomControllerTest {
     @Autowired
     private RoomService roomService;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        jdbcTemplate.execute("DROP TABLE HISTORY IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE ROOM IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS ROOM" +
-                "(ID   INT NOT NULL AUTO_INCREMENT," +
-                "NAME VARCHAR(255)," +
-                "PRIMARY KEY (ID)" +
-                ");");
-        roomService.addRoom("test1");
-        roomService.addRoom("test2");
     }
 
     @DisplayName("방 목록을 조회한다.")
+    @Order(1)
     @Test
     void findAllRooms() throws JsonProcessingException {
+        roomService.addRoom("test1");
+        roomService.addRoom("test2");
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/rooms")
@@ -66,6 +59,7 @@ class RoomControllerTest {
     }
 
     @DisplayName("방을 추가한다.")
+    @Order(2)
     @Test
     void addRoom() throws JsonProcessingException {
         RestAssured.given().log().all()

@@ -11,7 +11,7 @@ public class SpringChessController {
         return "/index.html";
     }
 
-    @GetMapping("/room/**")
+    @GetMapping("/rooms/**")
     public String enter() {
         return "/game.html";
     }

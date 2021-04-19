@@ -17,22 +17,22 @@ public class SpringChessAPIController {
     @Autowired
     private ChessService chessService;
 
-    @GetMapping("/room")
+    @GetMapping("/rooms")
     public ResponseEntity<List<RoomDto>> loadAllRoom() {
         return chessService.loadAllRoom();
     }
 
-    @PostMapping("/room/{id}")
+    @PostMapping("/rooms/{id}")
     public ResponseEntity<ChessGameDto> loadGame(@PathVariable("id") Long roodId, @RequestBody Room room) {
         return chessService.loadGame(roodId, room);
     }
 
-    @PostMapping("/room")
+    @PostMapping("/rooms")
     public void createRoom(@RequestBody Room room) {
         chessService.createRoom(room);
     }
 
-    @PutMapping("/room/{id}/piece")
+    @PutMapping("/room/{id}/pieces")
     public ResponseEntity<ChessGameDto> movePiece(@PathVariable("id") Long roodId, @RequestBody MoveDto moveDto) {
         return chessService.movePiece(roodId, moveDto);
     }

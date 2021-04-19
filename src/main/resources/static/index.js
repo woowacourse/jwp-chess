@@ -4,7 +4,7 @@ const btnCreate = document.getElementById('btn-game-create')
 getTotalRoom();
 
 function getTotalRoom() {
-    axios.get('/api/room')
+    axios.get('/api/rooms')
         .then(function (response) {
             refreshRoomList(response.data)
         }).catch(function (error) {
@@ -15,7 +15,7 @@ function getTotalRoom() {
 btnCreate.addEventListener('click', function (e) {
     let name = prompt("방이름을 입력해 주세요.");
     let pw = prompt("비밀번호를 입력해 주세요");
-    axios.post('/api/room', {
+    axios.post('/api/rooms', {
         "name": name,
         "pw": pw
     }).then(function (response) {
@@ -49,6 +49,6 @@ function enterGame(event) {
         idx = event.target.parentElement.dataset.idx;
     }
     let room = roomListData[idx];
-    location.href = '/room/' + room.id;
+    location.href = '/rooms/' + room.id;
 }
 

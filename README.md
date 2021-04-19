@@ -6,7 +6,7 @@
 ## 3단계, 추가미션
 
 - [x] DB 스키마 변경
-  - [x] player 테이블에 password 컬럼을 varchar(255)로 추가한다.
+  - [x] 테이블에 white_player_password, black_player_password 컬럼을 varchar(255)로 추가한다.
 
 <br>
 
@@ -15,9 +15,8 @@
   - [x] 방의 제목을 입력한다. (5글자 이상)
   - [x] white 플레이어의 비밀번호를 입력받는다.
   - [x] 서버에 white 플레이어의 비밀번호와 함께 방 생성 요청이 들어간다.
-  - [x] 체스 게임, white/black 플레이어, 초기 기물 위치 정보를 생성해서 DB에 저장한다.
-  - [x] DB의 player 테이블에서 white/black 플레이어의 password 컬럼은 비어있다.
-  - [x] 방 생성시 입력받은 white 플레이어의 비밀번호를 hash 함수로 암호화해서, white 플레이어의 password 컬럼에 저장한다.
+  - [x] 초기 체스 게임 상태, white 플레이어의 암호화된 비밀번호를 DB에 저장한다.
+  - [x] DB 테이블의 black_player_password 컬럼은 null이다.
   - [x] 서버는 hash 암호화 된 white 플레이어의 비밀번호를 쿠키에 담아 방 생성 요청 응답으로 넘겨준다.
 
 <br>
@@ -27,12 +26,12 @@
 
 <br>
 
-- [ ] 방 입장
+- [x] 방 입장
   - [x] 방에 입장하는 플레이어는 black 플레이어다.
-  - [ ] black 플레이어는 방에 입장할 때 비밀번호를 입력한다.
-  - [ ] 서버에 black 플레이어의 비밀번호와 함께 방 입장 요청이 들어간다.
-  - [ ] black 플레이어의 비밀번호를 hash 함수로 암호화해서, black 플레이어의 password 컬럼에 저장한다.
-  - [ ] 서버는 hash 암호화 된 black 플레이어의 비밀번호를 쿠키에 담아 방 입장 요청 응답으로 넘겨준다.
+  - [x] black 플레이어는 방에 입장할 때 비밀번호를 입력한다.
+  - [x] 서버에 black 플레이어의 비밀번호와 함께 방 입장 요청이 들어간다.
+  - [x] black 플레이어의 비밀번호를 hash 함수로 암호화해서, DB 테이블의 black_player_password 컬럼에 저장한다.
+  - [x] 서버는 hash 암호화 된 black 플레이어의 비밀번호를 쿠키에 담아 방 입장 요청 응답으로 넘겨준다.
 
 <br>
 

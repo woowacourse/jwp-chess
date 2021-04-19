@@ -2,26 +2,28 @@ package chess.web.controller;
 
 
 import chess.web.controller.dto.request.CreateGameRequestDto;
+import chess.web.controller.dto.request.JoinGameRequestDto;
 import chess.web.controller.dto.response.ChessGameResponseDto;
 import chess.web.controller.dto.response.CreateGameResponseDto;
 import chess.web.controller.dto.response.GameStatusResponseDto;
 import chess.web.service.ChessGameService;
+import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
 public class ChessGameController {
-
-    private static final String ENCRYPTED_WHITE_PLAYER_PASSWORD = "encryptedWhitePlayerPassword";
-    private static final String ENCRYPTED_BLACK_PLAYER_PASSWORD = "encryptedBlackPlayerPassword";
 
     private final ChessGameService chessGameService;
 
@@ -37,11 +39,19 @@ public class ChessGameController {
     }
 
     @PostMapping("/games")
-    public String createChessGame(@ModelAttribute CreateGameRequestDto createGameRequestDto, HttpServletResponse response) {
+    public String createGame(@ModelAttribute CreateGameRequestDto createGameRequestDto, HttpServletResponse response) {
         CreateGameResponseDto createGameResponseDto = chessGameService.createNewChessGame(createGameRequestDto);
-        Cookie cookie = new Cookie(ENCRYPTED_WHITE_PLAYER_PASSWORD, createGameResponseDto.getEncryptedWhitePlayerPassword());
+        Cookie cookie = new Cookie("encryptedWhitePlayerPassword", createGameResponseDto.getEncryptedWhitePlayerPassword());
         response.addCookie(cookie);
         return "redirect:/games/" + createGameResponseDto.getGameId();
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<String> joinGame(@RequestBody JoinGameRequestDto joinGameRequestDto, HttpServletResponse response) {
+        String encryptedBlackPlayerPassword = chessGameService.joinGame(joinGameRequestDto);
+        Cookie cookie = new Cookie("encryptedBlackPlayerPassword", encryptedBlackPlayerPassword);
+        response.addCookie(cookie);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/games/{gameId}")

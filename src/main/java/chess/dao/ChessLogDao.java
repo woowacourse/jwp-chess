@@ -3,6 +3,7 @@ package chess.dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class ChessLogDao {
     private static final String MOVE = "move ";
@@ -35,7 +36,7 @@ public class ChessLogDao {
             connection = DriverManager.getConnection("jdbc:mysql://" + server + "/" + database + option, userName, password);
             System.out.println("정상적으로 연결되었습니다.");
         } catch (SQLException e) {
-            System.err.println("연결 오류:" + e.getMessage());
+            Logger.getLogger("연결 오류:" + e.getMessage());
             e.printStackTrace();
         }
 
@@ -47,7 +48,7 @@ public class ChessLogDao {
             if (con != null)
                 con.close();
         } catch (SQLException e) {
-            System.err.println("con 오류:" + e.getMessage());
+            Logger.getLogger("con 오류:" + e.getMessage());
         }
     }
 
@@ -62,7 +63,7 @@ public class ChessLogDao {
             closeConnection(connection);
         }
         catch (SQLException e) {
-            System.err.println("로그 추가 오류:" + e.getMessage());
+            Logger.getLogger("로그 추가 오류:" + e.getMessage());
             e.printStackTrace();
             closeConnection(connection);
         }
@@ -84,7 +85,7 @@ public class ChessLogDao {
             return commands;
         }
         catch (SQLException e) {
-            System.err.println("커맨드 적용 오류:" + e.getMessage());
+            Logger.getLogger("커맨드 적용 오류:" + e.getMessage());
             e.printStackTrace();
             closeConnection(connection);
             return null;
@@ -101,7 +102,7 @@ public class ChessLogDao {
             closeConnection(connection);
         }
         catch (SQLException e) {
-            System.err.println("로그 제거 오류:" + e.getMessage());
+            Logger.getLogger("로그 제거 오류:" + e.getMessage());
             e.printStackTrace();
             closeConnection(connection);
         }

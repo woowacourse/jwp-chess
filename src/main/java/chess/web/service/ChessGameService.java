@@ -1,8 +1,10 @@
 package chess.web.service;
 
 import chess.domain.game.ChessGame;
+import chess.web.controller.dto.request.CreateGameRequestDto;
 import chess.web.controller.dto.request.MoveRequestDto;
 import chess.web.controller.dto.response.ChessGameResponseDto;
+import chess.web.controller.dto.response.CreateGameResponseDto;
 import chess.web.controller.dto.response.GameStatusResponseDto;
 import chess.repository.ChessGameRepository;
 import java.util.List;
@@ -25,9 +27,10 @@ public class ChessGameService {
             .collect(Collectors.toList());
     }
 
-    public Long createNewChessGame(String gameTitle) {
-        ChessGame chessGame = new ChessGame(gameTitle);
-        return chessGameRepository.save(chessGame);
+    public CreateGameResponseDto createNewChessGame(CreateGameRequestDto createGameRequestDto) {
+        ChessGame chessGame = new ChessGame(createGameRequestDto);
+        Long createdChessGameId = chessGameRepository.save(chessGame);
+        return new CreateGameResponseDto(createdChessGameId, chessGame.getEncryptedWhitePlayerPassword());
     }
 
     public GameStatusResponseDto getGameStatus(Long gameId) {

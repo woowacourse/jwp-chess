@@ -5,6 +5,7 @@ import chess.domain.board.move.MoveRequest;
 import chess.domain.board.score.Scores;
 import chess.domain.color.type.TeamColor;
 import chess.domain.password.PasswordEncoder;
+import chess.web.controller.dto.request.CreateGameRequestDto;
 
 public class ChessGame {
 
@@ -51,6 +52,10 @@ public class ChessGame {
 
     public ChessGame() {
         this(null, "title", INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE, null, null);
+    }
+
+    public ChessGame(CreateGameRequestDto createGameRequestDto) {
+        this(createGameRequestDto.getGameTitle(), createGameRequestDto.getRawWhitePlayerPassword());
     }
 
     public Long getId() {

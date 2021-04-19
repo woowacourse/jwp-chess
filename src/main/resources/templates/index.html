@@ -19,7 +19,7 @@
   </li>
 </ul>
 
-<form action="/games" method="post" style="width: 260px; margin-top: 40px; margin-left: auto; margin-right: auto" onsubmit="return create_room_check();">
+<form action="/games" method="post" style="width: 260px; margin-top: 40px; margin-left: auto; margin-right: auto" onsubmit="return create_game_check();">
   <div class="row mb-3">
     <div>
       <input type="text" class="form-control" id="new_game_title" name="gameTitle" placeholder="방 제목을 입력하세요">
@@ -27,7 +27,7 @@
   </div>
   <div class="row mb-3">
     <div>
-      <input type="password" class="form-control" id="white-player-password" name="whitePlayerPassword" placeholder="비밀번호를 입력하세요">
+      <input type="password" class="form-control" id="white-player-password" name="rawWhitePlayerPassword" placeholder="비밀번호를 입력하세요">
     </div>
   </div>
   <input class="btn btn-outline-primary" type="submit" id="create_room_button" value="방 생성" style="width: 100%"/>
@@ -38,11 +38,18 @@
         crossorigin="anonymous"></script>
 <script type="text/javascript">
   const game_title_min_size = 5;
+  const password_min_size = 5;
   function create_game_check() {
     const new_game_title = document.getElementById('new_game_title');
     if(new_game_title.value.length < game_title_min_size) {
       alert('방 제목은 ' + game_title_min_size + '글자 이상이어야 합니다.');
       new_game_title.focus();
+      return false;
+    }
+    const white_player_password = document.getElementById('white-player-password');
+    if(white_player_password.value.length < password_min_size) {
+      alert('비밀번호는 ' + password_min_size + '자 이상이어야 합니다.');
+      white_player_password.focus();
       return false;
     }
     return true;

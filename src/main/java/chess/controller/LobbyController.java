@@ -42,9 +42,7 @@ public class LobbyController {
         if (error.hasErrors()) {
             return ResponseEntity.badRequest().body(error.getAllErrors().get(0).getDefaultMessage());
         }
-        String find =
-                lobbyService.findRoomId(titleDTO.getTitle()).orElseThrow(() -> new EmptyResultDataAccessException(0));
-        return ResponseEntity.ok(new RoomIdDTO(find));
+        return ResponseEntity.ok(new RoomIdDTO(lobbyService.findRoomId(titleDTO.getTitle()).orElseThrow(() -> new EmptyResultDataAccessException(0))));
     }
 
     @PostMapping("/isDuplicate")

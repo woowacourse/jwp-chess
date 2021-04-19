@@ -88,11 +88,7 @@ public class ChessService {
     }
 
     public void flushCommands(String command, String gameId) {
-        try {
-            commandRepository.insert(new CommandDto(command), Integer.parseInt(gameId));
-        } catch (DataAccessException e) {
-            System.out.println(e.getMessage());
-        }
+        commandRepository.insert(new CommandDto(command), Integer.parseInt(gameId));
     }
 
     public String getIdByName(String name) {

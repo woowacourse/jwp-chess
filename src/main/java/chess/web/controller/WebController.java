@@ -1,7 +1,7 @@
 package chess.web.controller;
 
 import chess.domain.command.Commands;
-import chess.domain.vo.MoveVo;
+import chess.domain.dto.MoveDto;
 import chess.web.service.WebChessService;
 import chess.view.ModelView;
 import chess.view.RenderView;
@@ -37,9 +37,9 @@ public class WebController {
     }
 
     public String movePiece(Request request, Response response) {
-        final MoveVo moveVo = GSON.fromJson(request.body(), MoveVo.class);
-        final String command = makeMoveCmd(moveVo.getSource(), moveVo.getTarget());
-        final String historyId = moveVo.getGameId();
+        final MoveDto moveDto = GSON.fromJson(request.body(), MoveDto.class);
+        final String command = makeMoveCmd(moveDto.getSource(), moveDto.getTarget());
+        final String historyId = moveDto.getGameId();
         try {
             webChessService.move(historyId, command, new Commands(command));
             return GSON.toJson(ModelView.moveResponse(webChessService.continuedGameInfo(historyId), historyId));

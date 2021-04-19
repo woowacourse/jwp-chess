@@ -2,7 +2,7 @@ package chess.controller;
 
 import chess.domain.command.Commands;
 import chess.domain.exception.DataException;
-import chess.domain.vo.MoveVo;
+import chess.domain.dto.MoveDto;
 import chess.service.ChessService;
 import chess.view.ModelView;
 import com.google.gson.Gson;
@@ -59,9 +59,9 @@ public class ChessController {
 
     @PostMapping("/move")
     @ResponseBody
-    public String move(@RequestBody MoveVo moveVo) {
-        String command = makeMoveCmd(moveVo.getSource(), moveVo.getTarget());
-        String historyId = moveVo.getGameId();
+    public String move(@RequestBody MoveDto moveDto) {
+        String command = makeMoveCmd(moveDto.getSource(), moveDto.getTarget());
+        String historyId = moveDto.getGameId();
 
         try {
             chessService.move(historyId, command, new Commands(command));

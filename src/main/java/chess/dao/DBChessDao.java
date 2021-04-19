@@ -21,7 +21,7 @@ public class DBChessDao implements ChessDao {
             "name VARCHAR(64) NOT NULL," +
             "winner_color VARCHAR(64) NOT NULL," +
             "is_running boolean not null default false ," +
-            "created_date TIMESTAMP," +
+            "created_date TIMESTAMP(6)," +
             "PRIMARY KEY (chess_id)" +
             ");";
 

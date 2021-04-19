@@ -22,7 +22,7 @@ public class DBMovementDao implements MovementDao {
             "chess_id VARCHAR(36) NOT NULL," +
             "source_position VARCHAR(64) NOT NULL," +
             "target_position VARCHAR(64) NOT NULL," +
-            "created_date TIMESTAMP," +
+            "created_date TIMESTAMP(6)," +
             "PRIMARY KEY (movement_id)," +
             "FOREIGN KEY (chess_id) REFERENCES chess(chess_id) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";

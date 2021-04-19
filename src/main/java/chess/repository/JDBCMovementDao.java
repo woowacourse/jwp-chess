@@ -37,7 +37,7 @@ public class JDBCMovementDao implements MovementDao {
     @Override
     public List<Movement> findByChessName(String name) {
         return jdbcTemplate.query("select * from movement as mv" +
-                " left outer join chess as ch on mv.chess_id = ch.chess_id" +
+                " left outer join chess as ch using(chess_id)" +
                 " where ch.name = ?" +
                 " order by mv.created_date",
             movementMapper,

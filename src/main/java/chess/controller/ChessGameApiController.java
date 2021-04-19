@@ -48,7 +48,8 @@ public class ChessGameApiController {
     }
 
     @PutMapping("/{name}/pieces")
-    public ResponseEntity<CommonResponseDto<MoveResponseDto>> movePieces(@PathVariable("name") final String gameName, @RequestBody final MoveRequestDto requestDto) {
+    public ResponseEntity<CommonResponseDto<MoveResponseDto>> movePieces(@PathVariable("name") final String gameName,
+        @RequestBody final MoveRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.OK)
             .body(new CommonResponseDto<>(chessService.movePiece(gameName, requestDto), HttpStatus.OK.value()));
     }

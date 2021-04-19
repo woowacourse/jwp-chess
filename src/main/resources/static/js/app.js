@@ -167,7 +167,9 @@ async function movePiece(sourcePosition, targetPosition) {
         body: JSON.stringify(data)
     };
 
-    const response = await fetch(basePath + "/api/games/" + localStorage.getItem("name") + "/pieces", option)
+    const response = await fetch(
+        basePath + "/api/games/" + localStorage.getItem("name") + "/pieces",
+        option)
     .then(res => res.json());
 
     if (response.statusCode === 400 || response.statusCode === 500) {

@@ -69,7 +69,6 @@ class JdbcTemplateChessDaoTest {
         Square a4 = expectedChessGameManager.getBoard().findByPosition(Position.of("a4"));
         assertThat(a4.getPiece().getClass()).isEqualTo(Pawn.class);
         assertThat(a4.getPiece().getColor()).isEqualTo(WHITE);
-        assertThat(a4.getPiece().getColor()).isEqualTo(WHITE);
     }
 
     @Test

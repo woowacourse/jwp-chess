@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>체스</title>
+        <link rel="stylesheet" href="css/style.css"/>
+    </head>
+    <body>
+        <h1>저장된 게임 목록</h1>
+        <div>
+            <form id="room" action="/game/load" method="post">
+                {{#roomNames}}
+                <input type="submit" name="roomName" value="{{{.}}}"></input>
+                <br></br>
+                <br></br>
+                {{/roomNames}}
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.controller.web.dto.score.ScoreResponseDto;
+import chess.dao.dto.score.ScoreDto;
 import chess.domain.manager.GameStatus;
 
 public interface ScoreDao {
@@ -8,5 +8,5 @@ public interface ScoreDao {
 
     Long updateScore(final GameStatus gameStatus, final Long gameId);
 
-    ScoreResponseDto findScoreByGameId(final Long gameId);
+    ScoreDto findScoreByGameId(final Long gameId);
 }

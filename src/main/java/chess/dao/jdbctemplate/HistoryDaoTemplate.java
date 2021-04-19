@@ -1,7 +1,7 @@
 package chess.dao.jdbctemplate;
 
-import chess.controller.web.dto.history.HistoryResponseDto;
 import chess.dao.HistoryDao;
+import chess.dao.dto.history.HistoryDto;
 import chess.domain.history.History;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,8 +21,8 @@ public class HistoryDaoTemplate implements HistoryDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<HistoryResponseDto> actorRowMapper = (resultSet, rowNum) ->
-            new HistoryResponseDto(
+    private final RowMapper<HistoryDto> actorRowMapper = (resultSet, rowNum) ->
+            new HistoryDto(
                     resultSet.getString("move_command"),
                     resultSet.getString("turn_owner"),
                     resultSet.getInt("turn_number"),
@@ -46,7 +46,7 @@ public class HistoryDaoTemplate implements HistoryDao {
     }
 
     @Override
-    public List<HistoryResponseDto> findHistoryByGameId(final Long gameId) {
+    public List<HistoryDto> findHistoryByGameId(final Long gameId) {
         String sql = "SELECT * from history where game_id = ? ORDER BY id ASC";
         return jdbcTemplate.query(sql, actorRowMapper, gameId);
     }

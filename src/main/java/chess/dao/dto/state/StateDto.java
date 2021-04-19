@@ -1,12 +1,15 @@
-package chess.controller.web.dto.state;
+package chess.dao.dto.state;
 
-public class StateResponseDto {
+public class StateDto {
 
     private String turnOwner;
     private int turnNumber;
     private boolean isPlaying;
 
-    public StateResponseDto() {
+    public StateDto(final String turnOwner, final int turnNumber, final boolean isPlaying) {
+        this.turnOwner = turnOwner;
+        this.turnNumber = turnNumber;
+        this.isPlaying = isPlaying;
     }
 
     public String getTurnOwner() {

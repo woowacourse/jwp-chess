@@ -1,7 +1,7 @@
 package chess.dao.jdbc;
 
-import chess.controller.web.dto.history.HistoryResponseDto;
 import chess.dao.HistoryDao;
+import chess.dao.dto.history.HistoryDto;
 import chess.domain.history.History;
 import chess.exception.DataAccessException;
 
@@ -34,23 +34,23 @@ public class HistoryDaoJDBC implements HistoryDao {
     }
 
     @Override
-    public List<HistoryResponseDto> findHistoryByGameId(final Long gameId) {
+    public List<HistoryDto> findHistoryByGameId(final Long gameId) {
         final String query = "SELECT * from history where game_id = ? ORDER BY id ASC";
 
         try (Connection connection = ConnectionProvider.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(query);) {
             pstmt.setInt(1, gameId.intValue());
             try (ResultSet resultSet = pstmt.executeQuery()) {
-                List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
+                List<HistoryDto> historyDtos = new ArrayList<>();
                 while (resultSet.next()) {
-                    historyResponseDtos.add(new HistoryResponseDto(
+                    historyDtos.add(new HistoryDto(
                             resultSet.getString("move_command"),
                             resultSet.getString("turn_owner"),
                             resultSet.getInt("turn_number"),
                             resultSet.getBoolean("playing")
                     ));
                 }
-                return historyResponseDtos;
+                return historyDtos;
             }
         } catch (SQLException e) {
             throw new DataAccessException("해당 GameID의 기록들을 검색하는데 실패했습니다.", e);

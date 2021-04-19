@@ -1,11 +1,11 @@
 package chess.dao;
 
-import chess.controller.web.dto.game.GameResponseDto;
+import chess.dao.dto.game.GameDto;
 import chess.domain.game.Game;
 
 public interface GameDao {
 
     Long saveGame(final Game game);
 
-    GameResponseDto findGameById(final Long gameId);
+    GameDto findGameById(final Long gameId);
 }

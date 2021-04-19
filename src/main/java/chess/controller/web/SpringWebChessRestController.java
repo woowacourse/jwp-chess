@@ -10,7 +10,6 @@ import chess.controller.web.dto.state.StateResponseDto;
 import chess.domain.game.Game;
 import chess.domain.movecommand.MoveCommand;
 import chess.service.ChessService;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,20 +20,16 @@ import java.util.List;
 public class SpringWebChessRestController {
 
     private final ChessService chessService;
-    private final ModelMapper modelMapper;
 
-    public SpringWebChessRestController(ChessService chessService, ModelMapper modelMapper) {
+    public SpringWebChessRestController(ChessService chessService) {
         this.chessService = chessService;
-        this.modelMapper = modelMapper;
     }
 
     @PostMapping("")
     public ResponseEntity<GameIdResponseDto> saveGame(@RequestBody GameRequestDto gameRequestDto) {
         Game game = Game.of(gameRequestDto.getRoomName(),
-                gameRequestDto.getWhiteUsername(),
-                gameRequestDto.getBlackUsername());
-        GameIdResponseDto gameIdResponseDto = new GameIdResponseDto(chessService.saveGame(game));
-        return ResponseEntity.ok().body(gameIdResponseDto);
+                gameRequestDto.getWhiteUsername(), gameRequestDto.getBlackUsername());
+        return ResponseEntity.ok().body(new GameIdResponseDto(chessService.saveGame(game)));
     }
 
     @GetMapping("/{id}/load")

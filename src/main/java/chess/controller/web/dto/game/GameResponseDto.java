@@ -2,31 +2,43 @@ package chess.controller.web.dto.game;
 
 public class GameResponseDto {
 
-    private final Long id;
-    private final String whiteUsername;
-    private final String blackUsername;
-    private final String roomName;
+    private Long id;
+    private String whiteUsername;
+    private String blackUsername;
+    private String roomName;
 
-    public GameResponseDto(Long id, String whiteUsername, String blackUsername, String roomName) {
-        this.id = id;
-        this.whiteUsername = whiteUsername;
-        this.blackUsername = blackUsername;
-        this.roomName = roomName;
+    public GameResponseDto() {
     }
 
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getWhiteUsername() {
         return whiteUsername;
+    }
+
+    public void setWhiteUsername(String whiteUsername) {
+        this.whiteUsername = whiteUsername;
     }
 
     public String getBlackUsername() {
         return blackUsername;
     }
 
+    public void setBlackUsername(String blackUsername) {
+        this.blackUsername = blackUsername;
+    }
+
     public String getRoomName() {
         return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 }

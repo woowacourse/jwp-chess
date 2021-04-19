@@ -1,15 +1,21 @@
-package chess.controller.web.dto.game;
+package chess.dao.dto.game;
 
-public class GameRequestDto {
+public class GameDto {
 
+    private final Long id;
     private final String whiteUsername;
     private final String blackUsername;
     private final String roomName;
 
-    public GameRequestDto(final String whiteUsername, final String blackUsername, final String roomName) {
+    public GameDto(Long id, String whiteUsername, String blackUsername, String roomName) {
+        this.id = id;
         this.whiteUsername = whiteUsername;
         this.blackUsername = blackUsername;
         this.roomName = roomName;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getWhiteUsername() {

@@ -1,7 +1,7 @@
 package chess.dao.jdbctemplate;
 
-import chess.controller.web.dto.state.StateResponseDto;
 import chess.dao.StateDao;
+import chess.dao.dto.state.StateDto;
 import chess.domain.manager.ChessManager;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,8 +16,8 @@ public class StateDaoTemplate implements StateDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<StateResponseDto> actorRowMapper = (resultSet, rowNum) ->
-            new StateResponseDto(
+    private final RowMapper<StateDto> actorRowMapper = (resultSet, rowNum) ->
+            new StateDto(
                     resultSet.getString("turn_owner"),
                     resultSet.getInt("turn_number"),
                     resultSet.getBoolean("playing")
@@ -36,7 +36,7 @@ public class StateDaoTemplate implements StateDao {
     }
 
     @Override
-    public StateResponseDto findStateByGameId(final Long gameId) {
+    public StateDto findStateByGameId(final Long gameId) {
         String sql = "SELECT * from state where game_id = ?";
         return jdbcTemplate.queryForObject(sql, actorRowMapper, gameId);
     }

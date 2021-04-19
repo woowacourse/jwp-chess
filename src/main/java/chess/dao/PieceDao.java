@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.controller.web.dto.piece.PieceResponseDto;
+import chess.dao.dto.piece.PieceDto;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
 
@@ -14,5 +14,5 @@ public interface PieceDao {
 
     Long updateTargetPiece(final String target, Piece sourcePiece, final Long gameId);
 
-    List<PieceResponseDto> findPiecesByGameId(final Long gameId);
+    List<PieceDto> findPiecesByGameId(final Long gameId);
 }

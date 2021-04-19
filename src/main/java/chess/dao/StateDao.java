@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.controller.web.dto.state.StateResponseDto;
+import chess.dao.dto.state.StateDto;
 import chess.domain.manager.ChessManager;
 
 public interface StateDao {
@@ -8,5 +8,5 @@ public interface StateDao {
 
     Long updateState(final ChessManager chessManager, final Long gameId);
 
-    StateResponseDto findStateByGameId(final Long gameId);
+    StateDto findStateByGameId(final Long gameId);
 }

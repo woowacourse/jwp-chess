@@ -1,8 +1,8 @@
 package chess.dao.jdbctemplate;
 
-import chess.controller.web.dto.score.ScoreResponseDto;
 import chess.dao.GameDao;
 import chess.dao.ScoreDao;
+import chess.dao.dto.score.ScoreDto;
 import chess.domain.game.Game;
 import chess.domain.manager.GameStatus;
 import chess.domain.piece.Score;
@@ -50,7 +50,7 @@ class ScoreDaoTemplateTest {
 
         //when
         scoreDao.saveScore(gameStatus, newGameId);
-        ScoreResponseDto findScore = scoreDao.findScoreByGameId(newGameId);
+        ScoreDto findScore = scoreDao.findScoreByGameId(newGameId);
 
         //then
         assertThat(findScore).isNotNull();
@@ -72,7 +72,7 @@ class ScoreDaoTemplateTest {
 
         //when
         scoreDao.updateScore(updatedGameStatus, newGameId);
-        ScoreResponseDto updatedScore = scoreDao.findScoreByGameId(newGameId);
+        ScoreDto updatedScore = scoreDao.findScoreByGameId(newGameId);
 
         //then
         assertThat(updatedScore).isNotNull();
@@ -90,7 +90,7 @@ class ScoreDaoTemplateTest {
         scoreDao.saveScore(gameStatus, newGameId);
 
         //when
-        ScoreResponseDto findScore = scoreDao.findScoreByGameId(newGameId);
+        ScoreDto findScore = scoreDao.findScoreByGameId(newGameId);
 
         //then
         assertThat(findScore).isNotNull();

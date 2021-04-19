@@ -1,8 +1,8 @@
 package chess.dao.jdbctemplate;
 
-import chess.controller.web.dto.piece.PieceResponseDto;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
+import chess.dao.dto.piece.PieceDto;
 import chess.domain.board.BoardInitializer;
 import chess.domain.board.position.Position;
 import chess.domain.game.Game;
@@ -94,14 +94,14 @@ class PieceDaoTemplateTest {
     void findPiecesByGameId() {
         //given
         Long gameId = 1L;
-        List<PieceResponseDto> pieceResponseDtos = Arrays.asList(
-                new PieceResponseDto("r", "a1"),
-                new PieceResponseDto("n", "a2"),
-                new PieceResponseDto("b", "a3")
+        List<PieceDto> pieceResponseDtos = Arrays.asList(
+                new PieceDto("r", "a1"),
+                new PieceDto("n", "a2"),
+                new PieceDto("b", "a3")
         );
 
         //when
-        List<PieceResponseDto> findPieces = pieceDao.findPiecesByGameId(gameId);
+        List<PieceDto> findPieces = pieceDao.findPiecesByGameId(gameId);
 
         //then
         for (int i = 0; i < findPieces.size(); i++) {

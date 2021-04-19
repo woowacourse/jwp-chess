@@ -1,7 +1,7 @@
 package chess.dao.jdbctemplate;
 
-import chess.controller.web.dto.game.GameResponseDto;
 import chess.dao.GameDao;
+import chess.dao.dto.game.GameDto;
 import chess.domain.game.Game;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,8 +20,8 @@ public class GameDaoTemplate implements GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private RowMapper<GameResponseDto> actorRowMapper = (resultSet, rowNum) ->
-            new GameResponseDto(
+    private RowMapper<GameDto> actorRowMapper = (resultSet, rowNum) ->
+            new GameDto(
                     resultSet.getLong("id"),
                     resultSet.getString("white_username"),
                     resultSet.getString("black_username"),
@@ -43,7 +43,7 @@ public class GameDaoTemplate implements GameDao {
     }
 
     @Override
-    public GameResponseDto findGameById(final Long gameId) {
+    public GameDto findGameById(final Long gameId) {
         String sql = "SELECT * from game where id = ?";
         return jdbcTemplate.queryForObject(sql, actorRowMapper, gameId);
     }

@@ -1,8 +1,8 @@
 package chess.dao.jdbctemplate;
 
-import chess.controller.web.dto.history.HistoryResponseDto;
 import chess.dao.GameDao;
 import chess.dao.HistoryDao;
+import chess.dao.dto.history.HistoryDto;
 import chess.domain.game.Game;
 import chess.domain.history.History;
 import org.junit.jupiter.api.AfterEach;
@@ -67,7 +67,7 @@ class HistoryDaoTemplateTest {
 
         //when
         historyDao.saveHistory(history, gameId);
-        List<HistoryResponseDto> game = historyDao.findHistoryByGameId(gameId);
+        List<HistoryDto> game = historyDao.findHistoryByGameId(gameId);
 
         //then
         assertThat(game).isNotEmpty();
@@ -79,14 +79,14 @@ class HistoryDaoTemplateTest {
     void shouldFindHistoryByGameId() {
         //given
         Long gameId = 1L;
-        List<HistoryResponseDto> historyResponseDtos = Arrays.asList(
-                new HistoryResponseDto("move a1, a2", "WHITE", 1, true),
-                new HistoryResponseDto("move a2, a3", "BLACK", 1, true),
-                new HistoryResponseDto("move a3, a4", "WHITE", 2, true),
-                new HistoryResponseDto("move a4, a5", "BLACK", 2, true)
+        List<HistoryDto> historyResponseDtos = Arrays.asList(
+                new HistoryDto("move a1, a2", "WHITE", 1, true),
+                new HistoryDto("move a2, a3", "BLACK", 1, true),
+                new HistoryDto("move a3, a4", "WHITE", 2, true),
+                new HistoryDto("move a4, a5", "BLACK", 2, true)
         );
         //when
-        List<HistoryResponseDto> findHistories = historyDao.findHistoryByGameId(gameId);
+        List<HistoryDto> findHistories = historyDao.findHistoryByGameId(gameId);
 
         //then
         assertThat(findHistories).hasSize(4);

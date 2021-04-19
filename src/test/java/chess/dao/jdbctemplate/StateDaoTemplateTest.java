@@ -1,8 +1,8 @@
 package chess.dao.jdbctemplate;
 
-import chess.controller.web.dto.state.StateResponseDto;
 import chess.dao.GameDao;
 import chess.dao.StateDao;
+import chess.dao.dto.state.StateDto;
 import chess.domain.board.Board;
 import chess.domain.board.BoardInitializer;
 import chess.domain.game.Game;
@@ -52,7 +52,7 @@ class StateDaoTemplateTest {
 
         //when
         stateDao.saveState(chessManager, newGameId);
-        StateResponseDto findState = stateDao.findStateByGameId(newGameId);
+        StateDto findState = stateDao.findStateByGameId(newGameId);
 
         //then
         assertThat(findState).isNotNull();
@@ -74,7 +74,7 @@ class StateDaoTemplateTest {
 
         //when
         stateDao.updateState(updatedChessManager, newGameId);
-        StateResponseDto findUpdatedState = stateDao.findStateByGameId(newGameId);
+        StateDto findUpdatedState = stateDao.findStateByGameId(newGameId);
 
         //then
         assertThat(findUpdatedState).isNotNull();
@@ -94,7 +94,7 @@ class StateDaoTemplateTest {
         stateDao.saveState(chessManager, newGameId);
 
         //when
-        StateResponseDto findState = stateDao.findStateByGameId(newGameId);
+        StateDto findState = stateDao.findStateByGameId(newGameId);
 
         //then
         assertThat(findState).isNotNull();

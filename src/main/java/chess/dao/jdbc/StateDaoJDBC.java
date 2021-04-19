@@ -1,7 +1,7 @@
 package chess.dao.jdbc;
 
-import chess.controller.web.dto.state.StateResponseDto;
 import chess.dao.StateDao;
+import chess.dao.dto.state.StateDto;
 import chess.domain.manager.ChessManager;
 import chess.exception.DataAccessException;
 
@@ -45,7 +45,7 @@ public class StateDaoJDBC implements StateDao {
     }
 
     @Override
-    public StateResponseDto findStateByGameId(final Long gameId) {
+    public StateDto findStateByGameId(final Long gameId) {
         final String query = "SELECT * from state where game_id = ?";
 
         try (Connection connection = ConnectionProvider.getConnection();
@@ -55,7 +55,7 @@ public class StateDaoJDBC implements StateDao {
                 if (!resultSet.next()) {
                     return null;
                 }
-                return new StateResponseDto(
+                return new StateDto(
                         resultSet.getString("turn_owner"),
                         resultSet.getInt("turn_number"),
                         resultSet.getBoolean("playing"));

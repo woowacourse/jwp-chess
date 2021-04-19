@@ -1,7 +1,7 @@
 package chess.dao.jdbc;
 
-import chess.controller.web.dto.game.GameResponseDto;
 import chess.dao.GameDao;
+import chess.dao.dto.game.GameDto;
 import chess.domain.game.Game;
 import chess.exception.DataAccessException;
 
@@ -28,7 +28,7 @@ public class GameDaoJDBC implements GameDao {
     }
 
     @Override
-    public GameResponseDto findGameById(final Long gameId) {
+    public GameDto findGameById(final Long gameId) {
         final String query = "SELECT * from game where id = ?";
 
         try (Connection connection = ConnectionProvider.getConnection();
@@ -38,7 +38,7 @@ public class GameDaoJDBC implements GameDao {
                 if (!resultSet.next()) {
                     return null;
                 }
-                return new GameResponseDto(
+                return new GameDto(
                         gameId,
                         resultSet.getString("white_username"),
                         resultSet.getString("black_username"),

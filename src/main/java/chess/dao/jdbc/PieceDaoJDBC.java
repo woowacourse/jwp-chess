@@ -1,7 +1,7 @@
 package chess.dao.jdbc;
 
-import chess.controller.web.dto.piece.PieceResponseDto;
 import chess.dao.PieceDao;
+import chess.dao.dto.piece.PieceDto;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
 import chess.exception.DataAccessException;
@@ -65,17 +65,17 @@ public class PieceDaoJDBC implements PieceDao {
     }
 
     @Override
-    public List<PieceResponseDto> findPiecesByGameId(final Long gameId) {
+    public List<PieceDto> findPiecesByGameId(final Long gameId) {
         final String query = "SELECT * from piece where game_id = ?";
 
         try (Connection connection = ConnectionProvider.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(query);) {
             pstmt.setInt(1, gameId.intValue());
-            List<PieceResponseDto> pieceResponseDtos = new ArrayList<>();
+            List<PieceDto> pieceResponseDtos = new ArrayList<>();
 
             try (ResultSet resultSet = pstmt.executeQuery()) {
                 while (resultSet.next()) {
-                    pieceResponseDtos.add(new PieceResponseDto(resultSet.getString("symbol"),
+                    pieceResponseDtos.add(new PieceDto(resultSet.getString("symbol"),
                             resultSet.getString("position")));
                 }
                 return pieceResponseDtos;

@@ -2,19 +2,25 @@ package chess.controller.web.dto.score;
 
 public class ScoreResponseDto {
 
-    private final double whiteScore;
-    private final double blackScore;
+    private double whiteScore;
+    private double blackScore;
 
-    public ScoreResponseDto(final double whiteScore, final double blackScore) {
-        this.whiteScore = whiteScore;
-        this.blackScore = blackScore;
+    public ScoreResponseDto() {
     }
 
     public double getWhiteScore() {
         return whiteScore;
     }
 
+    public void setWhiteScore(double whiteScore) {
+        this.whiteScore = whiteScore;
+    }
+
     public double getBlackScore() {
         return blackScore;
+    }
+
+    public void setBlackScore(double blackScore) {
+        this.blackScore = blackScore;
     }
 }

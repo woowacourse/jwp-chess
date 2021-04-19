@@ -12,6 +12,7 @@ import chess.dao.jdbc.*;
 import chess.domain.game.Game;
 import chess.domain.movecommand.MoveCommand;
 import chess.service.ChessService;
+import org.modelmapper.ModelMapper;
 
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class SparkWebChessController {
                 new HistoryDaoJDBC(),
                 new PieceDaoJDBC(),
                 new ScoreDaoJDBC(),
-                new StateDaoJDBC()
+                new StateDaoJDBC(),
+                new ModelMapper()
         );
     }
 

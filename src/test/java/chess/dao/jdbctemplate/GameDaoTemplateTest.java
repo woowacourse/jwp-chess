@@ -1,7 +1,7 @@
 package chess.dao.jdbctemplate;
 
-import chess.controller.web.dto.game.GameResponseDto;
 import chess.dao.GameDao;
+import chess.dao.dto.game.GameDto;
 import chess.domain.game.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +56,7 @@ class GameDaoTemplateTest {
 
         //when
         Long newGameId = gameDao.saveGame(Game.of(roomName, whiteUsername, blackUsername));
-        GameResponseDto findGame = gameDao.findGameById(newGameId);
+        GameDto findGame = gameDao.findGameById(newGameId);
 
         //then
         assertThat(findGame).isNotNull();
@@ -75,7 +75,7 @@ class GameDaoTemplateTest {
         Long id = 1L;
 
         //when
-        GameResponseDto findGame = gameDao.findGameById(id);
+        GameDto findGame = gameDao.findGameById(id);
 
         //then
         assertThat(findGame.getRoomName()).isEqualTo(roomName);

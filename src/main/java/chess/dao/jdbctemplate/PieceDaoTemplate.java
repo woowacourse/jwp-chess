@@ -1,7 +1,7 @@
 package chess.dao.jdbctemplate;
 
-import chess.controller.web.dto.piece.PieceResponseDto;
 import chess.dao.PieceDao;
+import chess.dao.dto.piece.PieceDto;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,8 +22,8 @@ public class PieceDaoTemplate implements PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<PieceResponseDto> actorRowMapper = (resultSet, rowNum) ->
-            new PieceResponseDto(
+    private final RowMapper<PieceDto> actorRowMapper = (resultSet, rowNum) ->
+            new PieceDto(
                     resultSet.getString("symbol"),
                     resultSet.getString("position")
             );
@@ -52,7 +52,7 @@ public class PieceDaoTemplate implements PieceDao {
     }
 
     @Override
-    public List<PieceResponseDto> findPiecesByGameId(final Long gameId) {
+    public List<PieceDto> findPiecesByGameId(final Long gameId) {
         String sql = "SELECT * from piece where game_id = ?";
         return jdbcTemplate.query(sql, actorRowMapper, gameId);
     }

@@ -1,7 +1,7 @@
 package chess.dao.jdbc;
 
-import chess.controller.web.dto.score.ScoreResponseDto;
 import chess.dao.ScoreDao;
+import chess.dao.dto.score.ScoreDto;
 import chess.domain.manager.GameStatus;
 import chess.exception.DataAccessException;
 
@@ -43,7 +43,7 @@ public class ScoreDaoJDBC implements ScoreDao {
     }
 
     @Override
-    public ScoreResponseDto findScoreByGameId(final Long gameId) {
+    public ScoreDto findScoreByGameId(final Long gameId) {
         final String query = "SELECT * from score where game_id = ?";
 
         try (Connection connection = ConnectionProvider.getConnection();
@@ -53,7 +53,7 @@ public class ScoreDaoJDBC implements ScoreDao {
                 if (!resultSet.next()) {
                     return null;
                 }
-                return new ScoreResponseDto(
+                return new ScoreDto(
                         resultSet.getDouble("white_score"),
                         resultSet.getDouble("black_score"));
             }

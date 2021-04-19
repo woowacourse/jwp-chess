@@ -47,6 +47,16 @@ function postFetch(url, bodyData) {
     });
 }
 
+function postFetchScore(url) {
+    return fetch(url, {
+        method: 'post'
+    }).then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+    });
+}
+
 async function moveBoard() {
     await postFetchMove("move").then(data => {
         $board = data;
@@ -72,7 +82,7 @@ function showMovablePosition() {
 }
 
 async function findScore() {
-    await postFetchPath("score").then(data => {
+    await postFetchScore("score/" + $roomId).then(data => {
         $status = data;
     });
     showScore();

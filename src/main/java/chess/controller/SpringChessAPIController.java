@@ -39,7 +39,7 @@ public class SpringChessAPIController {
         chessService.createRoom(room);
     }
 
-    @PutMapping("/room/{id}/pieces")
+    @PutMapping("/rooms/{id}/pieces")
     public ResponseEntity<ChessGameDto> movePiece(@PathVariable("id") long roodId, @RequestBody MoveDto moveDto) {
         return ResponseEntity.ok().body(chessService.movePiece(roodId, moveDto));
     }

@@ -6,7 +6,7 @@
     
 - SpringChessController
     - [ ] 각 상황에 맞는 메소드 활용 (http 메소드가 각 어떤 상황에서 활용되는지): line22
-    - [ ] produces의 역할?
+    - [x] produces의 역할?
     - [x] final 선언: line 16
     
 - PiecePositionDaoConvertor

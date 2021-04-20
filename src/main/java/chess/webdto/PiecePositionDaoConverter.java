@@ -1,8 +1,7 @@
-package chess.webdao;
+package chess.webdto;
 
 import chess.domain.Position;
 import chess.domain.piece.Piece;
-import chess.webdto.PieceDto;
 
 import java.util.HashMap;
 import java.util.Map;

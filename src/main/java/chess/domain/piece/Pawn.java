@@ -11,12 +11,12 @@ import java.util.Map;
 public class Pawn extends Piece {
 
     private static final String NAME = "p";
+    private static final String BLACK_INITIAL_ROW = "7";
+    private static final String WHITE_INITIAL_ROW = "2";
     private static final Score SCORE = new Score(1);
-    private boolean isMoved;
 
     public Pawn(Color color) {
         super(NAME, color, SCORE);
-        isMoved = false;
     }
 
     private List<Direction> findDirections() {
@@ -40,9 +40,8 @@ public class Pawn extends Piece {
     }
 
     private boolean isForwardTwoStepMovable(Map<Position, Piece> board, Direction direction,
-        Position source,
-        Position target) {
-        if (isMoved || !board.get(target).isEmpty()) {
+        Position source, Position target) {
+        if (!isInitialPosition(source) || !board.get(target).isEmpty()) {
             return false;
         }
         Position firstStep = source.sum(direction);
@@ -51,6 +50,13 @@ public class Pawn extends Piece {
         }
         Position secondStep = firstStep.sum(direction);
         return secondStep.equals(target);
+    }
+
+    private boolean isInitialPosition(Position source) {
+        if (isBlack()) {
+            return source.chessRowCoordinate().equals(BLACK_INITIAL_ROW);
+        }
+        return source.chessRowCoordinate().equals(WHITE_INITIAL_ROW);
     }
 
     @Override
@@ -63,12 +69,8 @@ public class Pawn extends Piece {
         List<Direction> directions = new ArrayList<>(findDirections());
         Direction forwardDirection = directions.remove(0);
 
-        if (isForwardOneStepMovable(board, forwardDirection, source, target)
+        return isForwardOneStepMovable(board, forwardDirection, source, target)
             || isForwardTwoStepMovable(board, forwardDirection, source, target)
-            || isDiagonalMovable(board, directions, source, target)) {
-            isMoved = true;
-            return true;
-        }
-        return false;
+            || isDiagonalMovable(board, directions, source, target);
     }
 }

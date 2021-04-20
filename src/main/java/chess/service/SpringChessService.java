@@ -4,7 +4,6 @@ import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.webdao.ChessDao;
-import chess.webdao.MysqlChessDao;
 import chess.webdto.ChessGameDto;
 import chess.webdto.PieceDto;
 import chess.webdto.ScoreDto;

@@ -19,7 +19,7 @@ import static chess.webdto.TeamDto.WHITE_TEAM;
 
 //todo: CRUD 위주로 진행해야함
 @Repository
-public class MysqlChessDao implements ChessDao{
+public class MysqlChessDao implements ChessDao {
     private final RowMapper<ChessGameTableDto> actorRowMapper = (resultSet, rowNum) -> {
         ChessGameTableDto chessGameTableDto = new ChessGameTableDto(
                 resultSet.getString("current_turn_team"),

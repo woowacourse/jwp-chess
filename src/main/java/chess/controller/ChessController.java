@@ -7,7 +7,6 @@ import chess.service.ChessService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/chess")
 public class ChessController {
     private final ChessService chessService;
 
@@ -15,23 +14,23 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/board")
-    public BoardDto loadSavedBoard() {
-        return chessService.getSavedBoard();
+    @GetMapping("/board/{roomName}")
+    public BoardDto loadSavedBoard(@PathVariable String roomName) {
+        return chessService.getSavedBoard(roomName);
     }
 
-    @PutMapping("/board")
-    public BoardDto resetBoard() {
-        return chessService.resetBoard();
+    @PutMapping("/board/{roomName}")
+    public BoardDto resetBoard(@PathVariable String roomName) {
+        return chessService.resetBoard(roomName);
     }
 
-    @GetMapping("/score")
-    public ScoreDto scoreStatus() {
-        return chessService.score();
+    @GetMapping("/score/{roomName}")
+    public ScoreDto scoreStatus(@PathVariable String roomName) {
+        return chessService.score(roomName);
     }
 
-    @PostMapping("/move")
-    public BoardDto move(@RequestBody MoveInfoDto moveInfoDto) {
-        return chessService.move(moveInfoDto);
+    @PostMapping("/move/{roomName}")
+    public BoardDto move(@RequestBody MoveInfoDto moveInfoDto, @PathVariable String roomName) {
+        return chessService.move(moveInfoDto, roomName);
     }
 }

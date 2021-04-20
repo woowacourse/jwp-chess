@@ -17,7 +17,7 @@ import java.util.Map;
 @Repository
 public class ChessDao {
     private final JdbcTemplate jdbcTemplate;
-    private final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ?";
+    private final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ? and room_name = ?";
     private final String UPDATE_TURN_QUERY = "update turn set turn_owner = ? where turn_owner = ?";
     private final String SELECT_TURN_QUERY = "select turn_owner from turn";
 
@@ -25,9 +25,9 @@ public class ChessDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public BoardDto getSavedBoard() {
-        String sql = "select position, piece from board;";
-        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
+    public BoardDto getSavedBoard(String roomName) {
+        String sql = "select position, piece from board where room_name = ?;";
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, roomName);
         Map<String, String> boardInfo = new HashMap<>();
         for (Map<String, Object> result : resultList) {
             String position = (String) result.get("position");
@@ -43,12 +43,12 @@ public class ChessDao {
         return TurnDto.of(turnOwner);
     }
 
-    public void resetBoard(Board board) {
+    public void resetBoard(Board board, String roomName) {
         for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
             Position position = entry.getKey();
             Piece piece = entry.getValue();
             String unicode = piece != null ? piece.getUnicode() : "";
-            executeBoardUpdateQuery(unicode, position.convertToString());
+            executeBoardUpdateQuery(unicode, position.convertToString(), roomName);
         }
     }
 
@@ -63,8 +63,8 @@ public class ChessDao {
         jdbcTemplate.update(sql, roomName);
     }
 
-    private void executeBoardUpdateQuery(String unicode, String position) {
-        jdbcTemplate.update(UPDATE_BOARD_QUERY, unicode, position);
+    private void executeBoardUpdateQuery(String unicode, String position, String roomName) {
+        jdbcTemplate.update(UPDATE_BOARD_QUERY, unicode, position, roomName);
     }
 
     public void renewBoardAfterMove(String targetPosition, String destinationPosition, Piece targetPiece) {

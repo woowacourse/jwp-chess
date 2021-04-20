@@ -5,6 +5,7 @@ import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,5 +36,11 @@ public class ViewController {
         RoomListDto roomListDto = chessService.getRoomList();
         model.addAttribute("roomList", roomListDto.getRoomList());
         return "roomList";
+    }
+
+    @GetMapping("/{roomName}")
+    public String chessBoard(@PathVariable String roomName, Model model) {
+        model.addAttribute("roomName", roomName);
+        return "chess";
     }
 }

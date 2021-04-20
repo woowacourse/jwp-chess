@@ -1,9 +1,14 @@
+const roomName = document.getElementById('roomName').value;
 applicationStart();
 
 let firstClickPosition = "";
 let secondClickPosition = "";
 
+
+
 async function applicationStart() {
+    console.log("applicationStart");
+    console.log(roomName);
     const chessBoard = document.querySelector(".chessboard");
     const idArr = ['a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8',
         'a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7',
@@ -31,7 +36,10 @@ async function applicationStart() {
 }
 
 async function loadSavedBoard() {
-    let savedBoardInformation = await fetch("/board")
+    let url = "/board/" + roomName;
+    console.log("loadSavedBoard Start");
+    console.log(url);
+    let savedBoardInformation = await fetch(url)
     savedBoardInformation = await savedBoardInformation.json();
     return savedBoardInformation.boardInfo;
 }
@@ -80,7 +88,8 @@ async function sendMoveInformation(targetPosition, destinationPosition) {
         destination: destinationPosition
     }
 
-    let boardInformation = await fetch("/move", {
+    let url = "/move/" + roomName;
+    let boardInformation = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -117,7 +126,8 @@ async function renewBoard(boardInfo) {
 }
 
 async function resetBoard() {
-    let initialBoardInformation = await fetch("/board", {
+    let url = "/board/" + roomName;
+    let initialBoardInformation = await fetch(url, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -129,7 +139,8 @@ async function resetBoard() {
 }
 
 async function alertScore() {
-    let scoreInformation = await fetch("/score")
+    let url = "/score/" + roomName;
+    let scoreInformation = await fetch(url)
     scoreInformation = await scoreInformation.json();
     alert("백: " + scoreInformation.whiteScore + " 흑: " + scoreInformation.blackScore);
 }

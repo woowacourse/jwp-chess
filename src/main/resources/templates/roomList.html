@@ -7,7 +7,7 @@
 <body>
 <tr th:each="room : ${roomList}">
     <td>
-        <a th:text="${room}" style="text-decoration: none" th:href="@{/chess/{roomName}(roomName=${room})}"></a><br/>
+        <a th:text="${room}" style="text-decoration: none" th:href="@{/{roomName}(roomName=${room})}"></a><br/>
     </td>
 </tr>
 <form th:action="@{/}" method="post">

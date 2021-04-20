@@ -20,26 +20,26 @@ public class ChessService {
         this.chessDao = chessDao;
     }
 
-    public BoardDto resetBoard() {
+    public BoardDto resetBoard(String roomName) {
         Board initiatedBoard = BoardFactory.create();
         chessDao.resetTurnOwner();
-        chessDao.resetBoard(initiatedBoard);
+        chessDao.resetBoard(initiatedBoard, roomName);
         return BoardDto.of(initiatedBoard);
     }
 
-    public BoardDto getSavedBoard() {
-        return chessDao.getSavedBoard();
+    public BoardDto getSavedBoard(String roomName) {
+        return chessDao.getSavedBoard(roomName);
     }
 
-    public ScoreDto score() {
-        Board board = convertBoardDtoToBoard(getSavedBoard());
+    public ScoreDto score(String roomName) {
+        Board board = convertBoardDtoToBoard(getSavedBoard(roomName));
         double whiteScore = board.calculateScore(WHITE);
         double blackScore = board.calculateScore(BLACK);
         return ScoreDto.of(whiteScore, blackScore);
     }
 
-    public BoardDto move(MoveInfoDto moveInfoDto) {
-        Board board = convertBoardDtoToBoard(getSavedBoard());
+    public BoardDto move(MoveInfoDto moveInfoDto, String roomName) {
+        Board board = convertBoardDtoToBoard(getSavedBoard(roomName));
         Piece targetPiece = getTargetPiece(moveInfoDto, board);
         Team turnOwnerAfterMove = chessGameMove(board, moveInfoDto.getTarget(), moveInfoDto.getDestination());
 

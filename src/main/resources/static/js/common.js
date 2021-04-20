@@ -1,5 +1,9 @@
 const index = {
     init: function () {
+        setTimeout(() => {
+            loadPage();
+        }, 2000);
+
         const _this = this;
         document.querySelector(".chess-btn").addEventListener("click", event => {
             if (event.target.value === "start") {
@@ -153,6 +157,15 @@ const index = {
                 alert("[continue] 잘못된 명령입니다!");
             });
     }
+}
+
+loadPage = () => {
+    let loadingText = document.querySelector("#loading-text");
+    loadingText.parentNode.removeChild(loadingText);
+    let loadingContent = document.querySelector("#loading-content");
+    loadingContent.parentNode.removeChild(loadingContent);
+    let loadingWrapper = document.querySelector("#loading-wrapper");
+    loadingWrapper.parentNode.removeChild(loadingWrapper);
 }
 
 enrollChessGameId = (chessGameId) => {

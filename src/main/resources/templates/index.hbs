@@ -1,4 +1,8 @@
 {{>layout/header}}
+<div id="loading-wrapper">
+    <div id="loading-text">LOADING</div>
+    <div id="loading-content"></div>
+</div>
 {{#chessGameStatus}}
     {{^exist}}
         <button class="button is-primary is-light chess-btn start" value="start">게임 시작</button>
@@ -145,6 +149,5 @@
 </div>
 
 <script type="text/javascript" src="js/common.js"></script>
-</body>
-</html>
+{{>layout/footer}}
 

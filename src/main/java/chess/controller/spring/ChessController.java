@@ -1,11 +1,11 @@
 package chess.controller.spring;
 
-import chess.exception.ChessException;
 import chess.domain.ChessGame;
 import chess.domain.dto.GameDto;
 import chess.domain.dto.WebBoardDto;
 import chess.domain.web.Game;
 import chess.domain.web.GameHistory;
+import chess.exception.ChessException;
 import chess.service.ChessService;
 import chess.service.UserService;
 import java.time.LocalDateTime;

@@ -1,7 +1,6 @@
 package chess.repository;
 
 import chess.domain.web.GameHistory;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;

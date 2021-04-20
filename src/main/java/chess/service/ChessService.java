@@ -7,7 +7,6 @@ import chess.domain.web.GameHistory;
 import chess.repository.GameDao;
 import chess.repository.GameHistoryDao;
 import chess.util.BoardInitializer;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,7 @@ public class ChessService {
         return gameDao.addGame(game);
     }
 
-    public void addGameHistory(GameHistory gameHistory) throws SQLException {
+    public void addGameHistory(GameHistory gameHistory) {
         gameHistoryDao.addGameHistory(gameHistory);
     }
 
@@ -41,7 +40,7 @@ public class ChessService {
         return gameHistoryDao.findAllGameHistoryByGameId(gameId);
     }
 
-    public void updateGameIsEnd(int gameId) throws SQLException {
+    public void updateGameIsEnd(int gameId) {
         gameDao.updateGameIsEnd(gameId);
     }
 

@@ -1,6 +1,6 @@
 package chess.exception;
 
-public class ChessException extends IllegalArgumentException{
+public class ChessException extends IllegalArgumentException {
     private String errorMessage;
     private int gameId;
 

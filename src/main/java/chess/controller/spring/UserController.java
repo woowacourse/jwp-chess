@@ -1,6 +1,5 @@
 package chess.controller.spring;
 
-import chess.service.ChessService;
 import chess.service.UserService;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -31,7 +30,7 @@ public class UserController {
         int userId = userService.addUserIfNotExist(userName);
         Cookie cookie = new Cookie("userId", encodeCookie(String.valueOf(userId)));
         response.addCookie(cookie);
-        return REDIRECT +"/games";
+        return REDIRECT + "/games";
     }
 
     @PostMapping("/logout")

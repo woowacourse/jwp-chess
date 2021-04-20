@@ -7,11 +7,11 @@ import chess.webdto.PieceDto;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PiecePositionDAOConverter {
+public class PiecePositionDaoConverter {
     private static final String FIELD_SEPARATOR = ",";
     private static final String PIECE_SEPARATOR = "/";
 
-    private PiecePositionDAOConverter() {
+    private PiecePositionDaoConverter() {
     }
 
     public static String asDAO(final Map<Position, Piece> teamPiecePosition) {
@@ -34,7 +34,7 @@ public class PiecePositionDAOConverter {
         for (String singlePieceInfo : teamPieceInfos) {
             final String[] SinglePieceInfos = singlePieceInfo.split(FIELD_SEPARATOR);
             final Position position = Position.of(SinglePieceInfos[0]);
-            final Piece piece = DAOtoPiece.generatePiece(team, SinglePieceInfos[1], Boolean.valueOf(SinglePieceInfos[2]));
+            final Piece piece = DaoToPiece.generatePiece(team, SinglePieceInfos[1], Boolean.valueOf(SinglePieceInfos[2]));
             piecePosition.put(position, piece);
         }
         return piecePosition;

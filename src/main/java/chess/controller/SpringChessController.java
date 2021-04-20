@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.service.SpringChessService;
-import chess.webdto.ChessGameDTO;
+import chess.webdto.ChessGameDto;
 import chess.webdto.MoveRequestDto;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +21,17 @@ public class SpringChessController {
     }
 
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ChessGameDTO startNewGame() {
+    public ChessGameDto startNewGame() {
         return springChessService.startNewGame();
     }
 
     @GetMapping(value = "/previous", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ChessGameDTO loadPrevGame() {
+    public ChessGameDto loadPrevGame() {
         return springChessService.loadPreviousGame();
     }
 
     @PutMapping(path = "/move")
-    public ChessGameDTO move(@RequestBody MoveRequestDto moveRequestDTO) {
+    public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDTO) {
         final String start = moveRequestDTO.getStart();
         final String destination = moveRequestDTO.getDestination();
         return springChessService.move(start, destination);

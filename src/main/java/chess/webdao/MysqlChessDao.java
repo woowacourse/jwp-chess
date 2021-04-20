@@ -8,18 +8,14 @@ import chess.domain.team.PiecePositions;
 import chess.domain.team.Score;
 import chess.domain.team.Team;
 import chess.webdto.ChessGameTableDto;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 import static chess.webdto.TeamDto.BLACK_TEAM;
 import static chess.webdto.TeamDto.WHITE_TEAM;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 //todo: CRUD 위주로 진행해야함
 @Repository
@@ -49,7 +45,7 @@ public class MysqlChessDao implements ChessDao{
 
     private void createTeamInfo(final String team, final Map<Position, Piece> teamPiecePosition) {
         final String query = "INSERT INTO team_info (team, piece_info) VALUES (?, ?)";
-        this.jdbcTemplate.update(query, team, PiecePositionDAOConverter.asDAO(teamPiecePosition));
+        this.jdbcTemplate.update(query, team, PiecePositionDaoConverter.asDAO(teamPiecePosition));
     }
 
     public ChessGame readChessGame() {
@@ -66,7 +62,7 @@ public class MysqlChessDao implements ChessDao{
 
     private Team generateTeam(final String teamPieceInfo, final String team) {
         Map<Position, Piece> piecePosition;
-        piecePosition = PiecePositionDAOConverter.asPiecePosition(teamPieceInfo, team);
+        piecePosition = PiecePositionDaoConverter.asPiecePosition(teamPieceInfo, team);
         final PiecePositions piecePositionsByTeam = new PiecePositions(piecePosition);
         return new Team(piecePositionsByTeam, new CapturedPieces(), new Score());
     }
@@ -94,7 +90,7 @@ public class MysqlChessDao implements ChessDao{
 
     private void updateTeamInfo(final Map<Position, Piece> teamPiecePosition, final String team) {
         final String query = "UPDATE team_info SET piece_info = (?) WHERE team = (?)";
-        this.jdbcTemplate.update(query, PiecePositionDAOConverter.asDAO(teamPiecePosition), team);
+        this.jdbcTemplate.update(query, PiecePositionDaoConverter.asDAO(teamPiecePosition), team);
     }
 
     public void deleteChessGame() {

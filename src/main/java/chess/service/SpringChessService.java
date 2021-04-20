@@ -5,7 +5,7 @@ import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.webdao.ChessDao;
 import chess.webdao.MysqlChessDao;
-import chess.webdto.ChessGameDTO;
+import chess.webdto.ChessGameDto;
 import chess.webdto.PieceDto;
 import org.springframework.stereotype.Service;
 
@@ -23,30 +23,30 @@ public class SpringChessService {
         this.chessDao = chessDao;
     }
 
-    public ChessGameDTO startNewGame() {
+    public ChessGameDto startNewGame() {
         chessDao.deleteChessGame();
         ChessGame chessGame = chessDao.createChessGame();
 
-        return generateChessGameDTO(chessGame);
+        return generateChessGameDto(chessGame);
     }
 
-    public ChessGameDTO loadPreviousGame() {
+    public ChessGameDto loadPreviousGame() {
         final ChessGame chessGame = chessDao.readChessGame();
 
-        return generateChessGameDTO(chessGame);
+        return generateChessGameDto(chessGame);
     }
 
-    public ChessGameDTO move(final String start, final String destination) {
+    public ChessGameDto move(final String start, final String destination) {
         final ChessGame chessGame = chessDao.readChessGame();
 
         chessGame.move(Position.of(start), Position.of(destination));
         chessDao.updateChessGame(chessGame, currentTurnTeamToString(chessGame));
 
-        return generateChessGameDTO(chessGame);
+        return generateChessGameDto(chessGame);
     }
 
 
-    private ChessGameDTO generateChessGameDTO(final ChessGame chessGame) {
+    private ChessGameDto generateChessGameDto(final ChessGame chessGame) {
         final Map<String, Map<String, String>> piecePositionToString
                 = generatePiecePositionToString(chessGame);
         final String currentTurnTeam = currentTurnTeamToString(chessGame);
@@ -57,7 +57,7 @@ public class SpringChessService {
 
         final boolean isPlaying = chessGame.isPlaying();
 
-        return new ChessGameDTO(piecePositionToString, currentTurnTeam, teamScore, isPlaying);
+        return new ChessGameDto(piecePositionToString, currentTurnTeam, teamScore, isPlaying);
     }
 
     private Map<String, Map<String, String>> generatePiecePositionToString(final ChessGame chessGame) {

@@ -41,10 +41,10 @@ public class SpringChessService {
         return userDao.usersInRoom(id);
     }
 
-    public String create(RoomDto roomDto) {
+    public RoomIdDto create(RoomDto roomDto) {
         userDao.insert(roomDto.getWhite());
         userDao.insert(roomDto.getBlack());
-        return roomDao.insert(roomDto);
+        return new RoomIdDto(roomDao.insert(roomDto));
     }
 
     public GameStatusDto gameStatus(String id) {

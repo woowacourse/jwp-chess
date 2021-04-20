@@ -4,9 +4,7 @@ import chess.dto.web.*;
 import chess.service.SpringChessService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/room")
@@ -19,10 +17,8 @@ public class SpringChessApiController {
     }
 
     @PostMapping
-    private Map<String, String> createRoom(@RequestBody RoomDto roomDto) {
-        Map<String, String> result = new HashMap<>();
-        result.put("roomId", springChessService.create(roomDto));
-        return result;
+    private RoomIdDto createRoom(@RequestBody RoomDto roomDto) {
+        return springChessService.create(roomDto);
     }
 
     @GetMapping("{id}/statistics")

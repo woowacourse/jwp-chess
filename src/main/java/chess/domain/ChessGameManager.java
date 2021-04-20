@@ -11,6 +11,9 @@ import chess.domain.state.*;
 import chess.domain.statistics.ChessGameStatistics;
 import chess.domain.statistics.MatchResult;
 import chess.exception.DomainException;
+import chess.exception.InvalidStateException;
+import chess.exception.InvalidTurnException;
+import chess.exception.NullObjectSelectionException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -61,7 +64,7 @@ public class ChessGameManager {
     public void move(Position from, Position to) {
         validateProperPieceAtFromPosition(from);
         if (this.state.isNotRunning()) {
-            throw new DomainException("이동 명령을 수행할 수 없습니다. - 진행중인 게임이 없습니다.");
+            throw new InvalidStateException("이동 명령을 수행할 수 없습니다. - 진행중인 게임이 없습니다.");
         }
 
         MoveResult moveResult = chessBoard.move(chessBoard.createMoveRoute(from, to));
@@ -80,13 +83,13 @@ public class ChessGameManager {
 
     private void validateHasPieceAtFromPosition(Position from) {
         if (!this.chessBoard.hasPiece(from)) {
-            throw new DomainException("해당 위치에는 말이 없습니다.");
+            throw new NullObjectSelectionException("해당 위치에는 말이 없습니다.");
         }
     }
 
     private void validateTurn(Position from) {
         if (!chessBoard.getPieceByPosition(from).isSameColor(this.currentTurnColor)) {
-            throw new DomainException("현재 움직일 수 있는 진영의 기물이 아닙니다.");
+            throw new InvalidTurnException("현재 움직일 수 있는 진영의 기물이 아닙니다.");
         }
     }
 
@@ -120,7 +123,7 @@ public class ChessGameManager {
                 .filter(ColoredPieces::isKingAlive)
                 .map(ColoredPieces::getColor)
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("시스템 에러 - King이 살아있는 진영을 찾을 수 없습니다."));
+                .orElseThrow(() -> new DomainException("시스템 에러 - King이 살아있는 진영을 찾을 수 없습니다."));
     }
 
     public ChessBoard getBoard() {

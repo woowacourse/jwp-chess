@@ -27,27 +27,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import spark.utils.StringUtils;
 
 @Controller
-public class SpringWebController {
+public class ChessController {
     public static final String REDIRECT = "redirect:";
     private final ChessService chessService;
     private final UserService userService;
 
-    public SpringWebController(ChessService chessService, UserService userService) {
+    public ChessController(ChessService chessService, UserService userService) {
         this.chessService = chessService;
         this.userService = userService;
     }
 
-    @GetMapping("/")
-    private String renderLogin() {
-        return "login-spring";
-    }
-
     @GetMapping("/games")
-    private String renderGames(HttpServletResponse response, Model model,
-        @CookieValue("userId") String cookie) {
+    private String renderGames(Model model, @CookieValue("userId") String cookie) {
         Optional<Integer> currentUserId = checkLogin(cookie);
         return currentUserId.map(userId -> games(model, userId))
-            .orElseGet(() -> logoutAndRedirect(response));
+            .orElse(REDIRECT + "/logout");
     }
 
     private String games(Model model, int userId) {
@@ -67,7 +61,7 @@ public class SpringWebController {
         return currentUserId
             .map(id -> eachGame(model, gameId,
                 getErrorMessage(response, gameId, errorMessageCookie)))
-            .orElseGet(() -> logoutAndRedirect(response));
+            .orElse(REDIRECT + "/logout");
     }
 
     private String eachGame(Model model, int currentGameId, String error) {
@@ -84,14 +78,6 @@ public class SpringWebController {
         return errorMessageCookie;
     }
 
-    @PostMapping("/login")
-    private String login(@RequestParam("userName") String userName, HttpServletResponse response) {
-        int userId = userService.addUserIfNotExist(userName);
-        Cookie cookie = new Cookie("userId", encodeCookie(String.valueOf(userId)));
-        response.addCookie(cookie);
-        return REDIRECT +"/games";
-    }
-
     private Optional<Integer> checkLogin(String cookie) {
         String userIdStringFormat = decodeCookie(cookie);
         if (userIdStringFormat == null) {
@@ -104,19 +90,11 @@ public class SpringWebController {
         return Optional.empty();
     }
 
-    @PostMapping("/logout")
-    private String logoutAndRedirect(HttpServletResponse response) {
-        Cookie cookie = new Cookie("user", null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-        return REDIRECT + "/";
-    }
-
     @PostMapping("/start")
-    private String start(@CookieValue("userId") String userCookie, HttpServletResponse response) {
+    private String start(@CookieValue("userId") String userCookie) {
         Optional<Integer> currentUserId = checkLogin(userCookie);
         return currentUserId.map(this::startGame)
-            .orElseGet(() -> logoutAndRedirect(response));
+            .orElse(REDIRECT + "/logout");
     }
 
     private String startGame(int currentUserId) {

@@ -7,7 +7,7 @@ const blackCount = document.querySelector(`#blackScore strong`);
 const winner = document.querySelector(`#winner`);
 const basePath = 'http://localhost:8080';
 
-end.addEventListener("click", (event) => {
+end.addEventListener("click", async (event) => {
     const item = event.target;
     if (item.classList.contains("game_over")) {
         alert("이미 게임끝냤슈!");
@@ -32,10 +32,14 @@ end.addEventListener("click", (event) => {
             body: JSON.stringify(data)
         };
 
-        fetch(basePath + "/api/games", option)
-        .then(async () => {
-            await loadGame();
-        });
+        const response = fetch(basePath + "/api/games", option);
+        if (response.status === 400 || response.status === 500) {
+            const body = await response.json();
+            alert(body);
+            return;
+        }
+
+        await loadGame();
         alert("이 게임 끝났습니다.");
     }
 });
@@ -50,22 +54,22 @@ const loadGame = async () => {
     rawBoard();
     const response = await fetch(
         basePath + "/api/games/" + localStorage.getItem("name"))
-    .then(res => res.json());
+    const body = await response.json();
 
-    if (response.statusCode === 400 || response.statusCode === 500) {
-        alert(response.message);
+    if (response.status === 400 || response.status === 500) {
+        alert(body.message);
         return;
     }
-    reRangeBoard(response.body);
+    reRangeBoard(body);
 
-    if (response.body.gameOver) {
+    if (body.gameOver) {
         let winnerNode = winner.querySelector("strong");
-        if (response.body.winner === "NOTHING") {
+        if (body.winner === "NOTHING") {
             winnerNode.innerText = "무승부";
             alert("무승부!");
         } else {
-            winnerNode.innerText = response.body.winner;
-            alert("승리자는" + response.body.winner);
+            winnerNode.innerText = body.winner;
+            alert("승리자는" + body.winner);
         }
         winner.style.visibility = "visible";
     }
@@ -170,10 +174,10 @@ async function movePiece(sourcePosition, targetPosition) {
     const response = await fetch(
         basePath + "/api/games/" + localStorage.getItem("name") + "/pieces",
         option)
-    .then(res => res.json());
 
-    if (response.statusCode === 400 || response.statusCode === 500) {
-        alert(response.message);
+    if (response.status === 400 || response.status === 500) {
+        const body = await response.json();
+        alert(body.message);
         return;
     }
 

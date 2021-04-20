@@ -21,10 +21,10 @@ mainStart.addEventListener("click", async () => {
     };
 
     const response = await fetch(basePath + "/api/games", option)
-    .then(res => res.json());
 
-    if (response.statusCode === 400 || response.statusCode === 500) {
-        alert(response.message);
+    if (response.status === 400 || response.status === 500) {
+        const body = await response.json();
+        alert(body.message);
         return;
     }
     localStorage.setItem("name", result)
@@ -37,11 +37,11 @@ mainLoad.addEventListener("click", async () => {
         return;
     }
 
-    const response = await fetch(basePath + "/api/games/" + result)
-    .then(res => res.json());
+    const response = await fetch(basePath + "/api/games/" + result);
 
-    if (response.statusCode === 400 || response.statusCode === 500) {
-        alert(response.message);
+    if (response.status === 400 || response.status === 500) {
+        const body = await response.json();
+        alert(body.message);
         return;
     }
     localStorage.setItem("name", result)

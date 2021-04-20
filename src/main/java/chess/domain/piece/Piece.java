@@ -29,6 +29,13 @@ public abstract class Piece {
         return whiteUnicode;
     }
 
+    public double getScoreIfSameTeam(Team team) {
+        if (this.team.equals(team)) {
+            return score;
+        }
+        return 0;
+    }
+
     public boolean isKing() {
         return false;
     }

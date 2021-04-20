@@ -1,7 +1,5 @@
 package chess.webdto;
 
-import java.util.Map;
-
 public class ChessGameDto {
     private final TeamPiecesDto piecePositionByTeam;
     private final String currentTurnTeam;

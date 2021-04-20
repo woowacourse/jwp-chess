@@ -6,7 +6,7 @@ public class TeamPiecesDto {
     private Map<String, String> white;
     private Map<String, String> black;
 
-    public TeamPiecesDto(Map<String, String> white, Map<String, String> black){
+    public TeamPiecesDto(Map<String, String> white, Map<String, String> black) {
         this.white = white;
         this.black = black;
     }

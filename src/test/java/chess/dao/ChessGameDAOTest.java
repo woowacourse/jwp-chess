@@ -2,7 +2,6 @@ package chess.dao;
 
 import chess.domain.game.ChessGameEntity;
 import chess.dto.ChessGameStatusDto;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,12 +25,6 @@ class ChessGameDAOTest {
     @BeforeEach
     void setUp() {
         chessGameDAO = new ChessGameDAO(jdbcTemplate);
-    }
-
-    @AfterEach
-    void tearDown() {
-        jdbcTemplate.execute("DELETE FROM piece");
-        jdbcTemplate.execute("DELETE FROM chess_game");
     }
 
     @DisplayName("상태가 BlackTurn 또는 WhiteTurn인 체스 게임을 찾는다")

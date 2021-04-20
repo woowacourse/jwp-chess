@@ -4,12 +4,9 @@ import chess.dao.ChessGameDAO;
 import chess.dao.PieceDAO;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
-import chess.dto.ChessGameDto;
 import chess.dto.ChessGameResponseDto;
 import chess.dto.ChessGameStatusDto;
 import chess.dto.ScoreDto;
-import chess.exception.NotFoundPlayingChessGameException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +18,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ActiveProfiles("test")
@@ -40,12 +36,6 @@ class ChessGameServiceTest {
         pieceDAO = new PieceDAO(jdbcTemplate);
         chessGameDAO = new ChessGameDAO(jdbcTemplate);
         chessGameService = new ChessGameService(chessGameDAO, pieceDAO);
-    }
-
-    @AfterEach
-    void tearDown() {
-        jdbcTemplate.execute("DELETE FROM piece");
-        jdbcTemplate.execute("DELETE FROM chess_game");
     }
 
     @DisplayName("새 체스 게임을 생성하는 기능을 테스트한다")

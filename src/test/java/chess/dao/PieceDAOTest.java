@@ -4,7 +4,6 @@ import chess.domain.board.Board;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,12 +33,6 @@ class PieceDAOTest {
     void setUp() {
         pieceDAO = new PieceDAO(jdbcTemplate);
         chessGameDAO = new ChessGameDAO(jdbcTemplate);
-    }
-
-    @AfterEach
-    void tearDown() {
-        jdbcTemplate.execute("DELETE FROM piece");
-        jdbcTemplate.execute("DELETE FROM chess_game");
     }
 
     @DisplayName("piece들을 저장하고 조회하는 기능을 테스트한다")

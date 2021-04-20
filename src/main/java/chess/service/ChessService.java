@@ -72,6 +72,6 @@ public class ChessService {
     }
 
     private Board convertBoardDtoToBoard(BoardDto boardDto) {
-        return BoardFactory.loadSavedBoardInfo(boardDto.getBoardInfo());
+        return boardDto.toBoard();
     }
 }

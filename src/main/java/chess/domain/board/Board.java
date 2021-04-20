@@ -70,7 +70,7 @@ public class Board {
         if (targetMovablePositions.contains(destination)) {
             return;
         }
-        throw new UnsupportedOperationException("이동 불가능한 좌표입니다.");
+        throw new IllegalArgumentException("이동 불가능한 좌표입니다.");
     }
 
     public double calculateScore(Team team) {

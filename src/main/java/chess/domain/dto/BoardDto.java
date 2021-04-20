@@ -3,8 +3,10 @@ package chess.domain.dto;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceFactory;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -46,5 +48,15 @@ public class BoardDto {
 
     public Map<String, String> getBoardInfo() {
         return boardInfo;
+    }
+
+    public Board toBoard() {
+        Map<Position, Piece> board = new LinkedHashMap<>();
+        for (Map.Entry<String, String> entry : boardInfo.entrySet()) {
+            String position = entry.getKey();
+            String uniCode = entry.getValue();
+            board.put(Position.convertStringToPosition(position), PieceFactory.createPieceByUniCode(uniCode));
+        }
+        return new Board(board);
     }
 }

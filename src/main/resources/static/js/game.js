@@ -27,12 +27,13 @@ function onClickSquare(e) {
 function move(source, target, turn) {
     $.ajax({
         type: "POST",
-        url: "/chess/game/" + gameId() + "/move",
-        data: {
+        url: "/chess/" + gameId() + "/move",
+        data: JSON.stringify({
             "source": source,
             "target": target,
             "turn": turn
-        },
+        }),
+        contentType: "application/json",
         dataType: "json",
         success: update,
         error: alertError,
@@ -43,7 +44,8 @@ function move(source, target, turn) {
 function initBoard() {
     $.ajax({
         type: "GET",
-        url: "/chess/game/" + gameId() + "/board",
+        url: "/chess/" + gameId() + "/board",
+        contentType: "application/json",
         dataType: "json",
         success: update,
         error: alertError,

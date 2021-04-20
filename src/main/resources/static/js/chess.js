@@ -15,7 +15,7 @@ $(".grid-item").click(function (event) {
 
 function turnCheck(clickedSection) {
     $.ajax({
-        url: "/myTurn",
+        url: "/turn",
         data: JSON.stringify({
             roomId: roomId,
             clickedSection: clickedSection
@@ -31,14 +31,14 @@ function turnCheck(clickedSection) {
             moveOrCancle(clickedSection);
         }
     }).error(function (response) {
-        location.href = "/errorPage/" + response.status;
+        location.href = "/error-page/" + response.status;
     });
 }
 
 function getMovablePosition(clickedSection, turn) {
     if (turn) {
         $.ajax({
-            url: "/movablePositions",
+            url: "/movable-positions",
             data: JSON.stringify({
                 roomId: roomId,
                 clickedSection: clickedSection
@@ -52,7 +52,7 @@ function getMovablePosition(clickedSection, turn) {
             startPoint = clickedSection;
             startPointCheck = true;
         }).error(function (response) {
-            location.href = "/errorPage/" + response.status;
+            location.href = "/error-page/" + response.status;
         });
     }
 }
@@ -99,7 +99,7 @@ function moveWhenCanGo(clickedSection) {
 
 function move() {
     $.ajax({
-        url: "/move",
+        url: "/piece/move",
         data: JSON.stringify({
             roomId: roomId,
             startPoint: startPoint,
@@ -121,7 +121,7 @@ function move() {
         checkEndGame(currentStatus);
         initialize();
     }).error(function (response) {
-        location.href = "/errorPage/" + response.status;
+        location.href = "/error-page/" + response.status;
     });
 }
 
@@ -134,9 +134,9 @@ function updateStatus(currentStatus) {
     whiteScore.innerText = currentStatus.whiteScore;
     turn.removeChild(turn.children[0]);
     if (currentStatus.turn === "BLACK") {
-        turn.insertAdjacentHTML("beforeend", "<img src=\"../img/black_turn.png\">");
+        turn.insertAdjacentHTML("beforeend", "<img src=\"../../img/black_turn.png\">");
     } else {
-        turn.insertAdjacentHTML("beforeend", "<img src=\"../img/white_turn.png\">");
+        turn.insertAdjacentHTML("beforeend", "<img src=\"../../img/white_turn.png\">");
     }
 }
 
@@ -149,7 +149,7 @@ function checkEndGame(currentStatus) {
 
 function gameInitialize(winner, loser) {
     $.ajax({
-        url: "/initialize",
+        url: "/game/end",
         data: JSON.stringify({
             roomId: roomId,
             winner: winner,
@@ -163,7 +163,7 @@ function gameInitialize(winner, loser) {
             window.location.href = "/";
         }
     }).error(function (response) {
-        location.href = "/errorPage/" + response.status;
+        location.href = "/error-page/" + response.status;
     });
 }
 

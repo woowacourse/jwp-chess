@@ -41,7 +41,7 @@ public final class SpringChessGameController {
         return "index";
     }
 
-    @GetMapping("/enter/{id}")
+    @GetMapping("/room/{id}")
     public String enterRoom(@PathVariable final String id, final Model model) {
         model.addAttribute("number", id);
         model.addAttribute("button", "새로운게임");
@@ -50,7 +50,7 @@ public final class SpringChessGameController {
         return "chess";
     }
 
-    @GetMapping(path = "/start/{id}")
+    @GetMapping(path = "/room/{id}/play")
     public String startGame(@PathVariable final String id, final Model model) {
         roomService.addNewRoom(id);
         logService.initializeByRoomId(id);
@@ -59,7 +59,7 @@ public final class SpringChessGameController {
         return "chess";
     }
 
-    @GetMapping(path = "/continue/{id}")
+    @GetMapping(path = "/room/{id}/continue")
     public String continueGame(@PathVariable final String id, final Model model) {
         ChessGame chessGame = roomService.initializeChessGame(id);
         logService.continueGame(id, chessGame);
@@ -80,7 +80,7 @@ public final class SpringChessGameController {
         model.addAttribute("users", users);
     }
 
-    @GetMapping(path = "/errorPage/{code}")
+    @GetMapping(path = "/error-page/{code}")
     public String errorPage(@PathVariable final String code) {
         return "/error/" + code + ".html";
     }

@@ -24,7 +24,7 @@ function newGame(name) {
     }
 
     $.ajax({
-        url: "/createNewGame",
+        url: "/new-game",
         data: JSON.stringify(data),
         method: "POST",
         contentType: "application/json",
@@ -34,6 +34,6 @@ function newGame(name) {
             location.reload();
         }
     }).error(function (response) {
-        location.href = "/errorPage/" + response.status;
+        location.href = "/error-page/" + response.status;
     });
 }

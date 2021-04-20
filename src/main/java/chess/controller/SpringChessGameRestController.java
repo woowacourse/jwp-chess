@@ -34,27 +34,27 @@ public class SpringChessGameRestController {
         this.logService = logService;
     }
 
-    @PostMapping(path = "/createNewGame", consumes = "application/json")
+    @PostMapping(path = "/new-game")
     public ResponseEntity<Boolean> createNewGame(@RequestBody final RoomNameDTO roomNameDTO) {
         roomService.createRoom(roomNameDTO.getName());
         return ResponseEntity.status(OK).body(true);
     }
 
-    @PostMapping(path = "/myTurn")
+    @PostMapping(path = "/turn")
     public ResponseEntity<Boolean> checkCurrentTurn(@RequestBody final SectionDTO sectionDTO) {
         ChessGame chessGame = roomService.loadChessGameById(sectionDTO.getRoomId());
         return ResponseEntity.status(OK)
                 .body(chessGame.checkRightTurn(sectionDTO.getClickedSection()));
     }
 
-    @PostMapping("/movablePositions")
+    @PostMapping("/movable-positions")
     public ResponseEntity<List<String>> findMovablePosition(@RequestBody final SectionDTO sectionDTO) {
         ChessGame chessGame = roomService.loadChessGameById(sectionDTO.getRoomId());
         return ResponseEntity.status(OK)
                 .body(chessGame.movablePositionsByStartPoint(sectionDTO.getClickedSection()));
     }
 
-    @PostMapping("/move")
+    @PostMapping("/piece/move")
     public ResponseEntity<StatusDTO> movePiece(@RequestBody final MoveDTO moveDTO) {
         String roomId = moveDTO.getRoomId();
         String startPoint = moveDTO.getStartPoint();
@@ -66,7 +66,7 @@ public class SpringChessGameRestController {
                 .body(new StatusDTO(chessGame, users));
     }
 
-    @PostMapping(path = "/initialize")
+    @PostMapping(path = "/game/end")
     public ResponseEntity<Boolean> initialize(@RequestBody final ResultDTO resultDTO) {
         String roomId = resultDTO.getRoomId();
         String winner = resultDTO.getWinner();

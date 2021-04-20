@@ -8,13 +8,20 @@ import java.util.function.Predicate;
 
 public class FirstTurnBlackPawnMoveCondition extends MoveCondition {
 
+    private static final int BLACK_PAWN_INITIAL_ROW = 6;
+
     @Override
     public boolean isSatisfyBy(final Board board, final Piece piece, final Position target) {
         return !piece.isSamePosition(target) &&
+            isInitialPosition(piece) &&
             isRightMovePath(piece, target) &&
             isNotExistPieceOnPath(board, piece, target) &&
             isNotSameColorOnTarget(board, piece, target) &&
             isNotChessPieceOutOfBoard(board, target);
+    }
+
+    private boolean isInitialPosition(final Piece piece) {
+        return piece.getRow() == BLACK_PAWN_INITIAL_ROW;
     }
 
     private boolean isRightMovePath(final Piece piece, final Position target) {

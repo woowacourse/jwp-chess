@@ -5,17 +5,15 @@ import java.sql.SQLException;
 
 public interface RoomRepository {
 
-    long insert(Room room) throws SQLException;
+    long insert(Room room);
 
-    void update(Room room) throws SQLException;
+    void update(Room room);
 
-    Room findRoomByRoomName(String name) throws SQLException;
+    Room findRoomByName(String name);
 
-    boolean isExistRoomName(String name) throws SQLException;
+    boolean isExistName(String name);
 
-    Room findRoomById(long roomId) throws SQLException;
+    Room findRoomById(long roomId);
 
-    void deleteAll() throws SQLException;
-
-    int count() throws SQLException;
+    void deleteAll();
 }

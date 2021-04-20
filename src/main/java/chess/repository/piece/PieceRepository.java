@@ -6,17 +6,17 @@ import java.util.List;
 
 public interface PieceRepository {
 
-    long insert(long roomId, Piece piece) throws SQLException;
+    long insert(long roomId, Piece piece);
 
-    void update(Piece piece) throws SQLException;
+    void update(Piece piece);
 
-    void deleteAll() throws SQLException;
+    void deleteAll();
 
-    int count() throws SQLException;
+    int count();
 
-    Piece findPieceById(long pieceId) throws SQLException;
+    Piece findPieceById(long pieceId);
 
-    List<Piece> findPiecesByRoomId(long roomId) throws SQLException;
+    List<Piece> findPiecesByRoomId(long roomId);
 
-    void deletePieceById(long id) throws SQLException;
+    void deletePieceById(long id);
 }

@@ -94,7 +94,7 @@ public class ChessService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public MoveResponseDto findPiecesByRoomName(String roomName) throws SQLException {
         Room room = findRoomByRoomName(roomName);
 
@@ -106,7 +106,7 @@ public class ChessService {
     }
 
     public void createRoom(String roomName) throws SQLException {
-        if (!roomRepository.isExistRoomName(roomName)) {
+        if (!roomRepository.isExistName(roomName)) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 방입니다. 다른 이름을 사용해주세요.");
         }
 
@@ -118,10 +118,10 @@ public class ChessService {
     }
 
     private Room findRoomByRoomName(String roomName) throws SQLException {
-        if (roomRepository.isExistRoomName(roomName)) {
+        if (roomRepository.isExistName(roomName)) {
             throw new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다.");
         }
-        Room room = roomRepository.findRoomByRoomName(roomName);
+        Room room = roomRepository.findRoomByName(roomName);
         List<Piece> pieces = pieceRepository.findPiecesByRoomId(room.getId());
         return new Room(
                 room.getId(),

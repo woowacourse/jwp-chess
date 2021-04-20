@@ -35,7 +35,7 @@ class JdbcPieceRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Room room = new Room(1, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
+        Room room = new Room(1, "piece테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
         roomId = roomRepository.insert(room);
         repository.deleteAll();
     }

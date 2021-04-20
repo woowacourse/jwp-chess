@@ -7,7 +7,6 @@ import chess.domain.game.Room;
 import chess.domain.gamestate.running.Ready;
 import chess.domain.team.Team;
 import chess.utils.BoardUtil;
-import java.sql.SQLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ class JdbcRoomRepositoryTest {
 
         // when
         long roomId = repository.insert(room);
-        Room foundRoom = repository.findRoomByRoomName(room.getName());
+        Room foundRoom = repository.findRoomByName(room.getName());
 
         // then
         assertAll(
@@ -88,7 +87,7 @@ class JdbcRoomRepositoryTest {
         long roomId = repository.insert(room);
 
         // when
-        Room foundRoom = repository.findRoomByRoomName(room.getName());
+        Room foundRoom = repository.findRoomByName(room.getName());
 
         // then
         assertAll(
@@ -105,6 +104,6 @@ class JdbcRoomRepositoryTest {
         long roomId = repository.insert(new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
 
         // then
-        assertThat(repository.isExistRoomName("테스트")).isFalse();
+        assertThat(repository.isExistName("테스트")).isFalse();
     }
 }

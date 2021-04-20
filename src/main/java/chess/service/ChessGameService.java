@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChessGameService {
-    private GameDao gameDao;
-    private PieceDao pieceDao;
+    private final GameDao gameDao;
+    private final PieceDao pieceDao;
 
     public ChessGameService(GameDao gameDao, PieceDao pieceDao) {
         this.gameDao = gameDao;

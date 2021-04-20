@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 @RestController
 public class SpringWebChessController {
-    private ChessGameService chessGameService;
+    private final ChessGameService chessGameService;
 
     public SpringWebChessController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;

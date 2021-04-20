@@ -68,6 +68,24 @@ public class Round {
             changeToEnd();
         }
     }
+    
+    public void changeTurn(final String currentTurn) {
+        if ("white".equals(currentTurn)) {
+            State nextWhiteTurn = whitePlayer.getState().toRunningTurn();
+            State nextBlackTurn = blackPlayer.getState().toFinishedTurn();
+            changeState(nextWhiteTurn, nextBlackTurn);
+        }
+        if ("black".equals(currentTurn)) {
+            State nextWhiteTurn = whitePlayer.getState().toFinishedTurn();
+            State nextBlackTurn = blackPlayer.getState().toRunningTurn();
+            changeState(nextWhiteTurn, nextBlackTurn);
+        }
+    }
+
+    private void changeState(final State nextWhiteTurn, final State nextBlackTurn) {
+        whitePlayer.changeState(nextWhiteTurn);
+        blackPlayer.changeState(nextBlackTurn);
+    }
 
     public void changeToEnd() {
         this.command = command.end();
@@ -77,10 +95,8 @@ public class Round {
         board = ChessBoardFactory.initializeBoard();
         Pieces whitePieces = whitePlayer.getPieces();
         Pieces blackPieces = blackPlayer.getPieces();
-
         whitePieces.getPieces().forEach(piece -> board.put(piece.getPosition(), piece));
         blackPieces.getPieces().forEach(piece -> board.put(piece.getPosition(), piece));
-
         return board;
     }
 

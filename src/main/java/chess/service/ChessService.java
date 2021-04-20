@@ -34,8 +34,8 @@ public class ChessService {
     private Round round;
 
     public ChessService(final ChessRepository chessRepository) {
-        this.round = makeRound();
         this.chessRepository = chessRepository;
+        this.round = makeRound();
     }
 
     public void remove() {
@@ -113,34 +113,11 @@ public class ChessService {
     }
 
     public void updateRound(final ChessBoardDto chessBoard, final String currentTurn) {
-        changeRound(chessBoard);
-        changeRoundState(currentTurn);
-    }
-
-    private void changeRound(final ChessBoardDto chessBoard) {
         PiecesDto piecesDto = piecesDto(chessBoard);
         round = new Round(StateFactory.initialization(new Pieces(piecesDto.getWhitePieces())),
                 StateFactory.initialization(new Pieces(piecesDto.getBlackPieces())),
                 CommandFactory.initialCommand("start"));
-    }
-
-    private void changeRoundState(final String currentTurn) {
-        if ("white".equals(currentTurn)) {
-            Player white = round.getWhitePlayer();
-            Player black = round.getBlackPlayer();
-            State nextWhiteTurn = white.getState().toRunningTurn();
-            State nextBlackTurn = black.getState().toFinishedTurn();
-            white.changeState(nextWhiteTurn);
-            black.changeState(nextBlackTurn);
-        }
-        if ("black".equals(currentTurn)) {
-            Player white = round.getWhitePlayer();
-            Player black = round.getBlackPlayer();
-            State nextWhiteTurn = white.getState().toFinishedTurn();
-            State nextBlackTurn = black.getState().toRunningTurn();
-            white.changeState(nextWhiteTurn);
-            black.changeState(nextBlackTurn);
-        }
+        round.changeTurn(currentTurn);
     }
 
     public PlayerDto playerDto() {
@@ -168,13 +145,9 @@ public class ChessService {
     public MoveResponseDto move(final MoveRequestDto moveRequestDto) {
         Queue<String> commands =
                 new ArrayDeque<>(Arrays.asList("move", moveRequestDto.getSource(), moveRequestDto.getTarget()));
-        executeRound(commands);
+        round.execute(commands);
         movePiece(moveRequestDto);
         return new MoveResponseDto(true);
-    }
-
-    public void executeRound(final Queue<String> commands) {
-        round.execute(commands);
     }
 
     public void movePiece(final MoveRequestDto moveRequestDto) {

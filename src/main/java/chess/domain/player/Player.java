@@ -39,6 +39,4 @@ public abstract class Player {
     public final Pieces getPieces() {
         return state.pieces();
     }
-
-    public abstract String getName();
 }

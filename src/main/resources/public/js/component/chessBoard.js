@@ -48,18 +48,7 @@ async function move(sourcePosition, targetPosition) {
     try {
         const res = await movePiece(store.pieces.flat(), store.gridDto,
             sourcePosition, targetPosition);
-        const data = res.data;
-        console.log(data)
-        console.log(data.code)
-        console.log(data.message)
-        if (data.code === 401) {
-            alert(data.message);
-            return;
-        }
-        if (data.code !== 204) {
-            alert(data.message);
-            return;
-        }
+
         const source = document.getElementById(sourcePosition);
         const target = document.getElementById(targetPosition);
         const piece = source.getElementsByTagName("img")[0];
@@ -89,8 +78,8 @@ async function move(sourcePosition, targetPosition) {
         store.gridDto.isBlackTurn = !store.gridDto.isBlackTurn;
 
         changeTurn();
-    } catch (e) {
-        console.log(e);
+    } catch (err) {
+        alert(err.response.data.message)
     }
 }
 

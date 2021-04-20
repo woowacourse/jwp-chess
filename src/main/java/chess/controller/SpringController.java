@@ -74,6 +74,7 @@ public class SpringController {
 
     @ExceptionHandler({ChessException.class})
     public ResponseEntity<Object> handleAll(ChessException e) {
-        return new ResponseEntity<>(new ResponseDto(e.getCode(), e.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto(e.getCode(), e.getMessage()),
+            HttpStatus.BAD_REQUEST);
     }
 }

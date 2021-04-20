@@ -60,11 +60,10 @@ function loadPrevGame() {
         .then(data => {
             if (data.status === 500) {
                 alert("저장된 게임이 없어요.")
+                return;
             }
-            if (data.status === 200) {
-                initializeChessBoard(data);
-                checkIsPlaying(data);
-            }
+            initializeChessBoard(data);
+            checkIsPlaying(data);
         })
         .catch(error => {
             console.log(error)

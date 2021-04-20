@@ -89,43 +89,11 @@ public class Round {
         return board;
     }
 
-    public boolean isPlaying() {
-        return !command.isEnd();
-    }
-
-    public double calculateScore() {
-        Player currentPlayer = currentPlayer();
-        return score(currentPlayer.getState().pieces());
-    }
-
-    public String currentPlayerName() {
-        return currentPlayer().getName();
-    }
-
-    private double score(final Pieces pieces) {
-        return pieces.calculateScore();
-    }
-
-    private Player currentPlayer() {
-        if (blackPlayer.isFinish()) {
-            return blackPlayer;
-        }
-        return whitePlayer;
-    }
-
-    public boolean isStatus() {
-        return command.isStatus();
-    }
-
     public Player getWhitePlayer() {
         return whitePlayer;
     }
 
     public Player getBlackPlayer() {
         return blackPlayer;
-    }
-
-    public Command getCommand() {
-        return command;
     }
 }

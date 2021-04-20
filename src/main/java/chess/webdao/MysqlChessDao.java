@@ -19,7 +19,7 @@ import static chess.webdto.TeamDto.WHITE_TEAM;
 
 //todo: CRUD 위주로 진행해야함
 @Repository
-public class SpringChessGameDao {
+public class MysqlChessDao implements ChessDao{
     private final RowMapper<ChessGameTableDto> actorRowMapper = (resultSet, rowNum) -> {
         ChessGameTableDto chessGameTableDto = new ChessGameTableDto(
                 resultSet.getString("current_turn_team"),
@@ -29,7 +29,7 @@ public class SpringChessGameDao {
     };
     private JdbcTemplate jdbcTemplate;
 
-    public SpringChessGameDao(JdbcTemplate jdbcTemplate) {
+    public MysqlChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

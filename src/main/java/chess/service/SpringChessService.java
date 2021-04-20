@@ -3,7 +3,8 @@ package chess.service;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
-import chess.webdao.SpringChessGameDao;
+import chess.webdao.ChessDao;
+import chess.webdao.MysqlChessDao;
 import chess.webdto.ChessGameDTO;
 import chess.webdto.PieceDto;
 import org.springframework.stereotype.Service;
@@ -16,30 +17,30 @@ import static chess.webdto.TeamDto.WHITE_TEAM;
 
 @Service
 public class SpringChessService {
-    private final SpringChessGameDao springChessGameDao;
+    private final ChessDao chessDao;
 
-    public SpringChessService(SpringChessGameDao springChessGameDao) {
-        this.springChessGameDao = springChessGameDao;
+    public SpringChessService(ChessDao chessDao) {
+        this.chessDao = chessDao;
     }
 
     public ChessGameDTO startNewGame() {
-        springChessGameDao.deleteChessGame();
-        ChessGame chessGame = springChessGameDao.createChessGame();
+        chessDao.deleteChessGame();
+        ChessGame chessGame = chessDao.createChessGame();
 
         return generateChessGameDTO(chessGame);
     }
 
     public ChessGameDTO loadPreviousGame() {
-        final ChessGame chessGame = springChessGameDao.readChessGame();
+        final ChessGame chessGame = chessDao.readChessGame();
 
         return generateChessGameDTO(chessGame);
     }
 
     public ChessGameDTO move(final String start, final String destination) {
-        final ChessGame chessGame = springChessGameDao.readChessGame();
+        final ChessGame chessGame = chessDao.readChessGame();
 
         chessGame.move(Position.of(start), Position.of(destination));
-        springChessGameDao.updateChessGame(chessGame, currentTurnTeamToString(chessGame));
+        chessDao.updateChessGame(chessGame, currentTurnTeamToString(chessGame));
 
         return generateChessGameDTO(chessGame);
     }

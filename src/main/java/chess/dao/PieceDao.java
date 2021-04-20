@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.dao.setting.DBConnection;
-import chess.dto.request.ChessRequestDto;
+import chess.dto.response.ChessResponseDto;
 import chess.dto.request.MoveRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,13 +29,13 @@ public class PieceDao extends DBConnection {
         }
     }
 
-    public List<ChessRequestDto> showAllPieces() {
-        List<ChessRequestDto> pieces = new ArrayList<>();
+    public List<ChessResponseDto> showAllPieces() {
+        List<ChessResponseDto> pieces = new ArrayList<>();
         String query = "SELECT * FROM piece";
 
         try {
             pieces = jdbcTemplate.query(
-                    query, (rs, rowNum) -> new ChessRequestDto(
+                    query, (rs, rowNum) -> new ChessResponseDto(
                             rs.getLong("id"),
                             rs.getString("piece_name"),
                             rs.getString("piece_position"))

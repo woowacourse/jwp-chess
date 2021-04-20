@@ -2,10 +2,10 @@ package chess.repository;
 
 import chess.dao.PieceDao;
 import chess.dao.TurnDao;
-import chess.dto.request.ChessRequestDto;
+import chess.dto.response.ChessResponseDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
-import chess.dto.request.TurnRequestDto;
+import chess.dto.response.TurnResponseDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,11 +31,11 @@ public class ChessRepository {
         turnDao.initializeTurn();
     }
 
-    public List<ChessRequestDto> showAllPieces() {
+    public List<ChessResponseDto> showAllPieces() {
         return pieceDao.showAllPieces();
     }
 
-    public List<TurnRequestDto> showCurrentTurn() {
+    public List<TurnResponseDto> showCurrentTurn() {
         return turnDao.showCurrentTurn();
     }
 

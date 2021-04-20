@@ -1,10 +1,10 @@
-package chess.dto.request;
+package chess.dto.response;
 
-public class TurnRequestDto {
+public class TurnResponseDto {
     private final Long id;
     private final String currentTurn;
 
-    public TurnRequestDto(final Long id, final String currentTurn) {
+    public TurnResponseDto(final Long id, final String currentTurn) {
         this.id = id;
         this.currentTurn = currentTurn;
     }

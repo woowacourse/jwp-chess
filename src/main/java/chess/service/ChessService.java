@@ -11,10 +11,11 @@ import chess.domain.position.Position;
 import chess.domain.state.State;
 import chess.domain.state.StateFactory;
 import chess.dto.*;
-import chess.dto.request.ChessRequestDto;
+import chess.dto.response.ChessResponseDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
-import chess.dto.request.TurnRequestDto;
+import chess.dto.response.ScoreResponseDto;
+import chess.dto.response.TurnResponseDto;
 import chess.dto.response.MoveResponseDto;
 import chess.repository.ChessRepository;
 import org.springframework.stereotype.Service;
@@ -44,8 +45,8 @@ public class ChessService {
 
     public StringChessBoardDto dbChessBoard() {
         Map<String, String> dbChessBoard = new LinkedHashMap<>();
-        List<ChessRequestDto> pieces = chessRepository.showAllPieces();
-        for (ChessRequestDto piece : pieces) {
+        List<ChessResponseDto> pieces = chessRepository.showAllPieces();
+        for (ChessResponseDto piece : pieces) {
             dbChessBoard.put(piece.getPiecePosition(), piece.getPieceName());
         }
         chessRepository.removeAllPieces();
@@ -95,9 +96,9 @@ public class ChessService {
     }
 
     public String currentTurn() {
-        List<TurnRequestDto> turns = chessRepository.showCurrentTurn();
+        List<TurnResponseDto> turns = chessRepository.showCurrentTurn();
         return turns.stream()
-                .map(TurnRequestDto::getCurrentTurn)
+                .map(TurnResponseDto::getCurrentTurn)
                 .collect(Collectors.joining());
     }
 
@@ -126,10 +127,10 @@ public class ChessService {
         return new PlayerDto(whitePlayer, blackPlayer);
     }
 
-    public ScoreDto scoreDto(final PlayerDto playerDto) {
+    public ScoreResponseDto scoreResponseDto(final PlayerDto playerDto) {
         double whiteScore = playerDto.getWhitePlayer().calculateScore();
         double blackScore = playerDto.getBlackPlayer().calculateScore();
-        return new ScoreDto(whiteScore, blackScore);
+        return new ScoreResponseDto(whiteScore, blackScore);
     }
 
     public void changeRoundToEnd(final PlayerDto playerDto) {

@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.*;
+import chess.dto.response.ScoreResponseDto;
 import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,11 +50,11 @@ public class ViewController {
         chessService.changeRoundState(currentTurn);
 
         PlayerDto playerDto = chessService.playerDto();
-        ScoreDto scoreDto = chessService.scoreDto(playerDto);
+        ScoreResponseDto scoreResponseDto = chessService.scoreResponseDto(playerDto);
         chessService.changeRoundToEnd(playerDto);
 
-        model.addAttribute("whiteScore", scoreDto.getWhiteScore());
-        model.addAttribute("blackScore", scoreDto.getBlackScore());
+        model.addAttribute("whiteScore", scoreResponseDto.getWhiteScore());
+        model.addAttribute("blackScore", scoreResponseDto.getBlackScore());
         return "chess";
     }
 

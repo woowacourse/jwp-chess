@@ -2,7 +2,7 @@ package chess.dao;
 
 import chess.dao.setting.DBConnection;
 import chess.dto.request.TurnChangeRequestDto;
-import chess.dto.request.TurnRequestDto;
+import chess.dto.response.TurnResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,13 +29,13 @@ public class TurnDao extends DBConnection {
         }
     }
 
-    public List<TurnRequestDto> showCurrentTurn() {
-        List<TurnRequestDto> turn = new ArrayList<>();
+    public List<TurnResponseDto> showCurrentTurn() {
+        List<TurnResponseDto> turn = new ArrayList<>();
         String query = "SELECT * FROM turn";
 
         try {
             turn = jdbcTemplate.query(
-                    query, (rs, rowNum) -> new TurnRequestDto(
+                    query, (rs, rowNum) -> new TurnResponseDto(
                             rs.getLong("id"),
                             rs.getString("current_turn"))
             );

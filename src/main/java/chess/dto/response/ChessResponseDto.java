@@ -1,11 +1,11 @@
-package chess.dto.request;
+package chess.dto.response;
 
-public class ChessRequestDto {
+public class ChessResponseDto {
     private final Long id;
     private final String pieceName;
     private final String piecePosition;
 
-    public ChessRequestDto(final Long id, final String pieceName, final String piecePosition) {
+    public ChessResponseDto(final Long id, final String pieceName, final String piecePosition) {
         this.id = id;
         this.pieceName = pieceName;
         this.piecePosition = piecePosition;

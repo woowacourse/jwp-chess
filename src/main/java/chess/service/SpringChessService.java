@@ -9,6 +9,7 @@ import chess.dto.PositionDTO;
 import chess.dto.ResponseDTO;
 import chess.dto.RoomValidateDTO;
 import chess.dto.ScoreDTO;
+import chess.exception.NotExistRoomException;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -42,7 +43,7 @@ public class SpringChessService {
     }
 
     public ResponseDTO move(PositionDTO positionDTO, String roomName) {
-        Board board = springBoardDao.findBoard(roomName).orElseThrow(IllegalArgumentException::new);
+        Board board = springBoardDao.findBoard(roomName).orElseThrow(NotExistRoomException::new);
         return moveExecute(positionDTO, board, roomName);
     }
 
@@ -82,7 +83,7 @@ public class SpringChessService {
     }
 
     private Side currentTurn(String roomName) {
-        return springBoardDao.findTurn(roomName).orElseThrow(IllegalArgumentException::new);
+        return springBoardDao.findTurn(roomName).orElseThrow(NotExistRoomException::new);
     }
 
     public List<String> rooms() {
@@ -98,7 +99,7 @@ public class SpringChessService {
     }
 
     public ScoreDTO score(String roomName) {
-        Board board = springBoardDao.findBoard(roomName).orElseThrow(IllegalArgumentException::new);
+        Board board = springBoardDao.findBoard(roomName).orElseThrow(NotExistRoomException::new);
         return new ScoreDTO(String.valueOf(board.score(Side.WHITE)), String.valueOf(board.score(Side.BLACK)));
     }
 }

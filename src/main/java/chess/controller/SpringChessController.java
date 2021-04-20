@@ -4,6 +4,7 @@ import chess.dto.PositionDTO;
 import chess.dto.RoomNameDTO;
 import chess.dto.TurnDTO;
 import chess.exception.ChessException;
+import chess.exception.NotExistRoomException;
 import chess.service.SpringChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,8 +14,6 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class SpringChessController {
-
-    private static final String DB_ERROR_MESSAGE = "올바르지 않은 방 제목입니다. (DB 접근 오류)";
 
     private SpringChessService springChessService;
 
@@ -87,9 +86,9 @@ public class SpringChessController {
         springChessService.deleteRoom(roomNameDTO.getRoomName());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity dbException() {
-        return ResponseEntity.badRequest().body(DB_ERROR_MESSAGE);
+    @ExceptionHandler(NotExistRoomException.class)
+    public ResponseEntity dbException(NotExistRoomException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(ChessException.class)

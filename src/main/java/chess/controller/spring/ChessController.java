@@ -38,7 +38,7 @@ public class ChessController {
 
     @GetMapping("/games")
     private String renderGames(Model model, @CookieValue("userId") String cookie) {
-        Optional<Integer> currentUserId = checkLogin(cookie);
+        Optional<Integer> currentUserId = userService.checkLogin(cookie);
         return currentUserId.map(userId -> games(model, userId))
             .orElse(REDIRECT + "/logout");
     }
@@ -56,7 +56,7 @@ public class ChessController {
         @CookieValue("userId") String userCookie,
         @CookieValue(value = "em", required = false) String errorMessageCookie
     ) {
-        Optional<Integer> currentUserId = checkLogin(userCookie);
+        Optional<Integer> currentUserId = userService.checkLogin(userCookie);
         return currentUserId
             .map(id -> eachGame(model, gameId,
                 getErrorMessage(response, gameId, errorMessageCookie)))
@@ -77,21 +77,9 @@ public class ChessController {
         return errorMessageCookie;
     }
 
-    private Optional<Integer> checkLogin(String cookie) {
-        String userIdStringFormat = decodeCookie(cookie);
-        if (userIdStringFormat == null) {
-            return Optional.empty();
-        }
-        int userId = Integer.parseInt(userIdStringFormat);
-        if (userService.isUserExist(userId)) {
-            return Optional.of(userId);
-        }
-        return Optional.empty();
-    }
-
     @PostMapping("/start")
     private String start(@CookieValue("userId") String userCookie) {
-        Optional<Integer> currentUserId = checkLogin(userCookie);
+        Optional<Integer> currentUserId = userService.checkLogin(userCookie);
         return currentUserId.map(this::startGame)
             .orElse(REDIRECT + "/logout");
     }
@@ -117,13 +105,6 @@ public class ChessController {
         chessService.addGameHistory(
             new GameHistory(gameId, command, LocalDateTime.now(ZoneId.of("Asia/Seoul"))));
         return REDIRECT + "/games/" + gameId;
-    }
-
-    private String decodeCookie(String cookie) {
-        if (cookie == null) {
-            return null;
-        }
-        return new String(Base64.getUrlDecoder().decode(cookie));
     }
 
     private Map<String, Object> getCurrentGameMap(int currentUserId, String error,

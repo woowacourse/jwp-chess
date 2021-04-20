@@ -2,6 +2,7 @@ package chess.service;
 
 import chess.domain.web.User;
 import chess.repository.UserDao;
+import java.util.Base64;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,24 @@ public class UserService {
 
     public String findUserNameByUserId(int userId) {
         return userDao.findUserById(userId).get().getName();
+    }
+
+    public Optional<Integer> checkLogin(String cookie) {
+        String userIdStringFormat = decodeCookie(cookie);
+        if (userIdStringFormat == null) {
+            return Optional.empty();
+        }
+        int userId = Integer.parseInt(userIdStringFormat);
+        if (isUserExist(userId)) {
+            return Optional.of(userId);
+        }
+        return Optional.empty();
+    }
+
+    private String decodeCookie(String cookie) {
+        if (cookie == null) {
+            return null;
+        }
+        return new String(Base64.getUrlDecoder().decode(cookie));
     }
 }

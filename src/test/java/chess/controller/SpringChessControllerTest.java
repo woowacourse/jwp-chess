@@ -4,6 +4,10 @@ import chess.dto.MoveRequestDto;
 import io.restassured.RestAssured;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.path.xml.config.XmlPathConfig;
+import io.restassured.path.xml.element.Node;
+import io.restassured.path.xml.element.NodeChildren;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -13,7 +17,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -102,10 +108,27 @@ class SpringChessControllerTest {
 
         XmlPath.config = XmlPathConfig.xmlPathConfig().allowDocTypeDeclaration(true);
 
-        List<Object> inputs = XmlPath.from(dom).getList("html.body.div.form.input.@value");
-        assertThat(inputs).hasSize(roomNames.size()).hasSameElementsAs(roomNames);
+        NodeChildren li = XmlPath.from(dom).getNodeChildren("html.body.div.form.ul.li");
+        Iterator<Node> liNodes = li.nodeIterator();
+        List<String> actualRoomNames = new ArrayList<>();
+        while (liNodes.hasNext()) {
+            Node node = liNodes.next();
+            Node div = node.children()
+                    .list()
+                    .get(0);
+
+            String roomName = div.children()
+                    .list()
+                    .get(0)
+                    .getAttribute("value");
+
+            actualRoomNames.add(roomName);
+        }
+
+        assertThat(actualRoomNames).hasSize(roomNames.size()).hasSameElementsAs(roomNames);
     }
 
+    @DisplayName("요청한 방이름이 저장되어 있는 경우 방 상태를 제대로 반환 해주는지")
     @Test
     void load() {
         String roomName = "닉방";
@@ -120,6 +143,20 @@ class SpringChessControllerTest {
                         "html.body.div.find{it.@id == 'turn'}.label", equalTo("white의 차례입니다."));
     }
 
+    @DisplayName("삭제 요청한 방이름이 저장되어 있는 경우 방 기록을 잘 삭제해 주는지")
+    @Test
+    void delete() {
+        String roomName = "닉방";
+
+        RestAssured.given().log().all()
+                .queryParam("roomName", roomName)
+                .when().delete("/delete/" + roomName)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @DisplayName("생성 요청한 방이름이 이미 저장되어 있는 경우 새로운 게임을 만들지 않고 경고 메세지와 함께 index 화면을 반환해주는지")
     @Test
     void gameHandleError() {
         String roomName = "오즈방";

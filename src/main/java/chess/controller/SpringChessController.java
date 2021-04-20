@@ -75,12 +75,11 @@ public class SpringChessController {
         return modelAndView;
     }
 
-
     @DeleteMapping(value = "/delete/{roomName}")
     @ResponseBody
     public ResponseEntity<DeleteDto> delete(@PathVariable("roomName") String roomName) {
         springChessService.deleteRoom(roomName);
-        DeleteDto deleteDto = new DeleteDto(true);
+        DeleteDto deleteDto = new DeleteDto(roomName, true);
         return ResponseEntity.ok().body(deleteDto);
     }
 
@@ -115,9 +114,9 @@ public class SpringChessController {
     }
 
     @ExceptionHandler(InvalidRoomDeleteException.class)
-    @ResponseBody
-    public ResponseEntity<DeleteDto> deleteHandleError() {
-        DeleteDto deleteDto = new DeleteDto(false);
+    public ResponseEntity<DeleteDto> deleteHandleError(HttpServletRequest req) {
+        String roomName = req.getServletPath();
+        DeleteDto deleteDto = new DeleteDto(roomName, false);
         return ResponseEntity.badRequest().body(deleteDto);
     }
 }

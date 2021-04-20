@@ -5,24 +5,18 @@ $rooms.addEventListener('click', removeRoom);
 function removeRoom(event) {
     const target = event.target;
     if (target && target.className === "destroy") {
-        // fetch api
         const roomName = target.parentNode
             .querySelector("input[name=roomName]")
             .getAttribute("value");
 
-        const option = {
-            method: "DELETE",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        };
-
-        fetch(`/delete/${roomName}`, option)
-            .then(repsonse => {
-                if (!repsonse.ok) {
+        fetch(`/delete/${roomName}`, {
+            method: "DELETE"
+        })
+            .then(response => {
+                if (!response.ok) {
                     throw new Error(roomName + "방을 삭제 할 수 없습니다.");
                 }
-                return repsonse.json();
+                return response.json();
             })
             .then(body => {
                 // remove room list from ui

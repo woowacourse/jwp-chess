@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.TestPropertySource;
 
 import chess.dao.ChessDao;
 import chess.domain.piece.Color;
@@ -19,6 +20,7 @@ import chess.dto.response.PieceResponseDto;
 import chess.dto.response.PiecesResponseDto;
 
 @JdbcTest
+@TestPropertySource("classpath:application-test.properties")
 public class ChessServiceTest {
 
     private ChessService chessService;

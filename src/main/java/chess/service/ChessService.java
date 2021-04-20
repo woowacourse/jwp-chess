@@ -15,8 +15,8 @@ import chess.dto.GridDto;
 import chess.dto.PieceDto;
 import chess.dto.requestdto.MoveRequestDto;
 import chess.dto.requestdto.StartRequestDto;
-import chess.dto.response.Response;
 import chess.dto.response.ResponseCode;
+import chess.dto.response.ResponseDto;
 import chess.dto.responsedto.GridAndPiecesResponseDto;
 import chess.dto.responsedto.RoomsResponseDto;
 import chess.exception.ChessException;
@@ -42,7 +42,7 @@ public class ChessService {
         pieceDAO = new PieceDAO(jdbcTemplate);
     }
 
-    public Response move(MoveRequestDto requestDto) throws SQLException {
+    public ResponseDto move(MoveRequestDto requestDto) throws SQLException {
         GridDto gridDto = requestDto.getGridDto();
         List<Piece> pieces = requestDto.getPiecesDto().stream()
             .map(pieceDto -> {
@@ -82,7 +82,7 @@ public class ChessService {
             EMPTY_PIECE_NAME);
         pieceDAO.updatePiece(targetPieceDto.getPieceId(), sourcePieceDto.getIsBlack(),
             sourcePieceDto.getName().charAt(0));
-        return new Response(ResponseCode.NO_CONTENT);
+        return new ResponseDto(ResponseCode.NO_CONTENT);
     }
 
     public void start(long gridId) {

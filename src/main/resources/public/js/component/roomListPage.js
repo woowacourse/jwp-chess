@@ -1,4 +1,4 @@
-import { getRooms } from "../service/chessService.js";
+import {getRooms} from "../service/chessService.js";
 import * as chessPage from "./chessPage.js";
 import {store} from "../store.js";
 
@@ -47,9 +47,12 @@ function enterRoom(event) {
 
 function createRoom() {
     let roomName;
-    do {
-        roomName = prompt('입장할 방의 이름을 입력해주세요.');
-        store.roomName = roomName;
-        chessPage.createChessBoard(roomName);
-    } while (!roomName)
+
+    roomName = prompt('입장할 방의 이름을 입력해주세요.');
+    if (!roomName) {
+        return false;
+    }
+    store.roomName = roomName;
+    chessPage.createChessBoard(roomName);
+
 }

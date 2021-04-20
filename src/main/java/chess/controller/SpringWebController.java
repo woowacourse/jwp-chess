@@ -28,11 +28,6 @@ import spark.utils.StringUtils;
 
 @Controller
 public class SpringWebController {
-    public static final String ROOT = "/";
-    public static final String LOGIN = "login";
-    public static final String GAMES = "games";
-    public static final String GAME_ID = "/{id}";
-    public static final String SPRING_FOOTER = "-spring";
     public static final String REDIRECT = "redirect:";
     private final ChessService chessService;
     private final UserService userService;
@@ -44,7 +39,7 @@ public class SpringWebController {
 
     @GetMapping("/")
     private String renderLogin() {
-        return LOGIN + SPRING_FOOTER;
+        return "login-spring";
     }
 
     @GetMapping("/games")
@@ -57,7 +52,7 @@ public class SpringWebController {
 
     private String games(Model model, int userId) {
         List<GameDto> runningGamesByUserId = chessService.findGamesByUserId(userId);
-        model.addAttribute(GAMES, runningGamesByUserId);
+        model.addAttribute("games", runningGamesByUserId);
         model.addAttribute("userName", userService.findUserNameByUserId(userId));
         return "games-spring";
     }
@@ -84,7 +79,7 @@ public class SpringWebController {
     private String getErrorMessage(HttpServletResponse response, int gameId,
         String errorMessageCookie) {
         Cookie cookie = new Cookie("em", null);
-        cookie.setPath(ROOT + GAMES + "/" + gameId);
+        cookie.setPath("/games/" + gameId);
         response.addCookie(cookie);
         return errorMessageCookie;
     }
@@ -141,9 +136,9 @@ public class SpringWebController {
             }
         } catch (IllegalArgumentException e) {
             Cookie cookie = new Cookie("em", encodeCookie(e.getMessage()));
-            cookie.setPath(ROOT + GAMES + "/" + gameId);
+            cookie.setPath( "/games/" + gameId);
             response.addCookie(cookie);
-            return REDIRECT + ROOT + GAMES + "/" + gameId;
+            return REDIRECT + "/games/" + gameId;
         }
 
         chessService.addGameHistory(

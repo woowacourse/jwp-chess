@@ -22,7 +22,7 @@ public class ChessService {
 
     public BoardDto resetBoard(String roomName) {
         Board initiatedBoard = BoardFactory.create();
-        chessDao.resetTurnOwner();
+        chessDao.resetTurnOwner(roomName);
         chessDao.resetBoard(initiatedBoard, roomName);
         return BoardDto.of(initiatedBoard);
     }
@@ -41,10 +41,10 @@ public class ChessService {
     public BoardDto move(MoveInfoDto moveInfoDto, String roomName) {
         Board board = convertBoardDtoToBoard(getSavedBoard(roomName));
         Piece targetPiece = getTargetPiece(moveInfoDto, board);
-        Team turnOwnerAfterMove = chessGameMove(board, moveInfoDto.getTarget(), moveInfoDto.getDestination());
+        Team turnOwnerAfterMove = chessGameMove(board, moveInfoDto.getTarget(), moveInfoDto.getDestination(), roomName);
 
-        chessDao.renewBoardAfterMove(moveInfoDto.getTarget(), moveInfoDto.getDestination(), targetPiece);
-        chessDao.renewTurnOwnerAfterMove(turnOwnerAfterMove);
+        chessDao.renewBoardAfterMove(moveInfoDto.getTarget(), moveInfoDto.getDestination(), targetPiece, roomName);
+        chessDao.renewTurnOwnerAfterMove(turnOwnerAfterMove, roomName);
         return BoardDto.of(board);
     }
 
@@ -61,14 +61,14 @@ public class ChessService {
         return board.getBoard().get(target);
     }
 
-    private Team getSavedTurnOwner() {
-        TurnDto savedTurnOwner = chessDao.getSavedTurnOwner();
+    private Team getSavedTurnOwner(String roomName) {
+        TurnDto savedTurnOwner = chessDao.getSavedTurnOwner(roomName);
         return convertStringToTeam(savedTurnOwner.getTurn());
     }
 
-    public Team chessGameMove(Board board, String target, String destination) {
+    public Team chessGameMove(Board board, String target, String destination, String roomName) {
         return board.movePiece(convertStringToPosition(target),
-                convertStringToPosition(destination), getSavedTurnOwner());
+                convertStringToPosition(destination), getSavedTurnOwner(roomName));
     }
 
     private Board convertBoardDtoToBoard(BoardDto boardDto) {

@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS board;
+DROP TABLE IF EXISTS turn;
 DROP TABLE IF EXISTS room;
+
 create table room(
     room_name varchar(20) not null,
     primary key (room_name)
@@ -152,12 +154,13 @@ values ('g6', '', 'whatsup');
 insert into board (position, piece, room_name)
 values ('h6', '', 'whatsup');
 
-DROP TABLE IF EXISTS turn;
 create table turn
 (
     turn_owner varchar(10) not null,
-    primary key (turn_owner)
+    room_name varchar(20) not null,
+    primary key (turn_owner),
+    foreign key (room_name) references room (room_name) on update cascade
 );
 
-insert into turn (turn_owner)
-values ('white');
+insert into turn (turn_owner, room_name)
+values ('white', 'whatsup');

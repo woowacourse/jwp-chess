@@ -1,11 +1,11 @@
 package chess.dto;
 
-public class MoveRequest {
+public class MoveRequestBody {
     private final int gameId;
     private final String from;
     private final String to;
 
-    public MoveRequest(int gameId, String from, String to) {
+    public MoveRequestBody(int gameId, String from, String to) {
         this.gameId = gameId;
         this.from = from;
         this.to = to;

@@ -8,8 +8,8 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.GameListDto;
-import chess.dto.NewGameResponse;
-import chess.dto.RunningGameResponse;
+import chess.dto.NewGameDto;
+import chess.dto.RunningGameDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,15 +22,15 @@ public class ChessGameService {
         this.pieceDao = pieceDao;
     }
 
-    public NewGameResponse createNewGame() {
+    public NewGameDto createNewGame() {
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.start();
         int gameId = gameDao.saveNewGame(chessGameManager);
         pieceDao.savePiecesByGameId(chessGameManager, gameId);
-        return NewGameResponse.from(chessGameManager, gameId);
+        return NewGameDto.from(chessGameManager, gameId);
     }
 
-    public RunningGameResponse move(int gameId, Position from, Position to) {
+    public RunningGameDto move(int gameId, Position from, Position to) {
         ChessGameManager chessGameManager = loadChessGameByGameId(gameId);
 
         chessGameManager.move(from, to);
@@ -42,7 +42,7 @@ public class ChessGameService {
 
         gameDao.updateTurnByGameId(chessGameManager, gameId);
 
-        return RunningGameResponse.from(chessGameManager);
+        return RunningGameDto.from(chessGameManager);
     }
 
     public ChessGameManager loadChessGameByGameId(int gameId) {

@@ -1,15 +1,15 @@
 package chess.dto;
 
-public class CommonDto<T> {
+public class CommonResponseBody<T> {
     private final String message;
     private final T item;
 
-    public CommonDto(String message, T item) {
+    public CommonResponseBody(String message, T item) {
         this.message = message;
         this.item = item;
     }
 
-    public CommonDto(String message) {
+    public CommonResponseBody(String message) {
         this(message, null);
     }
 

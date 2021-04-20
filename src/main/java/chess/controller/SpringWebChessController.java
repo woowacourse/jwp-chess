@@ -1,9 +1,9 @@
 package chess.controller;
 
 import chess.domain.position.Position;
-import chess.dto.CommonDto;
-import chess.dto.MoveRequest;
-import chess.dto.RunningGameResponse;
+import chess.dto.CommonResponseBody;
+import chess.dto.MoveRequestBody;
+import chess.dto.RunningGameDto;
 import chess.exception.HandledException;
 import chess.service.ChessGameService;
 import org.springframework.http.ResponseEntity;
@@ -19,21 +19,21 @@ public class SpringWebChessController {
         this.chessGameService = chessGameService;
     }
 
-    private ResponseEntity<CommonDto<?>> handleExpectedException(Supplier<ResponseEntity<CommonDto<?>>> supplier) {
+    private ResponseEntity<CommonResponseBody<?>> handleExpectedException(Supplier<ResponseEntity<CommonResponseBody<?>>> supplier) {
         try {
             return supplier.get();
         } catch (HandledException e) {
             return ResponseEntity.badRequest().body(
-                    new CommonDto<>(
+                    new CommonResponseBody<>(
                             e.getMessage()));
         }
     }
 
     @GetMapping("/newgame")
-    public ResponseEntity<CommonDto<?>> newGame() {
+    public ResponseEntity<CommonResponseBody<?>> newGame() {
         return handleExpectedException(() ->
                 ResponseEntity.ok().body(
-                        new CommonDto<>(
+                        new CommonResponseBody<>(
                                 "새로운 게임이 생성되었습니다.",
                                 chessGameService.createNewGame()
                         )
@@ -42,15 +42,15 @@ public class SpringWebChessController {
     }
 
     @PostMapping("/move")
-    public ResponseEntity<CommonDto<?>> move(@RequestBody MoveRequest moveRequest) {
+    public ResponseEntity<CommonResponseBody<?>> move(@RequestBody MoveRequestBody moveRequestBody) {
         return handleExpectedException(() -> {
 
-            int gameId = moveRequest.getGameId();
-            Position from = Position.of(moveRequest.getFrom());
-            Position to = Position.of(moveRequest.getTo());
+            int gameId = moveRequestBody.getGameId();
+            Position from = Position.of(moveRequestBody.getFrom());
+            Position to = Position.of(moveRequestBody.getTo());
 
             return ResponseEntity.ok().body(
-                    new CommonDto<>(
+                    new CommonResponseBody<>(
                             "기물을 이동했습니다.",
                             chessGameService.move(gameId, from, to))
             );
@@ -58,10 +58,10 @@ public class SpringWebChessController {
     }
 
     @GetMapping("/loadGames")
-    public ResponseEntity<CommonDto<?>> loadGames() {
+    public ResponseEntity<CommonResponseBody<?>> loadGames() {
         return handleExpectedException(() ->
                 ResponseEntity.ok().body(
-                        new CommonDto<>(
+                        new CommonResponseBody<>(
                                 "게임 목록을 불러왔습니다.",
                                 chessGameService.loadAllGames()
                         )
@@ -70,12 +70,12 @@ public class SpringWebChessController {
     }
 
     @GetMapping("/load/{id}")
-    public ResponseEntity<CommonDto<?>> loadGame(@PathVariable int id) {
+    public ResponseEntity<CommonResponseBody<?>> loadGame(@PathVariable int id) {
         return handleExpectedException(() ->
                 ResponseEntity.ok().body(
-                        new CommonDto<>(
+                        new CommonResponseBody<>(
                                 "게임을 불러왔습니다",
-                                RunningGameResponse.from(chessGameService.loadChessGameByGameId(id))
+                                RunningGameDto.from(chessGameService.loadChessGameByGameId(id))
                         )
                 )
         );

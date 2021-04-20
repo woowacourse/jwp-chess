@@ -56,10 +56,11 @@ const exitGame = async () => {
     method: "PUT"
   })
 
-  const result = await response.json();
+  let result = await response;
   if (response.ok) {
     updateGameState(roomId);
   } else {
+    result = response.json();
     alert("HTTP-Error: " + result["message"]);
   }
 }

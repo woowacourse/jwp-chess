@@ -16,7 +16,6 @@ public class SpringChessAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleException(Exception e) {
         Map<String, String> body = new HashMap<>();
-        body.put("result", "fail");
         body.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }

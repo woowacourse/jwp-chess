@@ -20,10 +20,12 @@ document.querySelector(".rooms").addEventListener("click", async (event) => {
     const response = await fetch("./room/" + idToBeRemoved + "/close", {
       method: "PUT"
     });
-    const result = await response.json();
+
+    let result = await response;
     if (response.ok) {
       window.location.reload();
     } else {
+      result = response.json();
       alert("HTTP-Error: " + result["message"]);
     }
   }
@@ -68,7 +70,6 @@ document.querySelector(".create-room").addEventListener("submit",
       } else {
         alert("2자 이상의 이름을 입력해주세요.");
       }
-
     })
 
 function isValueLengthIsLongerThan(value, length) {

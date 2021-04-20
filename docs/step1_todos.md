@@ -37,9 +37,12 @@
     - [x] http 메소드와 사용 상황 정리    
 
 ## 임시 checkPoints
+[ 도메인 관련 ]
 - [ ] Piece interface 만들기
-- [x] Dao interface
-- [ ] Dao의 로직 서비스로 분리
 - [ ] CapturedPieces 삭제
 - [ ] Piece의 moved -> isFirstMoved로 변경
 - [ ] (0,0)의 위치정보를 "a1"등의 문자열 형태로 변경해주는 내용 수정
+
+[ 스프링 관련 ]
+- [x] Dao interface
+- [ ] Dao의 로직 서비스로 분리

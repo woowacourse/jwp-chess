@@ -10,35 +10,35 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChessGameService {
-    private GameDao gameDAO;
+    private GameDao gameDao;
 
-    public ChessGameService(GameDao gameDAO) {
-        this.gameDAO = gameDAO;
+    public ChessGameService(GameDao gameDao) {
+        this.gameDao = gameDao;
     }
 
     public NewGameResponse createNewGame() {
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.start();
-        int gameId = gameDAO.saveNewGame(chessGameManager);
+        int gameId = gameDao.saveNewGame(chessGameManager);
         return NewGameResponse.from(chessGameManager, gameId);
 
     }
 
     public RunningGameResponse move(int gameId, Position from, Position to) {
-        ChessGameManager chessGameManager = gameDAO.loadGame(gameId);
+        ChessGameManager chessGameManager = gameDao.loadGame(gameId);
         chessGameManager.move(from, to);
 
-        gameDAO.updateTurnByGameId(chessGameManager, gameId);
-        gameDAO.updatePiecesByGameId(chessGameManager, gameId);
+        gameDao.updateTurnByGameId(chessGameManager, gameId);
+        gameDao.updatePiecesByGameId(chessGameManager, gameId);
 
         return RunningGameResponse.from(chessGameManager);
     }
 
     public GameListDto loadAllGames() {
-        return GameListDto.from(gameDAO.loadGames());
+        return GameListDto.from(gameDao.loadGames());
     }
 
     public ChessGameManager loadChessGameById(int id) {
-        return gameDAO.loadGame(id);
+        return gameDao.loadGame(id);
     }
 }

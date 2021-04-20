@@ -42,12 +42,12 @@ public class SpringWebController {
         this.userService = userService;
     }
 
-    @GetMapping(ROOT)
+    @GetMapping("/")
     private String renderLogin() {
         return LOGIN + SPRING_FOOTER;
     }
 
-    @GetMapping(ROOT + GAMES)
+    @GetMapping("/games")
     private String renderGames(HttpServletResponse response, Model model,
         @CookieValue("userId") String cookie) {
         Optional<Integer> currentUserId = checkLogin(cookie);
@@ -59,10 +59,10 @@ public class SpringWebController {
         List<GameDto> runningGamesByUserId = chessService.findGamesByUserId(userId);
         model.addAttribute(GAMES, runningGamesByUserId);
         model.addAttribute("userName", userService.findUserNameByUserId(userId));
-        return GAMES + SPRING_FOOTER;
+        return "games-spring";
     }
 
-    @GetMapping(ROOT + GAMES + GAME_ID)
+    @GetMapping("/games/{id}")
     private String renderGame(Model model, @PathVariable("id") int gameId,
         HttpServletResponse response,
         @CookieValue("userId") String userCookie,
@@ -94,7 +94,7 @@ public class SpringWebController {
         int userId = userService.addUserIfNotExist(userName);
         Cookie cookie = new Cookie("userId", encodeCookie(String.valueOf(userId)));
         response.addCookie(cookie);
-        return REDIRECT + ROOT + GAMES;
+        return REDIRECT +"/games";
     }
 
     private Optional<Integer> checkLogin(String cookie) {
@@ -114,10 +114,10 @@ public class SpringWebController {
         Cookie cookie = new Cookie("user", null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
-        return REDIRECT + ROOT;
+        return REDIRECT + "/";
     }
 
-    @PostMapping(ROOT + "start")
+    @PostMapping("/start")
     private String start(@CookieValue("userId") String userCookie, HttpServletResponse response) {
         Optional<Integer> currentUserId = checkLogin(userCookie);
         return currentUserId.map(this::startGame)
@@ -127,10 +127,10 @@ public class SpringWebController {
     private String startGame(int currentUserId) {
         int gameId = chessService.getAddedGameId(
             new Game(currentUserId, false, LocalDateTime.now(ZoneId.of("Asia/Seoul"))));
-        return REDIRECT + ROOT + GAMES + "/" + gameId;
+        return REDIRECT + "/games/" + gameId;
     }
 
-    @PostMapping(ROOT + "move" + GAME_ID)
+    @PostMapping("/move/{id}")
     private String move(@PathVariable("id") int gameId, @RequestParam String command,
         HttpServletResponse response) throws SQLException {
         ChessGame chessGame = chessService.reloadAllHistory(gameId);
@@ -148,7 +148,7 @@ public class SpringWebController {
 
         chessService.addGameHistory(
             new GameHistory(gameId, command, LocalDateTime.now(ZoneId.of("Asia/Seoul"))));
-        return REDIRECT + ROOT + GAMES + "/" + gameId;
+        return REDIRECT + "/games/" + gameId;
     }
 
     private String encodeCookie(String cookie) {

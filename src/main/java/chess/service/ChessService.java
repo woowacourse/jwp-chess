@@ -34,15 +34,15 @@ public class ChessService {
 
     public CommonResponseDto<MoveResponseDto> movePiece(final String gameName, final MoveRequestDto requestDto) {
         try {
-            ChessGame chessGame = ChessGame.newGame();
-            List<Movement> movements = movementDao.findByChessName(gameName);
+            final ChessGame chessGame = ChessGame.newGame();
+            final List<Movement> movements = movementDao.findByChessName(gameName);
 
-            for (Movement movement : movements) {
+            for (final Movement movement : movements) {
                 chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
             }
 
             chessGame.moveByTurn(new Position(requestDto.getSource()), new Position(requestDto.getTarget()));
-            Chess chess = findChessByName(gameName);
+            final Chess chess = findChessByName(gameName);
             movementDao.save(new Movement(chess.getId(), requestDto.getSource(), requestDto.getTarget()));
 
             if (chessGame.isGameOver()) {
@@ -60,11 +60,11 @@ public class ChessService {
     }
 
     public void changeGameStatus(final GameStatusRequestDto requestDto) {
-        ChessGame chessGame = ChessGame.newGame();
-        Chess chess = findChessByName(requestDto.getChessName());
-        List<Movement> movements = movementDao.findByChessName(chess.getName());
+        final ChessGame chessGame = ChessGame.newGame();
+        final Chess chess = findChessByName(requestDto.getChessName());
+        final List<Movement> movements = movementDao.findByChessName(chess.getName());
 
-        for (Movement movement : movements) {
+        for (final Movement movement : movements) {
             chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
         }
 
@@ -75,8 +75,8 @@ public class ChessService {
 
     public CommonResponseDto<GameStatusDto> startChess(final ChessSaveRequestDto request) {
         try {
-            ChessGame chessGame = ChessGame.newGame();
-            Chess chess = new Chess(request.getName());
+            final ChessGame chessGame = ChessGame.newGame();
+            final Chess chess = new Chess(request.getName());
             chessDao.save(chess);
             return new CommonResponseDto<>(
                 new GameStatusDto(chessGame.pieces(), chessGame.calculateScore(), chessGame.isGameOver(),
@@ -88,11 +88,11 @@ public class ChessService {
 
     public CommonResponseDto<GameStatusDto> loadChess(final String chessName) {
         try {
-            ChessGame chessGame = ChessGame.newGame();
-            Chess chess = findChessByName(chessName);
-            List<Movement> movements = movementDao.findByChessName(chess.getName());
+            final ChessGame chessGame = ChessGame.newGame();
+            final Chess chess = findChessByName(chessName);
+            final List<Movement> movements = movementDao.findByChessName(chess.getName());
 
-            for (Movement movement : movements) {
+            for (final Movement movement : movements) {
                 chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
             }
             return new CommonResponseDto<>(new GameStatusDto(chessGame.pieces(),

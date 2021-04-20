@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JDBCChessDao implements ChessDao {
 
-    static RowMapper<Chess> chessMapper = (rs, rowNum) -> new Chess(
+    static final RowMapper<Chess> chessMapper = (rs, rowNum) -> new Chess(
         rs.getString("chess_id"),
         rs.getString("name"),
         Color.findByValue(rs.getString("winner_color")),
@@ -23,12 +23,12 @@ public class JDBCChessDao implements ChessDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JDBCChessDao(JdbcTemplate jdbcTemplate) {
+    public JDBCChessDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void save(Chess chess) {
+    public void save(final Chess chess) {
         if (findByName(chess.getName()).isPresent()) {
             throw new DuplicateRoomException();
         }
@@ -43,8 +43,8 @@ public class JDBCChessDao implements ChessDao {
     }
 
     @Override
-    public Optional<Chess> findByName(String name) {
-        List<Chess> chess = jdbcTemplate.query("select * from chess where name = ?",
+    public Optional<Chess> findByName(final String name) {
+        final List<Chess> chess = jdbcTemplate.query("select * from chess where name = ?",
             chessMapper,
             name
         );
@@ -55,7 +55,7 @@ public class JDBCChessDao implements ChessDao {
     }
 
     @Override
-    public void update(Chess chess) {
+    public void update(final Chess chess) {
         jdbcTemplate.update("update chess" +
                 " set is_running = ?, winner_color = ?" +
                 " where chess_id = ? ",
@@ -66,7 +66,7 @@ public class JDBCChessDao implements ChessDao {
     }
 
     @Override
-    public void deleteByName(String name) {
+    public void deleteByName(final String name) {
 
     }
 }

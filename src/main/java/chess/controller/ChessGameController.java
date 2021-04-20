@@ -21,7 +21,7 @@ public class ChessGameController {
     }
 
     @GetMapping("/games")
-    public String startPage(Model model) {
+    public String startPage(final Model model) {
         TilesDto tilesDto = chessService.emptyBoard();
         model.addAttribute("tilesDto", tilesDto);
         return "board";

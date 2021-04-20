@@ -9,9 +9,9 @@ import chess.service.ChessService;
 public class SparkChessApplication {
 
     public static void main(String[] args) {
-        ChessService chessService = new ChessService(new DBChessDao(CustomConnectionPool.create()),
+        final ChessService chessService = new ChessService(new DBChessDao(CustomConnectionPool.create()),
             new DBMovementDao(CustomConnectionPool.create()));
-        ChessWebController chessWebController = new ChessWebController(chessService);
+        final ChessWebController chessWebController = new ChessWebController(chessService);
         chessWebController.run();
     }
 }

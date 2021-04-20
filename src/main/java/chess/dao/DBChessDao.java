@@ -17,7 +17,7 @@ public class DBChessDao implements ChessDao {
     public DBChessDao(final ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
 
-        String query = "CREATE TABLE IF NOT EXISTS chess ( " +
+        final String query = "CREATE TABLE IF NOT EXISTS chess ( " +
             "chess_id VARCHAR(36) NOT NULL," +
             "name VARCHAR(64) NOT NULL," +
             "winner_color VARCHAR(64) NOT NULL," +
@@ -26,7 +26,7 @@ public class DBChessDao implements ChessDao {
             "PRIMARY KEY (chess_id)" +
             ");";
 
-        Connection connection = connectionPool.getConnection();
+        final Connection connection = connectionPool.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.execute();
@@ -41,13 +41,13 @@ public class DBChessDao implements ChessDao {
 
     @Override
     public void save(final Chess chess) {
-        String query = "INSERT INTO chess VALUES (?, ?, ?, ?, ?)";
+        final String query = "INSERT INTO chess VALUES (?, ?, ?, ?, ?)";
 
         if (findByName(chess.getName()).isPresent()) {
             throw new DuplicateRoomException();
         }
 
-        Connection connection = connectionPool.getConnection();
+        final Connection connection = connectionPool.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, chess.getId());
@@ -66,22 +66,22 @@ public class DBChessDao implements ChessDao {
 
     @Override
     public Optional<Chess> findByName(final String name) {
-        String query = "SELECT * FROM chess" +
+        final String query = "SELECT * FROM chess" +
             " WHERE name = ?" +
             " ORDER BY created_date";
 
-        Connection connection = connectionPool.getConnection();
+        final Connection connection = connectionPool.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            final PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, name);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            final ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.next()) {
                 closeResources(connection, preparedStatement);
                 resultSet.close();
                 return Optional.empty();
             }
-            Chess chess = new Chess(
+            final Chess chess = new Chess(
                 resultSet.getString("chess_id"),
                 resultSet.getString("name"),
                 Color.findByValue(resultSet.getString("winner_color")),
@@ -101,13 +101,13 @@ public class DBChessDao implements ChessDao {
 
     @Override
     public void update(final Chess chess) {
-        String query = "UPDATE chess" +
+        final String query = "UPDATE chess" +
             " SET winner_color = ?, is_running = ?" +
             " WHERE chess_id = ?";
 
-        Connection connection = connectionPool.getConnection();
+        final Connection connection = connectionPool.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            final PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, chess.getWinnerColor().toString());
             preparedStatement.setBoolean(2, chess.isRunning());
             preparedStatement.setString(3, chess.getId());
@@ -123,11 +123,11 @@ public class DBChessDao implements ChessDao {
 
     @Override
     public void deleteByName(final String name) {
-        String query = "DELETE FROM chess WHERE name = ?";
+        final String query = "DELETE FROM chess WHERE name = ?";
 
-        Connection connection = connectionPool.getConnection();
+        final Connection connection = connectionPool.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            final PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
 
@@ -138,7 +138,7 @@ public class DBChessDao implements ChessDao {
         }
     }
 
-    private void closeResources(Connection connection, PreparedStatement preparedStatement) throws SQLException {
+    private void closeResources(final Connection connection, final PreparedStatement preparedStatement) throws SQLException {
         connectionPool.releaseConnection(connection);
         preparedStatement.close();
     }

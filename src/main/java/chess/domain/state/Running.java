@@ -13,7 +13,7 @@ public class Running extends Turn {
 
     @Override
     public State move(final Source source, final Target target) {
-        Pieces pieces = pieces();
+        final Pieces pieces = pieces();
         pieces.move(source, target);
         return new Finished(pieces);
     }

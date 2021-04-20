@@ -17,7 +17,7 @@ public class DBMovementDao implements MovementDao {
     public DBMovementDao(final ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
 
-        String query = "CREATE TABLE IF NOT EXISTS movement ( " +
+        final String query = "CREATE TABLE IF NOT EXISTS movement ( " +
             "movement_id VARCHAR(36) NOT NULL," +
             "chess_id VARCHAR(36) NOT NULL," +
             "source_position VARCHAR(64) NOT NULL," +
@@ -27,7 +27,7 @@ public class DBMovementDao implements MovementDao {
             "FOREIGN KEY (chess_id) REFERENCES chess(chess_id) ON DELETE CASCADE ON UPDATE CASCADE" +
             ");";
 
-        Connection connection = connectionPool.getConnection();
+        final Connection connection = connectionPool.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.execute();
@@ -42,11 +42,11 @@ public class DBMovementDao implements MovementDao {
 
     @Override
     public void save(final Movement movement) {
-        String query = "INSERT INTO movement VALUES (?, ?, ?, ?, ?)";
+        final String query = "INSERT INTO movement VALUES (?, ?, ?, ?, ?)";
 
-        Connection connection = connectionPool.getConnection();
+        final Connection connection = connectionPool.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            final PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, movement.getId());
             preparedStatement.setString(2, movement.getChessId());
             preparedStatement.setString(3, movement.getSourcePosition());
@@ -63,19 +63,19 @@ public class DBMovementDao implements MovementDao {
 
     @Override
     public List<Movement> findByChessName(final String name) {
-        String query = "SELECT * FROM movement as mv" +
+        final String query = "SELECT * FROM movement as mv" +
             " JOIN chess as ch on mv.chess_id = ch.chess_id" +
             " WHERE ch.name = ?" +
             " ORDER BY mv.created_date";
 
-        Connection connection = connectionPool.getConnection();
+        final Connection connection = connectionPool.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            final PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, name);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            final ResultSet resultSet = preparedStatement.executeQuery();
 
-            List<Movement> movements = new ArrayList<>();
+            final List<Movement> movements = new ArrayList<>();
             while (resultSet.next()) {
                 Movement movement = new Movement(
                     resultSet.getString("movement_id"),
@@ -99,7 +99,7 @@ public class DBMovementDao implements MovementDao {
         return Collections.emptyList();
     }
 
-    private void closeResources(Connection connection, PreparedStatement preparedStatement) throws SQLException {
+    private void closeResources(final Connection connection, final PreparedStatement preparedStatement) throws SQLException {
         connectionPool.releaseConnection(connection);
         preparedStatement.close();
     }

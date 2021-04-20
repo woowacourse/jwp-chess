@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({ChessException.class, MovementException.class,
         BlankException.class, StateException.class})
-    public ResponseEntity<ErrorResponseDto> handleCustomException(RuntimeException exception) {
+    public ResponseEntity<ErrorResponseDto> handleCustomException(final RuntimeException exception) {
         logger.info(exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponseDto> handleException(RuntimeException exception) {
+    public ResponseEntity<ErrorResponseDto> handleException(final RuntimeException exception) {
         logger.info(exception.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(new ErrorResponseDto("서버 내부 에러입니다. "));

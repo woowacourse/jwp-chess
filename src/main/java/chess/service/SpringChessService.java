@@ -37,8 +37,8 @@ public class SpringChessService {
 
     @Transactional
     public MoveResponseDto movePiece(final String gameName, final MoveRequestDto requestDto) {
-        ChessGame chessGame = ChessGame.newGame();
-        Chess chess = movedChess(chessGame, gameName);
+        final ChessGame chessGame = ChessGame.newGame();
+        final Chess chess = movedChess(chessGame, gameName);
         chessGame.moveByTurn(new Position(requestDto.getSource()), new Position(requestDto.getTarget()));
         movementDao.save(new Movement(chess.getId(), requestDto.getSource(), requestDto.getTarget()));
 
@@ -54,7 +54,7 @@ public class SpringChessService {
 
     @Transactional
     public void saveChess(final ChessSaveRequestDto requestDto) {
-        Chess chess = new Chess(requestDto.getName());
+        final Chess chess = new Chess(requestDto.getName());
 
         if (chessDao.findByName(requestDto.getName()).isPresent()) {
             throw new DuplicateRoomException();
@@ -65,8 +65,8 @@ public class SpringChessService {
 
     @Transactional
     public void changeGameStatus(final GameStatusRequestDto requestDto) {
-        ChessGame chessGame = ChessGame.newGame();
-        Chess chess = movedChess(chessGame, requestDto.getChessName());
+        final ChessGame chessGame = ChessGame.newGame();
+        final Chess chess = movedChess(chessGame, requestDto.getChessName());
 
         chess.changeRunning(!requestDto.isGameOver());
         chess.changeWinnerColor(chessGame.findWinner());
@@ -74,18 +74,18 @@ public class SpringChessService {
     }
 
     public GameStatusDto loadChess(final String name) {
-        ChessGame chessGame = ChessGame.newGame();
-        Chess chess = movedChess(chessGame, name);
+        final ChessGame chessGame = ChessGame.newGame();
+        final Chess chess = movedChess(chessGame, name);
 
         return new GameStatusDto(chessGame.pieces(),
             chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor());
     }
 
     private Chess movedChess(final ChessGame chessGame, final String name) {
-        Chess chess = findChessByName(name);
-        List<Movement> movements = movementDao.findByChessName(chess.getName());
+        final Chess chess = findChessByName(name);
+        final List<Movement> movements = movementDao.findByChessName(chess.getName());
 
-        for (Movement movement : movements) {
+        for (final Movement movement : movements) {
             chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
         }
         return chess;

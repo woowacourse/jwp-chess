@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JDBCMovementDao implements MovementDao {
 
-    static RowMapper<Movement> movementMapper = (rs, rowNum) -> new Movement(
+    static final RowMapper<Movement> movementMapper = (rs, rowNum) -> new Movement(
         rs.getString("movement_id"),
         rs.getString("chess_id"),
         rs.getString("source_position"),
@@ -20,12 +20,12 @@ public class JDBCMovementDao implements MovementDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JDBCMovementDao(JdbcTemplate jdbcTemplate) {
+    public JDBCMovementDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void save(Movement movement) {
+    public void save(final Movement movement) {
         jdbcTemplate.update("insert into movement value (?, ?, ?, ?, ?)",
             movement.getId(),
             movement.getChessId(),
@@ -35,7 +35,7 @@ public class JDBCMovementDao implements MovementDao {
     }
 
     @Override
-    public List<Movement> findByChessName(String name) {
+    public List<Movement> findByChessName(final String name) {
         return jdbcTemplate.query("select * from movement as mv" +
                 " left outer join chess as ch using(chess_id)" +
                 " where ch.name = ?" +

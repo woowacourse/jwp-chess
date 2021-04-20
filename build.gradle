@@ -15,9 +15,13 @@ repositories {
 dependencies {
     implementation 'com.sparkjava:spark-core:2.9.3'
     implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.modelmapper.extensions:modelmapper-spring:2.4.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-mustache'
+    implementation 'com.h2database:h2'
 
     implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
     implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.1'
@@ -26,7 +30,7 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured:3.3.0'
 
     runtimeOnly 'mysql:mysql-connector-java'
-    runtimeOnly 'com.h2database:h2'
+    testImplementation 'com.h2database:h2'
 }
 
 test {

@@ -5,7 +5,7 @@
     - [x] Controller 어노테이션의 역할? RestController
     
 - SpringChessController
-    - [ ] 각 상황에 맞는 메소드 활용 (http 메소드가 각 어떤 상황에서 활용되는지): line22
+    - [x] 각 상황에 맞는 메소드 활용 (http 메소드가 각 어떤 상황에서 활용되는지): line22
     - [x] produces의 역할?
     - [x] final 선언: line 16
     
@@ -34,7 +34,7 @@
     - [ ] Spring 어노테이션의 전체적인 정리
     - [x] produces, consumes 정리
     - [ ] Spring 간단한 동작원리 정리
-    - [ ] http 메소드와 사용 상황 정리    
+    - [x] http 메소드와 사용 상황 정리    
 
 ## 임시 checkPoints
 - Piece interface 만들기

@@ -1,6 +1,6 @@
 export default class ChessService {
     constructor() {
-        this.baseUrl = "http://localhost:8080";
+        this.baseUrl = "http://localhost:8080/game";
         this.headers = {
             "Content-Type": "application/json"
         };
@@ -15,12 +15,14 @@ export default class ChessService {
     }
 
     async startGame() {
-        const response = await fetch(`${this.baseUrl}/startNewGame`);
-        return response.json();
+        return await fetch(`${this.baseUrl}/new`, {
+            method: "POST",
+            headers: this.headers
+        }).then(response => response.json());
     }
 
     async loadPrevGame() {
-        const response = await fetch(`${this.baseUrl}/loadPrevGame`);
+        const response = await fetch(`${this.baseUrl}/previous`);
         return response.json();
     }
 

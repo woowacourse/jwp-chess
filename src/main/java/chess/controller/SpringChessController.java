@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestController
+@RequestMapping("/game")
 public class SpringChessController {
     private final SpringChessService springChessService;
 
@@ -19,12 +20,12 @@ public class SpringChessController {
         this.springChessService = springChessService;
     }
 
-    @GetMapping(value = "/startNewGame", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/new", produces = MediaType.APPLICATION_JSON_VALUE)
     public ChessGameDTO startNewGame() {
         return springChessService.startNewGame();
     }
 
-    @GetMapping(value = "/loadPrevGame", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/previous", produces = MediaType.APPLICATION_JSON_VALUE)
     public ChessGameDTO loadPrevGame() {
         return springChessService.loadPreviousGame();
     }

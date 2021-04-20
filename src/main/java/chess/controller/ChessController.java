@@ -22,7 +22,6 @@ public class ChessController {
 
     private final ChessService service;
 
-    @Autowired
     public ChessController(final ChessService service) {
         this.service = service;
     }

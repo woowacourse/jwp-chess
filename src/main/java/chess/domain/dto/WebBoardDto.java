@@ -11,8 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class WebBoardDto {
-    private static final String imgTag = "<img class=\"chessboard\" src=\"/images/%s.png\" alt=\"\">";
-
     private final Board board;
     private final Team turn;
     private final boolean isEnd;
@@ -46,7 +44,7 @@ public class WebBoardDto {
 
                 Piece piece = board.pieceAt(position);
                 String value = piece.getTeam().name() + "-" + piece.getName();
-                webMap.put(key, String.format(imgTag, value.toLowerCase(Locale.ROOT)));
+                webMap.put(key, value.toLowerCase(Locale.ROOT));
             }
         }
         return webMap;

@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import static chess.domain.piece.Piece.NO_COLOR_ERROR;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class PieceTest {
+class PieceTest {
+
     @DisplayName("blank를 제외한 말들에 no color를 주입했을 때 에러를 반환 하는지")
     @Test
     void validateColor_noColor_throwError() {

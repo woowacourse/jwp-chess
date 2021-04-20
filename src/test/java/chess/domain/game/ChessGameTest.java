@@ -17,7 +17,7 @@ import static chess.domain.game.ChessGame.TURN_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class ChessGameTest {
+class ChessGameTest {
     private ChessGame chessGame;
 
     @BeforeEach

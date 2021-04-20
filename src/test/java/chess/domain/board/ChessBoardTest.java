@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class ChessBoardTest {
+class ChessBoardTest {
     private ChessBoard chessBoard;
 
     @BeforeEach

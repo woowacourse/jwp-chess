@@ -11,7 +11,7 @@ import static chess.domain.piece.Piece.NOT_MOVABLE_POSITION_ERROR;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-public class KingTest {
+class KingTest {
     private ChessBoard chessBoard;
 
     @BeforeEach

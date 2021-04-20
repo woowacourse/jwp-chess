@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ResultTest {
+class ResultTest {
     @DisplayName("white가 승리했을 때 올바르게 승패를 판단하는지")
     @Test
     void resultWhite() {

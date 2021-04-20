@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PositionTest {
+class PositionTest {
 
     @Test
     @DisplayName("Position 캐싱이 잘 되었는지 확인")

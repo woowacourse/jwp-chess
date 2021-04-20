@@ -12,7 +12,7 @@ import static chess.domain.piece.Blank.BLANK_MOVE_ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class BlankTest {
+class BlankTest {
     private Blank blank;
     private ChessBoard chessBoard;
     private Direction direction;

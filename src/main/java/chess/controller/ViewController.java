@@ -1,20 +1,15 @@
 package chess.controller;
 
-import chess.domain.piece.Piece;
-import chess.domain.position.Position;
 import chess.dto.*;
 import chess.service.ChessService;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.Map;
-
 @Controller
 public class ViewController {
-    public static final Gson GSON = new Gson();
-
     private final ChessService chessService;
 
     public ViewController(final ChessService chessService) {
@@ -36,13 +31,14 @@ public class ViewController {
     }
 
     @GetMapping("/chess")
-    public String chess(final Model model) {
+    public String chess(final Model model) throws JsonProcessingException {
         StringChessBoardDto dbChessBoard = chessService.dbChessBoard();
         ChessBoardDto chessBoard = chessService.chessBoard(dbChessBoard);
         StringChessBoardDto stringChessBoard = chessService.stringChessBoard(chessBoard);
         PiecesDto piecesDto = chessService.piecesDto(chessBoard);
 
-        String jsonFormatChessBoard = GSON.toJson(stringChessBoard.getStringChessBoard());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonFormatChessBoard = objectMapper.writeValueAsString(stringChessBoard.getStringChessBoard());
         model.addAttribute("jsonFormatChessBoard", jsonFormatChessBoard);
 
         chessService.updateRound(piecesDto);

@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Controller
 public class ViewController {
     private final ChessService chessService;
@@ -32,7 +29,7 @@ public class ViewController {
 
     @PostMapping("/")
     public String roomList(Model model, @RequestParam("roomName") String roomName) {
-        chessService.addRoom(roomName);
+        chessService.addGame(roomName);
         RoomListDto roomListDto = chessService.getRoomList();
         model.addAttribute("roomList", roomListDto.getRoomList());
         return "roomList";

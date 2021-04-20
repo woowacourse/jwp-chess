@@ -9,10 +9,10 @@ create table room(
 
 create table board
 (
+    seq int not null auto_increment primary key,
     position varchar(12) not null,
     piece    varchar(12) not null,
     room_name varchar(20) not null,
-    primary key (position),
     foreign key (room_name) references room (room_name) on update cascade
 );
 
@@ -156,9 +156,9 @@ values ('h6', '', 'whatsup');
 
 create table turn
 (
+    seq int not null auto_increment primary key,
     turn_owner varchar(10) not null,
     room_name varchar(20) not null,
-    primary key (turn_owner),
     foreign key (room_name) references room (room_name) on update cascade
 );
 

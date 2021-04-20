@@ -52,8 +52,8 @@ public class ChessService {
         return chessDao.getRoomList();
     }
 
-    public void addRoom(String roomName) {
-        chessDao.addRoom(roomName);
+    public void addGame(String roomName) {
+        chessDao.addGame(roomName);
     }
 
     private Piece getTargetPiece(MoveInfoDto moveInfoDto, Board board) {

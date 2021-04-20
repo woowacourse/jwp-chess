@@ -19,57 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ChessController {
-
-    private final ChessService service;
-
-    public ChessController(final ChessService service) {
-        this.service = service;
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity exceptionHandler(RuntimeException e) {
-        return ResponseEntity.ok().body(ResponseDto.error(e.getMessage()));
-    }
-
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
     public String welcomeAsHTML() {
         return "index.html";
-    }
-
-    @PostMapping(value = "room/create")
-    @ResponseBody
-    public ResponseEntity createRoom(@RequestBody RoomDto roomDto) throws SQLException {
-        service.createRoom(roomDto.getName());
-        return ResponseEntity.ok().body(roomDto);
-    }
-
-    @GetMapping(value = "/room/{name}")
-    @ResponseBody
-    public ResponseEntity enterRoom(@PathVariable("name") String roomName) throws SQLException {
-        MoveResponseDto result = service.findPiecesByRoomName(roomName);
-        return ResponseEntity.ok().body(result);
-    }
-
-    @GetMapping(value = "/room/{name}/start")
-    @ResponseBody
-    public ResponseEntity startRoom(@PathVariable("name") String roomName) throws SQLException {
-        MoveResponseDto result = service.start(roomName);
-        return ResponseEntity.ok().body(result);
-    }
-
-    @GetMapping(value = "/room/{name}/end")
-    @ResponseBody
-    public ResponseEntity endRoom(@PathVariable("name") String roomName) throws SQLException {
-        MoveResponseDto result = service.end(roomName);
-        return ResponseEntity.ok().body(result);
-    }
-
-    @PostMapping(value = "/room/{name}/move")
-    @ResponseBody
-    public ResponseEntity move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto)
-            throws SQLException {
-        MoveResponseDto result = service.move(roomName, moveRequestDto.getSource(),
-                moveRequestDto.getTarget());
-        return ResponseEntity.ok().body(result);
     }
 }

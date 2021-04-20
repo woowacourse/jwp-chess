@@ -1,5 +1,8 @@
 import {blackTeamCurrentTurn, chessBoard, drawPieceImage, whiteTeamCurrentTurn} from "./initialize.js";
 import {finishGame} from "./finishGame.js";
+import ChessService from "./ChessService.js";
+
+const apiService = new ChessService();
 
 const whiteTeamScoreUI = document.getElementById("whiteTeamScore");
 const blackTeamScoreUI = document.getElementById("blackTeamScore");
@@ -46,21 +49,7 @@ function serverMoveRequest(startPoint, destPoint) {
         destination: destPoint
     }
 
-    const postOption = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(moveRequest)
-    }
-
-    fetch("/move", postOption)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-            return response.json();
-        })
+    apiService.moveSourceToTarget(start, destination)
         .then(data => {
             drawPieceImage(data);
             updateScoreUI(data.teamScore.white, data.teamScore.black);

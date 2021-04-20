@@ -3,6 +3,9 @@ let loadBtn = document.getElementById("loadBtn");
 
 import {chessBoard, gameResultWindow, initChessBoard} from "./initialize.js";
 import {addChessBoardEvent, checkIsPlaying, player1, player2} from "./movement.js";
+import ChessService from "./ChessService.js";
+
+const apiService = new ChessService();
 
 loadFirstPage();
 
@@ -14,17 +17,17 @@ function loadFirstPage() {
 }
 
 function startNewGame() {
-    fetch("/startNewGame")
-        .then(response => {
-            return response.json();
-        })
+    apiService.startGame()
         .then(data => {
+            /*
             if (data.availability === "unavailable") {
                 let forceStart = confirm("현재 진행 중인 체스 게임이 있습니다. 삭제 후 새 게임을 시작하시겠습니까?");
                 if (forceStart) {
                     forceNewGame();
                 }
-            } else if (data.connection === "fail") {
+            }
+            */
+            if (data.connection === "fail") {
                 alert("서버와의 통신에 실패했습니다.");
             } else {
                 initializeChessBoard(data);
@@ -34,7 +37,7 @@ function startNewGame() {
             alert("서버와의 통신에 실패했습니다.");
         })
 }
-
+/*
 function forceNewGame() {
     fetch("/forceNewGame")
         .then(response => {
@@ -50,15 +53,9 @@ function forceNewGame() {
             alert("서버와의 통신이 실패하였습니다.");
         })
 }
-
+*/
 function loadPrevGame() {
-    fetch("/loadPrevGame")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-            return response.json();
-        })
+    apiService.loadPrevGame()
         .then(data => {
             initializeChessBoard(data);
             checkIsPlaying(data);

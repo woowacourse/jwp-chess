@@ -48,3 +48,16 @@
 - [스프링 공식문서 ~Mapping](https://docs.spring.io/spring-framework/docs/5.2.5.RELEASE/spring-framework-reference/web.html#mvc-ann-requestmapping)
 - [mdn 문서 Content-Type](https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Content-Type)
 - [mdn 문서 Accept](https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Accept)
+
+# [Network] REST - 4
+
+## 내용
+- REST(Representational State Transfer)는 효율적, 안정적이며 확장가능한 분산시스템을 가져올 수 있는소프트웨어 아키텍처 디자인 제약의 모음
+- 그 제약들을 준수했을 때 그 시스템은 `RESTful`하다고 한다.
+- REST의 기본 개념은 **리소스(자원)** 이다.
+- REST란 자원의 이름을 구분하여 해당 자원의 상태(정보)를 주고 받는 것을 의미하며 `자원의 표현에 의한 상태전달` 을 의미한다.
+- get, post 등의 API 를 만들 때, 자원의 관점에서 바라봐야 한다.
+
+## 링크
+- [REST service architecture](https://www.service-architecture.com/articles/web-services/representational_state_transfer_rest.html)
+- [mdn REST](https://developer.mozilla.org/ko/docs/Glossary/REST)

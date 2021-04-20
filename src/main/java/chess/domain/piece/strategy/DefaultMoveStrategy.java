@@ -2,7 +2,7 @@ package chess.domain.piece.strategy;
 
 import chess.domain.order.MoveRoute;
 import chess.domain.position.Direction;
-import chess.exception.DomainException;
+import chess.exception.InvalidMoveStrategyException;
 
 import java.util.List;
 
@@ -24,13 +24,13 @@ public abstract class DefaultMoveStrategy implements MoveStrategy {
 
     private void validateProperDirection(MoveRoute moveRoute) {
         if (!movableDirections.contains(moveRoute.getDirection())) {
-            throw new DomainException("움직일 수 없는 방향입니다.");
+            throw new InvalidMoveStrategyException("움직일 수 없는 방향입니다.");
         }
     }
 
     private void validateRouteIsNotBlocked(MoveRoute route) {
         if (route.isBlocked()) {
-            throw new DomainException("중간에 말이 있어 행마할 수 없습니다.");
+            throw new InvalidMoveStrategyException("중간에 말이 있어 행마할 수 없습니다.");
         }
     }
 
@@ -43,7 +43,7 @@ public abstract class DefaultMoveStrategy implements MoveStrategy {
     // TODO 체이닝 간소화
     private void validateSameColorPiece(MoveRoute moveRoute) {
         if (moveRoute.getPieceAtToPosition().isSameColor(moveRoute.getPieceAtFromPosition())) {
-            throw new DomainException("동일한 진영의 말이 있어서 행마할 수 없습니다.");
+            throw new InvalidMoveStrategyException("동일한 진영의 말이 있어서 행마할 수 없습니다.");
         }
     }
 }

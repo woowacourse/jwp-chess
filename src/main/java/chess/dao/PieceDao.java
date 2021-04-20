@@ -23,13 +23,6 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void updatePiecesByGameId(ChessGameManager chessGameManager, int gameId) {
-        String deletePiecesQuery = "DELETE FROM piece WHERE game_id = ?";
-        this.jdbcTemplate.update(deletePiecesQuery, gameId);
-
-        savePiecesByGameId(chessGameManager, gameId);
-    }
-
     public void savePiecesByGameId(ChessGameManager chessGameManager, int gameId) {
         Map<String, PieceDto> board = ChessBoardDto.from(chessGameManager.getBoard()).board();
         for (String position : board.keySet()) {
@@ -59,4 +52,26 @@ public class PieceDao {
         } while (resultSet.next());
         return ChessBoard.from(board);
     };
+
+    public Piece loadPieceByPosition(Position position, int gameId) {
+        String queryPieceByPosition = "SELECT * FROM piece WHERE game_id = ? AND position = ?";
+        Piece piece = this.jdbcTemplate.queryForObject(queryPieceByPosition, pieceRowMapper, gameId, position.getNotation());
+        return piece;
+    }
+
+    private final RowMapper<Piece> pieceRowMapper = (resultSet, rowNum) ->
+            PieceDeserializeTable.deserializeFrom(
+                    resultSet.getString("name"),
+                    Color.of(resultSet.getString("color"))
+            );
+
+    public void savePiece(Piece piece, Position position, int gameId) {
+        String query = "INSERT INTO piece(game_id, name, color, position) VALUES(?, ?, ?, ?)";
+        this.jdbcTemplate.update(query, gameId, piece.getName(), piece.getColor().name(), position.getNotation());
+    }
+
+    public void deletePieceByPosition(Position position, int gameId) {
+        String queryPieceByPosition = "DELETE FROM piece WHERE game_id = ? AND position = ?";
+        this.jdbcTemplate.update(queryPieceByPosition, gameId, position.getNotation());
+    }
 }

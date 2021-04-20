@@ -5,6 +5,7 @@ import chess.dao.PieceDao;
 import chess.domain.ChessGameManager;
 import chess.domain.board.ChessBoard;
 import chess.domain.piece.Color;
+import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.GameListDto;
 import chess.dto.NewGameResponse;
@@ -34,8 +35,12 @@ public class ChessGameService {
 
         chessGameManager.move(from, to);
 
+        Piece pieceToMove = pieceDao.loadPieceByPosition(from, gameId);
+        pieceDao.deletePieceByPosition(to, gameId);
+        pieceDao.savePiece(pieceToMove, to, gameId);
+        pieceDao.deletePieceByPosition(from, gameId);
+
         gameDao.updateTurnByGameId(chessGameManager, gameId);
-        pieceDao.updatePiecesByGameId(chessGameManager, gameId);
 
         return RunningGameResponse.from(chessGameManager);
     }

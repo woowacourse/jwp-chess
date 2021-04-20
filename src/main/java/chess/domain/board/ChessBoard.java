@@ -9,7 +9,8 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.position.*;
 import chess.domain.statistics.ScoreTable;
-import chess.exception.DomainException;
+import chess.exception.InvalidMoveStrategyException;
+import chess.exception.NullObjectSelectionException;
 
 import java.util.*;
 import java.util.function.Function;
@@ -59,13 +60,13 @@ public class ChessBoard {
 
     private void validateRealPieceHasBeenChosen(Position fromPosition) {
         if (!this.hasPiece(fromPosition)) {
-            throw new DomainException("해당 위치에는 말이 없습니다.");
+            throw new NullObjectSelectionException("해당 위치에는 말이 없습니다.");
         }
     }
 
     private void validateProperMoveStrategy(Piece pieceToMove, MoveRoute moveRoute) {
         if (!pieceToMove.canMove(moveRoute)) {
-            throw new DomainException("기물이 움직일 수 없는 상황입니다.");
+            throw new InvalidMoveStrategyException("기물이 움직일 수 없는 상황입니다.");
         }
     }
 

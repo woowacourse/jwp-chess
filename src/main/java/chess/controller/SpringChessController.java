@@ -3,6 +3,7 @@ package chess.controller;
 import chess.dto.PositionDTO;
 import chess.dto.RoomNameDTO;
 import chess.dto.TurnDTO;
+import chess.exception.ChessException;
 import chess.service.SpringChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class SpringChessController {
 
-    private static final String DB_ERROR_MESSAGE = "DB 접근 오류";
+    private static final String DB_ERROR_MESSAGE = "올바르지 않은 방 제목입니다. (DB 접근 오류)";
 
     private SpringChessService springChessService;
 
@@ -45,11 +46,7 @@ public class SpringChessController {
     @PostMapping(value = "/move/{roomName}")
     @ResponseBody
     public ResponseEntity move(@RequestBody PositionDTO positionDTO, @PathVariable String roomName) {
-        try {
-            return ResponseEntity.ok().body(springChessService.move(positionDTO, roomName));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(DB_ERROR_MESSAGE);
-        }
+        return ResponseEntity.ok().body(springChessService.move(positionDTO, roomName));
     }
 
     @GetMapping("/currentBoard/{roomName}")
@@ -59,20 +56,12 @@ public class SpringChessController {
 
     @PostMapping(value = "/currentTurn/{roomName}")
     public ResponseEntity currentTurn(@PathVariable String roomName) {
-        try {
-            return ResponseEntity.ok().body(new TurnDTO(springChessService.turnName(roomName)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(DB_ERROR_MESSAGE);
-        }
+        return ResponseEntity.ok().body(new TurnDTO(springChessService.turnName(roomName)));
     }
 
     @PostMapping(value = "/score/{roomName}")
     public ResponseEntity score(@PathVariable String roomName) {
-        try {
-            return ResponseEntity.ok().body(springChessService.score(roomName));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(DB_ERROR_MESSAGE);
-        }
+        return ResponseEntity.ok().body(springChessService.score(roomName));
     }
 
     @GetMapping("/rooms")
@@ -96,5 +85,15 @@ public class SpringChessController {
     @ResponseBody
     public void deleteRoom(@RequestBody RoomNameDTO roomNameDTO) {
         springChessService.deleteRoom(roomNameDTO.getRoomName());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity dbException() {
+        return ResponseEntity.badRequest().body(DB_ERROR_MESSAGE);
+    }
+
+    @ExceptionHandler(ChessException.class)
+    public ResponseEntity chessException(ChessException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

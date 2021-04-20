@@ -5,7 +5,6 @@ import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -45,7 +44,7 @@ public class SpringBoardDao {
         this.jdbcTemplate.update(query, boardPositionSet(board.getBoard()), boardPieceSet(board.getBoard()), turn, roomName);
     }
 
-    public Optional<Board> findBoard(String roomName) throws DataAccessException {
+    public Optional<Board> findBoard(String roomName) {
         String query = "select * from board where roomName=?";
         return this.jdbcTemplate.query(
                 query,
@@ -56,7 +55,7 @@ public class SpringBoardDao {
                 roomName).stream().findAny().map(Board::new);
     }
 
-    public Optional<Side> findTurn(String roomName) throws DataAccessException {
+    public Optional<Side> findTurn(String roomName) {
         String query = "SELECT turn FROM board WHERE roomName = ?";
         return jdbcTemplate.queryForList(query, String.class, roomName)
         .stream().findAny().map(Side::getTurnByName);

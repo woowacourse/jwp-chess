@@ -41,7 +41,7 @@ public class ChessService {
     }
 
     private ResponseDTO moveExecute(PositionDTO positionDTO, Board board) {
-        board.move(Position.from(positionDTO.from()), Position.from(positionDTO.to()), currentTurn());
+        board.move(Position.from(positionDTO.getFrom()), Position.from(positionDTO.getTo()), currentTurn());
         boardDAO.updateBoard(board, currentTurn().changeTurn().name());
         if (board.isGameSet()) {
             Side side = board.winner();

@@ -1,19 +1,22 @@
 package chess.dto;
 
 public class PositionDTO {
-    private final String from;
-    private final String to;
+    private String from;
+    private String to;
+
+    public PositionDTO() {
+    }
 
     public PositionDTO(String from, String to) {
         this.from = from;
         this.to = to;
     }
 
-    public String from() {
+    public String getFrom() {
         return from;
     }
 
-    public String to() {
+    public String getTo() {
         return to;
     }
 }

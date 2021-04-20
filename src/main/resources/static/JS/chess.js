@@ -75,6 +75,7 @@ async function move(from, to) {
         from: from,
         to: to,
     }
+
     let response = await fetch(`/move/${roomName}`, {
         method: 'post',
         body: JSON.stringify(data),
@@ -82,10 +83,11 @@ async function move(from, to) {
             'Content-Type': 'application/json'
         }
     });
+
     const status = response.status;
-    response = await response.json();
 
     if(status === 200) {
+        response = await response.json();
         if (response.code === "200") {
             changeImage(from, to);
             await changeTurn();
@@ -98,14 +100,11 @@ async function move(from, to) {
             alert(response.message + "가 승리했습니다!");
             return;
         }
-        if (response.code === "400") {
-            alert(response.message);
-            return;
-        }
     }
 
     if(status === 400) {
-        alert(response.text());
+        response = await response.text();
+        alert(response);
     }
 }
 
@@ -129,15 +128,17 @@ async function changeTurn() {
     });
 
     const status = response.status;
-    response = await response.json();
+
     if(status === 200) {
+        response = await response.json();
         const currentTurn = document.querySelector('.turn');
         currentTurn.textContent = response.turn;
         return;
     }
 
     if(status === 400) {
-        alert(response.text());
+        response = await response.text();
+        alert(response);
     }
 }
 
@@ -196,14 +197,15 @@ async function clickScore() {
     });
 
     const status = score.status;
-    score = await score.json();
     if(status === 200) {
+        score = await score.json();
         alert("White 점수 : " + score.whiteScore + "\nBlack 점수 : " + score.blackScore);
         return;
     }
 
     if(status === 400) {
-        alert(score.text());
+        score = await score.text();
+        alert(score);
     }
 }
 

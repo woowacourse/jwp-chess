@@ -44,15 +44,11 @@ public class SpringChessService {
 
     public ResponseDTO move(PositionDTO positionDTO, String roomName) {
         Board board = springBoardDao.findBoard(roomName).orElseThrow(IllegalArgumentException::new);
-        try {
-            return moveExecute(positionDTO, board, roomName);
-        } catch (ChessException e) {
-            return new ResponseDTO(FAIL_CODE, e.getMessage(), currentTurn(roomName).name());
-        }
+        return moveExecute(positionDTO, board, roomName);
     }
 
     private ResponseDTO moveExecute(PositionDTO positionDTO, Board board, String roomName) {
-        board.move(Position.from(positionDTO.from()), Position.from(positionDTO.to()), currentTurn(roomName));
+        board.move(Position.from(positionDTO.getFrom()), Position.from(positionDTO.getTo()), currentTurn(roomName));
         springBoardDao.updateBoard(board, currentTurn(roomName).changeTurn().name(), roomName);
         if (board.isGameSet()) {
             Side side = board.winner();

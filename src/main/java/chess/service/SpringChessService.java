@@ -1,8 +1,5 @@
 package chess.service;
 
-import chess.repository.PlayLogRepository;
-import chess.repository.RoomRepository;
-import chess.repository.UserRepository;
 import chess.domain.board.Board;
 import chess.domain.board.Point;
 import chess.domain.board.Team;
@@ -11,6 +8,9 @@ import chess.domain.chessgame.ScoreBoard;
 import chess.domain.chessgame.Turn;
 import chess.domain.gamestate.GameState;
 import chess.dto.web.*;
+import chess.repository.PlayLogRepository;
+import chess.repository.RoomRepository;
+import chess.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,8 +42,13 @@ public class SpringChessService {
     }
 
     public RoomIdDto create(RoomDto roomDto) {
-        userRepository.insert(roomDto.getWhite());
-        userRepository.insert(roomDto.getBlack());
+        if (userRepository.isNotExist(roomDto.getWhite())) {
+            userRepository.insert(roomDto.getWhite());
+        }
+
+        if (userRepository.isNotExist(roomDto.getBlack())) {
+            userRepository.insert(roomDto.getBlack());
+        }
         return new RoomIdDto(roomRepository.insert(roomDto));
     }
 

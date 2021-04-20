@@ -14,11 +14,14 @@ public class UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public boolean isNotExist(String userName) {
+        String query = "SELECT NOT EXISTS(SELECT * FROM users WHERE name = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, userName);
+    }
+
     public void insert(String userName) {
-        String query = "INSERT INTO users (name) "
-                + "SELECT * FROM (SELECT ?) AS tmp "
-                + "WHERE NOT EXISTS (SELECT * FROM users WHERE name = ?)";
-        jdbcTemplate.update(query, userName, userName);
+        String query = "INSERT INTO users (name) values (?)";
+        jdbcTemplate.update(query, userName);
     }
 
     public UsersInRoomDto usersInRoom(String roomId) {

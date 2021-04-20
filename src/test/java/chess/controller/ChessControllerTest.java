@@ -39,7 +39,7 @@ class ChessControllerTest {
         this.mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("status"))
+                .andExpect(model().attributeExists("chessGameStatus"))
                 .andExpect(model().attribute("chessGameStatus",existChessGameStatus))
                 .andExpect(view().name("index"));
     }

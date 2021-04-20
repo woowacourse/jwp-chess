@@ -5,6 +5,9 @@ const startButton = document.getElementById("start");
 const backButton = document.getElementById("back");
 const scoreButton = document.getElementById("score");
 
+const SUCCEED = "SUCCEED";
+const GAME_SET = "GAME_SET";
+
 startButton.addEventListener("click", clickStart);
 backButton.addEventListener("click", clickBack);
 scoreButton.addEventListener("click", clickScore);
@@ -88,12 +91,12 @@ async function move(from, to) {
 
     if(status === 200) {
         response = await response.json();
-        if (response.code === "200") {
+        if (response.code === SUCCEED) {
             changeImage(from, to);
             await changeTurn();
             return;
         }
-        if (response.code === "300") {
+        if (response.code === GAME_SET) {
             changeImage(from, to);
             const currentTurn = document.querySelector('.turn');
             currentTurn.textContent = response.turn;

@@ -18,9 +18,9 @@ import java.util.Map;
 
 @Service
 public class SpringChessService {
-    private static final String SUCCEED_CODE = "200";
-    private static final String GAME_SET_CODE = "300";
-    private static final String FAIL_CODE = "400";
+    private static final String SUCCEED_CODE = "SUCCEED";
+    private static final String GAME_SET_CODE = "GAME_SET";
+    private static final String FAIL_CODE = "FAIL";
     private static final String WHITE = "W";
     private static final String BLACK = "B";
     private static final String BLANK = ".";

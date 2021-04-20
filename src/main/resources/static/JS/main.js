@@ -80,7 +80,7 @@ async function addRoom(event) {
         }).then(res => {
             return res.json();
         });
-        if (response.code === "200") {
+        if (response.code === "SUCCEED") {
             createRoom(roomName);
         }
         alert(response.message);

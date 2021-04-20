@@ -1,7 +1,5 @@
 package chess.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,7 +13,6 @@ import chess.dto.request.PiecesRequestDto;
 import chess.dto.response.PiecesResponseDto;
 import chess.dto.response.RoomsResponseDto;
 import chess.dto.response.ScoreResponseDto;
-import chess.exception.PieceMoveException;
 import chess.service.ChessService;
 
 @RestController
@@ -48,10 +45,4 @@ public class ChessApiController {
         @RequestParam("color") String colorName) {
         return chessService.getScore(roomId, colorName);
     }
-
-    @ExceptionHandler(PieceMoveException.class)
-    public ResponseEntity<String> exceptionHandle(PieceMoveException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
 }

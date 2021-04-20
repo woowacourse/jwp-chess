@@ -5,7 +5,6 @@ import chess.domain.ChessGameManager;
 import chess.domain.position.Position;
 import chess.dto.*;
 import chess.exception.HandledException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +12,8 @@ import java.util.function.Supplier;
 
 @RestController
 public class SpringWebChessController {
-    private GameDao gameDAO;
+    private final GameDao gameDAO;
 
-    @Autowired
     public SpringWebChessController(GameDao gameDAO) {
         this.gameDAO = gameDAO;
     }

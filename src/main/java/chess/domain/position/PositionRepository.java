@@ -4,12 +4,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 
 public class PositionRepository {
     private static final List<Position> positions;
 
-    private PositionRepository() {}
+    private PositionRepository() {
+    }
 
     static {
         positions = Arrays.stream(Rank.values())

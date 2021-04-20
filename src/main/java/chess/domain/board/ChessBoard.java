@@ -29,7 +29,7 @@ public class ChessBoard {
 
     public static ChessBoard from(Map<Position, Piece> realPiecesMap) {
         Map<Position, Piece> board = new HashMap<>(realPiecesMap);
-        for (Position position: PositionRepository.positions()) {
+        for (Position position : PositionRepository.positions()) {
             board.merge(position, new Blank(), (existPiece, newPiece) -> existPiece);
         }
         return new ChessBoard(board);

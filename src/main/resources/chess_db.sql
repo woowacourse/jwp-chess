@@ -22,10 +22,11 @@
 DROP TABLE IF EXISTS `game`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `game` (
-  `game_id` int(11) NOT NULL AUTO_INCREMENT,
-  `turn` varchar(16) NOT NULL,
-  PRIMARY KEY (`game_id`)
+CREATE TABLE `game`
+(
+    `game_id` int(11) NOT NULL AUTO_INCREMENT,
+    `turn`    varchar(16) NOT NULL,
+    PRIMARY KEY (`game_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -33,10 +34,12 @@ CREATE TABLE `game` (
 -- Dumping data for table `game`
 --
 
-LOCK TABLES `game` WRITE;
+LOCK
+TABLES `game` WRITE;
 /*!40000 ALTER TABLE `game` DISABLE KEYS */;
 /*!40000 ALTER TABLE `game` ENABLE KEYS */;
-UNLOCK TABLES;
+UNLOCK
+TABLES;
 
 --
 -- Table structure for table `piece`
@@ -45,15 +48,16 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `piece`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `piece` (
-  `piece_id` int(11) NOT NULL AUTO_INCREMENT,
-  `game_id` int(11) NOT NULL,
-  `name` varchar(16) NOT NULL,
-  `color` varchar(16) NOT NULL,
-  `position` varchar(8) NOT NULL,
-  PRIMARY KEY (`piece_id`),
-  KEY `game_id` (`game_id`),
-  CONSTRAINT `piece_ibfk_1` FOREIGN KEY (`game_id`) REFERENCES `game` (`game_id`) ON DELETE CASCADE
+CREATE TABLE `piece`
+(
+    `piece_id` int(11) NOT NULL AUTO_INCREMENT,
+    `game_id`  int(11) NOT NULL,
+    `name`     varchar(16) NOT NULL,
+    `color`    varchar(16) NOT NULL,
+    `position` varchar(8)  NOT NULL,
+    PRIMARY KEY (`piece_id`),
+    KEY        `game_id` (`game_id`),
+    CONSTRAINT `piece_ibfk_1` FOREIGN KEY (`game_id`) REFERENCES `game` (`game_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -61,10 +65,12 @@ CREATE TABLE `piece` (
 -- Dumping data for table `piece`
 --
 
-LOCK TABLES `piece` WRITE;
+LOCK
+TABLES `piece` WRITE;
 /*!40000 ALTER TABLE `piece` DISABLE KEYS */;
 /*!40000 ALTER TABLE `piece` ENABLE KEYS */;
-UNLOCK TABLES;
+UNLOCK
+TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

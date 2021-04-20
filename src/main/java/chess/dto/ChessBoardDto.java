@@ -38,6 +38,6 @@ public class ChessBoardDto {
                                 entry -> Position.of(entry.getKey()),
                                 entry -> entry.getValue().toPiece()
                         )
-                , ChessBoard::from));
+                        , ChessBoard::from));
     }
 }

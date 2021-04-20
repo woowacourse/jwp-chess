@@ -9,7 +9,6 @@ import chess.dto.ChessBoardDto;
 import chess.dto.PieceDeserializeTable;
 import chess.dto.PieceDto;
 import chess.exception.NoSavedGameException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -20,8 +19,8 @@ import java.util.Map;
 
 @Repository
 public class GameDao {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+
+    private final JdbcTemplate jdbcTemplate;
 
     public GameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

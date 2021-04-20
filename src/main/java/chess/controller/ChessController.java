@@ -19,14 +19,12 @@ public class ChessController {
 
     @GetMapping("/start")
     public String start() {
-        chessService.remove();
         chessService.makeRound();
         return makeNewGame();
     }
 
     @GetMapping("/reset")
     public String reset() {
-        chessService.remove();
         chessService.resetRound();
         return makeNewGame();
     }
@@ -34,13 +32,10 @@ public class ChessController {
     @GetMapping("/chess")
     public String chess(final Model model) throws JsonProcessingException {
         ChessBoardDto chessBoard = chessService.chessBoardFromDB();
-        StringChessBoardDto stringChessBoard = chessService.stringChessBoard(chessBoard);
-
-        String jsonFormatChessBoard = chessService.jsonFormatChessBoard(stringChessBoard);
+        String jsonFormatChessBoard = chessService.jsonFormatChessBoard(chessBoard);
         model.addAttribute("jsonFormatChessBoard", jsonFormatChessBoard);
         String currentTurn = chessService.currentTurn();
         model.addAttribute("currentTurn", currentTurn);
-
         chessService.updateRound(chessBoard, currentTurn);
 
         ScoreResponseDto scoreResponseDto = chessService.scoreResponseDto();
@@ -49,9 +44,7 @@ public class ChessController {
     }
 
     private String makeNewGame() {
-        ChessBoardDto chessBoard = chessService.chessBoard();
-        StringChessBoardDto filteredChessBoard = chessService.filteredChessBoard(chessBoard);
-        chessService.initialize(filteredChessBoard);
+        chessService.initialize();
         return "redirect:/chess";
     }
 }

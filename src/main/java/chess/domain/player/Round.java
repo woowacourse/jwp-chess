@@ -68,7 +68,7 @@ public class Round {
             changeToEnd();
         }
     }
-    
+
     public void changeTurn(final String currentTurn) {
         if ("white".equals(currentTurn)) {
             State nextWhiteTurn = whitePlayer.getState().toRunningTurn();

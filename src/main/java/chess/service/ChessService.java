@@ -8,7 +8,6 @@ import chess.domain.piece.PiecesFactory;
 import chess.domain.player.Player;
 import chess.domain.player.Round;
 import chess.domain.position.Position;
-import chess.domain.state.State;
 import chess.domain.state.StateFactory;
 import chess.dto.ChessBoardDto;
 import chess.dto.PiecesDto;
@@ -38,19 +37,20 @@ public class ChessService {
         this.round = makeRound();
     }
 
-    public void remove() {
-        chessRepository.removeAllPieces();
-        chessRepository.removeTurn();
-    }
-
     public void resetRound() {
         round = makeRound();
     }
 
     public Round makeRound() {
+        remove();
         return new Round(StateFactory.initialization(PiecesFactory.whitePieces()),
                 StateFactory.initialization(PiecesFactory.blackPieces()),
                 CommandFactory.initialCommand("start"));
+    }
+
+    private void remove() {
+        chessRepository.removeAllPieces();
+        chessRepository.removeTurn();
     }
 
     public ChessBoardDto chessBoardFromDB() {
@@ -100,8 +100,9 @@ public class ChessService {
         whitePieces.add(chessBoardEntry.getValue());
     }
 
-    public String jsonFormatChessBoard(final StringChessBoardDto stringChessBoard) throws JsonProcessingException {
+    public String jsonFormatChessBoard(final ChessBoardDto chessBoard) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
+        StringChessBoardDto stringChessBoard = stringChessBoard(chessBoard);
         return objectMapper.writeValueAsString(stringChessBoard.getStringChessBoard());
     }
 
@@ -159,7 +160,14 @@ public class ChessService {
         chessRepository.changeTurn(turnChangeRequestDto);
     }
 
-    public StringChessBoardDto filteredChessBoard(final ChessBoardDto chessBoard) {
+    public void initialize() {
+        StringChessBoardDto filteredChessBoard = filteredChessBoard();
+        chessRepository.initializePieceStatus(filteredChessBoard.getStringChessBoard());
+        chessRepository.initializeTurn();
+    }
+
+    public StringChessBoardDto filteredChessBoard() {
+        ChessBoardDto chessBoard = chessBoard();
         Map<String, String> filteredChessBoard = new LinkedHashMap<>();
         for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.getChessBoard().entrySet()) {
             filterChessBoard(filteredChessBoard, chessBoardEntry);
@@ -172,10 +180,5 @@ public class ChessService {
         if (chessBoardEntry.getValue() != null) {
             filteredChessBoard.put(chessBoardEntry.getKey().toString(), chessBoardEntry.getValue().getPiece());
         }
-    }
-
-    public void initialize(final StringChessBoardDto filteredChessBoard) {
-        chessRepository.initializePieceStatus(filteredChessBoard.getStringChessBoard());
-        chessRepository.initializeTurn();
     }
 }

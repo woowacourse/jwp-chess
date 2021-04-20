@@ -80,7 +80,7 @@ async function move(from, to) {
         to: to
     }
     const response = await fetch(currentRoomName + '/move', {
-        method: 'post',
+        method: 'put',
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
@@ -117,47 +117,9 @@ function changeImage(sourcePosition, targetPosition) {
     target.appendChild(piece);
 }
 
-async function changeTurn() {
-    const response = await fetch(currentRoomName + '/current-turn', {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    }).then(res => {
-        return res.json();
-    });
-
-    const currentTurn = document.querySelector('.turn');
-    currentTurn.textContent = response.turn;
-}
-
-function clickStart() {
-    if (confirm("재시작하시겠습니까?")) {
-        fetch(currentRoomName + '/restart', {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(function () {
-            syncBoard();
-            changeTurn();
-        });
-    }
-}
-
-async function clickBack() {
-    if (confirm("목록으로 돌아가시겠습니까?")) {
-        window.location.href = "http://localhost:8080/";
-    }
-}
-
 async function syncBoard() {
-    let data = {
-        roomName: currentRoomName
-    }
-    const board = await fetch(currentRoomName + '/current-board', {
-        method: 'post',
-        body: JSON.stringify(data),
+    const board = await fetch(currentRoomName + '/board', {
+        method: 'get',
         headers: {
             'Content-Type': 'application/json'
         }
@@ -182,9 +144,43 @@ async function syncBoard() {
     }
 }
 
+async function changeTurn() {
+    const response = await fetch(currentRoomName + '/turn', {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(res => {
+        return res.json();
+    });
+
+    const currentTurn = document.querySelector('.turn');
+    currentTurn.textContent = response.turn;
+}
+
+function clickStart() {
+    if (confirm("재시작하시겠습니까?")) {
+        fetch(currentRoomName + '/restart', {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function () {
+            syncBoard();
+            changeTurn();
+        });
+    }
+}
+
+async function clickBack() {
+    if (confirm("목록으로 돌아가시겠습니까?")) {
+        window.location.href = "http://localhost:8080/";
+    }
+}
+
 async function clickScore() {
     const score = await fetch(currentRoomName + '/score', {
-        method: 'post',
+        method: 'get',
         headers: {
             'Content-Type': 'application/json'
         }

@@ -31,10 +31,7 @@ public enum Row {
 
     public Row nextRow(int moveValue) {
         int targetValue = this.value + moveValue;
-        return Arrays.stream(Row.values())
-                .filter(row -> row.value == targetValue)
-                .findAny()
-                .orElseThrow(InvalidRowException::new);
+        return from(targetValue);
     }
 
     public String row() {

@@ -141,21 +141,22 @@ public class Position {
         return new Position(column.nextColumn(next), row);
     }
 
+    public String positionName() {
+        return this.column.column() + this.row.row();
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
+        if (this == o){
             return true;
         }
-        if (!(o instanceof Position)) {
+        if (o == null || getClass() != o.getClass()){
             return false;
         }
 
         Position position = (Position) o;
-
-        if (row != position.row) {
-            return false;
-        }
-        return column == position.column;
+        return column == position.column &&
+                row == position.row;
     }
 
     @Override
@@ -163,9 +164,5 @@ public class Position {
         int result = row != null ? row.hashCode() : 0;
         result = 31 * result + (column != null ? column.hashCode() : 0);
         return result;
-    }
-
-    public String positionName() {
-        return this.column.column() + this.row.row();
     }
 }

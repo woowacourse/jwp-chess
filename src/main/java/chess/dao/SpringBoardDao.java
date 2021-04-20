@@ -26,15 +26,6 @@ public class SpringBoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Map<Position, Piece> initBoardTable(String roomName) {
-        try {
-            return findBoard(roomName);
-        } catch (DataAccessException e) {
-            newBoard(roomName);
-            return initBoardTable(roomName);
-        }
-    }
-
     public Map<Position, Piece> newBoard(String roomName) {
         String query = "INSERT INTO board (roomName, position, pieceName, turn) VALUES (?, ?, ?, ?)";
         Board board = Board.getGamingBoard();
@@ -48,16 +39,21 @@ public class SpringBoardDao {
         this.jdbcTemplate.update(query, boardPositionSet(board.getBoard()), boardPieceSet(board.getBoard()), turn, roomName);
     }
 
-    public Map<Position, Piece> findBoard(String roomName) {
+    //Todo : CustomException 변경 필요
+    public Board findBoard(String roomName) {
         String query = "select * from board where roomName=?";
 
-        return this.jdbcTemplate.queryForObject(
+        return this.jdbcTemplate.query(
                 query,
                 (resultSet, rowNum) -> daoToBoard(
                         resultSet.getString("position"),
                         resultSet.getString("pieceName")
                 ),
-                roomName);
+                roomName)
+                .stream()
+                .findAny()
+                .map(Board::new)
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public Side findTurn(String roomName) {

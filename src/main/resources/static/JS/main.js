@@ -89,16 +89,13 @@ function getClickedRoom() {
 async function addRoom(event) {
     const roomName = event.target.value;
     if (event.key === "Enter" && roomName !== "") {
-        if (0 > roomName.length && 10 < roomName.length) {
+        if (0 > roomName.length || 10 < roomName.length) {
             alert("방 이름은 한 글자 이상 열 글자 이하여야 합니다.")
             return;
         }
-        let data = {
-            roomName: roomName
-        }
-        const response = await fetch('/check-room-name', {
-            method: 'post',
-            body: JSON.stringify(data),
+
+        const response = await fetch(roomName + '/check', {
+            method: 'get',
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -118,7 +115,7 @@ async function createRoom(roomName) {
     let data = {
         roomName: roomName
     }
-    await fetch('/create', {
+    await fetch('/rooms', {
         method: 'post',
         body: JSON.stringify(data),
         headers: {

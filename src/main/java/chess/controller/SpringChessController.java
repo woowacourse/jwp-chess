@@ -28,57 +28,57 @@ public class SpringChessController {
         return springChessService.rooms();
     }
 
+    @PostMapping("/rooms")
+    @ResponseBody
+    public void createRoom(@RequestBody RoomNameDto roomName) {
+        springChessService.createRoom(roomName.getRoomName());
+    }
+
     @GetMapping("/rooms/{roomName}")
     public String enterRoom() {
         return "/chess.html";
     }
 
-    @PostMapping("/create")
+    @PutMapping(value = "/rooms/{roomName}/move")
     @ResponseBody
-    public void createRoom(@RequestBody RoomNameDto roomNameDTO) {
-        springChessService.createRoom(roomNameDTO.getRoomName());
-    }
-
-    @PostMapping(value = "/rooms/{roomName}/move")
-    @ResponseBody
-    public ResponseDto move(@RequestBody PositionDto positionDto, @PathVariable RoomNameDto roomName) {
-        ResponseDto responseDto = springChessService.move(positionDto, roomName.getRoomName());
+    public ResponseDto move(@RequestBody PositionDto positionDto, @PathVariable String roomName) {
+        ResponseDto responseDto = springChessService.move(positionDto, roomName);
         return responseDto;
     }
 
-    @PostMapping("/rooms/{roomName}/current-board")
+    @PutMapping(value = "/rooms/{roomName}/restart")
     @ResponseBody
-    public Map<String, String> currentBoard(@PathVariable RoomNameDto roomName) {
-        return springChessService.currentBoardByRoomName(roomName.getRoomName());
+    public void restart(@PathVariable String roomName) {
+        springChessService.restartBoard(roomName);
     }
 
-    @PostMapping(value = "/rooms/{roomName}/current-turn")
+    @GetMapping("/rooms/{roomName}/board")
     @ResponseBody
-    public TurnDto currentTurn(@PathVariable RoomNameDto roomName) {
-        return new TurnDto(springChessService.turnName(roomName.getRoomName()));
+    public Map<String, String> currentBoard(@PathVariable String roomName) {
+        return springChessService.currentBoardByRoomName(roomName);
     }
 
-    @PostMapping(value = "/rooms/{roomName}/restart")
+    @GetMapping(value = "/rooms/{roomName}/turn")
     @ResponseBody
-    public void restart(@PathVariable RoomNameDto roomName) {
-        springChessService.newBoard(roomName.getRoomName());
+    public TurnDto currentTurn(@PathVariable String roomName) {
+        return new TurnDto(springChessService.turnName(roomName));
     }
 
-    @PostMapping(value = "/rooms/{roomName}/score")
+    @GetMapping(value = "/rooms/{roomName}/score")
     @ResponseBody
-    public ScoreDto score(@PathVariable RoomNameDto roomName) {
-        return springChessService.score(roomName.getRoomName());
+    public ScoreDto score(@PathVariable String roomName) {
+        return springChessService.score(roomName);
     }
 
-    @PostMapping("/check-room-name")
+    @GetMapping("/{roomName}/check")
     @ResponseBody
-    public RoomValidateDto checkRoomName(@RequestBody RoomNameDto roomName) {
-        return springChessService.checkDuplicatedRoom(roomName.getRoomName());
+    public RoomValidateDto checkRoomName(@PathVariable String roomName) {
+        return springChessService.checkDuplicatedRoom(roomName);
     }
 
     @DeleteMapping("/rooms/{roomName}")
     @ResponseBody
-    public void deleteRoom(@PathVariable RoomNameDto roomName) {
-        springChessService.deleteRoom(roomName.getRoomName());
+    public void deleteRoom(@PathVariable String roomName) {
+        springChessService.deleteRoom(roomName);
     }
 }

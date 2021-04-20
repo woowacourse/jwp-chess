@@ -32,17 +32,17 @@ public class SpringChessService {
     }
 
     public Map<String, String> currentBoardByRoomName(String roomName) {
-        Map<Position, Piece> board = springBoardDao.initBoardTable(roomName);
+        Board board = springBoardDao.findBoard(roomName);
         Map<String, String> boardName = new LinkedHashMap<>();
-        for (Position position : board.keySet()) {
+        for (Position position : board.getBoard().keySet()) {
             String positionName = position.positionName();
-            boardName.put(positionName, pieceToName(board.get(position)));
+            boardName.put(positionName, pieceToName(board.getBoard().get(position)));
         }
         return boardName;
     }
 
     public ResponseDto move(PositionDto positionDTO, String roomName) {
-        Board board = new Board(springBoardDao.findBoard(roomName));
+        Board board = springBoardDao.findBoard(roomName);
         try {
             return moveExecute(positionDTO, board, roomName);
         } catch (ChessException e) {
@@ -60,7 +60,7 @@ public class SpringChessService {
         return new ResponseDto(SUCCEED_CODE, "Succeed", currentTurn(roomName).name());
     }
 
-    public void newBoard(String roomName) {
+    public void restartBoard(String roomName) {
         springBoardDao.updateBoard(Board.getGamingBoard(), "WHITE", roomName);
     }
 
@@ -69,20 +69,6 @@ public class SpringChessService {
             return new RoomValidateDto(FAIL_CODE, "중복된 방 이름입니다.");
         }
         return new RoomValidateDto(SUCCEED_CODE, "방 생성 성공!");
-    }
-
-    private String pieceToName(Piece piece) {
-        if (piece.side() == Side.WHITE) {
-            return WHITE + piece.getInitial().toUpperCase();
-        }
-        if (piece.side() == Side.BLACK) {
-            return BLACK + piece.getInitial().toUpperCase();
-        }
-        return BLANK;
-    }
-
-    public String turnName(String roomName) {
-        return currentTurn(roomName).name();
     }
 
     private Side currentTurn(String roomName) {
@@ -102,7 +88,21 @@ public class SpringChessService {
     }
 
     public ScoreDto score(String roomName) {
-        Board board = new Board(springBoardDao.findBoard(roomName));
+        Board board = springBoardDao.findBoard(roomName);
         return new ScoreDto(String.valueOf(board.score(Side.WHITE)), String.valueOf(board.score(Side.BLACK)));
+    }
+
+    private String pieceToName(Piece piece) {
+        if (piece.side() == Side.WHITE) {
+            return WHITE + piece.getInitial().toUpperCase();
+        }
+        if (piece.side() == Side.BLACK) {
+            return BLACK + piece.getInitial().toUpperCase();
+        }
+        return BLANK;
+    }
+
+    public String turnName(String roomName) {
+        return currentTurn(roomName).name();
     }
 }

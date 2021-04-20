@@ -37,7 +37,7 @@ async function loadSavedBoard() {
     let url = "/board/" + roomName;
     let savedBoardInformation = await fetch(url)
     savedBoardInformation = await savedBoardInformation.json();
-    return savedBoardInformation.boardInfo;
+    return savedBoardInformation.data.boardInfo;
 }
 
 async function reStartGame() {
@@ -66,8 +66,8 @@ function clickDiv(e) {
 
 async function movePiece(targetPosition, destinationPosition) {
     const boardInfo = await sendMoveInformation(targetPosition, destinationPosition);
-    checkGameOver(boardInfo.gameOverFlag);
-    renewBoard(boardInfo.boardInfo);
+    checkGameOver(boardInfo.data.gameOverFlag);
+    renewBoard(boardInfo.data.boardInfo);
 }
 
 function checkGameOver(gameOverFlag) {
@@ -131,12 +131,12 @@ async function resetBoard() {
         }
     })
     initialBoardInformation = await initialBoardInformation.json();
-    return initialBoardInformation.boardInfo;
+    return initialBoardInformation.data.boardInfo;
 }
 
 async function alertScore() {
     let url = "/score/" + roomName;
     let scoreInformation = await fetch(url)
     scoreInformation = await scoreInformation.json();
-    alert("백: " + scoreInformation.whiteScore + " 흑: " + scoreInformation.blackScore);
+    alert("백: " + scoreInformation.data.whiteScore + " 흑: " + scoreInformation.data.blackScore);
 }

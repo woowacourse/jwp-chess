@@ -29,7 +29,7 @@ public class SpringChessController {
         return springChessService.loadPreviousGame();
     }
 
-    @PostMapping(path = "/move")
+    @PutMapping(path = "/move")
     public ChessGameDTO move(@RequestBody MoveRequestDto moveRequestDTO) {
         final String start = moveRequestDTO.getStart();
         final String destination = moveRequestDTO.getDestination();

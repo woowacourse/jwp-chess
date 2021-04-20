@@ -34,7 +34,8 @@
     - [ ] Spring 어노테이션의 전체적인 정리
     - [x] produces, consumes 정리
     - [ ] Spring 간단한 동작원리 정리
-    - [x] http 메소드와 사용 상황 정리    
+    - [x] http 메소드와 사용 상황 정리
+- [ ] 도메인 이외로직에 대해 test 작성하기
 
 ## 임시 checkPoints
 [ 도메인 관련 ]

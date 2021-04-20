@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.web;
 
 import chess.database.dao.RoomDao;
 import chess.domain.board.ChessBoard;

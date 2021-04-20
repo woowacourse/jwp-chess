@@ -25,8 +25,7 @@ public class SpringChessService {
     public int createRoom(String name) {
         ChessGame chessGame = initializeChessBoard();
         chessGame.start(Collections.singletonList("start"));
-        roomDao.addRoom(new SaveRoomDto(name, chessGame));
-        return roomDao.getLastInsertId();
+        return roomDao.addRoom(new SaveRoomDto(name, chessGame));
     }
 
     public ChessGameDto movePiece(int roomNo, MoveRequestDto moveRequestDto) {
@@ -75,5 +74,13 @@ public class SpringChessService {
 
     public void deleteRoom(int roomNo) {
         roomDao.deleteRoomByRoomNo(roomNo);
+    }
+
+    public ChessGameDto resetRoom(int roomNo) {
+        ChessGame chessGame = initializeChessBoard();
+        chessGame.start(Collections.singletonList("start"));
+        RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
+        roomDao.updateRoom(new RoomDto(roomNo, roomDto.getRoomName(), chessGame));
+        return new ChessGameDto(roomNo, roomDto.getRoomName(), chessGame);
     }
 }

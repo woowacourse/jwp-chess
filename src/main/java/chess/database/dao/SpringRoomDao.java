@@ -3,6 +3,8 @@ package chess.database.dao;
 import chess.dto.RoomDto;
 import chess.dto.SaveRoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -16,26 +18,21 @@ public class SpringRoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addRoom(SaveRoomDto saveRoomDto) {
+    public int addRoom(SaveRoomDto saveRoomDto) {
         String query = "INSERT INTO chess_room (room_name, turn, board) VALUES (?, ?, ?)";
-
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query);
+            PreparedStatement ps = connection.prepareStatement(query, new String[] {"room_no"});
             ps.setString(1, saveRoomDto.getRoomName());
             ps.setString(2, saveRoomDto.getTurn());
             ps.setString(3, saveRoomDto.getChessBoard());
             return ps;
-        });
-    }
-
-    public int getLastInsertId() {
-        String query = "SELECT LAST_INSERT_ID()";
-        return jdbcTemplate.queryForObject(query, Integer.class);
+        }, keyHolder);
+        return keyHolder.getKey().intValue();
     }
 
     public void updateRoom(RoomDto roomDto) {
         String query = "UPDATE chess_room SET turn = ?, board = ? where room_no = ?";
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, roomDto.getTurn());
@@ -74,8 +71,8 @@ public class SpringRoomDao {
                 });
     }
 
-    public void deleteRoomByRoomNo(int roomNo) {
+    public int deleteRoomByRoomNo(int roomNo) {
         String query = "DELETE FROM chess_room WHERE room_no = ?";
-        jdbcTemplate.update(query, roomNo);
+        return jdbcTemplate.update(query, roomNo);
     }
 }

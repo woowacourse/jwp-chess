@@ -1,10 +1,13 @@
-package chess.controller;
+package chess.controller.web;
 
-import chess.dto.*;
+import chess.dto.ChessGameDto;
+import chess.dto.RoomDto;
 import chess.service.SpringChessService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -25,25 +28,17 @@ public class SpringChessController {
     @PostMapping("/create")
     public String createRoom(@RequestParam("roomName") String roomName) {
         int roomNo = springChessService.createRoom(roomName);
-        return "redirect:/game/" + roomNo;
+        return "redirect:/room/" + roomNo;
     }
 
-    @GetMapping("/game/{roomNo}")
+    @GetMapping("/room/{roomNo}")
     public ModelAndView enterRoom(@PathVariable("roomNo") int roomNo) {
         ChessGameDto chessGameDto = springChessService.loadRoom(roomNo);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("chessGame", chessGameDto);
+        modelAndView.addObject("roomNo", roomNo);
+        modelAndView.addObject("roomName", chessGameDto.getRoomName());
         modelAndView.setViewName("game");
         return modelAndView;
-    }
-
-    @PutMapping(value = "/game/{roomNo}/move")
-    @ResponseBody
-    public ChessGameDto movePiece(@PathVariable("roomNo") int roomNo, @RequestBody MoveRequestDto moveRequestDto) {
-        System.out.println(roomNo);
-        System.out.println(moveRequestDto.getCommand());
-        ChessGameDto chessGameDto = springChessService.movePiece(roomNo, moveRequestDto);
-        return chessGameDto;
     }
 
     @GetMapping(value = "/rooms")
@@ -57,17 +52,6 @@ public class SpringChessController {
 
     @GetMapping("/load")
     public String loadRoom(@RequestParam("roomNo") int roomNo) {
-        return "redirect:/game/" + roomNo;
-    }
-
-    @DeleteMapping("/exit/{roomNo}")
-    public ResponseEntity deleteRoom(@PathVariable("roomNo") int roomNo) {
-        springChessService.deleteRoom(roomNo);
-        return ResponseEntity.ok().build();
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> exceptionHandle(Exception e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return "redirect:/room/" + roomNo;
     }
 }

@@ -7,225 +7,162 @@
 </head>
 <body>
 <div id="room">
-    <h1 style="font-size:50px;" class="{{{chessGame.roomNo}}}">{{chessGame.roomNo}}번 방</h1>
-    <h1 style="font-size:50px;" class="{{{chessGame.roomName}}}">ROOM {{chessGame.roomName}}</h1>
+    <h1 style="font-size:50px;" class="{{{roomNo}}}">{{roomNo}}번 방</h1>
+    <h1 style="font-size:50px;" class="{{{roomName}}}">ROOM {{roomName}}</h1>
 </div>
 <div>
-    <label style="color:darkgreen;font-size:30px;"><label id="turn" class="{{{chessGame.turn}}}">{{chessGame.turn}}</label>의 차례입니다.</label>
+    <label style="color:darkgreen;font-size:30px;"><label id="turn"></label>의 차례입니다.</label>
 </div>
 <div>
-    <label style="color:darkred;font-size:20px;margin-right:10px;">Black: <label id="blackScore">{{chessGame.scoreDto.blackScore}}</label></label>
-    <label style="color:darkblue;font-size:20px;">White: <label id="whiteScore">{{chessGame.scoreDto.whiteScore}}</label></label>
+    <label style="color:darkred;font-size:20px;margin-right:10px;">Black: <label id="blackScore"></label></label>
+    <label style="color:darkblue;font-size:20px;">White: <label id="whiteScore"></label></label>
 </div>
+<input type="button" id="restart" value="재시작">
 <input type="button" id="home" value="홈으로"/>
 <input type="button" id="exit" value="나가기"/>
 <table class="chessboard">
     <tr id="8" class="chessboard">
         <td id="a8" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.a8.color}}}{{{chessGame.chessBoard.a8.type}}}.png"/>
         </td>
         <td id="b8" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.b8.color}}}{{{chessGame.chessBoard.b8.type}}}.png"/>
         </td>
         <td id="c8" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.c8.color}}}{{{chessGame.chessBoard.c8.type}}}.png"/>
         </td>
         <td id="d8" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.d8.color}}}{{{chessGame.chessBoard.d8.type}}}.png"/>
         </td>
         <td id="e8" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.e8.color}}}{{{chessGame.chessBoard.e8.type}}}.png"/>
         </td>
         <td id="f8" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.f8.color}}}{{{chessGame.chessBoard.f8.type}}}.png"/>
         </td>
         <td id="g8" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.g8.color}}}{{{chessGame.chessBoard.g8.type}}}.png"/>
         </td>
         <td id="h8" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.h8.color}}}{{{chessGame.chessBoard.h8.type}}}.png"/>
         </td>
     </tr>
     <tr id="7" class="chessboard">
         <td id="a7" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.a7.color}}}{{{chessGame.chessBoard.a7.type}}}.png"/>
         </td>
         <td id="b7" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.b7.color}}}{{{chessGame.chessBoard.b7.type}}}.png"/>
         </td>
         <td id="c7" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.c7.color}}}{{{chessGame.chessBoard.c7.type}}}.png"/>
         </td>
         <td id="d7" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.d7.color}}}{{{chessGame.chessBoard.d7.type}}}.png"/>
         </td>
         <td id="e7" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.e7.color}}}{{{chessGame.chessBoard.e7.type}}}.png"/>
         </td>
         <td id="f7" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.f7.color}}}{{{chessGame.chessBoard.f7.type}}}.png"/>
         </td>
         <td id="g7" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.g7.color}}}{{{chessGame.chessBoard.g7.type}}}.png"/>
         </td>
         <td id="h7" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.h7.color}}}{{{chessGame.chessBoard.h7.type}}}.png"/>
         </td>
     </tr>
     <tr id="6" class="chessboard">
         <td id="a6" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.a6.color}}}{{{chessGame.chessBoard.a6.type}}}.png"/>
         </td>
         <td id="b6" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.b6.color}}}{{{chessGame.chessBoard.b6.type}}}.png"/>
         </td>
         <td id="c6" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.c6.color}}}{{{chessGame.chessBoard.c6.type}}}.png"/>
         </td>
         <td id="d6" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.d6.color}}}{{{chessGame.chessBoard.d6.type}}}.png"/>
         </td>
         <td id="e6" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.e6.color}}}{{{chessGame.chessBoard.e6.type}}}.png"/>
         </td>
         <td id="f6" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.f6.color}}}{{{chessGame.chessBoard.f6.type}}}.png"/>
         </td>
         <td id="g6" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.g6.color}}}{{{chessGame.chessBoard.g6.type}}}.png"/>
         </td>
         <td id="h6" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.h6.color}}}{{{chessGame.chessBoard.h6.type}}}.png"/>
         </td>
     </tr>
     <tr id="5" class="chessboard">
         <td id="a5" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.a5.color}}}{{{chessGame.chessBoard.a5.type}}}.png"/>
         </td>
         <td id="b5" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.b5.color}}}{{{chessGame.chessBoard.b5.type}}}.png"/>
         </td>
         <td id="c5" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.c5.color}}}{{{chessGame.chessBoard.c5.type}}}.png"/>
         </td>
         <td id="d5" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.d5.color}}}{{{chessGame.chessBoard.d5.type}}}.png"/>
         </td>
         <td id="e5" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.e5.color}}}{{{chessGame.chessBoard.e5.type}}}.png"/>
         </td>
         <td id="f5" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.f5.color}}}{{{chessGame.chessBoard.f5.type}}}.png"/>
         </td>
         <td id="g5" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.g5.color}}}{{{chessGame.chessBoard.g5.type}}}.png"/>
         </td>
         <td id="h5" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.h5.color}}}{{{chessGame.chessBoard.h5.type}}}.png"/>
         </td>
     </tr>
     <tr id="4" class="chessboard">
         <td id="a4" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.a4.color}}}{{{chessGame.chessBoard.a4.type}}}.png"/>
         </td>
         <td id="b4" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.b4.color}}}{{{chessGame.chessBoard.b4.type}}}.png"/>
         </td>
         <td id="c4" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.c4.color}}}{{{chessGame.chessBoard.c4.type}}}.png"/>
         </td>
         <td id="d4" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.d4.color}}}{{{chessGame.chessBoard.d4.type}}}.png"/>
         </td>
         <td id="e4" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.e4.color}}}{{{chessGame.chessBoard.e4.type}}}.png"/>
         </td>
         <td id="f4" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.f4.color}}}{{{chessGame.chessBoard.f4.type}}}.png"/>
         </td>
         <td id="g4" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.g4.color}}}{{{chessGame.chessBoard.g4.type}}}.png"/>
         </td>
         <td id="h4" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.h4.color}}}{{{chessGame.chessBoard.h4.type}}}.png"/>
         </td>
     </tr>
     <tr id="3" class="chessboard">
         <td id="a3" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.a3.color}}}{{{chessGame.chessBoard.a3.type}}}.png"/>
         </td>
         <td id="b3" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.b3.color}}}{{{chessGame.chessBoard.b3.type}}}.png"/>
         </td>
         <td id="c3" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.c3.color}}}{{{chessGame.chessBoard.c3.type}}}.png"/>
         </td>
         <td id="d3" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.d3.color}}}{{{chessGame.chessBoard.d3.type}}}.png"/>
         </td>
         <td id="e3" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.e3.color}}}{{{chessGame.chessBoard.e3.type}}}.png"/>
         </td>
         <td id="f3" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.f3.color}}}{{{chessGame.chessBoard.f3.type}}}.png"/>
         </td>
         <td id="g3" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.g3.color}}}{{{chessGame.chessBoard.g3.type}}}.png"/>
         </td>
         <td id="h3" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.h3.color}}}{{{chessGame.chessBoard.h3.type}}}.png"/>
         </td>
     </tr>
     <tr id="2" class="chessboard">
         <td id="a2" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.a2.color}}}{{{chessGame.chessBoard.a2.type}}}.png"/>
         </td>
         <td id="b2" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.b2.color}}}{{{chessGame.chessBoard.b2.type}}}.png"/>
         </td>
         <td id="c2" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.c2.color}}}{{{chessGame.chessBoard.c2.type}}}.png"/>
         </td>
         <td id="d2" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.d2.color}}}{{{chessGame.chessBoard.d2.type}}}.png"/>
         </td>
         <td id="e2" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.e2.color}}}{{{chessGame.chessBoard.e2.type}}}.png"/>
         </td>
         <td id="f2" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.f2.color}}}{{{chessGame.chessBoard.f2.type}}}.png"/>
         </td>
         <td id="g2" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.g2.color}}}{{{chessGame.chessBoard.g2.type}}}.png"/>
         </td>
         <td id="h2" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.h2.color}}}{{{chessGame.chessBoard.h2.type}}}.png"/>
         </td>
     </tr>
     <tr id="1" class="chessboard">
         <td id="a1" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.a1.color}}}{{{chessGame.chessBoard.a1.type}}}.png"/>
         </td>
         <td id="b1" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.b1.color}}}{{{chessGame.chessBoard.b1.type}}}.png"/>
         </td>
         <td id="c1" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.c1.color}}}{{{chessGame.chessBoard.c1.type}}}.png"/>
         </td>
         <td id="d1" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.d1.color}}}{{{chessGame.chessBoard.d1.type}}}.png"/>
         </td>
         <td id="e1" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.e1.color}}}{{{chessGame.chessBoard.e1.type}}}.png"/>
         </td>
         <td id="f1" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.f1.color}}}{{{chessGame.chessBoard.f1.type}}}.png"/>
         </td>
         <td id="g1" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.g1.color}}}{{{chessGame.chessBoard.g1.type}}}.png"/>
         </td>
         <td id="h1" class="chessboard">
-            <img class="chessboard" src="/images/{{{chessGame.chessBoard.h1.color}}}{{{chessGame.chessBoard.h1.type}}}.png"/>
         </td>
     </tr>
 </table>

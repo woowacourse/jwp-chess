@@ -1,7 +1,7 @@
 package chess;
 
-import chess.controller.Response;
-import chess.controller.SparkChessController;
+import chess.controller.web.Response;
+import chess.controller.web.SparkChessController;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -21,7 +21,7 @@ public class SparkChessApplication {
 
         get("/", (req, res) -> {
             Response response = sparkChessController.resetGameAsReadyState();
-            return render(response.getModel(), "index.html");
+            return render(response.getModel(), "index.hbs");
         });
 
         post("/game", (req, res) -> {
@@ -29,7 +29,7 @@ public class SparkChessApplication {
             Response response = sparkChessController.createRoom(roomId);
             if (response.isNotSuccessful()) {
                 res.status(response.getHttpStatus());
-                return render(response.getModel(), "index.html");
+                return render(response.getModel(), "index.hbs");
             }
             return render(response.getModel(), "game.hbs");
         });

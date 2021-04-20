@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.web;
 
 public enum StatusCode {
     SUCCESSFUL(200),

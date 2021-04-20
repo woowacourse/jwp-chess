@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.web;
 
 import chess.domain.board.Position;
 import chess.domain.feature.Color;

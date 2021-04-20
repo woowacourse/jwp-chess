@@ -4,10 +4,12 @@ import chess.dao.SpringChessLogDao;
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.dto.*;
+import chess.exception.IllegalRoomException;
+import chess.exception.InvalidMoveException;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class SpringChessService {
@@ -24,8 +26,10 @@ public class SpringChessService {
     }
 
     private ChessGame loadChessGame(String roomNumber) {
+        validateRoom(roomNumber);
         List<CommandDto> commands = springChessLogDao.applyCommand(roomNumber);
         ChessGame chessGame = new ChessGame();
+
         chessGame.settingBoard();
 
         for (CommandDto command : commands) {
@@ -35,16 +39,17 @@ public class SpringChessService {
         return chessGame;
     }
 
-    public BoardDto move(MoveRequestDto moveRequestDto) throws SQLException {
+    private void validateRoom(String roomId) {
+        if (Objects.isNull(roomId)) {
+            throw new IllegalRoomException("[ERROR] 방 이름은 공백이 될 수 없습니다.");
+        }
+    }
+
+    public BoardDto move(MoveRequestDto moveRequestDto) {
         ChessGame chessGame = loadChessGame(moveRequestDto.getRoomId());
 
-        try {
-            BoardDto boardDto = movePiece(chessGame, moveRequestDto);
-            return boardDto;
-        }
-        catch (Exception e) {
-            return start(chessGame);
-        }
+        BoardDto boardDto = movePiece(chessGame, moveRequestDto);
+        return boardDto;
     }
 
     private BoardDto start(ChessGame chessGame) {
@@ -53,9 +58,12 @@ public class SpringChessService {
     }
 
     private BoardDto movePiece(ChessGame chessGame, MoveRequestDto moveRequestDto) {
-        if (chessGame.move(moveRequestDto.getTarget(), moveRequestDto.getDestination())) {
-            springChessLogDao.addLog(moveRequestDto);
+        if (!chessGame.move(moveRequestDto.getTarget(), moveRequestDto.getDestination())) {
+            throw new InvalidMoveException();
         }
+
+        springChessLogDao.addLog(moveRequestDto);
+
         if (chessGame.isBeforeEnd()) {
             return new BoardDto(chessGame.getBoard(), chessGame.turn());
         }

@@ -41,9 +41,13 @@ function postFetch(url, bodyData) {
         },
         body: bodyData
     }).then(response => {
-        if (response.ok) {
-            return response.json();
+        if (response.status === 400) {
+            exceptionHandler(response.json());
         }
+        if (!response.ok) {
+            throw new Error(response.status);
+        }
+        return response.json();
     });
 }
 
@@ -190,6 +194,12 @@ function changeTurn(team) {
 async function clearRoom() {
     clearBoard();
     window.location.href = "/chess/clear/" + $roomId;
+}
+
+function exceptionHandler(error) {
+    error.then(data => {
+        alert(data.errorMessage);
+    });
 }
 
 document.addEventListener("click", createMoveCommand);

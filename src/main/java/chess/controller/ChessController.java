@@ -1,17 +1,15 @@
 package chess.controller;
 
-import chess.dto.request.MoveRequestDto;
-import chess.dto.request.TurnChangeRequestDto;
-import chess.dto.response.MoveResponseDto;
+import chess.dto.ChessBoardDto;
+import chess.dto.StringChessBoardDto;
+import chess.dto.response.ScoreResponseDto;
 import chess.service.ChessService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
-@RestController
+@Controller
 public class ChessController {
     private final ChessService chessService;
 
@@ -19,14 +17,41 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
-    public MoveResponseDto move(@RequestBody MoveRequestDto moveRequestDto) {
-        return chessService.move(moveRequestDto);
+    @GetMapping("/start")
+    public String start() {
+        chessService.remove();
+        chessService.makeRound();
+        return makeNewGame();
     }
 
-    @PostMapping(value = "/turn", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> turn(@RequestBody TurnChangeRequestDto turnChangeRequestDto) {
-        chessService.changeTurn(turnChangeRequestDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping("/reset")
+    public String reset() {
+        chessService.remove();
+        chessService.resetRound();
+        return makeNewGame();
+    }
+
+    @GetMapping("/chess")
+    public String chess(final Model model) throws JsonProcessingException {
+        ChessBoardDto chessBoard = chessService.chessBoardFromDB();
+        StringChessBoardDto stringChessBoard = chessService.stringChessBoard(chessBoard);
+
+        String jsonFormatChessBoard = chessService.jsonFormatChessBoard(stringChessBoard);
+        model.addAttribute("jsonFormatChessBoard", jsonFormatChessBoard);
+        String currentTurn = chessService.currentTurn();
+        model.addAttribute("currentTurn", currentTurn);
+
+        chessService.updateRound(chessBoard, currentTurn);
+
+        ScoreResponseDto scoreResponseDto = chessService.scoreResponseDto();
+        model.addAttribute("score", scoreResponseDto);
+        return "chess";
+    }
+
+    private String makeNewGame() {
+        ChessBoardDto chessBoard = chessService.chessBoard();
+        StringChessBoardDto filteredChessBoard = chessService.filteredChessBoard(chessBoard);
+        chessService.initialize(filteredChessBoard);
+        return "redirect:/chess";
     }
 }

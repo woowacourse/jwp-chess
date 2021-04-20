@@ -48,21 +48,8 @@ function serverMoveRequest(start, destination) {
         start: start,
         destination: destination
     }
-    const postOption = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(moveRequest)
-    }
-
-    fetch("/move", postOption)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-            return response.json();
-        }).then(data => {
+    apiService.moveSourceToTarget(moveRequest)
+        .then(data => {
             drawPieceImage(data);
             updateScoreUI(data.teamScore.white, data.teamScore.black);
             updateTurn(data.currentTurnTeam);

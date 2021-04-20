@@ -6,11 +6,11 @@ export default class ChessService {
         };
     }
 
-    async moveSourceToTarget({start, destination}) {
+    async moveSourceToTarget(moveRequest) {
         return await fetch(`${this.baseUrl}/move`, {
             method: "POST",
             headers: this.headers,
-            body: JSON.stringify({start, destination})
+            body: JSON.stringify(moveRequest)
         }).then(response => response.json());
     }
 

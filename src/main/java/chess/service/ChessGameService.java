@@ -1,7 +1,5 @@
 package chess.service;
 
-import chess.dao.GameDao;
-import chess.dao.PieceDao;
 import chess.domain.ChessGameManager;
 import chess.domain.board.ChessBoard;
 import chess.domain.piece.Color;
@@ -10,23 +8,25 @@ import chess.domain.position.Position;
 import chess.dto.GameListDto;
 import chess.dto.NewGameDto;
 import chess.dto.RunningGameDto;
+import chess.repository.GameRepository;
+import chess.repository.PieceRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessGameService {
-    private final GameDao gameDao;
-    private final PieceDao pieceDao;
+    private final GameRepository gameRepository;
+    private final PieceRepository pieceRepository;
 
-    public ChessGameService(GameDao gameDao, PieceDao pieceDao) {
-        this.gameDao = gameDao;
-        this.pieceDao = pieceDao;
+    public ChessGameService(GameRepository gameRepository, PieceRepository pieceRepository) {
+        this.gameRepository = gameRepository;
+        this.pieceRepository = pieceRepository;
     }
 
     public NewGameDto createNewGame() {
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.start();
-        int gameId = gameDao.saveNewGame(chessGameManager);
-        pieceDao.savePiecesByGameId(chessGameManager, gameId);
+        int gameId = gameRepository.saveNewGame(chessGameManager);
+        pieceRepository.savePiecesByGameId(chessGameManager, gameId);
         return NewGameDto.from(chessGameManager, gameId);
     }
 
@@ -35,19 +35,19 @@ public class ChessGameService {
 
         chessGameManager.move(from, to);
 
-        Piece pieceToMove = pieceDao.loadPieceByPosition(from, gameId);
-        pieceDao.deletePieceByPosition(to, gameId);
-        pieceDao.savePiece(pieceToMove, to, gameId);
-        pieceDao.deletePieceByPosition(from, gameId);
+        Piece pieceToMove = pieceRepository.loadPieceByPosition(from, gameId);
+        pieceRepository.deletePieceByPosition(to, gameId);
+        pieceRepository.savePiece(pieceToMove, to, gameId);
+        pieceRepository.deletePieceByPosition(from, gameId);
 
-        gameDao.updateTurnByGameId(chessGameManager, gameId);
+        gameRepository.updateTurnByGameId(chessGameManager, gameId);
 
         return RunningGameDto.from(chessGameManager);
     }
 
     public ChessGameManager loadChessGameByGameId(int gameId) {
-        ChessBoard chessBoard = pieceDao.loadChessBoardByGameId(gameId);
-        Color currentTurn = gameDao.loadCurrentTurnByGameId(gameId);
+        ChessBoard chessBoard = pieceRepository.loadChessBoardByGameId(gameId);
+        Color currentTurn = gameRepository.loadCurrentTurnByGameId(gameId);
 
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.load(chessBoard, currentTurn);
@@ -55,6 +55,6 @@ public class ChessGameService {
     }
 
     public GameListDto loadAllGames() {
-        return GameListDto.from(gameDao.loadGames());
+        return GameListDto.from(gameRepository.loadGames());
     }
 }

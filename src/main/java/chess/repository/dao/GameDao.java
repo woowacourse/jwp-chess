@@ -1,8 +1,9 @@
-package chess.dao;
+package chess.repository.dao;
 
 import chess.domain.ChessGameManager;
 import chess.domain.piece.Color;
 import chess.exception.NoSavedGameException;
+import chess.repository.GameRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class GameDao {
+public class GameDao implements GameRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public GameDao(JdbcTemplate jdbcTemplate) {

@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.repository.dao;
 
 import chess.domain.ChessGameManager;
 import chess.domain.board.ChessBoard;
@@ -8,6 +8,7 @@ import chess.domain.position.Position;
 import chess.dto.ChessBoardDto;
 import chess.dto.PieceDeserializeTable;
 import chess.dto.PieceDto;
+import chess.repository.PieceRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-public class PieceDao {
+public class PieceDao implements PieceRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public PieceDao(JdbcTemplate jdbcTemplate) {

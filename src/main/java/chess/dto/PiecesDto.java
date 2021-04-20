@@ -20,8 +20,8 @@ public class PiecesDto {
         }
     }
 
-    public PiecesDto(List<PieceDto> pieceDtos) {
-        this.roomId = -1;
+    public PiecesDto(int roomId, List<PieceDto> pieceDtos) {
+        this.roomId = roomId;
         this.pieceDtos = pieceDtos;
     }
 

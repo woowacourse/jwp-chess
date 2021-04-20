@@ -7,8 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function ChessPage() {
   this.roomId = parseInt(localStorage.getItem("roomId"));
-  this.getScoreUrl = "http://localhost:8080/api/score";
-  this.putBoardUrl = "http://localhost:8080/api/pieces";
+  this.chessUrl = "http://localhost:8080/api/chess/rooms/";
 }
 
 ChessPage.prototype.initChessPage = function () {
@@ -57,7 +56,6 @@ ChessPage.prototype.putPieces = function () {
   document.querySelector('.chess-game-move-button .target').value = "";
 
   const moveData = {
-    roomId: chessPage.roomId,
     source: source,
     target: target
   };
@@ -70,7 +68,10 @@ ChessPage.prototype.putPieces = function () {
     method: 'PUT'
   }
 
-  fetch(chessPage.putBoardUrl, obj)
+  console.log(obj)
+  console.log(chessPage.chessUrl + chessPage.roomId + "/pieces");
+
+  fetch(chessPage.chessUrl + chessPage.roomId + "/pieces", obj)
   .then(function (response) {
     if (response.ok) {
       return response.json();
@@ -111,7 +112,7 @@ ChessPage.prototype.registerGetScoreEvent = function () {
 
 ChessPage.prototype.getScore = function (color) {
   fetch(
-      chessPage.getScoreUrl + "?roomId=" + chessPage.roomId + "&color=" + color,
+      chessPage.chessUrl + chessPage.roomId + "/score" + "?color=" + color,
       {
         method: 'GET'
       }).then(res => res.json())

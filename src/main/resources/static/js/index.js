@@ -6,8 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function IndexPage() {
-  this.getRoomsUrl = "http://localhost:8080/api/rooms";
-  this.postPiecesUrl = "http://localhost:8080/api/pieces";
+  this.roomsApiUrl = "http://localhost:8080/api/chess/rooms";
 }
 
 IndexPage.prototype.initIndexPage = function () {
@@ -25,7 +24,7 @@ IndexPage.prototype.registerMakeRoomButtonEvent = function () {
 
 IndexPage.prototype.getRooms = function () {
   const roomList = document.querySelector(".room-list");
-  fetch(indexPage.getRoomsUrl, {
+  fetch(indexPage.roomsApiUrl, {
     method: 'GET'
   }).then(res => res.json())
   .then(function (data) {
@@ -41,7 +40,7 @@ IndexPage.prototype.getRooms = function () {
 }
 
 IndexPage.prototype.addNewRoom = function (newRoomId) {
-  fetch(indexPage.postPiecesUrl, {
+  fetch(indexPage.roomsApiUrl + "/" + newRoomId, {
     method: 'POST',
     body: JSON.stringify({
       roomId: newRoomId

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import chess.dto.request.BoardRequestDto;
+import chess.dto.request.MoveRequestDto;
 import chess.dto.request.PiecesRequestDto;
 import chess.dto.response.PiecesResponseDto;
 import chess.dto.response.RoomsResponseDto;
@@ -39,8 +39,8 @@ public class ChessApiController {
     }
 
     @PutMapping(value = "/board")
-    public PiecesResponseDto putBoard(@RequestBody BoardRequestDto boardRequestDto) {
-        return chessService.putBoard(boardRequestDto);
+    public PiecesResponseDto putBoard(@RequestBody MoveRequestDto moveRequestDto) {
+        return chessService.putBoard(moveRequestDto);
     }
 
     @GetMapping(value = "/score")

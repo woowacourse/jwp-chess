@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import chess.dao.ChessDao;
 import chess.domain.piece.Color;
-import chess.dto.request.BoardRequestDto;
+import chess.dto.request.MoveRequestDto;
 import chess.dto.request.PiecesRequestDto;
 import chess.dto.response.PieceResponseDto;
 import chess.dto.response.PiecesResponseDto;
@@ -38,7 +38,7 @@ public class ChessServiceTest {
     @Test
     @DisplayName("체스 게임 방이 없는 경우, 방을 만들고 DB에 해당 방의 정보와 기물 정보를 저장한다.")
     void addRoomTest1() {
-        PiecesRequestDto piecesRequestDto = new PiecesRequestDto(2);
+        PiecesRequestDto piecesRequestDto = new PiecesRequestDto(5);
         PiecesResponseDto piecesResponseDto = chessService.postPieces(piecesRequestDto);
 
         assertTrue(piecesResponseDto.isPlaying());
@@ -65,7 +65,7 @@ public class ChessServiceTest {
     void putBoardTest() {
         PiecesRequestDto piecesRequestDto = new PiecesRequestDto(1);
         chessService.postPieces(piecesRequestDto);
-        PiecesResponseDto piecesResponseDto = chessService.putBoard(new BoardRequestDto(1, "a2", "a4"));
+        PiecesResponseDto piecesResponseDto = chessService.putBoard(new MoveRequestDto(1, "a2", "a4"));
 
         for (PieceResponseDto pieceResponseDto : piecesResponseDto.getAlivePieces()) {
             if (pieceResponseDto.getPosition().equals("a4")) {

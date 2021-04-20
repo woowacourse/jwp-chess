@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import chess.dao.ChessDao;
 import chess.domain.chessgame.ChessGame;
@@ -18,7 +19,7 @@ import chess.domain.position.Position;
 import chess.dto.PieceDto;
 import chess.dto.PiecesDto;
 import chess.dto.RoomIdDto;
-import chess.dto.request.BoardRequestDto;
+import chess.dto.request.MoveRequestDto;
 import chess.dto.request.PiecesRequestDto;
 import chess.dto.response.PiecesResponseDto;
 import chess.dto.response.PiecesResponsesDto;
@@ -39,7 +40,7 @@ public class ChessService {
         PiecesDto piecesDto = new PiecesDto(chessDao.findPiecesByRoomId(new RoomIdDto(piecesRequestDto.getRoomId())));
         PiecesResponsesDto piecesResponsesDto = new PiecesResponsesDto(piecesDto);
 
-        if (piecesDto.getPieceDtos().size() == 0) {
+        if (CollectionUtils.isEmpty(piecesDto.getPieceDtos())) {
             chessDao.insertRoom(new RoomIdDto(piecesRequestDto.getRoomId()));
             return new PiecesResponseDto(makeNewBoard(piecesRequestDto.getRoomId()));
         }
@@ -58,13 +59,13 @@ public class ChessService {
     }
 
     @Transactional
-    public PiecesResponseDto putBoard(BoardRequestDto boardRequestDto) {
-        int roomId = boardRequestDto.getRoomId();
+    public PiecesResponseDto putBoard(MoveRequestDto moveRequestDto) {
+        int roomId = moveRequestDto.getRoomId();
         ChessGame chessGame = makeChessGame(roomId);
-        chessGame.move(new Position(boardRequestDto.getSource()), new Position(boardRequestDto.getTarget()));
+        chessGame.move(new Position(moveRequestDto.getSource()), new Position(moveRequestDto.getTarget()));
 
         chessDao.updateRoom(roomId, chessGame.getIsBlackTurn(), chessGame.isPlaying());
-        chessDao.updatePiecesByRoomId(new PiecesDto(boardRequestDto.getRoomId(), chessGame.pieces()));
+        chessDao.updatePiecesByRoomId(new PiecesDto(moveRequestDto.getRoomId(), chessGame.pieces()));
 
         return new PiecesResponseDto(makeWinnerColor(roomId, chessGame), chessGame.isPlaying(),
             new PiecesDto(chessDao.findPiecesByRoomId(new RoomIdDto(roomId))));

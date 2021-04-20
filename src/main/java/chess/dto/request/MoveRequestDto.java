@@ -1,12 +1,12 @@
 package chess.dto.request;
 
-public class BoardRequestDto {
+public class MoveRequestDto {
 
     private final int roomId;
     private final String source;
     private final String target;
 
-    public BoardRequestDto(int roomId, String source, String target) {
+    public MoveRequestDto(int roomId, String source, String target) {
         this.roomId = roomId;
         this.source = source;
         this.target = target;

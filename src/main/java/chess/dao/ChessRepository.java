@@ -11,11 +11,11 @@ import chess.dto.PiecesDto;
 import chess.dto.RoomIdDto;
 
 @Repository
-public class ChessDao {
+public class ChessRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ChessDao(JdbcTemplate jdbcTemplate) {
+    public ChessRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

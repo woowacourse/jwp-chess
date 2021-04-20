@@ -5,11 +5,11 @@ import java.util.Map;
 public class ChessGameDto {
     private final Map<String, Map<String, String>> piecePositionByTeam;
     private final String currentTurnTeam;
-    private final Map<String, Double> teamScore;
+    private final ScoreDto teamScore;
     private final boolean isPlaying;
 
     public ChessGameDto(final Map<String, Map<String, String>> piecePositionByTeam, final String currentTurnTeam,
-                        final Map<String, Double> teamScore, final boolean isPlaying) {
+                        final ScoreDto teamScore, final boolean isPlaying) {
         this.piecePositionByTeam = piecePositionByTeam;
         this.currentTurnTeam = currentTurnTeam;
         this.teamScore = teamScore;
@@ -24,7 +24,7 @@ public class ChessGameDto {
         return currentTurnTeam;
     }
 
-    public Map<String, Double> getTeamScore() {
+    public ScoreDto getTeamScore() {
         return teamScore;
     }
 

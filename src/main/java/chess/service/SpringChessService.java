@@ -7,6 +7,7 @@ import chess.webdao.ChessDao;
 import chess.webdao.MysqlChessDao;
 import chess.webdto.ChessGameDto;
 import chess.webdto.PieceDto;
+import chess.webdto.ScoreDto;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -50,10 +51,7 @@ public class SpringChessService {
         final Map<String, Map<String, String>> piecePositionToString
                 = generatePiecePositionToString(chessGame);
         final String currentTurnTeam = currentTurnTeamToString(chessGame);
-        final Map<String, Double> teamScore = new HashMap<>();
-
-        teamScore.put(WHITE_TEAM.team(), chessGame.calculateWhiteTeamScore());
-        teamScore.put(BLACK_TEAM.team(), chessGame.calculateBlackTeamScore());
+        final ScoreDto teamScore = new ScoreDto(chessGame.calculateWhiteTeamScore(), chessGame.calculateBlackTeamScore());
 
         final boolean isPlaying = chessGame.isPlaying();
 

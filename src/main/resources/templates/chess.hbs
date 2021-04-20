@@ -7,10 +7,10 @@
 </head>
 <body>
 <div id="total">
-    <input id="room-id" type="hidden" value={{id}}>
+    <input id="room-id" type="hidden" value={{state.id}}>
     <div id="top">
         <p>Woowa Kingdom Chess</p>
-        <p style="color: red">{{error}}</p>
+        <p style="color: red">{{state.error}}</p>
     </div>
     <div id="middle">
         <div id="chessboard-box">
@@ -93,15 +93,15 @@
                 <img src="/img/black_team.png">
                 <div class="information">
                     <p class="nickname">
-                        {{users.blackUser}}
+                        {{state.users.blackUser}}
                     </p>
                     <p id="black-score">
-                        {{black-score}}
+                        {{state.blackScore}}
                     </p>
                 </div>
             </div>
             <div id="turn">
-                {{#if isWhite}}
+                {{#if state.white}}
                 <img src="/img/white_turn.png">
                 {{else}}
                 <img src="/img/black_turn.png">
@@ -111,16 +111,16 @@
                 <img src="/img/white_team.png">
                 <div class="information">
                     <p class="nickname">
-                        {{users.whiteUser}}
+                        {{state.users.whiteUser}}
                     </p>
                     <p id="white-score">
-                        {{white-score}}
+                        {{state.whiteScore}}
                     </p>
                 </div>
             </div>
             <div id="bottom">
                 <button onclick="location.href='/'">나가기</button>
-                <button onclick="location.href='/room/' + {{id}} + '/play'">{{button}}</button>
+                <button onclick="location.href='/room/' + {{id}} + '/play'">{{state.button}}</button>
                 <button onclick="location.href='/room/' + {{id}} + '/continue'">이어하기</button>
             </div>
         </div>
@@ -129,10 +129,10 @@
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript" src="/js/chess.js"></script>
 <script type="text/javascript">
-    {{#pieces}}
+    {{#state.pieces}}
     document.getElementById("{{position}}")
         .insertAdjacentHTML("beforeend", "<img src=/img/pieces/{{team}}_{{initial}}.png>");
-    {{/pieces}}
+    {{/state.pieces}}
 </script>
 </body>
 </html>

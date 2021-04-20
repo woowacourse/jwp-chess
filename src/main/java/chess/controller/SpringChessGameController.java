@@ -1,9 +1,7 @@
 package chess.controller;
 
 import chess.domain.ChessGame;
-import chess.domain.Team;
-import chess.dto.game.PiecesDTO;
-import chess.dto.user.UsersDTO;
+import chess.dto.game.GameDTO;
 import chess.exception.InitialSettingDataException;
 import chess.exception.NoLogsException;
 import chess.exception.NotEnoughPlayerException;
@@ -43,10 +41,8 @@ public final class SpringChessGameController {
 
     @GetMapping("/room/{id}")
     public String enterRoom(@PathVariable final String id, final Model model) {
-        model.addAttribute("number", id);
-        model.addAttribute("button", "새로운게임");
-        model.addAttribute("isWhite", true);
-        model.addAttribute("users", userService.participatedUsers(id));
+        model.addAttribute("state",
+                new GameDTO(id, userService.participatedUsers(id), "새로운게임", true));
         return "chess";
     }
 
@@ -54,8 +50,9 @@ public final class SpringChessGameController {
     public String startGame(@PathVariable final String id, final Model model) {
         roomService.addNewRoom(id);
         logService.initializeByRoomId(id);
-        UsersDTO users = userService.usersParticipatedInGame(id);
-        gameInformation(roomService.loadChessGameById(id), model, id, users);
+        model.addAttribute("state",
+                new GameDTO(id, userService.usersParticipatedInGame(id), roomService.loadChessGameById(id), "초기화")
+        );
         return "chess";
     }
 
@@ -63,21 +60,10 @@ public final class SpringChessGameController {
     public String continueGame(@PathVariable final String id, final Model model) {
         ChessGame chessGame = roomService.initializeChessGame(id);
         logService.continueGame(id, chessGame);
-        UsersDTO users = userService.usersParticipatedInGame(id);
-        gameInformation(chessGame, model, id, users);
+        model.addAttribute("state",
+                new GameDTO(id, userService.usersParticipatedInGame(id), roomService.loadChessGameById(id), "초기화")
+        );
         return "chess";
-    }
-
-    private void gameInformation(final ChessGame chessGame, final Model model,
-                                 final String roomId, final UsersDTO users) {
-        PiecesDTO piecesDTOs = PiecesDTO.create(chessGame.board());
-        model.addAttribute("pieces", piecesDTOs.toList());
-        model.addAttribute("button", "초기화");
-        model.addAttribute("isWhite", Team.WHITE.equals(chessGame.turn()));
-        model.addAttribute("black-score", chessGame.scoreByTeam(Team.BLACK));
-        model.addAttribute("white-score", chessGame.scoreByTeam(Team.WHITE));
-        model.addAttribute("id", roomId);
-        model.addAttribute("users", users);
     }
 
     @GetMapping(path = "/error-page/{code}")
@@ -93,10 +79,8 @@ public final class SpringChessGameController {
     @ExceptionHandler({NoLogsException.class, NotEnoughPlayerException.class})
     public String notExistLog(final RoomException e, final Model model) {
         String roomId = e.getRoomId();
-        model.addAttribute("id", roomId);
-        model.addAttribute("button", "새로운게임");
-        model.addAttribute("users", userService.participatedUsers(roomId));
-        model.addAttribute("error", e.getMessage());
+        model.addAttribute("state",
+                new GameDTO(roomId, "새로운게임", userService.participatedUsers(roomId), e.getMessage()));
         return "chess";
     }
 }

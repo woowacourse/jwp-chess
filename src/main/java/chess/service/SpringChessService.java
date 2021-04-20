@@ -7,6 +7,7 @@ import chess.webdao.ChessDao;
 import chess.webdto.ChessGameDto;
 import chess.webdto.PieceDto;
 import chess.webdto.ScoreDto;
+import chess.webdto.TeamPiecesDto;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -47,21 +48,16 @@ public class SpringChessService {
 
 
     private ChessGameDto generateChessGameDto(final ChessGame chessGame) {
-        final Map<String, Map<String, String>> piecePositionToString
-                = generatePiecePositionToString(chessGame);
+        final TeamPiecesDto piecePositionToString
+                = new TeamPiecesDto(
+                generatePiecePositionByTeamToString(chessGame.currentWhitePiecePosition()),
+                generatePiecePositionByTeamToString(chessGame.currentBlackPiecePosition())
+        );
         final String currentTurnTeam = currentTurnTeamToString(chessGame);
         final ScoreDto teamScore = new ScoreDto(chessGame.calculateWhiteTeamScore(), chessGame.calculateBlackTeamScore());
-
         final boolean isPlaying = chessGame.isPlaying();
 
         return new ChessGameDto(piecePositionToString, currentTurnTeam, teamScore, isPlaying);
-    }
-
-    private Map<String, Map<String, String>> generatePiecePositionToString(final ChessGame chessGame) {
-        final Map<String, Map<String, String>> piecePosition = new HashMap<>();
-        piecePosition.put(WHITE_TEAM.team(), generatePiecePositionByTeamToString(chessGame.currentWhitePiecePosition()));
-        piecePosition.put(BLACK_TEAM.team(), generatePiecePositionByTeamToString(chessGame.currentBlackPiecePosition()));
-        return piecePosition;
     }
 
     private Map<String, String> generatePiecePositionByTeamToString(final Map<Position, Piece> piecePosition) {

@@ -7,7 +7,7 @@ import chess.domain.team.CapturedPieces;
 import chess.domain.team.PiecePositions;
 import chess.domain.team.Score;
 import chess.domain.team.Team;
-import chess.webdto.ChessGameTableDto;
+import chess.webdto.TurnDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -20,12 +20,12 @@ import static chess.webdto.TeamDto.WHITE_TEAM;
 //todo: CRUD 위주로 진행해야함
 @Repository
 public class MysqlChessDao implements ChessDao {
-    private final RowMapper<ChessGameTableDto> actorRowMapper = (resultSet, rowNum) -> {
-        ChessGameTableDto chessGameTableDto = new ChessGameTableDto(
+    private final RowMapper<TurnDto> actorRowMapper = (resultSet, rowNum) -> {
+        TurnDto turnDto = new TurnDto(
                 resultSet.getString("current_turn_team"),
                 resultSet.getBoolean("is_playing")
         );
-        return chessGameTableDto;
+        return turnDto;
     };
     private JdbcTemplate jdbcTemplate;
 
@@ -69,8 +69,8 @@ public class MysqlChessDao implements ChessDao {
 
     private ChessGame generateChessGame(final Team blackTeam, final Team whiteTeam) {
         final String chessGameQuery = "SELECT * FROM chess_game";
-        final ChessGameTableDto chessGameTableDto = this.jdbcTemplate.queryForObject(chessGameQuery, actorRowMapper);
-        return generateChessGameAccordingToDB(blackTeam, whiteTeam, chessGameTableDto.getCurrentTurnTeam(), chessGameTableDto.getIsPlaying());
+        final TurnDto turnDto = this.jdbcTemplate.queryForObject(chessGameQuery, actorRowMapper);
+        return generateChessGameAccordingToDB(blackTeam, whiteTeam, turnDto.getCurrentTurnTeam(), turnDto.getIsPlaying());
     }
 
     private ChessGame generateChessGameAccordingToDB(final Team blackTeam, final Team whiteTeam,

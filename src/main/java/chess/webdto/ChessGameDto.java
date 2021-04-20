@@ -3,12 +3,12 @@ package chess.webdto;
 import java.util.Map;
 
 public class ChessGameDto {
-    private final Map<String, Map<String, String>> piecePositionByTeam;
+    private final TeamPiecesDto piecePositionByTeam;
     private final String currentTurnTeam;
     private final ScoreDto teamScore;
     private final boolean isPlaying;
 
-    public ChessGameDto(final Map<String, Map<String, String>> piecePositionByTeam, final String currentTurnTeam,
+    public ChessGameDto(final TeamPiecesDto piecePositionByTeam, final String currentTurnTeam,
                         final ScoreDto teamScore, final boolean isPlaying) {
         this.piecePositionByTeam = piecePositionByTeam;
         this.currentTurnTeam = currentTurnTeam;
@@ -16,7 +16,7 @@ public class ChessGameDto {
         this.isPlaying = isPlaying;
     }
 
-    public Map<String, Map<String, String>> getPiecePositionByTeam() {
+    public TeamPiecesDto getPiecePositionByTeam() {
         return piecePositionByTeam;
     }
 

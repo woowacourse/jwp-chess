@@ -1,4 +1,4 @@
-package chess.dao.spark;
+package chess.dao;
 
 import chess.domain.board.Team;
 import chess.dto.web.UsersInRoomDto;

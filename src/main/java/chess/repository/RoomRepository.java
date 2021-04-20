@@ -1,4 +1,4 @@
-package chess.dao.spring;
+package chess.repository;
 
 import chess.dto.web.RoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class RoomDao {
+public class RoomRepository {
 
     private JdbcTemplate jdbcTemplate;
 
-    public RoomDao(JdbcTemplate jdbcTemplate) {
+    public RoomRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

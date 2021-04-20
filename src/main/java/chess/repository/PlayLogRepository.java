@@ -1,4 +1,4 @@
-package chess.dao.spring;
+package chess.repository;
 
 import chess.domain.board.Board;
 import chess.domain.chessgame.ChessGame;
@@ -9,13 +9,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PlayLogDao {
+public class PlayLogRepository {
 
     private static final Gson GSON = new Gson();
 
     private JdbcTemplate jdbcTemplate;
 
-    public PlayLogDao(JdbcTemplate jdbcTemplate) {
+    public PlayLogRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

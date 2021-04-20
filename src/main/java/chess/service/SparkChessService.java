@@ -1,9 +1,9 @@
 package chess.service;
 
-import chess.dao.spark.ChessDataSource;
-import chess.dao.spark.PlayLogDao;
-import chess.dao.spark.RoomDao;
-import chess.dao.spark.UserDao;
+import chess.dao.ChessDataSource;
+import chess.dao.PlayLogDao;
+import chess.dao.RoomDao;
+import chess.dao.UserDao;
 import chess.domain.board.Board;
 import chess.domain.board.Point;
 import chess.domain.board.Team;

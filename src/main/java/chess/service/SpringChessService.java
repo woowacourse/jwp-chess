@@ -1,8 +1,8 @@
 package chess.service;
 
-import chess.dao.spring.PlayLogDao;
-import chess.dao.spring.RoomDao;
-import chess.dao.spring.UserDao;
+import chess.repository.PlayLogRepository;
+import chess.repository.RoomRepository;
+import chess.repository.UserRepository;
 import chess.domain.board.Board;
 import chess.domain.board.Point;
 import chess.domain.board.Team;
@@ -19,32 +19,32 @@ import java.util.stream.Collectors;
 @Service
 public class SpringChessService {
 
-    private RoomDao roomDao;
-    private UserDao userDao;
-    private PlayLogDao playLogDao;
+    private RoomRepository roomRepository;
+    private UserRepository userRepository;
+    private PlayLogRepository playLogRepository;
 
-    public SpringChessService(RoomDao roomDao, UserDao userDao, PlayLogDao playLogDao) {
-        this.roomDao = roomDao;
-        this.userDao = userDao;
-        this.playLogDao = playLogDao;
+    public SpringChessService(RoomRepository roomRepository, UserRepository userRepository, PlayLogRepository playLogRepository) {
+        this.roomRepository = roomRepository;
+        this.userRepository = userRepository;
+        this.playLogRepository = playLogRepository;
     }
 
     public List<RoomDto> openedRooms() {
-        return roomDao.openedRooms();
+        return roomRepository.openedRooms();
     }
 
     public BoardDto latestBoard(String id) {
-        return playLogDao.latestBoard(id);
+        return playLogRepository.latestBoard(id);
     }
 
     public UsersInRoomDto usersInRoom(String id) {
-        return userDao.usersInRoom(id);
+        return userRepository.usersInRoom(id);
     }
 
     public RoomIdDto create(RoomDto roomDto) {
-        userDao.insert(roomDto.getWhite());
-        userDao.insert(roomDto.getBlack());
-        return new RoomIdDto(roomDao.insert(roomDto));
+        userRepository.insert(roomDto.getWhite());
+        userRepository.insert(roomDto.getBlack());
+        return new RoomIdDto(roomRepository.insert(roomDto));
     }
 
     public GameStatusDto gameStatus(String id) {
@@ -54,23 +54,23 @@ public class SpringChessService {
     }
 
     private Board boardFromDb(String roomId) {
-        return playLogDao.latestBoard(roomId).toEntity();
+        return playLogRepository.latestBoard(roomId).toEntity();
     }
 
     private ChessGame chessGameFromDb(Board board, String roomId) {
-        GameStatusDto gameStatusDto = playLogDao.latestGameStatus(roomId);
+        GameStatusDto gameStatusDto = playLogRepository.latestGameStatus(roomId);
         Turn turn = gameStatusDto.toTurnEntity();
         GameState gameState = gameStatusDto.toGameStateEntity(board);
         return new ChessGame(turn, new ScoreBoard(board), gameState);
     }
 
     public BoardDto start(String id) {
-        Board board = playLogDao.latestBoard(id).toEntity();
+        Board board = playLogRepository.latestBoard(id).toEntity();
         ChessGame chessGame = chessGameFromDb(board, id);
         chessGame.start();
         BoardDto boardDto = new BoardDto(board);
         GameStatusDto gameStatusDto = new GameStatusDto(chessGame);
-        playLogDao.insert(boardDto, gameStatusDto, id);
+        playLogRepository.insert(boardDto, gameStatusDto, id);
         return new BoardDto(board);
     }
 
@@ -80,11 +80,11 @@ public class SpringChessService {
         chessGame.end();
         BoardDto boardDto = new BoardDto(board);
         GameStatusDto gameStatusDto = new GameStatusDto(chessGame);
-        playLogDao.insert(boardDto, gameStatusDto, id);
+        playLogRepository.insert(boardDto, gameStatusDto, id);
     }
 
     public void close(String id) {
-        roomDao.close(id);
+        roomRepository.close(id);
     }
 
     public List<PointDto> movablePoints(String id, String point) {
@@ -101,9 +101,9 @@ public class SpringChessService {
         ChessGame chessGame = chessGameFromDb(board, id);
 
         chessGame.move(Point.of(source), Point.of(destination));
-        playLogDao.insert(new BoardDto(board), new GameStatusDto(chessGame), id);
+        playLogRepository.insert(new BoardDto(board), new GameStatusDto(chessGame), id);
         if (!chessGame.isOngoing() && chessGame.winner() != Team.NONE) {
-            userDao.updateStatistics(id, chessGame.winner());
+            userRepository.updateStatistics(id, chessGame.winner());
         }
         return new BoardDto(board);
     }

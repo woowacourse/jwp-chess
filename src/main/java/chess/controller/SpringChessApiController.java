@@ -63,7 +63,7 @@ public class SpringChessApiController {
     }
 
     @PostMapping("{id}/move")
-    private BoardDto move(@PathVariable String id, @RequestBody Map<String, String> body) {
-        return springChessService.move(id, body.get("source"), body.get("destination"));
+    private BoardDto move(@PathVariable String id, @RequestBody PointsDto pointsDto) {
+        return springChessService.move(id, pointsDto.getSource(), pointsDto.getDestination());
     }
 }

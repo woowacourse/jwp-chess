@@ -1,6 +1,6 @@
 ## Refactoring TODO
 
-- [ ] MAP으로 다루던것을 좀더 명확하 DTO로 수정
+- [x] MAP으로 다루던것을 좀더 명확하게 DTO로 수정
 - [ ] success 메시지 제거
 - [ ] Dao를 Repo로 네이밍 수정
 - [ ] insert할떄 사용하는 중복체크 쿼리 분리

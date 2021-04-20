@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class GameDAO {
+public class GameDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public GameDAO(JdbcTemplate jdbcTemplate) {
+    public GameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

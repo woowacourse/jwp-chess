@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dao.GameDAO;
+import chess.dao.GameDao;
 import chess.domain.ChessGameManager;
 import chess.domain.position.Position;
 import chess.dto.*;
@@ -13,10 +13,10 @@ import java.util.function.Supplier;
 
 @RestController
 public class SpringWebChessController {
-    private GameDAO gameDAO;
+    private GameDao gameDAO;
 
     @Autowired
-    public SpringWebChessController(GameDAO gameDAO) {
+    public SpringWebChessController(GameDao gameDAO) {
         this.gameDAO = gameDAO;
     }
 

@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.spring;
 
 import chess.domain.ChessGame;
 import chess.domain.dto.GameDto;

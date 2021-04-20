@@ -1,0 +1,12 @@
+CREATE SCHEMA IF NOT EXISTS chess;
+USE chess;
+
+DROP TABLE IF EXISTS chessgame ;
+
+CREATE TABLE chessgame (
+   id int NOT NULL AUTO_INCREMENT,
+   running TINYINT NOT NULL,
+   pieces VARCHAR(192) NOT NULL,
+    next_turn VARCHAR(15) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE INDEX id_UNIQUE (id ASC) )

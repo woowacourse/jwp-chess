@@ -38,7 +38,7 @@ async function processResponse(response) {
 async function loadGameListIntoBox() {
     const gameListBox = document.getElementById("gameListBox");
 
-    const response = await fetch("/loadGames");
+    const response = await fetch("/load/games");
     if (response.ok) {
         const responseBody = await response.json();
 

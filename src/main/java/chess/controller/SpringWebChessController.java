@@ -66,7 +66,7 @@ public class SpringWebChessController {
         });
     }
 
-    @GetMapping("/loadGames")
+    @GetMapping("/load/games")
     public ResponseEntity<CommonDto<?>> loadGames() {
         return handleExpectedException(() -> {
             return ResponseEntity.ok().body(

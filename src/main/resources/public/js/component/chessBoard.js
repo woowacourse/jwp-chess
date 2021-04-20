@@ -46,8 +46,12 @@ function getClickedPiece() {
 
 async function move(sourcePosition, targetPosition) {
     try {
-        const res = await movePiece(store.pieces.flat(), store.gridDto, sourcePosition, targetPosition);
+        const res = await movePiece(store.pieces.flat(), store.gridDto,
+            sourcePosition, targetPosition);
         const data = res.data;
+        console.log(data)
+        console.log(data.code)
+        console.log(data.message)
         if (data.code === 401) {
             alert(data.message);
             return;

@@ -5,6 +5,7 @@ import chess.dto.requestdto.StartRequestDto;
 import chess.dto.response.Response;
 import chess.dto.response.ResponseCode;
 import chess.dto.responsedto.GridAndPiecesResponseDto;
+import chess.exception.ChessException;
 import chess.service.ChessService;
 import java.sql.SQLException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +68,8 @@ public class SpringController {
         return new Response(ResponseCode.OK, chessService.getAllRooms());
     }
 
-    @ExceptionHandler({Exception.class})
-    public ResponseEntity<Object> handleAll(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler({ChessException.class})
+    public ResponseEntity<Object> handleAll(ChessException e) {
+        return new ResponseEntity<>(new Response(e.getCode(), e.getMessage()), HttpStatus.OK);
     }
 }

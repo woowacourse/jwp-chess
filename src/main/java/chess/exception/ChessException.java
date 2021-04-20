@@ -3,6 +3,7 @@ package chess.exception;
 import chess.dto.response.ResponseCode;
 
 public class ChessException extends RuntimeException {
+
     private final ResponseCode responseCode;
 
     public ChessException(ResponseCode responseCode) {
@@ -12,5 +13,9 @@ public class ChessException extends RuntimeException {
 
     public int getCode() {
         return responseCode.getCode();
+    }
+
+    public String getMessage() {
+        return responseCode.getMessage();
     }
 }

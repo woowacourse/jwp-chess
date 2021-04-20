@@ -36,11 +36,11 @@ public class ChessController {
         return "index.html";
     }
 
-    @GetMapping(value = "/createroom/{name}")
+    @PostMapping(value = "room/create")
     @ResponseBody
-    public ResponseEntity createRoom(@PathVariable("name") String roomName) throws SQLException {
-        service.createRoom(roomName);
-        return ResponseEntity.ok().body(new RoomDto(roomName));
+    public ResponseEntity createRoom(@RequestBody RoomDto roomDto) throws SQLException {
+        service.createRoom(roomDto.getName());
+        return ResponseEntity.ok().body(roomDto);
     }
 
     @GetMapping(value = "/room/{name}")

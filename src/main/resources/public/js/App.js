@@ -146,7 +146,11 @@ const App = function() {
       .then(result => {
         if (result.status === "ERROR" && result.message === "[ERROR] 존재하지 않는 방입니다.") {
           alert("존재하지 않는 방이므로, 새로 방을 만듭니다.");
-          fetch(`http://localhost:8080/createroom/${roomName}`)
+          fetch(`http://localhost:8080/room/create`, {
+            method: 'POST',
+            headers: {'content-type': 'application/json'},
+            body: JSON.stringify({name: roomName})
+          })
             .then(response => response.json())
             .then(result => this.roomName = roomName);
           this.renderEmptyBoard();

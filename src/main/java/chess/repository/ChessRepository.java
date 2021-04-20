@@ -2,9 +2,9 @@ package chess.repository;
 
 import chess.dao.PieceDao;
 import chess.dao.TurnDao;
-import chess.dto.response.ChessResponseDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
+import chess.dto.response.ChessResponseDto;
 import chess.dto.response.TurnResponseDto;
 import org.springframework.stereotype.Repository;
 

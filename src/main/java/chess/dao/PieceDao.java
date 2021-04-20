@@ -1,8 +1,8 @@
 package chess.dao;
 
 import chess.dao.setting.DBConnection;
-import chess.dto.response.ChessResponseDto;
 import chess.dto.request.MoveRequestDto;
+import chess.dto.response.ChessResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public class PieceDao extends DBConnection {
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public PieceDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);

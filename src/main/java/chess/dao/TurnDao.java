@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public class TurnDao extends DBConnection {
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public TurnDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);

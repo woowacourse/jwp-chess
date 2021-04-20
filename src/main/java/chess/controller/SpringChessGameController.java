@@ -34,7 +34,7 @@ public final class SpringChessGameController {
     }
 
     @GetMapping("/")
-    private String goHome(final Model model) {
+    public String goHome(final Model model) {
         roomService.loadRooms();
         model.addAttribute("rooms", roomService.allRooms());
         model.addAttribute("results", resultService.allUserResult());
@@ -42,7 +42,7 @@ public final class SpringChessGameController {
     }
 
     @GetMapping("/enter/{id}")
-    private String enterRoom(@PathVariable final String id, final Model model) {
+    public String enterRoom(@PathVariable final String id, final Model model) {
         model.addAttribute("number", id);
         model.addAttribute("button", "새로운게임");
         model.addAttribute("isWhite", true);
@@ -51,7 +51,7 @@ public final class SpringChessGameController {
     }
 
     @GetMapping(path = "/start/{id}")
-    private String startGame(@PathVariable final String id, final Model model) {
+    public String startGame(@PathVariable final String id, final Model model) {
         roomService.addNewRoom(id);
         logService.initializeByRoomId(id);
         UsersDTO users = userService.usersParticipatedInGame(id);
@@ -60,7 +60,7 @@ public final class SpringChessGameController {
     }
 
     @GetMapping(path = "/continue/{id}")
-    private String continueGame(@PathVariable final String id, final Model model) {
+    public String continueGame(@PathVariable final String id, final Model model) {
         ChessGame chessGame = roomService.initializeChessGame(id);
         logService.continueGame(id, chessGame);
         UsersDTO users = userService.usersParticipatedInGame(id);
@@ -81,17 +81,17 @@ public final class SpringChessGameController {
     }
 
     @GetMapping(path = "/errorPage/{code}")
-    private String errorPage(@PathVariable final String code) {
+    public String errorPage(@PathVariable final String code) {
         return "/error/" + code + ".html";
     }
 
     @ExceptionHandler(InitialSettingDataException.class)
-    private String initSettingException() {
+    public String initSettingException() {
         return "/error/500.html";
     }
 
     @ExceptionHandler({NoLogsException.class, NotEnoughPlayerException.class})
-    private String notExistLog(final RoomException e, final Model model) {
+    public String notExistLog(final RoomException e, final Model model) {
         String roomId = e.getRoomId();
         model.addAttribute("id", roomId);
         model.addAttribute("button", "새로운게임");

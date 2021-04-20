@@ -46,14 +46,13 @@ public class PlayLogRepository {
         String query = "SELECT game_status FROM play_log WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
 
         try {
-            GameStatusDto result = jdbcTemplate.queryForObject(
+            return jdbcTemplate.queryForObject(
                     query,
                     (resultSet, rowNum) -> {
                         String statusJson = resultSet.getString(1);
                         return GSON.fromJson(statusJson, GameStatusDto.class);
                     },
                     roomId);
-            return result;
         } catch (Exception e) {
             generateFirstRow(roomId);
             return latestGameStatus(roomId);

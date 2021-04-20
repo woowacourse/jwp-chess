@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import chess.dao.ChessDao;
+import chess.dao.ChessRepository;
 import chess.domain.chessgame.ChessGame;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
@@ -29,19 +29,19 @@ import chess.dto.response.ScoreResponseDto;
 @Service
 public class ChessService {
 
-    private final ChessDao chessDao;
+    private final ChessRepository chessRepository;
 
-    public ChessService(ChessDao chessDao) {
-        this.chessDao = chessDao;
+    public ChessService(ChessRepository chessRepository) {
+        this.chessRepository = chessRepository;
     }
 
     @Transactional
     public PiecesResponseDto postPieces(PiecesRequestDto piecesRequestDto) {
-        PiecesDto piecesDto = new PiecesDto(chessDao.findPiecesByRoomId(new RoomIdDto(piecesRequestDto.getRoomId())));
+        PiecesDto piecesDto = new PiecesDto(chessRepository.findPiecesByRoomId(new RoomIdDto(piecesRequestDto.getRoomId())));
         PiecesResponsesDto piecesResponsesDto = new PiecesResponsesDto(piecesDto);
 
         if (CollectionUtils.isEmpty(piecesDto.getPieceDtos())) {
-            chessDao.insertRoom(new RoomIdDto(piecesRequestDto.getRoomId()));
+            chessRepository.insertRoom(new RoomIdDto(piecesRequestDto.getRoomId()));
             return new PiecesResponseDto(makeNewBoard(piecesRequestDto.getRoomId()));
         }
 
@@ -52,10 +52,10 @@ public class ChessService {
         ChessGame chessGame = new ChessGame();
 
         for (Entry<Position, Piece> entry : chessGame.pieces().entrySet()) {
-            chessDao.insertPieceByRoomId(new PieceDto(roomId, entry));
+            chessRepository.insertPieceByRoomId(new PieceDto(roomId, entry));
         }
 
-        return new PiecesResponsesDto(new PiecesDto(chessDao.findPiecesByRoomId(new RoomIdDto(roomId))));
+        return new PiecesResponsesDto(new PiecesDto(chessRepository.findPiecesByRoomId(new RoomIdDto(roomId))));
     }
 
     @Transactional
@@ -64,11 +64,11 @@ public class ChessService {
         ChessGame chessGame = makeChessGame(roomId);
         chessGame.move(new Position(moveRequestDto.getSource()), new Position(moveRequestDto.getTarget()));
 
-        chessDao.updateRoom(roomId, chessGame.getIsBlackTurn(), chessGame.isPlaying());
-        chessDao.updatePiecesByRoomId(new PiecesDto(moveRequestDto.getRoomId(), chessGame.pieces()));
+        chessRepository.updateRoom(roomId, chessGame.getIsBlackTurn(), chessGame.isPlaying());
+        chessRepository.updatePiecesByRoomId(new PiecesDto(moveRequestDto.getRoomId(), chessGame.pieces()));
 
         return new PiecesResponseDto(makeWinnerColor(roomId, chessGame), chessGame.isPlaying(),
-            new PiecesDto(chessDao.findPiecesByRoomId(new RoomIdDto(roomId))));
+            new PiecesDto(chessRepository.findPiecesByRoomId(new RoomIdDto(roomId))));
     }
 
     private Color makeWinnerColor(int roomId, ChessGame chessGame) {
@@ -76,9 +76,9 @@ public class ChessService {
 
         if (!chessGame.isPlaying()) {
             RoomIdDto roomIdDto = new RoomIdDto(roomId);
-            winnerColor = Color.valueOf(chessDao.findTurnByRoomId(roomIdDto));
-            chessDao.deleteAllPiecesByRoomId(roomIdDto);
-            chessDao.deleteRoomById(roomIdDto);
+            winnerColor = Color.valueOf(chessRepository.findTurnByRoomId(roomIdDto));
+            chessRepository.deleteAllPiecesByRoomId(roomIdDto);
+            chessRepository.deleteRoomById(roomIdDto);
         }
         return winnerColor;
     }
@@ -91,7 +91,7 @@ public class ChessService {
 
     @Transactional
     public RoomsResponseDto getRooms() {
-        List<RoomIdDto> roomIdDtos = chessDao.findAllRoomId();
+        List<RoomIdDto> roomIdDtos = chessRepository.findAllRoomId();
         return new RoomsResponseDto(roomIdDtos.stream()
             .map(RoomIdDto::getId)
             .collect(Collectors.toList())
@@ -99,10 +99,10 @@ public class ChessService {
     }
 
     private ChessGame makeChessGame(int roomId) {
-        PiecesDto piecesDtos = new PiecesDto(chessDao.findPiecesByRoomId(new RoomIdDto(roomId)));
+        PiecesDto piecesDtos = new PiecesDto(chessRepository.findPiecesByRoomId(new RoomIdDto(roomId)));
         Map<Position, Piece> board = new HashMap<>();
-        Color turn = Color.valueOf(chessDao.findTurnByRoomId(new RoomIdDto(roomId)));
-        boolean isPlaying = chessDao.findPlayingFlagByRoomId(new RoomIdDto(roomId));
+        Color turn = Color.valueOf(chessRepository.findTurnByRoomId(new RoomIdDto(roomId)));
+        boolean isPlaying = chessRepository.findPlayingFlagByRoomId(new RoomIdDto(roomId));
 
         for (PieceDto pieceDto : piecesDtos.getPieceDtos()) {
             board.put(new Position(pieceDto.getPosition()),

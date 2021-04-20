@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 
-import chess.dao.ChessDao;
+import chess.dao.ChessRepository;
 import chess.domain.piece.Color;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.PiecesRequestDto;
@@ -30,7 +30,7 @@ public class ChessServiceTest {
 
     @BeforeEach
     void setUp() {
-        chessService = new ChessService(new ChessDao(jdbcTemplate));
+        chessService = new ChessService(new ChessRepository(jdbcTemplate));
         jdbcTemplate.execute("DROP TABLE pieces IF EXISTS");
         jdbcTemplate.execute("DROP TABLE room IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE pieces(room_id bigint(20), piece_name char(1), position char(2))");

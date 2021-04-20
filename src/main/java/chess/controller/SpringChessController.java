@@ -20,7 +20,7 @@ public class SpringChessController {
         this.springChessService = springChessService;
     }
 
-    @PostMapping(value = "/new", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ChessGameDTO startNewGame() {
         return springChessService.startNewGame();
     }

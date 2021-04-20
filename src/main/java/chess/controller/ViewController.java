@@ -1,10 +1,10 @@
 package chess.controller;
 
-import chess.dto.*;
+import chess.dto.ChessBoardDto;
+import chess.dto.StringChessBoardDto;
 import chess.dto.response.ScoreResponseDto;
 import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,28 +33,18 @@ public class ViewController {
 
     @GetMapping("/chess")
     public String chess(final Model model) throws JsonProcessingException {
-        StringChessBoardDto dbChessBoard = chessService.dbChessBoard();
-        ChessBoardDto chessBoard = chessService.chessBoard(dbChessBoard);
+        ChessBoardDto chessBoard = chessService.chessBoardFromDB();
         StringChessBoardDto stringChessBoard = chessService.stringChessBoard(chessBoard);
-        PiecesDto piecesDto = chessService.piecesDto(chessBoard);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonFormatChessBoard = objectMapper.writeValueAsString(stringChessBoard.getStringChessBoard());
+        String jsonFormatChessBoard = chessService.jsonFormatChessBoard(stringChessBoard);
         model.addAttribute("jsonFormatChessBoard", jsonFormatChessBoard);
-
-        chessService.updateRound(piecesDto);
-
         String currentTurn = chessService.currentTurn();
         model.addAttribute("currentTurn", currentTurn);
 
-        chessService.changeRoundState(currentTurn);
+        chessService.updateRound(chessBoard, currentTurn);
 
-        PlayerDto playerDto = chessService.playerDto();
-        ScoreResponseDto scoreResponseDto = chessService.scoreResponseDto(playerDto);
-        chessService.changeRoundToEnd(playerDto);
-
-        model.addAttribute("whiteScore", scoreResponseDto.getWhiteScore());
-        model.addAttribute("blackScore", scoreResponseDto.getBlackScore());
+        ScoreResponseDto scoreResponseDto = chessService.scoreResponseDto();
+        model.addAttribute("score", scoreResponseDto);
         return "chess";
     }
 

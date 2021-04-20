@@ -10,14 +10,19 @@ import chess.domain.player.Round;
 import chess.domain.position.Position;
 import chess.domain.state.State;
 import chess.domain.state.StateFactory;
-import chess.dto.*;
-import chess.dto.response.ChessResponseDto;
+import chess.dto.ChessBoardDto;
+import chess.dto.PiecesDto;
+import chess.dto.PlayerDto;
+import chess.dto.StringChessBoardDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
+import chess.dto.response.ChessResponseDto;
+import chess.dto.response.MoveResponseDto;
 import chess.dto.response.ScoreResponseDto;
 import chess.dto.response.TurnResponseDto;
-import chess.dto.response.MoveResponseDto;
 import chess.repository.ChessRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -33,6 +38,11 @@ public class ChessService {
         this.chessRepository = chessRepository;
     }
 
+    public void remove() {
+        chessRepository.removeAllPieces();
+        chessRepository.removeTurn();
+    }
+
     public void resetRound() {
         round = makeRound();
     }
@@ -43,7 +53,13 @@ public class ChessService {
                 CommandFactory.initialCommand("start"));
     }
 
-    public StringChessBoardDto dbChessBoard() {
+    public ChessBoardDto chessBoardFromDB() {
+        StringChessBoardDto dbChessBoard = dbChessBoard();
+        return new ChessBoardDto(round.getBoard(
+                ChessBoardFactory.loadBoard(dbChessBoard.getStringChessBoard())));
+    }
+
+    private StringChessBoardDto dbChessBoard() {
         Map<String, String> dbChessBoard = new LinkedHashMap<>();
         List<ChessResponseDto> pieces = chessRepository.showAllPieces();
         for (ChessResponseDto piece : pieces) {
@@ -51,11 +67,6 @@ public class ChessService {
         }
         chessRepository.removeAllPieces();
         return new StringChessBoardDto(dbChessBoard);
-    }
-
-    public ChessBoardDto chessBoard(final StringChessBoardDto dbChessBoard) {
-        return new ChessBoardDto(round.getBoard(
-                ChessBoardFactory.loadBoard(dbChessBoard.getStringChessBoard())));
     }
 
     public ChessBoardDto chessBoard() {
@@ -89,10 +100,9 @@ public class ChessService {
         whitePieces.add(chessBoardEntry.getValue());
     }
 
-    public void updateRound(final PiecesDto piecesDto) {
-        round = new Round(StateFactory.initialization(new Pieces(piecesDto.getWhitePieces())),
-                StateFactory.initialization(new Pieces(piecesDto.getBlackPieces())),
-                CommandFactory.initialCommand("start"));
+    public String jsonFormatChessBoard(final StringChessBoardDto stringChessBoard) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(stringChessBoard.getStringChessBoard());
     }
 
     public String currentTurn() {
@@ -102,7 +112,19 @@ public class ChessService {
                 .collect(Collectors.joining());
     }
 
-    public void changeRoundState(final String currentTurn) {
+    public void updateRound(final ChessBoardDto chessBoard, final String currentTurn) {
+        changeRound(chessBoard);
+        changeRoundState(currentTurn);
+    }
+
+    private void changeRound(final ChessBoardDto chessBoard) {
+        PiecesDto piecesDto = piecesDto(chessBoard);
+        round = new Round(StateFactory.initialization(new Pieces(piecesDto.getWhitePieces())),
+                StateFactory.initialization(new Pieces(piecesDto.getBlackPieces())),
+                CommandFactory.initialCommand("start"));
+    }
+
+    private void changeRoundState(final String currentTurn) {
         if ("white".equals(currentTurn)) {
             Player white = round.getWhitePlayer();
             Player black = round.getBlackPlayer();
@@ -127,13 +149,16 @@ public class ChessService {
         return new PlayerDto(whitePlayer, blackPlayer);
     }
 
-    public ScoreResponseDto scoreResponseDto(final PlayerDto playerDto) {
+    public ScoreResponseDto scoreResponseDto() {
+        PlayerDto playerDto = playerDto();
         double whiteScore = playerDto.getWhitePlayer().calculateScore();
         double blackScore = playerDto.getBlackPlayer().calculateScore();
+        changeRoundToEnd();
         return new ScoreResponseDto(whiteScore, blackScore);
     }
 
-    public void changeRoundToEnd(final PlayerDto playerDto) {
+    private void changeRoundToEnd() {
+        PlayerDto playerDto = playerDto();
         if (!(playerDto.getWhitePlayer().getPieces().isKing() &&
                 playerDto.getBlackPlayer().getPieces().isKing())) {
             round.changeToEnd();
@@ -159,11 +184,6 @@ public class ChessService {
 
     public void changeTurn(final TurnChangeRequestDto turnChangeRequestDto) {
         chessRepository.changeTurn(turnChangeRequestDto);
-    }
-
-    public void remove() {
-        chessRepository.removeAllPieces();
-        chessRepository.removeTurn();
     }
 
     public StringChessBoardDto filteredChessBoard(final ChessBoardDto chessBoard) {

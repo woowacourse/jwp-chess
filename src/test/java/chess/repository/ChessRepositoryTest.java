@@ -1,11 +1,9 @@
 package chess.repository;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,9 +15,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.CollectionUtils;
 
 import chess.dao.ChessRepository;
-import chess.dto.PieceDto;
-import chess.dto.PiecesDto;
-import chess.dto.RoomIdDto;
+import chess.domain.piece.Piece;
+import chess.domain.piece.PieceFactory;
+import chess.domain.position.Position;
 
 @JdbcTest
 @TestPropertySource("classpath:application-test.properties")
@@ -44,98 +42,91 @@ public class ChessRepositoryTest {
     @Test
     @DisplayName("방의 모든 기물들을 가져온다.")
     void findAllPiecesByRoomId() {
-        RoomIdDto roomIdDto = new RoomIdDto(1);
+        int roomId = 1;
 
-        assertEquals(1, chessRepository.findPiecesByRoomId(roomIdDto).size());
-        assertEquals("p", chessRepository.findPiecesByRoomId(roomIdDto).get(0).getPieceName());
-        assertEquals("a8", chessRepository.findPiecesByRoomId(roomIdDto).get(0).getPosition());
+        assertEquals(1, chessRepository.findPiecesByRoomId(roomId).size());
+        assertEquals("p", chessRepository.findPiecesByRoomId(roomId).get(new Position("a8")).getName());
     }
 
     @Test
     @DisplayName("모든 방의 번호를 가져온다.")
     void findAllRoomId() {
         assertEquals(1, chessRepository.findAllRoomId().size());
-        assertEquals(1, chessRepository.findAllRoomId().get(0).getId());
+        assertEquals(1, chessRepository.findAllRoomId().get(0));
     }
 
     @Test
     @DisplayName("새로운 방을 추가한다.")
     void insertNewRoom() {
-        RoomIdDto roomIdDto = new RoomIdDto(2);
-
-        assertDoesNotThrow(() -> chessRepository.insertRoom(roomIdDto));
+        assertDoesNotThrow(() -> chessRepository.insertRoom(2));
         assertEquals(2, chessRepository.findAllRoomId().size());
-        assertEquals(2, chessRepository.findAllRoomId().get(1).getId());
+        assertEquals(2, chessRepository.findAllRoomId().get(1));
     }
 
     @Test
     @DisplayName("방의 turn을 찾는다.")
     void findTurnByRoomId() {
-        RoomIdDto roomIdDto = new RoomIdDto(1);
-
-        assertEquals("WHITE", chessRepository.findTurnByRoomId(roomIdDto));
+        int roomId = 1;
+        assertEquals("WHITE", chessRepository.findTurnByRoomId(roomId));
     }
 
     @Test
     @DisplayName("방이 게임이 끝났는지 찾는다.")
     void findPlayingFlagByRoomId() {
-        RoomIdDto roomIdDto = new RoomIdDto(1);
-
-        assertTrue(chessRepository.findPlayingFlagByRoomId(roomIdDto));
+        int roomId = 1;
+        assertTrue(chessRepository.findPlayingFlagByRoomId(roomId));
     }
 
     @Test
     @DisplayName("방의 정보를 수정한다.")
     void updateRoom() {
-        RoomIdDto roomIdDto = new RoomIdDto(1);
+        int roomId = 1;
         assertDoesNotThrow(() -> chessRepository.updateRoom(1, false, false));
-        assertFalse(chessRepository.findPlayingFlagByRoomId(roomIdDto));
+        assertFalse(chessRepository.findPlayingFlagByRoomId(roomId));
     }
 
     @Test
     @DisplayName("방의 기물 정보를 수정한다.")
     void updatePieces() {
-        RoomIdDto roomIdDto = new RoomIdDto(1);
-        PieceDto pieceDto = new PieceDto(1, "r", "a7");
-        PiecesDto piecesDto = new PiecesDto(Collections.singletonList(pieceDto));
+        int roomId = 1;
+        String pieceName = "r";
+        String position = "a7";
 
-        assertDoesNotThrow(() -> chessRepository.updatePiecesByRoomId(piecesDto));
-        assertEquals(2, chessRepository.findPiecesByRoomId(roomIdDto).size());
-        assertEquals("p", chessRepository.findPiecesByRoomId(roomIdDto).get(0).getPieceName());
-        assertEquals("a8", chessRepository.findPiecesByRoomId(roomIdDto).get(0).getPosition());
-        assertEquals("r", chessRepository.findPiecesByRoomId(roomIdDto).get(1).getPieceName());
-        assertEquals("a7", chessRepository.findPiecesByRoomId(roomIdDto).get(1).getPosition());
+        Map<Position, Piece> board = new HashMap<>();
+        board.put(new Position(position), PieceFactory.of(pieceName));
+        assertDoesNotThrow(() -> chessRepository.updatePiecesByRoomId(roomId, board));
+        assertEquals(1, chessRepository.findPiecesByRoomId(roomId).size());
+        assertEquals("r", chessRepository.findPiecesByRoomId(roomId).get(new Position("a7")).getName());
     }
 
     @Test
     @DisplayName("방의 기물을 추가한다.")
     void insertPiece() {
-        PieceDto pieceDto = new PieceDto(1, "k", "a5");
-        RoomIdDto roomIdDto = new RoomIdDto(1);
+        int roomId = 1;
+        String pieceName = "k";
+        String position = "a5";
 
-        assertDoesNotThrow(() -> chessRepository.insertPieceByRoomId(pieceDto));
-        assertEquals(2, chessRepository.findPiecesByRoomId(roomIdDto).size());
-        assertEquals("p", chessRepository.findPiecesByRoomId(roomIdDto).get(0).getPieceName());
-        assertEquals("a8", chessRepository.findPiecesByRoomId(roomIdDto).get(0).getPosition());
-        assertEquals("k", chessRepository.findPiecesByRoomId(roomIdDto).get(1).getPieceName());
-        assertEquals("a5", chessRepository.findPiecesByRoomId(roomIdDto).get(1).getPosition());
+        assertDoesNotThrow(() -> chessRepository.insertPieceByRoomId(roomId, pieceName, position));
+        assertEquals(2, chessRepository.findPiecesByRoomId(roomId).size());
+        assertEquals("p", chessRepository.findPiecesByRoomId(roomId).get(new Position("a8")).getName());
+        assertEquals("k", chessRepository.findPiecesByRoomId(roomId).get(new Position("a5")).getName());
     }
 
     @Test
     @DisplayName("방의 기물 정보를 삭제한다.")
     void deletePieces() {
-        RoomIdDto roomIdDto = new RoomIdDto(1);
+        int roomId = 1;
 
-        assertDoesNotThrow(() -> chessRepository.deleteAllPiecesByRoomId(roomIdDto));
-        assertTrue(CollectionUtils.isEmpty(chessRepository.findPiecesByRoomId(roomIdDto)));
+        assertDoesNotThrow(() -> chessRepository.deleteAllPiecesByRoomId(roomId));
+        assertTrue(CollectionUtils.isEmpty(chessRepository.findPiecesByRoomId(roomId)));
     }
 
     @Test
     @DisplayName("방을 삭제한다.")
     void deleteRoom() {
-        RoomIdDto roomIdDto = new RoomIdDto(1);
+        int roomId = 1;
 
-        assertDoesNotThrow(() -> chessRepository.deleteRoomById(roomIdDto));
+        assertDoesNotThrow(() -> chessRepository.deleteRoomById(roomId));
         assertTrue(CollectionUtils.isEmpty(chessRepository.findAllRoomId()));
     }
 }

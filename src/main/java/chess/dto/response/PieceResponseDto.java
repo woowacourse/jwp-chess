@@ -1,15 +1,13 @@
 package chess.dto.response;
 
-import chess.dto.PieceDto;
-
 public class PieceResponseDto {
 
     private final String position;
     private final String name;
 
-    public PieceResponseDto(PieceDto pieceDto) {
-        this.position = pieceDto.getPosition();
-        this.name = pieceDto.getPieceName();
+    public PieceResponseDto(String positionName, String pieceName) {
+        this.position = positionName;
+        this.name = pieceName;
     }
 
     public String getPosition() {

@@ -1,10 +1,7 @@
 package chess.service;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +11,7 @@ import chess.dao.ChessRepository;
 import chess.domain.chessgame.ChessGame;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
-import chess.dto.PieceDto;
-import chess.dto.PiecesDto;
-import chess.dto.RoomIdDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.PiecesRequestDto;
 import chess.dto.response.PiecesResponseDto;
@@ -37,11 +30,11 @@ public class ChessService {
 
     @Transactional
     public PiecesResponseDto postPieces(PiecesRequestDto piecesRequestDto) {
-        PiecesDto piecesDto = new PiecesDto(chessRepository.findPiecesByRoomId(new RoomIdDto(piecesRequestDto.getRoomId())));
-        PiecesResponsesDto piecesResponsesDto = new PiecesResponsesDto(piecesDto);
+        Map<Position, Piece> boardInfo = chessRepository.findPiecesByRoomId(piecesRequestDto.getRoomId());
+        PiecesResponsesDto piecesResponsesDto = new PiecesResponsesDto(boardInfo);
 
-        if (CollectionUtils.isEmpty(piecesDto.getPieceDtos())) {
-            chessRepository.insertRoom(new RoomIdDto(piecesRequestDto.getRoomId()));
+        if (CollectionUtils.isEmpty(boardInfo)) {
+            chessRepository.insertRoom(piecesRequestDto.getRoomId());
             return new PiecesResponseDto(makeNewBoard(piecesRequestDto.getRoomId()));
         }
 
@@ -52,10 +45,10 @@ public class ChessService {
         ChessGame chessGame = new ChessGame();
 
         for (Entry<Position, Piece> entry : chessGame.pieces().entrySet()) {
-            chessRepository.insertPieceByRoomId(new PieceDto(roomId, entry));
+            chessRepository.insertPieceByRoomId(roomId, entry.getValue().getName(), entry.getKey().chessCoordinate());
         }
 
-        return new PiecesResponsesDto(new PiecesDto(chessRepository.findPiecesByRoomId(new RoomIdDto(roomId))));
+        return new PiecesResponsesDto(chessRepository.findPiecesByRoomId(roomId));
     }
 
     @Transactional
@@ -65,20 +58,19 @@ public class ChessService {
         chessGame.move(new Position(moveRequestDto.getSource()), new Position(moveRequestDto.getTarget()));
 
         chessRepository.updateRoom(roomId, chessGame.getIsBlackTurn(), chessGame.isPlaying());
-        chessRepository.updatePiecesByRoomId(new PiecesDto(moveRequestDto.getRoomId(), chessGame.pieces()));
+        chessRepository.updatePiecesByRoomId(moveRequestDto.getRoomId(), chessGame.pieces());
 
         return new PiecesResponseDto(makeWinnerColor(roomId, chessGame), chessGame.isPlaying(),
-            new PiecesDto(chessRepository.findPiecesByRoomId(new RoomIdDto(roomId))));
+            chessRepository.findPiecesByRoomId(roomId));
     }
 
     private Color makeWinnerColor(int roomId, ChessGame chessGame) {
         Color winnerColor = Color.NONE;
 
         if (!chessGame.isPlaying()) {
-            RoomIdDto roomIdDto = new RoomIdDto(roomId);
-            winnerColor = Color.valueOf(chessRepository.findTurnByRoomId(roomIdDto));
-            chessRepository.deleteAllPiecesByRoomId(roomIdDto);
-            chessRepository.deleteRoomById(roomIdDto);
+            winnerColor = Color.valueOf(chessRepository.findTurnByRoomId(roomId));
+            chessRepository.deleteAllPiecesByRoomId(roomId);
+            chessRepository.deleteRoomById(roomId);
         }
         return winnerColor;
     }
@@ -91,23 +83,13 @@ public class ChessService {
 
     @Transactional
     public RoomsResponseDto getRooms() {
-        List<RoomIdDto> roomIdDtos = chessRepository.findAllRoomId();
-        return new RoomsResponseDto(roomIdDtos.stream()
-            .map(RoomIdDto::getId)
-            .collect(Collectors.toList())
-        );
+        return new RoomsResponseDto(chessRepository.findAllRoomId());
     }
 
     private ChessGame makeChessGame(int roomId) {
-        PiecesDto piecesDtos = new PiecesDto(chessRepository.findPiecesByRoomId(new RoomIdDto(roomId)));
-        Map<Position, Piece> board = new HashMap<>();
-        Color turn = Color.valueOf(chessRepository.findTurnByRoomId(new RoomIdDto(roomId)));
-        boolean isPlaying = chessRepository.findPlayingFlagByRoomId(new RoomIdDto(roomId));
-
-        for (PieceDto pieceDto : piecesDtos.getPieceDtos()) {
-            board.put(new Position(pieceDto.getPosition()),
-                PieceFactory.of(pieceDto.getPieceName()));
-        }
+        Map<Position, Piece> board = chessRepository.findPiecesByRoomId(roomId);
+        Color turn = Color.valueOf(chessRepository.findTurnByRoomId(roomId));
+        boolean isPlaying = chessRepository.findPlayingFlagByRoomId(roomId);
 
         return new ChessGame(board, isPlaying, turn);
     }

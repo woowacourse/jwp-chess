@@ -2,10 +2,11 @@ package chess.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import chess.domain.piece.Color;
-import chess.dto.PieceDto;
-import chess.dto.PiecesDto;
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 
 public class PiecesResponseDto {
 
@@ -13,12 +14,12 @@ public class PiecesResponseDto {
     private final boolean isPlaying;
     private final List<PieceResponseDto> alivePieces;
 
-    public PiecesResponseDto(Color winnerColor, boolean isPlaying, PiecesDto piecesDtos) {
+    public PiecesResponseDto(Color winnerColor, boolean isPlaying, Map<Position, Piece> board) {
         this.winnerColor = winnerColor;
         this.isPlaying = isPlaying;
         this.alivePieces = new ArrayList<>();
-        for (PieceDto movedPiece : piecesDtos.getPieceDtos()) {
-            alivePieces.add(new PieceResponseDto(movedPiece));
+        for (Map.Entry<Position, Piece> piece : board.entrySet()) {
+            alivePieces.add(new PieceResponseDto(piece.getKey().chessCoordinate(), piece.getValue().getName()));
         }
     }
 

@@ -15,7 +15,6 @@ window.onload = function () {
     })
 }
 
-
 let state = "stay"; // stay, show
 let source = "";
 let target = "";
@@ -23,6 +22,25 @@ let target = "";
 function enterNewGame() {
     const roomName = document.getElementById("game-name-input").value;
     location.href = "/room/create/" + roomName;
+}
+
+function deleteRequest() {
+    return function (event) {
+        const roomId = event.target.id;
+        const requestQuery = "roomId=" + roomId;
+        $.ajax({
+            url: "/room/delete/"+roomId,
+            type: "DELETE",
+            data: requestQuery,
+            success: function () {
+                alert("id : " + roomId + " 방을 삭제했습니다.");
+                location.href="/main";
+            },
+            error: function () {
+                alert("에러 발생");
+            }
+        })
+    }
 }
 
 function click() {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" rel="stylesheet">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
@@ -33,7 +34,7 @@
         <tr>
             <th>{{id}}</th>
             <th><a href="/game/load/{{id}}">{{name}}</a></th>
-            <th><a href="/room/delete/{{id}}">delete</a></th>
+            <th><a id={{id}} class="delete-btn">delete</a></th>
         </tr>
         {{/list}}
         </tbody>

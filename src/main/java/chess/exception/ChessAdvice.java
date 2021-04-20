@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class chessAdvice {
+public class ChessAdvice {
     @ExceptionHandler(PieceMoveException.class)
     public ResponseEntity<String> domainExceptionHandle(PieceMoveException e) {
         return ResponseEntity.badRequest().body(e.getMessage());

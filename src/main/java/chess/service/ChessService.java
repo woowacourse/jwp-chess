@@ -17,7 +17,6 @@ import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.request.TurnRequestDto;
 import chess.dto.response.MoveResponseDto;
 import chess.repository.ChessRepository;
-import jdk.jfr.internal.tool.PrettyWriter;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -75,13 +74,18 @@ public class ChessService {
         List<Piece> whitePieces = new ArrayList<>();
         List<Piece> blackPieces = new ArrayList<>();
         for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.getChessBoard().entrySet()) {
-            if (chessBoardEntry.getValue().isBlack()) {
-                blackPieces.add(chessBoardEntry.getValue());
-                continue;
-            }
-            whitePieces.add(chessBoardEntry.getValue());
+            filterPieces(whitePieces, blackPieces, chessBoardEntry);
         }
         return new PiecesDto(whitePieces, blackPieces);
+    }
+
+    private void filterPieces(final List<Piece> whitePieces, final List<Piece> blackPieces,
+                              final Map.Entry<Position, Piece> chessBoardEntry) {
+        if (chessBoardEntry.getValue().isBlack()) {
+            blackPieces.add(chessBoardEntry.getValue());
+            return;
+        }
+        whitePieces.add(chessBoardEntry.getValue());
     }
 
     public void updateRound(final PiecesDto piecesDto) {
@@ -164,12 +168,16 @@ public class ChessService {
     public StringChessBoardDto filteredChessBoard(final ChessBoardDto chessBoard) {
         Map<String, String> filteredChessBoard = new LinkedHashMap<>();
         for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.getChessBoard().entrySet()) {
-            if (chessBoardEntry.getValue() != null) {
-                filteredChessBoard.put(chessBoardEntry.getKey().toString(),
-                        chessBoardEntry.getValue().getPiece());
-            }
+            filterChessBoard(filteredChessBoard, chessBoardEntry);
         }
         return new StringChessBoardDto(filteredChessBoard);
+    }
+
+    private void filterChessBoard(final Map<String, String> filteredChessBoard,
+                                  final Map.Entry<Position, Piece> chessBoardEntry) {
+        if (chessBoardEntry.getValue() != null) {
+            filteredChessBoard.put(chessBoardEntry.getKey().toString(), chessBoardEntry.getValue().getPiece());
+        }
     }
 
     public void initialize(final StringChessBoardDto filteredChessBoard) {

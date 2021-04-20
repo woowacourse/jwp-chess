@@ -40,8 +40,8 @@ public class ChessService {
 
     public BoardDto move(MoveInfoDto moveInfoDto, String roomName) {
         Board board = convertBoardDtoToBoard(getSavedBoard(roomName));
-        Piece targetPiece = getTargetPiece(moveInfoDto, board);
         Team turnOwnerAfterMove = chessGameMove(board, moveInfoDto.getTarget(), moveInfoDto.getDestination(), roomName);
+        Piece targetPiece = getTargetPiece(moveInfoDto, board);
 
         chessDao.renewBoardAfterMove(moveInfoDto.getTarget(), moveInfoDto.getDestination(), targetPiece, roomName);
         chessDao.renewTurnOwnerAfterMove(turnOwnerAfterMove, roomName);
@@ -57,7 +57,7 @@ public class ChessService {
     }
 
     private Piece getTargetPiece(MoveInfoDto moveInfoDto, Board board) {
-        Position target = convertStringToPosition(moveInfoDto.getTarget());
+        Position target = convertStringToPosition(moveInfoDto.getDestination());
         return board.getBoard().get(target);
     }
 

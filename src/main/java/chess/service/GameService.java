@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class GameService {
@@ -54,20 +55,32 @@ public class GameService {
     }
 
     public ChessGame loadChessGame(final Long roomId) {
-        final GameDto gameDto = gameDao.load(roomId);
+        validateGameDto(gameDao.load(roomId));
+        final GameDto gameDto = gameDao.load(roomId).get();
         String[] data = gameDto.getBoard().split(",");
         return ChessGame.load(dataToBoard(data), Turn.of(gameDto.getTurn()));
     }
 
+    private void validateGameDto(Optional<GameDto> gameDto) {
+        if (gameDto.equals(Optional.empty())) {
+            throw new IllegalStateException("게임 정보를 찾을 수 없습니다.");
+        }
+    }
+
     private Board dataToBoard(String[] data) {
-        Map<Position, Piece> board = new HashMap<>(); 
-        int index = 0;
+        Map<Position, Piece> board = new HashMap<>();
+        int dataIndex = 0;
         for (Vertical v : Vertical.values()) {
-            for (Horizontal h : Horizontal.values()) {
-                board.put(new Position(v, h), PieceSymbolMapper.parseToPiece(data[index++]));
-            }
+            dataIndex = convertDataToBoard(data, board, dataIndex, v);
         }
         return new Board(board);
+    }
+
+    private int convertDataToBoard(String[] data, Map<Position, Piece> board, int index, Vertical v) {
+        for (Horizontal h : Horizontal.values()) {
+            board.put(new Position(v, h), PieceSymbolMapper.parseToPiece(data[index++]));
+        }
+        return index;
     }
 
     public ScoresDto scores(final Long roomId) {

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -36,9 +35,8 @@ public class GameController {
     }
 
     @PostMapping("/game/move/{roomId}")
-    public String move(Model model, @PathVariable final Long roomId, HttpServletRequest httpServletRequest) throws SQLException {
-        Position source = new Position(httpServletRequest.getParameter("source"));
-        Position target = new Position(httpServletRequest.getParameter("target"));
+    public String move(Model model, @PathVariable final Long roomId,
+                       @RequestParam Position source, @RequestParam Position target) throws SQLException {
         gameService.move(roomId, source, target);
         return printGame(roomId, model);
     }

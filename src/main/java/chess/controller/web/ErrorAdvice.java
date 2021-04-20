@@ -23,4 +23,10 @@ public class ErrorAdvice {
         model.addAttribute("msg", e.getMessage());
         return "errorPage";
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    private String IllegalStateExceptionHandler(IllegalStateException e, Model model) {
+        model.addAttribute("msg", e.getMessage());
+        return "errorPage";
+    }
 }

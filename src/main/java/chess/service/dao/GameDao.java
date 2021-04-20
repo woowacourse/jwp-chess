@@ -6,10 +6,12 @@ import chess.domain.board.position.Horizontal;
 import chess.domain.board.position.Vertical;
 import chess.domain.player.Turn;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class GameDao {
@@ -28,14 +30,10 @@ public class GameDao {
         jdbcTemplate.update(query, roomId, turn.name(), boardToData(board));
     }
 
-    public GameDto load(final Long roomId) {
+    public Optional<GameDto> load(final Long roomId) {
         final String query = "SELECT * FROM game_status WHERE room_id = ?";
-        return jdbcTemplate.queryForObject(query, (rs, rowNum)
-                -> makeGameDto(rs.getString(COLUMN_LABEL_OF_TURN), rs.getString(COLUMN_LABEL_OF_BOARD)), roomId);
-    }
-
-    private GameDto makeGameDto(final String turn, final String board) {
-        return new GameDto(turn, board);
+        List<GameDto> results = jdbcTemplate.query(query, makeGameDto(), roomId);
+        return results.stream().findAny();
     }
 
     public void delete(final Long roomId) {
@@ -46,6 +44,14 @@ public class GameDao {
     public void update(final Long roomId, final Turn turn, final Board board) {
         final String query = "UPDATE game_status SET turn = ?,  board= ?  WHERE room_id = ?";
         jdbcTemplate.update(query, turn.name(), boardToData(board), roomId);
+    }
+
+    private RowMapper<GameDto> makeGameDto() {
+        return (rs, rowNum) -> {
+            String turn = rs.getString(COLUMN_LABEL_OF_TURN);
+            String board = rs.getString(COLUMN_LABEL_OF_BOARD);
+            return new GameDto(turn, board);
+        };
     }
 
     public String boardToData(final Board board) {

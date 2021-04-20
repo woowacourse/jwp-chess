@@ -30,6 +30,7 @@ public class SpringChessService {
         chessDao.deleteChessGame();
 
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
+
         chessDao.createChessGame(chessGame.isPlaying());
         chessDao.createTeamInfo(WHITE_TEAM.team(), chessGame.currentWhitePiecePosition());
         chessDao.createTeamInfo(BLACK_TEAM.team(), chessGame.currentBlackPiecePosition());
@@ -38,39 +39,36 @@ public class SpringChessService {
     }
 
     public ChessGameDto loadPreviousGame() {
-        ChessGame chessGame = generateChessGame();
+        ChessGame chessGame = getChessGame();
         return generateChessGameDto(chessGame);
     }
 
-    private ChessGame generateChessGame() {
+    private ChessGame getChessGame() {
         final String blackPieces = chessDao.readTeamInfo(BLACK_TEAM.team());
         final String whitePieces = chessDao.readTeamInfo(WHITE_TEAM.team());
         final Team blackTeam = generateTeam(blackPieces, BLACK_TEAM.team());
         final Team whiteTeam = generateTeam(whitePieces, WHITE_TEAM.team());
         TurnDto turnDto = chessDao.readTurn();
 
-        ChessGame chessGame = generateChessGameAccordingToDB(blackTeam, whiteTeam, turnDto.getCurrentTurnTeam(), turnDto.getIsPlaying());
-        return chessGame;
+
+        if (WHITE_TEAM.team().equals(turnDto.getCurrentTurnTeam())) {
+            return new ChessGame(blackTeam, whiteTeam, whiteTeam, turnDto.getIsPlaying());
+        }
+        return new ChessGame(blackTeam, whiteTeam, blackTeam, turnDto.getIsPlaying());
     }
 
-    private ChessGame generateChessGameAccordingToDB(final Team blackTeam, final Team whiteTeam,
-                                                     final String currentTurnTeam, final boolean isPlaying) {
-        if (WHITE_TEAM.team().equals(currentTurnTeam)) {
-            return new ChessGame(blackTeam, whiteTeam, whiteTeam, isPlaying);
-        }
-        return new ChessGame(blackTeam, whiteTeam, blackTeam, isPlaying);
-    }
 
     private Team generateTeam(final String teamPieceInfo, final String team) {
-        Map<Position, Piece> piecePosition;
-        piecePosition = PiecePositionDaoConverter.asPiecePosition(teamPieceInfo, team);
+        Map<Position, Piece> piecePosition = PiecePositionDaoConverter.asPiecePosition(teamPieceInfo, team);
         final PiecePositions piecePositionsByTeam = new PiecePositions(piecePosition);
+
         return new Team(piecePositionsByTeam, new CapturedPieces(), new Score());
     }
 
     public ChessGameDto move(final String start, final String destination) {
-        final ChessGame chessGame = generateChessGame();
+        final ChessGame chessGame = getChessGame();
         chessGame.move(Position.of(start), Position.of(destination));
+
         chessDao.updateTeamInfo(chessGame.currentWhitePiecePosition(), WHITE_TEAM.team());
         chessDao.updateTeamInfo(chessGame.currentBlackPiecePosition(), BLACK_TEAM.team());
         chessDao.updateChessGame(chessGame, currentTurnTeamToString(chessGame));
@@ -78,7 +76,7 @@ public class SpringChessService {
         return generateChessGameDto(chessGame);
     }
 
-
+    //todo: 로직정리
     private ChessGameDto generateChessGameDto(final ChessGame chessGame) {
         final TeamPiecesDto piecePositionToString
                 = new TeamPiecesDto(

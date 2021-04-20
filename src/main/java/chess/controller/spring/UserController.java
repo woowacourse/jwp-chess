@@ -49,11 +49,4 @@ public class UserController {
         return new String(Base64.getUrlEncoder().withoutPadding()
             .encode(cookie.getBytes(StandardCharsets.UTF_8)));
     }
-
-    private String decodeCookie(String cookie) {
-        if (cookie == null) {
-            return null;
-        }
-        return new String(Base64.getUrlDecoder().decode(cookie));
-    }
 }

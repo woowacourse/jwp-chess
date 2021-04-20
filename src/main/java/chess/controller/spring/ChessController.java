@@ -1,5 +1,6 @@
 package chess.controller.spring;
 
+import chess.exception.ChessException;
 import chess.domain.ChessGame;
 import chess.domain.dto.GameDto;
 import chess.domain.dto.WebBoardDto;
@@ -7,8 +8,6 @@ import chess.domain.web.Game;
 import chess.domain.web.GameHistory;
 import chess.service.ChessService;
 import chess.service.UserService;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
@@ -104,8 +103,7 @@ public class ChessController {
     }
 
     @PostMapping("/move/{id}")
-    private String move(@PathVariable("id") int gameId, @RequestParam String command,
-        HttpServletResponse response) throws SQLException {
+    private String move(@PathVariable("id") int gameId, @RequestParam String command) {
         ChessGame chessGame = chessService.reloadAllHistory(gameId);
         try {
             chessGame.move(command);
@@ -113,23 +111,12 @@ public class ChessController {
                 chessService.updateGameIsEnd(gameId);
             }
         } catch (IllegalArgumentException e) {
-            Cookie cookie = new Cookie("em", encodeCookie(e.getMessage()));
-            cookie.setPath( "/games/" + gameId);
-            response.addCookie(cookie);
-            return REDIRECT + "/games/" + gameId;
+            throw new ChessException(e.getMessage(), gameId);
         }
 
         chessService.addGameHistory(
             new GameHistory(gameId, command, LocalDateTime.now(ZoneId.of("Asia/Seoul"))));
         return REDIRECT + "/games/" + gameId;
-    }
-
-    private String encodeCookie(String cookie) {
-        if (cookie == null) {
-            return null;
-        }
-        return new String(Base64.getUrlEncoder().withoutPadding()
-            .encode(cookie.getBytes(StandardCharsets.UTF_8)));
     }
 
     private String decodeCookie(String cookie) {

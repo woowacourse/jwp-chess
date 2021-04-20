@@ -18,7 +18,7 @@ import java.util.Map;
 public class ChessDao {
     private final JdbcTemplate jdbcTemplate;
     private final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ? and room_name = ?";
-    private final String UPDATE_TURN_QUERY = "update turn set turn_owner = ? where room_name = ?";
+    private final String UPDATE_GAME_QUERY = "update game set turn_owner = ? where room_name = ?";
 
     public ChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -37,7 +37,7 @@ public class ChessDao {
     }
 
     public TurnDto getSavedTurnOwner(String roomName) {
-        String sql = "select turn_owner from turn where room_name = ?;";
+        String sql = "select turn_owner from game where room_name = ?;";
         String turnOwner = jdbcTemplate.queryForObject(sql, String.class, roomName);
         return TurnDto.of(turnOwner);
     }
@@ -52,16 +52,14 @@ public class ChessDao {
     }
 
     public RoomListDto getRoomList() {
-        String sql = "select * from room;";
+        String sql = "select * from game;";
         List<String> roomNames = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("room_name"));
         return new RoomListDto(roomNames);
     }
 
     public void addGame(String roomName) {
-        String sql = "insert into room(room_name) values (?);";
+        String sql = "insert into game(room_name, turn_owner) values (?, 'white');";
         jdbcTemplate.update(sql, roomName);
-        String sql2 = "insert into turn(turn_owner, room_name) values ('white', ?);";
-        jdbcTemplate.update(sql2, roomName);
         String sql3 = "insert into board (position, piece, room_name) values ('a1', '&#9814;', ?);";
         jdbcTemplate.update(sql3, roomName);
         sql3 = "insert into board (position, piece, room_name) values ('b1', '&#9816;', ?);";
@@ -210,11 +208,11 @@ public class ChessDao {
     }
 
     public void renewTurnOwnerAfterMove(Team turnOwner, String roomName) {
-        jdbcTemplate.update(UPDATE_TURN_QUERY,
+        jdbcTemplate.update(UPDATE_GAME_QUERY,
                 turnOwner.getTeamString(), roomName);
     }
 
     public void resetTurnOwner(String roomName) {
-        jdbcTemplate.update(UPDATE_TURN_QUERY, "white", roomName);
+        jdbcTemplate.update(UPDATE_GAME_QUERY, "white", roomName);
     }
 }

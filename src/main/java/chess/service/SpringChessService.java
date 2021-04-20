@@ -25,29 +25,37 @@ public class SpringChessService {
     public ChessGameDTO startNewGame() {
         springChessGameDao.deleteChessGame();
         ChessGame chessGame = springChessGameDao.createChessGame();
+
         return generateChessGameDTO(chessGame);
     }
 
     public ChessGameDTO loadPreviousGame() {
         final ChessGame chessGame = springChessGameDao.readChessGame();
+
         return generateChessGameDTO(chessGame);
     }
 
     public ChessGameDTO move(final String start, final String destination) {
         final ChessGame chessGame = springChessGameDao.readChessGame();
+
         chessGame.move(Position.of(start), Position.of(destination));
         springChessGameDao.updateChessGame(chessGame, currentTurnTeamToString(chessGame));
+
         return generateChessGameDTO(chessGame);
     }
 
 
     private ChessGameDTO generateChessGameDTO(final ChessGame chessGame) {
-        final Map<String, Map<String, String>> piecePositionToString = generatePiecePositionToString(chessGame);
+        final Map<String, Map<String, String>> piecePositionToString
+                = generatePiecePositionToString(chessGame);
         final String currentTurnTeam = currentTurnTeamToString(chessGame);
         final Map<String, Double> teamScore = new HashMap<>();
+
         teamScore.put(WHITE_TEAM.team(), chessGame.calculateWhiteTeamScore());
         teamScore.put(BLACK_TEAM.team(), chessGame.calculateBlackTeamScore());
+
         final boolean isPlaying = chessGame.isPlaying();
+
         return new ChessGameDTO(piecePositionToString, currentTurnTeam, teamScore, isPlaying);
     }
 

@@ -1,8 +1,5 @@
 package chess.webdto;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class MoveRequestDto {
     private String start;
     private String destination;

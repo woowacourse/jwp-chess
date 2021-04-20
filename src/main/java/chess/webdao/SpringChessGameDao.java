@@ -17,6 +17,7 @@ import java.util.Map;
 import static chess.webdto.TeamDto.BLACK_TEAM;
 import static chess.webdto.TeamDto.WHITE_TEAM;
 
+//todo: CRUD 위주로 진행해야함
 @Repository
 public class SpringChessGameDao {
     private final RowMapper<ChessGameTableDto> actorRowMapper = (resultSet, rowNum) -> {
@@ -34,6 +35,7 @@ public class SpringChessGameDao {
 
     public ChessGame createChessGame() {
         String sql = "INSERT INTO chess_game (current_turn_team, is_playing) VALUES (?, ?)";
+        //todo : Service로 이동
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
         createTeamInfo(WHITE_TEAM.team(), chessGame.currentWhitePiecePosition());
         createTeamInfo(BLACK_TEAM.team(), chessGame.currentBlackPiecePosition());

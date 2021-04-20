@@ -3,11 +3,13 @@ package chess.service;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
+import chess.domain.team.CapturedPieces;
+import chess.domain.team.PiecePositions;
+import chess.domain.team.Score;
+import chess.domain.team.Team;
 import chess.webdao.ChessDao;
-import chess.webdto.ChessGameDto;
-import chess.webdto.PieceDto;
-import chess.webdto.ScoreDto;
-import chess.webdto.TeamPiecesDto;
+import chess.webdao.PiecePositionDaoConverter;
+import chess.webdto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -26,21 +28,51 @@ public class SpringChessService {
 
     public ChessGameDto startNewGame() {
         chessDao.deleteChessGame();
-        ChessGame chessGame = chessDao.createChessGame();
+
+        final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
+        chessDao.createChessGame(chessGame.isPlaying());
+        chessDao.createTeamInfo(WHITE_TEAM.team(), chessGame.currentWhitePiecePosition());
+        chessDao.createTeamInfo(BLACK_TEAM.team(), chessGame.currentBlackPiecePosition());
 
         return generateChessGameDto(chessGame);
     }
 
     public ChessGameDto loadPreviousGame() {
-        final ChessGame chessGame = chessDao.readChessGame();
-
+        ChessGame chessGame = generateChessGame();
         return generateChessGameDto(chessGame);
     }
 
-    public ChessGameDto move(final String start, final String destination) {
-        final ChessGame chessGame = chessDao.readChessGame();
+    private ChessGame generateChessGame() {
+        final String blackPieces = chessDao.readTeamInfo(BLACK_TEAM.team());
+        final String whitePieces = chessDao.readTeamInfo(WHITE_TEAM.team());
+        final Team blackTeam = generateTeam(blackPieces, BLACK_TEAM.team());
+        final Team whiteTeam = generateTeam(whitePieces, WHITE_TEAM.team());
+        TurnDto turnDto = chessDao.readTurn();
 
+        ChessGame chessGame = generateChessGameAccordingToDB(blackTeam, whiteTeam, turnDto.getCurrentTurnTeam(), turnDto.getIsPlaying());
+        return chessGame;
+    }
+
+    private ChessGame generateChessGameAccordingToDB(final Team blackTeam, final Team whiteTeam,
+                                                     final String currentTurnTeam, final boolean isPlaying) {
+        if (WHITE_TEAM.team().equals(currentTurnTeam)) {
+            return new ChessGame(blackTeam, whiteTeam, whiteTeam, isPlaying);
+        }
+        return new ChessGame(blackTeam, whiteTeam, blackTeam, isPlaying);
+    }
+
+    private Team generateTeam(final String teamPieceInfo, final String team) {
+        Map<Position, Piece> piecePosition;
+        piecePosition = PiecePositionDaoConverter.asPiecePosition(teamPieceInfo, team);
+        final PiecePositions piecePositionsByTeam = new PiecePositions(piecePosition);
+        return new Team(piecePositionsByTeam, new CapturedPieces(), new Score());
+    }
+
+    public ChessGameDto move(final String start, final String destination) {
+        final ChessGame chessGame = generateChessGame();
         chessGame.move(Position.of(start), Position.of(destination));
+        chessDao.updateTeamInfo(chessGame.currentWhitePiecePosition(), WHITE_TEAM.team());
+        chessDao.updateTeamInfo(chessGame.currentBlackPiecePosition(), BLACK_TEAM.team());
         chessDao.updateChessGame(chessGame, currentTurnTeamToString(chessGame));
 
         return generateChessGameDto(chessGame);

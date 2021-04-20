@@ -97,7 +97,7 @@ function show(target) {
 
     $.ajax({
         url: "/game/show/" + roomId,
-        type: "POST",
+        type: "GET",
         data: requestQuery,
         success: function (result) {
             //[d2, d3]

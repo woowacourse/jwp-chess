@@ -11,11 +11,13 @@
 <body>
 <div class="container">
     <br>
-    <input aria-describedby="basic-addon1" aria-label="new game" class="form-control" id="game-name-input" onKeypress="javascript:if(event.keyCode==13) {
-           enterNewGame();
-    }"
-           placeholder="Input new game"
-           type="text">
+        <form action="/room/new" method="post">
+            <input aria-describedby="basic-addon1" aria-label="new game" class="form-control" id="game-name-input" name="roomName" onKeypress="javascript:if(event.keyCode==13) {
+                   enterNewGame();
+            }"
+                   placeholder="Input new game"
+                   type="text">
+        </form>
     <br>
     <br>
     <table class="table table table-striped table-hover table-responsive">

@@ -8,6 +8,9 @@ services:
       - 13306:3306
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chess_db
+      MYSQL_USER: joy
+      MYSQL_PASSWORD: joy
       TZ: Asia/Seoul
     volumes:
       - ./db/mysql/data:/var/lib/mysql

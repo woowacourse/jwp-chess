@@ -43,14 +43,26 @@ export function addChessBoardEvent() {
     })
 }
 
-function serverMoveRequest(startPoint, destPoint) {
+function serverMoveRequest(start, destination) {
     const moveRequest = {
-        start: startPoint,
-        destination: destPoint
+        start: start,
+        destination: destination
+    }
+    const postOption = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(moveRequest)
     }
 
-    apiService.moveSourceToTarget(start, destination)
-        .then(data => {
+    fetch("/move", postOption)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(response.status);
+            }
+            return response.json();
+        }).then(data => {
             drawPieceImage(data);
             updateScoreUI(data.teamScore.white, data.teamScore.black);
             updateTurn(data.currentTurnTeam);

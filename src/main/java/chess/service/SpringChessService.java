@@ -27,7 +27,7 @@ public class SpringChessService {
 
     private ChessGame loadChessGame(String roomNumber) {
         validateRoom(roomNumber);
-        List<CommandDto> commands = springChessLogDao.applyCommand(roomNumber);
+        List<CommandDto> commands = springChessLogDao.find(roomNumber);
         ChessGame chessGame = new ChessGame();
 
         chessGame.settingBoard();
@@ -62,7 +62,7 @@ public class SpringChessService {
             throw new InvalidMoveException();
         }
 
-        springChessLogDao.addLog(moveRequestDto);
+        springChessLogDao.add(moveRequestDto);
 
         if (chessGame.isBeforeEnd()) {
             return new BoardDto(chessGame.getBoard(), chessGame.turn());
@@ -83,6 +83,6 @@ public class SpringChessService {
     }
 
     public void deleteRoom(String roomNumber) {
-        springChessLogDao.deleteLog(roomNumber);
+        springChessLogDao.delete(roomNumber);
     }
 }

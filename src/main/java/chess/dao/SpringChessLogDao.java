@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class SpringChessLogDao {
+public class SpringChessLogDao implements ChessRepository {
     private SimpleJdbcInsert simpleJdbcInsert;
     private JdbcTemplate jdbcTemplate;
 
@@ -24,12 +24,12 @@ public class SpringChessLogDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addLog(MoveRequestDto moveRequestDto) {
+    public Long add(MoveRequestDto moveRequestDto) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(moveRequestDto);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<CommandDto> applyCommand(String roomId) {
+    public List<CommandDto> find(String roomId) {
         String query = "select target, destination from chessgame where room_id = ? ORDER BY command_date ASC;";
         return jdbcTemplate.query(
                 query,
@@ -43,7 +43,7 @@ public class SpringChessLogDao {
                 }, roomId);
     }
 
-    public void deleteLog(String roomId) {
+    public void delete(String roomId) {
         String query = "DELETE FROM chessgame WHERE room_id = ?";
         this.jdbcTemplate.update(query, roomId);
     }

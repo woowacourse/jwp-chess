@@ -139,11 +139,7 @@ public class ChessService {
     public MoveResponseDto move(final MoveRequestDto moveRequestDto) {
         Queue<String> commands =
                 new ArrayDeque<>(Arrays.asList("move", moveRequestDto.getSource(), moveRequestDto.getTarget()));
-        try {
-            executeRound(commands);
-        } catch (final RuntimeException runtimeException) {
-            throw new RuntimeException(runtimeException.getMessage());
-        }
+        executeRound(commands);
         movePiece(moveRequestDto);
         return new MoveResponseDto(true);
     }

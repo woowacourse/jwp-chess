@@ -1,22 +1,17 @@
 package chess;
 
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static spark.Spark.get;
+import chess.controller.ChessWebController;
+import chess.dao.CustomConnectionPool;
+import chess.dao.DBChessDao;
+import chess.dao.DBMovementDao;
+import chess.service.ChessService;
 
 public class SparkChessApplication {
-    public static void main(String[] args) {
-        get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(model, "index.hbs");
-        });
-    }
 
-    private static String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+    public static void main(String[] args) {
+        final ChessService chessService = new ChessService(new DBChessDao(CustomConnectionPool.create()),
+            new DBMovementDao(CustomConnectionPool.create()));
+        final ChessWebController chessWebController = new ChessWebController(chessService);
+        chessWebController.run();
     }
 }

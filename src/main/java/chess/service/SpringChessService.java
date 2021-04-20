@@ -9,7 +9,6 @@ import chess.dto.PositionDTO;
 import chess.dto.ResponseDTO;
 import chess.dto.RoomValidateDTO;
 import chess.dto.ScoreDTO;
-import chess.exception.ChessException;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;

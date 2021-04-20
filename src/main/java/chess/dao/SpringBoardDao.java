@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 @Repository
 public class SpringBoardDao {
 
-    private final static String COMMA = ",";
-    private final static String WHITE_INITIAL = "W";
-    private final static String BLACK_INITIAL = "B";
+    private static final String COMMA = ",";
+    private static final String WHITE_INITIAL = "W";
+    private static final String BLACK_INITIAL = "B";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -58,7 +58,9 @@ public class SpringBoardDao {
     public Optional<Side> findTurn(String roomName) {
         String query = "SELECT turn FROM board WHERE roomName = ?";
         return jdbcTemplate.queryForList(query, String.class, roomName)
-        .stream().findAny().map(Side::getTurnByName);
+                .stream()
+                .findAny()
+                .map(Side::getTurnByName);
     }
 
     private String boardPositionSet(Map<Position, Piece> board) {

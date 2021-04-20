@@ -41,7 +41,7 @@ public class ChessService {
     }
 
     public void start() {
-        remove();
+        remove(); //TODO: ?
         initialize(filteredChessBoard(round.getBoard()));
     }
 

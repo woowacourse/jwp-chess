@@ -50,9 +50,9 @@ public class SpringChessController {
         String jsonFormatChessBoard = GSON.toJson(loadedBoard);
         model.addAttribute("jsonFormatChessBoard", jsonFormatChessBoard);
 
+        //TODO: Room 도입하면서 고칠 수 있을 듯
         String currentTurn = chessService.getCurrentTurn();
         model.addAttribute("currentTurn", currentTurn);
-
         PlayerDto playerDto = chessService.playerDto();
         chessService.changeRoundToEnd(playerDto);
 

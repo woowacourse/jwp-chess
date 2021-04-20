@@ -2,9 +2,7 @@ package chess.controller;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.PiecesDto;
-import chess.dto.PlayerDto;
-import chess.dto.ScoreDto;
+import chess.dto.*;
 import chess.service.ChessService;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Controller;
@@ -39,12 +37,12 @@ public class ViewController {
 
     @GetMapping("/chess")
     public String chess(final Model model) {
-        Map<String, String> chessBoardFromDB = chessService.chessBoardFromDB();
-        Map<Position, Piece> chessBoard = chessService.chessBoard(chessBoardFromDB);
-        Map<String, String> stringChessBoard = chessService.stringChessBoard(chessBoard);
+        StringChessBoardDto dbChessBoard = chessService.dbChessBoard();
+        ChessBoardDto chessBoard = chessService.chessBoard(dbChessBoard);
+        StringChessBoardDto stringChessBoard = chessService.stringChessBoard(chessBoard);
         PiecesDto piecesDto = chessService.piecesDto(chessBoard);
 
-        String jsonFormatChessBoard = GSON.toJson(stringChessBoard);
+        String jsonFormatChessBoard = GSON.toJson(stringChessBoard.getStringChessBoard());
         model.addAttribute("jsonFormatChessBoard", jsonFormatChessBoard);
 
         chessService.updateRound(piecesDto);
@@ -64,8 +62,8 @@ public class ViewController {
     }
 
     private String makeNewGame() {
-        Map<Position, Piece> chessBoard = chessService.chessBoard();
-        Map<String, String> filteredChessBoard = chessService.filteredChessBoard(chessBoard);
+        ChessBoardDto chessBoard = chessService.chessBoard();
+        StringChessBoardDto filteredChessBoard = chessService.filteredChessBoard(chessBoard);
         chessService.initialize(filteredChessBoard);
         return "redirect:/chess";
     }

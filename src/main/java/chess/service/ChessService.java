@@ -2,7 +2,6 @@ package chess.service;
 
 import chess.domain.board.ChessBoardFactory;
 import chess.domain.command.CommandFactory;
-import chess.domain.command.Move;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.piece.PiecesFactory;
@@ -11,15 +10,14 @@ import chess.domain.player.Round;
 import chess.domain.position.Position;
 import chess.domain.state.State;
 import chess.domain.state.StateFactory;
-import chess.dto.PiecesDto;
-import chess.dto.PlayerDto;
-import chess.dto.ScoreDto;
+import chess.dto.*;
 import chess.dto.request.ChessRequestDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.request.TurnRequestDto;
 import chess.dto.response.MoveResponseDto;
 import chess.repository.ChessRepository;
+import jdk.jfr.internal.tool.PrettyWriter;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -45,37 +43,38 @@ public class ChessService {
                 CommandFactory.initialCommand("start"));
     }
 
-    public Map<String, String> chessBoardFromDB() {
-        Map<String, String> chessBoardFromDB = new LinkedHashMap<>();
+    public StringChessBoardDto dbChessBoard() {
+        Map<String, String> dbChessBoard = new LinkedHashMap<>();
         List<ChessRequestDto> pieces = chessRepository.showAllPieces();
         for (ChessRequestDto piece : pieces) {
-            chessBoardFromDB.put(piece.getPiecePosition(), piece.getPieceName());
+            dbChessBoard.put(piece.getPiecePosition(), piece.getPieceName());
         }
         chessRepository.removeAllPieces();
-        return chessBoardFromDB;
+        return new StringChessBoardDto(dbChessBoard);
     }
 
-    public Map<Position, Piece> chessBoard(final Map<String, String> chessBoardFromDB) {
-        return round.getBoard(ChessBoardFactory.loadBoard(chessBoardFromDB));
+    public ChessBoardDto chessBoard(final StringChessBoardDto dbChessBoard) {
+        return new ChessBoardDto(round.getBoard(
+                ChessBoardFactory.loadBoard(dbChessBoard.getStringChessBoard())));
     }
 
-    public Map<Position, Piece> chessBoard() {
-        return round.getBoard();
+    public ChessBoardDto chessBoard() {
+        return new ChessBoardDto(round.getBoard());
     }
 
-    public Map<String, String> stringChessBoard(final Map<Position, Piece> chessBoard) {
+    public StringChessBoardDto stringChessBoard(final ChessBoardDto chessBoard) {
         Map<String, String> stringChessBoard = new LinkedHashMap<>();
-        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.entrySet()) {
+        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.getChessBoard().entrySet()) {
             stringChessBoard.put(chessBoardEntry.getKey().toString(), chessBoardEntry.getValue().getPiece());
         }
         chessRepository.initializePieceStatus(stringChessBoard);
-        return stringChessBoard;
+        return new StringChessBoardDto(stringChessBoard);
     }
 
-    public PiecesDto piecesDto(final Map<Position, Piece> chessBoard) {
+    public PiecesDto piecesDto(final ChessBoardDto chessBoard) {
         List<Piece> whitePieces = new ArrayList<>();
         List<Piece> blackPieces = new ArrayList<>();
-        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.entrySet()) {
+        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.getChessBoard().entrySet()) {
             if (chessBoardEntry.getValue().isBlack()) {
                 blackPieces.add(chessBoardEntry.getValue());
                 continue;
@@ -162,19 +161,19 @@ public class ChessService {
         chessRepository.removeTurn();
     }
 
-    public Map<String, String> filteredChessBoard(final Map<Position, Piece> chessBoard) {
+    public StringChessBoardDto filteredChessBoard(final ChessBoardDto chessBoard) {
         Map<String, String> filteredChessBoard = new LinkedHashMap<>();
-        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.entrySet()) {
+        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.getChessBoard().entrySet()) {
             if (chessBoardEntry.getValue() != null) {
                 filteredChessBoard.put(chessBoardEntry.getKey().toString(),
                         chessBoardEntry.getValue().getPiece());
             }
         }
-        return filteredChessBoard;
+        return new StringChessBoardDto(filteredChessBoard);
     }
 
-    public void initialize(final Map<String, String> filteredChessBoard) {
-        chessRepository.initializePieceStatus(filteredChessBoard);
+    public void initialize(final StringChessBoardDto filteredChessBoard) {
+        chessRepository.initializePieceStatus(filteredChessBoard.getStringChessBoard());
         chessRepository.initializeTurn();
     }
 }

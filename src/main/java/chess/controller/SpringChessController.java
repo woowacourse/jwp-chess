@@ -37,29 +37,29 @@ public class SpringChessController {
         return ResponseEntity.ok().body(new RoomNameDTO(roomName));
     }
 
-    @PostMapping(value = "/restart/{roomName}")
-    public void restart(@PathVariable String roomName) {
+    @PostMapping(value = "/restart")
+    public void restart(@SessionAttribute String roomName) {
         springChessService.newBoard(roomName);
     }
 
-    @PostMapping(value = "/move/{roomName}")
+    @PostMapping(value = "/move")
     @ResponseBody
-    public ResponseEntity move(@RequestBody PositionDTO positionDTO, @PathVariable String roomName) {
+    public ResponseEntity move(@RequestBody PositionDTO positionDTO, @SessionAttribute String roomName) {
         return ResponseEntity.ok().body(springChessService.move(positionDTO, roomName));
     }
 
-    @GetMapping("/currentBoard/{roomName}")
-    public ResponseEntity currentBoard(@PathVariable String roomName) {
+    @GetMapping("/currentBoard")
+    public ResponseEntity currentBoard(@SessionAttribute String roomName) {
         return ResponseEntity.ok().body(springChessService.currentBoardByRoomName(roomName));
     }
 
-    @PostMapping(value = "/currentTurn/{roomName}")
-    public ResponseEntity currentTurn(@PathVariable String roomName) {
+    @PostMapping(value = "/currentTurn")
+    public ResponseEntity currentTurn(@SessionAttribute String roomName) {
         return ResponseEntity.ok().body(new TurnDTO(springChessService.turnName(roomName)));
     }
 
-    @PostMapping(value = "/score/{roomName}")
-    public ResponseEntity score(@PathVariable String roomName) {
+    @PostMapping(value = "/score")
+    public ResponseEntity score(@SessionAttribute String roomName) {
         return ResponseEntity.ok().body(springChessService.score(roomName));
     }
 

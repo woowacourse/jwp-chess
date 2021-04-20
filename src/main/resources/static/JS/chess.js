@@ -72,14 +72,12 @@ function getClickedPiece() {
 
 async function move(from, to) {
 
-    const roomName = await currentRoomName();
-
     let data = {
         from: from,
         to: to,
     }
 
-    let response = await fetch(`/move/${roomName}`, {
+    let response = await fetch(`/move`, {
         method: 'post',
         body: JSON.stringify(data),
         headers: {
@@ -122,8 +120,7 @@ function changeImage(sourcePosition, targetPosition) {
 }
 
 async function changeTurn() {
-    const roomName = await currentRoomName();
-    let response = await fetch(`/currentTurn/${roomName}`, {
+    let response = await fetch(`/currentTurn`, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
@@ -146,9 +143,8 @@ async function changeTurn() {
 }
 
 async function clickStart() {
-    const roomName = await currentRoomName();
     if (confirm("재시작하시겠습니까?")) {
-        fetch(`/restart/${roomName}`, {
+        fetch(`/restart`, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -167,8 +163,7 @@ async function clickBack() {
 }
 
 async function syncBoard() {
-    const roomName = await currentRoomName();
-    const board = await fetch(`/currentBoard/${roomName}`)
+    const board = await fetch(`/currentBoard`)
         .then(res => {
         return res.json();
     });
@@ -191,8 +186,7 @@ async function syncBoard() {
 }
 
 async function clickScore() {
-    const roomName = await currentRoomName();
-    let score = await fetch(`/score/${roomName}`, {
+    let score = await fetch(`/score`, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'

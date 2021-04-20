@@ -75,7 +75,7 @@ public class SpringWebChessController {
                 ResponseEntity.ok().body(
                         new CommonDto<>(
                                 "게임을 불러왔습니다",
-                                RunningGameResponse.from(chessGameService.loadChessGameById(id))
+                                RunningGameResponse.from(chessGameService.loadChessGameByGameId(id))
                         )
                 )
         );

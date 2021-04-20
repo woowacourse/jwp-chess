@@ -3,7 +3,7 @@ package chess.service;
 import chess.dao.RoomDAO;
 import chess.domain.ChessGame;
 import chess.domain.Rooms;
-import chess.dto.RoomDTO;
+import chess.dto.room.RoomDTO;
 import chess.exception.ClientException;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package chess.dao;
 
-import chess.dto.UserDTO;
-import chess.dto.UsersDTO;
+import chess.dto.user.UserDTO;
+import chess.dto.user.UsersDTO;
 import chess.exception.InitialSettingDataException;
 import chess.exception.NotEnoughPlayerException;
 import org.springframework.dao.DataAccessException;

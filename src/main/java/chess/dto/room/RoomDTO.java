@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.room;
 
 public final class RoomDTO {
     private final int id;

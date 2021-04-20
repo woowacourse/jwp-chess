@@ -1,7 +1,8 @@
-package chess.dto;
+package chess.dto.game;
 
 import chess.domain.ChessGame;
 import chess.domain.Team;
+import chess.dto.user.UsersDTO;
 
 public final class StatusDTO {
     private final String turn;

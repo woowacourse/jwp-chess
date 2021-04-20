@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.result;
 
 public final class ResultDTO {
     private String roomId;

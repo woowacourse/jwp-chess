@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.user;
 
 public final class UserDTO {
     private final int id;

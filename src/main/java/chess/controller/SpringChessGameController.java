@@ -2,8 +2,8 @@ package chess.controller;
 
 import chess.domain.ChessGame;
 import chess.domain.Team;
-import chess.dto.PiecesDTO;
-import chess.dto.UsersDTO;
+import chess.dto.game.PiecesDTO;
+import chess.dto.user.UsersDTO;
 import chess.exception.InitialSettingDataException;
 import chess.exception.NoLogsException;
 import chess.exception.NotEnoughPlayerException;

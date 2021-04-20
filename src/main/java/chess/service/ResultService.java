@@ -2,8 +2,8 @@ package chess.service;
 
 import chess.dao.ResultDAO;
 import chess.dao.UserDAO;
-import chess.dto.RankingDTO;
-import chess.dto.UserDTO;
+import chess.dto.result.RankingDTO;
+import chess.dto.user.UserDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

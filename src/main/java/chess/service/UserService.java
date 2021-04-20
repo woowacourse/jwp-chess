@@ -1,7 +1,7 @@
 package chess.service;
 
 import chess.dao.UserDAO;
-import chess.dto.UsersDTO;
+import chess.dto.user.UsersDTO;
 import org.springframework.stereotype.Service;
 
 @Service

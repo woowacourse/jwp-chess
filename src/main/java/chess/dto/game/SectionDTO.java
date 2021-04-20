@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.game;
 
 public final class SectionDTO {
     private String roomId;

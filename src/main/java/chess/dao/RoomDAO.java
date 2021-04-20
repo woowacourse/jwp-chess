@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dto.RoomDTO;
+import chess.dto.room.RoomDTO;
 import chess.exception.InitialSettingDataException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

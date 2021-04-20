@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.result;
 
 public final class RankingDTO implements Comparable {
     private final String nickname;

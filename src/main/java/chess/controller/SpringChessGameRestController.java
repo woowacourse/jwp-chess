@@ -1,7 +1,12 @@
 package chess.controller;
 
 import chess.domain.ChessGame;
-import chess.dto.*;
+import chess.dto.game.MoveDTO;
+import chess.dto.game.SectionDTO;
+import chess.dto.game.StatusDTO;
+import chess.dto.result.ResultDTO;
+import chess.dto.room.RoomNameDTO;
+import chess.dto.user.UsersDTO;
 import chess.exception.ClientException;
 import chess.service.LogService;
 import chess.service.ResultService;

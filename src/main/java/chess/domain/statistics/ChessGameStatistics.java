@@ -18,10 +18,6 @@ public class ChessGameStatistics {
         return Collections.unmodifiableMap(colorsScore);
     }
 
-    public String getResultText() {
-        return this.matchResult.getText();
-    }
-
     public MatchResult getMatchResult() {
         return this.matchResult;
     }

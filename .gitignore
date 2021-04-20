@@ -33,3 +33,6 @@ out/
 
 ### DOCKER ###
 /docker/db/
+
+### MAC OS ###
+.DS_Store

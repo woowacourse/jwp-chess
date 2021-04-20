@@ -7,16 +7,14 @@ import java.util.Arrays;
 import java.util.function.BiPredicate;
 
 public enum MatchResult {
-    DRAW(Double::equals, "무승부"),
-    WHITE_WIN((whiteScore, blackScore) -> whiteScore > blackScore, "백 승리"),
-    BLACK_WIN((whiteScore, blackScore) -> whiteScore < blackScore, "흑 승리");
+    DRAW(Double::equals),
+    WHITE_WIN((whiteScore, blackScore) -> whiteScore > blackScore),
+    BLACK_WIN((whiteScore, blackScore) -> whiteScore < blackScore);
 
     private final BiPredicate<Double, Double> matchResultConditionScore;
-    private final String text;
 
-    MatchResult(BiPredicate<Double, Double> matchResultConditionScore, String text) {
+    MatchResult(BiPredicate<Double, Double> matchResultConditionScore) {
         this.matchResultConditionScore = matchResultConditionScore;
-        this.text = text;
     }
 
     public static MatchResult generateMatchResult(double whiteScore, double blackScore) {
@@ -31,9 +29,5 @@ public enum MatchResult {
             return WHITE_WIN;
         }
         return BLACK_WIN;
-    }
-
-    public String getText() {
-        return text;
     }
 }

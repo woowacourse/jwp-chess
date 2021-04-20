@@ -24,7 +24,7 @@ public class PieceDao implements PieceRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void savePiecesByGameId(ChessGameManager chessGameManager, int gameId) {
+    public void savePieces(ChessGameManager chessGameManager, int gameId) {
         Map<String, PieceDto> board = ChessBoardDto.from(chessGameManager.getBoard()).board();
         for (String position : board.keySet()) {
             String query = "insert into piece(game_id, name, color, position) values(?, ?, ?, ?)";
@@ -34,7 +34,7 @@ public class PieceDao implements PieceRepository {
         }
     }
 
-    public ChessBoard loadChessBoardByGameId(int gameId) {
+    public ChessBoard findChessBoardByGameId(int gameId) {
         String queryPiece = "SELECT * FROM piece WHERE game_id = ?";
         ChessBoard chessBoard = this.jdbcTemplate.queryForObject(queryPiece, chessBoardRowMapper, gameId);
         return chessBoard;
@@ -54,7 +54,7 @@ public class PieceDao implements PieceRepository {
         return ChessBoard.from(board);
     };
 
-    public Piece loadPieceByPosition(Position position, int gameId) {
+    public Piece findPieceByPosition(Position position, int gameId) {
         String queryPieceByPosition = "SELECT * FROM piece WHERE game_id = ? AND position = ?";
         Piece piece = this.jdbcTemplate.queryForObject(queryPieceByPosition, pieceRowMapper, gameId, position.getNotation());
         return piece;

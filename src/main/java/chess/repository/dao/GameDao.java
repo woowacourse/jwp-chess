@@ -18,7 +18,7 @@ public class GameDao implements GameRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int saveNewGame(ChessGameManager chessGameManager) {
+    public int save(ChessGameManager chessGameManager) {
         Color currentTurnColor = chessGameManager.getCurrentTurnColor();
 
         String insertGameQuery = "insert into game(turn) values(?)";
@@ -30,7 +30,7 @@ public class GameDao implements GameRepository {
         return gameId;
     }
 
-    public Color loadCurrentTurnByGameId(int gameId) {
+    public Color findCurrentTurnByGameId(int gameId) {
         String gameQuery = "SELECT turn FROM game WHERE game_id = ?";
         Color currentTurn = this.jdbcTemplate.queryForObject(gameQuery, colorRowMapper, gameId);
 
@@ -50,7 +50,7 @@ public class GameDao implements GameRepository {
         this.jdbcTemplate.update(query, currentTurnColor.name(), gameId);
     }
 
-    public List<Integer> loadGames() {
+    public List<Integer> findAllGamesId() {
         String query = "SELECT game_id FROM game ";
         return this.jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getInt("game_id"));
     }

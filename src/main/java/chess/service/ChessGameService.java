@@ -25,8 +25,8 @@ public class ChessGameService {
     public NewGameDto createNewGame() {
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.start();
-        int gameId = gameRepository.saveNewGame(chessGameManager);
-        pieceRepository.savePiecesByGameId(chessGameManager, gameId);
+        int gameId = gameRepository.save(chessGameManager);
+        pieceRepository.savePieces(chessGameManager, gameId);
         return NewGameDto.from(chessGameManager, gameId);
     }
 
@@ -35,7 +35,7 @@ public class ChessGameService {
 
         chessGameManager.move(from, to);
 
-        Piece pieceToMove = pieceRepository.loadPieceByPosition(from, gameId);
+        Piece pieceToMove = pieceRepository.findPieceByPosition(from, gameId);
         pieceRepository.deletePieceByPosition(to, gameId);
         pieceRepository.savePiece(pieceToMove, to, gameId);
         pieceRepository.deletePieceByPosition(from, gameId);
@@ -46,8 +46,8 @@ public class ChessGameService {
     }
 
     public ChessGameManager loadChessGameByGameId(int gameId) {
-        ChessBoard chessBoard = pieceRepository.loadChessBoardByGameId(gameId);
-        Color currentTurn = gameRepository.loadCurrentTurnByGameId(gameId);
+        ChessBoard chessBoard = pieceRepository.findChessBoardByGameId(gameId);
+        Color currentTurn = gameRepository.findCurrentTurnByGameId(gameId);
 
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.load(chessBoard, currentTurn);
@@ -55,6 +55,6 @@ public class ChessGameService {
     }
 
     public GameListDto loadAllGames() {
-        return GameListDto.from(gameRepository.loadGames());
+        return GameListDto.from(gameRepository.findAllGamesId());
     }
 }

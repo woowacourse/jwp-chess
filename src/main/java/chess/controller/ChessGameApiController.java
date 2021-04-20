@@ -28,29 +28,27 @@ public class ChessGameApiController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponseDto<Object>> saveChess(@RequestBody final ChessSaveRequestDto requestDto) {
+    public ResponseEntity<Object> saveChess(@RequestBody final ChessSaveRequestDto requestDto) {
         chessService.saveChess(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(new CommonResponseDto<>(HttpStatus.CREATED.value()));
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<CommonResponseDto<Object>> finishChess(@RequestBody final GameStatusRequestDto requestDto) {
+    public ResponseEntity<Object> finishChess(@RequestBody final GameStatusRequestDto requestDto) {
         chessService.changeGameStatus(requestDto);
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(new CommonResponseDto<>(HttpStatus.OK.value()));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<CommonResponseDto<GameStatusDto>> loadChess(@PathVariable final String name) {
+    public ResponseEntity<GameStatusDto> loadChess(@PathVariable final String name) {
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new CommonResponseDto<>(chessService.loadChess(name), HttpStatus.OK.value()));
+            .body(chessService.loadChess(name));
     }
 
     @PutMapping("/{name}/pieces")
-    public ResponseEntity<CommonResponseDto<MoveResponseDto>> movePieces(@PathVariable("name") final String gameName,
+    public ResponseEntity<MoveResponseDto> movePieces(@PathVariable("name") final String gameName,
         @RequestBody final MoveRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new CommonResponseDto<>(chessService.movePiece(gameName, requestDto), HttpStatus.OK.value()));
+            .body(chessService.movePiece(gameName, requestDto));
     }
 }

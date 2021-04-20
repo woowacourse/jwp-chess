@@ -13,7 +13,7 @@
     - [x] String.valueOf, Boolean.valueOf 활용하기
     
 - SpringChessGameDao
-    - [ ] 만약 검색되는 게임이 없다면..?!
+    - [x] 만약 검색되는 게임이 없다면..-> Client 에서 처리
     
 - ChessGameDto
     - [ ] 맵 활용 이유?! ScoreDto 활용은 어떤지 고려하기

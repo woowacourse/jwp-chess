@@ -37,6 +37,7 @@ function startNewGame() {
             alert("서버와의 통신에 실패했습니다.");
         })
 }
+
 /*
 function forceNewGame() {
     fetch("/forceNewGame")
@@ -57,12 +58,16 @@ function forceNewGame() {
 function loadPrevGame() {
     apiService.loadPrevGame()
         .then(data => {
-            initializeChessBoard(data);
-            checkIsPlaying(data);
+            if (data.status === 500) {
+                alert("저장된 게임이 없어요.")
+            }
+            if (data.status === 200) {
+                initializeChessBoard(data);
+                checkIsPlaying(data);
+            }
         })
         .catch(error => {
             console.log(error)
-            alert("서버와의 통신이 실패하였습니다.");
         })
 }
 

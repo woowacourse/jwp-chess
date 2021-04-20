@@ -8,14 +8,18 @@ import chess.domain.team.PiecePositions;
 import chess.domain.team.Score;
 import chess.domain.team.Team;
 import chess.webdto.ChessGameTableDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 import static chess.webdto.TeamDto.BLACK_TEAM;
 import static chess.webdto.TeamDto.WHITE_TEAM;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 //todo: CRUD 위주로 진행해야함
 @Repository
@@ -100,4 +104,5 @@ public class MysqlChessDao implements ChessDao{
         this.jdbcTemplate.update(deletePiecePositionQuery);
         this.jdbcTemplate.update(deleteChessGameQuery);
     }
+
 }

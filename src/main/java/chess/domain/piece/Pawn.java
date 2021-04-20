@@ -39,16 +39,17 @@ public class Pawn extends Piece {
             .anyMatch(direction -> source.sum(direction).equals(target));
     }
 
-    private boolean isForwardTwoStepMovable(Map<Position, Piece> board, Direction direction,
-        Position source,
+    private boolean isForwardTwoStepMovable(Map<Position, Piece> board, Direction direction, Position source,
         Position target) {
-        if (isMoved || !board.get(target).isEmpty()) {
+        if (!source.isInitialPawnRow(super.getColor()) || !board.get(target).isEmpty()) {
             return false;
         }
+
         Position firstStep = source.sum(direction);
         if (!board.get(firstStep).isEmpty()) {
             return false;
         }
+
         Position secondStep = firstStep.sum(direction);
         return secondStep.equals(target);
     }

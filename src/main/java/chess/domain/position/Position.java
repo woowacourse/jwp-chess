@@ -2,12 +2,15 @@ package chess.domain.position;
 
 import java.util.Objects;
 
+import chess.domain.piece.Color;
 import chess.exception.IllegalPositionException;
 
 public class Position {
 
     public static final int CHESS_BOARD_START_RANGE = 0;
     public static final int CHESS_BOARD_END_RANGE = 8;
+    private static final int INITIAL_BLACK_PAWN_ROW = 1;
+    private static final int INITIAL_WHITE_PAWN_ROW = 6;
     private static final int CHESS_COORDINATES_LENGTH = 2;
 
     private final Row row;
@@ -84,6 +87,21 @@ public class Position {
         return column.chessCoordinate() + row.chessCoordinate();
     }
 
+    public boolean isInitialPawnRow(Color color) {
+        if (color.isBlack()) {
+            return isInitialBlackPawnRow();
+        }
+        return isInitialWhitePawnRow();
+    }
+
+    public boolean isInitialBlackPawnRow() {
+        return this.row.equals(new Row(INITIAL_BLACK_PAWN_ROW));
+    }
+
+    public boolean isInitialWhitePawnRow() {
+        return this.row.equals(new Row(INITIAL_WHITE_PAWN_ROW));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -101,4 +119,5 @@ public class Position {
     public int hashCode() {
         return Objects.hash(row, column);
     }
+
 }

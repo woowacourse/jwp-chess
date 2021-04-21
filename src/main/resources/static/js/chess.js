@@ -6,9 +6,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function ChessPage() {
-    this.roomId = parseInt(localStorage.getItem("roomId"));
-    this.getScoreUrl = "http://localhost:8080/api/score/" + this.roomId;
-    this.putBoardUrl = "http://localhost:8080/api/board/" + this.roomId;
+    this.roomId = document.querySelector("#roomId").textContent;
+    this.getScoreUrl = window.location.origin + "/api/score/" + this.roomId;
+    this.putBoardUrl = window.location.origin + "/api/board/" + this.roomId;
 }
 
 ChessPage.prototype.initChessPage = function () {
@@ -56,7 +56,7 @@ ChessPage.prototype.putPieces = function () {
     document.querySelector('.chess-game-move-button .target').value = "";
 
     const moveData = {
-        roomId: chessPage.roomId,
+        roomId: this.roomId,
         source: source,
         target: target
     };
@@ -69,7 +69,7 @@ ChessPage.prototype.putPieces = function () {
         method: 'PUT'
     }
 
-    fetch(chessPage.putBoardUrl, obj)
+    fetch(this.putBoardUrl, obj)
         .then(function (response) {
             if (response.ok) {
                 return response.json();

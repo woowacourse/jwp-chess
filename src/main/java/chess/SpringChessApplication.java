@@ -3,7 +3,9 @@ package chess;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @SpringBootApplication
 @Controller
@@ -17,8 +19,9 @@ public class SpringChessApplication {
         return "index";
     }
 
-    @GetMapping("/chess")
-    public String chess() {
+    @GetMapping("/chess/{roomId}")
+    public String chess(Model model, @PathVariable int roomId) {
+        model.addAttribute("roomId", roomId);
         return "chess";
     }
 }

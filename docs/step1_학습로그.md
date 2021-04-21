@@ -61,3 +61,20 @@
 ## 링크
 - [REST service architecture](https://www.service-architecture.com/articles/web-services/representational_state_transfer_rest.html)
 - [mdn REST](https://developer.mozilla.org/ko/docs/Glossary/REST)
+
+# 학습로그 1-2
+
+# [Spring] @Transactional - 3
+
+## 내용
+- 트랜잭션의 원자성을 유지시켜준다.
+- 기본은 `(readOnly = false)`로 셋팅되어 있다. `(readOnly = true)`의 경우, 읽기 이외의 경우 exception을 던진다.
+
+# [DB] 이벤트소싱 패턴 - 4
+## 내용
+- 이벤트를 저장하는 방식이다.
+- 히스토리를 관리가 가능하며, 비즈니스 로직과 동기화할 필요가 없다.
+- 히스토리가 많으면 비즈니스로직을 수행해야하는 오버헤드가 크다. 단점을 스냅샷을 활용하여 보완할 수 있다고 한다.
+
+## 링크
+- [마이크로소프트 이벤트소싱 관련 글](https://docs.microsoft.com/ko-kr/azure/architecture/patterns/event-sourcing)

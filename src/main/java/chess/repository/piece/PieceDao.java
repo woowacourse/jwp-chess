@@ -4,7 +4,7 @@ import chess.domain.piece.Piece;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface PieceRepository {
+public interface PieceDao {
 
     long insert(long roomId, Piece piece);
 

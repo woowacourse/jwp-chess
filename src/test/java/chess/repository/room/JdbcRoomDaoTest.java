@@ -14,10 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class JdbcRoomRepositoryTest {
+class JdbcRoomDaoTest {
 
     @Autowired
-    JdbcRoomRepository repository;
+    JdbcRoomDao repository;
 
     @BeforeEach
     void setUp() {

@@ -11,9 +11,8 @@ import chess.domain.piece.King;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.team.Team;
-import chess.repository.room.JdbcRoomRepository;
+import chess.repository.room.JdbcRoomDao;
 import chess.utils.BoardUtil;
-import java.sql.SQLException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,13 +22,13 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class JdbcPieceRepositoryTest {
+class JdbcPieceDaoTest {
 
     @Autowired
-    private JdbcPieceRepository repository;
+    private JdbcPieceDao repository;
 
     @Autowired
-    private JdbcRoomRepository roomRepository;
+    private JdbcRoomDao roomRepository;
 
     private long roomId;
 

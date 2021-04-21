@@ -6,17 +6,19 @@ import chess.domain.team.Team;
 import chess.utils.BoardUtil;
 import java.sql.PreparedStatement;
 import javax.sql.DataSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class JdbcRoomRepository implements RoomRepository {
+@Component
+public class JdbcRoomDao implements RoomDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcRoomRepository(final DataSource dataSource) {
+    public JdbcRoomDao(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

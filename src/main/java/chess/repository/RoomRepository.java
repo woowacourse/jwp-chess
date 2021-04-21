@@ -52,4 +52,9 @@ public class RoomRepository {
         final String query = "UPDATE Room SET is_full = true WHERE id = ?";
         jdbcTemplate.update(query, id);
     }
+
+    public boolean checkRoomIsFull(String id) {
+        final String query = "SELECT is_full FROM Room WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, Boolean.class, id);
+    }
 }

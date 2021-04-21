@@ -115,4 +115,8 @@ public class ChessService {
     public void addUser(String roomId, String password) {
         userRepository.insert(roomId, password);
     }
+
+    public boolean checkRoomFull(String roomId) {
+        return roomRepository.checkRoomIsFull(roomId);
+    }
 }

@@ -79,7 +79,7 @@ function update(response) {
 }
 
 function showError(response) {
-    alert(response.responseText);
+    alert(response.responseJSON.message);
 }
 
 function initialize() {

@@ -1,12 +1,11 @@
-package chess.service;
+package chess.service.game;
 
 import chess.domain.ChessGame;
 import chess.domain.Position;
-import chess.repository.ChessGameRepository;
+import chess.domain.ChessGameRepository;
+import chess.service.game.ChessGameService;
 import dto.ChessGameDto;
 import dto.MoveDto;
-import dto.RoomRequestDto;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service

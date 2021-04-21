@@ -1,8 +1,6 @@
 package chess.controller;
 
-import chess.domain.Room;
-import chess.service.ChessGameService;
-import chess.service.ChessRoomService;
+import chess.service.room.ChessRoomService;
 import dto.ChessGameDto;
 import dto.RoomDto;
 import dto.RoomRequestDto;

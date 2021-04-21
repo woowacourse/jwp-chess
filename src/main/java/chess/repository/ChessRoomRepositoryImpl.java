@@ -1,6 +1,7 @@
 package chess.repository;
 
 import chess.dao.RoomDao;
+import chess.domain.ChessRoomRepository;
 import chess.domain.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ChessRoomRepositoryImpl implements ChessRoomRepository{
+public class ChessRoomRepositoryImpl implements ChessRoomRepository {
 
     private final RoomDao roomDao;
 

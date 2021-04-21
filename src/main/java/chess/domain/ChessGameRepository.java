@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.domain;
 
 import chess.domain.ChessGame;
 import dto.MoveDto;

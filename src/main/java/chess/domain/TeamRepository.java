@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.domain;
 
 import chess.domain.team.BlackTeam;
 import chess.domain.team.Team;

@@ -1,4 +1,4 @@
-package chess.service;
+package chess.service.game;
 
 import chess.domain.Room;
 import dto.ChessGameDto;

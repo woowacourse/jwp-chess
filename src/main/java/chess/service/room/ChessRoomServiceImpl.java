@@ -1,23 +1,23 @@
-package chess.service;
+package chess.service.room;
 
 import chess.domain.ChessGame;
 import chess.domain.Room;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
-import chess.repository.ChessGameRepository;
-import chess.repository.ChessRoomRepository;
+import chess.domain.ChessGameRepository;
+import chess.domain.ChessRoomRepository;
+import chess.service.room.ChessRoomService;
 import dto.ChessGameDto;
 import dto.RoomDto;
 import dto.RoomRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ChessRoomServiceImpl implements ChessRoomService{
+public class ChessRoomServiceImpl implements ChessRoomService {
     private final ChessRoomRepository chessRoomRepository;
     private final ChessGameRepository chessGameRepository;
 

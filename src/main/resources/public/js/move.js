@@ -114,7 +114,7 @@ function mark(clickedLocation) {
 
 function endMessage() {
     if (gameId() != null) {
-        alert(`플레이를 저장했습니다!`);
+        alert(`게임이 종료되었습니다.`);
         return true;
     }
     return confirmEnd();

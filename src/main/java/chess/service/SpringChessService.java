@@ -6,6 +6,7 @@ import chess.domain.piece.Piece;
 import chess.domain.team.Team;
 import chess.webdao.ChessDao;
 import chess.webdto.*;
+import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,7 +67,7 @@ public class SpringChessService {
     }
 
 
-    //todo: 로직정리
+    //todo: 로직정리 json 형식 정리하는 방법 생각...
     private ChessGameDto generateChessGameDto(final ChessGame chessGame) {
         final TeamPiecesDto piecePositionToString
                 = new TeamPiecesDto(

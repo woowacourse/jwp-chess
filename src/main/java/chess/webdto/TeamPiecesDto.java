@@ -2,6 +2,7 @@ package chess.webdto;
 
 import java.util.Map;
 
+//todo: Dto 타입으로 변
 public class TeamPiecesDto {
     private Map<String, String> white;
     private Map<String, String> black;

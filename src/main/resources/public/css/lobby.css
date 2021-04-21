@@ -2,6 +2,12 @@ h1 {
     text-align: center;
 }
 
+p {
+    margin-top: 5px;
+    margin-bottom: 0;
+    padding-bottom: 5px;
+}
+
 div {
     margin: auto;
     text-align: center;
@@ -27,7 +33,6 @@ button:hover{
     box-shadow:-200px 0 0 0 rgba(0,0,0,0.5) inset;
 }
 
-a:visited {
-    text-decoration: none;
-    text-shadow: 0 0 24px;
+p:hover{
+    color: cornflowerblue;
 }

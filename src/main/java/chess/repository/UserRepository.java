@@ -24,11 +24,15 @@ public class UserRepository {
     public Team findTeamByPassword(UserInfoDto userInfo) {
         final String query = "SELECT team FROM User WHERE password = ? AND room_id = ?";
         final String team = jdbcTemplate.queryForObject(query, String.class, userInfo.getPassword(), userInfo.getId());
-        System.out.println("^^^");
-        System.out.println(Team.valueOf(team.toUpperCase()));
         if (Objects.isNull(team)) {
             throw new DataException("Team이 존재하지 않습니다.");
         }
         return Team.valueOf(team.toUpperCase());
+    }
+
+    public boolean isExist(String roomId, String password) {
+        final String query = "SELECT count(*) FROM User WHERE room_id = ? AND password = ?";
+        final int counts = jdbcTemplate.queryForObject(query, Integer.class, roomId, password);
+        return counts > 0;
     }
 }

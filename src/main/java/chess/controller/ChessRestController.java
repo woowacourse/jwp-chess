@@ -43,14 +43,18 @@ public class ChessRestController {
     public ResponseEntity<String> saveSecondUser(@RequestBody UserInfoDto userInfoDto,
                                                  HttpServletRequest request) {
         final String roomId = userInfoDto.getId();
+        final String password = userInfoDto.getPassword();
         if (chessService.checkRoomFull(roomId)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 꽉 찬 방이에요 😅");
+            throw new IllegalArgumentException("이미 꽉 찬 방이에요 😅");
+        }
+        if (chessService.checkSamePassword(roomId,password)) {
+            throw new IllegalArgumentException("굉장하군요. 백팀 참가자와 같은 비밀번호를 입력했어요😲 다른 비밀번호로 부탁해요~");
         }
         chessService.updateRoomState(roomId);
-        chessService.addUser(roomId, userInfoDto.getPassword(), Team.BLACK.team());
+        chessService.addUser(roomId, password, Team.BLACK.team());
 
         HttpSession session = request.getSession();
-        session.setAttribute("password",userInfoDto.getPassword());
+        session.setAttribute("password",password);
         return ResponseEntity.ok(roomId);
     }
 

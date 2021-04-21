@@ -129,4 +129,8 @@ public class ChessService {
     public void updateRoomState(String roomId) {
         roomRepository.updateToFull(roomId);
     }
+
+    public boolean checkSamePassword(String roomId, String password) {
+        return userRepository.isExist(roomId ,password);
+    }
 }

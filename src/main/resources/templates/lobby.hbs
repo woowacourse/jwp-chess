@@ -17,8 +17,7 @@
         <div id="roomList">
             {{#room}}
                 <div id="room">
-                    <button class="{{id}}" onclick="enterRoom({{id}})"> {{name}} </button>
-<!--                    <a class="{{name}}" href="/rooms/{{id}}">{{name}}</a>-->
+                    <p class="room-p" onclick="enterRoom({{id}})"> {{name}} </p>
                 </div>
             {{/room}}
         </div>

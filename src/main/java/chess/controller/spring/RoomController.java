@@ -1,9 +1,11 @@
 package chess.controller.spring;
 
+import chess.domain.piece.TeamType;
 import chess.domain.room.Room;
 import chess.dto.RoomDTO;
 import chess.dto.RoomRegistrationDTO;
 import chess.service.spring.RoomService;
+import chess.service.spring.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +19,11 @@ import java.util.stream.Collectors;
 public class RoomController {
 
     private final RoomService roomService;
+    private final UserService userService;
 
-    public RoomController(RoomService roomService) {
+    public RoomController(RoomService roomService, UserService userService) {
         this.roomService = roomService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -39,6 +43,7 @@ public class RoomController {
         roomService.addRoom(roomRegistrationDTO.getName());
         Room room = roomService.findLastAddedRoom();
         RoomDTO roomDTO = RoomDTO.from(room);
+        userService.addUser(roomRegistrationDTO.getPassword(), room.getId(), TeamType.BLACK);
         httpSession.setAttribute("password", roomRegistrationDTO.getPassword());
         httpSession.setAttribute("roomId", String.valueOf(room.getId()));
         return ResponseEntity.ok().body(roomDTO);

@@ -1,7 +1,6 @@
 package chess.service.spring;
 
 import chess.domain.piece.TeamType;
-import chess.domain.room.Room;
 import chess.domain.user.User;
 import chess.repository.spring.UserDAO;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +46,7 @@ class UserServiceTest {
         String encodedPassword = new BCryptPasswordEncoder().encode(password);
         given(passwordEncoder.encode(password)).willReturn(encodedPassword);
 
-        userService.addUser(password, new Room(1, "room1"), TeamType.WHITE);
+        userService.addUser(password, 1, TeamType.WHITE);
 
         verify(userDAO, times(1)).findByRoomId(1);
         verify(passwordEncoder, times(1)).encode(password);
@@ -60,7 +59,7 @@ class UserServiceTest {
                 new User(2, "enco", "WHITE", 1));
         given(userDAO.findByRoomId(1)).willReturn(users);
 
-        assertThatCode(() -> userService.addUser("pass", new Room(1, "room1"), TeamType.WHITE))
+        assertThatCode(() -> userService.addUser("pass", 1, TeamType.WHITE))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("이미 꽉 찬 방입니다.");
     }

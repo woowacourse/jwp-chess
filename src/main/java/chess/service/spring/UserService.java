@@ -1,7 +1,6 @@
 package chess.service.spring;
 
 import chess.domain.piece.TeamType;
-import chess.domain.room.Room;
 import chess.domain.user.User;
 import chess.repository.spring.UserDAO;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,12 +19,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void addUser(String password, Room room, TeamType teamType) {
-        List<User> users = userDAO.findByRoomId(room.getId());
+    public void addUser(String password, int roomId, TeamType teamType) {
+        List<User> users = userDAO.findByRoomId(roomId);
         if (users.size() == 2) {
             throw new IllegalStateException("이미 꽉 찬 방입니다.");
         }
         String encodedPassword = passwordEncoder.encode(password);
-        userDAO.insertUser(encodedPassword, teamType.toString(), room.getId());
+        userDAO.insertUser(encodedPassword, teamType.toString(), roomId);
     }
 }

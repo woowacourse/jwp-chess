@@ -26,7 +26,7 @@ public class ScoreDaoTemplate implements ScoreDao {
             );
 
     @Override
-    public Long saveScore(final GameStatus gameStatus, final Long gameId) {
+    public Long save(final GameStatus gameStatus, final Long gameId) {
         String sql = "INSERT INTO score(game_id, white_score, black_score) VALUES (?, ?, ?)";
         return (long) jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -38,7 +38,7 @@ public class ScoreDaoTemplate implements ScoreDao {
     }
 
     @Override
-    public Long updateScore(final GameStatus gameStatus, final Long gameId) {
+    public Long update(final GameStatus gameStatus, final Long gameId) {
         String sql = "UPDATE score SET white_score=?, black_score=? WHERE game_id=?";
         return (long) jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -50,7 +50,7 @@ public class ScoreDaoTemplate implements ScoreDao {
     }
 
     @Override
-    public ScoreDto findScoreByGameId(final Long gameId) {
+    public ScoreDto findByGameId(final Long gameId) {
         String sql = "SELECT * from score where game_id = ?";
         return jdbcTemplate.queryForObject(sql, actorRowMapper, gameId);
     }

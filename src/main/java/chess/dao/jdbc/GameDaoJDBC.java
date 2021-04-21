@@ -10,7 +10,7 @@ import java.sql.*;
 public class GameDaoJDBC implements GameDao {
 
     @Override
-    public Long saveGame(final Game game) {
+    public Long save(final Game game) {
         final String query = "INSERT INTO game(room_name, white_username, black_username) VALUES (?, ?, ?)";
 
         try (final Connection connection = ConnectionProvider.getConnection();
@@ -28,7 +28,7 @@ public class GameDaoJDBC implements GameDao {
     }
 
     @Override
-    public GameDto findGameById(final Long gameId) {
+    public GameDto findById(final Long gameId) {
         final String query = "SELECT * from game where id = ?";
 
         try (Connection connection = ConnectionProvider.getConnection();

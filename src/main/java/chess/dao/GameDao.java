@@ -5,7 +5,7 @@ import chess.domain.game.Game;
 
 public interface GameDao {
 
-    Long saveGame(final Game game);
+    Long save(final Game game);
 
-    GameDto findGameById(final Long gameId);
+    GameDto findById(final Long gameId);
 }

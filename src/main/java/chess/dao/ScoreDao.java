@@ -4,9 +4,9 @@ import chess.dao.dto.score.ScoreDto;
 import chess.domain.manager.GameStatus;
 
 public interface ScoreDao {
-    Long saveScore(final GameStatus gameStatus, final Long gameId);
+    Long save(final GameStatus gameStatus, final Long gameId);
 
-    Long updateScore(final GameStatus gameStatus, final Long gameId);
+    Long update(final GameStatus gameStatus, final Long gameId);
 
-    ScoreDto findScoreByGameId(final Long gameId);
+    ScoreDto findByGameId(final Long gameId);
 }

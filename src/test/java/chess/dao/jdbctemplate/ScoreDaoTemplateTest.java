@@ -35,7 +35,7 @@ class ScoreDaoTemplateTest {
 
     @BeforeEach
     void setUp() {
-        Long newGameId = gameDao.saveGame(Game.of("게임", "흰색유저", "흑색유저"));
+        Long newGameId = gameDao.save(Game.of("게임", "흰색유저", "흑색유저"));
         String sql = "INSERT INTO score(game_id, white_score, black_score) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, newGameId, 38.0, 38.0);
     }
@@ -43,14 +43,14 @@ class ScoreDaoTemplateTest {
     @Test
     void saveScore() {
         //given
-        Long newGameId = gameDao.saveGame(Game.of("게임", "흰색유저", "흑색유저"));
+        Long newGameId = gameDao.save(Game.of("게임", "흰색유저", "흑색유저"));
         double whiteScore = 37.0d;
         double blackScore = 37.0d;
         GameStatus gameStatus = GameStatus.from(new Score(whiteScore), new Score(blackScore));
 
         //when
-        scoreDao.saveScore(gameStatus, newGameId);
-        ScoreDto findScore = scoreDao.findScoreByGameId(newGameId);
+        scoreDao.save(gameStatus, newGameId);
+        ScoreDto findScore = scoreDao.findByGameId(newGameId);
 
         //then
         assertThat(findScore).isNotNull();
@@ -61,18 +61,18 @@ class ScoreDaoTemplateTest {
     @Test
     void updateScore() {
         //given
-        Long newGameId = gameDao.saveGame(Game.of("게임", "흰색유저", "흑색유저"));
+        Long newGameId = gameDao.save(Game.of("게임", "흰색유저", "흑색유저"));
         double whiteScore = 37.0d;
         double blackScore = 37.0d;
         GameStatus gameStatus = GameStatus.from(new Score(whiteScore), new Score(blackScore));
-        scoreDao.saveScore(gameStatus, newGameId);
+        scoreDao.save(gameStatus, newGameId);
         double updatedWhiteScore = 35.0d;
         double updatedBlackScore = 36.0d;
         GameStatus updatedGameStatus = GameStatus.from(new Score(updatedWhiteScore), new Score(updatedBlackScore));
 
         //when
-        scoreDao.updateScore(updatedGameStatus, newGameId);
-        ScoreDto updatedScore = scoreDao.findScoreByGameId(newGameId);
+        scoreDao.update(updatedGameStatus, newGameId);
+        ScoreDto updatedScore = scoreDao.findByGameId(newGameId);
 
         //then
         assertThat(updatedScore).isNotNull();
@@ -83,14 +83,14 @@ class ScoreDaoTemplateTest {
     @Test
     void findScoreByGameId() {
         //given
-        Long newGameId = gameDao.saveGame(Game.of("게임", "흰색유저", "흑색유저"));
+        Long newGameId = gameDao.save(Game.of("게임", "흰색유저", "흑색유저"));
         double whiteScore = 37.0d;
         double blackScore = 37.0d;
         GameStatus gameStatus = GameStatus.from(new Score(whiteScore), new Score(blackScore));
-        scoreDao.saveScore(gameStatus, newGameId);
+        scoreDao.save(gameStatus, newGameId);
 
         //when
-        ScoreDto findScore = scoreDao.findScoreByGameId(newGameId);
+        ScoreDto findScore = scoreDao.findByGameId(newGameId);
 
         //then
         assertThat(findScore).isNotNull();

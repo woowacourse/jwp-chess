@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface HistoryDao {
 
-    Long saveHistory(final History history, final Long gameId);
+    Long save(final History history, final Long gameId);
 
-    List<HistoryDto> findHistoryByGameId(final Long gameId);
+    List<HistoryDto> findByGameId(final Long gameId);
 }

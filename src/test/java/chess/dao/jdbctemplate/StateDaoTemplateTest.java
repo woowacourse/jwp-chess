@@ -38,7 +38,7 @@ class StateDaoTemplateTest {
 
     @BeforeEach
     void setUp() {
-        newGameId = gameDao.saveGame(Game.of("게임", "흰색유저", "흑색유저"));
+        newGameId = gameDao.save(Game.of("게임", "흰색유저", "흑색유저"));
     }
 
     @Test
@@ -51,8 +51,8 @@ class StateDaoTemplateTest {
         ChessManager chessManager = new ChessManager(board, turnOwner, turnNumber, isPlaying);
 
         //when
-        stateDao.saveState(chessManager, newGameId);
-        StateDto findState = stateDao.findStateByGameId(newGameId);
+        stateDao.save(chessManager, newGameId);
+        StateDto findState = stateDao.findByGameId(newGameId);
 
         //then
         assertThat(findState).isNotNull();
@@ -66,15 +66,15 @@ class StateDaoTemplateTest {
         //given
         Board board = BoardInitializer.initiateBoard();
         ChessManager chessManager = new ChessManager(board);
-        stateDao.saveState(chessManager, newGameId);
+        stateDao.save(chessManager, newGameId);
         Owner updatedTurnOwner = Owner.BLACK;
         int updatedTurnNumber = 2;
         boolean updatedIsPlaying = false;
         ChessManager updatedChessManager = new ChessManager(board, updatedTurnOwner, updatedTurnNumber, updatedIsPlaying);
 
         //when
-        stateDao.updateState(updatedChessManager, newGameId);
-        StateDto findUpdatedState = stateDao.findStateByGameId(newGameId);
+        stateDao.update(updatedChessManager, newGameId);
+        StateDto findUpdatedState = stateDao.findByGameId(newGameId);
 
         //then
         assertThat(findUpdatedState).isNotNull();
@@ -91,10 +91,10 @@ class StateDaoTemplateTest {
         int turnNumber = 44;
         boolean isPlaying = false;
         ChessManager chessManager = new ChessManager(board, turnOwner, turnNumber, isPlaying);
-        stateDao.saveState(chessManager, newGameId);
+        stateDao.save(chessManager, newGameId);
 
         //when
-        StateDto findState = stateDao.findStateByGameId(newGameId);
+        StateDto findState = stateDao.findByGameId(newGameId);
 
         //then
         assertThat(findState).isNotNull();

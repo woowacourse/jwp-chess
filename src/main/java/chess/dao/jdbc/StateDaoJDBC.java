@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class StateDaoJDBC implements StateDao {
 
     @Override
-    public Long saveState(final ChessManager chessManager, final Long gameId) {
+    public Long save(final ChessManager chessManager, final Long gameId) {
         final String query = "INSERT INTO state(game_id, turn_owner, turn_number, playing) VALUES (?, ?, ?, ?)";
 
         try (final Connection connection = ConnectionProvider.getConnection();
@@ -29,7 +29,7 @@ public class StateDaoJDBC implements StateDao {
     }
 
     @Override
-    public Long updateState(final ChessManager chessManager, final Long gameId) {
+    public Long update(final ChessManager chessManager, final Long gameId) {
         final String query = "UPDATE state SET turn_owner=?, turn_number=?, playing=? WHERE game_id=?";
 
         try (final Connection connection = ConnectionProvider.getConnection();
@@ -45,7 +45,7 @@ public class StateDaoJDBC implements StateDao {
     }
 
     @Override
-    public StateDto findStateByGameId(final Long gameId) {
+    public StateDto findByGameId(final Long gameId) {
         final String query = "SELECT * from state where game_id = ?";
 
         try (Connection connection = ConnectionProvider.getConnection();

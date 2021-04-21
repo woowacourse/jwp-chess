@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class ScoreDaoJDBC implements ScoreDao {
 
     @Override
-    public Long saveScore(final GameStatus gameStatus, final Long gameId) {
+    public Long save(final GameStatus gameStatus, final Long gameId) {
         final String query = "INSERT INTO score(game_id, white_score, black_score) VALUES (?, ?, ?)";
 
         try (final Connection connection = ConnectionProvider.getConnection();
@@ -28,7 +28,7 @@ public class ScoreDaoJDBC implements ScoreDao {
     }
 
     @Override
-    public Long updateScore(final GameStatus gameStatus, final Long gameId) {
+    public Long update(final GameStatus gameStatus, final Long gameId) {
         final String query = "UPDATE score SET white_score=?, black_score=? WHERE game_id=?";
 
         try (final Connection connection = ConnectionProvider.getConnection();
@@ -43,7 +43,7 @@ public class ScoreDaoJDBC implements ScoreDao {
     }
 
     @Override
-    public ScoreDto findScoreByGameId(final Long gameId) {
+    public ScoreDto findByGameId(final Long gameId) {
         final String query = "SELECT * from score where game_id = ?";
 
         try (Connection connection = ConnectionProvider.getConnection();

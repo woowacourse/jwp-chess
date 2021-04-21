@@ -29,7 +29,7 @@ public class GameDaoTemplate implements GameDao {
             );
 
     @Override
-    public Long saveGame(final Game game) {
+    public Long save(final Game game) {
         String sql = "INSERT INTO game(room_name, white_username, black_username) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -43,7 +43,7 @@ public class GameDaoTemplate implements GameDao {
     }
 
     @Override
-    public GameDto findGameById(final Long gameId) {
+    public GameDto findById(final Long gameId) {
         String sql = "SELECT * from game where id = ?";
         return jdbcTemplate.queryForObject(sql, actorRowMapper, gameId);
     }

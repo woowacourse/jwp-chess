@@ -39,7 +39,7 @@ class HistoryDaoTemplateTest {
 
     @BeforeEach
     void setUp() {
-        gameDao.saveGame(Game.of("게임1", "흰색유저1", "흑색유저1"));
+        gameDao.save(Game.of("게임1", "흰색유저1", "흑색유저1"));
         String sql = "INSERT INTO history(game_id, move_command, turn_owner, turn_number, playing) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, 1, "move a1, a2", "WHITE", 1, true);
         jdbcTemplate.update(sql, 1, "move a2, a3", "BLACK", 1, true);
@@ -66,8 +66,8 @@ class HistoryDaoTemplateTest {
         History history = History.of(moveCommand, turnOwner, turnNumber, isPlaying);
 
         //when
-        historyDao.saveHistory(history, gameId);
-        List<HistoryDto> game = historyDao.findHistoryByGameId(gameId);
+        historyDao.save(history, gameId);
+        List<HistoryDto> game = historyDao.findByGameId(gameId);
 
         //then
         assertThat(game).isNotEmpty();
@@ -86,7 +86,7 @@ class HistoryDaoTemplateTest {
                 new HistoryDto("move a4, a5", "BLACK", 2, true)
         );
         //when
-        List<HistoryDto> findHistories = historyDao.findHistoryByGameId(gameId);
+        List<HistoryDto> findHistories = historyDao.findByGameId(gameId);
 
         //then
         assertThat(findHistories).hasSize(4);

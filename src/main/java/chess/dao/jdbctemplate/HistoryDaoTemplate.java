@@ -30,7 +30,7 @@ public class HistoryDaoTemplate implements HistoryDao {
             );
 
     @Override
-    public Long saveHistory(final History history, final Long gameId) {
+    public Long save(final History history, final Long gameId) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO history(game_id, move_command, turn_owner, turn_number, playing) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(connection -> {
@@ -46,7 +46,7 @@ public class HistoryDaoTemplate implements HistoryDao {
     }
 
     @Override
-    public List<HistoryDto> findHistoryByGameId(final Long gameId) {
+    public List<HistoryDto> findByGameId(final Long gameId) {
         String sql = "SELECT * from history where game_id = ? ORDER BY id ASC";
         return jdbcTemplate.query(sql, actorRowMapper, gameId);
     }

@@ -42,7 +42,7 @@ class PieceDaoTemplateTest {
 
     @BeforeEach
     void setUp() {
-        Long newGameId = gameDao.saveGame(Game.of("게임1", "흰색유저1", "흑색유저1"));
+        Long newGameId = gameDao.save(Game.of("게임1", "흰색유저1", "흑색유저1"));
         String sql = "INSERT INTO piece(game_id, position, symbol) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, newGameId, "a1", "r");
         jdbcTemplate.update(sql, newGameId, "a2", "n");

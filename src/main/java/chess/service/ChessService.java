@@ -53,9 +53,9 @@ public class ChessService {
 
     public Long saveGame(final Game game) {
         ChessManager chessManager = new ChessManager();
-        Long gameId = gameDao.saveGame(game);
-        stateDao.saveState(chessManager, gameId);
-        scoreDao.saveScore(chessManager.gameStatus(), gameId);
+        Long gameId = gameDao.save(game);
+        stateDao.save(chessManager, gameId);
+        scoreDao.save(chessManager.gameStatus(), gameId);
         pieceDao.savePieces(gameId, chessManager.boardToMap());
         return gameId;
     }
@@ -68,22 +68,22 @@ public class ChessService {
     }
 
     public GameResponseDto findGameByGameId(final Long gameId) {
-        GameDto gameDto = gameDao.findGameById(gameId);
+        GameDto gameDto = gameDao.findById(gameId);
         return modelMapper.map(gameDto, GameResponseDto.class);
     }
 
     public ScoreResponseDto findScoreByGameId(final Long gameId) {
-        ScoreDto scoreDto = scoreDao.findScoreByGameId(gameId);
+        ScoreDto scoreDto = scoreDao.findByGameId(gameId);
         return modelMapper.map(scoreDto, ScoreResponseDto.class);
     }
 
     public StateResponseDto findStateByGameId(final Long gameId) {
-        StateDto stateDto = stateDao.findStateByGameId(gameId);
+        StateDto stateDto = stateDao.findByGameId(gameId);
         return modelMapper.map(stateDto, StateResponseDto.class);
     }
 
     public List<HistoryResponseDto> findHistoryByGameId(final Long gameId) {
-        List<HistoryDto> historyDtos = historyDao.findHistoryByGameId(gameId);
+        List<HistoryDto> historyDtos = historyDao.findByGameId(gameId);
         return historyDtos.stream()
                 .map(historyDto -> modelMapper.map(historyDto, HistoryResponseDto.class))
                 .collect(Collectors.toList());
@@ -100,10 +100,10 @@ public class ChessService {
         History history = History.of(moveCommand, chessManager);
         Piece sourcePiece = chessManager.pickPiece(Position.of(moveCommand.source()));
         chessManager.move(Position.of(moveCommand.source()), Position.of(moveCommand.target()));
-        scoreDao.updateScore(chessManager.gameStatus(), gameId);
-        stateDao.updateState(chessManager, gameId);
+        scoreDao.update(chessManager.gameStatus(), gameId);
+        stateDao.update(chessManager, gameId);
         this.updatePieceByMove(moveCommand, sourcePiece, gameId);
-        historyDao.saveHistory(history, gameId);
+        historyDao.save(history, gameId);
         return modelMapper.map(HistoryDto.from(history), HistoryResponseDto.class);
     }
 
@@ -114,7 +114,7 @@ public class ChessService {
 
     private ChessManager loadChessManager(final Long gameId) {
         PieceDtos pieceDtos = new PieceDtos(pieceDao.findPiecesByGameId(gameId));
-        StateDto stateDto = stateDao.findStateByGameId(gameId);
+        StateDto stateDto = stateDao.findByGameId(gameId);
         return new ChessManager(
                 this.initBoard(pieceDtos),
                 Owner.valueOf(stateDto.getTurnOwner()),

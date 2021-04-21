@@ -55,8 +55,8 @@ class GameDaoTemplateTest {
         String blackUsername = "흑색유저4";
 
         //when
-        Long newGameId = gameDao.saveGame(Game.of(roomName, whiteUsername, blackUsername));
-        GameDto findGame = gameDao.findGameById(newGameId);
+        Long newGameId = gameDao.save(Game.of(roomName, whiteUsername, blackUsername));
+        GameDto findGame = gameDao.findById(newGameId);
 
         //then
         assertThat(findGame).isNotNull();
@@ -75,7 +75,7 @@ class GameDaoTemplateTest {
         Long id = 1L;
 
         //when
-        GameDto findGame = gameDao.findGameById(id);
+        GameDto findGame = gameDao.findById(id);
 
         //then
         assertThat(findGame.getRoomName()).isEqualTo(roomName);

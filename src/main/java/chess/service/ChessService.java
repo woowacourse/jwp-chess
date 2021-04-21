@@ -1,33 +1,40 @@
-package chess.web.service;
+package chess.service;
 
 import chess.domain.command.Command;
 import chess.domain.command.Move;
-import chess.domain.command.MoveCommandDAO;
+import chess.domain.command.dao.MoveCommandDao;
 import chess.domain.game.ChessGame;
-import chess.domain.game.ChessGameDAO;
 import chess.domain.game.Score;
 import chess.domain.game.Side;
+import chess.domain.game.dao.ChessGameDao;
 import chess.exception.ChessException;
+import chess.web.dto.MoveCommandDto;
 import chess.web.view.RenderView;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessService {
 
-    private static final ChessGameDAO CHESS_GAME_DAO = new ChessGameDAO();
-    private static final MoveCommandDAO MOVE_COMMAND_DAO = new MoveCommandDAO();
+    private final ChessGameDao chessGameDao;
+    private final MoveCommandDao moveCommandDao;
 
-    public String addChessGame(String gameName) throws SQLException {
+    public ChessService(ChessGameDao chessGameDao, MoveCommandDao moveCommandDao) {
+        this.chessGameDao = chessGameDao;
+        this.moveCommandDao = moveCommandDao;
+    }
+
+    public Long addChessGame(String gameName) {
         ChessGame chessGame = ChessGame.initChessGame();
         chessGame.setName(gameName);
 
-        return CHESS_GAME_DAO.addGame(chessGame);
+        return chessGameDao.addGame(chessGame);
     }
 
-    public ChessGame replayedChessGame(String gameId) throws SQLException {
-        List<Command> commands = MOVE_COMMAND_DAO.findCommandsByGameId(gameId);
+    public ChessGame replayedChessGame(String gameId) {
+        List<Command> commands = moveCommandDao.findCommandsByGameId(gameId);
 
         ChessGame chessGame = ChessGame.initChessGame();
         for (Command command : commands) {
@@ -37,29 +44,33 @@ public class ChessService {
         return chessGame;
     }
 
-    public Map<String, Object> movePiece(String gameId, String source, String target,
-            Side turn) throws SQLException {
+    public Map<String, Object> movePiece(String gameId, MoveCommandDto moveCommandDto) {
+        String source = moveCommandDto.getSource();
+        String target = moveCommandDto.getTarget();
+        Side turn = moveCommandDto.getTurn();
+
         ChessGame chessGame = replayedChessGame(gameId);
         validateCurrentTurn(chessGame, turn);
 
         move(chessGame, new Move(source, target), turn);
 
+        // todo Spark 의존 없애기
         Map<String, Object> model = RenderView.renderBoard(chessGame);
 
         if (chessGame.isGameSet()) {
-            CHESS_GAME_DAO.updateGameEnd(chessGame.getId());
+            chessGameDao.updateGameEnd(chessGame.getId());
             model.put("isGameSet", Boolean.TRUE);
             model.put("gameResult", result(chessGame));
         }
         return model;
     }
 
-    private void move(ChessGame chessGame, Move command, Side side) throws SQLException {
+    private void move(ChessGame chessGame, Move command, Side side) {
         chessGame.execute(command);
 
         command.setGameId(chessGame.getId());
         command.setSide(side);
-        int insertedRowCount = MOVE_COMMAND_DAO.addMoveCommand(command);
+        int insertedRowCount = moveCommandDao.addMoveCommand(command);
         if (insertedRowCount == 0) {
             throw new ChessException("플레이어의 턴이 아닙니다");
         }

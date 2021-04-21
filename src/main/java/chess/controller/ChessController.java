@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 
 @Controller
-@RequestMapping("/play")
+@RequestMapping("/chess")
 public class ChessController {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -31,13 +31,13 @@ public class ChessController {
         return "play";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/new-game")
     public String playNewGameWithNoSave(Model model) {
         model.addAllAttributes(ModelView.newGameResponse(springChessService.initialGameInfo()));
         return "chessGame";
     }
 
-    @GetMapping("/{name}/new")
+    @GetMapping("/{name}/new-game")
     public String playNewGameWithSave(Model model, @PathVariable String name) throws DataException {
         model.addAllAttributes(ModelView.newGameResponse(
                 springChessService.initialGameInfo(),
@@ -46,24 +46,22 @@ public class ChessController {
         return "chessGame";
     }
 
-    @GetMapping("/continue")
+    @GetMapping("/continue-game")
     public String continueGame(Model model, @RequestParam("name") String name) throws DataException {
         final String id = springChessService.getIdByName(name);
         model.addAllAttributes(ModelView.commonResponseForm(springChessService.continuedGameInfo(id), id));
         return "chessGame";
     }
 
-    @GetMapping("/end")
+    @GetMapping("/end-game")
     public String endGame() {
         return "play";
     }
 
-    @PostMapping("/move")
+    @PostMapping("/{historyId}/piece/movement")
     @ResponseBody
-    public MoveResponseDto move(@RequestBody MoveDto moveDto) {
+    public MoveResponseDto move(@PathVariable String historyId, @RequestBody MoveDto moveDto) {
         String command = makeMoveCmd(moveDto.getSource(), moveDto.getTarget());
-        String historyId = moveDto.getGameId();
-
         try {
             springChessService.move(historyId, command, new Commands(command));
             return new MoveResponseDto(springChessService.continuedGameInfo(historyId), historyId);

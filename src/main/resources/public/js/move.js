@@ -19,17 +19,17 @@ function gameId() {
 }
 
 function move(source, target) {
+    const rawGameId = gameId();
     $.ajax({
         type: "POST",
-        url: '/play/move',
+        url: '/chess/'+rawGameId+'/piece/movement',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
         },
         data: JSON.stringify({
             "source": source.id,
-            "target": target.id,
-            "gameId": gameId(),
+            "target": target.id
         }),
         success: update,
         error: showError,
@@ -83,7 +83,7 @@ function update(response) {
     if (winner != null) {
         message += winner + "팀이 이겼습니다.🤭";
         alert(message);
-        window.location = baseUrl + "/play";
+        window.location = baseUrl + "/chess";
     }
 }
 

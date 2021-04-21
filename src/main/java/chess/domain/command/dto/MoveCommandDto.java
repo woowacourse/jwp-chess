@@ -1,4 +1,4 @@
-package chess.web.dto;
+package chess.domain.command.dto;
 
 import chess.domain.game.Side;
 

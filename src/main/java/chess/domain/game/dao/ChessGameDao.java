@@ -1,7 +1,7 @@
 package chess.domain.game.dao;
 
 import chess.domain.game.ChessGame;
-import chess.web.dto.ChessGameDto;
+import chess.domain.game.dto.ChessGameDto;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;

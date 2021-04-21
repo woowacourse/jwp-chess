@@ -1,4 +1,4 @@
-package chess.web.dto;
+package chess.domain.game.dto;
 
 public class ChessGameDto {
 

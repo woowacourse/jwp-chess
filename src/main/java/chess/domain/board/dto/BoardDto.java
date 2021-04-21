@@ -1,4 +1,4 @@
-package chess.web.dto;
+package chess.domain.board.dto;
 
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;

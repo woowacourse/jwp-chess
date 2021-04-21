@@ -8,7 +8,7 @@ import chess.domain.game.Score;
 import chess.domain.game.Side;
 import chess.domain.game.dao.ChessGameDao;
 import chess.exception.ChessException;
-import chess.web.dto.MoveCommandDto;
+import chess.domain.command.dto.MoveCommandDto;
 import chess.web.view.RenderView;
 import java.util.HashMap;
 import java.util.List;

@@ -1,7 +1,7 @@
 package chess.web.view;
 
 import chess.domain.game.ChessGame;
-import chess.web.dto.BoardDto;
+import chess.domain.board.dto.BoardDto;
 import java.util.HashMap;
 import java.util.Map;
 import spark.ModelAndView;

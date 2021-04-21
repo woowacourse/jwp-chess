@@ -12,9 +12,11 @@ import chess.exception.NotExistRoomException;
 import chess.service.dto.ChessSaveRequestDto;
 import chess.service.dto.GameStatusDto;
 import chess.service.dto.GameStatusRequestDto;
+import chess.service.dto.GameStatusViewDto;
 import chess.service.dto.MoveRequestDto;
 import chess.service.dto.MoveResponseDto;
 import chess.service.dto.TilesDto;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,6 +73,16 @@ public class SpringChessService {
         chess.changeRunning(!requestDto.isGameOver());
         chess.changeWinnerColor(chessGame.findWinner());
         chessDao.update(chess);
+    }
+
+    @Transactional
+    public List<GameStatusViewDto> roomInfos() {
+        final List<Chess> chessGroup = chessDao.loadChessInfo();
+        final List<GameStatusViewDto> gameStatusViewDtos = new ArrayList<>();
+        for (final Chess chess : chessGroup) {
+            gameStatusViewDtos.add(new GameStatusViewDto(chess.getName(), chess.isRunning()));
+        }
+        return gameStatusViewDtos;
     }
 
     public GameStatusDto loadChess(final String name) {

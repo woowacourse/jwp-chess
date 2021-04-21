@@ -1,5 +1,6 @@
 const mainStart = document.querySelector("#main-start");
 const mainLoad = document.querySelector("#main-load");
+const mainView = document.querySelector("#main-view");
 const basePath = 'http://localhost:8080';
 
 mainStart.addEventListener("click", async () => {
@@ -47,3 +48,8 @@ mainLoad.addEventListener("click", async () => {
     localStorage.setItem("name", result)
     window.location = basePath + "/games"
 });
+
+mainView.addEventListener("click", async () => {
+    open("view", "저장된 체스게임 방",
+        "width = 500, height = 500, top = 100, left = 200, location = no");
+})

@@ -69,5 +69,11 @@ public class JDBCChessDao implements ChessDao {
     public void deleteByName(final String name) {
 
     }
+
+    public List<Chess> loadChessInfo() {
+        return jdbcTemplate.query("select * from chess order by created_date",
+            chessMapper
+        );
+    }
 }
 

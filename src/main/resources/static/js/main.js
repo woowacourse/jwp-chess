@@ -8,6 +8,8 @@ for (let i = 0; i < users.length; ++i) {
     users[i].innerHTML = i + 1;
 }
 
+const chessAPI = "/api/v1/chess";
+const chessURL = "/chess";
 
 function createRoom() {
     let name = prompt("방 이름을 입력해주세요");
@@ -24,7 +26,7 @@ function newGame(name) {
     }
 
     $.ajax({
-        url: "/createNewGame",
+        url: chessAPI + "/new-game",
         data: JSON.stringify(data),
         method: "POST",
         contentType: "application/json",
@@ -35,6 +37,6 @@ function newGame(name) {
         }
     }).error(function (response) {
         const errorMessage = response.responseText;
-        location.href = "/errorPage?error=" + errorMessage;
+        location.href = chessURL + "/error-page?error=" + errorMessage;
     });
 }

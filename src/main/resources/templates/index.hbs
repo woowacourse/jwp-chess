@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Woowa Kingdom Chess</title>
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
     <style>
         #center {
             display: flex;
@@ -42,7 +42,7 @@
                         <td>{{status}}</td>
                         <td>
                             {{#if playing}}
-                            <button onclick="location.href = '/enter?id={{id}}'">입장하기</button>
+                            <button onclick="location.href = '/chess/enter?id={{id}}'">입장하기</button>
                             {{/if}}
                         </td>
                     </tr>
@@ -83,6 +83,6 @@
     <cite><a href="https://kr.freepik.com/vectors/banner">kr.freepik.com</a></cite>
 </footer>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
 </body>
 </html>

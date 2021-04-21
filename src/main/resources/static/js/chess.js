@@ -1,4 +1,6 @@
 const roomId = document.getElementById("room-id").value;
+const chessURL = "/chess";
+const chessAPI = "/api/v1/chess";
 let startPoint = "";
 let endPoint = "";
 let movablePosition = [];
@@ -15,7 +17,7 @@ $(".grid-item").click(function (event) {
 
 function turnCheck(clickedSection) {
     $.ajax({
-        url: "/myTurn",
+        url: chessAPI + "/turn",
         data: JSON.stringify({
             roomId: roomId,
             clickedSection: clickedSection
@@ -32,14 +34,14 @@ function turnCheck(clickedSection) {
         }
     }).error(function (response) {
         const errorMessage = response.responseText;
-        location.href = "/errorPage?error=" + errorMessage;
+        location.href = chessURL + "/error-page?error=" + errorMessage;
     });
 }
 
 function getMovablePosition(clickedSection, turn) {
     if (turn) {
         $.ajax({
-            url: "/movablePositions",
+            url: chessAPI + "/movable-positions",
             data: JSON.stringify({
                 roomId: roomId,
                 clickedSection: clickedSection
@@ -54,7 +56,7 @@ function getMovablePosition(clickedSection, turn) {
             startPointCheck = true;
         }).error(function (response) {
             const errorMessage = response.responseText;
-            location.href = "/errorPage?error=" + errorMessage;
+            location.href = chessURL + "/error-page?error=" + errorMessage;
         });
     }
 }
@@ -101,7 +103,7 @@ function moveWhenCanGo(clickedSection) {
 
 function move() {
     $.ajax({
-        url: "/move",
+        url: chessAPI + "/move",
         data: JSON.stringify({
             roomId: roomId,
             startPoint: startPoint,
@@ -124,7 +126,7 @@ function move() {
         initialize();
     }).error(function (response) {
         const errorMessage = response.responseText;
-        location.href = "/errorPage?error=" + errorMessage;
+        location.href = chessURL + "/error-page?error=" + errorMessage;
     });
 }
 
@@ -137,9 +139,9 @@ function updateStatus(currentStatus) {
     whiteScore.innerText = currentStatus.whiteScore;
     turn.removeChild(turn.children[0]);
     if (currentStatus.turn === "BLACK") {
-        turn.insertAdjacentHTML("beforeend", "<img src=\"./img/black_turn.png\">");
+        turn.insertAdjacentHTML("beforeend", "<img src=\"/img/black_turn.png\">");
     } else {
-        turn.insertAdjacentHTML("beforeend", "<img src=\"./img/white_turn.png\">");
+        turn.insertAdjacentHTML("beforeend", "<img src=\"/img/white_turn.png\">");
     }
 }
 
@@ -152,7 +154,7 @@ function checkEndGame(currentStatus) {
 
 function gameInitialize(winner, loser) {
     $.ajax({
-        url: "/initialize",
+        url: chessAPI + "/initialize",
         data: JSON.stringify({
             roomId: roomId,
             winner: winner,
@@ -163,11 +165,11 @@ function gameInitialize(winner, loser) {
         dataType: "json"
     }).done(function (success) {
         if (success) {
-            window.location.href = "/";
+            window.location.href = chessURL + "/";
         }
     }).error(function (response) {
         const errorMessage = response.responseText;
-        location.href = "/errorPage?error=" + errorMessage;
+        location.href = chessURL + "/error-page?error=" + errorMessage;
     });
 }
 

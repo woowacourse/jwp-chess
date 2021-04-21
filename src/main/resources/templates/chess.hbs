@@ -90,7 +90,7 @@
         </div>
         <div id="status">
             <div class="score">
-                <img src="./img/black_team.png">
+                <img src="/img/black_team.png">
                 <div class="information">
                     <p class="nickname">
                         {{users.blackUser}}
@@ -102,13 +102,13 @@
             </div>
             <div id="turn">
                 {{#if isWhite}}
-                <img src="./img/white_turn.png">
+                <img src="/img/white_turn.png">
                 {{else}}
-                <img src="./img/black_turn.png">
+                <img src="/img/black_turn.png">
                 {{/if}}
             </div>
             <div class="score">
-                <img src="./img/white_team.png">
+                <img src="/img/white_team.png">
                 <div class="information">
                     <p class="nickname">
                         {{users.whiteUser}}
@@ -139,7 +139,7 @@
 <script type="text/javascript">
     {{#pieces}}
     document.getElementById("{{position}}")
-        .insertAdjacentHTML("beforeend", "<img src=./img/pieces/{{team}}_{{initial}}.png>");
+        .insertAdjacentHTML("beforeend", "<img src=/img/pieces/{{team}}_{{initial}}.png>");
     {{/pieces}}
 </script>
 </body>

@@ -41,6 +41,9 @@ public class ChessGameService {
         pieceRepository.deletePieceByPosition(from, gameId);
 
         gameRepository.updateTurnByGameId(chessGameManager, gameId);
+        if (chessGameManager.isEnd()) {
+            gameRepository.delete(gameId);
+        }
 
         return RunningGameDto.from(chessGameManager);
     }

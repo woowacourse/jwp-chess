@@ -54,4 +54,10 @@ public class GameDao implements GameRepository {
         String query = "SELECT game_id FROM game ";
         return this.jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getInt("game_id"));
     }
+
+    @Override
+    public void delete(int gameId) {
+        String query = "DELETE from game WHERE game_id = ?";
+        this.jdbcTemplate.update(query, gameId);
+    }
 }

@@ -13,4 +13,6 @@ public interface GameRepository {
     void updateTurnByGameId(ChessGameManager chessGameManager, int gameId);
 
     List<Integer> findAllGamesId();
+
+    void delete(int gameId);
 }

@@ -1,4 +1,4 @@
-const $url = "http://localhost:8080/game/";
+const $url = "http://localhost:8080/games/";
 const $board = document.querySelector("#main");
 const $sidebar = document.querySelector("#menu-container");
 const $gameId = document.querySelector("#game-id").innerHTML;
@@ -11,7 +11,7 @@ $board.addEventListener("mouseout", outSquare);
 $board.addEventListener("click", onclickSquare);
 
 async function loadBoard() {
-    await fetch($url + $gameId + "/load")
+    await fetch($url + $gameId + "/pieces")
         .then(data => {
             if (!data.ok) {
                 exceptionHandling(data.json());

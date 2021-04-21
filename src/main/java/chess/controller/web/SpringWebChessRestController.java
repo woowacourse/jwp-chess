@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/games")
 public class SpringWebChessRestController {
 
     private final ChessService chessService;
@@ -32,7 +32,7 @@ public class SpringWebChessRestController {
         return ResponseEntity.ok().body(new GameIdResponseDto(chessService.saveGame(game)));
     }
 
-    @GetMapping("/{id}/load")
+    @GetMapping("/{id}/pieces")
     public ResponseEntity<List<PieceResponseDto>> findPiecesByGameId(@PathVariable Long id) {
         return ResponseEntity.ok().body(chessService.findPiecesById(id));
     }

@@ -28,7 +28,6 @@ const requestRoomRegistration = async () => {
             showRoom(response.data);
             $roomName.value = '';
             $roomAdminPassword.value = '';
-            console.log(response.headers);
         }).catch(error => alert(error.response.data));
 }
 

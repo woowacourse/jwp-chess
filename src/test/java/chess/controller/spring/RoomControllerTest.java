@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -59,8 +58,8 @@ class RoomControllerTest {
         return new ObjectMapper().writeValueAsString(object);
     }
 
-    private ValidatableResponse assertResponse(Response response, String expectedResponseBody) {
-        return response.then().log().all()
+    private void assertResponse(Response response, String expectedResponseBody) {
+        response.then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(is(expectedResponseBody));
     }
@@ -77,7 +76,6 @@ class RoomControllerTest {
                 .body(requestBody)
                 .when().post("/rooms");
 
-        assertResponse(response, expectedResponseBody)
-                .cookie("password", is("pass1"));
+        assertResponse(response, expectedResponseBody);
     }
 }

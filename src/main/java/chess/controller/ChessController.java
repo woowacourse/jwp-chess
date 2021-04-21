@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class SpringWebChessController {
+public class ChessController {
     private final ChessGameService chessGameService;
 
-    public SpringWebChessController(ChessGameService chessGameService) {
+    public ChessController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 

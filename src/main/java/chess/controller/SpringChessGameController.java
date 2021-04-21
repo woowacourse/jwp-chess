@@ -1,30 +1,22 @@
 package chess.controller;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-
 import chess.domain.ChessGame;
 import chess.domain.Team;
 import chess.dto.PiecesDTO;
 import chess.dto.RoomIdDTO;
 import chess.dto.UsersDTO;
-import chess.exception.DriverLoadException;
-import chess.service.LogService;
+import chess.service.HistoryService;
 import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
 import java.util.List;
-import org.springframework.dao.DataAccessException;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/chess")
@@ -33,15 +25,15 @@ public final class SpringChessGameController {
     private final RoomService roomService;
     private final ResultService resultService;
     private final UserService userService;
-    private final LogService logService;
+    private final HistoryService historyService;
 
     public SpringChessGameController(final RoomService roomService,
         final ResultService resultService,
-        final UserService userService, final LogService logService) {
+        final UserService userService, final HistoryService historyService) {
         this.roomService = roomService;
         this.resultService = resultService;
         this.userService = userService;
-        this.logService = logService;
+        this.historyService = historyService;
     }
 
     @GetMapping("/")
@@ -76,7 +68,7 @@ public final class SpringChessGameController {
         chessGame.initialize();
         String roomId = roomIdDTO.getRoomId();
         roomService.addRoom(roomId, chessGame);
-        logService.initializeByRoomId(roomId);
+        historyService.initializeByRoomId(roomId);
         UsersDTO users = userService.usersParticipatedInGame(roomId);
         gameInformation(roomService.loadGameByRoomId(roomId), model, roomId, users);
         return "chess";
@@ -87,8 +79,8 @@ public final class SpringChessGameController {
         String roomId = roomIdDTO.getRoomId();
         ChessGame chessGame = roomService.loadGameByRoomId(roomId);
         chessGame.initialize();
-        List<String[]> logs = logService.logByRoomId(roomId);
-        logService.executeLog(logs, chessGame);
+        List<String[]> logs = historyService.logByRoomId(roomId);
+        historyService.executeLog(logs, chessGame);
         UsersDTO users = userService.usersParticipatedInGame(roomId);
         gameInformation(roomService.loadGameByRoomId(roomId), model, roomId, users);
         return "chess";

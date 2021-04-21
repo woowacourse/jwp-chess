@@ -8,7 +8,7 @@ import chess.dto.StatusDTO;
 import chess.dto.UsersDTO;
 import chess.exception.DataAccessException;
 import chess.exception.DriverLoadException;
-import chess.service.LogService;
+import chess.service.HistoryService;
 import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
@@ -28,14 +28,14 @@ public final class SparkChessGameController {
     private final RoomService roomService;
     private final ResultService resultService;
     private final UserService userService;
-    private final LogService logService;
+    private final HistoryService historyService;
 
     public SparkChessGameController(final RoomService roomService, final ResultService resultService,
-                                    final UserService userService, final LogService logService) {
+                                    final UserService userService, final HistoryService historyService) {
         this.roomService = roomService;
         this.resultService = resultService;
         this.userService = userService;
-        this.logService = logService;
+        this.historyService = historyService;
     }
 
     public void start(final Rooms rooms) {
@@ -98,7 +98,7 @@ public final class SparkChessGameController {
                 ChessGame chessGame = new ChessGame();
                 chessGame.initialize();
                 rooms.addRoom(roomId, chessGame);
-                logService.initializeByRoomId(roomId);
+                historyService.initializeByRoomId(roomId);
                 UsersDTO users = userService.usersParticipatedInGame(roomId);
                 gameInformation(rooms.loadGameByRoomId(roomId), model, roomId, users);
             } catch (Exception e) {
@@ -115,8 +115,8 @@ public final class SparkChessGameController {
                 String roomId = request.queryParams("room-id");
                 ChessGame chessGame = rooms.loadGameByRoomId(roomId);
                 chessGame.initialize();
-                List<String[]> logs = logService.logByRoomId(roomId);
-                logService.executeLog(logs, chessGame);
+                List<String[]> logs = historyService.logByRoomId(roomId);
+                historyService.executeLog(logs, chessGame);
                 UsersDTO users = userService.usersParticipatedInGame(roomId);
                 gameInformation(chessGame, model, roomId, users);
             } catch (Exception e) {
@@ -163,7 +163,7 @@ public final class SparkChessGameController {
             String endPoint = request.queryParams("endPoint");
             ChessGame chessGame = rooms.loadGameByRoomId(roomId);
             chessGame.move(startPoint, endPoint);
-            logService.createLog(roomId, startPoint, endPoint);
+            historyService.createLog(roomId, startPoint, endPoint);
             UsersDTO users = userService.usersParticipatedInGame(roomId);
             return new StatusDTO(chessGame, users);
         }, new JsonTransformer());

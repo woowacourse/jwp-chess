@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class LogDAO {
+public class HistoryDAO {
     private final JdbcTemplate jdbcTemplate;
 
-    public LogDAO(final JdbcTemplate jdbcTemplate) {
+    public HistoryDAO(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

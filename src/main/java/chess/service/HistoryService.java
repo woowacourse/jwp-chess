@@ -1,25 +1,25 @@
 package chess.service;
 
-import chess.dao.LogDAO;
+import chess.dao.HistoryDAO;
 import chess.domain.ChessGame;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public final class LogService {
-    private final LogDAO logDAO;
+public final class HistoryService {
+    private final HistoryDAO historyDAO;
 
-    public LogService(final LogDAO logDAO) {
-        this.logDAO = logDAO;
+    public HistoryService(final HistoryDAO historyDAO) {
+        this.historyDAO = historyDAO;
     }
 
     public void initializeByRoomId(final String roomId) {
-        logDAO.deleteLogByRoomId(roomId);
+        historyDAO.deleteLogByRoomId(roomId);
     }
 
     public List<String[]> logByRoomId(final String roomId) {
-        return logDAO.allLogByRoomId(roomId);
+        return historyDAO.allLogByRoomId(roomId);
     }
 
     public void executeLog(final List<String[]> logs, final ChessGame chessGame) {
@@ -27,6 +27,6 @@ public final class LogService {
     }
 
     public void createLog(final String roomId, final String startPoint, final String endPoint) {
-        logDAO.createLog(roomId, startPoint, endPoint);
+        historyDAO.createLog(roomId, startPoint, endPoint);
     }
 }

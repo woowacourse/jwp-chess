@@ -10,11 +10,13 @@ import chess.dto.SectionDTO;
 import chess.dto.StatusDTO;
 import chess.dto.UsersDTO;
 import chess.exception.DriverLoadException;
-import chess.service.LogService;
+import chess.service.HistoryService;
 import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,18 +30,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/chess")
 public class SpringChessGameRestController {
 
+    private static final Logger LOGGER = LogManager.getLogger(SpringChessGameRestController.class);
+
     private final RoomService roomService;
     private final ResultService resultService;
     private final UserService userService;
-    private final LogService logService;
+    private final HistoryService historyService;
 
     public SpringChessGameRestController(final RoomService roomService,
         final ResultService resultService,
-        final UserService userService, final LogService logService) {
+        final UserService userService, final HistoryService historyService) {
         this.roomService = roomService;
         this.resultService = resultService;
         this.userService = userService;
-        this.logService = logService;
+        this.historyService = historyService;
     }
 
     @PostMapping(path = "/new-game", consumes = "application/json")
@@ -67,7 +71,7 @@ public class SpringChessGameRestController {
         String endPoint = moveDTO.getEndPoint();
         ChessGame chessGame = roomService.loadGameByRoomId(roomId);
         chessGame.move(startPoint, endPoint);
-        logService.createLog(roomId, startPoint, endPoint);
+        historyService.createLog(roomId, startPoint, endPoint);
         UsersDTO users = userService.usersParticipatedInGame(roomId);
         return new StatusDTO(chessGame, users);
     }
@@ -85,7 +89,8 @@ public class SpringChessGameRestController {
     }
 
     @ExceptionHandler(DriverLoadException.class)
-    private ResponseEntity driverLoadExceptionHandle() {
+    private ResponseEntity driverLoadExceptionHandle(DriverLoadException e) {
+        LOGGER.error(e.getStackTrace());
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
             .contentType(MediaType.APPLICATION_JSON)
             .body("!! JDBC Driver load 오류");
@@ -93,6 +98,7 @@ public class SpringChessGameRestController {
 
     @ExceptionHandler(DataAccessException.class)
     private ResponseEntity dataAccessExceptionHandle(DataAccessException e) {
+        LOGGER.error(e.getStackTrace());
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
             .contentType(MediaType.APPLICATION_JSON)
             .body("!! Database Access 오류");

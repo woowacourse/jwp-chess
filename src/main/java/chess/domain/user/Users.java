@@ -10,13 +10,13 @@ public class Users {
     private final List<User> users;
 
     public Users(List<User> users) {
-        validateUsers(users);
+        validateUserCounts(users);
         this.users = users;
     }
 
-    private void validateUsers(List<User> users) {
-        if (users.size() == MAXIMUM_USER_COUNTS_FOR_ONE_ROOM) {
-            throw new IllegalArgumentException("이미 꽉 찬 방입니다.");
+    private void validateUserCounts(List<User> users) {
+        if (users.size() > MAXIMUM_USER_COUNTS_FOR_ONE_ROOM) {
+            throw new IllegalArgumentException("게임에 참여할 수 있는 유저는 2명입니다.");
         }
     }
 
@@ -27,6 +27,10 @@ public class Users {
         User existingUser = users.get(0);
         TeamType teamType = TeamType.valueOf(existingUser.getTeamType());
         return teamType.findOppositeTeam();
+    }
+
+    public boolean hasMaximumCountsForGame() {
+        return users.size() == MAXIMUM_USER_COUNTS_FOR_ONE_ROOM;
     }
 
     public boolean hasEqualUser(String password, TeamType teamType) {

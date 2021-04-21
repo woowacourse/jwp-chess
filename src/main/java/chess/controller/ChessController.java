@@ -66,7 +66,7 @@ public class ChessController {
 
         try {
             springChessService.move(historyId, command, new Commands(command));
-            return ModelView.moveResponse(springChessService.continuedGameInfo(historyId), historyId);
+            return new MoveResponseDto(springChessService.continuedGameInfo(historyId), historyId);
         } catch (IllegalArgumentException | SQLException e) {
             return new MoveResponseDto(e.getMessage());
         }

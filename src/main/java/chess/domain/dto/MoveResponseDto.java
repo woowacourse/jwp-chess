@@ -16,7 +16,7 @@ public class MoveResponseDto {
         this.squares = gameInfoDto.squares();
         this.turn = gameInfoDto.turn();
         this.scores = gameInfoDto.scores();
-        this.winner = null;
+        this.winner = gameInfoDto.winner();
         this.gameId = gameId;
     }
 

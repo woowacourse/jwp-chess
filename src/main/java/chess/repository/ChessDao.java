@@ -17,16 +17,16 @@ import java.util.Map;
 @Repository
 public class ChessDao {
     private final JdbcTemplate jdbcTemplate;
-    private final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ?";
-    private final String UPDATE_TURN_QUERY = "update turn set turn_owner = ? where turn_owner = ?";
+    private final String UPDATE_BOARD_QUERY = "update board set piece = ? where room_number = ? and position = ?";
+    private final String UPDATE_GAME_QUERY = "update game set turn = ? where room_number = ?";
 
     public ChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public BoardDto getSavedBoardInfo() {
-        String sql = "select position, piece from board;";
-        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
+    public BoardDto getSavedBoardInfo(int roomNumber) {
+        String sql = "select position, piece from board where room_number = ?;";
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, roomNumber);
         Map<String, String> boardInfo = new HashMap<>();
         for (Map<String, Object> result : resultList) {
             String position = (String) result.get("position");
@@ -36,36 +36,36 @@ public class ChessDao {
         return BoardDto.of(boardInfo);
     }
 
-    public TurnDto getSavedTurnOwner() {
-        String sql = "select * from turn;";
-        String turnOwner = jdbcTemplate.queryForObject(sql, String.class);
+    public TurnDto getSavedTurnOwner(int roomNumber) {
+        String sql = "select turn from game where room_number = ?;";
+        String turnOwner = jdbcTemplate.queryForObject(sql, String.class, roomNumber);
         return TurnDto.of(turnOwner);
     }
 
-    public void resetBoard(Board board) {
+    public void resetBoard(Board board, int roomNumber) {
         for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
             Position position = entry.getKey();
             Piece piece = entry.getValue();
             String unicode = piece != null ? piece.getUnicode() : "";
-            executeBoardUpdateQuery(unicode, position.convertToString());
+            executeBoardUpdateQuery(unicode, position.convertToString(), roomNumber);
         }
     }
 
-    private void executeBoardUpdateQuery(String unicode, String position) {
-        jdbcTemplate.update(UPDATE_BOARD_QUERY, unicode, position);
+    private void executeBoardUpdateQuery(String unicode, String position, int roomNumber) {
+        jdbcTemplate.update(UPDATE_BOARD_QUERY, unicode, position, roomNumber);
     }
 
-    public void renewBoardAfterMove(String targetPosition, String destinationPosition, Piece targetPiece) {
-        jdbcTemplate.update(UPDATE_BOARD_QUERY, targetPiece.getUnicode(), destinationPosition);
-        jdbcTemplate.update(UPDATE_BOARD_QUERY, "", targetPosition);
+    public void renewBoardAfterMove(String targetPosition, String destinationPosition, Piece targetPiece, int roomNumber) {
+        jdbcTemplate.update(UPDATE_BOARD_QUERY, targetPiece.getUnicode(), destinationPosition, roomNumber);
+        jdbcTemplate.update(UPDATE_BOARD_QUERY, "", targetPosition, roomNumber);
     }
 
-    public void renewTurnOwnerAfterMove(Team turnOwner) {
-        jdbcTemplate.update(UPDATE_TURN_QUERY, turnOwner.getTeamString(), turnOwner.getOpposite().getTeamString());
+    public void renewTurnOwnerAfterMove(Team turnOwner, int roomNumber) {
+        jdbcTemplate.update(UPDATE_GAME_QUERY, turnOwner.getTeamString(), roomNumber);
     }
 
     public void resetTurnOwner(Team turnOwner) {
-        jdbcTemplate.update(UPDATE_TURN_QUERY, "white", turnOwner.getTeamString());
+        jdbcTemplate.update(UPDATE_GAME_QUERY, "white", turnOwner.getTeamString());
     }
 
     public RoomsDto getRoomList() {

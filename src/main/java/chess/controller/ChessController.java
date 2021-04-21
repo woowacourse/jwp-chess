@@ -21,22 +21,27 @@ public class ChessController {
         return "main.html";
     }
 
+    @GetMapping("/room/{roomNumber}")
+    public String chessView() {
+        return "/chess.html";
+    }
+
     @GetMapping("/room")
     @ResponseBody
     public RoomsDto showRoomList() {
         return chessService.getRoomList();
     }
 
-    @GetMapping("/board")
+    @GetMapping("/board/{roomNumber}")
     @ResponseBody
-    public BoardDto loadSavedBoard() {
-        return chessService.getSavedBoardInfo(chessGame);
+    public BoardDto loadSavedBoard(@PathVariable int roomNumber) {
+        return chessService.getSavedBoardInfo(chessGame, roomNumber);
     }
 
-    @PutMapping("/board")
+    @PutMapping("/board/{roomNumber}")
     @ResponseBody
-    public BoardDto resetBoard() {
-        return chessService.initiateBoard(chessGame);
+    public BoardDto resetBoard(@PathVariable int roomNumber) {
+        return chessService.initiateBoard(chessGame, roomNumber);
     }
 
     @GetMapping("/score")
@@ -45,15 +50,15 @@ public class ChessController {
         return chessGame.scoreStatus();
     }
 
-    @PostMapping("/move")
+    @PostMapping("/move/{roomNumber}")
     @ResponseBody
-    public ResponseDto move(@RequestBody MoveInfoDto moveInfoDto) {
-        return chessService.move(chessGame, moveInfoDto);
+    public ResponseDto move(@RequestBody MoveInfoDto moveInfoDto, @PathVariable int roomNumber) {
+        return chessService.move(chessGame, moveInfoDto, roomNumber);
     }
 
-    @GetMapping("/move")
+    @GetMapping("/move/{roomNumber}")
     @ResponseBody
-    public BoardDto getCurrentBoard() {
-        return chessService.getCurrentBoard(chessGame);
+    public BoardDto getCurrentBoard(@PathVariable int roomNumber) {
+        return chessService.getCurrentBoard(chessGame, roomNumber);
     }
 }

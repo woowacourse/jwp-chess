@@ -31,7 +31,8 @@ async function applicationStart() {
 }
 
 async function loadSavedBoard() {
-    let savedBoardInformation = await fetch("/board")
+    const url = window.location.href.split('/')
+    let savedBoardInformation = await fetch("/board/" + url[url.length - 1])
     savedBoardInformation = await savedBoardInformation.json();
     return savedBoardInformation.boardInfo;
 }
@@ -77,7 +78,8 @@ async function movePiece(targetPosition, destinationPosition) {
 }
 
 async function sendMoveInformation(bodyValue) {
-    const response = await fetch("/move", {
+    const url = window.location.href.split('/')
+    const response = await fetch("/move/" + url[url.length - 1], {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -91,7 +93,7 @@ async function sendMoveInformation(bodyValue) {
     }
 
     if (response.code === "200") {
-        const board = await fetch("/move"
+        const board = await fetch("/move/" + url[url.length - 1]
         ).then(res => res.json());
 
         checkGameOver(board.gameOverFlag);

@@ -6,7 +6,6 @@ import chess.domain.dto.move.MoveRequestDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.serivce.chess.ChessService;
 import java.sql.SQLException;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/room")
-public class ChessRoomController {
+public class RoomController {
     private final ChessService service;
 
-    public ChessRoomController(final ChessService service) {
+    public RoomController(final ChessService service) {
         this.service = service;
     }
 
@@ -33,35 +32,35 @@ public class ChessRoomController {
 
     @PostMapping(value = "/create")
     @ResponseBody
-    public ResponseEntity createRoom(@RequestBody RoomDto roomDto) throws SQLException {
+    public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto) throws SQLException {
         service.createRoom(roomDto.getName());
         return ResponseEntity.ok().body(roomDto);
     }
 
     @GetMapping(value = "/{name}")
     @ResponseBody
-    public ResponseEntity enterRoom(@PathVariable("name") String roomName) throws SQLException {
+    public ResponseEntity<MoveResponseDto> enterRoom(@PathVariable("name") String roomName) throws SQLException {
         MoveResponseDto result = service.findPiecesByRoomName(roomName);
         return ResponseEntity.ok().body(result);
     }
 
     @GetMapping(value = "/{name}/start")
     @ResponseBody
-    public ResponseEntity startRoom(@PathVariable("name") String roomName) throws SQLException {
+    public ResponseEntity<MoveResponseDto> startRoom(@PathVariable("name") String roomName) throws SQLException {
         MoveResponseDto result = service.start(roomName);
         return ResponseEntity.ok().body(result);
     }
 
     @GetMapping(value = "/{name}/end")
     @ResponseBody
-    public ResponseEntity endRoom(@PathVariable("name") String roomName) throws SQLException {
+    public ResponseEntity<MoveResponseDto> endRoom(@PathVariable("name") String roomName) throws SQLException {
         MoveResponseDto result = service.end(roomName);
         return ResponseEntity.ok().body(result);
     }
 
     @PostMapping(value = "/{name}/move")
     @ResponseBody
-    public ResponseEntity move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto)
+    public ResponseEntity<MoveResponseDto> move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto)
         throws SQLException {
         MoveResponseDto result = service.move(roomName, moveRequestDto.getSource(),
             moveRequestDto.getTarget());

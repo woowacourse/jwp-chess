@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Controller
+@RequestMapping("/game")
 public class GameController {
     private final RoomService roomService;
     private final GameService gameService;
@@ -23,27 +24,28 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/game/load/{roomId}")
+    @GetMapping("/load/{roomId}")
     public String loadGame(@PathVariable final Long roomId, Model model) throws SQLException {
         return printGame(roomId, model);
     }
 
-    @GetMapping("/game/show/{roomId}")
+    @GetMapping("/show/{roomId}")
     @ResponseBody
     public String show(@PathVariable final Long roomId, @RequestParam Position source) {
         return gameService.show(roomId, source).toString();
     }
 
-    @PostMapping("/game/move/{roomId}")
+    @PostMapping("/move/{roomId}")
     public String move(Model model, @PathVariable final Long roomId,
                        @RequestParam Position source, @RequestParam Position target) throws SQLException {
+        System.out.println(source + " "+ target);
         gameService.move(roomId, source, target);
         return printGame(roomId, model);
     }
 
     private String printGame(final Long roomId, final Model model) throws SQLException {
         if (gameService.isGameEnd(roomId)) {
-            return printWinnerResult(roomId, model);
+            return "redirect:/game/result/" + roomId;
         }
 
         model.addAttribute("room", roomService.room(roomId));
@@ -52,7 +54,8 @@ public class GameController {
         return "chessBoard";
     }
 
-    private String printWinnerResult(Long roomId, Model model) {
+    @GetMapping("/result/{roomId}")
+    public String result(@PathVariable Long roomId, Model model) {
         final List<Owner> winner = gameService.winner(roomId);
         roomService.delete(roomId);
         gameService.delete(roomId);

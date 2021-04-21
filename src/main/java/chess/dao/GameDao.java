@@ -53,9 +53,7 @@ public class GameDao {
         return ChessBoard.from(board);
     };
 
-    private final RowMapper<Color> colorRowMapper = (resultSet, rowNum) -> {
-        return Color.of(resultSet.getString("turn"));
-    };
+    private final RowMapper<Color> colorRowMapper = (resultSet, rowNum) -> Color.of(resultSet.getString("turn"));
 
     public ChessGameManager loadGame(int gameId) {
         String gameQuery = "SELECT turn FROM game WHERE game_id = ?";

@@ -1,6 +1,7 @@
 package chess.service.dao;
 
 import chess.controller.dto.RoomDto;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -41,6 +42,11 @@ public class RoomDao {
 
     public String name(final Long roomId) throws SQLException {
         final String query = "SELECT room_name FROM room_status WHERE room_id = ?";
-        return jdbcTemplate.queryForObject(query, String.class, roomId);
+
+        try {
+            return jdbcTemplate.queryForObject(query, String.class, roomId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new SQLException();
+        }
     }
 }

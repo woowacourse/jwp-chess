@@ -2,7 +2,6 @@ package chess.dao;
 
 import chess.domain.piece.Piece;
 import chess.dto.PieceDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -15,8 +14,11 @@ import java.util.List;
 
 @Repository
 public class PieceDAO {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public PieceDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public long createPiece(long gridId, Piece piece) {
         boolean isBlack = piece.isBlack();

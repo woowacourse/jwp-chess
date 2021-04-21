@@ -4,7 +4,6 @@ import chess.dto.response.Response;
 import chess.dto.responsedto.GridAndPiecesResponseDto;
 import chess.dto.responsedto.RoomsResponseDto;
 import chess.service.ChessService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class RoomController {
-    @Autowired
-    private ChessService chessService;
+    private final ChessService chessService;
+
+    public RoomController(ChessService chessService) {
+        this.chessService = chessService;
+    }
 
     @PostMapping("/room/{roomId}/restart")
     public Response<GridAndPiecesResponseDto> restart(@PathVariable("roomId") String roomId) {

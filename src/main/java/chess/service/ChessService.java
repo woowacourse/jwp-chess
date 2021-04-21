@@ -20,7 +20,6 @@ import chess.dto.response.ResponseCode;
 import chess.dto.responsedto.GridAndPiecesResponseDto;
 import chess.dto.responsedto.RoomsResponseDto;
 import chess.exception.ChessException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -33,12 +32,15 @@ import java.util.stream.Collectors;
 public class ChessService {
     private static final char EMPTY_PIECE_NAME = '.';
 
-    @Autowired
-    private RoomDAO roomDAO;
-    @Autowired
-    private GridDAO gridDAO;
-    @Autowired
-    private PieceDAO pieceDAO;
+    private final RoomDAO roomDAO;
+    private final GridDAO gridDAO;
+    private final PieceDAO pieceDAO;
+
+    public ChessService(RoomDAO roomDAO, GridDAO gridDAO, PieceDAO pieceDAO) {
+        this.roomDAO = roomDAO;
+        this.gridDAO = gridDAO;
+        this.pieceDAO = pieceDAO;
+    }
 
     public Response<MoveRequestDto> move(MoveRequestDto requestDto) {
         GridDto gridDto = requestDto.getGridDto();

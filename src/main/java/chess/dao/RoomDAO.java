@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.dto.RoomDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,8 +16,11 @@ import java.util.Optional;
 
 @Repository
 public class RoomDAO {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public RoomDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public long createRoom(String roomName) {
         String query = "INSERT INTO room (roomName) VALUES (?)";

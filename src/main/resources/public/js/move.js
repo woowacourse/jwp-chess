@@ -21,7 +21,7 @@ function gameId() {
 function move(source, target) {
     $.ajax({
         type: "POST",
-        url: '/play/move',
+        url: '/rooms/move',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
@@ -74,7 +74,7 @@ function update(response) {
     if (winner != null) {
         message += winner + "팀이 이겼습니다.🤭";
         alert(message);
-        window.location = baseUrl + "/play";
+        window.location = baseUrl + "/rooms";
     }
 }
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/play")
+@RequestMapping("/rooms")
 public class ChessRestController {
 
     private final ChessService chessService;
@@ -30,8 +30,8 @@ public class ChessRestController {
     public ResponseEntity<GameResponse> move(@RequestBody MoveRequestDto moveRequestDto) {
         String command = makeMoveCmd(moveRequestDto.getSource(), moveRequestDto.getTarget());
         String id = moveRequestDto.getGameId();
-        chessService.move(id, command, new Commands(command));
-        return ResponseEntity.ok(new GameResponse(chessService.continuedGameInfo(id), id));
+        chessService.move(id, command);
+        return ResponseEntity.ok(new GameResponse(chessService.gameInfo(id), id));
     }
 
     private String makeMoveCmd(String source, String target) {

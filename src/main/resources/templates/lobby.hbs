@@ -16,7 +16,7 @@
         <div id="historyList">
             {{#history}}
                 <div id="history">
-                    <a class="{{name}}" href="/play/continue/{{id}}">{{name}}</a>
+                    <a class="{{name}}" href="/rooms/{{id}}">{{name}}</a>
                 </div>
             {{/history}}
         </div>
@@ -27,11 +27,11 @@
     const playNewGame = function () {
         const name = prompt("게임 저장 시 이용할 이름을 입력해주세요!");
         if (name == null) {
-            window.location = "/play";
+            window.location = "/rooms";
         } else {
             $.ajax({
                 type: "POST",
-                url: '/play',
+                url: '/rooms',
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json"

@@ -1,55 +1,35 @@
 package chess.controller;
 
-import chess.dao.GameDao;
-import chess.domain.ChessGameManager;
-import chess.domain.position.Position;
 import chess.dto.*;
+import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SpringWebChessController {
-    private final GameDao gameDAO;
+    private final ChessService service;
 
-    public SpringWebChessController(GameDao gameDAO) {
-        this.gameDAO = gameDAO;
+    public SpringWebChessController(ChessService service) {
+        this.service = service;
     }
 
     @GetMapping("/newgame")
     public ResponseEntity<CommonDto<NewGameDto>> newGame() {
-        ChessGameManager chessGameManager = new ChessGameManager();
-        chessGameManager.start();
-        int gameId = gameDAO.saveGame(chessGameManager);
-        return ResponseEntity.ok().body(
-                new CommonDto<>("새로운 게임이 생성되었습니다.", NewGameDto.from(chessGameManager, gameId)));
+        return ResponseEntity.ok().body(service.saveNewGame());
     }
 
     @PostMapping("/move")
     public ResponseEntity<CommonDto<RunningGameDto>> move(@RequestBody MoveRequest moveRequest) {
-        ChessGameManager chessGameManager = gameDAO.loadGame(moveRequest.getGameId());
-
-        int gameId = moveRequest.getGameId();
-        String from = moveRequest.getFrom();
-        String to = moveRequest.getTo();
-        chessGameManager.move(Position.of(from), Position.of(to));
-
-        gameDAO.updateTurnByGameId(chessGameManager, gameId);
-        gameDAO.updatePiecesByGameId(chessGameManager, gameId);
-
-        return ResponseEntity.ok().body(
-                new CommonDto<>("기물을 이동했습니다.", RunningGameDto.from(chessGameManager)));
+        return ResponseEntity.ok().body(service.move(moveRequest.getGameId(), moveRequest.getFrom(), moveRequest.getTo()));
     }
 
     @GetMapping("/load/games")
     public ResponseEntity<CommonDto<GameListDto>> loadGames() {
-        return ResponseEntity.ok().body(
-                new CommonDto<>("게임 목록을 불러왔습니다.", new GameListDto(gameDAO.loadGames())));
+        return ResponseEntity.ok().body(service.loadGameList());
     }
 
-    @GetMapping("/load/{id}")
-    public ResponseEntity<CommonDto<RunningGameDto>> loadGame(@PathVariable int id) {
-        ChessGameManager chessGameManager = gameDAO.loadGame(id);
-        return ResponseEntity.ok().body(
-                new CommonDto<>("게임을 불러왔습니다", RunningGameDto.from(chessGameManager)));
+    @GetMapping("/load/{gameId}")
+    public ResponseEntity<CommonDto<RunningGameDto>> loadGame(@PathVariable int gameId) {
+        return ResponseEntity.ok().body(service.loadGame(gameId));
     }
 }

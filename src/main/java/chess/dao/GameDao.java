@@ -93,7 +93,7 @@ public class GameDao {
         this.jdbcTemplate.update(query, currentTurnColor.name(), gameId);
     }
 
-    public List<Integer> loadGames() {
+    public List<Integer> loadGameList() {
         String query = "SELECT game_id FROM game ";
         return this.jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getInt("game_id"));
     }

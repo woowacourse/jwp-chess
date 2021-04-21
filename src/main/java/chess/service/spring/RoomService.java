@@ -24,6 +24,7 @@ public class RoomService {
     }
 
     public Room findLastAddedRoom() {
-        return roomDAO.findLastAddedRoom();
+        return roomDAO.findLastAddedRoom()
+                .orElseThrow(() -> new IllegalStateException("등록된 방이 없습니다."));
     }
 }

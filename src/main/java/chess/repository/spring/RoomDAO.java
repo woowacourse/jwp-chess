@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class RoomDAO {
@@ -31,8 +32,12 @@ public class RoomDAO {
         jdbcTemplate.update(query, name);
     }
 
-    public Room findLastAddedRoom() {
+    public Optional<Room> findLastAddedRoom() {
         String query = "SELECT * FROM ROOM ORDER BY ID DESC LIMIT 1";
-        return jdbcTemplate.query(query, ROW_MAPPER).get(0);
+        List<Room> rooms = jdbcTemplate.query(query, ROW_MAPPER);
+        if (rooms.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(rooms.get(0));
     }
 }

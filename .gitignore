@@ -36,13 +36,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### DOCKER ###
-/docker/db/
-=======
-/src/main/node_modules/
-<<<<<<< HEAD
-=======
-/docker-compose/db/
-/chess-docker/db/
->>>>>>> e4dad9a0... chore: docker-compose 파일 수정

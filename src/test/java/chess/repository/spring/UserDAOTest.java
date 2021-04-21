@@ -7,12 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
+@DirtiesContext
 class UserDAOTest {
 
     private UserDAO userDAO;
@@ -26,7 +28,7 @@ class UserDAOTest {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS ROOM (ID INT NOT NULL AUTO_INCREMENT, NAME VARCHAR(255), PRIMARY KEY (ID))");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS USER (ID INT NOT NULL AUTO_INCREMENT, PASSWORD  VARCHAR(255), " +
                 "TEAM_TYPE VARCHAR(255), ROOM_ID   INT NOT NULL, PRIMARY KEY (ID), " +
-                "CONSTRAINT USER_FK FOREIGN KEY (ROOM_ID) REFERENCES ROOM (ID) );");
+                "CONSTRAINT USER_FK FOREIGN KEY (ROOM_ID) REFERENCES ROOM (ID))");
         String query = "INSERT INTO ROOM (NAME) VALUES (?)";
         jdbcTemplate.update(query, "room1");
     }

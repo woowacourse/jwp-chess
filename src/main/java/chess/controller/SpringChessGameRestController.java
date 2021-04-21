@@ -69,8 +69,10 @@ public class SpringChessGameRestController {
         String roomId = moveDTO.getRoomId();
         String startPoint = moveDTO.getStartPoint();
         String endPoint = moveDTO.getEndPoint();
+
         ChessGame chessGame = roomService.loadGameByRoomId(roomId);
         chessGame.move(startPoint, endPoint);
+
         historyService.createLog(roomId, startPoint, endPoint);
         UsersDTO users = userService.usersParticipatedInGame(roomId);
         return new StatusDTO(chessGame, users);
@@ -81,9 +83,11 @@ public class SpringChessGameRestController {
         String roomId = resultDTO.getRoomId();
         String winner = resultDTO.getWinner();
         String loser = resultDTO.getLoser();
+
         roomService.changeStatus(roomId);
         int winnerId = userService.userIdByNickname(winner);
         int loserId = userService.userIdByNickname(loser);
+
         resultService.saveGameResult(roomId, winnerId, loserId);
         return true;
     }

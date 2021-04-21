@@ -67,8 +67,10 @@ public final class SpringChessGameController {
         ChessGame chessGame = new ChessGame();
         chessGame.initialize();
         String roomId = roomIdDTO.getRoomId();
+
         roomService.addRoom(roomId, chessGame);
         historyService.initializeByRoomId(roomId);
+
         UsersDTO users = userService.usersParticipatedInGame(roomId);
         gameInformation(roomService.loadGameByRoomId(roomId), model, roomId, users);
         return "chess";
@@ -79,8 +81,10 @@ public final class SpringChessGameController {
         String roomId = roomIdDTO.getRoomId();
         ChessGame chessGame = roomService.loadGameByRoomId(roomId);
         chessGame.initialize();
+
         List<String[]> logs = historyService.logByRoomId(roomId);
         historyService.executeLog(logs, chessGame);
+
         UsersDTO users = userService.usersParticipatedInGame(roomId);
         gameInformation(roomService.loadGameByRoomId(roomId), model, roomId, users);
         return "chess";

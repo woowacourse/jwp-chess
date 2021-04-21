@@ -28,7 +28,7 @@ public class ChessController {
     @GetMapping("/chessboard")
     public ResponseEntity<BoardDTO> showChessBoard(@PathVariable int id) {
         BoardDTO chessBoardDTO = findChessBoard(id);
-        return writeResponse(chessBoardDTO);
+        return ResponseEntity.ok().body(chessBoardDTO);
     }
 
     private BoardDTO findChessBoard(int id) {
@@ -37,34 +37,30 @@ public class ChessController {
         return BoardDTO.of(chessBoard, teamType);
     }
 
-    private <T> ResponseEntity<T> writeResponse(T t) {
-        return ResponseEntity.ok().body(t);
-    }
-
     @PutMapping("/chessboard")
     public ResponseEntity<BoardDTO> move(@PathVariable int id, @RequestBody MoveRequestDTO moveRequestDTO, HttpSession httpSession) {
         String password = (String) httpSession.getAttribute("password");
         TeamType currentTeamType = chessService.findCurrentTeamTypeByRoomId(id);
-        userService.validateCurrentUser(id, password, currentTeamType);
+        userService.validateUserTurn(id, password, currentTeamType);
         String current = moveRequestDTO.getCurrent();
         String destination = moveRequestDTO.getDestination();
         String teamType = moveRequestDTO.getTeamType();
         chessService.moveByRoomId(current, destination, teamType, id);
         BoardDTO chessBoardDTO = findChessBoard(id);
-        return writeResponse(chessBoardDTO);
+        return ResponseEntity.ok().body(chessBoardDTO);
     }
 
     @GetMapping("/result")
     public ResponseEntity<ResultDTO> showResult(@PathVariable int id) {
         Result result = chessService.calculateResultByRoomId(id);
         ResultDTO resultDTO = ResultDTO.from(result);
-        return writeResponse(resultDTO);
+        return ResponseEntity.ok().body(resultDTO);
     }
 
     @DeleteMapping("/histories")
     public ResponseEntity<String> restart(@PathVariable int id) {
         chessService.deleteAllHistoriesByRoomId(id);
         String location = "/";
-        return writeResponse(location);
+        return ResponseEntity.ok().body(location);
     }
 }

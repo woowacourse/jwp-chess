@@ -71,9 +71,21 @@ class UserServiceTest {
                 new User(2, "enco", "WHITE", 1));
         given(userDAO.findByRoomId(1)).willReturn(users);
 
-        assertThatCode(() -> userService.validateCurrentUser(1, "encoded", TeamType.WHITE))
+        assertThatCode(() -> userService.validateUserTurn(1, "encoded", TeamType.WHITE))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("현재 차례가 아닙니다.");
+        verify(userDAO, times(1)).findByRoomId(1);
+    }
+
+    @DisplayName("혼자서는 게임을 진행할 수 없.")
+    @Test
+    void cannotPlayAlone() {
+        List<User> users = Arrays.asList(new User(1, "encoded", "BLACK", 1));
+        given(userDAO.findByRoomId(1)).willReturn(users);
+
+        assertThatCode(() -> userService.validateUserTurn(1, "encoded", TeamType.WHITE))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("혼자서는 플레이할 수 없습니다.");
         verify(userDAO, times(1)).findByRoomId(1);
     }
 }

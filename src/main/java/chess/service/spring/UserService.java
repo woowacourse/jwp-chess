@@ -27,8 +27,11 @@ public class UserService {
         userDAO.insertUser(encodedPassword, teamType.toString(), roomId);
     }
 
-    public void validateCurrentUser(int roomId, String password, TeamType teamType) {
+    public void validateUserTurn(int roomId, String password, TeamType teamType) {
         Users users = new Users(userDAO.findByRoomId(roomId));
+        if (!users.hasMaximumCountsForGame()) {
+            throw new IllegalStateException("혼자서는 플레이할 수 없습니다.");
+        }
         String encodedPassword = passwordEncoder.encode(password);
         boolean isValidTurn = users.hasEqualUser(encodedPassword, teamType);
         if (!isValidTurn) {

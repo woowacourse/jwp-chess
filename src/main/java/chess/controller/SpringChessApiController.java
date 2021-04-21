@@ -9,6 +9,8 @@ import chess.service.ChessService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.jetty.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/room")
+@RequestMapping("/rooms")
 public class SpringChessApiController {
 
     private final ChessService chessService;
@@ -28,11 +30,9 @@ public class SpringChessApiController {
     }
 
     @PostMapping
-    private Map<String, String> createRoom(@RequestBody RoomDto roomDto) {
-        Map<String, String> result = new HashMap<>();
-        result.put("result", "success");
-        result.put("roomId", chessService.create(roomDto));
-        return result;
+    private ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto) {
+        roomDto.setId(chessService.create(roomDto));
+        return ResponseEntity.status(HttpStatus.CREATED_201).body(roomDto);
     }
 
     @PutMapping("/{id}/close")

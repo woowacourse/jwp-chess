@@ -48,7 +48,7 @@ document.querySelector(".create-room").addEventListener("submit",
       if (isValueLengthIsLongerThan(roomName.value, 2)
           && isValueLengthIsLongerThan(white.value, 2)
           && isValueLengthIsLongerThan(black.value, 2)) {
-        const response = await fetch("./room", {
+        const response = await fetch("./rooms", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

@@ -13,6 +13,9 @@ POST /rooms
   },
   "response": {
     "id": "string",
+    "name": "string",
+    "white": "string",
+    "black": "string"
   }
 }
 ```

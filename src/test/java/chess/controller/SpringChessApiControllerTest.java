@@ -12,6 +12,7 @@ import chess.dto.web.RoomDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import org.eclipse.jetty.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,10 +42,12 @@ public class SpringChessApiControllerTest {
             .writeValueAsString(new RoomDto("1", "roomName", "white", "black"));
 
         mockMvc
-            .perform(post("/room").content(content).contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.result").value("success"))
-            .andExpect(jsonPath("$.roomId").value("1"))
+            .perform(post("/rooms").content(content).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().is(HttpStatus.CREATED_201))
+            .andExpect(jsonPath("$.id").value("1"))
+            .andExpect(jsonPath("$.name").value("roomName"))
+            .andExpect(jsonPath("$.white").value("white"))
+            .andExpect(jsonPath("$.black").value("black"))
             .andDo(print());
     }
 

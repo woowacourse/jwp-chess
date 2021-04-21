@@ -45,7 +45,6 @@ public class ChessService {
         GridDto gridDto = requestDto.getGridDto();
         List<Piece> pieces = PieceMapper.PiecesDtoGroupConvertToPieces(requestDto.getPiecesDto());
         List<Line> lines = Lines.from(pieces).lines();
-
         Grid grid = new Grid(new CustomGridStrategy(lines, Color.findColorByTurn(requestDto.getGridDto().getIsBlackTurn())));
         grid.move(requestDto.getSourcePosition(), requestDto.getTargetPosition());
         gridDAO.changeTurn(gridDto.getGridId(), !gridDto.getIsBlackTurn());

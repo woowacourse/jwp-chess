@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.Set;
 
 public class PointDto {
-    private final EnumMap<Team, Double> result;
+    private final Map<Team, Double> result;
 
-    public PointDto(EnumMap<Team, Double> result) {
+    public PointDto(Map<Team, Double> result) {
         this.result = result;
     }
 

@@ -12,6 +12,7 @@ import chess.view.OutputView;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChessGame {
 
@@ -72,7 +73,7 @@ public class ChessGame {
         }
     }
 
-    public EnumMap<Team, Double> calculatePoint() {
+    public Map<Team, Double> calculatePoint() {
         EnumMap<Team, Double> result = new EnumMap<>(Team.class);
         calculateEachTeamPoint(result, Team.BLACK);
         calculateEachTeamPoint(result, Team.WHITE);

@@ -21,7 +21,7 @@ public final class SpringChessController {
         return "lobby";
     }
 
-    @GetMapping("/room/{id}")
+    @GetMapping("/rooms/{id}")
     public String joinRoom(@PathVariable String id, Model model) {
         model.addAttribute("board", chessService.latestBoard(id));
         model.addAttribute("roomId", id);

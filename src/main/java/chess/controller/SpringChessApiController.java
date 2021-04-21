@@ -35,6 +35,14 @@ public class SpringChessApiController {
         return result;
     }
 
+    @PutMapping("/{id}/close")
+    private Map<String, String> closeRoom(@PathVariable String id) {
+        Map<String, String> result = new HashMap<>();
+        chessService.close(id);
+        result.put("result", "success");
+        return result;
+    }
+
     @GetMapping("{id}/statistics")
     private UsersInRoomDto usersInRoom(@PathVariable String id) {
         return chessService.usersInRoom(id);
@@ -54,14 +62,6 @@ public class SpringChessApiController {
     private Map<String, String> exitGame(@PathVariable String id) {
         Map<String, String> result = new HashMap<>();
         chessService.exit(id);
-        result.put("result", "success");
-        return result;
-    }
-
-    @PutMapping("/{id}/close")
-    private Map<String, String> closeRoom(@PathVariable String id) {
-        Map<String, String> result = new HashMap<>();
-        chessService.close(id);
         result.put("result", "success");
         return result;
     }

@@ -37,7 +37,7 @@ public class SpringChessControllerTest {
     @DisplayName("\"/room/1\" 경로에는 index.html이 반환된다.")
     @Test
     void joinRoom() throws Exception {
-        mockMvc.perform(get("/room/1123"))
+        mockMvc.perform(get("/rooms/1123"))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(model().attributeExists("roomId"))

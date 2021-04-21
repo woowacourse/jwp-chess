@@ -14,15 +14,28 @@ public class GameStatusDto {
     private static final String BLACK = "b";
     private static final String WHITE = "w";
     private static final String NONE = "n";
+    private static final String READY = "Ready";
+    private static final String RUNNING = "Running";
+    private static final String FINISH = "Finish";
 
     private final String gameState;
     private final String turn;
     private final String winner;
 
     public GameStatusDto(ChessGame chessGame) {
-        gameState = chessGame.gameState().getClass().getSimpleName();
+        gameState = encodedGameState(chessGame.gameState());
         turn = encodedTeam(chessGame.currentTurn());
         winner = winnerByGameStatus(chessGame);
+    }
+
+    private String encodedGameState(GameState gameState) {
+        if (gameState instanceof Ready) {
+            return READY;
+        }
+        if (gameState instanceof Running) {
+            return RUNNING;
+        }
+        return FINISH;
     }
 
     private static String winnerByGameStatus(ChessGame chessGame) {

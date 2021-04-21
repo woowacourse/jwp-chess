@@ -47,9 +47,4 @@ public class RoomController {
         httpSession.setAttribute("roomId", String.valueOf(room.getId()));
         return ResponseEntity.ok().body(roomDTO);
     }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleException(RuntimeException runtimeException) {
-        return ResponseEntity.badRequest().body(runtimeException.getMessage());
-    }
 }

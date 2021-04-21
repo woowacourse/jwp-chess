@@ -67,9 +67,4 @@ public class ChessController {
         String location = "/";
         return writeResponse(location);
     }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleException(RuntimeException runtimeException) {
-        return ResponseEntity.status(400).body(runtimeException.getMessage());
-    }
 }

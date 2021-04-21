@@ -1,27 +1,14 @@
 package chess.dto.result;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public final class RankingDTO implements Comparable {
     private final String nickname;
     private final int winCount;
     private final int loseCount;
-
-    public RankingDTO(final String nickname, final int winCount, final int loseCount) {
-        this.nickname = nickname;
-        this.winCount = winCount;
-        this.loseCount = loseCount;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public int getWinCount() {
-        return winCount;
-    }
-
-    public int getLoseCount() {
-        return loseCount;
-    }
 
     @Override
     public int compareTo(Object o) {

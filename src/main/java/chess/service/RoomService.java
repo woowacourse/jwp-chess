@@ -4,7 +4,6 @@ import chess.dao.RoomDAO;
 import chess.domain.ChessGame;
 import chess.domain.Rooms;
 import chess.dto.room.RoomDTO;
-import chess.exception.ClientException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,18 +23,11 @@ public final class RoomService {
     }
 
     public Long createRoom(final String name) {
-        isEmptyName(name);
         return roomDAO.createRoom(name);
     }
 
     public void changeStatus(final String roomId) {
         roomDAO.changeStatusEndByRoomId(roomId);
-    }
-
-    public void isEmptyName(final String name) {
-        if (name.isEmpty()) {
-            throw new ClientException();
-        }
     }
 
     public void loadRooms() {

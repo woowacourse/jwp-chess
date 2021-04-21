@@ -1,30 +1,15 @@
 package chess.dto.user;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public final class UsersDTO {
     private String blackUser;
     private String whiteUser;
-
-    public UsersDTO() {
-    }
-
-    public UsersDTO(final String blackUser, final String whiteUser) {
-        this.blackUser = blackUser;
-        this.whiteUser = whiteUser;
-    }
-
-    public String getBlackUser() {
-        return blackUser;
-    }
-
-    public String getWhiteUser() {
-        return whiteUser;
-    }
-
-    public void setBlackUser(String blackUser) {
-        this.blackUser = blackUser;
-    }
-
-    public void setWhiteUser(String whiteUser) {
-        this.whiteUser = whiteUser;
-    }
 }

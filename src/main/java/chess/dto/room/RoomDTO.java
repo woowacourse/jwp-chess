@@ -1,5 +1,8 @@
 package chess.dto.room;
 
+import lombok.Getter;
+
+@Getter
 public final class RoomDTO {
     private final int id;
     private final String title;
@@ -23,29 +26,5 @@ public final class RoomDTO {
             return "진행중";
         }
         return "종료됨";
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getBlackUser() {
-        return blackUser;
-    }
-
-    public String getWhiteUser() {
-        return whiteUser;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public boolean isPlaying() {
-        return playing;
     }
 }

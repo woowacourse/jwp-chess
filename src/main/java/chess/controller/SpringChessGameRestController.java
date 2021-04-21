@@ -7,7 +7,6 @@ import chess.dto.game.StatusDTO;
 import chess.dto.result.ResultDTO;
 import chess.dto.room.RoomNameDTO;
 import chess.dto.user.UsersDTO;
-import chess.exception.ClientException;
 import chess.service.LogService;
 import chess.service.ResultService;
 import chess.service.RoomService;
@@ -15,11 +14,13 @@ import chess.service.UserService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -40,7 +41,7 @@ public class SpringChessGameRestController {
     }
 
     @PostMapping(path = "/new-game")
-    public ResponseEntity<Boolean> createNewGame(@RequestBody final RoomNameDTO roomNameDTO) {
+    public ResponseEntity<Boolean> createNewGame(@RequestBody @Valid final RoomNameDTO roomNameDTO) {
         Long id = roomService.createRoom(roomNameDTO.getName());
         return ResponseEntity.status(CREATED)
                 .header("Location", "/rooms/" + id)
@@ -48,21 +49,21 @@ public class SpringChessGameRestController {
     }
 
     @PostMapping(path = "/turn")
-    public ResponseEntity<Boolean> checkCurrentTurn(@RequestBody final SectionDTO sectionDTO) {
+    public ResponseEntity<Boolean> checkCurrentTurn(@RequestBody @Valid final SectionDTO sectionDTO) {
         ChessGame chessGame = roomService.loadChessGameById(sectionDTO.getRoomId());
         return ResponseEntity.status(OK)
                 .body(chessGame.checkRightTurn(sectionDTO.getClickedSection()));
     }
 
     @PostMapping("/movable-positions")
-    public ResponseEntity<List<String>> findMovablePosition(@RequestBody final SectionDTO sectionDTO) {
+    public ResponseEntity<List<String>> findMovablePosition(@RequestBody @Valid final SectionDTO sectionDTO) {
         ChessGame chessGame = roomService.loadChessGameById(sectionDTO.getRoomId());
         return ResponseEntity.status(OK)
                 .body(chessGame.movablePositionsByStartPoint(sectionDTO.getClickedSection()));
     }
 
     @PostMapping("/piece/move")
-    public ResponseEntity<StatusDTO> movePiece(@RequestBody final MoveDTO moveDTO) {
+    public ResponseEntity<StatusDTO> movePiece(@RequestBody @Valid final MoveDTO moveDTO) {
         String roomId = moveDTO.getRoomId();
         String startPoint = moveDTO.getStartPoint();
         String endPoint = moveDTO.getEndPoint();
@@ -74,7 +75,7 @@ public class SpringChessGameRestController {
     }
 
     @PostMapping(path = "/game/end")
-    public ResponseEntity<Boolean> initialize(@RequestBody final ResultDTO resultDTO) {
+    public ResponseEntity<Boolean> initialize(@RequestBody @Valid final ResultDTO resultDTO) {
         String roomId = resultDTO.getRoomId();
         String winner = resultDTO.getWinner();
         String loser = resultDTO.getLoser();
@@ -85,7 +86,7 @@ public class SpringChessGameRestController {
         return ResponseEntity.status(OK).body(true);
     }
 
-    @ExceptionHandler(ClientException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> clientException() {
         return ResponseEntity.status(BAD_REQUEST)
                 .body("client error");

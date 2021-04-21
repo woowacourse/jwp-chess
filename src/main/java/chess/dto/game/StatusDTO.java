@@ -3,7 +3,9 @@ package chess.dto.game;
 import chess.domain.ChessGame;
 import chess.domain.Team;
 import chess.dto.user.UsersDTO;
+import lombok.Getter;
 
+@Getter
 public final class StatusDTO {
     private final String turn;
     private final Double blackScore;
@@ -39,29 +41,5 @@ public final class StatusDTO {
             return users.getBlackUser();
         }
         return "NONE";
-    }
-
-    public String getTurn() {
-        return turn;
-    }
-
-    public Double getBlackScore() {
-        return blackScore;
-    }
-
-    public Double getWhiteScore() {
-        return whiteScore;
-    }
-
-    public boolean isEnds() {
-        return ends;
-    }
-
-    public String getWinner() {
-        return winner;
-    }
-
-    public String getLoser() {
-        return loser;
     }
 }

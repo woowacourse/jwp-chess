@@ -1,28 +1,24 @@
 package chess.dto.game;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public final class MoveDTO {
+    @NotBlank
     private String roomId;
+
+    @NotBlank
+    @Pattern(regexp = "^[a-hA-H]{1}[1-8]{1}$")
     private String startPoint;
+
+    @NotBlank
+    @Pattern(regexp = "^[a-hA-H]{1}[1-8]{1}$")
     private String endPoint;
-
-    public MoveDTO() {
-    }
-
-    public MoveDTO(final String roomId, final String startPoint, final String endPoint) {
-        this.roomId = roomId;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-    }
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public String getStartPoint() {
-        return startPoint;
-    }
-
-    public String getEndPoint() {
-        return endPoint;
-    }
 }

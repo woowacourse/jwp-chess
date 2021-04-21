@@ -119,7 +119,7 @@ public class SpringChessApiControllerTest {
     @DisplayName("이동 가능한 위치")
     @Test
     void movablePoints() throws Exception {
-        mockMvc.perform(get("/rooms/1/movablePoints/a1"))
+        mockMvc.perform(get("/rooms/1/points/a1/movable-points"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.[0].x").value("a"))
             .andExpect(jsonPath("$.[0].y").value("1"));

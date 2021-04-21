@@ -60,7 +60,7 @@ public class SpringChessApiController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST_400).build();
     }
 
-    @GetMapping("/{id}/movablePoints/{point}")
+    @GetMapping("/{id}/points/{point}/movable-points")
     private List<PointDto> movablePoints(@PathVariable String id, @PathVariable String point) {
         return chessService.movablePoints(id, point);
     }

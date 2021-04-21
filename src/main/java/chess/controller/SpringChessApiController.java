@@ -26,7 +26,7 @@ public class SpringChessApiController {
         return springChessService.usersInRoom(id);
     }
 
-    @GetMapping("{id}/getGameStatus")
+    @GetMapping("{id}/status")
     private GameStatusDto gameStatus(@PathVariable String id) {
         return springChessService.gameStatus(id);
     }
@@ -46,7 +46,7 @@ public class SpringChessApiController {
         springChessService.close(id);
     }
 
-    @GetMapping("/{id}/movablePoints/{point}")
+    @GetMapping("/{id}/movable/{point}")
     private List<PointDto> movablePoints(@PathVariable String id, @PathVariable String point) {
         return springChessService.movablePoints(id, point);
     }

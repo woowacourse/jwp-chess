@@ -6,7 +6,7 @@ export const removeAllMovables = () => {
 }
 
 async function getMovables(point, roomId) {
-  const response = await fetch("./" + roomId + "/movablePoints/" + point);
+  const response = await fetch("./" + roomId + "/movable/" + point);
   const result = await response.json();
   if (response.ok) {
     return result;

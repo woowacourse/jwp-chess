@@ -5,6 +5,7 @@ import static org.hamcrest.core.Is.is;
 import com.google.gson.JsonObject;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -12,6 +13,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+@Disabled
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ChessControllerTest {
 

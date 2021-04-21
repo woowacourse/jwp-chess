@@ -1,19 +1,21 @@
 package chess.repository.room;
 
 import chess.domain.game.Room;
-import java.sql.SQLException;
+import java.util.Optional;
 
 public interface RoomRepository {
 
-    long insert(Room room);
+    long insert(String name);
 
-    void update(Room room);
+    long insert(Room room);
 
     Room findRoomByName(String name);
 
-    boolean isExistName(String name);
+    void save(Room room);
 
-    Room findRoomById(long roomId);
+    void saveAfterMove(Room room, String source, String target);
+
+    boolean exists(String name);
 
     void deleteAll();
 }

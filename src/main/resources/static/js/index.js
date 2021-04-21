@@ -1,5 +1,5 @@
 const $start = document.querySelector("#start-btn");
-const $url = "http://localhost:8080/game";
+const $url = "http://localhost:8080/games";
 
 $start.addEventListener("click", startGame);
 

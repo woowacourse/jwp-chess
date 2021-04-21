@@ -22,7 +22,7 @@ public class SpringWebChessController {
     }
 
 
-    @GetMapping("/game/{id}")
+    @GetMapping("/games/{id}")
     public String findGameByGameId(@PathVariable Long id, Model model) {
         GameResponseDto gameResponseDto = chessService.findGameByGameId(id);
         model.addAttribute(gameResponseDto);

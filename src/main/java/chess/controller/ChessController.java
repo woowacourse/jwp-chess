@@ -8,6 +8,7 @@ import chess.service.SpringChessService;
 import chess.view.ModelView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ public class ChessController {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private final SpringChessService springChessService;
 
+    @Autowired
     public ChessController(SpringChessService springChessService) {
         this.springChessService = springChessService;
     }

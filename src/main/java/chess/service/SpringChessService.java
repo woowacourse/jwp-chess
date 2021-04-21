@@ -10,6 +10,7 @@ import chess.domain.exception.DataException;
 import chess.domain.repository.CommandRepository;
 import chess.domain.repository.HistoryRepository;
 import chess.domain.utils.PieceInitializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import spark.utils.StringUtils;
@@ -24,6 +25,7 @@ public class SpringChessService {
     private CommandRepository commandRepository;
     private HistoryRepository historyRepository;
 
+    @Autowired
     public SpringChessService(CommandRepository commandRepository, HistoryRepository historyRepository) {
         this.commandRepository = commandRepository;
         this.historyRepository = historyRepository;

@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 
 import chess.dto.request.MoveRequestDto;
-import chess.dto.request.PiecesRequestDto;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -25,11 +24,9 @@ public class ChessControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        PiecesRequestDto piecesRequestDto = new PiecesRequestDto(1);
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(piecesRequestDto)
-            .when().post("/api/pieces")
+            .when().post("/api/pieces/1")
             .then().log().all();
     }
 
@@ -59,11 +56,9 @@ public class ChessControllerTest {
     @DisplayName("기물 가져오는거 확인")
     @Test
     void postPieces() {
-        PiecesRequestDto piecesRequestDto = new PiecesRequestDto(1);
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(piecesRequestDto)
-            .when().post("/api/pieces")
+            .when().post("/api/pieces/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -73,11 +68,11 @@ public class ChessControllerTest {
     @DisplayName("보드 갱신 확인")
     @Test
     void putBoard() {
-        MoveRequestDto moveRequestDto = new MoveRequestDto(1, "a2", "a4");
+        MoveRequestDto moveRequestDto = new MoveRequestDto("a2", "a4");
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(moveRequestDto)
-            .when().put("/api/board")
+            .when().put("/api/board/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -92,7 +87,7 @@ public class ChessControllerTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("roomId", 1)
             .queryParam("color", "WHITE")
-            .when().get("/api/score")
+            .when().get("/api/score/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("score.toString()", equalTo("38.0"));

@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function ChessPage() {
     this.roomId = parseInt(localStorage.getItem("roomId"));
-    this.getScoreUrl = "http://localhost:8080/api/score";
-    this.putBoardUrl = "http://localhost:8080/api/board";
+    this.getScoreUrl = "http://localhost:8080/api/score/" + this.roomId;
+    this.putBoardUrl = "http://localhost:8080/api/board/" + this.roomId;
 }
 
 ChessPage.prototype.initChessPage = function () {
@@ -27,7 +27,6 @@ ChessPage.prototype.templatePieces = function (pieces) {
 }
 
 ChessPage.prototype.pieceElement = function (piece) {
-
     if (piece.name === ".") {
         return `<img class="chess-piece">`;
     }
@@ -109,9 +108,9 @@ ChessPage.prototype.registerGetScoreEvent = function () {
         });
 }
 
-ChessPage.prototype.getScore = function (color) {
+ChessPage.prototype.getScore = function (colorName) {
     fetch(
-        chessPage.getScoreUrl + "?roomId=" + chessPage.roomId + "&color=" + color,
+        chessPage.getScoreUrl + "/" + colorName,
         {
             method: 'GET'
         }).then(res => res.json())

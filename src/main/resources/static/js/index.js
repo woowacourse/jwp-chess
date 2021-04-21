@@ -12,7 +12,7 @@ document.querySelector(".make-room-button").addEventListener("click", function (
 
 function IndexPage() {
     this.getRoomsUrl = "http://localhost:8080/api/rooms";
-    this.postPiecesUrl = "http://localhost:8080/api/pieces";
+    this.postPiecesUrl = "http://localhost:8080/api/pieces/";
 }
 
 IndexPage.prototype.initIndexPage = function () {
@@ -34,11 +34,8 @@ IndexPage.prototype.initIndexPage = function () {
 }
 
 IndexPage.prototype.addNewRoom = function (newRoomId) {
-    fetch(indexPage.postPiecesUrl, {
+    fetch(indexPage.postPiecesUrl + newRoomId, {
         method: 'POST',
-        body: JSON.stringify({
-            roomId: newRoomId
-        }),
         headers: {
             'Content-Type': 'application/json',
         }

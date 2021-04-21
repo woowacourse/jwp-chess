@@ -4,7 +4,10 @@ import chess.domain.board.*;
 import chess.domain.piece.Team;
 import chess.view.OutputView;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class ChessGame {
     private static final int HORIZONTAL_INDEX = 0;

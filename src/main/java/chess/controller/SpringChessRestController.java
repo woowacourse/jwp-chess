@@ -18,7 +18,7 @@ public class SpringChessRestController {
         this.springChessService = springChessService;
     }
 
-    @GetMapping("/create/{id}")
+    @PostMapping("/create/{id}")
     public ResponseEntity<BoardDto> createRoom(@PathVariable("id") String id) {
         return ResponseEntity.ok(springChessService.loadRoom(id));
     }
@@ -32,13 +32,14 @@ public class SpringChessRestController {
         }
     }
 
-    @PostMapping("/movable")
-    public ResponseEntity<List<String>> movablePosition(@RequestBody MovablePositionDto movablePositionDto) {
-        return ResponseEntity.ok(springChessService.movablePosition(movablePositionDto));
+    @GetMapping("/movable")
+    public ResponseEntity<List<String>> movablePosition(@RequestParam("roomId") String roomId, @RequestParam("target") String target) {
+        MovablePositionDto dto = new MovablePositionDto(roomId, target);
+        return ResponseEntity.ok(springChessService.movablePosition(dto));
     }
 
-    @PostMapping("/score/{roomId}")
-    public ResponseEntity<BoardStatusDto> score(@PathVariable String roomId) {
+    @GetMapping("/score")
+    public ResponseEntity<BoardStatusDto> score(String roomId) {
         return ResponseEntity.ok(springChessService.boardStatusDto(roomId));
     }
 }

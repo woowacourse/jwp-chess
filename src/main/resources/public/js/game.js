@@ -13,8 +13,23 @@ const $roomId = document.getElementById("room").value;
 
 createBoard();
 
-function getFetch(url) {
-    return fetch(url).then(response => response.json());
+function getFetch(url, data) {
+    return fetch(url + "?" + new URLSearchParams(data)).then(response => {
+        return response.json();
+    })
+}
+
+function getFetchPath(url) {
+    return getFetch(url, {
+        "roomId": $roomId,
+        "target": $target
+    });
+}
+
+function getFetchScore(url) {
+    return getFetch(url, {
+        "roomId": $roomId
+    })
 }
 
 function postFetchMove(url) {
@@ -22,13 +37,6 @@ function postFetchMove(url) {
         "roomId": $roomId,
         "target": $target,
         "destination": $destination
-    }));
-}
-
-function postFetchPath(url) {
-    return postFetch(url, JSON.stringify({
-        "roomId": $roomId,
-        "target": $target
     }));
 }
 
@@ -41,18 +49,15 @@ function postFetch(url, bodyData) {
         },
         body: bodyData
     }).then(response => {
-        console.log(response)
         return response.json();
     })
 }
 
-function postFetchScore(url) {
+function postFetchWithoutBody(url) {
     return fetch(url, {
         method: 'post'
     }).then(response => {
-        if (response.ok) {
-            return response.json();
-        }
+        return response.json();
     });
 }
 
@@ -67,7 +72,7 @@ async function moveBoard() {
 async function findPath() {
     clearMovablePosition();
 
-    await postFetchPath("movable").then(data => {
+    await getFetchPath("movable").then(data => {
         $path = data;
     });
     showMovablePosition();
@@ -81,7 +86,7 @@ function showMovablePosition() {
 }
 
 async function findScore() {
-    await postFetchScore("score/" + $roomId).then(data => {
+    await getFetchScore("score/").then(data => {
         $status = data;
     });
     showScore();
@@ -111,7 +116,7 @@ function clearMovablePosition() {
 
 async function createBoard() {
     clearBoard();
-    await getFetch("create/" + $roomId).then(data => {
+    await postFetchWithoutBody("create/" + $roomId).then(data => {
         $board = data;
     })
     refreshBoard();

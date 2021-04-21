@@ -21,7 +21,7 @@ public class SpringChessController {
         return "main";
     }
 
-    @PostMapping("/start")
+    @GetMapping("/start")
     public ModelAndView startGame(@RequestParam("room") String id) {
         final ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("roomId", id);

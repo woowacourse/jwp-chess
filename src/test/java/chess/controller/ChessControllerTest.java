@@ -82,12 +82,9 @@ public class ChessControllerTest {
     @DisplayName("점수 확인")
     @Test
     void getScore() {
-
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .queryParam("roomId", 1)
-            .queryParam("color", "WHITE")
-            .when().get("/api/score/1")
+            .when().get("/api/score/1/WHITE")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("score.toString()", equalTo("38.0"));

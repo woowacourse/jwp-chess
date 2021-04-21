@@ -15,7 +15,7 @@ export default class ChessService {
     }
 
     async startGame() {
-        return await fetch(`${this.baseUrl}/new`, {
+        return await fetch(`${this.baseUrl}`, {
             method: "POST",
             headers: this.headers
         }).then(response => response.json());

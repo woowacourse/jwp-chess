@@ -50,3 +50,15 @@
 [ 스프링 관련 ]
 - [x] Dao interface
 - [x] Dao의 로직 서비스로 분리
+
+[ DDL ]
+```sql
+CREATE TABLE board (
+	board_id bigint NOT NULL AUTO_INCREMENT,
+	room_id bigint NOT NULL,
+	start char(2) NOT NULL,
+	destination char(2) NOT NULL,
+	date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(board_id)	
+);
+```

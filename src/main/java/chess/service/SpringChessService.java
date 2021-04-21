@@ -8,7 +8,6 @@ import chess.domain.team.PiecePositions;
 import chess.domain.team.Score;
 import chess.domain.team.Team;
 import chess.webdao.ChessDao;
-import chess.webdto.PiecePositionDaoConverter;
 import chess.webdto.*;
 import org.springframework.stereotype.Service;
 

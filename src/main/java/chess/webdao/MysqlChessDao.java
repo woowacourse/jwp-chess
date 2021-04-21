@@ -3,6 +3,7 @@ package chess.webdao;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
+import chess.webdto.MoveRequestDto;
 import chess.webdto.PiecePositionDaoConverter;
 import chess.webdto.TurnDto;
 import org.springframework.jdbc.core.JdbcTemplate;

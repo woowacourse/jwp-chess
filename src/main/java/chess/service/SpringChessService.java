@@ -12,13 +12,16 @@ import chess.webdto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static chess.webdto.TeamDto.BLACK_TEAM;
 import static chess.webdto.TeamDto.WHITE_TEAM;
 
 @Service
+@Transactional(readOnly = true)
 public class SpringChessService {
     private final ChessDao chessDao;
 

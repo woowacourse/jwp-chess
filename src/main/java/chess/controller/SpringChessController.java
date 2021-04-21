@@ -20,12 +20,12 @@ public class SpringChessController {
         this.springChessService = springChessService;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public ChessGameDto startNewGame() {
         return springChessService.startNewGame();
     }
 
-    @GetMapping(value = "/previous", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/previous")
     public ChessGameDto loadPrevGame() {
         return springChessService.loadPreviousGame();
     }

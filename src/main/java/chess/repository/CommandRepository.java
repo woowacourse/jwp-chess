@@ -14,8 +14,8 @@ public class CommandRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insert(CommandDto commandDto, int id) {
-        String query = "INSERT INTO Command (data, password_id) VALUES (?, ?)";
+    public void insert(CommandDto commandDto, String id) {
+        String query = "INSERT INTO Command (data, room_id) VALUES (?, ?)";
         jdbcTemplate.update(query, commandDto.data(), id);
     }
 

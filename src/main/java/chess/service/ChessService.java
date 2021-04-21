@@ -2,11 +2,13 @@ package chess.service;
 
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
+import chess.domain.board.Path;
 import chess.domain.command.Commands;
 import chess.domain.utils.PieceInitializer;
 import chess.dto.CommandDto;
 import chess.dto.GameInfoDto;
 import chess.dto.RoomDto;
+import chess.dto.UserInfoDto;
 import chess.repository.CommandRepository;
 import chess.repository.UserRepository;
 import chess.repository.RoomRepository;
@@ -82,10 +84,14 @@ public class ChessService {
         return commandRepository.selectAllCommandsByRoomId(id);
     }
 
-    public void move(String id, String command) {
+    public void move(String id, String command, UserInfoDto userInfoDto) {
 //        ChessGame chessGame = gameStateOf(id);
         ChessGame chessGame = restore(lastState(id));
-        chessGame.moveAs(new Commands(command));
+
+        final Path path = new Path(new Commands(command).path());
+        chessGame.isCorrectTurnBetween(path.source(), userRepository.findTeamByPassword(userInfoDto));
+
+        chessGame.moveAs(path);
         updateMoveInfo(command, id);
     }
 
@@ -104,9 +110,9 @@ public class ChessService {
         roomRepository.updateToFull(historyId);
     }
 
-    private void flushCommands(String command, String gameId) {
+    private void flushCommands(String command, String roomId) {
         try {
-            commandRepository.insert(new CommandDto(command), Integer.parseInt(gameId));
+            commandRepository.insert(new CommandDto(command), roomId);
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
         }

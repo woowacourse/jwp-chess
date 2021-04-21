@@ -47,7 +47,7 @@ class CommandRepositoryTest {
     @Test
     void insert() {
         CommandDto commandDto = new CommandDto("move b1 b2");
-        commandRepository.insert(commandDto, 1);
+        commandRepository.insert(commandDto, "1");
         final List<CommandDto> commands = commandRepository.selectAllCommandsByRoomId(String.valueOf(1));
         assertThat(commands.size()).isEqualTo(3);
     }

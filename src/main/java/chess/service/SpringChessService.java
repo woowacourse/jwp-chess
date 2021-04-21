@@ -6,7 +6,6 @@ import chess.domain.piece.Piece;
 import chess.domain.team.Team;
 import chess.webdao.ChessDao;
 import chess.webdto.*;
-import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

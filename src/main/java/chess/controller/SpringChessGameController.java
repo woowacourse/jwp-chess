@@ -46,7 +46,7 @@ public final class SpringChessGameController {
         return "chess";
     }
 
-    @GetMapping(path = "/rooms/{id}/play")
+    @GetMapping(path = "/rooms/{id}/pieces")
     public String startGame(@PathVariable final String id, final Model model) {
         roomService.addNewRoom(id);
         logService.initializeByRoomId(id);
@@ -56,7 +56,7 @@ public final class SpringChessGameController {
         return "chess";
     }
 
-    @GetMapping(path = "/rooms/{id}/continue")
+    @GetMapping(path = "/rooms/{id}/saved-pieces")
     public String continueGame(@PathVariable final String id, final Model model) {
         ChessGame chessGame = roomService.initializeChessGame(id);
         logService.continueGame(id, chessGame);

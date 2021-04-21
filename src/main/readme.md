@@ -127,6 +127,23 @@ POST /rooms/:roomId/movement
   "requestBody": {
     "source": "string",
     "destination": "string"
+  },
+  "response": {
+    "board": [
+      {
+        "team": "string",
+        "piece": "string",
+        "x": "string",
+        "y": "string"
+      },
+      {
+        "team": "string",
+        "piece": "string",
+        "x": "string",
+        "y": "string"
+      },
+      ...
+    ]
   }
 }
 ```

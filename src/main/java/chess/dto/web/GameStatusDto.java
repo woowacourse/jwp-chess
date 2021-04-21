@@ -16,7 +16,7 @@ public class GameStatusDto {
     private static final String NONE = "n";
     private static final String READY = "Ready";
     private static final String RUNNING = "Running";
-    private static final String FINISH = "Finish";
+    private static final String FINISH = "Finished";
 
     private String gameState;
     private String turn;

@@ -9,7 +9,7 @@ async function getMovables(point, roomId) {
   const response = await fetch("./" + roomId + "/points/" + point + "/movable-points");
   const result = await response.json();
   if (response.ok) {
-    return result;
+    return result["points"];
   } else {
     alert("HTTP-Error: " + result["message"]);
   }

@@ -16,17 +16,19 @@ document.querySelector(".rooms").addEventListener("click", async (event) => {
   if (event.target.classList.contains("remove-room")) {
     const idToBeRemoved = event.target.closest(".room").getAttribute(
         "id").toString();
-    console.log(idToBeRemoved)
     const response = await fetch("./rooms", {
       method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         id: idToBeRemoved
       })
     });
-    const result = await response.json();
     if (response.ok) {
       window.location.reload();
     } else {
+      const result = await response.json();
       alert("HTTP-Error: " + result["message"]);
     }
   }
@@ -63,8 +65,9 @@ document.querySelector(".create-room").addEventListener("submit",
           })
         });
         const result = await response.json();
+        console.log(result)
         if (response.ok) {
-          window.location.href = "./room/" + result["roomId"];
+          window.location.href = "./rooms/" + result["id"];
         } else {
           alert("HTTP-Error: " + result["message"]);
         }

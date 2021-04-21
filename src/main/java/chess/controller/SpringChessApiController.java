@@ -2,12 +2,11 @@ package chess.controller;
 
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
-import chess.dto.web.PointDto;
+import chess.dto.web.MovementDto;
+import chess.dto.web.PointsDto;
 import chess.dto.web.RoomDto;
 import chess.dto.web.UsersInRoomDto;
 import chess.service.ChessService;
-import java.util.List;
-import java.util.Map;
 import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,12 +60,13 @@ public class SpringChessApiController {
     }
 
     @GetMapping("/{id}/points/{point}/movable-points")
-    private List<PointDto> movablePoints(@PathVariable String id, @PathVariable String point) {
+    private PointsDto movablePoints(@PathVariable String id, @PathVariable String point) {
         return chessService.movablePoints(id, point);
     }
 
-    @PostMapping("{id}/move")
-    private BoardDto move(@PathVariable String id, @RequestBody Map<String, String> body) {
-        return chessService.move(id, body.get("source"), body.get("destination"));
+    @PostMapping("{id}/movement")
+    private ResponseEntity<BoardDto> move(@PathVariable String id, @RequestBody MovementDto movementDto) {
+        return ResponseEntity.status(HttpStatus.CREATED_201)
+            .body(chessService.move(id, movementDto.getSource(), movementDto.getDestination()));
     }
 }

@@ -54,15 +54,18 @@ const addEventToSquares = () => {
 const exitGame = async () => {
   const response = await fetch("./" + roomId + "/game-status", {
     method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({
       "gameState": "Finished"
     })
   })
 
-  const result = await response.json();
   if (response.ok) {
     updateGameState(roomId);
   } else {
+    const result = await response.json();
     alert("HTTP-Error: " + result["message"]);
   }
 }

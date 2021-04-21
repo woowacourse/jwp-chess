@@ -121,8 +121,8 @@ public class SpringChessApiControllerTest {
     void movablePoints() throws Exception {
         mockMvc.perform(get("/rooms/1/points/a1/movable-points"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.[0].x").value("a"))
-            .andExpect(jsonPath("$.[0].y").value("1"));
+            .andExpect(jsonPath("$.points.[0].x").value("a"))
+            .andExpect(jsonPath("$.points.[0].y").value("1"));
     }
 
     @DisplayName("말 이동")
@@ -132,12 +132,11 @@ public class SpringChessApiControllerTest {
         body.put("source", "a1");
         body.put("destination", "b2");
 
-        String content = new ObjectMapper()
-            .writeValueAsString(body);
+        String content = objectMapper.writeValueAsString(body);
 
         mockMvc.perform(
-            post("/rooms/1/move").contentType(MediaType.APPLICATION_JSON_VALUE).content(content))
-            .andExpect(status().isOk())
+            post("/rooms/1/movement").contentType(MediaType.APPLICATION_JSON_VALUE).content(content))
+            .andExpect(status().is(HttpStatus.CREATED_201))
             .andExpect(jsonPath("$.board").hasJsonPath());
     }
 }

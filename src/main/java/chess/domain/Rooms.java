@@ -2,7 +2,9 @@ package chess.domain;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
+@Component
 public final class Rooms {
     private final Map<String, ChessGame> rooms;
 

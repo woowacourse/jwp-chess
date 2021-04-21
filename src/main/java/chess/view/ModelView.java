@@ -22,7 +22,7 @@ public class ModelView {
         model.put("squares", gameInfoDto.squares());
         model.put("turn", gameInfoDto.turn());
         model.put("scores", gameInfoDto.scores());
-        model.put("gameId", id);
+        model.put("roomId", id);
         return model;
     }
 

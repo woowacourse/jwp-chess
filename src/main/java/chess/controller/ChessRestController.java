@@ -4,6 +4,7 @@ import chess.domain.board.Team;
 import chess.domain.response.ChessResponse;
 import chess.domain.response.ErrorResponse;
 import chess.domain.response.GameResponse;
+import chess.dto.IdRequestDto;
 import chess.dto.InitialGameInfoDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.UserInfoDto;
@@ -50,7 +51,7 @@ public class ChessRestController {
         if (chessService.checkSamePassword(roomId, password)) {
             throw new IllegalArgumentException("굉장하군요. 백팀 참가자와 같은 비밀번호를 입력했어요😲 다른 비밀번호로 부탁해요~");
         }
-        chessService.updateRoomState(roomId);
+        chessService.updateToFull(roomId);
         chessService.addUser(roomId, password, Team.BLACK.team());
 
         HttpSession session = request.getSession();
@@ -61,7 +62,11 @@ public class ChessRestController {
     @PostMapping("/move")
     public ResponseEntity<ChessResponse> move(@RequestBody MoveRequestDto moveRequestDto,
                                               HttpServletRequest request) {
-        String id = moveRequestDto.getGameId();
+        String id = moveRequestDto.getRoomId();
+
+        if (chessService.checkRoomEnd(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("이미 종료된 게임입니다😞"));
+        }
         if (!chessService.checkRoomFull(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("흑팀 참가자가 아직 입장하지 않았습니다😞"));
         }
@@ -75,5 +80,11 @@ public class ChessRestController {
 
     private String makeMoveCmd(String source, String target) {
         return String.join(" ", "move", source, target);
+    }
+
+    @PostMapping("/end")
+    public ResponseEntity.BodyBuilder end(@RequestBody IdRequestDto idRequestDto) {
+        chessService.updateToEnd(idRequestDto.getRoomId());
+        return ResponseEntity.ok();
     }
 }

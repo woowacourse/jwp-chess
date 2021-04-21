@@ -64,4 +64,9 @@ public class RoomRepository {
         final String query = "UPDATE Room SET is_end = true WHERE id = ?";
         jdbcTemplate.update(query, id);
     }
+
+    public boolean isEnd(String id) {
+        final String query = "SELECT is_end FROM Room WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, Boolean.class, id);
+    }
 }

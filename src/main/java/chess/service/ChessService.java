@@ -55,7 +55,7 @@ public class ChessService {
     public GameInfoDto continuedGameInfo(String id, List<CommandDto> commands) {
         ChessGame chessGame = restore(commands);
         if (chessGame.isEnd()) {
-            updateDB(id);
+            updateToEnd(id);
         }
         return new GameInfoDto(chessGame);
     }
@@ -91,7 +91,7 @@ public class ChessService {
         }
     }
 
-    private void updateDB(String roomId) {
+    public void updateToEnd(String roomId) {
         roomRepository.updateToEnd(roomId);
     }
 
@@ -111,11 +111,15 @@ public class ChessService {
         return roomRepository.checkRoomIsFull(roomId);
     }
 
-    public void updateRoomState(String roomId) {
+    public void updateToFull(String roomId) {
         roomRepository.updateToFull(roomId);
     }
 
     public boolean checkSamePassword(String roomId, String password) {
         return userRepository.isExist(roomId, password);
+    }
+
+    public boolean checkRoomEnd(String roomId) {
+        return roomRepository.isEnd(roomId);
     }
 }

@@ -25,16 +25,16 @@ class SpringChessControllerTest {
     private SpringChessService springChessService;
 
     @Test
-    @DisplayName("GET: /games/new가 정상 작동한다")
+    @DisplayName("POST: /games/new가 정상 작동한다")
     void startNewGame() throws Exception {
-        mockMvc.perform(get("/games/new"))
+        mockMvc.perform(post("/games/new"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("POST: /games/new은 허용하지 않는다")
+    @DisplayName("GET: /games/new은 허용하지 않는다")
     void startNewGamePostRequestError() throws Exception {
-        mockMvc.perform(post("/games/new"))
+        mockMvc.perform(get("/games/new"))
                 .andExpect(status().is4xxClientError());
     }
 

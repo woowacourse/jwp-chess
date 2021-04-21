@@ -14,7 +14,14 @@ function loadFirstPage() {
 }
 
 function startNewGame() {
-    fetch("/games/new")
+    const postOption = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    fetch("/games/new", postOption)
         .then(response => {
             return response.json();
         })

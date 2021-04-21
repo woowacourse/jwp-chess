@@ -16,7 +16,7 @@ public class SpringChessController {
         this.springChessService = springChessService;
     }
 
-    @GetMapping(value = "/games/new")
+    @PostMapping(value = "/games/new")
     public ChessGameDto startNewGame() {
         return springChessService.startNewGame();
     }

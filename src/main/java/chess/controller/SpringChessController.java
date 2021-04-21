@@ -16,17 +16,17 @@ public class SpringChessController {
         this.springChessService = springChessService;
     }
 
-    @GetMapping(value = "/game/new")
+    @GetMapping(value = "/games/new")
     public ChessGameDto startNewGame() {
         return springChessService.startNewGame();
     }
 
-    @GetMapping(value = "/game/saved")
+    @GetMapping(value = "/games/saved")
     public ChessGameDto loadSavedGame() {
         return springChessService.loadSavedGame();
     }
 
-    @PostMapping(value = "/game/move")
+    @PostMapping(value = "/games/move")
     public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDto) {
         final String start = moveRequestDto.getStart();
         final String destination = moveRequestDto.getDestination();

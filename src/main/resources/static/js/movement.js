@@ -54,7 +54,7 @@ function serverMoveRequest(startPoint, destPoint) {
         body: JSON.stringify(moveRequest)
     }
 
-    fetch("/game/move", postOption)
+    fetch("/games/move", postOption)
         .then(response => {
             if (!response.ok) {
                 throw new Error(response.status);

@@ -14,7 +14,7 @@ public class ChessController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping("/newgame")
+    @PostMapping("/game")
     public ResponseEntity<CommonResponseBody<NewGameDto>> newGame() {
         return ResponseEntity.ok().body(
                 new CommonResponseBody<>(
@@ -24,9 +24,8 @@ public class ChessController {
         );
     }
 
-    @PostMapping("/move")
-    public ResponseEntity<CommonResponseBody<RunningGameDto>> move(@RequestBody MoveRequestBody moveRequestBody) {
-        int gameId = moveRequestBody.getGameId();
+    @PutMapping("/game/{gameId}/pieces")
+    public ResponseEntity<CommonResponseBody<RunningGameDto>> move(@PathVariable int gameId, @RequestBody MoveRequestBody moveRequestBody) {
         Position from = Position.of(moveRequestBody.getFrom());
         Position to = Position.of(moveRequestBody.getTo());
 
@@ -36,7 +35,7 @@ public class ChessController {
                         chessGameService.move(gameId, from, to)));
     }
 
-    @GetMapping("/loadGames")
+    @GetMapping("/games")
     public ResponseEntity<CommonResponseBody<GameListDto>> loadGames() {
         return ResponseEntity.ok().body(
                 new CommonResponseBody<>(
@@ -45,12 +44,12 @@ public class ChessController {
                 ));
     }
 
-    @GetMapping("/load/{id}")
-    public ResponseEntity<CommonResponseBody<RunningGameDto>> loadGame(@PathVariable int id) {
+    @GetMapping("/game/{gameId}")
+    public ResponseEntity<CommonResponseBody<RunningGameDto>> loadGame(@PathVariable int gameId) {
         return ResponseEntity.ok().body(
                 new CommonResponseBody<>(
                         "게임을 불러왔습니다",
-                        RunningGameDto.from(chessGameService.loadChessGameByGameId(id))
+                        RunningGameDto.from(chessGameService.loadChessGameByGameId(gameId))
                 ));
     }
 }

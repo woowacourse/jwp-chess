@@ -38,7 +38,7 @@ async function processResponse(response) {
 async function loadGameListIntoBox() {
     const gameListBox = document.getElementById("gameListBox");
 
-    const response = await fetch("/loadGames");
+    const response = await fetch("/games");
     if (response.ok) {
         const responseBody = await response.json();
 
@@ -66,13 +66,12 @@ async function addAndRequestMove(square) {
         console.log(`request [POST]/move, body: from: ${fromSquare.id}, \nto: ${toSquare.id}\n`);
 
         try {
-            fetch("/move", {
-                method: "POST",
+            fetch(`/game/${gameId}/pieces`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    gameId: gameId,
                     from: fromSquare.id,
                     to: toSquare.id,
                 }),
@@ -87,7 +86,13 @@ async function addAndRequestMove(square) {
 async function addEventOnStartButton() {
     await document.getElementById('start-button').addEventListener('click', event => {
         try {
-            fetch('/newgame')
+            fetch('/game', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({}),
+            })
                 .then(res => processResponse(res));
             turnOnPanel();
         } catch (error) {
@@ -107,7 +112,13 @@ async function addSelectionEventOnChessBoard() {
 async function addEventOnRegameButton() {
     await document.getElementById('regame-button').addEventListener('click', event => {
         try {
-            fetch('/newgame')
+            fetch('/game', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({}),
+            })
                 .then(res => processResponse(res));
             turnOnPanel();
         } catch (error) {
@@ -121,7 +132,7 @@ async function addEventOnLoadGameButton() {
         try {
             const gameListBox = document.getElementById("gameListBox");
             gameId = gameListBox.options[gameListBox.selectedIndex].value;
-            fetch(`/load/${gameId}`)
+            fetch(`/game/${gameId}`)
                 .then(res => processResponse(res));
             turnOnPanel();
         } catch (error) {

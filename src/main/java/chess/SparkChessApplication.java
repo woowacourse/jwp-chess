@@ -1,22 +1,65 @@
 package chess;
 
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import static spark.Spark.delete;
 import static spark.Spark.get;
+import static spark.Spark.post;
+import static spark.Spark.staticFiles;
+
+import chess.controller.ChessController;
+import chess.dao.ChessDAOSql2o;
+import chess.service.ChessService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 
 public class SparkChessApplication {
     public static void main(String[] args) {
-        get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(model, "index.hbs");
-        });
-    }
+        staticFiles.location("/static");
+        ChessController chessController = new ChessController(new ChessService(new ChessDAOSql2o()));
+        ObjectMapper objectMapper = new ObjectMapper();
 
-    private static String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+        get("/", (req, res) -> {
+            res.redirect("index.html");
+            return null;
+        });
+
+        get("/:gameId/pieces", (req, res) -> {
+            String gameId = req.params(":gameId");
+            return objectMapper
+                .writeValueAsString(chessController.startGame(Long.parseLong(gameId)));
+        });
+
+        get("/:gameId/roundstatus", (req, res) -> {
+            String gameId = req.params(":gameId");
+            return objectMapper
+                .writeValueAsString(chessController.roundStatus(Long.parseLong(gameId)));
+        });
+
+        post("/:gameId/move", (req, res) -> {
+            Map<String, String> request = objectMapper.readValue(req.body(), Map.class);
+            String gameId = req.params(":gameId");
+            String currentPosition = request.get("currentPosition");
+            String targetPosition = request.get("targetPosition");
+            chessController.move(Long.parseLong(gameId), currentPosition, targetPosition);
+            return objectMapper
+                .writeValueAsString(chessController.roundStatus(Long.parseLong(gameId)));
+        });
+
+        get("/:gameId/restart", (req, res) -> {
+            String gameId = req.params(":gameId");
+            chessController.restart(Long.parseLong(gameId));
+            return true;
+        });
+
+        delete("/exit/:gameId", (req, res) -> {
+            String gameId = req.params(":gameId");
+            chessController.exitGame(Long.parseLong(gameId));
+            return true;
+        });
+
+        post("/save/:gameId", (req, res) -> {
+            String gameId = req.params(":gameId");
+            chessController.saveGame(Long.parseLong(gameId));
+            return true;
+        });
     }
 }

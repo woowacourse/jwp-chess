@@ -41,8 +41,7 @@ public class ChessGame {
             board.put(whitePlayerState.pieces(), blackPlayerState.pieces()));
     }
 
-    public void
-    moveByTurn(final Position sourcePosition, final Position targetPosition) {
+    public void moveByTurn(final Position sourcePosition, final Position targetPosition) {
         if (whitePlayer.isFinish()) {
             move(sourcePosition, targetPosition, blackPlayer);
             chessBoard = chessBoard.put(whitePlayer.pieces(), blackPlayer.pieces());

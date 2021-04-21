@@ -21,7 +21,6 @@ public class GlobalExceptionHandler {
         BlankException.class, StateException.class})
     public ResponseEntity<ErrorResponseDto> handleCustomException(final RuntimeException exception) {
         logger.info(exception.getMessage());
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponseDto(exception.getMessage()));
     }

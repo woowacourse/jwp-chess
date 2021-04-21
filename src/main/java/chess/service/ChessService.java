@@ -30,27 +30,54 @@ public class ChessService {
         return histories();
     }
 
+    public GameInfoDto gameInfo(String id) {
+        final List<CommandDto> commands = lastState(id);
+        if (commands.isEmpty()) {
+            return initialGameInfo();
+        }
+        return continuedGameInfo(id, commands);
+    }
+
     public GameInfoDto initialGameInfo() {
         return new GameInfoDto(new ChessGame(Board.of(PieceInitializer.pieceInfo())));
     }
 
-    public GameInfoDto continuedGameInfo(String id) {
-        ChessGame chessGame = gameStateOf(id);
+//    public GameInfoDto continuedGameInfo1(String id) {
+//        ChessGame chessGame = gameStateOf(id);
+//        if (chessGame.isEnd()) {
+//            updateDB(id);
+//        }
+//        return new GameInfoDto(chessGame);
+//    }
+
+    public GameInfoDto continuedGameInfo(String id, List<CommandDto> commands) {
+        ChessGame chessGame = restore(commands);
         if (chessGame.isEnd()) {
             updateDB(id);
         }
         return new GameInfoDto(chessGame);
     }
 
-    private ChessGame gameStateOf(String id) {
+    private ChessGame restore(List<CommandDto> commands) {
         ChessGame chessGame = new ChessGame(Board.of(PieceInitializer.pieceInfo()));
-        chessGame.makeBoardStateOf(lastState(id));
+        chessGame.makeBoardStateOf(commands);
         return chessGame;
     }
 
-    public void move(String id, String command, Commands commands) {
-        ChessGame chessGame = gameStateOf(id);
-        chessGame.moveAs(commands);
+//    private ChessGame gameStateOf(String id) {
+//        ChessGame chessGame = new ChessGame(Board.of(PieceInitializer.pieceInfo()));
+//        chessGame.makeBoardStateOf(lastState(id));
+//        return chessGame;
+//    }
+
+    private List<CommandDto> lastState(String id) {
+        return commandRepository.selectAllCommands(id);
+    }
+
+    public void move(String id, String command) {
+//        ChessGame chessGame = gameStateOf(id);
+        ChessGame chessGame = restore(lastState(id));
+        chessGame.moveAs(new Commands(command));
         updateMoveInfo(command, id);
     }
 
@@ -79,9 +106,5 @@ public class ChessService {
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    private List<CommandDto> lastState(String id) {
-        return commandRepository.selectAllCommands(id);
     }
 }

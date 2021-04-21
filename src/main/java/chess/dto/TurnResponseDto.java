@@ -2,10 +2,10 @@ package chess.dto;
 
 import chess.domain.feature.Color;
 
-public class TurnDto {
+public class TurnResponseDto {
     private final String turn;
 
-    public TurnDto(Color turn) {
+    public TurnResponseDto(Color turn) {
         this.turn = turn.getColor();
     }
 

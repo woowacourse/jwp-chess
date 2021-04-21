@@ -5,10 +5,10 @@ import chess.domain.feature.Color;
 import chess.domain.game.ChessGame;
 import chess.domain.game.Result;
 import chess.domain.piece.Piece;
-import chess.dto.OutcomeDto;
-import chess.dto.PieceDto;
-import chess.dto.ScoreDto;
-import chess.dto.TurnDto;
+import chess.dto.OutcomeResponseDto;
+import chess.dto.PieceResponseDto;
+import chess.dto.ScoreResponseDto;
+import chess.dto.TurnResponseDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,17 +30,17 @@ public class Response {
     private Map<String, Object> pieceMoveModelToRender(ChessGame chessGame) {
         Map<String, Object> model = new HashMap<>();
         Color turn = chessGame.getTurn();
-        model.put("turn", new TurnDto(turn));
+        model.put("turn", new TurnResponseDto(turn));
 
         Map<Position, Piece> chessBoard = chessGame.getChessBoardAsMap();
         for (Map.Entry<Position, Piece> entry : chessBoard.entrySet()) {
-            model.put(entry.getKey().getPosition(), new PieceDto(entry.getValue()));
+            model.put(entry.getKey().getPosition(), new PieceResponseDto(entry.getValue()));
         }
 
         Result result = chessGame.calculateResult();
-        model.put("score", new ScoreDto(result));
+        model.put("score", new ScoreResponseDto(result));
         if (!chessGame.isOngoing()) {
-            model.put("outcome", new OutcomeDto(result));
+            model.put("outcome", new OutcomeResponseDto(result));
         }
         return model;
     }

@@ -23,6 +23,12 @@ public class ChessGame {
         this.state = state;
     }
 
+    public ChessGame(ChessBoard chessBoard, Color turn, State state, String roomName) {
+        this.chessBoard = chessBoard;
+        this.turn = turn;
+        this.state = state;
+    }
+
     public void start(List<String> input) {
         state.start(input, this);
     }

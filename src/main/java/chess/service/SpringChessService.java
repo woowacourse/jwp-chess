@@ -28,12 +28,11 @@ public class SpringChessService {
         this.roomDao = roomDao;
     }
 
-    public ChessGame initializeRoom(String roomName) {
+    public long saveRoom(String roomName) {
         roomDao.validateRoomExistence(roomName);
         ChessGame chessGame = initializeChessBoard();
         Room room = createRoom(roomName, chessGame);
-        roomDao.addRoom(room);
-        return chessGame;
+        return roomDao.saveRoom(room);
     }
 
     private ChessGame initializeChessBoard() {
@@ -54,13 +53,13 @@ public class SpringChessService {
         chessGame.play(command);
 
         room = createRoom(roomName, chessGame);
-        roomDao.addRoom(room);
+        roomDao.saveRoom(room);
 
         return chessGame;
     }
 
-    public ChessGame loadRoom(String name) {
-        Room room = roomDao.findByRoomName(name);
+    public ChessGame loadRoom(long id) {
+        Room room = roomDao.findById(id);
         return createChessGame(room);
     }
 
@@ -102,5 +101,9 @@ public class SpringChessService {
 
     public void deleteRoom(String roomName) {
         roomDao.deleteRoom(roomName);
+    }
+
+    public long getRoomId(String roomName) {
+        return roomDao.getRoomIdByName(roomName);
     }
 }

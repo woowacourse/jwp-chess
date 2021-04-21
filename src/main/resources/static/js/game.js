@@ -51,7 +51,7 @@ function sendMoveRequest(trimmedMoveCommand) {
     };
 
     const http = new XMLHttpRequest();
-    const url = '/game/move';
+    const url = window.location + "/move";
 
     http.open('POST', url);
     http.setRequestHeader('Content-type', 'application/json');

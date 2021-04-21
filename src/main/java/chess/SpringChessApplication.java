@@ -8,18 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @SpringBootApplication
 @Controller
 public class SpringChessApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(SpringChessApplication.class, args);
-    }
-
-    @GetMapping("/")
-    public String index() {
-        return "index.html";
-    }
-
-    @GetMapping("/room/**")
-    public String enter() {
-        return "/game.html";
     }
 }

@@ -12,12 +12,12 @@ window.onload = () => {
     const urls = location.href.split("/");
     roomId = urls[urls.length - 1];
     loadChessGame();
-
 }
 
 function loadChessGame() {
     const pw = prompt("비밀번호를 입력 해 주세요.");
     const body = {
+        "id": roomId,
         "pw": pw
     }
     axios.post('/api/room/' + roomId, body)
@@ -32,17 +32,6 @@ function loadChessGame() {
         location.href = "/";
     });
 }
-
-/*const btnStart = document.getElementsByClassName('btn-start')[0];
-btnStart.addEventListener('click', function (e) {
-    axios.get('/refreshChessGame?id=' + roomId)
-        .then(function (response) {
-            refreshChessBoard(response.data);
-        })
-        .catch(function (error) {
-            alert('게임을 갱신 할 수 없습니다.')
-        });
-})*/
 
 const tiles = document.getElementsByClassName('tile');
 for (let i = 0; i < tiles.length; i++) {
@@ -96,7 +85,7 @@ function movePiece(target) {
         'from': source.getAttribute('id'),
         'to': target.getAttribute('id')
     }
-    axios.put('/api/room/' + roomId, body)
+    axios.put('/api/game/' + gameInfo.id, body)
         .then(function (response) {
             source.classList.remove('selected-piece')
             source = null;
@@ -118,6 +107,7 @@ function clearSelect() {
 }
 
 function refreshChessBoard(chessGame) {
+    console.log(chessGame);
     gameInfo = chessGame;
     let isEnd = chessGame.end;
 

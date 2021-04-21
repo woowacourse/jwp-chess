@@ -4,7 +4,7 @@ const btnCreate = document.getElementById('btn-game-create')
 getTotalRoom();
 
 function getTotalRoom() {
-    axios.get('/api/room')
+    axios.get('/api/rooms')
         .then(function (response) {
             refreshRoomList(response.data)
         }).catch(function (error) {

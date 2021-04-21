@@ -40,7 +40,7 @@ public class HistoryDao {
         try (Connection connection = DriveManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, name);
-            findRawIdNumber(preparedStatement);
+            id = findRawIdNumber(preparedStatement);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }

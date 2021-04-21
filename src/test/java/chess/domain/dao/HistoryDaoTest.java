@@ -24,12 +24,14 @@ class HistoryDaoTest {
 
     @Test
     void name() throws SQLException {
+        historyDao.insert("minjeong");
         final Optional<Integer> id = historyDao.findIdByName("minjeong");
         System.out.println(id.get());
     }
 
     @Test
     void delete() throws SQLException {
+        historyDao.insert("minjeong");
         historyDao.delete("minjeong");
     }
 

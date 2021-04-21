@@ -10,8 +10,8 @@ import chess.dto.GameInfoDto;
 import chess.dto.RoomDto;
 import chess.dto.UserInfoDto;
 import chess.repository.CommandRepository;
-import chess.repository.UserRepository;
 import chess.repository.RoomRepository;
+import chess.repository.UserRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import spark.utils.StringUtils;
@@ -131,6 +131,6 @@ public class ChessService {
     }
 
     public boolean checkSamePassword(String roomId, String password) {
-        return userRepository.isExist(roomId ,password);
+        return userRepository.isExist(roomId, password);
     }
 }

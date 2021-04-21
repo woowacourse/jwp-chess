@@ -4,8 +4,8 @@ import chess.domain.board.Team;
 import chess.domain.response.ChessResponse;
 import chess.domain.response.ErrorResponse;
 import chess.domain.response.GameResponse;
-import chess.dto.MoveRequestDto;
 import chess.dto.InitialGameInfoDto;
+import chess.dto.MoveRequestDto;
 import chess.dto.UserInfoDto;
 import chess.service.ChessService;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class ChessRestController {
         chessService.addUser(roomId, initialGameInfoDto.getPassword(), Team.WHITE.team());
 
         HttpSession session = request.getSession();
-        session.setAttribute("password",initialGameInfoDto.getPassword());
+        session.setAttribute("password", initialGameInfoDto.getPassword());
         return ResponseEntity.ok(roomId);
     }
 
@@ -47,14 +47,14 @@ public class ChessRestController {
         if (chessService.checkRoomFull(roomId)) {
             throw new IllegalArgumentException("이미 꽉 찬 방이에요 😅");
         }
-        if (chessService.checkSamePassword(roomId,password)) {
+        if (chessService.checkSamePassword(roomId, password)) {
             throw new IllegalArgumentException("굉장하군요. 백팀 참가자와 같은 비밀번호를 입력했어요😲 다른 비밀번호로 부탁해요~");
         }
         chessService.updateRoomState(roomId);
         chessService.addUser(roomId, password, Team.BLACK.team());
 
         HttpSession session = request.getSession();
-        session.setAttribute("password",password);
+        session.setAttribute("password", password);
         return ResponseEntity.ok(roomId);
     }
 

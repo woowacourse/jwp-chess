@@ -7,7 +7,7 @@ import chess.dto.SquareDto;
 
 import java.util.List;
 
-public class GameResponse implements ChessResponse{
+public class GameResponse implements ChessResponse {
 
     private final List<SquareDto> squares;
     private final Team turn;

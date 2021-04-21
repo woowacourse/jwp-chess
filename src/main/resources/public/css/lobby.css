@@ -27,12 +27,12 @@ button {
     background-color: aquamarine;
 }
 
-button:hover{
+button:hover {
     background-color: lightslategray;
     color: white;
-    box-shadow:-200px 0 0 0 rgba(0,0,0,0.5) inset;
+    box-shadow: -200px 0 0 0 rgba(0, 0, 0, 0.5) inset;
 }
 
-p:hover{
+p:hover {
     color: cornflowerblue;
 }

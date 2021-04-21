@@ -88,7 +88,7 @@ function update(response) {
 }
 
 function showError(response) {
-    alert(response.errorMessage);
+    alert(response.responseJSON.errorMessage);
     return;
 }
 

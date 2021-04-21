@@ -9,6 +9,7 @@ import chess.view.ModelView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -62,13 +63,18 @@ public class ChessController {
 
     @PostMapping("/{historyId}/piece/movement")
     @ResponseBody
-    public MoveResponseDto move(@PathVariable String historyId, @RequestBody MoveDto moveDto) {
+    public ResponseEntity<MoveResponseDto> move(@PathVariable String historyId, @RequestBody MoveDto moveDto) {
         String command = makeMoveCmd(moveDto.getSource(), moveDto.getTarget());
         try {
             springChessService.move(historyId, command, new Commands(command));
-            return new MoveResponseDto(springChessService.continuedGameInfo(historyId), historyId);
+            MoveResponseDto moveResponseDto = new MoveResponseDto(springChessService
+                .continuedGameInfo(historyId), historyId);
+            return ResponseEntity.status(200)
+                .body(moveResponseDto);
         } catch (IllegalArgumentException | SQLException e) {
-            return new MoveResponseDto(e.getMessage());
+            MoveResponseDto moveResponseDto = new MoveResponseDto(e.getMessage());
+            return ResponseEntity.status(400)
+                .body(moveResponseDto);
         }
     }
 

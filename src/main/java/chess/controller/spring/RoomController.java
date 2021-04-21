@@ -1,6 +1,5 @@
 package chess.controller.spring;
 
-import chess.domain.piece.TeamType;
 import chess.domain.room.Room;
 import chess.dto.RoomDTO;
 import chess.dto.RoomRegistrationDTO;
@@ -43,7 +42,7 @@ public class RoomController {
         roomService.addRoom(roomRegistrationDTO.getName());
         Room room = roomService.findLastAddedRoom();
         RoomDTO roomDTO = RoomDTO.from(room);
-        userService.addUser(roomRegistrationDTO.getPassword(), room.getId(), TeamType.BLACK);
+        userService.addUser(roomRegistrationDTO.getPassword(), room.getId());
         httpSession.setAttribute("password", roomRegistrationDTO.getPassword());
         httpSession.setAttribute("roomId", String.valueOf(room.getId()));
         return ResponseEntity.ok().body(roomDTO);

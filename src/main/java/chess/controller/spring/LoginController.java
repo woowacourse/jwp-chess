@@ -1,6 +1,5 @@
 package chess.controller.spring;
 
-import chess.domain.piece.TeamType;
 import chess.dto.LoginRequestDTO;
 import chess.service.spring.UserService;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,7 @@ public class LoginController {
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequestDTO, HttpSession httpSession) {
         String password = loginRequestDTO.getPassword();
         int roomId = loginRequestDTO.getRoomId();
-        userService.addUser(password, roomId, TeamType.BLACK);
+        userService.addUser(password, roomId);
         httpSession.setAttribute("roomId", String.valueOf(roomId));
         httpSession.setAttribute("password", password);
         return ResponseEntity.status(HttpStatus.OK).body("/chessgame/" + roomId);

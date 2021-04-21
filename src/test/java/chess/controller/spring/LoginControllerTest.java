@@ -1,6 +1,5 @@
 package chess.controller.spring;
 
-import chess.domain.piece.TeamType;
 import chess.dto.LoginRequestDTO;
 import chess.service.spring.RoomService;
 import chess.service.spring.UserService;
@@ -58,7 +57,7 @@ class LoginControllerTest {
     @Order(2)
     @Test
     void cannotLogin() throws JsonProcessingException {
-        userService.addUser("pass1", 1, TeamType.BLACK);
+        userService.addUser("pass1", 1);
         String requestBody = new ObjectMapper().writeValueAsString(new LoginRequestDTO(1, "abc123"));
 
         RestAssured.given().log().all()

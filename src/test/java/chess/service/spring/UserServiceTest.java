@@ -1,6 +1,5 @@
 package chess.service.spring;
 
-import chess.domain.piece.TeamType;
 import chess.domain.user.User;
 import chess.repository.spring.UserDAO;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -39,14 +39,12 @@ class UserServiceTest {
     @DisplayName("유저를 정상적으로 추가한다.")
     @Test
     void addUser() {
-        List<User> users = Arrays.asList(new User(1, "encoded", "BLACK", 1));
-        given(userDAO.findByRoomId(1)).willReturn(users);
-
         String password = "test";
         String encodedPassword = new BCryptPasswordEncoder().encode(password);
+        given(userDAO.findByRoomId(1)).willReturn(Collections.emptyList());
         given(passwordEncoder.encode(password)).willReturn(encodedPassword);
 
-        userService.addUser(password, 1, TeamType.WHITE);
+        userService.addUser(password, 1);
 
         verify(userDAO, times(1)).findByRoomId(1);
         verify(passwordEncoder, times(1)).encode(password);
@@ -59,7 +57,7 @@ class UserServiceTest {
                 new User(2, "enco", "WHITE", 1));
         given(userDAO.findByRoomId(1)).willReturn(users);
 
-        assertThatCode(() -> userService.addUser("pass", 1, TeamType.WHITE))
+        assertThatCode(() -> userService.addUser("pass", 1))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("이미 꽉 찬 방입니다.");
     }

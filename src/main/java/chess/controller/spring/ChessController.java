@@ -7,17 +7,22 @@ import chess.dto.MoveRequestDTO;
 import chess.dto.ResultDTO;
 import chess.dto.board.BoardDTO;
 import chess.service.spring.ChessService;
+import chess.service.spring.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/chessgame/{id}")
 public class ChessController {
 
     private final ChessService chessService;
+    private final UserService userService;
 
-    public ChessController(ChessService chessService) {
+    public ChessController(ChessService chessService, UserService userService) {
         this.chessService = chessService;
+        this.userService = userService;
     }
 
     @GetMapping("/chessboard")
@@ -37,7 +42,10 @@ public class ChessController {
     }
 
     @PutMapping("/chessboard")
-    public ResponseEntity<BoardDTO> move(@PathVariable int id, @RequestBody MoveRequestDTO moveRequestDTO) {
+    public ResponseEntity<BoardDTO> move(@PathVariable int id, @RequestBody MoveRequestDTO moveRequestDTO, HttpSession httpSession) {
+        String password = (String) httpSession.getAttribute("password");
+        TeamType currentTeamType = chessService.findCurrentTeamTypeByRoomId(id);
+        userService.validateCurrentUser(password, id, currentTeamType);
         String current = moveRequestDTO.getCurrent();
         String destination = moveRequestDTO.getDestination();
         String teamType = moveRequestDTO.getTeamType();

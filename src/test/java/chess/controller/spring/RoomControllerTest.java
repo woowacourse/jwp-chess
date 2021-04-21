@@ -51,16 +51,16 @@ class RoomControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/rooms");
 
-        assertResponse(response, expectedResponseBody);
+        assertResponse(response, expectedResponseBody, HttpStatus.OK);
     }
 
     private String writeResponseBody(Object object) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(object);
     }
 
-    private void assertResponse(Response response, String expectedResponseBody) {
+    private void assertResponse(Response response, String expectedResponseBody, HttpStatus httpStatus) {
         response.then().log().all()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(httpStatus.value())
                 .body(is(expectedResponseBody));
     }
 
@@ -76,6 +76,6 @@ class RoomControllerTest {
                 .body(requestBody)
                 .when().post("/rooms");
 
-        assertResponse(response, expectedResponseBody);
+        assertResponse(response, expectedResponseBody, HttpStatus.OK);
     }
 }

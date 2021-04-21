@@ -30,8 +30,12 @@ public class ChessService {
         this.userRepository = userRepository;
     }
 
-    public List<RoomDto> loadHistory() {
-        return histories();
+    public List<RoomDto> loadWaitingRoom() {
+        return rooms();
+    }
+
+    private List<RoomDto> rooms() {
+        return new ArrayList<>(roomRepository.selectWaitRooms());
     }
 
     public GameInfoDto gameInfo(String id) {
@@ -83,10 +87,6 @@ public class ChessService {
         ChessGame chessGame = restore(lastState(id));
         chessGame.moveAs(new Commands(command));
         updateMoveInfo(command, id);
-    }
-
-    private List<RoomDto> histories() {
-        return new ArrayList<>(roomRepository.selectWaitRooms());
     }
 
     public String addRoom(String name) {

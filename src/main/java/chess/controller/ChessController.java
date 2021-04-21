@@ -22,7 +22,7 @@ public class ChessController {
     @GetMapping("")
     public ModelAndView play() throws DataException {
         final ModelAndView modelAndView = new ModelAndView("lobby");
-        modelAndView.addAllObjects(ModelView.historyResponse(chessService.loadHistory()));
+        modelAndView.addAllObjects(ModelView.historyResponse(chessService.loadWaitingRoom()));
         return modelAndView;
     }
 
@@ -35,13 +35,6 @@ public class ChessController {
         ));
         return modelAndView;
     }
-
-//    @GetMapping("/continue/{id}")
-//    public ModelAndView continueGame(@PathVariable String id) throws DataException {
-//        final ModelAndView modelAndView = new ModelAndView("chessGame");
-//        modelAndView.addAllObjects(ModelView.gameResponse(chessService.continuedGameInfo(id), id));
-//        return modelAndView;
-//    }
 
     @GetMapping("/end")
     public String endGame() {

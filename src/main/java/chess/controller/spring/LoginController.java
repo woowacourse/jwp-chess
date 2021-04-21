@@ -6,6 +6,7 @@ import chess.service.spring.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -28,5 +29,10 @@ public class LoginController {
         httpSession.setAttribute("roomId", String.valueOf(roomId));
         httpSession.setAttribute("password", password);
         return ResponseEntity.status(HttpStatus.OK).body("/chessgame/" + roomId);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleException(RuntimeException runtimeException) {
+        return ResponseEntity.badRequest().body(runtimeException.getMessage());
     }
 }

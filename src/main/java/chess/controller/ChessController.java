@@ -35,7 +35,7 @@ public class ChessController {
                         chessGameService.move(gameId, from, to)));
     }
 
-    @GetMapping("/games")
+    @GetMapping("/game")
     public ResponseEntity<CommonResponseBody<GameListDto>> loadGames() {
         return ResponseEntity.ok().body(
                 new CommonResponseBody<>(

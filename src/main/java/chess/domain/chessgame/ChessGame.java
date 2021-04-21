@@ -74,8 +74,11 @@ public class ChessGame {
         isPlaying = false;
     }
 
-    public boolean isKingAlive(Color color) {
-        return board.isKingAlive(color);
+    public Color matchColor() {
+        if (isBlackTurn) {
+            return Color.BLACK;
+        }
+        return Color.WHITE;
     }
 
     @Override

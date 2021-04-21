@@ -3,6 +3,7 @@ package chess.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,10 +14,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 
 import chess.dao.ChessRepository;
+import chess.domain.chessgame.ChessGame;
 import chess.domain.piece.Color;
-import chess.dto.request.MoveRequestDto;
-import chess.dto.request.PiecesRequestDto;
-import chess.dto.response.PieceResponseDto;
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 import chess.dto.response.PiecesResponseDto;
 
 @JdbcTest
@@ -40,11 +41,10 @@ public class ChessServiceTest {
     @Test
     @DisplayName("체스 게임 방이 없는 경우, 방을 만들고 DB에 해당 방의 정보와 기물 정보를 저장한다.")
     void addRoomTest1() {
-        PiecesRequestDto piecesRequestDto = new PiecesRequestDto(5);
-        PiecesResponseDto piecesResponseDto = chessService.postPieces(piecesRequestDto);
+        PiecesResponseDto piecesResponseDto = new PiecesResponseDto(chessService.postPieces(5));
 
         assertTrue(piecesResponseDto.isPlaying());
-        assertEquals(64, piecesResponseDto.getAlivePieces().size());
+        assertEquals(64, piecesResponseDto.getPiecesInBoard().size());
         assertEquals(Color.NONE, piecesResponseDto.getWinnerColor());
     }
 
@@ -54,27 +54,24 @@ public class ChessServiceTest {
         jdbcTemplate.update("INSERT INTO room (id, turn, playing_flag) VALUES (?, ?, ?)", 1, "BLACK", true);
         jdbcTemplate.update("INSERT INTO pieces (room_id, piece_name, position) VALUES (?, ?, ?)", 1, "p", "a2");
 
-        PiecesRequestDto piecesRequestDto = new PiecesRequestDto(1);
-        PiecesResponseDto piecesResponseDto = chessService.postPieces(piecesRequestDto);
+        PiecesResponseDto piecesResponseDto = new PiecesResponseDto(chessService.postPieces(1));
 
         assertTrue(piecesResponseDto.isPlaying());
-        assertEquals("p", piecesResponseDto.getAlivePieces().get(0).getName());
+        assertEquals("p", piecesResponseDto.getPiecesInBoard().get(0).getName());
         assertEquals(Color.NONE, piecesResponseDto.getWinnerColor());
     }
 
     @Test
     @DisplayName("기물을 이동시키고 기물 정보 데이터를 업데이트 한다.")
     void putBoardTest() {
-        PiecesRequestDto piecesRequestDto = new PiecesRequestDto(1);
-        chessService.postPieces(piecesRequestDto);
-        PiecesResponseDto piecesResponseDto = chessService.putBoard(new MoveRequestDto(1, "a2", "a4"));
-
-        for (PieceResponseDto pieceResponseDto : piecesResponseDto.getAlivePieces()) {
-            if (pieceResponseDto.getPosition().equals("a4")) {
-                assertEquals("p", pieceResponseDto.getName());
+        chessService.postPieces(1);
+        ChessGame chessGame = chessService.putBoard(1, new Position("a2"), new Position("a4"));
+        for (Map.Entry<Position, Piece> piece : chessGame.pieces().entrySet()) {
+            if (piece.getKey().chessCoordinate().equals("a4")) {
+                assertEquals("p", piece.getValue().getName());
             }
-            if (pieceResponseDto.getPosition().equals("a2")) {
-                assertEquals(".", pieceResponseDto.getName());
+            if (piece.getKey().chessCoordinate().equals("a2")) {
+                assertEquals(".", piece.getValue().getName());
             }
         }
     }
@@ -82,23 +79,22 @@ public class ChessServiceTest {
     @Test
     @DisplayName("체스 게임 점수를 계산한다.")
     void getScoreTest() {
-        PiecesRequestDto piecesRequestDto = new PiecesRequestDto(1);
-        chessService.postPieces(piecesRequestDto);
+        chessService.postPieces(1);
 
-        assertEquals(38, chessService.getScore(1, "BLACK").getScore());
-        assertEquals(38, chessService.getScore(1, "WHITE").getScore());
+        assertEquals(38, chessService.getScore(1, "BLACK").getValue());
+        assertEquals(38, chessService.getScore(1, "WHITE").getValue());
     }
 
     @Test
     @DisplayName("체스 게임 방 목록을 구한다.")
     void getRoomsTest() {
-        chessService.postPieces(new PiecesRequestDto(1));
-        chessService.postPieces(new PiecesRequestDto(2));
-        chessService.postPieces(new PiecesRequestDto(3));
-        chessService.postPieces(new PiecesRequestDto(4));
-        chessService.postPieces(new PiecesRequestDto(5));
+        chessService.postPieces(1);
+        chessService.postPieces(2);
+        chessService.postPieces(3);
+        chessService.postPieces(4);
+        chessService.postPieces(5);
 
-        assertEquals(Arrays.asList(1, 2, 3, 4, 5), chessService.getRooms().getRoomIds());
+        assertEquals(Arrays.asList(1, 2, 3, 4, 5), chessService.getRooms());
     }
 
 }

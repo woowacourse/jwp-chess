@@ -12,21 +12,24 @@ public class PiecesResponseDto {
 
     private final Color winnerColor;
     private final boolean isPlaying;
-    private final List<PieceResponseDto> alivePieces;
+    private final List<PieceResponseDto> piecesInBoard;
 
     public PiecesResponseDto(Color winnerColor, boolean isPlaying, Map<Position, Piece> board) {
         this.winnerColor = winnerColor;
         this.isPlaying = isPlaying;
-        this.alivePieces = new ArrayList<>();
+        this.piecesInBoard = new ArrayList<>();
         for (Map.Entry<Position, Piece> piece : board.entrySet()) {
-            alivePieces.add(new PieceResponseDto(piece.getKey().chessCoordinate(), piece.getValue().getName()));
+            piecesInBoard.add(new PieceResponseDto(piece.getKey().chessCoordinate(), piece.getValue().getName()));
         }
     }
 
-    public PiecesResponseDto(PiecesResponsesDto piecesResponsesDto) {
+    public PiecesResponseDto(Map<Position, Piece> boardInfo) {
         this.winnerColor = Color.NONE;
         this.isPlaying = true;
-        this.alivePieces = piecesResponsesDto.getPieceResponseDtos();
+        this.piecesInBoard = new ArrayList<>();
+        for (Map.Entry<Position, Piece> piece : boardInfo.entrySet()) {
+            piecesInBoard.add(new PieceResponseDto(piece.getKey().chessCoordinate(), piece.getValue().getName()));
+        }
     }
 
     public Color getWinnerColor() {
@@ -37,7 +40,7 @@ public class PiecesResponseDto {
         return isPlaying;
     }
 
-    public List<PieceResponseDto> getAlivePieces() {
-        return alivePieces;
+    public List<PieceResponseDto> getPiecesInBoard() {
+        return piecesInBoard;
     }
 }

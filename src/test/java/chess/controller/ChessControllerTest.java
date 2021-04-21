@@ -67,7 +67,7 @@ public class ChessControllerTest {
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body("alivePieces.size()", is(64));
+            .body("piecesInBoard.size()", is(64));
     }
 
     @DisplayName("보드 갱신 확인")
@@ -81,12 +81,13 @@ public class ChessControllerTest {
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body("alivePieces.size()", is(64));
+            .body("piecesInBoard.size()", is(64));
     }
 
     @DisplayName("점수 확인")
     @Test
     void getScore() {
+
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("roomId", 1)
@@ -94,6 +95,6 @@ public class ChessControllerTest {
             .when().get("/api/score")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
-            .body("score", equalTo("38.0"));    //TODO: fail 나는거 확인
+            .body("score.toString()", equalTo("38.0"));
     }
 }

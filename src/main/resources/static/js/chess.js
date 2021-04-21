@@ -19,10 +19,10 @@ ChessPage.prototype.initChessPage = function () {
 }
 
 ChessPage.prototype.templatePieces = function (pieces) {
-    for (let i = 0; i < pieces.alivePieces.length; i++) {
-        document.querySelector("." + pieces.alivePieces[i].position)
+    for (let i = 0; i < pieces.piecesInBoard.length; i++) {
+        document.querySelector("." + pieces.piecesInBoard[i].position)
             .insertAdjacentHTML("beforeend",
-                chessPage.pieceElement(pieces.alivePieces[i]));
+                chessPage.pieceElement(pieces.piecesInBoard[i]));
     }
 }
 

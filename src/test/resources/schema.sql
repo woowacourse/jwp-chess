@@ -19,5 +19,5 @@ CREATE TABLE IF NOT EXISTS play_log (
     board json NOT NULL,
     game_status json NOT NULL,
     room_id int NOT NULL,
-    ast_played_time timestamp default NOW()
+    last_played_time timestamp default NOW()
 );

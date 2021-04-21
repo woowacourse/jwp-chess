@@ -3,6 +3,7 @@ package chess.repository;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.dto.BoardDto;
+import chess.domain.dto.RoomsDto;
 import chess.domain.dto.TurnDto;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
@@ -65,5 +66,12 @@ public class ChessDao {
 
     public void resetTurnOwner(Team turnOwner) {
         jdbcTemplate.update(UPDATE_TURN_QUERY, "white", turnOwner.getTeamString());
+    }
+
+    public RoomsDto getRoomList() {
+        String sql = "select * from game;";
+        List<String> roomNames = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("room_name"));
+        List<Integer> roomNumbers = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getInt("room_number"));
+        return RoomsDto.of(roomNames, roomNumbers);
     }
 }

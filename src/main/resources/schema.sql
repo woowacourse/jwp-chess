@@ -1,154 +1,156 @@
 DROP TABLE IF EXISTS board;
+DROP TABLE IF EXISTS game;
+
+create table game
+(
+    room_name varchar(12) not null,
+    room_number int not null auto_increment primary key,
+    turn varchar(10) not null
+);
 
 create table board
 (
     position varchar(12) not null,
-    piece    varchar(12) not null,
-    primary key (position)
-);
-insert into board (position, piece)
-values ('a1', '&#9814;');
-insert into board (position, piece)
-values ('b1', '&#9816;');
-insert into board (position, piece)
-values ('c1', '&#9815;');
-insert into board (position, piece)
-values ('d1', '&#9812;');
-insert into board (position, piece)
-values ('e1', '&#9813;');
-insert into board (position, piece)
-values ('f1', '&#9815;');
-insert into board (position, piece)
-values ('g1', '&#9816;');
-insert into board (position, piece)
-values ('h1', '&#9814;');
-
-insert into board (position, piece)
-values ('a8', '&#9820;');
-insert into board (position, piece)
-values ('b8', '&#9822;');
-insert into board (position, piece)
-values ('c8', '&#9821;');
-insert into board (position, piece)
-values ('d8', '&#9818;');
-insert into board (position, piece)
-values ('e8', '&#9819;');
-insert into board (position, piece)
-values ('f8', '&#9821;');
-insert into board (position, piece)
-values ('g8', '&#9822;');
-insert into board (position, piece)
-values ('h8', '&#9820;');
-
-insert into board (position, piece)
-values ('a7', '&#9823;');
-insert into board (position, piece)
-values ('b7', '&#9823;');
-insert into board (position, piece)
-values ('c7', '&#9823;');
-insert into board (position, piece)
-values ('d7', '&#9823;');
-insert into board (position, piece)
-values ('e7', '&#9823;');
-insert into board (position, piece)
-values ('f7', '&#9823;');
-insert into board (position, piece)
-values ('g7', '&#9823;');
-insert into board (position, piece)
-values ('h7', '&#9823;');
-
-insert into board (position, piece)
-values ('a2', '&#9817;');
-insert into board (position, piece)
-values ('b2', '&#9817;');
-insert into board (position, piece)
-values ('c2', '&#9817;');
-insert into board (position, piece)
-values ('d2', '&#9817;');
-insert into board (position, piece)
-values ('e2', '&#9817;');
-insert into board (position, piece)
-values ('f2', '&#9817;');
-insert into board (position, piece)
-values ('g2', '&#9817;');
-insert into board (position, piece)
-values ('h2', '&#9817;');
-
-insert into board (position, piece)
-values ('a3', '');
-insert into board (position, piece)
-values ('b3', '');
-insert into board (position, piece)
-values ('c3', '');
-insert into board (position, piece)
-values ('d3', '');
-insert into board (position, piece)
-values ('e3', '');
-insert into board (position, piece)
-values ('f3', '');
-insert into board (position, piece)
-values ('g3', '');
-insert into board (position, piece)
-values ('h3', '');
-
-insert into board (position, piece)
-values ('a4', '');
-insert into board (position, piece)
-values ('b4', '');
-insert into board (position, piece)
-values ('c4', '');
-insert into board (position, piece)
-values ('d4', '');
-insert into board (position, piece)
-values ('e4', '');
-insert into board (position, piece)
-values ('f4', '');
-insert into board (position, piece)
-values ('g4', '');
-insert into board (position, piece)
-values ('h4', '');
-
-insert into board (position, piece)
-values ('a5', '');
-insert into board (position, piece)
-values ('b5', '');
-insert into board (position, piece)
-values ('c5', '');
-insert into board (position, piece)
-values ('d5', '');
-insert into board (position, piece)
-values ('e5', '');
-insert into board (position, piece)
-values ('f5', '');
-insert into board (position, piece)
-values ('g5', '');
-insert into board (position, piece)
-values ('h5', '');
-
-insert into board (position, piece)
-values ('a6', '');
-insert into board (position, piece)
-values ('b6', '');
-insert into board (position, piece)
-values ('c6', '');
-insert into board (position, piece)
-values ('d6', '');
-insert into board (position, piece)
-values ('e6', '');
-insert into board (position, piece)
-values ('f6', '');
-insert into board (position, piece)
-values ('g6', '');
-insert into board (position, piece)
-values ('h6', '');
-
-DROP TABLE IF EXISTS turn;
-
-create table turn
-(
-    turn_owner varchar(10) not null,
-    primary key (turn_owner)
+    piece varchar(12) not null,
+    room_number int,
+    foreign key (room_number) references game (room_number)
 );
 
-insert into turn (turn_owner)
-values ('white');
+insert into game (room_name, turn)
+values ('room_one', 'white');
+
+insert into board (position, piece, room_number)
+values ('a1', '&#9814;', 1);
+insert into board (position, piece, room_number)
+values ('b1', '&#9816;', 1);
+insert into board (position, piece, room_number)
+values ('c1', '&#9815;', 1);
+insert into board (position, piece, room_number)
+values ('d1', '&#9812;', 1);
+insert into board (position, piece, room_number)
+values ('e1', '&#9813;', 1);
+insert into board (position, piece, room_number)
+values ('f1', '&#9815;', 1);
+insert into board (position, piece, room_number)
+values ('g1', '&#9816;', 1);
+insert into board (position, piece, room_number)
+values ('h1', '&#9814;', 1);
+
+insert into board (position, piece, room_number)
+values ('a8', '&#9820;', 1);
+insert into board (position, piece, room_number)
+values ('b8', '&#9822;', 1);
+insert into board (position, piece, room_number)
+values ('c8', '&#9821;', 1);
+insert into board (position, piece, room_number)
+values ('d8', '&#9818;', 1);
+insert into board (position, piece, room_number)
+values ('e8', '&#9819;', 1);
+insert into board (position, piece, room_number)
+values ('f8', '&#9821;', 1);
+insert into board (position, piece, room_number)
+values ('g8', '&#9822;', 1);
+insert into board (position, piece, room_number)
+values ('h8', '&#9820;', 1);
+
+insert into board (position, piece, room_number)
+values ('a7', '&#9823;', 1);
+insert into board (position, piece, room_number)
+values ('b7', '&#9823;', 1);
+insert into board (position, piece, room_number)
+values ('c7', '&#9823;', 1);
+insert into board (position, piece, room_number)
+values ('d7', '&#9823;', 1);
+insert into board (position, piece, room_number)
+values ('e7', '&#9823;', 1);
+insert into board (position, piece, room_number)
+values ('f7', '&#9823;', 1);
+insert into board (position, piece, room_number)
+values ('g7', '&#9823;', 1);
+insert into board (position, piece, room_number)
+values ('h7', '&#9823;', 1);
+
+insert into board (position, piece, room_number)
+values ('a2', '&#9817;', 1);
+insert into board (position, piece, room_number)
+values ('b2', '&#9817;', 1);
+insert into board (position, piece, room_number)
+values ('c2', '&#9817;', 1);
+insert into board (position, piece, room_number)
+values ('d2', '&#9817;', 1);
+insert into board (position, piece, room_number)
+values ('e2', '&#9817;', 1);
+insert into board (position, piece, room_number)
+values ('f2', '&#9817;', 1);
+insert into board (position, piece, room_number)
+values ('g2', '&#9817;', 1);
+insert into board (position, piece, room_number)
+values ('h2', '&#9817;', 1);
+
+insert into board (position, piece, room_number)
+values ('a3', '', 1);
+insert into board (position, piece, room_number)
+values ('b3', '', 1);
+insert into board (position, piece, room_number)
+values ('c3', '', 1);
+insert into board (position, piece, room_number)
+values ('d3', '', 1);
+insert into board (position, piece, room_number)
+values ('e3', '', 1);
+insert into board (position, piece, room_number)
+values ('f3', '', 1);
+insert into board (position, piece, room_number)
+values ('g3', '', 1);
+insert into board (position, piece, room_number)
+values ('h3', '', 1);
+
+insert into board (position, piece, room_number)
+values ('a4', '', 1);
+insert into board (position, piece, room_number)
+values ('b4', '', 1);
+insert into board (position, piece, room_number)
+values ('c4', '', 1);
+insert into board (position, piece, room_number)
+values ('d4', '', 1);
+insert into board (position, piece, room_number)
+values ('e4', '', 1);
+insert into board (position, piece, room_number)
+values ('f4', '', 1);
+insert into board (position, piece, room_number)
+values ('g4', '', 1);
+insert into board (position, piece, room_number)
+values ('h4', '', 1);
+
+insert into board (position, piece, room_number)
+values ('a5', '', 1);
+insert into board (position, piece, room_number)
+values ('b5', '', 1);
+insert into board (position, piece, room_number)
+values ('c5', '', 1);
+insert into board (position, piece, room_number)
+values ('d5', '', 1);
+insert into board (position, piece, room_number)
+values ('e5', '', 1);
+insert into board (position, piece, room_number)
+values ('f5', '', 1);
+insert into board (position, piece, room_number)
+values ('g5', '', 1);
+insert into board (position, piece, room_number)
+values ('h5', '', 1);
+
+insert into board (position, piece, room_number)
+values ('a6', '', 1);
+insert into board (position, piece, room_number)
+values ('b6', '', 1);
+insert into board (position, piece, room_number)
+values ('c6', '', 1);
+insert into board (position, piece, room_number)
+values ('d6', '', 1);
+insert into board (position, piece, room_number)
+values ('e6', '', 1);
+insert into board (position, piece, room_number)
+values ('f6', '', 1);
+insert into board (position, piece, room_number)
+values ('g6', '', 1);
+insert into board (position, piece, room_number)
+values ('h6', '', 1);

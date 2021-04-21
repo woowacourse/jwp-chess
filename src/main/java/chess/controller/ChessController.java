@@ -1,10 +1,7 @@
 package chess.controller;
 
 import chess.domain.ChessGame;
-import chess.domain.dto.BoardDto;
-import chess.domain.dto.MoveInfoDto;
-import chess.domain.dto.ResponseDto;
-import chess.domain.dto.ScoreDto;
+import chess.domain.dto.*;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +18,13 @@ public class ChessController {
 
     @GetMapping("/")
     public String start() {
-        return "chess.html";
+        return "main.html";
+    }
+
+    @GetMapping("/room")
+    @ResponseBody
+    public RoomsDto showRoomList() {
+        return chessService.getRoomList();
     }
 
     @GetMapping("/board")

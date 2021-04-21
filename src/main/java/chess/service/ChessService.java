@@ -3,10 +3,7 @@ package chess.service;
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
-import chess.domain.dto.BoardDto;
-import chess.domain.dto.MoveInfoDto;
-import chess.domain.dto.ResponseDto;
-import chess.domain.dto.TurnDto;
+import chess.domain.dto.*;
 import chess.domain.piece.Piece;
 import chess.repository.ChessDao;
 import org.springframework.stereotype.Service;
@@ -53,5 +50,9 @@ public class ChessService {
     public BoardDto getCurrentBoard(ChessGame chessGame) {
         Board board = chessGame.getBoard();
         return BoardDto.of(board);
+    }
+
+    public RoomsDto getRoomList() {
+        return chessDao.getRoomList();
     }
 }

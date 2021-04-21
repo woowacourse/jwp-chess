@@ -1,0 +1,107 @@
+.body {
+    margin: 0 auto;
+}
+
+td {
+    width: 60px;
+    height: 75px;
+}
+
+img {
+    max-height: 100%;
+    min-width: 100%;
+}
+
+.blackTile {
+    background-color: #614c39;
+}
+
+.whiteTile {
+    background-color: #f0c49c;
+}
+
+.clickedTile {
+    background-color: #F5D042;
+}
+
+.clickedRoomName {
+    background-color: greenyellow;
+}
+
+.button {
+    display: flex;
+    margin: 10px 30%;
+}
+
+.title {
+    text-align: center;
+}
+
+.chess-board {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 5px solid #614c39;
+    margin: auto;
+    width: 35vw;
+    height: 35vw;
+}
+
+div {
+    text-align: center;
+    font-size: 50px;
+    margin: 0 auto;
+}
+
+.start-button {
+    border: 1px solid green;
+    flex: 1;
+    width: 30%;
+    height: 50pt;
+    font-size: 40px;
+    box-sizing: border-box;
+}
+
+.back-button {
+    border: 1px solid red;
+    flex: 1;
+    width: 30%;
+    height: 50pt;
+    margin: 0px 5%;
+    font-size: 40px;
+    box-sizing: border-box;
+}
+
+.score-button {
+    border: 1px solid blue;
+    flex: 1;
+    width: 30%;
+    height: 50pt;
+    font-size: 40px;
+    box-sizing: border-box;
+}
+
+.room-table {
+    border: 2px solid black;
+    margin: auto;
+    align-items: center;
+}
+
+.room-table th {
+    position: sticky;
+    top: 0px;
+    background-color: gray;
+}
+
+.input-name {
+    margin: 0 auto;
+    width: 30%;
+    height: 100%;
+    font-size: 30px;
+}
+
+.delete-button {
+    width: 30%;
+    height: 150%;
+    font-size: 30px;
+}

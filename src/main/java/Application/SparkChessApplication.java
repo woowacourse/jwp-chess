@@ -1,4 +1,4 @@
-package chess;
+package Application;
 
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;

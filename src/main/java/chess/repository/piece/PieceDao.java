@@ -1,7 +1,6 @@
 package chess.repository.piece;
 
 import chess.domain.piece.Piece;
-import java.sql.SQLException;
 import java.util.List;
 
 public interface PieceDao {

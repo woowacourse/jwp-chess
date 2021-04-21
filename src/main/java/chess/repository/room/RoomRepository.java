@@ -1,7 +1,6 @@
 package chess.repository.room;
 
 import chess.domain.game.Room;
-import java.util.Optional;
 
 public interface RoomRepository {
 

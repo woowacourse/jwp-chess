@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.board.Board;
 import chess.domain.gamestate.CommandType;
 import chess.domain.gamestate.State;
-import chess.domain.gamestate.finished.End;
 import chess.utils.BoardUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,7 +1,6 @@
 package chess.repository.room;
 
 import chess.domain.game.Room;
-import java.sql.SQLException;
 
 public interface RoomDao {
 

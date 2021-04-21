@@ -20,20 +20,19 @@ class RoomDaoTest {
     @Autowired RoomDao roomDao;
 
     private String roomName;
-    private Long roomId;
+    private long roomId;
 
     @BeforeEach
     void beforeEach() {
         roomName = "room";
-        roomId = 123L;
 
-        roomDao.save(roomName, roomId);
+        roomId = roomDao.save(roomName);
     }
 
     @Test
     void load() {
-        roomDao.save("room2", 124L);
-        roomDao.save("room3", 125L);
+        roomDao.save("room2");
+        roomDao.save("room3");
 
         List<RoomDto> rooms = roomDao.load();
 

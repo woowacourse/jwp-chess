@@ -24,8 +24,7 @@ public class RoomService {
 
         validateRoomName(roomName, isDuplicated);
 
-        final Long roomId = System.currentTimeMillis();
-        roomDao.save(roomName, roomId);
+        final Long roomId = roomDao.save(roomName);
         return roomId;
     }
 

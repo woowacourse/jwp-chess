@@ -42,8 +42,11 @@ export async function getBoardAfterMove(source, destination, roomId) {
 }
 
 export async function getInitializedBoard(roomId) {
-  const response = await fetch("./" + roomId + "/start", {
-    method: "PUT"
+  const response = await fetch("./" + roomId + "/game-status", {
+    method: "PUT",
+    body: JSON.stringify({
+      "gameState": "Running"
+    })
   });
   const result = await response.json();
   if (response.ok) {

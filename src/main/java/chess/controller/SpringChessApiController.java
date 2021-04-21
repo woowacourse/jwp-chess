@@ -6,7 +6,6 @@ import chess.dto.web.PointDto;
 import chess.dto.web.RoomDto;
 import chess.dto.web.UsersInRoomDto;
 import chess.service.ChessService;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.jetty.http.HttpStatus;
@@ -31,13 +30,12 @@ public class SpringChessApiController {
 
     @PostMapping
     private ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto) {
-        roomDto.setId(chessService.create(roomDto));
-        return ResponseEntity.status(HttpStatus.CREATED_201).body(roomDto);
+        return ResponseEntity.status(HttpStatus.CREATED_201).body(chessService.create(roomDto));
     }
 
     @PutMapping
-    private ResponseEntity<Object> closeRoom(@RequestBody String id) {
-        chessService.close(id);
+    private ResponseEntity<Object> closeRoom(@RequestBody RoomDto roomDto) {
+        chessService.close(roomDto.getId());
         return ResponseEntity.status(HttpStatus.CREATED_201).build();
     }
 
@@ -51,17 +49,15 @@ public class SpringChessApiController {
         return chessService.gameStatus(id);
     }
 
-    @PutMapping("{id}/start")
-    private BoardDto startGame(@PathVariable String id) {
-        return chessService.start(id);
-    }
-
-    @PutMapping("{id}/exit")
-    private Map<String, String> exitGame(@PathVariable String id) {
-        Map<String, String> result = new HashMap<>();
-        chessService.exit(id);
-        result.put("result", "success");
-        return result;
+    @PutMapping("{id}/game-status")
+    private ResponseEntity<BoardDto> updateStatus(@PathVariable String id, @RequestBody GameStatusDto gameStatusDto) {
+        if (gameStatusDto.getGameState().equals("Running")) {
+            return ResponseEntity.status(HttpStatus.CREATED_201).body(chessService.start(id));
+        }
+        if (gameStatusDto.getGameState().equals("Finished")) {
+            return ResponseEntity.status(HttpStatus.CREATED_201).body(chessService.exit(id));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST_400).build();
     }
 
     @GetMapping("/{id}/movablePoints/{point}")

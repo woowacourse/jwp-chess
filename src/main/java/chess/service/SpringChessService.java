@@ -48,10 +48,11 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public String create(RoomDto roomDto) {
+    public RoomDto create(RoomDto roomDto) {
         userDao.insert(roomDto.getWhite());
         userDao.insert(roomDto.getBlack());
-        return roomDao.insert(roomDto);
+        roomDto.setId(roomDao.insert(roomDto));
+        return roomDto;
     }
 
     @Override
@@ -84,13 +85,14 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public void exit(String id) {
+    public BoardDto exit(String id) {
         Board board = boardFromDb(id);
         ChessGame chessGame = chessGameFromDb(board, id);
         chessGame.end();
         BoardDto boardDto = new BoardDto(board);
         GameStatusDto gameStatusDto = new GameStatusDto(chessGame);
         playLogDao.insert(boardDto, gameStatusDto, id);
+        return boardDto;
     }
 
     @Override

@@ -15,13 +15,13 @@ public interface ChessService {
 
     UsersInRoomDto usersInRoom(String id);
 
-    String create(RoomDto roomDto);
+    RoomDto create(RoomDto roomDto);
 
     GameStatusDto gameStatus(String id);
 
     BoardDto start(String id);
 
-    void exit(String id);
+    BoardDto exit(String id);
 
     void close(String id);
 

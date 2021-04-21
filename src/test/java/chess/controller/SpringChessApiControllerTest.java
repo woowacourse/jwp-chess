@@ -39,11 +39,11 @@ public class SpringChessApiControllerTest {
     @DisplayName("방 생성")
     @Test
     void createRoom() throws Exception {
-        String content = new ObjectMapper()
+        String content = objectMapper
             .writeValueAsString(new RoomDto("1", "roomName", "white", "black"));
 
         mockMvc
-            .perform(post("/rooms").content(content).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .perform(post("/rooms").contentType(MediaType.APPLICATION_JSON_VALUE).content(content))
             .andExpect(status().is(HttpStatus.CREATED_201))
             .andExpect(jsonPath("$.id").value("1"))
             .andExpect(jsonPath("$.name").value("roomName"))
@@ -78,17 +78,29 @@ public class SpringChessApiControllerTest {
     @DisplayName("게임 시작")
     @Test
     void start() throws Exception {
-        mockMvc.perform(put("/rooms/1/start"))
-            .andExpect(status().isOk())
+        Map<String, String> body = new HashMap<>();
+        body.put("gameState", "Running");
+
+        mockMvc.perform(
+            put("/rooms/1/game-status")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(body)))
+            .andExpect(status().is(HttpStatus.CREATED_201))
             .andExpect(jsonPath("$.board").hasJsonPath());
     }
 
     @DisplayName("게임 종료")
     @Test
     void exitGame() throws Exception {
-        mockMvc.perform(put("/rooms/1/exit"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.result").value("success"));
+        Map<String, String> body = new HashMap<>();
+        body.put("gameState", "Running");
+
+        mockMvc.perform(
+            put("/rooms/1/game-status")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(body)))
+            .andExpect(status().is(HttpStatus.CREATED_201))
+            .andExpect(jsonPath("$.board").hasJsonPath());
     }
 
     @DisplayName("방 삭제")
@@ -100,8 +112,7 @@ public class SpringChessApiControllerTest {
         mockMvc.perform(
             put("/rooms")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(body))
-            )
+                .content(objectMapper.writeValueAsString(body)))
             .andExpect(status().is(HttpStatus.CREATED_201));
     }
 

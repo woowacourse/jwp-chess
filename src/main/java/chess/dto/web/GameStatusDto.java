@@ -18,9 +18,19 @@ public class GameStatusDto {
     private static final String RUNNING = "Running";
     private static final String FINISH = "Finish";
 
-    private final String gameState;
-    private final String turn;
-    private final String winner;
+    private String gameState;
+    private String turn;
+    private String winner;
+
+    public GameStatusDto() {
+
+    }
+
+    public GameStatusDto(String gameState, String turn, String winner) {
+        this.gameState = gameState;
+        this.turn = turn;
+        this.winner = winner;
+    }
 
     public GameStatusDto(ChessGame chessGame) {
         gameState = encodedGameState(chessGame.gameState());

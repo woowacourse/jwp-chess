@@ -31,8 +31,8 @@ public class MockChessService implements ChessService {
     }
 
     @Override
-    public String create(RoomDto roomDto) {
-        return "1";
+    public RoomDto create(RoomDto roomDto) {
+        return new RoomDto("1", "roomName", "white", "black");
     }
 
     @Override
@@ -46,7 +46,9 @@ public class MockChessService implements ChessService {
     }
 
     @Override
-    public void exit(String id) {}
+    public BoardDto exit(String id) {
+        return new BoardDto(new Board());
+    }
 
     @Override
     public void close(String id) {}

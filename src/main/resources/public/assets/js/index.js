@@ -52,8 +52,11 @@ const addEventToSquares = () => {
 }
 
 const exitGame = async () => {
-  const response = await fetch("./" + roomId + "/exit", {
-    method: "PUT"
+  const response = await fetch("./" + roomId + "/game-status", {
+    method: "PUT",
+    body: JSON.stringify({
+      "gameState": "Finished"
+    })
   })
 
   const result = await response.json();

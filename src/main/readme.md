@@ -71,9 +71,28 @@ PUT /rooms/:roomId/game-status
 {
   "requestBody": {
     "gameState": "string"
+  },
+  "response": {
+    "board": [
+      {
+        "team": "string",
+        "piece": "string",
+        "x": "string",
+        "y": "string"
+      },
+      {
+        "team": "string",
+        "piece": "string",
+        "x": "string",
+        "y": "string"
+      },
+      ...
+    ]
   }
 }
 ```
+
+
 
 ## Room 안에 있는 게임의 선택된 Point에서 이동할 수 있는 Point 불러오기
 

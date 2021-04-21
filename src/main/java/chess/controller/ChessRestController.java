@@ -1,10 +1,12 @@
 package chess.controller;
 
+import chess.domain.board.Team;
 import chess.domain.response.ChessResponse;
 import chess.domain.response.ErrorResponse;
 import chess.domain.response.GameResponse;
 import chess.dto.MoveRequestDto;
 import chess.dto.InitialGameInfoDto;
+import chess.dto.UserInfoDto;
 import chess.service.ChessService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +25,21 @@ public class ChessRestController {
         this.chessService = chessService;
     }
 
-    @PostMapping
+    @PostMapping("/first")
     public ResponseEntity<String> saveInfo(@RequestBody InitialGameInfoDto initialGameInfoDto) {
         final String roomId = chessService.addRoom(initialGameInfoDto.getName());
-        chessService.addUser(roomId, initialGameInfoDto.getPassword());
+        chessService.addUser(roomId, initialGameInfoDto.getPassword(), Team.WHITE.team());
+        return ResponseEntity.ok(roomId);
+    }
+
+    @PostMapping("/second")
+    public ResponseEntity<String> saveSecondUser(@RequestBody UserInfoDto userInfoDto) {
+        final String roomId = userInfoDto.getId();
+        if (chessService.checkRoomFull(roomId)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 꽉 찬 방이에요 😅");
+        }
+        chessService.updateRoomState(roomId);
+        chessService.addUser(roomId, userInfoDto.getPassword(), Team.BLACK.team());
         return ResponseEntity.ok(roomId);
     }
 

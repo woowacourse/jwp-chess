@@ -101,7 +101,7 @@ public class ChessService {
     }
 
     private void updateDB(String historyId) {
-        roomRepository.updateWaitState(historyId);
+        roomRepository.updateToFull(historyId);
     }
 
     private void flushCommands(String command, String gameId) {
@@ -112,11 +112,15 @@ public class ChessService {
         }
     }
 
-    public void addUser(String roomId, String password) {
-        userRepository.insert(roomId, password);
+    public void addUser(String roomId, String password, String team) {
+        userRepository.insert(roomId, password, team);
     }
 
     public boolean checkRoomFull(String roomId) {
         return roomRepository.checkRoomIsFull(roomId);
+    }
+
+    public void updateRoomState(String roomId) {
+        roomRepository.updateToFull(roomId);
     }
 }

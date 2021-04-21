@@ -56,7 +56,7 @@ class RoomRepositoryTest {
 
     @Test
     void updateEndState() {
-        roomRepository.updateWaitState(String.valueOf(1));
+        roomRepository.updateToFull(String.valueOf(1));
         final List<RoomDto> names = roomRepository.selectWaitRooms();
         assertThat(names.size()).isEqualTo(0);
     }

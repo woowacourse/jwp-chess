@@ -1,6 +1,7 @@
-const gameHistory = document.getElementById("historyList");
-if ($("#history").length === 0)
-    gameHistory.innerText = "비어있습니다 - 텅!";
+const roomList = document.getElementById("roomList");
+
+if ($("#room").length === 0)
+    roomList.innerText = "비어있습니다 - 텅!";
 
 function playNewGame() {
     console.log("여기~");
@@ -18,7 +19,7 @@ function playNewGame() {
 
     $.ajax({
         type: "POST",
-        url: '/rooms',
+        url: '/rooms/first',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
@@ -55,3 +56,27 @@ function showError (response) {
 function redirect (response) {
     window.location = `/rooms/${response}`;
 }
+
+function enterRoom (id) {
+    const password = getPassword();
+    if (password == null) {
+        window.location = "/rooms";
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: '/rooms/second',
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({
+            "id" : id,
+            "password" : password,
+        }),
+        success: redirect,
+        error: showError,
+    })
+}
+

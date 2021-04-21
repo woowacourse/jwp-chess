@@ -48,7 +48,7 @@ public class RoomRepository {
         return jdbcTemplate.query(query, rowMapper);
     }
 
-    public void updateWaitState(String id) {
+    public void updateToFull(String id) {
         final String query = "UPDATE Room SET is_full = true WHERE id = ?";
         jdbcTemplate.update(query, id);
     }

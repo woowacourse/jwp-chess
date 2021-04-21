@@ -11,8 +11,8 @@ public class UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insert(String roomId, String password) {
-        final String query = "INSERT INTO User (room_id, password) VALUES (?, ?)";
-        jdbcTemplate.update(query, roomId, password);
+    public void insert(String roomId, String password, String team) {
+        final String query = "INSERT INTO User (room_id, password, team) VALUES (?, ?, ?)";
+        jdbcTemplate.update(query, roomId, password, team);
     }
 }

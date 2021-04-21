@@ -22,7 +22,7 @@ public class ChessController {
     @GetMapping("")
     public ModelAndView play() throws DataException {
         final ModelAndView modelAndView = new ModelAndView("lobby");
-        modelAndView.addAllObjects(ModelView.historyResponse(chessService.loadWaitingRoom()));
+        modelAndView.addAllObjects(ModelView.roomResponse(chessService.loadWaitingRoom()));
         return modelAndView;
     }
 

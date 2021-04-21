@@ -26,10 +26,10 @@ public class ModelView {
         return model;
     }
 
-    public static Map<String, Object> historyResponse(List<RoomDto> history) {
+    public static Map<String, Object> roomResponse(List<RoomDto> room) {
         Map<String, Object> model = new HashMap<>();
-        if (!history.isEmpty()) {
-            model.put("history", history);
+        if (!room.isEmpty()) {
+            model.put("room", room);
         }
         return model;
     }

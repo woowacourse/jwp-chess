@@ -39,14 +39,14 @@ public final class SpringChessGameController {
         return "index";
     }
 
-    @GetMapping("/room/{id}")
+    @GetMapping("/rooms/{id}")
     public String enterRoom(@PathVariable final String id, final Model model) {
         model.addAttribute("state",
                 new GameDTO(id, userService.participatedUsers(id), "새로운게임", true));
         return "chess";
     }
 
-    @GetMapping(path = "/room/{id}/play")
+    @GetMapping(path = "/rooms/{id}/play")
     public String startGame(@PathVariable final String id, final Model model) {
         roomService.addNewRoom(id);
         logService.initializeByRoomId(id);
@@ -56,7 +56,7 @@ public final class SpringChessGameController {
         return "chess";
     }
 
-    @GetMapping(path = "/room/{id}/continue")
+    @GetMapping(path = "/rooms/{id}/continue")
     public String continueGame(@PathVariable final String id, final Model model) {
         ChessGame chessGame = roomService.initializeChessGame(id);
         logService.continueGame(id, chessGame);

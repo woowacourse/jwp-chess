@@ -5,21 +5,38 @@ import chess.exception.InitialSettingDataException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class RoomDAO {
+    private static final int DEFAULT_BLACK_USER_ID = 1;
+    private static final int DEFAULT_WHITE_USER_ID = 2;
+    private static final int PLAYING_STATUS = 1;
+
     private final JdbcTemplate jdbcTemplate;
 
     public RoomDAO(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createRoom(final String name) {
+    public Long createRoom(final String name) {
         String query = "INSERT INTO room (title, black_user, white_user, status) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(query, name, 1, 2, 1); // (이름, default_black_user_id(1), default_white_user_id(2), 상태(진행중: 1 / 종료됨: 0))
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
+            ps.setString(1, name);
+            ps.setInt(2, DEFAULT_BLACK_USER_ID);
+            ps.setInt(3, DEFAULT_WHITE_USER_ID);
+            ps.setInt(4, PLAYING_STATUS);
+            return ps;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public List<RoomDTO> allRooms() {

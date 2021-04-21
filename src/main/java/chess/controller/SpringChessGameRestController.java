@@ -41,8 +41,10 @@ public class SpringChessGameRestController {
 
     @PostMapping(path = "/new-game")
     public ResponseEntity<Boolean> createNewGame(@RequestBody final RoomNameDTO roomNameDTO) {
-        roomService.createRoom(roomNameDTO.getName());
-        return ResponseEntity.status(OK).body(true);
+        Long id = roomService.createRoom(roomNameDTO.getName());
+        return ResponseEntity.status(CREATED)
+                .header("Location", "/rooms/" + id)
+                .body(true);
     }
 
     @PostMapping(path = "/turn")

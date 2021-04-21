@@ -10,12 +10,8 @@ const requestLogin = () => {
         "password": password
     });
     axios.post('/login', requestData, {headers: {'Content-Type': 'application/json'}})
-        .then(response => {
-            console.log(response.data);
-            window.location.replace(response.data)
-        }).catch(error => {
-        console.log(error);
-    })
+        .then(response => window.location.replace(response.data))
+        .catch(error => alert(error.response.data));
 };
 
 addSubmitButtonEvent();

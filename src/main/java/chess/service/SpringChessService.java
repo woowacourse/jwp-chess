@@ -50,7 +50,7 @@ public class SpringChessService {
         TurnDto turnDto = chessDao.readTurn();
 
 
-        if (WHITE_TEAM.team().equals(turnDto.getCurrentTurnTeam())) {
+        if (WHITE_TEAM.isEqual(turnDto.getCurrentTurnTeam())) {
             return new ChessGame(blackTeam, whiteTeam, whiteTeam, turnDto.getIsPlaying());
         }
         return new ChessGame(blackTeam, whiteTeam, blackTeam, turnDto.getIsPlaying());

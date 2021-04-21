@@ -45,7 +45,7 @@ public class ChessController {
     public ResponseEntity<BoardDTO> move(@PathVariable int id, @RequestBody MoveRequestDTO moveRequestDTO, HttpSession httpSession) {
         String password = (String) httpSession.getAttribute("password");
         TeamType currentTeamType = chessService.findCurrentTeamTypeByRoomId(id);
-        userService.validateCurrentUser(password, id, currentTeamType);
+        userService.validateCurrentUser(id, password, currentTeamType);
         String current = moveRequestDTO.getCurrent();
         String destination = moveRequestDTO.getDestination();
         String teamType = moveRequestDTO.getTeamType();

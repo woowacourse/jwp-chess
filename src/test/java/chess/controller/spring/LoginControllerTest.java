@@ -57,7 +57,7 @@ class LoginControllerTest {
     @Order(2)
     @Test
     void cannotLogin() throws JsonProcessingException {
-        userService.addUser("pass1", 1);
+        userService.addUser(1, "pass1");
         String requestBody = new ObjectMapper().writeValueAsString(new LoginRequestDTO(1, "abc123"));
 
         RestAssured.given().log().all()

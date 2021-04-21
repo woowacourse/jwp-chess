@@ -42,7 +42,7 @@ public class RoomController {
         roomService.addRoom(roomRegistrationDTO.getName());
         Room room = roomService.findLastAddedRoom();
         RoomDTO roomDTO = RoomDTO.from(room);
-        userService.addUser(roomRegistrationDTO.getPassword(), room.getId());
+        userService.addUser(room.getId(), roomRegistrationDTO.getPassword());
         httpSession.setAttribute("password", roomRegistrationDTO.getPassword());
         httpSession.setAttribute("roomId", String.valueOf(room.getId()));
         return ResponseEntity.ok().body(roomDTO);

@@ -24,7 +24,7 @@ public class LoginController {
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequestDTO, HttpSession httpSession) {
         String password = loginRequestDTO.getPassword();
         int roomId = loginRequestDTO.getRoomId();
-        userService.addUser(password, roomId);
+        userService.addUser(roomId, password);
         httpSession.setAttribute("roomId", String.valueOf(roomId));
         httpSession.setAttribute("password", password);
         return ResponseEntity.status(HttpStatus.OK).body("/chessgame/" + roomId);

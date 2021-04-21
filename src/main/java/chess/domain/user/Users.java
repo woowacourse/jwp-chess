@@ -16,7 +16,7 @@ public class Users {
 
     private void validateUsers(List<User> users) {
         if (users.size() == MAXIMUM_USER_COUNTS_FOR_ONE_ROOM) {
-            throw new IllegalStateException("이미 꽉 찬 방입니다.");
+            throw new IllegalArgumentException("이미 꽉 찬 방입니다.");
         }
     }
 
@@ -27,5 +27,10 @@ public class Users {
         User existingUser = users.get(0);
         TeamType teamType = TeamType.valueOf(existingUser.getTeamType());
         return teamType.findOppositeTeam();
+    }
+
+    public boolean hasEqualUser(String password, TeamType teamType) {
+        return users.stream()
+                .anyMatch(user -> user.hasSameInformation(password, teamType));
     }
 }

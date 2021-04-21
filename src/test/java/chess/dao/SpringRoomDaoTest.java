@@ -24,8 +24,8 @@ public class SpringRoomDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DROP TABLE rooms");
-        jdbcTemplate.execute("CREATE TABLE rooms ("
+        jdbcTemplate.execute("DROP TABLE room");
+        jdbcTemplate.execute("CREATE TABLE room ("
             + " id int NOT NULL PRIMARY KEY AUTO_INCREMENT,"
             + " name varchar(255) NOT NULL,"
             + " is_opened boolean NOT NULL,"
@@ -33,9 +33,9 @@ public class SpringRoomDaoTest {
             + " black varchar(255) NOT NULL)");
 
         jdbcTemplate.execute(
-            "INSERT INTO rooms (id, name, is_opened, white, black) VALUES (1, 'room1', true, 'white1', 'black1')");
+            "INSERT INTO room (id, name, is_opened, white, black) VALUES (1, 'room1', true, 'white1', 'black1')");
         jdbcTemplate.execute(
-            "INSERT INTO rooms (id, name, is_opened, white, black) VALUES (2, 'room2', false , 'white2', 'black2')");
+            "INSERT INTO room (id, name, is_opened, white, black) VALUES (2, 'room2', false , 'white2', 'black2')");
 
         springRoomDao = new SpringRoomDao(jdbcTemplate);
     }

@@ -20,7 +20,7 @@ public class SpringRoomDao implements RoomDao {
     }
 
     public String insert(RoomDto roomDto) {
-        String query = "INSERT INTO rooms (name, is_opened, white, black) VALUES(?, true, ?, ?)";
+        String query = "INSERT INTO room (name, is_opened, white, black) VALUES(?, true, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -36,7 +36,7 @@ public class SpringRoomDao implements RoomDao {
     }
 
     public List<RoomDto> openedRooms() {
-        String query = "SELECT id, name, white, black FROM rooms WHERE is_opened = true";
+        String query = "SELECT id, name, white, black FROM room WHERE is_opened = true";
         return jdbcTemplate.query(
             query,
             (resultSet, rowNum) -> new RoomDto(
@@ -48,7 +48,7 @@ public class SpringRoomDao implements RoomDao {
     }
 
     public void close(String roomId) {
-        String query = "UPDATE rooms SET is_opened = false WHERE id = (?)";
+        String query = "UPDATE room SET is_opened = false WHERE id = (?)";
         jdbcTemplate.update(query, roomId);
     }
 }

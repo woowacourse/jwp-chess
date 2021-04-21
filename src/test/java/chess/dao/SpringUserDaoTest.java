@@ -24,24 +24,24 @@ public class SpringUserDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DROP TABLE users");
-        jdbcTemplate.execute("CREATE TABLE users ("
+        jdbcTemplate.execute("DROP TABLE `user`");
+        jdbcTemplate.execute("CREATE TABLE `user` ("
             + " name varchar(255) NOT NULL PRIMARY KEY, "
             + " win int(11) NOT NULL default 0, "
             + " lose int(11) NOT NULL default 0)");
 
-        jdbcTemplate.execute("DROP TABLE rooms");
-        jdbcTemplate.execute("CREATE TABLE rooms ("
+        jdbcTemplate.execute("DROP TABLE room");
+        jdbcTemplate.execute("CREATE TABLE room ("
             + " id int NOT NULL PRIMARY KEY AUTO_INCREMENT,"
             + " name varchar(255) NOT NULL,"
             + " is_opened boolean NOT NULL,"
             + " white varchar(255) NOT NULL,"
             + " black varchar(255) NOT NULL)");
 
-        jdbcTemplate.execute("INSERT INTO users (name) VALUES ('white')");
-        jdbcTemplate.execute("INSERT INTO users (name) VALUES ('black')");
+        jdbcTemplate.execute("INSERT INTO `user` (name) VALUES ('white')");
+        jdbcTemplate.execute("INSERT INTO `user` (name) VALUES ('black')");
         jdbcTemplate.execute(
-            "INSERT INTO rooms (id, name, is_opened, white, black) VALUES (1, 'testRoom', true, 'white', 'black')");
+            "INSERT INTO room (id, name, is_opened, white, black) VALUES (1, 'testRoom', true, 'white', 'black')");
 
         springUserDao = new SpringUserDao(jdbcTemplate);
     }
@@ -51,7 +51,7 @@ public class SpringUserDaoTest {
     @Test
     void insert() {
         springUserDao.insert("testUser");
-        jdbcTemplate.query("SELECT count(*) FROM users WHERE name = ?",
+        jdbcTemplate.query("SELECT count(*) FROM `user` WHERE name = ?",
             (resultSet, rowNum) ->
                 assertThat(resultSet.getInt(1)).isEqualTo(1)
             , "testUser");

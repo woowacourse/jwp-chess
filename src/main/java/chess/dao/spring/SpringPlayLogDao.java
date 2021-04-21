@@ -21,12 +21,12 @@ public class SpringPlayLogDao implements PlayLogDao {
     }
 
     public void insert(BoardDto boardDto, GameStatusDto gameStatusDto, String roomId) {
-        String query = "INSERT INTO play_logs (board, game_status, room_id) VALUES (?, ?, ?)";
+        String query = "INSERT INTO play_log (board, game_status, room_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(query, GSON.toJson(boardDto), GSON.toJson(gameStatusDto), roomId);
     }
 
     public BoardDto latestBoard(String roomId) {
-        String query = "SELECT board FROM play_logs WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
+        String query = "SELECT board FROM play_log WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
 
         try {
             BoardDto result = jdbcTemplate.queryForObject(
@@ -44,7 +44,7 @@ public class SpringPlayLogDao implements PlayLogDao {
     }
 
     public GameStatusDto latestGameStatus(String roomId) {
-        String query = "SELECT game_status FROM play_logs WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
+        String query = "SELECT game_status FROM play_log WHERE room_id = (?) ORDER BY last_played_time DESC, id DESC LIMIT 1";
 
         try {
             GameStatusDto result = jdbcTemplate.queryForObject(

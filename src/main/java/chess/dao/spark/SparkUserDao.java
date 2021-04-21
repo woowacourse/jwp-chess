@@ -18,9 +18,9 @@ public class SparkUserDao implements UserDao {
 
     @Override
     public void insert(String userName) {
-        String query = "INSERT INTO users (name) "
+        String query = "INSERT INTO user (name) "
             + "SELECT * FROM (SELECT ?) AS tmp "
-            + "WHERE NOT EXISTS (SELECT * FROM users WHERE name = ?);";
+            + "WHERE NOT EXISTS (SELECT * FROM user WHERE name = ?);";
 
         try (Connection connection = chessDataSource.connection();
             PreparedStatement pstmt = connection.prepareStatement(query);) {
@@ -43,8 +43,8 @@ public class SparkUserDao implements UserDao {
             + " black_user.lose AS blackLose "
             + "FROM"
             + " rooms AS r"
-            + " INNER JOIN users AS black_user ON r.black = black_user.name"
-            + " INNER JOIN users AS white_user ON r.white = white_user.name "
+            + " INNER JOIN `user` AS black_user ON r.black = black_user.name"
+            + " INNER JOIN `user` AS white_user ON r.white = white_user.name "
             + "WHERE r.id = ?;";
 
         try (Connection connection = chessDataSource.connection();
@@ -77,9 +77,9 @@ public class SparkUserDao implements UserDao {
     }
 
     private void updateWinner(String roomId, String winner) {
-        String updateWinnerQueryForm = "UPDATE users "
-            + "SET users.win = users.win + 1 "
-            + "WHERE users.name = (SELECT %s FROM rooms WHERE id = ?);";
+        String updateWinnerQueryForm = "UPDATE `user` "
+            + "SET `user`.win = `user`.win + 1 "
+            + "WHERE `user`.name = (SELECT %s FROM rooms WHERE id = ?);";
 
         try (Connection connection = chessDataSource.connection();
             PreparedStatement pstmt = connection
@@ -92,9 +92,9 @@ public class SparkUserDao implements UserDao {
     }
 
     private void updateLoser(String roomId, String loser) {
-        String updateLoserQuery = "UPDATE users "
-            + "SET users.lose = users.lose + 1 "
-            + "WHERE users.name = (SELECT %s FROM rooms WHERE id = ?);";
+        String updateLoserQuery = "UPDATE `user` "
+            + "SET `user`.lose = `user`.lose + 1 "
+            + "WHERE `user`.name = (SELECT %s FROM rooms WHERE id = ?);";
 
         try (Connection connection = chessDataSource.connection();
             PreparedStatement pstmt = connection

@@ -33,9 +33,9 @@ public class SpringPlayLogDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("DROP TABLE play_logs");
+        jdbcTemplate.update("DROP TABLE play_log");
 
-        jdbcTemplate.update("CREATE TABLE play_logs ("
+        jdbcTemplate.update("CREATE TABLE play_log ("
             + " id int NOT NULL PRIMARY KEY AUTO_INCREMENT,"
             + " board clob NOT NULL,"
             + " game_status clob NOT NULL,"
@@ -43,7 +43,7 @@ public class SpringPlayLogDaoTest {
             + " last_played_time timestamp default NOW()"
             + ")");
 
-        jdbcTemplate.update("INSERT INTO play_logs (board, game_status, room_id) VALUES (?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO play_log (board, game_status, room_id) VALUES (?, ?, ?)",
             GSON.toJson(new BoardDto(new Board())),
             GSON.toJson(new GameStatusDto(new ChessGame(new Board()))),
             "1");
@@ -111,7 +111,7 @@ public class SpringPlayLogDaoTest {
 
         springPlayLogDao.insert(new BoardDto(board), new GameStatusDto(chessGame), "1");
 
-        jdbcTemplate.query("SELECT COUNT(*) FROM play_logs WHERE room_id = 1",
+        jdbcTemplate.query("SELECT COUNT(*) FROM play_log WHERE room_id = 1",
             (resultSet, rowNum) ->
                 assertThat(resultSet.getInt(1)).isEqualTo(2)
         );

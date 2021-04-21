@@ -1,8 +1,8 @@
 package chess.webdto;
 
 public class PieceInfoDto {
-        private String position;
-        private String piece;
+    private String position;
+    private String piece;
 
     public PieceInfoDto(String position, String piece) {
         this.position = position;

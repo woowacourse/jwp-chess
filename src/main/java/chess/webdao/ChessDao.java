@@ -1,25 +1,14 @@
 package chess.webdao;
 
-import chess.domain.ChessGame;
-import chess.domain.Position;
-import chess.domain.piece.Piece;
 import chess.webdto.MoveRequestDto;
-import chess.webdto.TurnDto;
 
-import java.util.Map;
+import java.util.List;
 
 public interface ChessDao {
-    int createChessGame(boolean isPlaying);
+    int insertMove(String start, String destination);
 
-    int createTeamInfo(final String team, final Map<Position, Piece> teamPiecePosition);
+    List<MoveRequestDto> selectAllMovesByRoomId(int roomId);
 
-    String readTeamInfo(final String team);
+    void deleteMovesByRoomId(int roomId);
 
-    TurnDto readTurn();
-
-    void updateTeamInfo(final Map<Position, Piece> teamPiecePosition, final String team);
-
-    void updateChessGame(final ChessGame chessGame, final String currentTurnTeam);
-
-    void deleteChessGame();
 }

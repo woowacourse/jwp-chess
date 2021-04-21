@@ -8,7 +8,7 @@ export default class ChessService {
 
     async moveSourceToTarget(moveRequest) {
         return await fetch(`${this.baseUrl}/move`, {
-            method: "PUT",
+            method: "POST",
             headers: this.headers,
             body: JSON.stringify(moveRequest)
         }).then(response => response.json());
@@ -16,7 +16,7 @@ export default class ChessService {
 
     async startGame() {
         return await fetch(`${this.baseUrl}`, {
-            method: "POST",
+            method: "GET",
             headers: this.headers
         }).then(response => response.json());
     }

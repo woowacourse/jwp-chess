@@ -3,16 +3,12 @@ package chess.service;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
-import chess.domain.team.CapturedPieces;
-import chess.domain.team.PiecePositions;
-import chess.domain.team.Score;
 import chess.domain.team.Team;
 import chess.webdao.ChessDao;
 import chess.webdto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,56 +25,46 @@ public class SpringChessService {
         this.chessDao = chessDao;
     }
 
+
+    @Transactional
     public ChessGameDto startNewGame() {
-        chessDao.deleteChessGame();
-
+        chessDao.deleteMovesByRoomId(1);
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
-
-        chessDao.createChessGame(chessGame.isPlaying());
-        chessDao.createTeamInfo(WHITE_TEAM.team(), chessGame.currentWhitePiecePosition());
-        chessDao.createTeamInfo(BLACK_TEAM.team(), chessGame.currentBlackPiecePosition());
-
         return generateChessGameDto(chessGame);
     }
+
 
     public ChessGameDto loadPreviousGame() {
-        ChessGame chessGame = getChessGame();
+        final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
+
+        List<MoveRequestDto> moves = chessDao.selectAllMovesByRoomId(1);
+
+        for (int i = 0; i < moves.size(); i++) {
+            String startPosition = moves.get(i).getStart();
+            String destPosition = moves.get(i).getDestination();
+            chessGame.move(Position.of(startPosition), Position.of(destPosition));
+        }
+
         return generateChessGameDto(chessGame);
     }
 
-    private ChessGame getChessGame() {
-        final String blackPieces = chessDao.readTeamInfo(BLACK_TEAM.team());
-        final String whitePieces = chessDao.readTeamInfo(WHITE_TEAM.team());
-        final Team blackTeam = generateTeam(blackPieces, BLACK_TEAM.team());
-        final Team whiteTeam = generateTeam(whitePieces, WHITE_TEAM.team());
-        TurnDto turnDto = chessDao.readTurn();
-
-
-        if (WHITE_TEAM.isEqual(turnDto.getCurrentTurnTeam())) {
-            return new ChessGame(blackTeam, whiteTeam, whiteTeam, turnDto.getIsPlaying());
-        }
-        return new ChessGame(blackTeam, whiteTeam, blackTeam, turnDto.getIsPlaying());
-    }
-
-
-    private Team generateTeam(final String teamPieceInfo, final String team) {
-        Map<Position, Piece> piecePosition = PiecePositionDaoConverter.asPiecePosition(teamPieceInfo, team);
-        final PiecePositions piecePositionsByTeam = new PiecePositions(piecePosition);
-
-        return new Team(piecePositionsByTeam, new CapturedPieces(), new Score());
-    }
 
     @Transactional
     public ChessGameDto move(final String start, final String destination) {
-        final ChessGame chessGame = getChessGame();
-        chessGame.move(Position.of(start), Position.of(destination));
+        final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
 
-        chessDao.updateTeamInfo(chessGame.currentWhitePiecePosition(), WHITE_TEAM.team());
-        chessDao.updateTeamInfo(chessGame.currentBlackPiecePosition(), BLACK_TEAM.team());
-        chessDao.updateChessGame(chessGame, currentTurnTeamToString(chessGame));
+        chessDao.insertMove(start, destination);
+        List<MoveRequestDto> moves = chessDao.selectAllMovesByRoomId(1);
+
+        for (int i = 0; i < moves.size(); i++) {
+            String startPosition = moves.get(i).getStart();
+            String destPosition = moves.get(i).getDestination();
+            chessGame.move(Position.of(startPosition), Position.of(destPosition));
+        }
 
         return generateChessGameDto(chessGame);
     }
+
 
     //todo: 로직정리
     private ChessGameDto generateChessGameDto(final ChessGame chessGame) {

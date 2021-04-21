@@ -14,7 +14,7 @@ public enum TeamDto {
         return team;
     }
 
-    public boolean isEqual(String word){
-       return this.team.equals(word);
+    public boolean isEqual(String word) {
+        return this.team.equals(word);
     }
 }

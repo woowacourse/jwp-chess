@@ -53,14 +53,10 @@ public class SparkChessService {
     }
 
     public List<HistoryDto> loadHistory() throws SQLException {
-        return histories();
-    }
-
-    private List<HistoryDto> histories() throws SQLException {
         return historyDao.selectActive()
-                .stream()
-                .map(HistoryDto::new)
-                .collect(Collectors.toList());
+            .stream()
+            .map(HistoryDto::new)
+            .collect(Collectors.toList());
     }
 
     public String addHistory(String name) throws SQLException {

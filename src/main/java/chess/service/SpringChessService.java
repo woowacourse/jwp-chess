@@ -30,10 +30,6 @@ public class SpringChessService {
     }
 
     public List<HistoryDto> loadHistory() {
-        return histories();
-    }
-
-    private List<HistoryDto> histories() {
         return historyRepository.selectActive()
             .stream()
             .map(HistoryDto::new)
@@ -47,13 +43,9 @@ public class SpringChessService {
     public GameInfoDto continuedGameInfo(String id) {
         ChessGame chessGame = gameStateOf(id);
         if (chessGame.isEnd()) {
-            updateDB(id);
+            historyRepository.updateEndState(id);
         }
         return new GameInfoDto(chessGame);
-    }
-
-    private void updateDB(String historyId) {
-        historyRepository.updateEndState(historyId);
     }
 
     public void move(String id, String command, Commands commands) throws SQLException {

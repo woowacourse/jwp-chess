@@ -10,6 +10,7 @@ import chess.domain.team.Team;
 import chess.webdao.ChessDao;
 import chess.webdto.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +65,7 @@ public class SpringChessService {
         return new Team(piecePositionsByTeam, new CapturedPieces(), new Score());
     }
 
+    @Transactional
     public ChessGameDto move(final String start, final String destination) {
         final ChessGame chessGame = getChessGame();
         chessGame.move(Position.of(start), Position.of(destination));

@@ -39,7 +39,8 @@ class PieceDAOTest {
     @Test
     void testSaveAllAndFindAllPiecesByChessGameId() {
         //given
-        Long chessGameId = chessGameDAO.save();
+        String title = "title";
+        Long chessGameId = chessGameDAO.save(title);
         List<Piece> pieces = Arrays.asList(
                 Piece.createKing(Color.BLACK, 0, 0),
                 Piece.createKing(Color.WHITE, 7, 0)
@@ -63,7 +64,7 @@ class PieceDAOTest {
     @Test
     void testFindOneByPosition() {
         //given
-        Long chessGameId = chessGameDAO.save();
+        Long chessGameId = chessGameDAO.save("title");
         Piece piece = Piece.createKing(Color.WHITE, 7, 0);
         List<Piece> pieces = Arrays.asList(piece);
         pieceDAO.saveAll(chessGameId, pieces);
@@ -79,7 +80,7 @@ class PieceDAOTest {
     @Test
     void testUpdate() {
         //given
-        Long chessGameId = chessGameDAO.save();
+        Long chessGameId = chessGameDAO.save("title");
         List<Piece> pieces = Arrays.asList(Piece.createKing(Color.WHITE, 7, 0));
         pieceDAO.saveAll(chessGameId, pieces);
         Piece savedPiece = pieceDAO.findOneByPosition(chessGameId, 7, 0).get();
@@ -101,7 +102,7 @@ class PieceDAOTest {
     @Test
     void testDelete() {
         //given
-        Long chessGameId = chessGameDAO.save();
+        Long chessGameId = chessGameDAO.save("title");
         List<Piece> pieces = Arrays.asList(Piece.createKing(Color.WHITE, 7, 0));
         pieceDAO.saveAll(chessGameId, pieces);
 

@@ -31,7 +31,7 @@ class ChessGameDAOTest {
     @Test
     void testFindByStateIsBlackTurnOrWhiteTurn() {
         //given
-        jdbcTemplate.update("INSERT INTO chess_game(state) VALUES(?)", new Object[]{"BlackTurn"});
+        jdbcTemplate.update("INSERT INTO chess_game(state, title) VALUES(?, ?)", new Object[]{"BlackTurn", "title"});
 
         //when
         ChessGameEntity chessGameEntity = chessGameDAO.findByStateIsBlackTurnOrWhiteTurn().get();
@@ -47,7 +47,7 @@ class ChessGameDAOTest {
     @Test
     void testCreate() {
         //when
-        Long createdId = chessGameDAO.save();
+        Long createdId = chessGameDAO.save("title");
 
         //then
         assertThat(createdId).isNotNull();
@@ -57,7 +57,7 @@ class ChessGameDAOTest {
     @Test
     void testUpdateState() {
         //given
-        jdbcTemplate.update("INSERT INTO chess_game(state) VALUES(?)", new Object[]{"BlackTurn"});
+        jdbcTemplate.update("INSERT INTO chess_game(state, title) VALUES(?, ?)", new Object[]{"BlackTurn", "title"});
 
         //when
         chessGameDAO.updateState(1L, "WhiteTurn");
@@ -72,7 +72,7 @@ class ChessGameDAOTest {
     @Test
     void testFindIsExistPlayingChessGameStatusIfExist() {
         //given
-        jdbcTemplate.update("INSERT INTO chess_game(state) VALUES(?)", new Object[]{"BlackTurn"});
+        jdbcTemplate.update("INSERT INTO chess_game(state, title) VALUES(?, ?)", new Object[]{"BlackTurn", "title"});
 
         //when
         ChessGameStatusDto chessGameStatus = chessGameDAO.findIsExistPlayingChessGameStatus();
@@ -86,7 +86,7 @@ class ChessGameDAOTest {
     @Test
     void testFindIsExistPlayingChessGameStatusIfNotExist() {
         //given
-        jdbcTemplate.update("INSERT INTO chess_game(state) VALUES(?)", new Object[]{"End"});
+        jdbcTemplate.update("INSERT INTO chess_game(state, title) VALUES(?, ?)", new Object[]{"End", "title"});
 
         //when
         ChessGameStatusDto chessGameStatus = chessGameDAO.findIsExistPlayingChessGameStatus();

@@ -4,7 +4,7 @@ import chess.dao.ChessGameDAO;
 import chess.dao.PieceDAO;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
-import chess.dto.ChessGameResponseDto;
+import chess.dto.ChessGameInfoResponseDto;
 import chess.dto.ChessGameStatusDto;
 import chess.dto.ScoreDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,12 +42,12 @@ class ChessGameServiceTest {
     @Test
     void testCreateNewChessGame() {
         //when
-        ChessGameResponseDto chessGameDto = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto chessGameDto = chessGameService.createNewChessGame("title");
 
         //then
         assertAll(
                 () -> assertThat(chessGameDto).isNotNull(),
-                () -> assertThat(chessGameDto.getState()).isEqualTo("BlackTurn"),
+                () -> assertThat(chessGameDto.getState()).isEqualTo("Ready"),
                 () -> assertThat(chessGameDto.getPieceDtos()).hasSize(32)
         );
     }
@@ -56,7 +56,8 @@ class ChessGameServiceTest {
     @Test
     void testMoveChessPiece() {
         //given
-        ChessGameResponseDto chessGameDto = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto chessGameDto = chessGameService.createNewChessGame("title");
+        chessGameDAO.updateState(chessGameDto.getChessGameId(), "BlackTurn");
 
         //when
         chessGameService.moveChessPiece(chessGameDto.getChessGameId(),
@@ -74,7 +75,7 @@ class ChessGameServiceTest {
     }, delimiter = ':')
     void testFindLatestChessGameStatus(String state, boolean expected) {
         //given
-        Long chessGameId = chessGameDAO.save();
+        Long chessGameId = chessGameDAO.save("title");
         chessGameDAO.updateState(chessGameId, state);
 
         //when
@@ -88,7 +89,8 @@ class ChessGameServiceTest {
     @Test
     void testEndGame() {
         //given
-        Long id = chessGameDAO.save();
+        Long id = chessGameDAO.save("title");
+        chessGameDAO.updateState(id, "BlackTurn");
 
         //when
         chessGameService.endGame(id);
@@ -102,7 +104,7 @@ class ChessGameServiceTest {
     @Test
     void testCalculateScores() {
         //given
-        ChessGameResponseDto chessGame = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto chessGame = chessGameService.createNewChessGame("title");
         pieceDAO.delete(chessGame.getChessGameId(), 1, 0);
 
         //when

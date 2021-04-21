@@ -1,6 +1,7 @@
 CREATE TABLE chess_game
 (id IDENTITY,
 state VARCHAR(64) NOT NULL,
+title VARCHAR(100) NOT NULL,
 PRIMARY KEY (id));
 
 CREATE TABLE piece

@@ -2,7 +2,8 @@ package chess.controller;
 
 import chess.domain.piece.Position;
 import chess.dto.ChessGameDto;
-import chess.dto.ChessGameResponseDto;
+import chess.dto.ChessGameInfoResponseDto;
+import chess.dto.ChessGamesSaveDto;
 import chess.dto.ScoreDto;
 import chess.service.ChessGameService;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-@RequestMapping("/chessgames")
+@RequestMapping("/api/chessgames")
 @RestController
 public class ChessApiController {
 
@@ -36,10 +37,15 @@ public class ChessApiController {
         return ResponseEntity.ok(latestPlayingGame);
     }
 
-    @PostMapping()
-    public ResponseEntity<ChessGameResponseDto> createNewChessGame() {
-        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
+    @PostMapping
+    public ResponseEntity<ChessGameInfoResponseDto> createNewChessGame(@RequestBody ChessGamesSaveDto chessGamesSaveDto) {
+        ChessGameInfoResponseDto newChessGame = chessGameService.createNewChessGame(chessGamesSaveDto.getTitle());
         return ResponseEntity.created(URI.create("/chessgames/" + newChessGame.getChessGameId())).body(newChessGame);
+    }
+
+    @PutMapping("/{chessGameId}")
+    public ResponseEntity<ChessGameDto> startChessGame(@PathVariable("chessGameId") Long chessGameId) {
+        return ResponseEntity.ok(chessGameService.startGame(chessGameId));
     }
 
     @DeleteMapping("/{chessGameId}")

@@ -34,8 +34,8 @@ public class GlobalException {
         return badRequest(e);
     }
 
-    @ExceptionHandler(NotFoundChessGame.class)
-    public ResponseEntity<String> handleNotFoundChessGame(NotFoundChessGame e) {
+    @ExceptionHandler(NotFoundChessGameException.class)
+    public ResponseEntity<String> handleNotFoundChessGame(NotFoundChessGameException e) {
         return badRequest(e);
     }
 

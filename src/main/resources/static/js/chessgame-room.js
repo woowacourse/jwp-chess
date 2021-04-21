@@ -2,7 +2,7 @@ const index = {
     init: function () {
         setTimeout(() => {
             loadPage();
-        }, 2000);
+        }, 1000);
 
         const _this = this;
         document.querySelector(".chess-btn").addEventListener("click", event => {
@@ -10,7 +10,15 @@ const index = {
                 _this.start();
                 return;
             }
-            _this.continue();
+
+            if (event.target.value === "continue") {
+                _this.continue();
+                return;
+            }
+
+            if (confirm("게임에서 나가시겠습니까?")) {
+                window.location = "/";
+            }
         });
 
         document.querySelector(".chess-end-btn").addEventListener("click", event => {
@@ -51,14 +59,14 @@ const index = {
     },
 
     move: function (source, target) {
-        const chessGameId = document.querySelector(".chess-board").id;
+        const chessGameId = document.querySelector(".chess-game-id").id;
         const option = {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
             }
         };
-        fetch(`/chessgames/${chessGameId}/pieces?source=${source}&target=${target}`, option)
+        fetch(`/api/chessgames/${chessGameId}/pieces?source=${source}&target=${target}`, option)
             .then(data => {
                 if (!data.ok) {
                     throw new Error("잘못된 명령입니다!");
@@ -82,14 +90,18 @@ const index = {
     },
 
     start: function () {
+        const data = {
+            state: 'BlackTurn'
+        };
         const option = {
-            method: "POST",
+            method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify(data)
         };
-
-        fetch("/chessgames", option)
+        const chessGameId = document.querySelector('.chess-game-id').id;
+        fetch(`/api/chessgames/${chessGameId}`, option)
             .then(data => {
                 return data.json()
             })
@@ -110,8 +122,8 @@ const index = {
                 'Content-Type': 'application/json'
             }
         };
-        const chessGameId = document.querySelector(".chess-board").id;
-        fetch(`/chessgames/${chessGameId}`, option)
+        const chessGameId = document.querySelector(".chess-game-id").id;
+        fetch(`/api/chessgames/${chessGameId}`, option)
             .then(data => {
                 if (!data.ok) {
                     throw new Error("잘못된 명령입니다!");
@@ -129,8 +141,8 @@ const index = {
             });
     },
     scores: function () {
-        const chessGameId = document.querySelector('.chess-board').id;
-        fetch(`/chessgames/${chessGameId}/scores`)
+        const chessGameId = document.querySelector('.chess-game-id').id;
+        fetch(`/api/chessgames/${chessGameId}/scores`)
             .then(data => {
                 return data.json()
             })
@@ -143,7 +155,7 @@ const index = {
     },
     continue: function () {
         const chessGameId = parseInt(document.querySelector(".chess-game-id").id);
-        fetch(`/chessgames/${chessGameId}`)
+        fetch(`/api/chessgames/${chessGameId}`)
             .then(data => {
                 return data.json()
             })
@@ -254,7 +266,7 @@ placePieces = pieceDtos => {
 changeChessBoardUnitTemplate = (pieceDto) => {
     const position = pieceDto.position;
     const chessBoardUnit = document.querySelector(`#${position}`);
-    const inputValue = `<img class="piece" src="images/${decidePieceColor(pieceDto.notation)}.png" alt=${pieceDto.notation}>`
+    const inputValue = `<img class="piece" src="/images/${decidePieceColor(pieceDto.notation)}.png" alt=${pieceDto.notation}>`
     chessBoardUnit.innerHTML = inputValue;
 }
 

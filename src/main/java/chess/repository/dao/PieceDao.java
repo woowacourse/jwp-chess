@@ -13,8 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class PieceDao implements PieceRepository {
@@ -26,12 +25,15 @@ public class PieceDao implements PieceRepository {
 
     public void savePieces(ChessGameManager chessGameManager, int gameId) {
         Map<String, PieceDto> board = ChessBoardDto.from(chessGameManager.getBoard()).board();
-        for (String position : board.keySet()) {
-            String query = "insert into piece(game_id, name, color, position) values(?, ?, ?, ?)";
-
-            PieceDto piece = board.get(position);
-            this.jdbcTemplate.update(query, gameId, piece.getName(), piece.getColor(), position);
-        }
+        String query = "insert into piece(game_id, name, color, position) values(?, ?, ?, ?)";
+        Set<String> positions = board.keySet();
+        this.jdbcTemplate.batchUpdate(query, positions, positions.size(), (ps, argument) -> {
+            ps.setInt(1, gameId);
+            PieceDto piece = board.get(argument);
+            ps.setString(2, piece.getName());
+            ps.setString(3, piece.getColor());
+            ps.setString(4, argument);
+        });
     }
 
     public ChessBoard findChessBoardByGameId(int gameId) {

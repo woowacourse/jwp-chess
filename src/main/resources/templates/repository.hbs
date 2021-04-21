@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>체스</title>
+    <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<h1>저장된 게임 목록</h1>
+<div>
+<form id="room" action="/load" method="get">
+    {{#rooms}}
+    <div style="margin-bottom:10px;">
+        <input type="submit" name="roomNo" value="{{{roomNo}}}"/>
+        <label>방 이름: {{{roomName}}}</label>
+        <label>현재 턴: {{{turn}}}</label>
+    </div>
+    {{/rooms}}
+</form>
+</div>
+</body>
+</html>

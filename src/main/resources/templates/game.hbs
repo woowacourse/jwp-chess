@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>체스</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<div id="room">
+    <h1 style="font-size:50px;" class="{{{roomNo}}}">{{roomNo}}번 방</h1>
+    <h1 style="font-size:50px;" class="{{{roomName}}}">ROOM {{roomName}}</h1>
+</div>
+<div>
+    <label style="color:darkgreen;font-size:30px;"><label id="turn"></label>의 차례입니다.</label>
+</div>
+<div>
+    <label style="color:darkred;font-size:20px;margin-right:10px;">Black: <label id="blackScore"></label></label>
+    <label style="color:darkblue;font-size:20px;">White: <label id="whiteScore"></label></label>
+</div>
+<input type="button" id="restart" value="재시작">
+<input type="button" id="home" value="홈으로"/>
+<input type="button" id="exit" value="나가기"/>
+<table class="chessboard">
+    <tr id="8" class="chessboard">
+        <td id="a8" class="chessboard">
+        </td>
+        <td id="b8" class="chessboard">
+        </td>
+        <td id="c8" class="chessboard">
+        </td>
+        <td id="d8" class="chessboard">
+        </td>
+        <td id="e8" class="chessboard">
+        </td>
+        <td id="f8" class="chessboard">
+        </td>
+        <td id="g8" class="chessboard">
+        </td>
+        <td id="h8" class="chessboard">
+        </td>
+    </tr>
+    <tr id="7" class="chessboard">
+        <td id="a7" class="chessboard">
+        </td>
+        <td id="b7" class="chessboard">
+        </td>
+        <td id="c7" class="chessboard">
+        </td>
+        <td id="d7" class="chessboard">
+        </td>
+        <td id="e7" class="chessboard">
+        </td>
+        <td id="f7" class="chessboard">
+        </td>
+        <td id="g7" class="chessboard">
+        </td>
+        <td id="h7" class="chessboard">
+        </td>
+    </tr>
+    <tr id="6" class="chessboard">
+        <td id="a6" class="chessboard">
+        </td>
+        <td id="b6" class="chessboard">
+        </td>
+        <td id="c6" class="chessboard">
+        </td>
+        <td id="d6" class="chessboard">
+        </td>
+        <td id="e6" class="chessboard">
+        </td>
+        <td id="f6" class="chessboard">
+        </td>
+        <td id="g6" class="chessboard">
+        </td>
+        <td id="h6" class="chessboard">
+        </td>
+    </tr>
+    <tr id="5" class="chessboard">
+        <td id="a5" class="chessboard">
+        </td>
+        <td id="b5" class="chessboard">
+        </td>
+        <td id="c5" class="chessboard">
+        </td>
+        <td id="d5" class="chessboard">
+        </td>
+        <td id="e5" class="chessboard">
+        </td>
+        <td id="f5" class="chessboard">
+        </td>
+        <td id="g5" class="chessboard">
+        </td>
+        <td id="h5" class="chessboard">
+        </td>
+    </tr>
+    <tr id="4" class="chessboard">
+        <td id="a4" class="chessboard">
+        </td>
+        <td id="b4" class="chessboard">
+        </td>
+        <td id="c4" class="chessboard">
+        </td>
+        <td id="d4" class="chessboard">
+        </td>
+        <td id="e4" class="chessboard">
+        </td>
+        <td id="f4" class="chessboard">
+        </td>
+        <td id="g4" class="chessboard">
+        </td>
+        <td id="h4" class="chessboard">
+        </td>
+    </tr>
+    <tr id="3" class="chessboard">
+        <td id="a3" class="chessboard">
+        </td>
+        <td id="b3" class="chessboard">
+        </td>
+        <td id="c3" class="chessboard">
+        </td>
+        <td id="d3" class="chessboard">
+        </td>
+        <td id="e3" class="chessboard">
+        </td>
+        <td id="f3" class="chessboard">
+        </td>
+        <td id="g3" class="chessboard">
+        </td>
+        <td id="h3" class="chessboard">
+        </td>
+    </tr>
+    <tr id="2" class="chessboard">
+        <td id="a2" class="chessboard">
+        </td>
+        <td id="b2" class="chessboard">
+        </td>
+        <td id="c2" class="chessboard">
+        </td>
+        <td id="d2" class="chessboard">
+        </td>
+        <td id="e2" class="chessboard">
+        </td>
+        <td id="f2" class="chessboard">
+        </td>
+        <td id="g2" class="chessboard">
+        </td>
+        <td id="h2" class="chessboard">
+        </td>
+    </tr>
+    <tr id="1" class="chessboard">
+        <td id="a1" class="chessboard">
+        </td>
+        <td id="b1" class="chessboard">
+        </td>
+        <td id="c1" class="chessboard">
+        </td>
+        <td id="d1" class="chessboard">
+        </td>
+        <td id="e1" class="chessboard">
+        </td>
+        <td id="f1" class="chessboard">
+        </td>
+        <td id="g1" class="chessboard">
+        </td>
+        <td id="h1" class="chessboard">
+        </td>
+    </tr>
+</table>
+</body>
+<script src="/js/game.js"></script>
+</html>

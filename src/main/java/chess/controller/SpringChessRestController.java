@@ -25,6 +25,7 @@ public class SpringChessRestController {
 
     @PostMapping("/move")
     public ResponseEntity<BoardDto> move(@RequestBody MoveRequestDto moveRequestDto) {
+        System.out.println("moveRequest : " + moveRequestDto.getRoomId() + moveRequestDto.getTarget() + moveRequestDto.getDestination());
         try {
             return ResponseEntity.ok(springChessService.move(moveRequestDto));
         } catch (Exception e) {

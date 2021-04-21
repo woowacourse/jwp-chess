@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.SpringChessLogDao;
+import chess.dao.SpringChessRoomDao;
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.dto.BoardDto;
@@ -17,9 +18,11 @@ public class SpringChessService {
     private static final String END_TRUE = "true";
 
     private final SpringChessLogDao springChessLogDao;
+    private final SpringChessRoomDao chessRoomDao;
 
-    public SpringChessService(SpringChessLogDao springChessLogDao) {
+    public SpringChessService(SpringChessLogDao springChessLogDao, SpringChessRoomDao chessRoomDao) {
         this.springChessLogDao = springChessLogDao;
+        this.chessRoomDao = chessRoomDao;
     }
 
     public BoardDto loadRoom(String roomNumber) {
@@ -73,5 +76,9 @@ public class SpringChessService {
 
     public void deleteRoom(String roomNumber) {
         springChessLogDao.deleteLog(roomNumber);
+    }
+
+    public String createRoom(String name) {
+        return chessRoomDao.createRoom(name);
     }
 }

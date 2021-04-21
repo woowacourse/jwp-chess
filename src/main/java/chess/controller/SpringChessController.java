@@ -22,7 +22,9 @@ public class SpringChessController {
     }
 
     @GetMapping("/start")
-    public ModelAndView startGame(@RequestParam("room") String id) {
+    public ModelAndView startGame(@RequestParam("room") String name) {
+        String id = springChessService.createRoom(name);
+
         final ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("roomId", id);
         return modelAndView;

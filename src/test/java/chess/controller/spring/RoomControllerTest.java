@@ -1,6 +1,7 @@
 package chess.controller.spring;
 
 import chess.dto.RoomDTO;
+import chess.dto.RoomRegistrationDTO;
 import chess.service.spring.RoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,10 +69,10 @@ class RoomControllerTest {
     @Test
     void addRoom() throws JsonProcessingException {
         String expectedResponseBody = writeResponseBody(new RoomDTO(3, "room3"));
-
+        String requestBody = writeResponseBody(new RoomRegistrationDTO("room3", "pass1"));
         Response response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("room3")
+                .body(requestBody)
                 .when().post("/rooms");
 
         assertResponse(response, expectedResponseBody);

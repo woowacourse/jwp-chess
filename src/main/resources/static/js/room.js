@@ -21,10 +21,13 @@ function addSubmitButtonEvent() {
 
 const requestRoomRegistration = async () => {
     const $roomName = document.getElementById('room-name');
-    await axios.post('/rooms', $roomName.value, {headers: {'Content-Type': 'application/json'}})
+    const $roomAdminPassword = document.getElementById('room-admin-password');
+    const requestData = JSON.stringify({"name": $roomName.value, "password": $roomAdminPassword.value});
+    await axios.post('/rooms', requestData, {headers: {'Content-Type': 'application/json'}})
         .then(response => {
             showRoom(response.data);
             $roomName.value = '';
+            $roomAdminPassword.value = '';
         }).catch(error => alert(error.response.data));
 }
 

@@ -2,6 +2,7 @@ package chess.controller.spring;
 
 import chess.domain.room.Room;
 import chess.dto.RoomDTO;
+import chess.dto.RoomRegistrationDTO;
 import chess.service.spring.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +30,8 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<RoomDTO> addRoom(@RequestBody String name) {
-        roomService.addRoom(name);
+    public ResponseEntity<RoomDTO> addRoom(@RequestBody RoomRegistrationDTO roomRegistrationDTO) {
+        roomService.addRoom(roomRegistrationDTO.getName());
         Room room = roomService.findLastAddedRoom();
         RoomDTO roomDTO = RoomDTO.from(room);
         return ResponseEntity.ok().body(roomDTO);

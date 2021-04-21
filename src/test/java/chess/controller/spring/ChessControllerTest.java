@@ -96,7 +96,7 @@ class ChessControllerTest {
                 .body(moveRequestDTO)
                 .when().put("/chessgame/1/chessboard");
 
-        assertResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, "조작할 수 있는 기물이 없습니다.");
+        assertResponse(response, HttpStatus.BAD_REQUEST, "조작할 수 있는 기물이 없습니다.");
     }
 
     @DisplayName("리스타트시 응답 결과는 메인 페이지 url이다.")
@@ -114,6 +114,6 @@ class ChessControllerTest {
         Response response = RestAssured.given().log().all()
                 .when().get("/chessgame/1/result");
 
-        assertResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, "승리한 팀을 찾을 수 없습니다.");
+        assertResponse(response, HttpStatus.BAD_REQUEST, "승리한 팀을 찾을 수 없습니다.");
     }
 }

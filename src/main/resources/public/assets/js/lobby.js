@@ -17,8 +17,11 @@ document.querySelector(".rooms").addEventListener("click", async (event) => {
     const idToBeRemoved = event.target.closest(".room").getAttribute(
         "id").toString();
     console.log(idToBeRemoved)
-    const response = await fetch("./room/" + idToBeRemoved + "/close", {
-      method: "PUT"
+    const response = await fetch("./rooms", {
+      method: "PUT",
+      body: JSON.stringify({
+        id: idToBeRemoved
+      })
     });
     const result = await response.json();
     if (response.ok) {

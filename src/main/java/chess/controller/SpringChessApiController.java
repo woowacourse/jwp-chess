@@ -35,12 +35,10 @@ public class SpringChessApiController {
         return ResponseEntity.status(HttpStatus.CREATED_201).body(roomDto);
     }
 
-    @PutMapping("/{id}/close")
-    private Map<String, String> closeRoom(@PathVariable String id) {
-        Map<String, String> result = new HashMap<>();
+    @PutMapping
+    private ResponseEntity<Object> closeRoom(@RequestBody String id) {
         chessService.close(id);
-        result.put("result", "success");
-        return result;
+        return ResponseEntity.status(HttpStatus.CREATED_201).build();
     }
 
     @GetMapping("{id}/statistics")

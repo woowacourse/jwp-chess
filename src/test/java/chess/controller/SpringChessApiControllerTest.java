@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class SpringChessApiControllerTest {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final MockChessService mockChessService = new MockChessService();
 
     private MockMvc mockMvc;
@@ -54,7 +55,7 @@ public class SpringChessApiControllerTest {
     @DisplayName("방 안의 사용자들")
     @Test
     void usersInRoom() throws Exception {
-        mockMvc.perform(get("/room/1/statistics"))
+        mockMvc.perform(get("/rooms/1/statistics"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.whiteName").value("white"))
             .andExpect(jsonPath("$.blackName").value("black"))
@@ -67,7 +68,7 @@ public class SpringChessApiControllerTest {
     @DisplayName("게임 상태")
     @Test
     void gameStatus() throws Exception {
-        mockMvc.perform(get("/room/1/getGameStatus"))
+        mockMvc.perform(get("/rooms/1/getGameStatus"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.gameState").value("Ready"))
             .andExpect(jsonPath("$.turn").value("w"))
@@ -77,7 +78,7 @@ public class SpringChessApiControllerTest {
     @DisplayName("게임 시작")
     @Test
     void start() throws Exception {
-        mockMvc.perform(put("/room/1/start"))
+        mockMvc.perform(put("/rooms/1/start"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.board").hasJsonPath());
     }
@@ -85,7 +86,7 @@ public class SpringChessApiControllerTest {
     @DisplayName("게임 종료")
     @Test
     void exitGame() throws Exception {
-        mockMvc.perform(put("/room/1/exit"))
+        mockMvc.perform(put("/rooms/1/exit"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.result").value("success"));
     }
@@ -93,15 +94,21 @@ public class SpringChessApiControllerTest {
     @DisplayName("방 삭제")
     @Test
     void closeRoom() throws Exception {
-        mockMvc.perform(put("/room/1/close"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.result").value("success"));
+        Map<String, String> body = new HashMap<>();
+        body.put("id", "1");
+
+        mockMvc.perform(
+            put("/rooms")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(body))
+            )
+            .andExpect(status().is(HttpStatus.CREATED_201));
     }
 
     @DisplayName("이동 가능한 위치")
     @Test
     void movablePoints() throws Exception {
-        mockMvc.perform(get("/room/1/movablePoints/a1"))
+        mockMvc.perform(get("/rooms/1/movablePoints/a1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.[0].x").value("a"))
             .andExpect(jsonPath("$.[0].y").value("1"));
@@ -118,7 +125,7 @@ public class SpringChessApiControllerTest {
             .writeValueAsString(body);
 
         mockMvc.perform(
-            post("/room/1/move").contentType(MediaType.APPLICATION_JSON_VALUE).content(content))
+            post("/rooms/1/move").contentType(MediaType.APPLICATION_JSON_VALUE).content(content))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.board").hasJsonPath());
     }

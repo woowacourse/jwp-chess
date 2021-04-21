@@ -34,4 +34,9 @@ public class ChessController {
     public ApiResponseDto<BoardDto> move(@RequestBody MoveInfoDto moveInfoDto, @PathVariable String roomName) {
         return ApiResponseDto.createOK(chessService.move(moveInfoDto, roomName));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ApiResponseDto<BoardDto> excepationHandling(Exception exception) {
+        return ApiResponseDto.BAD_REQUEST(null, exception.getMessage());
+    }
 }

@@ -66,15 +66,22 @@ function clickDiv(e) {
 
 async function movePiece(targetPosition, destinationPosition) {
     const boardInfo = await sendMoveInformation(targetPosition, destinationPosition);
+    checkMoveCommandValid(boardInfo);
     checkGameOver(boardInfo.data.gameOverFlag);
     renewBoard(boardInfo.data.boardInfo);
 }
 
 function checkGameOver(gameOverFlag) {
-    if (gameOverFlag === "true") {
+    if (gameOverFlag === true) {
         alert("게임이 종료되었습니다. 체스판을 초기화 합니다.");
         reStartGame();
         return '';
+    }
+}
+
+function checkMoveCommandValid(boardInfo) {
+    if(boardInfo.code === "BAD_REQUEST") {
+        alert(boardInfo.message);
     }
 }
 

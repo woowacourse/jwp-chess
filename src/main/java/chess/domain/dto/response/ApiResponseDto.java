@@ -7,13 +7,15 @@ public class ApiResponseDto<T> {
 
     private ApiResponseDto() {}
 
-    private ApiResponseDto(ApiResponseCode status) {
-        this.bindStatus(status);
-    }
-
     private ApiResponseDto(ApiResponseCode status, T data) {
         this.bindStatus(status);
         this.data = data;
+    }
+
+    private ApiResponseDto(ApiResponseCode status, T data, String message) {
+        this.code = status;
+        this.data = data;
+        this.message = message;
     }
 
     private void bindStatus(ApiResponseCode status) {
@@ -25,12 +27,8 @@ public class ApiResponseDto<T> {
         return new ApiResponseDto<>(ApiResponseCode.OK, data);
     }
 
-    public static <T> ApiResponseDto<T> NOT_FOUND(T data) {
-        return new ApiResponseDto<>(ApiResponseCode.NOT_FOUND, data);
-    }
-
-    public static <T> ApiResponseDto<T> BAD_REQUEST(T data){
-        return new ApiResponseDto<>(ApiResponseCode.BAD_REQUEST, data);
+    public static <T> ApiResponseDto<T> BAD_REQUEST(T data, String message){
+        return new ApiResponseDto<>(ApiResponseCode.BAD_REQUEST, data, message);
     }
 
     public ApiResponseCode getCode() {

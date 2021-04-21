@@ -9,7 +9,6 @@ import chess.service.ChessService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,6 @@ public class SpringChessApiController {
 
     private final ChessService chessService;
 
-    @Autowired
     public SpringChessApiController(ChessService chessService) {
         this.chessService = chessService;
     }

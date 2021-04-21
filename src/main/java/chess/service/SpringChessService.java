@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
-@Service("chessService")
+@Service
 public class SpringChessService implements ChessService {
 
     private final RoomDao roomDao;

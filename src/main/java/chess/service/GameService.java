@@ -15,7 +15,6 @@ import chess.service.dao.GameDao;
 import chess.view.PieceSymbolMapper;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +87,7 @@ public class GameService {
         return new ScoresDto(chessGame.score(Owner.BLACK), chessGame.score(Owner.WHITE));
     }
 
-    public BoardDto board(final Long roomId) throws SQLException {
+    public BoardDto board(final Long roomId) {
         final ChessGame chessGame = loadChessGame(roomId);
         return new BoardDto(chessGame.boardDto());
     }

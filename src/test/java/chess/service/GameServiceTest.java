@@ -1,11 +1,10 @@
-package chess.service.dao;
+package chess.service;
 
 import chess.controller.dto.BoardDto;
 import chess.controller.dto.ScoresDto;
 import chess.domain.ChessGame;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
-import chess.service.GameService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 @SpringBootTest
 @Transactional

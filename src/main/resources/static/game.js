@@ -33,13 +33,6 @@ function loadChessGame() {
     });
 }
 
-const tiles = document.getElementsByClassName('tile');
-for (let i = 0; i < tiles.length; i++) {
-    tiles.item(i).addEventListener('click', function (e) {
-        selectPiece(e.target);
-    })
-}
-
 
 function selectPiece(target) {
     if (gameInfo.end) {
@@ -52,6 +45,7 @@ function selectPiece(target) {
             alert('빈 공간을 클릭 할 수 없습니다.')
             return;
         }
+
         const isWhiteTurn = gameInfo.whiteTeam.turn;
         const isWhitePiece = target.getAttribute('color') === 'white';
 
@@ -67,15 +61,14 @@ function selectPiece(target) {
             source = null;
             return;
         }
+
         if (source.getAttribute('color') === target.getAttribute('color')) {
             source.classList.remove('selected-piece')
             source = target;
             source.classList.add('selected-piece')
             return;
         }
-
         movePiece(target);
-
     }
 
 }
@@ -159,9 +152,85 @@ function askExit() {
 }
 
 function clearChessBoard() {
-    let pieces = document.getElementsByClassName('piece');
-    for (let i = 0; i < pieces.length; i++) {
-        pieces[i].innerHTML = "";
+    const board = document.querySelector('.chessboard');
+    board.innerHTML = ' <!-- 1st -->\n' +
+        '        <div id="a8" class="tile white"></div>\n' +
+        '        <div id="b8" class="tile black"></div>\n' +
+        '        <div id="c8" class="tile white"></div>\n' +
+        '        <div id="d8" class="tile black"></div>\n' +
+        '        <div id="e8" class="tile white"></div>\n' +
+        '        <div id="f8" class="tile black"></div>\n' +
+        '        <div id="g8" class="tile white"></div>\n' +
+        '        <div id="h8" class="tile black"></div>\n' +
+        '        <!-- 2nd -->\n' +
+        '        <div id="a7" class="tile black"></div>\n' +
+        '        <div id="b7" class="tile white"></div>\n' +
+        '        <div id="c7" class="tile black"></div>\n' +
+        '        <div id="d7" class="tile white"></div>\n' +
+        '        <div id="e7" class="tile black"></div>\n' +
+        '        <div id="f7" class="tile white"></div>\n' +
+        '        <div id="g7" class="tile black"></div>\n' +
+        '        <div id="h7" class="tile white"></div>\n' +
+        '        <!-- 3th -->\n' +
+        '        <div id="a6" class="tile white"></div>\n' +
+        '        <div id="b6" class="tile black"></div>\n' +
+        '        <div id="c6" class="tile white"></div>\n' +
+        '        <div id="d6" class="tile black"></div>\n' +
+        '        <div id="e6" class="tile white"></div>\n' +
+        '        <div id="f6" class="tile black"></div>\n' +
+        '        <div id="g6" class="tile white"></div>\n' +
+        '        <div id="h6" class="tile black"></div>\n' +
+        '        <!-- 4st -->\n' +
+        '        <div id="a5" class="tile black"></div>\n' +
+        '        <div id="b5" class="tile white"></div>\n' +
+        '        <div id="c5" class="tile black"></div>\n' +
+        '        <div id="d5" class="tile white"></div>\n' +
+        '        <div id="e5" class="tile black"></div>\n' +
+        '        <div id="f5" class="tile white"></div>\n' +
+        '        <div id="g5" class="tile black"></div>\n' +
+        '        <div id="h5" class="tile white"></div>\n' +
+        '        <!-- 5th -->\n' +
+        '        <div id="a4" class="tile white"></div>\n' +
+        '        <div id="b4" class="tile black"></div>\n' +
+        '        <div id="c4" class="tile white"></div>\n' +
+        '        <div id="d4" class="tile black"></div>\n' +
+        '        <div id="e4" class="tile white"></div>\n' +
+        '        <div id="f4" class="tile black"></div>\n' +
+        '        <div id="g4" class="tile white"></div>\n' +
+        '        <div id="h4" class="tile black"></div>\n' +
+        '        <!-- 6th -->\n' +
+        '        <div id="a3" class="tile black"></div>\n' +
+        '        <div id="b3" class="tile white"></div>\n' +
+        '        <div id="c3" class="tile black"></div>\n' +
+        '        <div id="d3" class="tile white"></div>\n' +
+        '        <div id="e3" class="tile black"></div>\n' +
+        '        <div id="f3" class="tile white"></div>\n' +
+        '        <div id="g3" class="tile black"></div>\n' +
+        '        <div id="h3" class="tile white"></div>\n' +
+        '        <!-- 7th -->\n' +
+        '        <div id="a2" class="tile white"></div>\n' +
+        '        <div id="b2" class="tile black"></div>\n' +
+        '        <div id="c2" class="tile white"></div>\n' +
+        '        <div id="d2" class="tile black"></div>\n' +
+        '        <div id="e2" class="tile white"></div>\n' +
+        '        <div id="f2" class="tile black"></div>\n' +
+        '        <div id="g2" class="tile white"></div>\n' +
+        '        <div id="h2" class="tile black"></div>\n' +
+        '        <!-- 8th -->\n' +
+        '        <div id="a1" class="tile black"></div>\n' +
+        '        <div id="b1" class="tile white"></div>\n' +
+        '        <div id="c1" class="tile black"></div>\n' +
+        '        <div id="d1" class="tile white"></div>\n' +
+        '        <div id="e1" class="tile black"></div>\n' +
+        '        <div id="f1" class="tile white"></div>\n' +
+        '        <div id="g1" class="tile black"></div>\n' +
+        '        <div id="h1" class="tile white"></div>';
+
+    const tiles = document.getElementsByClassName('tile');
+    for (let i = 0; i < tiles.length; i++) {
+        tiles.item(i).addEventListener('click', function (e) {
+            selectPiece(e.target);
+        })
     }
 }
 

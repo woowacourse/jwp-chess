@@ -1,6 +1,7 @@
 package chess.domain.command.dto;
 
 import chess.domain.game.Side;
+import java.util.Locale;
 
 public class MoveCommandDto {
 
@@ -14,7 +15,7 @@ public class MoveCommandDto {
     public MoveCommandDto(String source, String target, String turn) {
         this.source = source;
         this.target = target;
-        this.turn = Side.valueOf(turn);
+        this.turn = convertToSide(turn);
     }
 
     public String getSource() {
@@ -38,6 +39,10 @@ public class MoveCommandDto {
     }
 
     public void setTurn(String turn) {
-        this.turn = Side.valueOf(turn);
+        this.turn = convertToSide(turn);
+    }
+
+    private Side convertToSide(String side) {
+        return Side.valueOf(side.toUpperCase(Locale.ROOT));
     }
 }

@@ -5,7 +5,8 @@ import java.util.List;
 public class RoomListDto {
     private List<String> roomList;
 
-    public RoomListDto() {}
+    public RoomListDto() {
+    }
 
     public RoomListDto(List<String> roomList) {
         this.roomList = roomList;

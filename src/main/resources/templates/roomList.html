@@ -7,11 +7,11 @@
 <body>
 <tr th:each="room : ${roomList}">
     <td>
-        <a th:text="${room}" style="text-decoration: none" th:href="@{/{roomName}(roomName=${room})}"></a><br/>
+        <a style="text-decoration: none" th:href="@{/{roomName}(roomName=${room})}" th:text="${room}"></a><br/>
     </td>
 </tr>
-<form th:action="@{/}" method="post">
-    <input type="text" th:name="roomName"/>
+<form method="post" th:action="@{/}">
+    <input th:name="roomName" type="text"/>
     <button type="submit">방 생성하기</button>
 </form>
 </body>

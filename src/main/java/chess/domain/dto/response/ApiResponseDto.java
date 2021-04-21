@@ -5,7 +5,8 @@ public class ApiResponseDto<T> {
     private String message;
     private T data;
 
-    private ApiResponseDto() {}
+    private ApiResponseDto() {
+    }
 
     private ApiResponseDto(ApiResponseCode status, T data) {
         this.bindStatus(status);
@@ -18,17 +19,17 @@ public class ApiResponseDto<T> {
         this.message = message;
     }
 
-    private void bindStatus(ApiResponseCode status) {
-        this.code = status;
-        this.message = status.getMessage();
-    }
-
     public static <T> ApiResponseDto<T> createOK(T data) {
         return new ApiResponseDto<>(ApiResponseCode.OK, data);
     }
 
-    public static <T> ApiResponseDto<T> BAD_REQUEST(T data, String message){
+    public static <T> ApiResponseDto<T> BAD_REQUEST(T data, String message) {
         return new ApiResponseDto<>(ApiResponseCode.BAD_REQUEST, data, message);
+    }
+
+    private void bindStatus(ApiResponseCode status) {
+        this.code = status;
+        this.message = status.getMessage();
     }
 
     public ApiResponseCode getCode() {

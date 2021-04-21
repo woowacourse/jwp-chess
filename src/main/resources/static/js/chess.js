@@ -5,7 +5,6 @@ let firstClickPosition = "";
 let secondClickPosition = "";
 
 
-
 async function applicationStart() {
     const chessBoard = document.querySelector(".chessboard");
     const idArr = ['a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8',
@@ -80,7 +79,7 @@ function checkGameOver(gameOverFlag) {
 }
 
 function checkMoveCommandValid(boardInfo) {
-    if(boardInfo.code === "BAD_REQUEST") {
+    if (boardInfo.code === "BAD_REQUEST") {
         alert(boardInfo.message);
     }
 }

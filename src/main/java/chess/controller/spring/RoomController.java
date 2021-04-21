@@ -36,15 +36,18 @@ public class RoomController {
 
     @PostMapping
     public ResponseEntity<RoomDTO> addRoom(@RequestBody RoomRegistrationDTO roomRegistrationDTO, HttpSession httpSession) {
-        if (!Objects.isNull(httpSession.getAttribute("password"))) {
+        String sessionPassword = (String) httpSession.getAttribute("password");
+        if (!Objects.isNull(sessionPassword)) {
             throw new IllegalStateException("현재 플레이 중인 게임이 존재합니다.");
         }
         roomService.addRoom(roomRegistrationDTO.getName());
         Room room = roomService.findLastAddedRoom();
+        int roomId = room.getId();
+        String loginPassword = roomRegistrationDTO.getPassword();
+        userService.addUser(roomId, loginPassword);
+        httpSession.setAttribute("password", loginPassword);
+        httpSession.setAttribute("roomId", String.valueOf(roomId));
         RoomDTO roomDTO = RoomDTO.from(room);
-        userService.addUser(room.getId(), roomRegistrationDTO.getPassword());
-        httpSession.setAttribute("password", roomRegistrationDTO.getPassword());
-        httpSession.setAttribute("roomId", String.valueOf(room.getId()));
         return ResponseEntity.ok().body(roomDTO);
     }
 }

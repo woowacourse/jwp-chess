@@ -1,8 +1,10 @@
 package chess.dto.web;
 
 public class PointsDto {
-    private final String source;
-    private final String destination;
+    private String source;
+    private String destination;
+
+    public PointsDto(){}
 
     public PointsDto(final String source, final String destination) {
         this.source = source;

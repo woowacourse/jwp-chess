@@ -48,13 +48,13 @@ class CommandRepositoryTest {
     void insert() {
         CommandDto commandDto = new CommandDto("move b1 b2");
         commandRepository.insert(commandDto, 1);
-        final List<CommandDto> commands = commandRepository.selectAllCommands(String.valueOf(1));
+        final List<CommandDto> commands = commandRepository.selectAllCommandsByRoomId(String.valueOf(1));
         assertThat(commands.size()).isEqualTo(3);
     }
 
     @Test
     void selectAllCommands() {
-        List<CommandDto> commandDtos = commandRepository.selectAllCommands(keyId);
+        List<CommandDto> commandDtos = commandRepository.selectAllCommandsByRoomId(keyId);
         assertThat(commandDtos.get(0).data()).isEqualTo("move a1 a2");
         assertThat(commandDtos.get(1).data()).isEqualTo("move a7 a6");
     }

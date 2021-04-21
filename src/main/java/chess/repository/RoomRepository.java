@@ -1,6 +1,6 @@
 package chess.repository;
 
-import chess.dto.HistoryDto;
+import chess.dto.RoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,23 +14,23 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class HistoryRepository {
+public class RoomRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public HistoryRepository(JdbcTemplate jdbcTemplate) {
+    public RoomRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<HistoryDto> rowMapper = (resultSet, rowNum) ->
-            new HistoryDto(resultSet.getString("history_id"), resultSet.getString("name"));
+    private final RowMapper<RoomDto> rowMapper = (resultSet, rowNum) ->
+            new RoomDto(resultSet.getString("id"), resultSet.getString("name"));
 
     public int insert(String name) {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
-        final String query = "INSERT INTO History (name) VALUES (?)";
+        final String query = "INSERT INTO Room (name) VALUES (?)";
         jdbcTemplate.update((Connection con) -> {
             PreparedStatement pstmt = con.prepareStatement(
                     query,
-                    new String[]{"history_id"});
+                    new String[]{"id"});
             pstmt.setString(1, name);
             return pstmt;
         }, keyHolder);
@@ -38,23 +38,18 @@ public class HistoryRepository {
     }
 
     public Optional<Integer> findIdByName(String name) {
-        final String query = "SELECT history_id FROM History WHERE name = ? AND is_end = false " +
-                "ORDER BY history_id DESC limit 1";
+        final String query = "SELECT id FROM Room WHERE name = ? AND is_full = false " +
+                "ORDER BY id DESC limit 1";
         return Optional.ofNullable(jdbcTemplate.queryForObject(query, Integer.class, name));
     }
 
-    public int delete(String name) {
-        final String query = "DELETE FROM History WHERE Name = ?";
-        return jdbcTemplate.update(query, name);
-    }
-
-    public List<HistoryDto> selectActive() {
-        final String query = "SELECT * FROM History WHERE is_end = false";
+    public List<RoomDto> selectWaitRooms() {
+        final String query = "SELECT * FROM Room WHERE is_full = false";
         return jdbcTemplate.query(query, rowMapper);
     }
 
-    public void updateEndState(String id) {
-        final String query = "UPDATE History SET is_end = 1 WHERE history_id = ?";
+    public void updateWaitState(String id) {
+        final String query = "UPDATE Room SET is_full = true WHERE id = ?";
         jdbcTemplate.update(query, id);
     }
 }

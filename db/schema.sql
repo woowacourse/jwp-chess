@@ -18,7 +18,7 @@ CREATE TABLE User
     id int not null auto_increment,
     password varchar(50) not null,
     room_id int not null,
-    team varchar(10) not null,
+    team varchar(10) not null default 'white',
     PRIMARY KEY(id),
     FOREIGN KEY(room_id) REFERENCES Room (id)
 )ENGINE=InnoDB;
@@ -26,9 +26,9 @@ CREATE TABLE User
 CREATE TABLE Command
 (
     id int not null auto_increment,
-    user_id int not null,
+    room_id int not null,
     data text not null,
     PRIMARY KEY(id),
-    FOREIGN KEY(user_id) REFERENCES User (id)
+    FOREIGN KEY(room_id) REFERENCES Room (id)
 ) ENGINE=InnoDB;
 

@@ -1,11 +1,11 @@
 package chess.dto;
 
-public class HistoryDto {
+public class RoomDto {
 
     private final String id;
     private final String name;
 
-    public HistoryDto(String id, String name) {
+    public RoomDto(String id, String name) {
         this.id = id;
         this.name = name;
     }

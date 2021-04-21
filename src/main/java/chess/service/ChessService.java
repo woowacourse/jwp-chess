@@ -6,9 +6,10 @@ import chess.domain.command.Commands;
 import chess.domain.utils.PieceInitializer;
 import chess.dto.CommandDto;
 import chess.dto.GameInfoDto;
-import chess.dto.HistoryDto;
+import chess.dto.RoomDto;
 import chess.repository.CommandRepository;
-import chess.repository.HistoryRepository;
+import chess.repository.UserRepository;
+import chess.repository.RoomRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import spark.utils.StringUtils;
@@ -19,14 +20,17 @@ import java.util.List;
 @Service
 public class ChessService {
     private final CommandRepository commandRepository;
-    private final HistoryRepository historyRepository;
+    private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
 
-    public ChessService(CommandRepository commandRepository, HistoryRepository historyRepository) {
+    public ChessService(CommandRepository commandRepository, RoomRepository roomRepository,
+                        UserRepository userRepository) {
         this.commandRepository = commandRepository;
-        this.historyRepository = historyRepository;
+        this.roomRepository = roomRepository;
+        this.userRepository = userRepository;
     }
 
-    public List<HistoryDto> loadHistory() {
+    public List<RoomDto> loadHistory() {
         return histories();
     }
 
@@ -71,7 +75,7 @@ public class ChessService {
 //    }
 
     private List<CommandDto> lastState(String id) {
-        return commandRepository.selectAllCommands(id);
+        return commandRepository.selectAllCommandsByRoomId(id);
     }
 
     public void move(String id, String command) {
@@ -81,12 +85,12 @@ public class ChessService {
         updateMoveInfo(command, id);
     }
 
-    private List<HistoryDto> histories() {
-        return new ArrayList<>(historyRepository.selectActive());
+    private List<RoomDto> histories() {
+        return new ArrayList<>(roomRepository.selectWaitRooms());
     }
 
-    public String addHistory(String name) {
-        final int id = historyRepository.insert(name);
+    public String addRoom(String name) {
+        final int id = roomRepository.insert(name);
         return String.valueOf(id);
     }
 
@@ -97,7 +101,7 @@ public class ChessService {
     }
 
     private void updateDB(String historyId) {
-        historyRepository.updateEndState(historyId);
+        roomRepository.updateWaitState(historyId);
     }
 
     private void flushCommands(String command, String gameId) {
@@ -106,5 +110,9 @@ public class ChessService {
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public void addUser(String roomId, String password) {
+        userRepository.insert(roomId, password);
     }
 }

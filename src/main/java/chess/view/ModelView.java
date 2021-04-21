@@ -1,7 +1,7 @@
 package chess.view;
 
 import chess.dto.GameInfoDto;
-import chess.dto.HistoryDto;
+import chess.dto.RoomDto;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +26,7 @@ public class ModelView {
         return model;
     }
 
-    public static Map<String, Object> historyResponse(List<HistoryDto> history) {
+    public static Map<String, Object> historyResponse(List<RoomDto> history) {
         Map<String, Object> model = new HashMap<>();
         if (!history.isEmpty()) {
             model.put("history", history);

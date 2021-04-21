@@ -1,9 +1,8 @@
 package chess.controller;
 
-import chess.domain.command.Commands;
 import chess.domain.response.GameResponse;
 import chess.dto.MoveRequestDto;
-import chess.dto.NameDto;
+import chess.dto.InitialGameInfoDto;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +21,10 @@ public class ChessRestController {
     }
 
     @PostMapping
-    public ResponseEntity<String> saveName(@RequestBody NameDto nameDto) {
-        return ResponseEntity.ok(chessService.addHistory(nameDto.getName()));
+    public ResponseEntity<String> saveInfo(@RequestBody InitialGameInfoDto initialGameInfoDto) {
+        final String roomId = chessService.addRoom(initialGameInfoDto.getName());
+        chessService.addUser(roomId, initialGameInfoDto.getPassword());
+        return ResponseEntity.ok(roomId);
     }
 
     @PostMapping("/move")

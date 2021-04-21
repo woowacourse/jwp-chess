@@ -68,7 +68,7 @@ public class SpringChessApiControllerTest {
     @DisplayName("게임 상태")
     @Test
     void gameStatus() throws Exception {
-        mockMvc.perform(get("/rooms/1/getGameStatus"))
+        mockMvc.perform(get("/rooms/1/game-status"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.gameState").value("Ready"))
             .andExpect(jsonPath("$.turn").value("w"))

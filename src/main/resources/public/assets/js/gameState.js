@@ -12,7 +12,7 @@ const launch = document.querySelector(".launch");
 const result = document.querySelector(".result");
 
 async function getGameStatus(roomId) {
-  const response = await fetch("./" + roomId + "/getGameStatus");
+  const response = await fetch("./" + roomId + "/game-status");
   const result = await response.json();
   if (response.ok) {
     return result;

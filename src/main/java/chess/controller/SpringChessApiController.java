@@ -46,7 +46,7 @@ public class SpringChessApiController {
         return chessService.usersInRoom(id);
     }
 
-    @GetMapping("{id}/getGameStatus")
+    @GetMapping("{id}/game-status")
     private GameStatusDto gameStatus(@PathVariable String id) {
         return chessService.gameStatus(id);
     }

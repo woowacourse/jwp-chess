@@ -9,10 +9,6 @@ public class CommonResponseBody<T> {
         this.item = item;
     }
 
-    public CommonResponseBody(String message) {
-        this(message, null);
-    }
-
     public String getMessage() {
         return message;
     }

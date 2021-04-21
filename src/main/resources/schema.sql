@@ -1,3 +1,11 @@
+CREATE TABLE chessroom
+(
+    room_id       INT          NOT NULL AUTO_INCREMENT,
+    room_name     VARCHAR(255) NOT NULL,
+    room_password VARCHAR(255) NOT NULL,
+    PRIMARY KEY (room_id)
+);
+
 CREATE TABLE chessgame
 (
     command_log  INT         NOT NULL AUTO_INCREMENT,

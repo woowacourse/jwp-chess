@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.dto.RoomDto;
 import chess.service.SpringChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class SpringChessController {
@@ -26,13 +28,8 @@ public class SpringChessController {
     }
 
     @GetMapping("/chess/start")
-    public ModelAndView startGame(@RequestParam("room") String id) {
-        if (Objects.nonNull(springChessService.findRoomByRoomId(id))) {
-            final ModelAndView modelAndView = new ModelAndView("main");
-            modelAndView.addObject("interact", ROOM_NOT_EXIST);
-            return modelAndView;
-        }
-
+    public ModelAndView startGame(@RequestParam("room") String name) {
+        Long id = springChessService.createRoom(new RoomDto(name, null));
         final ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("roomId", id);
 
@@ -40,15 +37,17 @@ public class SpringChessController {
     }
 
     @GetMapping("/chess/enter")
-    public ModelAndView enterGame(@RequestParam("room") String id) {
-        if (Objects.isNull(springChessService.findRoomByRoomId(id))) {
+    public ModelAndView enterGame(@RequestParam("id") String id) {
+        Optional<String> roomId = springChessService.findRoomById(id);
+
+        if (Objects.isNull(roomId)) {
             final ModelAndView modelAndView = new ModelAndView("main");
             modelAndView.addObject("interact", ROOM_ALREADY_EXIST);
             return modelAndView;
         }
 
         final ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("roomId", id);
+        modelAndView.addObject("roomId", roomId.get());
 
         return modelAndView;
     }

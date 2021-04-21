@@ -51,8 +51,7 @@ public class ChessLogDao {
             pstmt.setString(3, destination);
             pstmt.executeUpdate();
             closeConnection(connection);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             Logger.getLogger("로그 추가 오류:" + e.getMessage());
             e.printStackTrace();
             closeConnection(connection);
@@ -73,8 +72,7 @@ public class ChessLogDao {
             closeConnection(connection);
 
             return commands;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             Logger.getLogger("커맨드 적용 오류:" + e.getMessage());
             e.printStackTrace();
             closeConnection(connection);
@@ -90,8 +88,7 @@ public class ChessLogDao {
             pstmt.setString(1, roomId);
             pstmt.executeUpdate();
             closeConnection(connection);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             Logger.getLogger("로그 제거 오류:" + e.getMessage());
             e.printStackTrace();
             closeConnection(connection);

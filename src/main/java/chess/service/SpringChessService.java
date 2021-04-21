@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.SpringChessLogDao;
+import chess.dao.SpringChessRoomDao;
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.dto.*;
@@ -10,24 +11,31 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class SpringChessService {
     private static final String END_TRUE = "true";
 
+    private final SpringChessRoomDao springChessRoomDao;
     private final SpringChessLogDao springChessLogDao;
 
-    public SpringChessService(SpringChessLogDao springChessLogDao) {
+    public SpringChessService(SpringChessRoomDao springChessRoomDao, SpringChessLogDao springChessLogDao) {
+        this.springChessRoomDao = springChessRoomDao;
         this.springChessLogDao = springChessLogDao;
     }
 
-    public BoardDto loadRoom(String roomNumber) {
-        return start(loadChessGame(roomNumber));
+    public Long createRoom(RoomDto roomDto) {
+        return springChessRoomDao.addRoom(roomDto);
     }
 
-    private ChessGame loadChessGame(String roomNumber) {
-        validateRoom(roomNumber);
-        List<CommandDto> commands = springChessLogDao.find(roomNumber);
+    public BoardDto loadRoom(String id) {
+        return start(loadChessGame(id));
+    }
+
+    private ChessGame loadChessGame(String id) {
+        validateRoom(id);
+        List<CommandDto> commands = springChessLogDao.find(id);
         ChessGame chessGame = new ChessGame();
 
         chessGame.settingBoard();
@@ -39,8 +47,8 @@ public class SpringChessService {
         return chessGame;
     }
 
-    private void validateRoom(String roomId) {
-        if (Objects.isNull(roomId)) {
+    private void validateRoom(String name) {
+        if (Objects.isNull(name)) {
             throw new IllegalRoomException("[ERROR] 방 이름은 공백이 될 수 없습니다.");
         }
     }
@@ -78,8 +86,12 @@ public class SpringChessService {
         return new BoardStatusDto(loadChessGame(roomId).boardStatus());
     }
 
-    public String findRoomByRoomId(String roomId) {
-        return springChessLogDao.findRoomByRoomId(roomId);
+    public Optional<String> findRoomByName(String roomName) {
+        return springChessLogDao.findRoomByName(roomName);
+    }
+
+    public Optional<String> findRoomById(String id) {
+        return springChessLogDao.findRoomById(id);
     }
 
     public void deleteRoom(String roomNumber) {

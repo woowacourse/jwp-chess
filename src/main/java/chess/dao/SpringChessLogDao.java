@@ -2,6 +2,7 @@ package chess.dao;
 
 import chess.dto.CommandDto;
 import chess.dto.MoveRequestDto;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class SpringChessLogDao implements ChessRepository {
@@ -29,18 +30,18 @@ public class SpringChessLogDao implements ChessRepository {
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<CommandDto> find(String roomId) {
+    public List<CommandDto> find(String id) {
         String query = "select target, destination from chessgame where room_id = ? ORDER BY command_date ASC;";
         return jdbcTemplate.query(
                 query,
                 (resultSet, rowNum) -> {
                     CommandDto commandDto = new CommandDto(
-                            roomId,
+                            id,
                             resultSet.getString("target"),
                             resultSet.getString("destination")
                     );
                     return commandDto;
-                }, roomId);
+                }, id);
     }
 
     public void delete(String roomId) {
@@ -48,16 +49,23 @@ public class SpringChessLogDao implements ChessRepository {
         this.jdbcTemplate.update(query, roomId);
     }
 
-    public String findRoomByRoomId(String roomId) {
-        String query = "select room_id from chessgame where room_id = ?";
-        List<String> roomLog = jdbcTemplate.query(
-                query,
-                (resultSet, rowNum) -> resultSet.getString("room_id")
-                , roomId);
+    public Optional<String> findRoomByName(String name) {
+        String query = "select room_id from chessroom where room_name = ?";
 
-        if (Objects.isNull(roomLog)) {
-            return null;
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, String.class, name));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
-        return roomId;
+    }
+
+    public Optional<String> findRoomById(String id) {
+        String query = "select room_id from chessroom where room_name = ?";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, String.class, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

@@ -26,6 +26,9 @@ public class MoveController {
         if (Objects.isNull(roomId) && Objects.isNull(password)) {
             return "login";
         }
+        if (!id.equals(roomId)) {
+            throw new IllegalStateException("현재 플레이 중인 게임이 있습니다.");
+        }
         return "game";
     }
 

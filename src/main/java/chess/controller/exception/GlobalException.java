@@ -3,10 +3,11 @@ package chess.controller.exception;
 import chess.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalException {
 
     @ExceptionHandler(NoSuchPermittedChessPieceException.class)
@@ -35,8 +36,9 @@ public class GlobalException {
     }
 
     @ExceptionHandler(NotFoundChessGameException.class)
-    public ResponseEntity<String> handleNotFoundChessGame(NotFoundChessGameException e) {
-        return badRequest(e);
+    public String handleNotFoundChessGame(NotFoundChessGameException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "error-page";
     }
 
     @ExceptionHandler(Exception.class)

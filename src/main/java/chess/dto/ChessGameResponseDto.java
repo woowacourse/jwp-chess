@@ -5,12 +5,12 @@ import chess.domain.game.ChessGame;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ChessGameDto {
+public class ChessGameResponseDto {
     private final boolean finished;
     private List<PieceDto> pieceDtos;
     private String state;
 
-    public ChessGameDto(final ChessGame chessGame) {
+    public ChessGameResponseDto(final ChessGame chessGame) {
         pieceDtos = chessGame.getBoard().getPieces().stream()
                 .map(PieceDto::new)
                 .collect(Collectors.toList());

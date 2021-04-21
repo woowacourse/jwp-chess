@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.domain.piece.Position;
-import chess.dto.ChessGameDto;
+import chess.dto.ChessGameResponseDto;
 import chess.dto.ChessGameInfoResponseDto;
 import chess.dto.ChessGamesSaveDto;
 import chess.dto.ScoreDto;
@@ -22,18 +22,18 @@ public class ChessApiController {
     }
 
     @PutMapping("/{chessGameId}/pieces")
-    public ResponseEntity<ChessGameDto> movePiece(@PathVariable("chessGameId") Long chessGameId,
-                                                  @RequestParam(value = "source") String sourcePosition,
-                                                  @RequestParam(value = "target") String targetPosition) {
+    public ResponseEntity<ChessGameResponseDto> movePiece(@PathVariable("chessGameId") Long chessGameId,
+                                                          @RequestParam(value = "source") String sourcePosition,
+                                                          @RequestParam(value = "target") String targetPosition) {
         Position source = Position.parseChessPosition(sourcePosition);
         Position target = Position.parseChessPosition(targetPosition);
-        ChessGameDto chessGameDto = chessGameService.moveChessPiece(chessGameId, source, target);
-        return ResponseEntity.ok(chessGameDto);
+        ChessGameResponseDto chessGameResponseDto = chessGameService.moveChessPiece(chessGameId, source, target);
+        return ResponseEntity.ok(chessGameResponseDto);
     }
 
     @GetMapping("/{chessGameId}")
-    public ResponseEntity<ChessGameDto> findChessGame(@PathVariable("chessGameId") Long id) {
-        ChessGameDto latestPlayingGame = chessGameService.findChessGameById(id);
+    public ResponseEntity<ChessGameResponseDto> findChessGame(@PathVariable("chessGameId") Long id) {
+        ChessGameResponseDto latestPlayingGame = chessGameService.findChessGameById(id);
         return ResponseEntity.ok(latestPlayingGame);
     }
 
@@ -44,14 +44,14 @@ public class ChessApiController {
     }
 
     @PutMapping("/{chessGameId}")
-    public ResponseEntity<ChessGameDto> startChessGame(@PathVariable("chessGameId") Long chessGameId) {
+    public ResponseEntity<ChessGameResponseDto> startChessGame(@PathVariable("chessGameId") Long chessGameId) {
         return ResponseEntity.ok(chessGameService.startGame(chessGameId));
     }
 
     @DeleteMapping("/{chessGameId}")
-    public ResponseEntity<ChessGameDto> endChessGame(@PathVariable("chessGameId") Long chessGameId) {
-        ChessGameDto chessGameDto = chessGameService.endGame(chessGameId);
-        return ResponseEntity.ok(chessGameDto);
+    public ResponseEntity<ChessGameResponseDto> endChessGame(@PathVariable("chessGameId") Long chessGameId) {
+        ChessGameResponseDto chessGameResponseDto = chessGameService.endGame(chessGameId);
+        return ResponseEntity.ok(chessGameResponseDto);
     }
 
     @GetMapping("/{chessGameId}/scores")

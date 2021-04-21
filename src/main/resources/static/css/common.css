@@ -38,7 +38,7 @@ td:hover {
 }
 
 .black {
-    background-color: #2AC1BC;
+    background-color: #33cc99;
 }
 
 .white {
@@ -277,7 +277,7 @@ body {
 }
 
 .chess-game-list {
-    background-color: #2AC1BC;
+    background-color: #33cc99;
 }
 
 .container {
@@ -391,8 +391,20 @@ body {
 }
 
 .chess-game-list-table {
+    height: 100%;
     width: 100%;
     margin-top: 1%;
+    text-align: center;
+    font-size: x-large;
+    font-family: 'Jua', sans-serif;
+}
+
+th {
+    border: 4px solid white;
+}
+
+tr {
+    height: 5%;
 }
 
 .chess-game-room-id {

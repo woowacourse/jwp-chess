@@ -39,7 +39,7 @@ public class ChessGameService {
     }
 
     @Transactional
-    public ChessGameDto moveChessPiece(Long chessGameId, final Position source, final Position target) {
+    public ChessGameResponseDto moveChessPiece(Long chessGameId, final Position source, final Position target) {
         ChessGameEntity chessGameEntity = chessGameDAO.findById(chessGameId)
                 .orElseThrow(NotFoundPlayingChessGameException::new);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
@@ -53,7 +53,7 @@ public class ChessGameService {
         pieceDAO.update(sourcePiece);
         chessGameDAO.updateState(chessGameId, chessGame.getState().getValue());
 
-        return new ChessGameDto(chessGame);
+        return new ChessGameResponseDto(chessGame);
     }
 
     @Transactional(readOnly = true)
@@ -62,14 +62,14 @@ public class ChessGameService {
     }
 
     @Transactional
-    public ChessGameDto endGame(Long chessGameId) {
+    public ChessGameResponseDto endGame(Long chessGameId) {
         ChessGameEntity chessGameEntity = chessGameDAO.findById(chessGameId)
                 .orElseThrow(NotFoundChessGameException::new);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
         chessGame.end();
         chessGameDAO.updateState(chessGameId, chessGame.getState().getValue());
 
-        return new ChessGameDto(chessGame);
+        return new ChessGameResponseDto(chessGame);
     }
 
     @Transactional(readOnly = true)
@@ -82,11 +82,11 @@ public class ChessGameService {
     }
 
     @Transactional(readOnly = true)
-    public ChessGameDto findChessGameById(Long chessGameId) { //todo: 테스트 코드 짜기!
+    public ChessGameResponseDto findChessGameById(Long chessGameId) {
         ChessGameEntity chessGameEntity = chessGameDAO.findById(chessGameId)
                 .orElseThrow(NotFoundChessGameException::new);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
-        return new ChessGameDto(chessGame);
+        return new ChessGameResponseDto(chessGame);
     }
 
     @Transactional(readOnly = true)
@@ -106,14 +106,14 @@ public class ChessGameService {
     }
 
     @Transactional
-    public ChessGameDto startGame(Long chessGameId) {
+    public ChessGameResponseDto startGame(Long chessGameId) {
         ChessGameEntity chessGameEntity = chessGameDAO.findById(chessGameId)
                 .orElseThrow(NotFoundPlayingChessGameException::new);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
         chessGame.start();
         chessGameDAO.updateState(chessGameId, chessGame.getState().getValue());
 
-        return new ChessGameDto(chessGame);
+        return new ChessGameResponseDto(chessGame);
     }
 
     private ChessGame findChessGameByChessGameId(final ChessGameEntity chessGameEntity) {

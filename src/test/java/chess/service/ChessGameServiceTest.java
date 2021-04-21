@@ -4,6 +4,7 @@ import chess.dao.ChessGameDAO;
 import chess.dao.PieceDAO;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
+import chess.dto.ChessGameResponseDto;
 import chess.dto.ChessGameInfoResponseDto;
 import chess.dto.ChessGameStatusDto;
 import chess.dto.ScoreDto;
@@ -116,5 +117,23 @@ class ChessGameServiceTest {
                 () -> assertThat(scoreDto.getWhiteScore()).isEqualTo(38.0)
         );
     }
+
+    @DisplayName("id로 특정 chessgame을 조회하는 기능을 테스트한다")
+    @Test
+    void testFindChessGameById() {
+        //given
+        Long id = chessGameDAO.save("title");
+
+        //when
+        ChessGameResponseDto chessGameResponseDto = chessGameService.findChessGameById(id);
+
+        //then
+        assertAll(
+                () -> assertThat(chessGameResponseDto).isNotNull(),
+                () -> assertThat(chessGameResponseDto.getState()).isEqualTo("Ready"),
+                () -> assertThat(chessGameResponseDto.getPieceDtos()).hasSize(0)
+        );
+    }
+
 
 }

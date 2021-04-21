@@ -22,7 +22,9 @@ public class RoomRepository {
     }
 
     private final RowMapper<RoomDto> rowMapper = (resultSet, rowNum) ->
-            new RoomDto(resultSet.getString("id"), resultSet.getString("name"));
+            new RoomDto(resultSet.getString("id"),
+                    resultSet.getString("name"),
+                    resultSet.getBoolean("is_full"));
 
     public int insert(String name) {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -43,8 +45,8 @@ public class RoomRepository {
         return Optional.ofNullable(jdbcTemplate.queryForObject(query, Integer.class, name));
     }
 
-    public List<RoomDto> selectWaitRooms() {
-        final String query = "SELECT * FROM Room WHERE is_full = false";
+    public List<RoomDto> selectActiveRooms() {
+        final String query = "SELECT * FROM Room WHERE is_end = false";
         return jdbcTemplate.query(query, rowMapper);
     }
 
@@ -56,5 +58,10 @@ public class RoomRepository {
     public boolean checkRoomIsFull(String id) {
         final String query = "SELECT is_full FROM Room WHERE id = ?";
         return jdbcTemplate.queryForObject(query, Boolean.class, id);
+    }
+
+    public void updateToEnd(String id) {
+        final String query = "UPDATE Room SET is_end = true WHERE id = ?";
+        jdbcTemplate.update(query, id);
     }
 }

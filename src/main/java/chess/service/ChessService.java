@@ -32,12 +32,12 @@ public class ChessService {
         this.userRepository = userRepository;
     }
 
-    public List<RoomDto> loadWaitingRoom() {
+    public List<RoomDto> loadActiveRooms() {
         return rooms();
     }
 
     private List<RoomDto> rooms() {
-        return new ArrayList<>(roomRepository.selectWaitRooms());
+        return new ArrayList<>(roomRepository.selectActiveRooms());
     }
 
     public GameInfoDto gameInfo(String id) {
@@ -51,14 +51,6 @@ public class ChessService {
     public GameInfoDto initialGameInfo() {
         return new GameInfoDto(new ChessGame(Board.of(PieceInitializer.pieceInfo())));
     }
-
-//    public GameInfoDto continuedGameInfo1(String id) {
-//        ChessGame chessGame = gameStateOf(id);
-//        if (chessGame.isEnd()) {
-//            updateDB(id);
-//        }
-//        return new GameInfoDto(chessGame);
-//    }
 
     public GameInfoDto continuedGameInfo(String id, List<CommandDto> commands) {
         ChessGame chessGame = restore(commands);
@@ -74,18 +66,11 @@ public class ChessService {
         return chessGame;
     }
 
-//    private ChessGame gameStateOf(String id) {
-//        ChessGame chessGame = new ChessGame(Board.of(PieceInitializer.pieceInfo()));
-//        chessGame.makeBoardStateOf(lastState(id));
-//        return chessGame;
-//    }
-
     private List<CommandDto> lastState(String id) {
         return commandRepository.selectAllCommandsByRoomId(id);
     }
 
     public void move(String id, String command, UserInfoDto userInfoDto) {
-//        ChessGame chessGame = gameStateOf(id);
         ChessGame chessGame = restore(lastState(id));
 
         final Path path = new Path(new Commands(command).path());
@@ -100,14 +85,14 @@ public class ChessService {
         return String.valueOf(id);
     }
 
-    private void updateMoveInfo(String command, String historyId) {
-        if (StringUtils.isNotEmpty(historyId)) {
-            flushCommands(command, historyId);
+    private void updateMoveInfo(String command, String roomId) {
+        if (StringUtils.isNotEmpty(roomId)) {
+            flushCommands(command, roomId);
         }
     }
 
-    private void updateDB(String historyId) {
-        roomRepository.updateToFull(historyId);
+    private void updateDB(String roomId) {
+        roomRepository.updateToEnd(roomId);
     }
 
     private void flushCommands(String command, String roomId) {

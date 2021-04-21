@@ -9,6 +9,7 @@ CREATE TABLE Room
     id int not null auto_increment,
     name varchar(100) not null,
     is_full boolean not null default false,
+    is_end boolean not null default false,
     PRIMARY KEY(id)
 )ENGINE=InnoDB;
 

@@ -55,7 +55,12 @@ public class SpringChessController {
         String source = moveRequestDto.getSource();
         String target = moveRequestDto.getTarget();
         int roomId = moveRequestDto.getRoomId();
-        return chessService.move(source, target, roomId);
+        try {
+            chessService.move(source, target, roomId);
+        } catch (RuntimeException runtimeException) {
+            return new MoveResponseDto(true, runtimeException.getMessage());
+        }
+        return new MoveResponseDto(false);
     }
 
     @PostMapping(value = "/turn", produces = "application/json")

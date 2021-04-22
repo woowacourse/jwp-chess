@@ -50,7 +50,7 @@ public class Round {
             this.command = command.ready();
             Position sourcePosition = Position.from(commands.poll());
             Position targetPosition = Position.from(commands.poll());
-            moveByTurn(sourcePosition, targetPosition); //TODO: 여기서 이제 왕 죽었는지 체크
+            moveByTurn(sourcePosition, targetPosition);
             changeRoundToEnd();
         }
     }

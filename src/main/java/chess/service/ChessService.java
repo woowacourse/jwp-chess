@@ -48,16 +48,11 @@ public class ChessService {
         return new Round(board, currentTurn);
     }
 
-    public MoveResponseDto move(String source, String target, int roomId) {
+    public void move(String source, String target, int roomId) {
         Queue<String> commands = new ArrayDeque<>(Arrays.asList("move", source, target));
-        try {
-            Round round = getStoredRound(roomId);
-            round.execute(commands);
-        } catch (RuntimeException runtimeException) {
-            return new MoveResponseDto(true, runtimeException.getMessage());
-        }
+        Round round = getStoredRound(roomId);
+        round.execute(commands);
         movePiece(source, target, roomId);
-        return new MoveResponseDto(false);
     }
 
     public void movePiece(String source, String target, int roomId) {

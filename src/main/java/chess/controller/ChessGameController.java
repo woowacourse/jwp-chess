@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 public class ChessGameController {
     private final ChessGameService chessGameService;
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> checkChessGameException(Exception exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
     public ChessGameController(final ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }

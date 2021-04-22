@@ -36,14 +36,10 @@ public class ChessGame {
         setCurrentTurn();
     }
 
-    public boolean havePieceInCurrentTurn(final Position position) {
-        return currentTurn.havePiece(position);
-    }
-
     public void move(final Position current, final Position destination) {
         final Piece chosenPiece = currentTurn.choosePiece(current);
         if (!validateMovable(current, destination, chosenPiece)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("움직일 수 없습니다.");
         }
 
         Team enemy = currentTurn.getEnemy();
@@ -56,10 +52,7 @@ public class ChessGame {
     }
 
     private boolean validateMovable(final Position current, final Position destination, final Piece chosenPiece) {
-        if (currentTurn.havePiece(destination) || !chosenPiece.isMovable(current, destination, generateChessBoard())) {
-            return false;
-        }
-        return true;
+        return !currentTurn.havePiece(destination) && chosenPiece.isMovable(current, destination, generateChessBoard());
     }
 
 
@@ -72,10 +65,6 @@ public class ChessGame {
         if (piece.isKing()) {
             finish();
         }
-    }
-
-    public Team getCurrentTurn() {
-        return currentTurn;
     }
 
     public void finish() {
@@ -96,18 +85,6 @@ public class ChessGame {
         final Map<Position, Piece> chessBoard = blackTeam.getPiecePosition();
         chessBoard.putAll(whiteTeam.getPiecePosition());
         return Collections.unmodifiableMap(chessBoard);
-    }
-
-    public double calculateScoreByTeam(final int team) {
-        if (team == BLACK_TEAM) {
-            return blackTeam.calculateTotalScore();
-        }
-
-        if (team == WHITE_TEAM) {
-            return whiteTeam.calculateTotalScore();
-        }
-
-        return 0;
     }
 
     public BlackTeam getBlackTeam() {

@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.domain.game.ChessGameEntity;
-import chess.dto.ChessGameStatusDto;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,19 +21,6 @@ public class ChessGameDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<ChessGameEntity> findByStateIsBlackTurnOrWhiteTurn() {
-        String query = "SELECT * FROM chess_game WHERE state in(?, ?)";
-        List<ChessGameEntity> chessGameEntities = jdbcTemplate.query(query
-                , (rs, rowNum) -> new ChessGameEntity(rs.getLong("id"), rs.getString("state"))
-                , "BlackTurn", "WhiteTurn");
-        if (chessGameEntities.isEmpty()) {
-            return Optional.empty();
-        }
-
-        ChessGameEntity chessGameEntity = DataAccessUtils.nullableSingleResult(chessGameEntities);
-        return Optional.of(chessGameEntity);
-    }
-
     public Long create() {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO chess_game(state) VALUES(?)";
@@ -51,18 +37,6 @@ public class ChessGameDAO {
         jdbcTemplate.update(query, state, id);
     }
 
-    public ChessGameStatusDto findIsExistPlayingChessGameStatus() {
-        String query = "SELECT * FROM chess_game WHERE state in(?, ?)";
-        List<ChessGameEntity> chessGameEntities = jdbcTemplate.query(query
-                , (rs, rowNum) -> new ChessGameEntity(rs.getLong("id"), rs.getString("state"))
-                , "BlackTurn", "WhiteTurn");
-        if (chessGameEntities.isEmpty()) {
-            return ChessGameStatusDto.isNotExist();
-        }
-
-        return ChessGameStatusDto.exist();
-    }
-
     public List<ChessGameEntity> findAllByStateIsBlackTurnOrWhiteTurn() {
         String query = "SELECT * FROM chess_game WHERE state in(?, ?)";
         List<ChessGameEntity> chessGameEntities = jdbcTemplate.query(query
@@ -70,5 +44,18 @@ public class ChessGameDAO {
                 , "BlackTurn", "WhiteTurn");
 
         return chessGameEntities;
+    }
+
+    public Optional<ChessGameEntity> findGameByRoomId(long roomId) {
+        String query = "SELECT * FROM chess_game WHERE id = ?";
+        List<ChessGameEntity> chessGameEntities = jdbcTemplate.query(query
+                , (rs, rowNum) -> new ChessGameEntity(rs.getLong("id"), rs.getString("state"))
+                , roomId);
+        if (chessGameEntities.isEmpty()) {
+            return Optional.empty();
+        }
+
+        ChessGameEntity chessGameEntity = DataAccessUtils.nullableSingleResult(chessGameEntities);
+        return Optional.of(chessGameEntity);
     }
 }

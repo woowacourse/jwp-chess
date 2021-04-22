@@ -16,19 +16,11 @@
 <div class="chess-game">
 
     <div class="game-title">
-        <h1 class="game-title-header">우아한 체스게임</h1>
+        <h1 class="game-title-header roomId" id="{{roomId}}">우아한 체스게임 {{roomId}}</h1>
     </div>
 
-    {{#status}}
-        {{^exist}}
-            <button class="button is-primary is-light chess-btn start" value="start">게임 시작</button>
-        {{/exist}}
-        {{#exist}}
-            <button class="button is-primary is-light chess-btn continue" value="continue">이어하기</button>
-        {{/exist}}
-    {{/status}}
-    <button class="button is-warning is-light hidden chess-status-btn">점수 확인</button>
-    <button class="button is-danger is-light hidden chess-end-btn">게임 종료</button>
+    <button class="button is-warning is-light chess-status-btn">점수 확인</button>
+    <button class="button is-danger is-light chess-end-btn">게임 종료</button>
 
     <div class="score-info">
         <span class="tag is-black score score-tag hidden">Black</span>

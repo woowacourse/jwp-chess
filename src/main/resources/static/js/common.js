@@ -1,13 +1,9 @@
+const room = document.querySelector(".roomId");
+
 const index = {
     init: function () {
         const _this = this;
-        document.querySelector(".chess-btn").addEventListener("click", event => {
-            if (event.target.value === "start") {
-                _this.start();
-                return;
-            }
-            _this.continue();
-        });
+        _this.continue();
 
         document.querySelector(".chess-end-btn").addEventListener("click", event => {
             _this.end();
@@ -47,7 +43,7 @@ const index = {
     },
 
     move: function (source, target) {
-        fetch(`/pieces?source=${source}&target=${target}`)
+        fetch(`/pieces?source=${source}&target=${target}` + '&roomId=' + room.id)
             .then(data => {
                 if (!data.ok) {
                     throw new Error("잘못된 명령입니다!");
@@ -91,6 +87,7 @@ const index = {
                 alert("잘못된 명령입니다!");
             });
     },
+
     end: function () {
         const option = {
             method: "DELETE",
@@ -98,7 +95,7 @@ const index = {
                 'Content-Type': 'application/json'
             }
         };
-        fetch("/chessgames", option)
+        fetch("/chessgames?roomId=" + room.id, option)
             .then(data => {
                 if (!data.ok) {
                     throw new Error("잘못된 명령입니다!");
@@ -114,8 +111,9 @@ const index = {
                 alert("[end] 잘못된 명령입니다!")
             });
     },
+
     scores: function () {
-        fetch("/scores")
+        fetch("/scores?roomId=" + room.id)
             .then(data => {
                 return data.json()
             })
@@ -126,8 +124,9 @@ const index = {
                 alert("잘못된 명령입니다!")
             });
     },
+
     continue: function () {
-        fetch("/chessgames")
+        fetch("/chessgames?roomId=" + room.id)
             .then(data => {
                 return data.json()
             })
@@ -137,7 +136,7 @@ const index = {
                 toggleContinueAndEndButtons(chessGameDto.finished);
             })
             .catch(error => {
-                alert("[continue] 잘못된 명령입니다!");
+//                alert("[continue] 잘못된 명령입니다!");
             });
     }
 }

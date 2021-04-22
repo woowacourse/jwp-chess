@@ -1,11 +1,11 @@
 package chess.controller;
 
-import chess.dto.ChessGameStatusDto;
 import chess.dto.ChessRoomDto;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -19,9 +19,8 @@ public class ChessController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        ChessGameStatusDto latestGameStatus = chessGameService.findLatestChessGameStatus();
-        model.addAttribute("status", latestGameStatus);
+    public String index(@RequestParam long roomId, Model model) {
+        model.addAttribute("roomId", roomId);
         return "index";
     }
 

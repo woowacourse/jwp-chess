@@ -8,17 +8,14 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
 import chess.dto.ChessGameDto;
-import chess.dto.ChessGameStatusDto;
 import chess.dto.ChessRoomDto;
 import chess.dto.ScoreDto;
-import chess.exception.AlreadyPlayingChessGameException;
 import chess.exception.NoSuchPermittedChessPieceException;
 import chess.exception.NotFoundPlayingChessGameException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,23 +30,18 @@ public class ChessGameService {
     }
 
     @Transactional
-    public ChessGameDto createNewChessGame() {
-        Optional<ChessGameEntity> latestChessGame = chessGameDAO.findByStateIsBlackTurnOrWhiteTurn();
-        if (latestChessGame.isPresent()) {
-            throw new AlreadyPlayingChessGameException();
-        }
-
+    public ChessRoomDto createNewChessRoom() {
         Long chessGameId = chessGameDAO.create();
         List<Piece> pieces = PieceFactory.createPieces();
         pieceDAO.saveAll(chessGameId, pieces);
         ChessGame chessGame = new ChessGame(new Board(pieces));
         chessGame.changeState(new BlackTurn(chessGame));
-        return new ChessGameDto(chessGame);
+        return new ChessRoomDto(chessGameId);
     }
 
     @Transactional
-    public ChessGameDto moveChessPiece(final Position source, final Position target) {
-        ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
+    public ChessGameDto moveChessPiece(Position source, Position target, long roomId) {
+        ChessGameEntity chessGameEntity = findGameByRoomId(roomId);
         Long chessGameId = chessGameEntity.getId();
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
         Piece sourcePiece = pieceDAO.findOneByPosition(chessGameId, source.getRow(), source.getColumn())
@@ -65,21 +57,9 @@ public class ChessGameService {
         return new ChessGameDto(chessGame);
     }
 
-    @Transactional(readOnly = true)
-    public ChessGameStatusDto findLatestChessGameStatus() {
-        return chessGameDAO.findIsExistPlayingChessGameStatus();
-    }
-
-    @Transactional(readOnly = true)
-    public ChessGameDto findLatestPlayingGame() {
-        ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
-        ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
-        return new ChessGameDto(chessGame);
-    }
-
     @Transactional
-    public ChessGameDto endGame() {
-        ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
+    public ChessGameDto endGame(long roomId) {
+        ChessGameEntity chessGameEntity = findGameByRoomId(roomId);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
         chessGame.end();
         chessGameDAO.updateState(chessGameEntity.getId(), chessGame.getState().getValue());
@@ -88,15 +68,35 @@ public class ChessGameService {
     }
 
     @Transactional(readOnly = true)
-    public ScoreDto calculateScores() {
-        ChessGameEntity chessGameEntity = findStateIsBlackAndWhiteTurnGame();
+    public ScoreDto calculateScores(long roomId) {
+        ChessGameEntity chessGameEntity = findGameByRoomId(roomId);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
 
         return new ScoreDto(chessGame);
     }
 
-    private ChessGameEntity findStateIsBlackAndWhiteTurnGame() {
-        return chessGameDAO.findByStateIsBlackTurnOrWhiteTurn()
+    @Transactional(readOnly = true)
+    public List<ChessRoomDto> findChessRooms() {
+        List<ChessGameEntity> chessGameEntities = findAllStateIsBlackAndWhiteTurnGame();
+        return  chessGameEntities.stream()
+                .map(ChessGameEntity::getId)
+                .map(ChessRoomDto::new)
+                .collect(Collectors.toList());
+    }
+
+    private List<ChessGameEntity> findAllStateIsBlackAndWhiteTurnGame() {
+        return chessGameDAO.findAllByStateIsBlackTurnOrWhiteTurn();
+    }
+
+    @Transactional
+    public ChessGameDto findChessGame(long roomId) {
+        ChessGameEntity chessGameEntity = findGameByRoomId(roomId);
+        ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
+        return new ChessGameDto(chessGame);
+    }
+
+    private ChessGameEntity findGameByRoomId(long roomId) {
+        return chessGameDAO.findGameByRoomId(roomId)
                 .orElseThrow(NotFoundPlayingChessGameException::new);
     }
 
@@ -110,15 +110,4 @@ public class ChessGameService {
         return chessGame;
     }
 
-    public List<ChessRoomDto> findChessRooms() {
-        List<ChessGameEntity> chessGameEntities = findAllStateIsBlackAndWhiteTurnGame();
-        return  chessGameEntities.stream()
-                .map(ChessGameEntity::getId)
-                .map(ChessRoomDto::new)
-                .collect(Collectors.toList());
-    }
-
-    private List<ChessGameEntity> findAllStateIsBlackAndWhiteTurnGame() {
-        return chessGameDAO.findAllByStateIsBlackTurnOrWhiteTurn();
-    }
 }

@@ -31,7 +31,7 @@ public class SpringChessController {
         return "chessboard";
     }
 
-    @GetMapping("/create")
+    @PostMapping("/rooms")
     private String createRoom(@RequestParam("roomName") String roomName) {
         Long roomId = roomService.create(roomName);
         return "redirect:game/" + roomId;

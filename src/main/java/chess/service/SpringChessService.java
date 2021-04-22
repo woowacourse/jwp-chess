@@ -9,6 +9,7 @@ import chess.domain.gamestate.Ready;
 import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
 import chess.dto.MoveRequestDto;
+import chess.repository.room.InvalidRoomSaveException;
 import chess.repository.room.Room;
 import chess.repository.room.SpringRoomDao;
 import chess.util.JsonConverter;
@@ -28,11 +29,16 @@ public class SpringChessService {
         this.roomDao = roomDao;
     }
 
-    public long saveRoom(String roomName) {
+    public long initializeRoom(String roomName) {
         roomDao.validateRoomExistence(roomName);
         ChessGame chessGame = initializeChessBoard();
         Room room = createRoom(roomName, chessGame);
-        return roomDao.saveRoom(room);
+
+        OptionalLong optionalId = roomDao.saveRoom(room);
+        if (optionalId.isPresent()) {
+            return optionalId.getAsLong();
+        }
+        throw new InvalidRoomSaveException();
     }
 
     private ChessGame initializeChessBoard() {
@@ -41,18 +47,19 @@ public class SpringChessService {
 
         ChessGame chessGame = new ChessGame(chessBoard, Color.WHITE, gameState);
         chessGame.start(Collections.singletonList(START));
+
         return chessGame;
     }
 
     public ChessGame movePiece(MoveRequestDto moveRequestDto) {
-        String roomName = moveRequestDto.getRoomName();
-        Room room = roomDao.findByRoomName(roomName);
+        long id = moveRequestDto.getId();
+        Room room = roomDao.findById(id);
 
         ChessGame chessGame = createChessGame(room);
         List<String> command = Arrays.asList(moveRequestDto.getCommand().split(SPACE));
         chessGame.play(command);
 
-        room = createRoom(roomName, chessGame);
+        room = createRoom(room.getName(), chessGame);
         roomDao.saveRoom(room);
 
         return chessGame;
@@ -60,6 +67,7 @@ public class SpringChessService {
 
     public ChessGame loadRoom(long id) {
         Room room = roomDao.findById(id);
+
         return createChessGame(room);
     }
 
@@ -67,6 +75,7 @@ public class SpringChessService {
         String turn = chessGame.getTurnAsString();
         Map<Position, Piece> chessBoard = chessGame.getChessBoardAsMap();
         JsonObject state = JsonConverter.toJsonObject(chessBoard);
+
         return new Room(roomName, turn, state);
     }
 
@@ -87,6 +96,7 @@ public class SpringChessService {
         String color = pieceJson.get("color").getAsString();
 
         Type pieceType = Type.convert(type);
+
         return pieceType.createPiece(Position.of(position), Color.convert(color));
     }
 

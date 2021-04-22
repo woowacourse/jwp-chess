@@ -11,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -28,20 +31,19 @@ public class SpringChessController {
         return "index";
     }
 
-    @PostMapping("/game")
-    public String game(@RequestParam("roomName") String roomName) {
-        long id = springChessService.saveRoom(roomName);
+    @GetMapping("/game")
+    public String game(@RequestParam("roomName") String roomName, RedirectAttributes redirectAttributes) {
+        long id = springChessService.initializeRoom(roomName);
+        redirectAttributes.addFlashAttribute("roomName", roomName);
 
-        return "redirect:/game/" + roomName + "-" + id;
+        return "redirect:/game/" + id;
     }
 
-    @GetMapping("/game/{roomNameAndId}")
-    public ModelAndView enterRoom(@PathVariable("roomNameAndId") String roomNameAndId) {
-        String[] split = roomNameAndId.split("-");
-        String roomName = split[0];
-        long id = Long.parseLong(split[1]);
-
+    @GetMapping("/game/{id}")
+    public ModelAndView enterRoom(HttpServletRequest request, @PathVariable("id") long id) {
         ChessGame chessGame = springChessService.loadRoom(id);
+
+        String roomName = getRoomName(request);
 
         ModelAndView modelAndView = new ModelAndView();
         addChessGame(modelAndView, chessGame);
@@ -51,13 +53,22 @@ public class SpringChessController {
         return modelAndView;
     }
 
-    @PostMapping(value = "/game/*/move", consumes = "application/json")
-    public ModelAndView move(@RequestBody MoveRequestDto moveRequestDto) {
+    private String getRoomName(HttpServletRequest request) {
+        Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+        assert inputFlashMap != null;
+
+        return (String) inputFlashMap.get("roomName");
+    }
+
+    @PostMapping(value = "/game/{id}/move", consumes = "text/plain")
+    public ModelAndView move(@PathVariable("id") long id, @RequestBody String moveCommand) {
+        MoveRequestDto moveRequestDto = new MoveRequestDto(id, moveCommand);
         ChessGame chessGame = springChessService.movePiece(moveRequestDto);
 
         ModelAndView modelAndView = new ModelAndView();
         addChessGame(modelAndView, chessGame);
         modelAndView.setViewName("game");
+
         return modelAndView;
     }
 
@@ -68,14 +79,16 @@ public class SpringChessController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("roomNames", roomNames);
         modelAndView.setViewName("repository");
+
         return modelAndView;
     }
 
-    @PostMapping("/load")
-    public String load(@RequestParam("roomName") String roomName) {
+    @GetMapping("/load")
+    public String load(@RequestParam("roomName") String roomName, RedirectAttributes redirectAttributes) {
         long id = springChessService.getRoomId(roomName);
+        redirectAttributes.addFlashAttribute("roomName", roomName);
 
-        return "redirect:/game/" + roomName + "-" + id;
+        return "redirect:/game/" + id;
     }
 
     @DeleteMapping(value = "/delete/{roomName}")
@@ -83,6 +96,7 @@ public class SpringChessController {
     public ResponseEntity<DeleteResponseDto> delete(@PathVariable("roomName") String roomName) {
         springChessService.deleteRoom(roomName);
         DeleteResponseDto deleteResponseDto = new DeleteResponseDto(roomName, true);
+
         return ResponseEntity.ok().body(deleteResponseDto);
     }
 

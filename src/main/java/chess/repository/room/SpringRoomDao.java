@@ -6,9 +6,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
+import java.util.OptionalLong;
 
 @Repository
 public class SpringRoomDao {
@@ -18,7 +19,7 @@ public class SpringRoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long saveRoom(Room room) {
+    public OptionalLong saveRoom(Room room) {
         String query = "INSERT INTO rooms (name, turn, state) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE turn = VALUES(turn), state = VALUES(state)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -30,24 +31,10 @@ public class SpringRoomDao {
             return ps;
         }, keyHolder);
 
-        BigInteger generatedKey = (BigInteger) keyHolder.getKeyList().get(0).get("GENERATED_KEY");
-        return generatedKey.longValue();
-    }
-
-    public Room findByRoomName(String name) {
-        String query = "SELECT * FROM rooms WHERE name = ?";
-        try {
-            return jdbcTemplate.queryForObject(
-                    query,
-                    (resultSet, rowNum) -> new Room(
-                            resultSet.getString("name"),
-                            resultSet.getString("turn"),
-                            JsonConverter.fromJson(resultSet.getString("state"))),
-                    name);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new NoSuchRoomNameException();
+        if (keyHolder.getKeyList().size() == 1) {
+            return OptionalLong.of(Objects.requireNonNull(keyHolder.getKey()).longValue());
         }
+        return OptionalLong.empty();
     }
 
     public Room findById(long id) {
@@ -61,7 +48,6 @@ public class SpringRoomDao {
                             JsonConverter.fromJson(resultSet.getString("state"))),
                     id);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new NoSuchRoomIdException();
         }
     }
@@ -90,6 +76,10 @@ public class SpringRoomDao {
 
     public long getRoomIdByName(String roomName) {
         String query = "SELECT room_id FROM rooms WHERE name = ?";
-        return (long) jdbcTemplate.queryForObject(query, Integer.class, roomName);
+        try {
+            return (long) jdbcTemplate.queryForObject(query, Integer.class, roomName);
+        } catch (Exception e) {
+            throw new NoSuchRoomNameException();
+        }
     }
 }

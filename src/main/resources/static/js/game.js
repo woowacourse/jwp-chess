@@ -45,16 +45,11 @@ function movePiece(event) {
 }
 
 function sendMoveRequest(trimmedMoveCommand) {
-    const params = {
-        roomName: document.querySelector('#room').firstElementChild.className,
-        command: trimmedMoveCommand
-    };
-
     const http = new XMLHttpRequest();
     const url = window.location + "/move";
 
     http.open('POST', url);
-    http.setRequestHeader('Content-type', 'application/json');
+    http.setRequestHeader('Content-type', 'text/plain');
     http.onreadystatechange = function () {
         const sourcePosition = trimmedMoveCommand.split(" ")[1]
         const targetPosition = trimmedMoveCommand.split(" ")[2]
@@ -69,7 +64,7 @@ function sendMoveRequest(trimmedMoveCommand) {
         }
     }
 
-    http.send(JSON.stringify(params));
+    http.send(trimmedMoveCommand);
 }
 
 function replaceComponents(dom, sourcePosition, targetPosition) {

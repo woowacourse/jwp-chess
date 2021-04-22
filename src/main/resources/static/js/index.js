@@ -1,4 +1,4 @@
-import {getFetch, postFetch} from "./promise/fetches.js"
+import {getFetch, putFetch} from "./promise/fetches.js"
 import pieceFonts from "./enum/chessPieceFont.js"
 
 const $chessboard = document.querySelector('#chessboard');
@@ -26,7 +26,7 @@ async function getPieces(url) {
 }
 
 async function movePiece(from, to) {
-    const moveResult = await postFetch("/game/move", {gameId: chessGameId, from: from, to: to});
+    const moveResult = await putFetch("/game/move", {gameId: chessGameId, from: from, to: to});
     if (moveResult.hasOwnProperty("end") && moveResult.end === true) {
         alert("게임이 종료되었습니다~!");
         findGames();
@@ -53,7 +53,7 @@ async function findGames() {
 }
 
 async function calculateScore() {
-    const scoreResponseData = await getFetch(`/game/score/${chessGameId}`);
+    const scoreResponseData = await getFetch(`/game/${chessGameId}/score`);
 
     $blackScore.innerText = scoreResponseData.colorsScore.BLACK;
     $whiteScore.innerText = scoreResponseData.colorsScore.WHITE;
@@ -95,7 +95,7 @@ function onClickLoadBtn(e) {
     if (e.target && e.target.id === "loadBtn") {
         const loadGameId = prompt("로드할 게임 ID를 입력해주세요.");
         if (loadGameId) {
-            getPieces("/game/load/" + loadGameId);
+            getPieces("/game/" + loadGameId);
         }
     }
 }

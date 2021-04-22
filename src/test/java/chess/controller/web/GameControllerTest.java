@@ -46,11 +46,11 @@ public class GameControllerTest {
 
         float whiteScore = (float) RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/game/score/" + userId)
+                .when().get("/game/" + userId + "/score")
                 .jsonPath().getMap("colorsScore")
                 .get("WHITE");
 
-        assertThat(whiteScore).isEqualTo(38.0);
+        assertThat(whiteScore).isEqualTo(38);
     }
 
     @DisplayName("move Test")
@@ -61,13 +61,13 @@ public class GameControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract().path("gameId");
 
-        MoveRequestDto moveRequestDto = new MoveRequestDto(userId,"c2", "c3");
+        MoveRequestDto moveRequestDto = new MoveRequestDto(userId, "c2", "c3");
 
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveRequestDto)
-                .when().post("/game/move")
+                .when().put("/game/move")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .assertThat().body("end", equalTo(false))

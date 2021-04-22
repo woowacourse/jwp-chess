@@ -14,22 +14,23 @@
 ## DB DDL
 ```sql
 -- -----------------------------------------------------
+-- Table `mydb`.`room`
+-- -----------------------------------------------------
+CREATE TABLE `room` (
+  `room_id` int(11) NOT NULL,
+  `current_turn` char(5) DEFAULT NULL,
+  PRIMARY KEY (`room_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+
+-- -----------------------------------------------------
 -- Table `mydb`.`piece`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`piece` (
-`id` BIGINT NOT NULL AUTO_INCREMENT,
-`piece_name` VARCHAR(45) NOT NULL,
-`piece_position` VARCHAR(45) NOT NULL,
-PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`turn`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`turn` (
-`id` BIGINT NOT NULL AUTO_INCREMENT,
-`current_turn` VARCHAR(45) NOT NULL,
-PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+CREATE TABLE `piece` (
+  `piece_name` char(1) DEFAULT NULL,
+  `piece_position` char(2) DEFAULT NULL,
+  `room_id` int(11) NOT NULL,
+  KEY `room_id` (`room_id`),
+  CONSTRAINT `room_id` FOREIGN KEY (`room_id`) REFERENCES `room` (`room_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ```

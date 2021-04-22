@@ -103,7 +103,18 @@ function removeOutdatedChessBoard() {
         .forEach(piece => piece.remove());
 }
 
-initiate();
+function addDeleteEvent() {
+    const $deleteButton = document.getElementById('delete-button');
+    $deleteButton.addEventListener('click', requestDeletion);
+}
 
+const requestDeletion = async () => {
+    await axios.delete('/logout/' + roomId)
+        .then(response => window.location.replace(response.data))
+        .catch(error => alert(error.response.data));
+}
+
+initiate();
+addDeleteEvent();
 
 

@@ -7,6 +7,7 @@ import chess.dto.MoveRequestDTO;
 import chess.dto.ResultDTO;
 import chess.dto.board.BoardDTO;
 import chess.service.spring.ChessService;
+import chess.service.spring.RoomService;
 import chess.service.spring.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,12 @@ public class ChessController {
 
     private final ChessService chessService;
     private final UserService userService;
+    private final RoomService roomService;
 
-    public ChessController(ChessService chessService, UserService userService) {
+    public ChessController(ChessService chessService, UserService userService, RoomService roomService) {
         this.chessService = chessService;
         this.userService = userService;
+        this.roomService = roomService;
     }
 
     @GetMapping("/chessboard")
@@ -57,9 +60,12 @@ public class ChessController {
         return ResponseEntity.ok().body(resultDTO);
     }
 
-    @DeleteMapping("/histories")
-    public ResponseEntity<String> restart(@PathVariable int id) {
+    @DeleteMapping
+    public ResponseEntity<String> exit(@PathVariable int id, HttpSession httpSession) {
         chessService.deleteAllHistoriesByRoomId(id);
+        userService.deleteAllUsersByRoomId(id);
+        roomService.deleteRoomById(id);
+        httpSession.invalidate();
         String location = "/";
         return ResponseEntity.ok().body(location);
     }

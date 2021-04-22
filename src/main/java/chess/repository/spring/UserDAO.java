@@ -37,4 +37,9 @@ public class UserDAO {
         String query = "DELETE FROM USER WHERE ROOM_ID = ?";
         jdbcTemplate.update(query, roomId);
     }
+
+    public void deleteUser(User user) {
+        String query = "DELETE FROM USER WHERE ID = ?";
+        jdbcTemplate.update(query, user.getId());
+    }
 }

@@ -15,16 +15,16 @@ function printResult(resultDTO) {
     document.getElementById('winner-team').innerText = '우승팀 : ' + resultDTO.winnerTeamType;
 }
 
-function addRestartEvent() {
-    const $restartButton = document.getElementById('restart-button');
-    $restartButton.addEventListener('click', requestRestart);
+function addDeleteEvent() {
+    const $deleteButton = document.getElementById('delete-button');
+    $deleteButton.addEventListener('click', requestDeletion);
 }
 
-const requestRestart = async () => {
-    await axios.delete('/chessgame/' + roomId + '/histories')
+const requestDeletion = async () => {
+    await axios.delete('/chessgame/' + roomId)
         .then(response => window.location.replace(response.data))
         .catch(error => alert(error.response.data));
 }
 
 showResult();
-addRestartEvent();
+addDeleteEvent();

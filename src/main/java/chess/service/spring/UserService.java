@@ -1,10 +1,13 @@
 package chess.service.spring;
 
 import chess.domain.piece.TeamType;
+import chess.domain.user.User;
 import chess.domain.user.Users;
 import chess.repository.spring.UserDAO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -42,5 +45,14 @@ public class UserService {
 
     public void deleteAllUsersByRoomId(int roomId) {
         userDAO.deleteAllUsersByRoomId(roomId);
+    }
+
+    public void deleteUserBy(int roomId, String password) {
+        List<User> users = userDAO.findByRoomId(roomId);
+        User targetUser = users.stream()
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()))
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("삭제할 유저가 존재하지 않습니다."));
+        userDAO.deleteUser(targetUser);
     }
 }

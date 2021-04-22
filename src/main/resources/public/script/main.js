@@ -19,22 +19,17 @@ let state = "stay"; // stay, show
 let source = "";
 let target = "";
 
-function enterNewGame() {
-    const roomName = document.getElementById("game-name-input").value;
-    location.href = "/room/create/" + roomName;
-}
-
 function deleteRequest() {
     return function (event) {
         const roomId = event.target.id;
         const requestQuery = "roomId=" + roomId;
         $.ajax({
-            url: "/room/delete/"+roomId,
+            url: "/room",
             type: "DELETE",
             data: requestQuery,
             success: function () {
-                alert("id : " + roomId + " 방을 삭제했습니다.");
-                location.href="/main";
+                alert("id : " + roomId + "번 방을 삭제했습니다.");
+                location.href="/room/list";
             },
             error: function () {
                 alert("에러 발생");
@@ -114,7 +109,7 @@ function show(target) {
     const requestQuery = "source=" + target.id;
 
     $.ajax({
-        url: "/game/show/" + roomId,
+        url: "/game/movable/" + roomId,
         type: "GET",
         data: requestQuery,
         success: function (result) {
@@ -130,6 +125,24 @@ function show(target) {
         },
         error: function () {
             alert("에러 발생");
+        }
+    })
+}
+
+function makeNewRoom() {
+    const roomName = document.getElementById('game-name-input').value;
+    const requestQuery = "roomName=" + roomName;
+
+    let url = $.ajax({
+        url: "/rooms",
+        type: "POST",
+        data: requestQuery,
+        success: function () {
+            const gameRoom = url.getResponseHeader('Location');
+            location.href = gameRoom;
+        },
+        error: function () {
+            alert("방 생성에 실패했습니다.");
         }
     })
 }

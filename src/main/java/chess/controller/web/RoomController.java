@@ -2,11 +2,14 @@ package chess.controller.web;
 
 import chess.service.GameService;
 import chess.service.RoomService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @Controller
 public class RoomController {
@@ -18,24 +21,26 @@ public class RoomController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/main")
+    @GetMapping("/room/list")
     public String loadRoomList(Model model) {
         model.addAttribute("list", roomService.loadList());
         return "mainPage";
     }
 
-    @RequestMapping(value = "/room/new", method = RequestMethod.POST)
-    public String createRoom(@RequestParam String roomName) {
+    @PostMapping("/rooms")
+    public ResponseEntity<Void> createRoom(@RequestParam String roomName) {
         final Long roomId = roomService.save(roomName);
         gameService.create(roomId);
-        return "redirect:/game/load/" + roomId;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("http://localhost:8080/game/load/" + roomId));
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/room/delete/{roomId}")
+    @DeleteMapping("/room")
     @ResponseBody
-    public ResponseEntity<String> deleteRoom(@PathVariable Long roomId) {
+    public ResponseEntity<Void> deleteRoom(Long roomId) {
         roomService.delete(roomId);
         gameService.delete(roomId);
-        return new ResponseEntity<>("DELETE Response", HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 }

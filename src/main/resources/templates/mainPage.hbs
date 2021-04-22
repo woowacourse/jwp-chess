@@ -12,13 +12,13 @@
 <body>
 <div class="container">
     <br>
-        <form action="/room/new" method="post">
-            <input aria-describedby="basic-addon1" aria-label="new game" class="form-control" id="game-name-input" name="roomName" onKeypress="javascript:if(event.keyCode==13) {
-                   enterNewGame();
-            }"
-                   placeholder="Input new game"
-                   type="text">
-        </form>
+{{!--     <form action="/rooms" method="Post"> --}}
+        <input aria-describedby="basic-addon1" aria-label="new game" class="form-control"
+            id="game-name-input" name="roomName" onKeypress="javascript:if(event.keyCode==13) {
+               makeNewRoom();
+               }"
+            placeholder="Input new game" type="text">
+{{!--     </form> --}}
     <br>
     <br>
     <table class="table table table-striped table-hover table-responsive">
@@ -33,8 +33,8 @@
         {{#list}}
         <tr>
             <th>{{id}}</th>
-            <th><a href="/game/load/{{id}}">{{name}}</a></th>
-            <th><a id={{id}} class="delete-btn">delete</a></th>
+            <th><a href="/game/load/{{id}}" id={{name}}>{{name}}</a></th>
+            <th><a id={{id}} class="delete-btn" style='cursor:pointer'>delete</a></th>
         </tr>
         {{/list}}
         </tbody>

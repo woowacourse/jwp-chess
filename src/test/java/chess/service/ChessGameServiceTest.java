@@ -130,7 +130,7 @@ class ChessGameServiceTest {
         assertAll(
                 () -> assertThat(chessGameResponseDto).isNotNull(),
                 () -> assertThat(chessGameResponseDto.getState()).isEqualTo("Ready"),
-                () -> assertThat(chessGameResponseDto.getPieceDtos()).hasSize(0)
+                () -> assertThat(chessGameResponseDto.getPieceDtos()).isEmpty()
         );
     }
 

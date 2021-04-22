@@ -40,7 +40,6 @@ public class GameDao {
             return pstmt;
         }, keyHolder);
         int gameId = Objects.requireNonNull(keyHolder.getKey()).intValue();
-        System.out.println("gameID : " + gameId);
         savePiecesByGameId(gameId, board);
         return gameId;
     }

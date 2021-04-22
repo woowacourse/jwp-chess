@@ -17,7 +17,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void addUser(int roomId, String password) {
+    public void addUserIntoRoom(int roomId, String password) {
         Users users = new Users(userDAO.findByRoomId(roomId));
         if (users.hasMaximumCountsForGame()) {
             throw new IllegalStateException("이미 꽉 찬 방입니다.");

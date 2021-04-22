@@ -45,7 +45,7 @@ class UserServiceTest {
         given(userDAO.findByRoomId(1)).willReturn(Collections.emptyList());
         given(passwordEncoder.encode(password)).willReturn(encodedPassword);
 
-        userService.addUser(1, password);
+        userService.addUserIntoRoom(1, password);
 
         verify(userDAO, times(1)).findByRoomId(1);
         verify(passwordEncoder, times(1)).encode(password);
@@ -58,7 +58,7 @@ class UserServiceTest {
                 new User(2, "enco", "WHITE", 1));
         given(userDAO.findByRoomId(1)).willReturn(users);
 
-        assertThatCode(() -> userService.addUser(1, "pass"))
+        assertThatCode(() -> userService.addUserIntoRoom(1, "pass"))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("이미 꽉 찬 방입니다.");
         verify(userDAO, times(1)).findByRoomId(1);

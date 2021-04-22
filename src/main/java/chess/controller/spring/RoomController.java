@@ -44,7 +44,7 @@ public class RoomController {
         Room room = roomService.findLastAddedRoom();
         int roomId = room.getId();
         String loginPassword = roomRegistrationDTO.getPassword();
-        userService.addUser(roomId, loginPassword);
+        userService.addUserIntoRoom(roomId, loginPassword);
         httpSession.setAttribute("password", loginPassword);
         httpSession.setAttribute("roomId", String.valueOf(roomId));
         RoomDTO roomDTO = RoomDTO.from(room);

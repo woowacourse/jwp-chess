@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class OutputView {
-    private static final String NEWLINE = System.getProperty("line.separator");
+    private static final String NEWLINE = System.lineSeparator();
 
     private OutputView() {
     }

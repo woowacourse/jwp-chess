@@ -153,9 +153,8 @@
 </table>
 
 <h2>점수 판</h2>
-{{#scores}}
-{{color}} Score: {{value}}<br>
-{{/scores}}
+{{blackScore.color}} Score: {{blackScore.value}}<br>
+{{whiteScore.color}} Score: {{whiteScore.value}}<br>
 
 <h2>{{error.message}}</h2>
 <h2>차례 : {{turn.color}} </h2>
@@ -165,8 +164,7 @@
     <label for="from">From: </label>
     <input type="text" name="from" id="from">
     <label for="to">To: </label>
-    <input type="text" name="to" id="to">
-    <input type="submit" value="이동">
+    <input type="text" name="to" id="to"><input type="submit" value="이동">
 </form>
 
 

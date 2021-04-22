@@ -5,6 +5,7 @@ import chess.dao.CommandDao;
 import chess.domain.game.BoardFactory;
 import chess.domain.game.Game;
 import chess.domain.location.Position;
+import chess.domain.piece.Color;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -42,7 +43,8 @@ public class ChessService {
 
     private void makeChessModel(Game game, Model model) {
         setBoard(new BoardDto(game.allBoard()).getMaps(), model);
-        setGameInformation(new ScoreDtos(game.score()).getScoreDtos(), new ColorDto(game.currentPlayer()), game.isEnd(), model);
+        setGameScore(game, model);
+        setGameInformation(new ColorDto(game.currentPlayer()), game.isEnd(), model);
     }
 
     private void setBoard(Map<PositionDto, PieceDto> board, Model model) {
@@ -51,13 +53,15 @@ public class ChessService {
         }
     }
 
-    private void setGameInformation(List<ScoreDto> score,
-                                    ColorDto color,
+    private void setGameScore(Game game, Model model) {
+        model.addAttribute("blackScore", new ScoreDto(Color.BLACK, game.score(Color.BLACK)));
+        model.addAttribute("whiteScore", new ScoreDto(Color.WHITE, game.score(Color.WHITE)));
+    }
+
+    private void setGameInformation(ColorDto color,
                                     boolean isFinished,
                                     Model model) {
-        model.addAttribute("scores", score);
         model.addAttribute("turn", color);
-
         if (isFinished) {
             model.addAttribute("winner", color);
         }

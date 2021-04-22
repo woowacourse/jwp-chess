@@ -9,6 +9,7 @@ import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
 import chess.dto.ChessGameDto;
 import chess.dto.ChessGameStatusDto;
+import chess.dto.ChessRoomDto;
 import chess.dto.ScoreDto;
 import chess.exception.AlreadyPlayingChessGameException;
 import chess.exception.NoSuchPermittedChessPieceException;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ChessGameService {
@@ -108,4 +110,15 @@ public class ChessGameService {
         return chessGame;
     }
 
+    public List<ChessRoomDto> findChessRooms() {
+        List<ChessGameEntity> chessGameEntities = findAllStateIsBlackAndWhiteTurnGame();
+        return  chessGameEntities.stream()
+                .map(ChessGameEntity::getId)
+                .map(ChessRoomDto::new)
+                .collect(Collectors.toList());
+    }
+
+    private List<ChessGameEntity> findAllStateIsBlackAndWhiteTurnGame() {
+        return chessGameDAO.findAllByStateIsBlackTurnOrWhiteTurn();
+    }
 }

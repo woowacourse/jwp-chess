@@ -63,4 +63,12 @@ public class ChessGameDAO {
         return ChessGameStatusDto.exist();
     }
 
+    public List<ChessGameEntity> findAllByStateIsBlackTurnOrWhiteTurn() {
+        String query = "SELECT * FROM chess_game WHERE state in(?, ?)";
+        List<ChessGameEntity> chessGameEntities = jdbcTemplate.query(query
+                , (rs, rowNum) -> new ChessGameEntity(rs.getLong("id"), rs.getString("state"))
+                , "BlackTurn", "WhiteTurn");
+
+        return chessGameEntities;
+    }
 }

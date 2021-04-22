@@ -240,7 +240,7 @@
     is_start_position_clicked = false;
     xhr.onload = function () {
       const move_response = xhr.response;
-      if (move_response['moveError']) {
+      if (move_response['canMove'] === false) {
         alert(move_response['errorMessage']);
         return;
       }

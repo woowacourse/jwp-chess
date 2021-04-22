@@ -4,10 +4,12 @@ package chess.web.controller;
 import static chess.web.controller.ChessGameController.ENCRYPTED_PASSWORD;
 
 import chess.web.controller.dto.request.MoveRequestDto;
+import chess.web.controller.dto.response.MoveCompleteResponseDto;
 import chess.web.controller.dto.response.MoveResponseDto;
 import chess.web.service.ChessGameService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,12 +28,12 @@ public class ChessGamePlayController {
     }
 
     @PostMapping("/move")
-    public MoveResponseDto movePiece(
+    public ResponseEntity<MoveCompleteResponseDto> movePiece(
         @RequestBody MoveRequestDto moveRequestDto,
         @CookieValue(ENCRYPTED_PASSWORD) String encryptedPassword) {
 
         chessGameService.movePiece(moveRequestDto, encryptedPassword);
-        return new MoveResponseDto(false);
+        return new ResponseEntity<>(new MoveCompleteResponseDto(), HttpStatus.OK);
     }
 
     @DeleteMapping("/games/{gameId}")

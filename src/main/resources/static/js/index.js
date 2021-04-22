@@ -7,6 +7,12 @@ const main = {
         $newGame.addEventListener("click", async () => {
             await _this.make()
         });
+
+        const $deleteGames = document.querySelectorAll(".room-delete");
+        $deleteGames.forEach(game => game.addEventListener("click", async ({target}) => {
+            const gameId = target.closest(".room").id;
+            await deleteRoom(gameId);
+        }));
     },
 
     make: async function () {

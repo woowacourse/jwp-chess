@@ -57,10 +57,13 @@ export async function makeRoom(name) {
 }
 
 export async function deleteRoom(roomId) {
+    console.log(roomId);
     const response = await fetch("http://localhost:8080/rooms/" + roomId, {
-        method: 'DELETE',
+        method: "POST",
         headers: {"Content-Type": "application/json"}
-    }).then(() => alert('방이 삭제되었습니다.'))
-        .catch(err => alert(JSON.stringify(err)));
-    return await response.json();
+    })
+        .then((response) => {
+            alert('방을 삭제했습니다.');
+            location.href = response.url
+        });
 }

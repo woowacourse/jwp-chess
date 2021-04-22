@@ -140,18 +140,13 @@
   </div>
 </div>
 
-<div id="board-status" style="display: none" th:text="${gameStatusDto.getBoardStatus()}"></div>
-<div id="game-id" style="display: none" th:text="${gameStatusDto.getGameId()}"></div>
-<div id="is-king-dead" style="display: none" th:text="${gameStatusDto.isKingDead()}"></div>
-<div id="before-turn-team-name" style="display: none" th:text="${gameStatusDto.getBeforeTurnTeamColorName()}"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
         crossorigin="anonymous"></script>
 <script type="text/javascript">
   const HOME = 'http://localhost:8080';
 
-  const board_status = document.getElementById("board-status").innerHTML;
+  const board_status = getCookieByValue('boardStatus');
 
   const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
   const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -223,7 +218,7 @@
     cell.appendChild(img);
   }
 
-  const game_id = document.getElementById('game-id').innerText;
+  const game_id = getCookieByValue('gameId');
 
   function request_move_post() {
     const xhr = new XMLHttpRequest();
@@ -248,11 +243,8 @@
     };
   }
 
-  const is_king_dead = document.getElementById('is-king-dead');
-
-  if (is_king_dead.innerText === "true") {
-    const before_turn_team_name = document.getElementById('before-turn-team-name');
-    alert(before_turn_team_name.innerText + ' 팀이 이겼습니다.');
+  if (getCookieByValue('isKingDead') === "true") {
+    alert(getCookieByValue('beforeTurnTeamColorName') + ' 팀이 이겼습니다.');
     exitAndDeleteGame();
   }
 
@@ -276,6 +268,21 @@
       return false;
     }
     exitAndDeleteGame();
+  }
+
+  function getCookieByValue(value) {
+    const name = value + "=";
+    const ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) === 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
   }
 </script>
 </body>

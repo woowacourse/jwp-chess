@@ -1,8 +1,11 @@
 package dto;
+import javax.validation.constraints.Min;
 
 public class RoomRequestDto {
     private Long id;
+    @Min(value = 2)
     private String name;
+    @Min(value = 4)
     private String pw;
     private Long gameId;
 

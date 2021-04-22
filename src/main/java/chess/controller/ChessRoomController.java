@@ -6,8 +6,10 @@ import dto.RoomDto;
 import dto.RoomRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -27,12 +29,12 @@ public class ChessRoomController {
     }
 
     @PostMapping("/room")
-    public void create(@RequestBody RoomRequestDto roomRequestDto) {
+    public void create(@Valid @ModelAttribute RoomRequestDto roomRequestDto, BindingResult bindingResult) {
         chessRoomService.create(roomRequestDto);
     }
 
     @PostMapping("/room/{id}")
-    public ResponseEntity<ChessGameDto> enter(@PathVariable final String id, @RequestBody RoomRequestDto roomRequestDto) {
+    public ResponseEntity<ChessGameDto> enter(@ModelAttribute RoomRequestDto roomRequestDto) {
         return ResponseEntity.ok().body(chessRoomService.enter(roomRequestDto));
     }
 }

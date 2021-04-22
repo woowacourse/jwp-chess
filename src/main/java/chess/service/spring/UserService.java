@@ -32,10 +32,15 @@ public class UserService {
         if (!users.hasMaximumCountsForGame()) {
             throw new IllegalStateException("혼자서는 플레이할 수 없습니다.");
         }
-        String encodedPassword = passwordEncoder.encode(password);
-        boolean isValidTurn = users.hasEqualUser(encodedPassword, teamType);
+        boolean isValidTurn = users.filterBySameTeam(teamType)
+                .stream()
+                .anyMatch(user -> passwordEncoder.matches(password, user.getPassword()));
         if (!isValidTurn) {
             throw new IllegalStateException("현재 차례가 아닙니다.");
         }
+    }
+
+    public void deleteAllUsersByRoomId(int roomId) {
+        userDAO.deleteAllUsersByRoomId(roomId);
     }
 }

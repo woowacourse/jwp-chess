@@ -18,6 +18,10 @@ public class User {
         this.roomId = roomId;
     }
 
+    public boolean isSameTeam(TeamType teamType) {
+        return this.teamType.equals(teamType.toString());
+    }
+
     public int getId() {
         return id;
     }
@@ -45,9 +49,5 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id, password, teamType, roomId);
-    }
-
-    public boolean hasSameInformation(String password, TeamType teamType) {
-        return this.password.equals(password) && teamType.toString().equals(this.teamType);
     }
 }

@@ -3,6 +3,7 @@ package chess.domain.user;
 import chess.domain.piece.TeamType;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Users {
     private static final int MAXIMUM_USER_COUNTS_FOR_ONE_ROOM = 2;
@@ -33,8 +34,9 @@ public class Users {
         return users.size() == MAXIMUM_USER_COUNTS_FOR_ONE_ROOM;
     }
 
-    public boolean hasEqualUser(String password, TeamType teamType) {
+    public List<User> filterBySameTeam(TeamType teamType) {
         return users.stream()
-                .anyMatch(user -> user.hasSameInformation(password, teamType));
+                .filter(user -> user.isSameTeam(teamType))
+                .collect(Collectors.toList());
     }
 }

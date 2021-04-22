@@ -165,7 +165,7 @@ function gameInitialize(winner, loser) {
         dataType: "json"
     }).done(function (success) {
         if (success) {
-            window.location.href = chessURL + "/";
+            window.location.href = chessURL;
         }
     }).error(function (response) {
         const errorMessage = response.responseText;

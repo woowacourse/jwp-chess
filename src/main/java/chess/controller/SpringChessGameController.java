@@ -36,7 +36,7 @@ public final class SpringChessGameController {
         this.historyService = historyService;
     }
 
-    @GetMapping("/")
+    @GetMapping()
     private String goHome(final Model model) {
         try {
             List<String> roomIds = roomService.allRoomsId();

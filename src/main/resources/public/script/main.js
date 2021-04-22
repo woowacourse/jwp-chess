@@ -75,10 +75,11 @@ function show(target) {
         url: "/game/reachable/" + roomId,
         type: "GET",
         data: requestQuery,
+        contentType : "application/json",
         success: function (result) {
+            positions = result.positions;
             //[d2, d3]
-            if (result !== null && result !== "[]") {
-                const positions = result.slice(1, -1).split(", ");
+            if (result !== null) {
                 positions.forEach((el) => {
                     const piece = document.getElementById(el);
                     piece.classList.add("moveAble");

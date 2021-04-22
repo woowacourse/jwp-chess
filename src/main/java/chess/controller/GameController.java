@@ -19,12 +19,6 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @ResponseBody
-    @GetMapping("/reachable/{roomId}")
-    public String reachable(@PathVariable final Long roomId, @RequestParam final Position source) {
-        return gameService.reachable(roomId, source).toString();
-    }
-
     @GetMapping("/load/{roomId}")
     public String loadGame(@PathVariable final Long roomId, final Model model) {
         model.addAttribute("room", roomService.roomInfo(roomId));
@@ -37,15 +31,5 @@ public class GameController {
         model.addAttribute("winner", OutputView.decideWinnerName(gameService.winner(roomId)));
         roomService.delete(roomId);
         return "winningResultPage";
-    }
-
-    @PostMapping("/move/{roomId}")
-    public String move(@PathVariable final Long roomId,
-                       @RequestParam final Position source, @RequestParam final Position target) {
-        gameService.move(roomId, source, target);
-        if (gameService.isGameEnd(roomId)) {
-            return "redirect:/game/result/" + roomId;
-        }
-        return "redirect:/game/load/" + roomId;
     }
 }

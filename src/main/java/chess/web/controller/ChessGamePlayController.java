@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ChessGamePlayController {
 
+    private static final String NOT_CORRECT_PASSWORD_ERROR_MESSAGE = "비밀번호가 일치하지 않습니다.";
+
     private final ChessGameService chessGameService;
 
     public ChessGamePlayController(ChessGameService chessGameService) {
@@ -30,10 +32,17 @@ public class ChessGamePlayController {
     @PostMapping("/move")
     public ResponseEntity<MoveCompleteResponseDto> movePiece(
         @RequestBody MoveRequestDto moveRequestDto,
-        @CookieValue(ENCRYPTED_PASSWORD) String encryptedPassword) {
+        @CookieValue(value = ENCRYPTED_PASSWORD, required = false) String encryptedPassword) {
 
+        validateCookie(encryptedPassword);
         chessGameService.movePiece(moveRequestDto, encryptedPassword);
         return new ResponseEntity<>(new MoveCompleteResponseDto(), HttpStatus.OK);
+    }
+
+    private void validateCookie(String encryptedPassword) {
+        if (encryptedPassword == null) {
+            throw new IllegalArgumentException(NOT_CORRECT_PASSWORD_ERROR_MESSAGE);
+        }
     }
 
     @DeleteMapping("/games/{gameId}")

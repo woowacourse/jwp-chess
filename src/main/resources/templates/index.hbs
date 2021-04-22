@@ -9,20 +9,21 @@
             <div class="border to-top"></div>
             <div class="chess-game-list-title">
                 체스게임 목록
-                <input class="button is-primary is-light new-game-btn" type="button" value="새 게임">
+                <!--                todo: new-game-btn 클래스 버튼을 만들어야 함!-->
+                <input type="button" value="새로운 게임" class="btn second new-game-btn">
             </div>
 
             <table class="chess-game-list-table">
-                <tr>
+                <tr class="table-header">
                     <th class="chess-game-room-id">방 번호</th>
                     <th class="chess-game-room-title">방 제목</th>
                     <th class="chess-game-room-state">게임상태</th>
                     <!--                <th>방장이름</th>-->
                 </tr>
                 {{#chessGameDtos}}
-                    <tr>
-                        <td>{{chessGameId}}</td>
-                        <td>{{title}}</td>
+                    <tr class="table-body">
+                        <td class="chess-game-id">{{chessGameId}}</td>
+                        <td class="chess-game-title">{{title}}</td>
                         <!--            <td>로키</td>-->
                         <td>{{state}}</td>
                     </tr>
@@ -31,5 +32,18 @@
         </div>
     </div>
 </div>
+
+
+
+<a class="confirm-btn btn-dialog" href="/">Dialog</a>
+<!-- Dialog will be inserted here -->
+<div class="awsm-dialog animated bounceIn confirm-text">
+    <div class="awd-content">
+        <p class="awd-message">Are you sure?</p>
+        <button class="btn awd-ok">Yes</button>
+        <button class="btn awd-cancel">No</button>
+    </div>
+</div>
+
 <script type="text/javascript" src="/js/chessgames-list.js"></script>
 {{>layout/footer}}

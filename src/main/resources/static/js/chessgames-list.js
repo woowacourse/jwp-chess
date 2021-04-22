@@ -5,6 +5,17 @@ const chessGameFunction = {
             const title = prompt("방제는 뭘로 하시겠어요?");
             _this.create(title);
         });
+
+        document.querySelector(".chess-game-list-table").addEventListener("click", event => {
+            const classList = event.target.classList;
+            if (!classList.contains("chess-game-id") && !classList.contains("chess-game-title")) {
+                return
+            }
+            const chessGameId = parseInt(event.target.parentElement.firstElementChild.innerText);
+            if (confirm(`${chessGameId}번방에 입장하시겠습니까?`)) {
+                window.location = `/chessgames/${chessGameId}`;
+            }
+        })
     },
     create: function (title) {
         const data = {
@@ -23,13 +34,8 @@ const chessGameFunction = {
                 return data.json();
             })
             .then(chessGameDto => {
-                // enrollChessGameId(chessGameDto.chessGameId);
-                // placePieces(chessGameDto.pieceDtos);
-                // toggleStartAndEndButtons(chessGameDto.finished);
-                // changeTurn(chessGameDto.state);
                 const chessGameId = chessGameDto.chessGameId.toString();
-                window.location = `/`;
-                // window.location = `/chessgames/${chessGameId}`;
+                window.location = `/chessgames/${chessGameId}`;
             })
             .catch(error => {
                 alert("잘못된 명령입니다!");

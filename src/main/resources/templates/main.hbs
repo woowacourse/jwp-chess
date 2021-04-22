@@ -15,7 +15,7 @@
     </form>
     <ul id="rooms"> 방 목록
         {{#chessRooms}}
-            <li class="clickable">{{roomId}}</li>
+            <li class="clickable" id="{{roomId}}">{{roomId}}</li>
         {{/chessRooms}}
         {{^chessRooms}}
             <li>방이 없습니다! 새 게임을 눌러 방을 만들어주세요.</li>

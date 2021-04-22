@@ -61,31 +61,6 @@ const index = {
                 placePieces(chessGameDto.pieceDtos);
                 changeTurn(chessGameDto.state);
             })
-            .catch(error => {
-                alert(error.message);
-            });
-    },
-
-    start: function () {
-        const option = {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        };
-
-        fetch("/chessgames", option)
-            .then(data => {
-                return data.json()
-            })
-            .then(chessGameDto => {
-                placePieces(chessGameDto.pieceDtos);
-                toggleStartAndEndButtons(chessGameDto.finished);
-                changeTurn(chessGameDto.state);
-            })
-            .catch(error => {
-                alert("잘못된 명령입니다!");
-            });
     },
 
     end: function () {
@@ -104,12 +79,8 @@ const index = {
                 return data.json()
             })
             .then(chessGameDto => {
-                console.log(chessGameDto);
                 toggleStartAndEndButtons(chessGameDto.state);
             })
-            .catch(error => {
-                alert("[end] 잘못된 명령입니다!")
-            });
     },
 
     scores: function () {
@@ -135,9 +106,6 @@ const index = {
                 changeTurn(chessGameDto.state);
                 toggleContinueAndEndButtons(chessGameDto.finished);
             })
-            .catch(error => {
-//                alert("[continue] 잘못된 명령입니다!");
-            });
     }
 }
 
@@ -184,7 +152,6 @@ winToggleButtons = (finished) => {
         return;
     }
 
-    document.querySelector(".start").classList.remove("hidden");
     document.querySelector(".chess-status-btn").classList.add("hidden");
     document.querySelector(".chess-end-btn").classList.add("hidden");
     document.querySelector(".turn-info.text").innerText = "승리!";
@@ -192,20 +159,17 @@ winToggleButtons = (finished) => {
 
 toggleStartAndEndButtons = (state) => {
     if (state === "End") {
-        document.querySelector(".start").classList.remove("hidden");
         document.querySelector(".chess-status-btn").classList.add("hidden");
         document.querySelector(".chess-end-btn").classList.add("hidden");
         return;
     }
 
     document.querySelector(".turn-info.text").innerText = "누구 차례?";
-    document.querySelector(".start").classList.add("hidden");
     document.querySelector(".chess-status-btn").classList.remove("hidden");
     document.querySelector(".chess-end-btn").classList.remove("hidden");
 }
 
 toggleContinueAndEndButtons = () => {
-    document.querySelector(".continue").classList.add("hidden");
     document.querySelector(".chess-status-btn").classList.remove("hidden");
     document.querySelector(".chess-end-btn").classList.remove("hidden");
 }

@@ -7,7 +7,7 @@ newRoom.addEventListener("click", onNewRoom);
 rooms.addEventListener("click", onRoomSelect);
 
 function onRoomSelect(event) {
-    if (event.target && event.target.nodeName == "LI") {
+    if (event.target && event.target.nodeName == "LI" && event.target.classList.contains("clickable")) {
         roomId.value = event.target.id;
         form.submit();
     }
@@ -23,7 +23,6 @@ function onNewRoom() {
         })
         .then(chessRoomDto => {
             roomId.value = chessRoomDto.roomId;
-            console.log(roomId.value);
             form.submit();
         })
         .catch(error => {

@@ -10,9 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 @SpringBootTest
 @Transactional
@@ -22,7 +21,6 @@ class GameDaoTest {
     private Long roomId;
     private Turn turn;
     private Board board;
-
 
     @BeforeEach
     void beforeEach() {
@@ -35,7 +33,7 @@ class GameDaoTest {
     void testLoad() {
         gameDao.save(roomId, turn, board);
 
-        assertThat(gameDao.load(roomId).get().getTurn()).isEqualTo("WHITE");
+        assertThat(gameDao.load(roomId).getTurn()).isEqualTo("WHITE");
     }
 
     @Test
@@ -47,7 +45,7 @@ class GameDaoTest {
 
         gameDao.update(roomId, Turn.BLACK, board);
 
-        String[] boardArray = gameDao.load(roomId).get().getBoard().split(",");
+        String[] boardArray = gameDao.load(roomId).getBoard().split(",");
         assertThat(boardArray[2]).isEqualTo("&#9814;"); // a3 - rook
     }
 
@@ -56,6 +54,8 @@ class GameDaoTest {
         gameDao.save(roomId, turn, board);
         gameDao.delete(roomId);
 
-        assertThat(gameDao.load(roomId).equals(Optional.empty())).isTrue();
+        assertThatIllegalStateException()
+                .isThrownBy(() -> gameDao.load(roomId))
+                .withMessage("게임 정보를 찾을 수 없습니다.");
     }
 }

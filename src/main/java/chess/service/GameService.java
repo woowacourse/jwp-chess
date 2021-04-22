@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class GameService {
@@ -38,7 +37,7 @@ public class GameService {
         gameDao.delete(roomId);
     }
 
-    public List<String> show(final Long roomId, final Position source) {
+    public List<String> movable(final Long roomId, final Position source) {
         final ChessGame chessGame = loadChessGame(roomId);
         return chessGame.reachablePositions(source);
     }
@@ -54,16 +53,9 @@ public class GameService {
     }
 
     public ChessGame loadChessGame(final Long roomId) {
-        validateGameDto(gameDao.load(roomId));
-        final GameDto gameDto = gameDao.load(roomId).get();
+        GameDto gameDto = gameDao.load(roomId);
         String[] data = gameDto.getBoard().split(",");
         return ChessGame.load(dataToBoard(data), Turn.of(gameDto.getTurn()));
-    }
-
-    private void validateGameDto(Optional<GameDto> gameDto) {
-        if (gameDto.equals(Optional.empty())) {
-            throw new IllegalStateException("게임 정보를 찾을 수 없습니다.");
-        }
     }
 
     private Board dataToBoard(String[] data) {

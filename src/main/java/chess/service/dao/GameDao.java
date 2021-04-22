@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class GameDao {
@@ -30,10 +29,12 @@ public class GameDao {
         jdbcTemplate.update(query, roomId, turn.name(), boardToData(board));
     }
 
-    public Optional<GameDto> load(final Long roomId) {
+    public GameDto load(final Long roomId) {
         final String query = "SELECT * FROM game_status WHERE room_id = ?";
         List<GameDto> results = jdbcTemplate.query(query, makeGameDto(), roomId);
-        return results.stream().findAny();
+        return results.stream()
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("게임 정보를 찾을 수 없습니다."));
     }
 
     public void delete(final Long roomId) {

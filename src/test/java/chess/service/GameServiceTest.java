@@ -33,7 +33,7 @@ public class GameServiceTest {
 
     @Test
     void testShow() {
-        List<String> positions = gameService.show(roomId, new Position("b2"));
+        List<String> positions = gameService.movable(roomId, new Position("b2"));
 
         assertThat(positions).isEqualTo(Arrays.asList("b3", "b4"));
     }

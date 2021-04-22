@@ -29,10 +29,10 @@ public class GameController {
         return printGame(roomId, model);
     }
 
-    @GetMapping("/show/{roomId}")
+    @GetMapping("/movable/{roomId}")
     @ResponseBody
     public String show(@PathVariable final Long roomId, @RequestParam Position source) {
-        return gameService.show(roomId, source).toString();
+        return gameService.movable(roomId, source).toString();
     }
 
     @PostMapping("/move/{roomId}")

@@ -4,6 +4,7 @@ import chess.domain.board.Board;
 import chess.domain.chessgame.ChessGame;
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,22 +22,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PlayLogRepositoryTest {
 
     private final PlayLogRepository playLogRepository;
-    private Board board;
-    private ChessGame chessGame;
+    private final JdbcTemplate jdbcTemplate;
+    private final Gson gson = new Gson();
     private BoardDto boardDto;
     private GameStatusDto gameStatusDto;
 
-    public PlayLogRepositoryTest(JdbcTemplate jdbcTemplate){
+    public PlayLogRepositoryTest(JdbcTemplate jdbcTemplate) {
         playLogRepository = new PlayLogRepository(jdbcTemplate);
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @BeforeEach
     void setUp() {
-        board = new Board();
-        chessGame = new ChessGame(board);
+        Board board = new Board();
+        ChessGame chessGame = new ChessGame(board);
         boardDto = new BoardDto(board);
         gameStatusDto = new GameStatusDto(chessGame);
-        playLogRepository.insert(boardDto, gameStatusDto, "1");
+
+        String query = "INSERT INTO play_log (board, game_status, room_id) VALUES (?, ?, ?)";
+        jdbcTemplate.update(query, gson.toJson(boardDto), gson.toJson(gameStatusDto), "1");
     }
 
     @DisplayName("insert를 하면, 테이블에 게임정보가 들어간다.")
@@ -51,14 +55,14 @@ class PlayLogRepositoryTest {
 
     @DisplayName("보드 정보를 요청하면, roomId에 매칭되는 최근 보드의 정보를 가져온다. ")
     @Test
-    void latestBoard(){
+    void latestBoard() {
         BoardDto boardDto = playLogRepository.latestBoard("1");
         assertThat(boardDto).usingRecursiveComparison().isEqualTo(this.boardDto);
     }
 
     @DisplayName("게임 상태를 요청하면, roomId에 매칭되는 게임 상태를 가져온다")
     @Test
-    void latestGameStatus(){
+    void latestGameStatus() {
         GameStatusDto gameStatusDto = playLogRepository.latestGameStatus("1");
         assertThat(gameStatusDto).usingRecursiveComparison().isEqualTo(this.gameStatusDto);
     }

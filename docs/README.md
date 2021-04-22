@@ -8,4 +8,4 @@
 - [x] Gson 객체도 Bean 으로 만들기
 - [x] ~~@JsonCreator를 통해 생성자를 찾도록 수정~~
   - Intellij 세팅으로는 default 생성자가 반드시 필요.
-- [ ] 테스트 코드 작성
+- [x] 테스트 코드 작성

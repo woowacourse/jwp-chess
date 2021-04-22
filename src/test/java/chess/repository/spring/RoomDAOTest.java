@@ -56,4 +56,14 @@ class RoomDAOTest {
 
         assertThat(room.getName()).isEqualTo("room2");
     }
+
+    @DisplayName("방을 id로 삭제한다.")
+    @Test
+    void deleteRoom() {
+        Room room = roomDAO.findLastAddedRoom().get();
+        
+        roomDAO.deleteRoomById(room.getId());
+
+        assertThat(roomDAO.findAllRooms()).hasSize(1);
+    }
 }

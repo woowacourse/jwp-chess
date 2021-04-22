@@ -103,7 +103,7 @@ class ChessControllerTest {
     @Test
     void restart() {
         Response response = RestAssured.given().log().all()
-                .when().delete("/chessgame/1/histories");
+                .when().delete("/chessgame/1");
 
         assertResponse(response, HttpStatus.OK, "/");
     }

@@ -10,7 +10,10 @@ import java.util.stream.Collectors;
 
 public class BoardDto {
 
-    private final List<PieceDto> board;
+    private List<PieceDto> board;
+
+    public BoardDto() {
+    }
 
     public BoardDto(Board board) {
         Map<Point, SquareState> squares = board.squares();

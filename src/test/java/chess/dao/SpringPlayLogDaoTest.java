@@ -10,7 +10,8 @@ import chess.domain.chessgame.ScoreBoard;
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
 import chess.dto.web.PieceDto;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 public class SpringPlayLogDaoTest {
 
-    private static final Gson GSON = new Gson();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private SpringPlayLogDao springPlayLogDao;
 
@@ -31,12 +32,12 @@ public class SpringPlayLogDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws JsonProcessingException {
         jdbcTemplate.update("TRUNCATE TABLE play_log");
 
         jdbcTemplate.update("INSERT INTO play_log (board, game_status, room_id) VALUES (?, ?, ?)",
-            GSON.toJson(new BoardDto(new Board())),
-            GSON.toJson(new GameStatusDto(new ChessGame(new Board()))),
+            OBJECT_MAPPER.writeValueAsString(new BoardDto(new Board())),
+            OBJECT_MAPPER.writeValueAsString(new GameStatusDto(new ChessGame(new Board()))),
             "1");
 
         springPlayLogDao = new SpringPlayLogDao(jdbcTemplate);

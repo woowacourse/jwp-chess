@@ -26,12 +26,6 @@ public class GameStatusDto {
 
     }
 
-    public GameStatusDto(String gameState, String turn, String winner) {
-        this.gameState = gameState;
-        this.turn = turn;
-        this.winner = winner;
-    }
-
     public GameStatusDto(ChessGame chessGame) {
         gameState = encodedGameState(chessGame.gameState());
         turn = encodedTeam(chessGame.currentTurn());

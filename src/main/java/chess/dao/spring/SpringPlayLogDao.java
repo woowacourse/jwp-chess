@@ -3,14 +3,15 @@ package chess.dao.spring;
 import chess.dao.PlayLogDao;
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class SpringPlayLogDao implements PlayLogDao {
 
-    private static final Gson GSON = new Gson();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -20,7 +21,12 @@ public class SpringPlayLogDao implements PlayLogDao {
 
     public void insert(BoardDto boardDto, GameStatusDto gameStatusDto, String roomId) {
         String query = "INSERT INTO play_log (board, game_status, room_id) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query, GSON.toJson(boardDto), GSON.toJson(gameStatusDto), roomId);
+        try {
+            jdbcTemplate.update(query, OBJECT_MAPPER.writeValueAsString(boardDto),
+                OBJECT_MAPPER.writeValueAsString(gameStatusDto), roomId);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("직렬화에 실패했습니다.");
+        }
     }
 
     public BoardDto latestBoard(String roomId) {
@@ -30,7 +36,11 @@ public class SpringPlayLogDao implements PlayLogDao {
             query,
             (resultSet, rowNum) -> {
                 String boardJson = resultSet.getString(1);
-                return GSON.fromJson(boardJson, BoardDto.class);
+                try {
+                    return OBJECT_MAPPER.readValue(boardJson, BoardDto.class);
+                } catch (JsonProcessingException e) {
+                    throw new IllegalArgumentException("역직렬화에 실패했습니다.");
+                }
             },
             roomId);
     }
@@ -42,7 +52,11 @@ public class SpringPlayLogDao implements PlayLogDao {
             query,
             (resultSet, rowNum) -> {
                 String statusJson = resultSet.getString(1);
-                return GSON.fromJson(statusJson, GameStatusDto.class);
+                try {
+                    return OBJECT_MAPPER.readValue(statusJson, GameStatusDto.class);
+                } catch (JsonProcessingException e) {
+                    throw new IllegalArgumentException("역직렬화에 실패했습니다.");
+                }
             },
             roomId);
     }

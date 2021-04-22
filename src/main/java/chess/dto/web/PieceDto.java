@@ -12,10 +12,14 @@ public class PieceDto {
     private static final String WHITE = "w";
     private static final String NONE = "n";
 
-    private final String team;
-    private final String piece;
-    private final String x;
-    private final String y;
+    private String team;
+    private String piece;
+    private String x;
+    private String y;
+
+    public PieceDto(){
+
+    }
 
     public PieceDto(Point point, Team team, Piece piece) {
         this.piece = pieceNameForDto(piece);

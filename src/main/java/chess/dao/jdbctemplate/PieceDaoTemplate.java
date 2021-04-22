@@ -30,7 +30,7 @@ public class PieceDaoTemplate implements PieceDao {
 
     @Override
     public long[] savePieces(final Long gameId, final Map<Position, Piece> pieces) {
-        String sql = "INSERT INTO piece(game_id, position, symbol) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO piece(game_id, position, symbold) VALUES (?, ?, ?)";
         List<Object[]> collect = pieces.entrySet()
                 .stream()
                 .map(entry -> new Object[]{gameId, entry.getKey().parseString(), entry.getValue().getSymbol()})

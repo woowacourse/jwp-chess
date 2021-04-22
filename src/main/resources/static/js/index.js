@@ -24,9 +24,8 @@ function startGame(event) {
 
     fetch($url, option)
         .then(data => {
-            if (data.status === 400) {
-                exceptionHandling(data.json());
-            } else if (!data.ok) {
+            if (!data.ok) {
+                exceptionHandling(data.json())
                 throw new Error(data.status);
             }
             return data.json();

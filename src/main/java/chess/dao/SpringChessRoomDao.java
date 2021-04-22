@@ -1,7 +1,10 @@
 package chess.dao;
 
+import chess.dto.RoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class SpringChessRoomDao {
@@ -20,5 +23,12 @@ public class SpringChessRoomDao {
     private String createdRoomId() {
         String query = "SELECT MAX(room_id) from chessroom";
         return this.jdbcTemplate.queryForObject(query, String.class);
+    }
+
+    public List<RoomDto> findAllRoomIds() {
+        String query = "SELECT room_id, room_name FROM chessroom";
+        return jdbcTemplate.query(query,
+                (rs, row) -> new RoomDto(
+                        rs.getString("room_id"), rs.getString("room_name")));
     }
 }

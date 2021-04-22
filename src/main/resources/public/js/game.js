@@ -117,6 +117,8 @@ function clearMovablePosition() {
 async function createBoard() {
     clearBoard();
     await postFetchWithoutBody("create/" + $roomId).then(data => {
+        console.log("board id = " + $roomId);
+        console.log(data)
         $board = data;
     })
     refreshBoard();

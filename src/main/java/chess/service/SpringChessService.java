@@ -4,10 +4,7 @@ import chess.dao.SpringChessLogDao;
 import chess.dao.SpringChessRoomDao;
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
-import chess.dto.BoardDto;
-import chess.dto.BoardStatusDto;
-import chess.dto.MovablePositionDto;
-import chess.dto.MoveRequestDto;
+import chess.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -80,5 +77,9 @@ public class SpringChessService {
 
     public String createRoom(String name) {
         return chessRoomDao.createRoom(name);
+    }
+
+    public List<RoomDto> roomIds() {
+        return chessRoomDao.findAllRoomIds();
     }
 }

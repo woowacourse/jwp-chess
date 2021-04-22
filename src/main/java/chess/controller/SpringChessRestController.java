@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/enter")
+@RequestMapping("/game")
 @RestController
 public class SpringChessRestController {
     private final SpringChessService springChessService;
@@ -16,7 +16,7 @@ public class SpringChessRestController {
         this.springChessService = springChessService;
     }
 
-    @PostMapping("/create/{id}")
+    @GetMapping("/board/{id}")
     public ResponseEntity<BoardDto> createRoom(@PathVariable("id") String id) {
         return ResponseEntity.ok(springChessService.loadRoom(id));
     }

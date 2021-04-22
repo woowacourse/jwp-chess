@@ -3,9 +3,7 @@ let main = {
         this.showList();
     },
     showList: function () {
-        const roomId = document.querySelector('#enterRoomId');
-
-        fetch("/list").then(res => {
+        fetch("/rooms").then(res => {
             return res.json();
         }).then(function (room_ids) {
             const room_list = document.querySelector('.room_list')
@@ -16,7 +14,7 @@ let main = {
 
         function renderRoomTemplate(id, name) {
             return ` <div class="room">
-                        <a href="/enter/${id}">방 번호 : ${id} <br> 방 제목 : ${name}</a>
+                        <a href="/game/${id}">방 번호 : ${id} <br> 방 제목 : ${name}</a>
                     </div>`;
         }
     },

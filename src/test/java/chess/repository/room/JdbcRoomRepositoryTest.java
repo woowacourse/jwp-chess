@@ -7,7 +7,6 @@ import chess.domain.game.Room;
 import chess.domain.gamestate.running.Ready;
 import chess.domain.team.Team;
 import chess.utils.BoardUtil;
-import java.sql.SQLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ class JdbcRoomRepositoryTest {
 
         // when
         long roomId = repository.insert(room);
-        Room foundRoom = repository.findRoomByRoomName(room.getName());
+        Room foundRoom = repository.findByName(room.getName());
 
         // then
         assertAll(
@@ -47,14 +46,14 @@ class JdbcRoomRepositoryTest {
     void update() {
         // given
         long roomId = repository.insert(new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
-        Room foundRoom = repository.findRoomById(roomId);
+        Room foundRoom = repository.findById(roomId);
 
         // when
         foundRoom.play("start");
         repository.update(foundRoom);
 
         // then
-        Room resultRoom = repository.findRoomById(roomId);
+        Room resultRoom = repository.findById(roomId);
         assertAll(
             () -> assertThat(resultRoom.getId()).isEqualTo(roomId),
             () -> assertThat(resultRoom.getName()).isEqualTo(foundRoom.getName()),
@@ -70,7 +69,7 @@ class JdbcRoomRepositoryTest {
         long roomId = repository.insert(room);
 
         // when
-        Room foundRoom = repository.findRoomById(roomId);
+        Room foundRoom = repository.findById(roomId);
 
         // then
         assertAll(
@@ -88,7 +87,7 @@ class JdbcRoomRepositoryTest {
         long roomId = repository.insert(room);
 
         // when
-        Room foundRoom = repository.findRoomByRoomName(room.getName());
+        Room foundRoom = repository.findByName(room.getName());
 
         // then
         assertAll(

@@ -46,7 +46,7 @@ public class JdbcRoomRepository implements RoomRepository {
     }
 
     @Override
-    public Room findRoomById(long roomId) {
+    public Room findById(long roomId) {
         String sql = "SELECT * FROM rooms WHERE id = ?";
         return this.jdbcTemplate.queryForObject(
                 sql,
@@ -63,7 +63,7 @@ public class JdbcRoomRepository implements RoomRepository {
     }
 
     @Override
-    public Room findRoomByRoomName(String roomName) {
+    public Room findByName(String roomName) {
         String sql = "SELECT * FROM rooms WHERE name = ?";
         return this.jdbcTemplate.queryForObject(
                 sql,
@@ -87,22 +87,12 @@ public class JdbcRoomRepository implements RoomRepository {
                 Integer.class,
                 roomName
         );
-
-        if (count == 0) {
-            return true;
-        }
-        return false;
+        return count == 0;
     }
 
     @Override
     public void deleteAll() {
         String sql = "DELETE FROM rooms";
         this.jdbcTemplate.update(sql);
-    }
-
-    @Override
-    public int count() {
-        String sql = "SELECT COUNT(*) FROM rooms";
-        return this.jdbcTemplate.queryForObject(sql, Integer.class);
     }
 }

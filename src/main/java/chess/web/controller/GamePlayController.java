@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-public class ChessGamePlayController {
+public class GamePlayController {
 
     private static final String NOT_CORRECT_PASSWORD_ERROR_MESSAGE = "비밀번호가 일치하지 않습니다.";
 
     private final ChessGameService chessGameService;
 
-    public ChessGamePlayController(ChessGameService chessGameService) {
+    public GamePlayController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 

@@ -132,4 +132,17 @@ public class ChessBoard {
     public Map<Position, Piece> board() {
         return Collections.unmodifiableMap(this.board);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessBoard that = (ChessBoard) o;
+        return Objects.equals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board);
+    }
 }

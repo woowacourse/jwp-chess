@@ -40,11 +40,11 @@ public class RealPiece extends Piece {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RealPiece realPiece = (RealPiece) o;
-        return color == realPiece.color;
+        return color == realPiece.color && Objects.equals(moveStrategy, realPiece.moveStrategy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(color);
+        return Objects.hash(color, moveStrategy);
     }
 }

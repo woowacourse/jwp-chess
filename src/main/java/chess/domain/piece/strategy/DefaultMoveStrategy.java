@@ -5,6 +5,7 @@ import chess.domain.position.Direction;
 import chess.exception.InvalidMoveStrategyException;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class DefaultMoveStrategy implements MoveStrategy {
     private final List<Direction> movableDirections;
@@ -45,5 +46,17 @@ public abstract class DefaultMoveStrategy implements MoveStrategy {
         if (moveRoute.getPieceAtToPosition().isSameColor(moveRoute.getPieceAtFromPosition())) {
             throw new InvalidMoveStrategyException("동일한 진영의 말이 있어서 행마할 수 없습니다.");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        return this.getClass() == o.getClass();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(movableDirections);
     }
 }

@@ -16,6 +16,14 @@ public class RoomDto {
         this.roomPassword = roomPassword;
     }
 
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
+
     public String getRoomName() {
         return roomName;
     }

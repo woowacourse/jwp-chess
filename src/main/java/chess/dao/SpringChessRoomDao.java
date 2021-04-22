@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class SpringChessRoomDao {
+public class SpringChessRoomDao implements ChessRoomRepository {
     private SimpleJdbcInsert simpleJdbcInsert;
     private JdbcTemplate jdbcTemplate;
 
@@ -22,11 +22,13 @@ public class SpringChessRoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addRoom(RoomDto roomDto) {
+    @Override
+    public Long add(RoomDto roomDto) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(roomDto);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
+    @Override
     public List<RoomDto> findAllRoom() {
         String query = "select * from chessroom order by room_id asc";
         return jdbcTemplate.query(
@@ -42,11 +44,13 @@ public class SpringChessRoomDao {
         );
     }
 
+    @Override
     public String findRoomNameById(String id) {
         String query = "select target, destination from chessroom where room_id = ? ORDER BY command_date ASC;";
         return jdbcTemplate.queryForObject(query, String.class, id);
     }
 
+    @Override
     public void delete(String id) {
         String query = "DELETE FROM chessroom WHERE room_id = ?";
         this.jdbcTemplate.update(query, id);

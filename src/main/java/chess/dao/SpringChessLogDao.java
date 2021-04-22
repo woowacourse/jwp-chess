@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class SpringChessLogDao implements ChessRepository {
@@ -25,11 +24,13 @@ public class SpringChessLogDao implements ChessRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Long add(MoveRequestDto moveRequestDto) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(moveRequestDto);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
+    @Override
     public List<CommandDto> find(String id) {
         String query = "select target, destination from chessgame where room_id = ? ORDER BY command_date ASC;";
         return jdbcTemplate.query(
@@ -44,21 +45,13 @@ public class SpringChessLogDao implements ChessRepository {
                 }, id);
     }
 
+    @Override
     public void delete(String roomId) {
         String query = "DELETE FROM chessgame WHERE room_id = ?";
         this.jdbcTemplate.update(query, roomId);
     }
 
-    public Optional<String> findRoomByName(String name) {
-        String query = "select room_id from chessroom where room_name = ?";
-
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, String.class, name));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
+    @Override
     public String findRoomById(String id) {
         String query = "select room_id from chessroom where room_id = ?";
 

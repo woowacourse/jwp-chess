@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class SpringChessService {
@@ -26,7 +25,7 @@ public class SpringChessService {
     }
 
     public Long createRoom(RoomDto roomDto) {
-        return springChessRoomDao.addRoom(roomDto);
+        return springChessRoomDao.add(roomDto);
     }
 
     public BoardDto loadRoom(String id) {
@@ -60,8 +59,7 @@ public class SpringChessService {
     public BoardDto move(MoveRequestDto moveRequestDto) {
         ChessGame chessGame = loadChessGame(moveRequestDto.getRoomId());
 
-        BoardDto boardDto = movePiece(chessGame, moveRequestDto);
-        return boardDto;
+        return movePiece(chessGame, moveRequestDto);
     }
 
     private BoardDto start(ChessGame chessGame) {
@@ -90,15 +88,12 @@ public class SpringChessService {
         return new BoardStatusDto(loadChessGame(roomId).boardStatus());
     }
 
-    public Optional<String> findRoomByName(String roomName) {
-        return springChessLogDao.findRoomByName(roomName);
-    }
-
     public String findRoomById(String id) {
         return springChessLogDao.findRoomById(id);
     }
 
     public void deleteRoom(String roomNumber) {
         springChessLogDao.delete(roomNumber);
+        springChessRoomDao.delete(roomNumber);
     }
 }

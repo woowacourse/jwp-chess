@@ -46,8 +46,8 @@ public class ChessService {
     }
 
     private void setBoard(Map<PositionDto, PieceDto> board, Model model) {
-        for (PositionDto positionDTO : board.keySet()) {
-            model.addAttribute(positionDTO.getKey(), board.get(positionDTO));
+        for (PositionDto positionDto : board.keySet()) {
+            model.addAttribute(positionDto.getKey(), board.get(positionDto));
         }
     }
 

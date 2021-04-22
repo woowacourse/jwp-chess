@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Position {
+    private static final Map<String, Position> cache = new HashMap<>();
+
     private final Column column;
     private final Row row;
-    private static final Map<String, Position> cache = new HashMap<>();
 
     static {
         for (Column x : Column.values()) {

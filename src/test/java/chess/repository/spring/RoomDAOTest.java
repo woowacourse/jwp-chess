@@ -61,7 +61,7 @@ class RoomDAOTest {
     @Test
     void deleteRoom() {
         Room room = roomDAO.findLastAddedRoom().get();
-        
+
         roomDAO.deleteRoomById(room.getId());
 
         assertThat(roomDAO.findAllRooms()).hasSize(1);

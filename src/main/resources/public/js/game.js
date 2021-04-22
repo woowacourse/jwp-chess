@@ -202,7 +202,7 @@ async function clearRoom() {
     fetch("/clear/" + $roomId, {
         method: 'delete'
     }).then(res => {
-        return res.url
+        return res.url;
     }).then(url => {
         window.location.href = url;
     });

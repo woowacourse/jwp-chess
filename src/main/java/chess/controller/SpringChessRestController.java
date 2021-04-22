@@ -1,6 +1,9 @@
 package chess.controller;
 
-import chess.dto.*;
+import chess.dto.BoardDto;
+import chess.dto.BoardStatusDto;
+import chess.dto.MovablePositionDto;
+import chess.dto.MoveRequestDto;
 import chess.service.SpringChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

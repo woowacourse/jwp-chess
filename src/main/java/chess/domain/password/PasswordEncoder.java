@@ -12,14 +12,13 @@ public class PasswordEncoder {
     }
 
     private static MessageDigest getMessageDigest(String rawPassword) {
-        MessageDigest messageDigest = null;
         try {
-            messageDigest = MessageDigest.getInstance("SHA-256");
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(rawPassword.getBytes(StandardCharsets.UTF_8));
+            return messageDigest;
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("비밀번호 암호화를 위한 인스턴스를 찾을 수 없습니다.");
         }
-        messageDigest.update(rawPassword.getBytes(StandardCharsets.UTF_8));
-        return messageDigest;
     }
 
     private static String getEncryptedPassword(MessageDigest messageDigest) {

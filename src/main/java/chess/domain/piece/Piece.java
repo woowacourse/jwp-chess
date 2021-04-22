@@ -40,6 +40,10 @@ public abstract class Piece {
         return PATTERN.matcher(piece).matches();
     }
 
+    public boolean isSameColor(String name) {
+         return this.color.name().equals(name.toUpperCase());
+    }
+
     public final boolean isBlack() {
         return color.equals(Color.BLACK);
     }

@@ -1,74 +1,53 @@
 package chess.dao;
 
-import chess.dto.request.ChessRequestDto;
-import chess.dto.request.MoveRequestDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import chess.dto.request.PieceDto;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class PieceDao {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Autowired
-    public PieceDao(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public PieceDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public void initializePieceStatus(final String pieceName, final String piecePosition) {
-        String query = "INSERT INTO piece (piece_name, piece_position) VALUE (?, ?)";
+    public void insertInitialPieces(int roomId, final String pieceName, final String piecePosition) {
+        String query = "INSERT INTO piece (piece_name, piece_position, room_id) VALUE (?, ?, ?)";
+        jdbcTemplate.update(query, pieceName, piecePosition, roomId);
+    }
+
+    public void movePiece(String source, String target, int roomId) {
+        String query = "UPDATE piece SET piece_position=? WHERE piece_position=? AND room_id = ?";
+        jdbcTemplate.update(query, target, source, roomId);
+    }
+
+    public void removePiece(String target, int roomId) {
+        String query = "DELETE FROM piece WHERE piece_position=? AND room_id = ?";
         try {
-            jdbcTemplate.update(query, pieceName, piecePosition);
+            jdbcTemplate.update(query, target, roomId);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public List<ChessRequestDto> showAllPieces() {
-        List<ChessRequestDto> pieces = new ArrayList<>();
-        String query = "SELECT * FROM piece";
-
-        try {
-            pieces = jdbcTemplate.query(
-                    query, (rs, rowNum) -> new ChessRequestDto(
-                            rs.getLong("id"),
-                            rs.getString("piece_name"),
-                            rs.getString("piece_position"))
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public List<PieceDto> getPieces(int roomId) {
+        String query = "SELECT * FROM piece WHERE room_id = :room_id";
+        SqlParameterSource namedParameters = new MapSqlParameterSource("room_id", roomId);
+        List<PieceDto> pieces = this.namedParameterJdbcTemplate.query(
+                query,
+                namedParameters,
+                (rs, rowNum) -> new PieceDto(
+                        rs.getString("piece_name"),
+                        rs.getString("piece_position"))
+        );
         return pieces;
-    }
-
-    public void movePiece(final MoveRequestDto moveRequestDto) {
-        String query = "UPDATE piece SET piece_position=? WHERE piece_position=?";
-        try {
-            jdbcTemplate.update(query, moveRequestDto.getTarget(), moveRequestDto.getSource());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void removeAllPieces() {
-        String query = "DELETE FROM piece";
-        try {
-            jdbcTemplate.update(query);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void removePiece(final MoveRequestDto moveRequestDto) {
-        String query = "DELETE FROM piece WHERE piece_position=?";
-        try {
-            jdbcTemplate.update(query, moveRequestDto.getTarget());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

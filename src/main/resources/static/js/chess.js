@@ -14,69 +14,69 @@ for (let i = 0; i < file.length; i++) {
 for (let i = 0; i < cells.length; i++) {
     if (jsonFormatObject[cells[i]]) {
         const divCell = document.getElementById(cells[i]);
-        let piece = jsonFormatObject[cells[i]];
+        let pieceName = jsonFormatObject[cells[i]].piece;
 
         const img = document.createElement('img');
         img.style.width = '100%';
         img.style.height = '100%';
 
-        if (piece === 'P') {
-            piece = '';
+        if (pieceName === 'P') {
+            pieceName = '';
             img.src = '/images/black-pawn.png';
             img.id = divCell.id;
         }
-        if (piece === 'R') {
-            piece = '';
+        if (pieceName === 'R') {
+            pieceName = '';
             img.src = '/images/black-rook.png';
             img.id = divCell.id;
         }
-        if (piece === 'N') {
-            piece = '';
+        if (pieceName === 'N') {
+            pieceName = '';
             img.src = '/images/black-knight.png';
             img.id = divCell.id;
         }
-        if (piece === 'B') {
-            piece = '';
+        if (pieceName === 'B') {
+            pieceName = '';
             img.src = '/images/black-bishop.png';
             img.id = divCell.id;
         }
-        if (piece === 'Q') {
-            piece = '';
+        if (pieceName === 'Q') {
+            pieceName = '';
             img.src = '/images/black-queen.png';
             img.id = divCell.id;
         }
-        if (piece === 'K') {
-            piece = '';
+        if (pieceName === 'K') {
+            pieceName = '';
             img.src = '/images/black-king.png';
             img.id = divCell.id;
         }
-        if (piece === 'p') {
-            piece = '';
+        if (pieceName === 'p') {
+            pieceName = '';
             img.src = '/images/white-pawn.png';
             img.id = divCell.id;
         }
-        if (piece === 'r') {
-            piece = '';
+        if (pieceName === 'r') {
+            pieceName = '';
             img.src = '/images/white-rook.png';
             img.id = divCell.id;
         }
-        if (piece === 'n') {
-            piece = '';
+        if (pieceName === 'n') {
+            pieceName = '';
             img.src = '/images/white-knight.png';
             img.id = divCell.id;
         }
-        if (piece === 'b') {
-            piece = '';
+        if (pieceName === 'b') {
+            pieceName = '';
             img.src = '/images/white-bishop.png';
             img.id = divCell.id;
         }
-        if (piece === 'q') {
-            piece = '';
+        if (pieceName === 'q') {
+            pieceName = '';
             img.src = '/images/white-queen.png';
             img.id = divCell.id;
         }
-        if (piece === 'k') {
-            piece = '';
+        if (pieceName === 'k') {
+            pieceName = '';
             img.src = '/images/white-king.png';
             img.id = divCell.id;
         }
@@ -143,7 +143,8 @@ function request_move_post(first_click, second_click) {
     moveXhr.responseType = 'json';
     moveXhr.send(JSON.stringify({
         source: start_position,
-        target: destination
+        target: destination,
+        roomId :window.location.href.split('chess/')[1]
     }));
 
     start_position = null;
@@ -152,7 +153,6 @@ function request_move_post(first_click, second_click) {
 
     moveXhr.onload = function () {
         const move_response = moveXhr.response;
-
         if (move_response['moveError']) {
             alert(move_response['errorMessage']);
             first_click.style.backgroundColor = '';
@@ -175,8 +175,9 @@ function request_move_post(first_click, second_click) {
         turnXhr.responseType = 'json';
         turnXhr.send(JSON.stringify({
             currentTurn: current_turn,
-            nextTurn: next_turn
+            nextTurn: next_turn,
+            roomId :window.location.href.split('chess/')[1]
         }));
-        window.location.href = 'http://127.0.0.1:8080/chess';
+        window.location.href = "/chess/" + window.location.href.split('chess/')[1];
     };
 }

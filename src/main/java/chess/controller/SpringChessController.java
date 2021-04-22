@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.PlayerDto;
+import chess.domain.player.Round;
 import chess.dto.ScoreDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
@@ -9,12 +9,7 @@ import chess.service.ChessService;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class SpringChessController {
@@ -31,32 +26,25 @@ public class SpringChessController {
         return "home";
     }
 
-    @GetMapping("/start")
-    public String start() {
-        chessService.start();
-        return "redirect:/chess";
+    @GetMapping("/makeRoom")
+    @ResponseBody
+    public int makeRoom() {
+        return chessService.makeRoom();
     }
 
-    @GetMapping("/reset")
-    public String reset() {
-        chessService.reset();
-        return "redirect:/chess";
-    }
+    @GetMapping("/chess/{roomId}")
+    public String chess(final Model model, @PathVariable int roomId) {
+        Round loadedRound = chessService.getStoredRound(roomId);
+        String board = GSON.toJson(loadedRound.getBoard());
+        model.addAttribute("jsonFormatChessBoard", board);
 
-    @GetMapping("/chess")
-    public String chess(final Model model) {
-        Map<String, String> loadedBoard = chessService.getStoredBoard();
-
-        String jsonFormatChessBoard = GSON.toJson(loadedBoard);
-        model.addAttribute("jsonFormatChessBoard", jsonFormatChessBoard);
-
-        //TODO: Room 도입하면서 고칠 수 있을 듯
-        String currentTurn = chessService.getCurrentTurn();
+        String currentTurn = loadedRound.getCurrentTurn();
         model.addAttribute("currentTurn", currentTurn);
-        PlayerDto playerDto = chessService.playerDto();
-        chessService.changeRoundToEnd(playerDto);
 
-        ScoreDto scoreDto = chessService.scoreDto(playerDto);
+        Double whiteScore = chessService.getWhiteScore(roomId);
+        Double blackScore = chessService.getBlackScore(roomId);
+
+        ScoreDto scoreDto = new ScoreDto(whiteScore, blackScore);
         model.addAttribute("score", scoreDto);
         return "chess";
     }
@@ -64,12 +52,18 @@ public class SpringChessController {
     @PostMapping(value = "/move", produces = "application/json")
     @ResponseBody
     public MoveResponseDto move(@RequestBody MoveRequestDto moveRequestDto) {
-        return chessService.move(moveRequestDto);
+        String source = moveRequestDto.getSource();
+        String target = moveRequestDto.getTarget();
+        int roomId = moveRequestDto.getRoomId();
+        return chessService.move(source, target, roomId);
     }
 
     @PostMapping(value = "/turn", produces = "application/json")
     @ResponseBody
     public void turn(@RequestBody TurnChangeRequestDto turnChangeRequestDto) {
-        chessService.changeTurn(turnChangeRequestDto);
+        String nextTurn = turnChangeRequestDto.getNextTurn();
+        String currentTurn = turnChangeRequestDto.getCurrentTurn();
+        int roomId = turnChangeRequestDto.getRoomId();
+        chessService.changeTurn(nextTurn, currentTurn, roomId);
     }
 }

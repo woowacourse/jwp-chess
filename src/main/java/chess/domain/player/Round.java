@@ -2,12 +2,17 @@ package chess.domain.player;
 
 import chess.domain.board.ChessBoardFactory;
 import chess.domain.command.Command;
+import chess.domain.command.Move;
+import chess.domain.command.Ready;
+import chess.domain.command.Start;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
 import chess.domain.position.Source;
 import chess.domain.position.Target;
+import chess.domain.state.RunningTurn;
 import chess.domain.state.State;
+import chess.domain.state.StateFactory;
 
 import java.util.Map;
 import java.util.Queue;
@@ -18,9 +23,19 @@ public class Round {
     private final Player blackPlayer;
     private Command command;
     private boolean isEnd = false;
+    private String currentTurn;
+
+    public Round(Map<Position, Piece> board, String currentTurn) {
+        this.board = board;
+        this.whitePlayer = new WhitePlayer(board, currentTurn);
+        this.blackPlayer = new BlackPlayer(board, currentTurn);
+        this.command = new Start();
+        this.currentTurn = currentTurn;
+    }
 
     public Round(final State white, final State black, final Command command) {
         this(new WhitePlayer(white), new BlackPlayer(black), command);
+        this.currentTurn = "white";
     }
 
     public Round(final Player whitePlayer, final Player blackPlayer, final Command command) {
@@ -35,7 +50,8 @@ public class Round {
             this.command = command.ready();
             Position sourcePosition = Position.from(commands.poll());
             Position targetPosition = Position.from(commands.poll());
-            moveByTurn(sourcePosition, targetPosition);
+            moveByTurn(sourcePosition, targetPosition); //TODO: 여기서 이제 왕 죽었는지 체크
+            changeRoundToEnd();
         }
     }
 
@@ -45,6 +61,12 @@ public class Round {
             return;
         }
         move(whitePlayer, blackPlayer, sourcePosition, targetPosition);
+    }
+
+    public void changeRoundToEnd() {
+        if (!(whitePlayer.getPieces().isKing() && blackPlayer.getPieces().isKing())) {
+            changeToEnd();
+        }
     }
 
     private void move(final Player currentPlayer, final Player anotherPlayer,
@@ -68,6 +90,26 @@ public class Round {
         }
     }
 
+//    public void changeTurn(final String currentTurn) {
+//        State nextWhiteTurn = null;
+//        State nextBlackTurn = null;
+//
+//        if ("white".equals(currentTurn)) {
+//            nextWhiteTurn = whitePlayer.getState().toRunningTurn();
+//            nextBlackTurn = blackPlayer.getState().toFinishedTurn();
+//        }
+//        if ("black".equals(currentTurn)) {
+//            nextWhiteTurn = whitePlayer.getState().toFinishedTurn();
+//            nextBlackTurn = blackPlayer.getState().toRunningTurn();
+//        }
+//        changePlayersTurn(nextWhiteTurn, nextBlackTurn);
+//    }
+//
+//    private void changePlayersTurn(State nextWhiteTurn, State nextBlackTurn) {
+//        whitePlayer.changeState(nextWhiteTurn);
+//        blackPlayer.changeState(nextBlackTurn);
+//    }
+
     public void changeToEnd() {
         this.command = command.end();
     }
@@ -83,38 +125,6 @@ public class Round {
         return board;
     }
 
-    public void updateBoard(Map<Position, Piece> loadedBoard) {
-        board = loadedBoard;
-    }
-
-    public boolean isPlaying() {
-        return !command.isEnd();
-    }
-
-    public double calculateScore() {
-        Player currentPlayer = currentPlayer();
-        return score(currentPlayer.getState().pieces());
-    }
-
-    public String currentPlayerName() {
-        return currentPlayer().getName();
-    }
-
-    private double score(final Pieces pieces) {
-        return pieces.calculateScore();
-    }
-
-    private Player currentPlayer() {
-        if (blackPlayer.isFinish()) {
-            return blackPlayer;
-        }
-        return whitePlayer;
-    }
-
-    public boolean isStatus() {
-        return command.isStatus();
-    }
-
     public Player getWhitePlayer() {
         return whitePlayer;
     }
@@ -123,7 +133,7 @@ public class Round {
         return blackPlayer;
     }
 
-    public Command getCommand() {
-        return command;
+    public String getCurrentTurn() {
+        return this.currentTurn;
     }
 }

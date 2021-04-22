@@ -1,61 +1,67 @@
 package chess.repository;
 
+//import chess.dao.PieceDao;
+
 import chess.dao.PieceDao;
-import chess.dao.TurnDao;
-import chess.dto.request.ChessRequestDto;
+import chess.dao.RoomDao;
+import chess.domain.board.ChessBoardFactory;
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 import chess.dto.request.MoveRequestDto;
+import chess.dto.request.PieceDto;
 import chess.dto.request.TurnChangeRequestDto;
-import chess.dto.request.TurnRequestDto;
 import org.springframework.stereotype.Repository;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 public class ChessRepository {
+    private final RoomDao roomDao;
     private final PieceDao pieceDao;
-    private final TurnDao turnDao;
 
-    public ChessRepository(PieceDao pieceDao, TurnDao turnDao) {
+    public ChessRepository(RoomDao roomDao, PieceDao pieceDao) {
+        this.roomDao = roomDao;
         this.pieceDao = pieceDao;
-        this.turnDao = turnDao;
     }
 
-    public void initializePieceStatus(final Map<String, String> board) {
+    public int makeRoom(Map<String, String> board) {
+        int newRoomId = roomDao.selectLastRoomId() + 1;
+        roomDao.insertRoom(newRoomId);
+        initializePieceStatus(newRoomId, board);
+        return newRoomId;
+    }
+
+    public void initializePieceStatus(int roomId, final Map<String, String> board) {
         for (Map.Entry<String, String> boardStatus : board.entrySet()) {
-            pieceDao.initializePieceStatus(boardStatus.getValue(), boardStatus.getKey());
+            pieceDao.insertInitialPieces(roomId, boardStatus.getValue(), boardStatus.getKey());
         }
     }
 
-    public void initializeTurn() {
-        turnDao.initializeTurn();
+    public Map<Position, Piece> getBoardByRoomId(int roomId) {
+        Map<String, String> board = new LinkedHashMap<>();
+        List<PieceDto> pieces = pieceDao.getPieces(roomId);
+
+        for (PieceDto piece : pieces) {
+            board.put(piece.getPosition(), piece.getName());
+        }
+        return ChessBoardFactory.createStoredBoard(board);
     }
 
-    public List<ChessRequestDto> showAllPieces() {
-        return pieceDao.showAllPieces();
+    public void movePiece(String source, String target, int roomId) {
+        pieceDao.movePiece(source, target, roomId);
     }
 
-    public List<TurnRequestDto> showCurrentTurn() {
-        return turnDao.showCurrentTurn();
+    public void changeTurn(String nextTurn, String currentTurn, int roomId) {
+        roomDao.changeTurn(nextTurn, currentTurn, roomId);
     }
 
-    public void movePiece(final MoveRequestDto moveRequestDto) {
-        pieceDao.movePiece(moveRequestDto);
+    public String getCurrentTurnByRoomId(int roomId) {
+        return roomDao.selectTurnByRoomId(roomId);
     }
 
-    public void changeTurn(final TurnChangeRequestDto turnChangeRequestDto) {
-        turnDao.changeTurn(turnChangeRequestDto);
-    }
-
-    public void removeAllPieces() {
-        pieceDao.removeAllPieces();
-    }
-
-    public void removeTurn() {
-        turnDao.removeTurn();
-    }
-
-    public void removePiece(final MoveRequestDto moveRequestDto) {
-        pieceDao.removePiece(moveRequestDto);
+    public void removePiece(String target, int roomId) {
+        pieceDao.removePiece(target, roomId);
     }
 }

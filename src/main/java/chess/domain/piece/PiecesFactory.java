@@ -4,6 +4,7 @@ import chess.domain.position.Position;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PiecesFactory {
     private static final String KING = "k";
@@ -47,6 +48,16 @@ public class PiecesFactory {
             pieces.add(Pawn.from(PAWN.toUpperCase(), Position.valueOf("7", Character.toString((char) ('a' + idx)))));
         }
 
+        return new Pieces(pieces);
+    }
+
+    public static Pieces makePieces(Map<Position, Piece> board, String name) {
+        List<Piece> pieces = new ArrayList<>();
+        for (Map.Entry<Position, Piece> entry : board.entrySet()) {
+            if (entry.getValue().isSameColor(name)) {
+                pieces.add(entry.getValue());
+            }
+        }
         return new Pieces(pieces);
     }
 }

@@ -37,8 +37,8 @@ public class RoomController {
     }
 
     @ResponseBody
-    @DeleteMapping
-    public void deleteRoom(final long roomId) {
+    @DeleteMapping("/{roomId}")
+    public void deleteRoom(@PathVariable final long roomId) {
         roomService.delete(roomId);
     }
 }

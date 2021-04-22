@@ -34,11 +34,9 @@ function enterNewGame() {
 function deleteRoom() {
     return function (event) {
         const roomId = event.target.id;
-        const requestQuery = "roomId=" + roomId;
         $.ajax({
-            url: "/room",
+            url: "/room/"+roomId,
             type: "DELETE",
-            data: requestQuery,
             success: function () {
                 alert("삭제 완료");
                 location.href="/room/list";

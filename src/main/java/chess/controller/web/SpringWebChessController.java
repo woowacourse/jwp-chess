@@ -2,6 +2,7 @@ package chess.controller.web;
 
 import chess.controller.web.dto.game.GameResponseDto;
 import chess.service.ChessService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,8 @@ public class SpringWebChessController {
 
     @GetMapping("/games/{id}")
     public String findGameByGameId(@PathVariable Long id, Model model) {
-        GameResponseDto gameResponseDto = chessService.findGameByGameId(id);
+        GameResponseDto gameResponseDto =
+                new ModelMapper().map(chessService.findGameByGameId(id), GameResponseDto.class);
         model.addAttribute(gameResponseDto);
         return "board";
     }

@@ -1,4 +1,4 @@
-CREATE TABLE chessroom
+CREATE TABLE IF NOT EXISTS chessroom
 (
     room_id       INT          NOT NULL AUTO_INCREMENT,
     room_name     VARCHAR(255) NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE chessroom
     PRIMARY KEY (room_id)
 );
 
-CREATE TABLE chessgame
+CREATE TABLE IF NOT EXISTS chessgame
 (
     command_log  INT         NOT NULL AUTO_INCREMENT,
     room_id      INT         NOT NULL,

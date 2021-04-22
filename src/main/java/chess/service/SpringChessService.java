@@ -54,7 +54,13 @@ public class SpringChessService implements ChessService {
     public RoomDto create(RoomDto roomDto) {
         userDao.insert(roomDto.getWhite());
         userDao.insert(roomDto.getBlack());
-        roomDto.setId(roomDao.insert(roomDto));
+        String roomId = roomDao.insert(roomDto);
+        roomDto.setId(roomId);
+
+        Board board = new Board();
+        ChessGame chessGame = new ChessGame(board);
+
+        playLogDao.insert(new BoardDto(board), new GameStatusDto(chessGame), roomId);
         return roomDto;
     }
 
@@ -65,20 +71,9 @@ public class SpringChessService implements ChessService {
         return new GameStatusDto(chessGame);
     }
 
-    private Board boardFromDb(String roomId) {
-        return playLogDao.latestBoard(roomId).toEntity();
-    }
-
-    private ChessGame chessGameFromDb(Board board, String roomId) {
-        GameStatusDto gameStatusDto = playLogDao.latestGameStatus(roomId);
-        Turn turn = gameStatusDto.toTurnEntity();
-        GameState gameState = gameStatusDto.toGameStateEntity(board);
-        return new ChessGame(turn, new ScoreBoard(board), gameState);
-    }
-
     @Override
     public BoardDto start(String id) {
-        Board board = playLogDao.latestBoard(id).toEntity();
+        Board board = boardFromDb(id);
         ChessGame chessGame = chessGameFromDb(board, id);
         chessGame.start();
         BoardDto boardDto = new BoardDto(board);
@@ -124,5 +119,16 @@ public class SpringChessService implements ChessService {
             userDao.updateStatistics(id, chessGame.winner());
         }
         return new BoardDto(board);
+    }
+
+    private Board boardFromDb(String roomId) {
+        return playLogDao.latestBoard(roomId).toEntity();
+    }
+
+    private ChessGame chessGameFromDb(Board board, String roomId) {
+        GameStatusDto gameStatusDto = playLogDao.latestGameStatus(roomId);
+        Turn turn = gameStatusDto.toTurnEntity();
+        GameState gameState = gameStatusDto.toGameStateEntity(board);
+        return new ChessGame(turn, new ScoreBoard(board), gameState);
     }
 }

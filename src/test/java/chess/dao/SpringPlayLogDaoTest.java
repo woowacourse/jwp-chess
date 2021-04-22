@@ -64,28 +64,6 @@ public class SpringPlayLogDaoTest {
             .isEqualTo(new GameStatusDto(new ChessGame(new Board())));
     }
 
-    @DisplayName("존재하지 않는 id의 방 최근 보드를 요청한 경우 생성 후 반환")
-    @Test
-    void latestBoardWhenDoesNotHaveId() {
-        BoardDto boardDto = springPlayLogDao.latestBoard("2");
-
-        List<PieceDto> expectedBoard = new BoardDto(new Board()).getBoard();
-        List<PieceDto> actualBoard = boardDto.getBoard();
-
-        assertThat(actualBoard).hasSize(expectedBoard.size());
-        assertThat(actualBoard).usingRecursiveFieldByFieldElementComparator()
-            .containsAll(expectedBoard);
-    }
-
-    @DisplayName("존재하지 않는 id의 방 최근 게임 상태를 요청한 경우 생성 후 반환")
-    @Test
-    void latestGameStatusWhenDoesNotHaveId() {
-        GameStatusDto gameStatusDto = springPlayLogDao.latestGameStatus("2");
-
-        assertThat(gameStatusDto).usingRecursiveComparison()
-            .isEqualTo(new GameStatusDto(new ChessGame(new Board())));
-    }
-
     @DisplayName("플레이 기록 추가")
     @Test
     void insert() {

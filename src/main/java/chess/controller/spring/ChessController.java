@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/chessgame/{id}")
+@RequestMapping("/chessgame/{roomId}")
 public class ChessController {
 
     private final ChessService chessService;
@@ -29,42 +29,42 @@ public class ChessController {
     }
 
     @GetMapping("/chessboard")
-    public ResponseEntity<BoardDTO> showChessBoard(@PathVariable int id) {
-        BoardDTO chessBoardDTO = findChessBoard(id);
+    public ResponseEntity<BoardDTO> showChessBoard(@PathVariable int roomId) {
+        BoardDTO chessBoardDTO = findChessBoard(roomId);
         return ResponseEntity.ok().body(chessBoardDTO);
     }
 
-    private BoardDTO findChessBoard(int id) {
-        ChessBoard chessBoard = chessService.findChessBoardByRoomId(id);
-        TeamType teamType = chessService.findCurrentTeamTypeByRoomId(id);
+    private BoardDTO findChessBoard(int roomId) {
+        ChessBoard chessBoard = chessService.findChessBoardByRoomId(roomId);
+        TeamType teamType = chessService.findCurrentTeamTypeByRoomId(roomId);
         return BoardDTO.of(chessBoard, teamType);
     }
 
     @PutMapping("/chessboard")
-    public ResponseEntity<BoardDTO> move(@PathVariable int id, @RequestBody MoveRequestDTO moveRequestDTO, HttpSession httpSession) {
+    public ResponseEntity<BoardDTO> move(@PathVariable int roomId, @RequestBody MoveRequestDTO moveRequestDTO, HttpSession httpSession) {
         String password = (String) httpSession.getAttribute("password");
-        TeamType currentTeamType = chessService.findCurrentTeamTypeByRoomId(id);
-        userService.validateUserTurn(id, password, currentTeamType);
+        TeamType currentTeamType = chessService.findCurrentTeamTypeByRoomId(roomId);
+        userService.validateUserTurn(roomId, password, currentTeamType);
         String current = moveRequestDTO.getCurrent();
         String destination = moveRequestDTO.getDestination();
         String teamType = moveRequestDTO.getTeamType();
-        chessService.moveByRoomId(current, destination, teamType, id);
-        BoardDTO chessBoardDTO = findChessBoard(id);
+        chessService.moveByRoomId(current, destination, teamType, roomId);
+        BoardDTO chessBoardDTO = findChessBoard(roomId);
         return ResponseEntity.ok().body(chessBoardDTO);
     }
 
     @GetMapping("/result")
-    public ResponseEntity<ResultDTO> showResult(@PathVariable int id) {
-        Result result = chessService.calculateResultByRoomId(id);
+    public ResponseEntity<ResultDTO> showResult(@PathVariable int roomId) {
+        Result result = chessService.calculateResultByRoomId(roomId);
         ResultDTO resultDTO = ResultDTO.from(result);
         return ResponseEntity.ok().body(resultDTO);
     }
 
     @DeleteMapping
-    public ResponseEntity<String> exit(@PathVariable int id, HttpSession httpSession) {
-        chessService.deleteAllHistoriesByRoomId(id);
-        userService.deleteAllUsersByRoomId(id);
-        roomService.deleteRoomById(id);
+    public ResponseEntity<String> exit(@PathVariable int roomId, HttpSession httpSession) {
+        chessService.deleteAllHistoriesByRoomId(roomId);
+        userService.deleteAllUsersByRoomId(roomId);
+        roomService.deleteRoomById(roomId);
         httpSession.invalidate();
         String location = "/";
         return ResponseEntity.ok().body(location);

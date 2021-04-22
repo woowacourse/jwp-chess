@@ -31,11 +31,12 @@ public class LoginController {
         return ResponseEntity.status(HttpStatus.OK).body("/chessgame/" + roomId);
     }
 
-    @DeleteMapping("/logout/{id}")
-    public ResponseEntity<String> logout(@PathVariable int id, HttpSession httpSession) {
+    @DeleteMapping("/logout/{roomId}")
+    public ResponseEntity<String> logout(@PathVariable int roomId, HttpSession httpSession) {
         String password = (String) httpSession.getAttribute("password");
-        userService.deleteUserBy(id, password);
+        userService.deleteUserBy(roomId, password);
         httpSession.invalidate();
-        return ResponseEntity.status(HttpStatus.OK).body("/");
+        String location = "/";
+        return ResponseEntity.status(HttpStatus.OK).body(location);
     }
 }

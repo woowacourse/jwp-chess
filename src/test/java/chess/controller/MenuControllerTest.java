@@ -27,7 +27,7 @@ class MenuControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        service.restartBoard();
+        service.restartBoardById(1);
     }
 
     @DisplayName("시작할 때 체스판을 초기화 한다.")

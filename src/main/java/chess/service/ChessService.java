@@ -23,47 +23,47 @@ public class ChessService {
         this.moveDao = moveDao;
     }
 
-    public Game findGame() {
+    public Game findGameById(int id) {
         Game game = new Game();
         game.changeState(new Running());
-        List<MoveRequest> findGame = moveDao.getMoves();
+        List<MoveRequest> findGame = moveDao.getMovesById(id);
         findGame.forEach(move -> game.move(Position.of(move.getFrom()),Position.of(move.getTo())));
         return game;
     }
 
-    public Board findBoard() {
-        return findGame().getBoard();
+    public Board findBoardById(int id) {
+        return findGameById(id).getBoard();
     }
 
-    public boolean addMove(Position from, Position to) {
-        Board board = findBoard();
+    public boolean addMoveById(Position from, Position to, int id) {
+        Board board = findBoardById(id);
         boolean movable = board.isMovable(to, board.generateAvailablePath(from));
         if (movable) {
-            findGame().move(from, to);
-            moveDao.addMove(from, to);
+            findGameById(id).move(from, to);
+            moveDao.addMoveById(from, to, id);
         }
         return movable;
     }
 
-    public Board restartBoard() {
-        moveDao.deleteAll();
-        return findBoard();
+    public Board restartBoardById(int id) {
+        moveDao.deleteAllById(id);
+        return findBoardById(id);
     }
 
-    public boolean endGame() {
-        return findGame().isFinished();
+    public boolean endGameById(int id) {
+        return findGameById(id).isFinished();
     }
 
-    public PieceColor findTurn() {
-        return findGame().getTurn();
+    public PieceColor findTurnById(int id) {
+        return findGameById(id).getTurn();
     }
 
-    public Map<PieceColor, Double> getScores() {
-        return new ScoreDto(findBoard()).getScores();
+    public Map<PieceColor, Double> getScoresById(int id) {
+        return new ScoreDto(findBoardById(id)).getScores();
     }
 
-    public List<String> findPath(Position from) {
-        Path path = findBoard().generateAvailablePath(from);
+    public List<String> findPathById(Position from, int id) {
+        Path path = findBoardById(id).generateAvailablePath(from);
         return path.positions()
             .stream()
             .map(Position::toString)

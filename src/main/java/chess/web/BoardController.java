@@ -9,13 +9,14 @@ import chess.dto.PathDto;
 import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/board")
+@RequestMapping("rooms/{id}/board")
 public class BoardController {
 
     private final ChessService service;
@@ -24,38 +25,33 @@ public class BoardController {
         this.service = service;
     }
 
-    @GetMapping(value = {"", "/restart"})
-    public BoardDto getNewBoard() {
-        return new BoardDto(service.restartBoard());
+    @GetMapping(value = {"/init", "/restart"})
+    public BoardDto getNewBoard(@PathVariable int id) {
+        return new BoardDto(service.restartBoardById(id));
     }
 
- /*   @GetMapping("/restart")
-    public String restart() {
-        return "redirect:/board";
-    }*/
-
     @GetMapping("/status")
-    public boolean isEnd() {
-        return service.endGame();
+    public boolean isEnd(@PathVariable int id) {
+        return service.endGameById(id);
     }
 
     @GetMapping("/turn")
-    public PieceColor getTurn() {
-        return service.findTurn();
+    public PieceColor getTurn(@PathVariable int id) {
+        return service.findTurnById(id);
     }
 
     @GetMapping("/score")
-    public Map<PieceColor, Double> getScore() {
-        return service.getScores();
+    public Map<PieceColor, Double> getScore(@PathVariable int id) {
+        return service.getScoresById(id);
     }
 
     @PostMapping(path = "/path")
-    public List<String> movablePath(@RequestBody PathDto dto) {
-        return service.findPath(Position.of(dto.getFrom()));
+    public List<String> movablePath(@RequestBody PathDto dto, @PathVariable int id) {
+        return service.findPathById(Position.of(dto.getFrom()), id);
     }
 
     @PostMapping(path = "/move")
-    public boolean move(@RequestBody MoveRequest dto) {
-        return service.addMove(Position.of(dto.getFrom()), Position.of(dto.getTo()));
+    public boolean move(@RequestBody MoveRequest dto, @PathVariable int id) {
+        return service.addMoveById(Position.of(dto.getFrom()), Position.of(dto.getTo()), id);
     }
 }

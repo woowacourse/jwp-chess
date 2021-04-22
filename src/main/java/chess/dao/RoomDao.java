@@ -20,12 +20,6 @@ public class RoomDao {
         return jdbcTemplate.query(query, mapper);
     }
 
-
-    public Room findById(int id) {
-        String query = "select * from room where id = " + id;
-        return jdbcTemplate.queryForObject(query, mapper);
-    }
-
     public void delete(int id) {
         String query = "delete from room where id = " + id;
         jdbcTemplate.update(query);

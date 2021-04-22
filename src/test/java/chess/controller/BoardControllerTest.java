@@ -36,7 +36,8 @@ class BoardControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        service.restartBoard();
+        int id = 1;
+        service.restartBoardById(id);
     }
 
     @DisplayName("초기화된 보드를 가져온다 - GET")

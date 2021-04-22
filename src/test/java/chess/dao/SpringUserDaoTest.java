@@ -9,12 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestPropertySource;
 
-@TestPropertySource("classpath:application.properties")
-@SpringBootTest
+@JdbcTest
 public class SpringUserDaoTest {
 
     private SpringUserDao springUserDao;
@@ -25,7 +23,6 @@ public class SpringUserDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("TRUNCATE TABLE `user`");
-
         jdbcTemplate.execute("TRUNCATE TABLE room");
 
         jdbcTemplate.execute("INSERT INTO `user` (name) VALUES ('white')");

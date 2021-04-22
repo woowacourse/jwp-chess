@@ -32,4 +32,9 @@ public class UserDAO {
         String query = "INSERT INTO USER (PASSWORD, TEAM_TYPE, ROOM_ID) VALUES (?, ?, ?)";
         jdbcTemplate.update(query, password, teamType, roomId);
     }
+
+    public void deleteAllUsersByRoomId(int roomId) {
+        String query = "DELETE FROM USER WHERE ROOM_ID = ?";
+        jdbcTemplate.update(query, roomId);
+    }
 }

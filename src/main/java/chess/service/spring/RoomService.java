@@ -27,4 +27,8 @@ public class RoomService {
         return roomDAO.findLastAddedRoom()
                 .orElseThrow(() -> new IllegalStateException("등록된 방이 없습니다."));
     }
+
+    public void deleteRoomById(int id) {
+        roomDAO.deleteRoomById(id);
+    }
 }

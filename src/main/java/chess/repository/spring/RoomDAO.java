@@ -40,4 +40,9 @@ public class RoomDAO {
         }
         return Optional.of(rooms.get(0));
     }
+
+    public void deleteRoomById(int id) {
+        String query = "DELETE FROM ROOM WHERE ID = ?";
+        jdbcTemplate.update(query, id);
+    }
 }

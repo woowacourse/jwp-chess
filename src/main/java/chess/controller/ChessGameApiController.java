@@ -2,11 +2,12 @@ package chess.controller;
 
 import chess.service.SpringChessService;
 import chess.service.dto.ChessSaveRequestDto;
-import chess.service.dto.CommonResponseDto;
 import chess.service.dto.GameStatusDto;
 import chess.service.dto.GameStatusRequestDto;
+import chess.service.dto.GameStatusRequestsDto;
 import chess.service.dto.MoveRequestDto;
 import chess.service.dto.MoveResponseDto;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,27 +29,31 @@ public class ChessGameApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveChess(@RequestBody final ChessSaveRequestDto requestDto) {
+    public ResponseEntity<Void> saveChess(@RequestBody final ChessSaveRequestDto requestDto) {
         chessService.saveChess(requestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Object> finishChess(@RequestBody final GameStatusRequestDto requestDto) {
+    public ResponseEntity<Void> finishChess(@RequestBody final GameStatusRequestDto requestDto) {
         chessService.changeGameStatus(requestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/view")
+    public ResponseEntity<GameStatusRequestsDto> viewRoom() {
+        final GameStatusRequestsDto gameStatusRequestsDto = chessService.roomInfos();
+        return new ResponseEntity<>(gameStatusRequestsDto, HttpStatus.CREATED);
+    }
+
     @GetMapping("/{name}")
     public ResponseEntity<GameStatusDto> loadChess(@PathVariable final String name) {
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(chessService.loadChess(name));
+        return ResponseEntity.ok(chessService.loadChess(name));
     }
 
     @PutMapping("/{name}/pieces")
     public ResponseEntity<MoveResponseDto> movePieces(@PathVariable("name") final String gameName,
         @RequestBody final MoveRequestDto requestDto) {
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(chessService.movePiece(gameName, requestDto));
+        return ResponseEntity.ok(chessService.movePiece(gameName, requestDto));
     }
 }

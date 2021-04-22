@@ -14,7 +14,6 @@
   />
   <meta content="ie=edge" http-equiv="X-UA-Compatible"/>
   <link href="/css/style.css" rel="stylesheet"/>
-  <!-- <link rel="icon" href="favicon.png" /> -->
   <title>체스게임!</title>
 </head>
 <body>
@@ -33,9 +32,18 @@
 <div class="game-start d-flex">
   <input id="main-start" type="button" value="새로운 게임"/>
   <input id="main-load" type="button" value="저장된 방에 입장"/>
+  <input id="main-view" type="button" value="방 조회"/>
 </div>
 
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<div style="display: none" class="room-container">
+  <table border="1" bordercolor="blue" width="500" height="300" align="center">
+    <tr align="center" bgcolor="skybule">
+      <td>방 이름</td>
+      <td>게임 종료 여부</td>
+    </tr>
+  </table>
+</div>
+
 <script src="/js/main.js" type="module"></script>
 </body>
 </html>

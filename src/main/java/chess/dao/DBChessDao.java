@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class DBChessDao implements ChessDao {
@@ -135,6 +137,42 @@ public class DBChessDao implements ChessDao {
         } catch (SQLException e) {
             System.err.println("chess 삭 오류" + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Chess> find() {
+        final String query = "SELECT * FROM chess order by created_date";
+
+        final Connection connection = connectionPool.getConnection();
+        try {
+            final PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            final List<Chess> chessGroup = new ArrayList<>();
+            if (!resultSet.next()) {
+                closeResources(connection, preparedStatement);
+                resultSet.close();
+                return chessGroup;
+            }
+
+            do {
+                final Chess chess = new Chess(
+                    resultSet.getString("chess_id"),
+                    resultSet.getString("name"),
+                    Color.findByValue(resultSet.getString("winner_color")),
+                    resultSet.getBoolean("is_running"),
+                    resultSet.getTimestamp("created_date").toLocalDateTime()
+                );
+                chessGroup.add(chess);
+            } while (resultSet.next());
+            closeResources(connection, preparedStatement);
+            resultSet.close();
+            return chessGroup;
+        } catch (SQLException e) {
+            System.err.println("chess 저장 오류" + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 

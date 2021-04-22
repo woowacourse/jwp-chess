@@ -41,7 +41,7 @@ public abstract class Piece {
     }
 
     public boolean isSameColor(String name) {
-         return this.color.name().equals(name.toUpperCase());
+        return this.color.name().equals(name.toUpperCase());
     }
 
     public final boolean isBlack() {

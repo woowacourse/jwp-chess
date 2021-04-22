@@ -8,7 +8,6 @@ import chess.domain.player.Round;
 import chess.domain.position.Position;
 import chess.domain.state.State;
 import chess.domain.state.StateFactory;
-import chess.dto.response.MoveResponseDto;
 import chess.repository.ChessRepository;
 import org.springframework.stereotype.Service;
 

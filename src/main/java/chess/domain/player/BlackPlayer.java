@@ -1,9 +1,7 @@
 package chess.domain.player;
 
 import chess.domain.piece.Piece;
-import chess.domain.piece.PiecesFactory;
 import chess.domain.position.Position;
-import chess.domain.state.RunningTurn;
 import chess.domain.state.State;
 
 import java.util.Map;

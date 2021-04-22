@@ -7,9 +7,7 @@ import chess.dao.RoomDao;
 import chess.domain.board.ChessBoardFactory;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.request.MoveRequestDto;
 import chess.dto.request.PieceDto;
-import chess.dto.request.TurnChangeRequestDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.LinkedHashMap;

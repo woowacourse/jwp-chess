@@ -1,7 +1,5 @@
 package chess.controller;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-
 import chess.domain.ChessGame;
 import chess.dto.MoveDTO;
 import chess.dto.ResultDTO;
@@ -9,18 +7,11 @@ import chess.dto.RoomNameDTO;
 import chess.dto.SectionDTO;
 import chess.dto.StatusDTO;
 import chess.dto.UsersDTO;
-import chess.exception.DriverLoadException;
 import chess.service.HistoryService;
 import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.dao.DataAccessException;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/chess")
 public class SpringChessGameRestController {
-
-    private static final Logger LOGGER = LogManager.getLogger(SpringChessGameRestController.class);
 
     private final RoomService roomService;
     private final ResultService resultService;
@@ -90,21 +79,5 @@ public class SpringChessGameRestController {
 
         resultService.saveGameResult(roomId, winnerId, loserId);
         return true;
-    }
-
-    @ExceptionHandler(DriverLoadException.class)
-    private ResponseEntity driverLoadExceptionHandle(DriverLoadException e) {
-        LOGGER.error(e.getStackTrace());
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body("!! JDBC Driver load 오류");
-    }
-
-    @ExceptionHandler(DataAccessException.class)
-    private ResponseEntity dataAccessExceptionHandle(DataAccessException e) {
-        LOGGER.error(e.getStackTrace());
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body("!! Database Access 오류");
     }
 }

@@ -1,13 +1,13 @@
 package chess.web.service;
 
 import chess.domain.game.ChessGame;
+import chess.repository.ChessGameRepository;
 import chess.web.controller.dto.request.CreateGameRequestDto;
 import chess.web.controller.dto.request.JoinGameRequestDto;
 import chess.web.controller.dto.request.MoveRequestDto;
 import chess.web.controller.dto.response.ChessGameResponseDto;
 import chess.web.controller.dto.response.CreateGameResponseDto;
 import chess.web.controller.dto.response.GameStatusResponseDto;
-import chess.repository.ChessGameRepository;
 import chess.web.exception.GameNotExistsException;
 import java.util.List;
 import java.util.stream.Collectors;

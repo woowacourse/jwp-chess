@@ -43,6 +43,7 @@ public class ChessGame {
     public ChessGame(String title, String encryptedWhitePlayerPassword, String encryptedBlackPlayerPassword) {
         this(null, title, INITIAL_BOARD_STATUS, INITIAL_TURN_TEAM_COLOR_VALUE, encryptedWhitePlayerPassword, encryptedBlackPlayerPassword);
     }
+
     public ChessGame(String title, TeamColor currentTurnTeamColor, String encryptedWhitePlayerPassword, String encryptedBlackPlayerPassword) {
         this(null, title, INITIAL_BOARD_STATUS, currentTurnTeamColor.getValue(), encryptedWhitePlayerPassword, encryptedBlackPlayerPassword);
     }

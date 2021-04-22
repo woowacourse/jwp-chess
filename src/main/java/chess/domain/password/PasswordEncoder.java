@@ -25,7 +25,7 @@ public class PasswordEncoder {
         byte[] byteData = messageDigest.digest();
         StringBuilder sb = new StringBuilder();
         for (byte byteDatum : byteData) {
-            sb.append(Integer.toString((byteDatum&0xff) + 0x100, 16).substring(1));
+            sb.append(Integer.toString((byteDatum & 0xff) + 0x100, 16).substring(1));
         }
         return sb.toString();
     }

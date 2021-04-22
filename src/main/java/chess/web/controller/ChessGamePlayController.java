@@ -5,7 +5,6 @@ import static chess.web.controller.ChessGameController.ENCRYPTED_PASSWORD;
 
 import chess.web.controller.dto.request.MoveRequestDto;
 import chess.web.controller.dto.response.MoveCompleteResponseDto;
-import chess.web.controller.dto.response.MoveResponseDto;
 import chess.web.service.ChessGameService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;

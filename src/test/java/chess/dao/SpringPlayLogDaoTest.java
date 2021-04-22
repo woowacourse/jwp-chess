@@ -33,15 +33,7 @@ public class SpringPlayLogDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("DROP TABLE play_log");
-
-        jdbcTemplate.update("CREATE TABLE play_log ("
-            + " id int NOT NULL PRIMARY KEY AUTO_INCREMENT,"
-            + " board clob NOT NULL,"
-            + " game_status clob NOT NULL,"
-            + " room_id int NOT NULL,"
-            + " last_played_time timestamp default NOW()"
-            + ")");
+        jdbcTemplate.update("TRUNCATE TABLE play_log");
 
         jdbcTemplate.update("INSERT INTO play_log (board, game_status, room_id) VALUES (?, ?, ?)",
             GSON.toJson(new BoardDto(new Board())),

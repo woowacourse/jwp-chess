@@ -24,13 +24,7 @@ public class SpringRoomDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DROP TABLE room");
-        jdbcTemplate.execute("CREATE TABLE room ("
-            + " id int NOT NULL PRIMARY KEY AUTO_INCREMENT,"
-            + " name varchar(255) NOT NULL,"
-            + " is_opened boolean NOT NULL,"
-            + " white varchar(255) NOT NULL,"
-            + " black varchar(255) NOT NULL)");
+        jdbcTemplate.execute("TRUNCATE TABLE room");
 
         jdbcTemplate.execute(
             "INSERT INTO room (id, name, is_opened, white, black) VALUES (1, 'room1', true, 'white1', 'black1')");

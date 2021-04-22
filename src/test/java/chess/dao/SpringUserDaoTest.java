@@ -24,19 +24,9 @@ public class SpringUserDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DROP TABLE `user`");
-        jdbcTemplate.execute("CREATE TABLE `user` ("
-            + " name varchar(255) NOT NULL PRIMARY KEY, "
-            + " win int(11) NOT NULL default 0, "
-            + " lose int(11) NOT NULL default 0)");
+        jdbcTemplate.execute("TRUNCATE TABLE `user`");
 
-        jdbcTemplate.execute("DROP TABLE room");
-        jdbcTemplate.execute("CREATE TABLE room ("
-            + " id int NOT NULL PRIMARY KEY AUTO_INCREMENT,"
-            + " name varchar(255) NOT NULL,"
-            + " is_opened boolean NOT NULL,"
-            + " white varchar(255) NOT NULL,"
-            + " black varchar(255) NOT NULL)");
+        jdbcTemplate.execute("TRUNCATE TABLE room");
 
         jdbcTemplate.execute("INSERT INTO `user` (name) VALUES ('white')");
         jdbcTemplate.execute("INSERT INTO `user` (name) VALUES ('black')");

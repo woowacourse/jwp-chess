@@ -11,7 +11,7 @@ public class ChessWebController {
         return "index";
     }
 
-    @GetMapping("/chess")
+    @GetMapping("/chess/**")
     public String chess() {
         return "chess";
     }

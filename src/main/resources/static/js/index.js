@@ -18,7 +18,7 @@ IndexPage.prototype.registerMakeRoomButtonEvent = function () {
   document.querySelector(".make-room-button").addEventListener("click",
       function () {
         let newRoomId = document.querySelector(".newRoomId").value;
-        indexPage.addNewRoom(newRoomId);
+        indexPage.enterNewRoom(newRoomId);
       });
 }
 
@@ -31,7 +31,7 @@ IndexPage.prototype.getRooms = function () {
     for (let i = 0; i < data.roomIds.length; i++) {
       roomList.innerHTML +=
           `<li class="room">
-                <button class="room-button" onclick=indexPage.addNewRoom(${data.roomIds[i]})>
+                <button class="room-button" onclick=indexPage.enterNewRoom(${data.roomIds[i]})>
                    ${data.roomIds[i]}
                 </button>
             </li>`;
@@ -39,19 +39,6 @@ IndexPage.prototype.getRooms = function () {
   });
 }
 
-IndexPage.prototype.addNewRoom = function (newRoomId) {
-  fetch(indexPage.roomsApiUrl + "/" + newRoomId, {
-    method: 'POST',
-    body: JSON.stringify({
-      roomId: newRoomId
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  }).then(res => res.json())
-  .then(data => {
-    localStorage.setItem("roomId", newRoomId);
-    localStorage.setItem("pieces", JSON.stringify(data));
-    location.href = 'chess'
-  });
+IndexPage.prototype.enterNewRoom = function (newRoomId) {
+  location.href = 'chess/' + newRoomId;
 }

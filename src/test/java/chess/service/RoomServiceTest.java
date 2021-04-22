@@ -9,7 +9,6 @@ import chess.domain.chessgame.ChessGame;
 import chess.domain.chessgame.Room;
 import chess.domain.piece.Color;
 import chess.domain.position.Position;
-import chess.repository.RoomRepository;
 import chess.repository.RoomRepositoryImpl;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;

@@ -6,15 +6,15 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function ChessPage() {
-  this.roomId = parseInt(localStorage.getItem("roomId"));
+  this.roomId = window.location.pathname.split("/")[2];
   this.chessUrl = "http://localhost:8080/api/chess/rooms/";
 }
 
 ChessPage.prototype.initChessPage = function () {
-  this.templatePieces(JSON.parse(localStorage.getItem("pieces")));
   this.registerGameExitEvent();
   this.registerPieceMoveEvent();
   this.registerGetScoreEvent();
+  this.initChessBoard();
 }
 
 ChessPage.prototype.templatePieces = function (pieces) {
@@ -67,9 +67,6 @@ ChessPage.prototype.putPieces = function () {
     },
     method: 'PUT'
   }
-
-  console.log(obj)
-  console.log(chessPage.chessUrl + chessPage.roomId + "/pieces");
 
   fetch(chessPage.chessUrl + chessPage.roomId + "/pieces", obj)
   .then(function (response) {
@@ -128,3 +125,17 @@ ChessPage.prototype.registerGameExitEvent = function () {
     location.href = '/';
   });
 }
+
+ChessPage.prototype.initChessBoard = function () {
+
+  fetch(chessPage.chessUrl + chessPage.roomId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  }).then(res => res.json())
+  .then(data => {
+    chessPage.templatePieces(data);
+  });
+}
+

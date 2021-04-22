@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-// todo Config에 viewController 로 변경?
 @Controller
 public class IndexController {
 
@@ -21,5 +20,4 @@ public class IndexController {
         model.addAttribute("games", chessGameDAO.findActiveGames());
         return "lobby";
     }
-
 }

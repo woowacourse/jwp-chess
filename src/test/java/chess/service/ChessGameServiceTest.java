@@ -4,10 +4,7 @@ import chess.dao.ChessGameDAO;
 import chess.dao.PieceDAO;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
-import chess.dto.ChessGameResponseDto;
-import chess.dto.ChessGameInfoResponseDto;
-import chess.dto.ChessGameStatusDto;
-import chess.dto.ScoreDto;
+import chess.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -135,5 +134,48 @@ class ChessGameServiceTest {
         );
     }
 
+    @DisplayName("체스게임 아이디로 특정 체스게임의 정보를 조회환다 ")
+    @Test
+    void testFindChessGameInfoById() {
+        //given
+        String title = "title";
+        Long id = chessGameDAO.save(title);
+
+        //when
+        ChessGameInfoResponseDto chessGameInfoResponseDto = chessGameService.findChessGameInfoById(id);
+
+        //then
+        assertAll(
+                () -> assertThat(chessGameInfoResponseDto.getChessGameId()).isEqualTo(id),
+                () -> assertThat(chessGameInfoResponseDto.getState()).isEqualTo("Ready"),
+                () -> assertThat(chessGameInfoResponseDto.getTitle()).isEqualTo(title),
+                () -> assertThat(chessGameInfoResponseDto.getPieceDtos()).isEmpty(),
+                () -> assertThat(chessGameInfoResponseDto.isEnd()).isFalse(),
+                () -> assertThat(chessGameInfoResponseDto.isReady()).isTrue(),
+                () -> assertThat(chessGameInfoResponseDto.isPlaying()).isFalse(),
+                () -> assertThat(chessGameInfoResponseDto.isFinished()).isFalse()
+        );
+    }
+
+    @DisplayName("실행중인 모든 게임을 찾는 기능을 테스트한다")
+    @Test
+    void testFindAllPlayingGames() {
+        //given
+        Long firstId = chessGameDAO.save("title1");
+        Long secondId = chessGameDAO.save("title2");
+        Long thirdId = chessGameDAO.save("title3");
+        chessGameDAO.updateState(secondId,"End");
+        chessGameDAO.updateState(thirdId,"BlackTurn");
+
+        //when
+        List<PlayingChessgameEntityDto> allPlayingGames = chessGameService.findAllPlayingGames();
+
+        //then
+        assertAll(
+                () -> assertThat(allPlayingGames).hasSize(2),
+                () -> assertThat(allPlayingGames).extracting("chessGameId")
+                        .containsAnyOf(firstId, thirdId)
+        );
+    }
 
 }

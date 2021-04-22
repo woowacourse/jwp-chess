@@ -90,7 +90,7 @@ public class ChessGameService {
     }
 
     @Transactional(readOnly = true)
-    public ChessGameInfoResponseDto findChessGameInfoById(Long chessGameId) { //todo: 테스트코드짜기
+    public ChessGameInfoResponseDto findChessGameInfoById(Long chessGameId) {
         ChessGameEntity chessGameEntity = chessGameDAO.findById(chessGameId)
                 .orElseThrow(NotFoundChessGameException::new);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);

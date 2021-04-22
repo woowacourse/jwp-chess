@@ -1,8 +1,8 @@
 package chess.controller;
 
 import chess.domain.piece.Position;
-import chess.dto.ChessGameResponseDto;
 import chess.dto.ChessGameInfoResponseDto;
+import chess.dto.ChessGameResponseDto;
 import chess.dto.ChessGamesSaveDto;
 import chess.dto.ScoreDto;
 import chess.service.ChessGameService;

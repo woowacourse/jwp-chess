@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class ChessGame {
     private final Players players;
     private final Board board;
-
     private Turn turn;
     private boolean isGameEnd;
 

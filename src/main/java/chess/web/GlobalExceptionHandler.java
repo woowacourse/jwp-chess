@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.web;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

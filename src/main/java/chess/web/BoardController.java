@@ -1,11 +1,11 @@
-package chess.controller;
+package chess.web;
 
+import chess.service.ChessService;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.MoveRequest;
 import chess.dto.PathDto;
-import chess.service.ChessService;
 import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +28,11 @@ public class BoardController {
     public BoardDto getNewBoard() {
         return new BoardDto(service.restartBoard());
     }
+
+ /*   @GetMapping("/restart")
+    public String restart() {
+        return "redirect:/board";
+    }*/
 
     @GetMapping("/status")
     public boolean isEnd() {

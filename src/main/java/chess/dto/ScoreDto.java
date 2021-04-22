@@ -1,8 +1,8 @@
 package chess.dto;
 
-import chess.domain.board.Board;
 import chess.domain.piece.PieceColor;
 import chess.domain.result.Result;
+import chess.domain.board.Board;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

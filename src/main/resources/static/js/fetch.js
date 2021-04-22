@@ -45,3 +45,22 @@ export async function loadBoard() {
     const response = await fetch("http://localhost:8080/load");
     return await response.json();
 }
+
+export async function makeRoom(name) {
+    console.log(name);
+    const response = await fetch("http://localhost:8080/rooms", {
+        method: "POST",
+        body: JSON.stringify({name}),
+        headers: {"Content-Type": "application/json"}
+    });
+    location.href = response.url;
+}
+
+export async function deleteRoom(roomId) {
+    const response = await fetch("http://localhost:8080/rooms/" + roomId, {
+        method: 'DELETE',
+        headers: {"Content-Type": "application/json"}
+    }).then(() => alert('방이 삭제되었습니다.'))
+        .catch(err => alert(JSON.stringify(err)));
+    return await response.json();
+}

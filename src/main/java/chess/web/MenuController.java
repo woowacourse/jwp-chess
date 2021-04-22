@@ -1,11 +1,7 @@
-package chess.controller;
+package chess.web;
 
-import chess.dto.BoardDto;
 import chess.service.ChessService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MenuController {
@@ -16,14 +12,14 @@ public class MenuController {
         this.service = service;
     }
 
-    @GetMapping
+/*    @GetMapping
     public String renderInitBoard() {
-        return "index.html";
+        return "game.mustache";
     }
 
     @ResponseBody
     @GetMapping("/load")
     public ResponseEntity<BoardDto> loadBoard() {
         return ResponseEntity.ok(new BoardDto(service.findBoard()));
-    }
+    }*/
 }

@@ -164,8 +164,8 @@ class ChessGameServiceTest {
         Long firstId = chessGameDAO.save("title1");
         Long secondId = chessGameDAO.save("title2");
         Long thirdId = chessGameDAO.save("title3");
-        chessGameDAO.updateState(secondId,"End");
-        chessGameDAO.updateState(thirdId,"BlackTurn");
+        chessGameDAO.updateState(secondId, "End");
+        chessGameDAO.updateState(thirdId, "BlackTurn");
 
         //when
         List<PlayingChessgameEntityDto> allPlayingGames = chessGameService.findAllPlayingGames();

@@ -1,4 +1,4 @@
-export {getFetch, postFetch}
+export {getFetch, putFetch}
 const BASE_PORT = "8080";
 const BASE_URL = `http://localhost:${BASE_PORT}`;
 
@@ -13,9 +13,9 @@ function getFetch(url) {
     });
 }
 
-function postFetch(url, body = {}) {
+function putFetch(url, body = {}) {
     return fetch(`${BASE_URL}${url}`, {
-        method: "post",
+        method: "put",
         body: JSON.stringify(body),
         headers: {
             'Content-Type': 'application/json'

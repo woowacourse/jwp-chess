@@ -127,13 +127,17 @@ public class ChessGame {
     }
 
     private void validateWhitePlayerPassword(String encryptedPassword) {
-        if (!encryptedWhitePlayerPassword.equals(encryptedPassword)) {
+        if (encryptedWhitePlayerPassword == null
+            || !encryptedWhitePlayerPassword.equals(encryptedPassword)) {
+
             throw new IllegalArgumentException(NOT_CORRECT_PASSWORD_ERROR_MESSAGE);
         }
     }
 
     private void validateBlackPlayerPassword(String encryptedPassword) {
-        if (!encryptedBlackPlayerPassword.equals(encryptedPassword)) {
+        if (encryptedBlackPlayerPassword == null
+            || !encryptedBlackPlayerPassword.equals(encryptedPassword)) {
+
             throw new IllegalArgumentException(NOT_CORRECT_PASSWORD_ERROR_MESSAGE);
         }
     }

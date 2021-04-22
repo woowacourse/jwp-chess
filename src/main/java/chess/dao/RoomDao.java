@@ -21,11 +21,11 @@ public class RoomDao {
     );
 
     public long insert(String roomName) {
-        String query = "INSERT INTO room (room_name) VALUES (?)";
-        String query2 = "SELECT last_insert_id();";
+        String insertRoom = "INSERT INTO room (room_name) VALUES (?)";
+        String findLastId = "SELECT last_insert_id();";
 
-        jdbcTemplate.update(query, roomName);
-        return jdbcTemplate.queryForObject(query2, Long.class);
+        jdbcTemplate.update(insertRoom, roomName);
+        return jdbcTemplate.queryForObject(findLastId, Long.class);
     }
 
     public List<RoomDto> selectAll() {

@@ -135,7 +135,8 @@ public class SpringChessApiControllerTest {
         String content = objectMapper.writeValueAsString(body);
 
         mockMvc.perform(
-            post("/rooms/1/movement").contentType(MediaType.APPLICATION_JSON_VALUE).content(content))
+            post("/rooms/1/movement").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(content))
             .andExpect(status().is(HttpStatus.CREATED_201))
             .andExpect(jsonPath("$.board").hasJsonPath());
     }

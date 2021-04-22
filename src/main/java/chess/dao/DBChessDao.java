@@ -3,28 +3,28 @@ package chess.dao;
 import chess.domain.piece.Color;
 import chess.entity.Chess;
 import chess.exception.DuplicateRoomException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.*;
 import java.util.Optional;
 
 public class DBChessDao implements ChessDao {
 
     private final ConnectionPool connectionPool;
+    private final Logger logger = LoggerFactory.getLogger(DBChessDao.class);
 
     public DBChessDao(final ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
 
         String query = "CREATE TABLE IF NOT EXISTS chess ( " +
-            "chess_id VARCHAR(36) NOT NULL," +
-            "name VARCHAR(64) NOT NULL," +
-            "winner_color VARCHAR(64) NOT NULL," +
-            "is_running boolean not null default false ," +
-            "created_date TIMESTAMP(6)," +
-            "PRIMARY KEY (chess_id)" +
-            ");";
+                "chess_id VARCHAR(36) NOT NULL," +
+                "name VARCHAR(64) NOT NULL," +
+                "winner_color VARCHAR(64) NOT NULL," +
+                "is_running boolean not null default false ," +
+                "created_date TIMESTAMP(6)," +
+                "PRIMARY KEY (chess_id)" +
+                ");";
 
         Connection connection = connectionPool.getConnection();
         try {
@@ -34,8 +34,7 @@ public class DBChessDao implements ChessDao {
             closeResources(connection, preparedStatement);
 
         } catch (SQLException e) {
-            System.err.println("테이블 생성오류" + e.getMessage());
-            e.printStackTrace();
+            logger.info("테이블 생성오류" + e.getMessage());
         }
     }
 
@@ -59,16 +58,15 @@ public class DBChessDao implements ChessDao {
             preparedStatement.executeUpdate();
             closeResources(connection, preparedStatement);
         } catch (SQLException e) {
-            System.err.println("chess 저장 오류" + e.getMessage());
-            e.printStackTrace();
+            logger.info("chess 저장 오류" + e.getMessage());
         }
     }
 
     @Override
     public Optional<Chess> findByName(final String name) {
         String query = "SELECT * FROM chess" +
-            " WHERE name = ?" +
-            " ORDER BY created_date";
+                " WHERE name = ?" +
+                " ORDER BY created_date";
 
         Connection connection = connectionPool.getConnection();
         try {
@@ -82,19 +80,18 @@ public class DBChessDao implements ChessDao {
                 return Optional.empty();
             }
             Chess chess = new Chess(
-                resultSet.getString("chess_id"),
-                resultSet.getString("name"),
-                Color.findByValue(resultSet.getString("winner_color")),
-                resultSet.getBoolean("is_running"),
-                resultSet.getTimestamp("created_date").toLocalDateTime()
+                    resultSet.getString("chess_id"),
+                    resultSet.getString("name"),
+                    Color.findByValue(resultSet.getString("winner_color")),
+                    resultSet.getBoolean("is_running"),
+                    resultSet.getTimestamp("created_date").toLocalDateTime()
             );
 
             closeResources(connection, preparedStatement);
             resultSet.close();
             return Optional.ofNullable(chess);
         } catch (SQLException e) {
-            System.err.println("chess 저장 오류" + e.getMessage());
-            e.printStackTrace();
+            logger.info("chess 저장 오류" + e.getMessage());
             return Optional.empty();
         }
     }
@@ -102,8 +99,8 @@ public class DBChessDao implements ChessDao {
     @Override
     public void update(final Chess chess) {
         String query = "UPDATE chess" +
-            " SET winner_color = ?, is_running = ?" +
-            " WHERE chess_id = ?";
+                " SET winner_color = ?, is_running = ?" +
+                " WHERE chess_id = ?";
 
         Connection connection = connectionPool.getConnection();
         try {
@@ -115,10 +112,8 @@ public class DBChessDao implements ChessDao {
 
             closeResources(connection, preparedStatement);
         } catch (SQLException e) {
-            System.err.println("chess 업데이트 오류" + e.getMessage());
-            e.printStackTrace();
+            logger.info("chess 업데이트 오류" + e.getMessage());
         }
-
     }
 
     @Override
@@ -133,8 +128,7 @@ public class DBChessDao implements ChessDao {
 
             closeResources(connection, preparedStatement);
         } catch (SQLException e) {
-            System.err.println("chess 삭 오류" + e.getMessage());
-            e.printStackTrace();
+            logger.info("chess 삭제 오류" + e.getMessage());
         }
     }
 

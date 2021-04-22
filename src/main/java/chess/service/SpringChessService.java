@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 public class SpringChessService {
 
     private final ChessDao chessDao;
@@ -29,10 +28,6 @@ public class SpringChessService {
     public SpringChessService(final ChessDao chessDao, final MovementDao movementDao) {
         this.chessDao = chessDao;
         this.movementDao = movementDao;
-    }
-
-    public TilesDto emptyBoard() {
-        return new TilesDto(Board.emptyBoard());
     }
 
     @Transactional
@@ -73,12 +68,17 @@ public class SpringChessService {
         chessDao.update(chess);
     }
 
+    @Transactional(readOnly = true)
     public GameStatusDto loadChess(final String name) {
         ChessGame chessGame = ChessGame.newGame();
         Chess chess = movedChess(chessGame, name);
 
         return new GameStatusDto(chessGame.pieces(),
             chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor());
+    }
+
+    public TilesDto emptyBoard() {
+        return new TilesDto(Board.emptyBoard());
     }
 
     private Chess movedChess(final ChessGame chessGame, final String name) {

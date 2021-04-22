@@ -32,7 +32,7 @@ end.addEventListener("click", async (event) => {
             body: JSON.stringify(data)
         };
 
-        const response = fetch(basePath + "/api/games", option);
+        const response = fetch(basePath + "/api/v1/games", option);
         if (response.status === 400 || response.status === 500) {
             const body = await response.json();
             alert(body);
@@ -53,7 +53,7 @@ exit.addEventListener("click", () => {
 const loadGame = async () => {
     rawBoard();
     const response = await fetch(
-        basePath + "/api/games/" + localStorage.getItem("name"))
+        basePath + "/api/v1/games/" + localStorage.getItem("name"))
     const body = await response.json();
 
     if (response.status === 400 || response.status === 500) {
@@ -172,7 +172,7 @@ async function movePiece(sourcePosition, targetPosition) {
     };
 
     const response = await fetch(
-        basePath + "/api/games/" + localStorage.getItem("name") + "/pieces",
+        basePath + "/api/v1/games/" + localStorage.getItem("name") + "/pieces",
         option)
 
     if (response.status === 400 || response.status === 500) {

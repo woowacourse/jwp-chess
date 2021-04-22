@@ -20,7 +20,7 @@ mainStart.addEventListener("click", async () => {
         body: JSON.stringify(data)
     };
 
-    const response = await fetch(basePath + "/api/games", option)
+    const response = await fetch(basePath + "/api/v1/games", option)
 
     if (response.status === 400 || response.status === 500) {
         const body = await response.json();
@@ -37,7 +37,7 @@ mainLoad.addEventListener("click", async () => {
         return;
     }
 
-    const response = await fetch(basePath + "/api/games/" + result);
+    const response = await fetch(basePath + "/api/v1/games/" + result);
 
     if (response.status === 400 || response.status === 500) {
         const body = await response.json();

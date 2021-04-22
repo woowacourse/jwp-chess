@@ -1,7 +1,10 @@
 package chess.controller;
 
 import chess.dto.*;
+import chess.exception.ChessException;
+import chess.exception.NotExistRoomException;
 import chess.service.SpringChessService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,22 +31,22 @@ public class SpringChessController {
         return springChessService.rooms();
     }
 
+    @GetMapping("/rooms/{roomName}")
+    public String enterRoom() {
+        return "/chess.html";
+    }
+
     @PostMapping("/rooms")
     @ResponseBody
     public void createRoom(@RequestBody RoomNameDto roomName) {
         springChessService.createRoom(roomName.getRoomName());
     }
 
-    @GetMapping("/rooms/{roomName}")
-    public String enterRoom() {
-        return "/chess.html";
-    }
-
     @PutMapping(value = "/rooms/{roomName}/move")
     @ResponseBody
-    public ResponseDto move(@RequestBody PositionDto positionDto, @PathVariable String roomName) {
-        ResponseDto responseDto = springChessService.move(positionDto, roomName);
-        return responseDto;
+    public ResponseEntity<ResponseDto> move(@RequestBody PositionDto positionDto, @PathVariable String roomName) {
+
+        return ResponseEntity.ok().body(springChessService.move(positionDto, roomName));
     }
 
     @PutMapping(value = "/rooms/{roomName}/restart")
@@ -80,5 +83,15 @@ public class SpringChessController {
     @ResponseBody
     public void deleteRoom(@PathVariable String roomName) {
         springChessService.deleteRoom(roomName);
+    }
+
+    @ExceptionHandler(NotExistRoomException.class)
+    public ResponseEntity<String> dbException(NotExistRoomException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(ChessException.class)
+    public ResponseEntity<String> chessException(ChessException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

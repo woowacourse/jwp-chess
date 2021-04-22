@@ -5,7 +5,7 @@ import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
-import org.springframework.dao.DataAccessException;
+import chess.exception.NotExistRoomException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +39,6 @@ public class SpringBoardDao {
         this.jdbcTemplate.update(query, boardPositionSet(board.getBoard()), boardPieceSet(board.getBoard()), turn, roomName);
     }
 
-    //Todo : CustomException 변경 필요
     public Board findBoard(String roomName) {
         String query = "select * from board where roomName=?";
 
@@ -53,14 +52,19 @@ public class SpringBoardDao {
                 .stream()
                 .findAny()
                 .map(Board::new)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(NotExistRoomException::new);
     }
 
     public Side findTurn(String roomName) {
         String query = "SELECT turn FROM board WHERE roomName = ?";
-        String side = this.jdbcTemplate.queryForObject(query, String.class, roomName);
-
-        return Side.getTurnByName(side);
+        return this.jdbcTemplate.query(query,
+                (resultSet, rowNum) -> Side.getTurnByName(
+                        resultSet.getString("turn")
+                ),
+                roomName)
+                .stream()
+                .findAny()
+                .orElseThrow(NotExistRoomException::new);
     }
 
     private String boardPositionSet(Map<Position, Piece> board) {

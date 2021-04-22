@@ -79,31 +79,33 @@ async function move(from, to) {
         from: from,
         to: to
     }
-    const response = await fetch(currentRoomName + '/move', {
+    let response = await fetch(currentRoomName + '/move', {
         method: 'put',
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
         }
-    }).then(res => {
-        return res.json();
     });
 
-    if (response.code === "200") {
-        changeImage(from, to);
-        await changeTurn();
-        return;
+    const status = response.status;
+    if (status === 200) {
+        response = await response.json();
+        if (response.code === "SUCCEED") {
+            changeImage(from, to);
+            await changeTurn();
+            return;
+        }
+        if (response.code === "GAME_SET") {
+            changeImage(from, to);
+            const currentTurn = document.querySelector('.turn');
+            currentTurn.textContent = response.turn;
+            alert(response.message + "가 승리했습니다!");
+            return;
+        }
     }
-    if (response.code === "300") {
-        changeImage(from, to);
-        const currentTurn = document.querySelector('.turn');
-        currentTurn.textContent = response.turn;
-        alert(response.message + "가 승리했습니다!");
-        return;
-    }
-    if (response.code === "400") {
-        alert(response.message);
-        return;
+    if (status === 400) {
+        response = await response.text();
+        alert(response);
     }
 }
 
@@ -118,15 +120,20 @@ function changeImage(sourcePosition, targetPosition) {
 }
 
 async function syncBoard() {
-    const board = await fetch(currentRoomName + '/board', {
+    let response = await fetch(currentRoomName + '/board', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json'
         }
-    }).then(res => {
-        return res.json();
     });
 
+    if (response.status === 400) {
+        response = await response.text();
+        alert(response);
+        window.location.href = "http://localhost:8080/";
+    }
+
+    let board = await response.json();
     const positions = Object.keys(board);
     const pieces = Object.values(board);
     for (let i = 0; i < positions.length; i++) {

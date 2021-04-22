@@ -71,7 +71,7 @@ public class SpringChessService {
         return new BoardStatusDto(loadChessGame(roomId).boardStatus());
     }
 
-    public void deleteRoom(String roomNumber) {
+    public void resetRoom(String roomNumber) {
         springChessLogDao.deleteLog(roomNumber);
     }
 
@@ -81,5 +81,10 @@ public class SpringChessService {
 
     public List<RoomDto> roomIds() {
         return chessRoomDao.findAllRoomIds();
+    }
+
+    public void deleteRoom(String roomNumber) {
+        chessRoomDao.deleteRoom(roomNumber);
+        springChessLogDao.deleteLog(roomNumber);
     }
 }

@@ -39,7 +39,7 @@ public class SpringChessController {
 
     @GetMapping("/clear/{id}")
     public String clear(@PathVariable String id) {
-        springChessService.deleteRoom(id);
+        springChessService.resetRoom(id);
         return "redirect:/";
     }
 

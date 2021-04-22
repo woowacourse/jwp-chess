@@ -31,4 +31,9 @@ public class SpringChessRoomDao {
                 (rs, row) -> new RoomDto(
                         rs.getString("room_id"), rs.getString("room_name")));
     }
+
+    public void deleteRoom(String roomNumber) {
+        String query = "DELETE FROM chessroom WHERE room_id = ?";
+        jdbcTemplate.update(query, roomNumber);
+    }
 }

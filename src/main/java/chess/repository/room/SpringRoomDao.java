@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
-import java.util.OptionalLong;
 
 @Repository
 public class SpringRoomDao {
@@ -19,8 +18,8 @@ public class SpringRoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public OptionalLong saveRoom(Room room) {
-        String query = "INSERT INTO rooms (name, turn, state) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE turn = VALUES(turn), state = VALUES(state)";
+    public long saveRoom(Room room) {
+        String query = "INSERT INTO rooms (name, turn, state) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -31,10 +30,16 @@ public class SpringRoomDao {
             return ps;
         }, keyHolder);
 
-        if (keyHolder.getKeyList().size() == 1) {
-            return OptionalLong.of(Objects.requireNonNull(keyHolder.getKey()).longValue());
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public void updateRoom(Room room) {
+        try {
+            String query = "UPDATE rooms SET turn=?, state=? WHERE name=?";
+            jdbcTemplate.update(query, room.getTurn(), room.getState().toString(), room.getName());
+        } catch (Exception e) {
+            throw new InvalidRoomUpdateException();
         }
-        return OptionalLong.empty();
     }
 
     public Room findById(long id) {

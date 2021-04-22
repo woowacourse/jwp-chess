@@ -9,7 +9,6 @@ import chess.domain.gamestate.Ready;
 import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
 import chess.dto.MoveRequestDto;
-import chess.repository.room.InvalidRoomSaveException;
 import chess.repository.room.Room;
 import chess.repository.room.SpringRoomDao;
 import chess.util.JsonConverter;
@@ -34,11 +33,7 @@ public class SpringChessService {
         ChessGame chessGame = initializeChessBoard();
         Room room = createRoom(roomName, chessGame);
 
-        OptionalLong optionalId = roomDao.saveRoom(room);
-        if (optionalId.isPresent()) {
-            return optionalId.getAsLong();
-        }
-        throw new InvalidRoomSaveException();
+        return roomDao.saveRoom(room);
     }
 
     private ChessGame initializeChessBoard() {
@@ -60,7 +55,7 @@ public class SpringChessService {
         chessGame.play(command);
 
         room = createRoom(room.getName(), chessGame);
-        roomDao.saveRoom(room);
+        roomDao.updateRoom(room);
 
         return chessGame;
     }

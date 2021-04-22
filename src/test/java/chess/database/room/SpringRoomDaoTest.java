@@ -66,10 +66,9 @@ class SpringRoomDaoTest {
         Room room = new Room("씨유방",
                 "white",
                 JsonConverter.fromJson("{e1:pieceInfo5}"));
-        OptionalLong optionalLong = springRoomDao.saveRoom(room);
-        assertThat(optionalLong.isPresent()).isTrue();
+        long id = springRoomDao.saveRoom(room);
 
-        Room cuRoom = springRoomDao.findById(optionalLong.getAsLong());
+        Room cuRoom = springRoomDao.findById(id);
         assertThat(cuRoom).isEqualTo(new Room("씨유방", "white", JsonConverter.fromJson("{e1:pieceInfo5}")));
     }
 
@@ -83,7 +82,7 @@ class SpringRoomDaoTest {
         Room room = new Room("닉방",
                 "black",
                 JsonConverter.fromJson("{a2:pieceInfo1}"));
-        springRoomDao.saveRoom(room);
+        springRoomDao.updateRoom(room);
 
         nickRoom = springRoomDao.findById(nickRoomId);
         assertThat(nickRoom).isEqualTo(new Room("닉방", "black", JsonConverter.fromJson("{a2:pieceInfo1}")));

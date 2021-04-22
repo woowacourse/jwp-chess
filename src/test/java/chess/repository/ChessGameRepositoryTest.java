@@ -6,7 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.domain.color.type.TeamColor;
 import chess.domain.game.ChessGame;
 import chess.domain.password.PasswordEncoder;
+import chess.web.exception.GameNotExistsException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,13 +29,22 @@ class ChessGameRepositoryTest {
         chessGameRepository.deleteAll();
     }
 
+    @DisplayName("findById() 결과가 없을 때 테스트")
+    @Test
+    void findByIdResultNone() {
+        Optional<ChessGame> foundOptionalChessGame = chessGameRepository.findById(1L);
+
+        assertThat(foundOptionalChessGame.isPresent()).isFalse();
+    }
+
     @DisplayName("저장 및 조회")
     @Test
     void saveAndFind() {
         ChessGame chessGame = new ChessGame(TEST_TITLE);
 
         Long gameId = chessGameRepository.save(chessGame);
-        ChessGame foundChessGame = chessGameRepository.findById(gameId);
+        ChessGame foundChessGame = chessGameRepository.findById(gameId)
+            .orElseThrow(GameNotExistsException::new);
 
         assertThat(foundChessGame.getId()).isEqualTo(gameId);
     }
@@ -85,7 +96,8 @@ class ChessGameRepositoryTest {
         ChessGame chessGame = new ChessGame(TEST_TITLE);
         Long savedGameId = chessGameRepository.save(chessGame);
 
-        ChessGame savedChessGame = chessGameRepository.findById(savedGameId);
+        ChessGame savedChessGame = chessGameRepository.findById(savedGameId)
+            .orElseThrow(GameNotExistsException::new);
         assertThat(savedChessGame.getCurrentTurnTeamColor()).isSameAs(TeamColor.WHITE);
         assertThat(savedChessGame.getEncryptedBlackPlayerPassword()).isNull();
 
@@ -95,7 +107,8 @@ class ChessGameRepositoryTest {
         savedChessGame.joinBlackPlayerWithPassword(rawBlackPlayerPassword);
         chessGameRepository.update(savedChessGame);
 
-        ChessGame updatedChessGame = chessGameRepository.findById(savedGameId);
+        ChessGame updatedChessGame = chessGameRepository.findById(savedGameId)
+            .orElseThrow(GameNotExistsException::new);
 
         assertThat(updatedChessGame.getCurrentTurnTeamColor()).isSameAs(TeamColor.BLACK);
         assertThat(updatedChessGame.getBoardStatus()).isEqualTo(""

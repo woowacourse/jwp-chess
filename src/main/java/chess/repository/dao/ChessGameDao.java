@@ -6,7 +6,9 @@ import chess.repository.ChessGameRepository;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -50,13 +52,12 @@ public class ChessGameDao implements ChessGameRepository {
     }
 
     @Override
-    public ChessGame findById(Long gameId) {
+    public Optional<ChessGame> findById(Long gameId) {
         String query = "SELECT * FROM chess_game WHERE chess_game_id = ?";
-        try {
-            return jdbcTemplate.queryForObject(query, chessGameRowMapper, gameId);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        ChessGame result = DataAccessUtils.singleResult(
+            jdbcTemplate.query(query, chessGameRowMapper, gameId)
+        );
+        return Optional.ofNullable(result);
     }
 
     @Override

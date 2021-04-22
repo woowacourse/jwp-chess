@@ -8,6 +8,7 @@ import chess.web.controller.dto.response.ChessGameResponseDto;
 import chess.web.controller.dto.response.CreateGameResponseDto;
 import chess.web.controller.dto.response.GameStatusResponseDto;
 import chess.repository.ChessGameRepository;
+import chess.web.exception.GameNotExistsException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -35,14 +36,16 @@ public class ChessGameService {
     }
 
     public String joinGame(JoinGameRequestDto joinGameRequestDto) {
-        ChessGame chessGame = chessGameRepository.findById(joinGameRequestDto.getGameId());
+        ChessGame chessGame = chessGameRepository.findById(joinGameRequestDto.getGameId())
+            .orElseThrow(GameNotExistsException::new);
         chessGame.joinBlackPlayerWithPassword(joinGameRequestDto.getRawBlackPlayerPassword());
         chessGameRepository.update(chessGame);
         return chessGame.getEncryptedBlackPlayerPassword();
     }
 
     public GameStatusResponseDto getGameStatus(Long gameId) {
-        ChessGame chessGame = chessGameRepository.findById(gameId);
+        ChessGame chessGame = chessGameRepository.findById(gameId)
+            .orElseThrow(GameNotExistsException::new);
         return new GameStatusResponseDto(chessGame);
     }
 
@@ -51,7 +54,8 @@ public class ChessGameService {
     }
 
     public void movePiece(MoveRequestDto moveRequestDTO) {
-        ChessGame chessGame = chessGameRepository.findById(moveRequestDTO.getGameId());
+        ChessGame chessGame = chessGameRepository.findById(moveRequestDTO.getGameId())
+            .orElseThrow(GameNotExistsException::new);
         chessGame.validatePassword(moveRequestDTO.getEncryptedPassword());
         String startPositionInput = moveRequestDTO.getStartPositionInput();
         String destinationInput = moveRequestDTO.getDestinationInput();

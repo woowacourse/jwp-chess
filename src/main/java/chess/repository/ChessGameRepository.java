@@ -2,11 +2,12 @@ package chess.repository;
 
 import chess.domain.game.ChessGame;
 import java.util.List;
+import java.util.Optional;
 
 public interface ChessGameRepository {
     Long save(ChessGame chessGame);
 
-    ChessGame findById(Long gameId);
+    Optional<ChessGame> findById(Long gameId);
 
     List<ChessGame> findAll();
 

@@ -28,6 +28,11 @@ public class PieceDAO {
         jdbcTemplate.batchUpdate(query, params);
     }
 
+    private Object[] parseObjects(Long chessGameId, Piece piece) {
+        return new Object[]{piece.getColor().toString(), piece.getShape().toString(), chessGameId,
+                piece.getRow(), piece.getColumn()};
+    }
+
     public List<Piece> findAllPiecesByChessGameId(Long chessGameId) {
         String query = "SELECT * FROM piece WHERE chess_game_id = ?";
         return jdbcTemplate.query(query, pieceRowMapper(), chessGameId);
@@ -43,16 +48,6 @@ public class PieceDAO {
         }
     }
 
-    public void update(final Piece piece) {
-        String query = "UPDATE piece SET row_index = ?, col_index = ? WHERE id = ?";
-        jdbcTemplate.update(query, piece.getRow(), piece.getColumn(), piece.getId());
-    }
-
-    public void delete(final Long chessGameId, final int row, final int col) {
-        String query = "DELETE FROM piece WHERE chess_game_id = ? AND row_index = ? AND col_index = ?";
-        jdbcTemplate.update(query, chessGameId, row, col);
-    }
-
     private RowMapper<Piece> pieceRowMapper() {
         return (rs, rowNum) -> {
             long id = rs.getLong("id");
@@ -66,9 +61,14 @@ public class PieceDAO {
         };
     }
 
-    private Object[] parseObjects(Long chessGameId, Piece piece) {
-        return new Object[]{piece.getColor().toString(), piece.getShape().toString(), chessGameId,
-                piece.getRow(), piece.getColumn()};
+    public void update(final Piece piece) {
+        String query = "UPDATE piece SET row_index = ?, col_index = ? WHERE id = ?";
+        jdbcTemplate.update(query, piece.getRow(), piece.getColumn(), piece.getId());
+    }
+
+    public void delete(final Long chessGameId, final int row, final int col) {
+        String query = "DELETE FROM piece WHERE chess_game_id = ? AND row_index = ? AND col_index = ?";
+        jdbcTemplate.update(query, chessGameId, row, col);
     }
 
 }

@@ -70,7 +70,7 @@ public class JDBCChessDao implements ChessDao {
 
     }
 
-    public List<Chess> loadChessInfo() {
+    public List<Chess> find() {
         return jdbcTemplate.query("select * from chess order by created_date",
             chessMapper
         );

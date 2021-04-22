@@ -4,8 +4,10 @@ import chess.service.SpringChessService;
 import chess.service.dto.ChessSaveRequestDto;
 import chess.service.dto.GameStatusDto;
 import chess.service.dto.GameStatusRequestDto;
+import chess.service.dto.GameStatusRequestsDto;
 import chess.service.dto.MoveRequestDto;
 import chess.service.dto.MoveResponseDto;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +38,12 @@ public class ChessGameApiController {
     public ResponseEntity<Void> finishChess(@RequestBody final GameStatusRequestDto requestDto) {
         chessService.changeGameStatus(requestDto);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/view")
+    public ResponseEntity<GameStatusRequestsDto> viewRoom() {
+        final GameStatusRequestsDto gameStatusRequestsDto = chessService.roomInfos();
+        return new ResponseEntity<>(gameStatusRequestsDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/{name}")

@@ -50,6 +50,44 @@ mainLoad.addEventListener("click", async () => {
 });
 
 mainView.addEventListener("click", async () => {
-    open("view", "저장된 체스게임 방",
-        "width = 500, height = 500, top = 100, left = 200, location = no");
+    const response = await fetch(basePath + "/api/games/view");
+    const body = await response.json();
+
+    const roomContainer = document.querySelector(".room-container");
+    const table = roomContainer.children[0];
+    if (roomContainer.getAttribute("style") === "display: block") {
+        const first = table.children[0];
+        while (table.firstChild) {
+            table.removeChild(table.firstChild);
+        }
+        table.append(first);
+        roomContainer.setAttribute("style", "display: none");
+        return;
+    }
+
+    if (response.status === 400 || response.status === 500) {
+        alert(body.message);
+        return;
+    }
+    const gameStatusRequests = body.gameStatusRequests;
+
+    gameStatusRequests.forEach(gameStatusRequest => {
+        const tr = document.createElement("tr");
+        tr.setAttribute("align", "center");
+        tr.setAttribute("bgcolor", "skybule");
+
+        let td = document.createElement("td");
+        td.innerText = gameStatusRequest.chessName;
+        tr.appendChild(td);
+
+        td = document.createElement("td");
+        if (gameStatusRequest.gameOver) {
+            td.innerText = "X";
+        } else {
+            td.innerText = "O";
+        }
+        tr.appendChild(td);
+        table.appendChild(tr);
+    })
+    roomContainer.setAttribute("style", "display: block");
 })

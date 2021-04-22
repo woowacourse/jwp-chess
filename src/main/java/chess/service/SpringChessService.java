@@ -12,12 +12,12 @@ import chess.exception.NotExistRoomException;
 import chess.service.dto.ChessSaveRequestDto;
 import chess.service.dto.GameStatusDto;
 import chess.service.dto.GameStatusRequestDto;
-import chess.service.dto.GameStatusViewDto;
+import chess.service.dto.GameStatusRequestsDto;
 import chess.service.dto.MoveRequestDto;
 import chess.service.dto.MoveResponseDto;
 import chess.service.dto.TilesDto;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,13 +76,11 @@ public class SpringChessService {
     }
 
     @Transactional
-    public List<GameStatusViewDto> roomInfos() {
-        final List<Chess> chessGroup = chessDao.loadChessInfo();
-        final List<GameStatusViewDto> gameStatusViewDtos = new ArrayList<>();
-        for (final Chess chess : chessGroup) {
-            gameStatusViewDtos.add(new GameStatusViewDto(chess.getName(), chess.isRunning()));
-        }
-        return gameStatusViewDtos;
+    public GameStatusRequestsDto roomInfos() {
+        final List<Chess> chessGroup = chessDao.find();
+        return new GameStatusRequestsDto(chessGroup.stream()
+            .map(chess -> new GameStatusRequestDto(chess.getName(), chess.isRunning()))
+            .collect(Collectors.toList()));
     }
 
     public GameStatusDto loadChess(final String name) {

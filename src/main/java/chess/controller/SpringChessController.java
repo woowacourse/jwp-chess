@@ -9,13 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class SpringChessController {
-    private static final int ROOM_NOT_EXIST = -1;
-    private static final int ROOM_ALREADY_EXIST = -2;
-
     private final SpringChessService springChessService;
 
     public SpringChessController(SpringChessService springChessService) {
@@ -37,17 +33,15 @@ public class SpringChessController {
     }
 
     @GetMapping("/chess/enter")
-    public ModelAndView enterGame(@RequestParam("id") String id) {
-        Optional<String> roomId = springChessService.findRoomById(id);
+    public ModelAndView enterGame(@RequestParam("room") String id) {
+        String roomId = springChessService.findRoomById(id);
 
         if (Objects.isNull(roomId)) {
-            final ModelAndView modelAndView = new ModelAndView("main");
-            modelAndView.addObject("interact", ROOM_ALREADY_EXIST);
-            return modelAndView;
+            return new ModelAndView("main");
         }
 
         final ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("roomId", roomId.get());
+        modelAndView.addObject("roomId", roomId);
 
         return modelAndView;
     }

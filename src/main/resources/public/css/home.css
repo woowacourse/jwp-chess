@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-image: url('../images/background.png');
+}
+
+.room-vertical {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tile {
+    width: 240px;
+    height: 80px;
+}
+
+.start-white > .tile:nth-of-type(odd) {
+    background-color: lightpink;
+}
+
+.start-black > .tile:nth-of-type(even) {
+    background-color: lightpink;
+}
+
+.base-background {
+    background-color: antiquewhite;
+}
+
+.start-white > .tile:hover {
+    background-color: plum;
+}
+
+.start-black > .tile:hover {
+    background-color: plum;
+}
+
+.board {
+    width: 240px;
+    height: 640px;
+}
+
+.title {
+    top: 30%;
+    left: 10%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.tile{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /*position: relative;*/
+}
+.button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.room-title {
+/*    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);*/
+    font-size : 20px;
+    text-align : center;
+    /*margin-top : 100px;*/
+    /*margin-left : 10px;*/
+}

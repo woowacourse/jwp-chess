@@ -1,14 +1,38 @@
-const interact = document.getElementById("interact").value;
+let rooms;
 
-roomInteract();
+const $roomFrame = document.getElementById("room-frame");
 
-async function roomInteract() {
-    console.log(interact);
-    if (interact == -1) {
-        confirm("이미 존재하는 방입니다.");
-    }
+loadRoom();
 
-    if (interact == -2) {
-        confirm("존재하지 않는 방입니다.");
+function loadRoom() {
+    fetch("/chess/room/list").then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+    }).then(data => {
+        rooms = data;
+        createRoom();
+    });
+}
+
+function createRoom() {
+    for (let i = 0; i < rooms.length ; i++) {
+        let title = (i + 1) + "번 방: " + rooms[i].roomName;
+        document.getElementById("room" + (i + 1)).innerHTML = `
+            <text class="room-title" id=${i + 1}>${title}</text>
+        `
+        if (i === 7) {
+            break;
+        }
     }
 }
+
+function selectRoom(e) {
+    if (e.target.className !== "room-title") {
+        return;
+    }
+
+    location.href = "https://localhost:8080/chess/enter?room=" + e.target.id
+}
+
+//$roomFrame.addEventListener("click", selectRoom);

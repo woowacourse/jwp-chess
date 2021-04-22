@@ -59,13 +59,13 @@ public class SpringChessLogDao implements ChessRepository {
         }
     }
 
-    public Optional<String> findRoomById(String id) {
-        String query = "select room_id from chessroom where room_name = ?";
+    public String findRoomById(String id) {
+        String query = "select room_id from chessroom where room_id = ?";
 
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, String.class, id));
+            return jdbcTemplate.queryForObject(query, String.class, id);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            return null;
         }
     }
 }

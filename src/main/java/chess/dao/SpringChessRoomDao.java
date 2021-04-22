@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class SpringChessRoomDao {
@@ -24,6 +25,21 @@ public class SpringChessRoomDao {
     public Long addRoom(RoomDto roomDto) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(roomDto);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+    }
+
+    public List<RoomDto> findAllRoom() {
+        String query = "select * from chessroom order by room_id asc";
+        return jdbcTemplate.query(
+                query,
+                (resultSet, rowNum) -> {
+                    RoomDto roomDto = new RoomDto(
+                            resultSet.getString("room_id"),
+                            resultSet.getString("room_name"),
+                            resultSet.getString("room_password")
+                    );
+                    return roomDto;
+                }
+        );
     }
 
     public String findRoomNameById(String id) {

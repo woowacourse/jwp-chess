@@ -20,8 +20,13 @@ public class SpringChessRestController {
         this.springChessService = springChessService;
     }
 
+    @GetMapping("/room/list")
+    public ResponseEntity<List<RoomDto>> loadRoom() {
+        return ResponseEntity.ok(springChessService.loadAllRoom());
+    }
+
     @GetMapping("/create/{id}")
-    public ResponseEntity<BoardDto> loadRoom(@PathVariable("id") String id) {
+    public ResponseEntity<BoardDto> createRoom(@PathVariable("id") String id) {
         return ResponseEntity.ok(springChessService.loadRoom(id));
     }
 

@@ -33,6 +33,10 @@ public class SpringChessService {
         return start(loadChessGame(id));
     }
 
+    public List<RoomDto> loadAllRoom() {
+        return springChessRoomDao.findAllRoom();
+    }
+
     private ChessGame loadChessGame(String id) {
         validateRoom(id);
         List<CommandDto> commands = springChessLogDao.find(id);
@@ -90,7 +94,7 @@ public class SpringChessService {
         return springChessLogDao.findRoomByName(roomName);
     }
 
-    public Optional<String> findRoomById(String id) {
+    public String findRoomById(String id) {
         return springChessLogDao.findRoomById(id);
     }
 

@@ -1,10 +1,17 @@
 package chess.dto;
 
 public class RoomDto {
+    private String roomId;
     private String roomName;
     private String roomPassword;
 
     public RoomDto(String roomName, String roomPassword) {
+        this.roomName = roomName;
+        this.roomPassword = roomPassword;
+    }
+
+    public RoomDto(String roomId, String roomName, String roomPassword) {
+        this.roomId = roomId;
         this.roomName = roomName;
         this.roomPassword = roomPassword;
     }

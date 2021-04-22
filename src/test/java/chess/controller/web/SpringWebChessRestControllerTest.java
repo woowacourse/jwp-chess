@@ -23,18 +23,32 @@ class SpringWebChessRestControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+
+        GameRequestDto gameRequestDto =
+                new GameRequestDto("user1", "user2", "roomName1");
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(gameRequestDto)
+                .when()
+                .post("/games")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("gameId", notNullValue());
     }
 
     @Test
-    @DisplayName("체스 게임 생성 요청, method = post, path = /game")
+    @DisplayName("체스 게임 생성 요청, method = post, path = /games")
     void saveGame() {
-        GameRequestDto gameRequestDto = new GameRequestDto("user1", "user2", "roomName");
+        GameRequestDto gameRequestDto =
+                new GameRequestDto("user3", "user4", "roomName2");
         RestAssured
                 .given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(gameRequestDto)
                 .when()
-                    .post("/game")
+                    .post("/games")
                 .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -42,12 +56,12 @@ class SpringWebChessRestControllerTest {
     }
 
     @Test
-    @DisplayName("체스 게임 불러오기, method = get, path = /game/1/load")
+    @DisplayName("체스 게임 보드 정보(체스말들의 정보) 가져오기, method = get, path = /games/1/pieces")
     void findPiecesByGameId() {
         RestAssured
                 .given().log().all()
                 .when()
-                    .get("/game/1/load")
+                    .get("/games/1/pieces")
                 .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -55,12 +69,12 @@ class SpringWebChessRestControllerTest {
     }
 
     @Test
-    @DisplayName("체스 게임 점수 불러오기, method = get, path = /game/1/score")
+    @DisplayName("체스 게임 점수 불러오기, method = get, path = /games/1/score")
     void findScoreByGameId() {
         RestAssured
                 .given().log().all()
                 .when()
-                    .get("/game/1/score")
+                    .get("/games/1/score")
                 .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -69,12 +83,12 @@ class SpringWebChessRestControllerTest {
     }
 
     @Test
-    @DisplayName("체스 게임의 상태 불러오기, method = get, path = /game/1/state")
+    @DisplayName("체스 게임의 상태 불러오기, method = get, path = /games/1/state")
     void findStateByGameId() {
         RestAssured
                 .given().log().all()
                 .when()
-                    .get("/game/1/state")
+                    .get("/games/1/state")
                 .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -84,12 +98,12 @@ class SpringWebChessRestControllerTest {
     }
 
     @Test
-    @DisplayName("체스 게임의 기록 불러오기, method = get, path = /game/1/history")
+    @DisplayName("체스 게임의 기록 불러오기, method = get, path = /games/1/history")
     void findHistoryByGameId() {
         RestAssured
                 .given().log().all()
                 .when()
-                    .get("/game/1/history")
+                    .get("/games/1/history")
                 .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -97,12 +111,12 @@ class SpringWebChessRestControllerTest {
     }
 
     @Test
-    @DisplayName("source 위치에 체스말 이동 가능 경로 불러온다, method = get, path = /game/1/path?source=c2")
+    @DisplayName("source 위치에 체스말 이동 가능 경로 불러온다, method = get, path = /games/1/path?source=c2")
     void movablePath() {
         RestAssured
                 .given().log().all()
                 .when()
-                    .get("/game/1/path?source=c2")
+                    .get("/games/1/path?source=c2")
                 .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -111,7 +125,7 @@ class SpringWebChessRestControllerTest {
     }
 
     @Test
-    @DisplayName("requestBody 로 보내는 source 와 target 으로 체스말 이동 요청한다, method = post, path = /game/1/move")
+    @DisplayName("requestBody 로 보내는 source 와 target 으로 체스말 이동 요청한다, method = post, path = /games/1/move")
     void move() {
         MoveRequestDto moveRequestDto = new MoveRequestDto("a2", "a3");
         RestAssured
@@ -119,7 +133,7 @@ class SpringWebChessRestControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(moveRequestDto)
                 .when()
-                    .post("/game/1/move")
+                    .post("/games/1/move")
                 .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .contentType(MediaType.APPLICATION_JSON_VALUE)

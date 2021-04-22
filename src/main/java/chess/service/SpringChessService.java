@@ -8,7 +8,6 @@ import chess.domain.game.ChessGame;
 import chess.domain.gamestate.Ready;
 import chess.domain.gamestate.Running;
 import chess.domain.piece.Piece;
-import chess.dto.MoveRequestDto;
 import chess.repository.room.Room;
 import chess.repository.room.SpringRoomDao;
 import chess.util.JsonConverter;
@@ -46,12 +45,11 @@ public class SpringChessService {
         return chessGame;
     }
 
-    public ChessGame movePiece(MoveRequestDto moveRequestDto) {
-        long id = moveRequestDto.getId();
+    public ChessGame movePiece(long id, String moveCommand) {
         Room room = roomDao.findById(id);
 
         ChessGame chessGame = createChessGame(room);
-        List<String> command = Arrays.asList(moveRequestDto.getCommand().split(SPACE));
+        List<String> command = Arrays.asList(moveCommand.split(SPACE));
         chessGame.play(command);
 
         room = createRoom(room.getName(), chessGame);

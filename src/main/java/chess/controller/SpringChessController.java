@@ -62,8 +62,7 @@ public class SpringChessController {
 
     @PostMapping(value = "/game/{id}/move", consumes = "text/plain")
     public ModelAndView move(@PathVariable("id") long id, @RequestBody String moveCommand) {
-        MoveRequestDto moveRequestDto = new MoveRequestDto(id, moveCommand);
-        ChessGame chessGame = springChessService.movePiece(moveRequestDto);
+        ChessGame chessGame = springChessService.movePiece(id, moveCommand);
 
         ModelAndView modelAndView = new ModelAndView();
         addChessGame(modelAndView, chessGame);

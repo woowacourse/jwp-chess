@@ -6,13 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static chess.dao.DBConnection.getConnection;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class CommandDaoTest {
@@ -23,7 +19,7 @@ public class CommandDaoTest {
 
     @BeforeEach
     public void setup() {
-        jdbcTemplate.execute("DROP TABLE customers IF EXISTS");
+        jdbcTemplate.execute("DROP TABLE command IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE customers(" +
                 "id SERIAL, first_name VARCHAR(255), last_name VARCHAR(255))");
 
@@ -32,12 +28,6 @@ public class CommandDaoTest {
                                             .collect(Collectors.toList());
 
         jdbcTemplate.batchUpdate("INSERT INTO command(room_id, move_from, move_to) VALUES (1L, ?,?)", splitUpNames);
-    }
-
-    @Test
-    public void connection() {
-        Connection con = getConnection();
-        assertNotNull(con);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.exception.ChessException;
 import chess.exception.DataAccessException;
 import chess.service.ChessService;
 import chess.service.RoomService;
@@ -50,9 +51,9 @@ public class SpringChessController {
         return "redirect:/game/" + roomId;
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handle(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    @ExceptionHandler(ChessException.class)
+    public ResponseEntity<String> handle(ChessException e) {
+        return ResponseEntity.status(e.code()).body(e.desc());
     }
 
     @ExceptionHandler(DataAccessException.class)

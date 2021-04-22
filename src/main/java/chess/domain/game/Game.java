@@ -5,6 +5,8 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.state.BlackTurn;
 import chess.domain.state.State;
+import chess.exception.ChessException;
+import chess.exception.ErrorCode;
 
 import java.util.Map;
 
@@ -26,7 +28,7 @@ public class Game {
 
     private void checkGameEnd() {
         if (isEnd()) {
-            throw new IllegalArgumentException("이미 종료된 게임입니다.");
+            throw new ChessException(ErrorCode.FINISHED_GAME);
         }
     }
 

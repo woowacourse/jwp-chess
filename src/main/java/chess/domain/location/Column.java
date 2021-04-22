@@ -1,5 +1,8 @@
 package chess.domain.location;
 
+import chess.exception.ChessException;
+import chess.exception.ErrorCode;
+
 public enum Column {
     A("a"),
     B("b"),
@@ -19,7 +22,7 @@ public enum Column {
 
     public Column move(int value) {
         if ((this.ordinal() + value) < 0 || this.ordinal() + value >= columns.length) {
-            throw new IllegalArgumentException("범위를 넘어가는 move 입니다");
+            throw new ChessException(ErrorCode.INVALID_MOVE);
         }
         return columns[(this.ordinal() + value)];
     }

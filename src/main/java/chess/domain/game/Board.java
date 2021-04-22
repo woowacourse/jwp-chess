@@ -4,6 +4,8 @@ import chess.domain.location.Position;
 import chess.domain.piece.Color;
 import chess.domain.piece.Empty;
 import chess.domain.piece.Piece;
+import chess.exception.ChessException;
+import chess.exception.ErrorCode;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,20 +31,20 @@ public class Board {
     private void validateFromPiece(Color color, Position from) {
         if (!pieceByPosition.get(from)
                             .isSame(color)) {
-            throw new IllegalArgumentException("같은 색깔의 말을 골라야 합니다.");
+            throw new ChessException(ErrorCode.INVALID_PIECE_SELECT);
         }
     }
 
     private void validateToPiece(Color color, Position to) {
         if (pieceByPosition.get(to)
                            .isSame(color)) {
-            throw new IllegalArgumentException("같은 색깔의 말을 잡을 수 없습니다.");
+            throw new ChessException(ErrorCode.CANNOT_KILL_SAME_COLOR);
         }
     }
 
     private void validateCanMove(Position from, Position to) {
         if (!movablePositions(from).contains(to)) {
-            throw new IllegalArgumentException("이동할 수 없는 위치로의 이동입니다.");
+            throw new ChessException(ErrorCode.INVALID_MOVE);
         }
     }
 

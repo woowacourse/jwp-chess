@@ -1,5 +1,8 @@
 package chess.domain.location;
 
+import chess.exception.ChessException;
+import chess.exception.ErrorCode;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +32,7 @@ public class Position {
         if (cache.containsKey(key)) {
             return cache.get(key);
         }
-        throw new IllegalArgumentException();
+        throw new ChessException(ErrorCode.INVALID_POSITION);
     }
 
     private static void cacheByColumn(Column x) {

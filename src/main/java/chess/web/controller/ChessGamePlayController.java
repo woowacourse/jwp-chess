@@ -30,8 +30,7 @@ public class ChessGamePlayController {
         @RequestBody MoveRequestDto moveRequestDto,
         @CookieValue(ENCRYPTED_PASSWORD) String encryptedPassword) {
 
-        moveRequestDto.setEncryptedPassword(encryptedPassword);
-        chessGameService.movePiece(moveRequestDto);
+        chessGameService.movePiece(moveRequestDto, encryptedPassword);
         return new MoveResponseDto(false);
     }
 

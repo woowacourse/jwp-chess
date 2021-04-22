@@ -53,10 +53,10 @@ public class ChessGameService {
         chessGameRepository.deleteById(gameId);
     }
 
-    public void movePiece(MoveRequestDto moveRequestDTO) {
+    public void movePiece(MoveRequestDto moveRequestDTO, String encryptedPassword) {
         ChessGame chessGame = chessGameRepository.findById(moveRequestDTO.getGameId())
             .orElseThrow(GameNotExistsException::new);
-        chessGame.validatePassword(moveRequestDTO.getEncryptedPassword());
+        chessGame.validatePassword(encryptedPassword);
         String startPositionInput = moveRequestDTO.getStartPositionInput();
         String destinationInput = moveRequestDTO.getDestinationInput();
         chessGame.movePiece(startPositionInput, destinationInput);

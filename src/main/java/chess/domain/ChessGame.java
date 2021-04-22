@@ -40,10 +40,10 @@ public class ChessGame {
         return currentTurn.havePiece(position);
     }
 
-    public boolean move(final Position current, final Position destination) {
+    public void move(final Position current, final Position destination) {
         final Piece chosenPiece = currentTurn.choosePiece(current);
         if (!validateMovable(current, destination, chosenPiece)) {
-            return false;
+            throw new IllegalArgumentException();
         }
 
         Team enemy = currentTurn.getEnemy();
@@ -53,7 +53,6 @@ public class ChessGame {
 
         currentTurn.move(current, destination);
         changeTurn();
-        return true;
     }
 
     private boolean validateMovable(final Position current, final Position destination, final Piece chosenPiece) {

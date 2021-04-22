@@ -3,7 +3,6 @@ package chess.service.game;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.ChessGameRepository;
-import chess.service.game.ChessGameService;
 import dto.ChessGameDto;
 import dto.MoveDto;
 import org.springframework.stereotype.Service;
@@ -19,12 +18,8 @@ public class ChessGameServiceImpl implements ChessGameService {
     @Override
     public ChessGameDto move(final Long gameId, final MoveDto moveDto) {
         final ChessGame chessGame = chessGameRepository.chessGame(gameId);
-
-        if (chessGame.move(Position.of(moveDto.getFrom()), Position.of(moveDto.getTo()))) {
-            chessGameRepository.save(gameId, chessGame, moveDto);
-            return new ChessGameDto(gameId, chessGame);
-        }
-
-        throw new IllegalArgumentException("이동할 수 없습니다.");
+        chessGame.move(Position.of(moveDto.getFrom()), Position.of(moveDto.getTo()));
+        chessGameRepository.save(gameId, chessGame, moveDto);
+        return new ChessGameDto(gameId, chessGame);
     }
 }

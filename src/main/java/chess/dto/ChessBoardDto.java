@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toMap;
 public class ChessBoardDto {
     private final Map<String, PieceDto> chessBoard;
 
-    private ChessBoardDto(Map<String, PieceDto> chessBoard) {
+    public ChessBoardDto(Map<String, PieceDto> chessBoard) {
         this.chessBoard = chessBoard;
     }
 

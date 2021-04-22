@@ -1,7 +1,9 @@
 package chess.dto;
 
 import chess.domain.ChessGameManager;
+import chess.domain.board.ChessBoard;
 import chess.domain.piece.Color;
+import chess.domain.statistics.ChessGameStatistics;
 import chess.domain.statistics.MatchResult;
 
 import java.util.Map;
@@ -28,6 +30,18 @@ public class RunningGameDto {
                 chessGameManager.getStatistics().getColorsScore(),
                 chessGameManager.getStatistics().getMatchResult(),
                 chessGameManager.isEnd());
+    }
+
+    public static RunningGameDto of(ChessBoard chessBoard, Color currentTurn, boolean isEnd) {
+        Map<Color, Double> scoreMap = chessBoard.getScoreMap();
+        ChessGameStatistics chessGameStatistics = new ChessGameStatistics(scoreMap,
+                MatchResult.generateMatchResult(scoreMap.get(Color.WHITE), scoreMap.get(Color.BLACK)));
+        return new RunningGameDto(
+                ChessBoardDto.from(chessBoard).board(),
+                currentTurn,
+                chessGameStatistics.getColorsScore(),
+                chessGameStatistics.getMatchResult(),
+                isEnd);
     }
 
     public Map<String, PieceDto> getChessBoard() {

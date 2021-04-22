@@ -37,10 +37,10 @@ public class SpringChessController {
         return "redirect:game/" + roomId;
     }
 
-    @GetMapping("/delete/{roomId}")
-    private String deleteRoom(@PathVariable("roomId") Long roomId) {
+    @ResponseBody
+    @DeleteMapping("/rooms/{roomId}")
+    private void deleteRoom(@PathVariable("roomId") Long roomId) {
         roomService.delete(roomId);
-        return "redirect:/";
     }
 
     @PostMapping("/game/{roomId}/move")

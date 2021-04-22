@@ -28,7 +28,7 @@ public class RoomDao {
             throw new IllegalArgumentException("중복된 방 이름입니다.");
         }
 
-        final String query = "INSERT INTO room_status (room_name) VALUES (?)";
+        final String query = "INSERT INTO room (room_name) VALUES (?)";
         jdbcTemplate.update(con -> {
             PreparedStatement pstmt = con.prepareStatement(query, new String[]{"id"});
             pstmt.setString(1, roomName);
@@ -38,17 +38,17 @@ public class RoomDao {
     }
 
     private boolean isRoomNameExist(final String roomName) {
-        final String query = "SELECT EXISTS (SELECT * FROM room_status WHERE room_name = ?)";
+        final String query = "SELECT EXISTS (SELECT * FROM room WHERE room_name = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, roomName);
     }
 
     public void delete(final long roomId) {
-        final String query = "DELETE FROM room_status WHERE id = ?";
+        final String query = "DELETE FROM room WHERE id = ?";
         jdbcTemplate.update(query, roomId);
     }
 
     public List<RoomInfoDto> load() {
-        final String query = "SELECT * FROM room_status";
+        final String query = "SELECT * FROM room";
         return jdbcTemplate.query(query, (rs, rowNum) -> makeRoomDto(rs));
     }
 
@@ -59,7 +59,7 @@ public class RoomDao {
     }
 
     public String name(final long roomId) {
-        final String query = "SELECT room_name FROM room_status WHERE id = ?";
+        final String query = "SELECT room_name FROM room WHERE id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
     }
 }

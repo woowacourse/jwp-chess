@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.controller.dto.RoomDto;
 import chess.service.RoomService;
+import chess.view.OutputView;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +28,8 @@ public class RoomController {
     @PostMapping("/create")
     public String createRoom(@Valid final RoomDto roomDto, final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException("방 길이는 3 ~ 12 글자 입니다.");
+            final String errorMsg = OutputView.getErrorMessage(bindingResult.getFieldErrors());
+            throw new IllegalArgumentException(errorMsg);
         }
 
         final Long roomId = roomService.save(roomDto.getRoomName());

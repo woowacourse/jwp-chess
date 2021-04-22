@@ -29,12 +29,12 @@ public class GameDao {
     }
 
     public void save(final long roomId, final Turn turn, final Board board) {
-        final String query = "INSERT INTO game_status (room_id, turn, board) VALUES (?, ?, ?)";
+        final String query = "INSERT INTO game (room_id, turn, board) VALUES (?, ?, ?)";
         jdbcTemplate.update(query, roomId, turn.name(), boardToData(board));
     }
 
     public ChessGame load(final long roomId) {
-        final String query = "SELECT * FROM game_status WHERE room_id = (?) ORDER BY id DESC limit 1";
+        final String query = "SELECT * FROM game WHERE room_id = (?) ORDER BY id DESC limit 1";
         return jdbcTemplate.queryForObject(query, (rs, rowNum) -> {
             final String board = rs.getString(COLUMN_LABEL_OF_BOARD);
             final String turn = rs.getString(COLUMN_LABEL_OF_TURN);
@@ -43,12 +43,12 @@ public class GameDao {
     }
 
     public void delete(final long roomId) {
-        final String query = "DELETE FROM game_status WHERE room_id = ?";
+        final String query = "DELETE FROM game WHERE room_id = ?";
         jdbcTemplate.update(query, roomId);
     }
 
     public void update(final long roomId, final Turn turn, final Board board) {
-        final String query = "UPDATE game_status SET turn = ?,  board= ?  WHERE room_id = ?";
+        final String query = "UPDATE game SET turn = ?,  board= ?  WHERE room_id = ?";
         jdbcTemplate.update(query, turn.name(), boardToData(board), roomId);
     }
 

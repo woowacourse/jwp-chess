@@ -9,16 +9,16 @@
 - 메인 페이지 : "/room/list"
 - DB Table (DATABASE : web_chess)
 ```SQL
-CREATE TABLE game_status(
-    id int not null auto_increment primary key,
-    room_id int,
+CREATE TABLE game(
+    id bigint not null auto_increment primary key,
+    room_id bigint,
     turn  CHAR(10) not null,
     board TEXT
     );
 ```
 ```SQL
-CREATE TABLE room_status(
-    id int not null auto_increment primary key,
+CREATE TABLE room(
+    id bigint not null auto_increment primary key,
     room_name CHAR(10) not null
     );
 ```

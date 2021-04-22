@@ -18,12 +18,12 @@ public class ChessGame {
     public ChessGame() {
         board = new Board();
         board.initChessPieces();
-        isPlaying = false;
+        isPlaying = true;
         isBlackTurn = false;
     }
 
-    public ChessGame(Map<Position, Piece> board, boolean isPlaying ,Color turn) {
-        this.board = new Board(board);
+    public ChessGame(Map<Position, Piece> pieces, boolean isPlaying, Color turn) {
+        this.board = new Board(pieces);
         this.isBlackTurn = turn.isBlack();
         this.isPlaying = isPlaying;
     }
@@ -32,7 +32,7 @@ public class ChessGame {
         return isPlaying;
     }
 
-    public boolean getIsBlackTurn(){
+    public boolean isBlackTurn() {
         return isBlackTurn;
     }
 
@@ -77,6 +77,16 @@ public class ChessGame {
         return board.isKingAlive(color);
     }
 
+    public Color winnerColor() {
+        if (isKingAlive(Color.BLACK) && isKingAlive(Color.WHITE)) {
+            return Color.NONE;
+        }
+        if (isKingAlive(Color.BLACK)) {
+            return Color.BLACK;
+        }
+        return Color.WHITE;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -94,4 +104,5 @@ public class ChessGame {
     public int hashCode() {
         return Objects.hash(board, isPlaying, isBlackTurn);
     }
+
 }

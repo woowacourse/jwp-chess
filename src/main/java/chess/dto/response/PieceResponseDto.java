@@ -1,14 +1,16 @@
 package chess.dto.response;
 
-import chess.dto.PieceDto;
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 
 public class PieceResponseDto {
+
     private final String position;
     private final String name;
 
-    public PieceResponseDto(PieceDto pieceDto) {
-        this.position = pieceDto.getPosition();
-        this.name = pieceDto.getPieceName();
+    public PieceResponseDto(Position position, Piece piece) {
+        this.position = position.chessCoordinate();
+        this.name = piece.getName();
     }
 
     public String getPosition() {
@@ -18,4 +20,5 @@ public class PieceResponseDto {
     public String getName() {
         return name;
     }
+
 }

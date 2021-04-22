@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.chesscontroller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,4 +15,5 @@ public class ChessWebController {
     public String chess() {
         return "chess";
     }
+
 }

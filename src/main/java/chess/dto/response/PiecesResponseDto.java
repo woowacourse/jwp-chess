@@ -1,8 +1,8 @@
 package chess.dto.response;
 
+import chess.domain.chessgame.ChessGame;
+import chess.domain.chessgame.Room;
 import chess.domain.piece.Color;
-import chess.dto.PieceDto;
-import chess.dto.PiecesDto;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,19 +13,17 @@ public class PiecesResponseDto {
     private final boolean isPlaying;
     private final List<PieceResponseDto> alivePieces;
 
-    public PiecesResponseDto(Color winnerColor, boolean isPlaying, PiecesDto piecesDtos) {
-        this.winnerColor = winnerColor;
-        this.isPlaying = isPlaying;
-        this.alivePieces = new ArrayList<>();
-        for (PieceDto movedPiece : piecesDtos.getPieceDtos()) {
-            alivePieces.add(new PieceResponseDto(movedPiece));
-        }
+    public PiecesResponseDto(ChessGame chessGame) {
+        this.winnerColor = chessGame.winnerColor();
+        this.isPlaying = chessGame.isPlaying();
+        alivePieces = new ArrayList<>();
+        chessGame.pieces().forEach((key, value) -> {
+            alivePieces.add(new PieceResponseDto(key, value));
+        });
     }
 
-    public PiecesResponseDto(PiecesResponsesDto piecesResponsesDto) {
-        this.winnerColor = Color.NONE;
-        this.isPlaying = true;
-        this.alivePieces = piecesResponsesDto.getPieceResponseDtos();
+    public PiecesResponseDto(Room room) {
+        this(room.chessgame());
     }
 
     public Color getWinnerColor() {
@@ -39,4 +37,5 @@ public class PiecesResponseDto {
     public List<PieceResponseDto> getAlivePieces() {
         return alivePieces;
     }
+
 }

@@ -80,12 +80,11 @@ class ChessControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveRequestDTO)
                 .when().put("/chessgame/1/chessboard");
-        String expectedResponseBody = writeResponseBody();
 
-        assertResponse(response, HttpStatus.OK, expectedResponseBody);
+        assertResponse(response, HttpStatus.BAD_REQUEST, "혼자서는 플레이할 수 없습니다.");
     }
 
-    @DisplayName("현재 턴이 아닌 기물을 조작시 예외가 발생한다.")
+    @DisplayName("현재 턴이 아닌 기물을 조작시 예외가 발생한다. (혼자서는 플레이가 불가능하다.)")
     @Test
     void cannotMove() {
         MoveRequestDTO moveRequestDTO = new MoveRequestDTO("a2", "a3", "BLACK");
@@ -96,7 +95,7 @@ class ChessControllerTest {
                 .body(moveRequestDTO)
                 .when().put("/chessgame/1/chessboard");
 
-        assertResponse(response, HttpStatus.BAD_REQUEST, "조작할 수 있는 기물이 없습니다.");
+        assertResponse(response, HttpStatus.BAD_REQUEST, "혼자서는 플레이할 수 없습니다.");
     }
 
     @DisplayName("리스타트시 응답 결과는 메인 페이지 url이다.")

@@ -34,7 +34,7 @@ public class Users {
         return users.size() == MAXIMUM_USER_COUNTS_FOR_ONE_ROOM;
     }
 
-    public List<User> filterBySameTeam(TeamType teamType) {
+    public List<User> filterByTeam(TeamType teamType) {
         return users.stream()
                 .filter(user -> user.isSameTeam(teamType))
                 .collect(Collectors.toList());

@@ -77,7 +77,7 @@ class UserServiceTest {
         verify(userDAO, times(1)).findByRoomId(1);
     }
 
-    @DisplayName("혼자서는 게임을 진행할 수 없.")
+    @DisplayName("혼자서는 게임을 진행할 수 없다.")
     @Test
     void cannotPlayAlone() {
         List<User> users = Arrays.asList(new User(1, "encoded", "BLACK", 1));
@@ -86,6 +86,19 @@ class UserServiceTest {
         assertThatCode(() -> userService.validateUserTurn(1, "encoded", TeamType.WHITE))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("혼자서는 플레이할 수 없습니다.");
+        verify(userDAO, times(1)).findByRoomId(1);
+    }
+
+    @DisplayName("주어진 ID 및 패스워드가 일치한 유저가 없으면 삭제 불가다.")
+    @Test
+    void cannotDeleteUser() {
+        List<User> users = Arrays.asList(new User(1, "pass", "black", 1),
+                new User(2, "pass2", "black", 1));
+        given(userDAO.findByRoomId(1)).willReturn(users);
+
+        assertThatCode(() -> userService.deleteUserBy(1, "kakak1"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("삭제할 유저가 존재하지 않습니다.");
         verify(userDAO, times(1)).findByRoomId(1);
     }
 }

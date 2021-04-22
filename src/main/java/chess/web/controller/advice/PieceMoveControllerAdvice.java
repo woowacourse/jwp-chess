@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = PieceMoveController.class)
-public class PieceMoveAdvice {
+public class PieceMoveControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public MoveResponseDto pieceMoveException(IllegalArgumentException e) {

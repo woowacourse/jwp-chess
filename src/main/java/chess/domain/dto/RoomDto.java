@@ -2,13 +2,13 @@ package chess.domain.dto;
 
 public class RoomDto {
 
-    private final String roomName;
+    private String name;
 
-    public RoomDto(String roomName) {
-        this.roomName = roomName;
+    public String getName() {
+        return name;
     }
 
-    public String getRoomName() {
-        return roomName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -104,32 +104,32 @@ const App = function() {
     fetch(`http://localhost:8080/room/${this.roomName}/start`, {
       method: 'GET'
     })
-      .then(response => response.json())
-      .then(result => {
-        if (result.status === "ERROR") {
-          alert(result.message);
-          return;
-        }
-        this.renderBoard(result.pieces);
-        this.renderMessage(result);
-      })
-      .catch(err => alert(err));
+    .then(response => response.json())
+    .then(result => {
+      if (result.status === "ERROR") {
+        alert(result.message);
+        return;
+      }
+      this.renderBoard(result.pieces);
+      this.renderMessage(result);
+    })
+    .catch(err => alert(err));
   })
 
   this.$endBtn.addEventListener('click', () => {
     fetch(`http://localhost:8080/room/${this.roomName}/end`, {
       method: 'GET'
     })
-      .then(response => response.json())
-      .then(result => {
-        if (result.status === "ERROR") {
-          alert(result.message);
-          return;
-        }
-        this.renderBoard(result.pieces);
-        this.renderMessage(result);
-      })
-      .catch(err => alert(err));
+    .then(response => response.json())
+    .then(result => {
+      if (result.status === "ERROR") {
+        alert(result.message);
+        return;
+      }
+      this.renderBoard(result.pieces);
+      this.renderMessage(result);
+    })
+    .catch(err => alert(err));
   })
 
   this.constructor = function() {
@@ -142,26 +142,30 @@ const App = function() {
     }
 
     fetch(`http://localhost:8080/room/${roomName}`)
-      .then(response => response.json())
-      .then(result => {
-        if (result.status === "ERROR" && result.message === "[ERROR] 존재하지 않는 방입니다.") {
-          alert("존재하지 않는 방이므로, 새로 방을 만듭니다.");
-          fetch(`http://localhost:8080/createroom/${roomName}`)
-            .then(response => response.json())
-            .then(result => this.roomName = roomName);
-          this.renderEmptyBoard();
-          return;
-        }
-        if (result.status === "ERROR" && result.message === "[ERROR] 아직 시작되지 않은 방입니다.") {
-          this.roomName = roomName;
-          this.renderEmptyBoard();
-          return;
-        }
+    .then(response => response.json())
+    .then(result => {
+      if (result.status === "ERROR" && result.message === "[ERROR] 존재하지 않는 방입니다.") {
+        alert("존재하지 않는 방이므로, 새로 방을 만듭니다.");
+        fetch(`http://localhost:8080/room`, {
+          method: 'POST',
+          headers: {'content-type': 'application/json'},
+          body: JSON.stringify({name: roomName})
+        })
+        .then(response => response.json())
+        .then(result => this.roomName = roomName);
+        this.renderEmptyBoard();
+        return;
+      }
+      if (result.status === "ERROR" && result.message === "[ERROR] 아직 시작되지 않은 방입니다.") {
         this.roomName = roomName;
-        this.renderBoard(result.pieces);
-        this.renderMessage(result);
-      })
-      .catch(err => alert(err));
+        this.renderEmptyBoard();
+        return;
+      }
+      this.roomName = roomName;
+      this.renderBoard(result.pieces);
+      this.renderMessage(result);
+    })
+    .catch(err => alert(err));
   }.bind(this);
 }
 
@@ -169,5 +173,3 @@ window.onload = () => {
   const app = new App();
   app.constructor();
 }
-
-

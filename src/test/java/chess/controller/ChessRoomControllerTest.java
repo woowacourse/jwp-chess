@@ -1,7 +1,5 @@
 package chess.controller;
 
-import static org.hamcrest.core.Is.is;
-
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class ChessControllerTest {
+class ChessRoomControllerTest {
 
     @LocalServerPort
     int port;
@@ -31,14 +29,14 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @Test
-    void createRoom() {
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/createroom/1")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
-    }
+//    @Test
+//    void createRoom() {
+//        RestAssured.given().log().all()
+//                .accept(MediaType.APPLICATION_JSON_VALUE)
+//                .when().get("/room/create")
+//                .then().log().all()
+//                .statusCode(HttpStatus.OK.value());
+//    }
 
     @Test
     void enterRoom() {

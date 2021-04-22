@@ -23,11 +23,6 @@ public class ChessController {
         this.service = service;
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity exceptionHandler(RuntimeException e) {
-        return ResponseEntity.ok().body(ResponseDto.error(e.getMessage()));
-    }
-
     @GetMapping(value = "/createroom/{name}")
     public ResponseEntity<RoomDto> createRoom(@PathVariable("name") String roomName) throws SQLException {
         service.createRoom(roomName);

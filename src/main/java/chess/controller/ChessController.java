@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ChessController {
 
-    @Autowired
     public ChessController() {
     }
 

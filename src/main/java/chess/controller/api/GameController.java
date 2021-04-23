@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.api;
 
 import chess.dto.FinishDTO;
 import chess.dto.MoveDTO;
@@ -22,7 +22,6 @@ public class GameController {
 
     private final GameService gameService;
 
-    @Autowired
     public GameController(GameService gameService) {
         this.gameService = gameService;
     }

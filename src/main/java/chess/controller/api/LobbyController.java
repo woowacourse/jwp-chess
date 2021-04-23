@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.api;
 
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
@@ -25,7 +25,6 @@ public class LobbyController {
 
     private final LobbyService lobbyService;
 
-    @Autowired
     public LobbyController(LobbyService lobbyService) {
         this.lobbyService = lobbyService;
     }

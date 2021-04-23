@@ -16,7 +16,6 @@ import java.util.List;
 public class GameService {
     private final ChessRepository chessRepository;
 
-    @Autowired
     public GameService(ChessRepository chessRepository) {
         this.chessRepository = chessRepository;
     }

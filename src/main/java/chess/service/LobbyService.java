@@ -12,7 +12,6 @@ import java.util.Optional;
 public class LobbyService {
     ChessRepository chessRepository;
 
-    @Autowired
     public LobbyService(ChessRepository chessRepository) {
         this.chessRepository = chessRepository;
     }

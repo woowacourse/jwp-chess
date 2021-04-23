@@ -18,9 +18,7 @@ public class FakeMoveDao implements MoveRepository {
 
     @Override
     public void move(long chessId, MovePosition movePosition) {
-        final Chess chess = fakeChessTable.get(chessId);
-        chess.move(movePosition);
-        fakeChessTable.put(chessId, chess);
+
     }
 
     @Override

@@ -7,7 +7,7 @@ import chess.dto.game.StatusDTO;
 import chess.dto.result.ResultDTO;
 import chess.dto.room.RoomNameDTO;
 import chess.dto.user.UsersDTO;
-import chess.service.LogService;
+import chess.service.HistoryService;
 import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
@@ -30,14 +30,14 @@ public class SpringChessGameRestController {
     private final RoomService roomService;
     private final ResultService resultService;
     private final UserService userService;
-    private final LogService logService;
+    private final HistoryService historyService;
 
     public SpringChessGameRestController(final RoomService roomService, final ResultService resultService,
-                                         final UserService userService, final LogService logService) {
+                                         final UserService userService, final HistoryService historyService) {
         this.roomService = roomService;
         this.resultService = resultService;
         this.userService = userService;
-        this.logService = logService;
+        this.historyService = historyService;
     }
 
     @PostMapping(path = "/new-game")
@@ -68,7 +68,7 @@ public class SpringChessGameRestController {
         String startPoint = moveDTO.getStartPoint();
         String endPoint = moveDTO.getEndPoint();
         ChessGame chessGame = roomService.movePiece(roomId, startPoint, endPoint);
-        logService.createLog(roomId, startPoint, endPoint);
+        historyService.createHistory(roomId, startPoint, endPoint);
         UsersDTO users = userService.usersParticipatedInGame(roomId);
         return ResponseEntity.status(OK)
                 .body(new StatusDTO(chessGame, users));

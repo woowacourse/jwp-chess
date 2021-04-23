@@ -29,7 +29,7 @@ CREATE TABLE room
     status     TINYINT(4) NOT NULL   -- 0 -> 종료된 게임을 뜻함 / 1 -> 진행중인 게임을 뜻함
 );
 
-CREATE TABLE log
+CREATE TABLE history
 (
     id             INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
     room_id        INT         NOT NULL, -- room_id와 연결
@@ -37,10 +37,3 @@ CREATE TABLE log
     end_position   VARCHAR(12) NOT NULL,
     register_date  timestamp DEFAULT NOW()
 );
-
--- 초기 데이터 생성
-INSERT INTO user (nickname)
-VALUES ('blackAir'),
-       ('whiteAir');
-
-

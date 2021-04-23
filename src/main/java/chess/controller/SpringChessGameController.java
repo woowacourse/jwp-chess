@@ -3,10 +3,10 @@ package chess.controller;
 import chess.domain.ChessGame;
 import chess.dto.game.GameDTO;
 import chess.exception.InitialSettingDataException;
-import chess.exception.NoLogsException;
+import chess.exception.NoHistoryException;
 import chess.exception.NotEnoughPlayerException;
 import chess.exception.RoomException;
-import chess.service.LogService;
+import chess.service.HistoryService;
 import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
@@ -21,14 +21,14 @@ public final class SpringChessGameController {
     private final RoomService roomService;
     private final ResultService resultService;
     private final UserService userService;
-    private final LogService logService;
+    private final HistoryService historyService;
 
     public SpringChessGameController(final RoomService roomService, final ResultService resultService,
-                                     final UserService userService, final LogService logService) {
+                                     final UserService userService, final HistoryService historyService) {
         this.roomService = roomService;
         this.resultService = resultService;
         this.userService = userService;
-        this.logService = logService;
+        this.historyService = historyService;
     }
 
     @GetMapping("/")
@@ -49,7 +49,7 @@ public final class SpringChessGameController {
     @GetMapping(path = "/rooms/{id}/pieces")
     public String startGame(@PathVariable final String id, final Model model) {
         roomService.addNewRoom(id);
-        logService.initializeByRoomId(id);
+        historyService.initializeByRoomId(id);
         model.addAttribute("state",
                 new GameDTO(id, userService.usersParticipatedInGame(id), roomService.loadChessGameById(id), "초기화")
         );
@@ -59,7 +59,7 @@ public final class SpringChessGameController {
     @GetMapping(path = "/rooms/{id}/saved-pieces")
     public String continueGame(@PathVariable final String id, final Model model) {
         ChessGame chessGame = roomService.initializeChessGame(id);
-        logService.continueGame(id, chessGame);
+        historyService.continueGame(id, chessGame);
         model.addAttribute("state",
                 new GameDTO(id, userService.usersParticipatedInGame(id), roomService.loadChessGameById(id), "초기화")
         );
@@ -76,8 +76,8 @@ public final class SpringChessGameController {
         return "/error/500.html";
     }
 
-    @ExceptionHandler({NoLogsException.class, NotEnoughPlayerException.class})
-    public String notExistLog(final RoomException e, final Model model) {
+    @ExceptionHandler({NoHistoryException.class, NotEnoughPlayerException.class})
+    public String notExistHistory(final RoomException e, final Model model) {
         String roomId = e.getRoomId();
         model.addAttribute("state",
                 new GameDTO(roomId, "새로운게임", userService.participatedUsers(roomId), e.getMessage()));

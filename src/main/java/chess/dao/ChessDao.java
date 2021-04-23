@@ -39,8 +39,8 @@ public class ChessDao implements ChessRepository {
 
     private RowMapper<Chess> chessMapper(List<PieceDto> pieceDtos) {
         return (resultSet, rowNum) -> {
-            final String status = resultSet.getString("c.status");
-            final String turn = resultSet.getString("c.turn");
+            final String status = resultSet.getString("status");
+            final String turn = resultSet.getString("turn");
             return Chess.of(pieceDtos, status, turn);
         };
     }

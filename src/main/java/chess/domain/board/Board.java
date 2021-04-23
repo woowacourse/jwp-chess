@@ -31,6 +31,10 @@ public class Board {
         this.board = board;
     }
 
+    public static Board from(BoardDto boardDto) {
+        return from(boardDto.getPieceDtos());
+    }
+
     public static Board from(List<PieceDto> pieceDtos) {
         final Map<Position, Piece> board = new HashMap<>();
         for (PieceDto pieceDto : pieceDtos) {

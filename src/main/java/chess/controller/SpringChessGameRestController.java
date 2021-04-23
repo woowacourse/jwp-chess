@@ -37,7 +37,7 @@ public class SpringChessGameRestController {
         this.historyService = historyService;
     }
 
-    @PostMapping(path = "/new")
+    @PostMapping(path = "/new-game")
     public ResponseEntity<Boolean> createNewGame(@RequestBody @Valid final RoomNameDTO roomNameDTO) {
         Long id = roomService.createRoom(roomNameDTO.getName());
         return ResponseEntity.status(CREATED)

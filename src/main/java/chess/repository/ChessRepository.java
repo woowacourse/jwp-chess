@@ -4,11 +4,11 @@ import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
 import chess.utils.Serializer;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class ChessRepository {
@@ -18,7 +18,7 @@ public class ChessRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<String> findRoomId(String title) {
+    public Optional<String> findGame(String title) {
         String findTitleQuery = "SELECT id FROM chess_game WHERE BINARY title = ?";
         return jdbcTemplate.queryForList(findTitleQuery, String.class, title)
                 .stream()
@@ -47,15 +47,6 @@ public class ChessRepository {
         }, gameId);
     }
 
-    public ChessGame loadGameByName(String roomName) {
-        String findingGameQuery = "SELECT board, turn FROM chess_game WHERE BINARY title = ?";
-        return jdbcTemplate.queryForObject(findingGameQuery, (resultSet, rowNum) -> {
-            return new ChessGame(
-                    Serializer.deserializeGame(resultSet.getString("board")),
-                    Color.of(resultSet.getString("turn")));
-        }, roomName);
-    }
-
     public String turn(String gameId) {
         String findingTurnQuery = "SELECT turn FROM chess_game WHERE id = ?";
         return jdbcTemplate.queryForObject(findingTurnQuery, String.class, gameId);
@@ -71,11 +62,6 @@ public class ChessRepository {
         return jdbcTemplate.queryForObject(finishedQuery, Boolean.class, gameId);
     }
 
-    public boolean isFinishedByName(String roomName) {
-        String finishedQuery = "SELECT finished FROM chess_game WHERE BINARY title = ?";
-        return jdbcTemplate.queryForObject(finishedQuery, Boolean.class, roomName);
-    }
-
     public void finish(String gameId) {
         String savingGameQuery = "UPDATE chess_game SET finished = ? WHERE id = ?";
         jdbcTemplate.update(savingGameQuery, true, gameId);
@@ -87,11 +73,18 @@ public class ChessRepository {
                 gameId);
     }
 
-    public Map<String, String> findAllRooms() {
-        String findAllQuery = "SELECT id, title FROM chess_game";
-        return jdbcTemplate
-                .queryForList(findAllQuery)
-                .stream()
-                .collect(Collectors.toMap(room -> room.get("id").toString(), room -> room.get("title").toString()));
+    public List<ChessGame> findAllGames() {
+        String findAllQuery = "SELECT * FROM chess_game";
+        return jdbcTemplate.query(findAllQuery, chessGameMapper());
+    }
+
+    private RowMapper<ChessGame> chessGameMapper() {
+        return (rs, rowNum) -> new ChessGame(
+                rs.getLong("id"),
+                Color.of(rs.getString("turn")),
+                rs.getBoolean("finished"),
+                Serializer.deserializeGame(rs.getString("board")),
+                rs.getString("title")
+        );
     }
 }

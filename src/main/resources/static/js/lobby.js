@@ -18,34 +18,34 @@ function init() {
 async function showRoomList() {
     const $roomList = document.querySelector('.room-list ')
     let response = await fetch(
-        '/rooms'
+        '/games'
     )
     response = await response.json()
     rooms = response.roomList
-    for (const [id, name] of Object.entries(rooms)) {
+    for (const room of rooms) {
         $roomList.insertAdjacentHTML('beforeend',
-            await roomTemplate(id, name)
+            await roomTemplate(room)
         )
-
     }
 }
 
-async function roomTemplate(id, name) {
-    name = name.trim()
-    const score = await roomScore(name)
-    const isFinished = await roomFinished(name)
-    id = await findRoomId(name)
+async function roomTemplate(room) {
+    const id = room.id
+    const name = room.title.trim()
+    const blackScore = room.blackScore
+    const whiteScore = room.whiteScore
+    const isFinished = room.finished
 
     return `<div class="room-info-item">
                 <div class="room-info">
                     <div class="room-status">
                         <img style="max-width: 2rem" alt="black-score" src="../images/pawn_black.png"/>
-                        <span>${score.blackScore}</span>
+                        <span>${blackScore}</span>
                         <img style="max-width: 2rem" alt="white-score" src="../images/pawn_white.png"/>
-                        <span style="margin-right: 1rem">${score.whiteScore}</span>
+                        <span style="margin-right: 1rem">${whiteScore}</span>
                         <img class="playing" style="max-width: 2rem" alt="playing" src="../images/chess_clock.png"/>
-                        <span class="${isFinished.finished ? "finished" : "playing"}">
-                            ${isFinished.finished ? 'FINISHED' : 'PLAYING'}
+                        <span class="${isFinished ? "finished" : "playing"}">
+                            ${isFinished ? 'FINISHED' : 'PLAYING'}
                         </span>
                     </div>
                     <div class="room-name">
@@ -56,40 +56,6 @@ async function roomTemplate(id, name) {
                     <i class="fas fa-play"></i>
                 </button>     
             </div>`
-}
-
-async function roomScore(roomName) {
-    let score = await fetch(
-        `/scoreByName/${roomName}`
-    )
-    score = await score.json()
-    return score
-}
-
-async function roomFinished(roomName) {
-    let finished = await fetch(
-        `/finishByName/${roomName}`
-    )
-    finished = await finished.json()
-    return finished
-}
-
-async function findRoomId(roomName) {
-    let response = await fetch(
-        `/findRoomId`,
-        {
-            method: 'POST',
-            body: JSON.stringify({
-                'title': roomName
-            }),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-                'Accept': 'application/json'
-            }
-        }
-    )
-    response = await response.json()
-    return response.roomId
 }
 
 function routeToRoom(id) {
@@ -126,8 +92,8 @@ async function enterHandler(e) {
     const action = e.path[2].id
 
     if (action === 'start') {
-        let response = await fetch(
-            '/isDuplicate',
+        response = await fetch(
+            '/game',
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -139,43 +105,18 @@ async function enterHandler(e) {
                 }
             }
         )
-        response = await response.json()
-        if (response.duplicate === false) {
-            response = await fetch(
-                '/lobby/new',
-                {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        'title': roomName
-                    }),
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8',
-                        'Accept': 'application/json'
-                    }
-                }
-            )
-            if (response.status === 400) {
-                response = await response.text()
-                $nameLength.textContent = response
-                $nameDuplicate.style.display = "none"
-                $blank.style.display = "none"
-                $nameLength.style.display = null
-                document.querySelector('#room-name').value = ''
-                return;
-            }
-            response = await response.json()
-            window.location.href = `/${response.roomId}`
-            return;
-        }
-
-        if (response.duplicate === true) {
-            $nameDuplicate.style.display = null
-            $nameDuplicate.textContent = "이미 존재하는 방 이름입니다."
-            $nameLength.style.display = "none"
+        if (response.status === 400) {
+            response = await response.text()
+            $nameLength.textContent = response
+            $nameDuplicate.style.display = "none"
             $blank.style.display = "none"
+            $nameLength.style.display = null
             document.querySelector('#room-name').value = ''
             return;
         }
+        response = await response.json()
+        window.location.href = `/${response.roomId}`
+        return;
     }
 }
 
@@ -187,15 +128,6 @@ function cancelHandler() {
     $chessImage.style.opacity = '1'
     $controller.style.opacity = '1'
     $controller.childNodes.forEach(ctrl => ctrl.disabled = false)
-}
-
-async function selectHandler(e) {
-    const roomName = e.target.value
-    if (roomName === 'none') {
-        document.querySelector('.room-info').style.display = 'none'
-        return
-    }
-    await showRoomInfo(roomName)
 }
 
 function loadHandler() {

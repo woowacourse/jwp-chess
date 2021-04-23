@@ -23,6 +23,10 @@ public class Serializer {
                 .collect(Collectors.joining());
     }
 
+    public static ChessBoardDto chessGameAsDto(ChessGame chessGame) {
+        return deserializeGameAsDTO(serializeGame(chessGame));
+    }
+
     public static ChessBoard deserializeGame(String response) {
         Map<Position, Piece> chessBoard = new LinkedHashMap<>();
         for (int i = 0; i < response.length(); i += LAST_INDEX_OF_EACH_PIECE) {

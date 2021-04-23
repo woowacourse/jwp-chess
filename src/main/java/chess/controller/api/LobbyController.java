@@ -2,7 +2,6 @@ package chess.controller.api;
 
 import chess.dto.ChessGameDto;
 import chess.dto.ChessGamesDto;
-import chess.dto.RoomIdDto;
 import chess.dto.TitleDto;
 import chess.service.LobbyService;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +23,11 @@ public class LobbyController {
     }
 
     @PostMapping("/game")
-    public ResponseEntity newGame(@RequestBody @Valid TitleDto titleDTO) {
+    public ResponseEntity<String> newGame(@RequestBody @Valid TitleDto titleDTO) {
         if (lobbyService.findGame(titleDTO.getTitle()).isPresent()) {
             throw new IllegalArgumentException("같은 이름으로 등록된 방이 있습니다.");
         }
-        return ResponseEntity.ok(new RoomIdDto(lobbyService.newGame(titleDTO.getTitle())));
+        return ResponseEntity.ok(lobbyService.newGame(titleDTO.getTitle()));
     }
 
     @GetMapping("/games")

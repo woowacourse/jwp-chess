@@ -10,8 +10,11 @@ import java.util.Map;
 
 public class ChessGame {
 
-    private final ChessBoard chessBoard;
+    private long id;
     private Color turn;
+    private boolean finished;
+    private final ChessBoard chessBoard;
+    private String title;
 
     public ChessGame() {
         this(new ChessBoard(), Color.WHITE);
@@ -20,6 +23,14 @@ public class ChessGame {
     public ChessGame(ChessBoard chessBoard, Color turn) {
         this.chessBoard = chessBoard;
         this.turn = turn;
+    }
+
+    public ChessGame(long id, Color turn, boolean finished, ChessBoard chessBoard, String title) {
+        this.id = id;
+        this.turn = turn;
+        this.finished = finished;
+        this.chessBoard = chessBoard;
+        this.title = title;
     }
 
     public void move(Position source, Position target) {
@@ -56,5 +67,17 @@ public class ChessGame {
 
     public double getScore(Color color) {
         return chessBoard.score(color);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

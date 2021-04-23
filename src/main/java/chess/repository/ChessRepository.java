@@ -33,25 +33,25 @@ public class ChessRepository {
         return jdbcTemplate.queryForObject(findingGameQuery, String.class);
     }
 
-    public ChessGame loadGame(String gameId) {
+    public ChessGame loadGame(Long id) {
         String loadingGameQuery = "SELECT * FROM chess_game WHERE id= ?";
-        return jdbcTemplate.queryForObject(loadingGameQuery, chessGameMapper(), gameId);
+        return jdbcTemplate.queryForObject(loadingGameQuery, chessGameMapper(), id);
     }
 
-    public void saveGame(String gameId, ChessGame chessGame) {
+    public void saveGame(Long id, ChessGame chessGame) {
         String savingGameQuery = "UPDATE chess_game SET turn = ?, board = ? WHERE id = ?";
-        jdbcTemplate.update(savingGameQuery, chessGame.getTurn(), Serializer.serializeGame(chessGame), gameId);
+        jdbcTemplate.update(savingGameQuery, chessGame.getTurn(), Serializer.serializeGame(chessGame), id);
     }
 
-    public void finish(String gameId) {
+    public void finish(Long id) {
         String savingGameQuery = "UPDATE chess_game SET finished = ? WHERE id = ?";
-        jdbcTemplate.update(savingGameQuery, true, gameId);
+        jdbcTemplate.update(savingGameQuery, true, id);
     }
 
-    public void restart(String gameId, ChessGame chessGame) {
+    public void restart(Long id, ChessGame chessGame) {
         String restartQuery = "UPDATE chess_game SET turn = ?, finished = ?, board = ? WHERE id = ?";
         jdbcTemplate.update(restartQuery, chessGame.getTurn(), chessGame.isOver(), Serializer.serializeGame(chessGame),
-                gameId);
+                id);
     }
 
     public List<ChessGame> findAllGames() {

@@ -15,32 +15,32 @@ public class GameService {
         this.chessRepository = chessRepository;
     }
 
-    public ChessGame loadGame(String gameId) {
-        return chessRepository.loadGame(gameId);
+    public ChessGame loadGame(Long id) {
+        return chessRepository.loadGame(id);
     }
 
-    public void move(String gameId, MoveDto moveDTO) {
-        ChessGame chessGame = chessRepository.loadGame(gameId);
+    public void move(Long id, MoveDto moveDTO) {
+        ChessGame chessGame = chessRepository.loadGame(id);
         Position sourcePosition = Position.of(moveDTO.getSource());
         Position targetPosition = Position.of(moveDTO.getTarget());
         chessGame.move(sourcePosition, targetPosition);
-        checkGameOver(gameId, chessGame);
-        chessRepository.saveGame(gameId, chessGame);
+        checkGameOver(id, chessGame);
+        chessRepository.saveGame(id, chessGame);
     }
 
-    private void checkGameOver(String gameId, ChessGame chessGame) {
+    private void checkGameOver(Long id, ChessGame chessGame) {
         if (chessGame.isOver()) {
-            finish(gameId);
+            finish(id);
         }
     }
 
-    public void finish(String gameId) {
-        chessRepository.finish(gameId);
+    public void finish(Long id) {
+        chessRepository.finish(id);
     }
 
-    public ChessGame restart(String gameId) {
+    public ChessGame restart(Long id) {
         ChessGame chessGame = new ChessGame();
-        chessRepository.restart(gameId, chessGame);
-        return chessRepository.loadGame(gameId);
+        chessRepository.restart(id, chessGame);
+        return chessRepository.loadGame(id);
     }
 }

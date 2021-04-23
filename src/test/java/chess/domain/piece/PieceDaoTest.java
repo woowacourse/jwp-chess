@@ -43,9 +43,7 @@ public class PieceDaoTest {
         // given
         final Chess chess = chessDao.findChessById(chessId);
         final ChessDto chessDto = new ChessDto(chess);
-        assertThat(chessDto.getBoardDto()
-                           .getPieceDtos()).size()
-                                           .isEqualTo(0);
+        assertThat(chessDto.getBoardDto().getPieceDtos()).size().isEqualTo(0);
 
         // when
         final Chess newChess = Chess.createWithEmptyBoard()
@@ -56,9 +54,7 @@ public class PieceDaoTest {
         // then
         final Chess insertedChess = chessDao.findChessById(chessId);
         final ChessDto insertedChessDto = new ChessDto(insertedChess);
-        assertThat(insertedChessDto.getBoardDto()
-                                   .getPieceDtos()).size()
-                                                   .isEqualTo(64);
+        assertThat(insertedChessDto.getBoardDto().getPieceDtos()).size().isEqualTo(64);
     }
 
     @DisplayName("기물 이동 테스트")
@@ -70,8 +66,7 @@ public class PieceDaoTest {
         final String target = "a4";
         MovePosition movePosition = new MovePosition(source, target);
 
-        final Chess newChess = Chess.createWithEmptyBoard()
-                                    .start();
+        final Chess newChess = Chess.createWithEmptyBoard().start();
         pieceDao.insert(chessId, BoardDto.from(newChess));
 
         // when
@@ -80,17 +75,14 @@ public class PieceDaoTest {
         // then
         final Chess chess = chessDao.findChessById(chessId);
         final ChessDto chessDto = new ChessDto(chess);
-        for (PieceDto pieceDto : chessDto.getBoardDto()
-                                         .getPieceDtos()) {
-            if (pieceDto.getPosition()
-                        .equals(source)) {
+        for (PieceDto pieceDto : chessDto.getBoardDto().getPieceDtos()) {
+            if (pieceDto.getPosition().equals(source)) {
                 assertThat(pieceDto.getPosition()).isEqualTo(source);
                 assertThat(pieceDto.getColor()).isEqualTo(Color.BLANK.name());
                 assertThat(pieceDto.getName()).isEqualTo(Color.BLANK.name());
             }
 
-            if (pieceDto.getPosition()
-                        .equals(target)) {
+            if (pieceDto.getPosition().equals(target)) {
                 assertThat(pieceDto.getPosition()).isEqualTo(target);
                 assertThat(pieceDto.getColor()).isEqualTo(Color.WHITE.name());
                 assertThat(pieceDto.getName()).isEqualTo(Pawn.WHITE_INSTANCE.getName());

@@ -19,7 +19,7 @@ public class ChessDaoTest {
 
     private final ChessService chessService;
     private final ChessDao chessDao;
-    private Long chessId;
+    private long chessId;
 
     @Autowired
     public ChessDaoTest(JdbcTemplate jdbcTemplate) {
@@ -43,9 +43,7 @@ public class ChessDaoTest {
         // then
         assertThat(chessDto.getStatus()).isEqualTo("RUNNING");
         assertThat(chessDto.getTurn()).isEqualTo("WHITE");
-        assertThat(chessDto.getBoardDto()
-                           .getPieceDtos()).size()
-                                           .isEqualTo(64);
+        assertThat(chessDto.getBoardDto().getPieceDtos()).size().isEqualTo(64);
     }
 
     @DisplayName("초기 체스판 삽입 테스트")
@@ -53,7 +51,7 @@ public class ChessDaoTest {
     void insertTest() {
 
         // when
-        Long newChessId = chessDao.insert();
+        long newChessId = chessDao.insert();
 
         // then
         assertThat(newChessId).isNotEqualTo(chessId);

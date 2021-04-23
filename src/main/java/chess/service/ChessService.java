@@ -22,12 +22,12 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessDto getChessGame(Long chessId) {
+    public ChessDto getChessGame(long chessId) {
         final Chess chess = chessDao.findChessById(chessId);
         return new ChessDto(chess);
     }
 
-    public Long insert() {
+    public long insert() {
         final Chess chess = Chess.createWithEmptyBoard()
                                  .start();
         final BoardDto boardDto = BoardDto.from(chess);
@@ -38,9 +38,8 @@ public class ChessService {
         return chessId;
     }
 
-    public void move(Long chessId, MovePosition movePosition) {
-        final Chess chess = chessDao.findChessById(chessId)
-                                    .move(movePosition);
+    public void move(long chessId, MovePosition movePosition) {
+        final Chess chess = chessDao.findChessById(chessId).move(movePosition);
         pieceDao.move(chessId, movePosition);
         chessDao.updateChess(chessId, chess.status(), chess.color());
     }

@@ -33,8 +33,7 @@ public class BoardFactoryTest {
         final int whiteRow = 8;
 
         // when
-        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create()
-                                                                            .getBoard();
+        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create().getBoard();
 
         // then
         assertThat(chessBord.get(Position.from(file + blackRow))).isInstanceOf(pieceClass);
@@ -59,8 +58,7 @@ public class BoardFactoryTest {
     void initializedPawnTest() {
 
         // when
-        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create()
-                                                                            .getBoard();
+        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create().getBoard();
 
         // then
         for (int i = 0; i < 8; i++) {
@@ -79,8 +77,7 @@ public class BoardFactoryTest {
     void initializedBlankTest(int rank) {
 
         // when
-        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create()
-                                                                            .getBoard();
+        final Map<Position, Piece> chessBord = BoardFactory.InitializedBoard.create().getBoard();
 
         // then
         for (int i = 0; i < 8; i++) {
@@ -94,8 +91,7 @@ public class BoardFactoryTest {
     void initializedBlankTest() {
 
         // when
-        final Map<Position, Piece> chessBord = BoardFactory.EmptyBoard.create()
-                                                                      .getBoard();
+        final Map<Position, Piece> chessBord = BoardFactory.EmptyBoard.create().getBoard();
 
         // then
         for (int i = 0; i < 8; i++) {

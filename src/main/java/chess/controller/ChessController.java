@@ -34,7 +34,7 @@ public class ChessController {
 
     @PostMapping("")
     public ResponseEntity<Long> newChessGame() {
-        Long chessId = chessService.insert();
+        long chessId = chessService.insert();
         ResponseCookie cookie = ResponseCookie.from("chessId", String.valueOf(chessId))
                                               .path("/")
                                               .build();

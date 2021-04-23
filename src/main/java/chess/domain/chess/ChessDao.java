@@ -24,7 +24,7 @@ public class ChessDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Chess findChessById(Long chessId) {
+    public Chess findChessById(long chessId) {
         String sql = "SELECT c.status, c.turn, p.position, p.color, p.name "
                 + "FROM chess c LEFT JOIN piece p ON c.chess_id = p.chess_id "
                 + "WHERE c.chess_id = ?";
@@ -68,12 +68,11 @@ public class ChessDao {
         jdbcTemplate.update(
                 connection -> connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS),
                 keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey())
-                      .longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
 
-    public void updateChess(Long chessId, String status, String turn) {
+    public void updateChess(long chessId, String status, String turn) {
         String sql = "UPDATE chess SET status = ?, turn = ? WHERE chess_id = ?";
         jdbcTemplate.update(sql, status, turn, chessId);
     }

@@ -25,8 +25,7 @@ public class BoardTest {
 
     @BeforeEach
     void setUp() {
-        chess = Chess.createWithEmptyBoard()
-                     .start();
+        chess = Chess.createWithEmptyBoard().start();
         board = chess.getBoard();
     }
 

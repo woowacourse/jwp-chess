@@ -27,13 +27,13 @@ public class BoardDto {
 
     public static BoardDto from(Chess chess) {
         final List<PieceDto> pieceDtos = new ArrayList<>();
-        final Map<Position, Piece> boardMap = chess.getBoard()
-                                                   .getBoard();
+        final Map<Position, Piece> boardMap = chess.getBoard().getBoard();
         for (Map.Entry<Position, Piece> entry : boardMap.entrySet()) {
             String position = getPosition(entry);
             String color = entry.getValue()
                                 .getColor()
                                 .name();
+
             String name = entry.getValue()
                                .getName();
             pieceDtos.add(new PieceDto(position, color, name));
@@ -48,10 +48,8 @@ public class BoardDto {
     }
 
     private static String getPosition(Map.Entry<Position, Piece> entry) {
-        char file = (char) (entry.getKey()
-                                 .getX() + START_FILE_CHARACTER);
-        int rank = entry.getKey()
-                        .getY() + 1;
+        char file = (char) (entry.getKey().getX() + START_FILE_CHARACTER);
+        int rank = entry.getKey().getY() + 1;
         return Character.toString(file) + rank;
     }
 

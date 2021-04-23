@@ -16,14 +16,13 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insert(Long chessId, BoardDto boardDto) {
+    public void insert(long chessId, BoardDto boardDto) {
         String sql = "INSERT INTO piece (chess_id, position, color, name) VALUES (?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(
                 sql,
                 boardDto.getPieceDtos(),
-                boardDto.getPieceDtos()
-                        .size(),
+                boardDto.getPieceDtos().size(),
                 (pstmt, argument) -> {
                     pstmt.setLong(1, chessId);
                     pstmt.setString(2, argument.getPosition());
@@ -32,13 +31,13 @@ public class PieceDao {
                 });
     }
 
-    public void move(Long chessId, MovePosition movePosition) {
+    public void move(long chessId, MovePosition movePosition) {
         MovePositionVo movePositionVO = MovePositionVo.from(movePosition);
         updateTargetPosition(chessId, movePositionVO);
         updateSourcePosition(chessId, movePositionVO);
     }
 
-    private void updateTargetPosition(Long chessId, MovePositionVo movePositionVO) {
+    private void updateTargetPosition(long chessId, MovePositionVo movePositionVO) {
         String sql =
                 "UPDATE piece AS target, (SELECT color, name FROM piece WHERE position = ? AND chess_id = ?) AS source " +
                         "SET target.color = source.color, target.name = source.name " +
@@ -48,7 +47,7 @@ public class PieceDao {
                 chessId);
     }
 
-    private void updateSourcePosition(Long chessId, MovePositionVo movePositionVO) {
+    private void updateSourcePosition(long chessId, MovePositionVo movePositionVO) {
         String sql =
                 "UPDATE piece SET color = 'BLANK', name = 'BLANK' WHERE position = ? AND chess_id = ?";
         jdbcTemplate.update(sql, movePositionVO.getSource(), chessId);

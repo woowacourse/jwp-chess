@@ -12,7 +12,6 @@ import java.util.List;
 
 @Repository
 public class TurnDao {
-    @Autowired
     private final JdbcTemplate jdbcTemplate;
 
     public TurnDao(DataSource dataSource) {

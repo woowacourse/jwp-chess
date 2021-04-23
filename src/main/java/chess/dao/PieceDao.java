@@ -12,7 +12,6 @@ import java.util.List;
 
 @Repository
 public class PieceDao {
-    @Autowired
     private final JdbcTemplate jdbcTemplate;
 
     public PieceDao(DataSource dataSource) {

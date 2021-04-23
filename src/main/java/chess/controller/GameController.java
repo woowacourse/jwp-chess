@@ -6,15 +6,20 @@ import chess.dto.ScoreDTO;
 import chess.dto.TurnDTO;
 import chess.service.GameService;
 import chess.utils.Serializer;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-@Controller
+@RestController
 public class GameController {
+
     private final GameService gameService;
 
     @Autowired
@@ -22,20 +27,12 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/{gameId}")
-    public String initBoard() {
-        return "index";
-    }
-
     @GetMapping("/chessboard/{gameId}")
-    @ResponseBody
     public ResponseEntity loadGame(@PathVariable String gameId) {
         return ResponseEntity.ok(Serializer.deserializeGameAsDTO(gameService.loadGame(gameId)));
     }
 
-    //    gameid를 int로 받을지 string으로 받을지
     @GetMapping("/turn/{gameId}")
-    @ResponseBody
     public ResponseEntity turn(@PathVariable String gameId) {
         return ResponseEntity.ok(new TurnDTO(gameService.turn(gameId)));
     }
@@ -51,7 +48,6 @@ public class GameController {
     }
 
     @GetMapping("/finishById/{gameId}")
-    @ResponseBody
     public ResponseEntity isFinished(@PathVariable String gameId) {
         return ResponseEntity.ok(new FinishDTO(gameService.isFinished(gameId)));
     }
@@ -63,14 +59,12 @@ public class GameController {
     }
 
     @GetMapping("/scoreById/{gameId}")
-    @ResponseBody
     public ResponseEntity score(@PathVariable String gameId) {
         List<Double> scores = gameService.score(gameId);
         return ResponseEntity.ok(new ScoreDTO(scores.get(0), scores.get(1)));
     }
 
     @PostMapping("/restart/{gameId}")
-    @ResponseBody
     public ResponseEntity restart(@PathVariable String gameId) {
         return ResponseEntity.ok(Serializer.deserializeGameAsDTO(gameService.restart(gameId)));
     }

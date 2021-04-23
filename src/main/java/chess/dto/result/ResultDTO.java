@@ -10,8 +10,6 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public final class ResultDTO {
-    @NotBlank
-    private String roomId;
 
     @NotBlank
     private String winner;

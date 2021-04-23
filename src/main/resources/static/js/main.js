@@ -24,7 +24,7 @@ function newGame(name) {
     }
 
     $.ajax({
-        url: "/new-game",
+        url: "/rooms/new",
         data: JSON.stringify(data),
         method: "POST",
         contentType: "application/json",

@@ -15,13 +15,9 @@ $(".grid-item").click(function (event) {
 
 function turnCheck(clickedSection) {
     $.ajax({
-        url: "/turn",
-        data: JSON.stringify({
-            roomId: roomId,
-            clickedSection: clickedSection
-        }),
+        url: "/rooms/" + roomId + "/positions/" + clickedSection + "/turn",
         contentType: "application/json",
-        method: "POST",
+        method: "GET",
         dataType: "json"
     }).done(function (turn) {
         if (startPoint === "") {
@@ -38,13 +34,9 @@ function turnCheck(clickedSection) {
 function getMovablePosition(clickedSection, turn) {
     if (turn) {
         $.ajax({
-            url: "/movable-positions",
-            data: JSON.stringify({
-                roomId: roomId,
-                clickedSection: clickedSection
-            }),
+            url: "/rooms/" + roomId + "/positions/" + clickedSection + "/movable-positions",
             contentType: "application/json",
-            method: "POST",
+            method: "GET",
             dataType: "json"
         }).done(function (positions) {
             movablePosition = positions;
@@ -99,9 +91,8 @@ function moveWhenCanGo(clickedSection) {
 
 function move() {
     $.ajax({
-        url: "/piece/move",
+        url: "/rooms/" + roomId + "/piece/move",
         data: JSON.stringify({
-            roomId: roomId,
             startPoint: startPoint,
             endPoint: endPoint
         }),
@@ -149,9 +140,8 @@ function checkEndGame(currentStatus) {
 
 function gameInitialize(winner, loser) {
     $.ajax({
-        url: "/game/end",
+        url: "/rooms/" + roomId + "/end",
         data: JSON.stringify({
-            roomId: roomId,
             winner: winner,
             loser: loser
         }),

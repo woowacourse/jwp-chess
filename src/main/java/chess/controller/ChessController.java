@@ -24,7 +24,7 @@ public class ChessController {
         );
     }
 
-    @PutMapping("/game/{gameId}/pieces")
+    @PutMapping("/game/{gameId}/piece")
     public ResponseEntity<CommonResponseBody<RunningGameDto>> move(@PathVariable int gameId, @RequestBody MoveRequestBody moveRequestBody) {
         Position from = Position.of(moveRequestBody.getFrom());
         Position to = Position.of(moveRequestBody.getTo());

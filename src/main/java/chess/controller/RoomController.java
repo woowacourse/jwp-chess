@@ -30,38 +30,32 @@ public class RoomController {
         return ResponseEntity.ok().body(ResponseDto.error(e.getMessage()));
     }
 
-    @PostMapping(value = "/create")
-    @ResponseBody
-    public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto) throws SQLException {
+    @PostMapping("/create")
+    public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto) {
         service.createRoom(roomDto.getName());
         return ResponseEntity.ok().body(roomDto);
     }
 
-    @GetMapping(value = "/{name}")
-    @ResponseBody
-    public ResponseEntity<MoveResponseDto> enterRoom(@PathVariable("name") String roomName) throws SQLException {
+    @GetMapping("/{name}")
+    public ResponseEntity<MoveResponseDto> enterRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.findPiecesByRoomName(roomName);
         return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping(value = "/{name}/start")
-    @ResponseBody
-    public ResponseEntity<MoveResponseDto> startRoom(@PathVariable("name") String roomName) throws SQLException {
+    @GetMapping("/{name}/start")
+    public ResponseEntity<MoveResponseDto> startRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.start(roomName);
         return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping(value = "/{name}/end")
-    @ResponseBody
-    public ResponseEntity<MoveResponseDto> endRoom(@PathVariable("name") String roomName) throws SQLException {
+    @GetMapping("/{name}/end")
+    public ResponseEntity<MoveResponseDto> endRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.end(roomName);
         return ResponseEntity.ok().body(result);
     }
 
-    @PostMapping(value = "/{name}/move")
-    @ResponseBody
-    public ResponseEntity<MoveResponseDto> move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto)
-        throws SQLException {
+    @PostMapping("/{name}/move")
+    public ResponseEntity<MoveResponseDto> move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto) {
         MoveResponseDto result = service.move(roomName, moveRequestDto.getSource(),
             moveRequestDto.getTarget());
         return ResponseEntity.ok().body(result);

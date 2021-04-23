@@ -44,7 +44,7 @@ public class ChessService {
 
     public boolean checkMovement(long gameId, MoveRequestDto moveRequestDto) {
         String turn = gameService.findById(gameId).getTurn();
-        if (!turn.equals(moveRequestDto.getColor().toUpperCase())) {
+        if (!turn.equalsIgnoreCase(moveRequestDto.getColor())) {
             return false;
         }
         Board board = generateBoard(gameId);

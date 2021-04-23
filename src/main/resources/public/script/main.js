@@ -4,6 +4,11 @@ window.onload = function () {
         el.addEventListener('click', click());
     })
 
+    const enterBtn = document.getElementsByClassName("enter-btn");
+    Array.from(enterBtn).forEach((el) => {
+        el.addEventListener('click', enterRoom());
+    })
+
     const deleteBtn = document.getElementsByClassName("delete-btn");
     Array.from(deleteBtn).forEach((el) => {
         el.addEventListener('click', deleteRoom());
@@ -30,6 +35,13 @@ function enterNewGame() {
             alert("에러 발생");
         }
     })
+}
+
+function enterRoom() {
+    return function (event) {
+        const roomId = event.target.id;
+        location.href="/game/load/"+roomId;
+    }
 }
 
 function deleteRoom() {

@@ -38,9 +38,4 @@ public class RoomRestController {
         roomService.delete(roomId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @GetMapping("/list")
-    public ResponseEntity<List<RoomInfoDto>> loadRoomList() {
-        return new ResponseEntity<>(roomService.loadList(), HttpStatus.OK);
-    }
 }

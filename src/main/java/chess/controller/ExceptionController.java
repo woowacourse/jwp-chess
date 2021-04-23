@@ -15,7 +15,7 @@ public class ExceptionController {
 
     @ExceptionHandler({Exception.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handlingException(final Exception e, final Model model) {
+    public ResponseEntity<String> handlingException(final Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

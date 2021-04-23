@@ -42,9 +42,9 @@ public class ChessDAO {
     public boolean isGameIdExisting(String gameId) {
         String query = "SELECT count(*) as count FROM chess WHERE game_id = ?";
 
-        List<Integer> count = jdbcTemplate.query(query, (rs, i) -> rs.getInt("count"), gameId);
+        Integer count = jdbcTemplate.queryForObject(query, Integer.class, gameId);
 
-        return count.get(0) != 0;
+        return count != 0;
     }
 
 }

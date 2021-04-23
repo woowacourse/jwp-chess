@@ -1,11 +1,11 @@
 package chess.service;
 
+import chess.domain.ChessRepository;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
 import chess.exception.AlreadyExistingGameIdException;
-import chess.repository.GameRepository;
 import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
 import chess.web.dto.StatusDto;
@@ -14,23 +14,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessService {
 
-    private final GameRepository gameRepository;
+    private final ChessRepository chessRepository;
 
-    public ChessService(GameRepository gameRepository) {
-        this.gameRepository = gameRepository;
+    public ChessService(ChessRepository chessRepository) {
+        this.chessRepository = chessRepository;
     }
 
     public MessageDto end(String gameId) {
-        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
+        ChessGame chessGame = chessRepository.findByGameId(gameId);
 
         chessGame.end();
+
+        chessRepository.update(chessGame);
 
         return new MessageDto("finished");
     }
 
     public GameDto loadByGameId(String gameId) {
-        ChessGame chessGame = gameRepository.findByGameIdFromDB(gameId);
-        gameRepository.saveToCache(gameId, chessGame);
+        ChessGame chessGame = chessRepository.findByGameId(gameId);
 
         return new GameDto(chessGame);
     }
@@ -42,20 +43,23 @@ public class ChessService {
     }
 
     private ChessGame saveGameAndStart(String gameId) {
-        ChessGame chessGame = new ChessGame(new Board(PieceFactory.createPieces()));
-        chessGame.start();
-
-        if (gameRepository.isGameIdExistingInDB(gameId)) {
+        if (chessRepository.containsByGameId(gameId)) {
             throw new AlreadyExistingGameIdException();
         }
 
-        gameRepository.saveToCache(gameId, chessGame);
+        ChessGame chessGame = new ChessGame(
+                gameId,
+                new Board(PieceFactory.createPieces())
+        );
+        chessGame.start();
+
+        chessRepository.save(chessGame);
 
         return chessGame;
     }
 
     public StatusDto getStatus(String gameId) {
-        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
+        ChessGame chessGame = chessRepository.findByGameId(gameId);
 
         double whiteScore = chessGame.getWhiteScore();
         double blackScore = chessGame.getBlackScore();
@@ -63,34 +67,11 @@ public class ChessService {
         return new StatusDto(whiteScore, blackScore);
     }
 
-    public MessageDto save(String gameId) {
-        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
-        saveGameToDB(gameId, chessGame);
-
-        return new MessageDto("저장 완료");
-    }
-
-    private void saveGameToDB(String gameId, ChessGame chessGame) {
-        if (gameRepository.isGameIdExistingInDB(gameId)) {
-            gameRepository.updateToDB(gameId, chessGame);
-            return;
-        }
-
-        gameRepository.saveToDB(gameId, chessGame);
-    }
-
     public GameDto move(String gameId, String source, String target) {
-        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
+        ChessGame chessGame = chessRepository.findByGameId(gameId);
 
-        return executeMove(
-                Position.ofChessPiece(source),
-                Position.ofChessPiece(target),
-                chessGame
-        );
-    }
-
-    private GameDto executeMove(Position sourcePosition, Position targetPosition, ChessGame chessGame) {
-        chessGame.move(sourcePosition, targetPosition);
+        chessGame.move(Position.ofChessPiece(source), Position.ofChessPiece(target));
+        chessRepository.update(chessGame);
 
         return new GameDto(chessGame);
     }

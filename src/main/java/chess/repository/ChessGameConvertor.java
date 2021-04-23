@@ -60,14 +60,17 @@ public class ChessGameConvertor {
         return gson.toJson(new Wrapper(stateName, collect));
     }
 
-    public static ChessGame jsonToChessGame(String jsonData) {
+    public static ChessGame jsonToChessGame(String gameId, String jsonData) {
         Wrapper wrapper = gson.fromJson(jsonData, Wrapper.class);
 
         List<chess.domain.piece.ChessPiece> chessPieces = wrapper.getPieces().stream()
                 .map(piece -> convertChessPiece(piece.className, piece.row, piece.col))
                 .collect(toList());
 
-        ChessGame chessGame = new ChessGame(new Board(chessPieces));
+        ChessGame chessGame = new ChessGame(
+                gameId,
+                new Board(chessPieces)
+        );
 
         State state = convertState(wrapper.getState(), chessGame);
         chessGame.changeState(state);

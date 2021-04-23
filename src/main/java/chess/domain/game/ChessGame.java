@@ -10,10 +10,12 @@ import java.util.Optional;
 
 public class ChessGame {
 
+    private final String gameId;
     private final Board board;
     private State state;
 
-    public ChessGame(final Board board) {
+    public ChessGame(String gameId, Board board) {
+        this.gameId = gameId;
         this.board = board;
         this.state = new Ready(this);
     }
@@ -84,6 +86,10 @@ public class ChessGame {
 
     public State getState() {
         return state;
+    }
+
+    public String getGameId() {
+        return gameId;
     }
 
     public boolean isBlackTurn() {

@@ -36,11 +36,6 @@ public class SpringWebChessController {
         return chessService.move(gameId, source, target);
     }
 
-    @PostMapping("/game/{gameId}")
-    public MessageDto save(@PathVariable String gameId) {
-        return chessService.save(gameId);
-    }
-
     @GetMapping("/game/{gameId}/status")
     public StatusDto status(@PathVariable String gameId) {
         return chessService.getStatus(gameId);

@@ -37,7 +37,10 @@ export async function getPath(from) {
 }
 
 export async function restart() {
-    const response = await fetch(url + "/restart");
+    const response = await fetch(url + "/restart", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"}
+    });
     return await response.json();
 }
 

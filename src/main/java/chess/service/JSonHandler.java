@@ -1,16 +1,9 @@
 package chess.service;
 
-import chess.domain.board.Board;
-import chess.domain.board.position.Horizontal;
-import chess.domain.board.position.Position;
-import chess.domain.board.position.Vertical;
-import chess.domain.piece.Piece;
-import chess.domain.piece.PieceSymbolMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Component

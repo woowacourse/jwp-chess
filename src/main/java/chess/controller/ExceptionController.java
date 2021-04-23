@@ -26,7 +26,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> titleNotValidException(MethodArgumentNotValidException error){
+    public ResponseEntity<String> titleNotValidException(MethodArgumentNotValidException error) {
         return ResponseEntity.badRequest().body(error.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
 }

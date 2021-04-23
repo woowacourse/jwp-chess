@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class BoardDto {
-    public boolean gameOverFlag = false;
+    private boolean gameOverFlag = false;
     private Map<String, String> boardInfo = new HashMap<>();
 
     public BoardDto() {
@@ -36,10 +36,7 @@ public class BoardDto {
     }
 
     private static boolean getGameOverFlag(Board board) {
-        if (board.isAnyKingDead()) {
-            return true;
-        }
-        return false;
+        return board.isAnyKingDead();
     }
 
     public static BoardDto of(Map<String, String> boardInfo) {

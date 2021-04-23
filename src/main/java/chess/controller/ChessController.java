@@ -6,21 +6,18 @@ import chess.domain.exception.DataException;
 import chess.domain.dto.MoveDto;
 import chess.service.SpringChessService;
 import chess.view.ModelView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.sql.SQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 
 @Controller
 @RequestMapping("/chess")
 public class ChessController {
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private final SpringChessService springChessService;
 
     @Autowired
@@ -63,19 +60,14 @@ public class ChessController {
 
     @PostMapping("/{historyId}/piece/movement")
     @ResponseBody
-    public ResponseEntity<MoveResponseDto> move(@PathVariable String historyId, @RequestBody MoveDto moveDto) {
+    public ResponseEntity<MoveResponseDto> move(@PathVariable String historyId, @RequestBody MoveDto moveDto)
+        throws SQLException {
         String command = makeMoveCmd(moveDto.getSource(), moveDto.getTarget());
-        try {
-            springChessService.move(historyId, command, new Commands(command));
-            MoveResponseDto moveResponseDto = new MoveResponseDto(springChessService
-                .continuedGameInfo(historyId), historyId);
-            return ResponseEntity.status(200)
-                .body(moveResponseDto);
-        } catch (IllegalArgumentException | SQLException e) {
-            MoveResponseDto moveResponseDto = new MoveResponseDto(e.getMessage());
-            return ResponseEntity.status(400)
-                .body(moveResponseDto);
-        }
+        springChessService.move(historyId, command, new Commands(command));
+        MoveResponseDto moveResponseDto = new MoveResponseDto(springChessService
+            .continuedGameInfo(historyId), historyId);
+        return ResponseEntity.status(200)
+            .body(moveResponseDto);
     }
 
     private String makeMoveCmd(String source, String target) {

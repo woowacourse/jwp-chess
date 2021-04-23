@@ -6,6 +6,7 @@ import chess.dto.ChessGameInfoResponseDto;
 import chess.dto.ChessGamesSaveDto;
 import chess.service.ChessGameService;
 import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -162,8 +163,7 @@ class ChessApiControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/api/chessgames/{chessGameId}", newChessGame.getChessGameId() + 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("존재하지 않는 체스 게임입니다."));
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @DisplayName("새로운 체스 게임을 만드는 API 요청")

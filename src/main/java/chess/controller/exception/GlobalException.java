@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class GlobalException {
@@ -35,6 +36,7 @@ public class GlobalException {
         return badRequest(e);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundChessGameException.class)
     public String handleNotFoundChessGame(NotFoundChessGameException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());

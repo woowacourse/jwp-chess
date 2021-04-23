@@ -31,8 +31,9 @@ async function showRoomList() {
 }
 
 async function roomTemplate(id, name) {
-    score = await roomScore(name)
-    isFinished = await roomFinished(name)
+    name = name.trim()
+    const score = await roomScore(name)
+    const isFinished = await roomFinished(name)
     id = await findRoomId(name)
 
     return `<div class="room-info-item">
@@ -91,10 +92,6 @@ async function findRoomId(roomName) {
     return response.roomId
 }
 
-function parseRoomName(name) {
-    return name.replaceAll(' ', '%20')
-}
-
 function routeToRoom(id) {
     window.location.href = `${id}`
 }
@@ -118,11 +115,13 @@ async function modalHandler(e) {
 }
 
 async function enterHandler(e) {
-    const roomName = document.querySelector('#room-name').value
     const $nameDuplicate = document.querySelector('#name-duplicate')
     const $nameLength = document.querySelector('#name-length')
     const $blank = document.querySelector('#blank')
     $blank.style.display = null
+
+    let roomName = document.querySelector('#room-name').value
+    roomName = roomName.trim()
 
     const action = e.path[2].id
 

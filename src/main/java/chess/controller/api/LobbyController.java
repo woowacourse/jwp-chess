@@ -51,22 +51,22 @@ public class LobbyController {
     }
 
     @PostMapping("/isDuplicate")
-    public ResponseEntity isDuplicate(@RequestBody TitleDTO titleDTO) {
+    public ResponseEntity<DuplicateDTO> isDuplicate(@RequestBody TitleDTO titleDTO) {
         return ResponseEntity.ok(new DuplicateDTO(lobbyService.isDuplicate(titleDTO.getTitle())));
     }
 
     @GetMapping("/rooms")
-    public ResponseEntity findAllRooms() {
+    public ResponseEntity<RoomListDTO> findAllRooms() {
         return ResponseEntity.ok(new RoomListDTO(lobbyService.findAllRooms()));
     }
 
     @GetMapping("/finishByName/{roomName}")
-    public ResponseEntity isFinished(@PathVariable String roomName) {
+    public ResponseEntity<FinishDTO> isFinished(@PathVariable String roomName) {
         return ResponseEntity.ok(new FinishDTO(lobbyService.isFinished(roomName)));
     }
 
     @GetMapping("/scoreByName/{roomName}")
-    public ResponseEntity score(@PathVariable String roomName) {
+    public ResponseEntity<ScoreDTO> score(@PathVariable String roomName) {
         ChessGame chessGame = lobbyService.loadGame(roomName);
         return ResponseEntity
             .ok(new ScoreDTO(chessGame.getScore(Color.BLACK), chessGame.getScore(Color.WHITE)));

@@ -1,9 +1,6 @@
 package chess.controller.api;
 
-import chess.dto.FinishDTO;
-import chess.dto.MoveDTO;
-import chess.dto.ScoreDTO;
-import chess.dto.TurnDTO;
+import chess.dto.*;
 import chess.service.GameService;
 import chess.utils.Serializer;
 import java.util.List;
@@ -27,17 +24,17 @@ public class GameController {
     }
 
     @GetMapping("/chessboard/{gameId}")
-    public ResponseEntity loadGame(@PathVariable String gameId) {
+    public ResponseEntity<ChessBoardDTO> loadGame(@PathVariable String gameId) {
         return ResponseEntity.ok(Serializer.deserializeGameAsDTO(gameService.loadGame(gameId)));
     }
 
     @GetMapping("/turn/{gameId}")
-    public ResponseEntity turn(@PathVariable String gameId) {
+    public ResponseEntity<TurnDTO> turn(@PathVariable String gameId) {
         return ResponseEntity.ok(new TurnDTO(gameService.turn(gameId)));
     }
 
     @PutMapping(path = "/move/{gameId}")
-    public ResponseEntity move(@PathVariable String gameId, @RequestBody MoveDTO moveDTO) {
+    public ResponseEntity<Void> move(@PathVariable String gameId, @RequestBody MoveDTO moveDTO) {
         try {
             gameService.move(gameId, moveDTO);
             return ResponseEntity.ok().build();
@@ -47,24 +44,24 @@ public class GameController {
     }
 
     @GetMapping("/finishById/{gameId}")
-    public ResponseEntity isFinished(@PathVariable String gameId) {
+    public ResponseEntity<FinishDTO> isFinished(@PathVariable String gameId) {
         return ResponseEntity.ok(new FinishDTO(gameService.isFinished(gameId)));
     }
 
     @PostMapping("/finish/{gameId}")
-    public ResponseEntity finish(@PathVariable String gameId) {
+    public ResponseEntity<Void> finish(@PathVariable String gameId) {
         gameService.finish(gameId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/scoreById/{gameId}")
-    public ResponseEntity score(@PathVariable String gameId) {
+    public ResponseEntity<ScoreDTO> score(@PathVariable String gameId) {
         List<Double> scores = gameService.score(gameId);
         return ResponseEntity.ok(new ScoreDTO(scores.get(0), scores.get(1)));
     }
 
     @PostMapping("/restart/{gameId}")
-    public ResponseEntity restart(@PathVariable String gameId) {
+    public ResponseEntity<ChessBoardDTO> restart(@PathVariable String gameId) {
         return ResponseEntity.ok(Serializer.deserializeGameAsDTO(gameService.restart(gameId)));
     }
 }

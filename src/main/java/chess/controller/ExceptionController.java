@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionController {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity illegalArgumentException(IllegalArgumentException error) {
+    public ResponseEntity<Void> illegalArgumentException(IllegalArgumentException error) {
         return ResponseEntity.badRequest().build();
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity emptyResultDataAccessException(EmptyResultDataAccessException error) {
+    public ResponseEntity<Void> emptyResultDataAccessException(EmptyResultDataAccessException error) {
         return ResponseEntity.badRequest().build();
     }
 }

@@ -13,19 +13,13 @@ import java.util.Collections;
 import java.util.Map;
 
 @RequestMapping("/chess")
-@Controller
+@RestController
 public class ChessController {
 
     private final ChessService chessService;
 
     public ChessController(ChessService chessService) {
         this.chessService = chessService;
-    }
-
-    @PostMapping
-    public String initializeChess(@RequestBody final GameRequestDto gameRequestDto) {
-        final long id = chessService.initializeChess(gameRequestDto);
-        return "redirect:/games/" + id;
     }
 
     @GetMapping("/{gameId}")

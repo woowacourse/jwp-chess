@@ -2,11 +2,11 @@ package chess.dto;
 
 import chess.domain.piece.Color;
 
-public class TurnDTO {
+public class TurnDto {
 
     private final Color turn;
 
-    public TurnDTO(final String turn) {
+    public TurnDto(final String turn) {
         this.turn = Color.of(turn);
     }
 

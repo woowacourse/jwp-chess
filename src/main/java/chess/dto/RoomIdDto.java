@@ -1,9 +1,9 @@
 package chess.dto;
 
-public class RoomIdDTO {
+public class RoomIdDto {
     private final String roomId;
 
-    public RoomIdDTO(final String roomId) {
+    public RoomIdDto(final String roomId) {
         this.roomId = roomId;
     }
 

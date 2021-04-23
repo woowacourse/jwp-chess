@@ -3,9 +3,8 @@ package chess.service;
 import chess.domain.board.Position;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
-import chess.dto.MoveDTO;
+import chess.dto.MoveDto;
 import chess.repository.ChessRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class GameService {
         return chessRepository.turn(gameId);
     }
 
-    public void move(String gameId, MoveDTO moveDTO) {
+    public void move(String gameId, MoveDto moveDTO) {
         ChessGame chessGame = chessRepository.loadGameById(gameId);
         Position sourcePosition = Position.of(moveDTO.getSource());
         Position targetPosition = Position.of(moveDTO.getTarget());

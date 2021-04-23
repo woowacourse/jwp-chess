@@ -4,14 +4,13 @@ import chess.dto.*;
 import chess.service.GameService;
 import chess.utils.Serializer;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,17 +23,17 @@ public class GameController {
     }
 
     @GetMapping("/chessboard/{gameId}")
-    public ResponseEntity<ChessBoardDTO> loadGame(@PathVariable String gameId) {
+    public ResponseEntity<ChessBoardDto> loadGame(@PathVariable String gameId) {
         return ResponseEntity.ok(Serializer.deserializeGameAsDTO(gameService.loadGame(gameId)));
     }
 
     @GetMapping("/turn/{gameId}")
-    public ResponseEntity<TurnDTO> turn(@PathVariable String gameId) {
-        return ResponseEntity.ok(new TurnDTO(gameService.turn(gameId)));
+    public ResponseEntity<TurnDto> turn(@PathVariable String gameId) {
+        return ResponseEntity.ok(new TurnDto(gameService.turn(gameId)));
     }
 
     @PutMapping(path = "/move/{gameId}")
-    public ResponseEntity<Void> move(@PathVariable String gameId, @RequestBody MoveDTO moveDTO) {
+    public ResponseEntity<Void> move(@PathVariable String gameId, @RequestBody MoveDto moveDTO) {
         try {
             gameService.move(gameId, moveDTO);
             return ResponseEntity.ok().build();
@@ -44,8 +43,8 @@ public class GameController {
     }
 
     @GetMapping("/finishById/{gameId}")
-    public ResponseEntity<FinishDTO> isFinished(@PathVariable String gameId) {
-        return ResponseEntity.ok(new FinishDTO(gameService.isFinished(gameId)));
+    public ResponseEntity<FinishDto> isFinished(@PathVariable String gameId) {
+        return ResponseEntity.ok(new FinishDto(gameService.isFinished(gameId)));
     }
 
     @PostMapping("/finish/{gameId}")
@@ -55,13 +54,13 @@ public class GameController {
     }
 
     @GetMapping("/scoreById/{gameId}")
-    public ResponseEntity<ScoreDTO> score(@PathVariable String gameId) {
+    public ResponseEntity<ScoreDto> score(@PathVariable String gameId) {
         List<Double> scores = gameService.score(gameId);
-        return ResponseEntity.ok(new ScoreDTO(scores.get(0), scores.get(1)));
+        return ResponseEntity.ok(new ScoreDto(scores.get(0), scores.get(1)));
     }
 
     @PostMapping("/restart/{gameId}")
-    public ResponseEntity<ChessBoardDTO> restart(@PathVariable String gameId) {
+    public ResponseEntity<ChessBoardDto> restart(@PathVariable String gameId) {
         return ResponseEntity.ok(Serializer.deserializeGameAsDTO(gameService.restart(gameId)));
     }
 }

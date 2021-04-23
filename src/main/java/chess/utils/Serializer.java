@@ -5,7 +5,7 @@ import chess.domain.board.Position;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceMapper;
-import chess.dto.ChessBoardDTO;
+import chess.dto.ChessBoardDto;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -35,13 +35,13 @@ public class Serializer {
         return new ChessBoard(chessBoard);
     }
 
-    public static ChessBoardDTO deserializeGameAsDTO(String response) {
+    public static ChessBoardDto deserializeGameAsDTO(String response) {
         Map<String, String> chessBoard = new LinkedHashMap<>();
         for (int i = 0; i < response.length(); i += LAST_INDEX_OF_EACH_PIECE) {
             String name = response.substring(i, i + STARTING_INDEX_OF_POSITION);
             String position = response.substring(i + STARTING_INDEX_OF_POSITION, i + LAST_INDEX_OF_EACH_PIECE);
             chessBoard.put(position, name);
         }
-        return new ChessBoardDTO(chessBoard);
+        return new ChessBoardDto(chessBoard);
     }
 }

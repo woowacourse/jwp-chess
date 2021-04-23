@@ -2,15 +2,15 @@ package chess.controller.api;
 
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
-import chess.dto.DuplicateDTO;
-import chess.dto.FinishDTO;
-import chess.dto.RoomIdDTO;
-import chess.dto.RoomListDTO;
-import chess.dto.ScoreDTO;
-import chess.dto.TitleDTO;
+import chess.dto.DuplicateDto;
+import chess.dto.FinishDto;
+import chess.dto.RoomIdDto;
+import chess.dto.RoomListDto;
+import chess.dto.ScoreDto;
+import chess.dto.TitleDto;
 import chess.service.LobbyService;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -31,44 +31,44 @@ public class LobbyController {
 
 
     @PostMapping("/lobby/new")
-    public ResponseEntity newGame(@RequestBody @Valid TitleDTO titleDTO, BindingResult error) {
+    public ResponseEntity newGame(@RequestBody @Valid TitleDto titleDTO, BindingResult error) {
         if (error.hasErrors()) {
             return ResponseEntity.badRequest()
                 .body(error.getAllErrors().get(0).getDefaultMessage());
         }
-        return ResponseEntity.ok(new RoomIdDTO(lobbyService.newGame(titleDTO.getTitle())));
+        return ResponseEntity.ok(new RoomIdDto(lobbyService.newGame(titleDTO.getTitle())));
     }
 
     @PostMapping("/findRoomId")
-    public ResponseEntity findRoomId(@RequestBody @Valid TitleDTO titleDTO, BindingResult error) {
+    public ResponseEntity findRoomId(@RequestBody @Valid TitleDto titleDTO, BindingResult error) {
         String title = titleDTO.getTitle().replaceAll("%20", " ");
         if (error.hasErrors()) {
             return ResponseEntity.badRequest()
                 .body(error.getAllErrors().get(0).getDefaultMessage());
         }
-        return ResponseEntity.ok(new RoomIdDTO(lobbyService.findRoomId(title)
+        return ResponseEntity.ok(new RoomIdDto(lobbyService.findRoomId(title)
             .orElseThrow(() -> new EmptyResultDataAccessException(0))));
     }
 
     @PostMapping("/isDuplicate")
-    public ResponseEntity<DuplicateDTO> isDuplicate(@RequestBody TitleDTO titleDTO) {
-        return ResponseEntity.ok(new DuplicateDTO(lobbyService.isDuplicate(titleDTO.getTitle())));
+    public ResponseEntity<DuplicateDto> isDuplicate(@RequestBody TitleDto titleDTO) {
+        return ResponseEntity.ok(new DuplicateDto(lobbyService.isDuplicate(titleDTO.getTitle())));
     }
 
     @GetMapping("/rooms")
-    public ResponseEntity<RoomListDTO> findAllRooms() {
-        return ResponseEntity.ok(new RoomListDTO(lobbyService.findAllRooms()));
+    public ResponseEntity<RoomListDto> findAllRooms() {
+        return ResponseEntity.ok(new RoomListDto(lobbyService.findAllRooms()));
     }
 
     @GetMapping("/finishByName/{roomName}")
-    public ResponseEntity<FinishDTO> isFinished(@PathVariable String roomName) {
-        return ResponseEntity.ok(new FinishDTO(lobbyService.isFinished(roomName)));
+    public ResponseEntity<FinishDto> isFinished(@PathVariable String roomName) {
+        return ResponseEntity.ok(new FinishDto(lobbyService.isFinished(roomName)));
     }
 
     @GetMapping("/scoreByName/{roomName}")
-    public ResponseEntity<ScoreDTO> score(@PathVariable String roomName) {
+    public ResponseEntity<ScoreDto> score(@PathVariable String roomName) {
         ChessGame chessGame = lobbyService.loadGame(roomName);
         return ResponseEntity
-            .ok(new ScoreDTO(chessGame.getScore(Color.BLACK), chessGame.getScore(Color.WHITE)));
+            .ok(new ScoreDto(chessGame.getScore(Color.BLACK), chessGame.getScore(Color.WHITE)));
     }
 }

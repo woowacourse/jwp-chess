@@ -2,11 +2,11 @@ package chess.dto;
 
 import java.util.Map;
 
-public class ChessBoardDTO {
+public class ChessBoardDto {
 
     private final Map<String, String> positionAndPieceName;
 
-    public ChessBoardDTO(final Map<String, String> positionAndPieceName) {
+    public ChessBoardDto(final Map<String, String> positionAndPieceName) {
         this.positionAndPieceName = positionAndPieceName;
     }
 

@@ -2,10 +2,10 @@ package chess.dto;
 
 import java.util.Map;
 
-public class RoomListDTO {
+public class RoomListDto {
     private final Map<String, String> roomList;
 
-    public RoomListDTO(Map<String, String> roomList) {
+    public RoomListDto(Map<String, String> roomList) {
         this.roomList = roomList;
     }
 

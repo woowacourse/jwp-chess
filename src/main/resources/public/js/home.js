@@ -19,7 +19,7 @@ function createRoom() {
     for (let i = 0; i < rooms.length ; i++) {
         let title = rooms[i].roomId + "번 방: " + rooms[i].roomName;
         document.getElementById("room" + (i + 1)).innerHTML = `
-            <text class="room-title" id=${i + 1}>${title}</text>
+            <text class="room-title" id=${rooms[i].roomId}>${title}</text>
         `
         if (i === 7) {
             break;
@@ -32,7 +32,7 @@ function selectRoom(e) {
         return;
     }
 
-    location.href = "https://localhost:8080/chess/enter?room=" + e.target.id
+    location.href = "http://localhost:8080/chess/enter?room=" + e.target.id
 }
 
-//$roomFrame.addEventListener("click", selectRoom);
+document.addEventListener("click", selectRoom);

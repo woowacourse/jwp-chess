@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
 public class RoomRequestMapper implements RowMapper<Room> {
+
     private static final String ROOM_ID = "id";
     private static final String ROOM_NAME = "name";
 

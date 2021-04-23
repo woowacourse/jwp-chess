@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.containsString;
 import chess.dto.RoomRequestDto;
 import chess.service.RoomService;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

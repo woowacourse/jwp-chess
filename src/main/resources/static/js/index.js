@@ -1,4 +1,4 @@
-import {deleteRoom, makeRoom, loadGame} from "./fetch.js"
+import {deleteRoom, loadGame, makeRoom} from "./fetch.js"
 
 const main = {
     init: function () {

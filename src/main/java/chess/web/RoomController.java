@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 @Controller
 public class RoomController {
+
     private final RoomService service;
 
     @GetMapping("/")
@@ -22,7 +23,7 @@ public class RoomController {
     }
 
     @PostMapping("/rooms")
-    public String add(@RequestBody RoomRequestDto dto){
+    public String add(@RequestBody RoomRequestDto dto) {
         service.add(dto.getName());
         return "redirect:/";
     }

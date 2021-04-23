@@ -7,10 +7,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class RoomDao {
+
     private final JdbcTemplate jdbcTemplate;
     private final RoomRequestMapper mapper;
 
-    public RoomDao(JdbcTemplate jdbcTemplate){
+    public RoomDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = new RoomRequestMapper();
     }
@@ -28,5 +29,10 @@ public class RoomDao {
     public void insert(String name) {
         String query = "insert into room (name) values (?)";
         jdbcTemplate.update(query, name);
+    }
+
+    public void deleteAll() {
+        String query = "delete from room";
+        jdbcTemplate.update(query);
     }
 }

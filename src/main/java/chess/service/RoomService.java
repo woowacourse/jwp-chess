@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class RoomService {
+
     private final RoomDao roomDao;
 
     @Transactional(readOnly = true)
@@ -26,5 +27,9 @@ public class RoomService {
 
     public void add(String name) {
         roomDao.insert(name);
+    }
+
+    public void deleteAll() {
+        roomDao.deleteAll();
     }
 }

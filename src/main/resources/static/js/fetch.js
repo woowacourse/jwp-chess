@@ -64,7 +64,7 @@ export async function makeRoom(name) {
     const response = await fetch("http://localhost:8080/rooms", {
         method: "POST",
         body: JSON.stringify({name}),
-        headers: {"Content-Type": "application/json"}
+        headers: {"Content-Type": "application/json; charset=UTF-8"}
     });
     location.href = response.url;
 }
@@ -72,7 +72,7 @@ export async function makeRoom(name) {
 export async function deleteRoom(roomId) {
     const response = await fetch("http://localhost:8080/rooms/" + roomId, {
         method: "POST",
-        headers: {"Content-Type": "application/json"}
+        headers: {"Content-Type": "application/json; charset=UTF-8"}
     })
         .then((response) => {
             alert('방을 삭제했습니다.');

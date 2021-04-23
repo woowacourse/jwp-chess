@@ -1,6 +1,5 @@
 package chess.domain;
 
-import chess.domain.state.End;
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
 import chess.domain.piece.Piece;
@@ -8,6 +7,7 @@ import chess.domain.piece.PieceColor;
 import chess.domain.player.Player;
 import chess.domain.player.Players;
 import chess.domain.position.Position;
+import chess.domain.state.End;
 import chess.domain.state.Ready;
 import chess.domain.state.State;
 import chess.exception.InvalidSourceException;

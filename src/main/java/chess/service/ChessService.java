@@ -18,13 +18,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class ChessService {
+
     private final MoveDao moveDao;
 
     public Game findGameById(int id) {
         Game game = new Game();
         game.changeState(new Running());
         List<MoveRequest> findGame = moveDao.getMovesById(id);
-        findGame.forEach(move -> game.move(Position.of(move.getFrom()),Position.of(move.getTo())));
+        findGame.forEach(move -> game.move(Position.of(move.getFrom()), Position.of(move.getTo())));
         return game;
     }
 

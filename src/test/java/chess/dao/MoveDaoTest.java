@@ -32,6 +32,7 @@ class MoveDaoTest {
             + "id int not null auto_increment,"
             + "name varchar(50) not null,"
             + "primary key (id))");
+        jdbcTemplate.execute("insert into room (name) values ('test')");
 
         jdbcTemplate.execute("DROP TABLE IF EXISTS move");
         jdbcTemplate.execute("create table  move("
@@ -46,8 +47,8 @@ class MoveDaoTest {
         List<Object[]> splitPositions = Arrays.asList("a2 a3", "c7 c6").stream()
             .map(positions -> positions.split(" "))
             .collect(Collectors.toList());
-        jdbcTemplate.execute("insert into room (name) values ('test')");
-        jdbcTemplate.batchUpdate("INSERT INTO move (start, end, room_id) VALUES (?, ?, 1)", splitPositions);
+        jdbcTemplate
+            .batchUpdate("INSERT INTO move (start, end, room_id) VALUES (?, ?, 1)", splitPositions);
     }
 
     @DisplayName("체스말을 이동하면 db에 이동 이력이 삽입된다.")

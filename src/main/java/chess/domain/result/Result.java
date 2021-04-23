@@ -1,9 +1,9 @@
 package chess.domain.result;
 
-import chess.domain.position.Column;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
+import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.exception.NoWinnerException;
 import java.util.Arrays;

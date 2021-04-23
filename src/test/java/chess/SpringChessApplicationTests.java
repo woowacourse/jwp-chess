@@ -21,6 +21,6 @@ class SpringChessApplicationTests {
     void contextLoads() throws Exception {
         this.mockMvc.perform(get("/"))
             .andExpect(status().isOk())
-            .andExpect(view().name("WOOWA CHESS"));
+            .andExpect(view().name("index"));
     }
 }

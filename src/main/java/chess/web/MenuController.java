@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/rooms/{id}/board")
 @Controller
 public class MenuController {
+
     private final ChessService service;
 
     @GetMapping

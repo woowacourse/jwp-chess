@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -9,10 +9,12 @@ import chess.domain.piece.PieceColor;
 import chess.dto.MoveRequest;
 import chess.dto.PathDto;
 import chess.service.ChessService;
+import chess.service.RoomService;
 import io.restassured.RestAssured;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +24,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @DisplayName("Board Controller")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class BoardControllerTest {
@@ -33,11 +37,20 @@ class BoardControllerTest {
     @Autowired
     private ChessService service;
 
+    @Autowired
+    private RoomService roomService;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        int id = 1;
-        service.restartBoardById(id);
+        roomService.deleteAll();
+        roomService.add("test");
+        service.restartBoardById(1);
+    }
+
+    @AfterEach
+    void cleanUp() {
+        roomService.deleteAll();
     }
 
     @DisplayName("초기화된 보드를 가져온다 - GET")
@@ -45,7 +58,18 @@ class BoardControllerTest {
     void getNewBoard() {
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/board")
+            .when().get("/rooms/1/board/init")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value())
+            .body("size()", is(1));
+    }
+
+    @DisplayName("재시작하면 새 보드를 가져온다 - POST")
+    @Test
+    void restart() {
+        RestAssured.given().log().all()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/rooms/1/board/restart")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("size()", is(1));
@@ -56,7 +80,7 @@ class BoardControllerTest {
     void isEnd() {
         Boolean response = RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/board/status")
+            .when().get("/rooms/1/board/status")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(Boolean.TYPE);
@@ -69,7 +93,7 @@ class BoardControllerTest {
     void getTurn() {
         PieceColor color = RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/board/turn")
+            .when().get("/rooms/1/board/turn")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(PieceColor.class);
@@ -82,7 +106,7 @@ class BoardControllerTest {
     void getScore() {
         Map scores = RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/board/score")
+            .when().get("/rooms/1/board/score")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(Map.class);
@@ -99,7 +123,7 @@ class BoardControllerTest {
         List paths = RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(dto)
-            .when().post("/board/path")
+            .when().post("/rooms/1/board/path")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(List.class);
@@ -115,7 +139,7 @@ class BoardControllerTest {
         Boolean response = RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(dto)
-            .when().post("/board/move")
+            .when().post("/rooms/1/board/move")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(Boolean.TYPE);

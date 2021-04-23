@@ -1,8 +1,8 @@
 package chess.domain.piece;
 
-import chess.domain.position.Position;
 import chess.domain.board.Board;
 import chess.domain.board.Path;
+import chess.domain.position.Position;
 import chess.domain.result.Score;
 import java.util.List;
 import java.util.stream.Collectors;

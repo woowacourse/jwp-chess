@@ -5,7 +5,6 @@ import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.MoveRequest;
 import chess.dto.PathDto;
-import chess.dto.RoomRequestDto;
 import chess.service.ChessService;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("rooms/{id}/board")
 public class BoardController {
+
     private final ChessService service;
 
     @GetMapping(value = {"/init"})
@@ -50,12 +50,14 @@ public class BoardController {
     }
 
     @PostMapping(path = "/path")
-    public ResponseEntity<List<String>> movablePath(@RequestBody PathDto dto, @PathVariable int id) {
+    public ResponseEntity<List<String>> movablePath(@RequestBody PathDto dto,
+        @PathVariable int id) {
         return ResponseEntity.ok(service.findPathById(Position.of(dto.getFrom()), id));
     }
 
     @PostMapping(path = "/move")
     public ResponseEntity<Boolean> move(@RequestBody MoveRequest dto, @PathVariable int id) {
-        return ResponseEntity.ok(service.addMoveById(Position.of(dto.getFrom()), Position.of(dto.getTo()), id));
+        return ResponseEntity
+            .ok(service.addMoveById(Position.of(dto.getFrom()), Position.of(dto.getTo()), id));
     }
 }

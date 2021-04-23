@@ -5,6 +5,7 @@ import chess.domain.board.position.Position;
 import chess.domain.board.position.Vertical;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 public enum PieceSymbolMapper {
@@ -30,16 +31,16 @@ public enum PieceSymbolMapper {
         this.piece = piece;
     }
 
-    public static String[][] parseBoardAsUnicode(final Map<Position, Piece> board) {
-        final String[][] uniCodeBoard = new String[8][8];
+    public static Map<String, String> parseBoardAsUnicode(final Map<Position, Piece> board) {
+        final Map<String,String> tempBoard = new HashMap<>();
         for (final Vertical v : Vertical.values()) {
             for (final Horizontal h : Horizontal.values()) {
                 final Position position = new Position(v, h);
                 final Piece piece = board.get(position);
-                uniCodeBoard[h.getIndex() - 1][v.getIndex() - 1] = parseToUnicode(piece);
+                tempBoard.put(position.parseAsString(), parseToUnicode(piece));
             }
         }
-        return uniCodeBoard;
+        return tempBoard;
     }
 
     private static String parseToUnicode(final Piece piece) {

@@ -11,10 +11,10 @@ import chess.domain.player.Turn;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.apache.logging.log4j.message.MapMessage.MapFormat.JSON;
 
 @Repository
 public class GameDao {
@@ -53,9 +53,14 @@ public class GameDao {
     }
 
     public String boardToData(final Board board) {
-        return Arrays.stream(board.parseUnicodeBoard())
-                .flatMap(strings -> Arrays.stream(strings))
-                .collect(Collectors.joining(SEPARATOR_OF_PIECE));
+        final Map<String, String> uniCodeBoard = board.parseUnicodeBoardAsMap();
+        final List<String> symbols = new LinkedList<>();
+        for (final Horizontal h : Horizontal.values()) {
+            for (final Vertical v : Vertical.values()) {
+                symbols.add(uniCodeBoard.get(new Position(v, h).parseAsString()));
+            }
+        }
+        return symbols.stream().collect(Collectors.joining(SEPARATOR_OF_PIECE));
     }
 
     public static Board dataToBoard(final String dataLine) {

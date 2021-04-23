@@ -100,7 +100,7 @@ public class Board {
                 .count();
     }
 
-    public String[][] parseUnicodeBoard() {
+    public Map<String, String> parseUnicodeBoardAsMap(){
         return PieceSymbolMapper.parseBoardAsUnicode(board);
     }
 }

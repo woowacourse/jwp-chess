@@ -1,5 +1,6 @@
 package chess.repository;
 
+import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.dto.BoardDto;
@@ -34,6 +35,37 @@ public class ChessDao {
             boardInfo.put(position, piece);
         }
         return BoardDto.of(boardInfo);
+    }
+
+    public BoardDto initialize(ChessGame chessGame, String roomName) {
+        int roomNumber = initializeGame(roomName);
+        return initializeBoard(chessGame, roomNumber);
+    }
+
+    private int initializeGame(String roomName) {
+        String sql = "insert into game (room_name, turn) values (?, 'white');";
+        jdbcTemplate.update(sql, roomName);
+        return findRoomNumberByRoomName(roomName);
+    }
+
+    private int findRoomNumberByRoomName(String roomName) {
+        String sql = "select room_number from game where room_name = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, roomName);
+    }
+
+    private BoardDto initializeBoard(ChessGame chessGame, int roomNumber) {
+        chessGame.settingBoard();
+        chessGame.getBoard().getBoard().forEach((key,value) -> {
+            String unicode = value != null ? value.getUnicode() : "";
+            System.out.println(key.convertToString()+"     "+unicode);
+            executeBoardInsertQuery(key.convertToString(), unicode, roomNumber);
+        });
+        return BoardDto.of(chessGame.getBoard());
+    }
+
+    private void executeBoardInsertQuery(String position, String unicode, int roomNumber) {
+        String sql = "insert into board (position, piece, room_number) values (?, ?, ?)";
+        jdbcTemplate.update(sql, position, unicode, roomNumber);
     }
 
     public TurnDto getSavedTurnOwner(int roomNumber) {

@@ -1,8 +1,7 @@
 const button = document.querySelector("button");
 let roomList = document.querySelector(".roomlist");
 
-//button.addEventListener("click", makeRoom);
-//roomList.addEventListener("click", moveRoom);
+button.addEventListener("click", makeRoom);
 
 mainStart();
 
@@ -14,13 +13,27 @@ async function showRoomList() {
     const rooms = await fetch("/room"
     ).then(res => res.json());
     for (let i = 0; i < rooms.roomNames.length; i++) {
+        const divRoom = document.createElement("div");
         let eachRoom = document.createElement("a");
         eachRoom.setAttribute("class", "room");
         eachRoom.setAttribute("href", "/room/" + rooms.roomNumbers[i]);
         eachRoom.textContent = rooms.roomNames[i];
-        roomList.appendChild(eachRoom);
+        divRoom.appendChild(eachRoom);
+        roomList.appendChild(divRoom);
     }
 }
 
-
+async function makeRoom() {
+    const roomName = document.querySelector("#roomName").value;
+    const data = {
+        roomName: roomName
+    }
+    await fetch("/board", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+}
 

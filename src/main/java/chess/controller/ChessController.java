@@ -6,6 +6,8 @@ import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Controller
 public class ChessController {
     private final ChessService chessService;
@@ -21,15 +23,15 @@ public class ChessController {
         return "main.html";
     }
 
-    @GetMapping("/room/{roomNumber}")
-    public String chessView() {
-        return "/chess.html";
-    }
-
     @GetMapping("/room")
     @ResponseBody
     public RoomsDto showRoomList() {
         return chessService.getRoomList();
+    }
+
+    @GetMapping("/room/{roomNumber}")
+    public String moveRoom() {
+        return "/chess.html";
     }
 
     @GetMapping("/board/{roomNumber}")
@@ -38,11 +40,17 @@ public class ChessController {
         return chessService.getSavedBoardInfo(chessGame, roomNumber);
     }
 
-    @PutMapping("/board/{roomNumber}")
+    @PostMapping("/board")
     @ResponseBody
-    public BoardDto resetBoard(@PathVariable int roomNumber) {
-        return chessService.initiateBoard(chessGame, roomNumber);
+    public BoardDto resetBoard(@RequestBody Map<String, Object> data) {
+        return chessService.initialize(chessGame, (String)data.get("roomName"));
     }
+
+//    @PutMapping("/board/{roomNumber}")
+//    @ResponseBody
+//    public BoardDto resetBoard(@RequestParam String roomName) {
+//        return chessService.initialize(chessGame, roomName);
+//    }
 
     @GetMapping("/score")
     @ResponseBody

@@ -62,7 +62,7 @@ function clickDiv(e) {
 }
 
 function checkGameOver(gameOverFlag) {
-    if (gameOverFlag === "true") {
+    if (gameOverFlag === true) {
         alert("게임이 종료되었습니다. 체스판을 초기화 합니다.");
         reStartGame();
         return '';

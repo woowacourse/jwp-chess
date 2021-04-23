@@ -23,6 +23,10 @@ public class ChessService {
         return BoardDto.of(chessGame.getBoard());
     }
 
+    public BoardDto initialize(ChessGame chessGame, String roomName) {
+        return chessDao.initialize(chessGame, roomName);
+    }
+
     public BoardDto getSavedBoardInfo(ChessGame chessGame, int roomNumber) {
         BoardDto boardDto = chessDao.getSavedBoardInfo(roomNumber);
         TurnDto turnDto = chessDao.getSavedTurnOwner(roomNumber);

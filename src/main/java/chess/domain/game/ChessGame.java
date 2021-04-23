@@ -34,7 +34,7 @@ public class ChessGame {
 
     public void validateTurn(Position source) {
         if (turn != chessBoard.getPiece(source).getColor()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("자신의 턴을 확인하세요.");
         }
     }
 

@@ -16,8 +16,8 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Void> illegalArgumentException(IllegalArgumentException error) {
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<String> illegalArgumentException(IllegalArgumentException error) {
+        return ResponseEntity.badRequest().body(error.getMessage());
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)

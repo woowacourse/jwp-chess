@@ -9,7 +9,7 @@ const POST = {
 }
 
 const moveToChessView = function () {
-    window.location.href = '/chess/view';
+    window.location.href = '../../../java/chess/view';
 }
 
 async function onRestart() {

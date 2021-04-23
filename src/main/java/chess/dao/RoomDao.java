@@ -38,7 +38,7 @@ public class RoomDao implements RoomRepository {
         final long roomId = insertRoom(room);
         final long chessId = insertChess(roomId);
         insertPieces(chessId, boardDto);
-        return roomId;
+        return chessId;
     }
 
     private long insertRoom(Room room) {

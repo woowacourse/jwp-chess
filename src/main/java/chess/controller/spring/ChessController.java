@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/chessgame/{roomId}")
@@ -41,7 +42,7 @@ public class ChessController {
     }
 
     @PutMapping("/chessboard")
-    public ResponseEntity<BoardDTO> move(@PathVariable int roomId, @RequestBody MoveRequestDTO moveRequestDTO, HttpSession httpSession) {
+    public ResponseEntity<BoardDTO> move(@PathVariable int roomId, @RequestBody @Valid MoveRequestDTO moveRequestDTO, HttpSession httpSession) {
         String password = (String) httpSession.getAttribute("password");
         TeamType currentTeamType = chessService.findCurrentTeamTypeByRoomId(roomId);
         userService.validateUserTurn(roomId, password, currentTeamType);

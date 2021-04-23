@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<RoomDTO> addRoom(@RequestBody RoomRegistrationDTO roomRegistrationDTO, HttpSession httpSession) {
+    public ResponseEntity<RoomDTO> addRoom(@RequestBody @Valid RoomRegistrationDTO roomRegistrationDTO, HttpSession httpSession) {
         String sessionPassword = (String) httpSession.getAttribute("password");
         if (!Objects.isNull(sessionPassword)) {
             throw new IllegalStateException("현재 플레이 중인 게임이 존재합니다.");

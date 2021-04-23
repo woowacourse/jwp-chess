@@ -1,8 +1,12 @@
 package chess.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class LoginRequestDTO {
 
+    @NotNull
     private final int roomId;
+    @NotNull
     private final String password;
 
     public LoginRequestDTO(int roomId, String password) {

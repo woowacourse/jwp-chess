@@ -1,9 +1,14 @@
 package chess.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class MoveRequestDTO {
 
+    @NotNull
     private final String current;
+    @NotNull
     private final String destination;
+    @NotNull
     private final String teamType;
 
     public MoveRequestDTO(String current, String destination, String teamType) {

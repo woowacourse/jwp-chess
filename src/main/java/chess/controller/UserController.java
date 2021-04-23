@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity createUser(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<String> createUser(@RequestBody UserRequestDto userRequestDto) {
         final long id = userService.add(userRequestDto);
         return ResponseEntity.created(URI.create("/users/" + id)).build();
     }

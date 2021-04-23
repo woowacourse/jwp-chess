@@ -20,7 +20,7 @@ public class SparkChessApplication {
 
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            return render(model, "static/chess.html");
+            return render(model, "static/chess.hbs");
         });
         post("/restart", (req, res) -> {
             chessService.initChessGame();

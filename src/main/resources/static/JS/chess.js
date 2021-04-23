@@ -1,6 +1,5 @@
-let currentRoomName;
+let currentRoomName = document.getElementById("roomName").value;
 
-getCurrentRoomName();
 createChessBoard();
 
 const startButton = document.getElementById("start");
@@ -10,11 +9,6 @@ const scoreButton = document.getElementById("score");
 startButton.addEventListener("click", clickStart);
 backButton.addEventListener("click", clickBack);
 scoreButton.addEventListener("click", clickScore);
-
-function getCurrentRoomName() {
-    const url = window.location.href.split("/");
-    currentRoomName = decodeURI(url[url.length - 1]);
-}
 
 function createChessBoard() {
     makeTable();

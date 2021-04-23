@@ -38,7 +38,7 @@ async function processResponse(response) {
 async function loadGameListIntoBox() {
     const gameListBox = document.getElementById("gameListBox");
 
-    const response = await fetch("/game");
+    const response = await fetch("/games");
     if (response.ok) {
         const responseBody = await response.json();
 
@@ -66,7 +66,7 @@ async function addAndRequestMove(square) {
         console.log(`request [POST]/move, body: from: ${fromSquare.id}, \nto: ${toSquare.id}\n`);
 
         try {
-            fetch(`/game/${gameId}/piece`, {
+            fetch(`/games/${gameId}/piece`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -86,7 +86,7 @@ async function addAndRequestMove(square) {
 async function addEventOnStartButton() {
     await document.getElementById('start-button').addEventListener('click', event => {
         try {
-            fetch('/game', {
+            fetch('/games', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -112,7 +112,7 @@ async function addSelectionEventOnChessBoard() {
 async function addEventOnRegameButton() {
     await document.getElementById('regame-button').addEventListener('click', event => {
         try {
-            fetch('/game', {
+            fetch('/games', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -132,7 +132,7 @@ async function addEventOnLoadGameButton() {
         try {
             const gameListBox = document.getElementById("gameListBox");
             gameId = gameListBox.options[gameListBox.selectedIndex].value;
-            fetch(`/game/${gameId}`)
+            fetch(`/games/${gameId}`)
                 .then(res => processResponse(res));
             turnOnPanel();
         } catch (error) {

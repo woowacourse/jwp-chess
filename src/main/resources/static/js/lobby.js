@@ -114,8 +114,8 @@ async function enterHandler(e) {
             document.querySelector('#room-name').value = ''
             return;
         }
-        response = await response.json()
-        window.location.href = `/room/${response.roomId}`
+        const id = await response.json()
+        window.location.href = `/room/${id}`
         return;
     }
 }

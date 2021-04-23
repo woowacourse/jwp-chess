@@ -38,28 +38,9 @@ public class ChessRepository {
         return jdbcTemplate.queryForObject(loadingGameQuery, chessGameMapper(), gameId);
     }
 
-    public ChessGame loadGameById(String gameId) {
-        String findingGameQuery = "SELECT board, turn FROM chess_game WHERE id= ?";
-        return jdbcTemplate.queryForObject(findingGameQuery, (resultSet, rowNum) -> {
-            return new ChessGame(
-                    Serializer.deserializeGame(resultSet.getString("board")),
-                    Color.of(resultSet.getString("turn")));
-        }, gameId);
-    }
-
-    public String turn(String gameId) {
-        String findingTurnQuery = "SELECT turn FROM chess_game WHERE id = ?";
-        return jdbcTemplate.queryForObject(findingTurnQuery, String.class, gameId);
-    }
-
     public void saveGame(String gameId, ChessGame chessGame) {
         String savingGameQuery = "UPDATE chess_game SET turn = ?, board = ? WHERE id = ?";
         jdbcTemplate.update(savingGameQuery, chessGame.getTurn(), Serializer.serializeGame(chessGame), gameId);
-    }
-
-    public boolean isFinishedById(String gameId) {
-        String finishedQuery = "SELECT finished FROM chess_game WHERE id = ?";
-        return jdbcTemplate.queryForObject(finishedQuery, Boolean.class, gameId);
     }
 
     public void finish(String gameId) {

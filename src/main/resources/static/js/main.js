@@ -105,7 +105,6 @@ async function finishHandler(finished) {
     }
 }
 
-
 function deactivateDrag() {
     document.querySelector('.chessBoard').removeEventListener("drag", drag);
     document.querySelector('.chessBoard').removeEventListener("dragstart", dragstart);
@@ -153,7 +152,7 @@ async function btnHandler({target}) {
 
     if (target.id === 'restart') {
         const response = await fetch(
-            `/${gameId}/restart`,
+            `/room/${gameId}/restart`,
             {
                 method: 'POST'
             }
@@ -165,17 +164,19 @@ async function btnHandler({target}) {
         setTimeout(() => {
             $modal.style.display = 'none'
         }, 1500)
-        await initBoard(response)
+
+        const chessGame = await response.json()
         await moveHandler()
-        await changeTurn()
-        await result()
-        await finishHandler()
+        await initBoard(chessGame)
+        await changeTurn(chessGame.turn)
+        await result(chessGame.blackScore, chessGame.whiteScore)
+        await finishHandler(chessGame.finished)
         await toggleAvatar()
     }
     if (target.id === "finish") {
         const response = await finish()
         if (response.status === 200) {
-            await finishHandler()
+            await finishHandler(true)
             removeTurn()
         }
     }
@@ -185,7 +186,7 @@ async function finish() {
     const url = window.location.href.split('/')
     const gameId = url[url.length - 1]
     return await fetch(
-        `/${gameId}/game/finish`,
+        `/room/${gameId}/finish`,
         {
             method: 'POST'
         }
@@ -208,7 +209,7 @@ function moveHandler() {
 
 async function move(source, target) {
     let response = await fetch(
-        `/${this.gameId}/game/move`,
+        `/room/${this.gameId}/move`,
         {
             method: 'PUT',
             body: JSON.stringify({
@@ -222,12 +223,13 @@ async function move(source, target) {
         }
     )
     if (response.status === 200) {
+        const chessGame = await response.json()
         assignPieceImage(source, target)
-        await changeTurn()
-        await result()
-        await finishHandler()
-        return
+        await changeTurn(chessGame.turn)
+        await finishHandler(chessGame.finished)
+        return chessGame
     }
+
     const $modal = document.querySelector('.game')
     $modal.style.display = null
     $modal.querySelector('label').textContent = '잘못된 이동입니다.'
@@ -265,6 +267,6 @@ drop = async function (e) {
     e.preventDefault();
     e.target.style.background = "";
     target = e.target.closest('div')
-    await move(source, target)
-    await result()
+    const chessGame = await move(source, target)
+    await result(chessGame.blackScore, chessGame.whiteScore)
 }

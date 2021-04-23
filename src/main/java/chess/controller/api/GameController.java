@@ -1,8 +1,8 @@
 package chess.controller.api;
 
-import chess.dto.*;
+import chess.dto.ChessGameDto;
+import chess.dto.MoveDto;
 import chess.service.GameService;
-import chess.utils.Serializer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +22,9 @@ public class GameController {
     }
 
     @PutMapping(path = "/{id}/move")
-    public ResponseEntity<Void> move(@PathVariable String id, @RequestBody MoveDto moveDTO) {
+    public ResponseEntity<ChessGameDto> move(@PathVariable String id, @RequestBody MoveDto moveDTO) {
         gameService.move(id, moveDTO);
-        return ResponseEntity.ok().build();
+        return loadGame(id);
     }
 
     @PostMapping("/{id}/finish")

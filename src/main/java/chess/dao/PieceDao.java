@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.dao.setting.DBConnection;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.response.ChessResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class PieceDao extends DBConnection {
+public class PieceDao {
     @Autowired
     private final JdbcTemplate jdbcTemplate;
 

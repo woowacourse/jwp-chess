@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.dao.setting.DBConnection;
 import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.TurnResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class TurnDao extends DBConnection {
+public class TurnDao {
     @Autowired
     private final JdbcTemplate jdbcTemplate;
 

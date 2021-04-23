@@ -1,8 +1,9 @@
 package chess.dto;
 
-
 import java.beans.ConstructorProperties;
+import lombok.Getter;
 
+@Getter
 public class MoveRequest {
 
     private final String from;
@@ -12,13 +13,5 @@ public class MoveRequest {
     public MoveRequest(final String from, final String to) {
         this.from = from;
         this.to = to;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public String getTo() {
-        return to;
     }
 }

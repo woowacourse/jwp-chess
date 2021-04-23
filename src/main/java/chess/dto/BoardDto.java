@@ -5,7 +5,9 @@ import chess.domain.position.Position;
 import chess.domain.board.Board;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.Getter;
 
+@Getter
 public class BoardDto {
 
     private final Map<Position, Piece> board;
@@ -15,9 +17,5 @@ public class BoardDto {
             .stream()
             .collect(Collectors
                 .toMap(position -> position, board::findPieceBy));
-    }
-
-    public Map<Position, Piece> getBoard() {
-        return board;
     }
 }

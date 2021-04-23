@@ -8,16 +8,16 @@ const main = {
             await _this.make()
         });
 
-        const $playGames = document.querySelectorAll(".room-name");
-        $playGames.forEach(game => game.addEventListener("click", async ({target}) => {
-            const gameId = target.closest(".room").id;
-            await loadGame(gameId);
-        }));
-
         const $deleteGames = document.querySelectorAll(".room-delete");
         $deleteGames.forEach(game => game.addEventListener("click", async ({target}) => {
             const gameId = target.closest(".room").id;
             await deleteRoom(gameId);
+        }));
+
+        const $playGames = document.querySelectorAll(".room-name");
+        $playGames.forEach(game => game.addEventListener("click", async ({target}) => {
+            const gameId = target.closest(".room").id;
+            await loadGame(gameId);
         }));
     },
 
@@ -26,5 +26,4 @@ const main = {
         await makeRoom(newRoom);
     },
 }
-
 main.init();

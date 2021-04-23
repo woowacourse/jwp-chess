@@ -79,6 +79,6 @@ export async function deleteRoom(roomId) {
 
 export async function loadGame(roomId) {
     location.href = "/rooms/" + roomId +  "/board";
-    const response = await fetch("http://localhost:8080/rooms/" + roomId + "/load");
+    const response = await fetch("http://localhost:8080/rooms/" + roomId + "/board/load");
     return response.json();
 }

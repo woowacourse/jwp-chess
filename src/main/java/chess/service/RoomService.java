@@ -4,16 +4,14 @@ import chess.dao.RoomDao;
 import chess.dto.RoomDto;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Service
 public class RoomService {
     private final RoomDao roomDao;
-
-    RoomService(RoomDao roomDao) {
-        this.roomDao = roomDao;
-    }
 
     @Transactional(readOnly = true)
     public List<RoomDto> findAllDesc() {

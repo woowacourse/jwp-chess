@@ -12,16 +12,13 @@ import chess.dto.ScoreDto;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class ChessService {
-
     private final MoveDao moveDao;
-
-    public ChessService(MoveDao moveDao) {
-        this.moveDao = moveDao;
-    }
 
     public Game findGameById(int id) {
         Game game = new Game();

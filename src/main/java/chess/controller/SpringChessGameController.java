@@ -32,7 +32,7 @@ public final class SpringChessGameController {
     }
 
     @GetMapping("/")
-    public String goHome(final Model model) {
+    public String home(final Model model) {
         roomService.loadRooms();
         model.addAttribute("rooms", roomService.allRooms());
         model.addAttribute("results", resultService.allUserResult());
@@ -47,7 +47,7 @@ public final class SpringChessGameController {
     }
 
     @GetMapping(path = "/rooms/{id}/pieces")
-    public String startGame(@PathVariable final String id, final Model model) {
+    public String initializePieces(@PathVariable final String id, final Model model) {
         roomService.addNewRoom(id);
         historyService.initializeByRoomId(id);
         model.addAttribute("state",
@@ -57,7 +57,7 @@ public final class SpringChessGameController {
     }
 
     @GetMapping(path = "/rooms/{id}/saved-pieces")
-    public String continueGame(@PathVariable final String id, final Model model) {
+    public String savedPieces(@PathVariable final String id, final Model model) {
         ChessGame chessGame = roomService.initializeChessGame(id);
         historyService.continueGame(id, chessGame);
         model.addAttribute("state",

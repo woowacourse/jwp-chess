@@ -2,7 +2,6 @@ package chess.controller;
 
 import chess.domain.ChessGame;
 import chess.dto.game.MoveDTO;
-import chess.dto.game.SectionDTO;
 import chess.dto.game.StatusDTO;
 import chess.dto.result.ResultDTO;
 import chess.dto.room.RoomNameDTO;
@@ -15,10 +14,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -26,6 +22,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
+@RequestMapping("/rooms")
 public class SpringChessGameRestController {
     private final RoomService roomService;
     private final ResultService resultService;
@@ -48,23 +45,22 @@ public class SpringChessGameRestController {
                 .body(true);
     }
 
-    @PostMapping(path = "/turn")
-    public ResponseEntity<Boolean> checkCurrentTurn(@RequestBody @Valid final SectionDTO sectionDTO) {
-        ChessGame chessGame = roomService.loadChessGameById(sectionDTO.getRoomId());
+    @GetMapping(path = "/{roomId}/positions/{clickedSection}/turn")
+    public ResponseEntity<Boolean> checkCurrentTurn(@PathVariable final String roomId, @PathVariable final String clickedSection) {
+        ChessGame chessGame = roomService.loadChessGameById(roomId);
         return ResponseEntity.status(OK)
-                .body(chessGame.checkRightTurn(sectionDTO.getClickedSection()));
+                .body(chessGame.checkRightTurn(clickedSection));
     }
 
-    @PostMapping("/movable-positions")
-    public ResponseEntity<List<String>> findMovablePosition(@RequestBody @Valid final SectionDTO sectionDTO) {
-        ChessGame chessGame = roomService.loadChessGameById(sectionDTO.getRoomId());
+    @GetMapping("/{roomId}/positions/{clickedSection}/movable-positions")
+    public ResponseEntity<List<String>> findMovablePosition(@PathVariable final String roomId, @PathVariable final String clickedSection) {
+        ChessGame chessGame = roomService.loadChessGameById(roomId);
         return ResponseEntity.status(OK)
-                .body(chessGame.movablePositionsByStartPoint(sectionDTO.getClickedSection()));
+                .body(chessGame.movablePositionsByStartPoint(clickedSection));
     }
 
-    @PostMapping("/piece/move")
-    public ResponseEntity<StatusDTO> movePiece(@RequestBody @Valid final MoveDTO moveDTO) {
-        String roomId = moveDTO.getRoomId();
+    @PostMapping("/{roomId}/piece/move")
+    public ResponseEntity<StatusDTO> movePiece(@PathVariable final String roomId, @RequestBody @Valid final MoveDTO moveDTO) {
         String startPoint = moveDTO.getStartPoint();
         String endPoint = moveDTO.getEndPoint();
         ChessGame chessGame = roomService.movePiece(roomId, startPoint, endPoint);
@@ -74,9 +70,8 @@ public class SpringChessGameRestController {
                 .body(new StatusDTO(chessGame, users));
     }
 
-    @PostMapping(path = "/game/end")
-    public ResponseEntity<Boolean> initialize(@RequestBody @Valid final ResultDTO resultDTO) {
-        String roomId = resultDTO.getRoomId();
+    @PostMapping("/{roomId}/end")
+    public ResponseEntity<Boolean> endGame(@PathVariable final String roomId, @RequestBody @Valid final ResultDTO resultDTO) {
         String winner = resultDTO.getWinner();
         String loser = resultDTO.getLoser();
         roomService.changeStatus(roomId);
@@ -87,7 +82,7 @@ public class SpringChessGameRestController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> clientException() {
+    public ResponseEntity<String> clientExceptionHandle() {
         return ResponseEntity.status(BAD_REQUEST)
                 .body("client error");
     }

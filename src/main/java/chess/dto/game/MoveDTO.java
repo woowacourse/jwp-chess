@@ -11,8 +11,6 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 public final class MoveDTO {
-    @NotBlank
-    private String roomId;
 
     @NotBlank
     @Pattern(regexp = "^[a-hA-H]{1}[1-8]{1}$")

@@ -1,13 +1,17 @@
 package chess.controller;
 
 import chess.controller.dto.RoomDto;
+import chess.controller.dto.RoomInfoDto;
 import chess.service.RoomService;
 import chess.view.OutputView;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/room")
@@ -30,7 +34,13 @@ public class RoomRestController {
     }
 
     @DeleteMapping("/{roomId}")
-    public void deleteRoom(@PathVariable final long roomId) {
+    public ResponseEntity deleteRoom(@PathVariable final long roomId) {
         roomService.delete(roomId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<RoomInfoDto>> loadRoomList() {
+        return new ResponseEntity<>(roomService.loadList(), HttpStatus.OK);
     }
 }

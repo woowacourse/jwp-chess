@@ -15,20 +15,21 @@ let source = "";
 let target = "";
 
 function enterNewGame() {
-    const form = document.createElement("form");
-    form.setAttribute("charset", "UTF-8");
-    form.setAttribute("method", "Post");
-    form.setAttribute("action", "/room/create");
-
     const roomName = document.getElementById("game-name-input").value;
-    const roomNameField = document.createElement("input");
-    roomNameField.setAttribute("type", "hidden");
-    roomNameField.setAttribute("name", "roomName");
-    roomNameField.setAttribute("value", roomName);
-    form.appendChild(roomNameField);
+    const requestQuery = "roomName=" + roomName;
 
-    document.body.appendChild(form);
-    form.submit();
+    $.ajax({
+        url: "/room/create",
+        type: "POST",
+        data: requestQuery,
+        success: function () {
+            alert("생성 완료");
+            location.href="/room/list";
+        },
+        error: function () {
+            alert("에러 발생");
+        }
+    })
 }
 
 function deleteRoom() {

@@ -1,6 +1,7 @@
 package chess.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,8 +15,7 @@ public class ExceptionController {
 
     @ExceptionHandler({Exception.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handlingException(final Exception e, final Model model) {
-        model.addAttribute("msg", e.getMessage());
-        return "errorPage";
+    public ResponseEntity<String> handlingException(final Exception e, final Model model) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

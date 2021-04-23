@@ -20,17 +20,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JSonHandlerTest {
 
     @Autowired
-    RoomService roomService;
+    private RoomService roomService;
 
     @Autowired
-    GameDao gameDao;
+    private GameDao gameDao;
 
     @Autowired
-    JSonHandler jSonHandler;
+    private JSonHandler jSonHandler;
 
     @DisplayName("Json을 사용하여 board 불러오기 유효 테스트 / JSon -> board map 변환")
     @Test
-    void jsonDataToStringMap() {
+    public void jsonDataToStringMap() {
         final long id = roomService.save("tempRoom2");
         final ChessGame chessGame = gameDao.load(id);
 
@@ -43,7 +43,7 @@ class JSonHandlerTest {
 
     @DisplayName("Json을 사용하여 board 저장 유효 테스트 / 객체 -> JSon 변환")
     @Test
-    void saveBoardToDataWithJSon() {
+    public void saveBoardToDataWithJSon() {
         final long id = roomService.save("tempRoom2");
         final ChessGame chessGame = gameDao.load(id);
 

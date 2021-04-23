@@ -24,7 +24,7 @@ public class Serializer {
     }
 
     public static ChessBoardDto chessGameAsDto(ChessGame chessGame) {
-        return deserializeGameAsDTO(serializeGame(chessGame));
+        return deserializeGameAsDto(serializeGame(chessGame));
     }
 
     public static ChessBoard deserializeGame(String response) {
@@ -39,7 +39,7 @@ public class Serializer {
         return new ChessBoard(chessBoard);
     }
 
-    public static ChessBoardDto deserializeGameAsDTO(String response) {
+    public static ChessBoardDto deserializeGameAsDto(String response) {
         Map<String, String> chessBoard = new LinkedHashMap<>();
         for (int i = 0; i < response.length(); i += LAST_INDEX_OF_EACH_PIECE) {
             String name = response.substring(i, i + STARTING_INDEX_OF_POSITION);

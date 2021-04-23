@@ -19,10 +19,10 @@ public class GameService {
         return chessRepository.loadGame(id);
     }
 
-    public void move(Long id, MoveDto moveDTO) {
+    public void move(Long id, MoveDto moveDto) {
         ChessGame chessGame = chessRepository.loadGame(id);
-        Position sourcePosition = Position.of(moveDTO.getSource());
-        Position targetPosition = Position.of(moveDTO.getTarget());
+        Position sourcePosition = Position.of(moveDto.getSource());
+        Position targetPosition = Position.of(moveDto.getTarget());
         chessGame.move(sourcePosition, targetPosition);
         checkGameOver(id, chessGame);
         chessRepository.saveGame(id, chessGame);

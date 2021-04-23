@@ -23,11 +23,11 @@ public class LobbyController {
     }
 
     @PostMapping("/game")
-    public ResponseEntity<String> newGame(@RequestBody @Valid TitleDto titleDTO) {
-        if (lobbyService.findGame(titleDTO.getTitle()).isPresent()) {
+    public ResponseEntity<String> newGame(@RequestBody @Valid TitleDto titleDto) {
+        if (lobbyService.findGame(titleDto.getTitle()).isPresent()) {
             throw new IllegalArgumentException("같은 이름으로 등록된 방이 있습니다.");
         }
-        return ResponseEntity.ok(lobbyService.newGame(titleDTO.getTitle()));
+        return ResponseEntity.ok(lobbyService.newGame(titleDto.getTitle()));
     }
 
     @GetMapping("/games")

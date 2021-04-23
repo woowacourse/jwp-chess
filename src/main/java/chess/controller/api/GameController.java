@@ -22,8 +22,8 @@ public class GameController {
     }
 
     @PutMapping(path = "/{id}/move")
-    public ResponseEntity<ChessGameDto> move(@PathVariable Long id, @RequestBody MoveDto moveDTO) {
-        gameService.move(id, moveDTO);
+    public ResponseEntity<ChessGameDto> move(@PathVariable Long id, @RequestBody MoveDto moveDto) {
+        gameService.move(id, moveDto);
         return loadGame(id);
     }
 

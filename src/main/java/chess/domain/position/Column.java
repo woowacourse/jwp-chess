@@ -1,6 +1,7 @@
 package chess.domain.position;
 
 import chess.domain.piece.Direction;
+import chess.exception.InvalidPositionException;
 import java.util.Arrays;
 
 public enum Column {
@@ -25,7 +26,7 @@ public enum Column {
         return Arrays.stream(values())
             .filter(column -> column.value == intValue)
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 열입니다"));
+            .orElseThrow(() -> new InvalidPositionException("존재하지 않는 열입니다"));
     }
 
     public Column move(Direction direction) {

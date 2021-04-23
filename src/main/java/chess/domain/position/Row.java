@@ -1,6 +1,7 @@
 package chess.domain.position;
 
 import chess.domain.piece.Direction;
+import chess.exception.InvalidPositionException;
 import java.util.Arrays;
 
 public enum Row {
@@ -23,7 +24,7 @@ public enum Row {
         return Arrays.stream(values())
             .filter(row -> row.number.equals(value))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행입니다."));
+            .orElseThrow(() -> new InvalidPositionException("존재하지 않는 행입니다."));
     }
 
     public Row move(Direction direction) {

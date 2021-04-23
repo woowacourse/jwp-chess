@@ -10,6 +10,7 @@ import chess.domain.player.Players;
 import chess.domain.position.Position;
 import chess.domain.state.Ready;
 import chess.domain.state.State;
+import chess.exception.InvalidSourceException;
 import java.util.Arrays;
 
 public class Game {
@@ -35,7 +36,7 @@ public class Game {
     public void move(Position from, Position to) {
         Piece source = board.findPieceBy(from);
         if (!players.currentPlayer(turn).isOwnerOf(source)) {
-            throw new IllegalArgumentException(INVALID_SOURCE_ERROR_MESSAGE);
+            throw new InvalidSourceException(INVALID_SOURCE_ERROR_MESSAGE);
         }
         if (board.move(from, to)) {
             refreshState();

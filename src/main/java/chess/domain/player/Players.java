@@ -1,6 +1,7 @@
 package chess.domain.player;
 
 import chess.domain.piece.PieceColor;
+import chess.exception.InvalidPlayerException;
 import java.util.List;
 
 public class Players {
@@ -19,6 +20,6 @@ public class Players {
         return players.stream()
             .filter(player -> player.isColor(currentColor))
             .findAny()
-            .orElseThrow(() -> new IllegalArgumentException("해당 색을 가진 플레이어가 존재하지 않습니다."));
+            .orElseThrow(() -> new InvalidPlayerException("해당 색을 가진 플레이어가 존재하지 않습니다."));
     }
 }

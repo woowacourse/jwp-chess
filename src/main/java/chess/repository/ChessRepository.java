@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public class ChessRepository {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public ChessRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

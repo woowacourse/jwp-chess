@@ -6,6 +6,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
 import chess.exception.NotExistRoomException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -26,12 +27,10 @@ public class SpringBoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Map<Position, Piece> newBoard(String roomName) {
+    public void addBoard(String roomName) {
         String query = "INSERT INTO board (roomName, position, pieceName, turn) VALUES (?, ?, ?, ?)";
         Board board = Board.getGamingBoard();
         this.jdbcTemplate.update(query, roomName, boardPositionSet(board.getBoard()), boardPieceSet(board.getBoard()), "WHITE");
-
-        return board.getBoard();
     }
 
     public void updateBoard(Board board, String turn, String roomName) {
@@ -41,18 +40,14 @@ public class SpringBoardDao {
 
     public Board findBoard(String roomName) {
         String query = "select * from board where roomName=?";
-
-        return this.jdbcTemplate.query(
-                query,
-                (resultSet, rowNum) -> daoToBoard(
-                        resultSet.getString("position"),
-                        resultSet.getString("pieceName")
-                ),
-                roomName)
-                .stream()
-                .findAny()
-                .map(Board::new)
-                .orElseThrow(NotExistRoomException::new);
+        try {
+            return this.jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> daoToBoard(
+                    resultSet.getString("position"),
+                    resultSet.getString("pieceName")
+            ), roomName);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotExistRoomException();
+        }
     }
 
     public Side findTurn(String roomName) {
@@ -110,7 +105,7 @@ public class SpringBoardDao {
         this.jdbcTemplate.update(query, roomName);
     }
 
-    private Map<Position, Piece> daoToBoard(String positions, String pieces) {
+    private Board daoToBoard(String positions, String pieces) {
         Map<Position, Piece> board = new LinkedHashMap<>();
 
         String[] position = positions.split(",");
@@ -119,6 +114,6 @@ public class SpringBoardDao {
         for (int i = 0; i < position.length; i++) {
             board.put(Position.from(position[i]), PieceFactory.createPieceByName(piece[i]));
         }
-        return board;
+        return new Board(board);
     }
 }

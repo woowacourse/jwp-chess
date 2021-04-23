@@ -9,7 +9,7 @@ import chess.dto.PositionDto;
 import chess.dto.ResponseDto;
 import chess.dto.RoomValidateDto;
 import chess.dto.ScoreDto;
-import chess.exception.NotExistRoomException;
+import chess.exception.ChessException;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -31,7 +31,7 @@ public class SpringChessService {
         this.springBoardDao = springBoardDao;
     }
 
-    public Map<String, String> currentBoardByRoomName(String roomName) throws NotExistRoomException {
+    public Map<String, String> currentBoardByRoomName(String roomName) throws ChessException {
         Board board = springBoardDao.findBoard(roomName);
         Map<String, String> boardName = new LinkedHashMap<>();
         for (Position position : board.getBoard().keySet()) {
@@ -41,7 +41,7 @@ public class SpringChessService {
         return boardName;
     }
 
-    public ResponseDto move(PositionDto positionDTO, String roomName) throws NotExistRoomException {
+    public ResponseDto move(PositionDto positionDTO, String roomName) throws ChessException {
         Board board = springBoardDao.findBoard(roomName);
         return moveExecute(positionDTO, board, roomName);
     }
@@ -56,11 +56,15 @@ public class SpringChessService {
         return new ResponseDto(SUCCEED_CODE, "Succeed", currentTurn(roomName).name());
     }
 
-    private Side currentTurn(String roomName) throws NotExistRoomException {
+    private Side currentTurn(String roomName) throws ChessException {
         return springBoardDao.findTurn(roomName);
     }
 
-    public void restartBoard(String roomName) {
+    public void createRoom(String roomName) {
+        springBoardDao.addBoard(roomName);
+    }
+
+    public void restartRoom(String roomName) {
         springBoardDao.updateBoard(Board.getGamingBoard(), "WHITE", roomName);
     }
 
@@ -73,10 +77,6 @@ public class SpringChessService {
 
     public List<String> rooms() {
         return springBoardDao.findRooms();
-    }
-
-    public void createRoom(String roomName) {
-        springBoardDao.newBoard(roomName);
     }
 
     public void deleteRoom(String roomName) {

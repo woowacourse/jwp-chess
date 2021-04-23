@@ -94,7 +94,7 @@ async function addRoom(event) {
             return;
         }
 
-        const response = await fetch(roomName + '/check', {
+        const response = await fetch('/rooms/' + roomName + '/check', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'

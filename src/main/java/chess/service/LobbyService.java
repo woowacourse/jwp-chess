@@ -27,5 +27,4 @@ public class LobbyService {
     public Optional<String> findGame(String title) {
         return chessRepository.findGame(title);
     }
-
 }

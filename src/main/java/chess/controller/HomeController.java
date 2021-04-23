@@ -14,8 +14,8 @@ public class HomeController {
         return "lobby";
     }
 
-    @GetMapping("/{gameId}")
+    @GetMapping("/room/{id}")
     public String initBoard() {
-        return "index";
+        return "/index";
     }
 }

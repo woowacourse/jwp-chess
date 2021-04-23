@@ -3,19 +3,19 @@ window.onload = () => {
 }
 
 imageMap = {
-    "R": './images/rook_black.png',
-    "B": './images/bishop_black.png',
-    "Q": './images/queen_black.png',
-    "N": './images/knight_black.png',
-    "P": './images/pawn_black.png',
-    "K": './images/king_black.png',
-    "r": './images/rook_white.png',
-    "p": './images/pawn_white.png',
-    "b": './images/bishop_white.png',
-    "q": './images/queen_white.png',
-    "n": './images/knight_white.png',
-    "k": './images/king_white.png',
-    ".": './images/blank.png'
+    "R": '/images/rook_black.png',
+    "B": '/images/bishop_black.png',
+    "Q": '/images/queen_black.png',
+    "N": '/images/knight_black.png',
+    "P": '/images/pawn_black.png',
+    "K": '/images/king_black.png',
+    "r": '/images/rook_white.png',
+    "p": '/images/pawn_white.png',
+    "b": '/images/bishop_white.png',
+    "q": '/images/queen_white.png',
+    "n": '/images/knight_white.png',
+    "k": '/images/king_white.png',
+    ".": '/images/blank.png'
 }
 
 async function init() {
@@ -32,19 +32,20 @@ async function init() {
         window.location.href = '/'
     })
 
-    await initBoard(await start())
     await moveHandler()
-    await changeTurn()
-    await result()
-    await finishHandler()
+
+    let chessGame = await start()
+    chessGame = await chessGame.json()
+    await initBoard(chessGame)
+    await changeTurn(chessGame.turn)
+    await result(chessGame.blackScore, chessGame.whiteScore)
+    await finishHandler(chessGame.finished)
     await toggleAvatar()
 }
 
-async function initBoard(chessBoard) {
+async function initBoard(chessGame) {
     this.$chessBoard.innerHTML = ''
-    chessBoard = await chessBoard.json()
-    chessBoard = chessBoard.positionAndPieceName
-    for (const [position, piece] of Object.entries(chessBoard)) {
+    for (const [position, piece] of Object.entries(chessGame.chessBoardDto.positionAndPieceName)) {
         this.$chessBoard.insertAdjacentHTML('beforeend',
             insertPiece(position, piece)
         )
@@ -53,7 +54,7 @@ async function initBoard(chessBoard) {
 
 async function start() {
     return await fetch(
-        `/chessboard/${this.gameId}`
+        `/room/${this.gameId}/game-info`
     )
 }
 
@@ -69,31 +70,27 @@ async function toggleAvatar() {
 
     if (blackScore > whiteScore) {
         this.$blackResult.getElementsByTagName(
-            'img')[0].src = "./images/player_win.png"
+            'img')[0].src = "/images/player_win.png"
     }
     if (whiteScore > blackScore) {
         this.$whiteResult.getElementsByTagName(
-            'img')[0].src = "./images/player_win.png"
+            'img')[0].src = "/images/player_win.png"
     }
     if (blackScore === whiteScore) {
         this.$blackResult.getElementsByTagName(
-            'img')[0].src = './images/player_lose.png'
+            'img')[0].src = '/images/player_lose.png'
         this.$whiteResult.getElementsByTagName(
-            'img')[0].src = './images/player_lose.png'
+            'img')[0].src = '/images/player_lose.png'
     }
 }
 
 function removeTurn() {
-    document.querySelector('.black-turn').src = './images/up.png'
-    document.querySelector('.white-turn').src = './images/down.png'
+    document.querySelector('.black-turn').src = '/images/up.png'
+    document.querySelector('.white-turn').src = '/images/down.png'
 }
 
-async function finishHandler() {
-    let response = await fetch(
-        `/finishById/${this.gameId}`
-    )
-    response = await response.json()
-    if (response.finished === true) {
+async function finishHandler(finished) {
+    if (finished === true) {
         const $modal = document.querySelector('.game')
         $modal.style.display = null
         $modal.querySelector('label').textContent = '게임이 종료되었습니다.'
@@ -126,31 +123,20 @@ function positionColor(position) {
     return position[0].charCodeAt(0) % 2 === 0 ? 'b-black' : 'b-white'
 }
 
-async function changeTurn() {
-    let response = await fetch(
-        `/turn/${this.gameId}`
-    )
-    response = await response.json()
+async function changeTurn(turn) {
     const $blackTurn = document.querySelector('.black-turn')
     const $whiteTurn = document.querySelector('.white-turn')
-    if (response.turn === 'WHITE') {
-        $blackTurn.src = 'images/up.png'
-        $whiteTurn.src = 'images/down_turn.png'
+    if (turn === 'WHITE') {
+        $blackTurn.src = '/images/up.png'
+        $whiteTurn.src = '/images/down_turn.png'
     }
-    if (response.turn === 'BLACK') {
-        $blackTurn.src = 'images/up_turn.png'
-        $whiteTurn.src = 'images/down.png'
+    if (turn === 'BLACK') {
+        $blackTurn.src = '/images/up_turn.png'
+        $whiteTurn.src = '/images/down.png'
     }
 }
 
-async function result() {
-    let response = await fetch(
-        `/scoreById/${this.gameId}`
-    )
-    response = await response.json()
-    const blackScore = response.blackScore
-    const whiteScore = response.whiteScore
-
+async function result(blackScore, whiteScore) {
     this.$blackResult.querySelector(
         '.score').textContent = blackScore
     this.$whiteResult.querySelector(
@@ -167,7 +153,7 @@ async function btnHandler({target}) {
 
     if (target.id === 'restart') {
         const response = await fetch(
-            `/restart/${gameId}`,
+            `/${gameId}/restart`,
             {
                 method: 'POST'
             }
@@ -199,7 +185,7 @@ async function finish() {
     const url = window.location.href.split('/')
     const gameId = url[url.length - 1]
     return await fetch(
-        `/finish/${gameId}`,
+        `/${gameId}/game/finish`,
         {
             method: 'POST'
         }
@@ -222,7 +208,7 @@ function moveHandler() {
 
 async function move(source, target) {
     let response = await fetch(
-        `/move/${this.gameId}`,
+        `/${this.gameId}/game/move`,
         {
             method: 'PUT',
             body: JSON.stringify({

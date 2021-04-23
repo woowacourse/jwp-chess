@@ -19,12 +19,8 @@ public class GameService {
         this.chessRepository = chessRepository;
     }
 
-    public String loadGame(String gameId) {
+    public ChessGame loadGame(String gameId) {
         return chessRepository.loadGame(gameId);
-    }
-
-    public String turn(String gameId) {
-        return chessRepository.turn(gameId);
     }
 
     public void move(String gameId, MoveDto moveDTO) {
@@ -42,10 +38,6 @@ public class GameService {
         }
     }
 
-    public boolean isFinished(String gameId) {
-        return chessRepository.isFinishedById(gameId);
-    }
-
     public void finish(String gameId) {
         chessRepository.finish(gameId);
     }
@@ -55,7 +47,7 @@ public class GameService {
         return new ArrayList(Arrays.asList(chessGame.getScore(Color.BLACK), chessGame.getScore(Color.WHITE)));
     }
 
-    public String restart(String gameId) {
+    public ChessGame restart(String gameId) {
         ChessGame chessGame = new ChessGame();
         chessRepository.restart(gameId, chessGame);
         return chessRepository.loadGame(gameId);

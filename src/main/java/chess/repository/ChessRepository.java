@@ -33,9 +33,9 @@ public class ChessRepository {
         return jdbcTemplate.queryForObject(findingGameQuery, String.class);
     }
 
-    public String loadGame(String gameId) {
-        String loadingGameQuery = "SELECT board FROM chess_game WHERE id= ?";
-        return jdbcTemplate.queryForObject(loadingGameQuery, String.class, gameId);
+    public ChessGame loadGame(String gameId) {
+        String loadingGameQuery = "SELECT * FROM chess_game WHERE id= ?";
+        return jdbcTemplate.queryForObject(loadingGameQuery, chessGameMapper(), gameId);
     }
 
     public ChessGame loadGameById(String gameId) {

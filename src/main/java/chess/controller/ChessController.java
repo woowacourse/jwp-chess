@@ -22,7 +22,7 @@ public class ChessController {
 
     @PutMapping("/board/{roomName}")
     public ApiResponseDto<BoardDto> resetBoard(@PathVariable String roomName) {
-        return ApiResponseDto.createOK(chessService.resetBoard(roomName));
+        return ApiResponseDto.createOK(chessService.resetGame(roomName));
     }
 
     @GetMapping("/score/{roomName}")

@@ -9,6 +9,10 @@ import chess.domain.piece.Team;
 import chess.repository.ChessDao;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static chess.domain.board.Position.convertStringToPosition;
 import static chess.domain.piece.Team.*;
 
@@ -20,15 +24,31 @@ public class ChessService {
         this.chessDao = chessDao;
     }
 
-    public BoardDto resetBoard(String roomName) {
+    public BoardDto resetGame(String roomName) {
         Board initiatedBoard = BoardFactory.create();
         chessDao.resetTurnOwner(roomName);
-        chessDao.resetBoard(initiatedBoard, roomName);
+        resetBoard(initiatedBoard, roomName);
         return BoardDto.of(initiatedBoard);
     }
 
+    private void resetBoard(Board board, String roomName) {
+        for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
+            Position position = entry.getKey();
+            Piece piece = entry.getValue();
+            String unicode = piece != null ? piece.getUnicode() : "";
+            chessDao.resetEachBoardPosition(unicode, position.convertToString(), roomName);
+        }
+    }
+
     public BoardDto getSavedBoard(String roomName) {
-        return chessDao.getSavedBoard(roomName);
+        List<Map<String, Object>> resultList = chessDao.getSavedBoard(roomName);
+        Map<String, String> boardInfo = new HashMap<>();
+        for (Map<String, Object> result : resultList) {
+            String position = (String) result.get("position");
+            String piece = (String) result.get("piece");
+            boardInfo.put(position, piece);
+        }
+        return BoardDto.of(boardInfo);
     }
 
     public ScoreDto score(String roomName) {
@@ -53,7 +73,17 @@ public class ChessService {
     }
 
     public void addGame(String roomName) {
-        chessDao.addGame(roomName);
+        chessDao.initializeGameTable(roomName);
+        initializeGameBoard(roomName);
+    }
+
+    private void initializeGameBoard(String roomName) {
+        for (Map.Entry<Position, Piece> entry : BoardFactory.create().getBoard().entrySet()) {
+            Position position = entry.getKey();
+            Piece piece = entry.getValue();
+            String unicode = piece != null ? piece.getUnicode() : "";
+            chessDao.initializeEachBoardPosition(unicode, position.convertToString(), roomName);
+        }
     }
 
     private Piece getTargetPiece(MoveInfoDto moveInfoDto, Board board) {

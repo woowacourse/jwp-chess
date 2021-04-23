@@ -1,7 +1,6 @@
 package chess.repository;
 
 import chess.domain.board.Board;
-import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
 import chess.domain.dto.BoardDto;
 import chess.domain.dto.RoomListDto;
@@ -25,16 +24,9 @@ public class ChessDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public BoardDto getSavedBoard(String roomName) {
+    public List<Map<String, Object>> getSavedBoard(String roomName) {
         String sql = "select position, piece from board where room_name = ?;";
-        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, roomName);
-        Map<String, String> boardInfo = new HashMap<>();
-        for (Map<String, Object> result : resultList) {
-            String position = (String) result.get("position");
-            String piece = (String) result.get("piece");
-            boardInfo.put(position, piece);
-        }
-        return BoardDto.of(boardInfo);
+        return jdbcTemplate.queryForList(sql, roomName);
     }
 
     public TurnDto getSavedTurnOwner(String roomName) {
@@ -43,46 +35,23 @@ public class ChessDao {
         return TurnDto.of(turnOwner);
     }
 
-    public void resetBoard(Board board, String roomName) {
-        for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
-            Position position = entry.getKey();
-            Piece piece = entry.getValue();
-            String unicode = piece != null ? piece.getUnicode() : "";
-            executeBoardUpdateQuery(unicode, position.convertToString(), roomName);
-        }
-    }
-
     public RoomListDto getRoomList() {
         String sql = "select * from game;";
         List<String> roomNames = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("room_name"));
         return new RoomListDto(roomNames);
     }
 
-    private void executeBoardInsertQuery(String unicode, String position, String roomName) {
-        String sql = "insert into board (piece, position, room_name) values (?, ?, ?);";
-        jdbcTemplate.update(sql, unicode, position, roomName);
-    }
-
-    public void addGame(String roomName) {
-        initializeGameTable(roomName);
-        initializeBoardTable(roomName);
-    }
-
-    private void initializeGameTable(String roomName) {
+    public void initializeGameTable(String roomName) {
         String sql = "insert into game(room_name, turn_owner) values (?, 'white');";
         jdbcTemplate.update(sql, roomName);
     }
 
-    private void initializeBoardTable(String roomName) {
-        for (Map.Entry<Position, Piece> entry : BoardFactory.create().getBoard().entrySet()) {
-            Position position = entry.getKey();
-            Piece piece = entry.getValue();
-            String unicode = piece != null ? piece.getUnicode() : "";
-            executeBoardInsertQuery(unicode, position.convertToString(), roomName);
-        }
+    public void initializeEachBoardPosition(String unicode, String position, String roomName) {
+        String sql = "insert into board (piece, position, room_name) values (?, ?, ?);";
+        jdbcTemplate.update(sql, unicode, position, roomName);
     }
 
-    private void executeBoardUpdateQuery(String unicode, String position, String roomName) {
+    public void resetEachBoardPosition(String unicode, String position, String roomName) {
         jdbcTemplate.update(UPDATE_BOARD_QUERY, unicode, position, roomName);
     }
 

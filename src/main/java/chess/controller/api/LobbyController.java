@@ -31,21 +31,13 @@ public class LobbyController {
 
 
     @PostMapping("/lobby/new")
-    public ResponseEntity newGame(@RequestBody @Valid TitleDto titleDTO, BindingResult error) {
-        if (error.hasErrors()) {
-            return ResponseEntity.badRequest()
-                .body(error.getAllErrors().get(0).getDefaultMessage());
-        }
+    public ResponseEntity newGame(@RequestBody @Valid TitleDto titleDTO) {
         return ResponseEntity.ok(new RoomIdDto(lobbyService.newGame(titleDTO.getTitle())));
     }
 
     @PostMapping("/findRoomId")
-    public ResponseEntity findRoomId(@RequestBody @Valid TitleDto titleDTO, BindingResult error) {
+    public ResponseEntity findRoomId(@RequestBody @Valid TitleDto titleDTO) {
         String title = titleDTO.getTitle().replaceAll("%20", " ");
-        if (error.hasErrors()) {
-            return ResponseEntity.badRequest()
-                .body(error.getAllErrors().get(0).getDefaultMessage());
-        }
         return ResponseEntity.ok(new RoomIdDto(lobbyService.findRoomId(title)
             .orElseThrow(() -> new EmptyResultDataAccessException(0))));
     }

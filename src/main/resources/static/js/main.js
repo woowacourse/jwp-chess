@@ -2,7 +2,6 @@ window.onload = () => {
     init()
 }
 
-
 imageMap = {
     "R": '/images/rook_black.png',
     "B": '/images/bishop_black.png',
@@ -12,7 +11,7 @@ imageMap = {
     "K": '/images/king_black.png',
     "r": '/images/rook_white.png',
     "p": '/images/pawn_white.png',
-    "b": `${window.location.protocol}//${window.location.host}/images/bishop_white.png`,
+    "b": '/images/bishop_white.png',
     "q": '/images/queen_white.png',
     "n": '/images/knight_white.png',
     "k": '/images/king_white.png',

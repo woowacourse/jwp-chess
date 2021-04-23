@@ -8,24 +8,23 @@ import chess.domain.board.position.Vertical;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceSymbolMapper;
 import chess.domain.player.Turn;
+import chess.service.JSonHandler;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.apache.logging.log4j.message.MapMessage.MapFormat.JSON;
 
 @Repository
 public class GameDao {
     private static final String COLUMN_LABEL_OF_TURN = "turn";
     private static final String COLUMN_LABEL_OF_BOARD = "board";
-    private static final String SEPARATOR_OF_PIECE = ",";
 
     private final JdbcTemplate jdbcTemplate;
+    private final JSonHandler jSonHandler;
 
-    public GameDao(final JdbcTemplate jdbcTemplate) {
+    public GameDao(final JdbcTemplate jdbcTemplate, final JSonHandler jSonHandler) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jSonHandler = jSonHandler;
     }
 
     public void save(final long roomId, final Turn turn, final Board board) {
@@ -52,24 +51,18 @@ public class GameDao {
         jdbcTemplate.update(query, turn.name(), boardToData(board), roomId);
     }
 
-    public String boardToData(final Board board) {
-        final Map<String, String> uniCodeBoard = board.parseUnicodeBoardAsMap();
-        final List<String> symbols = new LinkedList<>();
-        for (final Horizontal h : Horizontal.values()) {
-            for (final Vertical v : Vertical.values()) {
-                symbols.add(uniCodeBoard.get(new Position(v, h).parseAsString()));
-            }
-        }
-        return symbols.stream().collect(Collectors.joining(SEPARATOR_OF_PIECE));
+    private String boardToData(final Board board) {
+        return jSonHandler.mapToJsonData(board.parseUnicodeBoardAsMap());
     }
 
-    public static Board dataToBoard(final String dataLine) {
+    private Board dataToBoard(final String dataLine) {
+        final Map<String, String> unicodeMap = jSonHandler.jsonDataToStringMap(dataLine);
         final Map<Position, Piece> board = new HashMap<>();
-        final String[] pieces = dataLine.split(SEPARATOR_OF_PIECE);
-        int index = 0;
         for (final Horizontal h : Horizontal.values()) {
             for (final Vertical v : Vertical.values()) {
-                board.put(new Position(v, h), PieceSymbolMapper.parseToPiece(pieces[index++]));
+                final Position position = new Position(v, h);
+                final String unicode = unicodeMap.get(position.parseAsString());
+                board.put(position, PieceSymbolMapper.parseToPiece(unicode));
             }
         }
         return new Board(board);

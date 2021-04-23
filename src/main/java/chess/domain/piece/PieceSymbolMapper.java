@@ -56,6 +56,6 @@ public enum PieceSymbolMapper {
                 .filter(value -> value.uniCode.equals(uniCode))
                 .map(value -> value.piece)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("심볼, 색상 매칭 오류"));
+                .orElseThrow(() -> new IllegalArgumentException("심볼, 색상 매칭 오류 : " + uniCode));
     }
 }

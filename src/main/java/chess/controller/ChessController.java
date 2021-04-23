@@ -22,7 +22,7 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @PostMapping("/creation")
+    @PostMapping
     public String initializeChess(@RequestBody final GameRequestDto gameRequestDto) {
         final long id = chessService.initializeChess(gameRequestDto);
         return "redirect:/games/" + id;

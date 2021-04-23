@@ -105,5 +105,4 @@ public class QueenMoveCondition extends MoveCondition {
                         piece.getPosition().calculateGradient(selectedPiece.getPosition());
     }
 
-
 }

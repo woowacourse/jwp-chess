@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Objects;
 
 @Repository
 public class UserDao {
@@ -36,7 +37,7 @@ public class UserDao {
             return preparedStatement;
         };
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
 

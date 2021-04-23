@@ -72,7 +72,7 @@ async function createGame(hostId, guestId) {
         hostId: hostId,
         guestId: guestId
     };
-    await postData(`${url}/chess/creation`, body);
+    await postData(`${url}/chess`, body);
 }
 
 async function loadGame() {

@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
 public class ChessService {
 
@@ -26,12 +25,14 @@ public class ChessService {
         this.userService = userService;
     }
 
+    @Transactional
     public long initializeChess(final GameRequestDto gameRequestDto) {
         final long id = gameService.add(gameRequestDto);
         pieceService.createInitialPieces(id);
         return id;
     }
 
+    @Transactional
     public ChessResponseDto bringGameData(long gameId) {
         Board board = generateBoard(gameId);
         List<PieceDto> pieceDtos = pieceService.findPiecesByGameId(gameId);
@@ -52,6 +53,7 @@ public class ChessService {
         return board.isMovable(moveRequestDto.getColor(), moveRequestDto.getSource(), moveRequestDto.getTarget());
     }
 
+    @Transactional
     public MoveResponseDto move(long gameId, MoveRequestDto moveRequestDto) {
         Board board = generateBoard(gameId);
         board.moveAndCatchPiece(

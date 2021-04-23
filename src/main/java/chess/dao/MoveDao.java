@@ -1,36 +1,21 @@
-package chess.domain.piece;
+package chess.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import chess.domain.board.BoardDto;
 import chess.domain.position.MovePosition;
 import chess.domain.position.MovePositionVo;
+import chess.repository.MoveRepository;
 
 @Repository
-public class PieceDao {
-
+public class MoveDao implements MoveRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public PieceDao(JdbcTemplate jdbcTemplate) {
+    public MoveDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insert(long chessId, BoardDto boardDto) {
-        String sql = "INSERT INTO piece (chess_id, position, color, name) VALUES (?, ?, ?, ?)";
-
-        jdbcTemplate.batchUpdate(
-                sql,
-                boardDto.getPieceDtos(),
-                boardDto.getPieceDtos().size(),
-                (pstmt, argument) -> {
-                    pstmt.setLong(1, chessId);
-                    pstmt.setString(2, argument.getPosition());
-                    pstmt.setString(3, argument.getColor());
-                    pstmt.setString(4, argument.getName());
-                });
-    }
-
+    @Override
     public void move(long chessId, MovePosition movePosition) {
         MovePositionVo movePositionVO = MovePositionVo.from(movePosition);
         updateTargetPosition(chessId, movePositionVO);
@@ -51,5 +36,12 @@ public class PieceDao {
         String sql =
                 "UPDATE piece SET color = 'BLANK', name = 'BLANK' WHERE position = ? AND chess_id = ?";
         jdbcTemplate.update(sql, movePositionVO.getSource(), chessId);
+    }
+
+
+    @Override
+    public void updateChess(long chessId, String status, String turn) {
+        String sql = "UPDATE chess SET status = ?, turn = ? WHERE chess_id = ?";
+        jdbcTemplate.update(sql, status, turn, chessId);
     }
 }

@@ -7,16 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BoardDto {
-    private final Map<PositionDto, PieceDto> maps;
+    private final Map<String, String> maps;
 
     public BoardDto(Map<Position, Piece> board) {
         maps = new HashMap<>();
         for (Position position : board.keySet()) {
-            maps.put(new PositionDto(position), new PieceDto(board.get(position)));
+            maps.put(position.toKey(), board.get(position).display());
         }
     }
 
-    public Map<PositionDto, PieceDto> getMaps() {
+    public Map<String, String> getMaps() {
         return maps;
     }
 }

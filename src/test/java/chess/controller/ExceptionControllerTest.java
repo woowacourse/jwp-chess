@@ -19,9 +19,6 @@ class ExceptionControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private RoomService roomService;
-
     @DisplayName("없는 경로를 처리하는 방법을 확인한다.")
     @Test
     public void exceptionHandlerTest() throws Exception {
@@ -40,6 +37,6 @@ class ExceptionControllerTest {
                 .andExpect(status().is3xxRedirection());
 
         mockMvc.perform(request)
-                .andExpect(status().isBadRequest());
+                .andExpect(status().is3xxRedirection());
     }
 }

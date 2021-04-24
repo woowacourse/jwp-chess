@@ -21,18 +21,22 @@ let target = "";
 
 function enterNewGame() {
     const roomName = document.getElementById("game-name-input").value;
-    const requestQuery = "roomName=" + roomName;
+    const player1 = prompt("플레이어1의 비밀번호를 입력하시오");
+    const jsonData = JSON.stringify({ roomName : roomName, player1 : player1 });
 
     $.ajax({
         url: "/room/create",
         type: "POST",
-        data: requestQuery,
-        success: function () {
-            alert("생성 완료");
-            location.href="/room/list";
+        data: jsonData,
+        dataType: "json",
+        contentType : 'application/json',
+        success: function (data) {
+            alert(roomName+"으로 방 생성 \n player1 : "+player1);
+            const roomId = data;
+            location.href="/game/load/"+roomId;
         },
-        error: function () {
-            alert("에러 발생");
+        error: function (e) {
+            alert("에러 발생  : " + e);
         }
     })
 }

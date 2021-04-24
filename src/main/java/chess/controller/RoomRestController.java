@@ -4,13 +4,16 @@ import chess.controller.dto.RoomDto;
 import chess.controller.dto.RoomInfoDto;
 import chess.service.RoomService;
 import chess.view.OutputView;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/room")
@@ -21,15 +24,15 @@ public class RoomRestController {
         this.roomService = roomService;
     }
 
+
     @PostMapping("/create")
-    public RedirectView createRoom(@Valid final RoomDto roomDto, final BindingResult bindingResult) {
+    public long createRoom(@RequestBody @Valid final RoomDto roomDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             final String errorMsg = OutputView.getErrorMessage(bindingResult.getFieldErrors());
             throw new IllegalArgumentException(errorMsg);
         }
-
         final Long roomId = roomService.save(roomDto.getRoomName());
-        return new RedirectView("/game/load/" + roomId);
+        return roomId;
     }
 
     @DeleteMapping("/{roomId}")

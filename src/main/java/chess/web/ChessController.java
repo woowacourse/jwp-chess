@@ -3,6 +3,7 @@ package chess.web;
 import chess.exception.ChessGameException;
 import chess.service.ChessService;
 import chess.web.dto.*;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +11,7 @@ import java.net.URLDecoder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/games")
 public class ChessController {
 
     private final ChessService chessService;
@@ -19,12 +20,12 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/{roomId}")
+    @GetMapping(value = "/{roomId}")
     public GameDto load(@PathVariable Long roomId) {
         return chessService.loadByGameId(roomId);
     }
 
-    @PatchMapping("/{roomId}/position")
+    @PatchMapping(value = "/{roomId}/position")
     public GameDto move(@PathVariable Long roomId, @RequestBody MoveDto moveDto) {
         String source = moveDto.getSource();
         String target = moveDto.getTarget();
@@ -32,12 +33,12 @@ public class ChessController {
         return chessService.move(roomId, source, target);
     }
 
-    @GetMapping("/{roomId}/status")
+    @GetMapping(value = "/{roomId}/status")
     public StatusDto status(@PathVariable Long roomId) {
         return chessService.getStatus(roomId);
     }
 
-    @PatchMapping("/{roomId}/end")
+    @PatchMapping(value = "/{roomId}/end")
     public MessageDto end(@PathVariable Long roomId) {
         return chessService.end(roomId);
     }

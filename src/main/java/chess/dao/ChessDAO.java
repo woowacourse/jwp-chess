@@ -56,7 +56,7 @@ public class ChessDAO {
     }
 
     public Room findRoomByRoomId(Long gameId) {
-        String query = "SELECT `room_id`, `room_name`, `data` FROM room a inner join chess b using (game_id) WHERE game_id = ?";
+        String query = "SELECT `room_id`, `room_name`, `data` FROM room a inner join chess b on (a.game_id = b.game_id) WHERE a.game_id = ?";
 
           List<Room> room = jdbcTemplate.query(query, (rs, i) -> {
             Long roomId = rs.getLong("room_id");

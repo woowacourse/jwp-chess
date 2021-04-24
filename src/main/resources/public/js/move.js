@@ -22,12 +22,13 @@ function move(source, target) {
     const rawGameId = gameId();
     $.ajax({
         type: "POST",
-        url: '/chess/game/'+rawGameId+'/piece/'+source.id,
+        url: '/chess/game/'+rawGameId+'/pieces',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
         },
         data: JSON.stringify({
+            "source" : source.id,
             "target": target.id
         }),
         success: update,

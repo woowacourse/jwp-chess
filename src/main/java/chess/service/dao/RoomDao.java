@@ -7,14 +7,14 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class RoomDao {
-    private static final int COLUMN_INDEX_OF_ROOM_ID = 1;
-    private static final int COLUMN_INDEX_OF_ROOM_NAME = 2;
+    private static final int COLUMN_INDEX_OF_ID = 1;
+    private static final int COLUMN_INDEX_OF_NAME = 2;
+
     private final JdbcTemplate jdbcTemplate;
     private final KeyHolder keyHolder;
 
@@ -44,23 +44,48 @@ public class RoomDao {
     }
 
     public void delete(final long roomId) {
-        final String query = "DELETE FROM room WHERE id = ?";
-        jdbcTemplate.update(query, roomId);
+        jdbcTemplate.update("DELETE FROM room WHERE id = ?", roomId);
     }
 
     public List<RoomInfoDto> load() {
-        final String query = "SELECT * FROM room";
-        return jdbcTemplate.query(query, (rs, rowNum) -> makeRoomDto(rs));
-    }
-
-    private RoomInfoDto makeRoomDto(final ResultSet rs) throws SQLException {
-        final long id = rs.getLong(COLUMN_INDEX_OF_ROOM_ID);
-        final String name = rs.getString(COLUMN_INDEX_OF_ROOM_NAME);
-        return new RoomInfoDto(id, name);
+        return jdbcTemplate.query( "SELECT * FROM room", (rs, rowNum) ->
+                new RoomInfoDto(rs.getLong(COLUMN_INDEX_OF_ID), rs.getString(COLUMN_INDEX_OF_NAME)
+        ));
     }
 
     public String name(final long roomId) {
         final String query = "SELECT room_name FROM room WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, String.class, roomId);
+    }
+
+    public boolean isJoined(final long roomId, final String player){
+        final String player1 = player1(roomId);
+        final String player2 = player2(roomId);
+
+        final boolean isPlayer1 = !Objects.isNull(player1) && player1.equals(player);
+        final boolean isPlayer2 = !Objects.isNull(player2) && player2.equals(player);
+
+        return isPlayer1 || isPlayer2;
+    }
+
+    public boolean isFull(long roomId) {
+        final String player1 = player1(roomId);
+        final String player2 = player2(roomId);
+        return !Objects.isNull(player1) && !Objects.isNull(player2);
+    }
+
+    public void enter(final long roomId, final String playerId) {
+        final String query = "UPDATE room SET player2 = ? WHERE id = ?";
+        jdbcTemplate.update(query, playerId, roomId);
+    }
+
+    private String player1(final long roomId) {
+        final String query = "SELECT player1 FROM room WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, String.class, roomId);
+    }
+
+    private String player2(final long roomId) {
+        final String query = "SELECT player2 FROM room WHERE id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
     }
 }

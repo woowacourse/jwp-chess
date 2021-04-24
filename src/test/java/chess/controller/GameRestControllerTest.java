@@ -3,6 +3,7 @@ package chess.controller;
 import chess.domain.board.position.Position;
 import chess.service.GameService;
 import chess.service.RoomService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,28 +34,31 @@ class GameRestControllerTest {
     @Autowired
     private GameService gameService;
 
+    private long testRoomId;
+
+    @BeforeEach
+    private void initTestRoom(){
+        testRoomId = roomService.save("newRoom", "test");
+    }
+
     @DisplayName("갈 수 있는 위치 리스트 반환 테스트")
     @Test
     public void reachable(){
-        final long id = roomService.save("newRoom", "test");
-        final List<String> reachable = gameService.reachable(id, new Position("a2"));
+        final List<String> reachable = gameService.reachable(testRoomId, new Position("a2"));
         assertThat(reachable).contains("a3").contains("a4");
     }
 
     @DisplayName("갈 수 있는 위치 요청 매핑 확인")
     @Test
     public void reachableMVC() throws Exception {
-        final long id = roomService.save("newRoom", "test");
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/game/reachable/"+id)
+        final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/game/reachable/"+testRoomId)
                 .param("source", "a2");
 
-        MvcResult mvcResult = mockMvc.perform(requestBuilder)
+        final MvcResult mvcResult = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // {"positions":["a3","a4"]}
         assertThat(mvcResult.getResponse().getContentAsString())
-                .isEqualTo("{\"positions\":[\"a3\",\"a4\"]}");
+                .isEqualTo("{\"positions\":[\"a3\",\"a4\"]}"); // {"positions":["a3","a4"]}
     }
 }

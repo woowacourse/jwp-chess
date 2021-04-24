@@ -28,8 +28,8 @@ function enterNewGame() {
         url: "/room/create",
         type: "POST",
         data: jsonData,
-        dataType: "json",
         contentType : 'application/json',
+        dataType: "json",
         success: function (data) {
             alert(roomName+"으로 방 생성 \n player1 : "+player1);
             const roomId = data;
@@ -43,19 +43,17 @@ function enterNewGame() {
 
 function enterRoom() {
     return function (event) {
-        const player2 = prompt("플레이어2의 비밀번호를 입력하시오");
-        const jsonData = JSON.stringify({ player2 : player2 });
-
         const roomId = event.target.id;
+        const player2 = prompt("플레이어2의 비밀번호를 입력하시오");
+
         $.ajax({
-            url: "/game/load/"+roomId,
-            type: "GET",
-            data: jsonData,
-            dataType: "json",
+            url: "/room/enter/"+roomId,
+            type: "POST",
+            data: player2,
             contentType : 'application/json',
             success: function () {
                 alert("암호 일치, 방 + "+roomId+"에 입장");
-                // location.href="/game/load/"+roomId;
+                location.href="/game/load/"+roomId;
             },
             error: function () {
                 alert("에러 발생");

@@ -25,7 +25,7 @@ public class RoomRestController {
     }
 
     @PostMapping("/create")
-    public long createRoom(@RequestBody @Valid final RoomDto roomDto, BindingResult bindingResult) {
+    public long createRoom(@RequestBody @Valid final RoomDto roomDto, final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             final String errorMsg = OutputView.getErrorMessage(bindingResult.getFieldErrors());
             throw new IllegalArgumentException(errorMsg);
@@ -37,6 +37,13 @@ public class RoomRestController {
     @DeleteMapping("/{roomId}")
     public ResponseEntity deleteRoom(@PathVariable final long roomId) {
         roomService.delete(roomId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/enter/{roomId}")
+    public ResponseEntity enterRoom(@PathVariable final long roomId, @RequestBody final String playerId){
+        roomService.enter(roomId, playerId);
+        // 쿠키 추가
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

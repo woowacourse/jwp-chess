@@ -35,4 +35,16 @@ public class RoomService {
     public RoomInfoDto roomInfo(final long roomId) {
         return new RoomInfoDto(roomId, roomDao.name(roomId));
     }
+
+    public void enter(final long roomId, final String playerId) {
+        if(roomDao.isJoined(roomId, playerId)){
+            return;
+        }
+
+        if(roomDao.isFull(roomId)){
+            throw new IllegalArgumentException("이미 가득 찬 방입니다.");
+        }
+
+        roomDao.enter(roomId, playerId);
+    }
 }

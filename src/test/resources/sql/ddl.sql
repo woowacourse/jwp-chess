@@ -1,5 +1,4 @@
-set
-mode MySQL;
+set mode MySQL;
 
 DROP TABLE rooms IF EXISTS;
 

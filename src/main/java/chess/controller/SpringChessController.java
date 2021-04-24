@@ -5,9 +5,11 @@ import chess.domain.feature.Color;
 import chess.domain.game.ChessGame;
 import chess.domain.game.Result;
 import chess.domain.piece.Piece;
-import chess.dto.*;
+import chess.dto.OutcomeResponseDto;
+import chess.dto.PieceResponseDto;
+import chess.dto.ScoreResponseDto;
+import chess.dto.TurnResponseDto;
 import chess.service.SpringChessService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -88,15 +90,6 @@ public class SpringChessController {
         redirectAttributes.addFlashAttribute("roomName", roomName);
 
         return "redirect:/game/" + id;
-    }
-
-    @DeleteMapping(value = "/delete/{roomName}")
-    @ResponseBody
-    public ResponseEntity<DeleteResponseDto> delete(@PathVariable("roomName") String roomName) {
-        springChessService.deleteRoom(roomName);
-        DeleteResponseDto deleteResponseDto = new DeleteResponseDto(roomName, true);
-
-        return ResponseEntity.ok().body(deleteResponseDto);
     }
 
     private void addChessGame(ModelAndView modelAndView, ChessGame chessGame) {

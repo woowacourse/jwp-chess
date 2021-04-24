@@ -43,16 +43,26 @@ public class ChessService {
 
     public Response<MoveRequestDto> move(MoveRequestDto requestDto) {
         GridDto gridDto = requestDto.getGridDto();
+        Grid grid = createGrid(requestDto);
+        grid.move(requestDto.getSourcePosition(), requestDto.getTargetPosition());
+        gridDAO.changeTurn(gridDto.getGridId(), !gridDto.getIsBlackTurn());
+        updatePiece(requestDto);
+        return new Response(HttpStatus.NO_CONTENT);
+    }
+
+    private Grid createGrid(MoveRequestDto requestDto) {
         List<Piece> pieces = PieceMapper.PiecesDtoGroupConvertToPieces(requestDto.getPiecesDto());
         List<Line> lines = Lines.from(pieces).lines();
         Grid grid = new Grid(new CustomGridStrategy(lines, Color.findColorByTurn(requestDto.getGridDto().getIsBlackTurn())));
-        grid.move(requestDto.getSourcePosition(), requestDto.getTargetPosition());
-        gridDAO.changeTurn(gridDto.getGridId(), !gridDto.getIsBlackTurn());
+        return grid;
+    }
+
+
+    private void updatePiece(MoveRequestDto requestDto) {
         PieceDto sourcePieceDto = findPieceDtoByPosition(requestDto.getPiecesDto(), requestDto.getSourcePosition());
         PieceDto targetPieceDto = findPieceDtoByPosition(requestDto.getPiecesDto(), requestDto.getTargetPosition());
         pieceDAO.updatePiece(sourcePieceDto.getPieceId(), sourcePieceDto.getIsBlack(), EMPTY_PIECE_NAME);
         pieceDAO.updatePiece(targetPieceDto.getPieceId(), sourcePieceDto.getIsBlack(), sourcePieceDto.getName().charAt(0));
-        return new Response(HttpStatus.NO_CONTENT);
     }
 
     private PieceDto findPieceDtoByPosition(List<PieceDto> piecesDto, String position) {

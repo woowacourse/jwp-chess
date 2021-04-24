@@ -5,7 +5,7 @@ async function makeRoom() {
     const roomId = await getRoomNumber();
 
     $roomList.insertAdjacentHTML("beforeend", addRoomButton(roomId))
-    location.replace("/chess/" + roomId)
+    location.replace("/rooms/" + roomId)
 }
 
 function getRoomNumber() {
@@ -23,7 +23,7 @@ $roomList.addEventListener('click', enter);
 
 function enter(event) {
     const roomId = event.target.closest('button').innerText;
-    location.replace("/chess/" + roomId)
+    location.replace("/rooms/" + roomId)
 }
 
 function getRoomList() {

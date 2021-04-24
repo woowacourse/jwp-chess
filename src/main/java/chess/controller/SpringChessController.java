@@ -33,7 +33,7 @@ public class SpringChessController {
         return chessService.makeRoom();
     }
 
-    @GetMapping("/chess/{roomId}")
+    @GetMapping("/rooms/{roomId}")
     public String chess(final Model model, @PathVariable int roomId) {
         Round loadedRound = chessService.getStoredRound(roomId);
         String board = GSON.toJson(loadedRound.getBoard());

@@ -3,10 +3,11 @@ package chess.repository.room;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.dao.piece.JdbcPieceDao;
+import chess.dao.room.JdbcRoomDao;
 import chess.domain.game.Room;
 import chess.domain.gamestate.running.Ready;
 import chess.domain.team.Team;
-import chess.repository.piece.JdbcPieceDao;
 import chess.utils.BoardUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

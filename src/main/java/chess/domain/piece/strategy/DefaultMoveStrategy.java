@@ -41,7 +41,6 @@ public abstract class DefaultMoveStrategy implements MoveStrategy {
         }
     }
 
-    // TODO 체이닝 간소화
     private void validateSameColorPiece(MoveRoute moveRoute) {
         if (moveRoute.getPieceAtToPosition().isSameColor(moveRoute.getPieceAtFromPosition())) {
             throw new InvalidMoveStrategyException("동일한 진영의 말이 있어서 행마할 수 없습니다.");

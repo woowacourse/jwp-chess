@@ -30,7 +30,7 @@ public class ChessService {
         return chessRepository.makeRoom(filteredChessBoard(round.getBoard()));
     }
 
-    public Map<String, String> filteredChessBoard(final Map<Position, Piece> chessBoard) {
+    private Map<String, String> filteredChessBoard(final Map<Position, Piece> chessBoard) {
         Map<String, String> filteredChessBoard = new LinkedHashMap<>();
         for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.entrySet()) {
             if (chessBoardEntry.getValue() != null) {

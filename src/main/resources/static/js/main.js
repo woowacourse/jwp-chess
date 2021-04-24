@@ -1,41 +1,50 @@
-document.getElementById("new-game").addEventListener("click", onNewGame);
-document.getElementById("continue").addEventListener("click", onContinue);
+import {HTTP_CLIENT, PATH} from "./http.js";
 
-const POST = {
-    "method": 'POST',
-    "headers": {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    },
+document.addEventListener("DOMContentLoaded", onBuildRoom);
+document.getElementById("new-game").addEventListener("click", onNewRoom);
+document.querySelector(".continue").addEventListener("click", onEnterRoom);
+
+async function onBuildRoom() {
+    const response = await HTTP_CLIENT.get(PATH.ROOM);
+    const data = await response.json();
+    document.querySelector("tbody").insertAdjacentHTML("beforeend", rooms(data));
 }
 
-function getCookie(name) {
-    return document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1];
+function rooms(data) {
+    let cells = "";
+    for (const room of data) {
+        cells += `<tr>
+                    <td class="room-id">${room.roomId}</td>
+                    <td>${room.title}</td>
+                    <td><button class="game-button">입장하기</button></td>
+                 </tr>`
+    }
+    return cells;
+}
+
+async function onNewRoom() {
+    const response = await HTTP_CLIENT.post(PATH.ROOM, prompt("방 제목을 입력해주세요", "EMPTY"));
+    moveToChessView(response);
+}
+
+async function onEnterRoom(event) {
+    const isEnterButton = event.target && event.target.nodeName === "BUTTON";
+    if (!isEnterButton) {
+        return;
+    }
+
+    const roomId = event.target.closest("tr").querySelector(".room-id").textContent;
+    const response = await HTTP_CLIENT.get(PATH.ROOM + `/${roomId}/chess`);
+    const data = await response.json();
+    if (!data.status.includes("RUNNING")) {
+        alert("이미 종료된 게임입니다.");
+        return;
+    }
+
+    moveToChessView(response);
 }
 
 const moveToChessView = function (response) {
-    window.location.href = response.headers.get('location');
-}
-
-async function onNewGame() {
-    const response = await fetch('/api/chess', POST);
-    moveToChessView(response);
-}
-
-async function onContinue() {
-    if (!document.cookie.includes("chessId")) {
-        alert("진행 중인 게임이 없습니다.");
-        return;
-    }
-
-    const chessId = getCookie("chessId");
-    const response = await fetch("/api/chess/" + chessId);
     console.log(response);
-    const data = await response.json();
-    if (!data.status.includes("RUNNING")) {
-        alert("진행 중인 게임이 없습니다.");
-        return;
-    }
-
-    moveToChessView(response);
+    window.location.href = response.headers.get('location');
 }

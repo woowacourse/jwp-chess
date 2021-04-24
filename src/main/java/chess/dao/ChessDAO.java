@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class ChessDAO {
@@ -40,7 +39,7 @@ public class ChessDAO {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement pstmt = connection.prepareStatement(query, new String[] {"game_id"});
+            PreparedStatement pstmt = connection.prepareStatement(query, new String[]{"game_id"});
             pstmt.setString(1, data);
 
             return pstmt;
@@ -58,7 +57,7 @@ public class ChessDAO {
     public Room findRoomByRoomId(Long gameId) {
         String query = "SELECT `room_id`, `room_name`, `data` FROM room a inner join chess b on (a.game_id = b.game_id) WHERE a.game_id = ?";
 
-          List<Room> room = jdbcTemplate.query(query, (rs, i) -> {
+        List<Room> room = jdbcTemplate.query(query, (rs, i) -> {
             Long roomId = rs.getLong("room_id");
             String roomName = rs.getString("room_name");
             String data = rs.getString("data");
@@ -79,7 +78,7 @@ public class ChessDAO {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement pstmt = connection.prepareStatement(query, new String[] {"room_id"});
+            PreparedStatement pstmt = connection.prepareStatement(query, new String[]{"room_id"});
             pstmt.setString(1, roomName);
             pstmt.setLong(2, gameId);
 

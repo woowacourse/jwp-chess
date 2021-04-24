@@ -8,7 +8,7 @@ export class RoomView {
     async render() {
         let rooms = await all_rooms()
 
-        for(let room of rooms) {
+        for (let room of rooms) {
             $(SELECTOR.ROOMS).appendChild(
                 parseDomFromString(roomInfoTemplate(room.roomId, room.roomName))
             )

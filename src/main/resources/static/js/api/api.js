@@ -7,7 +7,7 @@ export const move = async (source, target) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body:`{
+            body: `{
                     "source": "${source}",
                     "target": "${target}"
                 }`
@@ -49,7 +49,7 @@ export const game_info = async () => {
     try {
         const result = await fetch(URL.GAME_INFO(ROOM_ID()))
         return await result.json();
-    } catch(e) {
+    } catch (e) {
         alert(e)
     }
 }
@@ -58,7 +58,7 @@ export const game_status = async () => {
     try {
         const result = await fetch(URL.STATUS(ROOM_ID()))
         return await result.json();
-    } catch(e) {
+    } catch (e) {
         alert(e)
     }
 }

@@ -28,7 +28,7 @@ export class RoomController {
 
     async #enterRoomHandler() {
         $(SELECTOR.ROOMS).addEventListener('click', async e => {
-            if(e.target !== undefined && e.target.nodeName==="LI") {
+            if (e.target !== undefined && e.target.nodeName === "LI") {
                 let li = e.target
                 let roomId = li.id
 

@@ -1,14 +1,11 @@
 package chess.web;
 
-import chess.exception.ChessGameException;
 import chess.service.ChessService;
-import chess.web.dto.*;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import chess.web.dto.GameDto;
+import chess.web.dto.MessageDto;
+import chess.web.dto.MoveDto;
+import chess.web.dto.StatusDto;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URLDecoder;
-import java.util.List;
 
 @RestController
 @RequestMapping("/games")

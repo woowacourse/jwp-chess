@@ -1,20 +1,13 @@
 package chess.service;
 
 import chess.domain.ChessRepository;
-import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
-import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
 import chess.domain.room.Room;
 import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
-import chess.web.dto.RoomDto;
 import chess.web.dto.StatusDto;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class ChessService {

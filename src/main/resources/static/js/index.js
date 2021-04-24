@@ -8,7 +8,7 @@ rooms.addEventListener("click", onRoomSelect);
 
 function onRoomSelect(event) {
     if (event.target && event.target.nodeName == "LI" && event.target.classList.contains("clickable")) {
-        roomId.value = event.target.id;
+        form.action = "/room/" + event.target.id;
         form.submit();
     }
 }
@@ -22,7 +22,7 @@ function onNewRoom() {
             throw new Error("새 게임을 만들 수 없습니다.");
         })
         .then(chessRoomDto => {
-            roomId.value = chessRoomDto.roomId;
+            form.action = "/room/" + chessRoomDto.roomId;
             form.submit();
         })
         .catch(error => {

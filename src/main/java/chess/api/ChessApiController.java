@@ -17,18 +17,18 @@ public class ChessApiController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping("/pieces")
-    public ResponseEntity<ChessGameDto> findPieces(@RequestParam String source,
-                                                   @RequestParam String target,
-                                                   @RequestParam long roomId) {
+    @GetMapping("/pieces/{roomId}")
+    public ResponseEntity<ChessGameDto> findPieces(@PathVariable long roomId,
+                                                   @RequestParam String source,
+                                                   @RequestParam String target) {
         Position sourcePosition = Position.parseChessPosition(source);
         Position targetPosition = Position.parseChessPosition(target);
         ChessGameDto chessGameDto = chessGameService.moveChessPiece(sourcePosition, targetPosition, roomId);
         return ResponseEntity.ok(chessGameDto);
     }
 
-    @GetMapping("/chessgames")
-    public ResponseEntity<ChessGameDto> findChessGame(@RequestParam long roomId) {
+    @GetMapping("/chessgames/{roomId}")
+    public ResponseEntity<ChessGameDto> findChessGame(@PathVariable long roomId) {
         ChessGameDto chessGame = chessGameService.findChessGame(roomId);
         return ResponseEntity.ok(chessGame);
     }
@@ -39,14 +39,14 @@ public class ChessApiController {
         return ResponseEntity.ok(chessRoomDto);
     }
 
-    @DeleteMapping("/chessgames")
-    public ResponseEntity<ChessGameDto> endChessGame(@RequestParam long roomId) {
+    @DeleteMapping("/chessgames/{roomId}")
+    public ResponseEntity<ChessGameDto> endChessGame(@PathVariable long roomId) {
         ChessGameDto chessGameDto = chessGameService.endGame(roomId);
         return ResponseEntity.ok(chessGameDto);
     }
 
-    @GetMapping("/scores")
-    public ResponseEntity<ScoreDto> calculateScores(@RequestParam long roomId) {
+    @GetMapping("/scores/{roomId}")
+    public ResponseEntity<ScoreDto> calculateScores(@PathVariable long roomId) {
         ScoreDto scoreDto = chessGameService.calculateScores(roomId);
         return ResponseEntity.ok(scoreDto);
     }

@@ -43,7 +43,7 @@ const index = {
     },
 
     move: function (source, target) {
-        fetch(`/pieces?source=${source}&target=${target}` + '&roomId=' + room.id)
+        fetch('/pieces/' + room.id + `?source=${source}&target=${target}`)
             .then(data => {
                 if (!data.ok) {
                     throw new Error("잘못된 명령입니다!");
@@ -70,7 +70,7 @@ const index = {
                 'Content-Type': 'application/json'
             }
         };
-        fetch("/chessgames?roomId=" + room.id, option)
+        fetch("/chessgames/" + room.id, option)
             .then(data => {
                 if (!data.ok) {
                     throw new Error("잘못된 명령입니다!");
@@ -84,7 +84,7 @@ const index = {
     },
 
     scores: function () {
-        fetch("/scores?roomId=" + room.id)
+        fetch("/scores/" + room.id)
             .then(data => {
                 return data.json()
             })
@@ -97,7 +97,7 @@ const index = {
     },
 
     continue: function () {
-        fetch("/chessgames?roomId=" + room.id)
+        fetch("/chessgames/" + room.id)
             .then(data => {
                 return data.json()
             })
@@ -187,7 +187,7 @@ placePieces = pieceDtos => {
 changeChessBoardUnitTemplate = (pieceDto) => {
     const position = pieceDto.position;
     const chessBoardUnit = document.querySelector(`#${position}`);
-    const inputValue = `<img class="piece" src="images/${decidePieceColor(pieceDto.notation)}.png" alt=${pieceDto.notation}>`
+    const inputValue = `<img class="piece" src="../images/${decidePieceColor(pieceDto.notation)}.png" alt=${pieceDto.notation}>`
     chessBoardUnit.innerHTML = inputValue;
 }
 

@@ -23,6 +23,11 @@ public class FakeRoomDao implements RoomRepository {
     }
 
     @Override
+    public long findChessIdById(long roomId) {
+        return roomId;
+    }
+
+    @Override
     public long insert(Room room, BoardDto boardDto) {
         long roomId = fakeRoomTable.size() + 1L;
         fakeRoomTable.put(roomId, room);

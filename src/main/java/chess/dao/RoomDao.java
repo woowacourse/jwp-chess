@@ -34,6 +34,13 @@ public class RoomDao implements RoomRepository {
     }
 
     @Override
+    public long findChessIdById(long roomId) {
+        String sql = "SELECT c.chess_id FROM chess c WHERE c.room_id = ?";
+        return Objects.requireNonNull(
+                jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("chess_id"), roomId));
+    }
+
+    @Override
     public long insert(Room room, BoardDto boardDto) {
         final long roomId = insertRoom(room);
         final long chessId = insertChess(roomId);
@@ -52,7 +59,6 @@ public class RoomDao implements RoomRepository {
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
-
 
     private long insertChess(long roomId) {
         String sql = "INSERT INTO chess (room_id, status, turn) VALUES (?, 'RUNNING', 'WHITE')";

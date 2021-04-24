@@ -50,7 +50,7 @@ public class Pawn extends Piece {
     }
 
     private boolean twoSquareForward(int rowDifference, int columnDifference, int direction) {
-        return rowDifference == direction * DOUBLE_FORWARD && isInitPosition() && columnDifference == PAWN_ROUTE_COUNT_ONE_FORWARD;
+        return rowDifference == direction * DOUBLE_FORWARD && isMoved() == false && columnDifference == PAWN_ROUTE_COUNT_ONE_FORWARD;
     }
 
     private boolean oneSquareForward(int rowDifference, int columnDifference, int direction) {

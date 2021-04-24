@@ -63,9 +63,9 @@ public class Board {
     }
 
     private void movePiece(Position from, Position to, Piece piece) {
+        piece.moved();
         board.put(to, piece);
         board.put(from, Blank.getBlank());
-        piece.moved();
     }
 
     private void validatePawnCase(Position from, Position to, Piece piece) {

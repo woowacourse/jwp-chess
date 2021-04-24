@@ -12,7 +12,7 @@ import java.util.Objects;
 public abstract class Piece {
     private final Side side;
     private final String initial;
-    private boolean initPosition = true;
+    private boolean moved;
 
     public Piece(Side side, String initial) {
         this.side = side;
@@ -53,11 +53,11 @@ public abstract class Piece {
     public abstract double score();
 
     public void moved() {
-        initPosition = false;
+        moved = true;
     }
 
-    protected boolean isInitPosition() {
-        return initPosition;
+    protected boolean isMoved() {
+        return moved;
     }
 
     public boolean isSideEqualTo(Side side) {

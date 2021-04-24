@@ -1,13 +1,13 @@
-package chess.chessgame.domain.board;
+package chess.chessgame.domain.room.game.board;
 
-import chess.chessgame.domain.order.MoveOrder;
-import chess.chessgame.domain.position.Position;
+import chess.chessgame.domain.room.game.board.order.MoveOrder;
+import chess.chessgame.domain.room.game.board.position.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
-import static chess.chessgame.domain.piece.Fixture.mockBoard;
+import static chess.chessgame.domain.room.game.board.piece.Fixture.mockBoard;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SquareTest {

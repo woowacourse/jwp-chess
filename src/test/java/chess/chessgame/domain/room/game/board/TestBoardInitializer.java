@@ -1,9 +1,9 @@
-package chess.chessgame.domain.board;
+package chess.chessgame.domain.room.game.board;
 
-import chess.chessgame.domain.piece.Blank;
-import chess.chessgame.domain.position.File;
-import chess.chessgame.domain.position.Position;
-import chess.chessgame.domain.position.Rank;
+import chess.chessgame.domain.room.game.board.piece.Blank;
+import chess.chessgame.domain.room.game.board.position.File;
+import chess.chessgame.domain.room.game.board.position.Position;
+import chess.chessgame.domain.room.game.board.position.Rank;
 
 import java.util.ArrayList;
 import java.util.Arrays;

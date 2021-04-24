@@ -1,13 +1,13 @@
-package chess.chessgame.domain.piece.strategy;
+package chess.chessgame.domain.room.game.board.piece.strategy;
 
-import chess.chessgame.domain.board.Board;
-import chess.chessgame.domain.board.InitBoardInitializer;
-import chess.chessgame.domain.board.Square;
-import chess.chessgame.domain.board.TestBoardInitializer;
-import chess.chessgame.domain.order.MoveOrder;
-import chess.chessgame.domain.piece.Pawn;
-import chess.chessgame.domain.piece.attribute.Color;
-import chess.chessgame.domain.position.Position;
+import chess.chessgame.domain.room.game.board.Board;
+import chess.chessgame.domain.room.game.board.InitBoardInitializer;
+import chess.chessgame.domain.room.game.board.Square;
+import chess.chessgame.domain.room.game.board.TestBoardInitializer;
+import chess.chessgame.domain.room.game.board.order.MoveOrder;
+import chess.chessgame.domain.room.game.board.piece.Pawn;
+import chess.chessgame.domain.room.game.board.piece.attribute.Color;
+import chess.chessgame.domain.room.game.board.position.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

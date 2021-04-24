@@ -1,6 +1,6 @@
-package chess.chessgame.domain.piece.strategy;
+package chess.chessgame.domain.room.game.board.piece.strategy;
 
-import chess.chessgame.domain.position.Direction;
+import chess.chessgame.domain.room.game.board.position.Direction;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static chess.chessgame.domain.position.Direction.*;
+import static chess.chessgame.domain.room.game.board.position.Direction.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectionTest {

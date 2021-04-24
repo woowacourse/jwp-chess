@@ -1,6 +1,6 @@
-package chess.chessgame.domain.piece;
+package chess.chessgame.domain.room.game.board.piece;
 
-import chess.chessgame.domain.piece.attribute.Color;
+import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,13 +1,22 @@
 package dto;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class RoomRequestDto {
     private Long id;
-    @Min(value = 2)
+    @Size(min = 2, max = 8)
     private String name;
-    @Min(value = 4)
+    @Size(min = 4, max = 8)
     private String pw;
     private Long gameId;
+
+    public RoomRequestDto(final Long id, @Min(value = 2) @NotNull final String name, @Min(value = 10) @NotNull final String pw, final Long gameId) {
+        this.id = id;
+        this.name = name;
+        this.pw = pw;
+        this.gameId = gameId;
+    }
 
     public Long getId() {
         return id;

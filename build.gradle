@@ -13,8 +13,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'javax.validation:validation-api:2.0.1.Final'
-
     implementation 'com.sparkjava:spark-core:2.9.3'
     implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
 
@@ -23,6 +21,8 @@ dependencies {
 
     implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
     implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.1'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'junit:junit:4.12'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

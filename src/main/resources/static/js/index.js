@@ -46,7 +46,7 @@ async function movePiece(from, to) {
 }
 
 async function findGames() {
-    const responseData = await getFetch("/user");
+    const responseData = await getFetch("/room");
     const games = responseData.runningGames;
     $games.innerHTML = "";
     Object.keys(games).forEach(ele => $games.insertAdjacentHTML("beforeend", `<li>ID:${ele} , 다음순서:${games[ele]}`));

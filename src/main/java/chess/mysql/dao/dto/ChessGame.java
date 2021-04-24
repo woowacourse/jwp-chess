@@ -1,7 +1,7 @@
 package chess.mysql.dao.dto;
 
 import chess.converter.PiecesConverter;
-import chess.chessgame.domain.manager.ChessGameManager;
+import chess.chessgame.domain.room.game.ChessGameManager;
 
 public class ChessGame {
     private final long id;

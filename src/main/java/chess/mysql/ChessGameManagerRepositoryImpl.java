@@ -1,9 +1,9 @@
 package chess.mysql;
 
-import chess.chessgame.domain.manager.ChessGameManager;
-import chess.chessgame.domain.manager.ChessGameManagerBundle;
-import chess.chessgame.domain.manager.ChessGameManagerFactory;
-import chess.chessgame.domain.manager.NotStartedChessGameManager;
+import chess.chessgame.domain.room.game.ChessGameManager;
+import chess.chessgame.domain.room.game.ChessGameManagerBundle;
+import chess.chessgame.domain.room.game.ChessGameManagerFactory;
+import chess.chessgame.domain.room.game.NotStartedChessGameManager;
 import chess.chessgame.repository.ChessGameManagerRepository;
 import chess.mysql.dao.ChessDao;
 import chess.mysql.dao.dto.ChessGame;

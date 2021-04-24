@@ -1,7 +1,7 @@
 package chess.controller.web.dto;
 
-import chess.chessgame.domain.manager.ChessGameManager;
-import chess.chessgame.domain.piece.attribute.Color;
+import chess.chessgame.domain.room.game.ChessGameManager;
+import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 
 import java.util.Map;
 

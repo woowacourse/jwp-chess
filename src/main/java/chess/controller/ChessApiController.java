@@ -19,13 +19,11 @@ public class ChessApiController {
     }
 
     @PostMapping("/rooms")
-    @ResponseBody
     public int makeRoom() {
         return chessService.makeRoom();
     }
 
     @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public MoveResponseDto move(@RequestBody MoveRequestDto moveRequestDto) {
         String source = moveRequestDto.getSource();
         String target = moveRequestDto.getTarget();
@@ -39,7 +37,6 @@ public class ChessApiController {
     }
 
     @PostMapping(value = "/turn", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public void turn(@RequestBody TurnChangeRequestDto turnChangeRequestDto) {
         String nextTurn = turnChangeRequestDto.getNextTurn();
         String currentTurn = turnChangeRequestDto.getCurrentTurn();

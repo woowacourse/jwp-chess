@@ -1,7 +1,7 @@
 package chess.database.room;
 
 import chess.repository.room.DuplicateRoomNameException;
-import chess.repository.room.NoSuchRoomNameException;
+import chess.repository.room.NoSuchRoomIdException;
 import chess.repository.room.Room;
 import chess.repository.room.SpringRoomDao;
 import chess.util.JsonConverter;
@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.OptionalLong;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,18 +46,18 @@ class SpringRoomDaoTest {
         jdbcTemplate.batchUpdate("INSERT INTO rooms(name, turn, state) VALUES (?, ?, ?)", roomData);
     }
 
-    @DisplayName("방 이름 따라서 방 제대로 찾는지")
+    @DisplayName("id 따라서 방 제대로 찾는지")
     @Test
     void findByRoomName() {
-        Room sakjungRoom = springRoomDao.findByRoomName("삭정방");
+        Room sakjungRoom = springRoomDao.findById(2L);
         assertThat(sakjungRoom).isEqualTo(new Room("삭정방", "black", JsonConverter.fromJson("{b1:pieceInfo2}")));
     }
 
-    @DisplayName("존재하지 않는 방 이름일 경우 제대로된 에러를 반환 하는지")
+    @DisplayName("존재하지 않는 방 id일 경우 에러를 반환 하는지")
     @Test
     void findByRoomName_NotExistingRoomName_throwError() {
-        assertThatThrownBy(() -> springRoomDao.findByRoomName("워니방"))
-                .isInstanceOf(NoSuchRoomNameException.class);
+        assertThatThrownBy(() -> springRoomDao.findById(5L))
+                .isInstanceOf(NoSuchRoomIdException.class);
     }
 
     @DisplayName("방 상태 저장 제대로 하는지")
@@ -65,24 +66,25 @@ class SpringRoomDaoTest {
         Room room = new Room("씨유방",
                 "white",
                 JsonConverter.fromJson("{e1:pieceInfo5}"));
-        springRoomDao.addRoom(room);
+        long id = springRoomDao.saveRoom(room);
 
-        Room cuRoom = springRoomDao.findByRoomName("씨유방");
+        Room cuRoom = springRoomDao.findById(id);
         assertThat(cuRoom).isEqualTo(new Room("씨유방", "white", JsonConverter.fromJson("{e1:pieceInfo5}")));
     }
 
     @DisplayName("존재하는 데이터가 있을 때 데이터를 덮어 씌우는지")
     @Test
     void addRoomOn() {
-        Room nickRoom = springRoomDao.findByRoomName("닉방");
+        long nickRoomId = 4L;
+        Room nickRoom = springRoomDao.findById(nickRoomId);
         assertThat(nickRoom).isEqualTo(new Room("닉방", "white", JsonConverter.fromJson("{d1:pieceInfo4}")));
 
         Room room = new Room("닉방",
                 "black",
                 JsonConverter.fromJson("{a2:pieceInfo1}"));
-        springRoomDao.addRoom(room);
+        springRoomDao.updateRoom(room);
 
-        nickRoom = springRoomDao.findByRoomName("닉방");
+        nickRoom = springRoomDao.findById(nickRoomId);
         assertThat(nickRoom).isEqualTo(new Room("닉방", "black", JsonConverter.fromJson("{a2:pieceInfo1}")));
     }
 

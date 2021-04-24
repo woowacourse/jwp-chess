@@ -2,9 +2,13 @@ package chess.repository.room;
 
 import chess.util.JsonConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class SpringRoomDao {
@@ -14,13 +18,32 @@ public class SpringRoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addRoom(Room room) {
-        String query = "INSERT INTO rooms (name, turn, state) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE turn = VALUES(turn), state = VALUES(state)";
-        jdbcTemplate.update(query, room.getName(), room.getTurn(), room.getState().toString());
+    public long saveRoom(Room room) {
+        String query = "INSERT INTO rooms (name, turn, state) VALUES (?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"room_id"});
+            ps.setString(1, room.getName());
+            ps.setString(2, room.getTurn());
+            ps.setString(3, room.getState().toString());
+            return ps;
+        }, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Room findByRoomName(String name) {
-        String query = "SELECT * FROM rooms WHERE name = ?";
+    public void updateRoom(Room room) {
+        try {
+            String query = "UPDATE rooms SET turn=?, state=? WHERE name=?";
+            jdbcTemplate.update(query, room.getTurn(), room.getState().toString(), room.getName());
+        } catch (Exception e) {
+            throw new InvalidRoomUpdateException();
+        }
+    }
+
+    public Room findById(long id) {
+        String query = "SELECT * FROM rooms WHERE room_id = ?";
         try {
             return jdbcTemplate.queryForObject(
                     query,
@@ -28,10 +51,9 @@ public class SpringRoomDao {
                             resultSet.getString("name"),
                             resultSet.getString("turn"),
                             JsonConverter.fromJson(resultSet.getString("state"))),
-                    name);
+                    id);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new NoSuchRoomNameException();
+            throw new NoSuchRoomIdException();
         }
     }
 
@@ -49,7 +71,20 @@ public class SpringRoomDao {
     }
 
     public void deleteRoom(String roomName) {
-        String query = "DELETE FROM rooms WHERE name = ?";
-        jdbcTemplate.update(query, roomName);
+        try {
+            String query = "DELETE FROM rooms WHERE name = ?";
+            jdbcTemplate.update(query, roomName);
+        } catch (Exception e) {
+            throw new InvalidRoomDeleteException();
+        }
+    }
+
+    public long getRoomIdByName(String roomName) {
+        String query = "SELECT room_id FROM rooms WHERE name = ?";
+        try {
+            return (long) jdbcTemplate.queryForObject(query, Integer.class, roomName);
+        } catch (Exception e) {
+            throw new NoSuchRoomNameException();
+        }
     }
 }

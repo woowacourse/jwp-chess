@@ -15,9 +15,9 @@ public class ChessRestController {
     }
 
     @PostMapping("/games")
-    public ResponseEntity<CommonResponseBody<NewGameDto>> newGame() {
+    public ResponseEntity<CommonResponse<NewGameDto>> newGame() {
         return ResponseEntity.ok().body(
-                new CommonResponseBody<>(
+                new CommonResponse<>(
                         "새로운 게임이 생성되었습니다.",
                         chessGameService.createNewGame()
                 )
@@ -25,29 +25,29 @@ public class ChessRestController {
     }
 
     @PutMapping("/games/{gameId}/piece")
-    public ResponseEntity<CommonResponseBody<RunningGameDto>> move(@PathVariable int gameId, @RequestBody MoveRequestBody moveRequestBody) {
-        Position from = Position.of(moveRequestBody.getFrom());
-        Position to = Position.of(moveRequestBody.getTo());
+    public ResponseEntity<CommonResponse<RunningGameDto>> move(@PathVariable int gameId, @RequestBody MoveRequest moveRequest) {
+        Position from = Position.of(moveRequest.getFrom());
+        Position to = Position.of(moveRequest.getTo());
 
         return ResponseEntity.ok().body(
-                new CommonResponseBody<>(
+                new CommonResponse<>(
                         "기물을 이동했습니다.",
                         chessGameService.move(gameId, from, to)));
     }
 
     @GetMapping("/games")
-    public ResponseEntity<CommonResponseBody<GameListDto>> loadGames() {
+    public ResponseEntity<CommonResponse<GameListDto>> loadGames() {
         return ResponseEntity.ok().body(
-                new CommonResponseBody<>(
+                new CommonResponse<>(
                         "게임 목록을 불러왔습니다.",
                         chessGameService.loadAllGames()
                 ));
     }
 
     @GetMapping("/games/{gameId}")
-    public ResponseEntity<CommonResponseBody<RunningGameDto>> loadGame(@PathVariable int gameId) {
+    public ResponseEntity<CommonResponse<RunningGameDto>> loadGame(@PathVariable int gameId) {
         return ResponseEntity.ok().body(
-                new CommonResponseBody<>(
+                new CommonResponse<>(
                         "게임을 불러왔습니다",
                         RunningGameDto.from(chessGameService.loadChessGameByGameId(gameId))
                 ));

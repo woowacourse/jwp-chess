@@ -1,9 +1,9 @@
 package chess.dto;
 
-public class ErrorResponseBody {
+public class ErrorResponse {
     private final String message;
 
-    public ErrorResponseBody(String message) {
+    public ErrorResponse(String message) {
         this.message = message;
     }
 

@@ -13,8 +13,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.sparkjava:spark-core:2.9.3'
-    implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
@@ -26,7 +26,6 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured:3.3.0'
 
     runtimeOnly 'mysql:mysql-connector-java'
-    runtimeOnly 'com.h2database:h2'
 }
 
 test {

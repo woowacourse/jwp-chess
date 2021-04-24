@@ -13,9 +13,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.sparkjava:spark-core:2.9.3'
-    implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
-
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
@@ -27,6 +24,14 @@ dependencies {
 
     runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'com.h2database:h2'
+//
+//    testCompile('org.junit.jupiter:junit-jupiter:5.6.0')
+//    testCompile('org.assertj:assertj-core:3.15.0')
+//
+//    implementation('org.json:json:20190722')
+//
+//    compile('com.google.code.gson:gson:2.8.6')
+//    compile('ch.qos.logback:logback-classic:1.2.3')
 }
 
 test {

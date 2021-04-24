@@ -1,0 +1,98 @@
+package chess.dao;
+
+import chess.domain.board.ChessBoard;
+import chess.domain.piece.Color;
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
+import chess.dto.ChessBoardDto;
+import chess.dto.PieceDeserializeTable;
+import chess.dto.PieceDto;
+import chess.dto.SavedGameDto;
+import chess.exception.NoSavedGameException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+@Repository
+public class GameDao {
+    private final JdbcTemplate jdbcTemplate;
+
+    public GameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public int saveGame(SavedGameDto savedGameDto) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String insertGameQuery = "insert into game(turn) values(?)";
+        this.jdbcTemplate.update(con -> {
+            PreparedStatement pstmt = con.prepareStatement(
+                    insertGameQuery,
+                    new String[]{"game_id"});
+            pstmt.setString(1, savedGameDto.getCurrentTurnColor());
+            return pstmt;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
+    }
+
+    public void savePieceByGameId(int gameId, String position, PieceDto piece) {
+        String query = "insert into piece(game_id, name, color, position) values(?, ?, ?, ?)";
+        this.jdbcTemplate.update(query, gameId, piece.getName(), piece.getColor(), position);
+    }
+
+    public SavedGameDto loadGame(int gameId) {
+        String gameQuery = "SELECT turn FROM game WHERE game_id = ?";
+        String currentTurn = this.jdbcTemplate.queryForObject(gameQuery, String.class, gameId);
+
+        if (currentTurn == null) {
+            throw new NoSavedGameException("저장된 게임이 없습니다.");
+        }
+
+        String queryPiece = "SELECT * FROM piece WHERE game_id = ?";
+        ChessBoard chessBoard = this.jdbcTemplate.queryForObject(queryPiece, chessBoardRowMapper, gameId);
+        return new SavedGameDto(ChessBoardDto.from(chessBoard), currentTurn);
+    }
+
+    private final RowMapper<ChessBoard> chessBoardRowMapper = (resultSet, rowNum) -> {
+        Map<Position, Piece> board = new HashMap<>();
+
+        do {
+            Piece piece = PieceDeserializeTable.deserializeFrom(
+                    resultSet.getString("name"),
+                    Color.of(resultSet.getString("color")));
+            Position position = Position.of(resultSet.getString("position"));
+            board.put(position, piece);
+        } while (resultSet.next());
+        return ChessBoard.from(board);
+    };
+
+    public void updateTurnByGameId(Color currentTurnColor, int gameId) {
+        String query = "UPDATE game set turn=? WHERE game_id = ?";
+        this.jdbcTemplate.update(query, currentTurnColor.name(), gameId);
+    }
+
+    public void deleteGameByGameId(int gameId) {
+        this.jdbcTemplate.update("DELETE FROM game WHERE game_id = ?", gameId);
+    }
+
+    public void deletePiecesByGameId(int gameId) {
+        this.jdbcTemplate.update("DELETE FROM piece WHERE game_id = ?", gameId);
+    }
+
+    public List<Integer> loadGameList() {
+        String query = "SELECT game_id FROM game ";
+        return this.jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getInt("game_id"));
+    }
+
+    public int findRoomCount(String roomName) {
+        String query = "SELECT count(*) FROM room WHERE name = ?";
+        return this.jdbcTemplate.queryForObject(query, Integer.class, roomName);
+    }
+}

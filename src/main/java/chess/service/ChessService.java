@@ -113,4 +113,8 @@ public class ChessService {
     public RoomsResponseDto getAllRooms() {
         return new RoomsResponseDto(roomDAO.findAllRooms());
     }
+
+    public RoomsResponseDto getAllRooms(int page) {
+        return new RoomsResponseDto(roomDAO.findAllRooms(page));
+    }
 }

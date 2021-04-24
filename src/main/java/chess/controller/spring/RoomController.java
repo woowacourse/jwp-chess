@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 public class RoomController {
     private final ChessService chessService;
@@ -24,7 +26,10 @@ public class RoomController {
     }
 
     @GetMapping("/room")
-    public Response<RoomsResponseDto> getRooms() {
+    public Response<RoomsResponseDto> getRooms(@PathVariable(value = "page", required = false) Optional<Integer> page) {
+        if (page.isPresent()) {
+            return new Response(HttpStatus.OK, chessService.getAllRooms(page.get()));
+        }
         return new Response(HttpStatus.OK, chessService.getAllRooms());
     }
 }

@@ -16,9 +16,12 @@ import java.util.Optional;
 
 @Repository
 public class RoomDAO {
+    private static final int MAX_ROWS = 20;
+    private static final int GAP_BETWWEN_PAGE_AND_OFFSET = 1;
     private final JdbcTemplate jdbcTemplate;
 
     public RoomDAO(JdbcTemplate jdbcTemplate) {
+        jdbcTemplate.setMaxRows(MAX_ROWS);
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -49,7 +52,11 @@ public class RoomDAO {
     }
 
     public List<RoomDto> findAllRooms() {
-        String query = "SELECT * FROM room ORDER BY createdAt DESC";
+        return findAllRooms(0);
+    }
+
+    public List<RoomDto> findAllRooms(int page) {
+        String query = "SELECT * FROM room ORDER BY createdAt DESC LIMIT ? OFFSET ?";
         return jdbcTemplate.queryForObject(
                 query,
                 (rs, rowNum) -> {
@@ -62,8 +69,6 @@ public class RoomDAO {
                         ));
                     } while(rs.next());
                     return rooms;
-                });
+                }, MAX_ROWS, (page - GAP_BETWWEN_PAGE_AND_OFFSET) * MAX_ROWS);
     }
-
-
 }

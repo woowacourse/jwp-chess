@@ -114,6 +114,7 @@ function mark(clickedLocation) {
 
 function endGame() {
     alert('게임을 종료합니다. bye~');
+
     $.ajax({
         type: "POST",
         url: '/rooms/end',
@@ -124,8 +125,7 @@ function endGame() {
         data: JSON.stringify({
             "roomId": roomId(),
         }),
-        success: redirect,
-        error: showError,
+        complete: redirect,
     })
 }
 

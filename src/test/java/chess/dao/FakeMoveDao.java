@@ -2,9 +2,8 @@ package chess.dao;
 
 import java.util.Map;
 
+import chess.domain.board.Board;
 import chess.domain.chess.Chess;
-import chess.domain.chess.Color;
-import chess.domain.chess.Status;
 import chess.domain.position.MovePosition;
 import chess.repository.MoveRepository;
 
@@ -23,8 +22,8 @@ public class FakeMoveDao implements MoveRepository {
 
     @Override
     public void updateChess(long chessId, String status, String turn) {
-        Chess chess = fakeChessTable.get(chessId);
-        chess = new Chess(chess.getBoard(), Status.valueOf(status), Color.valueOf(turn));
+        final Board board = fakeChessTable.get(chessId).getBoard();
+        final Chess chess = new Chess(board, status, turn);
         fakeChessTable.put(chessId, chess);
     }
 }

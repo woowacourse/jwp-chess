@@ -38,7 +38,6 @@ public class MoveDao implements MoveRepository {
         jdbcTemplate.update(sql, movePositionVO.getSource(), chessId);
     }
 
-
     @Override
     public void updateChess(long chessId, String status, String turn) {
         String sql = "UPDATE chess SET status = ?, turn = ? WHERE chess_id = ?";

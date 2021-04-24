@@ -1,4 +1,4 @@
-package chess.dto.request;
+package chess.dto;
 
 public class PieceDto {
     private final String pieceName;

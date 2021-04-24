@@ -140,7 +140,7 @@ function request_move_post(first_click, second_click) {
 
     moveXhr.open('POST', '/move', true);
     moveXhr.setRequestHeader('Content-Type', 'application/json');
-    moveXhr.responseType = 'json';
+    moveXhr.responseType = "text";
     moveXhr.send(JSON.stringify({
         source: start_position,
         target: destination,
@@ -152,9 +152,8 @@ function request_move_post(first_click, second_click) {
     is_start_position_clicked = false;
 
     moveXhr.onload = function () {
-        const move_response = moveXhr.response;
-        if (move_response['moveError']) {
-            alert(move_response['errorMessage']);
+        if (moveXhr.status === 400) {
+            alert(moveXhr.response);
             first_click.style.backgroundColor = '';
             second_click.style.backgroundColor = '';
             return;
@@ -172,7 +171,7 @@ function request_move_post(first_click, second_click) {
 
         turnXhr.open('POST', '/turn', true);
         turnXhr.setRequestHeader('Content-Type', 'application/json');
-        turnXhr.responseType = 'json';
+        turnXhr.responseType = "text";
         turnXhr.send(JSON.stringify({
             currentTurn: current_turn,
             nextTurn: next_turn,

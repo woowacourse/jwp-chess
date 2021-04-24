@@ -42,10 +42,6 @@ public class RoomDao {
 
     public void changeTurn(String nextTurn, String currentTurn, int roomId) {
         String query = "UPDATE room SET current_turn=? WHERE current_turn= ? AND room_id = ?";
-        try {
-            jdbcTemplate.update(query, nextTurn, currentTurn, roomId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        jdbcTemplate.update(query, nextTurn, currentTurn, roomId);
     }
 }

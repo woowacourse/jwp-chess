@@ -3,9 +3,10 @@ $startBtn.addEventListener('click', makeRoom);
 
 async function makeRoom() {
     const roomId = await getRoomNumber();
+    console.log(roomId);
 
     $roomList.insertAdjacentHTML("beforeend", addRoomButton(roomId))
-    location.replace("/rooms/" + roomId)
+    // location.replace("/rooms/" + roomId)
 }
 
 function getRoomNumber() {

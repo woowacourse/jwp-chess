@@ -2,6 +2,7 @@ package chess.serivce.chess;
 
 import chess.domain.board.Board;
 import chess.domain.dto.PieceDto;
+import chess.domain.dto.RoomDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.domain.game.Room;
 import chess.domain.piece.Piece;
@@ -77,11 +78,12 @@ public class ChessService {
         );
     }
 
-    public void createRoom(String roomName) {
+    public RoomDto createRoom(String roomName) {
         if (!roomRepository.exists(roomName)) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 방입니다. 다른 이름을 사용해주세요.");
         }
 
-        roomRepository.insert(roomName);
+        long id = roomRepository.insert(roomName);
+        return new RoomDto(id, roomName);
     }
 }

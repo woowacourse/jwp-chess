@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.chess;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;

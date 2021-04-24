@@ -1,11 +1,14 @@
-package chess.controller;
+package chess.controller.chess;
 
+import chess.controller.ApiError;
+import chess.controller.ApiResult;
 import chess.domain.dto.ResponseDto;
 import chess.domain.dto.RoomDto;
 import chess.domain.dto.move.MoveRequestDto;
 import chess.domain.dto.move.MoveResponseDto;
+import chess.exception.BusinessException;
 import chess.serivce.chess.ChessService;
-import java.sql.SQLException;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,39 +27,44 @@ public class RoomController {
         this.service = service;
     }
 
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ApiError> businessExceptionHandler(BusinessException e) {
+        return ResponseEntity.badRequest().body(ApiError.of(e.getErrorCode(), e.getMessage()));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity exceptionHandler(RuntimeException e) {
         return ResponseEntity.ok().body(ResponseDto.error(e.getMessage()));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto) {
-        service.createRoom(roomDto.getName());
-        return ResponseEntity.ok().body(roomDto);
+    public ResponseEntity<ApiResult> createRoom(@RequestBody Map<String, String> body) {
+        RoomDto result = service.createRoom(body.get("name"));
+        return ResponseEntity.ok().body(ApiResult.of(result));
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<MoveResponseDto> enterRoom(@PathVariable("name") String roomName) {
+    public ResponseEntity<ApiResult> enterRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.findPiecesByRoomName(roomName);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().body(ApiResult.of(result));
     }
 
     @GetMapping("/{name}/start")
-    public ResponseEntity<MoveResponseDto> startRoom(@PathVariable("name") String roomName) {
+    public ResponseEntity<ApiResult> startRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.start(roomName);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().body(ApiResult.of(result));
     }
 
     @GetMapping("/{name}/end")
-    public ResponseEntity<MoveResponseDto> endRoom(@PathVariable("name") String roomName) {
+    public ResponseEntity<ApiResult> endRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.end(roomName);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().body(ApiResult.of(result));
     }
 
     @PostMapping("/{name}/move")
-    public ResponseEntity<MoveResponseDto> move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto) {
+    public ResponseEntity<ApiResult> move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto) {
         MoveResponseDto result = service.move(roomName, moveRequestDto.getSource(),
             moveRequestDto.getTarget());
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().body(ApiResult.of(result));
     }
 }

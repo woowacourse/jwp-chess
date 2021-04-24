@@ -15,10 +15,6 @@ public abstract class Piece {
 
     public abstract boolean canMove(MoveRoute moveRoute);
 
-    public boolean isBlank() {
-        return this.equals(new Blank());
-    }
-
     public boolean isNotBlank() {
         return !this.equals(new Blank());
     }

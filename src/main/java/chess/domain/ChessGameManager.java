@@ -130,10 +130,6 @@ public class ChessGameManager {
         return this.chessBoard;
     }
 
-    public boolean hasGame() {
-        return !(this.state instanceof EndWithoutGame || this.state instanceof InitialState);
-    }
-
     public boolean isEnd() {
         return this.state instanceof GameEnd || this.state instanceof EndWithoutGame;
     }

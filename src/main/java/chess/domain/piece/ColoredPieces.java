@@ -52,14 +52,6 @@ public class ColoredPieces {
         return pieces.contains(new King(color));
     }
 
-    public int size() {
-        return pieces.size();
-    }
-
-    public boolean contains(Piece Piece) {
-        return pieces.contains(Piece);
-    }
-
     public Color getColor() {
         return this.color;
     }

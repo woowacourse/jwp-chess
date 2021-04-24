@@ -57,12 +57,6 @@ public enum Rank {
         return Arrays.asList(values());
     }
 
-    public static List<Rank> asListInReverseOrder() {
-        List<Rank> ranks = asList();
-        Collections.reverse(ranks);
-        return ranks;
-    }
-
     public String getLetter() {
         return this.letter;
     }

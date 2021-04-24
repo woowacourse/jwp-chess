@@ -21,7 +21,7 @@ public class RoomController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/room/list")
+    @GetMapping("/rooms")
     public String loadRoomList(Model model) {
         model.addAttribute("list", roomService.loadList());
         return "mainPage";
@@ -32,7 +32,7 @@ public class RoomController {
         final Long roomId = roomService.save(roomName);
         gameService.create(roomId);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("http://localhost:8080/game/load/" + roomId));
+        headers.setLocation(URI.create("/game/load/" + roomId));
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 

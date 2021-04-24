@@ -13,29 +13,68 @@
 
 <h1 class="display-4 text-center" style="margin-top: 80px;margin-bottom: 40px;">인비의 체스 게임</h1>
 
-<ul class="list-group text-center" th:each="chessGame,index : ${allChessGames}" style="width: 400px; margin-left: auto; margin-right: auto">
+<ul class="list-group text-center" th:each="chessGame,index : ${notFulledChessGames}" style="width: 400px; margin-left: auto; margin-right: auto">
   <li th:id="${chessGame.getGameId()}" class="list-group-item" style="display: flex">
-    <a type="button" th:href="@{/games/{gameId}(gameId=${chessGame.getGameId()})}" class="btn btn-light" style="width: 100%" th:text="${chessGame.getTitle()}" ></a>
+    <button class="btn btn-light enter-game-button" style="width: 100%" th:text="${chessGame.getTitle()}" ></button>
   </li>
 </ul>
 
-<form action="/games" method="post" style="width: 400px; margin-top: 40px; margin-left: auto; margin-right: auto" onsubmit="return create_game_check();">
-  <div class="input-group">
-    <input id="new_game_title" name="gameTitle" type="text" class="form-control" placeholder="방 제목을 입력하세요">
-    <input class="btn btn-outline-secondary" type="submit" id="create_game_button" value="방 생성"/>
+<form action="/games" method="post" style="width: 260px; margin-top: 40px; margin-left: auto; margin-right: auto" onsubmit="return create_game_check();">
+  <div class="row mb-3">
+    <div>
+      <input type="text" class="form-control" id="new_game_title" name="gameTitle" placeholder="방 제목을 입력하세요">
+    </div>
   </div>
+  <div class="row mb-3">
+    <div>
+      <input type="password" class="form-control" id="white-player-password" name="rawWhitePlayerPassword" placeholder="비밀번호를 입력하세요">
+    </div>
+  </div>
+  <input class="btn btn-outline-primary" type="submit" id="create_game_button" value="방 생성" style="width: 100%"/>
 </form>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
         crossorigin="anonymous"></script>
 <script type="text/javascript">
+  const HOME = 'http://localhost:8080';
   const game_title_min_size = 5;
+  const password_min_size = 5;
+  const password_size_error_message = '비밀번호는 ' + password_min_size + '자 이상이어야 합니다.';
+
+  const enter_game_links =  document.getElementsByClassName("enter-game-button");
+  for (let i = 0; i < enter_game_links.length; i++) {
+    enter_game_links[i].addEventListener('click', (event) => {
+      const black_player_password = prompt("비밀번호를 입력하세요.");
+      if (black_player_password === null || black_player_password.length < password_min_size) {
+        alert(password_size_error_message);
+        return;
+      }
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/join', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.responseType = 'json';
+      xhr.send(JSON.stringify({
+        gameId : event.target.parentElement.id,
+        rawBlackPlayerPassword : black_player_password
+      }));
+      xhr.onload = function () {
+        window.location.href = HOME + '/games/' + event.target.parentElement.id;
+      };
+    });
+  }
+
   function create_game_check() {
     const new_game_title = document.getElementById('new_game_title');
     if(new_game_title.value.length < game_title_min_size) {
       alert('방 제목은 ' + game_title_min_size + '글자 이상이어야 합니다.');
       new_game_title.focus();
+      return false;
+    }
+    const white_player_password = document.getElementById('white-player-password');
+    if(white_player_password.value.length < password_min_size) {
+      alert(password_size_error_message);
+      white_player_password.focus();
       return false;
     }
     return true;

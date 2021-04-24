@@ -14,37 +14,28 @@
         padding: 0px;
         border: 1px solid black;
     }
-
     .cell:hover {
         filter: brightness(85%);
         cursor: pointer;
     }
-
     .row {
         width: 400px;
         margin-left: auto;
         margin-right: auto;
     }
-
     .status {
         height: 50px;
     }
-
     .content {
         display: table-cell;
         vertical-align: middle;
     }
-
     #current-turn-team-name {
         margin-bottom: 28px;
     }
-
-    #exit_form {
-        margin-top: 16px;
-    }
-
     #exit_button {
         width: 400px;
+        margin-top: 22px;
     }
 </style>
 <body>
@@ -144,15 +135,10 @@
     </div>
   </div>
 
-  <form id="exit_form" action="/" onsubmit="return endConfirm();">
-    <input id="exit_button" type="submit" class="btn btn-outline-danger" value="방 나가기">
-  </form>
+  <div style="text-align: center">
+    <button id="exit_button" class="btn btn-outline-danger" onclick="exitConfirm();">게임 나가기</button>
+  </div>
 </div>
-
-<div id="board-status" style="display: none" th:text="${gameStatusDto.getBoardStatus()}"></div>
-<div id="game-id" style="display: none" th:text="${gameStatusDto.getGameId()}"></div>
-<div id="is-king-dead" style="display: none" th:text="${gameStatusDto.isKingDead()}"></div>
-<div id="before-turn-team-name" style="display: none" th:text="${gameStatusDto.getBeforeTurnTeamColorName()}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
@@ -160,7 +146,7 @@
 <script type="text/javascript">
   const HOME = 'http://localhost:8080';
 
-  const board_status = document.getElementById("board-status").innerHTML;
+  const board_status = getCookieByValue('boardStatus');
 
   const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
   const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -232,7 +218,7 @@
     cell.appendChild(img);
   }
 
-  const game_id = document.getElementById('game-id').innerText;
+  const game_id = getCookieByValue('gameId');
 
   function request_move_post() {
     const xhr = new XMLHttpRequest();
@@ -249,7 +235,7 @@
     is_start_position_clicked = false;
     xhr.onload = function () {
       const move_response = xhr.response;
-      if (move_response['moveError']) {
+      if (move_response['canMove'] === false) {
         alert(move_response['errorMessage']);
         return;
       }
@@ -257,17 +243,17 @@
     };
   }
 
-  const is_king_dead = document.getElementById('is-king-dead');
-  if (is_king_dead.innerText === "true") {
-    const before_turn_team_name = document.getElementById('before-turn-team-name');
-    alert(before_turn_team_name.innerText + ' 팀이 이겼습니다.');
+  if (getCookieByValue('isKingDead') === "true") {
+    alert(getCookieByValue('beforeTurnTeamColorName') + ' 팀이 이겼습니다.');
+    exitAndDeleteGame();
+  }
+
+  function exitAndDeleteGame() {
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/delete', true);
+    xhr.open('DELETE', '/games/' + game_id, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.responseType = 'json';
-    xhr.send(JSON.stringify({
-      gameId: game_id,
-    }));
+    xhr.send();
     xhr.onload = function () {
       const delete_response = xhr.response;
       if (delete_response === 'OK') {
@@ -276,8 +262,27 @@
     };
   }
 
-  function endConfirm() {
-    return confirm('정말 나가시겠습니까?');
+  function exitConfirm() {
+    const is_exit = confirm('게임을 나가면 이 게임은 삭제됩니다. 정말 나가시겠습니까?');
+    if (!is_exit) {
+      return false;
+    }
+    exitAndDeleteGame();
+  }
+
+  function getCookieByValue(value) {
+    const name = value + "=";
+    const ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) === 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
   }
 </script>
 </body>

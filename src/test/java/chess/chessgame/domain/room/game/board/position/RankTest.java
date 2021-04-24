@@ -1,4 +1,4 @@
-package chess.chessgame.domain.position;
+package chess.chessgame.domain.room.game.board.position;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

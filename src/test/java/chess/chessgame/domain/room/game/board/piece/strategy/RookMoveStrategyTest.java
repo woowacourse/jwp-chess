@@ -1,8 +1,8 @@
-package chess.chessgame.domain.piece.strategy;
+package chess.chessgame.domain.room.game.board.piece.strategy;
 
-import chess.chessgame.domain.board.Board;
-import chess.chessgame.domain.board.InitBoardInitializer;
-import chess.chessgame.domain.position.Position;
+import chess.chessgame.domain.room.game.board.Board;
+import chess.chessgame.domain.room.game.board.InitBoardInitializer;
+import chess.chessgame.domain.room.game.board.position.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static chess.chessgame.domain.piece.Fixture.whiteRook;
+import static chess.chessgame.domain.room.game.board.piece.Fixture.whiteRook;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

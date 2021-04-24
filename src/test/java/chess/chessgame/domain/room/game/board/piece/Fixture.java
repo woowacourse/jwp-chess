@@ -1,8 +1,8 @@
-package chess.chessgame.domain.piece;
+package chess.chessgame.domain.room.game.board.piece;
 
-import chess.chessgame.domain.board.Board;
-import chess.chessgame.domain.board.InitBoardInitializer;
-import chess.chessgame.domain.piece.attribute.Color;
+import chess.chessgame.domain.room.game.board.Board;
+import chess.chessgame.domain.room.game.board.InitBoardInitializer;
+import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 
 public class Fixture {
     public static final Rook whiteRook = new Rook(Color.WHITE);

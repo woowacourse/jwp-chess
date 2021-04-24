@@ -1,4 +1,4 @@
-package chess.chessgame.domain.piece.attribute;
+package chess.chessgame.domain.room.game.board.piece.attribute;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

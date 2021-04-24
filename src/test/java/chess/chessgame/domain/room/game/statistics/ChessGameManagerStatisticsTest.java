@@ -1,15 +1,15 @@
-package chess.chessgame.domain.statistics;
+package chess.chessgame.domain.room.game.statistics;
 
-import chess.chessgame.domain.board.Board;
-import chess.chessgame.domain.board.Square;
-import chess.chessgame.domain.board.TestBoardInitializer;
-import chess.chessgame.domain.piece.Bishop;
-import chess.chessgame.domain.piece.Knight;
-import chess.chessgame.domain.piece.Pawn;
-import chess.chessgame.domain.piece.Queen;
-import chess.chessgame.domain.piece.Rook;
-import chess.chessgame.domain.piece.attribute.Color;
-import chess.chessgame.domain.position.Position;
+import chess.chessgame.domain.room.game.board.Board;
+import chess.chessgame.domain.room.game.board.Square;
+import chess.chessgame.domain.room.game.board.TestBoardInitializer;
+import chess.chessgame.domain.room.game.board.piece.Bishop;
+import chess.chessgame.domain.room.game.board.piece.Knight;
+import chess.chessgame.domain.room.game.board.piece.Pawn;
+import chess.chessgame.domain.room.game.board.piece.Queen;
+import chess.chessgame.domain.room.game.board.piece.Rook;
+import chess.chessgame.domain.room.game.board.piece.attribute.Color;
+import chess.chessgame.domain.room.game.board.position.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

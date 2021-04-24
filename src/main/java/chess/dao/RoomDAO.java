@@ -25,8 +25,6 @@ public class RoomDAO {
     public long createRoom(String roomName) {
         String query = "INSERT INTO room (roomName) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        System.out.println("createRoom");
-        System.out.println(jdbcTemplate);
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query,
                     Statement.RETURN_GENERATED_KEYS);
@@ -66,4 +64,6 @@ public class RoomDAO {
                     return rooms;
                 });
     }
+
+
 }

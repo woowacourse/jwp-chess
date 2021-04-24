@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ChessGameManagerStatisticsTest {
+class ChessGameDtoManagerStatisticsTest {
     @DisplayName("기본 점수 38점이 잘 계산되는지 확인")
     @Test
     void defaultScoreTest() {

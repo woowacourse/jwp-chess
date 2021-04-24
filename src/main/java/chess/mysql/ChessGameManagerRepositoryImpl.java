@@ -6,7 +6,7 @@ import chess.chessgame.domain.room.game.ChessGameManagerFactory;
 import chess.chessgame.domain.room.game.NotStartedChessGameManager;
 import chess.chessgame.repository.ChessGameManagerRepository;
 import chess.mysql.dao.ChessDao;
-import chess.mysql.dao.dto.ChessGame;
+import chess.mysql.dao.dto.ChessGameDto;
 import org.springframework.stereotype.Repository;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -33,18 +33,18 @@ public class ChessGameManagerRepositoryImpl implements ChessGameManagerRepositor
                 .collect(collectingAndThen(toList(), ChessGameManagerBundle::new));
     }
 
-    private ChessGameManager createFromEntity(ChessGame chessGame) {
-        return ChessGameManagerFactory.loadingGame(chessGame);
+    private ChessGameManager createFromEntity(ChessGameDto chessGameDto) {
+        return ChessGameManagerFactory.loadingGame(chessGameDto);
     }
 
     @Override
     public long add(ChessGameManager chessGameManager) {
-        return chessDao.save(new ChessGame(chessGameManager));
+        return chessDao.save(new ChessGameDto(chessGameManager));
     }
 
     @Override
     public void update(ChessGameManager chessGameManager) {
-        chessDao.update(new ChessGame(chessGameManager));
+        chessDao.update(new ChessGameDto(chessGameManager));
     }
 
     @Override

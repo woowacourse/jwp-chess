@@ -1,6 +1,6 @@
 package chess.mysql.dao;
 
-import chess.mysql.dao.dto.ChessGame;
+import chess.mysql.dao.dto.ChessGameDto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +13,7 @@ import static chess.mysql.dao.DbConnectionTemplate.executeQueryWithGenerateKey;
 
 public class MysqlChessDao implements ChessDao {
     @Override
-    public long save(ChessGame entity) {
+    public long save(ChessGameDto entity) {
         String query =
                 "INSERT INTO chessgame " +
                         "(pieces, running, next_turn) " +
@@ -27,7 +27,7 @@ public class MysqlChessDao implements ChessDao {
     }
 
     @Override
-    public Optional<ChessGame> findById(long id) {
+    public Optional<ChessGameDto> findById(long id) {
         String query =
                 "SELECT * " +
                         "FROM chessgame " +
@@ -40,7 +40,7 @@ public class MysqlChessDao implements ChessDao {
 
 
     @Override
-    public void update(ChessGame entity) {
+    public void update(ChessGameDto entity) {
         String query =
                 "UPDATE chessgame " +
                         "SET pieces = ?, running = ? , next_turn = ?" +
@@ -55,7 +55,7 @@ public class MysqlChessDao implements ChessDao {
     }
 
     @Override
-    public List<ChessGame> findAllOnRunning() {
+    public List<ChessGameDto> findAllOnRunning() {
         String query =
                 "SELECT * " +
                         "FROM chessgame " +
@@ -74,7 +74,7 @@ public class MysqlChessDao implements ChessDao {
         executeQuery(query, ps -> ps.setLong(1, id));
     }
 
-    private Optional<ChessGame> getOptionalChessGame(ResultSet resultSet) {
+    private Optional<ChessGameDto> getOptionalChessGame(ResultSet resultSet) {
         try (ResultSet rs = resultSet) {
             if (!rs.next()) {
                 return Optional.empty();
@@ -85,23 +85,23 @@ public class MysqlChessDao implements ChessDao {
             String pieces = rs.getString("pieces");
             String nextTurn = rs.getString("next_turn");
 
-            return Optional.of(new ChessGame(rowId, nextTurn, isRunning, pieces));
+            return Optional.of(new ChessGameDto(rowId, nextTurn, isRunning, pieces));
         } catch (SQLException e) {
             throw new IllegalStateException(e.getMessage());
         }
     }
 
-    private List<ChessGame> getChessGames(ResultSet resultSet) {
+    private List<ChessGameDto> getChessGames(ResultSet resultSet) {
         try (ResultSet rs = resultSet) {
-            List<ChessGame> chessGames = new ArrayList<>();
+            List<ChessGameDto> chessGameDtos = new ArrayList<>();
             while (rs.next()) {
                 long id = rs.getLong("id");
                 String pieces = rs.getString("pieces");
                 boolean isRunning = rs.getBoolean("running");
                 String nextTurn = rs.getString("next_turn");
-                chessGames.add(new ChessGame(id, nextTurn, isRunning, pieces));
+                chessGameDtos.add(new ChessGameDto(id, nextTurn, isRunning, pieces));
             }
-            return chessGames;
+            return chessGameDtos;
         } catch (SQLException e) {
             throw new IllegalStateException(e.getMessage());
         }

@@ -1,12 +1,10 @@
 package chess.dto;
 
-import chess.domain.piece.Color;
-
-public class SavedGameData {
+public class SavedGameDto {
     private final ChessBoardDto chessBoardDto;
-    private final Color currentTurnColor;
+    private final String currentTurnColor;
 
-    public SavedGameData(ChessBoardDto chessBoardDto, Color currentTurnColor) {
+    public SavedGameDto(ChessBoardDto chessBoardDto, String currentTurnColor) {
         this.chessBoardDto = chessBoardDto;
         this.currentTurnColor = currentTurnColor;
     }
@@ -15,7 +13,7 @@ public class SavedGameData {
         return chessBoardDto;
     }
 
-    public Color getCurrentTurnColor() {
+    public String getCurrentTurnColor() {
         return currentTurnColor;
     }
 }

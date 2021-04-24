@@ -1,24 +1,11 @@
 package chess.service;
 
 import chess.dao.GameDao;
-import chess.domain.board.BoardFactory;
-import chess.domain.board.ChessBoard;
-import chess.domain.order.MoveResult;
+import chess.domain.ChessGameManager;
 import chess.domain.piece.Color;
-import chess.domain.piece.ColoredPieces;
-import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.domain.statistics.ChessGameStatistics;
-import chess.domain.statistics.MatchResult;
 import chess.dto.*;
-import chess.exception.DomainException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
-
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class ChessService {
@@ -28,75 +15,64 @@ public class ChessService {
         this.gameDAO = gameDAO;
     }
 
+    public CommonDto<GameListDto> loadGameList() {
+        return new CommonDto<>("게임 목록을 불러왔습니다.", new GameListDto(gameDAO.loadGameList()));
+    }
+
     public CommonDto<NewGameDto> saveNewGame() {
-        ChessBoard chessBoard = BoardFactory.createBoard();
-        Color currentTurnColor = Color.WHITE;
-        Map<Color, Double> scoreMap = chessBoard.getScoreMap();
-        ChessGameStatistics chessGameStatistics = new ChessGameStatistics(scoreMap,
-                MatchResult.generateMatchResult(scoreMap.get(Color.WHITE), scoreMap.get(Color.BLACK)));
-        Map<String, PieceDto> board = ChessBoardDto.from(chessBoard).board();
-        int gameId = gameDAO.saveGame(currentTurnColor, board);
+        ChessGameManager chessGameManager = new ChessGameManager();
+        chessGameManager.start();
+
+        SavedGameDto savedGameDto = new SavedGameDto(
+                ChessBoardDto.from(chessGameManager.getBoard()),
+                chessGameManager.getCurrentTurnColor().name());
+        int gameId = gameDAO.saveGame(savedGameDto);
+
         return new CommonDto<>("새로운 게임이 생성되었습니다.",
-                new NewGameDto(gameId, board, currentTurnColor, chessGameStatistics.getColorsScore()));
+                NewGameDto.from(chessGameManager, gameId));
+    }
+
+    public CommonDto<RunningGameDto> loadGame(int gameId) {
+        ChessGameManager chessGameManager = loadChessGameManager(gameId);
+        return new CommonDto<>("게임을 불러왔습니다.", toRunningGameDto(chessGameManager));
     }
 
     public CommonDto<RunningGameDto> move(int gameId, String startPosition, String endPosition) {
-        RunningGameDto runningGameDto = gameDAO.loadGame(gameId);
-        ChessBoard chessBoard = toChessBoard(runningGameDto.getChessBoard());
-        Position from = Position.of(startPosition);
-        validateProperPieceAtFromPosition(from, chessBoard, runningGameDto.getCurrentTurnColor());
-        Position to = Position.of(endPosition);
-        MoveResult moveResult = chessBoard.move(chessBoard.createMoveRoute(from, to));
-        Color currentTurnColor = runningGameDto.getCurrentTurnColor();
-        List<ColoredPieces> coloredPieces = loadColoredPieces(chessBoard);
-        if (moveResult.isCaptured()) {
-            ColoredPieces opposite = findByColor(currentTurnColor.opposite(), coloredPieces);
-            opposite.remove(moveResult.getCapturedPiece());
-        }
-        currentTurnColor = currentTurnColor.opposite();
-        boolean kingDead = isKingDead(coloredPieces);
-        updateDatabase(chessBoard, currentTurnColor, kingDead, gameId);
-        return new CommonDto<>("기물을 이동했습니다.", RunningGameDto.of(chessBoard, currentTurnColor, kingDead));
+        ChessGameManager chessGameManager = loadChessGameManager(gameId);
+        chessGameManager.move(Position.of(startPosition), Position.of(endPosition));
+
+        updateDatabase(chessGameManager, gameId);
+
+        return new CommonDto<>("기물을 이동했습니다.",
+                toRunningGameDto(chessGameManager));
     }
 
-    private void updateDatabase(ChessBoard chessBoard, Color currentTurnColor, boolean kingDead, int gameId) {
-        if (kingDead) {
+    private void updateDatabase(ChessGameManager chessGameManager, int gameId) {
+        if (chessGameManager.isEnd()) {
             gameDAO.deletePiecesByGameId(gameId);
             gameDAO.deleteGameByGameId(gameId);
             return;
         }
-        gameDAO.updateTurnByGameId(currentTurnColor, gameId);
-        gameDAO.updatePiecesByGameId(ChessBoardDto.from(chessBoard), gameId);
+
+        gameDAO.updateTurnByGameId(chessGameManager.getCurrentTurnColor(), gameId);
+        gameDAO.updatePiecesByGameId(ChessBoardDto.from(chessGameManager.getBoard()), gameId);
     }
 
-    private ChessBoard toChessBoard(Map<String, PieceDto> chessBoard) {
-        ChessBoardDto chessBoardDto = new ChessBoardDto(chessBoard);
-        return chessBoardDto.toChessBoard();
+    private RunningGameDto toRunningGameDto(ChessGameManager chessGameManager) {
+        return RunningGameDto.of(
+                chessGameManager.getBoard(),
+                chessGameManager.getCurrentTurnColor(),
+                chessGameManager.isEnd());
     }
 
-    private List<ColoredPieces> loadColoredPieces(ChessBoard chessBoard) {
-        return chessBoard.board().values().stream()
-                .filter(Piece::isNotBlank)
-                .collect(groupingBy(Piece::getColor))
-                .entrySet()
-                .stream()
-                .map(entry -> new ColoredPieces(entry.getValue(), entry.getKey()))
-                .collect(toList());
-    }
+    private ChessGameManager loadChessGameManager(int gameId) {
+        SavedGameDto savedGameDto = gameDAO.loadGame(gameId);
 
-    private boolean isKingDead(List<ColoredPieces> coloredPieces) {
-        return coloredPieces.stream().anyMatch(ColoredPieces::isKingDead);
-    }
-
-    private void validateProperPieceAtFromPosition(Position from, ChessBoard chessBoard, Color currentTurnColor) {
-        validateHasPieceAtFromPosition(from, chessBoard);
-        validateTurn(from, chessBoard, currentTurnColor);
-    }
-
-    private void validateHasPieceAtFromPosition(Position from, ChessBoard chessBoard) {
-        if (!chessBoard.hasPiece(from)) {
-            throw new DomainException("해당 위치에는 말이 없습니다.");
-        }
+        ChessGameManager chessGameManager = new ChessGameManager();
+        chessGameManager.load(
+                savedGameDto.getChessBoardDto().toChessBoard(),
+                Color.of(savedGameDto.getCurrentTurnColor()));
+        return chessGameManager;
     }
 
     private void validateTurn(Position from, ChessBoard chessBoard, Color currentTurnColor) {

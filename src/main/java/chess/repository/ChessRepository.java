@@ -47,7 +47,7 @@ public class ChessRepository {
         return ChessBoardFactory.createStoredBoard(board);
     }
 
-    public void movePiece(String source, String target, int roomId) {
+    public void moveSourcePieceToTargetPoint(String source, String target, int roomId) {
         pieceDao.movePiece(source, target, roomId);
     }
 
@@ -59,7 +59,7 @@ public class ChessRepository {
         return roomDao.selectTurnByRoomId(roomId);
     }
 
-    public void removePiece(String target, int roomId) {
+    public void removeTargetPiece(String target, int roomId) {
         pieceDao.removePiece(target, roomId);
     }
 }

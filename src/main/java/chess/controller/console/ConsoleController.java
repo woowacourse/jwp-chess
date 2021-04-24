@@ -2,8 +2,8 @@ package chess.controller.console;
 
 import chess.controller.console.command.Command;
 import chess.controller.console.command.CommandRouter;
-import chess.chessgame.domain.manager.ChessGameManager;
-import chess.chessgame.domain.manager.ChessGameManagerFactory;
+import chess.chessgame.domain.room.game.ChessGameManager;
+import chess.chessgame.domain.room.game.ChessGameManagerFactory;
 import chess.service.ChessServiceImpl;
 import chess.util.Repeater;
 import chess.view.InputView;

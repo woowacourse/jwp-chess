@@ -1,6 +1,6 @@
 package chess.controller.web;
 
-import chess.chessgame.domain.manager.ChessGameManager;
+import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.controller.web.dto.ChessGameResponseDto;
 import chess.controller.web.dto.MoveRequestDto;
 import chess.controller.web.dto.MoveResponseDto;

@@ -1,7 +1,7 @@
 package chess.controller.console.command;
 
-import chess.chessgame.domain.manager.ChessGameManager;
-import chess.chessgame.domain.position.Position;
+import chess.chessgame.domain.room.game.ChessGameManager;
+import chess.chessgame.domain.room.game.board.position.Position;
 import chess.service.ChessServiceImpl;
 import chess.view.OutputView;
 

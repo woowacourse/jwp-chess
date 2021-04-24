@@ -1,11 +1,11 @@
 package chess.converter;
 
-import chess.chessgame.domain.board.Board;
-import chess.chessgame.domain.board.Square;
-import chess.chessgame.domain.piece.Piece;
-import chess.chessgame.domain.position.File;
-import chess.chessgame.domain.position.Position;
-import chess.chessgame.domain.position.Rank;
+import chess.chessgame.domain.room.game.board.Board;
+import chess.chessgame.domain.room.game.board.Square;
+import chess.chessgame.domain.room.game.board.piece.Piece;
+import chess.chessgame.domain.room.game.board.position.File;
+import chess.chessgame.domain.room.game.board.position.Position;
+import chess.chessgame.domain.room.game.board.position.Rank;
 
 import java.util.ArrayList;
 import java.util.Arrays;

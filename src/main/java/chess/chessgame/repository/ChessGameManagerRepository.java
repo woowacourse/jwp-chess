@@ -1,7 +1,7 @@
 package chess.chessgame.repository;
 
-import chess.chessgame.domain.manager.ChessGameManager;
-import chess.chessgame.domain.manager.ChessGameManagerBundle;
+import chess.chessgame.domain.room.game.ChessGameManager;
+import chess.chessgame.domain.room.game.ChessGameManagerBundle;
 
 public interface ChessGameManagerRepository {
     ChessGameManager findById(long id);

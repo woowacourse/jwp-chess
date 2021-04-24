@@ -1,7 +1,7 @@
 package chess.controller.web;
 
-import chess.chessgame.domain.manager.ChessGameManager;
-import chess.chessgame.domain.manager.ChessGameManagerBundle;
+import chess.chessgame.domain.room.game.ChessGameManager;
+import chess.chessgame.domain.room.game.ChessGameManagerBundle;
 import chess.controller.web.dto.ChessGameResponseDto;
 import chess.controller.web.dto.ErrorMessageResponseDto;
 import chess.controller.web.dto.MoveRequestDto;

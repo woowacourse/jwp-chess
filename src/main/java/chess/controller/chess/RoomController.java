@@ -7,8 +7,10 @@ import chess.domain.dto.RoomDto;
 import chess.domain.dto.move.MoveRequestDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.exception.BusinessException;
+import chess.exception.ErrorCode;
 import chess.serivce.chess.ChessService;
 import java.util.Map;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,9 +34,9 @@ public class RoomController {
         return ResponseEntity.badRequest().body(ApiError.of(e.getErrorCode(), e.getMessage()));
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity exceptionHandler(RuntimeException e) {
-        return ResponseEntity.ok().body(ResponseDto.error(e.getMessage()));
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ApiError> exceptionHandler(DataAccessException e) {
+        return ResponseEntity.badRequest().body(ApiError.of(ErrorCode.DB_COMMON, e.getMessage()));
     }
 
     @PostMapping("/create")

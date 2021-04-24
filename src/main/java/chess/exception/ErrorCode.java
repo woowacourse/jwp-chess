@@ -1,9 +1,18 @@
 package chess.exception;
 
 public enum ErrorCode {
-    // CHESS
-    INVALID_PIECE_MOVE(400, "C001", "[ERROR] 체스 기물을 해당 위치로 이동할 수 없습니다."),
-    INVALID_ROOM_COMMAND(400, "C002", "[ERROR] 유효하지 않는 방 명령입니다.")
+    // COMMON
+    NOT_FOUND(400, "C001", "[ERROR] 찾을 수 없는 정보입니다."),
+
+    // CHESS PIECE
+    INVALID_PIECE_MOVE(400, "P001", "[ERROR] 체스 기물을 해당 위치로 이동할 수 없습니다."),
+
+    // CHESS ROOM
+    INVALID_ROOM_COMMAND(400, "R001", "[ERROR] 유효하지 않는 방 명령입니다."),
+    DUPLICATE_ROOM(400, "R002", "[ERROR] 중복된 방입니다."),
+
+    // DB
+    DB_COMMON(400, "D001", "[ERROR] DB에서 예외가 발생했습니다.")
     ;
 
     private final int status;

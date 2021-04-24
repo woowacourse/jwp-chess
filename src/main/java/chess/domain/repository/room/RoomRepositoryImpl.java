@@ -9,6 +9,7 @@ import chess.domain.piece.Piece;
 import chess.domain.team.Team;
 import chess.dao.piece.PieceDao;
 import chess.dao.room.RoomDao;
+import chess.exception.domain.NotFoundException;
 import chess.utils.BoardUtil;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -50,7 +51,7 @@ public class RoomRepositoryImpl implements RoomRepository {
     @Override
     public Room findByName(String name) {
         if (roomDao.isExistName(name)) {
-            throw new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다.");
+            throw new NotFoundException("[ERROR] 존재하지 않는 방입니다.");
         }
 
         Room room = roomDao.findRoomByName(name);
@@ -83,7 +84,7 @@ public class RoomRepositoryImpl implements RoomRepository {
                 .filter(piece -> piece.getLocation().equals(Location.of(target)))
                 .filter(piece -> !piece.equals(sourcePiece))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 기물입니다."));
+                .orElseThrow(() -> new NotFoundException("[ERROR] 존재하지 않는 기물입니다."));
             pieceDao.deletePieceById(removedPiece.getId());
         }
 

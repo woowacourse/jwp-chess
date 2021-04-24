@@ -7,6 +7,7 @@ import chess.domain.dto.move.MoveResponseDto;
 import chess.domain.game.Room;
 import chess.domain.piece.Piece;
 import chess.domain.repository.room.RoomRepository;
+import chess.exception.domain.DuplicateRoomException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -80,7 +81,7 @@ public class ChessService {
 
     public RoomDto createRoom(String roomName) {
         if (!roomRepository.exists(roomName)) {
-            throw new IllegalArgumentException("[ERROR] 이미 존재하는 방입니다. 다른 이름을 사용해주세요.");
+            throw new DuplicateRoomException("[ERROR] 이미 존재하는 방입니다. 다른 이름을 사용해주세요.");
         }
 
         long id = roomRepository.insert(roomName);

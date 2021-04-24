@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.service.SpringChessService;
 import chess.webdto.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,14 +24,20 @@ public class SpringChessController {
         return springChessService.createGameRoom(roomName);
     }
 
-    @PostMapping(value = "/games/{id}/new")
+    @PostMapping(value = "/games/{id}")
     public ChessGameDto startNewGame(@PathVariable int id) {
         return springChessService.startNewGame(id);
     }
 
-    @GetMapping(value = "/games/{id}/saved")
+    @GetMapping(value = "/games/{id}")
     public ChessGameDto loadSavedGame(@PathVariable int id) {
         return springChessService.loadSavedGame(id);
+    }
+
+    @DeleteMapping(value = "/games/{id}")
+    public ResponseEntity<String> deleteGame(@PathVariable int id) {
+        springChessService.deleteGame(id);
+        return ResponseEntity.ok("success");
     }
 
     @PostMapping(value = "/games/{id}/move")

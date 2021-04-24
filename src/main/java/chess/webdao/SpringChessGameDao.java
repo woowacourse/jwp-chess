@@ -124,10 +124,12 @@ public class SpringChessGameDao {
         this.jdbcTemplate.update(sql, PiecePositionDaoConverter.asDao(teamPiecePosition), team, gameId);
     }
 
-    public void deleteChessGame() {
-        final String team_info_sql = "DELETE FROM team_info";
-        final String chess_game_sql = "DELETE FROM chess_game";
-        this.jdbcTemplate.update(team_info_sql);
-        this.jdbcTemplate.update(chess_game_sql);
+    public void deleteChessGame(final int gameId) {
+        final String team_info_sql = "DELETE FROM team_info where game_id = (?)";
+        final String chess_game_sql = "DELETE FROM chess_game where game_id = (?)";
+        final String game_room_info_sql = "DELETE FROM game_room_info where game_id = (?)";
+        this.jdbcTemplate.update(team_info_sql, gameId);
+        this.jdbcTemplate.update(chess_game_sql, gameId);
+        this.jdbcTemplate.update(game_room_info_sql, gameId);
     }
 }

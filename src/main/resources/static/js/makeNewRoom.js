@@ -5,7 +5,11 @@ makeRoomBtn.addEventListener("click", makeRoom);
 
 function makeRoom() {
     let roomName = prompt("사용할 체스방의 이름을 입력해주세요");
-    checkAvailableRoom(roomName);
+    if (roomName == "") {
+        alert("방 제목을 입력해주세요");
+    } else {
+        checkAvailableRoom(roomName);
+    }
 }
 
 function checkAvailableRoom(userInputRoomName) {
@@ -47,7 +51,7 @@ function makeRoomAPIRequest(data) {
         }
     };
 
-    let url = "/games/" + String(id) + "/new";
+    let url = "/games/" + String(id);
     console.log(url);
     fetch(url, postOption)
         .then(response => {

@@ -72,7 +72,6 @@ function serverMoveRequest(startPoint, destPoint) {
             checkIsPlaying(data);
         })
         .catch(error => {
-            console.log(error)
             alert("움직일 수 없는 경로입니다.");
         })
 }

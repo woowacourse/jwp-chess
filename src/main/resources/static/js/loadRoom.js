@@ -38,12 +38,21 @@ function showRoom(room) {
     chessRoomName.setAttribute("class", "chessRoomName");
     chessRoomName.innerText = name;
 
+    let chessRoomBtn = document.createElement('div');
+    chessRoomBtn.setAttribute("class", "chessRoomBtn");
+
     let chessRoomJoinBtn = document.createElement('button');
     chessRoomJoinBtn.setAttribute("class", "chessRoomJoinBtn");
     chessRoomJoinBtn.innerText = "Join";
 
+    let chessRoomDeleteBtn = document.createElement('button');
+    chessRoomDeleteBtn.setAttribute("class", "chessRoomDeleteBtn");
+    chessRoomDeleteBtn.innerText = "Delete";
+
     chessRoom.appendChild(chessRoomName);
-    chessRoom.appendChild(chessRoomJoinBtn);
+    chessRoomBtn.appendChild(chessRoomJoinBtn);
+    chessRoomBtn.appendChild(chessRoomDeleteBtn);
+    chessRoom.appendChild(chessRoomBtn);
     chessRoomList.appendChild(chessRoom);
 }
 

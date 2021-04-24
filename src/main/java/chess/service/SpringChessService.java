@@ -42,6 +42,10 @@ public class SpringChessService {
         return generateChessGameDto(chessGame, gameId);
     }
 
+    public void deleteGame(final int gameId) {
+        springChessGameDao.deleteChessGame(gameId);
+    }
+
     public ChessGameDto move(final int gameId, final String start, final String destination) {
         final ChessGame chessGame = springChessGameDao.readChessGame(gameId);
         chessGame.move(Position.of(start), Position.of(destination));

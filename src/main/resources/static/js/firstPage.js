@@ -21,14 +21,22 @@ export function closeRoomList() {
 
 chessRoomList.addEventListener("click", function(e) {
     if (e.target && e.target.nodeName == "BUTTON") {
-        let chessRoom = e.target.closest(".chessRoom");
-        let roomName = chessRoom.childNodes[0].innerText;
-        joinRoomAPIRequest(chessRoom.id, roomName);
+        if (e.target.innerText === "Join") {
+            let chessRoom = e.target.closest(".chessRoom");
+            let roomName = chessRoom.childNodes[0].innerText;
+            joinRoomAPIRequest(chessRoom.id, roomName);
+        } else if (e.target.innerText === "Delete") {
+            let chessRoom = e.target.closest(".chessRoom");
+            let roomName = chessRoom.childNodes[0].innerText;
+            if (confirm(roomName + "을 삭제하시겠습니까?")) {
+                deleteRoomAPIRequest(chessRoom, chessRoom.id, roomName);
+            }
+        }
     }
 })
 
 function joinRoomAPIRequest(id, roomName) {
-    fetch("games/" + String(id) + "/saved")
+    fetch("games/" + String(id))
         .then(response => {
             if (!response.ok) {
                 console.log(response.status);
@@ -72,4 +80,27 @@ export function saveRoomNumber(id) {
     roomNumber.setAttribute("id", "roomNumber");
     roomNumber.setAttribute("class", id);
     title.appendChild(roomNumber);
+}
+
+function deleteRoomAPIRequest(chessRoom, id, roomName) {
+    const deleteOption = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    fetch("games/" + String(id), deleteOption)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(response.status);
+            }
+            return response.body;
+        })
+        .then(data => {
+            chessRoom.remove();
+        })
+        .catch(error => {
+            alert("삭제에 실패했습니다.");
+        })
 }

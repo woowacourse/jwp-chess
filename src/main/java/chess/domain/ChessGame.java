@@ -24,7 +24,7 @@ public class ChessGame {
                 convertStringToPosition(destination), turnOwner);
     }
 
-    public ScoreDto scoreStatus() {
+    public ScoreDto scoreStatus(int roomNumber) {
         boardInitializeCheck();
         double whiteScore = board.calculateScore(Team.WHITE);
         double blackScore = board.calculateScore(Team.BLACK);

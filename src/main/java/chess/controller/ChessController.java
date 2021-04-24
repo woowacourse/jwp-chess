@@ -23,13 +23,13 @@ public class ChessController {
         return "main.html";
     }
 
-    @GetMapping("/room")
+    @GetMapping("/rooms")
     @ResponseBody
     public RoomsDto showRoomList() {
         return chessService.getRoomList();
     }
 
-    @GetMapping("/room/{roomNumber}")
+    @GetMapping("/rooms/{roomNumber}")
     public String moveRoom() {
         return "/chess.html";
     }
@@ -52,10 +52,10 @@ public class ChessController {
 //        return chessService.initialize(chessGame, roomName);
 //    }
 
-    @GetMapping("/score")
+    @GetMapping("/score/{roomNumber}")
     @ResponseBody
-    public ScoreDto scoreStatus() {
-        return chessGame.scoreStatus();
+    public ScoreDto scoreStatus(@PathVariable int roomNumber) {
+        return chessGame.scoreStatus(roomNumber);
     }
 
     @PostMapping("/move/{roomNumber}")

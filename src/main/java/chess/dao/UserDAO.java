@@ -92,4 +92,22 @@ public class UserDAO {
             throw new InitialSettingDataException();
         }
     }
+
+    public void createUser(final String playerId, final String password) {
+        try {
+            String query = "INSERT INTO user (nickname, password) values (?, ?)";
+            jdbcTemplate.update(query, playerId, password);
+        } catch (DataAccessException e) {
+            throw new InitialSettingDataException();
+        }
+    }
+
+//    public Optional<UserDTO> findByPlayerIdAndPassword(final String playerId, final String password) {
+//        try {
+//            String query = "INSERT INTO user (nickname, password) values (?, ?)";
+//            jdbcTemplate.update(query, playerId, password);
+//        } catch (DataAccessException e) {
+//            throw new InitialSettingDataException();
+//        }
+//    }
 }

@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.domain.ChessGame;
 import chess.dto.game.GameDTO;
+import chess.dto.room.RoomCreateDTO;
 import chess.exception.InitialSettingDataException;
 import chess.exception.NoHistoryException;
 import chess.exception.NotEnoughPlayerException;
@@ -12,9 +13,7 @@ import chess.service.RoomService;
 import chess.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public final class SpringChessGameController {
@@ -37,6 +36,13 @@ public final class SpringChessGameController {
         model.addAttribute("rooms", roomService.allRooms());
         model.addAttribute("results", resultService.allUserResult());
         return "index";
+    }
+
+    @PostMapping(path = "/rooms/new-game")
+    public String createNewGame(@ModelAttribute final RoomCreateDTO roomCreateDTO) {
+        Long id = roomService.createRoom(roomCreateDTO.getName());
+        userService.registerUser(roomCreateDTO.getPlayerId(), roomCreateDTO.getPassword());
+        return "redirect:/rooms/" + id;
     }
 
     @GetMapping("/rooms/{id}")

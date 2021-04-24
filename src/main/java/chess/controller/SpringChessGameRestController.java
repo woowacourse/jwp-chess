@@ -4,7 +4,6 @@ import chess.domain.ChessGame;
 import chess.dto.game.MoveDTO;
 import chess.dto.game.StatusDTO;
 import chess.dto.result.ResultDTO;
-import chess.dto.room.RoomNameDTO;
 import chess.dto.user.UsersDTO;
 import chess.service.HistoryService;
 import chess.service.ResultService;
@@ -35,14 +34,6 @@ public class SpringChessGameRestController {
         this.resultService = resultService;
         this.userService = userService;
         this.historyService = historyService;
-    }
-
-    @PostMapping(path = "/new-game")
-    public ResponseEntity<Boolean> createNewGame(@RequestBody @Valid final RoomNameDTO roomNameDTO) {
-        Long id = roomService.createRoom(roomNameDTO.getName());
-        return ResponseEntity.status(CREATED)
-                .header("Location", "/rooms/" + id)
-                .body(true);
     }
 
     @GetMapping(path = "/{roomId}/positions/{clickedSection}/turn")

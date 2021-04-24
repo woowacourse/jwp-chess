@@ -8,32 +8,18 @@ for (let i = 0; i < users.length; ++i) {
     users[i].innerHTML = i + 1;
 }
 
-
-function createRoom() {
-    let name = prompt("방 이름을 입력해주세요");
-    if (name !== "") {
-        newGame(name);
-    } else {
-        alert("방 이름은 한 글자 이상이어야합니다.");
-    }
+function showPopup() {
+    const popup = document.querySelector('#popup');
+    popup.classList.remove('hide');
 }
 
-function newGame(name) {
-    let data = {
-        "name": name
-    }
-
-    $.ajax({
-        url: "/rooms/new-game",
-        data: JSON.stringify(data),
-        method: "POST",
-        contentType: "application/json",
-        dataType: "json"
-    }).done(function (success) {
-        if (success) {
-            location.reload();
-        }
-    }).error(function (response) {
-        location.href = "/error-page/" + response.status;
-    });
+function closePopup() {
+    const roomName = document.querySelector('#room-name');
+    const userId = document.querySelector('#user-id');
+    const userPassword = document.querySelector('#user-password');
+    roomName.value = "";
+    userId.value = "";
+    userPassword.value = "";
+    const popup = document.querySelector('#popup');
+    popup.classList.add('hide');
 }

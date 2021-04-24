@@ -34,4 +34,11 @@ public final class UserService {
     public String whiteUserParticipatedInGame(final String roomId) {
         return userDAO.findWhiteUserByRoomId(roomId);
     }
+
+    public void registerUser(final String playerId, final String password) {
+//        Optional<UserDTO> user = userDAO.findByPlayerIdAndPassword(playerId, password);
+//        if (Optional.empty().equals(user)) {
+        userDAO.createUser(playerId, password);
+//        }
+    }
 }

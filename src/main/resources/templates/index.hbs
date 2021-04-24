@@ -51,7 +51,7 @@
                 </table>
             </div>
             <div id="create-button">
-                <input type="button" value="방 만들기" onclick="createRoom()">
+                <input type="button" value="방 만들기" onclick="showPopup()">
             </div>
         </div>
         <div id="result">
@@ -78,6 +78,22 @@
         </div>
     </div>
 </div>
+
+<div id="popup" class="hide">
+  <div class="content">
+  <form action="/rooms/new-game" method="post">
+      방 이름 : <input type="text" name="name" id="room-name" required size="10">
+      <br><br>
+      아이디 : <input type="text" name="playerId" id="user-id" required size="10">
+      <br><br>
+      비밀번호 : <input type="text" name="password" id="user-password" required size="10">
+      <br><br>
+    <input type="submit" value="방 만들기">
+  </form>
+  <button onclick="closePopup()">닫 기</button>
+  </div>
+</div>
+
 <footer>
     image source:
     <cite><a href="https://kr.freepik.com/vectors/banner">kr.freepik.com</a></cite>

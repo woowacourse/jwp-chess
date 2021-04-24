@@ -42,7 +42,7 @@ public class SpringRoomDao {
         });
     }
 
-    public RoomDto findRoomByRoomNo(int roomNo) {
+    public RoomDto findByNo(int roomNo) {
         String query = "SELECT * FROM chess_room WHERE room_no = ?";
         return jdbcTemplate.queryForObject(
                 query,
@@ -71,7 +71,7 @@ public class SpringRoomDao {
                 });
     }
 
-    public int deleteRoomByRoomNo(int roomNo) {
+    public int deleteByNo(int roomNo) {
         String query = "DELETE FROM chess_room WHERE room_no = ?";
         return jdbcTemplate.update(query, roomNo);
     }

@@ -3,7 +3,6 @@ package chess.service;
 import chess.domain.ChessGameManager;
 import chess.domain.board.ChessBoard;
 import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.GameListDto;
 import chess.dto.NewGameDto;
@@ -38,10 +37,8 @@ public class ChessGameService {
 
         chessGameManager.move(fromPosition, toPosition);
 
-        Piece pieceToMove = pieceRepository.findPieceByPosition(fromPosition, gameId);
         pieceRepository.deletePieceByPosition(toPosition, gameId);
-        pieceRepository.savePiece(pieceToMove, toPosition, gameId);
-        pieceRepository.deletePieceByPosition(fromPosition, gameId);
+        pieceRepository.updatePiecePosition(fromPosition, toPosition, gameId);
 
         gameRepository.updateTurnByGameId(chessGameManager, gameId);
         if (chessGameManager.isEnd()) {

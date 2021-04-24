@@ -77,4 +77,10 @@ public class PieceDao implements PieceRepository {
         String queryPieceByPosition = "DELETE FROM piece WHERE game_id = ? AND position = ?";
         this.jdbcTemplate.update(queryPieceByPosition, gameId, position.getNotation());
     }
+
+    @Override
+    public void updatePiecePosition(Position fromPosition, Position toPosition, int gameId) {
+        String query = "UPDATE piece SET position = ? WHERE game_id = ? AND position = ?";
+        this.jdbcTemplate.update(query, toPosition.getNotation(), gameId, fromPosition.getNotation());
+    }
 }

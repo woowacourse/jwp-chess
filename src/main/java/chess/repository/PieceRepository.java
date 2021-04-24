@@ -15,4 +15,6 @@ public interface PieceRepository {
     Piece findPieceByPosition(Position position, int gameId);
 
     void deletePieceByPosition(Position position, int gameId);
+
+    void updatePiecePosition(Position fromPosition, Position toPosition, int gameId);
 }

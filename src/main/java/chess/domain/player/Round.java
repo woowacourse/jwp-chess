@@ -121,11 +121,10 @@ public class Round {
         return board;
     }
 
-    public double getWhiteScore() {
-        return whitePlayer.calculateScore();
-    }
-
-    public double getBlackScore() {
+    public double getPlayerScore(String color) {
+        if ("white".equals(color)) {
+            return whitePlayer.calculateScore();
+        }
         return blackPlayer.calculateScore();
     }
 

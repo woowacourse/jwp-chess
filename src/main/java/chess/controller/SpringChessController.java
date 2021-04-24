@@ -42,8 +42,9 @@ public class SpringChessController {
         String currentTurn = loadedRound.getCurrentTurn();
         model.addAttribute("currentTurn", currentTurn);
 
-        double whiteScore = loadedRound.getWhiteScore();
-        double blackScore = loadedRound.getBlackScore();
+        double whiteScore = loadedRound.getPlayerScore("white");
+        double blackScore = loadedRound.getPlayerScore("black");
+
         ScoreDto scoreDto = new ScoreDto(whiteScore, blackScore);
         model.addAttribute("score", scoreDto);
 

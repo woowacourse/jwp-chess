@@ -28,16 +28,6 @@ public class RoomController {
         this.service = service;
     }
 
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ApiError> businessExceptionHandler(BusinessException e) {
-        return ResponseEntity.badRequest().body(ApiError.of(e.getErrorCode(), e.getMessage()));
-    }
-
-    @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<ApiError> exceptionHandler(DataAccessException e) {
-        return ResponseEntity.badRequest().body(ApiError.of(ErrorCode.DB_COMMON, e.getMessage()));
-    }
-
     @PostMapping("/{name}")
     public ResponseEntity<ApiResult> createRoom(@PathVariable("name") String roomName) {
         RoomDto result = service.createRoom(roomName);

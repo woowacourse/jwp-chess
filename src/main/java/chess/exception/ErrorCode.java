@@ -12,7 +12,10 @@ public enum ErrorCode {
     DUPLICATE_ROOM(400, "R002", "[ERROR] 중복된 방입니다."),
 
     // DB
-    DB_COMMON(400, "D001", "[ERROR] DB에서 예외가 발생했습니다.")
+    DB_COMMON(400, "D001", "[ERROR] DB에서 예외가 발생했습니다."),
+
+    // ETC
+    ETC(400, "E001", "[ERROR] 기타 예외")
     ;
 
     private final int status;

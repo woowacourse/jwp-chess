@@ -1,9 +1,10 @@
 package chess.controller;
 
 import chess.exception.ChessException;
-import chess.exception.DataAccessException;
+import chess.exception.DataNotFoundException;
 import chess.service.ChessService;
 import chess.service.RoomService;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,7 +42,8 @@ public class SpringChessController {
     @DeleteMapping("/rooms/{roomId}")
     private ResponseEntity deleteRoom(@PathVariable("roomId") Long roomId) {
         roomService.delete(roomId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                             .build();
     }
 
     @PostMapping("/game/{roomId}/move")
@@ -56,6 +58,12 @@ public class SpringChessController {
     public ResponseEntity<String> handle(ChessException e) {
         return ResponseEntity.status(e.code())
                              .body(e.desc());
+    }
+
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<String> handle(DataNotFoundException e) {
+        return ResponseEntity.badRequest()
+                             .body(e.getMessage());
     }
 
     @ExceptionHandler(DataAccessException.class)

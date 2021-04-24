@@ -133,16 +133,16 @@ function makeNewRoom() {
     const roomName = document.getElementById('game-name-input').value;
     const requestQuery = "roomName=" + roomName;
 
-    let url = $.ajax({
+    $.ajax({
         url: "/rooms",
         type: "POST",
         data: requestQuery,
-        success: function () {
-            const gameRoom = url.getResponseHeader('Location');
+        success: function (data, textStatus, response) {
+            let gameRoom = response.getResponseHeader('Location');
             location.href = gameRoom;
         },
-        error: function () {
-            alert("방 생성에 실패했습니다.");
+        error: function (response) {
+            alert(response.responseText);
         }
     })
 }

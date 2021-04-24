@@ -38,7 +38,7 @@ async function processResponse(response) {
 async function loadGameListIntoBox() {
     const gameListBox = document.getElementById("gameListBox");
 
-    const response = await fetch("/game/list");
+    const response = await fetch("/room/list");
     if (response.ok) {
         const responseBody = await response.json();
 
@@ -101,7 +101,7 @@ async function addEventOnStartButton() {
 
 async function createNewRoom() {
     const roomName = prompt("방 제목을 입력하세요");
-    fetch('game/room/name', {
+    fetch('/room/name', {
         method: 'POST',
         body : roomName
     }).then(res => updateRoomName(res));

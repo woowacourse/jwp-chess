@@ -30,11 +30,6 @@ public class ChessController {
         return ResponseEntity.ok().body(service.move(moveRequest.getGameId(), moveRequest.getFrom(), moveRequest.getTo()));
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<CommonDto<GameListDto>> loadGames() {
-        return ResponseEntity.ok().body(service.loadGameList());
-    }
-
     @GetMapping("/{gameId:[\\d]+}/load")
     public ResponseEntity<CommonDto<RunningGameDto>> loadGame(@PathVariable int gameId) {
         return ResponseEntity.ok().body(service.loadGame(gameId));

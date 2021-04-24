@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.dto.*;
 import chess.service.ChessGameService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +16,11 @@ public class ChessRestController {
 
     @PostMapping("/games")
     public ResponseEntity<CommonResponse<NewGameDto>> newGame() {
-        return ResponseEntity.ok().body(
+        return new ResponseEntity<>(
                 new CommonResponse<>(
                         "새로운 게임이 생성되었습니다.",
                         chessGameService.createNewGame()
-                )
-        );
+                ), HttpStatus.CREATED);
     }
 
     @PutMapping("/games/{gameId}/piece")

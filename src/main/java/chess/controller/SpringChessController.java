@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.controller.dto.GameStatusDto;
+import chess.controller.dto.MoveDto;
 import chess.exception.ChessException;
 import chess.exception.DataNotFoundException;
 import chess.service.ChessService;
@@ -53,11 +54,10 @@ public class SpringChessController {
     }
 
     @PostMapping("/games/{gameId}/move")
-    private ResponseEntity<GameStatusDto> move(@PathVariable("gameId") Long gameId,
-                        @RequestParam("from") String from,
-                        @RequestParam("to") String to) {
-        chessService.move(gameId, from, to);
-        return loadGame(gameId);
+    private ResponseEntity<GameStatusDto> move(@PathVariable("gameId") Long gameId, @RequestBody MoveDto moveDto) {
+        chessService.move(gameId, moveDto);
+        return ResponseEntity.ok()
+                             .body(chessService.load(gameId));
     }
 
     @ExceptionHandler(ChessException.class)

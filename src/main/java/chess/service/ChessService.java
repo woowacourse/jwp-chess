@@ -18,8 +18,10 @@ public class ChessService {
         this.commandDao = commandDao;
     }
 
-    public void move(Long gameId, String from, String to) {
+    public void move(Long gameId, MoveDto moveDto) {
         Game game = loadGame(gameId);
+        String from = moveDto.getFrom();
+        String to = moveDto.getTo();
         game.move(Position.from(from), Position.from(to));
         commandDao.insert(gameId, from, to);
     }

@@ -16,7 +16,6 @@ public class CommandDao {
     }
 
     private final RowMapper<MoveDto> commandRowMapper = (resultSet, rowNum) -> new MoveDto(
-            resultSet.getLong("game_id"),
             resultSet.getString("move_from"),
             resultSet.getString("move_to")
     );
@@ -27,7 +26,7 @@ public class CommandDao {
     }
 
     public List<MoveDto> findAllCommandOf(Long gameId) {
-        String query = "SELECT game_id, move_from, move_to FROM command WHERE game_id = (?)";
+        String query = "SELECT move_from, move_to FROM command WHERE game_id = (?)";
         return jdbcTemplate.query(query, commandRowMapper, gameId);
     }
 }

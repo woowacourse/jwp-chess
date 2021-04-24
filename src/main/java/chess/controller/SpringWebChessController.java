@@ -3,9 +3,11 @@ package chess.controller;
 import chess.dto.*;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
+@RequestMapping("/game")
 public class SpringWebChessController {
     private final ChessService service;
 
@@ -13,7 +15,12 @@ public class SpringWebChessController {
         this.service = service;
     }
 
-    @GetMapping("/newgame")
+    @GetMapping()
+    public String index() {
+        return "index.html";
+    }
+
+    @GetMapping("/new")
     public ResponseEntity<CommonDto<NewGameDto>> newGame() {
         return ResponseEntity.ok().body(service.saveNewGame());
     }
@@ -21,6 +28,11 @@ public class SpringWebChessController {
     @PostMapping("/move")
     public ResponseEntity<CommonDto<RunningGameDto>> move(@RequestBody MoveRequest moveRequest) {
         return ResponseEntity.ok().body(service.move(moveRequest.getGameId(), moveRequest.getFrom(), moveRequest.getTo()));
+    }
+
+    @PostMapping("/room/name")
+    public ResponseEntity<CommonDto<RoomDto>> saveRoomName(@RequestBody String roomName) {
+        return ResponseEntity.ok().body(service.saveRoom(roomName));
     }
 
     @GetMapping("/load/games")

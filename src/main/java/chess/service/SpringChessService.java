@@ -9,12 +9,8 @@ import chess.entity.Chess;
 import chess.entity.Movement;
 import chess.exception.DuplicateRoomException;
 import chess.exception.NotExistRoomException;
-import chess.service.dto.ChessSaveRequestDto;
-import chess.service.dto.GameStatusDto;
-import chess.service.dto.GameStatusRequestDto;
-import chess.service.dto.MoveRequestDto;
-import chess.service.dto.MoveResponseDto;
-import chess.service.dto.TilesDto;
+import chess.service.dto.*;
+
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,5 +89,11 @@ public class SpringChessService {
 
     private Chess findChessByName(final String chessName) {
         return chessDao.findByName(chessName).orElseThrow(NotExistRoomException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public ChessInfosDto findAllGame() {
+        List<Chess> findChessGame = chessDao.findAll();
+        return new ChessInfosDto(findChessGame);
     }
 }

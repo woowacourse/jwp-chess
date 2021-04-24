@@ -2,11 +2,15 @@ package chess.dao;
 
 import chess.domain.piece.Color;
 import chess.entity.Chess;
+import chess.entity.Movement;
 import chess.exception.DuplicateRoomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public class DBChessDao implements ChessDao {
@@ -129,6 +133,36 @@ public class DBChessDao implements ChessDao {
             closeResources(connection, preparedStatement);
         } catch (SQLException e) {
             logger.info("chess 삭제 오류" + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Chess> findAll() {
+        String query = "SELECT * FROM chess" +
+                " ORDER BY created_date";
+
+        Connection connection = connectionPool.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Chess> chessGroup = new ArrayList<>();
+            while (resultSet.next()) {
+                Chess chess = new Chess(
+                        resultSet.getString("chess_id"),
+                        resultSet.getString("name"),
+                        Color.findByValue(resultSet.getString("winner_color")),
+                        resultSet.getBoolean("is_running"),
+                        resultSet.getTimestamp("created_date").toLocalDateTime()
+                );
+                chessGroup.add(chess);
+            }
+
+            closeResources(connection, preparedStatement);
+            resultSet.close();
+            return chessGroup;
+        } catch (SQLException e) {
+            logger.info("chess 저장 오류" + e.getMessage());
+            return Collections.emptyList();
         }
     }
 

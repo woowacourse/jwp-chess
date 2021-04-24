@@ -35,6 +35,12 @@
   <input id="main-load" type="button" value="저장된 방에 입장"/>
 </div>
 
+<div class = "room-info" > 방목록</div>
+{{#chessInfosDto.chessInfos}}
+<div class = "room-info" id="{{name}}" >{{name}}</div>
+{{/chessInfosDto.chessInfos}}
+
+
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/js/main.js" type="module"></script>
 </body>

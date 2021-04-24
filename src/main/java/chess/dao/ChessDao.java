@@ -1,6 +1,8 @@
 package chess.dao;
 
 import chess.entity.Chess;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface ChessDao {
@@ -12,4 +14,6 @@ public interface ChessDao {
     void update(final Chess chess);
 
     void deleteByName(final String name);
+
+    List<Chess> findAll();
 }

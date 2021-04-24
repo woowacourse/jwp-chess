@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.service.SpringChessService;
+import chess.service.dto.ChessInfosDto;
 import chess.service.dto.TilesDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,9 @@ public class ChessGameController {
     }
 
     @GetMapping("/")
-    public String main() {
+    public String main(Model model) {
+        ChessInfosDto chessInfosDto = chessService.findAllGame();
+        model.addAttribute("chessInfosDto", chessInfosDto);
         return "main";
     }
 

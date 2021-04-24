@@ -29,7 +29,7 @@ public class ChessService {
 
         Board board = room.getBoard();
         return new MoveResponseDto(
-            generatePieceDtosFromPieces(board.getPieces()),
+            PieceDto.from(board.getPieces()),
             room.getCurrentTeam().getValue(),
             room.judgeResult()
         );
@@ -44,7 +44,7 @@ public class ChessService {
 
         Board board = room.getBoard();
         return new MoveResponseDto(
-            generatePieceDtosFromPieces(board.getPieces()),
+            PieceDto.from(board.getPieces()),
             room.getCurrentTeam().getValue(),
             room.judgeResult()
         );
@@ -59,7 +59,7 @@ public class ChessService {
 
         Board board = room.getBoard();
         return new MoveResponseDto(
-            generatePieceDtosFromPieces(board.getPieces()),
+            PieceDto.from(board.getPieces()),
             room.getCurrentTeam().getValue(),
             room.judgeResult()
         );
@@ -71,7 +71,7 @@ public class ChessService {
 
         Board board = room.getBoard();
         return new MoveResponseDto(
-            generatePieceDtosFromPieces(board.getPieces()),
+            PieceDto.from(board.getPieces()),
             room.getCurrentTeam().getValue(),
             room.judgeResult()
         );
@@ -83,12 +83,5 @@ public class ChessService {
         }
 
         roomRepository.insert(roomName);
-    }
-
-    private List<PieceDto> generatePieceDtosFromPieces(List<Piece> pieces) {
-        return pieces
-            .stream()
-            .map(piece -> PieceDto.from(piece))
-            .collect(Collectors.toList());
     }
 }

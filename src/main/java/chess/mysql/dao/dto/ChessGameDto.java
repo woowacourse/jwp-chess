@@ -3,20 +3,20 @@ package chess.mysql.dao.dto;
 import chess.converter.PiecesConverter;
 import chess.chessgame.domain.room.game.ChessGameManager;
 
-public class ChessGame {
+public class ChessGameDto {
     private final long id;
     private final String nextTurn;
     private final boolean running;
     private final String pieces;
 
-    public ChessGame(ChessGameManager chessGameManager) {
+    public ChessGameDto(ChessGameManager chessGameManager) {
         this.id = chessGameManager.getId();
         this.nextTurn = chessGameManager.nextColor().name();
         this.running = chessGameManager.isStart() && chessGameManager.isNotEnd();
         this.pieces = PiecesConverter.convertString(chessGameManager.getBoard());
     }
 
-    public ChessGame(long id, String nextTurn, boolean running, String pieces) {
+    public ChessGameDto(long id, String nextTurn, boolean running, String pieces) {
         this.id = id;
         this.nextTurn = nextTurn;
         this.running = running;

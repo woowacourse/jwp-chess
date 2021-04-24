@@ -1,6 +1,6 @@
 package chess.mysql.dao;
 
-import chess.mysql.dao.dto.ChessGame;
+import chess.mysql.dao.dto.ChessGameDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,12 +15,12 @@ import java.util.Optional;
 public class JdbcTemplateChessDao implements ChessDao {
     private JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<ChessGame> chessGameRowMapper = (rs, rownum) -> {
+    private final RowMapper<ChessGameDto> chessGameRowMapper = (rs, rownum) -> {
         long gameId = rs.getLong("id");
         String nextTurn = rs.getString("next_turn");
         boolean running = rs.getBoolean("running");
         String pieces = rs.getString("pieces");
-        return new ChessGame(gameId, nextTurn, running, pieces);
+        return new ChessGameDto(gameId, nextTurn, running, pieces);
     };
 
     public JdbcTemplateChessDao(JdbcTemplate jdbcTemplate) {
@@ -28,7 +28,7 @@ public class JdbcTemplateChessDao implements ChessDao {
     }
 
     @Override
-    public long save(ChessGame entity) {
+    public long save(ChessGameDto entity) {
         String query =
                 "INSERT INTO chess.chessgame (pieces, running, next_turn) VALUES " +
                         "(?, ?, ?)";
@@ -49,7 +49,7 @@ public class JdbcTemplateChessDao implements ChessDao {
     }
 
     @Override
-    public Optional<ChessGame> findById(long id) {
+    public Optional<ChessGameDto> findById(long id) {
         String query =
                 "SELECT * " +
                         "FROM chess.chessgame " +
@@ -60,7 +60,7 @@ public class JdbcTemplateChessDao implements ChessDao {
 
 
     @Override
-    public void update(ChessGame entity) {
+    public void update(ChessGameDto entity) {
         String query =
                 "UPDATE chess.chessgame " +
                         "SET pieces = ?, running = ? , next_turn = ?" +
@@ -71,7 +71,7 @@ public class JdbcTemplateChessDao implements ChessDao {
     }
 
     @Override
-    public List<ChessGame> findAllOnRunning() {
+    public List<ChessGameDto> findAllOnRunning() {
         String query =
                 "SELECT * " +
                         "FROM chess.chessgame " +

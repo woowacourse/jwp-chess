@@ -1,6 +1,6 @@
 package chess.mysql.dao;
 
-import chess.mysql.dao.dto.ChessGame;
+import chess.mysql.dao.dto.ChessGameDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,19 +11,19 @@ import static java.util.stream.Collectors.toList;
 public class StaticMemoryChessDao implements ChessDao {
     private static final long AUTO_INCREMENT_BASE = 1;
 
-    private final ConcurrentHashMap<Long, ChessGame> database = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, ChessGameDto> database = new ConcurrentHashMap<>();
     private long autoIncrement = AUTO_INCREMENT_BASE;
 
     @Override
-    public long save(ChessGame entity) {
+    public long save(ChessGameDto entity) {
         long id = autoIncrement++;
-        entity = new ChessGame(id, entity.getNextTurn(), entity.isRunning(), entity.getPieces());
+        entity = new ChessGameDto(id, entity.getNextTurn(), entity.isRunning(), entity.getPieces());
         database.put(entity.getId(), entity);
         return id;
     }
 
     @Override
-    public void update(ChessGame entity) {
+    public void update(ChessGameDto entity) {
         database.put(entity.getId(), entity);
     }
 
@@ -33,12 +33,12 @@ public class StaticMemoryChessDao implements ChessDao {
     }
 
     @Override
-    public Optional<ChessGame> findById(long id) {
+    public Optional<ChessGameDto> findById(long id) {
         return Optional.ofNullable(database.get(id));
     }
 
     @Override
-    public List<ChessGame> findAllOnRunning() {
+    public List<ChessGameDto> findAllOnRunning() {
         return database.keySet().stream()
                 .map(database::get)
                 .collect(toList());

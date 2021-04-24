@@ -1,6 +1,6 @@
 package chess.mysql.dao;
 
-import chess.mysql.dao.dto.ChessGame;
+import chess.mysql.dao.dto.ChessGameDto;
 import chess.chessgame.domain.room.game.board.Square;
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.ChessGameManagerFactory;
@@ -26,7 +26,7 @@ class MysqlChessDaoTest {
     @BeforeEach
     void dbSetup() throws SQLException {
         String sample = "RKBQKBKRPPPPPPPP........................p........ppppppprkbqkbkr"; // move a2 a3 한 번 진행
-        sampleGame = ChessGameManagerFactory.loadingGame(new ChessGame(0, "BLACK", true, sample));
+        sampleGame = ChessGameManagerFactory.loadingGame(new ChessGameDto(0, "BLACK", true, sample));
     }
 
     @DisplayName("DB에 체스보드 내용이 저장되는지 확인")
@@ -34,7 +34,7 @@ class MysqlChessDaoTest {
     void saveTest() throws SQLException {
         //given
         //when
-        dao.save(new ChessGame(sampleGame));
+        dao.save(new ChessGameDto(sampleGame));
 
         // then
         ChessGameManager expectedGameManager = getRecentGame().get();
@@ -47,11 +47,11 @@ class MysqlChessDaoTest {
     @Test
     void update() throws SQLException {
         //given
-        long gameId = dao.save(new ChessGame(ChessGameManagerFactory.createRunningGame(0)));
+        long gameId = dao.save(new ChessGameDto(ChessGameManagerFactory.createRunningGame(0)));
         ChessGameManager runningGame = ChessGameManagerFactory.createRunningGame(gameId);
         //when
         runningGame.move(Position.of("a2"), Position.of("a4"));  // b7 -> b6
-        dao.update(new ChessGame(runningGame));
+        dao.update(new ChessGameDto(runningGame));
 
         //then
         ChessGameManager expectedGameManager = getRecentGame().get();
@@ -64,7 +64,7 @@ class MysqlChessDaoTest {
     @Test
     void deleteOneGame() {
         //given
-        dao.save(new ChessGame(sampleGame));
+        dao.save(new ChessGameDto(sampleGame));
 
         //when
         dao.delete(sampleGame.getId());
@@ -84,7 +84,7 @@ class MysqlChessDaoTest {
                 String pieces = resultSet.getString("pieces");
                 String nextTurn = resultSet.getString("next_turn");
 
-                return Optional.of(ChessGameManagerFactory.loadingGame(new ChessGame(rowId, nextTurn, isRunning, pieces)));
+                return Optional.of(ChessGameManagerFactory.loadingGame(new ChessGameDto(rowId, nextTurn, isRunning, pieces)));
             }
         }
         return Optional.empty();

@@ -1,6 +1,6 @@
 package chess.mysql.dao;
 
-import chess.mysql.dao.dto.ChessGame;
+import chess.mysql.dao.dto.ChessGameDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JdbcTest
 @TestPropertySource("classpath:application-test.properties")
 class JdbcTemplateChessDaoTest {
-    private final ChessGame sample = new ChessGame(1L, "WHITE", true, "RNBQKBNRPPPPPPPP................................pppppppprnbqkbnr");
+    private final ChessGameDto sample = new ChessGameDto(1L, "WHITE", true, "RNBQKBNRPPPPPPPP................................pppppppprnbqkbnr");
 
     private JdbcTemplate jdbcTemplate;
     private JdbcTemplateChessDao jdbcTemplateChessDao;
@@ -36,8 +36,8 @@ class JdbcTemplateChessDaoTest {
         long gameId = jdbcTemplateChessDao.save(sample);
 
         //then
-        ChessGame chessGame = jdbcTemplateChessDao.findById(gameId).get();
-        assertThat(chessGame.getNextTurn()).isEqualTo("WHITE");
+        ChessGameDto chessGameDto = jdbcTemplateChessDao.findById(gameId).get();
+        assertThat(chessGameDto.getNextTurn()).isEqualTo("WHITE");
     }
 
     @DisplayName("수정 기능 테스트")
@@ -49,12 +49,12 @@ class JdbcTemplateChessDaoTest {
 
         //when
         long gameId = jdbcTemplateChessDao.save(sample);
-        jdbcTemplateChessDao.update(new ChessGame(gameId, changedTurn, true, expectedPieces));
+        jdbcTemplateChessDao.update(new ChessGameDto(gameId, changedTurn, true, expectedPieces));
 
         //then
-        ChessGame chessGame = jdbcTemplateChessDao.findById(gameId).get();
-        assertThat(chessGame.getPieces()).isEqualTo(expectedPieces);
-        assertThat(chessGame.getNextTurn()).isEqualTo(changedTurn);
+        ChessGameDto chessGameDto = jdbcTemplateChessDao.findById(gameId).get();
+        assertThat(chessGameDto.getPieces()).isEqualTo(expectedPieces);
+        assertThat(chessGameDto.getNextTurn()).isEqualTo(changedTurn);
     }
 
     @DisplayName("끝나지 않은 게임을 찾아오는 기능 테스트")
@@ -67,7 +67,7 @@ class JdbcTemplateChessDaoTest {
 
         //then
         List<Long> onRunnings = jdbcTemplateChessDao.findAllOnRunning().stream()
-                .map(ChessGame::getId)
+                .map(ChessGameDto::getId)
                 .collect(toList());
 
         assertThat(onRunnings).contains(firstGameId, secondGameId);

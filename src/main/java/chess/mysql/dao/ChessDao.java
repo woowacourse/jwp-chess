@@ -1,18 +1,18 @@
 package chess.mysql.dao;
 
-import chess.mysql.dao.dto.ChessGame;
+import chess.mysql.dao.dto.ChessGameDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ChessDao {
-    long save(ChessGame entity);
+    long save(ChessGameDto entity);
 
-    void update(ChessGame entity);
+    void update(ChessGameDto entity);
 
     void delete(long id);
 
-    Optional<ChessGame> findById(long id);
+    Optional<ChessGameDto> findById(long id);
 
-    List<ChessGame> findAllOnRunning();
+    List<ChessGameDto> findAllOnRunning();
 }

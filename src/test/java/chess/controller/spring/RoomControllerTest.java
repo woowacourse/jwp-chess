@@ -64,27 +64,27 @@ public class RoomControllerTest {
         createGridAndRoom(roomName);
         RestAssured
                 .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/room")
+                    .get("/room")
                 .then()
-                .log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("code", is(200))
-                .body("data.rooms.size()", is(1))
-                .body("data.rooms[0].roomName", is(roomName));
+                    .log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("code", is(200))
+                    .body("data.rooms.size()", is(1))
+                    .body("data.rooms[0].roomName", is(roomName));
     }
 
     private Response createGridAndRoom(String roomName) {
         return RestAssured
                 .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .pathParam("roomName", roomName)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .pathParam("roomName", roomName)
                 .when()
-                .get("/grid/{roomName}")
+                    .get("/grid/{roomName}")
                 .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .response();
+                    .statusCode(HttpStatus.OK.value())
+                    .extract()
+                    .response();
     }
 }

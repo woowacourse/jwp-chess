@@ -87,6 +87,6 @@ public class ChessService {
         if (roomCount != 0) {
             roomName = roomName + (" (" + roomCount + ")");
         }
-        return new CommonDto<>("방 정보를 가져왔습니다.", RoomDto.of(roomName));
+        return new CommonDto<>("방 정보를 가져왔습니다.", new RoomDto(roomName));
     }
 }

@@ -79,7 +79,11 @@ public class ChessService {
 
     public GridAndPiecesResponseDto getGridAndPieces(StartRequestDto requestDto) {
         String roomName = requestDto.getRoomName();
-        long roomId = roomDAO.findRoomIdByName(roomName).orElseGet(() -> roomDAO.createRoom(roomName));
+        long roomId = roomDAO.findRoomIdByName(roomName).orElseGet(() -> {
+            long createdRoomId = roomDAO.createRoom(roomName);
+            createGridAndPiece(createdRoomId);
+            return createdRoomId;
+        });
         GridDto gridDto = gridDAO.findRecentGridByRoomId(roomId);
         List<PieceDto> piecesResponseDto = pieceDAO.findPiecesByGridId(gridDto.getGridId());
         return new GridAndPiecesResponseDto(gridDto, piecesResponseDto);

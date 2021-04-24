@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.spring;
 
 import chess.dto.*;
 import chess.service.ChessService;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/game")
-public class SpringWebChessController {
+public class ChessController {
     private final ChessService service;
 
-    public SpringWebChessController(ChessService service) {
+    public ChessController(ChessService service) {
         this.service = service;
     }
 
@@ -25,22 +25,17 @@ public class SpringWebChessController {
         return ResponseEntity.ok().body(service.saveNewGame());
     }
 
-    @PostMapping("/move")
+    @PostMapping("/{gameId:[\\d]+}/move")
     public ResponseEntity<CommonDto<RunningGameDto>> move(@RequestBody MoveRequest moveRequest) {
         return ResponseEntity.ok().body(service.move(moveRequest.getGameId(), moveRequest.getFrom(), moveRequest.getTo()));
     }
 
-    @PostMapping("/room/name")
-    public ResponseEntity<CommonDto<RoomDto>> saveRoomName(@RequestBody String roomName) {
-        return ResponseEntity.ok().body(service.saveRoom(roomName));
-    }
-
-    @GetMapping("/load/games")
+    @GetMapping("/list")
     public ResponseEntity<CommonDto<GameListDto>> loadGames() {
         return ResponseEntity.ok().body(service.loadGameList());
     }
 
-    @GetMapping("/load/{gameId}")
+    @GetMapping("/{gameId:[\\d]+}/load")
     public ResponseEntity<CommonDto<RunningGameDto>> loadGame(@PathVariable int gameId) {
         return ResponseEntity.ok().body(service.loadGame(gameId));
     }

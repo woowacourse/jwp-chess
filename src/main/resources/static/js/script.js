@@ -38,7 +38,7 @@ async function processResponse(response) {
 async function loadGameListIntoBox() {
     const gameListBox = document.getElementById("gameListBox");
 
-    const response = await fetch("/game/load/games");
+    const response = await fetch("/game/list");
     if (response.ok) {
         const responseBody = await response.json();
 
@@ -66,7 +66,7 @@ async function addAndRequestMove(square) {
         console.log(`request [POST]/move, body: from: ${fromSquare.id}, \nto: ${toSquare.id}\n`);
 
         try {
-            fetch("/game/move", {
+            fetch(`/game/${gameId}/move`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -137,7 +137,7 @@ async function addEventOnLoadGameButton() {
         try {
             const gameListBox = document.getElementById("gameListBox");
             gameId = gameListBox.options[gameListBox.selectedIndex].value;
-            fetch(`/game/load/${gameId}`)
+            fetch(`/game/${gameId}/load`)
                 .then(res => processResponse(res));
             turnOnPanel();
         } catch (error) {

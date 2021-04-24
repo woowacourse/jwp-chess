@@ -38,8 +38,10 @@ public class RoomController {
         Chess chess = roomService.findChessById(chessId);
         ChessDto chessDto = new ChessDto(chess);
 
+        URI location = URI.create("/chess");
         HttpHeaders httpHeaders = createHeadersWithCookieOf(chessId);
         return ResponseEntity.status(200)
+                             .location(location)
                              .headers(httpHeaders)
                              .body(chessDto);
     }

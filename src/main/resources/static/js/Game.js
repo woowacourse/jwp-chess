@@ -5,7 +5,6 @@ const url = "http://localhost:8080";
 
 window.onload = async function () {
   const response = await requestData();
-  console.log(response);
   if (!response) {
     alert("게임을 불러올 수 없습니다. 홈으로 돌아갑니다.");
     history.back();

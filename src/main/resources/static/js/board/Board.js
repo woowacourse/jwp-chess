@@ -151,9 +151,7 @@ export class Board {
     this.#pieces.move(piece, targetTile)
     this.#turn.changeTurn();
     if (response["finished"]) {
-      // const winner = response["winner"];
       const back = confirm(`게임이 끝났습니다. 확인을 누르면 홈으로 돌아갑니다.`)
-      // const back = confirm(`${winner}가 이겼습니다. 확인을 누르면 홈으로 돌아갑니다.`)
       if (back) {
         window.location.href = "/";
       }

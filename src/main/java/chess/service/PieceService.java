@@ -1,8 +1,8 @@
 package chess.service;
 
 import chess.dao.PieceDao;
-import chess.domain.piece.PieceFactory;
-import chess.domain.piece.Position;
+import chess.domain.board.Board;
+import chess.domain.location.Location;
 import chess.dto.chess.MoveRequestDto;
 import chess.dto.piece.PieceDto;
 import java.util.List;
@@ -19,7 +19,7 @@ public class PieceService {
     }
 
     public void createInitialPieces(long gameId) {
-        pieceDao.insertAll(gameId, PieceFactory.createPieces());
+        pieceDao.insertAll(gameId, Board.createWithInitialLocation().toList());
     }
 
     public List<PieceDto> findPiecesByGameId(long gameId) {
@@ -30,12 +30,12 @@ public class PieceService {
     }
 
     public void move(long gameId, MoveRequestDto moveRequestDto) {
-        pieceDao.updatePosition(gameId, new Position(moveRequestDto.getSource()),
-            new Position(moveRequestDto.getTarget()));
+        pieceDao.updatePosition(gameId, Location.convert(moveRequestDto.getSource()),
+            Location.convert(moveRequestDto.getTarget()));
     }
 
     public void catchPiece(long gameId, MoveRequestDto moveRequestDto) {
-        pieceDao.delete(gameId, new Position(moveRequestDto.getTarget()));
+        pieceDao.delete(gameId, Location.convert(moveRequestDto.getTarget()));
     }
 
     public void removeAll(long gameId) {

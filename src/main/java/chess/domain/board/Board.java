@@ -1,60 +1,146 @@
 package chess.domain.board;
 
-import chess.domain.piece.Color;
+import chess.domain.location.Location;
+import chess.domain.piece.Bishop;
+import chess.domain.piece.King;
+import chess.domain.piece.Knight;
+import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
-import chess.domain.piece.Pieces;
-import chess.domain.piece.Position;
+import chess.domain.piece.Queen;
+import chess.domain.piece.Rook;
+import chess.domain.team.Team;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
 
-    public static final int ROW = 8;
-    public static final int COLUMN = 8;
+    private final List<Piece> pieces;
 
-    private final Pieces pieces;
-
-    public Board(final Pieces pieces) {
+    private Board(final List<Piece> pieces) {
         this.pieces = pieces;
     }
 
-    public Board(final List<Piece> pieces) {
-        this(new Pieces(pieces));
+    public static Board of(final List<Piece> pieces) {
+        return new Board(pieces);
     }
 
-    public void moveAndCatchPiece(Color color, Position source, Position target) {
-        Piece sourcePiece = pieces.findPieceByPosition(color, source);
-        sourcePiece.move(target, this);
-        pieces.catchPiece(color);
+    public static Board createWithInitialLocation() {
+        List<Piece> pieces = new ArrayList<>();
+        pieces.addAll(Rook.createInitialPieces());
+        pieces.addAll(Knight.createInitialPieces());
+        pieces.addAll(Bishop.createInitialPieces());
+        pieces.addAll(King.createInitialPieces());
+        pieces.addAll(Queen.createInitialPieces());
+        pieces.addAll(Pawn.createInitialPieces());
+        return new Board(pieces);
     }
 
-    public boolean isMovable(String color, String source, String target) {
-        Piece sourcePiece = pieces.findPieceByPosition(Color.from(color), new Position(source));
-        return sourcePiece.isMovable(new Position(target), this);
+    public void move(final Location source, final Location target, final Team team) {
+        validateMove(source, target, team);
+        final Piece sourcePiece = find(source);
+        removeIfExistent(target);
+        sourcePiece.move(target);
     }
 
-    public int getRow() {
-        return ROW;
+    public boolean isMovable(final Location source, final Location target, final Team team) {
+        try {
+            validateMove(source, target, team);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
-    public int getColumn() {
-        return COLUMN;
+    public void validateMove(final Location source, final Location target, final Team team) {
+        validateSameLocation(source, target);
+        final Piece sourcePiece = find(source);
+        validateTeam(sourcePiece, team);
+
+        validateMoveCapable(target, sourcePiece);
+        validateIsNotSameTeam(target, sourcePiece);
+        validateNotExistentInPath(sourcePiece.findPath(target));
+        validatePawnMovable(sourcePiece, source, target);
     }
 
-    public List<Piece> getPieces() {
-        return pieces.getPieces();
+    private void validateTeam(final Piece piece, final Team team) {
+        if (!piece.isSameTeam(team)) {
+            throw new MoveFailureException("상대의 말은 움직일 수 없습니다.");
+        }
     }
 
-
-    public double getWhiteScore() {
-        return pieces.getWhiteScore();
+    private void validateIsNotSameTeam(final Location target, final Piece piece) {
+        if (isExistent(target) && piece.isSameTeam(find(target))) {
+            throw new MoveFailureException("목표 위치에 같은 팀의 말이 있습니다.");
+        }
     }
 
-    public double getBlackScore() {
-        return pieces.getBlackScore();
+    private void validateMoveCapable(final Location target, final Piece piece) {
+        if (!piece.isMovable(target)) {
+            throw new MoveFailureException("해당 체스 말은 해당 위치로 이동할 능력이 없습니다.");
+        }
+    }
+
+    private void validateNotExistentInPath(final List<Location> pathToTarget) {
+        boolean isExistent = pathToTarget.stream()
+            .anyMatch(this::isExistent);
+
+        if (isExistent) {
+            throw new MoveFailureException("이동 경로에 말이 있습니다.");
+        }
+    }
+
+    private void validateSameLocation(final Location source, final Location target) {
+        if (source.equals(target)) {
+            throw new MoveFailureException("현재 말의 위치와 목표 위치는 같을 수 없습니다.");
+        }
+    }
+
+    private void validatePawnMovable(final Piece sourcePiece, final Location source,
+        final Location target) {
+        if (sourcePiece.isPawn()) {
+            int subX = source.subtractX(target);
+            if (subX == 0 && isExistent(target)) {
+                throw new MoveFailureException("폰이 이동할 수 없는 상황 입니다.");
+            }
+            if (subX != 0 && !isExistent(target)) {
+                throw new MoveFailureException("폰이 이동할 수 없는 상황 입니다.");
+            }
+        }
+    }
+
+    public Piece find(final Location location) {
+        return pieces
+            .stream()
+            .filter(piece -> piece.isHere(location))
+            .findFirst()
+            .orElseThrow(() -> new MoveFailureException("해당 위치에 체스 말이 존재하지 않습니다."));
+    }
+
+    public boolean isExistent(final Location location) {
+        return pieces
+            .stream()
+            .anyMatch(piece -> piece.isHere(location));
+    }
+
+    private void removeIfExistent(final Location target) {
+        if (isExistent(target)) {
+            Piece targetPiece = find(target);
+            pieces.remove(targetPiece);
+        }
     }
 
     public boolean isKingCatch() {
-        return pieces.isKingCatch();
+        return isKingDead(Team.WHITE) || isKingDead(Team.BLACK);
     }
 
+    private boolean isKingDead(final Team team) {
+        return pieces
+            .stream()
+            .filter(piece -> piece.isSameTeam(team))
+            .noneMatch(Piece::isKing);
+    }
+
+    public List<Piece> toList() {
+        return pieces;
+    }
 }

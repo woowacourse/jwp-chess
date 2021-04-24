@@ -1,17 +1,17 @@
 package chess.service;
 
 import chess.domain.board.Board;
-import chess.domain.piece.Color;
+import chess.domain.location.Location;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceFactory;
-import chess.domain.piece.Position;
+import chess.domain.team.Team;
 import chess.dto.chess.ChessResponseDto;
-import chess.dto.game.GameRequestDto;
-import chess.dto.game.GameResponseDto;
 import chess.dto.chess.MoveRequestDto;
 import chess.dto.chess.MoveResponseDto;
+import chess.dto.game.GameRequestDto;
+import chess.dto.game.GameResponseDto;
 import chess.dto.piece.PieceDto;
 import chess.dto.user.UserResponseDto;
+import chess.utils.PieceConverter;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -53,16 +53,19 @@ public class ChessService {
         }
         Board board = generateBoard(gameId);
 
-        return board.isMovable(moveRequestDto.getColor(), moveRequestDto.getSource(),
-            moveRequestDto.getTarget());
+        return board.isMovable(
+            Location.convert(moveRequestDto.getSource()),
+            Location.convert(moveRequestDto.getTarget()),
+            Team.from(moveRequestDto.getColor())
+        );
     }
 
     public MoveResponseDto move(long gameId, MoveRequestDto moveRequestDto) {
         Board board = generateBoard(gameId);
-        board.moveAndCatchPiece(
-            Color.from(moveRequestDto.getColor()),
-            new Position(moveRequestDto.getSource()),
-            new Position(moveRequestDto.getTarget())
+        board.move(
+            Location.convert(moveRequestDto.getSource()),
+            Location.convert(moveRequestDto.getTarget()),
+            Team.from(moveRequestDto.getColor())
         );
 
         pieceService.catchPiece(gameId, moveRequestDto);
@@ -74,18 +77,14 @@ public class ChessService {
         }
         gameService.changeTurn(gameId);
         return new MoveResponseDto(false, true);
-
     }
 
     private Board generateBoard(long gameId) {
         List<Piece> pieces = pieceService.findPiecesByGameId(gameId)
             .stream()
-            .map(piece -> PieceFactory.createPiece(
-                piece.getColor(),
-                piece.getShape(),
-                new Position(piece.getY(), piece.getX())))
+            .map(PieceConverter::run)
             .collect(Collectors.toList());
 
-        return new Board(pieces);
+        return Board.of(pieces);
     }
 }

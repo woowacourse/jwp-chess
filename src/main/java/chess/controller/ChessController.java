@@ -1,9 +1,9 @@
 package chess.controller;
 
 import chess.dto.chess.ChessResponseDto;
-import chess.dto.game.GameRequestDto;
 import chess.dto.chess.MoveRequestDto;
 import chess.dto.chess.MoveResponseDto;
+import chess.dto.game.GameRequestDto;
 import chess.service.ChessService;
 import java.util.Collections;
 import java.util.Map;

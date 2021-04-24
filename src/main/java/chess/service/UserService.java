@@ -1,8 +1,11 @@
 package chess.service;
 
 import chess.dao.UserDAO;
+import chess.dto.user.UserDTO;
 import chess.dto.user.UsersDTO;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public final class UserService {
@@ -35,10 +38,8 @@ public final class UserService {
         return userDAO.findWhiteUserByRoomId(roomId);
     }
 
-    public void registerUser(final String playerId, final String password) {
-//        Optional<UserDTO> user = userDAO.findByPlayerIdAndPassword(playerId, password);
-//        if (Optional.empty().equals(user)) {
-        userDAO.createUser(playerId, password);
-//        }
+    public int registerUser(final String playerId, final String password) {
+        Optional<UserDTO> user = userDAO.findByPlayerIdAndPassword(playerId, password);
+        return user.orElse(userDAO.createUser(playerId, password)).getId();
     }
 }

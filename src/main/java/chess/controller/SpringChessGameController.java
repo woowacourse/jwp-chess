@@ -40,9 +40,9 @@ public final class SpringChessGameController {
 
     @PostMapping(path = "/rooms/new-game")
     public String createNewGame(@ModelAttribute final RoomCreateDTO roomCreateDTO) {
-        Long id = roomService.createRoom(roomCreateDTO.getName());
-        userService.registerUser(roomCreateDTO.getPlayerId(), roomCreateDTO.getPassword());
-        return "redirect:/rooms/" + id;
+        int whiteUserId = userService.registerUser(roomCreateDTO.getPlayerId(), roomCreateDTO.getPassword());
+        Long roomId = roomService.createRoom(roomCreateDTO.getName(), whiteUserId);
+        return "redirect:/rooms/" + roomId;
     }
 
     @GetMapping("/rooms/{id}")

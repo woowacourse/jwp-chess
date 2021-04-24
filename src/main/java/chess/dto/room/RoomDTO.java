@@ -25,6 +25,9 @@ public final class RoomDTO {
         if (status == 1) {
             return "진행중";
         }
+        if (status == 2) {
+            return "준비중";
+        }
         return "종료됨";
     }
 }

@@ -18,6 +18,7 @@ public class RoomDAO {
     private static final int DEFAULT_BLACK_USER_ID = 1;
     private static final int DEFAULT_WHITE_USER_ID = 2;
     private static final int PLAYING_STATUS = 1;
+    private static final int READY_STATUS = 2;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -25,15 +26,14 @@ public class RoomDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long createRoom(final String name) {
-        String query = "INSERT INTO room (title, black_user, white_user, status) VALUES (?, ?, ?, ?)";
+    public Long createRoom(final String name, final int whiteUserId) {
+        String query = "INSERT INTO room (title, white_user, status) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
             ps.setString(1, name);
-            ps.setInt(2, DEFAULT_BLACK_USER_ID);
-            ps.setInt(3, DEFAULT_WHITE_USER_ID);
-            ps.setInt(4, PLAYING_STATUS);
+            ps.setInt(2, whiteUserId);
+            ps.setInt(3, READY_STATUS);
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -42,8 +42,8 @@ public class RoomDAO {
     public List<RoomDTO> allRooms() {
         try {
             String query = "SELECT room.id, room.title, black.nickname AS black_user, white.nickname AS white_user, room.status " +
-                    "FROM room JOIN user as black on black.id = room.black_user " +
-                    "JOIN user as white on white.id = room.white_user ORDER BY room.status DESC, room.id DESC";
+                    "FROM room LEFT JOIN user as black on black.id = room.black_user " +
+                    "LEFT JOIN user as white on white.id = room.white_user ORDER BY room.status DESC, room.id DESC";
 
             return jdbcTemplate.query(query, mapper());
         } catch (DataAccessException e) {
@@ -54,7 +54,7 @@ public class RoomDAO {
     private RowMapper<RoomDTO> mapper() {
         return (resultSet, rowNum) -> {
             int status = resultSet.getInt("status");
-            boolean playing = (status == 1);
+            boolean playing = (status == 1 || status == 2);
             return new RoomDTO(
                     resultSet.getInt("id"),
                     resultSet.getString("title"),

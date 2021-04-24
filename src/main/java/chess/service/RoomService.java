@@ -22,8 +22,8 @@ public final class RoomService {
         return roomDAO.allRooms();
     }
 
-    public Long createRoom(final String name) {
-        return roomDAO.createRoom(name);
+    public Long createRoom(final String name, final int whiteUserId) {
+        return roomDAO.createRoom(name, whiteUserId);
     }
 
     public void changeStatus(final String roomId) {

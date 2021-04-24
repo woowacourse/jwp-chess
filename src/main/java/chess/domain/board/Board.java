@@ -12,21 +12,11 @@ public class Board {
     public static final int MIN_BORDER = 1;
     public static final int MAX_BORDER = 8;
     public static final int PAWN_COUNT_THRESHOLD = 2;
-    private static final double TOTAL_SCORE = 38;
     private static final double PAWN_SAME_HORIZONTAL_SCORE = 0.5;
     private final Map<Position, Piece> board;
-    private final Map<Team, Double> lostScoreByTeam;
 
     public Board(Map<Position, Piece> board) {
         this.board = new LinkedHashMap<>(board);
-        this.lostScoreByTeam = initializeDeadPieceByTeamMap();
-    }
-
-    private Map<Team, Double> initializeDeadPieceByTeamMap() {
-        Map<Team, Double> result = new EnumMap<>(Team.class);
-        result.put(Team.BLACK, 0d);
-        result.put(Team.WHITE, 0d);
-        return result;
     }
 
     public Piece findPieceFromPosition(Position position) {
@@ -44,9 +34,6 @@ public class Board {
 
     private Team movePieceIfPossible(Piece targetPiece, Position target, Position destination) {
         if (targetPiece.canMove(target, destination, this)) {
-            Piece destinationPiece = findPieceFromPosition(destination);
-            loseScoreWhenDestinationIsPiece(destinationPiece);
-
             movePieceToPosition(targetPiece, destination);
             clearPosition(target);
 
@@ -68,13 +55,6 @@ public class Board {
         throw new IllegalArgumentException("해당 팀의 순서가 아닙니다.");
     }
 
-    private void loseScoreWhenDestinationIsPiece(Piece destinationPiece) {
-        if (Objects.nonNull(destinationPiece)) {
-            lostScoreByTeam.put(destinationPiece.getTeam()
-                    , lostScoreByTeam.get(destinationPiece.getTeam()) + destinationPiece.getScore());
-        }
-    }
-
     private void movePieceToPosition(Piece targetPiece, Position destination) {
         if (targetPiece.canPromotion(destination)) {
             targetPiece = new Queen(targetPiece.getTeam());
@@ -90,12 +70,28 @@ public class Board {
         if (targetMovablePositions.contains(destination)) {
             return;
         }
-        throw new UnsupportedOperationException("이동 불가능한 좌표입니다.");
+        throw new IllegalArgumentException("이동 불가능한 좌표입니다.");
     }
 
     public double calculateScore(Team team) {
-        double defaultScore = TOTAL_SCORE - lostScoreByTeam.get(team);
-        return defaultScore - countOfSameLinePawn(team) * PAWN_SAME_HORIZONTAL_SCORE;
+        double currentScore = getCurrentScore(team);
+        return currentScore - countOfSameLinePawn(team) * PAWN_SAME_HORIZONTAL_SCORE;
+    }
+
+    private double getCurrentScore(Team team) {
+        double score = 0;
+        for (Map.Entry<Position, Piece> entry : board.entrySet()) {
+            Piece piece = entry.getValue();
+            score += getScoreIfSameTeam(piece, team);
+        }
+        return score;
+    }
+
+    private double getScoreIfSameTeam(Piece piece, Team team) {
+        if (Objects.isNull(piece)) {
+            return 0;
+        }
+        return piece.getScoreIfSameTeam(team);
     }
 
     private int countOfSameLinePawn(Team team) {

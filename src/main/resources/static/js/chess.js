@@ -1,7 +1,9 @@
+const roomName = document.getElementById('roomName').value;
 applicationStart();
 
 let firstClickPosition = "";
 let secondClickPosition = "";
+
 
 async function applicationStart() {
     const chessBoard = document.querySelector(".chessboard");
@@ -31,9 +33,10 @@ async function applicationStart() {
 }
 
 async function loadSavedBoard() {
-    let savedBoardInformation = await fetch("/board")
+    let url = "/board/" + roomName;
+    let savedBoardInformation = await fetch(url)
     savedBoardInformation = await savedBoardInformation.json();
-    return savedBoardInformation.boardInfo;
+    return savedBoardInformation.data.boardInfo;
 }
 
 async function reStartGame() {
@@ -62,15 +65,22 @@ function clickDiv(e) {
 
 async function movePiece(targetPosition, destinationPosition) {
     const boardInfo = await sendMoveInformation(targetPosition, destinationPosition);
-    checkGameOver(boardInfo.gameOverFlag);
-    renewBoard(boardInfo.boardInfo);
+    checkMoveCommandValid(boardInfo);
+    checkGameOver(boardInfo.data.gameOverFlag);
+    renewBoard(boardInfo.data.boardInfo);
 }
 
 function checkGameOver(gameOverFlag) {
-    if (gameOverFlag === "true") {
+    if (gameOverFlag === true) {
         alert("게임이 종료되었습니다. 체스판을 초기화 합니다.");
         reStartGame();
         return '';
+    }
+}
+
+function checkMoveCommandValid(boardInfo) {
+    if (boardInfo.code === "BAD_REQUEST") {
+        alert(boardInfo.message);
     }
 }
 
@@ -80,7 +90,8 @@ async function sendMoveInformation(targetPosition, destinationPosition) {
         destination: destinationPosition
     }
 
-    let boardInformation = await fetch("/move", {
+    let url = "/move/" + roomName;
+    let boardInformation = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -117,7 +128,8 @@ async function renewBoard(boardInfo) {
 }
 
 async function resetBoard() {
-    let initialBoardInformation = await fetch("/board", {
+    let url = "/board/" + roomName;
+    let initialBoardInformation = await fetch(url, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -125,11 +137,12 @@ async function resetBoard() {
         }
     })
     initialBoardInformation = await initialBoardInformation.json();
-    return initialBoardInformation.boardInfo;
+    return initialBoardInformation.data.boardInfo;
 }
 
 async function alertScore() {
-    let scoreInformation = await fetch("/score")
+    let url = "/score/" + roomName;
+    let scoreInformation = await fetch(url)
     scoreInformation = await scoreInformation.json();
-    alert("백: " + scoreInformation.whiteScore + " 흑: " + scoreInformation.blackScore);
+    alert("백: " + scoreInformation.data.whiteScore + " 흑: " + scoreInformation.data.blackScore);
 }

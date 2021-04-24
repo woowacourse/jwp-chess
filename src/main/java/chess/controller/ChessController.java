@@ -3,6 +3,7 @@ package chess.controller;
 import chess.domain.dto.BoardDto;
 import chess.domain.dto.MoveInfoDto;
 import chess.domain.dto.ScoreDto;
+import chess.domain.dto.response.ApiResponseDto;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,23 +15,23 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/board")
-    public BoardDto loadSavedBoard() {
-        return chessService.getSavedBoard();
+    @GetMapping("/board/{roomName}")
+    public ApiResponseDto<BoardDto> loadSavedBoard(@PathVariable String roomName) {
+        return ApiResponseDto.createOK(chessService.getSavedBoard(roomName));
     }
 
-    @PutMapping("/board")
-    public BoardDto resetBoard() {
-        return chessService.resetBoard();
+    @PutMapping("/board/{roomName}")
+    public ApiResponseDto<BoardDto> resetBoard(@PathVariable String roomName) {
+        return ApiResponseDto.createOK(chessService.resetGame(roomName));
     }
 
-    @GetMapping("/score")
-    public ScoreDto scoreStatus() {
-        return chessService.score();
+    @GetMapping("/score/{roomName}")
+    public ApiResponseDto<ScoreDto> scoreStatus(@PathVariable String roomName) {
+        return ApiResponseDto.createOK(chessService.score(roomName));
     }
 
-    @PostMapping("/move")
-    public BoardDto move(@RequestBody MoveInfoDto moveInfoDto) {
-        return chessService.move(moveInfoDto);
+    @PostMapping("/move/{roomName}")
+    public ApiResponseDto<BoardDto> move(@RequestBody MoveInfoDto moveInfoDto, @PathVariable String roomName) {
+        return ApiResponseDto.createOK(chessService.move(moveInfoDto, roomName));
     }
 }

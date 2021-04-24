@@ -1,10 +1,11 @@
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>체스 게임</title>
-    <link href="chessBoard.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/css/chessBoard.css}" type="text/css"/>
 </head>
 <body>
+<input id="roomName" th:value="${roomName}" type="hidden">
 <h1 class="centered">체스 게임</h1>
 <div class="button-center">
     <button class="btn third" id="startButton" onclick="reStartGame()" type="button">Restart</button>
@@ -13,5 +14,5 @@
 <div class="chessboard">
 </div>
 </body>
-<script src="chess.js"></script>
+<script th:src="@{/js/chess.js}"></script>
 </html>

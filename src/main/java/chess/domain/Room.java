@@ -1,9 +1,9 @@
 package chess.domain;
 
 public class Room {
-    private Long id;
-    private String name;
-    private String pw;
+    private final Long id;
+    private final String name;
+    private final String pw;
     private Long gameId;
 
     public Room(Long id, String name, String pw, Long gameId) {

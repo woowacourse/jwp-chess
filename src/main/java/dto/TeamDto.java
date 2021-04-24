@@ -3,10 +3,10 @@ package dto;
 import chess.domain.team.Team;
 
 public class TeamDto {
-    private PiecesDto pieces;
-    private String name;
-    private double score;
-    private boolean isTurn;
+    private final PiecesDto pieces;
+    private final String name;
+    private final double score;
+    private final boolean isTurn;
 
 
     public TeamDto(PiecesDto pieces, String name, double score, boolean isTurn) {

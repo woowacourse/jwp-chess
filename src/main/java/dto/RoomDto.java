@@ -3,9 +3,9 @@ package dto;
 import chess.domain.Room;
 
 public class RoomDto {
-    private Long id;
-    private String name;
-    private Long gameId;
+    private final Long id;
+    private final String name;
+    private final Long gameId;
 
     public RoomDto(Room room) {
         this.id = room.getId();

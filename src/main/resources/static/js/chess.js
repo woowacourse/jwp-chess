@@ -1,7 +1,10 @@
 applicationStart();
 
+const restartButton = document.querySelector("#startButton");
 let firstClickPosition = "";
 let secondClickPosition = "";
+
+restartButton.addEventListener("click", reStartGame);
 
 async function applicationStart() {
     const chessBoard = document.querySelector(".chessboard");
@@ -126,13 +129,15 @@ function getBoardColor(index, color) {
 }
 
 async function resetBoard() {
-    let initialBoardInformation = await fetch("/board")
+    const url = window.location.href.split('/')
+    let initialBoardInformation = await fetch("/reset/" + url[url.length - 1])
     initialBoardInformation = await initialBoardInformation.json();
     return initialBoardInformation.boardInfo;
 }
 
 async function alertScore() {
-    let scoreInformation = await fetch("/score")
+    const url = window.location.href.split('/')
+    let scoreInformation = await fetch("/score/" + url[url.length - 1])
     scoreInformation = await scoreInformation.json();
     alert("백 : " + scoreInformation.whiteScore + "  흑 : " + scoreInformation.blackScore);
 }

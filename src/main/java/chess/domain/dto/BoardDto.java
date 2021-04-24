@@ -3,8 +3,10 @@ package chess.domain.dto;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceFactory;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -38,7 +40,7 @@ public class BoardDto {
     }
 
     public static BoardDto of(Map<String, String> boardInfo) {
-        return new BoardDto(boardInfo, true);
+        return new BoardDto(boardInfo, false);
     }
 
     public boolean getGameOverFlag() {
@@ -47,5 +49,13 @@ public class BoardDto {
 
     public Map<String, String> getBoardInfo() {
         return boardInfo;
+    }
+
+    public Board toBoard() {
+        Map<Position, Piece> board = new LinkedHashMap<>();
+        boardInfo.forEach((key, value) -> {
+            board.put(Position.from(key), PieceFactory.from(value));
+        });
+        return new Board(board);
     }
 }

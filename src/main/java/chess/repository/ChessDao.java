@@ -2,6 +2,7 @@ package chess.repository;
 
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
+import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
 import chess.domain.dto.BoardDto;
 import chess.domain.dto.RoomsDto;
@@ -18,7 +19,7 @@ import java.util.Map;
 @Repository
 public class ChessDao {
     private final JdbcTemplate jdbcTemplate;
-    private final String UPDATE_BOARD_QUERY = "update board set piece = ? where room_number = ? and position = ?";
+    private final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ? and room_number = ?";
     private final String UPDATE_GAME_QUERY = "update game set turn = ? where room_number = ?";
 
     public ChessDao(JdbcTemplate jdbcTemplate) {
@@ -37,9 +38,9 @@ public class ChessDao {
         return BoardDto.of(boardInfo);
     }
 
-    public BoardDto initialize(ChessGame chessGame, String roomName) {
+    public BoardDto initializeByName(String roomName) {
         int roomNumber = initializeGame(roomName);
-        return initializeBoard(chessGame, roomNumber);
+        return initializeBoard(roomNumber);
     }
 
     private int initializeGame(String roomName) {
@@ -53,14 +54,14 @@ public class ChessDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, roomName);
     }
 
-    private BoardDto initializeBoard(ChessGame chessGame, int roomNumber) {
-        chessGame.settingBoard();
-        chessGame.getBoard().getBoard().forEach((key,value) -> {
+    public BoardDto initializeBoard(int roomNumber) {
+//        chessGame.settingBoard();
+        Board newBoard = BoardFactory.create();
+        newBoard.getBoard().forEach((key, value) -> {
             String unicode = value != null ? value.getUnicode() : "";
-            System.out.println(key.convertToString()+"     "+unicode);
             executeBoardInsertQuery(key.convertToString(), unicode, roomNumber);
         });
-        return BoardDto.of(chessGame.getBoard());
+        return BoardDto.of(newBoard);
     }
 
     private void executeBoardInsertQuery(String position, String unicode, int roomNumber) {
@@ -96,8 +97,8 @@ public class ChessDao {
         jdbcTemplate.update(UPDATE_GAME_QUERY, turnOwner.getTeamString(), roomNumber);
     }
 
-    public void resetTurnOwner(Team turnOwner) {
-        jdbcTemplate.update(UPDATE_GAME_QUERY, "white", turnOwner.getTeamString());
+    public void resetTurnOwner(int roomNumber) {
+        jdbcTemplate.update(UPDATE_GAME_QUERY, "white", roomNumber);
     }
 
     public RoomsDto getRoomList() {

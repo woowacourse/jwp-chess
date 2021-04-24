@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.domain.ChessGame;
 import chess.domain.dto.*;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
@@ -11,11 +10,11 @@ import java.util.Map;
 @Controller
 public class ChessController {
     private final ChessService chessService;
-    private final ChessGame chessGame;
+//    private final ChessGame chessGame;
 
     public ChessController(ChessService chessService) {
         this.chessService = chessService;
-        this.chessGame = new ChessGame();
+//        this.chessGame = new ChessGame();
     }
 
     @GetMapping("/")
@@ -37,36 +36,37 @@ public class ChessController {
     @GetMapping("/board/{roomNumber}")
     @ResponseBody
     public BoardDto loadSavedBoard(@PathVariable int roomNumber) {
-        return chessService.getSavedBoardInfo(chessGame, roomNumber);
+        return chessService.getSavedBoardInfo(roomNumber);
     }
 
     @PostMapping("/board")
     @ResponseBody
-    public BoardDto resetBoard(@RequestBody Map<String, Object> data) {
-        return chessService.initialize(chessGame, (String)data.get("roomName"));
+    public BoardDto makeBoard(@RequestBody Map<String, Object> data) {
+        return chessService.initializeByName((String)data.get("roomName"));
     }
 
-//    @PutMapping("/board/{roomNumber}")
-//    @ResponseBody
-//    public BoardDto resetBoard(@RequestParam String roomName) {
-//        return chessService.initialize(chessGame, roomName);
-//    }
+    @GetMapping("/reset/{roomNumber}")
+    @ResponseBody
+    public BoardDto resetBoard(@PathVariable int roomNumber) {
+        return chessService.resetBoard(roomNumber);
+    }
 
     @GetMapping("/score/{roomNumber}")
     @ResponseBody
     public ScoreDto scoreStatus(@PathVariable int roomNumber) {
-        return chessGame.scoreStatus(roomNumber);
+//        return chessGame.scoreStatus(roomNumber);
+        return chessService.score(roomNumber);
     }
 
     @PostMapping("/move/{roomNumber}")
     @ResponseBody
     public ResponseDto move(@RequestBody MoveInfoDto moveInfoDto, @PathVariable int roomNumber) {
-        return chessService.move(chessGame, moveInfoDto, roomNumber);
+        return chessService.move(moveInfoDto, roomNumber);
     }
 
     @GetMapping("/move/{roomNumber}")
     @ResponseBody
     public BoardDto getCurrentBoard(@PathVariable int roomNumber) {
-        return chessService.getCurrentBoard(chessGame, roomNumber);
+        return chessService.getCurrentBoard(roomNumber);
     }
 }

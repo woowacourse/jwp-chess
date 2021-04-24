@@ -28,11 +28,11 @@ public class ChessGame {
         boardInitializeCheck();
         double whiteScore = board.calculateScore(Team.WHITE);
         double blackScore = board.calculateScore(Team.BLACK);
-        return new ScoreDto(whiteScore, blackScore);
+        return ScoreDto.of(whiteScore, blackScore);
     }
 
     private Position convertStringToPosition(String input) {
-        return Position.convertStringToPosition(input);
+        return Position.from(input);
     }
 
     private void boardInitializeCheck() {

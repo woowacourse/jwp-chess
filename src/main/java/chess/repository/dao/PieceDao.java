@@ -25,7 +25,7 @@ public class PieceDao implements PieceRepository {
 
     public void savePieces(ChessGameManager chessGameManager, int gameId) {
         Map<String, PieceDto> board = ChessBoardDto.from(chessGameManager.getBoard()).board();
-        String query = "insert into piece(game_id, name, color, position) values(?, ?, ?, ?)";
+        String query = "INSERT INTO piece(game_id, name, color, position) VALUES(?, ?, ?, ?)";
         Set<String> positions = board.keySet();
         this.jdbcTemplate.batchUpdate(query, positions, positions.size(), (ps, argument) -> {
             ps.setInt(1, gameId);

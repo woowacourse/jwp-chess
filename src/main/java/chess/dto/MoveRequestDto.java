@@ -5,6 +5,10 @@ public class MoveRequestDto {
     private String target;
     private String destination;
 
+    public MoveRequestDto() {
+
+    }
+
     public MoveRequestDto(String roomId, String target, String destination) {
         this.roomId = roomId;
         this.target = target;

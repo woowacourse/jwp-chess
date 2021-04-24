@@ -25,7 +25,7 @@ public class SpringChessController {
     @PostMapping("/room")
     public String createGame(@RequestParam("room") String name) {
         String id = springChessService.createRoom(name);
-        return "redirect:/enter/" + id;
+        return "redirect:/game/" + id;
     }
 
     @GetMapping("/game/{id}")

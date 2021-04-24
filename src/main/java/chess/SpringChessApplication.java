@@ -1,20 +1,18 @@
 package chess;
 
+import chess.domain.Rooms;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@Controller
 public class SpringChessApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(SpringChessApplication.class, args);
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(SpringChessApplication.class, args);
-	}
-
-	@GetMapping("/")
-	public String index() {
-		return "index";
-	}
+    @Bean
+    public Rooms rooms() {
+        return new Rooms();
+    }
 }

@@ -38,7 +38,6 @@ public class GameController {
     @PostMapping("/move/{roomId}")
     public String move(Model model, @PathVariable final Long roomId,
                        @RequestParam Position source, @RequestParam Position target) throws SQLException {
-        System.out.println(source + " "+ target);
         gameService.move(roomId, source, target);
         return printGame(roomId, model);
     }
@@ -54,7 +53,7 @@ public class GameController {
         return "chessBoard";
     }
 
-    @GetMapping("/result/{roomId}")
+    @GetMapping("/{roomId}/result")
     public String result(@PathVariable Long roomId, Model model) {
         final List<Owner> winner = gameService.winner(roomId);
         roomService.delete(roomId);

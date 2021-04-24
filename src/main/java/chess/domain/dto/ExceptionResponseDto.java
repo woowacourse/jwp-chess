@@ -1,10 +1,10 @@
 package chess.domain.dto;
 
-public class ErrorMessageDto {
+public class ExceptionResponseDto {
 
     private final String errorMessage;
 
-    public ErrorMessageDto(String errorMessage) {
+    public ExceptionResponseDto(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 

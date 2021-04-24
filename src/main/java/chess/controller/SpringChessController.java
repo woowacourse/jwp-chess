@@ -4,6 +4,7 @@ import chess.exception.ChessException;
 import chess.exception.DataAccessException;
 import chess.service.ChessService;
 import chess.service.RoomService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,11 +54,13 @@ public class SpringChessController {
 
     @ExceptionHandler(ChessException.class)
     public ResponseEntity<String> handle(ChessException e) {
-        return ResponseEntity.status(e.code()).body(e.desc());
+        return ResponseEntity.status(e.code())
+                             .body(e.desc());
     }
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<String> handle(DataAccessException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body(e.getMessage());
     }
 }

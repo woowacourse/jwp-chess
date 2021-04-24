@@ -32,13 +32,20 @@ public class ChessService {
 
     private Map<String, String> filteredChessBoard(final Map<Position, Piece> chessBoard) {
         Map<String, String> filteredChessBoard = new LinkedHashMap<>();
-        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.entrySet()) {
-            if (chessBoardEntry.getValue() != null) {
-                filteredChessBoard.put(chessBoardEntry.getKey().toString(),
-                        chessBoardEntry.getValue().getPiece());
-            }
+        for (Map.Entry<Position, Piece> cell : chessBoard.entrySet()) {
+            filter(filteredChessBoard, cell);
         }
         return filteredChessBoard;
+    }
+
+    private void filter(Map<String, String> filteredChessBoard, Map.Entry<Position, Piece> cell) {
+        if (isPieceExist(cell)) {
+            filteredChessBoard.put(cell.getKey().toString(), cell.getValue().getPiece());
+        }
+    }
+
+    private boolean isPieceExist(Map.Entry<Position, Piece> chessBoardEntry) {
+        return chessBoardEntry.getValue() != null;
     }
 
     public Round getStoredRound(int roomId) {

@@ -29,7 +29,7 @@ function deleteRequest() {
             data: requestQuery,
             success: function () {
                 alert("id : " + roomId + "번 방을 삭제했습니다.");
-                location.href="/room/list";
+                location.href="/rooms";
             },
             error: function () {
                 alert("에러 발생");

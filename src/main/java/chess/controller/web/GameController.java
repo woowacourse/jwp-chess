@@ -44,7 +44,7 @@ public class GameController {
 
     private String printGame(final Long roomId, final Model model) throws SQLException {
         if (gameService.isGameEnd(roomId)) {
-            return "redirect:/game/result/" + roomId;
+            return "redirect:/game/{roomId}/result" ;
         }
 
         model.addAttribute("room", roomService.room(roomId));

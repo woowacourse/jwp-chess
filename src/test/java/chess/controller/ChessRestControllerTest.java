@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @TestPropertySource("classpath:application-test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WebMvcTest
-class ChessControllerTest {
+class ChessRestControllerTest {
     @LocalServerPort
     int port;
 

@@ -25,6 +25,15 @@ public class GameController {
         return "chessBoardPage";
     }
 
+    @GetMapping("/load/{roomId}")
+    public String loadGame(@CookieValue(value="password") final String password,
+                           @PathVariable final Long roomId,
+                           final Model model) {
+        model.addAttribute("room", roomService.roomInfo(roomId));
+        model.addAttribute("game", gameService.gameInfo(roomId));
+        return "chessBoardPage";
+    }
+
     @GetMapping("/result/{roomId}")
     public String printResult(@PathVariable final Long roomId, final Model model) {
         model.addAttribute("winner", OutputView.decideWinnerName(gameService.winner(roomId)));

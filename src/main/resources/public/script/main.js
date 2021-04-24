@@ -43,8 +43,24 @@ function enterNewGame() {
 
 function enterRoom() {
     return function (event) {
+        const player2 = prompt("플레이어2의 비밀번호를 입력하시오");
+        const jsonData = JSON.stringify({ player2 : player2 });
+
         const roomId = event.target.id;
-        location.href="/game/load/"+roomId;
+        $.ajax({
+            url: "/game/load/"+roomId,
+            type: "GET",
+            data: jsonData,
+            dataType: "json",
+            contentType : 'application/json',
+            success: function () {
+                alert("암호 일치, 방 + "+roomId+"에 입장");
+                // location.href="/game/load/"+roomId;
+            },
+            error: function () {
+                alert("에러 발생");
+            }
+        })
     }
 }
 

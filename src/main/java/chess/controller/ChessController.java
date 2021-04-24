@@ -24,7 +24,7 @@ public class ChessController {
     }
 
     @GetMapping("")
-    public String play(Model model) throws DataException {
+    public String play(Model model) {
         model.addAllAttributes(ModelView.startResponse(springChessService.loadHistory()));
         return "play";
     }
@@ -36,7 +36,7 @@ public class ChessController {
     }
 
     @GetMapping("/{name}/new-game")
-    public String playNewGameWithSave(Model model, @PathVariable String name) throws DataException {
+    public String playNewGameWithSave(Model model, @PathVariable String name) {
         model.addAllAttributes(ModelView.newGameResponse(
                 springChessService.initialGameInfo(),
                 springChessService.addHistory(name)
@@ -45,7 +45,7 @@ public class ChessController {
     }
 
     @GetMapping("/continue-game")
-    public String continueGame(Model model, @RequestParam("name") String name) throws DataException {
+    public String continueGame(Model model, @RequestParam("name") String name) {
         final String id = springChessService.getIdByName(name);
         model.addAllAttributes(ModelView.commonResponseForm(springChessService.continuedGameInfo(id), id));
         return "chessGame";
@@ -58,8 +58,7 @@ public class ChessController {
 
     @PostMapping("/{historyId}/piece/movement")
     @ResponseBody
-    public ResponseEntity<MoveResponseDto> move(@PathVariable String historyId, @RequestBody MoveDto moveDto)
-        throws SQLException {
+    public ResponseEntity<MoveResponseDto> move(@PathVariable String historyId, @RequestBody MoveDto moveDto) {
         String command = makeMoveCmd(moveDto.getSource(), moveDto.getTarget());
         springChessService.move(historyId, command, new Commands(command));
         MoveResponseDto moveResponseDto = new MoveResponseDto(springChessService

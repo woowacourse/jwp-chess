@@ -86,26 +86,6 @@ public class Round {
         }
     }
 
-//    public void changeTurn(final String currentTurn) {
-//        State nextWhiteTurn = null;
-//        State nextBlackTurn = null;
-//
-//        if ("white".equals(currentTurn)) {
-//            nextWhiteTurn = whitePlayer.getState().toRunningTurn();
-//            nextBlackTurn = blackPlayer.getState().toFinishedTurn();
-//        }
-//        if ("black".equals(currentTurn)) {
-//            nextWhiteTurn = whitePlayer.getState().toFinishedTurn();
-//            nextBlackTurn = blackPlayer.getState().toRunningTurn();
-//        }
-//        changePlayersTurn(nextWhiteTurn, nextBlackTurn);
-//    }
-//
-//    private void changePlayersTurn(State nextWhiteTurn, State nextBlackTurn) {
-//        whitePlayer.changeState(nextWhiteTurn);
-//        blackPlayer.changeState(nextBlackTurn);
-//    }
-
     public void changeToEnd() {
         this.command = command.end();
     }

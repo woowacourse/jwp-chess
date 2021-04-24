@@ -1,6 +1,10 @@
 package chess.domain.room;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Room {
+
     private final long roomId;
     private final String title;
 

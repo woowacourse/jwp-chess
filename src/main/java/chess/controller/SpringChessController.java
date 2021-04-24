@@ -7,6 +7,7 @@ import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.MoveResponseDto;
 import chess.service.ChessService;
 import com.google.gson.Gson;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,15 +42,15 @@ public class SpringChessController {
         String currentTurn = loadedRound.getCurrentTurn();
         model.addAttribute("currentTurn", currentTurn);
 
-        Double whiteScore = chessService.getWhiteScore(roomId);
-        Double blackScore = chessService.getBlackScore(roomId);
-
+        double whiteScore = loadedRound.getWhiteScore();
+        double blackScore = loadedRound.getBlackScore();
         ScoreDto scoreDto = new ScoreDto(whiteScore, blackScore);
         model.addAttribute("score", scoreDto);
+
         return "chess";
     }
 
-    @PostMapping(value = "/move", produces = "application/json")
+    @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public MoveResponseDto move(@RequestBody MoveRequestDto moveRequestDto) {
         String source = moveRequestDto.getSource();
@@ -63,7 +64,7 @@ public class SpringChessController {
         return new MoveResponseDto(false);
     }
 
-    @PostMapping(value = "/turn", produces = "application/json")
+    @PostMapping(value = "/turn", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void turn(@RequestBody TurnChangeRequestDto turnChangeRequestDto) {
         String nextTurn = turnChangeRequestDto.getNextTurn();

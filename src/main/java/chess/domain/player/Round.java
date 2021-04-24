@@ -121,12 +121,12 @@ public class Round {
         return board;
     }
 
-    public Player getWhitePlayer() {
-        return whitePlayer;
+    public double getWhiteScore() {
+        return whitePlayer.calculateScore();
     }
 
-    public Player getBlackPlayer() {
-        return blackPlayer;
+    public double getBlackScore() {
+        return blackPlayer.calculateScore();
     }
 
     public String getCurrentTurn() {

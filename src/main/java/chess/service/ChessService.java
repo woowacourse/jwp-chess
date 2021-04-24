@@ -62,14 +62,4 @@ public class ChessService {
     public void changeTurn(String nextTurn, String currentTurn, int roomId) {
         chessRepository.changeTurn(nextTurn, currentTurn, roomId);
     }
-
-    public Double getWhiteScore(int roomId) {
-        Round round = getStoredRound(roomId);
-        return round.getWhitePlayer().calculateScore();
-    }
-
-    public Double getBlackScore(int roomId) {
-        Round round = getStoredRound(roomId);
-        return round.getBlackPlayer().calculateScore();
-    }
 }

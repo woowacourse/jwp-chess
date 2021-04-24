@@ -45,7 +45,9 @@ public class ChessController {
     @GetMapping("/game/{name}")
     public String continueGame(Model model, @PathVariable String name) {
         final String id = springChessService.getIdByName(name);
-        model.addAllAttributes(ModelView.commonResponseForm(springChessService.continuedGameInfo(id), id));
+        model.addAllAttributes(ModelView.commonResponseForm(
+            springChessService.continuedGameInfo(id),
+            id));
         return "chessGame";
     }
 
@@ -54,10 +56,11 @@ public class ChessController {
         return "play";
     }
 
-    @PostMapping("/{historyId}/piece/movement")
+    @PostMapping("/game/{historyId}/piece/{source}")
     @ResponseBody
-    public ResponseEntity<MoveResponseDto> move(@PathVariable String historyId, @RequestBody MoveDto moveDto) {
-        String command = makeMoveCmd(moveDto.getSource(), moveDto.getTarget());
+    public ResponseEntity<MoveResponseDto> move(@PathVariable String historyId,
+        @PathVariable String source, @RequestBody MoveDto moveDto) {
+        String command = makeMoveCmd(source, moveDto.getTarget());
         springChessService.move(historyId, command, new Commands(command));
         MoveResponseDto moveResponseDto = new MoveResponseDto(springChessService
             .continuedGameInfo(historyId), historyId);

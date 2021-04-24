@@ -22,13 +22,13 @@ public class ChessDao implements ChessRepository {
     @Override
     public Chess findChessById(long chessId) {
         List<PieceDto> pieceDtos = findPiecesById(chessId);
-        String sql = "SELECT c.chess_id, c.status, c.turn FROM chess c WHERE c.chess_id = ?";
+        String sql = "SELECT c.status, c.turn FROM chess c WHERE c.chess_id = ?";
         return jdbcTemplate.queryForObject(sql, chessMapper(pieceDtos), chessId);
     }
 
     private List<PieceDto> findPiecesById(long chessId) {
         String sql =
-                "SELECT p.piece_id, p.position, p.color, p.name FROM piece p WHERE p.chess_id = ?";
+                "SELECT p.position, p.color, p.name FROM piece p WHERE p.chess_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             final String position = rs.getString("position");
             final String color = rs.getString("color");

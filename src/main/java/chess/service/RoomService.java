@@ -17,8 +17,8 @@ public class RoomService {
         this.gameService = gameService;
     }
 
-    public long save(final String roomName) {
-        final long roomId = roomDao.save(roomName);
+    public long save(final String roomName, final String player1) {
+        final long roomId = roomDao.save(roomName, player1);
         gameService.create(roomId);
         return roomId;
     }

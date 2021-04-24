@@ -31,7 +31,7 @@ class JSonHandlerTest {
     @DisplayName("Json을 사용하여 board 불러오기 유효 테스트 / JSon -> board map 변환")
     @Test
     public void jsonDataToStringMap() {
-        final long id = roomService.save("tempRoom2");
+        final long id = roomService.save("tempRoom2", "test");
         final ChessGame chessGame = gameDao.load(id);
 
         final String data = jSonHandler.mapToJsonData(chessGame.board().parseUnicodeBoardAsMap());
@@ -44,7 +44,7 @@ class JSonHandlerTest {
     @DisplayName("Json을 사용하여 board 저장 유효 테스트 / 객체 -> JSon 변환")
     @Test
     public void saveBoardToDataWithJSon() {
-        final long id = roomService.save("tempRoom2");
+        final long id = roomService.save("tempRoom2", "test");
         final ChessGame chessGame = gameDao.load(id);
 
         final Board board = chessGame.board();

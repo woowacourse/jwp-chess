@@ -24,14 +24,13 @@ public class RoomRestController {
         this.roomService = roomService;
     }
 
-
     @PostMapping("/create")
     public long createRoom(@RequestBody @Valid final RoomDto roomDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             final String errorMsg = OutputView.getErrorMessage(bindingResult.getFieldErrors());
             throw new IllegalArgumentException(errorMsg);
         }
-        final Long roomId = roomService.save(roomDto.getRoomName());
+        final Long roomId = roomService.save(roomDto.getRoomName(), roomDto.getPlayer1());
         return roomId;
     }
 

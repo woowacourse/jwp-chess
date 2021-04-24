@@ -23,15 +23,16 @@ public class RoomDao {
         this.keyHolder = new GeneratedKeyHolder();
     }
 
-    public long save(final String roomName) {
+    public long save(final String roomName, final String player1) {
         if (isRoomNameExist(roomName)) {
             throw new IllegalArgumentException("중복된 방 이름입니다.");
         }
 
-        final String query = "INSERT INTO room (room_name) VALUES (?)";
+        final String query = "INSERT INTO room (room_name, player1) VALUES (?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement pstmt = con.prepareStatement(query, new String[]{"id"});
             pstmt.setString(1, roomName);
+            pstmt.setString(2, player1);
             return pstmt;
         }, keyHolder);
         return keyHolder.getKey().longValue();

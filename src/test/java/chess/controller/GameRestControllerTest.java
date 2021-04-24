@@ -36,7 +36,7 @@ class GameRestControllerTest {
     @DisplayName("갈 수 있는 위치 리스트 반환 테스트")
     @Test
     public void reachable(){
-        final long id = roomService.save("newRoom");
+        final long id = roomService.save("newRoom", "test");
         final List<String> reachable = gameService.reachable(id, new Position("a2"));
         assertThat(reachable).contains("a3").contains("a4");
     }
@@ -44,7 +44,7 @@ class GameRestControllerTest {
     @DisplayName("갈 수 있는 위치 요청 매핑 확인")
     @Test
     public void reachableMVC() throws Exception {
-        final long id = roomService.save("newRoom");
+        final long id = roomService.save("newRoom", "test");
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/game/reachable/"+id)
                 .param("source", "a2");

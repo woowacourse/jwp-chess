@@ -4,10 +4,10 @@ import chess.domain.dto.ErrorMessageDto;
 import chess.domain.exception.DataException;
 import java.sql.SQLException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class SpringChessControllerAdvice {
     @ExceptionHandler(DataException.class)
     public ResponseEntity<ErrorMessageDto> dataExceptionResponse(DataException dataException) {

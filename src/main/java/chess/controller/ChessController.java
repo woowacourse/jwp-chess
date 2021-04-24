@@ -40,7 +40,7 @@ public class ChessController {
     @PostMapping("/board")
     @ResponseBody
     public BoardDto makeBoard(@RequestBody Map<String, Object> data) {
-        return chessService.initializeByName((String)data.get("roomName"));
+        return chessService.initializeByName((String) data.get("roomName"));
     }
 
     @GetMapping("/reset/{roomNumber}")

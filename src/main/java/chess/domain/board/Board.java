@@ -1,10 +1,7 @@
 package chess.domain.board;
 
 
-import chess.domain.piece.Pawn;
-import chess.domain.piece.Piece;
-import chess.domain.piece.Queen;
-import chess.domain.piece.Team;
+import chess.domain.piece.*;
 
 import java.util.*;
 
@@ -20,6 +17,14 @@ public class Board {
     public Board(Map<Position, Piece> board) {
         this.board = new LinkedHashMap<>(board);
         this.lostScoreByTeam = initializeDeadPieceByTeamMap();
+    }
+
+    public static Board from(Map<String, String> boardInfo) {
+        Map<Position, Piece> board = new LinkedHashMap<>();
+        boardInfo.forEach((key, value) -> {
+            board.put(Position.from(key), PieceFactory.from(value));
+        });
+        return new Board(board);
     }
 
     private Map<Team, Double> initializeDeadPieceByTeamMap() {

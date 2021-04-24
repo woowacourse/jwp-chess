@@ -34,7 +34,8 @@ public class ChessDao {
             String piece = (String) result.get("piece");
             boardInfo.put(position, piece);
         }
-        return BoardDto.of(boardInfo);
+        Board board = Board.from(boardInfo);
+        return BoardDto.of(board);
     }
 
     public BoardDto initializeByName(String roomName) {

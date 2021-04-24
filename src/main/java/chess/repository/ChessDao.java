@@ -1,6 +1,5 @@
 package chess.repository;
 
-import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
@@ -55,7 +54,6 @@ public class ChessDao {
     }
 
     public BoardDto initializeBoard(int roomNumber) {
-//        chessGame.settingBoard();
         Board newBoard = BoardFactory.create();
         newBoard.getBoard().forEach((key, value) -> {
             String unicode = value != null ? value.getUnicode() : "";

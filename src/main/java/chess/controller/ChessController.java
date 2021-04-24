@@ -10,11 +10,9 @@ import java.util.Map;
 @Controller
 public class ChessController {
     private final ChessService chessService;
-//    private final ChessGame chessGame;
 
     public ChessController(ChessService chessService) {
         this.chessService = chessService;
-//        this.chessGame = new ChessGame();
     }
 
     @GetMapping("/")
@@ -54,7 +52,6 @@ public class ChessController {
     @GetMapping("/score/{roomNumber}")
     @ResponseBody
     public ScoreDto scoreStatus(@PathVariable int roomNumber) {
-//        return chessGame.scoreStatus(roomNumber);
         return chessService.score(roomNumber);
     }
 

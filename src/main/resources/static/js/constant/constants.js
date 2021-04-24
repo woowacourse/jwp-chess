@@ -1,7 +1,6 @@
 export const SELECTOR = {
     START_BUTTON : "#start_button",
-    LOAD_BUTTON : "#load_button",
-    SAVE_BUTTON : "#save_button"
+    ROOMS : "#rooms"
 }
 
 export const URL = {

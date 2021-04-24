@@ -1,5 +1,5 @@
 import {PieceFactory} from "../domain/piece/PieceFactory.js";
-import {game_info, game_status, move} from "../api/api.js";
+import {game_info, game_status, move} from "../../api/api.js";
 
 export class ChessController {
     #chessGame

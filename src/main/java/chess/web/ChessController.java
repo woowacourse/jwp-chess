@@ -10,30 +10,21 @@ import java.net.URLDecoder;
 import java.util.List;
 
 @RestController
-public class SpringWebChessController {
+@RequestMapping("/game")
+public class ChessController {
 
     private final ChessService chessService;
 
-    public SpringWebChessController(ChessService chessService) {
+    public ChessController(ChessService chessService) {
         this.chessService = chessService;
     }
 
-    @PostMapping("/room/{roomName}")
-    public RoomDto createNewRoom(@PathVariable String roomName) {
-        return chessService.createNewRoom(roomName);
-    }
-
-    @GetMapping("/game/{roomId}")
+    @GetMapping("/{roomId}")
     public GameDto load(@PathVariable Long roomId) {
         return chessService.loadByGameId(roomId);
     }
 
-    @GetMapping("/rooms")
-    public List<RoomDto> rooms() {
-        return chessService.getAllRooms();
-    }
-
-    @PatchMapping("/game/{roomId}/position")
+    @PatchMapping("/{roomId}/position")
     public GameDto move(@PathVariable Long roomId, @RequestBody MoveDto moveDto) {
         String source = moveDto.getSource();
         String target = moveDto.getTarget();
@@ -41,12 +32,12 @@ public class SpringWebChessController {
         return chessService.move(roomId, source, target);
     }
 
-    @GetMapping("/game/{roomId}/status")
+    @GetMapping("/{roomId}/status")
     public StatusDto status(@PathVariable Long roomId) {
         return chessService.getStatus(roomId);
     }
 
-    @PatchMapping("/game/{roomId}/end")
+    @PatchMapping("/{roomId}/end")
     public MessageDto end(@PathVariable Long roomId) {
         return chessService.end(roomId);
     }

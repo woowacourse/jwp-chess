@@ -43,28 +43,6 @@ public class ChessService {
         return new GameDto(chessGame);
     }
 
-    public RoomDto createNewRoom(String roomName) {
-        Long roomId = saveGameToDB(roomName);
-
-        return new RoomDto(new Room(roomId, roomName, null));
-    }
-
-    private Long saveGameToDB(String roomName) {
-        ChessGame chessGame = new ChessGame(
-                null,
-                new Board(PieceFactory.createPieces())
-        );
-        chessGame.start();
-
-        return chessRepository.save(
-                new Room(
-                        null,
-                        roomName,
-                        chessGame
-                )
-        );
-    }
-
     public StatusDto getStatus(Long roomId) {
         Room room = chessRepository.findByRoomId(roomId);
         ChessGame chessGame = room.getChessGame();
@@ -83,12 +61,6 @@ public class ChessService {
         chessRepository.update(room);
 
         return new GameDto(chessGame);
-    }
-
-    public List<RoomDto> getAllRooms() {
-        return chessRepository.allRooms().stream()
-                .map(room -> new RoomDto(room))
-                .collect(toList());
     }
 
 }

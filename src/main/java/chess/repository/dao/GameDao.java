@@ -21,10 +21,10 @@ public class GameDao implements GameRepository {
     public int save(ChessGameManager chessGameManager) {
         Color currentTurnColor = chessGameManager.getCurrentTurnColor();
 
-        String insertGameQuery = "insert into game(turn) values(?)";
+        String insertGameQuery = "INSERT INTO game(turn) VALUES(?)";
         this.jdbcTemplate.update(insertGameQuery, currentTurnColor.name());
 
-        String findGameIdQuery = "select last_insert_id()";
+        String findGameIdQuery = "SELECT last_insert_id()";
         int gameId = this.jdbcTemplate.queryForObject(findGameIdQuery, Integer.class);
 
         return gameId;

@@ -5,7 +5,8 @@ function startGame() {
         type: "POST",
         url: "/game",
         data: {
-            roomName: getParameterByName('roomName')
+            roomName: document.getElementById("roomName").innerText
+            // roomName: getParameterByName('roomName')
         },
         dataType: "json",
         success: setBoard,
@@ -41,9 +42,9 @@ document.getElementById("restart").addEventListener("click", restartGame);
 function restartGame() {
     $.ajax({
         type: "GET",
-        url: "/restart",
+        url: `/restart/${document.getElementById("roomName").innerText}`,
         data: {
-            roomName: getParameterByName('roomName')
+            roomName: document.getElementById("roomName").innerText
         },
         dataType: "json",
         success: setBoard,
@@ -81,7 +82,7 @@ function endGame() {
         type: "POST",
         url: "/end",
         data: {
-            roomName: getParameterByName('roomName')
+            roomName: document.getElementById("roomName").innerText
         },
         dataType: "json",
         complete: goHome
@@ -99,7 +100,7 @@ function move() {
         data: {
             source: document.getElementsByClassName("source")[0].id,
             target: document.getElementsByClassName("target")[0].id,
-            roomName:  getParameterByName('roomName')
+            roomName: document.getElementById("roomName").innerText
         },
         dataType: "json",
         success: switchPiece,
@@ -140,10 +141,7 @@ function turnSetting(turn) {
 function status() {
     $.ajax({
         type: "GET",
-        url: "/status",
-        data: {
-            roomName: getParameterByName('roomName')
-        },
+        url: `/status/${document.getElementById("roomName").innerText}`,
         success: printStatus,
         error: errorMessage,
     });

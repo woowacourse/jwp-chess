@@ -17,6 +17,9 @@ body {
     color: mediumaquamarine;
     margin-top: 100px;
 }
+#roomName {
+    display: none;
+}
 
 #room {
     display: block;

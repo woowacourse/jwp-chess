@@ -144,7 +144,7 @@ function request_move_post(first_click, second_click) {
     moveXhr.send(JSON.stringify({
         source: start_position,
         target: destination,
-        roomId :window.location.href.split('rooms/')[1]
+        roomId: window.location.href.split('rooms/')[1]
     }));
 
     start_position = null;
@@ -175,7 +175,7 @@ function request_move_post(first_click, second_click) {
         turnXhr.send(JSON.stringify({
             currentTurn: current_turn,
             nextTurn: next_turn,
-            roomId :window.location.href.split('rooms/')[1]
+            roomId: window.location.href.split('rooms/')[1]
         }));
         window.location.href = "/rooms/" + window.location.href.split('rooms/')[1];
     };

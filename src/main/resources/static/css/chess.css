@@ -7,6 +7,55 @@ body {
     background-color: #F3E4DF;
 }
 
+.chessRoomList {
+    position: absolute;
+    /* display: flex; */
+    display: none;
+    flex-direction: column;
+    margin-left: 30vw;
+    width: 40vw;
+    justify-content: center;
+    background-color: #E5CCC8;
+    z-index: 1;
+    box-shadow: 3px 3px 3px 3px gray;
+    border-radius: 20px;
+}
+
+.chessRoom {
+    color: #522632;
+    align-items: center;
+    margin-top: 1.5vh;
+    margin-bottom: 1.5vh;
+}
+
+.chessRoomName {
+    width: 100%;
+    text-align: center;
+}
+
+.chessRoomJoinBtn {
+    margin-top: 1vh;
+    margin-left: 40%;
+    width: 20%;
+    height: 30px;
+    border-radius: 20px;
+}
+
+.chessRoomJoinBtn:hover, .closeRoomListBtn:hover {
+    cursor: pointer;
+}
+
+.closeRoomListBtn {
+    background-color:#6F3B48;
+    color: white;
+    width: 30%;
+    margin-left: 35%;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    height: 30px;
+    border-radius: 20px;
+}
+
 .title {
     color: #522632;
     width: 100vw;
@@ -123,7 +172,7 @@ body {
     cursor: pointer;
 }
 
-.startBtn {
+.makeRoomBtn {
     width: 12vw;
     height: 12vw;
     background-color: #522632;
@@ -137,17 +186,17 @@ body {
     justify-content: center;
 }
 
-.startBtn > h3 {
+.makeRoomBtn > h3 {
     color: #F3E4DF;
     text-align: center;
 }
 
-.startBtn:hover {
+.makeRoomBtn:hover {
     cursor: pointer;
     background-color: #6F3B48;
 }
 
-.loadBtn {
+.joinRoomBtn {
     width: 12vw;
     height: 12vw;
     background-color: #522632;
@@ -160,12 +209,12 @@ body {
     justify-content: center;
 }
 
-.loadBtn:hover {
+.joinRoomBtn:hover {
     cursor: pointer;
     background-color: #6F3B48;
 }
 
-.loadBtn > h3 {
+.joinRoomBtn > h3 {
     color: #F3E4DF;
     text-align: center;
 }

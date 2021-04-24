@@ -24,14 +24,14 @@ public class RoomServiceTest {
     void findAllTest() {
 
         // given
-        Room room = new Room(1L, "테스트");
-        roomService.insert(room);
+        String title = "테스트";
+        roomService.insert(title);
 
         // when
         final List<Room> rooms = roomService.findAll();
 
         // then
-        assertThat(rooms).containsExactly(room);
+        assertThat(rooms).extracting("title").containsExactly(title);
     }
 
     @DisplayName("룸 ID로 체스 조회 테스트")
@@ -39,8 +39,8 @@ public class RoomServiceTest {
     void findChessIdByIdTest() {
 
         // given
-        Room room = new Room(1L, "테스트");
-        final long roomId = roomService.insert(room);
+        String title = "테스트";
+        final long roomId = roomService.insert(title);
 
         // when
         final long chessId = roomService.findChessIdById(roomId);
@@ -54,13 +54,13 @@ public class RoomServiceTest {
     void insertTest() {
 
         // given
-        Room room = new Room(1L, "테스트");
+        String title = "테스트";
 
         // when
-        roomService.insert(room);
+        roomService.insert(title);
 
         // then
         final List<Room> rooms = roomService.findAll();
-        assertThat(rooms).containsExactly(room);
+        assertThat(rooms).extracting("title").containsExactly(title);
     }
 }

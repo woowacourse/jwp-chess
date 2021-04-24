@@ -23,7 +23,8 @@ function rooms(data) {
 }
 
 async function onNewRoom() {
-    const response = await HTTP_CLIENT.post(PATH.ROOM, prompt("방 제목을 입력해주세요", "EMPTY"));
+    const title = prompt("방 제목을 입력해주세요", "EMPTY");
+    const response = await HTTP_CLIENT.post(PATH.ROOM + `?title=${title}`, null);
     moveToChessView(response);
 }
 

@@ -41,20 +41,20 @@ public class RoomDao implements RoomRepository {
     }
 
     @Override
-    public long insert(Room room, BoardDto boardDto) {
-        final long roomId = insertRoom(room);
+    public long insert(String title, BoardDto boardDto) {
+        final long roomId = insertRoom(title);
         final long chessId = insertChess(roomId);
         insertPieces(chessId, boardDto);
         return chessId;
     }
 
-    private long insertRoom(Room room) {
+    private long insertRoom(String title) {
         String sql = "INSERT INTO room (title) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement ps =
                     connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, room.getTitle());
+            ps.setString(1, title);
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();

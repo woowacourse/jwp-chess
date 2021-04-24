@@ -35,8 +35,8 @@ public class RoomService {
     }
 
     @Transactional
-    public long insert(Room room) {
+    public long insert(String title) {
         BoardDto boardDto = BoardDto.from(Chess.createWithEmptyBoard().start());
-        return roomRepository.insert(room, boardDto);
+        return roomRepository.insert(title, boardDto);
     }
 }

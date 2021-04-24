@@ -28,9 +28,9 @@ public class FakeRoomDao implements RoomRepository {
     }
 
     @Override
-    public long insert(Room room, BoardDto boardDto) {
+    public long insert(String title, BoardDto boardDto) {
         long roomId = fakeRoomTable.size() + 1L;
-        fakeRoomTable.put(roomId, room);
+        fakeRoomTable.put(roomId, new Room(roomId, title));
         return roomId;
     }
 }

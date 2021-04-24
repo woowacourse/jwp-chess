@@ -10,5 +10,5 @@ public interface RoomRepository {
 
     long findChessIdById(long roomId);
 
-    long insert(Room room, BoardDto boardDto);
+    long insert(String title, BoardDto boardDto);
 }

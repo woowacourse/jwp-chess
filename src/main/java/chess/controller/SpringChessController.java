@@ -27,7 +27,7 @@ public class SpringChessController {
         return "home";
     }
 
-    @GetMapping("/makeRoom")
+    @PostMapping("/rooms")
     @ResponseBody
     public int makeRoom() {
         return chessService.makeRoom();

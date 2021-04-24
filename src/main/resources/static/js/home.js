@@ -9,8 +9,8 @@ async function makeRoom() {
 }
 
 function getRoomNumber() {
-    return fetch("/makeRoom", {
-        method: 'GET',
+    return fetch("/rooms", {
+        method: 'POST',
     }).then(res => res.json())
 }
 

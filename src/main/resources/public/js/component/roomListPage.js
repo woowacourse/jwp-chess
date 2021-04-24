@@ -52,6 +52,11 @@ function createRoom() {
     if (!roomName) {
         return false;
     }
+    const rooms = document.querySelector("#room-list");
+    if (rooms.innerText.search(roomName) === 0) {
+        alert("중복된 방 이름이 존재합니다!");
+        return false;
+    }
     store.roomName = roomName;
     chessPage.createChessBoard(roomName);
 

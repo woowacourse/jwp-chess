@@ -38,10 +38,10 @@ public class SpringChessController {
         return "redirect:game/" + roomId;
     }
 
-    @ResponseBody
     @DeleteMapping("/rooms/{roomId}")
-    private void deleteRoom(@PathVariable("roomId") Long roomId) {
+    private ResponseEntity deleteRoom(@PathVariable("roomId") Long roomId) {
         roomService.delete(roomId);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/game/{roomId}/move")

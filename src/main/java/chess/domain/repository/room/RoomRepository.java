@@ -1,4 +1,4 @@
-package chess.repository.room;
+package chess.domain.repository.room;
 
 import chess.domain.game.Room;
 

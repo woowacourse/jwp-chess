@@ -1,4 +1,4 @@
-package chess.repository.room;
+package chess.dao.room;
 
 import chess.domain.game.Room;
 

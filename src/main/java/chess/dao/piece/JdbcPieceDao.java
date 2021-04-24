@@ -1,4 +1,4 @@
-package chess.repository.piece;
+package chess.dao.piece;
 
 import chess.domain.piece.Piece;
 import java.sql.PreparedStatement;

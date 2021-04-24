@@ -1,4 +1,4 @@
-package chess.repository.room;
+package chess.domain.repository.room;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -8,6 +8,7 @@ import chess.domain.game.Room;
 import chess.domain.gamestate.running.Move;
 import chess.domain.location.Location;
 import chess.domain.piece.Piece;
+import chess.domain.repository.room.RoomRepositoryImpl;
 import chess.domain.team.Team;
 import chess.utils.BoardUtil;
 import org.junit.jupiter.api.BeforeEach;

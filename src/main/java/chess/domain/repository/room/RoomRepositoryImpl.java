@@ -1,4 +1,4 @@
-package chess.repository.room;
+package chess.domain.repository.room;
 
 import chess.domain.board.Board;
 import chess.domain.game.Room;
@@ -7,7 +7,8 @@ import chess.domain.gamestate.running.Ready;
 import chess.domain.location.Location;
 import chess.domain.piece.Piece;
 import chess.domain.team.Team;
-import chess.repository.piece.PieceDao;
+import chess.dao.piece.PieceDao;
+import chess.dao.room.RoomDao;
 import chess.utils.BoardUtil;
 import java.util.List;
 import org.springframework.stereotype.Repository;

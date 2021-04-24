@@ -10,6 +10,7 @@ import chess.domain.state.State;
 import chess.domain.state.StateFactory;
 import chess.repository.ChessRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -61,9 +62,10 @@ public class ChessService {
         movePiece(source, target, roomId);
     }
 
+    @Transactional
     public void movePiece(String source, String target, int roomId) {
-        chessRepository.removePiece(target, roomId);
-        chessRepository.movePiece(source, target, roomId);
+        chessRepository.removeTargetPiece(target, roomId);
+        chessRepository.moveSourcePieceToTargetPoint(source, target, roomId);
     }
 
     public void changeTurn(String nextTurn, String currentTurn, int roomId) {

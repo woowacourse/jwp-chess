@@ -64,7 +64,7 @@ public class ChessController {
         springChessService.move(historyId, command, new Commands(command));
         MoveResponseDto moveResponseDto = new MoveResponseDto(springChessService
             .continuedGameInfo(historyId), historyId);
-        return ResponseEntity.status(200)
+        return ResponseEntity.ok()
             .body(moveResponseDto);
     }
 

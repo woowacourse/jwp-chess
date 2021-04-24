@@ -1,7 +1,6 @@
 package chess.controller;
 
 import chess.domain.dto.ErrorMessageDto;
-import chess.domain.dto.MoveResponseDto;
 import chess.domain.exception.DataException;
 import java.sql.SQLException;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,7 @@ public class SpringChessControllerAdvice {
     public ResponseEntity<ErrorMessageDto> dataExceptionResponse(DataException dataException) {
         String message = dataException.getMessage();
         ErrorMessageDto errorMessageDto = new ErrorMessageDto(message);
-        return ResponseEntity.status(400)
+        return ResponseEntity.badRequest()
             .body(errorMessageDto);
     }
 
@@ -22,7 +21,7 @@ public class SpringChessControllerAdvice {
     public ResponseEntity<ErrorMessageDto>  sqlExceptionResponse(SQLException sqlException) {
         String message = sqlException.getMessage();
         ErrorMessageDto errorMessageDto = new ErrorMessageDto(message);
-        return ResponseEntity.status(400)
+        return ResponseEntity.badRequest()
             .body(errorMessageDto);
     }
 
@@ -31,7 +30,7 @@ public class SpringChessControllerAdvice {
         illegalArgumentException) {
         String message = illegalArgumentException.getMessage();
         ErrorMessageDto errorMessageDto = new ErrorMessageDto(message);
-        return ResponseEntity.status(400)
+        return ResponseEntity.badRequest()
             .body(errorMessageDto);
     }
 

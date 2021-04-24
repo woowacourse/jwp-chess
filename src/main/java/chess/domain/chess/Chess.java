@@ -68,30 +68,6 @@ public class Chess {
         return new Chess(board, status, turn.next());
     }
 
-    public Chess end() {
-        return new Chess(board, Status.STOP, turn);
-    }
-
-    public Chess exit() {
-        return new Chess(board, Status.TERMINATED, turn);
-    }
-
-    public boolean isTerminated() {
-        return status.isTerminated();
-    }
-
-    public boolean isKindDead() {
-        return status.isKingDead();
-    }
-
-    public boolean isRunning() {
-        return status.isRunning();
-    }
-
-    public boolean isStop() {
-        return status.isStop();
-    }
-
     public String status() {
         return status.name();
     }

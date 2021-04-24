@@ -18,8 +18,7 @@ public class BoardDto {
     private final double whiteScore;
     private final List<PieceDto> pieceDtos;
 
-    public BoardDto(double blackScore, double whiteScore,
-                    List<PieceDto> pieceDtos) {
+    public BoardDto(double blackScore, double whiteScore, List<PieceDto> pieceDtos) {
         this.blackScore = blackScore;
         this.whiteScore = whiteScore;
         this.pieceDtos = pieceDtos;

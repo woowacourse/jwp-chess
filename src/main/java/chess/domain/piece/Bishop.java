@@ -10,7 +10,6 @@ public class Bishop extends AbstractPiece {
     public static final Bishop WHITE_INSTANCE = new Bishop(Color.WHITE);
 
     private static final DirectionGroup DIRECTION_GROUP;
-    private static final String SYMBOL = "b";
     private static final String NAME = "BISHOP";
     private static final double SCORE = 3;
 
@@ -45,11 +44,6 @@ public class Bishop extends AbstractPiece {
     @Override
     public boolean isKing() {
         return false;
-    }
-
-    @Override
-    public String getSymbol() {
-        return changeColorSymbol(SYMBOL);
     }
 
     @Override

@@ -15,8 +15,6 @@ public interface Piece {
 
     boolean isKing();
 
-    String getSymbol();
-
     String getName();
 
     Color getColor();

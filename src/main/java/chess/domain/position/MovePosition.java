@@ -24,16 +24,15 @@ public class MovePosition {
     private Position sourcePosition;
     private Position targetPosition;
 
-    public MovePosition() {
-    }
+    public MovePosition() {}
 
-    public void setSource(String sourcePosition) {
-        this.sourcePosition = Position.from(sourcePosition);
-    }
-
-    public void setTarget(String targetPosition) {
-        this.targetPosition = Position.from(targetPosition);
-    }
+    //    public void setSource(String sourcePosition) {
+    //        this.sourcePosition = Position.from(sourcePosition);
+    //    }
+    //
+    //    public void setTarget(String targetPosition) {
+    //        this.targetPosition = Position.from(targetPosition);
+    //    }
 
     public MovePosition(String source, String target) {
         this(Position.from(source), Position.from(target));

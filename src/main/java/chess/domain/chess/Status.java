@@ -10,12 +10,4 @@ public enum Status {
     public boolean isTerminated() {
         return this == TERMINATED;
     }
-
-    public boolean isKingDead() {
-        return this == KING_DEAD;
-    }
-
-    public boolean isStop() {
-        return this == STOP;
-    }
 }

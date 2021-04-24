@@ -7,7 +7,6 @@ import chess.domain.dto.MoveDto;
 import chess.service.SpringChessService;
 import chess.view.ModelView;
 import java.sql.SQLException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +19,6 @@ public class ChessController {
 
     private final SpringChessService springChessService;
 
-    @Autowired
     public ChessController(SpringChessService springChessService) {
         this.springChessService = springChessService;
     }

@@ -25,7 +25,6 @@ public class SpringChessService {
     private CommandRepository commandRepository;
     private HistoryRepository historyRepository;
 
-    @Autowired
     public SpringChessService(CommandRepository commandRepository, HistoryRepository historyRepository) {
         this.commandRepository = commandRepository;
         this.historyRepository = historyRepository;

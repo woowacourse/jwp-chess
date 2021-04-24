@@ -3,6 +3,7 @@ package chess.domain.piece;
 import chess.domain.location.Location;
 import chess.domain.score.PieceScore;
 import chess.domain.team.Team;
+import chess.exception.domain.InvalidPieceMoveException;
 
 public class Bishop extends Piece {
 
@@ -27,7 +28,7 @@ public class Bishop extends Piece {
     @Override
     public void validateMovingAbilityToTarget(Location target) {
         if (!location.canMoveDigonallyTo(target)) {
-            throw new IllegalArgumentException("[ERROR] 비숍은 해당 위치로 이동할 능력이 없습니다.");
+            throw new InvalidPieceMoveException("[ERROR] 비숍은 해당 위치로 이동할 능력이 없습니다.");
         }
     }
 

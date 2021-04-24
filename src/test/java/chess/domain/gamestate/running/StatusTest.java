@@ -7,6 +7,7 @@ import chess.domain.board.Board;
 import chess.domain.gamestate.CommandType;
 import chess.domain.gamestate.State;
 import chess.domain.gamestate.finished.End;
+import chess.exception.domain.InvalidRoomCommandException;
 import chess.utils.BoardUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,6 +58,6 @@ class StatusTest {
 
         // then
         assertThatThrownBy(() -> state.changeCommand(start))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidRoomCommandException.class);
     }
 }

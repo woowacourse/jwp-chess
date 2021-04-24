@@ -1,5 +1,6 @@
 package chess.domain.gamestate;
 
+import chess.exception.domain.InvalidRoomCommandException;
 import java.util.Arrays;
 
 public enum CommandType {
@@ -23,7 +24,7 @@ public enum CommandType {
         return Arrays.stream(values())
             .filter(commandType -> commandType.decription.equals(command))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 명령입니다."));
+            .orElseThrow(() -> new InvalidRoomCommandException("[ERROR] 존재하지 않는 명령입니다."));
     }
 
     private static void validate(String value) {
@@ -34,13 +35,13 @@ public enum CommandType {
             return;
         }
         if (splitedValue.length != COMMAND_LENGTH_EXCEPT_MOVE) {
-            throw new IllegalArgumentException("[ERROR] move이외의 명령어는 한 단어로 입력해야 합니다.");
+            throw new InvalidRoomCommandException("[ERROR] move이외의 명령어는 한 단어로 입력해야 합니다.");
         }
     }
 
     private static void validateLocationValue(String[] value) {
         if (value.length != COMMAND_LENGTH_MOVE) {
-            throw new IllegalArgumentException("[ERROR] 두 개의 좌표(시작 위치, 목적 위치)가 필요합니다.");
+            throw new InvalidRoomCommandException("[ERROR] 두 개의 좌표(시작 위치, 목적 위치)가 필요합니다.");
         }
     }
 }

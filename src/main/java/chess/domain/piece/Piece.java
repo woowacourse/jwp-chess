@@ -4,6 +4,7 @@ import chess.domain.board.Board;
 import chess.domain.location.Location;
 import chess.domain.score.PieceScore;
 import chess.domain.team.Team;
+import chess.exception.domain.InvalidPieceMoveException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +50,7 @@ public abstract class Piece {
         if (signature == 'b') {
             return Bishop.of(id, roomId, pieceTeam, pieceLocation);
         }
-        throw new IllegalArgumentException("[ERROR] 존재하지 않는 기물입니다.");
+        throw new InvalidPieceMoveException("[ERROR] 존재하지 않는 기물입니다.");
     }
 
     public void moveTo(Location target, Board board) {
@@ -63,7 +64,7 @@ public abstract class Piece {
 
     public final void validateTargetIsNotSameTeam(Location target, Board board) {
         if (board.isPieceExistIn(target) && this.isSameTeam(board.find(target))) {
-            throw new IllegalArgumentException("목표 위치에 같은 팀의 말이 있습니다.");
+            throw new InvalidPieceMoveException("[ERROR] 목표 위치에 같은 팀의 말이 있습니다.");
         }
     }
 
@@ -94,7 +95,7 @@ public abstract class Piece {
             .anyMatch(oneStep -> board.isPieceExistIn(oneStep));
 
         if (isPieceExistInPath) {
-            throw new IllegalArgumentException("[ERROR] 이동 경로에 말이 존재하므로 이동할 수 없습니다.");
+            throw new InvalidPieceMoveException("[ERROR] 이동 경로에 말이 존재하므로 이동할 수 없습니다.");
         }
     }
 

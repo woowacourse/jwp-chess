@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.board.Board;
 import chess.domain.gamestate.CommandType;
 import chess.domain.gamestate.State;
+import chess.exception.domain.InvalidRoomCommandException;
 import chess.utils.BoardUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,7 +44,7 @@ class StartTest {
 
         // then
         assertThatThrownBy(() -> state.changeCommand(start))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidRoomCommandException.class);
     }
 
     @DisplayName("상태 변경 - ready 상태에서 status 상태로 변경 불가능하다.")
@@ -54,6 +55,6 @@ class StartTest {
 
         // then
         assertThatThrownBy(() -> state.changeCommand(status))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidRoomCommandException.class);
     }
 }

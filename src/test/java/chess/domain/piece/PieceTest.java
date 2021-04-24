@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.board.Board;
 import chess.domain.location.Location;
 import chess.domain.team.Team;
+import chess.exception.domain.InvalidPieceMoveException;
 import chess.utils.BoardUtil;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -109,7 +110,7 @@ class PieceTest {
 
         // then
         assertThatThrownBy(() -> board.move(source, target, Team.BLACK))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("기물 공통 움직임 - 목표위치에 같은 팀의 기물이 존재하면 이동하지 못한다.")
@@ -121,6 +122,6 @@ class PieceTest {
 
         // when
         assertThatThrownBy(() -> board.move(source, target, Team.WHITE))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 }

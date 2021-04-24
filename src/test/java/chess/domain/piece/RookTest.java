@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.board.Board;
 import chess.domain.location.Location;
+import chess.exception.domain.InvalidPieceMoveException;
 import chess.utils.BoardUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -63,7 +64,7 @@ class RookTest {
 
         // then
         assertThatThrownBy(() -> rook.moveTo(nonMovableTarget, board))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("룩 이동 능력 테스트 - 수평, 수직 외에 이동할 수 없다.")
@@ -74,7 +75,7 @@ class RookTest {
 
         // then
         assertThatThrownBy(() -> rook.moveTo(nonMovableTarget, board))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("룩 공격 테스트 - 목표위치에 적의 기물이 있는 경우 그 기물을 없애고 해당 위치로 이동한다.")

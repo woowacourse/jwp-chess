@@ -3,6 +3,7 @@ package chess.domain.piece;
 import chess.domain.location.Location;
 import chess.domain.score.PieceScore;
 import chess.domain.team.Team;
+import chess.exception.domain.InvalidPieceMoveException;
 
 public class Rook extends Piece {
 
@@ -27,7 +28,7 @@ public class Rook extends Piece {
     @Override
     public void validateMovingAbilityToTarget(Location target) {
         if (!location.canMoveHorizontallyOrVerticallyTo(target)) {
-            throw new IllegalArgumentException("[ERROR] 룩은 해당 위치로 이동할 능력이 없습니다.");
+            throw new InvalidPieceMoveException("[ERROR] 룩은 해당 위치로 이동할 능력이 없습니다.");
         }
     }
 

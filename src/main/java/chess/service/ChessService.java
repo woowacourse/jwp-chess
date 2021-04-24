@@ -25,7 +25,7 @@ public class ChessService {
 
     @Transactional
     public Chess move(long chessId, MovePosition movePosition) {
-        Chess chess = chessRepository.findChessById(chessId).move(movePosition);
+        Chess chess = findChessById(chessId).move(movePosition);
         moveRepository.move(chessId, movePosition);
         moveRepository.updateChess(chessId, chess.status(), chess.color());
         return chess;

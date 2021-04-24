@@ -23,13 +23,31 @@ public class ChessService {
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.start();
 
+        ChessBoardDto chessBoardDto = ChessBoardDto.from(chessGameManager.getBoard());
         SavedGameDto savedGameDto = new SavedGameDto(
-                ChessBoardDto.from(chessGameManager.getBoard()),
+                chessBoardDto,
                 chessGameManager.getCurrentTurnColor().name());
         int gameId = gameDAO.saveGame(savedGameDto);
+        savePiecesByGameId(gameId, chessBoardDto);
 
         return new CommonDto<>("새로운 게임이 생성되었습니다.",
                 NewGameDto.from(chessGameManager, gameId));
+    }
+
+    private void savePiecesByGameId(int gameId, ChessBoardDto chessBoardDto) {
+        chessBoardDto.board().forEach((key, value) -> gameDAO.savePieceByGameId(gameId, key, value));
+    }
+
+    private void updateDatabase(ChessGameManager chessGameManager, int gameId) {
+        if (chessGameManager.isEnd()) {
+            gameDAO.deletePiecesByGameId(gameId);
+            gameDAO.deleteGameByGameId(gameId);
+            return;
+        }
+
+        gameDAO.updateTurnByGameId(chessGameManager.getCurrentTurnColor(), gameId);
+        gameDAO.deletePiecesByGameId(gameId);
+        savePiecesByGameId(gameId, ChessBoardDto.from(chessGameManager.getBoard()));
     }
 
     public CommonDto<RunningGameDto> loadGame(int gameId) {
@@ -45,17 +63,6 @@ public class ChessService {
 
         return new CommonDto<>("기물을 이동했습니다.",
                 toRunningGameDto(chessGameManager));
-    }
-
-    private void updateDatabase(ChessGameManager chessGameManager, int gameId) {
-        if (chessGameManager.isEnd()) {
-            gameDAO.deletePiecesByGameId(gameId);
-            gameDAO.deleteGameByGameId(gameId);
-            return;
-        }
-
-        gameDAO.updateTurnByGameId(chessGameManager.getCurrentTurnColor(), gameId);
-        gameDAO.updatePiecesByGameId(ChessBoardDto.from(chessGameManager.getBoard()), gameId);
     }
 
     private RunningGameDto toRunningGameDto(ChessGameManager chessGameManager) {
@@ -75,28 +82,11 @@ public class ChessService {
         return chessGameManager;
     }
 
-    private void validateTurn(Position from, ChessBoard chessBoard, Color currentTurnColor) {
-        if (!chessBoard.getPieceByPosition(from).isSameColor(currentTurnColor)) {
-            throw new DomainException("현재 움직일 수 있는 진영의 기물이 아닙니다.");
+    public CommonDto<RoomDto> saveRoom(String roomName) {
+        int roomCount = gameDAO.findRoomCount(roomName);
+        if (roomCount != 0) {
+            roomName = roomName + (" (" + roomCount + ")");
         }
-    }
-
-    private ColoredPieces findByColor(Color color, List<ColoredPieces> coloredPieces) {
-        return coloredPieces.stream()
-                .filter(pieces -> pieces.isSameColor(color))
-                .findAny()
-                .orElseThrow(() -> new DomainException("시스템 에러 - 진영을 찾을 수 없습니다."));
-    }
-
-    public CommonDto<GameListDto> loadGameList() {
-        return new CommonDto<>("게임 목록을 불러왔습니다.", new GameListDto(gameDAO.loadGameList()));
-    }
-
-    public CommonDto<RunningGameDto> loadGame(int gameId) {
-        RunningGameDto runningGameDto = gameDAO.loadGame(gameId);
-        ChessBoard chessBoard = toChessBoard(runningGameDto.getChessBoard());
-        Color currentTurnColor = runningGameDto.getCurrentTurnColor();
-        boolean isKingDead = isKingDead(loadColoredPieces(chessBoard));
-        return new CommonDto<>("게임을 불러왔습니다", RunningGameDto.of(chessBoard, currentTurnColor, isKingDead));
+        return new CommonDto<>("방 정보를 가져왔습니다.", RoomDto.of(roomName));
     }
 }

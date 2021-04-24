@@ -4,7 +4,10 @@ import chess.domain.board.ChessBoard;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.*;
+import chess.dto.ChessBoardDto;
+import chess.dto.PieceDeserializeTable;
+import chess.dto.PieceDto;
+import chess.dto.SavedGameDto;
 import chess.exception.NoSavedGameException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,29 +39,25 @@ public class GameDao {
             pstmt.setString(1, savedGameDto.getCurrentTurnColor());
             return pstmt;
         }, keyHolder);
-        int gameId = Objects.requireNonNull(keyHolder.getKey()).intValue();
-        savePiecesByGameId(gameId, savedGameDto.getChessBoardDto().board());
-        return gameId;
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
-    private void savePiecesByGameId(int gameId, Map<String, PieceDto> board) {
-        for (String position : board.keySet()) {
-            String query = "insert into piece(game_id, name, color, position) values(?, ?, ?, ?)";
-            PieceDto piece = board.get(position);
-            this.jdbcTemplate.update(query, gameId, piece.getName(), piece.getColor(), position);
-        }
+    public void savePieceByGameId(int gameId, String position, PieceDto piece) {
+        String query = "insert into piece(game_id, name, color, position) values(?, ?, ?, ?)";
+        this.jdbcTemplate.update(query, gameId, piece.getName(), piece.getColor(), position);
     }
 
     public SavedGameDto loadGame(int gameId) {
         String gameQuery = "SELECT turn FROM game WHERE game_id = ?";
         String currentTurn = this.jdbcTemplate.queryForObject(gameQuery, String.class, gameId);
 
-        if (currentTurn != null) {
-            String queryPiece = "SELECT * FROM piece WHERE game_id = ?";
-            ChessBoard chessBoard = this.jdbcTemplate.queryForObject(queryPiece, chessBoardRowMapper, gameId);
-            return new SavedGameDto(ChessBoardDto.from(chessBoard), currentTurn);
+        if (currentTurn == null) {
+            throw new NoSavedGameException("저장된 게임이 없습니다.");
         }
-        throw new NoSavedGameException("저장된 게임이 없습니다.");
+
+        String queryPiece = "SELECT * FROM piece WHERE game_id = ?";
+        ChessBoard chessBoard = this.jdbcTemplate.queryForObject(queryPiece, chessBoardRowMapper, gameId);
+        return new SavedGameDto(ChessBoardDto.from(chessBoard), currentTurn);
     }
 
     private final RowMapper<ChessBoard> chessBoardRowMapper = (resultSet, rowNum) -> {
@@ -73,11 +72,6 @@ public class GameDao {
         } while (resultSet.next());
         return ChessBoard.from(board);
     };
-
-    public void updatePiecesByGameId(ChessBoardDto chessBoardDto, int gameId) {
-        deletePiecesByGameId(gameId);
-        savePiecesByGameId(gameId, chessBoardDto.board());
-    }
 
     public void updateTurnByGameId(Color currentTurnColor, int gameId) {
         String query = "UPDATE game set turn=? WHERE game_id = ?";

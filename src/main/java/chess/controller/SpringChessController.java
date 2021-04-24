@@ -1,12 +1,8 @@
 package chess.controller;
 
 import chess.service.SpringChessService;
-import chess.webdto.ChessGameDto;
-import chess.webdto.MoveRequestDto;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import chess.webdto.*;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SpringChessController {
@@ -16,20 +12,31 @@ public class SpringChessController {
         this.springChessService = springChessService;
     }
 
-    @PostMapping(value = "/games/new")
-    public ChessGameDto startNewGame() {
-        return springChessService.startNewGame();
+    @GetMapping(value = "/games")
+    public GameRoomListDto loadGameRooms() {
+        return springChessService.loadGameRooms();
     }
 
-    @GetMapping(value = "/games/saved")
-    public ChessGameDto loadSavedGame() {
-        return springChessService.loadSavedGame();
+    @PostMapping(value = "/games")
+    public GameRoomDto createGameRoom(@RequestBody GameRoomNameDto gameRoomNameDto) {
+        final String roomName = gameRoomNameDto.getName();
+        return springChessService.createGameRoom(roomName);
     }
 
-    @PostMapping(value = "/games/move")
-    public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDto) {
+    @PostMapping(value = "/games/{id}/new")
+    public ChessGameDto startNewGame(@PathVariable int id) {
+        return springChessService.startNewGame(id);
+    }
+
+    @GetMapping(value = "/games/{id}/saved")
+    public ChessGameDto loadSavedGame(@PathVariable int id) {
+        return springChessService.loadSavedGame(id);
+    }
+
+    @PostMapping(value = "/games/{id}/move")
+    public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable int id) {
         final String start = moveRequestDto.getStart();
         final String destination = moveRequestDto.getDestination();
-        return springChessService.move(start, destination);
+        return springChessService.move(id, start, destination);
     }
 }

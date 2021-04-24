@@ -7,6 +7,7 @@ import chess.domain.Rooms;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceColor;
 import chess.dto.MovedInfoDto;
 import chess.dto.RoomNameDto;
 import chess.dto.SquareDto;
@@ -31,27 +32,42 @@ public class ChessService {
         this.rooms = new Rooms();
     }
 
-    public Game restartGame(String name) {
-        Game currentGame = currentGame(name);
+    public Game restartGame(String name, String password) {
+        Game currentGame = currentGame(name, password);
         currentGame.init();
         return currentGame;
     }
 
-    public Game currentGame(String name) {
+    public Game currentGame(String name, String password) {
         Optional<Game> game = rooms.findGame(name);
-        return game.orElseGet(() -> getGame(name));
+        return game.orElseGet(() -> getGame(name, password));
     }
 
-    private Game getGame(String name) {
+    private Game getGame(String name, String password) {
         if (roomDao.existsRoom(name)) {
-            Game findGame = Game.game(new Board(playingBoard(name)), roomDao.findRoomTurnColor(name));
+            Game findGame = Game.game(new Board(playingBoard(name)),
+                roomDao.findRoomTurnColor(name), password);
             rooms.addRoom(name, findGame);
             return findGame;
         }
 
-        Game newGame = Game.newGame();
+        Game newGame = Game.newGame(password);
         rooms.addRoom(name, newGame);
+        roomDao.addRoom(name, PieceColor.WHITE);
         return newGame;
+    }
+
+    public void setBlackPassword(String name, String password) {
+        Optional<Game> game = rooms.findGame(name);
+        game.ifPresent(existingGame -> {
+            addBlackPassword(password, existingGame);
+        });
+    }
+
+    private void addBlackPassword(String password, Game existingGame) {
+        if (existingGame.emptyBlackPlayer()) {
+            existingGame.setBlackPassword(password);
+        }
     }
 
     private Map<Position, Piece> playingBoard(String name) {
@@ -70,9 +86,9 @@ public class ChessService {
         return new Piece(pieceInfo.get(1), pieceInfo.get(0));
     }
 
-    public MovedInfoDto move(String name, String source, String target) {
-        Game currentGame = currentGame(name);
-        currentGame.move(source, target);
+    public MovedInfoDto move(String name, String source, String target, String password) {
+        Game currentGame = currentGame(name, password);
+        currentGame.move(source, target, password);
         if (currentGame.isEnd()) {
             deleteRoom(name);
             return new MovedInfoDto(source, target,
@@ -83,12 +99,17 @@ public class ChessService {
             currentGame.turnColor().getName());
     }
 
-    public void savePlayingBoard(String name) {
-        Game currentGame = currentGame(name);
+    public void savePlayingBoard(String name, String password) {
+        Game currentGame = currentGame(name, password);
         backupBoardDao.deleteExistingBoard(name);
         roomDao.deleteRoom(name);
         roomDao.addRoom(name, currentGame.turnColor());
         backupBoardDao.addPlayingBoard(name, currentGame.getBoard());
+    }
+
+    public void deleteRoomFromList(String roomName) {
+        backupBoardDao.deleteExistingBoard(roomName);
+        roomDao.deleteRoom(roomName);
     }
 
     public void deleteRoom(String roomName) {

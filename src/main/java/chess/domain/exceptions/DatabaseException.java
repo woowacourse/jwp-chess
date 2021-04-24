@@ -1,6 +1,8 @@
 package chess.domain.exceptions;
 
-public class DatabaseException extends RuntimeException {
+import org.springframework.dao.DataAccessException;
+
+public class DatabaseException extends DataAccessException {
 
     public DatabaseException() {
         super("데이터베이스에 문제가 발생했습니다.");

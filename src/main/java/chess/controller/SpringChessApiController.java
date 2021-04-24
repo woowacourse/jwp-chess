@@ -1,13 +1,15 @@
 package chess.controller;
 
-import chess.domain.exceptions.DatabaseException;
 import chess.dto.GameResponseDto;
 import chess.dto.MovedInfoDto;
 import chess.dto.StatusDto;
 import chess.service.ChessService;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 public class SpringChessApiController {
@@ -19,28 +21,33 @@ public class SpringChessApiController {
     }
 
     @PostMapping("/game")
-    public GameResponseDto game(@RequestParam String roomName) {
-        return GameResponseDto.of(chessService.currentGame(roomName));
+    public GameResponseDto game(HttpSession session, @RequestParam String roomName) {
+        String password = (String) session.getAttribute("password");
+        chessService.setBlackPassword(roomName, password);
+        return GameResponseDto.of(chessService.currentGame(roomName, password));
     }
 
     @GetMapping("/restart")
-    public GameResponseDto restart(@RequestParam String roomName) {
-        return GameResponseDto.of(chessService.restartGame(roomName));
+    public GameResponseDto restart(HttpSession session, @RequestParam String roomName) {
+        String password = (String) session.getAttribute("password");
+        return GameResponseDto.of(chessService.restartGame(roomName, password));
     }
 
     @PostMapping("/move")
-    public MovedInfoDto move(@RequestParam String roomName, @RequestParam String source, @RequestParam String target) {
-        return chessService.move(roomName, source, target);
+    public MovedInfoDto move(HttpSession session, @RequestParam String roomName, @RequestParam String source, @RequestParam String target) {
+        String password = (String) session.getAttribute("password");
+        return chessService.move(roomName, source, target, password);
     }
 
-    @GetMapping("/status")
-    public StatusDto status(@RequestParam String roomName) {
-        return new StatusDto(chessService.currentGame(roomName));
+    @GetMapping("/status/{name}")
+    public StatusDto status(HttpSession session, @PathVariable("name") String roomName) {
+        String password = (String) session.getAttribute("password");
+        return new StatusDto(chessService.currentGame(roomName, password));
     }
 
     @PostMapping("/end")
     public void end(@RequestParam String roomName) {
-        chessService.savePlayingBoard(roomName);
+        chessService.deleteRoom(roomName);
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
@@ -48,8 +55,8 @@ public class SpringChessApiController {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler({DatabaseException.class})
-    public ResponseEntity<String> error(DatabaseException e) {
+    @ExceptionHandler({DataAccessException.class})
+    public ResponseEntity<String> error(DataAccessException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 }

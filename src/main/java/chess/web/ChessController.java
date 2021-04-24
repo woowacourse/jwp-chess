@@ -42,9 +42,4 @@ public class ChessController {
         return chessService.end(roomId);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<MessageDto> handle(ChessGameException e) {
-        return ResponseEntity.badRequest().body(new MessageDto(e.getMessage()));
-    }
-
 }

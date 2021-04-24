@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RoomDaoTest {
+class GameDaoTest {
     @Autowired
-    private RoomDao roomDao;
+    private GameDao gameDao;
 
     @BeforeEach
     public void setup() {
@@ -16,12 +16,12 @@ class RoomDaoTest {
 
     @Test
     void insert() {
-        assertThat(roomDao.insert("asd")).isNotEqualTo(0L);
+        assertThat(gameDao.insert("asd")).isNotEqualTo(0L);
     }
 
     @Test
     void delete() {
-        roomDao.delete(1L);
+        gameDao.delete(1L);
     }
 
 }

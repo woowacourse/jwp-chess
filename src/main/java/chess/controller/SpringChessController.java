@@ -3,7 +3,7 @@ package chess.controller;
 import chess.exception.ChessException;
 import chess.exception.DataNotFoundException;
 import chess.service.ChessService;
-import chess.service.RoomService;
+import chess.service.GameService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,44 +14,44 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class SpringChessController {
     private final ChessService chessService;
-    private final RoomService roomService;
+    private final GameService gameService;
 
-    public SpringChessController(ChessService chessService, RoomService roomService) {
+    public SpringChessController(ChessService chessService, GameService gameService) {
         this.chessService = chessService;
-        this.roomService = roomService;
+        this.gameService = gameService;
     }
 
     @GetMapping("/")
     private String mainPage(Model model) {
-        model.addAttribute("roomList", roomService.load());
+        model.addAttribute("gameList", gameService.load());
         return "index";
     }
 
-    @GetMapping("/game/{roomId}")
-    private String loadGame(@PathVariable Long roomId, Model model) {
-        chessService.load(roomId, model);
+    @GetMapping("/games/{gameId}")
+    private String loadGame(@PathVariable Long gameId, Model model) {
+        chessService.load(gameId, model);
         return "chessboard";
     }
 
-    @PostMapping("/rooms")
-    private String createRoom(@RequestParam("roomName") String roomName) {
-        Long roomId = roomService.create(roomName);
-        return "redirect:game/" + roomId;
+    @PostMapping("/games")
+    private String createRoom(@RequestParam("gameName") String roomName) {
+        Long gameId = gameService.create(roomName);
+        return "redirect:games/" + gameId;
     }
 
-    @DeleteMapping("/rooms/{roomId}")
-    private ResponseEntity deleteRoom(@PathVariable("roomId") Long roomId) {
-        roomService.delete(roomId);
+    @DeleteMapping("/games/{gameId}")
+    private ResponseEntity deleteRoom(@PathVariable("gameId") Long gameId) {
+        gameService.delete(gameId);
         return ResponseEntity.ok()
                              .build();
     }
 
-    @PostMapping("/game/{roomId}/move")
-    private String move(@PathVariable("roomId") Long roomId,
+    @PostMapping("/games/{gameId}/move")
+    private String move(@PathVariable("gameId") Long gameId,
                         @RequestParam("from") String from,
                         @RequestParam("to") String to) {
-        chessService.move(roomId, from, to);
-        return "redirect:/game/" + roomId;
+        chessService.move(gameId, from, to);
+        return "redirect:/games/" + gameId;
     }
 
     @ExceptionHandler(ChessException.class)

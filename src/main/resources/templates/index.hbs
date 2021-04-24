@@ -8,16 +8,16 @@
 <h1>체스 게임을 시작합니다</h1>
 <h2>{{error.message}}</h2>
 
-<form action="/rooms" method = "POST">
+<form action="/games" method = "POST">
     <label>
         방 추가 <br>
     </label>
-    <input type="text" name="roomName">
+    <input type="text" name="gameName">
     <input type="submit" value="시작">
 </form>
 
 <h2>진행 게임 목록</h2>
-{{#roomList}}
+{{#gameList}}
 <tr>
     <th>{{id}}</th>
     <th>{{name}}</th>
@@ -25,7 +25,7 @@
     <button id={{id}} class="delete-btn">Delete</button>
     <br>
 </tr>
-{{/roomList}}
+{{/gameList}}
 
 </body>
 <script src="/script/main.js"></script>

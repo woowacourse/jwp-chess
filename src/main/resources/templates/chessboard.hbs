@@ -160,7 +160,7 @@
 <h2>차례 : {{turn.color}} </h2>
 <h2>승자 : {{winner.color}}</h2>
 
-<form action="/game/{{room.id}}/move" method="post">
+<form action="/games/{{game.id}}/move" method="post">
     <label for="from">From: </label>
     <input type="text" name="from" id="from">
     <label for="to">To: </label>

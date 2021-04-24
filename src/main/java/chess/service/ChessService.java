@@ -20,21 +20,21 @@ public class ChessService {
         this.commandDao = commandDao;
     }
 
-    public void move(Long roomId, String from, String to) {
-        Game game = newGame(roomId);
+    public void move(Long gameId, String from, String to) {
+        Game game = newGame(gameId);
         game.move(Position.from(from), Position.from(to));
-        commandDao.insert(roomId, from, to);
+        commandDao.insert(gameId, from, to);
     }
 
-    public void load(Long roomId, Model model) {
-        Game game = newGame(roomId);
+    public void load(Long gameId, Model model) {
+        Game game = newGame(gameId);
         makeChessModel(game, model);
-        model.addAttribute("room", new RoomDto(roomId, ""));
+        model.addAttribute("game", new GameDto(gameId, ""));
     }
 
-    private Game newGame(Long roomId) {
+    private Game newGame(Long gameId) {
         Game game = new Game(BoardFactory.create());
-        List<MoveDto> moves = commandDao.findAllCommandOf(roomId);
+        List<MoveDto> moves = commandDao.findAllCommandOf(gameId);
         for (MoveDto move : moves) {
             game.move(Position.from(move.getFrom()), Position.from(move.getTo()));
         }

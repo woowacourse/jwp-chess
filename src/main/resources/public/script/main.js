@@ -1,14 +1,14 @@
 window.onload = function () {
     const deleteBtn = document.getElementsByClassName("delete-btn");
     Array.from(deleteBtn).forEach((el) => {
-        el.addEventListener('click', deleteRoom);
+        el.addEventListener('click', deleteGame);
     })
 }
 
-async function deleteRoom(event) {
-    const roomId = event.target.id;
+async function deleteGame(event) {
+    const gameId = event.target.id;
     await fetch(
-        `/rooms/${roomId}`,
+        `/games/${gameId}`,
         {
             method: 'DELETE'
         }

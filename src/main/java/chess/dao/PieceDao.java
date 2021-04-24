@@ -31,11 +31,7 @@ public class PieceDao {
 
     public void removePiece(String target, int roomId) {
         String query = "DELETE FROM piece WHERE piece_position=? AND room_id = ?";
-        try {
-            jdbcTemplate.update(query, target, roomId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        jdbcTemplate.update(query, target, roomId);
     }
 
     public List<PieceDto> getPieces(int roomId) {

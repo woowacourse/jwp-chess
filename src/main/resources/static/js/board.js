@@ -1,4 +1,4 @@
-import { PATH, HTTP_CLIENT, COOKIE } from "./http.js";
+import { COOKIE, HTTP_CLIENT, PATH } from "./http.js";
 import PIECES from "./piece.js";
 
 const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];

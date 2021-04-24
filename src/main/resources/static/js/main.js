@@ -1,4 +1,4 @@
-import {HTTP_CLIENT, PATH} from "./http.js";
+import { HTTP_CLIENT, PATH } from "./http.js";
 
 document.addEventListener("DOMContentLoaded", onBuildRoom);
 document.getElementById("new-game").addEventListener("click", onNewRoom);

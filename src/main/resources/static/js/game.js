@@ -1,4 +1,4 @@
-import { PATH, HTTP_CLIENT } from "./http.js";
+import { HTTP_CLIENT, PATH } from "./http.js";
 
 document.getElementById("restart").addEventListener("click", onRestart);
 

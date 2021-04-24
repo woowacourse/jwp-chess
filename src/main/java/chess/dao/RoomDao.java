@@ -1,12 +1,15 @@
 package chess.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
 
 @Repository
 public class RoomDao {
@@ -19,19 +22,16 @@ public class RoomDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public int selectLastRoomId() {
-        String query = "SELECT room_id from room ORDER BY room_id desc limit 1";
-        try {
-            return jdbcTemplate.queryForObject(query, Integer.class);
-        } catch (DataAccessException e) {
-            return 0;
-        }
-    }
+    public int insertRoom() {
+        String query = "INSERT INTO room(current_turn) values(?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
+            ps.setString(1, "white");
+            return ps;
+        }, keyHolder);
 
-    public int insertRoom(int newRoomId) {
-        String query = "INSERT INTO room(room_id, current_turn) values(?, ?)";
-        jdbcTemplate.update(query, newRoomId, "white");
-        return newRoomId;
+        return keyHolder.getKey().intValue();
     }
 
     public String selectTurnByRoomId(int roomId) {

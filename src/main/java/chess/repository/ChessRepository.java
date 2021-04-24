@@ -1,7 +1,5 @@
 package chess.repository;
 
-//import chess.dao.PieceDao;
-
 import chess.dao.PieceDao;
 import chess.dao.RoomDao;
 import chess.domain.board.ChessBoardFactory;
@@ -25,8 +23,7 @@ public class ChessRepository {
     }
 
     public int makeRoom(Map<String, String> board) {
-        int newRoomId = roomDao.selectLastRoomId() + 1;
-        roomDao.insertRoom(newRoomId);
+        int newRoomId = roomDao.insertRoom();
         initializePieceStatus(newRoomId, board);
         return newRoomId;
     }

@@ -10,6 +10,18 @@
 - test : 테스트 코드만 바꿀 때 사용.
 - style : 들여쓰기 수정 및 기타 수정 사항.
 
+## API 명세
+- __POST: /games__
+    - 새로운 게임방을 만들기
+- __GET: /games__ 
+    - 만들어진 게임방의 목록을 반환하기
+- __POST: /games/:id/new__ 
+    - 지정한 게임방에 새로운 체스 게임을 생성하기
+- __GET: /games/:id/saved__ 
+    - 지정한 게임방에 저장된 체스 게임을 불러오기
+- __POST: /games/:id/move__
+    - 지정한 체스게임에 한 수를 진행하기
+
 ## 기능 구현 목록
 - [x] Spring MVC 적용
     - [x] 초기 화면 띄워주기 (GET)
@@ -21,12 +33,18 @@
         - [x] READ
         - [x] UPDATE
         - [x] DELETE
+- [ ] 게임방 생성/조회 구현
+    - [ ] POST 요청을 통해 새로운 게임방을 만들기 
+        - [ ] 입력한 게임방의 이름이 중복된다면 예외 처리
+        - [ ] 사용자에게 생성된 방의 id값을 반환하기
+    - [ ] GET 요청을 통해 게임방의 목록을 가져오기
 
 ## 요구사항
 - 요구사항
     - Spring Framework를 활용하여 애플리케이션을 구동한다.
     - Spark를 대체하여 Spring MVC를 활용하여 요청을 받고 응답을 한다.
     - Spring JDBC를 활용하여 DB 접근하던 기존 로직을 대체한다.
+    - 체스 게임을 진행할 수 있는 방을 만들어서 동시에 여러 게임이 가능하도록 하기
 
 - 프로그래밍 요구사항
     - 스프링 애플리케이션으로 체스가 실행 가능 해야한다.
@@ -45,18 +63,32 @@
 ## DB 테이블 구조
 ![table_structure](./img/table_structure.png)
 ```sql
+DROP DATABASE if exists chess_db;
 CREATE DATABASE chess_db;
 
 USE chess_db;
 
+DROP TABLE IF EXISTS game_room_info CASCADE;
+DROP TABLE IF EXISTS chess_game CASCADE;
+DROP TABLE IF EXISTS team_info CASCADE;
+
+CREATE TABLE game_room_info (
+    game_id int NOT NULL AUTO_INCREMENT,
+    room_name VARCHAR(50),
+    PRIMARY KEY (game_id)
+);
+
 CREATE TABLE chess_game (
+    game_id int NOT NULL,
     current_turn_team VARCHAR(5) NOT NULL,
-    is_playing boolean NOT NULL
+    is_playing boolean NOT NULL,
+    FOREIGN KEY (game_id) REFERENCES game_room_info(game_id)
 );
 
 CREATE TABLE team_info (
+    game_id int NOT NULL,
     team VARCHAR(5) NOT NULL,
     piece_info VARCHAR(400) NOT NULL,
-    primary key (team)
+    FOREIGN KEY (game_id) REFERENCES game_room_info(game_id)
 );
 ```       

@@ -1,12 +1,14 @@
 package chess.domain;
 
-import chess.domain.game.ChessGame;
+import chess.domain.room.Room;
+
+import java.util.List;
 
 public interface ChessRepository {
     
-    void save(ChessGame chessGame);
-    void update(ChessGame chessGame);
-    ChessGame findByGameId(String gameId);
-    boolean containsByGameId(String chessGame);
-    
+    Long save(Room room);
+    void update(Room room);
+    Room findByRoomId(Long roomId);
+    List<Room> allRooms();
+
 }

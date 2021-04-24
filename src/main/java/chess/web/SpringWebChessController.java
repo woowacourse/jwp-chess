@@ -2,12 +2,12 @@ package chess.web;
 
 import chess.exception.ChessGameException;
 import chess.service.ChessService;
-import chess.web.dto.GameDto;
-import chess.web.dto.MessageDto;
-import chess.web.dto.MoveDto;
-import chess.web.dto.StatusDto;
+import chess.web.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URLDecoder;
+import java.util.List;
 
 @RestController
 public class SpringWebChessController {
@@ -18,32 +18,37 @@ public class SpringWebChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/game/{gameId}/start")
-    public GameDto start(@PathVariable String gameId) {
-        return chessService.startNewGame(gameId);
+    @PostMapping("/room/{roomName}")
+    public RoomDto createNewRoom(@PathVariable String roomName) {
+        return chessService.createNewRoom(roomName);
     }
 
-    @GetMapping("/game/{gameId}")
-    public GameDto load(@PathVariable String gameId) {
-        return chessService.loadByGameId(gameId);
+    @GetMapping("/game/{roomId}")
+    public GameDto load(@PathVariable Long roomId) {
+        return chessService.loadByGameId(roomId);
     }
 
-    @PatchMapping("/game/{gameId}/position")
-    public GameDto move(@PathVariable String gameId, @RequestBody MoveDto moveDto) {
+    @GetMapping("/rooms")
+    public List<RoomDto> rooms() {
+        return chessService.getAllRooms();
+    }
+
+    @PatchMapping("/game/{roomId}/position")
+    public GameDto move(@PathVariable Long roomId, @RequestBody MoveDto moveDto) {
         String source = moveDto.getSource();
         String target = moveDto.getTarget();
 
-        return chessService.move(gameId, source, target);
+        return chessService.move(roomId, source, target);
     }
 
-    @GetMapping("/game/{gameId}/status")
-    public StatusDto status(@PathVariable String gameId) {
-        return chessService.getStatus(gameId);
+    @GetMapping("/game/{roomId}/status")
+    public StatusDto status(@PathVariable Long roomId) {
+        return chessService.getStatus(roomId);
     }
 
-    @PatchMapping("/game/{gameId}/end")
-    public MessageDto end(@PathVariable String gameId) {
-        return chessService.end(gameId);
+    @PatchMapping("/game/{roomId}/end")
+    public MessageDto end(@PathVariable Long roomId) {
+        return chessService.end(roomId);
     }
 
     @ExceptionHandler

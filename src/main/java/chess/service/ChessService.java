@@ -5,11 +5,16 @@ import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
-import chess.exception.AlreadyExistingGameIdException;
+import chess.domain.room.Room;
 import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
+import chess.web.dto.RoomDto;
 import chess.web.dto.StatusDto;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ChessService {
@@ -20,46 +25,49 @@ public class ChessService {
         this.chessRepository = chessRepository;
     }
 
-    public MessageDto end(String gameId) {
-        ChessGame chessGame = chessRepository.findByGameId(gameId);
+    public MessageDto end(Long roomId) {
+        Room room = chessRepository.findByRoomId(roomId);
+        ChessGame chessGame = room.getChessGame();
 
         chessGame.end();
 
-        chessRepository.update(chessGame);
+        chessRepository.update(room);
 
         return new MessageDto("finished");
     }
 
-    public GameDto loadByGameId(String gameId) {
-        ChessGame chessGame = chessRepository.findByGameId(gameId);
+    public GameDto loadByGameId(Long roomId) {
+        Room room = chessRepository.findByRoomId(roomId);
+        ChessGame chessGame = room.getChessGame();
 
         return new GameDto(chessGame);
     }
 
-    public GameDto startNewGame(String gameId) {
-        ChessGame chessGame = saveGameAndStart(gameId);
+    public RoomDto createNewRoom(String roomName) {
+        Long roomId = saveGameToDB(roomName);
 
-        return new GameDto(chessGame);
+        return new RoomDto(new Room(roomId, roomName, null));
     }
 
-    private ChessGame saveGameAndStart(String gameId) {
-        if (chessRepository.containsByGameId(gameId)) {
-            throw new AlreadyExistingGameIdException();
-        }
-
+    private Long saveGameToDB(String roomName) {
         ChessGame chessGame = new ChessGame(
-                gameId,
+                null,
                 new Board(PieceFactory.createPieces())
         );
         chessGame.start();
 
-        chessRepository.save(chessGame);
-
-        return chessGame;
+        return chessRepository.save(
+                new Room(
+                        null,
+                        roomName,
+                        chessGame
+                )
+        );
     }
 
-    public StatusDto getStatus(String gameId) {
-        ChessGame chessGame = chessRepository.findByGameId(gameId);
+    public StatusDto getStatus(Long roomId) {
+        Room room = chessRepository.findByRoomId(roomId);
+        ChessGame chessGame = room.getChessGame();
 
         double whiteScore = chessGame.getWhiteScore();
         double blackScore = chessGame.getBlackScore();
@@ -67,13 +75,20 @@ public class ChessService {
         return new StatusDto(whiteScore, blackScore);
     }
 
-    public GameDto move(String gameId, String source, String target) {
-        ChessGame chessGame = chessRepository.findByGameId(gameId);
+    public GameDto move(Long roomId, String source, String target) {
+        Room room = chessRepository.findByRoomId(roomId);
+        ChessGame chessGame = room.getChessGame();
 
         chessGame.move(Position.ofChessPiece(source), Position.ofChessPiece(target));
-        chessRepository.update(chessGame);
+        chessRepository.update(room);
 
         return new GameDto(chessGame);
+    }
+
+    public List<RoomDto> getAllRooms() {
+        return chessRepository.allRooms().stream()
+                .map(room -> new RoomDto(room))
+                .collect(toList());
     }
 
 }

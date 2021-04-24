@@ -10,11 +10,11 @@ import java.util.Optional;
 
 public class ChessGame {
 
-    private final String gameId;
+    private final Long gameId;
     private final Board board;
     private State state;
 
-    public ChessGame(String gameId, Board board) {
+    public ChessGame(Long gameId, Board board) {
         this.gameId = gameId;
         this.board = board;
         this.state = new Ready(this);
@@ -34,10 +34,6 @@ public class ChessGame {
 
     public void start() {
         state.start();
-    }
-
-    public boolean isFinished() {
-        return state.isFinished();
     }
 
     public boolean isKingCaught() {
@@ -76,10 +72,6 @@ public class ChessGame {
         board.catchWhitePiece();
     }
 
-    public int getBoardRow() {
-        return Board.getRow();
-    }
-
     public String getStatus() {
         return state.getStatus();
     }
@@ -88,7 +80,7 @@ public class ChessGame {
         return state;
     }
 
-    public String getGameId() {
+    public Long getGameId() {
         return gameId;
     }
 

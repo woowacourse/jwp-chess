@@ -6,6 +6,7 @@ import chess.domain.gamestate.State;
 import chess.domain.gamestate.finished.End;
 import chess.domain.location.Location;
 import chess.domain.team.Team;
+import chess.exception.domain.InvalidRoomCommandException;
 
 public class Move extends Running {
 
@@ -30,7 +31,7 @@ public class Move extends Running {
 
     public void validateCommand(CommandType command) {
         if (command != CommandType.STATUS && command != CommandType.END && command != CommandType.MOVE) {
-            throw new IllegalArgumentException("[ERROR] status, move, end만 가능합니다.");
+            throw new InvalidRoomCommandException("[ERROR] status, move, end만 가능합니다.");
         }
     }
 

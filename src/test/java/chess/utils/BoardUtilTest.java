@@ -13,6 +13,7 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
 import chess.domain.team.Team;
+import chess.exception.domain.InvalidPieceMoveException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +38,7 @@ class BoardUtilTest {
 
         // then
         assertThatThrownBy(() -> board.find(Location.of(1, 2)))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("기물로 구성된 2차원 배열을 각 기물이 위치값을 가진 리스트로 변환할 수 있다. - 화이트 ")

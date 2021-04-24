@@ -48,7 +48,7 @@ public class RoomRepositoryImpl implements RoomRepository {
     }
 
     @Override
-    public Room findRoomByName(String name) {
+    public Room findByName(String name) {
         if (roomDao.isExistName(name)) {
             throw new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다.");
         }

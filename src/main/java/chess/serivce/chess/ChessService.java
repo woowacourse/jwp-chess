@@ -22,7 +22,7 @@ public class ChessService {
 
     @Transactional
     public MoveResponseDto start(String roomName) {
-        Room room = roomRepository.findRoomByName(roomName);
+        Room room = roomRepository.findByName(roomName);
 
         room.play("start");
         roomRepository.save(room);
@@ -37,7 +37,7 @@ public class ChessService {
 
     @Transactional
     public MoveResponseDto end(String roomName) {
-        Room room = roomRepository.findRoomByName(roomName);
+        Room room = roomRepository.findByName(roomName);
 
         room.play("end");
         roomRepository.save(room);
@@ -52,7 +52,7 @@ public class ChessService {
 
     @Transactional
     public MoveResponseDto move(String roomName, String source, String target) {
-        Room room = roomRepository.findRoomByName(roomName);
+        Room room = roomRepository.findByName(roomName);
 
         room.play("move " + source + " " + target);
         roomRepository.saveAfterMove(room, source, target);
@@ -67,7 +67,7 @@ public class ChessService {
 
     @Transactional(readOnly = true)
     public MoveResponseDto findPiecesByRoomName(String roomName) {
-        Room room = roomRepository.findRoomByName(roomName);
+        Room room = roomRepository.findByName(roomName);
 
         Board board = room.getBoard();
         return new MoveResponseDto(

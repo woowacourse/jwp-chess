@@ -8,7 +8,7 @@ public interface RoomRepository {
 
     long insert(Room room);
 
-    Room findRoomByName(String name);
+    Room findByName(String name);
 
     void save(Room room);
 

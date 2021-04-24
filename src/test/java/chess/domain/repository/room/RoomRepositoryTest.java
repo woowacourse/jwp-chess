@@ -8,7 +8,6 @@ import chess.domain.game.Room;
 import chess.domain.gamestate.running.Move;
 import chess.domain.location.Location;
 import chess.domain.piece.Piece;
-import chess.domain.repository.room.RoomRepositoryImpl;
 import chess.domain.team.Team;
 import chess.utils.BoardUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +35,7 @@ class RoomRepositoryTest {
 
         // when
         long roomId = roomRepository.insert(name);
-        Room insertedRoom = roomRepository.findRoomByName(name);
+        Room insertedRoom = roomRepository.findByName(name);
 
         // then
         assertAll(
@@ -51,14 +50,14 @@ class RoomRepositoryTest {
         // given
         String name = "RoomRepo save테스트";
         long roomId = roomRepository.insert(name);
-        Room room = roomRepository.findRoomByName(name);
+        Room room = roomRepository.findByName(name);
 
         // when
         room.play("start");
         roomRepository.save(room);
 
         // then
-        Room savedRoom = roomRepository.findRoomByName(name);
+        Room savedRoom = roomRepository.findByName(name);
         assertAll(
             () -> assertThat(savedRoom.getId()).isEqualTo(roomId),
             () -> assertThat(savedRoom.getName()).isEqualTo(name),
@@ -92,12 +91,12 @@ class RoomRepositoryTest {
         long roomId = roomRepository.insert(initialRoom);
 
         // when
-        Room room = roomRepository.findRoomByName(name);
+        Room room = roomRepository.findByName(name);
         room.play("move " + source + " " + target);
         roomRepository.saveAfterMove(room, source, target);
 
         // then
-        Room resultRoom = roomRepository.findRoomByName(name);
+        Room resultRoom = roomRepository.findByName(name);
         Board resultBoard = resultRoom.getBoard();
         Piece pieceAtTarget = resultBoard.find(Location.of(target));
         assertAll(

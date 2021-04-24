@@ -54,7 +54,11 @@ function serverMoveRequest(startPoint, destPoint) {
         body: JSON.stringify(moveRequest)
     }
 
-    fetch("/games/move", postOption)
+    document.getElementById("roomNumber");
+    let roomNumber = document.getElementById("roomNumber").getAttribute("class");
+
+    let moveUrl = "/games/" + String(roomNumber) + "/move";
+    fetch(moveUrl, postOption)
         .then(response => {
             if (!response.ok) {
                 throw new Error(response.status);

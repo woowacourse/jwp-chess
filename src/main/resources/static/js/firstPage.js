@@ -1,8 +1,9 @@
-let startBtn = document.getElementById("startBtn");
-let loadBtn = document.getElementById("loadBtn");
+export let chessRoomList = document.getElementById("chessRoomList");
 
-import {chessBoard, gameResultWindow, initChessBoard} from "./initialize.js";
-import {addChessBoardEvent, checkIsPlaying, player1, player2} from "./movement.js";
+export const title = document.getElementById("title");
+
+import { chessBoard, gameResultWindow, initChessBoard } from "./initialize.js";
+import { addChessBoardEvent, checkIsPlaying, player1, player2 } from "./movement.js";
 
 loadFirstPage();
 
@@ -13,53 +14,21 @@ function loadFirstPage() {
     player2.style.display = "none";
 }
 
-function startNewGame() {
-    const postOption = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
+export function closeRoomList() {
+    chessRoomList.innerHTML = "";
+    chessRoomList.style.display = "none";
+}
+
+chessRoomList.addEventListener("click", function(e) {
+    if (e.target && e.target.nodeName == "BUTTON") {
+        let chessRoom = e.target.closest(".chessRoom");
+        let roomName = chessRoom.childNodes[0].innerText;
+        joinRoomAPIRequest(chessRoom.id, roomName);
     }
+})
 
-    fetch("/games/new", postOption)
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            if (data.availability === "unavailable") {
-                let forceStart = confirm("현재 진행 중인 체스 게임이 있습니다. 삭제 후 새 게임을 시작하시겠습니까?");
-                if (forceStart) {
-                    forceNewGame();
-                }
-            } else if (data.connection === "fail") {
-                alert("서버와의 통신에 실패했습니다.");
-            } else {
-                initializeChessBoard(data);
-            }
-        })
-        .catch(error => {
-            alert("서버와의 통신에 실패했습니다.");
-        })
-}
-
-function forceNewGame() {
-    fetch("/forceNewGame")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-            return response.json();
-        })
-        .then(data => {
-            initializeChessBoard(data);
-        })
-        .catch(error => {
-            alert("서버와의 통신이 실패하였습니다.");
-        })
-}
-
-function loadPrevGame() {
-    fetch("/games/saved")
+function joinRoomAPIRequest(id, roomName) {
+    fetch("games/" + String(id) + "/saved")
         .then(response => {
             if (!response.ok) {
                 console.log(response.status);
@@ -75,21 +44,32 @@ function loadPrevGame() {
         .then(data => {
             initializeChessBoard(data);
             checkIsPlaying(data);
+            closeRoomList();
+            changeTitleToRoomTitle(roomName);
+            saveRoomNumber(id);
         })
         .catch(error => {
         })
 }
 
-function initializeChessBoard(data) {
+export function initializeChessBoard(data) {
     console.log(data);
     initChessBoard(data);
     addChessBoardEvent();
-    startBtn.style.display = "none";
-    loadBtn.style.display = "none";
+    makeRoomBtn.style.display = "none";
+    joinRoomBtn.style.display = "none";
     chessBoard.style.display = "flex";
     player1.style.display = "flex";
     player2.style.display = "flex";
 }
 
-startBtn.addEventListener("click", startNewGame);
-loadBtn.addEventListener("click", loadPrevGame);
+export function changeTitleToRoomTitle(roomName) {
+    title.innerText = roomName + " 🎁";
+}
+
+export function saveRoomNumber(id) {
+    let roomNumber = document.createElement('div');
+    roomNumber.setAttribute("id", "roomNumber");
+    roomNumber.setAttribute("class", id);
+    title.appendChild(roomNumber);
+}

@@ -1,4 +1,5 @@
 import {gameResultWindow} from "./initialize.js";
+import {title} from "./firstPage.js";
 
 let winnerAnnouncement = document.getElementById("winnerAnnouncement");
 let finalWhiteTeamScore = document.getElementById("finalWhiteTeamScore");
@@ -14,6 +15,8 @@ export function finishGame(data) {
     }
     finalWhiteTeamScore.innerText = "White Team Score: " + data.teamScore.white;
     finalBlackTeamScore.innerText = "Black Team Score: " + data.teamScore.black;
+    title.innerHTML = "";
+    title.innerText = "Chess 🎁";
 }
 
 playAgainButton.addEventListener('click', playAgain);

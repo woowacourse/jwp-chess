@@ -22,14 +22,14 @@ public class RoomController {
 
     @PostMapping("/room/{roomId}/restart")
     public Response<GridAndPiecesResponseDto> restart(@PathVariable("roomId") String roomId) {
-        return new Response(HttpStatus.OK, chessService.restart(Long.parseLong(roomId)));
+        return new Response<>(HttpStatus.OK, chessService.restart(Long.parseLong(roomId)));
     }
 
     @GetMapping("/room")
     public Response<RoomsResponseDto> getRooms(@PathVariable(value = "page", required = false) Optional<Integer> page) {
         if (page.isPresent()) {
-            return new Response(HttpStatus.OK, chessService.getAllRooms(page.get()));
+            return new Response<>(HttpStatus.OK, chessService.getAllRooms(page.get()));
         }
-        return new Response(HttpStatus.OK, chessService.getAllRooms());
+        return new Response<>(HttpStatus.OK, chessService.getAllRooms());
     }
 }

@@ -46,7 +46,7 @@ public class ChessService {
         grid.move(requestDto.getSourcePosition(), requestDto.getTargetPosition());
         gridDAO.changeTurn(gridDto.getGridId(), !gridDto.getIsBlackTurn());
         updatePiece(requestDto);
-        return new Response(HttpStatus.NO_CONTENT);
+        return new Response<>(HttpStatus.NO_CONTENT);
     }
 
     private Grid createGrid(MoveRequestDto requestDto) {

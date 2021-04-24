@@ -24,18 +24,18 @@ public class GridController {
     public Response<GridAndPiecesResponseDto> getRoom(@PathVariable("roomName") String roomName) {
         StartRequestDto startRequestDto = new StartRequestDto(roomName);
         GridAndPiecesResponseDto gridAndPiecesResponseDto = chessService.getGridAndPieces(startRequestDto);
-        return new Response(HttpStatus.OK, gridAndPiecesResponseDto);
+        return new Response<>(HttpStatus.OK, gridAndPiecesResponseDto);
     }
 
     @PostMapping("/grid/{gridId}/start")
     public Response start(@PathVariable("gridId") String gridId) throws SQLException {
         chessService.start(Long.parseLong(gridId));
-        return new Response(HttpStatus.NO_CONTENT);
+        return new Response<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/grid/{gridId}/finish")
     public Response finish(@PathVariable("gridId") String gridId) {
         chessService.finish(Long.parseLong(gridId));
-        return new Response(HttpStatus.NO_CONTENT);
+        return new Response<>(HttpStatus.NO_CONTENT);
     }
 }

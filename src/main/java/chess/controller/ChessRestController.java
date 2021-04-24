@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.domain.position.Position;
 import chess.dto.*;
 import chess.service.ChessGameService;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +25,8 @@ public class ChessRestController {
 
     @PutMapping("/games/{gameId}/piece")
     public ResponseEntity<CommonResponse<RunningGameDto>> move(@PathVariable int gameId, @RequestBody MoveRequest moveRequest) {
-        Position from = Position.of(moveRequest.getFrom());
-        Position to = Position.of(moveRequest.getTo());
+        String from = moveRequest.getFrom();
+        String to = moveRequest.getTo();
 
         return ResponseEntity.ok().body(
                 new CommonResponse<>(

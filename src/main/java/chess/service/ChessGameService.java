@@ -30,15 +30,18 @@ public class ChessGameService {
         return NewGameDto.from(chessGameManager, gameId);
     }
 
-    public RunningGameDto move(int gameId, Position from, Position to) {
+    public RunningGameDto move(int gameId, String from, String to) {
         ChessGameManager chessGameManager = loadChessGameByGameId(gameId);
 
-        chessGameManager.move(from, to);
+        Position fromPosition = Position.of(from);
+        Position toPosition = Position.of(to);
 
-        Piece pieceToMove = pieceRepository.findPieceByPosition(from, gameId);
-        pieceRepository.deletePieceByPosition(to, gameId);
-        pieceRepository.savePiece(pieceToMove, to, gameId);
-        pieceRepository.deletePieceByPosition(from, gameId);
+        chessGameManager.move(fromPosition, toPosition);
+
+        Piece pieceToMove = pieceRepository.findPieceByPosition(fromPosition, gameId);
+        pieceRepository.deletePieceByPosition(toPosition, gameId);
+        pieceRepository.savePiece(pieceToMove, toPosition, gameId);
+        pieceRepository.deletePieceByPosition(fromPosition, gameId);
 
         gameRepository.updateTurnByGameId(chessGameManager, gameId);
         if (chessGameManager.isEnd()) {

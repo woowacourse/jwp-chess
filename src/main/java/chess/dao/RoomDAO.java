@@ -17,11 +17,11 @@ import java.util.Optional;
 @Repository
 public class RoomDAO {
     private static final int MAX_ROWS = 20;
-    private static final int GAP_BETWWEN_PAGE_AND_OFFSET = 1;
+    private static final int GAP_BETWEEN_PAGE_AND_OFFSET = 1;
+    private static final int FIRST_PAGE = 1;
     private final JdbcTemplate jdbcTemplate;
 
     public RoomDAO(JdbcTemplate jdbcTemplate) {
-        jdbcTemplate.setMaxRows(MAX_ROWS);
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -52,7 +52,7 @@ public class RoomDAO {
     }
 
     public List<RoomDto> findAllRooms() {
-        return findAllRooms(0);
+        return findAllRooms(FIRST_PAGE);
     }
 
     public List<RoomDto> findAllRooms(int page) {
@@ -69,6 +69,6 @@ public class RoomDAO {
                         ));
                     } while(rs.next());
                     return rooms;
-                }, MAX_ROWS, (page - GAP_BETWWEN_PAGE_AND_OFFSET) * MAX_ROWS);
+                }, MAX_ROWS, (page - GAP_BETWEEN_PAGE_AND_OFFSET) * MAX_ROWS);
     }
 }

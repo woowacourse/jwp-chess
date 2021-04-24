@@ -26,44 +26,6 @@
     transform: translate(-50%, -250%);
 }
 
-.main-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -30%);
-    font-weight: bold;
-}
-
-.game-button {
-    width: 300px;
-    height: 100px;
-    border: 5px solid #191930;
-    border-radius: 10px;
-    background-color: white;
-    color: black;
-    font-size: 30px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-    padding: 15px;
-}
-
-.game-button:hover {
-    border: 5px solid white;
-    background-color: #191930;
-    color: white;
-}
-
-#new-game {
-    margin-top: 50px;
-}
-
-#continue {
-    margin-top: 30px;
-}
-
 #board {
     border: 4px solid slategrey;
 

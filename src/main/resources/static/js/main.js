@@ -1,5 +1,6 @@
 const mainStart = document.querySelector("#main-start");
 const mainLoad = document.querySelector("#main-load");
+const rooms = document.querySelector(".room-single");
 const basePath = 'http://localhost:8080';
 
 mainStart.addEventListener("click", async () => {
@@ -46,4 +47,15 @@ mainLoad.addEventListener("click", async () => {
     }
     localStorage.setItem("name", result)
     window.location = basePath + "/games"
+});
+
+rooms.addEventListener("click", async (source) => {
+    const name = source.target.value;
+    if(name ==="" || name === undefined){
+        return;
+    }
+    if (window.confirm(name + "방에 입장 하시겠습니까?")) {
+        localStorage.setItem("name", name);
+        window.location = basePath + "/games";
+    }
 });

@@ -6,7 +6,6 @@ import chess.dto.ChessRoomDto;
 import chess.dto.ScoreDto;
 import chess.service.ChessGameService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,8 +33,8 @@ public class ChessApiController {
         return ResponseEntity.ok(chessGame);
     }
 
-    @GetMapping("/newRoomId")
-    public ResponseEntity<ChessRoomDto> newRoom(Model model) {
+    @PostMapping("/newRoomId")
+    public ResponseEntity<ChessRoomDto> newRoom() {
         ChessRoomDto chessRoomDto = chessGameService.createNewChessRoom();
         return ResponseEntity.ok(chessRoomDto);
     }

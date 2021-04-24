@@ -14,7 +14,7 @@ function onRoomSelect(event) {
 }
 
 function onNewRoom() {
-    fetch("newRoomId")
+    fetch("newRoomId", {method: 'POST'})
         .then(response => {
             if (response.ok) {
                 return response.json();

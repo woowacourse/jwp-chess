@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.controller.dto.GameDto;
-import chess.exception.DataNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -35,10 +34,8 @@ public class GameDao {
     }
 
 
-    public void delete(Long gameId) {
+    public int delete(Long gameId) {
         String query = "DELETE FROM game WHERE game_id = (?)";
-        if (jdbcTemplate.update(query, gameId) == 0) {
-            throw new DataNotFoundException("해당 Id에 방 번호가 없습니다.");
-        }
+        return jdbcTemplate.update(query, gameId);
     }
 }

@@ -12,6 +12,6 @@ CREATE TABLE command
     move_from  VARCHAR(30),
     move_to    VARCHAR(30),
     PRIMARY KEY (command_id),
-    FOREIGN KEY (game_id) REFERENCES game (game_id)  ON DELETE CASCADE
+    FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE
 );
 

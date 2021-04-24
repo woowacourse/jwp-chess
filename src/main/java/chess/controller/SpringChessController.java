@@ -3,7 +3,6 @@ package chess.controller;
 import chess.controller.dto.GameStatusDto;
 import chess.controller.dto.MoveDto;
 import chess.exception.ChessException;
-import chess.exception.DataNotFoundException;
 import chess.service.ChessService;
 import chess.service.GameService;
 import org.springframework.dao.DataAccessException;
@@ -64,12 +63,6 @@ public class SpringChessController {
     public ResponseEntity<String> handle(ChessException e) {
         return ResponseEntity.status(e.code())
                              .body(e.desc());
-    }
-
-    @ExceptionHandler(DataNotFoundException.class)
-    public ResponseEntity<String> handle(DataNotFoundException e) {
-        return ResponseEntity.badRequest()
-                             .body(e.getMessage());
     }
 
     @ExceptionHandler(DataAccessException.class)

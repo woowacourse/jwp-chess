@@ -1,54 +1,27 @@
 package chess.controller;
 
-import chess.domain.player.Round;
-import chess.dto.ScoreDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.MoveResponseDto;
 import chess.service.ChessService;
-import com.google.gson.Gson;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-public class SpringChessController {
-    public static final Gson GSON = new Gson();
-
+@RestController
+public class ChessApiController {
     private final ChessService chessService;
 
-    public SpringChessController(final ChessService chessService) {
+    public ChessApiController(final ChessService chessService) {
         this.chessService = chessService;
-    }
-
-    @GetMapping("/")
-    public String home() {
-        return "home";
     }
 
     @PostMapping("/rooms")
     @ResponseBody
     public int makeRoom() {
         return chessService.makeRoom();
-    }
-
-    @GetMapping("/rooms/{roomId}")
-    public String chess(final Model model, @PathVariable int roomId) {
-        Round loadedRound = chessService.getStoredRound(roomId);
-        String board = GSON.toJson(loadedRound.getBoard());
-        model.addAttribute("jsonFormatChessBoard", board);
-
-        String currentTurn = loadedRound.getCurrentTurn();
-        model.addAttribute("currentTurn", currentTurn);
-
-        double whiteScore = loadedRound.getPlayerScore("white");
-        double blackScore = loadedRound.getPlayerScore("black");
-
-        ScoreDto scoreDto = new ScoreDto(whiteScore, blackScore);
-        model.addAttribute("score", scoreDto);
-
-        return "chess";
     }
 
     @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)

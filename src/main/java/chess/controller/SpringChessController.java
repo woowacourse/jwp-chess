@@ -25,7 +25,7 @@ public class SpringChessController {
     @GetMapping("/")
     private String mainPage(Model model) {
         model.addAttribute("gameList", gameService.load());
-        return "index";
+        return "lobby";
     }
 
     @GetMapping("/games/{gameId}")

@@ -6,7 +6,6 @@
 </head>
 <body>
 <h1>체스 게임을 시작합니다</h1>
-<h2>{{error.message}}</h2>
 
 <form action="/games" method = "POST">
     <label>
@@ -19,14 +18,14 @@
 <h2>진행 게임 목록</h2>
 {{#gameList}}
 <tr>
-    <th>{{id}}</th>
+    <th>{{id}}번방 : </th>
     <th>{{name}}</th>
-    <th><a href="/games/{{id}}">Enter</a></th>
-    <button id={{id}} class="delete-btn">Delete</button>
+    <button id={{id}} class="enter-btn">ENTER</button>
+    <button id={{id}} class="delete-btn">DELETE</button>
     <br>
 </tr>
 {{/gameList}}
 
 </body>
-<script src="/script/main.js"></script>
+<script src="/script/lobby.js"></script>
 </html>

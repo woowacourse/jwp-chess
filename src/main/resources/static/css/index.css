@@ -11,6 +11,10 @@
     top: 57px;
 }
 
+.clicked {
+    background-color: beige;
+}
+
 .chess-board-image {
     position: absolute;
     top: 33px;

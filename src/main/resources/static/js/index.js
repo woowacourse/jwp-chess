@@ -7,12 +7,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.querySelector(".make-room-button").addEventListener("click", function () {
     let newRoomId = document.querySelector(".newRoomId").value;
-    indexPage.addNewRoom(newRoomId);
+    location.href = 'chess/' + newRoomId;
 });
 
 function IndexPage() {
-    this.getRoomsUrl = "http://localhost:8080/api/rooms";
-    this.postPiecesUrl = "http://localhost:8080/api/pieces/";
+    this.getRoomsUrl = window.location.origin + "/api/rooms";
 }
 
 IndexPage.prototype.initIndexPage = function () {
@@ -25,10 +24,10 @@ IndexPage.prototype.initIndexPage = function () {
             for (let i = 0; i < data.roomIds.length; i++) {
                 roomList.innerHTML +=
                     `<li class="room">
-                <button class="room-button" onclick=indexPage.addNewRoom(${data.roomIds[i]})>
-                   ${data.roomIds[i]}
-                </button>
-            </li>`;
+                        <button class="room-button" onclick="location.href = 'chess/' + ${data.roomIds[i]}">
+                        ${data.roomIds[i]}
+                        </button>
+                    </li>`;
             }
         });
 }

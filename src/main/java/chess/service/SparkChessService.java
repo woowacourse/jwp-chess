@@ -3,8 +3,8 @@ package chess.service;
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.domain.command.Commands;
-import chess.domain.dao.CommandDao;
-import chess.domain.dao.HistoryDao;
+import chess.domain.dao.SparkCommandDao;
+import chess.domain.dao.SparkHistoryDao;
 import chess.domain.dto.CommandDto;
 import chess.domain.dto.GameInfoDto;
 import chess.domain.dto.HistoryDto;
@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 @Service
 public class SparkChessService {
 
-    private CommandDao commandDao;
-    private HistoryDao historyDao;
+    private SparkCommandDao sparkCommandDao;
+    private SparkHistoryDao sparkHistoryDao;
 
-    public SparkChessService(CommandDao commandDao, HistoryDao historyDao) {
-        this.commandDao = commandDao;
-        this.historyDao = historyDao;
+    public SparkChessService(SparkCommandDao sparkCommandDao, SparkHistoryDao sparkHistoryDao) {
+        this.sparkCommandDao = sparkCommandDao;
+        this.sparkHistoryDao = sparkHistoryDao;
     }
 
     public GameInfoDto initialGameInfo() {
@@ -52,15 +52,15 @@ public class SparkChessService {
         updateMoveInfo(command, id, chessGame.isEnd());
     }
 
-    public List<HistoryDto> loadHistory() throws SQLException {
-        return historyDao.selectActive()
+    public List<HistoryDto> loadHistory() {
+        return sparkHistoryDao.selectActive()
             .stream()
             .map(HistoryDto::new)
             .collect(Collectors.toList());
     }
 
     public String addHistory(String name) throws SQLException {
-        final Optional<String> id = historyDao.insert(name);
+        final Optional<String> id = sparkHistoryDao.insert(name);
         if (!id.isPresent()) {
             throw new SQLException("[ERROR] id 값을 불러올 수 없습니다.");
         }
@@ -73,24 +73,24 @@ public class SparkChessService {
         }
     }
 
-    private void updateDB(String historyId) throws SQLException {
-        historyDao.updateEndState(historyId);
+    private void updateDB(String historyId) {
+        sparkHistoryDao.updateEndState(historyId);
     }
 
-    public void flushCommands(String command, String gameId) throws SQLException {
+    public void flushCommands(String command, String gameId) {
         try {
-            commandDao.insert(new CommandDto(command), Integer.valueOf(gameId));
+            sparkCommandDao.insert(new CommandDto(command), Integer.valueOf(gameId));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
     public List<CommandDto> lastState(String id) throws SQLException {
-        return commandDao.selectAllCommands(id);
+        return sparkCommandDao.selectAllCommands(id);
     }
 
     public String getIdByName(String name) throws SQLException {
-        final Optional<Integer> id = historyDao.findIdByName(name);
+        final Optional<Integer> id = sparkHistoryDao.findIdByName(name);
         if (!id.isPresent()) {
             throw new SQLException("[ERROR] 해당 이름의 사용자가 존재하지 않습니다.");
         }

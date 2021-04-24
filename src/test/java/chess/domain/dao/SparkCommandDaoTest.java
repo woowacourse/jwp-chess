@@ -6,18 +6,18 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-public class CommandDaoTest {
-    private CommandDao commandDao;
+public class SparkCommandDaoTest {
+    private SparkCommandDao sparkCommandDao;
 
     @BeforeEach
-    public void setup() throws SQLException {
-        commandDao = new CommandDao();
+    public void setup() {
+        sparkCommandDao = new SparkCommandDao();
     }
 
     @Test
     public void addUser() throws Exception {
         CommandDto commandDto = new CommandDto("start");
-        commandDao.insert(commandDto, 1);
+        sparkCommandDao.insert(commandDto, 1);
     }
 }
 

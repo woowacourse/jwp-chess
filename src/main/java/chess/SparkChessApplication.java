@@ -1,8 +1,8 @@
 package chess;
 
 import chess.controller.SparkController;
-import chess.domain.dao.CommandDao;
-import chess.domain.dao.HistoryDao;
+import chess.domain.dao.SparkCommandDao;
+import chess.domain.dao.SparkHistoryDao;
 import chess.service.SparkChessService;
 
 import static spark.Spark.*;
@@ -10,7 +10,7 @@ import static spark.Spark.*;
 public class SparkChessApplication {
     public static void main(String[] args) {
         staticFiles.location("/public");
-        final SparkController sparkController = initWebController(new CommandDao(), new HistoryDao());
+        final SparkController sparkController = initWebController(new SparkCommandDao(), new SparkHistoryDao());
 
         get("/play", sparkController::moveToMainPage);
         get("/play/new", sparkController::playNewGameWithNoSave);
@@ -20,7 +20,7 @@ public class SparkChessApplication {
         get("/play/end", sparkController::endGame);
     }
 
-    private static SparkController initWebController(CommandDao commandDao, HistoryDao historyDao) {
-        return new SparkController(new SparkChessService(commandDao, historyDao));
+    private static SparkController initWebController(SparkCommandDao springCommandDao, SparkHistoryDao sparkHistoryDao) {
+        return new SparkController(new SparkChessService(springCommandDao, sparkHistoryDao));
     }
 }

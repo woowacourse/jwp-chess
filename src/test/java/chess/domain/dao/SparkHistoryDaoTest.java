@@ -9,37 +9,37 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HistoryDaoTest {
-    private HistoryDao historyDao;
+class SparkHistoryDaoTest {
+    private SparkHistoryDao sparkHistoryDao;
 
     @BeforeEach
     void setUp() {
-        historyDao = new HistoryDao();
+        sparkHistoryDao = new SparkHistoryDao();
     }
 
     @Test
     void insert() throws SQLException {
-        historyDao.insert("minjeong");
+        sparkHistoryDao.insert("minjeong");
     }
 
     @Test
     void name() throws SQLException {
-        historyDao.insert("minjeong");
-        final Optional<Integer> id = historyDao.findIdByName("minjeong");
+        sparkHistoryDao.insert("minjeong");
+        final Optional<Integer> id = sparkHistoryDao.findIdByName("minjeong");
         System.out.println(id.get());
     }
 
     @Test
     void delete() throws SQLException {
-        historyDao.insert("minjeong");
-        historyDao.delete("minjeong");
+        sparkHistoryDao.insert("minjeong");
+        sparkHistoryDao.delete("minjeong");
     }
 
     @Test
     void selectAll() throws SQLException {
-        historyDao.insert("minjeong");
-        historyDao.insert("joanne");
-        final List<String> names = historyDao.selectActive();
+        sparkHistoryDao.insert("minjeong");
+        sparkHistoryDao.insert("joanne");
+        final List<String> names = sparkHistoryDao.selectActive();
         assertThat(names).contains("minjeong", "joanne");
     }
 }

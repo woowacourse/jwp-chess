@@ -25,7 +25,12 @@ public class GameRestController {
 
     @PostMapping("/move/{roomId}")
     public RedirectView move(@PathVariable final Long roomId,
-                       @RequestParam final Position source, @RequestParam final Position target) {
+                             @RequestParam final Position source,
+                             @RequestParam final Position target,
+                             @CookieValue("playerId") String playerId) {
+
+        System.out.println(playerId);
+
         gameService.move(roomId, source, target);
         if (gameService.isGameEnd(roomId)) {
             return new RedirectView("/game/result/" + roomId);

@@ -30,9 +30,8 @@ function enterNewGame() {
         data: jsonData,
         contentType : 'application/json',
         dataType: "json",
-        success: function (data) {
-            alert(roomName+"으로 방 생성 \n player1 : "+player1);
-            const roomId = data;
+        success: function (roomId) {
+            alert(roomName+" 방 생성");
             location.href="/game/load/"+roomId;
         },
         error: function (e) {
@@ -52,7 +51,7 @@ function enterRoom() {
             data: player2,
             contentType : 'application/json',
             success: function () {
-                alert("암호 일치, 방 + "+roomId+"에 입장");
+                alert("방 "+roomId+"에 입장합니다.");
                 location.href="/game/load/"+roomId;
             },
             error: function () {

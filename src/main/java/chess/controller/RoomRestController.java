@@ -11,7 +11,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -25,12 +27,17 @@ public class RoomRestController {
     }
 
     @PostMapping("/create")
-    public long createRoom(@RequestBody @Valid final RoomDto roomDto, final BindingResult bindingResult) {
+    public long createRoom(@RequestBody @Valid final RoomDto roomDto,
+                           final BindingResult bindingResult,
+                           final HttpServletResponse response) {
+
         if (bindingResult.hasErrors()) {
             final String errorMsg = OutputView.getErrorMessage(bindingResult.getFieldErrors());
             throw new IllegalArgumentException(errorMsg);
         }
+
         final Long roomId = roomService.save(roomDto.getRoomName(), roomDto.getPlayer1());
+        addCookie(response, "playerId", roomId);
         return roomId;
     }
 
@@ -41,9 +48,17 @@ public class RoomRestController {
     }
 
     @PostMapping("/enter/{roomId}")
-    public ResponseEntity enterRoom(@PathVariable final long roomId, @RequestBody final String playerId){
+    public ResponseEntity enterRoom(@PathVariable final long roomId,
+                                    @RequestBody final String playerId,
+                                    final HttpServletResponse response){
         roomService.enter(roomId, playerId);
-        // 쿠키 추가
+        addCookie(response, "playerId", roomId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private void addCookie(final HttpServletResponse response, final String name, final Object value){
+        final Cookie playerIdCookie = new Cookie(name, (String) value);
+        playerIdCookie.setMaxAge(60 * 5);
+        response.addCookie(playerIdCookie);
     }
 }

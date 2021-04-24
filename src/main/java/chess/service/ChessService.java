@@ -38,21 +38,16 @@ public class ChessService {
         chessBoardDto.board().forEach((key, value) -> gameDAO.savePieceByGameId(gameId, key, value));
     }
 
-    private void updateDatabase(ChessGameManager chessGameManager, int gameId) {
-        if (chessGameManager.isEnd()) {
-            gameDAO.deletePiecesByGameId(gameId);
-            gameDAO.deleteGameByGameId(gameId);
-            return;
-        }
-
-        gameDAO.updateTurnByGameId(chessGameManager.getCurrentTurnColor(), gameId);
-        gameDAO.deletePiecesByGameId(gameId);
-        savePiecesByGameId(gameId, ChessBoardDto.from(chessGameManager.getBoard()));
-    }
-
     public CommonDto<RunningGameDto> loadGame(int gameId) {
         ChessGameManager chessGameManager = loadChessGameManager(gameId);
         return new CommonDto<>("게임을 불러왔습니다.", toRunningGameDto(chessGameManager));
+    }
+
+    private RunningGameDto toRunningGameDto(ChessGameManager chessGameManager) {
+        return RunningGameDto.of(
+                chessGameManager.getBoard(),
+                chessGameManager.getCurrentTurnColor(),
+                chessGameManager.isEnd());
     }
 
     public CommonDto<RunningGameDto> move(int gameId, String startPosition, String endPosition) {
@@ -65,11 +60,16 @@ public class ChessService {
                 toRunningGameDto(chessGameManager));
     }
 
-    private RunningGameDto toRunningGameDto(ChessGameManager chessGameManager) {
-        return RunningGameDto.of(
-                chessGameManager.getBoard(),
-                chessGameManager.getCurrentTurnColor(),
-                chessGameManager.isEnd());
+    private void updateDatabase(ChessGameManager chessGameManager, int gameId) {
+        if (chessGameManager.isEnd()) {
+            gameDAO.deletePiecesByGameId(gameId);
+            gameDAO.deleteGameByGameId(gameId);
+            return;
+        }
+
+        gameDAO.updateTurnByGameId(chessGameManager.getCurrentTurnColor(), gameId);
+        gameDAO.deletePiecesByGameId(gameId);
+        savePiecesByGameId(gameId, ChessBoardDto.from(chessGameManager.getBoard()));
     }
 
     private ChessGameManager loadChessGameManager(int gameId) {

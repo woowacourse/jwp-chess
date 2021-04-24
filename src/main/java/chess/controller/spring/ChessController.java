@@ -1,23 +1,20 @@
 package chess.controller.spring;
 
-import chess.dto.*;
+import chess.dto.CommonDto;
+import chess.dto.MoveRequest;
+import chess.dto.NewGameDto;
+import chess.dto.RunningGameDto;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/game")
 public class ChessController {
     private final ChessService service;
 
     public ChessController(ChessService service) {
         this.service = service;
-    }
-
-    @GetMapping()
-    public String index() {
-        return "index.html";
     }
 
     @GetMapping("/new")

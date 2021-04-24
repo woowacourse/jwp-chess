@@ -56,14 +56,14 @@ public class ChessController {
         return "play";
     }
 
-    @PostMapping("/game/{historyId}/pieces")
+    @PostMapping("/game/{gameName}/move")
     @ResponseBody
-    public ResponseEntity<MoveResponseDto> move(@PathVariable String historyId,
+    public ResponseEntity<MoveResponseDto> move(@PathVariable String name,
         @RequestBody MoveDto moveDto) {
         String command = makeMoveCmd(moveDto.getSource(), moveDto.getTarget());
-        springChessService.move(historyId, command, new Commands(command));
+        springChessService.move(name, command, new Commands(command));
         MoveResponseDto moveResponseDto = new MoveResponseDto(springChessService
-            .continuedGameInfo(historyId), historyId);
+            .continuedGameInfo(name), name);
         return ResponseEntity.ok()
             .body(moveResponseDto);
     }

@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ChessService {
@@ -80,12 +79,8 @@ public class ChessService {
 
     public GridAndPiecesResponseDto getGridAndPieces(StartRequestDto requestDto) {
         String roomName = requestDto.getRoomName();
-        Optional<Long> roomId = roomDAO.findRoomIdByName(roomName);
-        if (!roomId.isPresent()) {
-            long createdRoomId = roomDAO.createRoom(roomName);
-            return createGridAndPiece(createdRoomId);
-        }
-        GridDto gridDto = gridDAO.findRecentGridByRoomId(roomId.get());
+        long roomId = roomDAO.findRoomIdByName(roomName).orElseGet(() -> roomDAO.createRoom(roomName));
+        GridDto gridDto = gridDAO.findRecentGridByRoomId(roomId);
         List<PieceDto> piecesResponseDto = pieceDAO.findPiecesByGridId(gridDto.getGridId());
         return new GridAndPiecesResponseDto(gridDto, piecesResponseDto);
     }

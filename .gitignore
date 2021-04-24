@@ -1,9 +1,13 @@
+.DS_Store
 HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
+/out/
+/target/
 !**/src/main/**
 !**/src/test/**
+
 
 ### STS ###
 .apt_generated
@@ -13,12 +17,14 @@ build/
 .settings
 .springBeans
 .sts4-cache
+bin/
 
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
+<<<<<<< HEAD
 out/
 
 ### NetBeans ###
@@ -30,6 +36,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### DOCKER ###
-/docker/db/

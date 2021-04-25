@@ -3,12 +3,7 @@ package chess.controller;
 import chess.service.SpringChessService;
 import chess.webdto.view.ChessGameDto;
 import chess.webdto.view.MoveRequestDto;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.SQLException;
-
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestController
 @RequestMapping("/game")

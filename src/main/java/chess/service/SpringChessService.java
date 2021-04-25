@@ -84,7 +84,7 @@ public class SpringChessService {
 
     public ScoreDto score(String roomName) {
         Board board = springBoardDao.findBoard(roomName)
-                .orElseThrow(() -> new EmptyResultDataAccessException("방이 존재하지 않습니다.", 1));
+                .orElseThrow(NotExistRoomException::new);
         return new ScoreDto(String.valueOf(board.score(Side.WHITE)), String.valueOf(board.score(Side.BLACK)));
     }
 

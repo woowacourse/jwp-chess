@@ -5,6 +5,7 @@ import chess.dto.game.GameDTO;
 import chess.dto.room.RoomCreateDTO;
 import chess.dto.user.JoinUserDTO;
 import chess.dto.user.PasswordDTO;
+import chess.dto.user.UserDTO;
 import chess.exception.InitialSettingDataException;
 import chess.exception.NoHistoryException;
 import chess.exception.NotEnoughPlayerException;
@@ -16,6 +17,10 @@ import chess.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @Controller
 public final class SpringChessGameController {
@@ -41,37 +46,60 @@ public final class SpringChessGameController {
     }
 
     @PostMapping(path = "/rooms/new-game")
-    public String createNewGame(@ModelAttribute final RoomCreateDTO roomCreateDTO) {
+    public String createNewGame(@ModelAttribute final RoomCreateDTO roomCreateDTO, final HttpServletResponse response) {
         int whiteUserId = userService.registerUser(new JoinUserDTO(roomCreateDTO));
+        playerInformationCookie(response, roomCreateDTO.getNickname(), roomCreateDTO.getPassword(), "white");
         Long roomId = roomService.createRoom(roomCreateDTO.getName(), whiteUserId);
         return "redirect:/rooms/" + roomId;
     }
 
     @PostMapping("/rooms/{id}/users/blackuser/add")
-    public String join(@PathVariable String id, @ModelAttribute JoinUserDTO joinUserDTO) {
+    public String join(@PathVariable final String id, @ModelAttribute final JoinUserDTO joinUserDTO, final HttpServletResponse response) {
         int blackUserId = userService.registerUser(joinUserDTO);
+        playerInformationCookie(response, joinUserDTO.getNickname(), joinUserDTO.getPassword(), "black");
         roomService.joinBlackUser(id, blackUserId);
         return "redirect:/rooms/" + id;
     }
 
     @PostMapping("/rooms/{id}/users/blackuser/re-enter")
-    public String blackUserReEntry(@PathVariable String id, @ModelAttribute PasswordDTO passwordDTO) {
-        String blackUserId = roomService.findBlackUserById(id);
-        if (userService.checkPassword(blackUserId, passwordDTO.getPassword())) {
+    public String blackUserReEntry(@PathVariable final String id, @ModelAttribute final PasswordDTO passwordDTO,
+                                   final HttpServletResponse response) {
+        Optional<UserDTO> blackUser = roomService.findBlackUserById(id);
+
+        if (blackUser.isPresent()) {
+            UserDTO user = blackUser.get();
+            userService.checkPassword(Integer.toString(user.getId()), passwordDTO.getPassword());
+
+            playerInformationCookie(response, user.getNickname(), passwordDTO.getPassword(), "black");
             return "redirect:/rooms/" + id;
         }
         return "redirect:/";
     }
 
     @PostMapping("/rooms/{id}/users/whiteuser/re-enter")
-    public String whiteUserReEntry(@PathVariable String id, @ModelAttribute PasswordDTO passwordDTO) {
-        String whiteUserId = roomService.findWhiteUserById(id);
-        System.out.println("##");
-        System.out.println(whiteUserId);
-        if (userService.checkPassword(whiteUserId, passwordDTO.getPassword())) {
+    public String whiteUserReEntry(@PathVariable String id, @ModelAttribute PasswordDTO passwordDTO,
+                                   final HttpServletResponse response) {
+        Optional<UserDTO> whiteUser = roomService.findWhiteUserById(id);
+
+        if (whiteUser.isPresent()) {
+            UserDTO user = whiteUser.get();
+            userService.checkPassword(Integer.toString(user.getId()), passwordDTO.getPassword());
+            playerInformationCookie(response, user.getNickname(), passwordDTO.getPassword(), "white");
             return "redirect:/rooms/" + id;
         }
         return "redirect:/";
+    }
+
+    private void playerInformationCookie(HttpServletResponse response, String nickname, String password, String team) {
+        Cookie color = new Cookie("color", team);
+        Cookie playerId = new Cookie("id", nickname);
+        Cookie playerPassword = new Cookie("password", password);
+        color.setPath("/");
+        playerId.setPath("/");
+        playerPassword.setPath("/");
+        response.addCookie(color);
+        response.addCookie(playerId);
+        response.addCookie(playerPassword);
     }
 
     @GetMapping("/rooms/{id}")

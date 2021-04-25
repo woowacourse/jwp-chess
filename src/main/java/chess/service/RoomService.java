@@ -1,21 +1,26 @@
 package chess.service;
 
 import chess.dao.RoomDAO;
+import chess.dao.UserDAO;
 import chess.domain.ChessGame;
 import chess.domain.Rooms;
 import chess.dto.room.RoomDTO;
+import chess.dto.user.UserDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public final class RoomService {
     private final Rooms rooms;
     private final RoomDAO roomDAO;
+    private final UserDAO userDAO;
 
-    public RoomService(Rooms rooms, RoomDAO roomDAO) {
+    public RoomService(Rooms rooms, RoomDAO roomDAO, UserDAO userDAO) {
         this.rooms = rooms;
         this.roomDAO = roomDAO;
+        this.userDAO = userDAO;
     }
 
     public List<RoomDTO> allRooms() {
@@ -60,11 +65,13 @@ public final class RoomService {
         roomDAO.joinBlackUser(roomId, blackUserId);
     }
 
-    public String findBlackUserById(final String id) {
-        return roomDAO.findBlackUserById(id);
+    public Optional<UserDTO> findBlackUserById(final String id) {
+        String blackUserId = roomDAO.findBlackUserById(id);
+        return userDAO.findById(blackUserId);
     }
 
-    public String findWhiteUserById(final String id) {
-        return roomDAO.findWhiteUserById(id);
+    public Optional<UserDTO> findWhiteUserById(final String id) {
+        String whiteUserId = roomDAO.findWhiteUserById(id);
+        return userDAO.findById(whiteUserId);
     }
 }

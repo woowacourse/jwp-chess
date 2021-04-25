@@ -2,11 +2,8 @@ package chess.service;
 
 import chess.dao.UserDAO;
 import chess.dto.user.JoinUserDTO;
-import chess.dto.user.UserDTO;
 import chess.dto.user.UsersDTO;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public final class UserService {
@@ -63,8 +60,8 @@ public final class UserService {
         return userId;
     }
 
-    public boolean checkPassword(final String blackUserId, final String password) {
-        Optional<UserDTO> user = userDAO.findPlayerByIdAndPassword(blackUserId, password);
-        return !Optional.empty().equals(user);
+    public void checkPassword(final String id, final String password) {
+        userDAO.findPlayerByIdAndPassword(id, password)
+                .orElseThrow(IllegalStateException::new);
     }
 }

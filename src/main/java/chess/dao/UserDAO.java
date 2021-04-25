@@ -156,4 +156,11 @@ public class UserDAO {
                 id, password);
         return users.stream().findAny();
     }
+
+    public Optional<UserDTO> findById(String id) {
+        List<UserDTO> users = jdbcTemplate.query("SELECT * FROM player WHERE id = ?",
+                (rs, rowNum) -> new UserDTO(rs.getInt("id"), rs.getString("nickname")),
+                id);
+        return users.stream().findAny();
+    }
 }

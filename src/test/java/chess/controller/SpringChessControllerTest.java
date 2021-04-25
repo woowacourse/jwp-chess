@@ -10,8 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -25,23 +24,39 @@ class SpringChessControllerTest {
     private SpringChessService springChessService;
 
     @Test
-    @DisplayName("POST: /games/new가 정상 작동한다")
-    void startNewGame() throws Exception {
-        mockMvc.perform(post("/games/new"))
+    @DisplayName("GET: /games가 정상 작동한다")
+    void loadGameRooms() throws Exception {
+        mockMvc.perform(get("/games"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("GET: /games/new은 허용하지 않는다")
-    void startNewGamePostRequestError() throws Exception {
-        mockMvc.perform(get("/games/new"))
-                .andExpect(status().is4xxClientError());
+    @DisplayName("POST: /games가 정상 작동한다")
+    void createNewGameRoom() throws Exception {
+        mockMvc.perform(post("/games")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\" : \"" + "testName" + "\"" + "}"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("GET: /games/saved가 정상 작동한다")
+    @DisplayName("POST: /games/{id}가 정상 작동한다")
+    void startNewGame() throws Exception {
+        mockMvc.perform(post("/games/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("GET: /games/{id}가 정상 작동한다")
     void loadSavedGame() throws Exception {
-        mockMvc.perform(get("/games/saved"))
+        mockMvc.perform(get("/games/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("DELETE: /games/{id}가 정상 작동한다")
+    void deleteGame() throws Exception {
+        mockMvc.perform(delete("/games/1"))
                 .andExpect(status().isOk());
     }
 
@@ -55,7 +70,7 @@ class SpringChessControllerTest {
     @Test
     @DisplayName("{start: e2, destination: e4}를 엔티티 바디로 추가해 POST 방식으로 데이터가 넘어가면, 상태코드 200을 반환한다")
     void move() throws Exception {
-        mockMvc.perform(post("/games/move")
+        mockMvc.perform(post("/games/1/move")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"start\" : \"" + "e2" + "\"" + ", " +
                         "\"destination\" : \"" + "e4" + "\"" +
@@ -66,14 +81,14 @@ class SpringChessControllerTest {
     @Test
     @DisplayName("엔티티 바디가 없이 POST 방식으로 요청하면, 400번대 에러를 반환한다.")
     void moveWithoutBody() throws Exception {
-        mockMvc.perform(post("/games/move"))
+        mockMvc.perform(post("/games/1/move"))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     @DisplayName("GET: /games/move는 허용하지 않는다")
     void moveGetRequest() throws Exception {
-        mockMvc.perform(get("/games/move"))
+        mockMvc.perform(get("/games/1/move"))
                 .andExpect(status().is4xxClientError());
     }
 }

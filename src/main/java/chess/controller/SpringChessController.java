@@ -13,37 +13,37 @@ public class SpringChessController {
         this.springChessService = springChessService;
     }
 
-    @GetMapping(value = "/games")
-    public GameRoomListDto loadGameRooms() {
-        return springChessService.loadGameRooms();
-    }
-
     @PostMapping(value = "/games")
     public GameRoomDto createGameRoom(@RequestBody GameRoomNameDto gameRoomNameDto) {
         final String roomName = gameRoomNameDto.getName();
         return springChessService.createGameRoom(roomName);
     }
 
-    @PostMapping(value = "/games/{id}")
-    public ChessGameDto startNewGame(@PathVariable int id) {
-        return springChessService.startNewGame(id);
+    @GetMapping(value = "/games")
+    public GameRoomListDto loadGameRooms() {
+        return springChessService.loadGameRooms();
     }
 
-    @GetMapping(value = "/games/{id}")
-    public ChessGameDto loadSavedGame(@PathVariable int id) {
-        return springChessService.loadSavedGame(id);
+    @PostMapping(value = "/games/{roomId}")
+    public ChessGameDto startNewGame(@PathVariable int roomId) {
+        return springChessService.createChessGame(roomId);
     }
 
-    @DeleteMapping(value = "/games/{id}")
-    public ResponseEntity<String> deleteGame(@PathVariable int id) {
-        springChessService.deleteGame(id);
+    @GetMapping(value = "/games/{roomId}")
+    public ChessGameDto loadSavedGame(@PathVariable int roomId) {
+        return springChessService.readChessGame(roomId);
+    }
+
+    @DeleteMapping(value = "/games/{roomId}")
+    public ResponseEntity<String> deleteGame(@PathVariable int roomId) {
+        springChessService.deleteChessGame(roomId);
         return ResponseEntity.ok("success");
     }
 
-    @PostMapping(value = "/games/{id}/move")
-    public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable int id) {
+    @PostMapping(value = "/games/{roomId}/move")
+    public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable int roomId) {
         final String start = moveRequestDto.getStart();
         final String destination = moveRequestDto.getDestination();
-        return springChessService.move(id, start, destination);
+        return springChessService.move(roomId, start, destination);
     }
 }

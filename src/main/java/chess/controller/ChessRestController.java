@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/rooms")
+@RequestMapping("api/rooms")
 public class ChessRestController {
 
     private final ChessService chessService;

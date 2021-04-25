@@ -18,7 +18,7 @@ function playNewGame() {
 
     $.ajax({
         type: "POST",
-        url: '/rooms/first',
+        url: 'api/rooms/first',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
@@ -41,7 +41,7 @@ function enterRoom(id) {
 
     $.ajax({
         type: "POST",
-        url: '/rooms/second',
+        url: 'api/rooms/second',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"

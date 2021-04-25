@@ -1,14 +1,27 @@
 package chess.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
 import java.time.LocalDateTime;
 
 public class GridDto {
-    private final Long gridId;
-    private final boolean isBlackTurn;
-    private final boolean isFinished;
-    private final Long roomId;
-    private final LocalDateTime createdAt;
-    private final boolean isStarted;
+    private Long gridId;
+    private boolean isBlackTurn;
+    private boolean isFinished;
+    private Long roomId;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime createdAt;
+    private boolean isStarted;
+
+    public GridDto() {
+        super();
+    }
 
     public GridDto(Long gridId, boolean isBlackTurn, boolean isFinished, Long roomId, LocalDateTime createdAt, boolean isStarted) {
         this.gridId = gridId;
@@ -18,6 +31,22 @@ public class GridDto {
         this.createdAt = createdAt;
         this.isStarted = isStarted;
     }
+
+    //    @JsonCreator
+//    public GridDto(
+//            @JsonProperty("gridId") Long gridId,
+//            @JsonProperty("isBlackTurn") boolean isBlackTurn,
+//            @JsonProperty("isFinished") boolean isFinished,
+//            @JsonProperty("roomId") Long roomId,
+//            @JsonProperty("createdAt") LocalDateTime createdAt,
+//            @JsonProperty("isStarted") boolean isStarted) {
+//        this.gridId = gridId;
+//        this.isBlackTurn = isBlackTurn;
+//        this.isFinished = isFinished;
+//        this.roomId = roomId;
+//        this.createdAt = createdAt;
+//        this.isStarted = isStarted;
+//    }
 
     public Long getGridId() {
         return gridId;

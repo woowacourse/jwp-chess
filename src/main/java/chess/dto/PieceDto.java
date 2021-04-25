@@ -8,11 +8,15 @@ public class PieceDto {
     private static final int PIECE_NAME_INDEX = 0;
     private static final int Y_POSITION_INDEX = 1;
     private static final int X_POSITION_INDEX = 0;
-    private final long pieceId;
-    private final boolean isBlack;
-    private final String position;
-    private final long gridId;
-    private final String name;
+    private long pieceId;
+    private boolean isBlack;
+    private String position;
+    private long gridId;
+    private String name;
+
+    public PieceDto() {
+        super();
+    }
 
     public PieceDto(long pieceId, boolean isBlack, String position, long gridId, String name) {
         this.pieceId = pieceId;

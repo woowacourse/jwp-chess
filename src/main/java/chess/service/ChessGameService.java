@@ -24,12 +24,12 @@ public class ChessGameService {
     public NewGameDto createNewGame() {
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.start();
-        int gameId = gameRepository.save(chessGameManager);
+        long gameId = gameRepository.save(chessGameManager);
         pieceRepository.savePieces(chessGameManager, gameId);
         return NewGameDto.from(chessGameManager, gameId);
     }
 
-    public RunningGameDto move(int gameId, String from, String to) {
+    public RunningGameDto move(long gameId, String from, String to) {
         ChessGameManager chessGameManager = loadChessGameByGameId(gameId);
 
         Position fromPosition = Position.of(from);
@@ -48,7 +48,7 @@ public class ChessGameService {
         return RunningGameDto.from(chessGameManager);
     }
 
-    public ChessGameManager loadChessGameByGameId(int gameId) {
+    public ChessGameManager loadChessGameByGameId(long gameId) {
         ChessBoard chessBoard = pieceRepository.findChessBoardByGameId(gameId);
         Color currentTurn = gameRepository.findCurrentTurnByGameId(gameId);
 

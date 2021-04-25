@@ -16,6 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `game`
+--
+
+DROP TABLE IF EXISTS `game`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `game` (
+  `game_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `turn` varchar(16) NOT NULL,
+  PRIMARY KEY (`game_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `game`
+--
+
+LOCK TABLES `game` WRITE;
+/*!40000 ALTER TABLE `game` DISABLE KEYS */;
+/*!40000 ALTER TABLE `game` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `piece`
 --
 
@@ -23,8 +46,8 @@ DROP TABLE IF EXISTS `piece`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `piece` (
-  `piece_id` int(11) NOT NULL AUTO_INCREMENT,
-  `game_id` int(11) NOT NULL,
+  `piece_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `game_id` bigint(20) NOT NULL,
   `name` varchar(16) NOT NULL,
   `color` varchar(16) NOT NULL,
   `position` varchar(8) NOT NULL,
@@ -52,4 +75,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-18 13:03:02
+-- Dump completed on 2021-04-25 21:02:45

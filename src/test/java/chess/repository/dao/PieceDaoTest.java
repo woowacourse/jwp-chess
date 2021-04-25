@@ -43,7 +43,7 @@ class PieceDaoTest {
     @DisplayName("진행된 게임에서 체스 보드를 읽어온다.")
     void findChessBoardByGameIdTest() {
         // given
-        int gameId = gameRepository.save(chessGameManager);
+        long gameId = gameRepository.save(chessGameManager);
 
         // when
         pieceDao.savePieces(chessGameManager, gameId);
@@ -57,13 +57,13 @@ class PieceDaoTest {
     @DisplayName("진행되고 있는 게임의 모든 기물을 저장한다.")
     void savePiecesTest() {
         // given
-        int gameId = gameRepository.save(chessGameManager);
+        long gameId = gameRepository.save(chessGameManager);
 
         // when
         pieceDao.savePieces(chessGameManager, gameId);
 
         //then
-        Integer rowFound = this.jdbcTemplate.queryForObject("SELECT count(*) FROM piece WHERE game_id = " + Integer.toString(gameId), Integer.class);
+        Integer rowFound = this.jdbcTemplate.queryForObject("SELECT count(*) FROM piece WHERE game_id = " + Long.toString(gameId), Integer.class);
         assertThat(rowFound).isEqualTo(32);
     }
 
@@ -71,7 +71,7 @@ class PieceDaoTest {
     @DisplayName("기물을 지정된 위치에 저장한다.")
     void savePieceByPositionTest() {
         // given
-        int gameId = gameRepository.save(chessGameManager); // to foreignKey
+        long gameId = gameRepository.save(chessGameManager); // to foreignKey
         Piece piece = new Pawn(Color.WHITE);
         Position position = Position.of("a4");
 
@@ -87,7 +87,7 @@ class PieceDaoTest {
     @DisplayName("지정된 위치의 기물을 읽어온다.")
     void findPieceByPositionTest() {
         // given
-        int gameId = gameRepository.save(chessGameManager);
+        long gameId = gameRepository.save(chessGameManager);
         pieceDao.savePieces(chessGameManager, gameId);
         Position position = Position.of("a2");  // White pawn
 
@@ -102,7 +102,7 @@ class PieceDaoTest {
     @DisplayName("지정된 위치의 기물을 삭제한다.")
     void deletePieceByPositionTest() {
         // given
-        int gameId = gameRepository.save(chessGameManager); // to foreignKey
+        long gameId = gameRepository.save(chessGameManager); // to foreignKey
         Position position = Position.of("a2");
 
         // when

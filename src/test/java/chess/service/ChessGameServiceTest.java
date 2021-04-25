@@ -49,7 +49,7 @@ class ChessGameServiceTest {
     @DisplayName("게임의 고유 값으로 게임을 읽어온다.")
     void loadChessGameBByGameId() {
         // given
-        int gameId = chessGameService.createNewGame().getGameId();
+        long gameId = chessGameService.createNewGame().getGameId();
 
         chessGameService.loadChessGameByGameId(gameId);
 
@@ -60,7 +60,7 @@ class ChessGameServiceTest {
     @DisplayName("기물을 이동한 결과를 반환한다.")
     void moveTest() {
         // given
-        int gameId = chessGameService.createNewGame().getGameId();
+        long gameId = chessGameService.createNewGame().getGameId();
 
         // when
         RunningGameDto runningGameDto = chessGameService.move(gameId, "a2", "a4");

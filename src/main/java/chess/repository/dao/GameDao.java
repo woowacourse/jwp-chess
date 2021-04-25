@@ -18,19 +18,19 @@ public class GameDao implements GameRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int save(ChessGameManager chessGameManager) {
+    public long save(ChessGameManager chessGameManager) {
         Color currentTurnColor = chessGameManager.getCurrentTurnColor();
 
         String insertGameQuery = "INSERT INTO game(turn) VALUES(?)";
         this.jdbcTemplate.update(insertGameQuery, currentTurnColor.name());
 
         String findGameIdQuery = "SELECT last_insert_id()";
-        int gameId = this.jdbcTemplate.queryForObject(findGameIdQuery, Integer.class);
+        long gameId = this.jdbcTemplate.queryForObject(findGameIdQuery, Long.class);
 
         return gameId;
     }
 
-    public Color findCurrentTurnByGameId(int gameId) {
+    public Color findCurrentTurnByGameId(long gameId) {
         String gameQuery = "SELECT turn FROM game WHERE game_id = ?";
         Color currentTurn = this.jdbcTemplate.queryForObject(gameQuery, colorRowMapper, gameId);
 
@@ -44,19 +44,19 @@ public class GameDao implements GameRepository {
         return Color.of(resultSet.getString("turn"));
     };
 
-    public void updateTurnByGameId(ChessGameManager chessGameManager, int gameId) {
+    public void updateTurnByGameId(ChessGameManager chessGameManager, long gameId) {
         Color currentTurnColor = chessGameManager.getCurrentTurnColor();
         String query = "UPDATE game set turn=? WHERE game_id = ?";
         this.jdbcTemplate.update(query, currentTurnColor.name(), gameId);
     }
 
-    public List<Integer> findAllGamesId() {
+    public List<Long> findAllGamesId() {
         String query = "SELECT game_id FROM game ";
-        return this.jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getInt("game_id"));
+        return this.jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getLong("game_id"));
     }
 
     @Override
-    public void delete(int gameId) {
+    public void delete(long gameId) {
         String query = "DELETE from game WHERE game_id = ?";
         this.jdbcTemplate.update(query, gameId);
     }

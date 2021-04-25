@@ -33,10 +33,10 @@ class GameDaoTest {
     @DisplayName("게임을 저장하고 고유 값을 얻어온다.")
     void saveTest() {
         // when
-        int gameId = gameDao.save(chessGameManager);
+        long gameId = gameDao.save(chessGameManager);
 
         // then
-        assertThat(gameId).isInstanceOf(Integer.class);
+        assertThat(gameId).isInstanceOf(Long.class);
     }
 
     @Test
@@ -46,7 +46,7 @@ class GameDaoTest {
         Color currentTurn = chessGameManager.getCurrentTurnColor();
 
         // when
-        int gameId = gameDao.save(chessGameManager);
+        long gameId = gameDao.save(chessGameManager);
         Color currentTurnFound = gameDao.findCurrentTurnByGameId(gameId);
 
         // then
@@ -57,7 +57,7 @@ class GameDaoTest {
     @DisplayName("순서를 업데이트한다.")
     void updateTurnByGameIdTest() {
         // given
-        int gameId = gameDao.save(chessGameManager);
+        long gameId = gameDao.save(chessGameManager);
         chessGameManager.move(Position.of("a2"), Position.of("a4"));
         Color currentTurn = chessGameManager.getCurrentTurnColor();
 
@@ -73,14 +73,14 @@ class GameDaoTest {
     @DisplayName("게임을 삭제한다.")
     void deleteTest() {
         // given
-        int gameId = gameDao.save(chessGameManager); // to foreignKey
+        long gameId = gameDao.save(chessGameManager); // to foreignKey
         Position position = Position.of("a2");
 
         // when
         gameDao.delete(gameId);
 
         // then
-        Integer rowFound = this.jdbcTemplate.queryForObject("SELECT count(*) FROM game WHERE game_id = " + Integer.toString(gameId), Integer.class);
+        Integer rowFound = this.jdbcTemplate.queryForObject("SELECT count(*) FROM game WHERE game_id = " + Long.toString(gameId), Integer.class);
         assertThat(rowFound).isEqualTo(0);
     }
 

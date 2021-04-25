@@ -6,13 +6,13 @@ import chess.domain.piece.Color;
 import java.util.List;
 
 public interface GameRepository {
-    int save(ChessGameManager chessGameManager);
+    long save(ChessGameManager chessGameManager);
 
-    Color findCurrentTurnByGameId(int gameId);
+    Color findCurrentTurnByGameId(long gameId);
 
-    void updateTurnByGameId(ChessGameManager chessGameManager, int gameId);
+    void updateTurnByGameId(ChessGameManager chessGameManager, long gameId);
 
-    List<Integer> findAllGamesId();
+    List<Long> findAllGamesId();
 
-    void delete(int gameId);
+    void delete(long gameId);
 }

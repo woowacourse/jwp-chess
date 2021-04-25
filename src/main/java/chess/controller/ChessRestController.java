@@ -24,7 +24,7 @@ public class ChessRestController {
     }
 
     @PutMapping("/games/{gameId}/piece")
-    public ResponseEntity<CommonResponse<RunningGameDto>> move(@PathVariable int gameId, @RequestBody MoveRequest moveRequest) {
+    public ResponseEntity<CommonResponse<RunningGameDto>> move(@PathVariable long gameId, @RequestBody MoveRequest moveRequest) {
         String from = moveRequest.getFrom();
         String to = moveRequest.getTo();
 
@@ -44,7 +44,7 @@ public class ChessRestController {
     }
 
     @GetMapping("/games/{gameId}")
-    public ResponseEntity<CommonResponse<RunningGameDto>> loadGame(@PathVariable int gameId) {
+    public ResponseEntity<CommonResponse<RunningGameDto>> loadGame(@PathVariable long gameId) {
         return ResponseEntity.ok().body(
                 new CommonResponse<>(
                         "게임을 불러왔습니다",

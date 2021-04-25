@@ -16,14 +16,8 @@ document.querySelector(".rooms").addEventListener("click", async (event) => {
   if (event.target.classList.contains("remove-room")) {
     const idToBeRemoved = event.target.closest(".room").getAttribute(
         "id").toString();
-    const response = await fetch("./rooms", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id: idToBeRemoved
-      })
+    const response = await fetch("./rooms/" + idToBeRemoved, {
+      method: "DELETE"
     });
     if (response.ok) {
       window.location.reload();
@@ -65,7 +59,6 @@ document.querySelector(".create-room").addEventListener("submit",
           })
         });
         const result = await response.json();
-        console.log(result)
         if (response.ok) {
           window.location.href = "./rooms/" + result["id"];
         } else {

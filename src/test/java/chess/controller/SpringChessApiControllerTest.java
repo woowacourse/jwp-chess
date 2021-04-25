@@ -1,5 +1,6 @@
 package chess.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -16,10 +17,13 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+@SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class SpringChessApiControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -104,13 +108,9 @@ public class SpringChessApiControllerTest {
     @DisplayName("방 삭제")
     @Test
     void closeRoom() throws Exception {
-        Map<String, String> body = new HashMap<>();
-        body.put("id", "1");
 
         mockMvc.perform(
-            put("/rooms")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(body)))
+            delete("/rooms/1"))
             .andExpect(status().isOk());
     }
 

@@ -22,13 +22,10 @@ POST /rooms
 
 ## Room 닫기
 
-PUT /rooms
+DELETE /rooms/:roomId
 
 ```json
 {
-  "requestBody": {
-    "id": "string"
-  }
 }
 ```
 

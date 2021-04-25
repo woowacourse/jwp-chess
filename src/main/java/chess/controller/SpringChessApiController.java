@@ -10,6 +10,7 @@ import chess.service.ChessService;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,9 +35,9 @@ public class SpringChessApiController {
         return ResponseEntity.created(URI.create("/rooms/" + responseBody.getId())).body(responseBody);
     }
 
-    @PutMapping
-    private ResponseEntity<Void> closeRoom(@RequestBody RoomDto roomDto) {
-        chessService.close(roomDto.getId());
+    @DeleteMapping("{id}")
+    private ResponseEntity<Void> closeRoom(@PathVariable String id) {
+        chessService.close(id);
         return ResponseEntity.ok().build();
     }
 

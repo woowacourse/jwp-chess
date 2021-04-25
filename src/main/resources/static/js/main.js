@@ -23,3 +23,17 @@ function closePopup() {
     const popup = document.querySelector('#popup');
     popup.classList.add('hide');
 }
+
+function showEnterPopup() {
+    const popup = document.querySelector('#enter-popup');
+    popup.classList.remove('hide');
+}
+
+function closeEnterPopup() {
+    const userId = document.querySelector('#black-user-id');
+    const userPassword = document.querySelector('#black-user-password');
+    userId.value = "";
+    userPassword.value = "";
+    const popup = document.querySelector('#enter-popup');
+    popup.classList.add('hide');
+}

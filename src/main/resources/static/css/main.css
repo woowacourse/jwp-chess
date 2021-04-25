@@ -80,7 +80,7 @@ th, td {
     width: 100%;
 }
 
-#popup {
+#popup, #enter-popup {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -95,16 +95,16 @@ th, td {
     -webkit-backdrop-filter: blur(4px);
 }
 
-#popup.hide {
+#popup.hide, #enter-popup.hide {
     display: none;
 }
 
-#popup.multiple-filter {
+#popup.multiple-filter, #enter-popup.multiple-filter {
     backdrop-filter: blur(4px) grayscale(90%);
     -webkit-backdrop-filter: blur(4px) grayscale(90%);
 }
 
-#popup .content {
+.content {
     padding: 20px;
     background: #fff;
     border-radius: 5px;

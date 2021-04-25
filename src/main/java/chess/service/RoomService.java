@@ -55,4 +55,8 @@ public final class RoomService {
         chessGame.move(startPoint, endPoint);
         return chessGame;
     }
+
+    public void joinBlackUser(final String roomId, final int blackUserId) {
+        roomDAO.joinBlackUser(roomId, blackUserId);
+    }
 }

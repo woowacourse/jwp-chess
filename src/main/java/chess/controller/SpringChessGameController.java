@@ -3,6 +3,7 @@ package chess.controller;
 import chess.domain.ChessGame;
 import chess.dto.game.GameDTO;
 import chess.dto.room.RoomCreateDTO;
+import chess.dto.user.JoinUserDTO;
 import chess.exception.InitialSettingDataException;
 import chess.exception.NoHistoryException;
 import chess.exception.NotEnoughPlayerException;
@@ -43,6 +44,13 @@ public final class SpringChessGameController {
         int whiteUserId = userService.registerUser(roomCreateDTO.getPlayerId(), roomCreateDTO.getPassword());
         Long roomId = roomService.createRoom(roomCreateDTO.getName(), whiteUserId);
         return "redirect:/rooms/" + roomId;
+    }
+
+    @PostMapping("/rooms/{id}/users/blackuser/add")
+    public String join(@PathVariable String id, @ModelAttribute JoinUserDTO joinUserDTO) {
+        int blackUserId = userService.registerUser(joinUserDTO.getPlayerId(), joinUserDTO.getPassword());
+        roomService.joinBlackUser(id, blackUserId);
+        return "redirect:/rooms/" + id;
     }
 
     @GetMapping("/rooms/{id}")

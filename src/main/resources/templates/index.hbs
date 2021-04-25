@@ -37,8 +37,33 @@
                     <tr>
                         <td class="room-no">{{@index}}</td>
                         <td>{{title}}</td>
-                        <td>{{blackUser}}</td>
-                        <td>{{whiteUser}}</td>
+                        <td>{{#if blackUser}}
+                                {{blackUser}}
+                            {{else if}}
+                                <button onclick="showEnterPopup()">참여</button>
+                                <div id="enter-popup" class="hide">
+                                    <div class="content">
+                                        <form action="/rooms/{{id}}/users/blackuser/add" method="post">
+                                            아이디 : <input type="text" name="playerId" id="black-user-id" required size="10">
+                                            <br><br>
+                                            비밀번호 : <input type="text" name="password" id="black-user-password" required size="10">
+                                            <br><br>
+                                            <input type="submit" value="입장">
+                                        </form>
+                                        <button onclick="closeEnterPopup()">닫 기</button>
+                                    </div>
+                                </div>
+                            {{/if}}
+                        </td>
+                        <td>{{#if whiteUser}}
+                                {{whiteUser}}
+                            {{else if}}
+                                <form action="/rooms/{{id}}/users/whiteuser/add" method="POST">
+                                    <input type="hidden" name="_method" value="PUT"/>
+                                    <input type="button" value="참여">
+                                </form>
+                            {{/if}}
+                        </td>
                         <td>{{status}}</td>
                         <td>
                             {{#if playing}}

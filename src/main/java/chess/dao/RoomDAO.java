@@ -54,7 +54,7 @@ public class RoomDAO {
     private RowMapper<RoomDTO> mapper() {
         return (resultSet, rowNum) -> {
             int status = resultSet.getInt("status");
-            boolean playing = (status == 1 || status == 2);
+            boolean playing = (status == 1);
             return new RoomDTO(
                     resultSet.getInt("id"),
                     resultSet.getString("title"),
@@ -80,5 +80,10 @@ public class RoomDAO {
         } catch (DataAccessException e) {
             throw new InitialSettingDataException();
         }
+    }
+
+    public void joinBlackUser(final String roomId, final int blackUserId) {
+        String query = "UPDATE room SET black_user = ?, status = ? WHERE id = ?";
+        jdbcTemplate.update(query, blackUserId, PLAYING_STATUS, roomId);
     }
 }

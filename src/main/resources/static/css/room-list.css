@@ -28,7 +28,7 @@ body {
     margin-top: -80px;
 }
 
-#start-btn,
-#room-list-btn {
-    width: 300px;
+.rooms {
+    display: inline;
+    font-size: 16pt;
 }

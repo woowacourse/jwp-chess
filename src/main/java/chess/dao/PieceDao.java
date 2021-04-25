@@ -6,14 +6,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class PieceDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public PieceDao(DataSource dataSource) {
+    public PieceDao(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

@@ -1,10 +1,12 @@
 package chess.repository;
 
 import chess.dao.PieceDao;
+import chess.dao.RoomDao;
 import chess.dao.TurnDao;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.ChessResponseDto;
+import chess.dto.response.RoomResponseDto;
 import chess.dto.response.TurnResponseDto;
 import org.springframework.stereotype.Repository;
 
@@ -13,10 +15,12 @@ import java.util.Map;
 
 @Repository
 public class ChessRepository {
+    private final RoomDao roomDao;
     private final PieceDao pieceDao;
     private final TurnDao turnDao;
 
-    public ChessRepository(PieceDao pieceDao, TurnDao turnDao) {
+    public ChessRepository(final RoomDao roomDao, final PieceDao pieceDao, final TurnDao turnDao) {
+        this.roomDao = roomDao;
         this.pieceDao = pieceDao;
         this.turnDao = turnDao;
     }
@@ -29,6 +33,10 @@ public class ChessRepository {
 
     public void initializeTurn() {
         turnDao.initializeTurn();
+    }
+
+    public List<RoomResponseDto> showAllRooms() {
+        return roomDao.showAllRooms();
     }
 
     public List<ChessResponseDto> showAllPieces() {

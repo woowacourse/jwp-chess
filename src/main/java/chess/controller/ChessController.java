@@ -1,13 +1,15 @@
 package chess.controller;
 
 import chess.dto.ChessBoardDto;
-import chess.dto.StringChessBoardDto;
+import chess.dto.response.RoomResponseDto;
 import chess.dto.response.ScoreResponseDto;
 import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 @Controller
 public class ChessController {
@@ -27,6 +29,13 @@ public class ChessController {
     public String reset() {
         chessService.resetRound();
         return makeNewGame();
+    }
+
+    @GetMapping("/room-list")
+    public String roomList(final Model model) {
+        List<RoomResponseDto> rooms = chessService.rooms();
+        model.addAttribute("rooms", rooms);
+        return "room-list";
     }
 
     @GetMapping("/chess")

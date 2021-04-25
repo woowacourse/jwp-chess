@@ -14,11 +14,9 @@ import chess.dto.PiecesDto;
 import chess.dto.PlayerDto;
 import chess.dto.StringChessBoardDto;
 import chess.dto.request.MoveRequestDto;
+import chess.dto.request.RoomRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
-import chess.dto.response.ChessResponseDto;
-import chess.dto.response.MoveResponseDto;
-import chess.dto.response.ScoreResponseDto;
-import chess.dto.response.TurnResponseDto;
+import chess.dto.response.*;
 import chess.repository.ChessRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,15 +71,6 @@ public class ChessService {
         return new ChessBoardDto(round.getBoard());
     }
 
-    public StringChessBoardDto stringChessBoard(final ChessBoardDto chessBoard) {
-        Map<String, String> stringChessBoard = new LinkedHashMap<>();
-        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.getChessBoard().entrySet()) {
-            stringChessBoard.put(chessBoardEntry.getKey().toString(), chessBoardEntry.getValue().getPiece());
-        }
-        chessRepository.initializePieceStatus(stringChessBoard);
-        return new StringChessBoardDto(stringChessBoard);
-    }
-
     public PiecesDto piecesDto(final ChessBoardDto chessBoard) {
         List<Piece> whitePieces = new ArrayList<>();
         List<Piece> blackPieces = new ArrayList<>();
@@ -100,10 +89,23 @@ public class ChessService {
         whitePieces.add(chessBoardEntry.getValue());
     }
 
+    public List<RoomResponseDto> rooms() {
+        return chessRepository.showAllRooms();
+    }
+
     public String jsonFormatChessBoard(final ChessBoardDto chessBoard) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         StringChessBoardDto stringChessBoard = stringChessBoard(chessBoard);
         return objectMapper.writeValueAsString(stringChessBoard.getStringChessBoard());
+    }
+
+    private StringChessBoardDto stringChessBoard(final ChessBoardDto chessBoard) {
+        Map<String, String> stringChessBoard = new LinkedHashMap<>();
+        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.getChessBoard().entrySet()) {
+            stringChessBoard.put(chessBoardEntry.getKey().toString(), chessBoardEntry.getValue().getPiece());
+        }
+        chessRepository.initializePieceStatus(stringChessBoard);
+        return new StringChessBoardDto(stringChessBoard);
     }
 
     public String currentTurn() {

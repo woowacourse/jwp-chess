@@ -5,11 +5,15 @@ export async function getGridAndPiecesByRoomName(roomName) {
     });
 }
 
-export async function startGameByGridId(gridId) {
+export async function gameStateByGridId(command, gridId) {
     return await axios({
         method: 'post',
-        url: `/grid/${gridId}/start`
-    })
+        url: `/grid/${gridId}/state`,
+        data: {
+            command,
+        }
+
+    });
 }
 
 export async function finishGameByGridId(gridId) {
@@ -19,14 +23,8 @@ export async function finishGameByGridId(gridId) {
     });
 }
 
-export async function restartGameByRoomId(roomId) {
-    return await axios({
-        method: 'get',
-        url: `/room/${roomId}/restart`
-    })
-}
-
-export async function movePiece(piecesDto, gridDto, sourcePosition, targetPosition) {
+export async function movePiece(piecesDto, gridDto, sourcePosition,
+    targetPosition) {
     return await axios({
         method: 'post',
         url: '/move',

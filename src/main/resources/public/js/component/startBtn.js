@@ -1,4 +1,4 @@
-import {startGameByGridId} from "../service/chessService.js";
+import {gameStateByGridId} from "../service/chessService.js";
 import {store} from "../store.js";
 
 export function addEvent() {
@@ -12,7 +12,7 @@ export async function start() {
             alert("이미 게임이 시작했습니다.")
             return;
         }
-        const res = await startGameByGridId(store.gridDto.gridId);
+        const res = await gameStateByGridId("start", store.gridDto.gridId);
         const data = res.data;
         if (data.code === 401) {
             alert(data.message);

@@ -1,4 +1,4 @@
-import {restartGameByRoomId} from "../service/chessService.js";
+import {gameStateByGridId} from "../service/chessService.js";
 import * as chessBoardFactory from "./chessBoardFactory.js"
 import * as startBtn from "./startBtn.js"
 import {store} from "../store.js";
@@ -10,7 +10,7 @@ export function addEvent() {
 
 async function restart() {
     try {
-        const res = await restartGameByRoomId(store.gridDto.roomId);
+        const res = await gameStateByGridId(store.gridDto.roomId);
         const data = res.data;
         if (data.code !== 200) {
             alert(data.message);

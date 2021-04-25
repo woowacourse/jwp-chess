@@ -5,29 +5,23 @@ import chess.domain.chessgame.ChessGame;
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
 import com.google.gson.Gson;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@Configuration
 public class PlayLogRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final Gson gson;
 
-    public PlayLogRepository(JdbcTemplate jdbcTemplate) {
+    public PlayLogRepository(JdbcTemplate jdbcTemplate, Gson gson) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Bean
-    public Gson gson(){
-        return new Gson();
+        this.gson = gson;
     }
 
     public void insert(BoardDto boardDto, GameStatusDto gameStatusDto, String roomId) {
         String query = "INSERT INTO play_log (board, game_status, room_id) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query, gson().toJson(boardDto), gson().toJson(gameStatusDto), roomId);
+        jdbcTemplate.update(query, gson.toJson(boardDto), gson.toJson(gameStatusDto), roomId);
     }
 
     public BoardDto latestBoard(String roomId) {
@@ -38,7 +32,7 @@ public class PlayLogRepository {
                     query,
                     (resultSet, rowNum) -> {
                         String boardJson = resultSet.getString(1);
-                        return gson().fromJson(boardJson, BoardDto.class);
+                        return gson.fromJson(boardJson, BoardDto.class);
                     },
                     roomId);
             return result;
@@ -56,7 +50,7 @@ public class PlayLogRepository {
                     query,
                     (resultSet, rowNum) -> {
                         String statusJson = resultSet.getString(1);
-                        return gson().fromJson(statusJson, GameStatusDto.class);
+                        return gson.fromJson(statusJson, GameStatusDto.class);
                     },
                     roomId);
         } catch (Exception e) {

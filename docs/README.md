@@ -14,5 +14,5 @@
 
 ## Step2
 
-- [ ] @Bean 어노테이션을 통해 빈을 생성하던거을 config을 통해 Gson을 bean으로 정의하기
+- [x] @Bean 어노테이션을 통해 빈을 생성하던거을 config을 통해 Gson을 bean으로 정의하기
 - [ ] Service 테스트 코드 작성

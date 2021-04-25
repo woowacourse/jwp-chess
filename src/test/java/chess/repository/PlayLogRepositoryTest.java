@@ -8,28 +8,29 @@ import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
-@JdbcTest
+@SpringBootTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @TestPropertySource("classpath:application.properties")
 class PlayLogRepositoryTest {
 
     private final PlayLogRepository playLogRepository;
     private final JdbcTemplate jdbcTemplate;
-    private final Gson gson = new Gson();
+    private final Gson gson;
+
     private BoardDto boardDto;
     private GameStatusDto gameStatusDto;
 
-    public PlayLogRepositoryTest(JdbcTemplate jdbcTemplate) {
-        playLogRepository = new PlayLogRepository(jdbcTemplate);
+    public PlayLogRepositoryTest(JdbcTemplate jdbcTemplate, Gson gson) {
+        playLogRepository = new PlayLogRepository(jdbcTemplate, gson);
         this.jdbcTemplate = jdbcTemplate;
+        this.gson = gson;
     }
 
     @BeforeEach

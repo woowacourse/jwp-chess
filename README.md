@@ -63,6 +63,17 @@
 - [x] 생성자 주입을 통해 받은 필드는 final 처리하기
 - [x] entrySet을 활용한 리팩토링
 - [x] DAO/Service 테스트 케이스 작성
+- [x] DAO를 가볍게 유지하기
+- [ ] DTO 생성 로직을 DTO 내부로 이동시키기
+- [ ] 테스트 코드 작성
+
+## 질문 사항
+- DTO가 Domain을 넘겨받아 생성하는 로직 정도는 가지고 있어도 괜찮을까?
+    - Domain을 알고있는 것은 아닐까?
+    - DTO의 역할이 Layer간 필요한 데이터 이동이라면, 필요한 데이터 추출 정도는 책임으로 가져도 자연스럽지 않나?
+- DAO가 최소한의 DB 로직을 가진다?
+    - ORM을 통한 DB 접근은 객체를 반환한다는데, 이건 Repository의 이야기인가?
+    - Repository와 Dao는 뭐가 다른걸까?
 
 ## DB 테이블 구조
 ![table_structure](./img/table_structure.png)

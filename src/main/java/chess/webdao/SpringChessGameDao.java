@@ -1,12 +1,5 @@
 package chess.webdao;
 
-import chess.domain.ChessGame;
-import chess.domain.Position;
-import chess.domain.piece.Piece;
-import chess.domain.team.PieceCaptured;
-import chess.domain.team.PiecePosition;
-import chess.domain.team.Score;
-import chess.domain.team.Team;
 import chess.webdto.ChessGameTableDto;
 import chess.webdto.GameRoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,14 +10,14 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Map;
-
-import static chess.service.TeamFormat.BLACK_TEAM;
-import static chess.service.TeamFormat.WHITE_TEAM;
 
 @Repository
 public class SpringChessGameDao {
     private final JdbcTemplate jdbcTemplate;
+
+    public SpringChessGameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     private final RowMapper<ChessGameTableDto> ChessGameInfoRowMapper = (resultSet, rowNum) -> {
         ChessGameTableDto chessGameTableDTO = new ChessGameTableDto(
@@ -34,21 +27,16 @@ public class SpringChessGameDao {
         return chessGameTableDTO;
     };
 
-    public SpringChessGameDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     public int createGameRoom(final String roomName) {
         String sql = "INSERT into game_room_info (room_name) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        this.jdbcTemplate.update(con ->  {
+        this.jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"game_id"});
             ps.setString(1, roomName);
             return ps;
         }, keyHolder);
 
-        System.out.println("keyHolder.getKey().intValue() = " + keyHolder.getKey().intValue());
         return keyHolder.getKey().intValue();
     }
 
@@ -64,72 +52,42 @@ public class SpringChessGameDao {
         );
     }
 
-    public ChessGame createChessGame(final int gameId) {
+    public void createChessGame(final int roomId, final String currentTurnTeam, final boolean isPlaying) {
         String sql = "INSERT INTO chess_game (game_id, current_turn_team, is_playing) VALUES (?, ?, ?)";
-        final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
-        createTeamInfo(gameId, WHITE_TEAM.asDaoFormat(), chessGame.currentWhitePiecePosition());
-        createTeamInfo(gameId, BLACK_TEAM.asDaoFormat(), chessGame.currentBlackPiecePosition());
-        this.jdbcTemplate.update(sql, gameId, WHITE_TEAM.asDaoFormat(), chessGame.isPlaying());
-        return chessGame;
+        this.jdbcTemplate.update(sql, roomId, currentTurnTeam, isPlaying);
     }
 
-    private void createTeamInfo(final int gameId, final String team, final Map<Position, Piece> teamPiecePosition) {
+    public void createTeamInfo(final int roomId, final String team, final String pieceInfo) {
         final String sql = "INSERT INTO team_info (game_id, team, piece_info) VALUES (?, ?, ?)";
-        this.jdbcTemplate.update(sql, gameId, team, PiecePositionDaoConverter.asDao(teamPiecePosition));
+        this.jdbcTemplate.update(sql, roomId, team, pieceInfo);
     }
 
-    public ChessGame readChessGame(final int gameId) {
-        final Team blackTeam = readTeamInfo(gameId, BLACK_TEAM.asDaoFormat());
-        final Team whiteTeam = readTeamInfo(gameId, WHITE_TEAM.asDaoFormat());
-        return generateChessGame(gameId, blackTeam, whiteTeam);
-    }
-
-    private Team readTeamInfo(final int gameId, final String team) {
+    public String readTeamInfo(final int roomId, final String team) {
         final String sql = "SELECT piece_info FROM team_info where team = (?) && game_id = (?)";
-        final String teamPieceInfo = this.jdbcTemplate.queryForObject(sql, String.class, team, gameId);
-        return generateTeam(teamPieceInfo, team);
+        return this.jdbcTemplate.queryForObject(sql, String.class, team, roomId);
     }
 
-    private Team generateTeam(final String teamPieceInfo, final String team) {
-        Map<Position, Piece> piecePosition;
-        piecePosition = PiecePositionDaoConverter.asPiecePosition(teamPieceInfo, team);
-        final PiecePosition PiecePositionByTeam = new PiecePosition(piecePosition);
-        return new Team(PiecePositionByTeam, new PieceCaptured(), new Score());
-    }
-
-    private ChessGame generateChessGame(final int gameId, final Team blackTeam, final Team whiteTeam) {
+    public ChessGameTableDto readChessGame(final int roomId) {
         final String sql = "SELECT * FROM chess_game where game_id = (?)";
-        final ChessGameTableDto chessGameTableDTO = this.jdbcTemplate.queryForObject(sql, ChessGameInfoRowMapper, gameId);
-        return generateChessGameAccordingToDB(blackTeam, whiteTeam,
-                chessGameTableDTO.getCurrentTurnTeam(), chessGameTableDTO.getIsPlaying());
+        return this.jdbcTemplate.queryForObject(sql, ChessGameInfoRowMapper, roomId);
     }
 
-    private ChessGame generateChessGameAccordingToDB(final Team blackTeam, final Team whiteTeam,
-                                                     final String currentTurnTeam, final boolean isPlaying) {
-        if (WHITE_TEAM.asDaoFormat().equals(currentTurnTeam)) {
-            return new ChessGame(blackTeam, whiteTeam, whiteTeam, isPlaying);
-        }
-        return new ChessGame(blackTeam, whiteTeam, blackTeam, isPlaying);
-    }
-
-    public void updateChessGame(final int gameId, final ChessGame chessGame, final String currentTurnTeam) {
-        updateTeamInfo(gameId, chessGame.currentWhitePiecePosition(), WHITE_TEAM.asDaoFormat());
-        updateTeamInfo(gameId, chessGame.currentBlackPiecePosition(), BLACK_TEAM.asDaoFormat());
+    public void updateChessGame(final int roomId, final String currentTurnTeam, final boolean isPlaying) {
         final String sql = "UPDATE chess_game SET current_turn_team = (?), is_playing = (?) where game_id = (?)";
-        this.jdbcTemplate.update(sql, currentTurnTeam, chessGame.isPlaying(), gameId);
+        this.jdbcTemplate.update(sql, currentTurnTeam, isPlaying, roomId);
     }
 
-    private void updateTeamInfo(final int gameId, final Map<Position, Piece> teamPiecePosition, final String team) {
+    public void updateTeamInfo(final int roomId, final String team, final String pieceInfo) {
         final String sql = "UPDATE team_info SET piece_info = (?) WHERE team = (?) && game_id = (?)";
-        this.jdbcTemplate.update(sql, PiecePositionDaoConverter.asDao(teamPiecePosition), team, gameId);
+        this.jdbcTemplate.update(sql, pieceInfo, team, roomId);
     }
 
-    public void deleteChessGame(final int gameId) {
+    public void deleteChessGame(final int roomId) {
         final String team_info_sql = "DELETE FROM team_info where game_id = (?)";
         final String chess_game_sql = "DELETE FROM chess_game where game_id = (?)";
         final String game_room_info_sql = "DELETE FROM game_room_info where game_id = (?)";
-        this.jdbcTemplate.update(team_info_sql, gameId);
-        this.jdbcTemplate.update(chess_game_sql, gameId);
-        this.jdbcTemplate.update(game_room_info_sql, gameId);
+        this.jdbcTemplate.update(team_info_sql, roomId);
+        this.jdbcTemplate.update(chess_game_sql, roomId);
+        this.jdbcTemplate.update(game_room_info_sql, roomId);
     }
 }

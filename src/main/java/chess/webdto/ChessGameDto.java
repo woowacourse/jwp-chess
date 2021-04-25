@@ -1,10 +1,27 @@
 package chess.webdto;
 
+import chess.domain.ChessGame;
+
 public class ChessGameDto {
     private final TeamPiecesDto piecePositionByTeam;
     private final String currentTurnTeam;
     private final ScoreDto teamScore;
     private final boolean isPlaying;
+
+    public ChessGameDto(ChessGame chessGame){
+        this.piecePositionByTeam = new TeamPiecesDto(chessGame);
+        this.currentTurnTeam = convert(chessGame.isWhiteTeamTurn());
+        this.teamScore = new ScoreDto(chessGame.calculateWhiteTeamScore(), chessGame.calculateBlackTeamScore());
+        this.isPlaying = chessGame.isPlaying();
+    }
+
+    private String convert(boolean whiteTeamTurn) {
+        if(whiteTeamTurn){
+            return WordConstants.WHITE;
+        }
+        return WordConstants.BLACK;
+    }
+
 
     public ChessGameDto(final TeamPiecesDto piecePositionByTeam, final String currentTurnTeam,
                         final ScoreDto teamScore, final boolean isPlaying) {

@@ -1,6 +1,7 @@
 package chess.repository.room;
 
 import chess.domain.game.Room;
+import java.util.List;
 
 public interface RoomRepository {
 
@@ -13,6 +14,8 @@ public interface RoomRepository {
     boolean isExistRoomName(String name);
 
     Room findById(long roomId);
+
+    List<Room> findAll();
 
     void deleteAll();
 }

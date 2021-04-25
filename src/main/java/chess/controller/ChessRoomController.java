@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.domain.dto.RoomDto;
+import chess.domain.dto.RoomsDto;
 import chess.domain.dto.move.MoveRequestDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.serivce.chess.ChessService;
@@ -52,6 +53,12 @@ public class ChessRoomController {
             throws SQLException {
         MoveResponseDto result = service.move(roomName, moveRequestDto.getSource(),
                 moveRequestDto.getTarget());
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping(value = "/all")
+    public ResponseEntity<RoomsDto> showRooms() {
+        RoomsDto result = service.showRooms();
         return ResponseEntity.ok().body(result);
     }
 }

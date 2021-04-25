@@ -2,6 +2,8 @@ package chess.serivce.chess;
 
 import chess.domain.board.Board;
 import chess.domain.dto.PieceDto;
+import chess.domain.dto.RoomDto;
+import chess.domain.dto.RoomsDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.domain.game.Room;
 import chess.domain.gamestate.State;
@@ -96,6 +98,16 @@ public class ChessService {
             room.getCurrentTeam().getValue(),
             room.judgeResult()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public RoomsDto showRooms() {
+        List<Room> rooms = roomRepository.findAll();
+        List<RoomDto> roomDtos = rooms.stream()
+                .map(Room::getName)
+                .map(RoomDto::new)
+                .collect(Collectors.toList());
+        return new RoomsDto(roomDtos);
     }
 
     public void createRoom(String roomName) {

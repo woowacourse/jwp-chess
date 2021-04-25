@@ -1,5 +1,7 @@
 package chess.serivce.chess;
 
+import chess.Exceptions.DuplicateRoomException;
+import chess.Exceptions.NoRoomException;
 import chess.domain.board.Board;
 import chess.domain.dto.PieceDto;
 import chess.domain.dto.RoomDto;
@@ -33,7 +35,7 @@ public class ChessService {
 
     public void createRoom(String roomName) {
         if (roomRepository.roomExists(roomName)) {
-            throw new IllegalArgumentException("[ERROR] 이미 존재하는 방입니다. 다른 이름을 사용해주세요.");
+            throw new DuplicateRoomException("이미 존재하는 방입니다. 다른 이름을 사용해주세요.");
         }
 
         Room room = new Room(0, roomName, new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
@@ -62,7 +64,7 @@ public class ChessService {
                     .filter(piece -> piece.getLocation().equals(Location.of(target)))
                     .filter(piece -> !piece.equals(sourcePiece))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 기물입니다."));
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기물입니다."));
             pieceRepository.deletePieceById(removedPiece.getId());
         }
 
@@ -101,7 +103,7 @@ public class ChessService {
 
     private Room findRoomByName(String roomName) {
         if (!roomRepository.roomExists(roomName)) {
-            throw new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다.");
+            throw new NoRoomException("존재하지 않는 방입니다.");
         }
         Room room = roomRepository.findByName(roomName);
         List<Piece> pieces = pieceRepository.findPiecesByRoomId(room.getId());

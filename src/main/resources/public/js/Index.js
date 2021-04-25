@@ -14,11 +14,16 @@ const MainApp = function() {
       body: JSON.stringify({name: roomName})
     })
     .then(response => response.json())
-    .then(result => {
+    .then(responseJson => {
+      if (responseJson.status === 400) {
+        throw new Error(responseJson.message);
+      }
       this.$roomTable.insertAdjacentHTML("beforeend",
-          `<li><a href="/room/${result.name}">${result.name}</a></li>`)
+          `<li><a href="/room/${responseJson.name}">${responseJson.name}</a></li>`);
     })
-    .catch(err => alert(err));
+    .catch(err => {
+      alert(err);
+    });
   });
 
   this.constructor = function() {

@@ -1,4 +1,4 @@
-const App = function(roomName) {
+const Room = function(roomName) {
   this.$chessBoard = document.querySelector("#chess_board");
   this.$endBtn = document.querySelector("#end");
   this.$lobbyBtn = document.querySelector("#lobby");
@@ -112,13 +112,13 @@ const App = function(roomName) {
         method: 'GET'
       })
       .then(response => response.json())
-      .then(result => {
-        if (result.status === "ERROR") {
-          alert(result.message);
+      .then(responseJson => {
+        if (responseJson.status === "ERROR") {
+          alert(responseJson.message);
           return;
         }
-        this.renderBoard(result.pieces);
-        this.renderMessage(result);
+        this.renderBoard(responseJson.pieces);
+        this.renderMessage(responseJson);
       })
       .catch(err => alert(err));
     }
@@ -149,6 +149,6 @@ const App = function(roomName) {
 
 window.onload = () => {
   const pathName = decodeURI(window.location.pathname);
-  const app = new App(pathName.split("/")[2]);
+  const app = new Room(pathName.split("/")[2]);
   app.constructor();
 }

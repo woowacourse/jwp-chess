@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS movement;
 DROP TABLE IF EXISTS chess;
+DROP TABLE IF EXISTS user;
 
 CREATE TABLE IF NOT EXISTS chess (
     chess_id VARCHAR (36) NOT NULL,
@@ -18,4 +19,12 @@ CREATE TABLE IF NOT EXISTS movement (
     created_date TIMESTAMP (6),
     PRIMARY KEY (movement_id),
     FOREIGN KEY (chess_id) REFERENCES chess (chess_id) ON DELETE CASCADE ON UPDATE CASCADE
+    );
+
+CREATE TABLE IF NOT EXISTS user (
+    user_id VARCHAR (36) NOT NULL,
+    name VARCHAR (64) NOT NULL,
+    password VARCHAR (64) NOT NULL,
+    created_date TIMESTAMP (6),
+    PRIMARY KEY (user_id)
     );

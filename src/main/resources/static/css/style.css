@@ -186,3 +186,7 @@ img {
     border: 5px solid yellow;
     box-sizing: border-box;
 }
+
+#main-start, #main-load {
+    margin: 0 0.5rem;
+}

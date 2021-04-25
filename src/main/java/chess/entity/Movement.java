@@ -12,7 +12,6 @@ public class Movement {
     private String targetPosition;
     private LocalDateTime createdDate;
 
-
     public Movement(final String chessId, final String sourcePosition, final String targetPosition) {
         this(UUID.randomUUID().toString(), chessId, sourcePosition, targetPosition, LocalDateTime.now());
     }

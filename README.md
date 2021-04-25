@@ -64,7 +64,7 @@
 - [x] DAO/Service 테스트 케이스 작성
 - [x] DAO를 가볍게 유지하기
 - [x] DTO 생성 로직을 DTO 내부로 이동시키기
-- [ ] 테스트 코드 작성
+- [x] 테스트 코드 작성
 
 ## 질문 사항
 - DTO가 Domain을 넘겨받아 생성하는 로직 정도는 가지고 있어도 괜찮을까?
@@ -83,26 +83,26 @@ CREATE DATABASE chess_db;
 USE chess_db;
 
 DROP TABLE IF EXISTS game_room_info CASCADE;
-DROP TABLE IF EXISTS chess_game CASCADE;
+DROP TABLE IF EXISTS chess_game_info CASCADE;
 DROP TABLE IF EXISTS team_info CASCADE;
 
 CREATE TABLE game_room_info (
-    game_id int NOT NULL AUTO_INCREMENT,
+    room_id int NOT NULL AUTO_INCREMENT,
     room_name VARCHAR(50),
-    PRIMARY KEY (game_id)
+    PRIMARY KEY (room_id)
 );
 
-CREATE TABLE chess_game (
-    game_id int NOT NULL,
+CREATE TABLE chess_game_info (
+    room_id int NOT NULL,
     current_turn_team VARCHAR(5) NOT NULL,
     is_playing boolean NOT NULL,
-    FOREIGN KEY (game_id) REFERENCES game_room_info(game_id)
+    FOREIGN KEY (room_id) REFERENCES game_room_info(room_id)
 );
 
 CREATE TABLE team_info (
-    game_id int NOT NULL,
+    room_id int NOT NULL,
     team VARCHAR(5) NOT NULL,
     piece_info VARCHAR(400) NOT NULL,
-    FOREIGN KEY (game_id) REFERENCES game_room_info(game_id)
+    FOREIGN KEY (room_id) REFERENCES game_room_info(room_id)
 );
 ```       

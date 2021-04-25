@@ -1,17 +1,20 @@
 package chess.service;
 
+import chess.webdto.converter.DaoToChessGame;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
-import chess.domain.team.PiecePositions;
 import chess.domain.team.Team;
-import chess.viewdto.ChessGameDto;
+import chess.webdto.dao.BoardInfosDto;
+import chess.webdto.dao.PieceDto;
+import chess.webdto.dao.TurnDto;
+import chess.webdto.view.ChessGameDto;
+import chess.webdto.view.MoveRequestDto;
 import chess.webdao.ChessDao;
 import chess.webdto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +33,7 @@ public class SpringChessService {
         chessDao.deleteBoardByRoomId(1);
         chessDao.deleteRoomByRoomId(1);
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
-        chessDao.createRoom(convertTurn(chessGame.isWhiteTeamTurn()), chessGame.isPlaying());
+        chessDao.createRoom(WordConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying());
         long roomId = 1;
         insertBoardInfos(chessGame, roomId);
         return new ChessGameDto(chessGame);
@@ -55,40 +58,14 @@ public class SpringChessService {
         return PieceDto.convert(value);
     }
 
-    private String convertTurn(boolean whiteTeamTurn) {
-        if (whiteTeamTurn) {
-            return WordConstants.WHITE;
-        }
-        return WordConstants.BLACK;
-    }
-
-
     public ChessGameDto loadPreviousGame() {
         // 턴 가져오기
         TurnDto turnDto = chessDao.selectTurnByRoomId(1);
         // 기존정보 가져오기
         List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(1);
 
-
-        Map<Position, Piece> whites = new HashMap<>();
-        Map<Position, Piece> blacks = new HashMap<>();
-        for (BoardInfosDto boardInfo : boardInfos) {
-            if (boardInfo.getTeam().equals("white")) {
-                whites.put(Position.of(boardInfo.getPosition()), DaoToPiece.generatePiece(boardInfo.getTeam(), boardInfo.getPiece(), boardInfo.getIsFirstMoved()));
-            }
-
-            if (boardInfo.getTeam().equals("black")) {
-                blacks.put(Position.of(boardInfo.getPosition()), DaoToPiece.generatePiece(boardInfo.getTeam(), boardInfo.getPiece(), boardInfo.getIsFirstMoved()));
-            }
-        }
-        PiecePositions whitePiecePosition = new PiecePositions(whites);
-        PiecePositions blackPiecePosition = new PiecePositions(blacks);
-
-        Team blackTeam = new Team(blackPiecePosition);
-        Team whiteTeam = new Team(whitePiecePosition);
-
         // 기존 정보로 체스보드 만들기
-        final ChessGame chessGame = new ChessGame(blackTeam, whiteTeam, currentTurn(blackTeam, whiteTeam, turnDto.getTurn()), turnDto.getIsPlaying());
+        final ChessGame chessGame = new DaoToChessGame(turnDto, boardInfos).covertToChessGame();
 
 
         return new ChessGameDto(chessGame);
@@ -102,26 +79,8 @@ public class SpringChessService {
         // 기존정보 가져오기
         List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(1);
 
-
-        Map<Position, Piece> whites = new HashMap<>();
-        Map<Position, Piece> blacks = new HashMap<>();
-        for (BoardInfosDto boardInfo : boardInfos) {
-            if (boardInfo.getTeam().equals("white")) {
-                whites.put(Position.of(boardInfo.getPosition()), DaoToPiece.generatePiece(boardInfo.getTeam(), boardInfo.getPiece(), boardInfo.getIsFirstMoved()));
-            }
-
-            if (boardInfo.getTeam().equals("black")) {
-                blacks.put(Position.of(boardInfo.getPosition()), DaoToPiece.generatePiece(boardInfo.getTeam(), boardInfo.getPiece(), boardInfo.getIsFirstMoved()));
-            }
-        }
-        PiecePositions whitePiecePosition = new PiecePositions(whites);
-        PiecePositions blackPiecePosition = new PiecePositions(blacks);
-
-        Team blackTeam = new Team(blackPiecePosition);
-        Team whiteTeam = new Team(whitePiecePosition);
-
         // 기존 정보로 체스보드 만들기
-        final ChessGame chessGame = new ChessGame(blackTeam, whiteTeam, currentTurn(blackTeam, whiteTeam, turnDto.getTurn()), turnDto.getIsPlaying());
+        final ChessGame chessGame = new DaoToChessGame(turnDto, boardInfos).covertToChessGame();
 
         // 기존정보에 움직이기
         String startPosition = moveRequestDto.getStart();
@@ -131,16 +90,10 @@ public class SpringChessService {
         // 기존정보 삭제하기
         chessDao.deleteBoardByRoomId(1);
         // 새로운 정보 넣어주기
-        chessDao.changeTurnByRoomId(convertTurn(chessGame.isWhiteTeamTurn()), chessGame.isPlaying(), 1);
+        chessDao.changeTurnByRoomId(WordConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying(), 1);
         insertBoardInfos(chessGame, 1);
         return new ChessGameDto(chessGame);
     }
 
-    private Team currentTurn(Team black, Team white, String currentTurnTeam) {
-        if (currentTurnTeam.equals("white")) {
-            return white;
-        }
-        return black;
-    }
 
 }

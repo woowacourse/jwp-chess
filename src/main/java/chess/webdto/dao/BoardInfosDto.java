@@ -1,4 +1,4 @@
-package chess.webdto;
+package chess.webdto.dao;
 
 public class BoardInfosDto {
     private String team;

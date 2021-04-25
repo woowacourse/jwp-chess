@@ -1,8 +1,7 @@
 package chess.webdao;
 
-import chess.webdto.BoardInfosDto;
-import chess.webdto.MoveRequestDto;
-import chess.webdto.TurnDto;
+import chess.webdto.dao.BoardInfosDto;
+import chess.webdto.dao.TurnDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -11,30 +10,12 @@ import java.util.List;
 
 @Repository
 public class MysqlChessDao implements ChessDao {
-    private final RowMapper<MoveRequestDto> movesMapper = (resultSet, rowNum) -> {
-        MoveRequestDto moveRequestDto = new MoveRequestDto();
-        moveRequestDto.setStart(resultSet.getString("start"));
-        moveRequestDto.setDestination(resultSet.getString("destination"));
-        return moveRequestDto;
-    };
-
     private JdbcTemplate jdbcTemplate;
 
     public MysqlChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public int insertMove(String start, String destination) {
-        String sql = "INSERT INTO board (room_id, start, destination) VALUES (?, ?, ?)";
-        return this.jdbcTemplate.update(sql, 1, start, destination);
-    }
-
-    @Override
-    public List<MoveRequestDto> selectAllMovesByRoomId(int roomId) {
-        final String sql = "SELECT start, destination FROM board WHERE room_id = (?)";
-        return jdbcTemplate.query(sql, movesMapper, roomId);
-    }
 
     @Override
     public void deleteRoomByRoomId(int roomId) {
@@ -90,7 +71,7 @@ public class MysqlChessDao implements ChessDao {
     @Override
     public void createBoard(String team, String position,
                             String piece, boolean isFirstMoved, long roomId) {
-        String sql = "INSERT INTO board (team, position, piece, is_first_moved, room_id) VALUES (?,?,?,?, ?)";
+        String sql = "INSERT INTO board (team, position, piece, is_first_moved, room_id) VALUES (?,?,?,?,?)";
 
         this.jdbcTemplate.update(sql, team, position, piece, isFirstMoved, roomId);
     }

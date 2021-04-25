@@ -1,16 +1,11 @@
 package chess.webdao;
 
-import chess.webdto.BoardInfosDto;
-import chess.webdto.MoveRequestDto;
-import chess.webdto.TurnDto;
+import chess.webdto.dao.BoardInfosDto;
+import chess.webdto.dao.TurnDto;
 
 import java.util.List;
 
 public interface ChessDao {
-    int insertMove(String start, String destination);
-
-    List<MoveRequestDto> selectAllMovesByRoomId(int roomId);
-
     void deleteRoomByRoomId(int roomId);
 
     void deleteBoardByRoomId(int roomId);

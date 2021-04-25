@@ -1,4 +1,4 @@
-package chess.webdto;
+package chess.webdto.converter;
 
 import chess.domain.piece.*;
 

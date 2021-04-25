@@ -1,4 +1,4 @@
-package chess.webdto;
+package chess.webdto.view;
 
 public class MoveRequestDto {
     private String start;

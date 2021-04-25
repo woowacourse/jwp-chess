@@ -12,12 +12,14 @@ import java.util.List;
 @Repository
 public class MysqlChessDao implements ChessDao {
     private JdbcTemplate jdbcTemplate;
+
     private RowMapper<TurnDto> turnMapper = (resultSet, rowNum) -> {
         TurnDto turnDto = new TurnDto();
         turnDto.setTurn(resultSet.getString("turn"));
         turnDto.setIsPlaying(resultSet.getBoolean("is_playing"));
         return turnDto;
     };
+
     private RowMapper<BoardInfosDto> boardInfoMapper = (resultSet, rowNumber) -> {
         BoardInfosDto boardInfosDto = new BoardInfosDto();
 

@@ -1,6 +1,6 @@
 package dto;
 
-import chess.domain.Room;
+import chess.domain.room.Room;
 
 public class RoomDto {
     private final Long id;

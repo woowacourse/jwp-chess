@@ -1,7 +1,7 @@
 package chess.dao;
 
 
-import chess.domain.Room;
+import chess.domain.room.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

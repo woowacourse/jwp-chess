@@ -1,12 +1,11 @@
 package chess.service.room;
 
-import chess.domain.ChessGame;
-import chess.domain.Room;
+import chess.domain.game.ChessGame;
+import chess.domain.room.Room;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
-import chess.domain.ChessGameRepository;
-import chess.domain.ChessRoomRepository;
-import chess.service.room.ChessRoomService;
+import chess.domain.game.ChessGameRepository;
+import chess.domain.room.ChessRoomRepository;
 import dto.ChessGameDto;
 import dto.RoomDto;
 import dto.RoomRequestDto;

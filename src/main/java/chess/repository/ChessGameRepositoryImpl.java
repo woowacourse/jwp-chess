@@ -1,8 +1,8 @@
 package chess.repository;
 
 import chess.dao.GameDao;
-import chess.domain.ChessGame;
-import chess.domain.ChessGameRepository;
+import chess.domain.game.ChessGame;
+import chess.domain.game.ChessGameRepository;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
 import dto.MoveDto;

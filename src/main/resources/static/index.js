@@ -1,5 +1,7 @@
 let roomListData = [];
-const btnCreate = document.getElementById('btn-game-create')
+const btnCreateRoom = document.getElementById('btn-game-create')
+const btnCreateUser = document.getElementById('btn-user-create')
+const btnLogin = document.getElementById('btn-login')
 
 getTotalRoom();
 
@@ -12,9 +14,24 @@ function getTotalRoom() {
     });
 }
 
-btnCreate.addEventListener('click', function (e) {
+btnCreateRoom.addEventListener('click', function (e) {
     let name = prompt("방이름을 입력해 주세요.");
     let pw = prompt("비밀번호를 입력해 주세요");
+    axios.post('/api/room', {
+        "name": name,
+        "pw": pw
+    }).then(function (response) {
+        //refreshRoomList(response.data)
+        window.location.reload()
+    }).catch(function (error) {
+        alert('방을 만들지 못했습니다.');
+    });
+})
+
+btnCreateUser.addEventListener('click', function (e) {
+    let name = prompt("계정을 입력해 주세요.");
+    let pw = prompt("비밀번호를 입력해 주세요");
+
     axios.post('/api/room', {
         "name": name,
         "pw": pw

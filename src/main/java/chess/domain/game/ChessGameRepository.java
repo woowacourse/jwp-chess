@@ -1,6 +1,6 @@
-package chess.domain;
+package chess.domain.game;
 
-import chess.domain.ChessGame;
+import chess.domain.game.ChessGame;
 import dto.MoveDto;
 
 public interface ChessGameRepository {

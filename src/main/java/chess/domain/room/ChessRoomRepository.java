@@ -1,6 +1,4 @@
-package chess.domain;
-
-import chess.domain.Room;
+package chess.domain.room;
 
 import java.util.List;
 

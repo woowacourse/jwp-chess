@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.Position;
+import chess.domain.game.Position;
 import chess.domain.piece.Piece;
 import dto.MoveDto;
 import org.springframework.beans.factory.annotation.Autowired;

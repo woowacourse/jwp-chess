@@ -1,8 +1,8 @@
 package chess.service.game;
 
-import chess.domain.ChessGame;
-import chess.domain.Position;
-import chess.domain.ChessGameRepository;
+import chess.domain.game.ChessGame;
+import chess.domain.game.Position;
+import chess.domain.game.ChessGameRepository;
 import dto.ChessGameDto;
 import dto.MoveDto;
 import org.springframework.stereotype.Service;

@@ -2,8 +2,8 @@ package chess.repository;
 
 import chess.dao.PieceDao;
 import chess.dao.TeamDao;
-import chess.domain.Position;
-import chess.domain.TeamRepository;
+import chess.domain.game.Position;
+import chess.domain.team.TeamRepository;
 import chess.domain.piece.Piece;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.Team;

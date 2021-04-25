@@ -1,4 +1,4 @@
-package chess.domain;
+package chess.domain.room;
 
 public class Room {
     private final Long id;

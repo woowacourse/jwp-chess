@@ -1,8 +1,8 @@
 package chess.repository;
 
 import chess.dao.RoomDao;
-import chess.domain.ChessRoomRepository;
-import chess.domain.Room;
+import chess.domain.room.ChessRoomRepository;
+import chess.domain.room.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

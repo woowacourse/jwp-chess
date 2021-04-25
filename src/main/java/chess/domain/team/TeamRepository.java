@@ -1,4 +1,4 @@
-package chess.domain;
+package chess.domain.team;
 
 import chess.domain.team.BlackTeam;
 import chess.domain.team.Team;

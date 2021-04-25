@@ -159,4 +159,19 @@ public class Board {
     public Map<Position, Piece> getBoard() {
         return Collections.unmodifiableMap(board);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Board)) return false;
+
+        Board board1 = (Board) o;
+
+        return getBoard() != null ? getBoard().equals(board1.getBoard()) : board1.getBoard() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getBoard() != null ? getBoard().hashCode() : 0;
+    }
 }

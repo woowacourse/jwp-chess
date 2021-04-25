@@ -40,7 +40,7 @@ public class SpringPlayLogDaoTest {
             OBJECT_MAPPER.writeValueAsString(new GameStatusDto(new ChessGame(new Board()))),
             "1");
 
-        springPlayLogDao = new SpringPlayLogDao(jdbcTemplate);
+        springPlayLogDao = new SpringPlayLogDao(OBJECT_MAPPER, jdbcTemplate);
     }
 
     @DisplayName("해당 방의 최근 보드 정보 조회")

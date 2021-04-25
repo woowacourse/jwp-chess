@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.dto.*;
 import chess.exception.ChessException;
+import chess.exception.DuplicatedRoomNameException;
 import chess.exception.NotExistRoomException;
 import chess.service.SpringChessService;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +39,9 @@ public class SpringChessController {
     }
 
     @PostMapping(value = "/restart")
-    public void restart(@SessionAttribute String roomName) {
+    public ResponseEntity<Void> restart(@SessionAttribute String roomName) {
         springChessService.newBoard(roomName);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/move")
@@ -93,6 +95,11 @@ public class SpringChessController {
 
     @ExceptionHandler(ChessException.class)
     public ResponseEntity<String> chessException(ChessException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(DuplicatedRoomNameException.class)
+    public ResponseEntity<String> duplicatedRoomNameException(DuplicatedRoomNameException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

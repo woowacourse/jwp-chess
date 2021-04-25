@@ -71,19 +71,26 @@ async function addRoom(event) {
         let data = {
             roomName: roomName
         }
-        const response = await fetch('/checkRoomName', {
+        let response = await fetch('/checkRoomName', {
             method: 'post',
             body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(res => {
-            return res.json();
         });
-        if (response.code === "SUCCEED") {
+
+        const status = response.status;
+
+        if(status === 200) {
+            response = await response.json();
             createRoom(roomName);
+            alert(response.message);
         }
-        alert(response.message);
+
+        if(status === 400) {
+            response = await response.text();
+            alert(response);
+        }
         event.target.value = '';
         renderRooms();
     }

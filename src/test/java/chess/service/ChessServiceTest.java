@@ -24,7 +24,7 @@ public class ChessServiceTest {
 
     public ChessServiceTest() {
         final Map<Long, Chess> fakeChessTable = new HashMap<>();
-        fakeChessTable.put(1L, Chess.createWithEmptyBoard().start());
+        fakeChessTable.put(1L, Chess.createWithInitializedBoard());
         chessService =
                 new ChessService(new FakeChessDao(fakeChessTable), new FakeMoveDao(fakeChessTable));
     }

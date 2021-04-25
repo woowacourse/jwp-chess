@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 import chess.domain.board.Board;
-import chess.domain.chess.Chess;
+import chess.domain.board.BoardFactory;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
 
@@ -22,9 +22,7 @@ class BishopTest {
 
     @BeforeEach
     void setUp() {
-        board = Chess.createWithEmptyBoard()
-                     .start()
-                     .getBoard();
+        board = BoardFactory.InitializedBoard.create();
     }
 
     @Test

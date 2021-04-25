@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.board.Board;
-import chess.domain.chess.Chess;
+import chess.domain.board.BoardFactory;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
 
@@ -22,9 +22,7 @@ class BlankTest {
         Blank blank = Blank.INSTANCE;
         Position sourcePosition = Position.from("a3");
         Position targetPosition = Position.from("a4");
-        Board board = Chess.createWithEmptyBoard()
-                           .start()
-                           .getBoard();
+        Board board = BoardFactory.InitializedBoard.create();
 
         final MovePosition movePosition = new MovePosition(sourcePosition, targetPosition);
 

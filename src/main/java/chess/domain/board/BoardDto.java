@@ -18,6 +18,10 @@ public class BoardDto {
     private final double whiteScore;
     private final List<PieceDto> pieceDtos;
 
+    public BoardDto(Board board, List<PieceDto> pieceDtos) {
+        this(board.score(Color.WHITE), board.score(Color.BLACK), pieceDtos);
+    }
+
     public BoardDto(double blackScore, double whiteScore, List<PieceDto> pieceDtos) {
         this.blackScore = blackScore;
         this.whiteScore = whiteScore;
@@ -25,8 +29,12 @@ public class BoardDto {
     }
 
     public static BoardDto from(Chess chess) {
+        return from(chess.getBoard());
+    }
+
+    public static BoardDto from(final Board board) {
         final List<PieceDto> pieceDtos = new ArrayList<>();
-        final Map<Position, Piece> boardMap = chess.getBoard().getBoard();
+        final Map<Position, Piece> boardMap = board.getBoard();
         for (Map.Entry<Position, Piece> entry : boardMap.entrySet()) {
             String position = getPosition(entry);
             String color = entry.getValue()
@@ -38,12 +46,12 @@ public class BoardDto {
             pieceDtos.add(new PieceDto(position, color, name));
         }
 
-        return from(pieceDtos);
+        return new BoardDto(board, pieceDtos);
     }
 
     public static BoardDto from(final List<PieceDto> pieceDtos) {
         Board board = Board.from(pieceDtos);
-        return new BoardDto(board.score(Color.WHITE), board.score(Color.BLACK), pieceDtos);
+        return new BoardDto(board, pieceDtos);
     }
 
     private static String getPosition(Map.Entry<Position, Piece> entry) {

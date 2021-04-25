@@ -33,6 +33,10 @@ public class Chess {
         return new Chess(BoardFactory.EmptyBoard.create(), Status.STOP, Color.WHITE);
     }
 
+    public static Chess createWithInitializedBoard() {
+        return new Chess(BoardFactory.InitializedBoard.create());
+    }
+
     public static Chess from(ChessDto chessDto) {
         Board board = Board.from(chessDto.getBoardDto());
         return new Chess(board);

@@ -12,16 +12,16 @@
         <div id="start-out-div">
             <div id="start-in-div">
             {{#rooms}}
-                <div id="roomId" class="rooms">
-                    {{roomId}}
+                <div id="room-list-{{roomId}}">
+                    <div id="{{roomId}}" class="room">{{roomId}}</div>
                     <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <div id="room{{roomId}}" class="room roomNames">{{roomName}}</div>
+                    <br/><br/>
                 </div>
-                <div id="roomName" class="rooms">{{roomName}}</div>
-                <br/><br/>
             {{/rooms}}
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/js/home.js"></script>
+    <script type="text/javascript" src="/js/room-list.js"></script>
     </body>
 </html>

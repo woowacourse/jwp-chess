@@ -25,10 +25,10 @@ body {
 #start-in-div {
     position: absolute;
     margin-left: -150px;
-    margin-top: -80px;
+    margin-top: -240px;
 }
 
-.rooms {
+.room {
     display: inline;
     font-size: 16pt;
 }

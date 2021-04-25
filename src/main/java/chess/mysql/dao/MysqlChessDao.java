@@ -13,17 +13,19 @@ import static chess.mysql.dao.DbConnectionTemplate.executeQueryWithGenerateKey;
 
 public class MysqlChessDao implements ChessDao {
     @Override
-    public long save(ChessGameDto entity) {
+    public ChessGameDto save(ChessGameDto entity) {
         String query =
                 "INSERT INTO chessgame " +
                         "(pieces, running, next_turn) " +
                         "VALUES (?, ?, ?)";
 
-        return executeQueryWithGenerateKey(query, ps -> {
+        Long gameId = executeQueryWithGenerateKey(query, ps -> {
             ps.setString(1, entity.getPieces());
             ps.setBoolean(2, entity.isRunning());
             ps.setString(3, entity.getNextTurn());
         }, rs -> rs.getLong(1));
+
+        return new ChessGameDto(gameId, entity.getNextTurn(), entity.isRunning(), entity.getPieces());
     }
 
     @Override

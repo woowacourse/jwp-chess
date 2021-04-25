@@ -1,11 +1,11 @@
 package chess.mysql.dao;
 
-import chess.mysql.dao.dto.ChessGameDto;
-import chess.chessgame.domain.room.game.board.Square;
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.ChessGameManagerFactory;
+import chess.chessgame.domain.room.game.board.Square;
 import chess.chessgame.domain.room.game.board.piece.Pawn;
 import chess.chessgame.domain.room.game.board.position.Position;
+import chess.mysql.dao.dto.ChessGameDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class MysqlChessDaoTest {
     @Test
     void update() throws SQLException {
         //given
-        long gameId = dao.save(new ChessGameDto(ChessGameManagerFactory.createRunningGame(0)));
+        long gameId = dao.save(new ChessGameDto(ChessGameManagerFactory.createRunningGame(0))).getId();
         ChessGameManager runningGame = ChessGameManagerFactory.createRunningGame(gameId);
         //when
         runningGame.move(Position.of("a2"), Position.of("a4"));  // b7 -> b6

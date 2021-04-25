@@ -38,8 +38,8 @@ public class ChessGameManagerRepositoryImpl implements ChessGameManagerRepositor
     }
 
     @Override
-    public long add(ChessGameManager chessGameManager) {
-        return chessDao.save(new ChessGameDto(chessGameManager));
+    public ChessGameManager add(ChessGameManager chessGameManager) {
+        return ChessGameManagerFactory.loadingGame(chessDao.save(new ChessGameDto(chessGameManager)));
     }
 
     @Override

@@ -28,7 +28,7 @@ public class JdbcTemplateChessDao implements ChessDao {
     }
 
     @Override
-    public long save(ChessGameDto entity) {
+    public ChessGameDto save(ChessGameDto entity) {
         String query =
                 "INSERT INTO chess.chessgame (pieces, running, next_turn) VALUES " +
                         "(?, ?, ?)";
@@ -45,7 +45,7 @@ public class JdbcTemplateChessDao implements ChessDao {
                 , keyHolder
         );
 
-        return keyHolder.getKey().longValue();
+        return new ChessGameDto(keyHolder.getKey().longValue(), entity.getNextTurn(), entity.isRunning(), entity.getPieces());
     }
 
     @Override

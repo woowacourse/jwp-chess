@@ -32,7 +32,7 @@ public class SpringChessControllerTest {
 
     @Test
     @DisplayName("현재 방 이름을 잘 반환하는지 테스트")
-    void currentRoomTest() throws Exception{
+    void currentRoomTest() throws Exception {
         mockMvc.perform(get("/currentRoom")
                 .contentType(MediaType.APPLICATION_JSON)
                 .sessionAttr("roomName", "testRoomName"))
@@ -110,9 +110,9 @@ public class SpringChessControllerTest {
     @DisplayName("생성되어있는 방 리스트 테스트")
     void roomsTest() throws Exception {
         mockMvc.perform(get("/rooms")
-            .contentType(MediaType.APPLICATION_JSON)
-            .sessionAttr("roomName", "testRoomName"))
-            .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)
+                .sessionAttr("roomName", "testRoomName"))
+                .andExpect(status().isOk());
     }
 
     @Test

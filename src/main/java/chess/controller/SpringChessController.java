@@ -1,9 +1,6 @@
 package chess.controller;
 
 import chess.dto.*;
-import chess.exception.ChessException;
-import chess.exception.DuplicatedRoomNameException;
-import chess.exception.NotExistRoomException;
 import chess.service.SpringChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

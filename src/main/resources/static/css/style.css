@@ -30,7 +30,9 @@ img {
 
 .button {
     display: flex;
-    margin: 10px 30%;
+    justify-content: space-around;
+    align-items: center;
+    width: 50%;
 }
 
 .title {

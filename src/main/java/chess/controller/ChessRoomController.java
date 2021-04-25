@@ -5,7 +5,6 @@ import chess.domain.dto.RoomsDto;
 import chess.domain.dto.move.MoveRequestDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.serivce.chess.ChessService;
-import java.sql.SQLException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +31,7 @@ public class ChessRoomController {
 
     @GetMapping(value = "/{name}")
     public ResponseEntity<MoveResponseDto> enterRoom(@PathVariable("name") String roomName) {
-        MoveResponseDto result = service.findPiecesByRoomName(roomName);
+        MoveResponseDto result = service.findPiecesInRoom(roomName);
         return ResponseEntity.ok().body(result);
     }
 
@@ -51,7 +50,7 @@ public class ChessRoomController {
 
     @GetMapping(value = "/all")
     public ResponseEntity<RoomsDto> showRooms() {
-        RoomsDto result = service.showRooms();
+        RoomsDto result = service.findAllRooms();
         return ResponseEntity.ok().body(result);
     }
 }

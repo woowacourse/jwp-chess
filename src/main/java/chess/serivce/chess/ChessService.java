@@ -31,72 +31,8 @@ public class ChessService {
         this.pieceRepository = pieceRepository;
     }
 
-    @Transactional
-    public MoveResponseDto end(String roomName) {
-        Room room = findRoomByRoomName(roomName);
-
-        room.play("end");
-        roomRepository.update(room);
-        return new MoveResponseDto(
-            pieceDtos(room.getBoard()),
-            room.getCurrentTeam().getValue(),
-            room.judgeResult()
-        );
-    }
-
-    @Transactional
-    public MoveResponseDto move(String roomName, String source, String target) {
-        Room room = findRoomByRoomName(roomName);
-        Board board = room.getBoard();
-        Piece sourcePiece = board.find(Location.of(source));
-        List<Piece> beforeMovePieces = board.getPieces();
-
-        room.play("move " + source + " " + target);
-        roomRepository.update(room);
-        List<Piece> afterMovePieces = board.getPieces();
-
-        if (beforeMovePieces.size() != afterMovePieces.size()) {
-            Piece removedPiece = beforeMovePieces
-                .stream()
-                .filter(piece -> piece.getLocation().equals(Location.of(target)))
-                .filter(piece -> !piece.equals(sourcePiece))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 기물입니다."));
-            pieceRepository.deletePieceById(removedPiece.getId());
-        }
-
-        for (Piece piece : board.getPieces()) {
-            pieceRepository.update(piece);
-        }
-        return new MoveResponseDto(
-            pieceDtos(room.getBoard()),
-            room.getCurrentTeam().getValue(),
-            room.judgeResult()
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public MoveResponseDto findPiecesByRoomName(String roomName) {
-        Room room = findRoomByRoomName(roomName);
-        return new MoveResponseDto(
-            pieceDtos(room.getBoard()),
-            room.getCurrentTeam().getValue(),
-            room.judgeResult()
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public RoomsDto showRooms() {
-        List<Room> rooms = roomRepository.findAll();
-        List<RoomDto> roomDtos = rooms.stream()
-                .map(Room::getName)
-                .map(RoomDto::new)
-                .collect(Collectors.toList());
-        return new RoomsDto(roomDtos);
-    }
-
     public void createRoom(String roomName) {
-        if (!roomRepository.isExistRoomName(roomName)) {
+        if (roomRepository.roomExists(roomName)) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 방입니다. 다른 이름을 사용해주세요.");
         }
 
@@ -109,8 +45,62 @@ public class ChessService {
         }
     }
 
-    private Room findRoomByRoomName(String roomName) {
-        if (roomRepository.isExistRoomName(roomName)) {
+    @Transactional
+    public MoveResponseDto move(String roomName, String source, String target) {
+        Room room = findRoomByName(roomName);
+        Board board = room.getBoard();
+        Piece sourcePiece = board.find(Location.of(source));
+        List<Piece> beforeMovePieces = board.getPieces();
+
+        room.play("move " + source + " " + target);
+        roomRepository.update(room);
+        List<Piece> afterMovePieces = board.getPieces();
+
+        if (beforeMovePieces.size() != afterMovePieces.size()) {
+            Piece removedPiece = beforeMovePieces
+                    .stream()
+                    .filter(piece -> piece.getLocation().equals(Location.of(target)))
+                    .filter(piece -> !piece.equals(sourcePiece))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 기물입니다."));
+            pieceRepository.deletePieceById(removedPiece.getId());
+        }
+
+        for (Piece piece : board.getPieces()) {
+            pieceRepository.update(piece);
+        }
+        return new MoveResponseDto(
+                pieceDtos(room.getBoard()),
+                room.getCurrentTeam().getValue(),
+                room.judgeResult()
+        );
+    }
+
+    @Transactional
+    public MoveResponseDto end(String roomName) {
+        Room room = findRoomByName(roomName);
+
+        room.play("end");
+        roomRepository.update(room);
+        return new MoveResponseDto(
+            pieceDtos(room.getBoard()),
+            room.getCurrentTeam().getValue(),
+            room.judgeResult()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public MoveResponseDto findPiecesInRoom(String roomName) {
+        Room room = findRoomByName(roomName);
+        return new MoveResponseDto(
+            pieceDtos(room.getBoard()),
+            room.getCurrentTeam().getValue(),
+            room.judgeResult()
+        );
+    }
+
+    private Room findRoomByName(String roomName) {
+        if (!roomRepository.roomExists(roomName)) {
             throw new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다.");
         }
         Room room = roomRepository.findByName(roomName);
@@ -120,6 +110,16 @@ public class ChessService {
                 roomName,
                 State.generateState(room.getState().getValue(), Board.of(pieces)),
                 room.getCurrentTeam());
+    }
+
+    @Transactional(readOnly = true)
+    public RoomsDto findAllRooms() {
+        List<Room> rooms = roomRepository.findAll();
+        List<RoomDto> roomDtos = rooms.stream()
+                .map(Room::getName)
+                .map(RoomDto::new)
+                .collect(Collectors.toList());
+        return new RoomsDto(roomDtos);
     }
 
 

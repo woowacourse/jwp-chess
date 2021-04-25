@@ -107,19 +107,21 @@ const App = function(roomName) {
   this.$chessBoard.addEventListener('click', this.onClickPiece);
 
   this.$endBtn.addEventListener('click', () => {
-    fetch(`http://localhost:8080/api/room/${this.$roomName}/end`, {
-      method: 'GET'
-    })
-    .then(response => response.json())
-    .then(result => {
-      if (result.status === "ERROR") {
-        alert(result.message);
-        return;
-      }
-      this.renderBoard(result.pieces);
-      this.renderMessage(result);
-    })
-    .catch(err => alert(err));
+    if (confirm("게임을 끝내시겠습니까?")) {
+      fetch(`http://localhost:8080/api/room/${this.$roomName}/end`, {
+        method: 'GET'
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.status === "ERROR") {
+          alert(result.message);
+          return;
+        }
+        this.renderBoard(result.pieces);
+        this.renderMessage(result);
+      })
+      .catch(err => alert(err));
+    }
   });
 
   this.$lobbyBtn.addEventListener('click', () => {

@@ -15,4 +15,6 @@
 ## Step2
 
 - [x] @Bean 어노테이션을 통해 빈을 생성하던거을 config을 통해 Gson을 bean으로 정의하기
-- [ ] Service 테스트 코드 작성
+- [x] Service 테스트 코드 작성
+- [x] 테이블 Drop이 필요한 부분을 @sql 어노테이션을 이용해 초기화
+- [x] @TestPropertySource("classpath:application.properties") 제거

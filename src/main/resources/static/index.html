@@ -2,25 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="/css/style.css">
-  <title>체스</title>
+  <title>Title</title>
 </head>
 <body>
-<div id="game_screen_wrap">
-  <div id="game_screen">
-    <table id="chess_board"></table>
-    <div>
-      <button class="btn" id="start">게임 시작</button>
-      <button class="btn" id="end">게임 종료</button>
-    </div>
-    <div>
-      <span id="current_turn"></span>
-      <span id="black_score"></span>
-      <span id="white_score"></span>
-      <span id="winner"></span>
-    </div>
+<div id="wrap">
+  <p>체스 게임</p>
+  <ul id="room_list">
+  </ul>
+  <div>
+    <input
+        class="new-room"
+        placeholder="방 이름을 입력해주세요"
+        autofocus
+    />
+    <button class="btn" id="create">방 생성</button>
   </div>
 </div>
-<script type="module" src="/js/App.js"></script>
+<script type="module" src="/js/index.js"></script>
 </body>
 </html>

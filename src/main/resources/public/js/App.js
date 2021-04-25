@@ -1,4 +1,4 @@
-const App = function() {
+const App = function(roomName) {
   this.$chessBoard = document.querySelector("#chess_board");
   this.$startBtn = document.querySelector("#start");
   this.$endBtn = document.querySelector("#end");
@@ -6,9 +6,9 @@ const App = function() {
   this.$blackScore = document.querySelector("#black_score");
   this.$whiteScore = document.querySelector("#white_score");
   this.$winner = document.querySelector("#winner");
-  this.roomName = undefined;
+  this.roomName = roomName;
 
-  this.renderEmptyBoard = function() {
+  this.renderEmptyBoard = () => {
     this.$chessBoard.innerHTML = '';
 
     for (let r = 1; r <= 8; r++) {
@@ -22,19 +22,18 @@ const App = function() {
       }
       this.$chessBoard.appendChild(row);
     }
-  }.bind(this);
+  };
 
-  this.renderBoard = function(response) {
+  this.renderBoard = (response) => {
     this.renderEmptyBoard();
 
     response.forEach((piece) => {
       const viewPiece = document.getElementById(piece.location);
       viewPiece.innerText = piece.team + piece.signature;
     })
+  };
 
-  }.bind(this);
-
-  this.renderMessage = function(payload) {
+  this.renderMessage = (payload) => {
     const blackScore = payload.scoreDto.blackScore;
     const whiteScore = payload.scoreDto.whiteScore;
     const currentTeam = payload.currentTeam;
@@ -48,10 +47,9 @@ const App = function() {
       alert(`축하합니다!! 승자 : ${winner}`);
       this.$winner.innerHTML = `승자 : ${winner}`;
     }
+  };
 
-  }.bind(this);
-
-  this.getClickedPiece = function() {
+  this.getClickedPiece = () => {
     const pieces = document.getElementsByTagName("td");
     for (let i = 0; i < pieces.length; i++) {
       if (pieces[i].classList.contains("clicked")) {
@@ -59,9 +57,9 @@ const App = function() {
       }
     }
     return null;
-  }.bind(this);
+  };
 
-  this.onClickPiece = function(event) {
+  this.onClickPiece = (event) => {
     const clickPiece = event.target.closest("td");
     const clickedPiece = this.getClickedPiece();
     if (clickedPiece) {
@@ -74,104 +72,89 @@ const App = function() {
       clickPiece.classList.toggle("clicked");
       clickPiece.classList.add("clickedTile");
     }
-  }.bind(this);
+  };
 
-  this.move = function(source, target) {
+  this.move = (source, target) => {
     const payload = {
       source: source,
       target: target
     }
 
-    fetch(`http://localhost:8080/room/${this.roomName}/move`, {
-      method: 'POST',
+    fetch(`http://localhost:8080/rooms/${this.roomName}/move`, {
+      method: 'PUT',
       headers: {'content-type': 'application/json'},
       body: JSON.stringify(payload)
     })
     .then(response => response.json())
-    .then(result => {
-      if (result.status === "ERROR") {
-        alert(result.message);
+    .then(responseJson => {
+      if (responseJson.status != "OK") {
+        alert(responseJson.detailMessage);
         return;
       }
-      this.renderBoard(result.pieces);
-      this.renderMessage(result);
+      this.renderBoard(responseJson.payload.pieces);
+      this.renderMessage(responseJson.payload);
     })
     .catch(err => alert(err));
-  }.bind(this);
+  };
 
   this.$chessBoard.addEventListener('click', this.onClickPiece);
   this.$startBtn.addEventListener('click', () => {
-    fetch(`http://localhost:8080/room/${this.roomName}/start`, {
-      method: 'GET'
+    fetch(`http://localhost:8080/rooms/${this.roomName}/start`, {
+      method: 'PUT',
+      headers: {'content-type': 'application/json'}
     })
       .then(response => response.json())
-      .then(result => {
-        if (result.status === "ERROR") {
-          alert(result.message);
+      .then(responseJson => {
+        if (responseJson.status != "OK") {
+          alert(responseJson.detailMessage);
           return;
         }
-        this.renderBoard(result.pieces);
-        this.renderMessage(result);
+        this.renderBoard(responseJson.payload.pieces);
+        this.renderMessage(responseJson.payload);
+        alert("게임이 시작되었습니다.");
       })
       .catch(err => alert(err));
   })
 
   this.$endBtn.addEventListener('click', () => {
-    fetch(`http://localhost:8080/room/${this.roomName}/end`, {
-      method: 'GET'
+    fetch(`http://localhost:8080/rooms/${this.roomName}/end`, {
+      method: 'PUT',
+      headers: {'content-type': 'application/json'}
     })
       .then(response => response.json())
-      .then(result => {
-        if (result.status === "ERROR") {
-          alert(result.message);
+      .then(responseJson => {
+        if (responseJson.status != "OK") {
+          alert(responseJson.detailMessage);
           return;
         }
-        this.renderBoard(result.pieces);
-        this.renderMessage(result);
+        this.renderBoard(responseJson.payload.pieces);
+        this.renderMessage(responseJson.payload);
+        alert("게임이 종료되었습니다.");
       })
       .catch(err => alert(err));
   })
 
-  this.constructor = function() {
+  this.constructor = () => {
     this.renderEmptyBoard();
 
-    const roomName = prompt("입장하실 방의 이름을 입력해주세요.\n 존재하지 않은 이름을 입력시 새로운 방이 만들어집니다.");
-    if (roomName === "") {
-      alert("다시 입력해주세요 :)");
-      return this.constructor();
-    }
-
-    fetch(`http://localhost:8080/room/${roomName}`)
+    fetch(`http://localhost:8080/rooms/${this.roomName}`)
       .then(response => response.json())
-      .then(result => {
-        if (result.status === "ERROR" && result.message === "[ERROR] 존재하지 않는 방입니다.") {
-          alert("존재하지 않는 방이므로, 새로 방을 만듭니다.");
-          fetch(`http://localhost:8080/room/create`, {
-            method: 'POST',
-            headers: {'content-type': 'application/json'},
-            body: JSON.stringify({name: roomName})
-          })
-            .then(response => response.json())
-            .then(result => this.roomName = roomName);
-          this.renderEmptyBoard();
+      .then(responseJson => {
+        if (responseJson.status != "OK") {
+          alert(responseJson.detailMessage);
           return;
         }
-        if (result.status === "ERROR" && result.message === "[ERROR] 아직 시작되지 않은 방입니다.") {
-          this.roomName = roomName;
-          this.renderEmptyBoard();
-          return;
-        }
-        this.roomName = roomName;
-        this.renderBoard(result.pieces);
-        this.renderMessage(result);
+        this.renderBoard(responseJson.payload.pieces);
+        this.renderMessage(responseJson.payload);
       })
-      .catch(err => alert(err));
-  }.bind(this);
+      .catch(error => alert('에러 : ' + error));
+  };
+
+  this.constructor();
 }
 
 window.onload = () => {
-  const app = new App();
+  const roomName = window.location.pathname.split("/")[2];
+  const app = new App(roomName);
   app.constructor();
 }
-
-

@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.controller.dto.RoomInfoDto;
+import chess.dto.RoomInfoDto;
 import chess.service.dao.RoomDao;
 import org.springframework.stereotype.Service;
 

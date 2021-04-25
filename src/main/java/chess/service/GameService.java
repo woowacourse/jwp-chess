@@ -1,11 +1,10 @@
 package chess.service;
 
-import chess.controller.dto.GameInfoDto;
+import chess.dto.GameInfoDto;
 import chess.domain.ChessGame;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
 import chess.service.dao.GameDao;
-import chess.service.dao.RoomDao;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;

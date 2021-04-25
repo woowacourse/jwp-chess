@@ -1,4 +1,4 @@
-package chess.controller.dto;
+package chess.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

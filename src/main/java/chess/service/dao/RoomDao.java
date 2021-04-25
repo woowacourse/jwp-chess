@@ -1,7 +1,7 @@
 package chess.service.dao;
 
-import chess.controller.dto.RoomDto;
-import chess.controller.dto.RoomInfoDto;
+import chess.dto.RoomDto;
+import chess.dto.RoomInfoDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;

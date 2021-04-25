@@ -1,7 +1,6 @@
-package chess.controller.dto;
+package chess.dto;
 
 import chess.domain.board.Board;
-import chess.domain.board.position.Position;
 
 import java.util.Map;
 

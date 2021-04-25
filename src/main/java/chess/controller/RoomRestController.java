@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.controller.dto.RoomDto;
+import chess.dto.RoomDto;
 import chess.service.PlayerService;
 import chess.service.RoomService;
 import chess.view.OutputView;

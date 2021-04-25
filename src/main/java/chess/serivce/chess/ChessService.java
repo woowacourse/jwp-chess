@@ -14,7 +14,6 @@ import chess.domain.team.Team;
 import chess.repository.piece.PieceRepository;
 import chess.repository.room.RoomRepository;
 import chess.utils.BoardUtil;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -34,20 +33,7 @@ public class ChessService {
     }
 
     @Transactional
-    public MoveResponseDto start(String roomName) throws SQLException {
-        Room room = findRoomByRoomName(roomName);
-
-        room.play("start");
-        roomRepository.update(room);
-        return new MoveResponseDto(
-            pieceDtos(room.getBoard()),
-            room.getCurrentTeam().getValue(),
-            room.judgeResult()
-        );
-    }
-
-    @Transactional
-    public MoveResponseDto end(String roomName) throws SQLException {
+    public MoveResponseDto end(String roomName) {
         Room room = findRoomByRoomName(roomName);
 
         room.play("end");
@@ -60,7 +46,7 @@ public class ChessService {
     }
 
     @Transactional
-    public MoveResponseDto move(String roomName, String source, String target) throws SQLException {
+    public MoveResponseDto move(String roomName, String source, String target) {
         Room room = findRoomByRoomName(roomName);
         Board board = room.getBoard();
         Piece sourcePiece = board.find(Location.of(source));
@@ -115,7 +101,9 @@ public class ChessService {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 방입니다. 다른 이름을 사용해주세요.");
         }
 
-        long roomId = roomRepository.insert(new Room(0, roomName, new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
+        Room room = new Room(0, roomName, new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
+        room.play("start");
+        long roomId = roomRepository.insert(room);
         Board board = BoardUtil.generateInitialBoard();
         for (Piece piece : board.getPieces()) {
             pieceRepository.insert(roomId, piece);

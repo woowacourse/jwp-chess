@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/room")
+@RequestMapping("/api/room")
 public class ChessRoomController {
 
     private final ChessService service;
@@ -33,12 +33,6 @@ public class ChessRoomController {
     @GetMapping(value = "/{name}")
     public ResponseEntity<MoveResponseDto> enterRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.findPiecesByRoomName(roomName);
-        return ResponseEntity.ok().body(result);
-    }
-
-    @GetMapping(value = "/{name}/start")
-    public ResponseEntity<MoveResponseDto> startRoom(@PathVariable("name") String roomName) throws SQLException {
-        MoveResponseDto result = service.start(roomName);
         return ResponseEntity.ok().body(result);
     }
 

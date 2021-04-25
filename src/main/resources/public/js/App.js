@@ -1,12 +1,12 @@
-const App = function() {
+const App = function(roomName) {
   this.$chessBoard = document.querySelector("#chess_board");
-  this.$startBtn = document.querySelector("#start");
   this.$endBtn = document.querySelector("#end");
+  this.$lobbyBtn = document.querySelector("#lobby");
   this.$currentTurn = document.querySelector("#current_turn");
   this.$blackScore = document.querySelector("#black_score");
   this.$whiteScore = document.querySelector("#white_score");
   this.$winner = document.querySelector("#winner");
-  this.roomName = undefined;
+  this.$roomName = roomName;
 
   this.renderEmptyBoard = function() {
     this.$chessBoard.innerHTML = '';
@@ -22,6 +22,11 @@ const App = function() {
       }
       this.$chessBoard.appendChild(row);
     }
+  }.bind(this);
+
+  this.renderRoomName = function() {
+    document.querySelector("#room_name").insertAdjacentHTML("beforeend",
+        `<h1>${this.$roomName}</h1>`);
   }.bind(this);
 
   this.renderBoard = function(response) {
@@ -82,7 +87,7 @@ const App = function() {
       target: target
     }
 
-    fetch(`http://localhost:8080/room/${this.roomName}/move`, {
+    fetch(`http://localhost:8080/api/room/${this.$roomName}/move`, {
       method: 'POST',
       headers: {'content-type': 'application/json'},
       body: JSON.stringify(payload)
@@ -100,24 +105,9 @@ const App = function() {
   }.bind(this);
 
   this.$chessBoard.addEventListener('click', this.onClickPiece);
-  this.$startBtn.addEventListener('click', () => {
-    fetch(`http://localhost:8080/room/${this.roomName}/start`, {
-      method: 'GET'
-    })
-    .then(response => response.json())
-    .then(result => {
-      if (result.status === "ERROR") {
-        alert(result.message);
-        return;
-      }
-      this.renderBoard(result.pieces);
-      this.renderMessage(result);
-    })
-    .catch(err => alert(err));
-  })
 
   this.$endBtn.addEventListener('click', () => {
-    fetch(`http://localhost:8080/room/${this.roomName}/end`, {
+    fetch(`http://localhost:8080/api/room/${this.$roomName}/end`, {
       method: 'GET'
     })
     .then(response => response.json())
@@ -130,38 +120,24 @@ const App = function() {
       this.renderMessage(result);
     })
     .catch(err => alert(err));
-  })
+  });
+
+  this.$lobbyBtn.addEventListener('click', () => {
+    if (confirm("로비로 돌아가시겠습니까?")) {
+      window.location.href = "http://localhost:8080/";
+    }
+  });
 
   this.constructor = function() {
     this.renderEmptyBoard();
-
-    const roomName = prompt("입장하실 방의 이름을 입력해주세요.\n 존재하지 않은 이름을 입력시 새로운 방이 만들어집니다.");
-    if (roomName === "") {
-      alert("다시 입력해주세요 :)");
-      return this.constructor();
-    }
-
-    fetch(`http://localhost:8080/room/${roomName}`)
+    this.renderRoomName();
+    fetch(`http://localhost:8080/api/room/${roomName}`)
     .then(response => response.json())
     .then(result => {
-      if (result.status === "ERROR" && result.message === "[ERROR] 존재하지 않는 방입니다.") {
-        alert("존재하지 않는 방이므로, 새로 방을 만듭니다.");
-        fetch(`http://localhost:8080/room`, {
-          method: 'POST',
-          headers: {'content-type': 'application/json'},
-          body: JSON.stringify({name: roomName})
-        })
-        .then(response => response.json())
-        .then(result => this.roomName = roomName);
-        this.renderEmptyBoard();
-        return;
-      }
       if (result.status === "ERROR" && result.message === "[ERROR] 아직 시작되지 않은 방입니다.") {
-        this.roomName = roomName;
         this.renderEmptyBoard();
         return;
       }
-      this.roomName = roomName;
       this.renderBoard(result.pieces);
       this.renderMessage(result);
     })
@@ -170,6 +146,7 @@ const App = function() {
 }
 
 window.onload = () => {
-  const app = new App();
+  const pathName = decodeURI(window.location.pathname);
+  const app = new App(pathName.split("/")[2]);
   app.constructor();
 }

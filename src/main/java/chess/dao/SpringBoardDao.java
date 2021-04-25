@@ -8,7 +8,6 @@ import chess.domain.position.Position;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,8 +20,8 @@ public class SpringBoardDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public SpringBoardDao(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public SpringBoardDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Board initBoard(String roomName) {

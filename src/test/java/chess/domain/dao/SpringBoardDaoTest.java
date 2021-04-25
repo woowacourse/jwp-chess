@@ -26,7 +26,7 @@ public class SpringBoardDaoTest {
 
     @BeforeEach
     void setUp() {
-        springBoardDao = new SpringBoardDao(jdbcTemplate.getDataSource());
+        springBoardDao = new SpringBoardDao(jdbcTemplate);
         jdbcTemplate.execute("set mode MySQL");
     }
 

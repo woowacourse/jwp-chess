@@ -13,12 +13,13 @@ public final class ChessGame {
     private String id;
     private String name;
 
-    public ChessGame(State state) {
+    public ChessGame(State state, String name) {
         this.state = state;
+        this.name = name;
     }
 
-    public static ChessGame initChessGame() {
-        ChessGame chessGame = new ChessGame(new Ready(Board.createGamingBoard()));
+    public static ChessGame initChessGame(String name) {
+        ChessGame chessGame = new ChessGame(new Ready(Board.createGamingBoard()), name);
         chessGame.start();
         return chessGame;
     }

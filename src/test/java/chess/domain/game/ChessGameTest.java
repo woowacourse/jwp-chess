@@ -17,7 +17,13 @@ class ChessGameTest {
 
     @BeforeEach
     void setUp() {
-        runningChessGame = new ChessGame(new Running(Board.createGamingBoard(), Side.WHITE));
+        runningChessGame = new ChessGame(
+                new Running(
+                        Board.createGamingBoard(),
+                        Side.WHITE
+                ),
+                "game"
+        );
     }
 
     @ParameterizedTest(name = "Running 상태에서 move, end 명령 가능")

@@ -25,7 +25,7 @@ public class ChessService {
     }
 
     public Long addChessGame(String gameName) {
-        ChessGame chessGame = ChessGame.initChessGame();
+        ChessGame chessGame = ChessGame.initChessGame("game");
         chessGame.setName(gameName);
 
         return chessGameDao.addGame(chessGame);
@@ -33,7 +33,7 @@ public class ChessService {
 
     public ChessGame replayedChessGame(String gameId) {
         List<Command> commands = moveCommandDao.findCommandsByGameId(gameId);
-        ChessGame chessGame = ChessGame.initChessGame();
+        ChessGame chessGame = ChessGame.initChessGame("game");
 
         for (Command command : commands) {
             chessGame.execute(command);

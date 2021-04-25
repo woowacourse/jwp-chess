@@ -23,7 +23,6 @@ function SquareBuffer() {
 
 async function processResponse(response) {
     const responseBody = await response.json();
-
     console.log(responseBody.message);
     updateMessage(responseBody.message);
 
@@ -88,10 +87,8 @@ async function addEventOnStartButton() {
     await document.getElementById('start-button').addEventListener('click', event => {
         try {
             fetch('/game/new')
-                .then(res => {
-                    createNewRoom();
-                    processResponse(res);
-                });
+                .then(res => processResponse(res))
+                .then(() => createNewRoom());
             turnOnPanel();
         } catch (error) {
             console.error(error.messages);
@@ -101,14 +98,24 @@ async function addEventOnStartButton() {
 
 async function createNewRoom() {
     const roomName = prompt("방 제목을 입력하세요");
-    fetch('/room/name', {
+    alert(gameId);
+    await fetch('/room/name', {
         method: 'POST',
-        body : roomName
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body : JSON.stringify ({
+            gameId : gameId,
+            name : roomName
+        })
     }).then(res => updateRoomName(res));
 }
 
 async function updateRoomName(response) {
     const responseBody = await response.json();
+    console.log(responseBody);
+    console.log(responseBody.item);
+    console.log(responseBody.item.name);
     document.getElementById('room-name').innerText = responseBody.item.name;
 }
 

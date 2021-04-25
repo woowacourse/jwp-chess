@@ -28,6 +28,7 @@ public class ChessService {
                 chessBoardDto,
                 chessGameManager.getCurrentTurnColor().name());
         int gameId = gameDAO.saveGame(savedGameDto);
+        System.out.println("게임 세이브 ********** ");
         savePiecesByGameId(gameId, chessBoardDto);
 
         return new CommonDto<>("새로운 게임이 생성되었습니다.",
@@ -82,11 +83,22 @@ public class ChessService {
         return chessGameManager;
     }
 
-    public CommonDto<RoomDto> saveRoom(String roomName) {
-        int roomCount = gameDAO.findRoomCount(roomName);
+    public CommonDto<RoomDto> saveRoom(RoomDto roomDto) {
+        String roomName = roomDto.getName();
+        int gameId = roomDto.getGameId();
+        System.out.println("**** GameID : " + gameId);
+        int roomCount = gameDAO.findRoomNameCount(roomName);
+        String countedRoomName = addRoomCount(roomName, roomCount);
+        System.out.println("카운트한 이름 중복 개수 : " + countedRoomName);
+        System.out.println("room Save *** ");
+        gameDAO.saveRoom(gameId, roomName);
+        return new CommonDto<>("방 정보를 가져왔습니다.", new RoomDto(gameId, countedRoomName));
+    }
+
+    private String addRoomCount(String roomName, int roomCount) {
         if (roomCount != 0) {
-            roomName = roomName + (" (" + roomCount + ")");
+            roomName = roomName + " (" + roomCount + ")";
         }
-        return new CommonDto<>("방 정보를 가져왔습니다.", new RoomDto(roomName));
+        return roomName;
     }
 }

@@ -3,13 +3,10 @@ package chess.controller.spring;
 import chess.dto.CommonDto;
 import chess.dto.GameListDto;
 import chess.service.ChessService;
-import chess.service.RoomDto;
+import chess.dto.RoomDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/room")
@@ -26,7 +23,7 @@ public class RoomController {
     }
 
     @PostMapping("/name")
-    public ResponseEntity<CommonDto<RoomDto>> saveRoomName(@RequestBody String roomName) {
-        return ResponseEntity.ok().body(service.saveRoom(roomName));
+    public ResponseEntity<CommonDto<RoomDto>> saveRoomName(@RequestBody RoomDto roomDto) {
+        return ResponseEntity.ok().body(service.saveRoom(roomDto));
     }
 }

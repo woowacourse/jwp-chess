@@ -91,8 +91,13 @@ public class GameDao {
         return this.jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getInt("game_id"));
     }
 
-    public int findRoomCount(String roomName) {
+    public int findRoomNameCount(String roomName) {
         String query = "SELECT count(*) FROM room WHERE name = ?";
         return this.jdbcTemplate.queryForObject(query, Integer.class, roomName);
+    }
+
+    public void saveRoom(int gameId, String roomName) {
+        String query = "INSERT INTO room(game_id, name) VALUES(?, ?)";
+        this.jdbcTemplate.update(query, gameId, roomName);
     }
 }

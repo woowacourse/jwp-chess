@@ -40,8 +40,8 @@ public class GameDao {
         return keyHolder.getKey().intValue();
     }
 
-    public List<Game> findRunningGamesByUserId(int userId) {
-        String query = "SELECT * FROM game g JOIN user u ON g.userId = u.id WHERE g.userId = ?";
+    public List<Game> findGamesByUserId(int userId) {
+        String query = "SELECT * FROM game g WHERE g.userId = ?";
         return jdbcTemplate.query(query, gameRowMapper, userId);
     }
 

@@ -1,5 +1,3 @@
-
-
 const startButton = document.getElementById("start");
 const backButton = document.getElementById("back");
 const scoreButton = document.getElementById("score");
@@ -14,10 +12,9 @@ startButton.addEventListener("click", clickStart);
 backButton.addEventListener("click", clickBack);
 scoreButton.addEventListener("click", clickScore);
 
-
-
 renderRoomName();
 createChessBoard();
+
 function createChessBoard() {
     makeTable();
     syncBoard();

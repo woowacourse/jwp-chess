@@ -80,7 +80,7 @@ th, td {
     width: 100%;
 }
 
-#popup, #enter-popup {
+#popup, #enter-popup, #black-user-password-popup, #white-user-password-popup {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -95,11 +95,11 @@ th, td {
     -webkit-backdrop-filter: blur(4px);
 }
 
-#popup.hide, #enter-popup.hide {
+#popup.hide, #enter-popup.hide, #black-user-password-popup.hide, #white-user-password-popup.hide {
     display: none;
 }
 
-#popup.multiple-filter, #enter-popup.multiple-filter {
+.multiple-filter {
     backdrop-filter: blur(4px) grayscale(90%);
     -webkit-backdrop-filter: blur(4px) grayscale(90%);
 }

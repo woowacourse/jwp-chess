@@ -42,8 +42,8 @@ public class RoomDAO {
     public List<RoomDTO> allRooms() {
         try {
             String query = "SELECT room.id, room.title, black.nickname AS black_user, white.nickname AS white_user, room.status " +
-                    "FROM room LEFT JOIN user as black on black.id = room.black_user " +
-                    "LEFT JOIN user as white on white.id = room.white_user ORDER BY room.status DESC, room.id DESC";
+                    "FROM room LEFT JOIN player as black on black.id = room.black_user " +
+                    "LEFT JOIN player as white on white.id = room.white_user ORDER BY room.status DESC, room.id DESC";
 
             return jdbcTemplate.query(query, mapper());
         } catch (DataAccessException e) {
@@ -85,5 +85,17 @@ public class RoomDAO {
     public void joinBlackUser(final String roomId, final int blackUserId) {
         String query = "UPDATE room SET black_user = ?, status = ? WHERE id = ?";
         jdbcTemplate.update(query, blackUserId, PLAYING_STATUS, roomId);
+    }
+
+    public String findBlackUserById(final String id) {
+        return jdbcTemplate.queryForObject("SELECT black_user FROM room WHERE id = ?",
+                String.class,
+                id);
+    }
+
+    public String findWhiteUserById(final String id) {
+        return jdbcTemplate.queryForObject("SELECT white_user FROM room WHERE id = ?",
+                String.class,
+                id);
     }
 }

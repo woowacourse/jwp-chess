@@ -59,4 +59,12 @@ public final class RoomService {
     public void joinBlackUser(final String roomId, final int blackUserId) {
         roomDAO.joinBlackUser(roomId, blackUserId);
     }
+
+    public String findBlackUserById(final String id) {
+        return roomDAO.findBlackUserById(id);
+    }
+
+    public String findWhiteUserById(final String id) {
+        return roomDAO.findWhiteUserById(id);
+    }
 }

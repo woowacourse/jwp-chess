@@ -4,6 +4,7 @@ import chess.domain.ChessGame;
 import chess.dto.game.GameDTO;
 import chess.dto.room.RoomCreateDTO;
 import chess.dto.user.JoinUserDTO;
+import chess.dto.user.PasswordDTO;
 import chess.exception.InitialSettingDataException;
 import chess.exception.NoHistoryException;
 import chess.exception.NotEnoughPlayerException;
@@ -41,16 +42,36 @@ public final class SpringChessGameController {
 
     @PostMapping(path = "/rooms/new-game")
     public String createNewGame(@ModelAttribute final RoomCreateDTO roomCreateDTO) {
-        int whiteUserId = userService.registerUser(roomCreateDTO.getPlayerId(), roomCreateDTO.getPassword());
+        int whiteUserId = userService.registerUser(new JoinUserDTO(roomCreateDTO));
         Long roomId = roomService.createRoom(roomCreateDTO.getName(), whiteUserId);
         return "redirect:/rooms/" + roomId;
     }
 
     @PostMapping("/rooms/{id}/users/blackuser/add")
     public String join(@PathVariable String id, @ModelAttribute JoinUserDTO joinUserDTO) {
-        int blackUserId = userService.registerUser(joinUserDTO.getPlayerId(), joinUserDTO.getPassword());
+        int blackUserId = userService.registerUser(joinUserDTO);
         roomService.joinBlackUser(id, blackUserId);
         return "redirect:/rooms/" + id;
+    }
+
+    @PostMapping("/rooms/{id}/users/blackuser/re-enter")
+    public String blackUserReEntry(@PathVariable String id, @ModelAttribute PasswordDTO passwordDTO) {
+        String blackUserId = roomService.findBlackUserById(id);
+        if (userService.checkPassword(blackUserId, passwordDTO.getPassword())) {
+            return "redirect:/rooms/" + id;
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/rooms/{id}/users/whiteuser/re-enter")
+    public String whiteUserReEntry(@PathVariable String id, @ModelAttribute PasswordDTO passwordDTO) {
+        String whiteUserId = roomService.findWhiteUserById(id);
+        System.out.println("##");
+        System.out.println(whiteUserId);
+        if (userService.checkPassword(whiteUserId, passwordDTO.getPassword())) {
+            return "redirect:/rooms/" + id;
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/rooms/{id}")

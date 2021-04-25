@@ -5,12 +5,12 @@ import lombok.Getter;
 @Getter
 public class RoomCreateDTO {
     private final String name;
-    private final String playerId;
+    private final String nickname;
     private final String password;
 
-    public RoomCreateDTO(String name, String playerId, String password) {
+    public RoomCreateDTO(String name, String nickname, String password) {
         this.name = name;
-        this.playerId = playerId;
+        this.nickname = nickname;
         this.password = password;
     }
 }

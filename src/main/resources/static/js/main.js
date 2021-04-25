@@ -37,3 +37,27 @@ function closeEnterPopup() {
     const popup = document.querySelector('#enter-popup');
     popup.classList.add('hide');
 }
+
+function showBlackUserPasswordPopup() {
+    const popup = document.querySelector('#black-user-password-popup');
+    popup.classList.remove('hide');
+}
+
+function closeBlackUserPasswordPopup() {
+    const userPassword = document.querySelector('#black-user-password-value');
+    userPassword.value = "";
+    const popup = document.querySelector('#black-user-password-popup');
+    popup.classList.add('hide');
+}
+
+function showWhiteUserPasswordPopup() {
+    const popup = document.querySelector('#white-user-password-popup');
+    popup.classList.remove('hide');
+}
+
+function closeWhiteUserPasswordPopup() {
+    const userPassword = document.querySelector('#white-user-password-value');
+    userPassword.value = "";
+    const popup = document.querySelector('#white-user-password-popup');
+    popup.classList.add('hide');
+}

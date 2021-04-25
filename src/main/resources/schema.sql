@@ -6,7 +6,7 @@ USE
 chess;
 
 -- 초기 테이블 생성
-CREATE TABLE user
+CREATE TABLE player
 (
     id       INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nickname VARCHAR(64) NOT NULL,

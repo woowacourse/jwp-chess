@@ -4,6 +4,8 @@ import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
+import chess.webdto.ChessGameTableDto;
+import chess.webdto.GameRoomDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -23,48 +27,50 @@ class SpringChessGameDaoTest {
     @Autowired
     SpringChessGameDao springChessGameDao;
 
+    private int testRoomNumber;
+
     @BeforeEach
     void setUp() {
-        springChessGameDao.deleteChessGame();
+        testRoomNumber = springChessGameDao.createGameRoom("test1");
     }
 
     @Test
-    void createChessGame() {
-        final ChessGame chessGame = springChessGameDao.createChessGame();
-        assertThat(chessGame.calculateBlackTeamScore()).isEqualTo(38.0);
-        assertThat(chessGame.calculateWhiteTeamScore()).isEqualTo(38.0);
-        assertThat(chessGame.isPlaying()).isTrue();
-        assertThat(chessGame.isWhiteTeamTurn()).isTrue();
+    void loadGameRooms() {
+        springChessGameDao.createGameRoom("test2");
+        springChessGameDao.createGameRoom("test3");
+        springChessGameDao.createGameRoom("test4");
+        final List<GameRoomDto> gameRoomDtos = springChessGameDao.loadGameRooms();
+        assertThat(gameRoomDtos.size()).isEqualTo(4);
     }
 
     @Test
-    void readChessGame() {
-        final ChessGame chessGameCreated = springChessGameDao.createChessGame();
-        final Map<Position, Piece> positionPieceCreated = chessGameCreated.generateChessBoard();
+    void ChessGameInfoTest() {
+        springChessGameDao.createChessGameInfo(testRoomNumber, "black", true);
+        ChessGameTableDto chessGameTableDto = springChessGameDao.readChessGameInfo(testRoomNumber);
+        assertThat(chessGameTableDto.getCurrentTurnTeam()).isEqualTo("black");
+        assertThat(chessGameTableDto.getIsPlaying()).isTrue();
 
-        final ChessGame chessGameLoaded = springChessGameDao.readChessGame();
-        final Map<Position, Piece> positionPieceLoaded = chessGameLoaded.generateChessBoard();
-
-        assertThat(positionPieceCreated).isEqualTo(positionPieceLoaded);
+        springChessGameDao.updateChessGameInfo(testRoomNumber, "white", false);
+        chessGameTableDto = springChessGameDao.readChessGameInfo(testRoomNumber);
+        assertThat(chessGameTableDto.getCurrentTurnTeam()).isEqualTo("white");
+        assertThat(chessGameTableDto.getIsPlaying()).isFalse();
     }
 
     @Test
-    void updateChessGame() {
-        final ChessGame chessGame = springChessGameDao.createChessGame();
-        chessGame.move(Position.of("e2"), Position.of("e4"));
-        springChessGameDao.updateChessGame(chessGame, "black");
+    void TeamInfoTest() {
+        springChessGameDao.createTeamInfo(testRoomNumber, "black", "testPieceInfo");
+        String pieceInfo = springChessGameDao.readTeamInfo(testRoomNumber, "black");
+        assertThat(pieceInfo).isEqualTo("testPieceInfo");
 
-        final ChessGame chessGameUpdated = springChessGameDao.readChessGame();
-        final Map<Position, Piece> positionPieceUpdated = chessGameUpdated.generateChessBoard();
-
-        assertThat(positionPieceUpdated.get(Position.of("e4"))).isInstanceOf(Pawn.class);
+        springChessGameDao.updateTeamInfo(testRoomNumber, "black", "updatePieceInfo");
+        pieceInfo = springChessGameDao.readTeamInfo(testRoomNumber, "black");
+        assertThat(pieceInfo).isEqualTo("updatePieceInfo");
     }
 
     @Test
-    void deleteChessGame() {
-        springChessGameDao.createChessGame();
-        springChessGameDao.deleteChessGame();
-        assertThatThrownBy(() -> springChessGameDao.readChessGame())
-                .isInstanceOf(EmptyResultDataAccessException.class);
+    void deleteChessGameTest() {
+        springChessGameDao.deleteChessGame(testRoomNumber);
+        assertThatCode(() -> springChessGameDao.readChessGameInfo(testRoomNumber))
+                .isInstanceOf(Exception.class);
     }
 }

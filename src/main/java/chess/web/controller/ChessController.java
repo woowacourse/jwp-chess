@@ -3,7 +3,6 @@ package chess.web.controller;
 import chess.domain.board.dto.BoardDto;
 import chess.domain.command.dto.MoveCommandDto;
 import chess.domain.game.ChessGame;
-import chess.domain.game.dao.ChessGameDao;
 import chess.domain.game.dto.ChessGameDto;
 import chess.domain.game.dto.GameNameDto;
 import chess.service.ChessService;
@@ -22,11 +21,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping("/chess")
 public class ChessController {
 
-    private final ChessGameDao chessGameDao;
     private final ChessService chessService;
 
-    public ChessController(ChessGameDao chessGameDao, ChessService chessService) {
-        this.chessGameDao = chessGameDao;
+    public ChessController(ChessService chessService) {
         this.chessService = chessService;
     }
 
@@ -39,7 +36,7 @@ public class ChessController {
 
     @GetMapping("/{gameId}")
     public String gameDetailView(@PathVariable String gameId, Model model) {
-        ChessGameDto chessGameDTO = chessGameDao.findGameById(gameId);
+        ChessGameDto chessGameDTO = chessService.findGameById(gameId);
         model.addAttribute("chessGame", chessGameDTO);
         return "game";
     }

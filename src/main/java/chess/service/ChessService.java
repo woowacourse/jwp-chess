@@ -8,6 +8,7 @@ import chess.domain.command.dto.MoveCommandDto;
 import chess.domain.game.ChessGame;
 import chess.domain.game.Side;
 import chess.domain.game.dao.ChessGameDao;
+import chess.domain.game.dto.ChessGameDto;
 import chess.exception.ChessException;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -70,5 +71,9 @@ public class ChessService {
         if (insertedRowCount == 0) {
             throw new ChessException("플레이어의 턴이 아닙니다");
         }
+    }
+
+    public ChessGameDto findGameById(String gameId) {
+        return chessGameDao.findGameById(gameId);
     }
 }

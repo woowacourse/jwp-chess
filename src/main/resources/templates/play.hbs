@@ -16,7 +16,7 @@
         <div id="historyList">
             {{#history}}
                 <div id="history">
-                    <a class="{{name}}" href="/play/continue?name={{name}}">{{name}}</a>
+                    <a class="{{name}}" href="/chess/game/{{name}}">{{name}}</a>
                 </div>
             {{/history}}
         </div>
@@ -24,17 +24,43 @@
 </div>
 </body>
 <script>
-    const playNewGame = function () {
+    const playNewGame = () => {
         const name = prompt("게임 저장 시 이용할 이름을 입력해주세요!");
-        if (name == null) {
-            window.location = "/play";
+        if (name !== null) {
+            makeRoom(name);
         } else {
-            window.location = `/play/${name}/new`;
+            window.location = `/chess/game/temporary`;
         }
     }
 
     const gameHistory = document.getElementById("historyList");
     if ($("#history").length === 0)
         gameHistory.innerText = "비어있습니다 - 텅!";
+
+    const makeRoom = (name) => {
+        $.ajax({
+        type: "POST",
+        url: '/chess/game/'+name,
+        async : false,
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({
+        }),
+        success: loadGame,
+        error: showFoamRoomError,
+        })
+    }
+
+    const loadGame = (response) => {
+        const name = response.name;
+        window.location = "/chess/game/"+name;
+    }
+
+    const showFoamRoomError = (response) => {
+        alert(response.responseJSON.errorMessage);
+    }
+
 </script>
 </html>

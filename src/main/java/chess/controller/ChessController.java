@@ -1,75 +1,71 @@
 package chess.controller;
 
 import chess.domain.command.Commands;
+import chess.domain.dto.HistoryDto;
 import chess.domain.dto.MoveResponseDto;
-import chess.domain.exception.DataException;
 import chess.domain.dto.MoveDto;
 import chess.service.SpringChessService;
 import chess.view.ModelView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 
 @Controller
-@RequestMapping("/play")
+@RequestMapping("/chess")
 public class ChessController {
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private final SpringChessService springChessService;
 
     public ChessController(SpringChessService springChessService) {
         this.springChessService = springChessService;
     }
 
-    @GetMapping("")
-    public String play(Model model) throws DataException {
+    @GetMapping()
+    public String play(Model model) {
         model.addAllAttributes(ModelView.startResponse(springChessService.loadHistory()));
         return "play";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/game/temporary")
     public String playNewGameWithNoSave(Model model) {
         model.addAllAttributes(ModelView.newGameResponse(springChessService.initialGameInfo()));
         return "chessGame";
     }
 
-    @GetMapping("/{name}/new")
-    public String playNewGameWithSave(Model model, @PathVariable String name) throws DataException {
-        model.addAllAttributes(ModelView.newGameResponse(
-                springChessService.initialGameInfo(),
-                springChessService.addHistory(name)
-        ));
-        return "chessGame";
+    @PostMapping("/game/{name}")
+    public ResponseEntity<HistoryDto> playNewGameWithSave(Model model, @PathVariable String name) {
+        springChessService.initialGameInfo();
+        springChessService.addHistory(name);
+        return ResponseEntity.ok()
+            .body(new HistoryDto(name));
     }
 
-    @GetMapping("/continue")
-    public String continueGame(Model model, @RequestParam("name") String name) throws DataException {
+    @GetMapping("/game/{name}")
+    public String continueGame(Model model, @PathVariable String name) {
         final String id = springChessService.getIdByName(name);
-        model.addAllAttributes(ModelView.commonResponseForm(springChessService.continuedGameInfo(id), id));
+        model.addAllAttributes(ModelView.commonResponseForm(
+            springChessService.continuedGameInfo(id),
+            id));
         return "chessGame";
     }
 
-    @GetMapping("/end")
+    @GetMapping("/game/termination")
     public String endGame() {
         return "play";
     }
 
-    @PostMapping("/move")
+    @PostMapping("/game/{gameName}/move")
     @ResponseBody
-    public MoveResponseDto move(@RequestBody MoveDto moveDto) {
+    public ResponseEntity<MoveResponseDto> move(@PathVariable String name,
+        @RequestBody MoveDto moveDto) {
         String command = makeMoveCmd(moveDto.getSource(), moveDto.getTarget());
-        String historyId = moveDto.getGameId();
-
-        try {
-            springChessService.move(historyId, command, new Commands(command));
-            return ModelView.moveResponse(springChessService.continuedGameInfo(historyId), historyId);
-        } catch (IllegalArgumentException | SQLException e) {
-            return new MoveResponseDto(e.getMessage());
-        }
+        springChessService.move(name, command, new Commands(command));
+        MoveResponseDto moveResponseDto = new MoveResponseDto(springChessService
+            .continuedGameInfo(name), name);
+        return ResponseEntity.ok()
+            .body(moveResponseDto);
     }
 
     private String makeMoveCmd(String source, String target) {

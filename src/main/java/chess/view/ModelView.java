@@ -37,15 +37,6 @@ public class ModelView {
         return commonResponseForm(gameInfoDto);
     }
 
-    public static MoveResponseDto moveResponse(GameInfoDto gameInfoDto, String id) {
-        MoveResponseDto moveResponseDto = new MoveResponseDto(gameInfoDto, id);
-        final Team winner = gameInfoDto.winner();
-        if (winner != null) {
-            moveResponseDto.setWinner(winner);
-        }
-        return moveResponseDto;
-    }
-
     public static Map<String, Object> moveSparkResponse(GameInfoDto gameInfoDto, String id) {
         Map<String, Object> model = commonResponseForm(gameInfoDto, id);
         final Team winner = gameInfoDto.winner();

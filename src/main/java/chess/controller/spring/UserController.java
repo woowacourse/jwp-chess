@@ -1,8 +1,7 @@
 package chess.controller.spring;
 
+import chess.controller.spring.util.CookieParser;
 import chess.service.UserService;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
@@ -28,7 +27,7 @@ public class UserController {
     @PostMapping("/login")
     private String login(@RequestParam("userName") String userName, HttpServletResponse response) {
         int userId = userService.addUserIfNotExist(userName);
-        Cookie cookie = new Cookie("userId", encodeCookie(String.valueOf(userId)));
+        Cookie cookie = new Cookie("userId", CookieParser.encodeCookie(String.valueOf(userId)));
         response.addCookie(cookie);
         return REDIRECT + "/games";
     }
@@ -39,13 +38,5 @@ public class UserController {
         cookie.setMaxAge(0);
         response.addCookie(cookie);
         return REDIRECT + "/";
-    }
-
-    private String encodeCookie(String cookie) {
-        if (cookie == null) {
-            return null;
-        }
-        return new String(Base64.getUrlEncoder().withoutPadding()
-            .encode(cookie.getBytes(StandardCharsets.UTF_8)));
     }
 }

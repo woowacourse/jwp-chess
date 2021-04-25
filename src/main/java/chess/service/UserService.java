@@ -1,8 +1,8 @@
 package chess.service;
 
+import chess.controller.spring.util.CookieParser;
 import chess.domain.web.User;
 import chess.repository.UserDao;
-import java.util.Base64;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class UserService {
     }
 
     public Optional<Integer> checkLogin(String cookie) {
-        String userIdStringFormat = decodeCookie(cookie);
+        String userIdStringFormat = CookieParser.decodeCookie(cookie);
         if (userIdStringFormat == null) {
             return Optional.empty();
         }
@@ -41,12 +41,5 @@ public class UserService {
             return Optional.of(userId);
         }
         return Optional.empty();
-    }
-
-    private String decodeCookie(String cookie) {
-        if (cookie == null) {
-            return null;
-        }
-        return new String(Base64.getUrlDecoder().decode(cookie));
     }
 }

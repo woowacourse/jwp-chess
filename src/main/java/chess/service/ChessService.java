@@ -30,7 +30,7 @@ public class ChessService {
     }
 
     public List<GameDto> findGamesByUserId(int userId) {
-        return gameDao.findRunningGamesByUserId(userId)
+        return gameDao.findGamesByUserId(userId)
             .stream()
             .map(GameDto::new)
             .collect(Collectors.toList());

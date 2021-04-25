@@ -5,7 +5,6 @@ import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
-import chess.exception.NotExistRoomException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -47,7 +46,7 @@ public class SpringBoardDao {
                 .findAny();
     }
 
-    public Side findTurn(String roomName) {
+    public Optional<Side> findTurn(String roomName) {
         String query = "SELECT turn FROM board WHERE roomName = ?";
         return this.jdbcTemplate.query(query,
                 (resultSet, rowNum) -> Side.getTurnByName(
@@ -55,14 +54,7 @@ public class SpringBoardDao {
                 ),
                 roomName)
                 .stream()
-                .findAny()
-                .orElseThrow(NotExistRoomException::new);
-    }
-
-    public boolean checkDuplicateByRoomName(String roomName) {
-        String query = "SELECT count(*) FROM board WHERE roomName = ?";
-        int count = this.jdbcTemplate.queryForObject(query, Integer.class, roomName);
-        return count != 0;
+                .findAny();
     }
 
     public List<String> findRooms() {

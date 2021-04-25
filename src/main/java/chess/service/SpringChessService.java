@@ -7,10 +7,10 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.PositionDto;
 import chess.dto.ResponseDto;
-import chess.dto.RoomValidateDto;
 import chess.dto.ScoreDto;
-import chess.exception.ChessException;
-import chess.exception.NotExistRoomException;
+import chess.exception.room.DuplicateRoomNameException;
+import chess.exception.room.NotExistRoomException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -58,23 +58,20 @@ public class SpringChessService {
         return new ResponseDto(SUCCEED_CODE, "Succeed", currentTurn(roomName).name());
     }
 
-    private Side currentTurn(String roomName) throws ChessException {
-        return springBoardDao.findTurn(roomName);
+    private Side currentTurn(String roomName) {
+        return springBoardDao.findTurn(roomName).orElseThrow(NotExistRoomException::new);
     }
 
     public void createRoom(String roomName) {
-        springBoardDao.addBoard(roomName);
+        try {
+            springBoardDao.addBoard(roomName);
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateRoomNameException();
+        }
     }
 
     public void restartRoom(String roomName) {
         springBoardDao.updateBoard(Board.getGamingBoard(), "WHITE", roomName);
-    }
-
-    public RoomValidateDto checkDuplicatedRoom(String roomName) {
-        if (springBoardDao.checkDuplicateByRoomName(roomName)) {
-            return new RoomValidateDto(FAIL_CODE, "중복된 방 이름입니다.");
-        }
-        return new RoomValidateDto(SUCCEED_CODE, "방 생성 성공!");
     }
 
     public List<String> rooms() {

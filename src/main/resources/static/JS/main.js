@@ -98,27 +98,23 @@ async function addRoom(event) {
         let data = {
             roomName: roomName
         }
-
-        try {
-            let response = await fetch('/rooms', {
-                method: 'post',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            let status = response.status;
-            event.target.value = '';
-
-            if (status === 500) {
-                response = await response.text();
-                alert(response);
+        let response = await fetch('/rooms', {
+            method: 'post',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
             }
-            await renderRooms();
+        });
 
-        } catch (error) {
-            console.log(error);
+        let status = response.status;
+        event.target.value = '';
+        response = await response.text();
+        if (status === 201) {
+            alert(response);
         }
+        if (status === 403) {
+            alert(response);
+        }
+        await renderRooms();
     }
 }

@@ -17,7 +17,7 @@ public class ChessExceptionAdvice {
     }
 
     @ExceptionHandler(RoomException.class)
-    public ResponseEntity<Object> handleNotExistRoomException(RoomException e) {
+    public ResponseEntity<Object> handleRoomException(RoomException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 

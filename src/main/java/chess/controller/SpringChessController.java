@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.dto.*;
 import chess.service.SpringChessService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,8 +33,9 @@ public class SpringChessController {
 
     @PostMapping("/rooms")
     @ResponseBody
-    public void createRoom(@RequestBody RoomNameDto roomName) {
+    public ResponseEntity<String> createRoom(@RequestBody RoomNameDto roomName) {
         springChessService.createRoom(roomName.getRoomName());
+        return ResponseEntity.status(HttpStatus.CREATED).body("방 생성 성공!");
     }
 
     @GetMapping("/rooms/{roomName}")
@@ -70,12 +72,6 @@ public class SpringChessController {
     @ResponseBody
     public ScoreDto score(@PathVariable String roomName) {
         return springChessService.score(roomName);
-    }
-
-    @GetMapping("/rooms/{roomName}/check")
-    @ResponseBody
-    public RoomValidateDto checkRoomName(@PathVariable String roomName) {
-        return springChessService.checkDuplicatedRoom(roomName);
     }
 
     @DeleteMapping("/rooms/{roomName}")

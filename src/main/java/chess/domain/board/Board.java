@@ -6,12 +6,15 @@ import chess.domain.team.Team;
 import chess.domain.team.Winner;
 import chess.exception.domain.InvalidPieceMoveException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Board {
 
+    public static final Board EMPTY_BOARD = new Board(Collections.emptyList());
     private static final int NUM_OF_KING = 2;
+
     private final List<Piece> pieces;
 
     private Board(final List<Piece> pieces) {

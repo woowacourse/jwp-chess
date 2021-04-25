@@ -1,5 +1,6 @@
 package chess.dao.room;
 
+import chess.domain.board.Board;
 import chess.domain.game.Room;
 import chess.domain.gamestate.State;
 import chess.domain.team.Team;
@@ -57,7 +58,7 @@ public class JdbcRoomDao implements RoomDao {
                     new Room(
                             rs.getLong("id"),
                             rs.getString("name"),
-                            State.generateState(rs.getString("state"), BoardUtil.generateInitialBoard()),
+                            State.generateState(rs.getString("state"), Board.EMPTY_BOARD),
                             Team.of(rs.getString("currentteam"))
                     )
                 ,
@@ -74,7 +75,7 @@ public class JdbcRoomDao implements RoomDao {
                         new Room(
                                 rs.getLong("id"),
                                 rs.getString("name"),
-                                State.generateState(rs.getString("state"), BoardUtil.generateInitialBoard()),
+                                State.generateState(rs.getString("state"), Board.EMPTY_BOARD),
                                 Team.of(rs.getString("currentteam"))
                         )
                 ,

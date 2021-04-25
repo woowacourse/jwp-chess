@@ -3,6 +3,7 @@ package chess.domain.piece;
 import chess.domain.position.Position;
 import chess.domain.position.Source;
 import chess.domain.position.Target;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,8 +33,8 @@ public class Pieces {
 
     public Optional<Piece> findPiece(final Position position) {
         return this.pieces.stream()
-            .filter(piece -> piece.isSamePosition(position))
-            .findFirst();
+                .filter(piece -> piece.isSamePosition(position))
+                .findFirst();
     }
 
     public void remove(final Position position) {
@@ -48,7 +49,7 @@ public class Pieces {
 
     public boolean isBlackPieces() {
         return pieces.stream()
-            .allMatch(Piece::isBlack);
+                .allMatch(Piece::isBlack);
     }
 
     public boolean isKingPosition(final Position position) {
@@ -60,12 +61,12 @@ public class Pieces {
 
     public boolean isKingDead() {
         return pieces.stream()
-            .noneMatch(Piece::isKing);
+                .noneMatch(Piece::isKing);
     }
 
     public double calculateScore() {
         return this.pieces.stream()
-            .mapToDouble(piece -> piece.score(pieces))
-            .sum();
+                .mapToDouble(piece -> piece.score(pieces))
+                .sum();
     }
 }

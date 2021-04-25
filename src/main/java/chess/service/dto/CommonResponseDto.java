@@ -2,9 +2,9 @@ package chess.service.dto;
 
 public class CommonResponseDto<T> {
 
-    private T body;
-    private int statusCode;
-    private String message;
+    private final T body;
+    private final int statusCode;
+    private final String message;
 
     public CommonResponseDto(final int statusCode) {
         this(null, statusCode, "");

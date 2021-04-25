@@ -6,11 +6,8 @@ import chess.domain.piece.direction.MoveStrategy;
 import chess.domain.position.Position;
 import chess.domain.position.Source;
 import chess.domain.position.Target;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -32,8 +29,8 @@ public class Board {
     private static Map<Position, Piece> assignPieces(final Pieces pieces) {
         final Map<Position, Piece> chessBoard = BoardInitializer.emptyBoards();
         final Map<Position, Piece> collect = pieces.unwrap()
-            .stream()
-            .collect(Collectors.toMap(Piece::position, piece -> piece));
+                .stream()
+                .collect(Collectors.toMap(Piece::position, piece -> piece));
         chessBoard.putAll(collect);
         return chessBoard;
     }
@@ -99,6 +96,6 @@ public class Board {
 
     private boolean hasNoPiecesInPath(final List<Position> paths) {
         return paths.stream()
-            .allMatch(path -> chessBoard.get(path).isBlank());
+                .allMatch(path -> chessBoard.get(path).isBlank());
     }
 }

@@ -3,6 +3,7 @@ package chess.domain.state;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
+
 import java.util.Optional;
 
 public abstract class Turn implements State {

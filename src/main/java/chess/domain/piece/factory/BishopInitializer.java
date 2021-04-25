@@ -4,6 +4,7 @@ import chess.domain.piece.Bishop;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,7 +21,7 @@ public final class BishopInitializer implements LocationInitializer {
         List<Piece> pieces = new ArrayList<>();
         for (final String file : FILES) {
             RANKS_WHITE.forEach(
-                rank -> pieces.add(new Bishop(Color.WHITE, new Position(file, rank))));
+                    rank -> pieces.add(new Bishop(Color.WHITE, new Position(file, rank))));
         }
         return pieces;
     }
@@ -30,7 +31,7 @@ public final class BishopInitializer implements LocationInitializer {
         List<Piece> pieces = new ArrayList<>();
         for (final String file : FILES) {
             RANKS_BLACK.forEach(
-                rank -> pieces.add(new Bishop(Color.BLACK, new Position(file, rank))));
+                    rank -> pieces.add(new Bishop(Color.BLACK, new Position(file, rank))));
         }
         return pieces;
     }

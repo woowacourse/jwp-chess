@@ -16,6 +16,7 @@ import chess.domain.state.StateFactory;
 import chess.exception.InvalidMoveException;
 import chess.exception.ValidTurnException;
 import chess.service.dto.ScoreDto;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class ChessGame {
         final State whitePlayerState = StateFactory.initialization(PieceInitializer.whitePieces());
         final State blackPlayerState = StateFactory.initialization(PieceInitializer.blackPieces());
         return new ChessGame(new WhitePlayer(whitePlayerState), new BlackPlayer(blackPlayerState),
-            board.put(whitePlayerState.pieces(), blackPlayerState.pieces()));
+                board.put(whitePlayerState.pieces(), blackPlayerState.pieces()));
     }
 
     public void
@@ -65,7 +66,7 @@ public class ChessGame {
 
     private void move(final Position sourcePosition, final Position targetPosition, Player player) {
         Source source = new Source(
-            player.findPiece(sourcePosition).orElseThrow(ValidTurnException::new));
+                player.findPiece(sourcePosition).orElseThrow(ValidTurnException::new));
         Target target = new Target(chessBoard.findPiece(targetPosition));
 
         if (chessBoard.checkPath(source, target)) {

@@ -1,23 +1,16 @@
 package chess.controller;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
-import static spark.Spark.put;
-import static spark.Spark.staticFiles;
-
 import chess.JsonTransformer;
 import chess.service.ChessService;
-import chess.service.dto.ChessSaveRequestDto;
-import chess.service.dto.CommonResponseDto;
-import chess.service.dto.GameStatusRequestDto;
-import chess.service.dto.MoveRequestDto;
-import chess.service.dto.ResponseCode;
-import chess.service.dto.TilesDto;
+import chess.service.dto.*;
 import com.google.gson.Gson;
-import java.util.HashMap;
-import java.util.Map;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static spark.Spark.*;
 
 public class ChessWebController {
 

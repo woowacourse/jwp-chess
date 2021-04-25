@@ -15,9 +15,9 @@ public enum Color {
 
     public static Color findByValue(final String value) {
         return Arrays.stream(values())
-            .filter(targetValue -> targetValue.name.equals(value))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("없는 색상입니다."));
+                .filter(targetValue -> targetValue.name.equals(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("없는 색상입니다."));
     }
 
     public boolean isBlack() {

@@ -1,24 +1,25 @@
 package chess.entity;
 
 import chess.domain.piece.Color;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Chess {
 
-    private String id;
-    private String name;
+    private final String id;
+    private final String name;
     private Color winnerColor;
     private boolean isRunning;
-    private LocalDateTime createdDate;
+    private final LocalDateTime createdDate;
 
     public Chess(final String name) {
         this(UUID.randomUUID().toString(), name, Color.NOTHING, true, LocalDateTime.now());
     }
 
     public Chess(final String id, final String name, final Color winnerColor, final boolean isRunning,
-        final LocalDateTime createdDate) {
+                 final LocalDateTime createdDate) {
         this.id = id;
         this.name = name;
         this.winnerColor = winnerColor;

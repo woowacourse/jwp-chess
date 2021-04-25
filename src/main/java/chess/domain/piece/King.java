@@ -3,6 +3,7 @@ package chess.domain.piece;
 import chess.domain.piece.direction.MoveStrategies;
 import chess.domain.position.Position;
 import chess.domain.position.Target;
+
 import java.util.List;
 
 public final class King extends GeneralPiece {

@@ -2,7 +2,6 @@ package chess.dao;
 
 import chess.domain.piece.Color;
 import chess.entity.Chess;
-import chess.entity.Movement;
 import chess.exception.DuplicateRoomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

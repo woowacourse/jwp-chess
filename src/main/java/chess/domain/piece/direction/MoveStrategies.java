@@ -15,14 +15,14 @@ public class MoveStrategies {
 
     public static MoveStrategies everyMoveStrategies() {
         return new MoveStrategies(Arrays
-            .asList(new East(), new West(), new South(), new North(), new Northwest(), new Northeast(), new Southeast(),
-                new Southwest()));
+                .asList(new East(), new West(), new South(), new North(), new Northwest(), new Northeast(), new Southeast(),
+                        new Southwest()));
     }
 
     public static MoveStrategies knightMoveStrategies() {
         return new MoveStrategies(Arrays
-            .asList(new UpLeft(), new UpRight(), new LeftUp(), new LeftDown(), new DownLeft(), new DownRight(),
-                new RightUp(), new RightDown()));
+                .asList(new UpLeft(), new UpRight(), new LeftUp(), new LeftDown(), new DownLeft(), new DownRight(),
+                        new RightUp(), new RightDown()));
     }
 
     public static MoveStrategies diagonalMoveStrategies() {
@@ -39,9 +39,9 @@ public class MoveStrategies {
 
     public static MoveStrategy matchedMoveStrategy(final int fileDegree, final int rankDegree) {
         return everyMoveStrategies().moveStrategies.stream()
-            .filter(moveStrategy -> moveStrategy.isSameDirection(fileDegree, rankDegree))
-            .findFirst()
-            .orElse(new Nothing());
+                .filter(moveStrategy -> moveStrategy.isSameDirection(fileDegree, rankDegree))
+                .findFirst()
+                .orElse(new Nothing());
     }
 
     public List<MoveStrategy> strategies() {

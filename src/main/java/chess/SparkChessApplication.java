@@ -11,7 +11,7 @@ public class SparkChessApplication {
 
     public static void main(String[] args) {
         ChessService chessService = new ChessService(new DBChessDao(CustomConnectionPool.create(new MysqlConnectionProperty())),
-            new DBMovementDao(CustomConnectionPool.create(new MysqlConnectionProperty())));
+                new DBMovementDao(CustomConnectionPool.create(new MysqlConnectionProperty())));
         ChessWebController chessWebController = new ChessWebController(chessService);
         chessWebController.run();
     }

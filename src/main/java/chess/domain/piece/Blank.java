@@ -4,6 +4,7 @@ import chess.domain.position.Position;
 import chess.domain.position.Target;
 import chess.exception.BlankMoveException;
 import chess.exception.EmptyPositionException;
+
 import java.util.List;
 
 public final class Blank extends Piece {

@@ -4,6 +4,7 @@ import chess.domain.piece.direction.MoveStrategies;
 import chess.domain.position.Position;
 import chess.domain.position.Source;
 import chess.domain.position.Target;
+
 import java.util.List;
 
 public abstract class GeneralPiece extends Piece {
@@ -23,7 +24,7 @@ public abstract class GeneralPiece extends Piece {
     private boolean isPossibleDirection(final Target target) {
         final List<Integer> result = target.subtract(new Source(this));
         return moveStrategies.strategies().stream()
-            .anyMatch(moveStrategy -> moveStrategy.isSameDirection(result.get(0), result.get(1)));
+                .anyMatch(moveStrategy -> moveStrategy.isSameDirection(result.get(0), result.get(1)));
     }
 
     @Override

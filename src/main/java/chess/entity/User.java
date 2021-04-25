@@ -5,10 +5,10 @@ import java.util.UUID;
 
 public class User {
 
-    private String id;
-    private String name;
-    private String password;
-    private LocalDateTime createdDate;
+    private final String id;
+    private final String name;
+    private final String password;
+    private final LocalDateTime createdDate;
 
     public User(final String name, final String password) {
         this(UUID.randomUUID().toString(), name, password, LocalDateTime.now());

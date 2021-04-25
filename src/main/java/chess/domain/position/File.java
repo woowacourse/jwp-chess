@@ -25,20 +25,20 @@ public enum File {
 
     public static Optional<File> from(final String symbol) {
         return Arrays.stream(values())
-            .filter(file -> file.symbol.equals(symbol))
-            .findFirst();
+                .filter(file -> file.symbol.equals(symbol))
+                .findFirst();
     }
 
     public static Optional<File> from(final int value) {
         return Arrays.stream(values())
-            .filter(file -> file.value == value)
-            .findFirst();
+                .filter(file -> file.value == value)
+                .findFirst();
     }
 
     public static List<String> fileSymbols() {
         return Arrays.stream(values())
-            .map(File::symbol)
-            .collect(Collectors.toList());
+                .map(File::symbol)
+                .collect(Collectors.toList());
     }
 
     public int subtract(final File file) {
@@ -60,9 +60,9 @@ public enum File {
     @Override
     public String toString() {
         return "File{" +
-            "symbol='" + symbol + '\'' +
-            ", value=" + value +
-            '}';
+                "symbol='" + symbol + '\'' +
+                ", value=" + value +
+                '}';
     }
 }
 

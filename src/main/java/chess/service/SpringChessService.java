@@ -10,10 +10,10 @@ import chess.entity.Movement;
 import chess.exception.DuplicateRoomException;
 import chess.exception.NotExistRoomException;
 import chess.service.dto.*;
-
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class SpringChessService {
@@ -40,7 +40,7 @@ public class SpringChessService {
         }
 
         return new MoveResponseDto(requestDto.getSource(), requestDto.getTarget(),
-            chessGame.calculateScore(), !chess.isRunning());
+                chessGame.calculateScore(), !chess.isRunning());
     }
 
     @Transactional
@@ -70,7 +70,7 @@ public class SpringChessService {
         Chess chess = movedChess(chessGame, name);
 
         return new GameStatusDto(chessGame.pieces(),
-            chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor());
+                chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor());
     }
 
     public TilesDto emptyBoard() {

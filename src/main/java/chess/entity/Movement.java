@@ -6,18 +6,18 @@ import java.util.UUID;
 
 public class Movement {
 
-    private String id;
-    private String chessId;
-    private String sourcePosition;
-    private String targetPosition;
-    private LocalDateTime createdDate;
+    private final String id;
+    private final String chessId;
+    private final String sourcePosition;
+    private final String targetPosition;
+    private final LocalDateTime createdDate;
 
     public Movement(final String chessId, final String sourcePosition, final String targetPosition) {
         this(UUID.randomUUID().toString(), chessId, sourcePosition, targetPosition, LocalDateTime.now());
     }
 
     public Movement(final String id, final String chessId, final String sourcePosition, final String targetPosition,
-        final LocalDateTime createdDate) {
+                    final LocalDateTime createdDate) {
         this.id = id;
         this.chessId = chessId;
         this.sourcePosition = sourcePosition;

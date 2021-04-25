@@ -83,8 +83,8 @@ public class ChessRestController {
     }
 
     @PostMapping("/end")
-    public ResponseEntity.BodyBuilder end(@RequestBody IdRequestDto idRequestDto) {
+    public ResponseEntity<Void> end(@RequestBody IdRequestDto idRequestDto) {
         chessService.updateToEnd(idRequestDto.getRoomId());
-        return ResponseEntity.ok();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

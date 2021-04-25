@@ -1,4 +1,4 @@
-package chess.domain.utils;
+package chess.controller;
 
 import chess.domain.exception.DataException;
 import chess.domain.response.ErrorResponse;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseBody
     public ResponseEntity<ErrorResponse> passDetailError(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }

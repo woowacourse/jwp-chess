@@ -15,11 +15,11 @@ public class StaticMemoryChessDao implements ChessDao {
     private long autoIncrement = AUTO_INCREMENT_BASE;
 
     @Override
-    public long save(ChessGameDto entity) {
+    public ChessGameDto save(ChessGameDto entity) {
         long id = autoIncrement++;
         entity = new ChessGameDto(id, entity.getNextTurn(), entity.isRunning(), entity.getPieces());
         database.put(entity.getId(), entity);
-        return id;
+        return entity;
     }
 
     @Override

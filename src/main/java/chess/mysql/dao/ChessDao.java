@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChessDao {
-    long save(ChessGameDto entity);
+    ChessGameDto save(ChessGameDto entity);
 
     void update(ChessGameDto entity);
 

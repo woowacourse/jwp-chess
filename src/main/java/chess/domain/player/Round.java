@@ -2,6 +2,7 @@ package chess.domain.player;
 
 import chess.domain.board.ChessBoardFactory;
 import chess.domain.command.Command;
+import chess.domain.command.CommandFactory;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
@@ -19,9 +20,19 @@ public class Round {
     private Map<Position, Piece> board;
     private Command command;
     private boolean isEnd = false;
+    private String currentTurn;
+
+    public Round(final Map<Position, Piece> board, final String currentTurn) {
+        this.whitePlayer = new WhitePlayer(board, currentTurn);
+        this.blackPlayer = new BlackPlayer(board, currentTurn);
+        this.board = board;
+        this.command = CommandFactory.initialCommand("start");
+        this.currentTurn = currentTurn;
+    }
 
     public Round(final State white, final State black, final Command command) {
         this(new WhitePlayer(white), new BlackPlayer(black), command);
+        this.currentTurn = "white";
     }
 
     public Round(final Player whitePlayer, final Player blackPlayer, final Command command) {
@@ -67,24 +78,6 @@ public class Round {
         if (isEnd) {
             changeToEnd();
         }
-    }
-
-    public void changeTurn(final String currentTurn) {
-        if ("white".equals(currentTurn)) {
-            State nextWhiteTurn = whitePlayer.getState().toRunningTurn();
-            State nextBlackTurn = blackPlayer.getState().toFinishedTurn();
-            changeState(nextWhiteTurn, nextBlackTurn);
-        }
-        if ("black".equals(currentTurn)) {
-            State nextWhiteTurn = whitePlayer.getState().toFinishedTurn();
-            State nextBlackTurn = blackPlayer.getState().toRunningTurn();
-            changeState(nextWhiteTurn, nextBlackTurn);
-        }
-    }
-
-    private void changeState(final State nextWhiteTurn, final State nextBlackTurn) {
-        whitePlayer.changeState(nextWhiteTurn);
-        blackPlayer.changeState(nextBlackTurn);
     }
 
     public void changeToEnd() {

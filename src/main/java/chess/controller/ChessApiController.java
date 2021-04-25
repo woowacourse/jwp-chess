@@ -20,15 +20,12 @@ public class ChessApiController {
 
     @PostMapping("/room")
     public Long start(@RequestBody final String req) {
-        chessService.makeRound();
         return chessService.addRoom(req.split(":")[1].split("\"")[1]);
     }
 
     @GetMapping("/board/{roomId}")
     public ChessBoardDto chess(@PathVariable final Long roomId) {
-        ChessBoardDto chessBoardDto = chessService.chessBoardFromDB(roomId);
-        System.out.println(chessBoardDto);
-        return chessBoardDto;
+        return chessService.chessBoardFromDB(roomId);
     }
 
     @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)

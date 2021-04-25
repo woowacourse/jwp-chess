@@ -17,10 +17,8 @@ public class PieceDao {
     }
 
     public void initializePieceStatus(final String pieceName, final String piecePosition, Long roomId) {
-        String pieceName2 = pieceName;
-        String piecePosition2 = piecePosition;
         String query = "INSERT INTO piece (piece_name, piece_position, room_id) VALUE (?, ?, ?)";
-        jdbcTemplate.update(query, pieceName2, piecePosition2, roomId);
+        jdbcTemplate.update(query, pieceName, piecePosition, roomId);
     }
 
     public List<ChessResponseDto> showAllPieces(final Long roomId) {

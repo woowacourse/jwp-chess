@@ -146,7 +146,8 @@ function request_move_post(first_click, second_click, current_turn) {
     moveXhr.responseType = 'json';
     moveXhr.send(JSON.stringify({
         source: start_position,
-        target: destination
+        target: destination,
+        roomId: roomId
     }));
 
     start_position = null;

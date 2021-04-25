@@ -71,6 +71,7 @@ public class ChessService {
     }
 
     public void move(String id, String command, UserInfoDto userInfoDto) {
+        moveValidation(id);
         ChessGame chessGame = restore(lastState(id));
 
         final Path path = new Path(new Commands(command).path());
@@ -78,6 +79,15 @@ public class ChessService {
 
         chessGame.moveAs(path);
         updateMoveInfo(command, id);
+    }
+
+    private void moveValidation(String id) {
+        if (checkRoomEnd(id)) {
+            throw new IllegalArgumentException("이미 종료된 게임입니다😞");
+        }
+        if (!checkRoomFull(id)) {
+            throw new IllegalArgumentException("흑팀 참가자가 아직 입장하지 않았습니다😞");
+        }
     }
 
     public String addRoom(String name) {
@@ -111,8 +121,18 @@ public class ChessService {
         return roomRepository.checkRoomIsFull(roomId);
     }
 
-    public void updateToFull(String roomId) {
+    public void updateToFull(String roomId, String password) {
+        updateValidation(roomId, password);
         roomRepository.updateToFull(roomId);
+    }
+
+    private void updateValidation(String roomId, String password) {
+        if (checkRoomFull(roomId)) {
+            throw new IllegalArgumentException("이미 꽉 찬 방이에요 😅");
+        }
+        if (checkSamePassword(roomId, password)) {
+            throw new IllegalArgumentException("굉장하군요. 백팀 참가자와 같은 비밀번호를 입력했어요😲 다른 비밀번호로 부탁해요~");
+        }
     }
 
     public boolean checkSamePassword(String roomId, String password) {

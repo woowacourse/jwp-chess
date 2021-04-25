@@ -21,7 +21,7 @@ function roomId() {
 function move(source, target) {
     $.ajax({
         type: "POST",
-        url: 'api/rooms/move',
+        url: '/api/rooms/move',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
@@ -117,14 +117,7 @@ function endGame() {
 
     $.ajax({
         type: "POST",
-        url: 'apirooms/end',
-        headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        },
-        data: JSON.stringify({
-            "roomId": roomId(),
-        }),
+        url: `/api/rooms/${roomId()}/status`,
         complete: redirect,
     })
 }

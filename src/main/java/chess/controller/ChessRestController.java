@@ -11,16 +11,13 @@ import chess.dto.UserInfoDto;
 import chess.service.ChessService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("api/rooms")
+@RequestMapping("/api/rooms")
 public class ChessRestController {
 
     private final ChessService chessService;
@@ -29,7 +26,7 @@ public class ChessRestController {
         this.chessService = chessService;
     }
 
-    @PostMapping("/first")
+    @PostMapping
     public ResponseEntity<String> saveInfo(@RequestBody InitialGameInfoDto initialGameInfoDto,
                                            HttpServletRequest request) {
         final String roomId = chessService.addRoom(initialGameInfoDto.getName());
@@ -40,18 +37,13 @@ public class ChessRestController {
         return ResponseEntity.ok(roomId);
     }
 
-    @PostMapping("/second")
+    @PostMapping("/user")
     public ResponseEntity<String> saveSecondUser(@RequestBody UserInfoDto userInfoDto,
                                                  HttpServletRequest request) {
         final String roomId = userInfoDto.getId();
         final String password = userInfoDto.getPassword();
-        if (chessService.checkRoomFull(roomId)) {
-            throw new IllegalArgumentException("이미 꽉 찬 방이에요 😅");
-        }
-        if (chessService.checkSamePassword(roomId, password)) {
-            throw new IllegalArgumentException("굉장하군요. 백팀 참가자와 같은 비밀번호를 입력했어요😲 다른 비밀번호로 부탁해요~");
-        }
-        chessService.updateToFull(roomId);
+
+        chessService.updateToFull(roomId, password);
         chessService.addUser(roomId, password, Team.BLACK.team());
 
         HttpSession session = request.getSession();
@@ -63,14 +55,6 @@ public class ChessRestController {
     public ResponseEntity<ChessResponse> move(@RequestBody MoveRequestDto moveRequestDto,
                                               HttpServletRequest request) {
         String id = moveRequestDto.getRoomId();
-
-        if (chessService.checkRoomEnd(id)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("이미 종료된 게임입니다😞"));
-        }
-        if (!chessService.checkRoomFull(id)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("흑팀 참가자가 아직 입장하지 않았습니다😞"));
-        }
-
         HttpSession session = request.getSession();
         final Object password = session.getAttribute("password");
         String command = makeMoveCmd(moveRequestDto.getSource(), moveRequestDto.getTarget());
@@ -82,9 +66,9 @@ public class ChessRestController {
         return String.join(" ", "move", source, target);
     }
 
-    @PostMapping("/end")
-    public ResponseEntity<Void> end(@RequestBody IdRequestDto idRequestDto) {
-        chessService.updateToEnd(idRequestDto.getRoomId());
+    @PostMapping("/{id}/status")
+    public ResponseEntity<Void> end(@PathVariable String id) {
+        chessService.updateToEnd(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

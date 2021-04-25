@@ -39,12 +39,6 @@ public class RoomRepository {
         return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
-    public Optional<Integer> findIdByName(String name) {
-        final String query = "SELECT id FROM Room WHERE name = ? AND is_full = false " +
-                "ORDER BY id DESC limit 1";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, Integer.class, name));
-    }
-
     public List<RoomDto> selectActiveRooms() {
         final String query = "SELECT * FROM Room WHERE is_end = false";
         return jdbcTemplate.query(query, rowMapper);

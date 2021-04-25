@@ -165,9 +165,9 @@ public class Board {
         if (this == o) return true;
         if (!(o instanceof Board)) return false;
 
-        Board board1 = (Board) o;
+        Board that = (Board) o;
 
-        return getBoard() != null ? getBoard().equals(board1.getBoard()) : board1.getBoard() == null;
+        return getBoard() != null ? getBoard().equals(that.getBoard()) : that.getBoard() == null;
     }
 
     @Override

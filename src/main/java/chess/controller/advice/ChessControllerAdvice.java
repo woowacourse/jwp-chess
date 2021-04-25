@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ChessControllerAdvice {
     @ExceptionHandler(HandledException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(HandledException e) {
-        return new ResponseEntity<>(new ErrorResponse(e.getMessage()), e.getHttpStatus());
+        return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

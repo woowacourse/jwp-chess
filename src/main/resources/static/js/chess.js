@@ -192,3 +192,9 @@ statusBtn.addEventListener('click', function () {
     alert('하얀색 기물 점수는: ' + whiteScore.textContent + '\n' +
         '검정색 기물 점수는: ' + blackScore.textContent);
 });
+
+const homeBtn = document.getElementById('home-btn');
+
+homeBtn.addEventListener('click', function () {
+    window.location.href = "/";
+});

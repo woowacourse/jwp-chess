@@ -7,3 +7,9 @@ for (let i = 0; i < roomNames.length; i++) {
         window.location.href = 'http://127.0.0.1:8080/chess/' + roomId;
     })
 }
+
+const homeBtn = document.getElementById('home-btn');
+
+homeBtn.addEventListener('click', function () {
+    window.location.href = '/';
+});

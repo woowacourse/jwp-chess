@@ -34,7 +34,7 @@ public class MoveCommandDao {
     }
 
     public List<Command> findCommandsByGameId(String gameId) {
-        String sql = "SELECT * FROM chess_game game "
+        String sql = "SELECT cmd.source_position, cmd.target_position FROM chess_game game "
                 + "JOIN move_command cmd on game.id = cmd.game_id "
                 + "WHERE is_end=false AND game.id=(?) ORDER BY cmd.created_at";
 

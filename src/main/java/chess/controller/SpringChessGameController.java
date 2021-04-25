@@ -50,6 +50,7 @@ public final class SpringChessGameController {
         int whiteUserId = userService.registerUser(new JoinUserDTO(roomCreateDTO));
         playerInformationCookie(response, roomCreateDTO.getNickname(), roomCreateDTO.getPassword(), "white");
         Long roomId = roomService.createRoom(roomCreateDTO.getName(), whiteUserId);
+        roomService.addNewRoom(roomId);
         return "redirect:/rooms/" + roomId;
     }
 
@@ -105,7 +106,7 @@ public final class SpringChessGameController {
     @GetMapping("/rooms/{id}")
     public String enterRoom(@PathVariable final String id, final Model model) {
         model.addAttribute("state",
-                new GameDTO(id, userService.participatedUsers(id), "새로운게임", true));
+                new GameDTO(id, userService.participatedUsers(id), roomService.loadChessGameById(id), "새로운게임"));
         return "chess";
     }
 

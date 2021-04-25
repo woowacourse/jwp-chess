@@ -9,12 +9,20 @@ import chess.domain.position.Position;
 import chess.domain.position.Row;
 
 import java.util.List;
+import java.util.Map;
 
 public final class ChessGame {
     private Board board;
     private Team currentTurn;
-    private boolean isPlaying = true;
+    private boolean isPlaying;
     private Team winner;
+
+    public ChessGame() {
+        BoardFactory boardFactory = new BoardFactory();
+        this.board = boardFactory.board();
+        this.currentTurn = Team.WHITE;
+        this.isPlaying = true;
+    }
 
     public void initialize() {
         BoardFactory boardFactory = new BoardFactory();
@@ -72,5 +80,12 @@ public final class ChessGame {
 
     public Team turn() {
         return currentTurn;
+    }
+
+    public boolean checkRightTurnTest(String value) {
+        if (value.equals("white")) {
+            return currentTurn.equals(Team.WHITE);
+        }
+        return currentTurn.equals(Team.BLACK);
     }
 }

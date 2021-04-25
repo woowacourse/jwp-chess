@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -37,10 +38,19 @@ public class SpringChessGameRestController {
     }
 
     @GetMapping(path = "/{roomId}/positions/{clickedSection}/turn")
-    public ResponseEntity<Boolean> checkCurrentTurn(@PathVariable final String roomId, @PathVariable final String clickedSection) {
+    public ResponseEntity<Boolean> checkCurrentTurn(@PathVariable final String roomId, @PathVariable final String clickedSection,
+                                                    @CookieValue(value = "color", required = false) Cookie color,
+                                                    @CookieValue(value = "id", required = false) Cookie id,
+                                                    @CookieValue(value = "password", required = false) Cookie password) {
         ChessGame chessGame = roomService.loadChessGameById(roomId);
+        if (chessGame.checkRightTurnTest(color.getValue())) {
+            System.out.println("### !error");
+            return ResponseEntity.status(OK)
+                    .body(true);
+        }
+        System.out.println("##error");
         return ResponseEntity.status(OK)
-                .body(chessGame.checkRightTurn(clickedSection));
+                .body(false);
     }
 
     @GetMapping("/{roomId}/positions/{clickedSection}/movable-positions")

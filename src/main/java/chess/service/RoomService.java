@@ -45,6 +45,12 @@ public final class RoomService {
         rooms.addRoom(id, chessGame);
     }
 
+    public void addNewRoom(final Long id) {
+        ChessGame chessGame = new ChessGame();
+        chessGame.initialize();
+        rooms.addRoom(Long.toString(id), chessGame);
+    }
+
     public ChessGame initializeChessGame(final String id) {
         ChessGame chessGame = rooms.loadGameByRoomId(id);
         chessGame.initialize();

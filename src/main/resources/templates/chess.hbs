@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>체스</title>
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <script type="module">
+        import {getFetch, getAcceptJsonFetch, putFetch} from "../js/promise/fetches.js"
+        import pieceFonts from "../js/enum/chessPieceFont.js"
+
+        const $chessboard = document.querySelector('#chessboard');
+        const $blackScore = document.querySelector('#blackScore')
+        const $whiteScore = document.querySelector('#whiteScore')
+
+        let nextColor;
+        let chessGameId = 0;
+
+        $chessboard.addEventListener("click", onClickPiece);
+
+        getPieces("/game/{{{gameId}}}");
+
+        function onClickLoadBtn(e) {
+            if (e.target && e.target.id === "loadBtn") {
+                const loadGameId = prompt("로드할 게임 ID를 입력해주세요.");
+                if (loadGameId) {
+                    getPieces("/game/" + loadGameId);
+                }
+            }
+        }
+
+        async function movePiece(from, to) {
+            const moveResult = await putFetch("/game/move", {gameId: chessGameId, from: from, to: to});
+            if (moveResult.hasOwnProperty("end") && moveResult.end === true) {
+                alert("게임이 종료되었습니다~! 대기 화면으로 이동합니다");
+                location.href ="/";
+            }
+            if (moveResult.hasOwnProperty("end") && moveResult.end === false) {
+                const $to = $chessboard.querySelector("#" + to);
+                const $from = $chessboard.querySelector("#" + from);
+                const color = $from.classList.contains("BLACK") ? "BLACK" : "WHITE";
+                $to.innerText = $from.innerText;
+                $from.innerText = "";
+
+                $from.classList.remove("BLACK", "WHITE");
+                $to.classList.remove("BLACK", "WHITE");
+                $to.classList.add(color);
+                nextColor = moveResult.nextColor;
+            }
+        }
+
+        function equalCell(target) {
+            return target === getFirstSelected();
+        }
+
+        function notEqualCell(target) {
+            return target !== getFirstSelected();
+        }
+
+        function sameColorCell(target) {
+            if (target.classList.contains("BLACK")) {
+                return getFirstSelected().classList.contains("BLACK");
+            }
+            if (target.classList.contains("WHITE")) {
+                return getFirstSelected().classList.contains("WHITE");
+            }
+            return false;
+
+        }
+
+        function checkAnySelected() {
+            return $chessboard.querySelectorAll(".selected").length === 1;
+        }
+
+        function getFirstSelected() {
+            return $chessboard.querySelector(".selected");
+        }
+
+        function removeSelectedClass() {
+            $chessboard.querySelectorAll(".selected")
+                .forEach(e => e.classList.remove("selected"));
+        }
+
+        async function onClickPiece(e) {
+            if (e.target && e.target.classList.contains("cell")) {
+                if (!checkAnySelected() && !e.target.classList.contains(nextColor)) {
+                    alert("움직일 수 있는 진영의 기물이 아닙니다.");
+                    return;
+                }
+
+                if (checkAnySelected() && sameColorCell(e.target)) {
+                    removeSelectedClass();
+                    if (!equalCell(e.target)) {
+                        return;
+                    }
+                }
+                if (checkAnySelected() && notEqualCell(e.target)) {
+                    await movePiece(getFirstSelected().id, e.target.id);
+                    await calculateScore();
+                    removeSelectedClass();
+                    return;
+                }
+
+                if (e.target.innerText !== "") {
+                    e.target.classList.toggle("selected");
+                }
+            }
+        }
+
+        async function calculateScore() {
+            const scoreResponseData = await getFetch(`/game/${chessGameId}/score`);
+
+            $blackScore.innerText = scoreResponseData.colorsScore.BLACK;
+            $whiteScore.innerText = scoreResponseData.colorsScore.WHITE;
+        }
+
+        function setBoard(positionsAndPieces) {
+            $chessboard.querySelectorAll(".cell").forEach(e => {
+                e.innerText = ""
+                e.classList.remove("WHITE", "BLACK");
+            });
+            Object.keys(positionsAndPieces).forEach(e => {
+                const coordinate = $chessboard.querySelector('#' + e)
+                coordinate.textContent = pieceFonts[positionsAndPieces[e].notation]
+                coordinate.classList.add(positionsAndPieces[e].color);
+            });
+        }
+
+        async function getPieces(url) {
+            const piecesData = await getAcceptJsonFetch(url, chessGameId);
+            chessGameId = piecesData.gameId;
+            await calculateScore();
+            setBoard(piecesData.piecesAndPositions);
+            nextColor = piecesData.color;
+        }
+    </script>
+</head>
+<body>
+<div id="main-frame">
+    <div class="chessboard" id="chessboard">
+        <!-- 1st -->
+        <div class="cell white" id="a8"></div>
+        <div class="cell black" id="b8"></div>
+        <div class="cell white" id="c8"></div>
+        <div class="cell black" id="d8"></div>
+        <div class="cell white" id="e8"></div>
+        <div class="cell black" id="f8"></div>
+        <div class="cell white" id="g8"></div>
+        <div class="cell black" id="h8"></div>
+        <!-- 2nd -->
+        <div class="cell black" id="a7"></div>
+        <div class="cell white" id="b7"></div>
+        <div class="cell black" id="c7"></div>
+        <div class="cell white" id="d7"></div>
+        <div class="cell black" id="e7"></div>
+        <div class="cell white" id="f7"></div>
+        <div class="cell black" id="g7"></div>
+        <div class="cell white" id="h7"></div>
+        <!-- 3th -->
+        <div class="cell white" id="a6"></div>
+        <div class="cell black" id="b6"></div>
+        <div class="cell white" id="c6"></div>
+        <div class="cell black" id="d6"></div>
+        <div class="cell white" id="e6"></div>
+        <div class="cell black" id="f6"></div>
+        <div class="cell white" id="g6"></div>
+        <div class="cell black" id="h6"></div>
+        <!-- 4st -->
+        <div class="cell black" id="a5"></div>
+        <div class="cell white" id="b5"></div>
+        <div class="cell black" id="c5"></div>
+        <div class="cell white" id="d5"></div>
+        <div class="cell black" id="e5"></div>
+        <div class="cell white" id="f5"></div>
+        <div class="cell black" id="g5"></div>
+        <div class="cell white" id="h5"></div>
+        <!-- 5th -->
+        <div class="cell white" id="a4"></div>
+        <div class="cell black" id="b4"></div>
+        <div class="cell white" id="c4"></div>
+        <div class="cell black" id="d4"></div>
+        <div class="cell white" id="e4"></div>
+        <div class="cell black" id="f4"></div>
+        <div class="cell white" id="g4"></div>
+        <div class="cell black" id="h4"></div>
+        <!-- 6th -->
+        <div class="cell black" id="a3"></div>
+        <div class="cell white" id="b3"></div>
+        <div class="cell black" id="c3"></div>
+        <div class="cell white" id="d3"></div>
+        <div class="cell black" id="e3"></div>
+        <div class="cell white" id="f3"></div>
+        <div class="cell black" id="g3"></div>
+        <div class="cell white" id="h3"></div>
+        <!-- 7th -->
+        <div class="cell white" id="a2"></div>
+        <div class="cell black" id="b2"></div>
+        <div class="cell white" id="c2"></div>
+        <div class="cell black" id="d2"></div>
+        <div class="cell white" id="e2"></div>
+        <div class="cell black" id="f2"></div>
+        <div class="cell white" id="g2"></div>
+        <div class="cell black" id="h2"></div>
+        <!-- 8th -->
+        <div class="cell black" id="a1"></div>
+        <div class="cell white" id="b1"></div>
+        <div class="cell black" id="c1"></div>
+        <div class="cell white" id="d1"></div>
+        <div class="cell black" id="e1"></div>
+        <div class="cell white" id="f1"></div>
+        <div class="cell black" id="g1"></div>
+        <div class="cell white" id="h1"></div>
+    </div>
+</div>
+<div class="center">
+    <div id="status"></div>
+    <br/>
+    <label>white 점수 :</label>
+    <div id="whiteScore"></div>
+    <br/>
+    <label>black 점수 :</label>
+    <div id="blackScore"></div>
+    <br/>
+</div>
+</body>
+</html>

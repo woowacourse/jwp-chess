@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.*;
 
 @DisplayName("/Game path API test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class GameControllerTest {
+public class GameRestControllerTest {
 
     @LocalServerPort
     int port;

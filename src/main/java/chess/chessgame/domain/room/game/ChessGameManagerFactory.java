@@ -6,7 +6,7 @@ import chess.chessgame.domain.room.game.board.LoadBoardInitializer;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.game.statistics.ChessGameStatistics;
 import chess.converter.PiecesConverter;
-import chess.mysql.dao.dto.ChessGame;
+import chess.mysql.dao.dto.ChessGameDto;
 
 import static chess.chessgame.domain.room.game.board.piece.attribute.Color.WHITE;
 import static chess.converter.PiecesConverter.convertSquares;
@@ -27,12 +27,12 @@ public class ChessGameManagerFactory {
         return new NotStartedChessGameManager(id);
     }
 
-    public static ChessGameManager loadingGame(ChessGame chessGame) {
-        Board loadedBoard = LoadBoardInitializer.getBoard(convertSquares(chessGame.getPieces()));
-        if (chessGame.isRunning()) {
-            return new RunningGameManager(chessGame.getId(), loadedBoard, Color.of(chessGame.getNextTurn()));
+    public static ChessGameManager loadingGame(ChessGameDto chessGameDto) {
+        Board loadedBoard = LoadBoardInitializer.getBoard(convertSquares(chessGameDto.getPieces()));
+        if (chessGameDto.isRunning()) {
+            return new RunningGameManager(chessGameDto.getId(), loadedBoard, Color.of(chessGameDto.getNextTurn()));
         }
-        return createEndGame(chessGame.getId(), ChessGameStatistics.createNotStartGameResult(),
-                LoadBoardInitializer.getBoard(PiecesConverter.convertSquares(chessGame.getPieces())));
+        return createEndGame(chessGameDto.getId(), ChessGameStatistics.createNotStartGameResult(),
+                LoadBoardInitializer.getBoard(PiecesConverter.convertSquares(chessGameDto.getPieces())));
     }
 }

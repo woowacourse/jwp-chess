@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap');
+
+body {
+    background-color: BLACK;
+}
+
+h1 {
+    font-family: 'Zen Dots', cursive;
+    font-size: 3.5rem;
+}
+
+.imgg {
+    width: 60px;
+    display: inline;
+}
+
+#startBtn{
+    width: 100px;
+    height: 50px;
+}
+
+.text {
+    font-size: 1.5rem;
+    font-family: 'Zen Dots', cursive;
+}
+
+.rainbow {
+    background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 20%, #FC4F4F 40%, #00C0FF 60%, #FFCF00 80%, #FC4F4F 90%, #00C0FF 100%);
+    animation: slide 4s linear infinite;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.rainbow :hover{
+    background-image: linear-gradient(90deg, #ff8888 0%, #ffdda8 20%, #f9ff93 40%, #d5ffb5 60%, #b3fdff 80%, #FFCF00 90%, #00C0FF 100%);
+    animation: slide 10s linear infinite;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+@keyframes slide {
+    from {
+        background-position: -50vw;
+    }
+    to {
+        background-position: 50vw;
+    }
+}

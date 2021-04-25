@@ -68,15 +68,9 @@ public class ChessService {
     public ChessBoardDto chessBoardFromDB(final Long roomId) {
         StringChessBoardDto dbChessBoard = dbChessBoard(roomId);
         String currentTurn = chessRepository.showCurrentTurn(roomId);
-        Round round = new Round(ChessBoardFactory.loadBoard(dbChessBoard.getStringChessBoard()), currentTurn);
+        Round round = loadRoundFromDB(roomId);
         return new ChessBoardDto(round.getBoard(
                 ChessBoardFactory.loadBoard(dbChessBoard.getStringChessBoard())), currentTurn);
-    }
-
-    private Round loadRoundFromDB(final Long roomId) {
-        StringChessBoardDto dbChessBoard = dbChessBoard(roomId);
-        String currentTurn = chessRepository.showCurrentTurn(roomId);
-        return new Round(ChessBoardFactory.loadBoard(dbChessBoard.getStringChessBoard()), currentTurn);
     }
 
     private StringChessBoardDto dbChessBoard(final Long roomId) {
@@ -92,33 +86,6 @@ public class ChessService {
         return chessRepository.showAllRooms();
     }
 
-    public ScoreResponseDto scoreResponseDto(final Long roomId) {
-        PlayerDto playerDto = playerDto(roomId);
-        double whiteScore = playerDto.getWhitePlayer().calculateScore();
-        double blackScore = playerDto.getBlackPlayer().calculateScore();
-        Round round = loadRoundFromDB(roomId);
-        changeRoundToEnd(playerDto, round);
-        return new ScoreResponseDto(whiteScore, blackScore);
-    }
-
-    public PlayerDto playerDto(final Long roomId) {
-        Round round = loadRoundFromDB(roomId);
-        Player whitePlayer = round.getWhitePlayer();
-        Player blackPlayer = round.getBlackPlayer();
-        return new PlayerDto(whitePlayer, blackPlayer);
-    }
-
-    private void changeRoundToEnd(final PlayerDto playerDto, final Round round) {
-        if (isKingDead(playerDto)) {
-            round.changeToEnd();
-        }
-    }
-
-    private boolean isKingDead(final PlayerDto playerDto) {
-        return !(playerDto.getWhitePlayer().getPieces().isKing() &&
-                playerDto.getBlackPlayer().getPieces().isKing());
-    }
-
     public MoveResponseDto move(final MoveRequestDto moveRequestDto) {
         Queue<String> commands =
                 new ArrayDeque<>(Arrays.asList("move", moveRequestDto.getSource(), moveRequestDto.getTarget()));
@@ -126,6 +93,26 @@ public class ChessService {
         round.execute(commands);
         movePiece(moveRequestDto);
         return new MoveResponseDto(true);
+    }
+
+    private Round loadRoundFromDB(final Long roomId) {
+        StringChessBoardDto dbChessBoard = dbChessBoard(roomId);
+        String currentTurn = chessRepository.showCurrentTurn(roomId);
+        return Round.of(ChessBoardFactory.loadBoard(dbChessBoard.getStringChessBoard()), currentTurn);
+    }
+
+    public ScoreResponseDto scoreResponseDto(final Long roomId) {
+        PlayerDto playerDto = playerDto(roomId);
+        double whiteScore = playerDto.getWhitePlayer().calculateScore();
+        double blackScore = playerDto.getBlackPlayer().calculateScore();
+        return new ScoreResponseDto(whiteScore, blackScore);
+    }
+
+    private PlayerDto playerDto(final Long roomId) {
+        Round round = loadRoundFromDB(roomId);
+        Player whitePlayer = round.getWhitePlayer();
+        Player blackPlayer = round.getBlackPlayer();
+        return new PlayerDto(whitePlayer, blackPlayer);
     }
 
     public void movePiece(final MoveRequestDto moveRequestDto) {

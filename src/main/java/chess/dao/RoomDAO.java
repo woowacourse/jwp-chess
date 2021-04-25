@@ -15,8 +15,7 @@ import java.util.Objects;
 
 @Repository
 public class RoomDAO {
-    private static final int DEFAULT_BLACK_USER_ID = 1;
-    private static final int DEFAULT_WHITE_USER_ID = 2;
+    private static final String NO_USER = "no user";
     private static final int PLAYING_STATUS = 1;
     private static final int READY_STATUS = 2;
 
@@ -54,7 +53,7 @@ public class RoomDAO {
     private RowMapper<RoomDTO> mapper() {
         return (resultSet, rowNum) -> {
             int status = resultSet.getInt("status");
-            boolean playing = (status == 1);
+            boolean playing = (status == 1 || status == 2);
             return new RoomDTO(
                     resultSet.getInt("id"),
                     resultSet.getString("title"),
@@ -88,14 +87,22 @@ public class RoomDAO {
     }
 
     public String findBlackUserById(final String id) {
-        return jdbcTemplate.queryForObject("SELECT black_user FROM room WHERE id = ?",
-                String.class,
-                id);
+        try {
+            return jdbcTemplate.queryForObject("SELECT black_user FROM room WHERE id = ?",
+                    String.class,
+                    id);
+        } catch (DataAccessException e) {
+            return NO_USER;
+        }
     }
 
     public String findWhiteUserById(final String id) {
-        return jdbcTemplate.queryForObject("SELECT white_user FROM room WHERE id = ?",
-                String.class,
-                id);
+        try {
+            return jdbcTemplate.queryForObject("SELECT white_user FROM room WHERE id = ?",
+                    String.class,
+                    id);
+        } catch (DataAccessException e) {
+            return NO_USER;
+        }
     }
 }

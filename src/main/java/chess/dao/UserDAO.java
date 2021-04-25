@@ -10,15 +10,17 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class UserDAO {
+    public static final UserDTO UNKNOWN_USER = new UserDTO();
+
     private final JdbcTemplate jdbcTemplate;
 
     public UserDAO(final JdbcTemplate jdbcTemplate) {
@@ -96,18 +98,6 @@ public class UserDAO {
         } catch (DataAccessException e) {
             throw new InitialSettingDataException();
         }
-    }
-
-    public UserDTO createUser(final String playerId, final String password) {
-        String query = "INSERT INTO player (nickname, password) values (?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
-            ps.setString(1, playerId);
-            ps.setString(2, password);
-            return ps;
-        }, keyHolder);
-        return new UserDTO(Objects.requireNonNull(keyHolder.getKey()).intValue(), playerId);
     }
 
     public Optional<UserDTO> findByPlayerIdAndPassword(final String playerId, final String password) {

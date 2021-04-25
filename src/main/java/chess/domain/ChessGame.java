@@ -9,7 +9,6 @@ import chess.domain.position.Position;
 import chess.domain.position.Row;
 
 import java.util.List;
-import java.util.Map;
 
 public final class ChessGame {
     private Board board;
@@ -80,12 +79,5 @@ public final class ChessGame {
 
     public Team turn() {
         return currentTurn;
-    }
-
-    public boolean checkRightTurnTest(String value) {
-        if (value.equals("white")) {
-            return currentTurn.equals(Team.WHITE);
-        }
-        return currentTurn.equals(Team.BLACK);
     }
 }

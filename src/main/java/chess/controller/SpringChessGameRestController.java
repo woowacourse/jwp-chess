@@ -4,6 +4,7 @@ import chess.domain.ChessGame;
 import chess.dto.game.MoveDTO;
 import chess.dto.game.StatusDTO;
 import chess.dto.result.ResultDTO;
+import chess.dto.user.UserDTO;
 import chess.dto.user.UsersDTO;
 import chess.service.HistoryService;
 import chess.service.ResultService;
@@ -39,18 +40,15 @@ public class SpringChessGameRestController {
 
     @GetMapping(path = "/{roomId}/positions/{clickedSection}/turn")
     public ResponseEntity<Boolean> checkCurrentTurn(@PathVariable final String roomId, @PathVariable final String clickedSection,
-                                                    @CookieValue(value = "color", required = false) Cookie color,
-                                                    @CookieValue(value = "id", required = false) Cookie id,
-                                                    @CookieValue(value = "password", required = false) Cookie password) {
-        ChessGame chessGame = roomService.loadChessGameById(roomId);
-        if (chessGame.checkRightTurnTest(color.getValue())) {
-            System.out.println("### !error");
+                                                    @CookieValue(value = "id") Cookie id,
+                                                    @CookieValue(value = "password") Cookie password) {
+        UserDTO user = userService.getUser(id.getValue(), password.getValue());
+        if (!roomService.checkRightTurn(roomId, user, clickedSection)) {
             return ResponseEntity.status(OK)
-                    .body(true);
+                    .body(false);
         }
-        System.out.println("##error");
         return ResponseEntity.status(OK)
-                .body(false);
+                .body(true);
     }
 
     @GetMapping("/{roomId}/positions/{clickedSection}/movable-positions")

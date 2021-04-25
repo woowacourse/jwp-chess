@@ -4,12 +4,14 @@ import chess.dao.RoomDAO;
 import chess.dao.UserDAO;
 import chess.domain.ChessGame;
 import chess.domain.Rooms;
+import chess.domain.Team;
 import chess.dto.room.RoomDTO;
 import chess.dto.user.UserDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
+import static chess.dao.UserDAO.UNKNOWN_USER;
 
 @Service
 public final class RoomService {
@@ -39,12 +41,6 @@ public final class RoomService {
         roomDAO.allRoomIds().forEach(id -> rooms.addRoom(id, new ChessGame()));
     }
 
-    public void addNewRoom(final String id) {
-        ChessGame chessGame = new ChessGame();
-        chessGame.initialize();
-        rooms.addRoom(id, chessGame);
-    }
-
     public void addNewRoom(final Long id) {
         ChessGame chessGame = new ChessGame();
         chessGame.initialize();
@@ -71,13 +67,31 @@ public final class RoomService {
         roomDAO.joinBlackUser(roomId, blackUserId);
     }
 
-    public Optional<UserDTO> findBlackUserById(final String id) {
+    public UserDTO findBlackUserById(final String id) {
         String blackUserId = roomDAO.findBlackUserById(id);
-        return userDAO.findById(blackUserId);
+        return userDAO.findById(blackUserId)
+                .orElse(UNKNOWN_USER);
     }
 
-    public Optional<UserDTO> findWhiteUserById(final String id) {
+    public UserDTO findWhiteUserById(final String id) {
         String whiteUserId = roomDAO.findWhiteUserById(id);
-        return userDAO.findById(whiteUserId);
+        return userDAO.findById(whiteUserId)
+                .orElse(UNKNOWN_USER);
+    }
+
+    public boolean checkRightTurn(final String roomId, final UserDTO user, final String clickedSection) {
+        ChessGame chessGame = loadChessGameById(roomId);
+
+        if (UNKNOWN_USER.equals(user) || !chessGame.checkRightTurn(clickedSection)) {
+            return false;
+        }
+
+        Team turn = chessGame.turn();
+        if (Team.BLACK.equals(turn)) {
+            return roomDAO.findBlackUserById(roomId)
+                    .equals(Integer.toString(user.getId()));
+        }
+        return roomDAO.findWhiteUserById(roomId)
+                .equals(Integer.toString(user.getId()));
     }
 }

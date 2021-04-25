@@ -2,8 +2,11 @@ package chess.service;
 
 import chess.dao.UserDAO;
 import chess.dto.user.JoinUserDTO;
+import chess.dto.user.UserDTO;
 import chess.dto.user.UsersDTO;
 import org.springframework.stereotype.Service;
+
+import static chess.dao.UserDAO.UNKNOWN_USER;
 
 @Service
 public final class UserService {
@@ -63,5 +66,10 @@ public final class UserService {
     public void checkPassword(final String id, final String password) {
         userDAO.findPlayerByIdAndPassword(id, password)
                 .orElseThrow(IllegalStateException::new);
+    }
+
+    public UserDTO getUser(final String id, final String password) {
+        return userDAO.findByPlayerIdAndPassword(id, password)
+                .orElse(UNKNOWN_USER);
     }
 }

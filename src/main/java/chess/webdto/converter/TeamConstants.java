@@ -1,13 +1,13 @@
-package chess.webdto;
+package chess.webdto.converter;
 
-public class WordConstants {
+public class TeamConstants {
     public static final String WHITE = "white";
     public static final String BLACK = "black";
 
     public static String convert(boolean whiteTeamTurn) {
         if(whiteTeamTurn){
-            return WordConstants.WHITE;
+            return TeamConstants.WHITE;
         }
-        return WordConstants.BLACK;
+        return TeamConstants.BLACK;
     }
 }

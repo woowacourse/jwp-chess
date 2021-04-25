@@ -1,5 +1,6 @@
 package chess.webdao;
 
+import chess.webdto.converter.TeamInfoToDto;
 import chess.webdto.dao.BoardInfosDto;
 import chess.webdto.dao.TurnDto;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -51,6 +52,7 @@ public class MysqlChessDao implements ChessDao {
 
     @Override
     public long createRoom(String currentTurn, boolean isPlaying) {
+        // 이후, 방 추가용 코드
         //KeyHolder keyHolder = new GeneratedKeyHolder();
 
         String sql = "INSERT INTO room (turn, is_playing, name, room_id) VALUES (?, ?, ?, ?)";
@@ -69,11 +71,10 @@ public class MysqlChessDao implements ChessDao {
     }
 
     @Override
-    public void createBoard(String team, String position,
-                            String piece, boolean isFirstMoved, long roomId) {
+    public void createBoard(TeamInfoToDto teamInfoDto) {
         String sql = "INSERT INTO board (team, position, piece, is_first_moved, room_id) VALUES (?,?,?,?,?)";
 
-        this.jdbcTemplate.update(sql, team, position, piece, isFirstMoved, roomId);
+        this.jdbcTemplate.update(sql, teamInfoDto.getTeam(), teamInfoDto.getPosition(), teamInfoDto.getPiece(), teamInfoDto.getIsFirstMoved(), teamInfoDto.getRoomId());
     }
 
     private RowMapper<BoardInfosDto> boardInfoMapper = (resultSet, rowNumber) -> {

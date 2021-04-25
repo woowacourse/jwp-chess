@@ -1,7 +1,7 @@
 package chess.webdto.view;
 
 import chess.domain.ChessGame;
-import chess.webdto.WordConstants;
+import chess.webdto.converter.TeamConstants;
 
 public class ChessGameDto {
     private final TeamPiecesDto piecePositionByTeam;
@@ -11,7 +11,7 @@ public class ChessGameDto {
 
     public ChessGameDto(ChessGame chessGame){
         this.piecePositionByTeam = new TeamPiecesDto(chessGame);
-        this.currentTurnTeam = WordConstants.convert(chessGame.isWhiteTeamTurn());
+        this.currentTurnTeam = TeamConstants.convert(chessGame.isWhiteTeamTurn());
         this.teamScore = new ScoreDto(chessGame.calculateWhiteTeamScore(), chessGame.calculateBlackTeamScore());
         this.isPlaying = chessGame.isPlaying();
     }

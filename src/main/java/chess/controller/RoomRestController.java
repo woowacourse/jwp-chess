@@ -1,30 +1,27 @@
 package chess.controller;
 
 import chess.controller.dto.RoomDto;
-import chess.controller.dto.RoomInfoDto;
+import chess.service.PlayerService;
 import chess.service.RoomService;
 import chess.view.OutputView;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/room")
 public class RoomRestController {
     private final RoomService roomService;
+    private final PlayerService playerService;
 
-    public RoomRestController(final RoomService roomService) {
+    public RoomRestController(final RoomService roomService, final PlayerService playerService) {
         this.roomService = roomService;
+        this.playerService = playerService;
     }
 
     @PostMapping("/create")
@@ -46,7 +43,7 @@ public class RoomRestController {
     public ResponseEntity enterRoom(@PathVariable final long roomId,
                                     @RequestBody final String playerId,
                                     final HttpServletResponse response) {
-        roomService.enter(roomId, playerId);
+        playerService.enter(roomId, playerId);
         addCookie(response, "playerId", playerId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -4,7 +4,6 @@ import chess.controller.dto.GameInfoDto;
 import chess.domain.ChessGame;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
-import chess.domain.player.Turn;
 import chess.service.dao.GameDao;
 import chess.service.dao.RoomDao;
 import org.springframework.stereotype.Service;
@@ -17,12 +16,8 @@ public class GameService {
 
     private final GameDao gameDao;
 
-    // TODO :: roomDao 제거
-    private final RoomDao roomDao;
-
-    public GameService(final GameDao gameDao, final RoomDao roomDao) {
+    public GameService(final GameDao gameDao) {
         this.gameDao = gameDao;
-        this.roomDao = roomDao;
     }
 
     public void create(final long roomId) {

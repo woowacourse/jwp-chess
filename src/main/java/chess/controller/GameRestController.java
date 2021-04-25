@@ -4,7 +4,7 @@ import chess.controller.dto.ReachablePositionsDto;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
 import chess.service.GameService;
-import chess.service.RoomService;
+import chess.service.PlayerService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -14,18 +14,18 @@ import java.util.List;
 @RequestMapping("/game")
 public class GameRestController {
     private final GameService gameService;
-    private final RoomService roomService;
+    private final PlayerService playerService;
 
-    public GameRestController(final GameService gameService, final RoomService roomService) {
+    public GameRestController(final GameService gameService, final PlayerService playerService) {
         this.gameService = gameService;
-        this.roomService = roomService;
+        this.playerService = playerService;
     }
 
     @GetMapping("/reachable/{roomId}")
     public ReachablePositionsDto reachable(@PathVariable final Long roomId,
                                            @RequestParam final Position source,
                                            @CookieValue final String playerId) {
-        final Owner owner = roomService.ownerOfPlayer(roomId, playerId);
+        final Owner owner = playerService.ownerOfPlayer(roomId, playerId);
         final List<String> reachable = gameService.reachable(roomId, source, owner);
         return new ReachablePositionsDto(reachable);
     }

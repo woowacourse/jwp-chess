@@ -8,7 +8,6 @@ import chess.domain.player.Players;
 import chess.domain.player.Scores;
 import chess.domain.player.Turn;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

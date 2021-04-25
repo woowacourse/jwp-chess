@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class BoardDto {
-    public boolean gameOverFlag = false;
+    private boolean gameOverFlag = false;
     private Map<String, String> boardInfo = new HashMap<>();
 
     public BoardDto() {

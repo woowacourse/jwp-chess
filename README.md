@@ -23,7 +23,18 @@
 - [x] status를 입력하면 각 진영의 점수를 출력한다.
 - [x] status를 입력하면 각 진영의 승패 결과를 출력한다. 
 - [x] 각 말은 점수를 갖는다. 
-- [ ] 리팩토링 
+- [x] 리팩토링
+
+# web
+- [] Controller 테스트 작성
+- [] Repository 테스트 작성
+- [] Service 테스트 작성
+- [] h2 관련 테이블 생성 쿼리 리팩토링  
+- [] Spring Request 처리 과정 - 문서화
+- [] @RequestBody, @ResponseBody 역할? - 문서화
+- [] @ComponentScan과 빈 주입 방법? - 문서화
+## step3
+- [] ResponseBody
 
 ### 보드 객체 기능
 - [x] 말 움직이기 (move)

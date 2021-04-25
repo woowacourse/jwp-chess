@@ -32,8 +32,10 @@ public class SpringChessService {
     public ChessGameDto startNewGame() {
         chessDao.deleteBoardByRoomId(1);
         chessDao.deleteRoomByRoomId(1);
+
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
         chessDao.createRoom(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying());
+
         long roomId = 1;
         insertBoardInfos(chessGame, roomId);
         return new ChessGameDto(chessGame);
@@ -67,7 +69,6 @@ public class SpringChessService {
         List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(1);
 
         final ChessGame chessGame = new DaoToChessGame(turnDto, boardInfos).covertToChessGame();
-
         String startPosition = moveRequestDto.getStart();
         String destPosition = moveRequestDto.getDestination();
         chessGame.move(Position.of(startPosition), Position.of(destPosition));
@@ -75,6 +76,7 @@ public class SpringChessService {
         chessDao.deleteBoardByRoomId(1);
         chessDao.changeTurnByRoomId(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying(), 1);
         insertBoardInfos(chessGame, 1);
+
         return new ChessGameDto(chessGame);
     }
 

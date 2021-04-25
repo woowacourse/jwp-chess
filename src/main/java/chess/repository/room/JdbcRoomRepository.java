@@ -96,14 +96,14 @@ public class JdbcRoomRepository implements RoomRepository {
     }
 
     @Override
-    public boolean isExistRoomName(String roomName) {
+    public boolean roomExists(String roomName) {
         String sql = "SELECT COUNT(*) FROM rooms WHERE name = ?";
         int count = this.jdbcTemplate.queryForObject(
                 sql,
                 Integer.class,
                 roomName
         );
-        return count == 0;
+        return count > 0;
     }
 
     @Override

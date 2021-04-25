@@ -81,7 +81,7 @@ class JdbcRoomRepositoryTest {
     }
 
     @Test
-    void findRoomByRoomName() {
+    void findRoomByName() {
         // given
         Room room = new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
         long roomId = repository.insert(room);
@@ -99,11 +99,11 @@ class JdbcRoomRepositoryTest {
     }
 
     @Test
-    void isExistRoomName() {
+    void roomExists() {
         // given, when
-        long roomId = repository.insert(new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
+        long roomId = repository.insert(new Room(0, "테스트1", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
 
         // then
-        assertThat(repository.isExistRoomName("테스트")).isFalse();
+        assertThat(repository.roomExists("테스트1")).isTrue();
     }
 }

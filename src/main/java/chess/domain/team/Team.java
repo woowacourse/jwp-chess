@@ -7,21 +7,19 @@ import java.util.Map;
 
 public final class Team {
     private final PiecePositions piecePositions;
-    private final CapturedPieces capturedPieces;
     private final Score score;
 
-    public Team(final PiecePositions piecePositions, final CapturedPieces capturedPieces, final Score score) {
+    public Team(final PiecePositions piecePositions) {
         this.piecePositions = piecePositions;
-        this.capturedPieces = capturedPieces;
-        this.score = score;
+        this.score = new Score();
     }
 
     public static Team blackTeam() {
-        return new Team(PiecePositions.initBlackPosition(), new CapturedPieces(), new Score());
+        return new Team(PiecePositions.initBlackPosition());
     }
 
     public static Team whiteTeam() {
-        return new Team(PiecePositions.initWhitePosition(), new CapturedPieces(), new Score());
+        return new Team(PiecePositions.initWhitePosition());
     }
 
     public Piece choosePiece(final Position position) {
@@ -46,10 +44,6 @@ public final class Team {
 
     public void promotePiece(final Position position) {
         piecePositions.promote(position);
-    }
-
-    public void catchPiece(final Piece piece) {
-        capturedPieces.add(piece);
     }
 
     public double calculateScore() {

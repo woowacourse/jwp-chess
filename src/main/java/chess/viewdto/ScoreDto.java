@@ -1,4 +1,4 @@
-package chess.webdto;
+package chess.viewdto;
 
 public class ScoreDto {
     private Double white;

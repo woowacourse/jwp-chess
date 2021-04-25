@@ -1,6 +1,7 @@
-package chess.webdto;
+package chess.viewdto;
 
 import chess.domain.ChessGame;
+import chess.webdto.WordConstants;
 
 public class ChessGameDto {
     private final TeamPiecesDto piecePositionByTeam;

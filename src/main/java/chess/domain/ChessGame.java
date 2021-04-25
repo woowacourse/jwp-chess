@@ -88,7 +88,6 @@ public final class ChessGame {
         final Team enemyTeam = getEnemy();
         if (enemyTeam.havePiece(destination)) {
             final Piece enemyPiece = enemyTeam.deletePiece(destination);
-            currentTurnTeam.catchPiece(enemyPiece);
             finishIfKingIsCaught(enemyPiece);
         }
     }

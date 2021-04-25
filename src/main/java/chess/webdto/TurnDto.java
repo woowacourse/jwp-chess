@@ -1,19 +1,25 @@
 package chess.webdto;
 
 public class TurnDto {
-    private String current_turn_team;
-    private boolean is_playing;
+    private String turn;
+    private boolean isPlaying;
 
-    public TurnDto(String current_turn_team, boolean is_playing) {
-        this.current_turn_team = current_turn_team;
-        this.is_playing = is_playing;
+    public TurnDto(){
     }
 
-    public String getCurrentTurnTeam() {
-        return current_turn_team;
+    public void setTurn(String turn) {
+        this.turn = turn;
+    }
+
+    public void setIsPlaying (boolean isPlaying) {
+        this.isPlaying = isPlaying;
+    }
+
+    public String getTurn() {
+        return turn;
     }
 
     public boolean getIsPlaying() {
-        return is_playing;
+        return isPlaying;
     }
 }

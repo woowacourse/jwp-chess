@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.service.SpringChessService;
-import chess.webdto.ChessGameDto;
+import chess.viewdto.ChessGameDto;
 import chess.webdto.MoveRequestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class SpringChessController {
         this.springChessService = springChessService;
     }
 
-    @GetMapping
+    @PostMapping
     public ChessGameDto startNewGame() {
         return springChessService.startNewGame();
     }
@@ -30,10 +30,8 @@ public class SpringChessController {
     }
 
     @PostMapping(path = "/move")
-    public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDTO) {
-        final String start = moveRequestDTO.getStart();
-        final String destination = moveRequestDTO.getDestination();
-        return springChessService.move(start, destination);
+    public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDto) {
+        return springChessService.move(moveRequestDto);
     }
 
     @ExceptionHandler({IllegalArgumentException.class})

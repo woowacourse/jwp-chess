@@ -1,8 +1,9 @@
-package chess.webdto;
+package chess.viewdto;
 
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
+import chess.webdto.PieceDto;
 
 import java.util.HashMap;
 import java.util.Map;

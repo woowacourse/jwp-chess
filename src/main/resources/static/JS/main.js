@@ -20,11 +20,12 @@ async function renderRooms() {
         }
     }).then(res => {
         return res.json();
-    })
+    }).then(json => {
+        for (let i = 0; i < json.length; i++) {
+            renderRoom(json[i]);
+        }
+    });
 
-    for (let i = 0; i < response.length; i++) {
-        renderRoom(response[i]);
-    }
 }
 
 function initList() {
@@ -86,6 +87,7 @@ function getClickedRoom() {
     return null;
 }
 
+
 async function addRoom(event) {
     const roomName = event.target.value;
     if (event.key === "Enter" && roomName !== "") {
@@ -93,33 +95,30 @@ async function addRoom(event) {
             alert("방 이름은 한 글자 이상 열 글자 이하여야 합니다.")
             return;
         }
+        let data = {
+            roomName: roomName
+        }
 
-        const response = await fetch('/rooms/' + roomName + '/check', {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json'
+        try {
+            let response = await fetch('/rooms', {
+                method: 'post',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            let status = response.status;
+            event.target.value = '';
+
+            if (status === 500) {
+                response = await response.text();
+                alert(response);
             }
-        }).then(res => {
-            return res.json();
-        });
-        if (response.code === "SUCCEED") {
-            createRoom(roomName);
-        }
-        alert(response.message);
-        event.target.value = '';
-        renderRooms();
-    }
-}
+            await renderRooms();
 
-async function createRoom(roomName) {
-    let data = {
-        roomName: roomName
-    }
-    await fetch('/rooms', {
-        method: 'post',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
+        } catch (error) {
+            console.log(error);
         }
-    });
+    }
 }

@@ -101,6 +101,11 @@ async function move(from, to) {
         response = await response.text();
         alert(response);
     }
+
+    if (response.status === 500) {
+        response = await response.text();
+        alert(response);
+    }
 }
 
 function changeImage(sourcePosition, targetPosition) {
@@ -121,7 +126,7 @@ async function syncBoard() {
         }
     });
 
-    if (response.status === 400) {
+    if (response.status === 500) {
         response = await response.text();
         alert(response);
         window.location.href = "http://localhost:8080/";

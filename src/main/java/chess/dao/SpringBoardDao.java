@@ -6,14 +6,10 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
 import chess.exception.NotExistRoomException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -38,16 +34,17 @@ public class SpringBoardDao {
         this.jdbcTemplate.update(query, boardPositionSet(board.getBoard()), boardPieceSet(board.getBoard()), turn, roomName);
     }
 
-    public Board findBoard(String roomName) {
+    public Optional<Board> findBoard(String roomName) {
         String query = "select * from board where roomName=?";
-        try {
-            return this.jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> daoToBoard(
-                    resultSet.getString("position"),
-                    resultSet.getString("pieceName")
-            ), roomName);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotExistRoomException();
-        }
+
+        return this.jdbcTemplate.query(query,
+                (resultSet, rowNum) -> daoToBoard(
+                        resultSet.getString("position"),
+                        resultSet.getString("pieceName")
+                ),
+                roomName)
+                .stream()
+                .findAny();
     }
 
     public Side findTurn(String roomName) {
@@ -60,32 +57,6 @@ public class SpringBoardDao {
                 .stream()
                 .findAny()
                 .orElseThrow(NotExistRoomException::new);
-    }
-
-    private String boardPositionSet(Map<Position, Piece> board) {
-        return board.keySet()
-                .stream()
-                .map(Position::positionName)
-                .collect(Collectors.joining(COMMA));
-    }
-
-    private String boardPieceSet(Map<Position, Piece> board) {
-        List<String> pieceNames = new ArrayList<>();
-        for (Piece piece : board.values()) {
-            pieceNames.add(pieceToName(piece));
-        }
-        return String.join(COMMA, pieceNames);
-    }
-
-    private String pieceToName(Piece piece) {
-        String pieceName = piece.getInitial();
-        if (piece.side() == Side.WHITE) {
-            return "W" + pieceName.toUpperCase();
-        }
-        if (piece.side() == Side.BLACK) {
-            return "B" + pieceName.toUpperCase();
-        }
-        return pieceName;
     }
 
     public boolean checkDuplicateByRoomName(String roomName) {
@@ -115,5 +86,31 @@ public class SpringBoardDao {
             board.put(Position.from(position[i]), PieceFactory.createPieceByName(piece[i]));
         }
         return new Board(board);
+    }
+
+    private String boardPositionSet(Map<Position, Piece> board) {
+        return board.keySet()
+                .stream()
+                .map(Position::positionName)
+                .collect(Collectors.joining(COMMA));
+    }
+
+    private String boardPieceSet(Map<Position, Piece> board) {
+        List<String> pieceNames = new ArrayList<>();
+        for (Piece piece : board.values()) {
+            pieceNames.add(pieceToName(piece));
+        }
+        return String.join(COMMA, pieceNames);
+    }
+
+    private String pieceToName(Piece piece) {
+        String pieceName = piece.getInitial();
+        if (piece.side() == Side.WHITE) {
+            return "W" + pieceName.toUpperCase();
+        }
+        if (piece.side() == Side.BLACK) {
+            return "B" + pieceName.toUpperCase();
+        }
+        return pieceName;
     }
 }

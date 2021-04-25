@@ -10,6 +10,8 @@ import chess.dto.ResponseDto;
 import chess.dto.RoomValidateDto;
 import chess.dto.ScoreDto;
 import chess.exception.ChessException;
+import chess.exception.NotExistRoomException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -31,8 +33,8 @@ public class SpringChessService {
         this.springBoardDao = springBoardDao;
     }
 
-    public Map<String, String> currentBoardByRoomName(String roomName) throws ChessException {
-        Board board = springBoardDao.findBoard(roomName);
+    public Map<String, String> currentBoardByRoomName(String roomName) {
+        Board board = springBoardDao.findBoard(roomName).orElseThrow(NotExistRoomException::new);
         Map<String, String> boardName = new LinkedHashMap<>();
         for (Position position : board.getBoard().keySet()) {
             String positionName = position.positionName();
@@ -41,8 +43,8 @@ public class SpringChessService {
         return boardName;
     }
 
-    public ResponseDto move(PositionDto positionDTO, String roomName) throws ChessException {
-        Board board = springBoardDao.findBoard(roomName);
+    public ResponseDto move(PositionDto positionDTO, String roomName) {
+        Board board = springBoardDao.findBoard(roomName).orElseThrow(NotExistRoomException::new);
         return moveExecute(positionDTO, board, roomName);
     }
 
@@ -84,7 +86,8 @@ public class SpringChessService {
     }
 
     public ScoreDto score(String roomName) {
-        Board board = springBoardDao.findBoard(roomName);
+        Board board = springBoardDao.findBoard(roomName)
+                .orElseThrow(() -> new EmptyResultDataAccessException("방이 존재하지 않습니다.", 1));
         return new ScoreDto(String.valueOf(board.score(Side.WHITE)), String.valueOf(board.score(Side.BLACK)));
     }
 

@@ -18,7 +18,6 @@ public class PieceDto {
     private String y;
 
     public PieceDto(){
-
     }
 
     public PieceDto(Point point, Team team, Piece piece) {

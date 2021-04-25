@@ -11,7 +11,6 @@ import chess.dto.ScoreDto;
 import chess.exception.room.DuplicateRoomNameException;
 import chess.exception.room.NotExistRoomException;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -22,7 +21,6 @@ import java.util.Map;
 public class SpringChessService {
     private static final String SUCCEED_CODE = "SUCCEED";
     private static final String GAME_SET_CODE = "GAME_SET";
-    private static final String FAIL_CODE = "FAIL";
     private static final String WHITE = "W";
     private static final String BLACK = "B";
     private static final String BLANK = ".";

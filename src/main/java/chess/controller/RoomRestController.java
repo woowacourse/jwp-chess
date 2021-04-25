@@ -15,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 @RestController
@@ -30,15 +31,10 @@ public class RoomRestController {
     public long createRoom(@RequestBody @Valid final RoomDto roomDto,
                            final BindingResult bindingResult,
                            final HttpServletResponse response) {
-
-        if (bindingResult.hasErrors()) {
-            final String errorMsg = OutputView.getErrorMessage(bindingResult.getFieldErrors());
-            throw new IllegalArgumentException(errorMsg);
-        }
-
-        final Long roomId = roomService.save(roomDto.getRoomName(), roomDto.getPlayer1());
-        addCookie(response, "playerId", roomId);
-        return roomId;
+        handleBindingResult(bindingResult);
+        addCookie(response, "playerId", roomDto.getPlayer1());
+        System.out.println("playerId" + roomDto.getPlayer1() );
+        return roomService.save(roomDto.getRoomName(), roomDto.getPlayer1());
     }
 
     @DeleteMapping("/{roomId}")
@@ -52,13 +48,21 @@ public class RoomRestController {
                                     @RequestBody final String playerId,
                                     final HttpServletResponse response){
         roomService.enter(roomId, playerId);
-        addCookie(response, "playerId", roomId);
+        addCookie(response, "playerId", playerId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private void addCookie(final HttpServletResponse response, final String name, final Object value){
-        final Cookie playerIdCookie = new Cookie(name, (String) value);
+    private void addCookie(final HttpServletResponse response, final String name, final String value){
+        final Cookie playerIdCookie = new Cookie(name, value);
         playerIdCookie.setMaxAge(60 * 5);
+        playerIdCookie.setPath("/");
         response.addCookie(playerIdCookie);
+    }
+
+    private void handleBindingResult(final BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            final String errorMsg = OutputView.getErrorMessage(bindingResult.getFieldErrors());
+            throw new IllegalArgumentException(errorMsg);
+        }
     }
 }

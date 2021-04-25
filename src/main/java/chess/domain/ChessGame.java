@@ -35,18 +35,18 @@ public class ChessGame {
     }
 
     public void move(final Position source, final Position target) {
-        validateTurn(source);
+        validateTurn(players.ownerOf(source));
         board.movePiece(source, target);
         players.move(source, target);
         isGameEnd = players.anyKingDead(board);
         changeTurn();
     }
 
-    public void validateTurn(final Position source) {
-        turn.validate(players.ownerOf(source));
+    public void validateTurn(final Owner owner) {
+        turn.validate(owner);
     }
 
-    public void changeTurn() {
+    private void changeTurn() {
         turn = turn.change();
     }
 
@@ -55,12 +55,9 @@ public class ChessGame {
     }
 
     public List<String> reachablePositions(final Position source) {
-        if (turn.is(players.ownerOf(source))) {
-            return board.reachablePositions(source).stream()
-                    .map(position -> position.parseAsString())
-                    .collect(Collectors.toList());
-        }
-        return Collections.EMPTY_LIST;
+        return board.reachablePositions(source).stream()
+                .map(position -> position.parseAsString())
+                .collect(Collectors.toList());
     }
 
     public Board board() {

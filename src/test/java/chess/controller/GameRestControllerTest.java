@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.domain.board.position.Position;
+import chess.domain.piece.Owner;
 import chess.service.GameService;
 import chess.service.RoomService;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +45,7 @@ class GameRestControllerTest {
     @DisplayName("갈 수 있는 위치 리스트 반환 테스트")
     @Test
     public void reachable(){
-        final List<String> reachable = gameService.reachable(testRoomId, new Position("a2"));
+        final List<String> reachable = gameService.reachable(testRoomId, new Position("a2"), Owner.WHITE);
         assertThat(reachable).contains("a3").contains("a4");
     }
 

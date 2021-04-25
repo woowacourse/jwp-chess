@@ -1,5 +1,6 @@
 package chess.service.dao;
 
+import chess.controller.dto.RoomDto;
 import chess.controller.dto.RoomInfoDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -7,6 +8,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,7 +49,7 @@ public class RoomDao {
         jdbcTemplate.update("DELETE FROM room WHERE id = ?", roomId);
     }
 
-    public List<RoomInfoDto> load() {
+    public List<RoomInfoDto> loadRooms() {
         return jdbcTemplate.query( "SELECT * FROM room", (rs, rowNum) ->
                 new RoomInfoDto(rs.getLong(COLUMN_INDEX_OF_ID), rs.getString(COLUMN_INDEX_OF_NAME)
         ));
@@ -56,22 +58,6 @@ public class RoomDao {
     public String name(final long roomId) {
         final String query = "SELECT room_name FROM room WHERE id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
-    }
-
-    public boolean isJoined(final long roomId, final String player){
-        final String player1 = player1(roomId);
-        final String player2 = player2(roomId);
-
-        final boolean isPlayer1 = !Objects.isNull(player1) && player1.equals(player);
-        final boolean isPlayer2 = !Objects.isNull(player2) && player2.equals(player);
-
-        return isPlayer1 || isPlayer2;
-    }
-
-    public boolean isFull(long roomId) {
-        final String player1 = player1(roomId);
-        final String player2 = player2(roomId);
-        return !Objects.isNull(player1) && !Objects.isNull(player2);
     }
 
     public void enter(final long roomId, final String playerId) {
@@ -87,5 +73,28 @@ public class RoomDao {
     private String player2(final long roomId) {
         final String query = "SELECT player2 FROM room WHERE id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
+    }
+
+    // TODO :: RoomDTO 생성자로 속성 주입
+    public RoomDto roomInfo(final long roomId){
+        final RoomDto roomDto = new RoomDto();
+        roomDto.setRoomName(name(roomId));
+        roomDto.setPlayer1(player1(roomId));
+        roomDto.setPlayer2(player2(roomId));
+        return roomDto;
+    }
+
+    public List<String> players(final long roomId) {
+        final List<String> players = new ArrayList<>();
+        addIfExist(players, player1(roomId));
+        addIfExist(players, player2(roomId));
+        return players;
+    }
+
+    private void addIfExist(final List<String> players, final String player){
+        if(Objects.isNull(player)){
+            return;
+        }
+        players.add(player);
     }
 }

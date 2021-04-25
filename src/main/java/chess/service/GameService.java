@@ -4,7 +4,9 @@ import chess.controller.dto.GameInfoDto;
 import chess.domain.ChessGame;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
+import chess.domain.player.Turn;
 import chess.service.dao.GameDao;
+import chess.service.dao.RoomDao;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -15,8 +17,12 @@ public class GameService {
 
     private final GameDao gameDao;
 
-    public GameService(GameDao gameDao) {
+    // TODO :: roomDao 제거
+    private final RoomDao roomDao;
+
+    public GameService(final GameDao gameDao, final RoomDao roomDao) {
         this.gameDao = gameDao;
+        this.roomDao = roomDao;
     }
 
     public void create(final long roomId) {
@@ -28,9 +34,10 @@ public class GameService {
         gameDao.delete(roomId);
     }
 
-    public List<String> reachable(final long roomId, final Position source) {
+    public List<String> reachable(final long roomId, final Position source, final Owner owner) {
         try {
             final ChessGame chessGame = gameDao.load(roomId);
+            chessGame.validateTurn(owner);
             return chessGame.reachablePositions(source);
         } catch (IllegalArgumentException exception) {
             return Collections.EMPTY_LIST;

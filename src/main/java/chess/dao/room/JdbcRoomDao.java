@@ -6,6 +6,7 @@ import chess.domain.gamestate.State;
 import chess.domain.team.Team;
 import chess.utils.BoardUtil;
 import java.sql.PreparedStatement;
+import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -80,6 +81,21 @@ public class JdbcRoomDao implements RoomDao {
                         )
                 ,
                 roomName
+        );
+    }
+
+    @Override
+    public List<Room> findAll() {
+        String sql = "SELECT * FROM rooms";
+        return this.jdbcTemplate.query(
+            sql,
+            (rs, rowNum) ->
+                new Room(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    State.generateState(rs.getString("state"), Board.EMPTY_BOARD),
+                    Team.of(rs.getString("currentteam"))
+                )
         );
     }
 

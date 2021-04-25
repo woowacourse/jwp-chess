@@ -1,6 +1,7 @@
 package chess.dao.room;
 
 import chess.domain.game.Room;
+import java.util.List;
 
 public interface RoomDao {
 
@@ -10,9 +11,11 @@ public interface RoomDao {
 
     Room findRoomByName(String name);
 
-    boolean isExistName(String name);
-
     Room findRoomById(long roomId);
+
+    List<Room> findAll();
+
+    boolean isExistName(String name);
 
     void deleteAll();
 }

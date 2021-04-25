@@ -65,6 +65,11 @@ public class RoomRepositoryImpl implements RoomRepository {
     }
 
     @Override
+    public List<Room> findAll() {
+        return roomDao.findAll();
+    }
+
+    @Override
     public void save(Room room) {
         roomDao.update(room);
     }

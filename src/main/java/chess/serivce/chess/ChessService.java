@@ -79,6 +79,14 @@ public class ChessService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public List<RoomDto> findAll() {
+        return roomRepository.findAll()
+            .stream()
+            .map(room -> RoomDto.from(room))
+            .collect(Collectors.toList());
+    }
+
     public RoomDto createRoom(String roomName) {
         if (!roomRepository.exists(roomName)) {
             throw new DuplicateRoomException("[ERROR] 이미 존재하는 방입니다. 다른 이름을 사용해주세요.");

@@ -9,6 +9,7 @@ import chess.exception.BusinessException;
 import chess.exception.ErrorCode;
 import chess.serivce.chess.ChessService;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,11 @@ public class RoomController {
 
     public RoomController(final ChessService service) {
         this.service = service;
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<ApiResult> roomList() {
+        return ResponseEntity.ok().body(ApiResult.of(service.findAll()));
     }
 
     @PostMapping("/{name}")

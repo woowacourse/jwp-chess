@@ -1,12 +1,13 @@
 package chess.webdto.dao;
 
-public class BoardInfosDto {
+public class TeamInfoDto {
     private String team;
     private String position;
     private String piece;
     private boolean isFirstMoved;
+    private long roomId;
 
-    public BoardInfosDto() {
+    public TeamInfoDto() {
     }
 
     public String getTeam() {
@@ -37,7 +38,17 @@ public class BoardInfosDto {
         return isFirstMoved;
     }
 
-    public void setIsFirstMoved(boolean isFirstMoved) {
-        this.isFirstMoved = isFirstMoved;
+    public void setIsFirstMoved(boolean firstMoved) {
+        isFirstMoved = firstMoved;
     }
+
+    public long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
+    }
+
+
 }

@@ -21,7 +21,7 @@ public class DaoToChessGame {
         this.boardInfos = boardInfos;
     }
 
-    public ChessGame covertToChessGame(){
+    public ChessGame covertToChessGame() {
         Map<Position, Piece> whites = new HashMap<>();
         Map<Position, Piece> blacks = new HashMap<>();
         for (BoardInfosDto boardInfo : boardInfos) {

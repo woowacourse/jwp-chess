@@ -1,18 +1,17 @@
 package chess.service;
 
-import chess.webdto.converter.DaoToChessGame;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.domain.team.Team;
+import chess.webdao.ChessDao;
+import chess.webdto.converter.DaoToChessGame;
 import chess.webdto.converter.TeamConstants;
 import chess.webdto.converter.TeamInfoToDto;
 import chess.webdto.dao.BoardInfosDto;
-import chess.webdto.dao.PieceDto;
 import chess.webdto.dao.TurnDto;
 import chess.webdto.view.ChessGameDto;
 import chess.webdto.view.MoveRequestDto;
-import chess.webdao.ChessDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,12 +42,12 @@ public class SpringChessService {
     private void insertBoardInfos(ChessGame chessGame, long roomId) {
         Map<Position, Piece> whites = chessGame.currentWhitePiecePosition();
         for (Map.Entry<Position, Piece> whiteInfo : whites.entrySet()) {
-            chessDao.createBoard(new TeamInfoToDto(TeamConstants.WHITE, whiteInfo, roomId));
+            chessDao.createBoard(new TeamInfoToDto(TeamConstants.WHITE, whiteInfo, roomId).convertToTeamInfoDto());
         }
 
         Map<Position, Piece> blacks = chessGame.currentBlackPiecePosition();
         for (Map.Entry<Position, Piece> blackInfo : blacks.entrySet()) {
-            chessDao.createBoard(new TeamInfoToDto(TeamConstants.BLACK, blackInfo, roomId));
+            chessDao.createBoard(new TeamInfoToDto(TeamConstants.BLACK, blackInfo, roomId).convertToTeamInfoDto());
         }
     }
 

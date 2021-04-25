@@ -3,65 +3,34 @@ package chess.webdto.converter;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.webdto.dao.PieceDto;
+import chess.webdto.dao.TeamInfoDto;
 
 import java.util.Map;
 
 public class TeamInfoToDto {
     private String team;
-    private String position;
-    private String piece;
-    private boolean isFirstMoved;
+    private Map.Entry<Position, Piece> infos;
     private long roomId;
 
-    public TeamInfoToDto(){
+    public TeamInfoToDto() {
     }
 
     public TeamInfoToDto(String team, Map.Entry<Position, Piece> infos, long roomId) {
         this.team = team;
-        this.position = infos.getKey().getPositionInitial();
-        this.piece = convert(infos.getValue());
-        this.isFirstMoved =infos.getValue().isFirstMove();
+        this.infos = infos;
         this.roomId = roomId;
     }
 
-    public void setTeam(String team) {
-        this.team = team;
-    }
+    public TeamInfoDto convertToTeamInfoDto() {
+        TeamInfoDto teamInfoDto = new TeamInfoDto();
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
+        teamInfoDto.setTeam(team);
+        teamInfoDto.setPosition(infos.getKey().getPositionInitial());
+        teamInfoDto.setPiece(convert(infos.getValue()));
+        teamInfoDto.setIsFirstMoved(infos.getValue().isFirstMove());
+        teamInfoDto.setRoomId(roomId);
 
-    public void setPiece(String piece) {
-        this.piece = piece;
-    }
-
-    public void setIsFirstMoved(boolean firstMoved) {
-        isFirstMoved = firstMoved;
-    }
-
-    public void setRoomId(long roomId) {
-        this.roomId = roomId;
-    }
-
-    public String getTeam() {
-        return team;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public String getPiece() {
-        return piece;
-    }
-
-    public boolean getIsFirstMoved() {
-        return isFirstMoved;
-    }
-
-    public long getRoomId() {
-        return roomId;
+        return teamInfoDto;
     }
 
     private String convert(Piece value) {

@@ -13,9 +13,14 @@ public class TeamPiecesDto {
     private Map<String, String> white;
     private Map<String, String> black;
 
-    public TeamPiecesDto(ChessGame chessGame){
+    public TeamPiecesDto(ChessGame chessGame) {
         white = convert(chessGame.currentWhitePiecePosition());
         black = convert(chessGame.currentBlackPiecePosition());
+    }
+
+    public TeamPiecesDto(Map<String, String> white, Map<String, String> black) {
+        this.white = white;
+        this.black = black;
     }
 
     private Map<String, String> convert(Map<Position, Piece> piecePosition) {
@@ -27,11 +32,6 @@ public class TeamPiecesDto {
             piecePositionConverted.put(positionInitial, pieceString);
         }
         return piecePositionConverted;
-    }
-
-    public TeamPiecesDto(Map<String, String> white, Map<String, String> black) {
-        this.white = white;
-        this.black = black;
     }
 
     public Map<String, String> getWhite() {

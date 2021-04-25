@@ -9,7 +9,7 @@ public class ChessGameDto {
     private final ScoreDto teamScore;
     private final boolean isPlaying;
 
-    public ChessGameDto(ChessGame chessGame){
+    public ChessGameDto(ChessGame chessGame) {
         this.piecePositionByTeam = new TeamPiecesDto(chessGame);
         this.currentTurnTeam = TeamConstants.convert(chessGame.isWhiteTeamTurn());
         this.teamScore = new ScoreDto(chessGame.calculateWhiteTeamScore(), chessGame.calculateBlackTeamScore());

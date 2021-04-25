@@ -1,7 +1,7 @@
 package chess.webdao;
 
-import chess.webdto.converter.TeamInfoToDto;
 import chess.webdto.dao.BoardInfosDto;
+import chess.webdto.dao.TeamInfoDto;
 import chess.webdto.dao.TurnDto;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public interface ChessDao {
 
     long createRoom(String currentTurn, boolean isPlaying);
 
-    void createBoard(TeamInfoToDto teamInfoDto);
+    void createBoard(TeamInfoDto teamInfoDto);
 
     List<BoardInfosDto> selectBoardInfosByRoomId(int i);
 }

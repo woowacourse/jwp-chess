@@ -3,25 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="/css/style.css">
-  <title>체스</title>
+  <title>체스게임!</title>
 </head>
 <body>
-<div id="game_screen_wrap">
-  <div id="game_screen">
-    <span id="room_name"></span>
-    <table id="chess_board"></table>
-    <div>
-      <button class="btn" id="end">게임 종료</button>
-      <button class="btn" id="lobby">로비 화면</button>
-    </div>
-    <div>
-      <span id="current_turn"></span>
-      <span id="black_score"></span>
-      <span id="white_score"></span>
-      <span id="winner"></span>
-    </div>
+<div id="main_screen">
+  <button class="btn" id="create">게임 생성</button>
+  <div id="room_table">
+    <h1>현재 생성된 게임들: </h1>
   </div>
 </div>
-<script type="module" src="/js/App.js"></script>
+<script type="module" src="/js/Main.js"></script>
 </body>
 </html>

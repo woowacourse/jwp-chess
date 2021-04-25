@@ -9,11 +9,11 @@ public class IndexController {
 
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
     public String mainScreen() {
-        return "main.html";
+        return "index.html";
     }
 
     @GetMapping(value = "/room/{name}")
     public String chessScreen() {
-        return "/index.html";
+        return "/room.html";
     }
 }

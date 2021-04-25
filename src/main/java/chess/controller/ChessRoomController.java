@@ -37,14 +37,13 @@ public class ChessRoomController {
     }
 
     @GetMapping(value = "/{name}/end")
-    public ResponseEntity<MoveResponseDto> endRoom(@PathVariable("name") String roomName) throws SQLException {
+    public ResponseEntity<MoveResponseDto> endRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.end(roomName);
         return ResponseEntity.ok().body(result);
     }
 
     @PostMapping(value = "/{name}/move")
-    public ResponseEntity<MoveResponseDto> move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto)
-            throws SQLException {
+    public ResponseEntity<MoveResponseDto> move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto) {
         MoveResponseDto result = service.move(roomName, moveRequestDto.getSource(),
                 moveRequestDto.getTarget());
         return ResponseEntity.ok().body(result);

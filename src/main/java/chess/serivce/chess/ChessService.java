@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChessService {
 
     private final RoomRepository roomRepository;
-
     private final PieceRepository pieceRepository;
 
     public ChessService(final RoomRepository roomRepository,

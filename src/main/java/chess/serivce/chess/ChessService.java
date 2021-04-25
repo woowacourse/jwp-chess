@@ -5,7 +5,6 @@ import chess.domain.dto.PieceDto;
 import chess.domain.dto.RoomDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.domain.game.Room;
-import chess.domain.piece.Piece;
 import chess.domain.repository.room.RoomRepository;
 import chess.exception.domain.DuplicateRoomException;
 import java.util.List;

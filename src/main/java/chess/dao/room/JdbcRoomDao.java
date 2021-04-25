@@ -4,7 +4,6 @@ import chess.domain.board.Board;
 import chess.domain.game.Room;
 import chess.domain.gamestate.State;
 import chess.domain.team.Team;
-import chess.utils.BoardUtil;
 import java.sql.PreparedStatement;
 import java.util.List;
 import javax.sql.DataSource;

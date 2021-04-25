@@ -1,5 +1,7 @@
 package chess.domain.repository.room;
 
+import chess.dao.piece.PieceDao;
+import chess.dao.room.RoomDao;
 import chess.domain.board.Board;
 import chess.domain.game.Room;
 import chess.domain.gamestate.State;
@@ -7,8 +9,6 @@ import chess.domain.gamestate.running.Ready;
 import chess.domain.location.Location;
 import chess.domain.piece.Piece;
 import chess.domain.team.Team;
-import chess.dao.piece.PieceDao;
-import chess.dao.room.RoomDao;
 import chess.exception.domain.NotFoundException;
 import chess.utils.BoardUtil;
 import java.util.List;

@@ -1,17 +1,11 @@
 package chess.controller.chess;
 
-import chess.controller.ApiError;
 import chess.controller.ApiResult;
 import chess.domain.dto.RoomDto;
 import chess.domain.dto.move.MoveRequestDto;
 import chess.domain.dto.move.MoveResponseDto;
-import chess.exception.BusinessException;
-import chess.exception.ErrorCode;
 import chess.serivce.chess.ChessService;
-import org.springframework.dao.DataAccessException;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

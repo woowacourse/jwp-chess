@@ -9,17 +9,14 @@ import chess.domain.chessgame.ChessGame;
 import chess.domain.chessgame.ScoreBoard;
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
-import chess.dto.web.PieceDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-
 
 @JdbcTest
 public class SpringPlayLogDaoTest {
@@ -33,11 +30,13 @@ public class SpringPlayLogDaoTest {
 
     @BeforeEach
     void setUp() throws JsonProcessingException {
-        jdbcTemplate.update("TRUNCATE TABLE play_log");
+        Board board = new Board();
+        ChessGame chessGame = new ChessGame(board);
+        chessGame.start();
 
         jdbcTemplate.update("INSERT INTO play_log (board, game_status, room_id) VALUES (?, ?, ?)",
-            OBJECT_MAPPER.writeValueAsString(new BoardDto(new Board())),
-            OBJECT_MAPPER.writeValueAsString(new GameStatusDto(new ChessGame(new Board()))),
+            OBJECT_MAPPER.writeValueAsString(new BoardDto(board)),
+            OBJECT_MAPPER.writeValueAsString(new GameStatusDto(chessGame)),
             "1");
 
         springPlayLogDao = new SpringPlayLogDao(OBJECT_MAPPER, jdbcTemplate);
@@ -48,12 +47,12 @@ public class SpringPlayLogDaoTest {
     void latestBoard() {
         BoardDto boardDto = springPlayLogDao.latestBoard("1");
 
-        List<PieceDto> expectedBoard = new BoardDto(new Board()).getBoard();
-        List<PieceDto> actualBoard = boardDto.getBoard();
+        Board board = new Board();
+        ChessGame chessGame = new ChessGame(board);
+        chessGame.start();
 
-        assertThat(actualBoard).hasSize(expectedBoard.size());
-        assertThat(actualBoard).usingRecursiveFieldByFieldElementComparator()
-            .containsAll(expectedBoard);
+        assertThat(new BoardDto(board)).usingRecursiveComparison()
+            .isEqualTo(boardDto);
     }
 
     @DisplayName("해당 방의 최근 게임 상태 조회")
@@ -61,8 +60,11 @@ public class SpringPlayLogDaoTest {
     void latestGameStatus() {
         GameStatusDto gameStatusDto = springPlayLogDao.latestGameStatus("1");
 
+        ChessGame chessGame = new ChessGame(new Board());
+        chessGame.start();
+
         assertThat(gameStatusDto).usingRecursiveComparison()
-            .isEqualTo(new GameStatusDto(new ChessGame(new Board())));
+            .isEqualTo(new GameStatusDto(chessGame));
     }
 
     @DisplayName("플레이 기록 추가")
@@ -76,7 +78,6 @@ public class SpringPlayLogDaoTest {
         ChessGame chessGame = new ChessGame(gameStatusDto.toTurnEntity(), new ScoreBoard(board),
             gameStatusDto.toGameStateEntity(board));
 
-        chessGame.start();
         chessGame.move(Point.of("a2"), Point.of("a4"));
 
         springPlayLogDao.insert(new BoardDto(board), new GameStatusDto(chessGame), "1");

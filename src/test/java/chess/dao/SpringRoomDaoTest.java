@@ -22,8 +22,6 @@ public class SpringRoomDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("TRUNCATE TABLE room");
-
         jdbcTemplate.execute(
             "INSERT INTO room (id, name, is_opened, white, black) VALUES (1, 'room1', true, 'white1', 'black1')");
         jdbcTemplate.execute(

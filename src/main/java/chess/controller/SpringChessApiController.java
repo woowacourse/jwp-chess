@@ -35,7 +35,7 @@ public class SpringChessApiController {
     }
 
     @PutMapping
-    private ResponseEntity<Object> closeRoom(@RequestBody RoomDto roomDto) {
+    private ResponseEntity<Void> closeRoom(@RequestBody RoomDto roomDto) {
         chessService.close(roomDto.getId());
         return ResponseEntity.ok().build();
     }

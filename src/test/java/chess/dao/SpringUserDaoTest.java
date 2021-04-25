@@ -22,9 +22,6 @@ public class SpringUserDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("TRUNCATE TABLE `user`");
-        jdbcTemplate.execute("TRUNCATE TABLE room");
-
         jdbcTemplate.execute("INSERT INTO `user` (name) VALUES ('white')");
         jdbcTemplate.execute("INSERT INTO `user` (name) VALUES ('black')");
         jdbcTemplate.execute(

@@ -2,7 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.Side;
 import chess.domain.position.Position;
-import chess.exception.InvalidMovementException;
+import chess.exception.chessgame.InvalidMovementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

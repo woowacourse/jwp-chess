@@ -7,7 +7,7 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.PositionDto;
 import chess.dto.ResponseDto;
-import chess.exception.ChessException;
+import chess.exception.chessgame.ChessException;
 
 import java.sql.SQLException;
 import java.util.LinkedHashMap;

@@ -1,9 +1,8 @@
 package chess.controller;
 
-import chess.exception.ChessException;
+import chess.exception.chessgame.ChessException;
+import chess.exception.room.RoomException;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,17 +13,12 @@ public class ChessExceptionAdvice {
 
     @ExceptionHandler(ChessException.class)
     public ResponseEntity<String> handleChessException(ChessException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<String> handleEmptyResultException(EmptyResultDataAccessException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
-
-    @ExceptionHandler(DuplicateKeyException.class)
-    public ResponseEntity<Object> handleDuplicateException() {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("중복된 이름의 방이 있습니다.");
+    @ExceptionHandler(RoomException.class)
+    public ResponseEntity<Object> handleNotExistRoomException(RoomException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
     @ExceptionHandler(DataAccessException.class)

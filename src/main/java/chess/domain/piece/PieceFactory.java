@@ -1,7 +1,7 @@
 package chess.domain.piece;
 
 import chess.domain.Side;
-import chess.exception.ChessException;
+import chess.exception.chessgame.ChessException;
 
 public class PieceFactory {
 

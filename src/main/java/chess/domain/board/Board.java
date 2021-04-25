@@ -7,8 +7,8 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import chess.exception.InvalidCommandException;
-import chess.exception.InvalidMovementException;
+import chess.exception.chessgame.InvalidCommandException;
+import chess.exception.chessgame.InvalidMovementException;
 
 import java.util.Collections;
 import java.util.List;

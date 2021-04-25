@@ -2,8 +2,8 @@ package chess.domain.piece;
 
 import chess.domain.Side;
 import chess.domain.position.Position;
-import chess.exception.InvalidMethodCallException;
-import chess.exception.InvalidMovementException;
+import chess.exception.chessgame.InvalidMethodCallException;
+import chess.exception.chessgame.InvalidMovementException;
 
 import java.util.List;
 import java.util.Locale;

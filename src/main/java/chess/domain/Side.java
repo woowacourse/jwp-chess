@@ -1,6 +1,6 @@
 package chess.domain;
 
-import chess.exception.ChessException;
+import chess.exception.chessgame.ChessException;
 
 import java.util.Arrays;
 

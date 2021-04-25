@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -36,11 +37,12 @@ class SpringChessGameDaoTest {
 
     @Test
     void loadGameRooms() {
-        springChessGameDao.createGameRoom("test2");
-        springChessGameDao.createGameRoom("test3");
-        springChessGameDao.createGameRoom("test4");
         final List<GameRoomDto> gameRoomDtos = springChessGameDao.loadGameRooms();
-        assertThat(gameRoomDtos.size()).isEqualTo(4);
+        final Optional<GameRoomDto> test1 = gameRoomDtos.stream()
+                .filter(gameRoomDto -> gameRoomDto.getRoomId() == testRoomNumber)
+                .filter(gameRoomDto -> gameRoomDto.getRoomName().equals("test1"))
+                .findFirst();
+        assertThat(test1.isPresent()).isTrue();
     }
 
     @Test

@@ -28,8 +28,8 @@ function showRoomStatus(data) {
 }
 
 function showRoom(room) {
-    let id = room.game_id;
-    let name = room.room_name;
+    let id = room.roomId;
+    let name = room.roomName;
     let chessRoom = document.createElement('div');
     chessRoom.setAttribute("class", "chessRoom");
     chessRoom.setAttribute("id", id);

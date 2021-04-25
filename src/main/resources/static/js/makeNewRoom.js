@@ -41,8 +41,8 @@ function checkAvailableRoom(userInputRoomName) {
 }
 
 function makeRoomAPIRequest(data) {
-    let id = data.game_id;
-    let room_name = data.room_name;
+    let id = data.roomId;
+    let room_name = data.roomName;
 
     const postOption = {
         method: 'POST',

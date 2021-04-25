@@ -1,19 +1,19 @@
 package chess.webdto;
 
 public class GameRoomDto {
-    private final int game_id;
-    private final String room_name;
+    private final int roomId;
+    private final String roomName;
 
-    public GameRoomDto(int game_id, String room_name) {
-        this.game_id = game_id;
-        this.room_name = room_name;
+    public GameRoomDto(int roomId, String roomName) {
+        this.roomId = roomId;
+        this.roomName = roomName;
     }
 
-    public int getGame_id() {
-        return game_id;
+    public int getRoomId() {
+        return roomId;
     }
 
-    public String getRoom_name() {
-        return room_name;
+    public String getRoomName() {
+        return roomName;
     }
 }

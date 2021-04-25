@@ -1,7 +1,6 @@
 package chess.service;
 
 import chess.domain.piece.Color;
-import chess.domain.position.Position;
 import chess.dto.NewGameDto;
 import chess.dto.RunningGameDto;
 import org.junit.jupiter.api.AfterEach;
@@ -64,7 +63,7 @@ class ChessGameServiceTest {
         int gameId = chessGameService.createNewGame().getGameId();
 
         // when
-        RunningGameDto runningGameDto = chessGameService.move(gameId, Position.of("a2"), Position.of("a4"));
+        RunningGameDto runningGameDto = chessGameService.move(gameId, "a2", "a4");
 
         // then
         assertThat(runningGameDto.getChessBoard().get("a4")).isNotNull();

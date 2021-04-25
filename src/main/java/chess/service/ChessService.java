@@ -14,16 +14,15 @@ import chess.dto.PiecesDto;
 import chess.dto.PlayerDto;
 import chess.dto.StringChessBoardDto;
 import chess.dto.request.MoveRequestDto;
-import chess.dto.request.RoomRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
-import chess.dto.response.*;
+import chess.dto.response.ChessResponseDto;
+import chess.dto.response.MoveResponseDto;
+import chess.dto.response.RoomResponseDto;
+import chess.dto.response.ScoreResponseDto;
 import chess.repository.ChessRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ChessService {
@@ -40,35 +39,36 @@ public class ChessService {
     }
 
     public Round makeRound() {
-        remove();
         return new Round(StateFactory.initialization(PiecesFactory.whitePieces()),
                 StateFactory.initialization(PiecesFactory.blackPieces()),
                 CommandFactory.initialCommand("start"));
     }
 
-    private void remove() {
-        chessRepository.removeAllPieces();
-        chessRepository.removeTurn();
+    public Long addRoom(final String roomName) {
+        Long aLong = chessRepository.addRoom(roomName);
+        initialize(aLong);
+        return aLong;
     }
 
-    public ChessBoardDto chessBoardFromDB() {
-        StringChessBoardDto dbChessBoard = dbChessBoard();
+    public ChessBoardDto chessBoardFromDB(final Long roomId) {
+        StringChessBoardDto dbChessBoard = dbChessBoard(roomId);
+        String currentTurn = chessRepository.showCurrentTurn(roomId);
         return new ChessBoardDto(round.getBoard(
-                ChessBoardFactory.loadBoard(dbChessBoard.getStringChessBoard())));
+                ChessBoardFactory.loadBoard(dbChessBoard.getStringChessBoard())), currentTurn);
     }
 
-    private StringChessBoardDto dbChessBoard() {
+    private StringChessBoardDto dbChessBoard(final Long roomId) {
         Map<String, String> dbChessBoard = new LinkedHashMap<>();
-        List<ChessResponseDto> pieces = chessRepository.showAllPieces();
+        List<ChessResponseDto> pieces = chessRepository.showAllPieces(roomId);
         for (ChessResponseDto piece : pieces) {
             dbChessBoard.put(piece.getPiecePosition(), piece.getPieceName());
         }
-        chessRepository.removeAllPieces();
         return new StringChessBoardDto(dbChessBoard);
     }
 
-    public ChessBoardDto chessBoard() {
-        return new ChessBoardDto(round.getBoard());
+    public ChessBoardDto chessBoard(final Long roomId) {
+        String currentTurn = chessRepository.showCurrentTurn(roomId);
+        return new ChessBoardDto(round.getBoard(), currentTurn);
     }
 
     public PiecesDto piecesDto(final ChessBoardDto chessBoard) {
@@ -93,27 +93,27 @@ public class ChessService {
         return chessRepository.showAllRooms();
     }
 
-    public String jsonFormatChessBoard(final ChessBoardDto chessBoard) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        StringChessBoardDto stringChessBoard = stringChessBoard(chessBoard);
-        return objectMapper.writeValueAsString(stringChessBoard.getStringChessBoard());
-    }
+//    public String jsonFormatChessBoard(final ChessBoardDto chessBoard, Long roomId) throws JsonProcessingException {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        StringChessBoardDto stringChessBoard = stringChessBoard(chessBoard, roomId);
+//        return objectMapper.writeValueAsString(stringChessBoard.getStringChessBoard());
+//    }
 
-    private StringChessBoardDto stringChessBoard(final ChessBoardDto chessBoard) {
-        Map<String, String> stringChessBoard = new LinkedHashMap<>();
-        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.getChessBoard().entrySet()) {
-            stringChessBoard.put(chessBoardEntry.getKey().toString(), chessBoardEntry.getValue().getPiece());
-        }
-        chessRepository.initializePieceStatus(stringChessBoard);
-        return new StringChessBoardDto(stringChessBoard);
-    }
+//    private StringChessBoardDto stringChessBoard(final ChessBoardDto chessBoard, Long roomId) {
+//        Map<String, String> stringChessBoard = new LinkedHashMap<>();
+//        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.getChessBoard().entrySet()) {
+//            stringChessBoard.put(chessBoardEntry.getKey().toString(), chessBoardEntry.getValue().getPiece());
+//        }
+//        chessRepository.initializePieceStatus(stringChessBoard, roomId);
+//        return new StringChessBoardDto(stringChessBoard);
+//    }
 
-    public String currentTurn() {
-        List<TurnResponseDto> turns = chessRepository.showCurrentTurn();
-        return turns.stream()
-                .map(TurnResponseDto::getCurrentTurn)
-                .collect(Collectors.joining());
-    }
+//    public String currentTurn() {
+//        List<TurnResponseDto> turns = chessRepository.showCurrentTurn();
+//        return turns.stream()
+//                .map(TurnResponseDto::getCurrentTurn)
+//                .collect(Collectors.joining());
+//    }
 
     public void updateRound(final ChessBoardDto chessBoard, final String currentTurn) {
         PiecesDto piecesDto = piecesDto(chessBoard);
@@ -162,14 +162,13 @@ public class ChessService {
         chessRepository.changeTurn(turnChangeRequestDto);
     }
 
-    public void initialize() {
-        StringChessBoardDto filteredChessBoard = filteredChessBoard();
-        chessRepository.initializePieceStatus(filteredChessBoard.getStringChessBoard());
-        chessRepository.initializeTurn();
+    public void initialize(final Long roomId) {
+        StringChessBoardDto filteredChessBoard = filteredChessBoard(roomId);
+        chessRepository.initializePieceStatus(filteredChessBoard.getStringChessBoard(), roomId);
     }
 
-    public StringChessBoardDto filteredChessBoard() {
-        ChessBoardDto chessBoard = chessBoard();
+    public StringChessBoardDto filteredChessBoard(final Long roomId) {
+        ChessBoardDto chessBoard = chessBoard(roomId);
         Map<String, String> filteredChessBoard = new LinkedHashMap<>();
         for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.getChessBoard().entrySet()) {
             filterChessBoard(filteredChessBoard, chessBoardEntry);

@@ -22,7 +22,7 @@ public class OutputView {
         return "무승부";
     }
 
-    public static String getErrorMessage(final List<FieldError> fieldError){
+    public static String getErrorMessage(final List<FieldError> fieldError) {
         return fieldError.stream()
                 .map(error -> error.getDefaultMessage())
                 .collect(Collectors.joining(", "));

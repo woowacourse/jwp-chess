@@ -55,7 +55,7 @@ public class GameService {
         return chessGame.isGameEnd();
     }
 
-    public GameInfoDto gameInfo(final long roomId){
+    public GameInfoDto gameInfo(final long roomId) {
         final ChessGame chessGame = gameDao.load(roomId);
         return new GameInfoDto(chessGame.board(), chessGame.score(Owner.BLACK), chessGame.score(Owner.WHITE));
     }

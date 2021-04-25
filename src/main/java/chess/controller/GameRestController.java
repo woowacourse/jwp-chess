@@ -38,6 +38,6 @@ public class GameRestController {
         if (gameService.isGameEnd(roomId)) {
             return new RedirectView("/game/result/" + roomId);
         }
-        return new RedirectView( "/game/load/" + roomId);
+        return new RedirectView("/game/load/" + roomId);
     }
 }

@@ -18,21 +18,21 @@ public class ExceptionController {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handlingException(final Exception e) {
-        final String message = "Unhandled exception : "+ e.getMessage();
+        final String message = "Unhandled exception : " + e.getMessage();
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleIllegalArgumentException(final Exception e) {
-        final String message = "IllegalArgumentException exception : "+ e.getMessage();
+        final String message = "IllegalArgumentException exception : " + e.getMessage();
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(SQLException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleSQLException(final Exception e) {
-        final String message = "SQL exception : "+ e.getMessage();
+        final String message = "SQL exception : " + e.getMessage();
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 }

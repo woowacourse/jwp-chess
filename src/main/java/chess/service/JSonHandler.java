@@ -10,7 +10,7 @@ import java.util.Map;
 public class JSonHandler {
     private final ObjectMapper mapper;
 
-    public JSonHandler(final ObjectMapper mapper){
+    public JSonHandler(final ObjectMapper mapper) {
         this.mapper = mapper;
     }
 
@@ -24,7 +24,8 @@ public class JSonHandler {
 
     public Map<String, String> jsonDataToStringMap(final String data) {
         try {
-            return mapper.readValue(data, new TypeReference<Map<String, String>>() {});
+            return mapper.readValue(data, new TypeReference<Map<String, String>>() {
+            });
         } catch (Exception e) {
             throw new IllegalArgumentException("JSon mapping 실패 \n" + data);
         }

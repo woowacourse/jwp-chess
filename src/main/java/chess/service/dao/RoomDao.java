@@ -50,9 +50,9 @@ public class RoomDao {
     }
 
     public List<RoomInfoDto> loadRooms() {
-        return jdbcTemplate.query( "SELECT * FROM room", (rs, rowNum) ->
+        return jdbcTemplate.query("SELECT * FROM room", (rs, rowNum) ->
                 new RoomInfoDto(rs.getLong(COLUMN_INDEX_OF_ID), rs.getString(COLUMN_INDEX_OF_NAME)
-        ));
+                ));
     }
 
     public String name(final long roomId) {
@@ -76,7 +76,7 @@ public class RoomDao {
     }
 
     // TODO :: RoomDTO 생성자로 속성 주입
-    public RoomDto roomInfo(final long roomId){
+    public RoomDto roomInfo(final long roomId) {
         final RoomDto roomDto = new RoomDto();
         roomDto.setRoomName(name(roomId));
         roomDto.setPlayer1(player1(roomId));
@@ -91,8 +91,8 @@ public class RoomDao {
         return players;
     }
 
-    private void addIfExist(final List<String> players, final String player){
-        if(Objects.isNull(player)){
+    private void addIfExist(final List<String> players, final String player) {
+        if (Objects.isNull(player)) {
             return;
         }
         players.add(player);

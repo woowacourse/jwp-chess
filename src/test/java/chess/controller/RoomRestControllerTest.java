@@ -36,7 +36,7 @@ class RoomRestControllerTest {
     private RoomDto roomDto;
 
     @BeforeEach
-    private void init(){
+    private void init() {
         roomDto = new RoomDto();
         roomDto.setRoomName("validName");
         roomDto.setPlayer1("player1");
@@ -130,9 +130,9 @@ class RoomRestControllerTest {
         final long roomId = roomService.save("newRoom", "test");
         final int preSize = roomService.loadList().size();
 
-        final RequestBuilder request = MockMvcRequestBuilders.delete("/room/"+ roomId);
+        final RequestBuilder request = MockMvcRequestBuilders.delete("/room/" + roomId);
         mockMvc.perform(request).andExpect(status().isOk());
 
-        assertThat(preSize-1).isEqualTo(roomService.loadList().size());
+        assertThat(preSize - 1).isEqualTo(roomService.loadList().size());
     }
 }

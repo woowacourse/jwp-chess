@@ -33,7 +33,6 @@ public class RoomRestController {
                            final HttpServletResponse response) {
         handleBindingResult(bindingResult);
         addCookie(response, "playerId", roomDto.getPlayer1());
-        System.out.println("playerId" + roomDto.getPlayer1() );
         return roomService.save(roomDto.getRoomName(), roomDto.getPlayer1());
     }
 
@@ -46,20 +45,20 @@ public class RoomRestController {
     @PostMapping("/enter/{roomId}")
     public ResponseEntity enterRoom(@PathVariable final long roomId,
                                     @RequestBody final String playerId,
-                                    final HttpServletResponse response){
+                                    final HttpServletResponse response) {
         roomService.enter(roomId, playerId);
         addCookie(response, "playerId", playerId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private void addCookie(final HttpServletResponse response, final String name, final String value){
+    private void addCookie(final HttpServletResponse response, final String name, final String value) {
         final Cookie playerIdCookie = new Cookie(name, value);
         playerIdCookie.setMaxAge(60 * 5);
         playerIdCookie.setPath("/");
         response.addCookie(playerIdCookie);
     }
 
-    private void handleBindingResult(final BindingResult bindingResult){
+    private void handleBindingResult(final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             final String errorMsg = OutputView.getErrorMessage(bindingResult.getFieldErrors());
             throw new IllegalArgumentException(errorMsg);

@@ -42,10 +42,10 @@ public class RoomService {
     // TODO :: PlayerService 고민
     public void enter(final long roomId, final String playerId) {
         final List<String> players = roomDao.players(roomId);
-        if(players.contains(playerId)){
+        if (players.contains(playerId)) {
             return;
         }
-        if(players.size() == MAXIMUM_SIZE_OF_ROOM){
+        if (players.size() == MAXIMUM_SIZE_OF_ROOM) {
             throw new IllegalArgumentException("이미 가득 찬 방입니다.");
         }
         roomDao.enter(roomId, playerId);
@@ -56,11 +56,11 @@ public class RoomService {
         final String player1 = roomInfo.getPlayer1();
         final String player2 = roomInfo.getPlayer2();
 
-        if(player1.equals(playerId)){
+        if (player1.equals(playerId)) {
             return Owner.WHITE;
         }
 
-        if(player2.equals(playerId)){
+        if (player2.equals(playerId)) {
             return Owner.BLACK;
         }
 

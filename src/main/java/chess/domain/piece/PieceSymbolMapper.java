@@ -32,7 +32,7 @@ public enum PieceSymbolMapper {
     }
 
     public static Map<String, String> parseBoardAsUnicode(final Map<Position, Piece> board) {
-        final Map<String,String> tempBoard = new HashMap<>();
+        final Map<String, String> tempBoard = new HashMap<>();
         for (final Vertical v : Vertical.values()) {
             for (final Horizontal h : Horizontal.values()) {
                 final Position position = new Position(v, h);

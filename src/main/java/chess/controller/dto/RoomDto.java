@@ -9,11 +9,12 @@ public class RoomDto {
     @Size(min = 3, max = 12, message = "적절하지 않은 방 이름 길이")
     private String roomName;
 
-    @NotNull @NotBlank
+    @NotNull
+    @NotBlank
     private String player1;
     private String player2;
 
-    public RoomDto(){
+    public RoomDto() {
     }
 
     public String getRoomName() {

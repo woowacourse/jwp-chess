@@ -38,13 +38,13 @@ class GameRestControllerTest {
     private long testRoomId;
 
     @BeforeEach
-    private void initTestRoom(){
+    private void initTestRoom() {
         testRoomId = roomService.save("newRoom", "test");
     }
 
     @DisplayName("갈 수 있는 위치 리스트 반환 테스트")
     @Test
-    public void reachable(){
+    public void reachable() {
         final List<String> reachable = gameService.reachable(testRoomId, new Position("a2"), Owner.WHITE);
         assertThat(reachable).contains("a3").contains("a4");
     }
@@ -52,7 +52,7 @@ class GameRestControllerTest {
     @DisplayName("갈 수 있는 위치 요청 매핑 확인")
     @Test
     public void reachableMVC() throws Exception {
-        final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/game/reachable/"+testRoomId)
+        final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/game/reachable/" + testRoomId)
                 .param("source", "a2");
 
         final MvcResult mvcResult = mockMvc.perform(requestBuilder)

@@ -22,20 +22,19 @@ let target = "";
 function enterNewGame() {
     const roomName = document.getElementById("game-name-input").value;
     const player1 = prompt("플레이어1의 비밀번호를 입력하시오");
-    const jsonData = JSON.stringify({ roomName : roomName, player1 : player1 });
+    const jsonData = JSON.stringify({roomName: roomName, player1: player1});
 
     $.ajax({
         url: "/room/create",
         type: "POST",
         data: jsonData,
-        contentType : 'application/json',
-        dataType: "json",
+        contentType: 'application/json',
         success: function (roomId) {
-            alert(roomName+" 방 생성");
-            location.href="/game/load/"+roomId;
+            alert(roomName + " 방 생성");
+            location.href = "/game/load/" + roomId;
         },
         error: function (e) {
-            alert("에러 발생  : " + e);
+            alert(e.responseText);
         }
     })
 }
@@ -46,16 +45,16 @@ function enterRoom() {
         const player2 = prompt("플레이어2의 비밀번호를 입력하시오");
 
         $.ajax({
-            url: "/room/enter/"+roomId,
+            url: "/room/enter/" + roomId,
             type: "POST",
             data: player2,
-            contentType : 'application/json',
+            contentType: 'application/json',
             success: function () {
-                alert("방 "+roomId+"에 입장합니다.");
-                location.href="/game/load/"+roomId;
+                alert("방 " + roomId + "에 입장합니다.");
+                location.href = "/game/load/" + roomId;
             },
-            error: function () {
-                alert("에러 발생");
+            error: function (e) {
+                alert(e.responseText);
             }
         })
     }
@@ -65,14 +64,14 @@ function deleteRoom() {
     return function (event) {
         const roomId = event.target.id;
         $.ajax({
-            url: "/room/"+roomId,
+            url: "/room/" + roomId,
             type: "DELETE",
             success: function () {
                 alert("삭제 완료");
-                location.href="/room/list";
+                location.href = "/room/list";
             },
-            error: function () {
-                alert("에러 발생");
+            error: function (e) {
+                alert(e.responseText);
             }
         })
     }
@@ -105,9 +104,9 @@ function show(target) {
         url: "/game/reachable/" + roomId,
         type: "GET",
         data: requestQuery,
-        contentType : "application/json",
+        contentType: "application/json",
         success: function (result) {
-            positions = result.positions;
+            let positions = result.positions;
             //[d2, d3]
             if (result !== null) {
                 positions.forEach((el) => {
@@ -117,8 +116,8 @@ function show(target) {
                 });
             }
         },
-        error: function (result) {
-            alert("에러 발생");
+        error: function (e) {
+            alert(e.responseText);
         }
     })
 }

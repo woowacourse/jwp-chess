@@ -32,7 +32,8 @@ public class SpringChessApiController {
     @PostMapping
     private ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto) {
         RoomDto responseBody = chessService.create(roomDto);
-        return ResponseEntity.created(URI.create("/rooms/" + responseBody.getId())).body(responseBody);
+        return ResponseEntity.created(URI.create("/rooms/" + responseBody.getId()))
+            .body(responseBody);
     }
 
     @DeleteMapping("{id}")
@@ -52,7 +53,8 @@ public class SpringChessApiController {
     }
 
     @PutMapping("{id}/game-status")
-    private ResponseEntity<BoardDto> updateStatus(@PathVariable String id, @RequestBody GameStatusDto gameStatusDto) {
+    private ResponseEntity<BoardDto> updateStatus(@PathVariable String id,
+        @RequestBody GameStatusDto gameStatusDto) {
         if (gameStatusDto.getGameState().equals("Running")) {
             return ResponseEntity.ok().body(chessService.start(id));
         }
@@ -68,7 +70,8 @@ public class SpringChessApiController {
     }
 
     @PostMapping("{id}/movement")
-    private ResponseEntity<BoardDto> move(@PathVariable String id, @RequestBody MovementDto movementDto) {
+    private ResponseEntity<BoardDto> move(@PathVariable String id,
+        @RequestBody MovementDto movementDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(chessService.move(id, movementDto.getSource(), movementDto.getDestination()));
     }

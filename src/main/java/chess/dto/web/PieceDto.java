@@ -17,7 +17,7 @@ public class PieceDto {
     private String x;
     private String y;
 
-    public PieceDto(){
+    public PieceDto() {
     }
 
     public PieceDto(Point point, Team team, Piece piece) {

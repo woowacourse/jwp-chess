@@ -1,10 +1,10 @@
-renderRoomName();
-createChessBoard();
-
 const startButton = document.getElementById("start");
 const backButton = document.getElementById("back");
 const scoreButton = document.getElementById("score");
 
+const SUCCEED_HTTP_CODE = 200;
+const FAIL_HTTP_CODE = 400;
+const CHESS_TABLE_LENGTH = 8;
 const SUCCEED = "SUCCEED";
 const GAME_SET = "GAME_SET";
 
@@ -12,10 +12,8 @@ startButton.addEventListener("click", clickStart);
 backButton.addEventListener("click", clickBack);
 scoreButton.addEventListener("click", clickScore);
 
-const SUCCEED_HTTP_CODE = 200;
-const FAIL_HTTP_CODE = 400;
-
-const CHESS_TABLE_LENGTH = 8;
+renderRoomName();
+createChessBoard();
 
 function createChessBoard() {
     makeTable();

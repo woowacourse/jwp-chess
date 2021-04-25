@@ -22,7 +22,7 @@ public class SpringRoomDao {
         String query = "INSERT INTO chess_room (room_name, turn, board) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, new String[] {"room_no"});
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"room_no"});
             ps.setString(1, saveRoomDto.getRoomName());
             ps.setString(2, saveRoomDto.getTurn());
             ps.setString(3, saveRoomDto.getChessBoard());

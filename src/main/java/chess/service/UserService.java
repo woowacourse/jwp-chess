@@ -2,6 +2,7 @@ package chess.service;
 
 import chess.dao.UserDAO;
 import chess.dto.UsersDTO;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,5 +19,9 @@ public final class UserService {
 
     public int userIdByNickname(final String nickname) {
         return userDAO.findUserIdByNickname(nickname);
+    }
+
+    public void enrollUser(final String roomId, final String nickname, final String password) {
+        userDAO.insertUser(roomId, nickname, password);
     }
 }

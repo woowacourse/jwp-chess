@@ -16,6 +16,11 @@ public class UserDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void insertUser(final String roomId, final String nickname, final String password) {
+        String query = "INSERT INTO user (room_id, nickname, password) VALUES (?, ?, ?)";
+        jdbcTemplate.update(query, roomId, nickname, password);
+    }
+
     public UsersDTO findByRoomId(final String roomId) {
         String query = "SELECT black.nickname AS black_user, white.nickname AS white_user " +
                 "FROM room JOIN user as black on black.id = room.black_user " +

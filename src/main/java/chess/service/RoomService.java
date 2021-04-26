@@ -37,14 +37,12 @@ public class RoomService {
 
     private Long saveGameToDB(String roomName) {
         ChessGame chessGame = new ChessGame(
-                null,
                 new Board(PieceFactory.createPieces())
         );
         chessGame.start();
 
         return roomRepository.save(
                 new Room(
-                        null,
                         roomName,
                         chessGame
                 )

@@ -13,6 +13,10 @@ public class Room {
         this.chessGame = chessGame;
     }
 
+    public Room(String roomName, ChessGame chessGame) {
+        this(null, roomName, chessGame);
+    }
+
     public Long getRoomId() {
         return roomId;
     }

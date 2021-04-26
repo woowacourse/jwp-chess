@@ -20,6 +20,10 @@ public class ChessGame {
         this.state = new Ready(this);
     }
 
+    public ChessGame(Board board) {
+        this(null, board);
+    }
+
     public void changeState(State state) {
         this.state = state;
     }

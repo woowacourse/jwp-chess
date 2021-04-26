@@ -32,12 +32,4 @@ public class GlobalExceptionHandler {
             .contentType(MediaType.APPLICATION_JSON)
             .body("!! Database Access 오류");
     }
-
-    @ExceptionHandler(InvalidPasswordException.class)
-    private ResponseEntity invalidPasswordExceptionHandle(InvalidPasswordException e) {
-        LOGGER.error(e.getStackTrace());
-        return ResponseEntity.status(BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(e.getMessage());
-    }
 }

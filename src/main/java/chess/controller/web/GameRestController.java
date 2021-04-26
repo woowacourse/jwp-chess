@@ -60,7 +60,7 @@ public class GameRestController {
     }
 
     private void isProperUser(User user, Color nextColor) {
-        if (user.isSameColor(nextColor)) {
+        if (user.isSameColor(nextColor.opposite())) {
             throw new IllegalStateException("상대방의 턴입니다.");
         }
     }

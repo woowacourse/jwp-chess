@@ -58,8 +58,8 @@ class ChessControllerTest {
     }
 
     private String writeResponseBody() throws JsonProcessingException {
-        ChessBoard chessBoard = chessService.findChessBoardByRoomId(1);
-        TeamType currentTeamType = chessService.findCurrentTeamTypeByRoomId(1);
+        ChessBoard chessBoard = chessService.findChessBoard(1);
+        TeamType currentTeamType = chessService.findCurrentTeamType(1);
         BoardDTO boardDTO = BoardDTO.of(chessBoard, currentTeamType);
         return new ObjectMapper().writeValueAsString(boardDTO);
     }

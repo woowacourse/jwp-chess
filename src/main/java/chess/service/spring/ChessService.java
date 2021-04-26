@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Service
 public class ChessService {
-    private static Map<Integer, ChessBoard> CACHED_CHESS_BOARDS = new HashMap<>();
+    private static final Map<Integer, ChessBoard> CACHED_CHESS_BOARDS = new HashMap<>();
 
     private final UserService userService;
     private final RoomService roomService;
@@ -27,40 +27,43 @@ public class ChessService {
         this.chessDAO = chessDAO;
     }
 
-    public ChessBoard findChessBoardByRoomId(int id) {
-        return CACHED_CHESS_BOARDS.computeIfAbsent(id, key -> {
+    public ChessBoard findChessBoard(int roomId) {
+        return CACHED_CHESS_BOARDS.computeIfAbsent(roomId, key -> {
             ChessBoard chessBoard = new ChessBoard(ChessBoardGenerator.generateDefaultChessBoard());
-            Histories histories = new Histories(chessDAO.findAllHistoriesByRoomId(id));
+            Histories histories = new Histories(chessDAO.findAllByRoomId(roomId));
             histories.restoreChessBoardAsLatest(chessBoard);
-            CACHED_CHESS_BOARDS.put(id, chessBoard);
+            CACHED_CHESS_BOARDS.put(roomId, chessBoard);
             return chessBoard;
         });
     }
 
     public void move(History history, int roomId, String password) {
-        TeamType teamType = findCurrentTeamTypeByRoomId(roomId);
+        TeamType teamType = findCurrentTeamType(roomId);
         userService.validateUserTurn(roomId, password, teamType);
-        ChessBoard chessBoard = findChessBoardByRoomId(roomId);
+        ChessBoard chessBoard = findChessBoard(roomId);
         history.updateChessBoard(chessBoard);
-        chessDAO.insertHistoryByRoomId(history, roomId);
+        chessDAO.insertHistory(history, roomId);
     }
 
-    public TeamType findCurrentTeamTypeByRoomId(int id) {
-        Histories histories = new Histories(chessDAO.findAllHistoriesByRoomId(id));
+    public TeamType findCurrentTeamType(int roomId) {
+        Histories histories = new Histories(chessDAO.findAllByRoomId(roomId));
         return histories.findNextTeamType();
     }
 
-    public Result calculateResultByRoomId(int id) {
-        ChessBoard chessBoard = findChessBoardByRoomId(id);
+    public Result calculateResult(int roomId) {
+        ChessBoard chessBoard = findChessBoard(roomId);
         Scores scores = chessBoard.calculateScores();
         TeamType winnerTeamType = chessBoard.findWinnerTeam();
         return new Result(scores, winnerTeamType);
     }
 
-    public void deleteGame(int id) {
-        chessDAO.deleteAllHistoriesByRoomId(id);
-        userService.deleteAllByRoomId(id);
-        roomService.deleteById(id);
-        CACHED_CHESS_BOARDS.remove(id);
+    public void deleteGame(int roomId) {
+        if (!roomService.isRoomExists(roomId)) {
+            throw new IllegalStateException("삭제할 방이 없습니다.");
+        }
+        chessDAO.deleteAllByRoomId(roomId);
+        userService.deleteAllByRoomId(roomId);
+        roomService.deleteById(roomId);
+        CACHED_CHESS_BOARDS.remove(roomId);
     }
 }

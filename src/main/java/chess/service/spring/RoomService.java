@@ -5,6 +5,7 @@ import chess.repository.spring.RoomDAO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoomService {
@@ -29,5 +30,10 @@ public class RoomService {
 
     public void deleteById(int id) {
         roomDAO.deleteById(id);
+    }
+
+    public boolean isRoomExists(int id) {
+        Optional<Room> room = roomDAO.findById(id);
+        return room.isPresent();
     }
 }

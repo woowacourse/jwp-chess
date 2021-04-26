@@ -41,7 +41,7 @@ class ChessDAOTest {
     @DisplayName("DB에 저장된 모든 History들 중 방 번호에 맞는 엔티티들만 조회한다.")
     @Test
     void findAllHistories() {
-        List<History> histories = chessDAO.findAllHistoriesByRoomId(1);
+        List<History> histories = chessDAO.findAllByRoomId(1);
 
         assertThat(histories).hasSize(2);
     }
@@ -49,16 +49,16 @@ class ChessDAOTest {
     @DisplayName("DB에 History를 insert한다.")
     @Test
     void insertHistory() {
-        chessDAO.insertHistoryByRoomId(new History("a1", "a3", "WHITE"), 2);
+        chessDAO.insertHistory(new History("a1", "a3", "WHITE"), 2);
 
-        assertThat(chessDAO.findAllHistoriesByRoomId(2)).hasSize(2);
+        assertThat(chessDAO.findAllByRoomId(2)).hasSize(2);
     }
 
     @DisplayName("DB의 Histories를 전부 delete한다.")
     @Test
     void deleteAllHistories() {
-        chessDAO.deleteAllHistoriesByRoomId(2);
+        chessDAO.deleteAllByRoomId(2);
 
-        assertThat(chessDAO.findAllHistoriesByRoomId(2)).isEmpty();
+        assertThat(chessDAO.findAllByRoomId(2)).isEmpty();
     }
 }

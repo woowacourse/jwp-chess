@@ -32,8 +32,8 @@ public class ChessController {
     }
 
     private BoardDTO findChessBoard(int roomId) {
-        ChessBoard chessBoard = chessService.findChessBoardByRoomId(roomId);
-        TeamType teamType = chessService.findCurrentTeamTypeByRoomId(roomId);
+        ChessBoard chessBoard = chessService.findChessBoard(roomId);
+        TeamType teamType = chessService.findCurrentTeamType(roomId);
         return BoardDTO.of(chessBoard, teamType);
     }
 
@@ -48,7 +48,7 @@ public class ChessController {
 
     @GetMapping("/result")
     public ResponseEntity<ResultDTO> showResult(@PathVariable int roomId) {
-        Result result = chessService.calculateResultByRoomId(roomId);
+        Result result = chessService.calculateResult(roomId);
         ResultDTO resultDTO = ResultDTO.from(result);
         return ResponseEntity.ok().body(resultDTO);
     }

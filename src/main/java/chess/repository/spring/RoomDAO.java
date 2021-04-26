@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class RoomDAO {
@@ -28,6 +29,13 @@ public class RoomDAO {
     public List<Room> findAll() {
         String query = "SELECT * FROM ROOM";
         return jdbcTemplate.query(query, ROW_MAPPER);
+    }
+
+    public Optional<Room> findById(int id) {
+        String query = "SELECT * FROM ROOM WHERE ID = ?";
+        return jdbcTemplate.query(query, ROW_MAPPER, id)
+                .stream()
+                .findAny();
     }
 
     public int insertRoom(String name) {

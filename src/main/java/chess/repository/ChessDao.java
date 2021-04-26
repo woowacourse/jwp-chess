@@ -3,11 +3,11 @@ package chess.repository;
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
+import chess.domain.piece.Piece;
+import chess.domain.piece.Team;
 import chess.dto.BoardDto;
 import chess.dto.RoomsDto;
 import chess.dto.TurnDto;
-import chess.domain.piece.Piece;
-import chess.domain.piece.Team;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -17,9 +17,9 @@ import java.util.Map;
 
 @Repository
 public class ChessDao {
+    private static final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ? and room_number = ?";
+    private static final String UPDATE_GAME_QUERY = "update game set turn = ? where room_number = ?";
     private final JdbcTemplate jdbcTemplate;
-    private final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ? and room_number = ?";
-    private final String UPDATE_GAME_QUERY = "update game set turn = ? where room_number = ?";
 
     public ChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

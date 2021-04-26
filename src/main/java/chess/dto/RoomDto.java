@@ -6,6 +6,8 @@ import javax.validation.constraints.Size;
 
 public class RoomDto {
 
+    private Long id;
+
     @Size(min = 3, max = 12, message = "적절하지 않은 방 이름 길이")
     private String roomName;
 
@@ -15,6 +17,15 @@ public class RoomDto {
     private String player2;
 
     public RoomDto() {
+    }
+
+    public RoomDto(final long id, final String name){
+        this.id = id;
+        this.roomName = name;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getRoomName() {
@@ -39,14 +50,5 @@ public class RoomDto {
 
     public void setRoomName(String roomName) {
         this.roomName = roomName;
-    }
-
-    @Override
-    public String toString() {
-        return "RoomDto{" +
-                "roomName='" + roomName + '\'' +
-                ", player1='" + player1 + '\'' +
-                ", player2='" + player2 + '\'' +
-                '}';
     }
 }

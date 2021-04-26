@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dto.RoomInfoDto;
+import chess.dto.RoomDto;
 import chess.service.dao.RoomDao;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +29,11 @@ public class RoomService {
         roomDao.delete(roomId);
     }
 
-    public List<RoomInfoDto> loadList() {
+    public List<RoomDto> loadList() {
         return roomDao.loadRooms();
     }
 
-    public RoomInfoDto roomInfo(final long roomId) {
-        return new RoomInfoDto(roomId, roomDao.name(roomId));
+    public RoomDto roomInfo(final long roomId) {
+        return new RoomDto(roomId, roomDao.name(roomId));
     }
 }

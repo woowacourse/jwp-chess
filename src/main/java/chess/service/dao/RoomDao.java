@@ -1,7 +1,6 @@
 package chess.service.dao;
 
 import chess.dto.RoomDto;
-import chess.dto.RoomInfoDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -49,9 +48,9 @@ public class RoomDao {
         jdbcTemplate.update("DELETE FROM room WHERE id = ?", roomId);
     }
 
-    public List<RoomInfoDto> loadRooms() {
+    public List<RoomDto> loadRooms() {
         return jdbcTemplate.query("SELECT * FROM room", (rs, rowNum) ->
-                new RoomInfoDto(rs.getLong(COLUMN_INDEX_OF_ID), rs.getString(COLUMN_INDEX_OF_NAME)
+                new RoomDto(rs.getLong(COLUMN_INDEX_OF_ID), rs.getString(COLUMN_INDEX_OF_NAME)
                 ));
     }
 

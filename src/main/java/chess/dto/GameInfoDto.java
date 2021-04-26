@@ -31,9 +31,4 @@ public class GameInfoDto {
     public double getWhiteScore() {
         return whiteScore;
     }
-
-    @Override
-    public String toString() {
-        return board.toString();
-    }
 }

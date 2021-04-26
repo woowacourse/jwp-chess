@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.service.CookieHandler;
 import chess.service.PlayerService;
 import chess.service.RoomService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +26,9 @@ class ExceptionControllerTest {
 
     @MockBean
     private RoomService roomService;
+
+    @MockBean
+    private CookieHandler cookieHandler;
 
     @DisplayName("없는 경로를 처리하는 방법을 확인한다.")
     @Test

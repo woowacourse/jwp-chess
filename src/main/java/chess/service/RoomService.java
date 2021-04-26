@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.domain.ChessRepository;
+import chess.domain.RoomRepository;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.PieceFactory;
@@ -16,14 +16,14 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class RoomService {
 
-    private final ChessRepository chessRepository;
+    private final RoomRepository roomRepository;
 
-    public RoomService(ChessRepository chessRepository) {
-        this.chessRepository = chessRepository;
+    public RoomService(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
     }
 
     public List<RoomDto> getAllRooms() {
-        return chessRepository.allRooms().stream()
+        return roomRepository.allRooms().stream()
                 .map(RoomDto::new)
                 .collect(toList());
     }
@@ -42,7 +42,7 @@ public class RoomService {
         );
         chessGame.start();
 
-        return chessRepository.save(
+        return roomRepository.save(
                 new Room(
                         null,
                         roomName,

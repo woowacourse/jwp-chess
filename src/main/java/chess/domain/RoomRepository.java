@@ -4,7 +4,7 @@ import chess.domain.room.Room;
 
 import java.util.List;
 
-public interface ChessRepository {
+public interface RoomRepository {
 
     Long save(Room room);
 

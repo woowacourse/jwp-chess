@@ -1,22 +1,21 @@
 package chess.repository;
 
 import chess.dao.ChessDAO;
-import chess.domain.ChessRepository;
+import chess.domain.RoomRepository;
 import chess.domain.game.ChessGame;
 import chess.domain.room.Room;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 @Repository
-public class ChessRepositoryImpl implements ChessRepository {
+public class RoomRepositoryImpl implements RoomRepository {
 
     private final ChessDAO chessDAO;
 
-    public ChessRepositoryImpl(ChessDAO chessDAO) {
+    public RoomRepositoryImpl(ChessDAO chessDAO) {
         this.chessDAO = chessDAO;
     }
 

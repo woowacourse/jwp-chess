@@ -1,9 +1,6 @@
 package chess.service;
 
-import chess.exception.BlankException;
-import chess.exception.ChessException;
-import chess.exception.MovementException;
-import chess.exception.StateException;
+import chess.exception.*;
 import chess.service.dto.ErrorResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,25 +9,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler({ChessException.class, MovementException.class,
-            BlankException.class, StateException.class})
+            BlankException.class, StateException.class, UserException.class})
     public ResponseEntity<ErrorResponseDto> handleCustomException(RuntimeException exception) {
         logger.info(exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponseDto(exception.getMessage()));
     }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponseDto> handleException(RuntimeException exception) {
-        logger.info(exception.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponseDto("서버 내부 에러입니다. "));
-    }
-
 }

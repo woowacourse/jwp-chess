@@ -74,13 +74,12 @@ class GameDaoTest {
     void deleteTest() {
         // given
         long gameId = gameDao.save(chessGameManager, "test title"); // to foreignKey
-        Position position = Position.of("a2");
 
         // when
         gameDao.delete(gameId);
 
         // then
-        Integer rowFound = this.jdbcTemplate.queryForObject("SELECT count(*) FROM game WHERE game_id = " + Long.toString(gameId), Integer.class);
+        Integer rowFound = this.jdbcTemplate.queryForObject("SELECT count(*) FROM game WHERE game_id = " + gameId, Integer.class);
         assertThat(rowFound).isEqualTo(0);
     }
 

@@ -67,18 +67,6 @@ public final class RoomService {
         roomDAO.joinBlackUser(roomId, blackUserId);
     }
 
-    public UserDTO findBlackUserById(final String id) {
-        String blackUserId = roomDAO.findBlackUserById(id);
-        return userDAO.findById(blackUserId)
-                .orElse(UNKNOWN_USER);
-    }
-
-    public UserDTO findWhiteUserById(final String id) {
-        String whiteUserId = roomDAO.findWhiteUserById(id);
-        return userDAO.findById(whiteUserId)
-                .orElse(UNKNOWN_USER);
-    }
-
     public boolean checkRightTurn(final String roomId, final UserDTO user, final String clickedSection) {
         ChessGame chessGame = loadChessGameById(roomId);
 
@@ -93,5 +81,11 @@ public final class RoomService {
         }
         return roomDAO.findWhiteUserById(roomId)
                 .equals(Integer.toString(user.getId()));
+    }
+
+    public UserDTO participatedUser(final String id, final String color) {
+        String userId = roomDAO.findUserIdByRoomIdAndColor(id, color);
+        return userDAO.findById(userId)
+                .orElse(UNKNOWN_USER);
     }
 }

@@ -63,27 +63,16 @@ public final class SpringChessGameController {
         return "redirect:/rooms/" + id;
     }
 
-    @PostMapping("/rooms/{id}/users/blackuser/re-enter")
-    public String blackUserReEntry(@PathVariable final String id, @ModelAttribute final PasswordDTO passwordDTO,
-                                   final HttpServletResponse response) {
-        UserDTO blackUser = roomService.findBlackUserById(id);
+    @PostMapping("/rooms/{id}/users/{color}/re-enter")
+    public String userReEntry(@PathVariable final String id, @PathVariable final String color,
+                              @ModelAttribute final PasswordDTO passwordDTO,
+                              final HttpServletResponse response) {
 
-        if (!UNKNOWN_USER.equals(blackUser)) {
-            userService.checkPassword(Integer.toString(blackUser.getId()), passwordDTO.getPassword());
-            playerCookie(response, blackUser.getNickname(), passwordDTO.getPassword(), "black");
-            return "redirect:/rooms/" + id;
-        }
-        return "redirect:/";
-    }
+        UserDTO user = roomService.participatedUser(id, color);
 
-    @PostMapping("/rooms/{id}/users/whiteuser/re-enter")
-    public String whiteUserReEntry(@PathVariable final String id, @ModelAttribute final PasswordDTO passwordDTO,
-                                   final HttpServletResponse response) {
-        UserDTO whiteUser = roomService.findWhiteUserById(id);
-
-        if (!UNKNOWN_USER.equals(whiteUser)) {
-            userService.checkPassword(Integer.toString(whiteUser.getId()), passwordDTO.getPassword());
-            playerCookie(response, whiteUser.getNickname(), passwordDTO.getPassword(), "white");
+        if (!UNKNOWN_USER.equals(user)) {
+            userService.checkPassword(Integer.toString(user.getId()), passwordDTO.getPassword());
+            playerCookie(response, user.getNickname(), passwordDTO.getPassword(), "black");
             return "redirect:/rooms/" + id;
         }
         return "redirect:/";

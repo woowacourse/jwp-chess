@@ -41,7 +41,7 @@
                                     <button onclick="showBlackUserPasswordPopup()">{{blackUser}}</button>
                                     <div id="black-user-password-popup" class="hide">
                                         <div class="content">
-                                            <form action="/rooms/{{id}}/users/blackuser/re-enter" method="post">
+                                            <form action="/rooms/{{id}}/users/black/re-enter" method="post">
                                                 비밀번호 : <input type="text" name="password" id="black-user-password-value" required size="10">
                                                 <br><br>
                                                 <input type="submit" value="확인">
@@ -73,7 +73,7 @@
                                     <button onclick="showWhiteUserPasswordPopup()">{{whiteUser}}</button>
                                     <div id="white-user-password-popup" class="hide">
                                         <div class="content">
-                                            <form action="/rooms/{{id}}/users/whiteuser/re-enter" method="post">
+                                            <form action="/rooms/{{id}}/users/white/re-enter" method="post">
                                                 비밀번호 : <input type="text" name="password" id="white-user-password-value" required size="10">
                                                 <br><br>
                                                 <input type="submit" value="확인">

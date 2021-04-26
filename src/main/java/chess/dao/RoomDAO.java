@@ -105,4 +105,13 @@ public class RoomDAO {
             return NO_USER;
         }
     }
+
+    public String findUserIdByRoomIdAndColor(final String id, final String color) {
+        try {
+            String query = "SELECT " + color + "_user FROM room WHERE id = ?";
+            return jdbcTemplate.queryForObject(query, String.class, id);
+        } catch (DataAccessException e) {
+            return NO_USER;
+        }
+    }
 }

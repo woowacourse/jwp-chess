@@ -43,7 +43,7 @@ public class ChessService {
         return movable;
     }
 
-    public Board restartBoardById(int id) {
+    public Board getNewBoardById(int id) {
         moveDao.deleteAllById(id);
         return findBoardById(id);
     }

@@ -46,7 +46,7 @@ class BoardControllerTest {
         RestAssured.port = port;
         roomService.deleteAll();
         roomService.add("test");
-        service.restartBoardById(1);
+        service.getNewBoardById(1);
     }
 
     @DisplayName("초기화된 보드를 가져온다 - GET")

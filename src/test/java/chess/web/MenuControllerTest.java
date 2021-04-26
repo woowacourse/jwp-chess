@@ -37,7 +37,7 @@ class MenuControllerTest {
         RestAssured.port = port;
         roomService.deleteAll();
         roomService.add("test");
-        service.restartBoardById(1);
+        service.getNewBoardById(1);
     }
 
 

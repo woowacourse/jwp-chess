@@ -1,5 +1,5 @@
-export async function getBoard() {
-    const response = await fetch(url+ "/init");
+export async function getNewBoard() {
+    const response = await fetch(url+ "/start");
     return await response.json();
 }
 
@@ -34,14 +34,6 @@ export async function getPath(from) {
         headers: {"Content-Type": "application/json"}
     });
     return await data.json();
-}
-
-export async function restart() {
-    const response = await fetch(url + "/restart", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"}
-    });
-    return await response.json();
 }
 
 export async function loadBoard() {

@@ -1,12 +1,11 @@
 import {
-    getBoard,
+    getNewBoard,
     getPath,
     getScores,
     getStatus,
     getTurn,
     loadBoard,
-    move,
-    restart
+    move
 } from "./fetch.js"
 import {PIECES, SCORE_TEMPLATE} from "./constant.js";
 
@@ -140,7 +139,7 @@ window.onload = function () {
     }
 
     async function restartGame() {
-        await setBoard(await restart());
+        await setBoard(await getNewBoard());
         await fillScore();
         setMessage(await checkTurn());
         document.querySelectorAll(".tile").forEach(tile => {
@@ -172,7 +171,7 @@ window.onload = function () {
             $start_bt.classList.remove("start");
             $load_bt.classList.add("hidden");
             setMessage(await checkTurn());
-            const data = await getBoard();
+            const data = await getNewBoard();
             return setBoard(data);
         });
 

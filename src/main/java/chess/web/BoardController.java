@@ -24,14 +24,9 @@ public class BoardController {
 
     private final ChessService service;
 
-    @GetMapping(value = {"/init"})
+    @GetMapping(value = {"/start"})
     public ResponseEntity<BoardDto> getNewBoard(@PathVariable int id) {
-        return ResponseEntity.ok(new BoardDto(service.restartBoardById(id)));
-    }
-
-    @PostMapping("/restart")
-    public ResponseEntity<BoardDto> restart(@PathVariable int id) {
-        return ResponseEntity.ok(new BoardDto(service.restartBoardById(id)));
+        return ResponseEntity.ok(new BoardDto(service.getNewBoardById(id)));
     }
 
     @GetMapping("/status")

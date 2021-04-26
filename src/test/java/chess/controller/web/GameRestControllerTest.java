@@ -1,7 +1,10 @@
 package chess.controller.web;
 
 import chess.controller.web.dto.MoveRequestDto;
+import chess.controller.web.dto.RoomRequestDto;
 import io.restassured.RestAssured;
+import io.restassured.filter.cookie.CookieFilter;
+import io.restassured.filter.session.SessionFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 
 @DisplayName("/Game path API test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -25,46 +28,46 @@ public class GameRestControllerTest {
         RestAssured.port = port;
     }
 
-    @DisplayName("Game Start 테스트")
-    @Test
-    void StartGameTest() {
-        RestAssured
-                .when().get("/game/start")
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .assertThat().body("color", equalTo("WHITE"))
-                .assertThat().body("piecesAndPositions", not(nullValue()));
-    }
-
     @DisplayName("score Test")
     @Test
     void scoreTest() {
-        Integer userId = RestAssured.when().get("/game/start")
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new RoomRequestDto("테스트", "1111"))
+                .when().post("/room")
                 .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract().path("gameId");
+                .statusCode(HttpStatus.OK.value());
 
         float whiteScore = (float) RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/game/" + userId + "/score")
+                .when().get("/game/" + 1 + "/score")
                 .jsonPath().getMap("colorsScore")
                 .get("WHITE");
 
         assertThat(whiteScore).isEqualTo(38);
     }
 
+/*
     @DisplayName("move Test")
     @Test
     void movePiece() {
-        Integer userId = RestAssured.when().get("/game/start")
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract().path("gameId");
-
-        MoveRequestDto moveRequestDto = new MoveRequestDto(userId, "c2", "c3");
+        SessionFilter sessionFilter = new SessionFilter();
 
         RestAssured
                 .given().log().all()
+                .filter(sessionFilter)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new RoomRequestDto("테스트", "1111"))
+                .when().post("/room")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        MoveRequestDto moveRequestDto = new MoveRequestDto(1, "c2", "c3");
+
+        RestAssured
+                .given().log().all()
+                .sessionId(sessionFilter.getSessionId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveRequestDto)
                 .when().put("/game/move")
@@ -73,4 +76,5 @@ public class GameRestControllerTest {
                 .assertThat().body("end", equalTo(false))
                 .assertThat().body("nextColor", equalTo("BLACK"));
     }
+   */
 }

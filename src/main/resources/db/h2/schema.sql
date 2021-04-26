@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS room (
     user1 INT NOT NULL,
     user2 INT NULL,
     PRIMARY KEY (room_id),
-    FOREIGN KEY room(room_id)
+    FOREIGN KEY (game_id)
     REFERENCES chessgame(id),
     FOREIGN KEY (user1)
     REFERENCES user(user_id),

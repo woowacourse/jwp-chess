@@ -79,7 +79,7 @@ class ChessControllerTest {
 
         given(chessService.getStatistics(CHESS_GAME_TEST_ID)).willReturn(chessGameStatistics);
 
-        mockMvc.perform(get("/game/" + CHESS_GAME_TEST_ID + "/score"))
+        mockMvc.perform(get("/games/" + CHESS_GAME_TEST_ID + "/score"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.matchResult").value("무승부"))
                 .andExpect(jsonPath("$.colorsScore.size()").value(2));
@@ -92,7 +92,7 @@ class ChessControllerTest {
 
         given(chessService.findById(CHESS_GAME_TEST_ID)).willReturn(chessGameManager);
 
-        mockMvc.perform(get("/game/" + CHESS_GAME_TEST_ID + "/load"))
+        mockMvc.perform(get("/games/" + CHESS_GAME_TEST_ID + "/load"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(CHESS_GAME_TEST_ID))
                 .andExpect(jsonPath("$.color").value("WHITE"))
@@ -108,7 +108,7 @@ class ChessControllerTest {
         given(chessService.nextColor(CHESS_GAME_TEST_ID)).willReturn(Color.BLACK);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/game/" + CHESS_GAME_TEST_ID + "/move")
+                .post("/games/" + CHESS_GAME_TEST_ID + "/move")
                 .content(content).header("Content-Type", "application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.end").value(false))

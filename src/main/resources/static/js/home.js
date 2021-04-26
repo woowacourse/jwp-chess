@@ -1,15 +1,12 @@
 const $roomNameInput = document.getElementById("new-room");
 $roomNameInput.addEventListener('keyup', makeRoom);
 
-// const $startBtn = document.getElementById('start-btn');
-// $startBtn.addEventListener('click', makeRoom);
-
 async function makeRoom(event) {
     if (event.key === 'Enter' && event.target.value !== "") {
         const roomName = $roomNameInput.value;
-        console.log(await insertRoom(roomName));
+        const roomId = await insertRoom(roomName);
         $roomList.insertAdjacentHTML("beforeend", addRoomButton(roomName))
-        // location.replace("/rooms/" + roomId)
+        location.href = "/rooms/" + roomId;
     }
 }
 
@@ -27,9 +24,16 @@ function addRoomButton(roomName) {
 const $roomList = document.getElementById('room-list');
 $roomList.addEventListener('click', enter);
 
-function enter(event) {
-    const roomId = event.target.closest('button').innerText;
-    location.replace("/rooms/" + roomId)
+async function enter(event) {
+    const roomName = event.target.closest('button').innerText;
+    const roomId = await findRoom(roomName);
+    location.href = "/rooms/" + roomId;
+}
+
+function findRoom(roomName) {
+    return fetch("/room/" + roomName, {
+        method: 'GET'
+    }).then(res => res.json())
 }
 
 function getRoomList() {

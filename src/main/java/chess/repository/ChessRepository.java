@@ -63,4 +63,8 @@ public class ChessRepository {
     public List<String> getRoomNames() {
         return roomDao.selectAllRoomNames();
     }
+
+    public int getRoomId(String roomName) {
+        return roomDao.selectRoomId(roomName);
+    }
 }

@@ -53,4 +53,10 @@ public class RoomDao {
                 query, (rs, rowNum) -> rs.getString("room_name")
         );
     }
+
+    public int selectRoomId(String roomName) {
+        String query = "SELECT room_id FROM room WHERE room_name = :room_name";
+        SqlParameterSource namedParameters = new MapSqlParameterSource("room_name", roomName);
+        return namedParameterJdbcTemplate.queryForObject(query, namedParameters, Integer.class);
+    }
 }

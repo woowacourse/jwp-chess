@@ -75,4 +75,8 @@ public class ChessService {
     public List<String> getRoomNames() {
         return chessRepository.getRoomNames();
     }
+
+    public int getRoomId(String roomName) {
+        return chessRepository.getRoomId(roomName);
+    }
 }

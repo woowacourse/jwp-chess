@@ -35,9 +35,4 @@ public class ChessController {
         ));
         return modelAndView;
     }
-
-    @GetMapping("/end")
-    public String endGame() {
-        return "lobby";
-    }
 }

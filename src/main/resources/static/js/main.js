@@ -53,7 +53,7 @@ mainLoad.addEventListener("click", async () => {
 
 rooms.addEventListener("click", async (source) => {
     const name = source.target.value;
-    if(name ==="" || name === undefined){
+    if(name ===""|| name === undefined){
         return;
     }
     if (window.confirm(name + "방에 입장 하시겠습니까?")) {

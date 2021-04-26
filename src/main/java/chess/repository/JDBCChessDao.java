@@ -62,10 +62,11 @@ public class JDBCChessDao implements ChessDao {
     @Override
     public void update(Chess chess) {
         jdbcTemplate.update("update chess" +
-                        " set is_running = ?, winner_color = ?" +
+                        " set is_running = ?, winner_color = ?, black_player_id = ?" +
                         " where chess_id = ? ",
                 chess.isRunning(),
                 chess.getWinnerColor().getName(),
+                chess.getBlackPlayerId(),
                 chess.getId()
         );
     }

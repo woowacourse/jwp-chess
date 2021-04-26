@@ -12,11 +12,13 @@ import chess.entity.User;
 import chess.exception.DuplicateRoomException;
 import chess.exception.NotExistRoomException;
 import chess.exception.NotExistUserException;
+import chess.exception.WrongAccessException;
 import chess.service.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class SpringChessService {
@@ -33,8 +35,9 @@ public class SpringChessService {
 
     @Transactional
     public MoveResponseDto movePiece(final String gameName, final MoveRequestDto requestDto) {
+        Chess chess = findChessByName(gameName);
         ChessGame chessGame = ChessGame.newGame();
-        Chess chess = movedChess(chessGame, gameName);
+        moveChess(chessGame, chess.getName());
         chessGame.moveByTurn(new Position(requestDto.getSource()), new Position(requestDto.getTarget()));
         movementDao.save(new Movement(chess.getId(), requestDto.getSource(), requestDto.getTarget()));
 
@@ -49,8 +52,8 @@ public class SpringChessService {
     }
 
     @Transactional
-    public void saveChess(final ChessSaveRequestDto requestDto, String name) {
-        User whiteUser = userDao.findByName(name).orElseThrow(NotExistUserException::new);
+    public void saveChess(final ChessSaveRequestDto requestDto, String playerName) {
+        User whiteUser = userDao.findByName(playerName).orElseThrow(NotExistUserException::new);
 
         if (chessDao.findByName(requestDto.getName()).isPresent()) {
             throw new DuplicateRoomException();
@@ -61,35 +64,56 @@ public class SpringChessService {
 
     @Transactional
     public void changeGameStatus(final GameStatusRequestDto requestDto) {
+        Chess chess = findChessByName(requestDto.getChessName());
         ChessGame chessGame = ChessGame.newGame();
-        Chess chess = movedChess(chessGame, requestDto.getChessName());
+        moveChess(chessGame, requestDto.getChessName());
 
         chess.changeRunning(!requestDto.isGameOver());
         chess.changeWinnerColor(chessGame.findWinner());
         chessDao.update(chess);
     }
 
-    @Transactional(readOnly = true)
-    public GameStatusDto loadChess(final String name) {
+    @Transactional
+    public GameStatusDto loadChess(final String chessName, final String playerName) {
+        Chess chess = findChessByName(chessName);
+        validateChess(chess, playerName);
         ChessGame chessGame = ChessGame.newGame();
-        Chess chess = movedChess(chessGame, name);
+        moveChess(chessGame, chessName);
 
         return new GameStatusDto(chessGame.pieces(),
                 chessGame.calculateScore(), !chess.isRunning(), chess.getWinnerColor());
+    }
+
+    private void validateChess(final Chess chess, String playerName) {
+        User user = userDao.findByName(playerName).orElseThrow(NotExistUserException::new);
+
+        if (chess.getWhitePlayerId().equals(user.getId())) {
+            return;
+        }
+
+        if (Objects.isNull(chess.getBlackPlayerId())) {
+            chess.changeBlackPlayerID(user.getId());
+            chessDao.update(chess);
+            return;
+        }
+
+        if (chess.getBlackPlayerId().equals(user.getId())) {
+            return;
+        }
+
+        throw new WrongAccessException();
     }
 
     public TilesDto emptyBoard() {
         return new TilesDto(Board.emptyBoard());
     }
 
-    private Chess movedChess(final ChessGame chessGame, final String name) {
-        Chess chess = findChessByName(name);
-        List<Movement> movements = movementDao.findByChessName(chess.getName());
+    private void moveChess(final ChessGame chessGame, final String chessName) {
+        List<Movement> movements = movementDao.findByChessName(chessName);
 
         for (Movement movement : movements) {
             chessGame.moveByTurn(new Position(movement.getSourcePosition()), new Position(movement.getTargetPosition()));
         }
-        return chess;
     }
 
     private Chess findChessByName(final String chessName) {

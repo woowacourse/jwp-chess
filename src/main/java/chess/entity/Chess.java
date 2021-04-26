@@ -67,7 +67,7 @@ public class Chess {
         this.isRunning = isRunning;
     }
 
-    public void changeBlackPlayerIn(final String id) {
+    public void changeBlackPlayerID(final String id) {
         this.blackPlayerId = id;
     }
 

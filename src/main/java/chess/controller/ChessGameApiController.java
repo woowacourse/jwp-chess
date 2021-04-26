@@ -22,8 +22,8 @@ public class ChessGameApiController {
 
     @PostMapping
     public ResponseEntity<Object> saveChess(@RequestBody final ChessSaveRequestDto requestDto, HttpSession session) {
-        String name = (String) session.getAttribute(USER);
-        chessService.saveChess(requestDto, name);
+        String playerName = (String) session.getAttribute(USER);
+        chessService.saveChess(requestDto, playerName);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -34,9 +34,11 @@ public class ChessGameApiController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<GameStatusDto> loadChess(@PathVariable final String name) {
+    public ResponseEntity<GameStatusDto> loadChess(@PathVariable final String name, HttpSession session) {
+        String playerName = (String) session.getAttribute(USER);
+        GameStatusDto gameStatusDto = chessService.loadChess(name, playerName);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(chessService.loadChess(name));
+                .body(gameStatusDto);
     }
 
     @PutMapping("/{name}/pieces")

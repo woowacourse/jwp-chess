@@ -1,37 +1,47 @@
 package chess.controller.spring;
 
+import chess.controller.spring.vo.SessionVO;
 import chess.domain.board.ChessBoard;
 import chess.domain.piece.TeamType;
 import chess.dto.MoveRequestDTO;
 import chess.dto.board.BoardDTO;
 import chess.service.spring.ChessService;
 import chess.service.spring.RoomService;
+import chess.service.spring.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
-import static org.hamcrest.core.Is.is;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 @DirtiesContext
 @ActiveProfiles("test")
 class ChessControllerTest {
 
-    @LocalServerPort
-    int port;
+    private int roomId;
 
     @Autowired
     private ChessService chessService;
@@ -39,80 +49,101 @@ class ChessControllerTest {
     @Autowired
     private RoomService roomService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private WebApplicationContext ctx;
+
+    private MockMvc mockMvc;
+
     @BeforeEach
     void setUp() {
-        RestAssured.port = port;
-        roomService.addRoom("room1", "pass1");
+        mockMvc = MockMvcBuilders.webAppContextSetup(ctx)
+                .addFilters(new CharacterEncodingFilter("UTF-8", true))
+                .alwaysDo(print())
+                .build();
+        roomId = roomService.addRoom("room1", "pass1");
+        userService.addUserIntoRoom(roomId, "anotheruser123");
+    }
+
+    @AfterEach
+    void tearDown() {
+        chessService.deleteGame(roomId, roomId);
     }
 
     @DisplayName("보드를 조회한다.")
     @Test
-    void showBoard() throws JsonProcessingException {
+    void showBoard() throws Exception {
+        Map<String, Object> sessionMap = new HashMap<>();
+        sessionMap.put("session", new SessionVO(roomId, "pass1"));
         String expectedResponseBody = writeResponseBody();
 
-        Response response = RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/chessgame/1/chessboard");
-
-        assertResponse(response, HttpStatus.OK, expectedResponseBody);
+        mockMvc.perform(get("/chessgame/" + roomId + "/chessboard")
+                .sessionAttrs(sessionMap)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedResponseBody));
     }
 
     private String writeResponseBody() throws JsonProcessingException {
-        ChessBoard chessBoard = chessService.findChessBoard(1);
-        TeamType currentTeamType = chessService.findCurrentTeamType(1);
+        ChessBoard chessBoard = chessService.findChessBoard(roomId);
+        TeamType currentTeamType = chessService.findCurrentTeamType(roomId);
         BoardDTO boardDTO = BoardDTO.of(chessBoard, currentTeamType);
         return new ObjectMapper().writeValueAsString(boardDTO);
     }
 
-    private void assertResponse(Response response, HttpStatus httpStatus, String expectedResponseBody) {
-        response.then().log().all()
-                .statusCode(httpStatus.value())
-                .body(is(expectedResponseBody));
+    private String writeRequestBody(Object object) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(object);
     }
 
     @DisplayName("체스 기물을 이동한다.")
     @Test
-    void move() throws JsonProcessingException {
-        MoveRequestDTO moveRequestDTO = new MoveRequestDTO("a2", "a3", "WHITE");
+    void move() throws Exception {
+        Map<String, Object> sessionMap = new HashMap<>();
+        sessionMap.put("session", new SessionVO(roomId, "pass1"));
 
-        Response response = RestAssured.given().log().all()
+        MoveRequestDTO moveRequestDTO = new MoveRequestDTO("a2", "a3", "WHITE");
+        String requestBody = writeRequestBody(moveRequestDTO);
+
+        mockMvc.perform(put("/chessgame/" + roomId + "/chessboard")
+                .sessionAttrs(sessionMap)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(moveRequestDTO)
-                .when().put("/chessgame/1/chessboard");
-
-        assertResponse(response, HttpStatus.BAD_REQUEST, "혼자서는 플레이할 수 없습니다.");
+                .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(content().string(writeResponseBody()));
     }
 
-    @DisplayName("현재 턴이 아닌 기물을 조작시 예외가 발생한다. (혼자서는 플레이가 불가능하다.)")
+    @DisplayName("현재 턴이 아닌 기물을 조작시 예외가 발생한다.")
     @Test
-    void cannotMove() {
-        MoveRequestDTO moveRequestDTO = new MoveRequestDTO("a2", "a3", "BLACK");
+    void cannotMove() throws Exception {
+        Map<String, Object> sessionMap = new HashMap<>();
+        sessionMap.put("session", new SessionVO(roomId, "pass1"));
 
-        Response response = RestAssured.given().log().all()
+        MoveRequestDTO moveRequestDTO = new MoveRequestDTO("a2", "a3", "BLACK");
+        String requestBody = writeRequestBody(moveRequestDTO);
+
+        mockMvc.perform(put("/chessgame/" + roomId + "/chessboard")
+                .sessionAttrs(sessionMap)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(moveRequestDTO)
-                .when().put("/chessgame/1/chessboard");
-
-        assertResponse(response, HttpStatus.BAD_REQUEST, "혼자서는 플레이할 수 없습니다.");
+                .content(requestBody))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("조작할 수 있는 기물이 없습니다."));
     }
 
     @DisplayName("리스타트시 응답 결과는 메인 페이지 url이다.")
     @Test
-    void restart() {
-        Response response = RestAssured.given().log().all()
-                .when().delete("/chessgame/1");
+    void restart() throws Exception {
+        int newRoomId = roomService.addRoom("room2", "pass369");
+        Map<String, Object> sessionMap = new HashMap<>();
+        sessionMap.put("session", new SessionVO(newRoomId, "pass369"));
 
-        assertResponse(response, HttpStatus.OK, "/");
-    }
-
-    @DisplayName("도메인 예외가 발생하면 500 에러와 메시지가 발생한다.")
-    @Test
-    void handleException() {
-        Response response = RestAssured.given().log().all()
-                .when().get("/chessgame/1/result");
-
-        assertResponse(response, HttpStatus.BAD_REQUEST, "승리한 팀을 찾을 수 없습니다.");
+        mockMvc.perform(delete("/chessgame/" + newRoomId)
+                .sessionAttrs(sessionMap)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().string("/"));
     }
 }

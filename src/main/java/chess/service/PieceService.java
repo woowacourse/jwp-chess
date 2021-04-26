@@ -4,7 +4,7 @@ import chess.dao.PieceDao;
 import chess.domain.board.Board;
 import chess.domain.location.Location;
 import chess.dto.chess.MoveRequestDto;
-import chess.dto.piece.PieceDto;
+import chess.dto.piece.PieceResponseDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -22,10 +22,10 @@ public class PieceService {
         pieceDao.insertAll(gameId, Board.createWithInitialLocation().toList());
     }
 
-    public List<PieceDto> findPiecesByGameId(final long gameId) {
+    public List<PieceResponseDto> findPiecesByGameId(final long gameId) {
         return pieceDao.selectAll(gameId)
             .stream()
-            .map(PieceDto::from)
+            .map(PieceResponseDto::from)
             .collect(Collectors.toList());
     }
 

@@ -9,7 +9,7 @@ import chess.dto.chess.MoveRequestDto;
 import chess.dto.chess.MoveResponseDto;
 import chess.dto.game.GameRequestDto;
 import chess.dto.game.GameResponseDto;
-import chess.dto.piece.PieceDto;
+import chess.dto.piece.PieceResponseDto;
 import chess.dto.user.UserResponseDto;
 import chess.utils.PieceConverter;
 import java.util.List;
@@ -40,11 +40,11 @@ public class ChessService {
     }
 
     public ChessResponseDto bringGameData(final long gameId) {
-        final List<PieceDto> pieceDtos = pieceService.findPiecesByGameId(gameId);
+        final List<PieceResponseDto> pieceResponseDtos = pieceService.findPiecesByGameId(gameId);
         final GameResponseDto gameResponseDto = gameService.findById(gameId);
         final UserResponseDto host = userService.findUserById(gameResponseDto.getHostId());
         final UserResponseDto guest = userService.findUserById(gameResponseDto.getGuestId());
-        return new ChessResponseDto(pieceDtos, host, guest, gameResponseDto);
+        return new ChessResponseDto(pieceResponseDtos, host, guest, gameResponseDto);
     }
 
     public boolean checkMovement(final long gameId, final MoveRequestDto moveRequestDto) {

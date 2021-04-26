@@ -9,26 +9,14 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
 import chess.domain.team.Team;
-import chess.dto.piece.PieceDto;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import chess.dto.piece.PieceResponseDto;
 
 public class PieceConverter {
 
-    public static Piece run(final PieceDto pieceDto) {
-        final char pieceLetter = pieceDto.getShape().getValue();
-        final Team team = pieceDto.getColor();
-        final Location location = Location.of(pieceDto.getX(), pieceDto.getY());
-        return createPiece(pieceLetter, location, team);
-    }
-
-    public static Piece run(final ResultSet resultSet) throws SQLException {
-        final char pieceLetter = resultSet.getString("shape").charAt(0);
-        final Team team = Team.from(resultSet.getString("color"));
-        final Location location = Location.of(
-            resultSet.getInt("x"),
-            resultSet.getInt("y")
-        );
+    public static Piece run(final PieceResponseDto pieceResponseDto) {
+        final char pieceLetter = pieceResponseDto.getShape().getValue();
+        final Team team = pieceResponseDto.getColor();
+        final Location location = Location.of(pieceResponseDto.getX(), pieceResponseDto.getY());
         return createPiece(pieceLetter, location, team);
     }
 

@@ -47,10 +47,6 @@ public class Room {
        return players.enterable();
     }
 
-    public boolean enterable(RoomInfo roomInfo) {
-        return roomInfo.checkPassword(roomInfo) && enterable();
-    }
-
     public boolean isWhitePlayer(String user) {
         return user.equals(players.getWhitePlayer());
     }

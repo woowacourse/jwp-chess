@@ -46,6 +46,7 @@ public class RoomDao {
     }
 
     public void setBlackPlayer(final String blackPlayer, final Long roomId) {
+        System.out.println("setBlackPlayer blackPlayer : " + blackPlayer + "roomId : " + roomId);
         String sql = "update room set black_player = ? where room_id = ?";
         jdbcTemplate.update(sql, blackPlayer, roomId);
     }

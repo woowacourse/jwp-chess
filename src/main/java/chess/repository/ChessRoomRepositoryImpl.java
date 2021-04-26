@@ -31,10 +31,12 @@ public class ChessRoomRepositoryImpl implements ChessRoomRepository {
 
     @Override
     public Room room(final Long roomId) {
+        System.out.println("roomId:" + roomId);
         return roomDao.load(roomId);
     }
 
     public void join(String blackPlayer, Long roomId) {
+        System.out.println("join:" + blackPlayer);
         userDao.setRoomId(roomId, blackPlayer);
         roomDao.setBlackPlayer(blackPlayer, roomId);
     }

@@ -72,7 +72,7 @@ btnLogin.addEventListener('click', function (e) {
         "name": name,
         "pw": pw
     }).then(function (response) {
-        setCookie('user', response.data.name, 1)
+        setCookie('user', response.data.name, 5)
         refreshTitle()
     }).catch(function (error) {
         alert('로그인에 실패했습니다.');

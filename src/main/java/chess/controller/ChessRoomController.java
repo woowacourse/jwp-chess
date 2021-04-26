@@ -6,7 +6,7 @@ import dto.RoomDto;
 import dto.RoomRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +31,7 @@ public class ChessRoomController {
     }
 
     @Autowired
-    public ChessRoomController(final ChessRoomService chessRoomService) {
+    public ChessRoomController(final ChessRoomService chessRoomService, final SimpMessagingTemplate simpMessagingTemplate) {
         this.chessRoomService = chessRoomService;
     }
 
@@ -51,13 +51,9 @@ public class ChessRoomController {
     }
 
     @PostMapping("/room/{id}")
-    public ResponseEntity enterable(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
-        chessRoomService.enterable(roomRequestDto);
+    public ResponseEntity enter(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
+        System.out.println("enter called.");
+        chessRoomService.enter(roomRequestDto);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/room/{id}")
-    public ResponseEntity<ChessGameDto> enter(@CookieValue(value = "user") String cookie, @PathVariable Long id) {
-        return ResponseEntity.ok().body(chessRoomService.enter(cookie, id));
     }
 }

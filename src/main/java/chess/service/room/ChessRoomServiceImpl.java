@@ -46,27 +46,6 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     }
 
     @Override
-    public boolean enterable(final RoomRequestDto roomRequestDto) {
-        RoomInfo roomInfo = new RoomInfo (roomRequestDto.getName(), roomRequestDto.getPw(), roomRequestDto.getGameId());
-        Room savedRoom = chessRoomRepository.room(roomRequestDto.getId());
-        User user = userDao.findByName(roomRequestDto.getUser());
-
-        if (!savedRoom.checkPassword(roomInfo)){
-            throw new IllegalArgumentException("비밀번호가 잘 못되었습니다.");
-        }
-
-        if (!savedRoom.enterable()){
-            throw new IllegalArgumentException("방이 가득 찼습니다.");
-        }
-
-        if (user.inGame()) {
-            throw new IllegalArgumentException("이미 게임 중 인 사용자 입니다.");
-        }
-
-        return false;
-    }
-
-    @Override
     public List<RoomDto> rooms() {
         List<Room> rooms = chessRoomRepository.rooms();
         List<RoomDto> roomDtos = new ArrayList<>();
@@ -78,9 +57,10 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     }
 
     @Override
-    public ChessGameDto enter(String user, Long roomId) {
-        chessRoomRepository.join(user, roomId);
-        Room room = chessRoomRepository.room(roomId);
+    public ChessGameDto enter(RoomRequestDto roomRequestDto) {
+        validateEnterStatus(roomRequestDto);
+        chessRoomRepository.join(roomRequestDto.getUser(), roomRequestDto.getId());
+        Room room = chessRoomRepository.room(roomRequestDto.getId());
         Long gameId = room.getGameId();
         return new ChessGameDto(gameId, chessGameRepository.chessGame(gameId), room);
     }
@@ -94,4 +74,24 @@ public class ChessRoomServiceImpl implements ChessRoomService {
             chessRoomRepository.deleteRoom(roomId);
         }
     }
+
+    public void validateEnterStatus(RoomRequestDto roomRequestDto) {
+        RoomInfo roomInfo = new RoomInfo (roomRequestDto.getName(), roomRequestDto.getPw(), roomRequestDto.getGameId());
+        Room savedRoom = chessRoomRepository.room(roomRequestDto.getId());
+        User user = userDao.findByName(roomRequestDto.getUser());
+
+        if (!savedRoom.checkPassword(roomInfo)){
+            throw new IllegalArgumentException("비밀번호가 잘 못되었습니다.");
+        }
+
+        if (!savedRoom.enterable()){
+            throw new IllegalArgumentException("방에 입장할 수 없습니다.");
+        }
+
+        if (user.inGame()) {
+            throw new IllegalArgumentException("이미 게임 중 인 사용자 입니다.");
+        }
+
+    }
+
 }

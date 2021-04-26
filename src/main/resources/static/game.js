@@ -1,6 +1,8 @@
+const url = "http://localhost:8080"
+let stompClient;
 let gameInfo = {};
 let source = null;
-
+let started = false;
 
 const piecesMap = {
     "P": "♟", "R": "&#9820;", "N": "&#9822;", "B": "&#9821;", "Q": "&#9819;", "K": "&#9818;",
@@ -23,8 +25,20 @@ window.onload = () => {
     }
 }
 
+function connectToSocket(roomId) {
+    let socket = new SockJS(url + "/chess_game");
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        stompClient.subscribe("/topic/game/" + roomId, function (response) {
+            let data = JSON.parse(response.body);
+            refreshChessBoard(data)
+        })
+    })
+}
+
 function loadChessGame() {
-    axios.get('/api/room/' + roomId)
+    axios.get('/api/game/' + roomId)
         .then(function (response) {
             console.log(response.data)
             refreshChessBoard(response.data)
@@ -34,7 +48,7 @@ function loadChessGame() {
         } else {
             alert('게임을 로드 할 수 없습니다.');
         }
-        //location.href = "/";
+        location.href = "/";
     });
 }
 
@@ -105,10 +119,18 @@ function clearSelect() {
 }
 
 function refreshChessBoard(chessGame) {
-    console.log(chessGame);
     gameInfo = chessGame;
     let isEnd = chessGame.end;
+    const blackPlayer = chessGame.blackTeam.player;
+    const whitePlayer = chessGame.whiteTeam.player;
 
+    if (whitePlayer == null || blackPlayer == null) {
+        started = false;
+        connectToSocket(roomId);
+        return;
+    }
+
+    started = true;
     clearChessBoard();
     let blackPieces = chessGame.blackTeam.pieces.pieces;
     for (let i = 0; i < blackPieces.length; i++) {

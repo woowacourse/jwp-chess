@@ -1,4 +1,4 @@
-import {finishGameByGridId, movePiece} from "../service/chessService.js";
+import {gameStateByGridId, movePiece} from "../service/chessService.js";
 import {store} from "../store.js";
 
 export function addEvent() {
@@ -92,7 +92,7 @@ function changeTurn() {
 
 async function finish() {
     try {
-        const res = await finishGameByGridId(store.gridDto.gridId);
+        const res = await gameStateByGridId(store.gridDto.gridId);
         const data = res.data;
         if (data.code === 204) {
             store.gridDto.isFinished = true;

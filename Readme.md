@@ -9,9 +9,9 @@
 - [x] /room/:roomId/restart GET
 
 ### JDBC
-- [ ] Spring 내부 DB를 사용하도록 구현 
+- [x] Spring 내부 DB를 사용하도록 구현 
   -> schema.sql 활용해서 DDL 실행시키기
-- [ ] DAO를 Spring JDBC로 코드 교체하기
+- [x] DAO를 Spring JDBC로 코드 교체하기
 
 ### 기타
-- [ ] 응답 코드 추가해주기
+- [x] 응답 코드 추가해주기

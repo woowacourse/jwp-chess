@@ -47,15 +47,17 @@ public class SpringController {
             HttpStatus.OK);
     }
 
-    @PostMapping("/grid/{gridId}/start")
-    public ResponseEntity start(@PathVariable("gridId") String gridId) throws SQLException {
-        chessService.start(Long.parseLong(gridId));
-        return new ResponseEntity(new ResponseDto(ResponseCode.NO_CONTENT), HttpStatus.OK);
-    }
+    @PostMapping("/grid/{gridId}/state")
+    public ResponseEntity state(@RequestBody String command,
+        @PathVariable("gridId") String gridId) {
 
-    @PostMapping("/grid/{gridId}/finish")
-    public ResponseEntity finish(@PathVariable("gridId") String gridId) {
-        chessService.finish(Long.parseLong(gridId));
+        if (command.equals("gameStart")) {
+            chessService.start(Long.parseLong(gridId));
+        }
+        if (command.equals("finish")) {
+            chessService.finish(Long.parseLong(gridId));
+        }
+
         return new ResponseEntity(new ResponseDto(ResponseCode.NO_CONTENT), HttpStatus.OK);
     }
 

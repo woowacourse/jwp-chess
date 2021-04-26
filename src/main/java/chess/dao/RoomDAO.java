@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.controller.spring.params.Page;
 import chess.dto.RoomDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -52,10 +53,10 @@ public class RoomDAO {
     }
 
     public List<RoomDto> findAllRooms() {
-        return findAllRooms(FIRST_PAGE);
+        return findAllRooms(new Page(FIRST_PAGE));
     }
 
-    public List<RoomDto> findAllRooms(int page) {
+    public List<RoomDto> findAllRooms(Page page) {
         String query = "SELECT * FROM room ORDER BY createdAt DESC LIMIT ? OFFSET ?";
         return jdbcTemplate.queryForObject(
                 query,
@@ -69,6 +70,6 @@ public class RoomDAO {
                         ));
                     } while(rs.next());
                     return rooms;
-                }, MAX_ROWS, (page - GAP_BETWEEN_PAGE_AND_OFFSET) * MAX_ROWS);
+                }, page.getPageSize(), page.getOffset());
     }
 }

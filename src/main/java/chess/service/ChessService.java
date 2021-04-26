@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.controller.spring.params.Page;
 import chess.dao.GridDAO;
 import chess.dao.PieceDAO;
 import chess.dao.RoomDAO;
@@ -113,7 +114,7 @@ public class ChessService {
         return new RoomsResponseDto(roomDAO.findAllRooms());
     }
 
-    public RoomsResponseDto getAllRooms(int page) {
-        return new RoomsResponseDto(roomDAO.findAllRooms(page));
+    public RoomsResponseDto getAllRooms(int pageNumber) {
+        return new RoomsResponseDto(roomDAO.findAllRooms(new Page(pageNumber)));
     }
 }

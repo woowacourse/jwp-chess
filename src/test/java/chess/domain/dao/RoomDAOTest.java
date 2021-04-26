@@ -1,5 +1,6 @@
 package chess.domain.dao;
 
+import chess.controller.spring.params.Page;
 import chess.dao.RoomDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,6 +54,6 @@ public class RoomDAOTest {
             roomDao.createRoom(i + "");
         }
         long roomId = roomDao.createRoom("ab");
-        assertThat(roomDao.findAllRooms(2).get(0).getRoomId()).isEqualTo(roomId);
+        assertThat(roomDao.findAllRooms(new Page(2)).get(0).getRoomId()).isEqualTo(roomId);
     }
 }

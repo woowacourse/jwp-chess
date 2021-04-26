@@ -1,5 +1,6 @@
 package chess.utils;
 
+import chess.dao.dto.PieceDto;
 import chess.domain.location.Location;
 import chess.domain.piece.Bishop;
 import chess.domain.piece.King;
@@ -13,10 +14,18 @@ import chess.dto.piece.PieceResponseDto;
 
 public class PieceConverter {
 
+    // TODO : 추후에 삭제 하고 패키지 이동
     public static Piece run(final PieceResponseDto pieceResponseDto) {
         final char pieceLetter = pieceResponseDto.getShape().getValue();
         final Team team = pieceResponseDto.getColor();
         final Location location = Location.of(pieceResponseDto.getX(), pieceResponseDto.getY());
+        return createPiece(pieceLetter, location, team);
+    }
+
+    public static Piece run(final PieceDto pieceDto) {
+        final char pieceLetter = pieceDto.getShape();
+        final Team team = Team.from(pieceDto.getColor());
+        final Location location = Location.of(pieceDto.getX(), pieceDto.getY());
         return createPiece(pieceLetter, location, team);
     }
 

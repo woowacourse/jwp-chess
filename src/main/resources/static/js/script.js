@@ -107,6 +107,7 @@ async function createNewRoom() {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
+            'Accept': 'application/json'
         },
         body: JSON.stringify({
             gameId: gameId,
@@ -124,9 +125,9 @@ async function updateRoomName(res) {
         updateMessage(response.message);
         return;
     }
-    res = await res.json();
-    alert(res.message);
-    updateMessage(res.message);
+    res = await res.text();
+    alert(res);
+    updateMessage(res);
     createNewRoom();
 }
 

@@ -4,17 +4,18 @@ import chess.mysql.dao.dto.ChessGameDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("jdbcTemplateChessDao 테스트")
-@JdbcTest
+@SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
 class JdbcTemplateChessDaoTest {
     private final ChessGameDto sample = new ChessGameDto(1L, "WHITE", true, "RNBQKBNRPPPPPPPP................................pppppppprnbqkbnr");
@@ -33,10 +34,9 @@ class JdbcTemplateChessDaoTest {
     void saveAndFindByIdTest() {
         //given
         //when
-        long gameId = jdbcTemplateChessDao.save(sample);
+        ChessGameDto chessGameDto = jdbcTemplateChessDao.save(sample);
 
         //then
-        ChessGameDto chessGameDto = jdbcTemplateChessDao.findById(gameId).get();
         assertThat(chessGameDto.getNextTurn()).isEqualTo("WHITE");
     }
 
@@ -48,13 +48,13 @@ class JdbcTemplateChessDaoTest {
         String expectedPieces = ".................RNBQKBNRPPPPPPPP...............pppppppprnbqkbnr";
 
         //when
-        long gameId = jdbcTemplateChessDao.save(sample);
-        jdbcTemplateChessDao.update(new ChessGameDto(gameId, changedTurn, true, expectedPieces));
+        ChessGameDto chessGameDto = jdbcTemplateChessDao.save(sample);
+        jdbcTemplateChessDao.update(new ChessGameDto(chessGameDto.getId(), changedTurn, true, expectedPieces));
+        ChessGameDto result = jdbcTemplateChessDao.findById(chessGameDto.getId()).get();
 
         //then
-        ChessGameDto chessGameDto = jdbcTemplateChessDao.findById(gameId).get();
-        assertThat(chessGameDto.getPieces()).isEqualTo(expectedPieces);
-        assertThat(chessGameDto.getNextTurn()).isEqualTo(changedTurn);
+        assertThat(result.getPieces()).isEqualTo(expectedPieces);
+        assertThat(result.getNextTurn()).isEqualTo(changedTurn);
     }
 
     @DisplayName("끝나지 않은 게임을 찾아오는 기능 테스트")
@@ -62,26 +62,26 @@ class JdbcTemplateChessDaoTest {
     void findAllOnRunning() {
         //given
         //when
-        long firstGameId = jdbcTemplateChessDao.save(sample);
-        long secondGameId = jdbcTemplateChessDao.save(sample);
+        ChessGameDto first = jdbcTemplateChessDao.save(sample);
+        ChessGameDto second = jdbcTemplateChessDao.save(sample);
 
         //then
         List<Long> onRunnings = jdbcTemplateChessDao.findAllOnRunning().stream()
                 .map(ChessGameDto::getId)
                 .collect(toList());
 
-        assertThat(onRunnings).contains(firstGameId, secondGameId);
+        assertThat(onRunnings).contains(first.getId(), second.getId());
     }
 
     @DisplayName("삭제 기능 테스트")
     @Test
     void delete() {
         //given
-        long gameId = jdbcTemplateChessDao.save(sample);
+        ChessGameDto expectedDelete = jdbcTemplateChessDao.save(sample);
 
         //when
-        jdbcTemplateChessDao.delete(gameId);
+        jdbcTemplateChessDao.delete(expectedDelete.getId());
         //then
-        assertThat(jdbcTemplateChessDao.findById(gameId));
+        assertThat(jdbcTemplateChessDao.findById(expectedDelete.getId()));
     }
 }

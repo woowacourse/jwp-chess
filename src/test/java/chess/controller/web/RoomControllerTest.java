@@ -1,5 +1,6 @@
 package chess.controller.web;
 
+import chess.controller.web.dto.RoomRequestDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.*;
 
@@ -20,6 +22,18 @@ class RoomControllerTest {
         RestAssured.port = port;
     }
 
+    @DisplayName("Game Start 테스트")
+    @Test
+    void StartGameTest() {
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new RoomRequestDto("테스트", "1111"))
+                .when().post("/room")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
     @DisplayName("활성화 중인 게임을 가져올 수 있는지 확인")
     @Test
     void getGamesTest() {
@@ -27,6 +41,6 @@ class RoomControllerTest {
                 .when().get("/room")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .assertThat().body("runningGames", not(nullValue()));
+                .assertThat().body("activeRooms", not(nullValue()));
     }
 }

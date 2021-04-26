@@ -11,11 +11,6 @@ public class Running implements State {
     }
 
     @Override
-    public State end() {
-        return new GameEnd();
-    }
-
-    @Override
     public State status() {
         return this;
     }

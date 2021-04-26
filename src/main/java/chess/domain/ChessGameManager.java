@@ -57,10 +57,6 @@ public class ChessGameManager {
         this.state = state;
     }
 
-    public void end() {
-        updateState(this.state.end());
-    }
-
     public void move(Position from, Position to) {
         validateProperPieceAtFromPosition(from);
         if (this.state.isNotRunning()) {
@@ -131,7 +127,7 @@ public class ChessGameManager {
     }
 
     public boolean isEnd() {
-        return this.state instanceof GameEnd || this.state instanceof EndWithoutGame;
+        return this.state instanceof GameEnd;
     }
 
     public Color getCurrentTurnColor() {

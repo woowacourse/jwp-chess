@@ -13,11 +13,6 @@ public class InitialState implements State {
     }
 
     @Override
-    public State end() {
-        return new EndWithoutGame();
-    }
-
-    @Override
     public State status() {
         throw new InvalidStateException("통계를 보여줄 수 없습니다. - 진행했거나 진행한 게임이 없습니다.");
     }

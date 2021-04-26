@@ -8,7 +8,6 @@ public class TeamDto {
     private double score;
     private boolean isTurn;
 
-
     public TeamDto(PiecesDto pieces, String name, double score, boolean isTurn) {
         this.pieces = pieces;
         this.name = name;

@@ -12,4 +12,6 @@ public interface RoomDao {
     List<Room> rooms();
 
     Optional<Room> findRoom(Long roomId);
+
+    void removeRoom(Long id);
 }

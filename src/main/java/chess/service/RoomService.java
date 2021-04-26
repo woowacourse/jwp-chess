@@ -15,4 +15,8 @@ public interface RoomService {
     void enterRoomAsPlayer(Long roomId, String password, TeamColor teamColor, User user);
 
     Optional<Room> findRoom(Long roomId);
+
+    void enterRoomAsParticipant(Long roomId, String password, User user);
+
+    void removeRoom(Long id);
 }

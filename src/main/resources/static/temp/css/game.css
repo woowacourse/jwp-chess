@@ -157,3 +157,14 @@
   height: 10%;
   /*padding-top: 5%;*/
 }
+
+
+.board-item:hover {
+  background-color: #9f91a9;
+}
+
+.movable {
+  background-color: lightblue;
+  border: solid 1px grey;
+  box-sizing: border-box;
+}

@@ -87,4 +87,8 @@ class Board {
   getColor() {
     return this.#roundStatus.currentColor;
   }
+
+  movable() {
+    return this.#roundStatus != null && this.#teamColor === this.#roundStatus.currentColor;
+  }
 }

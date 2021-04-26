@@ -48,9 +48,18 @@ public class RoomServiceNormal implements RoomService {
     public Optional<Room> findRoom(Long roomId) {
         return roomDao.findRoom(roomId);
     }
-//
-//    @Override
-//    public Optional<Room> roomById(Long gameId) {
-//        return roomDao.findRoom(gameId);
-//    }
+
+    @Override
+    public void enterRoomAsParticipant(Long roomId, String password, User user) {
+        Room room = roomDao.findRoom(roomId).orElseThrow(RoomNotFoundException::new);
+        if (room.isLocked() && room.passwordIncorrect(password)) {
+            throw new PasswordIncorrectException();
+        }
+        room.enterAsParticipant(user);
+    }
+
+    @Override
+    public void removeRoom(Long id) {
+        roomDao.removeRoom(id);
+    }
 }

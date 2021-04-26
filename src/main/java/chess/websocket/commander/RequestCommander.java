@@ -1,8 +1,17 @@
 package chess.websocket.commander;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+
 import chess.controller.dto.PieceDto;
+import chess.controller.dto.PositionDto;
 import chess.controller.dto.RoomRequestDto;
+import chess.controller.dto.RoundStatusDto;
+import chess.domain.ChessGame;
+import chess.domain.Position;
 import chess.domain.TeamColor;
+import chess.domain.converter.StringPositionConverter;
+import chess.domain.piece.Piece;
 import chess.domain.room.Room;
 import chess.domain.room.User;
 import chess.exception.RoomNotFoundException;
@@ -14,11 +23,11 @@ import chess.websocket.commander.dto.GameRoomResponseDto;
 import chess.websocket.commander.dto.NameDto;
 import chess.websocket.commander.dto.RoomResponseDto;
 import chess.websocket.domain.Lobby;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
@@ -28,12 +37,14 @@ public class RequestCommander {
     private final RoomService roomService;
     private final ObjectMapper objectMapper;
     private final Lobby lobby;
+    private final StringPositionConverter positionConverter;
 
     public RequestCommander(RoomService roomService,
         ObjectMapper objectMapper, Lobby lobby) {
         this.roomService = roomService;
         this.objectMapper = objectMapper;
         this.lobby = lobby;
+        this.positionConverter = new StringPositionConverter();
     }
 
     public void enterLobby(User user) {
@@ -95,6 +106,16 @@ public class RequestCommander {
         updateRoomForLobbyUsers(data);
     }
 
+    public void enterRoomAsParticipant(Map<String, Object> data, User user) throws Exception {
+        final EnterRoomRequestDto enterRoomRequestDto = objectMapper
+            .convertValue(data, EnterRoomRequestDto.class);
+        roomService.enterRoomAsParticipant(enterRoomRequestDto.getRoomId(),
+            enterRoomRequestDto.getPassword(), user);
+
+        user.enterRoom(enterRoomRequestDto.getRoomId(), enterRoomRequestDto.getNickname());
+        loadChessGameRoom(enterRoomRequestDto.getRoomId(), user);
+    }
+
 
     private void loadChessGameRoom(Long roomId, User user) throws Exception {
         Room room = roomService.findRoom(roomId).orElseThrow(RoomNotFoundException::new);
@@ -108,16 +129,17 @@ public class RequestCommander {
         final String whitePlayer = room.whitePlayer().map(User::name).orElse("");
         final String blackPlayer = room.blackPlayer().map(User::name).orElse("");
 
-
         GameRoomResponseDto gameRoomResponseDto = new GameRoomResponseDto(
             pieces, user.isPlayer(), user.teamColor(), whitePlayer, blackPlayer
         );
 
-        user.sendData(objectMapper.writeValueAsString(new ResponseForm<>(Form.LOAD_GAME, gameRoomResponseDto)));
-
+        user.sendData(objectMapper
+            .writeValueAsString(new ResponseForm<>(Form.LOAD_GAME, gameRoomResponseDto)));
+        user.sendData(objectMapper
+            .writeValueAsString(new ResponseForm<>(Form.UPDATE_STATUS, roundStatus(roomId))));
     }
 
-    private void updateNameForRoomUsers(Long roomId) throws Exception{
+    private void updateNameForRoomUsers(Long roomId) throws Exception {
         NameDto nameDto = new NameDto();
         Room room = roomService.findRoom(roomId)
             .orElseThrow(RoomNotFoundException::new);
@@ -128,15 +150,71 @@ public class RequestCommander {
         final String response = objectMapper
             .writeValueAsString(new ResponseForm<>(Form.NEW_USER_NAME, nameDto));
 
-        room.players()
+        room.users()
             .forEach(user -> user.sendData(response));
     }
 
     public void leaveRoom(User user) {
         roomService.findRoom(user.roomId()).ifPresent(room -> {
-            room.leaveRoom(user);
+            if (user.isPlayer()) {
+                try {
+                    final String response = objectMapper
+                        .writeValueAsString(new ResponseForm<>(Form.REMOVE_ROOM, user.name()));
+                    room.users().stream().filter(roomUser -> !roomUser.equals(user)).forEach(roomUser -> roomUser.sendData(response));
+                    roomService.removeRoom(room.id());
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                room.leaveRoom(user);
+            }
             updateRoomForLobbyUsers(new HashMap<>());
         });
+    }
+
+    private RoundStatusDto roundStatus(Long roomId) {
+        final ChessGame chessGame = roomService.findRoom(roomId)
+            .orElseThrow(RoomNotFoundException::new).chessGame();
+        List<Piece> pieces = chessGame.currentColorPieces();
+        return new RoundStatusDto(
+            mapMovablePositions(pieces),
+            chessGame.currentColor(),
+            chessGame.gameResult(),
+            chessGame.isChecked(),
+            chessGame.isKingDead()
+        );
+    }
+
+    private Map<String, List<String>> mapMovablePositions(List<Piece> pieces) {
+        return pieces.stream()
+            .collect(toMap(
+                piece -> piece.currentPosition().columnAndRow(),
+                piece -> piece.movablePositions()
+                    .stream()
+                    .map(Position::columnAndRow)
+                    .collect(toList())
+            ));
+    }
+
+    public void move(Map<String, Object> data, User user) throws Exception {
+        PositionDto positionDto = objectMapper.convertValue(data, PositionDto.class);
+        final Position currentPosition = positionConverter
+            .convert(positionDto.getCurrentPosition());
+        final Position targetPosition = positionConverter.convert(positionDto.getTargetPosition());
+        final Room room = roomService.findRoom(user.roomId())
+            .orElseThrow(RoomNotFoundException::new);
+
+        room.chessGame().movePiece(currentPosition, targetPosition);
+        final String roundStatus = objectMapper.writeValueAsString(
+            new ResponseForm<>(Form.UPDATE_STATUS, roundStatus(user.roomId())));
+
+        String movedResponse = objectMapper
+            .writeValueAsString(new ResponseForm<>(Form.MOVE_PIECE, positionDto));
+
+        room.users().stream().filter(roomUser -> !roomUser.equals(user))
+            .forEach(roomUser -> roomUser.sendData(movedResponse));
+
+        room.users().forEach(roomUser -> roomUser.sendData(roundStatus));
     }
 
 //    public void enterRoom(String[] contents, WebSocketSession player) {

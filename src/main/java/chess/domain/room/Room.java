@@ -37,6 +37,11 @@ public class Room {
         users.add(user);
     }
 
+    public void enterAsParticipant(User user) {
+        user.setAsNotPlayer();
+        users.add(user);
+    }
+
     public boolean hasSameId(Long roomId) {
         return this.id.equals(roomId);
     }
@@ -79,5 +84,9 @@ public class Room {
 
     public void leaveRoom(User user) {
         users.remove(user);
+    }
+
+    public List<User> users() {
+        return users;
     }
 }

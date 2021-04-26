@@ -33,4 +33,9 @@ public class RoomDaoCaching implements RoomDao {
             .filter(room -> room.hasSameId(roomId))
             .findAny();
     }
+
+    @Override
+    public void removeRoom(Long roomId) {
+        findRoom(roomId).ifPresent(rooms::remove);
+    }
 }

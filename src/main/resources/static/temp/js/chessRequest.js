@@ -19,6 +19,25 @@ class ChessRequest {
     });
     webSocket.send(JSON.stringify(requestForm));
   }
+
+  enterRoomAsParticipant(roomId, nickname, password) {
+    let requestForm = new RequestForm('ENTER_ROOM_PARTICIPANT');
+    requestForm.setData({
+      roomId,
+      nickname,
+      password
+    });
+    webSocket.send(JSON.stringify(requestForm));
+  }
+
+  move(currentPosition, targetPosition) {
+    let requestForm = new RequestForm('PIECE_MOVE');
+    requestForm.setData({
+      currentPosition,
+      targetPosition
+    });
+    webSocket.send(JSON.stringify(requestForm));
+  }
 }
 
 class RequestForm {

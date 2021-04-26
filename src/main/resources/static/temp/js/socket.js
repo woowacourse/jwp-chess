@@ -10,6 +10,8 @@ let $exits;
 let $error_messages;
 let $modals;
 let $enter_modal;
+let $board;
+
 let roomId;
 let locked;
 let impossible;
@@ -23,6 +25,7 @@ webSocket.onmessage = function (message) {
   $error_messages = document.querySelectorAll('.error_message');
   $modals = document.querySelectorAll('.modal');
   $enter_modal = document.querySelector('.enter-modal');
+  $board = document.querySelector('.board');
   eventHandler();
 }
 
@@ -36,33 +39,12 @@ function eventHandler() {
   if ($create_modal) {
     $create_modal.addEventListener('click', clickEvent);
   }
+  if ($board) {
+    $board.addEventListener('click', clickEvent);
+  }
 }
 
-function clickEvent({target}) {
-  console.log(target)
-
-  if (target.classList.contains('create-room')
-      || target.parentElement.classList.contains('create-room')) {
-    $create_modal.style.display = 'block';
-    return;
-  }
-
-  if (target.classList.contains('enter')) {
-    //다 모달 띄워야됨.
-    $enter_modal.style.display = 'block';
-    roomId = target.id;
-    locked = target.classList.contains('lock');
-    $enter_modal.id = target.classList.contains('asPlayer') ? 'asPlayer'
-        : 'asParticipant';
-    impossible = target.classList.contains('impossible');
-    return;
-  }
-
-  if (target.parentElement.classList.contains('exit')) {
-    exitAll();
-    return;
-  }
-
+function submit(target) {
   if (target.classList.contains('submit')) {
     const nickname = getElement(target, 'nickname').value;
     const password = getElement(target, 'password').value;
@@ -91,7 +73,6 @@ function clickEvent({target}) {
     }
 
     if (target.classList.contains('enter-submit')) {
-      console.log(target);
       if (nickname === '') {
         $error_messages.forEach(error => error.textContent = '닉네임을 설정해주세요');
         return;
@@ -116,6 +97,44 @@ function clickEvent({target}) {
       exitAll();
     }
   }
+}
+
+function clickEvent({target}) {
+
+  if (target.classList.contains('create-room')
+      || target.parentElement.classList.contains('create-room')) {
+    $create_modal.style.display = 'block';
+    return;
+  }
+
+  if (target.classList.contains('enter') || target.parentElement.classList.contains('enter')) {
+    //다 모달 띄워야됨.
+    const enter = target.closest('.enter')
+    $enter_modal.style.display = 'block';
+    roomId = enter.id;
+    locked = enter.classList.contains('lock');
+    $enter_modal.id = enter.classList.contains('asPlayer') ? 'asPlayer'
+        : 'asParticipant';
+    impossible = enter.classList.contains('impossible');
+    return;
+  }
+
+  if (target.parentElement.classList.contains('exit')) {
+    exitAll();
+    return;
+  }
+
+  if ((target.classList.contains('board-item') || target.parentElement.classList.contains('board-item')) && commandExecutor.board().movable()) {
+    let targetBoardItem = target.closest(".board-item");
+
+    if (targetBoardItem.classList.contains('movable')) {
+      movePosition(targetBoardItem);
+    } else {
+      commandExecutor.board().selectItem(targetBoardItem);
+    }
+  }
+
+  submit(target);
 
 }
 
@@ -129,6 +148,14 @@ function exitAll() {
   roomId = '';
   locked = '';
   impossible = false;
+}
+
+function movePosition(targetBoardItem) {
+  const currentPosition = commandExecutor.board().getSelectedItem().id;
+  const targetPosition = targetBoardItem.id;
+
+  commandExecutor.board().move(targetBoardItem);
+  roomRequest.move(currentPosition, targetPosition);
 }
 
 webSocket.onopen = () => {

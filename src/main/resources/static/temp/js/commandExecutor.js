@@ -1,7 +1,7 @@
 class CommandExecutor {
   #board;
 
-  execute(response) {
+  async execute(response) {
     switch (response.form) {
       case 'UPDATE_ROOM' :
         document.querySelector('.contents');
@@ -27,7 +27,24 @@ class CommandExecutor {
         myName.innerHTML = response.data.whiteName;
         break;
 
+      case 'UPDATE_STATUS' :
+        this.#board.updateBoardStatus(response.data);
+        break;
 
+      case 'MOVE_PIECE' :
+        const currentPosition = document.getElementById(response.data.currentPosition);
+        const targetPosition = document.getElementById(response.data.targetPosition);
+        this.#board.selectItem(currentPosition);
+        this.#board.move(targetPosition);
+        break;
+
+      case 'REMOVE_ROOM' :
+        await alert(`${response.data}님이 나가 게임이 종료됩니다.`);
+        window.location.reload();
     }
+  }
+
+  board() {
+    return this.#board;
   }
 }

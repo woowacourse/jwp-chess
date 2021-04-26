@@ -12,7 +12,7 @@ public class RoomResponseDto {
         this.roomId = room.id();
         this.title = room.title();
         this.locked = room.isLocked();
-        this.playerAmount = room.count();
+        this.playerAmount = room.players().size();
     }
 
     public Long getRoomId() {

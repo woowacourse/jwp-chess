@@ -35,14 +35,14 @@ class ChessServiceImplTest {
     @BeforeEach
     void beforeEach() {
         String sample = "RKBQKBKRPPPPPPPP................................pppppppprkbqkbkr"; // move a2 a3 한 번 진행
-        chessGame = new ChessGame(DEFAULT_CHESS_GAME_ID, WHITE, true, sample);
+        chessGame = new ChessGame(DEFAULT_CHESS_GAME_ID, WHITE, true, sample, "temp");
         sampleGame = ChessGameManagerFactory.loadingGame(chessGame);
     }
 
     @Test
     @DisplayName("체스 게임을 시작한다.")
     void start() {
-        ChessGameManager chessGameManager = chessService.start();
+        ChessGameManager chessGameManager = chessService.start("");
 
         assertThat(chessGameManager.getId()).isEqualTo(2);
     }

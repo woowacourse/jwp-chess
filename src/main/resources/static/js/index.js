@@ -1,4 +1,4 @@
-import {getFetch} from "./promise/fetches.js"
+import {getFetch, postFetch} from "./promise/fetches.js"
 
 const $games = document.querySelector('#chess-game-list');
 const $generatorButton = document.querySelector("#generator");
@@ -12,7 +12,7 @@ function insertGameList(ele, games) {
     chessGameLI.className = "list-group-item";
     chessGameLI.innerHTML = `
             <div class="view" id = "${ele}">
-            NO.${ele} Room
+            NO.${ele} ${games[ele]} Room
             </div>`;
     chessGameLI.addEventListener("click", function () {
         location.href = "/board?id=" + this.children[0].id;
@@ -29,8 +29,9 @@ async function findGames() {
 }
 
 async function askGenerateChessGame() {
-    if (confirm("새로운 체스 게임방을 만드시겠습니까?")) {
-        await getFetch("/game/start");
+    const title = prompt("새로 만들 체스 게임 방 제목을 입력해주세요.");
+    if (title) {
+        await postFetch("/game/start", {title: title});
         location.reload();
     }
 }

@@ -7,8 +7,8 @@ public class EndChessGameManager extends NotRunningGameManager {
     private final ChessGameStatistics chessGameStatistics;
     private final Board board;
 
-    public EndChessGameManager(long id, ChessGameStatistics chessGameStatistics, Board board) {
-        super(id);
+    public EndChessGameManager(long id, String title, ChessGameStatistics chessGameStatistics, Board board) {
+        super(id, title);
         this.chessGameStatistics = chessGameStatistics;
         this.board = board;
     }

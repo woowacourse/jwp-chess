@@ -119,6 +119,15 @@
     margin-bottom: 10px;
 }
 
+#title {
+    font-family: 'Merriweather', serif;
+    font-weight: bolder;
+    font-size: 35px;
+    text-align: center;
+    background: #282828;
+    color: white;
+}
+
 .board {
     font-family: 'Merriweather', serif;
     margin: 180px 10px 0px 10px;

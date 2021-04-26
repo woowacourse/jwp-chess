@@ -5,8 +5,8 @@ import chess.domain.board.InitBoardInitializer;
 import chess.domain.statistics.ChessGameStatistics;
 
 public class NotStartedChessGameManager extends NotRunningGameManager {
-    public NotStartedChessGameManager(long id) {
-        super(id);
+    public NotStartedChessGameManager(long id, String title) {
+        super(id, title);
     }
 
     @Override
@@ -32,5 +32,10 @@ public class NotStartedChessGameManager extends NotRunningGameManager {
     @Override
     public ChessGameStatistics getStatistics() {
         throw new UnsupportedOperationException("게임이 진행중이지 않아 실행할 수 없습니다.");
+    }
+
+    @Override
+    public String getTitle() {
+        return null;
     }
 }

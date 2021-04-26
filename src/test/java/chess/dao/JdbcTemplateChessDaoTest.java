@@ -40,7 +40,7 @@ class JdbcTemplateChessDaoTest {
     @BeforeEach
     void beforeEach() {
         String sample = "RKBQKBKRPPPPPPPP................................pppppppprkbqkbkr"; // move a2 a3 한 번 진행
-        chessGame = new ChessGame(DEFAULT_CHESS_GAME_ID, WHITE, true, sample);
+        chessGame = new ChessGame(DEFAULT_CHESS_GAME_ID, WHITE, true, sample, "");
         sampleGame = ChessGameManagerFactory.loadingGame(chessGame);
     }
 

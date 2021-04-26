@@ -10,19 +10,21 @@ import java.util.Map;
 
 public abstract class NotRunningGameManager implements ChessGameManager {
     private final long id;
+    private final String title;
 
-    public NotRunningGameManager(long id) {
+    public NotRunningGameManager(long id, String title) {
         this.id = id;
+        this.title = title;
     }
 
     @Override
     public ChessGameManager start() {
-        return ChessGameManagerFactory.createRunningGame(id);
+        return ChessGameManagerFactory.createRunningGame(id, title);
     }
 
     @Override
     public ChessGameManager end() {
-        return ChessGameManagerFactory.createEndGame(id, ChessGameStatistics.createNotStartGameResult(), InitBoardInitializer.getBoard());
+        return ChessGameManagerFactory.createEndGame(id, title, ChessGameStatistics.createNotStartGameResult(), InitBoardInitializer.getBoard());
     }
 
     @Override
@@ -48,5 +50,10 @@ public abstract class NotRunningGameManager implements ChessGameManager {
     @Override
     public Map<String, PieceDto> getPieces() {
         throw new UnsupportedOperationException("게임이 진행중이지 않아 실행할 수 없습니다.");
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
     }
 }

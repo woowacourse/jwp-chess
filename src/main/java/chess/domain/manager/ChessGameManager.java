@@ -32,4 +32,6 @@ public interface ChessGameManager {
     Map<String, PieceDto> getPieces();
 
     ChessGameStatistics getStatistics();
+
+    String getTitle();
 }

@@ -7,6 +7,7 @@ const $chessboard = document.querySelector("#chess-board");
 const $blackScore = document.querySelector("#BLACK");
 const $whiteScore = document.querySelector("#WHITE");
 const $turn = document.querySelector("#turn");
+const $title = document.querySelector("#title");
 
 $startButton.addEventListener("click", start);
 $resetButton.addEventListener("click", reset);
@@ -27,12 +28,14 @@ async function initializeChessBoard() {
     await calculateScore();
     setBoard(piecesData.piecesAndPositions);
     setTurn(piecesData.color);
+    setTitle(piecesData.title)
 }
 
 async function updateBoard(piecesData) {
     await calculateScore();
     setBoard(piecesData.piecesAndPositions);
     setTurn(piecesData.color);
+    setTitle(piecesData.title);
 }
 
 function setBoard(positionsAndPieces) {
@@ -49,6 +52,10 @@ function setBoard(positionsAndPieces) {
         piece.style.height = "100%";
         coordinate.appendChild(piece);
     });
+}
+
+function setTitle(title) {
+    $title.innerHTML = title + "  Room";
 }
 
 async function calculateScore() {

@@ -6,6 +6,8 @@ import chess.domain.manager.ChessGameManagerBundle;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 public class ChessController {
     private final ChessService chessService;
@@ -20,9 +22,10 @@ public class ChessController {
         return new RunningGameResponseDto(runningGames.getIdAndNextTurn());
     }
 
-    @GetMapping("/game/start")
-    public ChessGameResponseDto gameStart() {
-        return new ChessGameResponseDto(chessService.start());
+    @PostMapping("/game/start")
+    public ChessGameResponseDto gameStart(@RequestBody Map<String, String> param) {
+        String title = param.get("title");
+        return new ChessGameResponseDto(chessService.start(title));
     }
 
     @GetMapping("/games/{id:[\\d]+}/score")

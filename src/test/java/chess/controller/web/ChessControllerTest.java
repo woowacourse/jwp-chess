@@ -7,7 +7,9 @@ import chess.domain.manager.ChessGameManagerFactory;
 import chess.domain.piece.attribute.Color;
 import chess.domain.statistics.ChessGameStatistics;
 import chess.service.ChessService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,7 +42,7 @@ class ChessControllerTest {
     @DisplayName("게임 리스트 조회 테스트")
     void getGames() throws Exception {
         List<ChessGameManager> chessGameManagers = new ArrayList<>();
-        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID);
+        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID, "temp");
         chessGameManagers.add(chessGameManager);
 
         given(chessService.findRunningGames()).willReturn(new ChessGameManagerBundle(chessGameManagers));
@@ -46,17 +50,22 @@ class ChessControllerTest {
         mockMvc.perform(get("/games"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.runningGames." + CHESS_GAME_TEST_ID)
-                        .value("WHITE"));
+                        .value("temp"));
     }
 
     @Test
     @DisplayName("새로운 게임 시작 테스트")
     void gameStart() throws Exception {
-        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID);
+        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID, "test");
+        Map<String, Object> data = new HashMap<>();
+        data.put("title", "test");
+        String json = new ObjectMapper().writeValueAsString(data);
 
-        given(chessService.start()).willReturn(chessGameManager);
+        given(chessService.start("test")).willReturn(ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID, "test"));
 
-        mockMvc.perform(get("/game/start"))
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/game/start")
+                        .content(json).header("Content-Type", "application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(CHESS_GAME_TEST_ID))
                 .andExpect(jsonPath("$.color").value("WHITE"))
@@ -79,7 +88,7 @@ class ChessControllerTest {
     @Test
     @DisplayName("해당 게임 로딩 테스트")
     void loadGame() throws Exception {
-        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID);
+        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID, "");
 
         given(chessService.findById(CHESS_GAME_TEST_ID)).willReturn(chessGameManager);
 

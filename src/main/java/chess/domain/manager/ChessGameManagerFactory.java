@@ -14,24 +14,24 @@ public class ChessGameManagerFactory {
     private ChessGameManagerFactory() {
     }
 
-    public static ChessGameManager createRunningGame(long id) {
-        return new RunningGameManager(id, InitBoardInitializer.getBoard(), WHITE);
+    public static ChessGameManager createRunningGame(long id, String title) {
+        return new RunningGameManager(id, InitBoardInitializer.getBoard(), title, WHITE);
     }
 
-    public static ChessGameManager createEndGame(long id, ChessGameStatistics chessGameStatistics, Board board) {
-        return new EndChessGameManager(id, chessGameStatistics, board);
+    public static ChessGameManager createEndGame(long id, String title, ChessGameStatistics chessGameStatistics, Board board) {
+        return new EndChessGameManager(id, title, chessGameStatistics, board);
     }
 
-    public static ChessGameManager createNotStartedGameManager(long id) {
-        return new NotStartedChessGameManager(id);
+    public static ChessGameManager createNotStartedGameManager(long id, String title) {
+        return new NotStartedChessGameManager(id, title);
     }
 
     public static ChessGameManager loadingGame(ChessGame chessGame) {
         Board loadedBoard = LoadBoardInitializer.getBoard(convertSquares(chessGame.getPieces()));
         if (chessGame.isRunning()) {
-            return new RunningGameManager(chessGame.getId(), loadedBoard, chessGame.getNextTurn());
+            return new RunningGameManager(chessGame.getId(), loadedBoard, chessGame.getTitle(), chessGame.getNextTurn());
         }
-        return createEndGame(chessGame.getId(), ChessGameStatistics.createNotStartGameResult(),
+        return createEndGame(chessGame.getId(), chessGame.getTitle(), ChessGameStatistics.createNotStartGameResult(),
                 LoadBoardInitializer.getBoard(PiecesConverter.convertSquares(chessGame.getPieces())));
     }
 }

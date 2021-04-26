@@ -26,15 +26,17 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public ChessGameManager start() {
-        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(TEMPORARY_ID);
+    public ChessGameManager start(String title) {
+        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(TEMPORARY_ID, title);
         long gameId = chessDao.save(new ChessGame(chessGameManager));
-        return ChessGameManagerFactory.createRunningGame(gameId);
+        return ChessGameManagerFactory.createRunningGame(gameId, title);
     }
 
     @Override
     public ChessGameManager end(long gameId) {
         ChessGameManager endGameManager = findById(gameId).end();
+        ChessGameManager chessGame = findById(gameId);
+        chessGame.end();
         update(endGameManager);
         return endGameManager;
     }
@@ -51,11 +53,6 @@ public class ChessServiceImpl implements ChessService {
         return ChessGameManagerFactory.loadingGame(chessGame);
     }
 
-    @Override
-    public boolean isKindDead(long gameId) {
-        return findById(gameId).isKingDead();
-    }
-
     private void update(ChessGameManager chessGameManager) {
         chessDao.update(new ChessGame(chessGameManager));
     }
@@ -64,7 +61,7 @@ public class ChessServiceImpl implements ChessService {
     public ChessGameManager load(long gameId) {
         return chessDao.findById(gameId)
                 .map(ChessGameManagerFactory::loadingGame)
-                .orElseGet(() -> new NotStartedChessGameManager(gameId));
+                .orElseGet(() -> new NotStartedChessGameManager(gameId,""));
     }
 
     @Override
@@ -91,7 +88,7 @@ public class ChessServiceImpl implements ChessService {
     public ChessGameManager findById(long gameId) {
         return chessDao.findById(gameId)
                 .map(ChessGameManagerFactory::loadingGame)
-                .orElseGet(() -> new NotStartedChessGameManager(gameId));
+                .orElseGet(() -> new NotStartedChessGameManager(gameId, ""));
     }
 
     @Override
@@ -106,7 +103,8 @@ public class ChessServiceImpl implements ChessService {
 
     @Override
     public ChessGameManager reset(long gameId) {
-        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(gameId);
+        String title = findById(gameId).getTitle();
+        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(gameId, title);
         update(chessGameManager);
         return chessGameManager;
     }

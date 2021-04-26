@@ -14,6 +14,6 @@ public class ChessGameManagerBundle {
 
     public Map<Long, String> getIdAndNextTurn() {
         return chessGameManagers.stream()
-                .collect(toMap(ChessGameManager::getId, game -> game.nextColor().name()));
+                .collect(toMap(ChessGameManager::getId, ChessGameManager::getTitle));
     }
 }

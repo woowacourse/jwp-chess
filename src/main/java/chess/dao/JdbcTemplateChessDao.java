@@ -20,7 +20,8 @@ public class JdbcTemplateChessDao implements ChessDao {
         String nextTurn = rs.getString("next_turn");
         boolean running = rs.getBoolean("running");
         String pieces = rs.getString("pieces");
-        return new ChessGame(gameId, Color.of(nextTurn), running, pieces);
+        String title = rs.getString("title");
+        return new ChessGame(gameId, Color.of(nextTurn), running, pieces, title);
     };
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
@@ -38,6 +39,7 @@ public class JdbcTemplateChessDao implements ChessDao {
         parameters.put("pieces", entity.getPieces());
         parameters.put("running", entity.isRunning());
         parameters.put("next_turn", entity.getNextTurn());
+        parameters.put("title", entity.getTitle());
 
         return insertAction.executeAndReturnKey(parameters).longValue();
     }

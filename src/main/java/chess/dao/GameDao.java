@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.game.Game;
+import chess.domain.team.Team;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,7 +19,7 @@ public class GameDao {
         resultSet.getString("name"),
         resultSet.getLong("host_id"),
         resultSet.getLong("guest_id"),
-        resultSet.getString("turn"),
+        Team.from(resultSet.getString("turn")),
         resultSet.getBoolean("is_finished"),
         resultSet.getTimestamp("created_time").toLocalDateTime()
     );
@@ -53,7 +54,7 @@ public class GameDao {
     }
 
     public void updateTurn(long id) {
-        String sql = "UPDATE game SET turn = (CASE WHEN turn = 'BLACK' THEN 'WHITE' ELSE 'BLACK' END) WHERE id = ?";
+        String sql = "UPDATE game SET turn = (CASE WHEN turn = 'black' THEN 'white' ELSE 'black' END) WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

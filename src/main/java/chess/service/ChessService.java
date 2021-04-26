@@ -47,8 +47,8 @@ public class ChessService {
     }
 
     public boolean checkMovement(long gameId, MoveRequestDto moveRequestDto) {
-        String turn = gameService.findById(gameId).getTurn();
-        if (!turn.equals(moveRequestDto.getColor().toUpperCase())) {
+        Team turn = gameService.findById(gameId).getTurn();
+        if (!turn.equals(moveRequestDto.getColor())) {
             return false;
         }
         Board board = generateBoard(gameId);
@@ -56,7 +56,7 @@ public class ChessService {
         return board.isMovable(
             Location.convert(moveRequestDto.getSource()),
             Location.convert(moveRequestDto.getTarget()),
-            Team.from(moveRequestDto.getColor())
+            moveRequestDto.getColor()
         );
     }
 
@@ -65,7 +65,7 @@ public class ChessService {
         board.move(
             Location.convert(moveRequestDto.getSource()),
             Location.convert(moveRequestDto.getTarget()),
-            Team.from(moveRequestDto.getColor())
+            moveRequestDto.getColor()
         );
 
         pieceService.catchPiece(gameId, moveRequestDto);

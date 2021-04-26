@@ -15,6 +15,7 @@ http://localhost:8080/swagger-ui.html#/
 
 ## 1단계 피드백 이후 리팩토링
 - [x] 기존 Domain으로 변경
+- [x] Controller에서 String 대신 Enum을 받도록 변경 (DTO 포함)
 - [ ] ChessController URI 정리
 - [ ] Controller와 API Controller 분리계
 - [ ] 모든 응답 DTO로 변경

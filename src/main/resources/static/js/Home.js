@@ -24,17 +24,14 @@ async function startNewGame(e) {
     return;
   }
 
-  try {
-    const host = await getExistentUser(whiteUserName);
-    const guest = await getExistentUser(blackUserName);
-    if (isEmptyObject(host) || isEmptyObject(guest)) {
-      alert("존재하지 않는 유저가 있습니다.");
-      return;
-    }
-    await createGame(host["id"], guest["id"]);
-  } catch (e) {
-    alert(e);
+  const host = await getExistentUser(whiteUserName);
+  const guest = await getExistentUser(blackUserName);
+  if (!host || !guest) {
+    alert("존재하지 않는 유저가 있습니다.");
+    return;
   }
+
+  await createGame(host["id"], guest["id"]);
 }
 
 async function getExistentUser(userName) {
@@ -59,10 +56,6 @@ async function createUser(userName) {
     password: "123"
   }
   return await postData(`${url}/users`, body);
-}
-
-function isEmptyObject(object) {
-  return Object.keys(object).length === 0;
 }
 
 async function createGame(hostId, guestId) {

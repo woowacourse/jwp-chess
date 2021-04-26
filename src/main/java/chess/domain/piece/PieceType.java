@@ -1,6 +1,8 @@
 package chess.domain.piece;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 
 public enum PieceType {
@@ -19,6 +21,7 @@ public enum PieceType {
         this.score = score;
     }
 
+    @JsonCreator
     public static PieceType from(final char value) {
         return Arrays.stream(values())
             .filter(pieceType -> pieceType.value == value)
@@ -26,6 +29,7 @@ public enum PieceType {
             .orElseThrow(() -> new PieceTypeNotFoundException(value));
     }
 
+    @JsonValue
     public char getValue() {
         return value;
     }

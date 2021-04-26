@@ -1,5 +1,7 @@
 package chess.domain.team;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 
 public enum Team {
@@ -12,9 +14,10 @@ public enum Team {
         this.value = value;
     }
 
+    @JsonCreator
     public static Team from(final String value) {
         return Arrays.stream(values())
-            .filter(team -> team.value.equals(value.toLowerCase()))
+            .filter(team -> team.value.equals(value))
             .findAny()
             .orElseThrow(() -> new TeamNotFoundException(value));
     }
@@ -27,13 +30,7 @@ public enum Team {
         return this == WHITE;
     }
 
-    public Team reverse() {
-        if (this == WHITE) {
-            return BLACK;
-        }
-        return WHITE;
-    }
-
+    @JsonValue
     public String getValue() {
         return value;
     }

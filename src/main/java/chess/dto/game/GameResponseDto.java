@@ -1,16 +1,17 @@
 package chess.dto.game;
 
 import chess.domain.game.Game;
+import chess.domain.team.Team;
 
 public class GameResponseDto {
 
     private final String name;
-    private final String turn;
+    private final Team turn;
     private final long hostId;
     private final long guestId;
     private final boolean isFinished;
 
-    public GameResponseDto(final String name, final String turn, final long hostId,
+    public GameResponseDto(final String name, final Team turn, final long hostId,
         final long guestId, final boolean isFinished) {
         this.name = name;
         this.turn = turn;
@@ -28,7 +29,7 @@ public class GameResponseDto {
         return name;
     }
 
-    public String getTurn() {
+    public Team getTurn() {
         return turn;
     }
 

@@ -1,5 +1,6 @@
 package chess.domain.game;
 
+import chess.domain.team.Team;
 import java.time.LocalDateTime;
 
 public class Game {
@@ -8,12 +9,13 @@ public class Game {
     private final String name;
     private final long hostId;
     private final long guestId;
-    private final String turn;
+    private final Team turn;
     private final boolean isFinished;
     private final LocalDateTime createdTime;
 
-    public Game(long id, String name, long hostId, long guestId, String turn, boolean isFinished,
-        LocalDateTime createdTime) {
+    public Game(final long id, final String name, final long hostId, final long guestId,
+        final Team turn, final boolean isFinished,
+        final LocalDateTime createdTime) {
         this.id = id;
         this.name = name;
         this.hostId = hostId;
@@ -39,7 +41,7 @@ public class Game {
         return guestId;
     }
 
-    public String getTurn() {
+    public Team getTurn() {
         return turn;
     }
 

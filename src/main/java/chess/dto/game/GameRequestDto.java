@@ -1,6 +1,7 @@
 package chess.dto.game;
 
 import chess.domain.game.Game;
+import chess.domain.team.Team;
 import java.time.LocalDateTime;
 
 public class GameRequestDto {
@@ -16,7 +17,7 @@ public class GameRequestDto {
     }
 
     public Game toEntity() {
-        return new Game(0L, name, hostId, guestId, "", false, LocalDateTime.now());
+        return new Game(0L, name, hostId, guestId, Team.WHITE, false, LocalDateTime.now());
     }
 
     public String getName() {

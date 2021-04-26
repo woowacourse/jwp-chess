@@ -1,18 +1,20 @@
 package chess.dto.chess;
 
+import chess.domain.team.Team;
+
 public class MoveRequestDto {
 
-    private final String color;
+    private final Team color;
     private final String source;
     private final String target;
 
-    public MoveRequestDto(String color, String source, String target) {
+    public MoveRequestDto(final Team color, final String source, final String target) {
         this.color = color;
         this.source = source;
         this.target = target;
     }
 
-    public String getColor() {
+    public Team getColor() {
         return color;
     }
 

@@ -1,15 +1,17 @@
 package chess.dto.piece;
 
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceType;
+import chess.domain.team.Team;
 
 public class PieceDto {
 
     private final int x;
     private final int y;
-    private final String color;
-    private final String shape;
+    private final Team color;
+    private final PieceType shape;
 
-    public PieceDto(int x, int y, String color, String shape) {
+    public PieceDto(final int x, final int y, final Team color, final PieceType shape) {
         this.x = x;
         this.y = y;
         this.color = color;
@@ -17,8 +19,7 @@ public class PieceDto {
     }
 
     public static PieceDto from(Piece piece) {
-        return new PieceDto(piece.getX(), piece.getY(),
-            piece.getTeamValue(), String.valueOf(piece.getPieceTypeValue()));
+        return new PieceDto(piece.getX(), piece.getY(), piece.getTeam(), piece.getPieceType());
     }
 
     public int getX() {
@@ -29,11 +30,11 @@ public class PieceDto {
         return y;
     }
 
-    public String getColor() {
+    public Team getColor() {
         return color;
     }
 
-    public String getShape() {
+    public PieceType getShape() {
         return shape;
     }
 }

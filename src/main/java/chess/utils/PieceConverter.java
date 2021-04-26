@@ -16,8 +16,8 @@ import java.sql.SQLException;
 public class PieceConverter {
 
     public static Piece run(final PieceDto pieceDto) {
-        final char pieceLetter = pieceDto.getShape().charAt(0);
-        final Team team = Team.from(pieceDto.getColor());
+        final char pieceLetter = pieceDto.getShape().getValue();
+        final Team team = pieceDto.getColor();
         final Location location = Location.of(pieceDto.getX(), pieceDto.getY());
         return createPiece(pieceLetter, location, team);
     }

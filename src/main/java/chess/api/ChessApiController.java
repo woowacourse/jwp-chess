@@ -7,6 +7,9 @@ import chess.dto.ScoreDto;
 import chess.service.ChessGameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 public class ChessApiController {
@@ -33,10 +36,14 @@ public class ChessApiController {
         return ResponseEntity.ok(chessGame);
     }
 
-    @PostMapping("/newRoomId")
+    @PostMapping("/chessgames")
     public ResponseEntity<ChessRoomDto> newRoom() {
         ChessRoomDto chessRoomDto = chessGameService.createNewChessRoom();
-        return ResponseEntity.ok(chessRoomDto);
+        URI uri = UriComponentsBuilder
+                .fromUriString("http://localhost:8080/chessgames/{roomId}")
+                .buildAndExpand(chessRoomDto.getRoomId())
+                .toUri();
+        return ResponseEntity.created(uri).body(chessRoomDto);
     }
 
     @DeleteMapping("/chessgames/{roomId}")

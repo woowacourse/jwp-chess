@@ -14,7 +14,7 @@ function onRoomSelect(event) {
 }
 
 function onNewRoom() {
-    fetch("newRoomId", {method: 'POST'})
+    fetch("/chessgames", {method: 'POST'})
         .then(response => {
             if (response.ok) {
                 return response.json();

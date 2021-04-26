@@ -8,6 +8,8 @@ public interface ChessGameManagerRepository {
 
     ChessGameManagerBundle findRunningGames();
 
+    ChessGameManager create();
+
     ChessGameManager add(ChessGameManager chessGameManager);
 
     void update(ChessGameManager chessGameManager);

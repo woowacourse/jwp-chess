@@ -1,13 +1,14 @@
 package chess.controller.web;
 
-import chess.chessgame.domain.room.Room;
 import chess.chessgame.domain.room.game.ChessGameManagerBundle;
+import chess.controller.web.dto.RoomRequestDto;
 import chess.controller.web.dto.RunningGameResponseDto;
 import chess.service.ChessService;
 import chess.service.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,8 +28,8 @@ public class RoomController {
     }
 
     @PostMapping("/room")
-    public ResponseEntity createRoom() {
-        roomService.createRoom();
-        return null;
+    public ResponseEntity<Void> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
+        roomService.createRoom(roomRequestDto.getRoomName(), roomRequestDto.getWhiteUserPassword());
+        return ResponseEntity.ok().build();
     }
 }

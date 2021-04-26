@@ -5,16 +5,21 @@ import chess.service.ChessUserService;
 import dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.MissingRequestCookieException;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/user")
 public class ChessUserController {
 
     private final ChessUserService chessUserService;
+
+    @ExceptionHandler({MissingRequestCookieException.class})
+    public ResponseEntity<String> checkCookieMissing(Exception exception) {
+        return ResponseEntity.badRequest().body("로그인을 해 주세요.");
+    }
 
     @Autowired
     public ChessUserController(final ChessUserService chessUserService) {
@@ -30,5 +35,11 @@ public class ChessUserController {
     public ResponseEntity<UserDto> login(@RequestBody UserDto userDto) {
         UserDto response = chessUserService.login(userDto.getName(), userDto.getPw());
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/exit")
+    public ResponseEntity<UserDto> exit(@CookieValue(value = "user") String cookie) {
+        chessUserService.exit(cookie);
+        return ResponseEntity.ok().build();
     }
 }

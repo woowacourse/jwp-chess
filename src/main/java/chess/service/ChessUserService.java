@@ -30,4 +30,11 @@ public class ChessUserService {
 
         return UserDto.toResponse(user);
     }
+
+    public void exit(final String name) {
+        User user = userDao.findByName(name);
+        if (user.inGame()) {
+            userDao.setRoomId(null, name);
+        }
+    }
 }

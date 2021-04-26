@@ -1,5 +1,6 @@
 package chess.exception;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 import chess.controller.SpringChessGameRestController;
@@ -30,5 +31,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
             .contentType(MediaType.APPLICATION_JSON)
             .body("!! Database Access 오류");
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    private ResponseEntity invalidPasswordExceptionHandle(InvalidPasswordException e) {
+        LOGGER.error(e.getStackTrace());
+        return ResponseEntity.status(BAD_REQUEST)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(e.getMessage());
     }
 }

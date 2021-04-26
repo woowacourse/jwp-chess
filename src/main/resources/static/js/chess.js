@@ -58,6 +58,8 @@ function getMovablePosition(clickedSection, turn) {
             const errorMessage = response.responseText;
             location.href = chessURL + "/error-page?error=" + errorMessage;
         });
+    } else {
+        alert("현재 해당 색상의 턴이 아닙니다.");
     }
 }
 

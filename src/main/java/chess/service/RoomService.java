@@ -3,6 +3,7 @@ package chess.service;
 import chess.dao.RoomDAO;
 import chess.domain.ChessGame;
 import chess.domain.Rooms;
+import chess.domain.Team;
 import chess.dto.RoomDTO;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -50,15 +51,30 @@ public final class RoomService {
         roomDAO.changeStatusEndByRoomId(roomId);
     }
 
-    public List<String> allRoomsId() {
-        return roomDAO.allRoomIds();
-    }
-
     public void addRoom(final String roomId, final ChessGame chessGame) {
         rooms.addRoom(roomId, chessGame);
     }
 
+    public void move(final String roomId, final String startPoint, final String endPoint) {
+        ChessGame chessGame = loadGameByRoomId(roomId);
+        chessGame.move(startPoint, endPoint);
+    }
+
     public ChessGame loadGameByRoomId(final String roomId) {
         return rooms.loadGameByRoomId(roomId);
+    }
+
+    public boolean checkRightTurn(final String roomId, final String clickedSection, final String password) {
+        ChessGame chessGame = loadGameByRoomId(roomId);
+
+        if (!chessGame.checkRightTurn(clickedSection)) {
+            return false;
+        }
+
+        Team turn = chessGame.turn();
+        if (Team.BLACK.equals(turn)) {
+            return password.equals(roomDAO.findBlackUserPassword(roomId));
+        }
+        return password.equals(roomDAO.findWhiteUserPassword(roomId));
     }
 }

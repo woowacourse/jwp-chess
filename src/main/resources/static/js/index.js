@@ -44,6 +44,6 @@ async function findGames() {
     const games = responseData.activeRooms;
 
     $games.innerHTML = "<div class='text rainbow'>{ </div>";
-    Object.keys(games).forEach(ele => $games.insertAdjacentHTML("beforeend", `<div id="${ele}" class="text rainbow">&nbsp;&nbsp;<span class="room">{"roomId":"${ele}" , "roomName":"${games[ele]}"},</span><img class="imgg" src="../img/tenor.gif"/></div>`));
+    Object.keys(games).forEach(roomId => $games.insertAdjacentHTML("beforeend", `<div id="${roomId}" class="text rainbow">&nbsp;&nbsp;<span class="room">{"roomId":"${roomId}" , "roomName":"${games[roomId].roomName}, "isFull":"${games[roomId].isFull}"},</span><img class="imgg" src="../img/tenor.gif"/></div>`));
     $games.insertAdjacentHTML("beforeend", "<div class='text rainbow'>} </div>");
 }

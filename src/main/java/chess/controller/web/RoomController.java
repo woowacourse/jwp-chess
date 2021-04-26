@@ -32,7 +32,7 @@ public class RoomController {
         final Long roomId = roomService.save(roomName);
         gameService.create(roomId);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/game/" + roomId));
+        headers.setLocation(URI.create("/games/" + roomId));
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 

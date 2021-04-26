@@ -33,7 +33,6 @@
     - [x] Spring 어노테이션의 전체적인 정리
     - [x] produces, consumes 정리
     - [x] http 메소드와 사용 상황 정리
-- [ ] 도메인 이외로직에 대해 test 작성하기
 
 ## 임시 checkPoints
 [ 도메인 관련 ]
@@ -80,3 +79,8 @@ CREATE TABLE board (
 )
 ```
 
+# todos
+- [ ] dto 만드는 클래스 제거
+- [ ] dao 인터페이스 제거
+- [ ] indent 2, `.` 2개 이상등 요구사항 위반 내용 수정
+- [ ] test 코드 작성

@@ -43,7 +43,7 @@ const index = {
     },
 
     move: function (source, target) {
-        fetch('/pieces/' + room.id + `?source=${source}&target=${target}`)
+        fetch('/chessgames/' + room.id + '/pieces' + `?source=${source}&target=${target}`)
             .then(data => {
                 if (!data.ok) {
                     throw new Error("잘못된 명령입니다!");

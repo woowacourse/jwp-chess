@@ -20,7 +20,7 @@ public class ChessApiController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping("/pieces/{roomId}")
+    @GetMapping("/chessgames/{roomId}/pieces")
     public ResponseEntity<ChessGameDto> findPieces(@PathVariable long roomId,
                                                    @RequestParam String source,
                                                    @RequestParam String target) {

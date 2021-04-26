@@ -1,7 +1,7 @@
 package chess.dto;
 
 public class ChessRoomDto {
-    Long roomId;
+    private Long roomId;
 
     public ChessRoomDto(Long roomId) {
         this.roomId = roomId;

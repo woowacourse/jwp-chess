@@ -41,4 +41,22 @@ class SpringChessLogDaoTest {
         assertThat(commandDtos.get(1).getTarget()).isEqualTo("a7");
         assertThat(commandDtos.get(1).getDestination()).isEqualTo("a5");
     }
+
+    @DisplayName("로그가 정상적으로 삭제 되는지 확인한다.")
+    @Test
+    void remove() {
+        springChessLogDao.add(new MoveRequestDto(TEST_ID, "d2", "d4"));
+        springChessLogDao.add(new MoveRequestDto(TEST_ID, "a7", "a5"));
+
+        springChessLogDao.delete(TEST_ID);
+
+        springChessLogDao.add(new MoveRequestDto(TEST_ID, "c2", "c4"));
+
+        List<CommandDto> commandDtos = springChessLogDao.find(TEST_ID);
+
+        assertThat(commandDtos.get(0).getRoomId()).isEqualTo(TEST_ID);
+        assertThat(commandDtos.get(0).getTarget()).isEqualTo("c2");
+        assertThat(commandDtos.get(0).getDestination()).isEqualTo("c4");
+        assertThat(commandDtos).hasSize(1);
+    }
 }

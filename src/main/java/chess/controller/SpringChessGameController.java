@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import static chess.dao.UserDAO.UNKNOWN_USER;
-
 @Controller
 public final class SpringChessGameController {
     private final RoomService roomService;
@@ -70,7 +68,7 @@ public final class SpringChessGameController {
 
         UserDTO user = roomService.participatedUser(id, color);
 
-        if (!UNKNOWN_USER.equals(user)) {
+        if (user != null) {
             userService.checkPassword(Integer.toString(user.getId()), passwordDTO.getPassword());
             playerCookie(response, user.getNickname(), passwordDTO.getPassword(), "black");
             return "redirect:/rooms/" + id;

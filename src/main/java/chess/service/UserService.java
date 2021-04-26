@@ -6,8 +6,6 @@ import chess.dto.user.UserDTO;
 import chess.dto.user.UsersDTO;
 import org.springframework.stereotype.Service;
 
-import static chess.dao.UserDAO.UNKNOWN_USER;
-
 @Service
 public final class UserService {
     private final UserDAO userDAO;
@@ -70,6 +68,6 @@ public final class UserService {
 
     public UserDTO getUser(final String id, final String password) {
         return userDAO.findByPlayerIdAndPassword(id, password)
-                .orElse(UNKNOWN_USER);
+                .orElse(null);
     }
 }

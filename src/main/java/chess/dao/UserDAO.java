@@ -19,8 +19,6 @@ import java.util.Optional;
 
 @Repository
 public class UserDAO {
-    public static final UserDTO UNKNOWN_USER = new UserDTO();
-
     private final JdbcTemplate jdbcTemplate;
 
     public UserDAO(final JdbcTemplate jdbcTemplate) {

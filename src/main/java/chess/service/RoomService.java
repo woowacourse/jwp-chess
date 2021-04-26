@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static chess.dao.UserDAO.UNKNOWN_USER;
-
 @Service
 public final class RoomService {
     private final Rooms rooms;
@@ -70,7 +68,7 @@ public final class RoomService {
     public boolean checkRightTurn(final String roomId, final UserDTO user, final String clickedSection) {
         ChessGame chessGame = loadChessGameById(roomId);
 
-        if (UNKNOWN_USER.equals(user) || !chessGame.checkRightTurn(clickedSection)) {
+        if (user == null || !chessGame.checkRightTurn(clickedSection)) {
             return false;
         }
 
@@ -86,6 +84,6 @@ public final class RoomService {
     public UserDTO participatedUser(final String id, final String color) {
         String userId = roomDAO.findUserIdByRoomIdAndColor(id, color);
         return userDAO.findById(userId)
-                .orElse(UNKNOWN_USER);
+                .orElse(null);
     }
 }

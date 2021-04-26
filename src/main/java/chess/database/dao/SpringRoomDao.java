@@ -22,7 +22,7 @@ public class SpringRoomDao {
         String query = "INSERT INTO chess_room (room_name, turn, board) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, new String[] {"room_no"});
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"room_no"});
             ps.setString(1, saveRoomDto.getRoomName());
             ps.setString(2, saveRoomDto.getTurn());
             ps.setString(3, saveRoomDto.getChessBoard());
@@ -42,7 +42,7 @@ public class SpringRoomDao {
         });
     }
 
-    public RoomDto findRoomByRoomNo(int roomNo) {
+    public RoomDto findByNo(int roomNo) {
         String query = "SELECT * FROM chess_room WHERE room_no = ?";
         return jdbcTemplate.queryForObject(
                 query,
@@ -71,7 +71,7 @@ public class SpringRoomDao {
                 });
     }
 
-    public int deleteRoomByRoomNo(int roomNo) {
+    public int deleteByNo(int roomNo) {
         String query = "DELETE FROM chess_room WHERE room_no = ?";
         return jdbcTemplate.update(query, roomNo);
     }

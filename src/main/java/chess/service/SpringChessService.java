@@ -29,7 +29,7 @@ public class SpringChessService {
     }
 
     public ChessGameDto movePiece(int roomNo, MoveRequestDto moveRequestDto) {
-        RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
+        RoomDto roomDto = roomDao.findByNo(roomNo);
         List<String> input = Arrays.asList(moveRequestDto.getCommand().split(" "));
         ChessGame chessGame = setChessGame(roomDto);
         chessGame.play(input);
@@ -43,7 +43,7 @@ public class SpringChessService {
     }
 
     public ChessGameDto loadRoom(int roomNo) {
-        RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
+        RoomDto roomDto = roomDao.findByNo(roomNo);
         ChessGame chessGame = setChessGame(roomDto);
         return new ChessGameDto(roomNo, roomDto.getRoomName(), chessGame);
     }
@@ -73,13 +73,13 @@ public class SpringChessService {
     }
 
     public void deleteRoom(int roomNo) {
-        roomDao.deleteRoomByRoomNo(roomNo);
+        roomDao.deleteByNo(roomNo);
     }
 
     public ChessGameDto resetRoom(int roomNo) {
         ChessGame chessGame = initializeChessBoard();
         chessGame.start(Collections.singletonList("start"));
-        RoomDto roomDto = roomDao.findRoomByRoomNo(roomNo);
+        RoomDto roomDto = roomDao.findByNo(roomNo);
         roomDao.updateRoom(new RoomDto(roomNo, roomDto.getRoomName(), chessGame));
         return new ChessGameDto(roomNo, roomDto.getRoomName(), chessGame);
     }

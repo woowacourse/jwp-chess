@@ -15,7 +15,7 @@ startGame();
 
 async function startGame() {
     try {
-        let response = await fetch(`/room/${roomNo}/start`);
+        let response = await fetch(`/api/rooms/${roomNo}/start`);
         if (!response.ok) {
             throw await response.json();
         }
@@ -49,7 +49,7 @@ function makePiece(piece) {
 
 async function restart() {
     try {
-        let response = await fetch(`/room/${roomNo}/restart`, {
+        let response = await fetch(`/api/rooms/${roomNo}/restart`, {
             method: 'PUT'
         });
         if (!response.ok) {
@@ -74,7 +74,7 @@ function exitChessRoom() {
 }
 
 async function requestDelete() {
-    let response = await fetch(`/room/${roomNo}/exit`, {
+    let response = await fetch(`/api/rooms/${roomNo}`, {
         method: 'DELETE'
     });
     if (!response.ok) {
@@ -119,7 +119,7 @@ async function sendMoveRequest(trimmedMoveCommand) {
     const sourcePosition = trimmedMoveCommand.split(" ")[1]
     const targetPosition = trimmedMoveCommand.split(" ")[2]
     try {
-        let response = await fetch(`/room/${roomNo}/move`, {
+        let response = await fetch(`/api/rooms/${roomNo}/move`, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json;charset=utf-8'
@@ -152,8 +152,3 @@ function replaceComponents(response, sourcePosition, targetPosition) {
     $blackScore.innerText = response.scoreDto.blackScore;
     $whiteScore.innerText = response.scoreDto.whiteScore;
 }
-
-
-
-
-

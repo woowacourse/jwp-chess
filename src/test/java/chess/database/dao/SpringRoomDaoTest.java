@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@TestPropertySource(locations = "classpath:application-test.properties")
+@ActiveProfiles("test")
 class SpringRoomDaoTest {
 
     private SpringRoomDao springRoomDao;
@@ -45,7 +45,7 @@ class SpringRoomDaoTest {
 
         //when
         int roomNo = springRoomDao.addRoom(saveRoomDto);
-        RoomDto roomDto = springRoomDao.findRoomByRoomNo(roomNo);
+        RoomDto roomDto = springRoomDao.findByNo(roomNo);
 
         //then
         assertThat(roomDto).isEqualTo(new RoomDto(roomNo, saveRoomDto.getRoomName(), saveRoomDto.getTurn(), saveRoomDto.getChessBoard()));
@@ -64,7 +64,7 @@ class SpringRoomDaoTest {
         springRoomDao.updateRoom(roomDto);
 
         //then
-        assertThat(roomDto).isEqualTo(springRoomDao.findRoomByRoomNo(roomNo));
+        assertThat(roomDto).isEqualTo(springRoomDao.findByNo(roomNo));
     }
 
     @Test
@@ -75,7 +75,7 @@ class SpringRoomDaoTest {
         int roomNo = springRoomDao.addRoom(saveRoomDto);
 
         //when
-        int result = springRoomDao.deleteRoomByRoomNo(roomNo);
+        int result = springRoomDao.deleteByNo(roomNo);
 
         //then
         assertThat(result).isEqualTo(1);
@@ -97,6 +97,6 @@ class SpringRoomDaoTest {
         assertThat(rooms).isEqualTo(Arrays.asList(
                 new RoomDto(roomNo1, saveRoomDto1.getRoomName(), saveRoomDto1.getTurn(), saveRoomDto1.getChessBoard()),
                 new RoomDto(roomNo2, saveRoomDto2.getRoomName(), saveRoomDto2.getTurn(), saveRoomDto2.getChessBoard())
-                ));
+        ));
     }
 }

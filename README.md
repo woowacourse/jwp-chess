@@ -2,6 +2,8 @@
 
 ### Spring 기능 관련
 - controller
+  - ChessRestController
+  - ChessViewController
 - service
 - jdbcTemplate
 
@@ -17,8 +19,10 @@
 
 - [x] 새로운 게임 시작하기
     - [x] 입력된 방 제목대로 체스 게임 방 생성
-        - [x] 이미 존재하는 방 이름 (db상에 존재하는 room_id)일 경우 에러 반환
     - [x] 초기 상태로 web상에 보드판 생성
+    
+- [x] 재시작 하기
+    - [x] 게임이 진행 중인 시점에서 재시작을 누르면 보드가 처음 상태로 초기화 됨
 
 - [x] 저장된 게임 불러오기
     - [x] 저장되어 있는 게임 목록 (db상에 존재하는 room_id) 보여주기
@@ -31,13 +35,13 @@
         - [x] 상태가 바뀐 노드들만 교체
     - [x] 킹이 죽으면 게임 종료를 알리기
     - [x] 게임 종료 후 체스판 초기화 하고 메인 화면으로 나가기
-    - [x] save버튼 클릭하면 게임 상태 저장하기
+    - [x] 게임 생성 및 말 이동 시 게임 상태 저장하기
         - [x] 방의 상태 그대로 db에 저장
             - [x] 이미 존재하는 파일명이라면 덮어 씌우기
         - [x] **room_id (INT)**: ID <br>
           **name (VARCHAR)**: 방 이름<br>
           **turn (VARCHAR)**: black 혹은 white 턴 <br>
-          **state (JSON)**: 포지션과 말에 대한 정보
+          **board (VARCHAR)**: 포지션과 말에 대한 정보
     - [x] drag and drop을 통해 말을 움직이는 기능
     - [x] 스코어 출력 기능 
 

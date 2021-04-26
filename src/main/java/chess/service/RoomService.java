@@ -7,6 +7,7 @@ import chess.domain.piece.PieceFactory;
 import chess.domain.room.Room;
 import chess.web.dto.RoomDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class RoomService {
                 .collect(toList());
     }
 
+    @Transactional
     public RoomDto createNewRoom(String roomName) {
         Long roomId = saveGameToDB(roomName);
 

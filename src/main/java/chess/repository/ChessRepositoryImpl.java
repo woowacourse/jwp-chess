@@ -21,7 +21,6 @@ public class ChessRepositoryImpl implements ChessRepository {
     }
 
     @Override
-    @Transactional
     public Long save(Room room) {
         String roomName = room.getRoomName();
         ChessGame chessGame = room.getChessGame();

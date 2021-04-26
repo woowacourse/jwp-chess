@@ -20,6 +20,7 @@ import chess.domain.piece.Rook;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class Team {
@@ -159,5 +160,23 @@ public abstract class Team {
                 .filter(piece -> piece.isPawn() == isPawn)
                 .mapToDouble(scoreByPiece::get)
                 .sum();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Team team = (Team) o;
+        return isCurrentTurn == team.isCurrentTurn && Objects.equals(name, team.name) && Objects
+            .equals(piecePosition, team.piecePosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, isCurrentTurn, piecePosition);
     }
 }

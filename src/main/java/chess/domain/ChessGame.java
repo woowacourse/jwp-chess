@@ -6,6 +6,7 @@ import chess.domain.team.Team;
 import chess.domain.team.WhiteTeam;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 public class ChessGame {
     private final BlackTeam blackTeam;
@@ -97,5 +98,24 @@ public class ChessGame {
         }
 
         currentTurn = whiteTeam;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return isEnd == chessGame.isEnd && Objects.equals(blackTeam, chessGame.blackTeam)
+            && Objects.equals(whiteTeam, chessGame.whiteTeam) && Objects
+            .equals(currentTurn, chessGame.currentTurn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(blackTeam, whiteTeam, currentTurn, isEnd);
     }
 }

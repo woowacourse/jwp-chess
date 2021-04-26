@@ -1,5 +1,7 @@
 package chess.domain;
 
+import java.util.Objects;
+
 public class Room {
     private long id;
     private String name;
@@ -39,6 +41,24 @@ public class Room {
         if (!room.getPw().equals(pw)) {
             throw new IllegalArgumentException("비밀번호가 다릅니다.");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Room room = (Room) o;
+        return id == room.id && gameId == room.gameId && Objects.equals(name, room.name)
+            && Objects.equals(pw, room.pw);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, pw, gameId);
     }
 
     @Override

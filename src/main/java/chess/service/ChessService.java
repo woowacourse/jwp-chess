@@ -70,7 +70,7 @@ public class ChessService {
     public CommonResponseDto<GameStatusDto> startChess(final ChessSaveRequestDto request) {
         try {
             ChessGame chessGame = ChessGame.newGame();
-            Chess chess = new Chess(request.getName());
+            Chess chess = new Chess(request.getName(), "");
             chessDao.save(chess);
             return new CommonResponseDto<>(
                     new GameStatusDto(chessGame.pieces(), chessGame.calculateScore(), chessGame.isGameOver(),

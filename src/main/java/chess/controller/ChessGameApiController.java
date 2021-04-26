@@ -6,9 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 @RestController
 @RequestMapping("/api/v1/games")
 public class ChessGameApiController {
+
+    private static final String USER = "user";
 
     private final SpringChessService chessService;
 
@@ -17,8 +21,9 @@ public class ChessGameApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveChess(@RequestBody final ChessSaveRequestDto requestDto) {
-        chessService.saveChess(requestDto);
+    public ResponseEntity<Object> saveChess(@RequestBody final ChessSaveRequestDto requestDto, HttpSession session) {
+        String name = (String) session.getAttribute(USER);
+        chessService.saveChess(requestDto, name);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

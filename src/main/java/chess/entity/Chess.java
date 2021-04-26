@@ -10,19 +10,23 @@ public class Chess {
 
     private final String id;
     private final String name;
-    private Color winnerColor;
-    private boolean isRunning;
     private final LocalDateTime createdDate;
+    private Color winnerColor;
+    private String whitePlayerId;
+    private String blackPlayerId;
+    private boolean isRunning;
 
-    public Chess(final String name) {
-        this(UUID.randomUUID().toString(), name, Color.NOTHING, true, LocalDateTime.now());
+    public Chess(final String name, final String whitePlayerId) {
+        this(UUID.randomUUID().toString(), name, Color.NOTHING, whitePlayerId, null,  true, LocalDateTime.now());
     }
 
-    public Chess(final String id, final String name, final Color winnerColor, final boolean isRunning,
+    public Chess(final String id, final String name, final Color winnerColor, final String whitePlayerId, final String blackPlayerId,  final boolean isRunning,
                  final LocalDateTime createdDate) {
         this.id = id;
         this.name = name;
         this.winnerColor = winnerColor;
+        this.whitePlayerId = whitePlayerId;
+        this.blackPlayerId = blackPlayerId;
         this.isRunning = isRunning;
         this.createdDate = createdDate;
     }
@@ -39,6 +43,14 @@ public class Chess {
         return winnerColor;
     }
 
+    public String getWhitePlayerId() {
+        return whitePlayerId;
+    }
+
+    public String getBlackPlayerId() {
+        return blackPlayerId;
+    }
+
     public boolean isRunning() {
         return isRunning;
     }
@@ -53,6 +65,10 @@ public class Chess {
 
     public void changeRunning(final Boolean isRunning) {
         this.isRunning = isRunning;
+    }
+
+    public void changeBlackPlayerIn(final String id) {
+        this.blackPlayerId = id;
     }
 
     @Override

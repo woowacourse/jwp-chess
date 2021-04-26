@@ -2,13 +2,16 @@ package chess.service;
 
 import chess.dao.ChessDao;
 import chess.dao.MovementDao;
+import chess.dao.UserDao;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
 import chess.domain.position.Position;
 import chess.entity.Chess;
 import chess.entity.Movement;
+import chess.entity.User;
 import chess.exception.DuplicateRoomException;
 import chess.exception.NotExistRoomException;
+import chess.exception.NotExistUserException;
 import chess.service.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +23,12 @@ public class SpringChessService {
 
     private final ChessDao chessDao;
     private final MovementDao movementDao;
+    private final UserDao userDao;
 
-    public SpringChessService(final ChessDao chessDao, final MovementDao movementDao) {
+    public SpringChessService(final ChessDao chessDao, final MovementDao movementDao, final UserDao userDao) {
         this.chessDao = chessDao;
         this.movementDao = movementDao;
+        this.userDao = userDao;
     }
 
     @Transactional
@@ -44,13 +49,13 @@ public class SpringChessService {
     }
 
     @Transactional
-    public void saveChess(final ChessSaveRequestDto requestDto) {
-        Chess chess = new Chess(requestDto.getName());
+    public void saveChess(final ChessSaveRequestDto requestDto, String name) {
+        User whiteUser = userDao.findByName(name).orElseThrow(NotExistUserException::new);
 
         if (chessDao.findByName(requestDto.getName()).isPresent()) {
             throw new DuplicateRoomException();
         }
-
+        Chess chess = new Chess(requestDto.getName(), whiteUser.getId());
         chessDao.save(chess);
     }
 

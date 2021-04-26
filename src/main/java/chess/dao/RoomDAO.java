@@ -26,9 +26,11 @@ public class RoomDAO {
     }
 
     public List<RoomDTO> allRooms() {
-        String query = "SELECT room.id, room.title, black.nickname AS black_nickname, white.nickname AS white_nickname, room.status " +
-            "FROM room LEFT JOIN user as black on black.id = room.black_id " +
-            "LEFT JOIN user as white on white.id = room.white_id ORDER BY room.id DESC";
+        String query =
+            "SELECT room.id, room.title, black.nickname AS black_nickname, white.nickname AS white_nickname, room.status "
+                +
+                "FROM room LEFT JOIN user as black on black.id = room.black_id " +
+                "LEFT JOIN user as white on white.id = room.white_id ORDER BY room.id DESC";
         return jdbcTemplate.query(query, mapper());
     }
 
@@ -67,14 +69,16 @@ public class RoomDAO {
     }
 
     public String findBlackUserPassword(final String roomId) {
-        String query = "SELECT black.password FROM room JOIN user as black on room.black_id = black.id "
-            + "WHERE room.id = ?";
+        String query =
+            "SELECT black.password FROM room JOIN user as black on room.black_id = black.id "
+                + "WHERE room.id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
     }
 
     public String findWhiteUserPassword(final String roomId) {
-        String query = "SELECT white.password FROM room JOIN user as white on room.white_id = white.id "
-            + "WHERE room.id = ?";
+        String query =
+            "SELECT white.password FROM room JOIN user as white on room.white_id = white.id "
+                + "WHERE room.id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
     }
 }

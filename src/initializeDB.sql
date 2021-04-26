@@ -8,11 +8,11 @@ chess;
 -- 초기 테이블 생성
 CREATE TABLE room
 (
-    id         INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    black_id   INT,
-    white_id   INT,
-    title      VARCHAR(64) NOT NULL,
-    status     VARCHAR(64) NOT NULL
+    id       INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    black_id INT,
+    white_id INT,
+    title    VARCHAR(64) NOT NULL,
+    status   VARCHAR(64) NOT NULL
 );
 
 CREATE TABLE user

@@ -1,6 +1,7 @@
 package chess.dto;
 
 public final class RoomNameDTO {
+
     private String name;
 
     public RoomNameDTO() {

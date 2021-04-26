@@ -5,6 +5,7 @@ import chess.domain.position.Position;
 import chess.domain.position.Row;
 
 public final class Pawn extends NoKingPieces {
+
     private static final String BLACK_TEAM_ROW = "7";
     private static final String WHITE_TEAM_ROW = "2";
 

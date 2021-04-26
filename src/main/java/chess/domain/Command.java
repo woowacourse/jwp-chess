@@ -27,7 +27,7 @@ public enum Command {
 
     public static boolean validatesCommand(final String command) {
         return Arrays.stream(Command.values())
-                .anyMatch(cmd -> cmd.command.equals(command));
+            .anyMatch(cmd -> cmd.command.equals(command));
     }
 
     public boolean prints() {

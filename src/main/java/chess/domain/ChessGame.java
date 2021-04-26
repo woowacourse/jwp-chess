@@ -7,10 +7,10 @@ import chess.domain.pieces.Pieces;
 import chess.domain.position.Col;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-
 import java.util.List;
 
 public final class ChessGame {
+
     private Board board;
     private Team currentTurn;
     private boolean isPlaying = true;
@@ -34,8 +34,8 @@ public final class ChessGame {
 
     private Position position(final String point) {
         return new Position(
-                Row.location(String.valueOf(point.charAt(1))),
-                Col.location(String.valueOf(point.charAt(0)))
+            Row.location(String.valueOf(point.charAt(1))),
+            Col.location(String.valueOf(point.charAt(0)))
         );
     }
 

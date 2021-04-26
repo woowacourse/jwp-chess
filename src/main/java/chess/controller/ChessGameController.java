@@ -6,7 +6,6 @@ import chess.domain.Team;
 import chess.exception.StartCommandException;
 import chess.view.InputView;
 import chess.view.OutputView;
-
 import java.util.Objects;
 
 public final class ChessGameController {
@@ -40,7 +39,8 @@ public final class ChessGameController {
             turnExecute(chessGame);
         }
         if (Objects.nonNull(chessGame.winner())) {
-            OutputView.printWinner(chessGame.winner(), chessGame.scoreByTeam(Team.BLACK), chessGame.scoreByTeam(Team.WHITE));
+            OutputView.printWinner(chessGame.winner(), chessGame.scoreByTeam(Team.BLACK),
+                chessGame.scoreByTeam(Team.WHITE));
         }
     }
 
@@ -60,7 +60,8 @@ public final class ChessGameController {
             move(chessGame);
         }
         if (Command.STATUS.equals(command)) {
-            OutputView.printEachTeamScore(chessGame.scoreByTeam(Team.BLACK), chessGame.scoreByTeam(Team.WHITE));
+            OutputView.printEachTeamScore(chessGame.scoreByTeam(Team.BLACK),
+                chessGame.scoreByTeam(Team.WHITE));
         }
     }
 

@@ -1,6 +1,7 @@
 package chess.dto;
 
 public final class MoveDTO {
+
     private String roomId;
     private String startPoint;
     private String endPoint;

@@ -1,6 +1,7 @@
 package chess.dto;
 
 public final class RankingDTO implements Comparable {
+
     private final String nickname;
     private final int winCount;
     private final int loseCount;

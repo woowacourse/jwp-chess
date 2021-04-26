@@ -1,7 +1,6 @@
 package chess.domain.position;
 
 import chess.exception.InvalidCoordinateException;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -27,24 +26,24 @@ public enum Col {
 
     public static int location(final String col) {
         return Arrays.stream(Col.values())
-                .filter(value -> value.col.equals(col))
-                .findFirst()
-                .orElseThrow(InvalidCoordinateException::new)
-                .location;
+            .filter(value -> value.col.equals(col))
+            .findFirst()
+            .orElseThrow(InvalidCoordinateException::new)
+            .location;
     }
 
     public static String initial(final int location) {
         return Arrays.stream(Col.values())
-                .filter(value -> value.location == location)
-                .findFirst()
-                .orElseThrow(InvalidCoordinateException::new)
-                .col;
+            .filter(value -> value.location == location)
+            .findFirst()
+            .orElseThrow(InvalidCoordinateException::new)
+            .col;
     }
 
     public static List<Integer> pawnInitCols() {
         return Arrays.stream(Col.values())
-                .map(pawnCol -> pawnCol.location)
-                .collect(Collectors.toList());
+            .map(pawnCol -> pawnCol.location)
+            .collect(Collectors.toList());
     }
 
     public static List<Integer> rookInitCols() {

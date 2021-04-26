@@ -2,14 +2,14 @@ package chess.dao;
 
 import chess.dto.UserDTO;
 import chess.dto.UsersDTO;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public class UserDAO {
+
     private final JdbcTemplate jdbcTemplate;
 
     public UserDAO(final JdbcTemplate jdbcTemplate) {
@@ -23,9 +23,9 @@ public class UserDAO {
 
     public UsersDTO findByRoomId(final String roomId) {
         String query = "SELECT black.nickname AS black_user, white.nickname AS white_user " +
-                "FROM room JOIN user as black on black.id = room.black_user " +
-                "JOIN user as white on white.id = room.white_user " +
-                "WHERE room.id = ?";
+            "FROM room JOIN user as black on black.id = room.black_user " +
+            "JOIN user as white on white.id = room.white_user " +
+            "WHERE room.id = ?";
         return jdbcTemplate.queryForObject(query, mapper(), roomId);
     }
 
@@ -38,8 +38,8 @@ public class UserDAO {
 
     private RowMapper<UsersDTO> mapper() {
         return (resultSet, rowNum) -> new UsersDTO(
-                resultSet.getString("black_user"),
-                resultSet.getString("white_user")
+            resultSet.getString("black_user"),
+            resultSet.getString("white_user")
         );
     }
 
@@ -55,8 +55,8 @@ public class UserDAO {
 
     private RowMapper<UserDTO> findAllMapper() {
         return (resultSet, rowNum) -> new UserDTO(
-                resultSet.getInt("id"),
-                resultSet.getString("nickname")
+            resultSet.getInt("id"),
+            resultSet.getString("nickname")
         );
     }
 

@@ -89,7 +89,8 @@ function moveOrCancle(clickedSection) {
 
 function removeAllMovablePosition(point) {
     point.classList.remove("selected");
-    const movable = Array.prototype.slice.call(document.querySelectorAll(".movable"));
+    const movable = Array.prototype.slice.call(
+        document.querySelectorAll(".movable"));
     movable.forEach(function (section) {
         section.classList.remove("movable");
         section.removeAttribute("style");
@@ -141,9 +142,11 @@ function updateStatus(currentStatus) {
     whiteScore.innerText = currentStatus.whiteScore;
     turn.removeChild(turn.children[0]);
     if (currentStatus.turn === "BLACK") {
-        turn.insertAdjacentHTML("beforeend", "<img src=\"/img/black_turn.png\">");
+        turn.insertAdjacentHTML("beforeend",
+            "<img src=\"/img/black_turn.png\">");
     } else {
-        turn.insertAdjacentHTML("beforeend", "<img src=\"/img/white_turn.png\">");
+        turn.insertAdjacentHTML("beforeend",
+            "<img src=\"/img/white_turn.png\">");
     }
 }
 

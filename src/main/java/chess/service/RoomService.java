@@ -5,10 +5,8 @@ import chess.domain.ChessGame;
 import chess.domain.Rooms;
 import chess.domain.Team;
 import chess.dto.RoomDTO;
-import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public final class RoomService {
@@ -64,7 +62,8 @@ public final class RoomService {
         return rooms.loadGameByRoomId(roomId);
     }
 
-    public boolean checkRightTurn(final String roomId, final String clickedSection, final String password) {
+    public boolean checkRightTurn(final String roomId, final String clickedSection,
+        final String password) {
         ChessGame chessGame = loadGameByRoomId(roomId);
 
         if (!chessGame.checkRightTurn(clickedSection)) {

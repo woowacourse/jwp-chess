@@ -1,6 +1,7 @@
 package chess.dto;
 
 public class EnterRoomRequestDTO {
+
     private final String id;
     private final String nickname;
     private final String password;

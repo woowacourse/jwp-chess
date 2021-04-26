@@ -1,14 +1,15 @@
 package chess.domain.position;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import chess.domain.Team;
 import chess.domain.pieces.Pawn;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 class PositionTest {
+
     @Test
     @DisplayName("Poistion을 생성하면, Position 인스턴스가 생성된다.")
     void create() {

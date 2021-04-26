@@ -54,7 +54,8 @@ public final class SpringChessGameController {
     }
 
     @PostMapping(path = "/new-game")
-    public String createNewGame(@ModelAttribute final CreateRoomRequestDTO requestDTO, final HttpServletResponse response) {
+    public String createNewGame(@ModelAttribute final CreateRoomRequestDTO requestDTO,
+        final HttpServletResponse response) {
         userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
         int whiteUserId = userService.userIdByNickname(requestDTO.getNickname());
         roomService.createRoom(requestDTO.getTitle(), whiteUserId);
@@ -65,7 +66,8 @@ public final class SpringChessGameController {
     }
 
     @PostMapping("/enter-black")
-    public String enterBlack(@ModelAttribute final EnterRoomRequestDTO requestDTO, final HttpServletResponse response) {
+    public String enterBlack(@ModelAttribute final EnterRoomRequestDTO requestDTO,
+        final HttpServletResponse response) {
         userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
         int blackUserId = userService.userIdByNickname(requestDTO.getNickname());
         roomService.enrollBlackUser(requestDTO.getId(), blackUserId);
@@ -76,7 +78,8 @@ public final class SpringChessGameController {
     }
 
     @PostMapping("/enter-white")
-    public String enterWhite(@ModelAttribute final EnterRoomRequestDTO requestDTO, final HttpServletResponse response) {
+    public String enterWhite(@ModelAttribute final EnterRoomRequestDTO requestDTO,
+        final HttpServletResponse response) {
         userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
         int whiteUserId = userService.userIdByNickname(requestDTO.getNickname());
         roomService.enrollWhiteUser(requestDTO.getId(), whiteUserId);

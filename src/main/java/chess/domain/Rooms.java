@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public final class Rooms {
+
     private final Map<String, ChessGame> rooms;
 
     public Rooms() {

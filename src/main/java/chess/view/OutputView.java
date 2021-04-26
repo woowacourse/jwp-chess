@@ -4,11 +4,11 @@ import chess.domain.Team;
 import chess.domain.board.Board;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
-
 import java.util.Arrays;
 import java.util.Locale;
 
 public final class OutputView {
+
     public static final int BOARD_MAX_SIZE = 8;
 
     private OutputView() {
@@ -75,12 +75,14 @@ public final class OutputView {
         }
     }
 
-    public static void printEachTeamScore(final Double blackTeamScore, final Double whiteTeamScore) {
+    public static void printEachTeamScore(final Double blackTeamScore,
+        final Double whiteTeamScore) {
         System.out.println("Black 팀 점수 : " + blackTeamScore);
         System.out.println("White 팀 점수 : " + whiteTeamScore);
     }
 
-    public static void printWinner(final Team winner, final Double blackTeamScore, final Double whiteTeamScore) {
+    public static void printWinner(final Team winner, final Double blackTeamScore,
+        final Double whiteTeamScore) {
         printEachTeamScore(blackTeamScore, whiteTeamScore);
         System.out.println("승자는 " + winner.name() + "팀 입니다.");
     }

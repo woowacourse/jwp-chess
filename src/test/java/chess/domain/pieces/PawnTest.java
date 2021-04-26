@@ -1,13 +1,14 @@
 package chess.domain.pieces;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.domain.position.Col;
 import chess.domain.position.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 class PawnTest {
+
     @Test
     @DisplayName("Pawn이 Black 팀으로 생성되면, row의 실제 좌표 위치는 1이다.")
     void blackTeamPositionCheck() {

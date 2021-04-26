@@ -1,27 +1,19 @@
 package chess.service;
 
 import chess.dao.GameDao;
-import chess.dao.RoomDao;
 import chess.domain.ChessGameManager;
 import chess.domain.piece.Color;
 import chess.domain.position.Position;
 import chess.dto.*;
-import chess.exception.HandledException;
 import chess.exception.NoSavedGameException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ChessService {
+public class GameService {
     private final GameDao gameDao;
-    private final RoomDao roomDao;
 
-    public ChessService(GameDao gameDao, RoomDao roomDao) {
+    public GameService(GameDao gameDao) {
         this.gameDao = gameDao;
-        this.roomDao = roomDao;
-    }
-
-    public CommonDto<RoomListDto> loadRoomList() {
-        return new CommonDto<>("게임 목록을 불러왔습니다.", new RoomListDto(roomDao.loadRoomList()));
     }
 
     public CommonDto<NewGameDto> saveNewGame() {
@@ -87,21 +79,5 @@ public class ChessService {
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.load(chessBoardDto.toChessBoard(), Color.of(turn));
         return chessGameManager;
-    }
-
-    public CommonDto<RoomDto> saveRoom(RoomDto roomDto) {
-        String roomName = roomDto.getName();
-        int gameId = roomDto.getGameId();
-
-        if (roomDao.countRoomByName(roomName) != 0) {
-            throw new HandledException("방이 이미 등록되어있습니다.");
-        }
-
-        roomDao.saveRoom(gameId, roomName);
-        return new CommonDto<>("방 정보를 가져왔습니다.", new RoomDto(gameId, roomName));
-    }
-
-    public String loadRoomName(int gameId) {
-        return roomDao.loadRoomName(gameId);
     }
 }

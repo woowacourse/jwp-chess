@@ -97,46 +97,30 @@ async function addEventOnStartButton() {
 }
 
 async function createNewRoom() {
-    const roomName = prompt("방 제목을 입력하세요");
-    alert(gameId);
-    await fetch('/room/name', {
+    const roomName = prompt("방 제목을 입력하세요.(영어만 가능)");
+    await fetch('/room/new', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
         },
-        body : JSON.stringify ({
-            gameId : gameId,
-            name : roomName
+        body: JSON.stringify({
+            gameId: gameId,
+            name: roomName
         })
-    }).then(res => updateRoomName(res));
-}
-
-async function updateRoomName(response) {
-    const responseBody = await response.json();
-    console.log(responseBody);
-    console.log(responseBody.item);
-    console.log(responseBody.item.name);
-    document.getElementById('room-name').innerText = responseBody.item.name;
-}
-
-async function addSelectionEventOnChessBoard() {
-    $chessBoard.addEventListener('click', event => {
-        const selectedSquare = event.target.closest('div');
-        squareBuffer.add(selectedSquare);
-        selectedSquare.classList.toggle('opaque');
     })
+        .then(res => res.json())
+        .then(res => updateRoomName(res.item.name));
 }
 
-async function addEventOnRegameButton() {
-    await document.getElementById('regame-button').addEventListener('click', event => {
-        try {
-            fetch('/game/new')
-                .then(res => processResponse(res));
-            turnOnPanel();
-        } catch (error) {
-            console.error(error.messages);
-        }
-    });
+function loadRoomName() {
+    fetch(`/room/${gameId}/load`)
+        .then(res => res.text())
+        .then(res => updateRoomName(res));
+}
+
+async function updateRoomName(name) {
+    console.log(name);
+    document.getElementById('room-name').innerText = name;
 }
 
 async function addEventOnLoadGameButton() {
@@ -145,7 +129,8 @@ async function addEventOnLoadGameButton() {
             const gameListBox = document.getElementById("gameListBox");
             gameId = gameListBox.options[gameListBox.selectedIndex].value;
             fetch(`/game/${gameId}/load`)
-                .then(res => processResponse(res));
+                .then(res => processResponse(res))
+                .then(() => loadRoomName());
             turnOnPanel();
         } catch (error) {
             console.error(error.message);
@@ -200,6 +185,26 @@ async function updateWinner(responseJsonBody) {
 
 async function updateMessage(message) {
     document.getElementById('message-console').innerText = message;
+}
+
+async function addSelectionEventOnChessBoard() {
+    $chessBoard.addEventListener('click', event => {
+        const selectedSquare = event.target.closest('div');
+        squareBuffer.add(selectedSquare);
+        selectedSquare.classList.toggle('opaque');
+    })
+}
+
+async function addEventOnRegameButton() {
+    await document.getElementById('regame-button').addEventListener('click', event => {
+        try {
+            fetch('/game/new')
+                .then(res => processResponse(res));
+            turnOnPanel();
+        } catch (error) {
+            console.error(error.messages);
+        }
+    });
 }
 
 async function turnOnPanel() {

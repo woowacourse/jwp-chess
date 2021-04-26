@@ -4,10 +4,7 @@ import chess.domain.board.ChessBoard;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.ChessBoardDto;
-import chess.dto.PieceDeserializeTable;
-import chess.dto.PieceDto;
-import chess.dto.SavedGameDto;
+import chess.dto.*;
 import chess.exception.NoSavedGameException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -99,5 +96,10 @@ public class GameDao {
     public void saveRoom(int gameId, String roomName) {
         String query = "INSERT INTO room(game_id, name) VALUES(?, ?)";
         this.jdbcTemplate.update(query, gameId, roomName);
+    }
+
+    public String loadRoomName(int gameId) {
+        String query = "SELECT name FROM room WHERE game_id = ?";
+        return this.jdbcTemplate.queryForObject(query, String.class, gameId);
     }
 }

@@ -22,8 +22,13 @@ public class RoomController {
         return ResponseEntity.ok().body(service.loadGameList());
     }
 
-    @PostMapping("/name")
+    @PostMapping("/new")
     public ResponseEntity<CommonDto<RoomDto>> saveRoomName(@RequestBody RoomDto roomDto) {
         return ResponseEntity.ok().body(service.saveRoom(roomDto));
+    }
+
+    @GetMapping("/{gameId:[\\d]+}/load")
+    public ResponseEntity<String> findRoomName(@PathVariable int gameId) {
+        return ResponseEntity.ok().body(service.loadRoomName(gameId));
     }
 }

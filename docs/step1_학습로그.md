@@ -100,6 +100,7 @@
 - infrastructure layer(persistence layer): DB나 자료를 영구저장하는 것과 관련된 레이어
 - 관심사를 가지고 구분하였기 때문에 관심사별로 응집되어 있다. 레이어간 교체가능할 수 있기 때문에 유지보수에 좋을 수 있다.
 - 레이어 간에 소통을 하므로 소통하기 위해서는 각 모든 레이어를 거쳐야 한다. 적당한 규모로 나누는 것이 어렵다.
+- 레이어간 소통하기 위해 dto를 사용하기도 한다.
 ## 링크
 - [layered architecture에 대한 참고자료 링크](https://dzone.com/articles/layered-architecture-is-good)
 ## 태그

@@ -50,7 +50,7 @@ class PieceDaoTest {
         ChessBoard chessBoardFound = this.pieceDao.findChessBoardByGameId(gameId);
 
         // then
-        assertThat(chessGameManager.getBoard()).isEqualTo(chessBoardFound);
+        assertThat(chessBoardFound).isEqualTo(chessGameManager.getBoard());
     }
 
     @Test
@@ -80,7 +80,7 @@ class PieceDaoTest {
         Piece pieceFound = pieceDao.findPieceByPosition(position, gameId);
 
         // then
-        assertThat(piece).isEqualTo(pieceFound);
+        assertThat(pieceFound).isEqualTo(piece);
     }
 
     @Test

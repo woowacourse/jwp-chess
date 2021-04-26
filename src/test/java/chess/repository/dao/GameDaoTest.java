@@ -50,7 +50,7 @@ class GameDaoTest {
         Color currentTurnFound = gameDao.findCurrentTurnByGameId(gameId);
 
         // then
-        assertThat(currentTurn).isEqualTo(currentTurnFound);
+        assertThat(currentTurnFound).isEqualTo(currentTurn);
     }
 
     @Test
@@ -66,7 +66,7 @@ class GameDaoTest {
         Color currentTurnFound = gameDao.findCurrentTurnByGameId(gameId);
 
         // then
-        assertThat(currentTurn).isEqualTo(currentTurnFound);
+        assertThat(currentTurnFound).isEqualTo(currentTurn);
     }
 
     @Test

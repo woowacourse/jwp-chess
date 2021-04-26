@@ -2,9 +2,7 @@ package chess.controller;
 
 import chess.domain.board.Team;
 import chess.domain.response.ChessResponse;
-import chess.domain.response.ErrorResponse;
 import chess.domain.response.GameResponse;
-import chess.dto.IdRequestDto;
 import chess.dto.InitialGameInfoDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.UserInfoDto;

@@ -20,8 +20,8 @@ public class RoomDao {
         long roomId = rs.getLong("room_id");
         long gameId = rs.getLong("game_id");
         String roomName = rs.getString("room_name");
-        long blackUserId = rs.getLong("user1");
-        long whiteUserId = rs.getLong("user2");
+        long whiteUserId = rs.getLong("user1");
+        long blackUserId = rs.getLong("user2");
 
         return new RoomDto(roomId, roomName, gameId, blackUserId, whiteUserId);
     };
@@ -51,10 +51,14 @@ public class RoomDao {
                 entity.getGameManager(), Arrays.asList(entity.getWhiteUser()));
     }
 
-    public List<RoomDto> findAll() {
+    public List<RoomDto> findAllActiveRoom() {
         String query =
                 "SELECT * " +
-                        "FROM chess.room";
+                        "FROM chess.room r " +
+                        "WHERE game_id IN (" +
+                        " SELECT id FROM chess.chessgame" +
+                        " WHERE running = true" +
+                        ") ";
 
         return jdbcTemplate.query(query, rowMapper);
     }
@@ -62,8 +66,8 @@ public class RoomDao {
     public RoomDto findByRoomId(long roomId) {
         String query =
                 "SELECT * " +
-                        "FROM chess.user " +
-                        "WHERE user_id = ?";
+                        "FROM chess.room " +
+                        "WHERE room_id = ?";
 
         return jdbcTemplate.query(query, rowMapper, roomId).stream().findAny()
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 방이 없습니다."));

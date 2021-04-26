@@ -18,9 +18,7 @@ CREATE TABLE IF NOT EXISTS chess.user (
     user_id INT NOT NULL AUTO_INCREMENT,
     color VARCHAR(10) NULL,
     password VARCHAR(128) NULL,
-    PRIMARY KEY (user_id),
-    FOREIGN KEY (game_id)
-    REFERENCES chess.chessgame(id)
+    PRIMARY KEY (user_id)
     )
     ENGINE = InnoDB;
 

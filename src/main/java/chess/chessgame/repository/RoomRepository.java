@@ -11,7 +11,7 @@ public interface RoomRepository {
 
     void endRoom(Room room);
 
-    List<Room> findAll();
+    List<Room> findAllActiveRoom ();
 
     Room findRoomByRoomId(long roomId);
 }

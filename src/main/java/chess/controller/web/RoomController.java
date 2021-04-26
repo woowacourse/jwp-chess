@@ -1,35 +1,18 @@
 package chess.controller.web;
 
-import chess.chessgame.domain.room.game.ChessGameManagerBundle;
-import chess.controller.web.dto.RoomRequestDto;
-import chess.controller.web.dto.RunningGameResponseDto;
-import chess.service.ChessService;
-import chess.service.RoomService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@RestController
+@RequestMapping("/room")
+@Controller
 public class RoomController {
-    private final ChessService chessService;
-    private final RoomService roomService;
 
-    public RoomController(ChessService chessService, RoomService roomService) {
-        this.chessService = chessService;
-        this.roomService = roomService;
-    }
-
-    @GetMapping("/room")
-    public ResponseEntity<RunningGameResponseDto> entranceRoom() {
-        ChessGameManagerBundle runningGames = chessService.findRunningGames();
-        return ResponseEntity.ok(new RunningGameResponseDto(runningGames.getIdAndNextTurn()));
-    }
-
-    @PostMapping("/room")
-    public ResponseEntity<Void> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
-        roomService.createRoom(roomRequestDto.getRoomName(), roomRequestDto.getWhiteUserPassword());
-        return ResponseEntity.ok().build();
+    @GetMapping("{roomId:[\\d]+}")
+    public String enterRoom(@PathVariable long roomId, Model model) {
+        model.addAttribute("roomId", roomId);
+        return "chess";
     }
 }

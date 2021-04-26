@@ -34,6 +34,10 @@ public class Room {
         return gameManager;
     }
 
+    public long getRoomId() {
+        return roomId;
+    }
+
     public String getRoomName() {
         return roomName;
     }

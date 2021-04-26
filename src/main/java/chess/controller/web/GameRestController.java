@@ -43,6 +43,6 @@ public class GameRestController {
     @PutMapping("move")
     public ResponseEntity<MoveResponseDto> movePiece(@RequestBody MoveRequestDto moveMessage) {
         chessService.move(moveMessage);
-        return ResponseEntity.ok(new MoveResponseDto(chessService.isEnd(moveMessage.getGameId()), chessService.nextColor(moveMessage.getGameId())));
+        return ResponseEntity.ok(new MoveResponseDto(chessService. isEnd(moveMessage.getGameId()), chessService.nextColor(moveMessage.getGameId())));
     }
 }

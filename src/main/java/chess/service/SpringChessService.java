@@ -3,18 +3,20 @@ package chess.service;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
+import chess.domain.team.PiecePositions;
 import chess.domain.team.Team;
 import chess.webdao.MysqlChessDao;
-import chess.webdto.converter.DaoToChessGame;
-import chess.webdto.converter.TeamConstants;
-import chess.webdto.converter.TeamInfoToDto;
+import chess.webdto.dao.DaoToPiece;
+import chess.webdto.dao.TeamConstants;
 import chess.webdto.dao.BoardInfosDto;
+import chess.webdto.dao.TeamInfoDto;
 import chess.webdto.dao.TurnDto;
 import chess.webdto.view.ChessGameDto;
 import chess.webdto.view.MoveRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,12 +46,12 @@ public class SpringChessService {
     private void insertBoardInfos(ChessGame chessGame, long roomId) {
         Map<Position, Piece> whites = chessGame.currentWhitePiecePosition();
         for (Map.Entry<Position, Piece> whiteInfo : whites.entrySet()) {
-            chessDao.createBoard(new TeamInfoToDto(TeamConstants.WHITE, whiteInfo, roomId).convertToTeamInfoDto());
+            chessDao.createBoard(new TeamInfoDto(TeamConstants.WHITE, whiteInfo, roomId));
         }
 
         Map<Position, Piece> blacks = chessGame.currentBlackPiecePosition();
         for (Map.Entry<Position, Piece> blackInfo : blacks.entrySet()) {
-            chessDao.createBoard(new TeamInfoToDto(TeamConstants.BLACK, blackInfo, roomId).convertToTeamInfoDto());
+            chessDao.createBoard(new TeamInfoDto(TeamConstants.BLACK, blackInfo, roomId));
         }
     }
 
@@ -57,7 +59,7 @@ public class SpringChessService {
         TurnDto turnDto = chessDao.selectTurnByRoomId(1);
         List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(1);
 
-        final ChessGame chessGame = new DaoToChessGame(turnDto, boardInfos).covertToChessGame();
+        final ChessGame chessGame = covertToChessGame(turnDto, boardInfos);
 
         return new ChessGameDto(chessGame);
     }
@@ -68,7 +70,8 @@ public class SpringChessService {
         TurnDto turnDto = chessDao.selectTurnByRoomId(1);
         List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(1);
 
-        final ChessGame chessGame = new DaoToChessGame(turnDto, boardInfos).covertToChessGame();
+        final ChessGame chessGame = covertToChessGame(turnDto, boardInfos);
+
         String startPosition = moveRequestDto.getStart();
         String destPosition = moveRequestDto.getDestination();
         chessGame.move(Position.of(startPosition), Position.of(destPosition));
@@ -78,6 +81,34 @@ public class SpringChessService {
         insertBoardInfos(chessGame, 1);
 
         return new ChessGameDto(chessGame);
+    }
+
+    private ChessGame covertToChessGame(TurnDto turnDto, List<BoardInfosDto> boardInfos) {
+        Map<Position, Piece> whites = new HashMap<>();
+        Map<Position, Piece> blacks = new HashMap<>();
+        for (BoardInfosDto boardInfo : boardInfos) {
+            if (boardInfo.getTeam().equals("white")) {
+                whites.put(Position.of(boardInfo.getPosition()), DaoToPiece.generatePiece(boardInfo.getTeam(), boardInfo.getPiece(), boardInfo.getIsFirstMoved()));
+            }
+
+            if (boardInfo.getTeam().equals("black")) {
+                blacks.put(Position.of(boardInfo.getPosition()), DaoToPiece.generatePiece(boardInfo.getTeam(), boardInfo.getPiece(), boardInfo.getIsFirstMoved()));
+            }
+        }
+        PiecePositions whitePiecePosition = new PiecePositions(whites);
+        PiecePositions blackPiecePosition = new PiecePositions(blacks);
+
+        Team blackTeam = new Team(blackPiecePosition);
+        Team whiteTeam = new Team(whitePiecePosition);
+
+        return new ChessGame(blackTeam, whiteTeam, currentTurn(blackTeam, whiteTeam, turnDto.getTurn()), turnDto.getIsPlaying());
+    }
+
+    private Team currentTurn(Team black, Team white, String currentTurnTeam) {
+        if (currentTurnTeam.equals("white")) {
+            return white;
+        }
+        return black;
     }
 
 

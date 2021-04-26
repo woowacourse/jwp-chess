@@ -1,4 +1,4 @@
-package chess.webdto.converter;
+package chess.webdto.dao;
 
 public class TeamConstants {
     public static final String WHITE = "white";

@@ -59,7 +59,7 @@ public class MysqlChessDao {
 
     public long createRoom(String currentTurn, boolean isPlaying) {
         String sql = "INSERT INTO room (turn, is_playing, name, room_id) VALUES (?, ?, ?, ?)";
-        String name = "아무이름샘플";
+        String name = "한글도 되나";
         long roomId = 1;
         return this.jdbcTemplate.update(sql, currentTurn, isPlaying, name, roomId);
     }

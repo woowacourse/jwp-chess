@@ -1,7 +1,7 @@
 package chess.webdto.view;
 
 import chess.domain.ChessGame;
-import chess.webdto.converter.TeamConstants;
+import chess.webdto.dao.TeamConstants;
 
 public class ChessGameDto {
     private final TeamPiecesDto piecePositionByTeam;

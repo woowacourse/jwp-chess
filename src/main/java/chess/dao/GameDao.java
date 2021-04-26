@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dto.RoomResponseDto;
 import chess.entity.Game;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -20,15 +21,6 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Game> gameRowMapper = (resultSet, rowNum) -> new Game(
-            resultSet.getLong("id"),
-            resultSet.getString("name"),
-            resultSet.getLong("host_id"),
-            resultSet.getLong("guest_id"),
-            resultSet.getString("turn"),
-            resultSet.getBoolean("is_finished"),
-            resultSet.getTimestamp("created_time").toLocalDateTime()
-    );
 
     public long insert(Game game) {
         final String sql = "INSERT INTO game(name, host_id, guest_id) VALUES (?, ?, ?)";
@@ -64,8 +56,24 @@ public class GameDao {
         return jdbcTemplate.queryForObject(sql, String.class, id);
     }
 
-    public List<String> getRoomNumbers() {
-        String sql = "SELECT id FROM game WHERE is_finished = 0";
-        return jdbcTemplate.queryForList(sql, String.class);
+    public List<RoomResponseDto> getRooms() {
+        String sql = "SELECT name, id FROM game WHERE is_finished = 0";
+        return jdbcTemplate.query(sql, roomRowMapper);
     }
+
+    private final RowMapper<Game> gameRowMapper = (resultSet, rowNum) -> new Game(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getLong("host_id"),
+            resultSet.getLong("guest_id"),
+            resultSet.getString("turn"),
+            resultSet.getBoolean("is_finished"),
+            resultSet.getTimestamp("created_time").toLocalDateTime()
+    );
+
+    private final RowMapper<RoomResponseDto> roomRowMapper = (resultSet, rowNum) -> new RoomResponseDto(
+            resultSet.getString("name"),
+            resultSet.getLong("id")
+    );
+
 }

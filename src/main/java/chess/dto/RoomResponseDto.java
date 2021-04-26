@@ -1,25 +1,21 @@
 package chess.dto;
 
-import java.util.List;
-
 public class RoomResponseDto {
 
-    private final String roomNumbers;
+    private final String roomName;
+    private final long roomId;
 
-    private RoomResponseDto(String roomNumbers) {
-        this.roomNumbers = roomNumbers;
+    public RoomResponseDto(String roomName, long roomId) {
+        this.roomName = roomName;
+        this.roomId = roomId;
     }
 
-    public static RoomResponseDto from(List<String> roomNumbers) {
-        StringBuffer sb = new StringBuffer();
-        for (String roomNumber : roomNumbers) {
-            sb.append(roomNumber + " ");
-        }
-        return new RoomResponseDto(sb.toString());
+    public String getRoomName() {
+        return roomName;
     }
 
-    public String getRoomNumbers() {
-        return roomNumbers;
+    public long getRoomId() {
+        return roomId;
     }
 
 }

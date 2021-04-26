@@ -1,0 +1,47 @@
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+    <link rel="stylesheet" href="/css/room-list.css">
+</head>
+<body>
+<div id="main-div">
+    <div class="title-wrapper">
+        <span class="title">CHESS </span>
+        <span class="subtitle">GAME</span>
+    </div>
+    <div id="start-out-div">
+        <div id="start-in-div">
+            <table id="table">
+                <tr>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        게임이름
+                    </th>
+                    <th>
+                        입장
+                    </th>
+                </tr>
+                {{#rooms}}
+                    <tr>
+                        <td>
+                            <div id="{{roomId}}" class="room">{{roomId}}</div>
+                        </td>
+                        <td>
+                            <div id="room {{roomId}} name" class="rooms">{{roomName}}</div>
+                        </td>
+                        <td>
+                            <input type="button" id="room{{roomId}}" class="room roomNames" value="입장">
+                        </td>
+                    </tr>
+                {{/rooms}}
+            </table>
+        </div>
+    </div>
+    <button id="home-btn" type="button" class="btn btn-outline-primary">홈 화면</button>
+</div>
+<script type="text/javascript" src="/js/room-list.js"></script>
+</body>
+</html>

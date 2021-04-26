@@ -6,6 +6,8 @@ import chess.dto.GameResponseDto;
 import chess.dto.RoomResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GameService {
 
@@ -35,8 +37,8 @@ public class GameService {
         return gameDao.getTurn(gameId);
     }
 
-    public RoomResponseDto getRoomNumber() {
-        return RoomResponseDto.from(gameDao.getRoomNumbers());
+    public List<RoomResponseDto> getRooms() {
+        return gameDao.getRooms();
     }
 
 }

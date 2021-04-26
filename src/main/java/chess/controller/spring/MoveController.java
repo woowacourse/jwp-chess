@@ -17,7 +17,7 @@ public class MoveController {
         return "index";
     }
 
-    @GetMapping("/chessgame/{roomId}")
+    @GetMapping("/game/{roomId}")
     public String moveToGamePage(@PathVariable int roomId, Model model, HttpSession httpSession) {
         SessionVO session = (SessionVO) httpSession.getAttribute("session");
         model.addAttribute("roomId", roomId);

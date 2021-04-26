@@ -8,7 +8,7 @@ function showRoom(room) {
     const $rooms = document.getElementById('room-list');
     const $roomChild = document.createElement('li');
     const $url = document.createElement('a');
-    $url.href = '/chessgame/' + room.id;
+    $url.href = '/game/' + room.id;
     $url.textContent = room.name;
     $roomChild.appendChild($url);
     $rooms.appendChild($roomChild);

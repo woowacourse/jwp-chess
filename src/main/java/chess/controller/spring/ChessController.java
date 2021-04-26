@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/chessgame/{roomId}")
@@ -40,7 +39,7 @@ public class ChessController {
 
     @PutMapping("/chessboard")
     public ResponseEntity<BoardDTO> move(@PathVariable int roomId, @RequestBody @Valid MoveRequestDTO moveRequestDTO, HttpSession httpSession) {
-        SessionVO sessionVO = (SessionVO) Objects.requireNonNull(httpSession.getAttribute("session"), "로그인이 필요합니다.");
+        SessionVO sessionVO = (SessionVO) httpSession.getAttribute("session");
         History history = new History(moveRequestDTO.getCurrent(), moveRequestDTO.getDestination(), moveRequestDTO.getTeamType());
         chessService.move(history, roomId, sessionVO.getPassword());
         BoardDTO chessBoardDTO = findChessBoard(roomId);

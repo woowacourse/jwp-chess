@@ -29,7 +29,7 @@ public class LoginController {
         String password = loginRequestDTO.getPassword();
         userService.addUserIntoRoom(roomId, password);
         httpSession.setAttribute("session", new SessionVO(roomId, password));
-        return ResponseEntity.status(HttpStatus.OK).body("/chessgame/" + roomId);
+        return ResponseEntity.status(HttpStatus.OK).body("/game/" + roomId);
     }
 
     @DeleteMapping("/logout/{roomId}")

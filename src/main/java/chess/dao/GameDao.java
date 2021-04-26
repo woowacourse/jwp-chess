@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dto.GameCountResponseDto;
 import chess.dto.RoomResponseDto;
 import chess.entity.Game;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -61,6 +62,15 @@ public class GameDao {
         return jdbcTemplate.query(sql, roomRowMapper);
     }
 
+    public GameCountResponseDto gameCount() {
+        String sql = "SELECT count(*) FROM game";
+        return jdbcTemplate.queryForObject(sql, gameCountRowMapper);
+    }
+
+    private final RowMapper<GameCountResponseDto> gameCountRowMapper = (resultSet, rowNum) -> new GameCountResponseDto(
+            resultSet.getInt("count(*)")
+    );
+
     private final RowMapper<Game> gameRowMapper = (resultSet, rowNum) -> new Game(
             resultSet.getLong("id"),
             resultSet.getString("name"),
@@ -75,5 +85,4 @@ public class GameDao {
             resultSet.getString("name"),
             resultSet.getLong("id")
     );
-
 }

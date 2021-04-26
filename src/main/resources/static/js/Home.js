@@ -13,6 +13,12 @@ window.onload = function () {
 }
 
 async function startNewGame(e) {
+    const roomcnt = await getData(`${url}/games/roomcnt`)
+    if(roomcnt["count"] >= 10) {
+        alert("더이상 방을 만들 수 없습니다.")
+        return;
+    }
+
     const roomName = prompt("방 제목을 입력하세요");
     const whiteUserName = prompt("흰색 유저 이름을 입력하세요.");
     const blackUserName = prompt("검정색 유저 이름을 입력하세요.");
@@ -21,6 +27,7 @@ async function startNewGame(e) {
         await validateRoomName(roomName);
     } catch (e) {
         alert("중복된 이름이거나, 올바르지 않은 입력입니다.")
+        return;
     }
 
     try {

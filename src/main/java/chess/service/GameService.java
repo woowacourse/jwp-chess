@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.GameDao;
+import chess.dto.GameCountResponseDto;
 import chess.dto.GameRequestDto;
 import chess.dto.GameResponseDto;
 import chess.dto.RoomResponseDto;
@@ -41,4 +42,7 @@ public class GameService {
         return gameDao.getRooms();
     }
 
+    public GameCountResponseDto gameCount() {
+        return gameDao.gameCount();
+    }
 }

@@ -3,6 +3,7 @@ package chess.controller.spring;
 import chess.dto.RoomDTO;
 import chess.dto.RoomRegistrationDTO;
 import chess.service.spring.RoomService;
+import chess.service.spring.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -31,21 +32,36 @@ class RoomControllerTest {
     @LocalServerPort
     int port;
 
+    private int firstRoomId;
+    private int secondRoomId;
+
     @Autowired
     private RoomService roomService;
+
+    @Autowired
+    private UserService userService;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        firstRoomId = roomService.addRoom("room1", "pass1");
+        secondRoomId = roomService.addRoom("room2", "pass1");
+    }
+
+    @AfterEach
+    void tearDown() {
+        userService.deleteAllByRoomId(firstRoomId);
+        userService.deleteAllByRoomId(secondRoomId);
+
+        roomService.deleteById(firstRoomId);
+        roomService.deleteById(secondRoomId);
     }
 
     @DisplayName("방 목록을 조회한다.")
     @Order(1)
     @Test
     void findAllRooms() throws JsonProcessingException {
-        roomService.addRoom("room1", "pass1");
-        roomService.addRoom("room2", "pass1");
-        String expectedResponseBody = writeResponseBody(Arrays.asList(new RoomDTO(1, "room1"), new RoomDTO(2, "room2")));
+        String expectedResponseBody = writeResponseBody(Arrays.asList(new RoomDTO(firstRoomId, "room1"), new RoomDTO(secondRoomId, "room2")));
 
         Response response = RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -68,8 +84,8 @@ class RoomControllerTest {
     @Order(2)
     @Test
     void addRoom() throws JsonProcessingException {
-        String expectedResponseBody = writeResponseBody(new RoomDTO(3, "room3"));
         String requestBody = writeResponseBody(new RoomRegistrationDTO("room3", "pass1"));
+        String expectedResponseBody = writeResponseBody(new RoomDTO(secondRoomId + 1, "room3"));
 
         Response response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

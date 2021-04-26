@@ -16,9 +16,9 @@ public class UserDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insertUser(final String roomId, final String nickname, final String password) {
-        String query = "INSERT INTO user (room_id, nickname, password) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query, roomId, nickname, password);
+    public void insertUser(final String nickname, final String password) {
+        String query = "INSERT INTO user (nickname, password) VALUES (?, ?)";
+        jdbcTemplate.update(query, nickname, password);
     }
 
     public UsersDTO findByRoomId(final String roomId) {

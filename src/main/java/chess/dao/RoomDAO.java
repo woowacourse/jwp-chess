@@ -15,9 +15,9 @@ public class RoomDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createRoom(final String title) {
-        String query = "INSERT INTO room (title, status) VALUES (?, ?)";
-        jdbcTemplate.update(query, title, "준비중");
+    public void createRoom(final String title, final int userId) {
+        String query = "INSERT INTO room (white_id, title, status) VALUES (?, ?, ?)";
+        jdbcTemplate.update(query, userId, title, "준비중");
     }
 
     public String createdRoomId() {
@@ -26,7 +26,9 @@ public class RoomDAO {
     }
 
     public List<RoomDTO> allRooms() {
-        String query = "SELECT id, title, status FROM room ORDER BY room.id DESC";
+        String query = "SELECT room.id, room.title, black.nickname AS black_user, white.nickname AS white_user, room.status " +
+            "FROM room LEFT JOIN user as black on black.id = room.black_id " +
+            "LEFT JOIN user as white on white.id = room.white_id ORDER BY room.id DESC";
         return jdbcTemplate.query(query, mapper());
     }
 

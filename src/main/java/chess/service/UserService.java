@@ -21,7 +21,7 @@ public final class UserService {
         return userDAO.findUserIdByNickname(nickname);
     }
 
-    public void enrollUser(final String roomId, final String nickname, final String password) {
-        userDAO.insertUser(roomId, nickname, password);
+    public void enrollUser(final String nickname, final String password) {
+        userDAO.insertUser(nickname, password);
     }
 }

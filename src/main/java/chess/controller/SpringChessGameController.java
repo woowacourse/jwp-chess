@@ -51,9 +51,9 @@ public final class SpringChessGameController {
 
     @PostMapping(path = "/new-game")
     public String createNewGame(@ModelAttribute final CreateRoomRequestDTO requestDTO) {
-        roomService.createRoom(requestDTO.getTitle());
-        String roomId = roomService.createdRoomId();
-        userService.enrollUser(roomId, requestDTO.getNickname(), requestDTO.getPassword());
+        userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
+        int whiteId = userService.userIdByNickname(requestDTO.getNickname());
+        roomService.createRoom(requestDTO.getTitle(), whiteId);
         return "chess";
     }
 

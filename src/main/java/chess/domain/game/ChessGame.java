@@ -121,11 +121,11 @@ public class ChessGame {
             return Color.BLACK;
         }
 
-        if (whitePlayer.isFinish()) {
+        if (!whitePlayer.isFinish()) {
             return Color.WHITE;
         }
 
-        return Color.BLACK;
+        return Color.NOTHING;
     }
 
     private double score(final Pieces pieces) {

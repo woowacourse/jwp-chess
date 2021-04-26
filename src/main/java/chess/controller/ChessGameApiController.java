@@ -43,8 +43,11 @@ public class ChessGameApiController {
 
     @PutMapping("/{name}/pieces")
     public ResponseEntity<MoveResponseDto> movePieces(@PathVariable("name") final String gameName,
-                                                      @RequestBody final MoveRequestDto requestDto) {
+                                                      @RequestBody final MoveRequestDto requestDto,
+                                                      HttpSession session) {
+        String playerName = (String) session.getAttribute(USER);
+        MoveResponseDto moveResponseDto = chessService.movePiece(gameName, requestDto, playerName);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(chessService.movePiece(gameName, requestDto));
+                .body(moveResponseDto);
     }
 }

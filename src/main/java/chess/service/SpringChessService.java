@@ -5,14 +5,12 @@ import chess.dao.MovementDao;
 import chess.dao.UserDao;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
+import chess.domain.piece.Color;
 import chess.domain.position.Position;
 import chess.entity.Chess;
 import chess.entity.Movement;
 import chess.entity.User;
-import chess.exception.DuplicateRoomException;
-import chess.exception.NotExistRoomException;
-import chess.exception.NotExistUserException;
-import chess.exception.WrongAccessException;
+import chess.exception.*;
 import chess.service.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,10 +32,13 @@ public class SpringChessService {
     }
 
     @Transactional
-    public MoveResponseDto movePiece(final String gameName, final MoveRequestDto requestDto) {
+    public MoveResponseDto movePiece(final String gameName, final MoveRequestDto requestDto, String playerName) {
         Chess chess = findChessByName(gameName);
         ChessGame chessGame = ChessGame.newGame();
         moveChess(chessGame, chess.getName());
+        System.out.println("chessGame.turn() = " + chessGame.turn());
+        validateTurn(chess, playerName, chessGame.turn());
+
         chessGame.moveByTurn(new Position(requestDto.getSource()), new Position(requestDto.getTarget()));
         movementDao.save(new Movement(chess.getId(), requestDto.getSource(), requestDto.getTarget()));
 
@@ -49,6 +50,26 @@ public class SpringChessService {
 
         return new MoveResponseDto(requestDto.getSource(), requestDto.getTarget(),
                 chessGame.calculateScore(), !chess.isRunning());
+    }
+
+    private void validateTurn(final Chess chess, final String playerName, final Color turn) {
+        User user = userDao.findByName(playerName).orElseThrow(NotExistUserException::new);
+
+        if (Objects.isNull(chess.getBlackPlayerId())) {
+            throw new NotFoundUserException();
+        }
+
+        if (chess.getWhitePlayerId().equals(user.getId())) {
+            if (turn.isBlack()) {
+                throw new InvalidTurnException();
+            }
+        }
+
+        if (chess.getBlackPlayerId().equals(user.getId())) {
+            if (!turn.isBlack()) {
+                throw new InvalidTurnException();
+            }
+        }
     }
 
     @Transactional

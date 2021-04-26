@@ -9,6 +9,8 @@ chess;
 CREATE TABLE room
 (
     id         INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    black_id   INT,
+    white_id   INT,
     title      VARCHAR(64) NOT NULL,
     status     VARCHAR(64) NOT NULL
 );
@@ -16,7 +18,6 @@ CREATE TABLE room
 CREATE TABLE user
 (
     id       INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    room_id  INT         NOT NULL,
     nickname VARCHAR(64) NOT NULL UNIQUE,
     password VARCHAR(64) NOT NULL
 );

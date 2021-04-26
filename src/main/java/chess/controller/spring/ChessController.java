@@ -1,7 +1,7 @@
 package chess.controller.spring;
 
 import chess.dto.CommonDto;
-import chess.dto.MoveRequest;
+import chess.dto.MovePositionDto;
 import chess.dto.NewGameDto;
 import chess.dto.RunningGameDto;
 import chess.service.ChessService;
@@ -23,8 +23,8 @@ public class ChessController {
     }
 
     @PostMapping("/{gameId:[\\d]+}/move")
-    public ResponseEntity<CommonDto<RunningGameDto>> move(@RequestBody MoveRequest moveRequest) {
-        return ResponseEntity.ok().body(service.move(moveRequest.getGameId(), moveRequest.getFrom(), moveRequest.getTo()));
+    public ResponseEntity<CommonDto<RunningGameDto>> move(@RequestBody MovePositionDto movePositionDto) {
+        return ResponseEntity.ok().body(service.move(movePositionDto.getGameId(), movePositionDto.getFrom(), movePositionDto.getTo()));
     }
 
     @GetMapping("/{gameId:[\\d]+}/load")

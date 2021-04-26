@@ -66,7 +66,7 @@ async function addAndRequestMove(square) {
         console.log(`request [POST]/move, body: from: ${fromSquare.id}, \nto: ${toSquare.id}\n`);
 
         try {
-            fetch(`/games/${gameId}/piece`, {
+            fetch(`/games/${gameId}/pieces`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

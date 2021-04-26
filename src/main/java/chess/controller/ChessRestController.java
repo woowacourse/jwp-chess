@@ -23,7 +23,7 @@ public class ChessRestController {
                 ), HttpStatus.CREATED);
     }
 
-    @PutMapping("/games/{gameId}/piece")
+    @PutMapping("/games/{gameId}/pieces")
     public ResponseEntity<CommonResponse<RunningGameDto>> move(@PathVariable long gameId, @RequestBody MoveRequest moveRequest) {
         String from = moveRequest.getFrom();
         String to = moveRequest.getTo();

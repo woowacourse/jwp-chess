@@ -23,9 +23,11 @@ http://localhost:8080/swagger-ui.html#/
       - [x] GameDto 생성 및 적용
       - [x] PieceDto 생성 및 적용
       - [x] UserDto 생성 및 적용
+    - [x] Dao의 select 메서드의 반환값 Optional로 변경
     - [ ] GameRepository 생성 (상위 레이어에서 게임 관련 도메인 접근) 
-    - [ ] UserRepository 생성 (상위 레이어에서 유저 도메인 접근) 
-
+    - [ ] UserRepository 생성 (상위 레이어에서 유저 도메인 접근)
+- [ ] 예외 처리 관련 기능 추가
+    - [x] data select에 싪패하면 404 에러 발생  
 - [ ] ChessController URI 정리
 - [ ] Controller와 API Controller 분리계
 - [ ] 모든 응답 DTO로 변경

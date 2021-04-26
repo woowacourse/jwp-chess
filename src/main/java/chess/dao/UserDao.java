@@ -3,6 +3,7 @@ package chess.dao;
 import chess.dao.dto.UserDto;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -38,14 +39,18 @@ public class UserDao {
         return keyHolder.getKey().longValue();
     }
 
-    public UserDto selectByName(final String name) {
+    public Optional<UserDto> selectByName(final String name) {
         final String sql = "SELECT * FROM user WHERE name = ?";
-        return jdbcTemplate.queryForObject(sql, userRowMapper, name);
+        return Optional.ofNullable(
+            jdbcTemplate.queryForObject(sql, userRowMapper, name)
+        );
     }
 
-    public UserDto selectById(final long id) {
+    public Optional<UserDto> selectById(final long id) {
         final String sql = "SELECT * FROM user WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, userRowMapper, id);
+        return Optional.ofNullable(
+            jdbcTemplate.queryForObject(sql, userRowMapper, id)
+        );
     }
 
 }

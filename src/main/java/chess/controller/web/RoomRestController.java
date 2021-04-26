@@ -27,7 +27,7 @@ public class RoomRestController {
     }
 
     @GetMapping
-    public ResponseEntity<ActiveRoomsResponseDto> getRoomsId() {
+    public ResponseEntity<ActiveRoomsResponseDto> getRooms() {
         return ResponseEntity.ok(new ActiveRoomsResponseDto(roomService.findAllRunningRoom()));
     }
 

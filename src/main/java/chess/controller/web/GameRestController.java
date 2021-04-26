@@ -24,11 +24,6 @@ public class GameRestController {
         this.chessService = chessService;
     }
 
-    @GetMapping("start")
-    public ResponseEntity<ChessGameResponseDto> gameStart() {
-        return ResponseEntity.ok(new ChessGameResponseDto(chessService.start()));
-    }
-
     @GetMapping("{gameId}/score")
     public ResponseEntity<ScoreResponseDto> getScore(@PathVariable long gameId) {
         return ResponseEntity.ok(new ScoreResponseDto(chessService.getStatistics(gameId)));

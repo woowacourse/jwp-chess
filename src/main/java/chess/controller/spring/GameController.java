@@ -19,13 +19,12 @@ public class GameController {
 
     @GetMapping("/new")
     public ResponseEntity<CommonDto<NewGameDto>> newGame() {
-        return ResponseEntity.ok().body(gameService.saveNewGame());
+        return ResponseEntity.ok(gameService.saveNewGame());
     }
 
     @PostMapping("/{gameId:[\\d]+}/move")
     public ResponseEntity<CommonDto<RunningGameDto>> move(@RequestBody MovePositionDto movePositionDto) {
-        return ResponseEntity.ok()
-                .body(gameService.move(
+        return ResponseEntity.ok(gameService.move(
                         movePositionDto.getGameId(),
                         movePositionDto.getFrom(),
                         movePositionDto.getTo()));
@@ -33,6 +32,6 @@ public class GameController {
 
     @GetMapping("/{gameId:[\\d]+}/load")
     public ResponseEntity<CommonDto<RunningGameDto>> load(@PathVariable int gameId) {
-        return ResponseEntity.ok().body(gameService.loadGame(gameId));
+        return ResponseEntity.ok(gameService.loadGame(gameId));
     }
 }

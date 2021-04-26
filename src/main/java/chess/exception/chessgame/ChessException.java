@@ -1,6 +1,8 @@
 package chess.exception.chessgame;
 
-public class ChessException extends RuntimeException {
+import chess.exception.WebException;
+
+public class ChessException extends WebException {
     public ChessException(String message) {
         super(message);
     }

@@ -23,7 +23,7 @@ public class BoardDao {
         String database = "chessdb"; // MySQL DATABASE 이름
         String option = "?useSSL=false&serverTimezone=UTC";
         String userName = "root"; //  MySQL 서버 아이디
-        String password = "Weak"; // MySQL 서버 비밀번호
+        String password = "root"; // MySQL 서버 비밀번호
 
         // 드라이버 로딩
         try {

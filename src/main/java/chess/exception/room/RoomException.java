@@ -1,10 +1,11 @@
 package chess.exception.room;
 
-import org.springframework.dao.DataAccessException;
+import chess.exception.WebException;
+import org.springframework.http.HttpStatus;
 
-public class RoomException extends DataAccessException {
+public class RoomException extends WebException {
 
-    public RoomException(String msg) {
-        super(msg);
+    public RoomException(HttpStatus status, Object body) {
+        super(status, body);
     }
 }

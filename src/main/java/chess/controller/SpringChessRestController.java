@@ -56,7 +56,8 @@ public class SpringChessRestController {
     }
 
     @DeleteMapping("/rooms/{roomName}")
-    public void deleteRoom(@PathVariable String roomName) {
+    public ResponseEntity deleteRoom(@PathVariable String roomName) {
         springChessService.deleteRoom(roomName);
+        return ResponseEntity.noContent().build();
     }
 }

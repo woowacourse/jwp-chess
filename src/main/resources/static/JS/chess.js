@@ -97,7 +97,7 @@ async function move(from, to) {
             return;
         }
     }
-    if (status === 403 || status === 500) {
+    if (status === 400 || status === 500) {
         response = await response.text();
         alert(response);
     }
@@ -121,7 +121,7 @@ async function syncBoard() {
         }
     });
 
-    if (response.status === 403 || response.status === 500) {
+    if (response.status === 400 || response.status === 500) {
         response = await response.text();
         alert(response);
         window.location.href = "http://localhost:8080/";

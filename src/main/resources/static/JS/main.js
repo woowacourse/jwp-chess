@@ -25,7 +25,6 @@ async function renderRooms() {
             renderRoom(json[i]);
         }
     });
-
 }
 
 function initList() {
@@ -53,14 +52,19 @@ async function deleteRoom() {
         }
         let roomName = decodeURI(clickedRoom.textContent);
 
-        await fetch('/api/rooms/' + roomName, {
+        let response = await fetch('/api/rooms/' + roomName, {
             method: 'delete',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
+
+        let status = response.status;
+        if (status === 204) {
+            alert("삭제가 완료되었습니다.");
+        }
     }
-    renderRooms();
+    await renderRooms();
 }
 
 function clickRoomName(event) {
@@ -109,10 +113,7 @@ async function addRoom(event) {
         let status = response.status;
         event.target.value = '';
         response = await response.text();
-        if (status === 201) {
-            alert(response);
-        }
-        if (status === 403) {
+        if (status === 201 || status === 500) {
             alert(response);
         }
         await renderRooms();

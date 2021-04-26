@@ -65,6 +65,5 @@ function putFetch(url, body = {}) {
 function exceptionHandling(errorPromise) {
     errorPromise.then(data => {
         alert(data.errorMsg);
-        location.href = "/";
     })
 }

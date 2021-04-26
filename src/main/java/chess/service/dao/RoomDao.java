@@ -74,13 +74,8 @@ public class RoomDao {
         return jdbcTemplate.queryForObject(query, String.class, roomId);
     }
 
-    // TODO :: RoomDTO 생성자로 속성 주입
     public RoomDto roomInfo(final long roomId) {
-        final RoomDto roomDto = new RoomDto();
-        roomDto.setRoomName(name(roomId));
-        roomDto.setPlayer1(player1(roomId));
-        roomDto.setPlayer2(player2(roomId));
-        return roomDto;
+        return new RoomDto(name(roomId), player1(roomId), player2(roomId));
     }
 
     public List<String> players(final long roomId) {

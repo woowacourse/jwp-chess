@@ -4,17 +4,17 @@ import chess.domain.board.Board;
 
 import java.util.Map;
 
-public class GameInfoDto {
+public class GameDto {
 
     private final Map<String, String> board;
     private final double blackScore;
     private final double whiteScore;
 
-    public GameInfoDto(Board board, double blackScore, double whiteScore) {
+    public GameDto(Board board, double blackScore, double whiteScore) {
         this(board.parseUnicodeBoardAsMap(), blackScore, whiteScore);
     }
 
-    public GameInfoDto(Map<String, String> board, double blackScore, double whiteScore) {
+    public GameDto(Map<String, String> board, double blackScore, double whiteScore) {
         this.board = board;
         this.blackScore = blackScore;
         this.whiteScore = whiteScore;

@@ -24,6 +24,12 @@ public class RoomDto {
         this.roomName = name;
     }
 
+    public RoomDto(final String roomName, final String player1, final String player2){
+        this.roomName = roomName;
+        this.player1 = player1;
+        this.player2 = player2;
+    }
+
     public Long getId() {
         return id;
     }

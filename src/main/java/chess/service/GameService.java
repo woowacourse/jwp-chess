@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dto.GameInfoDto;
+import chess.dto.GameDto;
 import chess.domain.ChessGame;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
@@ -55,9 +55,9 @@ public class GameService {
         return chessGame.isGameEnd();
     }
 
-    public GameInfoDto gameInfo(final long roomId) {
+    public GameDto gameInfo(final long roomId) {
         final ChessGame chessGame = gameDao.load(roomId);
-        return new GameInfoDto(chessGame.board(), chessGame.score(Owner.BLACK), chessGame.score(Owner.WHITE));
+        return new GameDto(chessGame.board(), chessGame.score(Owner.BLACK), chessGame.score(Owner.WHITE));
     }
 
     public List<Owner> winner(final long roomId) {

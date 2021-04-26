@@ -38,9 +38,7 @@ class RoomRestControllerTest {
 
     @BeforeEach
     private void init() {
-        roomDto = new RoomDto();
-        roomDto.setRoomName("validName");
-        roomDto.setPlayer1("player1");
+        roomDto = new RoomDto("validName", "player1", "player2");
     }
 
     @DisplayName("유효한 이름으로 방 생성")
@@ -56,7 +54,7 @@ class RoomRestControllerTest {
     @DisplayName("유효하지 않은 이름으로 방 생성 (너무 짧은 방 이름)")
     @Test
     public void createRoomWithTooShortName() throws Exception {
-        roomDto.setRoomName("a");
+        roomDto = new RoomDto("a", "player1", "player2");
 
         final RequestBuilder request = MockMvcRequestBuilders.post("/room/create")
                 .content(mapper.writeValueAsString(roomDto))
@@ -68,7 +66,7 @@ class RoomRestControllerTest {
     @DisplayName("유효하지 않은 이름으로 방 생성 (너무 긴 방 이름)")
     @Test
     public void createRoomWithTooLongName() throws Exception {
-        roomDto.setRoomName("tooLongRoomName");
+        roomDto = new RoomDto("tooLongRoomName", "player1", "player2");
 
         final RequestBuilder request = MockMvcRequestBuilders.post("/room/create")
                 .content(mapper.writeValueAsString(roomDto))
@@ -80,7 +78,7 @@ class RoomRestControllerTest {
     @DisplayName("player1이 blank인 방 생성 요청")
     @Test
     public void createRoomWithoutPlayer1() throws Exception {
-        roomDto.setPlayer1("");
+        roomDto = new RoomDto("tooLongRoomName", "", "player2");
 
         final RequestBuilder request = MockMvcRequestBuilders.post("/room/create")
                 .content(mapper.writeValueAsString(roomDto))
@@ -92,7 +90,7 @@ class RoomRestControllerTest {
     @DisplayName("player1이 null인 방 생성 요청")
     @Test
     public void createRoomWithNullPlayer1() throws Exception {
-        roomDto.setPlayer1(null);
+        roomDto = new RoomDto("tooLongRoomName", null, "player2");
 
         final RequestBuilder request = MockMvcRequestBuilders.post("/room/create")
                 .content(mapper.writeValueAsString(roomDto))
@@ -115,7 +113,7 @@ class RoomRestControllerTest {
     @DisplayName("유효한 방 참가")
     @Test
     public void enterRoom() throws Exception {
-        roomDto.setPlayer1("player2");
+        roomDto = new RoomDto("tooLongRoomName", "player1", "player2");
 
         final RequestBuilder request = MockMvcRequestBuilders.post("/room/enter/{}")
                 .param("player2", "player2")

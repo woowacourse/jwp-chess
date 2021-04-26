@@ -8,18 +8,18 @@ import java.util.Map;
 import static java.util.stream.Collectors.toMap;
 
 public class ActiveRoomsResponseDto {
-    private final Map<Long, String> activeRooms;
+    private final Map<Long, RoomResponseDto> activeRooms;
 
     public ActiveRoomsResponseDto(List<Room> rooms) {
         this(rooms.stream()
-                .collect(toMap(Room::getRoomId, Room::getRoomName)));
+                .collect(toMap(Room::getRoomId, room -> new RoomResponseDto(room.isMaxUser(), room.getRoomName()))));
     }
 
-    public ActiveRoomsResponseDto(Map<Long, String> activeRooms) {
+    public ActiveRoomsResponseDto(Map<Long, RoomResponseDto> activeRooms) {
         this.activeRooms = activeRooms;
     }
 
-    public Map<Long, String> getActiveRooms() {
+    public Map<Long, RoomResponseDto> getActiveRooms() {
         return activeRooms;
     }
 }

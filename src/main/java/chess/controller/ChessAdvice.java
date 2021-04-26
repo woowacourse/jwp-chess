@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.exception.ChessException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,8 @@ public class ChessAdvice {
         return new ResponseEntity<>("SQL 에러 발생", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleDomainException(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    @ExceptionHandler(ChessException.class)
+    public ResponseEntity<String> handleDomainException(ChessException e) {
+        return ResponseEntity.status(e.getStatusCode()).body(e.getErrorMessage());
     }
 }

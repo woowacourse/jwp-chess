@@ -1,9 +1,12 @@
 package chess.domain.command;
 
+import chess.exception.ChessException;
+import chess.exception.ErrorInformation;
+
 public class End implements Command {
     @Override
     public Command execute(final String command) {
-        throw new UnsupportedOperationException("이미 끝난 상태입니다.");
+        throw new ChessException(ErrorInformation.ALREADY_FINISHED);
     }
 
     @Override

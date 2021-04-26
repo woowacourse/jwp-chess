@@ -40,7 +40,7 @@ public class RoomDAO {
             return prepareStatement;
         };
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
-        return (int) keyHolder.getKey();
+        return keyHolder.getKey().intValue();
     }
 
     public Optional<Room> findLastAddedRoom() {

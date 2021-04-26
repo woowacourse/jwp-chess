@@ -1,10 +1,9 @@
 package chess.controller.spring;
 
-import chess.domain.room.Room;
+import chess.controller.spring.vo.SessionVO;
 import chess.dto.RoomDTO;
 import chess.dto.RoomRegistrationDTO;
 import chess.service.spring.RoomService;
-import chess.service.spring.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +18,9 @@ import java.util.stream.Collectors;
 public class RoomController {
 
     private final RoomService roomService;
-    private final UserService userService;
 
-    public RoomController(RoomService roomService, UserService userService) {
+    public RoomController(RoomService roomService) {
         this.roomService = roomService;
-        this.userService = userService;
     }
 
     @GetMapping
@@ -37,18 +34,19 @@ public class RoomController {
 
     @PostMapping
     public ResponseEntity<RoomDTO> addRoom(@RequestBody @Valid RoomRegistrationDTO roomRegistrationDTO, HttpSession httpSession) {
-        String sessionPassword = (String) httpSession.getAttribute("password");
-        if (!Objects.isNull(sessionPassword)) {
+        validateUserSession(httpSession);
+        String name = roomRegistrationDTO.getName();
+        String password = roomRegistrationDTO.getPassword();
+        int roomId = roomService.addRoom(name, password);
+        httpSession.setAttribute("session", new SessionVO(roomId, password));
+        RoomDTO roomDTO = new RoomDTO(roomId, name);
+        return ResponseEntity.ok().body(roomDTO);
+    }
+
+    private void validateUserSession(HttpSession httpSession) {
+        SessionVO sessionVO = (SessionVO) httpSession.getAttribute("session");
+        if (!Objects.isNull(sessionVO)) {
             throw new IllegalStateException("현재 플레이 중인 게임이 존재합니다.");
         }
-        roomService.addRoom(roomRegistrationDTO.getName());
-        Room room = roomService.findLastAddedRoom();
-        int roomId = room.getId();
-        String loginPassword = roomRegistrationDTO.getPassword();
-        userService.addUserIntoRoom(roomId, loginPassword);
-        httpSession.setAttribute("password", loginPassword);
-        httpSession.setAttribute("roomId", String.valueOf(roomId));
-        RoomDTO roomDTO = RoomDTO.from(room);
-        return ResponseEntity.ok().body(roomDTO);
     }
 }

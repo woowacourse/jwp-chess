@@ -1,5 +1,6 @@
 package chess.controller.spring;
 
+import chess.controller.spring.vo.SessionVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +19,12 @@ public class MoveController {
 
     @GetMapping("/chessgame/{roomId}")
     public String moveToGamePage(@PathVariable int roomId, Model model, HttpSession httpSession) {
-        String sessionRoomId = (String) httpSession.getAttribute("roomId");
-        String password = (String) httpSession.getAttribute("password");
+        SessionVO session = (SessionVO) httpSession.getAttribute("session");
         model.addAttribute("roomId", roomId);
-        if (Objects.isNull(sessionRoomId) && Objects.isNull(password)) {
+        if (Objects.isNull(session)) {
             return "login";
         }
-        if (roomId != Integer.parseInt(sessionRoomId)) {
+        if (roomId != session.getRoomId()) {
             throw new IllegalStateException("현재 플레이 중인 게임이 있습니다.");
         }
         return "game";

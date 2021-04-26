@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.GameDao;
+import chess.dao.PieceDao;
 import chess.domain.ChessGameManager;
 import chess.domain.piece.Color;
 import chess.domain.position.Position;
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameService {
     private final GameDao gameDao;
+    private final PieceDao pieceDao;
 
-    public GameService(GameDao gameDao) {
+    public GameService(GameDao gameDao, PieceDao pieceDao) {
         this.gameDao = gameDao;
+        this.pieceDao = pieceDao;
     }
 
     public CommonDto<NewGameDto> saveNewGame() {
@@ -33,7 +36,7 @@ public class GameService {
     }
 
     private void savePiecesByGameId(int gameId, ChessBoardDto chessBoardDto) {
-        gameDao.savePiecesByGameId(gameId, chessBoardDto.board());
+        pieceDao.savePiecesByGameId(gameId, chessBoardDto.board());
     }
 
     public CommonDto<RunningGameDto> loadGame(int gameId) {
@@ -53,7 +56,7 @@ public class GameService {
         chessGameManager.move(Position.of(startPosition), Position.of(endPosition));
 
         if (chessGameManager.isEnd()) {
-            gameDao.deletePiecesByGameId(gameId);
+            pieceDao.deletePiecesByGameId(gameId);
             gameDao.deleteGameByGameId(gameId);
             return new CommonDto<>("게임이 끝났습니다.", toRunningGameDto(chessGameManager));
         }
@@ -64,8 +67,8 @@ public class GameService {
     }
 
     private void updatePiece(int gameId, String from, String to) {
-        gameDao.deletePieceByGameId(gameId, to);
-        gameDao.updatePiecePositionByGameId(gameId, from, to);
+        pieceDao.deletePieceByGameId(gameId, to);
+        pieceDao.updatePiecePositionByGameId(gameId, from, to);
     }
 
     private ChessGameManager loadChessGameManager(int gameId) {
@@ -74,7 +77,7 @@ public class GameService {
             throw new NoSavedGameException("저장된 게임이 없습니다.");
         }
 
-        ChessBoardDto chessBoardDto = gameDao.selectPieceByGameId(gameId);
+        ChessBoardDto chessBoardDto = pieceDao.selectPieceByGameId(gameId);
 
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.load(chessBoardDto.toChessBoard(), Color.of(turn));

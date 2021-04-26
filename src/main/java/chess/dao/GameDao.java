@@ -16,9 +16,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Repository
 public class GameDao {
@@ -39,11 +37,6 @@ public class GameDao {
             return pstmt;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).intValue();
-    }
-
-    public void savePieceByGameId(int gameId, String position, PieceDto piece) {
-        String query = "INSERT INTO piece(game_id, name, color, position) VALUES(?, ?, ?, ?)";
-        this.jdbcTemplate.update(query, gameId, piece.getName(), piece.getColor(), position);
     }
 
     public SavedGameDto loadGame(int gameId) {
@@ -92,5 +85,16 @@ public class GameDao {
     public void updatePiecePositionByGameId(int gameId, String startPosition, String endPosition) {
         String query = "UPDATE piece SET position=? WHERE game_id=? AND position=?";
         this.jdbcTemplate.update(query, endPosition, gameId, startPosition);
+    }
+
+    public void savePiecesByGameId(int gameId, Map<String, PieceDto> chessBoard) {
+        String query = "INSERT INTO piece(game_id, name, color, position) VALUES(?, ?, ?, ?)";
+        this.jdbcTemplate.batchUpdate(query, chessBoard.keySet(), chessBoard.size(), (ps, position) -> {
+            ps.setInt(1, gameId);
+            PieceDto pieceDto = chessBoard.get(position);
+            ps.setString(2, pieceDto.getName());
+            ps.setString(3, pieceDto.getColor());
+            ps.setString(4, position);
+        });
     }
 }

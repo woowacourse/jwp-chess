@@ -9,6 +9,8 @@ import chess.dto.*;
 import chess.exception.HandledException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ChessService {
     private final GameDao gameDao;
@@ -39,7 +41,7 @@ public class ChessService {
     }
 
     private void savePiecesByGameId(int gameId, ChessBoardDto chessBoardDto) {
-        chessBoardDto.board().forEach((key, value) -> gameDao.savePieceByGameId(gameId, key, value));
+        gameDao.savePiecesByGameId(gameId, chessBoardDto.board());
     }
 
     public CommonDto<RunningGameDto> loadGame(int gameId) {

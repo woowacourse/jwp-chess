@@ -49,9 +49,4 @@ public class RoomController {
             throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "방에 입장할 권한이 없습니다.");
         }
     }
-
-    @ExceptionHandler(HttpClientErrorException.class)
-    private ResponseEntity<ErrorMessageResponseDto> handle(Exception e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorMessageResponseDto(e.getMessage()));
-    }
 }

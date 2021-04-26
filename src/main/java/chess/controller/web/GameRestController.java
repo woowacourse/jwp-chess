@@ -1,11 +1,14 @@
 package chess.controller.web;
 
 import chess.chessgame.domain.room.game.ChessGameManager;
+import chess.chessgame.domain.room.game.board.piece.attribute.Color;
+import chess.chessgame.domain.room.user.User;
 import chess.controller.web.dto.ChessGameResponseDto;
 import chess.controller.web.dto.MoveRequestDto;
 import chess.controller.web.dto.MoveResponseDto;
 import chess.controller.web.dto.ScoreResponseDto;
 import chess.service.ChessService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
+
+import javax.servlet.http.HttpSession;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/game")
@@ -36,8 +43,25 @@ public class GameRestController {
     }
 
     @PutMapping("move")
-    public ResponseEntity<MoveResponseDto> movePiece(@RequestBody MoveRequestDto moveMessage) {
+    public ResponseEntity<MoveResponseDto> movePiece(@RequestBody MoveRequestDto moveMessage, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        Color nextColor = chessService.nextColor(moveMessage.getGameId());
+        validateUser(user, nextColor);
+
         chessService.move(moveMessage);
-        return ResponseEntity.ok(new MoveResponseDto(chessService. isEnd(moveMessage.getGameId()), chessService.nextColor(moveMessage.getGameId())));
+        return ResponseEntity.ok(new MoveResponseDto(chessService.isEnd(moveMessage.getGameId()), nextColor));
+    }
+
+    private void validateUser(User user, Color nextColor) {
+        if (Objects.isNull(user)) {
+            throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "방에 입장할 권한이 없습니다.");
+        }
+        isProperUser(user, nextColor);
+    }
+
+    private void isProperUser(User user, Color nextColor) {
+        if (user.isSameColor(nextColor)) {
+            throw new IllegalStateException("상대방의 턴입니다.");
+        }
     }
 }

@@ -1,10 +1,11 @@
 package chess.dto.game;
 
-import chess.domain.game.Game;
-import chess.domain.team.Team;
+import chess.dao.dto.GameDto;
 import java.time.LocalDateTime;
 
 public class GameRequestDto {
+
+    private static final String EMPTY_STRING = "";
 
     private final String name;
     private final long hostId;
@@ -16,9 +17,9 @@ public class GameRequestDto {
         this.guestId = guestId;
     }
 
-    public Game toEntity() {
-        return new Game(
-            0L, name, hostId, guestId, Team.WHITE, false, LocalDateTime.now()
+    public GameDto toGameDto() {
+        return new GameDto(
+            0L, name, hostId, guestId, EMPTY_STRING, false, LocalDateTime.now()
         );
     }
 

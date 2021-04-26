@@ -18,7 +18,6 @@ public class PieceDao {
     private final RowMapper<Piece> pieceRowMapper = (resultSet, rowNum) -> PieceConverter
         .run(resultSet);
 
-
     public PieceDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

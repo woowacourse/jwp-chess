@@ -1,6 +1,6 @@
 package chess.dto.game;
 
-import chess.domain.game.Game;
+import chess.dao.dto.GameDto;
 import chess.domain.team.Team;
 
 public class GameResponseDto {
@@ -13,6 +13,7 @@ public class GameResponseDto {
 
     public GameResponseDto(final String name, final Team turn, final long hostId,
         final long guestId, final boolean isFinished) {
+
         this.name = name;
         this.turn = turn;
         this.hostId = hostId;
@@ -20,9 +21,14 @@ public class GameResponseDto {
         this.isFinished = isFinished;
     }
 
-    public static GameResponseDto from(final Game game) {
-        return new GameResponseDto(game.getName(), game.getTurn(), game.getHostId(),
-            game.getGuestId(), game.isFinished());
+    public static GameResponseDto from(final GameDto gameDto) {
+        return new GameResponseDto(
+            gameDto.getName(),
+            Team.from(gameDto.getTurn()),
+            gameDto.getHostId(),
+            gameDto.getGuestId(),
+            gameDto.isFinished()
+        );
     }
 
     public String getName() {

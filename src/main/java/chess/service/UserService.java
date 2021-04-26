@@ -15,7 +15,7 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public long add(final  UserRequestDto userRequestDto) {
+    public long add(final UserRequestDto userRequestDto) {
         return userDao.insert(userRequestDto.toEntity());
     }
 

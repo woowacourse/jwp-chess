@@ -1,7 +1,6 @@
 package chess.dao;
 
-import chess.domain.game.Game;
-import chess.domain.team.Team;
+import chess.dao.dto.GameDto;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,12 +13,12 @@ import org.springframework.stereotype.Repository;
 public class GameDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Game> gameRowMapper = (resultSet, rowNum) -> new Game(
+    private final RowMapper<GameDto> gameRowMapper = (resultSet, rowNum) -> new GameDto(
         resultSet.getLong("id"),
         resultSet.getString("name"),
         resultSet.getLong("host_id"),
         resultSet.getLong("guest_id"),
-        Team.from(resultSet.getString("turn")),
+        resultSet.getString("turn"),
         resultSet.getBoolean("is_finished"),
         resultSet.getTimestamp("created_time").toLocalDateTime()
     );
@@ -28,22 +27,22 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long insert(final Game game) {
+    public long insert(final GameDto gameDto) {
         final String sql = "INSERT INTO game(name, host_id, guest_id) VALUES (?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         final PreparedStatementCreator preparedStatementCreator = con -> {
             final PreparedStatement preparedStatement = con
                 .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, game.getName());
-            preparedStatement.setLong(2, game.getHostId());
-            preparedStatement.setLong(3, game.getGuestId());
+            preparedStatement.setString(1, gameDto.getName());
+            preparedStatement.setLong(2, gameDto.getHostId());
+            preparedStatement.setLong(3, gameDto.getGuestId());
             return preparedStatement;
         };
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
-    public Game findById(final long gameId) {
+    public GameDto findById(final long gameId) {
         final String sql = "SELECT * FROM game WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, gameRowMapper, gameId);
     }

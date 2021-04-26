@@ -3,8 +3,8 @@ const HIGHLIGHTED_BLACK_BEAR_SRC = `${SRC_PATH}/black-bear-piece-yellow.png`;
 const BLACK_BEAR_SRC = `${SRC_PATH}/black-bear-piece.png`;
 const HIGHLIGHTED_WHITE_BEAR_SRC = `${SRC_PATH}/white-bear-piece-cyan.png`;
 const WHITE_BEAR_SRC = `${SRC_PATH}/white-bear-piece.png`;
-const BLACK_TEAM  = "black";
-const WHITE_TEAM  = "white";
+const BLACK_TEAM = "black";
+const WHITE_TEAM = "white";
 
 export class Turn {
   #turn

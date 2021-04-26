@@ -15,7 +15,7 @@ public class GameService {
     }
 
     public long add(final GameRequestDto gameRequestDto) {
-        return gameDao.insert(gameRequestDto.toEntity());
+        return gameDao.insert(gameRequestDto.toGameDto());
     }
 
     public GameResponseDto findById(final long gameId) {
@@ -29,4 +29,5 @@ public class GameService {
     public void changeTurn(final long gameId) {
         gameDao.updateTurn(gameId);
     }
+
 }

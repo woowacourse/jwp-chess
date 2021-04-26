@@ -6,12 +6,20 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.querySelector(".make-room-button").addEventListener("click", function () {
-    let newRoomId = document.querySelector(".newRoomId").value;
-    location.href = 'chess/' + newRoomId;
+    let newRoomTitle = document.querySelector(".newRoomId").value;
+    console.log(newRoomTitle);
+    fetch(indexPage.postRoomUrl + '?title=' + newRoomTitle, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(res => res.json())
+        .then(data => location.href = 'chess/' + data);
 });
 
 function IndexPage() {
     this.getRoomsUrl = window.location.origin + "/api/rooms";
+    this.postRoomUrl = window.location.origin + "/api/room";
 }
 
 IndexPage.prototype.initIndexPage = function () {
@@ -20,27 +28,24 @@ IndexPage.prototype.initIndexPage = function () {
     fetch(indexPage.getRoomsUrl, {
         method: 'GET'
     }).then(res => res.json())
-        .then(function (data) {
-            for (let i = 0; i < data.roomIds.length; i++) {
+        .then(async function (data) {
+            for (let i = 0; i < data.roomNames.length; i++) {
+                let sd = await postRoomId(data.roomNames[i]);
                 roomList.innerHTML +=
                     `<li class="room">
-                        <button class="room-button" onclick="location.href = 'chess/' + ${data.roomIds[i]}">
-                        ${data.roomIds[i]}
+                        <button class="room-button" onclick="location.href = 'chess/' + ${sd}">
+                        ${data.roomNames[i]}
                         </button>
                     </li>`;
             }
         });
 }
 
-IndexPage.prototype.addNewRoom = function (newRoomId) {
-    fetch(indexPage.postPiecesUrl + newRoomId, {
+async function postRoomId(roomTitle) {
+    return await fetch(indexPage.postRoomUrl + '?title=' + roomTitle, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         }
-    }).then(res => res.json())
-        .then(data => {
-            localStorage.setItem("pieces", JSON.stringify(data));
-            location.href = 'chess/' + newRoomId;
-        });
+    }).then(res => res.json());
 }

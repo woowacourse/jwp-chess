@@ -4,13 +4,13 @@ import java.util.List;
 
 public class RoomsResponseDto {
 
-    private final List<Integer> roomIds;
+    private final List<String> roomNames;
 
-    public RoomsResponseDto(List<Integer> roomIds) {
-        this.roomIds = roomIds;
+    public RoomsResponseDto(List<String> roomNames) {
+        this.roomNames = roomNames;
     }
 
-    public List<Integer> getRoomIds() {
-        return roomIds;
+    public List<String> getRoomNames() {
+        return roomNames;
     }
 }

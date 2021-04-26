@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.GameDao;
+import chess.dao.RoomDao;
 import chess.domain.ChessGameManager;
 import chess.domain.piece.Color;
 import chess.domain.position.Position;
@@ -10,14 +11,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
-    private final GameDao gameDAO;
+    private final GameDao gameDao;
+    private final RoomDao roomDao;
 
-    public ChessService(GameDao gameDAO) {
-        this.gameDAO = gameDAO;
+    public ChessService(GameDao gameDao, RoomDao roomDao) {
+        this.gameDao = gameDao;
+        this.roomDao = roomDao;
     }
 
     public CommonDto<GameListDto> loadGameList() {
-        return new CommonDto<>("게임 목록을 불러왔습니다.", new GameListDto(gameDAO.loadGameList()));
+        return new CommonDto<>("게임 목록을 불러왔습니다.", new GameListDto(roomDao.loadRoomList()));
     }
 
     public CommonDto<NewGameDto> saveNewGame() {
@@ -28,7 +31,7 @@ public class ChessService {
         SavedGameDto savedGameDto = new SavedGameDto(
                 chessBoardDto,
                 chessGameManager.getCurrentTurnColor().name());
-        int gameId = gameDAO.saveGame(savedGameDto);
+        int gameId = gameDao.saveGame(savedGameDto);
         savePiecesByGameId(gameId, chessBoardDto);
 
         return new CommonDto<>("새로운 게임이 생성되었습니다.",
@@ -36,7 +39,7 @@ public class ChessService {
     }
 
     private void savePiecesByGameId(int gameId, ChessBoardDto chessBoardDto) {
-        chessBoardDto.board().forEach((key, value) -> gameDAO.savePieceByGameId(gameId, key, value));
+        chessBoardDto.board().forEach((key, value) -> gameDao.savePieceByGameId(gameId, key, value));
     }
 
     public CommonDto<RunningGameDto> loadGame(int gameId) {
@@ -55,26 +58,23 @@ public class ChessService {
         ChessGameManager chessGameManager = loadChessGameManager(gameId);
         chessGameManager.move(Position.of(startPosition), Position.of(endPosition));
 
-        updateDatabase(chessGameManager, gameId);
-
-        return new CommonDto<>("기물을 이동했습니다.",
-                toRunningGameDto(chessGameManager));
+        if (chessGameManager.isEnd()) {
+            gameDao.deletePiecesByGameId(gameId);
+            gameDao.deleteGameByGameId(gameId);
+            return new CommonDto<>("게임이 끝났습니다.", toRunningGameDto(chessGameManager));
+        }
+        updatePiecePosition(gameId, startPosition, endPosition, chessGameManager);
+        return new CommonDto<>("기물을 이동했습니다.", toRunningGameDto(chessGameManager));
     }
 
-    private void updateDatabase(ChessGameManager chessGameManager, int gameId) {
-        if (chessGameManager.isEnd()) {
-            gameDAO.deletePiecesByGameId(gameId);
-            gameDAO.deleteGameByGameId(gameId);
-            return;
-        }
-
-        gameDAO.updateTurnByGameId(chessGameManager.getCurrentTurnColor(), gameId);
-        gameDAO.deletePiecesByGameId(gameId);
-        savePiecesByGameId(gameId, ChessBoardDto.from(chessGameManager.getBoard()));
+    private void updatePiecePosition(int gameId, String startPosition, String endPosition, ChessGameManager chessGameManager) {
+        gameDao.updateTurnByGameId(chessGameManager.getCurrentTurnColor(), gameId);
+        gameDao.deletePieceByGameId(gameId, endPosition);
+        gameDao.updatePiecePositionByGameId(gameId, startPosition, endPosition);
     }
 
     private ChessGameManager loadChessGameManager(int gameId) {
-        SavedGameDto savedGameDto = gameDAO.loadGame(gameId);
+        SavedGameDto savedGameDto = gameDao.loadGame(gameId);
 
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.load(
@@ -87,15 +87,15 @@ public class ChessService {
         String roomName = roomDto.getName();
         int gameId = roomDto.getGameId();
 
-        if (gameDAO.countRoomByName(roomName) != 0) {
+        if (roomDao.countRoomByName(roomName) != 0) {
             throw new HandledException("방이 이미 등록되어있습니다.");
         }
 
-        gameDAO.saveRoom(gameId, roomName);
+        roomDao.saveRoom(gameId, roomName);
         return new CommonDto<>("방 정보를 가져왔습니다.", new RoomDto(gameId, roomName));
     }
 
     public String loadRoomName(int gameId) {
-        return gameDAO.loadRoomName(gameId);
+        return roomDao.loadRoomName(gameId);
     }
 }

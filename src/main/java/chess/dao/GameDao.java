@@ -4,7 +4,10 @@ import chess.domain.board.ChessBoard;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.*;
+import chess.dto.ChessBoardDto;
+import chess.dto.PieceDeserializeTable;
+import chess.dto.PieceDto;
+import chess.dto.SavedGameDto;
 import chess.exception.NoSavedGameException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -83,24 +85,12 @@ public class GameDao {
         this.jdbcTemplate.update("DELETE FROM piece WHERE game_id = ?", gameId);
     }
 
-    public List<RoomDto> loadGameList() {
-        String query = "SELECT game_id, name FROM room";
-        return this.jdbcTemplate.query(query, (res, rowNum) ->
-                new RoomDto(res.getInt("game_id"), res.getString("name")));
+    public void deletePieceByGameId(int gameId, String endPosition) {
+        this.jdbcTemplate.update("DELETE FROM piece WHERE game_id = ? AND position = ?", gameId, endPosition);
     }
 
-    public int countRoomByName(String roomName) {
-        String query = "SELECT count(*) FROM room WHERE name = ?";
-        return this.jdbcTemplate.queryForObject(query, Integer.class, roomName);
-    }
-
-    public void saveRoom(int gameId, String roomName) {
-        String query = "INSERT INTO room(game_id, name) VALUES(?, ?)";
-        this.jdbcTemplate.update(query, gameId, roomName);
-    }
-
-    public String loadRoomName(int gameId) {
-        String query = "SELECT name FROM room WHERE game_id = ?";
-        return this.jdbcTemplate.queryForObject(query, String.class, gameId);
+    public void updatePiecePositionByGameId(int gameId, String startPosition, String endPosition) {
+        String query = "UPDATE piece SET position=? WHERE game_id=? AND position=?";
+        this.jdbcTemplate.update(query, endPosition, gameId, startPosition);
     }
 }

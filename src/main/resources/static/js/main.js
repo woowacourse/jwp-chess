@@ -62,6 +62,10 @@ rooms.addEventListener("click", async (source) => {
     }
 });
 
+signIn.addEventListener("click", async () => {
+    window.location = basePath + "/signin";
+});
+
 signUp.addEventListener("click", async () => {
     window.location = basePath + "/signup";
 });

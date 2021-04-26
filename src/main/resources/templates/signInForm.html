@@ -6,9 +6,9 @@
 </head>
 <body>
 <form id="formElem">
-  아이디 : <input type="text" name="name"><br>
-  비밀번호 : <input type="text" name="password"><br>
-  <input type="submit">
+    아이디 : <input type="text" name="name"><br>
+    비밀번호 : <input type="text" name="password"><br>
+    <input type="submit">
 </form>
 </body>
 <script>
@@ -21,7 +21,7 @@
             password : form.querySelector('input[name="password"]').value,
         }
 
-        let response = await fetch("http://localhost:8080/api/v1/users/signup", {
+        let response = await fetch("http://localhost:8080/api/v1/users/signin", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -36,6 +36,7 @@
         }
 
         window.location ="http://localhost:8080";
+
     };
 </script>
 </html>

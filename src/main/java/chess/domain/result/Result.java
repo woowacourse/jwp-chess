@@ -61,7 +61,7 @@ public class Result {
             .filter(Piece::isKing)
             .map(piece -> piece.color() + WINNING_GUIDE_MESSAGE)
             .findFirst()
-            .orElseThrow(() -> new NoWinnerException("우승자가 없습니다."))
+            .orElseThrow(NoWinnerException::new)
             ;
     }
 }

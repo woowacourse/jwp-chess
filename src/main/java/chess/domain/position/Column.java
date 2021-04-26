@@ -26,7 +26,7 @@ public enum Column {
         return Arrays.stream(values())
             .filter(column -> column.value == intValue)
             .findFirst()
-            .orElseThrow(() -> new InvalidPositionException("존재하지 않는 열입니다"));
+            .orElseThrow(InvalidPositionException::new);
     }
 
     public Column move(Direction direction) {

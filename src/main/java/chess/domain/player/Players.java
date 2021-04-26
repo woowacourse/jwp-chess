@@ -20,6 +20,6 @@ public class Players {
         return players.stream()
             .filter(player -> player.isColor(currentColor))
             .findAny()
-            .orElseThrow(() -> new InvalidPlayerException("해당 색을 가진 플레이어가 존재하지 않습니다."));
+            .orElseThrow(InvalidPlayerException::new);
     }
 }

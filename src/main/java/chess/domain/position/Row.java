@@ -24,7 +24,7 @@ public enum Row {
         return Arrays.stream(values())
             .filter(row -> row.number.equals(value))
             .findFirst()
-            .orElseThrow(() -> new InvalidPositionException("존재하지 않는 행입니다."));
+            .orElseThrow(InvalidPositionException::new);
     }
 
     public Row move(Direction direction) {

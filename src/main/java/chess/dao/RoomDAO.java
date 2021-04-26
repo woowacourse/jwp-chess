@@ -1,14 +1,14 @@
 package chess.dao;
 
 import chess.dto.RoomDTO;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public class RoomDAO {
+
     private final JdbcTemplate jdbcTemplate;
 
     public RoomDAO(final JdbcTemplate jdbcTemplate) {
@@ -32,11 +32,6 @@ public class RoomDAO {
 
     private RowMapper<RoomDTO> mapper() {
         return (resultSet, rowNum) -> {
-            boolean playing = false;
-            int status = resultSet.getInt("status");
-            if (status == 1) {
-                playing = true;
-            }
             return new RoomDTO(
                 resultSet.getInt("id"),
                 resultSet.getString("title"),

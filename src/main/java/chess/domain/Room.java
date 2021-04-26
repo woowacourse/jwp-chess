@@ -1,21 +1,21 @@
 package chess.domain;
 
 public class Room {
-    private Long id;
+    private long id;
     private String name;
     private String pw;
-    private Long gameId;
+    private long gameId;
 
     public Room() {}
 
-    public Room(Long id, String name, String pw, Long gameId) {
+    public Room(long id, String name, String pw, long gameId) {
         this.id = id;
         this.name = name;
         this.pw = pw;
         this.gameId = gameId;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -27,11 +27,11 @@ public class Room {
         return pw;
     }
 
-    public Long getGameId() {
+    public long getGameId() {
         return gameId;
     }
 
-    public void setGameId(final Long gameId) {
+    public void setGameId(final long gameId) {
         this.gameId = gameId;
     }
 

@@ -4,9 +4,11 @@ import chess.dao.UserDao;
 import chess.entity.User;
 import chess.exception.DuplicateRoomException;
 import chess.exception.DuplicateUserException;
+import chess.exception.InvalidPasswordException;
 import chess.exception.NotExistUserException;
 import chess.service.dto.UserFindResponseDto;
 import chess.service.dto.UserSaveRequestDto;
+import chess.service.dto.UserSignRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,5 +40,14 @@ public class UserService {
             return new UserFindResponseDto(user.get().getName());
         }
         throw new NotExistUserException();
+    }
+
+    @Transactional(readOnly = true)
+    public void signIn(final UserSignRequestDto requestDto) {
+        User user = userDao.findByName(requestDto.getName())
+                .orElseThrow(NotExistUserException::new);
+        if (!user.samePassword(requestDto.getPassword())) {
+            throw new InvalidPasswordException();
+        }
     }
 }

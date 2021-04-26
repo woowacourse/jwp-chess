@@ -36,4 +36,8 @@ public class User {
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
+
+    public boolean samePassword(String password) {
+        return this.password.equals(password);
+    }
 }

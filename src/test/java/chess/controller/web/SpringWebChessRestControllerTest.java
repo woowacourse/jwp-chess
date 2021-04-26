@@ -45,14 +45,14 @@ class SpringWebChessRestControllerTest {
                 new GameRequestDto("user3", "user4", "roomName2");
         RestAssured
                 .given().log().all()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(gameRequestDto)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(gameRequestDto)
                 .when()
-                    .post("/games")
+                .post("/games")
                 .then().log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("gameId", notNullValue());
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("gameId", notNullValue());
     }
 
     @Test
@@ -61,11 +61,11 @@ class SpringWebChessRestControllerTest {
         RestAssured
                 .given().log().all()
                 .when()
-                    .get("/games/1/pieces")
+                .get("/games/1/pieces")
                 .then().log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("size()", is(64));
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("size()", is(64));
     }
 
     @Test
@@ -74,12 +74,12 @@ class SpringWebChessRestControllerTest {
         RestAssured
                 .given().log().all()
                 .when()
-                    .get("/games/1/score")
+                .get("/games/1/score")
                 .then().log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("whiteScore", notNullValue())
-                    .body("blackScore", notNullValue());
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("whiteScore", notNullValue())
+                .body("blackScore", notNullValue());
     }
 
     @Test
@@ -88,13 +88,13 @@ class SpringWebChessRestControllerTest {
         RestAssured
                 .given().log().all()
                 .when()
-                    .get("/games/1/state")
+                .get("/games/1/state")
                 .then().log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("turnOwner", notNullValue())
-                    .body("turnNumber", notNullValue())
-                    .body("playing", notNullValue());
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("turnOwner", notNullValue())
+                .body("turnNumber", notNullValue())
+                .body("playing", notNullValue());
     }
 
     @Test
@@ -103,11 +103,11 @@ class SpringWebChessRestControllerTest {
         RestAssured
                 .given().log().all()
                 .when()
-                    .get("/games/1/history")
+                .get("/games/1/history")
                 .then().log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("size()", is(0));
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("size()", is(0));
     }
 
     @Test
@@ -116,11 +116,11 @@ class SpringWebChessRestControllerTest {
         RestAssured
                 .given().log().all()
                 .when()
-                    .get("/games/1/path?source=c2")
+                .get("/games/1/path?source=c2")
                 .then().log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("size()", notNullValue());
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("size()", notNullValue());
 
     }
 
@@ -130,16 +130,16 @@ class SpringWebChessRestControllerTest {
         MoveRequestDto moveRequestDto = new MoveRequestDto("a2", "a3");
         RestAssured
                 .given().log().all()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(moveRequestDto)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(moveRequestDto)
                 .when()
-                    .post("/games/1/move")
+                .post("/games/1/move")
                 .then().log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("moveCommand", notNullValue())
-                    .body("turnOwner", notNullValue())
-                    .body("turnNumber", notNullValue())
-                    .body("playing", notNullValue());
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("moveCommand", notNullValue())
+                .body("turnOwner", notNullValue())
+                .body("turnNumber", notNullValue())
+                .body("playing", notNullValue());
     }
 }

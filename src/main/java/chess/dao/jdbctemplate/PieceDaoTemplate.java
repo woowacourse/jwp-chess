@@ -2,12 +2,15 @@ package chess.dao.jdbctemplate;
 
 import chess.dao.PieceDao;
 import chess.dao.dto.piece.PieceDto;
+import chess.dao.dto.piece.PieceDtos;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -24,31 +27,38 @@ public class PieceDaoTemplate implements PieceDao {
 
     private final RowMapper<PieceDto> actorRowMapper = (resultSet, rowNum) ->
             new PieceDto(
+                    resultSet.getLong("id"),
+                    resultSet.getLong("game_id"),
                     resultSet.getString("symbol"),
                     resultSet.getString("position")
             );
 
     @Override
-    public long[] savePieces(final Long gameId, final Map<Position, Piece> pieces) {
+    public Long save(PieceDto pieceDto) {
         String sql = "INSERT INTO piece(game_id, position, symbol) VALUES (?, ?, ?)";
-        List<Object[]> collect = pieces.entrySet()
-                .stream()
-                .map(entry -> new Object[]{gameId, entry.getKey().parseString(), entry.getValue().getSymbol()})
+        return (long) jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setLong(1, pieceDto.getGameId());
+            ps.setString(2, pieceDto.getPosition());
+            ps.setString(3, pieceDto.getSymbol());
+            return ps;
+        }, new GeneratedKeyHolder());
+    }
+
+    @Override
+    public long[] savePieces(final Long gameId, final List<PieceDto> pieces) {
+        String sql = "INSERT INTO piece(game_id, position, symbol) VALUES (?, ?, ?)";
+        List<Object[]> collect = pieces.stream()
+                .map(pieceDto -> new Object[]{ gameId, pieceDto.getPosition(), pieceDto.getSymbol() })
                 .collect(Collectors.toList());
         int[] ints = jdbcTemplate.batchUpdate(sql, collect);
         return Arrays.stream(ints).asLongStream().toArray();
     }
 
     @Override
-    public Long updateSourcePiece(final String source, final Long gameId) {
+    public Long updateByGameIdAndPosition(PieceDto pieceDto) {
         String sql = "UPDATE piece SET symbol = ? WHERE game_id=? AND position=?";
-        return (long) jdbcTemplate.update(sql, ".", gameId, source);
-    }
-
-    @Override
-    public Long updateTargetPiece(final String target, final Piece sourcePiece, final Long gameId) {
-        String sql = "UPDATE piece SET symbol = ? where game_id = ? AND position = ?";
-        return (long) jdbcTemplate.update(sql, sourcePiece.getSymbol(), gameId, target);
+        return (long) jdbcTemplate.update(sql, pieceDto.getSymbol(), pieceDto.getGameId(), pieceDto.getPosition());
     }
 
     @Override

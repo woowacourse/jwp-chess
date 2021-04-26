@@ -2,10 +2,8 @@ package chess.dao.jdbctemplate;
 
 import chess.dao.GameDao;
 import chess.dao.ScoreDao;
+import chess.dao.dto.game.GameDto;
 import chess.dao.dto.score.ScoreDto;
-import chess.domain.game.Game;
-import chess.domain.manager.GameStatus;
-import chess.domain.piece.Score;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
@@ -35,7 +33,7 @@ class ScoreDaoTemplateTest {
 
     @BeforeEach
     void setUp() {
-        Long newGameId = gameDao.save(Game.of("게임", "흰색유저", "흑색유저"));
+        Long newGameId = gameDao.save(new GameDto("게임", "흰색유저", "흑색유저"));
         String sql = "INSERT INTO score(game_id, white_score, black_score) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, newGameId, 38.0, 38.0);
     }
@@ -43,13 +41,13 @@ class ScoreDaoTemplateTest {
     @Test
     void saveScore() {
         //given
-        Long newGameId = gameDao.save(Game.of("게임", "흰색유저", "흑색유저"));
+        Long newGameId = gameDao.save(new GameDto("게임", "흰색유저", "흑색유저"));
         double whiteScore = 37.0d;
         double blackScore = 37.0d;
-        GameStatus gameStatus = GameStatus.from(new Score(whiteScore), new Score(blackScore));
+        ScoreDto scoreDto = new ScoreDto(newGameId, whiteScore, blackScore);
 
         //when
-        scoreDao.save(gameStatus, newGameId);
+        scoreDao.save(scoreDto);
         ScoreDto findScore = scoreDao.findByGameId(newGameId);
 
         //then
@@ -61,17 +59,17 @@ class ScoreDaoTemplateTest {
     @Test
     void updateScore() {
         //given
-        Long newGameId = gameDao.save(Game.of("게임", "흰색유저", "흑색유저"));
+        Long newGameId = gameDao.save(new GameDto("게임", "흰색유저", "흑색유저"));
         double whiteScore = 37.0d;
         double blackScore = 37.0d;
-        GameStatus gameStatus = GameStatus.from(new Score(whiteScore), new Score(blackScore));
-        scoreDao.save(gameStatus, newGameId);
+        ScoreDto scoreDto = new ScoreDto(newGameId, whiteScore, blackScore);
+        scoreDao.save(scoreDto);
         double updatedWhiteScore = 35.0d;
         double updatedBlackScore = 36.0d;
-        GameStatus updatedGameStatus = GameStatus.from(new Score(updatedWhiteScore), new Score(updatedBlackScore));
+        ScoreDto updateScoreDto = new ScoreDto(newGameId, updatedWhiteScore, updatedBlackScore);
 
         //when
-        scoreDao.update(updatedGameStatus, newGameId);
+        scoreDao.update(updateScoreDto);
         ScoreDto updatedScore = scoreDao.findByGameId(newGameId);
 
         //then
@@ -83,11 +81,11 @@ class ScoreDaoTemplateTest {
     @Test
     void findScoreByGameId() {
         //given
-        Long newGameId = gameDao.save(Game.of("게임", "흰색유저", "흑색유저"));
+        Long newGameId = gameDao.save(new GameDto("게임", "흰색유저", "흑색유저"));
         double whiteScore = 37.0d;
         double blackScore = 37.0d;
-        GameStatus gameStatus = GameStatus.from(new Score(whiteScore), new Score(blackScore));
-        scoreDao.save(gameStatus, newGameId);
+        ScoreDto scoreDto = new ScoreDto(newGameId, whiteScore, blackScore);
+        scoreDao.save(scoreDto);
 
         //when
         ScoreDto findScore = scoreDao.findByGameId(newGameId);

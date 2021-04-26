@@ -2,11 +2,8 @@ package chess.dao.jdbctemplate;
 
 import chess.dao.GameDao;
 import chess.dao.StateDao;
+import chess.dao.dto.game.GameDto;
 import chess.dao.dto.state.StateDto;
-import chess.domain.board.Board;
-import chess.domain.board.BoardInitializer;
-import chess.domain.game.Game;
-import chess.domain.manager.ChessManager;
 import chess.domain.piece.Owner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,20 +35,19 @@ class StateDaoTemplateTest {
 
     @BeforeEach
     void setUp() {
-        newGameId = gameDao.save(Game.of("게임", "흰색유저", "흑색유저"));
+        newGameId = gameDao.save(new GameDto("게임", "흰색유저", "흑색유저"));
     }
 
     @Test
     void saveState() {
         //given
-        Board board = BoardInitializer.initiateBoard();
         Owner turnOwner = Owner.WHITE;
         int turnNumber = 1;
         boolean isPlaying = true;
-        ChessManager chessManager = new ChessManager(board, turnOwner, turnNumber, isPlaying);
+        StateDto stateDto = new StateDto(newGameId, turnOwner.name(), turnNumber, isPlaying);
 
         //when
-        stateDao.save(chessManager, newGameId);
+        stateDao.save(stateDto);
         StateDto findState = stateDao.findByGameId(newGameId);
 
         //then
@@ -64,16 +60,18 @@ class StateDaoTemplateTest {
     @Test
     void updateState() {
         //given
-        Board board = BoardInitializer.initiateBoard();
-        ChessManager chessManager = new ChessManager(board);
-        stateDao.save(chessManager, newGameId);
+        Owner turnOwner = Owner.WHITE;
+        int turnNumber = 1;
+        boolean isPlaying = true;
+        StateDto stateDto = new StateDto(newGameId, turnOwner.name(), turnNumber, isPlaying);
+        stateDao.save(stateDto);
         Owner updatedTurnOwner = Owner.BLACK;
         int updatedTurnNumber = 2;
         boolean updatedIsPlaying = false;
-        ChessManager updatedChessManager = new ChessManager(board, updatedTurnOwner, updatedTurnNumber, updatedIsPlaying);
+        StateDto updateStateDto = new StateDto(newGameId, updatedTurnOwner.name(), updatedTurnNumber, updatedIsPlaying);
 
         //when
-        stateDao.update(updatedChessManager, newGameId);
+        stateDao.update(updateStateDto);
         StateDto findUpdatedState = stateDao.findByGameId(newGameId);
 
         //then
@@ -86,12 +84,11 @@ class StateDaoTemplateTest {
     @Test
     void findStateByGameId() {
         //given
-        Board board = BoardInitializer.initiateBoard();
         Owner turnOwner = Owner.BLACK;
         int turnNumber = 44;
         boolean isPlaying = false;
-        ChessManager chessManager = new ChessManager(board, turnOwner, turnNumber, isPlaying);
-        stateDao.save(chessManager, newGameId);
+        StateDto stateDto = new StateDto(newGameId, turnOwner.name(), turnNumber, isPlaying);
+        stateDao.save(stateDto);
 
         //when
         StateDto findState = stateDao.findByGameId(newGameId);

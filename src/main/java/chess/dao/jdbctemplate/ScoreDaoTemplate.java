@@ -21,32 +21,40 @@ public class ScoreDaoTemplate implements ScoreDao {
 
     private final RowMapper<ScoreDto> actorRowMapper = (resultSet, rowNum) ->
             new ScoreDto(
+                    resultSet.getLong("id"),
+                    resultSet.getLong("game_id"),
                     resultSet.getDouble("white_score"),
                     resultSet.getDouble("black_score")
             );
 
     @Override
-    public Long save(final GameStatus gameStatus, final Long gameId) {
+    public Long save(final ScoreDto scoreDto) {
         String sql = "INSERT INTO score(game_id, white_score, black_score) VALUES (?, ?, ?)";
         return (long) jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setLong(1, gameId);
-            ps.setDouble(2, gameStatus.whiteScore());
-            ps.setDouble(3, gameStatus.blackScore());
+            ps.setLong(1, scoreDto.getGameId());
+            ps.setDouble(2, scoreDto.getWhiteScore());
+            ps.setDouble(3, scoreDto.getBlackScore());
             return ps;
         }, new GeneratedKeyHolder());
     }
 
     @Override
-    public Long update(final GameStatus gameStatus, final Long gameId) {
+    public Long update(final ScoreDto scoreDto) {
         String sql = "UPDATE score SET white_score=?, black_score=? WHERE game_id=?";
         return (long) jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setDouble(1, gameStatus.whiteScore());
-            ps.setDouble(2, gameStatus.blackScore());
-            ps.setLong(3, gameId);
+            ps.setDouble(1, scoreDto.getWhiteScore());
+            ps.setDouble(2, scoreDto.getBlackScore());
+            ps.setLong(3, scoreDto.getGameId());
             return ps;
         }, new GeneratedKeyHolder());
+    }
+
+    @Override
+    public ScoreDto findById(Long id) {
+        String sql = "SELECT * from score where id = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
     }
 
     @Override

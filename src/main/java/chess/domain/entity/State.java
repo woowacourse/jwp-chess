@@ -1,52 +1,40 @@
-package chess.dao.dto.history;
+package chess.domain.entity;
 
-import chess.domain.entity.History;
+import chess.domain.manager.ChessManager;
 
-public class HistoryDto {
+public class State implements Entity<Long> {
 
     private Long id;
     private Long gameId;
-    private String moveCommand;
     private String turnOwner;
     private int turnNumber;
     private boolean isPlaying;
 
-    public HistoryDto() {
+    public State() {
     }
 
-    public HistoryDto(Long id, Long gameId, String moveCommand, String turnOwner, int turnNumber, boolean isPlaying) {
+    public State(Long id, Long gameId, String turnOwner, int turnNumber, boolean isPlaying) {
         this.id = id;
         this.gameId = gameId;
-        this.moveCommand = moveCommand;
         this.turnOwner = turnOwner;
         this.turnNumber = turnNumber;
         this.isPlaying = isPlaying;
     }
 
-    public HistoryDto(Long gameId, String moveCommand, String turnOwner, int turnNumber, boolean isPlaying) {
+    public State(Long gameId, String turnOwner, int turnNumber, boolean isPlaying) {
         this.gameId = gameId;
-        this.moveCommand = moveCommand;
         this.turnOwner = turnOwner;
         this.turnNumber = turnNumber;
         this.isPlaying = isPlaying;
     }
 
-    public static HistoryDto from(final History history) {
-        return new HistoryDto(
-                history.getGameId(),
-                history.getMoveCommand(),
-                history.getTurnOwner(),
-                history.getTurnNumber(),
-                history.isPlaying()
-        );
+    public static State of(Long gameId, ChessManager chessManager) {
+        return new State(gameId, chessManager.turnOwner().name(), chessManager.turnNumber(), chessManager.isPlaying());
     }
 
+    @Override
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getGameId() {
@@ -55,14 +43,6 @@ public class HistoryDto {
 
     public void setGameId(Long gameId) {
         this.gameId = gameId;
-    }
-
-    public String getMoveCommand() {
-        return moveCommand;
-    }
-
-    public void setMoveCommand(String moveCommand) {
-        this.moveCommand = moveCommand;
     }
 
     public String getTurnOwner() {

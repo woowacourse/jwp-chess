@@ -14,6 +14,7 @@ import chess.dao.dto.piece.PieceDto;
 import chess.dao.dto.score.ScoreDto;
 import chess.dao.dto.state.StateDto;
 import chess.dao.jdbc.*;
+import chess.domain.repository.*;
 import chess.service.ChessService;
 import chess.service.dto.game.GameInfoDto;
 import chess.service.dto.move.MoveDto;
@@ -29,15 +30,15 @@ public class SparkWebChessController {
     private final ModelMapper modelMapper;
 
     public SparkWebChessController() {
-        this.chessService = new ChessService(
-                new GameDaoJDBC(),
-                new HistoryDaoJDBC(),
-                new PieceDaoJDBC(),
-                new ScoreDaoJDBC(),
-                new StateDaoJDBC(),
-                new ModelMapper()
-        );
         this.modelMapper = new ModelMapper();
+        this.chessService = new ChessService(
+                new GameRepository(new GameDaoJDBC(), modelMapper),
+                new HistoryRepository(new HistoryDaoJDBC(), modelMapper),
+                new PieceRepository(new PieceDaoJDBC(), modelMapper),
+                new ScoreRepository(new ScoreDaoJDBC(), modelMapper),
+                new StateRepository(new StateDaoJDBC(), modelMapper),
+                modelMapper
+        );
     }
 
     public PathResponseDto movablePath(final String source, final Long gameId) {

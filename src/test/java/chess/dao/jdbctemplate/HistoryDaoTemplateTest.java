@@ -2,9 +2,8 @@ package chess.dao.jdbctemplate;
 
 import chess.dao.GameDao;
 import chess.dao.HistoryDao;
+import chess.dao.dto.game.GameDto;
 import chess.dao.dto.history.HistoryDto;
-import chess.domain.game.Game;
-import chess.domain.history.History;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +38,7 @@ class HistoryDaoTemplateTest {
 
     @BeforeEach
     void setUp() {
-        gameDao.save(Game.of("게임1", "흰색유저1", "흑색유저1"));
+        gameDao.save(new GameDto("게임1", "흰색유저1", "흑색유저1"));
         String sql = "INSERT INTO history(game_id, move_command, turn_owner, turn_number, playing) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, 1, "move a1, a2", "WHITE", 1, true);
         jdbcTemplate.update(sql, 1, "move a2, a3", "BLACK", 1, true);
@@ -63,10 +62,10 @@ class HistoryDaoTemplateTest {
         String turnOwner = "WHITE";
         int turnNumber = 3;
         boolean isPlaying = true;
-        History history = History.of(moveCommand, turnOwner, turnNumber, isPlaying);
+        HistoryDto historyDto = new HistoryDto(gameId, moveCommand, turnOwner, turnNumber, isPlaying);
 
         //when
-        historyDao.save(history, gameId);
+        historyDao.save(historyDto);
         List<HistoryDto> game = historyDao.findByGameId(gameId);
 
         //then
@@ -80,10 +79,10 @@ class HistoryDaoTemplateTest {
         //given
         Long gameId = 1L;
         List<HistoryDto> historyResponseDtos = Arrays.asList(
-                new HistoryDto("move a1, a2", "WHITE", 1, true),
-                new HistoryDto("move a2, a3", "BLACK", 1, true),
-                new HistoryDto("move a3, a4", "WHITE", 2, true),
-                new HistoryDto("move a4, a5", "BLACK", 2, true)
+                new HistoryDto(gameId, "move a1, a2", "WHITE", 1, true),
+                new HistoryDto(gameId, "move a2, a3", "BLACK", 1, true),
+                new HistoryDto(gameId, "move a3, a4", "WHITE", 2, true),
+                new HistoryDto(gameId, "move a4, a5", "BLACK", 2, true)
         );
         //when
         List<HistoryDto> findHistories = historyDao.findByGameId(gameId);

@@ -2,7 +2,6 @@ package chess.dao.jdbctemplate;
 
 import chess.dao.GameDao;
 import chess.dao.dto.game.GameDto;
-import chess.domain.game.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +30,7 @@ class GameDaoTemplateTest {
     public GameDaoTemplateTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         gameDao = new GameDaoTemplate(jdbcTemplate);
+
     }
 
     @BeforeEach
@@ -55,7 +55,7 @@ class GameDaoTemplateTest {
         String blackUsername = "흑색유저4";
 
         //when
-        Long newGameId = gameDao.save(Game.of(roomName, whiteUsername, blackUsername));
+        Long newGameId = gameDao.save(new GameDto(roomName, whiteUsername, blackUsername));
         GameDto findGame = gameDao.findById(newGameId);
 
         //then

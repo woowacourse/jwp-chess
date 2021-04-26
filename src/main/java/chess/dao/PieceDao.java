@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 public interface PieceDao {
-    long[] savePieces(final Long gameId, final Map<Position, Piece> pieces);
+    Long save(PieceDto pieceDto);
 
-    Long updateSourcePiece(final String source, final Long gameId);
-
-    Long updateTargetPiece(final String target, Piece sourcePiece, final Long gameId);
+    long[] savePieces(final Long gameId, final List<PieceDto> pieceDtos);
 
     List<PieceDto> findPiecesByGameId(final Long gameId);
+
+    Long updateByGameIdAndPosition(PieceDto pieceDto);
 }

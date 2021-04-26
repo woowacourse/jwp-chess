@@ -4,9 +4,11 @@ import chess.dao.dto.state.StateDto;
 import chess.domain.manager.ChessManager;
 
 public interface StateDao {
-    Long save(final ChessManager chessManager, final Long gameId);
+    Long save(StateDto stateDto);
 
-    Long update(final ChessManager chessManager, final Long gameId);
+    Long update(final StateDto stateDto);
 
     StateDto findByGameId(final Long gameId);
+
+    StateDto findById(Long id);
 }

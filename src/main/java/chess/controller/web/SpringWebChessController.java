@@ -22,7 +22,6 @@ public class SpringWebChessController {
         return "index";
     }
 
-
     @GetMapping("/games/{id}")
     public String findGameByGameId(@PathVariable Long id, Model model) {
         GameResponseDto gameResponseDto =

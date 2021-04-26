@@ -1,28 +1,35 @@
-package chess.dao.dto.score;
+package chess.domain.entity;
 
-public class ScoreDto {
+import chess.domain.manager.GameStatus;
+
+public class Score implements Entity<Long> {
 
     private Long id;
     private Long gameId;
     private double whiteScore;
     private double blackScore;
 
-    public ScoreDto() {
+    public Score() {
     }
 
-    public ScoreDto(Long id, Long gameId, double whiteScore, double blackScore) {
+    public Score(Long id, Long gameId, double whiteScore, double blackScore) {
         this.id = id;
         this.gameId = gameId;
         this.whiteScore = whiteScore;
         this.blackScore = blackScore;
     }
 
-    public ScoreDto(Long gameId, double whiteScore, double blackScore) {
+    public Score(Long gameId, double whiteScore, double blackScore) {
         this.gameId = gameId;
         this.whiteScore = whiteScore;
         this.blackScore = blackScore;
     }
 
+    public static Score of(GameStatus gameStatus, Long gameId) {
+        return new Score(gameId, gameStatus.whiteScore(), gameStatus.blackScore());
+    }
+
+    @Override
     public Long getId() {
         return id;
     }

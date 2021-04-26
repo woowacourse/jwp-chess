@@ -70,6 +70,7 @@ public class SpringWebChessRestController {
 
     @GetMapping("/{id}/path")
     public ResponseEntity<List<String>> movablePath(@PathVariable Long id, @RequestParam String source) {
+        System.out.println("asdfgsa controller= " + source + " = ******");
         PathResponseDto pathResponseDto = modelMapper.map(chessService.movablePath(source, id), PathResponseDto.class);
         return ResponseEntity.ok().body(pathResponseDto.getPath());
     }

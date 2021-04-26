@@ -17,15 +17,31 @@ import java.util.Map;
 public class PieceDaoJDBC implements PieceDao {
 
     @Override
-    public long[] savePieces(final Long gameId, final Map<Position, Piece> pieces) {
+    public Long save(PieceDto pieceDto) {
         final String query = "INSERT INTO piece(game_id, position, symbol) VALUES (?, ?, ?)";
 
         try (final Connection connection = ConnectionProvider.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(query)) {
-            for (final Map.Entry<Position, Piece> entry : pieces.entrySet()) {
+            pstmt.setInt(1, pieceDto.getGameId().intValue());
+            pstmt.setString(2, pieceDto.getPosition());
+            pstmt.setString(3, pieceDto.getSymbol());
+            pstmt.addBatch();
+            return pstmt.executeLargeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("체스말을 저장하는데 실패했습니다.", e);
+        }
+    }
+
+    @Override
+    public long[] savePieces(final Long gameId, final List<PieceDto> pieceDtos) {
+        final String query = "INSERT INTO piece(game_id, position, symbol) VALUES (?, ?, ?)";
+
+        try (final Connection connection = ConnectionProvider.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
+            for (PieceDto pieceDto : pieceDtos) {
                 pstmt.setInt(1, gameId.intValue());
-                pstmt.setString(2, entry.getKey().parseString());
-                pstmt.setString(3, entry.getValue().getSymbol());
+                pstmt.setString(2, pieceDto.getPosition());
+                pstmt.setString(3, pieceDto.getSymbol());
                 pstmt.addBatch();
             }
             return pstmt.executeLargeBatch();
@@ -35,32 +51,17 @@ public class PieceDaoJDBC implements PieceDao {
     }
 
     @Override
-    public Long updateSourcePiece(final String source, final Long gameId) {
+    public Long updateByGameIdAndPosition(PieceDto pieceDto) {
         final String query = "UPDATE piece SET symbol = ? WHERE game_id=? && position=?";
 
         try (final Connection connection = ConnectionProvider.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, ".");
-            pstmt.setInt(2, gameId.intValue());
-            pstmt.setString(3, source);
+            pstmt.setString(1, pieceDto.getSymbol());
+            pstmt.setInt(2, pieceDto.getGameId().intValue());
+            pstmt.setString(3, pieceDto.getPosition());
             return pstmt.executeLargeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("선택한 위치의 체스말을 수정하는데 실패했습니다.", e);
-        }
-    }
-
-    @Override
-    public Long updateTargetPiece(final String target, final Piece sourcePiece, final Long gameId) {
-        final String query = "UPDATE piece SET symbol = ? where game_id = ? && position = ?";
-
-        try (final Connection connection = ConnectionProvider.getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, sourcePiece.getSymbol());
-            pstmt.setInt(2, gameId.intValue());
-            pstmt.setString(3, target);
-            return pstmt.executeLargeUpdate();
-        } catch (SQLException e) {
-            throw new DataAccessException("이동하려는 위치의 체스말을 수정하는데 실패했습니다.", e);
         }
     }
 
@@ -75,7 +76,10 @@ public class PieceDaoJDBC implements PieceDao {
 
             try (ResultSet resultSet = pstmt.executeQuery()) {
                 while (resultSet.next()) {
-                    pieceResponseDtos.add(new PieceDto(resultSet.getString("symbol"),
+                    pieceResponseDtos.add(new PieceDto(
+                            resultSet.getLong("id"),
+                            resultSet.getLong("game_id"),
+                            resultSet.getString("symbol"),
                             resultSet.getString("position")));
                 }
                 return pieceResponseDtos;

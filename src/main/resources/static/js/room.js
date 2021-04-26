@@ -76,10 +76,7 @@ const index = {
                     throw new Error("잘못된 명령입니다!");
                 }
                 clearBoard();
-                return data.json()
-            })
-            .then(chessGameDto => {
-                toggleStartAndEndButtons(chessGameDto.state);
+                toggleStartAndEndButtons("End");
             })
     },
 

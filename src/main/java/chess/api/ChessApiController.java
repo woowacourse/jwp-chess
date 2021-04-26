@@ -48,8 +48,8 @@ public class ChessApiController {
 
     @DeleteMapping("/chessgames/{roomId}")
     public ResponseEntity<ChessGameDto> endChessGame(@PathVariable long roomId) {
-        ChessGameDto chessGameDto = chessGameService.endGame(roomId);
-        return ResponseEntity.ok(chessGameDto);
+        chessGameService.endGame(roomId);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/scores/{roomId}")

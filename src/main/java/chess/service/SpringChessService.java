@@ -87,13 +87,7 @@ public class SpringChessService {
         Map<Position, Piece> whites = new HashMap<>();
         Map<Position, Piece> blacks = new HashMap<>();
         for (BoardInfosDto boardInfo : boardInfos) {
-            if (boardInfo.getTeam().equals("white")) {
-                whites.put(Position.of(boardInfo.getPosition()), DaoToPiece.generatePiece(boardInfo.getTeam(), boardInfo.getPiece(), boardInfo.getIsFirstMoved()));
-            }
-
-            if (boardInfo.getTeam().equals("black")) {
-                blacks.put(Position.of(boardInfo.getPosition()), DaoToPiece.generatePiece(boardInfo.getTeam(), boardInfo.getPiece(), boardInfo.getIsFirstMoved()));
-            }
+            sortBlackAndWhite(whites, blacks, boardInfo);
         }
         PiecePositions whitePiecePosition = new PiecePositions(whites);
         PiecePositions blackPiecePosition = new PiecePositions(blacks);
@@ -102,6 +96,16 @@ public class SpringChessService {
         Team whiteTeam = new Team(whitePiecePosition);
 
         return new ChessGame(blackTeam, whiteTeam, currentTurn(blackTeam, whiteTeam, turnDto.getTurn()), turnDto.getIsPlaying());
+    }
+
+    private void sortBlackAndWhite(Map<Position, Piece> whites, Map<Position, Piece> blacks, BoardInfosDto boardInfo) {
+        if (boardInfo.isWhite()) {
+            whites.put(Position.of(boardInfo.getPosition()), DaoToPiece.generatePiece(boardInfo.getTeam(), boardInfo.getPiece(), boardInfo.getIsFirstMoved()));
+        }
+
+        if (boardInfo.isBlack()) {
+            blacks.put(Position.of(boardInfo.getPosition()), DaoToPiece.generatePiece(boardInfo.getTeam(), boardInfo.getPiece(), boardInfo.getIsFirstMoved()));
+        }
     }
 
     private Team currentTurn(Team black, Team white, String currentTurnTeam) {

@@ -40,4 +40,12 @@ public class BoardInfosDto {
     public void setIsFirstMoved(boolean isFirstMoved) {
         this.isFirstMoved = isFirstMoved;
     }
+
+    public boolean isWhite() {
+        return "white".equals(team);
+    }
+
+    public boolean isBlack() {
+        return "black".equals(team);
+    }
 }

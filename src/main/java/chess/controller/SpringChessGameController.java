@@ -88,7 +88,7 @@ public final class SpringChessGameController {
     }
 
     @GetMapping("/rooms/{id}")
-    public String enterRoom(@PathVariable final String id, final Model model) {
+    public String chessBoardByRoom(@PathVariable final String id, final Model model) {
         model.addAttribute("state",
                 new GameDTO(id, userService.participatedUsers(id), roomService.loadChessGameById(id), "새로운게임"));
         return "chess";

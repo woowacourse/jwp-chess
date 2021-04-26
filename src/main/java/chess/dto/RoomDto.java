@@ -19,12 +19,12 @@ public class RoomDto {
     public RoomDto() {
     }
 
-    public RoomDto(final long id, final String name){
+    public RoomDto(final long id, final String name) {
         this.id = id;
         this.roomName = name;
     }
 
-    public RoomDto(final String roomName, final String player1, final String player2){
+    public RoomDto(final String roomName, final String player1, final String player2) {
         this.roomName = roomName;
         this.player1 = player1;
         this.player2 = player2;

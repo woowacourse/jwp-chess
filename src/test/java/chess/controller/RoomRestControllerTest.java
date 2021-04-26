@@ -11,9 +11,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.Cookie;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -44,7 +47,7 @@ class RoomRestControllerTest {
     @DisplayName("유효한 이름으로 방 생성")
     @Test
     public void createRoom() throws Exception {
-        final RequestBuilder request = MockMvcRequestBuilders.post("/room/create")
+        final RequestBuilder request = MockMvcRequestBuilders.post("/room")
                 .content(mapper.writeValueAsString(roomDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -56,7 +59,7 @@ class RoomRestControllerTest {
     public void createRoomWithTooShortName() throws Exception {
         roomDto = new RoomDto("a", "player1", "player2");
 
-        final RequestBuilder request = MockMvcRequestBuilders.post("/room/create")
+        final RequestBuilder request = MockMvcRequestBuilders.post("/room")
                 .content(mapper.writeValueAsString(roomDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -102,7 +105,7 @@ class RoomRestControllerTest {
     @DisplayName("중복 방 이름 생성 시 404 응답")
     @Test
     public void duplicatedRoom() throws Exception {
-        final RequestBuilder request = MockMvcRequestBuilders.post("/room/create")
+        final RequestBuilder request = MockMvcRequestBuilders.post("/room")
                 .content(mapper.writeValueAsString(roomDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -126,11 +129,13 @@ class RoomRestControllerTest {
     @DisplayName("방 삭제 테스트")
     @Test
     public void deleteRoom() throws Exception {
-        final long roomId = roomService.save("newRoom", "test");
+        final long roomId = roomService.create("newRoom", "test");
         final int preSize = roomService.loadList().size();
 
         final RequestBuilder request = MockMvcRequestBuilders.delete("/room/" + roomId);
-        mockMvc.perform(request).andExpect(status().isOk());
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
 
         assertThat(preSize - 1).isEqualTo(roomService.loadList().size());
     }
@@ -138,12 +143,11 @@ class RoomRestControllerTest {
     @DisplayName("방 삭제 테스트 / 쿠키 정상 삭제 확인")
     @Test
     public void deleteRoomWithCookie() throws Exception {
-        final long roomId = roomService.save("newRoom", "test");
+        final long roomId = roomService.create("newRoom", "test");
 
         final RequestBuilder request = MockMvcRequestBuilders.delete("/room/" + roomId);
-        mockMvc.perform(request).andExpect(status().isOk());
-        final boolean isDeleted = cookie().exists("web_chess_" + roomId).equals(false);
+        final MvcResult result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
 
-        assertThat(isDeleted).isTrue();
+        cookie().doesNotExist("web_chess_" + roomId).match(result);
     }
 }

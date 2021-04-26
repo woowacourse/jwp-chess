@@ -25,12 +25,12 @@ function enterNewGame() {
     const jsonData = JSON.stringify({roomName: roomName, player1: player1});
 
     $.ajax({
-        url: "/room/create",
+        url: "/room",
         type: "POST",
         data: jsonData,
         contentType: 'application/json',
         success: function (roomId) {
-            alert(roomName + " 방 생성");
+            // alert(roomName + " 방 생성");
             location.href = "/game/load/" + roomId;
         },
         error: function (e) {

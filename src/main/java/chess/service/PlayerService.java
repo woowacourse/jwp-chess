@@ -13,7 +13,7 @@ public class PlayerService {
 
     private final RoomDao roomDao;
 
-    public PlayerService(final RoomDao roomDao){
+    public PlayerService(final RoomDao roomDao) {
         this.roomDao = roomDao;
     }
 
@@ -24,7 +24,7 @@ public class PlayerService {
             return;
         }
 
-        if(isFull(players)){
+        if (isFull(players)) {
             throw new IllegalArgumentException("이미 가득 찬 방입니다.");
         }
 
@@ -35,7 +35,7 @@ public class PlayerService {
         return players.contains(playerId);
     }
 
-    private boolean isFull(final List<String> players){
+    private boolean isFull(final List<String> players) {
         return players.size() == MAXIMUM_SIZE_OF_ROOM;
     }
 
@@ -53,12 +53,12 @@ public class PlayerService {
         throw new IllegalArgumentException("적절하지 않은 사용자입니다.");
     }
 
-    private boolean isPlayer1(final RoomDto roomInfo, final String playerId){
+    private boolean isPlayer1(final RoomDto roomInfo, final String playerId) {
         final String player1 = roomInfo.getPlayer1();
         return player1.equals(playerId);
     }
 
-    private boolean isPlayer2(final RoomDto roomInfo, final String playerId){
+    private boolean isPlayer2(final RoomDto roomInfo, final String playerId) {
         final String player2 = roomInfo.getPlayer2();
         return player2.equals(playerId);
     }

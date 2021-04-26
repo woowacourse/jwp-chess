@@ -42,7 +42,7 @@ class GameRestControllerTest {
 
     @BeforeEach
     private void initTestRoom() {
-        testRoomId = roomService.save(roomName, player1);
+        testRoomId = roomService.create(roomName, player1);
     }
 
     @DisplayName("갈 수 있는 위치 리스트 반환 테스트")
@@ -57,7 +57,7 @@ class GameRestControllerTest {
     public void reachableMvc() throws Exception {
         final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/game/reachable/" + testRoomId)
                 .param("source", "a2")
-                .cookie(new Cookie("web_chess_"+testRoomId, "test"));
+                .cookie(new Cookie("web_chess_" + testRoomId, "test"));
 
         final MvcResult mvcResult = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
@@ -72,7 +72,7 @@ class GameRestControllerTest {
     public void reachableMvcWithoutCookie() throws Exception {
         final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/game/reachable/" + testRoomId)
                 .param("source", "a2")
-                .cookie(new Cookie("web_chess_"+testRoomId, "test"));
+                .cookie(new Cookie("web_chess_" + testRoomId, "test"));
 
         final MvcResult mvcResult = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())

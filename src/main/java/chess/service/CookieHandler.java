@@ -16,8 +16,8 @@ public class CookieHandler {
     private static final String DEFAULT_COOKIE_NAME = "web_chess_";
 
     public void addPlayerIdCookie(final HttpServletResponse response,
-                                  final long roomId, final String playerId){
-        addCookie(response, DEFAULT_COOKIE_NAME+roomId, playerId);
+                                  final long roomId, final String playerId) {
+        addCookie(response, DEFAULT_COOKIE_NAME + roomId, playerId);
     }
 
     private void addCookie(final HttpServletResponse response,
@@ -28,15 +28,15 @@ public class CookieHandler {
         response.addCookie(playerIdCookie);
     }
 
-    public void extendAge(final Cookie cookie, final HttpServletResponse response){
+    public void extendAge(final Cookie cookie, final HttpServletResponse response) {
         cookie.setMaxAge(DEFAULT_MAX_AGE);
         response.addCookie(cookie);
     }
 
-    public void remove(final long roomId, final HttpServletRequest request, final HttpServletResponse response){
+    public void remove(final long roomId, final HttpServletRequest request, final HttpServletResponse response) {
         final Cookie cookie = search(roomId, request);
 
-        if(Objects.isNull(cookie)){
+        if (Objects.isNull(cookie)) {
             return;
         }
 
@@ -44,9 +44,13 @@ public class CookieHandler {
         response.addCookie(cookie);
     }
 
-    public Cookie search(long roomId, final HttpServletRequest request){
+    public Cookie search(long roomId, final HttpServletRequest request) {
+        if (Objects.isNull(request.getCookies())) {
+            return null;
+        }
+
         return Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals(DEFAULT_COOKIE_NAME+roomId))
+                .filter(cookie -> cookie.getName().equals(DEFAULT_COOKIE_NAME + roomId))
                 .findFirst()
                 .orElse(null);
     }

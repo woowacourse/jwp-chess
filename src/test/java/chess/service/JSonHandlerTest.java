@@ -37,7 +37,7 @@ class JSonHandlerTest {
 
     @BeforeEach
     private void initGame() {
-        final long id = roomService.save("tempRoom", "test");
+        final long id = roomService.create("tempRoom", "test");
         chessGame = gameDao.load(id);
     }
 

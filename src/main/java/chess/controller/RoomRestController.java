@@ -29,12 +29,12 @@ public class RoomRestController {
         this.cookieHandler = cookieHandler;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public long createRoom(@RequestBody @Valid final RoomDto room,
                            final BindingResult bindingResult,
                            final HttpServletResponse response) {
         handleBindingResult(bindingResult);
-        final long roomId = roomService.save(room.getRoomName(), room.getPlayer1());
+        final long roomId = roomService.create(room.getRoomName(), room.getPlayer1());
         cookieHandler.addPlayerIdCookie(response, roomId, room.getPlayer1());
         return roomId;
     }

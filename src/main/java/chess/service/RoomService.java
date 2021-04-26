@@ -1,31 +1,32 @@
 package chess.service;
 
+import chess.domain.ChessGame;
 import chess.dto.RoomDto;
+import chess.service.dao.GameDao;
 import chess.service.dao.RoomDao;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-// TODO :: Dao랑 service가 같이 있는게 걸린다. 분리할 생각
-
 @Service
 public class RoomService {
-    private final GameService gameService;
     private final RoomDao roomDao;
+    private final GameDao gameDao;
 
-    public RoomService(final RoomDao roomDao, final GameService gameService) {
+    public RoomService(final RoomDao roomDao, final GameDao gameDao) {
         this.roomDao = roomDao;
-        this.gameService = gameService;
+        this.gameDao = gameDao;
     }
 
-    public long save(final String roomName, final String player1) {
+    public long create(final String roomName, final String player1) {
+        final ChessGame chessGame = ChessGame.initNew();
         final long roomId = roomDao.save(roomName, player1);
-        gameService.create(roomId);
+        gameDao.save(roomId, chessGame.turn(), chessGame.board());
         return roomId;
     }
 
     public void delete(final long roomId) {
-        gameService.delete(roomId);
+        gameDao.delete(roomId);
         roomDao.delete(roomId);
     }
 

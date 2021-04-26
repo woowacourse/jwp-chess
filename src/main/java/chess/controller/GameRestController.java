@@ -12,7 +12,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
 import java.util.Objects;
 
 @RestController
@@ -43,8 +42,8 @@ public class GameRestController {
         return new ReachablePositionsDto(gameService.reachable(roomId, source, owner));
     }
 
-    private void validatePlayerCookie(final Cookie cookie){
-        if(Objects.isNull(cookie)){
+    private void validatePlayerCookie(final Cookie cookie) {
+        if (Objects.isNull(cookie)) {
             throw new IllegalArgumentException("사용자 비밀번호가 없습니다.");
         }
     }
@@ -52,7 +51,7 @@ public class GameRestController {
     @PostMapping("/move/{roomId}")
     public RedirectView move(@PathVariable final Long roomId,
                              @RequestParam final Position source,
-                             @RequestParam final Position target){
+                             @RequestParam final Position target) {
         gameService.move(roomId, source, target);
         if (gameService.isGameEnd(roomId)) {
             return new RedirectView("/game/result/" + roomId);

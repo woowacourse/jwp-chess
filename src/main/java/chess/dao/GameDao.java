@@ -83,9 +83,10 @@ public class GameDao {
         this.jdbcTemplate.update("DELETE FROM piece WHERE game_id = ?", gameId);
     }
 
-    public List<Integer> loadGameList() {
-        String query = "SELECT game_id FROM game ";
-        return this.jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getInt("game_id"));
+    public List<RoomDto> loadGameList() {
+        String query = "SELECT game_id, name FROM room";
+        return this.jdbcTemplate.query(query, (res, rowNum) ->
+                new RoomDto(res.getInt("game_id"), res.getString("name")));
     }
 
     public int countRoomByName(String roomName) {

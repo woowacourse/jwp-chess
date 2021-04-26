@@ -3,13 +3,13 @@ package chess.dto;
 import java.util.List;
 
 public class GameListDto {
-    private final List<Integer> gamesId;
+    private final List<RoomDto> rooms;
 
-    public GameListDto(List<Integer> gamesId) {
-        this.gamesId = gamesId;
+    public GameListDto(List<RoomDto> rooms) {
+        this.rooms = rooms;
     }
 
-    public List<Integer> getGamesId() {
-        return gamesId;
+    public List<RoomDto> getRooms() {
+        return rooms;
     }
 }

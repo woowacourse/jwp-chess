@@ -42,12 +42,12 @@ async function loadGameListIntoBox() {
         const responseBody = await response.json();
 
         console.log(responseBody.message);
-        const gameNumbers = responseBody.item.gamesId;
+        let rooms = responseBody.item.rooms;
 
-        for (let gameNumber of gameNumbers) {
+        for (let room of rooms) {
             let option = document.createElement("option");
-            option.text = `${gameNumber}번 게임`;
-            option.setAttribute("value", gameNumber);
+            option.text = room.name;
+            option.setAttribute("value", room.gameId);
             gameListBox.add(option);
         }
     }

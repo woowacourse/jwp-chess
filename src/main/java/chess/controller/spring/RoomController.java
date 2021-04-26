@@ -2,13 +2,12 @@ package chess.controller.spring;
 
 import chess.dto.CommonDto;
 import chess.dto.GameListDto;
-import chess.service.ChessService;
 import chess.dto.RoomDto;
+import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/room")
 public class RoomController {
     private final ChessService service;
@@ -28,7 +27,7 @@ public class RoomController {
     }
 
     @GetMapping("/{gameId:[\\d]+}/load")
-    public ResponseEntity<String> findRoomName(@PathVariable int gameId) {
-        return ResponseEntity.ok().body(service.loadRoomName(gameId));
+    public String findRoomName(@PathVariable int gameId) {
+        return service.loadRoomName(gameId);
     }
 }

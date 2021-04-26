@@ -14,7 +14,6 @@ import io.restassured.RestAssured;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +29,8 @@ import org.springframework.test.context.ActiveProfiles;
 @DisplayName("Board Controller")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class BoardControllerTest {
+
+    private final int roomId = 1;
 
     @LocalServerPort
     int port;
@@ -48,17 +49,12 @@ class BoardControllerTest {
         service.restartBoardById(1);
     }
 
-    @AfterEach
-    void cleanUp() {
-        roomService.deleteAll();
-    }
-
     @DisplayName("초기화된 보드를 가져온다 - GET")
     @Test
     void getNewBoard() {
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/rooms/1/board/init")
+            .when().get("/rooms/{id}/board/init", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("size()", is(1));
@@ -69,7 +65,7 @@ class BoardControllerTest {
     void restart() {
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/rooms/1/board/restart")
+            .when().post("/rooms/{id}/board/restart", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("size()", is(1));
@@ -80,7 +76,7 @@ class BoardControllerTest {
     void isEnd() {
         Boolean response = RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/rooms/1/board/status")
+            .when().get("/rooms/{id}/board/status", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(Boolean.TYPE);
@@ -93,7 +89,7 @@ class BoardControllerTest {
     void getTurn() {
         PieceColor color = RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/rooms/1/board/turn")
+            .when().get("/rooms/{id}/board/turn", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(PieceColor.class);
@@ -106,7 +102,7 @@ class BoardControllerTest {
     void getScore() {
         Map scores = RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/rooms/1/board/score")
+            .when().get("/rooms/{id}/board/score", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(Map.class);
@@ -123,7 +119,7 @@ class BoardControllerTest {
         List paths = RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(dto)
-            .when().post("/rooms/1/board/path")
+            .when().post("/rooms/{id}/board/path", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(List.class);
@@ -139,7 +135,7 @@ class BoardControllerTest {
         Boolean response = RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(dto)
-            .when().post("/rooms/1/board/move")
+            .when().post("/rooms/{id}/board/move", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(Boolean.TYPE);

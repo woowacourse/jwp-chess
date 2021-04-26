@@ -6,7 +6,6 @@ import static org.hamcrest.core.Is.is;
 import chess.service.ChessService;
 import chess.service.RoomService;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +21,8 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class MenuControllerTest {
 
+    private final int roomId = 1;
+
     @LocalServerPort
     int port;
 
@@ -34,21 +35,18 @@ class MenuControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        roomService.deleteAll();
         roomService.add("test");
         service.restartBoardById(1);
     }
 
-    @AfterEach
-    void cleanUp() {
-        roomService.deleteAll();
-    }
 
     @DisplayName("시작할 때 체스판을 초기화 한다.")
     @Test
     void renderInitBoard() {
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/rooms/1/board")
+            .when().get("/rooms/{id}/board", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.TEXT_HTML_VALUE)
@@ -60,7 +58,7 @@ class MenuControllerTest {
     void loadBoard() {
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/rooms/1/board/load")
+            .when().get("/rooms/{id}/board/load", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("size()", is(1));

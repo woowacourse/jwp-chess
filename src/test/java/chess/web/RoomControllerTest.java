@@ -64,7 +64,7 @@ class RoomControllerTest {
     void delete() {
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/rooms/1")
+            .when().post("/rooms/{id}",1)
             .then().log().all()
             .statusCode(HttpStatus.FOUND.value());
 

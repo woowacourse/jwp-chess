@@ -39,14 +39,21 @@ public final class SpringChessGameController {
     @GetMapping()
     private String goHome(final Model model) {
         try {
-            List<String> roomIds = roomService.allRoomsId();
-            roomIds.forEach(id -> roomService.addRoom(id, new ChessGame()));
+            roomService.loadAllRooms();
             model.addAttribute("rooms", roomService.allRooms());
             model.addAttribute("results", resultService.allUserResult());
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
         }
         return "index";
+    }
+
+    @PostMapping(path = "/new-game")
+    public String createNewGame(@ModelAttribute final CreateRoomRequestDTO requestDTO) {
+        roomService.createRoom(requestDTO.getTitle());
+        String roomId = roomService.createdRoomId();
+        userService.enrollUser(roomId, requestDTO.getNickname(), requestDTO.getPassword());
+        return "chess";
     }
 
     @GetMapping("/enter")

@@ -4,6 +4,7 @@ import chess.dao.RoomDAO;
 import chess.domain.ChessGame;
 import chess.domain.Rooms;
 import chess.dto.RoomDTO;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +24,18 @@ public final class RoomService {
         return roomDAO.allRooms();
     }
 
-    public void createRoom(final String name) {
-        roomDAO.createRoom(name);
+    public void createRoom(final String title) {
+        roomDAO.createRoom(title);
+    }
+
+    public String createdRoomId() {
+        return roomDAO.createdRoomId();
+    }
+
+    public void loadAllRooms() {
+        for (String roomId : roomDAO.allRoomIds()) {
+            rooms.addRoom(roomId, new ChessGame());
+        }
     }
 
     public void changeStatus(final String roomId) {

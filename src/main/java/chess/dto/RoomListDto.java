@@ -2,10 +2,10 @@ package chess.dto;
 
 import java.util.List;
 
-public class GameListDto {
+public class RoomListDto {
     private final List<RoomDto> rooms;
 
-    public GameListDto(List<RoomDto> rooms) {
+    public RoomListDto(List<RoomDto> rooms) {
         this.rooms = rooms;
     }
 

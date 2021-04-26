@@ -7,9 +7,8 @@ import chess.domain.piece.Color;
 import chess.domain.position.Position;
 import chess.dto.*;
 import chess.exception.HandledException;
+import chess.exception.NoSavedGameException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ChessService {
@@ -21,8 +20,8 @@ public class ChessService {
         this.roomDao = roomDao;
     }
 
-    public CommonDto<GameListDto> loadGameList() {
-        return new CommonDto<>("게임 목록을 불러왔습니다.", new GameListDto(roomDao.loadRoomList()));
+    public CommonDto<RoomListDto> loadRoomList() {
+        return new CommonDto<>("게임 목록을 불러왔습니다.", new RoomListDto(roomDao.loadRoomList()));
     }
 
     public CommonDto<NewGameDto> saveNewGame() {
@@ -33,6 +32,7 @@ public class ChessService {
         SavedGameDto savedGameDto = new SavedGameDto(
                 chessBoardDto,
                 chessGameManager.getCurrentTurnColor().name());
+
         int gameId = gameDao.saveGame(savedGameDto);
         savePiecesByGameId(gameId, chessBoardDto);
 
@@ -65,23 +65,27 @@ public class ChessService {
             gameDao.deleteGameByGameId(gameId);
             return new CommonDto<>("게임이 끝났습니다.", toRunningGameDto(chessGameManager));
         }
-        updatePiecePosition(gameId, startPosition, endPosition, chessGameManager);
+
+        gameDao.updateTurnByGameId(chessGameManager.getCurrentTurnColor(), gameId);
+        updatePiece(gameId, startPosition, endPosition);
         return new CommonDto<>("기물을 이동했습니다.", toRunningGameDto(chessGameManager));
     }
 
-    private void updatePiecePosition(int gameId, String startPosition, String endPosition, ChessGameManager chessGameManager) {
-        gameDao.updateTurnByGameId(chessGameManager.getCurrentTurnColor(), gameId);
-        gameDao.deletePieceByGameId(gameId, endPosition);
-        gameDao.updatePiecePositionByGameId(gameId, startPosition, endPosition);
+    private void updatePiece(int gameId, String from, String to) {
+        gameDao.deletePieceByGameId(gameId, to);
+        gameDao.updatePiecePositionByGameId(gameId, from, to);
     }
 
     private ChessGameManager loadChessGameManager(int gameId) {
-        SavedGameDto savedGameDto = gameDao.loadGame(gameId);
+        String turn = gameDao.selectGameTurnByGameId(gameId);
+        if (turn == null) {
+            throw new NoSavedGameException("저장된 게임이 없습니다.");
+        }
+
+        ChessBoardDto chessBoardDto = gameDao.selectPieceByGameId(gameId);
 
         ChessGameManager chessGameManager = new ChessGameManager();
-        chessGameManager.load(
-                savedGameDto.getChessBoardDto().toChessBoard(),
-                Color.of(savedGameDto.getCurrentTurnColor()));
+        chessGameManager.load(chessBoardDto.toChessBoard(), Color.of(turn));
         return chessGameManager;
     }
 

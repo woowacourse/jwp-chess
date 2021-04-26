@@ -1,14 +1,9 @@
 package chess.dao;
 
-import chess.domain.board.ChessBoard;
 import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
-import chess.domain.position.Position;
 import chess.dto.ChessBoardDto;
-import chess.dto.PieceDeserializeTable;
 import chess.dto.PieceDto;
 import chess.dto.SavedGameDto;
-import chess.exception.NoSavedGameException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,7 +11,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 @Repository
 public class GameDao {
@@ -39,30 +36,25 @@ public class GameDao {
         return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
-    public SavedGameDto loadGame(int gameId) {
+    public String selectGameTurnByGameId(int gameId) {
         String gameQuery = "SELECT turn FROM game WHERE game_id = ?";
-        String currentTurn = this.jdbcTemplate.queryForObject(gameQuery, String.class, gameId);
-
-        if (currentTurn == null) {
-            throw new NoSavedGameException("저장된 게임이 없습니다.");
-        }
-
-        String queryPiece = "SELECT * FROM piece WHERE game_id = ?";
-        ChessBoard chessBoard = this.jdbcTemplate.queryForObject(queryPiece, chessBoardRowMapper, gameId);
-        return new SavedGameDto(ChessBoardDto.from(chessBoard), currentTurn);
+        return this.jdbcTemplate.queryForObject(gameQuery, String.class, gameId);
     }
 
-    private final RowMapper<ChessBoard> chessBoardRowMapper = (resultSet, rowNum) -> {
-        Map<Position, Piece> board = new HashMap<>();
+    public ChessBoardDto selectPieceByGameId(int gameId) {
+        String query = "SELECT * FROM piece WHERE game_id = ?";
+        return this.jdbcTemplate.queryForObject(query, chessBoardDtoMapper, gameId);
+    }
 
+    private final RowMapper<ChessBoardDto> chessBoardDtoMapper = (resultSet, rowNum) -> {
+        Map<String, PieceDto> chessBoard = new HashMap<>();
         do {
-            Piece piece = PieceDeserializeTable.deserializeFrom(
+            PieceDto pieceDto = new PieceDto(
                     resultSet.getString("name"),
-                    Color.of(resultSet.getString("color")));
-            Position position = Position.of(resultSet.getString("position"));
-            board.put(position, piece);
+                    resultSet.getString("color"));
+            chessBoard.put(resultSet.getString("position"), pieceDto);
         } while (resultSet.next());
-        return ChessBoard.from(board);
+        return new ChessBoardDto(chessBoard);
     };
 
     public void updateTurnByGameId(Color currentTurnColor, int gameId) {

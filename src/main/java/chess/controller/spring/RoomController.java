@@ -1,8 +1,8 @@
 package chess.controller.spring;
 
 import chess.dto.CommonDto;
-import chess.dto.GameListDto;
 import chess.dto.RoomDto;
+import chess.dto.RoomListDto;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +17,8 @@ public class RoomController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<CommonDto<GameListDto>> loadGames() {
-        return ResponseEntity.ok().body(service.loadGameList());
+    public ResponseEntity<CommonDto<RoomListDto>> loadGames() {
+        return ResponseEntity.ok().body(service.loadRoomList());
     }
 
     @PostMapping("/new")

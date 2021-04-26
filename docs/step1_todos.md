@@ -81,6 +81,6 @@ CREATE TABLE board (
 
 # todos
 - [ ] dto 만드는 클래스 제거
-- [ ] dao 인터페이스 제거
+- [x] dao 인터페이스 제거
 - [ ] indent 2, `.` 2개 이상등 요구사항 위반 내용 수정
 - [ ] test 코드 작성

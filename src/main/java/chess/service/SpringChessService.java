@@ -4,7 +4,7 @@ import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.domain.team.Team;
-import chess.webdao.ChessDao;
+import chess.webdao.MysqlChessDao;
 import chess.webdto.converter.DaoToChessGame;
 import chess.webdto.converter.TeamConstants;
 import chess.webdto.converter.TeamInfoToDto;
@@ -21,9 +21,9 @@ import java.util.Map;
 @Service
 @Transactional(readOnly = true)
 public class SpringChessService {
-    private final ChessDao chessDao;
+    private final MysqlChessDao chessDao;
 
-    public SpringChessService(ChessDao chessDao) {
+    public SpringChessService(MysqlChessDao chessDao) {
         this.chessDao = chessDao;
     }
 

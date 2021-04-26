@@ -46,7 +46,7 @@ public class SpringChessRoomDao implements ChessRoomRepository {
 
     @Override
     public String findRoomNameById(String id) {
-        String query = "select target, destination from chessroom where room_id = ? ORDER BY command_date ASC;";
+        String query = "select room_name from chessroom where room_id = ?";
         return jdbcTemplate.queryForObject(query, String.class, id);
     }
 

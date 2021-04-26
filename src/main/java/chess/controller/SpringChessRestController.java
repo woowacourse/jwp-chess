@@ -6,6 +6,7 @@ import chess.exception.IllegalRoomException;
 import chess.exception.InvalidMoveException;
 import chess.exception.NoSuchCommandException;
 import chess.service.SpringChessService;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +46,7 @@ public class SpringChessRestController {
         return ResponseEntity.ok(springChessService.boardStatusDto(id));
     }
 
-    @ExceptionHandler({InvalidMoveException.class, IllegalRoomException.class, GameIsNotStartException.class, NoSuchCommandException.class})
+    @ExceptionHandler({InvalidMoveException.class, IllegalRoomException.class, GameIsNotStartException.class, NoSuchCommandException.class, EmptyResultDataAccessException.class})
     public ResponseEntity<ErrorMessageDto> moveFail(Exception e) {
         return ResponseEntity.badRequest().body(new ErrorMessageDto(e.getMessage()));
     }

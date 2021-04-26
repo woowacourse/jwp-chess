@@ -30,7 +30,7 @@ class UsersTest {
     void isFirstTeamWhite() {
         Users users = new Users(Collections.emptyList());
 
-        assertThat(users.generateTeamType()).isEqualTo(TeamType.WHITE);
+        assertThat(users.generateCurrentTeamType()).isEqualTo(TeamType.WHITE);
     }
 
     @DisplayName("유저 수가 1명이면 두 번째 유저의 팀은 그 반대 팀이다.")
@@ -39,6 +39,6 @@ class UsersTest {
         List<User> userList = Arrays.asList(new User(1, "pa", "BLACK", 1));
         Users users = new Users(userList);
 
-        assertThat(users.generateTeamType()).isEqualTo(TeamType.WHITE);
+        assertThat(users.generateCurrentTeamType()).isEqualTo(TeamType.WHITE);
     }
 }

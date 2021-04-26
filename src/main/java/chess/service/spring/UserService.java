@@ -19,17 +19,17 @@ public class UserService {
     }
 
     public void addUserIntoRoom(int roomId, String password) {
-        Users users = new Users(userDAO.findByRoomId(roomId));
-        if (users.hasMaximumCountsForGame()) {
+        Users usersInRoom = new Users(userDAO.findAllByRoomId(roomId));
+        if (usersInRoom.hasMaximumCountsForGame()) {
             throw new IllegalStateException("이미 꽉 찬 방입니다.");
         }
-        TeamType teamType = users.generateTeamType();
         String encodedPassword = passwordEncoder.encode(password);
+        TeamType teamType = usersInRoom.generateCurrentTeamType();
         userDAO.insertUser(encodedPassword, teamType.toString(), roomId);
     }
 
     public void validateUserTurn(int roomId, String password, TeamType teamType) {
-        Users users = new Users(userDAO.findByRoomId(roomId));
+        Users users = new Users(userDAO.findAllByRoomId(roomId));
         if (!users.hasMaximumCountsForGame()) {
             throw new IllegalStateException("혼자서는 플레이할 수 없습니다.");
         }
@@ -41,12 +41,12 @@ public class UserService {
         }
     }
 
-    public void deleteAllUsersByRoomId(int roomId) {
-        userDAO.deleteAllUsersByRoomId(roomId);
+    public void deleteAllByRoomId(int roomId) {
+        userDAO.deleteAllByRoomId(roomId);
     }
 
-    public void deleteUserBy(int roomId, String password) {
-        User targetUser = userDAO.findByRoomId(roomId)
+    public void deleteUser(int roomId, String password) {
+        User targetUser = userDAO.findAllByRoomId(roomId)
                 .stream()
                 .filter(user -> passwordEncoder.matches(password, user.getPassword()))
                 .findAny()

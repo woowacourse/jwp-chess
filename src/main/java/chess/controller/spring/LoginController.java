@@ -35,7 +35,7 @@ public class LoginController {
     @DeleteMapping("/logout/{roomId}")
     public ResponseEntity<String> logout(@PathVariable int roomId, HttpSession httpSession) {
         SessionVO sessionVO = (SessionVO) httpSession.getAttribute("session");
-        userService.deleteUserBy(roomId, sessionVO.getPassword());
+        userService.deleteUser(roomId, sessionVO.getPassword());
         httpSession.invalidate();
         String location = "/";
         return ResponseEntity.status(HttpStatus.OK).body(location);

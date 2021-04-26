@@ -23,7 +23,7 @@ public class UserDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<User> findByRoomId(int roomId) {
+    public List<User> findAllByRoomId(int roomId) {
         String query = "SELECT * FROM USER WHERE ROOM_ID = ?";
         return jdbcTemplate.query(query, ROW_MAPPER, roomId);
     }
@@ -33,7 +33,7 @@ public class UserDAO {
         jdbcTemplate.update(query, password, teamType, roomId);
     }
 
-    public void deleteAllUsersByRoomId(int roomId) {
+    public void deleteAllByRoomId(int roomId) {
         String query = "DELETE FROM USER WHERE ROOM_ID = ?";
         jdbcTemplate.update(query, roomId);
     }

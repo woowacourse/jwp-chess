@@ -21,7 +21,7 @@ public class Users {
         }
     }
 
-    public TeamType generateTeamType() {
+    public TeamType generateCurrentTeamType() {
         if (users.isEmpty()) {
             return TeamType.WHITE;
         }

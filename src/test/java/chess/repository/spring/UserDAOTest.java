@@ -19,6 +19,7 @@ class UserDAOTest {
 
     private UserDAO userDAO;
     private RoomDAO roomDAO;
+    private int roomId;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -31,17 +32,15 @@ class UserDAOTest {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS USER (ID INT NOT NULL AUTO_INCREMENT, PASSWORD  VARCHAR(255), " +
                 "TEAM_TYPE VARCHAR(255), ROOM_ID   INT NOT NULL, PRIMARY KEY (ID), " +
                 "CONSTRAINT USER_FK FOREIGN KEY (ROOM_ID) REFERENCES ROOM (ID))");
-        String query = "INSERT INTO ROOM (NAME) VALUES (?)";
-        jdbcTemplate.update(query, "room1");
+        roomId = roomDAO.insertRoom("room1");
     }
 
     @DisplayName("User를 추가한다.")
     @Test
     void addUser() {
-        int roomId = roomDAO.findLastAddedRoom().get().getId();
         userDAO.insertUser("pass123", "BLACK", roomId);
 
-        List<User> users = userDAO.findByRoomId(roomId);
+        List<User> users = userDAO.findAllByRoomId(roomId);
 
         assertThat(users).hasSize(1);
     }
@@ -49,24 +48,22 @@ class UserDAOTest {
     @DisplayName("모든 User를 삭제한다.")
     @Test
     void deleteAllUsers() {
-        int roomId = roomDAO.findLastAddedRoom().get().getId();
         userDAO.insertUser("123", "B", roomId);
         userDAO.insertUser("123", "c", roomId);
 
-        userDAO.deleteAllUsersByRoomId(roomId);
+        userDAO.deleteAllByRoomId(roomId);
 
-        assertThat(userDAO.findByRoomId(roomId)).isEmpty();
+        assertThat(userDAO.findAllByRoomId(roomId)).isEmpty();
     }
 
     @DisplayName("특정 ID의 User를 삭제한다.")
     @Test
     void deleteUser() {
-        int roomId = roomDAO.findLastAddedRoom().get().getId();
         userDAO.insertUser("123", "B", roomId);
-        User user = userDAO.findByRoomId(roomId).get(0);
+        User user = userDAO.findAllByRoomId(roomId).get(0);
 
         userDAO.deleteUser(user);
 
-        assertThat(userDAO.findByRoomId(roomId)).isEmpty();
+        assertThat(userDAO.findAllByRoomId(roomId)).isEmpty();
     }
 }

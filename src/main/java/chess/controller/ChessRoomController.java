@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,9 +20,14 @@ import java.util.List;
 public class ChessRoomController {
     private final ChessRoomService chessRoomService;
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<String> checkChessRoomException(Exception exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler({MissingRequestCookieException.class})
+    public ResponseEntity<String> checkCookieMissing(Exception exception) {
+        return ResponseEntity.badRequest().body("로그인을 해 주세요.");
     }
 
     @Autowired
@@ -44,8 +50,7 @@ public class ChessRoomController {
     }
 
     @PostMapping("/room/{id}")
-    public ResponseEntity<ChessGameDto> enter(@RequestBody RoomRequestDto roomRequestDto) {
-        System.out.println("enter : " + roomRequestDto);
+    public ResponseEntity<ChessGameDto> enter(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
         return ResponseEntity.ok().body(chessRoomService.enter(roomRequestDto));
     }
 }

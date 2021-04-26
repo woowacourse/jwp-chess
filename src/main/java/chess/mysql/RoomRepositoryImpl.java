@@ -41,7 +41,7 @@ public class RoomRepositoryImpl implements RoomRepository {
     }
 
     @Override
-    public Room findRoomByRoomId(long roomId) {
+    public Room findRoomBy(long roomId) {
         RoomDto roomDto = roomDao.findByRoomId(roomId);
 
         return createRoomFrom(roomDto);

@@ -13,5 +13,5 @@ public interface RoomRepository {
 
     List<Room> findAllActiveRoom ();
 
-    Room findRoomByRoomId(long roomId);
+    Room findRoomBy(long roomId);
 }

@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.chessgame.domain.room.Room;
+import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.user.User;
 import chess.chessgame.repository.ChessGameManagerRepository;
 import chess.chessgame.repository.RoomRepository;
@@ -31,5 +32,9 @@ public class RoomService {
 
     public List<Room> findAllRunningRoom() {
         return roomRepository.findAllActiveRoom();
+    }
+
+    public ChessGameManager findGameBy(long roomId) {
+        return roomRepository.findRoomBy(roomId).getGameManager();
     }
 }

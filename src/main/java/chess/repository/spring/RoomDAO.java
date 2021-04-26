@@ -2,9 +2,13 @@ package chess.repository.spring;
 
 import chess.domain.room.Room;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +31,16 @@ public class RoomDAO {
         return jdbcTemplate.query(query, ROW_MAPPER);
     }
 
-    public void insertRoom(String name) {
+    public int insertRoom(String name) {
         String query = "INSERT INTO ROOM (NAME) VALUES (?)";
-        jdbcTemplate.update(query, name);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        PreparedStatementCreator preparedStatementCreator = (connection) -> {
+            PreparedStatement prepareStatement = connection.prepareStatement(query, new String[]{"id"});
+            prepareStatement.setString(1, name);
+            return prepareStatement;
+        };
+        jdbcTemplate.update(preparedStatementCreator, keyHolder);
+        return (int) keyHolder.getKey();
     }
 
     public Optional<Room> findLastAddedRoom() {

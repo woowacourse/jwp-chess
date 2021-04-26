@@ -39,14 +39,15 @@ class RoomDAOTest {
         assertThat(rooms).hasSize(2);
     }
 
-    @DisplayName("방을 추가한다.")
+    @DisplayName("방을 추가하고, 추가된 방의 id를 반환받는다.")
     @Test
     void insertRoom() {
-        roomDAO.insertRoom("room3");
+        int id = roomDAO.insertRoom("room3");
 
         List<Room> rooms = roomDAO.findAllRooms();
 
         assertThat(rooms).hasSize(3);
+        assertThat(id).isGreaterThan(2);
     }
 
     @DisplayName("가장 마지막에 생성된 방을 조회한다.")

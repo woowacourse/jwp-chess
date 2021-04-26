@@ -36,6 +36,13 @@ public class ChessController {
         return new ChessGameResponseDto(load);
     }
 
+    @GetMapping("/games/{id:[\\d]+}/reset")
+    public ChessGameResponseDto resetGame(@PathVariable long id){
+        ChessGameManager resetGame = chessService.reset(id);
+        return new ChessGameResponseDto(resetGame);
+    }
+
+
     @PostMapping("/games/{id:[\\d]+}/move")
     public MoveResponseDto movePiece(@PathVariable long id, @RequestBody MoveRequestDto moveMessage) {
         chessService.move(id, moveMessage);

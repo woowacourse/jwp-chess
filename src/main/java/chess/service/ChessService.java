@@ -29,4 +29,6 @@ public interface ChessService {
     Color nextColor(long gameId);
 
     ChessGameStatistics getStatistics(long gameId);
+
+    ChessGameManager reset(long gameId);
 }

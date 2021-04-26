@@ -12,29 +12,24 @@ $startButton.addEventListener("click", start);
 $resetButton.addEventListener("click", reset);
 $chessboard.addEventListener("click", onClickPiece);
 
-function start() {
-    initializeChessBoard();
+async function start() {
+    await initializeChessBoard();
     $startButton.disabled = 'disabled';
 }
 
-function reset() {
-    axios({
-        method: 'get',
-        url: '/reset',
-        params: {
-            id: chessGameId
-        }
-    }).then(function (response) {
-        const data = JSON.parse(response.data);
-        updateBoard(data);
-    }).catch(err => {
-        console.log(err)
-    })
-
+async function reset() {
+    const piecesData = await getFetch(`/games/${chessGameId}/reset`);
+    await updateBoard(piecesData);
 }
 
 async function initializeChessBoard() {
     const piecesData = await getFetch(`/games/${chessGameId}/load/`);
+    await calculateScore();
+    setBoard(piecesData.piecesAndPositions);
+    setTurn(piecesData.color);
+}
+
+async function updateBoard(piecesData) {
     await calculateScore();
     setBoard(piecesData.piecesAndPositions);
     setTurn(piecesData.color);

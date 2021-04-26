@@ -103,4 +103,11 @@ public class ChessServiceImpl implements ChessService {
     public ChessGameStatistics getStatistics(long gameId) {
         return findById(gameId).getStatistics();
     }
+
+    @Override
+    public ChessGameManager reset(long gameId) {
+        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(gameId);
+        update(chessGameManager);
+        return chessGameManager;
+    }
 }

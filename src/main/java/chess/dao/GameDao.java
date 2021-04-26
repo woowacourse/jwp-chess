@@ -88,7 +88,7 @@ public class GameDao {
         return this.jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getInt("game_id"));
     }
 
-    public int findRoomNameCount(String roomName) {
+    public int countRoomByName(String roomName) {
         String query = "SELECT count(*) FROM room WHERE name = ?";
         return this.jdbcTemplate.queryForObject(query, Integer.class, roomName);
     }

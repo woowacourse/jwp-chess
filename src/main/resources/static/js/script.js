@@ -97,28 +97,41 @@ async function addEventOnStartButton() {
 }
 
 async function createNewRoom() {
-    const roomName = prompt("방 제목을 입력하세요.");
-    await fetch('/room/new', {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            gameId: gameId,
-            name: roomName
+        const roomName = prompt("방 제목을 입력하세요.");
+        await fetch('/room/new', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                gameId: gameId,
+                name: roomName
+            })
         })
-    })
-        .then(res => res.json())
-        .then(res => updateRoomName(res.item.name));
+            .then(res => updateRoomName(res));
+}
+
+async function updateRoomName(res) {
+    console.log(res);
+    if (res.ok) {
+        const response = await res.json();
+        displayRoomName(response.item.name);
+        updateMessage(response.message);
+        return;
+    }
+    res = await res.json();
+    alert(res.message);
+    updateMessage(res.message);
+    createNewRoom();
 }
 
 function loadRoomName() {
     fetch(`/room/${gameId}/load`)
         .then(res => res.text())
-        .then(res => updateRoomName(res));
+        .then(res => displayRoomName(res));
 }
 
-async function updateRoomName(name) {
+async function displayRoomName(name) {
     console.log(name);
     document.getElementById('room-name').innerText = name;
 }
@@ -199,7 +212,8 @@ async function addEventOnRegameButton() {
     await document.getElementById('regame-button').addEventListener('click', event => {
         try {
             fetch('/game/new')
-                .then(res => processResponse(res));
+                .then(res => processResponse(res))
+                .then(() => createNewRoom());
             turnOnPanel();
         } catch (error) {
             console.error(error.messages);

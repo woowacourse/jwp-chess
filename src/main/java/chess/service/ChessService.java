@@ -5,6 +5,7 @@ import chess.domain.ChessGameManager;
 import chess.domain.piece.Color;
 import chess.domain.position.Position;
 import chess.dto.*;
+import chess.exception.HandledException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -85,22 +86,14 @@ public class ChessService {
     public CommonDto<RoomDto> saveRoom(RoomDto roomDto) {
         String roomName = roomDto.getName();
         int gameId = roomDto.getGameId();
-        int roomCount = gameDAO.findRoomNameCount(roomName);
-        String countedRoomName = addRoomCount(roomName, roomCount);
-        gameDAO.saveRoom(gameId, roomName);
-        return new CommonDto<>("방 정보를 가져왔습니다.", new RoomDto(gameId, countedRoomName));
-    }
-
-    private String addRoomCount(String roomName, int roomCount) {
-        if (roomCount != 0) {
-            roomName = roomName + " (" + roomCount + ")";
+        if (gameDAO.countRoomByName(roomName) != 0) {
+            throw new HandledException("방이 이미 등록되어있습니다.");
         }
-        return roomName;
+        gameDAO.saveRoom(gameId, roomName);
+        return new CommonDto<>("방 정보를 가져왔습니다.", new RoomDto(gameId, roomName));
     }
 
     public String loadRoomName(int gameId) {
-        String roomName = gameDAO.loadRoomName(gameId);
-        System.out.println("로드한 방 이름 : " + roomName);
-        return roomName;
+        return gameDAO.loadRoomName(gameId);
     }
 }

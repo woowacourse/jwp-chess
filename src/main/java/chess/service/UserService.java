@@ -2,10 +2,7 @@ package chess.service;
 
 import chess.dao.UserDao;
 import chess.entity.User;
-import chess.exception.DuplicateRoomException;
-import chess.exception.DuplicateUserException;
-import chess.exception.InvalidPasswordException;
-import chess.exception.NotExistUserException;
+import chess.exception.*;
 import chess.service.dto.UserFindResponseDto;
 import chess.service.dto.UserSaveRequestDto;
 import chess.service.dto.UserSignRequestDto;
@@ -28,6 +25,12 @@ public class UserService {
     public void save(final UserSaveRequestDto requestDto) {
         if (userDao.findByName(requestDto.getName()).isPresent()) {
             throw new DuplicateUserException();
+        }
+        if ("".equals(requestDto.getName())) {
+            throw new UserNameNullException();
+        }
+        if ("".equals(requestDto.getPassword())) {
+            throw new UserPasswordNullException();
         }
         User user = requestDto.toEntity();
         userDao.save(user);

@@ -27,9 +27,7 @@ public class RoomController {
 
     @GetMapping("/room")
     public Response<RoomsResponseDto> getRooms(@PathVariable(value = "page", required = false) Optional<Integer> page) {
-        if (page.isPresent()) {
-            return new Response<>(HttpStatus.OK, chessService.getAllRooms(page.get()));
-        }
-        return new Response<>(HttpStatus.OK, chessService.getAllRooms());
+        return page.map(p -> new Response<>(HttpStatus.OK, chessService.getAllRooms(p))).orElseGet(
+                () -> new Response<>(HttpStatus.OK, chessService.getAllRooms()));
     }
 }

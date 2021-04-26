@@ -24,7 +24,7 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/load/{roomId}")
+    @GetMapping("/{roomId}")
     public String loadGame(@PathVariable final Long roomId, Model model) throws SQLException {
         return printGame(roomId, model);
     }

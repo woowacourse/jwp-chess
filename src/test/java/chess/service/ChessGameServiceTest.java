@@ -38,7 +38,7 @@ class ChessGameServiceTest {
     @DisplayName("새로운 게임을 생성한다.")
     void createNewGameTest() {
         // when
-        NewGameDto newGameDto = chessGameService.createNewGame();
+        NewGameDto newGameDto = chessGameService.createNewGame("test title");
 
         // then
         assertThat(newGameDto.getChessBoard()).isInstanceOf(Map.class);
@@ -49,7 +49,7 @@ class ChessGameServiceTest {
     @DisplayName("게임의 고유 값으로 게임을 읽어온다.")
     void loadChessGameBByGameId() {
         // given
-        long gameId = chessGameService.createNewGame().getGameId();
+        long gameId = chessGameService.createNewGame("test title").getGameId();
 
         chessGameService.loadChessGameByGameId(gameId);
 
@@ -60,7 +60,7 @@ class ChessGameServiceTest {
     @DisplayName("기물을 이동한 결과를 반환한다.")
     void moveTest() {
         // given
-        long gameId = chessGameService.createNewGame().getGameId();
+        long gameId = chessGameService.createNewGame("test title").getGameId();
 
         // when
         RunningGameDto runningGameDto = chessGameService.move(gameId, "a2", "a4");
@@ -75,10 +75,10 @@ class ChessGameServiceTest {
     void loadAllGamesTest() {
         int NUMBER_OF_GAME = 3;
         for (int i = 0; i < NUMBER_OF_GAME; i++) {
-            chessGameService.createNewGame();
+            chessGameService.createNewGame("test title");
         }
 
-        assertThat(chessGameService.loadAllGames().getGamesId()).hasSize(NUMBER_OF_GAME);
+        assertThat(chessGameService.loadAllGames().getGames()).hasSize(NUMBER_OF_GAME);
     }
 
     @AfterEach

@@ -3,17 +3,17 @@ package chess.dto;
 import java.util.List;
 
 public class GameListDto {
-    private final List<Long> gamesId;
+    private final List<GameEntryDto> games;
 
-    public GameListDto(List<Long> gamesId) {
-        this.gamesId = gamesId;
+    private GameListDto(List<GameEntryDto> games) {
+        this.games = games;
     }
 
-    public static GameListDto from(List<Long> loadGames) {
+    public static GameListDto from(List<GameEntryDto> loadGames) {
         return new GameListDto(loadGames);
     }
 
-    public List<Long> getGamesId() {
-        return gamesId;
+    public List<GameEntryDto> getGames() {
+        return games;
     }
 }

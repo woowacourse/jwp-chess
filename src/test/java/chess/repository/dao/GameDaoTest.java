@@ -33,7 +33,7 @@ class GameDaoTest {
     @DisplayName("게임을 저장하고 고유 값을 얻어온다.")
     void saveTest() {
         // when
-        long gameId = gameDao.save(chessGameManager);
+        long gameId = gameDao.save(chessGameManager, "test title");
 
         // then
         assertThat(gameId).isInstanceOf(Long.class);
@@ -46,7 +46,7 @@ class GameDaoTest {
         Color currentTurn = chessGameManager.getCurrentTurnColor();
 
         // when
-        long gameId = gameDao.save(chessGameManager);
+        long gameId = gameDao.save(chessGameManager, "test title");
         Color currentTurnFound = gameDao.findCurrentTurnByGameId(gameId);
 
         // then
@@ -57,7 +57,7 @@ class GameDaoTest {
     @DisplayName("순서를 업데이트한다.")
     void updateTurnByGameIdTest() {
         // given
-        long gameId = gameDao.save(chessGameManager);
+        long gameId = gameDao.save(chessGameManager, "test title");
         chessGameManager.move(Position.of("a2"), Position.of("a4"));
         Color currentTurn = chessGameManager.getCurrentTurnColor();
 
@@ -73,7 +73,7 @@ class GameDaoTest {
     @DisplayName("게임을 삭제한다.")
     void deleteTest() {
         // given
-        long gameId = gameDao.save(chessGameManager); // to foreignKey
+        long gameId = gameDao.save(chessGameManager, "test title"); // to foreignKey
         Position position = Position.of("a2");
 
         // when

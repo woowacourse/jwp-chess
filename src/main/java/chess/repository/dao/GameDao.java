@@ -1,7 +1,9 @@
+
 package chess.repository.dao;
 
 import chess.domain.ChessGameManager;
 import chess.domain.piece.Color;
+import chess.dto.GameEntryDto;
 import chess.exception.NoSavedGameException;
 import chess.repository.GameRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,11 +20,11 @@ public class GameDao implements GameRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long save(ChessGameManager chessGameManager) {
+    public long save(ChessGameManager chessGameManager, String title) {
         Color currentTurnColor = chessGameManager.getCurrentTurnColor();
 
-        String insertGameQuery = "INSERT INTO game(turn) VALUES(?)";
-        this.jdbcTemplate.update(insertGameQuery, currentTurnColor.name());
+        String insertGameQuery = "INSERT INTO game(title, turn) VALUES(?, ?)";
+        this.jdbcTemplate.update(insertGameQuery, title, currentTurnColor.name());
 
         String findGameIdQuery = "SELECT last_insert_id()";
         long gameId = this.jdbcTemplate.queryForObject(findGameIdQuery, Long.class);
@@ -50,9 +52,13 @@ public class GameDao implements GameRepository {
         this.jdbcTemplate.update(query, currentTurnColor.name(), gameId);
     }
 
-    public List<Long> findAllGamesId() {
-        String query = "SELECT game_id FROM game ";
-        return this.jdbcTemplate.query(query, (resultSet, rowNum) -> resultSet.getLong("game_id"));
+    public List<GameEntryDto> findAllGames() {
+        String query = "SELECT game_id, title FROM game ";
+        return this.jdbcTemplate.query(query, (resultSet, rowNum) -> {
+            long gameId = resultSet.getLong("game_id");
+            String gameTitle = resultSet.getString("title");
+            return new GameEntryDto(gameId, gameTitle);
+        });
     }
 
     @Override
@@ -61,3 +67,4 @@ public class GameDao implements GameRepository {
         this.jdbcTemplate.update(query, gameId);
     }
 }
+

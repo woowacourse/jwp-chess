@@ -15,11 +15,11 @@ public class ChessRestController {
     }
 
     @PostMapping("/games")
-    public ResponseEntity<CommonResponse<NewGameDto>> newGame() {
+    public ResponseEntity<CommonResponse<NewGameDto>> newGame(@RequestBody CreateGameRequest createGameRequest) {
         return new ResponseEntity<>(
                 new CommonResponse<>(
                         "새로운 게임이 생성되었습니다.",
-                        chessGameService.createNewGame()
+                        chessGameService.createNewGame(createGameRequest.getTitle())
                 ), HttpStatus.CREATED);
     }
 

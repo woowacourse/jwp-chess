@@ -21,10 +21,10 @@ public class ChessGameService {
         this.pieceRepository = pieceRepository;
     }
 
-    public NewGameDto createNewGame() {
+    public NewGameDto createNewGame(String title) {
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.start();
-        long gameId = gameRepository.save(chessGameManager);
+        long gameId = gameRepository.save(chessGameManager, title);
         pieceRepository.savePieces(chessGameManager, gameId);
         return NewGameDto.from(chessGameManager, gameId);
     }
@@ -58,6 +58,6 @@ public class ChessGameService {
     }
 
     public GameListDto loadAllGames() {
-        return GameListDto.from(gameRepository.findAllGamesId());
+        return GameListDto.from(gameRepository.findAllGames());
     }
 }

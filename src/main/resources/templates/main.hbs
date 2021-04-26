@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/home.css">
+    <title>체스 홈</title>
+</head>
+<body>
+<form action="/chess/start">
+    방 생성 : <input type="text" name="room">
+    <input type="submit" value="입장하기">
+</form>
+<form action="/chess/enter">
+    방 번호 : <input type="text" name="room">
+    <input type="submit" value="입장하기">
+</form>
+<div class="title room-container">
+    <div class="board base-background room-vertical" id="room-frame">
+        <div class="room-vertical start-black">
+            <div class="tile" id=room1></div>
+            <div class="tile" id=room2></div>
+            <div class="tile" id=room3></div>
+            <div class="tile" id=room4></div>
+            <div class="tile" id=room5></div>
+            <div class="tile" id=room6></div>
+            <div class="tile" id=room7></div>
+            <div class="tile" id=room8></div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/js/home.js" type="text/javascript"></script>
+</html>

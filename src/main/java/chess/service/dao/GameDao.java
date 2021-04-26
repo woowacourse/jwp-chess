@@ -12,7 +12,8 @@ import chess.service.JSonHandler;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 public class GameDao {

@@ -1,9 +1,9 @@
 package chess.service;
 
-import chess.dto.GameDto;
 import chess.domain.ChessGame;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
+import chess.dto.GameDto;
 import chess.service.dao.GameDao;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +30,9 @@ public class GameService {
         }
     }
 
-    private void validateOwner(final ChessGame chessGame, final Position source, final Owner player){
+    private void validateOwner(final ChessGame chessGame, final Position source, final Owner player) {
         final Owner pieceOwner = chessGame.ownerOf(source);
-        if(!pieceOwner.isSameTeam(player)){
+        if (!pieceOwner.isSameTeam(player)) {
             throw new IllegalArgumentException("사용자의 기물이 아닙니다.");
         }
     }

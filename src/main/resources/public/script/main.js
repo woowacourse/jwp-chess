@@ -42,7 +42,7 @@ function enterNewGame() {
 function enterRoom() {
     return function (event) {
         const roomId = event.target.id;
-        const player2 = prompt("플레이어2의 비밀번호를 입력하시오");
+        const player2 = prompt("플레이어의 비밀번호를 입력하시오");
 
         $.ajax({
             url: "/room/enter/" + roomId,

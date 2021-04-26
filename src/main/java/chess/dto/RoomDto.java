@@ -38,23 +38,23 @@ public class RoomDto {
         return roomName;
     }
 
-    public String getPlayer1() {
-        return player1;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
-    public String getPlayer2() {
-        return player2;
+    public String getPlayer1() {
+        return player1;
     }
 
     public void setPlayer1(String player1) {
         this.player1 = player1;
     }
 
-    public void setPlayer2(String player2) {
-        this.player2 = player2;
+    public String getPlayer2() {
+        return player2;
     }
 
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
+    public void setPlayer2(String player2) {
+        this.player2 = player2;
     }
 }

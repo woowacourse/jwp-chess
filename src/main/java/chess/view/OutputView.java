@@ -1,7 +1,6 @@
 package chess.view;
 
 import chess.domain.piece.Owner;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.util.List;

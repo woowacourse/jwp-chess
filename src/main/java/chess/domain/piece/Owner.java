@@ -34,10 +34,10 @@ public enum Owner {
 
     @Override
     public String toString() {
-        if(this.isBlack()){
+        if (this.isBlack()) {
             return "black";
         }
-        if(this.isWhite()){
+        if (this.isWhite()) {
             return "white";
         }
         return "empty";

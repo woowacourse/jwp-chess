@@ -1,8 +1,8 @@
 package chess.controller;
 
-import chess.dto.ReachablePositionsDto;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
+import chess.dto.ReachablePositionsDto;
 import chess.service.CookieHandler;
 import chess.service.GameService;
 import chess.service.PlayerService;

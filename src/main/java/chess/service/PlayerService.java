@@ -1,7 +1,7 @@
 package chess.service;
 
-import chess.dto.RoomDto;
 import chess.domain.piece.Owner;
+import chess.dto.RoomDto;
 import chess.service.dao.RoomDao;
 import org.springframework.stereotype.Service;
 

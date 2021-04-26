@@ -22,12 +22,12 @@ public class RoomDao {
     }
 
     public void delete(int id) {
-        String query = "delete from room where (id) = (?)";
+        String query = "delete from room where id = ?";
         jdbcTemplate.update(query, id);
     }
 
     public void insert(String name) {
-        String query = "insert into room (name) values (?)";
+        String query = "insert into room (name) values ?";
         jdbcTemplate.update(query, name);
     }
 

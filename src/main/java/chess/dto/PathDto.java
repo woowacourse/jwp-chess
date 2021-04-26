@@ -1,15 +1,14 @@
 package chess.dto;
 
-import java.beans.ConstructorProperties;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.jackson.Jacksonized;
 
+@Jacksonized
+@Builder
+@RequiredArgsConstructor
 @Getter
 public class PathDto {
-
     private final String from;
-
-    @ConstructorProperties({"from"})
-    public PathDto(final String from) {
-        this.from = from;
-    }
 }

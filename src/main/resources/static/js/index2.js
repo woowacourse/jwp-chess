@@ -116,7 +116,6 @@ function sameColorCell(target) {
         return getFirstSelected().classList.contains("WHITE");
     }
     return false;
-
 }
 
 function checkAnySelected() {

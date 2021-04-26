@@ -6,11 +6,12 @@ import chess.domain.manager.GameStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 
-@Repository
+@Component
 public class ScoreDaoTemplate implements ScoreDao {
 
     private final JdbcTemplate jdbcTemplate;

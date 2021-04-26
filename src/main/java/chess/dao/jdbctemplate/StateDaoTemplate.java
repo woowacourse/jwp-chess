@@ -5,9 +5,10 @@ import chess.dao.dto.state.StateDto;
 import chess.domain.manager.ChessManager;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Component
 public class StateDaoTemplate implements StateDao {
 
     private final JdbcTemplate jdbcTemplate;

@@ -23,12 +23,12 @@ public class MoveDao {
     }
 
     public List<MoveRequest> getMovesById(int id) {
-        String query = "select * from move where room_id= " + id;
-        return jdbcTemplate.query(query, mapper);
+        String query = "select * from move where (room_id) = (?)";
+        return jdbcTemplate.query(query, mapper, id);
     }
 
     public void deleteAllById(int id) {
-        String query = "delete from move where room_id=" + id;
-        jdbcTemplate.update(query);
+        String query = "delete from move where (room_id) = (?)";
+        jdbcTemplate.update(query, id);
     }
 }

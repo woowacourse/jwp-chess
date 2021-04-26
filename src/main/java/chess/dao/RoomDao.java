@@ -22,8 +22,8 @@ public class RoomDao {
     }
 
     public void delete(int id) {
-        String query = "delete from room where id = " + id;
-        jdbcTemplate.update(query);
+        String query = "delete from room where (id) = (?)";
+        jdbcTemplate.update(query, id);
     }
 
     public void insert(String name) {

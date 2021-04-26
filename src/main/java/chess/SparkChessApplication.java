@@ -12,7 +12,7 @@ public class SparkChessApplication {
     public static void main(String[] args) {
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            return render(model, "index.hbs");
+            return render(model, "index2.hbs");
         });
     }
 

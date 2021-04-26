@@ -42,7 +42,14 @@ public class ChessGame {
     }
 
     public void validateTurn(final Owner owner) {
-        turn.validate(owner);
+        if(isTurn(owner)){
+            return;
+        }
+        throw new IllegalArgumentException("적절하지 않은 턴입니다.");
+    }
+
+    public boolean isTurn(final Owner owner){
+        return turn.is(owner);
     }
 
     private void changeTurn() {

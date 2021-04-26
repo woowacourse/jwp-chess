@@ -37,7 +37,6 @@ class GameRestControllerTest {
     private GameService gameService;
 
     private long testRoomId;
-
     private String roomName = "newRoom";
     private String player1 = "test";
 
@@ -58,7 +57,7 @@ class GameRestControllerTest {
     public void reachableMvc() throws Exception {
         final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/game/reachable/" + testRoomId)
                 .param("source", "a2")
-                .cookie(new Cookie("playerId", "test"));
+                .cookie(new Cookie("web_chess_"+testRoomId, "test"));
 
         final MvcResult mvcResult = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
@@ -73,7 +72,7 @@ class GameRestControllerTest {
     public void reachableMvcWithoutCookie() throws Exception {
         final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/game/reachable/" + testRoomId)
                 .param("source", "a2")
-                .cookie(new Cookie("playerId", "test"));
+                .cookie(new Cookie("web_chess_"+testRoomId, "test"));
 
         final MvcResult mvcResult = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())

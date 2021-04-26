@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.RoomDto;
+import chess.service.CookieHandler;
 import chess.service.PlayerService;
 import chess.service.RoomService;
 import chess.view.OutputView;
@@ -9,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -18,23 +19,31 @@ import javax.validation.Valid;
 public class RoomRestController {
     private final RoomService roomService;
     private final PlayerService playerService;
+    private final CookieHandler cookieHandler;
 
-    public RoomRestController(final RoomService roomService, final PlayerService playerService) {
+    public RoomRestController(final RoomService roomService,
+                              final PlayerService playerService,
+                              final CookieHandler cookieHandler) {
         this.roomService = roomService;
         this.playerService = playerService;
+        this.cookieHandler = cookieHandler;
     }
 
     @PostMapping("/create")
-    public long createRoom(@RequestBody @Valid final RoomDto roomDto,
+    public long createRoom(@RequestBody @Valid final RoomDto room,
                            final BindingResult bindingResult,
                            final HttpServletResponse response) {
         handleBindingResult(bindingResult);
-        addCookie(response, "playerId", roomDto.getPlayer1());
-        return roomService.save(roomDto.getRoomName(), roomDto.getPlayer1());
+        final long roomId = roomService.save(room.getRoomName(), room.getPlayer1());
+        cookieHandler.addPlayerIdCookie(response, roomId, room.getPlayer1());
+        return roomId;
     }
 
     @DeleteMapping("/{roomId}")
-    public ResponseEntity deleteRoom(@PathVariable final long roomId) {
+    public ResponseEntity deleteRoom(@PathVariable long roomId,
+                                     final HttpServletRequest request,
+                                     final HttpServletResponse response) {
+        cookieHandler.remove(roomId, request, response);
         roomService.delete(roomId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -44,15 +53,8 @@ public class RoomRestController {
                                     @RequestBody final String playerId,
                                     final HttpServletResponse response) {
         playerService.enter(roomId, playerId);
-        addCookie(response, "playerId", playerId);
+        cookieHandler.addPlayerIdCookie(response, roomId, playerId);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    private void addCookie(final HttpServletResponse response, final String name, final String value) {
-        final Cookie playerIdCookie = new Cookie(name, value);
-        playerIdCookie.setMaxAge(60 * 5);
-        playerIdCookie.setPath("/");
-        response.addCookie(playerIdCookie);
     }
 
     private void handleBindingResult(final BindingResult bindingResult) {

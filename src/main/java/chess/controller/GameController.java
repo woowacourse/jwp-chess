@@ -18,7 +18,7 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/loadf/{roomId}")
+    @GetMapping("/load/{roomId}")
     public String loadGame(@PathVariable final Long roomId, final Model model) {
         model.addAttribute("room", roomService.roomInfo(roomId));
         model.addAttribute("game", gameService.gameInfo(roomId));

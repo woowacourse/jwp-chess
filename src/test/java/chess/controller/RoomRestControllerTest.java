@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
@@ -133,5 +135,17 @@ class RoomRestControllerTest {
         mockMvc.perform(request).andExpect(status().isOk());
 
         assertThat(preSize - 1).isEqualTo(roomService.loadList().size());
+    }
+
+    @DisplayName("방 삭제 테스트 / 쿠키 정상 삭제 확인")
+    @Test
+    public void deleteRoomWithCookie() throws Exception {
+        final long roomId = roomService.save("newRoom", "test");
+
+        final RequestBuilder request = MockMvcRequestBuilders.delete("/room/" + roomId);
+        mockMvc.perform(request).andExpect(status().isOk());
+        final boolean isDeleted = cookie().exists("web_chess_" + roomId).equals(false);
+
+        assertThat(isDeleted).isTrue();
     }
 }

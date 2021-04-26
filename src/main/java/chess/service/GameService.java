@@ -31,10 +31,16 @@ public class GameService {
     public List<String> reachable(final long roomId, final Position source, final Owner owner) {
         try {
             final ChessGame chessGame = gameDao.load(roomId);
-            chessGame.validateTurn(owner);
+            validateTurn(chessGame, owner);
             return chessGame.reachablePositions(source);
         } catch (IllegalArgumentException exception) {
             return Collections.EMPTY_LIST;
+        }
+    }
+
+    private void validateTurn(final ChessGame chessGame, final Owner owner){
+        if(!chessGame.isTurn(owner)){
+            throw new IllegalArgumentException("현재 사용자의 차례가 아닙니다.");
         }
     }
 

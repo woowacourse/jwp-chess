@@ -46,7 +46,7 @@ public final class SpringChessGameController {
         return "index";
     }
 
-    @PostMapping(path = "/rooms/new-game")
+    @PostMapping(path = "/rooms")
     public String createNewGame(@ModelAttribute final RoomCreateDTO roomCreateDTO, final HttpServletResponse response) {
         int whiteUserId = userService.registerUser(new JoinUserDTO(roomCreateDTO));
         Long roomId = roomService.createRoom(roomCreateDTO.getName(), whiteUserId);

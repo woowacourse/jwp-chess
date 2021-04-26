@@ -18,18 +18,16 @@ public class RoomController {
 
     @GetMapping("/list")
     public ResponseEntity<CommonDto<RoomListDto>> roomList() {
-        return ResponseEntity.ok().body(service.list());
+        return ResponseEntity.ok(service.list());
     }
 
     @PostMapping("/new")
     public ResponseEntity<CommonDto<RoomDto>> saveRoom(@RequestBody RoomDto roomDto) {
-        return ResponseEntity.ok()
-                .body(service.save(roomDto));
+        return ResponseEntity.ok(service.save(roomDto));
     }
 
     @GetMapping("/{gameId:[\\d]+}/load")
     public ResponseEntity<String> findRoomName(@PathVariable int gameId) {
-        return ResponseEntity.ok()
-                .body(service.loadRoomName(gameId));
+        return ResponseEntity.ok(service.loadRoomName(gameId));
     }
 }

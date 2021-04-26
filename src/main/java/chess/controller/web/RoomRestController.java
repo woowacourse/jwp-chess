@@ -1,19 +1,24 @@
 package chess.controller.web;
 
 import chess.chessgame.domain.room.game.ChessGameManager;
+import chess.chessgame.domain.room.user.User;
 import chess.controller.web.dto.ActiveRoomsResponseDto;
 import chess.controller.web.dto.ChessGameResponseDto;
 import chess.controller.web.dto.RoomRequestDto;
+import chess.controller.web.dto.UserRequestDto;
 import chess.service.ChessService;
 import chess.service.RoomService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpSession;
 
 @RequestMapping("/room")
 @RestController
@@ -37,9 +42,15 @@ public class RoomRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/{roomId:[\\d]+}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChessGameResponseDto> enterRoom(@PathVariable long roomId) {
-        ChessGameManager load = chessService.load(roomId);
-        return ResponseEntity.ok(new ChessGameResponseDto(load));
+    @PostMapping("{roomId:[\\d]+}/password")
+    public ResponseEntity<Void> enterPassword(@PathVariable long roomId, @RequestBody UserRequestDto userRequestDto,
+                            Model model, HttpSession session) {
+        User currentUser = roomService.findUserBy(roomId, userRequestDto.getPassword());
+        session.setAttribute("user", currentUser);
+
+        ChessGameManager game = roomService.findGameBy(roomId);
+        model.addAttribute("gameId", game.getId());
+
+        return ResponseEntity.ok().build();
     }
 }

@@ -32,18 +32,23 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     @Override
     public Room createRoom(String roomName, ChessGameManager chessGameManager, List<User> users) {
-        return roomDao.insertRoom(new Room(0, roomName, chessGameManager,users));
+        return roomDao.insertRoom(new Room(EMPTY_ID, roomName, chessGameManager, users));
     }
 
     @Override
-    public void endRoom(Room room) {
-
+    public void updateBlackUser(Room room) {
+        roomDao.updateBlackUser(room);
     }
 
     @Override
     public Room findRoomBy(long roomId) {
         RoomDto roomDto = roomDao.findByRoomId(roomId);
+        return createRoomFrom(roomDto);
+    }
 
+    @Override
+    public Room findRoomByUserId(long userId) {
+        RoomDto roomDto = roomDao.findByUserId(userId);
         return createRoomFrom(roomDto);
     }
 
@@ -60,8 +65,8 @@ public class RoomRepositoryImpl implements RoomRepository {
         User whiteUser = userDao.findByUserId(roomDto.getWhiteUserId());
         users.add(whiteUser);
 
-        if (roomDto.getWhiteUserId() != EMPTY_ID) {
-            User blackUser = userDao.findByUserId(roomDto.getWhiteUserId());
+        if (roomDto.getBlackUserId() != EMPTY_ID) {
+            User blackUser = userDao.findByUserId(roomDto.getBlackUserId());
             users.add(blackUser);
         }
 

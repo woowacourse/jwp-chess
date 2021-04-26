@@ -16,17 +16,17 @@ CREATE TABLE IF NOT EXISTS chessgame (
 
 CREATE TABLE IF NOT EXISTS user (
     user_id INT NOT NULL AUTO_INCREMENT,
-    color VARCHAR(10) NULL,
-    password VARCHAR(128) NULL,
+    color VARCHAR(10) NOT NULL,
+    password VARCHAR(128) NOT NULL,
     PRIMARY KEY (user_id)
     )
     ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS room (
     room_id INT NOT NULL AUTO_INCREMENT,
-    room_name VARCHAR(100) NULL,
-    game_id INT NULL,
-    user1 INT NULL,
+    room_name VARCHAR(100) NOT NULL,
+    game_id INT NOT NULL,
+    user1 INT NOT NULL,
     user2 INT NULL,
     PRIMARY KEY (room_id),
     FOREIGN KEY room(room_id)

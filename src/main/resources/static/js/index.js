@@ -14,6 +14,9 @@ async function onClickStartBtn(e) {
     const password = prompt("비밀번호를 입력해달라");
     isEmpty(password);
 
+    console.log(roomName);
+    console.log(password);
+
     await postFetch("/room", {roomName: roomName, password: password});
     findGames();
 }
@@ -25,9 +28,14 @@ function isEmpty(obj) {
     }
 }
 
-function onClickGameRoom(e) {
+async function onClickGameRoom(e) {
     if (e.target && e.target.classList.contains('room')) {
-        location.href = `/room/${e.target.closest('.text').id}`;
+        const password = prompt("비밀번호를 입력하라");
+        isEmpty(password);
+        const roomId = e.target.closest('.text').id;
+        console.log(roomId);
+        await postFetch(`/room/${roomId}/password`, {roomId: roomId, password: password});
+        location.href = `/room/${roomId}`;
     }
 }
 

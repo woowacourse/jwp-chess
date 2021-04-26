@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS chess.chessgame (
 
 CREATE TABLE IF NOT EXISTS chess.user (
     user_id INT NOT NULL AUTO_INCREMENT,
-    color VARCHAR(10) NULL,
-    password VARCHAR(128) NULL,
+    color VARCHAR(10) NOT NULL,
+    password VARCHAR(128) NOT NULL,
     PRIMARY KEY (user_id)
     )
     ENGINE = InnoDB;

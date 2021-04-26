@@ -7,10 +7,12 @@ import chess.chessgame.repository.ChessGameManagerRepository;
 import chess.chessgame.repository.RoomRepository;
 import chess.chessgame.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static chess.chessgame.domain.room.game.board.piece.attribute.Color.BLACK;
 import static chess.chessgame.domain.room.game.board.piece.attribute.Color.WHITE;
 
 @Service
@@ -25,8 +27,9 @@ public class RoomService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public Room createRoom(String roomName, String userPassword) {
-        User whiteUser = userRepository.createUser(userPassword, WHITE);
+        User whiteUser = userRepository.createUser(WHITE, userPassword);
         return roomRepository.createRoom(roomName, chessGameManagerRepository.create(), Arrays.asList(whiteUser));
     }
 
@@ -36,5 +39,22 @@ public class RoomService {
 
     public ChessGameManager findGameBy(long roomId) {
         return roomRepository.findRoomBy(roomId).getGameManager();
+    }
+
+    public Room findRoomByUserId(long userId) {
+        return roomRepository.findRoomByUserId(userId);
+    }
+
+    @Transactional
+    public User findUserBy(long roomId, String password) {
+        Room room = roomRepository.findRoomBy(roomId);
+        if (room.isMaxUser() || room.isSamePassword(WHITE, password)) {
+            return userRepository.matchPasswordUser(roomId, password);
+        }
+        User blackUser = userRepository.createUser(BLACK, password);
+        room.enterUser(blackUser);
+        roomRepository.updateBlackUser(room);
+
+        return blackUser;
     }
 }

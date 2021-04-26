@@ -31,7 +31,7 @@ public class Room {
         this.users.enterUser(user);
     }
 
-    public boolean isMaxUser(){
+    public boolean isMaxUser() {
         return users.isMaxUser();
     }
 

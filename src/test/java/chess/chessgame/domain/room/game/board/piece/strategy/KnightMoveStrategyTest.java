@@ -25,17 +25,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class KnightMoveStrategyTest {
     private Board board;
 
-    @BeforeEach
-    void setUp() {
-        board = InitBoardInitializer.getBoard();
-    }
-
     private static Stream<Arguments> knightCanMoveTest() {
         return Stream.of(
                 Arguments.of(Position.of("b1"), Position.of("c3"), true),
                 Arguments.of(Position.of("b1"), Position.of("a3"), true),
                 Arguments.of(Position.of("a3"), Position.of("c4"), true)
         );
+    }
+
+    @BeforeEach
+    void setUp() {
+        board = InitBoardInitializer.getBoard();
     }
 
     @DisplayName("나이트의 이동 가능한 경우 테스트")
@@ -67,7 +67,7 @@ class KnightMoveStrategyTest {
         Board testBoard = TestBoardInitializer.createTestBoard(Arrays.asList(fromSquare, toSquare));
 
         assertThatThrownBy(() -> testBoard.move(fromPosition, toPosition))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("동일한 진영의 말이 있어서 행마할 수 없습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("동일한 진영의 말이 있어서 행마할 수 없습니다.");
     }
 }

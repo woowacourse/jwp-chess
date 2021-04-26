@@ -1,11 +1,11 @@
 package chess.chessgame.domain.room.game;
 
-import chess.controller.web.dto.PieceDto;
 import chess.chessgame.domain.room.game.board.Board;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.game.board.position.Position;
 import chess.chessgame.domain.room.game.statistics.ChessGameStatistics;
 import chess.chessgame.domain.room.game.statistics.MatchResult;
+import chess.controller.web.dto.PieceDto;
 
 import java.util.Map;
 

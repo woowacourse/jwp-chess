@@ -3,8 +3,6 @@ package chess.chessgame.repository;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.user.User;
 
-import java.util.List;
-
 public interface UserRepository {
     User createUser(Color color, String password);
 

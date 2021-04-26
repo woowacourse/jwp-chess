@@ -25,11 +25,6 @@ public class TestBoardInitializer implements BoardInitializer {
         return Board.of(board);
     }
 
-    @Override
-    public Board createBoard(List<Square> squares) {
-        return InitBoardInitializer.getBoard();
-    }
-
     private static List<Square> createBlankSquare() {
         return Arrays.stream(Rank.values())
                 .flatMap(rank ->
@@ -38,6 +33,11 @@ public class TestBoardInitializer implements BoardInitializer {
                                 .map(position -> new Square(position, Blank.getInstance()))
                 )
                 .collect(Collectors.collectingAndThen(toList(), ArrayList::new));
+    }
+
+    @Override
+    public Board createBoard(List<Square> squares) {
+        return InitBoardInitializer.getBoard();
     }
 
 

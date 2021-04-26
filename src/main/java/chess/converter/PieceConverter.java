@@ -1,6 +1,13 @@
 package chess.converter;
 
-import chess.chessgame.domain.room.game.board.piece.*;
+import chess.chessgame.domain.room.game.board.piece.Bishop;
+import chess.chessgame.domain.room.game.board.piece.Blank;
+import chess.chessgame.domain.room.game.board.piece.King;
+import chess.chessgame.domain.room.game.board.piece.Knight;
+import chess.chessgame.domain.room.game.board.piece.Pawn;
+import chess.chessgame.domain.room.game.board.piece.Piece;
+import chess.chessgame.domain.room.game.board.piece.Queen;
+import chess.chessgame.domain.room.game.board.piece.Rook;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 
 import java.util.Arrays;

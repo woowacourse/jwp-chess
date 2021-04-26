@@ -1,17 +1,13 @@
 package chess.mysql.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Objects;
 
 public class DbConnectionTemplate {
-    interface PsConsumer {
-        void accept(PreparedStatement preparedStatement) throws SQLException;
-    }
-
-    interface RsFunction<T> {
-        T apply(ResultSet resultSet) throws SQLException;
-    }
-
     public static <T> T executeQuery(String query, PsConsumer setParams, RsFunction<T> createDtoFunction) {
         try (Connection connection = ChessConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -48,5 +44,13 @@ public class DbConnectionTemplate {
         } catch (SQLException e) {
             throw new IllegalStateException(e.getMessage());
         }
+    }
+
+    interface PsConsumer {
+        void accept(PreparedStatement preparedStatement) throws SQLException;
+    }
+
+    interface RsFunction<T> {
+        T apply(ResultSet resultSet) throws SQLException;
     }
 }

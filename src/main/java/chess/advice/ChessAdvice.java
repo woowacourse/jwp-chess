@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ChessAdvice {
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({IllegalArgumentException.class, NullPointerException.class})
     public ResponseEntity IllegalArgumentExceptionHandler() {
         return ResponseEntity.badRequest().build();
     }

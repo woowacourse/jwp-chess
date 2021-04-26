@@ -97,7 +97,7 @@ async function addEventOnStartButton() {
 }
 
 async function createNewRoom() {
-    const roomName = prompt("방 제목을 입력하세요.(영어만 가능)");
+    const roomName = prompt("방 제목을 입력하세요.");
     await fetch('/room/new', {
         method: 'POST',
         headers: {

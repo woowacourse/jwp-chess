@@ -28,7 +28,7 @@ public class GameDao {
 
     public int saveGame(SavedGameDto savedGameDto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String insertGameQuery = "insert into game(turn) values(?)";
+        String insertGameQuery = "INSERT INTO game(turn) VALUES(?)";
         this.jdbcTemplate.update(con -> {
             PreparedStatement pstmt = con.prepareStatement(
                     insertGameQuery,
@@ -40,7 +40,7 @@ public class GameDao {
     }
 
     public void savePieceByGameId(int gameId, String position, PieceDto piece) {
-        String query = "insert into piece(game_id, name, color, position) values(?, ?, ?, ?)";
+        String query = "INSERT INTO piece(game_id, name, color, position) VALUES(?, ?, ?, ?)";
         this.jdbcTemplate.update(query, gameId, piece.getName(), piece.getColor(), position);
     }
 

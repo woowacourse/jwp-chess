@@ -12,7 +12,8 @@ const chessAPI = "/api/v1/chess";
 const chessURL = "/chess";
 
 function createRoom() {
-    let name = prompt("방 이름을 입력해주세요");
+    let name = prompt("방 이름을 입력해주세요.");
+    let password = prompt("플레이어 1의 비밀번호를 입력해주세요.");
     if (name !== "") {
         newGame(name);
     } else {
@@ -39,4 +40,51 @@ function newGame(name) {
         const errorMessage = response.responseText;
         location.href = chessURL + "/error-page?error=" + errorMessage;
     });
+}
+
+function showNewGamePopup() {
+    const popup = document.querySelector('.new-game');
+    popup.classList.remove('hide');
+}
+
+function closeNewGamePopup() {
+    const popup = document.querySelector('.new-game');
+    popup.classList.add('hide');
+
+    const roomName = popup.querySelector('#room-name');
+    const userId = popup.querySelector('#user-id');
+    const userPassword = popup.querySelector('#user-password');
+    roomName.value = "";
+    userId.value = "";
+    userPassword.value = "";
+}
+
+function showEnterBlackPopup() {
+    const popup = document.querySelector('.enter-black');
+    popup.classList.remove('hide');
+}
+
+function closeEnterBlackPopup() {
+    const popup = document.querySelector('.enter-black');
+    popup.classList.add('hide');
+
+    const userId = popup.querySelector('#user-id');
+    const userPassword = popup.querySelector('#user-password');
+    userId.value = "";
+    userPassword.value = "";
+}
+
+function showEnterWhitePopup() {
+    const popup = document.querySelector('.enter-white');
+    popup.classList.remove('hide');
+}
+
+function closeEnterWhitePopup() {
+    const popup = document.querySelector('.enter-white');
+    popup.classList.add('hide');
+
+    const userId = popup.querySelector('#user-id');
+    const userPassword = popup.querySelector('#user-password');
+    userId.value = "";
+    userPassword.value = "";
 }

@@ -29,4 +29,12 @@ public class GameUsers {
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(String.format("%s 색상의 유저가 없습니다.", color.name())));
     }
+
+    public boolean isMaxUser() {
+        return users.size() >= MAX_GAME_USER_SIZE;
+    }
+
+    public boolean isSamePassword(Color color, String password) {
+        return findUserByColor(color).isSamePassword(password);
+    }
 }

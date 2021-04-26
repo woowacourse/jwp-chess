@@ -6,9 +6,9 @@ import chess.chessgame.domain.room.user.User;
 import java.util.List;
 
 public interface UserRepository {
-    User createUser(String password, Color color);
+    User createUser(Color color, String password);
 
-    List<User> findByGameId(long gameId);
+    User matchPasswordUser(long gameId, String password);
 
     User findByUserId(long userId);
 

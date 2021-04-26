@@ -1,6 +1,7 @@
 package chess.chessgame.domain.room;
 
 import chess.chessgame.domain.room.game.ChessGameManager;
+import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.user.GameUsers;
 import chess.chessgame.domain.room.user.User;
 
@@ -30,6 +31,10 @@ public class Room {
         this.users.enterUser(user);
     }
 
+    public boolean isMaxUser(){
+        return users.isMaxUser();
+    }
+
     public ChessGameManager getGameManager() {
         return gameManager;
     }
@@ -48,5 +53,9 @@ public class Room {
 
     public User getBlackUser() {
         return users.findUserByColor(BLACK);
+    }
+
+    public boolean isSamePassword(Color color, String password) {
+        return users.isSamePassword(color, password);
     }
 }

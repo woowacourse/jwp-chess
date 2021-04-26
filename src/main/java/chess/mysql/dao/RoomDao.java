@@ -73,20 +73,29 @@ public class RoomDao {
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 방이 없습니다."));
     }
 
-    public void updateWhiteUser(Room entity) {
+    public RoomDto findByUserId(long userId) {
         String query =
-                "UPDATE " +
-                        "SET user2 = ? " +
+                "SELECT * " +
                         "FROM chess.room " +
+                        "WHERE  user1 = ? OR user2 = ?";
+
+        return jdbcTemplate.query(query, rowMapper, userId, userId).stream().findAny()
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 방이 없습니다."));
+    }
+
+    public void updateBlackUser(Room entity) {
+        String query =
+                "UPDATE chess.room " +
+                        "SET user2 = ? " +
                         "WHERE room_id = ?";
 
-        jdbcTemplate.update(query, entity.getBlackUser(), entity.getRoomName());
+        jdbcTemplate.update(query, entity.getBlackUser().getUserId(), entity.getRoomId());
     }
 
     public void deleteRoom(Room entity) {
         String query =
                 "DELETE FROM chess.room WHERE room_id = ?";
 
-        jdbcTemplate.update(query, entity.getRoomName());
+        jdbcTemplate.update(query, entity.getRoomId());
     }
 }

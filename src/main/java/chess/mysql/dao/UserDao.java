@@ -9,7 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public class UserDao {
@@ -53,5 +53,16 @@ public class UserDao {
 
         return jdbcTemplate.query(query, rowMapper, userId).stream().findAny()
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 없습니다."));
+    }
+
+    public List<User> findByRoomId(long roomId) {
+        String query =
+                "SELECT * " +
+                        "FROM chess.user u " +
+                        "INNER JOIN chess.room r " +
+                        "ON u.user_id = r.user1 OR u.user_id = r.user2 " +
+                        "WHERE room_id = ?";
+
+        return jdbcTemplate.query(query, rowMapper, roomId);
     }
 }

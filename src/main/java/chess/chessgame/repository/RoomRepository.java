@@ -9,9 +9,11 @@ import java.util.List;
 public interface RoomRepository {
     Room createRoom(String roomName, ChessGameManager chessGameManager, List<User> users);
 
-    void endRoom(Room room);
+    void updateBlackUser(Room room);
 
     List<Room> findAllActiveRoom ();
 
     Room findRoomBy(long roomId);
+
+    Room findRoomByUserId(long userId);
 }

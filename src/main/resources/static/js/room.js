@@ -81,7 +81,7 @@ const index = {
     },
 
     scores: function () {
-        fetch("/scores/" + room.id)
+        fetch("/chessgames/" + room.id + "/scores")
             .then(data => {
                 return data.json()
             })

@@ -52,7 +52,7 @@ public class ChessApiController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/scores/{roomId}")
+    @GetMapping("/chessgames/{roomId}/scores")
     public ResponseEntity<ScoreDto> calculateScores(@PathVariable long roomId) {
         ScoreDto scoreDto = chessGameService.calculateScores(roomId);
         return ResponseEntity.ok(scoreDto);

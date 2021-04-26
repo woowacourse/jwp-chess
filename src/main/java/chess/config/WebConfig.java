@@ -14,4 +14,5 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(new StringToTeamConverter());
         registry.addConverter(new StringToPieceTypeConverter());
     }
+
 }

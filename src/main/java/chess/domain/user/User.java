@@ -41,4 +41,5 @@ public class User {
             ", createdTime=" + createdTime +
             '}';
     }
+
 }

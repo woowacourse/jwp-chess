@@ -36,4 +36,5 @@ class BishopTest {
         // then
         assertThat(bishop.isMovable(nonMovableTarget)).isFalse();
     }
+
 }

@@ -40,4 +40,5 @@ public class Rook extends Piece {
     public boolean isMovable(final Location target) {
         return location.isHorizontalOrVertical(target);
     }
+
 }

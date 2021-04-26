@@ -78,4 +78,5 @@ class PawnTest {
         assertThat(blackPawn.isMovable(leftTarget)).isFalse();
         assertThat(blackPawn.isMovable(rightTarget)).isFalse();
     }
+
 }

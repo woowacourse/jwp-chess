@@ -8,7 +8,7 @@ public class UserRequestDto {
     private final String name;
     private final String password;
 
-    public UserRequestDto(String name, String password) {
+    public UserRequestDto(final String name, final String password) {
         this.name = name;
         this.password = password;
     }
@@ -24,4 +24,5 @@ public class UserRequestDto {
     public User toEntity() {
         return new User(0L, name, password, LocalDateTime.now());
     }
+
 }

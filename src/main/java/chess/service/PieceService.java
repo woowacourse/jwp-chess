@@ -14,31 +14,32 @@ public class PieceService {
 
     private final PieceDao pieceDao;
 
-    public PieceService(PieceDao pieceDao) {
+    public PieceService(final PieceDao pieceDao) {
         this.pieceDao = pieceDao;
     }
 
-    public void createInitialPieces(long gameId) {
+    public void createInitialPieces(final long gameId) {
         pieceDao.insertAll(gameId, Board.createWithInitialLocation().toList());
     }
 
-    public List<PieceDto> findPiecesByGameId(long gameId) {
+    public List<PieceDto> findPiecesByGameId(final long gameId) {
         return pieceDao.selectAll(gameId)
             .stream()
             .map(PieceDto::from)
             .collect(Collectors.toList());
     }
 
-    public void move(long gameId, MoveRequestDto moveRequestDto) {
+    public void move(final long gameId, final MoveRequestDto moveRequestDto) {
         pieceDao.updatePosition(gameId, Location.convert(moveRequestDto.getSource()),
             Location.convert(moveRequestDto.getTarget()));
     }
 
-    public void catchPiece(long gameId, MoveRequestDto moveRequestDto) {
+    public void catchPiece(final long gameId, final MoveRequestDto moveRequestDto) {
         pieceDao.delete(gameId, Location.convert(moveRequestDto.getTarget()));
     }
 
-    public void removeAll(long gameId) {
+    public void removeAll(final long gameId) {
         pieceDao.deletePieces(gameId);
     }
+
 }

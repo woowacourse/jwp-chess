@@ -20,7 +20,7 @@ public class GameResponseDto {
         this.isFinished = isFinished;
     }
 
-    public static GameResponseDto from(Game game) {
+    public static GameResponseDto from(final Game game) {
         return new GameResponseDto(game.getName(), game.getTurn(), game.getHostId(),
             game.getGuestId(), game.isFinished());
     }
@@ -44,4 +44,5 @@ public class GameResponseDto {
     public boolean isFinished() {
         return isFinished;
     }
+
 }

@@ -5,7 +5,7 @@ public class MoveResponseDto {
     private final boolean finished;
     private final boolean success;
 
-    public MoveResponseDto(boolean finished, boolean success) {
+    public MoveResponseDto(final boolean finished, final boolean success) {
         this.finished = finished;
         this.success = success;
     }
@@ -17,4 +17,5 @@ public class MoveResponseDto {
     public boolean isSuccess() {
         return success;
     }
+
 }

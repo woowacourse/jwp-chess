@@ -8,25 +8,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameService {
 
-    private GameDao gameDao;
+    private final GameDao gameDao;
 
-    public GameService(GameDao gameDao) {
+    public GameService(final GameDao gameDao) {
         this.gameDao = gameDao;
     }
 
-    public long add(GameRequestDto gameRequestDto) {
+    public long add(final GameRequestDto gameRequestDto) {
         return gameDao.insert(gameRequestDto.toEntity());
     }
 
-    public GameResponseDto findById(long gameId) {
+    public GameResponseDto findById(final long gameId) {
         return GameResponseDto.from(gameDao.findById(gameId));
     }
 
-    public void endGame(long gameId) {
+    public void endGame(final long gameId) {
         gameDao.updateGameStatus(gameId, true);
     }
 
-    public void changeTurn(long gameId) {
+    public void changeTurn(final long gameId) {
         gameDao.updateTurn(gameId);
     }
 }

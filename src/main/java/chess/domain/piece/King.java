@@ -42,4 +42,5 @@ public class King extends Piece {
     public boolean isMovable(final Location target) {
         return location.isAdjacent(target);
     }
+
 }

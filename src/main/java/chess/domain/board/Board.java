@@ -143,4 +143,5 @@ public class Board {
     public List<Piece> toList() {
         return pieces;
     }
+
 }

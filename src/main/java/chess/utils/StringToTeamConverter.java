@@ -9,4 +9,5 @@ public class StringToTeamConverter implements Converter<String, Team> {
     public Team convert(final String source) {
         return Team.from(source);
     }
+
 }

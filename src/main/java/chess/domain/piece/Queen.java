@@ -37,4 +37,5 @@ public class Queen extends Piece {
     public PieceType getPieceType() {
         return PieceType.QUEEN;
     }
+
 }

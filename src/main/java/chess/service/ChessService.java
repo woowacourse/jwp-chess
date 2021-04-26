@@ -25,8 +25,9 @@ public class ChessService {
     private final PieceService pieceService;
     private final UserService userService;
 
-    public ChessService(GameService gameService, PieceService pieceService,
-        UserService userService) {
+    public ChessService(final GameService gameService, final PieceService pieceService,
+        final UserService userService) {
+
         this.gameService = gameService;
         this.pieceService = pieceService;
         this.userService = userService;
@@ -38,20 +39,20 @@ public class ChessService {
         return id;
     }
 
-    public ChessResponseDto bringGameData(long gameId) {
-        List<PieceDto> pieceDtos = pieceService.findPiecesByGameId(gameId);
-        GameResponseDto gameResponseDto = gameService.findById(gameId);
-        UserResponseDto host = userService.findUserById(gameResponseDto.getHostId());
-        UserResponseDto guest = userService.findUserById(gameResponseDto.getGuestId());
+    public ChessResponseDto bringGameData(final long gameId) {
+        final List<PieceDto> pieceDtos = pieceService.findPiecesByGameId(gameId);
+        final GameResponseDto gameResponseDto = gameService.findById(gameId);
+        final UserResponseDto host = userService.findUserById(gameResponseDto.getHostId());
+        final UserResponseDto guest = userService.findUserById(gameResponseDto.getGuestId());
         return new ChessResponseDto(pieceDtos, host, guest, gameResponseDto);
     }
 
-    public boolean checkMovement(long gameId, MoveRequestDto moveRequestDto) {
-        Team turn = gameService.findById(gameId).getTurn();
+    public boolean checkMovement(final long gameId, final MoveRequestDto moveRequestDto) {
+        final Team turn = gameService.findById(gameId).getTurn();
         if (!turn.equals(moveRequestDto.getColor())) {
             return false;
         }
-        Board board = generateBoard(gameId);
+        final Board board = generateBoard(gameId);
 
         return board.isMovable(
             Location.convert(moveRequestDto.getSource()),
@@ -60,8 +61,8 @@ public class ChessService {
         );
     }
 
-    public MoveResponseDto move(long gameId, MoveRequestDto moveRequestDto) {
-        Board board = generateBoard(gameId);
+    public MoveResponseDto move(final long gameId, final MoveRequestDto moveRequestDto) {
+        final Board board = generateBoard(gameId);
         board.move(
             Location.convert(moveRequestDto.getSource()),
             Location.convert(moveRequestDto.getTarget()),
@@ -79,12 +80,13 @@ public class ChessService {
         return new MoveResponseDto(false, true);
     }
 
-    private Board generateBoard(long gameId) {
-        List<Piece> pieces = pieceService.findPiecesByGameId(gameId)
+    private Board generateBoard(final long gameId) {
+        final List<Piece> pieces = pieceService.findPiecesByGameId(gameId)
             .stream()
             .map(PieceConverter::run)
             .collect(Collectors.toList());
 
         return Board.of(pieces);
     }
+
 }

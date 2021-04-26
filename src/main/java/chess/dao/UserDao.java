@@ -20,7 +20,7 @@ public class UserDao {
         resultSet.getTimestamp("created_time").toLocalDateTime()
     );
 
-    public UserDao(JdbcTemplate jdbcTemplate) {
+    public UserDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -39,13 +39,14 @@ public class UserDao {
     }
 
 
-    public User selectByName(String name) {
+    public User selectByName(final String name) {
         final String sql = "SELECT * FROM user WHERE name = ?";
         return jdbcTemplate.queryForObject(sql, userRowMapper, name);
     }
 
-    public User selectById(long id) {
+    public User selectById(final long id) {
         final String sql = "SELECT * FROM user WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, userRowMapper, id);
     }
+
 }

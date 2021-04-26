@@ -52,4 +52,5 @@ class KnightTest {
         // then
         assertThat(pathToTarget).isEmpty();
     }
+
 }

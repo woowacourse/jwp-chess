@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/games")
 public class GameController {
 
-    final GameService gameService;
+    private final GameService gameService;
 
-    public GameController(GameService gameService) {
+    public GameController(final GameService gameService) {
         this.gameService = gameService;
     }
 
     @GetMapping("/{id}")
-    public String getGameById() {
+    public String loadGameById() {
         return "chess";
     }
 

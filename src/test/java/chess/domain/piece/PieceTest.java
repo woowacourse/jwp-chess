@@ -125,4 +125,5 @@ class PieceTest {
         assertThat(king.isSameTeam(whiteQueen)).isTrue();
         assertThat(king.isSameTeam(blackQueen)).isFalse();
     }
+
 }

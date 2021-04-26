@@ -37,4 +37,5 @@ public enum PieceType {
     public double getScore() {
         return score;
     }
+
 }

@@ -19,16 +19,16 @@ public class PieceDao {
         .run(resultSet);
 
 
-    public PieceDao(JdbcTemplate jdbcTemplate) {
+    public PieceDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insertAll(long gameId, List<Piece> pieces) {
-        String sql = "INSERT INTO piece(game_id, x, y, color, shape) VALUES(?,?,?,?,?)";
+    public void insertAll(final long gameId, final List<Piece> pieces) {
+        final String sql = "INSERT INTO piece(game_id, x, y, color, shape) VALUES(?,?,?,?,?)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
+            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
                 Piece piece = pieces.get(i);
                 ps.setLong(1, gameId);
                 ps.setInt(2, piece.getX());
@@ -44,24 +44,25 @@ public class PieceDao {
         });
     }
 
-    public List<Piece> selectAll(long gameId) {
-        String sql = "SELECT * FROM piece WHERE game_id = ?";
+    public List<Piece> selectAll(final long gameId) {
+        final String sql = "SELECT * FROM piece WHERE game_id = ?";
         return jdbcTemplate.query(sql, pieceRowMapper, gameId);
     }
 
-    public void delete(long gameId, Location target) {
-        String sql = "DELETE FROM piece WHERE game_id = ? AND x = ? AND y = ?";
+    public void delete(final long gameId, final Location target) {
+        final String sql = "DELETE FROM piece WHERE game_id = ? AND x = ? AND y = ?";
         jdbcTemplate.update(sql, gameId, target.getX(), target.getY());
     }
 
-    public void updatePosition(long gameId, Location source, Location target) {
-        String sql = "UPDATE piece SET x = ?, y = ? WHERE game_id = ? AND x = ? AND y = ?";
+    public void updatePosition(final long gameId, Location source, final Location target) {
+        final String sql = "UPDATE piece SET x = ?, y = ? WHERE game_id = ? AND x = ? AND y = ?";
         jdbcTemplate.update(sql, target.getX(), target.getY(), gameId, source.getX(),
             source.getY());
     }
 
-    public void deletePieces(long gameId) {
-        String sql = "DELETE FROM piece WHERE game_id = ?";
+    public void deletePieces(final long gameId) {
+        final String sql = "DELETE FROM piece WHERE game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }
+
 }

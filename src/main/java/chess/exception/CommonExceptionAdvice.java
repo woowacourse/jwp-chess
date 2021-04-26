@@ -12,4 +12,5 @@ public class CommonExceptionAdvice {
     public ResponseEntity<String> handle(final Exception e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
+
 }

@@ -24,11 +24,11 @@ public class GameDao {
         resultSet.getTimestamp("created_time").toLocalDateTime()
     );
 
-    public GameDao(JdbcTemplate jdbcTemplate) {
+    public GameDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long insert(Game game) {
+    public long insert(final Game game) {
         final String sql = "INSERT INTO game(name, host_id, guest_id) VALUES (?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         final PreparedStatementCreator preparedStatementCreator = con -> {
@@ -43,18 +43,19 @@ public class GameDao {
         return keyHolder.getKey().longValue();
     }
 
-    public Game findById(long gameId) {
+    public Game findById(final long gameId) {
         final String sql = "SELECT * FROM game WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, gameRowMapper, gameId);
     }
 
-    public void updateGameStatus(long id, boolean isFinished) {
-        String sql = "UPDATE game SET is_finished = ? WHERE id = ?";
+    public void updateGameStatus(final long id, final boolean isFinished) {
+        final String sql = "UPDATE game SET is_finished = ? WHERE id = ?";
         jdbcTemplate.update(sql, isFinished, id);
     }
 
-    public void updateTurn(long id) {
-        String sql = "UPDATE game SET turn = (CASE WHEN turn = 'black' THEN 'white' ELSE 'black' END) WHERE id = ?";
+    public void updateTurn(final long id) {
+        final String sql = "UPDATE game SET turn = (CASE WHEN turn = 'black' THEN 'white' ELSE 'black' END) WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
 }

@@ -18,7 +18,7 @@ public class PieceDto {
         this.shape = shape;
     }
 
-    public static PieceDto from(Piece piece) {
+    public static PieceDto from(final Piece piece) {
         return new PieceDto(piece.getX(), piece.getY(), piece.getTeam(), piece.getPieceType());
     }
 
@@ -37,4 +37,5 @@ public class PieceDto {
     public PieceType getShape() {
         return shape;
     }
+
 }

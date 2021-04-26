@@ -40,4 +40,5 @@ class KingTest {
         // then
         assertThat(king.isMovable(nonMovableTarget)).isFalse();
     }
+
 }

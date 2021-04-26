@@ -50,4 +50,5 @@ public class PieceConverter {
                 return Pawn.of(location, team);
         }
     }
+
 }

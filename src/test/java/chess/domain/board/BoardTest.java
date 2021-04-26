@@ -308,4 +308,5 @@ class BoardTest {
             () -> initialBoard.move(Location.of(1, 1), Location.of(1, 3), Team.WHITE)
         ).isInstanceOf(MoveFailureException.class);
     }
+
 }

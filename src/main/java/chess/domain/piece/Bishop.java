@@ -40,4 +40,5 @@ public class Bishop extends Piece {
     public boolean isMovable(final Location target) {
         return location.isDiagonal(target);
     }
+
 }

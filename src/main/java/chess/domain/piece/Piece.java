@@ -114,4 +114,5 @@ public abstract class Piece implements Movable {
     }
 
     public abstract PieceType getPieceType();
+
 }

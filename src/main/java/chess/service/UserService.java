@@ -11,20 +11,21 @@ public class UserService {
 
     final UserDao userDao;
 
-    public UserService(UserDao userDao) {
+    public UserService(final UserDao userDao) {
         this.userDao = userDao;
     }
 
-    public long add(UserRequestDto userRequestDto) {
+    public long add(final  UserRequestDto userRequestDto) {
         return userDao.insert(userRequestDto.toEntity());
     }
 
-    public UserResponseDto findUserByName(String name) {
-        User user = userDao.selectByName(name);
+    public UserResponseDto findUserByName(final String name) {
+        final User user = userDao.selectByName(name);
         return UserResponseDto.from(user);
     }
 
-    public UserResponseDto findUserById(long id) {
+    public UserResponseDto findUserById(final long id) {
         return UserResponseDto.from(userDao.selectById(id));
     }
+
 }

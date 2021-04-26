@@ -13,4 +13,5 @@ public class StringToPieceTypeConverter implements Converter<String, PieceType> 
             source.isEmpty() ? EMPTY_LETTER : source.charAt(0)
         );
     }
+
 }

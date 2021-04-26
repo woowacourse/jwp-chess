@@ -10,14 +10,16 @@ public class GameRequestDto {
     private final long hostId;
     private final long guestId;
 
-    public GameRequestDto(String name, long hostId, long guestId) {
+    public GameRequestDto(final String name, final long hostId, final long guestId) {
         this.name = name;
         this.hostId = hostId;
         this.guestId = guestId;
     }
 
     public Game toEntity() {
-        return new Game(0L, name, hostId, guestId, Team.WHITE, false, LocalDateTime.now());
+        return new Game(
+            0L, name, hostId, guestId, Team.WHITE, false, LocalDateTime.now()
+        );
     }
 
     public String getName() {
@@ -31,4 +33,5 @@ public class GameRequestDto {
     public long getGuestId() {
         return guestId;
     }
+
 }

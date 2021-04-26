@@ -40,4 +40,5 @@ class QueenTest {
         // then
         assertThat(queen.isMovable(nonMovableTarget)).isFalse();
     }
+
 }

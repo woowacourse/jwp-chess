@@ -6,6 +6,8 @@ import chess.domain.piece.attribute.Color;
 import chess.domain.position.Position;
 import chess.domain.statistics.ChessGameStatistics;
 import chess.domain.statistics.MatchResult;
+import chess.exception.InvalidChessArgumentException;
+import chess.exception.InvalidMoveException;
 
 import java.util.Map;
 
@@ -37,7 +39,7 @@ public class RunningGameManager implements ChessGameManager {
     @Override
     public void move(Position from, Position to) {
         if (board.findColorByPosition(from) != currentColor) {
-            throw new IllegalArgumentException("현재 움직일 수 있는 진영의 기물이 아닙니다.");
+            throw new InvalidMoveException("현재 움직일 수 있는 진영의 기물이 아닙니다.");
         }
         board.move(from, to);
         turnOver();

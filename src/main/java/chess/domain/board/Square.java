@@ -6,8 +6,9 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.attribute.Color;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
+import chess.exception.InvalidChessArgumentException;
+import chess.exception.InvalidChessStatusException;
 
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class Square {
@@ -22,7 +23,7 @@ public class Square {
 
     public void move(MoveOrder moveOrder) {
         if (hasNotPiece()) {
-            throw new NoSuchElementException("해당 위치엔 말이 없습니다.");
+            throw new InvalidChessArgumentException("해당 위치엔 말이 없습니다.");
         }
 
         if (piece.canMove(moveOrder)) {
@@ -30,7 +31,7 @@ public class Square {
             this.piece = Blank.getInstance();
             return;
         }
-        throw new IllegalArgumentException("기물이 움직일 수 없는 상황입니다.");
+        throw new InvalidChessStatusException("기물이 움직일 수 없는 상황입니다.");
     }
 
     public boolean kindOf(Class<? extends Piece> kind) {

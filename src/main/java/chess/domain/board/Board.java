@@ -9,6 +9,8 @@ import chess.domain.position.Direction;
 import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
+import chess.exception.InvalidChessArgumentException;
+import chess.exception.InvalidChessStatusException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +38,7 @@ public class Board {
         return this.board.stream()
                 .filter(square -> square.isSamePosition(position))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 포지션을 찾을 수 없습니다."));
+                .orElseThrow(() -> new InvalidChessArgumentException("해당 포지션을 찾을 수 없습니다."));
     }
 
     public List<Square> getAliveSquares() {
@@ -84,7 +86,7 @@ public class Board {
         return board.stream()
                 .filter(square -> square.kindOf(King.class))
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("왕이 남아있는 색깔이 없습니다."))
+                .orElseThrow(() -> new InvalidChessStatusException("왕이 남아있는 색깔이 없습니다."))
                 .getColor();
     }
 

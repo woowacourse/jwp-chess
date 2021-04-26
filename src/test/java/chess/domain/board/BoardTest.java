@@ -2,6 +2,7 @@ package chess.domain.board;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
+import chess.exception.InvalidChessArgumentException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ public class BoardTest {
     @Test
     void throwExceptionWhenSquareHasNotPiece() {
         assertThatThrownBy(() -> mockBoard.move(Position.of("a3"), Position.of("b3")))
-                .isInstanceOf(NoSuchElementException.class)
+                .isInstanceOf(InvalidChessArgumentException.class)
                 .hasMessage("해당 위치엔 말이 없습니다.");
     }
 

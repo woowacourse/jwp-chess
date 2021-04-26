@@ -1,5 +1,7 @@
 package chess.domain.piece.attribute;
 
+import chess.exception.InvalidChessArgumentException;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +31,7 @@ public enum Color {
         return Arrays.stream(values())
                 .filter(color -> color.name().equalsIgnoreCase(colorName))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 이름의 color가 없습니다."));
+                .orElseThrow(() -> new InvalidChessArgumentException("해당 이름의 color가 없습니다."));
     }
 
     private static boolean isNotBlank(Color color) {
@@ -44,6 +46,6 @@ public enum Color {
         return USER_COLORS.stream()
                 .filter(color -> this != color)
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("반대되는 색상이 없습니다."));
+                .orElseThrow(() -> new InvalidChessArgumentException("반대되는 색상이 없습니다."));
     }
 }

@@ -1,6 +1,7 @@
 package chess.domain.piece;
 
 import chess.domain.piece.attribute.Color;
+import chess.exception.InvalidMoveException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +38,7 @@ public class ColoredPieces {
 
     public void remove(Piece piece) {
         if (piece.getColor() != color) {
-            throw new IllegalArgumentException("진영이 다른 피스를 제거할 수 없습니다");
+            throw new InvalidMoveException("진영이 다른 피스를 제거할 수 없습니다");
         }
         pieces.remove(piece);
     }

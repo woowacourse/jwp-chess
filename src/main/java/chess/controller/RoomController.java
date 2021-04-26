@@ -35,13 +35,13 @@ public class RoomController {
 
     @GetMapping("/{roomId}/chess")
     public ResponseEntity<ChessDto> enterRoom(@PathVariable long roomId) {
-        long chessId = roomService.findChessIdById(roomId);
-        Chess chess = roomService.findChessById(chessId);
+        long chessId = roomService.findChessIdByRoomId(roomId);
+        Chess chess = roomService.findChessByChessId(chessId);
         ChessDto chessDto = new ChessDto(chess);
 
         URI location = URI.create("/chess");
         HttpHeaders httpHeaders = createHeadersWithCookieOf(chessId);
-        return ResponseEntity.status(200)
+        return ResponseEntity.ok()
                              .location(location)
                              .headers(httpHeaders)
                              .body(chessDto);

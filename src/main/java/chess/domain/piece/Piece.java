@@ -12,6 +12,7 @@ import java.util.Objects;
 public abstract class Piece {
     private final Side side;
     private final String initial;
+
     private boolean initPosition = true;
 
     public Piece(Side side, String initial) {
@@ -84,5 +85,25 @@ public abstract class Piece {
 
     public Side side() {
         return this.side;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Piece)) return false;
+
+        Piece piece = (Piece) o;
+
+        if (isInitPosition() != piece.isInitPosition()) return false;
+        if (side != piece.side) return false;
+        return getInitial() != null ? getInitial().equals(piece.getInitial()) : piece.getInitial() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = side != null ? side.hashCode() : 0;
+        result = 31 * result + (getInitial() != null ? getInitial().hashCode() : 0);
+        result = 31 * result + (isInitPosition() ? 1 : 0);
+        return result;
     }
 }

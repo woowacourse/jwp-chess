@@ -63,9 +63,9 @@ public class Board {
     }
 
     private void movePiece(Position from, Position to, Piece piece) {
+        piece.moved();
         board.put(to, piece);
         board.put(from, Blank.getBlank());
-        piece.moved();
     }
 
     private void validatePawnCase(Position from, Position to, Piece piece) {
@@ -158,5 +158,20 @@ public class Board {
 
     public Map<Position, Piece> getBoard() {
         return Collections.unmodifiableMap(board);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Board)) return false;
+
+        Board that = (Board) o;
+
+        return getBoard() != null ? getBoard().equals(that.getBoard()) : that.getBoard() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getBoard() != null ? getBoard().hashCode() : 0;
     }
 }

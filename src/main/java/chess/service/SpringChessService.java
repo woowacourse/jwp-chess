@@ -9,6 +9,7 @@ import chess.dto.PositionDTO;
 import chess.dto.ResponseDTO;
 import chess.dto.RoomValidateDTO;
 import chess.dto.ScoreDTO;
+import chess.exception.DuplicatedRoomNameException;
 import chess.exception.NotExistRoomException;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +64,7 @@ public class SpringChessService {
 
     public RoomValidateDTO checkDuplicatedRoom(String roomName) {
         if (springBoardDao.checkDuplicateByRoomName(roomName)) {
-            return new RoomValidateDTO(FAIL_CODE, "중복된 방 이름입니다.");
+            throw new DuplicatedRoomNameException();
         }
         return new RoomValidateDTO(SUCCEED_CODE, "방 생성 성공!");
     }

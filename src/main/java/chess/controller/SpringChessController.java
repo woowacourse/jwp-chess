@@ -1,16 +1,14 @@
 package chess.controller;
 
-import chess.dto.PositionDTO;
-import chess.dto.RoomNameDTO;
-import chess.dto.TurnDTO;
-import chess.exception.ChessException;
-import chess.exception.NotExistRoomException;
+import chess.dto.*;
 import chess.service.SpringChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class SpringChessController {
@@ -33,44 +31,45 @@ public class SpringChessController {
     }
 
     @GetMapping("/currentRoom")
-    public ResponseEntity currentRoom(@SessionAttribute String roomName) {
+    public ResponseEntity<RoomNameDTO> currentRoom(@SessionAttribute String roomName) {
         return ResponseEntity.ok().body(new RoomNameDTO(roomName));
     }
 
     @PostMapping(value = "/restart")
-    public void restart(@SessionAttribute String roomName) {
+    public ResponseEntity<Void> restart(@SessionAttribute String roomName) {
         springChessService.newBoard(roomName);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/move")
     @ResponseBody
-    public ResponseEntity move(@RequestBody PositionDTO positionDTO, @SessionAttribute String roomName) {
+    public ResponseEntity<ResponseDTO> move(@RequestBody PositionDTO positionDTO, @SessionAttribute String roomName) {
         return ResponseEntity.ok().body(springChessService.move(positionDTO, roomName));
     }
 
     @GetMapping("/currentBoard")
-    public ResponseEntity currentBoard(@SessionAttribute String roomName) {
+    public ResponseEntity<Map<String, String>> currentBoard(@SessionAttribute String roomName) {
         return ResponseEntity.ok().body(springChessService.currentBoardByRoomName(roomName));
     }
 
     @PostMapping(value = "/currentTurn")
-    public ResponseEntity currentTurn(@SessionAttribute String roomName) {
+    public ResponseEntity<TurnDTO> currentTurn(@SessionAttribute String roomName) {
         return ResponseEntity.ok().body(new TurnDTO(springChessService.turnName(roomName)));
     }
 
     @PostMapping(value = "/score")
-    public ResponseEntity score(@SessionAttribute String roomName) {
+    public ResponseEntity<ScoreDTO> score(@SessionAttribute String roomName) {
         return ResponseEntity.ok().body(springChessService.score(roomName));
     }
 
     @GetMapping("/rooms")
-    public ResponseEntity roomNames() {
+    public ResponseEntity<List<String>> roomNames() {
         return ResponseEntity.ok().body(springChessService.rooms());
     }
 
     @PostMapping("/checkRoomName")
     @ResponseBody
-    public ResponseEntity checkRoomName(@RequestBody RoomNameDTO roomNameDTO) {
+    public ResponseEntity<RoomValidateDTO> checkRoomName(@RequestBody RoomNameDTO roomNameDTO) {
         return ResponseEntity.ok().body(springChessService.checkDuplicatedRoom(roomNameDTO.getRoomName()));
     }
 
@@ -84,15 +83,5 @@ public class SpringChessController {
     @ResponseBody
     public void deleteRoom(@RequestBody RoomNameDTO roomNameDTO) {
         springChessService.deleteRoom(roomNameDTO.getRoomName());
-    }
-
-    @ExceptionHandler(NotExistRoomException.class)
-    public ResponseEntity dbException(NotExistRoomException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(ChessException.class)
-    public ResponseEntity chessException(ChessException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

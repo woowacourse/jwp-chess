@@ -14,7 +14,7 @@ public final class UserService {
     }
 
     public UsersDTO usersParticipatedInGame(final String roomId) {
-        return userDAO.findByRoomId(roomId);
+        return userDAO.findUsersByRoomId(roomId);
     }
 
     public int userIdByNickname(final String nickname) {

@@ -56,7 +56,7 @@ public final class SpringChessGameController {
         userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
         int whiteUserId = userService.userIdByNickname(requestDTO.getNickname());
         roomService.createRoom(requestDTO.getTitle(), whiteUserId);
-        return "redirect:/room/" + roomService.createdRoomId();
+        return "redirect:room/" + roomService.createdRoomId();
     }
 
     @PostMapping("/enter-black")
@@ -64,7 +64,7 @@ public final class SpringChessGameController {
         userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
         int blackUserId = userService.userIdByNickname(requestDTO.getNickname());
         roomService.enrollBlackUser(requestDTO.getId(), blackUserId);
-        return "redirect:/room/" + requestDTO.getId();
+        return "redirect:room/" + requestDTO.getId();
     }
 
     @PostMapping("/enter-white")
@@ -72,19 +72,19 @@ public final class SpringChessGameController {
         userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
         int whiteUserId = userService.userIdByNickname(requestDTO.getNickname());
         roomService.enrollWhiteUser(requestDTO.getId(), whiteUserId);
-        return "redirect:/room/" + requestDTO.getId();
+        return "redirect:room/" + requestDTO.getId();
     }
 
     @GetMapping(path = "/room/{roomId}")
     public String enterRoom(@PathVariable final String roomId, final Model model) {
-//        try {
-//            model.addAttribute("roomId", roomId);
-//            model.addAttribute("button", "새로운게임");
-//            model.addAttribute("isWhite", true);
-//            model.addAttribute("whiteUser", requestDTO.getNickname());
-//        } catch (Exception e) {
-//            model.addAttribute("error", e.getMessage());
-//        }
+        try {
+            model.addAttribute("roomId", roomId);
+            model.addAttribute("button", "새로운게임");
+            model.addAttribute("isWhite", true);
+            model.addAttribute("users", userService.usersParticipatedInGame(roomId));
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
         return "chess";
     }
 
@@ -98,7 +98,7 @@ public final class SpringChessGameController {
         historyService.initializeByRoomId(roomId);
 
         UsersDTO users = userService.usersParticipatedInGame(roomId);
-        gameInformation(roomService.loadGameByRoomId(roomId), model, roomId, users);
+        gameInformation(chessGame, model, roomId, users);
         return "chess";
     }
 
@@ -124,7 +124,7 @@ public final class SpringChessGameController {
         model.addAttribute("isWhite", Team.WHITE.equals(chessGame.turn()));
         model.addAttribute("black-score", chessGame.scoreByTeam(Team.BLACK));
         model.addAttribute("white-score", chessGame.scoreByTeam(Team.WHITE));
-        model.addAttribute("number", roomId);
+        model.addAttribute("roomId", roomId);
         model.addAttribute("users", users);
     }
 

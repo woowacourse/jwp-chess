@@ -29,6 +29,13 @@ public class UserDAO {
         return jdbcTemplate.queryForObject(query, mapper(), roomId);
     }
 
+    public UsersDTO findUsersByRoomId(final String roomId) {
+        String query = "SELECT black.nickname AS black_user, white.nickname AS white_user " +
+            "FROM room JOIN user as black on room.black_id = black.id " +
+            "JOIN user as white on room.white_id = white.id WHERE room.id = ?";
+        return jdbcTemplate.queryForObject(query, mapper(), roomId);
+    }
+
     private RowMapper<UsersDTO> mapper() {
         return (resultSet, rowNum) -> new UsersDTO(
                 resultSet.getString("black_user"),

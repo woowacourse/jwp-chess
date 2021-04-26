@@ -1,4 +1,4 @@
-const roomId = document.getElementById("room-id").value;
+const roomId = document.querySelector("#room-id").value;
 const chessURL = "/chess";
 const chessAPI = "/api/v1/chess";
 let startPoint = "";

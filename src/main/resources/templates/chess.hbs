@@ -93,8 +93,8 @@
                 <img src="/img/black_team.png">
                 <div class="information">
                     <p class="nickname">
-                    {{#if blackUser}}
-                        {{blackUser}}
+                    {{#if users.blackUser}}
+                        {{users.blackUser}}
                     {{else}}
                         아직 입장 전 입니다.
                     {{/if}}
@@ -115,8 +115,8 @@
                 <img src="/img/white_team.png">
                 <div class="information">
                     <p class="nickname">
-                        {{#if whiteUser}}
-                            {{whiteUser}}
+                        {{#if users.whiteUser}}
+                            {{users.whiteUser}}
                         {{else}}
                             아직 입장 전 입니다.
                         {{/if}}
@@ -130,11 +130,11 @@
                 <form action="/chess" method="get">
                     <input type="submit" value="나가기">
                 </form>
-                <form action="start" method="post">
+                <form action="/chess/start" method="post">
                     <input type="hidden" name="roomId" value={{roomId}}>
                     <input id="init-button" type="submit" value={{button}}>
                 </form>
-                <form action="continue" method="post">
+                <form action="/chess/continue" method="post">
                     <input type="hidden" name="roomId" value={{roomId}}>
                     <input type="submit" value="이어하기">
                 </form>

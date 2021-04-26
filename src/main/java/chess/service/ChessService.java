@@ -1,11 +1,11 @@
 package chess.service;
 
-import chess.controller.web.dto.MoveRequestDto;
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.ChessGameManagerBundle;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.game.board.position.Position;
 import chess.chessgame.domain.room.game.statistics.ChessGameStatistics;
+import chess.controller.web.dto.MoveRequestDto;
 
 public interface ChessService {
     ChessGameManager start();

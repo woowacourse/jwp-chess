@@ -11,7 +11,7 @@ public interface RoomRepository {
 
     void updateBlackUser(Room room);
 
-    List<Room> findAllActiveRoom ();
+    List<Room> findAllActiveRoom();
 
     Room findRoomBy(long roomId);
 

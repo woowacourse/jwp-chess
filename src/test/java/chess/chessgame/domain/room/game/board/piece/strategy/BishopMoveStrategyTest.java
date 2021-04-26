@@ -20,17 +20,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class BishopMoveStrategyTest {
     private Board board;
 
-    @BeforeEach
-    void setUp() {
-        board = InitBoardInitializer.getBoard();
-    }
-
     private static Stream<Arguments> bishopCanMoveTest() {
         return Stream.of(
                 Arguments.of(Position.of("a3"), Position.of("b4"), true),   // 한 대각선 이동
                 Arguments.of(Position.of("a3"), Position.of("d6"), true),   // 다수의 대각선 이동
                 Arguments.of(Position.of("c5"), Position.of("a3"), true)   // 다수의 Rank 이동외
         );
+    }
+
+    @BeforeEach
+    void setUp() {
+        board = InitBoardInitializer.getBoard();
     }
 
     @DisplayName("비숍의 이동 가능한 경우 테스트")

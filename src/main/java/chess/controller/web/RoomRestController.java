@@ -3,12 +3,9 @@ package chess.controller.web;
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.user.User;
 import chess.controller.web.dto.ActiveRoomsResponseDto;
-import chess.controller.web.dto.ChessGameResponseDto;
 import chess.controller.web.dto.RoomRequestDto;
 import chess.controller.web.dto.UserRequestDto;
-import chess.service.ChessService;
 import chess.service.RoomService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +39,7 @@ public class RoomRestController {
 
     @PostMapping("{roomId:[\\d]+}/password")
     public ResponseEntity<Void> enterPassword(@PathVariable long roomId, @RequestBody UserRequestDto userRequestDto,
-                            Model model, HttpSession session) {
+                                              Model model, HttpSession session) {
         User currentUser = roomService.findUserBy(roomId, userRequestDto.getPassword());
         session.setAttribute("user", currentUser);
 

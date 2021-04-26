@@ -13,8 +13,6 @@ import java.util.Optional;
 
 @Repository
 public class JdbcTemplateChessDao implements ChessDao {
-    private JdbcTemplate jdbcTemplate;
-
     private final RowMapper<ChessGameDto> chessGameRowMapper = (rs, rownum) -> {
         long gameId = rs.getLong("id");
         String nextTurn = rs.getString("next_turn");
@@ -22,6 +20,7 @@ public class JdbcTemplateChessDao implements ChessDao {
         String pieces = rs.getString("pieces");
         return new ChessGameDto(gameId, nextTurn, running, pieces);
     };
+    private JdbcTemplate jdbcTemplate;
 
     public JdbcTemplateChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

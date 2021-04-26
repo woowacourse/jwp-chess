@@ -20,17 +20,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class KingMoveStrategyTest {
     private Board board;
 
-    @BeforeEach
-    void setUp() {
-        board = InitBoardInitializer.getBoard();
-    }
-
     private static Stream<Arguments> kingCanMoveTest() {
         return Stream.of(
                 Arguments.of(Position.of("a3"), Position.of("b4"), true),   // 한 대각선 이동
                 Arguments.of(Position.of("a3"), Position.of("a4"), true),   // 한 칸의 직선 방향 이동
                 Arguments.of(Position.of("a3"), Position.of("b3"), true)   // 한 File 이동
         );
+    }
+
+    @BeforeEach
+    void setUp() {
+        board = InitBoardInitializer.getBoard();
     }
 
     @DisplayName("의 이동 가능한 경우 테스트")

@@ -12,13 +12,6 @@ import static chess.chessgame.domain.room.game.board.position.Direction.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectionTest {
-    @DisplayName("from을 통해 Direction 객체를 찾아오는지 확인")
-    @ParameterizedTest
-    @MethodSource
-    void fromTest(Direction expected, int xDegree, int yDegree) {
-        assertThat(Direction.of(xDegree, yDegree)).isEqualTo(expected);
-    }
-
     private static Stream<Arguments> fromTest() {
         return Stream.of(
                 Arguments.of(NORTH, 0, 1),
@@ -38,5 +31,12 @@ class DirectionTest {
                 Arguments.of(WWN, -2, 1),
                 Arguments.of(WWS, -2, -1)
         );
+    }
+
+    @DisplayName("from을 통해 Direction 객체를 찾아오는지 확인")
+    @ParameterizedTest
+    @MethodSource
+    void fromTest(Direction expected, int xDegree, int yDegree) {
+        assertThat(Direction.of(xDegree, yDegree)).isEqualTo(expected);
     }
 }

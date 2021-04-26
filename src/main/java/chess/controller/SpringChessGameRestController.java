@@ -1,9 +1,9 @@
 package chess.controller;
 
 import chess.domain.ChessGame;
+import chess.dto.CreateRoomRequestDTO;
 import chess.dto.MoveDTO;
 import chess.dto.ResultDTO;
-import chess.dto.RoomNameDTO;
 import chess.dto.SectionDTO;
 import chess.dto.StatusDTO;
 import chess.dto.UsersDTO;
@@ -12,6 +12,7 @@ import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
 import java.util.List;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,26 +36,20 @@ public class SpringChessGameRestController {
         this.historyService = historyService;
     }
 
-    @PostMapping(path = "/new-game", consumes = "application/json")
-    private boolean createNewGame(@RequestBody final RoomNameDTO roomNameDTO) {
-        roomService.createRoom(roomNameDTO.getName());
-        return true;
-    }
-
     @PostMapping(path = "/turn", consumes = "application/json")
-    private boolean checkCurrentTurn(@RequestBody final SectionDTO sectionDTO) {
+    public boolean checkCurrentTurn(@RequestBody final SectionDTO sectionDTO) {
         ChessGame chessGame = roomService.loadGameByRoomId(sectionDTO.getRoomId());
         return chessGame.checkRightTurn(sectionDTO.getClickedSection());
     }
 
     @PostMapping("/movable-positions")
-    private List<String> findMovablePosition(@RequestBody final SectionDTO sectionDTO) {
+    public List<String> findMovablePosition(@RequestBody final SectionDTO sectionDTO) {
         ChessGame chessGame = roomService.loadGameByRoomId(sectionDTO.getRoomId());
         return chessGame.movablePositionsByStartPoint(sectionDTO.getClickedSection());
     }
 
     @PostMapping("/move")
-    private StatusDTO movePiece(@RequestBody final MoveDTO moveDTO) {
+    public StatusDTO movePiece(@RequestBody final MoveDTO moveDTO) {
         String roomId = moveDTO.getRoomId();
         String startPoint = moveDTO.getStartPoint();
         String endPoint = moveDTO.getEndPoint();
@@ -68,7 +63,7 @@ public class SpringChessGameRestController {
     }
 
     @PostMapping(path = "/initialize")
-    private boolean initialize(@RequestBody final ResultDTO resultDTO) {
+    public boolean initialize(@RequestBody final ResultDTO resultDTO) {
         String roomId = resultDTO.getRoomId();
         String winner = resultDTO.getWinner();
         String loser = resultDTO.getLoser();

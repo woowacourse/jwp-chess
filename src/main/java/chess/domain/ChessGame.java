@@ -85,4 +85,8 @@ public class ChessGame {
     public Turn turn() {
         return turn;
     }
+
+    public Owner ownerOf(final Position position) {
+        return players.ownerOf(position);
+    }
 }

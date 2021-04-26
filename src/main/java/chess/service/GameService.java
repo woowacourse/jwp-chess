@@ -23,9 +23,17 @@ public class GameService {
         try {
             final ChessGame chessGame = gameDao.load(roomId);
             validateTurn(chessGame, owner);
+            validateOwner(chessGame, source, owner);
             return chessGame.reachablePositions(source);
         } catch (IllegalArgumentException exception) {
             return Collections.EMPTY_LIST;
+        }
+    }
+
+    private void validateOwner(final ChessGame chessGame, final Position source, final Owner player){
+        final Owner pieceOwner = chessGame.ownerOf(source);
+        if(!pieceOwner.isSameTeam(player)){
+            throw new IllegalArgumentException("사용자의 기물이 아닙니다.");
         }
     }
 

@@ -26,16 +26,28 @@ public class RoomDAO {
     }
 
     public List<RoomDTO> allRooms() {
-        String query = "SELECT room.id, room.title, black.nickname AS black_user, white.nickname AS white_user, room.status " +
+        String query = "SELECT room.id, room.title, black.nickname AS black_nickname, white.nickname AS white_nickname, room.status " +
             "FROM room LEFT JOIN user as black on black.id = room.black_id " +
             "LEFT JOIN user as white on white.id = room.white_id ORDER BY room.id DESC";
         return jdbcTemplate.query(query, mapper());
+    }
+
+    public void enrollBlackUser(final String roomId, final int blackUserId) {
+        String query = "UPDATE room SET black_id=? WHERE id=?";
+        jdbcTemplate.update(query, blackUserId, roomId);
+    }
+
+    public void enrollWhiteUser(final String roomId, final int whiteUserId) {
+        String query = "UPDATE room SET white_id=? WHERE id=?";
+        jdbcTemplate.update(query, whiteUserId, roomId);
     }
 
     private RowMapper<RoomDTO> mapper() {
         return (resultSet, rowNum) -> {
             return new RoomDTO(
                 resultSet.getInt("id"),
+                resultSet.getString("black_nickname"),
+                resultSet.getString("white_nickname"),
                 resultSet.getString("title"),
                 resultSet.getString("status")
             );

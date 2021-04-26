@@ -3,6 +3,7 @@ package chess.controller;
 import chess.domain.ChessGame;
 import chess.domain.Team;
 import chess.dto.CreateRoomRequestDTO;
+import chess.dto.EnterRoomRequestDTO;
 import chess.dto.PiecesDTO;
 import chess.dto.RoomIdDTO;
 import chess.dto.UsersDTO;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,21 +54,37 @@ public final class SpringChessGameController {
     @PostMapping(path = "/new-game")
     public String createNewGame(@ModelAttribute final CreateRoomRequestDTO requestDTO) {
         userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
-        int whiteId = userService.userIdByNickname(requestDTO.getNickname());
-        roomService.createRoom(requestDTO.getTitle(), whiteId);
-        return "chess";
+        int whiteUserId = userService.userIdByNickname(requestDTO.getNickname());
+        roomService.createRoom(requestDTO.getTitle(), whiteUserId);
+        return "redirect:/room/" + roomService.createdRoomId();
     }
 
-    @GetMapping("/enter")
-    public String enterRoom(@RequestParam final String id, final Model model) {
-        try {
-            model.addAttribute("number", id);
-            model.addAttribute("button", "새로운게임");
-            model.addAttribute("isWhite", true);
-            model.addAttribute("users", userService.usersParticipatedInGame(id));
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-        }
+    @PostMapping("/enter-black")
+    public String enterBlack(@ModelAttribute final EnterRoomRequestDTO requestDTO) {
+        userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
+        int blackUserId = userService.userIdByNickname(requestDTO.getNickname());
+        roomService.enrollBlackUser(requestDTO.getId(), blackUserId);
+        return "redirect:/room/" + requestDTO.getId();
+    }
+
+    @PostMapping("/enter-white")
+    public String enterWhite(@ModelAttribute final EnterRoomRequestDTO requestDTO) {
+        userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
+        int whiteUserId = userService.userIdByNickname(requestDTO.getNickname());
+        roomService.enrollWhiteUser(requestDTO.getId(), whiteUserId);
+        return "redirect:/room/" + requestDTO.getId();
+    }
+
+    @GetMapping(path = "/room/{roomId}")
+    public String enterRoom(@PathVariable final String roomId, final Model model) {
+//        try {
+//            model.addAttribute("roomId", roomId);
+//            model.addAttribute("button", "새로운게임");
+//            model.addAttribute("isWhite", true);
+//            model.addAttribute("whiteUser", requestDTO.getNickname());
+//        } catch (Exception e) {
+//            model.addAttribute("error", e.getMessage());
+//        }
         return "chess";
     }
 

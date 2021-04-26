@@ -38,6 +38,14 @@ public final class RoomService {
         }
     }
 
+    public void enrollBlackUser(final String roomId, final int blackUserId) {
+        roomDAO.enrollBlackUser(roomId, blackUserId);
+    }
+
+    public void enrollWhiteUser(final String roomId, final int white) {
+        roomDAO.enrollWhiteUser(roomId, white);
+    }
+
     public void changeStatus(final String roomId) {
         roomDAO.changeStatusEndByRoomId(roomId);
     }

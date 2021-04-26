@@ -34,17 +34,17 @@
                     <tbody>
                     {{#rooms}}
                     <tr>
-                        <td class="room-no">{{@index}}</td>
+                        <td class="room-no">{{id}}</td>
                         <td>{{title}}</td>
-                        {{#if blackUser}}
-                          <td>{{blackUser}}</td>
+                        {{#if blackNickname}}
+                          <td>{{blackNickname}}</td>
                         {{else}}
-                          <td><input type="button" value="입장" onclick="showEnterBlackPopup()"></td>
+                          <td><input type="button" value="입장" onclick="showEnterBlackPopup({{id}})"></td>
                         {{/if}}
-                        {{#if whiteUser}}
-                          <td>{{whiteUser}}</td>
+                        {{#if whiteNickname}}
+                          <td>{{whiteNickname}}</td>
                         {{else}}
-                          <td><input type="button" value="입장" onclick="showEnterWhitePopup()"></td>
+                          <td><input type="button" value="입장" onclick="showEnterWhitePopup({{id}})"></td>
                         {{/if}}
                         <td>{{status}}</td>
                     </tr>
@@ -100,10 +100,11 @@
 <div id="popup" class="enter-black hide">
   <div class="content">
 
-  <form action="/chess/new-game" method="post">
-      흑색 유저 닉네임 : <input type="text" name="nickname" required size="10">
+  <form action="/chess/enter-black" method="post">
+      <input type="hidden" id="game-id" name="id" value="">
+      흑색 유저 닉네임 : <input type="text" id="user-nickname" name="nickname" required size="10">
       <br><br>
-      비밀번호 : <input type="password" name="password" required size="10">
+      비밀번호 : <input type="password" id="user-password" name="password" required size="10">
       <br><br>
     <input type="submit" value="입장하기">
   </form>
@@ -114,10 +115,11 @@
 <div id="popup" class="enter-white hide">
   <div class="content">
 
-  <form action="/chess/new-game" method="post">
-      백색 유저 닉네임 : <input type="text" name="nickname" required size="10">
+  <form action="/chess/enter-white" method="post">
+      <input type="hidden" id="game-id" name="id" value="">
+      백색 유저 닉네임 : <input type="text" id="user-nickname" name="nickname" required size="10">
       <br><br>
-      비밀번호 : <input type="password" name="password" required size="10">
+      비밀번호 : <input type="password" id="user-password" name="password" required size="10">
       <br><br>
     <input type="submit" value="입장하기">
   </form>

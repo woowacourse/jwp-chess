@@ -52,39 +52,47 @@ function closeNewGamePopup() {
     popup.classList.add('hide');
 
     const roomName = popup.querySelector('#room-name');
-    const userId = popup.querySelector('#user-id');
+    const userId = popup.querySelector('#user-nickname');
     const userPassword = popup.querySelector('#user-password');
     roomName.value = "";
     userId.value = "";
     userPassword.value = "";
 }
 
-function showEnterBlackPopup() {
+function showEnterBlackPopup(id) {
     const popup = document.querySelector('.enter-black');
     popup.classList.remove('hide');
+    const gameId = popup.querySelector('#game-id');
+    gameId.value = id;
 }
 
 function closeEnterBlackPopup() {
     const popup = document.querySelector('.enter-black');
     popup.classList.add('hide');
 
-    const userId = popup.querySelector('#user-id');
+    const gameId = popup.querySelector('#game-id');
+    const userNickname = popup.querySelector('#user-nickname');
     const userPassword = popup.querySelector('#user-password');
-    userId.value = "";
+    gameId.value = "";
+    userNickname.value = "";
     userPassword.value = "";
 }
 
-function showEnterWhitePopup() {
+function showEnterWhitePopup(id) {
     const popup = document.querySelector('.enter-white');
     popup.classList.remove('hide');
+    const gameId = popup.querySelector('#game-id');
+    gameId.value = id;
 }
 
 function closeEnterWhitePopup() {
     const popup = document.querySelector('.enter-white');
     popup.classList.add('hide');
 
-    const userId = popup.querySelector('#user-id');
+    const gameId = popup.querySelector('#game-id');
+    const userNickname = popup.querySelector('#user-nickname');
     const userPassword = popup.querySelector('#user-password');
-    userId.value = "";
+    gameId.value = "";
+    userNickname.value = "";
     userPassword.value = "";
 }

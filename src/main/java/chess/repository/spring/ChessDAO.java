@@ -27,9 +27,9 @@ public class ChessDAO {
         return jdbcTemplate.query(query, ROW_MAPPER, roomId);
     }
 
-    public void insertHistoryByRoomId(String source, String destination, String teamType, int roomId) {
+    public void insertHistoryByRoomId(History history, int roomId) {
         String query = "INSERT INTO HISTORY (SOURCE, DESTINATION, TEAM_TYPE, ROOM_ID) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(query, source, destination, teamType, roomId);
+        jdbcTemplate.update(query, history.getSource(), history.getDestination(), history.getTeamType(), roomId);
     }
 
     public void deleteAllHistoriesByRoomId(int roomId) {

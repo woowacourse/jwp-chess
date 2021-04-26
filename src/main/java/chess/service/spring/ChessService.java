@@ -2,8 +2,8 @@ package chess.service.spring;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.board.ChessBoardGenerator;
-import chess.domain.board.Coordinate;
 import chess.domain.history.Histories;
+import chess.domain.history.History;
 import chess.domain.piece.TeamType;
 import chess.domain.result.Result;
 import chess.domain.result.Scores;
@@ -17,9 +17,13 @@ import java.util.Map;
 public class ChessService {
     private static Map<Integer, ChessBoard> CACHED_CHESS_BOARDS = new HashMap<>();
 
+    private final UserService userService;
+    private final RoomService roomService;
     private final ChessDAO chessDAO;
 
-    public ChessService(ChessDAO chessDAO) {
+    public ChessService(UserService userService, RoomService roomService, ChessDAO chessDAO) {
+        this.userService = userService;
+        this.roomService = roomService;
         this.chessDAO = chessDAO;
     }
 
@@ -33,15 +37,17 @@ public class ChessService {
         });
     }
 
+    public void move(History history, int roomId, String password) {
+        TeamType teamType = findCurrentTeamTypeByRoomId(roomId);
+        userService.validateUserTurn(roomId, password, teamType);
+        ChessBoard chessBoard = findChessBoardByRoomId(roomId);
+        history.updateChessBoard(chessBoard);
+        chessDAO.insertHistoryByRoomId(history, roomId);
+    }
+
     public TeamType findCurrentTeamTypeByRoomId(int id) {
         Histories histories = new Histories(chessDAO.findAllHistoriesByRoomId(id));
         return histories.findNextTeamType();
-    }
-
-    public void moveByRoomId(String current, String destination, String teamType, int id) {
-        ChessBoard chessBoard = findChessBoardByRoomId(id);
-        chessBoard.move(Coordinate.from(current), Coordinate.from(destination), TeamType.valueOf(teamType));
-        chessDAO.insertHistoryByRoomId(current, destination, teamType, id);
     }
 
     public Result calculateResultByRoomId(int id) {
@@ -51,8 +57,10 @@ public class ChessService {
         return new Result(scores, winnerTeamType);
     }
 
-    public void deleteAllHistoriesByRoomId(int id) {
+    public void deleteGame(int id) {
         chessDAO.deleteAllHistoriesByRoomId(id);
+        userService.deleteAllUsersByRoomId(id);
+        roomService.deleteRoomById(id);
         CACHED_CHESS_BOARDS.remove(id);
     }
 }

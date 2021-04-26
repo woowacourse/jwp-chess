@@ -49,7 +49,7 @@ class ChessDAOTest {
     @DisplayName("DB에 History를 insert한다.")
     @Test
     void insertHistory() {
-        chessDAO.insertHistoryByRoomId("a1", "a3", "WHITE", 2);
+        chessDAO.insertHistoryByRoomId(new History("a1", "a3", "WHITE"), 2);
 
         assertThat(chessDAO.findAllHistoriesByRoomId(2)).hasSize(2);
     }

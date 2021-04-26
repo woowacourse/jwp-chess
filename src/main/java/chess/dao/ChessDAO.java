@@ -88,12 +88,6 @@ public class ChessDAO {
         return keyHolder.getKeyAs(Long.class);
     }
 
-    public void updateRoom(Long roomId, String roomName, Long gameId) {
-        String query = "UPDATE SET room_name=?, game_id=? where room_id = ?";
-
-        jdbcTemplate.update(query, roomName, gameId, roomId);
-    }
-
     public static class Room {
 
         private final Long roomId;

@@ -30,17 +30,22 @@ public class RoomService {
 
     @Transactional
     public RoomDto createNewRoom(String roomName) {
-        Long roomId = saveGameToDB(roomName);
+        ChessGame chessGame = createChessGame();
+        Long roomId = saveGameToDB(roomName, chessGame);
 
-        return new RoomDto(new Room(roomId, roomName, null));
+        return new RoomDto(new Room(roomId, roomName, chessGame));
     }
 
-    private Long saveGameToDB(String roomName) {
+    private ChessGame createChessGame() {
         ChessGame chessGame = new ChessGame(
                 new Board(PieceFactory.createPieces())
         );
         chessGame.start();
 
+        return chessGame;
+    }
+
+    private Long saveGameToDB(String roomName, ChessGame chessGame) {
         return roomRepository.save(
                 new Room(
                         roomName,

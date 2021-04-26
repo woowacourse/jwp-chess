@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.domain.dto.*;
+import chess.dto.*;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

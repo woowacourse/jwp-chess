@@ -3,7 +3,7 @@ package chess.service;
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
-import chess.domain.dto.*;
+import chess.dto.*;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.repository.ChessDao;

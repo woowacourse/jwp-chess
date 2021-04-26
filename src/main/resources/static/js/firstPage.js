@@ -2,8 +2,8 @@ export let chessRoomList = document.getElementById("chessRoomList");
 
 export const title = document.getElementById("title");
 
-import { chessBoard, gameResultWindow, initChessBoard } from "./initialize.js";
-import { addChessBoardEvent, checkIsPlaying, player1, player2 } from "./movement.js";
+import {chessBoard, gameResultWindow, initChessBoard} from "./initialize.js";
+import {addChessBoardEvent, checkIsPlaying, player1, player2} from "./movement.js";
 
 loadFirstPage();
 
@@ -19,7 +19,7 @@ export function closeRoomList() {
     chessRoomList.style.display = "none";
 }
 
-chessRoomList.addEventListener("click", function(e) {
+chessRoomList.addEventListener("click", function (e) {
     if (e.target && e.target.nodeName == "BUTTON") {
         if (e.target.innerText === "Join") {
             let chessRoom = e.target.closest(".chessRoom");

@@ -14,11 +14,6 @@ import java.util.List;
 @Repository
 public class SpringChessGameDao {
     private final JdbcTemplate jdbcTemplate;
-
-    public SpringChessGameDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private final RowMapper<ChessGameTableDto> ChessGameInfoRowMapper = (resultSet, rowNum) -> {
         ChessGameTableDto chessGameTableDTO = new ChessGameTableDto(
                 resultSet.getString("current_turn_team"),
@@ -26,6 +21,10 @@ public class SpringChessGameDao {
         );
         return chessGameTableDTO;
     };
+
+    public SpringChessGameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public int createGameRoom(final String roomName) {
         String sql = "INSERT into game_room_info (room_name) VALUES (?)";

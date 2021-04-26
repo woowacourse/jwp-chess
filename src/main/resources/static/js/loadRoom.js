@@ -61,6 +61,6 @@ function addCloseBtn() {
     closeRoomListBtn.setAttribute("class", "closeRoomListBtn");
     closeRoomListBtn.setAttribute("id", "closeRoomListBtn");
     closeRoomListBtn.innerText = "close";
-    closeRoomListBtn.addEventListener("click",closeRoomList);
+    closeRoomListBtn.addEventListener("click", closeRoomList);
     chessRoomList.appendChild(closeRoomListBtn);
 }

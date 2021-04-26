@@ -36,7 +36,7 @@ body {
 .chessRoomBtn {
     display: flex;
     flex-direction: row;
-    justify-content:center;
+    justify-content: center;
     margin-top: 1vh;
 }
 
@@ -60,7 +60,7 @@ body {
 }
 
 .closeRoomListBtn {
-    background-color:#6F3B48;
+    background-color: #6F3B48;
     color: white;
     width: 30%;
     margin-left: 35%;

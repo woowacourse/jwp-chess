@@ -8,8 +8,11 @@ import chess.domain.team.PiecePosition;
 import chess.domain.team.Score;
 import chess.domain.team.Team;
 import chess.webdao.PiecePositionDaoConverter;
-import chess.webdto.*;
 import chess.webdao.SpringChessGameDao;
+import chess.webdto.ChessGameDto;
+import chess.webdto.ChessGameTableDto;
+import chess.webdto.GameRoomDto;
+import chess.webdto.GameRoomListDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -61,7 +64,7 @@ public class SpringChessService {
 
         springChessGameDao.updateChessGameInfo(roomId, currentTurnTeamAsString(chessGame), chessGame.isPlaying());
 
-        springChessGameDao.updateTeamInfo(roomId,WHITE_TEAM.asDaoFormat(),
+        springChessGameDao.updateTeamInfo(roomId, WHITE_TEAM.asDaoFormat(),
                 PiecePositionDaoConverter.asDao(chessGame.currentWhitePiecePosition()));
 
         springChessGameDao.updateTeamInfo(roomId, BLACK_TEAM.asDaoFormat(),

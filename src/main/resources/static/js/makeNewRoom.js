@@ -27,7 +27,7 @@ function checkAvailableRoom(userInputRoomName) {
 
     fetch("/games", postOption)
         .then(response => {
-            if(!response.ok) {
+            if (!response.ok) {
                 throw new Error(response.status);
             }
             return response.json();
@@ -55,7 +55,7 @@ function makeRoomAPIRequest(data) {
     console.log(url);
     fetch(url, postOption)
         .then(response => {
-            if(!response.ok) {
+            if (!response.ok) {
                 throw new Error(response.status);
             }
             return response.json();

@@ -17,6 +17,15 @@ public class ChessGameDto {
     private final boolean isPlaying;
     private final int roomNumber;
 
+    private ChessGameDto(final Map<String, Map<String, String>> piecePositionByTeam, final String currentTurnTeam,
+                         final Map<String, Double> teamScore, final boolean isPlaying, final int roomNumber) {
+        this.piecePositionByTeam = piecePositionByTeam;
+        this.currentTurnTeam = currentTurnTeam;
+        this.teamScore = teamScore;
+        this.isPlaying = isPlaying;
+        this.roomNumber = roomNumber;
+    }
+
     public static ChessGameDto of(final int gameId, final String currentTurnTeam, final ChessGame chessGame) {
         final Map<String, Map<String, String>> piecePositionAsString = generatePiecePositionAsString(chessGame);
 
@@ -42,15 +51,6 @@ public class ChessGameDto {
             piecePositionConverted.put(positionInitial, pieceAsString);
         });
         return piecePositionConverted;
-    }
-
-    private ChessGameDto(final Map<String, Map<String, String>> piecePositionByTeam, final String currentTurnTeam,
-                        final Map<String, Double> teamScore, final boolean isPlaying, final int roomNumber) {
-        this.piecePositionByTeam = piecePositionByTeam;
-        this.currentTurnTeam = currentTurnTeam;
-        this.teamScore = teamScore;
-        this.isPlaying = isPlaying;
-        this.roomNumber = roomNumber;
     }
 
     public Map<String, Map<String, String>> getPiecePositionByTeam() {

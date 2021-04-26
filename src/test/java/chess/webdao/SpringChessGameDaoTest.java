@@ -1,24 +1,17 @@
 package chess.webdao;
 
-import chess.domain.ChessGame;
-import chess.domain.Position;
-import chess.domain.piece.Pawn;
-import chess.domain.piece.Piece;
 import chess.webdto.ChessGameTableDto;
 import chess.webdto.GameRoomDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SpringBootTest

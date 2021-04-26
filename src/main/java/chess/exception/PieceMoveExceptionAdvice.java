@@ -8,7 +8,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class PieceMoveExceptionAdvice {
 
     @ExceptionHandler(PieceMoveException.class)
-    public ResponseEntity<String> exceptionHandle(PieceMoveException e) {
+    public ResponseEntity<String> pieceMoveExceptionHandle(PieceMoveException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(NotExistDataException.class)
+    public ResponseEntity<String> notExistDataExceptionHandle(NotExistDataException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(DataBaseException.class)
+    public ResponseEntity<String> dataBaseExceptionHandle(DataBaseException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

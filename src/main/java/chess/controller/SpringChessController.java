@@ -45,4 +45,10 @@ public class SpringChessController {
     public ResponseEntity<List<RoomDto>> isExistingRoom() {
         return ResponseEntity.ok(springChessService.roomIds());
     }
+
+    @DeleteMapping("/room/{id}")
+    public String deleteRoom(@PathVariable String id) {
+        springChessService.deleteRoom(id);
+        return "redirect:/";
+    }
 }

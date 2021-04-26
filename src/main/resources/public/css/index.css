@@ -152,6 +152,33 @@ a:hover {
     text-decoration: none;
 }
 
+.room .destroy {
+    display: none;
+    position: absolute;
+    right: 13px;
+    width: 40px;
+    height: 40px;
+    margin-top: 10px;
+    font-size: 30px;
+    color: inherit;
+    background: none;
+    border: 0;
+    transition: color 0.2s ease-out;
+    cursor: pointer;
+}
+
+.room .destroy:hover {
+    color: #af5b5e;
+}
+
+.room .destroy:after {
+    content: '×';
+}
+
+.room:hover .destroy {
+    display: block;
+}
+
 .create_btn {
     font-family: 'Jua', sans-serif;
     border-radius: 10px;

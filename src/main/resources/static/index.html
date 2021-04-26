@@ -87,7 +87,7 @@
         </div>
         <div class="panel" id="panel">
             <div class="panel-item" id="upper-panel">
-                <span id="score-console" style="font-size: 1.5em; color: cornsilk;">
+                <span id="upper-console" style="font-size: 1.5em; color: cornsilk;">
                     체스 게임에 오신 것을 환영합니다.
                 </span>
             </div>
@@ -96,22 +96,24 @@
 
                 </select>
 
-                <span id="message-console" style="display: none; font-size: 1.5em; color: cornsilk;">
+                <span id="middle-console" style="display: none; font-size: 1.5em; color: cornsilk;">
                     여기에 메세지가 나타납니다.
                 </span>
+
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="game-title-input-div" style="display: none;">
+                    <input class="mdl-textfield__input" type="text" id="game-title-input" style="margin-top: 12px; text-align: center;">
+                    <label class="mdl-textfield__label" for="game-title-input" style="color: gray; text-align-last: center;">제목</label>
+                </div>
             </div>
             <div class="panel-item" id="bottom-panel">
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect button-profile" id="start-button">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect button-profile" id="new-game-button">
                     새 게임
                 </button>
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect button-profile" id="load-button">
                     불러오기
                 </button>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect button-profile" style="display: none;" id="save-button">
-                    저장하기
-                </button>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect button-profile" style="display: none; " id="regame-button">
-                    다시하기
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect button-profile" style="display: none; " id="create-game-button">
+                    게임 만들기
                 </button>
             </div>
         </div>

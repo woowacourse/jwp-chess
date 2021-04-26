@@ -7,9 +7,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class RoomDao {
@@ -57,38 +55,5 @@ public class RoomDao {
     public String name(final long roomId) {
         final String query = "SELECT room_name FROM room WHERE id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
-    }
-
-    public void enter(final long roomId, final String playerId) {
-        final String query = "UPDATE room SET player2 = ? WHERE id = ?";
-        jdbcTemplate.update(query, playerId, roomId);
-    }
-
-    private String player1(final long roomId) {
-        final String query = "SELECT player1 FROM room WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, String.class, roomId);
-    }
-
-    private String player2(final long roomId) {
-        final String query = "SELECT player2 FROM room WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, String.class, roomId);
-    }
-
-    public RoomDto roomInfo(final long roomId) {
-        return new RoomDto(name(roomId), player1(roomId), player2(roomId));
-    }
-
-    public List<String> players(final long roomId) {
-        final List<String> players = new ArrayList<>();
-        addIfExist(players, player1(roomId));
-        addIfExist(players, player2(roomId));
-        return players;
-    }
-
-    private void addIfExist(final List<String> players, final String player) {
-        if (Objects.isNull(player)) {
-            return;
-        }
-        players.add(player);
     }
 }

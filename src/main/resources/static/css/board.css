@@ -29,6 +29,7 @@ body {
 
 #chessTitle {
     font-size: 4vw;
+    margin-left: 5vw;
 }
 
 #input-container {
@@ -88,7 +89,7 @@ body {
 
 .score {
     float: right;
-    margin-top: 0.7vw;
+    margin-top: 0.5vw;
     margin-right: 1.5vw;
     padding-left: 1.5vw;
     border-left: 2px solid;
@@ -103,7 +104,7 @@ body {
 
 .user-name {
     float: left;
-    margin-top: 0.2vw;
+    margin-top: 0.5vw;
     margin-left: 1.5vw;
 }
 

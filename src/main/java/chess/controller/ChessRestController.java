@@ -23,6 +23,15 @@ public class ChessRestController {
                 ), HttpStatus.CREATED);
     }
 
+    @GetMapping("/games/{gameId}")
+    public ResponseEntity<CommonResponse<RunningGameDto>> loadGame(@PathVariable long gameId) {
+        return ResponseEntity.ok(
+                new CommonResponse<>(
+                        "게임을 불러왔습니다",
+                        RunningGameDto.from(chessGameService.loadChessGameByGameId(gameId))
+                ));
+    }
+
     @PutMapping("/games/{gameId}/pieces")
     public ResponseEntity<CommonResponse<RunningGameDto>> move(@PathVariable long gameId, @RequestBody MoveRequest moveRequest) {
         String from = moveRequest.getFrom();
@@ -40,15 +49,6 @@ public class ChessRestController {
                 new CommonResponse<>(
                         "게임 목록을 불러왔습니다.",
                         chessGameService.loadAllGames()
-                ));
-    }
-
-    @GetMapping("/games/{gameId}")
-    public ResponseEntity<CommonResponse<RunningGameDto>> loadGame(@PathVariable long gameId) {
-        return ResponseEntity.ok(
-                new CommonResponse<>(
-                        "게임을 불러왔습니다",
-                        RunningGameDto.from(chessGameService.loadChessGameByGameId(gameId))
                 ));
     }
 }

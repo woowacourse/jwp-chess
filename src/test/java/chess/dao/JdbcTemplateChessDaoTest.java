@@ -12,17 +12,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 import static chess.domain.piece.attribute.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
-@ActiveProfiles("test")
 class JdbcTemplateChessDaoTest {
     private static final long DEFAULT_CHESS_GAME_ID = 1;
     ChessGame chessGame;
@@ -84,9 +84,7 @@ class JdbcTemplateChessDaoTest {
         jdbcTemplateChessDao.delete(DEFAULT_CHESS_GAME_ID);
 
         //then
-        try {
-            jdbcTemplateChessDao.findById(DEFAULT_CHESS_GAME_ID);
-        } catch (Exception e) {
-        }
+        assertThatThrownBy(() -> jdbcTemplateChessDao.findById(DEFAULT_CHESS_GAME_ID))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

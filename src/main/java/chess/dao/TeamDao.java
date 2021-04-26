@@ -13,13 +13,13 @@ public class TeamDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void create(Team team, long teamId) {
+    public void create(Team team, long gameId) {
         String sql = "insert into team (name, is_turn, game_id) values (?, ?, ?)";
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"team_id"});
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, team.getName());
             preparedStatement.setBoolean(2, team.isCurrentTurn());
-            preparedStatement.setLong(3, teamId);
+            preparedStatement.setLong(3, gameId);
             return preparedStatement;
         });
     }

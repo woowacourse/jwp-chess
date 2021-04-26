@@ -88,7 +88,7 @@ public class ChessGameService {
         return chessGameDAO.findAllByStateIsBlackTurnOrWhiteTurn();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ChessGameDto findChessGame(long roomId) {
         ChessGameEntity chessGameEntity = findGameByRoomId(roomId);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);

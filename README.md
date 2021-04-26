@@ -27,14 +27,12 @@
 
 # web
 - [] Controller 테스트 작성
-- [] Repository 테스트 작성
+- [x] Repository 테스트 작성
 - [] Service 테스트 작성
-- [] h2 관련 테이블 생성 쿼리 리팩토링  
-- [] Spring Request 처리 과정 - 문서화
-- [] @RequestBody, @ResponseBody 역할? - 문서화
-- [] @ComponentScan과 빈 주입 방법? - 문서화
-## step3
-- [] ResponseBody
+- [x] h2 관련 테이블 생성 쿼리 리팩토링  
+- [x] Spring Request 처리 과정 - 문서화
+- [x] @RequestBody, @ResponseBody 역할? - 문서화
+- [x] @ComponentScan과 빈 주입 방법? - 문서화
 
 ### 보드 객체 기능
 - [x] 말 움직이기 (move)

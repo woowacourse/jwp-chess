@@ -1,5 +1,6 @@
 package chess.dto.room;
 
+import chess.domain.GameStatus;
 import lombok.Getter;
 
 @Getter
@@ -17,17 +18,7 @@ public final class RoomDTO {
         this.title = title;
         this.blackUser = blackUser;
         this.whiteUser = whiteUser;
-        this.status = status(status);
+        this.status = GameStatus.status(status);
         this.playing = playing;
-    }
-
-    private String status(final int status) {
-        if (status == 1) {
-            return "진행중";
-        }
-        if (status == 2) {
-            return "준비중";
-        }
-        return "종료됨";
     }
 }

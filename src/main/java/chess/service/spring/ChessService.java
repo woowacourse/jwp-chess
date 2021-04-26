@@ -57,9 +57,9 @@ public class ChessService {
         return new Result(scores, winnerTeamType);
     }
 
-    public void deleteGame(int roomId) {
-        if (!roomService.isRoomExists(roomId)) {
-            throw new IllegalStateException("삭제할 방이 없습니다.");
+    public void deleteGame(int roomId, int userRoomId) {
+        if (roomId != userRoomId || !roomService.isRoomExists(roomId)) {
+            throw new IllegalStateException("방을 삭제할 수 없습니다.");
         }
         chessDAO.deleteAllByRoomId(roomId);
         userService.deleteAllByRoomId(roomId);

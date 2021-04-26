@@ -55,7 +55,8 @@ public class ChessController {
 
     @DeleteMapping
     public ResponseEntity<String> exit(@PathVariable int roomId, HttpSession httpSession) {
-        chessService.deleteGame(roomId);
+        SessionVO sessionVO = (SessionVO) httpSession.getAttribute("session");
+        chessService.deleteGame(roomId, sessionVO.getRoomId());
         httpSession.invalidate();
         String location = "/";
         return ResponseEntity.ok().body(location);

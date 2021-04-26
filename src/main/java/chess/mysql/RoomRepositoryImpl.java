@@ -48,8 +48,8 @@ public class RoomRepositoryImpl implements RoomRepository {
     }
 
     @Override
-    public List<Room> findAll() {
-        return roomDao.findAll().stream()
+    public List<Room> findAllActiveRoom() {
+        return roomDao.findAllActiveRoom().stream()
                 .map(this::createRoomFrom)
                 .collect(toList());
     }
@@ -57,12 +57,12 @@ public class RoomRepositoryImpl implements RoomRepository {
     private Room createRoomFrom(RoomDto roomDto) {
         ArrayList<User> users = new ArrayList<>();
 
-        User blackUser = userDao.findByUserId(roomDto.getBlackUserId());
-        users.add(blackUser);
+        User whiteUser = userDao.findByUserId(roomDto.getWhiteUserId());
+        users.add(whiteUser);
 
         if (roomDto.getWhiteUserId() != EMPTY_ID) {
-            User whiteUser = userDao.findByUserId(roomDto.getWhiteUserId());
-            users.add(whiteUser);
+            User blackUser = userDao.findByUserId(roomDto.getWhiteUserId());
+            users.add(blackUser);
         }
 
         ChessGameManager chessGame = chessDao.findById(roomDto.getGameId()).map(ChessGameManagerFactory::loadingGame)

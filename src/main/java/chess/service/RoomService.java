@@ -8,8 +8,8 @@ import chess.chessgame.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 
-import static chess.chessgame.domain.room.game.board.piece.attribute.Color.BLACK;
 import static chess.chessgame.domain.room.game.board.piece.attribute.Color.WHITE;
 
 @Service
@@ -27,5 +27,9 @@ public class RoomService {
     public Room createRoom(String roomName, String userPassword) {
         User whiteUser = userRepository.createUser(userPassword, WHITE);
         return roomRepository.createRoom(roomName, chessGameManagerRepository.create(), Arrays.asList(whiteUser));
+    }
+
+    public List<Room> findAllRunningRoom() {
+        return roomRepository.findAllActiveRoom();
     }
 }

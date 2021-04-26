@@ -35,8 +35,8 @@ public class UserDao {
         jdbcTemplate.update(connection ->
                 {
                     PreparedStatement ps = connection.prepareStatement(query, new String[]{"user_id"});
-                    ps.setLong(1, entity.getUserId());
-                    ps.setString(2, entity.getColor().name());
+                    ps.setString(1, entity.getColor().name());
+                    ps.setString(2, entity.getPassword());
                     return ps;
                 }
                 , keyHolder
@@ -52,6 +52,6 @@ public class UserDao {
                         "WHERE user_id = ?";
 
         return jdbcTemplate.query(query, rowMapper, userId).stream().findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 방이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 없습니다."));
     }
 }

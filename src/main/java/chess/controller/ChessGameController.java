@@ -37,7 +37,9 @@ public class ChessGameController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ChessGameDto> movePiece(@CookieValue(value = "user") String cookie, @PathVariable("id") Long gameId, @RequestBody MoveDto moveDto) {
-        return ResponseEntity.ok().body(chessGameService.move(gameId, moveDto));
+    public ResponseEntity<ChessGameDto> movePiece(@CookieValue(value = "user") String cookie, @PathVariable("id") Long id, @RequestBody MoveDto moveDto) {
+        ChessGameDto chessGameDto = chessGameService.move(id, moveDto);
+        simpMessagingTemplate.convertAndSend("/topic/game/" + id, chessGameDto);
+        return ResponseEntity.ok().body(chessGameDto);
     }
 }

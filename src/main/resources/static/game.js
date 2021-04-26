@@ -2,7 +2,6 @@ const url = "http://localhost:8080"
 let stompClient;
 let gameInfo = {};
 let source = null;
-let started = false;
 
 const piecesMap = {
     "P": "♟", "R": "&#9820;", "N": "&#9822;", "B": "&#9821;", "Q": "&#9819;", "K": "&#9818;",
@@ -13,6 +12,7 @@ let roomId = "";
 window.onload = () => {
     const urls = location.href.split("/");
     roomId = urls[urls.length - 1];
+    connectToSocket(roomId);
     loadChessGame();
     window.onbeforeunload = () => {
         axios.put('/api/user/exit', {
@@ -26,6 +26,7 @@ window.onload = () => {
 }
 
 function connectToSocket(roomId) {
+    console.log("connectToSocket")
     let socket = new SockJS(url + "/chess_game");
     stompClient = Stomp.over(socket);
 
@@ -65,6 +66,10 @@ function selectPiece(target) {
             return;
         }
 
+        if (!checkMovable()) {
+            return;
+        }
+
         const isWhiteTurn = gameInfo.whiteTeam.turn;
         const isWhitePiece = target.getAttribute('color') === 'white';
 
@@ -97,7 +102,7 @@ function movePiece(target) {
         'from': source.getAttribute('id'),
         'to': target.getAttribute('id')
     }
-    axios.put('/api/game/' + gameInfo.id, body)
+    axios.put('/api/game/' + roomId, body)
         .then(function (response) {
             source.classList.remove('selected-piece')
             source = null;
@@ -111,6 +116,35 @@ function movePiece(target) {
         })
 }
 
+function checkMovable() {
+    if (gameInfo == null) {
+        console.log('게임 정보가 없습니다.')
+        return false;
+    }
+
+    const user = getCookie('user');
+
+    if (gameInfo.whiteTeam.player === user) {
+        if (!gameInfo.whiteTeam.turn) {
+            console.log('턴이 아닙니다.')
+            return false;
+        }
+        return true;
+    }
+
+    if (gameInfo.blackTeam.player === user) {
+        if (!gameInfo.blackTeam.turn) {
+            console.log('턴이 아닙니다.')
+            return false;
+        }
+        return true;
+    }
+
+    console.log('쿠키 정보가 없습니다.')
+    return false;
+
+}
+
 function clearSelect() {
     let selectedPiece = document.getElementsByClassName('selected-piece');
     for (let i = 0; i < selectedPiece.length; i++) {
@@ -119,18 +153,16 @@ function clearSelect() {
 }
 
 function refreshChessBoard(chessGame) {
+    console.log(chessGame)
     gameInfo = chessGame;
     let isEnd = chessGame.end;
     const blackPlayer = chessGame.blackTeam.player;
     const whitePlayer = chessGame.whiteTeam.player;
 
     if (whitePlayer == null || blackPlayer == null) {
-        started = false;
-        connectToSocket(roomId);
         return;
     }
 
-    started = true;
     clearChessBoard();
     let blackPieces = chessGame.blackTeam.pieces.pieces;
     for (let i = 0; i < blackPieces.length; i++) {

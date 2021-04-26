@@ -1,6 +1,6 @@
 package chess.websocket;
 
-import chess.websocket.util.Command;
+import chess.websocket.commander.Command;
 import java.util.Map;
 
 public class RequestForm {

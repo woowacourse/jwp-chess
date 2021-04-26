@@ -2,7 +2,7 @@ package chess.websocket;
 
 public class ResponseForm<T> {
     public enum Form{
-        UPDATE_ROOM,
+        UPDATE_ROOM,LOAD_GAME, NEW_USER_NAME;
     }
 
     private String form;

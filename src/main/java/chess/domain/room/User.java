@@ -11,4 +11,16 @@ public interface User {
     void setAsPlayer(TeamColor teamColor);
 
     void setAsNotPlayer();
+
+    TeamColor teamColor();
+
+    String name();
+
+    boolean isWhite();
+
+    boolean isBlack();
+
+    void enterRoom(Long roomId, String nickname);
+
+    Long roomId();
 }

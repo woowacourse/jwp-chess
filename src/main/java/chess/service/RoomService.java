@@ -4,6 +4,7 @@ import chess.domain.TeamColor;
 import chess.domain.room.Room;
 import chess.domain.room.User;
 import java.util.List;
+import java.util.Optional;
 
 public interface RoomService {
 
@@ -12,4 +13,6 @@ public interface RoomService {
     List<Room> rooms();
 
     void enterRoomAsPlayer(Long roomId, String password, TeamColor teamColor, User user);
+
+    Optional<Room> findRoom(Long roomId);
 }

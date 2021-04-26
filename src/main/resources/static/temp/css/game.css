@@ -33,6 +33,7 @@
   width: 12.5%;
   /*border: 1px solid white;*/
   margin: 0;
+  font-size: 2.5em;
 }
 
 .white {
@@ -156,4 +157,3 @@
   height: 10%;
   /*padding-top: 5%;*/
 }
-

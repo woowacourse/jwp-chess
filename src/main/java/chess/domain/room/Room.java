@@ -5,6 +5,8 @@ import chess.domain.TeamColor;
 import chess.exception.MaxPlayerSizeException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Room {
     private static final int MAX_PLAYER_SIZE = 2;
@@ -28,7 +30,7 @@ public class Room {
 
     public void enterAsPlayer(User user, TeamColor teamColor) {
         long playerCount = users.stream().filter(User::isPlayer).count();
-        if(user.isPlayer() && playerCount >= MAX_PLAYER_SIZE) {
+        if(playerCount >= MAX_PLAYER_SIZE) {
             throw new MaxPlayerSizeException();
         }
         user.setAsPlayer(teamColor);
@@ -57,5 +59,25 @@ public class Room {
 
     public boolean passwordIncorrect(String password) {
         return roomInformation.passwordIncorrect(password);
+    }
+
+    public ChessGame chessGame() {
+        return chessGame;
+    }
+
+    public List<User> players() {
+        return users.stream().filter(User::isPlayer).collect(Collectors.toList());
+    }
+
+    public Optional<User> whitePlayer() {
+        return users.stream().filter(User::isWhite).findAny();
+    }
+
+    public Optional<User> blackPlayer() {
+        return users.stream().filter(User::isBlack).findAny();
+    }
+
+    public void leaveRoom(User user) {
+        users.remove(user);
     }
 }

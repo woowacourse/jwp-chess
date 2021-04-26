@@ -1,22 +1,13 @@
 package chess.websocket;
 
-import chess.controller.dto.RoomRequestDto;
 import chess.domain.room.User;
-import chess.websocket.commander.RequestCommand;
 import chess.websocket.commander.RequestCommander;
 import chess.websocket.domain.SocketUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -54,11 +45,6 @@ public class SpringSocketHandler extends TextWebSocketHandler {
         User user = users.get(session.getId());
 
         requestForm.getCommand().execute(commander, requestForm.getData(), user);
-
-
-//        requestForm.getCommand()
-//            .execute(commander, requestForm.getData(), session);
-
         super.handleTextMessage(session, input);
     }
 
@@ -67,6 +53,7 @@ public class SpringSocketHandler extends TextWebSocketHandler {
         throws Exception {
         User user = users.get(session.getId());
         commander.leaveLobby(user);
+        commander.leaveRoom(user);
         users.remove(session.getId());
         super.afterConnectionClosed(session, status);
     }

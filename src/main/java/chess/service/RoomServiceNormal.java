@@ -8,6 +8,7 @@ import chess.domain.room.User;
 import chess.exception.PasswordIncorrectException;
 import chess.exception.RoomNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,11 @@ public class RoomServiceNormal implements RoomService {
             throw new PasswordIncorrectException();
         }
         room.enterAsPlayer(user, teamColor);
+    }
+
+    @Override
+    public Optional<Room> findRoom(Long roomId) {
+        return roomDao.findRoom(roomId);
     }
 //
 //    @Override

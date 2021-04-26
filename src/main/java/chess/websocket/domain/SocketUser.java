@@ -10,14 +10,15 @@ public class SocketUser implements User {
 
     private final WebSocketSession session;
     private boolean player;
-    private String name;
+    private String nickname;
     private TeamColor teamColor;
+    private Long roomId;
 
 
     public SocketUser(WebSocketSession session) {
         this.session = session;
         player = false;
-        name = "사용자";
+        nickname = "사용자";
         teamColor = TeamColor.NONE;
     }
 
@@ -46,4 +47,37 @@ public class SocketUser implements User {
         player = false;
         this.teamColor = TeamColor.NONE;
     }
+
+    @Override
+    public TeamColor teamColor() {
+        return teamColor;
+    }
+
+    @Override
+    public String name() {
+        return nickname;
+    }
+
+    @Override
+    public boolean isWhite() {
+        return teamColor == TeamColor.WHITE;
+    }
+
+    @Override
+    public boolean isBlack() {
+        return teamColor == TeamColor.BLACK;
+    }
+
+    @Override
+    public void enterRoom(Long roomId, String nickname) {
+        this.roomId = roomId;
+        this.nickname = nickname;
+    }
+
+    @Override
+    public Long roomId() {
+        return roomId;
+    }
+
+
 }

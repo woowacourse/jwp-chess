@@ -3,14 +3,24 @@ package chess.websocket.commander.dto;
 import chess.domain.room.Room;
 
 public class RoomResponseDto {
+    private Long roomId;
     private String title;
     private boolean locked;
     private int playerAmount;
 
     public RoomResponseDto(Room room) {
+        this.roomId = room.id();
         this.title = room.title();
         this.locked = room.isLocked();
         this.playerAmount = room.count();
+    }
+
+    public Long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
     }
 
     public String getTitle() {

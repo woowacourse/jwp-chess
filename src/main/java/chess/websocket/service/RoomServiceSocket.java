@@ -6,12 +6,10 @@ import chess.domain.room.Room;
 import chess.domain.room.User;
 import chess.service.RoomService;
 import chess.service.RoomServiceNormal;
-import chess.websocket.ResponseForm;
-import chess.websocket.ResponseForm.Form;
 import chess.websocket.domain.Lobby;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -35,18 +33,8 @@ public class RoomServiceSocket implements RoomService {
     public Long createRoom(String title, boolean locked, String password, User user) {
         Long roomId = roomService.createRoom(title, locked, password, user);
         lobby.leave(user);
-//        updateRooms();
         return roomId;
     }
-
-//    private void updateRooms() {
-//        final List<Room> rooms = roomDao.rooms();
-//        try {
-//            lobby.updateRoom(objectMapper.writeValueAsString(new ResponseForm<>(Form.UPDATE_ROOM, rooms)));
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     @Override
     public List<Room> rooms() {
@@ -57,5 +45,10 @@ public class RoomServiceSocket implements RoomService {
     public void enterRoomAsPlayer(Long roomId, String password, TeamColor teamColor, User user) {
         roomService.enterRoomAsPlayer(roomId, password, teamColor, user);
         lobby.leave(user);
+    }
+
+    @Override
+    public Optional<Room> findRoom(Long roomId) {
+        return roomService.findRoom(roomId);
     }
 }

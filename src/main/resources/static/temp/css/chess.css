@@ -50,20 +50,14 @@ body {
 }
 
 .room-item {
-  display: flex;
   background-color: #ffe97f;
-  align-items: center;
-  text-align: center;
-  justify-content: space-between;
   width: 30%;
   height: 4em;
   border-radius: 10px;
-  /*border: 1px solid red;*/
   padding: 10px;
   margin: 10px;
   box-shadow: 5px 5px 5px 0px rgba(0, 0, 255, .2);
-  cursor: pointer;
-  transition: 0.2s;
+  transition: .3s;
 }
 
 .room-item:hover {
@@ -71,7 +65,33 @@ body {
   box-shadow: 5px 10px 5px 0px rgba(0, 0, 255, .2);
 }
 
+.enter-info {
+  /*transition: 1s;*/
+  display: none;
+  text-align: center;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 3%;
+}
+
+.room-item:hover .enter-info {
+  display: flex;
+}
+
+.room-item:hover .room-contents {
+  display: none;
+}
+
+
 .room-contents {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
+  margin-top: 0.5em;
+}
+
+.room-content {
   text-align: center;
   font-size: 1.2rem;
   display: table-cell;
@@ -83,7 +103,20 @@ body {
   padding-right: 5px;
 }
 
+
+.enter {
+  background-color: #6f9c6f;
+  border-radius: 5px;
+  padding: 0.8em 2.5em;
+  cursor: pointer;
+}
+
+.enter:hover {
+  background-color: #6bb16b;
+}
+
 .create-room {
+  cursor: pointer;
   background-color: #98c198;
 }
 
@@ -98,7 +131,7 @@ body {
   margin-left: .2em;
 }
 
-.create-modal {
+.modal {
   position: fixed;
   left: 50%;
   top: 50%;

@@ -7,7 +7,7 @@ import dto.RoomRequestDto;
 import java.util.List;
 
 public interface ChessRoomService {
-    Long create(RoomRequestDto room);
+    RoomDto create(RoomRequestDto room);
     boolean enterable(RoomRequestDto room);
     List<RoomDto> rooms();
     ChessGameDto enter(RoomRequestDto roomRequestDto);

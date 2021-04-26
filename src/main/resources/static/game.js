@@ -25,7 +25,7 @@ function loadChessGame() {
             refreshChessBoard(response.data)
         }).catch(function (error) {
         if (error.response.status === 400) {
-            alert('비밀번호가 틀렸습니다.');
+            alert(error.response.data);
         } else {
             alert('게임을 로드 할 수 없습니다.');
         }

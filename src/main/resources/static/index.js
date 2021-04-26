@@ -4,6 +4,7 @@ const btnCreateUser = document.getElementById('btn-user-create')
 const btnLogin = document.getElementById('btn-login')
 
 getTotalRoom();
+console.log(getCookie('user'));
 
 function getTotalRoom() {
     axios.get('/api/rooms')
@@ -15,22 +16,30 @@ function getTotalRoom() {
 };
 
 btnCreateRoom.addEventListener('click', function (e) {
-    let name = prompt("방이름을 입력해 주세요.");
-    let pw = prompt("비밀번호를 입력해 주세요");
+    const name = prompt("방이름을 입력해 주세요.");
+    const pw = prompt("비밀번호를 입력해 주세요");
+    const cookieUser = getCookie('user');
+    console.log(cookieUser);
+    if (cookieUser === null) {
+        console.log('로그인 먼저 해주세요.');
+        return;
+    }
+
     axios.post('/api/room', {
         "name": name,
-        "pw": pw
+        "pw": pw,
+        "user": cookieUser
     }).then(function (response) {
-        //refreshRoomList(response.data)
-        window.location.reload()
+        console.log(response.data.id)
+        enterGame(response.data.id)
     }).catch(function (error) {
         alert('방을 만들지 못했습니다.');
     });
 });
 
 btnCreateUser.addEventListener('click', function (e) {
-    let name = prompt("계정을 입력해 주세요.");
-    let pw = prompt("비밀번호를 입력해 주세요");
+    const name = prompt("계정을 입력해 주세요.");
+    const pw = prompt("비밀번호를 입력해 주세요");
 
     axios.post('/api/room', {
         "name": name,
@@ -47,14 +56,15 @@ btnLogin.addEventListener('click', function (e) {
     let name = prompt("계정을 입력해 주세요.");
     let pw = prompt("비밀번호를 입력해 주세요");
 
-    axios.post('/api/room', {
+    axios.post('/api/user/login', {
         "name": name,
         "pw": pw
     }).then(function (response) {
-        //refreshRoomList(response.data)
-        window.location.reload()
+        console.log(getCookie('user'));
+        setCookie('user', response.data.name, 1)
+        console.log(getCookie('user'));
     }).catch(function (error) {
-        alert('방을 만들지 못했습니다.');
+        alert('로그인에 실패했습니다.');
     });
 });
 
@@ -70,16 +80,34 @@ function refreshRoomList(data) {
     }
     const roomList = document.querySelectorAll('.box-chess-game');
     for (const room of roomList) {
-        room.addEventListener('click', enterGame);
+        room.addEventListener('click', clickRoom);
     }
 }
 
-function enterGame(event) {
+function clickRoom(event) {
     let idx = event.target.dataset.idx;
     if (idx === undefined) {
         idx = event.target.parentElement.dataset.idx;
     }
     let room = roomListData[idx];
-    location.href = '/room/' + room.id;
+    enterGame(room.id)
 }
+
+function enterGame(id) {
+    location.href = '/room/' + id;
+}
+
+function setCookie(name, value, min) {
+    const exdate = new Date();
+    exdate.setMinutes(exdate.getMinutes() + min);
+    const cookie_value = escape(value) + ((min == null) ? '' : '; expires=' + exdate.toUTCString());
+    document.cookie = name + '=' + cookie_value;
+
+}
+
+function getCookie(name) {
+    const value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return value? value[2] : null;
+}
+
 

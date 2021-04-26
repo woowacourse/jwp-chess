@@ -29,14 +29,16 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     }
 
     @Override
-    public Long create(final RoomRequestDto roomRequestDto) {
+    public RoomDto create(final RoomRequestDto roomRequestDto) {
         Long gameId = chessGameRepository.create(new ChessGame(new WhiteTeam(), new BlackTeam()));
 
-        Room room = new Room(roomRequestDto.getId(),
+        Long roomId = chessRoomRepository.create(new Room(roomRequestDto.getId(),
                 new RoomInfo(roomRequestDto.getName(), roomRequestDto.getPw(), gameId),
-                new Players(roomRequestDto.getUser()));
+                new Players(roomRequestDto.getUser())));
 
-        return chessRoomRepository.create(room);
+        return new RoomDto(new Room(roomId,
+                new RoomInfo(roomRequestDto.getName(), roomRequestDto.getPw(), gameId),
+                new Players(roomRequestDto.getUser())));
     }
 
     @Override

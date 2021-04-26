@@ -41,12 +41,13 @@ public class ChessRoomController {
     }
     
     @PostMapping("/room")
-    public void create(@CookieValue(value = "user") @Valid @RequestBody RoomRequestDto roomRequestDto, BindingResult bindingResult) {
+    public ResponseEntity<RoomDto> create(@CookieValue(value = "user") @Valid @RequestBody RoomRequestDto roomRequestDto, BindingResult bindingResult) {
         System.out.println("create : " + roomRequestDto);
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException();
         }
-        chessRoomService.create(roomRequestDto);
+
+        return ResponseEntity.ok().body(chessRoomService.create(roomRequestDto));
     }
 
     @PostMapping("/room/{id}")

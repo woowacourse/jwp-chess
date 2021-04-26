@@ -22,16 +22,21 @@ function SquareBuffer() {
 }
 
 async function processResponse(response) {
-    const responseBody = await response.json();
+    if (!response.ok) {
+        let errorMessage = await response.text();
+        updateMessage(errorMessage);
+        console.log(errorMessage);
+        return;
+    }
+    let responseBody = await response.json();
+    if (responseBody.item.gameId !== undefined) {
+        gameId = responseBody.item.gameId;
+    }
+
     console.log(responseBody.message);
     updateMessage(responseBody.message);
+    updateGameData(responseBody);
 
-    if (response.ok) {
-        if (responseBody.item.gameId !== undefined) {
-            gameId = responseBody.item.gameId;
-        }
-        updateGameData(responseBody);
-    }
 }
 
 async function loadGameListIntoBox() {
@@ -97,18 +102,18 @@ async function addEventOnStartButton() {
 }
 
 async function createNewRoom() {
-        const roomName = prompt("방 제목을 입력하세요.");
-        await fetch('/room/new', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                gameId: gameId,
-                name: roomName
-            })
+    const roomName = prompt("방 제목을 입력하세요.");
+    await fetch('/room/new', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            gameId: gameId,
+            name: roomName
         })
-            .then(res => updateRoomName(res));
+    })
+        .then(res => updateRoomName(res));
 }
 
 async function updateRoomName(res) {

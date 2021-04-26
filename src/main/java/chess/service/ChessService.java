@@ -86,9 +86,11 @@ public class ChessService {
     public CommonDto<RoomDto> saveRoom(RoomDto roomDto) {
         String roomName = roomDto.getName();
         int gameId = roomDto.getGameId();
+
         if (gameDAO.countRoomByName(roomName) != 0) {
             throw new HandledException("방이 이미 등록되어있습니다.");
         }
+
         gameDAO.saveRoom(gameId, roomName);
         return new CommonDto<>("방 정보를 가져왔습니다.", new RoomDto(gameId, roomName));
     }

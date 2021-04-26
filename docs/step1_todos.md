@@ -24,34 +24,28 @@
     - [x] js 관련 내용 파악
     - [x] db 관련 구조 파악 (dto, dao, service, controller 등)
 - [x] 테스트 코드 가져오기
-- [ ] 코드 도메인 구성 변경해보기
-- [ ] 코드 Dto 구성 변경해보기
-- [ ] 코드 테이블 구조 변경해보기
-    - [ ] 요구사항 분석서
-    - [ ] 개념적 설계 (ERD)
-    - [ ] 논리적 설계
-    - [ ] 바로 테이블 매핑이 가능한 방안? (RowMapper 사용가능한 방안으로)
+- [x] 코드 Dto 구성 변경해보기
+- [x] 코드 테이블 구조 변경해보기
+    - [x] 바로 테이블 매핑이 가능한 방안? (RowMapper 사용가능한 방안으로)
 - [x] 클래스 이름 통일하기 (카멜케이스) 
-- [ ] 학습로그 정리하기
+- [x] 학습로그 정리하기
     - [x] @Controller, @RestController의 차이
-    - [ ] Spring 어노테이션의 전체적인 정리
+    - [x] Spring 어노테이션의 전체적인 정리
     - [x] produces, consumes 정리
-    - [ ] Spring 간단한 동작원리 정리
     - [x] http 메소드와 사용 상황 정리
 - [ ] 도메인 이외로직에 대해 test 작성하기
 
 ## 임시 checkPoints
 [ 도메인 관련 ]
-- [ ] Piece interface 만들기
-- [ ] CapturedPieces 삭제
-- [ ] Piece의 moved -> isFirstMoved로 변경
-- [ ] (0,0)의 위치정보를 "a1"등의 문자열 형태로 변경해주는 내용 수정
+- [x] CapturedPieces 삭제
 
 [ 스프링 관련 ]
 - [x] Dao interface
 - [x] Dao의 로직 서비스로 분리
 
-[ DDL ]
+
+## DDL
+- 1차 수정 : 이벤트 소싱방식
 ```sql
 CREATE TABLE board (
 	board_id bigint NOT NULL AUTO_INCREMENT,
@@ -61,4 +55,27 @@ CREATE TABLE board (
 	date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(board_id)	
 );
+```
+- 2차 수정
+```sql
+CREATE TABLE room (
+	room_id BIGINT NOT NULL,
+	turn CHAR(5) NOT NULL,
+	is_playing BOOLEAN NOT NULL,
+	name VARCHAR(25) NOT NULL,
+	password VARCHAR(16),
+	create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(room_id)
+)
+
+CREATE TABLE board (
+	board_id BIGINT NOT NULL AUTO_INCREMENT,
+	team VARCHAR(10) NOT NULL,
+	position VARCHAR(10) NOT NULL,
+	piece VARCHAR(10) NOT NULL, 
+	is_first_moved BOOLEAN NOT NULL,
+	room_id BIGINT NOT NULL,
+	PRIMARY KEY(board_id),
+	FOREIGN KEY (room_id) REFERENCES room (room_id)
+)
 ```

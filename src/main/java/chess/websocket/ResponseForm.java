@@ -1,14 +1,8 @@
 package chess.websocket;
 
 public class ResponseForm<T> {
-    public static enum Form{
-        MESSAGE,
-        ENTER,
-        PIECES,
-        STATUS,
-        MOVE,
-        COLOR,
-        ERROR
+    public enum Form{
+        UPDATE_ROOM,
     }
 
     private String form;

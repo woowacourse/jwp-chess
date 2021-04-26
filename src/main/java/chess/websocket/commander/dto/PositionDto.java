@@ -1,4 +1,4 @@
-package chess.websocket.commander;
+package chess.websocket.commander.dto;
 
 public class PositionDto {
     private String currentPosition;

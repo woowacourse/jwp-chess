@@ -1,20 +1,28 @@
 package chess.domain;
 
 public enum TeamColor {
-    WHITE, BLACK;
+    WHITE, BLACK, NONE;
 
     public TeamColor reverse() {
         if (this == WHITE) {
             return BLACK;
         }
-        return WHITE;
+
+        if (this == BLACK) {
+            return WHITE;
+        }
+        return this;
     }
 
     public static TeamColor teamColor(String teamColor) {
         if (teamColor.equalsIgnoreCase("WHITE")) {
             return WHITE;
         }
-        return BLACK;
+
+        if (teamColor.equalsIgnoreCase("BLACK")) {
+            return BLACK;
+        }
+        return NONE;
     }
 
     public boolean isWhite() {
@@ -26,7 +34,7 @@ public enum TeamColor {
     }
 
     public boolean isEnemy(TeamColor teamColor) {
-        return teamColor != this;
+        return (teamColor.isWhite() && this.isBlack()) || (teamColor.isBlack() && this.isWhite());
     }
 
 }

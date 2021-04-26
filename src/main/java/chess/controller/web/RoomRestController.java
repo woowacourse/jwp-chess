@@ -23,11 +23,9 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/room")
 @RestController
 public class RoomRestController {
-    private final ChessService chessService;
     private final RoomService roomService;
 
-    public RoomRestController(ChessService chessService, RoomService roomService) {
-        this.chessService = chessService;
+    public RoomRestController(RoomService roomService) {
         this.roomService = roomService;
     }
 

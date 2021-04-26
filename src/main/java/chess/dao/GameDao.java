@@ -1,7 +1,8 @@
 package chess.dao;
 
 import chess.dao.dto.game.GameDto;
-import chess.domain.entity.Game;
+
+import java.util.List;
 
 public interface GameDao {
 
@@ -10,4 +11,6 @@ public interface GameDao {
     GameDto findById(final Long gameId);
 
     Long update(GameDto gameDto);
+
+    List<GameDto> findByPlayingIsTrue();
 }

@@ -7,9 +7,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 
 @Component
 public class GameDaoTemplate implements GameDao {
@@ -55,6 +55,12 @@ public class GameDaoTemplate implements GameDao {
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    @Override
+    public List<GameDto> findByPlayingIsTrue() {
+        String sql = "SELECT * from game AS g JOIN state AS s ON g.id = s.game_id WHERE s.playing = true ORDER BY g.id ASC";
+        return jdbcTemplate.query(sql, actorRowMapper);
     }
 
     @Override

@@ -2,12 +2,14 @@ package chess.controller.web;
 
 import chess.controller.web.dto.game.GameIdResponseDto;
 import chess.controller.web.dto.game.GameRequestDto;
+import chess.controller.web.dto.game.GameResponseDto;
 import chess.controller.web.dto.history.HistoryResponseDto;
 import chess.controller.web.dto.move.MoveRequestDto;
 import chess.controller.web.dto.move.PathResponseDto;
 import chess.controller.web.dto.piece.PieceResponseDto;
 import chess.controller.web.dto.score.ScoreResponseDto;
 import chess.controller.web.dto.state.StateResponseDto;
+import chess.dao.dto.game.GameDto;
 import chess.dao.dto.history.HistoryDto;
 import chess.dao.dto.piece.PieceDto;
 import chess.service.ChessService;
@@ -36,6 +38,15 @@ public class SpringWebChessRestController {
     public ResponseEntity<GameIdResponseDto> saveGame(@RequestBody GameRequestDto gameRequestDto) {
         GameInfoDto gameInfoDto = modelMapper.map(gameRequestDto, GameInfoDto.class);
         return ResponseEntity.ok().body(new GameIdResponseDto(chessService.saveGame(gameInfoDto)));
+    }
+
+    @GetMapping("/playing/true")
+    public ResponseEntity<List<GameResponseDto>> findGamesByPlayingIsTrue() {
+        List<GameDto> gameDtos = chessService.findGamesByPlayingIsTrue();
+        List<GameResponseDto> gameResponseDtos = gameDtos.stream()
+                .map(gameDto -> modelMapper.map(gameDto, GameResponseDto.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(gameResponseDtos);
     }
 
     @GetMapping("/{id}/pieces")

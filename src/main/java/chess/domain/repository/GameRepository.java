@@ -6,6 +6,9 @@ import chess.domain.entity.Game;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Repository
 public class GameRepository implements ChessRepository<Game, Long> {
 
@@ -33,5 +36,12 @@ public class GameRepository implements ChessRepository<Game, Long> {
     public Game findById(Long id) {
         GameDto gameDto = gameDao.findById(id);
         return modelMapper.map(gameDto, Game.class);
+    }
+
+    public List<Game> findByPlayingIsTrue() {
+        List<GameDto> gameDtos = gameDao.findByPlayingIsTrue();
+        return gameDtos.stream()
+                .map(gameDto -> modelMapper.map(gameDto, Game.class))
+                .collect(Collectors.toList());
     }
 }

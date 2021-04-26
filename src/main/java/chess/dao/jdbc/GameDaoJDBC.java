@@ -5,6 +5,8 @@ import chess.dao.dto.game.GameDto;
 import chess.exception.DataAccessException;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameDaoJDBC implements GameDao {
 
@@ -42,6 +44,28 @@ public class GameDaoJDBC implements GameDao {
             return resultSet.getLong(1);
         } catch (SQLException e) {
             throw new DataAccessException("체스 게임을 업데이트 하는데 실패했습니다.", e);
+        }
+    }
+
+    @Override
+    public List<GameDto> findByPlayingIsTrue() {
+        final String query = "SELECT * from game AS g JOIN state AS s ON g.id = s.game_id WHERE s.playing = true ORDER BY g.id ASC";
+
+        try (Connection connection = ConnectionProvider.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query);) {
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                List<GameDto> gameDtos = new ArrayList<>();
+                while (!resultSet.next()) {
+                    gameDtos.add(new GameDto(
+                            resultSet.getLong("id"),
+                            resultSet.getString("room_name"),
+                            resultSet.getString("white_username"),
+                            resultSet.getString("black_username")));
+                }
+                return gameDtos;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("해당 ID의 체스게임을 검색하는데 실패했습니다.", e);
         }
     }
 

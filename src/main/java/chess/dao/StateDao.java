@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.dao.dto.state.StateDto;
-import chess.domain.manager.ChessManager;
 
 public interface StateDao {
     Long save(StateDto stateDto);

@@ -29,4 +29,9 @@ public class SpringWebChessController {
         model.addAttribute(gameResponseDto);
         return "board";
     }
+
+    @GetMapping("/games")
+    public String games() {
+        return "gameList";
+    }
 }

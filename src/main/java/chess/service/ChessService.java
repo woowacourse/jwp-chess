@@ -78,6 +78,13 @@ public class ChessService {
         return modelMapper.map(game, GameDto.class);
     }
 
+    public List<GameDto> findGamesByPlayingIsTrue() {
+        List<Game> games = gameRepository.findByPlayingIsTrue();
+        return games.stream()
+                .map(game -> modelMapper.map(game, GameDto.class))
+                .collect(Collectors.toList());
+    }
+
     public ScoreDto findScoreByGameId(final Long gameId) {
         Score score = scoreRepository.findByGameId(gameId);
         return modelMapper.map(score, ScoreDto.class);
@@ -102,6 +109,7 @@ public class ChessService {
         return PathDto.from(path);
     }
 
+    @Transactional
     public HistoryDto move(final MoveDto moveDto, final Long gameId) {
         ChessManager chessManager = loadChessManager(gameId);
         MoveCommand moveCommand = new MoveCommand(moveDto.getSource(), moveDto.getTarget());

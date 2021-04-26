@@ -17,18 +17,6 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/games")
-    public ResponseEntity<RunningGameResponseDto> getGames() {
-        ChessGameManagerBundle runningGames = chessService.findRunningGames();
-        return ResponseEntity.ok(new RunningGameResponseDto(runningGames.getIdAndNextTurn()));
-    }
-
-    @PostMapping("/game/start")
-    public ResponseEntity<ChessGameResponseDto> gameStart(@RequestBody Map<String, String> param) {
-        String title = param.get("title");
-        return ResponseEntity.ok(new ChessGameResponseDto(chessService.start(title)));
-    }
-
     @GetMapping("/games/{id:[\\d]+}/score")
     public ResponseEntity<ScoreResponseDto> getScore(@PathVariable long id) {
         return ResponseEntity.ok(new ScoreResponseDto(chessService.getStatistics(id)));

@@ -39,40 +39,6 @@ class ChessControllerTest {
     ChessService chessService;
 
     @Test
-    @DisplayName("게임 리스트 조회 테스트")
-    void getGames() throws Exception {
-        List<ChessGameManager> chessGameManagers = new ArrayList<>();
-        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID, "temp");
-        chessGameManagers.add(chessGameManager);
-
-        given(chessService.findRunningGames()).willReturn(new ChessGameManagerBundle(chessGameManagers));
-
-        mockMvc.perform(get("/games"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.runningGames." + CHESS_GAME_TEST_ID)
-                        .value("temp"));
-    }
-
-    @Test
-    @DisplayName("새로운 게임 시작 테스트")
-    void gameStart() throws Exception {
-        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID, "test");
-        Map<String, Object> data = new HashMap<>();
-        data.put("title", "test");
-        String json = new ObjectMapper().writeValueAsString(data);
-
-        given(chessService.start("test")).willReturn(ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID, "test"));
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/game/start")
-                        .content(json).header("Content-Type", "application/json"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(CHESS_GAME_TEST_ID))
-                .andExpect(jsonPath("$.color").value("WHITE"))
-                .andExpect(jsonPath("$.piecesAndPositions.size()").value(32));
-    }
-
-    @Test
     @DisplayName("게임 점수 조회 테스트")
     void getScore() throws Exception {
         ChessGameStatistics chessGameStatistics = ChessGameStatistics.createNotStartGameResult();

@@ -108,4 +108,9 @@ public class ChessServiceImpl implements ChessService {
         update(chessGameManager);
         return chessGameManager;
     }
+
+    @Override
+    public void delete(long id) {
+        chessDao.delete(id);
+    }
 }

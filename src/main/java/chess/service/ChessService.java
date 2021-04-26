@@ -29,4 +29,6 @@ public interface ChessService {
     ChessGameStatistics getStatistics(long gameId);
 
     ChessGameManager reset(long gameId);
+
+    void delete(long id);
 }

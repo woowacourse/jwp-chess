@@ -1,4 +1,4 @@
-import {getFetch, postFetch} from "./promise/fetches.js"
+import {deleteFetch, getFetch, postFetch} from "./promise/fetches.js"
 
 const $games = document.querySelector('#chess-game-list');
 const $generatorButton = document.querySelector("#generator");
@@ -12,16 +12,30 @@ function insertGameList(ele, games) {
     chessGameLI.className = "list-group-item";
     chessGameLI.innerHTML = `
             <div class="view" id = "${ele}">
-            NO.${ele} ${games[ele]} Room
+            <label class = "label">NO.${ele} ${games[ele]} Room</label>
+            <button class="destroy"></button>
             </div>`;
-    chessGameLI.addEventListener("click", function () {
-        location.href = "/board?id=" + this.children[0].id;
-    });
+    chessGameLI.addEventListener("click", click);
     $games.appendChild(chessGameLI);
 }
 
+function click(e) {
+    if (e.target.classList.contains("destroy")) {
+        askDeleteGame(e.target.parentNode.id);
+    } else {
+        location.href = "/board?id=" + this.children[0].id;
+    }
+}
+
+function askDeleteGame(id){
+    if(confirm(`NO.${id} 게임 방을 지우시겠습니까?`)){
+        deleteFetch(`/room/${id}`);
+        location.reload();
+    }
+}
+
 async function findGames() {
-    const responseData = await getFetch("/games");
+    const responseData = await getFetch("/rooms");
     const games = responseData.runningGames;
     $games.innerHTML = "";
     Object.keys(games)
@@ -31,7 +45,7 @@ async function findGames() {
 async function askGenerateChessGame() {
     const title = prompt("새로 만들 체스 게임 방 제목을 입력해주세요.");
     if (title) {
-        await postFetch("/game/start", {title: title});
+        await postFetch("/room", {title: title});
         location.reload();
     }
 }

@@ -32,22 +32,6 @@ public class GridDto {
         this.isStarted = isStarted;
     }
 
-    //    @JsonCreator
-//    public GridDto(
-//            @JsonProperty("gridId") Long gridId,
-//            @JsonProperty("isBlackTurn") boolean isBlackTurn,
-//            @JsonProperty("isFinished") boolean isFinished,
-//            @JsonProperty("roomId") Long roomId,
-//            @JsonProperty("createdAt") LocalDateTime createdAt,
-//            @JsonProperty("isStarted") boolean isStarted) {
-//        this.gridId = gridId;
-//        this.isBlackTurn = isBlackTurn;
-//        this.isFinished = isFinished;
-//        this.roomId = roomId;
-//        this.createdAt = createdAt;
-//        this.isStarted = isStarted;
-//    }
-
     public Long getGridId() {
         return gridId;
     }

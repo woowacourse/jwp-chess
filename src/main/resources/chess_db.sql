@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `game`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `game` (
   `game_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(64) DEFAULT NULL,
   `turn` varchar(16) NOT NULL,
   PRIMARY KEY (`game_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -75,4 +76,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-25 21:02:45
+-- Dump completed on 2021-04-26 22:49:02

@@ -1,19 +1,16 @@
 package chess.service;
 
-import chess.chessgame.repository.ChessGameManagerRepository;
-import chess.controller.web.dto.MoveRequestDto;
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.ChessGameManagerBundle;
-import chess.chessgame.domain.room.game.ChessGameManagerFactory;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.game.board.position.Position;
 import chess.chessgame.domain.room.game.statistics.ChessGameStatistics;
+import chess.chessgame.repository.ChessGameManagerRepository;
+import chess.controller.web.dto.MoveRequestDto;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessServiceImpl implements ChessService {
-    private static final long TEMPORARY_ID = 0;
-
     private final ChessGameManagerRepository chessGameManagerRepository;
 
     public ChessServiceImpl(ChessGameManagerRepository chessGameManagerRepository) {
@@ -22,8 +19,7 @@ public class ChessServiceImpl implements ChessService {
 
     @Override
     public ChessGameManager start() {
-        long gameId = chessGameManagerRepository.add(ChessGameManagerFactory.createRunningGame(TEMPORARY_ID));
-        return ChessGameManagerFactory.createRunningGame(gameId);
+        return chessGameManagerRepository.add(chessGameManagerRepository.create());
     }
 
     @Override

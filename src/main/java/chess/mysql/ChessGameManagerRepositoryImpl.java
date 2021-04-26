@@ -14,6 +14,8 @@ import static java.util.stream.Collectors.toList;
 
 @Repository
 public class ChessGameManagerRepositoryImpl implements ChessGameManagerRepository {
+    private static final int TEMPORARY_ID = 0;
+
     private final ChessDao chessDao;
 
     public ChessGameManagerRepositoryImpl(ChessDao chessDao) {
@@ -31,6 +33,11 @@ public class ChessGameManagerRepositoryImpl implements ChessGameManagerRepositor
         return chessDao.findAllOnRunning().stream()
                 .map(this::createFromEntity)
                 .collect(collectingAndThen(toList(), ChessGameManagerBundle::new));
+    }
+
+    @Override
+    public ChessGameManager create() {
+        return add(ChessGameManagerFactory.createRunningGame(TEMPORARY_ID));
     }
 
     private ChessGameManager createFromEntity(ChessGameDto chessGameDto) {

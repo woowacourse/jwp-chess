@@ -7,7 +7,11 @@ import chess.chessgame.domain.room.user.User;
 import java.util.List;
 
 public interface RoomRepository {
-    Room createRoom(ChessGameManager chessGameManager, List<User> users);
+    Room createRoom(String roomName, ChessGameManager chessGameManager, List<User> users);
 
     void endRoom(Room room);
+
+    List<Room> findAll();
+
+    Room findRoomByRoomId(long roomId);
 }

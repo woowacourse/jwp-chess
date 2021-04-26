@@ -1,17 +1,16 @@
-package chess.domain.user;
+package chess.dao.dto;
 
 import java.time.LocalDateTime;
 
-public class User {
+public class UserDto {
 
     private final long id;
     private final String name;
     private final String password;
     private final LocalDateTime createdTime;
 
-    public User(final long id, final String name, final String password,
+    public UserDto(final long id, final String name, final String password,
         final LocalDateTime createdTime) {
-
         this.id = id;
         this.name = name;
         this.password = password;

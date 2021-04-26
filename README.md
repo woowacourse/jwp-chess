@@ -22,7 +22,7 @@ http://localhost:8080/swagger-ui.html#/
     - DB 테이블 데이터의 접근 관련 객체는 dao 패키지 하위에 dto를 생성하여 접근 
       - [x] GameDto 생성 및 적용
       - [x] PieceDto 생성 및 적용
-      - [ ] UserDto 생성 및 적용
+      - [x] UserDto 생성 및 적용
     - [ ] GameRepository 생성 (상위 레이어에서 게임 관련 도메인 접근) 
     - [ ] UserRepository 생성 (상위 레이어에서 유저 도메인 접근) 
 

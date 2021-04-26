@@ -43,7 +43,7 @@ public class RoomServiceTest {
         final long roomId = roomService.insert(title);
 
         // when
-        final long chessId = roomService.findChessIdById(roomId);
+        final long chessId = roomService.findChessIdByRoomId(roomId);
 
         // then
         assertThat(chessId).isEqualTo(1L);

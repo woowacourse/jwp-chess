@@ -26,11 +26,11 @@ public class RoomService {
         return roomRepository.findAll();
     }
 
-    public long findChessIdById(long roomId) {
+    public long findChessIdByRoomId(long roomId) {
         return roomRepository.findChessIdById(roomId);
     }
 
-    public Chess findChessById(long chessId) {
+    public Chess findChessByChessId(long chessId) {
         return chessRepository.findChessById(chessId);
     }
 

@@ -8,7 +8,7 @@ import chess.domain.board.position.Vertical;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceSymbolMapper;
 import chess.domain.player.Turn;
-import chess.service.JSonHandler;
+import chess.util.JSonHandler;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

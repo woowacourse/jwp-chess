@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.RoomDto;
-import chess.service.CookieHandler;
+import chess.util.CookieHandler;
 import chess.service.PlayerService;
 import chess.service.RoomService;
 import chess.view.OutputView;

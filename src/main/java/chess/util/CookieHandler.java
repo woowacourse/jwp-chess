@@ -1,4 +1,4 @@
-package chess.service;
+package chess.util;
 
 import org.springframework.stereotype.Component;
 

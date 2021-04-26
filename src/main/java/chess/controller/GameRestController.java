@@ -3,7 +3,7 @@ package chess.controller;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
 import chess.dto.ReachablePositionsDto;
-import chess.service.CookieHandler;
+import chess.util.CookieHandler;
 import chess.service.GameService;
 import chess.service.PlayerService;
 import org.springframework.web.bind.annotation.*;

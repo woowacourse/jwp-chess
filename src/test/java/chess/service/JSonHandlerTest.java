@@ -3,6 +3,7 @@ package chess.service;
 import chess.domain.ChessGame;
 import chess.domain.piece.*;
 import chess.service.dao.GameDao;
+import chess.util.JSonHandler;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

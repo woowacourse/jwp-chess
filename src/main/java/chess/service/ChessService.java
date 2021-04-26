@@ -22,13 +22,13 @@ public class ChessService {
         this.chessRepository = chessRepository;
     }
 
-    public int makeRoom() {
+    public int makeRoom(String roomName) {
         State whiteState = StateFactory.initialization(PiecesFactory.whitePieces());
         State blackState = StateFactory.initialization(PiecesFactory.blackPieces());
         Command start = CommandFactory.initialCommand("start");
         Round round = new Round(whiteState, blackState, start);
 
-        return chessRepository.makeRoom(filteredChessBoard(round.getBoard()));
+        return chessRepository.makeRoom(filteredChessBoard(round.getBoard()), roomName);
     }
 
     private Map<String, String> filteredChessBoard(final Map<Position, Piece> chessBoard) {
@@ -70,5 +70,9 @@ public class ChessService {
 
     public void changeTurn(String nextTurn, String currentTurn, int roomId) {
         chessRepository.changeTurn(nextTurn, currentTurn, roomId);
+    }
+
+    public List<String> getRoomNames() {
+        return chessRepository.getRoomNames();
     }
 }

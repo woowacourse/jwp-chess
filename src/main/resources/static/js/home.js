@@ -1,22 +1,27 @@
-const $startBtn = document.getElementById('start-btn');
-$startBtn.addEventListener('click', makeRoom);
+const $roomNameInput = document.getElementById("new-room");
+$roomNameInput.addEventListener('keyup', makeRoom);
 
-async function makeRoom() {
-    const roomId = await getRoomNumber();
-    console.log(roomId);
+// const $startBtn = document.getElementById('start-btn');
+// $startBtn.addEventListener('click', makeRoom);
 
-    $roomList.insertAdjacentHTML("beforeend", addRoomButton(roomId))
-    // location.replace("/rooms/" + roomId)
+async function makeRoom(event) {
+    if (event.key === 'Enter' && event.target.value !== "") {
+        const roomName = $roomNameInput.value;
+        console.log(await insertRoom(roomName));
+        $roomList.insertAdjacentHTML("beforeend", addRoomButton(roomName))
+        // location.replace("/rooms/" + roomId)
+    }
 }
 
-function getRoomNumber() {
+function insertRoom(roomName) {
     return fetch("/rooms", {
         method: 'POST',
+        body: roomName
     }).then(res => res.json())
 }
 
-function addRoomButton(roomId) {
-    return `<li><button>${roomId}</button></li>`;
+function addRoomButton(roomName) {
+    return `<li><button>${roomName}</button></li>`;
 }
 
 const $roomList = document.getElementById('room-list');
@@ -28,5 +33,15 @@ function enter(event) {
 }
 
 function getRoomList() {
-
+    return fetch("/rooms", {
+        method: 'GET',
+    }).then(res => res.json())
 }
+
+async function renderRoomList() {
+    const roomList = await getRoomList();
+    const roomNames = roomList["roomNames"];
+    roomNames.forEach(element => $roomList.insertAdjacentHTML("beforeend", addRoomButton(element)));
+}
+
+renderRoomList();

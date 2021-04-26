@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.dto.RoomNamesDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.MoveResponseDto;
@@ -7,9 +8,9 @@ import chess.service.ChessService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ChessApiController {
@@ -19,9 +20,15 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
+    @GetMapping("/rooms")
+    public ResponseEntity<RoomNamesDto> getRoomNames() {
+        RoomNamesDto roomNamesDto = new RoomNamesDto(chessService.getRoomNames());
+        return ResponseEntity.ok().body(roomNamesDto);
+    }
+
     @PostMapping("/rooms")
-    public ResponseEntity<Integer> makeRoom() {
-        return new ResponseEntity<>(chessService.makeRoom(), HttpStatus.CREATED);
+    public ResponseEntity<Integer> makeRoom(@RequestBody String roomName) {
+        return new ResponseEntity<>(chessService.makeRoom(roomName), HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)

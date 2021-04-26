@@ -22,8 +22,8 @@ public class ChessRepository {
         this.pieceDao = pieceDao;
     }
 
-    public int makeRoom(Map<String, String> board) {
-        int newRoomId = roomDao.insertRoom();
+    public int makeRoom(Map<String, String> board, String roomName) {
+        int newRoomId = roomDao.insertRoom(roomName);
         initializePieceStatus(newRoomId, board);
         return newRoomId;
     }
@@ -58,5 +58,9 @@ public class ChessRepository {
 
     public void removeTargetPiece(String target, int roomId) {
         pieceDao.removePiece(target, roomId);
+    }
+
+    public List<String> getRoomNames() {
+        return roomDao.selectAllRoomNames();
     }
 }

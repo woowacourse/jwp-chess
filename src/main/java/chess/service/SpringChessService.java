@@ -47,7 +47,7 @@ public class SpringChessService {
     }
 
     private ResponseDto moveExecute(PositionDto positionDTO, Board board, String roomName) {
-        board.move(Position.from(positionDTO.from()), Position.from(positionDTO.to()), currentTurn(roomName));
+        board.move(Position.from(positionDTO.getFrom()), Position.from(positionDTO.getTo()), currentTurn(roomName));
         springBoardDao.updateBoard(board, currentTurn(roomName).changeTurn().name(), roomName);
         if (board.isGameSet()) {
             Side side = board.winner();

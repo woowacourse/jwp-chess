@@ -13,7 +13,7 @@ window.onload = function () {
 async function renderRooms() {
     initList();
     roomTable.insertAdjacentHTML("beforeend", `<tr><th>방 이름</th></tr>`);
-    const response = await fetch('/rooms', {
+    await fetch('/api/rooms', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ async function deleteRoom() {
         }
         let roomName = decodeURI(clickedRoom.textContent);
 
-        await fetch('/rooms/' + roomName, {
+        await fetch('/api/rooms/' + roomName, {
             method: 'delete',
             headers: {
                 'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ async function addRoom(event) {
         let data = {
             roomName: roomName
         }
-        let response = await fetch('/rooms', {
+        let response = await fetch('/api/rooms', {
             method: 'post',
             body: JSON.stringify(data),
             headers: {

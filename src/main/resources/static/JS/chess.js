@@ -73,7 +73,7 @@ async function move(from, to) {
         from: from,
         to: to
     }
-    let response = await fetch(currentRoomName + '/move', {
+    let response = await fetch('/api/rooms/' + currentRoomName + '/move', {
         method: 'put',
         body: JSON.stringify(data),
         headers: {
@@ -114,7 +114,7 @@ function changeImage(sourcePosition, targetPosition) {
 }
 
 async function syncBoard() {
-    let response = await fetch(currentRoomName + '/board', {
+    let response = await fetch('/api/rooms/' + currentRoomName + '/board', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json'
@@ -146,7 +146,7 @@ async function syncBoard() {
 }
 
 async function changeTurn() {
-    const response = await fetch(currentRoomName + '/turn', {
+    const response = await fetch('/api/rooms/' + currentRoomName + '/turn', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ async function changeTurn() {
 
 function clickStart() {
     if (confirm("재시작하시겠습니까?")) {
-        fetch(currentRoomName + '/restart', {
+        fetch('/api/rooms/' + currentRoomName + '/restart', {
             method: 'put',
             headers: {
                 'Content-Type': 'application/json'
@@ -180,7 +180,7 @@ async function clickBack() {
 }
 
 async function clickScore() {
-    const score = await fetch(currentRoomName + '/score', {
+    const score = await fetch('/api/rooms/' + currentRoomName + '/score', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json'

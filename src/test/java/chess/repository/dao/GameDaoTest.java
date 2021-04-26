@@ -20,7 +20,7 @@ class GameDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private GameDao gameDao;
-    private ChessGameManager chessGameManager = new ChessGameManager();
+    private ChessGameManager chessGameManager;
 
     @BeforeEach
     void setUp() {

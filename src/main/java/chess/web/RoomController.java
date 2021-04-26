@@ -9,26 +9,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
+@RequestMapping("/rooms")
 @Controller
 public class RoomController {
 
     private final RoomService service;
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("rooms", service.findAllDesc());
-        return "index";
-    }
-
-    @PostMapping("/rooms")
+    @PostMapping
     public String add(@RequestBody RoomRequestDto dto) {
         service.add(dto.getName());
         return "redirect:/";
     }
 
-    @PostMapping("/rooms/{id}")
+    @PostMapping("/{id}")
     public String delete(@PathVariable int id) {
         service.delete(id);
         return "redirect:/";

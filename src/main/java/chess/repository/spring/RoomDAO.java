@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class RoomDAO {
@@ -26,7 +25,7 @@ public class RoomDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Room> findAllRooms() {
+    public List<Room> findAll() {
         String query = "SELECT * FROM ROOM";
         return jdbcTemplate.query(query, ROW_MAPPER);
     }
@@ -43,16 +42,7 @@ public class RoomDAO {
         return keyHolder.getKey().intValue();
     }
 
-    public Optional<Room> findLastAddedRoom() {
-        String query = "SELECT * FROM ROOM ORDER BY ID DESC LIMIT 1";
-        List<Room> rooms = jdbcTemplate.query(query, ROW_MAPPER);
-        if (rooms.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(rooms.get(0));
-    }
-
-    public void deleteRoomById(int id) {
+    public void deleteById(int id) {
         String query = "DELETE FROM ROOM WHERE ID = ?";
         jdbcTemplate.update(query, id);
     }

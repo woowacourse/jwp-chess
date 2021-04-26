@@ -42,7 +42,7 @@ class ChessControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        roomService.addRoom("room1");
+        roomService.addRoom("room1", "pass1");
     }
 
     @DisplayName("보드를 조회한다.")

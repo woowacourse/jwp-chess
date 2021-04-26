@@ -43,8 +43,8 @@ class RoomControllerTest {
     @Order(1)
     @Test
     void findAllRooms() throws JsonProcessingException {
-        roomService.addRoom("room1");
-        roomService.addRoom("room2");
+        roomService.addRoom("room1", "pass1");
+        roomService.addRoom("room2", "pass1");
         String expectedResponseBody = writeResponseBody(Arrays.asList(new RoomDTO(1, "room1"), new RoomDTO(2, "room2")));
 
         Response response = RestAssured.given().log().all()

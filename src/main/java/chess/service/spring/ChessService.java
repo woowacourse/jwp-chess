@@ -60,7 +60,7 @@ public class ChessService {
     public void deleteGame(int id) {
         chessDAO.deleteAllHistoriesByRoomId(id);
         userService.deleteAllByRoomId(id);
-        roomService.deleteRoomById(id);
+        roomService.deleteById(id);
         CACHED_CHESS_BOARDS.remove(id);
     }
 }

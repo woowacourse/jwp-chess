@@ -34,7 +34,7 @@ class RoomDAOTest {
     @DisplayName("모든 방 리스트를 조회한다.")
     @Test
     void findAllRooms() {
-        List<Room> rooms = roomDAO.findAllRooms();
+        List<Room> rooms = roomDAO.findAll();
 
         assertThat(rooms).hasSize(2);
     }
@@ -44,27 +44,19 @@ class RoomDAOTest {
     void insertRoom() {
         int id = roomDAO.insertRoom("room3");
 
-        List<Room> rooms = roomDAO.findAllRooms();
+        List<Room> rooms = roomDAO.findAll();
 
         assertThat(rooms).hasSize(3);
         assertThat(id).isGreaterThan(2);
     }
 
-    @DisplayName("가장 마지막에 생성된 방을 조회한다.")
-    @Test
-    void findLastRoom() {
-        Room room = roomDAO.findLastAddedRoom().get();
-
-        assertThat(room.getName()).isEqualTo("room2");
-    }
-
     @DisplayName("방을 id로 삭제한다.")
     @Test
     void deleteRoom() {
-        Room room = roomDAO.findLastAddedRoom().get();
+        int id = roomDAO.insertRoom("room4");
 
-        roomDAO.deleteRoomById(room.getId());
+        roomDAO.deleteById(id);
 
-        assertThat(roomDAO.findAllRooms()).hasSize(1);
+        assertThat(roomDAO.findAll()).hasSize(2);
     }
 }

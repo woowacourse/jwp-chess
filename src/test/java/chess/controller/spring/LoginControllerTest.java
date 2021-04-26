@@ -35,7 +35,7 @@ class LoginControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        roomService.addRoom("room");
+        roomService.addRoom("room", "pass1");
     }
 
     @DisplayName("로그인을 시도한다.")

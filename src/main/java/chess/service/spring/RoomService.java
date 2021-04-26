@@ -17,21 +17,17 @@ public class RoomService {
         this.roomDAO = roomDAO;
     }
 
-    public List<Room> findAllRooms() {
-        return roomDAO.findAllRooms();
-    }
-
-    public void addRoom(String name) { //삭제할 메서드.
-        roomDAO.insertRoom(name);
-    }
-
-    public void deleteRoomById(int id) {
-        roomDAO.deleteRoomById(id);
+    public List<Room> findAll() {
+        return roomDAO.findAll();
     }
 
     public int addRoom(String name, String password) {
         int roomId = roomDAO.insertRoom(name);
         userService.addUserIntoRoom(roomId, password);
         return roomId;
+    }
+
+    public void deleteById(int id) {
+        roomDAO.deleteById(id);
     }
 }

@@ -25,7 +25,7 @@ public class RoomController {
 
     @GetMapping
     public ResponseEntity<List<RoomDTO>> showRooms() {
-        List<RoomDTO> roomDTOS = roomService.findAllRooms()
+        List<RoomDTO> roomDTOS = roomService.findAll()
                 .stream()
                 .map(RoomDTO::from)
                 .collect(Collectors.toList());

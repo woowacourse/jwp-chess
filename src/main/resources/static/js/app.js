@@ -33,7 +33,7 @@ end.addEventListener("click", async (event) => {
         };
 
         const response = fetch(basePath + "/api/v1/games", option);
-        if (response.status === 400 || response.status === 500) {
+        if (response.status === 400 || response.status === 401 || response.status === 500) {
             const body = await response.json();
             alert(body);
             return;
@@ -56,7 +56,7 @@ const loadGame = async () => {
         basePath + "/api/v1/games/" + localStorage.getItem("name"))
     const body = await response.json();
 
-    if (response.status === 400 || response.status === 500) {
+    if (response.status === 400 || response.status === 401 || response.status === 500) {
         alert(body.message);
         return;
     }
@@ -175,7 +175,7 @@ async function movePiece(sourcePosition, targetPosition) {
         basePath + "/api/v1/games/" + localStorage.getItem("name") + "/pieces",
         option)
 
-    if (response.status === 400 || response.status === 500) {
+    if (response.status === 400 || response.status === 401 || response.status === 500) {
         const body = await response.json();
         alert(body.message);
         return;

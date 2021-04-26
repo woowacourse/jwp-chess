@@ -25,4 +25,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponseDto(exception.getMessage()));
     }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ErrorResponseDto> authorizationException(RuntimeException exception) {
+        logger.info(exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponseDto(exception.getMessage()));
+    }
 }

@@ -1,5 +1,7 @@
 const mainStart = document.querySelector("#main-start");
 const mainLoad = document.querySelector("#main-load");
+const signIn = document.querySelector("#main-signin");
+const signUp = document.querySelector("#main-signup");
 const rooms = document.querySelector(".room-single");
 const basePath = 'http://localhost:8080';
 
@@ -23,7 +25,7 @@ mainStart.addEventListener("click", async () => {
 
     const response = await fetch(basePath + "/api/v1/games", option)
 
-    if (response.status === 400 || response.status === 500) {
+    if (response.status === 400 || response.status === 401 || response.status === 500) {
         const body = await response.json();
         alert(body.message);
         return;
@@ -40,7 +42,7 @@ mainLoad.addEventListener("click", async () => {
 
     const response = await fetch(basePath + "/api/v1/games/" + result);
 
-    if (response.status === 400 || response.status === 500) {
+    if (response.status === 400 || response.status === 401 || response.status === 500) {
         const body = await response.json();
         alert(body.message);
         return;
@@ -58,4 +60,8 @@ rooms.addEventListener("click", async (source) => {
         localStorage.setItem("name", name);
         window.location = basePath + "/games";
     }
+});
+
+signUp.addEventListener("click", async () => {
+    window.location = basePath + "/signup";
 });

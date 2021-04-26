@@ -187,6 +187,6 @@ img {
     box-sizing: border-box;
 }
 
-#main-start, #main-load {
+#main-start, #main-load, #main-signin, #main-singup {
     margin: 0 0.5rem;
 }

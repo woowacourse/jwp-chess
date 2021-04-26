@@ -29,4 +29,9 @@ public class ChessGameController {
         model.addAttribute("tilesDto", tilesDto);
         return "board";
     }
+
+    @GetMapping("/signup")
+    public String signup() {
+        return "signUpForm";
+    }
 }

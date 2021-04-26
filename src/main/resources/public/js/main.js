@@ -16,7 +16,7 @@ let main = {
 
         function renderRoomTemplate(id, name) {
             return `<div class="room">
-                            <a id="${id}" href="/game/${id}">방 번호 : ${id} <br> 방 제목 : ${name}</a>
+                            <a id="${id}" href="/rooms/${id}">방 번호 : ${id} <br> 방 제목 : ${name}</a>
                             <button class="destroy"></button>
                     </div>`;
         }
@@ -24,12 +24,12 @@ let main = {
     deleteRoom(event) {
         if (event.target.classList.contains('destroy')) {
             const roomId = event.target.parentNode.querySelector('a').id;
-            fetch("/room/" + roomId, {
+            fetch("/rooms/" + roomId, {
                 method: 'delete'
             }).then(res => {
-                return res.url
-            }).then(url => {
-                window.location.href = url;
+                if (res.status === 200) {
+                    window.location.href = "/";
+                }
             });
         }
     }

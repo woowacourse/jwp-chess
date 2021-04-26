@@ -1,7 +1,6 @@
 package chess.dto;
 
 public class MoveRequestDto {
-    private String roomId;
     private String target;
     private String destination;
 
@@ -9,14 +8,9 @@ public class MoveRequestDto {
 
     }
 
-    public MoveRequestDto(String roomId, String target, String destination) {
-        this.roomId = roomId;
+    public MoveRequestDto(String target, String destination) {
         this.target = target;
         this.destination = destination;
-    }
-
-    public String getRoomId() {
-        return roomId;
     }
 
     public String getTarget() {

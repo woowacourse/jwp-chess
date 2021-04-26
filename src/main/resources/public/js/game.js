@@ -25,20 +25,12 @@ function getFetchWithParams(url, data) {
 
 function getFetchPath(url) {
     return getFetchWithParams(url, {
-        "roomId": $roomId,
         "target": $target
     });
 }
 
-function getFetchScore(url) {
-    return getFetchWithParams(url, {
-        "roomId": $roomId
-    })
-}
-
 function postFetchMove(url) {
     return postFetch(url, JSON.stringify({
-        "roomId": $roomId,
         "target": $target,
         "destination": $destination
     }));
@@ -58,7 +50,7 @@ function postFetch(url, bodyData) {
 }
 
 async function moveBoard() {
-    await postFetchMove("move").then(data => {
+    await postFetchMove($roomId + "/command").then(data => {
         $board = data;
         refreshBoard();
         createBoard();
@@ -68,7 +60,7 @@ async function moveBoard() {
 async function findPath() {
     clearMovablePosition();
 
-    await getFetchPath("movable").then(data => {
+    await getFetchPath($roomId + "/path").then(data => {
         $path = data;
     });
     showMovablePosition();
@@ -82,7 +74,7 @@ function showMovablePosition() {
 }
 
 async function findScore() {
-    await getFetchScore("score/").then(data => {
+    await getFetch($roomId + "/status").then(data => {
         $status = data;
     });
     showScore();
@@ -112,7 +104,7 @@ function clearMovablePosition() {
 
 async function createBoard() {
     clearBoard();
-    await getFetch("board/" + $roomId).then(data => {
+    await getFetch($roomId + "/board").then(data => {
         $board = data;
     })
     refreshBoard();
@@ -199,12 +191,12 @@ function changeTurn(team) {
 
 async function clearRoom() {
     clearBoard();
-    fetch("/clear/" + $roomId, {
+    fetch($roomId + "/commands", {
         method: 'delete'
     }).then(res => {
-        return res.url;
-    }).then(url => {
-        window.location.href = url;
+        if (res.status === 200) {
+            window.location.href = "/";
+        }
     });
 }
 

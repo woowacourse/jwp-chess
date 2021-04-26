@@ -6,7 +6,10 @@ import chess.service.spring.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,12 +22,13 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
 @DirtiesContext
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
 class LoginControllerTest {
 
     @LocalServerPort
     int port;
+
+    private int roomId;
 
     @Autowired
     private UserService userService;
@@ -35,14 +39,19 @@ class LoginControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        roomService.addRoom("room", "pass1");
+        roomId = roomService.addRoom("room", "pass1");
+    }
+
+    @AfterEach
+    void tearDown() {
+        userService.deleteAllByRoomId(roomId);
+        roomService.deleteById(roomId);
     }
 
     @DisplayName("로그인을 시도한다.")
-    @Order(1)
     @Test
     void login() throws JsonProcessingException {
-        String requestBody = new ObjectMapper().writeValueAsString(new LoginRequestDTO(1, "abc123"));
+        String requestBody = writeHttpBody(roomId, "abc123");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -53,12 +62,15 @@ class LoginControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    private String writeHttpBody(int roomId, String password) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(new LoginRequestDTO(roomId, password));
+    }
+
     @DisplayName("이미 방에 두 명의 플레이어가 존재하는 경우 유저가 추가될 수 없다.")
-    @Order(2)
     @Test
     void cannotLogin() throws JsonProcessingException {
-        userService.addUserIntoRoom(1, "pass1");
-        String requestBody = new ObjectMapper().writeValueAsString(new LoginRequestDTO(1, "abc123"));
+        userService.addUserIntoRoom(roomId, "pass1");
+        String requestBody = writeHttpBody(roomId, "abc123");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

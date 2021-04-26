@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 
 import chess.dao.ChessRepository;
 import chess.domain.chessgame.ChessGame;
@@ -21,7 +22,8 @@ import chess.domain.position.Position;
 import chess.dto.response.PiecesResponseDto;
 
 @JdbcTest
-@TestPropertySource("classpath:application-test.properties")
+@TestPropertySource("classpath:application.properties")
+@Sql("classpath:initSetting.sql")
 public class ChessServiceTest {
 
     private ChessService chessService;
@@ -32,10 +34,6 @@ public class ChessServiceTest {
     @BeforeEach
     void setUp() {
         chessService = new ChessService(new ChessRepository(jdbcTemplate));
-        jdbcTemplate.execute("DROP TABLE pieces IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE room IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE pieces(room_id bigint(20), piece_name char(1), position char(2))");
-        jdbcTemplate.execute("CREATE TABLE room(id bigint(20), turn char(5), playing_flag boolean)");
     }
 
     @Test
@@ -51,7 +49,8 @@ public class ChessServiceTest {
     @Test
     @DisplayName("체스 게임 방이 이미 존재하는 경우, 해당 방 정보와 기물 정보를 가져온다.")
     void addRoomTest2() {
-        jdbcTemplate.update("INSERT INTO room (id, turn, playing_flag) VALUES (?, ?, ?)", 1, "BLACK", true);
+        jdbcTemplate.update("INSERT INTO room (id, title, turn, playing_flag) VALUES (?, ?, ?, ?)", 1, "hello", "BLACK",
+            true);
         jdbcTemplate.update("INSERT INTO pieces (room_id, piece_name, position) VALUES (?, ?, ?)", 1, "p", "a2");
 
         PiecesResponseDto piecesResponseDto = new PiecesResponseDto(chessService.postPieces(1));
@@ -64,8 +63,9 @@ public class ChessServiceTest {
     @Test
     @DisplayName("기물을 이동시키고 기물 정보 데이터를 업데이트 한다.")
     void putBoardTest() {
-        chessService.postPieces(1);
-        ChessGame chessGame = chessService.putBoard(1, new Position("a2"), new Position("a4"));
+        int roomId =chessService.postRooms("3");
+        chessService.postPieces(roomId);
+        ChessGame chessGame = chessService.putBoard(roomId, new Position("a2"), new Position("a4"));
         for (Map.Entry<Position, Piece> piece : chessGame.pieces().entrySet()) {
             if (piece.getKey().chessCoordinate().equals("a4")) {
                 assertEquals("p", piece.getValue().getName());
@@ -79,22 +79,23 @@ public class ChessServiceTest {
     @Test
     @DisplayName("체스 게임 점수를 계산한다.")
     void getScoreTest() {
-        chessService.postPieces(1);
+        int roomId =chessService.postRooms("test");
+        chessService.postPieces(roomId);
 
-        assertEquals(38, chessService.getScore(1, "BLACK").getValue());
-        assertEquals(38, chessService.getScore(1, "WHITE").getValue());
+        assertEquals(38, chessService.getScore(roomId, "BLACK").getValue());
+        assertEquals(38, chessService.getScore(roomId, "WHITE").getValue());
     }
 
     @Test
     @DisplayName("체스 게임 방 목록을 구한다.")
     void getRoomsTest() {
-        chessService.postPieces(1);
-        chessService.postPieces(2);
-        chessService.postPieces(3);
-        chessService.postPieces(4);
-        chessService.postPieces(5);
+        chessService.postRooms("hi");
+        chessService.postRooms("hello");
+        chessService.postRooms("i");
+        chessService.postRooms("am");
+        chessService.postRooms("sally");
 
-        assertEquals(Arrays.asList(1, 2, 3, 4, 5), chessService.getRooms());
+        assertEquals(Arrays.asList("hi", "hello", "i", "am", "sally"), chessService.getRooms());
     }
 
 }

@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,9 +38,12 @@ class GameRestControllerTest {
 
     private long testRoomId;
 
+    private String roomName = "newRoom";
+    private String player1 = "test";
+
     @BeforeEach
     private void initTestRoom() {
-        testRoomId = roomService.save("newRoom", "test");
+        testRoomId = roomService.save(roomName, player1);
     }
 
     @DisplayName("갈 수 있는 위치 리스트 반환 테스트")
@@ -51,9 +55,25 @@ class GameRestControllerTest {
 
     @DisplayName("갈 수 있는 위치 요청 매핑 확인")
     @Test
-    public void reachableMVC() throws Exception {
+    public void reachableMvc() throws Exception {
         final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/game/reachable/" + testRoomId)
-                .param("source", "a2");
+                .param("source", "a2")
+                .cookie(new Cookie("playerId", "test"));
+
+        final MvcResult mvcResult = mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertThat(mvcResult.getResponse().getContentAsString())
+                .isEqualTo("{\"positions\":[\"a3\",\"a4\"]}"); // {"positions":["a3","a4"]}
+    }
+
+    @DisplayName("cookie가 일치하지 않는 경우, reachable 조회할 수 없음 확인")
+    @Test
+    public void reachableMvcWithoutCookie() throws Exception {
+        final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/game/reachable/" + testRoomId)
+                .param("source", "a2")
+                .cookie(new Cookie("playerId", "test"));
 
         final MvcResult mvcResult = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())

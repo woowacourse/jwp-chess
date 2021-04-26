@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// TODO :: Dao랑 service가 같이 있는게 걸린다. 분리할 생각
+
 @Service
 public class RoomService {
     private final GameService gameService;

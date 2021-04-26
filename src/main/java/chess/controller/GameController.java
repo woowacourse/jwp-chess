@@ -18,7 +18,7 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/load/{roomId}")
+    @GetMapping("/loadf/{roomId}")
     public String loadGame(@PathVariable final Long roomId, final Model model) {
         model.addAttribute("room", roomService.roomInfo(roomId));
         model.addAttribute("game", gameService.gameInfo(roomId));
@@ -27,7 +27,8 @@ public class GameController {
 
     @GetMapping("/result/{roomId}")
     public String printResult(@PathVariable final Long roomId, final Model model) {
-        model.addAttribute("winner", OutputView.decideWinnerName(gameService.winner(roomId)));
+        final String winnerName = OutputView.decideWinnerName(gameService.winner(roomId));
+        model.addAttribute("winner", winnerName);
         roomService.delete(roomId);
         return "winningResultPage";
     }

@@ -3,11 +3,11 @@ package chess.service;
 import chess.dto.RoomDto;
 import chess.domain.piece.Owner;
 import chess.service.dao.RoomDao;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
 public class PlayerService {
     private static final int MAXIMUM_SIZE_OF_ROOM = 2;
 

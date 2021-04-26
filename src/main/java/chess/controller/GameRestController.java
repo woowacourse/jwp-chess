@@ -8,6 +8,8 @@ import chess.service.PlayerService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -20,6 +22,8 @@ public class GameRestController {
         this.gameService = gameService;
         this.playerService = playerService;
     }
+
+    // TODO :: move와 reachable에서 사용자를 확인했음을 볼 수 있도록 수정
 
     @GetMapping("/reachable/{roomId}")
     public ReachablePositionsDto reachable(@PathVariable final Long roomId,

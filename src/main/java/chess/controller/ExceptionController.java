@@ -11,9 +11,6 @@ import java.sql.SQLException;
 @ControllerAdvice
 public class ExceptionController {
 
-    public ExceptionController() {
-    }
-
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handlingException(final Exception e) {

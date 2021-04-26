@@ -1,18 +1,20 @@
 package chess.controller;
 
 import chess.domain.ChessGame;
-import chess.dto.CreateRoomRequestDTO;
 import chess.dto.MoveDTO;
 import chess.dto.ResultDTO;
 import chess.dto.SectionDTO;
 import chess.dto.StatusDTO;
 import chess.dto.UsersDTO;
+import chess.exception.InvalidPasswordException;
 import chess.service.HistoryService;
 import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
 import java.util.List;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import java.util.Objects;
+import javax.servlet.http.Cookie;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,10 +38,13 @@ public class SpringChessGameRestController {
         this.historyService = historyService;
     }
 
-    @PostMapping(path = "/turn", consumes = "application/json")
-    public boolean checkCurrentTurn(@RequestBody final SectionDTO sectionDTO) {
-        ChessGame chessGame = roomService.loadGameByRoomId(sectionDTO.getRoomId());
-        return chessGame.checkRightTurn(sectionDTO.getClickedSection());
+    @PostMapping(path = "/turn")
+    public boolean checkCurrentTurn(
+        @RequestBody final SectionDTO sectionDTO,
+        @CookieValue(value = "password", required = false) final String password) {
+
+        return roomService
+            .checkRightTurn(sectionDTO.getRoomId(), sectionDTO.getClickedSection(), password);
     }
 
     @PostMapping("/movable-positions")
@@ -53,13 +58,11 @@ public class SpringChessGameRestController {
         String roomId = moveDTO.getRoomId();
         String startPoint = moveDTO.getStartPoint();
         String endPoint = moveDTO.getEndPoint();
-
-        ChessGame chessGame = roomService.loadGameByRoomId(roomId);
-        chessGame.move(startPoint, endPoint);
+        roomService.move(roomId, startPoint, endPoint);
 
         historyService.createLog(roomId, startPoint, endPoint);
         UsersDTO users = userService.usersParticipatedInGame(roomId);
-        return new StatusDTO(chessGame, users);
+        return new StatusDTO(roomService.loadGameByRoomId(roomId), users);
     }
 
     @PostMapping(path = "/initialize")

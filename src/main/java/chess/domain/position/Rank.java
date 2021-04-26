@@ -53,10 +53,6 @@ public enum Rank {
                 .collect(Collectors.toList());
     }
 
-    public static List<Rank> asList() {
-        return Arrays.asList(values());
-    }
-
     public String getLetter() {
         return this.letter;
     }

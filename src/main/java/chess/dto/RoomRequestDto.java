@@ -10,6 +10,7 @@ import lombok.extern.jackson.Jacksonized;
 @RequiredArgsConstructor
 @Getter
 public class RoomRequestDto {
+
     private final String name;
 
 }

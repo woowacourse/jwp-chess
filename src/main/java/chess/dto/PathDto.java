@@ -10,5 +10,6 @@ import lombok.extern.jackson.Jacksonized;
 @RequiredArgsConstructor
 @Getter
 public class PathDto {
+
     private final String from;
 }

@@ -10,6 +10,7 @@ import lombok.extern.jackson.Jacksonized;
 @RequiredArgsConstructor
 @Getter
 public class MoveRequest {
+
     private final String from;
     private final String to;
 }

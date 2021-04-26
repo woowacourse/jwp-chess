@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 @Controller
 public class IndexController {
+
     private final RoomService service;
 
     @GetMapping

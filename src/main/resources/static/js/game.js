@@ -1,12 +1,4 @@
-import {
-    getNewBoard,
-    getPath,
-    getScores,
-    getStatus,
-    getTurn,
-    loadBoard,
-    move
-} from "./fetch.js"
+import {getNewBoard, getPath, getScores, getStatus, getTurn, loadBoard, move} from "./fetch.js"
 import {PIECES, SCORE_TEMPLATE} from "./constant.js";
 
 window.onload = function () {

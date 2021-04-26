@@ -79,3 +79,4 @@ CREATE TABLE board (
 	FOREIGN KEY (room_id) REFERENCES room (room_id)
 )
 ```
+

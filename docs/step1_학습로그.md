@@ -78,3 +78,44 @@
 
 ## 링크
 - [마이크로소프트 이벤트소싱 관련 글](https://docs.microsoft.com/ko-kr/azure/architecture/patterns/event-sourcing)
+
+# 학습로그 1-3
+
+# [DB] 데이터 모델링 - 5
+
+## 내용
+- [데이터 모델링 공부하여 정리한 글](https://nauni.tistory.com/218?category=928627)
+- [정규화 공부하여 정리한 글](https://nauni.tistory.com/225?category=928627)
+
+## 태그
+- DB
+
+# [Architecture] Layered Architecture, Dto - 4
+
+## 내용
+- layered architecture는 관심사를 분리하여 레이어로 구분한 것을 의미한다.
+- presentation layer: UI에 관련된 내용
+- application layer: 서비스들을 관리한다. 도메인에 포함되지 않지만 기능 요구사항들을 관리
+- domain layer: 핵심 비지니스 로직이 존재
+- infrastructure layer(persistence layer): DB나 자료를 영구저장하는 것과 관련된 레이어
+- 관심사를 가지고 구분하였기 때문에 관심사별로 응집되어 있다. 레이어간 교체가능할 수 있기 때문에 유지보수에 좋을 수 있다.
+- 레이어 간에 소통을 하므로 소통하기 위해서는 각 모든 레이어를 거쳐야 한다. 적당한 규모로 나누는 것이 어렵다.
+## 링크
+- [layered architecture에 대한 참고자료 링크](https://dzone.com/articles/layered-architecture-is-good)
+## 태그
+- LayeredArchitecture, Dto
+
+# 학습로그 1-4
+
+# [Architecture] 추상화 - 4
+## 내용
+- 과한 추상화는 코드의 가독성을 해친다.
+- [지나친 추상화 프로젝트 깃허브 참고자료 링크](https://github.com/EnterpriseQualityCoding/FizzBuzzEnterpriseEdition)
+- 현재 단계에서 굳이 interface를 사용하여 의존관계를 분리해주는 것은 지나칠 수 있다.
+- 현재 단계의 프로젝트 규모에서 dto 조립기 까지 만들 필요 없이 dto에서 도메인 정보를 받아 만들어주는 로직정도는 가져도 괜찮다.
+- dto의 비즈니스 로직이 들어가면 안 된다는 것은 도메인의 로직을 의미하는 것이다.
+- 도메인은 dto 정보를 모르게, dto는 일부 도메인 정보를 알고 적절한 값으로 사용가능하게 만드는 방식을 사용할 수 있다.
+
+## 태그
+- 추상화
+

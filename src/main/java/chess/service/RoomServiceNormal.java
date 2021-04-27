@@ -55,7 +55,7 @@ public class RoomServiceNormal implements RoomService {
         if (room.isLocked() && room.passwordIncorrect(password)) {
             throw new PasswordIncorrectException();
         }
-        room.enterAsParticipant(user, nickname);
+        room.enterAsParticipant(roomId, user, nickname);
     }
 
     @Override

@@ -45,9 +45,10 @@ public class SocketUser implements User {
     }
 
     @Override
-    public void setAsNotPlayer(String name) {
+    public void setAsNotPlayer(Long roomId, String name) {
         player = false;
         this.nickname = name;
+        this.roomId = roomId;
     }
 
     @Override

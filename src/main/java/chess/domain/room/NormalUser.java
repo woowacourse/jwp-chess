@@ -34,10 +34,11 @@ public class NormalUser implements User{
     }
 
     @Override
-    public void setAsNotPlayer(String nickname) {
+    public void setAsNotPlayer(Long roomId, String nickname) {
         player = false;
         this.nickname = nickname;
         this.teamColor = TeamColor.NONE;
+        this.roomId = roomId;
     }
 
     @Override

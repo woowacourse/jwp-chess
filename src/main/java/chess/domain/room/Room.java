@@ -37,9 +37,10 @@ public class Room {
         users.add(user);
     }
 
-    public void enterAsParticipant(User user, String nickname) {
-        user.setAsNotPlayer(nickname);
+    public void enterAsParticipant(Long roomId, User user, String nickname) {
+        user.setAsNotPlayer(roomId, nickname);
         users.add(user);
+
     }
 
     public boolean hasSameId(Long roomId) {

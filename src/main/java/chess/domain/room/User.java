@@ -10,7 +10,7 @@ public interface User {
 
     void setAsPlayer(Long roomId, TeamColor teamColor, String nickname);
 
-    void setAsNotPlayer(String name);
+    void setAsNotPlayer(Long roomId, String name);
 
     TeamColor teamColor();
 

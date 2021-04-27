@@ -35,11 +35,11 @@ public class PieceService {
     }
 
     public void catchPiece(final long gameId, final MoveRequestDto moveRequestDto) {
-        pieceDao.delete(gameId, Location.convert(moveRequestDto.getTarget()));
+        pieceDao.deleteByLocation(gameId, Location.convert(moveRequestDto.getTarget()));
     }
 
     public void removeAll(final long gameId) {
-        pieceDao.deletePieces(gameId);
+        pieceDao.deletePiecesByGameId(gameId);
     }
 
 }

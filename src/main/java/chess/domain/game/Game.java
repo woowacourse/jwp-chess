@@ -2,8 +2,10 @@ package chess.domain.game;
 
 import chess.domain.board.Board;
 import chess.domain.location.Location;
+import chess.domain.piece.Piece;
 import chess.domain.team.Team;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Game {
 
@@ -42,6 +44,10 @@ public class Game {
             Location.convert(target),
             turn
         );
+    }
+
+    public List<Piece> toPieces() {
+        return board.toList();
     }
 
 }

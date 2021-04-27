@@ -54,7 +54,23 @@ public class PieceDao {
         return jdbcTemplate.query(sql, pieceRowMapper, gameId);
     }
 
-    public void delete(final long gameId, final Location target) {
+    public void deleteBatchByIds(final List<Long> ids) {
+        final String sql = "DELETE FROM piece WHERE id = ?";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                ps.setLong(1, ids.get(i));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return ids.size();
+            }
+        });
+    }
+
+    public void deleteByLocation(final long gameId, final Location target) {
         final String sql = "DELETE FROM piece WHERE game_id = ? AND x = ? AND y = ?";
         jdbcTemplate.update(sql, gameId, target.getX(), target.getY());
     }
@@ -65,7 +81,7 @@ public class PieceDao {
             source.getY());
     }
 
-    public void deletePieces(final long gameId) {
+    public void deletePiecesByGameId(final long gameId) {
         final String sql = "DELETE FROM piece WHERE game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }

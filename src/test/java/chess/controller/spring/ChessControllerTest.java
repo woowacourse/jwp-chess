@@ -26,9 +26,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -75,12 +72,10 @@ class ChessControllerTest {
     @DisplayName("보드를 조회한다.")
     @Test
     void showBoard() throws Exception {
-        Map<String, Object> sessionMap = new HashMap<>();
-        sessionMap.put("session", new SessionVO(roomId, "pass1"));
         String expectedResponseBody = writeResponseBody();
 
         mockMvc.perform(get("/chessgame/" + roomId + "/chessboard")
-                .sessionAttrs(sessionMap)
+                .sessionAttr("session", new SessionVO(roomId, "pass1"))
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content().string(expectedResponseBody));
@@ -100,14 +95,11 @@ class ChessControllerTest {
     @DisplayName("체스 기물을 이동한다.")
     @Test
     void move() throws Exception {
-        Map<String, Object> sessionMap = new HashMap<>();
-        sessionMap.put("session", new SessionVO(roomId, "pass1"));
-
         MoveRequestDTO moveRequestDTO = new MoveRequestDTO("a2", "a3", "WHITE");
         String requestBody = writeRequestBody(moveRequestDTO);
 
         mockMvc.perform(put("/chessgame/" + roomId + "/chessboard")
-                .sessionAttrs(sessionMap)
+                .sessionAttr("session", new SessionVO(roomId, "pass1"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .content(requestBody))
@@ -118,14 +110,11 @@ class ChessControllerTest {
     @DisplayName("현재 턴이 아닌 기물을 조작시 예외가 발생한다.")
     @Test
     void cannotMove() throws Exception {
-        Map<String, Object> sessionMap = new HashMap<>();
-        sessionMap.put("session", new SessionVO(roomId, "pass1"));
-
         MoveRequestDTO moveRequestDTO = new MoveRequestDTO("a2", "a3", "BLACK");
         String requestBody = writeRequestBody(moveRequestDTO);
 
         mockMvc.perform(put("/chessgame/" + roomId + "/chessboard")
-                .sessionAttrs(sessionMap)
+                .sessionAttr("session", new SessionVO(roomId, "pass1"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .content(requestBody))
@@ -133,15 +122,13 @@ class ChessControllerTest {
                 .andExpect(content().string("조작할 수 있는 기물이 없습니다."));
     }
 
-    @DisplayName("리스타트시 응답 결과는 메인 페이지 url이다.")
+    @DisplayName("게임 종료시 응답 메시지는 메인 페이지 url이다.")
     @Test
-    void restart() throws Exception {
+    void exit() throws Exception {
         int newRoomId = roomService.addRoom("room2", "pass369");
-        Map<String, Object> sessionMap = new HashMap<>();
-        sessionMap.put("session", new SessionVO(newRoomId, "pass369"));
 
         mockMvc.perform(delete("/chessgame/" + newRoomId)
-                .sessionAttrs(sessionMap)
+                .sessionAttr("session", new SessionVO(newRoomId, "pass369"))
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content().string("/"));

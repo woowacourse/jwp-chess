@@ -2,8 +2,6 @@ package chess.controller.web;
 
 import chess.service.GameService;
 import chess.service.RoomService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,12 +26,12 @@ public class RoomController {
     }
 
     @PostMapping("/rooms")
-    public ResponseEntity<Void> createRoom(@RequestParam String roomName) {
+    public ResponseEntity createRoom(@RequestParam String roomName) {
         final Long roomId = roomService.save(roomName);
         gameService.create(roomId);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/games/" + roomId));
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        return ResponseEntity
+                .created(URI.create("/games/" + roomId))
+                .build();
     }
 
     @DeleteMapping("/room")

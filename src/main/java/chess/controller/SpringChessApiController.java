@@ -38,7 +38,8 @@ public class SpringChessApiController {
     }
 
     @PutMapping("{id}/status")
-    private ResponseEntity<Void> closeRoom(@PathVariable String id, @RequestBody RoomStatusDto roomStatusDto) {
+    private ResponseEntity<Void> closeRoom(@PathVariable String id,
+        @RequestBody RoomStatusDto roomStatusDto) {
         if (roomStatusDto.getStatus().equals("closed")) {
             chessService.close(id);
             return ResponseEntity.ok().build();
@@ -76,6 +77,7 @@ public class SpringChessApiController {
     @PutMapping("{id}/movement")
     private ResponseEntity<BoardDto> move(@PathVariable String id,
         @RequestBody MovementDto movementDto) {
-        return ResponseEntity.ok(chessService.move(id, movementDto.getSource(), movementDto.getDestination()));
+        return ResponseEntity
+            .ok(chessService.move(id, movementDto.getSource(), movementDto.getDestination()));
     }
 }

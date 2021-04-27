@@ -8,7 +8,8 @@ import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
-import chess.dto.MovedInfoDto;
+import chess.dto.MoveRequestDto;
+import chess.dto.MoveResponseDto;
 import chess.dto.RoomNameDto;
 import chess.dto.SquareDto;
 import org.springframework.stereotype.Service;
@@ -86,16 +87,20 @@ public class ChessService {
         return new Piece(pieceInfo.get(1), pieceInfo.get(0));
     }
 
-    public MovedInfoDto move(String name, String source, String target, String password) {
+    public MoveResponseDto move(MoveRequestDto moveRequestDto, String password) {
+        String name = moveRequestDto.getRoomName();
+        String source = moveRequestDto.getSource();
+        String target = moveRequestDto.getTarget();
+
         Game currentGame = currentGame(name, password);
         currentGame.move(source, target, password);
         if (currentGame.isEnd()) {
             deleteRoom(name);
-            return new MovedInfoDto(source, target,
+            return new MoveResponseDto(source, target,
                 currentGame.winnerColor().getSymbol());
         }
 
-        return new MovedInfoDto(source, target,
+        return new MoveResponseDto(source, target,
             currentGame.turnColor().getName());
     }
 

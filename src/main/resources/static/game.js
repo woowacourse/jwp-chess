@@ -96,13 +96,14 @@ function goHome() {
 function move() {
     $.ajax({
         type: "POST",
+        contentType: 'application/json',
         url: "/move",
-        data: {
+        data: JSON.stringify({
             source: document.getElementsByClassName("source")[0].id,
             target: document.getElementsByClassName("target")[0].id,
             roomName: document.getElementById("roomName").innerText
-        },
-        dataType: "json",
+        }),
+        dataType: 'json',
         success: switchPiece,
         error: errorMessage,
         complete: clearSelect()
@@ -110,6 +111,7 @@ function move() {
 }
 
 function switchPiece(res) {
+    console.log(res);
     let sourceElement = document.getElementById(res.source).firstElementChild;
     let targetElement = document.getElementById(res.target).firstElementChild;
     let blankImgUrl = "./img/Blank.png";

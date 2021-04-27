@@ -1,11 +1,10 @@
 package chess.controller;
 
+import chess.dto.RoomInfoRequestDto;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -27,10 +26,9 @@ public class SpringChessController {
     }
 
     @PostMapping("/white-game")
-    public String whiteStart(Model model, HttpServletRequest request, HttpSession session) {
-        Map<String, String[]> paramMap = request.getParameterMap();
-        String room = paramMap.get("roomName")[0];
-        String password = paramMap.get("wPassword")[0];
+    public String whiteStart(Model model, HttpSession session, @ModelAttribute RoomInfoRequestDto roomInfoRequestDto) {
+        String room = roomInfoRequestDto.getRoomName();
+        String password = roomInfoRequestDto.getPassword();
 
         model.addAttribute("room", room);
         session.setAttribute("password", password);
@@ -39,10 +37,9 @@ public class SpringChessController {
     }
 
     @PostMapping("/black-game")
-    public String blackStart(Model model, HttpServletRequest request, HttpSession session) {
-        Map<String, String[]> paramMap = request.getParameterMap();
-        String room = paramMap.get("roomName")[0];
-        String password = paramMap.get("bPassword")[0];
+    public String blackStart(Model model, HttpSession session, @ModelAttribute RoomInfoRequestDto roomInfoRequestDto) {
+        String room = roomInfoRequestDto.getRoomName();
+        String password = roomInfoRequestDto.getPassword();
 
         chessService.deleteRoomFromList(room);
 

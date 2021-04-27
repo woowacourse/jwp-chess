@@ -1,7 +1,8 @@
 package chess.controller;
 
 import chess.dto.GameResponseDto;
-import chess.dto.MovedInfoDto;
+import chess.dto.MoveRequestDto;
+import chess.dto.MoveResponseDto;
 import chess.dto.StatusDto;
 import chess.service.ChessService;
 import org.springframework.dao.DataAccessException;
@@ -34,9 +35,9 @@ public class SpringChessApiController {
     }
 
     @PostMapping("/move")
-    public MovedInfoDto move(HttpSession session, @RequestParam String roomName, @RequestParam String source, @RequestParam String target) {
+    public MoveResponseDto move(HttpSession session, @RequestBody MoveRequestDto moveRequestDto) {
         String password = (String) session.getAttribute("password");
-        return chessService.move(roomName, source, target, password);
+        return chessService.move(moveRequestDto, password);
     }
 
     @GetMapping("/status/{name}")

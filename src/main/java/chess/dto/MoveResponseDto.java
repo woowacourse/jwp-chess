@@ -1,12 +1,12 @@
 package chess.dto;
 
-public class MovedInfoDto {
+public class MoveResponseDto {
 
     String source;
     String target;
     String color;
 
-    public MovedInfoDto(String source, String target, String color) {
+    public MoveResponseDto(String source, String target, String color) {
         this.source = source;
         this.target = target;
         this.color = color;

@@ -5,19 +5,29 @@ const room = function (roomId, title, locked, playerAmount) {
         <div class="room-content">${title}</div>
         <div class="room-detail">
           <div class="room-people">${playerAmount}/2</div>
-          <div class="room-access"><i class="fas fa-${locked ? 'lock' : 'unlock'}"></i></div>
+          <div class="room-access"><i class="fas fa-${locked ? 'lock'
+      : 'unlock'}"></i></div>
         </div>
         </div>
             
         <div class="enter-info">
-          <div class="enter asPlayer ${locked ? 'lock' : 'unlock'} ${playerAmount >= 2 ? 'impossible' : ''}" id="${roomId}"><span>입장</span></div>
-          <div class="enter asParticipant ${locked ? 'lock' : 'unlock'}" id="${roomId}"><span>관전</span></div>
+          <div class="enter asPlayer ${locked ? 'lock'
+      : 'unlock'} ${playerAmount >= 2 ? 'impossible' : ''}" id="${roomId}"><span>입장</span></div>
+          <div class="enter asParticipant ${locked ? 'lock'
+      : 'unlock'}" id="${roomId}"><span>관전</span></div>
         </div>
     </div>`
 }
 
 const createRoom = '<div class="room-item create-room"><span>+</span></div>';
 
+const chat = function (sender, message) {
+  return `
+  <div class="chat-content">
+            <div class="sender"><span>${sender} :</span></div>
+            <div class="message"> <span>${message}</span></div>
+          </div>`
+}
 
 const gameRoom = function (whitePlayer, blackPlayer) {
   return `<div class="game-contents">
@@ -64,12 +74,12 @@ const gameRoom = function (whitePlayer, blackPlayer) {
       </div>
       <!--채팅-->
       <div class="chat">
-        <div class="chat-content"></div>
+        <div class="chat-contents"></div>
         <div class="send-form">
           <div class="message"></div>
           <div class="send">
-            <input type="text" name="sendContent">
-            <input type="submit" value="보내기">
+            <input class="send-message" type="text" name="sendContent">
+            <input class="send-submit" type="submit" value="보내기">
           </div>
         </div>
       </div>

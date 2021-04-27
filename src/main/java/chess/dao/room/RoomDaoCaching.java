@@ -7,13 +7,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RoomDaoCaching implements RoomDao {
+public class
+RoomDaoCaching implements RoomDao {
     private static Long roomId = 1L;
 
-    private final List<Room> rooms = new ArrayList<>();
+    private static final List<Room> rooms = new ArrayList<>();
 
     @Override
     public Room newRoom(RoomInformation roomInformation) {
@@ -37,5 +39,10 @@ public class RoomDaoCaching implements RoomDao {
     @Override
     public void removeRoom(Long roomId) {
         findRoom(roomId).ifPresent(rooms::remove);
+    }
+
+    @Override
+    public void removeAll() {
+        rooms.clear();
     }
 }

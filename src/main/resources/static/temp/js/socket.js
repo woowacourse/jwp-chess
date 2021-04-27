@@ -11,6 +11,7 @@ let $error_messages;
 let $modals;
 let $enter_modal;
 let $board;
+let $chat;
 
 let roomId;
 let locked;
@@ -26,6 +27,7 @@ webSocket.onmessage = function (message) {
   $modals = document.querySelectorAll('.modal');
   $enter_modal = document.querySelector('.enter-modal');
   $board = document.querySelector('.board');
+  $chat = document.querySelector('.chat');
   eventHandler();
 }
 
@@ -41,6 +43,19 @@ function eventHandler() {
   }
   if ($board) {
     $board.addEventListener('click', clickEvent);
+  }
+
+  if ($chat) {
+    $chat.addEventListener('click', clickEvent);
+    $chat.addEventListener('keyup', onKeyUpEvent);
+  }
+}
+
+function onKeyUpEvent({key, target}) {
+  if (key === 'Enter' && target.classList.contains('send-message')
+      && target.value.length > 0) {
+    roomRequest.chat(target.value);
+    target.value = '';
   }
 }
 
@@ -95,6 +110,15 @@ function submit(target) {
       }
 
       exitAll();
+      return;
+    }
+
+    if (target.classList.contains('send-submit')) {
+      let contentElement = getElement(target, 'sendContent');
+      if(contentElement.value.length > 0) {
+        roomRequest.chat(contentElement.value);
+        contentElement.value = '';
+      }
     }
   }
 }
@@ -107,7 +131,8 @@ function clickEvent({target}) {
     return;
   }
 
-  if (target.classList.contains('enter') || target.parentElement.classList.contains('enter')) {
+  if (target.classList.contains('enter')
+      || target.parentElement.classList.contains('enter')) {
     //다 모달 띄워야됨.
     const enter = target.closest('.enter')
     $enter_modal.style.display = 'block';
@@ -124,7 +149,9 @@ function clickEvent({target}) {
     return;
   }
 
-  if ((target.classList.contains('board-item') || target.parentElement.classList.contains('board-item')) && commandExecutor.board().movable()) {
+  if ((target.classList.contains('board-item')
+      || target.parentElement.classList.contains('board-item'))
+      && commandExecutor.board().movable()) {
     let targetBoardItem = target.closest(".board-item");
 
     if (targetBoardItem.classList.contains('movable')) {
@@ -156,8 +183,4 @@ function movePosition(targetBoardItem) {
 
   commandExecutor.board().move(targetBoardItem);
   roomRequest.move(currentPosition, targetPosition);
-}
-
-webSocket.onopen = () => {
-
 }

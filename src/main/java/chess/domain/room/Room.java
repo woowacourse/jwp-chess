@@ -28,17 +28,17 @@ public class Room {
         this(id, roomInformation, chessGame, new ArrayList<>());
     }
 
-    public void enterAsPlayer(User user, TeamColor teamColor) {
+    public void enterAsPlayer(User user, TeamColor teamColor, String nickname) {
         long playerCount = users.stream().filter(User::isPlayer).count();
         if(playerCount >= MAX_PLAYER_SIZE) {
             throw new MaxPlayerSizeException();
         }
-        user.setAsPlayer(teamColor);
+        user.setAsPlayer(id, teamColor, nickname);
         users.add(user);
     }
 
-    public void enterAsParticipant(User user) {
-        user.setAsNotPlayer();
+    public void enterAsParticipant(User user, String nickname) {
+        user.setAsNotPlayer(nickname);
         users.add(user);
     }
 

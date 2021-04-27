@@ -7,7 +7,8 @@ public class ResponseForm<T> {
         NEW_USER_NAME,
         UPDATE_STATUS,
         MOVE_PIECE,
-        REMOVE_ROOM;
+        REMOVE_ROOM,
+        MESSAGE;
     }
 
     private String form;

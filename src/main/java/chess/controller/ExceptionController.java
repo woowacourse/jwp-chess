@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.exception.PasswordIncorrectException;
 import chess.exception.RoomNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -19,5 +20,10 @@ public class ExceptionController {
     public ResponseEntity bindingFail(MethodArgumentNotValidException exception) {
         BindingResult bindingResult = exception.getBindingResult();
         return ResponseEntity.badRequest().body(bindingResult);
+    }
+
+    @ExceptionHandler(PasswordIncorrectException.class)
+    public ResponseEntity passwordIncorrect(PasswordIncorrectException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

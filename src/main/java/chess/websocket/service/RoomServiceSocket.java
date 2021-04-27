@@ -25,8 +25,8 @@ public class RoomServiceSocket implements RoomService {
     }
 
     @Override
-    public Long createRoom(String title, boolean locked, String password, User user) {
-        Long roomId = roomService.createRoom(title, locked, password, user);
+    public Long createRoom(String title, boolean locked, String password, String name, User user) {
+        Long roomId = roomService.createRoom(title, locked, password, name, user);
         lobby.leave(user);
         return roomId;
     }
@@ -37,14 +37,14 @@ public class RoomServiceSocket implements RoomService {
     }
 
     @Override
-    public void enterRoomAsPlayer(Long roomId, String password, TeamColor teamColor, User user) {
-        roomService.enterRoomAsPlayer(roomId, password, teamColor, user);
+    public void enterRoomAsPlayer(Long roomId, String password, TeamColor teamColor, String name, User user) {
+        roomService.enterRoomAsPlayer(roomId, password, teamColor, name, user);
         lobby.leave(user);
     }
 
     @Override
-    public void enterRoomAsParticipant(Long roomId, String password, User user) {
-        roomService.enterRoomAsParticipant(roomId, password, user);
+    public void enterRoomAsParticipant(Long roomId, String password, String nickname, User user) {
+        roomService.enterRoomAsParticipant(roomId, password, nickname, user);
         lobby.leave(user);
     }
 

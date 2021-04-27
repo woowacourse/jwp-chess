@@ -1,22 +1,15 @@
-package chess.websocket.domain;
+package chess.domain.room;
 
 import chess.domain.TeamColor;
-import chess.domain.room.User;
-import java.io.IOException;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
-public class SocketUser implements User {
+public class NormalUser implements User{
 
-    private final WebSocketSession session;
     private boolean player;
     private String nickname;
     private TeamColor teamColor;
     private Long roomId;
 
-
-    public SocketUser(WebSocketSession session) {
-        this.session = session;
+    public NormalUser() {
         player = false;
         nickname = "사용자";
         teamColor = TeamColor.NONE;
@@ -24,11 +17,7 @@ public class SocketUser implements User {
 
     @Override
     public void sendData(String data) {
-        try {
-            session.sendMessage(new TextMessage(data));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        throw new IllegalStateException("사용할 수 없는 메서드입니다.");
     }
 
     @Override
@@ -45,9 +34,10 @@ public class SocketUser implements User {
     }
 
     @Override
-    public void setAsNotPlayer(String name) {
+    public void setAsNotPlayer(String nickname) {
         player = false;
-        this.nickname = name;
+        this.nickname = nickname;
+        this.teamColor = TeamColor.NONE;
     }
 
     @Override
@@ -70,11 +60,8 @@ public class SocketUser implements User {
         return teamColor == TeamColor.BLACK;
     }
 
-
     @Override
     public Long roomId() {
         return roomId;
     }
-
-
 }

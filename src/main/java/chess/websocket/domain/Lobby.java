@@ -1,6 +1,5 @@
 package chess.websocket.domain;
 
-import chess.domain.room.Room;
 import chess.domain.room.User;
 import java.util.ArrayList;
 import java.util.List;

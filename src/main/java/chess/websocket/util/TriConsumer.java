@@ -1,7 +1,5 @@
 package chess.websocket.util;
 
-import java.io.IOException;
-
 @FunctionalInterface
 public interface TriConsumer<T, U, V> {
 

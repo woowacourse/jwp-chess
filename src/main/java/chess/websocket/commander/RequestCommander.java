@@ -20,6 +20,7 @@ import chess.websocket.ResponseForm;
 import chess.websocket.ResponseForm.Form;
 import chess.websocket.commander.dto.EnterRoomRequestDto;
 import chess.websocket.commander.dto.GameRoomResponseDto;
+import chess.websocket.commander.dto.MessageDto;
 import chess.websocket.commander.dto.NameDto;
 import chess.websocket.commander.dto.RoomResponseDto;
 import chess.websocket.domain.Lobby;
@@ -29,9 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("socket")
 public class RequestCommander {
 
     private final RoomService roomService;
@@ -61,12 +64,11 @@ public class RequestCommander {
             roomRequestDto.getTitle(),
             roomRequestDto.isLocked(),
             roomRequestDto.getPassword(),
+            roomRequestDto.getNickname(),
             user
         );
         updateRoomForLobbyUsers(data);
 
-        // TODO: 자동 들어가는 로직 처리
-        user.enterRoom(roomId, roomRequestDto.getNickname());
         loadChessGameRoom(roomId, user);
     }
 
@@ -97,9 +99,8 @@ public class RequestCommander {
         final EnterRoomRequestDto enterRoomRequestDto = objectMapper
             .convertValue(data, EnterRoomRequestDto.class);
         roomService.enterRoomAsPlayer(enterRoomRequestDto.getRoomId(),
-            enterRoomRequestDto.getPassword(), TeamColor.BLACK, user);
+            enterRoomRequestDto.getPassword(), TeamColor.BLACK, enterRoomRequestDto.getNickname(), user);
 
-        user.enterRoom(enterRoomRequestDto.getRoomId(), enterRoomRequestDto.getNickname());
         loadChessGameRoom(enterRoomRequestDto.getRoomId(), user);
 
         updateNameForRoomUsers(user.roomId());
@@ -110,9 +111,8 @@ public class RequestCommander {
         final EnterRoomRequestDto enterRoomRequestDto = objectMapper
             .convertValue(data, EnterRoomRequestDto.class);
         roomService.enterRoomAsParticipant(enterRoomRequestDto.getRoomId(),
-            enterRoomRequestDto.getPassword(), user);
+            enterRoomRequestDto.getPassword(), enterRoomRequestDto.getNickname(), user);
 
-        user.enterRoom(enterRoomRequestDto.getRoomId(), enterRoomRequestDto.getNickname());
         loadChessGameRoom(enterRoomRequestDto.getRoomId(), user);
     }
 
@@ -215,6 +215,16 @@ public class RequestCommander {
             .forEach(roomUser -> roomUser.sendData(movedResponse));
 
         room.users().forEach(roomUser -> roomUser.sendData(roundStatus));
+    }
+
+    public void chat(Map<String, Object> data, User user) throws Exception {
+        String message = (String) data.get("message");
+        final String messageResponse = objectMapper.writeValueAsString(
+            new ResponseForm<>(Form.MESSAGE, new MessageDto(user.name(), message)));
+
+        roomService.findRoom(user.roomId()).orElseThrow(RoomNotFoundException::new)
+            .users()
+            .forEach(roomUser -> roomUser.sendData(messageResponse));
     }
 
 //    public void enterRoom(String[] contents, WebSocketSession player) {

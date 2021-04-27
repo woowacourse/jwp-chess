@@ -14,4 +14,6 @@ public interface RoomDao {
     Optional<Room> findRoom(Long roomId);
 
     void removeRoom(Long id);
+
+    void removeAll();
 }

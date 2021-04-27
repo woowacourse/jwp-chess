@@ -23,10 +23,10 @@ public class RoomServiceNormal implements RoomService {
     }
 
     @Override
-    public Long createRoom(String title, boolean locked, String password, User user) {
+    public Long createRoom(String title, boolean locked, String password, String nickname, User user) {
         RoomInformation roomInformation = new RoomInformation(title, locked, password);
         Room createdRoom = roomDao.newRoom(roomInformation);
-        createdRoom.enterAsPlayer(user, TeamColor.WHITE);
+        createdRoom.enterAsPlayer(user, TeamColor.WHITE, nickname);
         return createdRoom.id();
     }
 
@@ -36,12 +36,12 @@ public class RoomServiceNormal implements RoomService {
     }
 
     @Override
-    public void enterRoomAsPlayer(Long roomId, String password, TeamColor teamColor, User user) {
+    public void enterRoomAsPlayer(Long roomId, String password, TeamColor teamColor, String nickname, User user) {
         Room room = roomDao.findRoom(roomId).orElseThrow(RoomNotFoundException::new);
         if (room.isLocked() && room.passwordIncorrect(password)) {
             throw new PasswordIncorrectException();
         }
-        room.enterAsPlayer(user, teamColor);
+        room.enterAsPlayer(user, teamColor, nickname);
     }
 
     @Override
@@ -50,12 +50,12 @@ public class RoomServiceNormal implements RoomService {
     }
 
     @Override
-    public void enterRoomAsParticipant(Long roomId, String password, User user) {
+    public void enterRoomAsParticipant(Long roomId, String password, String nickname, User user) {
         Room room = roomDao.findRoom(roomId).orElseThrow(RoomNotFoundException::new);
         if (room.isLocked() && room.passwordIncorrect(password)) {
             throw new PasswordIncorrectException();
         }
-        room.enterAsParticipant(user);
+        room.enterAsParticipant(user, nickname);
     }
 
     @Override

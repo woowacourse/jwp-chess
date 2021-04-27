@@ -41,6 +41,14 @@ class CommandExecutor {
       case 'REMOVE_ROOM' :
         await alert(`${response.data}님이 나가 게임이 종료됩니다.`);
         window.location.reload();
+        break;
+
+      case 'MESSAGE' :
+        let chatContents = document.querySelector('.chat-contents');
+        let content = chat(response.data.sender, response.data.contents);
+        chatContents.insertAdjacentHTML("beforeend", content);
+        chatContents.lastElementChild.scrollIntoView();
+        break;
     }
   }
 

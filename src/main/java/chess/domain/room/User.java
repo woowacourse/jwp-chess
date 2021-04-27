@@ -8,9 +8,9 @@ public interface User {
 
     boolean isPlayer();
 
-    void setAsPlayer(TeamColor teamColor);
+    void setAsPlayer(Long roomId, TeamColor teamColor, String nickname);
 
-    void setAsNotPlayer();
+    void setAsNotPlayer(String name);
 
     TeamColor teamColor();
 
@@ -19,8 +19,6 @@ public interface User {
     boolean isWhite();
 
     boolean isBlack();
-
-    void enterRoom(Long roomId, String nickname);
 
     Long roomId();
 }

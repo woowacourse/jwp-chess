@@ -38,6 +38,14 @@ class ChessRequest {
     });
     webSocket.send(JSON.stringify(requestForm));
   }
+
+  chat(message) {
+    let requestForm = new RequestForm('CHAT');
+    requestForm.setData({
+      message: message
+    });
+    webSocket.send(JSON.stringify(requestForm));
+  }
 }
 
 class RequestForm {

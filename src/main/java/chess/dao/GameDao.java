@@ -76,6 +76,11 @@ public class GameDao {
         return jdbcTemplate.update(sql, roomId);
     }
 
+    public int findByName(String roomName) {
+        String sql = "SELECT EXISTS(SELECT * FROM game WHERE name = ?) as isChk";
+        return jdbcTemplate.queryForObject(sql, Integer.class, roomName);
+    }
+
     private final RowMapper<Game> gameRowMapper = (resultSet, rowNum) -> new Game(
             resultSet.getLong("id"),
             resultSet.getString("name"),

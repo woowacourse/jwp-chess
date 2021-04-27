@@ -29,4 +29,9 @@ public class GameController {
         return ResponseEntity.ok(gameService.deleteByGameId(roomId));
     }
 
+    @GetMapping("/rooms/check")
+    public ResponseEntity<Integer> findGameByName(@RequestParam String name) {
+        return ResponseEntity.ok(gameService.findGameByName(name));
+    }
+
 }

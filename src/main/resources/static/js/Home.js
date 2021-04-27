@@ -27,13 +27,22 @@ async function startNewGame(e) {
         return;
     }
     const whiteUserName = prompt("흰색 유저 이름을 입력하세요.");
-    const blackUserName = prompt("검정색 유저 이름을 입력하세요.");
-
     try {
-        validateName(whiteUserName, blackUserName);
+        validateName(whiteUserName);
     } catch (e) {
-        alert("이름이 비어있거나, 같은 이름을 입력했습니다.");
         return;
+    }
+
+    const blackUserName = prompt("검정색 유저 이름을 입력하세요.");
+    try {
+        validateName(blackUserName);
+    } catch (e) {
+        return;
+    }
+
+    if (whiteUserName === blackUserName) {
+        alert("같은 유저를 입력하였습니다");
+        throw Error("같은 유저를 입력하였습니다.");
     }
 
     try {
@@ -69,20 +78,19 @@ async function validateRoomName(roomName) {
     const params = {
         name: roomName
     }
-    const room = await getData('${url}/games/rooms/check', params);
-    if (room != null) {
+    const isChk = await getData(`${url}/games/rooms/check`, params);
+    if (isChk === 1) {
+        alert("이미 존재하는 방 이름입니다");
         throw Error("존재하는 방이름 입니다.");
     }
 
 }
 
 
-function validateName(whiteName, blackName) {
-    if (whiteName.length === 0 || blackName.length === 0) {
+function validateName(name) {
+    if (name.length === 0) {
+        alert("이름을 입력해주세요");
         throw Error("이름을 입력하지 않았습니다.");
-    }
-    if (whiteName === blackName) {
-        throw Error("유저의 이름은 같을 수 없습니다.");
     }
 }
 

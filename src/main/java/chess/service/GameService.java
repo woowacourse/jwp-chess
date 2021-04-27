@@ -8,6 +8,7 @@ import chess.dto.RoomResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GameService {
@@ -48,5 +49,9 @@ public class GameService {
 
     public int deleteByGameId(long roomId) {
         return gameDao.deleteByGameId(roomId);
+    }
+
+    public int findGameByName(String roomName) {
+        return gameDao.findByName(roomName);
     }
 }

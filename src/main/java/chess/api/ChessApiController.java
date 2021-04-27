@@ -40,7 +40,7 @@ public class ChessApiController {
     public ResponseEntity<ChessRoomDto> newRoom() {
         ChessRoomDto chessRoomDto = chessGameService.createNewChessRoom();
         URI uri = UriComponentsBuilder
-                .fromUriString("http://localhost:8080/chessgames/{roomId}")
+                .fromUriString("/chessgames/{roomId}")
                 .buildAndExpand(chessRoomDto.getRoomId())
                 .toUri();
         return ResponseEntity.created(uri).body(chessRoomDto);

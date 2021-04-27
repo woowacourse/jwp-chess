@@ -13,7 +13,9 @@ import chess.webdto.ChessGameDto;
 import chess.webdto.ChessGameTableDto;
 import chess.webdto.GameRoomDto;
 import chess.webdto.GameRoomListDto;
+import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -22,11 +24,21 @@ import static chess.service.TeamFormat.BLACK_TEAM;
 import static chess.service.TeamFormat.WHITE_TEAM;
 
 @Service
+@Transactional
 public class SpringChessService {
     private final SpringChessGameDao springChessGameDao;
 
     public SpringChessService(SpringChessGameDao springChessGameDao) {
         this.springChessGameDao = springChessGameDao;
+    }
+
+    public void createUser(final String id, final String password) {
+        springChessGameDao.createUserInfo(id, password);
+    }
+
+    public boolean loginUser(final String id, final String password) {
+        String userPassword = springChessGameDao.getUserPasswordById(id);
+        return userPassword.equals(password);
     }
 
     public GameRoomDto createGameRoom(final String roomName) {

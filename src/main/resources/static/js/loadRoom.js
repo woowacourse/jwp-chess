@@ -3,21 +3,30 @@ import {chessRoomList, closeRoomList} from "./firstPage.js";
 let joinRoomBtn = document.getElementById("joinRoomBtn");
 joinRoomBtn.addEventListener("click", joinRoom);
 
+export function checkFetchLogin(response) {
+    if (!response.ok) {
+        console.log(response.status)
+        if (response.status === 401) {
+            alert("로그인을 먼저 해주세요");
+        } else {
+            alert("서버와의 통신에 실패했습니다.");
+        }
+        throw new Error(response.status);
+    }
+    return response.json();
+}
+
 function joinRoom() {
     //Fetch로 현재 방들 받아오기
-    chessRoomList.style.display = "flex";
     fetch("/games")
         .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-            return response.json();
+            return checkFetchLogin(response);
         })
         .then(data => {
+            chessRoomList.style.display = "flex";
             showRoomStatus(data);
         })
         .catch(error => {
-            alert("서버와의 통신에 실패했습니다.");
         });
 }
 

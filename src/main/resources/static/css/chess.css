@@ -76,7 +76,13 @@ body {
     display: flex;
     justify-content: center;
     margin-top: 50px;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
+}
+
+.userId {
+    color: #522632;
+    text-align: center;
+    margin-bottom: 15px;
 }
 
 #saveGameBtn {

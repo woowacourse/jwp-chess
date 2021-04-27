@@ -1,4 +1,5 @@
 import {changeTitleToRoomTitle, initializeChessBoard, saveRoomNumber} from "./firstPage.js";
+import {checkFetchLogin} from "./loadRoom.js";
 
 let makeRoomBtn = document.getElementById("makeRoomBtn");
 makeRoomBtn.addEventListener("click", makeRoom);
@@ -30,16 +31,12 @@ function checkAvailableRoom(userInputRoomName) {
 
     fetch("/games", postOption)
         .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-            return response.json();
+            return checkFetchLogin(response);
         })
         .then(data => {
             makeRoomAPIRequest(data);
         })
         .catch(error => {
-            alert("서버와의 통신에 실패했습니다.");
         })
 }
 
@@ -58,10 +55,7 @@ function makeRoomAPIRequest(data) {
     console.log(url);
     fetch(url, postOption)
         .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-            return response.json();
+            return checkFetchLogin(response);
         })
         .then(data => {
             initializeChessBoard(data);
@@ -69,6 +63,5 @@ function makeRoomAPIRequest(data) {
             saveRoomNumber(id);
         })
         .catch(error => {
-            alert("서버와의 통신에 실패했습니다.");
         })
 }

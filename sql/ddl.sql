@@ -3,9 +3,17 @@ CREATE DATABASE chess_db DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 USE chess_db;
 
+DROP TABLE IF EXISTS user_info CASCADE;
 DROP TABLE IF EXISTS game_room_info CASCADE;
 DROP TABLE IF EXISTS chess_game_info CASCADE;
 DROP TABLE IF EXISTS team_info CASCADE;
+
+CREATE TABLE user_info (
+    user_number int NOT NULL AUTO_INCREMENT,
+    user_id VARCHAR(20),
+    user_password VARCHAR(20),
+    PRIMARY KEY (user_number)
+);
 
 CREATE TABLE game_room_info (
     room_id int NOT NULL AUTO_INCREMENT,

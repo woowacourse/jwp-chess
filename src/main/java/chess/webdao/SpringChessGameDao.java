@@ -26,8 +26,18 @@ public class SpringChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void createUserInfo(final String id, final String password) {
+        final String sql = "INSERT into user_info (user_id, user_password) VALUES (?, ?)";
+        this.jdbcTemplate.update(sql, id, password);
+    }
+
+    public String getUserPasswordById(final String id) {
+        final String sql = "SELECT user_password FROM user_info WHERE user_id = (?)";
+        return this.jdbcTemplate.queryForObject(sql, String.class, id);
+    }
+
     public int createGameRoom(final String roomName) {
-        String sql = "INSERT into game_room_info (room_name) VALUES (?)";
+        final String sql = "INSERT into game_room_info (room_name) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         this.jdbcTemplate.update(con -> {
@@ -40,7 +50,7 @@ public class SpringChessGameDao {
     }
 
     public List<GameRoomDto> loadGameRooms() {
-        String sql = "SELECT * FROM game_room_info";
+        final String sql = "SELECT * FROM game_room_info";
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {

@@ -60,10 +60,7 @@ function serverMoveRequest(startPoint, destPoint) {
     let moveUrl = "/games/" + String(roomNumber) + "/move";
     fetch(moveUrl, postOption)
         .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-            return response.json();
+            return checkFetchMove(response);
         })
         .then(data => {
             drawPieceImage(data);
@@ -72,8 +69,20 @@ function serverMoveRequest(startPoint, destPoint) {
             checkIsPlaying(data);
         })
         .catch(error => {
-            alert("움직일 수 없는 경로입니다.");
         })
+}
+
+export function checkFetchMove(response) {
+    if (!response.ok) {
+        console.log(response.status)
+        if (response.status === 401) {
+            alert("로그인을 먼저 해주세요");
+        } else {
+            alert("움직일 수 없는 경로입니다.");
+        }
+        throw new Error(response.status);
+    }
+    return response.json();
 }
 
 export function updateScoreUI(whiteTeamScore, blackTeamScore) {

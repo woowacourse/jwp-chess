@@ -14,7 +14,6 @@ import chess.domain.piece.Piece;
 import chess.dto.GridDto;
 import chess.dto.PieceDto;
 import chess.dto.requestdto.MoveRequestDto;
-import chess.dto.requestdto.StartRequestDto;
 import chess.dto.response.Response;
 import chess.dto.response.ResponseCode;
 import chess.dto.responsedto.GridAndPiecesResponseDto;
@@ -78,8 +77,7 @@ public class ChessService {
         gridDAO.changeToStarting(gridId);
     }
 
-    public GridAndPiecesResponseDto getGridAndPieces(StartRequestDto requestDto) {
-        String roomName = requestDto.getRoomName();
+    public GridAndPiecesResponseDto getGridAndPieces(String roomName) {
         long roomId = roomDAO.findRoomIdByName(roomName).orElseGet(() -> {
             long createdRoomId = roomDAO.createRoom(roomName);
             createGridAndPiece(createdRoomId);

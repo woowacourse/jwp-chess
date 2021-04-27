@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/game")
+@RequestMapping("/games")
 public class GameController {
     private final RoomService roomService;
     private final GameService gameService;
@@ -24,7 +24,7 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/load/{roomId}")
+    @GetMapping("/{roomId}")
     public String loadGame(@PathVariable final Long roomId, Model model) throws SQLException {
         return printGame(roomId, model);
     }
@@ -35,7 +35,7 @@ public class GameController {
         return gameService.movable(roomId, source).toString();
     }
 
-    @PostMapping("/move/{roomId}")
+    @PostMapping("/{roomId}/move")
     public String move(Model model, @PathVariable final Long roomId,
                        @RequestParam Position source, @RequestParam Position target) throws SQLException {
         gameService.move(roomId, source, target);
@@ -44,7 +44,7 @@ public class GameController {
 
     private String printGame(final Long roomId, final Model model) throws SQLException {
         if (gameService.isGameEnd(roomId)) {
-            return "redirect:/game/{roomId}/result" ;
+            return "redirect:/games/{roomId}/result" ;
         }
 
         model.addAttribute("room", roomService.room(roomId));

@@ -76,7 +76,7 @@ function submitMove(src, tar) {
     const form = document.createElement("form");
     form.setAttribute("charset", "UTF-8");
     form.setAttribute("method", "Post");
-    form.setAttribute("action", "/game/move/" + roomId);
+    form.setAttribute("action", "/games/" + roomId + "/move");
 
     const sourceField = document.createElement("input");
     sourceField.setAttribute("type", "hidden");
@@ -109,7 +109,7 @@ function show(target) {
     const requestQuery = "source=" + target.id;
 
     $.ajax({
-        url: "/game/movable/" + roomId,
+        url: "/games/movable/" + roomId,
         type: "GET",
         data: requestQuery,
         success: function (result) {

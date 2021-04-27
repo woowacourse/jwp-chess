@@ -1,5 +1,6 @@
 package chess.controller.dto;
 
+import java.util.Collections;
 import java.util.Map;
 
 public class BoardDto {
@@ -11,6 +12,6 @@ public class BoardDto {
     }
 
     public Map<String, String> getBoard() {
-        return board;
+        return Collections.unmodifiableMap(board);
     }
 }

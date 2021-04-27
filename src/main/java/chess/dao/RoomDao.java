@@ -6,6 +6,7 @@ import chess.dto.TurnDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -54,8 +55,13 @@ public class RoomDao {
 
     public RoomsDto findRoomList() {
         String sql = "select * from room;";
-        List<String> roomNames = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("room_name"));
-        List<Integer> roomIds = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getInt("room_id"));
-        return RoomsDto.of(roomNames, roomIds);
+        return jdbcTemplate.queryForObject(
+                sql, (rs, rn) -> {
+                    List<String> roomNames = new ArrayList<>();
+                    List<Integer> roomIds = new ArrayList<>();
+                    roomNames.add(rs.getString("room_name"));
+                    roomIds.add(rs.getInt("room_id"));
+                    return RoomsDto.of(roomNames, roomIds);
+                });
     }
 }

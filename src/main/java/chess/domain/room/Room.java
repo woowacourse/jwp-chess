@@ -1,16 +1,29 @@
 package chess.domain.room;
 
+import static chess.domain.room.RoomStatus.*;
+
 public class Room {
     private final Long id;
-    private final String name;
-    private final String pw;
-    private Long gameId;
+    private final RoomInfo roomInfo;
+    private final Players players;
+    private final RoomStatus status;
 
-    public Room(Long id, String name, String pw, Long gameId) {
+    public Room(Long id, RoomInfo roomInfo, Players players) {
         this.id = id;
-        this.name = name;
-        this.pw = pw;
-        this.gameId = gameId;
+        this.roomInfo = roomInfo;
+        this.players = players;
+        this.status = READY;
+    }
+
+    public Room(Long id, RoomInfo roomInfo, Players players, RoomStatus roomStatus) {
+        this.id = id;
+        this.roomInfo = roomInfo;
+        this.players = players;
+        this.status = roomStatus;
+    }
+
+    public boolean checkPassword(RoomInfo roomInfo) {
+        return roomInfo.checkPassword(roomInfo);
     }
 
     public Long getId() {
@@ -18,32 +31,22 @@ public class Room {
     }
 
     public String getName() {
-        return name;
+        return roomInfo.getName();
     }
 
     public String getPw() {
-        return pw;
+        return roomInfo.getPw();
     }
 
     public Long getGameId() {
-        return gameId;
+        return roomInfo.getGameId();
     }
 
-    public void setGameId(final Long gameId) {
-        this.gameId = gameId;
+    public String getWhitePlayer() {
+        return players.getWhitePlayer();
     }
 
-    public boolean checkPassword(Room room) {
-        return room.getPw().equals(pw);
-    }
-
-    @Override
-    public String toString() {
-        return "Room{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", pw='" + pw + '\'' +
-                ", gameId='" + gameId + '\'' +
-                '}';
+    public String getBlackPlayer() {
+        return players.getBlackPlayer();
     }
 }

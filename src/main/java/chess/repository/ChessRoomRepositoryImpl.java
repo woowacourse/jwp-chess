@@ -1,6 +1,7 @@
 package chess.repository;
 
 import chess.dao.RoomDao;
+import chess.dao.UserDao;
 import chess.domain.room.ChessRoomRepository;
 import chess.domain.room.Room;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +13,20 @@ import java.util.List;
 public class ChessRoomRepositoryImpl implements ChessRoomRepository {
 
     private final RoomDao roomDao;
+    private final UserDao userDao;
 
     @Autowired
-    public ChessRoomRepositoryImpl(final RoomDao roomDao) {
+    public ChessRoomRepositoryImpl(final RoomDao roomDao, final UserDao userDao) {
         this.roomDao = roomDao;
+        this.userDao = userDao;
     }
 
     @Override
-    public Long create(final Room room, Long gameId) {
-        room.setGameId(gameId);
-        return roomDao.create(room);
+    public Long create(final Room room) {
+        Long roomId = roomDao.create(room);
+        String userName = room.getWhitePlayer();
+        userDao.setRoomId(roomId, userName);
+        return roomId;
     }
 
     @Override

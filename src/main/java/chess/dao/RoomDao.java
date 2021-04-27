@@ -1,7 +1,9 @@
 package chess.dao;
 
 
+import chess.domain.room.Players;
 import chess.domain.room.Room;
+import chess.domain.room.RoomInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,13 +21,14 @@ public class RoomDao {
     private JdbcTemplate jdbcTemplate;
 
     public Long create(Room room) {
-        String sql = "insert into room (name, pw, game_id) values (?, ?, ?)";
+        String sql = "insert into room (name, pw, white_player, game_id) values (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"game_id"});
             preparedStatement.setString(1, room.getName());
             preparedStatement.setString(2, room.getPw());
-            preparedStatement.setLong(3, room.getGameId());
+            preparedStatement.setString(3, room.getWhitePlayer());
+            preparedStatement.setLong(4, room.getGameId());
             return preparedStatement;
         }, keyHolder);
 
@@ -47,6 +50,6 @@ public class RoomDao {
         String name = resultSet.getString("name");
         String pw = resultSet.getString("pw");
         Long gameId = resultSet.getLong("game_id");
-        return new Room(id, name, pw, gameId);
+        return new Room(id, new RoomInfo(name, pw, gameId), new Players());
     };
 }

@@ -1,7 +1,9 @@
 package chess.service.room;
 
 import chess.domain.game.ChessGame;
+import chess.domain.room.Players;
 import chess.domain.room.Room;
+import chess.domain.room.RoomInfo;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
 import chess.domain.game.ChessGameRepository;
@@ -28,16 +30,20 @@ public class ChessRoomServiceImpl implements ChessRoomService {
 
     @Override
     public Long create(final RoomRequestDto roomRequestDto) {
-        Room room = new Room(roomRequestDto.getId(), roomRequestDto.getName(), roomRequestDto.getPw(), roomRequestDto.getGameId());
         Long gameId = chessGameRepository.create(new ChessGame(new WhiteTeam(), new BlackTeam()));
-        return chessRoomRepository.create(room, gameId);
+
+        Room room = new Room(roomRequestDto.getId(),
+                new RoomInfo(roomRequestDto.getName(), roomRequestDto.getPw(), gameId),
+                new Players(roomRequestDto.getUser()));
+
+        return chessRoomRepository.create(room);
     }
 
     @Override
     public boolean enterable(final RoomRequestDto roomRequestDto) {
-        Room room = new Room(roomRequestDto.getId(), roomRequestDto.getName(), roomRequestDto.getPw(), roomRequestDto.getGameId());
-        Room savedRoom = chessRoomRepository.room(room.getId());
-        return savedRoom.checkPassword(room);
+        RoomInfo roomInfo = new RoomInfo (roomRequestDto.getName(), roomRequestDto.getPw(), roomRequestDto.getGameId());
+        Room savedRoom = chessRoomRepository.room(roomRequestDto.getId());
+        return savedRoom.checkPassword(roomInfo);
     }
 
     @Override

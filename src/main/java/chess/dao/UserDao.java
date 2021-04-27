@@ -41,4 +41,9 @@ public class UserDao {
             return new User(userName, userPw, UserStatus.of(roomId));
         }, name);
     }
+
+    public void setRoomId(Long roomId, String name) {
+        String sql = "update user set room_id = ? where user_name = ?";
+        jdbcTemplate.update(sql, roomId, name);
+    }
 }

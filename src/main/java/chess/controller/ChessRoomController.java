@@ -41,7 +41,7 @@ public class ChessRoomController {
     }
     
     @PostMapping("/room")
-    public void create(@Valid @RequestBody RoomRequestDto roomRequestDto, BindingResult bindingResult) {
+    public void create(@CookieValue(value = "user") @Valid @RequestBody RoomRequestDto roomRequestDto, BindingResult bindingResult) {
         System.out.println("create : " + roomRequestDto);
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException();

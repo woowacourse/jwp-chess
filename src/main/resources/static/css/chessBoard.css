@@ -16,16 +16,13 @@
     font-size: 20px;
 }
 
-.inputbox {
+.inputSubmit {
     display: flex;
     justify-content: center;
-    margin-top: 1vw;
 }
 
 .submit {
-    position: relative;
-    display: flex;
-    margin-left: 60vw;
+    margin-left: 1vw;
 }
 
 .black {

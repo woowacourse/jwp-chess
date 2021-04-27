@@ -22,6 +22,7 @@ public class ChessController {
     }
 
     @GetMapping("/board/{roomNumber}")
+
     public ResponseEntity<BoardDto> loadSavedBoard(@PathVariable int roomNumber) {
         BoardDto boardDto = chessService.getSavedBoardInfo(roomNumber);
         return ResponseEntity.ok().body(boardDto);

@@ -34,10 +34,4 @@ public class ChessUserController {
         UserDto response = chessUserService.login(userDto.getName(), userDto.getPw());
         return ResponseEntity.ok(response);
     }
-
-    @PutMapping("/exit")
-    public ResponseEntity<UserDto> exit(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
-        chessUserService.exit(roomRequestDto.getId(), cookie);
-        return ResponseEntity.ok().build();
-    }
 }

@@ -4,6 +4,7 @@ import chess.service.room.ChessRoomService;
 import dto.ChessGameDto;
 import dto.RoomDto;
 import dto.RoomRequestDto;
+import dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -50,10 +51,16 @@ public class ChessRoomController {
         return ResponseEntity.ok().body(chessRoomService.create(roomRequestDto));
     }
 
-    @PostMapping("/room/{id}")
+    @PostMapping("/room/{id}/enter")
     public ResponseEntity enter(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
         System.out.println("enter called.");
         chessRoomService.enter(roomRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/room/{id}/exit")
+    public ResponseEntity exit(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
+        chessRoomService.exit(roomRequestDto.getId(), cookie);
         return ResponseEntity.ok().build();
     }
 }

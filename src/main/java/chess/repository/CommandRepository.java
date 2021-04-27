@@ -14,18 +14,18 @@ public class CommandRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insert(CommandDto commandDto, int id) {
-        String query = "INSERT INTO Command (data, history_id) VALUES (?, ?)";
+    public void insert(CommandDto commandDto, String id) {
+        String query = "INSERT INTO Command (data, room_id) VALUES (?, ?)";
         jdbcTemplate.update(query, commandDto.data(), id);
     }
 
-    public List<CommandDto> selectAllCommands(String id) {
-        String query = "SELECT * FROM history H JOIN Command C on H.history_id = C.history_id WHERE H.history_id = ? AND H.is_end = false";
+    public List<CommandDto> selectAllCommandsByRoomId(String roomId) {
+        String query = "SELECT * FROM Command WHERE room_id = ?";
         return jdbcTemplate.query(query,
                 (rs, rowNum) -> {
                     CommandDto commandDto = new CommandDto(rs.getString("data"));
                     return commandDto;
                 },
-                id);
+                roomId);
     }
 }

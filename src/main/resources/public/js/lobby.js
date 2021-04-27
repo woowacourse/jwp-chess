@@ -1,0 +1,81 @@
+const roomList = document.getElementById("roomList");
+
+if ($("#room").length === 0)
+    roomList.innerText = "비어있습니다 - 텅!";
+
+function playNewGame() {
+    const name = getName();
+    if (name == null) {
+        window.location = "/rooms";
+        return;
+    }
+
+    const password = getPassword();
+    if (password == null) {
+        window.location = "/rooms";
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: '/api/rooms',
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({
+            "name": name,
+            "password": password,
+        }),
+        success: redirect,
+        error: showError,
+    })
+}
+
+function enterRoom(id) {
+    const password = getPassword();
+    if (password == null) {
+        window.location = "/rooms";
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: '/api/rooms/user',
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({
+            "id": id,
+            "password": password,
+        }),
+        success: redirect,
+        error: showError,
+    })
+}
+
+function getName() {
+    const name = document.getElementById("roomName").value;
+    if (name == null) {
+        alert("방제는 필수로 입력하셔야 합니다😤");
+    }
+    return name;
+}
+
+function getPassword() {
+    const password = prompt("비밀번호를 입력 해 주세요.");
+    if (password == null) {
+        alert("비밀번호는 필수로 입력하셔야 합니다😤");
+    }
+    return password;
+}
+
+function showError(response) {
+    alert(response.responseJSON.message);
+}
+
+function redirect(response) {
+    window.location = `/rooms/${response}`;
+}
+

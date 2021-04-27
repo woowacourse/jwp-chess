@@ -11,8 +11,8 @@ for (let i = 0; i < squares.length; i++) {
     });
 }
 
-function gameId() {
-    let element = document.getElementById("gameId");
+function roomId() {
+    let element = document.getElementById("roomId");
     if (element == null)
         return null;
     return element.innerText;
@@ -21,7 +21,7 @@ function gameId() {
 function move(source, target) {
     $.ajax({
         type: "POST",
-        url: '/play/move',
+        url: '/api/rooms/move',
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
@@ -29,7 +29,7 @@ function move(source, target) {
         data: JSON.stringify({
             "source": source.id,
             "target": target.id,
-            "gameId": gameId(),
+            "roomId": roomId(),
         }),
         success: update,
         error: showError,
@@ -74,12 +74,12 @@ function update(response) {
     if (winner != null) {
         message += winner + "팀이 이겼습니다.🤭";
         alert(message);
-        window.location = baseUrl + "/play";
+        window.location = baseUrl + "/rooms";
     }
 }
 
 function showError(response) {
-    alert(response.responseText);
+    alert(response.responseJSON.message);
 }
 
 function initialize() {
@@ -112,14 +112,16 @@ function mark(clickedLocation) {
     }
 }
 
-function endMessage() {
-    if (gameId() != null) {
-        alert(`플레이를 저장했습니다!`);
-        return true;
-    }
-    return confirmEnd();
+function endGame() {
+    alert('게임을 종료합니다. bye~');
+
+    $.ajax({
+        type: "POST",
+        url: `/api/rooms/${roomId()}/status`,
+        complete: redirect,
+    })
 }
 
-function confirmEnd() {
-    return confirm("게임 시작 시 이름을 입력하지 않으셨으므로, 종료 시 이어하기가 불가합니다.😱\n그래도 종료하시겠습니까?");
+function redirect() {
+    window.location = `/rooms`;
 }

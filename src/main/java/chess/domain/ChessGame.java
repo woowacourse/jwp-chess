@@ -2,6 +2,7 @@ package chess.domain;
 
 import chess.domain.board.Board;
 import chess.domain.board.Path;
+import chess.domain.board.Position;
 import chess.domain.board.Team;
 import chess.domain.command.Commands;
 import chess.domain.state.Ready;
@@ -12,6 +13,7 @@ import chess.view.OutputView;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChessGame {
 
@@ -52,8 +54,7 @@ public class ChessGame {
         }
     }
 
-    public void moveAs(Commands command) {
-        final Path path = new Path(command.path());
+    public void moveAs(Path path) {
         board.move(path, turn);
         movePiece(path);
     }
@@ -72,7 +73,7 @@ public class ChessGame {
         }
     }
 
-    public EnumMap<Team, Double> calculatePoint() {
+    public Map<Team, Double> calculatePoint() {
         EnumMap<Team, Double> result = new EnumMap<>(Team.class);
         calculateEachTeamPoint(result, Team.BLACK);
         calculateEachTeamPoint(result, Team.WHITE);
@@ -118,5 +119,11 @@ public class ChessGame {
 
     public Team turn() {
         return turn;
+    }
+
+    public void isCorrectTurnBetween(Position source, Team team) {
+        if (!board.pieceAt(source).isSameTeam(team)) {
+            throw new IllegalArgumentException("당신은 " + team.team() + "팀 이므로, 해당 말을 움직일 수 없습니다.");
+        }
     }
 }

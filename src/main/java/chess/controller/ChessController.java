@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/play")
+@RequestMapping("/rooms")
 public class ChessController {
 
     private final ChessService chessService;
@@ -22,7 +22,7 @@ public class ChessController {
     @GetMapping("")
     public ModelAndView play() throws DataException {
         final ModelAndView modelAndView = new ModelAndView("lobby");
-        modelAndView.addAllObjects(ModelView.historyResponse(chessService.loadHistory()));
+        modelAndView.addAllObjects(ModelView.roomResponse(chessService.loadActiveRooms()));
         return modelAndView;
     }
 
@@ -30,21 +30,9 @@ public class ChessController {
     public ModelAndView play(@PathVariable String id) throws DataException {
         final ModelAndView modelAndView = new ModelAndView("chessGame");
         modelAndView.addAllObjects(ModelView.gameResponse(
-                chessService.initialGameInfo(),
+                chessService.gameInfo(id),
                 id
         ));
         return modelAndView;
-    }
-
-    @GetMapping("/continue/{id}")
-    public ModelAndView continueGame(@PathVariable String id) throws DataException {
-        final ModelAndView modelAndView = new ModelAndView("chessGame");
-        modelAndView.addAllObjects(ModelView.gameResponse(chessService.continuedGameInfo(id), id));
-        return modelAndView;
-    }
-
-    @GetMapping("/end")
-    public String endGame() {
-        return "lobby";
     }
 }

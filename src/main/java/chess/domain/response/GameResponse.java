@@ -7,19 +7,19 @@ import chess.dto.SquareDto;
 
 import java.util.List;
 
-public class GameResponse {
+public class GameResponse implements ChessResponse {
 
     private final List<SquareDto> squares;
     private final Team turn;
     private final List<ScoreDto> scores;
-    private final String gameId;
+    private final String roomId;
     private final Team winner;
 
-    public GameResponse(GameInfoDto gameInfoDto, String gameId) {
+    public GameResponse(GameInfoDto gameInfoDto, String roomId) {
         this.squares = gameInfoDto.squares();
         this.turn = gameInfoDto.turn();
         this.scores = gameInfoDto.scores();
-        this.gameId = gameId;
+        this.roomId = roomId;
         this.winner = gameInfoDto.winner();
     }
 
@@ -35,8 +35,8 @@ public class GameResponse {
         return scores;
     }
 
-    public String getGameId() {
-        return gameId;
+    public String getRoomId() {
+        return roomId;
     }
 
     public Team getWinner() {

@@ -3,7 +3,7 @@ package chess.dto;
 public class MoveRequestDto {
     private String source;
     private String target;
-    private String gameId;
+    private String roomId;
 
     public String getSource() {
         return source;
@@ -13,7 +13,7 @@ public class MoveRequestDto {
         return target;
     }
 
-    public String getGameId() {
-        return gameId;
+    public String getRoomId() {
+        return roomId;
     }
 }

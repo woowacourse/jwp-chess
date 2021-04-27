@@ -52,7 +52,7 @@ public enum Command {
         if (chessGame.isReady() || chessGame.isEnd()) {
             throw new IllegalArgumentException("[ERROR] 게임이 초기화되지 않았거나, 종료되지 않았습니다.");
         }
-        chessGame.moveAs(commands);
+        chessGame.move(commands);
     }
 
     private static void status(ChessGame chessGame, Commands commands) {

@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.domain.User;
-import chess.domain.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -31,13 +30,12 @@ public class UserDao {
     }
 
     public User findByName(final String name) {
-        // String sql = "select is_end from game where game_id = ?";
         String sql = "select * from user where user_name = ?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
             String userName = resultSet.getString("user_name");
             String userPw = resultSet.getString("user_pw");
             Long roomId = resultSet.getLong("room_id");
-            return new User(userName, userPw, UserStatus.of(roomId));
+            return new User(userName, userPw, roomId);
         }, name);
     }
 

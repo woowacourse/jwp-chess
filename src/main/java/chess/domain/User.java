@@ -1,16 +1,14 @@
 package chess.domain;
 
-import static chess.domain.UserStatus.IN_GAME;
-
 public class User {
     private final String name;
     private final String pw;
-    private final UserStatus status;
+    private final Long roomId;
 
-    public User(String name, String pw, UserStatus status) {
+    public User(String name, String pw, Long roomId) {
         this.name = name;
         this.pw = pw;
-        this.status = status;
+        this.roomId = roomId;
     }
 
     public boolean checkPassword(String pw) {
@@ -21,7 +19,12 @@ public class User {
         return name;
     }
 
+    public Long getRoomId() {
+        return roomId;
+    }
+
     public boolean inGame() {
-        return IN_GAME.equals(status);
+        System.out.println("inGame roomid : " + roomId);
+        return roomId != 0;
     }
 }

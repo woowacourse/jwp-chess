@@ -20,4 +20,9 @@ public class WhitePassword implements Password {
     public boolean isSame(String userPassword) {
         return password.equals(userPassword);
     }
+
+    @Override
+    public boolean isEmptyPassword() {
+        return false;
+    }
 }

@@ -91,7 +91,7 @@ public class Game {
     }
 
     public boolean emptyBlackPlayer() {
-        return blackPassword.getClass() == EmptyPassword.class;
+        return blackPassword.isEmptyPassword();
     }
 
     public PieceColor turnColor() {

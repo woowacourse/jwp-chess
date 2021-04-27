@@ -13,4 +13,9 @@ public class EmptyPassword implements Password {
     public boolean isSame(String userPassword) {
         return false;
     }
+
+    @Override
+    public boolean isEmptyPassword() {
+        return true;
+    }
 }

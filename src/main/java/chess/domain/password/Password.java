@@ -6,4 +6,6 @@ public interface Password {
     Optional<String> get();
 
     boolean isSame(String password);
+
+    boolean isEmptyPassword();
 }

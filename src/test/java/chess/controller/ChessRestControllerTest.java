@@ -59,11 +59,11 @@ class ChessRestControllerTest {
                 .andExpect(status().isOk());
     }
 
-//    @DisplayName("게임을 불러온다.")
-//    @Test
-//    void loadGameTest() throws Exception {
-//        this.mockMvc.perform(get("/games/1"))
-//                .andExpect(status().isOk());
-//    }
+    @DisplayName("게임을 불러온다.")
+    @Test
+    void loadGameTest() throws Exception {
+        this.mockMvc.perform(get("/games/1"))
+                .andExpect(status().isOk());
+    }
 
 }

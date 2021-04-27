@@ -51,9 +51,7 @@ class ChessGameServiceTest {
         // given
         long gameId = chessGameService.createNewGame("test title").getGameId();
 
-        chessGameService.loadChessGameByGameId(gameId);
-
-        // then
+        RunningGameDto runningGameDto = chessGameService.loadChessGame(gameId);
     }
 
     @Test

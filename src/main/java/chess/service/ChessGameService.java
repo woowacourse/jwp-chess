@@ -30,7 +30,7 @@ public class ChessGameService {
     }
 
     public RunningGameDto move(long gameId, String from, String to) {
-        ChessGameManager chessGameManager = loadChessGameByGameId(gameId);
+        ChessGameManager chessGameManager = loadChessGameManager(gameId);
 
         Position fromPosition = Position.of(from);
         Position toPosition = Position.of(to);
@@ -48,13 +48,17 @@ public class ChessGameService {
         return RunningGameDto.from(chessGameManager);
     }
 
-    public ChessGameManager loadChessGameByGameId(long gameId) {
+    private ChessGameManager loadChessGameManager(long gameId) {
         ChessBoard chessBoard = pieceRepository.findChessBoardByGameId(gameId);
         Color currentTurn = gameRepository.findCurrentTurnByGameId(gameId);
 
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.load(chessBoard, currentTurn);
         return chessGameManager;
+    }
+
+    public RunningGameDto loadChessGame(long gameId) {
+        return RunningGameDto.from(loadChessGameManager(gameId));
     }
 
     public GameListDto loadAllGames() {

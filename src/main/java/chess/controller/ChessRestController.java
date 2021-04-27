@@ -28,8 +28,8 @@ public class ChessRestController {
         return ResponseEntity.ok(
                 new CommonResponse<>(
                         "게임을 불러왔습니다",
-                        RunningGameDto.from(chessGameService.loadChessGameByGameId(gameId))
-                ));
+                        chessGameService.loadChessGame(gameId))
+                );
     }
 
     @PutMapping("/games/{gameId}/pieces")

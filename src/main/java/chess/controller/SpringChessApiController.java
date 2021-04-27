@@ -28,13 +28,13 @@ public class SpringChessApiController {
         return GameResponseDto.of(chessService.currentGame(roomName, password));
     }
 
-    @GetMapping("/restart")
-    public GameResponseDto restart(HttpSession session, @RequestParam String roomName) {
+    @GetMapping("/new-game/{name}")
+    public GameResponseDto restart(HttpSession session, @PathVariable("name") String roomName) {
         String password = (String) session.getAttribute("password");
         return GameResponseDto.of(chessService.restartGame(roomName, password));
     }
 
-    @PostMapping("/move")
+    @PutMapping("/game")
     public MoveResponseDto move(HttpSession session, @RequestBody MoveRequestDto moveRequestDto) {
         String password = (String) session.getAttribute("password");
         return chessService.move(moveRequestDto, password);
@@ -46,7 +46,7 @@ public class SpringChessApiController {
         return new StatusDto(chessService.currentGame(roomName, password));
     }
 
-    @PostMapping("/end")
+    @DeleteMapping("/game")
     public void end(@RequestParam String roomName) {
         chessService.deleteRoom(roomName);
     }

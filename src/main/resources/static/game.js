@@ -6,7 +6,6 @@ function startGame() {
         url: "/game",
         data: {
             roomName: document.getElementById("roomName").innerText
-            // roomName: getParameterByName('roomName')
         },
         dataType: "json",
         success: setBoard,
@@ -28,13 +27,6 @@ function setBoard(res) {
     status();
 }
 
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-
 document.addEventListener("click", squareClick);
 document.getElementById("end").addEventListener("click", endGame);
 document.getElementById("restart").addEventListener("click", restartGame);
@@ -42,7 +34,7 @@ document.getElementById("restart").addEventListener("click", restartGame);
 function restartGame() {
     $.ajax({
         type: "GET",
-        url: `/restart/${document.getElementById("roomName").innerText}`,
+        url: `/new-game/${document.getElementById("roomName").innerText}`,
         data: {
             roomName: document.getElementById("roomName").innerText
         },
@@ -79,8 +71,8 @@ function squareClick(event) {
 
 function endGame() {
     $.ajax({
-        type: "POST",
-        url: "/end",
+        type: "DELETE",
+        url: "/game",
         data: {
             roomName: document.getElementById("roomName").innerText
         },
@@ -95,9 +87,9 @@ function goHome() {
 
 function move() {
     $.ajax({
-        type: "POST",
+        type: "PUT",
         contentType: 'application/json',
-        url: "/move",
+        url: "/game",
         data: JSON.stringify({
             source: document.getElementsByClassName("source")[0].id,
             target: document.getElementsByClassName("target")[0].id,

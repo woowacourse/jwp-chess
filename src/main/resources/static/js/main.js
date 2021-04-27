@@ -16,7 +16,7 @@ async function showRoomList() {
         const divRoom = document.createElement("div");
         let eachRoom = document.createElement("a");
         eachRoom.setAttribute("class", "room");
-        eachRoom.setAttribute("href", "/rooms/" + rooms.roomNumbers[i]);
+        eachRoom.setAttribute("href", "/rooms/" + rooms.roomIds[i]);
         eachRoom.textContent = rooms.roomNames[i];
         divRoom.appendChild(eachRoom);
         roomList.appendChild(divRoom);

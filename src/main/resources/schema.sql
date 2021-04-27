@@ -1,10 +1,10 @@
 DROP TABLE IF EXISTS board;
 DROP TABLE IF EXISTS game;
 
-create table game
+create table room
 (
     room_name varchar(12) not null,
-    room_number int not null auto_increment primary key,
+    room_id int not null auto_increment primary key,
     turn varchar(10) not null
 );
 
@@ -12,6 +12,6 @@ create table board
 (
     position varchar(12) not null,
     piece varchar(12) not null,
-    room_number int,
-    foreign key (room_number) references game (room_number)
+    room_id int,
+    foreign key (room_id) references game (room_id)
 );

@@ -10,7 +10,7 @@ public class ViewController {
         return "main.html";
     }
 
-    @GetMapping("/rooms/{roomNumber}")
+    @GetMapping("/rooms/{roomId}")
     public String moveRoom() {
         return "/chess.html";
     }

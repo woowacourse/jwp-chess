@@ -17,17 +17,17 @@ import java.util.Map;
 
 @Repository
 public class ChessDao {
-    private static final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ? and room_number = ?";
-    private static final String UPDATE_GAME_QUERY = "update game set turn = ? where room_number = ?";
+    private static final String UPDATE_BOARD_QUERY = "update board set piece = ? where position = ? and room_id = ?";
+    private static final String UPDATE_ROOM_QUERY = "update room set turn = ? where room_id = ?";
     private final JdbcTemplate jdbcTemplate;
 
     public ChessDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public BoardDto getSavedBoardInfo(int roomNumber) {
-        String sql = "select position, piece from board where room_number = ?;";
-        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, roomNumber);
+    public BoardDto getSavedBoardInfo(int roomId) {
+        String sql = "select position, piece from board where room_id = ?;";
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, roomId);
         Map<String, String> boardInfo = new HashMap<>();
         for (Map<String, Object> result : resultList) {
             String position = (String) result.get("position");
@@ -39,71 +39,71 @@ public class ChessDao {
     }
 
     public BoardDto initializeByName(String roomName) {
-        int roomNumber = initializeGame(roomName);
-        return initializeBoard(roomNumber);
+        int roomId = initializeRoom(roomName);
+        return initializeBoard(roomId);
     }
 
-    private int initializeGame(String roomName) {
-        String sql = "insert into game (room_name, turn) values (?, 'white');";
+    private int initializeRoom(String roomName) {
+        String sql = "insert into room (room_name, turn) values (?, 'white');";
         jdbcTemplate.update(sql, roomName);
         return findRoomNumberByRoomName(roomName);
     }
 
     private int findRoomNumberByRoomName(String roomName) {
-        String sql = "select room_number from game where room_name = ?";
+        String sql = "select room_id from room where room_name = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, roomName);
     }
 
-    public BoardDto initializeBoard(int roomNumber) {
+    public BoardDto initializeBoard(int roomId) {
         Board newBoard = BoardFactory.create();
         newBoard.getBoard().forEach((key, value) -> {
             String unicode = value != null ? value.getUnicode() : "";
-            executeBoardInsertQuery(key.convertToString(), unicode, roomNumber);
+            executeBoardInsertQuery(key.convertToString(), unicode, roomId);
         });
         return BoardDto.of(newBoard);
     }
 
-    private void executeBoardInsertQuery(String position, String unicode, int roomNumber) {
-        String sql = "insert into board (position, piece, room_number) values (?, ?, ?)";
-        jdbcTemplate.update(sql, position, unicode, roomNumber);
+    private void executeBoardInsertQuery(String position, String unicode, int roomId) {
+        String sql = "insert into board (position, piece, room_id) values (?, ?, ?)";
+        jdbcTemplate.update(sql, position, unicode, roomId);
     }
 
-    public TurnDto getSavedTurnOwner(int roomNumber) {
-        String sql = "select turn from game where room_number = ?;";
-        String turnOwner = jdbcTemplate.queryForObject(sql, String.class, roomNumber);
+    public TurnDto getSavedTurnOwner(int roomId) {
+        String sql = "select turn from room where room_id = ?;";
+        String turnOwner = jdbcTemplate.queryForObject(sql, String.class, roomId);
         return TurnDto.of(turnOwner);
     }
 
-    public void resetBoard(Board board, int roomNumber) {
+    public void resetBoard(Board board, int roomId) {
         for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
             Position position = entry.getKey();
             Piece piece = entry.getValue();
             String unicode = piece != null ? piece.getUnicode() : "";
-            executeBoardUpdateQuery(unicode, position.convertToString(), roomNumber);
+            executeBoardUpdateQuery(unicode, position.convertToString(), roomId);
         }
     }
 
-    private void executeBoardUpdateQuery(String unicode, String position, int roomNumber) {
-        jdbcTemplate.update(UPDATE_BOARD_QUERY, unicode, position, roomNumber);
+    private void executeBoardUpdateQuery(String unicode, String position, int roomId) {
+        jdbcTemplate.update(UPDATE_BOARD_QUERY, unicode, position, roomId);
     }
 
-    public void renewBoardAfterMove(String targetPosition, String destinationPosition, Piece targetPiece, int roomNumber) {
-        jdbcTemplate.update(UPDATE_BOARD_QUERY, targetPiece.getUnicode(), destinationPosition, roomNumber);
-        jdbcTemplate.update(UPDATE_BOARD_QUERY, "", targetPosition, roomNumber);
+    public void renewBoardAfterMove(String targetPosition, String destinationPosition, Piece targetPiece, int roomId) {
+        jdbcTemplate.update(UPDATE_BOARD_QUERY, targetPiece.getUnicode(), destinationPosition, roomId);
+        jdbcTemplate.update(UPDATE_BOARD_QUERY, "", targetPosition, roomId);
     }
 
-    public void renewTurnOwnerAfterMove(Team turnOwner, int roomNumber) {
-        jdbcTemplate.update(UPDATE_GAME_QUERY, turnOwner.getTeamString(), roomNumber);
+    public void renewTurnOwnerAfterMove(Team turnOwner, int roomId) {
+        jdbcTemplate.update(UPDATE_ROOM_QUERY, turnOwner.getTeamString(), roomId);
     }
 
-    public void resetTurnOwner(int roomNumber) {
-        jdbcTemplate.update(UPDATE_GAME_QUERY, "white", roomNumber);
+    public void resetTurnOwner(int roomId) {
+        jdbcTemplate.update(UPDATE_ROOM_QUERY, "white", roomId);
     }
 
     public RoomsDto getRoomList() {
-        String sql = "select * from game;";
+        String sql = "select * from room;";
         List<String> roomNames = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("room_name"));
-        List<Integer> roomNumbers = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getInt("room_number"));
-        return RoomsDto.of(roomNames, roomNumbers);
+        List<Integer> roomIds = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getInt("room_id"));
+        return RoomsDto.of(roomNames, roomIds);
     }
 }

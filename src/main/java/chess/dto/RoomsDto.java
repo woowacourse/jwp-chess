@@ -4,25 +4,25 @@ import java.util.List;
 
 public class RoomsDto {
     private List<String> roomNames;
-    private List<Integer> roomNumbers;
+    private List<Integer> roomIds;
 
     public RoomsDto() {
     }
 
-    private RoomsDto(List<String> roomNames, List<Integer> roomNumbers) {
+    private RoomsDto(List<String> roomNames, List<Integer> roomIds) {
         this.roomNames = roomNames;
-        this.roomNumbers = roomNumbers;
+        this.roomIds = roomIds;
     }
 
-    public static RoomsDto of(List<String> roomNames, List<Integer> roomNumbers) {
-        return new RoomsDto(roomNames, roomNumbers);
+    public static RoomsDto of(List<String> roomNames, List<Integer> roomIds) {
+        return new RoomsDto(roomNames, roomIds);
     }
 
     public List<String> getRoomNames() {
         return roomNames;
     }
 
-    public List<Integer> getRoomNumbers() {
-        return roomNumbers;
+    public List<Integer> getRoomIds() {
+        return roomIds;
     }
 }

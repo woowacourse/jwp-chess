@@ -21,36 +21,36 @@ public class ChessService {
         return chessDao.initializeByName(roomName);
     }
 
-    public BoardDto resetBoard(int roomNumber) {
+    public BoardDto resetBoard(int roomId) {
         Board resetBoard = BoardFactory.create();
-        chessDao.resetTurnOwner(roomNumber);
-        chessDao.resetBoard(resetBoard, roomNumber);
+        chessDao.resetTurnOwner(roomId);
+        chessDao.resetBoard(resetBoard, roomId);
         return BoardDto.of(resetBoard);
     }
 
-    public BoardDto getSavedBoardInfo(int roomNumber) {
-        return chessDao.getSavedBoardInfo(roomNumber);
+    public BoardDto getSavedBoardInfo(int roomId) {
+        return chessDao.getSavedBoardInfo(roomId);
     }
 
-    public BoardDto move(MoveInfoDto moveInfoDto, int roomNumber) {
-        Board board = getSavedBoardInfo(roomNumber).toBoard();
+    public BoardDto move(MoveInfoDto moveInfoDto, int roomId) {
+        Board board = getSavedBoardInfo(roomId).toBoard();
         Position target = Position.from(moveInfoDto.getTarget());
         Piece targetPiece = board.getBoard().get(target);
-        Team turn = chessSingleMove(board, moveInfoDto, roomNumber);
+        Team turn = chessSingleMove(board, moveInfoDto, roomId);
 
-        chessDao.renewBoardAfterMove(moveInfoDto.getTarget(), moveInfoDto.getDestination(), targetPiece, roomNumber);
-        chessDao.renewTurnOwnerAfterMove(turn, roomNumber);
+        chessDao.renewBoardAfterMove(moveInfoDto.getTarget(), moveInfoDto.getDestination(), targetPiece, roomId);
+        chessDao.renewTurnOwnerAfterMove(turn, roomId);
         return BoardDto.of(board);
     }
 
-    private Team chessSingleMove(Board board, MoveInfoDto moveInfoDto, int roomNumber) {
+    private Team chessSingleMove(Board board, MoveInfoDto moveInfoDto, int roomId) {
         String target = moveInfoDto.getTarget();
         String destination = moveInfoDto.getDestination();
-        return board.movePiece(Position.from(target), Position.from(destination), findTurnAfterMove(roomNumber));
+        return board.movePiece(Position.from(target), Position.from(destination), findTurnAfterMove(roomId));
     }
 
-    private Team findTurnAfterMove(int roomNumber) {
-        TurnDto previousTurn = chessDao.getSavedTurnOwner(roomNumber);
+    private Team findTurnAfterMove(int roomId) {
+        TurnDto previousTurn = chessDao.getSavedTurnOwner(roomId);
         return Team.convertStringToTeam(previousTurn.getTurn());
     }
 
@@ -58,8 +58,8 @@ public class ChessService {
         return chessDao.getRoomList();
     }
 
-    public ScoreDto score(int roomNumber) {
-        Board board = getSavedBoardInfo(roomNumber).toBoard();
+    public ScoreDto score(int roomId) {
+        Board board = getSavedBoardInfo(roomId).toBoard();
 
         double whiteScore = board.calculateScore(Team.WHITE);
         double blackScore = board.calculateScore(Team.BLACK);

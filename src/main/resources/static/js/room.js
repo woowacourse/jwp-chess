@@ -46,6 +46,7 @@ const index = {
         fetch('/chessgames/' + room.id + '/pieces' + `?source=${source}&target=${target}`)
             .then(data => {
                 if (!data.ok) {
+                    alert("잘못된 좌표입니다.");
                     throw new Error("잘못된 명령입니다!");
                 }
                 return data.json();
@@ -73,6 +74,7 @@ const index = {
         fetch("/chessgames/" + room.id, option)
             .then(data => {
                 if (!data.ok) {
+                    alert("게임 종료 권한이 없습니다.");
                     throw new Error("잘못된 명령입니다!");
                 }
                 clearBoard();

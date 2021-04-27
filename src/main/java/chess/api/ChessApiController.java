@@ -1,10 +1,12 @@
 package chess.api;
 
+import chess.domain.User;
 import chess.domain.piece.Position;
 import chess.dto.ChessGameDto;
 import chess.dto.ChessRoomDto;
 import chess.dto.ScoreDto;
 import chess.service.ChessGameService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,6 +17,9 @@ import java.net.URI;
 public class ChessApiController {
 
     private final ChessGameService chessGameService;
+
+    @Autowired
+    private User user;
 
     public ChessApiController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
@@ -39,6 +44,7 @@ public class ChessApiController {
     @PostMapping("/chessgames")
     public ResponseEntity<ChessRoomDto> newRoom() {
         ChessRoomDto chessRoomDto = chessGameService.createNewChessRoom();
+        user.addRoomId(chessRoomDto.getRoomId());
         URI uri = UriComponentsBuilder
                 .fromUriString("/chessgames/{roomId}")
                 .buildAndExpand(chessRoomDto.getRoomId())
@@ -48,8 +54,11 @@ public class ChessApiController {
 
     @DeleteMapping("/chessgames/{roomId}")
     public ResponseEntity<ChessGameDto> endChessGame(@PathVariable long roomId) {
-        chessGameService.endGame(roomId);
-        return ResponseEntity.noContent().build();
+        if (user.hasRoomId(roomId)) {
+            chessGameService.endGame(roomId);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/chessgames/{roomId}/scores")

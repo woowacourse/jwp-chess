@@ -37,12 +37,12 @@ public class MysqlChessDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void deleteRoomByRoomId(int roomId) {
+    public void deleteRoomByRoomId(long roomId) {
         final String sql = "DELETE FROM room";
         this.jdbcTemplate.update(sql);
     }
 
-    public void deleteBoardByRoomId(int roomId) {
+    public void deleteBoardByRoomId(long roomId) {
         final String sql = "DELETE FROM board WHERE room_id = (?)";
         this.jdbcTemplate.update(sql, roomId);
     }

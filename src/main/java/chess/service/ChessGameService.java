@@ -98,7 +98,7 @@ public class ChessGameService {
     }
 
     @Transactional(readOnly = true)
-    public List<PlayingChessgameEntityDto> findAllPlayingGames() { //todo: 테스트 코드 짜기
+    public List<PlayingChessgameEntityDto> findAllPlayingGames() {
         List<ChessGameEntity> chessGameEntities = chessGameDAO.findAllNotEndGameOrderByIdDesc();
         return chessGameEntities.stream()
                 .map(PlayingChessgameEntityDto::new)

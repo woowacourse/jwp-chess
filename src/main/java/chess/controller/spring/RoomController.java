@@ -29,7 +29,7 @@ public class RoomController {
     public ResponseEntity<RoomResponseDTO> showRooms(@RequestParam(required = false, defaultValue = "1") int pageIndex) {
         int roomCounts = roomService.calculateRoomCounts();
         Pagination pagination = new Pagination(pageIndex, roomCounts);
-        List<RoomDTO> roomDtos = roomService.findByLimit(pagination.getOffset(), pagination.getContentCountsPerPage())
+        List<RoomDTO> roomDtos = roomService.findByLimit(pagination.getContentCountsPerPage(), pagination.getOffset())
                 .stream()
                 .map(RoomDTO::from)
                 .collect(Collectors.toList());

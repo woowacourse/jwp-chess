@@ -18,16 +18,12 @@ public class RoomService {
         this.roomDAO = roomDAO;
     }
 
-    public List<Room> findAll() {
-        return roomDAO.findAll();
-    }
-
-    public List<Room> findByLimit(int start, int end) {
-        return roomDAO.findByLimit(start, end);
+    public List<Room> findByLimit(int rowCounts, int offset) {
+        return roomDAO.findByLimit(rowCounts, offset);
     }
 
     public int calculateRoomCounts() {
-        return roomDAO.calculateCounts();
+        return roomDAO.calculateRoomCounts();
     }
 
     public int addRoom(String name, String password) {

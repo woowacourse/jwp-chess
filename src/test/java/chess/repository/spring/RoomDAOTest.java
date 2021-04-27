@@ -31,12 +31,12 @@ class RoomDAOTest {
         jdbcTemplate.update(query, "room2");
     }
 
-    @DisplayName("모든 방 리스트를 조회한다.")
+    @DisplayName("방 일부를 조회한다.")
     @Test
     void findAllRooms() {
-        List<Room> rooms = roomDAO.findAll();
+        List<Room> rooms = roomDAO.findByLimit(1, 0);
 
-        assertThat(rooms).hasSize(2);
+        assertThat(rooms).hasSize(1);
     }
 
     @DisplayName("방을 추가하고, 추가된 방의 id를 반환받는다.")
@@ -44,7 +44,7 @@ class RoomDAOTest {
     void insertRoom() {
         int id = roomDAO.insertRoom("room3");
 
-        List<Room> rooms = roomDAO.findAll();
+        List<Room> rooms = roomDAO.findByLimit(5, 0);
 
         assertThat(rooms).hasSize(3);
         assertThat(id).isGreaterThan(2);
@@ -57,6 +57,14 @@ class RoomDAOTest {
 
         roomDAO.deleteById(id);
 
-        assertThat(roomDAO.findAll()).hasSize(2);
+        assertThat(roomDAO.findByLimit(5, 0)).hasSize(2);
+    }
+
+    @DisplayName("방의 개수를 구한다.")
+    @Test
+    void counts() {
+        int roomCounts = roomDAO.calculateRoomCounts();
+
+        assertThat(roomCounts).isEqualTo(2);
     }
 }

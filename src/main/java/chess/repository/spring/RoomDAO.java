@@ -26,17 +26,12 @@ public class RoomDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Room> findAll() {
-        String query = "SELECT * FROM ROOM";
-        return jdbcTemplate.query(query, ROW_MAPPER);
+    public List<Room> findByLimit(int rowCounts, int offset) {
+        String query = "SELECT * FROM ROOM LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, ROW_MAPPER, rowCounts, offset);
     }
 
-    public List<Room> findByLimit(int start, int end) {
-        String query = "SELECT * FROM ROOM LIMIT ?, ?";
-        return jdbcTemplate.query(query, ROW_MAPPER, start, end);
-    }
-
-    public int calculateCounts() {
+    public int calculateRoomCounts() {
         String query = "SELECT COUNT(*) FROM ROOM";
         return jdbcTemplate.queryForObject(query, int.class).intValue();
     }

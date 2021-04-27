@@ -69,7 +69,7 @@ public class MysqlChessDao {
         this.jdbcTemplate.update(sql, teamInfoDto.getTeam(), teamInfoDto.getPosition(), teamInfoDto.getPiece(), teamInfoDto.getIsFirstMoved(), teamInfoDto.getRoomId());
     }
 
-    public List<BoardInfosDto> selectBoardInfosByRoomId(int roomId) {
+    public List<BoardInfosDto> selectBoardInfosByRoomId(long roomId) {
         String sql = "SELECT * FROM board WHERE room_id = (?)";
         return this.jdbcTemplate.query(sql, boardInfoMapper, roomId);
     }

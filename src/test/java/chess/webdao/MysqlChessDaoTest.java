@@ -2,8 +2,11 @@ package chess.webdao;
 
 import chess.domain.Position;
 import chess.domain.piece.Piece;
+import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
+import chess.webdto.dao.BoardInfosDto;
 import chess.webdto.dao.TeamInfoDto;
+import chess.webdto.dao.TurnDto;
 import groovy.util.MapEntry;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,9 +17,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,8 +60,34 @@ class MysqlChessDaoTest {
         mysqlChessDao.createBoard(teamInfoDto);
     }
 
+    @Test
+    @DisplayName("조회 - 방번호로 현재 턴")
+    void selectTurnByRoomId(){
+        mysqlChessDao.createRoom("black", true);
 
+        TurnDto turnDto = mysqlChessDao.selectTurnByRoomId(1L);
 
+        assertThat(turnDto.getTurn()).isEqualTo("black");
+    }
 
+    @Test
+    @DisplayName("조회 -  해당 방번호로 되어있는 보드 정보의 리스트 크기")
+    void selectBoardInfosByRoomId() {
+        // given
+        createRoom();
 
+        List<TeamInfoDto> teams = new ArrayList<>();
+        teams.add(new TeamInfoDto("white", Position.of("a2"), new Queen(), 1L));
+        teams.add(new TeamInfoDto("black", Position.of("b3"), new Rook(), 1L));
+
+        for(TeamInfoDto team: teams){
+            mysqlChessDao.createBoard(team);
+        }
+
+        // when
+        List<BoardInfosDto> boardInfosDtos = mysqlChessDao.selectBoardInfosByRoomId(1L);
+
+        // then
+        assertThat(boardInfosDtos).hasSize(2);
+    }
 }

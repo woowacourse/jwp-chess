@@ -1,8 +1,5 @@
 package chess.service;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
-
 import chess.dao.PlayLogDao;
 import chess.dao.RoomDao;
 import chess.dao.UserDao;
@@ -16,10 +13,10 @@ import chess.domain.gamestate.GameState;
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
 import chess.dto.web.PointDto;
-import chess.dto.web.PointsDto;
 import chess.dto.web.RoomDto;
 import chess.dto.web.UsersInRoomDto;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -106,13 +103,13 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public PointsDto movablePoints(String id, String point) {
+    public List<PointDto> movablePoints(String id, String point) {
         Board board = boardFromDb(id);
         ChessGame chessGame = chessGameFromDb(board, id);
         List<Point> movablePoints = chessGame.movablePoints(Point.of(point));
         return movablePoints.stream()
             .map(PointDto::new)
-            .collect(collectingAndThen(toList(), PointsDto::new));
+            .collect(Collectors.toList());
     }
 
     @Override

@@ -3,11 +3,12 @@ package chess.controller;
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
 import chess.dto.web.MovementDto;
-import chess.dto.web.PointsDto;
+import chess.dto.web.PointDto;
 import chess.dto.web.RoomDto;
 import chess.dto.web.UsersInRoomDto;
 import chess.service.ChessService;
 import java.net.URI;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -65,7 +66,7 @@ public class SpringChessApiController {
     }
 
     @GetMapping("{id}/points/{point}/movable-points")
-    private PointsDto movablePoints(@PathVariable String id, @PathVariable String point) {
+    private List<PointDto> movablePoints(@PathVariable String id, @PathVariable String point) {
         return chessService.movablePoints(id, point);
     }
 

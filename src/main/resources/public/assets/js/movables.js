@@ -10,7 +10,7 @@ async function getMovables(point, roomId) {
   const result = await response.json();
   console.log(result);
   if (response.ok) {
-    return result["points"];
+    return result;
   } else {
     alert("HTTP-Error: " + result["message"]);
   }

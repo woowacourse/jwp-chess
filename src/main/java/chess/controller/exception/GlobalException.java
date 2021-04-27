@@ -37,10 +37,15 @@ public class GlobalException {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundChessGameException.class)
-    public String handleNotFoundChessGame(NotFoundChessGameException e, Model model) {
+    @ExceptionHandler(NotFoundChessGamePageException.class)
+    public String handleNotFoundChessGame(NotFoundChessGamePageException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "error-page";
+    }
+
+    @ExceptionHandler(NotFoundChessGameException.class)
+    public ResponseEntity<String> handleNotFoundChessGame(NotFoundChessGameException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

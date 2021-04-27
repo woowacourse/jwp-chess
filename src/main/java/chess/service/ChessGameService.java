@@ -10,6 +10,7 @@ import chess.domain.piece.Position;
 import chess.dto.*;
 import chess.exception.NoSuchPermittedChessPieceException;
 import chess.exception.NotFoundChessGameException;
+import chess.exception.NotFoundChessGamePageException;
 import chess.exception.NotFoundPlayingChessGameException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,7 +93,7 @@ public class ChessGameService {
     @Transactional(readOnly = true)
     public ChessGameInfoResponseDto findChessGameInfoById(Long chessGameId) {
         ChessGameEntity chessGameEntity = chessGameDAO.findById(chessGameId)
-                .orElseThrow(NotFoundChessGameException::new);
+                .orElseThrow(NotFoundChessGamePageException::new);
         ChessGame chessGame = findChessGameByChessGameId(chessGameEntity);
         return new ChessGameInfoResponseDto(chessGameId, chessGame, chessGameEntity.getTitle());
     }

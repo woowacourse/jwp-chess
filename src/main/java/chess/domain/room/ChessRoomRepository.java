@@ -7,4 +7,6 @@ public interface ChessRoomRepository {
     Room room(final Long roomId);
     void join(String blackPlayer, Long roomId);
     List<Room> rooms();
+    void deleteUserFormRoom(Long roomId, String userName);
+    void deleteRoom(Long roomId);
 }

@@ -12,24 +12,29 @@ window.onload = () => {
     const urls = location.href.split("/");
     roomId = urls[urls.length - 1];
     loadChessGame();
+    window.onbeforeunload = () => {
+        axios.put('/api/user/exit', {
+            "id": roomId
+        }).then(function (response) {
+            deleteCookie('user')
+        }).catch(function (error) {
+        });
+        return "나가실래요?";
+    }
 }
 
 function loadChessGame() {
-    const pw = prompt("비밀번호를 입력 해 주세요.");
-    const body = {
-        "id": roomId,
-        "pw": pw
-    }
-    axios.post('/api/room/' + roomId, body)
+    axios.get('/api/room/' + roomId)
         .then(function (response) {
+            console.log(response.data)
             refreshChessBoard(response.data)
         }).catch(function (error) {
-        if (error.response.status === 400) {
-            alert(error.response.data);
+            if (error.response.status === 400) {
+                alert(error.data);
         } else {
             alert('게임을 로드 할 수 없습니다.');
         }
-        location.href = "/";
+        //location.href = "/";
     });
 }
 
@@ -144,7 +149,6 @@ function refreshChessBoard(chessGame) {
     }
 }
 
-
 function askExit() {
     if (confirm('게임이 끝났습니다. 나가시겠습니까?')) {
         location.href = "/";
@@ -234,6 +238,10 @@ function clearChessBoard() {
     }
 }
 
+function getCookie(name) {
+    const value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return value ? value[2] : null;
+}
 
 
 

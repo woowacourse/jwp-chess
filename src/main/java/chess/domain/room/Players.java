@@ -1,14 +1,12 @@
 package chess.domain.room;
 
 public class Players {
-    private String whitePlayer;
-    private String blackPlayer;
-
-    public Players() {
-    }
+    private final String whitePlayer;
+    private final String blackPlayer;
 
     public Players(final String whitePlayer) {
         this.whitePlayer = whitePlayer;
+        this.blackPlayer = null;
     }
 
     public Players(final String whitePlayer, final String blackPlayer) {
@@ -16,24 +14,16 @@ public class Players {
         this.blackPlayer = blackPlayer;
     }
 
-    public void join(String blackPlayer) {
-        this.blackPlayer = blackPlayer;
+    public boolean isEmpty() {
+        return whitePlayer == null && blackPlayer == null;
     }
 
-    public boolean startable() {
-        if (whitePlayer == null) {
-            return false;
-        }
-
-        return blackPlayer != null;
+    public boolean enterable() {
+        return whitePlayer != null && blackPlayer == null;
     }
 
     public String getWhitePlayer() {
         return whitePlayer;
-    }
-
-    public void setBlackPlayer(final String blackPlayer) {
-        this.blackPlayer = blackPlayer;
     }
 
     public String getBlackPlayer() {

@@ -12,6 +12,8 @@ public class RoomInfo {
     }
 
     public boolean checkPassword(RoomInfo roomInfo) {
+        System.out.println("checkPassword : " + roomInfo.getPw());
+        System.out.println("checkPassword : " + pw);
         return roomInfo.getPw().equals(pw);
     }
 
@@ -27,4 +29,12 @@ public class RoomInfo {
         return gameId;
     }
 
+    @Override
+    public String toString() {
+        return "RoomInfo{" +
+                "name='" + name + '\'' +
+                ", pw='" + pw + '\'' +
+                ", gameId=" + gameId +
+                '}';
+    }
 }

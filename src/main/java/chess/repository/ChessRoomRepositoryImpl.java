@@ -43,4 +43,14 @@ public class ChessRoomRepositoryImpl implements ChessRoomRepository {
     public List<Room> rooms() {
         return roomDao.loadAll();
     }
+
+    @Override
+    public void deleteUserFormRoom(final Long roomId, final String userName) {
+        roomDao.deleteUserFromRoom(roomId, userName);
+    }
+
+    @Override
+    public void deleteRoom(final Long roomId) {
+        roomDao.deleteRoom(roomId);
+    }
 }

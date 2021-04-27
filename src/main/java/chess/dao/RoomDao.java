@@ -50,6 +50,24 @@ public class RoomDao {
         jdbcTemplate.update(sql, blackPlayer, roomId);
     }
 
+    public void deleteUserFromRoom(final Long roomId, final String userName) {
+        Room room = load(roomId);
+        if (room.isWhitePlayer(userName)) {
+            String sql = "update room set white_player = ? where room_id = ?";
+            jdbcTemplate.update(sql, null, roomId);
+        }
+
+        if (room.isBlackPlayer(userName)) {
+            String sql = "update room set black_player = ? where room_id = ?";
+            jdbcTemplate.update(sql, null, roomId);
+        }
+    }
+
+    public void deleteRoom(final Long roomId) {
+        String sql = "delete from room where room_id = ?";
+        jdbcTemplate.update(sql, roomId);
+    }
+
     private final RowMapper<Room> roomRowMapper = (resultSet, rowNum) -> {
         Long id = resultSet.getLong("room_id");
         String name = resultSet.getString("name");

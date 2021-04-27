@@ -14,11 +14,7 @@ public class User {
     }
 
     public boolean checkPassword(String pw) {
-        if (this.pw.equals(pw)) {
-            return true;
-        }
-
-        return false;
+        return this.pw.equals(pw);
     }
 
     public String getName() {
@@ -26,10 +22,6 @@ public class User {
     }
 
     public boolean inGame() {
-        if (IN_GAME.equals(status)) {
-            return true;
-        }
-
-        return false;
+        return IN_GAME.equals(status);
     }
 }

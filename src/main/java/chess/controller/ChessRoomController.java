@@ -39,7 +39,7 @@ public class ChessRoomController {
     public ResponseEntity<List<RoomDto>> loadAll() {
         return ResponseEntity.ok().body(chessRoomService.rooms());
     }
-    
+
     @PostMapping("/room")
     public ResponseEntity<RoomDto> create(@CookieValue(value = "user") @Valid @RequestBody RoomRequestDto roomRequestDto, BindingResult bindingResult) {
         System.out.println("create : " + roomRequestDto);
@@ -51,7 +51,13 @@ public class ChessRoomController {
     }
 
     @PostMapping("/room/{id}")
-    public ResponseEntity<ChessGameDto> enter(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
-        return ResponseEntity.ok().body(chessRoomService.enter(roomRequestDto));
+    public ResponseEntity enterable(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
+        chessRoomService.enterable(roomRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/room/{id}")
+    public ResponseEntity<ChessGameDto> enter(@CookieValue(value = "user") String cookie, @PathVariable Long id) {
+        return ResponseEntity.ok().body(chessRoomService.enter(cookie, id));
     }
 }

@@ -1,14 +1,12 @@
 package chess.controller;
 
-import chess.domain.User;
 import chess.service.ChessUserService;
+import dto.RoomRequestDto;
 import dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/user")
@@ -38,8 +36,8 @@ public class ChessUserController {
     }
 
     @PutMapping("/exit")
-    public ResponseEntity<UserDto> exit(@CookieValue(value = "user") String cookie) {
-        chessUserService.exit(cookie);
+    public ResponseEntity<UserDto> exit(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
+        chessUserService.exit(roomRequestDto.getId(), cookie);
         return ResponseEntity.ok().build();
     }
 }

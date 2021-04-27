@@ -37,7 +37,6 @@ public class UserDao {
             String userName = resultSet.getString("user_name");
             String userPw = resultSet.getString("user_pw");
             Long roomId = resultSet.getLong("room_id");
-            System.out.println(roomId);
             return new User(userName, userPw, UserStatus.of(roomId));
         }, name);
     }

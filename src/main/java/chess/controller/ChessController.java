@@ -5,8 +5,6 @@ import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 public class ChessController {
     private final ChessService chessService;

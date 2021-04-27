@@ -2,60 +2,52 @@ package chess.service;
 
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
-import chess.domain.board.Position;
 import chess.dto.*;
-import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
-import chess.repository.ChessDao;
+import chess.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
-    private final ChessDao chessDao;
+    private final RoomRepository roomRepository;
 
-    public ChessService(ChessDao chessDao) {
-        this.chessDao = chessDao;
+    public ChessService(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
     }
 
     public BoardDto initializeByName(RoomNameDto roomNameDto) {
-        return chessDao.initializeByName(roomNameDto.getRoomName());
+        String roomName = roomNameDto.getRoomName();
+        validateRoomName(roomName);
+        return roomRepository.initializeByName(roomNameDto.getRoomName());
+    }
+
+    private void validateRoomName(String roomName) {
+        if (roomName.isEmpty()) {
+            throw new IllegalArgumentException("이름을 최소 1자 이상 입력해주세요.");
+        }
+        if (!roomRepository.exists(roomName)) {
+            throw new IllegalArgumentException("이미 존재하는 방이름입니다.");
+        }
     }
 
     public BoardDto resetBoard(int roomId) {
         Board resetBoard = BoardFactory.create();
-        chessDao.resetTurnOwner(roomId);
-        chessDao.resetBoard(resetBoard, roomId);
+        roomRepository.resetBoard(resetBoard, roomId);
         return BoardDto.of(resetBoard);
     }
 
     public BoardDto getSavedBoardInfo(int roomId) {
-        return chessDao.getSavedBoardInfo(roomId);
+        return roomRepository.findBoardByRoomId(roomId);
     }
 
     public BoardDto move(MoveInfoDto moveInfoDto, int roomId) {
         Board board = getSavedBoardInfo(roomId).toBoard();
-        Position target = Position.from(moveInfoDto.getTarget());
-        Piece targetPiece = board.getBoard().get(target);
-        Team turn = chessSingleMove(board, moveInfoDto, roomId);
-
-        chessDao.renewBoardAfterMove(moveInfoDto.getTarget(), moveInfoDto.getDestination(), targetPiece, roomId);
-        chessDao.renewTurnOwnerAfterMove(turn, roomId);
+        roomRepository.updateBoard(moveInfoDto, board, roomId);
         return BoardDto.of(board);
     }
 
-    private Team chessSingleMove(Board board, MoveInfoDto moveInfoDto, int roomId) {
-        String target = moveInfoDto.getTarget();
-        String destination = moveInfoDto.getDestination();
-        return board.movePiece(Position.from(target), Position.from(destination), findTurnAfterMove(roomId));
-    }
-
-    private Team findTurnAfterMove(int roomId) {
-        TurnDto previousTurn = chessDao.getSavedTurnOwner(roomId);
-        return Team.convertStringToTeam(previousTurn.getTurn());
-    }
-
     public RoomsDto getRoomList() {
-        return chessDao.getRoomList();
+        return roomRepository.findAll();
     }
 
     public ScoreDto score(int roomId) {

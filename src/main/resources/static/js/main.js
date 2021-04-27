@@ -25,16 +25,21 @@ async function showRoomList() {
 
 async function makeRoom() {
     const roomName = document.querySelector("#roomName").value;
-    const body = {
+    const bodyValue = {
         roomName: roomName
     }
-    await fetch("/room", {
+    const response = await fetch("/room", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(bodyValue)
     });
+    const body = await response.json();
+    if (!response.ok) {
+        alert(body.message);
+        return;
+    }
     location.reload();
 }
 

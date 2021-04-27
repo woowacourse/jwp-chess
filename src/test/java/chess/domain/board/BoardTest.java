@@ -2,11 +2,13 @@ package chess.domain.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import chess.domain.location.Location;
 import chess.domain.piece.Piece;
 import chess.domain.team.Team;
 import chess.utils.BoardUtil;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,10 +38,20 @@ class BoardTest {
     @DisplayName("기물들이 초기위치를 가지는 보드 생성 테스트")
     @Test
     void createWithInitialLocation() {
-        Board initialBoard = Board.createWithInitialLocation();
+        final List<Piece> expectedPieces = BoardUtil.generateInitialBoard().toList();
+        final Board initialBoard = Board.createWithInitialLocation();
+        final List<Piece> pieces = initialBoard.toList();
 
-        assertThat(initialBoard.toList())
-            .containsExactlyInAnyOrderElementsOf(BoardUtil.generateInitialBoard().toList());
+        for (Piece piece : pieces) {
+            assertTrue(
+                expectedPieces.stream()
+                    .anyMatch(expectedPiece ->
+                        expectedPiece.getPieceType().equals(piece.getPieceType()) &&
+                            expectedPiece.getX() == piece.getX() &&
+                            expectedPiece.getY() == piece.getY()
+                    )
+            );
+        }
     }
 
     @DisplayName("체스 말은 시작위치와 목표위치가 같으면 이동하지 못한다.")

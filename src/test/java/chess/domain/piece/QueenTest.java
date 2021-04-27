@@ -14,7 +14,7 @@ class QueenTest {
 
     @BeforeEach
     void setUp() {
-        queen = Queen.of(Location.of(4, 1), Team.WHITE);
+        queen = Queen.of(0L, Location.of(4, 1), Team.WHITE);
     }
 
     @DisplayName("퀸이 수평, 수직, 대각선으로 이동 가능하다.")

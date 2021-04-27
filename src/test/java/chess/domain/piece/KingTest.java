@@ -14,7 +14,7 @@ class KingTest {
 
     @BeforeEach
     void setUp() {
-        king = King.of(Location.of(5, 1), Team.WHITE);
+        king = King.of(0L, Location.of(5, 1), Team.WHITE);
     }
 
     @DisplayName("킹은 인접한 위치로 이동할 수 있다.")

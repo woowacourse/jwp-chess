@@ -11,10 +11,12 @@ public abstract class Piece implements Movable {
     private static final int WHITE_INITIAL_Y = 1;
     private static final int BLACK_INITIAL_Y = 8;
 
+    protected final long id;
     protected final Team team;
     protected Location location;
 
-    protected Piece(final Location location, final Team team) {
+    protected Piece(final long id, final Location location, final Team team) {
+        this.id = id;
         this.location = location;
         this.team = team;
     }
@@ -37,7 +39,7 @@ public abstract class Piece implements Movable {
     }
 
     public List<Location> findPath(final Location target) {
-        List<Location> path = new ArrayList<>();
+        final List<Location> path = new ArrayList<>();
         int subX = location.subtractX(target);
         int subY = location.subtractY(target);
         int dx = subX == 0 ? 0 : subX / Math.abs(subX);
@@ -76,6 +78,10 @@ public abstract class Piece implements Movable {
         return false;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public int getX() {
         return location.getX();
     }
@@ -96,23 +102,24 @@ public abstract class Piece implements Movable {
         return getPieceType().getValue();
     }
 
+    public abstract PieceType getPieceType();
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Piece piece = (Piece) o;
-        return team == piece.team && Objects.equals(location, piece.location);
+        final Piece piece = (Piece) o;
+        return id == piece.id && getTeam() == piece.getTeam() && Objects
+            .equals(location, piece.location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(team, location);
+        return Objects.hash(id, getTeam(), location);
     }
-
-    public abstract PieceType getPieceType();
 
 }

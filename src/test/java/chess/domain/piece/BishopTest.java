@@ -14,7 +14,7 @@ class BishopTest {
 
     @BeforeEach
     void setUp() {
-        bishop = Bishop.of(Location.of(3, 1), Team.WHITE);
+        bishop = Bishop.of(0L, Location.of(3, 1), Team.WHITE);
     }
 
     @DisplayName("비숍은 대각선으로 이동 가능하다.")

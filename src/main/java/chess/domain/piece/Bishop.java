@@ -10,24 +10,24 @@ public class Bishop extends Piece {
     private static final int LEFT_INITIAL_X = 3;
     private static final int RIGHT_INITIAL_X = 6;
 
-    private Bishop(final Location location, final Team team) {
-        super(location, team);
+    private Bishop(final long id, final Location location, final Team team) {
+        super(id, location, team);
     }
 
-    private Bishop(final int x, final Team team) {
-        super(Location.of(x, getInitialY(team)), team);
+    private Bishop(final long id, final int x, final Team team) {
+        super(id, Location.of(x, getInitialY(team)), team);
     }
 
-    public static Bishop of(final Location location, final Team team) {
-        return new Bishop(location, team);
+    public static Bishop of(final long id, final Location location, final Team team) {
+        return new Bishop(id, location, team);
     }
 
     public static List<Piece> createInitialPieces() {
         return Arrays.asList(
-            new Bishop(LEFT_INITIAL_X, Team.WHITE),
-            new Bishop(RIGHT_INITIAL_X, Team.WHITE),
-            new Bishop(LEFT_INITIAL_X, Team.BLACK),
-            new Bishop(RIGHT_INITIAL_X, Team.BLACK)
+            new Bishop(0L, LEFT_INITIAL_X, Team.WHITE),
+            new Bishop(0L, RIGHT_INITIAL_X, Team.WHITE),
+            new Bishop(0L, LEFT_INITIAL_X, Team.BLACK),
+            new Bishop(0L, RIGHT_INITIAL_X, Team.BLACK)
         );
     }
 

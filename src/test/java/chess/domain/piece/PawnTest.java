@@ -15,8 +15,8 @@ class PawnTest {
 
     @BeforeEach
     void setUp() {
-        whitePawn = Pawn.of(Location.of(4, 2), Team.WHITE);
-        blackPawn = Pawn.of(Location.of(4, 7), Team.BLACK);
+        whitePawn = Pawn.of(0L, Location.of(4, 2), Team.WHITE);
+        blackPawn = Pawn.of(0L, Location.of(4, 7), Team.BLACK);
     }
 
     @DisplayName("흰색 폰은 4가지 위치로 이동 가능하다.")

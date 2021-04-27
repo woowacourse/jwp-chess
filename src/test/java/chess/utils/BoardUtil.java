@@ -67,17 +67,17 @@ public class BoardUtil {
         Team team = findOutTeam(pieceLetter);
         switch (Character.toLowerCase(pieceLetter)) {
             case 'r':
-                return Rook.of(convertedLocation, team);
+                return Rook.of(0L, convertedLocation, team);
             case 'n':
-                return Knight.of(convertedLocation, team);
+                return Knight.of(0L, convertedLocation, team);
             case 'b':
-                return Bishop.of(convertedLocation, team);
+                return Bishop.of(0L, convertedLocation, team);
             case 'q':
-                return Queen.of(convertedLocation, team);
+                return Queen.of(0L, convertedLocation, team);
             case 'k':
-                return King.of(convertedLocation, team);
+                return King.of(0L, convertedLocation, team);
             default:
-                return Pawn.of(convertedLocation, team);
+                return Pawn.of(0L, convertedLocation, team);
         }
     }
 

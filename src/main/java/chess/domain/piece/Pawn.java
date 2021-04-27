@@ -19,20 +19,20 @@ public class Pawn extends Piece {
     private static final int MINIMUM_X = 1;
     private static final int MAXIMUM_X = 8;
 
-    private Pawn(final Location location, final Team team) {
-        super(location, team);
+    private Pawn(final long id, final Location location, final Team team) {
+        super(id, location, team);
     }
 
-    public static Pawn of(final Location location, final Team team) {
-        return new Pawn(location, team);
+    public static Pawn of(final long id, final Location location, final Team team) {
+        return new Pawn(id, location, team);
     }
 
     public static List<Piece> createInitialPieces() {
         return Stream.concat(
             IntStream.rangeClosed(MINIMUM_X, MAXIMUM_X)
-                .mapToObj(x -> of(Location.of(x, WHITE_PAWN_INITIAL_Y), Team.WHITE)),
+                .mapToObj(x -> of(0L, Location.of(x, WHITE_PAWN_INITIAL_Y), Team.WHITE)),
             IntStream.rangeClosed(MINIMUM_X, MAXIMUM_X)
-                .mapToObj(x -> of(Location.of(x, BLACK_PAWN_INITIAL_Y), Team.BLACK))
+                .mapToObj(x -> of(0L, Location.of(x, BLACK_PAWN_INITIAL_Y), Team.BLACK))
         ).collect(Collectors.toList());
     }
 

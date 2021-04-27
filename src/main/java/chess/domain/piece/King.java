@@ -9,22 +9,22 @@ public class King extends Piece {
 
     private static final int INITIAL_X = 5;
 
-    private King(final Location location, final Team team) {
-        super(location, team);
+    private King(final long id, final Location location, final Team team) {
+        super(id, location, team);
     }
 
-    private King(final int x, final Team team) {
-        super(Location.of(x, getInitialY(team)), team);
+    private King(final long id, final int x, final Team team) {
+        super(id, Location.of(x, getInitialY(team)), team);
     }
 
-    public static King of(final Location location, final Team team) {
-        return new King(location, team);
+    public static King of(final long id, final Location location, final Team team) {
+        return new King(id, location, team);
     }
 
     public static List<Piece> createInitialPieces() {
         return Arrays.asList(
-            new King(INITIAL_X, Team.WHITE),
-            new King(INITIAL_X, Team.BLACK)
+            new King(0L, INITIAL_X, Team.WHITE),
+            new King(0L, INITIAL_X, Team.BLACK)
         );
     }
 

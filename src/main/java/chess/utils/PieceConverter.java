@@ -19,32 +19,33 @@ public class PieceConverter {
         final char pieceLetter = pieceResponseDto.getShape().getValue();
         final Team team = pieceResponseDto.getColor();
         final Location location = Location.of(pieceResponseDto.getX(), pieceResponseDto.getY());
-        return createPiece(pieceLetter, location, team);
+        return createPiece(0L, pieceLetter, location, team);
     }
 
     public static Piece run(final PieceDto pieceDto) {
+        final long id = pieceDto.getId();
         final char pieceLetter = pieceDto.getShape();
         final Team team = Team.from(pieceDto.getColor());
         final Location location = Location.of(pieceDto.getX(), pieceDto.getY());
-        return createPiece(pieceLetter, location, team);
+        return createPiece(id, pieceLetter, location, team);
     }
 
-    private static Piece createPiece(final char pieceLetter, final Location location,
+    private static Piece createPiece(final long id, final char pieceLetter, final Location location,
         final Team team) {
 
         switch (pieceLetter) {
             case 'k':
-                return King.of(location, team);
+                return King.of(id, location, team);
             case 'q':
-                return Queen.of(location, team);
+                return Queen.of(id, location, team);
             case 'b':
-                return Bishop.of(location, team);
+                return Bishop.of(id, location, team);
             case 'n':
-                return Knight.of(location, team);
+                return Knight.of(id, location, team);
             case 'r':
-                return Rook.of(location, team);
+                return Rook.of(id, location, team);
             default:
-                return Pawn.of(location, team);
+                return Pawn.of(id, location, team);
         }
     }
 

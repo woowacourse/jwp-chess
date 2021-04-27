@@ -10,24 +10,24 @@ public class Rook extends Piece {
     private static final int LEFT_INITIAL_X = 1;
     private static final int RIGHT_INITIAL_X = 8;
 
-    private Rook(final Location location, final Team team) {
-        super(location, team);
+    private Rook(final long id, final Location location, final Team team) {
+        super(id, location, team);
     }
 
-    private Rook(final int x, final Team team) {
-        super(Location.of(x, getInitialY(team)), team);
+    private Rook(final long id, final int x, final Team team) {
+        super(id, Location.of(x, getInitialY(team)), team);
     }
 
-    public static Rook of(final Location location, final Team team) {
-        return new Rook(location, team);
+    public static Rook of(final long id, final Location location, final Team team) {
+        return new Rook(id, location, team);
     }
 
     public static List<Piece> createInitialPieces() {
         return Arrays.asList(
-            new Rook(LEFT_INITIAL_X, Team.WHITE),
-            new Rook(RIGHT_INITIAL_X, Team.WHITE),
-            new Rook(LEFT_INITIAL_X, Team.BLACK),
-            new Rook(RIGHT_INITIAL_X, Team.BLACK)
+            new Rook(0L, LEFT_INITIAL_X, Team.WHITE),
+            new Rook(0L, RIGHT_INITIAL_X, Team.WHITE),
+            new Rook(0L, LEFT_INITIAL_X, Team.BLACK),
+            new Rook(0L, RIGHT_INITIAL_X, Team.BLACK)
         );
     }
 

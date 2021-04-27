@@ -14,7 +14,7 @@ class RookTest {
 
     @BeforeEach
     void setUp() {
-        rook = Rook.of(Location.of(1, 1), Team.WHITE);
+        rook = Rook.of(0L, Location.of(1, 1), Team.WHITE);
     }
 
     @DisplayName("룩은 수평, 수직으로 이동 가능하다.")

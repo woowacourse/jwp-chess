@@ -11,24 +11,24 @@ public class Knight extends Piece {
     private static final int LEFT_INITIAL_X = 2;
     private static final int RIGHT_INITIAL_X = 7;
 
-    private Knight(final Location location, final Team team) {
-        super(location, team);
+    private Knight(final long id, final Location location, final Team team) {
+        super(id, location, team);
     }
 
-    private Knight(final int x, final Team team) {
-        super(Location.of(x, getInitialY(team)), team);
+    private Knight(final long id, final int x, final Team team) {
+        super(id, Location.of(x, getInitialY(team)), team);
     }
 
-    public static Knight of(final Location location, final Team team) {
-        return new Knight(location, team);
+    public static Knight of(final long id, final Location location, final Team team) {
+        return new Knight(id, location, team);
     }
 
     public static List<Piece> createInitialPieces() {
         return Arrays.asList(
-            new Knight(LEFT_INITIAL_X, Team.WHITE),
-            new Knight(RIGHT_INITIAL_X, Team.WHITE),
-            new Knight(LEFT_INITIAL_X, Team.BLACK),
-            new Knight(RIGHT_INITIAL_X, Team.BLACK)
+            new Knight(0L, LEFT_INITIAL_X, Team.WHITE),
+            new Knight(0L, RIGHT_INITIAL_X, Team.WHITE),
+            new Knight(0L, LEFT_INITIAL_X, Team.BLACK),
+            new Knight(0L, RIGHT_INITIAL_X, Team.BLACK)
         );
     }
 

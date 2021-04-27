@@ -15,7 +15,7 @@ class KnightTest {
 
     @BeforeEach
     void setUp() {
-        knight = Knight.of(Location.of(2, 1), Team.WHITE);
+        knight = Knight.of(0L, Location.of(2, 1), Team.WHITE);
     }
 
     @DisplayName("나이트는 대각선으로 한 칸 이동 후 수평 혹은 수직으로 한 칸 이동한다.")

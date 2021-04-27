@@ -1,6 +1,7 @@
 package chess.domain.piece;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.domain.location.Location;
 import chess.domain.team.Team;
@@ -15,7 +16,7 @@ class PieceTest {
 
     @BeforeEach
     void setUp() {
-        queen = Queen.of(Location.of(4, 4), Team.WHITE);
+        queen = Queen.of(0L, Location.of(4, 4), Team.WHITE);
     }
 
     @DisplayName("경로 계산 - 오른쪽 위 대각선")
@@ -88,7 +89,7 @@ class PieceTest {
     @Test
     void findPath_king() {
         // given
-        King king = King.of(Location.of(4, 1), Team.WHITE);
+        King king = King.of(0L, Location.of(4, 1), Team.WHITE);
         Location target = Location.of(5, 1);
 
         // when
@@ -101,24 +102,29 @@ class PieceTest {
     @DisplayName("기물 이둥 테스트")
     @Test
     void move() {
-        King king = King.of(Location.of(5, 1), Team.WHITE);
+        King king = King.of(0L, Location.of(5, 1), Team.WHITE);
         king.move(Location.of(4, 2));
-        assertThat(king).isEqualTo(King.of(Location.of(4, 2), Team.WHITE));
+
+        assertAll(
+            () -> assertThat(king.getX()).isEqualTo(4),
+            () -> assertThat(king.getY()).isEqualTo(2),
+            () -> assertThat(king.getTeam()).isEqualTo(Team.WHITE)
+        );
     }
 
     @DisplayName("기물 위치 확인 테스트")
     @Test
     void isHere() {
-        King king = King.of(Location.of(5, 1), Team.WHITE);
+        King king = King.of(0L, Location.of(5, 1), Team.WHITE);
         assertThat(king.isHere(Location.of(5, 1))).isTrue();
     }
 
     @DisplayName("팀 확인 테스트")
     @Test
     void isSameTeam() {
-        King king = King.of(Location.of(5, 1), Team.WHITE);
-        Queen whiteQueen = Queen.of(Location.of(4, 1), Team.WHITE);
-        Queen blackQueen = Queen.of(Location.of(4, 8), Team.BLACK);
+        King king = King.of(0L, Location.of(5, 1), Team.WHITE);
+        Queen whiteQueen = Queen.of(0L, Location.of(4, 1), Team.WHITE);
+        Queen blackQueen = Queen.of(0L, Location.of(4, 8), Team.BLACK);
 
         assertThat(king.isSameTeam(Team.WHITE)).isTrue();
         assertThat(king.isSameTeam(Team.BLACK)).isFalse();

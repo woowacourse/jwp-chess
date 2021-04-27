@@ -3,13 +3,13 @@ package chess.service.room;
 import chess.dao.UserDao;
 import chess.domain.User;
 import chess.domain.game.ChessGame;
+import chess.domain.game.ChessGameRepository;
+import chess.domain.room.ChessRoomRepository;
 import chess.domain.room.Players;
 import chess.domain.room.Room;
 import chess.domain.room.RoomInfo;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
-import chess.domain.game.ChessGameRepository;
-import chess.domain.room.ChessRoomRepository;
 import dto.ChessGameDto;
 import dto.RoomDto;
 import dto.RoomRequestDto;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChessRoomServiceImpl implements ChessRoomService {
@@ -48,12 +49,29 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     @Override
     public List<RoomDto> rooms() {
         List<Room> rooms = chessRoomRepository.rooms();
-        List<RoomDto> roomDtos = new ArrayList<>();
+        deleteEmptyRoom(rooms);
+        return  generateEnterableRoomDataList(rooms);
+    }
 
-        for (Room room : rooms) {
-            roomDtos.add(new RoomDto(room));
-        }
-        return roomDtos;
+
+    private void deleteEmptyRoom(List<Room> rooms) {
+        List<Room> roomsToDelete = rooms.stream()
+                .filter(room -> !room.isEmpty())
+                .collect(Collectors.toList());
+
+        roomsToDelete.forEach(room -> {
+            chessRoomRepository.deleteRoom(room.getId());
+        });
+    }
+
+    private List<RoomDto> generateEnterableRoomDataList(List<Room> rooms) {
+        List<Room> enterableRooms = rooms.stream()
+                .filter(Room::enterable)
+                .collect(Collectors.toList());
+
+       return enterableRooms.stream()
+               .map(RoomDto::new)
+               .collect(Collectors.toList());
     }
 
     @Override
@@ -69,10 +87,6 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     public void exit(final Long roomId, final String userName) {
         chessRoomRepository.deleteUserFormRoom(roomId, userName);
         Room room = chessRoomRepository.room(roomId);
-
-        if (room.isEmpty()) {
-            chessRoomRepository.deleteRoom(roomId);
-        }
     }
 
     public void validateEnterStatus(RoomRequestDto roomRequestDto) {
@@ -84,14 +98,12 @@ public class ChessRoomServiceImpl implements ChessRoomService {
             throw new IllegalArgumentException("비밀번호가 잘 못되었습니다.");
         }
 
-        if (!savedRoom.enterable()){
+        if (savedRoom.enterable()) {
             throw new IllegalArgumentException("방에 입장할 수 없습니다.");
         }
 
         if (user.inGame()) {
             throw new IllegalArgumentException("이미 게임 중 인 사용자 입니다.");
         }
-
     }
-
 }

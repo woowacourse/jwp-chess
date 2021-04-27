@@ -6,13 +6,13 @@ public class RoomDto {
     private Long id;
     private String name;
     private Long gameId;
-    private boolean isFull;
+    private boolean enterable;
 
     public RoomDto(Room room) {
         this.id = room.getId();
         this.name = room.getName();
         this.gameId = room.getGameId();
-        this.isFull = !room.enterable();
+        this.enterable = room.enterable();
     }
 
     public Long getId() {
@@ -27,7 +27,7 @@ public class RoomDto {
         return gameId;
     }
 
-    public boolean isFull() {
-        return isFull;
+    public boolean isEnterable() {
+        return enterable;
     }
 }

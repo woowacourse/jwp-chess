@@ -70,10 +70,9 @@ public class SpringChessApiController {
         return chessService.movablePoints(id, point);
     }
 
-    @PostMapping("{id}/movement")
+    @PutMapping("{id}/movement")
     private ResponseEntity<BoardDto> move(@PathVariable String id,
         @RequestBody MovementDto movementDto) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(chessService.move(id, movementDto.getSource(), movementDto.getDestination()));
+        return ResponseEntity.ok(chessService.move(id, movementDto.getSource(), movementDto.getDestination()));
     }
 }

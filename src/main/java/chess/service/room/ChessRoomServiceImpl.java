@@ -1,5 +1,7 @@
 package chess.service.room;
 
+import chess.dao.UserDao;
+import chess.domain.User;
 import chess.domain.game.ChessGame;
 import chess.domain.room.Players;
 import chess.domain.room.Room;
@@ -21,11 +23,13 @@ import java.util.List;
 public class ChessRoomServiceImpl implements ChessRoomService {
     private final ChessRoomRepository chessRoomRepository;
     private final ChessGameRepository chessGameRepository;
+    private final UserDao userDao;
 
     @Autowired
-    public ChessRoomServiceImpl(final ChessRoomRepository chessRoomRepository, final ChessGameRepository ChessGameRepository) {
+    public ChessRoomServiceImpl(final ChessRoomRepository chessRoomRepository, final ChessGameRepository ChessGameRepository, final UserDao userDao) {
         this.chessRoomRepository = chessRoomRepository;
         this.chessGameRepository = ChessGameRepository;
+        this.userDao = userDao;
     }
 
     @Override
@@ -45,7 +49,8 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     public boolean enterable(final RoomRequestDto roomRequestDto) {
         RoomInfo roomInfo = new RoomInfo (roomRequestDto.getName(), roomRequestDto.getPw(), roomRequestDto.getGameId());
         Room savedRoom = chessRoomRepository.room(roomRequestDto.getId());
-        return savedRoom.checkPassword(roomInfo);
+        User user = userDao.findByName(roomRequestDto.getUser());
+        return savedRoom.checkPassword(roomInfo) && !user.inGame();
     }
 
     @Override
@@ -61,12 +66,13 @@ public class ChessRoomServiceImpl implements ChessRoomService {
 
     @Override
     public ChessGameDto enter(final RoomRequestDto roomRequestDto) {
-        if (enterable(roomRequestDto)) {
-            Room room = chessRoomRepository.room(roomRequestDto.getId());
-            Long gameId = room.getGameId();
-            return new ChessGameDto(gameId, chessGameRepository.chessGame(gameId));
+        if (!enterable(roomRequestDto)) {
+            throw new IllegalArgumentException();
         }
 
-        throw new IllegalArgumentException();
+        chessRoomRepository.join(roomRequestDto.getUser(), roomRequestDto.getId());
+        Room room = chessRoomRepository.room(roomRequestDto.getId());
+        Long gameId = room.getGameId();
+        return new ChessGameDto(gameId, chessGameRepository.chessGame(gameId), room);
     }
 }

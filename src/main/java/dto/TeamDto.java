@@ -3,10 +3,11 @@ package dto;
 import chess.domain.team.Team;
 
 public class TeamDto {
-    private final PiecesDto pieces;
-    private final String name;
-    private final double score;
-    private final boolean isTurn;
+    private PiecesDto pieces;
+    private String name;
+    private double score;
+    private boolean isTurn;
+    private String player;
 
 
     public TeamDto(PiecesDto pieces, String name, double score, boolean isTurn) {
@@ -23,6 +24,15 @@ public class TeamDto {
         this.isTurn = team.isCurrentTurn();
     }
 
+    public TeamDto(Team team, String player) {
+        this.pieces = PiecesDto.of(team.getPiecePosition(), team.getName());
+        this.name = team.getName();
+        this.score = team.calculateTotalScore();
+        this.isTurn = team.isCurrentTurn();
+        this.player = player;
+    }
+
+
     public PiecesDto getPieces() {
         return pieces;
     }
@@ -37,5 +47,20 @@ public class TeamDto {
 
     public boolean isTurn() {
         return isTurn;
+    }
+
+    public String getPlayer() {
+        return player;
+    }
+
+    @Override
+    public String toString() {
+        return "TeamDto{" +
+                "pieces=" + pieces +
+                ", name='" + name + '\'' +
+                ", score=" + score +
+                ", isTurn=" + isTurn +
+                ", player='" + player + '\'' +
+                '}';
     }
 }

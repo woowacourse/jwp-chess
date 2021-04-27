@@ -45,11 +45,18 @@ public class RoomDao {
         return jdbcTemplate.query(sql, roomRowMapper);
     }
 
+    public void setBlackPlayer(final String blackPlayer, final Long roomId) {
+        String sql = "update room set black_player = ? where room_id = ?";
+        jdbcTemplate.update(sql, blackPlayer, roomId);
+    }
+
     private final RowMapper<Room> roomRowMapper = (resultSet, rowNum) -> {
         Long id = resultSet.getLong("room_id");
         String name = resultSet.getString("name");
         String pw = resultSet.getString("pw");
         Long gameId = resultSet.getLong("game_id");
-        return new Room(id, new RoomInfo(name, pw, gameId), new Players());
+        String whitePlayer = resultSet.getString("white_player");
+        String blackPlayer = resultSet.getString("black_player");
+        return new Room(id, new RoomInfo(name, pw, gameId), new Players(whitePlayer, blackPlayer));
     };
 }

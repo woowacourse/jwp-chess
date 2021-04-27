@@ -34,6 +34,11 @@ public class ChessRoomRepositoryImpl implements ChessRoomRepository {
         return roomDao.load(roomId);
     }
 
+    public void join(String blackPlayer, Long roomId) {
+        userDao.setRoomId(roomId, blackPlayer);
+        roomDao.setBlackPlayer(blackPlayer, roomId);
+    }
+
     @Override
     public List<Room> rooms() {
         return roomDao.loadAll();

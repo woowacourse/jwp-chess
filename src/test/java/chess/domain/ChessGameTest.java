@@ -7,7 +7,6 @@ import chess.domain.board.ChessBoard;
 import chess.domain.board.Position;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
-import java.util.Arrays;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +24,7 @@ public class ChessGameTest {
         chessGame.move(Position.of("d5"), Position.of( "f6"));
         chessGame.move(Position.of("b5"), Position.of( "b4"));
         chessGame.move(Position.of("f6"), Position.of( "e8"));
-        assertThat(chessGame.isFinished()).isTrue();
+        assertThat(chessGame.isOver()).isTrue();
     }
 
     @Test

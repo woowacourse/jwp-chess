@@ -64,7 +64,7 @@ public class SpringChessApiController {
             return ResponseEntity.ok(chessService.start(id));
         }
         if (gameStatusDto.getGameState().equals("Finished")) {
-            return ResponseEntity.ok().body(chessService.exit(id));
+            return ResponseEntity.ok(chessService.exit(id));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }

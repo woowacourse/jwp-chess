@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.chess.Chess;
 import chess.domain.chess.Color;
+import chess.domain.chess.Status;
 import chess.domain.piece.Blank;
 import chess.domain.piece.BoardUtils;
 import chess.domain.piece.Pawn;
@@ -25,8 +26,7 @@ public class BoardTest {
 
     @BeforeEach
     void setUp() {
-        chess = Chess.createWithEmptyBoard()
-                     .start();
+        chess = Chess.createWithInitializedBoard();
         board = chess.getBoard();
     }
 
@@ -54,11 +54,11 @@ public class BoardTest {
     @Test
     @DisplayName("킹이 죽으면 게임 상태를 멈춤으로 변경")
     void isRunning_IfKingIsDead_StatusISStop() {
-        assertThat(chess.isRunning()).isTrue();
+        assertThat(chess.status()).isEqualTo(Status.RUNNING.name());
 
         killKingOfBlack();
 
-        assertThat(chess.isRunning()).isFalse();
+        assertThat(chess.status()).isNotEqualTo(Status.RUNNING.name());
     }
 
     private void killKingOfBlack() {

@@ -9,16 +9,14 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 import chess.domain.board.Board;
-import chess.domain.chess.Chess;
+import chess.domain.board.BoardFactory;
 import chess.domain.position.MovePosition;
 import chess.domain.position.Position;
 
 class KnightTest {
     private final Knight knight = Knight.WHITE_INSTANCE;
     private final Position sourcePosition = Position.from("b1");
-    private final Board board = Chess.createWithEmptyBoard()
-                                     .start()
-                                     .getBoard();
+    private final Board board = BoardFactory.InitializedBoard.create();
 
     @Test
     @DisplayName("이동 검사")

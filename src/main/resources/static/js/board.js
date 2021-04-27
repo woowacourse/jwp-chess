@@ -1,29 +1,11 @@
+import { COOKIE, HTTP_CLIENT, PATH } from "./http.js";
+import PIECES from "./piece.js";
+
 const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const WHITE_SQUARE = "white-square";
 const BLACK_SQUARE = "black-square";
-const PIECES = {
-    BLACK_KING: `<img src="/img/king_black.png" class="piece" alt="king_black"/>`,
-    BLACK_QUEEN: `<img src="/img/queen_black.png" class="piece" alt="queen_black"/>`,
-    BLACK_ROOK: `<img src="/img/rook_black.png" class="piece" alt="rook black"/>`,
-    BLACK_BISHOP: `<img src="/img/bishop_black.png" class="piece" alt="bishop black"/>`,
-    BLACK_KNIGHT: `<img src="/img/knight_black.png" class="piece" alt="knight black"/>`,
-    BLACK_PAWN: `<img src="/img/pawn_black.png" class="piece" alt="pawn black"/>`,
-    WHITE_KING: `<img src="/img/king_white.png" class="piece" alt="king white"/>`,
-    WHITE_QUEEN: `<img src="/img/queen_white.png" class="piece" alt="queen white"/>`,
-    WHITE_ROOK: `<img src="/img/rook_white.png" class="piece" alt="rook_white"/>`,
-    WHITE_BISHOP: `<img src="/img/bishop_white.png" class="piece" alt="bishop white"/>`,
-    WHITE_KNIGHT: `<img src="/img/knight_white.png" class="piece" alt="knight white"/>`,
-    WHITE_PAWN: `<img src="/img/pawn_white.png" class="piece" alt="pawn white"/>`,
-}
 
 document.addEventListener("DOMContentLoaded", buildBoard);
-
-const PATCH = {
-    method: 'PATCH',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-}
 
 async function buildBoard() {
     let $board = document.getElementById("board");
@@ -36,10 +18,11 @@ async function buildBoard() {
     $board.addEventListener("mouseout", onRevertSquareColor);
 
     const data = await showChessInfo();
-    const boardDTO = data.boardDTO;
-    inputImageAtBoard(boardDTO.pieceDTOS);
-    $blackScore.textContent = boardDTO.blackScore;
-    $whiteScore.textContent = boardDTO.whiteScore;
+    const boardDto = data.boardDto;
+    console.log(boardDto);
+    inputImageAtBoard(boardDto.pieceDtos);
+    $blackScore.textContent = boardDto.blackScore;
+    $whiteScore.textContent = boardDto.whiteScore;
     borderCurrentTurn(data.turn);
 }
 
@@ -58,13 +41,9 @@ const $whiteScore = document.getElementById("white-score");
 const $blackScore = document.getElementById("black-score");
 
 async function showChessInfo() {
-    const chessId = getCookie("chessId");
-    const response = await fetch('/api/chess/' + chessId);
+    const chessId = COOKIE("chessId");
+    const response = await HTTP_CLIENT.get(PATH.CHESS + '?chessId=' + chessId);
     return await response.json();
-}
-
-function getCookie(name) {
-    return document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1];
 }
 
 function inputImageAtBoard(pieces) {
@@ -91,7 +70,7 @@ async function onMove(event) {
 
     const source = $position[0].id;
     const target = event.target.closest("div").id;
-    const chessId = getCookie('chessId');
+    const chessId = COOKIE('chessId');
     const moved = await patchMovePiece(chessId, source, target);
     revertSquareColor($position);
     if (!moved) {
@@ -118,7 +97,7 @@ function winner(turn) {
 }
 
 async function patchMovePiece(chessId, source, target) {
-    const response = await fetch('/api/chess/' + chessId + '?source=' + source + '&target=' + target, PATCH);
+    const response = await HTTP_CLIENT.patch(PATH.CHESS + `?chessId=${chessId}&source=${source}&target=${target}`);
     return response.ok;
 }
 

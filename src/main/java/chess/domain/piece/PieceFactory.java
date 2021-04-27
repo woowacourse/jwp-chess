@@ -17,8 +17,7 @@ public enum PieceFactory {
     private final String name;
     private final Function<Color, Piece> pieceFunction;
 
-    PieceFactory(String name,
-                 Function<Color, Piece> pieceFunction) {
+    PieceFactory(String name, Function<Color, Piece> pieceFunction) {
         this.name = name;
         this.pieceFunction = pieceFunction;
     }

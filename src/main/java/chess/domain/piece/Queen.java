@@ -10,7 +10,6 @@ public class Queen extends AbstractPiece {
     public static final Queen WHITE_INSTANCE = new Queen(Color.WHITE);
 
     private static final DirectionGroup DIRECTION_GROUP;
-    private static final String SYMBOL = "q";
     private static final String NAME = "QUEEN";
     private static final double SCORE = 9;
 
@@ -45,11 +44,6 @@ public class Queen extends AbstractPiece {
     @Override
     public boolean isKing() {
         return false;
-    }
-
-    @Override
-    public String getSymbol() {
-        return changeColorSymbol(SYMBOL);
     }
 
     @Override

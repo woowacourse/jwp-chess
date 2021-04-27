@@ -9,7 +9,6 @@ public class Pawn extends AbstractPiece {
     public static final Pawn BLACK_INSTANCE;
     public static final Pawn WHITE_INSTANCE;
 
-    private static final String SYMBOL = "p";
     private static final String NAME = "PAWN";
     private static final double SCORE = 1;
 
@@ -69,11 +68,6 @@ public class Pawn extends AbstractPiece {
     @Override
     public boolean isKing() {
         return false;
-    }
-
-    @Override
-    public String getSymbol() {
-        return changeColorSymbol(SYMBOL);
     }
 
     @Override

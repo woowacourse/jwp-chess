@@ -24,8 +24,7 @@ public class MovePosition {
     private Position sourcePosition;
     private Position targetPosition;
 
-    public MovePosition() {
-    }
+    public MovePosition() {}
 
     public void setSource(String sourcePosition) {
         this.sourcePosition = Position.from(sourcePosition);

@@ -31,6 +31,10 @@ public class Board {
         this.board = board;
     }
 
+    public static Board from(BoardDto boardDto) {
+        return from(boardDto.getPieceDtos());
+    }
+
     public static Board from(List<PieceDto> pieceDtos) {
         final Map<Position, Piece> board = new HashMap<>();
         for (PieceDto pieceDto : pieceDtos) {
@@ -105,11 +109,11 @@ public class Board {
                                        .reduce(DEFAULT_SUM_OF_PAWN_OPTION_SCORE, Double::sum);
     }
 
-    private boolean isSeveralPawnExist(Long pawnCont) {
+    private boolean isSeveralPawnExist(long pawnCont) {
         return pawnCont > 1L;
     }
 
-    private double changePawnScoreToHalf(Long pawnCont) {
+    private double changePawnScoreToHalf(long pawnCont) {
         return (double) pawnCont * OPTION_SCORE_OF_PAWN;
     }
 
@@ -117,8 +121,7 @@ public class Board {
         return board.entrySet()
                     .stream()
                     .filter(entry -> isPawnOfColor(color, entry.getValue()))
-                    .collect(groupingBy(entry -> entry.getKey()
-                                                      .getX(), counting()));
+                    .collect(groupingBy(entry -> entry.getKey().getX(), counting()));
     }
 
     private boolean isPawnOfColor(Color Color, Piece piece) {

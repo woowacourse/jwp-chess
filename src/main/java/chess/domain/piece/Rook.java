@@ -10,7 +10,6 @@ public class Rook extends AbstractPiece {
     public static final Rook WHITE_INSTANCE = new Rook(Color.WHITE);
 
     private static final DirectionGroup DIRECTION_GROUP;
-    private static final String SYMBOL = "r";
     private static final String NAME = "ROOK";
     private static final double SCORE = 5;
 
@@ -45,11 +44,6 @@ public class Rook extends AbstractPiece {
     @Override
     public boolean isKing() {
         return false;
-    }
-
-    @Override
-    public String getSymbol() {
-        return changeColorSymbol(SYMBOL);
     }
 
     @Override

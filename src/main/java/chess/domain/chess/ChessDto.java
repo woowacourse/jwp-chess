@@ -3,18 +3,23 @@ package chess.domain.chess;
 import chess.domain.board.BoardDto;
 
 public class ChessDto {
+
+    private final BoardDto boardDto;
     private final String status;
     private final String turn;
-    private final BoardDto boardDto;
 
     public ChessDto(Chess chess) {
-        this(chess.status(), chess.color(), BoardDto.from(chess));
+        this(BoardDto.from(chess), chess.status(), chess.color());
     }
 
-    public ChessDto(String status, String turn, BoardDto boardDto) {
+    public ChessDto(BoardDto boardDto, String status, String turn) {
+        this.boardDto = boardDto;
         this.status = status;
         this.turn = turn;
-        this.boardDto = boardDto;
+    }
+
+    public BoardDto getBoardDto() {
+        return boardDto;
     }
 
     public String getStatus() {
@@ -23,9 +28,5 @@ public class ChessDto {
 
     public String getTurn() {
         return turn;
-    }
-
-    public BoardDto getBoardDto() {
-        return boardDto;
     }
 }

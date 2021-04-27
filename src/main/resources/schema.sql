@@ -1,11 +1,20 @@
 USE chess;
 
+CREATE TABLE IF NOT EXISTS room
+(
+    room_id BIGINT AUTO_INCREMENT,
+    title varchar(10),
+    PRIMARY KEY (room_id)
+);
+
 CREATE TABLE IF NOT EXISTS chess
 (
+    room_id BIGINT,
     chess_id BIGINT AUTO_INCREMENT,
     status   varchar(10),
     turn     varchar(10),
-    PRIMARY KEY (chess_id)
+    PRIMARY KEY (chess_id),
+    FOREIGN KEY (room_id) REFERENCES room (room_id)
 );
 
 CREATE TABLE IF NOT EXISTS piece

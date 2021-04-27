@@ -10,7 +10,6 @@ public class King extends AbstractPiece {
     public static final King WHITE_INSTANCE = new King(Color.WHITE);
 
     private static final DirectionGroup DIRECTION_GROUP;
-    private static final String SYMBOL = "k";
     private static final String NAME = "KING";
     private static final double SCORE = 0;
 
@@ -45,11 +44,6 @@ public class King extends AbstractPiece {
     @Override
     public boolean isKing() {
         return true;
-    }
-
-    @Override
-    public String getSymbol() {
-        return changeColorSymbol(SYMBOL);
     }
 
     @Override

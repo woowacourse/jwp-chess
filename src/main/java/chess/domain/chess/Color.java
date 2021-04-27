@@ -14,7 +14,7 @@ public enum Color {
     }, BLANK {
         @Override
         public Color next() {
-            throw new UnsupportedOperationException("해당 컬러는 BLANK입니다.");
+            throw new UnsupportedOperationException("BLANK는 컬러를 변경할 수 없습니다.");
         }
     };
 

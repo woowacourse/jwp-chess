@@ -13,7 +13,6 @@ public class Blank extends AbstractPiece {
         INSTANCE = new Blank(Color.BLANK, DIRECTION_GROUP);
     }
 
-    private static final String SYMBOL = ".";
     private static final String NAME = "BLANK";
     private static final double SCORE = 0;
 
@@ -46,11 +45,6 @@ public class Blank extends AbstractPiece {
     @Override
     public boolean isKing() {
         return false;
-    }
-
-    @Override
-    public String getSymbol() {
-        return SYMBOL;
     }
 
     @Override

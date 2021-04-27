@@ -19,6 +19,10 @@ public class Chess {
         this(board, Status.RUNNING, Color.WHITE);
     }
 
+    public Chess(Board board, String status, String turn) {
+        this(board, Status.valueOf(status), Color.valueOf(turn));
+    }
+
     public Chess(Board board, Status status, Color turn) {
         this.board = board;
         this.status = status;
@@ -27,6 +31,15 @@ public class Chess {
 
     public static Chess createWithEmptyBoard() {
         return new Chess(BoardFactory.EmptyBoard.create(), Status.STOP, Color.WHITE);
+    }
+
+    public static Chess createWithInitializedBoard() {
+        return new Chess(BoardFactory.InitializedBoard.create());
+    }
+
+    public static Chess from(ChessDto chessDto) {
+        Board board = Board.from(chessDto.getBoardDto());
+        return new Chess(board);
     }
 
     public static Chess of(List<PieceDto> pieceDtos, String status, String turn) {
@@ -57,30 +70,6 @@ public class Chess {
 
         Status status = board.move(movePosition, turn);
         return new Chess(board, status, turn.next());
-    }
-
-    public Chess end() {
-        return new Chess(board, Status.STOP, turn);
-    }
-
-    public Chess exit() {
-        return new Chess(board, Status.TERMINATED, turn);
-    }
-
-    public boolean isTerminated() {
-        return status.isTerminated();
-    }
-
-    public boolean isKindDead() {
-        return status.isKingDead();
-    }
-
-    public boolean isRunning() {
-        return status.isRunning();
-    }
-
-    public boolean isStop() {
-        return status.isStop();
     }
 
     public String status() {

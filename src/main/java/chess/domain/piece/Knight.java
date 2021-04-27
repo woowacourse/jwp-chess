@@ -10,7 +10,6 @@ public class Knight extends AbstractPiece {
     public static final Knight WHITE_INSTANCE = new Knight(Color.WHITE);
 
     private static final DirectionGroup DIRECTION_GROUP;
-    private static final String SYMBOL = "n";
     private static final String NAME = "KNIGHT";
     private static final double SCORE = 2.5;
 
@@ -44,11 +43,6 @@ public class Knight extends AbstractPiece {
     @Override
     public boolean isKing() {
         return false;
-    }
-
-    @Override
-    public String getSymbol() {
-        return changeColorSymbol(SYMBOL);
     }
 
     @Override

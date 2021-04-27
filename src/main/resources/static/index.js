@@ -4,6 +4,18 @@ const btnCreateUser = document.getElementById('btn-user-create')
 const btnLogin = document.getElementById('btn-login')
 
 refresh();
+checkCookie()
+
+function checkCookie() {
+    const cookie = getCookie('user');
+    if (cookie) {
+        axios.get('/api/user/' + cookie)
+            .then(function (response) {
+                location.href = '/room/' + response.data.roomId;
+            }).catch(function (error) {
+        });
+    }
+}
 
 function refresh() {
     refreshTitle()
@@ -72,7 +84,7 @@ btnLogin.addEventListener('click', function (e) {
         "name": name,
         "pw": pw
     }).then(function (response) {
-        setCookie('user', response.data.name, 5)
+        setCookie('user', response.data.name, 720)
         refreshTitle()
     }).catch(function (error) {
         alert('로그인에 실패했습니다.');
@@ -80,6 +92,7 @@ btnLogin.addEventListener('click', function (e) {
 });
 
 function refreshRoomList(data) {
+    console.log(data);
     let list = document.getElementById("list-chess-game");
     roomListData = data;
     list.innerHTML = "";
@@ -115,7 +128,7 @@ function clickRoom(event) {
 
 function enterGame(id) {
     const pw = prompt('방 비밀번호를 입력 해 주세요')
-    axios.post('/api/room/' + id, {
+    axios.post('/api/room/' + id + "/enter", {
         "id": id,
         "user": getCookie('user'),
         "pw": pw

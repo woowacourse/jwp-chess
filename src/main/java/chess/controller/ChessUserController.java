@@ -24,6 +24,11 @@ public class ChessUserController {
         this.chessUserService = chessUserService;
     }
 
+    @GetMapping("/{name}")
+    public ResponseEntity<UserDto> getUser(@PathVariable String name) {
+        return ResponseEntity.ok(chessUserService.user(name));
+    }
+
     @PostMapping()
     public void create(@RequestBody UserDto userDto) {
         chessUserService.create(userDto.getName(), userDto.getPw());

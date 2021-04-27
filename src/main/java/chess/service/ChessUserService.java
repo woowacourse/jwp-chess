@@ -25,6 +25,10 @@ public class ChessUserService {
 
     }
 
+    public UserDto user(final String name) {
+        return UserDto.toResponse(userDao.findByName(name));
+    }
+
     public UserDto login(final String name, final String pw) {
         User user = userDao.findByName(name);
 

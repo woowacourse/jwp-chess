@@ -14,15 +14,7 @@ window.onload = () => {
     roomId = urls[urls.length - 1];
     connectToSocket(roomId);
     loadChessGame();
-    window.onbeforeunload = () => {
-        axios.put('/api/user/exit', {
-            "id": roomId
-        }).then(function (response) {
-            deleteCookie('user')
-        }).catch(function (error) {
-        });
-        return "나가실래요?";
-    }
+
 }
 
 function connectToSocket(roomId) {

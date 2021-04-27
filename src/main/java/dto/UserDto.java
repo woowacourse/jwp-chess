@@ -9,16 +9,16 @@ public class UserDto {
     private final String name;
     @Size(min = 2, max = 8)
     private final String pw;
-    private final boolean inGame;
+    private final Long roomId;
 
-    private UserDto(@Size(min = 2, max = 4) final String name, @Size(min = 2, max = 8) final String pw, final boolean inGame) {
+    private UserDto(@Size(min = 2, max = 4) final String name, @Size(min = 2, max = 8) final String pw, final Long roomId) {
         this.name = name;
         this.pw = pw;
-        this.inGame = inGame;
+        this.roomId = roomId;
     }
 
     public static UserDto toResponse(User user) {
-        return new UserDto(user.getName(), "", user.inGame());
+        return new UserDto(user.getName(), "", user.getRoomId());
     }
 
     public String getName() {
@@ -29,7 +29,7 @@ public class UserDto {
         return pw;
     }
 
-    public boolean isInGame() {
-        return inGame;
+    public Long getRoomId() {
+        return roomId;
     }
 }

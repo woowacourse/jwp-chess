@@ -7,7 +7,7 @@
     <link href="/css/chess.css" rel="stylesheet">
 </head>
 
-<body>
+<body id="body">
 <h1 class="title" id="title">Chess 🎁</h1>
 <div class="chess">
     <div class="makeRoomBtn" id="makeRoomBtn">
@@ -36,6 +36,32 @@
         <button id="playAgainButton">play again</button>
     </div>
 </div>
+<div class="user" id="user">
+    <button class="loginBtn" id="loginBtn">Login</button>
+    <button class="signupBtn" id="signupBtn">Signup</button>
+</div>
+<div class="loginForm" id="loginForm">
+    <h2>[Login]</h2>
+    <h3>ID</h3> <input type="text">
+    <h3>PW</h3> <input type="text">
+    <br>
+    <div class="buttons">
+        <button class="loginSubmit" id="loginSubmit">Login</button>
+        <button class="loginCloseBtn" id="loginCloseBtn">Close</button>
+    </div>
+</div>
+<div class="signupForm" id="signupForm">
+    <h2>[Signup]</h2>
+    <h3>ID</h3> <input type="text">
+    <h3>PW</h3> <input type="text">
+    <br>
+    <div class="buttons">
+        <button class="signupSubmit" id="signupSubmit">Signup</button>
+        <button class="signupCloseBtn" id="signupCloseBtn">Close</button>
+    </div>
+</div>
+<script src="js/userLogin.js" type="module"></script>
+<script src="js/userSignup.js" type="module"></script>
 <script src="js/makeNewRoom.js" type="module"></script>
 <script src="js/loadRoom.js" type="module"></script>
 <script src="js/firstPage.js" type="module"></script>

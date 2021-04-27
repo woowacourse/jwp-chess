@@ -2,6 +2,8 @@ export let chessRoomList = document.getElementById("chessRoomList");
 
 export const title = document.getElementById("title");
 
+let userRelated = document.getElementById("user");
+
 import {chessBoard, gameResultWindow, initChessBoard} from "./initialize.js";
 import {addChessBoardEvent, checkIsPlaying, player1, player2} from "./movement.js";
 
@@ -64,6 +66,7 @@ export function initializeChessBoard(data) {
     console.log(data);
     initChessBoard(data);
     addChessBoardEvent();
+    userRelated.style.display = "none";
     makeRoomBtn.style.display = "none";
     joinRoomBtn.style.display = "none";
     chessBoard.style.display = "flex";

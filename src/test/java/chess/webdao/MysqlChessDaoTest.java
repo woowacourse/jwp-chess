@@ -90,4 +90,18 @@ class MysqlChessDaoTest {
         // then
         assertThat(boardInfosDtos).hasSize(2);
     }
+
+    @Test
+    @DisplayName("업데이트 - room 턴정보 변경")
+    void changeTurnByRoomId() {
+        mysqlChessDao.createRoom("white", true);
+
+        TurnDto before = mysqlChessDao.selectTurnByRoomId(1L);
+        assertThat(before.getTurn()).isEqualTo("white");
+
+        mysqlChessDao.changeTurnByRoomId("black", true, 1L);
+
+        TurnDto after = mysqlChessDao.selectTurnByRoomId(1L);
+        assertThat(after.getTurn()).isEqualTo("black");
+    }
 }

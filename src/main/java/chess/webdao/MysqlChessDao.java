@@ -47,7 +47,7 @@ public class MysqlChessDao {
         this.jdbcTemplate.update(sql, roomId);
     }
 
-    public void changeTurnByRoomId(String turn, boolean isPlaying, int roomId) {
+    public void changeTurnByRoomId(String turn, boolean isPlaying, long roomId) {
         final String sql = "UPDATE room SET turn = (?), is_playing = (?) WHERE room_id = (?)";
         this.jdbcTemplate.update(sql, turn, isPlaying, roomId);
     }

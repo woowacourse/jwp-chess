@@ -8,7 +8,6 @@ import chess.domain.board.Board;
 import chess.domain.game.Room;
 import chess.domain.gamestate.running.Move;
 import chess.domain.gamestate.running.Ready;
-import chess.domain.piece.Piece;
 import chess.domain.team.Team;
 import chess.utils.BoardUtil;
 import java.util.List;

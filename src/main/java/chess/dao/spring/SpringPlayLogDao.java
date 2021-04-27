@@ -12,21 +12,21 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SpringPlayLogDao implements PlayLogDao {
 
-    private final ObjectMapper jacksonObjectMapper;
+    private final ObjectMapper objectMapper;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public SpringPlayLogDao(ObjectMapper jacksonObjectMapper,
+    public SpringPlayLogDao(ObjectMapper objectMapper,
         JdbcTemplate jdbcTemplate) {
-        this.jacksonObjectMapper = jacksonObjectMapper;
+        this.objectMapper = objectMapper;
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public void insert(BoardDto boardDto, GameStatusDto gameStatusDto, String roomId) {
         String query = "INSERT INTO play_log (board, game_status, room_id) VALUES (?, ?, ?)";
         try {
-            jdbcTemplate.update(query, jacksonObjectMapper.writeValueAsString(boardDto),
-                jacksonObjectMapper.writeValueAsString(gameStatusDto), roomId);
+            jdbcTemplate.update(query, objectMapper.writeValueAsString(boardDto),
+                objectMapper.writeValueAsString(gameStatusDto), roomId);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("직렬화에 실패했습니다.");
         }
@@ -40,7 +40,7 @@ public class SpringPlayLogDao implements PlayLogDao {
             (resultSet, rowNum) -> {
                 String boardJson = resultSet.getString(1);
                 try {
-                    return jacksonObjectMapper.readValue(boardJson, BoardDto.class);
+                    return objectMapper.readValue(boardJson, BoardDto.class);
                 } catch (JsonProcessingException e) {
                     throw new IllegalArgumentException("역직렬화에 실패했습니다.");
                 }
@@ -56,7 +56,7 @@ public class SpringPlayLogDao implements PlayLogDao {
             (resultSet, rowNum) -> {
                 String statusJson = resultSet.getString(1);
                 try {
-                    return jacksonObjectMapper.readValue(statusJson, GameStatusDto.class);
+                    return objectMapper.readValue(statusJson, GameStatusDto.class);
                 } catch (JsonProcessingException e) {
                     throw new IllegalArgumentException("역직렬화에 실패했습니다.");
                 }

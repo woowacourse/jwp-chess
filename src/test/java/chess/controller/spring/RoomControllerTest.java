@@ -1,7 +1,7 @@
 package chess.controller.spring;
 
-import chess.dto.RoomDTO;
-import chess.dto.RoomRegistrationDTO;
+import chess.dto.room.RoomDTO;
+import chess.dto.room.RoomRegistrationDTO;
 import chess.service.spring.RoomService;
 import chess.service.spring.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;

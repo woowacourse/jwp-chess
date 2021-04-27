@@ -22,6 +22,14 @@ public class RoomService {
         return roomDAO.findAll();
     }
 
+    public List<Room> findByLimit(int start, int end) {
+        return roomDAO.findByLimit(start, end);
+    }
+
+    public int calculateRoomCounts() {
+        return roomDAO.calculateCounts();
+    }
+
     public int addRoom(String name, String password) {
         int roomId = roomDAO.insertRoom(name);
         userService.addUserIntoRoom(roomId, password);

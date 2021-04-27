@@ -1,0 +1,7 @@
+.page {
+    float: left;
+    width: 20px;
+    margin-right: 5px;
+    text-align: center;
+    border: 3px solid blueviolet;
+}

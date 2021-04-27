@@ -1,8 +1,10 @@
 package chess.controller.spring;
 
+import chess.controller.spring.vo.Pagination;
 import chess.controller.spring.vo.SessionVO;
-import chess.dto.RoomDTO;
-import chess.dto.RoomRegistrationDTO;
+import chess.dto.room.RoomDTO;
+import chess.dto.room.RoomRegistrationDTO;
+import chess.dto.room.RoomResponseDTO;
 import chess.service.spring.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +26,15 @@ public class RoomController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoomDTO>> showRooms() {
-        List<RoomDTO> roomDTOS = roomService.findAll()
+    public ResponseEntity<RoomResponseDTO> showRooms(@RequestParam(required = false, defaultValue = "1") int pageIndex) {
+        int roomCounts = roomService.calculateRoomCounts();
+        Pagination pagination = new Pagination(pageIndex, roomCounts);
+        List<RoomDTO> roomDtos = roomService.findByLimit(pagination.getOffset(), pagination.getContentCountsPerPage())
                 .stream()
                 .map(RoomDTO::from)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(roomDTOS);
+        RoomResponseDTO roomResponseDto = new RoomResponseDTO(roomDtos, pagination);
+        return ResponseEntity.ok().body(roomResponseDto);
     }
 
     @PostMapping

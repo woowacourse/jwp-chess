@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.room;
 
 import javax.validation.constraints.NotNull;
 

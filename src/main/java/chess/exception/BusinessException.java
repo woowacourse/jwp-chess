@@ -2,7 +2,7 @@ package chess.exception;
 
 public class BusinessException extends RuntimeException {
 
-    ErrorCode errorCode;
+    private final ErrorCode errorCode;
 
     public BusinessException(String message, ErrorCode errorCode) {
         super(message);

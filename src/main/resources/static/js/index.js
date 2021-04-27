@@ -14,9 +14,6 @@ async function onClickStartBtn(e) {
     const password = prompt("비밀번호를 입력해달라");
     isEmpty(password);
 
-    console.log(roomName);
-    console.log(password);
-
     await postFetch("/room", {roomName: roomName, password: password});
     findGames();
 }

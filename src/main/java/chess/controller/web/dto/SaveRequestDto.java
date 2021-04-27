@@ -1,7 +1,11 @@
 package chess.controller.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SaveRequestDto {
+    @JsonProperty
     private final long gameId;
+    @JsonProperty
     private final String pieces;
 
     public SaveRequestDto(long gameId, String pieces) {

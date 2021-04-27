@@ -1,12 +1,13 @@
 package chess.controller.web.dto;
 
-import java.beans.ConstructorProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RoomRequestDto {
+    @JsonProperty
     private final String roomName;
+    @JsonProperty("password")
     private final String whiteUserPassword;
 
-    @ConstructorProperties({"roomName", "password"})
     public RoomRequestDto(String roomName, String whiteUserPassword) {
         this.roomName = roomName;
         this.whiteUserPassword = whiteUserPassword;

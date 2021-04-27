@@ -1,14 +1,17 @@
 package chess.controller.web.dto;
 
-import java.beans.ConstructorProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class MoveRequestDto {
+    @JsonProperty
     private final long gameId;
+    @JsonProperty
     private final String from;
+    @JsonProperty
     private final String to;
 
-    @ConstructorProperties({"gameId", "from", "to"})
     public MoveRequestDto(long gameId, String from, String to) {
         this.gameId = gameId;
         this.from = from;

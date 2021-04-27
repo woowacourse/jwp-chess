@@ -19,7 +19,7 @@ public final class RoomService {
     private final RoomDAO roomDAO;
     private final PlayerDAO playerDAO;
 
-    public RoomService(Rooms rooms, RoomDAO roomDAO, PlayerDAO playerDAO) {
+    public RoomService(final Rooms rooms, final RoomDAO roomDAO, final PlayerDAO playerDAO) {
         this.rooms = rooms;
         this.roomDAO = roomDAO;
         this.playerDAO = playerDAO;
@@ -93,8 +93,7 @@ public final class RoomService {
 
     public PlayerDTO participatedUser(final String id, final String color) {
         String userId = roomDAO.findUserIdByRoomIdAndColor(id, color);
-        Player player = playerDAO.findById(userId)
-                .orElse(new Player(-1));
+        Player player = playerDAO.findById(userId);
         return new PlayerDTO(player);
     }
 }

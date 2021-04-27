@@ -7,7 +7,7 @@ public class Room {
     private int whiteUserId;
     private int status;
 
-    public Room(int id, String title, int blackUserId, int whiteUserId, int status) {
+    public Room(final int id, final String title, final int blackUserId, final int whiteUserId, final int status) {
         this.id = id;
         this.title = title;
         this.blackUserId = blackUserId;
@@ -15,7 +15,7 @@ public class Room {
         this.status = status;
     }
 
-    public Room(int black_user, int white_user) {
+    public Room(final int black_user, final int white_user) {
         this(0, null, black_user, white_user, -1);
     }
 

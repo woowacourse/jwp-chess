@@ -9,7 +9,7 @@ public class History {
     private String endPosition;
     private LocalDateTime registerDate;
 
-    public History(String startPosition, String endPosition) {
+    public History(final String startPosition, final String endPosition) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
     }

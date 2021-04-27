@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class PlayerDAO {
@@ -77,14 +76,14 @@ public class PlayerDAO {
         }
     }
 
-    public Optional<Player> findByPlayerIdAndPassword(final String playerId, final String password) {
+    public Player findByPlayerIdAndPassword(final String playerId, final String password) {
         try {
             String query = "SELECT * FROM player WHERE player.nickname = ? AND player.password = ?";
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query,
+            return jdbcTemplate.queryForObject(query,
                     (rs, rowNum) -> new Player(rs.getInt("id"), rs.getString("nickname")),
-                    playerId, password));
+                    playerId, password);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            return new Player(-1);
         }
     }
 
@@ -98,11 +97,13 @@ public class PlayerDAO {
         }
     }
 
-    public Optional<Player> findByNickname(final String nickname) {
-        List<Player> players = jdbcTemplate.query("SELECT * FROM player WHERE nickname = ?",
-                (rs, rowNum) -> new Player(rs.getInt("id"), rs.getString("nickname")),
-                nickname);
-        return players.stream().findAny();
+    public Player findByNickname(final String nickname) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM player WHERE nickname = ?",
+                    (rs, rowNum) -> new Player(rs.getInt("id"), rs.getString("nickname")), nickname);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public int save(final JoinUserDTO joinUserDTO) {
@@ -117,17 +118,21 @@ public class PlayerDAO {
         return key.intValue();
     }
 
-    public Optional<Player> findPlayerByIdAndPassword(final String id, final String password) {
-        List<Player> players = jdbcTemplate.query("SELECT * FROM player WHERE id = ? AND password = ?",
-                (rs, rowNum) -> new Player(rs.getInt("id"), rs.getString("nickname")),
-                id, password);
-        return players.stream().findAny();
+    public Player findPlayerByIdAndPassword(final String id, final String password) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM player WHERE id = ? AND password = ?",
+                    (rs, rowNum) -> new Player(rs.getInt("id"), rs.getString("nickname")), id, password);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
-    public Optional<Player> findById(String id) {
-        List<Player> players = jdbcTemplate.query("SELECT * FROM player WHERE id = ?",
-                (rs, rowNum) -> new Player(rs.getInt("id"), rs.getString("nickname")),
-                id);
-        return players.stream().findAny();
+    public Player findById(String id) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM player WHERE id = ?",
+                    (rs, rowNum) -> new Player(rs.getInt("id"), rs.getString("nickname")), id);
+        } catch (EmptyResultDataAccessException e) {
+            return new Player(-1);
+        }
     }
 }

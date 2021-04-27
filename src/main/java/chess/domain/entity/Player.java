@@ -5,17 +5,17 @@ public class Player {
     private String nickname;
     private String password;
 
-    public Player(int id, String nickname, String password) {
+    public Player(final int id, final String nickname, final String password) {
         this.id = id;
         this.nickname = nickname;
         this.password = password;
     }
 
-    public Player(int id, String nickname) {
+    public Player(final int id, final String nickname) {
         this(id, nickname, null);
     }
 
-    public Player(int id) {
+    public Player(final int id) {
         this(id, null, null);
     }
 

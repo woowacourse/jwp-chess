@@ -6,10 +6,7 @@ import chess.dto.player.JoinUserDTO;
 import chess.dto.player.PasswordDTO;
 import chess.dto.player.PlayerDTO;
 import chess.dto.room.RoomCreateDTO;
-import chess.exception.InitialSettingDataException;
-import chess.exception.NoHistoryException;
-import chess.exception.NotEnoughPlayerException;
-import chess.exception.RoomException;
+import chess.exception.*;
 import chess.service.HistoryService;
 import chess.service.PlayerService;
 import chess.service.ResultService;
@@ -112,5 +109,13 @@ public final class SpringChessGameController {
         model.addAttribute("state",
                 new GameDTO(roomId, "새로운게임", playerService.participatedUsers(roomId), e.getMessage()));
         return "chess";
+    }
+
+    @ExceptionHandler(PlayerException.class)
+    public String playerException(final PlayerException e, final Model model) {
+        model.addAttribute("error", e.getMessage());
+        model.addAttribute("rooms", roomService.allRooms());
+        model.addAttribute("results", resultService.allUserResult());
+        return "index";
     }
 }

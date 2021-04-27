@@ -7,6 +7,8 @@ import chess.domain.entity.Room;
 import chess.dto.player.JoinUserDTO;
 import chess.dto.player.PlayerDTO;
 import chess.dto.player.PlayersDTO;
+import chess.exception.DuplicatedNicknameException;
+import chess.exception.InvalidPasswordException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -49,34 +51,33 @@ public final class PlayerService {
         try {
             validatesDuplicatedUser(joinUserDTO);
             return playerDAO.save(joinUserDTO);
-        } catch (IllegalStateException e) {
+        } catch (DuplicatedNicknameException e) {
             return login(joinUserDTO);
         }
     }
 
     private void validatesDuplicatedUser(final JoinUserDTO joinUserDTO) {
-        playerDAO.findByNickname(joinUserDTO.getNickname())
-                .ifPresent(user -> {
-                    throw new IllegalStateException("중복된 이름입니다.");
-                });
+        if (playerDAO.findByNickname(joinUserDTO.getNickname()) != null) {
+            throw new DuplicatedNicknameException();
+        }
     }
 
     private int login(final JoinUserDTO user) {
         int userId = playerDAO.findIdByNicknameAndPassword(user.getNickname(), user.getPassword());
         if (userId == 0) {
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+            throw new InvalidPasswordException();
         }
         return userId;
     }
 
     public void checkPassword(final String id, final String password) {
-        playerDAO.findPlayerByIdAndPassword(id, password)
-                .orElseThrow(IllegalStateException::new);
+        if (playerDAO.findPlayerByIdAndPassword(id, password) == null) {
+            throw new InvalidPasswordException();
+        }
     }
 
     public PlayerDTO getUser(final String id, final String password) {
-        Player player = playerDAO.findByPlayerIdAndPassword(id, password)
-                .orElse(new Player(-1));
+        Player player = playerDAO.findByPlayerIdAndPassword(id, password);
         return new PlayerDTO(player);
     }
 }

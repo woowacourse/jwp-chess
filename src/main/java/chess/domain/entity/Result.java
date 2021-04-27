@@ -6,7 +6,7 @@ public class Result {
     private final int winnerId;
     private final int loserId;
 
-    public Result(int id, int roomId, int winnerId, int loserId) {
+    public Result(final int id, final int roomId, final int winnerId, final int loserId) {
         this.id = id;
         this.roomId = roomId;
         this.winnerId = winnerId;

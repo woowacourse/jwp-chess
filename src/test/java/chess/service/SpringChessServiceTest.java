@@ -16,7 +16,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Arrays;
@@ -26,7 +25,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@TestPropertySource("classpath:application.properties")
 @Sql("classpath:tableInit.sql")
 class SpringChessServiceTest {
     SpringChessService springChessService;

@@ -52,8 +52,15 @@ public class SpringChessService implements ChessService {
 
     @Override
     public RoomDto create(RoomDto roomDto) {
-        userDao.insert(roomDto.getWhite());
-        userDao.insert(roomDto.getBlack());
+        String blackName = roomDto.getBlack();
+        String whiteName = roomDto.getWhite();
+
+        if (blackName.equals(whiteName)) {
+            throw new IllegalArgumentException("방 안에 같은 사용자가 2명 존재할 수 없습니다.");
+        }
+
+        userDao.insert(whiteName);
+        userDao.insert(blackName);
         String roomId = roomDao.insert(roomDto);
         roomDto.setId(roomId);
 

@@ -56,7 +56,7 @@ public class SpringChessApiController {
     private ResponseEntity<BoardDto> updateStatus(@PathVariable String id,
         @RequestBody GameStatusDto gameStatusDto) {
         if (gameStatusDto.getGameState().equals("Running")) {
-            return ResponseEntity.ok().body(chessService.start(id));
+            return ResponseEntity.ok(chessService.start(id));
         }
         if (gameStatusDto.getGameState().equals("Finished")) {
             return ResponseEntity.ok().body(chessService.exit(id));
@@ -64,7 +64,7 @@ public class SpringChessApiController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @GetMapping("/{id}/points/{point}/movable-points")
+    @GetMapping("{id}/points/{point}/movable-points")
     private PointsDto movablePoints(@PathVariable String id, @PathVariable String point) {
         return chessService.movablePoints(id, point);
     }

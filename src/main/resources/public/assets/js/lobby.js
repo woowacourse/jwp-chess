@@ -44,6 +44,11 @@ document.querySelector(".create-room").addEventListener("submit",
       const white = document.querySelector("#white");
       const black = document.querySelector("#black");
 
+      if (white.value === black.value) {
+        alert("white와 black의 이름은 달라야 합니다.");
+        return;
+      }
+
       if (isValueLengthIsLongerThan(roomName.value, 2)
           && isValueLengthIsLongerThan(white.value, 2)
           && isValueLengthIsLongerThan(black.value, 2)) {

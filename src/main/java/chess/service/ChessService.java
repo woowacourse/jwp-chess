@@ -28,6 +28,9 @@ public class ChessService {
         if (!roomRepository.exists(roomName)) {
             throw new IllegalArgumentException("이미 존재하는 방이름입니다.");
         }
+        if (roomName.length() > 12) {
+            throw new IllegalArgumentException("이름은 12자 이하로 입력해주세요.");
+        }
     }
 
     public BoardDto resetBoard(int roomId) {

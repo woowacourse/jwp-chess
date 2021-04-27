@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.piece.Team;
+import chess.dto.RoomDto;
 import chess.dto.RoomsDto;
 import chess.dto.TurnDto;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -51,13 +52,12 @@ public class RoomDao {
 
     public RoomsDto findRoomList() {
         String sql = "select * from room;";
-        return jdbcTemplate.queryForObject(
+        List<RoomDto> roomDtos = jdbcTemplate.query(
                 sql, (rs, rn) -> {
-                    List<String> roomNames = new ArrayList<>();
-                    List<Integer> roomIds = new ArrayList<>();
-                    roomNames.add(rs.getString("room_name"));
-                    roomIds.add(rs.getInt("room_id"));
-                    return RoomsDto.of(roomNames, roomIds);
+                    String roomName = rs.getString("room_name");
+                    int roomId = rs.getInt("room_id");
+                    return RoomDto.of(roomName, roomId);
                 });
+        return RoomsDto.of(roomDtos);
     }
 }

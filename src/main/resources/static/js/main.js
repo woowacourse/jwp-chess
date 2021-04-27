@@ -12,12 +12,13 @@ async function mainStart() {
 async function showRoomList() {
     const rooms = await fetch("/rooms"
     ).then(res => res.json());
-    for (let i = 0; i < rooms.roomNames.length; i++) {
+
+    for (let i = 0; i < rooms.roomDtos.length; i++) {
         const divRoom = document.createElement("div");
         let eachRoom = document.createElement("a");
         eachRoom.setAttribute("class", "room");
-        eachRoom.setAttribute("href", "/rooms/" + rooms.roomIds[i]);
-        eachRoom.textContent = rooms.roomNames[i];
+        eachRoom.setAttribute("href", "/rooms/" + rooms.roomDtos[i].roomId);
+        eachRoom.textContent = rooms.roomDtos[i].roomName;
         divRoom.appendChild(eachRoom);
         roomList.appendChild(divRoom);
     }

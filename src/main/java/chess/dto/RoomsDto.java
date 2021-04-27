@@ -3,26 +3,20 @@ package chess.dto;
 import java.util.List;
 
 public class RoomsDto {
-    private List<String> roomNames;
-    private List<Integer> roomIds;
+    private List<RoomDto> roomDtos;
 
     public RoomsDto() {
     }
 
-    private RoomsDto(List<String> roomNames, List<Integer> roomIds) {
-        this.roomNames = roomNames;
-        this.roomIds = roomIds;
+    private RoomsDto(List<RoomDto> roomDtos) {
+        this.roomDtos = roomDtos;
     }
 
-    public static RoomsDto of(List<String> roomNames, List<Integer> roomIds) {
-        return new RoomsDto(roomNames, roomIds);
+    public static RoomsDto of(List<RoomDto> roomDtos) {
+        return new RoomsDto(roomDtos);
     }
 
-    public List<String> getRoomNames() {
-        return roomNames;
-    }
-
-    public List<Integer> getRoomIds() {
-        return roomIds;
+    public List<RoomDto> getRoomDtos() {
+        return roomDtos;
     }
 }

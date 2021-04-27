@@ -52,7 +52,7 @@ public class SpringChessGameDao {
     }
 
     public void createChessGameInfo(final int roomId, final String currentTurnTeam, final boolean isPlaying) {
-        String sql = "INSERT INTO chess_game_info (room_id, current_turn_team, is_playing) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO chess_game_info (room_id, current_turn_team, is_playing) VALUES (?, ?, ?)";
         this.jdbcTemplate.update(sql, roomId, currentTurnTeam, isPlaying);
     }
 

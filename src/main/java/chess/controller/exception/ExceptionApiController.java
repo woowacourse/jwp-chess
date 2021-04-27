@@ -3,13 +3,11 @@ package chess.controller.exception;
 import chess.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
-public class GlobalException {
+@RestControllerAdvice
+public class ExceptionApiController {
 
     @ExceptionHandler(NoSuchPermittedChessPieceException.class)
     public ResponseEntity<String> handleNoSuchPermittedChessPieceException(NoSuchPermittedChessPieceException e) {
@@ -36,21 +34,9 @@ public class GlobalException {
         return badRequest(e);
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundChessGamePageException.class)
-    public String handleNotFoundChessGame(NotFoundChessGamePageException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "error-page";
-    }
-
     @ExceptionHandler(NotFoundChessGameException.class)
     public ResponseEntity<String> handleNotFoundChessGame(NotFoundChessGameException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
     private ResponseEntity<String> badRequest(Exception e) {

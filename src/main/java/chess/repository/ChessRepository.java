@@ -19,7 +19,7 @@ public class ChessRepository {
     }
 
     public Optional<String> findGame(String title) {
-        String findTitleQuery = "SELECT id FROM chess_game WHERE BINARY title = ?";
+        String findTitleQuery = "SELECT id FROM chess_game WHERE title = ?";
         return jdbcTemplate.queryForList(findTitleQuery, String.class, title)
                 .stream()
                 .findAny();

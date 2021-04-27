@@ -22,7 +22,7 @@ public class RoomRepository {
         this.boardDao = boardDao;
     }
 
-    public BoardDto initializeByName(String roomName) {
+    public BoardDto createRoom(String roomName) {
         int roomId = roomDao.createRoom(roomName);
         return boardDao.createBoard(roomId);
     }
@@ -45,21 +45,18 @@ public class RoomRepository {
         String destination = moveInfoDto.getDestination();
         Position targetPosition = Position.from(target);
         Piece targetPiece = board.getBoard().get(targetPosition);
-        Team turn = chessSingleMove(board, moveInfoDto, roomId);
+        Team turn = findTurnAfterMove(board, moveInfoDto, roomId);
 
         boardDao.updateBoardAfterMove(target, destination, targetPiece, roomId);
         roomDao.updateTurnOwnerAfterMove(turn, roomId);
     }
 
-    private Team chessSingleMove(Board board, MoveInfoDto moveInfoDto, int roomId) {
+    private Team findTurnAfterMove(Board board, MoveInfoDto moveInfoDto, int roomId) {
         String target = moveInfoDto.getTarget();
         String destination = moveInfoDto.getDestination();
-        return board.movePiece(Position.from(target), Position.from(destination), findTurnAfterMove(roomId));
-    }
-
-    private Team findTurnAfterMove(int roomId) {
         TurnDto previousTurn = roomDao.findTurnOwnerByRoomId(roomId);
-        return Team.convertStringToTeam(previousTurn.getTurn());
+        Team nextTurn = Team.convertStringToTeam(previousTurn.getTurn());
+        return board.movePiece(Position.from(target), Position.from(destination), nextTurn);
     }
 
     public boolean exists(String roomName) {

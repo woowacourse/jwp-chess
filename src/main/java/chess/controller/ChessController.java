@@ -15,19 +15,19 @@ public class ChessController {
 
     @GetMapping("/rooms")
     public ResponseEntity<RoomsDto> showRoomList() {
-        RoomsDto roomsDto = chessService.getRoomList();
+        RoomsDto roomsDto = chessService.findAll();
         return ResponseEntity.ok().body(roomsDto);
     }
 
     @GetMapping("/{roomId}/board")
     public ResponseEntity<BoardDto> loadSavedBoard(@PathVariable int roomId) {
-        BoardDto boardDto = chessService.getSavedBoardInfo(roomId);
+        BoardDto boardDto = chessService.findBoardByRoomId(roomId);
         return ResponseEntity.ok().body(boardDto);
     }
 
     @PostMapping("/room")
     public ResponseEntity<BoardDto> makeRoom(@RequestBody RoomNameDto roomNameDto) {
-        BoardDto boardDto = chessService.initializeByName(roomNameDto);
+        BoardDto boardDto = chessService.createRoom(roomNameDto);
         return ResponseEntity.ok().body(boardDto);
     }
 

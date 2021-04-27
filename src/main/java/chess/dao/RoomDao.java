@@ -19,10 +19,6 @@ public class RoomDao {
     }
 
     public int createRoom(String roomName) {
-        return initializeRoom(roomName);
-    }
-
-    private int initializeRoom(String roomName) {
         String sql = "insert into room (room_name, turn) values (?, 'white');";
         jdbcTemplate.update(sql, roomName);
         return findRoomIdByRoomName(roomName);

@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.domain.exceptions.ChessException;
 import chess.dto.GameResponseDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.MoveResponseDto;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
-@RestController
+@RestControllerAdvice
 public class SpringChessApiController {
 
     private final ChessService chessService;
@@ -51,13 +52,15 @@ public class SpringChessApiController {
         chessService.deleteRoom(roomName);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<String> error(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    @ExceptionHandler({ChessException.class})
+    public ResponseEntity<String> error(ChessException e) {
+        return new ResponseEntity(e.getMessage(), e.getStatus());
     }
 
     @ExceptionHandler({DataAccessException.class})
-    public ResponseEntity<String> error(DataAccessException e) {
+    public ResponseEntity error(DataAccessException e) {
+        e.printStackTrace();
+        e.notify();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 }

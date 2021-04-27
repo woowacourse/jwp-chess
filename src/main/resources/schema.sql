@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS board;
-DROP TABLE IF EXISTS game;
+DROP TABLE IF EXISTS room;
 
 create table room
 (
@@ -13,5 +13,5 @@ create table board
     position varchar(12) not null,
     piece varchar(12) not null,
     room_id int,
-    foreign key (room_id) references game (room_id)
+    foreign key (room_id) references room (room_id)
 );

@@ -28,7 +28,7 @@ async function makeRoom() {
     const data = {
         roomName: roomName
     }
-    await fetch("/board", {
+    await fetch("/room", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

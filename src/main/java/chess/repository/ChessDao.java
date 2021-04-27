@@ -46,10 +46,10 @@ public class ChessDao {
     private int initializeRoom(String roomName) {
         String sql = "insert into room (room_name, turn) values (?, 'white');";
         jdbcTemplate.update(sql, roomName);
-        return findRoomNumberByRoomName(roomName);
+        return findRoomIdByRoomName(roomName);
     }
 
-    private int findRoomNumberByRoomName(String roomName) {
+    private int findRoomIdByRoomName(String roomName) {
         String sql = "select room_id from room where room_name = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, roomName);
     }

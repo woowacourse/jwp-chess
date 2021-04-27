@@ -27,8 +27,8 @@ public class ChessController {
         return ResponseEntity.ok().body(boardDto);
     }
 
-    @PostMapping("/board")
-    public ResponseEntity<BoardDto> makeBoard(@RequestBody Map<String, Object> data) {
+    @PostMapping("/room")
+    public ResponseEntity<BoardDto> makeRoom(@RequestBody Map<String, Object> data) {
         BoardDto boardDto = chessService.initializeByName((String) data.get("roomName"));
         return ResponseEntity.ok().body(boardDto);
     }

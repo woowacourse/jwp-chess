@@ -19,7 +19,7 @@ const Index = function() {
       return response.json();
     })
     .then(responseJson => {
-      const rooms = responseJson;
+      const rooms = responseJson.rooms;
       for (let i = 0; i < rooms.length; i++) {
         this.roomList.insertAdjacentHTML("beforeend", this.renderRoom(rooms[i]));
       }
@@ -50,10 +50,9 @@ const Index = function() {
   }
 
   this.newRoomBtn.addEventListener('click', this.addNewRoom);
-
-  this.constructor();
 }
 
 window.onload = () => {
   const index = new Index();
+  index.constructor();
 }

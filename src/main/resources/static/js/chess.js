@@ -82,26 +82,21 @@ async function movePiece(targetPosition, destinationPosition) {
 
 async function sendMoveInformation(bodyValue) {
     const url = window.location.href.split('/')
-    await fetch("/move/" + url[url.length - 1], {
+    const response = await fetch("/move/" + url[url.length - 1], {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(bodyValue)
-    }).then(res => {
-        if (res.ok !== true) {
-            res.json().then(
-                data => {
-                    alert(data.message);
-                }
-            )
-        } else {
-            res.json().then(responsejson => {
-                checkGameOver(responsejson.gameOverFlag);
-                renewBoard(responsejson.boardInfo);
-            });
-        }
     });
+
+    const body = await response.json();
+    if (!response.ok) {
+        alert(body.message);
+        return;
+    }
+    checkGameOver(body.gameOverFlag);
+    renewBoard(body.boardInfo);
 }
 
 function renewBoard(boardInfo) {

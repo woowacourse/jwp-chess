@@ -14,6 +14,7 @@ import chess.domain.piece.Color;
 import chess.dto.MoveDto;
 import chess.service.GameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -29,12 +30,12 @@ public class GameControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
 
 
     @Test
+    @DisplayName("id로 게임 불러오기")
     void loadGame() throws Exception {
         when(gameService.loadGame(1L))
             .thenReturn(new ChessGame(1L, Color.WHITE, false, new ChessBoard(), "test-room"));
@@ -45,6 +46,7 @@ public class GameControllerTest {
     }
 
     @Test
+    @DisplayName("id로 특정한 방의 게임 말 이동시키기")
     void move() throws Exception {
         String content = objectMapper.writeValueAsString(new MoveDto("b2", "b3"));
 
@@ -59,6 +61,7 @@ public class GameControllerTest {
     }
 
     @Test
+    @DisplayName("특정한 방의 게임 수동으로 종료시키기")
     void finish() throws Exception {
         when(gameService.loadGame(1L))
             .thenReturn(new ChessGame(1L, Color.WHITE, false, new ChessBoard(), "test-room"));
@@ -68,6 +71,7 @@ public class GameControllerTest {
     }
 
     @Test
+    @DisplayName("특정한 방의 게임 재시작하기")
     void restart() throws Exception {
         when(gameService.restart(1L))
             .thenReturn(new ChessGame(1L, Color.BLACK, false, new ChessBoard(), "test-room"));

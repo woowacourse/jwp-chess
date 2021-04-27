@@ -65,6 +65,7 @@ public class LobbyControllerTest {
     }
 
     @Test
+    @DisplayName("생성된 게임 방 목록 불러오기")
     void allGames() throws Exception {
         when(lobbyService.findAllGames()).thenReturn(Arrays.asList(
             new ChessGame(),

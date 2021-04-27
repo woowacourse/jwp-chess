@@ -21,10 +21,9 @@ public class ChessController {
         return ResponseEntity.ok().body(roomsDto);
     }
 
-    @GetMapping("/board/{roomNumber}")
-
-    public ResponseEntity<BoardDto> loadSavedBoard(@PathVariable int roomNumber) {
-        BoardDto boardDto = chessService.getSavedBoardInfo(roomNumber);
+    @GetMapping("/{roomId}/board")
+    public ResponseEntity<BoardDto> loadSavedBoard(@PathVariable int roomId) {
+        BoardDto boardDto = chessService.getSavedBoardInfo(roomId);
         return ResponseEntity.ok().body(boardDto);
     }
 
@@ -34,21 +33,21 @@ public class ChessController {
         return ResponseEntity.ok().body(boardDto);
     }
 
-    @GetMapping("/reset/{roomNumber}")
-    public ResponseEntity<BoardDto> resetBoard(@PathVariable int roomNumber) {
-        BoardDto boardDto = chessService.resetBoard(roomNumber);
+    @GetMapping("/{roomId}/reset")
+    public ResponseEntity<BoardDto> resetBoard(@PathVariable int roomId) {
+        BoardDto boardDto = chessService.resetBoard(roomId);
         return ResponseEntity.ok().body(boardDto);
     }
 
-    @GetMapping("/score/{roomNumber}")
-    public ResponseEntity<ScoreDto> scoreStatus(@PathVariable int roomNumber) {
-        ScoreDto scoreDto = chessService.score(roomNumber);
+    @GetMapping("/{roomId}/score")
+    public ResponseEntity<ScoreDto> scoreStatus(@PathVariable int roomId) {
+        ScoreDto scoreDto = chessService.score(roomId);
         return ResponseEntity.ok().body(scoreDto);
     }
 
-    @PostMapping("/move/{roomNumber}")
-    public ResponseEntity<BoardDto> move(@RequestBody MoveInfoDto moveInfoDto, @PathVariable int roomNumber) {
-        BoardDto boardDto = chessService.move(moveInfoDto, roomNumber);
+    @PostMapping("/{roomId}/move")
+    public ResponseEntity<BoardDto> move(@RequestBody MoveInfoDto moveInfoDto, @PathVariable int roomId) {
+        BoardDto boardDto = chessService.move(moveInfoDto, roomId);
         return ResponseEntity.ok().body(boardDto);
     }
 }

@@ -35,7 +35,7 @@ async function applicationStart() {
 
 async function loadSavedBoard() {
     const url = window.location.href.split('/')
-    let savedBoardInformation = await fetch("/board/" + url[url.length - 1])
+    let savedBoardInformation = await fetch("/" + url[url.length - 1] + "/board")
     savedBoardInformation = await savedBoardInformation.json();
     return savedBoardInformation.boardInfo;
 }
@@ -82,7 +82,7 @@ async function movePiece(targetPosition, destinationPosition) {
 
 async function sendMoveInformation(bodyValue) {
     const url = window.location.href.split('/')
-    const response = await fetch("/move/" + url[url.length - 1], {
+    const response = await fetch("/" + url[url.length - 1] + "/move", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -125,14 +125,14 @@ function getBoardColor(index, color) {
 
 async function resetBoard() {
     const url = window.location.href.split('/')
-    let initialBoardInformation = await fetch("/reset/" + url[url.length - 1])
+    let initialBoardInformation = await fetch("/" + url[url.length - 1] + "/reset")
     initialBoardInformation = await initialBoardInformation.json();
     return initialBoardInformation.boardInfo;
 }
 
 async function alertScore() {
     const url = window.location.href.split('/')
-    let scoreInformation = await fetch("/score/" + url[url.length - 1])
+    let scoreInformation = await fetch("/" + url[url.length - 1] + "/score")
     scoreInformation = await scoreInformation.json();
     alert("백 : " + scoreInformation.whiteScore + "  흑 : " + scoreInformation.blackScore);
 }

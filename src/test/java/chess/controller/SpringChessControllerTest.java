@@ -66,6 +66,36 @@ public class SpringChessControllerTest {
     }
 
     @Test
+    @DisplayName("방 생성 테스트 - 중복이름일 때")
+    void makeSameRoomException() throws Exception {
+        String content = objectMapper.writeValueAsString(new RoomNameDto("room_one"));
+        mockMvc.perform(post("/room")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("방 생성 테스트 - 빈 이름일 때")
+    void makeNullRoomException() throws Exception {
+        String content = objectMapper.writeValueAsString(new RoomNameDto(""));
+        mockMvc.perform(post("/room")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("방 생성 테스트 - 13자 초과일 때")
+    void makeLongRoomException() throws Exception {
+        String content = objectMapper.writeValueAsString(new RoomNameDto("aaaaaaaaaaaaa"));
+        mockMvc.perform(post("/room")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("방 초기화 테스트")
     void resetBoard() throws Exception {
         Board board = BoardFactory.create();

@@ -1,9 +1,9 @@
 package chess.service;
 
+import chess.dao.PlayerDAO;
 import chess.dao.ResultDAO;
-import chess.dao.UserDAO;
+import chess.domain.entity.Player;
 import chess.dto.result.RankingDTO;
-import chess.dto.user.UserDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,21 +13,21 @@ import java.util.List;
 @Service
 public final class ResultService {
     private final ResultDAO resultDAO;
-    private final UserDAO userDAO;
+    private final PlayerDAO playerDAO;
 
-    public ResultService(final ResultDAO resultDAO, final UserDAO userDAO) {
+    public ResultService(final ResultDAO resultDAO, final PlayerDAO playerDAO) {
         this.resultDAO = resultDAO;
-        this.userDAO = userDAO;
+        this.playerDAO = playerDAO;
     }
 
     public List<RankingDTO> allUserResult() {
         List<RankingDTO> results = new ArrayList<>();
-        List<UserDTO> users = userDAO.findAll();
-        for (UserDTO user : users) {
-            int userId = user.getId();
+        List<Player> players = playerDAO.findAll();
+        for (Player player : players) {
+            int userId = player.getId();
             int winCount = resultDAO.winCountByUserId(userId);
             int loseCount = resultDAO.loseCountByUserId(userId);
-            results.add(new RankingDTO(userDAO.findNicknameById(userId), winCount, loseCount));
+            results.add(new RankingDTO(playerDAO.findNicknameById(userId), winCount, loseCount));
         }
         Collections.sort(results);
         return results;

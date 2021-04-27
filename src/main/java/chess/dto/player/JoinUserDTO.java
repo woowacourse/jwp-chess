@@ -1,4 +1,4 @@
-package chess.dto.user;
+package chess.dto.player;
 
 import chess.dto.room.RoomCreateDTO;
 import lombok.AllArgsConstructor;

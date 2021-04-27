@@ -1,30 +1,40 @@
 package chess.service;
 
+import chess.dao.PlayerDAO;
 import chess.dao.RoomDAO;
-import chess.dao.UserDAO;
 import chess.domain.ChessGame;
 import chess.domain.Rooms;
 import chess.domain.Team;
+import chess.domain.entity.Player;
+import chess.dto.player.PlayerDTO;
 import chess.dto.room.RoomDTO;
-import chess.dto.user.UserDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public final class RoomService {
     private final Rooms rooms;
     private final RoomDAO roomDAO;
-    private final UserDAO userDAO;
+    private final PlayerDAO playerDAO;
 
-    public RoomService(Rooms rooms, RoomDAO roomDAO, UserDAO userDAO) {
+    public RoomService(Rooms rooms, RoomDAO roomDAO, PlayerDAO playerDAO) {
         this.rooms = rooms;
         this.roomDAO = roomDAO;
-        this.userDAO = userDAO;
+        this.playerDAO = playerDAO;
     }
 
     public List<RoomDTO> allRooms() {
-        return roomDAO.allRooms();
+        return roomDAO.allRooms().stream()
+                .map(room -> {
+                    String blackUser = playerDAO.findNicknameById(room.getBlackUserId());
+                    String whiteUser = playerDAO.findNicknameById(room.getWhiteUserId());
+                    int status = room.getStatus();
+                    return new RoomDTO(
+                            room.getId(), room.getTitle(), blackUser, whiteUser, status, (status == 1 || status == 2)
+                    );
+                }).collect(Collectors.toList());
     }
 
     public Long createRoom(final String name, final int whiteUserId) {
@@ -65,10 +75,10 @@ public final class RoomService {
         roomDAO.joinBlackUser(roomId, blackUserId);
     }
 
-    public boolean checkRightTurn(final String roomId, final UserDTO user, final String clickedSection) {
+    public boolean checkRightTurn(final String roomId, final PlayerDTO user, final String clickedSection) {
         ChessGame chessGame = loadChessGameById(roomId);
 
-        if (user == null || !chessGame.checkRightTurn(clickedSection)) {
+        if (user.getId() == -1 || !chessGame.checkRightTurn(clickedSection)) {
             return false;
         }
 
@@ -81,9 +91,10 @@ public final class RoomService {
                 .equals(Integer.toString(user.getId()));
     }
 
-    public UserDTO participatedUser(final String id, final String color) {
+    public PlayerDTO participatedUser(final String id, final String color) {
         String userId = roomDAO.findUserIdByRoomIdAndColor(id, color);
-        return userDAO.findById(userId)
-                .orElse(null);
+        Player player = playerDAO.findById(userId)
+                .orElse(new Player(-1));
+        return new PlayerDTO(player);
     }
 }

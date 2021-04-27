@@ -1,10 +1,8 @@
 package chess.dao;
 
-import chess.dto.user.JoinUserDTO;
-import chess.dto.user.UserDTO;
-import chess.dto.user.UsersDTO;
+import chess.domain.entity.Player;
+import chess.dto.player.JoinUserDTO;
 import chess.exception.InitialSettingDataException;
-import chess.exception.NotEnoughPlayerException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,30 +16,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class UserDAO {
+public class PlayerDAO {
     private final JdbcTemplate jdbcTemplate;
 
-    public UserDAO(final JdbcTemplate jdbcTemplate) {
+    public PlayerDAO(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public UsersDTO findUsersByRoomId(final String roomId) {
-        try {
-            String query = "SELECT black.nickname AS black_user, white.nickname AS white_user " +
-                    "FROM room JOIN player as black on black.id = room.black_user " +
-                    "JOIN player as white on white.id = room.white_user " +
-                    "WHERE room.id = ?";
-            return jdbcTemplate.queryForObject(query, mapper(), roomId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotEnoughPlayerException(roomId);
-        }
-    }
-
-    private RowMapper<UsersDTO> mapper() {
-        return (resultSet, rowNum) -> new UsersDTO(
-                resultSet.getString("black_user"),
-                resultSet.getString("white_user")
-        );
     }
 
     public int findUserIdByNickname(final String nickname) {
@@ -49,7 +28,7 @@ public class UserDAO {
         return jdbcTemplate.queryForObject(query, Integer.class, nickname);
     }
 
-    public List<UserDTO> findAll() {
+    public List<Player> findAll() {
         try {
             String query = "SELECT * from player";
             return jdbcTemplate.query(query, findAllMapper());
@@ -58,8 +37,8 @@ public class UserDAO {
         }
     }
 
-    private RowMapper<UserDTO> findAllMapper() {
-        return (resultSet, rowNum) -> new UserDTO(
+    private RowMapper<Player> findAllMapper() {
+        return (resultSet, rowNum) -> new Player(
                 resultSet.getInt("id"),
                 resultSet.getString("nickname")
         );
@@ -70,7 +49,7 @@ public class UserDAO {
             String query = "SELECT nickname FROM player WHERE id = ?";
             return jdbcTemplate.queryForObject(query, String.class, id);
         } catch (DataAccessException e) {
-            throw new InitialSettingDataException();
+            return null;
         }
     }
 
@@ -98,11 +77,11 @@ public class UserDAO {
         }
     }
 
-    public Optional<UserDTO> findByPlayerIdAndPassword(final String playerId, final String password) {
+    public Optional<Player> findByPlayerIdAndPassword(final String playerId, final String password) {
         try {
             String query = "SELECT * FROM player WHERE player.nickname = ? AND player.password = ?";
             return Optional.ofNullable(jdbcTemplate.queryForObject(query,
-                    (rs, rowNum) -> new UserDTO(rs.getInt("id"), rs.getString("nickname")),
+                    (rs, rowNum) -> new Player(rs.getInt("id"), rs.getString("nickname")),
                     playerId, password));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -119,11 +98,11 @@ public class UserDAO {
         }
     }
 
-    public Optional<UserDTO> findByNickname(final String nickname) {
-        List<UserDTO> users = jdbcTemplate.query("SELECT * FROM player WHERE nickname = ?",
-                (rs, rowNum) -> new UserDTO(rs.getInt("id"), rs.getString("nickname")),
+    public Optional<Player> findByNickname(final String nickname) {
+        List<Player> players = jdbcTemplate.query("SELECT * FROM player WHERE nickname = ?",
+                (rs, rowNum) -> new Player(rs.getInt("id"), rs.getString("nickname")),
                 nickname);
-        return users.stream().findAny();
+        return players.stream().findAny();
     }
 
     public int save(final JoinUserDTO joinUserDTO) {
@@ -138,17 +117,17 @@ public class UserDAO {
         return key.intValue();
     }
 
-    public Optional<UserDTO> findPlayerByIdAndPassword(final String id, final String password) {
-        List<UserDTO> users = jdbcTemplate.query("SELECT * FROM player WHERE id = ? AND password = ?",
-                (rs, rowNum) -> new UserDTO(rs.getInt("id"), rs.getString("nickname")),
+    public Optional<Player> findPlayerByIdAndPassword(final String id, final String password) {
+        List<Player> players = jdbcTemplate.query("SELECT * FROM player WHERE id = ? AND password = ?",
+                (rs, rowNum) -> new Player(rs.getInt("id"), rs.getString("nickname")),
                 id, password);
-        return users.stream().findAny();
+        return players.stream().findAny();
     }
 
-    public Optional<UserDTO> findById(String id) {
-        List<UserDTO> users = jdbcTemplate.query("SELECT * FROM player WHERE id = ?",
-                (rs, rowNum) -> new UserDTO(rs.getInt("id"), rs.getString("nickname")),
+    public Optional<Player> findById(String id) {
+        List<Player> players = jdbcTemplate.query("SELECT * FROM player WHERE id = ?",
+                (rs, rowNum) -> new Player(rs.getInt("id"), rs.getString("nickname")),
                 id);
-        return users.stream().findAny();
+        return players.stream().findAny();
     }
 }

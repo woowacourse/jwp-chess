@@ -19,8 +19,8 @@ public final class HistoryService {
     public void continueGame(final String id, final ChessGame chessGame) {
         historyDAO.allHistoryByRoomId(id).forEach(
                 positions -> chessGame.move(
-                        positions.getStartPoint(),
-                        positions.getEndPoint()
+                        positions.getStartPosition(),
+                        positions.getEndPosition()
                 )
         );
     }

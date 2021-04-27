@@ -3,20 +3,19 @@ package chess.controller;
 import chess.domain.ChessGame;
 import chess.dto.game.MoveDTO;
 import chess.dto.game.StatusDTO;
+import chess.dto.player.PlayerDTO;
+import chess.dto.player.PlayersDTO;
 import chess.dto.result.ResultDTO;
-import chess.dto.user.UserDTO;
-import chess.dto.user.UsersDTO;
 import chess.service.HistoryService;
+import chess.service.PlayerService;
 import chess.service.ResultService;
 import chess.service.RoomService;
-import chess.service.UserService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
@@ -28,24 +27,24 @@ import static org.springframework.http.HttpStatus.*;
 public class SpringChessGameRestController {
     private final RoomService roomService;
     private final ResultService resultService;
-    private final UserService userService;
+    private final PlayerService playerService;
     private final HistoryService historyService;
 
     public SpringChessGameRestController(final RoomService roomService, final ResultService resultService,
-                                         final UserService userService, final HistoryService historyService) {
+                                         final PlayerService playerService, final HistoryService historyService) {
         this.roomService = roomService;
         this.resultService = resultService;
-        this.userService = userService;
+        this.playerService = playerService;
         this.historyService = historyService;
     }
 
     @GetMapping(path = "/{roomId}/positions/{clickedSection}/turn")
     public ResponseEntity<Boolean> checkCurrentTurn(@PathVariable final String roomId, @PathVariable final String clickedSection,
                                                     final HttpSession session) {
-        String id = (String)session.getAttribute("id");
-        String password = (String)session.getAttribute("password");
+        String id = (String) session.getAttribute("id");
+        String password = (String) session.getAttribute("password");
 
-        UserDTO user = userService.getUser(id, password);
+        PlayerDTO user = playerService.getUser(id, password);
         if (!roomService.checkRightTurn(roomId, user, clickedSection)) {
             return ResponseEntity.status(OK)
                     .body(false);
@@ -67,7 +66,7 @@ public class SpringChessGameRestController {
         String endPoint = moveDTO.getEndPoint();
         ChessGame chessGame = roomService.movePiece(roomId, startPoint, endPoint);
         historyService.createHistory(roomId, startPoint, endPoint);
-        UsersDTO users = userService.usersParticipatedInGame(roomId);
+        PlayersDTO users = playerService.usersParticipatedInGame(roomId);
         return ResponseEntity.status(OK)
                 .body(new StatusDTO(chessGame, users));
     }
@@ -77,8 +76,8 @@ public class SpringChessGameRestController {
         String winner = resultDTO.getWinner();
         String loser = resultDTO.getLoser();
         roomService.changeStatus(roomId);
-        int winnerId = userService.userIdByNickname(winner);
-        int loserId = userService.userIdByNickname(loser);
+        int winnerId = playerService.userIdByNickname(winner);
+        int loserId = playerService.userIdByNickname(loser);
         resultService.saveGameResult(roomId, winnerId, loserId);
         return ResponseEntity.status(OK).body(true);
     }

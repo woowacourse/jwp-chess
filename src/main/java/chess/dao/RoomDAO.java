@@ -1,8 +1,10 @@
 package chess.dao;
 
-import chess.dto.room.RoomDTO;
+import chess.domain.entity.Room;
 import chess.exception.InitialSettingDataException;
+import chess.exception.NotEnoughPlayerException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -38,31 +40,19 @@ public class RoomDAO {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public List<RoomDTO> allRooms() {
-        try {
-            String query = "SELECT room.id, room.title, black.nickname AS black_user, white.nickname AS white_user, room.status " +
-                    "FROM room LEFT JOIN player as black on black.id = room.black_user " +
-                    "LEFT JOIN player as white on white.id = room.white_user ORDER BY room.status DESC, room.id DESC";
-
-            return jdbcTemplate.query(query, mapper());
-        } catch (DataAccessException e) {
-            throw new InitialSettingDataException();
-        }
+    public List<Room> allRooms() {
+        String query = "SELECT * FROM room ORDER BY room.status DESC, room.id DESC";
+        return jdbcTemplate.query(query, mapper());
     }
 
-    private RowMapper<RoomDTO> mapper() {
-        return (resultSet, rowNum) -> {
-            int status = resultSet.getInt("status");
-            boolean playing = (status == 1 || status == 2);
-            return new RoomDTO(
-                    resultSet.getInt("id"),
-                    resultSet.getString("title"),
-                    resultSet.getString("black_user"),
-                    resultSet.getString("white_user"),
-                    status,
-                    playing
-            );
-        };
+    private RowMapper<Room> mapper() {
+        return (resultSet, rowNum) -> new Room(
+                resultSet.getInt("id"),
+                resultSet.getString("title"),
+                resultSet.getInt("black_user"),
+                resultSet.getInt("white_user"),
+                resultSet.getInt("status")
+        );
     }
 
     public void changeStatusEndByRoomId(final String roomId) {
@@ -112,6 +102,18 @@ public class RoomDAO {
             return jdbcTemplate.queryForObject(query, String.class, id);
         } catch (DataAccessException e) {
             return NO_USER;
+        }
+    }
+
+    public Room findPlayersByRoomId(final String roomId) {
+        try {
+            String query = "SELECT black_user, white_user FROM room WHERE room.id = ?";
+            return jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> new Room(
+                    resultSet.getInt("black_user"),
+                    resultSet.getInt("white_user")
+            ), roomId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotEnoughPlayerException(roomId);
         }
     }
 }

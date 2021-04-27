@@ -1,4 +1,4 @@
-package chess.dto.user;
+package chess.dto.player;
 
 public class PasswordDTO {
     private String password;

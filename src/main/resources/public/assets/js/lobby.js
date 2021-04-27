@@ -16,8 +16,14 @@ document.querySelector(".rooms").addEventListener("click", async (event) => {
   if (event.target.classList.contains("remove-room")) {
     const idToBeRemoved = event.target.closest(".room").getAttribute(
         "id").toString();
-    const response = await fetch("./rooms/" + idToBeRemoved, {
-      method: "DELETE"
+    const response = await fetch("./rooms/" + idToBeRemoved + "/status", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: "PUT",
+      body: JSON.stringify({
+        status: "closed"
+      })
     });
     if (response.ok) {
       window.location.reload();

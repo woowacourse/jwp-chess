@@ -23,7 +23,6 @@ public class GameStatusDto {
     private String winner;
 
     public GameStatusDto() {
-
     }
 
     public GameStatusDto(ChessGame chessGame) {

@@ -10,7 +10,6 @@ public class RoomDto {
     private String black;
 
     public RoomDto() {
-
     }
 
     public RoomDto(String id, String name, String white, String black) {

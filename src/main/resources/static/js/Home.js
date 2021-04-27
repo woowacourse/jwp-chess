@@ -20,15 +20,14 @@ async function startNewGame(e) {
     }
 
     const roomName = prompt("방 제목을 입력하세요");
-    const whiteUserName = prompt("흰색 유저 이름을 입력하세요.");
-    const blackUserName = prompt("검정색 유저 이름을 입력하세요.");
 
     try {
         await validateRoomName(roomName);
     } catch (e) {
-        alert("중복된 이름이거나, 올바르지 않은 입력입니다.")
         return;
     }
+    const whiteUserName = prompt("흰색 유저 이름을 입력하세요.");
+    const blackUserName = prompt("검정색 유저 이름을 입력하세요.");
 
     try {
         validateName(whiteUserName, blackUserName);
@@ -60,6 +59,11 @@ async function getExistentUser(userName) {
 async function validateRoomName(roomName) {
     if (roomName.length === 0) {
         throw Error("방 제목을 입력하세요");
+    }
+
+    if (roomName.length > 10) {
+        alert("10자 이하로 입력하세요")
+        throw Error("10자 이하로 입력하세요")
     }
 
     const params = {
@@ -107,9 +111,4 @@ async function createGame(name, hostId, guestId) {
 
 async function loadGame() {
     window.location.href = '/games/room-list';
-    // const roomNumbers = await getData(`${url}/games/room`);
-    // const gameId = prompt("이동할 방번호를 입력하세요. \n" + "저장되어 있는 방 번호입니다 : " + roomNumbers["roomNumbers"]);
-    // if (gameId != null) {
-    //     window.location.href = `${url}/games/${gameId}`;
-    // }
 }

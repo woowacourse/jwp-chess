@@ -1,5 +1,5 @@
 DROP DATABASE if exists chess_db;
-CREATE DATABASE chess_db;
+CREATE DATABASE chess_db DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 USE chess_db;
 

@@ -17,8 +17,8 @@ public class ChessService {
         this.chessDao = chessDao;
     }
 
-    public BoardDto initializeByName(String roomName) {
-        return chessDao.initializeByName(roomName);
+    public BoardDto initializeByName(RoomNameDto roomNameDto) {
+        return chessDao.initializeByName(roomNameDto.getRoomName());
     }
 
     public BoardDto resetBoard(int roomId) {

@@ -28,8 +28,8 @@ public class ChessController {
     }
 
     @PostMapping("/room")
-    public ResponseEntity<BoardDto> makeRoom(@RequestBody Map<String, Object> data) {
-        BoardDto boardDto = chessService.initializeByName((String) data.get("roomName"));
+    public ResponseEntity<BoardDto> makeRoom(@RequestBody RoomNameDto roomNameDto) {
+        BoardDto boardDto = chessService.initializeByName(roomNameDto);
         return ResponseEntity.ok().body(boardDto);
     }
 

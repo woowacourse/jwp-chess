@@ -1,7 +1,5 @@
 package chess.controller;
 
-import chess.domain.board.Board;
-import chess.domain.board.BoardFactory;
 import chess.dto.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -13,9 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,11 +31,6 @@ public class SpringChessControllerTest {
     @Test
     @DisplayName("방 목록 전체조회 테스트")
     void showRoomList() throws Exception{
-        List<RoomDto> roomDtos = new ArrayList<>();
-        roomDtos.add(RoomDto.of("room_one", 1));
-        roomDtos.add(RoomDto.of("room_two", 2));
-        roomDtos.add(RoomDto.of("room_three", 3));
-
         mockMvc.perform(get("/rooms")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -98,8 +88,6 @@ public class SpringChessControllerTest {
     @Test
     @DisplayName("방 초기화 테스트")
     void resetBoard() throws Exception {
-        Board board = BoardFactory.create();
-        String content = objectMapper.writeValueAsString(board);
         mockMvc.perform(get("/3/reset")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

@@ -45,4 +45,8 @@ public class GameService {
     public GameCountResponseDto gameCount() {
         return gameDao.gameCount();
     }
+
+    public int deleteByGameId(long roomId) {
+        return gameDao.deleteByGameId(roomId);
+    }
 }

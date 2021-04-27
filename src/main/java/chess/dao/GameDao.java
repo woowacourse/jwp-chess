@@ -71,6 +71,11 @@ public class GameDao {
             resultSet.getInt("count(*)")
     );
 
+    public int deleteByGameId(long roomId) {
+        String sql = "DELETE FROM game WHERE id = ?";
+        return jdbcTemplate.update(sql, roomId);
+    }
+
     private final RowMapper<Game> gameRowMapper = (resultSet, rowNum) -> new Game(
             resultSet.getLong("id"),
             resultSet.getString("name"),

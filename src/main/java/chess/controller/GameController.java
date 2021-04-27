@@ -2,24 +2,31 @@ package chess.controller;
 
 import chess.dto.GameCountResponseDto;
 import chess.service.GameService;
+import chess.service.PieceService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/games")
 @RestController
 public class GameController {
 
     private final GameService gameService;
+    private final PieceService pieceService;
 
-    public GameController(GameService gameService) {
+    public GameController(GameService gameService, PieceService pieceService) {
         this.gameService = gameService;
+        this.pieceService = pieceService;
     }
 
     @GetMapping("/roomcnt")
     public ResponseEntity<GameCountResponseDto> roomCount() {
         return ResponseEntity.ok().body(gameService.gameCount());
+    }
+
+    @PutMapping("/{roomId}/delete")
+    public ResponseEntity<Integer> deleteGameRoom(@PathVariable long roomId) {
+        pieceService.removeAll(roomId);
+        return ResponseEntity.ok(gameService.deleteByGameId(roomId));
     }
 
 }

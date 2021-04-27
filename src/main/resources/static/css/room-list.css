@@ -54,22 +54,11 @@ html {
 }
 
 #start-out-div {
-    position: fixed;
-    left: 50%;
-    top: 60%;
-    width: 300px;
-    height: 160px;
-    color: #fff;
-    display: block;
-    font-size: 3vw;
-    font-weight: bold;
+
 
 }
 
 #start-in-div {
-    position: fixed;
-    margin-left: -180px;
-    margin-top: -220px;
 }
 
 table {
@@ -86,6 +75,18 @@ th {
     font-size: 5vw;
     font-weight: bold;
     border: 3px solid #fff;
+}
+#table-id{
+    width:50px;
+}
+#table-name{
+    width:150px;
+}
+#table-enter{
+    width:70px;
+}
+#table-delete{
+    width:70px;
 }
 
 td {
@@ -111,13 +112,13 @@ td {
     padding: 2vh 4vw;
     position: relative;
     text-transform: uppercase;
+    margin-top: 20px;
 }
 
 #home-btn::before,
 #home-btn::after {
     background: #fff;
     content: '';
-    position: absolute;
     z-index: -1;
     height: 100%;
     left: 0;

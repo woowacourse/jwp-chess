@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -14,14 +15,17 @@
         <div id="start-in-div">
             <table id="table">
                 <tr>
-                    <th>
+                    <th id="table-id">
                         ID
                     </th>
-                    <th>
+                    <th id="table-name">
                         게임이름
                     </th>
-                    <th>
+                    <th id="table-enter">
                         입장
+                    </th>
+                    <th id="table-delete">
+                        삭제
                     </th>
                 </tr>
                 {{#rooms}}
@@ -35,6 +39,9 @@
                         <td>
                             <input type="button" id="room{{roomId}}" class="room roomNames" value="입장">
                         </td>
+                        <td>
+                            <input type="button" id="deleteRoom{{roomId}}" class = "room roomDelete" value="삭제">
+                        </td>
                     </tr>
                 {{/rooms}}
             </table>
@@ -42,6 +49,6 @@
     </div>
     <button id="home-btn" type="button" class="btn btn-outline-primary">홈 화면</button>
 </div>
-<script type="text/javascript" src="/js/room-list.js"></script>
+<script src="/js/room-list.js" type="module"></script>
 </body>
 </html>

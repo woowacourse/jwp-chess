@@ -3,6 +3,7 @@ package chess.serivce.chess;
 import chess.domain.board.Board;
 import chess.domain.dto.PieceDto;
 import chess.domain.dto.RoomDto;
+import chess.domain.dto.RoomsDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.domain.game.Room;
 import chess.domain.repository.room.RoomRepository;
@@ -79,11 +80,12 @@ public class ChessService {
     }
 
     @Transactional(readOnly = true)
-    public List<RoomDto> findAll() {
-        return roomRepository.findAll()
+    public RoomsDto findAll() {
+        List<RoomDto> roomDtos = roomRepository.findAll()
             .stream()
             .map(room -> RoomDto.from(room))
             .collect(Collectors.toList());
+        return RoomsDto.of(roomDtos);
     }
 
     public RoomDto createRoom(String roomName) {

@@ -12,18 +12,19 @@ const Index = function() {
       method: 'GET',
       headers: {'content-type': 'application/json'}
     })
-    .then(response => response.json())
-    .then(responseJson => {
-      if (responseJson.status != "OK") {
-        alert(responseJson.detailMessage);
-        return;
+    .then(response => {
+      if (!response.ok) {
+        throw response;
       }
-      const rooms = responseJson.payload;
+      return response.json();
+    })
+    .then(responseJson => {
+      const rooms = responseJson;
       for (let i = 0; i < rooms.length; i++) {
         this.roomList.insertAdjacentHTML("beforeend", this.renderRoom(rooms[i]));
       }
     })
-    .catch(err => alert(err));
+    .catch(err => err.json().then(json => alert(json.detailMessage)));
   }
 
   this.addNewRoom = () => {
@@ -32,15 +33,18 @@ const Index = function() {
       method: 'POST',
       headers: {'content-type': 'application/json'}
     })
-    .then(response => response.json())
-    .then(responseJson => {
-      if (responseJson.status != "OK") {
-        alert(responseJson.detailMessage);
-        return;
+    .then(response => {
+      if (!response.ok) {
+        throw response;
       }
-      this.roomList.insertAdjacentHTML("beforeend", this.renderRoom(responseJson.payload));
+      return response.json();
     })
-    .catch(err => alert(err));
+    .then(responseJson => {
+      this.roomList.insertAdjacentHTML("beforeend", this.renderRoom(responseJson));
+    })
+    .catch(err => {
+      err.json().then(json => alert(json.detailMessage));
+    });
 
     this.newRoomInput.value = "";
   }

@@ -85,16 +85,17 @@ const App = function(roomName) {
       headers: {'content-type': 'application/json'},
       body: JSON.stringify(payload)
     })
-    .then(response => response.json())
-    .then(responseJson => {
-      if (responseJson.status != "OK") {
-        alert(responseJson.detailMessage);
-        return;
+    .then(response => {
+      if (!response.ok) {
+        throw response;
       }
-      this.renderBoard(responseJson.payload.pieces);
-      this.renderMessage(responseJson.payload);
+      return response.json();
     })
-    .catch(err => alert(err));
+    .then(responseJson => {
+      this.renderBoard(responseJson.pieces);
+      this.renderMessage(responseJson);
+    })
+    .catch(err => err.json().then(json => alert(json.detailMessage)));
   };
 
   this.$chessBoard.addEventListener('click', this.onClickPiece);
@@ -103,17 +104,18 @@ const App = function(roomName) {
       method: 'PUT',
       headers: {'content-type': 'application/json'}
     })
-      .then(response => response.json())
-      .then(responseJson => {
-        if (responseJson.status != "OK") {
-          alert(responseJson.detailMessage);
-          return;
+      .then(response => {
+        if (!response.ok) {
+          throw response;
         }
-        this.renderBoard(responseJson.payload.pieces);
-        this.renderMessage(responseJson.payload);
+        return response.json();
+      })
+      .then(responseJson => {
+        this.renderBoard(responseJson.pieces);
+        this.renderMessage(responseJson);
         alert("게임이 시작되었습니다.");
       })
-      .catch(err => alert(err));
+    .catch(err => err.json().then(json => alert(json.detailMessage)));
   })
 
   this.$endBtn.addEventListener('click', () => {
@@ -121,33 +123,35 @@ const App = function(roomName) {
       method: 'PUT',
       headers: {'content-type': 'application/json'}
     })
-      .then(response => response.json())
-      .then(responseJson => {
-        if (responseJson.status != "OK") {
-          alert(responseJson.detailMessage);
-          return;
+      .then(response => {
+        if (!response.ok) {
+          throw response;
         }
-        this.renderBoard(responseJson.payload.pieces);
-        this.renderMessage(responseJson.payload);
+        return response.json();
+      })
+      .then(responseJson => {
+        this.renderBoard(responseJson.pieces);
+        this.renderMessage(responseJson);
         alert("게임이 종료되었습니다.");
       })
-      .catch(err => alert(err));
+    .catch(err => err.json().then(json => alert(json.detailMessage)));
   })
 
   this.constructor = () => {
     this.renderEmptyBoard();
 
     fetch(`http://localhost:8080/rooms/${this.roomName}`)
-      .then(response => response.json())
-      .then(responseJson => {
-        if (responseJson.status != "OK") {
-          alert(responseJson.detailMessage);
-          return;
+      .then(response => {
+        if (!response.ok) {
+          throw response;
         }
-        this.renderBoard(responseJson.payload.pieces);
-        this.renderMessage(responseJson.payload);
+        return response.json();
       })
-      .catch(error => alert('에러 : ' + error));
+      .then(responseJson => {
+        this.renderBoard(responseJson.pieces);
+        this.renderMessage(responseJson);
+      })
+      .catch(err => err.json().then(json => alert(json.detailMessage)));
   };
 
   this.constructor();

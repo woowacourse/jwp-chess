@@ -1,7 +1,7 @@
 package chess.controller.chess;
 
-import chess.controller.ApiResult;
 import chess.domain.dto.RoomDto;
+import chess.domain.dto.RoomsDto;
 import chess.domain.dto.move.MoveRequestDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.serivce.chess.ChessService;
@@ -24,38 +24,39 @@ public class RoomController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<ApiResult> roomList() {
-        return ResponseEntity.ok().body(ApiResult.of(service.findAll()));
+    public ResponseEntity<RoomsDto> roomList() {
+        RoomsDto result = service.findAll();
+        return ResponseEntity.ok().body(result);
     }
 
     @PostMapping("/{name}")
-    public ResponseEntity<ApiResult> createRoom(@PathVariable("name") String roomName) {
+    public ResponseEntity<RoomDto> createRoom(@PathVariable("name") String roomName) {
         RoomDto result = service.createRoom(roomName);
-        return ResponseEntity.ok().body(ApiResult.of(result));
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<ApiResult> enterRoom(@PathVariable("name") String roomName) {
+    public ResponseEntity<MoveResponseDto> enterRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.findPiecesByRoomName(roomName);
-        return ResponseEntity.ok().body(ApiResult.of(result));
+        return ResponseEntity.ok().body(result);
     }
 
     @PutMapping("/{name}/start")
-    public ResponseEntity<ApiResult> startRoom(@PathVariable("name") String roomName) {
+    public ResponseEntity<MoveResponseDto> startRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.start(roomName);
-        return ResponseEntity.ok().body(ApiResult.of(result));
+        return ResponseEntity.ok().body(result);
     }
 
     @PutMapping("/{name}/end")
-    public ResponseEntity<ApiResult> endRoom(@PathVariable("name") String roomName) {
+    public ResponseEntity<MoveResponseDto> endRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.end(roomName);
-        return ResponseEntity.ok().body(ApiResult.of(result));
+        return ResponseEntity.ok().body(result);
     }
 
     @PutMapping("/{name}/move")
-    public ResponseEntity<ApiResult> move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto) {
+    public ResponseEntity<MoveResponseDto> move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto) {
         MoveResponseDto result = service.move(roomName, moveRequestDto.getSource(),
             moveRequestDto.getTarget());
-        return ResponseEntity.ok().body(ApiResult.of(result));
+        return ResponseEntity.ok().body(result);
     }
 }

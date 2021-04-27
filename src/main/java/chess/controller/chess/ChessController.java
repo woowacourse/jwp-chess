@@ -13,7 +13,6 @@ public class ChessController {
 
     @GetMapping("/room/{name}")
     public String roomAsHTML() {
-        System.out.println("hi");
         return "/roompage.html";
     }
 }

@@ -46,12 +46,12 @@ public class SpringChessService {
     private void insertBoardInfos(ChessGame chessGame, long roomId) {
         Map<Position, Piece> whites = chessGame.currentWhitePiecePosition();
         for (Map.Entry<Position, Piece> whiteInfo : whites.entrySet()) {
-            chessDao.createBoard(new TeamInfoDto(TeamConstants.WHITE, whiteInfo, roomId));
+            chessDao.createBoard(new TeamInfoDto(TeamConstants.WHITE, whiteInfo.getKey(), whiteInfo.getValue(), roomId));
         }
 
         Map<Position, Piece> blacks = chessGame.currentBlackPiecePosition();
         for (Map.Entry<Position, Piece> blackInfo : blacks.entrySet()) {
-            chessDao.createBoard(new TeamInfoDto(TeamConstants.BLACK, blackInfo, roomId));
+            chessDao.createBoard(new TeamInfoDto(TeamConstants.BLACK, blackInfo.getKey(), blackInfo.getValue(), roomId));
         }
     }
 

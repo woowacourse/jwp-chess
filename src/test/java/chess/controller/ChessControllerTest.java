@@ -52,8 +52,8 @@ class ChessControllerTest {
         this.mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("chessGameDtos"))
-                .andExpect(model().attribute("chessGameDtos", playingChessgameEntityDtos))
+                .andExpect(model().attributeExists("chessGames"))
+                .andExpect(model().attribute("chessGames", playingChessgameEntityDtos))
                 .andExpect(view().name("index"));
     }
 
@@ -70,8 +70,8 @@ class ChessControllerTest {
         this.mockMvc.perform(get("/chessgames/" + 1L))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("chessGameInfoResponseDto"))
-                .andExpect(model().attribute("chessGameInfoResponseDto", expectedChessGameInfoResponseDto))
+                .andExpect(model().attributeExists("chessGameInfo"))
+                .andExpect(model().attribute("chessGameInfo", expectedChessGameInfoResponseDto))
                 .andExpect(view().name("chessgame-room"));
     }
 

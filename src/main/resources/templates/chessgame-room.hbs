@@ -1,7 +1,7 @@
 {{>layout/header}}
 <div class="chess-game">
 
-    {{#chessGameInfoResponseDto}}
+    {{#chessGameInfo}}
         <div class="game-title">
             <h1 class="game-title-header">우아한 체스게임</h1>
             <h1 class="game-room-title-header">방 제목: {{title}}</h1>
@@ -58,7 +58,7 @@
         </div>
 
     <div class="chess-board {{chessGameId}}">
-    {{/chessGameInfoResponseDto}}
+    {{/chessGameInfo}}
 
     <table class="">
         <tbody>

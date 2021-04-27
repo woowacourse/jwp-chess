@@ -22,14 +22,14 @@ public class ChessController {
     @GetMapping("/")
     public String chessgamesList(Model model) {
         List<PlayingChessgameEntityDto> chessGameDtos = chessGameService.findAllPlayingGames();
-        model.addAttribute("chessGameDtos", chessGameDtos);
+        model.addAttribute("chessGames", chessGameDtos);
         return "index";
     }
 
     @GetMapping("/chessgames/{id}")
     public String chessGame(@PathVariable("id") Long id, Model model) {
         ChessGameInfoResponseDto chessGameInfoResponseDto = chessGameService.findChessGameInfoById(id);
-        model.addAttribute("chessGameInfoResponseDto", chessGameInfoResponseDto);
+        model.addAttribute("chessGameInfo", chessGameInfoResponseDto);
         return "chessgame-room";
     }
 

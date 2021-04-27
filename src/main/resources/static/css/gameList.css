@@ -88,3 +88,49 @@
     border: 0.5vw solid #2ac0bb;
 }
 
+#main-btn {
+    background: #1AAB8A;
+    color: #fff;
+    border: none;
+    position: relative;
+    height: 60px;
+    font-size: 1.6em;
+    padding: 0 2em;
+    cursor: pointer;
+    transition: 800ms ease all;
+    outline: none;
+    margin-top: 1vw;
+    margin-left: 4.5vw;
+}
+
+#main-btn:hover {
+    background: #fff;
+    color: #1AAB8A;
+}
+
+#main-btn:before, #main-btn:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2px;
+    width: 0;
+    background: #1AAB8A;
+    transition: 400ms ease all;
+}
+
+#main-btn:after {
+    right: inherit;
+    top: inherit;
+    left: 0;
+    bottom: 0;
+}
+
+#main-btn:hover:before, #main-btn:hover:after {
+    width: 100%;
+    transition: 800ms ease all;
+}
+
+.gameList-input {
+    height: 6vw !important;
+}

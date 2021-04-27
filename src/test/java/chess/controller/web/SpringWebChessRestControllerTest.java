@@ -1,6 +1,6 @@
 package chess.controller.web;
 
-import chess.controller.web.dto.game.GameRequestDto;
+import chess.controller.web.dto.game.GameSaveRequestDto;
 import chess.controller.web.dto.move.MoveRequestDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,12 +24,12 @@ class SpringWebChessRestControllerTest {
     void setUp() {
         RestAssured.port = port;
 
-        GameRequestDto gameRequestDto =
-                new GameRequestDto("user1", "user2", "roomName1");
+        GameSaveRequestDto gameSaveRequestDto =
+                new GameSaveRequestDto("user1", "user2", "roomName1");
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(gameRequestDto)
+                .body(gameSaveRequestDto)
                 .when()
                 .post("/games")
                 .then().log().all()
@@ -41,12 +41,12 @@ class SpringWebChessRestControllerTest {
     @Test
     @DisplayName("체스 게임 생성 요청, method = post, path = /games")
     void saveGame() {
-        GameRequestDto gameRequestDto =
-                new GameRequestDto("user3", "user4", "roomName2");
+        GameSaveRequestDto gameSaveRequestDto =
+                new GameSaveRequestDto("user3", "user4", "roomName2");
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(gameRequestDto)
+                .body(gameSaveRequestDto)
                 .when()
                 .post("/games")
                 .then().log().all()

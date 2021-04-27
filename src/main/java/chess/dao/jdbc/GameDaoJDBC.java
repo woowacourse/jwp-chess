@@ -60,7 +60,9 @@ public class GameDaoJDBC implements GameDao {
                             resultSet.getLong("id"),
                             resultSet.getString("room_name"),
                             resultSet.getString("white_username"),
-                            resultSet.getString("black_username")));
+                            resultSet.getString("white_password"),
+                            resultSet.getString("black_username"),
+                            resultSet.getString("black_password")));
                 }
                 return gameDtos;
             }
@@ -84,7 +86,9 @@ public class GameDaoJDBC implements GameDao {
                         resultSet.getLong("id"),
                         resultSet.getString("room_name"),
                         resultSet.getString("white_username"),
-                        resultSet.getString("black_username"));
+                        resultSet.getString("white_password"),
+                        resultSet.getString("black_username"),
+                        resultSet.getString("black_password"));
             }
         } catch (SQLException e) {
             throw new DataAccessException("해당 ID의 체스게임을 검색하는데 실패했습니다.", e);

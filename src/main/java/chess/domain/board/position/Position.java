@@ -28,7 +28,6 @@ public class Position {
     }
 
     public static Position of(final String input) {
-        System.out.println("asdfgsa Position= " + input + " = ******");
         if (input.split("").length != POSITION_VALID_SIZE) {
             throw new IllegalArgumentException("입력값이 올바른 위치가 아닙니다.");
         }

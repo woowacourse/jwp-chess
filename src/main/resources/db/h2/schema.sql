@@ -12,7 +12,9 @@ CREATE TABLE game
     id             INTEGER IDENTITY PRIMARY KEY,
     room_name      VARCHAR(100) NOT NULL,
     white_username VARCHAR(45)  NOT NULL,
-    black_username VARCHAR(45)  NOT NULL
+    white_password VARCHAR(15) NOT NULL,
+    black_username VARCHAR(45),
+    black_password VARCHAR(15)
 );
 CREATE
 INDEX game_id ON game (id);

@@ -1,12 +1,12 @@
 package chess.service.dto.game;
 
-public class GameInfoDto {
+public class GameSaveInfoDto {
 
     private String roomName;
     private String whiteUsername;
-    private String blackUsername;
+    private String whitePassword;
 
-    public GameInfoDto() {
+    public GameSaveInfoDto() {
     }
 
     public String getRoomName() {
@@ -25,11 +25,11 @@ public class GameInfoDto {
         this.whiteUsername = whiteUsername;
     }
 
-    public String getBlackUsername() {
-        return blackUsername;
+    public String getWhitePassword() {
+        return whitePassword;
     }
 
-    public void setBlackUsername(String blackUsername) {
-        this.blackUsername = blackUsername;
+    public void setWhitePassword(String whitePassword) {
+        this.whitePassword = whitePassword;
     }
 }

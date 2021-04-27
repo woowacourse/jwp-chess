@@ -108,10 +108,6 @@ body {
     margin-left: 1.5vw;
 }
 
-#black-userName {
-    border-top: none;
-}
-
 #history {
     margin-left: 5vw;
     border: 5px solid dimgray;
@@ -245,7 +241,7 @@ body {
     left: 0vw;
 }
 
-#start-btn {
+#start-btn, #gameList-btn {
     background: #1AAB8A;
     color: #fff;
     border: none;
@@ -258,12 +254,12 @@ body {
     outline: none;
 }
 
-#start-btn:hover {
+#start-btn:hover, #gameList-btn:hover {
     background: #fff;
     color: #1AAB8A;
 }
 
-#start-btn:before, #start-btn:after {
+#start-btn:before, #start-btn:after, #gameList-btn:before, #gameList-btn:after {
     content: '';
     position: absolute;
     top: 0;
@@ -274,16 +270,21 @@ body {
     transition: 400ms ease all;
 }
 
-#start-btn:after {
+#start-btn:after, #gameList-btn:after {
     right: inherit;
     top: inherit;
     left: 0;
     bottom: 0;
 }
 
-#start-btn:hover:before, #start-btn:hover:after {
+#start-btn:hover:before, #start-btn:hover:after, #gameList-btn:hover:before, #gameList-btn:hover:after {
     width: 100%;
     transition: 800ms ease all;
+}
+
+#gameList-btn {
+    padding-left: 2.5vw;
+    padding-right: 2.5vw;
 }
 
 #score-container {

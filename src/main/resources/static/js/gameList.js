@@ -1,9 +1,11 @@
 const $url = "http://localhost:8080";
 const $gameList = document.querySelector("#gameList");
+const $mainBtn = document.querySelector("#main-btn");
 
 window.addEventListener("load", loadGameList);
 $gameList.addEventListener("mouseover", onGame);
 $gameList.addEventListener("mouseout", outGame);
+$mainBtn.addEventListener("click", main);
 
 async function loadGameList() {
     await fetch($url + "/games/playing/true")
@@ -61,7 +63,41 @@ function outGame(event) {
 
 function joinGame(event) {
     const $id = event.target.closest("li").id;
-    location.href = $url + "/games/" + $id;
+    const $username = document.querySelector("#username").value;
+    const $password = document.querySelector("#password").value;
+
+    const $userInfo = {
+        id: $id,
+        username: $username,
+        password: $password
+    }
+
+    const option = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify($userInfo)
+    }
+
+    fetch($url + "/games/" + $id + "/join", option)
+        .then(data => {
+            if (!data.ok) {
+                exceptionHandling(data.json())
+                throw new Error(data.status);
+            }
+            return data.json();
+        })
+        .then(post => {
+            location.href = $url + "/games/" + post.gameId;
+        })
+        .catch(error => {
+            console.log(error)
+        })
+}
+
+function main(event) {
+    location.href = $url;
 }
 
 function exceptionHandling(error) {

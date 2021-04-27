@@ -1,6 +1,6 @@
 package chess.controller.web;
 
-import chess.controller.web.dto.game.GameRequestDto;
+import chess.controller.web.dto.game.GameSaveRequestDto;
 import chess.controller.web.dto.game.GameResponseDto;
 import chess.controller.web.dto.history.HistoryResponseDto;
 import chess.controller.web.dto.move.MoveRequestDto;
@@ -16,7 +16,7 @@ import chess.dao.dto.state.StateDto;
 import chess.dao.jdbc.*;
 import chess.domain.repository.*;
 import chess.service.ChessService;
-import chess.service.dto.game.GameInfoDto;
+import chess.service.dto.game.GameSaveInfoDto;
 import chess.service.dto.move.MoveDto;
 import chess.service.dto.path.PathDto;
 import org.modelmapper.ModelMapper;
@@ -52,9 +52,9 @@ public class SparkWebChessController {
         return modelMapper.map(historyDto, HistoryResponseDto.class);
     }
 
-    public Long newGame(final GameRequestDto gameRequestDto) {
-        GameInfoDto gameInfoDto = modelMapper.map(gameRequestDto, GameInfoDto.class);
-        return chessService.saveGame(gameInfoDto);
+    public Long newGame(final GameSaveRequestDto gameSaveRequestDto) {
+        GameSaveInfoDto gameSaveInfoDto = modelMapper.map(gameSaveRequestDto, GameSaveInfoDto.class);
+        return chessService.saveGame(gameSaveInfoDto);
     }
 
     public List<PieceResponseDto> findPiecesByGameId(final Long gameId) {

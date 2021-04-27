@@ -1,7 +1,8 @@
 package chess.controller.web;
 
 import chess.controller.web.dto.game.GameIdResponseDto;
-import chess.controller.web.dto.game.GameRequestDto;
+import chess.controller.web.dto.game.GameJoinRequestDto;
+import chess.controller.web.dto.game.GameSaveRequestDto;
 import chess.controller.web.dto.game.GameResponseDto;
 import chess.controller.web.dto.history.HistoryResponseDto;
 import chess.controller.web.dto.move.MoveRequestDto;
@@ -13,12 +14,14 @@ import chess.dao.dto.game.GameDto;
 import chess.dao.dto.history.HistoryDto;
 import chess.dao.dto.piece.PieceDto;
 import chess.service.ChessService;
-import chess.service.dto.game.GameInfoDto;
+import chess.service.dto.game.GameJoinInfoDto;
+import chess.service.dto.game.GameSaveInfoDto;
 import chess.service.dto.move.MoveDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,9 +38,19 @@ public class SpringWebChessRestController {
     }
 
     @PostMapping("")
-    public ResponseEntity<GameIdResponseDto> saveGame(@RequestBody GameRequestDto gameRequestDto) {
-        GameInfoDto gameInfoDto = modelMapper.map(gameRequestDto, GameInfoDto.class);
-        return ResponseEntity.ok().body(new GameIdResponseDto(chessService.saveGame(gameInfoDto)));
+    public ResponseEntity<GameIdResponseDto> saveGame(@RequestBody GameSaveRequestDto gameSaveRequestDto,
+                                                      HttpSession httpSession) {
+        GameSaveInfoDto gameSaveInfoDto = modelMapper.map(gameSaveRequestDto, GameSaveInfoDto.class);
+        httpSession.setAttribute("password", gameSaveInfoDto.getWhitePassword());
+        return ResponseEntity.ok().body(new GameIdResponseDto(chessService.saveGame(gameSaveInfoDto)));
+    }
+
+    @PostMapping("/{id}/join")
+    public ResponseEntity<GameIdResponseDto> joinGame(@RequestBody GameJoinRequestDto gameJoinRequestDto,
+                                                      HttpSession httpSession) {
+        GameJoinInfoDto gameJoinInfoDto = modelMapper.map(gameJoinRequestDto, GameJoinInfoDto.class);
+        httpSession.setAttribute("password", gameJoinInfoDto.getPassword());
+        return ResponseEntity.ok().body(new GameIdResponseDto(chessService.joinGame(gameJoinInfoDto)));
     }
 
     @GetMapping("/playing/true")
@@ -79,10 +92,11 @@ public class SpringWebChessRestController {
         return ResponseEntity.ok().body(historyResponseDtos);
     }
 
-    @GetMapping("/{id}/path")
-    public ResponseEntity<List<String>> movablePath(@PathVariable Long id, @RequestParam String source) {
-        System.out.println("asdfgsa controller= " + source + " = ******");
-        PathResponseDto pathResponseDto = modelMapper.map(chessService.movablePath(source, id), PathResponseDto.class);
+    @GetMapping("/{gameId}/path")
+    public ResponseEntity<List<String>> movablePath(@PathVariable Long gameId, @RequestParam String source, HttpSession httpSession) {
+        String password = (String) httpSession.getAttribute("password");
+        chessService.checkTurn(gameId, password);
+        PathResponseDto pathResponseDto = modelMapper.map(chessService.movablePath(source, gameId), PathResponseDto.class);
         return ResponseEntity.ok().body(pathResponseDto.getPath());
     }
 

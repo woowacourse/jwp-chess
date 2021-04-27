@@ -2,7 +2,7 @@ package chess;
 
 import chess.controller.web.SparkWebChessController;
 import chess.controller.web.dto.exception.ExceptionMessageResponseDto;
-import chess.controller.web.dto.game.GameRequestDto;
+import chess.controller.web.dto.game.GameSaveRequestDto;
 import chess.controller.web.dto.game.GameResponseDto;
 import chess.controller.web.dto.move.MoveRequestDto;
 import com.google.gson.Gson;
@@ -27,8 +27,8 @@ public class SparkChessApplication {
         });
 
         post("/game", (request, response) -> {
-            GameRequestDto gameRequestDto = gson.fromJson(request.body(), GameRequestDto.class);
-            Long gameId = sparkWebChessController.newGame(gameRequestDto);
+            GameSaveRequestDto gameSaveRequestDto = gson.fromJson(request.body(), GameSaveRequestDto.class);
+            Long gameId = sparkWebChessController.newGame(gameSaveRequestDto);
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("id", gameId);
             return jsonObject;

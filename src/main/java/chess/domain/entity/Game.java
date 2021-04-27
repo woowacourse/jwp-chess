@@ -7,21 +7,30 @@ public class Game implements Entity<Long> {
     private Long id;
     private String roomName;
     private String whiteUsername;
+    private String whitePassword;
     private String blackUsername;
+    private String blackPassword;
 
     public Game() {
     }
 
-    public Game(Long id, String roomName, String whiteUsername, String blackUsername) {
+    public Game(Long id, String roomName, String whiteUsername, String whitePassword, String blackUsername,
+                String blackPassword) {
         this.id = id;
         this.roomName = roomName;
         this.whiteUsername = whiteUsername;
+        this.whitePassword = whitePassword;
         this.blackUsername = blackUsername;
-        validateGame();
+        this.blackPassword = blackPassword;
     }
 
-    public Game(String roomName, String whiteUsername, String blackUsername) {
-        this(null, roomName, whiteUsername, blackUsername);
+    public Game(String roomName, String whiteUsername, String whitePassword, String blackUsername, String blackPassword) {
+        this.roomName = roomName;
+        this.whiteUsername = whiteUsername;
+        this.whitePassword = whitePassword;
+        this.blackUsername = blackUsername;
+        this.blackPassword = blackPassword;
+        validateGame();
     }
 
     private void validateGame() {
@@ -31,16 +40,19 @@ public class Game implements Entity<Long> {
 
     private void validateNull() {
         Objects.requireNonNull(this.roomName, "방이름은 null 일 수 없습니다.");
-        Objects.requireNonNull(this.whiteUsername, "유저 이름은 null 일 수 없습니다.");
-        Objects.requireNonNull(this.blackUsername, "유저 이름은 null 일 수 없습니다.");
+        Objects.requireNonNull(this.whiteUsername, "흰색 유저 이름은 null 일 수 없습니다.");
+        Objects.requireNonNull(this.whitePassword, "흰색 유저 비밀번호는 null 일 수 없습니다.");
     }
 
     private void validateEmpty() {
         if (this.roomName.isEmpty()) {
             throw new IllegalArgumentException("방 이름은 1글자 이상 작성해야합니다.");
         }
-        if (this.whiteUsername.isEmpty() || this.blackUsername.isEmpty()) {
-            throw new IllegalArgumentException("유저 이름은 1글자 이상 작성해야합니다.");
+        if (this.whiteUsername.isEmpty()) {
+            throw new IllegalArgumentException("백색 유저 이름은 1글자 이상 작성해야합니다.");
+        }
+        if (this.whitePassword.isEmpty()) {
+            throw new IllegalArgumentException("백색 유저 비밀번호는 1글자 이상 작성해야합니다.");
         }
     }
 
@@ -69,11 +81,27 @@ public class Game implements Entity<Long> {
         this.whiteUsername = whiteUsername;
     }
 
+    public String getWhitePassword() {
+        return whitePassword;
+    }
+
+    public void setWhitePassword(String whitePassword) {
+        this.whitePassword = whitePassword;
+    }
+
     public String getBlackUsername() {
         return blackUsername;
     }
 
     public void setBlackUsername(String blackUsername) {
         this.blackUsername = blackUsername;
+    }
+
+    public String getBlackPassword() {
+        return blackPassword;
+    }
+
+    public void setBlackPassword(String blackPassword) {
+        this.blackPassword = blackPassword;
     }
 }

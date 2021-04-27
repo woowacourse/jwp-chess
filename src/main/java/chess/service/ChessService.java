@@ -8,17 +8,20 @@ import chess.dao.dto.state.StateDto;
 import chess.domain.board.Board;
 import chess.domain.board.position.Path;
 import chess.domain.board.position.Position;
+import chess.domain.entity.Game;
 import chess.domain.entity.History;
 import chess.domain.entity.Score;
 import chess.domain.entity.State;
-import chess.domain.entity.Game;
 import chess.domain.manager.ChessManager;
 import chess.domain.movecommand.MoveCommand;
 import chess.domain.piece.EmptyPiece;
 import chess.domain.piece.Owner;
 import chess.domain.piece.Piece;
 import chess.domain.repository.*;
-import chess.service.dto.game.GameInfoDto;
+import chess.exception.GameJoinException;
+import chess.exception.TurnOwnerException;
+import chess.service.dto.game.GameJoinInfoDto;
+import chess.service.dto.game.GameSaveInfoDto;
 import chess.service.dto.move.MoveDto;
 import chess.service.dto.path.PathDto;
 import chess.util.PieceConverter;
@@ -33,6 +36,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChessService {
+
+    private static final String EMPTY = "";
 
     private final GameRepository gameRepository;
     private final HistoryRepository historyRepository;
@@ -52,9 +57,9 @@ public class ChessService {
     }
 
     @Transactional
-    public Long saveGame(final GameInfoDto gameInfoDto) {
+    public Long saveGame(final GameSaveInfoDto gameSaveInfoDto) {
         ChessManager chessManager = new ChessManager();
-        Game game = new Game(gameInfoDto.getRoomName(), gameInfoDto.getWhiteUsername(), gameInfoDto.getBlackUsername());
+        Game game = new Game(gameSaveInfoDto.getRoomName(), gameSaveInfoDto.getWhiteUsername(), gameSaveInfoDto.getWhitePassword(), EMPTY, EMPTY);
         Long gameId = gameRepository.save(game);
         State state = State.of(gameId, chessManager);
         stateRepository.save(state);
@@ -64,6 +69,42 @@ public class ChessService {
                 .collect(Collectors.toList());
         pieceRepository.savePieces(gameId, pieces);
         return gameId;
+    }
+
+    @Transactional
+    public Long joinGame(final GameJoinInfoDto gameJoinInfoDto) {
+        Game game = gameRepository.findById(gameJoinInfoDto.getId());
+        if (game.getWhiteUsername().equals(gameJoinInfoDto.getUsername())) {
+            joinWhiteuser(game, gameJoinInfoDto);
+            return game.getId();
+        }
+        joinBlackuser(game, gameJoinInfoDto);
+        return game.getId();
+    }
+
+    private void joinWhiteuser(Game game, GameJoinInfoDto gameJoinRequestDto) {
+        checkPassword(gameJoinRequestDto.getPassword(), game.getWhitePassword());
+    }
+
+    private void joinBlackuser(Game game, GameJoinInfoDto gameJoinInfoDto) {
+        if (game.getBlackUsername().isEmpty()) {
+            game.setBlackUsername(gameJoinInfoDto.getUsername());
+            game.setBlackPassword(gameJoinInfoDto.getPassword());
+            gameRepository.update(game);
+            return;
+        }
+        if (game.getBlackUsername().equals(gameJoinInfoDto.getUsername())) {
+            checkPassword(gameJoinInfoDto.getPassword(), game.getBlackPassword());
+            return;
+        }
+        throw new GameJoinException("방에 접속할 수 없습니다.");
+    }
+
+    private void checkPassword(String password, String dbPassword) {
+        if (password.equals(dbPassword)) {
+            return;
+        }
+        throw new GameJoinException("비밀번호가 일치하지 않습니다.");
     }
 
     public List<PieceDto> findPiecesById(final Long gameId) {
@@ -104,7 +145,6 @@ public class ChessService {
 
     public PathDto movablePath(final String source, final Long gameId) {
         ChessManager chessManager = loadChessManager(gameId);
-        System.out.println("asdfgsa service= " + source + " = ******");
         Path path = chessManager.movablePath(Position.of(source));
         return PathDto.from(path);
     }
@@ -150,5 +190,23 @@ public class ChessService {
             piecesOnBoard.put(Position.of(piece.getPosition()), PieceConverter.parsePiece(piece.getSymbol()));
         }
         return new Board(piecesOnBoard);
+    }
+
+    public void checkTurn(Long gameId, String password) {
+        State state = stateRepository.findByGameId(gameId);
+        Game game = gameRepository.findById(gameId);
+        String turnOwner = state.getTurnOwner();
+        if (turnOwner.equals("WHITE")) {
+            checkTurnByPassword(game.getWhitePassword(), password);
+            return;
+        }
+        checkTurnByPassword(game.getBlackPassword(), password);
+    }
+
+    private void checkTurnByPassword(String password, String otherPassword) {
+        if (password.equals(otherPassword)) {
+            return;
+        }
+        throw new TurnOwnerException("지금은 상대편의 턴입니다.");
     }
 }

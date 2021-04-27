@@ -75,7 +75,7 @@ class SpringChessServiceTest {
         Map<Position, Piece> setting = new HashMap<>();
         setting.put(Position.of("a2"), new Rook());
         Team whiteTeam = new Team(new PiecePositions(setting));
-        ChessGame chessGame = new ChessGame(new Team(new PiecePositions(Collections.emptyMap())),whiteTeam ,whiteTeam , true);
+        ChessGame chessGame = new ChessGame(new Team(new PiecePositions(Collections.emptyMap())), whiteTeam, whiteTeam, true);
         chessGame.move(Position.of("a2"), Position.of("a3"));
         ChessGameDto expected = new ChessGameDto(chessGame);
 
@@ -84,5 +84,38 @@ class SpringChessServiceTest {
 
         // then
         assertThat(objectMapper.writeValueAsString(result)).isEqualTo(objectMapper.writeValueAsString(expected));
+    }
+
+    @Test
+    @DisplayName("기존 게임 로드")
+    void loadPreviousGame() throws Exception {
+        // given
+        Map<Position, Piece> setting = new HashMap<>();
+        setting.put(Position.of("a2"), new Rook());
+        Team whiteTeam = new Team(new PiecePositions(setting));
+        ChessGame chessGame = new ChessGame(new Team(new PiecePositions(Collections.emptyMap())), whiteTeam, whiteTeam, true);
+        ChessGameDto expected = new ChessGameDto(chessGame);
+
+        TurnDto turnDto = new TurnDto();
+        turnDto.setTurn("white");
+        turnDto.setIsPlaying(true);
+        given(mysqlChessDao.selectTurnByRoomId(1L)).willReturn(turnDto);
+
+        List<BoardInfosDto> boards = new ArrayList<>();
+        BoardInfosDto boardInfosDto = new BoardInfosDto();
+        boardInfosDto.setIsFirstMoved(true);
+        boardInfosDto.setPiece("Rook");
+        boardInfosDto.setPosition("a2");
+        boardInfosDto.setTeam("white");
+        boards.add(boardInfosDto);
+        given(mysqlChessDao.selectBoardInfosByRoomId(1L)).willReturn(boards);
+
+        // when
+        ChessGameDto result = springChessService.loadPreviousGame();
+
+        // then
+        assertThat(objectMapper.writeValueAsString(result)).isEqualTo(objectMapper.writeValueAsString(expected));
+
+
     }
 }

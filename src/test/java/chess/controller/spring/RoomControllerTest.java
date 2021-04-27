@@ -1,36 +1,45 @@
 package chess.controller.spring;
 
+import chess.controller.spring.vo.Pagination;
+import chess.controller.spring.vo.SessionVO;
 import chess.dto.room.RoomDTO;
 import chess.dto.room.RoomRegistrationDTO;
+import chess.dto.room.RoomResponseDTO;
 import chess.service.spring.RoomService;
 import chess.service.spring.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.Arrays;
+import java.util.List;
 
-import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 @DirtiesContext
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
 class RoomControllerTest {
-
-    @LocalServerPort
-    int port;
 
     private int firstRoomId;
     private int secondRoomId;
@@ -41,9 +50,17 @@ class RoomControllerTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private WebApplicationContext ctx;
+
+    private MockMvc mockMvc;
+
     @BeforeEach
     void setUp() {
-        RestAssured.port = port;
+        mockMvc = MockMvcBuilders.webAppContextSetup(ctx)
+                .addFilters(new CharacterEncodingFilter("UTF-8", true))
+                .alwaysDo(print())
+                .build();
         firstRoomId = roomService.addRoom("room1", "pass1");
         secondRoomId = roomService.addRoom("room2", "pass1");
     }
@@ -58,40 +75,48 @@ class RoomControllerTest {
     }
 
     @DisplayName("방 목록을 조회한다.")
-    @Order(1)
     @Test
-    void findAllRooms() throws JsonProcessingException {
-        String expectedResponseBody = writeResponseBody(Arrays.asList(new RoomDTO(firstRoomId, "room1"), new RoomDTO(secondRoomId, "room2")));
+    void findAllRooms() throws Exception {
+        List<RoomDTO> roomDTOS = Arrays.asList(new RoomDTO(firstRoomId, "room1"), new RoomDTO(secondRoomId, "room2"));
+        Pagination pagination = new Pagination(1, 2);
+        String expectedResponseBody = writeResponseBody(new RoomResponseDTO(roomDTOS, pagination));
 
-        Response response = RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/rooms");
-
-        assertResponse(response, expectedResponseBody, HttpStatus.OK);
+        mockMvc.perform(get("/rooms").accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedResponseBody));
     }
 
     private String writeResponseBody(Object object) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(object);
     }
 
-    private void assertResponse(Response response, String expectedResponseBody, HttpStatus httpStatus) {
-        response.then().log().all()
-                .statusCode(httpStatus.value())
-                .body(is(expectedResponseBody));
-    }
-
     @DisplayName("방을 추가한다.")
-    @Order(2)
     @Test
-    void addRoom() throws JsonProcessingException {
+    void addRoom() throws Exception {
         String requestBody = writeResponseBody(new RoomRegistrationDTO("room3", "pass1"));
         String expectedResponseBody = writeResponseBody(new RoomDTO(secondRoomId + 1, "room3"));
 
-        Response response = RestAssured.given().log().all()
+        mockMvc.perform(post("/rooms")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/rooms");
+                .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedResponseBody));
 
-        assertResponse(response, expectedResponseBody, HttpStatus.OK);
+        userService.deleteAllByRoomId(secondRoomId + 1);
+        roomService.deleteById(secondRoomId + 1);
+    }
+
+    @DisplayName("세션이 존재하면 방을 추가할 수 없다.")
+    @Test
+    void cannotAddRoom() throws Exception {
+        String requestBody = writeResponseBody(new RoomRegistrationDTO("room3", "pass1"));
+
+        mockMvc.perform(post("/rooms")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(requestBody)
+                .sessionAttr("session", new SessionVO(1, "pass31")))
+                .andExpect(status().isBadRequest());
     }
 }

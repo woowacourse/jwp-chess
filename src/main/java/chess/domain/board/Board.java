@@ -7,8 +7,8 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import chess.exception.InvalidCommandException;
-import chess.exception.InvalidMovementException;
+import chess.exception.chessgame.InvalidCommandException;
+import chess.exception.chessgame.InvalidMovementException;
 
 import java.util.Collections;
 import java.util.List;
@@ -63,9 +63,9 @@ public class Board {
     }
 
     private void movePiece(Position from, Position to, Piece piece) {
+        piece.moved();
         board.put(to, piece);
         board.put(from, Blank.getBlank());
-        piece.moved();
     }
 
     private void validatePawnCase(Position from, Position to, Piece piece) {

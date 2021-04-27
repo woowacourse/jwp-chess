@@ -1,22 +1,22 @@
 package chess.controller;
 
-import chess.exception.ChessException;
-import chess.exception.NotExistRoomException;
+import chess.exception.WebException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice()
+@ControllerAdvice
 public class ChessExceptionAdvice {
 
-
-    @ExceptionHandler(ChessException.class)
-    public ResponseEntity<String> handleChessException(ChessException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    @ExceptionHandler(WebException.class)
+    public ResponseEntity handleChessException(WebException e) {
+        return new ResponseEntity(e.getBody(), e.getStatus());
     }
 
-    @ExceptionHandler(NotExistRoomException.class)
-    public ResponseEntity<String> handleNotExistRoomException(NotExistRoomException e) {
-        return org.springframework.http.ResponseEntity.badRequest().body(e.getMessage());
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<String> handleDataExcessException(DataAccessException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("DB access 오류!");
     }
 }

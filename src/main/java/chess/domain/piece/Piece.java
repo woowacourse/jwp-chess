@@ -2,8 +2,8 @@ package chess.domain.piece;
 
 import chess.domain.Side;
 import chess.domain.position.Position;
-import chess.exception.InvalidMethodCallException;
-import chess.exception.InvalidMovementException;
+import chess.exception.chessgame.InvalidMethodCallException;
+import chess.exception.chessgame.InvalidMovementException;
 
 import java.util.List;
 import java.util.Locale;
@@ -12,7 +12,7 @@ import java.util.Objects;
 public abstract class Piece {
     private final Side side;
     private final String initial;
-    private boolean initPosition = true;
+    private boolean moved;
 
     public Piece(Side side, String initial) {
         this.side = side;
@@ -53,11 +53,11 @@ public abstract class Piece {
     public abstract double score();
 
     public void moved() {
-        initPosition = false;
+        moved = true;
     }
 
-    protected boolean isInitPosition() {
-        return initPosition;
+    protected boolean isMoved() {
+        return moved;
     }
 
     public boolean isSideEqualTo(Side side) {

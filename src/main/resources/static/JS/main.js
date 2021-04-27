@@ -13,18 +13,18 @@ window.onload = function () {
 async function renderRooms() {
     initList();
     roomTable.insertAdjacentHTML("beforeend", `<tr><th>방 이름</th></tr>`);
-    const response = await fetch('/rooms', {
+    await fetch('/api/rooms', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json'
         }
     }).then(res => {
         return res.json();
-    })
-
-    for (let i = 0; i < response.length; i++) {
-        renderRoom(response[i]);
-    }
+    }).then(json => {
+        for (let i = 0; i < json.length; i++) {
+            renderRoom(json[i]);
+        }
+    });
 }
 
 function initList() {
@@ -52,14 +52,19 @@ async function deleteRoom() {
         }
         let roomName = decodeURI(clickedRoom.textContent);
 
-        await fetch('/rooms/' + roomName, {
+        let response = await fetch('/api/rooms/' + roomName, {
             method: 'delete',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
+
+        let status = response.status;
+        if (status === 204) {
+            alert("삭제가 완료되었습니다.");
+        }
     }
-    renderRooms();
+    await renderRooms();
 }
 
 function clickRoomName(event) {
@@ -86,6 +91,7 @@ function getClickedRoom() {
     return null;
 }
 
+
 async function addRoom(event) {
     const roomName = event.target.value;
     if (event.key === "Enter" && roomName !== "") {
@@ -93,33 +99,23 @@ async function addRoom(event) {
             alert("방 이름은 한 글자 이상 열 글자 이하여야 합니다.")
             return;
         }
-
-        const response = await fetch(roomName + '/check', {
-            method: 'get',
+        let data = {
+            roomName: roomName
+        }
+        let response = await fetch('/api/rooms', {
+            method: 'post',
+            body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(res => {
-            return res.json();
         });
-        if (response.code === "SUCCEED") {
-            createRoom(roomName);
-        }
-        alert(response.message);
-        event.target.value = '';
-        renderRooms();
-    }
-}
 
-async function createRoom(roomName) {
-    let data = {
-        roomName: roomName
-    }
-    await fetch('/rooms', {
-        method: 'post',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
+        let status = response.status;
+        event.target.value = '';
+        response = await response.text();
+        if (status === 201 || status === 500) {
+            alert(response);
         }
-    });
+        await renderRooms();
+    }
 }

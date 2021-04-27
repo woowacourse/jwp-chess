@@ -1,7 +1,7 @@
 package chess.domain.command;
 
 import chess.domain.position.Position;
-import chess.exception.InvalidCommandException;
+import chess.exception.chessgame.InvalidCommandException;
 
 import java.util.Arrays;
 

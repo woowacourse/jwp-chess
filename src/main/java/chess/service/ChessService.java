@@ -7,9 +7,8 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.PositionDto;
 import chess.dto.ResponseDto;
-import chess.exception.ChessException;
+import chess.exception.chessgame.ChessException;
 
-import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,7 +30,7 @@ public class ChessService {
         boardDAO.addBoard(Board.getGamingBoard(), Side.WHITE.name());
     }
 
-    public ResponseDto move(PositionDto positionDTO) throws SQLException {
+    public ResponseDto move(PositionDto positionDTO) {
         Board board = new Board(boardDAO.findBoard(GAME_NUMBER));
         try {
             return moveExecute(positionDTO, board);
@@ -41,7 +40,7 @@ public class ChessService {
     }
 
     private ResponseDto moveExecute(PositionDto positionDTO, Board board) {
-        board.move(Position.from(positionDTO.from()), Position.from(positionDTO.to()), currentTurn());
+        board.move(Position.from(positionDTO.getFrom()), Position.from(positionDTO.getTo()), currentTurn());
         boardDAO.updateBoard(board, currentTurn().changeTurn().name());
         if (board.isGameSet()) {
             Side side = board.winner();

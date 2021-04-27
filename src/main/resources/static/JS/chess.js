@@ -1,6 +1,5 @@
-let currentRoomName;
+let currentRoomName = document.getElementById("roomName").value;
 
-getCurrentRoomName();
 createChessBoard();
 
 const startButton = document.getElementById("start");
@@ -10,11 +9,6 @@ const scoreButton = document.getElementById("score");
 startButton.addEventListener("click", clickStart);
 backButton.addEventListener("click", clickBack);
 scoreButton.addEventListener("click", clickScore);
-
-function getCurrentRoomName() {
-    const url = window.location.href.split("/");
-    currentRoomName = decodeURI(url[url.length - 1]);
-}
 
 function createChessBoard() {
     makeTable();
@@ -79,7 +73,7 @@ async function move(from, to) {
         from: from,
         to: to
     }
-    let response = await fetch(currentRoomName + '/move', {
+    let response = await fetch('/api/rooms/' + currentRoomName + '/move', {
         method: 'put',
         body: JSON.stringify(data),
         headers: {
@@ -103,7 +97,7 @@ async function move(from, to) {
             return;
         }
     }
-    if (status === 400) {
+    if (status === 400 || status === 500) {
         response = await response.text();
         alert(response);
     }
@@ -120,14 +114,14 @@ function changeImage(sourcePosition, targetPosition) {
 }
 
 async function syncBoard() {
-    let response = await fetch(currentRoomName + '/board', {
+    let response = await fetch('/api/rooms/' + currentRoomName + '/board', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json'
         }
     });
 
-    if (response.status === 400) {
+    if (response.status === 400 || response.status === 500) {
         response = await response.text();
         alert(response);
         window.location.href = "http://localhost:8080/";
@@ -152,7 +146,7 @@ async function syncBoard() {
 }
 
 async function changeTurn() {
-    const response = await fetch(currentRoomName + '/turn', {
+    const response = await fetch('/api/rooms/' + currentRoomName + '/turn', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json',
@@ -167,7 +161,7 @@ async function changeTurn() {
 
 function clickStart() {
     if (confirm("재시작하시겠습니까?")) {
-        fetch(currentRoomName + '/restart', {
+        fetch('/api/rooms/' + currentRoomName + '/restart', {
             method: 'put',
             headers: {
                 'Content-Type': 'application/json'
@@ -186,7 +180,7 @@ async function clickBack() {
 }
 
 async function clickScore() {
-    const score = await fetch(currentRoomName + '/score', {
+    const score = await fetch('/api/rooms/' + currentRoomName + '/score', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json'

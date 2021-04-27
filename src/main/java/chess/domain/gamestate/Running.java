@@ -4,7 +4,7 @@ import chess.domain.Score;
 import chess.domain.Side;
 import chess.domain.board.Board;
 import chess.domain.position.Position;
-import chess.exception.InvalidCommandException;
+import chess.exception.chessgame.InvalidCommandException;
 
 public class Running extends GameState {
 

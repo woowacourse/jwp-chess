@@ -7,9 +7,10 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.PositionDto;
 import chess.dto.ResponseDto;
-import chess.dto.RoomValidateDto;
 import chess.dto.ScoreDto;
-import chess.exception.NotExistRoomException;
+import chess.exception.room.DuplicateRoomNameException;
+import chess.exception.room.NotExistRoomException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -20,7 +21,6 @@ import java.util.Map;
 public class SpringChessService {
     private static final String SUCCEED_CODE = "SUCCEED";
     private static final String GAME_SET_CODE = "GAME_SET";
-    private static final String FAIL_CODE = "FAIL";
     private static final String WHITE = "W";
     private static final String BLACK = "B";
     private static final String BLANK = ".";
@@ -31,8 +31,8 @@ public class SpringChessService {
         this.springBoardDao = springBoardDao;
     }
 
-    public Map<String, String> currentBoardByRoomName(String roomName) throws NotExistRoomException {
-        Board board = springBoardDao.findBoard(roomName);
+    public Map<String, String> currentBoardByRoomName(String roomName) {
+        Board board = springBoardDao.findBoard(roomName).orElseThrow(NotExistRoomException::new);
         Map<String, String> boardName = new LinkedHashMap<>();
         for (Position position : board.getBoard().keySet()) {
             String positionName = position.positionName();
@@ -41,13 +41,13 @@ public class SpringChessService {
         return boardName;
     }
 
-    public ResponseDto move(PositionDto positionDTO, String roomName) throws NotExistRoomException {
-        Board board = springBoardDao.findBoard(roomName);
+    public ResponseDto move(PositionDto positionDTO, String roomName) {
+        Board board = springBoardDao.findBoard(roomName).orElseThrow(NotExistRoomException::new);
         return moveExecute(positionDTO, board, roomName);
     }
 
     private ResponseDto moveExecute(PositionDto positionDTO, Board board, String roomName) {
-        board.move(Position.from(positionDTO.from()), Position.from(positionDTO.to()), currentTurn(roomName));
+        board.move(Position.from(positionDTO.getFrom()), Position.from(positionDTO.getTo()), currentTurn(roomName));
         springBoardDao.updateBoard(board, currentTurn(roomName).changeTurn().name(), roomName);
         if (board.isGameSet()) {
             Side side = board.winner();
@@ -56,27 +56,24 @@ public class SpringChessService {
         return new ResponseDto(SUCCEED_CODE, "Succeed", currentTurn(roomName).name());
     }
 
-    private Side currentTurn(String roomName) throws NotExistRoomException {
-        return springBoardDao.findTurn(roomName);
+    private Side currentTurn(String roomName) {
+        return springBoardDao.findTurn(roomName).orElseThrow(NotExistRoomException::new);
     }
 
-    public void restartBoard(String roomName) {
-        springBoardDao.updateBoard(Board.getGamingBoard(), "WHITE", roomName);
-    }
-
-    public RoomValidateDto checkDuplicatedRoom(String roomName) {
-        if (springBoardDao.checkDuplicateByRoomName(roomName)) {
-            return new RoomValidateDto(FAIL_CODE, "중복된 방 이름입니다.");
+    public void createRoom(String roomName) {
+        try {
+            springBoardDao.addBoard(roomName);
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateRoomNameException();
         }
-        return new RoomValidateDto(SUCCEED_CODE, "방 생성 성공!");
+    }
+
+    public void restartRoom(String roomName) {
+        springBoardDao.updateBoard(Board.getGamingBoard(), "WHITE", roomName);
     }
 
     public List<String> rooms() {
         return springBoardDao.findRooms();
-    }
-
-    public void createRoom(String roomName) {
-        springBoardDao.newBoard(roomName);
     }
 
     public void deleteRoom(String roomName) {
@@ -84,7 +81,8 @@ public class SpringChessService {
     }
 
     public ScoreDto score(String roomName) {
-        Board board = springBoardDao.findBoard(roomName);
+        Board board = springBoardDao.findBoard(roomName)
+                .orElseThrow(NotExistRoomException::new);
         return new ScoreDto(String.valueOf(board.score(Side.WHITE)), String.valueOf(board.score(Side.BLACK)));
     }
 

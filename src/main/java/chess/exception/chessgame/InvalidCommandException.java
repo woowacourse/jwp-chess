@@ -1,4 +1,4 @@
-package chess.exception;
+package chess.exception.chessgame;
 
 public class InvalidCommandException extends ChessException {
     public InvalidCommandException() {

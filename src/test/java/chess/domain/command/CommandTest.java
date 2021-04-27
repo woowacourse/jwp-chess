@@ -1,6 +1,6 @@
 package chess.domain.command;
 
-import chess.exception.InvalidCommandException;
+import chess.exception.chessgame.InvalidCommandException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

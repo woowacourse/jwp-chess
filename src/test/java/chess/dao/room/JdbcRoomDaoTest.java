@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import chess.dao.piece.JdbcPieceDao;
 import chess.domain.board.Board;
 import chess.domain.game.Room;
+import chess.domain.gamestate.running.Move;
 import chess.domain.gamestate.running.Ready;
+import chess.domain.piece.Piece;
 import chess.domain.team.Team;
 import chess.utils.BoardUtil;
 import java.util.List;
@@ -53,11 +55,11 @@ class JdbcRoomDaoTest {
     void update() {
         // given
         long roomId = roomDao
-            .insert(new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
+            .insert(new Room(0, "테스트", new Move(Board.EMPTY_BOARD), Team.WHITE));
         Room foundRoom = roomDao.findRoomById(roomId);
 
         // when
-        foundRoom.play("start");
+        foundRoom.play("end");
         roomDao.update(foundRoom);
 
         // then
@@ -65,7 +67,7 @@ class JdbcRoomDaoTest {
         assertAll(
             () -> assertThat(resultRoom.getId()).isEqualTo(roomId),
             () -> assertThat(resultRoom.getName()).isEqualTo(foundRoom.getName()),
-            () -> assertThat(resultRoom.getState().getValue()).isEqualTo("start"),
+            () -> assertThat(resultRoom.getState().getValue()).isEqualTo("end"),
             () -> assertThat(resultRoom.getCurrentTeam()).isEqualTo(foundRoom.getCurrentTeam())
         );
     }

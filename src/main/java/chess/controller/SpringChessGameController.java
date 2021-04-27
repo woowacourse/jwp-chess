@@ -18,8 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public final class SpringChessGameController {
@@ -45,44 +44,39 @@ public final class SpringChessGameController {
     }
 
     @PostMapping(path = "/rooms")
-    public String createNewGame(@ModelAttribute final RoomCreateDTO roomCreateDTO, final HttpServletResponse response) {
+    public String createNewGame(@ModelAttribute final RoomCreateDTO roomCreateDTO, final HttpSession session) {
         int whiteUserId = userService.registerUser(new JoinUserDTO(roomCreateDTO));
         Long roomId = roomService.createRoom(roomCreateDTO.getName(), whiteUserId);
         roomService.addNewRoom(roomId);
-        playerCookie(response, roomCreateDTO.getNickname(), roomCreateDTO.getPassword(), "white");
+        playerSession(session, roomCreateDTO.getNickname(), roomCreateDTO.getPassword());
         return "redirect:/rooms/" + roomId;
     }
 
     @PostMapping("/rooms/{id}/users/blackuser/add")
-    public String join(@PathVariable final String id, @ModelAttribute final JoinUserDTO joinUserDTO, final HttpServletResponse response) {
+    public String join(@PathVariable final String id, @ModelAttribute final JoinUserDTO joinUserDTO, final HttpSession session) {
         int blackUserId = userService.registerUser(joinUserDTO);
         roomService.joinBlackUser(id, blackUserId);
-        playerCookie(response, joinUserDTO.getNickname(), joinUserDTO.getPassword(), "black");
+        playerSession(session, joinUserDTO.getNickname(), joinUserDTO.getPassword());
         return "redirect:/rooms/" + id;
     }
 
     @PostMapping("/rooms/{id}/users/{color}/re-enter")
     public String userReEntry(@PathVariable final String id, @PathVariable final String color,
-                              @ModelAttribute final PasswordDTO passwordDTO,
-                              final HttpServletResponse response) {
+                              @ModelAttribute final PasswordDTO passwordDTO, final HttpSession session) {
 
         UserDTO user = roomService.participatedUser(id, color);
 
         if (user != null) {
             userService.checkPassword(Integer.toString(user.getId()), passwordDTO.getPassword());
-            playerCookie(response, user.getNickname(), passwordDTO.getPassword(), "black");
+            playerSession(session, user.getNickname(), user.getPassword());
             return "redirect:/rooms/" + id;
         }
         return "redirect:/";
     }
 
-    private void playerCookie(final HttpServletResponse response, final String nickname, final String password, final String team) {
-        Cookie playerId = new Cookie("id", nickname);
-        Cookie playerPassword = new Cookie("password", password);
-        playerId.setPath("/");
-        playerPassword.setPath("/");
-        response.addCookie(playerId);
-        response.addCookie(playerPassword);
+    private void playerSession(final HttpSession session, final String nickname, final String password) {
+        session.setAttribute("id", nickname);
+        session.setAttribute("password", password);
     }
 
     @GetMapping("/rooms/{id}")

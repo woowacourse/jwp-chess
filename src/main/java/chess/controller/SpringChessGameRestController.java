@@ -17,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -40,9 +41,11 @@ public class SpringChessGameRestController {
 
     @GetMapping(path = "/{roomId}/positions/{clickedSection}/turn")
     public ResponseEntity<Boolean> checkCurrentTurn(@PathVariable final String roomId, @PathVariable final String clickedSection,
-                                                    @CookieValue(value = "id") Cookie id,
-                                                    @CookieValue(value = "password") Cookie password) {
-        UserDTO user = userService.getUser(id.getValue(), password.getValue());
+                                                    final HttpSession session) {
+        String id = (String)session.getAttribute("id");
+        String password = (String)session.getAttribute("password");
+
+        UserDTO user = userService.getUser(id, password);
         if (!roomService.checkRightTurn(roomId, user, clickedSection)) {
             return ResponseEntity.status(OK)
                     .body(false);

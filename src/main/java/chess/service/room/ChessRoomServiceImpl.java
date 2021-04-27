@@ -56,12 +56,10 @@ public class ChessRoomServiceImpl implements ChessRoomService {
 
     private void deleteEmptyRoom(List<Room> rooms) {
         List<Room> roomsToDelete = rooms.stream()
-                .filter(room -> !room.isEmpty())
+                .filter(Room::isEmpty)
                 .collect(Collectors.toList());
 
-        roomsToDelete.forEach(room -> {
-            chessRoomRepository.deleteRoom(room.getId());
-        });
+        roomsToDelete.forEach(chessRoomRepository::deleteRoom);
     }
 
     private List<RoomDto> generateEnterableRoomDataList(List<Room> rooms) {
@@ -85,8 +83,8 @@ public class ChessRoomServiceImpl implements ChessRoomService {
 
     @Override
     public void exit(final Long roomId, final String userName) {
+        userDao.setRoomId(roomId,userName);
         chessRoomRepository.deleteUserFormRoom(roomId, userName);
-        Room room = chessRoomRepository.room(roomId);
     }
 
     public void validateEnterStatus(RoomRequestDto roomRequestDto) {
@@ -98,7 +96,7 @@ public class ChessRoomServiceImpl implements ChessRoomService {
             throw new IllegalArgumentException("비밀번호가 잘 못되었습니다.");
         }
 
-        if (savedRoom.enterable()) {
+        if (!savedRoom.enterable()) {
             throw new IllegalArgumentException("방에 입장할 수 없습니다.");
         }
 

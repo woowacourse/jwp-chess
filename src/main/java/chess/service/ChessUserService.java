@@ -20,7 +20,6 @@ public class ChessUserService {
         this.chessRoomService = chessRoomService;
     }
 
-
     public void create(final String name, final String pw) {
         userDao.create(name, pw);
 
@@ -28,18 +27,22 @@ public class ChessUserService {
 
     public UserDto login(final String name, final String pw) {
         User user = userDao.findByName(name);
+
         if (!user.checkPassword(pw)) {
             throw  new IllegalArgumentException();
         }
 
+        exitIfInGameWhenLogIn(user);
         return UserDto.toResponse(user);
     }
 
-    public void exit(final Long roomId, final String name) {
-        User user = userDao.findByName(name);
+    private void exitIfInGameWhenLogIn(User user) {
         if (user.inGame()) {
-            userDao.setRoomId(null, name);
-            chessRoomService.exit(roomId, name);
+           exit(user.getRoomId(), user.getName());
         }
+    }
+
+    public void exit(final Long roomId, final String name) {
+        chessRoomService.exit(roomId, name);
     }
 }

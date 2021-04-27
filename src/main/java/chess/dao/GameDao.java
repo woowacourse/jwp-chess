@@ -36,4 +36,9 @@ public class GameDao {
         String sql = "update game set is_end = ? where game_id = ?";
         jdbcTemplate.update(sql, isEnd, gameId);
     }
+
+   public void delete(final Long gameId) {
+       String sql = "delete from game where game_id = ?";
+       jdbcTemplate.update(sql, gameId);
+    }
 }

@@ -1,6 +1,5 @@
-package chess.web;
+package chess.exception;
 
-import chess.exception.ChessGameException;
 import chess.web.dto.MessageDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

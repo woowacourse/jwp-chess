@@ -5,7 +5,10 @@ makeRoomBtn.addEventListener("click", makeRoom);
 
 function makeRoom() {
     let roomName = prompt("사용할 체스방의 이름을 입력해주세요");
-    if (roomName == "") {
+    console.log(roomName)
+    if (roomName === null ) {
+        // alert("취소되었습니다");
+    } else if (roomName == "") {
         alert("방 제목을 입력해주세요");
     } else {
         checkAvailableRoom(roomName);

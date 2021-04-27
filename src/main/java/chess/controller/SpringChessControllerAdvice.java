@@ -11,7 +11,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
-public class ExceptionController {
+public class SpringChessControllerAdvice {
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<String> handleIllegalArgumentException() {
         return ResponseEntity.badRequest().body("unavailable");

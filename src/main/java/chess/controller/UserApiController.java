@@ -4,28 +4,32 @@ import chess.dto.user.UserRequestDto;
 import chess.dto.user.UserResponseDto;
 import chess.service.UserService;
 import java.net.URI;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/users")
-@Controller
-public class UserController {
+@RequestMapping("/api/users")
+@RestController
+public class UserApiController {
 
     private final UserService userService;
 
-    public UserController(final UserService userService) {
+    public UserApiController(final UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping
-    public ResponseEntity createUser(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<String> createUser(@RequestBody UserRequestDto userRequestDto) {
         final long id = userService.add(userRequestDto);
-        return ResponseEntity.created(URI.create("/users/" + id)).build();
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .location(URI.create("/users/" + id))
+            .body("{}");
     }
 
     @GetMapping

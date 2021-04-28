@@ -23,7 +23,7 @@ export async function postData(url = '', data = {}) {
       'Content-Type': 'application/json',
     },
     redirect: 'follow',
-    body: JSON.stringify(data)
+    body: await JSON.stringify(data)
   })
   .then(response => {
     if (response.redirected) {
@@ -47,7 +47,7 @@ export async function putData(url = '', data = {}) {
       'Content-Type': 'application/json',
     },
     redirect: 'follow',
-    body: JSON.stringify(data)
+    body: await JSON.stringify(data)
   })
   .then(response => {
     if (!response.ok) {

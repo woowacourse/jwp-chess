@@ -38,7 +38,7 @@ async function getExistentUser(userName) {
   const params = {
     name: userName
   }
-  return await getData(`${url}/users`, params);
+  return await getData(`${url}/api/users`, params);
 }
 
 function validateName(whiteName, blackName) {
@@ -50,21 +50,13 @@ function validateName(whiteName, blackName) {
   }
 }
 
-async function createUser(userName) {
-  const body = {
-    name: userName,
-    password: "123"
-  }
-  return await postData(`${url}/users`, body);
-}
-
 async function createGame(hostId, guestId) {
   const body = {
     name: "임시 방이름",
     hostId: hostId,
     guestId: guestId
   };
-  await postData(`${url}/chess/creation`, body);
+  await postData(`${url}/games`, body);
 }
 
 function loadGame() {
@@ -80,7 +72,7 @@ async function registerMember() {
     alert("이름을 입력하지 않았습니다.");
     return;
   }
-  const response = await getData(`${url}/users`, {name: name});
+  const response = await getData(`${url}/api/users`, {name: name});
   if (response) {
     alert("이미 존재하는 이름입니다.");
     return;
@@ -94,6 +86,11 @@ async function registerMember() {
     name: name,
     password: password
   };
-  await postData(`${url}/users`, body);
-  alert("회원가입 완료!")
+  const response2 = await postData(`${url}/api/users`, body);
+  if (response2) {
+    alert("회원가입 완료!")
+  } else {
+    alert("회원가입이 실패했습니다. 잠시 후 다시 시도해 주세요.")
+  }
+
 }

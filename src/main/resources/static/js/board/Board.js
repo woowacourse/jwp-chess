@@ -86,7 +86,7 @@ export class Board {
     const gameId = this.#findGameIdInUri();
     try {
       const response = await getData(
-          `${url}/chess/${gameId}/move/check`, params
+          `${url}/api/games/${gameId}/move/check`, params
       );
       targetTile.highlight(response["isMovable"]);
     } catch (e) {
@@ -131,7 +131,7 @@ export class Board {
     }
     const gameId = this.#findGameIdInUri();
     const response = await getData(
-        `${url}/chess/${gameId}/move/check`, params);
+        `${url}/api/games/${gameId}/move/check`, params);
     const isMovable = response["isMovable"]
     if (isMovable) {
       await this.#requestMove(piece, targetTile, params, gameId);
@@ -143,7 +143,7 @@ export class Board {
 
   async #requestMove(piece, targetTile, body, gameId) {
     const response = await putData(
-        `${url}/chess/${gameId}/move`, body);
+        `${url}/api/games/${gameId}/move`, body);
 
     if (!response) {
       return;

@@ -15,7 +15,7 @@ http://localhost:8080/swagger-ui.html#/
 
 ## 1단계 피드백 이후 리팩토링
 - [x] 기존 Domain으로 변경
-- [x] Controller에서 String 대신 Enum을 받도록 변경 (DTO 포함)
+- [x] Controller에서 String 대신 Enum을 받도록 변경 (웹 DTO 포함)
 - [x] 도메인과 DAO 리팩토링
     - 기존 Game 도메인은 로직이 없는 데이터의 성격을 띠고 있었다.
     - 게임 진행 로직은 ChessService에 있었고 이 부분을 개선하고 싶었다.
@@ -31,11 +31,12 @@ http://localhost:8080/swagger-ui.html#/
     - [x] 게임 진행을 GameService가 전담 
     - [x] ChessService 삭제
     - [x] PieceService 삭제
-    - [ ] 게임 진행 요청을 GameController에서 전담
+    - [x] 게임 진행 요청을 GameController에서 전담
+    - [x] ChessController 삭제
+    - [x] Controller와 RestController 분리
+    - [ ] 모든 웹 요청,응답 DTO로 변경
+- [ ] 패키지 정리
 - [ ] 예외 처리 관련 기능 추가
-    - [x] data select에 싪패하면 404 에러 발생  
-- [ ] ChessController URI 정리
-- [ ] Controller와 API Controller 분리계
-- [ ] 모든 응답 DTO로 변경
-- [ ] ChessController, ChessService 가 필요한지 검토
-- [ ] Game 도메인과 GameRepository를 생성하여 역할을 부여해줄 필요가 있다.
+    - [x] data select에 싪패하면 404 에러 발생
+ 
+

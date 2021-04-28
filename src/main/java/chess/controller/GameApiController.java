@@ -1,36 +1,29 @@
 package chess.controller;
 
+
 import chess.dto.game.GameResponseDto;
 import chess.dto.game.move.MoveRequestDto;
 import chess.dto.game.move.MoveResponseDto;
-import chess.dto.game.GameRequestDto;
 import chess.service.GameService;
 import java.util.Collections;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/chess")
-@Controller
-public class ChessController {
+@RequestMapping("/api/games")
+@RestController
+public class GameApiController {
 
     private final GameService gameService;
 
-    public ChessController(final GameService gameService) {
+    public GameApiController(final GameService gameService) {
         this.gameService = gameService;
-    }
-
-    @PostMapping("/creation")
-    public String initializeChess(@RequestBody GameRequestDto gameRequestDto) {
-        final long id = gameService.initializeGame(gameRequestDto);
-        return "redirect:/games/" + id;
     }
 
     @GetMapping("/{gameId}")

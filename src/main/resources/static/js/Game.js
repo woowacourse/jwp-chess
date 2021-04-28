@@ -29,7 +29,7 @@ window.onload = async function () {
 
 async function requestData() {
   const gameId = findGameIdInUri();
-  return await getData(`${url}/chess/${gameId}`)
+  return await getData(`${url}/api/games/${gameId}`)
 }
 
 function findGameIdInUri() {

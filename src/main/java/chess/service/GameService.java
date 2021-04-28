@@ -4,10 +4,10 @@ import chess.domain.game.Game;
 import chess.domain.game.GameRepository;
 import chess.domain.user.User;
 import chess.domain.user.UserRepository;
+import chess.dto.game.GameRequestDto;
 import chess.dto.game.GameResponseDto;
 import chess.dto.game.move.MoveRequestDto;
 import chess.dto.game.move.MoveResponseDto;
-import chess.dto.game.GameRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

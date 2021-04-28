@@ -1,5 +1,6 @@
 package chess.controller;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,5 +31,10 @@ public class SpringChessControllerAdvice {
     @ExceptionHandler({LoginException.class})
     public ResponseEntity<String> handleLoginException() {
         return ResponseEntity.status(UNAUTHORIZED).body("unauthorized");
+    }
+
+    @ExceptionHandler({DuplicateKeyException.class})
+    public ResponseEntity<String> DuplicateKeyException() {
+        return ResponseEntity.status(CONFLICT).body("conflict");
     }
 }

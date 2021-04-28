@@ -1,5 +1,7 @@
 package chess.dao.dto;
 
+import chess.domain.piece.Piece;
+
 public class PieceDto {
 
     private final long id;
@@ -9,7 +11,7 @@ public class PieceDto {
     private final String color;
     private final char shape;
 
-    public PieceDto(final long id, final long gameId, final int x, final int y, final String color,
+    private PieceDto(final long id, final long gameId, final int x, final int y, final String color,
         final char shape) {
         this.id = id;
         this.gameId = gameId;
@@ -17,6 +19,23 @@ public class PieceDto {
         this.y = y;
         this.color = color;
         this.shape = shape;
+    }
+
+    public static PieceDto of(final long id, final long gameId, final int x, final int y,
+        final String color, final char shape) {
+
+        return new PieceDto(id, gameId, x, y, color, shape);
+    }
+
+    public static PieceDto of(final long gameId, final Piece piece) {
+        return new PieceDto(
+            piece.getId(),
+            gameId,
+            piece.getX(),
+            piece.getY(),
+            piece.getTeamValue(),
+            piece.getPieceTypeValue()
+        );
     }
 
     public long getId() {

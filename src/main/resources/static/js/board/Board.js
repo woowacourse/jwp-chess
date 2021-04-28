@@ -145,7 +145,7 @@ export class Board {
     const response = await putData(
         `${url}/chess/${gameId}/move`, body);
 
-    if (!response["success"]) {
+    if (!response) {
       return;
     }
     this.#pieces.move(piece, targetTile)

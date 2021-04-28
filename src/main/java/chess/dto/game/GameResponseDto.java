@@ -1,33 +1,48 @@
 package chess.dto.game;
 
-import chess.dao.dto.GameDto;
+import chess.domain.game.Game;
 import chess.domain.team.Team;
+import chess.domain.user.User;
+import chess.dto.game.piece.PieceResponseDto;
+import chess.dto.user.UserResponseDto;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameResponseDto {
 
     private final String name;
     private final Team turn;
-    private final long hostId;
-    private final long guestId;
     private final boolean isFinished;
+    private final List<PieceResponseDto> pieceResponseDtos;
+    private final UserResponseDto host;
+    private final UserResponseDto guest;
 
-    public GameResponseDto(final String name, final Team turn, final long hostId,
-        final long guestId, final boolean isFinished) {
+    private GameResponseDto(final String name, final Team turn, final boolean isFinished,
+        final List<PieceResponseDto> pieceResponseDtos, final UserResponseDto host,
+        final UserResponseDto guest) {
 
         this.name = name;
         this.turn = turn;
-        this.hostId = hostId;
-        this.guestId = guestId;
         this.isFinished = isFinished;
+        this.pieceResponseDtos = pieceResponseDtos;
+        this.host = host;
+        this.guest = guest;
     }
 
-    public static GameResponseDto from(final GameDto gameDto) {
+    public static GameResponseDto of(final Game game, final User host, final User guest) {
+        final List<PieceResponseDto> pieceResponseDtos =
+            game.toPieces()
+                .stream()
+                .map(PieceResponseDto::from)
+                .collect(Collectors.toList());
+
         return new GameResponseDto(
-            gameDto.getName(),
-            Team.from(gameDto.getTurn()),
-            gameDto.getHostId(),
-            gameDto.getGuestId(),
-            gameDto.isFinished()
+            game.getName(),
+            game.getTurn(),
+            game.isFinished(),
+            pieceResponseDtos,
+            UserResponseDto.from(host),
+            UserResponseDto.from(guest)
         );
     }
 
@@ -39,16 +54,20 @@ public class GameResponseDto {
         return turn;
     }
 
-    public long getHostId() {
-        return hostId;
-    }
-
-    public long getGuestId() {
-        return guestId;
-    }
-
     public boolean isFinished() {
         return isFinished;
+    }
+
+    public List<PieceResponseDto> getPieceResponseDtos() {
+        return pieceResponseDtos;
+    }
+
+    public UserResponseDto getHost() {
+        return host;
+    }
+
+    public UserResponseDto getGuest() {
+        return guest;
     }
 
 }

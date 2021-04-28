@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public UserResponseDto findUserById(final long id) {
-        final User user = userRepository.finaById(id);
+        final User user = userRepository.findById(id);
         return UserResponseDto.from(user);
     }
 

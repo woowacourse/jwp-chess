@@ -10,7 +10,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
 import chess.domain.team.Team;
-import chess.dto.piece.PieceResponseDto;
+import chess.dto.game.piece.PieceResponseDto;
 
 public class PieceConverter {
 

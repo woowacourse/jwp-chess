@@ -22,6 +22,13 @@ public enum Team {
             .orElseThrow(() -> new TeamNotFoundException(value));
     }
 
+    public Team reverse() {
+        if (this.equals(WHITE)) {
+            return BLACK;
+        }
+        return WHITE;
+    }
+
     public boolean isBlack() {
         return this == BLACK;
     }

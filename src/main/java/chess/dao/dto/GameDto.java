@@ -1,5 +1,6 @@
 package chess.dao.dto;
 
+import chess.domain.team.Team;
 import java.time.LocalDateTime;
 
 public class GameDto {
@@ -12,7 +13,7 @@ public class GameDto {
     private final boolean isFinished;
     private final LocalDateTime createdTime;
 
-    public GameDto(final long id, final String name, final long hostId, final long guestId,
+    private GameDto(final long id, final String name, final long hostId, final long guestId,
         final String turn, final boolean isFinished, final LocalDateTime createdTime) {
 
         this.id = id;
@@ -22,6 +23,24 @@ public class GameDto {
         this.turn = turn;
         this.isFinished = isFinished;
         this.createdTime = createdTime;
+    }
+
+    public static GameDto of(
+        final long id, final String name, final long hostId, final long guestId, final String turn,
+        final boolean isFinished, final LocalDateTime createdTime
+    ) {
+        return new GameDto(id, name, hostId, guestId, turn, isFinished, createdTime);
+    }
+
+    public static GameDto of(final String name, final long hostId, final long guestId) {
+        return new GameDto(
+            0L,
+            name,
+            hostId, guestId,
+            Team.WHITE.getValue(),
+            false,
+            LocalDateTime.now()
+        );
     }
 
     public long getId() {

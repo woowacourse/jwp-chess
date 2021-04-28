@@ -1,11 +1,6 @@
 package chess.dto.game;
 
-import chess.dao.dto.GameDto;
-import java.time.LocalDateTime;
-
 public class GameRequestDto {
-
-    private static final String EMPTY_STRING = "";
 
     private final String name;
     private final long hostId;
@@ -15,12 +10,6 @@ public class GameRequestDto {
         this.name = name;
         this.hostId = hostId;
         this.guestId = guestId;
-    }
-
-    public GameDto toGameDto() {
-        return new GameDto(
-            0L, name, hostId, guestId, EMPTY_STRING, false, LocalDateTime.now()
-        );
     }
 
     public String getName() {

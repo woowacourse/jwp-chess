@@ -22,7 +22,7 @@ public class UserRepository {
         return userDto.toEntity();
     }
 
-    public User finaById(final long id) {
+    public User findById(final long id) {
         final UserDto userDto = userDao.selectById(id);
         return userDto.toEntity();
     }

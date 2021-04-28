@@ -28,8 +28,10 @@ http://localhost:8080/swagger-ui.html#/
     - [x] UserRepository 생성
 - [ ] Service와 Controller 리팩토링
     - [x] UserService 에서 UserRepository 사용하도록 변경
-    - [ ] 게임 진행을 GameService가 전담 
-    - [ ] ChessService 삭제
+    - [x] 게임 진행을 GameService가 전담 
+    - [x] ChessService 삭제
+    - [x] PieceService 삭제
+    - [ ] 게임 진행 요청을 GameController에서 전담
 - [ ] 예외 처리 관련 기능 추가
     - [x] data select에 싪패하면 404 에러 발생  
 - [ ] ChessController URI 정리

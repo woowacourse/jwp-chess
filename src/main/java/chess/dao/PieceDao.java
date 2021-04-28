@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public class PieceDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<PieceDto> pieceRowMapper = (resultSet, rowNum) -> new PieceDto(
+    private final RowMapper<PieceDto> pieceRowMapper = (resultSet, rowNum) -> PieceDto.of(
         resultSet.getLong("id"),
         resultSet.getLong("game_id"),
         resultSet.getInt("x"),
@@ -70,20 +70,24 @@ public class PieceDao {
         });
     }
 
-    public void deleteByLocation(final long gameId, final Location target) {
-        final String sql = "DELETE FROM piece WHERE game_id = ? AND x = ? AND y = ?";
-        jdbcTemplate.update(sql, gameId, target.getX(), target.getY());
-    }
+    public void updateBatch(final List<PieceDto> pieceDtos) {
+        final String sql = "UPDATE piece SET x = ?, y = ? WHERE id = ?";
 
-    public void updatePosition(final long gameId, Location source, final Location target) {
-        final String sql = "UPDATE piece SET x = ?, y = ? WHERE game_id = ? AND x = ? AND y = ?";
-        jdbcTemplate.update(sql, target.getX(), target.getY(), gameId, source.getX(),
-            source.getY());
-    }
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                final PieceDto pieceDto = pieceDtos.get(i);
+                ps.setInt(1, pieceDto.getX());
+                ps.setInt(2, pieceDto.getY());
+                ps.setLong(3, pieceDto.getId());
+            }
 
-    public void deletePiecesByGameId(final long gameId) {
-        final String sql = "DELETE FROM piece WHERE game_id = ?";
-        jdbcTemplate.update(sql, gameId);
+            @Override
+            public int getBatchSize() {
+                return pieceDtos.size();
+            }
+        });
+
     }
 
 }

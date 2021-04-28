@@ -82,6 +82,10 @@ public abstract class Piece implements Movable {
         return id;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
     public int getX() {
         return location.getX();
     }

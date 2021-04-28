@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public class GameDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<GameDto> gameRowMapper = (resultSet, rowNum) -> new GameDto(
+    private final RowMapper<GameDto> gameRowMapper = (resultSet, rowNum) -> GameDto.of(
         resultSet.getLong("id"),
         resultSet.getString("name"),
         resultSet.getLong("host_id"),
@@ -52,7 +52,12 @@ public class GameDao {
         jdbcTemplate.update(sql, isFinished, id);
     }
 
-    public void updateTurn(final long id) {
+    public void updateTurn(final long id, final String turn) {
+        final String sql = "UPDATE game SET turn = ? WHERE id = ?";
+        jdbcTemplate.update(sql, turn, id);
+    }
+
+    public void reverseTurn(final long id) {
         final String sql = "UPDATE game SET turn = (CASE WHEN turn = 'black' THEN 'white' ELSE 'black' END) WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

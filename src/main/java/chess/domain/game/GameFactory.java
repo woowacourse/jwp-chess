@@ -17,10 +17,12 @@ public class GameFactory {
     }
 
     private static Game composeGame(final GameDto gameDto, final Board board) {
-        return new Game(
+        return Game.of(
             gameDto.getId(),
             gameDto.getName(),
             Team.from(gameDto.getTurn()),
+            gameDto.getHostId(),
+            gameDto.getGuestId(),
             gameDto.isFinished(),
             gameDto.getCreatedTime(),
             board

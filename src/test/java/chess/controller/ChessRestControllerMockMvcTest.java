@@ -37,7 +37,7 @@ class ChessRestControllerMockMvcTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("기물을 이동한다.")
+    @DisplayName("기물을 이동요청 API 테스트")
     @Test
     void movePieceTest() throws Exception {
         String content = objectMapper.writeValueAsString(new MoveRequest(1, "a2", "a4"));
@@ -48,7 +48,7 @@ class ChessRestControllerMockMvcTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("게임을 불러온다.")
+    @DisplayName("특정 게임 불러오기 요청 API 테스트")
     @Test
     void loadGameTest() throws Exception {
         this.mockMvc.perform(get("/games/1"))

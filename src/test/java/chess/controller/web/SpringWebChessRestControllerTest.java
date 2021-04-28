@@ -6,16 +6,26 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import javax.servlet.http.HttpSession;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SpringWebChessRestControllerTest {
+
+    private HttpSession httpSession;
+
+    @Autowired
+    public SpringWebChessRestControllerTest(HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
 
     @LocalServerPort
     int port;
@@ -25,7 +35,7 @@ class SpringWebChessRestControllerTest {
         RestAssured.port = port;
 
         GameSaveRequestDto gameSaveRequestDto =
-                new GameSaveRequestDto("user1", "user2", "roomName1");
+                new GameSaveRequestDto("user1", "1234", "roomName1");
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -42,7 +52,7 @@ class SpringWebChessRestControllerTest {
     @DisplayName("체스 게임 생성 요청, method = post, path = /games")
     void saveGame() {
         GameSaveRequestDto gameSaveRequestDto =
-                new GameSaveRequestDto("user3", "user4", "roomName2");
+                new GameSaveRequestDto("user3", "1234", "roomName2");
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -116,12 +126,12 @@ class SpringWebChessRestControllerTest {
         RestAssured
                 .given().log().all()
                 .when()
+                .sessionId("password", "1234")
                 .get("/games/1/path?source=c2")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("size()", notNullValue());
-
     }
 
     @Test

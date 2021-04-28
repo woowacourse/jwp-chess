@@ -36,13 +36,13 @@ class GameDaoTemplateTest {
     @BeforeEach
     void setUp() {
         List<Object[]> splitsGameInfos = Stream.of(
-                "게임1,흰색유저1,흑색유저1",
-                "게임2,흰색유저2,흑색유저2",
-                "게임3,흰색유저3,흑색유저3"
+                "게임1,흰색유저1,1234",
+                "게임2,흰색유저2,1234",
+                "게임3,흰색유저3,1234"
         )
                 .map(game -> game.split(","))
                 .collect(Collectors.toList());
-        jdbcTemplate.batchUpdate("INSERT INTO game(room_name, white_username, black_username) VALUES(?,?,?)", splitsGameInfos);
+        jdbcTemplate.batchUpdate("INSERT INTO game(room_name, white_username, white_password) VALUES(?,?,?)", splitsGameInfos);
         jdbcTemplate.execute("COMMIT");
     }
 
@@ -52,17 +52,17 @@ class GameDaoTemplateTest {
         //given
         String roomName = "게임4";
         String whiteUsername = "흰색유저4";
-        String blackUsername = "흑색유저4";
+        String whitePassword = "1234";
 
         //when
-        Long newGameId = gameDao.save(new GameDto(roomName, whiteUsername, blackUsername));
+        Long newGameId = gameDao.save(new GameDto(roomName, whiteUsername, whitePassword));
         GameDto findGame = gameDao.findById(newGameId);
 
         //then
         assertThat(findGame).isNotNull();
         assertThat(findGame.getRoomName()).isEqualTo(roomName);
         assertThat(findGame.getWhiteUsername()).isEqualTo(whiteUsername);
-        assertThat(findGame.getBlackUsername()).isEqualTo(blackUsername);
+        assertThat(findGame.getWhitePassword()).isEqualTo(whitePassword);
     }
 
     @Test
@@ -71,7 +71,7 @@ class GameDaoTemplateTest {
         //given
         String roomName = "게임1";
         String whiteUsername = "흰색유저1";
-        String blackUsername = "흑색유저1";
+        String whitePassword = "1234";
         Long id = 1L;
 
         //when
@@ -80,6 +80,6 @@ class GameDaoTemplateTest {
         //then
         assertThat(findGame.getRoomName()).isEqualTo(roomName);
         assertThat(findGame.getWhiteUsername()).isEqualTo(whiteUsername);
-        assertThat(findGame.getBlackUsername()).isEqualTo(blackUsername);
+        assertThat(findGame.getWhitePassword()).isEqualTo(whitePassword);
     }
 }

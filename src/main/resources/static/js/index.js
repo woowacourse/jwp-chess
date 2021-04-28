@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.querySelector(".make-room-button").addEventListener("click", function () {
     let newRoomTitle = document.querySelector(".newRoomId").value;
-    console.log(newRoomTitle);
     fetch(indexPage.postRoomUrl + '?title=' + newRoomTitle, {
         method: 'POST',
         headers: {

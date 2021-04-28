@@ -6,11 +6,8 @@ import chess.domain.piece.Piece;
 import chess.domain.team.PiecePositions;
 import chess.domain.team.Team;
 import chess.webdao.MysqlChessDao;
-import chess.webdto.dao.DaoToPiece;
-import chess.webdto.dao.TeamConstants;
-import chess.webdto.dao.BoardInfosDto;
-import chess.webdto.dao.TeamInfoDto;
-import chess.webdto.dao.TurnDto;
+import chess.webdao.RoomDao;
+import chess.webdto.dao.*;
 import chess.webdto.view.ChessGameDto;
 import chess.webdto.view.MoveRequestDto;
 import org.springframework.stereotype.Service;
@@ -24,19 +21,22 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class SpringChessService {
     private final MysqlChessDao chessDao;
+    private final RoomDao roomDao;
 
-    public SpringChessService(MysqlChessDao chessDao) {
+
+    public SpringChessService(MysqlChessDao chessDao, RoomDao roomDao) {
         this.chessDao = chessDao;
+        this.roomDao = roomDao;
     }
 
 
     @Transactional
     public ChessGameDto startNewGame() {
         chessDao.deleteBoardByRoomId(1);
-        chessDao.deleteRoomByRoomId(1);
+        roomDao.deleteRoomByRoomId(1);
 
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
-        chessDao.createRoom(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying());
+        roomDao.createRoom(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying());
 
         long roomId = 1;
         insertBoardInfos(chessGame, roomId);
@@ -56,7 +56,7 @@ public class SpringChessService {
     }
 
     public ChessGameDto loadPreviousGame() {
-        TurnDto turnDto = chessDao.selectTurnByRoomId(1);
+        TurnDto turnDto = roomDao.selectTurnByRoomId(1);
         List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(1);
 
         final ChessGame chessGame = covertToChessGame(turnDto, boardInfos);
@@ -67,7 +67,7 @@ public class SpringChessService {
 
     @Transactional
     public ChessGameDto move(MoveRequestDto moveRequestDto) {
-        TurnDto turnDto = chessDao.selectTurnByRoomId(1);
+        TurnDto turnDto = roomDao.selectTurnByRoomId(1);
         List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(1);
 
         final ChessGame chessGame = covertToChessGame(turnDto, boardInfos);
@@ -77,7 +77,7 @@ public class SpringChessService {
         chessGame.move(Position.of(startPosition), Position.of(destPosition));
 
         chessDao.deleteBoardByRoomId(1);
-        chessDao.changeTurnByRoomId(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying(), 1);
+        roomDao.changeTurnByRoomId(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying(), 1);
         insertBoardInfos(chessGame, 1);
 
         return new ChessGameDto(chessGame);

@@ -9,18 +9,23 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * CREATE TABLE board
+ * (
+ *     board_id       BIGINT      NOT NULL AUTO_INCREMENT,
+ *     team           VARCHAR(16) NOT NULL,
+ *     position       VARCHAR(16) NOT NULL,
+ *     piece          VARCHAR(16) NOT NULL,
+ *     is_first_moved BOOLEAN     NOT NULL,
+ *     room_id        BIGINT      NOT NULL,
+ *     PRIMARY KEY (board_id),
+ *     FOREIGN KEY (room_id) REFERENCES room (room_id)
+ * );
+ */
 @Repository
 public class MysqlChessDao {
     private JdbcTemplate jdbcTemplate;
 
-    private RowMapper<TurnDto> turnMapper = (resultSet, rowNum) -> {
-        TurnDto turnDto = new TurnDto();
-
-        turnDto.setTurn(resultSet.getString("turn"));
-        turnDto.setIsPlaying(resultSet.getBoolean("is_playing"));
-
-        return turnDto;
-    };
 
     private RowMapper<BoardInfosDto> boardInfoMapper = (resultSet, rowNumber) -> {
         BoardInfosDto boardInfosDto = new BoardInfosDto();
@@ -37,31 +42,9 @@ public class MysqlChessDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void deleteRoomByRoomId(long roomId) {
-        final String sql = "DELETE FROM room";
-        this.jdbcTemplate.update(sql);
-    }
-
     public void deleteBoardByRoomId(long roomId) {
         final String sql = "DELETE FROM board WHERE room_id = (?)";
         this.jdbcTemplate.update(sql, roomId);
-    }
-
-    public void changeTurnByRoomId(String turn, boolean isPlaying, long roomId) {
-        final String sql = "UPDATE room SET turn = (?), is_playing = (?) WHERE room_id = (?)";
-        this.jdbcTemplate.update(sql, turn, isPlaying, roomId);
-    }
-
-    public TurnDto selectTurnByRoomId(long roomId) {
-        final String sql = "SELECT * FROM room WHERE room_id = (?)";
-        return this.jdbcTemplate.queryForObject(sql, turnMapper, roomId);
-    }
-
-    public long createRoom(String currentTurn, boolean isPlaying) {
-        String sql = "INSERT INTO room (turn, is_playing, name, room_id) VALUES (?, ?, ?, ?)";
-        String name = "한글도 되나";
-        long roomId = 1;
-        return this.jdbcTemplate.update(sql, currentTurn, isPlaying, name, roomId);
     }
 
     public void createBoard(TeamInfoDto teamInfoDto) {

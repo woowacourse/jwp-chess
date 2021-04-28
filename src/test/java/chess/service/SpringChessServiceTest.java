@@ -7,6 +7,7 @@ import chess.domain.piece.Rook;
 import chess.domain.team.PiecePositions;
 import chess.domain.team.Team;
 import chess.webdao.MysqlChessDao;
+import chess.webdao.RoomDao;
 import chess.webdto.dao.BoardInfosDto;
 import chess.webdto.dao.TurnDto;
 import chess.webdto.view.ChessGameDto;
@@ -32,7 +33,8 @@ class SpringChessServiceTest {
     SpringChessService springChessService;
     @Mock
     MysqlChessDao mysqlChessDao;
-
+    @Mock
+    RoomDao roomDao;
     @BeforeAll
     static void beforeAll() {
         objectMapper = new ObjectMapper();
@@ -59,7 +61,7 @@ class SpringChessServiceTest {
         TurnDto turnDto = new TurnDto();
         turnDto.setTurn("white");
         turnDto.setIsPlaying(true);
-        given(mysqlChessDao.selectTurnByRoomId(1L)).willReturn(turnDto);
+        given(roomDao.selectTurnByRoomId(1L)).willReturn(turnDto);
 
         List<BoardInfosDto> boards = new ArrayList<>();
         BoardInfosDto boardInfosDto = new BoardInfosDto();
@@ -97,7 +99,7 @@ class SpringChessServiceTest {
         TurnDto turnDto = new TurnDto();
         turnDto.setTurn("white");
         turnDto.setIsPlaying(true);
-        given(mysqlChessDao.selectTurnByRoomId(1L)).willReturn(turnDto);
+        given(roomDao.selectTurnByRoomId(1L)).willReturn(turnDto);
 
         List<BoardInfosDto> boards = new ArrayList<>();
         BoardInfosDto boardInfosDto = new BoardInfosDto();

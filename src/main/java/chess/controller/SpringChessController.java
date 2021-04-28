@@ -3,7 +3,6 @@ package chess.controller;
 import chess.service.SpringChessService;
 import chess.webdto.view.ChessGameDto;
 import chess.webdto.view.MoveRequestDto;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

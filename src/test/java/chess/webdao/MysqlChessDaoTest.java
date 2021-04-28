@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 class MysqlChessDaoTest {
     private MysqlChessDao mysqlChessDao;
+    private RoomDao roomDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -31,6 +32,7 @@ class MysqlChessDaoTest {
     @BeforeEach
     void setUp() {
         this.mysqlChessDao = new MysqlChessDao(jdbcTemplate);
+        this.roomDao = new RoomDao(jdbcTemplate);
     }
 
     @AfterEach
@@ -42,7 +44,7 @@ class MysqlChessDaoTest {
     @Test
     @DisplayName("방만들기 - 만들어진 row count 확인")
     void createRoom() {
-        long rowNum = mysqlChessDao.createRoom("white", true);
+        long rowNum = roomDao.createRoom("white", true);
         assertThat(rowNum).isEqualTo(1L);
     }
 
@@ -60,9 +62,9 @@ class MysqlChessDaoTest {
     @Test
     @DisplayName("조회 - 방번호로 현재 턴")
     void selectTurnByRoomId() {
-        mysqlChessDao.createRoom("black", true);
+        roomDao.createRoom("black", true);
 
-        TurnDto turnDto = mysqlChessDao.selectTurnByRoomId(1L);
+        TurnDto turnDto = roomDao.selectTurnByRoomId(1L);
 
         assertThat(turnDto.getTurn()).isEqualTo("black");
     }
@@ -91,14 +93,14 @@ class MysqlChessDaoTest {
     @Test
     @DisplayName("업데이트 - room 턴정보 변경")
     void changeTurnByRoomId() {
-        mysqlChessDao.createRoom("white", true);
+        roomDao.createRoom("white", true);
 
-        TurnDto before = mysqlChessDao.selectTurnByRoomId(1L);
+        TurnDto before = roomDao.selectTurnByRoomId(1L);
         assertThat(before.getTurn()).isEqualTo("white");
 
-        mysqlChessDao.changeTurnByRoomId("black", true, 1L);
+        roomDao.changeTurnByRoomId("black", true, 1L);
 
-        TurnDto after = mysqlChessDao.selectTurnByRoomId(1L);
+        TurnDto after = roomDao.selectTurnByRoomId(1L);
         assertThat(after.getTurn()).isEqualTo("black");
     }
 }

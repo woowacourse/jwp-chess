@@ -45,7 +45,8 @@ public class ChessBoard {
         return this.board.get(position).isNotBlank();
     }
 
-    public MoveResult move(MoveRoute moveRoute) {
+    public MoveResult move(Position from, Position to) {
+        MoveRoute moveRoute = createMoveRoute(from, to);
         Position fromPosition = moveRoute.getFromPosition();
         Position toPosition = moveRoute.getToPosition();
         Piece pieceToMove = this.getPieceByPosition(moveRoute.getFromPosition());
@@ -71,7 +72,7 @@ public class ChessBoard {
         }
     }
 
-    public MoveRoute createMoveRoute(Position from, Position to) {
+    private MoveRoute createMoveRoute(Position from, Position to) {
         validateDifferentPositionHasBeenChosen(from, to);
         Direction direction = Direction.of(from, to);
         List<RouteEntry> route = new ArrayList<>();

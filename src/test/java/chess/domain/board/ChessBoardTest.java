@@ -27,7 +27,7 @@ public class ChessBoardTest {
     @DisplayName("이동할 때 해당 위치에 말이 없으면 예외")
     @Test
     void throwExceptionWhenSquareHasNotPiece() {
-        assertThatThrownBy(() -> chessBoard.move(chessBoard.createMoveRoute(Position.of("a3"), Position.of("b3"))))
+        assertThatThrownBy(() -> chessBoard.move(Position.of("a3"), Position.of("b3")))
                 .isInstanceOf(NullObjectSelectionException.class)
                 .hasMessage("해당 위치에는 말이 없습니다.");
     }
@@ -36,7 +36,7 @@ public class ChessBoardTest {
     @Test
     void movePiece() {
         Piece piece = chessBoard.getPieceByPosition(Position.of("b2"));
-        chessBoard.move(chessBoard.createMoveRoute(Position.of("b2"), Position.of("b3")));
+        chessBoard.move(Position.of("b2"), Position.of("b3"));
 
         assertThat(chessBoard.getPieceByPosition(Position.of("b3"))).isEqualTo(piece);
     }

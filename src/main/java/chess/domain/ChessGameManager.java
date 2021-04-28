@@ -63,7 +63,7 @@ public class ChessGameManager {
             throw new InvalidStateException("이동 명령을 수행할 수 없습니다. - 진행중인 게임이 없습니다.");
         }
 
-        MoveResult moveResult = chessBoard.move(chessBoard.createMoveRoute(from, to));
+        MoveResult moveResult = chessBoard.move(from, to);
         if (moveResult.isCaptured()) {
             ColoredPieces opposite = findByColor(currentTurnColor.opposite());
             opposite.remove(moveResult.getCapturedPiece());

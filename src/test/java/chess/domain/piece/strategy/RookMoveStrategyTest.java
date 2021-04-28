@@ -1,67 +1,92 @@
 package chess.domain.piece.strategy;
 
-import chess.domain.board.BoardFactory;
 import chess.domain.board.ChessBoard;
-import chess.domain.position.Position;
 import chess.domain.exception.InvalidMoveStrategyException;
-import org.junit.jupiter.api.BeforeEach;
+import chess.domain.piece.Color;
+import chess.domain.piece.Piece;
+import chess.domain.piece.Rook;
+import chess.domain.position.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.stream.Stream;
+import java.util.HashMap;
 
-import static chess.domain.piece.Fixture.whiteRook;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class RookMoveStrategyTest {
     private ChessBoard chessBoard;
 
-    @BeforeEach
-    void setUp() {
-        chessBoard = BoardFactory.createBoard();
-    }
-
-    private static Stream<Arguments> rookCanMoveTest() {
-        return Stream.of(
-                Arguments.of(Position.of("a3"), Position.of("b3"), true),   // 한 File 이동
-                Arguments.of(Position.of("a3"), Position.of("h3"), true),   // 다수의 File 이동
-                Arguments.of(Position.of("a3"), Position.of("a6"), true)   // 다수의 Rank 이동외
-        );
-    }
-
-    @DisplayName("룩의 이동 가능한 경우 테스트")
     @ParameterizedTest
-    @MethodSource
-    void rookCanMoveTest(Position from, Position to, boolean expected) {
-        assertThat(whiteRook.canMove(chessBoard.createMoveRoute(from, to))).isEqualTo(expected);
+    @CsvSource({
+            "d4, d6, NORTH",
+            "d4, d2, SOUTH",
+            "d4, f4, EAST",
+            "d4, b4, WEST"})
+    void rookCanMoveTest(String from, String to, String testCaseDescription) {
+        // given
+        this.chessBoard = ChessBoard.from(new HashMap<Position, Piece>(){{
+            put(Position.of("d4"), new Rook(Color.WHITE));
+        }});
+
+        Piece pieceToMove = this.chessBoard.getPieceByPosition(Position.of(from));
+
+        // when
+        this.chessBoard.move(Position.of(from), Position.of(to));
+
+        // then
+        Piece pieceWhichHasBeenMoved = this.chessBoard.getPieceByPosition(Position.of(to));
+        assertThat(pieceWhichHasBeenMoved).isEqualTo(pieceToMove);
     }
 
-    @DisplayName("대각선 방향으로 이동하려고 한다면 예외")
+    @DisplayName("대각선 방향으로 이동하려고 한다면 예외를 발생시킨다.")
     @ParameterizedTest
-    @CsvSource({"a1, b2"})
-    void throwExceptionWhenWrongDirection(String from, String to) {
-        assertThatThrownBy(() -> whiteRook.canMove(chessBoard.createMoveRoute(Position.of(from), Position.of(to))))
+    @CsvSource({
+            "d4, c3, SOUTHWEST",
+            "d4, e3, SOUTHEAST",
+            "d4, c5, NORTHWEST",
+            "d4, e5, NORTHEAST"})
+    void throwExceptionWhenWrongDirection(String from, String to, String testCaseDescription) {
+        // given
+        this.chessBoard = ChessBoard.from(new HashMap<Position, Piece>(){{
+            put(Position.of("d4"), new Rook(Color.WHITE));
+        }});
+
+        // when, then
+        assertThatThrownBy(() -> chessBoard.move(Position.of(from), Position.of(to)))
                 .isInstanceOf(InvalidMoveStrategyException.class)
                 .hasMessage("움직일 수 없는 방향입니다.");
     }
 
-    @DisplayName("룩이 가는 길에 다른 기물이 있으면 예외")
+    @DisplayName("중간에 다른 기물이 있으면 예외를 발생시킨다.")
     @Test
     void whenBlockedThrowTest() {
-        assertThatThrownBy(() -> whiteRook.canMove(chessBoard.createMoveRoute(Position.of("a1"), Position.of("a3"))))
+        // given
+        this.chessBoard = ChessBoard.from(new HashMap<Position, Piece>(){{
+            put(Position.of("d4"), new Rook(Color.WHITE));
+            put(Position.of("e4"), new Rook(Color.BLACK));
+        }});
+
+        // when, then
+        assertThatThrownBy(() -> chessBoard.move(Position.of("d4"), Position.of("f4")))
                 .isInstanceOf(InvalidMoveStrategyException.class)
                 .hasMessage("중간에 말이 있어 행마할 수 없습니다.");
     }
 
-    @DisplayName("목적지에 같은 팀의 말이 있다면 예외")
-    @ParameterizedTest
-    @CsvSource({"a1, b1", "a1, a2"})
-    void throwExceptionWhenMoveToSameTeam(String from, String to) {
-        assertThatThrownBy(() -> whiteRook.canMove(chessBoard.createMoveRoute(Position.of(from), Position.of(to))));
+    @DisplayName("목적지에 같은 팀의 말이 있다면 예외를 발생시킨다.")
+    @Test
+    void throwExceptionWhenMoveToSameTeam() {
+        // given
+        this.chessBoard = ChessBoard.from(new HashMap<Position, Piece>(){{
+            put(Position.of("d4"), new Rook(Color.WHITE));
+            put(Position.of("e4"), new Rook(Color.WHITE));
+        }});
+
+        // when, then
+        assertThatThrownBy(() -> chessBoard.move(Position.of("d4"), Position.of("e4")))
+                .isInstanceOf(InvalidMoveStrategyException.class)
+                .hasMessage("동일한 진영의 말이 있어서 행마할 수 없습니다.");
     }
 }

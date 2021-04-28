@@ -27,4 +27,10 @@ public class LobbyService {
     public Optional<String> findGame(String title) {
         return chessRepository.findGame(title);
     }
+
+    public void verifyDuplicateTitleInRooms(String title) {
+        if (chessRepository.findGame(title).isPresent()) {
+            throw new IllegalArgumentException("같은 이름으로 등록된 방이 있습니다.");
+        }
+    }
 }

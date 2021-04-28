@@ -24,9 +24,7 @@ public class LobbyController {
 
     @PostMapping("/game")
     public ResponseEntity<String> newGame(@RequestBody @Valid TitleDto titleDto) {
-        if (lobbyService.findGame(titleDto.getTitle()).isPresent()) {
-            throw new IllegalArgumentException("같은 이름으로 등록된 방이 있습니다.");
-        }
+        lobbyService.verifyDuplicateTitleInRooms(titleDto.getTitle());
         return ResponseEntity.ok(lobbyService.newGame(titleDto.getTitle()));
     }
 

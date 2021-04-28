@@ -28,7 +28,7 @@ public class BishopMoveStrategyTest {
 
     private static Stream<Arguments> bishopCanMoveTest() {
         return Stream.of(
-//                Arguments.of(Position.of("a3"), Position.of("b4"), true),   // 한 대각선 이동
+                Arguments.of(Position.of("a3"), Position.of("b4"), true),   // 한 대각선 이동
                 Arguments.of(Position.of("a3"), Position.of("d6"), true),   // 다수의 대각선 이동
                 Arguments.of(Position.of("c5"), Position.of("a3"), true)   // 다수의 Rank 이동외
         );
@@ -50,7 +50,7 @@ public class BishopMoveStrategyTest {
                 .hasMessage("움직일 수 없는 방향입니다.");
     }
 
-    @DisplayName("기물이 가는 길에 다른 기물이 있으면 예외")
+    @DisplayName("기물이 가는 길에 다른 기물이 있으면 예외를 발생시킨다.")
     @Test
     void whenBlockedThrowTest() {
         assertThatThrownBy(() -> whiteBishop.canMove(chessBoard.createMoveRoute(Position.of("c1"), Position.of("e3"))))
@@ -58,7 +58,7 @@ public class BishopMoveStrategyTest {
                 .hasMessage("중간에 말이 있어 행마할 수 없습니다.");
     }
 
-    @DisplayName("목적지에 같은 팀의 말이 있다면 예외")
+    @DisplayName("목적지에 같은 팀의 말이 있다면 예외를 발생시킨다.")
     @ParameterizedTest
     @CsvSource({"c1, d2", "c1, b2"})
     void throwExceptionWhenMoveToSameTeam(String from, String to) {

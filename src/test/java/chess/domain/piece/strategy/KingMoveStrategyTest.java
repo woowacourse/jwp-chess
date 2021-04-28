@@ -35,14 +35,14 @@ class KingMoveStrategyTest {
         );
     }
 
-    @DisplayName("의 이동 가능한 경우 테스트")
+    @DisplayName("킹의 이동 가능한 경우 테스트")
     @ParameterizedTest
     @MethodSource
     void kingCanMoveTest(Position from, Position to, boolean expected) {
         assertThat(whiteKing.canMove(chessBoard.createMoveRoute(from, to))).isEqualTo(expected);
     }
 
-    @DisplayName("어떠한 기물도 움직일 수 없는 방향으로 이동하려고 한다면 예외")
+    @DisplayName("어떠한 기물도 움직일 수 없는 방향으로 이동하려고 한다면 예외를 발생한다.")
     @ParameterizedTest
     @CsvSource({"h2, g5"})
     void throwExceptionWhenWrongDirection(String from, String to) {
@@ -50,7 +50,7 @@ class KingMoveStrategyTest {
                 .isInstanceOf(NoSuchDirectionException.class);
     }
 
-    @DisplayName("킹 기물이 2칸 이상 움직이면 예외")
+    @DisplayName("킹이 2칸 이상 움직이면 예외를 발생한다.")
     @Test
     void whenBlockedThrowTest() {
         assertThatThrownBy(() -> whiteKing.canMove(chessBoard.createMoveRoute(Position.of("d3"), Position.of("d5"))))
@@ -58,7 +58,7 @@ class KingMoveStrategyTest {
                 .hasMessage("킹이 움직일 수 있는 범위를 벗어났습니다.");
     }
 
-    @DisplayName("목적지에 같은 팀의 말이 있다면 예외")
+    @DisplayName("목적지에 같은 팀의 말이 있다면 예외를 발생한다.")
     @ParameterizedTest
     @CsvSource({"d1, e1", "d1, d2"})
     void throwExceptionWhenMoveToSameTeam(String from, String to) {

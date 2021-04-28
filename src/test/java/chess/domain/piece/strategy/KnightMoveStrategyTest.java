@@ -41,7 +41,7 @@ class KnightMoveStrategyTest {
         assertThat(whiteKnight.canMove(chessBoard.createMoveRoute(from, to))).isEqualTo(expected);
     }
 
-    @DisplayName("어떠한 기물도 움직일 수 없는 방향으로 이동하려고 한다면 예외")
+    @DisplayName("어떠한 기물도 움직일 수 없는 방향으로 이동하려고 한다면 예외를 던진다.")
     @ParameterizedTest
     @CsvSource({"a1, b8"})
     void throwExceptionWhenWrongDirection(String from, String to) {
@@ -50,7 +50,7 @@ class KnightMoveStrategyTest {
                 .hasMessage("움직일 수 없는 방향입니다.");
     }
 
-    @DisplayName("목적지에 같은 팀의 말이 있다면 예외")
+    @DisplayName("목적지에 같은 팀의 말이 있다면 예외를 던진다.")
     @ParameterizedTest
     @CsvSource({"c3, b1", "c3, d1"})
     void throwExceptionWhenMoveToSameTeam(String from, String to) {

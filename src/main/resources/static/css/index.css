@@ -2,6 +2,10 @@
     text-align: center;
 }
 
+#roomId {
+    display: none;
+}
+
 .chess-board-cell {
     display: grid;
     grid-template-columns: repeat(8, 80px);
@@ -9,6 +13,10 @@
     position: absolute;
     left: 548px;
     top: 57px;
+}
+
+.clicked {
+    background-color: beige;
 }
 
 .chess-board-image {

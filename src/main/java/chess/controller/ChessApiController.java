@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import chess.domain.chessgame.ChessGame;
@@ -29,6 +30,11 @@ public class ChessApiController {
     @GetMapping(value = "/rooms")
     public RoomsResponseDto getRooms() {
         return new RoomsResponseDto(chessService.getRooms());
+    }
+
+    @PostMapping(value = "/room")
+    public int postRoom(@RequestParam String title) {
+        return chessService.postRooms(title);
     }
 
     @PostMapping(value = "/pieces/{roomId}")

@@ -2,6 +2,7 @@ package chess.exception;
 
 import java.sql.SQLException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,11 +16,11 @@ public class ChessAdvice {
 
     @ExceptionHandler(SQLException.class)
     public ResponseEntity<String> sqlExceptionHandle(SQLException e) {
-        return ResponseEntity.badRequest().body("sql 에러가 발생했습니다.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("sql 에러가 발생했습니다.");
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> runtimeExceptionHandle(RuntimeException e) {
-        return ResponseEntity.badRequest().body("프로그램 실행 중 문제가 발생햇습니다.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("프로그램 실행 중 문제가 발생했습니다.");
     }
 }

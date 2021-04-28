@@ -15,7 +15,7 @@ import chess.dto.request.MoveRequestDto;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource("classpath:application-test.properties")
+@TestPropertySource("classpath:application.properties")
 public class ChessControllerTest {
 
     @LocalServerPort
@@ -26,7 +26,7 @@ public class ChessControllerTest {
         RestAssured.port = port;
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/api/pieces/1")
+            .when().post("/api/room?title=1")
             .then().log().all();
     }
 
@@ -50,7 +50,7 @@ public class ChessControllerTest {
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body("roomIds.size()", is(1));
+            .body("roomNames.size()", is(1));
     }
 
     @DisplayName("기물 가져오는거 확인")

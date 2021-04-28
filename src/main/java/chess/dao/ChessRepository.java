@@ -34,16 +34,16 @@ public class ChessRepository {
         return boardInfo;
     }
 
-    public List<Integer> findAllRoomId() {
-        String sql = "select id from room";
+    public List<String> findAllRoomName() {
+        String sql = "select title from room";
 
         return jdbcTemplate.query(sql,
-            (resultSet, rowNum) -> resultSet.getInt("id"));
+            (resultSet, rowNum) -> resultSet.getString("title"));
     }
 
-    public void insertRoom(int roomId) {
-        String sql = "insert into room (id, turn, playing_flag) values (?, 'WHITE', true)";
-        jdbcTemplate.update(sql, roomId);
+    public void insertRoom(String title) {
+        String sql = "insert into room (title, turn, playing_flag) values (?, 'WHITE', true)";
+        jdbcTemplate.update(sql, title);
     }
 
     public String findTurnByRoomId(int roomId) {
@@ -88,5 +88,14 @@ public class ChessRepository {
     public void deleteRoomById(int roomId) {
         String sql = "delete from room where id=?";
         jdbcTemplate.update(sql, roomId);
+    }
+
+    public String findIdByTitle(String roomTitle) {
+        String sql = "select id from room where title=?";
+        try {
+            return jdbcTemplate.queryForObject(sql, String.class, roomTitle);
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 }

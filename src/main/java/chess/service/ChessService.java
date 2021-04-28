@@ -28,7 +28,6 @@ public class ChessService {
         Map<Position, Piece> boardInfo = chessRepository.findPiecesByRoomId(roomId);
 
         if (CollectionUtils.isEmpty(boardInfo)) {
-            chessRepository.insertRoom(roomId);
             return makeNewBoard(roomId);
         }
 
@@ -73,8 +72,16 @@ public class ChessService {
     }
 
     @Transactional
-    public List<Integer> getRooms() {
-        return chessRepository.findAllRoomId();
+    public List<String> getRooms() {
+        return chessRepository.findAllRoomName();
+    }
+
+    @Transactional
+    public int postRooms(String title) {
+        if (chessRepository.findIdByTitle(title) == null) {
+            chessRepository.insertRoom(title);
+        }
+        return Integer.parseInt(chessRepository.findIdByTitle(title));
     }
 
     private ChessGame makeChessGame(int roomId) {

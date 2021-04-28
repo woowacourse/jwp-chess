@@ -5,6 +5,7 @@ import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.user.GameUsers;
 import chess.chessgame.domain.room.user.User;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static chess.chessgame.domain.room.game.board.piece.attribute.Color.BLACK;
@@ -15,6 +16,10 @@ public class Room {
     private final String roomName;
     private final ChessGameManager gameManager;
     private final GameUsers users;
+
+    public Room(long roomId, String roomName, ChessGameManager gameManager, User whiteUser) {
+        this(roomId, roomName, gameManager, Arrays.asList(whiteUser));
+    }
 
     public Room(long roomId, String roomName, ChessGameManager gameManager, List<User> users) {
         this(roomId, roomName, gameManager, new GameUsers(users));

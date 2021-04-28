@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -19,20 +18,18 @@ public class RoomDao {
         long roomId = rs.getLong("room_id");
         long gameId = rs.getLong("game_id");
         String roomName = rs.getString("room_name");
-        long whiteUserId = rs.getLong("user1");
-        long blackUserId = rs.getLong("user2");
 
-        return new RoomDto(roomId, roomName, gameId, blackUserId, whiteUserId);
+        return new RoomDto(roomId, roomName, gameId);
     };
 
     public RoomDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Room insertRoom(Room entity) {
+    public RoomDto insertRoom(Room entity) {
         String query =
-                "INSERT INTO chess.room (game_id, room_name, user1) VALUES " +
-                        "(?, ?, ?)";
+                "INSERT INTO chess.room (game_id, room_name) VALUES " +
+                        "(?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection ->
@@ -40,14 +37,13 @@ public class RoomDao {
                     PreparedStatement ps = connection.prepareStatement(query, new String[]{"room_id"});
                     ps.setLong(1, entity.getGameManager().getId());
                     ps.setString(2, entity.getRoomName());
-                    ps.setLong(3, entity.getWhiteUser().getUserId());
                     return ps;
                 }
                 , keyHolder
         );
 
-        return new Room(keyHolder.getKey().longValue(), entity.getRoomName(),
-                entity.getGameManager(), Arrays.asList(entity.getWhiteUser()));
+        return new RoomDto(keyHolder.getKey().longValue(), entity.getRoomName(),
+                entity.getGameManager().getId());
     }
 
     public List<RoomDto> findAllActiveRoom() {

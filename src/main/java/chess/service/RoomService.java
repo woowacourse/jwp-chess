@@ -9,7 +9,6 @@ import chess.chessgame.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static chess.chessgame.domain.room.game.board.piece.attribute.Color.BLACK;
@@ -30,7 +29,9 @@ public class RoomService {
     @Transactional
     public Room createRoom(String roomName, String userPassword) {
         User whiteUser = userRepository.createUser(WHITE, userPassword);
-        return roomRepository.createRoom(roomName, chessGameManagerRepository.create(), Arrays.asList(whiteUser));
+        Room room = roomRepository.createRoom(roomName, chessGameManagerRepository.create(), whiteUser);
+        userRepository.updateRoomId(whiteUser, room.getRoomId());
+        return room;
     }
 
     public List<Room> findAllRunningRoom() {
@@ -52,6 +53,8 @@ public class RoomService {
             return userRepository.matchPasswordUser(roomId, password);
         }
         User blackUser = userRepository.createUser(BLACK, password);
+        userRepository.updateRoomId(blackUser, roomId);
+
         room.enterUser(blackUser);
         roomRepository.updateBlackUser(room);
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserDao {
@@ -19,11 +20,19 @@ public class UserDao {
         long userId = rs.getLong("user_id");
         String password = rs.getString("password");
         String color = rs.getString("color");
-        return new User(userId, Color.of(color), password);
+        long roomId = rs.getLong("room_id");
+        return new User(userId, Color.of(color), password, roomId);
     };
 
     public UserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public void updateRoomId(long userId, long roomId) {
+        String query =
+                "UPDATE chess.user SET room_id = ? WHERE user_id = ?";
+
+        jdbcTemplate.update(query, roomId, userId);
     }
 
     public User insertUser(User entity) {
@@ -42,7 +51,7 @@ public class UserDao {
                 , keyHolder
         );
 
-        return new User(keyHolder.getKey().longValue(), entity.getColor(), entity.getPassword());
+        return new User(keyHolder.getKey().longValue(), entity.getColor(), entity.getPassword(), entity.getRoomId());
     }
 
     public User findByUserId(long userId) {
@@ -64,5 +73,14 @@ public class UserDao {
                         "WHERE room_id = ?";
 
         return jdbcTemplate.query(query, rowMapper, roomId);
+    }
+
+    public Optional<User> findByRoomIdAndColor(long roomId, Color color) {
+        String query =
+                "SELECT * " +
+                        "FROM chess.user " +
+                        "WHERE room_id = ? AND color = ?";
+
+        return jdbcTemplate.query(query, rowMapper, roomId, color.name()).stream().findAny();
     }
 }

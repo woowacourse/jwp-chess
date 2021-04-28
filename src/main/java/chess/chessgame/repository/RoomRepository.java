@@ -7,7 +7,7 @@ import chess.chessgame.domain.room.user.User;
 import java.util.List;
 
 public interface RoomRepository {
-    Room createRoom(String roomName, ChessGameManager chessGameManager, List<User> users);
+    Room createRoom(String roomName, ChessGameManager chessGameManager, User whiteUser);
 
     void updateBlackUser(Room room);
 

@@ -6,10 +6,14 @@ import chess.chessgame.domain.room.game.ChessGameManagerFactory;
 import chess.chessgame.domain.room.user.User;
 import chess.chessgame.repository.RoomRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static chess.chessgame.domain.room.game.board.piece.attribute.Color.BLACK;
+import static chess.chessgame.domain.room.game.board.piece.attribute.Color.WHITE;
 import static java.util.stream.Collectors.toList;
 
 @Repository
@@ -26,9 +30,12 @@ public class RoomRepositoryImpl implements RoomRepository {
         this.chessDao = chessDao;
     }
 
+    @Transactional
     @Override
-    public Room createRoom(String roomName, ChessGameManager chessGameManager, List<User> users) {
-        return roomDao.insertRoom(new Room(EMPTY_ID, roomName, chessGameManager, users));
+    public Room createRoom(String roomName, ChessGameManager chessGameManager, User whiteUser) {
+        RoomDto roomDto = roomDao.insertRoom(new Room(EMPTY_ID, roomName, chessGameManager, whiteUser));
+        userDao.updateRoomId(whiteUser.getUserId(), roomDto.getRoomId());
+        return createRoomFrom(roomDto);
     }
 
     @Override
@@ -58,13 +65,12 @@ public class RoomRepositoryImpl implements RoomRepository {
     private Room createRoomFrom(RoomDto roomDto) {
         ArrayList<User> users = new ArrayList<>();
 
-        User whiteUser = userDao.findByUserId(roomDto.getWhiteUserId());
+        User whiteUser = userDao.findByRoomIdAndColor(roomDto.getRoomId(), WHITE)
+                .orElseThrow(() -> new IllegalStateException("흰색 유저가 없습니다."));
         users.add(whiteUser);
 
-        if (roomDto.getBlackUserId() != EMPTY_ID) {
-            User blackUser = userDao.findByUserId(roomDto.getBlackUserId());
-            users.add(blackUser);
-        }
+        Optional<User> optionalBlackUser = userDao.findByRoomIdAndColor(roomDto.getRoomId(), BLACK);
+        optionalBlackUser.ifPresent(users::add);
 
         ChessGameManager chessGame = chessDao.findById(roomDto.getGameId()).map(ChessGameManagerFactory::loadingGame)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 게임이 없습니다"));

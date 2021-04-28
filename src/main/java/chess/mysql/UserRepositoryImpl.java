@@ -21,6 +21,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User updateRoomId(User user, long roomId) {
+        userDao.updateRoomId(user.getUserId(), roomId);
+        return user;
+    }
+
+    @Override
     public User matchPasswordUser(long roomId, String password) {
         return userDao.findByRoomId(roomId).stream()
                 .filter(user -> user.getPassword().equals(password))

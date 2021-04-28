@@ -39,8 +39,8 @@ public class ChessGame {
         turn = turn.getOppositeColor();
     }
 
-    public boolean isOver() {
-        return chessBoard.isOver();
+    public boolean isGameOver() {
+        return chessBoard.isGameOver();
     }
 
     public void validateTurn(Position source) {

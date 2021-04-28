@@ -21,7 +21,7 @@ async function showRoomList() {
         '/games'
     )
     response = await response.json()
-    rooms = response.roomList
+    rooms = response.gameList
     for (const room of rooms) {
         $roomList.insertAdjacentHTML('beforeend',
             await roomTemplate(room)

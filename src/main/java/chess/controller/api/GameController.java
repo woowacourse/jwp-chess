@@ -29,7 +29,7 @@ public class GameController {
 
     @PostMapping("/{id}/finish")
     public ResponseEntity<Void> finish(@PathVariable Long id) {
-        gameService.finish(id);
+        gameService.terminateGame(id);
         return ResponseEntity.ok().build();
     }
 

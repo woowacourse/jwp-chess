@@ -43,7 +43,6 @@ public enum Type {
     }
 
     public static Type of(char piece) {
-        System.out.println(piece);
         return Arrays.stream(values())
                 .filter(value -> value.name.equals(String.valueOf(piece).toUpperCase()))
                 .findAny()

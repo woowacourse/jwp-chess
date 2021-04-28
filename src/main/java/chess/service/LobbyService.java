@@ -9,7 +9,8 @@ import java.util.Optional;
 
 @Service
 public class LobbyService {
-    ChessRepository chessRepository;
+
+    private final ChessRepository chessRepository;
 
     public LobbyService(ChessRepository chessRepository) {
         this.chessRepository = chessRepository;

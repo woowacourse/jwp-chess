@@ -53,6 +53,6 @@ public class ChessRoomController {
     public ResponseEntity<ChessGameDto> exit(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
         ChessGameDto chessGameDto = chessRoomService.exitReturnEndChessGame(roomRequestDto, cookie);
         simpMessagingTemplate.convertAndSend("/topic/game/" + roomRequestDto.getId(), chessGameDto);
-        return ResponseEntity.ok().body(chessGameDto);
+        return ResponseEntity.ok(chessGameDto);
     }
 }

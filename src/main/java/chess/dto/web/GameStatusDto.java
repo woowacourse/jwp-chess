@@ -23,23 +23,12 @@ public class GameStatusDto {
     private String winner;
 
     public GameStatusDto() {
-
     }
 
     public GameStatusDto(ChessGame chessGame) {
         gameState = encodedGameState(chessGame.gameState());
         turn = encodedTeam(chessGame.currentTurn());
         winner = winnerByGameStatus(chessGame);
-    }
-
-    private String encodedGameState(GameState gameState) {
-        if (gameState instanceof Ready) {
-            return READY;
-        }
-        if (gameState instanceof Running) {
-            return RUNNING;
-        }
-        return FINISH;
     }
 
     private static String winnerByGameStatus(ChessGame chessGame) {
@@ -57,6 +46,16 @@ public class GameStatusDto {
             return WHITE;
         }
         return NONE;
+    }
+
+    private String encodedGameState(GameState gameState) {
+        if (gameState instanceof Ready) {
+            return READY;
+        }
+        if (gameState instanceof Running) {
+            return RUNNING;
+        }
+        return FINISH;
     }
 
     private Team toWinnerEntity() {

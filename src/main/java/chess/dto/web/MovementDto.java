@@ -6,7 +6,6 @@ public class MovementDto {
     private String destination;
 
     public MovementDto() {
-
     }
 
     public String getSource() {

@@ -6,7 +6,6 @@ import chess.domain.chessgame.ChessGame;
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
 import chess.dto.web.PointDto;
-import chess.dto.web.PointsDto;
 import chess.dto.web.RoomDto;
 import chess.dto.web.UsersInRoomDto;
 import chess.service.ChessService;
@@ -56,9 +55,8 @@ public class MockChessService implements ChessService {
     }
 
     @Override
-    public PointsDto movablePoints(String id, String point) {
-        return new PointsDto(
-            new ArrayList<>(Collections.singletonList(new PointDto(Point.of("a1")))));
+    public List<PointDto> movablePoints(String id, String point) {
+        return new ArrayList<>(Collections.singletonList(new PointDto(Point.of("a1"))));
     }
 
     @Override

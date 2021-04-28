@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -12,7 +13,6 @@ import chess.dto.web.RoomDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
-import org.eclipse.jetty.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,8 @@ public class SpringChessApiControllerTest {
 
         mockMvc
             .perform(post("/rooms").contentType(MediaType.APPLICATION_JSON_VALUE).content(content))
-            .andExpect(status().is(HttpStatus.CREATED_201))
+            .andExpect(status().isCreated())
+            .andExpect(header().string("Location", "/rooms/1"))
             .andExpect(jsonPath("$.id").value("1"))
             .andExpect(jsonPath("$.name").value("roomName"))
             .andExpect(jsonPath("$.white").value("white"))
@@ -85,7 +86,7 @@ public class SpringChessApiControllerTest {
             put("/rooms/1/game-status")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(body)))
-            .andExpect(status().is(HttpStatus.CREATED_201))
+            .andExpect(status().isOk())
             .andExpect(jsonPath("$.board").hasJsonPath());
     }
 
@@ -99,7 +100,7 @@ public class SpringChessApiControllerTest {
             put("/rooms/1/game-status")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(body)))
-            .andExpect(status().is(HttpStatus.CREATED_201))
+            .andExpect(status().isOk())
             .andExpect(jsonPath("$.board").hasJsonPath());
     }
 
@@ -107,13 +108,13 @@ public class SpringChessApiControllerTest {
     @Test
     void closeRoom() throws Exception {
         Map<String, String> body = new HashMap<>();
-        body.put("id", "1");
+        body.put("status", "closed");
 
         mockMvc.perform(
-            put("/rooms")
+            put("/rooms/1/status")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(body)))
-            .andExpect(status().is(HttpStatus.CREATED_201));
+            .andExpect(status().isOk());
     }
 
     @DisplayName("이동 가능한 위치")
@@ -121,8 +122,8 @@ public class SpringChessApiControllerTest {
     void movablePoints() throws Exception {
         mockMvc.perform(get("/rooms/1/points/a1/movable-points"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.points.[0].x").value("a"))
-            .andExpect(jsonPath("$.points.[0].y").value("1"));
+            .andExpect(jsonPath("$.[0].x").value("a"))
+            .andExpect(jsonPath("$.[0].y").value("1"));
     }
 
     @DisplayName("말 이동")
@@ -135,9 +136,9 @@ public class SpringChessApiControllerTest {
         String content = objectMapper.writeValueAsString(body);
 
         mockMvc.perform(
-            post("/rooms/1/movement").contentType(MediaType.APPLICATION_JSON_VALUE)
+            put("/rooms/1/movement").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(content))
-            .andExpect(status().is(HttpStatus.CREATED_201))
+            .andExpect(status().isOk())
             .andExpect(jsonPath("$.board").hasJsonPath());
     }
 }

@@ -16,13 +16,13 @@ document.querySelector(".rooms").addEventListener("click", async (event) => {
   if (event.target.classList.contains("remove-room")) {
     const idToBeRemoved = event.target.closest(".room").getAttribute(
         "id").toString();
-    const response = await fetch("./rooms", {
-      method: "PUT",
+    const response = await fetch("./rooms/" + idToBeRemoved + "/status", {
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       },
+      method: "PUT",
       body: JSON.stringify({
-        id: idToBeRemoved
+        status: "closed"
       })
     });
     if (response.ok) {
@@ -50,6 +50,11 @@ document.querySelector(".create-room").addEventListener("submit",
       const white = document.querySelector("#white");
       const black = document.querySelector("#black");
 
+      if (white.value === black.value) {
+        alert("white와 black의 이름은 달라야 합니다.");
+        return;
+      }
+
       if (isValueLengthIsLongerThan(roomName.value, 2)
           && isValueLengthIsLongerThan(white.value, 2)
           && isValueLengthIsLongerThan(black.value, 2)) {
@@ -65,7 +70,6 @@ document.querySelector(".create-room").addEventListener("submit",
           })
         });
         const result = await response.json();
-        console.log(result)
         if (response.ok) {
           window.location.href = "./rooms/" + result["id"];
         } else {

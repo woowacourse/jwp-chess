@@ -5,25 +5,28 @@ import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class SpringPlayLogDao implements PlayLogDao {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
+    private final ObjectMapper objectMapper;
     private final JdbcTemplate jdbcTemplate;
 
-    public SpringPlayLogDao(JdbcTemplate jdbcTemplate) {
+    @Autowired
+    public SpringPlayLogDao(ObjectMapper objectMapper,
+        JdbcTemplate jdbcTemplate) {
+        this.objectMapper = objectMapper;
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public void insert(BoardDto boardDto, GameStatusDto gameStatusDto, String roomId) {
         String query = "INSERT INTO play_log (board, game_status, room_id) VALUES (?, ?, ?)";
         try {
-            jdbcTemplate.update(query, OBJECT_MAPPER.writeValueAsString(boardDto),
-                OBJECT_MAPPER.writeValueAsString(gameStatusDto), roomId);
+            jdbcTemplate.update(query, objectMapper.writeValueAsString(boardDto),
+                objectMapper.writeValueAsString(gameStatusDto), roomId);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("직렬화에 실패했습니다.");
         }
@@ -37,7 +40,7 @@ public class SpringPlayLogDao implements PlayLogDao {
             (resultSet, rowNum) -> {
                 String boardJson = resultSet.getString(1);
                 try {
-                    return OBJECT_MAPPER.readValue(boardJson, BoardDto.class);
+                    return objectMapper.readValue(boardJson, BoardDto.class);
                 } catch (JsonProcessingException e) {
                     throw new IllegalArgumentException("역직렬화에 실패했습니다.");
                 }
@@ -53,7 +56,7 @@ public class SpringPlayLogDao implements PlayLogDao {
             (resultSet, rowNum) -> {
                 String statusJson = resultSet.getString(1);
                 try {
-                    return OBJECT_MAPPER.readValue(statusJson, GameStatusDto.class);
+                    return objectMapper.readValue(statusJson, GameStatusDto.class);
                 } catch (JsonProcessingException e) {
                     throw new IllegalArgumentException("역직렬화에 실패했습니다.");
                 }

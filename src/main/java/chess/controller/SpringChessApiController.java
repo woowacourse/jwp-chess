@@ -3,11 +3,14 @@ package chess.controller;
 import chess.dto.web.BoardDto;
 import chess.dto.web.GameStatusDto;
 import chess.dto.web.MovementDto;
-import chess.dto.web.PointsDto;
+import chess.dto.web.PointDto;
 import chess.dto.web.RoomDto;
+import chess.dto.web.RoomStatusDto;
 import chess.dto.web.UsersInRoomDto;
 import chess.service.ChessService;
-import org.eclipse.jetty.http.HttpStatus;
+import java.net.URI;
+import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,13 +32,19 @@ public class SpringChessApiController {
 
     @PostMapping
     private ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto) {
-        return ResponseEntity.status(HttpStatus.CREATED_201).body(chessService.create(roomDto));
+        RoomDto responseBody = chessService.create(roomDto);
+        return ResponseEntity.created(URI.create("/rooms/" + responseBody.getId()))
+            .body(responseBody);
     }
 
-    @PutMapping
-    private ResponseEntity<Object> closeRoom(@RequestBody RoomDto roomDto) {
-        chessService.close(roomDto.getId());
-        return ResponseEntity.status(HttpStatus.CREATED_201).build();
+    @PutMapping("{id}/status")
+    private ResponseEntity<Void> closeRoom(@PathVariable String id,
+        @RequestBody RoomStatusDto roomStatusDto) {
+        if (roomStatusDto.getStatus().equals("closed")) {
+            chessService.close(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @GetMapping("{id}/statistics")
@@ -49,24 +58,26 @@ public class SpringChessApiController {
     }
 
     @PutMapping("{id}/game-status")
-    private ResponseEntity<BoardDto> updateStatus(@PathVariable String id, @RequestBody GameStatusDto gameStatusDto) {
+    private ResponseEntity<BoardDto> updateStatus(@PathVariable String id,
+        @RequestBody GameStatusDto gameStatusDto) {
         if (gameStatusDto.getGameState().equals("Running")) {
-            return ResponseEntity.status(HttpStatus.CREATED_201).body(chessService.start(id));
+            return ResponseEntity.ok(chessService.start(id));
         }
         if (gameStatusDto.getGameState().equals("Finished")) {
-            return ResponseEntity.status(HttpStatus.CREATED_201).body(chessService.exit(id));
+            return ResponseEntity.ok(chessService.exit(id));
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST_400).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @GetMapping("/{id}/points/{point}/movable-points")
-    private PointsDto movablePoints(@PathVariable String id, @PathVariable String point) {
+    @GetMapping("{id}/points/{point}/movable-points")
+    private List<PointDto> movablePoints(@PathVariable String id, @PathVariable String point) {
         return chessService.movablePoints(id, point);
     }
 
-    @PostMapping("{id}/movement")
-    private ResponseEntity<BoardDto> move(@PathVariable String id, @RequestBody MovementDto movementDto) {
-        return ResponseEntity.status(HttpStatus.CREATED_201)
-            .body(chessService.move(id, movementDto.getSource(), movementDto.getDestination()));
+    @PutMapping("{id}/movement")
+    private ResponseEntity<BoardDto> move(@PathVariable String id,
+        @RequestBody MovementDto movementDto) {
+        return ResponseEntity
+            .ok(chessService.move(id, movementDto.getSource(), movementDto.getDestination()));
     }
 }

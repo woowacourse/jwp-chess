@@ -10,7 +10,6 @@ public class RoomDto {
     private String black;
 
     public RoomDto() {
-
     }
 
     public RoomDto(String id, String name, String white, String black) {
@@ -39,11 +38,11 @@ public class RoomDto {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

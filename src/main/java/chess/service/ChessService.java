@@ -8,7 +8,7 @@ import chess.domain.team.PiecePosition;
 import chess.domain.team.Score;
 import chess.domain.team.Team;
 import chess.webdao.PiecePositionDaoConverter;
-import chess.webdao.SpringChessGameDao;
+import chess.webdao.ChessGameDao;
 import chess.webdto.ChessGameDto;
 import chess.webdto.ChessGameTableDto;
 import chess.webdto.GameRoomDto;
@@ -24,41 +24,41 @@ import static chess.service.TeamFormat.WHITE_TEAM;
 
 @Service
 @Transactional
-public class SpringChessService {
-    private final SpringChessGameDao springChessGameDao;
+public class ChessService {
+    private final ChessGameDao chessGameDao;
 
-    public SpringChessService(SpringChessGameDao springChessGameDao) {
-        this.springChessGameDao = springChessGameDao;
+    public ChessService(ChessGameDao chessGameDao) {
+        this.chessGameDao = chessGameDao;
     }
 
     public void createUser(final String id, final String password) {
-        springChessGameDao.createUserInfo(id, password);
+        chessGameDao.createUserInfo(id, password);
     }
 
     public boolean loginUser(final String id, final String password) {
-        String userPassword = springChessGameDao.getUserPasswordById(id);
+        String userPassword = chessGameDao.getUserPasswordById(id);
         return userPassword.equals(password);
     }
 
     public GameRoomDto createGameRoom(final String roomName) {
-        final int roomId = springChessGameDao.createGameRoom(roomName);
+        final int roomId = chessGameDao.createGameRoom(roomName);
         return new GameRoomDto(roomId, roomName);
     }
 
     public GameRoomListDto loadGameRooms() {
-        final List<GameRoomDto> gameRooms = springChessGameDao.loadGameRooms();
+        final List<GameRoomDto> gameRooms = chessGameDao.loadGameRooms();
         return new GameRoomListDto(gameRooms);
     }
 
     public ChessGameDto createChessGame(final int roomId) {
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
 
-        springChessGameDao.createChessGameInfo(roomId, WHITE_TEAM.asDaoFormat(), chessGame.isPlaying());
+        chessGameDao.createChessGameInfo(roomId, WHITE_TEAM.asDaoFormat(), chessGame.isPlaying());
 
-        springChessGameDao.createTeamInfo(roomId, WHITE_TEAM.asDaoFormat(),
+        chessGameDao.createTeamInfo(roomId, WHITE_TEAM.asDaoFormat(),
                 PiecePositionDaoConverter.asDao(chessGame.currentWhitePiecePosition()));
 
-        springChessGameDao.createTeamInfo(roomId, BLACK_TEAM.asDaoFormat(),
+        chessGameDao.createTeamInfo(roomId, BLACK_TEAM.asDaoFormat(),
                 PiecePositionDaoConverter.asDao(chessGame.currentBlackPiecePosition()));
 
         return ChessGameDto.of(roomId, currentTurnTeamAsString(chessGame), chessGame);
@@ -73,25 +73,25 @@ public class SpringChessService {
         final ChessGame chessGame = readChessGameByRoomId(roomId);
         chessGame.move(Position.of(start), Position.of(destination));
 
-        springChessGameDao.updateChessGameInfo(roomId, currentTurnTeamAsString(chessGame), chessGame.isPlaying());
+        chessGameDao.updateChessGameInfo(roomId, currentTurnTeamAsString(chessGame), chessGame.isPlaying());
 
-        springChessGameDao.updateTeamInfo(roomId, WHITE_TEAM.asDaoFormat(),
+        chessGameDao.updateTeamInfo(roomId, WHITE_TEAM.asDaoFormat(),
                 PiecePositionDaoConverter.asDao(chessGame.currentWhitePiecePosition()));
 
-        springChessGameDao.updateTeamInfo(roomId, BLACK_TEAM.asDaoFormat(),
+        chessGameDao.updateTeamInfo(roomId, BLACK_TEAM.asDaoFormat(),
                 PiecePositionDaoConverter.asDao(chessGame.currentBlackPiecePosition()));
 
         return ChessGameDto.of(roomId, currentTurnTeamAsString(chessGame), chessGame);
     }
 
     private ChessGame readChessGameByRoomId(int roomId) {
-        final String blackTeamPieceInfo = springChessGameDao.readTeamInfo(roomId, BLACK_TEAM.asDaoFormat());
+        final String blackTeamPieceInfo = chessGameDao.readTeamInfo(roomId, BLACK_TEAM.asDaoFormat());
         final Team blackTeam = generateTeam(blackTeamPieceInfo, BLACK_TEAM.asDaoFormat());
 
-        final String whiteTeamPieceInfo = springChessGameDao.readTeamInfo(roomId, WHITE_TEAM.asDaoFormat());
+        final String whiteTeamPieceInfo = chessGameDao.readTeamInfo(roomId, WHITE_TEAM.asDaoFormat());
         final Team whiteTeam = generateTeam(whiteTeamPieceInfo, WHITE_TEAM.asDaoFormat());
 
-        final ChessGameTableDto chessGameTableDto = springChessGameDao.readChessGameInfo(roomId);
+        final ChessGameTableDto chessGameTableDto = chessGameDao.readChessGameInfo(roomId);
         final String currentTurnTeam = chessGameTableDto.getCurrentTurnTeam();
         final boolean isPlaying = chessGameTableDto.getIsPlaying();
 
@@ -120,6 +120,6 @@ public class SpringChessService {
     }
 
     public void deleteChessGame(final int roomId) {
-        springChessGameDao.deleteChessGame(roomId);
+        chessGameDao.deleteChessGame(roomId);
     }
 }

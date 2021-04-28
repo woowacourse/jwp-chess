@@ -20,21 +20,21 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 @SpringBootTest
 @Transactional
-class SpringChessServiceTest {
+class ChessServiceTest {
 
     @Autowired
-    SpringChessService springChessService;
+    ChessService chessService;
 
     GameRoomDto testGameRoom;
 
     @BeforeEach
     void setUp() {
-        testGameRoom = springChessService.createGameRoom("test");
+        testGameRoom = chessService.createGameRoom("test");
     }
 
     @Test
     void loadGameRooms() {
-        final GameRoomListDto gameRoomListDto = springChessService.loadGameRooms();
+        final GameRoomListDto gameRoomListDto = chessService.loadGameRooms();
         final List<GameRoomDto> gameRooms = gameRoomListDto.getGameRooms();
         final Optional<GameRoomDto> gameRoom = gameRooms.stream()
                 .filter(gameRoomDto -> gameRoomDto.getRoomId() == testGameRoom.getRoomId())
@@ -45,14 +45,14 @@ class SpringChessServiceTest {
 
     @Test
     void createChessGame() {
-        final ChessGameDto chessGameDto = springChessService.createChessGame(testGameRoom.getRoomId());
+        final ChessGameDto chessGameDto = chessService.createChessGame(testGameRoom.getRoomId());
         initialChessGameSettingTest(chessGameDto);
     }
 
     @Test
     void readChessGame() {
-        springChessService.createChessGame(testGameRoom.getRoomId());
-        final ChessGameDto chessGameDto = springChessService.readChessGame(testGameRoom.getRoomId());
+        chessService.createChessGame(testGameRoom.getRoomId());
+        final ChessGameDto chessGameDto = chessService.readChessGame(testGameRoom.getRoomId());
         initialChessGameSettingTest(chessGameDto);
     }
 
@@ -76,8 +76,8 @@ class SpringChessServiceTest {
 
     @Test
     void move() {
-        springChessService.createChessGame(testGameRoom.getRoomId());
-        final ChessGameDto chessGameDto = springChessService.move(testGameRoom.getRoomId(), "e2", "e4");
+        chessService.createChessGame(testGameRoom.getRoomId());
+        final ChessGameDto chessGameDto = chessService.move(testGameRoom.getRoomId(), "e2", "e4");
 
         final Map<String, Map<String, String>> piecePositionByTeam = chessGameDto.getPiecePositionByTeam();
         final Map<String, String> whiteTeamPiecePosition = piecePositionByTeam.get(WHITE_TEAM.asDtoFormat());
@@ -88,9 +88,9 @@ class SpringChessServiceTest {
 
     @Test
     void deleteChessGame() {
-        springChessService.createChessGame(testGameRoom.getRoomId());
-        springChessService.deleteChessGame(testGameRoom.getRoomId());
-        assertThatCode(() -> springChessService.readChessGame(testGameRoom.getRoomId()))
+        chessService.createChessGame(testGameRoom.getRoomId());
+        chessService.deleteChessGame(testGameRoom.getRoomId());
+        assertThatCode(() -> chessService.readChessGame(testGameRoom.getRoomId()))
                 .isInstanceOf(Exception.class);
     }
 }

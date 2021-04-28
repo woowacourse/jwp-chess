@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class SpringChessGameDao {
+public class ChessGameDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<ChessGameTableDto> ChessGameInfoRowMapper = (resultSet, rowNum) -> {
         ChessGameTableDto chessGameTableDTO = new ChessGameTableDto(
@@ -22,7 +22,7 @@ public class SpringChessGameDao {
         return chessGameTableDTO;
     };
 
-    public SpringChessGameDao(JdbcTemplate jdbcTemplate) {
+    public ChessGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

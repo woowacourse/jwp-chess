@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
-public class SpringChessControllerAdvice {
+public class ChessControllerAdvice {
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<String> handleIllegalArgumentException() {
         return ResponseEntity.badRequest().body("unavailable");

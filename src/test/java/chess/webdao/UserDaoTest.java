@@ -10,14 +10,14 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 @SpringBootTest
 @Transactional
-public class SpringUserDaoTest {
+public class UserDaoTest {
     @Autowired
-    SpringChessGameDao springChessGameDao;
+    ChessGameDao chessGameDao;
 
     @Test
     void createUserInfo() {
-        springChessGameDao.createUserInfo("duplicate", "one");
-        assertThatCode(() -> springChessGameDao.createUserInfo("duplicate", "two"))
+        chessGameDao.createUserInfo("duplicate", "one");
+        assertThatCode(() -> chessGameDao.createUserInfo("duplicate", "two"))
                 .isInstanceOf(DuplicateKeyException.class);
     }
 }

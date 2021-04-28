@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.service.SpringChessService;
+import chess.service.ChessService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class SpringChessControllerTest {
+class ChessControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private SpringChessService springChessService;
+    private ChessService chessService;
 
     @Test
     @DisplayName("GET: /games가 정상 작동한다")

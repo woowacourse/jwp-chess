@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class SpringChessApplication {
+public class ChessApplication {
     public static void main(String[] args) {
-        SpringApplication.run(SpringChessApplication.class, args);
+        SpringApplication.run(ChessApplication.class, args);
     }
 }

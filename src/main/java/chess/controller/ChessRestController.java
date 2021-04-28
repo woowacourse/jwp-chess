@@ -3,10 +3,11 @@ package chess.controller;
 import chess.dto.*;
 import chess.exception.NullTitleException;
 import chess.service.ChessGameService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 public class ChessRestController {
@@ -20,11 +21,13 @@ public class ChessRestController {
     public ResponseEntity<CommonResponse<NewGameDto>> newGame(@RequestBody CreateGameRequest createGameRequest) {
         validateTitleIsNotNull(createGameRequest.getTitle());
 
-        return new ResponseEntity<>(
-                new CommonResponse<>(
+        NewGameDto newGameDto = chessGameService.createNewGame(createGameRequest.getTitle());
+
+        return ResponseEntity.created(URI.create("/games/" + newGameDto.getGameId()))
+                .body(new CommonResponse<>(
                         "새로운 게임이 생성되었습니다.",
-                        chessGameService.createNewGame(createGameRequest.getTitle())
-                ), HttpStatus.CREATED);
+                        newGameDto
+                ));
     }
 
     private void validateTitleIsNotNull(String title) {

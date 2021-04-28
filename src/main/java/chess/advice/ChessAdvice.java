@@ -1,5 +1,7 @@
 package chess.advice;
 
+import exception.ChessException;
+import exception.ExceptionStatus;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,27 +10,27 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ChessAdvice {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity illegalArgumentExceptionHandler() {
-        ExceptionState exceptionState = ExceptionState.ILLEGAL_ARGUMENT;
-        return ResponseEntity.status(exceptionState.getStatus()).body(exceptionState.getErrorMessage());
-    }
-
     @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity nullPointerExceptionHandler() {
-        ExceptionState exceptionState = ExceptionState.NULL_POINTER;
-        return ResponseEntity.status(exceptionState.getStatus()).body(exceptionState.getErrorMessage());
+    public ResponseEntity<String> handleNullPointerException() {
+        ExceptionStatus exceptionStatus = ExceptionStatus.NULL_POINTER;
+        return ResponseEntity.status(exceptionStatus.getHttpStatus()).body(exceptionStatus.getMessage());
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity emptyResultDataAccessExceptionHandler() {
-        ExceptionState exceptionState = ExceptionState.EMPTY_RESULT_DATA_ACCESS;
-        return ResponseEntity.status(exceptionState.getStatus()).body(exceptionState.getErrorMessage());
+    public ResponseEntity<String> handleEmptyResultDataAccessException() {
+        ExceptionStatus exceptionStatus = ExceptionStatus.EMPTY_RESULT_DATA_ACCESS;
+        return ResponseEntity.status(exceptionStatus.getHttpStatus()).body(exceptionStatus.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity exceptionHandler() {
-        ExceptionState exceptionState = ExceptionState.EXCEPTION;
-        return ResponseEntity.status(exceptionState.getStatus()).body(exceptionState.getErrorMessage());
+    public ResponseEntity<String> handleException(final Exception e) {
+        System.out.println(e.getMessage());
+        ExceptionStatus exceptionStatus = ExceptionStatus.EXCEPTION;
+        return ResponseEntity.status(exceptionStatus.getHttpStatus()).body(exceptionStatus.getMessage());
+    }
+
+    @ExceptionHandler(ChessException.class)
+    public ResponseEntity<String> handleChessException(final ChessException e) {
+        return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 }

@@ -25,7 +25,6 @@ async function processResponse(response) {
     if (!response.ok) {
         let errorMessage = await response.text();
         updateMessage(errorMessage);
-        console.log(errorMessage);
         return;
     }
     let responseBody = await response.json();

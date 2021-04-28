@@ -27,8 +27,8 @@ public class GameController {
         return loadGame(id);
     }
 
-    @PostMapping("/{id}/finish")
-    public ResponseEntity<Void> finish(@PathVariable Long id) {
+    @PostMapping("/{id}/terminate")
+    public ResponseEntity<Void> terminateGame(@PathVariable Long id) {
         gameService.terminateGame(id);
         return ResponseEntity.ok().build();
     }

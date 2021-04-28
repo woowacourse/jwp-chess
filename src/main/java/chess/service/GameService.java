@@ -6,6 +6,8 @@ import chess.dto.MoveDto;
 import chess.repository.ChessRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class GameService {
@@ -45,5 +47,20 @@ public class GameService {
         ChessGame chessGame = new ChessGame();
         chessRepository.restart(id, chessGame);
         return chessRepository.loadGame(id);
+    }
+
+    public List<ChessGame> findAllGames() {
+        return chessRepository.findAllGames();
+    }
+
+    public Long newGame(String title) {
+        ChessGame chessGame = new ChessGame();
+        return chessRepository.addGame(chessGame, title);
+    }
+
+    public void verifyDuplicateTitleInGames(String title) {
+        if (chessRepository.findGame(title).isPresent()) {
+            throw new IllegalArgumentException("같은 이름으로 등록된 방이 있습니다.");
+        }
     }
 }

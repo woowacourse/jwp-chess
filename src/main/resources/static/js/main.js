@@ -186,7 +186,7 @@ async function finish() {
     const url = window.location.href.split('/')
     const gameId = url[url.length - 1]
     return await fetch(
-        `/game/${gameId}/finish`,
+        `/game/${gameId}/terminate`,
         {
             method: 'POST'
         }

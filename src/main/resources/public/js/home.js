@@ -5,7 +5,7 @@ const $roomFrame = document.getElementById("room-frame");
 loadRoom();
 
 function loadRoom() {
-    fetch("/chess/room/list").then(response => {
+    fetch("/chess/api/room/list").then(response => {
         if (response.ok) {
             return response.json();
         }

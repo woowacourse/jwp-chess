@@ -2,7 +2,6 @@ package chess.dao;
 
 import chess.dto.CommandDto;
 import chess.dto.MoveRequestDto;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -54,11 +53,6 @@ public class SpringChessLogDao implements ChessRepository {
     @Override
     public String findRoomById(String id) {
         String query = "select room_id from chessroom where room_id = ?";
-
-        try {
-            return jdbcTemplate.queryForObject(query, String.class, id);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        return jdbcTemplate.queryForObject(query, String.class, id);
     }
 }

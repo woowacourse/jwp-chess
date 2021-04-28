@@ -11,7 +11,7 @@ public class UserDto {
     private final String pw;
     private final Long roomId;
 
-    private UserDto(@Size(min = 2, max = 4) final String name, @Size(min = 2, max = 8) final String pw, final Long roomId) {
+    public UserDto(final String name, final String pw, final Long roomId) {
         this.name = name;
         this.pw = pw;
         this.roomId = roomId;

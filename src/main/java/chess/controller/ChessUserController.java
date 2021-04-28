@@ -14,11 +14,6 @@ public class ChessUserController {
 
     private final ChessUserService chessUserService;
 
-    @ExceptionHandler({MissingRequestCookieException.class})
-    public ResponseEntity<String> checkCookieMissing(Exception exception) {
-        return ResponseEntity.badRequest().body("로그인을 해 주세요.");
-    }
-
     @Autowired
     public ChessUserController(final ChessUserService chessUserService) {
         this.chessUserService = chessUserService;

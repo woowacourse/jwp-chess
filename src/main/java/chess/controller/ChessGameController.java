@@ -14,15 +14,7 @@ public class ChessGameController {
     private final ChessGameService chessGameService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> checkChessGameException(Exception exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
-    }
 
-    @ExceptionHandler({MissingRequestCookieException.class})
-    public ResponseEntity<String> checkCookieMissing(Exception exception) {
-        return ResponseEntity.badRequest().body("로그인을 해 주세요.");
-    }
 
     public ChessGameController(final ChessGameService chessGameService, final SimpMessagingTemplate simpMessagingTemplate) {
         this.chessGameService = chessGameService;

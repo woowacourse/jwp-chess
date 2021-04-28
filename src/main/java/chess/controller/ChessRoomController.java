@@ -22,20 +22,11 @@ public class ChessRoomController {
     private final ChessRoomService chessRoomService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<String> checkChessRoomException(Exception exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
-    }
-
-    @ExceptionHandler({MissingRequestCookieException.class})
-    public ResponseEntity<String> checkCookieMissing(Exception exception) {
-        return ResponseEntity.badRequest().body("로그인을 해 주세요.");
-    }
-
     @Autowired
-    public ChessRoomController(final ChessRoomService chessRoomService, final SimpMessagingTemplate simpMessagingTemplate, final SimpMessagingTemplate simpMessagingTemplate1) {
+    public ChessRoomController(final ChessRoomService chessRoomService,
+                              final SimpMessagingTemplate simpMessagingTemplate) {
         this.chessRoomService = chessRoomService;
-        this.simpMessagingTemplate = simpMessagingTemplate1;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @GetMapping("/rooms")

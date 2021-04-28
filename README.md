@@ -22,3 +22,8 @@
 - [x] PieceDAO#findOneByPosition
 - [x] PieceDAO#update
 - [x] PieceDAO#delete
+
+### 3단계
+- [x] 체스방 목록 불러오기 기능
+- [x] 새 체스방 만들기 기능
+- [x] 기존 체스방 불러오기 기능

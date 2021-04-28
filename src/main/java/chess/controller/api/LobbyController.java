@@ -23,7 +23,7 @@ public class LobbyController {
     }
 
     @PostMapping("/game")
-    public ResponseEntity<String> newGame(@RequestBody @Valid TitleDto titleDto) {
+    public ResponseEntity<Long> newGame(@RequestBody @Valid TitleDto titleDto) {
         lobbyService.verifyDuplicateTitleInGames(titleDto.getTitle());
         return ResponseEntity.ok(lobbyService.newGame(titleDto.getTitle()));
     }

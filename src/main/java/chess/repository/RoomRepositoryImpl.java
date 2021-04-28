@@ -47,7 +47,7 @@ public class RoomRepositoryImpl implements RoomRepository {
         }
     }
 
-    public boolean findPlayingFlagByRoomId(int roomId) {
+    public Boolean findPlayingFlagByRoomId(int roomId) {
         String sql = "select playing_flag from room where id=?";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, roomId);
@@ -89,7 +89,7 @@ public class RoomRepositoryImpl implements RoomRepository {
     public Color findTurnByRoomId(int roomId) {
         String sql = "select turn from room where id=?";
 
-        return Color.valueOf(jdbcTemplate.queryForObject(sql, String.class, roomId));
+        return jdbcTemplate.queryForObject(sql, Color.class, roomId);
     }
 
 }

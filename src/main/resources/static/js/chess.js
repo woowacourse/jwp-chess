@@ -133,9 +133,15 @@ ChessPage.prototype.initChessBoard = function () {
     headers: {
       'Content-Type': 'application/json',
     }
-  }).then(res => res.json())
-  .then(data => {
+  }).then(function (response) {
+    if (response.ok) {
+      return response.json();
+    }
+    response.text().then(function (data) {
+      alert(data);
+    })
+    throw Error();
+  }).then(data => {
     chessPage.templatePieces(data);
   });
 }
-

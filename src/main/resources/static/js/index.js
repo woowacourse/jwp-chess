@@ -26,7 +26,14 @@ IndexPage.prototype.getRooms = function () {
   const roomList = document.querySelector(".room-list");
   fetch(indexPage.roomsApiUrl, {
     method: 'GET'
-  }).then(res => res.json())
+  }).then(function (response) {
+    if (response.ok) {
+      return response.json();
+    }
+    response.text().then(function (data) {
+      alert(data);
+    })
+    throw Error})
   .then(function (data) {
     for (let i = 0; i < data.roomIds.length; i++) {
       roomList.innerHTML +=

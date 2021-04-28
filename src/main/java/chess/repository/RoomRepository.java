@@ -19,7 +19,7 @@ public interface RoomRepository {
 
     Room findRoomByRoomId(int roomId);
 
-    boolean findPlayingFlagByRoomId(int roomId);
+    Boolean findPlayingFlagByRoomId(int roomId);
 
     Map<Position, Piece> findPiecesByRoomId(int roomId);
 

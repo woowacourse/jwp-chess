@@ -6,6 +6,9 @@ import chess.domain.chessgame.Room;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
+import chess.exception.DataBaseException;
+import chess.exception.NotExistPieceDataException;
+import chess.exception.NotExistRoomDataException;
 import chess.repository.RoomRepository;
 import java.util.List;
 import java.util.Map;
@@ -24,37 +27,62 @@ public class RoomService {
 
     @Transactional
     public List<Integer> getRooms() {
-        return roomRepository.findAllPlayingRoomId();
+        List<Integer> roomIds;
+
+        try {
+            roomIds = roomRepository.findAllPlayingRoomId();
+        } catch (DataAccessException e) {
+            throw new DataBaseException(e);
+        }
+
+        if (roomIds.isEmpty()) {
+            throw new NotExistRoomDataException();
+        }
+        return roomIds;
     }
 
     @Transactional
     public Room postRoom(int roomId) {
+        Room room;
         try {
-            return roomRepository.findRoomByRoomId(roomId);
+            room = roomRepository.findRoomByRoomId(roomId);
         } catch (DataAccessException e) {
-            Room newRoom = new Room(roomId);
-            roomRepository.insertRoom(newRoom);
-            roomRepository.insertPieces(newRoom);
-
-            return newRoom;
+            room = new Room(roomId);
+            roomRepository.insertRoom(room);
+            roomRepository.insertPieces(room);
+            return room;
         }
+
+        if (room.pieces().isEmpty()) {
+            throw new NotExistPieceDataException();
+        }
+
+        return room;
     }
 
     @Transactional
     public ChessGame putPieces(int roomId, Position source, Position target) {
-        ChessGame chessGame = this.chessGame(roomId);
-        chessGame.move(source, target);
-        Room updatedRoom = new Room(roomId, chessGame);
+        try {
+            ChessGame chessGame = this.chessGame(roomId);
+            chessGame.move(source, target);
+            Room updatedRoom = new Room(roomId, chessGame);
 
-        roomRepository.updateChessGameByRoom(updatedRoom);
-        roomRepository.updatePiecesByRoom(updatedRoom);
+            roomRepository.updateChessGameByRoom(updatedRoom);
+            roomRepository.updatePiecesByRoom(updatedRoom);
 
-        return chessGame;
+            return chessGame;
+        } catch (DataAccessException e) {
+            throw new DataBaseException(e);
+        }
     }
 
     private ChessGame chessGame(int roomId) {
         Map<Position, Piece> pieces = roomRepository.findPiecesByRoomId(roomId);
-        boolean isPlaying = roomRepository.findPlayingFlagByRoomId(roomId);
+        if (pieces.isEmpty()) {
+            throw new NotExistPieceDataException();
+        }
+
+        Boolean isPlaying = roomRepository.findPlayingFlagByRoomId(roomId);
         Color turn = roomRepository.findTurnByRoomId(roomId);
 
         return new ChessGame(pieces, isPlaying, turn);
@@ -62,9 +90,12 @@ public class RoomService {
 
     @Transactional
     public Score getScore(int roomId, Color color) {
-        ChessGame chessGame = this.chessGame(roomId);
-
-        return chessGame.score(color);
+        try {
+            ChessGame chessGame = this.chessGame(roomId);
+            return chessGame.score(color);
+        } catch (DataAccessException e) {
+            throw new DataBaseException(e);
+        }
     }
 
 }

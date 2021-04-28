@@ -29,7 +29,14 @@ class ChessServiceTest {
 
     @BeforeEach
     void setUp() {
+        chessService.createUser("test", "test");
         testGameRoom = chessService.createGameRoom("test");
+    }
+
+    @Test
+    void validateUser() {
+        final boolean userInfo = chessService.validateUser("test", "test");
+        assertThat(userInfo).isTrue();
     }
 
     @Test

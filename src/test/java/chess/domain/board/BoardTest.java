@@ -9,6 +9,7 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Queen;
 import chess.domain.team.Team;
 import chess.domain.team.Winner;
+import chess.exception.domain.InvalidPieceMoveException;
 import chess.utils.BoardUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +33,7 @@ class BoardTest {
 
         // then
         assertThatThrownBy(() -> board.move(source, target, Team.WHITE))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("기물 이동 - 현재 턴의 기물만 이동할 수 있다.")
@@ -44,7 +45,7 @@ class BoardTest {
 
         // then
         assertThatThrownBy(() -> board.move(blackPawnLocation, target, Team.WHITE))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("검색 - 위치값에 따라 기물을 찾을 수 있다.")

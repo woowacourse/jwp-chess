@@ -1,6 +1,7 @@
-package chess.repository.room;
+package chess.domain.repository.room;
 
 import chess.domain.game.Room;
+import java.util.List;
 
 public interface RoomRepository {
 
@@ -8,7 +9,9 @@ public interface RoomRepository {
 
     long insert(Room room);
 
-    Room findRoomByName(String name);
+    Room findByName(String name);
+
+    List<Room> findAll();
 
     void save(Room room);
 

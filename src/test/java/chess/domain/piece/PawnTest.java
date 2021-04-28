@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.board.Board;
 import chess.domain.location.Location;
+import chess.exception.domain.InvalidPieceMoveException;
 import chess.utils.BoardUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -67,7 +68,7 @@ class PawnTest {
 
         // then
         assertThatThrownBy(() -> pawn.moveTo(target, board))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("폰 이동 능력 테스트 - 전진만 가능하며 뒤로 움직일 수 없다.")
@@ -80,7 +81,7 @@ class PawnTest {
 
         // then
         assertThatThrownBy(() -> pawn.moveTo(target, board))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("폰 이동 능력 테스트 - 전진만 가능하며 옆으로 움직일 수 없다.")
@@ -93,7 +94,7 @@ class PawnTest {
 
         // then
         assertThatThrownBy(() -> pawn.moveTo(target, board))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("폰 이동 능력 테스트 - 목표위치까지의 경로에 기물이 존재할 경우 이동할 수 없다.")
@@ -106,7 +107,7 @@ class PawnTest {
 
         // then
         assertThatThrownBy(() -> pawn.moveTo(target, board))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("폰 이동 능력 테스트 - 앞에 기물(아군, 적 포함)있으면 이동할 수 없다.")
@@ -119,7 +120,7 @@ class PawnTest {
 
         // then
         assertThatThrownBy(() -> pawn.moveTo(target, board))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("폰 이동 능력 테스트 - 적이 없는 경우엔 대각선으로 1칸 이동할 수 없다.")
@@ -132,7 +133,7 @@ class PawnTest {
 
         // then
         assertThatThrownBy(() -> pawn.moveTo(target, board))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("폰 인동 능력 테스트 - 대각선에 아군이 위치한 경우 이동할 수 없다.")
@@ -145,7 +146,7 @@ class PawnTest {
 
         // then
         assertThatThrownBy(() -> pawn.moveTo(target, board))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("폰 공격 테스트 - 대각선에 적이 위치한 경우 대각선으로 1칸 이동할 수 있다.")

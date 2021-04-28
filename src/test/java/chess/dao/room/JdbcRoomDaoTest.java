@@ -1,13 +1,16 @@
-package chess.repository.room;
+package chess.dao.room;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.dao.piece.JdbcPieceDao;
+import chess.domain.board.Board;
 import chess.domain.game.Room;
+import chess.domain.gamestate.running.Move;
 import chess.domain.gamestate.running.Ready;
 import chess.domain.team.Team;
-import chess.repository.piece.JdbcPieceDao;
 import chess.utils.BoardUtil;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,11 +54,11 @@ class JdbcRoomDaoTest {
     void update() {
         // given
         long roomId = roomDao
-            .insert(new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
+            .insert(new Room(0, "테스트", new Move(Board.EMPTY_BOARD), Team.WHITE));
         Room foundRoom = roomDao.findRoomById(roomId);
 
         // when
-        foundRoom.play("start");
+        foundRoom.play("end");
         roomDao.update(foundRoom);
 
         // then
@@ -63,7 +66,7 @@ class JdbcRoomDaoTest {
         assertAll(
             () -> assertThat(resultRoom.getId()).isEqualTo(roomId),
             () -> assertThat(resultRoom.getName()).isEqualTo(foundRoom.getName()),
-            () -> assertThat(resultRoom.getState().getValue()).isEqualTo("start"),
+            () -> assertThat(resultRoom.getState().getValue()).isEqualTo("end"),
             () -> assertThat(resultRoom.getCurrentTeam()).isEqualTo(foundRoom.getCurrentTeam())
         );
     }
@@ -102,6 +105,23 @@ class JdbcRoomDaoTest {
                 () -> assertThat(foundRoom.getState().getValue()).isEqualTo(room.getState().getValue()),
                 () -> assertThat(foundRoom.getCurrentTeam()).isEqualTo(room.getCurrentTeam())
         );
+    }
+
+    @Test
+    void findAll() {
+        // given
+        Room room1 = new Room(1, "테스트1", new Ready(Board.EMPTY_BOARD), Team.WHITE);
+        Room room2 = new Room(2, "테스트2", new Ready(Board.EMPTY_BOARD), Team.WHITE);
+        Room room3 = new Room(3, "테스트3", new Ready(Board.EMPTY_BOARD), Team.WHITE);
+        long room1Id = roomDao.insert(room1);
+        long room2Id = roomDao.insert(room2);
+        long room3Id = roomDao.insert(room3);
+
+        // when
+        List<Room> rooms = roomDao.findAll();
+
+        // then
+        assertThat(rooms.size()).isEqualTo(3);
     }
 
     @Test

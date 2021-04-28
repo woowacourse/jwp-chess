@@ -3,6 +3,7 @@ package chess.domain.piece;
 import chess.domain.location.Location;
 import chess.domain.score.PieceScore;
 import chess.domain.team.Team;
+import chess.exception.domain.InvalidPieceMoveException;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class Knight extends Piece {
         int subX = Math.abs(location.subtractX(target));
         int subY = Math.abs(location.subtractY(target));
         if (!((subX == 1 && subY == 2) || (subX == 2 && subY == 1))) {
-            throw new IllegalArgumentException("[ERROR] 나이트는 해당 위치로 이동할 능력이 없습니다.");
+            throw new InvalidPieceMoveException("[ERROR] 나이트는 해당 위치로 이동할 능력이 없습니다.");
         }
     }
 

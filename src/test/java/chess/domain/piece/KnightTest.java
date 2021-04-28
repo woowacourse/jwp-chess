@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.board.Board;
 import chess.domain.location.Location;
+import chess.exception.domain.InvalidPieceMoveException;
 import chess.utils.BoardUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -72,7 +73,7 @@ class KnightTest {
 
         // then
         assertThatThrownBy(() -> knight.moveTo(nonMovableTarget, board))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidPieceMoveException.class);
     }
 
     @DisplayName("나이트 공격 테스트 - 목표위치에 적의 기물이 있는 경우 그 기물을 없애고 해당 위치로 이동한다.")

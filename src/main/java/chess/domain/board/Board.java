@@ -4,13 +4,17 @@ import chess.domain.location.Location;
 import chess.domain.piece.Piece;
 import chess.domain.team.Team;
 import chess.domain.team.Winner;
+import chess.exception.domain.InvalidPieceMoveException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Board {
 
+    public static final Board EMPTY_BOARD = new Board(Collections.emptyList());
     private static final int NUM_OF_KING = 2;
+
     private final List<Piece> pieces;
 
     private Board(final List<Piece> pieces) {
@@ -31,13 +35,13 @@ public class Board {
 
     private void validateIsNotSameLocation(Location source, Location target) {
         if (source.equals(target)) {
-            throw new IllegalArgumentException("[ERROR] 시작 위치와 목표 위치는 같을 수 없습니다.");
+            throw new InvalidPieceMoveException("[ERROR] 시작 위치와 목표 위치는 같을 수 없습니다.");
         }
     }
 
     private void validateSourcePieceIsCurrentTurn(Piece sourcePiece, Team currentTurnTeam) {
         if (!sourcePiece.isSameTeam(currentTurnTeam)) {
-            throw new IllegalArgumentException("[ERROR] 현재 턴의 말만 움직일 수 있습니다.");
+            throw new InvalidPieceMoveException("[ERROR] 현재 턴의 말만 움직일 수 있습니다.");
         }
     }
 
@@ -52,7 +56,7 @@ public class Board {
             .stream()
             .filter(piece -> piece.isExistIn(location))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당 위치에 체스 말이 존재하지 않습니다."));
+            .orElseThrow(() -> new InvalidPieceMoveException("[ERROR] 해당 위치에 체스 말이 존재하지 않습니다."));
     }
 
     public void remove(Piece targetPiece) {

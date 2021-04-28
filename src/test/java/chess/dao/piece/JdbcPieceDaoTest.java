@@ -1,9 +1,10 @@
-package chess.repository.piece;
+package chess.dao.piece;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.dao.room.JdbcRoomDao;
 import chess.domain.game.Room;
 import chess.domain.gamestate.running.Ready;
 import chess.domain.location.Location;
@@ -11,7 +12,6 @@ import chess.domain.piece.King;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.team.Team;
-import chess.repository.room.JdbcRoomDao;
 import chess.utils.BoardUtil;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;

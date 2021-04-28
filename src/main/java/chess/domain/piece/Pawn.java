@@ -4,6 +4,7 @@ import chess.domain.board.Board;
 import chess.domain.location.Location;
 import chess.domain.score.PieceScore;
 import chess.domain.team.Team;
+import chess.exception.domain.InvalidPieceMoveException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class Pawn extends Piece {
         boolean isMovable = movableNextLocations.stream()
             .anyMatch(location -> location.equals(target));
         if (!isMovable) {
-            throw new IllegalArgumentException("[ERROR] 폰은 해당 위치로 이동할 능력이 없습니다.");
+            throw new InvalidPieceMoveException("[ERROR] 폰은 해당 위치로 이동할 능력이 없습니다.");
         }
     }
 
@@ -66,10 +67,10 @@ public class Pawn extends Piece {
     @Override
     protected void validatePawnMovable(Location target, Board board) {
         if (isAnythingInFront(target, board)) {
-            throw new IllegalArgumentException("[ERROR] 앞 위치에 기물(아군, 적 포함)있으면 이동할 수 없습니다.");
+            throw new InvalidPieceMoveException("[ERROR] 앞 위치에 기물(아군, 적 포함)있으면 이동할 수 없습니다.");
         }
         if (isEnemyOnTheFarwardDiagonal(target, board)) {
-            throw new IllegalArgumentException("[ERROR] 적이 존재하지 않으므로 대각선으로 이동할 수 없습니다.");
+            throw new InvalidPieceMoveException("[ERROR] 적이 존재하지 않으므로 대각선으로 이동할 수 없습니다.");
         }
     }
 

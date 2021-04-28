@@ -54,7 +54,7 @@ async function initBoard(chessGame) {
 
 async function start() {
     return await fetch(
-        `/room/${this.gameId}/game-info`
+        `/game/${this.gameId}/game-info`
     )
 }
 
@@ -152,7 +152,7 @@ async function btnHandler({target}) {
 
     if (target.id === 'restart') {
         const response = await fetch(
-            `/room/${gameId}/restart`,
+            `/game/${gameId}/restart`,
             {
                 method: 'POST'
             }
@@ -186,7 +186,7 @@ async function finish() {
     const url = window.location.href.split('/')
     const gameId = url[url.length - 1]
     return await fetch(
-        `/room/${gameId}/finish`,
+        `/game/${gameId}/finish`,
         {
             method: 'POST'
         }
@@ -209,7 +209,7 @@ function moveHandler() {
 
 async function move(source, target) {
     let response = await fetch(
-        `/room/${this.gameId}/move`,
+        `/game/${this.gameId}/move`,
         {
             method: 'PUT',
             body: JSON.stringify({

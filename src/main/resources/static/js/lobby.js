@@ -59,7 +59,7 @@ async function roomTemplate(room) {
 }
 
 function routeToRoom(id) {
-    window.location.href = `/room/${id}`
+    window.location.href = `/game/${id}`
 }
 
 async function modalHandler(e) {
@@ -115,7 +115,7 @@ async function enterHandler(e) {
             return;
         }
         const id = await response.json()
-        window.location.href = `/room/${id}`
+        window.location.href = `/game/${id}`
         return;
     }
 }

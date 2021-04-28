@@ -111,7 +111,7 @@ function movePiece(target) {
         'to': target.getAttribute('id')
     }
 
-    axios.put('/api/game/' + roomId, body)
+    axios.put('/api/game/' + roomId + "/move", body)
         .then(function (response) {
             source.classList.remove('selected-piece')
             source = null;

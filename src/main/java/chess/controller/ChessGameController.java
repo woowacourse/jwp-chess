@@ -28,7 +28,7 @@ public class ChessGameController {
         return ResponseEntity.ok().body(chessGameDto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/move")
     public ResponseEntity<ChessGameDto> movePiece(@CookieValue(value = "user") String cookie, @PathVariable("id") Long id,
                                                   @RequestBody MoveDto moveDto) {
         ChessGameDto chessGameDto = chessGameService.move(id, moveDto);

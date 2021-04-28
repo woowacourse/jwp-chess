@@ -4,7 +4,6 @@ import chess.domain.board.Board;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,17 +35,12 @@ class PieceDAOTest {
         chessGameDAO = new ChessGameDAO(jdbcTemplate);
     }
 
-    @AfterEach
-    void tearDown() {
-        jdbcTemplate.execute("DELETE FROM piece");
-        jdbcTemplate.execute("DELETE FROM chess_game");
-    }
-
     @DisplayName("piece들을 저장하고 조회하는 기능을 테스트한다")
     @Test
     void testSaveAllAndFindAllPiecesByChessGameId() {
         //given
-        Long chessGameId = chessGameDAO.save();
+        String title = "title";
+        Long chessGameId = chessGameDAO.save(title);
         List<Piece> pieces = Arrays.asList(
                 Piece.createKing(Color.BLACK, 0, 0),
                 Piece.createKing(Color.WHITE, 7, 0)
@@ -70,7 +64,7 @@ class PieceDAOTest {
     @Test
     void testFindOneByPosition() {
         //given
-        Long chessGameId = chessGameDAO.save();
+        Long chessGameId = chessGameDAO.save("title");
         Piece piece = Piece.createKing(Color.WHITE, 7, 0);
         List<Piece> pieces = Arrays.asList(piece);
         pieceDAO.saveAll(chessGameId, pieces);
@@ -86,7 +80,7 @@ class PieceDAOTest {
     @Test
     void testUpdate() {
         //given
-        Long chessGameId = chessGameDAO.save();
+        Long chessGameId = chessGameDAO.save("title");
         List<Piece> pieces = Arrays.asList(Piece.createKing(Color.WHITE, 7, 0));
         pieceDAO.saveAll(chessGameId, pieces);
         Piece savedPiece = pieceDAO.findOneByPosition(chessGameId, 7, 0).get();
@@ -108,7 +102,7 @@ class PieceDAOTest {
     @Test
     void testDelete() {
         //given
-        Long chessGameId = chessGameDAO.save();
+        Long chessGameId = chessGameDAO.save("title");
         List<Piece> pieces = Arrays.asList(Piece.createKing(Color.WHITE, 7, 0));
         pieceDAO.saveAll(chessGameId, pieces);
 

@@ -4,12 +4,7 @@ import chess.dao.ChessGameDAO;
 import chess.dao.PieceDAO;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
-import chess.dto.ChessGameDto;
-import chess.dto.ChessGameResponseDto;
-import chess.dto.ChessGameStatusDto;
-import chess.dto.ScoreDto;
-import chess.exception.NotFoundPlayingChessGameException;
-import org.junit.jupiter.api.AfterEach;
+import chess.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,8 +15,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ActiveProfiles("test")
@@ -42,22 +38,16 @@ class ChessGameServiceTest {
         chessGameService = new ChessGameService(chessGameDAO, pieceDAO);
     }
 
-    @AfterEach
-    void tearDown() {
-        jdbcTemplate.execute("DELETE FROM piece");
-        jdbcTemplate.execute("DELETE FROM chess_game");
-    }
-
     @DisplayName("새 체스 게임을 생성하는 기능을 테스트한다")
     @Test
     void testCreateNewChessGame() {
         //when
-        ChessGameResponseDto chessGameDto = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto chessGameDto = chessGameService.createNewChessGame("title");
 
         //then
         assertAll(
                 () -> assertThat(chessGameDto).isNotNull(),
-                () -> assertThat(chessGameDto.getState()).isEqualTo("BlackTurn"),
+                () -> assertThat(chessGameDto.getState()).isEqualTo("Ready"),
                 () -> assertThat(chessGameDto.getPieceDtos()).hasSize(32)
         );
     }
@@ -66,7 +56,8 @@ class ChessGameServiceTest {
     @Test
     void testMoveChessPiece() {
         //given
-        ChessGameResponseDto chessGameDto = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto chessGameDto = chessGameService.createNewChessGame("title");
+        chessGameDAO.updateState(chessGameDto.getChessGameId(), "BlackTurn");
 
         //when
         chessGameService.moveChessPiece(chessGameDto.getChessGameId(),
@@ -84,7 +75,7 @@ class ChessGameServiceTest {
     }, delimiter = ':')
     void testFindLatestChessGameStatus(String state, boolean expected) {
         //given
-        Long chessGameId = chessGameDAO.save();
+        Long chessGameId = chessGameDAO.save("title");
         chessGameDAO.updateState(chessGameId, state);
 
         //when
@@ -98,7 +89,8 @@ class ChessGameServiceTest {
     @Test
     void testEndGame() {
         //given
-        Long id = chessGameDAO.save();
+        Long id = chessGameDAO.save("title");
+        chessGameDAO.updateState(id, "BlackTurn");
 
         //when
         chessGameService.endGame(id);
@@ -112,7 +104,7 @@ class ChessGameServiceTest {
     @Test
     void testCalculateScores() {
         //given
-        ChessGameResponseDto chessGame = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto chessGame = chessGameService.createNewChessGame("title");
         pieceDAO.delete(chessGame.getChessGameId(), 1, 0);
 
         //when
@@ -122,6 +114,67 @@ class ChessGameServiceTest {
         assertAll(
                 () -> assertThat(scoreDto.getBlackScore()).isEqualTo(37.0),
                 () -> assertThat(scoreDto.getWhiteScore()).isEqualTo(38.0)
+        );
+    }
+
+    @DisplayName("id로 특정 chessgame을 조회하는 기능을 테스트한다")
+    @Test
+    void testFindChessGameById() {
+        //given
+        Long id = chessGameDAO.save("title");
+
+        //when
+        ChessGameResponseDto chessGameResponseDto = chessGameService.findChessGameById(id);
+
+        //then
+        assertAll(
+                () -> assertThat(chessGameResponseDto).isNotNull(),
+                () -> assertThat(chessGameResponseDto.getState()).isEqualTo("Ready"),
+                () -> assertThat(chessGameResponseDto.getPieceDtos()).isEmpty()
+        );
+    }
+
+    @DisplayName("체스게임 아이디로 특정 체스게임의 정보를 조회환다 ")
+    @Test
+    void testFindChessGameInfoById() {
+        //given
+        String title = "title";
+        Long id = chessGameDAO.save(title);
+
+        //when
+        ChessGameInfoResponseDto chessGameInfoResponseDto = chessGameService.findChessGameInfoById(id);
+
+        //then
+        assertAll(
+                () -> assertThat(chessGameInfoResponseDto.getChessGameId()).isEqualTo(id),
+                () -> assertThat(chessGameInfoResponseDto.getState()).isEqualTo("Ready"),
+                () -> assertThat(chessGameInfoResponseDto.getTitle()).isEqualTo(title),
+                () -> assertThat(chessGameInfoResponseDto.getPieceDtos()).isEmpty(),
+                () -> assertThat(chessGameInfoResponseDto.isEnd()).isFalse(),
+                () -> assertThat(chessGameInfoResponseDto.isReady()).isTrue(),
+                () -> assertThat(chessGameInfoResponseDto.isPlaying()).isFalse(),
+                () -> assertThat(chessGameInfoResponseDto.isFinished()).isFalse()
+        );
+    }
+
+    @DisplayName("실행중인 모든 게임을 찾는 기능을 테스트한다")
+    @Test
+    void testFindAllPlayingGames() {
+        //given
+        Long firstId = chessGameDAO.save("title1");
+        Long secondId = chessGameDAO.save("title2");
+        Long thirdId = chessGameDAO.save("title3");
+        chessGameDAO.updateState(secondId, "End");
+        chessGameDAO.updateState(thirdId, "BlackTurn");
+
+        //when
+        List<PlayingChessgameEntityDto> allPlayingGames = chessGameService.findAllPlayingGames();
+
+        //then
+        assertAll(
+                () -> assertThat(allPlayingGames).hasSize(2),
+                () -> assertThat(allPlayingGames).extracting("chessGameId")
+                        .containsAnyOf(firstId, thirdId)
         );
     }
 

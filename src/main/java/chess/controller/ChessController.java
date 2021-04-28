@@ -1,10 +1,14 @@
 package chess.controller;
 
-import chess.dto.ChessGameStatusDto;
+import chess.dto.ChessGameInfoResponseDto;
+import chess.dto.PlayingChessgameEntityDto;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Controller
 public class ChessController {
@@ -16,10 +20,17 @@ public class ChessController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        ChessGameStatusDto chessGameStatus = chessGameService.findLatestChessGameStatus();
-        model.addAttribute("chessGameStatus", chessGameStatus);
+    public String chessgamesList(Model model) {
+        List<PlayingChessgameEntityDto> chessGameDtos = chessGameService.findAllPlayingGames();
+        model.addAttribute("chessGames", chessGameDtos);
         return "index";
+    }
+
+    @GetMapping("/chessgames/{id}")
+    public String chessGame(@PathVariable("id") Long id, Model model) {
+        ChessGameInfoResponseDto chessGameInfoResponseDto = chessGameService.findChessGameInfoById(id);
+        model.addAttribute("chessGameInfo", chessGameInfoResponseDto);
+        return "chessgame-room";
     }
 
 }

@@ -38,7 +38,7 @@ td:hover {
 }
 
 .black {
-    background-color: #2AC1BC;
+    background-color: #33cc99;
 }
 
 .white {
@@ -68,6 +68,10 @@ td:hover {
     font-family: 'Jua', sans-serif;
 }
 
+.end-message {
+    font-family: 'Jua', sans-serif;
+}
+
 .turn-info.text {
     font-size: xxx-large;
     position: relative;
@@ -86,6 +90,10 @@ td:hover {
 
 .game-title-header {
     font-size: xxx-large;
+}
+
+.game-room-title-header {
+    font-size: xx-large;
 }
 
 .hidden {
@@ -114,4 +122,360 @@ td:hover {
 .chess-piece-position {
     width: 8%;
     text-align: center;
+}
+
+.chess-game-list-table {
+    /*height: 100%;*/
+    width: 100%;
+    margin-top: 1%;
+    text-align: center;
+    font-size: x-large;
+    font-family: 'Jua', sans-serif;
+}
+
+.table-header {
+    /*position: fixed;*/
+}
+
+.table-body {
+    /*position: absolute;*/
+}
+
+#loading-wrapper {
+    background-color: #222;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+#loading-text {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #999;
+    width: 100px;
+    height: 30px;
+    margin: -7px 0 0 -45px;
+    text-align: center;
+    font-family: 'PT Sans Narrow', sans-serif;
+    font-size: 20px;
+}
+
+#loading-content {
+    display: block;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    width: 170px;
+    height: 170px;
+    margin: -85px 0 0 -85px;
+    border: 3px solid #F00;
+}
+
+#loading-content:after {
+    content: "";
+    position: absolute;
+    border: 3px solid #0F0;
+    left: 15px;
+    right: 15px;
+    top: 15px;
+    bottom: 15px;
+}
+
+#loading-content:before {
+    content: "";
+    position: absolute;
+    border: 3px solid #00F;
+    left: 5px;
+    right: 5px;
+    top: 5px;
+    bottom: 5px;
+}
+
+#loading-content {
+    border: 3px solid transparent;
+    border-top-color: #4D658D;
+    border-bottom-color: #4D658D;
+    border-radius: 50%;
+    -webkit-animation: loader 2s linear infinite;
+    -moz-animation: loader 2s linear infinite;
+    -o-animation: loader 2s linear infinite;
+    animation: loader 2s linear infinite;
+}
+
+#loading-content:before {
+    border: 3px solid transparent;
+    border-top-color: #D4CC6A;
+    border-bottom-color: #D4CC6A;
+    border-radius: 50%;
+    -webkit-animation: loader 3s linear infinite;
+    -moz-animation: loader 2s linear infinite;
+    -o-animation: loader 2s linear infinite;
+    animation: loader 3s linear infinite;
+}
+
+#loading-content:after {
+    border: 3px solid transparent;
+    border-top-color: #84417C;
+    border-bottom-color: #84417C;
+    border-radius: 50%;
+    -webkit-animation: loader 1.5s linear infinite;
+    animation: loader 1.5s linear infinite;
+    -moz-animation: loader 2s linear infinite;
+    -o-animation: loader 2s linear infinite;
+}
+
+@-webkit-keyframes loaders {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes loader {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+#content-wrapper {
+    color: #FFF;
+    position: fixed;
+    left: 0;
+    top: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+#header {
+    width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    height: 100px;
+    background-color: #666;
+}
+
+#content {
+    width: 800px;
+    height: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    background-color: #888;
+}
+
+
+/*여기가 체스룸*/
+* {
+    box-sizing: border-box;
+    font-family: "Jua", sans-serif;
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background: #141414;
+    min-height: 100vh;
+}
+
+.chess-game-list {
+    background-color: #33cc99;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: scroll;
+}
+
+.container .card {
+    background: #fff0;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    position: relative;
+    margin: 1rem;
+    color: #fff;
+    overflow: hidden;
+}
+
+.container .card .border {
+    width: 100%;
+    height: 0.25rem;
+    top: 0;
+    left: -100%;
+    position: absolute;
+    background: linear-gradient(to right, transparent 50%, #fff);
+}
+
+.container .card .border.to-left {
+    animation: left 1s linear infinite;
+}
+
+.container .card .border.to-bottom {
+    width: 0.25rem;
+    height: 100%;
+    right: 0;
+    top: -100%;
+    left: initial;
+    background: linear-gradient(180deg, transparent 50%, #fff);
+    animation: bottom 1s linear infinite;
+    animation-delay: 0.5s;
+}
+
+.container .card .border.to-right {
+    width: 100%;
+    height: 0.25rem;
+    bottom: 0;
+    top: initial;
+    right: 0;
+    background: linear-gradient(90deg, #fff 50%, transparent);
+    animation: right 1s linear infinite;
+    animation-delay: 1s;
+}
+
+.container .card .border.to-top {
+    width: 0.25rem;
+    height: 100%;
+    bottom: -100%;
+    top: initial;
+    right: initial;
+    left: 0;
+    background: linear-gradient(0, transparent 50%, #fff);
+    animation: top 1s linear infinite;
+    animation-delay: 1.5s;
+}
+
+@keyframes left {
+    0% {
+        transform: translatex(0);
+    }
+    100% {
+        transform: translatex(200%);
+    }
+}
+
+@keyframes bottom {
+    0% {
+        transform: translatey(0);
+    }
+    100% {
+        transform: translatey(200%);
+    }
+}
+
+@keyframes right {
+    0% {
+        transform: translatex(200%);
+    }
+    100% {
+        transform: translatex(0%);
+    }
+}
+
+@keyframes top {
+    0% {
+        transform: translatey(0%);
+    }
+    100% {
+        transform: translatey(-200%);
+    }
+}
+
+@keyframes color {
+    0% {
+        filter: rotate-hue(0deg);
+    }
+    100% {
+        filter: rotate-hue(360deg);
+    }
+}
+
+th {
+    border: 4px solid white;
+}
+
+tr {
+    height: 5%;
+}
+
+.chess-game-room-id {
+    width: 10%;
+}
+
+.chess-game-room-title {
+    width: 70%;
+}
+
+.chess-game-room-state {
+    width: 15%;
+}
+
+.chess-game-list-title {
+    font-family: 'Jua', sans-serif;
+    font-size: xxx-large;
+}
+
+/*button*/
+.btn {
+    box-sizing: border-box;
+    appearance: none;
+    background-color: transparent;
+    border: 2px solid #e74c3c;
+    border-radius: 0.6em;
+    color: #e74c3c;
+    cursor: pointer;
+    display: flex;
+    align-self: center;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+    margin: 20px;
+    padding: 1.2em 2.8em;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+.btn:hover, .btn:focus {
+    color: #fff;
+    outline: 0;
+}
+
+.second {
+    float: right;
+    border-radius: 3em;
+    border-color: #1abc9c;
+    color: #fff;
+    background-image: linear-gradient(to right, rgba(26, 188, 156, 0.6), rgba(26, 188, 156, 0.6) 5%, #1abc9c 5%, #1abc9c 10%, rgba(26, 188, 156, 0.6) 10%, rgba(26, 188, 156, 0.6) 15%, #1abc9c 15%, #1abc9c 20%, rgba(26, 188, 156, 0.6) 20%, rgba(26, 188, 156, 0.6) 25%, #1abc9c 25%, #1abc9c 30%, rgba(26, 188, 156, 0.6) 30%, rgba(26, 188, 156, 0.6) 35%, #1abc9c 35%, #1abc9c 40%, rgba(26, 188, 156, 0.6) 40%, rgba(26, 188, 156, 0.6) 45%, #1abc9c 45%, #1abc9c 50%, rgba(26, 188, 156, 0.6) 50%, rgba(26, 188, 156, 0.6) 55%, #1abc9c 55%, #1abc9c 60%, rgba(26, 188, 156, 0.6) 60%, rgba(26, 188, 156, 0.6) 65%, #1abc9c 65%, #1abc9c 70%, rgba(26, 188, 156, 0.6) 70%, rgba(26, 188, 156, 0.6) 75%, #1abc9c 75%, #1abc9c 80%, rgba(26, 188, 156, 0.6) 80%, rgba(26, 188, 156, 0.6) 85%, #1abc9c 85%, #1abc9c 90%, rgba(26, 188, 156, 0.6) 90%, rgba(26, 188, 156, 0.6) 95%, #1abc9c 95%, #1abc9c 100%);
+    background-position: 0 0;
+    background-size: 100%;
+    transition: background 300ms ease-in-out;
+}
+
+.second:hover {
+    background-position: 100px;
 }

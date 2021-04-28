@@ -2,9 +2,11 @@ package chess.controller;
 
 import chess.dao.ChessGameDAO;
 import chess.dao.PieceDAO;
-import chess.dto.ChessGameResponseDto;
+import chess.dto.ChessGameInfoResponseDto;
+import chess.dto.ChessGamesSaveDto;
 import chess.service.ChessGameService;
 import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +57,8 @@ class ChessApiControllerTest {
     @Test
     void testMovePiece() {
         //given
-        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto newChessGame = chessGameService.createNewChessGame("title");
+        chessGameDAO.updateState(newChessGame.getChessGameId(), "BlackTurn");
         String source = "a7";
         String target = "a5";
 
@@ -63,7 +66,7 @@ class ChessApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/chessgames/{chessGameId}/pieces?source={source}&target={target}",
+                .put("/api/chessgames/{chessGameId}/pieces?source={source}&target={target}",
                         newChessGame.getChessGameId(), source, target)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -76,7 +79,8 @@ class ChessApiControllerTest {
     @Test
     void testMovePieceIfNoSuchPermittedChessPieceException() {
         //given
-        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto newChessGame = chessGameService.createNewChessGame("title");
+        chessGameDAO.updateState(newChessGame.getChessGameId(), "BlackTurn");
         String source = "a2";
         String target = "a3";
 
@@ -84,7 +88,7 @@ class ChessApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/chessgames/{chessGameId}/pieces?source={source}&target={target}",
+                .put("/api/chessgames/{chessGameId}/pieces?source={source}&target={target}",
                         newChessGame.getChessGameId(), source, target)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -95,7 +99,7 @@ class ChessApiControllerTest {
     @Test
     void testMovePieceIfNotPermittedChessPosition() {
         //given
-        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto newChessGame = chessGameService.createNewChessGame("title");
         String source = "a9";
         String target = "b7";
 
@@ -103,7 +107,7 @@ class ChessApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/chessgames/{chessGameId}/pieces?source={source}&target={target}",
+                .put("/api/chessgames/{chessGameId}/pieces?source={source}&target={target}",
                         newChessGame.getChessGameId(), source, target)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -114,7 +118,8 @@ class ChessApiControllerTest {
     @Test
     void testMovePieceIfNotMoveToTargetPosition() {
         //given
-        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto newChessGame = chessGameService.createNewChessGame("title");
+        chessGameDAO.updateState(newChessGame.getChessGameId(), "BlackTurn");
         String source = "a7";
         String target = "b6";
 
@@ -122,7 +127,7 @@ class ChessApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/chessgames/{chessGameId}/pieces?source={source}&target={target}",
+                .put("/api/chessgames/{chessGameId}/pieces?source={source}&target={target}",
                         newChessGame.getChessGameId(), source, target)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -133,16 +138,16 @@ class ChessApiControllerTest {
     @Test
     void testFindChessGame() {
         //given
-        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto newChessGame = chessGameService.createNewChessGame("title");
 
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/chessgames/{chessGameId}", newChessGame.getChessGameId())
+                .when().get("/api/chessgames/{chessGameId}", newChessGame.getChessGameId())
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("pieceDtos.size()", is(32))
-                .body("state", is("BlackTurn"))
+                .body("state", is("Ready"))
                 .body("finished", is(false));
     }
 
@@ -150,57 +155,44 @@ class ChessApiControllerTest {
     @Test
     void testFindChessGameIfNotExistPlayingChessGame() {
         //given
-        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto newChessGame = chessGameService.createNewChessGame("title");
         chessGameDAO.updateState(newChessGame.getChessGameId(), "End");
 
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/chessgames/{chessGameId}", newChessGame.getChessGameId() + 1L)
+                .when().get("/api/chessgames/{chessGameId}", newChessGame.getChessGameId() + 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("존재하지 않는 체스 게임입니다."));
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @DisplayName("새로운 체스 게임을 만드는 API 요청")
     @Test
     void testCreateNewChessGame() {
         //when //then
+        ChessGamesSaveDto chessGamesSaveDto = new ChessGamesSaveDto("title");
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/chessgames")
+                .body(chessGamesSaveDto)
+                .when().post("/api/chessgames")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("pieceDtos.size()", is(32))
-                .body("state", is("BlackTurn"))
+                .body("state", is("Ready"))
                 .body("finished", is(false));
-    }
-
-    @DisplayName("진행중인 게임이 이미 있을 때, 새로운 체스 게임을 만드는 API 요청")
-    @Test
-    void testCreateNewChessGameIfAlreadyExistPlayingChessGame() {
-        //given
-        chessGameService.createNewChessGame();
-
-        //when //then
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/chessgames")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(is("아직 끝나지 않은 게임이 있습니다."));
     }
 
     @DisplayName("체스 게임을 종료하는 요청을 ")
     @Test
     void testEndChessGame() {
         //given
-        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto newChessGame = chessGameService.createNewChessGame("title");
+        chessGameDAO.updateState(newChessGame.getChessGameId(), "BlackTurn");
 
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/chessgames/{chessGameId}", newChessGame.getChessGameId())
+                .when().delete("/api/chessgames/{chessGameId}", newChessGame.getChessGameId())
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("pieceDtos.size()", is(32))
@@ -212,14 +204,14 @@ class ChessApiControllerTest {
     @Test
     void testCalculateScores() {
         //given
-        ChessGameResponseDto newChessGame = chessGameService.createNewChessGame();
+        ChessGameInfoResponseDto newChessGame = chessGameService.createNewChessGame("title");
         pieceDAO.delete(newChessGame.getChessGameId(), 1, 0);
         pieceDAO.delete(newChessGame.getChessGameId(), 7, 3);
 
         //when //then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/chessgames/{chessGameId}/scores", newChessGame.getChessGameId())
+                .when().get("/api/chessgames/{chessGameId}/scores", newChessGame.getChessGameId())
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

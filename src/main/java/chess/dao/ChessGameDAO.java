@@ -27,7 +27,7 @@ public class ChessGameDAO {
     public Optional<ChessGameEntity> findByStateIsBlackTurnOrWhiteTurn() {
         String query = "SELECT * FROM chess_game WHERE state in(?, ?)";
         List<ChessGameEntity> chessGameEntities = jdbcTemplate.query(query
-                , (rs, rowNum) -> new ChessGameEntity(rs.getLong("id"), rs.getString("state"))
+                , chessGameEntityRowMapper()
                 , "BlackTurn", "WhiteTurn");
         if (chessGameEntities.isEmpty()) {
             return Optional.empty();
@@ -37,12 +37,13 @@ public class ChessGameDAO {
         return Optional.of(chessGameEntity);
     }
 
-    public Long save() {
+    public Long save(String title) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "INSERT INTO chess_game(state) VALUES(?)";
+        String query = "INSERT INTO chess_game(state, title) VALUES(?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, "BlackTurn");
+            preparedStatement.setString(1, "Ready");
+            preparedStatement.setString(2, title);
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -74,7 +75,14 @@ public class ChessGameDAO {
         }
     }
 
-    private RowMapper<ChessGameEntity> chessGameEntityRowMapper() {
-        return (rs, rowNum) -> new ChessGameEntity(rs.getLong("id"), rs.getString("state"));
+    public List<ChessGameEntity> findAllNotEndGameOrderByIdDesc() {
+        String query = "SELECT * FROM chess_game WHERE state NOT IN(?) ORDER BY ID DESC ";
+        return jdbcTemplate.query(query, chessGameEntityRowMapper(), "End");
     }
+
+    private RowMapper<ChessGameEntity> chessGameEntityRowMapper() {
+        return (rs, rowNum) -> new ChessGameEntity(rs.getLong("id"),
+                rs.getString("state"), rs.getString("title"));
+    }
+
 }

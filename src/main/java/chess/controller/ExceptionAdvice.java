@@ -15,7 +15,6 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> exception(Exception e) {
-        e.printStackTrace();
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.badRequest().body("예상치 못한 에러가 발생했습니다.");
     }
 }

@@ -1,7 +1,5 @@
 package dto;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class RoomRequestDto {
@@ -13,8 +11,7 @@ public class RoomRequestDto {
     final private String user;
     final private Long gameId;
 
-    public RoomRequestDto(final Long id, @Min(value = 2) @NotNull final String name,
-                          @Min(value = 10) @NotNull final String pw, final String user, final Long gameId) {
+    public RoomRequestDto(final Long id, final String name, final String pw, final String user, final Long gameId) {
         this.id = id;
         this.name = name;
         this.pw = pw;
@@ -34,7 +31,9 @@ public class RoomRequestDto {
         return pw;
     }
 
-    public String getUser() { return user; }
+    public String getUser() {
+        return user;
+    }
 
     public Long getGameId() {
         return gameId;

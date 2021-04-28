@@ -14,7 +14,6 @@ function checkCookie() {
                 if (response.data.roomId !== 0) {
                     location.href = '/room/' + response.data.roomId;
                 }
-
             }).catch(function (error) {
         });
     }
@@ -40,7 +39,7 @@ function getTotalRoom() {
         .then(function (response) {
             refreshRoomList(response.data)
         }).catch(function (error) {
-        alert('방 정보를 갱신하지 못했습니다.');
+            alert('방 정보를 갱신하지 못했습니다.');
     });
 }
 
@@ -48,7 +47,6 @@ btnCreateRoom.addEventListener('click', function (e) {
     const name = prompt("방이름을 입력해 주세요.");
     const pw = prompt("비밀번호를 입력해 주세요");
     const cookieUser = getCookie('user');
-    console.log(cookieUser);
     if (cookieUser === null) {
         console.log('로그인 먼저 해주세요.');
         return;
@@ -61,7 +59,7 @@ btnCreateRoom.addEventListener('click', function (e) {
     }).then(function (response) {
         location.href = '/room/' + response.data.id;
     }).catch(function (error) {
-        alert('방을 만들지 못했습니다.');
+        alert(error.response.data);
     });
 });
 

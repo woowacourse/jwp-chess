@@ -59,7 +59,7 @@ function loadChessGame() {
         }).catch(function (error) {
             if (error.response.status === 400) {
                 alert(error.data);
-        } else {
+            } else {
             alert('게임을 로드 할 수 없습니다.');
             exitRoom();
         }

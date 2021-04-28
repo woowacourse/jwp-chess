@@ -36,9 +36,8 @@ public class ChessRoomController {
 
     @PostMapping("/room")
     public ResponseEntity<RoomDto> create(@CookieValue(value = "user") @Valid @RequestBody RoomRequestDto roomRequestDto, BindingResult bindingResult) {
-        System.out.println("create : " + roomRequestDto);
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("방 이름은 2글자 이상 8글자 이하 비밀번호는 4글자 이상 8글자 이하여야 합니다.");
         }
 
         return ResponseEntity.ok().body(chessRoomService.create(roomRequestDto));

@@ -15,7 +15,7 @@ public class HomeController {
     }
 
     @GetMapping("/room/{id}")
-    public String initBoard() {
+    public String room() {
         return "./index";
     }
 }

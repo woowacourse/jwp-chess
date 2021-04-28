@@ -1,3 +1,5 @@
+import {logoutBtn} from "./userLogout.js";
+
 let loginForm = document.getElementById("loginForm");
 let loginBtn = document.getElementById("loginBtn");
 let loginSubmit = document.getElementById("loginSubmit");
@@ -38,13 +40,14 @@ function login() {
             if (!response.ok) {
                 throw new Error(response.status)
             }
-            return response.body;
+            return response.text();
         })
         .then(data => {
             console.log(data);
             alert("로그인에 성공했습니다. 게임 방을 생성하거나, 조인해주세요.");
             welcomeUser(id);
             close();
+            logoutBtn.style.display = "block";
         })
         .catch(error => {
             alert("로그인에 실패했습니다.");
@@ -53,6 +56,24 @@ function login() {
 
 function close() {
     loginForm.style.display = "none";
+}
+
+export function checkLoginUserWithSession() {
+    fetch("/login")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(response.status)
+            }
+            console.log(response)
+            return response.text();
+        })
+        .then(data => {
+            console.log(data)
+            welcomeUser(data);
+            logoutBtn.style.display = "block";
+        })
+        .catch(error => {
+        });
 }
 
 function welcomeUser(id) {

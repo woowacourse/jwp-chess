@@ -33,10 +33,7 @@ function signup() {
 
     fetch("/signup", postOption)
         .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status)
-            }
-            return response.body;
+            return checkDuplicate(response);
         })
         .then(data => {
             console.log(data);
@@ -46,6 +43,18 @@ function signup() {
         .catch(error => {
             alert("회원 가입에 실패했습니다.");
         })
+}
+
+export function checkDuplicate(response) {
+    if (!response.ok) {
+        if (response.status === 409) {
+            alert("회원 아이디가 중복됩니다. 다른 아이디를 사용해주세요");
+        } else {
+            alert("회원 가입에 실패했습니다.");
+        }
+        throw new Error(response.status)
+    }
+    return response.text();
 }
 
 function close() {

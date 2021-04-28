@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -54,6 +53,23 @@ public class SpringChessController {
             return ResponseEntity.ok("success");
         }
         return ResponseEntity.status(NOT_FOUND).body("not-found");
+    }
+
+    @GetMapping(value = "/login")
+    public ResponseEntity<String> login(final HttpServletRequest request) {
+        final HttpSession session = request.getSession();
+        final String id = (String) session.getAttribute("id");
+        if (Objects.isNull(id) || id.length() == 0) {
+            return ResponseEntity.status(NOT_FOUND).body("not-found");
+        }
+        return ResponseEntity.ok(id);
+    }
+
+    @PostMapping(value = "/logout")
+    public ResponseEntity<String> logout(final HttpServletRequest request) {
+        final HttpSession session = request.getSession();
+        session.setAttribute("id", null);
+        return ResponseEntity.ok("success");
     }
 
     @PostMapping(value = "/games")

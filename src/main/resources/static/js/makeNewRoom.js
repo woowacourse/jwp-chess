@@ -7,7 +7,7 @@ makeRoomBtn.addEventListener("click", makeRoom);
 function makeRoom() {
     let roomName = prompt("사용할 체스방의 이름을 입력해주세요");
     console.log(roomName)
-    if (roomName === null ) {
+    if (roomName === null) {
         // alert("취소되었습니다");
     } else if (roomName == "") {
         alert("방 제목을 입력해주세요");
@@ -31,7 +31,18 @@ function checkAvailableRoom(userInputRoomName) {
 
     fetch("/games", postOption)
         .then(response => {
-            return checkFetchLogin(response);
+            if (!response.ok) {
+                console.log(response.status)
+                if (response.status === 401) {
+                    alert("로그인을 먼저 해주세요");
+                } else if (response.status === 409) {
+                    alert("방 제목이 중복됩니다. 다른 방 제목을 사용해주세요.");
+                } else {
+                    alert("서버와의 통신에 실패했습니다.");
+                }
+                throw new Error(response.status);
+            }
+            return response.json();
         })
         .then(data => {
             makeRoomAPIRequest(data);

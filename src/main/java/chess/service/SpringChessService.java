@@ -13,7 +13,6 @@ import chess.webdto.ChessGameDto;
 import chess.webdto.ChessGameTableDto;
 import chess.webdto.GameRoomDto;
 import chess.webdto.GameRoomListDto;
-import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

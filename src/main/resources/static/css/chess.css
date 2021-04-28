@@ -7,6 +7,28 @@ body {
     background-color: #F3E4DF;
 }
 
+#logout {
+    display: none;
+    margin-left: 1vw;
+    height: 30px;
+    background-color: #522632;
+    box-shadow: 3px 3px 3px 3px gray;
+    border-radius: 10px;
+    color: white;
+    width: 70px;
+}
+
+#logout:hover {
+    cursor: pointer;
+    background-color: bisque;
+    color: #522632;
+}
+
+.userLoginStatus {
+    display: flex;
+    justify-content: center;
+}
+
 .chessRoomList {
     position: absolute;
     /* display: flex; */
@@ -51,7 +73,6 @@ body {
     cursor: pointer;
 }
 
-
 .chessRoomDeleteBtn {
     width: 10%;
     margin-left: 1.5%;
@@ -82,7 +103,7 @@ body {
 .userId {
     color: #522632;
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 23px;
 }
 
 #saveGameBtn {
@@ -285,7 +306,7 @@ body {
     box-shadow: 3px 3px 3px 3px gray;
 }
 
-.loginForm > h2 , .signupForm > h2 {
+.loginForm > h2, .signupForm > h2 {
     margin-bottom: 2vh;
 }
 
@@ -307,7 +328,7 @@ body {
 
 .loginForm > .buttons > button:hover, .signupForm > .buttons > button:hover {
     cursor: pointer;
-    background-color:bisque;
+    background-color: bisque;
 }
 
 .loginForm > input, .signupForm > input {

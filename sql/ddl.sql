@@ -12,13 +12,13 @@ CREATE TABLE user_info (
     user_number int NOT NULL AUTO_INCREMENT,
     user_id VARCHAR(20),
     user_password VARCHAR(20),
-    PRIMARY KEY (user_number)
+    PRIMARY KEY (user_number, user_id)
 );
 
 CREATE TABLE game_room_info (
     room_id int NOT NULL AUTO_INCREMENT,
     room_name VARCHAR(50),
-    PRIMARY KEY (room_id)
+    PRIMARY KEY (room_id, room_name)
 );
 
 CREATE TABLE chess_game_info (

@@ -1,11 +1,12 @@
+import {checkLoginUserWithSession} from "./userLogin.js";
+import {chessBoard, gameResultWindow, initChessBoard} from "./initialize.js";
+import {addChessBoardEvent, checkIsPlaying, player1, player2} from "./movement.js";
+
 export let chessRoomList = document.getElementById("chessRoomList");
 
 export const title = document.getElementById("title");
 
 let userRelated = document.getElementById("user");
-
-import {chessBoard, gameResultWindow, initChessBoard} from "./initialize.js";
-import {addChessBoardEvent, checkIsPlaying, player1, player2} from "./movement.js";
 
 loadFirstPage();
 
@@ -14,6 +15,7 @@ function loadFirstPage() {
     gameResultWindow.style.display = "none";
     player1.style.display = "none";
     player2.style.display = "none";
+    checkLoginUserWithSession();
 }
 
 export function closeRoomList() {
@@ -98,7 +100,7 @@ function deleteRoomAPIRequest(chessRoom, id, roomName) {
             if (!response.ok) {
                 throw new Error(response.status);
             }
-            return response.body;
+            return response.text();
         })
         .then(data => {
             chessRoom.remove();

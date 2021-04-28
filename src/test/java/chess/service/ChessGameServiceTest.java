@@ -26,13 +26,13 @@ class ChessGameServiceTest {
     private ChessGameService chessGameService;
 
     @Value("${spring.datasource.driver-class-name}")
-    String driver;
+    private String driver;
     @Value("${spring.datasource.url}")
-    String dataSourceUrl;
+    private String dataSourceUrl;
     @Value("${spring.datasource.username}")
-    String userName;
+    private String userName;
     @Value("${spring.datasource.password}")
-    String userPassword;
+    private String userPassword;
 
     @Test
     @DisplayName("새로운 게임을 생성한다.")

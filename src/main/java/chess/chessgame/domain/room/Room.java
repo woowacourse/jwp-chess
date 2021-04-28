@@ -55,7 +55,7 @@ public class Room {
         return users.findUserByColor(BLACK);
     }
 
-    public boolean isSamePassword(Color color, String password) {
+    public boolean isUserExistsIn(Color color, String password) {
         return users.isSamePassword(color, password);
     }
 }

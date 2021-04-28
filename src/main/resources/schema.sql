@@ -1,4 +1,4 @@
-use mydb;
+use chess;
 
 CREATE TABLE IF NOT EXISTS `room` (
   `room_id` int(11) NOT NULL AUTO_INCREMENT,

@@ -6,9 +6,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.piece.PieceFactory;
 import chess.domain.room.Room;
 import chess.web.dto.RoomDto;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

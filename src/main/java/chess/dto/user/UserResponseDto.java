@@ -1,6 +1,6 @@
 package chess.dto.user;
 
-import chess.dao.dto.UserDto;
+import chess.domain.user.User;
 import java.time.LocalDateTime;
 
 public class UserResponseDto {
@@ -15,8 +15,8 @@ public class UserResponseDto {
         this.createdTime = createdTime;
     }
 
-    public static UserResponseDto from(final UserDto userDto) {
-        return new UserResponseDto(userDto.getId(), userDto.getName(), userDto.getCreatedTime());
+    public static UserResponseDto from(final User user) {
+        return new UserResponseDto(user.getId(), user.getName(), user.getCreatedTime());
     }
 
     public long getId() {

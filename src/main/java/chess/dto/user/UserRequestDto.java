@@ -1,6 +1,6 @@
 package chess.dto.user;
 
-import chess.dao.dto.UserDto;
+import chess.domain.user.User;
 import java.time.LocalDateTime;
 
 public class UserRequestDto {
@@ -13,9 +13,10 @@ public class UserRequestDto {
         this.password = password;
     }
 
-    public UserDto toUserDto() {
-        return new UserDto(0L, name, password, LocalDateTime.now());
+    public User toEntity() {
+        return new User(0L, name, password, LocalDateTime.now());
     }
+
 
     public String getName() {
         return name;

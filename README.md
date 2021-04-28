@@ -16,7 +16,7 @@ http://localhost:8080/swagger-ui.html#/
 ## 1단계 피드백 이후 리팩토링
 - [x] 기존 Domain으로 변경
 - [x] Controller에서 String 대신 Enum을 받도록 변경 (DTO 포함)
-- [ ] 도메인과 DAO 리팩토링
+- [x] 도메인과 DAO 리팩토링
     - 기존 Game 도메인은 로직이 없는 데이터의 성격을 띠고 있었다.
     - 게임 진행 로직은 ChessService에 있었고 이 부분을 개선하고 싶었다.
     - DB 테이블 데이터의 접근 관련 객체는 dao 패키지 하위에 dto를 생성하여 접근 
@@ -25,7 +25,11 @@ http://localhost:8080/swagger-ui.html#/
       - [x] UserDto 생성 및 적용
     - [x] Dao의 select 메서드의 반환값 Optional로 변경
     - [x] GameRepository 생성 
-    - [ ] UserRepository 생성
+    - [x] UserRepository 생성
+- [ ] Service와 Controller 리팩토링
+    - [x] UserService 에서 UserRepository 사용하도록 변경
+    - [ ] 게임 진행을 GameService가 전담 
+    - [ ] ChessService 삭제
 - [ ] 예외 처리 관련 기능 추가
     - [x] data select에 싪패하면 404 에러 발생  
 - [ ] ChessController URI 정리

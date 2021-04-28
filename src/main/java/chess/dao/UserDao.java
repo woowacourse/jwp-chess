@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public class UserDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<UserDto> userRowMapper = (resultSet, rowNum) -> new UserDto(
+    private final RowMapper<UserDto> userRowMapper = (resultSet, rowNum) -> UserDto.of(
         resultSet.getLong("id"),
         resultSet.getString("name"),
         resultSet.getString("password"),

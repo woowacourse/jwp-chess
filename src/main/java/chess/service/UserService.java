@@ -1,7 +1,7 @@
 package chess.service;
 
-import chess.dao.UserDao;
-import chess.dao.dto.UserDto;
+import chess.domain.user.User;
+import chess.domain.user.UserRepository;
 import chess.dto.user.UserRequestDto;
 import chess.dto.user.UserResponseDto;
 import org.springframework.stereotype.Service;
@@ -9,24 +9,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    final UserDao userDao;
+    final UserRepository userRepository;
 
-    public UserService(final UserDao userDao) {
-        this.userDao = userDao;
+    public UserService(final UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public long add(final UserRequestDto userRequestDto) {
-        return userDao.insert(userRequestDto.toUserDto());
+        return userRepository.add(userRequestDto.toEntity());
     }
 
     public UserResponseDto findUserByName(final String name) {
-        final UserDto userDto = userDao.selectByName(name);
-        return UserResponseDto.from(userDto);
+        final User user = userRepository.findByName(name);
+        return UserResponseDto.from(user);
     }
 
     public UserResponseDto findUserById(final long id) {
-        final UserDto userDto = userDao.selectById(id);
-        return UserResponseDto.from(userDto);
+        final User user = userRepository.finaById(id);
+        return UserResponseDto.from(user);
     }
 
 }

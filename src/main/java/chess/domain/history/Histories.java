@@ -1,7 +1,6 @@
 package chess.domain.history;
 
 import chess.domain.board.ChessBoard;
-import chess.domain.board.Coordinate;
 import chess.domain.piece.TeamType;
 
 import java.util.List;
@@ -15,14 +14,7 @@ public class Histories {
     }
 
     public void restoreChessBoardAsLatest(ChessBoard chessBoard) {
-        histories.forEach(history -> updateChessBoardByEachHistory(chessBoard, history));
-    }
-
-    private void updateChessBoardByEachHistory(ChessBoard chessBoard, History history) {
-        Coordinate source = Coordinate.from(history.getSource());
-        Coordinate destination = Coordinate.from(history.getDestination());
-        TeamType teamType = TeamType.valueOf(history.getTeamType());
-        chessBoard.move(source, destination, teamType);
+        histories.forEach(history -> history.updateChessBoard(chessBoard));
     }
 
     public TeamType findNextTeamType() {

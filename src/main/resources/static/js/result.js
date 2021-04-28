@@ -1,31 +1,10 @@
-function showResult() {
-    const xmlHttp = new XMLHttpRequest();
-    const url = getBaseUrl() + '/result';
-    xmlHttp.onreadystatechange = function () {
-        if (isValidHttpResponse(this)) {
-            const resultDTO = JSON.parse(this.responseText);
-            printResult(resultDTO);
-            return;
-        }
-        if (isGameNotFinished(this)) {
-            alert('게임이 아직 종료되지 않았습니다.');
-            window.location = 'http://localhost:8080';
-        }
-    }
-    xmlHttp.open('GET', url, true);
-    xmlHttp.send();
-}
-
-function getBaseUrl() {
-    return 'http://localhost:8080/chessgame';
-}
-
-function isValidHttpResponse(xmlHttp) {
-    return xmlHttp.readyState === 4 && xmlHttp.status === 200;
-}
-
-function isGameNotFinished(xmlHttp) {
-    return xmlHttp.readyState === 4 && xmlHttp.status === 500;
+async function showResult() {
+    await axios.get('/chessgame/' + roomId + '/result')
+        .then(response => printResult(response.data))
+        .catch(error => {
+            alert(error.response.data);
+            window.location = '/chessgame/' + roomId;
+        });
 }
 
 function printResult(resultDTO) {
@@ -36,20 +15,16 @@ function printResult(resultDTO) {
     document.getElementById('winner-team').innerText = '우승팀 : ' + resultDTO.winnerTeamType;
 }
 
-function addRestartEvent() {
-    const restartButton = document.getElementById('restart-button');
-    restartButton.addEventListener('click', function (event) {
-        const xmlHttp = new XMLHttpRequest();
-        const url = getBaseUrl() + '/histories';
-        xmlHttp.onreadystatechange = function () {
-            if (isValidHttpResponse(this)) {
-                window.location.replace(this.responseText);
-            }
-        }
-        xmlHttp.open('DELETE', url, true);
-        xmlHttp.send();
-    });
+function addDeleteEvent() {
+    const $deleteButton = document.getElementById('delete-button');
+    $deleteButton.addEventListener('click', requestDeletion);
+}
+
+const requestDeletion = async () => {
+    await axios.delete('/chessgame/' + roomId)
+        .then(response => window.location.replace(response.data))
+        .catch(error => alert(error.response.data));
 }
 
 showResult();
-addRestartEvent();
+addDeleteEvent();

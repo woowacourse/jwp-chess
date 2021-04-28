@@ -22,18 +22,18 @@ public class ChessDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<History> findAllHistories() {
-        String query = "SELECT * FROM HISTORY";
-        return jdbcTemplate.query(query, ROW_MAPPER);
+    public List<History> findAllByRoomId(int roomId) {
+        String query = "SELECT * FROM HISTORY WHERE ROOM_ID = ?";
+        return jdbcTemplate.query(query, ROW_MAPPER, roomId);
     }
 
-    public void insertHistory(String source, String destination, String teamType) {
-        String query = "INSERT INTO HISTORY (SOURCE, DESTINATION, TEAM_TYPE) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query, source, destination, teamType);
+    public void insertHistory(History history, int roomId) {
+        String query = "INSERT INTO HISTORY (SOURCE, DESTINATION, TEAM_TYPE, ROOM_ID) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(query, history.getSource(), history.getDestination(), history.getTeamType(), roomId);
     }
 
-    public void deleteAllHistories() {
-        String query = "TRUNCATE TABLE HISTORY";
-        jdbcTemplate.update(query);
+    public void deleteAllByRoomId(int roomId) {
+        String query = "DELETE FROM HISTORY WHERE ROOM_ID = ?";
+        jdbcTemplate.update(query, roomId);
     }
 }

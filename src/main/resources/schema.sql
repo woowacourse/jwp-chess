@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `room` (
   `current_turn` char(5) DEFAULT NULL,
   `room_name` varchar(20) NOT NULL,
   PRIMARY KEY (`room_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `piece` (
   `piece_name` char(1) DEFAULT NULL,

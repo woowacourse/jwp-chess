@@ -7,6 +7,7 @@ import chess.exception.ChessPieceMoveNotAllowException;
 import java.util.List;
 
 public class Position {
+    private static final String POSITION_FORMAT = "[a-h][1-8]";
 
     private final int row;
     private final int column;
@@ -14,6 +15,33 @@ public class Position {
     public Position(final int row, final int column) {
         this.row = row;
         this.column = column;
+    }
+
+    public static Position ofChessPiece(String input) {
+        validateRightInput(input);
+
+        return getPositionFromInput(input);
+    }
+
+    private static void validateRightInput(String input) {
+        if (isRightPositionFormat(input)) {
+            return;
+        }
+
+        throw new ChessPieceMoveNotAllowException();
+    }
+
+    private static boolean isRightPositionFormat(String inputs) {
+        return inputs.matches(POSITION_FORMAT);
+    }
+
+    private static Position getPositionFromInput(String input) {
+        String[] inputs = input.split("");
+
+        int column = inputs[0].charAt(0) - 'a';
+        int row = Board.getRow() - Integer.parseInt(inputs[1]);
+
+        return new Position(row, column);
     }
 
     public double calculateGradient(Position position) {

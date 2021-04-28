@@ -1,49 +1,50 @@
 package chess.service;
 
-import chess.domain.board.Board;
+import chess.domain.RoomRepository;
 import chess.domain.game.ChessGame;
-import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Position;
-import chess.exception.CommandFormatException;
-import chess.repository.GameRepository;
+import chess.domain.room.Room;
 import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
 import chess.web.dto.StatusDto;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
-    private static final String POSITION_FORMAT = "[a-h][1-8]";
 
-    private final GameRepository gameRepository;
+    private final RoomRepository roomRepository;
 
-    public ChessService(GameRepository gameRepository) {
-        this.gameRepository = gameRepository;
+    public ChessService(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
     }
 
-    public MessageDto end(String gameId) {
-        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
+    @CachePut(value = "game", key = "#roomId")
+    public MessageDto end(Long roomId) {
+        Room room = roomRepository.findByRoomId(roomId);
+        ChessGame chessGame = room.getChessGame();
 
         chessGame.end();
+
+        roomRepository.update(room);
 
         return new MessageDto("finished");
     }
 
-    public GameDto loadByGameId(String gameId) {
-        ChessGame chessGame = gameRepository.findByGameIdFromDB(gameId);
-        gameRepository.saveToCache(gameId, chessGame);
+    @Cacheable(value = "game", key = "#roomId")
+    public GameDto loadByGameId(Long roomId) {
+        Room room = roomRepository.findByRoomId(roomId);
+        ChessGame chessGame = room.getChessGame();
 
         return new GameDto(chessGame);
     }
 
-    public GameDto startNewGame(String gameId) {
-        ChessGame chessGame = saveGameAndStart(gameId);
-
-        return new GameDto(chessGame);
-    }
-
-    public StatusDto getStatus(String gameId) {
-        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
+    @Cacheable(value = "status", key = "#roomId")
+    public StatusDto getStatus(Long roomId) {
+        Room room = roomRepository.findByRoomId(roomId);
+        ChessGame chessGame = room.getChessGame();
 
         double whiteScore = chessGame.getWhiteScore();
         double blackScore = chessGame.getBlackScore();
@@ -51,70 +52,15 @@ public class ChessService {
         return new StatusDto(whiteScore, blackScore);
     }
 
-    private ChessGame saveGameAndStart(String gameId) {
-        ChessGame chessGame = new ChessGame(new Board(PieceFactory.createPieces()));
-        chessGame.start();
+    @CachePut(value = "game", key = "#roomId")
+    public GameDto move(Long roomId, String source, String target) {
+        Room room = roomRepository.findByRoomId(roomId);
+        ChessGame chessGame = room.getChessGame();
 
-        if (gameRepository.isGameIdExistingInDB(gameId)) {
-            throw new IllegalArgumentException("이미 존재하는 게임 아이디 입니다.");
-        }
-
-        gameRepository.saveToCache(gameId, chessGame);
-
-        return chessGame;
-    }
-
-    public MessageDto save(String gameId) {
-        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
-        saveGameToDB(gameId, chessGame);
-
-        return new MessageDto("저장 완료");
-    }
-
-    private void saveGameToDB(String gameId, ChessGame chessGame) {
-        if (gameRepository.isGameIdExistingInDB(gameId)) {
-            gameRepository.updateToDB(gameId, chessGame);
-            return;
-        }
-
-        gameRepository.saveToDB(gameId, chessGame);
-    }
-
-    public GameDto move(String gameId, String source, String target) {
-        ChessGame chessGame = gameRepository.findByGameIdFromCache(gameId);
-
-        validateRightInputs(source, target);
-        Position sourcePosition = getPositionFromInput(source);
-        Position targetPosition = getPositionFromInput(target);
-
-        return executeMove(sourcePosition, targetPosition, chessGame);
-    }
-
-    private GameDto executeMove(Position sourcePosition, Position targetPosition, ChessGame chessGame) {
-        chessGame.move(sourcePosition, targetPosition);
+        chessGame.move(Position.ofChessPiece(source), Position.ofChessPiece(target));
+        roomRepository.update(room);
 
         return new GameDto(chessGame);
-    }
-
-    private void validateRightInputs(String source, String target) {
-        if (isRightPositionFormat(source) && isRightPositionFormat(target)) {
-            return;
-        }
-
-        throw new CommandFormatException();
-    }
-
-    private Position getPositionFromInput(String input) {
-        String[] inputs = input.split("");
-
-        int column = inputs[0].charAt(0) - 'a';
-        int row = Board.getRow() - Integer.parseInt(inputs[1]);
-
-        return new Position(row, column);
-    }
-
-    private boolean isRightPositionFormat(String inputs) {
-        return inputs.matches(POSITION_FORMAT);
     }
 
 }

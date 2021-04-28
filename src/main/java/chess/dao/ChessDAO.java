@@ -1,8 +1,12 @@
 package chess.dao;
 
+import chess.exception.NoDataExistenceException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
@@ -14,36 +18,110 @@ public class ChessDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addChessGame(String gameId, String data) {
-        String query = "INSERT INTO chess (game_id, data) VALUES (?, ?)";
+    public List<Room> allRooms() {
+        String query = "SELECT * FROM room inner join chess using (game_id)";
 
-        jdbcTemplate.update(query, gameId, data);
+        List<Room> room = jdbcTemplate.query(query, (rs, i) -> {
+            Long roomId = rs.getLong("room_id");
+            String roomName = rs.getString("room_name");
+            Long gameId = rs.getLong("game_id");
+            String data = rs.getString("data");
+
+            return new Room(roomId, roomName, gameId, data);
+        });
+
+        return room;
     }
 
-    public void updateChessGame(String gameId, String data) {
+    public Long addChessGame(String data) {
+        String query = "INSERT INTO chess (data) VALUES (?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement pstmt = connection.prepareStatement(query, new String[]{"game_id"});
+            pstmt.setString(1, data);
+
+            return pstmt;
+        }, keyHolder);
+
+        return keyHolder.getKeyAs(Long.class);
+    }
+
+    public void updateChessGame(Long gameId, String data) {
         String query = "UPDATE chess SET data=? WHERE game_id = ?";
 
         jdbcTemplate.update(query, data, gameId);
     }
 
-    public String findChessGameByGameId(String gameId) {
-        String query = "SELECT data FROM chess WHERE game_id = ?";
+    public Room findRoomByRoomId(Long gameId) {
+        String query = "SELECT `room_id`, `room_name`, `data` FROM room a inner join chess b on (a.game_id = b.game_id) WHERE a.game_id = ?";
 
-        List<String> data = jdbcTemplate.query(query, (rs, i) -> rs.getString("data"), gameId);
+        List<Room> room = jdbcTemplate.query(query, (rs, i) -> {
+            Long roomId = rs.getLong("room_id");
+            String roomName = rs.getString("room_name");
+            String data = rs.getString("data");
 
-        if (data.size() == 0) {
-            throw new IllegalArgumentException("데이터가 존재하지 않습니다.");
+            return new Room(roomId, roomName, gameId, data);
+        }, gameId);
+
+        if (room.size() == 0) {
+            throw new NoDataExistenceException();
         }
 
-        return data.get(0);
+        return room.get(0);
     }
 
-    public boolean isGameIdExisting(String gameId) {
-        String query = "SELECT count(*) as count FROM chess WHERE game_id = ?";
+    public Long addRoom(String roomName, Long gameId) {
+        String query = "INSERT INTO room (room_name, game_id) VALUES (?, ?)";
 
-        List<Integer> count = jdbcTemplate.query(query, (rs, i) -> rs.getInt("count"), gameId);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        return count.get(0) != 0;
+        jdbcTemplate.update(connection -> {
+            PreparedStatement pstmt = connection.prepareStatement(query, new String[]{"room_id"});
+            pstmt.setString(1, roomName);
+            pstmt.setLong(2, gameId);
+
+            return pstmt;
+        }, keyHolder);
+
+        return keyHolder.getKeyAs(Long.class);
+    }
+
+    public static class Room {
+
+        private final Long roomId;
+        private final String roomName;
+        private final Long gameId;
+        private final String gameData;
+
+        public Room(Long roomId, String roomName, Long gameId, String gameData) {
+            this.roomId = roomId;
+            this.roomName = roomName;
+            this.gameId = gameId;
+            this.gameData = gameData;
+        }
+
+        public Room(Long roomId, String roomName) {
+            this(roomId, roomName, null, null);
+        }
+
+        public Long getRoomId() {
+            return roomId;
+        }
+
+        public String getRoomName() {
+            return roomName;
+        }
+
+        public Long getGameId() {
+            return gameId;
+        }
+
+        public String getGameData() {
+            return gameData;
+        }
+
     }
 
 }

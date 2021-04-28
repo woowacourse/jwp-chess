@@ -3,6 +3,7 @@ package chess.repository;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
 import chess.domain.game.state.State;
+import chess.exception.DataLoadException;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Constructor;
@@ -59,14 +60,17 @@ public class ChessGameConvertor {
         return gson.toJson(new Wrapper(stateName, collect));
     }
 
-    public static ChessGame jsonToChessGame(String jsonData) {
+    public static ChessGame jsonToChessGame(Long gameId, String jsonData) {
         Wrapper wrapper = gson.fromJson(jsonData, Wrapper.class);
 
         List<chess.domain.piece.ChessPiece> chessPieces = wrapper.getPieces().stream()
                 .map(piece -> convertChessPiece(piece.className, piece.row, piece.col))
                 .collect(toList());
 
-        ChessGame chessGame = new ChessGame(new Board(chessPieces));
+        ChessGame chessGame = new ChessGame(
+                gameId,
+                new Board(chessPieces)
+        );
 
         State state = convertState(wrapper.getState(), chessGame);
         chessGame.changeState(state);
@@ -81,7 +85,7 @@ public class ChessGameConvertor {
             return (State) constructor.newInstance(chessGame);
         } catch (ClassNotFoundException | NoSuchMethodException |
                 IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            throw new IllegalArgumentException("불러오기에 실패했습니다.");
+            throw new DataLoadException();
         }
     }
 
@@ -91,7 +95,7 @@ public class ChessGameConvertor {
             Method createWithCoordinate = aClass.getDeclaredMethod("createWithCoordinate", int.class, int.class);
             return (chess.domain.piece.ChessPiece) createWithCoordinate.invoke(null, row, column);
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalArgumentException("불러오기에 실패했습니다.");
+            throw new DataLoadException();
         }
     }
 

@@ -11,7 +11,10 @@ function checkCookie() {
     if (cookie) {
         axios.get('/api/user/' + cookie)
             .then(function (response) {
-                location.href = '/room/' + response.data.roomId;
+                if (response.data.roomId !== 0) {
+                    location.href = '/room/' + response.data.roomId;
+                }
+
             }).catch(function (error) {
         });
     }
@@ -128,7 +131,7 @@ function clickRoom(event) {
 
 function enterGame(id) {
     const pw = prompt('방 비밀번호를 입력 해 주세요')
-    axios.post('/api/room/' + id + "/enter", {
+    axios.post('/api/room/' + id + '/enter', {
         "id": id,
         "user": getCookie('user'),
         "pw": pw

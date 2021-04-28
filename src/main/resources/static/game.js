@@ -3,6 +3,7 @@ let stompClient;
 let gameInfo = {};
 let source = null;
 
+const btnEnd = document.getElementById('btn-end')
 const piecesMap = {
     "P": "♟", "R": "&#9820;", "N": "&#9822;", "B": "&#9821;", "Q": "&#9819;", "K": "&#9818;",
     "p": "&#9817;", "r": "&#9814;", "n": "&#9816;", "b": "&#9815;", "q": "&#9813;", "k": "&#9812;"
@@ -14,7 +15,23 @@ window.onload = () => {
     roomId = urls[urls.length - 1];
     connectToSocket(roomId);
     loadChessGame();
+}
 
+btnEnd.addEventListener('click', function (e) {
+    exitRoom();
+});
+
+
+function exitRoom() {
+    console.log("gameinfo id : " + gameInfo.id)
+    axios.put('/api/room/' + roomId + '/exit', {
+        'id' : roomId,
+        'gameId' : gameInfo.id
+    }).then(function (response) {
+        refreshChessBoard(response.data)
+    }).catch(function (error) {
+        alert('게임을 떠날 수 없습니다.');
+    });
 }
 
 function connectToSocket(roomId) {
@@ -24,13 +41,17 @@ function connectToSocket(roomId) {
 
     stompClient.connect({}, function (frame) {
         stompClient.subscribe("/topic/game/" + roomId, function (response) {
-            let data = JSON.parse(response.body);
+            console.log(response);
+            const data = JSON.parse(response.body);
             refreshChessBoard(data)
         })
     })
 }
 
 function loadChessGame() {
+    if (gameInfo && gameInfo.isEnd) {
+        return;
+    }
     axios.get('/api/game/' + roomId)
         .then(function (response) {
             console.log(response.data)
@@ -40,18 +61,13 @@ function loadChessGame() {
                 alert(error.data);
         } else {
             alert('게임을 로드 할 수 없습니다.');
+            exitRoom();
         }
-        location.href = "/";
     });
 }
 
 
 function selectPiece(target) {
-    if (gameInfo.end) {
-        askExit();
-        return;
-    }
-
     if (source == null) {
         if (!target.classList.contains('piece')) {
             alert('빈 공간을 클릭 할 수 없습니다.')
@@ -94,6 +110,7 @@ function movePiece(target) {
         'from': source.getAttribute('id'),
         'to': target.getAttribute('id')
     }
+
     axios.put('/api/game/' + roomId, body)
         .then(function (response) {
             source.classList.remove('selected-piece')
@@ -146,8 +163,14 @@ function clearSelect() {
 
 function refreshChessBoard(chessGame) {
     console.log(chessGame)
+    if (chessGame.end) {
+        alert('상대가 나갔거나, 게임이 끝났습니다.')
+        exitRoom();
+        return;
+    }
+
     gameInfo = chessGame;
-    let isEnd = chessGame.end;
+
     const blackPlayer = chessGame.blackTeam.player;
     const whitePlayer = chessGame.whiteTeam.player;
 
@@ -189,17 +212,8 @@ function refreshChessBoard(chessGame) {
         document.getElementById('name-black').innerHTML = chessGame.blackTeam.name;
         document.getElementById('name-white').innerHTML = chessGame.whiteTeam.name + "&#9817;";
     }
-
-    if (isEnd) {
-        askExit();
-    }
 }
 
-function askExit() {
-    if (confirm('게임이 끝났습니다. 나가시겠습니까?')) {
-        location.href = "/";
-    }
-}
 
 function clearChessBoard() {
     const board = document.querySelector('.chessboard');

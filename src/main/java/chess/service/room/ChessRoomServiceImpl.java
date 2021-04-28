@@ -83,8 +83,17 @@ public class ChessRoomServiceImpl implements ChessRoomService {
 
     @Override
     public void exit(final Long roomId, final String userName) {
-        userDao.setRoomId(roomId,userName);
+        userDao.setRoomId(null,userName);
         chessRoomRepository.deleteUserFormRoom(roomId, userName);
+    }
+
+    @Override
+    public ChessGameDto exitReturnEndChessGame(final RoomRequestDto roomRequestDto, final String userName) {
+        userDao.setRoomId(null,userName);
+        chessRoomRepository.deleteUserFormRoom(roomRequestDto.getId(), userName);
+        ChessGame chessGame = chessGameRepository.chessGame(roomRequestDto.getGameId());
+        chessGame.finish();
+        return new ChessGameDto(roomRequestDto.getGameId(), chessGame);
     }
 
     public void validateEnterStatus(RoomRequestDto roomRequestDto) {

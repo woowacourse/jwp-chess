@@ -39,4 +39,15 @@ public class RoomRequestDto {
     public Long getGameId() {
         return gameId;
     }
+
+    @Override
+    public String toString() {
+        return "RoomRequestDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", pw='" + pw + '\'' +
+                ", user='" + user + '\'' +
+                ", gameId=" + gameId +
+                '}';
+    }
 }

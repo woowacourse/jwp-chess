@@ -11,4 +11,5 @@ public interface ChessRoomService {
     ChessGameDto enter(RoomRequestDto room);
     List<RoomDto> rooms();
     void exit(Long roomId, String userName);
+    ChessGameDto exitReturnEndChessGame(RoomRequestDto roomRequestDto, String userName);
 }

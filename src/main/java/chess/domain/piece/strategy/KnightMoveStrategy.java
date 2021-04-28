@@ -11,9 +11,10 @@ public class KnightMoveStrategy extends DefaultMoveStrategy {
 
     @Override
     public boolean canMove(MoveRoute moveRoute) {
+        super.canMove(moveRoute);
         if (moveRoute.length() > 2) {
             throw new InvalidMoveStrategyException("나이트가 움직일 수 있는 범위를 넘어섰습니다.");
         }
-        return super.canMove(moveRoute);
+        return true;
     }
 }

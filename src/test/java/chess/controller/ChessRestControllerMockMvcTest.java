@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.dto.CreateGameRequest;
 import chess.dto.MoveRequest;
 import chess.service.ChessGameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,13 +13,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
 @AutoConfigureMockMvc
-class ChessRestControllerTest {
+class ChessRestControllerMockMvcTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -35,17 +35,6 @@ class ChessRestControllerTest {
     void requestGamesTest() throws Exception {
         this.mockMvc.perform(get("/games"))
                 .andExpect(status().isOk());
-    }
-
-    @DisplayName("게임 생성 요청 ")
-    @Test
-    void createNewGameTest() throws Exception {
-        String content = objectMapper.writeValueAsString(new CreateGameRequest("test title"));
-
-        this.mockMvc.perform(post("/games")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content))
-                .andExpect(status().isCreated());
     }
 
     @DisplayName("기물을 이동한다.")

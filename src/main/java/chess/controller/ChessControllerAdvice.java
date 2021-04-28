@@ -1,17 +1,18 @@
 package chess.controller;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.security.auth.login.LoginException;
 import java.sql.SQLException;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
-public class ExceptionController {
+public class ChessControllerAdvice {
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<String> handleIllegalArgumentException() {
         return ResponseEntity.badRequest().body("unavailable");
@@ -25,5 +26,15 @@ public class ExceptionController {
     @ExceptionHandler({EmptyResultDataAccessException.class})
     public ResponseEntity<String> handleEmptyResultException() {
         return ResponseEntity.status(NOT_FOUND).body("not-found");
+    }
+
+    @ExceptionHandler({LoginException.class})
+    public ResponseEntity<String> handleLoginException() {
+        return ResponseEntity.status(UNAUTHORIZED).body("unauthorized");
+    }
+
+    @ExceptionHandler({DuplicateKeyException.class})
+    public ResponseEntity<String> DuplicateKeyException() {
+        return ResponseEntity.status(CONFLICT).body("conflict");
     }
 }

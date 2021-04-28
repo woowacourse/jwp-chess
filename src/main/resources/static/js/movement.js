@@ -1,5 +1,6 @@
 import {blackTeamCurrentTurn, chessBoard, drawPieceImage, whiteTeamCurrentTurn} from "./initialize.js";
 import {finishGame} from "./finishGame.js";
+import {askUserToLogin} from "./userLogin.js";
 
 const whiteTeamScoreUI = document.getElementById("whiteTeamScore");
 const blackTeamScoreUI = document.getElementById("blackTeamScore");
@@ -54,12 +55,13 @@ function serverMoveRequest(startPoint, destPoint) {
         body: JSON.stringify(moveRequest)
     }
 
-    fetch("/game/move", postOption)
+    document.getElementById("roomNumber");
+    let roomNumber = document.getElementById("roomNumber").getAttribute("class");
+
+    let moveUrl = "/games/" + String(roomNumber) + "/move";
+    fetch(moveUrl, postOption)
         .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-            return response.json();
+            return checkFetchMove(response);
         })
         .then(data => {
             drawPieceImage(data);
@@ -68,9 +70,21 @@ function serverMoveRequest(startPoint, destPoint) {
             checkIsPlaying(data);
         })
         .catch(error => {
-            console.log(error)
-            alert("움직일 수 없는 경로입니다.");
         })
+}
+
+export function checkFetchMove(response) {
+    if (!response.ok) {
+        console.log(response.status)
+        if (response.status === 401) {
+            alert("로그인을 먼저 해주세요");
+            askUserToLogin();
+        } else {
+            alert("움직일 수 없는 경로입니다.");
+        }
+        throw new Error(response.status);
+    }
+    return response.json();
 }
 
 export function updateScoreUI(whiteTeamScore, blackTeamScore) {

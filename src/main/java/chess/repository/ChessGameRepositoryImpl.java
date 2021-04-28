@@ -6,10 +6,11 @@ import chess.domain.game.ChessGameRepository;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
 import dto.MoveDto;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 
-@Service
+@Repository
 public class ChessGameRepositoryImpl implements ChessGameRepository {
 
     private final GameDao gameDao;

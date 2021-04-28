@@ -1,9 +1,14 @@
+DROP TABLE piece;
+DROP TABLE team;
+DROP TABLE room;
+DROP TABLE game;
+
 CREATE TABLE IF NOT EXISTS game
 (
     game_id INTEGER NOT NULL AUTO_INCREMENT,
     is_end  BOOLEAN NOT NULL DEFAULT false,
     PRIMARY KEY (game_id)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS room
 (
@@ -13,7 +18,7 @@ CREATE TABLE IF NOT EXISTS room
     game_id INTEGER     NOT NULL,
     PRIMARY KEY (room_id),
     FOREIGN KEY (game_id) REFERENCES game (game_id)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS team
 (
@@ -23,7 +28,7 @@ CREATE TABLE IF NOT EXISTS team
     game_id INTEGER     NOT NULL,
     PRIMARY KEY (team_id),
     FOREIGN KEY (game_id) REFERENCES game (game_id)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS piece
 (
@@ -34,4 +39,4 @@ CREATE TABLE IF NOT EXISTS piece
     game_id  INTEGER     NOT NULL,
     PRIMARY KEY (piece_id),
     FOREIGN KEY (game_id) REFERENCES game (game_id)
-);
+    );

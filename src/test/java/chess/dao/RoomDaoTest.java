@@ -15,9 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@Sql("classpath:tableInit.sql")
 class RoomDaoTest {
     private final RoomDao roomDao;
     private final JdbcTemplate jdbcTemplate;
@@ -30,8 +32,6 @@ class RoomDaoTest {
     @BeforeEach
     void setUp() {
         ChessGame chessGame = new ChessGame(new WhiteTeam(), new BlackTeam());
-        jdbcTemplate.execute("DELETE FROM room;"
-            + "ALTER TABLE room ALTER COLUMN room_id RESTART WITH 1;");
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement("insert into game (is_end) values (?)");

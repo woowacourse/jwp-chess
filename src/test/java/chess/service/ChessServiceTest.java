@@ -4,47 +4,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.domain.ChessGame;
-import chess.domain.Position;
 import chess.domain.Room;
-import chess.domain.team.BlackTeam;
-import chess.domain.team.WhiteTeam;
 import dto.ChessGameDto;
 import dto.MoveDto;
 import dto.PieceDto;
 import dto.RoomDto;
 import dto.TeamDto;
+import exception.ChessException;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@Sql("classpath:tableInit.sql")
 class ChessServiceTest {
     private final ChessService chessService;
-    private final JdbcTemplate jdbcTemplate;
-    private final ChessGame chessGame = new ChessGame(new WhiteTeam(), new BlackTeam());
     private final Room room = new Room(1, "멍토", "비번", 1);
 
-    public ChessServiceTest(final ChessService chessService, final JdbcTemplate jdbcTemplate) {
+    public ChessServiceTest(final ChessService chessService) {
         this.chessService = chessService;
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.execute("DELETE FROM team;"
-            + "ALTER TABLE team ALTER COLUMN team_id RESTART WITH 1;"
-            + "DELETE FROM piece;"
-            + "ALTER TABLE piece ALTER COLUMN piece_id RESTART WITH 1;"
-            + "DELETE FROM room;"
-            + "ALTER TABLE room ALTER COLUMN room_id RESTART WITH 1;"
-            + "DELETE FROM game;"
-            + "ALTER TABLE game ALTER COLUMN game_id RESTART WITH 1;");
     }
 
     @Test
@@ -121,6 +103,6 @@ class ChessServiceTest {
         }).doesNotThrowAnyException();
 
         assertThatThrownBy(() -> chessService.movePiece(1, moveDto))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ChessException.class);
     }
 }

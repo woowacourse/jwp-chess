@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `game`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `game` (
   `game_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `title` varchar(64) DEFAULT NULL,
+  `title` varchar(64) NOT NULL,
   `turn` varchar(16) NOT NULL,
   PRIMARY KEY (`game_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

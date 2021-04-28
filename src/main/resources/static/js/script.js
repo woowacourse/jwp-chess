@@ -102,6 +102,10 @@ async function addEventOnCreateGameButton() {
                         turnPanelOnGameMode();
                         processResponse(res)
                     }
+                    else {
+                        res.json()
+                            .then(responseBody => updateMessageOnUpperConsole(responseBody.message));
+                    }
                 });
         } catch (error) {
             console.error(error.messages);

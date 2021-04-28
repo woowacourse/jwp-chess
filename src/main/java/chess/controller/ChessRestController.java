@@ -1,9 +1,11 @@
 package chess.controller;
 
 import chess.dto.*;
+import chess.exception.NullTitleException;
 import chess.service.ChessGameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,11 +18,19 @@ public class ChessRestController {
 
     @PostMapping("/games")
     public ResponseEntity<CommonResponse<NewGameDto>> newGame(@RequestBody CreateGameRequest createGameRequest) {
+        validateTitleIsNotNull(createGameRequest.getTitle());
+
         return new ResponseEntity<>(
                 new CommonResponse<>(
                         "새로운 게임이 생성되었습니다.",
                         chessGameService.createNewGame(createGameRequest.getTitle())
                 ), HttpStatus.CREATED);
+    }
+
+    private void validateTitleIsNotNull(String title) {
+        if (!StringUtils.hasText(title)) {
+            throw new NullTitleException("게임 제목이 없습니다.");
+        }
     }
 
     @GetMapping("/games/{gameId}")

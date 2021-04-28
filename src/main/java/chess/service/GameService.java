@@ -4,7 +4,6 @@ import chess.dao.GameDao;
 import chess.dao.dto.GameDto;
 import chess.dto.game.GameRequestDto;
 import chess.dto.game.GameResponseDto;
-import chess.exception.DataNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,8 +20,7 @@ public class GameService {
     }
 
     public GameResponseDto findById(final long gameId) {
-        final GameDto gameDto = gameDao.findById(gameId)
-            .orElseThrow(() -> new DataNotFoundException(GameDto.class));
+        final GameDto gameDto = gameDao.findById(gameId);
         return GameResponseDto.from(gameDto);
     }
 

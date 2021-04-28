@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>체스 홈</title>
+    <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
-<form action="/start" method="post">
-    방번호 : <input type="text" name="room">
-    <input type="submit" value="입장하기">
-</form>
+<div class="main_form">
+    <div class="room_list">
+    </div>
+    <form action="/rooms" method="post">
+        방 제목 : <input type="text" name="room">
+        <input class="create_btn" type="submit" value="생성하기">
+    </form>
+</div>
 </body>
+<script src="/js/main.js" type="text/javascript"></script>
 </html>

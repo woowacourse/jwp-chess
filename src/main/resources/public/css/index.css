@@ -121,6 +121,74 @@ div#board-frame {
     animation-iteration-count: infinite;
 }
 
+.room {
+    width: 300px;
+    height: 60px;
+    margin: 10px;
+    background-color: plum;
+    border: medium solid mediumpurple;
+    top: 18%;
+    left: 20%;
+    font-size: 20px;
+    display: flex;
+}
+
+.main_form {
+    position: absolute;
+    top: 15%;
+    left: 45%;
+}
+
+a {
+    display: inline-block;
+    position: absolute;
+    left: 10%;
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(255, 0, 127);
+    text-decoration: none;
+}
+
+.room .destroy {
+    display: none;
+    position: absolute;
+    right: 13px;
+    width: 40px;
+    height: 40px;
+    margin-top: 10px;
+    font-size: 30px;
+    color: inherit;
+    background: none;
+    border: 0;
+    transition: color 0.2s ease-out;
+    cursor: pointer;
+}
+
+.room .destroy:hover {
+    color: #af5b5e;
+}
+
+.room .destroy:after {
+    content: '×';
+}
+
+.room:hover .destroy {
+    display: block;
+}
+
+.create_btn {
+    font-family: 'Jua', sans-serif;
+    border-radius: 10px;
+    background-color: mediumpurple;
+}
+
+.create_btn:hover {
+    background-color: rgb(255, 0, 127);
+}
+
 @keyframes rainbow-bg {
     100%, 0% {
         background-color: rgb(255, 0, 0);

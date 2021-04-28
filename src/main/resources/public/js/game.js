@@ -14,21 +14,25 @@ const $roomId = document.getElementById("room").value;
 createBoard();
 
 function getFetch(url) {
-    return fetch(url).then(response => response.json());
+    return fetch(url).then(response => {
+        return response.json();
+    });
+}
+
+function getFetchWithParams(url, data) {
+    return getFetch(url + "?" + new URLSearchParams(data));
+}
+
+function getFetchPath(url) {
+    return getFetchWithParams(url, {
+        "target": $target
+    });
 }
 
 function postFetchMove(url) {
     return postFetch(url, JSON.stringify({
-        "roomId": $roomId,
         "target": $target,
         "destination": $destination
-    }));
-}
-
-function postFetchPath(url) {
-    return postFetch(url, JSON.stringify({
-        "roomId": $roomId,
-        "target": $target
     }));
 }
 
@@ -41,23 +45,12 @@ function postFetch(url, bodyData) {
         },
         body: bodyData
     }).then(response => {
-        console.log(response)
         return response.json();
     })
 }
 
-function postFetchScore(url) {
-    return fetch(url, {
-        method: 'post'
-    }).then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-    });
-}
-
 async function moveBoard() {
-    await postFetchMove("move").then(data => {
+    await postFetchMove($roomId + "/command").then(data => {
         $board = data;
         refreshBoard();
         createBoard();
@@ -67,7 +60,7 @@ async function moveBoard() {
 async function findPath() {
     clearMovablePosition();
 
-    await postFetchPath("movable").then(data => {
+    await getFetchPath($roomId + "/path").then(data => {
         $path = data;
     });
     showMovablePosition();
@@ -81,7 +74,7 @@ function showMovablePosition() {
 }
 
 async function findScore() {
-    await postFetchScore("score/" + $roomId).then(data => {
+    await getFetch($roomId + "/status").then(data => {
         $status = data;
     });
     showScore();
@@ -111,7 +104,7 @@ function clearMovablePosition() {
 
 async function createBoard() {
     clearBoard();
-    await getFetch("create/" + $roomId).then(data => {
+    await getFetch($roomId + "/board").then(data => {
         $board = data;
     })
     refreshBoard();
@@ -198,7 +191,13 @@ function changeTurn(team) {
 
 async function clearRoom() {
     clearBoard();
-    window.location.href = "/clear/" + $roomId;
+    fetch($roomId + "/commands", {
+        method: 'delete'
+    }).then(res => {
+        if (res.status === 200) {
+            window.location.href = "/";
+        }
+    });
 }
 
 document.addEventListener("click", createMoveCommand);

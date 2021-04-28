@@ -10,8 +10,6 @@ public interface PieceRepository {
 
     void savePieces(ChessGameManager chessGameManager, long gameId);
 
-    void savePiece(Piece piece, Position position, long gameId);
-
     Piece findPieceByPosition(Position position, long gameId);
 
     void deletePieceByPosition(Position position, long gameId);

@@ -20,6 +20,7 @@ public class GameDao implements GameRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public long save(ChessGameManager chessGameManager, String title) {
         Color currentTurnColor = chessGameManager.getCurrentTurnColor();
 
@@ -32,6 +33,7 @@ public class GameDao implements GameRepository {
         return gameId;
     }
 
+    @Override
     public Color findCurrentTurnByGameId(long gameId) {
         String gameQuery = "SELECT turn FROM game WHERE game_id = ?";
         Color currentTurn = this.jdbcTemplate.queryForObject(gameQuery, colorRowMapper, gameId);
@@ -46,12 +48,14 @@ public class GameDao implements GameRepository {
         return Color.of(resultSet.getString("turn"));
     };
 
+    @Override
     public void updateTurnByGameId(ChessGameManager chessGameManager, long gameId) {
         Color currentTurnColor = chessGameManager.getCurrentTurnColor();
         String query = "UPDATE game set turn=? WHERE game_id = ?";
         this.jdbcTemplate.update(query, currentTurnColor.name(), gameId);
     }
 
+    @Override
     public List<GameEntryDto> findAllGames() {
         String query = "SELECT game_id, title FROM game ";
         return this.jdbcTemplate.query(query, (resultSet, rowNum) -> {

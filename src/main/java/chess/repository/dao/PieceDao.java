@@ -23,6 +23,14 @@ public class PieceDao implements PieceRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
+    public ChessBoard findChessBoardByGameId(long gameId) {
+        String queryPiece = "SELECT * FROM piece WHERE game_id = ?";
+        ChessBoard chessBoard = this.jdbcTemplate.queryForObject(queryPiece, chessBoardRowMapper, gameId);
+        return chessBoard;
+    }
+
+    @Override
     public void savePieces(ChessGameManager chessGameManager, long gameId) {
         String query = "INSERT INTO piece(game_id, name, color, position) VALUES(?, ?, ?, ?)";
 
@@ -36,12 +44,6 @@ public class PieceDao implements PieceRepository {
             ps.setString(3, piece.getColor());
             ps.setString(4, argument);
         });
-    }
-
-    public ChessBoard findChessBoardByGameId(long gameId) {
-        String queryPiece = "SELECT * FROM piece WHERE game_id = ?";
-        ChessBoard chessBoard = this.jdbcTemplate.queryForObject(queryPiece, chessBoardRowMapper, gameId);
-        return chessBoard;
     }
 
     private final RowMapper<ChessBoard> chessBoardRowMapper = (resultSet, rowNum) -> {
@@ -58,6 +60,7 @@ public class PieceDao implements PieceRepository {
         return ChessBoard.from(board);
     };
 
+    @Override
     public Piece findPieceByPosition(Position position, long gameId) {
         String queryPieceByPosition = "SELECT * FROM piece WHERE game_id = ? AND position = ?";
         Piece piece = this.jdbcTemplate.queryForObject(queryPieceByPosition, pieceRowMapper, gameId, position.getNotation());
@@ -70,11 +73,7 @@ public class PieceDao implements PieceRepository {
                     Color.of(resultSet.getString("color"))
             );
 
-    public void savePiece(Piece piece, Position position, long gameId) {
-        String query = "INSERT INTO piece(game_id, name, color, position) VALUES(?, ?, ?, ?)";
-        this.jdbcTemplate.update(query, gameId, piece.getName(), piece.getColor().name(), position.getNotation());
-    }
-
+    @Override
     public void deletePieceByPosition(Position position, long gameId) {
         String queryPieceByPosition = "DELETE FROM piece WHERE game_id = ? AND position = ?";
         this.jdbcTemplate.update(queryPieceByPosition, gameId, position.getNotation());

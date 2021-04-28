@@ -2,7 +2,6 @@ package chess.repository.dao;
 
 import chess.domain.ChessGameManager;
 import chess.domain.board.ChessBoard;
-import chess.domain.piece.Color;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
@@ -65,22 +64,6 @@ class PieceDaoTest {
         //then
         Integer rowFound = this.jdbcTemplate.queryForObject("SELECT count(*) FROM piece WHERE game_id = " + Long.toString(gameId), Integer.class);
         assertThat(rowFound).isEqualTo(32);
-    }
-
-    @Test
-    @DisplayName("기물을 지정된 위치에 저장한다.")
-    void savePieceByPositionTest() {
-        // given
-        long gameId = gameRepository.save(chessGameManager, "test title"); // to foreignKey
-        Piece piece = new Pawn(Color.WHITE);
-        Position position = Position.of("a4");
-
-        // when
-        pieceDao.savePiece(piece, position, gameId);
-        Piece pieceFound = pieceDao.findPieceByPosition(position, gameId);
-
-        // then
-        assertThat(pieceFound).isEqualTo(piece);
     }
 
     @Test

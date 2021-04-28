@@ -88,7 +88,7 @@ export class Board {
       const response = await getData(
           `${url}/api/games/${gameId}/move/check`, params
       );
-      targetTile.highlight(response["isMovable"]);
+      targetTile.highlight(response["movable"]);
     } catch (e) {
       console.log(e);
     }
@@ -132,8 +132,8 @@ export class Board {
     const gameId = this.#findGameIdInUri();
     const response = await getData(
         `${url}/api/games/${gameId}/move/check`, params);
-    const isMovable = response["isMovable"]
-    if (isMovable) {
+    const movable = response["movable"]
+    if (movable) {
       await this.#requestMove(piece, targetTile, params, gameId);
     } else {
       piece.unhighlight();

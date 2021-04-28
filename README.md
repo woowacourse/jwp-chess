@@ -26,7 +26,7 @@ http://localhost:8080/swagger-ui.html#/
     - [x] Dao의 select 메서드의 반환값 Optional로 변경
     - [x] GameRepository 생성 
     - [x] UserRepository 생성
-- [ ] Service와 Controller 리팩토링
+- [x] Service와 Controller 리팩토링
     - [x] UserService 에서 UserRepository 사용하도록 변경
     - [x] 게임 진행을 GameService가 전담 
     - [x] ChessService 삭제
@@ -34,7 +34,7 @@ http://localhost:8080/swagger-ui.html#/
     - [x] 게임 진행 요청을 GameController에서 전담
     - [x] ChessController 삭제
     - [x] Controller와 RestController 분리
-    - [ ] 모든 웹 요청,응답 DTO로 변경
+    - [x] 모든 웹 요청,응답 DTO로 변경
 - [x] 패키지 정리
 - [ ] 예외 처리 관련 기능 추가
     - [x] data select에 싪패하면 404 에러 발생

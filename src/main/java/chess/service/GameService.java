@@ -6,6 +6,7 @@ import chess.domain.user.User;
 import chess.domain.user.UserRepository;
 import chess.web.dto.game.GameRequestDto;
 import chess.web.dto.game.GameResponseDto;
+import chess.web.dto.game.move.MoveCheckResponseDto;
 import chess.web.dto.game.move.MoveRequestDto;
 import chess.web.dto.game.move.MoveResponseDto;
 import org.springframework.stereotype.Service;
@@ -38,11 +39,13 @@ public class GameService {
         return GameResponseDto.of(game, host, guest);
     }
 
-    public boolean checkMovement(final long gameId, final MoveRequestDto moveRequestDto) {
+    public MoveCheckResponseDto checkMovement(final long gameId,
+        final MoveRequestDto moveRequestDto) {
         final Game game = gameRepository.findById(gameId);
-        return game.checkMovement(
+        final boolean isMovable = game.checkMovement(
             moveRequestDto.getSource(), moveRequestDto.getTarget(), moveRequestDto.getColor()
         );
+        return new MoveCheckResponseDto(isMovable);
     }
 
     public MoveResponseDto move(final long gameId, final MoveRequestDto moveRequestDto) {

@@ -12,18 +12,18 @@ public class GameResponseDto {
 
     private final String name;
     private final Team turn;
-    private final boolean isFinished;
+    private final boolean finished;
     private final List<PieceResponseDto> pieceResponseDtos;
     private final UserResponseDto host;
     private final UserResponseDto guest;
 
-    private GameResponseDto(final String name, final Team turn, final boolean isFinished,
+    private GameResponseDto(final String name, final Team turn, final boolean finished,
         final List<PieceResponseDto> pieceResponseDtos, final UserResponseDto host,
         final UserResponseDto guest) {
 
         this.name = name;
         this.turn = turn;
-        this.isFinished = isFinished;
+        this.finished = finished;
         this.pieceResponseDtos = pieceResponseDtos;
         this.host = host;
         this.guest = guest;
@@ -55,7 +55,7 @@ public class GameResponseDto {
     }
 
     public boolean isFinished() {
-        return isFinished;
+        return finished;
     }
 
     public List<PieceResponseDto> getPieceResponseDtos() {

@@ -51,8 +51,7 @@ class ChessGameDaoTest {
 
     @Test
     void addGame() {
-        ChessGame chessGame = ChessGame.initChessGame();
-        chessGame.setName("new game");
+        ChessGame chessGame = ChessGame.initChessGame("new game");
 
         Long gameId = chessGameDao.addGame(chessGame);
 

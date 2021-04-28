@@ -36,7 +36,7 @@ public class ChessGameDao {
     }
 
     public List<ChessGameDto> findActiveGames() {
-        String sql = "SELECT * FROM chess_game WHERE is_end = false ORDER BY created_at";
+        String sql = "SELECT id, name FROM chess_game WHERE is_end = false ORDER BY created_at";
         return jdbcTemplate.query(sql, chessGameDtoRowMapper);
     }
 

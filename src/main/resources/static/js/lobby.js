@@ -6,7 +6,7 @@ $newGameBtn.addEventListener('click', newGame);
 function newGame() {
     $.ajax({
         type: "POST",
-        url: "/chess",
+        url: "/api/chess",
         data: JSON.stringify({
             "gameName": $gameNameInput.value
         }),

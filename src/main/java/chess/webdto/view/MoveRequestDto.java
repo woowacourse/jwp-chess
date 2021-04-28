@@ -4,6 +4,9 @@ public class MoveRequestDto {
     private String start;
     private String destination;
 
+    public MoveRequestDto() {
+    }
+
     public String getStart() {
         return start;
     }

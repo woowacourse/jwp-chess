@@ -27,13 +27,11 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class SpringChessServiceTest {
+    private static ObjectMapper objectMapper;
     @InjectMocks
     SpringChessService springChessService;
-
     @Mock
     MysqlChessDao mysqlChessDao;
-
-    private static ObjectMapper objectMapper;
 
     @BeforeAll
     static void beforeAll() {

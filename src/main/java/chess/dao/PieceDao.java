@@ -23,12 +23,14 @@ public class PieceDao {
 
     public List<ChessResponseDto> showAllPieces(final Long roomId) {
         List<ChessResponseDto> pieces;
-        String query = "SELECT * FROM piece WHERE room_id = ?";
+        String query = "SELECT * FROM piece WHERE room_id=?";
         pieces = jdbcTemplate.query(
-                query, (rs, rowNum) -> new ChessResponseDto(
+                query,
+                (rs, rowNum) -> new ChessResponseDto(
                         rs.getLong("id"),
                         rs.getString("piece_name"),
-                        rs.getString("piece_position")), roomId
+                        rs.getString("piece_position")),
+                roomId
         );
         return pieces;
     }

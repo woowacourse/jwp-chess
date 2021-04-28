@@ -36,7 +36,8 @@ public class RoomDao {
         List<RoomResponseDto> rooms;
         String query = "SELECT * FROM room";
         rooms = jdbcTemplate.query(
-                query, (rs, rowName) -> new RoomResponseDto(
+                query,
+                (rs, rowName) -> new RoomResponseDto(
                         rs.getLong("room_id"),
                         rs.getString("room_name"),
                         rs.getString("current_turn"))

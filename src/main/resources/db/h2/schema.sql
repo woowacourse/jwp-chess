@@ -1,6 +1,3 @@
-DROP TABLE IF EXISTS board;
-DROP TABLE IF EXISTS room;
-
 create table room
 (
     room_name varchar(12) not null,

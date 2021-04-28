@@ -1,4 +1,4 @@
-package chess.domain.dto;
+package chess.dto;
 
 public class ScoreDto {
     private String whiteScore;
@@ -7,9 +7,13 @@ public class ScoreDto {
     public ScoreDto() {
     }
 
-    public ScoreDto(Double whiteScore, Double blackScore) {
+    private ScoreDto(Double whiteScore, Double blackScore) {
         this.whiteScore = Double.toString(whiteScore);
         this.blackScore = Double.toString(blackScore);
+    }
+
+    public static ScoreDto of(double whiteScore, double blackScore) {
+        return new ScoreDto(whiteScore, blackScore);
     }
 
     public String getWhiteScore() {

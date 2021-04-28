@@ -1,7 +1,10 @@
 applicationStart();
 
+const restartButton = document.querySelector("#startButton");
 let firstClickPosition = "";
 let secondClickPosition = "";
+
+restartButton.addEventListener("click", reStartGame);
 
 async function applicationStart() {
     const chessBoard = document.querySelector(".chessboard");
@@ -31,7 +34,8 @@ async function applicationStart() {
 }
 
 async function loadSavedBoard() {
-    let savedBoardInformation = await fetch("/board")
+    const url = window.location.href.split('/')
+    let savedBoardInformation = await fetch("/" + url[url.length - 1] + "/board")
     savedBoardInformation = await savedBoardInformation.json();
     return savedBoardInformation.boardInfo;
 }
@@ -61,7 +65,7 @@ function clickDiv(e) {
 }
 
 function checkGameOver(gameOverFlag) {
-    if (gameOverFlag === "true") {
+    if (gameOverFlag === true) {
         alert("게임이 종료되었습니다. 체스판을 초기화 합니다.");
         reStartGame();
         return '';
@@ -77,26 +81,22 @@ async function movePiece(targetPosition, destinationPosition) {
 }
 
 async function sendMoveInformation(bodyValue) {
-    const response = await fetch("/move", {
+    const url = window.location.href.split('/')
+    const response = await fetch("/" + url[url.length - 1] + "/move", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(bodyValue)
-    }).then(res => res.json());
+    });
 
-    if (response.code === "400") {
-        alert(response.message);
+    const body = await response.json();
+    if (!response.ok) {
+        alert(body.message);
         return;
     }
-
-    if (response.code === "200") {
-        const board = await fetch("/move"
-        ).then(res => res.json());
-
-        checkGameOver(board.gameOverFlag);
-        renewBoard(board.boardInfo);
-    }
+    checkGameOver(body.gameOverFlag);
+    renewBoard(body.boardInfo);
 }
 
 function renewBoard(boardInfo) {
@@ -124,13 +124,15 @@ function getBoardColor(index, color) {
 }
 
 async function resetBoard() {
-    let initialBoardInformation = await fetch("/board")
+    const url = window.location.href.split('/')
+    let initialBoardInformation = await fetch("/" + url[url.length - 1] + "/reset")
     initialBoardInformation = await initialBoardInformation.json();
     return initialBoardInformation.boardInfo;
 }
 
 async function alertScore() {
-    let scoreInformation = await fetch("/score")
+    const url = window.location.href.split('/')
+    let scoreInformation = await fetch("/" + url[url.length - 1] + "/score")
     scoreInformation = await scoreInformation.json();
     alert("백 : " + scoreInformation.whiteScore + "  흑 : " + scoreInformation.blackScore);
 }

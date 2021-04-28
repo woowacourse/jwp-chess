@@ -1,15 +1,17 @@
-package chess.domain.dto;
+package chess.dto;
 
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceFactory;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class BoardDto {
-    public boolean gameOverFlag = false;
+    private boolean gameOverFlag = false;
     private Map<String, String> boardInfo = new HashMap<>();
 
     public BoardDto() {
@@ -37,15 +39,19 @@ public class BoardDto {
         return board.isAnyKingDead();
     }
 
-    public static BoardDto of(Map<String, String> boardInfo) {
-        return new BoardDto(boardInfo, true);
-    }
-
     public boolean getGameOverFlag() {
         return gameOverFlag;
     }
 
     public Map<String, String> getBoardInfo() {
         return boardInfo;
+    }
+
+    public Board toBoard() {
+        Map<Position, Piece> board = new LinkedHashMap<>();
+        boardInfo.forEach((key, value) -> {
+            board.put(Position.from(key), PieceFactory.from(value));
+        });
+        return new Board(board);
     }
 }

@@ -38,7 +38,7 @@ public class Position {
         return Collections.unmodifiableList(CACHE);
     }
 
-    public static Position convertStringToPosition(String input) {
+    public static Position from(String input) {
         return Position.of(Horizontal.find(input.substring(0, 1)),
                 Vertical.find(input.substring(1, 2)));
     }

@@ -9,6 +9,22 @@
     border: 5px solid #333;
 }
 
+.roomlist {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    font-size: 20px;
+}
+
+.inputSubmit {
+    display: flex;
+    justify-content: center;
+}
+
+.submit {
+    margin-left: 1vw;
+}
+
 .black {
     float: left;
     width: 80px;

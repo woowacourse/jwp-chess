@@ -26,7 +26,7 @@ public enum PieceFactory {
         this.supplier = supplier;
     }
 
-    public static Piece createPieceByUniCode(String uniCode) {
+    public static Piece from(String uniCode) {
         PieceFactory pieceFactory = Arrays.stream(PieceFactory.values())
                 .filter(value -> value.getUniCode().equals(uniCode))
                 .findAny()

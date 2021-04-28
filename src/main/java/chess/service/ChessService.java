@@ -163,7 +163,7 @@ public class ChessService {
         return modelMapper.map(history, HistoryDto.class);
     }
 
-    private void updatePieceByMove(MoveCommand moveCommand, Piece sourcePiece, Long gameId) {
+    private void updatePieceByMove(final MoveCommand moveCommand, final Piece sourcePiece, final Long gameId) {
         chess.domain.entity.Piece targetPiece =
                 new chess.domain.entity.Piece(gameId, sourcePiece.getSymbol(), moveCommand.target());
         pieceRepository.update(targetPiece);
@@ -184,7 +184,7 @@ public class ChessService {
                 state.isPlaying());
     }
 
-    private Board initBoard(List<chess.domain.entity.Piece> pieces) {
+    private Board initBoard(final List<chess.domain.entity.Piece> pieces) {
         Map<Position, Piece> piecesOnBoard = new HashMap<>();
         for (chess.domain.entity.Piece piece : pieces) {
             piecesOnBoard.put(Position.of(piece.getPosition()), PieceConverter.parsePiece(piece.getSymbol()));
@@ -192,7 +192,7 @@ public class ChessService {
         return new Board(piecesOnBoard);
     }
 
-    public void checkTurn(Long gameId, String password) {
+    public void checkTurn(final Long gameId, final String password) {
         State state = stateRepository.findByGameId(gameId);
         Game game = gameRepository.findById(gameId);
         String turnOwner = state.getTurnOwner();
@@ -203,7 +203,7 @@ public class ChessService {
         checkTurnByPassword(game.getBlackPassword(), password);
     }
 
-    private void checkTurnByPassword(String password, String otherPassword) {
+    private void checkTurnByPassword(final String password, final String otherPassword) {
         if (password.equals(otherPassword)) {
             return;
         }

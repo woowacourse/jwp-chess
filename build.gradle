@@ -26,11 +26,6 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
 
-    implementation 'io.rest-assured:rest-assured:4.3.2'
-    implementation 'io.rest-assured:json-path:4.3.2'
-    compile group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '3.0.0-M5'
-
-
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:3.3.0'
 

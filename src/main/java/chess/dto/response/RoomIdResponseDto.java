@@ -3,7 +3,7 @@ package chess.dto.response;
 public class RoomIdResponseDto {
     private final Long roomId;
 
-    public RoomIdResponseDto(Long roomId) {
+    public RoomIdResponseDto(final Long roomId) {
         this.roomId = roomId;
     }
 

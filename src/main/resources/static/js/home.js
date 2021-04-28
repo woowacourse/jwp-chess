@@ -10,7 +10,7 @@ async function addRoom() {
         alert("방 이름은 1자 이상으로 입력해주세요!");
         return;
     }
-    let roomId = await fetch('/room', {
+    let roomIdDto = await fetch('/room', {
         method: 'POST',
         body: JSON.stringify({
             roomName: roomName
@@ -19,8 +19,8 @@ async function addRoom() {
             'Content-Type': 'application/json'
         }
     })
-    roomId = await roomId.json();
-    window.location.href = "/chess/" + roomId;
+    roomIdDto = await roomIdDto.json();
+    window.location.href = "/chess/" + roomIdDto.roomId;
 }
 
 roomListBtn.addEventListener('click', function () {

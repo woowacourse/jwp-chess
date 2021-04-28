@@ -17,8 +17,13 @@ import java.util.Objects;
 
 @Repository
 public class RoomDao {
-    @Autowired
+
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public RoomDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Long create(Room room) {
         String sql = "insert into room (name, pw, white_player, game_id) values (?, ?, ?, ?)";

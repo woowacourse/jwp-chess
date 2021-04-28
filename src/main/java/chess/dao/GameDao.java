@@ -12,8 +12,13 @@ import java.util.Objects;
 
 @Repository
 public class GameDao {
+
+    private final JdbcTemplate jdbcTemplate;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public GameDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Long create(ChessGame chessGame) {
         String sql = "insert into game (is_end) values (?)";
@@ -37,8 +42,8 @@ public class GameDao {
         jdbcTemplate.update(sql, isEnd, gameId);
     }
 
-   public void delete(final Long gameId) {
-       String sql = "delete from game where game_id = ?";
-       jdbcTemplate.update(sql, gameId);
+    public void delete(final Long gameId) {
+        String sql = "delete from game where game_id = ?";
+        jdbcTemplate.update(sql, gameId);
     }
 }

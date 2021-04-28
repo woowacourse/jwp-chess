@@ -19,8 +19,12 @@ import java.util.Objects;
 @Repository
 public class PieceDao {
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public PieceDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Long create(Map<Position, Piece> pieces, String color, Long gameId) {
         String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";

@@ -9,14 +9,6 @@ public class TeamDto {
     private boolean isTurn;
     private String player;
 
-
-    public TeamDto(PiecesDto pieces, String name, double score, boolean isTurn) {
-        this.pieces = pieces;
-        this.name = name;
-        this.score = score;
-        this.isTurn = isTurn;
-    }
-
     public TeamDto(Team team) {
         this.pieces = PiecesDto.of(team.getPiecePosition(), team.getName());
         this.name = team.getName();

@@ -1,6 +1,6 @@
 package chess.utils;
 
-import chess.domain.piece.PieceType;
+import chess.domain.game.board.piece.PieceType;
 import org.springframework.core.convert.converter.Converter;
 
 public class StringToPieceTypeConverter implements Converter<String, PieceType> {

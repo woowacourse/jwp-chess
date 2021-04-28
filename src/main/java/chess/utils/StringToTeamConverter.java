@@ -1,6 +1,6 @@
 package chess.utils;
 
-import chess.domain.team.Team;
+import chess.domain.game.team.Team;
 import org.springframework.core.convert.converter.Converter;
 
 public class StringToTeamConverter implements Converter<String, Team> {

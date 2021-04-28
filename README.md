@@ -35,7 +35,7 @@ http://localhost:8080/swagger-ui.html#/
     - [x] ChessController 삭제
     - [x] Controller와 RestController 분리
     - [ ] 모든 웹 요청,응답 DTO로 변경
-- [ ] 패키지 정리
+- [x] 패키지 정리
 - [ ] 예외 처리 관련 기능 추가
     - [x] data select에 싪패하면 404 에러 발생
  

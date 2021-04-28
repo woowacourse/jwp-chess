@@ -1,6 +1,6 @@
 package chess.dao.dto;
 
-import chess.domain.team.Team;
+import chess.domain.game.team.Team;
 import java.time.LocalDateTime;
 
 public class GameDto {

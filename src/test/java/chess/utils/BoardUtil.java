@@ -1,15 +1,15 @@
 package chess.utils;
 
-import chess.domain.board.Board;
-import chess.domain.location.Location;
-import chess.domain.piece.Bishop;
-import chess.domain.piece.King;
-import chess.domain.piece.Knight;
-import chess.domain.piece.Pawn;
-import chess.domain.piece.Piece;
-import chess.domain.piece.Queen;
-import chess.domain.piece.Rook;
-import chess.domain.team.Team;
+import chess.domain.game.board.Board;
+import chess.domain.game.board.piece.Bishop;
+import chess.domain.game.board.piece.King;
+import chess.domain.game.board.piece.Knight;
+import chess.domain.game.board.piece.Pawn;
+import chess.domain.game.board.piece.Piece;
+import chess.domain.game.board.piece.Queen;
+import chess.domain.game.board.piece.Rook;
+import chess.domain.game.board.piece.location.Location;
+import chess.domain.game.team.Team;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -2,10 +2,10 @@ package chess.domain.game;
 
 import chess.dao.dto.GameDto;
 import chess.dao.dto.PieceDto;
-import chess.domain.board.Board;
-import chess.domain.piece.Piece;
-import chess.domain.team.Team;
-import chess.utils.PieceConverter;
+import chess.domain.game.board.Board;
+import chess.domain.game.board.piece.Piece;
+import chess.domain.game.team.Team;
+import chess.domain.game.utils.PieceConverter;
 import java.util.List;
 import java.util.stream.Collectors;
 

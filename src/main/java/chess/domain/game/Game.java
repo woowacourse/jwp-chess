@@ -1,10 +1,10 @@
 package chess.domain.game;
 
-import chess.domain.board.Board;
-import chess.domain.board.MoveFailureException;
-import chess.domain.location.Location;
-import chess.domain.piece.Piece;
-import chess.domain.team.Team;
+import chess.domain.game.board.Board;
+import chess.domain.game.board.MoveFailureException;
+import chess.domain.game.board.piece.Piece;
+import chess.domain.game.board.piece.location.Location;
+import chess.domain.game.team.Team;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;

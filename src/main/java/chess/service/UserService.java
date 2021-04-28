@@ -2,8 +2,8 @@ package chess.service;
 
 import chess.domain.user.User;
 import chess.domain.user.UserRepository;
-import chess.dto.user.UserRequestDto;
-import chess.dto.user.UserResponseDto;
+import chess.web.dto.user.UserRequestDto;
+import chess.web.dto.user.UserResponseDto;
 import org.springframework.stereotype.Service;
 
 @Service

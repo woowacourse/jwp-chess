@@ -1,37 +1,33 @@
 package chess.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.RoomRequestDto;
-
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import org.springframework.test.web.servlet.MockMvc;
-
+import javax.servlet.http.Cookie;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-public class ChessRoomControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
+public class ChessRoomControllerTest extends BaseTest {
     @Test
-    public void testRoomNameValidation() throws Exception {
+    public void testRoomCreate() throws Exception {
+        RoomRequestDto roomRequestDto = new RoomRequestDto(null, "room", "123456", null,null);
 
         mvc.perform(post("/api/room")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("name", "room")
-                .param("pw", "1"))
+                .content(objectMapper.writeValueAsString(roomRequestDto))
+                .cookie(new Cookie("user", "suri")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testRoomNameValidation() throws Exception {
+        RoomRequestDto roomRequestDto = new RoomRequestDto(null, "room", "1", null,null);
+
+        mvc.perform(post("/api/room")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(roomRequestDto))
+                .cookie(new Cookie("user", "suri")))
                 .andExpect(status().isBadRequest());
     }
 }

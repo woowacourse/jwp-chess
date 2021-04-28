@@ -12,8 +12,6 @@ public class RoomInfo {
     }
 
     public boolean checkPassword(RoomInfo roomInfo) {
-        System.out.println("checkPassword : " + roomInfo.getPw());
-        System.out.println("checkPassword : " + pw);
         return roomInfo.getPw().equals(pw);
     }
 

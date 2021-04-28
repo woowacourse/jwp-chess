@@ -1,5 +1,7 @@
 package chess.domain;
 
+import exception.ChessException;
+import exception.ExceptionStatus;
 import java.util.Objects;
 
 public class Room {
@@ -39,7 +41,7 @@ public class Room {
 
     public void checkPassword(Room room) {
         if (!room.getPw().equals(pw)) {
-            throw new IllegalArgumentException("비밀번호가 다릅니다.");
+            throw new ChessException(ExceptionStatus.LOGIN_FAIL);
         }
     }
 

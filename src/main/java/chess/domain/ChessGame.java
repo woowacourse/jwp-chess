@@ -4,6 +4,8 @@ import chess.domain.piece.Piece;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.Team;
 import chess.domain.team.WhiteTeam;
+import exception.ChessException;
+import exception.ExceptionStatus;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
@@ -48,7 +50,7 @@ public class ChessGame {
 
     private void validateMovable(final Position current, final Position destination, final Piece chosenPiece) {
         if (currentTurn.havePiece(destination) || !chosenPiece.isMovable(current, destination, generateChessBoard())) {
-            throw new IllegalArgumentException("이동할 수 없습니다.");
+            throw new ChessException(ExceptionStatus.ILLEGAL_ARGUMENT);
         }
     }
 

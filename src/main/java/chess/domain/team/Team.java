@@ -17,6 +17,8 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
+import exception.ChessException;
+import exception.ExceptionStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +93,7 @@ public abstract class Team {
         if (havePiece(position)) {
             return piecePosition.get(position);
         }
-        throw new IllegalArgumentException("해당 위치에 기물이 없습니다.");
+        throw new ChessException(ExceptionStatus.ILLEGAL_ARGUMENT);
     }
 
     public Piece killPiece(Position destination) {

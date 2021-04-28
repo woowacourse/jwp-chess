@@ -3,10 +3,9 @@ package chess.web.apicontroller;
 
 import chess.service.GameService;
 import chess.web.dto.game.GameResponseDto;
+import chess.web.dto.game.move.MoveCheckResponseDto;
 import chess.web.dto.game.move.MoveRequestDto;
 import chess.web.dto.game.move.MoveResponseDto;
-import java.util.Collections;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,12 +31,10 @@ public class GameApiController {
     }
 
     @GetMapping("/{gameId}/move/check")
-    public ResponseEntity<Map<String, Boolean>> checkMovement(@PathVariable long gameId,
+    public ResponseEntity<MoveCheckResponseDto> checkMovement(@PathVariable long gameId,
         @ModelAttribute MoveRequestDto moveRequestDto) {
 
-        final Map<String, Boolean> responseData = Collections
-            .singletonMap("isMovable", gameService.checkMovement(gameId, moveRequestDto));
-        return ResponseEntity.ok().body(responseData);
+        return ResponseEntity.ok().body(gameService.checkMovement(gameId, moveRequestDto));
     }
 
     @PutMapping("/{gameId}/move")

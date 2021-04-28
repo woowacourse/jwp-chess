@@ -35,8 +35,8 @@ public class ChessService {
         chessGameDao.createUserInfo(id, password);
     }
 
-    public boolean loginUser(final String id, final String password) {
-        String userPassword = chessGameDao.getUserPasswordById(id);
+    public boolean validateUser(final String id, final String password) {
+        String userPassword = chessGameDao.readUserPasswordById(id);
         return userPassword.equals(password);
     }
 

@@ -31,7 +31,7 @@ public class ChessGameDao {
         this.jdbcTemplate.update(sql, id, password);
     }
 
-    public String getUserPasswordById(final String id) {
+    public String readUserPasswordById(final String id) {
         final String sql = "SELECT user_password FROM user_info WHERE user_id = (?)";
         return this.jdbcTemplate.queryForObject(sql, String.class, id);
     }

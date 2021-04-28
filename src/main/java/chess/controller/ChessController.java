@@ -20,23 +20,6 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    private boolean generateSession(final HttpServletRequest request, final String id, final String password) {
-        final HttpSession session = request.getSession();
-        if (chessService.loginUser(id, password)) {
-            session.setAttribute("id", id);
-            return true;
-        }
-        return false;
-    }
-
-    private void validateSession(final HttpServletRequest request) throws LoginException {
-        final HttpSession session = request.getSession();
-        final String id = (String) session.getAttribute("id");
-        if (Objects.isNull(id) || id.length() == 0) {
-            throw new LoginException();
-        }
-    }
-
     @PostMapping(value = "/signup")
     public ResponseEntity<String> signup(@RequestBody UserInfoDto userInfoDto) {
         final String id = userInfoDto.getId();
@@ -49,10 +32,16 @@ public class ChessController {
     public ResponseEntity<String> login(@RequestBody UserInfoDto userInfoDto, final HttpServletRequest request) {
         final String id = userInfoDto.getId();
         final String password = userInfoDto.getPassword();
-        if (generateSession(request, id, password)) {
+        if (chessService.validateUser(id, password)) {
+            generateSession(request, id);
             return ResponseEntity.ok("success");
         }
         return ResponseEntity.status(NOT_FOUND).body("not-found");
+    }
+
+    private void generateSession(final HttpServletRequest request, final String id) {
+        final HttpSession session = request.getSession();
+        session.setAttribute("id", id);
     }
 
     @GetMapping(value = "/login")
@@ -70,6 +59,14 @@ public class ChessController {
         final HttpSession session = request.getSession();
         session.setAttribute("id", null);
         return ResponseEntity.ok("success");
+    }
+
+    private void validateSession(final HttpServletRequest request) throws LoginException {
+        final HttpSession session = request.getSession();
+        final String id = (String) session.getAttribute("id");
+        if (Objects.isNull(id) || id.length() == 0) {
+            throw new LoginException();
+        }
     }
 
     @PostMapping(value = "/games")

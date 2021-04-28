@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@TestPropertySource("classpath:application.properties")
+@Sql("classpath:tableInit.sql")
 class UserRepositoryTest {
 
     private final UserRepository userRepository;
@@ -30,19 +30,6 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("TRUNCATE TABLE users");
-        jdbcTemplate.update("DROP TABLE room");
-        jdbcTemplate.update(
-                "CREATE TABLE IF NOT EXISTS room (\n" +
-                        "    id int NOT NULL PRIMARY KEY AUTO_INCREMENT,\n" +
-                        "    name varchar(255) NOT NULL,\n" +
-                        "    is_opened boolean NOT NULL,\n" +
-                        "    white varchar(255) NOT NULL,\n" +
-                        "    black varchar(255) NOT NULL\n" +
-                        ")"
-        );
-        jdbcTemplate.update("TRUNCATE TABLE play_log");
-
         jdbcTemplate.update("INSERT INTO users (name) values ('fortune')");
         jdbcTemplate.update("INSERT INTO users (name) values ('root')");
         jdbcTemplate.update("INSERT INTO room (id, name, is_opened, white, black) VALUES (1, 'fortuneRooms', true, 'fortune', 'root')");

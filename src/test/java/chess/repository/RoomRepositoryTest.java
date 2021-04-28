@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@TestPropertySource("classpath:application.properties")
 class RoomRepositoryTest {
 
     private final RoomRepository roomRepository;
@@ -30,16 +28,6 @@ class RoomRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("DROP TABLE room");
-        jdbcTemplate.update(
-                "CREATE TABLE IF NOT EXISTS room (\n" +
-                        "    id int NOT NULL PRIMARY KEY AUTO_INCREMENT,\n" +
-                        "    name varchar(255) NOT NULL,\n" +
-                        "    is_opened boolean NOT NULL,\n" +
-                        "    white varchar(255) NOT NULL,\n" +
-                        "    black varchar(255) NOT NULL\n" +
-                        ")"
-        );
         jdbcTemplate.update("INSERT INTO room (id, name, is_opened, white, black) VALUES (1, 'fortuneRoom', true, 'fortune', 'portune')");
     }
 

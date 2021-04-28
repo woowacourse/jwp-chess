@@ -9,3 +9,12 @@
 - [x] ~~@JsonCreator를 통해 생성자를 찾도록 수정~~
   - Intellij 세팅으로는 default 생성자가 반드시 필요.
 - [x] 테스트 코드 작성
+
+---
+
+## Step2
+
+- [x] @Bean 어노테이션을 통해 빈을 생성하던거을 config을 통해 Gson을 bean으로 정의하기
+- [x] Service 테스트 코드 작성
+- [x] 테이블 Drop이 필요한 부분을 @sql 어노테이션을 이용해 초기화
+- [x] @TestPropertySource("classpath:application.properties") 제거

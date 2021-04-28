@@ -47,9 +47,9 @@ function enterRoom(event) {
 
 function createRoom() {
     let roomName;
-    do {
-        roomName = prompt('입장할 방의 이름을 입력해주세요.');
+    roomName = prompt('입장할 방의 이름을 입력해주세요.');
+    if (roomName !== null) {
         store.roomName = roomName;
         chessPage.createChessBoard(roomName);
-    } while (!roomName)
+    }
 }

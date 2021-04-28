@@ -1,7 +1,7 @@
 package chess.dao;
 
+import chess.controller.spring.params.Page;
 import chess.dto.RoomDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,14 +17,18 @@ import java.util.Optional;
 
 @Repository
 public class RoomDAO {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private static final int MAX_ROWS = 20;
+    private static final int GAP_BETWEEN_PAGE_AND_OFFSET = 1;
+    private static final int FIRST_PAGE = 1;
+    private final JdbcTemplate jdbcTemplate;
+
+    public RoomDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public long createRoom(String roomName) {
         String query = "INSERT INTO room (roomName) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        System.out.println("createRoom");
-        System.out.println(jdbcTemplate);
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query,
                     Statement.RETURN_GENERATED_KEYS);
@@ -49,7 +53,11 @@ public class RoomDAO {
     }
 
     public List<RoomDto> findAllRooms() {
-        String query = "SELECT * FROM room ORDER BY createdAt DESC";
+        return findAllRooms(new Page(FIRST_PAGE));
+    }
+
+    public List<RoomDto> findAllRooms(Page page) {
+        String query = "SELECT * FROM room ORDER BY createdAt DESC LIMIT ? OFFSET ?";
         return jdbcTemplate.queryForObject(
                 query,
                 (rs, rowNum) -> {
@@ -62,6 +70,6 @@ public class RoomDAO {
                         ));
                     } while(rs.next());
                     return rooms;
-                });
+                }, page.getPageSize(), page.getOffset());
     }
 }

@@ -27,7 +27,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.rest-assured:rest-assured:3.3.0'
+    testImplementation 'io.rest-assured:rest-assured:4.2.0'
 
 
     runtimeOnly 'mysql:mysql-connector-java'

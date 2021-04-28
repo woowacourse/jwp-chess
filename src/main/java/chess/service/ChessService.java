@@ -7,6 +7,9 @@ import chess.domain.room.Room;
 import chess.web.dto.GameDto;
 import chess.web.dto.MessageDto;
 import chess.web.dto.StatusDto;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +21,7 @@ public class ChessService {
         this.roomRepository = roomRepository;
     }
 
+    @CachePut(value = "game", key = "#roomId")
     public MessageDto end(Long roomId) {
         Room room = roomRepository.findByRoomId(roomId);
         ChessGame chessGame = room.getChessGame();
@@ -29,6 +33,7 @@ public class ChessService {
         return new MessageDto("finished");
     }
 
+    @Cacheable(value = "game", key = "#roomId")
     public GameDto loadByGameId(Long roomId) {
         Room room = roomRepository.findByRoomId(roomId);
         ChessGame chessGame = room.getChessGame();
@@ -36,6 +41,7 @@ public class ChessService {
         return new GameDto(chessGame);
     }
 
+    @Cacheable(value = "status", key = "#roomId")
     public StatusDto getStatus(Long roomId) {
         Room room = roomRepository.findByRoomId(roomId);
         ChessGame chessGame = room.getChessGame();
@@ -46,6 +52,7 @@ public class ChessService {
         return new StatusDto(whiteScore, blackScore);
     }
 
+    @CachePut(value = "game", key = "#roomId")
     public GameDto move(Long roomId, String source, String target) {
         Room room = roomRepository.findByRoomId(roomId);
         ChessGame chessGame = room.getChessGame();

@@ -6,6 +6,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.piece.PieceFactory;
 import chess.domain.room.Room;
 import chess.web.dto.RoomDto;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +23,13 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
+    //is cacheable?
     public List<RoomDto> getAllRooms() {
         return roomRepository.allRooms().stream()
                 .map(RoomDto::new)
                 .collect(toList());
     }
 
-    @Transactional
     public RoomDto createNewRoom(String roomName) {
         ChessGame chessGame = createChessGame();
         Long roomId = saveGameToDB(roomName, chessGame);
@@ -44,6 +45,7 @@ public class RoomService {
 
         return chessGame;
     }
+
 
     private Long saveGameToDB(String roomName, ChessGame chessGame) {
         return roomRepository.save(

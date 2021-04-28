@@ -14,11 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql("classpath:tableInit.sql")
 class SpringChessAPIControllerTest {
-    private static int createCount = 0;
-
     @LocalServerPort
     int port;
 
@@ -30,7 +30,6 @@ class SpringChessAPIControllerTest {
     @Test
     @DisplayName("방 생성하기 테스트")
     void createRoom() {
-        createCount++;
         Room room = new Room(1, "멍토", "비번", 1);
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -50,7 +49,7 @@ class SpringChessAPIControllerTest {
             .when().get("/api/rooms")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
-            .body("size()", is(createCount));
+            .body("size()", is(2));
     }
 
     @Test

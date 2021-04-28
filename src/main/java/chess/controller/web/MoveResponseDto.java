@@ -1,8 +1,8 @@
-package chess.controller.web.dto;
+package chess.controller.web;
 
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 
-public class MoveResponseDto {
+class MoveResponseDto {
     private final boolean end;
     private final String nextColor;
 

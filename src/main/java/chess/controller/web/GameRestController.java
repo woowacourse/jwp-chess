@@ -3,10 +3,6 @@ package chess.controller.web;
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.user.User;
-import chess.controller.web.dto.ChessGameResponseDto;
-import chess.controller.web.dto.MoveRequestDto;
-import chess.controller.web.dto.MoveResponseDto;
-import chess.controller.web.dto.ScoreResponseDto;
 import chess.service.ChessService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,7 +27,7 @@ public class GameRestController {
         this.chessService = chessService;
     }
 
-    @GetMapping("{gameId}/score")
+    @GetMapping("{gameId:[\\d]+}/score")
     public ResponseEntity<ScoreResponseDto> getScore(@PathVariable long gameId) {
         return ResponseEntity.ok(new ScoreResponseDto(chessService.getStatistics(gameId)));
     }

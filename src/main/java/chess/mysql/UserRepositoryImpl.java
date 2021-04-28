@@ -3,7 +3,6 @@ package chess.mysql;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.user.User;
 import chess.chessgame.repository.UserRepository;
-import chess.mysql.dao.UserDao;
 import org.springframework.stereotype.Repository;
 
 @Repository

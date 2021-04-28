@@ -6,7 +6,6 @@ import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.game.board.position.Position;
 import chess.chessgame.domain.room.game.statistics.ChessGameStatistics;
 import chess.chessgame.repository.ChessGameManagerRepository;
-import chess.controller.web.dto.MoveRequestDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -56,11 +55,6 @@ public class ChessServiceImpl implements ChessService {
             chessGameManager = chessGameManager.end();
         }
         chessGameManagerRepository.update(chessGameManager);
-    }
-
-    @Override
-    public void move(MoveRequestDto moveRequestDto) {
-        move(moveRequestDto.getGameId(), Position.of(moveRequestDto.getFrom()), Position.of(moveRequestDto.getTo()));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package chess.controller.web.dto;
+package chess.controller.web;
 
 import chess.chessgame.domain.room.Room;
 
@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
 
-public class ActiveRoomsResponseDto {
+class ActiveRoomsResponseDto {
     private final Map<Long, RoomResponseDto> activeRooms;
 
     public ActiveRoomsResponseDto(List<Room> rooms) {

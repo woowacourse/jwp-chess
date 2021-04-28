@@ -2,12 +2,7 @@ package chess.controller.web;
 
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.ChessGameManagerBundle;
-import chess.controller.web.dto.ChessGameResponseDto;
-import chess.controller.web.dto.ErrorMessageResponseDto;
-import chess.controller.web.dto.MoveRequestDto;
-import chess.controller.web.dto.MoveResponseDto;
-import chess.controller.web.dto.RunningGameResponseDto;
-import chess.controller.web.dto.ScoreResponseDto;
+import chess.chessgame.domain.room.game.board.position.Position;
 import chess.service.ChessServiceImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -94,7 +89,7 @@ public class SparkController {
     private Route moveRoute() {
         return (request, response) -> {
             MoveRequestDto moveRequestDto = GSON.fromJson(request.body(), MoveRequestDto.class);
-            chessServiceImpl.move(moveRequestDto);
+            chessServiceImpl.move(moveRequestDto.getGameId(), Position.of(moveRequestDto.getFrom()), Position.of(moveRequestDto.getTo()));
             response.type("application/json; charset=utf-8");
             return new MoveResponseDto(chessServiceImpl.isEnd(moveRequestDto.getGameId()), chessServiceImpl.nextColor(moveRequestDto.getGameId()));
         };

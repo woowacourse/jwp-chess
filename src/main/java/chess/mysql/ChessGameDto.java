@@ -1,4 +1,4 @@
-package chess.mysql.dao.dto;
+package chess.mysql;
 
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.converter.PiecesConverter;

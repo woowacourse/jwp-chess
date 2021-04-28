@@ -1,6 +1,6 @@
-package chess.mysql.dao.dto;
+package chess.mysql;
 
-public class RoomDto {
+class RoomDto {
     private final long roomId;
     private final String roomName;
     private final long gameId;

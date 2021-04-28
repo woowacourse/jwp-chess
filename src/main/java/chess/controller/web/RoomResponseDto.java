@@ -1,4 +1,4 @@
-package chess.controller.web.dto;
+package chess.controller.web;
 
 public class RoomResponseDto {
     private final boolean isFull;

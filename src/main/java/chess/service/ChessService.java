@@ -5,7 +5,6 @@ import chess.chessgame.domain.room.game.ChessGameManagerBundle;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.game.board.position.Position;
 import chess.chessgame.domain.room.game.statistics.ChessGameStatistics;
-import chess.controller.web.dto.MoveRequestDto;
 
 public interface ChessService {
     ChessGameManager start();
@@ -19,8 +18,6 @@ public interface ChessService {
     ChessGameManager load(long gameId);
 
     void move(long gameId, Position from, Position to);
-
-    void move(MoveRequestDto moveRequestDto);
 
     boolean isEnd(long gameId);
 

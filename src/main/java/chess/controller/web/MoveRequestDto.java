@@ -1,10 +1,10 @@
-package chess.controller.web.dto;
+package chess.controller.web;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class MoveRequestDto {
+class MoveRequestDto {
     @JsonProperty
     private final long gameId;
     @JsonProperty

@@ -1,11 +1,11 @@
-package chess.controller.web.dto;
+package chess.controller.web;
 
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 
 import java.util.Map;
 
-public class ChessGameResponseDto {
+class ChessGameResponseDto {
     private final long gameId;
     private final String color;
     private final Map<String, PieceDto> piecesAndPositions;

@@ -1,6 +1,7 @@
 package chess.mysql.dao;
 
-import chess.mysql.dao.dto.ChessGameDto;
+import chess.mysql.ChessGameDto;
+import chess.mysql.JdbcTemplateChessDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

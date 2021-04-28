@@ -1,6 +1,4 @@
-package chess.mysql.dao;
-
-import chess.mysql.dao.dto.ChessGameDto;
+package chess.mysql;
 
 import java.util.List;
 import java.util.Optional;

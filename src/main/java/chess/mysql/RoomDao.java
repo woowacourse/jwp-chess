@@ -1,7 +1,6 @@
-package chess.mysql.dao;
+package chess.mysql;
 
 import chess.chessgame.domain.room.Room;
-import chess.mysql.dao.dto.RoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

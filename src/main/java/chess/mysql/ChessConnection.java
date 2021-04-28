@@ -1,4 +1,4 @@
-package chess.mysql.dao;
+package chess.mysql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,6 +1,6 @@
-package chess.controller.web.dto;
+package chess.controller.web;
 
-public class ErrorMessageResponseDto {
+class ErrorMessageResponseDto {
     private final String errorMsg;
 
     public ErrorMessageResponseDto(String errorMsg) {

@@ -2,9 +2,6 @@ package chess.controller.web;
 
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.user.User;
-import chess.controller.web.dto.ActiveRoomsResponseDto;
-import chess.controller.web.dto.RoomRequestDto;
-import chess.controller.web.dto.UserRequestDto;
 import chess.service.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;

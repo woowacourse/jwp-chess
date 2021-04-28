@@ -5,8 +5,6 @@ import chess.chessgame.domain.room.game.ChessGameManagerBundle;
 import chess.chessgame.domain.room.game.ChessGameManagerFactory;
 import chess.chessgame.domain.room.game.NotStartedChessGameManager;
 import chess.chessgame.repository.ChessGameManagerRepository;
-import chess.mysql.dao.ChessDao;
-import chess.mysql.dao.dto.ChessGameDto;
 import org.springframework.stereotype.Repository;
 
 import static java.util.stream.Collectors.collectingAndThen;

@@ -5,10 +5,6 @@ import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.ChessGameManagerFactory;
 import chess.chessgame.domain.room.user.User;
 import chess.chessgame.repository.RoomRepository;
-import chess.mysql.dao.JdbcTemplateChessDao;
-import chess.mysql.dao.RoomDao;
-import chess.mysql.dao.UserDao;
-import chess.mysql.dao.dto.RoomDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

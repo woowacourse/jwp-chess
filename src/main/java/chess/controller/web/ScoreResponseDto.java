@@ -1,4 +1,4 @@
-package chess.controller.web.dto;
+package chess.controller.web;
 
 import chess.chessgame.domain.room.game.statistics.ChessGameStatistics;
 

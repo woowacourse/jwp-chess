@@ -10,10 +10,10 @@ import chess.domain.position.Position;
 import chess.domain.state.*;
 import chess.domain.statistics.ChessGameStatistics;
 import chess.domain.statistics.MatchResult;
-import chess.exception.DomainException;
-import chess.exception.InvalidStateException;
-import chess.exception.InvalidTurnException;
-import chess.exception.NullObjectSelectionException;
+import chess.domain.exception.DomainException;
+import chess.domain.exception.InvalidStateException;
+import chess.domain.exception.InvalidTurnException;
+import chess.domain.exception.NullObjectSelectionException;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,6 +1,6 @@
 package chess.domain.state;
 
-import chess.exception.InvalidStateException;
+import chess.domain.exception.InvalidStateException;
 
 public class InitialState implements State {
     public InitialState() {

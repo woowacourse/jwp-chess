@@ -1,7 +1,7 @@
 package chess.domain.order;
 
 import chess.domain.piece.Piece;
-import chess.exception.DomainException;
+import chess.domain.exception.DomainException;
 
 public class MoveResult {
     private final Piece capturedPiece;

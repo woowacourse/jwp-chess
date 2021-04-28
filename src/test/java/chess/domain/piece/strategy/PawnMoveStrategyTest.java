@@ -6,7 +6,7 @@ import chess.domain.order.MoveRoute;
 import chess.domain.piece.Color;
 import chess.domain.piece.Pawn;
 import chess.domain.position.Position;
-import chess.exception.InvalidMoveStrategyException;
+import chess.domain.exception.InvalidMoveStrategyException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

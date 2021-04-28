@@ -2,7 +2,7 @@ package chess.domain.piece.strategy;
 
 import chess.domain.order.MoveRoute;
 import chess.domain.position.Direction;
-import chess.exception.InvalidMoveStrategyException;
+import chess.domain.exception.InvalidMoveStrategyException;
 
 import java.util.List;
 import java.util.Objects;

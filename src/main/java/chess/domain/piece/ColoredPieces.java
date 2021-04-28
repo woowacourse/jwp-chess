@@ -1,6 +1,6 @@
 package chess.domain.piece;
 
-import chess.exception.DomainException;
+import chess.domain.exception.DomainException;
 
 import java.util.*;
 import java.util.stream.Collectors;

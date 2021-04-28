@@ -1,6 +1,6 @@
 package chess.domain.piece;
 
-import chess.exception.DomainException;
+import chess.domain.exception.DomainException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

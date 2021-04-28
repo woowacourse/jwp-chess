@@ -2,7 +2,7 @@ package chess.domain.board;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.exception.NullObjectSelectionException;
+import chess.domain.exception.NullObjectSelectionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

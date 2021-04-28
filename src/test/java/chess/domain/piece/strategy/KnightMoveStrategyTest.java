@@ -3,7 +3,7 @@ package chess.domain.piece.strategy;
 import chess.domain.board.BoardFactory;
 import chess.domain.board.ChessBoard;
 import chess.domain.position.Position;
-import chess.exception.NoSuchDirectionException;
+import chess.domain.exception.NoSuchDirectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

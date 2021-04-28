@@ -1,7 +1,7 @@
 package chess.domain.statistics;
 
 import chess.domain.piece.Color;
-import chess.exception.DomainException;
+import chess.domain.exception.DomainException;
 
 import java.util.Arrays;
 import java.util.function.BiPredicate;

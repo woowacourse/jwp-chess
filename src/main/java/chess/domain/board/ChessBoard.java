@@ -9,9 +9,9 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.position.*;
 import chess.domain.statistics.ScoreTable;
-import chess.exception.InvalidMoveStrategyException;
-import chess.exception.NullObjectSelectionException;
-import chess.exception.SamePositionChosenException;
+import chess.domain.exception.InvalidMoveStrategyException;
+import chess.domain.exception.NullObjectSelectionException;
+import chess.domain.exception.SamePositionChosenException;
 
 import java.util.*;
 import java.util.function.Function;

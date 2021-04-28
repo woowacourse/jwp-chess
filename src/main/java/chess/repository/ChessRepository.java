@@ -3,6 +3,7 @@ package chess.repository;
 import chess.dao.PieceDao;
 import chess.dao.RoomDao;
 import chess.dto.request.MoveRequestDto;
+import chess.dto.request.RoomNameRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.ChessResponseDto;
 import chess.dto.response.RoomResponseDto;
@@ -21,8 +22,8 @@ public class ChessRepository {
         this.pieceDao = pieceDao;
     }
 
-    public Long addRoom(final String roomName) {
-        return roomDao.addRoom(roomName);
+    public Long addRoom(final RoomNameRequestDto roomNameRequestDto) {
+        return roomDao.addRoom(roomNameRequestDto);
     }
 
     public void initializePieceStatus(final Map<String, String> board, Long roomId) {

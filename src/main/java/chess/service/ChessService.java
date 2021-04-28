@@ -12,6 +12,7 @@ import chess.dto.ChessBoardDto;
 import chess.dto.PlayerDto;
 import chess.dto.StringChessBoardDto;
 import chess.dto.request.MoveRequestDto;
+import chess.dto.request.RoomNameRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.ChessResponseDto;
 import chess.dto.response.MoveResponseDto;
@@ -30,11 +31,11 @@ public class ChessService {
         this.chessRepository = chessRepository;
     }
 
-    public Long addRoom(final String roomName) {
+    public Long addRoom(final RoomNameRequestDto roomNameRequestDto) {
         Round round = new Round(StateFactory.initialization(PiecesFactory.whitePieces()),
                 StateFactory.initialization(PiecesFactory.blackPieces()),
                 CommandFactory.initialCommand("start"));
-        Long roomId = chessRepository.addRoom(roomName);
+        Long roomId = chessRepository.addRoom(roomNameRequestDto);
         initialize(round, roomId);
         return roomId;
     }

@@ -2,8 +2,10 @@ package chess.controller;
 
 import chess.dto.ChessBoardDto;
 import chess.dto.request.MoveRequestDto;
+import chess.dto.request.RoomNameRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.MoveResponseDto;
+import chess.dto.response.RoomIdResponseDto;
 import chess.service.ChessService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,9 +20,9 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
-    @PostMapping("/room")
-    public Long start(@RequestBody final String req) {
-        return chessService.addRoom(req.split(":")[1].split("\"")[1]);
+    @PostMapping(value = "/room")
+    public RoomIdResponseDto start(@RequestBody final RoomNameRequestDto roomNameRequestDto) {
+        return new RoomIdResponseDto(chessService.addRoom(roomNameRequestDto));
     }
 
     @GetMapping("/board/{roomId}")

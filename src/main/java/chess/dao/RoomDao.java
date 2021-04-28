@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dto.request.RoomNameRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.RoomResponseDto;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,12 +21,12 @@ public class RoomDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public Long addRoom(final String roomName) {
+    public Long addRoom(final RoomNameRequestDto roomNameRequestDto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO room (room_name, current_turn) VALUES (?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, new String[]{"room_id"});
-            ps.setString(1, roomName);
+            ps.setString(1, roomNameRequestDto.getRoomName());
             ps.setString(2, "white");
             return ps;
         }, keyHolder);

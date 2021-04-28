@@ -42,6 +42,7 @@ public class ChessController {
     private void generateSession(final HttpServletRequest request, final String id) {
         final HttpSession session = request.getSession();
         session.setAttribute("id", id);
+        session.setMaxInactiveInterval(60 * 30);
     }
 
     @GetMapping(value = "/login")
@@ -59,14 +60,6 @@ public class ChessController {
         final HttpSession session = request.getSession();
         session.setAttribute("id", null);
         return ResponseEntity.ok("success");
-    }
-
-    private void validateSession(final HttpServletRequest request) throws LoginException {
-        final HttpSession session = request.getSession();
-        final String id = (String) session.getAttribute("id");
-        if (Objects.isNull(id) || id.length() == 0) {
-            throw new LoginException();
-        }
     }
 
     @PostMapping(value = "/games")
@@ -110,5 +103,13 @@ public class ChessController {
         final String start = moveRequestDto.getStart();
         final String destination = moveRequestDto.getDestination();
         return chessService.move(roomId, start, destination);
+    }
+
+    private void validateSession(final HttpServletRequest request) throws LoginException {
+        final HttpSession session = request.getSession();
+        final String id = (String) session.getAttribute("id");
+        if (Objects.isNull(id) || id.length() == 0) {
+            throw new LoginException();
+        }
     }
 }

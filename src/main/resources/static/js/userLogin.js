@@ -79,3 +79,8 @@ export function checkLoginUserWithSession() {
 function welcomeUser(id) {
     userId.innerText = "[Hello! " + String(id) + "]";
 }
+
+export function askUserToLogin() {
+    userId.innerText = "[Please Login]";
+    logoutBtn.style.display = "none";
+}

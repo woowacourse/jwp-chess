@@ -1,4 +1,5 @@
 import {chessRoomList, closeRoomList} from "./firstPage.js";
+import {askUserToLogin} from "./userLogin.js";
 
 let joinRoomBtn = document.getElementById("joinRoomBtn");
 joinRoomBtn.addEventListener("click", joinRoom);
@@ -8,6 +9,7 @@ export function checkFetchLogin(response) {
         console.log(response.status)
         if (response.status === 401) {
             alert("로그인을 먼저 해주세요");
+            askUserToLogin();
         } else {
             alert("서버와의 통신에 실패했습니다.");
         }

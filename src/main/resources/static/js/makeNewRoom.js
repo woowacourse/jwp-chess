@@ -1,5 +1,6 @@
 import {changeTitleToRoomTitle, initializeChessBoard, saveRoomNumber} from "./firstPage.js";
 import {checkFetchLogin} from "./loadRoom.js";
+import {askUserToLogin} from "./userLogin.js";
 
 let makeRoomBtn = document.getElementById("makeRoomBtn");
 makeRoomBtn.addEventListener("click", makeRoom);
@@ -35,6 +36,7 @@ function checkAvailableRoom(userInputRoomName) {
                 console.log(response.status)
                 if (response.status === 401) {
                     alert("로그인을 먼저 해주세요");
+                    askUserToLogin();
                 } else if (response.status === 409) {
                     alert("방 제목이 중복됩니다. 다른 방 제목을 사용해주세요.");
                 } else {

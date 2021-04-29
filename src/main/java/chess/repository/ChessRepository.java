@@ -2,10 +2,11 @@ package chess.repository;
 
 import chess.dao.PieceDao;
 import chess.dao.RoomDao;
-import chess.dto.response.ChessResponseDto;
-import chess.dto.response.RoomResponseDto;
+import chess.dao.dto.response.ChessResponseDto;
+import chess.dao.dto.response.RoomResponseDto;
 import org.springframework.stereotype.Repository;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,12 +30,22 @@ public class ChessRepository {
         }
     }
 
-    public List<RoomResponseDto> showAllRooms() {
-        return roomDao.showAllRooms();
+    public Map<Long, String> showAllRooms() {
+        Map<Long, String> rooms = new LinkedHashMap<>();
+        List<RoomResponseDto> roomResponsesDto = roomDao.showAllRooms();
+        for (RoomResponseDto roomResponseDto : roomResponsesDto) {
+            rooms.put(roomResponseDto.getRoomId(), roomResponseDto.getRoomName());
+        }
+        return rooms;
     }
 
-    public List<ChessResponseDto> showAllPieces(final Long roomId) {
-        return pieceDao.showAllPieces(roomId);
+    public Map<String, String> showAllPieces(final Long roomId) {
+        Map<String, String> pieces = new LinkedHashMap<>();
+        List<ChessResponseDto> ChessResponsesDto = pieceDao.showAllPieces(roomId);
+        for (ChessResponseDto chessResponseDto : ChessResponsesDto) {
+            pieces.put(chessResponseDto.getPiecePosition(), chessResponseDto.getPieceName());
+        }
+        return pieces;
     }
 
     public String showCurrentTurn(final Long roomId) {

@@ -1,4 +1,4 @@
-package chess.dto.response;
+package chess.dao.dto.response;
 
 public class RoomResponseDto {
     private final long roomId;

@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dto.response.ChessResponseDto;
+import chess.dao.dto.response.ChessResponseDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

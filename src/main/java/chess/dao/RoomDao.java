@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dto.response.RoomResponseDto;
+import chess.dao.dto.response.RoomResponseDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;

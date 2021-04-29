@@ -11,9 +11,8 @@ import chess.domain.state.StateFactory;
 import chess.dto.ChessBoardDto;
 import chess.dto.PlayerDto;
 import chess.dto.StringChessBoardDto;
-import chess.dto.response.ChessResponseDto;
 import chess.dto.response.MoveResponseDto;
-import chess.dto.response.RoomResponseDto;
+import chess.dao.dto.response.RoomResponseDto;
 import chess.dto.response.ScoreResponseDto;
 import chess.repository.ChessRepository;
 import org.springframework.stereotype.Service;
@@ -64,23 +63,17 @@ public class ChessService {
     }
 
     public ChessBoardDto chessBoardFromDB(final Long roomId) {
-        StringChessBoardDto dbChessBoard = dbChessBoard(roomId);
+        Map<String, String> dbChessBoard = dbChessBoard(roomId);
         String currentTurn = chessRepository.showCurrentTurn(roomId);
         Round round = loadRoundFromDB(roomId);
-        return new ChessBoardDto(round.getBoard(
-                ChessBoardFactory.loadBoard(dbChessBoard.getStringChessBoard())), currentTurn);
+        return new ChessBoardDto(round.getBoard(ChessBoardFactory.loadBoard(dbChessBoard)), currentTurn);
     }
 
-    private StringChessBoardDto dbChessBoard(final Long roomId) {
-        Map<String, String> dbChessBoard = new LinkedHashMap<>();
-        List<ChessResponseDto> pieces = chessRepository.showAllPieces(roomId);
-        for (ChessResponseDto piece : pieces) {
-            dbChessBoard.put(piece.getPiecePosition(), piece.getPieceName());
-        }
-        return new StringChessBoardDto(dbChessBoard);
+    private Map<String, String> dbChessBoard(final Long roomId) {
+        return chessRepository.showAllPieces(roomId);
     }
 
-    public List<RoomResponseDto> rooms() {
+    public Map<Long, String> rooms() {
         return chessRepository.showAllRooms();
     }
 
@@ -94,9 +87,9 @@ public class ChessService {
     }
 
     private Round loadRoundFromDB(final Long roomId) {
-        StringChessBoardDto dbChessBoard = dbChessBoard(roomId);
+        Map<String, String> dbChessBoard = dbChessBoard(roomId);
         String currentTurn = chessRepository.showCurrentTurn(roomId);
-        return Round.of(ChessBoardFactory.loadBoard(dbChessBoard.getStringChessBoard()), currentTurn);
+        return Round.of(ChessBoardFactory.loadBoard(dbChessBoard), currentTurn);
     }
 
     public ScoreResponseDto scoreResponseDto(final Long roomId) {

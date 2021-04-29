@@ -12,10 +12,6 @@ public final class HistoryService {
         this.historyDAO = historyDAO;
     }
 
-    public void initializeByRoomId(final String roomId) {
-        historyDAO.deleteHistoryByRoomId(roomId);
-    }
-
     public void createHistory(final String roomId, final String startPoint, final String endPoint) {
         historyDAO.createHistory(roomId, startPoint, endPoint);
     }
@@ -23,8 +19,8 @@ public final class HistoryService {
     public void continueGame(final String id, final ChessGame chessGame) {
         historyDAO.allHistoryByRoomId(id).forEach(
                 positions -> chessGame.move(
-                        positions.getStartPoint(),
-                        positions.getEndPoint()
+                        positions.getStartPosition(),
+                        positions.getEndPosition()
                 )
         );
     }

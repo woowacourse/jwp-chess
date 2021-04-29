@@ -2,7 +2,7 @@ package chess.dto.game;
 
 import chess.domain.ChessGame;
 import chess.domain.Team;
-import chess.dto.user.UsersDTO;
+import chess.dto.player.PlayersDTO;
 import lombok.Getter;
 
 @Getter
@@ -14,7 +14,7 @@ public final class StatusDTO {
     private final String winner;
     private final String loser;
 
-    public StatusDTO(final ChessGame chessGame, final UsersDTO users) {
+    public StatusDTO(final ChessGame chessGame, final PlayersDTO users) {
         this.turn = chessGame.turn().name();
         this.blackScore = chessGame.scoreByTeam(Team.BLACK);
         this.whiteScore = chessGame.scoreByTeam(Team.WHITE);
@@ -23,7 +23,7 @@ public final class StatusDTO {
         this.loser = loser(users);
     }
 
-    private String winner(final Team winner, final UsersDTO users) {
+    private String winner(final Team winner, final PlayersDTO users) {
         if (Team.WHITE.equals(winner)) {
             return users.getWhiteUser();
         }
@@ -33,7 +33,7 @@ public final class StatusDTO {
         return "NONE";
     }
 
-    private String loser(final UsersDTO users) {
+    private String loser(final PlayersDTO users) {
         if (users.getBlackUser().equals(winner)) {
             return users.getWhiteUser();
         }

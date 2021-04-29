@@ -13,8 +13,15 @@ import java.util.List;
 public final class ChessGame {
     private Board board;
     private Team currentTurn;
-    private boolean isPlaying = true;
+    private boolean isPlaying;
     private Team winner;
+
+    public ChessGame() {
+        BoardFactory boardFactory = new BoardFactory();
+        this.board = boardFactory.board();
+        this.currentTurn = Team.WHITE;
+        this.isPlaying = true;
+    }
 
     public void initialize() {
         BoardFactory boardFactory = new BoardFactory();

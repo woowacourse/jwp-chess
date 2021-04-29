@@ -1,4 +1,4 @@
-package chess.dto.user;
+package chess.dto.player;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public final class UsersDTO {
+public final class PlayersDTO {
     private String blackUser;
     private String whiteUser;
 }

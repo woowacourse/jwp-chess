@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.Movement;
+import chess.domain.entity.History;
 import chess.exception.NoHistoryException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,22 +21,17 @@ public class HistoryDAO {
         jdbcTemplate.update(query, roomId, startPoint, endPoint);
     }
 
-    public void deleteHistoryByRoomId(final String roomId) {
-        String query = "DELETE FROM history WHERE room_id = ?";
-        jdbcTemplate.update(query, roomId);
-    }
-
-    public List<Movement> allHistoryByRoomId(final String roomId) {
+    public List<History> allHistoryByRoomId(final String roomId) {
         String query = "SELECT start_position, end_position FROM history WHERE room_id = ? ORDER BY register_date";
-        List<Movement> histories = jdbcTemplate.query(query, mapper(), roomId);
+        List<History> histories = jdbcTemplate.query(query, mapper(), roomId);
         if (histories.isEmpty()) {
             throw new NoHistoryException(roomId);
         }
         return histories;
     }
 
-    private RowMapper<Movement> mapper() {
-        return (resultSet, rowNum) -> new Movement(
+    private RowMapper<History> mapper() {
+        return (resultSet, rowNum) -> new History(
                 resultSet.getString("start_position"),
                 resultSet.getString("end_position")
         );

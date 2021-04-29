@@ -8,32 +8,56 @@ for (let i = 0; i < users.length; ++i) {
     users[i].innerHTML = i + 1;
 }
 
-
-function createRoom() {
-    let name = prompt("방 이름을 입력해주세요");
-    if (name !== "") {
-        newGame(name);
-    } else {
-        alert("방 이름은 한 글자 이상이어야합니다.");
-    }
+function showPopup() {
+    const popup = document.querySelector('#popup');
+    popup.classList.remove('hide');
 }
 
-function newGame(name) {
-    let data = {
-        "name": name
-    }
+function closePopup() {
+    const roomName = document.querySelector('#room-name');
+    const userId = document.querySelector('#user-id');
+    const userPassword = document.querySelector('#user-password');
+    roomName.value = "";
+    userId.value = "";
+    userPassword.value = "";
+    const popup = document.querySelector('#popup');
+    popup.classList.add('hide');
+}
 
-    $.ajax({
-        url: "/rooms/new-game",
-        data: JSON.stringify(data),
-        method: "POST",
-        contentType: "application/json",
-        dataType: "json"
-    }).done(function (success) {
-        if (success) {
-            location.reload();
-        }
-    }).error(function (response) {
-        location.href = "/error-page/" + response.status;
-    });
+function showEnterPopup() {
+    const popup = document.querySelector('#enter-popup');
+    popup.classList.remove('hide');
+}
+
+function closeEnterPopup() {
+    const userId = document.querySelector('#black-user-id');
+    const userPassword = document.querySelector('#black-user-password');
+    userId.value = "";
+    userPassword.value = "";
+    const popup = document.querySelector('#enter-popup');
+    popup.classList.add('hide');
+}
+
+function showBlackUserPasswordPopup() {
+    const popup = document.querySelector('#black-user-password-popup');
+    popup.classList.remove('hide');
+}
+
+function closeBlackUserPasswordPopup() {
+    const userPassword = document.querySelector('#black-user-password-value');
+    userPassword.value = "";
+    const popup = document.querySelector('#black-user-password-popup');
+    popup.classList.add('hide');
+}
+
+function showWhiteUserPasswordPopup() {
+    const popup = document.querySelector('#white-user-password-popup');
+    popup.classList.remove('hide');
+}
+
+function closeWhiteUserPasswordPopup() {
+    const userPassword = document.querySelector('#white-user-password-value');
+    userPassword.value = "";
+    const popup = document.querySelector('#white-user-password-popup');
+    popup.classList.add('hide');
 }

@@ -123,7 +123,6 @@ public final class Position {
         return rightUpPath;
     }
 
-    // todo: Position에서 (0,0) 정보를 "a1"의 형태로 변환해주는 메소드라고 함 (해당 내용 확인 필요)
     public String getPositionInitial() {
         return positionMap.keySet().stream()
                 .filter(initial -> positionMap.get(initial).equals(this))

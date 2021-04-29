@@ -22,7 +22,7 @@ public class LobbyController {
         this.lobbyService = lobbyService;
     }
 
-    @PostMapping("/game")
+    @PostMapping("/room")
     public ResponseEntity<Long> newGame(@RequestBody @Valid TitleDto titleDto) {
         if (lobbyService.findGame(titleDto.getTitle()).isPresent()) {
             throw new IllegalArgumentException("같은 이름으로 등록된 방이 있습니다.");
@@ -30,7 +30,7 @@ public class LobbyController {
         return ResponseEntity.ok(lobbyService.newGame(titleDto.getTitle()));
     }
 
-    @GetMapping("/games")
+    @GetMapping("/rooms")
     public ResponseEntity<ChessGamesDto> findAllRooms() {
         return ResponseEntity.ok(new ChessGamesDto(
                 lobbyService.findAllGames()

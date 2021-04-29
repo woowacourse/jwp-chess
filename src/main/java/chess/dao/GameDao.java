@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dto.GameCountResponseDto;
+import chess.dto.RoomExistResponseDto;
 import chess.dto.RoomResponseDto;
 import chess.entity.Game;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -76,10 +77,14 @@ public class GameDao {
         return jdbcTemplate.update(sql, roomId);
     }
 
-    public int findByName(String roomName) {
+    public RoomExistResponseDto findByName(String roomName) {
         String sql = "SELECT EXISTS(SELECT * FROM game WHERE name = ?) as isChk";
-        return jdbcTemplate.queryForObject(sql, Integer.class, roomName);
+        return jdbcTemplate.queryForObject(sql, roomExistRowMapper, roomName);
     }
+
+    private final RowMapper<RoomExistResponseDto> roomExistRowMapper = (resultSet, rowNum) -> new RoomExistResponseDto(
+        resultSet.getInt("isChk")
+    );
 
     private final RowMapper<Game> gameRowMapper = (resultSet, rowNum) -> new Game(
             resultSet.getLong("id"),

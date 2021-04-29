@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.GameCountResponseDto;
+import chess.dto.RoomExistResponseDto;
 import chess.service.GameService;
 import chess.service.PieceService;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class GameController {
     }
 
     @GetMapping("/rooms/check")
-    public ResponseEntity<Integer> findGameByName(@RequestParam String name) {
+    public ResponseEntity<RoomExistResponseDto> findGameByName(@RequestParam String name) {
         return ResponseEntity.ok(gameService.findGameByName(name));
     }
 

@@ -79,7 +79,7 @@ async function validateRoomName(roomName) {
         name: roomName
     }
     const isChk = await getData(`${url}/games/rooms/check`, params);
-    if (isChk === 1) {
+    if (isChk["isExist"] === 1) {
         alert("이미 존재하는 방 이름입니다");
         throw Error("존재하는 방이름 입니다.");
     }

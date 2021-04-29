@@ -118,5 +118,5 @@ async function createGame(name, hostId, guestId) {
 }
 
 async function loadGame() {
-    window.location.href = '/games/room-list';
+    window.location.href = '/games/rooms';
 }

@@ -24,10 +24,10 @@ public class GameViewController {
         return "chess";
     }
 
-    @GetMapping("/room-list")
+    @GetMapping("/rooms")
     public String rooms(final Model model) {
         List<RoomResponseDto> rooms = gameService.getRooms();
         model.addAttribute("rooms", rooms);
-        return "room-list";
+        return "rooms";
     }
 }

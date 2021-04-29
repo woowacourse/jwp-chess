@@ -26,15 +26,15 @@ public class LobbyServiceTest {
     @Test
     @DisplayName("새 게임 생성 테스트")
     void newGame() {
-        given(chessRepository.addGame(any(), eq("test-room"))).willReturn("1");
-        assertThat(lobbyService.newGame("test-room")).isEqualTo("1");
+        given(chessRepository.addGame(any(), eq("test-room"))).willReturn(1L);
+        assertThat(lobbyService.newGame("test-room")).isEqualTo(1L);
     }
 
     @Test
     @DisplayName("방 이름으로 id 찾아오는 테스트")
     void findGame() {
-        given(chessRepository.findGame("test-room")).willReturn(Optional.of("1"));
-        assertThat(lobbyService.findGame("test-room")).isEqualTo(Optional.of("1"));
+        given(chessRepository.findGame("test-room")).willReturn(Optional.of(1L));
+        assertThat(lobbyService.findGame("test-room")).isEqualTo(Optional.of(1L));
     }
 
     @Test

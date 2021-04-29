@@ -19,12 +19,12 @@ public class LobbyService {
         return chessRepository.findAllGames();
     }
 
-    public String newGame(String title) {
+    public Long newGame(String title) {
         ChessGame chessGame = new ChessGame();
         return chessRepository.addGame(chessGame, title);
     }
 
-    public Optional<String> findGame(String title) {
+    public Optional<Long> findGame(String title) {
         return chessRepository.findGame(title);
     }
 }

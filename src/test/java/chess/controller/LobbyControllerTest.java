@@ -42,7 +42,7 @@ public class LobbyControllerTest {
     void duplicated() throws Exception {
         String content = objectMapper.writeValueAsString(new TitleDto("test-room"));
 
-        when(lobbyService.findGame("test-room")).thenReturn(Optional.of("1"));
+        when(lobbyService.findGame("test-room")).thenReturn(Optional.of(1L));
 
         mockMvc.perform(post("/game")
             .content(content)
@@ -55,7 +55,7 @@ public class LobbyControllerTest {
     void createGame() throws Exception {
         String content = objectMapper.writeValueAsString(new TitleDto("test-room"));
 
-        when(lobbyService.newGame("test-room")).thenReturn("1");
+        when(lobbyService.newGame("test-room")).thenReturn(1L);
 
         mockMvc.perform(post("/game")
             .content(content)

@@ -18,19 +18,19 @@ public class ChessRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<String> findGame(String title) {
+    public Optional<Long> findGame(String title) {
         String findTitleQuery = "SELECT id FROM chess_game WHERE title = ?";
-        return jdbcTemplate.queryForList(findTitleQuery, String.class, title)
+        return jdbcTemplate.queryForList(findTitleQuery, Long.class, title)
                 .stream()
                 .findAny();
     }
 
-    public String addGame(ChessGame chessGame, String title) {
+    public Long addGame(ChessGame chessGame, String title) {
         String addingGameQuery = "INSERT INTO chess_game (turn, finished, board, title) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(addingGameQuery, chessGame.getTurn(), chessGame.isOver(), Serializer.serializeGame(chessGame)
                 , title);
         String findingGameQuery = "SELECT MAX(id) FROM chess_game";
-        return jdbcTemplate.queryForObject(findingGameQuery, String.class);
+        return jdbcTemplate.queryForObject(findingGameQuery, Long.class);
     }
 
     public ChessGame loadGame(Long id) {

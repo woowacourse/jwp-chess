@@ -32,11 +32,11 @@ public class ChessRepositoryTest {
     @Test
     @DisplayName("새로운 게임 추가")
     void addGame() {
-        String id = chessRepository.addGame(new ChessGame(), "test");
+        Long id = chessRepository.addGame(new ChessGame(), "test");
 
-        ChessGame chessGame = chessRepository.loadGame(Long.parseLong(id));
+        ChessGame chessGame = chessRepository.loadGame(id);
 
-        assertThat(chessGame.getId()).isEqualTo(Long.parseLong(id));
+        assertThat(chessGame.getId()).isEqualTo(id);
         assertThat(chessGame.getTitle()).isEqualTo("test");
     }
 
@@ -44,52 +44,52 @@ public class ChessRepositoryTest {
     @DisplayName("id로 방 찾아오기")
     void loadGame() {
         ChessGame chessGame = new ChessGame(1L, Color.WHITE, false, new ChessBoard(), "test");
-        String id = chessRepository.addGame(chessGame, "test");
+        Long id = chessRepository.addGame(chessGame, "test");
 
-        ChessGame loadedGame = chessRepository.loadGame(Long.parseLong(id));
+        ChessGame loadedGame = chessRepository.loadGame(id);
 
         assertThat(chessGame.getTitle()).isEqualTo(loadedGame.getTitle());
-        assertThat(Long.parseLong(id)).isEqualTo(loadedGame.getId());
+        assertThat(id).isEqualTo(loadedGame.getId());
     }
 
     @Test
     @DisplayName("방 이름으로 찾기")
     void findGame() {
-        String id = chessRepository.addGame(new ChessGame(), "test");
-        Optional<String> findId = chessRepository.findGame("test");
+        Long id = chessRepository.addGame(new ChessGame(), "test");
+        Optional<Long> findId = chessRepository.findGame("test");
         assertThat(id).isEqualTo(findId.get());
     }
 
     @Test
     @DisplayName("바뀐 게임 상태 저장과 확인")
     void saveGame() {
-        String id = chessRepository.addGame(new ChessGame(), "test");
+        Long id = chessRepository.addGame(new ChessGame(), "test");
 
         ChessGame chessGame = new ChessGame(new ChessBoard(), Color.BLACK);
-        chessRepository.saveGame(Long.parseLong(id), chessGame);
+        chessRepository.saveGame(id, chessGame);
 
-        ChessGame savedGame = chessRepository.loadGame(Long.parseLong(id));
+        ChessGame savedGame = chessRepository.loadGame(id);
         assertThat(savedGame.getTurn()).isEqualTo("BLACK");
     }
 
     @Test
     @DisplayName("실행 중인 게임 수동 종료")
     void finish() {
-        String id = chessRepository.addGame(new ChessGame(), "test");
-        chessRepository.finish(Long.parseLong(id));
+        Long id = chessRepository.addGame(new ChessGame(), "test");
+        chessRepository.finish(id);
 
-        ChessGame finishedGame = chessRepository.loadGame(Long.parseLong(id));
+        ChessGame finishedGame = chessRepository.loadGame(id);
         assertThat(finishedGame.isFinished()).isTrue();
     }
 
     @Test
     @DisplayName("게임 재시작")
     void restart() {
-        String id = chessRepository.addGame(new ChessGame(), "test");
-        chessRepository.finish(Long.parseLong(id));
-        chessRepository.restart(Long.parseLong(id), new ChessGame());
+        Long id = chessRepository.addGame(new ChessGame(), "test");
+        chessRepository.finish(id);
+        chessRepository.restart(id, new ChessGame());
 
-        ChessGame newGame = chessRepository.loadGame(Long.parseLong(id));
+        ChessGame newGame = chessRepository.loadGame(id);
         assertThat(newGame.isFinished()).isFalse();
     }
 

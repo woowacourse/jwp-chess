@@ -169,3 +169,16 @@ body {
     color: #F3E4DF;
     text-align: center;
 }
+
+.rooms{
+    text-align: center;
+}
+
+.room_info{
+    padding : 1em;
+    border: 1px solid black;
+}
+
+.room_info:hover{
+    background-color: darksalmon;
+}

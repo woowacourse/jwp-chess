@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.dto.request.MoveRequestDto;
 import chess.dto.response.ChessResponseDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,8 @@ public class PieceDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void initializePieceStatus(final String pieceName, final String piecePosition, Long roomId) {
+    public void initializePieceStatus(final String pieceName, final String piecePosition,
+                                      final Long roomId) {
         String query = "INSERT INTO piece (piece_name, piece_position, room_id) VALUE (?, ?, ?)";
         jdbcTemplate.update(query, pieceName, piecePosition, roomId);
     }
@@ -33,13 +33,13 @@ public class PieceDao {
         );
     }
 
-    public void movePiece(final MoveRequestDto moveRequestDto) {
+    public void movePiece(final String source, final String target) {
         String query = "UPDATE piece SET piece_position=? WHERE piece_position=?";
-        jdbcTemplate.update(query, moveRequestDto.getTarget(), moveRequestDto.getSource());
+        jdbcTemplate.update(query, target, source);
     }
 
-    public void removePiece(final MoveRequestDto moveRequestDto) {
+    public void removePiece(final String target) {
         String query = "DELETE FROM piece WHERE piece_position=?";
-        jdbcTemplate.update(query, moveRequestDto.getTarget());
+        jdbcTemplate.update(query, target);
     }
 }

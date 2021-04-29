@@ -11,9 +11,6 @@ import chess.domain.state.StateFactory;
 import chess.dto.ChessBoardDto;
 import chess.dto.PlayerDto;
 import chess.dto.StringChessBoardDto;
-import chess.dto.request.MoveRequestDto;
-import chess.dto.request.RoomNameRequestDto;
-import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.ChessResponseDto;
 import chess.dto.response.MoveResponseDto;
 import chess.dto.response.RoomResponseDto;
@@ -31,11 +28,11 @@ public class ChessService {
         this.chessRepository = chessRepository;
     }
 
-    public Long addRoom(final RoomNameRequestDto roomNameRequestDto) {
+    public Long addRoom(final String roomName) {
         Round round = new Round(StateFactory.initialization(PiecesFactory.whitePieces()),
                 StateFactory.initialization(PiecesFactory.blackPieces()),
                 CommandFactory.initialCommand("start"));
-        Long roomId = chessRepository.addRoom(roomNameRequestDto);
+        Long roomId = chessRepository.addRoom(roomName);
         initialize(round, roomId);
         return roomId;
     }
@@ -87,12 +84,12 @@ public class ChessService {
         return chessRepository.showAllRooms();
     }
 
-    public MoveResponseDto move(final MoveRequestDto moveRequestDto) {
+    public MoveResponseDto move(final String source, final String target, final Long roomId) {
         Queue<String> commands =
-                new ArrayDeque<>(Arrays.asList("move", moveRequestDto.getSource(), moveRequestDto.getTarget()));
-        Round round = loadRoundFromDB(moveRequestDto.getRoomId());
+                new ArrayDeque<>(Arrays.asList("move", source, target));
+        Round round = loadRoundFromDB(roomId);
         round.execute(commands);
-        movePiece(moveRequestDto);
+        movePiece(source, target);
         return new MoveResponseDto(true);
     }
 
@@ -116,12 +113,12 @@ public class ChessService {
         return new PlayerDto(whitePlayer, blackPlayer);
     }
 
-    public void movePiece(final MoveRequestDto moveRequestDto) {
-        chessRepository.removePiece(moveRequestDto);
-        chessRepository.movePiece(moveRequestDto);
+    public void movePiece(final String source, final String target) {
+        chessRepository.removePiece(target);
+        chessRepository.movePiece(source, target);
     }
 
-    public void changeTurn(final TurnChangeRequestDto turnChangeRequestDto) {
-        chessRepository.changeTurn(turnChangeRequestDto);
+    public void changeTurn(final String nextTurn, final Long roomId) {
+        chessRepository.changeTurn(nextTurn, roomId);
     }
 }

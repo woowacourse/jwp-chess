@@ -22,7 +22,7 @@ public class ChessApiController {
 
     @PostMapping(value = "/room")
     public RoomIdResponseDto start(@RequestBody final RoomNameRequestDto roomNameRequestDto) {
-        return new RoomIdResponseDto(chessService.addRoom(roomNameRequestDto));
+        return new RoomIdResponseDto(chessService.addRoom(roomNameRequestDto.getRoomName()));
     }
 
     @GetMapping("/board/{roomId}")
@@ -32,12 +32,12 @@ public class ChessApiController {
 
     @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
     public MoveResponseDto move(@RequestBody final MoveRequestDto moveRequestDto) {
-        return chessService.move(moveRequestDto);
+        return chessService.move(moveRequestDto.getSource(), moveRequestDto.getTarget(), moveRequestDto.getRoomId());
     }
 
     @PostMapping(value = "/turn", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> turn(@RequestBody final TurnChangeRequestDto turnChangeRequestDto) {
-        chessService.changeTurn(turnChangeRequestDto);
+        chessService.changeTurn(turnChangeRequestDto.getNextTurn(), turnChangeRequestDto.getRoomId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

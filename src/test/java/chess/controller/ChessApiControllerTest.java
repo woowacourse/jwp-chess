@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,7 +45,7 @@ public class ChessApiControllerTest {
     void start() throws Exception {
         RoomNameRequestDto roomNameRequestDto = new RoomNameRequestDto("우테코");
 
-        given(chessService.addRoom(any(RoomNameRequestDto.class)))
+        given(chessService.addRoom("우테코"))
                 .willReturn(1L);
 
         mockMvc.perform(post("/room")
@@ -80,7 +79,7 @@ public class ChessApiControllerTest {
         MoveRequestDto moveRequestDto = new MoveRequestDto("a2", "a4", 1L);
         MoveResponseDto moveResponseDto = new MoveResponseDto(true);
 
-        given(chessService.move(any(MoveRequestDto.class)))
+        given(chessService.move("a2", "a4", 1L))
                 .willReturn(moveResponseDto);
 
         mockMvc.perform(post("/move")
@@ -102,6 +101,6 @@ public class ChessApiControllerTest {
                 .andExpect(status().isOk());
 
         verify(chessService, times(1))
-                .changeTurn(any(TurnChangeRequestDto.class));
+                .changeTurn("black", 1L);
     }
 }

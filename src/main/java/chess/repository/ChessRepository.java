@@ -2,9 +2,6 @@ package chess.repository;
 
 import chess.dao.PieceDao;
 import chess.dao.RoomDao;
-import chess.dto.request.MoveRequestDto;
-import chess.dto.request.RoomNameRequestDto;
-import chess.dto.request.TurnChangeRequestDto;
 import chess.dto.response.ChessResponseDto;
 import chess.dto.response.RoomResponseDto;
 import org.springframework.stereotype.Repository;
@@ -22,11 +19,11 @@ public class ChessRepository {
         this.pieceDao = pieceDao;
     }
 
-    public Long addRoom(final RoomNameRequestDto roomNameRequestDto) {
-        return roomDao.addRoom(roomNameRequestDto);
+    public Long addRoom(final String roomName) {
+        return roomDao.addRoom(roomName);
     }
 
-    public void initializePieceStatus(final Map<String, String> board, Long roomId) {
+    public void initializePieceStatus(final Map<String, String> board, final Long roomId) {
         for (Map.Entry<String, String> boardStatus : board.entrySet()) {
             pieceDao.initializePieceStatus(boardStatus.getValue(), boardStatus.getKey(), roomId);
         }
@@ -44,15 +41,15 @@ public class ChessRepository {
         return roomDao.showCurrentTurn(roomId);
     }
 
-    public void movePiece(final MoveRequestDto moveRequestDto) {
-        pieceDao.movePiece(moveRequestDto);
+    public void movePiece(final String source, final String target) {
+        pieceDao.movePiece(source, target);
     }
 
-    public void changeTurn(final TurnChangeRequestDto turnChangeRequestDto) {
-        roomDao.changeTurn(turnChangeRequestDto);
+    public void changeTurn(final String nextTurn, final Long roomId) {
+        roomDao.changeTurn(nextTurn, roomId);
     }
 
-    public void removePiece(final MoveRequestDto moveRequestDto) {
-        pieceDao.removePiece(moveRequestDto);
+    public void removePiece(final String target) {
+        pieceDao.removePiece(target);
     }
 }

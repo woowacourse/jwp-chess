@@ -1,6 +1,7 @@
 package chess.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -85,9 +86,6 @@ public class GameControllerTest {
     @Test
     @DisplayName("특정한 방의 게임 수동으로 종료시키기")
     void finish() throws Exception {
-        when(gameService.loadGame(1L))
-            .thenReturn(new ChessGame(1L, Color.WHITE, false, new ChessBoard(), "test-room"));
-
         mockMvc.perform(post("/room/1/finish"))
             .andExpect(status().isOk());
 
@@ -98,13 +96,15 @@ public class GameControllerTest {
     @Test
     @DisplayName("특정한 방의 게임 재시작하기")
     void restart() throws Exception {
-        when(gameService.restart(1L))
-            .thenReturn(new ChessGame(1L, Color.BLACK, false, new ChessBoard(), "test-room"));
+        when(gameService.restart(anyLong()))
+            .thenReturn(new ChessGame());
 
         mockMvc.perform(post("/room/1/restart"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("id").value(1))
             .andExpect(jsonPath("finished").value(false))
-            .andExpect(jsonPath("turn").value("BLACK"));
+            .andExpect(jsonPath("turn").value("WHITE"));
+
+        verify(gameService, times(1))
+            .restart(1L);
     }
 }

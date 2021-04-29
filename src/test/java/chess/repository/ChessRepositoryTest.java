@@ -94,6 +94,7 @@ public class ChessRepositoryTest {
     }
 
     @Test
+    @DisplayName("생성된 방 목록 불러오기")
     void findAllGames() {
         chessRepository.addGame(new ChessGame(), "test1");
         chessRepository.addGame(new ChessGame(), "test2");

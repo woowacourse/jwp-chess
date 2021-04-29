@@ -28,7 +28,7 @@ function exitRoom() {
         'id' : roomId,
         'gameId' : gameInfo.id
     }).then(function (response) {
-        refreshChessBoard(response.data)
+        document.location.href = "/";
     }).catch(function (error) {
         alert('게임을 떠날 수 없습니다.');
     });
@@ -44,6 +44,9 @@ function connectToSocket(roomId) {
             console.log(response);
             const data = JSON.parse(response.body);
             refreshChessBoard(data)
+            if (gameInfo.end) {
+                socket.close();
+            }
         })
     })
 }

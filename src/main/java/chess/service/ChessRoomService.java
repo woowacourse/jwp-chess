@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.controller.RoomNameDto;
 import chess.webdao.RoomDao;
 import chess.webdto.dao.RoomDto;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,8 @@ public class ChessRoomService {
         return roomDao.selectAllRooms();
     }
 
-    public void createNewRoom(){
-
+    @Transactional
+    public long createNewRoom(String roomName){
+       return roomDao.createRoom("white", true, roomName);
     }
 }

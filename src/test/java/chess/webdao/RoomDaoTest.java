@@ -51,6 +51,7 @@ class RoomDaoTest {
     void createRoom() {
         roomDao.createRoom("white", true, "sample");
         long secondRoomId = roomDao.createRoom("white", true, "sample");
+        roomDao.createRoom("white", true, "addoneMore");
 
         assertThat(secondRoomId).isEqualTo(2L);
     }
@@ -92,7 +93,7 @@ class RoomDaoTest {
 
     @Test
     @DisplayName("모든 방 조회")
-    void name() {
+    void selectAllRooms() {
         roomDao.createRoom("white", true, "sample");
         roomDao.createRoom("white", true, "sample");
 

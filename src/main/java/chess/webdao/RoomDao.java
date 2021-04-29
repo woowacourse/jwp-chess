@@ -81,6 +81,7 @@ public class RoomDao {
             ps.setString(3, roomName);
             return ps;
         }, keyHolder);
+        System.out.println(keyHolder.getKey().longValue());
 
         return keyHolder.getKey().longValue();
     }

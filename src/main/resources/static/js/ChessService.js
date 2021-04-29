@@ -9,7 +9,14 @@ export default class ChessService {
     async showRooms(){
         const response = await fetch(`${this.baseUrl}/rooms`);
         return response.json();
+    }
 
+    async createRoom({roomName}) {
+        return await fetch(`${this.baseUrl}/rooms`, {
+            method: "POST",
+            headers: this.headers,
+            body: JSON.stringify({roomName})
+        }).then(response => response.json());
     }
 
     async moveSourceToTarget(moveRequest, roomId) {

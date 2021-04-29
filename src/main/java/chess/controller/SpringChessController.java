@@ -24,6 +24,11 @@ public class SpringChessController {
     public List<RoomDto> loadRooms() {
         return chessRoomService.showRooms();
     }
+
+    @PostMapping
+    public long createRoom(@RequestBody RoomNameDto roomNameDto) {
+        return chessRoomService.createNewRoom(roomNameDto.getRoomName());
+    }
     @PostMapping("/{roomId}")
     public ChessGameDto startNewGame(@PathVariable long roomId) {
         return chessBoardService.startNewGame(roomId);

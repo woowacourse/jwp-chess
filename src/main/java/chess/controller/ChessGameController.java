@@ -5,7 +5,6 @@ import dto.ChessGameDto;
 import dto.MoveDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

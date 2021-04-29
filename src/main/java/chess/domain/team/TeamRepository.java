@@ -1,8 +1,5 @@
 package chess.domain.team;
 
-import chess.domain.team.BlackTeam;
-import chess.domain.team.Team;
-import chess.domain.team.WhiteTeam;
 import dto.MoveDto;
 
 public interface TeamRepository {

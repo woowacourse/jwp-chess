@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.domain.room.Room;
 import chess.service.room.ChessRoomService;
 import dto.ChessGameDto;
 import dto.RoomDto;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,7 +22,7 @@ public class ChessRoomController {
 
     @Autowired
     public ChessRoomController(final ChessRoomService chessRoomService,
-                              final SimpMessagingTemplate simpMessagingTemplate) {
+                               final SimpMessagingTemplate simpMessagingTemplate) {
         this.chessRoomService = chessRoomService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }

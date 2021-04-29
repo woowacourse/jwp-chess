@@ -1,8 +1,8 @@
 package chess.service.game;
 
 import chess.domain.game.ChessGame;
-import chess.domain.game.Position;
 import chess.domain.game.ChessGameRepository;
+import chess.domain.game.Position;
 import chess.domain.room.ChessRoomRepository;
 import chess.domain.room.Room;
 import dto.ChessGameDto;

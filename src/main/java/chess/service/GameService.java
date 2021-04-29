@@ -5,7 +5,6 @@ import chess.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GameService {
@@ -40,7 +39,7 @@ public class GameService {
         return gameDao.getRooms();
     }
 
-    public GameCountResponseDto gameCount() {
+    public int gameCount() {
         return gameDao.gameCount();
     }
 

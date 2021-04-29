@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.dto.GameCountResponseDto;
 import chess.dto.RoomExistResponseDto;
 import chess.dto.RoomResponseDto;
 import chess.entity.Game;
@@ -63,14 +62,10 @@ public class GameDao {
         return jdbcTemplate.query(sql, roomRowMapper);
     }
 
-    public GameCountResponseDto gameCount() {
+    public int gameCount() {
         String sql = "SELECT count(*) FROM game";
-        return jdbcTemplate.queryForObject(sql, gameCountRowMapper);
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
-
-    private final RowMapper<GameCountResponseDto> gameCountRowMapper = (resultSet, rowNum) -> new GameCountResponseDto(
-            resultSet.getInt("count(*)")
-    );
 
     public int deleteByGameId(long roomId) {
         String sql = "DELETE FROM game WHERE id = ?";

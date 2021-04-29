@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.dto.GameCountResponseDto;
 import chess.dto.RoomExistResponseDto;
 import chess.service.GameService;
 import chess.service.PieceService;
@@ -17,11 +16,6 @@ public class GameController {
     public GameController(GameService gameService, PieceService pieceService) {
         this.gameService = gameService;
         this.pieceService = pieceService;
-    }
-
-    @GetMapping("/roomcnt")
-    public ResponseEntity<GameCountResponseDto> roomCount() {
-        return ResponseEntity.ok().body(gameService.gameCount());
     }
 
     @DeleteMapping("/{roomId}")

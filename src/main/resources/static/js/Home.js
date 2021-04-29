@@ -12,13 +12,7 @@ window.onload = function () {
     registerUserButton.addEventListener("click", createUser);
 }
 
-async function startNewGame(e) {
-    const roomcnt = await getData(`${url}/games/roomcnt`)
-    if(roomcnt["count"] >= 10) {
-        alert("더이상 방을 만들 수 없습니다.")
-        return;
-    }
-
+async function startNewGame() {
     const roomName = prompt("방 제목을 입력하세요");
 
     try {
@@ -114,7 +108,10 @@ async function createGame(name, hostId, guestId) {
         hostId: hostId,
         guestId: guestId
     };
-    await postData(`${url}/chess`, body);
+    const response = await postData(`${url}/chess`, body);
+    if(!response) {
+        alert("게임을 더 만들 수 없습니다. 게임을 삭제하고 생성해주세요");
+    }
 }
 
 async function loadGame() {

@@ -10,16 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.Cookie;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,16 +26,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class RoomRestControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private RoomService roomService;
+    private final MockMvc mockMvc;
+    private final RoomService roomService;
 
     @Autowired
     private ObjectMapper mapper;
 
     private RoomDto roomDto;
+
+    @Autowired
+    public RoomRestControllerTest(MockMvc mockMvc, RoomService roomService) {
+        this.mockMvc = mockMvc;
+        this.roomService = roomService;
+    }
 
     @BeforeEach
     private void init() {
@@ -105,11 +106,12 @@ class RoomRestControllerTest {
     @DisplayName("중복 방 이름 생성 시 404 응답")
     @Test
     public void duplicatedRoom() throws Exception {
+        roomService.create(roomDto.getRoomName(), "player1");
+
         final RequestBuilder request = MockMvcRequestBuilders.post("/room")
                 .content(mapper.writeValueAsString(roomDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(request).andExpect(status().isOk());
         mockMvc.perform(request).andExpect(status().isBadRequest());
     }
 

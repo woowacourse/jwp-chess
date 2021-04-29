@@ -22,8 +22,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User updateRoomId(User user, long roomId) {
-        userDao.updateRoomId(user.getUserId(), roomId);
-        return user;
+        return userDao.updateRoomId(user, roomId);
     }
 
     @Override

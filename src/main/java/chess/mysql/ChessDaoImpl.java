@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class JdbcTemplateChessDao implements ChessDao {
+public class ChessDaoImpl implements ChessDao {
     private final RowMapper<ChessGameDto> chessGameRowMapper = (rs, rownum) -> {
         long gameId = rs.getLong("id");
         String nextTurn = rs.getString("next_turn");
@@ -21,7 +21,7 @@ public class JdbcTemplateChessDao implements ChessDao {
     };
     private JdbcTemplate jdbcTemplate;
 
-    public JdbcTemplateChessDao(JdbcTemplate jdbcTemplate) {
+    public ChessDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

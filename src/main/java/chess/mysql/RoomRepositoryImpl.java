@@ -22,9 +22,9 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     private final RoomDao roomDao;
     private final UserDao userDao;
-    private final JdbcTemplateChessDao chessDao;
+    private final ChessDaoImpl chessDao;
 
-    public RoomRepositoryImpl(RoomDao roomDao, UserDao userDao, JdbcTemplateChessDao chessDao) {
+    public RoomRepositoryImpl(RoomDao roomDao, UserDao userDao, ChessDaoImpl chessDao) {
         this.roomDao = roomDao;
         this.userDao = userDao;
         this.chessDao = chessDao;
@@ -34,13 +34,8 @@ public class RoomRepositoryImpl implements RoomRepository {
     @Override
     public Room createRoom(String roomName, ChessGameManager chessGameManager, User whiteUser) {
         RoomDto roomDto = roomDao.insertRoom(new Room(EMPTY_ID, roomName, chessGameManager, whiteUser));
-        userDao.updateRoomId(whiteUser.getUserId(), roomDto.getRoomId());
+        userDao.updateRoomId(whiteUser, roomDto.getRoomId());
         return createRoomFrom(roomDto);
-    }
-
-    @Override
-    public void updateBlackUser(Room room) {
-        roomDao.updateBlackUser(room);
     }
 
     @Override

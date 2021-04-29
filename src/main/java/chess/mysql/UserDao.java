@@ -28,11 +28,12 @@ public class UserDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void updateRoomId(long userId, long roomId) {
+    public User updateRoomId(User user, long roomId) {
         String query =
                 "UPDATE chess.user SET room_id = ? WHERE user_id = ?";
 
-        jdbcTemplate.update(query, roomId, userId);
+        jdbcTemplate.update(query, roomId, user.getUserId());
+        return new User(user.getUserId(), user.getColor(), user.getPassword(), roomId);
     }
 
     public User insertUser(User entity) {
@@ -67,9 +68,7 @@ public class UserDao {
     public List<User> findByRoomId(long roomId) {
         String query =
                 "SELECT * " +
-                        "FROM chess.user u " +
-                        "INNER JOIN chess.room r " +
-                        "ON u.user_id = r.user1 OR u.user_id = r.user2 " +
+                        "FROM chess.user " +
                         "WHERE room_id = ?";
 
         return jdbcTemplate.query(query, rowMapper, roomId);

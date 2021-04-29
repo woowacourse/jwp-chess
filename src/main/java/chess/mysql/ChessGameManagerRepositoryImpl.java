@@ -14,9 +14,9 @@ import static java.util.stream.Collectors.toList;
 public class ChessGameManagerRepositoryImpl implements ChessGameManagerRepository {
     private static final int TEMPORARY_ID = 0;
 
-    private final ChessDao chessDao;
+    private final ChessDaoImpl chessDao;
 
-    public ChessGameManagerRepositoryImpl(ChessDao chessDao) {
+    public ChessGameManagerRepositoryImpl(ChessDaoImpl chessDao) {
         this.chessDao = chessDao;
     }
 

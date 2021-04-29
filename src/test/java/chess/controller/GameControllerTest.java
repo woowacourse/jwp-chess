@@ -1,18 +1,24 @@
 package chess.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import chess.controller.api.GameController;
 import chess.domain.board.ChessBoard;
+import chess.domain.board.Position;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
+import chess.dto.ChessGameDto;
 import chess.dto.MoveDto;
 import chess.service.GameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,27 +45,40 @@ public class GameControllerTest {
     @Test
     @DisplayName("id로 게임 불러오기")
     void loadGame() throws Exception {
-        when(gameService.loadGame(1L))
-            .thenReturn(new ChessGame(1L, Color.WHITE, false, new ChessBoard(), "test-room"));
+        ChessGame chessGame = new ChessGame(1L, Color.WHITE, false, new ChessBoard(), "test-game");
+        ChessGameDto chessGameDto = new ChessGameDto(chessGame);
+        when(gameService.loadGame(1L)).thenReturn(chessGame);
 
         mockMvc.perform(get("/room/1/game-info"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("id").value(1));
+            .andExpect(content().json(objectMapper.writeValueAsString(chessGameDto)));
     }
 
     @Test
-    @DisplayName("id로 특정한 방의 게임 말 이동시키기")
-    void move() throws Exception {
-        String content = objectMapper.writeValueAsString(new MoveDto("b2", "b3"));
-
+    @DisplayName("움직일 수 있는 경우")
+    void moveSuccess() throws Exception {
+        MoveDto moveDto = new MoveDto("a2", "a3");
+        ChessGame chessGame = new ChessGame(1L, Color.WHITE, false, new ChessBoard(), "test-game");
+        chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
         when(gameService.loadGame(1L))
-            .thenReturn(new ChessGame(1L, Color.WHITE, false, new ChessBoard(), "test-room"));
+            .thenReturn(chessGame);
 
         mockMvc.perform(put("/room/1/move")
-            .content(content)
+            .content(objectMapper.writeValueAsString(moveDto))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("id").value(1));
+            .andExpect(content().json(objectMapper.writeValueAsString(new ChessGameDto(chessGame))));
+    }
+
+    @Test
+    @DisplayName("움직일 수 없는 경우 에러와 함께 bad request")
+    void moveFailed() throws Exception {
+        doThrow(new IllegalArgumentException()).when(gameService).move(eq(1L), any());
+
+        mockMvc.perform(put("/room/1/move")
+            .content(objectMapper.writeValueAsString(new MoveDto("b1", "b2")))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -87,4 +106,6 @@ public class GameControllerTest {
             .andExpect(jsonPath("finished").value(false))
             .andExpect(jsonPath("turn").value("BLACK"));
     }
+
+
 }

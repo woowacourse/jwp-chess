@@ -1,5 +1,7 @@
 package chess.controller;
 
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 import chess.dto.ChessBoardDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomNameRequestDto;
@@ -11,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 public class ChessApiController {
@@ -27,12 +31,16 @@ public class ChessApiController {
 
     @GetMapping("/board/{roomId}")
     public ChessBoardDto chess(@PathVariable final Long roomId) {
-        return chessService.chessBoardFromDB(roomId);
+        Map<Position, Piece> boardFromDB = chessService.chessBoardFromDB(roomId);
+        String currentTurn = chessService.currentTurn(roomId);
+        return new ChessBoardDto(boardFromDB, currentTurn);
     }
 
     @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
     public MoveResponseDto move(@RequestBody final MoveRequestDto moveRequestDto) {
-        return chessService.move(moveRequestDto.getSource(), moveRequestDto.getTarget(), moveRequestDto.getRoomId());
+        boolean isMovable = chessService.move(
+                moveRequestDto.getSource(), moveRequestDto.getTarget(), moveRequestDto.getRoomId());
+        return new MoveResponseDto(isMovable);
     }
 
     @PostMapping(value = "/turn", produces = MediaType.APPLICATION_JSON_VALUE)

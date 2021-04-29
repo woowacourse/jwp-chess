@@ -33,7 +33,9 @@ public class ChessController {
 
     @GetMapping("/chess/{roomId}")
     public String chess(@PathVariable final Long roomId, final Model model) {
-        ScoreResponseDto scoreResponseDto = chessService.scoreResponseDto(roomId);
+        double whiteScore = chessService.whiteScore(roomId);
+        double blackScore = chessService.blackScore(roomId);
+        ScoreResponseDto scoreResponseDto = new ScoreResponseDto(whiteScore, blackScore);
         model.addAttribute("roomId", roomId);
         model.addAttribute("score", scoreResponseDto);
         return "chess";

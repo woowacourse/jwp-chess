@@ -4,11 +4,9 @@ import chess.domain.piece.King;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.ChessBoardDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomNameRequestDto;
 import chess.dto.request.TurnChangeRequestDto;
-import chess.dto.response.MoveResponseDto;
 import chess.service.ChessService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -22,12 +20,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
 public class ChessApiControllerTest {
@@ -62,25 +62,22 @@ public class ChessApiControllerTest {
         board.put(Position.valueOf("1", "e"), King.from("k", Position.valueOf("1", "e")));
         board.put(Position.valueOf("2", "b"), Pawn.from("p", Position.valueOf("2", "b")));
 
-        ChessBoardDto chessBoardDto = new ChessBoardDto(board, "white");
-
         given(chessService.chessBoardFromDB(1L))
-                .willReturn(chessBoardDto);
+                .willReturn(board);
 
         mockMvc.perform(get("/board/" + 1L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(chessBoardDto)));
+                .andExpect(jsonPath("chessBoard.*", hasSize(2)));
     }
 
     @DisplayName("기물을 움직인다.")
     @Test
     void move() throws Exception {
         MoveRequestDto moveRequestDto = new MoveRequestDto("a2", "a4", 1L);
-        MoveResponseDto moveResponseDto = new MoveResponseDto(true);
 
         given(chessService.move("a2", "a4", 1L))
-                .willReturn(moveResponseDto);
+                .willReturn(true);
 
         mockMvc.perform(post("/move")
                 .contentType(MediaType.APPLICATION_JSON)

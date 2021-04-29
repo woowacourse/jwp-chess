@@ -5,6 +5,8 @@ import chess.service.ChessRoomService;
 import chess.webdto.dao.RoomDto;
 import chess.webdto.view.ChessGameDto;
 import chess.webdto.view.MoveRequestDto;
+import chess.webdto.view.RoomNameDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,27 +23,33 @@ public class SpringChessController {
     }
 
     @GetMapping
-    public List<RoomDto> loadRooms() {
-        return chessRoomService.showRooms();
+    public ResponseEntity<List<RoomDto>> loadRooms() {
+        List<RoomDto> roomDtos = chessRoomService.showRooms();
+        return ResponseEntity.ok().body(roomDtos);
     }
 
     @PostMapping
-    public long createRoom(@RequestBody RoomNameDto roomNameDto) {
-        return chessRoomService.createNewRoom(roomNameDto.getRoomName());
+    public ResponseEntity<Long> createRoom(@RequestBody RoomNameDto roomNameDto) {
+        long newRoom = chessRoomService.createNewRoom(roomNameDto.getRoomName());
+        return ResponseEntity.ok().body(newRoom);
     }
+
     @PostMapping("/{roomId}")
-    public ChessGameDto startNewGame(@PathVariable long roomId) {
-        return chessBoardService.startNewGame(roomId);
+    public ResponseEntity<ChessGameDto> startNewGame(@PathVariable long roomId) {
+        ChessGameDto chessGameDto = chessBoardService.startNewGame(roomId);
+        return ResponseEntity.ok().body(chessGameDto);
     }
 
     @GetMapping(value = "/{roomId}/previous")
-    public ChessGameDto loadPrevGame(@PathVariable long roomId) {
-        return chessBoardService.loadPreviousGame(roomId);
+    public ResponseEntity<ChessGameDto> loadPrevGame(@PathVariable long roomId) {
+        ChessGameDto chessGameDto = chessBoardService.loadPreviousGame(roomId);
+        return ResponseEntity.ok().body(chessGameDto);
     }
 
     @PostMapping(path = "/{roomId}/move")
-    public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable long roomId) {
-        return chessBoardService.move(moveRequestDto, roomId);
+    public ResponseEntity<ChessGameDto> move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable long roomId) {
+        ChessGameDto chessGameDto = chessBoardService.move(moveRequestDto, roomId);
+        return ResponseEntity.ok().body(chessGameDto);
     }
 
 }

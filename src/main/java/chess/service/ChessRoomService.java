@@ -1,14 +1,10 @@
 package chess.service;
 
-import chess.controller.RoomNameDto;
 import chess.webdao.RoomDao;
 import chess.webdto.dao.RoomDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,12 +16,12 @@ public class ChessRoomService {
         this.roomDao = roomDao;
     }
 
-    public List<RoomDto> showRooms(){
+    public List<RoomDto> showRooms() {
         return roomDao.selectAllRooms();
     }
 
     @Transactional
-    public long createNewRoom(String roomName){
-       return roomDao.createRoom("white", true, roomName);
+    public long createNewRoom(String roomName) {
+        return roomDao.createRoom("white", true, roomName);
     }
 }

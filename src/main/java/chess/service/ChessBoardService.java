@@ -18,19 +18,16 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class ChessBoardService {
     private final BoardDao chessDao;
     private final RoomDao roomDao;
-
 
     public ChessBoardService(BoardDao chessDao, RoomDao roomDao) {
         this.chessDao = chessDao;
         this.roomDao = roomDao;
     }
 
-
-    @Transactional
     public ChessGameDto startNewGame(long roomId) {
         chessDao.deleteBoardByRoomId(roomId);
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
@@ -56,13 +53,15 @@ public class ChessBoardService {
         TurnDto turnDto = roomDao.selectTurnByRoomId(roomId);
         List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(roomId);
 
+        if (boardInfos.size() == 0) {
+            ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
+            insertBoardInfos(chessGame, roomId);
+            return new ChessGameDto(chessGame);
+        }
         final ChessGame chessGame = covertToChessGame(turnDto, boardInfos);
-
         return new ChessGameDto(chessGame);
     }
 
-
-    @Transactional
     public ChessGameDto move(MoveRequestDto moveRequestDto, long roomId) {
         TurnDto turnDto = roomDao.selectTurnByRoomId(roomId);
         List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(roomId);
@@ -86,11 +85,9 @@ public class ChessBoardService {
         for (BoardInfosDto boardInfo : boardInfos) {
             sortBlackAndWhite(whites, blacks, boardInfo);
         }
-        PiecePositions whitePiecePosition = new PiecePositions(whites);
-        PiecePositions blackPiecePosition = new PiecePositions(blacks);
 
-        Team blackTeam = new Team(blackPiecePosition);
-        Team whiteTeam = new Team(whitePiecePosition);
+        Team blackTeam = new Team(new PiecePositions(blacks));
+        Team whiteTeam = new Team(new PiecePositions(whites));
 
         return new ChessGame(blackTeam, whiteTeam, currentTurn(blackTeam, whiteTeam, turnDto.getTurn()), turnDto.getIsPlaying());
     }

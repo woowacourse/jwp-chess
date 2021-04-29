@@ -2,26 +2,12 @@ package chess.webdao;
 
 import chess.webdto.dao.BoardInfosDto;
 import chess.webdto.dao.TeamInfoDto;
-import chess.webdto.dao.TurnDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * CREATE TABLE board
- * (
- *     board_id       BIGINT      NOT NULL AUTO_INCREMENT,
- *     team           VARCHAR(16) NOT NULL,
- *     position       VARCHAR(16) NOT NULL,
- *     piece          VARCHAR(16) NOT NULL,
- *     is_first_moved BOOLEAN     NOT NULL,
- *     room_id        BIGINT      NOT NULL,
- *     PRIMARY KEY (board_id),
- *     FOREIGN KEY (room_id) REFERENCES room (room_id)
- * );
- */
 @Repository
 public class BoardDao {
     private JdbcTemplate jdbcTemplate;

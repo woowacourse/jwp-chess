@@ -23,7 +23,7 @@ export function addChessBoardEvent() {
         if (e.target && e.target.nodeName === "IMG") {
             if (start === undefined) {
                 start = e.target;
-                start.style = "background-color: yellow";
+                start.style = "background-color: darksalmon";
             } else {
                 destination = e.target;
                 console.log(start.parentNode.id + "-->" + destination.parentNode.id);

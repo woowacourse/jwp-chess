@@ -11,23 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.util.List;
 
-/**
- * CREATE TABLE room
- * (
- *     room_id    BIGINT      NOT NULL,
- *     turn       VARCHAR(16) NOT NULL,
- *     is_playing BOOLEAN     NOT NULL,
- *     name       VARCHAR(16) NOT NULL,
- *     password   VARCHAR(16),
- *     create_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
- *     PRIMARY KEY (room_id)
- * );
- */
 @Repository
 public class RoomDao {
     private JdbcTemplate jdbcTemplate;
 
-    public RoomDao(JdbcTemplate jdbcTemplate){
+    public RoomDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -66,13 +54,14 @@ public class RoomDao {
         return this.jdbcTemplate.queryForObject(sql, turnMapper, roomId);
     }
 
-    public List<RoomDto> selectAllRooms(){
+    public List<RoomDto> selectAllRooms() {
         final String sql = "SELECT * FROM room";
         return this.jdbcTemplate.query(sql, roomRowMapper);
     }
 
     public long createRoom(String currentTurn, boolean isPlaying, String roomName) {
         String sql = "INSERT INTO room (turn, is_playing, name) VALUES (?, ?, ?)";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         this.jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"room_id"});
@@ -81,7 +70,6 @@ public class RoomDao {
             ps.setString(3, roomName);
             return ps;
         }, keyHolder);
-        System.out.println(keyHolder.getKey().longValue());
 
         return keyHolder.getKey().longValue();
     }

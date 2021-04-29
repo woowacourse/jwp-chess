@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.webdto.view;
 
 public class RoomNameDto {
     private String roomName;

@@ -1,7 +1,7 @@
 package chess.controller;
 
-import chess.Exceptions.DuplicateRoomException;
-import chess.Exceptions.NoRoomException;
+import chess.exceptions.DuplicateRoomException;
+import chess.exceptions.NoRoomException;
 import chess.domain.dto.RoomDto;
 import chess.domain.dto.RoomsDto;
 import chess.domain.dto.move.MoveRequestDto;

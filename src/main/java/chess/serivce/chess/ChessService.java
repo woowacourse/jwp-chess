@@ -1,7 +1,7 @@
 package chess.serivce.chess;
 
-import chess.Exceptions.DuplicateRoomException;
-import chess.Exceptions.NoRoomException;
+import chess.exceptions.DuplicateRoomException;
+import chess.exceptions.NoRoomException;
 import chess.domain.board.Board;
 import chess.domain.dto.PieceDto;
 import chess.domain.dto.RoomDto;

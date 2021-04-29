@@ -1,4 +1,4 @@
-package chess.Exceptions;
+package chess.exceptions;
 
 public class DuplicateRoomException extends IllegalArgumentException {
 

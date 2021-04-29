@@ -1,4 +1,4 @@
-package chess.mysql;
+package chess.mysql.chess;
 
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.ChessGameManagerBundle;

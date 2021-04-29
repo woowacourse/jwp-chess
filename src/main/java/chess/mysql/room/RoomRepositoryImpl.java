@@ -1,10 +1,12 @@
-package chess.mysql;
+package chess.mysql.room;
 
 import chess.chessgame.domain.room.Room;
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.ChessGameManagerFactory;
 import chess.chessgame.domain.room.user.User;
 import chess.chessgame.repository.RoomRepository;
+import chess.mysql.chess.ChessDaoImpl;
+import chess.mysql.user.UserDao;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,4 +1,4 @@
-package chess.mysql;
+package chess.mysql.chess;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

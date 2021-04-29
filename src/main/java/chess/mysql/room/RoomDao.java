@@ -1,4 +1,4 @@
-package chess.mysql;
+package chess.mysql.room;
 
 import chess.chessgame.domain.room.Room;
 import org.springframework.jdbc.core.JdbcTemplate;

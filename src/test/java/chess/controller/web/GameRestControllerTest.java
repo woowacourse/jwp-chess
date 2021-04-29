@@ -1,5 +1,6 @@
 package chess.controller.web;
 
+import chess.controller.RoomRequestDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,13 +27,13 @@ public class GameRestControllerTest {
     @DisplayName("score Test")
     @Test
     void scoreTest() {
-        RestAssured
+/*        RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new RoomRequestDto("테스트", "1111"))
                 .when().post("/room")
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value());*/
 
         float whiteScore = (float) RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)

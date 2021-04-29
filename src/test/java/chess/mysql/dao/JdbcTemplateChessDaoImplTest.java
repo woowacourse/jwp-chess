@@ -1,7 +1,7 @@
 package chess.mysql.dao;
 
-import chess.mysql.ChessGameDto;
-import chess.mysql.JdbcTemplateChessDao;
+import chess.mysql.chess.ChessGameDto;
+import chess.mysql.chess.ChessDaoImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +17,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("jdbcTemplateChessDao 테스트")
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
-class JdbcTemplateChessDaoTest {
+class JdbcTemplateChessDaoImplTest {
     private final ChessGameDto sample = new ChessGameDto(1L, "WHITE", true, "RNBQKBNRPPPPPPPP................................pppppppprnbqkbnr");
 
     private JdbcTemplate jdbcTemplate;
-    private JdbcTemplateChessDao jdbcTemplateChessDao;
+    private ChessDaoImpl jdbcTemplateChessDao;
 
     @Autowired
-    public JdbcTemplateChessDaoTest(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateChessDaoImplTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.jdbcTemplateChessDao = new JdbcTemplateChessDao(jdbcTemplate);
+        this.jdbcTemplateChessDao = new ChessDaoImpl(jdbcTemplate);
     }
 
     @DisplayName("저장 및 아이디로 chessGame을 찾아오는 기능 테스트")

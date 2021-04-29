@@ -1,4 +1,4 @@
-package chess.mysql;
+package chess.mysql.room;
 
 class RoomDto {
     private final long roomId;

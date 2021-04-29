@@ -1,4 +1,4 @@
-package chess.mysql;
+package chess.mysql.user;
 
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.user.User;

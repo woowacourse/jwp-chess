@@ -1,5 +1,7 @@
 package chess.controller;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -68,6 +70,9 @@ public class GameControllerTest {
 
         mockMvc.perform(post("/room/1/finish"))
             .andExpect(status().isOk());
+
+        verify(gameService, times(1))
+            .finish(1L);
     }
 
     @Test

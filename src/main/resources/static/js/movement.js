@@ -48,7 +48,7 @@ function serverMoveRequest(start, destination) {
         start: start,
         destination: destination
     }
-    apiService.moveSourceToTarget(moveRequest)
+    apiService.moveSourceToTarget(moveRequest,1)
         .then(data => {
             drawPieceImage(data);
             updateScoreUI(data.teamScore.white, data.teamScore.black);

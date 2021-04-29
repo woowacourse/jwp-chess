@@ -5,7 +5,7 @@ import chess.domain.Position;
 import chess.domain.piece.*;
 import chess.domain.team.PiecePositions;
 import chess.domain.team.Team;
-import chess.service.SpringChessService;
+import chess.service.ChessBoardService;
 import chess.webdto.view.ChessGameDto;
 import chess.webdto.view.MoveRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +15,7 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.HashMap;
@@ -22,6 +23,8 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(SpringChessController.class)
 class SpringChessControllerTest {
     @MockBean
-    private SpringChessService springChessService;
+    private ChessBoardService chessBoardService;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -41,10 +44,10 @@ class SpringChessControllerTest {
     @Test
     @DisplayName("게임 초기화")
     void startNewGame() throws Exception {
-        when(springChessService.startNewGame())
+        when(chessBoardService.startNewGame(1L))
                 .thenReturn(new ChessGameDto(new ChessGame(Team.blackTeam(), Team.whiteTeam())));
 
-        mockMvc.perform(post("/game"))
+        mockMvc.perform(post("/game/1"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("currentTurnTeam").value("white"))
@@ -72,10 +75,10 @@ class SpringChessControllerTest {
 
         ChessGame chessGame = new ChessGame(new Team(new PiecePositions(blackInfos)), whiteTeam, whiteTeam, true);
 
-        when(springChessService.loadPreviousGame())
+        when(chessBoardService.loadPreviousGame(1L))
                 .thenReturn(new ChessGameDto(chessGame));
 
-        mockMvc.perform(get("/game/previous"))
+        mockMvc.perform(get("/game/1/previous"))
                 .andDo(print())
                 .andExpect(jsonPath("currentTurnTeam").value("white"))
                 .andExpect(jsonPath("piecePositionByTeam.white.*", hasSize(3)))
@@ -97,10 +100,10 @@ class SpringChessControllerTest {
         moveRequestDto.setDestination("a4");
         String requestBody = objectMapper.writeValueAsString(moveRequestDto);
 
-        when(springChessService.move(BDDMockito.any(MoveRequestDto.class)))
+        when(chessBoardService.move(any(MoveRequestDto.class), anyLong()))
                 .thenReturn(new ChessGameDto(chessGame));
 
-        mockMvc.perform(post("/game/move")
+        mockMvc.perform(post("/game/1/move")
                 .content(requestBody)
                 .contentType("application/json"))
                 .andExpect(status().isOk())

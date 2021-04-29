@@ -17,7 +17,7 @@ function loadFirstPage() {
 }
 
 function startNewGame() {
-    apiService.startGame()
+    apiService.startGame(1)
         .then(data => {
             /*
             if (data.availability === "unavailable") {
@@ -56,7 +56,7 @@ function forceNewGame() {
 }
 */
 function loadPrevGame() {
-    apiService.loadPrevGame()
+    apiService.loadPrevGame(1)
         .then(data => {
             if (data.status === 500) {
                 alert("저장된 게임이 없어요.")

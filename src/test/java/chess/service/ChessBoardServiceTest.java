@@ -27,10 +27,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class SpringChessServiceTest {
+class ChessBoardServiceTest {
     private static ObjectMapper objectMapper;
     @InjectMocks
-    SpringChessService springChessService;
+    ChessBoardService chessBoardService;
     @Mock
     BoardDao boardDao;
     @Mock
@@ -45,7 +45,7 @@ class SpringChessServiceTest {
     void startNewGame() throws Exception {
         ChessGameDto expected = new ChessGameDto(new ChessGame(Team.blackTeam(), Team.whiteTeam()));
 
-        ChessGameDto result = springChessService.startNewGame();
+        ChessGameDto result = chessBoardService.startNewGame(1L);
 
         assertThat(objectMapper.writeValueAsString(result)).isEqualTo(objectMapper.writeValueAsString(expected));
     }
@@ -80,7 +80,7 @@ class SpringChessServiceTest {
         ChessGameDto expected = new ChessGameDto(chessGame);
 
         // when
-        ChessGameDto result = springChessService.move(moveRequestDto);
+        ChessGameDto result = chessBoardService.move(moveRequestDto, 1L);
 
         // then
         assertThat(objectMapper.writeValueAsString(result)).isEqualTo(objectMapper.writeValueAsString(expected));
@@ -111,11 +111,9 @@ class SpringChessServiceTest {
         given(boardDao.selectBoardInfosByRoomId(1L)).willReturn(boards);
 
         // when
-        ChessGameDto result = springChessService.loadPreviousGame();
+        ChessGameDto result = chessBoardService.loadPreviousGame(1L);
 
         // then
         assertThat(objectMapper.writeValueAsString(result)).isEqualTo(objectMapper.writeValueAsString(expected));
-
-
     }
 }

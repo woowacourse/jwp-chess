@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.service.SpringChessService;
+import chess.service.ChessBoardService;
 import chess.webdto.view.ChessGameDto;
 import chess.webdto.view.MoveRequestDto;
 import org.springframework.web.bind.annotation.*;
@@ -8,25 +8,25 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/game")
 public class SpringChessController {
-    private final SpringChessService springChessService;
+    private final ChessBoardService chessBoardService;
 
-    public SpringChessController(SpringChessService springChessService) {
-        this.springChessService = springChessService;
+    public SpringChessController(ChessBoardService chessBoardService) {
+        this.chessBoardService = chessBoardService;
     }
 
-    @PostMapping
-    public ChessGameDto startNewGame() {
-        return springChessService.startNewGame();
+    @PostMapping("/{roomId}")
+    public ChessGameDto startNewGame(@PathVariable long roomId) {
+        return chessBoardService.startNewGame(roomId);
     }
 
-    @GetMapping(value = "/previous")
-    public ChessGameDto loadPrevGame() {
-        return springChessService.loadPreviousGame();
+    @GetMapping(value = "/{roomId}/previous")
+    public ChessGameDto loadPrevGame(@PathVariable long roomId) {
+        return chessBoardService.loadPreviousGame(roomId);
     }
 
-    @PostMapping(path = "/move")
-    public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDto) {
-        return springChessService.move(moveRequestDto);
+    @PostMapping(path = "/{roomId}/move")
+    public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable long roomId) {
+        return chessBoardService.move(moveRequestDto, roomId);
     }
 
 }

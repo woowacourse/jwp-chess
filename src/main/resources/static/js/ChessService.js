@@ -6,23 +6,23 @@ export default class ChessService {
         };
     }
 
-    async moveSourceToTarget(moveRequest) {
-        return await fetch(`${this.baseUrl}/move`, {
+    async moveSourceToTarget(moveRequest, roomId) {
+        return await fetch(`${this.baseUrl}/${roomId}/move`, {
             method: "POST",
             headers: this.headers,
             body: JSON.stringify(moveRequest)
         }).then(response => response.json());
     }
 
-    async startGame() {
-        return await fetch(`${this.baseUrl}`, {
+    async startGame(roomId) {
+        return await fetch(`${this.baseUrl}/${roomId}`, {
             method: "POST",
             headers: this.headers
         }).then(response => response.json());
     }
 
-    async loadPrevGame() {
-        const response = await fetch(`${this.baseUrl}/previous`);
+    async loadPrevGame(roomId) {
+        const response = await fetch(`${this.baseUrl}/${roomId}/previous`);
         return response.json();
     }
 

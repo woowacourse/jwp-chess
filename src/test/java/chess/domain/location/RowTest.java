@@ -1,5 +1,6 @@
 package chess.domain.location;
 
+import chess.exception.ChessException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -31,8 +32,8 @@ class RowTest {
     @Test
     void moveByException() {
         Row row = Row.SIX;
-        assertThatThrownBy(() -> row.move(3)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> row.move(-6)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> row.move(3)).isInstanceOf(ChessException.class);
+        assertThatThrownBy(() -> row.move(-6)).isInstanceOf(ChessException.class);
     }
 
 }

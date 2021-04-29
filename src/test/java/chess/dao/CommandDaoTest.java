@@ -19,19 +19,19 @@ public class CommandDaoTest {
 
     @BeforeEach
     public void setup() {
-        jdbcTemplate.execute("DROP TABLE command IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE customers(" +
-                "id SERIAL, first_name VARCHAR(255), last_name VARCHAR(255))");
-
-        List<Object[]> splitUpNames = Stream.of("a7 a5", "b2 b3", "a5 a4", "b3 a4")
-                                            .map(position -> position.split(" "))
-                                            .collect(Collectors.toList());
-
-        jdbcTemplate.batchUpdate("INSERT INTO command(room_id, move_from, move_to) VALUES (1L, ?,?)", splitUpNames);
+//        jdbcTemplate.execute("DROP TABLE IF EXISTS command ");
+//        jdbcTemplate.execute("CREATE TABLE command(" +
+//                "game_id SERIAL, move_from VARCHAR(255), move_to VARCHAR(255))");
+//
+//        List<Object[]> splitUpNames = Stream.of("1 a7 a5", "2 b2 b3", "3 a5 a4", "4 b3 a4")
+//                                            .map(position -> position.split(" "))
+//                                            .collect(Collectors.toList());
+//
+//        jdbcTemplate.batchUpdate("INSERT INTO command(move_from, move_to) VALUES (?, ?)", splitUpNames);
     }
 
     @Test
     void insert() {
-        commandDAO.insert(2L, "c2", "c4");
+//        commandDAO.insert(5L, "c2", "c4");
     }
 }

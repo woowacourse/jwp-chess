@@ -12,9 +12,9 @@ function drawRooms(datas) {
     for (let i in datas) {
         console.log(datas[i])
         lists +=
-            `<li>
+            `<li class="room_item">
                 <div class="room_info" id=${datas[i].roomId}>
-                    Title: ${datas[i].name}, 진행상태: ${datas[i].isPlaying ? "진행중" : "종료"}
+                    <strong>Title: ${datas[i].name}</strong> <span>${datas[i].isPlaying ? "진행중" : "종료"}</span>
                 </div>
             </li>`
     }

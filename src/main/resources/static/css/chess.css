@@ -175,10 +175,44 @@ body {
 }
 
 .room_info{
-    padding : 1em;
+    padding : 1em 1em 1em 1.3em;
     border: 1px solid black;
+    position: relative;
+    text-align: left;
+}
+
+.room_info span {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    color: #F3E4DF;
+    background-color: #522632;
+    padding: 5px 15px;
+    border-radius: 15px;
 }
 
 .room_info:hover{
-    background-color: darksalmon;
+    background-color: #522632;
+}
+
+.create_room_btn {
+    width: 25%;
+    padding: 14px 25px;
+    margin-bottom: 30px;
+    border: none;
+    border-radius: 25px;
+    background-color: #522632;
+    font-size: 1.3em;
+    color: #F3E4DF;
+}
+
+.room_item {
+    list-style: none;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.room_item + .room_item {
+    margin-top: 7px;
 }

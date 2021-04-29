@@ -170,12 +170,12 @@ body {
     text-align: center;
 }
 
-.rooms{
+.rooms {
     text-align: center;
 }
 
-.room_info{
-    padding : 1em 1em 1em 1.3em;
+.room_info {
+    padding: 1em 1em 1em 1.3em;
     border: 1px solid black;
     position: relative;
     text-align: left;
@@ -192,7 +192,7 @@ body {
     border-radius: 15px;
 }
 
-.room_info:hover{
+.room_info:hover {
     background-color: darksalmon;
 }
 

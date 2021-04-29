@@ -3,8 +3,6 @@ package chess.webdto.view;
 import chess.domain.ChessGame;
 import chess.webdto.dao.TeamConstants;
 
-import java.util.Objects;
-
 public class ChessGameDto {
     private final TeamPiecesDto piecePositionByTeam;
     private final String currentTurnTeam;

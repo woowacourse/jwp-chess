@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PageController {
 
     @GetMapping("/rooms/{roomId}")
-    public String boardPage(){
+    public String boardPage() {
         return "board";
     }
 }

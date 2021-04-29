@@ -5,16 +5,15 @@ public class RoomDto {
     private String turn;
     private boolean isPlaying;
     private String name;
-    private String password;
 
-    public RoomDto(){
+    public RoomDto() {
     }
-    public RoomDto(long roomId, String turn, boolean isPlaying, String name, String password) {
+
+    public RoomDto(long roomId, String turn, boolean isPlaying, String name) {
         this.roomId = roomId;
         this.turn = turn;
         this.isPlaying = isPlaying;
         this.name = name;
-        this.password = password;
     }
 
     public long getRoomId() {
@@ -49,11 +48,4 @@ public class RoomDto {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

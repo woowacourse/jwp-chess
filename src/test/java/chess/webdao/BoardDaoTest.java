@@ -86,7 +86,7 @@ class BoardDaoTest {
 
     @Test
     @DisplayName("보드판 삭제")
-    void deleteBoardByRoomId(){
+    void deleteBoardByRoomId() {
         // given
         TeamInfoDto teamInfoDto = new TeamInfoDto("white", Position.of("a1"), new Rook(), 1L);
         boardDao.createBoard(teamInfoDto);

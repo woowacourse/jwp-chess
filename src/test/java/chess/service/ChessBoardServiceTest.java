@@ -35,6 +35,7 @@ class ChessBoardServiceTest {
     BoardDao boardDao;
     @Mock
     RoomDao roomDao;
+
     @BeforeAll
     static void beforeAll() {
         objectMapper = new ObjectMapper();
@@ -61,7 +62,8 @@ class ChessBoardServiceTest {
         TurnDto turnDto = new TurnDto();
         turnDto.setTurn("white");
         turnDto.setIsPlaying(true);
-        given(roomDao.selectTurnByRoomId(1L)).willReturn(turnDto);
+        given(roomDao.selectTurnByRoomId(1L))
+                .willReturn(turnDto);
 
         List<BoardInfosDto> boards = new ArrayList<>();
         BoardInfosDto boardInfosDto = new BoardInfosDto();
@@ -70,7 +72,8 @@ class ChessBoardServiceTest {
         boardInfosDto.setPosition("a2");
         boardInfosDto.setTeam("white");
         boards.add(boardInfosDto);
-        given(boardDao.selectBoardInfosByRoomId(1L)).willReturn(boards);
+        given(boardDao.selectBoardInfosByRoomId(1L))
+                .willReturn(boards);
 
         Map<Position, Piece> setting = new HashMap<>();
         setting.put(Position.of("a2"), new Rook());

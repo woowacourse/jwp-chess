@@ -14,11 +14,6 @@ import java.util.List;
 @Repository
 public class RoomDao {
     private JdbcTemplate jdbcTemplate;
-
-    public RoomDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private RowMapper<TurnDto> turnMapper = (resultSet, rowNum) -> {
         TurnDto turnDto = new TurnDto();
 
@@ -27,7 +22,6 @@ public class RoomDao {
 
         return turnDto;
     };
-
     private RowMapper<RoomDto> roomRowMapper = (resultSet, rowNum) -> {
         RoomDto roomDto = new RoomDto();
 
@@ -38,6 +32,10 @@ public class RoomDao {
 
         return roomDto;
     };
+
+    public RoomDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void deleteRoomByRoomId(long roomId) {
         final String sql = "DELETE FROM room WHERE room_id = (?)";

@@ -20,5 +20,5 @@ public class ExceptionController {
     public ResponseEntity<String> handleSQLException() {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body("fail");
     }
-    
+
 }

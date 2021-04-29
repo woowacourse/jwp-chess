@@ -6,7 +6,7 @@ export default class ChessService {
         };
     }
 
-    async showRooms(){
+    async showRooms() {
         const response = await fetch(`${this.baseUrl}/rooms`);
         return response.json();
     }

@@ -82,7 +82,7 @@ class RoomDaoTest {
 
     @Test
     @DisplayName("삭제 - roomId로 삭제")
-    void deleteRoomByRoomId(){
+    void deleteRoomByRoomId() {
         long roomId1 = roomDao.createRoom("white", true, "sample");
         long roomId2 = roomDao.createRoom("white", true, "sample");
 

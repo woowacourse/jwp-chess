@@ -3,8 +3,6 @@ package chess.webdto.dao;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 
-import java.util.Map;
-
 public class TeamInfoDto {
     private String team;
     private String position;

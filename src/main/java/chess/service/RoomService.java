@@ -6,7 +6,9 @@ import chess.dto.RoomDto;
 import chess.dto.RoomListDto;
 import chess.exception.HandledException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class RoomService {
     private final RoomDao roomDao;

@@ -12,7 +12,7 @@ function checkCookie() {
         axios.get('/api/user/' + cookie)
             .then(function (response) {
                 if (response.data.roomId !== 0) {
-                    location.href = '/room/' + response.data.roomId;
+                    location.href = '/rooms/' + response.data.roomId;
                 }
             }).catch(function (error) {
         });
@@ -52,12 +52,12 @@ btnCreateRoom.addEventListener('click', function (e) {
         return;
     }
 
-    axios.post('/api/room', {
+    axios.post('/api/rooms', {
         "name": name,
         "pw": pw,
         "user": cookieUser
     }).then(function (response) {
-        location.href = '/room/' + response.data.id;
+        location.href = '/rooms/' + response.data.id;
     }).catch(function (error) {
         alert(error.response.data);
     });
@@ -129,13 +129,13 @@ function clickRoom(event) {
 
 function enterGame(id) {
     const pw = prompt('방 비밀번호를 입력 해 주세요')
-    axios.post('/api/room/' + id + '/enter', {
+    axios.post('/api/rooms/' + id + '/enter', {
         "id": id,
         "user": getCookie('user'),
         "pw": pw
     })
         .then(function (response) {
-            location.href = '/room/' + id;
+            location.href = '/rooms/' + id;
         }).catch(function (error) {
         if (error.response.status === 400) {
             alert(error.response.data);

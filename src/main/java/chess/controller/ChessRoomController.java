@@ -34,7 +34,7 @@ public class ChessRoomController {
         return ResponseEntity.ok().body(chessRoomService.rooms());
     }
 
-    @PostMapping("/room")
+    @PostMapping("/rooms")
     public ResponseEntity<RoomDto> create(@CookieValue(value = "user") @Valid @RequestBody RoomRequestDto roomRequestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException("방 이름은 2글자 이상 8글자 이하 비밀번호는 4글자 이상 8글자 이하여야 합니다.");
@@ -43,13 +43,13 @@ public class ChessRoomController {
         return ResponseEntity.ok().body(chessRoomService.create(roomRequestDto));
     }
 
-    @PostMapping("/room/{id}/enter")
+    @PostMapping("/rooms/{id}/enter")
     public ResponseEntity enter(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
         chessRoomService.enter(roomRequestDto);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/room/{id}/exit")
+    @PutMapping("/rooms/{id}/exit")
     public ResponseEntity<ChessGameDto> exit(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
         ChessGameDto chessGameDto = chessRoomService.exitReturnEndChessGame(roomRequestDto, cookie);
         simpMessagingTemplate.convertAndSend("/topic/game/" + roomRequestDto.getId(), chessGameDto);

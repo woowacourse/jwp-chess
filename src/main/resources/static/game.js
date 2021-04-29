@@ -24,7 +24,7 @@ btnEnd.addEventListener('click', function (e) {
 
 function exitRoom() {
     console.log("gameinfo id : " + gameInfo.id)
-    axios.put('/api/room/' + roomId + '/exit', {
+    axios.put('/api/rooms/' + roomId + '/exit', {
         'id' : roomId,
         'gameId' : gameInfo.id
     }).then(function (response) {

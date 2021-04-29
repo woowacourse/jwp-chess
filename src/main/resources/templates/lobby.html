@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WOOWA CHESS</title>
+    <link rel="stylesheet" href="./css/index.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="title"><span>WOOWA CHESS</span></div>
+<div class="container main">
+    <div class="modal-background">
+        <img id="chess-image" src="../images/lobby_chess.png" style="max-width: 100%"/>
+        <div class="modal lobby" style="display: none">
+            <label>입장하실 방 이름을 입력해주세요.</label>
+            <input id="room-name" type="text"/>
+            <span class="error-msg" id="blank"></span>
+            <span class="error-msg" id="name-length" style="display: none"></span>
+            <span class="error-msg" id="name-duplicate" style="display: none"></span>
+            <div class="modal-btn-wrapper">
+                <button id="enter" class="modal-btn">ENTER</button>
+                <button id="cancel" class="modal-btn">CANCEL</button>
+            </div>
+        </div>
+    </div>
+    <div class="controller">
+        <button id="start" class="control-btn">START</button>
+        <button id="load" class="control-btn">LOAD</button>
+    </div>
+</div>
+<div class="container list" style="display: none">
+    <div class="room-list">
+        <button id="exit">X</button>
+    </div>
+</div>
+<script src="https://kit.fontawesome.com/9c5b8f215b.js" crossorigin="anonymous"></script>
+<script src="./js/lobby.js"></script>
+</body>
+</html>

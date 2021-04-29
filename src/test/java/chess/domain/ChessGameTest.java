@@ -18,12 +18,12 @@ public class ChessGameTest {
         ChessGame chessGame = new ChessGame();
 
         chessGame.move(Position.of("b1"), Position.of("c3"));
-        chessGame.move(Position.of("b7"), Position.of( "b6"));
-        chessGame.move(Position.of("c3"), Position.of( "d5"));
-        chessGame.move(Position.of("b6"), Position.of( "b5"));
-        chessGame.move(Position.of("d5"), Position.of( "f6"));
-        chessGame.move(Position.of("b5"), Position.of( "b4"));
-        chessGame.move(Position.of("f6"), Position.of( "e8"));
+        chessGame.move(Position.of("b7"), Position.of("b6"));
+        chessGame.move(Position.of("c3"), Position.of("d5"));
+        chessGame.move(Position.of("b6"), Position.of("b5"));
+        chessGame.move(Position.of("d5"), Position.of("f6"));
+        chessGame.move(Position.of("b5"), Position.of("b4"));
+        chessGame.move(Position.of("f6"), Position.of("e8"));
         assertThat(chessGame.isOver()).isTrue();
     }
 

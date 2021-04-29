@@ -67,7 +67,8 @@ public class GameControllerTest {
             .content(objectMapper.writeValueAsString(moveDto))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().json(objectMapper.writeValueAsString(new ChessGameDto(chessGame))));
+            .andExpect(
+                content().json(objectMapper.writeValueAsString(new ChessGameDto(chessGame))));
     }
 
     @Test
@@ -106,6 +107,4 @@ public class GameControllerTest {
             .andExpect(jsonPath("finished").value(false))
             .andExpect(jsonPath("turn").value("BLACK"));
     }
-
-
 }

@@ -23,7 +23,7 @@ public class GameController {
         return ResponseEntity.ok().body(gameService.gameCount());
     }
 
-    @PutMapping("/{roomId}/delete")
+    @DeleteMapping("/{roomId}")
     public ResponseEntity<Integer> deleteGameRoom(@PathVariable long roomId) {
         pieceService.removeAll(roomId);
         return ResponseEntity.ok(gameService.deleteByGameId(roomId));

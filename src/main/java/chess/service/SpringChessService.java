@@ -36,7 +36,7 @@ public class SpringChessService {
        // roomDao.deleteRoomByRoomId(1);
 
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
-        long roomId = roomDao.createRoom1(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying(), "sample");
+        long roomId = roomDao.createRoom(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying(), "sample");
 
         insertBoardInfos(chessGame, roomId);
         return new ChessGameDto(chessGame);

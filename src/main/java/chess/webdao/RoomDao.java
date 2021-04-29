@@ -74,8 +74,7 @@ public class RoomDao {
         return this.jdbcTemplate.query(sql, roomRowMapper);
     }
 
-    // return RoomId
-    public long createRoom1(String currentTurn, boolean isPlaying, String roomName) {
+    public long createRoom(String currentTurn, boolean isPlaying, String roomName) {
         String sql = "INSERT INTO room (turn, is_playing, name) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         this.jdbcTemplate.update(con -> {

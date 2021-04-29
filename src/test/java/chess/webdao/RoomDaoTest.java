@@ -49,8 +49,8 @@ class RoomDaoTest {
     @Test
     @DisplayName("방만들기 - 만들어진 roomId 확인")
     void createRoom() {
-        roomDao.createRoom1("white", true, "sample");
-        long secondRoomId = roomDao.createRoom1("white", true, "sample");
+        roomDao.createRoom("white", true, "sample");
+        long secondRoomId = roomDao.createRoom("white", true, "sample");
 
         assertThat(secondRoomId).isEqualTo(2L);
     }
@@ -58,7 +58,7 @@ class RoomDaoTest {
     @Test
     @DisplayName("조회 - 방번호로 현재 턴")
     void selectTurnByRoomId() {
-        long roomId = roomDao.createRoom1("black", true, "sample");
+        long roomId = roomDao.createRoom("black", true, "sample");
 
         TurnDto turnDto = roomDao.selectTurnByRoomId(roomId);
 
@@ -68,7 +68,7 @@ class RoomDaoTest {
     @Test
     @DisplayName("업데이트 - room 턴정보 변경")
     void changeTurnByRoomId() {
-        long roomId = roomDao.createRoom1("white", true, "sample");
+        long roomId = roomDao.createRoom("white", true, "sample");
 
         TurnDto before = roomDao.selectTurnByRoomId(roomId);
         assertThat(before.getTurn()).isEqualTo("white");
@@ -82,8 +82,8 @@ class RoomDaoTest {
     @Test
     @DisplayName("삭제 - roomId로 삭제")
     void deleteRoomByRoomId(){
-        long roomId1 = roomDao.createRoom1("white", true, "sample");
-        long roomId2 = roomDao.createRoom1("white", true, "sample");
+        long roomId1 = roomDao.createRoom("white", true, "sample");
+        long roomId2 = roomDao.createRoom("white", true, "sample");
 
         roomDao.deleteRoomByRoomId(roomId2);
 
@@ -93,8 +93,8 @@ class RoomDaoTest {
     @Test
     @DisplayName("모든 방 조회")
     void name() {
-        roomDao.createRoom1("white", true, "sample");
-        roomDao.createRoom1("white", true, "sample");
+        roomDao.createRoom("white", true, "sample");
+        roomDao.createRoom("white", true, "sample");
 
         assertThat(roomDao.selectAllRooms()).hasSize(2);
     }

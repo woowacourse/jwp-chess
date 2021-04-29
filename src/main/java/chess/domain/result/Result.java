@@ -5,6 +5,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
+import chess.exception.NoWinnerException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -60,7 +61,7 @@ public class Result {
             .filter(Piece::isKing)
             .map(piece -> piece.color() + WINNING_GUIDE_MESSAGE)
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("우승자가 없습니다."))
+            .orElseThrow(NoWinnerException::new)
             ;
     }
 }

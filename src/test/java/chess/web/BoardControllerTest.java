@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -9,6 +9,7 @@ import chess.domain.piece.PieceColor;
 import chess.dto.MoveRequest;
 import chess.dto.PathDto;
 import chess.service.ChessService;
+import chess.service.RoomService;
 import io.restassured.RestAssured;
 import java.util.Arrays;
 import java.util.List;
@@ -22,10 +23,14 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @DisplayName("Board Controller")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class BoardControllerTest {
+
+    private final int roomId = 1;
 
     @LocalServerPort
     int port;
@@ -33,10 +38,15 @@ class BoardControllerTest {
     @Autowired
     private ChessService service;
 
+    @Autowired
+    private RoomService roomService;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        service.restartBoard();
+        roomService.deleteAll();
+        roomService.add("test");
+        service.getNewBoardById(1);
     }
 
     @DisplayName("초기화된 보드를 가져온다 - GET")
@@ -44,7 +54,18 @@ class BoardControllerTest {
     void getNewBoard() {
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/board")
+            .when().get("/rooms/{id}/board/init", roomId)
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value())
+            .body("size()", is(1));
+    }
+
+    @DisplayName("재시작하면 새 보드를 가져온다 - POST")
+    @Test
+    void restart() {
+        RestAssured.given().log().all()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/rooms/{id}/board/restart", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("size()", is(1));
@@ -55,7 +76,7 @@ class BoardControllerTest {
     void isEnd() {
         Boolean response = RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/board/status")
+            .when().get("/rooms/{id}/board/status", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(Boolean.TYPE);
@@ -68,7 +89,7 @@ class BoardControllerTest {
     void getTurn() {
         PieceColor color = RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/board/turn")
+            .when().get("/rooms/{id}/board/turn", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(PieceColor.class);
@@ -81,7 +102,7 @@ class BoardControllerTest {
     void getScore() {
         Map scores = RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/board/score")
+            .when().get("/rooms/{id}/board/score", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(Map.class);
@@ -98,7 +119,7 @@ class BoardControllerTest {
         List paths = RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(dto)
-            .when().post("/board/path")
+            .when().post("/rooms/{id}/board/path", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(List.class);
@@ -114,7 +135,7 @@ class BoardControllerTest {
         Boolean response = RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(dto)
-            .when().post("/board/move")
+            .when().post("/rooms/{id}/board/move", roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .extract().response().as(Boolean.TYPE);

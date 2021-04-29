@@ -5,7 +5,9 @@ import chess.domain.piece.PieceColor;
 import chess.domain.result.Result;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Getter;
 
+@Getter
 public class ScoreDto {
 
     private final Result result;
@@ -21,9 +23,4 @@ public class ScoreDto {
         scores.put(PieceColor.WHITE, result.calculateTotalScore(PieceColor.WHITE).getScore());
         scores.put(PieceColor.BLACK, result.calculateTotalScore(PieceColor.BLACK).getScore());
     }
-
-    public Map<PieceColor, Double> getScores() {
-        return scores;
-    }
-
 }

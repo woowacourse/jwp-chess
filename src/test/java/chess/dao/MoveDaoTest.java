@@ -14,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-@TestPropertySource(("classpath:application-test.properties"))
 class MoveDaoTest {
 
     @Autowired
@@ -27,31 +27,41 @@ class MoveDaoTest {
 
     @BeforeEach
     void setUp() {
+        jdbcTemplate.execute("DROP TABLE IF EXISTS room cascade");
+        jdbcTemplate.execute("create table room("
+            + "id int not null auto_increment,"
+            + "name varchar(50) not null,"
+            + "primary key (id))");
+        jdbcTemplate.execute("insert into room (name) values ('test')");
+
         jdbcTemplate.execute("DROP TABLE IF EXISTS move");
         jdbcTemplate.execute("create table  move("
             + "id int not null auto_increment,"
+            + "room_id int,"
             + "start varchar(2) not null,"
             + "end varchar(2) not null,"
-            + "primary key (id)"
-            + ");");
+            + "primary key (id),"
+            + "foreign key (room_id) references room (id) on delete cascade"
+            + ")");
 
         List<Object[]> splitPositions = Arrays.asList("a2 a3", "c7 c6").stream()
             .map(positions -> positions.split(" "))
             .collect(Collectors.toList());
-        jdbcTemplate.batchUpdate("INSERT INTO move (start, end) VALUES (?, ?)", splitPositions);
+        jdbcTemplate
+            .batchUpdate("INSERT INTO move (start, end, room_id) VALUES (?, ?, 1)", splitPositions);
     }
 
     @DisplayName("체스말을 이동하면 db에 이동 이력이 삽입된다.")
     @Test
     void addMove() {
-        moveDao.addMove(Position.of("b7"), Position.of("b5"));
-        assertThat(moveDao.getMoves()).hasSize(3);
+        moveDao.addMoveById(Position.of("b7"), Position.of("b5"), 1);
+        assertThat(moveDao.getMovesById(1)).hasSize(3);
     }
 
     @DisplayName("db에서 이동 이력을 불러올 수 있다.")
     @Test
     void getMoves() {
-        MoveRequest move = moveDao.getMoves().get(0);
+        MoveRequest move = moveDao.getMovesById(1).get(0);
         assertThat(Position.of(move.getFrom())).isEqualTo(Position.of("a2"));
         assertThat(Position.of(move.getTo())).isEqualTo(Position.of("a3"));
     }
@@ -59,7 +69,7 @@ class MoveDaoTest {
     @DisplayName("새로 게임을 시작하면 이동 이력을 모두 삭제한다.")
     @Test
     void deleteAll() {
-        moveDao.deleteAll();
-        assertThat(moveDao.getMoves()).hasSize(0);
+        moveDao.deleteAllById(1);
+        assertThat(moveDao.getMovesById(1)).hasSize(0);
     }
 }

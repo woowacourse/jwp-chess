@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link href="/css/room.css" rel="stylesheet">
+  <title>WOOWA CHESS</title>
+</head>
+<body>
+
+<h1>WOOWA CHESS</h1>
+<div class="chess-game">
+  <div class="room-maker">N E W R O O M</div>
+  <div class="rooms">
+    {{#rooms}}
+      <div class="room" id="{{id}}">
+        <div class="room-name">{{name}}</div>
+        <div class="room-delete">X</div>
+      </div>
+    {{/rooms}}
+  </div>
+</div>
+<script src="/js/index.js" type="module"></script>
+</body>
+</html>

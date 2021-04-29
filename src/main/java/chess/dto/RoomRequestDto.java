@@ -9,7 +9,8 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @RequiredArgsConstructor
 @Getter
-public class PathDto {
+public class RoomRequestDto {
 
-    private final String from;
+    private final String name;
+
 }

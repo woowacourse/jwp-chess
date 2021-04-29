@@ -10,11 +10,10 @@ import chess.domain.position.Position;
 import chess.domain.state.End;
 import chess.domain.state.Ready;
 import chess.domain.state.State;
+import chess.exception.InvalidSourceException;
 import java.util.Arrays;
 
 public class Game {
-
-    private static final String INVALID_SOURCE_ERROR_MESSAGE = "움직일 수 없는 말을 선택했습니다.";
 
     private final Board board;
     private final Players players;
@@ -35,7 +34,7 @@ public class Game {
     public void move(Position from, Position to) {
         Piece source = board.findPieceBy(from);
         if (!players.currentPlayer(turn).isOwnerOf(source)) {
-            throw new IllegalArgumentException(INVALID_SOURCE_ERROR_MESSAGE);
+            throw new InvalidSourceException();
         }
         if (board.move(from, to)) {
             refreshState();

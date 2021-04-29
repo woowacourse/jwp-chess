@@ -17,18 +17,18 @@ public class MoveDao {
         this.mapper = new MoveRequestMapper();
     }
 
-    public void addMove(final Position from, final Position to) {
-        String query = "insert into move (start, end) values (?,?)";
-        jdbcTemplate.update(query, from.toString(), to.toString());
+    public void addMoveById(final Position from, final Position to, int id) {
+        String query = "insert into move (start, end, room_id) values (?,?,?)";
+        jdbcTemplate.update(query, from.toString(), to.toString(), id);
     }
 
-    public List<MoveRequest> getMoves() {
-        String query = "select * from move";
-        return jdbcTemplate.query(query, mapper);
+    public List<MoveRequest> getMovesById(int id) {
+        String query = "select * from move where room_id = ?";
+        return jdbcTemplate.query(query, mapper, id);
     }
 
-    public void deleteAll() {
-        String query = "delete from move";
-        jdbcTemplate.update(query);
+    public void deleteAllById(int id) {
+        String query = "delete from move where room_id = ?";
+        jdbcTemplate.update(query, id);
     }
 }

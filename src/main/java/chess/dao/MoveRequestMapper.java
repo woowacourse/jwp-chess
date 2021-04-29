@@ -12,8 +12,8 @@ public class MoveRequestMapper implements RowMapper<MoveRequest> {
 
     @Override
     public MoveRequest mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
-        String start = resultSet.getString(SOURCE_POSITION);
-        String end = resultSet.getString(TARGET_POSITION);
-        return new MoveRequest(start, end);
+        String from = resultSet.getString(SOURCE_POSITION);
+        String to = resultSet.getString(TARGET_POSITION);
+        return new MoveRequest(from, to);
     }
 }

@@ -18,7 +18,7 @@ function init() {
 async function showRoomList() {
     const $roomList = document.querySelector('.room-list ')
     let response = await fetch(
-        '/games'
+        '/rooms'
     )
     response = await response.json()
     rooms = response.roomList
@@ -93,7 +93,7 @@ async function enterHandler(e) {
 
     if (action === 'start') {
         response = await fetch(
-            '/game',
+            '/room',
             {
                 method: 'POST',
                 body: JSON.stringify({

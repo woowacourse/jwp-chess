@@ -48,7 +48,10 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public void move(long gameId, Position from, Position to) {
+    public void move(long gameId, Color userColor, Position from, Position to) {
+        if (!nextColor(gameId).equals(userColor)) {
+            throw new IllegalStateException("내가 움직일 차례가 아닙니다.");
+        }
         ChessGameManager chessGameManager = chessGameManagerRepository.findById(gameId);
         chessGameManager.move(from, to);
         if (chessGameManager.isKingDead()) {

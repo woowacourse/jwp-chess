@@ -1,4 +1,4 @@
-package chess.controller.web;
+package chess.controller;
 
 import java.util.Map;
 

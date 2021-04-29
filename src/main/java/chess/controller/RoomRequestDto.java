@@ -1,12 +1,15 @@
-package chess.controller.web;
+package chess.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class RoomRequestDto {
-    @JsonProperty
-    private final String roomName;
+class RoomRequestDto {
+    @JsonProperty("roomName")
+    private String roomName;
     @JsonProperty("password")
-    private final String whiteUserPassword;
+    private String whiteUserPassword;
+
+    public RoomRequestDto() {
+    }
 
     public RoomRequestDto(String roomName, String whiteUserPassword) {
         this.roomName = roomName;
@@ -16,7 +19,6 @@ public class RoomRequestDto {
     public String getRoomName() {
         return roomName;
     }
-
 
     public String getWhiteUserPassword() {
         return whiteUserPassword;

@@ -1,4 +1,4 @@
-package chess.controller.web;
+package chess.controller;
 
 public class RoomResponseDto {
     private final boolean isFull;

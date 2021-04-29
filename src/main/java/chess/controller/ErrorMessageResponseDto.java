@@ -1,4 +1,4 @@
-package chess.controller.web;
+package chess.controller;
 
 class ErrorMessageResponseDto {
     private final String errorMsg;

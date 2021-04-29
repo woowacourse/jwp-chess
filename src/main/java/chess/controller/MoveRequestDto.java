@@ -1,4 +1,4 @@
-package chess.controller.web;
+package chess.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -6,20 +6,30 @@ import java.util.Objects;
 
 class MoveRequestDto {
     @JsonProperty
-    private final long gameId;
+    private long gameId;
     @JsonProperty
-    private final String from;
+    private long roomId;
     @JsonProperty
-    private final String to;
+    private String from;
+    @JsonProperty
+    private String to;
 
-    public MoveRequestDto(long gameId, String from, String to) {
+    public MoveRequestDto() {
+    }
+
+    public MoveRequestDto(long gameId, long roomId, String from, String to) {
         this.gameId = gameId;
+        this.roomId = roomId;
         this.from = from;
         this.to = to;
     }
 
     public long getGameId() {
         return gameId;
+    }
+
+    public long getRoomId() {
+        return roomId;
     }
 
     public String getFrom() {

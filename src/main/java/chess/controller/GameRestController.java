@@ -1,10 +1,11 @@
-package chess.controller.web;
+package chess.controller;
 
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.game.board.position.Position;
 import chess.chessgame.domain.room.user.User;
 import chess.service.ChessService;
+import chess.service.RoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.client.HttpClientErrorException;
 
-import javax.servlet.http.HttpSession;
-import java.util.Objects;
-
 @RestController
 @RequestMapping("/game")
 public class GameRestController {
     private final ChessService chessService;
+    private final RoomService roomService;
 
-    public GameRestController(ChessService chessService) {
+    public GameRestController(ChessService chessService, RoomService roomService) {
         this.chessService = chessService;
+        this.roomService = roomService;
     }
 
     @GetMapping("{gameId:[\\d]+}/score")
@@ -41,24 +41,12 @@ public class GameRestController {
     }
 
     @PutMapping("move")
-    public ResponseEntity<MoveResponseDto> movePiece(@RequestBody MoveRequestDto moveMessage, @SessionAttribute User user, HttpSession session) {
-        Color nextColor = chessService.nextColor(moveMessage.getGameId());
-        validateUser(user, nextColor);
-
-        chessService.move(moveMessage.getGameId(), Position.of(moveMessage.getFrom()), Position.of(moveMessage.getTo()));
-        return ResponseEntity.ok(new MoveResponseDto(chessService.isEnd(moveMessage.getGameId()), nextColor));
-    }
-
-    private void validateUser(User user, Color nextColor) {
-        if (Objects.isNull(user)) {
-            throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "방에 입장할 권한이 없습니다.");
+    public ResponseEntity<MoveResponseDto> movePiece(@RequestBody MoveRequestDto moveMessage, @SessionAttribute User user) {
+        if (roomService.isAuthorityUser(user, moveMessage.getRoomId())) {
+            throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "방에 입장할 수 없습니다.");
         }
-        isProperUser(user, nextColor);
-    }
 
-    private void isProperUser(User user, Color nextColor) {
-        if (user.isSameColor(nextColor.opposite())) {
-            throw new IllegalStateException("상대방의 턴입니다.");
-        }
+        chessService.move(moveMessage.getGameId(), user.getColor(), Position.of(moveMessage.getFrom()), Position.of(moveMessage.getTo()));
+        return ResponseEntity.ok(new MoveResponseDto(chessService.isEnd(moveMessage.getGameId()), chessService.nextColor(moveMessage.getGameId())));
     }
 }

@@ -34,6 +34,10 @@ public class RoomService {
         return room;
     }
 
+    public boolean isAuthorityUser(User user, long roomId) {
+        return user.getRoomId() != roomId;
+    }
+
     public List<Room> findAllRunningRoom() {
         return roomRepository.findAllActiveRoom();
     }
@@ -53,11 +57,8 @@ public class RoomService {
             return userRepository.matchPasswordUser(roomId, password);
         }
         User blackUser = userRepository.createUser(BLACK, password);
-        userRepository.updateRoomId(blackUser, roomId);
 
         room.enterUser(blackUser);
-        roomRepository.updateBlackUser(room);
-
-        return blackUser;
+        return userRepository.updateRoomId(blackUser, roomId);
     }
 }

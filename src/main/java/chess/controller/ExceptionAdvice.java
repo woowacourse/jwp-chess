@@ -1,4 +1,4 @@
-package chess.controller.web;
+package chess.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +8,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.NoSuchElementException;
 
-@ControllerAdvice("chess.controller.web")
+@ControllerAdvice("chess.controller")
 public class ExceptionAdvice {
 
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class, NoSuchElementException.class, UnsupportedOperationException.class})

@@ -17,7 +17,7 @@ public interface ChessService {
 
     ChessGameManager load(long gameId);
 
-    void move(long gameId, Position from, Position to);
+    void move(long gameId, Color userColor, Position from, Position to);
 
     boolean isEnd(long gameId);
 

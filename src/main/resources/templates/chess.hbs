@@ -14,7 +14,7 @@
 
         let nextColor;
         let chessGameId = 0;
-
+        const roomId = {{roomId}};
         $chessboard.addEventListener("click", onClickPiece);
 
         getPieces("/game/{{{gameId}}}");
@@ -29,7 +29,7 @@
         }
 
         async function movePiece(from, to) {
-            const moveResult = await putFetch("/game/move", {gameId: chessGameId, from: from, to: to});
+            const moveResult = await putFetch("/game/move", {gameId: chessGameId, roomId: roomId, from: from, to: to});
             if (moveResult.hasOwnProperty("end") && moveResult.end === true) {
                 alert("게임이 종료되었습니다~! 대기 화면으로 이동합니다");
                 location.href ="/";

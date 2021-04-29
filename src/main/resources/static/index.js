@@ -48,7 +48,7 @@ btnCreateRoom.addEventListener('click', function (e) {
     const pw = prompt("비밀번호를 입력해 주세요");
     const cookieUser = getCookie('user');
     if (cookieUser === null) {
-        console.log('로그인 먼저 해주세요.');
+        alert('먼저 로그인 해 주세요.')
         return;
     }
 
@@ -71,7 +71,7 @@ btnCreateUser.addEventListener('click', function (e) {
         "name": name,
         "pw": pw
     }).then(function (response) {
-        console.log('계정생성이 완료되었습니다.')
+        alert('계정생성이 완료되었습니다.')
     }).catch(function (error) {
         alert('계정 만들지 못했습니다.');
     });
@@ -93,7 +93,6 @@ btnLogin.addEventListener('click', function (e) {
 });
 
 function refreshRoomList(data) {
-    console.log(data);
     let list = document.getElementById("list-chess-game");
     roomListData = data;
     list.innerHTML = "";

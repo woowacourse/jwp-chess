@@ -33,8 +33,6 @@ public class ChessGameRepositoryImpl implements ChessGameRepository {
     @Override
     public ChessGame chessGame(final Long gameId) {
         boolean isEnd = gameDao.isEnd(gameId);
-
-        System.out.println(gameId);
         WhiteTeam whiteTeam = teamRepositoryImpl.whiteTeam(gameId);
         BlackTeam blackTeam = teamRepositoryImpl.blackTeam(gameId);
         whiteTeam.setEnemy(blackTeam);

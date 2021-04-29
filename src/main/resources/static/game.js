@@ -23,7 +23,6 @@ btnEnd.addEventListener('click', function (e) {
 
 
 function exitRoom() {
-    console.log("gameinfo id : " + gameInfo.id)
     axios.put('/api/rooms/' + roomId + '/exit', {
         'id' : roomId,
         'gameId' : gameInfo.id
@@ -35,13 +34,11 @@ function exitRoom() {
 }
 
 function connectToSocket(roomId) {
-    console.log("connectToSocket")
     let socket = new SockJS(url + "/chess_game");
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function (frame) {
         stompClient.subscribe("/topic/game/" + roomId, function (response) {
-            console.log(response);
             const data = JSON.parse(response.body);
             refreshChessBoard(data)
             if (gameInfo.end) {
@@ -57,7 +54,6 @@ function loadChessGame() {
     }
     axios.get('/api/game/' + roomId)
         .then(function (response) {
-            console.log(response.data)
             refreshChessBoard(response.data)
         }).catch(function (error) {
             if (error.response.status === 400) {
@@ -130,7 +126,7 @@ function movePiece(target) {
 
 function checkMovable() {
     if (gameInfo == null) {
-        console.log('게임 정보가 없습니다.')
+        alert('게임 정보가 없습니다.')
         return false;
     }
 
@@ -138,7 +134,7 @@ function checkMovable() {
 
     if (gameInfo.whiteTeam.player === user) {
         if (!gameInfo.whiteTeam.turn) {
-            console.log('턴이 아닙니다.')
+            alert('턴이 아닙니다.')
             return false;
         }
         return true;
@@ -146,13 +142,13 @@ function checkMovable() {
 
     if (gameInfo.blackTeam.player === user) {
         if (!gameInfo.blackTeam.turn) {
-            console.log('턴이 아닙니다.')
+            alert('턴이 아닙니다.')
             return false;
         }
         return true;
     }
 
-    console.log('쿠키 정보가 없습니다.')
+    alert('쿠키 정보가 없습니다.')
     return false;
 
 }
@@ -165,7 +161,6 @@ function clearSelect() {
 }
 
 function refreshChessBoard(chessGame) {
-    console.log(chessGame)
     if (chessGame.end) {
         alert('상대가 나갔거나, 게임이 끝났습니다.')
         exitRoom();

@@ -24,7 +24,6 @@ public class User {
     }
 
     public boolean inGame() {
-        System.out.println("inGame roomid : " + roomId);
         return roomId != 0;
     }
 }

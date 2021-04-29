@@ -20,7 +20,7 @@
 ## 태그
 - Mockito, Test
 
-# [Test] MvcMock - 5
+# [Test] MockMvc - 5
 
 ## 내용
 - 전달해주는 객체를 equals를 가지고 비교한다.
@@ -30,4 +30,4 @@
 - Controller 에 적용해보았다.
 
 ## 태그
-- MvcMock, Test
+- MockMvc, Test

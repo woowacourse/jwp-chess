@@ -19,7 +19,7 @@ public class GameService {
     }
 
     public void move(Long id, MoveDto moveDto) {
-        ChessGame chessGame = chessRepository.loadGame(id);
+        ChessGame chessGame = loadGame(id);
         Position sourcePosition = Position.of(moveDto.getSource());
         Position targetPosition = Position.of(moveDto.getTarget());
 

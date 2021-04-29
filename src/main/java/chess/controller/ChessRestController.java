@@ -26,8 +26,7 @@ public class ChessRestController {
         return ResponseEntity.created(URI.create("/games/" + newGameDto.getGameId()))
                 .body(new CommonResponse<>(
                         "새로운 게임이 생성되었습니다.",
-                        newGameDto
-                ));
+                        newGameDto));
     }
 
     private void validateTitleIsNotNull(String title) {
@@ -41,8 +40,7 @@ public class ChessRestController {
         return ResponseEntity.ok(
                 new CommonResponse<>(
                         "게임을 불러왔습니다",
-                        chessGameService.loadChessGame(gameId))
-                );
+                        chessGameService.loadChessGame(gameId)));
     }
 
     @PutMapping("/games/{gameId}/pieces")
@@ -61,7 +59,6 @@ public class ChessRestController {
         return ResponseEntity.ok(
                 new CommonResponse<>(
                         "게임 목록을 불러왔습니다.",
-                        chessGameService.loadAllGames()
-                ));
+                        chessGameService.loadAllGames()));
     }
 }

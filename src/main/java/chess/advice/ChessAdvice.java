@@ -10,12 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ChessAdvice {
 
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<String> handleNullPointerException() {
-        ExceptionStatus exceptionStatus = ExceptionStatus.NULL_POINTER;
-        return ResponseEntity.status(exceptionStatus.getHttpStatus()).body(exceptionStatus.getMessage());
-    }
-
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handleEmptyResultDataAccessException() {
         ExceptionStatus exceptionStatus = ExceptionStatus.EMPTY_RESULT_DATA_ACCESS;

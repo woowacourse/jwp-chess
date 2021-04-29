@@ -22,7 +22,7 @@ public class GameController {
         return ResponseEntity.ok(gameService.saveNewGame());
     }
 
-    @PostMapping("/{gameId:[\\d]+}/move")
+    @PostMapping("/{gameId}/move")
     public ResponseEntity<CommonDto<RunningGameDto>> move(@RequestBody MovePositionDto movePositionDto) {
         return ResponseEntity.ok(gameService.move(
                         movePositionDto.getGameId(),
@@ -30,7 +30,7 @@ public class GameController {
                         movePositionDto.getTo()));
     }
 
-    @GetMapping("/{gameId:[\\d]+}/load")
+    @GetMapping("/{gameId}/load")
     public ResponseEntity<CommonDto<RunningGameDto>> load(@PathVariable int gameId) {
         return ResponseEntity.ok(gameService.loadGame(gameId));
     }

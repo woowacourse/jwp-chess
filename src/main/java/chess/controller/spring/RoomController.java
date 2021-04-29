@@ -26,7 +26,7 @@ public class RoomController {
         return ResponseEntity.ok(service.save(roomDto));
     }
 
-    @GetMapping("/{gameId:[\\d]+}/load")
+    @GetMapping("/{gameId}/load")
     public ResponseEntity<String> findRoomName(@PathVariable int gameId) {
         return ResponseEntity.ok(service.loadRoomName(gameId));
     }

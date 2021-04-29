@@ -50,8 +50,10 @@ public class CookieHandler {
         }
 
         return Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals(DEFAULT_COOKIE_NAME + roomId))
-                .findFirst()
+                .filter(cookie -> {
+                    System.out.println(cookie.getName() + "  " + DEFAULT_COOKIE_NAME + roomId);
+                    return cookie.getName().equals(DEFAULT_COOKIE_NAME + roomId);
+                }).findFirst()
                 .orElse(null);
     }
 }

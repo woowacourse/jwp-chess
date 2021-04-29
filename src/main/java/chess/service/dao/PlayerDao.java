@@ -48,15 +48,16 @@ public class PlayerDao {
         players.add(playerId);
     }
 
-    public Optional<Owner> getOwner(final long roomId, final String playerId) {
+    public Owner getOwner(final long roomId, final String playerId) {
         if (isPlayer1(roomId, playerId)) {
-            return Optional.of(Owner.WHITE);
+            return Owner.WHITE;
         }
 
         if (isPlayer2(roomId, playerId)) {
-            return Optional.of(Owner.BLACK);
+            return Owner.BLACK;
         }
-        return Optional.empty();
+
+        throw new IllegalArgumentException("적절하지 않은 사용자입니다.");
     }
 
     private boolean isPlayer1(final long roomId, final String playerId) {

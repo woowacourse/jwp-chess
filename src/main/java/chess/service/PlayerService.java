@@ -1,13 +1,11 @@
 package chess.service;
 
 import chess.domain.piece.Owner;
-import chess.dto.RoomDto;
 import chess.service.dao.PlayerDao;
 import chess.service.dao.RoomDao;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PlayerService {
@@ -44,10 +42,6 @@ public class PlayerService {
     }
 
     public Owner ownerOfPlayer(final long roomId, final String playerId) {
-        final Optional<Owner> owner = playerDao.getOwner(roomId, playerId);
-        if (owner.isPresent()) {
-            return owner.get();
-        }
-        throw new IllegalArgumentException("적절하지 않은 사용자입니다.");
+        return playerDao.getOwner(roomId, playerId);
     }
 }

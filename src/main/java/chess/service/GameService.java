@@ -51,6 +51,19 @@ public class GameService {
                 chessGameManager.isEnd());
     }
 
+    private ChessGameManager loadChessGameManager(int gameId) {
+        String turn = gameDao.selectGameTurnByGameId(gameId);
+        if (turn == null) {
+            throw new NoSavedGameException("저장된 게임이 없습니다.");
+        }
+
+        ChessBoardDto chessBoardDto = pieceDao.selectPieceByGameId(gameId);
+
+        ChessGameManager chessGameManager = new ChessGameManager();
+        chessGameManager.load(chessBoardDto.toChessBoard(), Color.of(turn));
+        return chessGameManager;
+    }
+
     public CommonDto<RunningGameDto> move(int gameId, String startPosition, String endPosition) {
         ChessGameManager chessGameManager = loadChessGameManager(gameId);
         chessGameManager.move(Position.of(startPosition), Position.of(endPosition));
@@ -69,18 +82,5 @@ public class GameService {
     private void updatePiece(int gameId, String from, String to) {
         pieceDao.deletePieceByGameId(gameId, to);
         pieceDao.updatePiecePositionByGameId(gameId, from, to);
-    }
-
-    private ChessGameManager loadChessGameManager(int gameId) {
-        String turn = gameDao.selectGameTurnByGameId(gameId);
-        if (turn == null) {
-            throw new NoSavedGameException("저장된 게임이 없습니다.");
-        }
-
-        ChessBoardDto chessBoardDto = pieceDao.selectPieceByGameId(gameId);
-
-        ChessGameManager chessGameManager = new ChessGameManager();
-        chessGameManager.load(chessBoardDto.toChessBoard(), Color.of(turn));
-        return chessGameManager;
     }
 }

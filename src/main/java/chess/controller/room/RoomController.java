@@ -1,6 +1,5 @@
-package chess.controller;
+package chess.controller.room;
 
-import chess.chessgame.domain.room.Room;
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.user.User;
 import chess.service.RoomService;
@@ -12,9 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.client.HttpClientErrorException;
-
-import javax.servlet.http.HttpSession;
-import java.util.Objects;
 
 @RequestMapping("/room")
 @Controller

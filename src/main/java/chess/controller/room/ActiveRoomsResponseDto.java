@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.room;
 
 import chess.chessgame.domain.room.Room;
 

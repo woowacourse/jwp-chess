@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.room;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

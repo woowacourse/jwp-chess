@@ -1,12 +1,12 @@
 package chess.chessgame.domain.room.game;
 
 import chess.chessgame.domain.room.game.board.InitBoardInitializer;
+import chess.chessgame.domain.room.game.board.Square;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.game.board.position.Position;
 import chess.chessgame.domain.room.game.statistics.ChessGameStatistics;
-import chess.controller.PieceDto;
 
-import java.util.Map;
+import java.util.List;
 
 public abstract class NotRunningGameManager implements ChessGameManager {
     private final long id;
@@ -46,7 +46,7 @@ public abstract class NotRunningGameManager implements ChessGameManager {
     }
 
     @Override
-    public Map<String, PieceDto> getPieces() {
+    public List<Square> getAliveSquares() {
         throw new UnsupportedOperationException("게임이 진행중이지 않아 실행할 수 없습니다.");
     }
 }

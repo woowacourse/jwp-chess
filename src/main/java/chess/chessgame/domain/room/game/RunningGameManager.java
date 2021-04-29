@@ -1,15 +1,14 @@
 package chess.chessgame.domain.room.game;
 
 import chess.chessgame.domain.room.game.board.Board;
+import chess.chessgame.domain.room.game.board.Square;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.game.board.position.Position;
 import chess.chessgame.domain.room.game.statistics.ChessGameStatistics;
 import chess.chessgame.domain.room.game.statistics.MatchResult;
-import chess.controller.PieceDto;
 
+import java.util.List;
 import java.util.Map;
-
-import static java.util.stream.Collectors.toMap;
 
 public class RunningGameManager implements ChessGameManager {
     private final long id;
@@ -56,10 +55,8 @@ public class RunningGameManager implements ChessGameManager {
     }
 
     @Override
-    public Map<String, PieceDto> getPieces() {
-        return board.getAliveSquares().stream()
-                .collect(toMap(square -> square.getPosition().toString()
-                        , square -> new PieceDto(square.getNotationText(), square.getColor().name())));
+    public List<Square> getAliveSquares() {
+        return board.getAliveSquares();
     }
 
     @Override

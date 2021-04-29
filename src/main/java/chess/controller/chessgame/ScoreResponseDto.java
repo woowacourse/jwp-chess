@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.chessgame;
 
 import chess.chessgame.domain.room.game.statistics.ChessGameStatistics;
 
@@ -6,7 +6,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
 
-public class ScoreResponseDto {
+class ScoreResponseDto {
     private final String matchResult;
     private final Map<String, Double> colorsScore;
 

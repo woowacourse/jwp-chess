@@ -1,12 +1,12 @@
 package chess.chessgame.domain.room.game;
 
 import chess.chessgame.domain.room.game.board.Board;
+import chess.chessgame.domain.room.game.board.Square;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.game.board.position.Position;
 import chess.chessgame.domain.room.game.statistics.ChessGameStatistics;
-import chess.controller.PieceDto;
 
-import java.util.Map;
+import java.util.List;
 
 public interface ChessGameManager {
     ChessGameManager start();
@@ -29,7 +29,7 @@ public interface ChessGameManager {
 
     long getId();
 
-    Map<String, PieceDto> getPieces();
+    List<Square> getAliveSquares();
 
     ChessGameStatistics getStatistics();
 }

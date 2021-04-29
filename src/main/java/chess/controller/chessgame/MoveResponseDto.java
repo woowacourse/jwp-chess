@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.chessgame;
 
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 

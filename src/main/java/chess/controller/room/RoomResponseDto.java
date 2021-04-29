@@ -1,6 +1,6 @@
-package chess.controller;
+package chess.controller.room;
 
-public class RoomResponseDto {
+class RoomResponseDto {
     private final boolean isFull;
     private final String roomName;
 

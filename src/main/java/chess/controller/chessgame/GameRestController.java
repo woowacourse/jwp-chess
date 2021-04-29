@@ -1,7 +1,6 @@
-package chess.controller;
+package chess.controller.chessgame;
 
 import chess.chessgame.domain.room.game.ChessGameManager;
-import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 import chess.chessgame.domain.room.game.board.position.Position;
 import chess.chessgame.domain.room.user.User;
 import chess.service.ChessService;

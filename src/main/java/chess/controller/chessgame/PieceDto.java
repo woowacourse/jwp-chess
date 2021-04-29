@@ -1,8 +1,8 @@
-package chess.controller;
+package chess.controller.chessgame;
 
 import java.util.Objects;
 
-public class PieceDto {
+class PieceDto {
     private final String notation;
     private final String color;
 

@@ -1,9 +1,11 @@
-package chess.controller;
+package chess.controller.chessgame;
 
 import chess.chessgame.domain.room.game.ChessGameManager;
 import chess.chessgame.domain.room.game.board.piece.attribute.Color;
 
 import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
 
 class ChessGameResponseDto {
     private final long gameId;
@@ -19,7 +21,9 @@ class ChessGameResponseDto {
     public ChessGameResponseDto(ChessGameManager chessGameManager) {
         this.gameId = chessGameManager.getId();
         this.color = chessGameManager.nextColor().name();
-        this.piecesAndPositions = chessGameManager.getPieces();
+        this.piecesAndPositions = chessGameManager.getAliveSquares().stream()
+                .collect(toMap(square -> square.getPosition().toString()
+                        , square -> new PieceDto(square.getNotationText(), square.getColor().name())));
     }
 
     public long getGameId() {

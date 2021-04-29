@@ -1,6 +1,7 @@
 package chess.domain.statistics;
 
 import chess.domain.piece.attribute.Color;
+import chess.exception.InvalidChessArgumentException;
 
 import java.util.Arrays;
 import java.util.function.BiPredicate;
@@ -22,7 +23,7 @@ public enum MatchResult {
         return Arrays.stream(values())
                 .filter(matchResult -> matchResult.matchResultConditionScore.test(whiteScore, blackScore))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("조건에 맞는 승패 결과가 없습니다."));
+                .orElseThrow(() -> new InvalidChessArgumentException("조건에 맞는 승패 결과가 없습니다."));
     }
 
     public static MatchResult generateMatchResultByKingAliveColor(Color color) {

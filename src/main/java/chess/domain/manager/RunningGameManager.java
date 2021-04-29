@@ -6,6 +6,8 @@ import chess.domain.piece.attribute.Color;
 import chess.domain.position.Position;
 import chess.domain.statistics.ChessGameStatistics;
 import chess.domain.statistics.MatchResult;
+import chess.exception.InvalidChessArgumentException;
+import chess.exception.InvalidMoveException;
 
 import java.util.Map;
 
@@ -14,28 +16,30 @@ import static java.util.stream.Collectors.toMap;
 public class RunningGameManager implements ChessGameManager {
     private final long id;
     private final Board board;
+    private final String title;
     private Color currentColor;
 
-    public RunningGameManager(long id, Board board, Color currentColor) {
+    public RunningGameManager(long id, Board board, String title, Color currentColor) {
         this.id = id;
         this.board = board;
+        this.title = title;
         this.currentColor = currentColor;
     }
 
     @Override
     public ChessGameManager start() {
-        return ChessGameManagerFactory.createRunningGame(id);
+        return ChessGameManagerFactory.createRunningGame(id, title);
     }
 
     @Override
     public ChessGameManager end() {
-        return ChessGameManagerFactory.createEndGame(id, getStatistics(), board);
+        return ChessGameManagerFactory.createEndGame(id, title, getStatistics(), board);
     }
 
     @Override
     public void move(Position from, Position to) {
         if (board.findColorByPosition(from) != currentColor) {
-            throw new IllegalArgumentException("현재 움직일 수 있는 진영의 기물이 아닙니다.");
+            throw new InvalidMoveException("현재 움직일 수 있는 진영의 기물이 아닙니다.");
         }
         board.move(from, to);
         turnOver();
@@ -93,5 +97,10 @@ public class RunningGameManager implements ChessGameManager {
     @Override
     public boolean isStart() {
         return true;
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
     }
 }

@@ -7,7 +7,9 @@ import chess.domain.manager.ChessGameManagerFactory;
 import chess.domain.piece.attribute.Color;
 import chess.domain.statistics.ChessGameStatistics;
 import chess.service.ChessService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,42 +39,13 @@ class ChessControllerTest {
     ChessService chessService;
 
     @Test
-    @DisplayName("게임 리스트 조회 테스트")
-    void getGames() throws Exception {
-        List<ChessGameManager> chessGameManagers = new ArrayList<>();
-        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID);
-        chessGameManagers.add(chessGameManager);
-
-        given(chessService.findRunningGames()).willReturn(new ChessGameManagerBundle(chessGameManagers));
-
-        mockMvc.perform(get("/games"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.runningGames." + CHESS_GAME_TEST_ID)
-                        .value("WHITE"));
-    }
-
-    @Test
-    @DisplayName("새로운 게임 시작 테스트")
-    void gameStart() throws Exception {
-        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID);
-
-        given(chessService.start()).willReturn(chessGameManager);
-
-        mockMvc.perform(get("/game/start"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(CHESS_GAME_TEST_ID))
-                .andExpect(jsonPath("$.color").value("WHITE"))
-                .andExpect(jsonPath("$.piecesAndPositions.size()").value(32));
-    }
-
-    @Test
     @DisplayName("게임 점수 조회 테스트")
     void getScore() throws Exception {
         ChessGameStatistics chessGameStatistics = ChessGameStatistics.createNotStartGameResult();
 
         given(chessService.getStatistics(CHESS_GAME_TEST_ID)).willReturn(chessGameStatistics);
 
-        mockMvc.perform(get("/game/" + CHESS_GAME_TEST_ID + "/score"))
+        mockMvc.perform(get("/games/" + CHESS_GAME_TEST_ID + "/score"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.matchResult").value("무승부"))
                 .andExpect(jsonPath("$.colorsScore.size()").value(2));
@@ -79,11 +54,11 @@ class ChessControllerTest {
     @Test
     @DisplayName("해당 게임 로딩 테스트")
     void loadGame() throws Exception {
-        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID);
+        ChessGameManager chessGameManager = ChessGameManagerFactory.createRunningGame(CHESS_GAME_TEST_ID, "");
 
         given(chessService.findById(CHESS_GAME_TEST_ID)).willReturn(chessGameManager);
 
-        mockMvc.perform(get("/game/" + CHESS_GAME_TEST_ID + "/load"))
+        mockMvc.perform(get("/games/" + CHESS_GAME_TEST_ID + "/load"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(CHESS_GAME_TEST_ID))
                 .andExpect(jsonPath("$.color").value("WHITE"))
@@ -99,7 +74,7 @@ class ChessControllerTest {
         given(chessService.nextColor(CHESS_GAME_TEST_ID)).willReturn(Color.BLACK);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/game/" + CHESS_GAME_TEST_ID + "/move")
+                .post("/games/" + CHESS_GAME_TEST_ID + "/move")
                 .content(content).header("Content-Type", "application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.end").value(false))

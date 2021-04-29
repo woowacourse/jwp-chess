@@ -1,145 +1,58 @@
-import {getFetch, postFetch} from "./promise/fetches.js"
-import pieceFonts from "./enum/chessPieceFont.js"
+import {deleteFetch, getFetch, postFetch} from "./promise/fetches.js"
 
-const $chessboard = document.querySelector('#chessboard');
-const $startBtn = document.querySelector('#startBtn');
-const $loadBtn = document.querySelector('#loadBtn');
-const $blackScore = document.querySelector('#blackScore')
-const $whiteScore = document.querySelector('#whiteScore')
-const $games = document.querySelector('#games');
+const $games = document.querySelector('#chess-game-list');
+const $generatorButton = document.querySelector("#generator");
 
-let nextColor;
-let chessGameId = 0;
+$generatorButton.addEventListener("click", askGenerateChessGame);
+
 findGames();
 
-$chessboard.addEventListener("click", onClickPiece);
-$startBtn.addEventListener("click", onClickStartBtn);
-$loadBtn.addEventListener("click", onClickLoadBtn);
-
-async function getPieces(url) {
-    const piecesData = await getFetch(url, chessGameId);
-    chessGameId = piecesData.id;
-    await findGames();
-    await calculateScore();
-    setBoard(piecesData.piecesAndPositions);
-    nextColor = piecesData.color;
+function insertGameList(ele, games) {
+    let chessGameLI = document.createElement('li');
+    chessGameLI.className = "list-group-item";
+    chessGameLI.innerHTML = `
+            <div class="view" id = "${ele}">
+            <label class = "label">NO.${ele} ${games[ele]} Room</label>
+            <button class="destroy"></button>
+            </div>`;
+    chessGameLI.addEventListener("click", click);
+    $games.appendChild(chessGameLI);
 }
 
-async function movePiece(from, to) {
-    const moveResult = await postFetch(`/game/${chessGameId}/move`, {from: from, to: to});
-    if (moveResult.hasOwnProperty("end") && moveResult.end === true) {
-        alert("게임이 종료되었습니다~!");
-        findGames();
+function click(e) {
+    if (e.target.classList.contains("destroy")) {
+        askDeleteGame(e.target.parentNode.id);
+    } else {
+        location.href = "/board?id=" + this.children[0].id;
     }
-    if (moveResult.hasOwnProperty("end") && moveResult.end === false) {
-        const $to = $chessboard.querySelector("#" + to);
-        const $from = $chessboard.querySelector("#" + from);
-        const color = $from.classList.contains("BLACK") ? "BLACK" : "WHITE";
-        $to.innerText = $from.innerText;
-        $from.innerText = "";
+}
 
-        $from.classList.remove("BLACK", "WHITE");
-        $to.classList.remove("BLACK", "WHITE");
-        $to.classList.add(color);
-        nextColor = moveResult.nextColor;
+function askDeleteGame(id){
+    if(confirm(`NO.${id} 게임 방을 지우시겠습니까?`)){
+        deleteFetch(`/room/${id}`);
+        location.reload();
     }
 }
 
 async function findGames() {
-    const responseData = await getFetch("/games");
+    const responseData = await getFetch("/rooms");
     const games = responseData.runningGames;
     $games.innerHTML = "";
-    Object.keys(games).forEach(ele => $games.insertAdjacentHTML("beforeend", `<li>ID:${ele} , 다음순서:${games[ele]}`));
+    Object.keys(games)
+        .forEach(ele => insertGameList(ele, games));
 }
 
-async function calculateScore() {
-    const scoreResponseData = await getFetch(`/game/${chessGameId}/score`);
-
-    $blackScore.innerText = scoreResponseData.colorsScore.BLACK;
-    $whiteScore.innerText = scoreResponseData.colorsScore.WHITE;
-}
-
-async function onClickPiece(e) {
-    if (e.target && e.target.classList.contains("cell")) {
-        if (!checkAnySelected() && !e.target.classList.contains(nextColor)) {
-            alert("움직일 수 있는 진영의 기물이 아닙니다.");
-            return;
-        }
-
-        if (checkAnySelected() && sameColorCell(e.target)) {
-            removeSelectedClass();
-            if (!equalCell(e.target)) {
-                return;
-            }
-        }
-        if (checkAnySelected() && notEqualCell(e.target)) {
-            await movePiece(getFirstSelected().id, e.target.id);
-            await calculateScore();
-            removeSelectedClass();
-            return;
-        }
-
-        if (e.target.innerText !== "") {
-            e.target.classList.toggle("selected");
-        }
+async function askGenerateChessGame() {
+    const title = prompt("새로 만들 체스 게임 방 제목을 입력해주세요.");
+    if (title) {
+        await postFetch("/room", {title: title});
+        location.reload();
     }
 }
 
-function onClickStartBtn(e) {
-    if (e.target && e.target.id === "startBtn") {
-        getPieces("/game/start");
-    }
-}
 
-function onClickLoadBtn(e) {
-    if (e.target && e.target.id === "loadBtn") {
-        const loadGameId = prompt("로드할 게임 ID를 입력해주세요.");
-        if (loadGameId) {
-            getPieces(`/game/${loadGameId}/load/`);
-        }
-    }
-}
 
-function equalCell(target) {
-    return target === getFirstSelected();
-}
 
-function notEqualCell(target) {
-    return target !== getFirstSelected();
-}
 
-function sameColorCell(target) {
-    if (target.classList.contains("BLACK")) {
-        return getFirstSelected().classList.contains("BLACK");
-    }
-    if (target.classList.contains("WHITE")) {
-        return getFirstSelected().classList.contains("WHITE");
-    }
-    return false;
 
-}
 
-function checkAnySelected() {
-    return $chessboard.querySelectorAll(".selected").length === 1;
-}
-
-function getFirstSelected() {
-    return $chessboard.querySelector(".selected");
-}
-
-function removeSelectedClass() {
-    $chessboard.querySelectorAll(".selected")
-        .forEach(e => e.classList.remove("selected"));
-}
-
-function setBoard(positionsAndPieces) {
-    $chessboard.querySelectorAll(".cell").forEach(e => {
-        e.innerText = ""
-        e.classList.remove("WHITE", "BLACK");
-    });
-    Object.keys(positionsAndPieces).forEach(e => {
-        const coordinate = $chessboard.querySelector('#' + e)
-        coordinate.textContent = pieceFonts[positionsAndPieces[e].notation]
-        coordinate.classList.add(positionsAndPieces[e].color);
-    });
-}

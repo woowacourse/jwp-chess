@@ -1,4 +1,4 @@
-export {getFetch, postFetch}
+export {getFetch, postFetch, deleteFetch}
 const BASE_PORT = "8080";
 const BASE_URL = `http://localhost:${BASE_PORT}`;
 
@@ -27,6 +27,22 @@ function postFetch(url, body = {}) {
             throw new Error(data.status);
         }
         return data.json()
+    })
+}
+
+function deleteFetch(url) {
+    return fetch(`${BASE_URL}${url}`, {
+        method: "delete",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(data => {
+        if (data.status === 400) {
+            exceptionHandling(data.json());
+        } else if (!data.ok) {
+            throw new Error(data.status);
+        }
+        return data
     })
 }
 

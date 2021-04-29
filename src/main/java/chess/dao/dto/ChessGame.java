@@ -9,19 +9,22 @@ public class ChessGame {
     private final Color nextTurn;
     private final boolean running;
     private final String pieces;
+    private final String title;
 
     public ChessGame(ChessGameManager chessGameManager) {
         this.id = chessGameManager.getId();
         this.nextTurn = chessGameManager.nextColor();
         this.running = chessGameManager.isStart() && chessGameManager.isNotEnd();
         this.pieces = PiecesConverter.convertString(chessGameManager.getBoard());
+        this.title = chessGameManager.getTitle();
     }
 
-    public ChessGame(long id, Color nextTurn, boolean running, String pieces) {
+    public ChessGame(long id, Color nextTurn, boolean running, String pieces, String title) {
         this.id = id;
         this.nextTurn = nextTurn;
         this.running = running;
         this.pieces = pieces;
+        this.title = title;
     }
 
     public Long getId() {
@@ -38,5 +41,9 @@ public class ChessGame {
 
     public String getPieces() {
         return pieces;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

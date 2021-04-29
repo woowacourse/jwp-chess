@@ -1,6 +1,7 @@
 package chess.domain.position;
 
 import chess.domain.piece.attribute.Color;
+import chess.exception.InvalidMoveException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,7 +66,7 @@ public enum Direction {
         return Arrays.stream(values())
                 .filter(direction -> direction.xDegree == xDegree && direction.yDegree == yDegree)
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("움직일 수 없는 방향입니다."));
+                .orElseThrow(() -> new InvalidMoveException("움직일 수 없는 방향입니다."));
     }
 
     public static boolean isNorthDiagonal(Direction direction) {

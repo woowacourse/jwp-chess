@@ -1,5 +1,7 @@
 package chess.domain.position;
 
+import chess.exception.InvalidChessArgumentException;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -35,14 +37,14 @@ public enum Rank {
 
     public static Rank from(String letter) {
         return Optional.ofNullable(SEARCH_MAP.get(letter))
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 문자의 Rank가 없습니다."));
+                .orElseThrow(() -> new InvalidChessArgumentException("해당하는 문자의 Rank가 없습니다."));
     }
 
     public static Rank from(int coordinate) {
         return Arrays.stream(values())
                 .filter(rank -> rank.coordinate == coordinate)
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 좌표의 Rank가 없습니다."));
+                .orElseThrow(() -> new InvalidChessArgumentException("해당하는 좌표의 Rank가 없습니다."));
     }
 
     public static List<Rank> getBlankRanks() {

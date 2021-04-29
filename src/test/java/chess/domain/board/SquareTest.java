@@ -2,6 +2,7 @@ package chess.domain.board;
 
 import chess.domain.order.MoveOrder;
 import chess.domain.position.Position;
+import chess.exception.InvalidChessArgumentException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ class SquareTest {
         MoveOrder moveOrder = mockBoard.createMoveOrder(Position.of("c3"), Position.of("c4"));
 
         assertThatThrownBy(() -> c3.move(moveOrder))
-                .isInstanceOf(NoSuchElementException.class)
+                .isInstanceOf(InvalidChessArgumentException.class)
                 .hasMessage("해당 위치엔 말이 없습니다.");
     }
 }

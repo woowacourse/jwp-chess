@@ -4,7 +4,10 @@ import chess.controller.web.dto.*;
 import chess.domain.manager.ChessGameManager;
 import chess.domain.manager.ChessGameManagerBundle;
 import chess.service.ChessService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 public class ChessController {
@@ -14,31 +17,27 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/games")
-    public RunningGameResponseDto getGames() {
-        ChessGameManagerBundle runningGames = chessService.findRunningGames();
-        return new RunningGameResponseDto(runningGames.getIdAndNextTurn());
-    }
-
-    @GetMapping("/game/start")
-    public ChessGameResponseDto gameStart() {
-        return new ChessGameResponseDto(chessService.start());
-    }
-
     @GetMapping("/games/{id:[\\d]+}/score")
-    public ScoreResponseDto getScore(@PathVariable long id) {
-        return new ScoreResponseDto(chessService.getStatistics(id));
+    public ResponseEntity<ScoreResponseDto> getScore(@PathVariable long id) {
+        return ResponseEntity.ok(new ScoreResponseDto(chessService.getStatistics(id)));
     }
 
     @GetMapping("/games/{id:[\\d]+}/load")
-    public ChessGameResponseDto loadGame(@PathVariable long id) {
+    public ResponseEntity<ChessGameResponseDto> loadGame(@PathVariable long id) {
         ChessGameManager load = chessService.findById(id);
-        return new ChessGameResponseDto(load);
+        return ResponseEntity.ok(new ChessGameResponseDto(load));
     }
 
+    @GetMapping("/games/{id:[\\d]+}/reset")
+    public ResponseEntity<ChessGameResponseDto> resetGame(@PathVariable long id){
+        ChessGameManager resetGame = chessService.reset(id);
+        return ResponseEntity.ok(new ChessGameResponseDto(resetGame));
+    }
+
+
     @PostMapping("/games/{id:[\\d]+}/move")
-    public MoveResponseDto movePiece(@PathVariable long id, @RequestBody MoveRequestDto moveMessage) {
+    public ResponseEntity<MoveResponseDto> movePiece(@PathVariable long id, @RequestBody MoveRequestDto moveMessage) {
         chessService.move(id, moveMessage);
-        return new MoveResponseDto(chessService.isEnd(id), chessService.nextColor(id));
+        return ResponseEntity.ok(new MoveResponseDto(chessService.isEnd(id), chessService.nextColor(id)));
     }
 }

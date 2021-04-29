@@ -15,7 +15,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import static chess.domain.piece.attribute.Color.BLACK;
@@ -23,7 +22,6 @@ import static chess.domain.piece.attribute.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
 class ChessServiceImplTest {
     private static final long DEFAULT_CHESS_GAME_ID = 1;
@@ -37,14 +35,14 @@ class ChessServiceImplTest {
     @BeforeEach
     void beforeEach() {
         String sample = "RKBQKBKRPPPPPPPP................................pppppppprkbqkbkr"; // move a2 a3 한 번 진행
-        chessGame = new ChessGame(DEFAULT_CHESS_GAME_ID, WHITE, true, sample);
+        chessGame = new ChessGame(DEFAULT_CHESS_GAME_ID, WHITE, true, sample, "temp");
         sampleGame = ChessGameManagerFactory.loadingGame(chessGame);
     }
 
     @Test
     @DisplayName("체스 게임을 시작한다.")
     void start() {
-        ChessGameManager chessGameManager = chessService.start();
+        ChessGameManager chessGameManager = chessService.start("");
 
         assertThat(chessGameManager.getId()).isEqualTo(2);
     }

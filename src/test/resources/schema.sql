@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS CHESSGAME (
   `running` TINYINT NOT NULL,
   `pieces` VARCHAR(192) NOT NULL,
   `next_turn` VARCHAR(15) NOT NULL,
+  `title` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) );

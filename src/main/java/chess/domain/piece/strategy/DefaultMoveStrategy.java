@@ -4,6 +4,8 @@ import chess.domain.board.Square;
 import chess.domain.order.MoveOrder;
 import chess.domain.piece.attribute.Color;
 import chess.domain.position.Direction;
+import chess.exception.InvalidChessArgumentException;
+import chess.exception.InvalidMoveException;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ public abstract class DefaultMoveStrategy implements MoveStrategy {
     @Override
     public boolean canMove(MoveOrder moveOrder) {
         if (!isProperDirection(moveOrder.getDirection())) {
-            throw new IllegalArgumentException("움직일 수 없는 방향입니다.");
+            throw new InvalidMoveException("움직일 수 없는 방향입니다.");
         }
 
         validateBlockedRoute(moveOrder.getRoute());
@@ -37,7 +39,7 @@ public abstract class DefaultMoveStrategy implements MoveStrategy {
                 .anyMatch(Square::hasPiece);
 
         if (blocked) {
-            throw new IllegalArgumentException("중간에 말이 있어 행마할 수 없습니다.");
+            throw new InvalidMoveException("중간에 말이 있어 행마할 수 없습니다.");
         }
     }
 
@@ -46,7 +48,7 @@ public abstract class DefaultMoveStrategy implements MoveStrategy {
         Color toColor = moveOrder.getTo().getPiece().getColor();
 
         if (fromColor == toColor) {
-            throw new IllegalArgumentException("동일한 진영의 말이 있어서 행마할 수 없습니다.");
+            throw new InvalidMoveException("동일한 진영의 말이 있어서 행마할 수 없습니다.");
         }
     }
 }

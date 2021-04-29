@@ -8,13 +8,11 @@ import chess.domain.position.Position;
 import chess.domain.statistics.ChessGameStatistics;
 
 public interface ChessService {
-    ChessGameManager start();
+    ChessGameManager start(String title);
 
     ChessGameManager end(long gameId);
 
     ChessGameManagerBundle findRunningGames();
-
-    boolean isKindDead(long gameId);
 
     ChessGameManager load(long gameId);
 
@@ -29,4 +27,8 @@ public interface ChessService {
     Color nextColor(long gameId);
 
     ChessGameStatistics getStatistics(long gameId);
+
+    ChessGameManager reset(long gameId);
+
+    void delete(long id);
 }

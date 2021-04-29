@@ -2,6 +2,7 @@ package chess.domain.converter;
 
 import chess.domain.piece.*;
 import chess.domain.piece.attribute.Color;
+import chess.exception.InvalidChessArgumentException;
 
 import java.util.Arrays;
 import java.util.function.Function;
@@ -31,7 +32,7 @@ public enum PieceConverter {
         PieceConverter pieceConverter = Arrays.stream(values())
                 .filter(mapper -> mapper.name.equalsIgnoreCase(name))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 문자의 piece는 없습니다."));
+                .orElseThrow(() -> new InvalidChessArgumentException("해당 문자의 piece는 없습니다."));
         return pieceConverter.builder.apply(color);
     }
 }

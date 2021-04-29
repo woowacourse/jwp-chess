@@ -2,7 +2,6 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -34,14 +33,14 @@ public class GameServiceTest {
     @DisplayName("게임 load 잘 되는지 확인")
     void loadGame() {
         ChessGame chessGame = new ChessGame(1L, Color.WHITE, false, new ChessBoard(), "test");
-        given(chessRepository.loadGame(anyLong())).willReturn(chessGame);
+        given(chessRepository.loadGame(1L)).willReturn(chessGame);
         assertThat(gameService.loadGame(1L)).isEqualTo(chessGame);
     }
 
     @Test
     @DisplayName("기물 이동할 때 load 와 save 확인")
     void move() {
-        given(chessRepository.loadGame(anyLong())).willReturn(
+        given(chessRepository.loadGame(1L)).willReturn(
             new ChessGame(1L, Color.WHITE, false, new ChessBoard(), "test")
         );
 
@@ -62,7 +61,7 @@ public class GameServiceTest {
         chessGame.move(Position.of("b5"), Position.of("b4"));
         chessGame.move(Position.of("f6"), Position.of("e8"));
 
-        given(chessRepository.loadGame(anyLong())).willReturn(
+        given(chessRepository.loadGame(1L)).willReturn(
             chessGame
         );
         gameService.move(1L, new MoveDto("a7", "a6"));

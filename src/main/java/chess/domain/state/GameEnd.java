@@ -1,6 +1,6 @@
 package chess.domain.state;
 
-import chess.exception.InvalidStateException;
+import chess.domain.exception.InvalidStateException;
 
 public class GameEnd implements State {
     public GameEnd() {
@@ -10,11 +10,6 @@ public class GameEnd implements State {
     @Override
     public State start() {
         return new Running();
-    }
-
-    @Override
-    public State end() {
-        throw new InvalidStateException("종료할 수 없습니다. - 실행중인 게임이 없습니다.");
     }
 
     @Override

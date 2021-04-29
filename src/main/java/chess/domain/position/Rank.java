@@ -1,6 +1,6 @@
 package chess.domain.position;
 
-import chess.exception.DomainException;
+import chess.domain.exception.DomainException;
 
 import java.util.*;
 import java.util.function.Function;
@@ -51,16 +51,6 @@ public enum Rank {
                 .skip(BLANK_LINE_ROW_PIVOT)
                 .limit(NUMBER_OF_BLANK_RANKS)
                 .collect(Collectors.toList());
-    }
-
-    public static List<Rank> asList() {
-        return Arrays.asList(values());
-    }
-
-    public static List<Rank> asListInReverseOrder() {
-        List<Rank> ranks = asList();
-        Collections.reverse(ranks);
-        return ranks;
     }
 
     public String getLetter() {

@@ -1,9 +1,9 @@
-package chess.exception;
+package chess.domain.exception;
 
-import org.springframework.http.HttpStatus;
+import chess.exception.HandledException;
 
 public class InvalidStateException extends HandledException {
     public InvalidStateException(String message) {
-        super(message, HttpStatus.BAD_REQUEST);
+        super(message);
     }
 }

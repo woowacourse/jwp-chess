@@ -6,13 +6,13 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 
 public interface PieceRepository {
-    ChessBoard findChessBoardByGameId(int gameId);
+    ChessBoard findChessBoardByGameId(long gameId);
 
-    void savePieces(ChessGameManager chessGameManager, int gameId);
+    void savePieces(ChessGameManager chessGameManager, long gameId);
 
-    void savePiece(Piece piece, Position position, int gameId);
+    Piece findPieceByPosition(Position position, long gameId);
 
-    Piece findPieceByPosition(Position position, int gameId);
+    void deletePieceByPosition(Position position, long gameId);
 
-    void deletePieceByPosition(Position position, int gameId);
+    void updatePiecePosition(Position fromPosition, Position toPosition, long gameId);
 }

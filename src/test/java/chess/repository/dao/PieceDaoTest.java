@@ -2,7 +2,6 @@ package chess.repository.dao;
 
 import chess.domain.ChessGameManager;
 import chess.domain.board.ChessBoard;
-import chess.domain.piece.Color;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
@@ -43,51 +42,35 @@ class PieceDaoTest {
     @DisplayName("진행된 게임에서 체스 보드를 읽어온다.")
     void findChessBoardByGameIdTest() {
         // given
-        int gameId = gameRepository.save(chessGameManager);
+        long gameId = gameRepository.save(chessGameManager, "test title");
 
         // when
         pieceDao.savePieces(chessGameManager, gameId);
         ChessBoard chessBoardFound = this.pieceDao.findChessBoardByGameId(gameId);
 
         // then
-        assertThat(chessGameManager.getBoard()).isEqualTo(chessBoardFound);
+        assertThat(chessBoardFound).isEqualTo(chessGameManager.getBoard());
     }
 
     @Test
     @DisplayName("진행되고 있는 게임의 모든 기물을 저장한다.")
     void savePiecesTest() {
         // given
-        int gameId = gameRepository.save(chessGameManager);
+        long gameId = gameRepository.save(chessGameManager, "test title");
 
         // when
         pieceDao.savePieces(chessGameManager, gameId);
 
         //then
-        Integer rowFound = this.jdbcTemplate.queryForObject("SELECT count(*) FROM piece WHERE game_id = " + Integer.toString(gameId), Integer.class);
+        Integer rowFound = this.jdbcTemplate.queryForObject("SELECT count(*) FROM piece WHERE game_id = " + Long.toString(gameId), Integer.class);
         assertThat(rowFound).isEqualTo(32);
-    }
-
-    @Test
-    @DisplayName("기물을 지정된 위치에 저장한다.")
-    void savePieceByPositionTest() {
-        // given
-        int gameId = gameRepository.save(chessGameManager); // to foreignKey
-        Piece piece = new Pawn(Color.WHITE);
-        Position position = Position.of("a4");
-
-        // when
-        pieceDao.savePiece(piece, position, gameId);
-        Piece pieceFound = pieceDao.findPieceByPosition(position, gameId);
-
-        // then
-        assertThat(piece).isEqualTo(pieceFound);
     }
 
     @Test
     @DisplayName("지정된 위치의 기물을 읽어온다.")
     void findPieceByPositionTest() {
         // given
-        int gameId = gameRepository.save(chessGameManager);
+        long gameId = gameRepository.save(chessGameManager, "test title");
         pieceDao.savePieces(chessGameManager, gameId);
         Position position = Position.of("a2");  // White pawn
 
@@ -102,7 +85,7 @@ class PieceDaoTest {
     @DisplayName("지정된 위치의 기물을 삭제한다.")
     void deletePieceByPositionTest() {
         // given
-        int gameId = gameRepository.save(chessGameManager); // to foreignKey
+        long gameId = gameRepository.save(chessGameManager, "test title"); // to foreignKey
         Position position = Position.of("a2");
 
         // when

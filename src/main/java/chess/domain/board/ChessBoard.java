@@ -9,8 +9,9 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.position.*;
 import chess.domain.statistics.ScoreTable;
-import chess.exception.InvalidMoveStrategyException;
-import chess.exception.NullObjectSelectionException;
+import chess.domain.exception.InvalidMoveStrategyException;
+import chess.domain.exception.NullObjectSelectionException;
+import chess.domain.exception.SamePositionChosenException;
 
 import java.util.*;
 import java.util.function.Function;
@@ -44,7 +45,8 @@ public class ChessBoard {
         return this.board.get(position).isNotBlank();
     }
 
-    public MoveResult move(MoveRoute moveRoute) {
+    public MoveResult move(Position from, Position to) {
+        MoveRoute moveRoute = createMoveRoute(from, to);
         Position fromPosition = moveRoute.getFromPosition();
         Position toPosition = moveRoute.getToPosition();
         Piece pieceToMove = this.getPieceByPosition(moveRoute.getFromPosition());
@@ -70,7 +72,8 @@ public class ChessBoard {
         }
     }
 
-    public MoveRoute createMoveRoute(Position from, Position to) {
+    private MoveRoute createMoveRoute(Position from, Position to) {
+        validateDifferentPositionHasBeenChosen(from, to);
         Direction direction = Direction.of(from, to);
         List<RouteEntry> route = new ArrayList<>();
 
@@ -90,6 +93,12 @@ public class ChessBoard {
         route.add(currentRouteEntry);
 
         return new MoveRoute(route);
+    }
+
+    private void validateDifferentPositionHasBeenChosen(Position fromPosition, Position toPosition) {
+        if (fromPosition.equals(toPosition)) {
+            throw new SamePositionChosenException("출발 좌표와 목적 좌표가 같습니다.");
+        }
     }
 
     public Map<Color, Double> getScoreMap() {

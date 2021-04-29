@@ -20,7 +20,7 @@ class GameDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private GameDao gameDao;
-    private ChessGameManager chessGameManager = new ChessGameManager();
+    private ChessGameManager chessGameManager;
 
     @BeforeEach
     void setUp() {
@@ -33,10 +33,10 @@ class GameDaoTest {
     @DisplayName("게임을 저장하고 고유 값을 얻어온다.")
     void saveTest() {
         // when
-        int gameId = gameDao.save(chessGameManager);
+        long gameId = gameDao.save(chessGameManager, "test title");
 
         // then
-        assertThat(gameId).isInstanceOf(Integer.class);
+        assertThat(gameId).isInstanceOf(Long.class);
     }
 
     @Test
@@ -46,18 +46,18 @@ class GameDaoTest {
         Color currentTurn = chessGameManager.getCurrentTurnColor();
 
         // when
-        int gameId = gameDao.save(chessGameManager);
+        long gameId = gameDao.save(chessGameManager, "test title");
         Color currentTurnFound = gameDao.findCurrentTurnByGameId(gameId);
 
         // then
-        assertThat(currentTurn).isEqualTo(currentTurnFound);
+        assertThat(currentTurnFound).isEqualTo(currentTurn);
     }
 
     @Test
     @DisplayName("순서를 업데이트한다.")
     void updateTurnByGameIdTest() {
         // given
-        int gameId = gameDao.save(chessGameManager);
+        long gameId = gameDao.save(chessGameManager, "test title");
         chessGameManager.move(Position.of("a2"), Position.of("a4"));
         Color currentTurn = chessGameManager.getCurrentTurnColor();
 
@@ -66,21 +66,20 @@ class GameDaoTest {
         Color currentTurnFound = gameDao.findCurrentTurnByGameId(gameId);
 
         // then
-        assertThat(currentTurn).isEqualTo(currentTurnFound);
+        assertThat(currentTurnFound).isEqualTo(currentTurn);
     }
 
     @Test
     @DisplayName("게임을 삭제한다.")
     void deleteTest() {
         // given
-        int gameId = gameDao.save(chessGameManager); // to foreignKey
-        Position position = Position.of("a2");
+        long gameId = gameDao.save(chessGameManager, "test title"); // to foreignKey
 
         // when
         gameDao.delete(gameId);
 
         // then
-        Integer rowFound = this.jdbcTemplate.queryForObject("SELECT count(*) FROM game WHERE game_id = " + Integer.toString(gameId), Integer.class);
+        Integer rowFound = this.jdbcTemplate.queryForObject("SELECT count(*) FROM game WHERE game_id = " + gameId, Integer.class);
         assertThat(rowFound).isEqualTo(0);
     }
 

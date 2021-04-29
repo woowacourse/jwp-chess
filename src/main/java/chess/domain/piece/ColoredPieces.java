@@ -1,6 +1,6 @@
 package chess.domain.piece;
 
-import chess.exception.DomainException;
+import chess.domain.exception.DomainException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -50,14 +50,6 @@ public class ColoredPieces {
 
     public boolean isKingAlive() {
         return pieces.contains(new King(color));
-    }
-
-    public int size() {
-        return pieces.size();
-    }
-
-    public boolean contains(Piece Piece) {
-        return pieces.contains(Piece);
     }
 
     public Color getColor() {

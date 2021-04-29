@@ -10,10 +10,10 @@ import chess.domain.position.Position;
 import chess.domain.state.*;
 import chess.domain.statistics.ChessGameStatistics;
 import chess.domain.statistics.MatchResult;
-import chess.exception.DomainException;
-import chess.exception.InvalidStateException;
-import chess.exception.InvalidTurnException;
-import chess.exception.NullObjectSelectionException;
+import chess.domain.exception.DomainException;
+import chess.domain.exception.InvalidStateException;
+import chess.domain.exception.InvalidTurnException;
+import chess.domain.exception.NullObjectSelectionException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,17 +57,13 @@ public class ChessGameManager {
         this.state = state;
     }
 
-    public void end() {
-        updateState(this.state.end());
-    }
-
     public void move(Position from, Position to) {
         validateProperPieceAtFromPosition(from);
         if (this.state.isNotRunning()) {
             throw new InvalidStateException("이동 명령을 수행할 수 없습니다. - 진행중인 게임이 없습니다.");
         }
 
-        MoveResult moveResult = chessBoard.move(chessBoard.createMoveRoute(from, to));
+        MoveResult moveResult = chessBoard.move(from, to);
         if (moveResult.isCaptured()) {
             ColoredPieces opposite = findByColor(currentTurnColor.opposite());
             opposite.remove(moveResult.getCapturedPiece());
@@ -130,12 +126,8 @@ public class ChessGameManager {
         return this.chessBoard;
     }
 
-    public boolean hasGame() {
-        return !(this.state instanceof EndWithoutGame || this.state instanceof InitialState);
-    }
-
     public boolean isEnd() {
-        return this.state instanceof GameEnd || this.state instanceof EndWithoutGame;
+        return this.state instanceof GameEnd;
     }
 
     public Color getCurrentTurnColor() {

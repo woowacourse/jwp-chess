@@ -2,17 +2,18 @@ package chess.repository;
 
 import chess.domain.ChessGameManager;
 import chess.domain.piece.Color;
+import chess.dto.GameEntryDto;
 
 import java.util.List;
 
 public interface GameRepository {
-    int save(ChessGameManager chessGameManager);
+    long save(ChessGameManager chessGameManager, String title);
 
-    Color findCurrentTurnByGameId(int gameId);
+    Color findCurrentTurnByGameId(long gameId);
 
-    void updateTurnByGameId(ChessGameManager chessGameManager, int gameId);
+    void updateTurnByGameId(ChessGameManager chessGameManager, long gameId);
 
-    List<Integer> findAllGamesId();
+    List<GameEntryDto> findAllGames();
 
-    void delete(int gameId);
+    void delete(long gameId);
 }

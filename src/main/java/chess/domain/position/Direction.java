@@ -1,7 +1,7 @@
 package chess.domain.position;
 
 import chess.domain.piece.Color;
-import chess.exception.NoSuchDirectionException;
+import chess.domain.exception.NoSuchDirectionException;
 
 import java.util.Arrays;
 import java.util.List;

@@ -3,7 +3,6 @@ package chess.service;
 import chess.domain.ChessGameManager;
 import chess.domain.board.ChessBoard;
 import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.GameListDto;
 import chess.dto.NewGameDto;
@@ -22,23 +21,24 @@ public class ChessGameService {
         this.pieceRepository = pieceRepository;
     }
 
-    public NewGameDto createNewGame() {
+    public NewGameDto createNewGame(String title) {
         ChessGameManager chessGameManager = new ChessGameManager();
         chessGameManager.start();
-        int gameId = gameRepository.save(chessGameManager);
+        long gameId = gameRepository.save(chessGameManager, title);
         pieceRepository.savePieces(chessGameManager, gameId);
         return NewGameDto.from(chessGameManager, gameId);
     }
 
-    public RunningGameDto move(int gameId, Position from, Position to) {
-        ChessGameManager chessGameManager = loadChessGameByGameId(gameId);
+    public RunningGameDto move(long gameId, String from, String to) {
+        ChessGameManager chessGameManager = loadChessGameManager(gameId);
 
-        chessGameManager.move(from, to);
+        Position fromPosition = Position.of(from);
+        Position toPosition = Position.of(to);
 
-        Piece pieceToMove = pieceRepository.findPieceByPosition(from, gameId);
-        pieceRepository.deletePieceByPosition(to, gameId);
-        pieceRepository.savePiece(pieceToMove, to, gameId);
-        pieceRepository.deletePieceByPosition(from, gameId);
+        chessGameManager.move(fromPosition, toPosition);
+
+        pieceRepository.deletePieceByPosition(toPosition, gameId);
+        pieceRepository.updatePiecePosition(fromPosition, toPosition, gameId);
 
         gameRepository.updateTurnByGameId(chessGameManager, gameId);
         if (chessGameManager.isEnd()) {
@@ -48,7 +48,7 @@ public class ChessGameService {
         return RunningGameDto.from(chessGameManager);
     }
 
-    public ChessGameManager loadChessGameByGameId(int gameId) {
+    private ChessGameManager loadChessGameManager(long gameId) {
         ChessBoard chessBoard = pieceRepository.findChessBoardByGameId(gameId);
         Color currentTurn = gameRepository.findCurrentTurnByGameId(gameId);
 
@@ -57,7 +57,11 @@ public class ChessGameService {
         return chessGameManager;
     }
 
+    public RunningGameDto loadChessGame(long gameId) {
+        return RunningGameDto.from(loadChessGameManager(gameId));
+    }
+
     public GameListDto loadAllGames() {
-        return GameListDto.from(gameRepository.findAllGamesId());
+        return GameListDto.from(gameRepository.findAllGames());
     }
 }

@@ -23,6 +23,7 @@ import static chess.domain.piece.Color.BLACK;
 import static chess.domain.piece.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,7 +55,7 @@ class GameServiceTest {
         int newGameId = 1;
 
         // when
-        given(gameDao.saveGame(savedGameDto)).willReturn(newGameId);
+        given(gameDao.saveGame(any(SavedGameDto.class))).willReturn(newGameId);
 
         // then
         CommonDto<NewGameDto> commonDto = gameService.saveNewGame();

@@ -2,8 +2,17 @@ package chess.webdao;
 
 import chess.webdto.dao.TurnDto;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * CREATE TABLE room
@@ -34,9 +43,20 @@ public class RoomDao {
         return turnDto;
     };
 
+    private RowMapper<RoomDto> roomRowMapper = (resultSet, rowNum) -> {
+        RoomDto roomDto = new RoomDto();
+
+        roomDto.setRoomId(resultSet.getLong("room_id"));
+        roomDto.setTurn(resultSet.getString("turn"));
+        roomDto.setIsPlaying(resultSet.getBoolean("is_playing"));
+        roomDto.setName(resultSet.getString("name"));
+
+        return roomDto;
+    };
+
     public void deleteRoomByRoomId(long roomId) {
-        final String sql = "DELETE FROM room";
-        this.jdbcTemplate.update(sql);
+        final String sql = "DELETE FROM room WHERE room_id = (?)";
+        this.jdbcTemplate.update(sql, roomId);
     }
 
     public void changeTurnByRoomId(String turn, boolean isPlaying, long roomId) {
@@ -49,10 +69,23 @@ public class RoomDao {
         return this.jdbcTemplate.queryForObject(sql, turnMapper, roomId);
     }
 
-    public long createRoom(String currentTurn, boolean isPlaying) {
-        String sql = "INSERT INTO room (turn, is_playing, name, room_id) VALUES (?, ?, ?, ?)";
-        String name = "한글도 되나";
-        long roomId = 1;
-        return this.jdbcTemplate.update(sql, currentTurn, isPlaying, name, roomId);
+    public List<RoomDto> selectAllRooms(){
+        final String sql = "SELECT * FROM room";
+        return this.jdbcTemplate.query(sql, roomRowMapper);
+    }
+
+    // return RoomId
+    public long createRoom1(String currentTurn, boolean isPlaying, String roomName) {
+        String sql = "INSERT INTO room (turn, is_playing, name) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        this.jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"room_id"});
+            ps.setString(1, currentTurn);
+            ps.setBoolean(2, isPlaying);
+            ps.setString(3, roomName);
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 }

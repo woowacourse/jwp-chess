@@ -1,10 +1,6 @@
 package chess.webdao;
 
-import chess.domain.Position;
-import chess.domain.piece.Queen;
-import chess.domain.piece.Rook;
-import chess.webdto.dao.BoardInfosDto;
-import chess.webdto.dao.TeamInfoDto;
+import chess.webdto.dao.TurnDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,22 +9,20 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
 
 @JdbcTest
 @ActiveProfiles("test")
-class MysqlChessDaoTest {
-    private MysqlChessDao mysqlChessDao;
+class RoomDaoTest {
+    private RoomDao roomDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        this.mysqlChessDao = new MysqlChessDao(jdbcTemplate);
+        this.roomDao = new RoomDao(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS board;\n" +
                 "DROP TABLE IF EXISTS room;\n" +
                 "CREATE TABLE room(" +
@@ -50,38 +44,58 @@ class MysqlChessDaoTest {
                 "    PRIMARY KEY (board_id),\n" +
                 "    FOREIGN KEY (room_id) REFERENCES room (room_id)\n" +
                 ");");
-        jdbcTemplate.execute("INSERT INTO room (turn, is_playing, name) VALUES ('white', true, 'sample' ) ");
-
     }
 
     @Test
-    @DisplayName("보드 만들기 - 만들기 return void")
-    void createBoard() {
-        // given
-        TeamInfoDto teamInfoDto = new TeamInfoDto("white", Position.of("a1"), new Rook(), 1L);
+    @DisplayName("방만들기 - 만들어진 roomId 확인")
+    void createRoom() {
+        roomDao.createRoom1("white", true, "sample");
+        long secondRoomId = roomDao.createRoom1("white", true, "sample");
 
-        // when
-        mysqlChessDao.createBoard(teamInfoDto);
+        assertThat(secondRoomId).isEqualTo(2L);
     }
-
 
     @Test
-    @DisplayName("조회 -  해당 방번호로 되어있는 보드 정보의 리스트 크기")
-    void selectBoardInfosByRoomId() {
-        // given
-        List<TeamInfoDto> teams = new ArrayList<>();
-        teams.add(new TeamInfoDto("white", Position.of("a2"), new Queen(), 1L));
-        teams.add(new TeamInfoDto("black", Position.of("b3"), new Rook(), 1L));
+    @DisplayName("조회 - 방번호로 현재 턴")
+    void selectTurnByRoomId() {
+        long roomId = roomDao.createRoom1("black", true, "sample");
 
-        for (TeamInfoDto team : teams) {
-            mysqlChessDao.createBoard(team);
-        }
+        TurnDto turnDto = roomDao.selectTurnByRoomId(roomId);
 
-        // when
-        List<BoardInfosDto> boardInfosDtos = mysqlChessDao.selectBoardInfosByRoomId(1L);
-
-        // then
-        assertThat(boardInfosDtos).hasSize(2);
+        assertThat(turnDto.getTurn()).isEqualTo("black");
     }
 
+    @Test
+    @DisplayName("업데이트 - room 턴정보 변경")
+    void changeTurnByRoomId() {
+        long roomId = roomDao.createRoom1("white", true, "sample");
+
+        TurnDto before = roomDao.selectTurnByRoomId(roomId);
+        assertThat(before.getTurn()).isEqualTo("white");
+
+        roomDao.changeTurnByRoomId("black", true, roomId);
+
+        TurnDto after = roomDao.selectTurnByRoomId(roomId);
+        assertThat(after.getTurn()).isEqualTo("black");
+    }
+
+    @Test
+    @DisplayName("삭제 - roomId로 삭제")
+    void deleteRoomByRoomId(){
+        long roomId1 = roomDao.createRoom1("white", true, "sample");
+        long roomId2 = roomDao.createRoom1("white", true, "sample");
+
+        roomDao.deleteRoomByRoomId(roomId2);
+
+        assertThat(roomDao.selectAllRooms()).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("모든 방 조회")
+    void name() {
+        roomDao.createRoom1("white", true, "sample");
+        roomDao.createRoom1("white", true, "sample");
+
+        assertThat(roomDao.selectAllRooms()).hasSize(2);
+    }
 }

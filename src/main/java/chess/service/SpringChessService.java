@@ -32,16 +32,16 @@ public class SpringChessService {
 
     @Transactional
     public ChessGameDto startNewGame() {
-        chessDao.deleteBoardByRoomId(1);
-        roomDao.deleteRoomByRoomId(1);
+       // chessDao.deleteBoardByRoomId(1);
+       // roomDao.deleteRoomByRoomId(1);
 
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
-        roomDao.createRoom(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying());
+        long roomId = roomDao.createRoom1(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying(), "sample");
 
-        long roomId = 1;
         insertBoardInfos(chessGame, roomId);
         return new ChessGameDto(chessGame);
     }
+
 
     private void insertBoardInfos(ChessGame chessGame, long roomId) {
         Map<Position, Piece> whites = chessGame.currentWhitePiecePosition();

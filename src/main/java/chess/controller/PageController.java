@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PageController {
 
-    //todo: 페이지 보여주기
-    @GetMapping("/game")
+    @GetMapping("/rooms/{roomId}")
     public String boardPage(){
-        return "game";
+        return "board";
     }
 }

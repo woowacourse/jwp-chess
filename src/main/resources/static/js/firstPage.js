@@ -16,8 +16,16 @@ function loadFirstPage() {
     player2.style.display = "none";
 }
 
+function getRoomId(){
+    const path = window.location.pathname;
+    console.log(path);
+    const roomId = path.split('/')[2];
+    console.log(roomId);
+    return roomId;
+}
+
 function startNewGame() {
-    apiService.startGame(1)
+    apiService.startGame(getRoomId())
         .then(data => {
             /*
             if (data.availability === "unavailable") {
@@ -56,7 +64,7 @@ function forceNewGame() {
 }
 */
 function loadPrevGame() {
-    apiService.loadPrevGame(1)
+    apiService.loadPrevGame(getRoomId())
         .then(data => {
             if (data.status === 500) {
                 alert("저장된 게임이 없어요.")

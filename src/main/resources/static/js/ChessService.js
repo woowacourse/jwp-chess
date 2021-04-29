@@ -35,7 +35,7 @@ export default class ChessService {
     }
 
     async loadPrevGame(roomId) {
-        const response = await fetch(`/rooms/${this.baseUrl}/${roomId}/previous`);
+        const response = await fetch(`${this.baseUrl}/rooms/${roomId}/previous`);
         return response.json();
     }
 

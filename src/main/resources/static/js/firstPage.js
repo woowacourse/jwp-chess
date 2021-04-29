@@ -16,25 +16,15 @@ function loadFirstPage() {
     player2.style.display = "none";
 }
 
-function getRoomId(){
+function getRoomId() {
     const path = window.location.pathname;
-    console.log(path);
     const roomId = path.split('/')[2];
-    console.log(roomId);
     return roomId;
 }
 
 function startNewGame() {
     apiService.startGame(getRoomId())
         .then(data => {
-            /*
-            if (data.availability === "unavailable") {
-                let forceStart = confirm("현재 진행 중인 체스 게임이 있습니다. 삭제 후 새 게임을 시작하시겠습니까?");
-                if (forceStart) {
-                    forceNewGame();
-                }
-            }
-            */
             if (data.connection === "fail") {
                 alert("서버와의 통신에 실패했습니다.");
             } else {
@@ -46,23 +36,6 @@ function startNewGame() {
         })
 }
 
-/*
-function forceNewGame() {
-    fetch("/forceNewGame")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-            return response.json();
-        })
-        .then(data => {
-            initializeChessBoard(data);
-        })
-        .catch(error => {
-            alert("서버와의 통신이 실패하였습니다.");
-        })
-}
-*/
 function loadPrevGame() {
     apiService.loadPrevGame(getRoomId())
         .then(data => {

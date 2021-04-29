@@ -32,6 +32,7 @@ public class ChessBoardService {
 
     @Transactional
     public ChessGameDto startNewGame(long roomId) {
+        chessDao.deleteBoardByRoomId(roomId);
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
 
         insertBoardInfos(chessGame, roomId);

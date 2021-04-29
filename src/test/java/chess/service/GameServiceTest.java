@@ -40,6 +40,7 @@ class GameServiceTest {
 
 
     private ChessGameManager chessGameManager;
+
     @BeforeEach
     void setUp() {
         chessGameManager = new ChessGameManager();
@@ -49,9 +50,6 @@ class GameServiceTest {
     @Test
     void 새로운_게임을_저장한다() {
         // given
-        SavedGameDto savedGameDto = new SavedGameDto(
-                ChessBoardDto.from(chessGameManager.getBoard()),
-                chessGameManager.getCurrentTurnColor().name());
         int newGameId = 1;
 
         // when

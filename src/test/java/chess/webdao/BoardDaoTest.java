@@ -20,15 +20,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @ActiveProfiles("test")
-class MysqlChessDaoTest {
-    private MysqlChessDao mysqlChessDao;
+class BoardDaoTest {
+    private BoardDao boardDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        this.mysqlChessDao = new MysqlChessDao(jdbcTemplate);
+        this.boardDao = new BoardDao(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS board;\n" +
                 "DROP TABLE IF EXISTS room;\n" +
                 "CREATE TABLE room(" +
@@ -61,7 +61,7 @@ class MysqlChessDaoTest {
         TeamInfoDto teamInfoDto = new TeamInfoDto("white", Position.of("a1"), new Rook(), 1L);
 
         // when
-        mysqlChessDao.createBoard(teamInfoDto);
+        boardDao.createBoard(teamInfoDto);
     }
 
 
@@ -74,14 +74,27 @@ class MysqlChessDaoTest {
         teams.add(new TeamInfoDto("black", Position.of("b3"), new Rook(), 1L));
 
         for (TeamInfoDto team : teams) {
-            mysqlChessDao.createBoard(team);
+            boardDao.createBoard(team);
         }
 
         // when
-        List<BoardInfosDto> boardInfosDtos = mysqlChessDao.selectBoardInfosByRoomId(1L);
+        List<BoardInfosDto> boardInfosDtos = boardDao.selectBoardInfosByRoomId(1L);
 
         // then
         assertThat(boardInfosDtos).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("보드판 삭제")
+    void deleteBoardByRoomId(){
+        // given
+        TeamInfoDto teamInfoDto = new TeamInfoDto("white", Position.of("a1"), new Rook(), 1L);
+        boardDao.createBoard(teamInfoDto);
+        assertThat(boardDao.selectBoardInfosByRoomId(1L)).hasSize(1);
+        // when
+        boardDao.deleteBoardByRoomId(1L);
+        //then
+        assertThat(boardDao.selectBoardInfosByRoomId(1L)).hasSize(0);
     }
 
 }

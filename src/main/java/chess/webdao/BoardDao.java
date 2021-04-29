@@ -23,7 +23,7 @@ import java.util.List;
  * );
  */
 @Repository
-public class MysqlChessDao {
+public class BoardDao {
     private JdbcTemplate jdbcTemplate;
 
 
@@ -38,7 +38,7 @@ public class MysqlChessDao {
         return boardInfosDto;
     };
 
-    public MysqlChessDao(JdbcTemplate jdbcTemplate) {
+    public BoardDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

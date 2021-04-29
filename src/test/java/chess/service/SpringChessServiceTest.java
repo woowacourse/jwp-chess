@@ -6,7 +6,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Rook;
 import chess.domain.team.PiecePositions;
 import chess.domain.team.Team;
-import chess.webdao.MysqlChessDao;
+import chess.webdao.BoardDao;
 import chess.webdao.RoomDao;
 import chess.webdto.dao.BoardInfosDto;
 import chess.webdto.dao.TurnDto;
@@ -32,7 +32,7 @@ class SpringChessServiceTest {
     @InjectMocks
     SpringChessService springChessService;
     @Mock
-    MysqlChessDao mysqlChessDao;
+    BoardDao boardDao;
     @Mock
     RoomDao roomDao;
     @BeforeAll
@@ -70,7 +70,7 @@ class SpringChessServiceTest {
         boardInfosDto.setPosition("a2");
         boardInfosDto.setTeam("white");
         boards.add(boardInfosDto);
-        given(mysqlChessDao.selectBoardInfosByRoomId(1L)).willReturn(boards);
+        given(boardDao.selectBoardInfosByRoomId(1L)).willReturn(boards);
 
         Map<Position, Piece> setting = new HashMap<>();
         setting.put(Position.of("a2"), new Rook());
@@ -108,7 +108,7 @@ class SpringChessServiceTest {
         boardInfosDto.setPosition("a2");
         boardInfosDto.setTeam("white");
         boards.add(boardInfosDto);
-        given(mysqlChessDao.selectBoardInfosByRoomId(1L)).willReturn(boards);
+        given(boardDao.selectBoardInfosByRoomId(1L)).willReturn(boards);
 
         // when
         ChessGameDto result = springChessService.loadPreviousGame();

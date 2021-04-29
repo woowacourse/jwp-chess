@@ -1,4 +1,4 @@
-package chess.webdao;
+package chess.webdto.dao;
 
 public class RoomDto {
     private long roomId;

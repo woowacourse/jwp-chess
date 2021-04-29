@@ -1,6 +1,5 @@
-package chess.controller.web;
+package chess.controller.room;
 
-import chess.controller.RoomRequestDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

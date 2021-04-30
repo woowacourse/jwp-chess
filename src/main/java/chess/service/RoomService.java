@@ -46,10 +46,6 @@ public class RoomService {
         return roomRepository.findRoomBy(roomId).getGameManager();
     }
 
-    public Room findRoomByUserId(long userId) {
-        return roomRepository.findRoomByUserId(userId);
-    }
-
     @Transactional
     public User findUserIfAbsentCreate(long roomId, String password) {
         Room room = roomRepository.findRoomBy(roomId);

@@ -17,32 +17,6 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public ChessGameManager start() {
-        return chessGameManagerRepository.add(chessGameManagerRepository.create());
-    }
-
-    @Override
-    public ChessGameManager end(long gameId) {
-        ChessGameManager endGameManager = findById(gameId).end();
-        update(endGameManager);
-        return endGameManager;
-    }
-
-    @Override
-    public ChessGameManagerBundle findRunningGames() {
-        return chessGameManagerRepository.findRunningGames();
-    }
-
-    @Override
-    public boolean isKindDead(long gameId) {
-        return findById(gameId).isKingDead();
-    }
-
-    private void update(ChessGameManager chessGameManager) {
-        chessGameManagerRepository.update(chessGameManager);
-    }
-
-    @Override
     public ChessGameManager load(long gameId) {
         return chessGameManagerRepository.findById(gameId);
     }

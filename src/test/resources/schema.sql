@@ -7,8 +7,7 @@ CREATE TABLE IF NOT EXISTS rooms(
     PRIMARY KEY (id)
 );
 
-CREATE TABLE if not exists pieces
-(
+CREATE TABLE IF NOT EXISTS pieces(
     id        INT(11) NOT NULL AUTO_INCREMENT,
     roomid    INT(11) NOT NULL,
     signature VARCHAR(45) NOT NULL,

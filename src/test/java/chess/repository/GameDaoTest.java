@@ -19,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class GameDaoTest {
 
     private static final int DEFAULT_HAS_GAME_USER_ID = 1;
-    private static final String DEFAULT_USER_NAME = "userDefault";
 
     @Autowired
     private GameDao gameDao;

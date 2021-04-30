@@ -21,7 +21,7 @@ public class PieceDao {
         jdbcTemplate.update(query, pieceName, piecePosition, roomId);
     }
 
-    public List<ChessResponseDto> showAllPieces(final Long roomId) {
+    public List<ChessResponseDto> findAllPieces(final Long roomId) {
         String query = "SELECT * FROM piece WHERE room_id=?";
         return jdbcTemplate.query(
                 query,

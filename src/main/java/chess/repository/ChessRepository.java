@@ -30,26 +30,26 @@ public class ChessRepository {
         }
     }
 
-    public Map<Long, String> showAllRooms() {
+    public Map<Long, String> findAllRooms() {
         Map<Long, String> rooms = new LinkedHashMap<>();
-        List<RoomResponseDto> roomResponsesDto = roomDao.showAllRooms();
+        List<RoomResponseDto> roomResponsesDto = roomDao.findAllRooms();
         for (RoomResponseDto roomResponseDto : roomResponsesDto) {
             rooms.put(roomResponseDto.getRoomId(), roomResponseDto.getRoomName());
         }
         return rooms;
     }
 
-    public Map<String, String> showAllPieces(final Long roomId) {
+    public Map<String, String> findAllPieces(final Long roomId) {
         Map<String, String> pieces = new LinkedHashMap<>();
-        List<ChessResponseDto> ChessResponsesDto = pieceDao.showAllPieces(roomId);
+        List<ChessResponseDto> ChessResponsesDto = pieceDao.findAllPieces(roomId);
         for (ChessResponseDto chessResponseDto : ChessResponsesDto) {
             pieces.put(chessResponseDto.getPiecePosition(), chessResponseDto.getPieceName());
         }
         return pieces;
     }
 
-    public String showCurrentTurn(final Long roomId) {
-        return roomDao.showCurrentTurn(roomId);
+    public String findCurrentTurn(final Long roomId) {
+        return roomDao.findCurrentTurn(roomId);
     }
 
     public void movePiece(final String source, final String target) {

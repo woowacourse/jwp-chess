@@ -31,7 +31,7 @@ public class RoomDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public List<RoomResponseDto> showAllRooms() {
+    public List<RoomResponseDto> findAllRooms() {
         List<RoomResponseDto> rooms;
         String query = "SELECT * FROM room";
         rooms = jdbcTemplate.query(
@@ -44,7 +44,7 @@ public class RoomDao {
         return rooms;
     }
 
-    public String showCurrentTurn(final Long roomId) {
+    public String findCurrentTurn(final Long roomId) {
         String query = "SELECT current_turn FROM room WHERE room_id=?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
     }

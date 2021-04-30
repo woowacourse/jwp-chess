@@ -52,7 +52,7 @@ public class ChessService {
     }
 
     public Map<Long, String> rooms() {
-        return chessRepository.showAllRooms();
+        return chessRepository.findAllRooms();
     }
 
     public boolean move(final String source, final String target, final Long roomId) {
@@ -81,11 +81,11 @@ public class ChessService {
     }
 
     private Map<String, String> pieces(final Long roomId) {
-        return chessRepository.showAllPieces(roomId);
+        return chessRepository.findAllPieces(roomId);
     }
 
     public String currentTurn(final Long roomId) {
-        return chessRepository.showCurrentTurn(roomId);
+        return chessRepository.findCurrentTurn(roomId);
     }
 
     public void movePiece(final String source, final String target) {

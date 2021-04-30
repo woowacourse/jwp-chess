@@ -1,9 +1,12 @@
 package chess.controller.room;
 
+import chess.mysql.room.RoomDao;
+import chess.service.RoomService;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -14,13 +17,16 @@ import static org.hamcrest.Matchers.nullValue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RoomRestControllerTest {
+    @Autowired
+    RoomService roomService;
+
     @LocalServerPort
     int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        createTestRoom();
+        roomService.createRoom("테스트", "1111");
     }
 
     @DisplayName("활성화 중인 게임을 가져올 수 있는지 확인")
@@ -71,14 +77,5 @@ class RoomRestControllerTest {
                 .body(new UserRequestDto(1, "4567"))
                 .when().post("/room/1/password")
                 .then().statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    private void createTestRoom() {
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new RoomRequestDto("테스트", "1111"))
-                .when().post("/room")
-                .then();
     }
 }

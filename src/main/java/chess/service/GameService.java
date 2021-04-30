@@ -8,7 +8,9 @@ import chess.domain.position.Position;
 import chess.dto.*;
 import chess.exception.NoSavedGameException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class GameService {
     private final GameDao gameDao;

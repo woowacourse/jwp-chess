@@ -87,7 +87,7 @@ const Room = function(roomName) {
       target: target
     }
 
-    fetch(`http://localhost:8080/api/room/${this.$roomName}/move`, {
+    fetch(`/api/room/${this.$roomName}/move`, {
       method: 'POST',
       headers: {'content-type': 'application/json'},
       body: JSON.stringify(payload)
@@ -108,7 +108,7 @@ const Room = function(roomName) {
 
   this.$endBtn.addEventListener('click', () => {
     if (confirm("게임을 끝내시겠습니까?")) {
-      fetch(`http://localhost:8080/api/room/${this.$roomName}/end`, {
+      fetch(`/api/room/${this.$roomName}/end`, {
         method: 'GET'
       })
       .then(response => response.json())
@@ -126,14 +126,14 @@ const Room = function(roomName) {
 
   this.$lobbyBtn.addEventListener('click', () => {
     if (confirm("로비로 돌아가시겠습니까?")) {
-      window.location.href = "http://localhost:8080/";
+      window.location.href = "/";
     }
   });
 
   this.constructor = function() {
     this.renderEmptyBoard();
     this.renderRoomName();
-    fetch(`http://localhost:8080/api/room/${roomName}`)
+    fetch(`/api/room/${roomName}`)
     .then(response => response.json())
     .then(result => {
       if (result.status === "ERROR" && result.message === "[ERROR] 아직 시작되지 않은 방입니다.") {

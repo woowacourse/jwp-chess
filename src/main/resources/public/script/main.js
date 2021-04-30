@@ -30,7 +30,7 @@ function enterNewGame() {
         data: jsonData,
         contentType: 'application/json',
         success: function (roomId) {
-            // alert(roomName + " 방 생성");
+            alert(roomName + " 방 생성");
             location.href = "/game/load/" + roomId;
         },
         error: function (e) {
@@ -137,26 +137,20 @@ function clickWhereToMove(eventTarget) {
 
 function submitMove(src, tar) {
     const roomId = document.getElementById("roomId").innerText;
+    const jsonData = JSON.stringify({source: src, target: tar});
 
-    const form = document.createElement("form");
-    form.setAttribute("charset", "UTF-8");
-    form.setAttribute("method", "Post");
-    form.setAttribute("action", "/game/move/" + roomId);
-
-    const sourceField = document.createElement("input");
-    sourceField.setAttribute("type", "hidden");
-    sourceField.setAttribute("name", "source");
-    sourceField.setAttribute("value", src);
-    form.appendChild(sourceField);
-
-    const targetField = document.createElement("input");
-    targetField.setAttribute("type", "hidden");
-    targetField.setAttribute("name", "target");
-    targetField.setAttribute("value", tar);
-    form.appendChild(targetField);
-
-    document.body.appendChild(form);
-    form.submit();
+    $.ajax({
+        url: "/game/move/" + roomId,
+        type: "POST",
+        data: jsonData,
+        contentType: "application/json",
+        success: function (result) {
+            location.href = result;
+        },
+        error: function (e) {
+            alert(e.responseText);
+        }
+    })
 }
 
 function checkIsValidTarget(target) {

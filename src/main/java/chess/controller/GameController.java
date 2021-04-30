@@ -36,15 +36,4 @@ public class GameController {
         model.addAttribute("winner", winnerName);
         return "winningResultPage";
     }
-
-    @PostMapping("/move/{roomId}")
-    public String move(@PathVariable final Long roomId,
-                       @RequestParam final Position source,
-                       @RequestParam final Position target) {
-        gameService.move(roomId, source, target);
-        if (gameService.isGameEnd(roomId)) {
-            return "redirect:/game/result/" + roomId;
-        }
-        return "redirect:/game/load/" + roomId;
-    }
 }

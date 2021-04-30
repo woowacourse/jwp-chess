@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.RoomListDto;
+import chess.dto.RoomsDto;
 import chess.dto.response.ScoreResponseDto;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
@@ -22,10 +22,10 @@ public class ChessController {
 
     @GetMapping("/rooms")
     public String rooms(final Model model) {
-        List<RoomListDto> roomsDto = new ArrayList<>();
+        List<RoomsDto> roomsDto = new ArrayList<>();
         Map<Long, String> rooms = chessService.rooms();
         for (Map.Entry<Long, String> roomEntry : rooms.entrySet()) {
-            roomsDto.add(new RoomListDto(roomEntry.getKey(), roomEntry.getValue()));
+            roomsDto.add(new RoomsDto(roomEntry.getKey(), roomEntry.getValue()));
         }
         model.addAttribute("rooms", roomsDto);
         return "rooms";

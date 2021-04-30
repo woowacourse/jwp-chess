@@ -1,10 +1,10 @@
 package chess.dto;
 
-public class RoomListDto {
+public class RoomsDto {
     private final Long roomId;
     private final String roomName;
 
-    public RoomListDto(final Long roomId, final String roomName) {
+    public RoomsDto(final Long roomId, final String roomName) {
         this.roomId = roomId;
         this.roomName = roomName;
     }

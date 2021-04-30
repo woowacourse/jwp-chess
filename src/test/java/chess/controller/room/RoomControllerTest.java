@@ -9,9 +9,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RoomControllerTest {
     @LocalServerPort
@@ -32,15 +29,5 @@ class RoomControllerTest {
                 .when().post("/room")
                 .then()
                 .statusCode(HttpStatus.OK.value());
-    }
-
-    @DisplayName("활성화 중인 게임을 가져올 수 있는지 확인")
-    @Test
-    void getGamesTest() {
-        RestAssured
-                .when().get("/room")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .assertThat().body("activeRooms", not(nullValue()));
     }
 }

@@ -37,7 +37,8 @@ public class RoomRestController {
     @PostMapping("{roomId:[\\d]+}/password")
     public ResponseEntity<Void> enterPassword(@PathVariable long roomId, @RequestBody UserRequestDto userRequestDto,
                                               Model model, HttpSession session) {
-        User currentUser = roomService.findUserBy(roomId, userRequestDto.getPassword());
+
+        User currentUser = roomService.findUserIfAbsentCreate(roomId, userRequestDto.getPassword());
         session.setAttribute("user", currentUser);
 
         ChessGameManager game = roomService.findGameBy(roomId);

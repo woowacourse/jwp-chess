@@ -51,7 +51,7 @@ public class RoomService {
     }
 
     @Transactional
-    public User findUserBy(long roomId, String password) {
+    public User findUserIfAbsentCreate(long roomId, String password) {
         Room room = roomRepository.findRoomBy(roomId);
         if (room.isMaxUser() || room.isUserExistsIn(WHITE, password)) {
             return userRepository.matchPasswordUser(roomId, password);

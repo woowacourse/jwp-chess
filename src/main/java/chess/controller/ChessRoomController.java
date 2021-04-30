@@ -37,7 +37,7 @@ public class ChessRoomController {
         }
     }
 
-    @GetMapping(value = "/{name}")
+    @GetMapping("/{name}")
     public ResponseEntity<MoveResponseDto> enterRoom(@PathVariable("name") String roomName) {
         try {
             MoveResponseDto result = service.findPiecesInRoom(roomName);
@@ -47,20 +47,20 @@ public class ChessRoomController {
         }
     }
 
-    @GetMapping(value = "/{name}/end")
+    @GetMapping("/{name}/end")
     public ResponseEntity<MoveResponseDto> endRoom(@PathVariable("name") String roomName) {
         MoveResponseDto result = service.end(roomName);
         return ResponseEntity.ok().body(result);
     }
 
-    @PostMapping(value = "/{name}/move")
+    @PostMapping("/{name}/move")
     public ResponseEntity<MoveResponseDto> move(@PathVariable("name") String roomName, @RequestBody MoveRequestDto moveRequestDto) {
         MoveResponseDto result = service.move(roomName, moveRequestDto.getSource(),
                 moveRequestDto.getTarget());
         return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping(value = "/all")
+    @GetMapping("/all")
     public ResponseEntity<RoomsDto> showRooms() {
         RoomsDto result = service.findAllRooms();
         return ResponseEntity.ok().body(result);

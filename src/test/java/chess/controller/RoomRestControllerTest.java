@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -64,7 +63,7 @@ class RoomRestControllerTest {
                 .content(mapper.writeValueAsString(roomDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(request).andExpect(status().is4xxClientError());
+        mockMvc.perform(request).andExpect(status().isBadRequest());
     }
 
     @DisplayName("유효하지 않은 이름으로 방 생성 (너무 긴 방 이름)")
@@ -76,7 +75,7 @@ class RoomRestControllerTest {
                 .content(mapper.writeValueAsString(roomDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(request).andExpect(status().is4xxClientError());
+        mockMvc.perform(request).andExpect(status().isBadRequest());
     }
 
     @DisplayName("player1이 blank인 방 생성 요청")
@@ -88,7 +87,7 @@ class RoomRestControllerTest {
                 .content(mapper.writeValueAsString(roomDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(request).andExpect(status().is4xxClientError());
+        mockMvc.perform(request).andExpect(status().isBadRequest());
     }
 
     @DisplayName("player1이 null인 방 생성 요청")
@@ -100,7 +99,7 @@ class RoomRestControllerTest {
                 .content(mapper.writeValueAsString(roomDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(request).andExpect(status().is4xxClientError());
+        mockMvc.perform(request).andExpect(status().isBadRequest());
     }
 
     @DisplayName("중복 방 이름 생성 시 404 응답")
@@ -118,14 +117,15 @@ class RoomRestControllerTest {
     @DisplayName("유효한 방 참가")
     @Test
     public void enterRoom() throws Exception {
-        roomDto = new RoomDto("tooLongRoomName", "player1", "player2");
+        roomDto = new RoomDto("room", "player1", "player2");
+        long roomId = roomService.create(roomDto.getRoomName(), roomDto.getPlayer1());
 
-        final RequestBuilder request = MockMvcRequestBuilders.post("/room/enter/{}")
-                .param("player2", "player2")
+        final RequestBuilder request = MockMvcRequestBuilders.post("/room/enter/" + roomId)
+                .param("playerId", roomDto.getPlayer2())
                 .content(mapper.writeValueAsString(roomDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(request).andExpect(status().is4xxClientError());
+        mockMvc.perform(request).andExpect(status().isOk());
     }
 
     @DisplayName("방 삭제 테스트")

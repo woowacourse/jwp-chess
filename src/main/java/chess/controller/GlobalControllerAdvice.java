@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.sql.SQLException;
 
 @ControllerAdvice
-public class ExceptionController {
+public class GlobalControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

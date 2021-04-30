@@ -1,7 +1,10 @@
 package chess.service;
 
 import chess.domain.ChessGame;
-import chess.domain.piece.*;
+import chess.domain.piece.Owner;
+import chess.domain.piece.Pawn;
+import chess.domain.piece.Piece;
+import chess.domain.piece.PieceSymbolMapper;
 import chess.service.dao.GameDao;
 import chess.util.JSonHandler;
 import com.fasterxml.jackson.core.type.TypeReference;

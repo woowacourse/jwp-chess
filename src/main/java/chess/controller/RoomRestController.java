@@ -1,9 +1,9 @@
 package chess.controller;
 
 import chess.dto.RoomDto;
-import chess.util.CookieHandler;
 import chess.service.PlayerService;
 import chess.service.RoomService;
+import chess.util.CookieHandler;
 import chess.view.OutputView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

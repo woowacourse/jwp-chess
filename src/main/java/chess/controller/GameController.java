@@ -1,13 +1,12 @@
 package chess.controller;
 
+import chess.domain.board.position.Position;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.view.OutputView;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/game")
@@ -36,5 +35,16 @@ public class GameController {
         final String winnerName = OutputView.decideWinnerName(gameService.winner(roomId));
         model.addAttribute("winner", winnerName);
         return "winningResultPage";
+    }
+
+    @PostMapping("/move/{roomId}")
+    public String move(@PathVariable final Long roomId,
+                       @RequestParam final Position source,
+                       @RequestParam final Position target) {
+        gameService.move(roomId, source, target);
+        if (gameService.isGameEnd(roomId)) {
+            return "redirect:/game/result/" + roomId;
+        }
+        return "redirect:/game/load/" + roomId;
     }
 }

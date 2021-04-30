@@ -3,11 +3,10 @@ package chess.controller;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Owner;
 import chess.dto.ReachablePositionsDto;
-import chess.util.CookieHandler;
 import chess.service.GameService;
 import chess.service.PlayerService;
+import chess.util.CookieHandler;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -46,16 +45,5 @@ public class GameRestController {
         if (Objects.isNull(cookie)) {
             throw new IllegalArgumentException("사용자 비밀번호가 없습니다.");
         }
-    }
-
-    @PostMapping("/move/{roomId}")
-    public RedirectView move(@PathVariable final Long roomId,
-                             @RequestParam final Position source,
-                             @RequestParam final Position target) {
-        gameService.move(roomId, source, target);
-        if (gameService.isGameEnd(roomId)) {
-            return new RedirectView("/game/result/" + roomId);
-        }
-        return new RedirectView("/game/load/" + roomId);
     }
 }

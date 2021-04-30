@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest({ExceptionController.class, RoomRestController.class})
-class ExceptionControllerTest {
+@WebMvcTest({GlobalControllerAdvice.class, RoomRestController.class})
+class GlobalControllerAdviceTest {
 
     @Autowired
     private MockMvc mockMvc;

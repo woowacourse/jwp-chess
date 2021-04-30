@@ -31,15 +31,4 @@ public enum Owner {
     public boolean isWhite() {
         return this.equals(WHITE);
     }
-
-    @Override
-    public String toString() {
-        if (this.isBlack()) {
-            return "black";
-        }
-        if (this.isWhite()) {
-            return "white";
-        }
-        return "empty";
-    }
 }

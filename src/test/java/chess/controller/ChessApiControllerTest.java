@@ -62,7 +62,7 @@ public class ChessApiControllerTest {
         board.put(Position.valueOf("1", "e"), King.from("k", Position.valueOf("1", "e")));
         board.put(Position.valueOf("2", "b"), Pawn.from("p", Position.valueOf("2", "b")));
 
-        given(chessService.chessBoardFromDB(1L))
+        given(chessService.board(1L))
                 .willReturn(board);
 
         mockMvc.perform(get("/board/" + 1L)

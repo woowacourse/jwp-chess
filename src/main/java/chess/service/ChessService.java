@@ -30,29 +30,25 @@ public class ChessService {
     }
 
     private void initialize(final Round round, final Long roomId) {
-        Map<String, String> filteredChessBoard = new LinkedHashMap<>();
-        Map<Position, Piece> chessBoard = round.getBoard();
-        for (Map.Entry<Position, Piece> chessBoardEntry : chessBoard.entrySet()) {
-            filterChessBoard(filteredChessBoard, chessBoardEntry);
+        Map<String, String> filteredBoard = new LinkedHashMap<>();
+        Map<Position, Piece> board = round.getBoard();
+        for (Map.Entry<Position, Piece> boardEntry : board.entrySet()) {
+            filterBoard(filteredBoard, boardEntry);
         }
-        chessRepository.initializePieceStatus(filteredChessBoard, roomId);
+        chessRepository.initializePieceStatus(filteredBoard, roomId);
     }
 
-    private void filterChessBoard(final Map<String, String> filteredChessBoard,
-                                  final Map.Entry<Position, Piece> chessBoardEntry) {
-        if (chessBoardEntry.getValue() != null) {
-            filteredChessBoard.put(chessBoardEntry.getKey().toString(), chessBoardEntry.getValue().getPiece());
+    private void filterBoard(final Map<String, String> filteredBoard,
+                             final Map.Entry<Position, Piece> boardEntry) {
+        if (boardEntry.getValue() != null) {
+            filteredBoard.put(boardEntry.getKey().toString(), boardEntry.getValue().getPiece());
         }
     }
 
-    public Map<Position, Piece> chessBoardFromDB(final Long roomId) {
-        Round round = loadRoundFromDB(roomId);
-        Map<String, String> dbChessBoard = dbChessBoard(roomId);
-        return round.getBoard(ChessBoardFactory.loadBoard(dbChessBoard));
-    }
-
-    private Map<String, String> dbChessBoard(final Long roomId) {
-        return chessRepository.showAllPieces(roomId);
+    public Map<Position, Piece> board(final Long roomId) {
+        Round round = round(roomId);
+        Map<String, String> pieces = pieces(roomId);
+        return round.getBoard(ChessBoardFactory.loadBoard(pieces));
     }
 
     public Map<Long, String> rooms() {
@@ -62,26 +58,30 @@ public class ChessService {
     public boolean move(final String source, final String target, final Long roomId) {
         Queue<String> commands =
                 new ArrayDeque<>(Arrays.asList("move", source, target));
-        Round round = loadRoundFromDB(roomId);
+        Round round = round(roomId);
         round.execute(commands);
         movePiece(source, target);
         return true;
     }
 
     public double whiteScore(final Long roomId) {
-        Round round = loadRoundFromDB(roomId);
+        Round round = round(roomId);
         return round.getWhitePlayer().calculateScore();
     }
 
     public double blackScore(final Long roomId) {
-        Round round = loadRoundFromDB(roomId);
+        Round round = round(roomId);
         return round.getBlackPlayer().calculateScore();
     }
 
-    private Round loadRoundFromDB(final Long roomId) {
-        Map<String, String> dbChessBoard = dbChessBoard(roomId);
+    private Round round(final Long roomId) {
+        Map<String, String> pieces = pieces(roomId);
         String currentTurn = currentTurn(roomId);
-        return Round.of(ChessBoardFactory.loadBoard(dbChessBoard), currentTurn);
+        return Round.of(ChessBoardFactory.loadBoard(pieces), currentTurn);
+    }
+
+    private Map<String, String> pieces(final Long roomId) {
+        return chessRepository.showAllPieces(roomId);
     }
 
     public String currentTurn(final Long roomId) {

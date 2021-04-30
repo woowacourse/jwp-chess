@@ -31,9 +31,9 @@ public class ChessApiController {
 
     @GetMapping("/board/{roomId}")
     public ChessBoardDto chess(@PathVariable final Long roomId) {
-        Map<Position, Piece> boardFromDB = chessService.chessBoardFromDB(roomId);
+        Map<Position, Piece> board = chessService.board(roomId);
         String currentTurn = chessService.currentTurn(roomId);
-        return new ChessBoardDto(boardFromDB, currentTurn);
+        return new ChessBoardDto(board, currentTurn);
     }
 
     @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)

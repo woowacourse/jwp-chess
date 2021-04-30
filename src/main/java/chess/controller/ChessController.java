@@ -20,15 +20,15 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/room-list")
-    public String roomList(final Model model) {
+    @GetMapping("/rooms")
+    public String rooms(final Model model) {
         List<RoomListDto> roomsDto = new ArrayList<>();
         Map<Long, String> rooms = chessService.rooms();
         for (Map.Entry<Long, String> roomEntry : rooms.entrySet()) {
             roomsDto.add(new RoomListDto(roomEntry.getKey(), roomEntry.getValue()));
         }
         model.addAttribute("rooms", roomsDto);
-        return "room-list";
+        return "rooms";
     }
 
     @GetMapping("/chess/{roomId}")

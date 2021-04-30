@@ -1,5 +1,5 @@
 const startBtn = document.getElementById('start-btn');
-const roomListBtn = document.getElementById('room-list-btn');
+const roomsBtn = document.getElementById('rooms-btn');
 
 startBtn.addEventListener('click', addRoom);
 
@@ -10,7 +10,7 @@ async function addRoom() {
         alert("방 이름은 1자 이상으로 입력해주세요!");
         return;
     }
-    let roomIdDto = await fetch('/room', {
+    let roomIdDto = await fetch('/api/room', {
         method: 'POST',
         body: JSON.stringify({
             roomName: roomName
@@ -23,6 +23,6 @@ async function addRoom() {
     window.location.href = "/chess/" + roomIdDto.roomId;
 }
 
-roomListBtn.addEventListener('click', function () {
-    window.location.href = '/room-list';
+roomsBtn.addEventListener('click', function () {
+    window.location.href = '/rooms';
 });

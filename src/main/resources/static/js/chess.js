@@ -120,7 +120,7 @@ async function runChessGame() {
 }
 
 async function boardDto() {
-    let boardDto = await fetch('/board/' + roomId, {
+    let boardDto = await fetch('/api/chess/' + roomId, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -141,7 +141,7 @@ function request_move_post(first_click, second_click, current_turn) {
     const moveXhr = new XMLHttpRequest();
     const turnXhr = new XMLHttpRequest();
 
-    moveXhr.open('POST', '/move', true);
+    moveXhr.open('POST', '/api/move', true);
     moveXhr.setRequestHeader('Content-Type', 'application/json');
     moveXhr.responseType = 'json';
     moveXhr.send(JSON.stringify({
@@ -173,7 +173,7 @@ function request_move_post(first_click, second_click, current_turn) {
             next_turn = 'white';
         }
 
-        turnXhr.open('POST', '/turn', true);
+        turnXhr.open('POST', '/api/turn', true);
         turnXhr.setRequestHeader('Content-Type', 'application/json');
         turnXhr.responseType = 'json';
         turnXhr.send(JSON.stringify({

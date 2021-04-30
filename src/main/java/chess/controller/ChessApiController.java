@@ -24,26 +24,26 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
-    @PostMapping(value = "/room")
+    @PostMapping(value = "/api/room")
     public RoomIdResponseDto start(@RequestBody final RoomNameRequestDto roomNameRequestDto) {
         return new RoomIdResponseDto(chessService.addRoom(roomNameRequestDto.getRoomName()));
     }
 
-    @GetMapping("/board/{roomId}")
+    @GetMapping("/api/chess/{roomId}")
     public ChessBoardDto chess(@PathVariable final Long roomId) {
         Map<Position, Piece> board = chessService.board(roomId);
         String currentTurn = chessService.currentTurn(roomId);
         return new ChessBoardDto(board, currentTurn);
     }
 
-    @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/api/move", produces = MediaType.APPLICATION_JSON_VALUE)
     public MoveResponseDto move(@RequestBody final MoveRequestDto moveRequestDto) {
         boolean isMovable = chessService.move(
                 moveRequestDto.getSource(), moveRequestDto.getTarget(), moveRequestDto.getRoomId());
         return new MoveResponseDto(isMovable);
     }
 
-    @PostMapping(value = "/turn", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/api/turn", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> turn(@RequestBody final TurnChangeRequestDto turnChangeRequestDto) {
         chessService.changeTurn(turnChangeRequestDto.getNextTurn(), turnChangeRequestDto.getRoomId());
         return new ResponseEntity<>(HttpStatus.OK);

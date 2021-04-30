@@ -48,7 +48,7 @@ public class ChessApiControllerTest {
         given(chessService.addRoom("우테코"))
                 .willReturn(1L);
 
-        mockMvc.perform(post("/room")
+        mockMvc.perform(post("/api/room")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(roomNameRequestDto)))
                 .andExpect(status().isOk())
@@ -65,7 +65,7 @@ public class ChessApiControllerTest {
         given(chessService.board(1L))
                 .willReturn(board);
 
-        mockMvc.perform(get("/board/" + 1L)
+        mockMvc.perform(get("/api/chess/" + 1L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("chessBoard.*", hasSize(2)));
@@ -79,7 +79,7 @@ public class ChessApiControllerTest {
         given(chessService.move("a2", "a4", 1L))
                 .willReturn(true);
 
-        mockMvc.perform(post("/move")
+        mockMvc.perform(post("/api/move")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(moveRequestDto)))
                 .andExpect(status().isOk())
@@ -92,7 +92,7 @@ public class ChessApiControllerTest {
         TurnChangeRequestDto turnChangeRequestDto =
                 new TurnChangeRequestDto("white", "black", 1L);
 
-        mockMvc.perform(post("/turn")
+        mockMvc.perform(post("/api/turn")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(turnChangeRequestDto)))
                 .andExpect(status().isOk());

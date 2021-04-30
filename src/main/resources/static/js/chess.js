@@ -181,7 +181,7 @@ function request_move_post(first_click, second_click, current_turn) {
             nextTurn: next_turn,
             roomId: roomId
         }));
-        window.location.href = 'http://127.0.0.1:8080/chess/' + roomId;
+        window.location.href = '/chess/' + roomId;
     };
 }
 

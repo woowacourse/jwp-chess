@@ -2,13 +2,16 @@ package chess.domain.player;
 
 import chess.domain.board.ChessBoardFactory;
 import chess.domain.command.Command;
+import chess.domain.command.CommandFactory;
 import chess.domain.command.Start;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
+import chess.domain.piece.PiecesFactory;
 import chess.domain.position.Position;
 import chess.domain.position.Source;
 import chess.domain.position.Target;
 import chess.domain.state.State;
+import chess.domain.state.StateFactory;
 
 import java.util.Map;
 import java.util.Queue;
@@ -20,6 +23,14 @@ public class Round {
     private Command command;
     private boolean isEnd = false;
     private String currentTurn;
+
+    public Round() {
+        this(
+                StateFactory.initialization(PiecesFactory.whitePieces()),
+                StateFactory.initialization(PiecesFactory.blackPieces()),
+                CommandFactory.initialCommand("start")
+        );
+    }
 
     public Round(Map<Position, Piece> board, String currentTurn) {
         this.board = board;

@@ -7,7 +7,7 @@ public class PieceDto {
     private final String name;
     private final String color;
 
-    private PieceDto(String name, String color) {
+    public PieceDto(String name, String color) {
         this.name = name;
         this.color = color;
     }

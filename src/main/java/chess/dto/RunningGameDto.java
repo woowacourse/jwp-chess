@@ -1,6 +1,5 @@
 package chess.dto;
 
-import chess.domain.ChessGameManager;
 import chess.domain.board.ChessBoard;
 import chess.domain.piece.Color;
 import chess.domain.statistics.ChessGameStatistics;
@@ -21,15 +20,6 @@ public class RunningGameDto {
         this.colorsScore = colorsScore;
         this.matchResult = matchResult;
         this.isEnd = isEnd;
-    }
-
-    public static RunningGameDto from(ChessGameManager chessGameManager) {
-        return new RunningGameDto(
-                ChessBoardDto.from(chessGameManager.getBoard()).board(),
-                chessGameManager.getCurrentTurnColor(),
-                chessGameManager.getStatistics().getColorsScore(),
-                chessGameManager.getStatistics().getMatchResult(),
-                chessGameManager.isEnd());
     }
 
     public static RunningGameDto of(ChessBoard chessBoard, Color currentTurn, boolean isEnd) {

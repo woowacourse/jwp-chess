@@ -11,7 +11,7 @@ public class Repeater {
     public static <T> T repeatOnError(Supplier<T> supplier) {
         try {
             return supplier.get();
-        } catch (RuntimeException e) {  // TODO 사용자 정의 예외만 잡도록 리팩토링
+        } catch (RuntimeException e) {
             OutputView.printMessage(e.getMessage());
             return repeatOnError(supplier);
         }

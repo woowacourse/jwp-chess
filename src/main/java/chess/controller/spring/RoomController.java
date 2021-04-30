@@ -1,32 +1,33 @@
 package chess.controller.spring;
 
 import chess.dto.CommonDto;
-import chess.dto.GameListDto;
 import chess.dto.RoomDto;
-import chess.service.ChessService;
+import chess.dto.RoomListDto;
+import chess.service.RoomService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/room")
 public class RoomController {
-    private final ChessService service;
+    private final RoomService service;
 
-    public RoomController(ChessService service) {
+    public RoomController(RoomService service) {
         this.service = service;
     }
 
     @GetMapping("/list")
-    public ResponseEntity<CommonDto<GameListDto>> loadGames() {
-        return ResponseEntity.ok().body(service.loadGameList());
+    public ResponseEntity<CommonDto<RoomListDto>> roomList() {
+        return ResponseEntity.ok(service.list());
     }
 
-    @PostMapping("/name")
-    public ResponseEntity<CommonDto<RoomDto>> saveRoomName(@RequestBody String roomName) {
-        return ResponseEntity.ok().body(service.saveRoom(roomName));
+    @PostMapping("/new")
+    public ResponseEntity<CommonDto<RoomDto>> saveRoom(@RequestBody RoomDto roomDto) {
+        return ResponseEntity.ok(service.save(roomDto));
+    }
+
+    @GetMapping("/{gameId}/load")
+    public ResponseEntity<String> findRoomName(@PathVariable int gameId) {
+        return ResponseEntity.ok(service.loadRoomName(gameId));
     }
 }

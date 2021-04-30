@@ -1,17 +1,13 @@
 package chess.controller;
 
 import chess.domain.board.position.Position;
-import chess.domain.piece.Owner;
 import chess.dto.ReachablePositionsDto;
-import chess.service.GameService;
 import chess.service.PlayerService;
 import chess.service.RoomService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
@@ -39,9 +34,6 @@ class GameRestControllerTest {
 
     @Autowired
     private RoomService roomService;
-
-    @Autowired
-    private GameService gameService;
 
     @Autowired
     private PlayerService playerService;
@@ -63,13 +55,7 @@ class GameRestControllerTest {
     @Test
     public void reachableMvc() throws Exception {
         final Position source = new Position("a2");
-        final Owner ownerOfTurn = Owner.WHITE;
-
-        final GameService mockService = Mockito.mock(GameService.class);
-
         final List<String> expectReachable = Arrays.asList("a3", "a4");
-        Mockito.when(mockService.reachable(testRoomId, source, ownerOfTurn))
-                .thenReturn(expectReachable);
 
         final MvcResult mvcResult = performReachablePositions(source, player1);
         assertThat(mvcResult.getResponse().getContentAsString())
@@ -81,10 +67,11 @@ class GameRestControllerTest {
     public void reachableMvcWithoutCookie() throws Exception {
         final Position source = new Position("a2");
         playerService.enter(testRoomId, player2);
+        final List<String> expectedReachable = Collections.EMPTY_LIST;
 
         final MvcResult mvcResult = performReachablePositions(source, player2);
         assertThat(mvcResult.getResponse().getContentAsString())
-                .isEqualTo(objectMapper.writeValueAsString(new ReachablePositionsDto(Collections.EMPTY_LIST)));
+                .isEqualTo(objectMapper.writeValueAsString(new ReachablePositionsDto(expectedReachable)));
     }
 
     private MvcResult performReachablePositions(Position source, String userName) throws Exception {

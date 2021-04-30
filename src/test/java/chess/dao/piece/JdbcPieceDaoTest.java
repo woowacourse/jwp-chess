@@ -1,4 +1,4 @@
-package chess.repository.piece;
+package chess.dao.piece;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -11,9 +11,8 @@ import chess.domain.piece.King;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.team.Team;
-import chess.repository.room.JdbcRoomRepository;
+import chess.dao.room.JdbcRoomDao;
 import chess.utils.BoardUtil;
-import java.sql.SQLException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,23 +20,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class JdbcPieceRepositoryTest {
+class JdbcPieceDaoTest {
 
     @Autowired
-    private JdbcPieceRepository repository;
+    private JdbcPieceDao jdbcPieceDao;
 
     @Autowired
-    private JdbcRoomRepository roomRepository;
+    private JdbcRoomDao jdbcRoomDao;
 
     private long roomId;
 
     @BeforeEach
     void setUp() {
         Room room = new Room(1, "Piece테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
-        roomId = roomRepository.insert(room);
-        repository.deleteAll();
+        roomId = jdbcRoomDao.insert(room);
     }
 
     @Test
@@ -46,8 +46,8 @@ class JdbcPieceRepositoryTest {
         Queen piece = Queen.of(Location.of(1, 1), Team.WHITE);
 
         // when
-        long uid = repository.insert(roomId, piece);
-        Piece foundPiece = repository.findPieceById(uid);
+        long uid = jdbcPieceDao.insert(roomId, piece);
+        Piece foundPiece = jdbcPieceDao.findPieceById(uid);
 
         // then
         assertThat(foundPiece).isInstanceOf(Queen.class);
@@ -64,12 +64,12 @@ class JdbcPieceRepositoryTest {
     void update() {
         // given
         Queen original = Queen.of(Location.of(1, 1), Team.WHITE);
-        long pieceId = repository.insert(roomId, original);
+        long pieceId = jdbcPieceDao.insert(roomId, original);
 
         // when
         Queen updated = Queen.of(pieceId, roomId, Team.WHITE, Location.of(1, 8));
-        repository.update(updated);
-        Piece foundPiece = repository.findPieceById(pieceId);
+        jdbcPieceDao.update(updated);
+        Piece foundPiece = jdbcPieceDao.findPieceById(pieceId);
 
         // then
         assertThat(foundPiece).isInstanceOf(Queen.class);
@@ -83,9 +83,9 @@ class JdbcPieceRepositoryTest {
         King piece2 = King.of(Location.of(1, 2),Team.WHITE);
 
         // when
-        long piece1Id = repository.insert(roomId, piece1);
-        long piece2Id = repository.insert(roomId, piece2);
-        List<Piece> foundPieces = repository.findPiecesByRoomId(roomId);
+        long piece1Id = jdbcPieceDao.insert(roomId, piece1);
+        long piece2Id = jdbcPieceDao.insert(roomId, piece2);
+        List<Piece> foundPieces = jdbcPieceDao.findPiecesByRoomId(roomId);
 
         // then
         assertThat(foundPieces.size()).isEqualTo(2);
@@ -106,10 +106,10 @@ class JdbcPieceRepositoryTest {
     @Test
     void count() {
         // given, when
-        int zero = repository.count();
+        int zero = jdbcPieceDao.count();
 
-        repository.insert(roomId, Queen.of(Location.of("a1"), Team.WHITE));
-        int one = repository.count();
+        jdbcPieceDao.insert(roomId, Queen.of(Location.of("a1"), Team.WHITE));
+        int one = jdbcPieceDao.count();
 
         // then
         assertThat(zero).isEqualTo(0);
@@ -118,7 +118,8 @@ class JdbcPieceRepositoryTest {
 
     @Test
     void deleteAll() {
-        assertThat(repository.count()).isEqualTo(0);
+        jdbcPieceDao.deleteAll();
+        assertThat(jdbcPieceDao.count()).isEqualTo(0);
     }
 
     @Test
@@ -127,11 +128,11 @@ class JdbcPieceRepositoryTest {
         Queen piece = Queen.of(Location.of(1, 1), Team.WHITE);
 
         // when
-        long id = repository.insert(roomId, piece);
-        repository.deletePieceById(id);
+        long id = jdbcPieceDao.insert(roomId, piece);
+        jdbcPieceDao.deletePieceById(id);
 
         // then
-        assertThatThrownBy(() -> repository.findPieceById(id))
+        assertThatThrownBy(() -> jdbcPieceDao.findPieceById(id))
             .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

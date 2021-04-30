@@ -1,4 +1,4 @@
-package chess.repository.room;
+package chess.dao.room;
 
 import chess.domain.game.Room;
 import chess.domain.gamestate.State;
@@ -13,11 +13,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcRoomRepository implements RoomRepository {
+public class JdbcRoomDao implements RoomDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcRoomRepository(final DataSource dataSource) {
+    public JdbcRoomDao(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

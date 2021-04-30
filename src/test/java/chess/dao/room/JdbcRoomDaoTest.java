@@ -1,4 +1,4 @@
-package chess.repository.room;
+package chess.dao.room;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -12,26 +12,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class JdbcRoomRepositoryTest {
+class JdbcRoomDaoTest {
 
     @Autowired
-    JdbcRoomRepository repository;
+    JdbcRoomDao jdbcRoomDao;
 
     @BeforeEach
     void setUp() {
-        repository.deleteAll();
+//        repository.deleteAll();
     }
 
     @Test
     void insert() {
         // given
-        Room room = new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
+        Room room = new Room(0, "테스트1", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
 
         // when
-        long roomId = repository.insert(room);
-        Room foundRoom = repository.findByName(room.getName());
+        long roomId = jdbcRoomDao.insert(room);
+        Room foundRoom = jdbcRoomDao.findByName(room.getName());
 
         // then
         assertAll(
@@ -45,15 +47,16 @@ class JdbcRoomRepositoryTest {
     @Test
     void update() {
         // given
-        long roomId = repository.insert(new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
-        Room foundRoom = repository.findById(roomId);
+        long roomId = jdbcRoomDao
+                .insert(new Room(0, "테스트2", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
+        Room foundRoom = jdbcRoomDao.findById(roomId);
 
         // when
         foundRoom.play("start");
-        repository.update(foundRoom);
+        jdbcRoomDao.update(foundRoom);
 
         // then
-        Room resultRoom = repository.findById(roomId);
+        Room resultRoom = jdbcRoomDao.findById(roomId);
         assertAll(
             () -> assertThat(resultRoom.getId()).isEqualTo(roomId),
             () -> assertThat(resultRoom.getName()).isEqualTo(foundRoom.getName()),
@@ -65,11 +68,11 @@ class JdbcRoomRepositoryTest {
     @Test
     void findRoomById() {
         // given
-        Room room = new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
-        long roomId = repository.insert(room);
+        Room room = new Room(0, "테스트3", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
+        long roomId = jdbcRoomDao.insert(room);
 
         // when
-        Room foundRoom = repository.findById(roomId);
+        Room foundRoom = jdbcRoomDao.findById(roomId);
 
         // then
         assertAll(
@@ -83,11 +86,11 @@ class JdbcRoomRepositoryTest {
     @Test
     void findRoomByName() {
         // given
-        Room room = new Room(0, "테스트", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
-        long roomId = repository.insert(room);
+        Room room = new Room(0, "테스트4", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
+        long roomId = jdbcRoomDao.insert(room);
 
         // when
-        Room foundRoom = repository.findByName(room.getName());
+        Room foundRoom = jdbcRoomDao.findByName(room.getName());
 
         // then
         assertAll(
@@ -101,9 +104,10 @@ class JdbcRoomRepositoryTest {
     @Test
     void roomExists() {
         // given, when
-        long roomId = repository.insert(new Room(0, "테스트1", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
+        long roomId = jdbcRoomDao
+                .insert(new Room(0, "테스트5", new Ready(BoardUtil.generateInitialBoard()), Team.WHITE));
 
         // then
-        assertThat(repository.roomExists("테스트1")).isTrue();
+        assertThat(jdbcRoomDao.roomExists("테스트5")).isTrue();
     }
 }

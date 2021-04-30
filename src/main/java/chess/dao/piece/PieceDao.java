@@ -1,9 +1,9 @@
-package chess.repository.piece;
+package chess.dao.piece;
 
 import chess.domain.piece.Piece;
 import java.util.List;
 
-public interface PieceRepository {
+public interface PieceDao {
 
     long insert(long roomId, Piece piece);
 

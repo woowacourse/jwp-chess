@@ -1,9 +1,9 @@
-package chess.repository.room;
+package chess.dao.room;
 
 import chess.domain.game.Room;
 import java.util.List;
 
-public interface RoomRepository {
+public interface RoomDao {
 
     long insert(Room room);
 

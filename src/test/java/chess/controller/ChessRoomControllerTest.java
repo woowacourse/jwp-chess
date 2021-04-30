@@ -1,5 +1,8 @@
 package chess.controller;
 
+import static org.hamcrest.Matchers.notNullValue;
+
+import chess.domain.dto.RoomDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,29 +24,46 @@ class ChessRoomControllerTest {
     }
 
     @Test
-    void index() {
-        RestAssured.given().log().all()
-                .accept(MediaType.TEXT_HTML_VALUE)
-                .when().get("/")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+    void createRoom_success() {
+        RoomDto roomDto = new RoomDto("pkroom");
+        RestAssured
+                .given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(roomDto)
+                .when()
+                    .post("/api/room")
+                .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body("name", notNullValue());
     }
 
-//    @Test
-//    void createRoom() {
-//        RestAssured.given().log().all()
-//                .accept(MediaType.APPLICATION_JSON_VALUE)
-//                .when().get("/room/create")
-//                .then().log().all()
-//                .statusCode(HttpStatus.OK.value());
-//    }
+    @Test
+    void enterRoom_success() {
+        RestAssured
+                .given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .param("name", "pkroom")
+                .when()
+                    .get("/api/room/pkroom")
+                .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body("pieces", notNullValue())
+                    .body("currentTeam", notNullValue())
+                    .body("scoreDto", notNullValue());
+    }
 
     @Test
-    void enterRoom() {
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/room/1")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+    void showRooms_success() {
+        RestAssured
+                .given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                    .get("/api/room/all")
+                .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body("rooms", notNullValue());
     }
 }

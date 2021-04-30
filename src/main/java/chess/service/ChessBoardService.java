@@ -53,7 +53,7 @@ public class ChessBoardService {
         TurnDto turnDto = roomDao.selectTurnByRoomId(roomId);
         List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(roomId);
 
-        if (boardInfos.size() == 0) {
+        if (boardInfos.isEmpty()) {
             ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
             insertBoardInfos(chessGame, roomId);
             return new ChessGameDto(chessGame);

@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.domain.board.Board;
+import chess.domain.exception.CannotCreateGameException;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChessService {
+    private static final int MAX_GAME_COUNT = 10;
 
     private final GameService gameService;
     private final PieceService pieceService;
@@ -27,6 +29,9 @@ public class ChessService {
 
     @Transactional
     public long initializeChess(final GameRequestDto gameRequestDto) {
+        if(gameService.gameCount() >= MAX_GAME_COUNT) {
+            throw new CannotCreateGameException();
+        }
         final long id = gameService.add(gameRequestDto);
         pieceService.createInitialPieces(id);
         return id;

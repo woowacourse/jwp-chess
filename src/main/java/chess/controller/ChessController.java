@@ -1,12 +1,10 @@
 package chess.controller;
 
 import chess.dto.ChessResponseDto;
-import chess.dto.GameRequestDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.MoveResponseDto;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;

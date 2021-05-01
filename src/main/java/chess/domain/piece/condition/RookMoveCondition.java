@@ -4,9 +4,6 @@ import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
 
-import java.sql.SQLOutput;
-import java.util.function.Predicate;
-
 public class RookMoveCondition extends MoveCondition {
 
     @Override

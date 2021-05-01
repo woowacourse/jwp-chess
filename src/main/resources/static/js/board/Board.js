@@ -145,10 +145,10 @@ export class Board {
             return;
         }
         this.#pieces.move(piece, targetTile)
-        if(response["turn"] == "BLACK") {
+        if (response["turn"] == "BLACK") {
             document.querySelector(".bear-piece.white").setAttribute("src", "/img/white-bear-piece.png");
             document.querySelector(".bear-piece.black").setAttribute("src", "/img/blackBear-blue.png");
-        }else{
+        } else {
             document.querySelector(".bear-piece.black").setAttribute("src", "/img/black-bear-piece.png");
             document.querySelector(".bear-piece.white").setAttribute("src", "/img/whiteBear-blue.png")
         }

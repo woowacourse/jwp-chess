@@ -1,10 +1,10 @@
 package chess.service;
 
 import chess.dao.GameDao;
-import chess.dto.GameRequestDto;
-import chess.dto.GameResponseDto;
-import chess.dto.RoomResponseDto;
+import chess.dto.*;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class GameService {
@@ -35,8 +35,19 @@ public class GameService {
         return gameDao.getTurn(gameId);
     }
 
-    public RoomResponseDto getRoomNumber() {
-        return RoomResponseDto.from(gameDao.getRoomNumbers());
+    public List<RoomResponseDto> getRooms() {
+        return gameDao.getRooms();
     }
 
+    public int gameCount() {
+        return gameDao.gameCount();
+    }
+
+    public int deleteByGameId(long roomId) {
+        return gameDao.deleteByGameId(roomId);
+    }
+
+    public RoomExistResponseDto findGameByName(String roomName) {
+        return gameDao.findByName(roomName);
+    }
 }

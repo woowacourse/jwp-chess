@@ -28,7 +28,7 @@ function moveToPreviousBoard(event) {
 function moveToBoard() {
     const roomName = prompt('방 이름을 입력해주세요~ :)', 'no name');
     apiService.createRoom({roomName})
-        .then(roomId => location.href = `/rooms/${roomId}`)
+        .then(response => window.location.href = response.headers.get('Location'))
 }
 
 apiService.showRooms()

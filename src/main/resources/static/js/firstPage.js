@@ -14,26 +14,14 @@ function loadFirstPage() {
     gameResultWindow.style.display = "none";
     player1.style.display = "none";
     player2.style.display = "none";
+
+    loadPrevGame()
 }
 
 function getRoomId() {
     const path = window.location.pathname;
     const roomId = path.split('/')[2];
     return roomId;
-}
-
-function startNewGame() {
-    apiService.startGame(getRoomId())
-        .then(data => {
-            if (data.connection === "fail") {
-                alert("서버와의 통신에 실패했습니다.");
-            } else {
-                initializeChessBoard(data);
-            }
-        })
-        .catch(error => {
-            alert("서버와의 통신에 실패했습니다.");
-        })
 }
 
 function loadPrevGame() {
@@ -61,6 +49,3 @@ function initializeChessBoard(data) {
     player1.style.display = "flex";
     player2.style.display = "flex";
 }
-
-startBtn.addEventListener("click", startNewGame);
-loadBtn.addEventListener("click", loadPrevGame);

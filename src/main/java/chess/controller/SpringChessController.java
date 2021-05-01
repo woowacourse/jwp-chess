@@ -6,9 +6,12 @@ import chess.webdto.dao.RoomDto;
 import chess.webdto.view.ChessGameDto;
 import chess.webdto.view.MoveRequestDto;
 import chess.webdto.view.RoomNameDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -30,14 +33,13 @@ public class SpringChessController {
 
     @PostMapping
     public ResponseEntity<Long> createRoom(@RequestBody RoomNameDto roomNameDto) {
-        long newRoom = chessRoomService.createNewRoom(roomNameDto.getRoomName());
-        return ResponseEntity.ok().body(newRoom);
-    }
-
-    @PostMapping("/{roomId}")
-    public ResponseEntity<ChessGameDto> startNewGame(@PathVariable long roomId) {
-        ChessGameDto chessGameDto = chessBoardService.startNewGame(roomId);
-        return ResponseEntity.ok().body(chessGameDto);
+        long roomId = chessRoomService.createNewRoom(roomNameDto.getRoomName());
+        chessBoardService.startNewGame(roomId);
+        URI url = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/" + roomId)
+                .build().toUri();
+        return ResponseEntity.created(url).build();
     }
 
     @GetMapping(value = "/{roomId}/previous")
@@ -49,7 +51,7 @@ public class SpringChessController {
     @PostMapping(path = "/{roomId}/move")
     public ResponseEntity<ChessGameDto> move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable long roomId) {
         ChessGameDto chessGameDto = chessBoardService.move(moveRequestDto, roomId);
-        return ResponseEntity.ok().body(chessGameDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(chessGameDto);
     }
 
 }

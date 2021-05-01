@@ -16,7 +16,7 @@ export default class ChessService {
             method: "POST",
             headers: this.headers,
             body: JSON.stringify({roomName})
-        }).then(response => response.json());
+        });
     }
 
     async moveSourceToTarget(moveRequest, roomId) {
@@ -24,13 +24,6 @@ export default class ChessService {
             method: "POST",
             headers: this.headers,
             body: JSON.stringify(moveRequest)
-        }).then(response => response.json());
-    }
-
-    async startGame(roomId) {
-        return await fetch(`${this.baseUrl}/rooms/${roomId}`, {
-            method: "POST",
-            headers: this.headers
         }).then(response => response.json());
     }
 

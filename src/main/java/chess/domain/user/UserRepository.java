@@ -3,7 +3,6 @@ package chess.domain.user;
 import chess.dao.UserDao;
 import chess.dao.dto.UserDto;
 import java.util.Objects;
-import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository

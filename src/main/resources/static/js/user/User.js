@@ -1,26 +1,20 @@
 export class User {
+  #id
   #name
-  #winCount
-  #loseCount
   #createdTime
 
   constructor(plainUser) {
+    this.#id = plainUser["id"];
     this.#name = plainUser["name"];
-    this.#winCount = plainUser["winCount"];
-    this.#loseCount = plainUser["loseCount"];
     this.#createdTime = plainUser["createdTime"];
+  }
+
+  get id() {
+    return this.#id;
   }
 
   get name() {
     return this.#name;
-  }
-
-  get winCount() {
-    return this.#winCount;
-  }
-
-  get loseCount() {
-    return this.#loseCount;
   }
 
   get createdTime() {

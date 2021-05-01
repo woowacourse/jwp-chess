@@ -9,31 +9,26 @@ public class RoomDto {
     private final long hostId;
     private final Long guestId;
     private final String name;
-    private final boolean hostParticipated;
-    private final boolean guestParticipated;
 
     private RoomDto(final long id, final long gameId, final long hostId, final Long guestId,
-        final String name, final boolean hostParticipated, final boolean guestParticipated) {
+        final String name) {
 
         this.id = id;
         this.gameId = gameId;
         this.hostId = hostId;
         this.guestId = guestId;
         this.name = name;
-        this.hostParticipated = hostParticipated;
-        this.guestParticipated = guestParticipated;
     }
 
     public static RoomDto of(final long id, final long gameId, final long hostId,
-        final Long guestId, final String name, final boolean hostParticipated,
-        final boolean guestParticipated) {
+        final Long guestId, final String name) {
 
-        return new RoomDto(id, gameId, hostId, guestId, name, hostParticipated, guestParticipated);
+        return new RoomDto(id, gameId, hostId, guestId, name);
     }
 
     public static RoomDto of(final long gameId, final long hostId, final String name) {
         return new RoomDto(
-            0L, gameId, hostId, 0L, name, true, false
+            0L, gameId, hostId, 0L, name
         );
     }
 
@@ -42,9 +37,7 @@ public class RoomDto {
             id,
             name,
             hostId,
-            guestId,
-            hostParticipated,
-            guestParticipated
+            guestId
         );
     }
 
@@ -66,14 +59,6 @@ public class RoomDto {
 
     public String getName() {
         return name;
-    }
-
-    public boolean isHostParticipated() {
-        return hostParticipated;
-    }
-
-    public boolean isGuestParticipated() {
-        return guestParticipated;
     }
 
 }

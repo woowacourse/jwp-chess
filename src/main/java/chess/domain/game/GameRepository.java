@@ -8,6 +8,8 @@ import chess.dao.dto.PieceDto;
 import chess.dao.dto.RoomDto;
 import chess.domain.game.board.Board;
 import chess.domain.game.board.piece.Piece;
+import chess.domain.game.room.Room;
+import chess.domain.game.room.Rooms;
 import chess.domain.game.team.Team;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,10 +36,18 @@ public class GameRepository {
     }
 
     public Game findById(final long gameId) {
-        final GameDto gameDto = gameDao.findById(gameId);
-        final RoomDto roomDto = roomDao.findByGameId(gameId);
+        final GameDto gameDto = gameDao.selectById(gameId);
+        final RoomDto roomDto = roomDao.selectByGameId(gameId);
         final List<PieceDto> pieceDtos = pieceDao.selectAll(gameId);
         return GameFactory.of(gameDto, pieceDtos, roomDto);
+    }
+
+    public Rooms findEmptyRooms() {
+        final List<RoomDto> roomDtos = roomDao.selectBatchWithEmptyGuest();
+        final List<Room> rooms = roomDtos.stream()
+            .map(RoomDto::toEntity)
+            .collect(Collectors.toList());
+        return new Rooms(rooms);
     }
 
     public void update(final Game game) {

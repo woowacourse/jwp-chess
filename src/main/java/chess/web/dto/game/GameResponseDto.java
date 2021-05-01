@@ -37,7 +37,7 @@ public class GameResponseDto {
                 .collect(Collectors.toList());
 
         return new GameResponseDto(
-            game.getName(),
+            game.getRoomName(),
             game.getTurn(),
             game.isFinished(),
             pieceResponseDtos,

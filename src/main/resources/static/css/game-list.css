@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Myeongjo&display=swap');
+
+html {
+    background-color: #1e1e1e;
+}
+
+.title-wrapper {
+    text-align: center;
+}
+
+.title {
+    color: #ffffff;
+    margin: 0;
+    padding-top: 5vh;
+    padding-bottom: 1vh;
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 1;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 5vw;
+    animation: glow 2s ease-in-out infinite alternate;
+    text-align: center;
+    letter-spacing: 0.3vw;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 1vw #086ad6;
+    }
+    to {
+        text-shadow: 0 0 1vw #4077de, 0 0 1vw #4077de;
+    }
+}
+
+button,
+button::after {
+    font-family: 'Do Hyeon', sans-serif;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.middle-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    font-family: 'Do Hyeon', sans-serif;
+    color: #ffffff;
+    font-size: 3vw;
+}
+
+.rooms {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.room {
+    display: flex;
+    justify-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    padding: 1.5vh 1.5vh;
+    margin-bottom: 2.5vh;
+    width: 100%;
+    color: #ffffff;
+    border: 0.3vh solid #ffffff;
+}
+
+.room .name {
+    padding-right: 4vh;
+    color: #88b6c4;
+}
+
+.name {
+    width: 25%;
+}
+
+.user-container {
+    display: inline-block;
+    justify-content: flex-end;
+}
+
+.team-tag {
+    padding-right: 1vh;
+    text-underline-position: under;
+}
+
+.team-tag.white {
+    color: #cfbd8c;
+}
+
+.team-tag.black {
+    color: #858581;
+}

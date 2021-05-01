@@ -45,5 +45,5 @@ public class User {
     public LocalDateTime getCreatedTime() {
         return createdTime;
     }
-    
+
 }

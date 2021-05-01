@@ -95,14 +95,6 @@ public class Game {
         return room.getGuestId();
     }
 
-    public boolean isHostParticipated() {
-        return room.isHostParticipated();
-    }
-
-    public boolean isGuestParticipated() {
-        return room.isGuestParticipated();
-    }
-
     public long getId() {
         return id;
     }

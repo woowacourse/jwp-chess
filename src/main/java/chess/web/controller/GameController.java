@@ -18,6 +18,11 @@ public class GameController {
         this.gameService = gameService;
     }
 
+    @GetMapping
+    public String showRooms() {
+        return "game-list";
+    }
+
     @PostMapping
     public String initializeChess(@RequestBody GameRequestDto gameRequestDto) {
         final long id = gameService.initializeGame(gameRequestDto);

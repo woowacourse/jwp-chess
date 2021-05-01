@@ -3,7 +3,6 @@ package chess.dao;
 import chess.dao.dto.GameDto;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,14 +36,9 @@ public class GameDao {
         return keyHolder.getKey().longValue();
     }
 
-    public GameDto findById(final long gameId) {
+    public GameDto selectById(final long gameId) {
         final String sql = "SELECT * FROM game WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, gameRowMapper, gameId);
-    }
-
-    public List<GameDto> findByStatus(final boolean isFinished) {
-        final String sql = "SELECT * FROM game WHERE is_finished = ?";
-        return jdbcTemplate.query(sql, gameRowMapper, isFinished);
     }
 
     public void updateGameStatus(final long id, final boolean isFinished) {

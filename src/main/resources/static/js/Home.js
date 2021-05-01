@@ -4,23 +4,24 @@ const url = "http://localhost:8080";
 
 window.onload = function () {
   const newGameButton = document.querySelector(".new-game");
-  const loadGameButton = document.querySelector(".load-game")
+  const searchGameButton = document.querySelector(".search-game")
   const registerMemberButton = document.querySelector(".register-member")
   const searchRecordButton = document.querySelector(".search-record")
 
   newGameButton.addEventListener("click", startNewGame);
-  loadGameButton.addEventListener("click", loadGame);
+  searchGameButton.addEventListener("click", showGames);
   registerMemberButton.addEventListener("click", registerMember);
 }
 
 async function startNewGame(e) {
   const userName = prompt("유저 이름을 입력하세요.");
+  if (userName.length === 0) {
+    alert("이름을 입력하지 않았습니다.");
+    return;
+  }
   const password = prompt("비밀번호를 입력하세요.");
-
-  try {
-    validateInput(userName, password);
-  } catch (e) {
-    alert(e.message);
+  if (password.length === 0) {
+    alert("비밀번호를 입력하지 않았습니다.");
     return;
   }
   const response = await requestAuthentication(userName, password);
@@ -28,21 +29,11 @@ async function startNewGame(e) {
     alert("로그인에 실패했습니다.");
     return;
   }
-  console.log(response);
   const roomName = prompt("방 이름을 입력하세요.");
   if (roomName.length === 0) {
     throw Error("방 이름을 입력하지 않았습니다.");
   }
   await createGame(response["id"], roomName);
-}
-
-function validateInput(userName, password) {
-  if (userName.length === 0) {
-    throw Error("이름을 입력하지 않았습니다.");
-  }
-  if (password.length === 0) {
-    throw Error("비밀번호를 입력하지 않았습니다.");
-  }
 }
 
 async function requestAuthentication(userName, password) {
@@ -61,11 +52,8 @@ async function createGame(hostId, gameName) {
   await postData(`${url}/games`, body);
 }
 
-function loadGame() {
-  const gameId = prompt("이동할 방번호를 입력하세요.");
-  if (gameId) {
-    window.location.href = `${url}/games/${gameId}`
-  }
+function showGames() {
+  window.location.href = `${url}/games`
 }
 
 async function registerMember() {

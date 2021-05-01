@@ -3,6 +3,7 @@ package chess.dao;
 import chess.dao.dto.RoomDto;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,9 +19,7 @@ public class RoomDao {
         resultSet.getLong("game_id"),
         resultSet.getLong("host_id"),
         (Long) resultSet.getObject("guest_id"),
-        resultSet.getString("name"),
-        resultSet.getBoolean("host_participated"),
-        resultSet.getBoolean("guest_participated")
+        resultSet.getString("name")
     );
 
     public RoomDao(final JdbcTemplate jdbcTemplate) {
@@ -42,9 +41,14 @@ public class RoomDao {
         return keyHolder.getKey().longValue();
     }
 
-    public RoomDto findByGameId(final long gameId) {
+    public RoomDto selectByGameId(final long gameId) {
         final String sql = "SELECT * FROM room WHERE game_id = ?";
         return jdbcTemplate.queryForObject(sql, roomRowMapper, gameId);
+    }
+
+    public List<RoomDto> selectBatchWithEmptyGuest() {
+        final String sql = "SELECT * FROM room WHERE guest_id IS NULL";
+        return jdbcTemplate.query(sql, roomRowMapper);
     }
 
 }

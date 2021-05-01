@@ -1,0 +1,50 @@
+package chess.dao;
+
+import chess.dao.dto.RoomDto;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class RoomDao {
+
+    private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<RoomDto> roomeRowMapper = (resultSet, rowNum) -> RoomDto.of(
+        resultSet.getLong("id"),
+        resultSet.getLong("game_id"),
+        resultSet.getLong("host_id"),
+        resultSet.getLong("guest_id"),
+        resultSet.getString("name"),
+        resultSet.getBoolean("host_participated"),
+        resultSet.getBoolean("guest_participated")
+    );
+
+    public RoomDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public long insert(final RoomDto roomDto) {
+        final String sql = "INSERT INTO room(game_id, host_id, name) VALUES (?, ?, ?)";
+        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        final PreparedStatementCreator preparedStatementCreator = con -> {
+            final PreparedStatement preparedStatement = con
+                .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setLong(1, roomDto.getGameId());
+            preparedStatement.setLong(2, roomDto.getHostId());
+            preparedStatement.setString(3, roomDto.getName());
+            return preparedStatement;
+        };
+        jdbcTemplate.update(preparedStatementCreator, keyHolder);
+        return keyHolder.getKey().longValue();
+    }
+
+    public RoomDto findByGameId(final long gameId) {
+        final String sql = "SELECT * FROM room WHERE game_id = ?";
+        return jdbcTemplate.queryForObject(sql, roomeRowMapper, gameId);
+    }
+
+}

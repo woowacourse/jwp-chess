@@ -2,8 +2,10 @@ package chess.domain.game;
 
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
+import chess.dao.RoomDao;
 import chess.dao.dto.GameDto;
 import chess.dao.dto.PieceDto;
+import chess.dao.dto.RoomDto;
 import chess.domain.game.board.Board;
 import chess.domain.game.board.piece.Piece;
 import chess.domain.game.team.Team;
@@ -16,22 +18,26 @@ public class GameRepository {
 
     private final GameDao gameDao;
     private final PieceDao pieceDao;
+    private final RoomDao roomDao;
 
-    public GameRepository(final GameDao gameDao, final PieceDao pieceDao) {
+    public GameRepository(final GameDao gameDao, final PieceDao pieceDao, final RoomDao roomDao) {
         this.gameDao = gameDao;
         this.pieceDao = pieceDao;
+        this.roomDao = roomDao;
     }
 
-    public long add(final String name, final long hostId, final long guestId) {
-        final long gameId = gameDao.insert(GameDto.of(name, hostId, guestId));
+    public long add(final String name, final long hostId) {
+        final long gameId = gameDao.insert();
+        roomDao.insert(RoomDto.of(gameId, hostId, name));
         pieceDao.insertAll(gameId, Board.createWithInitialLocation().toList());
         return gameId;
     }
 
     public Game findById(final long gameId) {
         final GameDto gameDto = gameDao.findById(gameId);
+        final RoomDto roomDto = roomDao.findByGameId(gameId);
         final List<PieceDto> pieceDtos = pieceDao.selectAll(gameId);
-        return GameFactory.of(gameDto, pieceDtos);
+        return GameFactory.of(gameDto, pieceDtos, roomDto);
     }
 
     public void update(final Game game) {

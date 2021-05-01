@@ -15,10 +15,11 @@ class CommandExecutor {
 
       case 'LOAD_GAME' :
         const contents = document.querySelector('.contents');
-        contents.innerHTML = gameRoom(response.data.whitePlayer, response.data.blackPlayer);
+        contents.innerHTML = gameRoom(response.data.whitePlayer,
+            response.data.blackPlayer);
         this.#board = new Board(response.data.player, response.data.teamColor);
         this.#board.drawBoard(response.data.pieces)
-          break;
+        break;
 
       case 'NEW_USER_NAME' :
         let enemyName = document.querySelector('.enemy .info-name span');
@@ -32,8 +33,10 @@ class CommandExecutor {
         break;
 
       case 'MOVE_PIECE' :
-        const currentPosition = document.getElementById(response.data.currentPosition);
-        const targetPosition = document.getElementById(response.data.targetPosition);
+        const currentPosition = document.getElementById(
+            response.data.currentPosition);
+        const targetPosition = document.getElementById(
+            response.data.targetPosition);
         this.#board.selectItem(currentPosition);
         this.#board.move(targetPosition);
         break;

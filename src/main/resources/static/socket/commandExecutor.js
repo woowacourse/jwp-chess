@@ -14,8 +14,10 @@ class CommandExecutor {
         this.$gameStatus.innerHTML = `<h3> 당신의 팀 컬러 : ${teamColor} </h3> 현재 점수 <br> 화이트 : ${score.whiteTeamScore}   블랙 : ${score.blackTeamScore}`;
         break;
       case 'MOVE' :
-        const currentPosition = document.getElementById(response.data.currentPosition);
-        const targetPosition = document.getElementById(response.data.targetPosition);
+        const currentPosition = document.getElementById(
+            response.data.currentPosition);
+        const targetPosition = document.getElementById(
+            response.data.targetPosition);
         board.selectItem(currentPosition);
         board.move(targetPosition);
         break;
@@ -26,7 +28,8 @@ class CommandExecutor {
         alert(response.data);
         break;
       default :
-        this.$chatContent.insertAdjacentHTML('afterbegin', response.userMessage);
+        this.$chatContent.insertAdjacentHTML('afterbegin',
+            response.userMessage);
     }
   }
 }

@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class
 RoomDaoCaching implements RoomDao {
-    private static Long roomId = 1L;
 
     private static final List<Room> rooms = new ArrayList<>();
+    private static Long roomId = 1L;
 
     @Override
     public Room newRoom(RoomInformation roomInformation) {

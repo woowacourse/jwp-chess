@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile("socket")
 public class Lobby {
+
     private final List<User> users = new ArrayList<>();
 
     public void enter(User user) {

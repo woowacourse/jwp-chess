@@ -2,7 +2,7 @@ package chess.domain.room;
 
 import chess.domain.TeamColor;
 
-public class NormalUser implements User{
+public class NormalUser implements User {
 
     private boolean player;
     private String nickname;

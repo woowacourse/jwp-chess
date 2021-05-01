@@ -8,12 +8,14 @@ import chess.domain.room.Room;
 import org.springframework.hateoas.EntityModel;
 
 public class RoomModel extends EntityModel<Room> {
+
     private Long roomId;
     private String title;
     private int count;
     private boolean locked;
 
-    public RoomModel() {}
+    public RoomModel() {
+    }
 
     public RoomModel(Room room) {
         this.roomId = room.id();

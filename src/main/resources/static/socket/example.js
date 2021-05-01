@@ -43,7 +43,8 @@ function setRoomId({key, target}) {
 }
 
 function clickEvent({target}) {
-  if (!target.classList.contains('ask-form') && board.getColor() === teamColor) {
+  if (!target.classList.contains('ask-form') && board.getColor()
+      === teamColor) {
     let targetBoardItem = target.closest(".board-item");
 
     if (targetBoardItem.classList.contains('movable')) {

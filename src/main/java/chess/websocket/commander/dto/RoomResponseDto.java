@@ -3,6 +3,7 @@ package chess.websocket.commander.dto;
 import chess.domain.room.Room;
 
 public class RoomResponseDto {
+
     private Long roomId;
     private String title;
     private boolean locked;

@@ -10,6 +10,7 @@ import org.springframework.validation.Validator;
 @Component
 @Profile("http")
 public class RoomValidator implements Validator {
+
     private static final String EMPTY_MESSAGE = "패스워드를 입력해주세요.";
 
     @Override

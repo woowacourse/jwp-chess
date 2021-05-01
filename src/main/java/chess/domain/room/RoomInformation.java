@@ -1,6 +1,7 @@
 package chess.domain.room;
 
 public class RoomInformation {
+
     private String title;
     private boolean locked;
     private String password;

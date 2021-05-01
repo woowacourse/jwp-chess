@@ -10,7 +10,8 @@ public class NameDto {
         this.blackName = blackName;
     }
 
-    public NameDto() { }
+    public NameDto() {
+    }
 
     public String getWhiteName() {
         return whiteName;

@@ -1,6 +1,7 @@
 package chess.websocket.commander.dto;
 
 public class MessageDto {
+
     private String sender;
     private String contents;
 

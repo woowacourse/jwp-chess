@@ -1,6 +1,7 @@
 package chess.controller.dto;
 
 public class RoomRequestDto {
+
     private String title;
     private boolean locked;
     private String password;
@@ -13,16 +14,7 @@ public class RoomRequestDto {
         this.nickname = nickname;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public RoomRequestDto() {
     }
 
     public String getNickname() {
@@ -33,18 +25,27 @@ public class RoomRequestDto {
         this.nickname = nickname;
     }
 
-    public RoomRequestDto() {
-    }
-
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public boolean isLocked() {
         return locked;
     }
 
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

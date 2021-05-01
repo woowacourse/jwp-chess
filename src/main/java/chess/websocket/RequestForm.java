@@ -4,6 +4,7 @@ import chess.websocket.commander.Command;
 import java.util.Map;
 
 public class RequestForm {
+
     private Command command;
     private Map<String, Object> data;
 

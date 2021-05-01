@@ -12,40 +12,40 @@ import org.springframework.validation.ObjectError;
 @JsonComponent
 public class ErrorSerializer extends JsonSerializer<Errors> {
 
-  @Override
-  public void serialize(Errors errors, JsonGenerator gen, SerializerProvider serializers)
-      throws IOException {
-    gen.writeStartArray();
-    errors.getFieldErrors().forEach(error -> {
-      try {
-        gen.writeStartObject();
-        fieldError(gen, error);
-        gen.writeEndObject();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    });
-    errors.getGlobalErrors().forEach(error -> {
-      try {
-        gen.writeStartObject();
+    @Override
+    public void serialize(Errors errors, JsonGenerator gen, SerializerProvider serializers)
+        throws IOException {
+        gen.writeStartArray();
+        errors.getFieldErrors().forEach(error -> {
+            try {
+                gen.writeStartObject();
+                fieldError(gen, error);
+                gen.writeEndObject();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        errors.getGlobalErrors().forEach(error -> {
+            try {
+                gen.writeStartObject();
+                globalError(gen, error);
+                gen.writeEndObject();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        gen.writeEndArray();
+    }
+
+    private void fieldError(JsonGenerator gen, FieldError error) throws IOException {
+        gen.writeStringField("field", error.getField());
         globalError(gen, error);
-        gen.writeEndObject();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    });
+    }
 
-    gen.writeEndArray();
-  }
-
-  private void fieldError(JsonGenerator gen, FieldError error) throws IOException {
-    gen.writeStringField("field", error.getField());
-    globalError(gen, error);
-  }
-
-  private void globalError(JsonGenerator gen, ObjectError error) throws IOException {
-    gen.writeStringField("objectName", error.getObjectName());
-    gen.writeStringField("code", error.getCode());
-    gen.writeStringField("defaultMessage", error.getDefaultMessage());
-  }
+    private void globalError(JsonGenerator gen, ObjectError error) throws IOException {
+        gen.writeStringField("objectName", error.getObjectName());
+        gen.writeStringField("code", error.getCode());
+        gen.writeStringField("defaultMessage", error.getDefaultMessage());
+    }
 }

@@ -1,5 +1,5 @@
 package chess.exception;
 
-public class RoomNotFoundException extends RuntimeException{
+public class RoomNotFoundException extends RuntimeException {
 
 }

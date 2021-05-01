@@ -1,5 +1,5 @@
 package chess.exception;
 
-public class MaxPlayerSizeException extends RuntimeException{
+public class MaxPlayerSizeException extends RuntimeException {
 
 }

@@ -1,6 +1,7 @@
 package chess.websocket.commander.dto;
 
 public class EnterRoomRequestDto {
+
     private Long roomId;
     private String nickname;
     private String password;
@@ -11,7 +12,8 @@ public class EnterRoomRequestDto {
         this.password = password;
     }
 
-    public EnterRoomRequestDto() {}
+    public EnterRoomRequestDto() {
+    }
 
     public Long getRoomId() {
         return roomId;

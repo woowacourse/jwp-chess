@@ -89,6 +89,7 @@ class Board {
   }
 
   movable() {
-    return this.#roundStatus != null && this.#teamColor === this.#roundStatus.currentColor;
+    return this.#roundStatus != null && this.#teamColor
+        === this.#roundStatus.currentColor;
   }
 }

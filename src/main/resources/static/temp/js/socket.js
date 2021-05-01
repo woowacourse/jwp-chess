@@ -115,7 +115,7 @@ function submit(target) {
 
     if (target.classList.contains('send-submit')) {
       let contentElement = getElement(target, 'sendContent');
-      if(contentElement.value.length > 0) {
+      if (contentElement.value.length > 0) {
         roomRequest.chat(contentElement.value);
         contentElement.value = '';
       }

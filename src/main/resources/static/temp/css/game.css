@@ -71,42 +71,39 @@
   font-size: 4em;
 }
 
-.hourglass{
-  display:block;
-  background:#464646;
-  margin:3em auto;
-  width:3em;
-  height:5em;
-  animation:hourglass 2s linear infinite;
+.hourglass {
+  display: block;
+  background: #464646;
+  margin: 3em auto;
+  width: 3em;
+  height: 5em;
+  animation: hourglass 2s linear infinite;
 }
 
-.outer{
-  fill:#ada99d;
+.outer {
+  fill: #ada99d;
 }
 
-.middle{
-  fill:#464646;
+.middle {
+  fill: #464646;
 }
 
-@keyframes hourglass{
-  0%{
-    transform:rotate(0deg);
-    box-shadow:
-    inset #ffe97f 0 -0em 0 0,
+@keyframes hourglass {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: inset #ffe97f 0 -0em 0 0,
     inset #464646 0 -2em 0 0,
     inset #ffe97f 0 -4em 0 0;
   }
-  80%{
-    transform:rotate(0deg);
-    box-shadow:
-    inset #ffe97f 0 -2em 0 0,
+  80% {
+    transform: rotate(0deg);
+    box-shadow: inset #ffe97f 0 -2em 0 0,
     inset #464646 0 -2em 0 0,
     inset #ffe97f 0 -2em 0 0;
   }
-  100%{
-    transform:rotate(180deg);
-    box-shadow:
-    inset #ffe97f 0 -2em 0 0,
+  100% {
+    transform: rotate(180deg);
+    box-shadow: inset #ffe97f 0 -2em 0 0,
     inset #464646 0 -2em 0 0,
     inset #ffe97f 0 -2em 0 0;
   }
@@ -124,7 +121,7 @@
 .arrow-up {
   display: none;
   /*border: 1px solid red;*/
-  transform:rotate(90deg);
+  transform: rotate(90deg);
 }
 
 

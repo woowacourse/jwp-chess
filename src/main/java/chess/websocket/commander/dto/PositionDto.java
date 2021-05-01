@@ -1,6 +1,7 @@
 package chess.websocket.commander.dto;
 
 public class PositionDto {
+
     private String currentPosition;
     private String targetPosition;
 

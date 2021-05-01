@@ -9,7 +9,6 @@ import chess.controller.model.RoomModel;
 import chess.domain.TeamColor;
 import chess.domain.room.Room;
 import chess.domain.room.User;
-import chess.exception.RoomNotFoundException;
 import chess.service.RoomService;
 import chess.websocket.commander.dto.EnterRoomRequestDto;
 import java.net.URI;
@@ -51,7 +50,8 @@ public class RoomApiController {
     @PostMapping("/rooms")
     public ResponseEntity createRoom(@RequestBody @Valid RoomRequestDto room) {
         final Long roomId = roomService
-            .createRoom(room.getTitle(), room.isLocked(), room.getPassword(), room.getNickname(), user);
+            .createRoom(room.getTitle(), room.isLocked(), room.getPassword(), room.getNickname(),
+                user);
 
         final URI uri = linkTo(methodOn(RoomApiController.class)
             .findRoom(roomId)).withSelfRel()
@@ -62,7 +62,7 @@ public class RoomApiController {
 
     @GetMapping("/rooms/{id}")
     public ResponseEntity findRoom(@PathVariable Long id) {
-        Room room = roomService.findRoom(id).orElseThrow(RoomNotFoundException::new);
+        Room room = roomService.findRoom(id);
         return ResponseEntity.ok(new RoomModel(room));
     }
 
@@ -77,27 +77,28 @@ public class RoomApiController {
 
     @DeleteMapping("/rooms/{id}")
     public ResponseEntity deleteRoom(@PathVariable Long id) {
-        return null;
+        roomService.removeRoom(id);
+        return ResponseEntity.ok(id);
     }
 
     @PutMapping("/rooms/enter/player")
     public ResponseEntity enterRoomAsPlayer(@RequestBody EnterRoomRequestDto enterRoomRequestDto) {
         roomService.enterRoomAsPlayer(enterRoomRequestDto.getRoomId(),
-            enterRoomRequestDto.getPassword(), TeamColor.BLACK, enterRoomRequestDto.getNickname(), user);
+            enterRoomRequestDto.getPassword(), TeamColor.BLACK, enterRoomRequestDto.getNickname(),
+            user);
 
-        final Room room = roomService.findRoom(enterRoomRequestDto.getRoomId())
-            .orElseThrow(RoomNotFoundException::new);
+        final Room room = roomService.findRoom(enterRoomRequestDto.getRoomId());
 
         return ResponseEntity.ok(new RoomModel(room));
     }
 
     @PutMapping("/rooms/enter/participant")
-    public ResponseEntity enterRoomAsParticipant(@RequestBody EnterRoomRequestDto enterRoomRequestDto) {
+    public ResponseEntity enterRoomAsParticipant(
+        @RequestBody EnterRoomRequestDto enterRoomRequestDto) {
         roomService.enterRoomAsParticipant(enterRoomRequestDto.getRoomId(),
             enterRoomRequestDto.getPassword(), enterRoomRequestDto.getNickname(), user);
 
-        final Room room = roomService.findRoom(enterRoomRequestDto.getRoomId())
-            .orElseThrow(RoomNotFoundException::new);
+        final Room room = roomService.findRoom(enterRoomRequestDto.getRoomId());
 
         return ResponseEntity.ok(new RoomModel(room));
     }

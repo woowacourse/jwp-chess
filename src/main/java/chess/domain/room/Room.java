@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Room {
+
     private static final int MAX_PLAYER_SIZE = 2;
 
     private Long id;
@@ -30,7 +31,7 @@ public class Room {
 
     public void enterAsPlayer(User user, TeamColor teamColor, String nickname) {
         long playerCount = users.stream().filter(User::isPlayer).count();
-        if(playerCount >= MAX_PLAYER_SIZE) {
+        if (playerCount >= MAX_PLAYER_SIZE) {
             throw new MaxPlayerSizeException();
         }
         user.setAsPlayer(id, teamColor, nickname);

@@ -70,7 +70,8 @@ public class ChessApiController {
     }
 
     @PostMapping("/{gameId}/move")
-    public ResponseEntity<RoundStatusDto> move(@PathVariable Long gameId, @RequestBody PositionDto position) {
+    public ResponseEntity<RoundStatusDto> move(@PathVariable Long gameId,
+        @RequestBody PositionDto position) {
         chessService.move(
             gameId,
             stringPositionConverter.convert(position.getCurrentPosition()),

@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,7 +52,9 @@ class RoomRestControllerTest {
                 .content(mapper.writeValueAsString(roomDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(request).andExpect(status().isOk());
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @DisplayName("유효하지 않은 이름으로 방 생성 (너무 짧은 방 이름)")

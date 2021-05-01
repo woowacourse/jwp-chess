@@ -14,47 +14,49 @@ window.onload = function () {
 }
 
 async function startNewGame(e) {
-  const whiteUserName = prompt("흰색 유저 이름을 입력하세요.");
-  const blackUserName = prompt("검정색 유저 이름을 입력하세요.");
+  const userName = prompt("유저 이름을 입력하세요.");
+  const password = prompt("비밀번호를 입력하세요.");
 
   try {
-    validateName(whiteUserName, blackUserName);
+    validateInput(userName, password);
   } catch (e) {
-    alert("이름이 비어있거나, 같은 이름을 입력했습니다.");
+    alert(e.message);
     return;
   }
-
-  const host = await getExistentUser(whiteUserName);
-  const guest = await getExistentUser(blackUserName);
-  if (!host || !guest) {
-    alert("존재하지 않는 유저가 있습니다.");
+  const response = await requestAuthentication(userName, password);
+  if (!response) {
+    alert("로그인에 실패했습니다.");
     return;
   }
-
-  await createGame(host["id"], guest["id"]);
-}
-
-async function getExistentUser(userName) {
-  const params = {
-    name: userName
+  console.log(response);
+  const roomName = prompt("방 이름을 입력하세요.");
+  if (roomName.length === 0) {
+    throw Error("방 이름을 입력하지 않았습니다.");
   }
-  return await getData(`${url}/api/users`, params);
+  await createGame(response["id"], roomName);
 }
 
-function validateName(whiteName, blackName) {
-  if (whiteName.length === 0 || blackName.length === 0) {
+function validateInput(userName, password) {
+  if (userName.length === 0) {
     throw Error("이름을 입력하지 않았습니다.");
   }
-  if (whiteName === blackName) {
-    throw Error("유저의 이름은 같을 수 없습니다.");
+  if (password.length === 0) {
+    throw Error("비밀번호를 입력하지 않았습니다.");
   }
 }
 
-async function createGame(hostId, guestId) {
+async function requestAuthentication(userName, password) {
+  const params = {
+    name: userName,
+    password: password
+  }
+  return await postData(`${url}/api/users/authentication`, params);
+}
+
+async function createGame(hostId, gameName) {
   const body = {
-    name: "임시 방이름",
-    hostId: hostId,
-    guestId: guestId
+    name: gameName,
+    hostId: hostId
   };
   await postData(`${url}/games`, body);
 }
@@ -86,8 +88,7 @@ async function registerMember() {
     name: name,
     password: password
   };
-  const response2 = await postData(`${url}/api/users`, body);
-  if (response2) {
+  if (await postData(`${url}/api/users`, body)) {
     alert("회원가입 완료!")
   } else {
     alert("회원가입이 실패했습니다. 잠시 후 다시 시도해 주세요.")

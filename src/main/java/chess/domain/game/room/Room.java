@@ -5,11 +5,11 @@ public class Room {
     private final long id;
     private final String name;
     private final long hostId;
-    private final long guestId;
+    private final Long guestId;
     private final boolean hostParticipated;
     private final boolean guestParticipated;
 
-    public Room(final long id, final String name, final long hostId, final long guestId,
+    public Room(final long id, final String name, final long hostId, final Long guestId,
         final boolean hostParticipated, final boolean guestParticipated) {
 
         this.id = id;
@@ -32,7 +32,7 @@ public class Room {
         return hostId;
     }
 
-    public long getGuestId() {
+    public Long getGuestId() {
         return guestId;
     }
 

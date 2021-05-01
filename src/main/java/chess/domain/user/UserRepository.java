@@ -2,6 +2,8 @@ package chess.domain.user;
 
 import chess.dao.UserDao;
 import chess.dao.dto.UserDto;
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,9 +24,11 @@ public class UserRepository {
         return userDto.toEntity();
     }
 
-    public User findById(final long id) {
-        final UserDto userDto = userDao.selectById(id);
-        return userDto.toEntity();
+    public User findById(final Long id) {
+        if (Objects.isNull(id)) {
+            return User.empty();
+        }
+        return userDao.selectById(id).toEntity();
     }
 
 }

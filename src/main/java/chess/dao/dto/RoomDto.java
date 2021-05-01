@@ -7,12 +7,12 @@ public class RoomDto {
     private final long id;
     private final long gameId;
     private final long hostId;
-    private final long guestId;
+    private final Long guestId;
     private final String name;
     private final boolean hostParticipated;
     private final boolean guestParticipated;
 
-    private RoomDto(final long id, final long gameId, final long hostId, final long guestId,
+    private RoomDto(final long id, final long gameId, final long hostId, final Long guestId,
         final String name, final boolean hostParticipated, final boolean guestParticipated) {
 
         this.id = id;
@@ -25,7 +25,7 @@ public class RoomDto {
     }
 
     public static RoomDto of(final long id, final long gameId, final long hostId,
-        final long guestId, final String name, final boolean hostParticipated,
+        final Long guestId, final String name, final boolean hostParticipated,
         final boolean guestParticipated) {
 
         return new RoomDto(id, gameId, hostId, guestId, name, hostParticipated, guestParticipated);

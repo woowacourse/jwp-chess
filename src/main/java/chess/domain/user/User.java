@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 public class User {
 
+    private static final User EMPTY_USER = new User(0, "", "", LocalDateTime.MIN);
+
     private final long id;
     private final String name;
     private final String password;
@@ -16,6 +18,16 @@ public class User {
         this.name = name;
         this.password = password;
         this.createdTime = createdTime;
+    }
+
+    public static User empty() {
+        return EMPTY_USER;
+    }
+
+    public void checkPassword(final String password) {
+        if (!this.password.equals(password)) {
+            throw new WrongPasswordException(password);
+        }
     }
 
     public long getId() {
@@ -33,5 +45,5 @@ public class User {
     public LocalDateTime getCreatedTime() {
         return createdTime;
     }
-
+    
 }

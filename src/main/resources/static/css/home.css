@@ -96,10 +96,6 @@ button:hover:after {
     padding: 2vh 6vw;
 }
 
-.middle-wrapper {
-    display: flex;
-}
-
 .button-wrapper {
     padding-top: 2vh;
     display: flex;

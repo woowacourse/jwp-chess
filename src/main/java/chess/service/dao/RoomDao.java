@@ -42,7 +42,7 @@ public class RoomDao {
         return jdbcTemplate.queryForObject(query, Boolean.class, roomName);
     }
 
-    public void delete(final long roomId) {
+    public void delete(final Long roomId) {
         jdbcTemplate.update("DELETE FROM room WHERE id = ?", roomId);
     }
 
@@ -52,7 +52,7 @@ public class RoomDao {
                 ));
     }
 
-    public String name(final long roomId) {
+    public String name(final Long roomId) {
         final String query = "SELECT room_name FROM room WHERE id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
     }

@@ -1,10 +1,8 @@
 package chess.view;
 
 import chess.domain.piece.Owner;
-import org.springframework.validation.FieldError;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OutputView {
 
@@ -19,11 +17,5 @@ public class OutputView {
             return winner.name();
         }
         return "무승부";
-    }
-
-    public static String getErrorMessage(final List<FieldError> fieldError) {
-        return fieldError.stream()
-                .map(error -> error.getDefaultMessage())
-                .collect(Collectors.joining(", "));
     }
 }

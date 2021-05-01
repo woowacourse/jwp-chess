@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.domain.piece.Owner;
+import chess.exception.InvalidRoomException;
 import chess.service.dao.PlayerDao;
 import chess.service.dao.RoomDao;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class PlayerService {
         this.playerDao = playerDao;
     }
 
-    public void enter(final long roomId, final String playerId) {
+    public void enter(final Long roomId, final String playerId) {
         final List<String> players = playerDao.players(roomId);
 
         if (isAlreadyJoined(players, playerId)) {
@@ -27,7 +28,7 @@ public class PlayerService {
         }
 
         if (isFull(players)) {
-            throw new IllegalArgumentException("이미 가득 찬 방입니다.");
+            throw new InvalidRoomException("이미 가득 찬 방입니다.");
         }
 
         playerDao.enter(roomId, playerId);
@@ -41,7 +42,7 @@ public class PlayerService {
         return players.size() == MAXIMUM_SIZE_OF_ROOM;
     }
 
-    public Owner ownerOfPlayer(final long roomId, final String playerId) {
+    public Owner ownerOfPlayer(final Long roomId, final String playerId) {
         return playerDao.getOwner(roomId, playerId);
     }
 }

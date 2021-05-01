@@ -1,13 +1,13 @@
 package chess.controller;
 
-import chess.domain.board.position.Position;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.view.OutputView;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/game")
@@ -21,20 +21,23 @@ public class GameController {
     }
 
     @GetMapping("/load/{roomId}")
-    public String loadGame(@PathVariable final Long roomId, final Model model) {
+    public ModelAndView loadGame(@PathVariable final Long roomId) {
         if (gameService.isGameEnd(roomId)) {
-            return "redirect:/game/result/" + roomId;
+            return new ModelAndView("redirect:/game/result/" + roomId);
         }
 
-        model.addAttribute("room", roomService.roomInfo(roomId));
-        model.addAttribute("game", gameService.gameInfo(roomId));
-        return "chessBoardPage";
+        final ModelAndView view = new ModelAndView("chessBoardPage");
+        view.addObject("room", roomService.roomInfo(roomId));
+        view.addObject("game", gameService.gameInfo(roomId));
+        return view;
     }
 
     @GetMapping("/result/{roomId}")
-    public String printResult(@PathVariable final Long roomId, final Model model) {
+    public ModelAndView printResult(@PathVariable final Long roomId) {
         final String winnerName = OutputView.decideWinnerName(gameService.winner(roomId));
-        model.addAttribute("winner", winnerName);
-        return "winningResultPage";
+
+        final ModelAndView view = new ModelAndView("winningResultPage");
+        view.addObject("winner", winnerName);
+        return view;
     }
 }

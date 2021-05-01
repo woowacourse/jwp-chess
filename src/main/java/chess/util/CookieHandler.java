@@ -1,5 +1,6 @@
 package chess.util;
 
+import chess.exception.InvalidUserException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
@@ -57,7 +58,7 @@ public class CookieHandler {
 
     public void validatePlayerCookie(final Cookie cookie) {
         if (Objects.isNull(cookie)) {
-            throw new IllegalArgumentException("사용자 비밀번호가 없습니다.");
+            throw new InvalidUserException("사용자 쿠기 정보가 없습니다.");
         }
     }
 }

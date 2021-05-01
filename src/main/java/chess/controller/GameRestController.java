@@ -6,17 +6,13 @@ import chess.dto.ReachablePositionsDto;
 import chess.service.GameService;
 import chess.service.PlayerService;
 import chess.util.CookieHandler;
-import com.sun.jndi.toolkit.url.Uri;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriBuilder;
-import org.springframework.web.util.UriBuilderFactory;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/game")
@@ -43,11 +39,8 @@ public class GameRestController {
         cookieHandler.extendAge(cookie, response);
 
         final Owner owner = playerService.ownerOfPlayer(roomId, cookie.getValue());
-        final ReachablePositionsDto reachablePositions = new ReachablePositionsDto(gameService.reachable(roomId, source, owner));
-        return ResponseEntity.ok(reachablePositions);
+        return ResponseEntity.ok(new ReachablePositionsDto(gameService.reachable(roomId, source, owner)));
     }
-
-
 
     @PostMapping("/move/{roomId}")
     public ResponseEntity move(@PathVariable final Long roomId,

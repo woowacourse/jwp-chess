@@ -20,12 +20,12 @@ public class RoomService {
 
     public long create(final String roomName, final String player1) {
         final ChessGame chessGame = ChessGame.initNew();
-        final long roomId = roomDao.save(roomName, player1);
+        final Long roomId = roomDao.save(roomName, player1);
         gameDao.save(roomId, chessGame.turn(), chessGame.board());
         return roomId;
     }
 
-    public void delete(final long roomId) {
+    public void delete(final Long roomId) {
         gameDao.delete(roomId);
         roomDao.delete(roomId);
     }
@@ -34,7 +34,7 @@ public class RoomService {
         return roomDao.loadRooms();
     }
 
-    public RoomDto roomInfo(final long roomId) {
+    public RoomDto roomInfo(final Long roomId) {
         return new RoomDto(roomId, roomDao.name(roomId));
     }
 }

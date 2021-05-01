@@ -2,9 +2,9 @@ package chess.controller;
 
 import chess.service.RoomService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/room")
@@ -16,8 +16,9 @@ public class RoomController {
     }
 
     @GetMapping("/list")
-    public String loadRoomList(final Model model) {
-        model.addAttribute("list", roomService.loadList());
-        return "mainPage";
+    public ModelAndView loadRoomList() {
+        final ModelAndView view = new ModelAndView("mainPage");
+        view.addObject("list", roomService.loadList());
+        return view;
     }
 }

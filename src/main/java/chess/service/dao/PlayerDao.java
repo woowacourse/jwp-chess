@@ -1,14 +1,12 @@
 package chess.service.dao;
 
 import chess.domain.piece.Owner;
-import chess.dto.RoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Repository
 public class PlayerDao {
@@ -19,22 +17,22 @@ public class PlayerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void enter(final long roomId, final String playerId) {
+    public void enter(final Long roomId, final String playerId) {
         final String query = "UPDATE room SET player2 = ? WHERE id = ?";
         jdbcTemplate.update(query, playerId, roomId);
     }
 
-    public String player1(final long roomId) {
+    public String player1(final Long roomId) {
         final String query = "SELECT player1 FROM room WHERE id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
     }
 
-    public String player2(final long roomId) {
+    public String player2(final Long roomId) {
         final String query = "SELECT player2 FROM room WHERE id = ?";
         return jdbcTemplate.queryForObject(query, String.class, roomId);
     }
 
-    public List<String> players(final long roomId) {
+    public List<String> players(final Long roomId) {
         final List<String> players = new ArrayList<>();
         addIfExist(players, player1(roomId));
         addIfExist(players, player2(roomId));
@@ -48,7 +46,7 @@ public class PlayerDao {
         players.add(playerId);
     }
 
-    public Owner getOwner(final long roomId, final String playerId) {
+    public Owner getOwner(final Long roomId, final String playerId) {
         if (isPlayer1(roomId, playerId)) {
             return Owner.WHITE;
         }
@@ -60,11 +58,11 @@ public class PlayerDao {
         throw new IllegalArgumentException("적절하지 않은 사용자입니다.");
     }
 
-    private boolean isPlayer1(final long roomId, final String playerId) {
+    private boolean isPlayer1(final Long roomId, final String playerId) {
         return playerId.equals(player1(roomId));
     }
 
-    private boolean isPlayer2(final long roomId, final String playerId) {
+    private boolean isPlayer2(final Long roomId, final String playerId) {
         return playerId.equals(player2(roomId));
     }
 }

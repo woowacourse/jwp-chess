@@ -7,6 +7,7 @@ import chess.domain.piece.Owner;
 import chess.domain.player.Players;
 import chess.domain.player.Scores;
 import chess.domain.player.Turn;
+import chess.exception.InvalidMovementException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +46,7 @@ public class ChessGame {
         if (isTurn(owner)) {
             return;
         }
-        throw new IllegalArgumentException("적절하지 않은 턴입니다.");
+        throw new InvalidMovementException("현재 턴이 아닙니다.");
     }
 
     public boolean isTurn(final Owner owner) {

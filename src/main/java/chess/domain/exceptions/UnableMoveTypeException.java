@@ -1,8 +1,10 @@
 package chess.domain.exceptions;
 
-public class UnableMoveTypeException extends IllegalArgumentException {
+import org.springframework.http.HttpStatus;
+
+public class UnableMoveTypeException extends ChessException {
 
     public UnableMoveTypeException() {
-        super("해당 말이 이동할 수 있는 위치가 아닙니다.");
+        super(HttpStatus.BAD_REQUEST, "해당 말이 이동할 수 있는 위치가 아닙니다.");
     }
 }

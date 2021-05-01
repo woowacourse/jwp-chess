@@ -12,10 +12,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GameTest {
+    private static final String WHITE_PW = "1234";
+    private static final String BLACK_PW = "1234";
+
     @DisplayName("Game점수 전체 계산")
     @Test
     void calculateGamePoint_int() {
-        Game game = Game.newGame();
+        Game game = Game.newGame(WHITE_PW);
+        game.setBlackPassword(BLACK_PW);
 
         double whitePoint = game.computeWhitePoint();
         double blackPoint = game.computeBlackPoint();
@@ -27,7 +31,9 @@ class GameTest {
     @DisplayName("Game Pawn이 여러개 있을 때의 점수 전체 계산")
     @Test
     void calculateGamePawnPoint_int() {
-        Game game = Game.newGame();
+        Game game = Game.newGame(WHITE_PW);
+        game.setBlackPassword(BLACK_PW);
+
         Board board = game.getBoard();
         Piece pawnPiece = new Piece(PieceKind.PAWN, PieceColor.WHITE);
         Position firstPawnPosition = Position.of('c', 3);
@@ -43,9 +49,10 @@ class GameTest {
     @DisplayName("게임 차례 위반 테스트")
     @Test
     void judgeTurn_ThrownError() {
-        Game game = Game.newGame();
+        Game game = Game.newGame(WHITE_PW);
+        game.setBlackPassword(BLACK_PW);
 
-        assertThatThrownBy(() -> game.move("e7", "e6"))
+        assertThatThrownBy(() -> game.move("e7", "e6", WHITE_PW))
             .isInstanceOf(RuntimeException.class)
             .hasMessageContaining("해당 턴이 아닙니다.");
     }
@@ -53,14 +60,16 @@ class GameTest {
     @DisplayName("게임 승패 알아보는 테스트")
     @Test
     void judgeWinner_PieceColor() {
-        Game game = Game.newGame();
+        Game game = Game.newGame(WHITE_PW);
+        game.setBlackPassword(BLACK_PW);
+
         Board board = game.getBoard();
         Piece queenPiece = new Piece(PieceKind.QUEEN, PieceColor.WHITE);
         Position checkMatePosition = Position.of('e', 7);
-        game.move("a2", "a3");
-        game.move("e7", "e6");
+        game.move("a2", "a3", WHITE_PW);
+        game.move("e7", "e6", WHITE_PW);
         board.putPieceAtPosition(checkMatePosition, queenPiece);
-        game.move("e7", "e8");
+        game.move("e7", "e8", WHITE_PW);
 
         PieceColor winnerColor = game.winnerColor();
 

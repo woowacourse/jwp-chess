@@ -1,8 +1,10 @@
 package chess.domain.exceptions;
 
-public class OverDistanceException extends IllegalArgumentException {
+import org.springframework.http.HttpStatus;
+
+public class OverDistanceException extends ChessException {
 
     public OverDistanceException() {
-        super("해당 말의 이동 가능한 거리를 초과했습니다.");
+        super(HttpStatus.BAD_REQUEST, "해당 말의 이동 가능한 거리를 초과했습니다.");
     }
 }

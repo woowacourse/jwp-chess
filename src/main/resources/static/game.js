@@ -5,7 +5,7 @@ function startGame() {
         type: "POST",
         url: "/game",
         data: {
-            roomName: getParameterByName('roomName')
+            roomName: document.getElementById("roomName").innerText
         },
         dataType: "json",
         success: setBoard,
@@ -27,13 +27,6 @@ function setBoard(res) {
     status();
 }
 
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-
 document.addEventListener("click", squareClick);
 document.getElementById("end").addEventListener("click", endGame);
 document.getElementById("restart").addEventListener("click", restartGame);
@@ -41,9 +34,9 @@ document.getElementById("restart").addEventListener("click", restartGame);
 function restartGame() {
     $.ajax({
         type: "GET",
-        url: "/restart",
+        url: `/new-game/${document.getElementById("roomName").innerText}`,
         data: {
-            roomName: getParameterByName('roomName')
+            roomName: document.getElementById("roomName").innerText
         },
         dataType: "json",
         success: setBoard,
@@ -78,10 +71,10 @@ function squareClick(event) {
 
 function endGame() {
     $.ajax({
-        type: "POST",
-        url: "/end",
+        type: "DELETE",
+        url: "/game",
         data: {
-            roomName: getParameterByName('roomName')
+            roomName: document.getElementById("roomName").innerText
         },
         dataType: "json",
         complete: goHome
@@ -94,14 +87,15 @@ function goHome() {
 
 function move() {
     $.ajax({
-        type: "POST",
-        url: "/move",
-        data: {
+        type: "PUT",
+        contentType: 'application/json',
+        url: "/game",
+        data: JSON.stringify({
             source: document.getElementsByClassName("source")[0].id,
             target: document.getElementsByClassName("target")[0].id,
-            roomName:  getParameterByName('roomName')
-        },
-        dataType: "json",
+            roomName: document.getElementById("roomName").innerText
+        }),
+        dataType: 'json',
         success: switchPiece,
         error: errorMessage,
         complete: clearSelect()
@@ -109,6 +103,7 @@ function move() {
 }
 
 function switchPiece(res) {
+    console.log(res);
     let sourceElement = document.getElementById(res.source).firstElementChild;
     let targetElement = document.getElementById(res.target).firstElementChild;
     let blankImgUrl = "./img/Blank.png";
@@ -140,10 +135,7 @@ function turnSetting(turn) {
 function status() {
     $.ajax({
         type: "GET",
-        url: "/status",
-        data: {
-            roomName: getParameterByName('roomName')
-        },
+        url: `/status/${document.getElementById("roomName").innerText}`,
         success: printStatus,
         error: errorMessage,
     });

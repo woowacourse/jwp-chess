@@ -1,8 +1,10 @@
 package chess.domain.exceptions;
 
-public class UnableCrossException extends IllegalArgumentException {
+import org.springframework.http.HttpStatus;
+
+public class UnableCrossException extends ChessException {
 
     public UnableCrossException() {
-        super("해당 말은 뛰어넘기가 불가합니다.");
+        super(HttpStatus.BAD_REQUEST, "해당 말은 뛰어넘기가 불가합니다.");
     }
 }

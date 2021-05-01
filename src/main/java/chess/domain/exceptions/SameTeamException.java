@@ -1,8 +1,10 @@
 package chess.domain.exceptions;
 
-public class SameTeamException extends IllegalArgumentException {
+import org.springframework.http.HttpStatus;
+
+public class SameTeamException extends ChessException {
 
     public SameTeamException() {
-        super("같은 팀의 말입니다.");
+        super(HttpStatus.BAD_REQUEST, "같은 팀의 말입니다.");
     }
 }

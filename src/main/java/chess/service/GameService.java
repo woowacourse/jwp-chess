@@ -2,7 +2,6 @@ package chess.service;
 
 import chess.domain.board.Position;
 import chess.domain.game.ChessGame;
-import chess.dto.MoveDto;
 import chess.repository.ChessRepository;
 import org.springframework.stereotype.Service;
 

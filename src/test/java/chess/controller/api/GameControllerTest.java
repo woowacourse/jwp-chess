@@ -62,7 +62,7 @@ class GameControllerTest {
         ChessGame chessGame = new ChessGame(1L, Color.WHITE, false, new ChessBoard(), "test-game");
         chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
         given(gameService.loadGame(1L)).willReturn(chessGame);
-        willDoNothing().given(gameService).move(1L, moveDto);
+        willDoNothing().given(gameService).move(1L, moveDto.getSource(), moveDto.getTarget());
 
         mockMvc.perform(put("/game/1/move")
                 .content(objectMapper.writeValueAsString(moveDto))
@@ -70,7 +70,7 @@ class GameControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(new ChessGameDto(chessGame))));
 
-        then(gameService).should(times(1)).move(any(), any());
+        then(gameService).should(times(1)).move(any(), any(), any());
         then(gameService).should(times(1)).loadGame(1L);
         then(gameService).shouldHaveNoMoreInteractions();
     }
@@ -78,14 +78,14 @@ class GameControllerTest {
     @Test
     @DisplayName("움직일 수 없는 경우 404")
     void moveFailed() throws Exception {
-        willThrow(new IllegalArgumentException()).given(gameService).move(eq(1L), any());
+        willThrow(new IllegalArgumentException()).given(gameService).move(eq(1L), any(), any());
 
         mockMvc.perform(put("/game/1/move")
                 .content(objectMapper.writeValueAsString(new MoveDto("b1", "b2")))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        then(gameService).should(times(1)).move(any(), any());
+        then(gameService).should(times(1)).move(any(), any(), any());
         then(gameService).shouldHaveNoMoreInteractions();
     }
 

@@ -15,8 +15,6 @@ import org.springframework.web.util.UriBuilderFactory;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Max;
-import java.net.URI;
 import java.util.Map;
 import java.util.Objects;
 
@@ -36,33 +34,25 @@ public class GameRestController {
     }
 
     @GetMapping("/reachable/{roomId}")
-    public ReachablePositionsDto reachable(@PathVariable final Long roomId,
-                                           @RequestParam final Position source,
-                                           final HttpServletRequest request,
-                                           final HttpServletResponse response) {
+    public ResponseEntity reachable(@PathVariable final Long roomId,
+                                    @RequestParam final Position source,
+                                    final HttpServletRequest request,
+                                    final HttpServletResponse response) {
         final Cookie cookie = cookieHandler.search(roomId, request);
-        validatePlayerCookie(cookie);
+        cookieHandler.validatePlayerCookie(cookie);
         cookieHandler.extendAge(cookie, response);
 
         final Owner owner = playerService.ownerOfPlayer(roomId, cookie.getValue());
-        return new ReachablePositionsDto(gameService.reachable(roomId, source, owner));
+        final ReachablePositionsDto reachablePositions = new ReachablePositionsDto(gameService.reachable(roomId, source, owner));
+        return ResponseEntity.ok(reachablePositions);
     }
 
-    private void validatePlayerCookie(final Cookie cookie) {
-        if (Objects.isNull(cookie)) {
-            throw new IllegalArgumentException("사용자 비밀번호가 없습니다.");
-        }
-    }
+
 
     @PostMapping("/move/{roomId}")
     public ResponseEntity move(@PathVariable final Long roomId,
                                @RequestBody final Map<String, Position> positions) {
-
         gameService.move(roomId, positions.get("source"), positions.get("target"));
-
-        if (gameService.isGameEnd(roomId)) {
-            return ResponseEntity.ok(URI.create("/game/result/" + roomId));
-        }
-        return ResponseEntity.ok(URI.create("/game/load/" + roomId));
+        return ResponseEntity.ok("/game/load/" + roomId);
     }
 }

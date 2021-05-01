@@ -50,7 +50,14 @@ public class CookieHandler {
         }
 
         return Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals(DEFAULT_COOKIE_NAME + roomId)).findFirst()
+                .filter(cookie -> cookie.getName().equals(DEFAULT_COOKIE_NAME + roomId))
+                .findFirst()
                 .orElse(null);
+    }
+
+    public void validatePlayerCookie(final Cookie cookie) {
+        if (Objects.isNull(cookie)) {
+            throw new IllegalArgumentException("사용자 비밀번호가 없습니다.");
+        }
     }
 }

@@ -4,6 +4,7 @@ import chess.domain.board.position.Position;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.view.OutputView;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

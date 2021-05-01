@@ -30,13 +30,13 @@ public class RoomRestController {
     }
 
     @PostMapping
-    public long createRoom(@RequestBody @Valid final RoomDto room,
-                           final BindingResult bindingResult,
-                           final HttpServletResponse response) {
+    public ResponseEntity createRoom(@RequestBody @Valid final RoomDto room,
+                                     final BindingResult bindingResult,
+                                     final HttpServletResponse response) {
         handleBindingResult(bindingResult);
         final long roomId = roomService.create(room.getRoomName(), room.getPlayer1());
         cookieHandler.addPlayerIdCookie(response, roomId, room.getPlayer1());
-        return roomId;
+        return ResponseEntity.ok(roomId);
     }
 
     @DeleteMapping("/{roomId}")
@@ -45,7 +45,7 @@ public class RoomRestController {
                                      final HttpServletResponse response) {
         cookieHandler.remove(roomId, request, response);
         roomService.delete(roomId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(roomId);
     }
 
     @PostMapping("/enter/{roomId}")
@@ -54,7 +54,7 @@ public class RoomRestController {
                                     final HttpServletResponse response) {
         playerService.enter(roomId, playerId);
         cookieHandler.addPlayerIdCookie(response, roomId, playerId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(roomId);
     }
 
     private void handleBindingResult(final BindingResult bindingResult) {

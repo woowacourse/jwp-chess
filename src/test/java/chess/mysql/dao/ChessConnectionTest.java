@@ -1,5 +1,6 @@
 package chess.mysql.dao;
 
+import chess.mysql.chess.ChessConnection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

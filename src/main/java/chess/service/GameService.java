@@ -18,12 +18,10 @@ public class GameService {
         this.chessRepository = chessRepository;
     }
 
-    public void move(Long id, MoveDto moveDto) {
+    public void move(Long id, String source, String target) {
         ChessGame chessGame = loadGame(id);
-        Position sourcePosition = Position.of(moveDto.getSource());
-        Position targetPosition = Position.of(moveDto.getTarget());
 
-        chessGame.move(sourcePosition, targetPosition);
+        chessGame.move(Position.of(source), Position.of(target));
         checkGameOver(id, chessGame);
 
         chessRepository.saveGame(id, chessGame);

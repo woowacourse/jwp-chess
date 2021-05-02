@@ -5,10 +5,10 @@ DROP TABLE IF EXISTS room;
 
 CREATE TABLE room
 (
-    room_id    BIGINT      NOT NULL,
-    turn       VARCHAR(16) NOT NULL,
-    is_playing BOOLEAN     NOT NULL,
-    name       VARCHAR(16) NOT NULL,
+    room_id    BIGINT       NOT NULL AUTO_INCREMENT,
+    turn       VARCHAR(16)  NOT NULL,
+    is_playing BOOLEAN      NOT NULL,
+    name       VARCHAR(100) NOT NULL,
     password   VARCHAR(16),
     create_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (room_id)

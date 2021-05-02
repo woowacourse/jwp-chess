@@ -1,7 +1,9 @@
 const url = "http://localhost:8080"
+let socket;
 let stompClient;
 let gameInfo = {};
 let source = null;
+let isLooser = false;
 
 const btnEnd = document.getElementById('btn-end')
 const piecesMap = {
@@ -10,14 +12,15 @@ const piecesMap = {
 }
 let roomId = "";
 
-window.onload = () => {
+window.onload = async () => {
     const urls = location.href.split("/");
     roomId = urls[urls.length - 1];
-    connectToSocket(roomId);
+    await connectToSocket(roomId);
     loadChessGame();
 }
 
 btnEnd.addEventListener('click', function (e) {
+    isLooser = true;
     exitRoom();
 });
 
@@ -27,23 +30,24 @@ function exitRoom() {
         'id' : roomId,
         'gameId' : gameInfo.id
     }).then(function (response) {
-        document.location.href = "/";
     }).catch(function (error) {
-        alert('게임을 떠날 수 없습니다.');
+    }).finally(function () {
+        alert('게임을 종료 합니다.')
+        location.href = "/";
     });
 }
 
-function connectToSocket(roomId) {
-    let socket = new SockJS(url + "/chess_game");
+async function connectToSocket(roomId) {
+    socket = new SockJS(url + "/chess_game");
     stompClient = Stomp.over(socket);
-
     stompClient.connect({}, function (frame) {
         stompClient.subscribe("/topic/game/" + roomId, function (response) {
             const data = JSON.parse(response.body);
-            refreshChessBoard(data)
             if (gameInfo.end) {
-                socket.close();
+                stompClient.unsubscribe();
+                socket.close;
             }
+            refreshChessBoard(data)
         })
     })
 }
@@ -54,7 +58,6 @@ function loadChessGame() {
     }
     axios.get('/api/game/' + roomId)
         .then(function (response) {
-            refreshChessBoard(response.data)
         }).catch(function (error) {
             if (error.response.status === 400) {
                 alert(error.data);
@@ -109,12 +112,10 @@ function movePiece(target) {
         'from': source.getAttribute('id'),
         'to': target.getAttribute('id')
     }
-
     axios.put('/api/game/' + roomId + "/move", body)
         .then(function (response) {
             source.classList.remove('selected-piece')
             source = null;
-            refreshChessBoard(response.data);
         })
         .catch(function (error) {
             alert('움직일 수 없습니다.');
@@ -161,8 +162,8 @@ function clearSelect() {
 }
 
 function refreshChessBoard(chessGame) {
-    if (chessGame.end) {
-        alert('상대가 나갔거나, 게임이 끝났습니다.')
+    if (chessGame.end && !isLooser) {
+        alert('상대방이 나갔거나 게임이 끝났습니다.')
         exitRoom();
         return;
     }

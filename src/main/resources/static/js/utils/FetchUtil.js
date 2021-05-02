@@ -50,6 +50,9 @@ export async function putData(url = '', data = {}) {
     body: await JSON.stringify(data)
   })
   .then(response => {
+    if (response.redirected) {
+      window.location.href = response.url;
+    }
     if (!response.ok) {
       throw new Error(response.status);
     }

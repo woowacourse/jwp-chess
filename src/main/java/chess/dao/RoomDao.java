@@ -46,9 +46,19 @@ public class RoomDao {
         return jdbcTemplate.queryForObject(sql, roomRowMapper, gameId);
     }
 
+    public RoomDto selectIdById(final long id) {
+        final String sql = "SELECT * FROM room WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, roomRowMapper, id);
+    }
+
     public List<RoomDto> selectBatchWithEmptyGuest() {
         final String sql = "SELECT * FROM room WHERE guest_id IS NULL";
         return jdbcTemplate.query(sql, roomRowMapper);
+    }
+
+    public void updateGuestById(final long guestId, final long id) {
+        final String sql = "UPDATE room SET guest_id = ? WHERE id = ?";
+        jdbcTemplate.update(sql, guestId, id);
     }
 
 }

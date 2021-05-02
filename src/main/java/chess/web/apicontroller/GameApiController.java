@@ -6,7 +6,6 @@ import chess.web.dto.game.GameResponseDto;
 import chess.web.dto.game.move.MoveCheckResponseDto;
 import chess.web.dto.game.move.MoveRequestDto;
 import chess.web.dto.game.move.MoveResponseDto;
-import chess.web.dto.game.room.RoomsResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,11 +23,6 @@ public class GameApiController {
 
     public GameApiController(final GameService gameService) {
         this.gameService = gameService;
-    }
-
-    @GetMapping
-    public ResponseEntity<RoomsResponseDto> bringRoomData() {
-        return ResponseEntity.ok().body(gameService.retrieveRoomsData());
     }
 
     @GetMapping("/{gameId}")

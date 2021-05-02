@@ -1,7 +1,7 @@
 import {Board} from "./board/Board.js"
-import {HOST, GUEST, Role} from "./role/Role.js";
+import {GUEST, HOST, Role} from "./role/Role.js";
 import {getData} from "./utils/FetchUtil.js"
-import {USER_ID_KEY, getCookie} from "./utils/CookieUtil.js";
+import {getCookie, USER_ID_KEY} from "./utils/CookieUtil.js";
 
 const url = "http://localhost:8080";
 
@@ -17,9 +17,10 @@ window.onload = async function () {
   const guest = response["guest"];
   const name = response["name"];
   const turn = response["turn"];
-  const isFinished = response["isFinished"];
+  const finished = response["finished"];
   const role = makeRole(host, guest);
-  if (isFinished) {
+  console.log(finished);
+  if (finished) {
     alert("이미 끝난 게임입니다. 홈으로 돌아갑니다.");
     history.back();
     return;

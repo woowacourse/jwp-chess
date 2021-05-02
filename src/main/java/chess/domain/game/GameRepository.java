@@ -42,6 +42,10 @@ public class GameRepository {
         return GameFactory.of(gameDto, pieceDtos, roomDto);
     }
 
+    public long findGameIdByRoomId(final long roomId) {
+        return roomDao.selectIdById(roomId).getGameId();
+    }
+
     public Rooms findEmptyRooms() {
         final List<RoomDto> roomDtos = roomDao.selectBatchWithEmptyGuest();
         final List<Room> rooms = roomDtos.stream()
@@ -86,6 +90,10 @@ public class GameRepository {
 
     private void updateTurn(final long gameId, Team turn) {
         gameDao.updateTurn(gameId, turn.getValue());
+    }
+
+    public void joinGuest(final long guestId, final long roomId) {
+        roomDao.updateGuestById(guestId, roomId);
     }
 
 }

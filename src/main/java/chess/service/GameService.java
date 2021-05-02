@@ -7,6 +7,7 @@ import chess.domain.user.User;
 import chess.domain.user.UserRepository;
 import chess.web.dto.game.GameRequestDto;
 import chess.web.dto.game.GameResponseDto;
+import chess.web.dto.game.join.JoinRequestDto;
 import chess.web.dto.game.move.MoveCheckResponseDto;
 import chess.web.dto.game.move.MoveRequestDto;
 import chess.web.dto.game.move.MoveResponseDto;
@@ -56,6 +57,11 @@ public class GameService {
         return GameResponseDto.of(game, host, guest);
     }
 
+    public void join(final long roomId, final JoinRequestDto joinRequestDto) {
+        final long guestId = joinRequestDto.getGuestId();
+        gameRepository.joinGuest(guestId, roomId);
+    }
+
     public MoveCheckResponseDto checkMovement(final long gameId,
         final MoveRequestDto moveRequestDto) {
         final Game game = gameRepository.findById(gameId);
@@ -72,6 +78,10 @@ public class GameService {
         );
         gameRepository.update(game);
         return new MoveResponseDto(game.isFinished());
+    }
+
+    public long bringGameIdByRoomId(final long roomId) {
+        return gameRepository.findGameIdByRoomId(roomId);
     }
 
 }

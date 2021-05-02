@@ -1,5 +1,6 @@
 import {getData, postData} from "./utils/FetchUtil.js"
 import {setCookie, USER_ID_KEY} from "./utils/CookieUtil.js";
+import {login} from "./utils/LoginUtil.js";
 
 const url = "http://localhost:8080";
 
@@ -27,33 +28,6 @@ async function startNewGame(e) {
   await createGame(hostId, roomName);
 }
 
-async function login() {
-  const userName = prompt("유저 이름을 입력하세요.");
-  if (userName.length === 0) {
-    alert("이름을 입력하지 않았습니다.");
-    return;
-  }
-  const password = prompt("비밀번호를 입력하세요.");
-  if (password.length === 0) {
-    alert("비밀번호를 입력하지 않았습니다.");
-    return;
-  }
-  const response = await requestAuthentication(userName, password);
-  if (!response) {
-    alert("로그인에 실패했습니다.");
-    return;
-  }
-  return response["id"];
-}
-
-async function requestAuthentication(userName, password) {
-  const params = {
-    name: userName,
-    password: password
-  }
-  return await postData(`${url}/api/users/authentication`, params);
-}
-
 async function createGame(hostId, gameName) {
   const body = {
     name: gameName,
@@ -63,12 +37,7 @@ async function createGame(hostId, gameName) {
 }
 
 async function showGames() {
-  const guestId = await login();
-  if (!guestId) {
-    return;
-  }
-  setCookie(USER_ID_KEY, guestId);
-  window.location.href = `${url}/games`
+  window.location.href = `${url}/rooms`
 }
 
 async function registerMember() {

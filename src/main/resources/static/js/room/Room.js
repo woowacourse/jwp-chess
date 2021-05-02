@@ -1,5 +1,9 @@
 import {User} from "../user/User.js";
+import {putData} from "../utils/FetchUtil.js";
+import {login} from "../utils/LoginUtil.js";
+import {setCookie, USER_ID_KEY} from "../utils/CookieUtil.js";
 
+const url = "http://localhost:8080";
 const HIGHRIGHTED_BOARD_COLOR = "rgba(144,197,213,0.87)";
 
 export class Room {
@@ -58,8 +62,16 @@ export class Room {
     room.#unhighlight();
   }
 
-  #click(e, room) {
-    // TODO : guest로 참여
+  async #click(e, room) {
+    const guestId = await login();
+    if (!guestId) {
+      return;
+    }
+    setCookie(USER_ID_KEY, guestId);
+    const body = {
+      guestId: guestId
+    };
+    await putData(`${url}/api/rooms/${room.#id}/join`, body);
   }
 
   #highlight() {

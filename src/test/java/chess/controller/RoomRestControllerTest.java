@@ -3,6 +3,7 @@ package chess.controller;
 import chess.dto.RoomDto;
 import chess.service.RoomService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -129,6 +130,24 @@ class RoomRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request).andExpect(status().isOk());
+    }
+
+    @DisplayName("유효한 방 입장 :: 입장 시 쿠키 등록")
+    @Test
+    public void testAddCookieWhenEnterRoom() throws Exception {
+        long roomId = roomService.create(roomDto.getRoomName(), roomDto.getPlayer1());
+
+        final RequestBuilder request = MockMvcRequestBuilders.post("/room/enter/" + roomId)
+                .content("playerId")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        final MvcResult mvcResult = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        final String cookieValue = mvcResult.getResponse().getCookie("web_chess_" + roomId).getValue();
+        Assertions.assertThat(cookieValue).isEqualTo("playerId");
     }
 
     @DisplayName("방 삭제 테스트")

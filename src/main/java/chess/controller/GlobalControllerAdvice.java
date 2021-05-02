@@ -35,7 +35,6 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity handleIllegalArgumentException() {
-        final String message = "Unhandled Exception";
-        return ResponseEntity.badRequest().body(message);
+        return ResponseEntity.badRequest().body("Unhandled Exception");
     }
 }

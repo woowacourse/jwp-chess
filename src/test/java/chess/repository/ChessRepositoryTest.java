@@ -4,6 +4,7 @@ import chess.domain.board.ChessBoard;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,11 +28,13 @@ class ChessRepositoryTest {
     }
 
     @Test
+    @DisplayName("게임 찾기 성공")
     void findGame() {
         assertThat(chessRepository.findGame("test")).isNotEmpty();
     }
 
     @Test
+    @DisplayName("게임 추가 테스트")
     void addGame() {
         ChessGame addingChessGame = new ChessGame(2L, Color.WHITE, false, new ChessBoard(), "add-test");
         chessRepository.addGame(addingChessGame, addingChessGame.getTitle());
@@ -40,6 +43,7 @@ class ChessRepositoryTest {
     }
 
     @Test
+    @DisplayName("게임 로딩 테스트")
     void loadGame() {
         ChessGame loadingChessGame = new ChessGame(3L, Color.WHITE, false, new ChessBoard(), "load-test");
         Long id = chessRepository.addGame(loadingChessGame, loadingChessGame.getTitle());
@@ -48,6 +52,7 @@ class ChessRepositoryTest {
     }
 
     @Test
+    @DisplayName("게임 저장 테스트")
     void saveGame() {
         ChessGame savingChessGame = new ChessGame(3L, Color.WHITE, false, new ChessBoard(), "save-test");
         Long id = chessRepository.addGame(savingChessGame, savingChessGame.getTitle());
@@ -59,6 +64,7 @@ class ChessRepositoryTest {
     }
 
     @Test
+    @DisplayName("게임 종료 테스트")
     void terminateGame() {
         chessRepository.terminateGame(id);
         ChessGame terminatedGame = chessRepository.loadGame(id);
@@ -67,6 +73,7 @@ class ChessRepositoryTest {
     }
 
     @Test
+    @DisplayName("게임 재시작 테스트")
     void restart() {
         ChessGame chessGame = new ChessGame(1L, Color.BLACK, false, new ChessBoard(), "test");
         chessRepository.restart(id, chessGame);
@@ -76,6 +83,7 @@ class ChessRepositoryTest {
     }
 
     @Test
+    @DisplayName("모든게임 불러오기 테스트")
     void findAllGames() {
         int size = chessRepository.findAllGames().size();
         ChessGame adding = new ChessGame(3L, Color.WHITE, false, new ChessBoard(), "save-test");

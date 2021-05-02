@@ -1,7 +1,10 @@
 package chess.controller;
 
+import chess.dao.UserDao;
 import dto.RoomCreateRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import javax.servlet.http.Cookie;
@@ -10,6 +13,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ChessRoomControllerTest extends BaseTest {
+
+    @Autowired
+    public UserDao userDao;
+
+
+    @BeforeEach
+    void init() {
+        userDao.create("suri", "123456");
+    }
+
+
     @Test
     public void testRoomCreate() throws Exception {
         RoomCreateRequest roomRequestDto = new RoomCreateRequest("room", "123456", "suri");

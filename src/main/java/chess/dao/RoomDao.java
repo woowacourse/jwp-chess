@@ -29,7 +29,7 @@ public class RoomDao {
         String sql = "insert into room (name, pw, white_player, game_id) values (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"game_id"});
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"room_id"});
             preparedStatement.setString(1, room.getName());
             preparedStatement.setString(2, room.getPw());
             preparedStatement.setString(3, room.getWhitePlayer());

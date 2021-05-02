@@ -1,7 +1,11 @@
 package dto;
 
+import javax.validation.constraints.Size;
+
 public class RoomCreateRequest {
+    @Size(min = 2, max = 8)
     private String name;
+    @Size(min = 4, max = 8)
     private String pw;
     private String user;
 

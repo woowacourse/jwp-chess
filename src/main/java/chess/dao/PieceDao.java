@@ -33,7 +33,7 @@ public class PieceDao {
         for (Position position : pieces.keySet()) {
             jdbcTemplate.update(con -> {
                 Piece piece = pieces.get(position);
-                PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"team_id"});
+                PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"piece_id"});
                 preparedStatement.setString(1, PieceConverter.convertToPieceName(color, piece));
                 preparedStatement.setString(2, color);
                 preparedStatement.setString(3, position.getKey());

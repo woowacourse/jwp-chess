@@ -1,12 +1,8 @@
 package chess.controller;
 
-import chess.domain.User;
-import dto.RoomRequestDto;
 import dto.UserDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-
-import javax.servlet.http.Cookie;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

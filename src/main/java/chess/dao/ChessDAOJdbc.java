@@ -45,7 +45,7 @@ public class ChessDAOJdbc implements ChessDAO {
     public Optional<TeamColor> findCurrentTurn(Long gameId) {
         String sql = "select color from current_color where game_id = ?";
         final List<String> colors = jdbcTemplate.queryForList(sql, String.class, gameId);
-        if(colors.isEmpty()) {
+        if (colors.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(TeamColor.valueOf(colors.get(0)));

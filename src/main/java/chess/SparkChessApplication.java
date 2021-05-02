@@ -12,9 +12,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 
 public class SparkChessApplication {
+
     public static void main(String[] args) {
         staticFiles.location("/static");
-        ChessController chessController = new ChessController(new ChessService(new ChessDAOSql2o()));
+        ChessController chessController = new ChessController(
+            new ChessService(new ChessDAOSql2o()));
         ObjectMapper objectMapper = new ObjectMapper();
 
         get("/", (req, res) -> {

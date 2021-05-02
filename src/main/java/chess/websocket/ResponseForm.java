@@ -1,19 +1,9 @@
 package chess.websocket;
 
 public class ResponseForm<T> {
-    public static enum Form{
-        MESSAGE,
-        ENTER,
-        PIECES,
-        STATUS,
-        MOVE,
-        COLOR,
-        ERROR
-    }
 
     private String form;
     private T data;
-
     public ResponseForm(Form form, T data) {
         this.form = form.name();
         this.data = data;
@@ -33,5 +23,15 @@ public class ResponseForm<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public enum Form {
+        UPDATE_ROOM,
+        LOAD_GAME,
+        NEW_USER_NAME,
+        UPDATE_STATUS,
+        MOVE_PIECE,
+        REMOVE_ROOM,
+        MESSAGE;
     }
 }

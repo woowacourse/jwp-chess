@@ -1,0 +1,198 @@
+body {
+  background-color: #464646;
+  margin: 0;
+  padding: 0;
+  font-family: 'Jua', sans-serif;
+}
+
+.page {
+  text-align: center;
+  justify-content: center;
+  padding: 20px 40px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  padding: 0 1rem;
+  border-bottom: 5px solid white;
+  color: #e6e3e3;
+}
+
+.web-title {
+  font-size: 2.5em;
+}
+
+.nickname {
+  margin-right: 1em;
+}
+
+.room-nav {
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+  padding: 2em;
+}
+
+.nav-content span {
+  font-size: 1.5em;
+  color: darkslateblue;
+}
+
+.room-list {
+  margin-top: 2em;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.room-item {
+  background-color: #ffe97f;
+  width: 30%;
+  height: 4em;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 255, .2);
+  transition: .3s;
+}
+
+.room-item:hover {
+  background-color: gold;
+  box-shadow: 5px 10px 5px 0px rgba(0, 0, 255, .2);
+}
+
+.enter-info {
+  /*transition: 1s;*/
+  display: none;
+  text-align: center;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 3%;
+}
+
+.room-item:hover .enter-info {
+  display: flex;
+}
+
+.room-item:hover .room-contents {
+  display: none;
+}
+
+
+.room-contents {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
+  margin-top: 0.5em;
+}
+
+.room-content {
+  text-align: center;
+  font-size: 1.2rem;
+  display: table-cell;
+  vertical-align: center;
+  width: 100%;
+}
+
+.room-detail {
+  padding-right: 5px;
+}
+
+
+.enter {
+  background-color: #6f9c6f;
+  border-radius: 5px;
+  padding: 0.8em 2.5em;
+  cursor: pointer;
+}
+
+.enter:hover {
+  background-color: #6bb16b;
+}
+
+.create-room {
+  cursor: pointer;
+  background-color: #98c198;
+}
+
+.create-room:hover {
+  background-color: #6f9c6f;
+}
+
+.create-room span {
+  text-align: center;
+  font-size: 3em;
+  color: whitesmoke;
+  margin-left: .2em;
+}
+
+.modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 50%;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  /*text-align: left;*/
+  margin: auto;
+  display: none;
+}
+
+.exit {
+  position: absolute;
+  right: 2%;
+  top: 2%;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.create-form {
+  font-size: 1.2em;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+input[type="text"], input[type="password"] {
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  width: 15em;
+  height: 2em;
+}
+
+button[type="submit"] {
+  background-color: #93bd93;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  width: 3.5em;
+  height: 1.5em;
+  font-size: 1.5em;
+  cursor: pointer;
+  font-family: 'Jua', sans-serif;
+}
+
+button[type="submit"]:hover {
+  background-color: #6bb16b;
+}
+
+.piece-white {
+  color: #e4b8b8;
+}
+
+.piece-black {
+  color: #bf9e4c;
+}
+
+.error_message {
+  color: orangered;
+}

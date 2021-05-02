@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChessDAO {
+
     void deleteAllByGameId(Long gameId);
 
     Optional<TeamColor> findCurrentTurn(Long gameId);

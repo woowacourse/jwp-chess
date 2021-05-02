@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  <link href="/temp/css/chess.css" rel="stylesheet">
+  <link href="/temp/css/game.css" rel="stylesheet">
+  <script defer src="/temp/js/chessRequest.js" type="text/javascript"></script>
+  <script defer src="/temp/js/commandExecutor.js" type="text/javascript"></script>
+  <script defer src="/temp/js/container.js" type="text/javascript"></script>
+  <script defer src="/temp/js/board.js" type="text/javascript"></script>
+  <script defer src="/temp/js/socket.js" type="text/javascript"></script>
+  <script crossorigin="anonymous" src="https://kit.fontawesome.com/fb005c2c2f.js"></script>
+</head>
+<body>
+<div class="page">
+  <!--header-->
+  <header class="header">
+    <div class="web-title">
+      <span>우아한 체스</span> <i class="fas fa-chess-king"></i>
+    </div>
+
+  </header>
+
+  <div class="contents">
+    <!--rooms-->
+    <div class="room-list">
+    </div>
+
+    <div class="modal create-modal">
+      <div class="exit">
+        <span>X</span>
+      </div>
+      <div class="create-form">
+        <label for="roomName">방 제목 :</label> <input id="roomName" name="roomName" type="text">
+        <br><br>
+        <label for="password"> 비밀번호 :</label> <input id="password" name="password" type="password">
+        <br><br>
+        <label>비밀번호 설정 :</label>
+        <label for="locked">설정</label><input id="locked" name="locked" type="radio" value="true">
+        <label for="unlocked">설정 안함</label> <input checked id="unlocked" name="locked"
+                                                   type="radio" value="false"> <br><br>
+        <label for="nickname">닉네임 설정 : </label> <input id="nickname" name="nickname" type="text">
+        <br><br>
+        <span class="error_message"></span>
+        <br><br><br>
+        <button class="submit create-submit" type="submit" value="만들기">만들기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal enter-modal">
+    <div class="exit">
+      <span>X</span>
+    </div>
+    <div class="enter-form">
+      <label for="enter-nickname">닉네임 설정 : </label> <input id="enter-nickname" name="nickname"
+                                                           type="text">
+      <br><br>
+      <label for="enter-password"> 비밀번호 :</label> <input id="enter-password" name="password"
+                                                         type="password">
+      <br><br>
+      <span class="error_message"></span>
+      <br><br><br>
+      <button class="submit enter-submit" type="submit" value="입장하기">입장</button>
+    </div>
+  </div>
+</div>
+</div>
+</body>
+</html>

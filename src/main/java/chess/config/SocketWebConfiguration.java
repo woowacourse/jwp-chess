@@ -23,7 +23,7 @@ public class SocketWebConfiguration implements WebMvcConfigurer, WebSocketConfig
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/socket/index.html");
+        registry.addViewController("/").setViewName("forward:/temp/chess.html");
     }
 
 

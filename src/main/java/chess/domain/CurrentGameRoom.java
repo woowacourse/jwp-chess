@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class CurrentGameRoom {
+
     private final Map<Long, ChessGame> chessGames = new HashMap<>();
 
     public Optional<ChessGame> loadGame(Long gameId) {

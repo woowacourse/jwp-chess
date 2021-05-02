@@ -25,10 +25,15 @@ body {
 #start-in-div {
     position: absolute;
     margin-left: -150px;
-    margin-top: -80px;
+    margin-top: -220px;
 }
 
-#start-btn,
-#rooms-btn {
+.room {
+    display: inline;
+    font-size: 16pt;
+}
+
+#home-btn {
     width: 300px;
+    margin-top: 14px;
 }

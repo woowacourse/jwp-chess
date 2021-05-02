@@ -18,12 +18,12 @@ public class ChessBoardFactory {
         return board;
     }
 
-    public static Map<Position, Piece> loadBoard(final Map<String, String> boardFromDB) {
+    public static Map<Position, Piece> loadBoard(final Map<String, String> pieces) {
         Map<Position, Piece> board = new LinkedHashMap<>();
-        for (Map.Entry<String, String> boardFromDBEntry : boardFromDB.entrySet()) {
+        for (Map.Entry<String, String> piecesEntry : pieces.entrySet()) {
             board.put(Position.findByString(
-                    boardFromDBEntry.getKey()),
-                    PieceFactory.createByString(boardFromDBEntry.getValue(), boardFromDBEntry.getKey()));
+                    piecesEntry.getKey()),
+                    PieceFactory.createByString(piecesEntry.getValue(), piecesEntry.getKey()));
         }
         return board;
     }

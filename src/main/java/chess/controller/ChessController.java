@@ -1,13 +1,16 @@
 package chess.controller;
 
-import chess.dto.ChessBoardDto;
-import chess.dto.StringChessBoardDto;
+import chess.dto.RoomsDto;
 import chess.dto.response.ScoreResponseDto;
 import chess.service.ChessService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ChessController {
@@ -17,34 +20,24 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/start")
-    public String start() {
-        chessService.makeRound();
-        return makeNewGame();
+    @GetMapping("/rooms")
+    public String rooms(final Model model) {
+        List<RoomsDto> roomsDto = new ArrayList<>();
+        Map<Long, String> rooms = chessService.rooms();
+        for (Map.Entry<Long, String> roomEntry : rooms.entrySet()) {
+            roomsDto.add(new RoomsDto(roomEntry.getKey(), roomEntry.getValue()));
+        }
+        model.addAttribute("rooms", roomsDto);
+        return "rooms";
     }
 
-    @GetMapping("/reset")
-    public String reset() {
-        chessService.resetRound();
-        return makeNewGame();
-    }
-
-    @GetMapping("/chess")
-    public String chess(final Model model) throws JsonProcessingException {
-        ChessBoardDto chessBoard = chessService.chessBoardFromDB();
-        String jsonFormatChessBoard = chessService.jsonFormatChessBoard(chessBoard);
-        model.addAttribute("jsonFormatChessBoard", jsonFormatChessBoard);
-        String currentTurn = chessService.currentTurn();
-        model.addAttribute("currentTurn", currentTurn);
-        chessService.updateRound(chessBoard, currentTurn);
-
-        ScoreResponseDto scoreResponseDto = chessService.scoreResponseDto();
+    @GetMapping("/chess/{roomId}")
+    public String chess(@PathVariable final Long roomId, final Model model) {
+        double whiteScore = chessService.whiteScore(roomId);
+        double blackScore = chessService.blackScore(roomId);
+        ScoreResponseDto scoreResponseDto = new ScoreResponseDto(whiteScore, blackScore);
+        model.addAttribute("roomId", roomId);
         model.addAttribute("score", scoreResponseDto);
         return "chess";
-    }
-
-    private String makeNewGame() {
-        chessService.initialize();
-        return "redirect:/chess";
     }
 }

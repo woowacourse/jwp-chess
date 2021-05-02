@@ -1,75 +1,45 @@
 package chess.dao;
 
-import chess.dao.setting.DBConnection;
-import chess.dto.request.MoveRequestDto;
-import chess.dto.response.ChessResponseDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import chess.dao.dto.response.ChessResponseDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class PieceDao extends DBConnection {
-    @Autowired
+public class PieceDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public PieceDao(DataSource dataSource) {
+    public PieceDao(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void initializePieceStatus(final String pieceName, final String piecePosition) {
-        String query = "INSERT INTO piece (piece_name, piece_position) VALUE (?, ?)";
-        try {
-            jdbcTemplate.update(query, pieceName, piecePosition);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void initializePieceStatus(final String pieceName, final String piecePosition,
+                                      final Long roomId) {
+        String query = "INSERT INTO piece (piece_name, piece_position, room_id) VALUE (?, ?, ?)";
+        jdbcTemplate.update(query, pieceName, piecePosition, roomId);
     }
 
-    public List<ChessResponseDto> showAllPieces() {
-        List<ChessResponseDto> pieces = new ArrayList<>();
-        String query = "SELECT * FROM piece";
-
-        try {
-            pieces = jdbcTemplate.query(
-                    query, (rs, rowNum) -> new ChessResponseDto(
-                            rs.getLong("id"),
-                            rs.getString("piece_name"),
-                            rs.getString("piece_position"))
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return pieces;
+    public List<ChessResponseDto> findAllPieces(final Long roomId) {
+        String query = "SELECT * FROM piece WHERE room_id=?";
+        return jdbcTemplate.query(
+                query,
+                (rs, rowNum) -> new ChessResponseDto(
+                        rs.getLong("id"),
+                        rs.getString("piece_name"),
+                        rs.getString("piece_position")),
+                roomId
+        );
     }
 
-    public void movePiece(final MoveRequestDto moveRequestDto) {
+    public void movePiece(final String source, final String target) {
         String query = "UPDATE piece SET piece_position=? WHERE piece_position=?";
-        try {
-            jdbcTemplate.update(query, moveRequestDto.getTarget(), moveRequestDto.getSource());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        jdbcTemplate.update(query, target, source);
     }
 
-    public void removeAllPieces() {
-        String query = "DELETE FROM piece";
-        try {
-            jdbcTemplate.update(query);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void removePiece(final MoveRequestDto moveRequestDto) {
+    public void removePiece(final String target) {
         String query = "DELETE FROM piece WHERE piece_position=?";
-        try {
-            jdbcTemplate.update(query, moveRequestDto.getTarget());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        jdbcTemplate.update(query, target);
     }
 }

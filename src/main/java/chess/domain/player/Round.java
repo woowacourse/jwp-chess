@@ -2,6 +2,7 @@ package chess.domain.player;
 
 import chess.domain.board.ChessBoardFactory;
 import chess.domain.command.Command;
+import chess.domain.command.CommandFactory;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
@@ -18,16 +19,51 @@ public class Round {
 
     private Map<Position, Piece> board;
     private Command command;
-    private boolean isEnd = false;
+    private String currentTurn;
+
+    public Round(final Map<Position, Piece> board, final String currentTurn, final String command) {
+        this.whitePlayer = new WhitePlayer(board, currentTurn);
+        this.blackPlayer = new BlackPlayer(board, currentTurn);
+        this.board = board;
+        this.command = CommandFactory.initialCommand(command);
+        this.currentTurn = currentTurn;
+    }
 
     public Round(final State white, final State black, final Command command) {
         this(new WhitePlayer(white), new BlackPlayer(black), command);
+        this.currentTurn = "white";
     }
 
     public Round(final Player whitePlayer, final Player blackPlayer, final Command command) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         this.command = command;
+    }
+
+    public static Round of(final Map<Position, Piece> board, final String currentTurn) {
+        int totalKing = 0;
+        for (Map.Entry<Position, Piece> boardEntry : board.entrySet()) {
+            totalKing = countKing(totalKing, boardEntry);
+        }
+        if (isAllKingAlive(totalKing)) {
+            return new Round(board, currentTurn, "start");
+        }
+        return new Round(board, currentTurn, "end");
+    }
+
+    private static int countKing(int totalKing, final Map.Entry<Position, Piece> boardEntry) {
+        if (isKing(boardEntry)) {
+            totalKing++;
+        }
+        return totalKing;
+    }
+
+    private static boolean isKing(Map.Entry<Position, Piece> boardEntry) {
+        return "k".equals(boardEntry.getValue().getPiece()) || "K".equals(boardEntry.getValue().getPiece());
+    }
+
+    private static boolean isAllKingAlive(int totalKing) {
+        return totalKing == 2;
     }
 
     public void execute(final Queue<String> commands) {
@@ -59,36 +95,11 @@ public class Round {
 
     private void checkPieces(final State state, final Target target) {
         if (state.isKing(target.getPosition())) {
-            isEnd = true;
+            this.command = command.end();
         }
         if (state.findPiece(target.getPosition()).isPresent()) {
             state.removePiece(target.getPosition());
         }
-        if (isEnd) {
-            changeToEnd();
-        }
-    }
-
-    public void changeTurn(final String currentTurn) {
-        if ("white".equals(currentTurn)) {
-            State nextWhiteTurn = whitePlayer.getState().toRunningTurn();
-            State nextBlackTurn = blackPlayer.getState().toFinishedTurn();
-            changeState(nextWhiteTurn, nextBlackTurn);
-        }
-        if ("black".equals(currentTurn)) {
-            State nextWhiteTurn = whitePlayer.getState().toFinishedTurn();
-            State nextBlackTurn = blackPlayer.getState().toRunningTurn();
-            changeState(nextWhiteTurn, nextBlackTurn);
-        }
-    }
-
-    private void changeState(final State nextWhiteTurn, final State nextBlackTurn) {
-        whitePlayer.changeState(nextWhiteTurn);
-        blackPlayer.changeState(nextBlackTurn);
-    }
-
-    public void changeToEnd() {
-        this.command = command.end();
     }
 
     public Map<Position, Piece> getBoard() {

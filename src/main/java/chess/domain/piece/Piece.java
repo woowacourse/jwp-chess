@@ -48,6 +48,10 @@ public abstract class Piece {
         return this.position.equals(position);
     }
 
+    public final boolean isSameColor(final String name) {
+        return this.color.name().equals(name.toUpperCase());
+    }
+
     public final void changePosition(final Position position) {
         this.position = position;
     }

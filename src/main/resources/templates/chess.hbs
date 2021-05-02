@@ -87,14 +87,11 @@
             <div id="h1" class="white piece-cell"></div>
         </div>
         <button id="status-btn" type="button" class="btn btn-outline-primary">점수 확인</button>
-        <button id="reset-btn" type="button" class="btn btn-outline-primary">다시 시작</button>
+        <button id="home-btn" type="button" class="btn btn-outline-primary">홈 화면</button>
     </div>
-    {{#jsonFormatChessBoard}}
-        <div id="jsonFormatChessBoard" style="display: none">{{.}}</div>
-    {{/jsonFormatChessBoard}}
-    {{#currentTurn}}
-        <div id="currentTurn" style="display: none">{{.}}</div>
-    {{/currentTurn}}
+    {{#roomId}}
+        <div id="roomId" style="display: none">{{roomId}}</div>
+    {{/roomId}}
     {{#score}}
         <div id="whiteScore" style="display: none">{{score.whiteScore}}</div>
         <div id="blackScore" style="display: none">{{score.blackScore}}</div>

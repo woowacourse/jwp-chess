@@ -16,11 +16,11 @@ import java.util.List;
 public class GlobalControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity handleBadRequest(final BindingResult bindingResult) {
+    public ResponseEntity handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
-        final String message = "Bad request Exception : " + mainError.getDefaultMessage();
+        final String message = "Invalid request Exception : " + mainError.getDefaultMessage();
         return ResponseEntity.badRequest().body(message);
     }
 

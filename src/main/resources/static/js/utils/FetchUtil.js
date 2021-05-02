@@ -29,7 +29,7 @@ export async function postData(url = '', data = {}) {
     if (response.redirected) {
       window.location.href = response.url;
     }
-    if (!response.ok) {
+    else if (!response.ok) {
       throw new Error(response.status);
     }
     return response.json()
@@ -53,7 +53,7 @@ export async function putData(url = '', data = {}) {
     if (response.redirected) {
       window.location.href = response.url;
     }
-    if (!response.ok) {
+    else if (!response.ok) {
       throw new Error(response.status);
     }
     return response.json()

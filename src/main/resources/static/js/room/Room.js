@@ -71,7 +71,11 @@ export class Room {
     const body = {
       guestId: guestId
     };
-    await putData(`${url}/api/rooms/${room.#id}/join`, body);
+    const response = await putData(`${url}/api/rooms/${room.#id}/join`, body);
+    if (!response) {
+      alert("방이 가득 찼습니다.")
+      location.reload();
+    }
   }
 
   #highlight() {

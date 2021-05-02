@@ -19,7 +19,6 @@ window.onload = async function () {
   const turn = response["turn"];
   const finished = response["finished"];
   const role = makeRole(host, guest);
-  console.log(finished);
   if (finished) {
     alert("이미 끝난 게임입니다. 홈으로 돌아갑니다.");
     history.back();

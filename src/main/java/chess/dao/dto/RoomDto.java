@@ -53,7 +53,7 @@ public class RoomDto {
         return hostId;
     }
 
-    public long getGuestId() {
+    public Long getGuestId() {
         return guestId;
     }
 

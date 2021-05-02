@@ -5,6 +5,7 @@ import chess.domain.game.GameRepository;
 import chess.domain.game.room.Room;
 import chess.domain.user.User;
 import chess.domain.user.UserRepository;
+import chess.exception.GameParticipationFailureException;
 import chess.web.dto.game.GameRequestDto;
 import chess.web.dto.game.GameResponseDto;
 import chess.web.dto.game.join.JoinRequestDto;
@@ -58,6 +59,9 @@ public class GameService {
     }
 
     public void join(final long roomId, final JoinRequestDto joinRequestDto) {
+        if (!gameRepository.isJoinableRoom(roomId)) {
+            throw new GameParticipationFailureException("이미 방이 가득 찼습니다.");
+        }
         final long guestId = joinRequestDto.getGuestId();
         gameRepository.joinGuest(guestId, roomId);
     }

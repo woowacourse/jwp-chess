@@ -18,7 +18,7 @@ import java.util.Objects;
 @Repository
 public class RoomDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public RoomDao(final JdbcTemplate jdbcTemplate) {

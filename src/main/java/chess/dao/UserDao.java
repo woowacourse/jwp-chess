@@ -13,7 +13,7 @@ import java.util.Objects;
 @Repository
 public class UserDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public UserDao(final JdbcTemplate jdbcTemplate) {

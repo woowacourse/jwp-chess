@@ -1,4 +1,5 @@
 import {getData, postData} from "./utils/FetchUtil.js"
+import {setCookie, USER_ID_KEY} from "./utils/CookieUtil.js";
 
 const url = "http://localhost:8080";
 
@@ -14,6 +15,16 @@ window.onload = function () {
 }
 
 async function startNewGame(e) {
+  const hostId = await login();
+  setCookie(USER_ID_KEY, hostId);
+  const roomName = prompt("방 이름을 입력하세요.");
+  if (roomName.length === 0) {
+    throw Error("방 이름을 입력하지 않았습니다.");
+  }
+  await createGame(hostId, roomName);
+}
+
+async function login() {
   const userName = prompt("유저 이름을 입력하세요.");
   if (userName.length === 0) {
     alert("이름을 입력하지 않았습니다.");
@@ -29,11 +40,7 @@ async function startNewGame(e) {
     alert("로그인에 실패했습니다.");
     return;
   }
-  const roomName = prompt("방 이름을 입력하세요.");
-  if (roomName.length === 0) {
-    throw Error("방 이름을 입력하지 않았습니다.");
-  }
-  await createGame(response["id"], roomName);
+  return response["id"];
 }
 
 async function requestAuthentication(userName, password) {
@@ -52,7 +59,9 @@ async function createGame(hostId, gameName) {
   await postData(`${url}/games`, body);
 }
 
-function showGames() {
+async function showGames() {
+  const guestId = await login();
+  setCookie(USER_ID_KEY, guestId);
   window.location.href = `${url}/games`
 }
 

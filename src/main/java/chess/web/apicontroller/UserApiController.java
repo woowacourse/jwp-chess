@@ -4,6 +4,7 @@ import chess.service.UserService;
 import chess.web.dto.user.UserRequestDto;
 import chess.web.dto.user.UserResponseDto;
 import java.net.URI;
+import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 @RestController
 public class UserApiController {
+
+    private static final String SESSION_KEY = "AUTHENTICATION";
 
     private final UserService userService;
 
@@ -32,10 +35,12 @@ public class UserApiController {
 
     @PostMapping("/authentication")
     public ResponseEntity<UserResponseDto> authenticateUser(
-        @RequestBody UserRequestDto userRequestDto) {
+        @RequestBody UserRequestDto userRequestDto, final HttpSession session) {
 
+        final UserResponseDto userResponseDto = userService.authenticate(userRequestDto);
+        session.setAttribute(SESSION_KEY, userRequestDto.getName());
         return ResponseEntity.status(HttpStatus.OK)
-            .body(userService.authenticate(userRequestDto));
+            .body(userResponseDto);
     }
 
 }

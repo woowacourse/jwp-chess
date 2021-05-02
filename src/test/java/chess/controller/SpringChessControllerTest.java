@@ -17,12 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,8 +29,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(SpringChessController.class)
 class SpringChessControllerTest {
@@ -56,34 +53,12 @@ class SpringChessControllerTest {
 
         String content = objectMapper.writeValueAsString(roomNameDto);
 
-        MvcResult result = mockMvc.perform(post("/rooms")
-                .content(content)
-                .contentType("application/json"))
-                .andExpect(status().isOk())
+        mockMvc.perform(post("/rooms")
+                .content(content).contentType("application/json"))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "http://localhost/rooms/" + 1))
                 .andDo(print())
                 .andReturn();
-
-
-        String roomId = result.getResponse().getContentAsString();
-
-        assertThat(roomId).isEqualTo("1");
-    }
-
-    @Test
-    @DisplayName("게임 초기화")
-    void startNewGame() throws Exception {
-        when(chessBoardService.startNewGame(1L))
-                .thenReturn(new ChessGameDto(new ChessGame(Team.blackTeam(), Team.whiteTeam())));
-
-        mockMvc.perform(post("/rooms/1"))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(jsonPath("currentTurnTeam").value("white"))
-                .andExpect(jsonPath("piecePositionByTeam.white.*", hasSize(16)))
-                .andExpect(jsonPath("piecePositionByTeam.black.*", hasSize(16)))
-                .andExpect(jsonPath("isPlaying").value(true))
-                .andExpect(jsonPath("teamScore.black").value(38.0))
-                .andExpect(jsonPath("teamScore.white").value(38.0));
     }
 
     @Test
@@ -133,7 +108,7 @@ class SpringChessControllerTest {
         mockMvc.perform(post("/rooms/1/move")
                 .content(requestBody)
                 .contentType("application/json"))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andDo(print())
                 .andExpect(jsonPath("currentTurnTeam").value("black"))
                 .andExpect(jsonPath("piecePositionByTeam.white.*", hasSize(16)))

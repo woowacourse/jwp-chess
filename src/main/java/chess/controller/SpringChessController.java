@@ -32,7 +32,7 @@ public class SpringChessController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createRoom(@RequestBody RoomNameDto roomNameDto) {
+    public ResponseEntity<Void> createRoom(@RequestBody RoomNameDto roomNameDto) {
         long roomId = chessRoomService.createNewRoom(roomNameDto.getRoomName());
         chessBoardService.startNewGame(roomId);
         URI url = ServletUriComponentsBuilder

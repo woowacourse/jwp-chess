@@ -1,7 +1,5 @@
 package chess.controller.spring;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,7 +21,7 @@ class ChessControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void handleGamesWithUserId() throws Exception{
+    public void handleGamesWithUserId() throws Exception {
         String userId = "1";
         Cookie userIdCookie = new Cookie("userId", CookieParser.encodeCookie(userId));
         mockMvc.perform(
@@ -33,7 +31,7 @@ class ChessControllerTest {
     }
 
     @Test
-    public void handleGamesWithoutUserId() throws Exception{
+    public void handleGamesWithoutUserId() throws Exception {
         String userId = "1";
         Cookie userIdCookie = new Cookie("userId", CookieParser.encodeCookie(userId));
         mockMvc.perform(

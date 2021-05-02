@@ -66,7 +66,7 @@ class UserDaoTest {
     @DisplayName("이름으로 유저 찾기 예외 테스트")
     public void findUserByNameExceptionTest() {
         String isNotExistUserName = "I'm not exist";
-        Optional<User> userByName= userDao.findByName(isNotExistUserName);
+        Optional<User> userByName = userDao.findByName(isNotExistUserName);
 
         assertThat(userByName.isPresent()).isFalse();
     }

@@ -28,7 +28,7 @@ public class GameService {
     }
 
     private void terminateIfGameOver(Long id, ChessGame chessGame) {
-        if(chessGame.isGameOver()){
+        if (chessGame.isGameOver()) {
             terminateGame(id);
         }
     }

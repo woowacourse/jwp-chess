@@ -54,7 +54,7 @@ async function initBoard(chessGame) {
 
 async function start() {
     return await fetch(
-        `/games/${this.gameId}/game-info`
+        `/games/${this.gameId}/info`
     )
 }
 

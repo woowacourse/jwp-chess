@@ -20,12 +20,12 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/games/{id}/game-info")
+    @GetMapping("/games/{id}/info")
     public ResponseEntity<ChessGameDto> loadGame(@PathVariable Long id) {
         return ResponseEntity.ok(new ChessGameDto(gameService.loadGame(id)));
     }
 
-    @PutMapping(path = "/games/{id}/move")
+    @PutMapping("/games/{id}/move")
     public ResponseEntity<ChessGameDto> move(@PathVariable Long id, @RequestBody MoveDto moveDto) {
 
         gameService.move(id, moveDto.getSource(), moveDto.getTarget());
@@ -43,7 +43,7 @@ public class GameController {
         return ResponseEntity.ok(new ChessGameDto(gameService.restart(id)));
     }
 
-    @PostMapping("/games/new-game")
+    @PostMapping("/games")
     public ResponseEntity<Long> newGame(@RequestBody @Valid TitleDto titleDto) {
         return ResponseEntity.ok(gameService.newGame(titleDto.getTitle()));
     }

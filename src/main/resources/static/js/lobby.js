@@ -93,7 +93,7 @@ async function enterHandler(e) {
 
     if (action === 'start') {
         response = await fetch(
-            '/games/new-game',
+            '/games',
             {
                 method: 'POST',
                 body: JSON.stringify({

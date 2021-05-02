@@ -47,7 +47,7 @@ class GameControllerTest {
         ChessGameDto chessGameDto = new ChessGameDto(chessGame);
         given(gameService.loadGame(1L)).willReturn(chessGame);
 
-        mockMvc.perform(get("/games/1/game-info"))
+        mockMvc.perform(get("/games/1/info"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(chessGameDto)));
 
@@ -122,7 +122,7 @@ class GameControllerTest {
         TitleDto newGameTitle = new TitleDto("test-room");
         given(gameService.newGame(newGameTitle.getTitle())).willReturn(1L);
 
-        mockMvc.perform(post("/games/new-game")
+        mockMvc.perform(post("/games")
                 .content(objectMapper.writeValueAsString(newGameTitle))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -139,7 +139,7 @@ class GameControllerTest {
         given(gameService.newGame(newGameTitle.getTitle())).willReturn(1L);
         willThrow(new IllegalArgumentException()).given(gameService).newGame(newGameTitle.getTitle());
 
-        mockMvc.perform(post("/games/new-game")
+        mockMvc.perform(post("/games")
                 .content(objectMapper.writeValueAsString(newGameTitle))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

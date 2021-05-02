@@ -57,10 +57,6 @@ public class ChessGame {
         return Collections.unmodifiableMap(chessBoard.getChessBoard());
     }
 
-    public Piece getPiece(Position position) {
-        return chessBoard.getPiece(position);
-    }
-
     public String getTurn() {
         return turn.toString();
     }

@@ -21,13 +21,14 @@ public class GameService {
         ChessGame chessGame = loadGame(id);
 
         chessGame.move(Position.of(source), Position.of(target));
-        checkGameOver(id, chessGame);
+
+        terminateIfGameOver(id, chessGame);
 
         chessRepository.saveGame(id, chessGame);
     }
 
-    private void checkGameOver(Long id, ChessGame chessGame) {
-        if (chessGame.isGameOver()) {
+    private void terminateIfGameOver(Long id, ChessGame chessGame) {
+        if(chessGame.isGameOver()){
             terminateGame(id);
         }
     }

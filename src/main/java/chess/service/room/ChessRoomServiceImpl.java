@@ -10,7 +10,7 @@ import chess.domain.room.Room;
 import chess.domain.room.RoomInfo;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
-import dto.*;
+import chess.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -8,7 +8,7 @@ import chess.domain.team.BlackTeam;
 import chess.domain.team.Team;
 import chess.domain.team.TeamRepository;
 import chess.domain.team.WhiteTeam;
-import dto.MoveDto;
+import chess.dto.MoveDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

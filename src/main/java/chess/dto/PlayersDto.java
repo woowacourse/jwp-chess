@@ -1,4 +1,4 @@
-package dto;
+package chess.dto;
 
 public class PlayersDto {
     private final String whitePlayer;

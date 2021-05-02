@@ -1,6 +1,6 @@
 package chess.service.room;
 
-import dto.*;
+import chess.dto.*;
 
 import java.util.List;
 

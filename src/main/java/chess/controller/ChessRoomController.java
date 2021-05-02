@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.service.room.ChessRoomService;
-import dto.*;
+import chess.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -50,7 +50,7 @@ public class ChessRoomController {
     @ResponseBody
     public ResponseEntity load(@CookieValue(value = "user") String cookie, @PathVariable Long id) {
         RoomLoadResponse RoomLoadResponse = chessRoomService.load(id);
-        simpMessagingTemplate.convertAndSend("/topic/room/" + id, RoomLoadResponse);
+        simpMessagingTemplate.convertAndSend("/topic/game/" + id, RoomLoadResponse);
         return ResponseEntity.ok().build();
     }
 

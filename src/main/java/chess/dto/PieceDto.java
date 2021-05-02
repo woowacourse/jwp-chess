@@ -1,4 +1,4 @@
-package dto;
+package chess.dto;
 
 public class PieceDto {
     private String position;

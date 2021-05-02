@@ -1,6 +1,6 @@
 package chess.domain.team;
 
-import dto.MoveDto;
+import chess.dto.MoveDto;
 
 public interface TeamRepository {
     Long create(Team team, Long gameId);

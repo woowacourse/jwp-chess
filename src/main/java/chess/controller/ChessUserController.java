@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.service.ChessUserService;
-import dto.UserDto;
+import chess.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

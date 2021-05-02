@@ -5,7 +5,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.game.ChessGameRepository;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
-import dto.MoveDto;
+import chess.dto.MoveDto;
 import org.springframework.stereotype.Repository;
 
 

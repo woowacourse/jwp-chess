@@ -1,6 +1,6 @@
 package chess.domain.game;
 
-import dto.MoveDto;
+import chess.dto.MoveDto;
 
 public interface ChessGameRepository {
     ChessGame chessGame(final Long gameId);

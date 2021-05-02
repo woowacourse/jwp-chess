@@ -2,13 +2,13 @@ package chess.dao;
 
 import chess.domain.game.Position;
 import chess.domain.piece.Piece;
-import dto.MoveDto;
+import chess.dto.MoveDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import util.PieceConverter;
+import chess.util.PieceConverter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

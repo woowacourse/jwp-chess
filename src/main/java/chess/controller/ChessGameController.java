@@ -1,8 +1,8 @@
 package chess.controller;
 
 import chess.service.game.ChessGameService;
-import dto.ChessGameDto;
-import dto.MoveDto;
+import chess.dto.ChessGameDto;
+import chess.dto.MoveDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

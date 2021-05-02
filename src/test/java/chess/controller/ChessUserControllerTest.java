@@ -1,6 +1,6 @@
 package chess.controller;
 
-import dto.UserDto;
+import chess.dto.UserDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 

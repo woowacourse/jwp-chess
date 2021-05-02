@@ -3,7 +3,7 @@ package chess.service;
 import chess.dao.UserDao;
 import chess.domain.User;
 import chess.service.room.ChessRoomService;
-import dto.UserDto;
+import chess.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -2,7 +2,6 @@ package chess.util;
 
 import chess.domain.piece.*;
 import org.junit.jupiter.api.Test;
-import util.PieceConverter;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

@@ -228,7 +228,6 @@ async function move(source, target) {
         const chessGame = await response.json()
         assignPieceImage(source, target)
         await changeTurn(chessGame.turn)
-        await finishHandler(chessGame.finished)
         return chessGame
     }
 
@@ -271,4 +270,5 @@ drop = async function (e) {
     target = e.target.closest('div')
     const chessGame = await move(source, target)
     await result(chessGame.blackScore, chessGame.whiteScore)
+    await finishHandler(chessGame.finished)
 }

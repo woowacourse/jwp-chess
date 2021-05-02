@@ -122,8 +122,8 @@ html {
 
 .player .score {
   font-size: 3rem;
-  color: #fff3e0;
-  text-shadow: 4px 3px 1px #ffc107, -2px 2px 20px #e8a32d;
+  color: #6d4c41;
+  text-shadow: -4px 2px 1px #ffc107, -2px 0 0 #e8a32d;
 }
 
 .control-btn {

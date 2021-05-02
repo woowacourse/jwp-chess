@@ -52,6 +52,7 @@ public class GameService {
     }
 
     public Long newGame(String title) {
+        verifyDuplicateTitleInGames(title);
         ChessGame chessGame = new ChessGame();
         return chessRepository.addGame(chessGame, title);
     }

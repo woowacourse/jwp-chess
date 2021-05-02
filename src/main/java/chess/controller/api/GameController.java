@@ -45,7 +45,6 @@ public class GameController {
 
     @PostMapping("/games/new-game")
     public ResponseEntity<Long> newGame(@RequestBody @Valid TitleDto titleDto) {
-        gameService.verifyDuplicateTitleInGames(titleDto.getTitle());
         return ResponseEntity.ok(gameService.newGame(titleDto.getTitle()));
     }
 

@@ -47,7 +47,7 @@ class GameControllerTest {
         ChessGameDto chessGameDto = new ChessGameDto(chessGame);
         given(gameService.loadGame(1L)).willReturn(chessGame);
 
-        mockMvc.perform(get("/game/1/game-info"))
+        mockMvc.perform(get("/games/1/game-info"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(chessGameDto)));
 
@@ -64,7 +64,7 @@ class GameControllerTest {
         given(gameService.loadGame(1L)).willReturn(chessGame);
         willDoNothing().given(gameService).move(1L, moveDto.getSource(), moveDto.getTarget());
 
-        mockMvc.perform(put("/game/1/move")
+        mockMvc.perform(put("/games/1/move")
                 .content(objectMapper.writeValueAsString(moveDto))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -80,7 +80,7 @@ class GameControllerTest {
     void moveFailed() throws Exception {
         willThrow(new IllegalArgumentException()).given(gameService).move(eq(1L), any(), any());
 
-        mockMvc.perform(put("/game/1/move")
+        mockMvc.perform(put("/games/1/move")
                 .content(objectMapper.writeValueAsString(new MoveDto("b1", "b2")))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -94,7 +94,7 @@ class GameControllerTest {
     void terminateGame() throws Exception {
         willDoNothing().given(gameService).terminateGame(1L);
 
-        mockMvc.perform(post("/game/1/terminate"))
+        mockMvc.perform(post("/games/1/terminate"))
                 .andExpect(status().isOk());
 
         then(gameService).should(times(1)).terminateGame(1L);
@@ -108,7 +108,7 @@ class GameControllerTest {
         ChessGameDto chessGameDto = new ChessGameDto(chessGame);
         given(gameService.restart(1L)).willReturn(chessGame);
 
-        mockMvc.perform(post("/game/1/restart"))
+        mockMvc.perform(post("/games/1/restart"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(chessGameDto)));
 
@@ -121,16 +121,14 @@ class GameControllerTest {
     void newGameSuccess() throws Exception {
         TitleDto newGameTitle = new TitleDto("test-room");
         given(gameService.newGame(newGameTitle.getTitle())).willReturn(1L);
-        willDoNothing().given(gameService).verifyDuplicateTitleInGames(newGameTitle.getTitle());
 
-        mockMvc.perform(post("/game")
+        mockMvc.perform(post("/games/new-game")
                 .content(objectMapper.writeValueAsString(newGameTitle))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("1"));
 
         then(gameService).should(times(1)).newGame(newGameTitle.getTitle());
-        then(gameService).should(times(1)).verifyDuplicateTitleInGames(newGameTitle.getTitle());
         then(gameService).shouldHaveNoMoreInteractions();
     }
 
@@ -139,14 +137,14 @@ class GameControllerTest {
     void newGameFailed() throws Exception {
         TitleDto newGameTitle = new TitleDto("test-room");
         given(gameService.newGame(newGameTitle.getTitle())).willReturn(1L);
-        willThrow(new IllegalArgumentException()).given(gameService).verifyDuplicateTitleInGames(newGameTitle.getTitle());
+        willThrow(new IllegalArgumentException()).given(gameService).newGame(newGameTitle.getTitle());
 
-        mockMvc.perform(post("/game")
+        mockMvc.perform(post("/games/new-game")
                 .content(objectMapper.writeValueAsString(newGameTitle))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        then(gameService).should(times(1)).verifyDuplicateTitleInGames(newGameTitle.getTitle());
+        then(gameService).should(times(1)).newGame(newGameTitle.getTitle());
         then(gameService).shouldHaveNoMoreInteractions();
     }
 

@@ -99,6 +99,7 @@ class GameServiceTest {
 
         assertThat(gameService.newGame("test")).isEqualTo(1L);
 
+        then(chessRepository).should(times(1)).findGame(eq("test"));
         then(chessRepository).should(times(1)).addGame(any(), eq("test"));
         then(chessRepository).shouldHaveNoMoreInteractions();
     }

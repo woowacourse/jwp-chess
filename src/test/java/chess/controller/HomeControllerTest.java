@@ -18,7 +18,7 @@ class HomeControllerTest {
     @Test
     void initBoard() throws Exception {
         standaloneSetup(new HomeController()).build()
-                .perform(get("/game/{id}", "1"))
+                .perform(get("/games/{id}", "1"))
                 .andExpect(status().isOk());
     }
 }

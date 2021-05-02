@@ -27,12 +27,16 @@ export class Turn {
     this.#setBearImage();
   }
 
-  #isWhite() {
+  isWhite() {
     return this.#turn === WHITE_TEAM;
   }
 
+  isBlack() {
+    return this.#turn === BLACK_TEAM;
+  }
+
   #reverseTurn() {
-    if (this.#isWhite()) {
+    if (this.isWhite()) {
       this.#turn = BLACK_TEAM;
       return;
     }
@@ -40,7 +44,7 @@ export class Turn {
   }
 
   #setBearImage() {
-    if (this.#isWhite()) {
+    if (this.isWhite()) {
       this.#whiteBearComponent.src = HIGHLIGHTED_WHITE_BEAR_SRC
       this.#blackBearComponent.src = BLACK_BEAR_SRC;
     } else {

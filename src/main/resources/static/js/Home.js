@@ -16,6 +16,9 @@ window.onload = function () {
 
 async function startNewGame(e) {
   const hostId = await login();
+  if (!hostId) {
+    return;
+  }
   setCookie(USER_ID_KEY, hostId);
   const roomName = prompt("방 이름을 입력하세요.");
   if (roomName.length === 0) {
@@ -61,6 +64,9 @@ async function createGame(hostId, gameName) {
 
 async function showGames() {
   const guestId = await login();
+  if (!guestId) {
+    return;
+  }
   setCookie(USER_ID_KEY, guestId);
   window.location.href = `${url}/games`
 }

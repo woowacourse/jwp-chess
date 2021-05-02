@@ -1,5 +1,7 @@
 import {Board} from "./board/Board.js"
+import {HOST, GUEST, Role} from "./role/Role.js";
 import {getData} from "./utils/FetchUtil.js"
+import {USER_ID_KEY, getCookie} from "./utils/CookieUtil.js";
 
 const url = "http://localhost:8080";
 
@@ -16,14 +18,14 @@ window.onload = async function () {
   const name = response["name"];
   const turn = response["turn"];
   const isFinished = response["isFinished"];
-
+  const role = makeRole(host, guest);
   if (isFinished) {
     alert("이미 끝난 게임입니다. 홈으로 돌아갑니다.");
     history.back();
     return;
   }
 
-  initBoard(pieces, turn);
+  initBoard(pieces, turn, role);
   fillInformation(host, guest)
 }
 
@@ -38,8 +40,18 @@ function findGameIdInUri() {
   return gameId;
 }
 
-function initBoard(pieces, turn) {
-  const board = new Board(pieces, turn);
+function makeRole(host, guest) {
+  const userId = getCookie(USER_ID_KEY);
+  if (userId == host["id"]) {
+    return new Role(HOST);
+  }
+  if (userId == guest["id"]) {
+    return new Role(GUEST);
+  }
+}
+
+function initBoard(pieces, turn, role) {
+  const board = new Board(pieces, turn, role);
   addEvent(board);
 }
 

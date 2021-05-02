@@ -91,7 +91,7 @@ public class Game {
         return room.getHostId();
     }
 
-    public long getGuestId() {
+    public Long getGuestId() {
         return room.getGuestId();
     }
 

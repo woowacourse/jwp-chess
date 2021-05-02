@@ -11,13 +11,15 @@ export class Board {
   #component
   #sourceTile
   #turn
+  #role
 
-  constructor(pieceDtos, turn) {
+  constructor(pieceDtos, turn, role) {
     this.#tiles = new Tiles();
     this.#pieces = new Pieces(pieceDtos);
     this.#component = document.querySelector(".grid");
     this.#sourceTile = null;
     this.#turn = new Turn(turn);
+    this.#role = role;
     this.#addEvent()
   }
 
@@ -68,6 +70,9 @@ export class Board {
   }
 
   async #enterPiece(e, board) {
+    if (!this.#checkTurn()) {
+      return;
+    }
     if (!e.target.classList.contains("tile") &&
         !e.target.classList.contains("piece")) {
       return;
@@ -115,6 +120,9 @@ export class Board {
   }
 
   async #dropPiece(e, board) {
+    if (!this.#checkTurn()) {
+      return;
+    }
     const sourcePosition = e.dataTransfer.getData("sourcePosition");
     const piece = board.#pieces.findBySourcePosition(sourcePosition);
     const sourceTile = board.#tiles.findByPosition(piece.x, piece.y);
@@ -177,4 +185,13 @@ export class Board {
     return this.#pieces.findBySourcePosition(sourcePosition);
   }
 
+  #checkTurn() {
+    if (this.#turn.isWhite() && this.#role.isHost()) {
+      return true;
+    }
+    if (this.#turn.isBlack() && this.#role.isGuest()) {
+      return true;
+    }
+    return false;
+  }
 }

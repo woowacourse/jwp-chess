@@ -24,6 +24,7 @@ async function init() {
     this.$controller.addEventListener('click', btnHandler)
     this.$blackResult = document.getElementById('BLACK')
     this.$whiteResult = document.getElementById('WHITE')
+    this.$roomTitle = document.querySelector('.room-title')
     const $home = document.getElementById('home')
     const url = window.location.href.split('/')
     this.gameId = url[url.length - 1]
@@ -50,6 +51,7 @@ async function initBoard(chessGame) {
             insertPiece(position, piece)
         )
     }
+    this.$roomTitle.textContent = chessGame.title
 }
 
 async function start() {
@@ -95,12 +97,12 @@ async function finishHandler(finished) {
         $modal.style.display = null
         $modal.querySelector('label').textContent = '게임이 종료되었습니다.'
         document.querySelector('#finish').disabled = false
+        await toggleFinish()
+        await toggleAvatar()
         setTimeout(() => {
             $modal.style.display = 'none'
         }, 1500)
         await deactivateDrag()
-        await toggleFinish()
-        await toggleAvatar()
         removeTurn()
     }
 }

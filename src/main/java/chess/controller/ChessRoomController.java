@@ -1,9 +1,7 @@
 package chess.controller;
 
 import chess.service.room.ChessRoomService;
-import dto.ChessGameDto;
-import dto.RoomDto;
-import dto.RoomRequestDto;
+import dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -33,17 +31,26 @@ public class ChessRoomController {
     }
 
     @PostMapping("/rooms")
-    public ResponseEntity<RoomDto> create(@CookieValue(value = "user") @Valid @RequestBody RoomRequestDto roomRequestDto, BindingResult bindingResult) {
+    public ResponseEntity<RoomCreateResponse> create(@CookieValue(value = "user") @Valid @RequestBody RoomCreateRequest roomCreateRequest,
+                                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException("방 이름은 2글자 이상 8글자 이하 비밀번호는 4글자 이상 8글자 이하여야 합니다.");
         }
 
-        return ResponseEntity.ok().body(chessRoomService.create(roomRequestDto));
+        return ResponseEntity.ok().body(chessRoomService.create(roomCreateRequest));
     }
 
     @PostMapping("/rooms/{id}/enter")
-    public ResponseEntity enter(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
-        chessRoomService.enter(roomRequestDto);
+    public ResponseEntity<RoomDto> enter(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
+        RoomDto roomDto = chessRoomService.enter(roomRequestDto);
+        return ResponseEntity.ok(roomDto);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity load(@CookieValue(value = "user") String cookie, @PathVariable Long id) {
+        RoomLoadResponse RoomLoadResponse = chessRoomService.load(id);
+        simpMessagingTemplate.convertAndSend("/topic/room/" + id, RoomLoadResponse);
         return ResponseEntity.ok().build();
     }
 

@@ -10,9 +10,7 @@ import chess.domain.room.Room;
 import chess.domain.room.RoomInfo;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
-import dto.ChessGameDto;
-import dto.RoomDto;
-import dto.RoomRequestDto;
+import dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,16 +31,14 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     }
 
     @Override
-    public RoomDto create(final RoomRequestDto roomRequestDto) {
+    public RoomCreateResponse create(final RoomCreateRequest roomCreateRequest) {
         Long gameId = chessGameRepository.create(new ChessGame(new WhiteTeam(), new BlackTeam()));
 
-        Long roomId = chessRoomRepository.create(new Room(roomRequestDto.getId(),
-                new RoomInfo(roomRequestDto.getName(), roomRequestDto.getPw(), gameId),
-                new Players(roomRequestDto.getUser())));
+        Long roomId = chessRoomRepository.create(new Room(null,
+                new RoomInfo(roomCreateRequest.getName(), roomCreateRequest.getPw(), gameId),
+                new Players(roomCreateRequest.getUser())));
 
-        return new RoomDto(new Room(roomId,
-                new RoomInfo(roomRequestDto.getName(), roomRequestDto.getPw(), gameId),
-                new Players(roomRequestDto.getUser())));
+        return new RoomCreateResponse(roomId);
     }
 
     @Override
@@ -72,12 +68,19 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     }
 
     @Override
-    public ChessGameDto enter(RoomRequestDto roomRequestDto) {
+    public RoomDto enter(RoomRequestDto roomRequestDto) {
         validateEnterStatus(roomRequestDto);
         chessRoomRepository.join(roomRequestDto.getUser(), roomRequestDto.getId());
         Room room = chessRoomRepository.room(roomRequestDto.getId());
-        Long gameId = room.getGameId();
-        return new ChessGameDto(gameId, chessGameRepository.chessGame(gameId), room);
+        return new RoomDto(room);
+    }
+
+    @Override
+    public RoomLoadResponse load(final Long roomId) {
+        Room room = chessRoomRepository.room(roomId);
+        ChessGame chessGame = chessGameRepository.chessGame(room.getGameId());
+        return new RoomLoadResponse(new RoomDto(room),
+                new ChessGameDto(room.getGameId(), chessGame));
     }
 
     @Override

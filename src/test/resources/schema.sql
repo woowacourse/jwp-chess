@@ -1,13 +1,9 @@
-DROP TABLE IF EXISTS game;
-
 CREATE TABLE game
 (
     game_id int(11) NOT NULL AUTO_INCREMENT,
     is_end tinyint(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (game_id)
 );
-
-DROP TABLE IF EXISTS piece;
 
 CREATE TABLE `piece` (
                          `piece_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -20,7 +16,17 @@ CREATE TABLE `piece` (
                          CONSTRAINT `piece_ibfk_1` FOREIGN KEY (`game_id`) REFERENCES `game` (`game_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS `room`;
+CREATE TABLE `team` (
+                        `team_id` int(11) NOT NULL AUTO_INCREMENT,
+                        `name` varchar(21) NOT NULL,
+                        `is_turn` tinyint(1) NOT NULL,
+                        `game_id` int(11) NOT NULL,
+                        PRIMARY KEY (`team_id`),
+                        KEY `team_ibfk_1` (`game_id`),
+                        CONSTRAINT `team_ibfk_1` FOREIGN KEY (`game_id`) REFERENCES `game` (`game_id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
 
 CREATE TABLE `room` (
                         `room_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -34,24 +40,8 @@ CREATE TABLE `room` (
                         KEY `white_idx` (`white_player`),
                         KEY `black_idx` (`black_player`),
                         KEY `room_ibfk_1` (`game_id`),
-                        CONSTRAINT `black` FOREIGN KEY (`black_player`) REFERENCES `user` (`user_name`) ON DELETE CASCADE ON UPDATE CASCADE,
                         CONSTRAINT `room_ibfk_1` FOREIGN KEY (`game_id`) REFERENCES `game` (`game_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-                        CONSTRAINT `white` FOREIGN KEY (`white_player`) REFERENCES `user` (`user_name`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
-
-DROP TABLE IF EXISTS `team`;
-
-CREATE TABLE `team` (
-                        `team_id` int(11) NOT NULL AUTO_INCREMENT,
-                        `name` varchar(21) NOT NULL,
-                        `is_turn` tinyint(1) NOT NULL,
-                        `game_id` int(11) NOT NULL,
-                        PRIMARY KEY (`team_id`),
-                        KEY `team_ibfk_1` (`game_id`),
-                        CONSTRAINT `team_ibfk_1` FOREIGN KEY (`game_id`) REFERENCES `game` (`game_id`) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
                         `user_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -63,3 +53,4 @@ CREATE TABLE `user` (
                         KEY `room_id_idx` (`room_id`),
                         CONSTRAINT `room_id` FOREIGN KEY (`room_id`) REFERENCES `room` (`room_id`) ON DELETE SET NULL ON UPDATE NO ACTION
 );
+

@@ -4,14 +4,14 @@ import chess.domain.room.Room;
 
 public class RoomDto {
     private Long id;
-    private String name;
-    private Long gameId;
+    private RoomInfoDto roomInfo;
+    private PlayersDto players;
     private boolean enterable;
 
     public RoomDto(Room room) {
         this.id = room.getId();
-        this.name = room.getName();
-        this.gameId = room.getGameId();
+        this.roomInfo = new RoomInfoDto(room.getName(), room.getPw(), roomInfo.getGameId());
+        this.players = new PlayersDto(room.getWhitePlayer(), room.getBlackPlayer());
         this.enterable = room.enterable();
     }
 
@@ -19,12 +19,12 @@ public class RoomDto {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public RoomInfoDto getRoomInfo() {
+        return roomInfo;
     }
 
-    public Long getGameId() {
-        return gameId;
+    public PlayersDto getPlayers() {
+        return players;
     }
 
     public boolean isEnterable() {

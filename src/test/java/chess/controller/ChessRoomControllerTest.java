@@ -1,8 +1,9 @@
 package chess.controller;
 
-import dto.RoomRequestDto;
+import dto.RoomCreateRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+
 import javax.servlet.http.Cookie;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -11,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ChessRoomControllerTest extends BaseTest {
     @Test
     public void testRoomCreate() throws Exception {
-        RoomRequestDto roomRequestDto = new RoomRequestDto(null, "room", "123456", null,null);
+        RoomCreateRequest roomRequestDto = new RoomCreateRequest("room", "123456", "suri");
 
         mvc.perform(post("/api/rooms")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -22,7 +23,7 @@ public class ChessRoomControllerTest extends BaseTest {
 
     @Test
     public void testRoomNameValidation() throws Exception {
-        RoomRequestDto roomRequestDto = new RoomRequestDto(null, "room", "1", null,null);
+        RoomCreateRequest roomRequestDto = new RoomCreateRequest("room", "1", "suri");
 
         mvc.perform(post("/api/rooms")
                 .contentType(MediaType.APPLICATION_JSON)

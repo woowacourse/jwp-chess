@@ -7,32 +7,23 @@ import chess.domain.room.ChessRoomRepository;
 import chess.domain.room.Room;
 import dto.ChessGameDto;
 import dto.MoveDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessGameServiceImpl implements ChessGameService {
-    private final ChessRoomRepository chessRoomRepository;
     private final ChessGameRepository chessGameRepository;
 
-
-    public ChessGameServiceImpl(final ChessRoomRepository chessRoomRepository, final ChessGameRepository chessGameRepository) {
-        this.chessRoomRepository = chessRoomRepository;
+    @Autowired
+    public ChessGameServiceImpl(final ChessGameRepository chessGameRepository) {
         this.chessGameRepository = chessGameRepository;
     }
 
     @Override
-    public ChessGameDto load(final Long roomId) {
-        Room room = chessRoomRepository.room(roomId);
-        Long gameId = room.getGameId();
-        return new ChessGameDto(gameId, chessGameRepository.chessGame(gameId), room);
-    }
-
-    @Override
     public ChessGameDto move(final Long id, final MoveDto moveDto) {
-        final Room room = chessRoomRepository.room(id);
-        final ChessGame chessGame = chessGameRepository.chessGame(room.getGameId());
+        final ChessGame chessGame = chessGameRepository.chessGame(id);
         chessGame.move(Position.of(moveDto.getFrom()), Position.of(moveDto.getTo()));
-        chessGameRepository.save(room.getGameId(), chessGame, moveDto);
-        return new ChessGameDto(room.getGameId(), chessGame, room);
+        chessGameRepository.save(id, chessGame, moveDto);
+        return new ChessGameDto(id, chessGame);
     }
 }

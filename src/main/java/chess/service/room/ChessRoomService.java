@@ -1,14 +1,13 @@
 package chess.service.room;
 
-import dto.ChessGameDto;
-import dto.RoomDto;
-import dto.RoomRequestDto;
+import dto.*;
 
 import java.util.List;
 
 public interface ChessRoomService {
-    RoomDto create(RoomRequestDto room);
-    ChessGameDto enter(RoomRequestDto room);
+    RoomCreateResponse create(RoomCreateRequest roomCreateRequest);
+    RoomDto enter(RoomRequestDto roomRequestDto);
+    RoomLoadResponse load(Long roomId);
     List<RoomDto> rooms();
     void exit(Long roomId, String userName);
     ChessGameDto exitReturnEndChessGame(RoomRequestDto roomRequestDto, String userName);

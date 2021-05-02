@@ -51,11 +51,9 @@ btnCreateRoom.addEventListener('click', function (e) {
         alert('먼저 로그인 해 주세요.')
         return;
     }
-
     axios.post('/api/rooms', {
         "name": name,
         "pw": pw,
-        "user": cookieUser
     }).then(function (response) {
         location.href = '/rooms/' + response.data.id;
     }).catch(function (error) {

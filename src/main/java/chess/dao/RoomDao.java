@@ -27,7 +27,7 @@ public class RoomDao {
         String query = "INSERT INTO room(current_turn, room_name) values(?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"room_id"});
             ps.setString(1, "white");
             ps.setString(2, roomName);
             return ps;

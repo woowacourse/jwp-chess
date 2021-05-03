@@ -26,7 +26,7 @@ public class RoomRepository {
         this.pieceDao = pieceDao;
     }
 
-    public long create(String roomName) {
+    public void create(String roomName) {
         if (roomDao.roomExists(roomName)) {
             throw new DuplicateRoomException("이미 존재하는 방입니다. 다른 이름을 사용해주세요.");
         }
@@ -38,7 +38,6 @@ public class RoomRepository {
         for (Piece piece : board.getPieces()) {
             pieceDao.insert(roomId, piece);
         }
-        return roomId;
     }
 
     public Room findByName(String roomName) {

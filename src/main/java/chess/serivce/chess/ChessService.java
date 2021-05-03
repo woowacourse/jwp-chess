@@ -1,22 +1,12 @@
 package chess.serivce.chess;
 
-import chess.dao.piece.PieceDao;
-import chess.dao.room.RoomDao;
 import chess.domain.board.Board;
 import chess.domain.dto.PieceDto;
 import chess.domain.dto.RoomDto;
 import chess.domain.dto.RoomsDto;
 import chess.domain.dto.move.MoveResponseDto;
 import chess.domain.game.Room;
-import chess.domain.gamestate.State;
-import chess.domain.gamestate.running.Ready;
-import chess.domain.location.Location;
-import chess.domain.piece.Piece;
-import chess.domain.team.Team;
-import chess.exceptions.DuplicateRoomException;
-import chess.exceptions.NoRoomException;
 import chess.repository.RoomRepository;
-import chess.utils.BoardUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -32,9 +22,8 @@ public class ChessService {
         this.roomRepository = roomRepository;
     }
 
-    public RoomDto createRoom(String roomName) {
-        long roomId = roomRepository.create(roomName);
-        return new RoomDto(roomName);
+    public void createRoom(String roomName) {
+        roomRepository.create(roomName);
     }
 
     @Transactional

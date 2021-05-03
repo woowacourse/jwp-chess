@@ -19,6 +19,7 @@ public class UserDao {
     public UserDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     public Long create(final String name, final String pw) {
         String sql = "insert into user (user_name, user_pw) values (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

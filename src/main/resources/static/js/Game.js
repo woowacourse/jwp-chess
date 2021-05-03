@@ -2,8 +2,9 @@ import {Board} from "./board/Board.js"
 import {GUEST, HOST, Role} from "./role/Role.js";
 import {getData} from "./utils/FetchUtil.js"
 import {getCookie, USER_ID_KEY} from "./utils/CookieUtil.js";
+import {CHESS_URL} from "./URL.js";
 
-const url = "http://localhost:8080";
+const url = CHESS_URL;
 let board;
 
 window.onload = async function () {

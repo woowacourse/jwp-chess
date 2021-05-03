@@ -2,8 +2,9 @@ import {Tiles} from "../tile/Tiles.js"
 import {Pieces} from "../piece/Pieces.js"
 import {Turn} from "./Turn.js"
 import {getData, putData} from "../utils/FetchUtil.js"
+import {CHESS_URL} from "../URL.js";
 
-const url = "http://localhost:8080";
+const url = CHESS_URL;
 
 export class Board {
   #tiles

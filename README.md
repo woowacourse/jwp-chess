@@ -1,6 +1,6 @@
 ## 체스 게임
 ## API 명세
-http://localhost:8080/swagger-ui.html#/
+http://bear-chess.kro.kr:8080/swagger-ui.html#/
 
 ## 1단계
 - [x] DB 연결하기

@@ -1,6 +1,7 @@
 import {postData} from "./FetchUtil.js";
+import {CHESS_URL} from "../URL.js";
 
-const url = "http://localhost:8080";
+const url = CHESS_URL;
 
 export async function login() {
   const userName = prompt("유저 이름을 입력하세요.");

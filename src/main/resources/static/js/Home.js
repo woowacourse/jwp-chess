@@ -1,8 +1,9 @@
 import {getData, postData} from "./utils/FetchUtil.js"
 import {setCookie, USER_ID_KEY} from "./utils/CookieUtil.js";
 import {login} from "./utils/LoginUtil.js";
+import {CHESS_URL} from "./URL.js";
 
-const url = "http://localhost:8080";
+const url = CHESS_URL;
 
 window.onload = function () {
   const newGameButton = document.querySelector(".new-game");

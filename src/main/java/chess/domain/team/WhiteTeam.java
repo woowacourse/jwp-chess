@@ -30,8 +30,4 @@ public class WhiteTeam extends Team {
     public WhiteTeam(boolean isCurrentTurn, Map<Position, Piece> pieces) {
         super(DEFAULT_NAME, isCurrentTurn, pieces);
     }
-
-    public WhiteTeam(String name, boolean isCurrentTurn, Map<Position, Piece> pieces) {
-        super(name, isCurrentTurn, pieces);
-    }
 }

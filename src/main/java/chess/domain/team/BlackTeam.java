@@ -30,8 +30,4 @@ public class BlackTeam extends Team {
     public BlackTeam(boolean isCurrentTurn, Map<Position, Piece> pieces) {
         super(DEFAULT_NAME, isCurrentTurn, pieces);
     }
-
-    public BlackTeam(String name, boolean isCurrentTurn, Map<Position, Piece> pieces) {
-        super(name, isCurrentTurn, pieces);
-    }
 }

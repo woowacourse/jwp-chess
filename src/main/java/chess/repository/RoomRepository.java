@@ -74,7 +74,7 @@ public class RoomRepository {
             pieceDao.deletePieceById(removedPiece.getId());
         }
 
-        for (Piece piece : board.getPieces()) {
+        for (Piece piece : afterMovePieces) {
             pieceDao.update(piece);
         }
     }

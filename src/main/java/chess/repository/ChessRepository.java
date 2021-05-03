@@ -8,6 +8,7 @@ import chess.domain.position.Position;
 import chess.dto.PieceDto;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,8 +61,15 @@ public class ChessRepository {
         pieceDao.removePiece(target, roomId);
     }
 
-    public List<String> getRoomNames() {
-        return roomDao.selectAllRoomNames();
+    public Map<Integer, String> getRoomNames() {
+        List<Map<String, Object>> resultList = roomDao.selectAllRoomNames();
+        Map<Integer, String> rooms = new HashMap<>();
+        for (Map<String, Object> result : resultList) {
+            int roomId = (int) result.get("room_id");
+            String roomName = (String) result.get("room_name");
+            rooms.put(roomId, roomName);
+        }
+        return rooms;
     }
 
     public int getRoomId(String roomName) {

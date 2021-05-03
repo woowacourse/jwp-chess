@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class RoomDao {
@@ -47,11 +48,9 @@ public class RoomDao {
         jdbcTemplate.update(query, nextTurn, currentTurn, roomId);
     }
 
-    public List<String> selectAllRoomNames() {
-        String query = "SELECT room_name FROM room";
-        return jdbcTemplate.query(
-                query, (rs, rowNum) -> rs.getString("room_name")
-        );
+    public List<Map<String, Object>> selectAllRoomNames() {
+        String query = "SELECT room_id, room_name FROM room";
+        return jdbcTemplate.queryForList(query);
     }
 
     public int selectRoomId(String roomName) {

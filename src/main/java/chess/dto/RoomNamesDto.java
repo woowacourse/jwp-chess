@@ -1,17 +1,15 @@
 package chess.dto;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class RoomNamesDto {
-    private final List<String> roomNames;
+    private final Map<Integer, String> rooms;
 
-    public RoomNamesDto(List<String> roomNames) {
-        this.roomNames = new ArrayList<>(roomNames);
+    public RoomNamesDto(Map<Integer, String> rooms) {
+        this.rooms = new HashMap<>(rooms);
     }
 
-    public List<String> getRoomNames() {
-        return Collections.unmodifiableList(roomNames);
+    public Map<Integer, String> getRoomNames() {
+        return Collections.unmodifiableMap(rooms);
     }
 }

@@ -72,7 +72,7 @@ public class ChessService {
         chessRepository.changeTurn(nextTurn, currentTurn, roomId);
     }
 
-    public List<String> getRoomNames() {
+    public Map<Integer, String> getRoomNames() {
         return chessRepository.getRoomNames();
     }
 

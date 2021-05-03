@@ -11,17 +11,17 @@ window.onload = async function () {
   await initSocket();
   const response = await requestData();
   if (!response) {
-    alert("게임을 불러올 수 없습니다. 홈으로 돌아갑니다.");
     stompClient.unsubscribe();
     socket.close();
-    history.back();
+    alert("게임을 불러올 수 없습니다. 홈으로 돌아갑니다.");
+    window.location.href = "/";
     return;
   }
   if (response["finished"]) {
-    alert("이미 끝난 게임입니다. 홈으로 돌아갑니다.");
     stompClient.unsubscribe();
     socket.close();
-    history.back();
+    alert("이미 끝난 게임입니다. 홈으로 돌아갑니다.");
+    window.location.href = "/";
     return;
   }
   const host = response["host"];
@@ -131,10 +131,10 @@ function actByJoin(response) {
 
 function checkGameEnd(finished) {
   if (finished) {
+    stompClient.unsubscribe();
+    socket.close();
     const back = confirm(`게임이 끝났습니다. 확인을 누르면 홈으로 돌아갑니다.`)
     if (back) {
-      stompClient.unsubscribe();
-      socket.close();
       window.location.href = "/";
     }
   }

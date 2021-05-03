@@ -172,13 +172,13 @@ export class Board {
       const tile = this.#tiles.findById(target.id);
       window.setTimeout(function () {
         tile.unhighlight.call(tile);
-      }, 50);
+      }, 150);
     }
     if (target.classList.contains("piece")) {
       const tile = this.#findTileByPieceComponent(target);
       window.setTimeout(function () {
         tile.unhighlight.call(tile);
-      }, 50);
+      }, 150);
     }
   }
 

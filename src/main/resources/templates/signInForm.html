@@ -21,7 +21,7 @@
             password : form.querySelector('input[name="password"]').value,
         }
 
-        let response = await fetch("http://gump-chess.o-r.kr:8080/api/v1/users/signin", {
+        let response = await fetch("http://www.gump-chess.o-r.kr:8080/api/v1/users/signin", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,7 +35,7 @@
             return;
         }
 
-        window.location ="http://gump-chess.o-r.kr:8080";
+        window.location ="http://www.gump-chess.o-r.kr:8080";
 
     };
 </script>

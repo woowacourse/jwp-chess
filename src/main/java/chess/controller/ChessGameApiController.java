@@ -22,7 +22,7 @@ public class ChessGameApiController {
 
     @PostMapping
     public ResponseEntity<Object> saveChess(@RequestBody final ChessSaveRequestDto requestDto, @LoginUser User user) {
-         chessService.saveChess(requestDto, user);
+        chessService.saveChess(requestDto, user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

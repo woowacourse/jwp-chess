@@ -100,7 +100,8 @@
 <div id="popup" class="enter-black hide">
   <div class="content">
 
-  <form action="/chess/enter-black" method="post">
+  <form action="/chess/enter" method="post">
+      <input type="hidden" id="color" name="color" value="black">
       <input type="hidden" id="game-id" name="id" value="">
       흑색 유저 닉네임 : <input type="text" id="user-nickname" name="nickname" required size="10">
       <br><br>
@@ -115,7 +116,8 @@
 <div id="popup" class="enter-white hide">
   <div class="content">
 
-  <form action="/chess/enter-white" method="post">
+  <form action="/chess/enter" method="post">
+      <input type="hidden" id="color" name="color" value="white">
       <input type="hidden" id="game-id" name="id" value="">
       백색 유저 닉네임 : <input type="text" id="user-nickname" name="nickname" required size="10">
       <br><br>

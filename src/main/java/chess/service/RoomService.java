@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 public final class RoomService {
 
+    private static final String BLACK = "black";
+
     private final RoomDAO roomDAO;
     private final Rooms rooms;
 
@@ -37,12 +39,12 @@ public final class RoomService {
         }
     }
 
-    public void enrollBlackUser(final String roomId, final int blackUserId) {
-        roomDAO.enrollBlackUser(roomId, blackUserId);
-    }
-
-    public void enrollWhiteUser(final String roomId, final int white) {
-        roomDAO.enrollWhiteUser(roomId, white);
+    public void enrollUserByColor(final String roomId, final int userId, final String color) {
+        if (BLACK.equals(color)) {
+            roomDAO.enrollBlackUser(roomId, userId);
+            return;
+        }
+        roomDAO.enrollWhiteUser(roomId, userId);
     }
 
     public void changeStatus(final String roomId) {

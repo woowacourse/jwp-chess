@@ -65,24 +65,11 @@ public final class SpringChessGameController {
         return "redirect:room/" + roomService.createdRoomId();
     }
 
-    @PostMapping("/enter-black")
-    public String enterBlack(@ModelAttribute final EnterRoomRequestDTO requestDTO,
-        final HttpServletResponse response) {
+    @PostMapping("/enter")
+    public String enter(@ModelAttribute final EnterRoomRequestDTO requestDTO, final HttpServletResponse response) {
         userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
-        int blackUserId = userService.userIdByNickname(requestDTO.getNickname());
-        roomService.enrollBlackUser(requestDTO.getId(), blackUserId);
-        Cookie cookie = new Cookie("password", requestDTO.getPassword());
-        cookie.setPath("/api/v1/chess");
-        response.addCookie(cookie);
-        return "redirect:room/" + requestDTO.getId();
-    }
-
-    @PostMapping("/enter-white")
-    public String enterWhite(@ModelAttribute final EnterRoomRequestDTO requestDTO,
-        final HttpServletResponse response) {
-        userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
-        int whiteUserId = userService.userIdByNickname(requestDTO.getNickname());
-        roomService.enrollWhiteUser(requestDTO.getId(), whiteUserId);
+        int userId = userService.userIdByNickname(requestDTO.getNickname());
+        roomService.enrollUserByColor(requestDTO.getId(), userId, requestDTO.getColor());
         Cookie cookie = new Cookie("password", requestDTO.getPassword());
         cookie.setPath("/api/v1/chess");
         response.addCookie(cookie);

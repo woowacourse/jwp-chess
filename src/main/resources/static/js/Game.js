@@ -5,18 +5,22 @@ import {getCookie, USER_ID_KEY} from "./utils/CookieUtil.js";
 import {CHESS_URL} from "./URL.js";
 
 const url = CHESS_URL;
-let board;
+let board, socket, stompClient;
 
 window.onload = async function () {
   await initSocket();
   const response = await requestData();
   if (!response) {
     alert("게임을 불러올 수 없습니다. 홈으로 돌아갑니다.");
+    stompClient.unsubscribe();
+    socket.close();
     history.back();
     return;
   }
   if (response["finished"]) {
     alert("이미 끝난 게임입니다. 홈으로 돌아갑니다.");
+    stompClient.unsubscribe();
+    socket.close();
     history.back();
     return;
   }
@@ -100,8 +104,8 @@ function dropPiece(e, board) {
 }
 
 async function initSocket() {
-  const socket = new SockJS(`${url}/stomp`);
-  const stompClient = Stomp.over(socket);
+  socket = new SockJS(`${url}/stomp`);
+  stompClient = Stomp.over(socket);
   stompClient.connect({}, () => {
     const gameId = findGameIdInUri();
     stompClient.subscribe(`/topic/games/${gameId}/move`,
@@ -118,8 +122,20 @@ function actByMove(response) {
   const color = response["color"];
   const finished = response["finished"];
   board.moveOtherSide(source, target, color, finished);
+  checkGameEnd(finished);
 }
 
 function actByJoin(response) {
   initGame(response);
+}
+
+function checkGameEnd(finished) {
+  if (finished) {
+    const back = confirm(`게임이 끝났습니다. 확인을 누르면 홈으로 돌아갑니다.`)
+    if (back) {
+      stompClient.unsubscribe();
+      socket.close();
+      window.location.href = "/";
+    }
+  }
 }

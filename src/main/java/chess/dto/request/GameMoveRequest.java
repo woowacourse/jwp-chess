@@ -1,9 +1,9 @@
 package chess.dto.request;
 
 public class GameMoveRequest {
-    Long roomId;
-    String from;
-    String to;
+    private final Long roomId;
+    private final String from;
+    private final String to;
 
     public GameMoveRequest(Long roomId, String from, String to) {
         this.roomId = roomId;

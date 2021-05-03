@@ -26,7 +26,7 @@ window.onload = async function () {
     await initGame(response);
     return;
   }
-  fillInformation(host, guest);
+  fillInformation(host, guest, name);
 }
 
 async function initGame(response) {
@@ -38,7 +38,7 @@ async function initGame(response) {
   const finished = response["finished"];
   const role = makeRole(host, guest);
   initBoard(pieces, turn, role);
-  fillInformation(host, guest)
+  fillInformation(host, guest, name)
 }
 
 async function requestData() {
@@ -67,16 +67,19 @@ function initBoard(pieces, turn, role) {
   addEvent(board);
 }
 
-function fillInformation(host, guest) {
+function fillInformation(host, guest, name) {
+  const roomName = document.querySelector(".room-name-content");
+  roomName.innerHTML = name;
+
   const blackNameTag = document.querySelector(".name-tag.black");
   blackNameTag.innerHTML = guest["name"];
   const blackRecordTag = document.querySelector(".record-tag.black");
-  blackRecordTag.innerHTML = "검정색 플레이어";
+  blackRecordTag.innerHTML = "흑팀";
 
   const whiteNameTag = document.querySelector(".name-tag.white");
   whiteNameTag.innerHTML = host["name"];
   const whiteRecordTag = document.querySelector(".record-tag.white");
-  whiteRecordTag.innerHTML = "흰색 플레이어";
+  whiteRecordTag.innerHTML = "백팀";
 }
 
 function addEvent(board) {

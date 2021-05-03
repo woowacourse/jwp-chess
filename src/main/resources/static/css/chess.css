@@ -84,6 +84,20 @@ body {
     font-family: 'Do Hyeon', sans-serif;
 }
 
+.room-name-container {
+    width: 60%;
+    padding-left: 1vw;
+}
+
+.room-name-tag {
+    color: #4986a7;
+    font-size: 3vw;
+}
+
+.room-name-content {
+    font-size: 3vw;
+}
+
 .name-container {
     height: 12vw;
     display: flex;

@@ -65,6 +65,23 @@ public class ChessUserControllerTest extends SpringBootBaseTest {
                 .andExpect(status().isBadRequest());
     }
 
+
+    @DisplayName("유저 생성 테스트 - 중복 이름 예외")
+    @Test
+    public void testUserDuplicatedName() throws Exception {
+        UserCreateRequest request = new UserCreateRequest("suri", "123456");
+
+        mvc.perform(post("/api/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+
+        mvc.perform(post("/api/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
     @DisplayName("유저 로그인 테스트")
     @Test
     public void testLogin() throws Exception {

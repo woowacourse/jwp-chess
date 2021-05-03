@@ -10,11 +10,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.Arrays;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,10 +45,17 @@ public class ChessApiControllerTest {
     @Test
     void getRoomNamesTest() throws Exception {
         given(chessService.getRoomNames())
-                .willReturn(Arrays.asList("room1", "room2", "room3"));
+                .willReturn(
+                        new HashMap<Integer, String>() {{
+                            put(1, "room1");
+                            put(2, "room2");
+                            put(3, "room3");
+                        }}
+                );
 
         mockMvc.perform(get("/rooms").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{'roomNames':['room1', 'room2', 'room3']}"));
+                .andDo(print())
+                .andExpect(content().json("{\"roomNames\":{\"1\":\"room1\",\"2\":\"room2\",\"3\":\"room3\"}}"));
     }
 }

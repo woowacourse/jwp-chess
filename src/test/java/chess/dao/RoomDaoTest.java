@@ -12,6 +12,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -60,7 +61,7 @@ public class RoomDaoTest {
     @DisplayName("모든 방 이름 목록 테스트")
     @Test
     void selectAllRoomNamesTest() {
-        List<String> roomNames = roomDao.selectAllRoomNames();
+        List<Map<String, Object>> roomNames = roomDao.selectAllRoomNames();
         assertEquals(3, roomNames.size());
     }
 

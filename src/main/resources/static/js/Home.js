@@ -34,9 +34,6 @@ async function createGame(hostId, gameName) {
     hostId: hostId
   };
   const response = await postData(`${url}/games`, body);
-  if (!response) {
-    alert("게임을 생성하는데 실패했습니다.");
-  }
 }
 
 async function showGames() {

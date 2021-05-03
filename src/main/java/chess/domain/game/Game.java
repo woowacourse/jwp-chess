@@ -49,6 +49,7 @@ public class Game {
         board.move(Location.convert(source), Location.convert(target), turn);
         if (board.isKingCatch()) {
             this.isFinished = true;
+            board.clearPieces();
             return;
         }
         this.turn = turn.reverse();

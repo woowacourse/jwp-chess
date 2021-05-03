@@ -140,6 +140,10 @@ public class Board {
             .noneMatch(Piece::isKing);
     }
 
+    public void clearPieces() {
+        pieces.clear();
+    }
+
     public List<Piece> toList() {
         return pieces;
     }

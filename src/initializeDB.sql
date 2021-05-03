@@ -1,9 +1,7 @@
 -- DB 생성
-CREATE
-DATABASE chess DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE chess DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-USE
-chess;
+USE chess;
 
 -- 초기 테이블 생성
 CREATE TABLE room

@@ -20,7 +20,7 @@ public class PieceDao {
     }
 
     public void insertInitialPieces(int roomId, final String pieceName, final String piecePosition) {
-        String query = "INSERT INTO piece (piece_name, piece_position, room_id) VALUE (?, ?, ?)";
+        String query = "INSERT INTO piece (piece_name, piece_position, room_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(query, pieceName, piecePosition, roomId);
     }
 

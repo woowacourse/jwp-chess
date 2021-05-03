@@ -39,8 +39,8 @@ public class ChessGame {
         turn = turn.getOppositeColor();
     }
 
-    public boolean isOver() {
-        return chessBoard.isOver();
+    public boolean isGameOver() {
+        return chessBoard.isGameOver();
     }
 
     public void validateTurn(Position source) {
@@ -55,10 +55,6 @@ public class ChessGame {
 
     public Map<Position, Piece> getChessBoardMap() {
         return Collections.unmodifiableMap(chessBoard.getChessBoard());
-    }
-
-    public Piece getPiece(Position position) {
-        return chessBoard.getPiece(position);
     }
 
     public String getTurn() {

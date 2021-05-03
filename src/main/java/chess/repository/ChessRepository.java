@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public class ChessRepository {
+
     private final JdbcTemplate jdbcTemplate;
 
     public ChessRepository(JdbcTemplate jdbcTemplate) {
@@ -25,12 +26,16 @@ public class ChessRepository {
                 .findAny();
     }
 
-    public String addGame(ChessGame chessGame, String title) {
+    public Long addGame(ChessGame chessGame, String title) {
         String addingGameQuery = "INSERT INTO chess_game (turn, finished, board, title) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(addingGameQuery, chessGame.getTurn(), chessGame.isOver(), Serializer.serializeGame(chessGame)
-                , title);
+        jdbcTemplate.update(
+                addingGameQuery,
+                chessGame.getTurn(),
+                chessGame.isGameOver(),
+                Serializer.serializeGame(chessGame),
+                title);
         String findingGameQuery = "SELECT MAX(id) FROM chess_game";
-        return jdbcTemplate.queryForObject(findingGameQuery, String.class);
+        return jdbcTemplate.queryForObject(findingGameQuery, Long.class);
     }
 
     public ChessGame loadGame(Long id) {
@@ -43,14 +48,14 @@ public class ChessRepository {
         jdbcTemplate.update(savingGameQuery, chessGame.getTurn(), Serializer.serializeGame(chessGame), id);
     }
 
-    public void finish(Long id) {
+    public void terminateGame(Long id) {
         String savingGameQuery = "UPDATE chess_game SET finished = ? WHERE id = ?";
         jdbcTemplate.update(savingGameQuery, true, id);
     }
 
     public void restart(Long id, ChessGame chessGame) {
         String restartQuery = "UPDATE chess_game SET turn = ?, finished = ?, board = ? WHERE id = ?";
-        jdbcTemplate.update(restartQuery, chessGame.getTurn(), chessGame.isOver(), Serializer.serializeGame(chessGame),
+        jdbcTemplate.update(restartQuery, chessGame.getTurn(), chessGame.isGameOver(), Serializer.serializeGame(chessGame),
                 id);
     }
 

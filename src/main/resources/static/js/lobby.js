@@ -21,7 +21,7 @@ async function showRoomList() {
         '/games'
     )
     response = await response.json()
-    rooms = response.roomList
+    rooms = response.gameList
     for (const room of rooms) {
         $roomList.insertAdjacentHTML('beforeend',
             await roomTemplate(room)
@@ -59,7 +59,7 @@ async function roomTemplate(room) {
 }
 
 function routeToRoom(id) {
-    window.location.href = `/room/${id}`
+    window.location.href = `/games/${id}`
 }
 
 async function modalHandler(e) {
@@ -93,7 +93,7 @@ async function enterHandler(e) {
 
     if (action === 'start') {
         response = await fetch(
-            '/game',
+            '/games',
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -115,7 +115,7 @@ async function enterHandler(e) {
             return;
         }
         const id = await response.json()
-        window.location.href = `/room/${id}`
+        window.location.href = `/games/${id}`
         return;
     }
 }

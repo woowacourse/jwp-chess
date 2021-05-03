@@ -81,13 +81,6 @@ public class ChessBoard {
         throw new IllegalArgumentException(NOT_MOVABLE_POSITION);
     }
 
-    public void move(String source, String target) {
-        Position sourcePosition = getPosition(Position.of(source));
-        Position targetPosition = getPosition(Position.of(target));
-
-        move(sourcePosition, targetPosition);
-    }
-
     private void validateMove(Position sourcePosition, Position targetPosition) {
         if (sourcePosition.equals(targetPosition)) {
             throw new IllegalArgumentException(SAME_POSITION);
@@ -110,7 +103,7 @@ public class ChessBoard {
         return chessBoard.get(position).isBlank();
     }
 
-    public boolean isOver() {
+    public boolean isGameOver() {
         long kingCount = kingCount();
         return kingCount < NUMBER_OF_KINGS;
     }

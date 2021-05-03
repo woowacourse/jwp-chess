@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessUserService {
 
-
     private final UserDao userDao;
     private final ChessRoomService chessRoomService;
 

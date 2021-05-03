@@ -17,6 +17,4 @@ public class ControllerExceptionHandler {
     public ResponseEntity<String> checkCookieMissing(Exception exception) {
         return ResponseEntity.badRequest().body("로그인을 해 주세요.");
     }
-
-
 }

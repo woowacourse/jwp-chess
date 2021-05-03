@@ -1,4 +1,4 @@
-import {Rooms} from "./room/rooms.js"
+import {Rooms} from "./room/Rooms.js"
 import {getData} from "./utils/FetchUtil.js"
 import {CHESS_URL} from "./URL.js";
 

@@ -12,7 +12,6 @@ import chess.domain.game.room.Room;
 import chess.domain.game.room.Rooms;
 import chess.domain.game.team.Team;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
@@ -55,6 +54,10 @@ public class GameRepository {
         return new Rooms(rooms);
     }
 
+    public Room findRoomById(final long roomId) {
+        return roomDao.selectIdById(roomId).toEntity();
+    }
+
     public void update(final Game game) {
         final long gameId = game.getId();
         updatePieces(gameId, game);
@@ -95,12 +98,6 @@ public class GameRepository {
 
     public void joinGuest(final long guestId, final long roomId) {
         roomDao.updateGuestById(guestId, roomId);
-    }
-
-    public boolean isJoinableRoom(final long roomId) {
-        final RoomDto roomDto = roomDao.selectIdById(roomId);
-        final Long guestId = roomDto.getGuestId();
-        return Objects.isNull(guestId);
     }
 
 }

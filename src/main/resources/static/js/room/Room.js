@@ -73,7 +73,7 @@ export class Room {
     };
     const response = await putData(`${url}/api/rooms/${room.#id}/join`, body);
     if (!response) {
-      alert("방이 가득 찼습니다.")
+      alert("방 입장에 실패했습니다.");
       location.reload();
     }
   }

@@ -4,14 +4,32 @@ import {getData} from "./utils/FetchUtil.js"
 import {getCookie, USER_ID_KEY} from "./utils/CookieUtil.js";
 
 const url = "http://localhost:8080";
+let board;
 
 window.onload = async function () {
+  await initSocket();
   const response = await requestData();
   if (!response) {
     alert("게임을 불러올 수 없습니다. 홈으로 돌아갑니다.");
     history.back();
     return;
   }
+  if (response["finished"]) {
+    alert("이미 끝난 게임입니다. 홈으로 돌아갑니다.");
+    history.back();
+    return;
+  }
+  const host = response["host"];
+  const guest = response["guest"];
+  const name = response["name"];
+  if (host["id"] && guest["id"]) {
+    await initGame(response);
+    return;
+  }
+  fillInformation(host, guest);
+}
+
+async function initGame(response) {
   const pieces = response["pieceResponseDtos"];
   const host = response["host"];
   const guest = response["guest"];
@@ -19,12 +37,6 @@ window.onload = async function () {
   const turn = response["turn"];
   const finished = response["finished"];
   const role = makeRole(host, guest);
-  if (finished) {
-    alert("이미 끝난 게임입니다. 홈으로 돌아갑니다.");
-    history.back();
-    return;
-  }
-
   initBoard(pieces, turn, role);
   fillInformation(host, guest)
 }
@@ -51,7 +63,7 @@ function makeRole(host, guest) {
 }
 
 function initBoard(pieces, turn, role) {
-  const board = new Board(pieces, turn, role);
+  board = new Board(pieces, turn, role);
   addEvent(board);
 }
 
@@ -81,4 +93,30 @@ function dropPiece(e, board) {
   const sourcePosition = e.dataTransfer.getData("sourcePosition");
   const piece = board.findPieceBySourcePosition(sourcePosition);
   piece.unhighlight();
+}
+
+async function initSocket() {
+  const socket = new SockJS(`${url}/stomp`);
+  const stompClient = Stomp.over(socket);
+  stompClient.connect({}, () => {
+    const gameId = findGameIdInUri();
+    stompClient.subscribe(`/topic/games/${gameId}/move`,
+            response => actByMove(JSON.parse(response.body)));
+
+    stompClient.subscribe(`/topic/games/${gameId}/join`,
+            response => actByJoin(JSON.parse(response.body)));
+  })
+}
+
+
+function actByMove(response) {
+  const source = response["source"];
+  const target = response["target"];
+  const color = response["color"];
+  const finished = response["finished"];
+  board.moveOtherSide(source, target, color, finished);
+}
+
+function actByJoin(response) {
+  initGame(response);
 }

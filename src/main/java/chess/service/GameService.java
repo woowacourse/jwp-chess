@@ -3,6 +3,7 @@ package chess.service;
 import chess.domain.game.Game;
 import chess.domain.game.GameRepository;
 import chess.domain.game.room.Room;
+import chess.domain.game.team.Team;
 import chess.domain.user.User;
 import chess.domain.user.UserRepository;
 import chess.exception.GameParticipationFailureException;
@@ -59,10 +60,14 @@ public class GameService {
     }
 
     public void join(final long roomId, final JoinRequestDto joinRequestDto) {
-        if (!gameRepository.isJoinableRoom(roomId)) {
+        final long guestId = joinRequestDto.getGuestId();
+        final Room room = gameRepository.findRoomById(roomId);
+        if (room.isFull()) {
             throw new GameParticipationFailureException("이미 방이 가득 찼습니다.");
         }
-        final long guestId = joinRequestDto.getGuestId();
+        if (room.isAlreadyJoin(guestId)) {
+            throw new GameParticipationFailureException("이미 참여한 방입니다.");
+        }
         gameRepository.joinGuest(guestId, roomId);
     }
 
@@ -76,12 +81,14 @@ public class GameService {
     }
 
     public MoveResponseDto move(final long gameId, final MoveRequestDto moveRequestDto) {
+        final String source = moveRequestDto.getSource();
+        final String target = moveRequestDto.getTarget();
+        final Team color = moveRequestDto.getColor();
         final Game game = gameRepository.findById(gameId);
-        game.move(
-            moveRequestDto.getSource(), moveRequestDto.getTarget(), moveRequestDto.getColor()
-        );
+
+        game.move(source, target, color);
         gameRepository.update(game);
-        return new MoveResponseDto(game.isFinished());
+        return new MoveResponseDto(source, target, color, game.isFinished());
     }
 
     public long bringGameIdByRoomId(final long roomId) {

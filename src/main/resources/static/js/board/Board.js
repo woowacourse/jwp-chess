@@ -194,4 +194,28 @@ export class Board {
     }
     return false;
   }
+
+  moveOtherSide(source, target, color, finished) {
+    if (color === "white" && this.#role.isHost()) {
+      return;
+    }
+    if (color === "black" && this.#role.isGuest()) {
+      return;
+    }
+    const sourceTile = this.#tiles.findById(source);
+    const targetTile = this.#tiles.findById(target);
+    const sourcePiece = this.#pieces.findByPosition(sourceTile.x, sourceTile.y);
+    this.#pieces.move(sourcePiece, targetTile)
+    this.#turn.changeTurn();
+    this.#checkGameEnd(finished)
+  }
+
+  #checkGameEnd(finished) {
+    if (finished) {
+      const back = confirm(`게임이 끝났습니다. 확인을 누르면 홈으로 돌아갑니다.`)
+      if (back) {
+        window.location.href = "/";
+      }
+    }
+  }
 }

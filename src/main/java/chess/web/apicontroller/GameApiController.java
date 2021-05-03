@@ -7,6 +7,7 @@ import chess.web.dto.game.move.MoveCheckResponseDto;
 import chess.web.dto.game.move.MoveRequestDto;
 import chess.web.dto.game.move.MoveResponseDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameApiController {
 
     private final GameService gameService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public GameApiController(final GameService gameService) {
+    public GameApiController(final GameService gameService,
+        final SimpMessagingTemplate simpMessagingTemplate) {
         this.gameService = gameService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @GetMapping("/{gameId}")
@@ -41,7 +45,10 @@ public class GameApiController {
     public ResponseEntity<MoveResponseDto> move(@PathVariable long gameId,
         @RequestBody MoveRequestDto moveRequestDto) {
 
-        return ResponseEntity.ok().body(gameService.move(gameId, moveRequestDto));
+        final MoveResponseDto moveResponseDto = gameService.move(gameId, moveRequestDto);
+        final String subscriptionUrl = String.format("/topic/games/%s/move", gameId);
+        simpMessagingTemplate.convertAndSend(subscriptionUrl, moveResponseDto);
+        return ResponseEntity.ok().body(moveResponseDto);
     }
 
 }

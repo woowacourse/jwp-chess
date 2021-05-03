@@ -21,12 +21,6 @@ public class BlackTeam extends Team {
         super(DEFAULT_NAME, isCurrentTurn);
     }
 
-    public BlackTeam(String name) {
-        super(name);
-        initializePawn(BLACK_PAWN_COLUMN, BLACK_PAWN_DIRECTION);
-        initializePiece(BLACK_PIECE_COLUMN);
-    }
-
     public BlackTeam(boolean isCurrentTurn, Map<Position, Piece> pieces) {
         super(DEFAULT_NAME, isCurrentTurn, pieces);
     }

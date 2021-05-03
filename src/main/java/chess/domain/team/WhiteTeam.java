@@ -21,12 +21,6 @@ public class WhiteTeam extends Team {
         super(DEFAULT_NAME, isCurrentTurn);
     }
 
-    public WhiteTeam(String name) {
-        super(name);
-        initializePawn(WHITE_PAWN_COLUMN, WHITE_PAWN_DIRECTION);
-        initializePiece(WHITE_PIECE_COLUMN);
-    }
-
     public WhiteTeam(boolean isCurrentTurn, Map<Position, Piece> pieces) {
         super(DEFAULT_NAME, isCurrentTurn, pieces);
     }

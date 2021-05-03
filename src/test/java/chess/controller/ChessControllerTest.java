@@ -1,12 +1,9 @@
 package chess.controller;
 
 import chess.domain.player.Round;
-import chess.repository.ChessRepository;
 import chess.service.ChessService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,8 +11,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @WebMvcTest(ChessController.class)
 public class ChessControllerTest {
@@ -28,7 +25,7 @@ public class ChessControllerTest {
 
     @DisplayName("홈 화면 정상 진입 테스트")
     @Test
-    public void homeTest() throws Exception {
+    void homeTest() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("home"));
@@ -36,7 +33,7 @@ public class ChessControllerTest {
 
     @DisplayName("체스 방 정상 진입 테스트")
     @Test
-    public void roomTest() throws Exception {
+    void roomTest() throws Exception {
         given(chessService.getStoredRound(1))
                 .willReturn(new Round());
         mockMvc.perform(get("/rooms/1"))

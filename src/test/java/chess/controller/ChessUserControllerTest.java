@@ -1,6 +1,7 @@
 package chess.controller;
 
-import chess.dto.UserDto;
+import chess.dto.request.UserCreateRequest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
@@ -9,48 +10,74 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ChessUserControllerTest extends SpringBootBaseTest {
 
+    @DisplayName("유저 생성 테스트")
     @Test
     public void testUserCreate() throws Exception {
-        UserDto userDto = new UserDto("suri", "123456", null);
+        UserCreateRequest request = new UserCreateRequest("suri", "123456");
 
         mvc.perform(post("/api/user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDto)))
+                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("유저 생성 테스트 - 유저 이름 2자 이상")
     @Test
-    public void testUserNameValidation() throws Exception {
-        UserDto userDto = new UserDto("", "123456", null);
+    public void testUserNameMinValidation() throws Exception {
+        UserCreateRequest request = new UserCreateRequest("", "123456");
 
         mvc.perform(post("/api/user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDto)))
+                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
     }
 
+    @DisplayName("유저 생성 테스트 - 유저 이름 4자 이하")
     @Test
-    public void testUserPwValidation() throws Exception {
-        UserDto userDto = new UserDto("suri", "", null);
+    public void testUserNameMaxValidation() throws Exception {
+        UserCreateRequest request = new UserCreateRequest("surisurisuri", "123456");
 
         mvc.perform(post("/api/user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDto)))
+                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
     }
 
+    @DisplayName("유저 생성 테스트 - 유저 비밀번호 2자 이상")
+    @Test
+    public void testUserPwMinValidation() throws Exception {
+        UserCreateRequest request = new UserCreateRequest("suri", "");
+
+        mvc.perform(post("/api/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("유저 생성 테스트 - 유저 비밀번호 8자 이상")
+    @Test
+    public void testUserPwMaxValidation() throws Exception {
+        UserCreateRequest request = new UserCreateRequest("suri", "12345678910");
+
+        mvc.perform(post("/api/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("유저 로그인 테스트")
     @Test
     public void testLogin() throws Exception {
-        UserDto userDto = new UserDto("suri", "123456", null);
+        UserCreateRequest request = new UserCreateRequest("suri", "123456");
 
         mvc.perform(post("/api/user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDto)))
+                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
 
         mvc.perform(post("/api/user/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDto)))
+                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
     }
 }

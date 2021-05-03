@@ -3,7 +3,7 @@ const mainLoad = document.querySelector("#main-load");
 const signIn = document.querySelector("#main-signin");
 const signUp = document.querySelector("#main-signup");
 const rooms = document.querySelector(".room-single");
-const basePath = 'http://localhost:8080';
+const basePath = 'http://gump-chess.o-r.kr:8080';
 
 mainStart.addEventListener("click", async () => {
     let result = window.prompt("게임 이름을 입력해주세요");

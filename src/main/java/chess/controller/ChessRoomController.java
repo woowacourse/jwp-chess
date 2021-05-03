@@ -51,7 +51,7 @@ public class ChessRoomController {
 
     @PostMapping("/enter")
     public ResponseEntity<RoomEnterResponse> enter(@CookieValue(value = "user") String cookie,
-                                         @RequestBody RoomEnterRequest request) {
+                                                   @RequestBody RoomEnterRequest request) {
         RoomEnterResponse roomDto = chessRoomService.enter(request);
         return ResponseEntity.ok(roomDto);
     }

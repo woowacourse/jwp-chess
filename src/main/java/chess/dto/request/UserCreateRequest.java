@@ -8,7 +8,6 @@ public class UserCreateRequest {
     @Size(min = 2, max = 8, message = "유저 비밀번호는 2글자 이상 4글자 이하 입니다.")
     private final String userPw;
 
-
     public UserCreateRequest(final String userName, final String userPw) {
         this.userName = userName;
         this.userPw = userPw;

@@ -15,7 +15,8 @@ public class ChessGameController {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    public ChessGameController(final ChessGameService chessGameService, final SimpMessagingTemplate simpMessagingTemplate) {
+    public ChessGameController(final ChessGameService chessGameService,
+                               final SimpMessagingTemplate simpMessagingTemplate) {
         this.chessGameService = chessGameService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
@@ -23,7 +24,7 @@ public class ChessGameController {
     @PutMapping("/{id}/move")
     @ResponseBody
     public ResponseEntity movePiece(@CookieValue(value = "user") String cookie, @PathVariable("id") Long gameId,
-                                                  @RequestBody GameMoveRequest request) {
+                                    @RequestBody GameMoveRequest request) {
         ChessGameDto chessGameDto = chessGameService.move(gameId, request);
         simpMessagingTemplate.convertAndSend("/topic/room/" + request.getRoomId(), chessGameDto);
         return ResponseEntity.ok().build();

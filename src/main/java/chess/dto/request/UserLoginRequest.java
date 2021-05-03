@@ -8,7 +8,6 @@ public class UserLoginRequest {
     @Size(min = 2, max = 8)
     private final String userPw;
 
-
     public UserLoginRequest(final String userName, final String userPw) {
         this.userName = userName;
         this.userPw = userPw;

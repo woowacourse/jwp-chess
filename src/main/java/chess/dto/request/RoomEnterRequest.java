@@ -5,7 +5,6 @@ public class RoomEnterRequest {
     private final String userName;
     private final String roomPw;
 
-
     public RoomEnterRequest(final Long roomId, final String userName, final String roomPw) {
         this.roomId = roomId;
         this.userName = userName;

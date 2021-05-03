@@ -66,7 +66,7 @@ function createRoom() {
 
     axios.post('/api/rooms', body)
         .then(function (response) {
-            location.href = '/rooms/' + response.data.id;
+            location.href = '/rooms/' + response.data.roomId;
         })
         .catch(function (error) {
             alert(error.response.data);
@@ -127,12 +127,12 @@ function refreshRoomList(data) {
         let room = data[i];
         if (room.isFull) {
             list.innerHTML += "<div class = box-chess-game data-idx = " + i + ">\n" +
-                "<p class=box-chess-game-title> " + room.name + "</p>\n" +
+                "<p class=box-chess-game-title> " + room.roomName + "</p>\n" +
                 "</div>\n"
         } else {
 
             list.innerHTML += "<div class = box-chess-game data-idx = " + i + ">\n" +
-                "<p class=box-chess-game-title> " + room.name + " (입장가능) </p>\n" +
+                "<p class=box-chess-game-title> " + room.roomName + " (입장가능) </p>\n" +
                 "</div>\n"
         }
     }
@@ -152,8 +152,7 @@ function clickRoom(event) {
     }
 
     let room = roomListData[idx];
-    console.log(room);
-    enterGame(room.id)
+    enterGame(room.roomId)
 }
 
 function enterGame(id) {
@@ -167,7 +166,7 @@ function enterGame(id) {
 
     axios.post('/api/rooms/enter', body)
         .then(function (response) {
-            location.href = '/rooms/' + response.data.id;
+            location.href = '/rooms/' + response.data.roomId;
         })
         .catch(function (error) {
             if (error.response.status === 400) {

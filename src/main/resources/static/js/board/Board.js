@@ -196,7 +196,7 @@ export class Board {
     return false;
   }
 
-  moveOtherSide(source, target, color, finished) {
+  moveOtherSide(source, target, color) {
     if (color === "white" && this.#role.isHost()) {
       return;
     }

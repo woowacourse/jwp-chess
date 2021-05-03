@@ -116,26 +116,26 @@ async function initSocket() {
   })
 }
 
-function actByMove(response) {
+async function actByMove(response) {
   const source = response["source"];
   const target = response["target"];
   const color = response["color"];
   const finished = response["finished"];
   board.moveOtherSide(source, target, color, finished);
-  checkGameEnd(finished);
+  await checkGameEnd(finished);
 }
 
 function actByJoin(response) {
   initGame(response);
 }
 
-function checkGameEnd(finished) {
+async function checkGameEnd(finished) {
   if (finished) {
     stompClient.unsubscribe();
-    socket.close();
-    const back = confirm(`게임이 끝났습니다. 확인을 누르면 홈으로 돌아갑니다.`)
-    if (back) {
+    alert(`게임이 끝났습니다. 3초뒤에  홈으로 돌아갑니다.`);
+    window.setTimeout(() => {
+      socket.close();
       window.location.href = "/";
-    }
+    }, 3000);
   }
 }

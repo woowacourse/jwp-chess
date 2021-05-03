@@ -19,7 +19,7 @@ public class SwaggerConfig {
             .groupName("chess")
             .select()
             .apis(RequestHandlerSelectors.
-                basePackage("chess.controller"))
+                basePackage("chess.web"))
             .paths(PathSelectors.any()).build();
     }
 

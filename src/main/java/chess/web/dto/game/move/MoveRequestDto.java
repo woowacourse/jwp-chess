@@ -21,20 +21,20 @@ public class MoveRequestDto {
         return source;
     }
 
-    public String getTarget() {
-        return target;
-    }
-
-    public Team getColor() {
-        return color;
-    }
-
     public void setSource(final String source) {
         this.source = source;
     }
 
+    public String getTarget() {
+        return target;
+    }
+
     public void setTarget(final String target) {
         this.target = target;
+    }
+
+    public Team getColor() {
+        return color;
     }
 
     public void setColor(final Team color) {

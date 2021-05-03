@@ -11,6 +11,7 @@ import chess.service.HistoryService;
 import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
+import chess.util.PasswordEncoder;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -56,10 +57,11 @@ public final class SpringChessGameController {
     @PostMapping(path = "/new-game")
     public String createNewGame(@ModelAttribute final CreateRoomRequestDTO requestDTO,
         final HttpServletResponse response) {
-        userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
+        String encodePassword = PasswordEncoder.encodingPassword(requestDTO.getPassword());
+        userService.enrollUser(requestDTO.getNickname(), encodePassword);
         int whiteUserId = userService.userIdByNickname(requestDTO.getNickname());
         roomService.createRoom(requestDTO.getTitle(), whiteUserId);
-        Cookie cookie = new Cookie("password", requestDTO.getPassword());
+        Cookie cookie = new Cookie("encodePassword", encodePassword);
         cookie.setPath("/api/v1/chess");
         response.addCookie(cookie);
         return "redirect:room/" + roomService.createdRoomId();
@@ -67,10 +69,11 @@ public final class SpringChessGameController {
 
     @PostMapping("/enter")
     public String enter(@ModelAttribute final EnterRoomRequestDTO requestDTO, final HttpServletResponse response) {
-        userService.enrollUser(requestDTO.getNickname(), requestDTO.getPassword());
+        String encodePassword = PasswordEncoder.encodingPassword(requestDTO.getPassword());
+        userService.enrollUser(requestDTO.getNickname(), encodePassword);
         int userId = userService.userIdByNickname(requestDTO.getNickname());
         roomService.enrollUserByColor(requestDTO.getId(), userId, requestDTO.getColor());
-        Cookie cookie = new Cookie("password", requestDTO.getPassword());
+        Cookie cookie = new Cookie("encodePassword", encodePassword);
         cookie.setPath("/api/v1/chess");
         response.addCookie(cookie);
         return "redirect:room/" + requestDTO.getId();

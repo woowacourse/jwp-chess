@@ -12,7 +12,7 @@ import javax.servlet.http.Cookie;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ChessRoomControllerTest extends BaseTest {
+public class ChessRoomControllerTest extends SpringBootBaseTest {
 
     @Autowired
     public UserDao userDao;

@@ -1,6 +1,5 @@
 package chess.service.room;
 
-import chess.dto.RoomDto;
 import chess.dto.request.RoomCreateRequest;
 import chess.dto.request.RoomEnterRequest;
 import chess.dto.request.RoomExitRequest;

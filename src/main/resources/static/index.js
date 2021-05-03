@@ -92,7 +92,7 @@ function createUser() {
             alert('계정생성이 완료되었습니다.')
         })
         .catch(function (error) {
-            alert('계정 만들지 못했습니다.');
+            alert(error.response.data);
         });
 }
 
@@ -114,7 +114,7 @@ function login() {
             setCookie('user', response.data.name, 720)
             refreshTitle()
         }).catch(function (error) {
-            alert('로그인에 실패했습니다.');
+            alert(error.response.data);
         });
 }
 

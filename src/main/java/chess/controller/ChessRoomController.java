@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 
 @RestController
@@ -41,8 +42,8 @@ public class ChessRoomController {
                                                      @Valid @RequestBody RoomCreateRequest request,
                                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException("방 이름은 2글자 이상 8글자 이하 " +
-                    "비밀번호는 4글자 이상 8글자 이하여야 합니다.");
+            throw new IllegalArgumentException(
+                    Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
 
         return ResponseEntity.ok().body(chessRoomService.create(request));

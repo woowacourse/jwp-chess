@@ -33,7 +33,7 @@ public class ChessUserService {
         User user = userDao.findByName(name);
 
         if (!user.checkPassword(pw)) {
-            throw  new IllegalArgumentException();
+            throw  new IllegalArgumentException("비밀번호가 틀립니다.");
         }
 
         exitIfInGameWhenLogIn(user);

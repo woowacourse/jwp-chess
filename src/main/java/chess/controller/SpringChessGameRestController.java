@@ -11,6 +11,8 @@ import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,22 +38,28 @@ public class SpringChessGameRestController {
     }
 
     @PostMapping(path = "/turn")
-    public boolean checkCurrentTurn(
+    public ResponseEntity<Boolean> checkCurrentTurn(
         @RequestBody final SectionDTO sectionDTO,
         @CookieValue(value = "password", required = false) final String password) {
 
-        return roomService
+        boolean isCurrentPlayerTurn = roomService
             .checkRightTurn(sectionDTO.getRoomId(), sectionDTO.getClickedSection(), password);
+
+        if (isCurrentPlayerTurn) {
+            return ResponseEntity.status(HttpStatus.OK).body(true);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(false);
     }
 
     @PostMapping("/movable-positions")
-    public List<String> findMovablePosition(@RequestBody final SectionDTO sectionDTO) {
+    public ResponseEntity<List<String>> findMovablePosition(@RequestBody final SectionDTO sectionDTO) {
         ChessGame chessGame = roomService.loadGameByRoomId(sectionDTO.getRoomId());
-        return chessGame.movablePositionsByStartPoint(sectionDTO.getClickedSection());
+        List<String> positions = chessGame.movablePositionsByStartPoint(sectionDTO.getClickedSection());
+        return ResponseEntity.status(HttpStatus.OK).body(positions);
     }
 
     @PostMapping("/move")
-    public StatusDTO movePiece(@RequestBody final MoveDTO moveDTO) {
+    public ResponseEntity<Object> movePiece(@RequestBody final MoveDTO moveDTO) {
         String roomId = moveDTO.getRoomId();
         String startPoint = moveDTO.getStartPoint();
         String endPoint = moveDTO.getEndPoint();
@@ -59,11 +67,13 @@ public class SpringChessGameRestController {
 
         historyService.createLog(roomId, startPoint, endPoint);
         UsersDTO users = userService.usersParticipatedInGame(roomId);
-        return new StatusDTO(roomService.loadGameByRoomId(roomId), users);
+        StatusDTO statusDTO = new StatusDTO(roomService.loadGameByRoomId(roomId), users);
+
+        return ResponseEntity.status(HttpStatus.OK).body(statusDTO);
     }
 
     @PostMapping(path = "/initialize")
-    public boolean initialize(@RequestBody final ResultDTO resultDTO) {
+    public ResponseEntity<Boolean> initialize(@RequestBody final ResultDTO resultDTO) {
         String roomId = resultDTO.getRoomId();
         String winner = resultDTO.getWinner();
         String loser = resultDTO.getLoser();
@@ -73,6 +83,6 @@ public class SpringChessGameRestController {
         int loserId = userService.userIdByNickname(loser);
 
         resultService.saveGameResult(roomId, winnerId, loserId);
-        return true;
+        return ResponseEntity.status(HttpStatus.OK).body(true);
     }
 }

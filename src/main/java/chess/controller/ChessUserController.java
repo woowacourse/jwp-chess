@@ -35,7 +35,8 @@ public class ChessUserController {
     }
 
     @PostMapping()
-    public ResponseEntity create(@Valid @RequestBody UserCreateRequest request, BindingResult bindingResult) {
+    public ResponseEntity create(@Valid @RequestBody UserCreateRequest request,
+                                 BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException(

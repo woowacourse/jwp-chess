@@ -187,7 +187,7 @@ function checkMovable() {
         return true;
     }
 
-    alert('쿠키 정보가 없습니다.')
+    alert('게임 참여자가 아닙니다.')
     return false;
 }
 

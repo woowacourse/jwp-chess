@@ -77,11 +77,11 @@ function loadChessGame() {
         })
         .catch(function (error) {
             if (error.response.status === 400) {
-                alert(error.data);
+                alert(error.response.data);
             } else {
                 alert('게임을 로드 할 수 없습니다.');
-                exitRoom();
             }
+            exitRoom();
         });
 }
 
@@ -92,7 +92,7 @@ function exitRoom() {
         'gameId' : chessGame.id
     }
     axios.put('/api/rooms/' + room.id + '/exit', body)
-        .then(function (response) {
+        .finally(function (response) {
             location.href = "/";
         });
 }

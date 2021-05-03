@@ -5,7 +5,7 @@ import chess.dao.room.RoomDao;
 import chess.domain.board.Board;
 import chess.domain.game.Room;
 import chess.domain.gamestate.State;
-import chess.domain.gamestate.running.Ready;
+import chess.domain.gamestate.running.Start;
 import chess.domain.location.Location;
 import chess.domain.piece.Piece;
 import chess.domain.team.Team;
@@ -31,10 +31,9 @@ public class RoomRepository {
             throw new DuplicateRoomException("이미 존재하는 방입니다. 다른 이름을 사용해주세요.");
         }
 
-        Room room = new Room(0, roomName, new Ready(BoardUtil.generateInitialBoard()), Team.WHITE);
-        room.play("start");
-        long roomId = roomDao.insert(room);
         Board board = BoardUtil.generateInitialBoard();
+        Room room = new Room(0, roomName, new Start(board), Team.WHITE);
+        long roomId = roomDao.insert(room);
         for (Piece piece : board.getPieces()) {
             pieceDao.insert(roomId, piece);
         }
@@ -60,11 +59,11 @@ public class RoomRepository {
     public void updatePieceMove(Room room, String source, String target) {
         List<Piece> beforeMovePieces = pieceDao.findPiecesByRoomId(room.getId());
 
-        Board board = room.getBoard();
+        Board board = Board.of(beforeMovePieces);
         Piece sourcePiece = board.find(Location.of(source));
         roomDao.update(room);
 
-        List<Piece> afterMovePieces = board.getPieces();
+        List<Piece> afterMovePieces = room.getBoard().getPieces();
         if (beforeMovePieces.size() != afterMovePieces.size()) {
             Piece removedPiece = beforeMovePieces
                     .stream()

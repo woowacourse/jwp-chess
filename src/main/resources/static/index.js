@@ -111,7 +111,7 @@ function login() {
 
     axios.post('/api/user/login', body)
         .then(function (response) {
-            setCookie('user', response.data.name, 720)
+            setCookie('user', response.data.userName, 720)
             refreshTitle()
         }).catch(function (error) {
             alert(error.response.data);

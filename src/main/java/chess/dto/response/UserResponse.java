@@ -2,19 +2,19 @@ package chess.dto.response;
 
 public class UserResponse {
     private final Long roomId;
-    private final String userUser;
+    private final String userName;
 
 
-    public UserResponse(final Long roomId, final String userUser) {
+    public UserResponse(final Long roomId, final String userName) {
         this.roomId = roomId;
-        this.userUser = userUser;
+        this.userName = userName;
     }
 
     public Long getRoomId() {
         return roomId;
     }
 
-    public String getUserUser() {
-        return userUser;
+    public String getUserName() {
+        return userName;
     }
 }

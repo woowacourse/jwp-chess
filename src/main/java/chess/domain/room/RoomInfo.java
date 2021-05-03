@@ -11,8 +11,8 @@ public class RoomInfo {
         this.gameId = gameId;
     }
 
-    public boolean checkPassword(RoomInfo roomInfo) {
-        return roomInfo.getPw().equals(pw);
+    public boolean checkPassword(String pw) {
+        return this.pw.equals(pw);
     }
 
     public String getName() {

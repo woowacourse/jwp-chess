@@ -8,7 +8,7 @@ import chess.domain.team.BlackTeam;
 import chess.domain.team.Team;
 import chess.domain.team.TeamRepository;
 import chess.domain.team.WhiteTeam;
-import chess.dto.MoveDto;
+import chess.dto.request.GameMoveRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -52,7 +52,7 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public void move(final Long gameId, final MoveDto moveDto) {
+    public void move(final Long gameId, final GameMoveRequest moveDto) {
         pieceDao.delete(gameId, moveDto);
         pieceDao.update(gameId, moveDto);
     }

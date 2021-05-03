@@ -5,7 +5,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.game.ChessGameRepository;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
-import chess.dto.MoveDto;
+import chess.dto.request.GameMoveRequest;
 import org.springframework.stereotype.Repository;
 
 
@@ -41,7 +41,7 @@ public class ChessGameRepositoryImpl implements ChessGameRepository {
     }
 
     @Override
-    public void save(final Long gameId, final ChessGame chessGame, final MoveDto moveDto) {
+    public void save(final Long gameId, final ChessGame chessGame, final GameMoveRequest moveDto) {
         boolean isEnd = chessGame.isEnd();
 
         if (isEnd) {

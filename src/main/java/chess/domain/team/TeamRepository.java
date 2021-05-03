@@ -1,11 +1,11 @@
 package chess.domain.team;
 
-import chess.dto.MoveDto;
+import chess.dto.request.GameMoveRequest;
 
 public interface TeamRepository {
     Long create(Team team, Long gameId);
     WhiteTeam whiteTeam(Long gameId);
     BlackTeam blackTeam(Long gameId);
     void update(Long gameId, Team team);
-    void move(Long gameId, MoveDto moveDto);
+    void move(Long gameId, GameMoveRequest moveDto);
 }

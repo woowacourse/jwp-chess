@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dao.UserDao;
-import chess.dto.RoomCreateRequest;
+import chess.dto.request.RoomCreateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

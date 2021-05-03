@@ -1,7 +1,12 @@
 package chess.controller;
 
+import chess.dto.RoomDto;
+import chess.dto.request.RoomCreateRequest;
+import chess.dto.request.RoomEnterRequest;
+import chess.dto.request.RoomExitRequest;
+import chess.dto.response.ChessRoomStatusResponse;
+import chess.dto.response.RoomListResponse;
 import chess.service.room.ChessRoomService;
-import chess.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -13,7 +18,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/rooms")
 public class ChessRoomController {
     private final ChessRoomService chessRoomService;
     private final SimpMessagingTemplate simpMessagingTemplate;
@@ -25,39 +30,43 @@ public class ChessRoomController {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    @GetMapping("/rooms")
-    public ResponseEntity<List<RoomDto>> loadAll() {
+    @GetMapping()
+    public ResponseEntity<List<RoomListResponse>> loadAll() {
         return ResponseEntity.ok().body(chessRoomService.rooms());
     }
 
-    @PostMapping("/rooms")
-    public ResponseEntity<RoomCreateResponse> create(@CookieValue(value = "user") @Valid @RequestBody RoomCreateRequest roomCreateRequest,
-                                          BindingResult bindingResult) {
+    @PostMapping()
+    public ResponseEntity create(@CookieValue(value = "user")
+                                                     @Valid @RequestBody RoomCreateRequest request,
+                                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException("방 이름은 2글자 이상 8글자 이하 비밀번호는 4글자 이상 8글자 이하여야 합니다.");
+            throw new IllegalArgumentException("방 이름은 2글자 이상 8글자 이하 " +
+                    "비밀번호는 4글자 이상 8글자 이하여야 합니다.");
         }
 
-        return ResponseEntity.ok().body(chessRoomService.create(roomCreateRequest));
+        return ResponseEntity.ok().body(chessRoomService.create(request));
     }
 
-    @PostMapping("/rooms/{id}/enter")
-    public ResponseEntity<RoomDto> enter(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
-        RoomDto roomDto = chessRoomService.enter(roomRequestDto);
+    @PostMapping("/{id}/enter")
+    public ResponseEntity<RoomDto> enter(@CookieValue(value = "user") String cookie,
+                                         @RequestBody RoomEnterRequest request) {
+        RoomDto roomDto = chessRoomService.enter(request);
         return ResponseEntity.ok(roomDto);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity load(@CookieValue(value = "user") String cookie, @PathVariable Long id) {
-        RoomLoadResponse RoomLoadResponse = chessRoomService.load(id);
-        simpMessagingTemplate.convertAndSend("/topic/game/" + id, RoomLoadResponse);
+        ChessRoomStatusResponse ChessRoomStatusResponse = chessRoomService.load(id);
+        simpMessagingTemplate.convertAndSend("/topic/room/" + id, ChessRoomStatusResponse);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/rooms/{id}/exit")
-    public ResponseEntity exit(@CookieValue(value = "user") String cookie, @RequestBody RoomRequestDto roomRequestDto) {
-        ChessGameDto chessGameDto = chessRoomService.exitReturnEndChessGame(roomRequestDto, cookie);
-        simpMessagingTemplate.convertAndSend("/topic/game/" + roomRequestDto.getId(), chessGameDto);
+    @PutMapping("/{id}/exit")
+    public ResponseEntity exit(@CookieValue(value = "user") String cookie,
+                               @RequestBody RoomExitRequest request) {
+        ChessRoomStatusResponse response = chessRoomService.exitReturnEndChessGame(request);
+        simpMessagingTemplate.convertAndSend("/topic/room/" + request.getRoomId(), response);
         return ResponseEntity.ok().build();
     }
 }

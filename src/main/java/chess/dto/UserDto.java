@@ -2,12 +2,8 @@ package chess.dto;
 
 import chess.domain.User;
 
-import javax.validation.constraints.Size;
-
 public class UserDto {
-    @Size(min = 2, max = 4)
     private final String name;
-    @Size(min = 2, max = 8)
     private final String pw;
     private final Long roomId;
 

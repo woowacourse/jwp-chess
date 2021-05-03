@@ -2,8 +2,8 @@ package chess.service;
 
 import chess.dao.UserDao;
 import chess.domain.User;
+import chess.dto.response.UserResponse;
 import chess.service.room.ChessRoomService;
-import chess.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +22,14 @@ public class ChessUserService {
 
     public void create(final String name, final String pw) {
         userDao.create(name, pw);
-
     }
 
-    public UserDto user(final String name) {
-        return UserDto.toResponse(userDao.findByName(name));
+    public UserResponse user(final String name) {
+        User user = userDao.findByName(name);
+        return new UserResponse(user.getRoomId(), user.getName());
     }
 
-    public UserDto login(final String name, final String pw) {
+    public UserResponse login(final String name, final String pw) {
         User user = userDao.findByName(name);
 
         if (!user.checkPassword(pw)) {
@@ -37,7 +37,7 @@ public class ChessUserService {
         }
 
         exitIfInGameWhenLogIn(user);
-        return UserDto.toResponse(user);
+        return new UserResponse(user.getRoomId(), user.getName());
     }
 
     private void exitIfInGameWhenLogIn(User user) {

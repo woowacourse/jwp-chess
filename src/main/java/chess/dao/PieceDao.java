@@ -2,13 +2,13 @@ package chess.dao;
 
 import chess.domain.game.Position;
 import chess.domain.piece.Piece;
-import chess.dto.MoveDto;
+import chess.dto.request.GameMoveRequest;
+import chess.util.PieceConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import chess.util.PieceConverter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -60,12 +60,12 @@ public class PieceDao {
         }, gameId, color);
     }
 
-    public void delete(final Long gameId, MoveDto moveDto) {
+    public void delete(final Long gameId, GameMoveRequest moveDto) {
         String sql = "delete from piece where game_id = ? and position = ?";
         jdbcTemplate.update(sql, gameId, moveDto.getTo());
     }
 
-    public void update(final Long gameId, MoveDto moveDto) {
+    public void update(final Long gameId, GameMoveRequest moveDto) {
         String sql = "update piece set position = ? where game_id = ? and position = ?";
         jdbcTemplate.update(sql, moveDto.getTo(), gameId, moveDto.getFrom());
     }

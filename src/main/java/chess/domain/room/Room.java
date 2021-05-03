@@ -11,8 +11,8 @@ public class Room {
         this.players = players;
     }
 
-    public boolean checkPassword(RoomInfo roomInfo) {
-        return this.roomInfo.checkPassword(roomInfo);
+    public boolean checkPassword(String pw) {
+        return this.roomInfo.checkPassword(pw);
     }
 
     public Long getId() {

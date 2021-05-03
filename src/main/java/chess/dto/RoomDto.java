@@ -10,7 +10,7 @@ public class RoomDto {
 
     public RoomDto(Room room) {
         this.id = room.getId();
-        this.roomInfo = new RoomInfoDto(room.getName(), room.getPw(), roomInfo.getGameId());
+        this.roomInfo = new RoomInfoDto(room.getName(), room.getPw(), room.getGameId());
         this.players = new PlayersDto(room.getWhitePlayer(), room.getBlackPlayer());
         this.enterable = room.enterable();
     }

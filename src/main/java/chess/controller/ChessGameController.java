@@ -1,8 +1,8 @@
 package chess.controller;
 
-import chess.service.game.ChessGameService;
 import chess.dto.ChessGameDto;
-import chess.dto.MoveDto;
+import chess.dto.request.GameMoveRequest;
+import chess.service.game.ChessGameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -22,10 +22,10 @@ public class ChessGameController {
 
     @PutMapping("/{id}/move")
     @ResponseBody
-    public ResponseEntity movePiece(@CookieValue(value = "user") String cookie, @PathVariable("id") Long id,
-                                                  @RequestBody MoveDto moveDto) {
-        ChessGameDto chessGameDto = chessGameService.move(id, moveDto);
-        simpMessagingTemplate.convertAndSend("/topic/game/" + id, chessGameDto);
+    public ResponseEntity movePiece(@CookieValue(value = "user") String cookie, @PathVariable("id") Long gameId,
+                                                  @RequestBody GameMoveRequest request) {
+        ChessGameDto chessGameDto = chessGameService.move(gameId, request);
+        simpMessagingTemplate.convertAndSend("/topic/room/" + request.getRoomId(), chessGameDto);
         return ResponseEntity.ok().build();
     }
 }

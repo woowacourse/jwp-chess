@@ -10,7 +10,14 @@ import chess.domain.room.Room;
 import chess.domain.room.RoomInfo;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
-import chess.dto.*;
+import chess.dto.ChessGameDto;
+import chess.dto.RoomDto;
+import chess.dto.request.RoomCreateRequest;
+import chess.dto.request.RoomEnterRequest;
+import chess.dto.request.RoomExitRequest;
+import chess.dto.response.ChessRoomStatusResponse;
+import chess.dto.response.RoomEnterResponse;
+import chess.dto.response.RoomListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,18 +38,18 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     }
 
     @Override
-    public RoomCreateResponse create(final RoomCreateRequest roomCreateRequest) {
+    public RoomEnterResponse create(final RoomCreateRequest roomCreateRequest) {
         Long gameId = chessGameRepository.create(new ChessGame(new WhiteTeam(), new BlackTeam()));
 
         Long roomId = chessRoomRepository.create(new Room(null,
                 new RoomInfo(roomCreateRequest.getName(), roomCreateRequest.getPw(), gameId),
-                new Players(roomCreateRequest.getUser())));
+                new Players(roomCreateRequest.getUserName())));
 
-        return new RoomCreateResponse(roomId);
+        return new RoomEnterResponse(roomId);
     }
 
     @Override
-    public List<RoomDto> rooms() {
+    public List<RoomListResponse> rooms() {
         List<Room> rooms = chessRoomRepository.rooms();
         deleteEmptyRoom(rooms);
         return  generateEnterableRoomDataList(rooms);
@@ -57,29 +64,29 @@ public class ChessRoomServiceImpl implements ChessRoomService {
         roomsToDelete.forEach(chessRoomRepository::deleteRoom);
     }
 
-    private List<RoomDto> generateEnterableRoomDataList(List<Room> rooms) {
+    private List<RoomListResponse> generateEnterableRoomDataList(List<Room> rooms) {
         List<Room> enterableRooms = rooms.stream()
                 .filter(Room::enterable)
                 .collect(Collectors.toList());
 
        return enterableRooms.stream()
-               .map(RoomDto::new)
+               .map(room -> new RoomListResponse(room.getId(), room.getName()))
                .collect(Collectors.toList());
     }
 
     @Override
-    public RoomDto enter(RoomRequestDto roomRequestDto) {
-        validateEnterStatus(roomRequestDto);
-        chessRoomRepository.join(roomRequestDto.getUser(), roomRequestDto.getId());
-        Room room = chessRoomRepository.room(roomRequestDto.getId());
+    public RoomDto enter(RoomEnterRequest request) {
+        validateEnterStatus(request);
+        chessRoomRepository.join(request.getUserName(), request.getRoomId());
+        Room room = chessRoomRepository.room(request.getRoomId());
         return new RoomDto(room);
     }
 
     @Override
-    public RoomLoadResponse load(final Long roomId) {
+    public ChessRoomStatusResponse load(final Long roomId) {
         Room room = chessRoomRepository.room(roomId);
         ChessGame chessGame = chessGameRepository.chessGame(room.getGameId());
-        return new RoomLoadResponse(new RoomDto(room),
+        return new ChessRoomStatusResponse(new RoomDto(room),
                 new ChessGameDto(room.getGameId(), chessGame));
     }
 
@@ -90,20 +97,21 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     }
 
     @Override
-    public ChessGameDto exitReturnEndChessGame(final RoomRequestDto roomRequestDto, final String userName) {
-        userDao.setRoomId(null,userName);
-        chessRoomRepository.deleteUserFormRoom(roomRequestDto.getId(), userName);
-        ChessGame chessGame = chessGameRepository.chessGame(roomRequestDto.getGameId());
+    public ChessRoomStatusResponse exitReturnEndChessGame(final RoomExitRequest request) {
+        Room room = chessRoomRepository.room(request.getRoomId());
+        userDao.setRoomId(null,request.getUserName());
+        chessRoomRepository.deleteUserFormRoom(request.getRoomId(), request.getUserName());
+        ChessGame chessGame = chessGameRepository.chessGame(request.getGameId());
         chessGame.finish();
-        return new ChessGameDto(roomRequestDto.getGameId(), chessGame);
+        return new ChessRoomStatusResponse(new RoomDto(room),
+                new ChessGameDto(request.getGameId(), chessGame));
     }
 
-    public void validateEnterStatus(RoomRequestDto roomRequestDto) {
-        RoomInfo roomInfo = new RoomInfo (roomRequestDto.getName(), roomRequestDto.getPw(), roomRequestDto.getGameId());
-        Room savedRoom = chessRoomRepository.room(roomRequestDto.getId());
-        User user = userDao.findByName(roomRequestDto.getUser());
+    public void validateEnterStatus(RoomEnterRequest request) {
+        Room savedRoom = chessRoomRepository.room(request.getRoomId());
+        User user = userDao.findByName(request.getUserName());
 
-        if (!savedRoom.checkPassword(roomInfo)){
+        if (!savedRoom.checkPassword(request.getPw())){
             throw new IllegalArgumentException("비밀번호가 잘 못되었습니다.");
         }
 

@@ -1,8 +1,8 @@
 package chess.service.game;
 
 import chess.dto.ChessGameDto;
-import chess.dto.MoveDto;
+import chess.dto.request.GameMoveRequest;
 
 public interface ChessGameService {
-    ChessGameDto move(Long gameId, MoveDto moveDto);
+    ChessGameDto move(Long gameId, GameMoveRequest moveDto);
 }

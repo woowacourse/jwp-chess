@@ -44,53 +44,82 @@ function getTotalRoom() {
 }
 
 btnCreateRoom.addEventListener('click', function (e) {
+    createRoom();
+});
+
+
+function createRoom() {
     const name = prompt("방이름을 입력해 주세요.");
     const pw = prompt("비밀번호를 입력해 주세요");
     const cookieUser = getCookie('user');
+
     if (cookieUser === null) {
         alert('먼저 로그인 해 주세요.')
         return;
     }
-    axios.post('/api/rooms', {
+
+    const body = {
         "name": name,
         "pw": pw,
-    }).then(function (response) {
-        location.href = '/rooms/' + response.data.id;
-    }).catch(function (error) {
-        alert(error.response.data);
-    });
-});
+        "userName": getCookie('user')
+    }
+
+    axios.post('/api/rooms', body)
+        .then(function (response) {
+            location.href = '/rooms/' + response.data.id;
+        })
+        .catch(function (error) {
+            alert(error.response.data);
+        });
+}
 
 btnCreateUser.addEventListener('click', function (e) {
+    createUser();
+});
+
+
+function createUser() {
     const name = prompt("계정을 입력해 주세요.");
     const pw = prompt("비밀번호를 입력해 주세요");
 
-    axios.post('/api/user', {
+    const body = {
         "name": name,
-        "pw": pw
-    }).then(function (response) {
-        alert('계정생성이 완료되었습니다.')
-    }).catch(function (error) {
-        alert('계정 만들지 못했습니다.');
-    });
-});
+        "pw": pw,
+    }
+
+    axios.post('/api/user', body)
+        .then(function (response) {
+            alert('계정생성이 완료되었습니다.')
+        })
+        .catch(function (error) {
+            alert('계정 만들지 못했습니다.');
+        });
+}
 
 btnLogin.addEventListener('click', function (e) {
-    let name = prompt("계정을 입력해 주세요.");
-    let pw = prompt("비밀번호를 입력해 주세요");
-
-    axios.post('/api/user/login', {
-        "name": name,
-        "pw": pw
-    }).then(function (response) {
-        setCookie('user', response.data.name, 720)
-        refreshTitle()
-    }).catch(function (error) {
-        alert('로그인에 실패했습니다.');
-    });
+    login();
 });
 
+function login() {
+    const name = prompt("계정을 입력해 주세요.");
+    const pw = prompt("비밀번호를 입력해 주세요");
+
+    const body = {
+        "name": name,
+        "pw": pw,
+    }
+
+    axios.post('/api/user/login', body)
+        .then(function (response) {
+            setCookie('user', response.data.name, 720)
+            refreshTitle()
+        }).catch(function (error) {
+            alert('로그인에 실패했습니다.');
+        });
+}
+
 function refreshRoomList(data) {
+    console.log(data);
     let list = document.getElementById("list-chess-game");
     roomListData = data;
     list.innerHTML = "";
@@ -117,29 +146,36 @@ function refreshRoomList(data) {
 
 function clickRoom(event) {
     let idx = event.target.dataset.idx;
+
     if (idx === undefined) {
         idx = event.target.parentElement.dataset.idx;
     }
+
     let room = roomListData[idx];
+    console.log(room);
     enterGame(room.id)
 }
 
 function enterGame(id) {
     const pw = prompt('방 비밀번호를 입력 해 주세요')
-    axios.post('/api/rooms/' + id + '/enter', {
-        "id": id,
-        "user": getCookie('user'),
+
+    const body = {
+        "roomId": id,
+        "userName": getCookie('user'),
         "pw": pw
-    })
+    }
+
+    axios.post('/api/rooms/' + id + '/enter', body)
         .then(function (response) {
-            location.href = '/rooms/' + id;
-        }).catch(function (error) {
-        if (error.response.status === 400) {
-            alert(error.response.data);
-        } else {
-            alert('게임을 로드 할 수 없습니다.');
-        }
-    });
+            location.href = '/rooms/' + response.data.id;
+        })
+        .catch(function (error) {
+            if (error.response.status === 400) {
+                alert(error.response.data);
+            } else {
+                alert('게임을 로드 할 수 없습니다.');
+            }
+        });
 }
 
 function setCookie(name, value, min) {

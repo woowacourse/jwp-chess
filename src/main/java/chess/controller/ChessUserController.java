@@ -1,7 +1,9 @@
 package chess.controller;
 
+import chess.dto.request.UserCreateRequest;
+import chess.dto.request.UserLoginRequest;
+import chess.dto.response.UserResponse;
 import chess.service.ChessUserService;
-import chess.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,18 +22,20 @@ public class ChessUserController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<UserDto> getUser(@PathVariable String name) {
+    public ResponseEntity<UserResponse> getUser(@PathVariable String name) {
         return ResponseEntity.ok(chessUserService.user(name));
     }
 
     @PostMapping()
-    public void create(@Valid @RequestBody UserDto userDto) {
-        chessUserService.create(userDto.getName(), userDto.getPw());
+    public ResponseEntity create(@Valid @RequestBody UserCreateRequest request) {
+        chessUserService.create(request.getName(), request.getPw());
+        return ResponseEntity.ok().build();
+
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDto> login(@RequestBody UserDto userDto) {
-        UserDto response = chessUserService.login(userDto.getName(), userDto.getPw());
+    public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest request) {
+        UserResponse response = chessUserService.login(request.getName(), request.getPw());
         return ResponseEntity.ok(response);
     }
 }

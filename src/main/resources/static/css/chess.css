@@ -85,35 +85,50 @@ body {
 }
 
 .room-name-container {
-    width: 60%;
     padding-left: 1vw;
 }
 
 .room-name-tag {
     color: #4986a7;
-    font-size: 3vw;
+    font-size: 2vw;
 }
 
 .room-name-content {
     font-size: 3vw;
 }
 
-.name-container {
+.top-name-container {
     height: 12vw;
     display: flex;
     align-items: center;
 }
 
-.name-container.black {
-    justify-content: flex-end;
+.top-name-container.black {
+    justify-content: space-between;
 }
 
-.name-container.white {
+.top-name-container.white {
     justify-content: flex-start;
 }
 
+.name-img-container {
+    height: 100%;
+    display: flex;
+}
+
+.name-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .name-tag {
-    font-size: 5vw;
+    font-size: 3vw;
+}
+
+.img-container {
+    height: 100%;
 }
 
 .bear-piece {
@@ -129,11 +144,16 @@ body {
 }
 
 .record-tag {
-    font-size: 3vw;
+    font-size: 2vw;
 }
 
 .record-tag.black {
     text-align: right;
+    color: #858581;
+}
+
+.record-tag.white {
+    color: #cfbd8c;
 }
 
 .chat-box {

@@ -32,12 +32,11 @@ public class SpringChessService {
     }
 
     @Transactional
-    public MoveResponseDto movePiece(final String gameName, final MoveRequestDto requestDto, String playerName) {
+    public MoveResponseDto movePiece(final String gameName, final MoveRequestDto requestDto, User user) {
         Chess chess = findChessByName(gameName);
         ChessGame chessGame = ChessGame.newGame();
         moveChess(chessGame, chess.getName());
-        System.out.println("chessGame.turn() = " + chessGame.turn());
-        validateTurn(chess, playerName, chessGame.turn());
+        validateTurn(chess, user.getName(), chessGame.turn());
 
         chessGame.moveByTurn(new Position(requestDto.getSource()), new Position(requestDto.getTarget()));
         movementDao.save(new Movement(chess.getId(), requestDto.getSource(), requestDto.getTarget()));
@@ -73,8 +72,8 @@ public class SpringChessService {
     }
 
     @Transactional
-    public void saveChess(final ChessSaveRequestDto requestDto, String playerName) {
-        User whiteUser = userDao.findByName(playerName).orElseThrow(NotExistUserException::new);
+    public void saveChess(final ChessSaveRequestDto requestDto, User user) {
+        User whiteUser = userDao.findByName(user.getName()).orElseThrow(NotExistUserException::new);
 
         if (chessDao.findByName(requestDto.getName()).isPresent()) {
             throw new DuplicateRoomException();
@@ -95,9 +94,9 @@ public class SpringChessService {
     }
 
     @Transactional
-    public GameStatusDto loadChess(final String chessName, final String playerName) {
+    public GameStatusDto loadChess(final String chessName, final User user) {
         Chess chess = findChessByName(chessName);
-        validateChess(chess, playerName);
+        validateChess(chess, user.getName());
         ChessGame chessGame = ChessGame.newGame();
         moveChess(chessGame, chessName);
 

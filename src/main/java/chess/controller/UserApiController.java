@@ -1,5 +1,7 @@
 package chess.controller;
 
+import chess.entity.User;
+import chess.service.LoginUser;
 import chess.service.UserService;
 import chess.service.dto.UserFindResponseDto;
 import chess.service.dto.UserSaveRequestDto;
@@ -16,7 +18,6 @@ import javax.servlet.http.HttpSession;
 public class UserApiController {
 
     private static final String USER = "user";
-    private static final String PASSWORD = "password";
 
     private final UserService userService;
 
@@ -28,14 +29,12 @@ public class UserApiController {
     public ResponseEntity<Object> save(@RequestBody UserSaveRequestDto requestDto, HttpSession session){
         userService.save(requestDto);
         session.setAttribute(USER, requestDto.getName());
-        session.setAttribute(PASSWORD, requestDto.getPassword());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<UserFindResponseDto> find(HttpSession session){
-        String name = (String) session.getAttribute(USER);
-        UserFindResponseDto responseDto = userService.findByName(name);
+    public ResponseEntity<UserFindResponseDto> find(@LoginUser User user){
+        UserFindResponseDto responseDto = userService.findByName(user.getName());
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
@@ -43,7 +42,6 @@ public class UserApiController {
     public ResponseEntity<Object> signIn(@RequestBody UserSignRequestDto requestDto, HttpSession session){
         userService.signIn(requestDto);
         session.setAttribute(USER, requestDto.getName());
-        session.setAttribute(PASSWORD, requestDto.getPassword());
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

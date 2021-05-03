@@ -59,8 +59,8 @@ function createRoom() {
     }
 
     const body = {
-        "name": name,
-        "pw": pw,
+        "roomName": name,
+        "roomPw": pw,
         "userName": getCookie('user')
     }
 
@@ -83,8 +83,8 @@ function createUser() {
     const pw = prompt("비밀번호를 입력해 주세요");
 
     const body = {
-        "name": name,
-        "pw": pw,
+        "userName": name,
+        "userPw": pw,
     }
 
     axios.post('/api/user', body)
@@ -105,8 +105,8 @@ function login() {
     const pw = prompt("비밀번호를 입력해 주세요");
 
     const body = {
-        "name": name,
-        "pw": pw,
+        "userName": name,
+        "userPw": pw,
     }
 
     axios.post('/api/user/login', body)
@@ -160,12 +160,12 @@ function enterGame(id) {
     const pw = prompt('방 비밀번호를 입력 해 주세요')
 
     const body = {
-        "roomId": id,
+        "roomId" : id,
         "userName": getCookie('user'),
-        "pw": pw
+        "roomPw": pw
     }
 
-    axios.post('/api/rooms/' + id + '/enter', body)
+    axios.post('/api/rooms/enter', body)
         .then(function (response) {
             location.href = '/rooms/' + response.data.id;
         })

@@ -16,6 +16,7 @@ import chess.dto.request.RoomCreateRequest;
 import chess.dto.request.RoomEnterRequest;
 import chess.dto.request.RoomExitRequest;
 import chess.dto.response.ChessRoomStatusResponse;
+import chess.dto.response.RoomCreateResponse;
 import chess.dto.response.RoomEnterResponse;
 import chess.dto.response.RoomListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +39,14 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     }
 
     @Override
-    public RoomEnterResponse create(final RoomCreateRequest roomCreateRequest) {
+    public RoomCreateResponse create(final RoomCreateRequest roomCreateRequest) {
         Long gameId = chessGameRepository.create(new ChessGame(new WhiteTeam(), new BlackTeam()));
 
         Long roomId = chessRoomRepository.create(new Room(null,
-                new RoomInfo(roomCreateRequest.getName(), roomCreateRequest.getPw(), gameId),
+                new RoomInfo(roomCreateRequest.getRoomName(), roomCreateRequest.getRoomPw(), gameId),
                 new Players(roomCreateRequest.getUserName())));
 
-        return new RoomEnterResponse(roomId);
+        return new RoomCreateResponse(roomId);
     }
 
     @Override
@@ -75,11 +76,11 @@ public class ChessRoomServiceImpl implements ChessRoomService {
     }
 
     @Override
-    public RoomDto enter(RoomEnterRequest request) {
+    public RoomEnterResponse enter(RoomEnterRequest request) {
         validateEnterStatus(request);
         chessRoomRepository.join(request.getUserName(), request.getRoomId());
         Room room = chessRoomRepository.room(request.getRoomId());
-        return new RoomDto(room);
+        return new RoomEnterResponse(room.getId());
     }
 
     @Override
@@ -111,7 +112,7 @@ public class ChessRoomServiceImpl implements ChessRoomService {
         Room savedRoom = chessRoomRepository.room(request.getRoomId());
         User user = userDao.findByName(request.getUserName());
 
-        if (!savedRoom.checkPassword(request.getPw())){
+        if (!savedRoom.checkPassword(request.getRoomPw())){
             throw new IllegalArgumentException("비밀번호가 잘 못되었습니다.");
         }
 

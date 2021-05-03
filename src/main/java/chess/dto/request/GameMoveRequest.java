@@ -1,12 +1,18 @@
-package chess.dto;
+package chess.dto.request;
 
-public class MoveDto {
+public class GameMoveRequest {
+    Long roomId;
     String from;
     String to;
 
-    public MoveDto(String from, String to) {
+    public GameMoveRequest(Long roomId, String from, String to) {
+        this.roomId = roomId;
         this.from = from;
         this.to = to;
+    }
+
+    public Long getRoomId() {
+        return roomId;
     }
 
     public String getFrom() {

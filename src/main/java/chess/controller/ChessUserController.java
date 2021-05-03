@@ -28,14 +28,14 @@ public class ChessUserController {
 
     @PostMapping()
     public ResponseEntity create(@Valid @RequestBody UserCreateRequest request) {
-        chessUserService.create(request.getName(), request.getPw());
+        chessUserService.create(request.getUserName(), request.getUserPw());
         return ResponseEntity.ok().build();
 
     }
 
     @PostMapping("/login")
     public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest request) {
-        UserResponse response = chessUserService.login(request.getName(), request.getPw());
+        UserResponse response = chessUserService.login(request.getUserName(), request.getUserPw());
         return ResponseEntity.ok(response);
     }
 }

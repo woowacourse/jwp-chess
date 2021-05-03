@@ -1,10 +1,11 @@
 package chess.controller;
 
-import chess.dto.RoomDto;
 import chess.dto.request.RoomCreateRequest;
 import chess.dto.request.RoomEnterRequest;
 import chess.dto.request.RoomExitRequest;
 import chess.dto.response.ChessRoomStatusResponse;
+import chess.dto.response.RoomCreateResponse;
+import chess.dto.response.RoomEnterResponse;
 import chess.dto.response.RoomListResponse;
 import chess.service.room.ChessRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class ChessRoomController {
     }
 
     @PostMapping()
-    public ResponseEntity create(@CookieValue(value = "user")
+    public ResponseEntity<RoomCreateResponse> create(@CookieValue(value = "user")
                                                      @Valid @RequestBody RoomCreateRequest request,
                                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -47,18 +48,18 @@ public class ChessRoomController {
         return ResponseEntity.ok().body(chessRoomService.create(request));
     }
 
-    @PostMapping("/{id}/enter")
-    public ResponseEntity<RoomDto> enter(@CookieValue(value = "user") String cookie,
+    @PostMapping("/enter")
+    public ResponseEntity<RoomEnterResponse> enter(@CookieValue(value = "user") String cookie,
                                          @RequestBody RoomEnterRequest request) {
-        RoomDto roomDto = chessRoomService.enter(request);
+        RoomEnterResponse roomDto = chessRoomService.enter(request);
         return ResponseEntity.ok(roomDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{roomId}")
     @ResponseBody
-    public ResponseEntity load(@CookieValue(value = "user") String cookie, @PathVariable Long id) {
-        ChessRoomStatusResponse ChessRoomStatusResponse = chessRoomService.load(id);
-        simpMessagingTemplate.convertAndSend("/topic/room/" + id, ChessRoomStatusResponse);
+    public ResponseEntity load(@CookieValue(value = "user") String cookie, @PathVariable Long roomId) {
+        ChessRoomStatusResponse ChessRoomStatusResponse = chessRoomService.load(roomId);
+        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, ChessRoomStatusResponse);
         return ResponseEntity.ok().build();
     }
 

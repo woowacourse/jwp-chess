@@ -1,29 +1,29 @@
-package chess.dto;
+package chess.dto.request;
 
 import javax.validation.constraints.Size;
 
 public class RoomCreateRequest {
     @Size(min = 2, max = 8)
-    private String name;
+    private String roomName;
     @Size(min = 4, max = 8)
-    private String pw;
-    private String user;
+    private String roomPw;
+    private String userName;
 
-    public RoomCreateRequest(final String name, final String pw, final String user) {
-        this.name = name;
-        this.pw = pw;
-        this.user = user;
+    public RoomCreateRequest(final String roomName, final String roomPw, final String userName) {
+        this.roomName = roomName;
+        this.roomPw = roomPw;
+        this.userName = userName;
     }
 
-    public String getName() {
-        return name;
+    public String getRoomName() {
+        return roomName;
     }
 
-    public String getPw() {
-        return pw;
+    public String getRoomPw() {
+        return roomPw;
     }
 
-    public String getUser() {
-        return user;
+    public String getUserName() {
+        return userName;
     }
 }

@@ -1,19 +1,22 @@
-package chess.dto;
+package chess.dto.response;
 
-public class RoomLoadResponse {
-    RoomDto roomDto;
-    ChessGameDto chessGameDto;
+import chess.dto.ChessGameDto;
+import chess.dto.RoomDto;
 
-    public RoomLoadResponse(final RoomDto roomDto, final ChessGameDto chessGameDto) {
-        this.roomDto = roomDto;
-        this.chessGameDto = chessGameDto;
+public class ChessRoomStatusResponse {
+    RoomDto room;
+    ChessGameDto chessGame;
+
+    public ChessRoomStatusResponse(final RoomDto room, final ChessGameDto chessGame) {
+        this.room = room;
+        this.chessGame = chessGame;
     }
 
-    public RoomDto getRoomDto() {
-        return roomDto;
+    public RoomDto getRoom() {
+        return room;
     }
 
-    public ChessGameDto getChessGameDto() {
-        return chessGameDto;
+    public ChessGameDto getChessGame() {
+        return chessGame;
     }
 }

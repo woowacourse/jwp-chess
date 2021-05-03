@@ -216,8 +216,6 @@ function refreshChessBoard(current) {
         return;
     }
 
-
-
     const whitePlayer = room.players.whitePlayer;
     const blackPlayer = room.players.blackPlayer;
 

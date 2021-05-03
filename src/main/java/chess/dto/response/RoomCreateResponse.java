@@ -1,9 +1,9 @@
 package chess.dto.response;
 
-public class RoomEnterResponse {
+public class RoomCreateResponse {
     public Long roomId;
 
-    public RoomEnterResponse(final Long id) {
+    public RoomCreateResponse(final Long id) {
         this.roomId = id;
     }
 

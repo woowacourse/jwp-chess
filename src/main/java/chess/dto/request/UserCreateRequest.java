@@ -2,23 +2,23 @@ package chess.dto.request;
 
 import javax.validation.constraints.Size;
 
-public class UserRequest {
+public class UserCreateRequest {
     @Size(min = 2, max = 4)
-    private final String name;
+    private final String userName;
     @Size(min = 2, max = 8)
-    private final String pw;
+    private final String userPw;
 
 
-    public UserRequest(final String name, final String pw) {
-        this.name = name;
-        this.pw = pw;
+    public UserCreateRequest(final String userName, final String userPw) {
+        this.userName = userName;
+        this.userPw = userPw;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public String getPw() {
-        return pw;
+    public String getUserPw() {
+        return userPw;
     }
 }

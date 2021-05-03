@@ -6,10 +6,13 @@ import chess.web.dto.user.UserResponseDto;
 
 public class RoomResponseDto {
 
-    private final long id;
-    private final String name;
-    private final UserResponseDto host;
-    private final UserResponseDto guest;
+    private long id;
+    private String name;
+    private UserResponseDto host;
+    private UserResponseDto guest;
+
+    public RoomResponseDto() {
+    }
 
     private RoomResponseDto(final long id, final String name, final UserResponseDto host,
         final UserResponseDto guest) {

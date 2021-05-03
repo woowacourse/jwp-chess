@@ -4,7 +4,10 @@ import java.util.List;
 
 public class RoomsResponseDto {
 
-    private final List<RoomResponseDto> roomResponseDtos;
+    private List<RoomResponseDto> roomResponseDtos;
+
+    public RoomsResponseDto() {
+    }
 
     private RoomsResponseDto(final List<RoomResponseDto> roomResponseDtos) {
         this.roomResponseDtos = roomResponseDtos;

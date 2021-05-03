@@ -2,8 +2,11 @@ package chess.web.dto.game;
 
 public class GameRequestDto {
 
-    private final String name;
-    private final long hostId;
+    private String name;
+    private long hostId;
+
+    public GameRequestDto() {
+    }
 
     public GameRequestDto(final String name, final long hostId) {
         this.name = name;

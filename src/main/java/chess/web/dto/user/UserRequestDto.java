@@ -5,8 +5,11 @@ import java.time.LocalDateTime;
 
 public class UserRequestDto {
 
-    private final String name;
-    private final String password;
+    private String name;
+    private String password;
+
+    public UserRequestDto() {
+    }
 
     public UserRequestDto(final String name, final String password) {
         this.name = name;

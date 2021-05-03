@@ -7,10 +7,13 @@ import chess.domain.game.team.Team;
 
 public class PieceResponseDto {
 
-    private final int x;
-    private final int y;
-    private final Team color;
-    private final PieceType shape;
+    private int x;
+    private int y;
+    private Team color;
+    private PieceType shape;
+
+    public PieceResponseDto() {
+    }
 
     private PieceResponseDto(final int x, final int y, final Team color, final PieceType shape) {
         this.x = x;

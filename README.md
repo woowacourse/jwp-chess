@@ -53,7 +53,7 @@ http://localhost:8080/swagger-ui.html#/
 - [x] 같은 유저가 들어가지 못하게 수정
 - [x] 게임 끝나면 기물을 지우도록 변경
 - [x] hbs -> html 변경
-- [ ] Web DTO에 기본 생성자 추가
+- [x] Web DTO에 기본 생성자 추가, @ModelAttribute 쓰는 DTO는 Setter까지 추가
 - [ ] 예외 처리 관련 기능 추가
   - 상황에 맞게 예외를 처리하고 싶은데 방법을 잘 모르겠어서, 고민해봐야 할 듯
     - 상황 예시

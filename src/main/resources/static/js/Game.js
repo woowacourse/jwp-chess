@@ -101,13 +101,12 @@ async function initSocket() {
   stompClient.connect({}, () => {
     const gameId = findGameIdInUri();
     stompClient.subscribe(`/topic/games/${gameId}/move`,
-            response => actByMove(JSON.parse(response.body)));
+        response => actByMove(JSON.parse(response.body)));
 
     stompClient.subscribe(`/topic/games/${gameId}/join`,
-            response => actByJoin(JSON.parse(response.body)));
+        response => actByJoin(JSON.parse(response.body)));
   })
 }
-
 
 function actByMove(response) {
   const source = response["source"];

@@ -10,7 +10,7 @@ public class RoomController {
 
     @GetMapping
     public String showRooms() {
-        return "game-list";
+        return "/html/game-list.html";
     }
 
 }

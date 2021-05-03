@@ -26,7 +26,7 @@ public class GameController {
 
     @GetMapping("/{id}")
     public String loadGameById() {
-        return "chess";
+        return "/html/chess.html";
     }
 
 }

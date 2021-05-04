@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class IndexController {
 
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
-    public String welcomeAsHTML() {
+    public String mainScreen() {
         return "index.html";
+    }
+
+    @GetMapping(value = "/room/{name}")
+    public String chessScreen() {
+        return "/room.html";
     }
 }

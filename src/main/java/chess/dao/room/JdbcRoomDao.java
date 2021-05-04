@@ -1,10 +1,11 @@
-package chess.repository.room;
+package chess.dao.room;
 
 import chess.domain.game.Room;
 import chess.domain.gamestate.State;
 import chess.domain.team.Team;
 import chess.utils.BoardUtil;
 import java.sql.PreparedStatement;
+import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,11 +13,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcRoomRepository implements RoomRepository {
+public class JdbcRoomDao implements RoomDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcRoomRepository(final DataSource dataSource) {
+    public JdbcRoomDao(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
@@ -63,6 +64,21 @@ public class JdbcRoomRepository implements RoomRepository {
     }
 
     @Override
+    public List<Room> findAll() {
+        String sql = "SELECT * FROM rooms";
+        return this.jdbcTemplate.query(
+                sql,
+                (rs, rowNum) ->
+                        new Room(
+                                rs.getLong("id"),
+                                rs.getString("name"),
+                                State.generateState(rs.getString("state"), BoardUtil.generateInitialBoard()),
+                                Team.of(rs.getString("currentteam"))
+                        )
+        );
+    }
+
+    @Override
     public Room findByName(String roomName) {
         String sql = "SELECT * FROM rooms WHERE name = ?";
         return this.jdbcTemplate.queryForObject(
@@ -80,14 +96,14 @@ public class JdbcRoomRepository implements RoomRepository {
     }
 
     @Override
-    public boolean isExistRoomName(String roomName) {
+    public boolean roomExists(String roomName) {
         String sql = "SELECT COUNT(*) FROM rooms WHERE name = ?";
         int count = this.jdbcTemplate.queryForObject(
                 sql,
                 Integer.class,
                 roomName
         );
-        return count == 0;
+        return count > 0;
     }
 
     @Override

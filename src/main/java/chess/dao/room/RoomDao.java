@@ -1,8 +1,9 @@
-package chess.repository.room;
+package chess.dao.room;
 
 import chess.domain.game.Room;
+import java.util.List;
 
-public interface RoomRepository {
+public interface RoomDao {
 
     long insert(Room room);
 
@@ -10,9 +11,11 @@ public interface RoomRepository {
 
     Room findByName(String name);
 
-    boolean isExistRoomName(String name);
+    boolean roomExists(String name);
 
     Room findById(long roomId);
+
+    List<Room> findAll();
 
     void deleteAll();
 }

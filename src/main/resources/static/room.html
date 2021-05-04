@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/css/style.css">
+  <title>체스</title>
+</head>
+<body>
+<div id="game_screen_wrap">
+  <div id="game_screen">
+    <span id="room_name"></span>
+    <table id="chess_board"></table>
+    <div>
+      <button class="btn" id="end">게임 종료</button>
+      <button class="btn" id="lobby">로비 화면</button>
+    </div>
+    <div>
+      <span id="current_turn"></span>
+      <span id="black_score"></span>
+      <span id="white_score"></span>
+      <span id="winner"></span>
+    </div>
+  </div>
+</div>
+<script type="module" src="/js/Room.js"></script>
+</body>
+</html>

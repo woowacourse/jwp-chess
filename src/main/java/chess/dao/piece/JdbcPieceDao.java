@@ -1,4 +1,4 @@
-package chess.repository.piece;
+package chess.dao.piece;
 
 import chess.domain.piece.Piece;
 import java.sql.PreparedStatement;
@@ -10,11 +10,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcPieceRepository implements PieceRepository {
+public class JdbcPieceDao implements PieceDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcPieceRepository(final DataSource dataSource) {
+    public JdbcPieceDao(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

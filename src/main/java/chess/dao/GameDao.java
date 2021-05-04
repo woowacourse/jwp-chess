@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.ChessGame;
+import chess.domain.game.ChessGame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,8 +12,13 @@ import java.util.Objects;
 
 @Repository
 public class GameDao {
+
+    private final JdbcTemplate jdbcTemplate;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public GameDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Long create(ChessGame chessGame) {
         String sql = "insert into game (is_end) values (?)";
@@ -35,5 +40,10 @@ public class GameDao {
     public void update(final Long gameId, final boolean isEnd) {
         String sql = "update game set is_end = ? where game_id = ?";
         jdbcTemplate.update(sql, isEnd, gameId);
+    }
+
+    public void delete(final Long gameId) {
+        String sql = "delete from game where game_id = ?";
+        jdbcTemplate.update(sql, gameId);
     }
 }

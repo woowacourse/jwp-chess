@@ -1,15 +1,15 @@
 package chess.repository;
 
 import chess.dao.GameDao;
-import chess.domain.ChessGame;
-import chess.domain.ChessGameRepository;
+import chess.domain.game.ChessGame;
+import chess.domain.game.ChessGameRepository;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.WhiteTeam;
-import dto.MoveDto;
-import org.springframework.stereotype.Service;
+import chess.dto.request.GameMoveRequest;
+import org.springframework.stereotype.Repository;
 
 
-@Service
+@Repository
 public class ChessGameRepositoryImpl implements ChessGameRepository {
 
     private final GameDao gameDao;
@@ -32,8 +32,6 @@ public class ChessGameRepositoryImpl implements ChessGameRepository {
     @Override
     public ChessGame chessGame(final Long gameId) {
         boolean isEnd = gameDao.isEnd(gameId);
-
-        System.out.println(gameId);
         WhiteTeam whiteTeam = teamRepositoryImpl.whiteTeam(gameId);
         BlackTeam blackTeam = teamRepositoryImpl.blackTeam(gameId);
         whiteTeam.setEnemy(blackTeam);
@@ -43,7 +41,7 @@ public class ChessGameRepositoryImpl implements ChessGameRepository {
     }
 
     @Override
-    public void save(final Long gameId, final ChessGame chessGame, final MoveDto moveDto) {
+    public void save(final Long gameId, final ChessGame chessGame, final GameMoveRequest moveDto) {
         boolean isEnd = chessGame.isEnd();
 
         if (isEnd) {

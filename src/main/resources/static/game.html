@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <title>Chessboard using Pure CSS and HTML</title>
 
+    <!--    libs for stomp and sockjs-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <!--    end libs for stomp and sockjs-->
+
     <style type="text/css">
         body {
             margin: 0 auto;
@@ -75,15 +80,15 @@
             color: #2ecc71;
         }
 
-        .btn-start::after, .btn-end::after {
+        #btn-start::after, .btn-end::after {
             height: 0;
             left: 50%;
             top: 50%;
             width: 0;
         }
 
-        .btn-start:hover:after,
-        .btn-start {
+        #btn-start:hover:after,
+        #btn-start {
             float: left;
         }
 
@@ -203,7 +208,7 @@
     </div>
 
     <div class="sidebar">
-        <!-- <button class="btn-start">새로하기</button> -->
+        <button id="btn-end">종료하기</button>
 
         <div class="status-white">
             <p id="name-white">WHITE</p>

@@ -1,6 +1,6 @@
 package chess.domain.team;
 
-import chess.domain.Position;
+import chess.domain.game.Position;
 import chess.domain.piece.Piece;
 
 import java.util.Map;
@@ -21,17 +21,7 @@ public class BlackTeam extends Team {
         super(DEFAULT_NAME, isCurrentTurn);
     }
 
-    public BlackTeam(String name) {
-        super(name);
-        initializePawn(BLACK_PAWN_COLUMN, BLACK_PAWN_DIRECTION);
-        initializePiece(BLACK_PIECE_COLUMN);
-    }
-
     public BlackTeam(boolean isCurrentTurn, Map<Position, Piece> pieces) {
         super(DEFAULT_NAME, isCurrentTurn, pieces);
-    }
-
-    public BlackTeam(String name, boolean isCurrentTurn, Map<Position, Piece> pieces) {
-        super(name, isCurrentTurn, pieces);
     }
 }

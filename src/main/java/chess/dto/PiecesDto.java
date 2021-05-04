@@ -1,8 +1,8 @@
-package dto;
+package chess.dto;
 
-import chess.domain.Position;
+import chess.domain.game.Position;
 import chess.domain.piece.Piece;
-import util.PieceConverter;
+import chess.util.PieceConverter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,27 +1,32 @@
 package chess.controller;
 
+import chess.dto.ChessGameDto;
+import chess.dto.request.GameMoveRequest;
 import chess.service.game.ChessGameService;
-import dto.ChessGameDto;
-import dto.MoveDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/game")
 public class ChessGameController {
     private final ChessGameService chessGameService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> checkChessGameException(Exception exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
-    }
-
-    public ChessGameController(final ChessGameService chessGameService) {
+    @Autowired
+    public ChessGameController(final ChessGameService chessGameService,
+                               final SimpMessagingTemplate simpMessagingTemplate) {
         this.chessGameService = chessGameService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    @PutMapping("/game/{id}")
-    public ResponseEntity<ChessGameDto> movePiece(@PathVariable("id") Long gameId, @RequestBody MoveDto moveDto) {
-        return ResponseEntity.ok().body(chessGameService.move(gameId, moveDto));
+    @PutMapping("/{id}/move")
+    @ResponseBody
+    public ResponseEntity movePiece(@CookieValue(value = "user") String cookie, @PathVariable("id") Long gameId,
+                                    @RequestBody GameMoveRequest request) {
+        ChessGameDto chessGameDto = chessGameService.move(gameId, request);
+        simpMessagingTemplate.convertAndSend("/topic/room/" + request.getRoomId(), chessGameDto);
+        return ResponseEntity.ok().build();
     }
 }

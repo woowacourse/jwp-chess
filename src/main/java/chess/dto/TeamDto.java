@@ -1,20 +1,12 @@
-package dto;
+package chess.dto;
 
 import chess.domain.team.Team;
 
 public class TeamDto {
-    private final PiecesDto pieces;
-    private final String name;
-    private final double score;
-    private final boolean isTurn;
-
-
-    public TeamDto(PiecesDto pieces, String name, double score, boolean isTurn) {
-        this.pieces = pieces;
-        this.name = name;
-        this.score = score;
-        this.isTurn = isTurn;
-    }
+    private PiecesDto pieces;
+    private String name;
+    private double score;
+    private boolean isTurn;
 
     public TeamDto(Team team) {
         this.pieces = PiecesDto.of(team.getPiecePosition(), team.getName());

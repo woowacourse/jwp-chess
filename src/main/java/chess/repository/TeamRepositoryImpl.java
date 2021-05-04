@@ -2,19 +2,19 @@ package chess.repository;
 
 import chess.dao.PieceDao;
 import chess.dao.TeamDao;
-import chess.domain.Position;
-import chess.domain.TeamRepository;
+import chess.domain.game.Position;
 import chess.domain.piece.Piece;
 import chess.domain.team.BlackTeam;
 import chess.domain.team.Team;
+import chess.domain.team.TeamRepository;
 import chess.domain.team.WhiteTeam;
-import dto.MoveDto;
+import chess.dto.request.GameMoveRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 
-@Service
+@Repository
 public class TeamRepositoryImpl implements TeamRepository {
     private final TeamDao teamDao;
     private final PieceDao pieceDao;
@@ -52,7 +52,7 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public void move(final Long gameId, final MoveDto moveDto) {
+    public void move(final Long gameId, final GameMoveRequest moveDto) {
         pieceDao.delete(gameId, moveDto);
         pieceDao.update(gameId, moveDto);
     }

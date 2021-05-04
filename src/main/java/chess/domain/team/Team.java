@@ -1,6 +1,6 @@
 package chess.domain.team;
 
-import chess.domain.Position;
+import chess.domain.game.Position;
 import chess.domain.piece.*;
 
 import java.util.HashMap;
@@ -18,7 +18,7 @@ import static chess.domain.piece.Rook.SCORE_ROOK;
 public abstract class Team {
     private static final Map<Piece, Double> scoreByPiece = new HashMap<>();
     private Team enemy;
-    private String name;
+    private final String name;
     private boolean isCurrentTurn;
 
     static {

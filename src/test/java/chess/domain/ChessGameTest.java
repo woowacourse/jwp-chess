@@ -1,5 +1,7 @@
 package chess.domain;
 
+import chess.domain.game.ChessGame;
+import chess.domain.game.Position;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.team.BlackTeam;

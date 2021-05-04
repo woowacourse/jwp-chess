@@ -1,6 +1,6 @@
-package dto;
+package chess.dto;
 
-import chess.domain.ChessGame;
+import chess.domain.game.ChessGame;
 
 public class ChessGameDto {
     private final Long id;
@@ -29,5 +29,15 @@ public class ChessGameDto {
 
     public boolean isEnd() {
         return isEnd;
+    }
+
+    @Override
+    public String toString() {
+        return "ChessGameDto{" +
+                "id=" + id +
+                ", whiteTeam=" + whiteTeam +
+                ", blackTeam=" + blackTeam +
+                ", isEnd=" + isEnd +
+                '}';
     }
 }

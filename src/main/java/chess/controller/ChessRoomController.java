@@ -1,51 +1,74 @@
 package chess.controller;
 
+import chess.dto.request.RoomCreateRequest;
+import chess.dto.request.RoomEnterRequest;
+import chess.dto.request.RoomExitRequest;
+import chess.dto.response.ChessRoomStatusResponse;
+import chess.dto.response.RoomCreateResponse;
+import chess.dto.response.RoomEnterResponse;
+import chess.dto.response.RoomListResponse;
 import chess.service.room.ChessRoomService;
-import dto.ChessGameDto;
-import dto.RoomDto;
-import dto.RoomRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/rooms")
 public class ChessRoomController {
     private final ChessRoomService chessRoomService;
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> checkChessRoomException(Exception exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
-    }
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    public ChessRoomController(final ChessRoomService chessRoomService) {
+    public ChessRoomController(final ChessRoomService chessRoomService,
+                               final SimpMessagingTemplate simpMessagingTemplate) {
         this.chessRoomService = chessRoomService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    @GetMapping("/rooms")
-    public ResponseEntity<List<RoomDto>> loadAll() {
+    @GetMapping()
+    public ResponseEntity<List<RoomListResponse>> loadAll() {
         return ResponseEntity.ok().body(chessRoomService.rooms());
     }
-    
-    @PostMapping("/room")
-    public void create(@Valid @RequestBody RoomRequestDto roomRequestDto, BindingResult bindingResult) {
-        System.out.println("create : " + roomRequestDto);
+
+    @PostMapping()
+    public ResponseEntity<RoomCreateResponse> create(@CookieValue(value = "user")
+                                                     @Valid @RequestBody RoomCreateRequest request,
+                                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }
-        chessRoomService.create(roomRequestDto);
+
+        return ResponseEntity.ok().body(chessRoomService.create(request));
     }
 
-    @PostMapping("/room/{id}")
-    public ResponseEntity<ChessGameDto> enter(@RequestBody RoomRequestDto roomRequestDto) {
-        System.out.println("enter : " + roomRequestDto);
-        return ResponseEntity.ok().body(chessRoomService.enter(roomRequestDto));
+    @PostMapping("/enter")
+    public ResponseEntity<RoomEnterResponse> enter(@CookieValue(value = "user") String cookie,
+                                                   @RequestBody RoomEnterRequest request) {
+        RoomEnterResponse roomDto = chessRoomService.enter(request);
+        return ResponseEntity.ok(roomDto);
+    }
+
+    @GetMapping("/{roomId}")
+    @ResponseBody
+    public ResponseEntity load(@CookieValue(value = "user") String cookie, @PathVariable Long roomId) {
+        ChessRoomStatusResponse ChessRoomStatusResponse = chessRoomService.load(roomId);
+        simpMessagingTemplate.convertAndSend("/topic/room/" + roomId, ChessRoomStatusResponse);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/exit")
+    public ResponseEntity exit(@CookieValue(value = "user") String cookie,
+                               @RequestBody RoomExitRequest request) {
+        ChessRoomStatusResponse response = chessRoomService.exitReturnEndChessGame(request);
+        simpMessagingTemplate.convertAndSend("/topic/room/" + request.getRoomId(), response);
+        return ResponseEntity.ok().build();
     }
 }

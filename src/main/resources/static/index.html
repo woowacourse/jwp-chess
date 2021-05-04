@@ -10,24 +10,35 @@
             background: #302E2B;
         }
 
-        #list-chess-game {
-            margin-top: 5em;
+        #top {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin: 5vh 20vh;
         }
 
-        #btn-game-create {
-            width: 240px;
-            height: 120px;
+        #list-chess-game {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            row-gap: 10px;
+            margin: 5vh 20vh;
+        }
+
+        .top_btn {
+            width: 120px;
+            height: 30px;
             background: none;
             border: 3px solid #fff;
             border-radius: 5px;
             color: #fff;
             display: block;
+            justify-content: center;
             font-size: 1.6em;
             font-weight: bold;
-            margin-top: 1em;
-            margin-left: 1em;
+            padding: 1em 3em;
             position: relative;
             text-transform: uppercase;
+            margin: 0 auto;
         }
 
         .box-chess-game {
@@ -38,20 +49,20 @@
             border-radius: 5px;
             color: #fff;
             display: block;
+            justify-content: center;
             font-size: 1.6em;
             font-weight: bold;
-            margin-left: 1em;
-            margin-bottom: 1em;
             padding: 1em 3em;
             position: relative;
             text-transform: uppercase;
-            float: left;
+            margin: 0 auto;
         }
+
 
         .box-chess-game::before,
         .box-chess-game::after,
-        #btn-game-create::before,
-        #btn-game-create::after {
+        .top_btn::before,
+        .top_btn::after {
             background: #fff;
             content: '';
             position: absolute;
@@ -59,13 +70,13 @@
         }
 
         .box-chess-game:hover,
-        #btn-game-create:hover {
+        .top_btn:hover {
             color: #2ecc71;
             cursor: pointer;
         }
 
         .box-chess-game::after,
-        #btn-game-create::after {
+        .top_btn::after {
             height: 0;
             left: 50%;
             top: 50%;
@@ -73,24 +84,48 @@
         }
 
         .box-chess-game:hover:after,
-        #btn-game-create:hover:after {
+        .top_btn:hover:after {
             height: 100%;
             left: 0;
             top: 0;
             width: 100%;
         }
 
-        .box-chess-game-title {
-            width: 80px;
-            height: 80px;
+        p {
+            margin: 0 auto;
+        }
+
+        #title {
+            display: flex;
+            justify-content: center;
+        }
+
+        #title_text {
+            font-size: 3em;
+            font-weight: bold;
+            color: #fff;
         }
     </style>
 
 </head>
 <body>
 
+<div id = "title">
+    <p id="title_text">로그인 해주세요.</p>
+</div>
+
 <div id="top">
-    <button id="btn-game-create">게임 생성하기</button>
+    <div id="btn-user-create" class="top_btn">
+        <p>계정 만들기</p>
+    </div>
+
+    <div id="btn-login" class="top_btn">
+        <p>로그인</p>
+    </div>
+
+    <div id="btn-game-create" class="top_btn">
+        <p>게임 생성</p>
+    </div>
 </div>
 
 <div id="list-chess-game">

@@ -1,6 +1,6 @@
 package chess.domain.team;
 
-import chess.domain.Position;
+import chess.domain.game.Position;
 import chess.domain.piece.Piece;
 
 import java.util.Map;
@@ -21,17 +21,7 @@ public class WhiteTeam extends Team {
         super(DEFAULT_NAME, isCurrentTurn);
     }
 
-    public WhiteTeam(String name) {
-        super(name);
-        initializePawn(WHITE_PAWN_COLUMN, WHITE_PAWN_DIRECTION);
-        initializePiece(WHITE_PIECE_COLUMN);
-    }
-
     public WhiteTeam(boolean isCurrentTurn, Map<Position, Piece> pieces) {
         super(DEFAULT_NAME, isCurrentTurn, pieces);
-    }
-
-    public WhiteTeam(String name, boolean isCurrentTurn, Map<Position, Piece> pieces) {
-        super(name, isCurrentTurn, pieces);
     }
 }

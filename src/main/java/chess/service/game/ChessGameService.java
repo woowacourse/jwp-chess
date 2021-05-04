@@ -1,11 +1,8 @@
 package chess.service.game;
 
-import chess.domain.Room;
-import dto.ChessGameDto;
-import dto.MoveDto;
-import dto.RoomRequestDto;
-import org.springframework.http.ResponseEntity;
+import chess.dto.ChessGameDto;
+import chess.dto.request.GameMoveRequest;
 
 public interface ChessGameService {
-    ChessGameDto move(Long gameId, MoveDto moveDto);
+    ChessGameDto move(Long gameId, GameMoveRequest moveDto);
 }

@@ -1,4 +1,4 @@
-package chess.domain;
+package chess.domain.game;
 
 import chess.domain.piece.Piece;
 import chess.domain.team.BlackTeam;
@@ -9,9 +9,6 @@ import java.util.Collections;
 import java.util.Map;
 
 public class ChessGame {
-    public static final int BLACK_TEAM = 0;
-    public static final int WHITE_TEAM = 1;
-
     private final BlackTeam blackTeam;
     private final WhiteTeam whiteTeam;
     private Team currentTurn;

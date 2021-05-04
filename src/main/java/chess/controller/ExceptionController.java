@@ -12,7 +12,7 @@ public class ExceptionController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Void> unpredictableException(Exception error) {
-        return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

@@ -25,32 +25,29 @@ let state = "non-clicked";
 let source = "";
 let target = "";
 
-function click(event) {
+async function click(event) {
     if (state === "non-clicked") {
         source = event.target.id;
         state = "clicked";
-        console.log(state)
-        console.log(source)
         return;
     }
 
     if (state === "clicked") {
-        console.log(state)
         console.log(event.target.id)
-        clickWhereToMove(event.target);
+        await clickWhereToMove(event.target);
         source = "";
         target = "";
         state = "stay";
     }
 }
 
-function clickWhereToMove(eventTarget) {
+async function clickWhereToMove(eventTarget) {
     target = eventTarget.id;
-    submitMove(source, target);
+    await submitMove(source, target);
 }
 
-function submitMove(src, tar) {
-    fetch(
+async function submitMove(src, tar) {
+    await fetch(
         `/games/${this.gameId}/move`, {
             method: 'POST',
             body: JSON.stringify({
@@ -63,11 +60,11 @@ function submitMove(src, tar) {
             }
         }
     ).then(response => {
-            if (response.status === 200) {
-                location.replace(`/games/${this.gameId}`)
-            } else {
-                alert(response.body)
+            if (response.status !== 200) {
+                response.text()
+                    .then(text => alert(text))
             }
+            location.replace(`/games/${this.gameId}`)
         }
     )
 }

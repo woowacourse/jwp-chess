@@ -23,37 +23,37 @@ public class SpringChessController {
     }
 
     @GetMapping("/")
-    private String mainPage(Model model) {
+    public String mainPage(Model model) {
         model.addAttribute("gameList", gameService.load());
         return "lobby";
     }
 
     @GetMapping("/games/{gameId}")
-    private String renderChessBoard(@PathVariable Long gameId) {
+    public String renderChessBoard(@PathVariable Long gameId) {
         return "chessboard";
     }
 
     @GetMapping("/games/{gameId}/load")
-    private ResponseEntity<GameStatusDto> loadGame(@PathVariable Long gameId) {
+    public ResponseEntity<GameStatusDto> loadGame(@PathVariable Long gameId) {
         return ResponseEntity.ok()
                              .body(chessService.load(gameId));
     }
 
     @PostMapping("/games")
-    private String createRoom(@RequestParam("gameName") String roomName) {
+    public String createRoom(@RequestParam("gameName") String roomName) {
         Long gameId = gameService.create(roomName);
         return "redirect:games/" + gameId;
     }
 
     @DeleteMapping("/games/{gameId}")
-    private ResponseEntity deleteRoom(@PathVariable("gameId") Long gameId) {
+    public ResponseEntity deleteRoom(@PathVariable("gameId") Long gameId) {
         gameService.delete(gameId);
         return ResponseEntity.ok()
                              .build();
     }
 
     @PostMapping("/games/{gameId}/move")
-    private ResponseEntity<GameStatusDto> move(@PathVariable("gameId") Long gameId, @RequestBody MoveDto moveDto) {
+    public ResponseEntity<GameStatusDto> move(@PathVariable("gameId") Long gameId, @RequestBody MoveDto moveDto) {
         chessService.move(gameId, moveDto);
         return ResponseEntity.ok()
                              .body(chessService.load(gameId));

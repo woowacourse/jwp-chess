@@ -26,19 +26,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestPropertySource("classpath:application-test.properties")
 @Sql("classpath:schema.sql")
 @JdbcTest
-public class ChessRepositoryTest {
+public class ProductChessRepositoryTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private ChessRepository chessRepository;
-
+    private ProductChessRepository productRepository;
 
     @BeforeEach
     void setUp() {
-        this.chessRepository = new ChessRepository(
+        this.productRepository = new ProductChessRepository(
                 new RoomDao(this.jdbcTemplate, this.namedParameterJdbcTemplate), new PieceDao(this.jdbcTemplate, this.namedParameterJdbcTemplate)
         );
     }
@@ -66,7 +65,7 @@ public class ChessRepositoryTest {
     void makeRoomTest() {
         Round round = new Round();
         Map<Position, Piece> board = round.getBoard();
-        int roomId = chessRepository.makeRoom(filteredChessBoard(board), "room4");
+        int roomId = productRepository.makeRoom(filteredChessBoard(board), "room4");
         assertEquals(4, roomId);
     }
 
@@ -75,8 +74,8 @@ public class ChessRepositoryTest {
     void initializePieceStatusTest() {
         Round round = new Round();
         Map<Position, Piece> board = round.getBoard();
-        int roomId = chessRepository.makeRoom(filteredChessBoard(board), "room4");
-        chessRepository.initializePieceStatus(roomId, filteredChessBoard(board));
+        int roomId = productRepository.makeRoom(filteredChessBoard(board), "room4");
+        productRepository.initializePieceStatus(roomId, filteredChessBoard(board));
     }
 
     @DisplayName("roomId로 보드 받아오는 테스트")
@@ -84,9 +83,9 @@ public class ChessRepositoryTest {
     void getBoardByRoomIdTest() {
         Round round = new Round();
         Map<Position, Piece> board = round.getBoard();
-        int roomId = chessRepository.makeRoom(filteredChessBoard(board), "room4");
-        chessRepository.initializePieceStatus(roomId, filteredChessBoard(board));
-        Map<Position, Piece> boardByRoomId = chessRepository.getBoardByRoomId(roomId);
+        int roomId = productRepository.makeRoom(filteredChessBoard(board), "room4");
+        productRepository.initializePieceStatus(roomId, filteredChessBoard(board));
+        Map<Position, Piece> boardByRoomId = productRepository.getBoardByRoomId(roomId);
         assertEquals(32, boardByRoomId.size());
     }
 
@@ -94,25 +93,25 @@ public class ChessRepositoryTest {
     @Test
     void changeTurnTest() {
         assertDoesNotThrow(
-                () -> chessRepository.changeTurn("black", "white", 3)
+                () -> productRepository.changeTurn("black", "white", 3)
         );
     }
 
     @DisplayName("roomId로 차례 확인 테스트")
     @Test
     void getCurrentTurnByRoomIdTest() {
-        assertEquals("white", chessRepository.getCurrentTurnByRoomId(3));
+        assertEquals("white", productRepository.getCurrentTurnByRoomId(3));
     }
 
     @DisplayName("방 제목 목록 테스트")
     @Test
     void getRoomNamesTest() {
-        assertEquals(3, chessRepository.getRoomNames().size());
+        assertEquals(3, productRepository.getRoomNames().size());
     }
 
     @DisplayName("room Id 가져오는 테스트")
     @Test
     void getRoomId() {
-        assertEquals(2, chessRepository.getRoomId("room2"));
+        assertEquals(2, productRepository.getRoomId("room2"));
     }
 }

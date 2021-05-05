@@ -16,10 +16,10 @@ import java.util.*;
 
 @Service
 public class ChessService {
-    private final ChessRepository chessRepository;
+    private final ChessRepository repository;
 
-    public ChessService(final ChessRepository chessRepository) {
-        this.chessRepository = chessRepository;
+    public ChessService(final ChessRepository repository) {
+        this.repository = repository;
     }
 
     public int makeRoom(String roomName) {
@@ -28,7 +28,7 @@ public class ChessService {
         Command start = CommandFactory.initialCommand("start");
         Round round = new Round(whiteState, blackState, start);
 
-        return chessRepository.makeRoom(filteredChessBoard(round.getBoard()), roomName);
+        return repository.makeRoom(filteredChessBoard(round.getBoard()), roomName);
     }
 
     private Map<String, String> filteredChessBoard(final Map<Position, Piece> chessBoard) {
@@ -50,8 +50,8 @@ public class ChessService {
     }
 
     public Round getStoredRound(int roomId) {
-        Map<Position, Piece> board = chessRepository.getBoardByRoomId(roomId);
-        String currentTurn = chessRepository.getCurrentTurnByRoomId(roomId);
+        Map<Position, Piece> board = repository.getBoardByRoomId(roomId);
+        String currentTurn = repository.getCurrentTurnByRoomId(roomId);
         return new Round(board, currentTurn);
     }
 
@@ -64,19 +64,19 @@ public class ChessService {
 
     @Transactional
     public void movePiece(String source, String target, int roomId) {
-        chessRepository.removeTargetPiece(target, roomId);
-        chessRepository.moveSourcePieceToTargetPoint(source, target, roomId);
+        repository.removeTargetPiece(target, roomId);
+        repository.moveSourcePieceToTargetPoint(source, target, roomId);
     }
 
     public void changeTurn(String nextTurn, String currentTurn, int roomId) {
-        chessRepository.changeTurn(nextTurn, currentTurn, roomId);
+        repository.changeTurn(nextTurn, currentTurn, roomId);
     }
 
     public Map<Integer, String> getRoomNames() {
-        return chessRepository.getRoomNames();
+        return repository.getRoomNames();
     }
 
     public int getRoomId(String roomName) {
-        return chessRepository.getRoomId(roomName);
+        return repository.getRoomId(roomName);
     }
 }

@@ -3,7 +3,7 @@ package chess.service;
 import chess.domain.piece.Piece;
 import chess.domain.player.Round;
 import chess.domain.position.Position;
-import chess.repository.ChessRepository;
+import chess.repository.ProductChessRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ public class ChessServiceTest {
     private ChessService chessService;
 
     @Mock
-    private ChessRepository chessRepository;
+    private ProductChessRepository productRepository;
 
     @BeforeEach
     void setUp() {
@@ -36,11 +36,11 @@ public class ChessServiceTest {
         Round round = new Round();
         Map<String, String> board = filteredChessBoard(round.getBoard());
 
-        given(chessRepository.makeRoom(board, "room4"))
+        given(productRepository.makeRoom(board, "room4"))
                 .willReturn(4);
 
         chessService.makeRoom("room4");
-        verify(chessRepository, times(1)).makeRoom(board, "room4");
+        verify(productRepository, times(1)).makeRoom(board, "room4");
     }
 
     private Map<String, String> filteredChessBoard(final Map<Position, Piece> chessBoard) {

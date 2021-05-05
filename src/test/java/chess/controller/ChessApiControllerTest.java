@@ -33,7 +33,7 @@ public class ChessApiControllerTest {
         given(chessService.getRoomId("room1"))
                 .willReturn(1);
 
-        MvcResult result = mockMvc.perform(get("/room/room1")
+        MvcResult result = mockMvc.perform(get("/rooms/room1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andReturn();

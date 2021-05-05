@@ -1,4 +1,7 @@
 window.onload = function () {
+    const createBtn = document.getElementById("create-btn");
+    createBtn.addEventListener('click', createGame);
+
     const enterBtn = document.getElementsByClassName("enter-btn");
     Array.from(enterBtn).forEach((el) => {
         el.addEventListener('click', enterGame);
@@ -7,6 +10,33 @@ window.onload = function () {
     const deleteBtn = document.getElementsByClassName("delete-btn");
     Array.from(deleteBtn).forEach((el) => {
         el.addEventListener('click', deleteGame);
+    })
+}
+
+async function createGame() {
+    const gameName = document.getElementById('gameName').value;
+    console.log(gameName)
+    await fetch(
+        `/games/`,
+        {
+            method: 'POST',
+            body: JSON.stringify({
+                'gameName': gameName
+            }),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                'Accept': 'application/json'
+            }
+        }
+    ).then(res => {
+        if (res.status === 200) {
+            res.json()
+                .then(id => window.location.href = `/games/${id}`)
+        } else {
+            res.text()
+                .then(text => alert(text))
+        }
+        gameName.value = "";
     })
 }
 

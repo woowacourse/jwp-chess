@@ -7,23 +7,21 @@
 <body>
 <h1>체스 게임을 시작합니다</h1>
 
-<form action="/games" method = "POST">
-    <label>
-        방 추가 <br>
-    </label>
-    <input type="text" name="gameName">
-    <input type="submit" value="시작">
-</form>
+<label>
+    게임 생성하기:
+</label>
+<input type="text" id="gameName">
+<button id="create-btn">생성</button>
 
 <h2>진행 게임 목록</h2>
 {{#gameList}}
-<tr>
-    <th>{{id}}번방 : </th>
-    <th>{{name}}</th>
-    <button id={{id}} class="enter-btn">ENTER</button>
-    <button id={{id}} class="delete-btn">DELETE</button>
-    <br>
-</tr>
+    <tr>
+        <th>{{id}}번방 :</th>
+        <th>{{gameName}}</th>
+        <button id={{id}} class="enter-btn">ENTER</button>
+        <button id={{id}} class="delete-btn">DELETE</button>
+        <br>
+    </tr>
 {{/gameList}}
 
 </body>

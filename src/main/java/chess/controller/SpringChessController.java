@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.controller.dto.GameDto;
 import chess.controller.dto.GameStatusDto;
 import chess.controller.dto.MoveDto;
 import chess.exception.ChessException;
@@ -40,9 +41,10 @@ public class SpringChessController {
     }
 
     @PostMapping("/games")
-    public String createRoom(@RequestParam("gameName") String roomName) {
-        Long gameId = gameService.create(roomName);
-        return "redirect:games/" + gameId;
+    public ResponseEntity<Long> createRoom(@RequestBody GameDto gameDto) {
+        System.out.println("LOG" + gameDto.getGameName());
+        Long createdGameId = gameService.create(gameDto.getGameName());
+        return ResponseEntity.ok().body(createdGameId);
     }
 
     @DeleteMapping("/games/{gameId}")

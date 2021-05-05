@@ -1,19 +1,19 @@
 package chess.controller.dto;
 
 public class GameDto {
-    private final Long id;
-    private final String name;
+    private Long id;
+    private String gameName;
 
-    public GameDto(Long id, String name) {
+    public GameDto(Long id, String gameName) {
         this.id = id;
-        this.name = name;
+        this.gameName = gameName;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getGameName() {
+        return gameName;
     }
 }

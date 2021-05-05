@@ -1,12 +1,13 @@
 package chess.controller;
 
-import chess.domain.board.position.Position;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.view.OutputView;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/game")
@@ -19,33 +20,24 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @ResponseBody
-    @GetMapping("/reachable/{roomId}")
-    public String reachable(@PathVariable final Long roomId, @RequestParam final Position source) {
-        return gameService.reachable(roomId, source).toString();
-    }
-
     @GetMapping("/load/{roomId}")
-    public String loadGame(@PathVariable final Long roomId, final Model model) {
-        model.addAttribute("room", roomService.roomInfo(roomId));
-        model.addAttribute("game", gameService.gameInfo(roomId));
-        return "chessBoardPage";
+    public ModelAndView loadGame(@PathVariable final Long roomId) {
+        if (gameService.isGameEnd(roomId)) {
+            return new ModelAndView("redirect:/game/result/" + roomId);
+        }
+
+        final ModelAndView view = new ModelAndView("chessBoardPage");
+        view.addObject("room", roomService.roomInfo(roomId));
+        view.addObject("game", gameService.gameInfo(roomId));
+        return view;
     }
 
     @GetMapping("/result/{roomId}")
-    public String printResult(@PathVariable final Long roomId, final Model model) {
-        model.addAttribute("winner", OutputView.decideWinnerName(gameService.winner(roomId)));
-        roomService.delete(roomId);
-        return "winningResultPage";
-    }
+    public ModelAndView printResult(@PathVariable final Long roomId) {
+        final String winnerName = OutputView.decideWinnerName(gameService.winner(roomId));
 
-    @PostMapping("/move/{roomId}")
-    public String move(@PathVariable final Long roomId,
-                       @RequestParam final Position source, @RequestParam final Position target) {
-        gameService.move(roomId, source, target);
-        if (gameService.isGameEnd(roomId)) {
-            return "redirect:/game/result/" + roomId;
-        }
-        return "redirect:/game/load/" + roomId;
+        final ModelAndView view = new ModelAndView("winningResultPage");
+        view.addObject("winner", winnerName);
+        return view;
     }
 }

@@ -4,6 +4,11 @@ window.onload = function () {
         el.addEventListener('click', click());
     })
 
+    const enterBtn = document.getElementsByClassName("enter-btn");
+    Array.from(enterBtn).forEach((el) => {
+        el.addEventListener('click', enterRoom());
+    })
+
     const deleteBtn = document.getElementsByClassName("delete-btn");
     Array.from(deleteBtn).forEach((el) => {
         el.addEventListener('click', deleteRoom());
@@ -15,36 +20,58 @@ let source = "";
 let target = "";
 
 function enterNewGame() {
-    const form = document.createElement("form");
-    form.setAttribute("charset", "UTF-8");
-    form.setAttribute("method", "Post");
-    form.setAttribute("action", "/room/create");
-
     const roomName = document.getElementById("game-name-input").value;
-    const roomNameField = document.createElement("input");
-    roomNameField.setAttribute("type", "hidden");
-    roomNameField.setAttribute("name", "roomName");
-    roomNameField.setAttribute("value", roomName);
-    form.appendChild(roomNameField);
+    const player1 = prompt("플레이어1의 비밀번호를 입력하시오");
+    const jsonData = JSON.stringify({roomName: roomName, player1: player1});
 
-    document.body.appendChild(form);
-    form.submit();
+    $.ajax({
+        url: "/room",
+        type: "POST",
+        data: jsonData,
+        contentType: 'application/json',
+        success: function (roomId) {
+            alert(roomName + " 방 생성");
+            location.href = "/game/load/" + roomId;
+        },
+        error: function (e) {
+            alert(e.responseText);
+        }
+    })
+}
+
+function enterRoom() {
+    return function (event) {
+        const roomId = event.target.id;
+        const player2 = prompt("플레이어의 비밀번호를 입력하시오");
+
+        $.ajax({
+            url: "/room/enter/" + roomId,
+            type: "POST",
+            data: player2,
+            contentType: 'application/json',
+            success: function () {
+                alert("방 " + roomId + "에 입장합니다.");
+                location.href = "/game/load/" + roomId;
+            },
+            error: function (e) {
+                alert(e.responseText);
+            }
+        })
+    }
 }
 
 function deleteRoom() {
     return function (event) {
         const roomId = event.target.id;
-        const requestQuery = "roomId=" + roomId;
         $.ajax({
-            url: "/room",
+            url: "/room/" + roomId,
             type: "DELETE",
-            data: requestQuery,
             success: function () {
                 alert("삭제 완료");
-                location.href="/room/list";
+                location.href = "/room/list";
             },
-            error: function () {
-                alert("에러 발생");
+            error: function (e) {
+                alert(e.responseText);
             }
         })
     }
@@ -77,10 +104,11 @@ function show(target) {
         url: "/game/reachable/" + roomId,
         type: "GET",
         data: requestQuery,
+        contentType: "application/json",
         success: function (result) {
+            let positions = result.positions;
             //[d2, d3]
-            if (result !== null && result !== "[]") {
-                const positions = result.slice(1, -1).split(", ");
+            if (result !== null) {
                 positions.forEach((el) => {
                     const piece = document.getElementById(el);
                     piece.classList.add("moveAble");
@@ -88,8 +116,8 @@ function show(target) {
                 });
             }
         },
-        error: function (result) {
-            alert("에러 발생");
+        error: function (e) {
+            alert(e.responseText);
         }
     })
 }
@@ -109,26 +137,20 @@ function clickWhereToMove(eventTarget) {
 
 function submitMove(src, tar) {
     const roomId = document.getElementById("roomId").innerText;
+    const jsonData = JSON.stringify({source: src, target: tar});
 
-    const form = document.createElement("form");
-    form.setAttribute("charset", "UTF-8");
-    form.setAttribute("method", "Post");
-    form.setAttribute("action", "/game/move/" + roomId);
-
-    const sourceField = document.createElement("input");
-    sourceField.setAttribute("type", "hidden");
-    sourceField.setAttribute("name", "source");
-    sourceField.setAttribute("value", src);
-    form.appendChild(sourceField);
-
-    const targetField = document.createElement("input");
-    targetField.setAttribute("type", "hidden");
-    targetField.setAttribute("name", "target");
-    targetField.setAttribute("value", tar);
-    form.appendChild(targetField);
-
-    document.body.appendChild(form);
-    form.submit();
+    $.ajax({
+        url: "/game/move/" + roomId,
+        type: "POST",
+        data: jsonData,
+        contentType: "application/json",
+        success: function (result) {
+            location.href = result;
+        },
+        error: function (e) {
+            alert(e.responseText);
+        }
+    })
 }
 
 function checkIsValidTarget(target) {

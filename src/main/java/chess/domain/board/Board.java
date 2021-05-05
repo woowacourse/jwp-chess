@@ -9,6 +9,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceSymbolMapper;
 import chess.domain.piece.movement.Direction;
 import chess.domain.piece.movement.Distance;
+import chess.exception.InvalidMovementException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public class Board {
             board.put(source, Empty.of());
             return;
         }
-        throw new IllegalArgumentException("해당 기물이 갈 수 있는 위치가 아닙니다.");
+        throw new InvalidMovementException("해당 기물이 갈 수 있는 위치가 아닙니다.");
     }
 
     public List<Position> reachablePositions(final Position source) {
@@ -100,7 +101,7 @@ public class Board {
                 .count();
     }
 
-    public String[][] parseUnicodeBoard() {
+    public Map<String, String> parseUnicodeBoardAsMap() {
         return PieceSymbolMapper.parseBoardAsUnicode(board);
     }
 }

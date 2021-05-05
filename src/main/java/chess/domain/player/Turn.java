@@ -28,12 +28,6 @@ public enum Turn {
         return BLACK;
     }
 
-    public void validate(final Owner mover) {
-        if (owner.isEnemy(mover)) {
-            throw new IllegalArgumentException("현재 순서의 사용자가 아닙니다.");
-        }
-    }
-
     public boolean is(final Owner mover) {
         return owner.isSameTeam(mover);
     }

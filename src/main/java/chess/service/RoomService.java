@@ -1,6 +1,8 @@
 package chess.service;
 
-import chess.controller.dto.RoomInfoDto;
+import chess.domain.ChessGame;
+import chess.dto.RoomDto;
+import chess.service.dao.GameDao;
 import chess.service.dao.RoomDao;
 import org.springframework.stereotype.Service;
 
@@ -8,31 +10,31 @@ import java.util.List;
 
 @Service
 public class RoomService {
-
-    private final GameService gameService;
     private final RoomDao roomDao;
+    private final GameDao gameDao;
 
-    public RoomService(final RoomDao roomDao, final GameService gameService) {
+    public RoomService(final RoomDao roomDao, final GameDao gameDao) {
         this.roomDao = roomDao;
-        this.gameService = gameService;
+        this.gameDao = gameDao;
     }
 
-    public long save(final String roomName) {
-        final long roomId = roomDao.save(roomName);
-        gameService.create(roomId);
+    public long create(final String roomName, final String player1) {
+        final ChessGame chessGame = ChessGame.initNew();
+        final Long roomId = roomDao.save(roomName, player1);
+        gameDao.save(roomId, chessGame.turn(), chessGame.board());
         return roomId;
     }
 
-    public void delete(final long roomId) {
-        gameService.delete(roomId);
+    public void delete(final Long roomId) {
+        gameDao.delete(roomId);
         roomDao.delete(roomId);
     }
 
-    public List<RoomInfoDto> loadList() {
-        return roomDao.load();
+    public List<RoomDto> loadList() {
+        return roomDao.loadRooms();
     }
 
-    public RoomInfoDto roomInfo(final long roomId) {
-        return new RoomInfoDto(roomId, roomDao.name(roomId));
+    public RoomDto roomInfo(final Long roomId) {
+        return new RoomDto(roomId, roomDao.name(roomId));
     }
 }

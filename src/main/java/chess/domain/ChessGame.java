@@ -7,8 +7,8 @@ import chess.domain.piece.Owner;
 import chess.domain.player.Players;
 import chess.domain.player.Scores;
 import chess.domain.player.Turn;
+import chess.exception.InvalidMovementException;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,18 +35,25 @@ public class ChessGame {
     }
 
     public void move(final Position source, final Position target) {
-        validateTurn(source);
+        validateTurn(players.ownerOf(source));
         board.movePiece(source, target);
         players.move(source, target);
         isGameEnd = players.anyKingDead(board);
         changeTurn();
     }
 
-    public void validateTurn(final Position source) {
-        turn.validate(players.ownerOf(source));
+    public void validateTurn(final Owner owner) {
+        if (isTurn(owner)) {
+            return;
+        }
+        throw new InvalidMovementException("현재 턴이 아닙니다.");
     }
 
-    public void changeTurn() {
+    public boolean isTurn(final Owner owner) {
+        return turn.is(owner);
+    }
+
+    private void changeTurn() {
         turn = turn.change();
     }
 
@@ -55,12 +62,9 @@ public class ChessGame {
     }
 
     public List<String> reachablePositions(final Position source) {
-        if (turn.is(players.ownerOf(source))) {
-            return board.reachablePositions(source).stream()
-                    .map(position -> position.parseAsString())
-                    .collect(Collectors.toList());
-        }
-        return Collections.EMPTY_LIST;
+        return board.reachablePositions(source).stream()
+                .map(position -> position.parseAsString())
+                .collect(Collectors.toList());
     }
 
     public Board board() {
@@ -81,5 +85,9 @@ public class ChessGame {
 
     public Turn turn() {
         return turn;
+    }
+
+    public Owner ownerOf(final Position position) {
+        return players.ownerOf(position);
     }
 }

@@ -29,7 +29,7 @@ public class GameHistoryDao {
     }
 
     public List<GameHistory> findAllGameHistoryByGameId(int gameId) {
-        String query = "SELECT * FROM game_history gh JOIN game g ON gh.gameId = g.id WHERE gh.gameId = ?";
+        String query = "SELECT * FROM game_history gh WHERE gh.gameId = ?";
         return jdbcTemplate.query(query, gameHistoryRowMapper, gameId);
     }
 }

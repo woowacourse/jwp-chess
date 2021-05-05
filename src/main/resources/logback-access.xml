@@ -1,11 +1,34 @@
-<configuration>
-    <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
-        <encoder>
-            <pattern>%n[↓↓↓ LOGBACK ACCESS ↓↓↓]%n%n%fullRequest%n%n%fullResponse%n%n[↑↑↑ LOGBACK
-                ACCESS ↑↑↑]%n
-            </pattern>
-        </encoder>
-    </appender>
+<configuration debug="false">
 
-    <appender-ref ref="STDOUT"/>
+    <!--spring boot의 기본 logback base.xml은 그대로 가져간다.-->
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="error">
+        <!--로깅이 기록될 위치-->
+        <encoder>
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %thread %-5level %logger - %m%n
+            </Pattern>
+            <charset>utf8</charset>
+        </encoder>
+        <!--로깅 파일이 특정 조건을 넘어가면 다른 파일로 만들어 준다.-->
+        <file>${home}error.log</file>
+        <!--   해당 로깅의 패턴을 설정   -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${home}error-%d{yyyyMMdd}-%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>15MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+    <include resource="file-appender.xml"/>
+
+    <!--    logger name이 file일때 적용할 appender를 등록한다.-->
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <logger level="WARN" name="error">
+        <appender-ref ref="error"/>
+    </logger>
+
+    <!--  appender이름이 file인 consoleAppender를 선언  -->
+    <property name="home" value="~/logs/spring"/>
 </configuration>

@@ -34,7 +34,7 @@ async function enter(event) {
 }
 
 function findRoom(roomName) {
-    return fetch("/room/" + roomName, {
+    return fetch("/rooms/" + roomName, {
         method: 'GET'
     }).then(res => res.json())
 }

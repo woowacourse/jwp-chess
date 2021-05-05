@@ -18,7 +18,7 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/room/{roomName}")
+    @GetMapping("/rooms/{roomName}")
     public ResponseEntity<Integer> getRoomId(@PathVariable String roomName) {
         return ResponseEntity.ok().body(chessService.getRoomId(roomName));
     }

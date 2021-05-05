@@ -17,9 +17,12 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
+import exception.ChessException;
+import exception.ExceptionStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class Team {
@@ -90,7 +93,7 @@ public abstract class Team {
         if (havePiece(position)) {
             return piecePosition.get(position);
         }
-        throw new IllegalArgumentException("해당 위치에 기물이 없습니다.");
+        throw new ChessException(ExceptionStatus.ILLEGAL_ARGUMENT);
     }
 
     public Piece killPiece(Position destination) {
@@ -159,5 +162,23 @@ public abstract class Team {
                 .filter(piece -> piece.isPawn() == isPawn)
                 .mapToDouble(scoreByPiece::get)
                 .sum();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Team team = (Team) o;
+        return isCurrentTurn == team.isCurrentTurn && Objects.equals(name, team.name) && Objects
+            .equals(piecePosition, team.piecePosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, isCurrentTurn, piecePosition);
     }
 }

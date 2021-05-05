@@ -1,6 +1,8 @@
 package chess.dao;
 
 import chess.domain.ChessGame;
+import exception.ChessException;
+import exception.ExceptionStatus;
 import java.sql.PreparedStatement;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,7 +31,11 @@ public class GameDao {
 
     public boolean isEnd(long gameId) {
         String sql = "select is_end from game where game_id = ?";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, gameId);
+        try {
+            return jdbcTemplate.queryForObject(sql, Boolean.class, gameId);
+        } catch (NullPointerException e) {
+            throw new ChessException(ExceptionStatus.TABLE_ERROR);
+        }
     }
 
     public void update(final long gameId, final boolean isEnd) {

@@ -1,21 +1,25 @@
 package chess.domain;
 
+import exception.ChessException;
+import exception.ExceptionStatus;
+import java.util.Objects;
+
 public class Room {
-    private Long id;
+    private long id;
     private String name;
     private String pw;
-    private Long gameId;
+    private long gameId;
 
     public Room() {}
 
-    public Room(Long id, String name, String pw, Long gameId) {
+    public Room(long id, String name, String pw, long gameId) {
         this.id = id;
         this.name = name;
         this.pw = pw;
         this.gameId = gameId;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -27,18 +31,36 @@ public class Room {
         return pw;
     }
 
-    public Long getGameId() {
+    public long getGameId() {
         return gameId;
     }
 
-    public void setGameId(final Long gameId) {
+    public void setGameId(final long gameId) {
         this.gameId = gameId;
     }
 
     public void checkPassword(Room room) {
         if (!room.getPw().equals(pw)) {
-            throw new IllegalArgumentException("비밀번호가 다릅니다.");
+            throw new ChessException(ExceptionStatus.LOGIN_FAIL);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Room room = (Room) o;
+        return id == room.id && gameId == room.gameId && Objects.equals(name, room.name)
+            && Objects.equals(pw, room.pw);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, pw, gameId);
     }
 
     @Override

@@ -13,7 +13,7 @@ spring:
     password: root
     driver-class-name: org.h2.Driver
     schema: classpath*:db/mysql/schema.sql
-    initialization-mode: never
+    initialization-mode: always
 
 handlebars:
   prefix: classpath:templates/

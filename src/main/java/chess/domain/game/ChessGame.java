@@ -42,8 +42,7 @@ public class ChessGame {
                 board.put(whitePlayerState.pieces(), blackPlayerState.pieces()));
     }
 
-    public void
-    moveByTurn(final Position sourcePosition, final Position targetPosition) {
+    public void moveByTurn(final Position sourcePosition, final Position targetPosition) {
         if (whitePlayer.isFinish()) {
             move(sourcePosition, targetPosition, blackPlayer);
             chessBoard = chessBoard.put(whitePlayer.pieces(), blackPlayer.pieces());
@@ -114,6 +113,18 @@ public class ChessGame {
         if (whitePlayer.isKingDead() || whiteScore < blackScore) {
             return Color.BLACK;
         }
+        return Color.NOTHING;
+    }
+
+    public Color turn() {
+        if (whitePlayer.isFinish()) {
+            return Color.BLACK;
+        }
+
+        if (!whitePlayer.isFinish()) {
+            return Color.WHITE;
+        }
+
         return Color.NOTHING;
     }
 

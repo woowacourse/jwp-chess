@@ -86,6 +86,8 @@ public class DBChessDao implements ChessDao {
                     resultSet.getString("chess_id"),
                     resultSet.getString("name"),
                     Color.findByValue(resultSet.getString("winner_color")),
+                    resultSet.getString("white_player_id"),
+                    resultSet.getString("black_player_id"),
                     resultSet.getBoolean("is_running"),
                     resultSet.getTimestamp("created_date").toLocalDateTime()
             );
@@ -150,6 +152,8 @@ public class DBChessDao implements ChessDao {
                         resultSet.getString("chess_id"),
                         resultSet.getString("name"),
                         Color.findByValue(resultSet.getString("winner_color")),
+                        resultSet.getString("white_player_id"),
+                        resultSet.getString("black_player_id"),
                         resultSet.getBoolean("is_running"),
                         resultSet.getTimestamp("created_date").toLocalDateTime()
                 );

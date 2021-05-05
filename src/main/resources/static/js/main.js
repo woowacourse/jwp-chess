@@ -1,7 +1,9 @@
 const mainStart = document.querySelector("#main-start");
 const mainLoad = document.querySelector("#main-load");
+const signIn = document.querySelector("#main-signin");
+const signUp = document.querySelector("#main-signup");
 const rooms = document.querySelector(".room-single");
-const basePath = 'http://localhost:8080';
+const basePath = 'http://www.gump-chess.o-r.kr:8080';
 
 mainStart.addEventListener("click", async () => {
     let result = window.prompt("게임 이름을 입력해주세요");
@@ -23,7 +25,7 @@ mainStart.addEventListener("click", async () => {
 
     const response = await fetch(basePath + "/api/v1/games", option)
 
-    if (response.status === 400 || response.status === 500) {
+    if (response.status === 400 || response.status === 401 || response.status === 500) {
         const body = await response.json();
         alert(body.message);
         return;
@@ -40,7 +42,7 @@ mainLoad.addEventListener("click", async () => {
 
     const response = await fetch(basePath + "/api/v1/games/" + result);
 
-    if (response.status === 400 || response.status === 500) {
+    if (response.status === 400 || response.status === 401 || response.status === 500) {
         const body = await response.json();
         alert(body.message);
         return;
@@ -51,11 +53,19 @@ mainLoad.addEventListener("click", async () => {
 
 rooms.addEventListener("click", async (source) => {
     const name = source.target.value;
-    if(name ==="" || name === undefined){
+    if(name ===""|| name === undefined){
         return;
     }
     if (window.confirm(name + "방에 입장 하시겠습니까?")) {
         localStorage.setItem("name", name);
         window.location = basePath + "/games";
     }
+});
+
+signIn.addEventListener("click", async () => {
+    window.location = basePath + "/signin";
+});
+
+signUp.addEventListener("click", async () => {
+    window.location = basePath + "/signup";
 });

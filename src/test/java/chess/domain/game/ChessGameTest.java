@@ -1,11 +1,13 @@
 package chess.domain.game;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import chess.domain.OutputFactory;
 import chess.domain.position.Position;
+import chess.exception.InvalidMoveException;
+import chess.exception.ValidTurnException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ChessGameTest {
 
@@ -35,7 +37,7 @@ class ChessGameTest {
         OutputFactory.printCurrentBoard(chessGame.chessBoard().chessBoard());
 
         assertThatThrownBy(() -> chessGame.moveByTurn(new Position("a4"), new Position("a5")))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ValidTurnException.class);
     }
 
     @Test
@@ -43,7 +45,7 @@ class ChessGameTest {
     void pawnMoveStrategyException() {
         ChessGame chessGame = ChessGame.newGame();
         assertThatThrownBy(() -> chessGame.moveByTurn(new Position("a2"), new Position("a5")))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidMoveException.class);
     }
 
     @Test
@@ -51,6 +53,6 @@ class ChessGameTest {
     void rookMoveStrategyException() {
         ChessGame chessGame = ChessGame.newGame();
         assertThatThrownBy(() -> chessGame.moveByTurn(new Position("a1"), new Position("a3")))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(InvalidMoveException.class);
     }
 }

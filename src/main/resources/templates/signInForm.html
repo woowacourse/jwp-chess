@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="formElem">
+    아이디 : <input type="text" name="name"><br>
+    비밀번호 : <input type="text" name="password"><br>
+    <input type="submit">
+</form>
+</body>
+<script>
+    formElem.onsubmit = async (e) => {
+        e.preventDefault();
+        var form = document.querySelector("#formElem");
+
+        data = {
+            name : form.querySelector('input[name="name"]').value,
+            password : form.querySelector('input[name="password"]').value,
+        }
+
+        let response = await fetch("http://www.gump-chess.o-r.kr:8080/api/v1/users/signin", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+
+        if (response.status === 400 || response.status === 401 || response.status === 500) {
+            const body = await response.json();
+            alert(body.message);
+            return;
+        }
+
+        window.location ="http://www.gump-chess.o-r.kr:8080";
+
+    };
+</script>
+</html>

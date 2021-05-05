@@ -18,6 +18,8 @@ public class JDBCChessDao implements ChessDao {
             rs.getString("chess_id"),
             rs.getString("name"),
             Color.findByValue(rs.getString("winner_color")),
+            rs.getString("white_player_id"),
+            rs.getString("black_player_id"),
             rs.getBoolean("is_running"),
             rs.getTimestamp("created_date").toLocalDateTime()
     );
@@ -34,10 +36,12 @@ public class JDBCChessDao implements ChessDao {
             throw new DuplicateRoomException();
         }
 
-        jdbcTemplate.update("INSERT INTO chess VALUES (?, ?, ?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO chess VALUES (?, ?, ?, ?, ?, ?, ?)",
                 chess.getId(),
                 chess.getName(),
                 chess.getWinnerColor().getName(),
+                chess.getWhitePlayerId(),
+                chess.getBlackPlayerId(),
                 chess.isRunning(),
                 chess.getCreatedDate()
         );
@@ -58,10 +62,11 @@ public class JDBCChessDao implements ChessDao {
     @Override
     public void update(Chess chess) {
         jdbcTemplate.update("update chess" +
-                        " set is_running = ?, winner_color = ?" +
+                        " set is_running = ?, winner_color = ?, black_player_id = ?" +
                         " where chess_id = ? ",
                 chess.isRunning(),
                 chess.getWinnerColor().getName(),
+                chess.getBlackPlayerId(),
                 chess.getId()
         );
     }

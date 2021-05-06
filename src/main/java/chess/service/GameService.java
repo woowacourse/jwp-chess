@@ -16,8 +16,8 @@ public class GameService {
         this.gameDao = gameDao;
     }
 
-    public Long create(String roomName) {
-        return gameDao.insert(roomName);
+    public Long create(GameDto gameDto) {
+        return gameDao.insert(gameDto.getGameName());
     }
 
     public void delete(Long roomId) {

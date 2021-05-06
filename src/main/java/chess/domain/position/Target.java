@@ -1,6 +1,8 @@
 package chess.domain.position;
 
 import chess.domain.state.State;
+import chess.exception.ChessException;
+import chess.exception.ErrorInformation;
 
 public class Target {
     private final Position position;
@@ -16,10 +18,10 @@ public class Target {
 
     private static void validateTarget(final Source source, final Position target, final State state) {
         if (state.findPiece(target).isPresent()) {
-            throw new IllegalArgumentException(String.format("같은 색깔의 기물 위치로는 이동할 수 없습니다. 입력 위치: %s", target));
+            throw new ChessException(ErrorInformation.INVALID_TARGET);
         }
         if (source.isSamePosition(target)) {
-            throw new IllegalArgumentException(String.format("source위치와 같은 위치로는 이동할 수 없습니다. 입력 위치: %s", target));
+            throw new ChessException(ErrorInformation.SAME_LOCATION);
         }
     }
 

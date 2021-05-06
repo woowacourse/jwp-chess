@@ -4,6 +4,8 @@ import chess.domain.piece.strategy.KingMoveStrategy;
 import chess.domain.piece.strategy.OneCellMoveStrategy;
 import chess.domain.position.Position;
 import chess.domain.position.Target;
+import chess.exception.ChessException;
+import chess.exception.ErrorInformation;
 
 import java.util.List;
 
@@ -28,11 +30,8 @@ public class King extends Piece {
     }
 
     private static void validate(final String piece) {
-        if (!SYMBOL.contains(piece)) {
-            throw new IllegalArgumentException(String.format("옳지 않은 기물입니다! 입력 값: %s", piece));
-        }
-        if (piece.length() > 1) {
-            throw new IllegalArgumentException(String.format("옳지 않은 기물입니다! 입력 값: %s", piece));
+        if (!SYMBOL.contains(piece) || piece.length() > 1) {
+            throw new ChessException(ErrorInformation.INVALID_PIECE);
         }
     }
 

@@ -5,7 +5,8 @@ import chess.domain.position.Position;
 
 public abstract class NoKingPieces extends Piece {
 
-    public NoKingPieces(final Position position, final Information information, final Moving moving) {
+    public NoKingPieces(final Position position, final Information information,
+        final Moving moving) {
         super(position, information, moving);
     }
 

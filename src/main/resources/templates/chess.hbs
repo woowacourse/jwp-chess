@@ -7,7 +7,7 @@
 </head>
 <body>
 <div id="total">
-    <input id="room-id" type="hidden" value={{number}}>
+    <input id="room-id" type="hidden" value={{roomId}}>
     <div id="top">
         <p>Woowa Kingdom Chess</p>
         <p style="color: red">{{error}}</p>
@@ -93,7 +93,11 @@
                 <img src="/img/black_team.png">
                 <div class="information">
                     <p class="nickname">
+                    {{#if users.blackUser}}
                         {{users.blackUser}}
+                    {{else}}
+                        아직 입장 전 입니다.
+                    {{/if}}
                     </p>
                     <p id="black-score">
                         {{black-score}}
@@ -111,7 +115,11 @@
                 <img src="/img/white_team.png">
                 <div class="information">
                     <p class="nickname">
-                        {{users.whiteUser}}
+                        {{#if users.whiteUser}}
+                            {{users.whiteUser}}
+                        {{else}}
+                            아직 입장 전 입니다.
+                        {{/if}}
                     </p>
                     <p id="white-score">
                         {{white-score}}
@@ -122,12 +130,12 @@
                 <form action="/chess" method="get">
                     <input type="submit" value="나가기">
                 </form>
-                <form action="start" method="post">
-                    <input type="hidden" name="roomId" value={{number}}>
+                <form action="/chess/start" method="post">
+                    <input type="hidden" name="roomId" value={{roomId}}>
                     <input id="init-button" type="submit" value={{button}}>
                 </form>
-                <form action="continue" method="post">
-                    <input type="hidden" name="roomId" value={{number}}>
+                <form action="/chess/continue" method="post">
+                    <input type="hidden" name="roomId" value={{roomId}}>
                     <input type="submit" value="이어하기">
                 </form>
             </div>

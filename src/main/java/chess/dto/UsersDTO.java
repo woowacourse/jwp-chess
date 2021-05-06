@@ -1,6 +1,7 @@
 package chess.dto;
 
 public final class UsersDTO {
+
     private final String blackUser;
     private final String whiteUser;
 

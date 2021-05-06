@@ -4,6 +4,7 @@ import chess.domain.ChessGame;
 import chess.domain.Team;
 
 public final class StatusDTO {
+
     private final String turn;
     private final Double blackScore;
     private final Double whiteScore;

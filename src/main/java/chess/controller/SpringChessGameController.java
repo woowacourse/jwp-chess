@@ -2,6 +2,8 @@ package chess.controller;
 
 import chess.domain.ChessGame;
 import chess.domain.Team;
+import chess.dto.CreateRoomRequestDTO;
+import chess.dto.EnterRoomRequestDTO;
 import chess.dto.PiecesDTO;
 import chess.dto.RoomIdDTO;
 import chess.dto.UsersDTO;
@@ -9,11 +11,15 @@ import chess.service.HistoryService;
 import chess.service.ResultService;
 import chess.service.RoomService;
 import chess.service.UserService;
+import chess.util.PasswordEncoder;
 import java.util.List;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,10 +43,9 @@ public final class SpringChessGameController {
     }
 
     @GetMapping()
-    private String goHome(final Model model) {
+    public String goHome(final Model model) {
         try {
-            List<String> roomIds = roomService.allRoomsId();
-            roomIds.forEach(id -> roomService.addRoom(id, new ChessGame()));
+            roomService.loadAllRooms();
             model.addAttribute("rooms", roomService.allRooms());
             model.addAttribute("results", resultService.allUserResult());
         } catch (Exception e) {
@@ -49,13 +54,38 @@ public final class SpringChessGameController {
         return "index";
     }
 
-    @GetMapping("/enter")
-    private String enterRoom(@RequestParam final String id, final Model model) {
+    @PostMapping(path = "/new-game")
+    public String createNewGame(@ModelAttribute final CreateRoomRequestDTO requestDTO,
+        final HttpServletResponse response) {
+        String encodePassword = PasswordEncoder.encodingPassword(requestDTO.getPassword());
+        userService.enrollUser(requestDTO.getNickname(), encodePassword);
+        int whiteUserId = userService.userIdByNickname(requestDTO.getNickname());
+        roomService.createRoom(requestDTO.getTitle(), whiteUserId);
+        Cookie cookie = new Cookie("encodePassword", encodePassword);
+        cookie.setPath("/api/v1/chess");
+        response.addCookie(cookie);
+        return "redirect:room/" + roomService.createdRoomId();
+    }
+
+    @PostMapping("/enter")
+    public String enter(@ModelAttribute final EnterRoomRequestDTO requestDTO, final HttpServletResponse response) {
+        String encodePassword = PasswordEncoder.encodingPassword(requestDTO.getPassword());
+        userService.enrollUser(requestDTO.getNickname(), encodePassword);
+        int userId = userService.userIdByNickname(requestDTO.getNickname());
+        roomService.enrollUserByColor(requestDTO.getId(), userId, requestDTO.getColor());
+        Cookie cookie = new Cookie("encodePassword", encodePassword);
+        cookie.setPath("/api/v1/chess");
+        response.addCookie(cookie);
+        return "redirect:room/" + requestDTO.getId();
+    }
+
+    @GetMapping(path = "/room/{roomId}")
+    public String enterRoom(@PathVariable final String roomId, final Model model) {
         try {
-            model.addAttribute("number", id);
+            model.addAttribute("roomId", roomId);
             model.addAttribute("button", "새로운게임");
             model.addAttribute("isWhite", true);
-            model.addAttribute("users", userService.usersParticipatedInGame(id));
+            model.addAttribute("users", userService.usersParticipatedInGame(roomId));
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
         }
@@ -63,7 +93,7 @@ public final class SpringChessGameController {
     }
 
     @PostMapping(path = "/start")
-    private String startGame(@ModelAttribute final RoomIdDTO roomIdDTO, final Model model) {
+    public String startGame(@ModelAttribute final RoomIdDTO roomIdDTO, final Model model) {
         ChessGame chessGame = new ChessGame();
         chessGame.initialize();
         String roomId = roomIdDTO.getRoomId();
@@ -72,12 +102,12 @@ public final class SpringChessGameController {
         historyService.initializeByRoomId(roomId);
 
         UsersDTO users = userService.usersParticipatedInGame(roomId);
-        gameInformation(roomService.loadGameByRoomId(roomId), model, roomId, users);
+        gameInformation(chessGame, model, roomId, users);
         return "chess";
     }
 
     @PostMapping(path = "/continue")
-    private String continueGame(@ModelAttribute final RoomIdDTO roomIdDTO, final Model model) {
+    public String continueGame(@ModelAttribute final RoomIdDTO roomIdDTO, final Model model) {
         String roomId = roomIdDTO.getRoomId();
         ChessGame chessGame = roomService.loadGameByRoomId(roomId);
         chessGame.initialize();
@@ -98,12 +128,12 @@ public final class SpringChessGameController {
         model.addAttribute("isWhite", Team.WHITE.equals(chessGame.turn()));
         model.addAttribute("black-score", chessGame.scoreByTeam(Team.BLACK));
         model.addAttribute("white-score", chessGame.scoreByTeam(Team.WHITE));
-        model.addAttribute("number", roomId);
+        model.addAttribute("roomId", roomId);
         model.addAttribute("users", users);
     }
 
     @GetMapping(path = "/error-page")
-    private String errorPage(@RequestParam final String error, final Model model) {
+    public String errorPage(@RequestParam final String error, final Model model) {
         model.addAttribute("error", error);
         return "error";
     }

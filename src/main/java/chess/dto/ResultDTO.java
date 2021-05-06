@@ -1,6 +1,7 @@
 package chess.dto;
 
 public final class ResultDTO {
+
     private String roomId;
     private String winner;
     private String loser;

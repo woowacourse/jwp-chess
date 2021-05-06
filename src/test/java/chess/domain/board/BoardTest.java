@@ -1,5 +1,11 @@
 package chess.domain.board;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import chess.domain.Team;
 import chess.domain.pieces.Pieces;
 import chess.domain.position.Col;
@@ -10,11 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
-
 class BoardTest {
+
     private final static double BASE_SCORE = 38.0;
     private Board board;
 
@@ -31,7 +34,7 @@ class BoardTest {
         Position endPoint = new Position(4, 0);
 
         assertThatThrownBy(
-                () -> board.move(startPoint, endPoint, Team.BLACK)
+            () -> board.move(startPoint, endPoint, Team.BLACK)
         ).isInstanceOf(EnemyTurnException.class);
         board.move(startPoint, endPoint, Team.WHITE);
     }
@@ -40,10 +43,10 @@ class BoardTest {
     @DisplayName("보드 크기를 벗어나는 좌표로 이동하려고 하면, false를 리턴한다.")
     void validateRangeCheck() {
         assertAll(
-                () -> assertFalse(board.isWithinBoardRange(new Position(8, 0))),
-                () -> assertFalse(board.isWithinBoardRange(new Position(-1, 0))),
-                () -> assertFalse(board.isWithinBoardRange(new Position(0, 8))),
-                () -> assertFalse(board.isWithinBoardRange(new Position(0, -1)))
+            () -> assertFalse(board.isWithinBoardRange(new Position(8, 0))),
+            () -> assertFalse(board.isWithinBoardRange(new Position(-1, 0))),
+            () -> assertFalse(board.isWithinBoardRange(new Position(0, 8))),
+            () -> assertFalse(board.isWithinBoardRange(new Position(0, -1)))
         );
     }
 

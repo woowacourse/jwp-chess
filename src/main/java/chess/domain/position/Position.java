@@ -1,13 +1,13 @@
 package chess.domain.position;
 
-import chess.domain.Team;
-
-import java.util.Objects;
-
 import static chess.domain.board.Board.RANGE_MAX_PIVOT;
 import static chess.domain.board.Board.RANGE_MIN_PIVOT;
 
+import chess.domain.Team;
+import java.util.Objects;
+
 public final class Position {
+
     private final int row;
     private final int col;
 
@@ -32,7 +32,8 @@ public final class Position {
     }
 
     public boolean isOutOfRange() {
-        return (row < RANGE_MIN_PIVOT || row > RANGE_MAX_PIVOT || col < RANGE_MIN_PIVOT || col > RANGE_MAX_PIVOT);
+        return (row < RANGE_MIN_PIVOT || row > RANGE_MAX_PIVOT || col < RANGE_MIN_PIVOT
+            || col > RANGE_MAX_PIVOT);
     }
 
     public String position() {
@@ -49,8 +50,12 @@ public final class Position {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Position position = (Position) o;
         return row == position.row && col == position.col;
     }

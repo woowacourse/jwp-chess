@@ -1,51 +1,39 @@
 package chess.dto;
 
 public final class RoomDTO {
+
     private final int id;
+    private final String blackNickname;
+    private final String whiteNickname;
     private final String title;
-    private final String blackUser;
-    private final String whiteUser;
     private final String status;
-    private final boolean playing;
 
-    public RoomDTO(final int id, final String title, final String blackUser, final String whiteUser,
-                   final int status, final boolean playing) {
+    public RoomDTO(final int id, final String blackNickname, final String whiteNickname,
+        final String title, final String status) {
         this.id = id;
+        this.blackNickname = blackNickname;
+        this.whiteNickname = whiteNickname;
         this.title = title;
-        this.blackUser = blackUser;
-        this.whiteUser = whiteUser;
-        this.status = status(status);
-        this.playing = playing;
-    }
-
-    private String status(final int status) {
-        if (status == 1) {
-            return "진행중";
-        }
-        return "종료됨";
+        this.status = status;
     }
 
     public int getId() {
         return id;
     }
 
+    public String getBlackNickname() {
+        return blackNickname;
+    }
+
+    public String getWhiteNickname() {
+        return whiteNickname;
+    }
+
     public String getTitle() {
         return title;
     }
 
-    public String getBlackUser() {
-        return blackUser;
-    }
-
-    public String getWhiteUser() {
-        return whiteUser;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public boolean isPlaying() {
-        return playing;
     }
 }

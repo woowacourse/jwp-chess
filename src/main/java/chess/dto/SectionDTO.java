@@ -1,6 +1,7 @@
 package chess.dto;
 
 public final class SectionDTO {
+
     private String roomId;
     private String clickedSection;
 

@@ -29,29 +29,31 @@
                         <th class="fixed">black 팀</th>
                         <th class="fixed">white 팀</th>
                         <th class="fixed">상태</th>
-                        <th class="fixed">입장</th>
                     </tr>
                     </thead>
                     <tbody>
                     {{#rooms}}
                     <tr>
-                        <td class="room-no">{{@index}}</td>
+                        <td class="room-no">{{id}}</td>
                         <td>{{title}}</td>
-                        <td>{{blackUser}}</td>
-                        <td>{{whiteUser}}</td>
+                        {{#if blackNickname}}
+                          <td>{{blackNickname}}</td>
+                        {{else}}
+                          <td><input type="button" value="입장" onclick="showEnterBlackPopup({{id}})"></td>
+                        {{/if}}
+                        {{#if whiteNickname}}
+                          <td>{{whiteNickname}}</td>
+                        {{else}}
+                          <td><input type="button" value="입장" onclick="showEnterWhitePopup({{id}})"></td>
+                        {{/if}}
                         <td>{{status}}</td>
-                        <td>
-                            {{#if playing}}
-                            <button onclick="location.href = '/chess/enter?id={{id}}'">입장하기</button>
-                            {{/if}}
-                        </td>
                     </tr>
                     {{/rooms}}
                     </tbody>
                 </table>
             </div>
             <div id="create-button">
-                <input type="button" value="방 만들기" onclick="createRoom()">
+                <input type="button" value="방 만들기" onclick="showNewGamePopup()">
             </div>
         </div>
         <div id="result">
@@ -78,6 +80,55 @@
         </div>
     </div>
 </div>
+
+<div id="popup" class="new-game hide">
+  <div class="content">
+
+  <form action="/chess/new-game" method="post">
+      방 이름 : <input type="text" name="title" required size="10">
+      <br><br>
+      아이디 : <input type="text" name="nickname" required size="10">
+      <br><br>
+      비밀번호 : <input type="password" name="password" required size="10">
+      <br><br>
+    <input type="submit" value="방 만들기">
+  </form>
+  <button onclick="closeNewGamePopup()">닫 기</button>
+  </div>
+</div>
+
+<div id="popup" class="enter-black hide">
+  <div class="content">
+
+  <form action="/chess/enter" method="post">
+      <input type="hidden" id="color" name="color" value="black">
+      <input type="hidden" id="game-id" name="id" value="">
+      흑색 유저 닉네임 : <input type="text" id="user-nickname" name="nickname" required size="10">
+      <br><br>
+      비밀번호 : <input type="password" id="user-password" name="password" required size="10">
+      <br><br>
+    <input type="submit" value="입장하기">
+  </form>
+  <button onclick="closeEnterBlackPopup()">닫 기</button>
+  </div>
+</div>
+
+<div id="popup" class="enter-white hide">
+  <div class="content">
+
+  <form action="/chess/enter" method="post">
+      <input type="hidden" id="color" name="color" value="white">
+      <input type="hidden" id="game-id" name="id" value="">
+      백색 유저 닉네임 : <input type="text" id="user-nickname" name="nickname" required size="10">
+      <br><br>
+      비밀번호 : <input type="password" id="user-password" name="password" required size="10">
+      <br><br>
+    <input type="submit" value="입장하기">
+  </form>
+  <button onclick="closeEnterWhitePopup()">닫 기</button>
+  </div>
+</div>
+
 <footer>
     image source:
     <cite><a href="https://kr.freepik.com/vectors/banner">kr.freepik.com</a></cite>

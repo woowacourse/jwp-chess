@@ -1,13 +1,13 @@
 package chess.dao;
 
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public class HistoryDAO {
+
     private final JdbcTemplate jdbcTemplate;
 
     public HistoryDAO(final JdbcTemplate jdbcTemplate) {
@@ -31,8 +31,8 @@ public class HistoryDAO {
 
     private RowMapper<String[]> mapper() {
         return (resultSet, rowNum) -> new String[]{
-                resultSet.getString("start_position"),
-                resultSet.getString("end_position")
+            resultSet.getString("start_position"),
+            resultSet.getString("end_position")
         };
     }
 }

@@ -4,14 +4,14 @@ import chess.dao.ResultDAO;
 import chess.dao.UserDAO;
 import chess.dto.RankingDTO;
 import chess.dto.UserDTO;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public final class ResultService {
+
     private final ResultDAO resultDAO;
     private final UserDAO userDAO;
 

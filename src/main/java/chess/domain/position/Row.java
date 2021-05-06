@@ -1,7 +1,6 @@
 package chess.domain.position;
 
 import chess.exception.InvalidCoordinateException;
-
 import java.util.Arrays;
 
 public enum Row {
@@ -24,17 +23,17 @@ public enum Row {
 
     public static int location(final String row) {
         return Arrays.stream(Row.values())
-                .filter(value -> value.row.equals(row))
-                .findFirst()
-                .orElseThrow(InvalidCoordinateException::new)
-                .location;
+            .filter(value -> value.row.equals(row))
+            .findFirst()
+            .orElseThrow(InvalidCoordinateException::new)
+            .location;
     }
 
     public static String initial(final int location) {
         return Arrays.stream(Row.values())
-                .filter(value -> value.location == location)
-                .findFirst()
-                .orElseThrow(InvalidCoordinateException::new)
-                .row;
+            .filter(value -> value.location == location)
+            .findFirst()
+            .orElseThrow(InvalidCoordinateException::new)
+            .row;
     }
 }

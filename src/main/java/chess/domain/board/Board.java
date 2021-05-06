@@ -6,11 +6,11 @@ import chess.domain.pieces.Pieces;
 import chess.domain.position.Position;
 import chess.exception.EnemyTurnException;
 import chess.exception.NoSuchPieceException;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public final class Board {
+
     public static final int RANGE_MIN_PIVOT = 0;
     public static final int RANGE_MAX_PIVOT = 7;
 

@@ -1,27 +1,27 @@
 package chess.domain.pieces;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import chess.domain.Team;
 import chess.domain.board.Board;
 import chess.domain.moving.QueenMoving;
 import chess.domain.position.Col;
 import chess.domain.position.Position;
 import chess.exception.WrongInitPositionException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 class QueenTest {
+
     private Board board;
     private final Position whiteTeamPawnPosition = new Position(0, 2);
     private final Position crossBlackTeamPawnPosition = new Position(0, 0);
@@ -55,7 +55,8 @@ class QueenTest {
     @DisplayName("Queen 초기 col 위치가 d가 아니면, 예외가 발생한다.")
     @ValueSource(strings = {"a", "b", "c", "e", "f", "g", "h"})
     void wrongInitColCheck(String col) {
-        assertThatThrownBy(() -> Queen.white(Col.location(col))).isInstanceOf(WrongInitPositionException.class);
+        assertThatThrownBy(() -> Queen.white(Col.location(col)))
+            .isInstanceOf(WrongInitPositionException.class);
     }
 
     @Test
@@ -74,12 +75,12 @@ class QueenTest {
 
     void set(final Queen queen) {
         Pieces blackTeamPieces = new Pieces(Arrays.asList(
-                new Pawn(crossBlackTeamPawnPosition),
-                new Pawn(straightBlackTeamPawnPosition)
+            new Pawn(crossBlackTeamPawnPosition),
+            new Pawn(straightBlackTeamPawnPosition)
         ));
         Pieces whiteTeamPieces = new Pieces(Arrays.asList(
-                new Pawn(whiteTeamPawnPosition),
-                queen
+            new Pawn(whiteTeamPawnPosition),
+            queen
         ));
         Map<Team, Pieces> boardMap = new HashMap<>();
         boardMap.put(Team.BLACK, blackTeamPieces);

@@ -2,11 +2,11 @@ package chess.domain.pieces;
 
 import chess.domain.position.Position;
 import chess.exception.WrongMoveCommandException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public final class Pieces {
+
     public static final double DEFAULT_SCORE = 0.0;
     public static final double DECREASE_UNIT = 0.5;
     public static final int DECREASE_PIVOT = 2;
@@ -19,31 +19,31 @@ public final class Pieces {
 
     public boolean containsPosition(final Position position) {
         return pieces.stream()
-                .anyMatch(piece -> piece.isSamePosition(position));
+            .anyMatch(piece -> piece.isSamePosition(position));
     }
 
     public Piece pieceByPosition(final Position position) {
         return pieces.stream()
-                .filter(piece -> piece.isSamePosition(position))
-                .findFirst()
-                .orElseThrow(WrongMoveCommandException::new);
+            .filter(piece -> piece.isSamePosition(position))
+            .findFirst()
+            .orElseThrow(WrongMoveCommandException::new);
     }
 
     public void removePieceByPosition(final Position position) {
         pieces.stream()
-                .filter(piece -> piece.isSamePosition(position))
-                .findFirst()
-                .ifPresent(pieces::remove);
+            .filter(piece -> piece.isSamePosition(position))
+            .findFirst()
+            .ifPresent(pieces::remove);
     }
 
     public boolean isKingAlive() {
         return pieces.stream()
-                .anyMatch(Piece::isKing);
+            .anyMatch(Piece::isKing);
     }
 
     public boolean contains(final Piece piece) {
         return pieces.stream()
-                .anyMatch(p -> p.equals(piece));
+            .anyMatch(p -> p.equals(piece));
     }
 
     public double calculatedScore(final int rangeMinPivot, final int rangeMaxPivot) {
@@ -54,8 +54,8 @@ public final class Pieces {
 
     private double calculatedSimpleSumScore() {
         return pieces.stream()
-                .mapToDouble(Piece::score)
-                .reduce(0, Double::sum);
+            .mapToDouble(Piece::score)
+            .reduce(0, Double::sum);
     }
 
     private double calculatedDecreasedScore(final int rangeMinPivot, final int rangeMaxPivot) {
@@ -68,9 +68,9 @@ public final class Pieces {
 
     private double decreasedScoreByCol(final int range) {
         long count = pieces.stream()
-                .filter(Piece::isPawn)
-                .filter(piece -> piece.isSameCol(range))
-                .count();
+            .filter(Piece::isPawn)
+            .filter(piece -> piece.isSameCol(range))
+            .count();
         if (count >= DECREASE_PIVOT) {
             return DECREASE_UNIT * count;
         }

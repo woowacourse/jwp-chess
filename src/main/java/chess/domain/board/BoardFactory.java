@@ -1,15 +1,22 @@
 package chess.domain.board;
 
 import chess.domain.Team;
-import chess.domain.pieces.*;
+import chess.domain.pieces.Bishop;
+import chess.domain.pieces.King;
+import chess.domain.pieces.Knight;
+import chess.domain.pieces.Pawn;
+import chess.domain.pieces.Piece;
+import chess.domain.pieces.Pieces;
+import chess.domain.pieces.Queen;
+import chess.domain.pieces.Rook;
 import chess.domain.position.Col;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class BoardFactory {
+
     private final Map<Team, Pieces> board = new HashMap<>();
 
     public BoardFactory() {

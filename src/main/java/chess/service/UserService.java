@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public final class UserService {
+
     private final UserDAO userDAO;
 
     public UserService(final UserDAO userDAO) {
@@ -13,10 +14,14 @@ public final class UserService {
     }
 
     public UsersDTO usersParticipatedInGame(final String roomId) {
-        return userDAO.findByRoomId(roomId);
+        return userDAO.findUsersByRoomId(roomId);
     }
 
     public int userIdByNickname(final String nickname) {
         return userDAO.findUserIdByNickname(nickname);
+    }
+
+    public void enrollUser(final String nickname, final String password) {
+        userDAO.insertUser(nickname, password);
     }
 }

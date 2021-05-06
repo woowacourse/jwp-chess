@@ -6,13 +6,13 @@ import chess.domain.pieces.Pieces;
 import chess.domain.position.Col;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class PiecesDTO {
+
     private final List<PieceDTO> pieceDTOs;
 
     private PiecesDTO(final List<PieceDTO> pieceDTOs) {
@@ -31,11 +31,11 @@ public final class PiecesDTO {
 
     private static void convert(final List<PieceDTO> list, final Pieces pieces, final Team team) {
         list.addAll(pieces.toList().stream()
-                .map(piece -> {
-                    Position position = piece.position();
-                    return new PieceDTO(team.name(), piece.initial(),
-                            Col.initial(position.col()) + Row.initial(position.row()));
-                }).collect(Collectors.toList()));
+            .map(piece -> {
+                Position position = piece.position();
+                return new PieceDTO(team.name(), piece.initial(),
+                    Col.initial(position.col()) + Row.initial(position.row()));
+            }).collect(Collectors.toList()));
     }
 
     public List<PieceDTO> toList() {

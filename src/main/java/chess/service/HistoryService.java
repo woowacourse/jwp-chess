@@ -2,12 +2,12 @@ package chess.service;
 
 import chess.dao.HistoryDAO;
 import chess.domain.ChessGame;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public final class HistoryService {
+
     private final HistoryDAO historyDAO;
 
     public HistoryService(final HistoryDAO historyDAO) {

@@ -1,12 +1,12 @@
 package chess.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
 
-    @RequestMapping("/rooms/{roomId}")
+    @GetMapping("/rooms/{roomId}")
     public String boardPage() {
         return "board";
     }

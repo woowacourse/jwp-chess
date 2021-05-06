@@ -51,7 +51,7 @@ public class SpringChessController {
     @PostMapping(path = "/{roomId}/move")
     public ResponseEntity<ChessGameDto> move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable long roomId) {
         ChessGameDto chessGameDto = chessBoardService.move(moveRequestDto, roomId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(chessGameDto);
+        return ResponseEntity.ok().body(chessGameDto);
     }
 
 }

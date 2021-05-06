@@ -27,25 +27,30 @@ public class GameDao {
     );
 
     public long insert(String gameName) {
-        String insertGame = "INSERT INTO game (game_name) VALUES (?)";
+        String sql = "INSERT INTO game (game_name) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update((Connection con)-> {
-            PreparedStatement pstmt = con.prepareStatement(insertGame, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, gameName);
             return pstmt;
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
+    public GameDto findById(Long id) {
+        String sql = "SELECT * FROM game WHERE game_id = (?)";
+        return jdbcTemplate.queryForObject(sql, gameRowWrapper, id);
+    }
+
     public List<GameDto> selectAll() {
-        String query = "SELECT * FROM game";
-        return jdbcTemplate.query(query, gameRowWrapper);
+        String sql = "SELECT * FROM game";
+        return jdbcTemplate.query(sql, gameRowWrapper);
     }
 
 
-    public int delete(Long gameId) {
-        String query = "DELETE FROM game WHERE game_id = (?)";
-        return jdbcTemplate.update(query, gameId);
+    public int delete(Long id) {
+        String sql = "DELETE FROM game WHERE game_id = (?)";
+        return jdbcTemplate.update(sql, id);
     }
-}
+ }

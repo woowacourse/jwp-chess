@@ -23,7 +23,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class GameStatusTest {
+class RoomStatusTest {
 
     private GameStatus gameStatus;
     private Map<Position, Piece> pieceMap;

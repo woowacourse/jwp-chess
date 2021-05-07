@@ -4,10 +4,10 @@ import chess.domain.board.position.Horizontal;
 import chess.domain.board.position.Path;
 import chess.domain.board.position.Position;
 import chess.domain.board.position.Vertical;
-import chess.domain.piece.EmptyPiece;
-import chess.domain.piece.Owner;
-import chess.domain.piece.Piece;
-import chess.domain.piece.king.King;
+import chess.domain.board.piece.EmptyPiece;
+import chess.domain.board.piece.Owner;
+import chess.domain.board.piece.Piece;
+import chess.domain.board.piece.king.King;
 
 import java.util.ArrayList;
 import java.util.HashMap;

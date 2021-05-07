@@ -29,6 +29,8 @@ public class HistoryRepository implements ChessRepository<History, Long> {
     @Override
     public Long update(History history) {
         return null;
+        /* HistoryDto historyDto = modelMapper.map(history, HistoryDto.class);
+        return historyDao.update(historyDto);*/
     }
 
     @Override

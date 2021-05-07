@@ -12,4 +12,6 @@ public interface PieceDao {
     List<PieceDto> findPiecesByGameId(final Long gameId);
 
     Long updateByGameIdAndPosition(PieceDto pieceDto);
+
+    PieceDto findById(Long id);
 }

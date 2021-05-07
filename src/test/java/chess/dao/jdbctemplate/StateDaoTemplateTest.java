@@ -4,7 +4,7 @@ import chess.dao.GameDao;
 import chess.dao.StateDao;
 import chess.dao.dto.game.GameDto;
 import chess.dao.dto.state.StateDto;
-import chess.domain.piece.Owner;
+import chess.domain.board.piece.Owner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;

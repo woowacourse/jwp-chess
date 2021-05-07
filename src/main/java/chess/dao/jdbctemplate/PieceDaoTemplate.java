@@ -2,19 +2,14 @@ package chess.dao.jdbctemplate;
 
 import chess.dao.PieceDao;
 import chess.dao.dto.piece.PieceDto;
-import chess.dao.dto.piece.PieceDtos;
-import chess.domain.board.position.Position;
-import chess.domain.piece.Piece;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -66,5 +61,11 @@ public class PieceDaoTemplate implements PieceDao {
     public List<PieceDto> findPiecesByGameId(final Long gameId) {
         String sql = "SELECT * from piece where game_id = ?";
         return jdbcTemplate.query(sql, actorRowMapper, gameId);
+    }
+
+    @Override
+    public PieceDto findById(Long id) {
+        String sql = "SELECT * from piece where id = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
     }
 }

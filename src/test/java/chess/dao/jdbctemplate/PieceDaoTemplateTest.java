@@ -6,7 +6,7 @@ import chess.dao.dto.game.GameDto;
 import chess.dao.dto.piece.PieceDto;
 import chess.domain.board.BoardInitializer;
 import chess.domain.board.position.Position;
-import chess.domain.piece.Piece;
+import chess.domain.board.piece.Piece;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;

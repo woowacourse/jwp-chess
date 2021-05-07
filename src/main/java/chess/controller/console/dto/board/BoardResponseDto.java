@@ -1,7 +1,7 @@
 package chess.controller.console.dto.board;
 
 import chess.domain.board.Board;
-import chess.domain.piece.Piece;
+import chess.domain.board.piece.Piece;
 
 import java.util.List;
 import java.util.stream.Collectors;

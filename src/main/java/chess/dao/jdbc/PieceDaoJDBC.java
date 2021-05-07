@@ -2,8 +2,6 @@ package chess.dao.jdbc;
 
 import chess.dao.PieceDao;
 import chess.dao.dto.piece.PieceDto;
-import chess.domain.board.position.Position;
-import chess.domain.piece.Piece;
 import chess.exception.DataAccessException;
 
 import java.sql.Connection;
@@ -12,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class PieceDaoJDBC implements PieceDao {
 
@@ -83,6 +80,30 @@ public class PieceDaoJDBC implements PieceDao {
                             resultSet.getString("position")));
                 }
                 return pieceResponseDtos;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("해당 GameID에 해당하는 체스말들을 검색하는데 실패했습니다.", e);
+        }
+    }
+
+    @Override
+    public PieceDto findById(Long id) {
+        final String query = "SELECT * from piece where id = ?";
+
+        try (Connection connection = ConnectionProvider.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query);) {
+            pstmt.setInt(1, id.intValue());
+
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                if (!resultSet.next()) {
+                    return null;
+                }
+                return new PieceDto(
+                        resultSet.getLong("id"),
+                        resultSet.getLong("game_id"),
+                        resultSet.getString("symbol"),
+                        resultSet.getString("position"));
+
             }
         } catch (SQLException e) {
             throw new DataAccessException("해당 GameID에 해당하는 체스말들을 검색하는데 실패했습니다.", e);

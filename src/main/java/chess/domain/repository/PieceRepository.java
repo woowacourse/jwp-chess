@@ -41,7 +41,8 @@ public class PieceRepository implements ChessRepository<Piece, Long> {
 
     @Override
     public Piece findById(Long id) {
-        return null;
+        PieceDto pieceDto = pieceDao.findById(id);
+        return modelMapper.map(pieceDto, Piece.class);
     }
 
     public List<Piece> findPiecesByGameId(Long gameId) {

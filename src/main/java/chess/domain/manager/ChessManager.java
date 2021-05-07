@@ -4,8 +4,8 @@ import chess.domain.board.Board;
 import chess.domain.board.BoardInitializer;
 import chess.domain.board.position.Path;
 import chess.domain.board.position.Position;
-import chess.domain.piece.Owner;
-import chess.domain.piece.Piece;
+import chess.domain.board.piece.Owner;
+import chess.domain.board.piece.Piece;
 
 import java.util.HashMap;
 import java.util.Map;

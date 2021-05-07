@@ -1,5 +1,6 @@
 package chess.domain.manager;
 
+import chess.domain.Entity;
 import chess.domain.board.Board;
 import chess.domain.board.BoardInitializer;
 import chess.domain.board.position.Path;
@@ -10,7 +11,7 @@ import chess.domain.board.piece.Piece;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChessManager {
+public class ChessManager extends Entity<Long> {
     private static final Owner FIRST_TURN = Owner.WHITE;
 
     private final Board board;

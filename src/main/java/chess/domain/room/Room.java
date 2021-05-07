@@ -1,8 +1,10 @@
 package chess.domain.room;
 
+import chess.domain.Entity;
+
 import java.util.Objects;
 
-public class Room {
+public class Room extends Entity<Long> {
 
     private final String roomName;
     private final Long whiteUserId;

@@ -1,5 +1,6 @@
 package chess.domain.board.piece;
 
+import chess.domain.Entity;
 import chess.domain.board.position.Path;
 import chess.domain.board.position.Position;
 import chess.domain.direction.Direction;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class Piece {
+public abstract class Piece extends Entity<Long> {
     private final Owner owner;
     private final Score score;
     private final List<Direction> directions;

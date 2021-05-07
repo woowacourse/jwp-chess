@@ -108,7 +108,7 @@ class SpringChessControllerTest {
         mockMvc.perform(post("/rooms/1/move")
                 .content(requestBody)
                 .contentType("application/json"))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("currentTurnTeam").value("black"))
                 .andExpect(jsonPath("piecePositionByTeam.white.*", hasSize(16)))

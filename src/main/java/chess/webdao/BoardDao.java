@@ -10,10 +10,12 @@ import java.util.List;
 
 @Repository
 public class BoardDao {
-    private JdbcTemplate jdbcTemplate;
+    private static final String DELETE_BOARD_BY_ROOM_ID = "DELETE FROM board WHERE room_id = (?)";
+    private static final String INSERT_BOARD = "INSERT INTO board (team, position, piece, is_first_moved, room_id) VALUES (?,?,?,?,?)";
+    private static final String SELECT_BOARD_BY_ROOM_ID = "SELECT * FROM board WHERE room_id = (?)";
 
-
-    private RowMapper<BoardInfosDto> boardInfoMapper = (resultSet, rowNumber) -> {
+    private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<BoardInfosDto> boardInfoMapper = (resultSet, rowNumber) -> {
         BoardInfosDto boardInfosDto = new BoardInfosDto();
 
         boardInfosDto.setTeam(resultSet.getString("team"));
@@ -29,18 +31,15 @@ public class BoardDao {
     }
 
     public void deleteBoardByRoomId(long roomId) {
-        final String sql = "DELETE FROM board WHERE room_id = (?)";
-        this.jdbcTemplate.update(sql, roomId);
+        this.jdbcTemplate.update(DELETE_BOARD_BY_ROOM_ID, roomId);
     }
 
     public void createBoard(TeamInfoDto teamInfoDto) {
-        String sql = "INSERT INTO board (team, position, piece, is_first_moved, room_id) VALUES (?,?,?,?,?)";
-        this.jdbcTemplate.update(sql, teamInfoDto.getTeam(), teamInfoDto.getPosition(), teamInfoDto.getPiece(), teamInfoDto.getIsFirstMoved(), teamInfoDto.getRoomId());
+        this.jdbcTemplate.update(INSERT_BOARD, teamInfoDto.getTeam(), teamInfoDto.getPosition(), teamInfoDto.getPiece(), teamInfoDto.getIsFirstMoved(), teamInfoDto.getRoomId());
     }
 
     public List<BoardInfosDto> selectBoardInfosByRoomId(long roomId) {
-        String sql = "SELECT * FROM board WHERE room_id = (?)";
-        return this.jdbcTemplate.query(sql, boardInfoMapper, roomId);
+        return this.jdbcTemplate.query(SELECT_BOARD_BY_ROOM_ID, boardInfoMapper, roomId);
     }
 
 }

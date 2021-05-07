@@ -13,8 +13,14 @@ import java.util.List;
 
 @Repository
 public class RoomDao {
-    private JdbcTemplate jdbcTemplate;
-    private RowMapper<TurnDto> turnMapper = (resultSet, rowNum) -> {
+    private static final String DELETE_ROOM_BY_ROOM_ID = "DELETE FROM room WHERE room_id = (?)";
+    private static final String UPDATE_ROOM_BY_ROOM_ID = "UPDATE room SET turn = (?), is_playing = (?) WHERE room_id = (?)";
+    private static final String SELECT_ROOM_BY_ROOM_ID = "SELECT * FROM room WHERE room_id = (?)";
+    private static final String SELECT_ALL_ROOMS = "SELECT * FROM room";
+    private static final String INSERT_ROOM = "INSERT INTO room (turn, is_playing, name) VALUES (?, ?, ?)";
+
+    private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<TurnDto> turnMapper = (resultSet, rowNum) -> {
         TurnDto turnDto = new TurnDto();
 
         turnDto.setTurn(resultSet.getString("turn"));
@@ -22,7 +28,7 @@ public class RoomDao {
 
         return turnDto;
     };
-    private RowMapper<RoomDto> roomRowMapper = (resultSet, rowNum) -> {
+    private final RowMapper<RoomDto> roomRowMapper = (resultSet, rowNum) -> {
         RoomDto roomDto = new RoomDto();
 
         roomDto.setRoomId(resultSet.getLong("room_id"));
@@ -38,31 +44,26 @@ public class RoomDao {
     }
 
     public void deleteRoomByRoomId(long roomId) {
-        final String sql = "DELETE FROM room WHERE room_id = (?)";
-        this.jdbcTemplate.update(sql, roomId);
+        this.jdbcTemplate.update(DELETE_ROOM_BY_ROOM_ID, roomId);
     }
 
     public void changeTurnByRoomId(String turn, boolean isPlaying, long roomId) {
-        final String sql = "UPDATE room SET turn = (?), is_playing = (?) WHERE room_id = (?)";
-        this.jdbcTemplate.update(sql, turn, isPlaying, roomId);
+        this.jdbcTemplate.update(UPDATE_ROOM_BY_ROOM_ID, turn, isPlaying, roomId);
     }
 
     public TurnDto selectTurnByRoomId(long roomId) {
-        final String sql = "SELECT * FROM room WHERE room_id = (?)";
-        return this.jdbcTemplate.queryForObject(sql, turnMapper, roomId);
+        return this.jdbcTemplate.queryForObject(SELECT_ROOM_BY_ROOM_ID, turnMapper, roomId);
     }
 
     public List<RoomDto> selectAllRooms() {
-        final String sql = "SELECT * FROM room";
-        return this.jdbcTemplate.query(sql, roomRowMapper);
+        return this.jdbcTemplate.query(SELECT_ALL_ROOMS, roomRowMapper);
     }
 
     public long createRoom(String currentTurn, boolean isPlaying, String roomName) {
-        String sql = "INSERT INTO room (turn, is_playing, name) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         this.jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"room_id"});
+            PreparedStatement ps = con.prepareStatement(INSERT_ROOM, new String[]{"room_id"});
             ps.setString(1, currentTurn);
             ps.setBoolean(2, isPlaying);
             ps.setString(3, roomName);

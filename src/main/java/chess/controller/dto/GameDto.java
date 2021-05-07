@@ -4,6 +4,10 @@ public class GameDto {
     private Long id;
     private String gameName;
 
+    public GameDto(String gameName) {
+        this.gameName = gameName;
+    }
+
     public GameDto(Long id, String gameName) {
         this.id = id;
         this.gameName = gameName;

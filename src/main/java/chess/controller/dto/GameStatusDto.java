@@ -13,7 +13,8 @@ public class GameStatusDto {
         boardDto = new BoardDto(game.allBoard());
         blackScore = game.score(Color.BLACK);
         whiteScore = game.score(Color.WHITE);
-        turn = game.currentPlayer().name();
+        turn = game.currentPlayer()
+                   .name();
     }
 
     public BoardDto getBoardDto() {

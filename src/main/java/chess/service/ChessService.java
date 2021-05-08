@@ -24,7 +24,7 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    public void move(Long gameId,MoveDto moveDto) {
+    public void move(Long gameId, MoveDto moveDto) {
         Game game = loadGame(gameId);
         String from = moveDto.getFrom();
         String to = moveDto.getTo();

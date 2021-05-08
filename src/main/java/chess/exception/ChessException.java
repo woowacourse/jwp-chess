@@ -1,6 +1,6 @@
 package chess.exception;
 
-public class ChessException extends RuntimeException{
+public class ChessException extends RuntimeException {
     private ErrorCode errorCode;
 
     public ChessException(ErrorCode errorCode) {

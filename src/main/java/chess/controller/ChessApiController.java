@@ -25,18 +25,19 @@ public class ChessApiController {
     @GetMapping("")
     public ResponseEntity<List<GameDto>> allGame() {
         List<GameDto> games = gameService.allGame();
-        return ResponseEntity.ok().body(games);
+        return ResponseEntity.ok()
+                             .body(games);
     }
 
     @PostMapping("")
     public ResponseEntity<Long> createRoom(@RequestBody GameDto gameDto) {
         Long createdGameId = gameService.create(gameDto);
-        return ResponseEntity.ok().body(createdGameId);
+        return ResponseEntity.ok()
+                             .body(createdGameId);
     }
 
     @GetMapping("/{gameId}/load")
     public ResponseEntity<GameStatusDto> loadGame(@PathVariable Long gameId) {
-
         return ResponseEntity.ok()
                              .body(chessService.load(gameId));
     }

@@ -12,7 +12,8 @@ public class BoardDto {
     public BoardDto(Map<Position, Piece> board) {
         maps = new HashMap<>();
         for (Position position : board.keySet()) {
-            maps.put(position.toKey(), board.get(position).display());
+            maps.put(position.toKey(), board.get(position)
+                                            .display());
         }
     }
 

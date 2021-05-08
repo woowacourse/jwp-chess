@@ -64,9 +64,8 @@ async function createGame() {
             }
         }
     ).then(res => {
-        if (res.status === 200) {
-            res.json()
-                .then(id => window.location.href = `/games/${id}`)
+        if (res.status === 201) {
+            window.location.href = res.headers.get('location')
         } else {
             res.text()
                 .then(text => alert(text))

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -32,7 +33,7 @@ public class ChessApiController {
     @PostMapping("")
     public ResponseEntity<Long> createRoom(@RequestBody GameDto gameDto) {
         Long createdGameId = gameService.create(gameDto);
-        return ResponseEntity.ok()
+        return ResponseEntity.created(URI.create("/games/" + createdGameId))
                              .body(createdGameId);
     }
 

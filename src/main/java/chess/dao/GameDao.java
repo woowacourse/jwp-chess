@@ -15,16 +15,17 @@ import java.util.Objects;
 
 @Repository
 public class GameDao {
+    private static final RowMapper<GameDto> gameRowWrapper = (resultSet, rowNum) -> new GameDto(
+            resultSet.getLong("game_id"),
+            resultSet.getString("game_name")
+    );
+
     private final JdbcTemplate jdbcTemplate;
+
 
     public GameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-    private final RowMapper<GameDto> gameRowWrapper = (resultSet, rowNum) -> new GameDto(
-            resultSet.getLong("game_id"),
-            resultSet.getString("game_name")
-    );
 
     public long insert(String gameName) {
         String sql = "INSERT INTO game (game_name) VALUES (?)";

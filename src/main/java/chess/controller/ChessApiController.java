@@ -2,7 +2,7 @@ package chess.controller;
 
 import chess.controller.dto.GameDto;
 import chess.controller.dto.GameStatusDto;
-import chess.controller.dto.MoveDto;
+import chess.domain.game.MoveRequest;
 import chess.service.ChessService;
 import chess.service.GameService;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +51,8 @@ public class ChessApiController {
     }
 
     @PostMapping("/{gameId}/move")
-    public ResponseEntity<GameStatusDto> move(@PathVariable("gameId") Long gameId, @RequestBody MoveDto moveDto) {
-        chessService.move(gameId, moveDto);
+    public ResponseEntity<GameStatusDto> move(@PathVariable("gameId") Long gameId, @RequestBody MoveRequest moveRequest) {
+        chessService.move(gameId, moveRequest);
         return ResponseEntity.ok()
                              .body(chessService.load(gameId));
     }

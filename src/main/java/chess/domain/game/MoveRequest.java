@@ -1,10 +1,10 @@
-package chess.controller.dto;
+package chess.domain.game;
 
-public class MoveDto {
+public class MoveRequest {
     private final String from;
     private final String to;
 
-    public MoveDto(String from, String to) {
+    public MoveRequest(String from, String to) {
         this.from = from;
         this.to = to;
     }

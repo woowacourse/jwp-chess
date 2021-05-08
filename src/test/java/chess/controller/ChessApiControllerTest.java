@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.controller.dto.GameDto;
-import chess.controller.dto.MoveDto;
+import chess.domain.game.MoveRequest;
 import chess.exception.ErrorCode;
 import chess.service.ChessService;
 import chess.service.GameService;
@@ -121,7 +121,7 @@ class ChessApiControllerTest {
     void move() throws Exception {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/games/1/move")
                                                                              .contentType(MediaType.APPLICATION_JSON)
-                                                                             .content(objectMapper.writeValueAsString(new MoveDto("c7", "c5")));
+                                                                             .content(objectMapper.writeValueAsString(new MoveRequest("c7", "c5")));
 
         mockMvc.perform(requestBuilder)
                .andExpect(status().isOk())
@@ -134,7 +134,7 @@ class ChessApiControllerTest {
     void wrongMove() throws Exception {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/games/1/move")
                                                                              .contentType(MediaType.APPLICATION_JSON)
-                                                                             .content(objectMapper.writeValueAsString(new MoveDto("c2", "c5")));
+                                                                             .content(objectMapper.writeValueAsString(new MoveRequest("c2", "c5")));
 
         mockMvc.perform(requestBuilder)
                .andExpect(status().isBadRequest())

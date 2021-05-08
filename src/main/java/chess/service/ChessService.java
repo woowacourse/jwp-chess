@@ -1,12 +1,11 @@
 package chess.service;
 
 import chess.controller.dto.GameStatusDto;
-import chess.controller.dto.MoveDto;
+import chess.domain.game.MoveRequest;
 import chess.dao.CommandDao;
 import chess.dao.GameDao;
 import chess.domain.game.BoardFactory;
 import chess.domain.game.Game;
-import chess.domain.location.Position;
 import chess.exception.ChessException;
 import chess.exception.ErrorCode;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -24,11 +23,11 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    public void move(Long gameId, MoveDto moveDto) {
+    public void move(Long gameId, MoveRequest moveRequest) {
         Game game = loadGame(gameId);
-        String from = moveDto.getFrom();
-        String to = moveDto.getTo();
-        game.move(Position.from(from), Position.from(to));
+        String from = moveRequest.getFrom();
+        String to = moveRequest.getTo();
+        game.move(new MoveRequest(from, to));
         commandDao.insert(gameId, from, to);
     }
 
@@ -40,9 +39,9 @@ public class ChessService {
     private Game loadGame(Long gameId) {
         checkGameExist(gameId);
         Game game = new Game(BoardFactory.create());
-        List<MoveDto> moves = commandDao.findAllCommandOf(gameId);
-        for (MoveDto move : moves) {
-            game.move(Position.from(move.getFrom()), Position.from(move.getTo()));
+        List<MoveRequest> requests = commandDao.findAllCommandOf(gameId);
+        for (MoveRequest request : requests) {
+            game.move(request);
         }
         return game;
     }

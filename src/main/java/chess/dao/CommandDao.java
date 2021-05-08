@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.controller.dto.MoveDto;
+import chess.domain.game.MoveRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +15,7 @@ public class CommandDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<MoveDto> commandRowMapper = (resultSet, rowNum) -> new MoveDto(
+    private final RowMapper<MoveRequest> commandRowMapper = (resultSet, rowNum) -> new MoveRequest(
             resultSet.getString("move_from"),
             resultSet.getString("move_to")
     );
@@ -25,7 +25,7 @@ public class CommandDao {
         jdbcTemplate.update(query, gameId, move_from, move_to);
     }
 
-    public List<MoveDto> findAllCommandOf(Long gameId) {
+    public List<MoveRequest> findAllCommandOf(Long gameId) {
         String query = "SELECT move_from, move_to FROM command WHERE game_id = (?)";
         return jdbcTemplate.query(query, commandRowMapper, gameId);
     }

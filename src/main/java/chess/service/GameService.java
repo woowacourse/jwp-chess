@@ -27,10 +27,6 @@ public class GameService {
         }
     }
 
-    public List<GameDto> load() {
-        return gameDao.selectAll();
-    }
-
     public List<GameDto> allGame() {
         return gameDao.selectAll();
     }

@@ -20,9 +20,9 @@ public class Game {
         state = BlackTurn.getInstance();
     }
 
-    public void move(Position from, Position to) {
+    public void move(MoveRequest moveRequest) {
         checkGameEnd();
-        board.move(state.color(), from, to);
+        board.move(state.color(), Position.from(moveRequest.getFrom()), Position.from(moveRequest.getTo()));
         updateState();
     }
 

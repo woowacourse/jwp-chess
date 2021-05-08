@@ -28,8 +28,8 @@ export async function postData(url = '', data = {}) {
   .then(response => {
     if (response.redirected) {
       window.location.href = response.url;
-    }
-    if (!response.ok) {
+      return {success: "true"};
+    } else if (!response.ok) {
       throw new Error(response.status);
     }
     return response.json()
@@ -50,7 +50,10 @@ export async function putData(url = '', data = {}) {
     body: await JSON.stringify(data)
   })
   .then(response => {
-    if (!response.ok) {
+    if (response.redirected) {
+      window.location.href = response.url;
+      return {success: "true"};
+    } else if (!response.ok) {
       throw new Error(response.status);
     }
     return response.json()

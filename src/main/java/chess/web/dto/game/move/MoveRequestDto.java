@@ -4,9 +4,12 @@ import chess.domain.game.team.Team;
 
 public class MoveRequestDto {
 
-    private final String source;
-    private final String target;
-    private final Team color;
+    private String source;
+    private String target;
+    private Team color;
+
+    public MoveRequestDto() {
+    }
 
     public MoveRequestDto(final String source, final String target, final Team color) {
         this.source = source;
@@ -18,12 +21,23 @@ public class MoveRequestDto {
         return source;
     }
 
+    public void setSource(final String source) {
+        this.source = source;
+    }
+
     public String getTarget() {
         return target;
+    }
+
+    public void setTarget(final String target) {
+        this.target = target;
     }
 
     public Team getColor() {
         return color;
     }
 
+    public void setColor(final Team color) {
+        this.color = color;
+    }
 }

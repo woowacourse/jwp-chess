@@ -2,10 +2,14 @@ package chess.domain.game;
 
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
+import chess.dao.RoomDao;
 import chess.dao.dto.GameDto;
 import chess.dao.dto.PieceDto;
+import chess.dao.dto.RoomDto;
 import chess.domain.game.board.Board;
 import chess.domain.game.board.piece.Piece;
+import chess.domain.game.room.Room;
+import chess.domain.game.room.Rooms;
 import chess.domain.game.team.Team;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,22 +20,42 @@ public class GameRepository {
 
     private final GameDao gameDao;
     private final PieceDao pieceDao;
+    private final RoomDao roomDao;
 
-    public GameRepository(final GameDao gameDao, final PieceDao pieceDao) {
+    public GameRepository(final GameDao gameDao, final PieceDao pieceDao, final RoomDao roomDao) {
         this.gameDao = gameDao;
         this.pieceDao = pieceDao;
+        this.roomDao = roomDao;
     }
 
-    public long add(final String name, final long hostId, final long guestId) {
-        final long gameId = gameDao.insert(GameDto.of(name, hostId, guestId));
+    public long add(final String name, final long hostId) {
+        final long gameId = gameDao.insert();
+        roomDao.insert(RoomDto.of(gameId, hostId, name));
         pieceDao.insertAll(gameId, Board.createWithInitialLocation().toList());
         return gameId;
     }
 
     public Game findById(final long gameId) {
-        final GameDto gameDto = gameDao.findById(gameId);
+        final GameDto gameDto = gameDao.selectById(gameId);
+        final RoomDto roomDto = roomDao.selectByGameId(gameId);
         final List<PieceDto> pieceDtos = pieceDao.selectAll(gameId);
-        return GameFactory.of(gameDto, pieceDtos);
+        return GameFactory.of(gameDto, pieceDtos, roomDto);
+    }
+
+    public long findGameIdByRoomId(final long roomId) {
+        return roomDao.selectIdById(roomId).getGameId();
+    }
+
+    public Rooms findEmptyRooms() {
+        final List<RoomDto> roomDtos = roomDao.selectBatchWithEmptyGuest();
+        final List<Room> rooms = roomDtos.stream()
+            .map(RoomDto::toEntity)
+            .collect(Collectors.toList());
+        return new Rooms(rooms);
+    }
+
+    public Room findRoomById(final long roomId) {
+        return roomDao.selectIdById(roomId).toEntity();
     }
 
     public void update(final Game game) {
@@ -70,6 +94,10 @@ public class GameRepository {
 
     private void updateTurn(final long gameId, Team turn) {
         gameDao.updateTurn(gameId, turn.getValue());
+    }
+
+    public void joinGuest(final long guestId, final long roomId) {
+        roomDao.updateGuestById(guestId, roomId);
     }
 
 }

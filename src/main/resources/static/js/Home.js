@@ -1,69 +1,47 @@
 import {getData, postData} from "./utils/FetchUtil.js"
+import {setCookie, USER_ID_KEY} from "./utils/CookieUtil.js";
+import {login} from "./utils/LoginUtil.js";
+import {CHESS_URL} from "./URL.js";
 
-const url = "http://localhost:8080";
+const url = CHESS_URL;
 
 window.onload = function () {
   const newGameButton = document.querySelector(".new-game");
-  const loadGameButton = document.querySelector(".load-game")
+  const searchGameButton = document.querySelector(".search-game")
   const registerMemberButton = document.querySelector(".register-member")
   const searchRecordButton = document.querySelector(".search-record")
 
   newGameButton.addEventListener("click", startNewGame);
-  loadGameButton.addEventListener("click", loadGame);
+  searchGameButton.addEventListener("click", showGames);
   registerMemberButton.addEventListener("click", registerMember);
 }
 
 async function startNewGame(e) {
-  const whiteUserName = prompt("흰색 유저 이름을 입력하세요.");
-  const blackUserName = prompt("검정색 유저 이름을 입력하세요.");
-
-  try {
-    validateName(whiteUserName, blackUserName);
-  } catch (e) {
-    alert("이름이 비어있거나, 같은 이름을 입력했습니다.");
+  const hostId = await login();
+  if (!hostId) {
     return;
   }
-
-  const host = await getExistentUser(whiteUserName);
-  const guest = await getExistentUser(blackUserName);
-  if (!host || !guest) {
-    alert("존재하지 않는 유저가 있습니다.");
-    return;
+  setCookie(USER_ID_KEY, hostId);
+  const roomName = prompt("방 이름을 입력하세요.");
+  if (roomName.length === 0) {
+    throw Error("방 이름을 입력하지 않았습니다.");
   }
-
-  await createGame(host["id"], guest["id"]);
+  await createGame(hostId, roomName);
 }
 
-async function getExistentUser(userName) {
-  const params = {
-    name: userName
-  }
-  return await getData(`${url}/api/users`, params);
-}
-
-function validateName(whiteName, blackName) {
-  if (whiteName.length === 0 || blackName.length === 0) {
-    throw Error("이름을 입력하지 않았습니다.");
-  }
-  if (whiteName === blackName) {
-    throw Error("유저의 이름은 같을 수 없습니다.");
-  }
-}
-
-async function createGame(hostId, guestId) {
+async function createGame(hostId, gameName) {
   const body = {
-    name: "임시 방이름",
-    hostId: hostId,
-    guestId: guestId
+    name: gameName,
+    hostId: hostId
   };
-  await postData(`${url}/games`, body);
+  const response = await postData(`${url}/games`, body);
+  if (!response) {
+    alert("게임을 생성하는데 실패했습니다.");
+  }
 }
 
-function loadGame() {
-  const gameId = prompt("이동할 방번호를 입력하세요.");
-  if (gameId) {
-    window.location.href = `${url}/games/${gameId}`
-  }
+async function showGames() {
+  window.location.href = `${url}/rooms`
 }
 
 async function registerMember() {
@@ -86,8 +64,7 @@ async function registerMember() {
     name: name,
     password: password
   };
-  const response2 = await postData(`${url}/api/users`, body);
-  if (response2) {
+  if (await postData(`${url}/api/users`, body)) {
     alert("회원가입 완료!")
   } else {
     alert("회원가입이 실패했습니다. 잠시 후 다시 시도해 주세요.")

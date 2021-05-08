@@ -5,9 +5,12 @@ import java.time.LocalDateTime;
 
 public class UserResponseDto {
 
-    private final long id;
-    private final String name;
-    private final LocalDateTime createdTime;
+    private long id;
+    private String name;
+    private LocalDateTime createdTime;
+
+    public UserResponseDto() {
+    }
 
     private UserResponseDto(final long id, String name, final LocalDateTime createdTime) {
         this.id = id;

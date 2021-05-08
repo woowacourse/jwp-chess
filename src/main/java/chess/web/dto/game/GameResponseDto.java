@@ -10,12 +10,15 @@ import java.util.stream.Collectors;
 
 public class GameResponseDto {
 
-    private final String name;
-    private final Team turn;
-    private final boolean finished;
-    private final List<PieceResponseDto> pieceResponseDtos;
-    private final UserResponseDto host;
-    private final UserResponseDto guest;
+    private String name;
+    private Team turn;
+    private boolean finished;
+    private List<PieceResponseDto> pieceResponseDtos;
+    private UserResponseDto host;
+    private UserResponseDto guest;
+
+    public GameResponseDto() {
+    }
 
     private GameResponseDto(final String name, final Team turn, final boolean finished,
         final List<PieceResponseDto> pieceResponseDtos, final UserResponseDto host,
@@ -37,7 +40,7 @@ public class GameResponseDto {
                 .collect(Collectors.toList());
 
         return new GameResponseDto(
-            game.getName(),
+            game.getRoomName(),
             game.getTurn(),
             game.isFinished(),
             pieceResponseDtos,

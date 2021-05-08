@@ -16,7 +16,7 @@ export class Piece {
     this.#y = parseInt(pieceDto["y"]);
 
     const defaultLocation = document.querySelector(".default-location");
-    defaultLocation.insertAdjacentHTML("beforeend", this.makeComponent(id));
+    defaultLocation.insertAdjacentHTML("beforeend", this.#makeTemplate(id));
     this.#component = document.querySelector(`#p${id}`);
     this.#setPosition(this.#x, this.#y);
     this.#addEvent();
@@ -42,7 +42,7 @@ export class Piece {
     return this.#component;
   }
 
-  makeComponent(id) {
+  #makeTemplate(id) {
     const imageName = this.#team[0] + this.#type;
     return `<img class="piece" id="p${id}" src="${SRC_PATH}${imageName}.png">`
   }

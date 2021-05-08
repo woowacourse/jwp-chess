@@ -2,8 +2,9 @@ import {Tiles} from "../tile/Tiles.js"
 import {Pieces} from "../piece/Pieces.js"
 import {Turn} from "./Turn.js"
 import {getData, putData} from "../utils/FetchUtil.js"
+import {CHESS_URL} from "../URL.js";
 
-const url = "http://localhost:8080";
+const url = CHESS_URL;
 
 export class Board {
   #tiles
@@ -11,13 +12,15 @@ export class Board {
   #component
   #sourceTile
   #turn
+  #role
 
-  constructor(pieceDtos, turn) {
+  constructor(pieceDtos, turn, role) {
     this.#tiles = new Tiles();
     this.#pieces = new Pieces(pieceDtos);
     this.#component = document.querySelector(".grid");
     this.#sourceTile = null;
     this.#turn = new Turn(turn);
+    this.#role = role;
     this.#addEvent()
   }
 
@@ -68,6 +71,9 @@ export class Board {
   }
 
   async #enterPiece(e, board) {
+    if (!this.#checkTurn()) {
+      return;
+    }
     if (!e.target.classList.contains("tile") &&
         !e.target.classList.contains("piece")) {
       return;
@@ -115,6 +121,9 @@ export class Board {
   }
 
   async #dropPiece(e, board) {
+    if (!this.#checkTurn()) {
+      return;
+    }
     const sourcePosition = e.dataTransfer.getData("sourcePosition");
     const piece = board.#pieces.findBySourcePosition(sourcePosition);
     const sourceTile = board.#tiles.findByPosition(piece.x, piece.y);
@@ -163,18 +172,42 @@ export class Board {
       const tile = this.#tiles.findById(target.id);
       window.setTimeout(function () {
         tile.unhighlight.call(tile);
-      }, 50);
+      }, 150);
     }
     if (target.classList.contains("piece")) {
       const tile = this.#findTileByPieceComponent(target);
       window.setTimeout(function () {
         tile.unhighlight.call(tile);
-      }, 50);
+      }, 150);
     }
   }
 
   findPieceBySourcePosition(sourcePosition) {
     return this.#pieces.findBySourcePosition(sourcePosition);
+  }
+
+  #checkTurn() {
+    if (this.#turn.isWhite() && this.#role.isHost()) {
+      return true;
+    }
+    if (this.#turn.isBlack() && this.#role.isGuest()) {
+      return true;
+    }
+    return false;
+  }
+
+  moveOtherSide(source, target, color) {
+    if (color === "white" && this.#role.isHost()) {
+      return;
+    }
+    if (color === "black" && this.#role.isGuest()) {
+      return;
+    }
+    const sourceTile = this.#tiles.findById(source);
+    const targetTile = this.#tiles.findById(target);
+    const sourcePiece = this.#pieces.findByPosition(sourceTile.x, sourceTile.y);
+    this.#pieces.move(sourcePiece, targetTile)
+    this.#turn.changeTurn();
   }
 
 }

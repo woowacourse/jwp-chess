@@ -2,9 +2,9 @@ package chess.controller;
 
 import chess.service.GameService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ChessFrontController {
@@ -20,7 +20,9 @@ public class ChessFrontController {
     }
 
     @GetMapping("/games/{gameId}")
-    public String renderChessBoard(@PathVariable Long gameId) {
-        return "chessboard";
+    public ModelAndView renderChessBoard(@PathVariable Long gameId) {
+        ModelAndView modelAndView = new ModelAndView("chessboard");
+        modelAndView.addObject("gameId", gameId);
+        return modelAndView;
     }
 }

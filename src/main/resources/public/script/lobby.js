@@ -1,5 +1,5 @@
 function gameTemplate(id, gameName) {
-    return `<tr data-id=${id}>
+    return `<tr>
         <th>${id}번방 :</th>
         <th>${gameName}</th>
         <button data-id=${id} class="enter-btn">ENTER</button>
@@ -30,14 +30,12 @@ window.onload = async function () {
 }
 
 function renderGameList() {
-    const $gameList = document.getElementById("gameList");
-    const gameListTable = Object.values(window.gameObj).reduce((acc, game) => {
+    const gameTable = document.getElementById("gameList");
+    gameTable.innerHTML = Object.values(window.gameObj).reduce((acc, game) => {
         const {id, gameName} = game;
         acc += gameTemplate(id, gameName);
         return acc;
-    }, '')
-
-    $gameList.innerHTML = gameListTable;
+    }, '');
 
     const enterBtn = document.getElementsByClassName("enter-btn");
     Array.from(enterBtn).forEach((el) => {

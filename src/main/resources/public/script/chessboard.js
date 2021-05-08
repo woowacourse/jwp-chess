@@ -3,16 +3,15 @@ window.onload = () => {
 }
 
 async function init() {
-    const url = window.location.href.split('/')
-    this.gameId = url[url.length - 1]
+    this.gameId = document.getElementById('gameId').innerText;
 
     const pieces = document.getElementsByClassName('piece');
     Array.from(pieces).forEach((el) => {
         el.addEventListener('click', click);
     })
 
-    const $home = document.getElementById('home')
-    $home.addEventListener('click', () => window.location.href = '/')
+    const home = document.getElementById('home')
+    home.addEventListener('click', () => window.location.href = '/')
 
     let chessStatus = await start()
     chessStatus = await chessStatus.json()

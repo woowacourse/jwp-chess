@@ -15,11 +15,9 @@ public class ChessFrontController {
     }
 
     @GetMapping("/")
-    public String mainPage(Model model) {
-        model.addAttribute("gameList", gameService.load());
+    public String mainPage() {
         return "lobby";
     }
-
 
     @GetMapping("/games/{gameId}")
     public String renderChessBoard(@PathVariable Long gameId) {

@@ -1,6 +1,43 @@
-window.onload = function () {
+function gameTemplate(id, gameName) {
+    return `<tr data-id=${id}>
+        <th>${id}번방 :</th>
+        <th>${gameName}</th>
+        <button data-id=${id} class="enter-btn">ENTER</button>
+        <button data-id=${id} class="delete-btn">DELETE</button>
+        <br>
+    </tr>`;
+}
+
+window.onload = async function () {
     const createBtn = document.getElementById("create-btn");
     createBtn.addEventListener('click', createGame);
+
+    const gameList = await fetch(
+        `/games/`
+    ).then(res => {
+            if (res.status === 200) {
+                return res.json()
+            } else {
+                res.text()
+                    .then(text => alert(text))
+            }
+        }
+    );
+    const gameObj = {}
+    gameList.forEach(game => gameObj[game.id] = game);
+    window.gameObj = gameObj;
+    renderGameList();
+}
+
+function renderGameList() {
+    const $gameList = document.getElementById("gameList");
+    const gameListTable = Object.values(window.gameObj).reduce((acc, game) => {
+        const {id, gameName} = game;
+        acc += gameTemplate(id, gameName);
+        return acc;
+    }, '')
+
+    $gameList.innerHTML = gameListTable;
 
     const enterBtn = document.getElementsByClassName("enter-btn");
     Array.from(enterBtn).forEach((el) => {
@@ -41,7 +78,7 @@ async function createGame() {
 }
 
 async function enterGame(event) {
-    const gameId = event.target.id;
+    const gameId = event.target.dataset.id;
     await fetch(
         `/games/${gameId}`,
     ).then(response => {
@@ -54,16 +91,17 @@ async function enterGame(event) {
 }
 
 async function deleteGame(event) {
-    const gameId = event.target.id;
+    const gameId = event.target.dataset.id;
     await fetch(
         `/games/${gameId}`,
         {
             method: 'DELETE'
         }
     ).then(response => {
-        if (response.status === 200) {
+        if (response.status === 204) {
+            delete window.gameObj[gameId];
+            renderGameList();
             alert('삭제 완료')
-            location.href = '/'
         } else {
             alert('에러 발생')
         }

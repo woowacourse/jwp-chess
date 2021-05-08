@@ -14,15 +14,7 @@
 <button id="create-btn">생성</button>
 
 <h2>진행 게임 목록</h2>
-{{#gameList}}
-    <tr>
-        <th>{{id}}번방 :</th>
-        <th>{{gameName}}</th>
-        <button id={{id}} class="enter-btn">ENTER</button>
-        <button id={{id}} class="delete-btn">DELETE</button>
-        <br>
-    </tr>
-{{/gameList}}
+<div id="gameList"></div>
 
 </body>
 <script src="/script/lobby.js"></script>

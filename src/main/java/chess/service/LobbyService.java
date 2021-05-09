@@ -2,13 +2,13 @@ package chess.service;
 
 import chess.domain.game.ChessGame;
 import chess.repository.ChessRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class LobbyService {
+
     ChessRepository chessRepository;
 
     public LobbyService(ChessRepository chessRepository) {

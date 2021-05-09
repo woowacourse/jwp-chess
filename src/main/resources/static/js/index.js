@@ -1,9 +1,9 @@
 const $start = document.querySelector("#start-btn");
 const $gameList = document.querySelector("#gameList-btn");
-const $url = "http://localhost:8080/games";
+const $url = "http://localhost:8080";
 
 $start.addEventListener("click", startGame);
-$gameList.addEventListener("click", gameList);
+$gameList.addEventListener("click", roomList);
 
 function startGame(event) {
     const $roomName = document.querySelector("#roomName").value;
@@ -24,7 +24,7 @@ function startGame(event) {
         body: JSON.stringify(room)
     }
 
-    fetch($url, option)
+    fetch($url + "/rooms", option)
         .then(data => {
             if (!data.ok) {
                 exceptionHandling(data.json())
@@ -33,15 +33,15 @@ function startGame(event) {
             return data.json();
         })
         .then(post => {
-            location.href = $url + "/" + post.gameId;
+            location.href = $url + "/rooms" + "/" + post.roomId;
         })
         .catch(error => {
             console.log(error);
         })
 }
 
-function gameList(event) {
-    location.href = $url;
+function roomList(event) {
+    location.href = $url + "/rooms";
 }
 
 function exceptionHandling(error) {

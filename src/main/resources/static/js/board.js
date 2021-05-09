@@ -1,6 +1,7 @@
 const $url = "http://localhost:8080/games/";
 const $board = document.querySelector("#main");
 const $sidebar = document.querySelector("#menu-container");
+const $roomId = document.querySelector("#room-id").innerHTML;
 const $gameId = document.querySelector("#game-id").innerHTML;
 let $isPlaying = true;
 let $turnOwner = "WHITE";
@@ -20,8 +21,7 @@ async function loadBoard() {
             return data.json();
         })
         .then(pieces => {
-            state();
-            score();
+            gameState()
             history();
 
             for (const pieceInfo of pieces) {
@@ -101,9 +101,8 @@ function onclickSquare(event) {
             })
             .then(history => {
                 movePiece($source, $target);
-                score();
                 if ($isPlaying) {
-                    state();
+                    gameState();
                 }
                 addHistory(history);
                 afterFinishedChangeState()
@@ -178,8 +177,8 @@ function invalidSquare(id) {
         .setAttribute("src", "../images/null.png");
 }
 
-function score() {
-    fetch($url + $gameId + "/score")
+function gameState() {
+    fetch($url + $gameId)
         .then(data => {
             if (!data.ok) {
                 exceptionHandling(data.json());
@@ -187,37 +186,24 @@ function score() {
             }
             return data.json();
         })
-        .then(status => {
-            const $whiteScoreText = status.whiteScore;
-            const $blackScoreText = status.blackScore;
-            $sidebar.querySelector("#white-score").innerHTML = $whiteScoreText;
-            $sidebar.querySelector("#black-score").innerHTML = $blackScoreText;
-        })
-        .catch(error => {
-            console.log(error);
-        })
-}
-
-function state() {
-    fetch($url + $gameId + "/state")
-        .then(data => {
-            if (!data.ok) {
-                exceptionHandling(data.json());
-                throw new Error(data.status);
-            }
-            return data.json();
-        })
-        .then(state => {
-            if (!state.playing) {
-                $isPlaying = state.playing;
+        .then(gameState => {
+            if (!gameState.playing) {
+                $isPlaying = gameState.playing;
                 alert("게임이 종료됐습니다!");
                 document.querySelector("#turn-color").classList.add("hidden");
                 document.querySelector("#turn-number").classList.add("hidden");
                 document.querySelector("#winner").innerHTML = $turnOwner + " 승리!!";
             }
-            $turnOwner = state.turnOwner;
-            document.querySelector("#turn-color").innerHTML = "현재 턴 : " + state.turnOwner;
-            document.querySelector("#turn-number").innerHTML = "턴 횟수 : " + state.turnNumber;
+            $turnOwner = gameState.turnOwner;
+            document.querySelector("#turn-color").innerHTML = "현재 턴 : " + gameState.turnOwner;
+            document.querySelector("#turn-number").innerHTML = "턴 횟수 : " + gameState.turnNumber;
+            const $whiteScoreText = gameState.whiteScore;
+            const $blackScoreText = gameState.blackScore;
+            $sidebar.querySelector("#white-score").innerHTML = $whiteScoreText;
+            $sidebar.querySelector("#black-score").innerHTML = $blackScoreText;
+        })
+        .catch(error => {
+            console.log(error);
         })
 }
 
@@ -275,7 +261,7 @@ function renderHistoryItem(history) {
                         <span>${history.turnNumber}</span>
                     </dt>
                     <dd>
-                        <span>${history.turnOwner} ${history.moveCommand}</span>
+                        <span>${history.turnOwner} move ${history.source} ${history.target}</span>
                     </dd>
                 </dl>
             </li>`;

@@ -8,7 +8,7 @@ $gameList.addEventListener("mouseout", outGame);
 $mainBtn.addEventListener("click", main);
 
 async function loadGameList() {
-    await fetch($url + "/games/playing/true")
+    await fetch($url + "/rooms/playing")
         .then(data => {
             if (!data.ok) {
                 exceptionHandling(data.json());
@@ -16,38 +16,38 @@ async function loadGameList() {
             }
             return data.json();
         })
-        .then(games => {
-            gameList(games);
+        .then(rooms => {
+            gameList(rooms);
         })
         .catch(error => {
             console.log(error);
         })
 }
 
-function gameList(games) {
-    for (const game of games) {
+function gameList(rooms) {
+    for (const game of rooms) {
         addGame(game);
     }
 }
 
-function addGame(game) {
-    document.querySelector("#gameList ol").insertAdjacentHTML("beforeend", renderGame(game));
-    document.getElementById(game.id).addEventListener("click", joinGame);
+function addGame(room) {
+    document.querySelector("#gameList ol").insertAdjacentHTML("beforeend", renderGame(room));
+    document.getElementById(room.roomId).addEventListener("click", joinGame);
 }
 
-function renderGame(game) {
-    return `<li id="${game.id}" class="roomInfo">
+function renderGame(room) {
+    return `<li id="${room.roomId}" class="roomInfo">
                 <dl>
                     <dt>
-                        <span class="roomInfo-roomname">${game.roomName}</span>
+                        <span class="roomInfo-roomname">${room.roomName}</span>
                     </dt>
                 </dl>
                 <dl>
                     <dd>
-                        <span class="roomInfo-username">${game.whiteUsername}</span>
+                        <span class="roomInfo-username">${room.whiteUserName}</span>
                     </dd>
                     <dd>
-                        <span id="roomInfo-blackname" class="roomInfo-username">${game.blackUsername}</span>
+                        <span id="roomInfo-blackname" class="roomInfo-username">${room.blackUserName}</span>
                     </dd>
                 </dl>
             </li>`;
@@ -67,7 +67,6 @@ function joinGame(event) {
     const $password = document.querySelector("#password").value;
 
     const $userInfo = {
-        id: $id,
         username: $username,
         password: $password
     }
@@ -80,7 +79,7 @@ function joinGame(event) {
         body: JSON.stringify($userInfo)
     }
 
-    fetch($url + "/games/" + $id + "/join", option)
+    fetch($url + "/rooms/" + $id + "/join", option)
         .then(data => {
             if (!data.ok) {
                 exceptionHandling(data.json())
@@ -89,7 +88,7 @@ function joinGame(event) {
             return data.json();
         })
         .then(post => {
-            location.href = $url + "/games/" + post.gameId;
+            location.href = $url + "/rooms/" + post.roomId;
         })
         .catch(error => {
             console.log(error)

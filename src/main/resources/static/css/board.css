@@ -19,7 +19,11 @@ body {
     margin-top: 1vw;
 }
 
-#game {
+#game-id {
+    display: none;
+}
+
+#room {
     float: left;
 }
 

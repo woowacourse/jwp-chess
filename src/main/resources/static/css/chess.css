@@ -169,3 +169,107 @@ body {
     color: #F3E4DF;
     text-align: center;
 }
+
+.rooms {
+    text-align: center;
+}
+
+.room-info {
+    padding: 1em 1em 1em 1.3em;
+    border: 1px solid black;
+    position: relative;
+    text-align: left;
+}
+
+.room-info span {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    color: #F3E4DF;
+    background-color: #522632;
+    padding: 5px 15px;
+    border-radius: 15px;
+}
+
+.room-info:hover {
+    background-color: darksalmon;
+}
+
+.create-room-btn, .room-infos-submit {
+    width: 25%;
+    padding: 14px 25px;
+    margin-bottom: 30px;
+    border: none;
+    border-radius: 25px;
+    background-color: #522632;
+    font-size: 1.3em;
+    color: #F3E4DF;
+}
+
+.room-item {
+    list-style: none;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.room-item + .room-item {
+    margin-top: 7px;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.room-infos {
+    margin: 5% 0 5% 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label{
+    font-size: 1.2rem;
+    color: #522632;
+}
+
+input {
+    width: 50%;
+    margin: 3%;
+    padding: 1%;
+
+}

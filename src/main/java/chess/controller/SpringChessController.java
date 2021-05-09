@@ -1,32 +1,63 @@
 package chess.controller;
 
-import chess.service.SpringChessService;
-import chess.webdto.view.ChessGameDto;
-import chess.webdto.view.MoveRequestDto;
+import chess.service.ChessBoardService;
+import chess.service.ChessRoomService;
+import chess.webdto.dao.RoomDto;
+import chess.webdto.view.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/rooms")
 public class SpringChessController {
-    private final SpringChessService springChessService;
+    private final ChessBoardService chessBoardService;
+    private final ChessRoomService chessRoomService;
+    private AllowedUserRequest allowedUserRequest;
 
-    public SpringChessController(SpringChessService springChessService) {
-        this.springChessService = springChessService;
+    public SpringChessController(ChessBoardService chessBoardService, ChessRoomService chessRoomService) {
+        this.chessBoardService = chessBoardService;
+        this.chessRoomService = chessRoomService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RoomDto>> loadRooms() {
+        List<RoomDto> roomDtos = chessRoomService.showRooms();
+        return ResponseEntity.ok().body(roomDtos);
     }
 
     @PostMapping
-    public ChessGameDto startNewGame() {
-        return springChessService.startNewGame();
+    public ResponseEntity<Void> createRoom(@RequestBody RoomNameDto roomNameDto) {
+        long roomId = chessRoomService.createNewRoom(roomNameDto.getRoomName(), roomNameDto.getPassword());
+        chessBoardService.startNewGame(roomId);
+        URI url = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/" + roomId)
+                .build().toUri();
+        return ResponseEntity.created(url).build();
     }
 
-    @GetMapping(value = "/previous")
-    public ChessGameDto loadPrevGame() {
-        return springChessService.loadPreviousGame();
+    @GetMapping(value = "/{roomId}/previous")
+    public ResponseEntity<ChessGameDto> loadPrevGame(@PathVariable long roomId) {
+        ChessGameDto chessGameDto = chessBoardService.loadPreviousGame(roomId);
+        return ResponseEntity.ok().body(chessGameDto);
     }
 
-    @PostMapping(path = "/move")
-    public ChessGameDto move(@RequestBody MoveRequestDto moveRequestDto) {
-        return springChessService.move(moveRequestDto);
+    @PostMapping(path = "/{roomId}/move")
+    public ResponseEntity<ChessGameDto> move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable long roomId) {
+        ChessGameDto chessGameDto = chessBoardService.move(moveRequestDto, roomId);
+        return ResponseEntity.ok().body(chessGameDto);
     }
 
+    @PostMapping(path = "/{roomId}/password")
+    public ResponseEntity<AllowedUserResponse> checkAllowedUser(@PathVariable long roomId, @RequestBody AllowedUserRequest allowedUserRequest) {
+        boolean isAllowed = chessBoardService.checkAllowedUser(roomId, allowedUserRequest.getPassword());
+        if (isAllowed) {
+            return ResponseEntity.ok().body(new AllowedUserResponse(true));
+        }
+        return ResponseEntity.badRequest().body(new AllowedUserResponse(false));
+    }
 }

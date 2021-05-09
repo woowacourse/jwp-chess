@@ -5,12 +5,9 @@ import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.domain.team.PiecePositions;
 import chess.domain.team.Team;
-import chess.webdao.MysqlChessDao;
-import chess.webdto.dao.DaoToPiece;
-import chess.webdto.dao.TeamConstants;
-import chess.webdto.dao.BoardInfosDto;
-import chess.webdto.dao.TeamInfoDto;
-import chess.webdto.dao.TurnDto;
+import chess.webdao.BoardDao;
+import chess.webdao.RoomDao;
+import chess.webdto.dao.*;
 import chess.webdto.view.ChessGameDto;
 import chess.webdto.view.MoveRequestDto;
 import org.springframework.stereotype.Service;
@@ -21,54 +18,53 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional(readOnly = true)
-public class SpringChessService {
-    private final MysqlChessDao chessDao;
+@Transactional
+public class ChessBoardService {
+    private final BoardDao chessDao;
+    private final RoomDao roomDao;
 
-    public SpringChessService(MysqlChessDao chessDao) {
+    public ChessBoardService(BoardDao chessDao, RoomDao roomDao) {
         this.chessDao = chessDao;
+        this.roomDao = roomDao;
     }
 
-
-    @Transactional
-    public ChessGameDto startNewGame() {
-        chessDao.deleteBoardByRoomId(1);
-        chessDao.deleteRoomByRoomId(1);
-
+    public ChessGameDto startNewGame(long roomId) {
+        chessDao.deleteBoardByRoomId(roomId);
         final ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
-        chessDao.createRoom(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying());
 
-        long roomId = 1;
         insertBoardInfos(chessGame, roomId);
         return new ChessGameDto(chessGame);
     }
 
+
     private void insertBoardInfos(ChessGame chessGame, long roomId) {
         Map<Position, Piece> whites = chessGame.currentWhitePiecePosition();
         for (Map.Entry<Position, Piece> whiteInfo : whites.entrySet()) {
-            chessDao.createBoard(new TeamInfoDto(TeamConstants.WHITE, whiteInfo, roomId));
+            chessDao.createBoard(new TeamInfoDto(TeamConstants.WHITE, whiteInfo.getKey(), whiteInfo.getValue(), roomId));
         }
 
         Map<Position, Piece> blacks = chessGame.currentBlackPiecePosition();
         for (Map.Entry<Position, Piece> blackInfo : blacks.entrySet()) {
-            chessDao.createBoard(new TeamInfoDto(TeamConstants.BLACK, blackInfo, roomId));
+            chessDao.createBoard(new TeamInfoDto(TeamConstants.BLACK, blackInfo.getKey(), blackInfo.getValue(), roomId));
         }
     }
 
-    public ChessGameDto loadPreviousGame() {
-        TurnDto turnDto = chessDao.selectTurnByRoomId(1);
-        List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(1);
+    public ChessGameDto loadPreviousGame(long roomId) {
+        TurnDto turnDto = roomDao.selectTurnByRoomId(roomId);
+        List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(roomId);
 
+        if (boardInfos.isEmpty()) {
+            ChessGame chessGame = new ChessGame(Team.blackTeam(), Team.whiteTeam());
+            insertBoardInfos(chessGame, roomId);
+            return new ChessGameDto(chessGame);
+        }
         final ChessGame chessGame = covertToChessGame(turnDto, boardInfos);
-
         return new ChessGameDto(chessGame);
     }
 
-
-    @Transactional
-    public ChessGameDto move(MoveRequestDto moveRequestDto) {
-        TurnDto turnDto = chessDao.selectTurnByRoomId(1);
-        List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(1);
+    public ChessGameDto move(MoveRequestDto moveRequestDto, long roomId) {
+        TurnDto turnDto = roomDao.selectTurnByRoomId(roomId);
+        List<BoardInfosDto> boardInfos = chessDao.selectBoardInfosByRoomId(roomId);
 
         final ChessGame chessGame = covertToChessGame(turnDto, boardInfos);
 
@@ -76,9 +72,9 @@ public class SpringChessService {
         String destPosition = moveRequestDto.getDestination();
         chessGame.move(Position.of(startPosition), Position.of(destPosition));
 
-        chessDao.deleteBoardByRoomId(1);
-        chessDao.changeTurnByRoomId(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying(), 1);
-        insertBoardInfos(chessGame, 1);
+        chessDao.deleteBoardByRoomId(roomId);
+        roomDao.changeTurnByRoomId(TeamConstants.convert(chessGame.isWhiteTeamTurn()), chessGame.isPlaying(), roomId);
+        insertBoardInfos(chessGame, roomId);
 
         return new ChessGameDto(chessGame);
     }
@@ -89,11 +85,9 @@ public class SpringChessService {
         for (BoardInfosDto boardInfo : boardInfos) {
             sortBlackAndWhite(whites, blacks, boardInfo);
         }
-        PiecePositions whitePiecePosition = new PiecePositions(whites);
-        PiecePositions blackPiecePosition = new PiecePositions(blacks);
 
-        Team blackTeam = new Team(blackPiecePosition);
-        Team whiteTeam = new Team(whitePiecePosition);
+        Team blackTeam = new Team(new PiecePositions(blacks));
+        Team whiteTeam = new Team(new PiecePositions(whites));
 
         return new ChessGame(blackTeam, whiteTeam, currentTurn(blackTeam, whiteTeam, turnDto.getTurn()), turnDto.getIsPlaying());
     }
@@ -115,5 +109,8 @@ public class SpringChessService {
         return black;
     }
 
-
+    public boolean checkAllowedUser(long roomId, String password) {
+        int result = roomDao.checkPassword(roomId, password);
+        return result == 1;
+    }
 }

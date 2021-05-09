@@ -3,8 +3,6 @@ package chess.webdto.dao;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 
-import java.util.Map;
-
 public class TeamInfoDto {
     private String team;
     private String position;
@@ -12,11 +10,11 @@ public class TeamInfoDto {
     private boolean isFirstMoved;
     private long roomId;
 
-    public TeamInfoDto(String team, Map.Entry<Position, Piece> infos, long roomId) {
+    public TeamInfoDto(String team, Position position, Piece piece, long roomId) {
         this.team = team;
-        this.position = infos.getKey().getPositionInitial();
-        this.piece = convert(infos.getValue());
-        this.isFirstMoved = infos.getValue().isFirstMove();
+        this.position = position.getPositionInitial();
+        this.piece = convert(piece);
+        this.isFirstMoved = piece.isFirstMove();
         this.roomId = roomId;
     }
 

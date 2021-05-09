@@ -12,12 +12,18 @@ export const player2 = document.getElementById("player2");
 let start = undefined;
 let destination = undefined;
 
+function getRoomId() {
+    const path = window.location.pathname;
+    const roomId = path.split('/')[2];
+    return roomId;
+}
+
 export function addChessBoardEvent() {
     chessBoard.addEventListener('click', function (e) {
         if (e.target && e.target.nodeName === "IMG") {
             if (start === undefined) {
                 start = e.target;
-                start.style = "background-color: yellow";
+                start.style = "background-color: darksalmon";
             } else {
                 destination = e.target;
                 console.log(start.parentNode.id + "-->" + destination.parentNode.id);
@@ -48,7 +54,7 @@ function serverMoveRequest(start, destination) {
         start: start,
         destination: destination
     }
-    apiService.moveSourceToTarget(moveRequest)
+    apiService.moveSourceToTarget(moveRequest, getRoomId())
         .then(data => {
             drawPieceImage(data);
             updateScoreUI(data.teamScore.white, data.teamScore.black);

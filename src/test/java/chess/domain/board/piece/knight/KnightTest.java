@@ -35,9 +35,8 @@ class KnightTest {
     @Test
     @DisplayName("getInstanceOf의 인자로 NONE 을 넘기면 예외가 발생한다.")
     void getInstanceOfThrowExceptionTest() {
-        assertThatThrownBy(() -> {
-            Knight.getInstanceOf(Owner.NONE);
-        }).isInstanceOf(IllegalArgumentException.class).hasMessage("Invalid Knight");
+        assertThatThrownBy(() -> Knight.getInstanceOf(Owner.NONE))
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("Invalid Knight");
     }
 
     @Test

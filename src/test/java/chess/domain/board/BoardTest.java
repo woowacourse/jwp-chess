@@ -96,29 +96,6 @@ public class BoardTest {
         assertThat(isFalse).isFalse();
     }
 
-    @Test
-    @DisplayName("보드 리셋 시킬 수 있다.")
-    void resetBoardTest() {
-        board.move(Position.of("a2"), Position.of("a4"));
-        List<Piece> pieces = new ArrayList<>();
-
-        pieces.addAll(Arrays.asList(getPiecesOfFirstLine(Owner.BLACK)));
-        pieces.addAll(Arrays.asList(getPiecesOfSecondLine(Owner.BLACK)));
-        for (int i = 0; i < 4; i++) {
-            pieces.addAll(Arrays.asList(getEmptyLine()));
-        }
-        pieces.addAll(Arrays.asList(getPiecesOfSecondLine(Owner.WHITE)));
-        pieces.addAll(Arrays.asList(getPiecesOfFirstLine(Owner.WHITE)));
-
-        board.resetBoard();
-
-        List<Piece> boardPieces = board.pieces();
-
-        for (int i = 0; i < 64; i++) {
-            assertThat(boardPieces.get(i)).isEqualTo(pieces.get(i));
-        }
-    }
-
     private static Piece[] getPiecesOfFirstLine(final Owner owner) {
         return new Piece[]{
                 Rook.getInstanceOf(owner),

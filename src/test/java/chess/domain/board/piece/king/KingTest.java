@@ -37,9 +37,8 @@ class KingTest {
     @Test
     @DisplayName("getInstanceOf의 인자로 NONE 을 넘기면 예외가 발생한다.")
     void getInstanceOfThrowExceptionTest() {
-        assertThatThrownBy(() -> {
-            King.getInstanceOf(Owner.NONE);
-        }).isInstanceOf(IllegalArgumentException.class).hasMessage("Invalid King");
+        assertThatThrownBy(() -> King.getInstanceOf(Owner.NONE)).isInstanceOf(IllegalArgumentException.class).hasMessage("Invalid King");
+
     }
 
     @Test

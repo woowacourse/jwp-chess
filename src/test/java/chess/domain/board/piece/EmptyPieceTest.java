@@ -1,7 +1,7 @@
 package chess.domain.board.piece;
 
-import chess.domain.board.position.Position;
 import chess.domain.board.piece.pawn.Pawn;
+import chess.domain.board.position.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,9 +36,9 @@ class EmptyPieceTest {
     @Test
     @DisplayName("EmptyPiece 는 isReachable 메서드를 사용할 수 없다.")
     void isReachableTest() {
-        assertThatThrownBy(() -> {
-            emptyPiece.isReachable(Position.of("a1"), Position.of("a2"), Pawn.getInstanceOf(Owner.WHITE));
-        }).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> emptyPiece.isReachable(
+                Position.of("a1"), Position.of("a2"), Pawn.getInstanceOf(Owner.WHITE)))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test

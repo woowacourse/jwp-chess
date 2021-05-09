@@ -84,28 +84,4 @@ class BoardInitializerTest {
             assertThat(boardPieces.get(i)).isEqualTo(pieces.get(i));
         }
     }
-
-    @Test
-    @DisplayName("보드 리셋 시킬 수 있다.")
-    void resetBoardTest() {
-        board.getBoard().put(Position.of("a1"), EmptyPiece.getInstance());
-
-        List<Piece> pieces = new ArrayList<>();
-
-        pieces.addAll(Arrays.asList(getPiecesOfFirstLine(Owner.BLACK)));
-        pieces.addAll(Arrays.asList(getPiecesOfSecondLine(Owner.BLACK)));
-        for (int i = 0; i < 4; i++) {
-            pieces.addAll(Arrays.asList(getEmptyLine()));
-        }
-        pieces.addAll(Arrays.asList(getPiecesOfSecondLine(Owner.WHITE)));
-        pieces.addAll(Arrays.asList(getPiecesOfFirstLine(Owner.WHITE)));
-
-        board.resetBoard();
-
-        List<Piece> boardPieces = board.pieces();
-
-        for (int i = 0; i < 64; i++) {
-            assertThat(boardPieces.get(i)).isEqualTo(pieces.get(i));
-        }
-    }
 }

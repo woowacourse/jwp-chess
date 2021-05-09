@@ -43,9 +43,8 @@ class OwnerTest {
     @Test
     @DisplayName("NONE 에 isEnemy를 사용하면 예외가 발생한다.")
     void noneIsEnemyThrowExceptionTest() {
-        assertThatThrownBy(() -> {
-            Owner.NONE.isEnemy(Owner.BLACK);
-        }).isInstanceOf(IllegalArgumentException.class).hasMessage("적이 존재하지 않는 색입니다.");
+        assertThatThrownBy(() -> Owner.NONE.isEnemy(Owner.BLACK))
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("적이 존재하지 않는 색입니다.");
     }
 
     @ParameterizedTest(name = "인자로 받는 Owner가 같은 색깔인지 판단한다.")

@@ -37,9 +37,8 @@ class QueenTest {
     @Test
     @DisplayName("getInstanceOf의 인자로 NONE을 넘기면 예외가 발생한다.")
     void getInstanceOfThrowExceptionTest() {
-        assertThatThrownBy(() -> {
-            Queen.getInstanceOf(Owner.NONE);
-        }).isInstanceOf(IllegalArgumentException.class).hasMessage("Invalid Queen");
+        assertThatThrownBy(() -> Queen.getInstanceOf(Owner.NONE))
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("Invalid Queen");
     }
 
     @Test

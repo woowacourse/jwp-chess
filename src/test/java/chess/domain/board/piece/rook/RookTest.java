@@ -36,9 +36,8 @@ class RookTest {
     @Test
     @DisplayName("getInstanceOf의 인자로 NONE을 넘기면 예외가 발생한다.")
     void getInstanceOfThrowExceptionTest() {
-        assertThatThrownBy(() -> {
-            Rook.getInstanceOf(Owner.NONE);
-        }).isInstanceOf(IllegalArgumentException.class).hasMessage("Invalid Rook");
+        assertThatThrownBy(() -> Rook.getInstanceOf(Owner.NONE))
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("Invalid Rook");
     }
 
     @Test

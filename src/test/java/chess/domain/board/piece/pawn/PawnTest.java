@@ -43,9 +43,8 @@ class PawnTest {
     @Test
     @DisplayName("getInstanceOf의 인자로 NONE을 넘기면 예외가 발생한다.")
     void getInstanceOfThrowExceptionTest() {
-        assertThatThrownBy(() -> {
-            Pawn.getInstanceOf(Owner.NONE);
-        }).isInstanceOf(IllegalArgumentException.class).hasMessage("Invalid Pawn");
+        assertThatThrownBy(() -> Pawn.getInstanceOf(Owner.NONE))
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("Invalid Pawn");
     }
 
     @Test

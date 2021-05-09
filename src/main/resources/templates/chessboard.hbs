@@ -152,8 +152,6 @@
     </tbody>
 </table>
 
-<div hidden id="gameId">{{gameId}}</div>
-
 차례
 <div id="turn"></div>
 
@@ -165,5 +163,9 @@ WhiteScore
 <button id="home">HOME</button>
 
 </body>
-<script src="/script/chessboard.js"></script>
+<script>
+    const gameId = {{gameId}};
+</script>
+<script src="/script/chessboard.js">
+</script>
 </html>

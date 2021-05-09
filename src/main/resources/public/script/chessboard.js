@@ -3,8 +3,6 @@ window.onload = () => {
 }
 
 async function init() {
-    this.gameId = document.getElementById('gameId').innerText;
-
     const pieces = document.getElementsByClassName('piece');
     Array.from(pieces).forEach((el) => {
         el.addEventListener('click', click);
@@ -13,7 +11,7 @@ async function init() {
     const home = document.getElementById('home')
     home.addEventListener('click', () => window.location.href = '/')
 
-    let chessStatus = await start()
+    let chessStatus = await load()
     chessStatus = await chessStatus.json()
     await setBoard(chessStatus)
     await setScore(chessStatus)
@@ -26,13 +24,11 @@ let target = "";
 
 async function click(event) {
     if (state === "non-clicked") {
-        source = event.target.id;
         state = "clicked";
         return;
     }
 
     if (state === "clicked") {
-        console.log(event.target.id)
         await clickWhereToMove(event.target);
         source = "";
         target = "";
@@ -47,7 +43,7 @@ async function clickWhereToMove(eventTarget) {
 
 async function submitMove(src, tar) {
     await fetch(
-        `/games/${this.gameId}/move`, {
+        `/games/${gameId}/move`, {
             method: 'POST',
             body: JSON.stringify({
                 from: src,
@@ -63,14 +59,14 @@ async function submitMove(src, tar) {
                 response.text()
                     .then(text => alert(text))
             }
-            location.replace(`/games/${this.gameId}`)
+            location.replace(`/games/${gameId}`)
         }
     )
 }
 
-async function start() {
+async function load() {
     return await fetch(
-        `/games/${this.gameId}/load`
+        `/games/${gameId}/load`
     )
 }
 

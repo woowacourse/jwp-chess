@@ -50,7 +50,6 @@ function renderGameList() {
 
 async function createGame() {
     const gameName = document.getElementById('gameName').value;
-    console.log(gameName)
     await fetch(
         `/games/`,
         {

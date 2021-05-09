@@ -25,10 +25,8 @@ public class ChessService {
 
     public void move(Long gameId, MoveRequest moveRequest) {
         Game game = loadGame(gameId);
-        String from = moveRequest.getFrom();
-        String to = moveRequest.getTo();
-        game.move(new MoveRequest(from, to));
-        commandDao.insert(gameId, from, to);
+        game.move(moveRequest);
+        commandDao.insert(gameId, moveRequest.getFrom(), moveRequest.getTo());
     }
 
     public GameStatusDto load(Long gameId) {

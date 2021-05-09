@@ -1,6 +1,3 @@
-let startBtn = document.getElementById("startBtn");
-let loadBtn = document.getElementById("loadBtn");
-
 import {chessBoard, gameResultWindow, initChessBoard} from "./initialize.js";
 import {addChessBoardEvent, checkIsPlaying, player1, player2} from "./movement.js";
 import ChessService from "./ChessService.js";
@@ -43,11 +40,8 @@ function loadPrevGame() {
 }
 
 function initializeChessBoard(data) {
-    console.log(data);
     initChessBoard(data);
     addChessBoardEvent();
-    startBtn.style.display = "none";
-    loadBtn.style.display = "none";
     chessBoard.style.display = "flex";
     player1.style.display = "flex";
     player2.style.display = "flex";

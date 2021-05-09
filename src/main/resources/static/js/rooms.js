@@ -15,8 +15,8 @@ function drawRooms(datas) {
     let lists = ""
     for (let i in datas) {
         lists +=
-            `<li class="room_item" id=${datas[i].roomId}>
-                <div class="room_info" >
+            `<li class="room-item" id=${datas[i].roomId}>
+                <div class="room-info" >
                     <strong>Title: ${datas[i].name}</strong> <span>${datas[i].isPlaying ? "진행중" : "종료"}</span>
                 </div>
             </li>`
@@ -33,12 +33,6 @@ function moveToPreviousBoard(event) {
 
 function showModal() {
     $modal.style.display = "block";
-    //const roomName = prompt('방 이름을 입력해주세요~ :)', '80글자까지만 입력해주세요~');
-    // if (roomName === null) {
-    //     return;
-    // }
-    // apiService.createRoom({roomName})
-    //   .then(response => window.location.href = response.headers.get('Location'))
 }
 
 apiService.showRooms()
@@ -59,17 +53,13 @@ window.onclick = function (event) {
 }
 
 $createBtn.addEventListener("click", function () {
-        console.log("hi")
         const roomName = $roomName.value;
         const password = $password.value;
-        if (roomName === null) {
+        if (roomName === null || password === null) {
              return;
         }
         apiService.createRoom({roomName, password})
            .then(response => window.location.href = response.headers.get('Location'))
-
-
-
     }
 )
 ;

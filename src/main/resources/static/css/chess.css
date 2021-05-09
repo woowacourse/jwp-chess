@@ -174,14 +174,14 @@ body {
     text-align: center;
 }
 
-.room_info {
+.room-info {
     padding: 1em 1em 1em 1.3em;
     border: 1px solid black;
     position: relative;
     text-align: left;
 }
 
-.room_info span {
+.room-info span {
     position: absolute;
     top: 50%;
     right: 20px;
@@ -192,7 +192,7 @@ body {
     border-radius: 15px;
 }
 
-.room_info:hover {
+.room-info:hover {
     background-color: darksalmon;
 }
 
@@ -207,13 +207,13 @@ body {
     color: #F3E4DF;
 }
 
-.room_item {
+.room-item {
     list-style: none;
     width: 50%;
     margin: 0 auto;
 }
 
-.room_item + .room_item {
+.room-item + .room-item {
     margin-top: 7px;
 }
 

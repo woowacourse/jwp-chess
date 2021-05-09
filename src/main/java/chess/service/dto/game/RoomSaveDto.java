@@ -1,12 +1,18 @@
 package chess.service.dto.game;
 
-public class GameSaveInfoDto {
+public class RoomSaveDto {
 
     private String roomName;
     private String whiteUsername;
     private String whitePassword;
 
-    public GameSaveInfoDto() {
+    public RoomSaveDto() {
+    }
+
+    public RoomSaveDto(String roomName, String whiteUsername, String whitePassword) {
+        this.roomName = roomName;
+        this.whiteUsername = whiteUsername;
+        this.whitePassword = whitePassword;
     }
 
     public String getRoomName() {

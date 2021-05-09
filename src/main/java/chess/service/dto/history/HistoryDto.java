@@ -1,12 +1,13 @@
-package chess.dao.dto.history;
+package chess.service.dto.history;
 
-import chess.domain.entity.History;
+import chess.domain.history.History;
 
 public class HistoryDto {
 
     private Long id;
     private Long gameId;
-    private String moveCommand;
+    private String source;
+    private String target;
     private String turnOwner;
     private int turnNumber;
     private boolean isPlaying;
@@ -14,18 +15,20 @@ public class HistoryDto {
     public HistoryDto() {
     }
 
-    public HistoryDto(Long id, Long gameId, String moveCommand, String turnOwner, int turnNumber, boolean isPlaying) {
-        this.id = id;
+    public HistoryDto(Long gameId, String source, String target, String turnOwner, int turnNumber, boolean isPlaying) {
         this.gameId = gameId;
-        this.moveCommand = moveCommand;
+        this.source = source;
+        this.target = target;
         this.turnOwner = turnOwner;
         this.turnNumber = turnNumber;
         this.isPlaying = isPlaying;
     }
 
-    public HistoryDto(Long gameId, String moveCommand, String turnOwner, int turnNumber, boolean isPlaying) {
+    public HistoryDto(Long id, Long gameId, String source, String target, String turnOwner, int turnNumber, boolean isPlaying) {
+        this.id = id;
         this.gameId = gameId;
-        this.moveCommand = moveCommand;
+        this.source = source;
+        this.target = target;
         this.turnOwner = turnOwner;
         this.turnNumber = turnNumber;
         this.isPlaying = isPlaying;
@@ -33,10 +36,11 @@ public class HistoryDto {
 
     public static HistoryDto from(final History history) {
         return new HistoryDto(
-                history.getGameId(),
-                history.getMoveCommand(),
-                history.getTurnOwner(),
-                history.getTurnNumber(),
+                history.gameId(),
+                history.sourceToString(),
+                history.targetToString(),
+                history.turnOwnerName(),
+                history.turnNumber(),
                 history.isPlaying()
         );
     }
@@ -57,12 +61,20 @@ public class HistoryDto {
         this.gameId = gameId;
     }
 
-    public String getMoveCommand() {
-        return moveCommand;
+    public String getSource() {
+        return source;
     }
 
-    public void setMoveCommand(String moveCommand) {
-        this.moveCommand = moveCommand;
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
     }
 
     public String getTurnOwner() {

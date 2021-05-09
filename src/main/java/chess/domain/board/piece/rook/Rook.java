@@ -12,12 +12,12 @@ public abstract class Rook extends Piece {
 
     private static final int MAX_DISTANCE = 7;
 
-    private Rook(final Owner owner, final Score score, final List<Direction> directions) {
-        super(owner, score, directions);
+    private Rook(final Owner owner, final String symbol, final List<Direction> directions) {
+        super(owner, symbol, directions);
     }
 
-    protected Rook(final Owner owner) {
-        this(owner, Score.ROOK_SCORE, Direction.straightDirections());
+    protected Rook(final Owner owner, final String symbol) {
+        this(owner, symbol, Direction.straightDirections());
     }
 
     public static Rook getInstanceOf(final Owner owner) {
@@ -30,6 +30,11 @@ public abstract class Rook extends Piece {
         }
 
         throw new IllegalArgumentException("Invalid Rook");
+    }
+
+    @Override
+    public Score score() {
+        return Score.ROOK_SCORE;
     }
 
     @Override

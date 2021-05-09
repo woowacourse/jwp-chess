@@ -9,15 +9,14 @@ import chess.domain.board.piece.Score;
 import java.util.List;
 
 public abstract class Bishop extends Piece {
-
     private static final int MAX_DISTANCE = 7;
 
-    private Bishop(final Owner owner, final Score score, final List<Direction> directions) {
-        super(owner, score, directions);
+    private Bishop(final Owner owner, final String symbol, final List<Direction> directions) {
+        super(owner, symbol, directions);
     }
 
-    public Bishop(final Owner owner) {
-        this(owner, Score.BISHOP_SCORE, Direction.diagonalDirections());
+    public Bishop(final Owner owner, final String symbol) {
+        this(owner, symbol, Direction.diagonalDirections());
     }
 
     public static Bishop getInstanceOf(final Owner owner) {
@@ -28,8 +27,12 @@ public abstract class Bishop extends Piece {
         if (owner.equals(Owner.WHITE)) {
             return WhiteBishop.getInstance();
         }
-
         throw new IllegalArgumentException("Invalid Bishop");
+    }
+
+    @Override
+    public Score score() {
+        return Score.BISHOP_SCORE;
     }
 
     @Override

@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class Piece extends Entity<Long> {
+public abstract class Piece {
     private final Owner owner;
-    private final Score score;
+    private final String symbol;
     private final List<Direction> directions;
 
-    public Piece(final Owner owner, final Score score, final List<Direction> directions) {
+    public Piece(Owner owner, String symbol, List<Direction> directions) {
         this.owner = owner;
+        this.symbol = symbol;
         this.directions = directions;
-        this.score = score;
     }
 
     public List<Path> movablePath(final Position source) {
@@ -56,6 +56,10 @@ public abstract class Piece extends Entity<Long> {
         return false;
     }
 
+    public boolean isOwnersKing(Owner owner) {
+        return false;
+    }
+
     public boolean isEmptyPiece() {
         return false;
     }
@@ -64,13 +68,13 @@ public abstract class Piece extends Entity<Long> {
         return this.owner.isEnemy(other.owner);
     }
 
-    public final Score score() {
-        return this.score;
-    }
+    public String getSymbol() {
+        return this.symbol;
+    };
+
+    public abstract Score score();
 
     public abstract int maxDistance();
 
     public abstract boolean isReachable(final Position source, final Position target, final Piece targetPiece);
-
-    public abstract String getSymbol();
 }

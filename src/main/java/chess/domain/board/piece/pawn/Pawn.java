@@ -1,11 +1,11 @@
 package chess.domain.board.piece.pawn;
 
-import chess.domain.board.position.Position;
-import chess.domain.board.position.Vertical;
-import chess.domain.direction.Direction;
 import chess.domain.board.piece.Owner;
 import chess.domain.board.piece.Piece;
 import chess.domain.board.piece.Score;
+import chess.domain.board.position.Position;
+import chess.domain.board.position.Vertical;
+import chess.domain.direction.Direction;
 
 import java.util.List;
 
@@ -13,12 +13,8 @@ public abstract class Pawn extends Piece {
 
     private static final int MAX_DISTANCE = 2;
 
-    private Pawn(final Owner owner, final Score score, final List<Direction> directions) {
-        super(owner, score, directions);
-    }
-
-    protected Pawn(final Owner owner, final List<Direction> directions) {
-        this(owner, Score.PAWN_SCORE, directions);
+    protected Pawn(final Owner owner, final String symbol, final List<Direction> directions) {
+        super(owner, symbol, directions);
     }
 
     public static Pawn getInstanceOf(final Owner owner) {
@@ -43,6 +39,11 @@ public abstract class Pawn extends Piece {
             return source.getDistance(target) == 1;
         }
         return false;
+    }
+
+    @Override
+    public Score score() {
+        return Score.PAWN_SCORE;
     }
 
     @Override

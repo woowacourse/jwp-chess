@@ -12,12 +12,12 @@ public abstract class Knight extends Piece {
 
     private static final int MAX_DISTANCE = 1;
 
-    private Knight(final Owner owner, final Score score, final List<Direction> directions) {
-        super(owner, score, directions);
+    private Knight(final Owner owner, final String symbol, final List<Direction> directions) {
+        super(owner, symbol, directions);
     }
 
-    protected Knight(final Owner owner) {
-        this(owner, Score.KNIGHT_SCORE, Direction.knightDirections());
+    public Knight(final Owner owner, String symbol) {
+        this(owner, symbol, Direction.knightDirections());
     }
 
     public static Knight getInstanceOf(final Owner owner) {
@@ -28,6 +28,11 @@ public abstract class Knight extends Piece {
             return WhiteKnight.getInstance();
         }
         throw new IllegalArgumentException("Invalid Knight");
+    }
+
+    @Override
+    public Score score() {
+        return Score.KNIGHT_SCORE;
     }
 
     @Override

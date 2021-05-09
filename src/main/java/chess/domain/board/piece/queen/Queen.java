@@ -12,12 +12,12 @@ public abstract class Queen extends Piece {
 
     private static final int MAX_DISTANCE = 7;
 
-    private Queen(final Owner owner, final Score score, final List<Direction> directions) {
-        super(owner, score, directions);
+    private Queen(final Owner owner, final String symbol, final List<Direction> directions) {
+        super(owner, symbol, directions);
     }
 
-    protected Queen(final Owner owner) {
-        this(owner, Score.QUEEN_SCORE, Direction.allDirections());
+    protected Queen(final Owner owner, final String symbol) {
+        this(owner, symbol, Direction.allDirections());
     }
 
     public static Queen getInstanceOf(final Owner owner) {
@@ -30,6 +30,11 @@ public abstract class Queen extends Piece {
         }
 
         throw new IllegalArgumentException("Invalid Queen");
+    }
+
+    @Override
+    public Score score() {
+        return Score.QUEEN_SCORE;
     }
 
     @Override

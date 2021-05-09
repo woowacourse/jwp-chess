@@ -11,7 +11,7 @@ public class EmptyPiece extends Piece {
     private static final EmptyPiece EMPTY_PIECE = new EmptyPiece();
 
     private EmptyPiece() {
-        super(Owner.NONE, Score.ZERO_SCORE, Collections.emptyList());
+        super(Owner.NONE, ".", Collections.emptyList());
     }
 
     public static EmptyPiece getInstance() {
@@ -29,12 +29,14 @@ public class EmptyPiece extends Piece {
     }
 
     @Override
+    public Score score() {
+        return Score.ZERO_SCORE;
+    }
+
+    @Override
     public boolean isEmptyPiece() {
         return true;
     }
 
-    @Override
-    public String getSymbol() {
-        return ".";
-    }
+
 }

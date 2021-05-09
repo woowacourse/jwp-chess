@@ -6,10 +6,11 @@ import chess.domain.board.piece.Owner;
 
 public class WhitePawn extends Pawn {
 
+    private static final String SYMBOL = "p";
     private static final WhitePawn WHITE_PAWN = new WhitePawn();
 
     private WhitePawn() {
-        super(Owner.WHITE, Direction.whitePawnDirections());
+        super(Owner.WHITE, SYMBOL, Direction.whitePawnDirections());
     }
 
     public static WhitePawn getInstance() {
@@ -19,10 +20,5 @@ public class WhitePawn extends Pawn {
     @Override
     public boolean isFirstLine(final Vertical vertical) {
         return Vertical.TWO.equals(vertical);
-    }
-
-    @Override
-    public String getSymbol() {
-        return "p";
     }
 }

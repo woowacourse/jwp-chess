@@ -12,12 +12,12 @@ public abstract class King extends Piece {
 
     private static final int MAX_DISTANCE = 1;
 
-    private King(final Owner owner, final Score score, final List<Direction> directions) {
-        super(owner, score, directions);
+    private King(final Owner owner, final String symbol, final List<Direction> directions) {
+        super(owner, symbol, directions);
     }
 
-    protected King(final Owner owner) {
-        this(owner, Score.ZERO_SCORE, Direction.allDirections());
+    public King(final Owner owner, final String symbol) {
+        this(owner, symbol, Direction.allDirections());
     }
 
     public static King getInstanceOf(final Owner owner) {
@@ -33,6 +33,11 @@ public abstract class King extends Piece {
     }
 
     @Override
+    public Score score() {
+        return Score.ZERO_SCORE;
+    }
+
+    @Override
     public int maxDistance() {
         return MAX_DISTANCE;
     }
@@ -40,5 +45,10 @@ public abstract class King extends Piece {
     @Override
     public boolean isReachable(final Position source, final Position target, final Piece targetPiece) {
         return true;
+    }
+
+    @Override
+    public boolean isOwnersKing(Owner owner) {
+        return this.isSameOwner(owner);
     }
 }

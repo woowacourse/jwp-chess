@@ -12,5 +12,7 @@ public class Entity<E> {
 
     public E getId() {
         return this.id;
-    };
+    }
+
+    ;
 }

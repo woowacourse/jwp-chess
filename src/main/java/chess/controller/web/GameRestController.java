@@ -1,14 +1,11 @@
 package chess.controller.web;
 
 import chess.controller.web.dto.game.GameResponseDto;
-import chess.controller.web.dto.game.RoomJoinRequestDto;
 import chess.controller.web.dto.history.HistoryResponseDto;
 import chess.controller.web.dto.move.MoveRequestDto;
 import chess.controller.web.dto.move.PathResponseDto;
 import chess.controller.web.dto.piece.PieceResponseDto;
-import chess.controller.web.dto.room.RoomIdResponseDto;
 import chess.service.*;
-import chess.service.dto.game.RoomJoinDto;
 import chess.service.dto.history.HistoryDto;
 import chess.service.dto.move.MoveDto;
 import chess.service.dto.piece.PieceDto;

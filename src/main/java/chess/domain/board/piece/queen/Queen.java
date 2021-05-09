@@ -1,10 +1,10 @@
 package chess.domain.board.piece.queen;
 
-import chess.domain.board.position.Position;
-import chess.domain.direction.Direction;
 import chess.domain.board.piece.Owner;
 import chess.domain.board.piece.Piece;
 import chess.domain.board.piece.Score;
+import chess.domain.board.position.Position;
+import chess.domain.direction.Direction;
 
 import java.util.List;
 

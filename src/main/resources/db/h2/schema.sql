@@ -11,8 +11,8 @@ CREATE TABLE room
 (
     id            INTEGER IDENTITY PRIMARY KEY,
     game_id       INTEGER,
-    name     VARCHAR(10) NOT NULL,
-    white_user_id INTEGER      NOT NULL,
+    name          VARCHAR(10) NOT NULL,
+    white_user_id INTEGER     NOT NULL,
     black_user_id INTEGER
 );
 CREATE
@@ -24,7 +24,7 @@ CREATE
 CREATE TABLE user
 (
     id       INTEGER IDENTITY PRIMARY KEY,
-    name VARCHAR(45) NOT NULL,
+    name     VARCHAR(45) NOT NULL,
     password VARCHAR(15) NOT NULL
 );
 CREATE
@@ -35,12 +35,12 @@ CREATE
 -- -----------------------------------------------------
 CREATE TABLE game
 (
-    id       INTEGER IDENTITY PRIMARY KEY,
+    id          INTEGER IDENTITY PRIMARY KEY,
     turn_owner  VARCHAR(45) NOT NULL,
     turn_number INTEGER     NOT NULL,
     playing     BIT         NOT NULL,
-    white_score DOUBLE  NOT NULL,
-    black_score DOUBLE  NOT NULL
+    white_score DOUBLE      NOT NULL,
+    black_score DOUBLE      NOT NULL
 );
 CREATE
     INDEX game_id ON game (id);

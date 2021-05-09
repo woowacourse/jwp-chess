@@ -1,8 +1,5 @@
 package chess.domain.board;
 
-import chess.domain.board.position.Horizontal;
-import chess.domain.board.position.Position;
-import chess.domain.board.position.Vertical;
 import chess.domain.board.piece.EmptyPiece;
 import chess.domain.board.piece.Owner;
 import chess.domain.board.piece.Piece;
@@ -12,6 +9,9 @@ import chess.domain.board.piece.knight.Knight;
 import chess.domain.board.piece.pawn.Pawn;
 import chess.domain.board.piece.queen.Queen;
 import chess.domain.board.piece.rook.Rook;
+import chess.domain.board.position.Horizontal;
+import chess.domain.board.position.Position;
+import chess.domain.board.position.Vertical;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;

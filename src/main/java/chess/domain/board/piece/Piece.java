@@ -1,6 +1,5 @@
 package chess.domain.board.piece;
 
-import chess.domain.Entity;
 import chess.domain.board.position.Path;
 import chess.domain.board.position.Position;
 import chess.domain.direction.Direction;
@@ -70,7 +69,9 @@ public abstract class Piece {
 
     public String getSymbol() {
         return this.symbol;
-    };
+    }
+
+    ;
 
     public abstract Score score();
 

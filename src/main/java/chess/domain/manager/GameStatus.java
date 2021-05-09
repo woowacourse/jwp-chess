@@ -1,11 +1,11 @@
 package chess.domain.manager;
 
 import chess.domain.board.Board;
-import chess.domain.board.position.Horizontal;
-import chess.domain.board.position.Vertical;
 import chess.domain.board.piece.Owner;
 import chess.domain.board.piece.Piece;
 import chess.domain.board.piece.Score;
+import chess.domain.board.position.Horizontal;
+import chess.domain.board.position.Vertical;
 
 import java.util.Arrays;
 

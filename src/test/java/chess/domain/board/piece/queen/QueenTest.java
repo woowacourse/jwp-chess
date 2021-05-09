@@ -1,9 +1,9 @@
 package chess.domain.board.piece.queen;
 
-import chess.domain.board.position.Path;
-import chess.domain.board.position.Position;
 import chess.domain.board.piece.Owner;
 import chess.domain.board.piece.Piece;
+import chess.domain.board.position.Path;
+import chess.domain.board.position.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

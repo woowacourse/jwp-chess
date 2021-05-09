@@ -49,7 +49,7 @@ public class User extends Entity<Long> {
     }
 
     public void checkPassword(String inputPassword) {
-        if(isDifferentPassword(inputPassword)) {
+        if (isDifferentPassword(inputPassword)) {
             throw new PasswordMissMatchException("비밀번호가 일치하지 않습니다!");
         }
     }

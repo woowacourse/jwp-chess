@@ -1,7 +1,6 @@
 package chess.domain.board.piece.king;
 
 import chess.domain.board.piece.Owner;
-import chess.domain.board.piece.bishop.WhiteBishop;
 
 public class WhiteKing extends King {
 

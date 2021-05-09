@@ -12,7 +12,6 @@ import org.springframework.test.context.TestConstructor;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJdbcTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -63,7 +62,7 @@ class JdbcRoomRepositoryTest {
         //when
         Long updateBlackUserId = 556L;
         roomRepository.updateBlackUser(updateBlackUserId, gameId);
-        Room updatedRoom =  roomRepository.findById(roomId).get();
+        Room updatedRoom = roomRepository.findById(roomId).get();
 
         //then
         assertThat(updatedRoom.blackUserId()).isEqualTo(updateBlackUserId);
@@ -81,7 +80,7 @@ class JdbcRoomRepositoryTest {
         Long roomId = roomRepository.save(room);
 
         //when
-        Room findRoom =  roomRepository.findById(roomId).get();
+        Room findRoom = roomRepository.findById(roomId).get();
 
         //then
         assertThat(expectedRoomName).isEqualTo(findRoom.name());

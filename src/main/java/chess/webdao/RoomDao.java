@@ -17,7 +17,8 @@ public class RoomDao {
     private static final String UPDATE_ROOM_BY_ROOM_ID = "UPDATE room SET turn = (?), is_playing = (?) WHERE room_id = (?)";
     private static final String SELECT_ROOM_BY_ROOM_ID = "SELECT * FROM room WHERE room_id = (?)";
     private static final String SELECT_ALL_ROOMS = "SELECT * FROM room";
-    private static final String INSERT_ROOM = "INSERT INTO room (turn, is_playing, name) VALUES (?, ?, ?)";
+    private static final String INSERT_ROOM = "INSERT INTO room (turn, is_playing, name, password) VALUES (?, ?, ?, ?)";
+    private static final String INSERT_ROOM_WITHOUT_PASSWORD = "INSERT INTO room (turn, is_playing, name) VALUES (?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<TurnDto> turnMapper = (resultSet, rowNum) -> {
@@ -59,7 +60,7 @@ public class RoomDao {
         return this.jdbcTemplate.query(SELECT_ALL_ROOMS, roomRowMapper);
     }
 
-    public long createRoom(String currentTurn, boolean isPlaying, String roomName) {
+    public long createRoom(String currentTurn, boolean isPlaying, String roomName, String password) {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         this.jdbcTemplate.update(con -> {
@@ -67,9 +68,29 @@ public class RoomDao {
             ps.setString(1, currentTurn);
             ps.setBoolean(2, isPlaying);
             ps.setString(3, roomName);
+            ps.setString(4, password);
             return ps;
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public long createRoom(String currentTurn, boolean isPlaying, String roomName) {
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        this.jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(INSERT_ROOM_WITHOUT_PASSWORD, new String[]{"room_id"});
+            ps.setString(1, currentTurn);
+            ps.setBoolean(2, isPlaying);
+            ps.setString(3, roomName);
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
+    }
+
+    public int checkPassword(long roomId, String password) {
+        String sql = "SELECT count(room_id) FROM room WHERE room_id = ? AND password = ?";
+        return this.jdbcTemplate.queryForObject(sql, int.class, roomId, password);
     }
 }

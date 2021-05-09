@@ -25,12 +25,15 @@ function getRoomId() {
 }
 
 function loadPrevGame() {
+    const password = prompt('비밀번호를 입력하세요~ :)');
+    apiService.checkAllowedUser(getRoomId(), {password})
+        .then(data => {
+            if (!data['allowed']) {
+                location.href = "/";
+            }
+        })
     apiService.loadPrevGame(getRoomId())
         .then(data => {
-            if (data.status === 500) {
-                alert("저장된 게임이 없어요.")
-                return;
-            }
             initializeChessBoard(data);
             checkIsPlaying(data);
         })

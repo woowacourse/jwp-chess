@@ -3,10 +3,7 @@ package chess.controller;
 import chess.service.ChessBoardService;
 import chess.service.ChessRoomService;
 import chess.webdto.dao.RoomDto;
-import chess.webdto.view.ChessGameDto;
-import chess.webdto.view.MoveRequestDto;
-import chess.webdto.view.RoomNameDto;
-import org.springframework.http.HttpStatus;
+import chess.webdto.view.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,6 +16,7 @@ import java.util.List;
 public class SpringChessController {
     private final ChessBoardService chessBoardService;
     private final ChessRoomService chessRoomService;
+    private AllowedUserRequest allowedUserRequest;
 
     public SpringChessController(ChessBoardService chessBoardService, ChessRoomService chessRoomService) {
         this.chessBoardService = chessBoardService;
@@ -33,7 +31,7 @@ public class SpringChessController {
 
     @PostMapping
     public ResponseEntity<Void> createRoom(@RequestBody RoomNameDto roomNameDto) {
-        long roomId = chessRoomService.createNewRoom(roomNameDto.getRoomName());
+        long roomId = chessRoomService.createNewRoom(roomNameDto.getRoomName(), roomNameDto.getPassword());
         chessBoardService.startNewGame(roomId);
         URI url = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -54,4 +52,12 @@ public class SpringChessController {
         return ResponseEntity.ok().body(chessGameDto);
     }
 
+    @PostMapping(path = "/{roomId}/password")
+    public ResponseEntity<AllowedUserResponse> checkAllowedUser(@PathVariable long roomId, @RequestBody AllowedUserRequest allowedUserRequest) {
+        boolean isAllowed = chessBoardService.checkAllowedUser(roomId, allowedUserRequest.getPassword());
+        if(isAllowed){
+            return ResponseEntity.ok().body(new AllowedUserResponse(true));
+        }
+        return ResponseEntity.badRequest().body(new AllowedUserResponse(false));
+    }
 }

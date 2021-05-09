@@ -24,4 +24,9 @@ public class ChessRoomService {
     public long createNewRoom(String roomName) {
         return roomDao.createRoom("white", true, roomName);
     }
+
+    @Transactional
+    public long createNewRoom(String roomName, String password) {
+        return roomDao.createRoom("white", true, roomName, password);
+    }
 }

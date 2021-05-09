@@ -109,5 +109,8 @@ public class ChessBoardService {
         return black;
     }
 
-
+    public boolean checkAllowedUser(long roomId, String password) {
+        int result = roomDao.checkPassword(roomId, password);
+        return result == 1;
+    }
 }

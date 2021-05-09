@@ -11,11 +11,11 @@ export default class ChessService {
         return response.json();
     }
 
-    async createRoom({roomName}) {
+    async createRoom({roomName, password}) {
         return await fetch(`${this.baseUrl}/rooms`, {
             method: "POST",
             headers: this.headers,
-            body: JSON.stringify({roomName})
+            body: JSON.stringify({roomName, password})
         });
     }
 
@@ -30,6 +30,16 @@ export default class ChessService {
     async loadPrevGame(roomId) {
         const response = await fetch(`${this.baseUrl}/rooms/${roomId}/previous`);
         return response.json();
+    }
+
+    async checkAllowedUser(roomId, {password}) {
+        console.log(roomId, password)
+        return await fetch(`${this.baseUrl}/rooms/${roomId}/password`, {
+            method: "POST",
+            headers: this.headers,
+            body: JSON.stringify({password})
+        }).then(response => response.json());
+
     }
 
 }

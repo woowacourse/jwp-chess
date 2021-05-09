@@ -3,7 +3,13 @@ import ChessService from "./ChessService.js";
 const apiService = new ChessService();
 
 const $roomUl = document.querySelector(".room_ul");
-const $createRoomBtn = document.querySelector(".create_room_btn");
+const $createRoomBtn = document.querySelector(".create-room-btn");
+// modals
+const $modal = document.getElementById("myModal");
+const $span = document.getElementsByClassName("close")[0];
+const $roomName = document.getElementById("name");
+const $password = document.getElementById("password");
+const $createBtn = document.querySelector(".room-infos-submit");
 
 function drawRooms(datas) {
     let lists = ""
@@ -25,16 +31,45 @@ function moveToPreviousBoard(event) {
     location.href = `/rooms/${roomId}`
 }
 
-function moveToBoard() {
-    const roomName = prompt('방 이름을 입력해주세요~ :)', '80글자까지만 입력해주세요~');
-    if (roomName === null) {
-        return;
-    }
-    apiService.createRoom({roomName})
-        .then(response => window.location.href = response.headers.get('Location'))
+function showModal() {
+    $modal.style.display = "block";
+    //const roomName = prompt('방 이름을 입력해주세요~ :)', '80글자까지만 입력해주세요~');
+    // if (roomName === null) {
+    //     return;
+    // }
+    // apiService.createRoom({roomName})
+    //   .then(response => window.location.href = response.headers.get('Location'))
 }
 
 apiService.showRooms()
     .then(drawRooms)
 
-$createRoomBtn.addEventListener("click", moveToBoard);
+$createRoomBtn.addEventListener("click", showModal);
+
+// When the user clicks on <span> (x), close the modal
+$span.onclick = function () {
+    $modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target === $modal) {
+        $modal.style.display = "none";
+    }
+}
+
+$createBtn.addEventListener("click", function () {
+        console.log("hi")
+        const roomName = $roomName.value;
+        const password = $password.value;
+        if (roomName === null) {
+             return;
+        }
+        apiService.createRoom({roomName, password})
+           .then(response => window.location.href = response.headers.get('Location'))
+
+
+
+    }
+)
+;

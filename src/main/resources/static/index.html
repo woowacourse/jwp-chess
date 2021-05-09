@@ -10,7 +10,23 @@
 <body>
 <h1 class="title">Chess Rooms🎁</h1>
 <section class="rooms">
-    <button class="create_room_btn">방만들기</button>
+    <button class="create-room-btn">방만들기</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="room-infos">
+                <label for="name">방이름을 입력해 주세요</label>
+                <input type="text" name="name" id="name" placeholder="80글자 이내로 입력해주세요 :)">
+                <label for="password">비밀번호를 입력해 주세요</label>
+                <input type="password" name="password" id="password" placeholder="비밀번호를 입력해주세요 :)">
+                <button class="room-infos-submit">CREATE</button>
+            </div>
+        </div>
+    </div>
+
     <ul class="room_ul">
         <li>
         </li>

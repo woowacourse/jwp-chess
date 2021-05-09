@@ -3,43 +3,45 @@ package chess.domain.manager;
 import chess.domain.Entity;
 import chess.domain.board.Board;
 import chess.domain.board.BoardInitializer;
-import chess.domain.board.position.Path;
-import chess.domain.board.position.Position;
 import chess.domain.board.piece.Owner;
 import chess.domain.board.piece.Piece;
+import chess.domain.board.position.Path;
+import chess.domain.board.position.Position;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChessManager extends Entity<Long> {
-    private static final Owner FIRST_TURN = Owner.WHITE;
 
-    private final Board board;
-    private Owner turnOwner = FIRST_TURN;
-    private int turnNumber = 1;
-    private boolean isPlaying = true;
-
-    public ChessManager(final Board board, final Owner turnOwner, final int turnNumber, final boolean isPlaying) {
-        this.board = board;
-        this.turnOwner = turnOwner;
-        this.turnNumber = turnNumber;
-        this.isPlaying = isPlaying;
-    }
-
-    public ChessManager(final Board board) {
-        this.board = board;
-    }
+    private Board board;
+    private State state;
+    private GameStatus gameStatus;
 
     public ChessManager() {
-        this(BoardInitializer.initiateBoard());
+        this(BoardInitializer.initiateBoard(), State.newGameState());
+    }
+
+    public ChessManager(final Board board, State state) {
+        this(null, board, state);
+    }
+
+    public ChessManager(final Long id, final Board board, final State state) {
+        this(id, board, state, GameStatus.statusOfBoard(board));
+    }
+
+    public ChessManager(Long id, Board board, State state, GameStatus gameStatus) {
+        super(id);
+        this.board = board;
+        this.state = state;
+        this.gameStatus = gameStatus;
     }
 
     public void move(final Position source, final Position target) {
         validateSourcePiece(source);
         validateTurnOwner(source);
         board.move(source, target);
-        increaseTurnNumber();
-        changeTurnOwner();
+        this.state = state.changeTurnOwner();
+        this.gameStatus = GameStatus.statusOfBoard(board);
         checkCaughtKing();
     }
 
@@ -50,42 +52,27 @@ public class ChessManager extends Entity<Long> {
     }
 
     private void validateTurnOwner(final Position source) {
-        if (!board.isPositionSameOwner(source, turnOwner)) {
-            throw new IllegalArgumentException("현재는 " + turnOwner.name() + "플레이어의 턴입니다.");
+        if (!board.isPositionSameOwner(source, this.state.turnOwner())) {
+            throw new IllegalArgumentException("현재는 " + this.state.turnOwnerName() + "플레이어의 턴입니다.");
         }
-    }
-
-    public void changeTurnOwner() {
-        turnOwner = turnOwner.reverse();
     }
 
     private void checkCaughtKing() {
-        if (isKingDead()) {
-            gameEnd();
+        if (isCaughtKing()) {
+            this.state = this.state.endGame();
         }
     }
 
-    private void increaseTurnNumber() {
-        if (this.turnOwner.equals(Owner.BLACK)) {
-            this.turnNumber++;
-        }
-    }
-
-    private boolean isKingDead() {
-        return !board.isKingAlive(this.turnOwner);
+    private boolean isCaughtKing() {
+        return board.isCaughtKing(this.state.turnOwner());
     }
 
     public void gameEnd() {
-        isPlaying = false;
+        this.state = this.state.endGame();
     }
 
     public boolean isPlaying() {
-        return isPlaying;
-    }
-
-    public void resetBoard() {
-        turnOwner = FIRST_TURN;
-        board.resetBoard();
+        return state.isPlaying();
     }
 
     public Path movablePath(final Position source) {
@@ -97,8 +84,24 @@ public class ChessManager extends Entity<Long> {
         return this.board.pickPiece(position);
     }
 
+    public State state() {
+        return this.state;
+    }
+
+    public Owner turnOwner() {
+        return this.state.turnOwner();
+    }
+
+    public String turnOwnerName() {
+        return this.state.turnOwnerName();
+    }
+
+    public int turnNumberValue() {
+        return this.state.turnNumberValue();
+    }
+
     public GameStatus gameStatus() {
-        return GameStatus.statusOfBoard(board);
+        return this.gameStatus;
     }
 
     public Board getBoard() {
@@ -107,13 +110,5 @@ public class ChessManager extends Entity<Long> {
 
     public Map<Position, Piece> boardToMap() {
         return new HashMap<>(this.board.getBoard());
-    }
-
-    public int turnNumber() {
-        return this.turnNumber;
-    }
-
-    public Owner turnOwner() {
-        return turnOwner;
     }
 }

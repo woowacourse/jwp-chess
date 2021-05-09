@@ -16,15 +16,15 @@ public class RoomNameDto {
         return roomName;
     }
 
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
     }
 }

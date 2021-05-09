@@ -55,7 +55,7 @@ public class SpringChessController {
     @PostMapping(path = "/{roomId}/password")
     public ResponseEntity<AllowedUserResponse> checkAllowedUser(@PathVariable long roomId, @RequestBody AllowedUserRequest allowedUserRequest) {
         boolean isAllowed = chessBoardService.checkAllowedUser(roomId, allowedUserRequest.getPassword());
-        if(isAllowed){
+        if (isAllowed) {
             return ResponseEntity.ok().body(new AllowedUserResponse(true));
         }
         return ResponseEntity.badRequest().body(new AllowedUserResponse(false));

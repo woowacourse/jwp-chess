@@ -1,69 +1,54 @@
 package chess.service;
 
-import chess.controller.dto.*;
+import chess.controller.dto.GameStatusDto;
+import chess.domain.game.MoveRequest;
 import chess.dao.CommandDao;
+import chess.dao.GameDao;
 import chess.domain.game.BoardFactory;
 import chess.domain.game.Game;
-import chess.domain.location.Position;
-import chess.domain.piece.Color;
+import chess.exception.ChessException;
+import chess.exception.ErrorCode;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ChessService {
     private final CommandDao commandDao;
+    private final GameDao gameDao;
 
-    public ChessService(CommandDao commandDao) {
+    public ChessService(CommandDao commandDao, GameDao gameDao) {
         this.commandDao = commandDao;
+        this.gameDao = gameDao;
     }
 
-    public void move(Long roomId, String from, String to) {
-        Game game = newGame(roomId);
-        game.move(Position.from(from), Position.from(to));
-        commandDao.insert(roomId, from, to);
+    public void move(Long gameId, MoveRequest moveRequest) {
+        Game game = loadGame(gameId);
+        game.move(moveRequest);
+        commandDao.insert(gameId, moveRequest.getFrom(), moveRequest.getTo());
     }
 
-    public void load(Long roomId, Model model) {
-        Game game = newGame(roomId);
-        makeChessModel(game, model);
-        model.addAttribute("room", new RoomDto(roomId, ""));
+    public GameStatusDto load(Long gameId) {
+        Game game = loadGame(gameId);
+        return new GameStatusDto(game);
     }
 
-    private Game newGame(Long roomId) {
+    private Game loadGame(Long gameId) {
+        checkGameExist(gameId);
         Game game = new Game(BoardFactory.create());
-        List<MoveDto> moves = commandDao.findAllCommandOf(roomId);
-        for (MoveDto move : moves) {
-            game.move(Position.from(move.getFrom()), Position.from(move.getTo()));
+        List<MoveRequest> requests = commandDao.findAllCommandOf(gameId);
+        for (MoveRequest request : requests) {
+            game.move(request);
         }
         return game;
     }
 
-    private void makeChessModel(Game game, Model model) {
-        setBoard(new BoardDto(game.allBoard()).getMaps(), model);
-        setGameScore(game, model);
-        setGameInformation(new ColorDto(game.currentPlayer()), game.isEnd(), model);
-    }
-
-    private void setBoard(Map<PositionDto, PieceDto> board, Model model) {
-        for (PositionDto positionDto : board.keySet()) {
-            model.addAttribute(positionDto.getKey(), board.get(positionDto));
-        }
-    }
-
-    private void setGameScore(Game game, Model model) {
-        model.addAttribute("blackScore", new ScoreDto(Color.BLACK, game.score(Color.BLACK)));
-        model.addAttribute("whiteScore", new ScoreDto(Color.WHITE, game.score(Color.WHITE)));
-    }
-
-    private void setGameInformation(ColorDto color,
-                                    boolean isFinished,
-                                    Model model) {
-        model.addAttribute("turn", color);
-        if (isFinished) {
-            model.addAttribute("winner", color);
+    private void checkGameExist(Long gameId) {
+        try {
+            gameDao.findById(gameId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ChessException(ErrorCode.NO_ROOM_TO_LOAD);
         }
     }
 }

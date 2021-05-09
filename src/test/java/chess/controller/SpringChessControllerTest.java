@@ -45,11 +45,12 @@ class SpringChessControllerTest {
     @Test
     @DisplayName("방생성 테스트")
     void createRoom() throws Exception {
-        when(chessRoomService.createNewRoom("sample"))
+        when(chessRoomService.createNewRoom("sample", "sample"))
                 .thenReturn(1L);
 
         RoomNameDto roomNameDto = new RoomNameDto();
         roomNameDto.setRoomName("sample");
+        roomNameDto.setPassword("sample");
 
         String content = objectMapper.writeValueAsString(roomNameDto);
 

@@ -11,25 +11,25 @@ import chess.domain.board.position.Position;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChessManager extends Entity<Long> {
+public class Game extends Entity<Long> {
 
     private Board board;
     private State state;
     private GameStatus gameStatus;
 
-    public ChessManager() {
+    public Game() {
         this(BoardInitializer.initiateBoard(), State.newGameState());
     }
 
-    public ChessManager(final Board board, State state) {
+    public Game(final Board board, State state) {
         this(null, board, state);
     }
 
-    public ChessManager(final Long id, final Board board, final State state) {
+    public Game(final Long id, final Board board, final State state) {
         this(id, board, state, GameStatus.statusOfBoard(board));
     }
 
-    public ChessManager(Long id, Board board, State state, GameStatus gameStatus) {
+    public Game(Long id, Board board, State state, GameStatus gameStatus) {
         super(id);
         this.board = board;
         this.state = state;

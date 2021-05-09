@@ -26,7 +26,7 @@ public class BoardInitializer {
         return new Board(map);
     }
 
-    public static void resetBoard(final Map<Position, Piece> board) {
+    public static void resetBoard(Map<Position, Piece> board) {
         putLineInMap(board, Vertical.EIGHT, getPiecesOfFirstLine(Owner.BLACK));
         putLineInMap(board, Vertical.SEVEN, getPiecesOfSecondLine(Owner.BLACK));
         putLineInMap(board, Vertical.SIX, getEmptyLine());
@@ -57,7 +57,7 @@ public class BoardInitializer {
         };
     }
 
-    private static Piece[] getPiecesOfSecondLine(final Owner owner) {
+    private static Piece[] getPiecesOfSecondLine(Owner owner) {
         final Piece[] pieces = new Pawn[BOARD_LENGTH];
         Arrays.fill(pieces, Pawn.getInstanceOf(owner));
         return pieces;

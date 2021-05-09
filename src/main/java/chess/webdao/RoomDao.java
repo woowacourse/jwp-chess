@@ -19,6 +19,7 @@ public class RoomDao {
     private static final String SELECT_ALL_ROOMS = "SELECT * FROM room";
     private static final String INSERT_ROOM = "INSERT INTO room (turn, is_playing, name, password) VALUES (?, ?, ?, ?)";
     private static final String INSERT_ROOM_WITHOUT_PASSWORD = "INSERT INTO room (turn, is_playing, name) VALUES (?, ?, ?)";
+    private static final String CHECK_ROOM_ID_PASSWORD = "SELECT count(room_id) FROM room WHERE room_id = ? AND password = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<TurnDto> turnMapper = (resultSet, rowNum) -> {
@@ -90,7 +91,6 @@ public class RoomDao {
     }
 
     public int checkPassword(long roomId, String password) {
-        String sql = "SELECT count(room_id) FROM room WHERE room_id = ? AND password = ?";
-        return this.jdbcTemplate.queryForObject(sql, int.class, roomId, password);
+        return this.jdbcTemplate.queryForObject(CHECK_ROOM_ID_PASSWORD, int.class, roomId, password);
     }
 }

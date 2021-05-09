@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>WOOWA CHESS</title>
@@ -12,6 +12,7 @@
 </head>
 <body>
 <div class="container">
+  <p class="id" th:text="${id}" style="visibility: hidden"></p>
   <div class="title"><span id="home" style="cursor: pointer">WOOWA CHESS</span></div>
   <div class="title-room"><span class="title-decorator"></span><span class="room-title"></span></div>
   <div class="content-wrapper">

@@ -19,6 +19,7 @@ imageMap = {
 }
 
 async function init() {
+    this.$gameId = document.querySelector('.id').textContent
     this.$chessBoard = document.querySelector('.chessBoard')
     this.$controller = document.querySelector('.controller')
     this.$controller.addEventListener('click', btnHandler)
@@ -26,8 +27,6 @@ async function init() {
     this.$whiteResult = document.getElementById('WHITE')
     this.$roomTitle = document.querySelector('.room-title')
     const $home = document.getElementById('home')
-    const url = window.location.href.split('/')
-    this.gameId = url[url.length - 1]
 
     $home.addEventListener('click', function () {
         window.location.href = '/'
@@ -56,7 +55,7 @@ async function initBoard(chessGame) {
 
 async function start() {
     return await fetch(
-        `/room/${this.gameId}/game-info`
+        `/room/${this.$gameId}/game-info`
     )
 }
 
@@ -146,7 +145,6 @@ async function result(blackScore, whiteScore) {
 
 async function btnHandler({target}) {
     const url = window.location.href.split('/')
-    const gameId = url[url.length - 1]
     if (target.id === 'home') {
         window.location.href = '/'
         return
@@ -154,7 +152,7 @@ async function btnHandler({target}) {
 
     if (target.id === 'restart') {
         const response = await fetch(
-            `/room/${gameId}/restart`,
+            `/room/${this.$gameId}/restart`,
             {
                 method: 'POST'
             }
@@ -186,9 +184,8 @@ async function btnHandler({target}) {
 
 async function finish() {
     const url = window.location.href.split('/')
-    const gameId = url[url.length - 1]
     return await fetch(
-        `/room/${gameId}/finish`,
+        `/room/${this.$gameId}/finish`,
         {
             method: 'POST'
         }
@@ -211,7 +208,7 @@ function moveHandler() {
 
 async function move(source, target) {
     let response = await fetch(
-        `/room/${this.gameId}/move`,
+        `/room/${this.$gameId}/move`,
         {
             method: 'PUT',
             body: JSON.stringify({

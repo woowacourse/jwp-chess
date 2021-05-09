@@ -26,7 +26,7 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public Long save(User user) {
+    public Long save(final User user) {
         final String sql = "INSERT INTO user(name, password) VALUES(?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -39,13 +39,13 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(final Long id) {
         final String sql = "SELECT * FROM user WHERE id = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, userRowMapper, id));
     }
 
     @Override
-    public Optional<User> findByName(String name) {
+    public Optional<User> findByName(final String name) {
         final String sql = "SELECT * FROM user WHERE name = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, userRowMapper, name));
     }

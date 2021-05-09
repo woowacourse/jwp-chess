@@ -21,7 +21,7 @@ public class Game extends Entity<Long> {
         this(BoardInitializer.initiateBoard(), State.newGameState());
     }
 
-    public Game(final Board board, State state) {
+    public Game(final Board board, final State state) {
         this(null, board, state);
     }
 
@@ -29,7 +29,7 @@ public class Game extends Entity<Long> {
         this(id, board, state, GameStatus.statusOfBoard(board));
     }
 
-    public Game(Long id, Board board, State state, GameStatus gameStatus) {
+    public Game(final Long id, final Board board, final State state, final GameStatus gameStatus) {
         super(id);
         this.board = board;
         this.state = state;
@@ -80,7 +80,7 @@ public class Game extends Entity<Long> {
         return board.movablePath(source);
     }
 
-    public Piece pickPiece(Position position) {
+    public Piece pickPiece(final Position position) {
         return this.board.pickPiece(position);
     }
 

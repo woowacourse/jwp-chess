@@ -32,7 +32,6 @@ public class JdbcGameRepository implements GameRepository {
         GameStatus gameStatus = GameStatus.from(new Score(resultSet.getDouble("white_score")),
                 new Score(resultSet.getDouble("black_score")));
         Map<Position, Piece> pieceMap = new HashMap<>();
-
         do {
             pieceMap.put(Position.of(resultSet.getString("position")),
                     PieceConverter.parsePiece(resultSet.getString("symbol")));
@@ -46,7 +45,7 @@ public class JdbcGameRepository implements GameRepository {
     }
 
     @Override
-    public Long save(Game game) {
+    public Long save(final Game game) {
         String sql = "INSERT INTO game(turn_owner, turn_number, playing, white_score, black_score) VALUES(?,?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -62,13 +61,13 @@ public class JdbcGameRepository implements GameRepository {
     }
 
     @Override
-    public Game findById(Long id) {
+    public Game findById(final Long id) {
         String sql = "SELECT * FROM game AS g JOIN square AS s ON g.id = s.game_id WHERE g.id = ?";
         return jdbcTemplate.queryForObject(sql, gameRowMapper, id);
     }
 
     @Override
-    public void update(Game game) {
+    public void update(final Game game) {
         String sql = "UPDATE game SET turn_owner = ?, turn_number = ?, playing = ?, white_score = ?, black_score = ? WHERE id = ?";
         jdbcTemplate.update(sql,
                 game.turnOwnerName(),

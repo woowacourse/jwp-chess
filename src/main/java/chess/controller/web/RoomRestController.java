@@ -25,14 +25,14 @@ public class RoomRestController {
     private final RoomService roomService;
     private final ModelMapper modelMapper;
 
-    public RoomRestController(RoomService roomService, ModelMapper modelMapper) {
+    public RoomRestController(RoomService roomService,ModelMapper modelMapper) {
         this.roomService = roomService;
         this.modelMapper = modelMapper;
     }
 
     @PostMapping
-    public ResponseEntity<RoomIdAndGameIdResponse> createRoom(@RequestBody RoomRequestDto roomRequestDto,
-                                                              HttpSession httpSession) {
+    public ResponseEntity<RoomIdAndGameIdResponse> createRoom(@RequestBody final RoomRequestDto roomRequestDto,
+                                                              final HttpSession httpSession) {
         RoomSaveDto roomSaveDto = modelMapper.map(roomRequestDto, RoomSaveDto.class);
         httpSession.setAttribute("password", roomSaveDto.getWhitePassword());
         RoomAndGameIdDto roomAndGameIdDto = roomService.saveRoom(roomSaveDto);
@@ -49,9 +49,9 @@ public class RoomRestController {
     }
 
     @PostMapping("/{roomId}/join")
-    public ResponseEntity<RoomIdResponseDto> joinRoom(@PathVariable Long roomId,
-                                                      @RequestBody RoomJoinRequestDto roomJoinRequestDto,
-                                                      HttpSession httpSession) {
+    public ResponseEntity<RoomIdResponseDto> joinRoom(@PathVariable final Long roomId,
+                                                      @RequestBody final RoomJoinRequestDto roomJoinRequestDto,
+                                                      final HttpSession httpSession) {
         RoomJoinDto roomJoinDto = modelMapper.map(roomJoinRequestDto, RoomJoinDto.class);
         httpSession.setAttribute("password", roomJoinDto.getPassword());
         return ResponseEntity.ok().body(new RoomIdResponseDto(roomService.joinGame(roomId, roomJoinDto)));

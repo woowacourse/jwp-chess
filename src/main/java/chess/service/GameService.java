@@ -43,7 +43,7 @@ public class GameService {
         return GameDto.from(game);
     }
 
-    public void update(Game game) {
+    public void update(final Game game) {
         gameRepository.update(game);
     }
 }

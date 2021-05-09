@@ -6,11 +6,11 @@ public class TurnNumber {
 
     private final int value;
 
-    private TurnNumber(int value) {
+    private TurnNumber(final int value) {
         this.value = value;
     }
 
-    public static TurnNumber of(int number) {
+    public static TurnNumber of(final int number) {
         return new TurnNumber(number);
     }
 

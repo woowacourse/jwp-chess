@@ -12,7 +12,7 @@ public class ScoreResponseDto {
         return whiteScore;
     }
 
-    public void setWhiteScore(double whiteScore) {
+    public void setWhiteScore(final double whiteScore) {
         this.whiteScore = whiteScore;
     }
 
@@ -20,7 +20,7 @@ public class ScoreResponseDto {
         return blackScore;
     }
 
-    public void setBlackScore(double blackScore) {
+    public void setBlackScore(final double blackScore) {
         this.blackScore = blackScore;
     }
 }

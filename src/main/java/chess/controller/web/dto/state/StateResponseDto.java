@@ -13,7 +13,7 @@ public class StateResponseDto {
         return turnOwner;
     }
 
-    public void setTurnOwner(String turnOwner) {
+    public void setTurnOwner(final String turnOwner) {
         this.turnOwner = turnOwner;
     }
 
@@ -21,7 +21,7 @@ public class StateResponseDto {
         return turnNumber;
     }
 
-    public void setTurnNumber(int turnNumber) {
+    public void setTurnNumber(final int turnNumber) {
         this.turnNumber = turnNumber;
     }
 
@@ -29,7 +29,7 @@ public class StateResponseDto {
         return isPlaying;
     }
 
-    public void setPlaying(boolean playing) {
+    public void setPlaying(final boolean playing) {
         isPlaying = playing;
     }
 }

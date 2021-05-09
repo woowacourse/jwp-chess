@@ -10,13 +10,13 @@ public class State {
     private final TurnNumber turnNumber;
     private final boolean isPlaying;
 
-    private State(Owner turnOwner, TurnNumber turnNumber, boolean isPlaying) {
+    private State(final Owner turnOwner, final TurnNumber turnNumber, final boolean isPlaying) {
         this.turnOwner = turnOwner;
         this.turnNumber = turnNumber;
         this.isPlaying = isPlaying;
     }
 
-    public static State of(Owner turnOwner, TurnNumber turnNumber, boolean isPlaying) {
+    public static State of(final Owner turnOwner, final TurnNumber turnNumber, final boolean isPlaying) {
         return new State(turnOwner, turnNumber, isPlaying);
     }
 

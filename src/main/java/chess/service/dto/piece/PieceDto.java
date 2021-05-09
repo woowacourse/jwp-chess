@@ -7,11 +7,11 @@ public class PieceDto {
     private String position;
     private String symbol;
 
-    public PieceDto(Long gameId, String position, String symbol) {
+    public PieceDto(final Long gameId, final String position, final String symbol) {
         this(null, gameId, position, symbol);
     }
 
-    public PieceDto(Long id, Long gameId, String position, String symbol) {
+    public PieceDto(final Long id, final Long gameId, final String position, final String symbol) {
         this.id = id;
         this.gameId = gameId;
         this.position = position;

@@ -14,7 +14,7 @@ public class PieceResponseDto {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -22,7 +22,7 @@ public class PieceResponseDto {
         return gameId;
     }
 
-    public void setGameId(Long gameId) {
+    public void setGameId(final Long gameId) {
         this.gameId = gameId;
     }
 
@@ -30,7 +30,7 @@ public class PieceResponseDto {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(final String position) {
         this.position = position;
     }
 
@@ -38,7 +38,7 @@ public class PieceResponseDto {
         return symbol;
     }
 
-    public void setSymbol(String symbol) {
+    public void setSymbol(final String symbol) {
         this.symbol = symbol;
     }
 }

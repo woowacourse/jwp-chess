@@ -4,7 +4,7 @@ public class RoomIdResponseDto {
 
     private Long roomId;
 
-    public RoomIdResponseDto(Long roomId) {
+    public RoomIdResponseDto(final Long roomId) {
         this.roomId = roomId;
     }
 

@@ -17,7 +17,7 @@ public class HistoryResponseDto {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -25,7 +25,7 @@ public class HistoryResponseDto {
         return gameId;
     }
 
-    public void setGameId(Long gameId) {
+    public void setGameId(final Long gameId) {
         this.gameId = gameId;
     }
 
@@ -33,7 +33,7 @@ public class HistoryResponseDto {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(final String source) {
         this.source = source;
     }
 
@@ -41,7 +41,7 @@ public class HistoryResponseDto {
         return target;
     }
 
-    public void setTarget(String target) {
+    public void setTarget(final String target) {
         this.target = target;
     }
 
@@ -49,7 +49,7 @@ public class HistoryResponseDto {
         return turnOwner;
     }
 
-    public void setTurnOwner(String turnOwner) {
+    public void setTurnOwner(final String turnOwner) {
         this.turnOwner = turnOwner;
     }
 
@@ -57,7 +57,7 @@ public class HistoryResponseDto {
         return turnNumber;
     }
 
-    public void setTurnNumber(int turnNumber) {
+    public void setTurnNumber(final int turnNumber) {
         this.turnNumber = turnNumber;
     }
 
@@ -65,7 +65,7 @@ public class HistoryResponseDto {
         return isPlaying;
     }
 
-    public void setPlaying(boolean playing) {
+    public void setPlaying(final boolean playing) {
         isPlaying = playing;
     }
 }

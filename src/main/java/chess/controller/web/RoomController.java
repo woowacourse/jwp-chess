@@ -14,7 +14,7 @@ public class RoomController {
     private final RoomService roomService;
     private final ModelMapper modelMapper;
 
-    public RoomController(RoomService roomService, ModelMapper modelMapper) {
+    public RoomController(final RoomService roomService, final ModelMapper modelMapper) {
         this.roomService = roomService;
         this.modelMapper = modelMapper;
     }
@@ -25,7 +25,7 @@ public class RoomController {
     }
 
     @GetMapping("/rooms/{id}")
-    public String findRoomById(@PathVariable Long id, Model model) {
+    public String findRoomById(@PathVariable final Long id, final Model model) {
         RoomResponseDto roomResponseDto = modelMapper.map(roomService.findById(id), RoomResponseDto.class);
         model.addAttribute(roomResponseDto);
         return "board";

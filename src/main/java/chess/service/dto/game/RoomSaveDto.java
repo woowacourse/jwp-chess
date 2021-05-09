@@ -9,7 +9,7 @@ public class RoomSaveDto {
     public RoomSaveDto() {
     }
 
-    public RoomSaveDto(String roomName, String whiteUsername, String whitePassword) {
+    public RoomSaveDto(final String roomName, final String whiteUsername, final String whitePassword) {
         this.roomName = roomName;
         this.whiteUsername = whiteUsername;
         this.whitePassword = whitePassword;
@@ -19,7 +19,7 @@ public class RoomSaveDto {
         return roomName;
     }
 
-    public void setRoomName(String roomName) {
+    public void setRoomName(final String roomName) {
         this.roomName = roomName;
     }
 
@@ -27,7 +27,7 @@ public class RoomSaveDto {
         return whiteUsername;
     }
 
-    public void setWhiteUsername(String whiteUsername) {
+    public void setWhiteUsername(final String whiteUsername) {
         this.whiteUsername = whiteUsername;
     }
 
@@ -35,7 +35,7 @@ public class RoomSaveDto {
         return whitePassword;
     }
 
-    public void setWhitePassword(String whitePassword) {
+    public void setWhitePassword(final String whitePassword) {
         this.whitePassword = whitePassword;
     }
 }

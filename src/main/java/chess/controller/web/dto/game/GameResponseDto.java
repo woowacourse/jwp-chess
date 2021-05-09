@@ -16,7 +16,7 @@ public class GameResponseDto {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -24,7 +24,7 @@ public class GameResponseDto {
         return turnOwner;
     }
 
-    public void setTurnOwner(String turnOwner) {
+    public void setTurnOwner(final String turnOwner) {
         this.turnOwner = turnOwner;
     }
 
@@ -32,7 +32,7 @@ public class GameResponseDto {
         return turnNumber;
     }
 
-    public void setTurnNumber(int turnNumber) {
+    public void setTurnNumber(final int turnNumber) {
         this.turnNumber = turnNumber;
     }
 
@@ -40,7 +40,7 @@ public class GameResponseDto {
         return isPlaying;
     }
 
-    public void setPlaying(boolean playing) {
+    public void setPlaying(final boolean playing) {
         isPlaying = playing;
     }
 
@@ -48,7 +48,7 @@ public class GameResponseDto {
         return whiteScore;
     }
 
-    public void setWhiteScore(double whiteScore) {
+    public void setWhiteScore(final double whiteScore) {
         this.whiteScore = whiteScore;
     }
 
@@ -56,7 +56,7 @@ public class GameResponseDto {
         return blackScore;
     }
 
-    public void setBlackScore(double blackScore) {
+    public void setBlackScore(final double blackScore) {
         this.blackScore = blackScore;
     }
 }

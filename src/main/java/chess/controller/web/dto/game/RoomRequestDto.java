@@ -6,7 +6,7 @@ public class RoomRequestDto {
     private String whiteUsername;
     private String whitePassword;
 
-    public RoomRequestDto(String whiteUsername, String whitePassword, String roomName) {
+    public RoomRequestDto(final String whiteUsername, final String whitePassword, final String roomName) {
         this.whiteUsername = whiteUsername;
         this.whitePassword = whitePassword;
         this.roomName = roomName;

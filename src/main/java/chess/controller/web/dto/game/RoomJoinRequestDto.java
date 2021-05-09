@@ -5,7 +5,7 @@ public class RoomJoinRequestDto {
     private String username;
     private String password;
 
-    public RoomJoinRequestDto(String username, String password) {
+    public RoomJoinRequestDto(final String username, final String password) {
         this.username = username;
         this.password = password;
     }

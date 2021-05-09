@@ -30,7 +30,7 @@ public class RoomService {
     }
 
     @Transactional
-    public RoomAndGameIdDto saveRoom(RoomSaveDto roomSaveDto) {
+    public RoomAndGameIdDto saveRoom(final RoomSaveDto roomSaveDto) {
         Long gameId = gameService.saveNewGame();
         User whiteUser = new User(roomSaveDto.getWhiteUsername(), roomSaveDto.getWhitePassword());
         Long whiteUserId = userService.save(whiteUser);
@@ -48,7 +48,7 @@ public class RoomService {
         throw new IllegalArgumentException("방에 접속할 수 없습니다.");
     }
 
-    private Long joinUser(Room room, User user) {
+    private Long joinUser(final Room room, final User user) {
         User whiteUser = userService.findById(room.whiteUserId());
         if (whiteUser.sameName(user.getName())) {
             whiteUser.checkPassword(user.getPassword());
@@ -65,13 +65,14 @@ public class RoomService {
         throw new IllegalArgumentException("방에 접속할 수 없습니다.");
     }
 
-    private Long joinBlackUser(User user, Room room) {
+    private Long joinBlackUser(final User user, final Room room) {
         Long userId = userService.save(user);
         room.joinBlackUser(userId);
         roomRepository.updateBlackUser(userId, room.getId());
         return room.getId();
     }
 
+    @Transactional(readOnly = true)
     public List<PlayingRoomDto> findRoomsByPlaying() {
         List<Room> rooms = roomRepository.findByPlayingGame();
         return rooms.stream()
@@ -79,7 +80,7 @@ public class RoomService {
                 .collect(Collectors.toList());
     }
 
-    private PlayingRoomDto playingRoom(Room room) {
+    private PlayingRoomDto playingRoom(final Room room) {
         User whiteUser = userService.findById(room.whiteUserId());
         if (room.blackUserId() == null || room.blackUserId().equals(0L)) {
             return new PlayingRoomDto(room.getId(), room.name(), whiteUser.getName(), "");
@@ -88,7 +89,8 @@ public class RoomService {
         return new PlayingRoomDto(room.getId(), room.name(), whiteUser.getName(), blackUser.getName());
     }
 
-    public RoomDto findById(Long id) {
+    @Transactional(readOnly = true)
+    public RoomDto findById(final Long id) {
         Optional<Room> roomOptional = roomRepository.findById(id);
         if (!roomOptional.isPresent()) {
             throw new RoomNotFoundException("방을 조회하는데 실패했습니다.");
@@ -102,7 +104,8 @@ public class RoomService {
         return new RoomDto(room.getId(), room.gameId(), room.name(), whiteUser.getName(), blackUser.getName());
     }
 
-    public Room findByGameId(Long gameId) {
+    @Transactional(readOnly = true)
+    public Room findByGameId(final Long gameId) {
         return roomRepository.findByGameId(gameId);
     }
 }

@@ -10,18 +10,11 @@ public class PlayingRoomResponseDto {
     public PlayingRoomResponseDto() {
     }
 
-    public PlayingRoomResponseDto(Long roomId, String roomName, String whiteUserName, String blackUserName) {
-        this.roomId = roomId;
-        this.roomName = roomName;
-        this.whiteUserName = whiteUserName;
-        this.blackUserName = blackUserName;
-    }
-
     public Long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(Long roomId) {
+    public void setRoomId(final Long roomId) {
         this.roomId = roomId;
     }
 
@@ -29,7 +22,7 @@ public class PlayingRoomResponseDto {
         return roomName;
     }
 
-    public void setRoomName(String roomName) {
+    public void setRoomName(final String roomName) {
         this.roomName = roomName;
     }
 
@@ -37,7 +30,7 @@ public class PlayingRoomResponseDto {
         return whiteUserName;
     }
 
-    public void setWhiteUserName(String whiteUserName) {
+    public void setWhiteUserName(final String whiteUserName) {
         this.whiteUserName = whiteUserName;
     }
 
@@ -45,7 +38,7 @@ public class PlayingRoomResponseDto {
         return blackUserName;
     }
 
-    public void setBlackUserName(String blackUserName) {
+    public void setBlackUserName(final String blackUserName) {
         this.blackUserName = blackUserName;
     }
 }

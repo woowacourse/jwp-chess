@@ -11,7 +11,7 @@ public class RoomIdAndGameIdResponse {
         return roomId;
     }
 
-    public void setRoomId(Long roomId) {
+    public void setRoomId(final Long roomId) {
         this.roomId = roomId;
     }
 
@@ -19,7 +19,7 @@ public class RoomIdAndGameIdResponse {
         return gameId;
     }
 
-    public void setGameId(Long gameId) {
+    public void setGameId(final Long gameId) {
         this.gameId = gameId;
     }
 }

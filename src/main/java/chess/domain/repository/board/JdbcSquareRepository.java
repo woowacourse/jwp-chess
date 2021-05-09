@@ -33,7 +33,7 @@ public class JdbcSquareRepository implements SquareRepository {
 
 
     @Override
-    public Long save(Square square) {
+    public Long save(final Square square) {
         final String sql = "INSERT INTO square(game_id, position, symbol) VALUES(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -47,7 +47,7 @@ public class JdbcSquareRepository implements SquareRepository {
     }
 
     @Override
-    public long[] saveBoard(Long gameId, Board board) {
+    public long[] saveBoard(final Long gameId, final Board board) {
         String sql = "INSERT INTO square(game_id, position, symbol) VALUES (?, ?, ?)";
         List<Object[]> collect = board.getBoard().entrySet().stream()
                 .map(entry -> new Object[]{gameId, entry.getKey().parseString(), entry.getValue().getSymbol()})
@@ -57,19 +57,19 @@ public class JdbcSquareRepository implements SquareRepository {
     }
 
     @Override
-    public Square findById(Long id) {
+    public Square findById(final Long id) {
         final String sql = "SELECT * FROM square WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, squareRowMapper, id);
     }
 
     @Override
-    public List<Square> findByGameId(Long gameId) {
+    public List<Square> findByGameId(final Long gameId) {
         final String sql = "SELECT * FROM square WHERE game_id = ?";
         return jdbcTemplate.query(sql, squareRowMapper, gameId);
     }
 
     @Override
-    public Long updateByGameIdAndPosition(Square square) {
+    public Long updateByGameIdAndPosition(final Square square) {
         final String sql = "UPDATE square SET symbol = ? WHERE game_id=? AND position=?";
         return (long) jdbcTemplate.update(sql, square.getPiece().getSymbol(), square.getGameId(), square.getPosition().parseString());
     }

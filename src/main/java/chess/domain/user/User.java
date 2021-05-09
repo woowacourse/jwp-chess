@@ -10,11 +10,11 @@ public class User extends Entity<Long> {
     private final String name;
     private final String password;
 
-    public User(String name, String password) {
+    public User(final String name, final String password) {
         this(null, name, password);
     }
 
-    public User(Long id, String name, String password) {
+    public User(final Long id, final String name, final String password) {
         super(id);
         this.name = name;
         this.password = password;
@@ -40,21 +40,17 @@ public class User extends Entity<Long> {
         }
     }
 
-    public boolean sameId(Long id) {
-        return this.id.equals(id);
-    }
-
-    public boolean sameName(String name) {
+    public boolean sameName(final String name) {
         return this.name.equals(name);
     }
 
-    public void checkPassword(String inputPassword) {
+    public void checkPassword(final String inputPassword) {
         if (isDifferentPassword(inputPassword)) {
             throw new PasswordMissMatchException("비밀번호가 일치하지 않습니다!");
         }
     }
 
-    private boolean isDifferentPassword(String inputPassword) {
+    private boolean isDifferentPassword(final String inputPassword) {
         return !this.password.equals(inputPassword);
     }
 

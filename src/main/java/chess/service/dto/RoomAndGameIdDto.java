@@ -5,7 +5,7 @@ public class RoomAndGameIdDto {
     private Long roomId;
     private Long gameId;
 
-    public RoomAndGameIdDto(Long roomId, Long gameId) {
+    public RoomAndGameIdDto(final Long roomId, final Long gameId) {
         this.roomId = roomId;
         this.gameId = gameId;
     }

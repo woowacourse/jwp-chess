@@ -38,7 +38,7 @@ public class MovePathService {
         return PathDto.from(path);
     }
 
-    public void checkTurnOwner(final Long gameId, final String password, final Owner owner) {
+    private void checkTurnOwner(final Long gameId, final String password, final Owner owner) {
         Room room = roomService.findByGameId(gameId);
         if (owner.isSame(Owner.WHITE)) {
             User whiteUser = userService.findById(room.whiteUserId());

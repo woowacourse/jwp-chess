@@ -15,7 +15,8 @@ public class HistoryDto {
     public HistoryDto() {
     }
 
-    public HistoryDto(Long gameId, String source, String target, String turnOwner, int turnNumber, boolean isPlaying) {
+    public HistoryDto(final Long gameId, final String source, final String target, final String turnOwner,
+                      final int turnNumber, final boolean isPlaying) {
         this.gameId = gameId;
         this.source = source;
         this.target = target;
@@ -24,7 +25,8 @@ public class HistoryDto {
         this.isPlaying = isPlaying;
     }
 
-    public HistoryDto(Long id, Long gameId, String source, String target, String turnOwner, int turnNumber, boolean isPlaying) {
+    public HistoryDto(final Long id, final Long gameId, final String source, final String target,
+                      final String turnOwner, final int turnNumber, final boolean isPlaying) {
         this.id = id;
         this.gameId = gameId;
         this.source = source;
@@ -49,7 +51,7 @@ public class HistoryDto {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -57,7 +59,7 @@ public class HistoryDto {
         return gameId;
     }
 
-    public void setGameId(Long gameId) {
+    public void setGameId(final Long gameId) {
         this.gameId = gameId;
     }
 
@@ -65,7 +67,7 @@ public class HistoryDto {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(final String source) {
         this.source = source;
     }
 
@@ -73,7 +75,7 @@ public class HistoryDto {
         return target;
     }
 
-    public void setTarget(String target) {
+    public void setTarget(final String target) {
         this.target = target;
     }
 
@@ -81,7 +83,7 @@ public class HistoryDto {
         return turnOwner;
     }
 
-    public void setTurnOwner(String turnOwner) {
+    public void setTurnOwner(final String turnOwner) {
         this.turnOwner = turnOwner;
     }
 
@@ -89,7 +91,7 @@ public class HistoryDto {
         return turnNumber;
     }
 
-    public void setTurnNumber(int turnNumber) {
+    public void setTurnNumber(final int turnNumber) {
         this.turnNumber = turnNumber;
     }
 
@@ -97,7 +99,7 @@ public class HistoryDto {
         return isPlaying;
     }
 
-    public void setPlaying(boolean playing) {
+    public void setPlaying(final boolean playing) {
         isPlaying = playing;
     }
 }

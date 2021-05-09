@@ -13,14 +13,14 @@ public class History extends Entity<Long> {
     private final Position target;
     private final State state;
 
-    public History(Long gameId, Position source, Position target, State state) {
+    public History(final Long gameId, final Position source, final Position target, final State state) {
         this.gameId = gameId;
         this.source = source;
         this.target = target;
         this.state = state;
     }
 
-    public History(Long id, Long gameId, Position source, Position target, State state) {
+    public History(final Long id, final Long gameId, final Position source, final Position target, final State state) {
         super(id);
         this.gameId = gameId;
         this.source = source;
@@ -28,12 +28,12 @@ public class History extends Entity<Long> {
         this.state = state;
     }
 
-    public History of(Long gameId, Position source, Position target, State state) {
+    public History of(final Long gameId, final Position source, final Position target, final State state) {
         validateHistory(gameId, source, target, state);
         return new History(gameId, source, target, state);
     }
 
-    private void validateHistory(Long gameId, Position source, Position target, State state) {
+    private void validateHistory(final Long gameId, final Position source, final Position target, final State state) {
         Objects.requireNonNull(gameId, "gameId는 null일 수 없습니다.");
         Objects.requireNonNull(source, "source 위치는 null일 수 없습니다.");
         Objects.requireNonNull(target, "target 위치는 null일 수 없습니다.");

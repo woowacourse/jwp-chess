@@ -11,19 +11,19 @@ public class Room extends Entity<Long> {
     private final Long whiteUserId;
     private Long blackUserId;
 
-    public Room(Long gameId, String name, Long whiteUserId) {
+    public Room(final Long gameId, final String name, final Long whiteUserId) {
         this(null, gameId, name, whiteUserId, null);
     }
 
-    public Room(Long id, Long gameId, String name, Long whiteUserId) {
+    public Room(final Long id, final Long gameId, final String name, final Long whiteUserId) {
         this(id, gameId, name, whiteUserId, null);
     }
 
-    public Room(Long gameId, String name, Long whiteUserId, Long blackUserId) {
+    public Room(final Long gameId, final String name, final Long whiteUserId, final Long blackUserId) {
         this(null, gameId, name, whiteUserId, blackUserId);
     }
 
-    public Room(Long id, Long gameId, String name, Long whiteUserId, Long blackUserId) {
+    public Room(final Long id, final Long gameId, final String name, final Long whiteUserId, final Long blackUserId) {
         super(id);
         this.gameId = gameId;
         this.name = name;
@@ -48,12 +48,12 @@ public class Room extends Entity<Long> {
         }
     }
 
-    public void joinBlackUser(Long blackUserId) {
+    public void joinBlackUser(final Long blackUserId) {
         validateBlackUserId(blackUserId);
         this.blackUserId = blackUserId;
     }
 
-    private void validateBlackUserId(Long blackUserId) {
+    private void validateBlackUserId(final Long blackUserId) {
         Objects.requireNonNull(blackUserId, "Black User ID는 null일 수 없습니다.");
     }
 

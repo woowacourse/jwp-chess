@@ -38,7 +38,7 @@ public class MoveService {
         return HistoryDto.from(history);
     }
 
-    private void updatePiece(Long gameId, Position source, Position target, Game game) {
+    private void updatePiece(final Long gameId, final Position source, final Position target, final Game game) {
         Square moveSquare = new Square(gameId, target, game.pickPiece(target));
         squareRepository.updateByGameIdAndPosition(moveSquare);
         Square emptySquare = new Square(gameId, source, game.pickPiece(source));

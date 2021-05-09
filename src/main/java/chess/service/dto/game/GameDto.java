@@ -11,11 +11,13 @@ public class GameDto {
     private double whiteScore;
     private double blackScore;
 
-    public GameDto(String turnOwner, int turnNumber, boolean isPlaying, double whiteScore, double blackScore) {
+    public GameDto(final String turnOwner, final int turnNumber, final boolean isPlaying,
+                   final double whiteScore, final double blackScore) {
         this(null, turnOwner, turnNumber, isPlaying, whiteScore, blackScore);
     }
 
-    public GameDto(Long id, String turnOwner, int turnNumber, boolean isPlaying, double whiteScore, double blackScore) {
+    public GameDto(final Long id, final String turnOwner, final int turnNumber, final boolean isPlaying,
+                   final double whiteScore, final double blackScore) {
         this.id = id;
         this.turnOwner = turnOwner;
         this.turnNumber = turnNumber;
@@ -24,7 +26,7 @@ public class GameDto {
         this.blackScore = blackScore;
     }
 
-    public static GameDto from(Game game) {
+    public static GameDto from(final Game game) {
         return new GameDto(
                 game.getId(),
                 game.turnOwnerName(),

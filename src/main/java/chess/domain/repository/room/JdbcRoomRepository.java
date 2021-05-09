@@ -29,7 +29,7 @@ public class JdbcRoomRepository implements RoomRepository {
     }
 
     @Override
-    public Long save(Room room) {
+    public Long save(final Room room) {
         final String sql = "INSERT INTO room(game_id, name, white_user_id, black_user_id) VALUES(?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -44,7 +44,7 @@ public class JdbcRoomRepository implements RoomRepository {
     }
 
     @Override
-    public Long saveNewRoom(Room room) {
+    public Long saveNewRoom(final Room room) {
         final String sql = "INSERT INTO room(game_id, name, white_user_id) VALUES(?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -58,19 +58,19 @@ public class JdbcRoomRepository implements RoomRepository {
     }
 
     @Override
-    public void updateBlackUser(Long userId, Long roomId) {
+    public void updateBlackUser(final Long userId, final Long roomId) {
         final String sql = "UPDATE room SET black_user_id = ? WHERE id = ?";
         jdbcTemplate.update(sql, userId, roomId);
     }
 
     @Override
-    public Optional<Room> findById(Long id) {
+    public Optional<Room> findById(final Long id) {
         final String sql = "SELECT * FROM room WHERE id = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, roomRowMapper, id));
     }
 
     @Override
-    public Room findByGameId(Long gameId) {
+    public Room findByGameId(final Long gameId) {
         final String sql = "SELECT * FROM room WHERE game_id = ?";
         return jdbcTemplate.queryForObject(sql, roomRowMapper, gameId);
     }

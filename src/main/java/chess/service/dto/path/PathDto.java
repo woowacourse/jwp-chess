@@ -13,7 +13,7 @@ public class PathDto {
     public PathDto() {
     }
 
-    private PathDto(List<String> path) {
+    private PathDto(final List<String> path) {
         this.path = path;
     }
 
@@ -27,7 +27,7 @@ public class PathDto {
         return path;
     }
 
-    public void setPath(List<String> path) {
+    public void setPath(final List<String> path) {
         this.path = path;
     }
 }

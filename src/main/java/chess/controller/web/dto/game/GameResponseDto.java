@@ -3,9 +3,11 @@ package chess.controller.web.dto.game;
 public class GameResponseDto {
 
     private Long id;
-    private String whiteUsername;
-    private String blackUsername;
-    private String roomName;
+    private String turnOwner;
+    private int turnNumber;
+    private boolean isPlaying;
+    private double whiteScore;
+    private double blackScore;
 
     public GameResponseDto() {
     }
@@ -18,27 +20,43 @@ public class GameResponseDto {
         this.id = id;
     }
 
-    public String getWhiteUsername() {
-        return whiteUsername;
+    public String getTurnOwner() {
+        return turnOwner;
     }
 
-    public void setWhiteUsername(String whiteUsername) {
-        this.whiteUsername = whiteUsername;
+    public void setTurnOwner(String turnOwner) {
+        this.turnOwner = turnOwner;
     }
 
-    public String getBlackUsername() {
-        return blackUsername;
+    public int getTurnNumber() {
+        return turnNumber;
     }
 
-    public void setBlackUsername(String blackUsername) {
-        this.blackUsername = blackUsername;
+    public void setTurnNumber(int turnNumber) {
+        this.turnNumber = turnNumber;
     }
 
-    public String getRoomName() {
-        return roomName;
+    public boolean isPlaying() {
+        return isPlaying;
     }
 
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
+    }
+
+    public double getWhiteScore() {
+        return whiteScore;
+    }
+
+    public void setWhiteScore(double whiteScore) {
+        this.whiteScore = whiteScore;
+    }
+
+    public double getBlackScore() {
+        return blackScore;
+    }
+
+    public void setBlackScore(double blackScore) {
+        this.blackScore = blackScore;
     }
 }

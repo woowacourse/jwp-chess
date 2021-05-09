@@ -1,15 +1,19 @@
 package chess.controller.web.dto.game;
 
-public class GameSaveRequestDto {
+public class RoomRequestDto {
 
+    private String roomName;
     private String whiteUsername;
     private String whitePassword;
-    private String roomName;
 
-    public GameSaveRequestDto(String whiteUsername, String whitePassword, String roomName) {
+    public RoomRequestDto(String whiteUsername, String whitePassword, String roomName) {
         this.whiteUsername = whiteUsername;
         this.whitePassword = whitePassword;
         this.roomName = roomName;
+    }
+
+    public String getRoomName() {
+        return roomName;
     }
 
     public String getWhiteUsername() {
@@ -18,9 +22,5 @@ public class GameSaveRequestDto {
 
     public String getWhitePassword() {
         return whitePassword;
-    }
-
-    public String getRoomName() {
-        return roomName;
     }
 }

@@ -34,7 +34,7 @@ public class RoomService {
         Long gameId = gameService.saveNewGame();
         User whiteUser = new User(roomSaveDto.getWhiteUsername(), roomSaveDto.getWhitePassword());
         Long whiteUserId = userService.save(whiteUser);
-        Long roomId = roomRepository.saveNewRoom(new Room(gameId, roomSaveDto.getRoomName(), whiteUserId));
+        Long roomId = roomRepository.save(new Room(gameId, roomSaveDto.getRoomName(), whiteUserId));
         return new RoomAndGameIdDto(roomId, gameId);
     }
 
@@ -42,24 +42,22 @@ public class RoomService {
     public Long joinGame(final Long roomId, final RoomJoinDto roomJoinDto) {
         Optional<Room> roomOptional = roomRepository.findById(roomId);
         User user = new User(roomJoinDto.getUsername(), roomJoinDto.getPassword());
-        if (roomOptional.isPresent()) {
-            return joinUser(roomOptional.get(), user);
-        }
-        throw new IllegalArgumentException("방에 접속할 수 없습니다.");
+        Room room = roomOptional.orElseThrow(() -> new IllegalArgumentException("방에 접속할 수 없습니다."));
+        return joinUser(room, user);
     }
 
     private Long joinUser(final Room room, final User user) {
         User whiteUser = userService.findById(room.whiteUserId());
-        if (whiteUser.sameName(user.getName())) {
+        if (whiteUser.isSame(user)) {
             whiteUser.checkPassword(user.getPassword());
             return room.getId();
         }
-        if (room.haveBlackUser()) {
+        if (room.isUnAccessibleRoom()) {
             User blackUser = userService.findById(room.blackUserId());
             blackUser.checkPassword(user.getPassword());
             return room.getId();
         }
-        if (room.isWaitingRoom()) {
+        if (room.isAccessibleRoom()) {
             return joinBlackUser(user, room);
         }
         throw new IllegalArgumentException("방에 접속할 수 없습니다.");
@@ -82,7 +80,7 @@ public class RoomService {
 
     private PlayingRoomDto playingRoom(final Room room) {
         User whiteUser = userService.findById(room.whiteUserId());
-        if (room.blackUserId() == null || room.blackUserId().equals(0L)) {
+        if (room.isAccessibleRoom()) {
             return new PlayingRoomDto(room.getId(), room.name(), whiteUser.getName(), "");
         }
         User blackUser = userService.findById(room.blackUserId());
@@ -92,16 +90,13 @@ public class RoomService {
     @Transactional(readOnly = true)
     public RoomDto findById(final Long id) {
         Optional<Room> roomOptional = roomRepository.findById(id);
-        if (!roomOptional.isPresent()) {
-            throw new RoomNotFoundException("방을 조회하는데 실패했습니다.");
-        }
-        Room room = roomOptional.get();
+        Room room = roomOptional.orElseThrow(() -> new RoomNotFoundException("방을 조회하는데 실패했습니다."));
         User whiteUser = userService.findById(room.whiteUserId());
-        if (room.blackUserId() == null || room.blackUserId().equals(0L)) {
-            return new RoomDto(room.getId(), room.gameId(), room.name(), whiteUser.getName(), "");
+        if (room.isAccessibleRoom()) {
+            return RoomDto.from(room, whiteUser.getName(), "");
         }
         User blackUser = userService.findById(room.blackUserId());
-        return new RoomDto(room.getId(), room.gameId(), room.name(), whiteUser.getName(), blackUser.getName());
+        return RoomDto.from(room, whiteUser.getName(), blackUser.getName());
     }
 
     @Transactional(readOnly = true)

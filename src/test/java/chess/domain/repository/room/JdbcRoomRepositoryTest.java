@@ -45,7 +45,7 @@ class JdbcRoomRepositoryTest {
         Game game = new Game();
         Long gameId = gameRepository.save(game);
         Room room = new Room(gameId, "방 이름", 55L);
-        Long roomId = roomRepository.saveNewRoom(room);
+        Long roomId = roomRepository.save(room);
 
         //when
         assertThat(roomId).isNotNull();

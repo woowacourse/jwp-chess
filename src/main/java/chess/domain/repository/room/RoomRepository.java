@@ -8,8 +8,6 @@ import java.util.Optional;
 public interface RoomRepository {
     Long save(Room room);
 
-    Long saveNewRoom(Room room);
-
     void updateBlackUser(Long userId, Long roomId);
 
     Optional<Room> findById(Long id);

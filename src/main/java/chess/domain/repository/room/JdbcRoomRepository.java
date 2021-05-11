@@ -44,20 +44,6 @@ public class JdbcRoomRepository implements RoomRepository {
     }
 
     @Override
-    public Long saveNewRoom(final Room room) {
-        final String sql = "INSERT INTO room(game_id, name, white_user_id) VALUES(?,?,?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setLong(1, room.gameId());
-            ps.setString(2, room.name());
-            ps.setLong(3, room.whiteUserId());
-            return ps;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
-    }
-
-    @Override
     public void updateBlackUser(final Long userId, final Long roomId) {
         final String sql = "UPDATE room SET black_user_id = ? WHERE id = ?";
         jdbcTemplate.update(sql, userId, roomId);

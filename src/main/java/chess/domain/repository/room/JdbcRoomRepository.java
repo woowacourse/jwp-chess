@@ -44,9 +44,9 @@ public class JdbcRoomRepository implements RoomRepository {
     }
 
     @Override
-    public void updateBlackUser(final Long userId, final Long roomId) {
-        final String sql = "UPDATE room SET black_user_id = ? WHERE id = ?";
-        jdbcTemplate.update(sql, userId, roomId);
+    public void update(Room room) {
+        final String sql = "UPDATE room SET white_user_id = ?, black_user_id = ? WHERE id = ?";
+        jdbcTemplate.update(sql, room.whiteUserId(), room.blackUserId(), room.getId());
     }
 
     @Override

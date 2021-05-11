@@ -65,8 +65,8 @@ public class RoomService {
 
     private Long joinBlackUser(final User user, final Room room) {
         Long userId = userService.save(user);
-        room.joinBlackUser(userId);
-        roomRepository.updateBlackUser(userId, room.getId());
+        Room updatedRoom = room.joinBlackUser(userId);
+        roomRepository.update(updatedRoom);
         return room.getId();
     }
 

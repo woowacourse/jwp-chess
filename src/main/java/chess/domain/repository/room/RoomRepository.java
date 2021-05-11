@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface RoomRepository {
     Long save(Room room);
 
-    void updateBlackUser(Long userId, Long roomId);
+    void update(Room room);
 
     Optional<Room> findById(Long id);
 

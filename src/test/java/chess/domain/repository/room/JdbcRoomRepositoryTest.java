@@ -60,12 +60,14 @@ class JdbcRoomRepositoryTest {
         Long roomId = roomRepository.save(room);
 
         //when
+        Room savedRoom = roomRepository.findById(roomId).get();
         Long updateBlackUserId = 556L;
-        roomRepository.updateBlackUser(updateBlackUserId, gameId);
-        Room updatedRoom = roomRepository.findById(roomId).get();
+        Room updatedRoom = savedRoom.joinBlackUser(updateBlackUserId);
+        roomRepository.update(updatedRoom);
+        Room findRoom = roomRepository.findById(roomId).get();
 
         //then
-        assertThat(updatedRoom.blackUserId()).isEqualTo(updateBlackUserId);
+        assertThat(findRoom.blackUserId()).isEqualTo(updateBlackUserId);
     }
 
     @Test

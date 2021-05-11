@@ -1,5 +1,7 @@
 package chess.service.dto.room;
 
+import chess.domain.room.Room;
+
 public class RoomDto {
 
     private Long id;
@@ -14,6 +16,14 @@ public class RoomDto {
         this.roomName = roomName;
         this.whiteUserName = whiteUserName;
         this.blackUserName = blackUserName;
+    }
+
+    public static RoomDto from(Room room, String whiteUserName) {
+        return from(room, whiteUserName, "");
+    }
+
+    public static RoomDto from(Room room, String whiteUserName, String blackUserName) {
+        return new RoomDto(room.getId(), room.gameId(), room.name(), whiteUserName, blackUserName);
     }
 
     public Long getId() {

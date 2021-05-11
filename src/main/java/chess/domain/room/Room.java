@@ -5,11 +5,12 @@ import chess.domain.Entity;
 import java.util.Objects;
 
 public class Room extends Entity<Long> {
+    private static final Long NOT_EXIST_VALUE = 0L;
 
     private final Long gameId;
     private final String name;
     private final Long whiteUserId;
-    private Long blackUserId;
+    private final Long blackUserId;
 
     public Room(final Long gameId, final String name, final Long whiteUserId) {
         this(null, gameId, name, whiteUserId, null);
@@ -25,11 +26,11 @@ public class Room extends Entity<Long> {
 
     public Room(final Long id, final Long gameId, final String name, final Long whiteUserId, final Long blackUserId) {
         super(id);
+        validateRoom(name, whiteUserId);
         this.gameId = gameId;
         this.name = name;
         this.whiteUserId = whiteUserId;
         this.blackUserId = blackUserId;
-        validateRoom(name, whiteUserId);
     }
 
     private static void validateRoom(final String name, final Long whiteUserId) {
@@ -48,21 +49,21 @@ public class Room extends Entity<Long> {
         }
     }
 
-    public void joinBlackUser(final Long blackUserId) {
+    public Room joinBlackUser(final Long blackUserId) {
         validateBlackUserId(blackUserId);
-        this.blackUserId = blackUserId;
+        return new Room(this.id, this.gameId, this.name, this.whiteUserId, blackUserId);
     }
 
     private void validateBlackUserId(final Long blackUserId) {
         Objects.requireNonNull(blackUserId, "Black User ID는 null일 수 없습니다.");
     }
 
-    public boolean isWaitingRoom() {
-        return blackUserId == null || blackUserId.equals(0L);
+    public boolean isAccessibleRoom() {
+        return blackUserId == null || blackUserId.equals(NOT_EXIST_VALUE);
     }
 
-    public boolean haveBlackUser() {
-        return blackUserId != null && blackUserId > 0L;
+    public boolean isFullRoom() {
+        return blackUserId != null && blackUserId > NOT_EXIST_VALUE;
     }
 
     public Long gameId() {
@@ -78,6 +79,9 @@ public class Room extends Entity<Long> {
     }
 
     public Long blackUserId() {
+        if (blackUserId == null) {
+            return NOT_EXIST_VALUE;
+        }
         return this.blackUserId;
     }
 }

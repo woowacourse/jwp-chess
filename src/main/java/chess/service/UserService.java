@@ -25,19 +25,22 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findById(final Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            return optionalUser.get();
-        }
-        throw new UserNotFoundException("유저를 조회하는데 실패했습니다.");
+        return optionalUser.orElseThrow(() -> new UserNotFoundException("유저를 조회하는데 실패했습니다."));
     }
 
-    //TODO 유저 입장 시 두 플레이어 모두 입장한 상태에서 2명 외의 다른 이름으로 접속을 요청하면 들어갈 수 없는 방입니다 같은 예외 던지기
     @Transactional(readOnly = true)
     public User findByName(final String name) {
         Optional<User> optionalUser = userRepository.findByName(name);
-        if (optionalUser.isPresent()) {
-            return optionalUser.get();
-        }
-        throw new UserNotFoundException("유저를 조회하는데 실패했습니다.");
+        return optionalUser.orElseThrow(() -> new UserNotFoundException("유저를 조회하는데 실패했습니다."));
+    }
+
+    public User findByRoomIdAndName(final Long roomId, String userName) {
+        Optional<User> optionalUser = userRepository.findByRoomIdAndName(roomId, userName);
+        return optionalUser.orElseThrow(() -> new UserNotFoundException("유저를 조회하는데 실패했습니다."));
+    }
+
+    public void accessibleUser(Long roomId, User user) {
+        User findUser = findByRoomIdAndName(roomId, user.getName());
+        findUser.checkPassword(user.getPassword());
     }
 }

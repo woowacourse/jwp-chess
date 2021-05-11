@@ -16,32 +16,32 @@ public class User extends Entity<Long> {
 
     public User(final Long id, final String name, final String password) {
         super(id);
+        validateUser(name, password);
         this.name = name;
         this.password = password;
-        validateUser();
     }
 
-    private void validateUser() {
-        validateNull();
-        validateEmpty();
+    private void validateUser(String name, String password) {
+        validateNull(name, password);
+        validateEmpty(name, password);
     }
 
-    private void validateNull() {
-        Objects.requireNonNull(this.name, "유저 이름은 null일 수 없습니다.");
-        Objects.requireNonNull(this.password, "유저 비밀번호는 null일 수 없습니다.");
+    private void validateNull(String name, String password) {
+        Objects.requireNonNull(name, "유저 이름은 null일 수 없습니다.");
+        Objects.requireNonNull(password, "유저 비밀번호는 null일 수 없습니다.");
     }
 
-    private void validateEmpty() {
-        if (this.name.isEmpty()) {
+    private void validateEmpty(String name, String password) {
+        if (name.isEmpty()) {
             throw new IllegalArgumentException("유저 이름은 공백일 수 없습니다.");
         }
-        if (this.password.isEmpty()) {
+        if (password.isEmpty()) {
             throw new IllegalArgumentException("유저 비밀번호는 공백일 수 없습니다.");
         }
     }
 
-    public boolean sameName(final String name) {
-        return this.name.equals(name);
+    public boolean isSameName(final User user) {
+        return this.name.equals(user.name);
     }
 
     public void checkPassword(final String inputPassword) {

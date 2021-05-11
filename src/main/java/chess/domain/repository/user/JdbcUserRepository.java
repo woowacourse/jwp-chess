@@ -49,4 +49,14 @@ public class JdbcUserRepository implements UserRepository {
         final String sql = "SELECT * FROM user WHERE name = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, userRowMapper, name));
     }
+
+    @Override
+    public Optional<User> findByRoomIdAndName(Long roomId, String userName) {
+        final String sql = "SELECT * FROM user AS u " +
+                "JOIN room AS r " +
+                "ON u.id = r.white_user_id " +
+                "OR u.id = r.black_user_id " +
+                "WHERE r.id = ? AND u.name = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, userRowMapper, roomId, userName));
+    }
 }

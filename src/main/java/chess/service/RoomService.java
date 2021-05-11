@@ -47,14 +47,8 @@ public class RoomService {
     }
 
     private Long joinUser(final Room room, final User user) {
-        User whiteUser = userService.findById(room.whiteUserId());
-        if (whiteUser.isSame(user)) {
-            whiteUser.checkPassword(user.getPassword());
-            return room.getId();
-        }
-        if (room.isUnAccessibleRoom()) {
-            User blackUser = userService.findById(room.blackUserId());
-            blackUser.checkPassword(user.getPassword());
+        if (room.isFullRoom()) {
+            userService.accessibleUser(room.getId(), user);
             return room.getId();
         }
         if (room.isAccessibleRoom()) {
@@ -93,7 +87,7 @@ public class RoomService {
         Room room = roomOptional.orElseThrow(() -> new RoomNotFoundException("방을 조회하는데 실패했습니다."));
         User whiteUser = userService.findById(room.whiteUserId());
         if (room.isAccessibleRoom()) {
-            return RoomDto.from(room, whiteUser.getName(), "");
+            return RoomDto.from(room, whiteUser.getName());
         }
         User blackUser = userService.findById(room.blackUserId());
         return RoomDto.from(room, whiteUser.getName(), blackUser.getName());

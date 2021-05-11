@@ -41,14 +41,14 @@ public class RoomService {
     @Transactional
     public Long joinGame(final Long roomId, final RoomJoinDto roomJoinDto) {
         Optional<Room> roomOptional = roomRepository.findById(roomId);
+        Room room = roomOptional.orElseThrow(() -> new IllegalArgumentException("해당 방을 찾을 수 없습니다."));
         User user = new User(roomJoinDto.getUsername(), roomJoinDto.getPassword());
-        Room room = roomOptional.orElseThrow(() -> new IllegalArgumentException("방에 접속할 수 없습니다."));
         return joinUser(room, user);
     }
 
     private Long joinUser(final Room room, final User user) {
         if (room.isFullRoom()) {
-            userService.accessibleUser(room.getId(), user);
+            userService.checkAccessibleUser(room.getId(), user);
             return room.getId();
         }
         if (room.isAccessibleRoom()) {
@@ -84,7 +84,7 @@ public class RoomService {
     @Transactional(readOnly = true)
     public RoomDto findById(final Long id) {
         Optional<Room> roomOptional = roomRepository.findById(id);
-        Room room = roomOptional.orElseThrow(() -> new RoomNotFoundException("방을 조회하는데 실패했습니다."));
+        Room room = roomOptional.orElseThrow(() -> new RoomNotFoundException("해당 방을 찾을 수 없습니다."));
         User whiteUser = userService.findById(room.whiteUserId());
         if (room.isAccessibleRoom()) {
             return RoomDto.from(room, whiteUser.getName());

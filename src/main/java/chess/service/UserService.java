@@ -39,7 +39,7 @@ public class UserService {
         return optionalUser.orElseThrow(() -> new UserNotFoundException("유저를 조회하는데 실패했습니다."));
     }
 
-    public void accessibleUser(Long roomId, User user) {
+    public void checkAccessibleUser(Long roomId, User user) {
         User findUser = findByRoomIdAndName(roomId, user.getName());
         findUser.checkPassword(user.getPassword());
     }

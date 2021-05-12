@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
+
     private final ChessRepository chessRepository;
 
     public GameService(ChessRepository chessRepository) {

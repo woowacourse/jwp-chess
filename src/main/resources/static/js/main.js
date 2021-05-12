@@ -19,14 +19,14 @@ imageMap = {
 }
 
 async function init() {
+    this.$gameId = document.querySelector('.id').textContent
     this.$chessBoard = document.querySelector('.chessBoard')
     this.$controller = document.querySelector('.controller')
     this.$controller.addEventListener('click', btnHandler)
     this.$blackResult = document.getElementById('BLACK')
     this.$whiteResult = document.getElementById('WHITE')
+    this.$roomTitle = document.querySelector('.room-title')
     const $home = document.getElementById('home')
-    const url = window.location.href.split('/')
-    this.gameId = url[url.length - 1]
 
     $home.addEventListener('click', function () {
         window.location.href = '/'
@@ -50,11 +50,12 @@ async function initBoard(chessGame) {
             insertPiece(position, piece)
         )
     }
+    this.$roomTitle.textContent = chessGame.title
 }
 
 async function start() {
     return await fetch(
-        `/room/${this.gameId}/game-info`
+        `/room/${this.$gameId}/game-info`
     )
 }
 
@@ -95,12 +96,12 @@ async function finishHandler(finished) {
         $modal.style.display = null
         $modal.querySelector('label').textContent = '게임이 종료되었습니다.'
         document.querySelector('#finish').disabled = false
+        await toggleFinish()
+        await toggleAvatar()
         setTimeout(() => {
             $modal.style.display = 'none'
         }, 1500)
         await deactivateDrag()
-        await toggleFinish()
-        await toggleAvatar()
         removeTurn()
     }
 }
@@ -144,7 +145,6 @@ async function result(blackScore, whiteScore) {
 
 async function btnHandler({target}) {
     const url = window.location.href.split('/')
-    const gameId = url[url.length - 1]
     if (target.id === 'home') {
         window.location.href = '/'
         return
@@ -152,7 +152,7 @@ async function btnHandler({target}) {
 
     if (target.id === 'restart') {
         const response = await fetch(
-            `/room/${gameId}/restart`,
+            `/room/${this.$gameId}/restart`,
             {
                 method: 'POST'
             }
@@ -184,9 +184,8 @@ async function btnHandler({target}) {
 
 async function finish() {
     const url = window.location.href.split('/')
-    const gameId = url[url.length - 1]
     return await fetch(
-        `/room/${gameId}/finish`,
+        `/room/${this.$gameId}/finish`,
         {
             method: 'POST'
         }
@@ -209,7 +208,7 @@ function moveHandler() {
 
 async function move(source, target) {
     let response = await fetch(
-        `/room/${this.gameId}/move`,
+        `/room/${this.$gameId}/move`,
         {
             method: 'PUT',
             body: JSON.stringify({
@@ -226,7 +225,6 @@ async function move(source, target) {
         const chessGame = await response.json()
         assignPieceImage(source, target)
         await changeTurn(chessGame.turn)
-        await finishHandler(chessGame.finished)
         return chessGame
     }
 
@@ -269,4 +267,5 @@ drop = async function (e) {
     target = e.target.closest('div')
     const chessGame = await move(source, target)
     await result(chessGame.blackScore, chessGame.whiteScore)
+    await finishHandler(chessGame.finished)
 }

@@ -33,6 +33,10 @@ public class ChessGame {
         this.title = title;
     }
 
+    public ChessGame(long id, String title) {
+        this(id, Color.WHITE, false, new ChessBoard(), title);
+    }
+
     public void move(Position source, Position target) {
         validateTurn(source);
         chessBoard.move(source, target);
@@ -79,5 +83,9 @@ public class ChessGame {
 
     public String getTitle() {
         return title;
+    }
+
+    public void finish() {
+        this.finished = true;
     }
 }

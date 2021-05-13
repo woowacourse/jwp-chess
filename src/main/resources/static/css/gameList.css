@@ -1,0 +1,136 @@
+.room {
+    height: 3.5vw;
+    border: 5px solid dimgrey;
+    border-radius: 10px;
+}
+
+.roomName {
+    float: left;
+    margin-top: 0.2vw;
+    width: 100%;
+}
+
+.white-username {
+    float: left;
+    margin-top: 0.2vw;
+    margin-left: 1.5vw;
+    width: 12.5vw;
+}
+
+.black-username {
+    float: left;
+    margin-top: 0.2vw;
+    border-left: 2px solid;
+    width: 3.5vw;
+}
+
+#list-container {
+    font-size: 1.6vw;
+}
+
+#roomInfo-blackname {
+    border-left: 1px solid black;
+}
+
+#gameList-container {
+    margin-left: 5vw;
+    border: 5px solid dimgray;
+    border-radius: 10px;
+    border-top: none;
+}
+
+#gameList {
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    height: 100%;
+    max-height: 23vw;
+}
+
+#gameList ol {
+    margin: 0.3vw;
+    padding: 0;
+}
+
+#gameList ol li {
+    display: block;
+    cursor: pointer;
+}
+
+#gameList ol dl {
+    overflow: hidden;
+    margin-top: 0;
+    margin-bottom: 0;
+    border: 1px solid;
+    height: 2.4vw;
+}
+
+#gameList ol dl dt {
+    width: 100%;
+    margin-top: 0.2vw;
+    display: block;
+    float: left;
+}
+
+#gameList ol dl dd {
+    width: 85%;
+    float: left;
+    display: contents;
+    position: absolute;
+}
+
+#gameList .roomInfo-username {
+    float: left;
+    width: 49%;
+    margin-top: 0.2vw;
+}
+
+.onGame {
+    border: 0.5vw solid #2ac0bb;
+}
+
+#main-btn {
+    background: #1AAB8A;
+    color: #fff;
+    border: none;
+    position: relative;
+    height: 60px;
+    font-size: 1.6em;
+    padding: 0 2em;
+    cursor: pointer;
+    transition: 800ms ease all;
+    outline: none;
+    margin-top: 1vw;
+    margin-left: 4.5vw;
+}
+
+#main-btn:hover {
+    background: #fff;
+    color: #1AAB8A;
+}
+
+#main-btn:before, #main-btn:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2px;
+    width: 0;
+    background: #1AAB8A;
+    transition: 400ms ease all;
+}
+
+#main-btn:after {
+    right: inherit;
+    top: inherit;
+    left: 0;
+    bottom: 0;
+}
+
+#main-btn:hover:before, #main-btn:hover:after {
+    width: 100%;
+    transition: 800ms ease all;
+}
+
+.gameList-input {
+    height: 6vw !important;
+}

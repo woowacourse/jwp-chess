@@ -1,67 +1,78 @@
 package chess.domain.history;
 
-import chess.domain.manager.ChessManager;
-import chess.domain.movecommand.MoveCommand;
+import chess.domain.Entity;
+import chess.domain.board.position.Position;
+import chess.domain.manager.State;
 
 import java.util.Objects;
 
-public class History {
+public class History extends Entity<Long> {
 
-    private final String moveCommand;
-    private final String turnOwner;
-    private final int turnNumber;
-    private final boolean isPlaying;
+    private final Long gameId;
+    private final Position source;
+    private final Position target;
+    private final State state;
 
-    private History(String moveCommand, String turnOwner, int turnNumber, boolean isPlaying) {
-        validateHistoryCapture(moveCommand, turnOwner);
-        this.moveCommand = moveCommand;
-        this.turnOwner = turnOwner;
-        this.turnNumber = turnNumber;
-        this.isPlaying = isPlaying;
+    public History(final Long gameId, final Position source, final Position target, final State state) {
+        this.gameId = gameId;
+        this.source = source;
+        this.target = target;
+        this.state = state;
     }
 
-    public static History of(String moveCommand, String turnOwner, int turnNumber, boolean isPlaying) {
-        return new History(moveCommand, turnOwner, turnNumber, isPlaying);
+    public History(final Long id, final Long gameId, final Position source, final Position target, final State state) {
+        super(id);
+        this.gameId = gameId;
+        this.source = source;
+        this.target = target;
+        this.state = state;
     }
 
-    public static History of(MoveCommand moveCommand, ChessManager chessManager) {
-        return new History(moveCommand.moveCommand(), chessManager.turnOwner().name()
-                , chessManager.turnNumber(), chessManager.isPlaying());
+    public History of(final Long gameId, final Position source, final Position target, final State state) {
+        validateHistory(gameId, source, target, state);
+        return new History(gameId, source, target, state);
     }
 
-    private void validateHistoryCapture(String moveCommand, String turnOwner) {
-        validateNull(moveCommand, turnOwner);
-        validateEmpty(moveCommand, turnOwner);
+    private void validateHistory(final Long gameId, final Position source, final Position target, final State state) {
+        Objects.requireNonNull(gameId, "gameId는 null일 수 없습니다.");
+        Objects.requireNonNull(source, "source 위치는 null일 수 없습니다.");
+        Objects.requireNonNull(target, "target 위치는 null일 수 없습니다.");
+        Objects.requireNonNull(state, "state는 null일 수 없습니다.");
     }
 
-    private void validateNull(String moveCommand, String turnOwner) {
-        Objects.requireNonNull(moveCommand, "moveCommand 는 null일 수 없습니다.");
-        Objects.requireNonNull(turnOwner, "turnOwner 는 null일 수 없습니다.");
+    public String sourceToString() {
+        return this.source.parseString();
     }
 
-    private void validateEmpty(String moveCommand, String turnOwner) {
-        if (moveCommand.isEmpty()) {
-            throw new IllegalArgumentException("moveCommand 는 빈값일 수 없습니다.");
-        }
-        if (turnOwner.isEmpty()) {
-            throw new IllegalArgumentException("turnOwner 는 빈값일 수 없습니다.");
-        }
+    public String targetToString() {
+        return this.target.parseString();
     }
 
-
-    public String moveCommand() {
-        return moveCommand;
-    }
-
-    public String turnOwner() {
-        return turnOwner;
+    public String turnOwnerName() {
+        return this.state.turnOwnerName();
     }
 
     public int turnNumber() {
-        return turnNumber;
+        return this.state.turnNumberValue();
     }
 
     public boolean isPlaying() {
-        return isPlaying;
+        return this.state.isPlaying();
+    }
+
+    public Long gameId() {
+        return this.gameId;
+    }
+
+    public Position source() {
+        return this.source;
+    }
+
+    public Position target() {
+        return this.target;
+    }
+
+    public State state() {
+        return this.state;
     }
 }

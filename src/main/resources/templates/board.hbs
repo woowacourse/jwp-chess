@@ -10,8 +10,9 @@
 </head>
 <body>
 <div id="name-container">
-    <div id="game">Room ID : <span id="game-id">{{id}}</span></div>
-    <div id="room-name">&nbsp; / {{gameResponseDto.roomName}}</div>
+    <div id="game-id">{{roomResponseDto.gameId}}</div>
+    <div id="room">Room ID : <span id="room-id">{{roomResponseDto.id}}</span></div>
+    <div id="room-name">&nbsp; / {{roomResponseDto.roomName}}</div>
 </div>
 <div id="main-container">
     <div id="board-container">
@@ -95,13 +96,13 @@
             <div id="top">
                 <div id="white-userName" class="user">
                     <span class="flag">🏳️</span>
-                    <span class="user-name">{{gameResponseDto.whiteUsername}}</span>
-                    <span id="white-score" class="score">38.0</span>
+                    <span class="user-name">{{roomResponseDto.whiteUserName}}</span>
+                    <span id="white-score" class="score"></span>
                 </div>
                 <div id="black-userName" class="user">
                     <span class="flag">🏴</span>
-                    <span class="user-name">{{gameResponseDto.blackUsername}}</span>
-                    <span id="black-score" class="score">38.0</span>
+                    <span class="user-name">{{roomResponseDto.blackUserName}}</span>
+                    <span id="black-score" class="score"></span>
                 </div>
             </div>
             <div id="history">

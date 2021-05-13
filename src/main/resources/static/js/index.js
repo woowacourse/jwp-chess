@@ -1,17 +1,19 @@
 const $start = document.querySelector("#start-btn");
-const $url = "http://localhost:8080/game";
+const $gameList = document.querySelector("#gameList-btn");
+const $url = "http://localhost:8080";
 
 $start.addEventListener("click", startGame);
+$gameList.addEventListener("click", roomList);
 
 function startGame(event) {
     const $roomName = document.querySelector("#roomName").value;
     const $whiteUsername = document.querySelector("#white-username").value;
-    const $blackUsername = document.querySelector("#black-username").value;
+    const $whitePassword = document.querySelector("#white-password").value;
 
     const room = {
         roomName: $roomName,
         whiteUsername: $whiteUsername,
-        blackUsername: $blackUsername
+        whitePassword: $whitePassword
     }
 
     const option = {
@@ -22,28 +24,29 @@ function startGame(event) {
         body: JSON.stringify(room)
     }
 
-    fetch($url, option)
+    fetch($url + "/rooms", option)
         .then(data => {
-            if (data.status === 400) {
-                exceptionHandling(data.json());
-            } else if (!data.ok) {
+            if (!data.ok) {
+                exceptionHandling(data.json())
                 throw new Error(data.status);
             }
             return data.json();
         })
         .then(post => {
-            console.log(post);
-            location.href = $url + "/" + post.gameId;
+            location.href = $url + "/rooms" + "/" + post.roomId;
         })
         .catch(error => {
             console.log(error);
-            alert(error)
         })
+}
 
-    function exceptionHandling(error) {
-        error.then(data => {
-            console.log(data);
-            alert(data.exceptionMessage);
-        })
-    }
+function roomList(event) {
+    location.href = $url + "/rooms";
+}
+
+function exceptionHandling(error) {
+    error.then(data => {
+        console.log(data);
+        alert(data.exceptionMessage);
+    })
 }

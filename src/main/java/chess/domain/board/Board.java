@@ -1,13 +1,12 @@
 package chess.domain.board;
 
+import chess.domain.board.piece.EmptyPiece;
+import chess.domain.board.piece.Owner;
+import chess.domain.board.piece.Piece;
 import chess.domain.board.position.Horizontal;
 import chess.domain.board.position.Path;
 import chess.domain.board.position.Position;
 import chess.domain.board.position.Vertical;
-import chess.domain.piece.EmptyPiece;
-import chess.domain.piece.Owner;
-import chess.domain.piece.Piece;
-import chess.domain.piece.king.King;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Board {
+
     private final Map<Position, Piece> board;
 
     public Board(final Map<Position, Piece> board) {
@@ -64,7 +64,13 @@ public class Board {
     }
 
     public boolean isKingAlive(final Owner owner) {
-        return board.containsValue(King.getInstanceOf(owner));
+        return this.board.values().stream()
+                .anyMatch(piece -> piece.isOwnersKing(owner));
+    }
+
+    public boolean isCaughtKing(final Owner owner) {
+        return this.board.values().stream()
+                .noneMatch(piece -> piece.isOwnersKing(owner));
     }
 
     public boolean isPositionSameOwner(final Position position, final Owner owner) {
@@ -77,9 +83,5 @@ public class Board {
 
     public Map<Position, Piece> getBoard() {
         return new HashMap<>(board);
-    }
-
-    public void resetBoard() {
-        BoardInitializer.resetBoard(board);
     }
 }

@@ -1,23 +1,22 @@
 package chess.domain.board;
 
+import chess.domain.board.piece.EmptyPiece;
+import chess.domain.board.piece.Owner;
+import chess.domain.board.piece.Piece;
+import chess.domain.board.piece.bishop.Bishop;
+import chess.domain.board.piece.king.King;
+import chess.domain.board.piece.knight.Knight;
+import chess.domain.board.piece.pawn.Pawn;
+import chess.domain.board.piece.queen.Queen;
+import chess.domain.board.piece.rook.Rook;
 import chess.domain.board.position.Horizontal;
 import chess.domain.board.position.Path;
 import chess.domain.board.position.Position;
 import chess.domain.board.position.Vertical;
-import chess.domain.piece.EmptyPiece;
-import chess.domain.piece.Owner;
-import chess.domain.piece.Piece;
-import chess.domain.piece.bishop.Bishop;
-import chess.domain.piece.king.King;
-import chess.domain.piece.knight.Knight;
-import chess.domain.piece.pawn.Pawn;
-import chess.domain.piece.queen.Queen;
-import chess.domain.piece.rook.Rook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -94,29 +93,6 @@ public class BoardTest {
 
         assertThat(isTrue).isTrue();
         assertThat(isFalse).isFalse();
-    }
-
-    @Test
-    @DisplayName("보드 리셋 시킬 수 있다.")
-    void resetBoardTest() {
-        board.move(Position.of("a2"), Position.of("a4"));
-        List<Piece> pieces = new ArrayList<>();
-
-        pieces.addAll(Arrays.asList(getPiecesOfFirstLine(Owner.BLACK)));
-        pieces.addAll(Arrays.asList(getPiecesOfSecondLine(Owner.BLACK)));
-        for (int i = 0; i < 4; i++) {
-            pieces.addAll(Arrays.asList(getEmptyLine()));
-        }
-        pieces.addAll(Arrays.asList(getPiecesOfSecondLine(Owner.WHITE)));
-        pieces.addAll(Arrays.asList(getPiecesOfFirstLine(Owner.WHITE)));
-
-        board.resetBoard();
-
-        List<Piece> boardPieces = board.pieces();
-
-        for (int i = 0; i < 64; i++) {
-            assertThat(boardPieces.get(i)).isEqualTo(pieces.get(i));
-        }
     }
 
     private static Piece[] getPiecesOfFirstLine(final Owner owner) {

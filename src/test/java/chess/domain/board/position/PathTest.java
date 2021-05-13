@@ -2,9 +2,9 @@ package chess.domain.board.position;
 
 import chess.domain.board.Board;
 import chess.domain.board.BoardInitializer;
-import chess.domain.piece.Owner;
-import chess.domain.piece.Piece;
-import chess.domain.piece.pawn.Pawn;
+import chess.domain.board.piece.Owner;
+import chess.domain.board.piece.Piece;
+import chess.domain.board.piece.pawn.Pawn;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

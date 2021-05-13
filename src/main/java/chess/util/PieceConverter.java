@@ -1,14 +1,14 @@
 package chess.util;
 
-import chess.domain.piece.EmptyPiece;
-import chess.domain.piece.Owner;
-import chess.domain.piece.Piece;
-import chess.domain.piece.bishop.Bishop;
-import chess.domain.piece.king.King;
-import chess.domain.piece.knight.Knight;
-import chess.domain.piece.pawn.Pawn;
-import chess.domain.piece.queen.Queen;
-import chess.domain.piece.rook.Rook;
+import chess.domain.board.piece.EmptyPiece;
+import chess.domain.board.piece.Owner;
+import chess.domain.board.piece.Piece;
+import chess.domain.board.piece.bishop.Bishop;
+import chess.domain.board.piece.king.King;
+import chess.domain.board.piece.knight.Knight;
+import chess.domain.board.piece.pawn.Pawn;
+import chess.domain.board.piece.queen.Queen;
+import chess.domain.board.piece.rook.Rook;
 
 public class PieceConverter {
 

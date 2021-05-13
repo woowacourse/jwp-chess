@@ -3,9 +3,11 @@ package chess.controller.web.dto.game;
 public class GameResponseDto {
 
     private Long id;
-    private String whiteUsername;
-    private String blackUsername;
-    private String roomName;
+    private String turnOwner;
+    private int turnNumber;
+    private boolean isPlaying;
+    private double whiteScore;
+    private double blackScore;
 
     public GameResponseDto() {
     }
@@ -14,31 +16,47 @@ public class GameResponseDto {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
-    public String getWhiteUsername() {
-        return whiteUsername;
+    public String getTurnOwner() {
+        return turnOwner;
     }
 
-    public void setWhiteUsername(String whiteUsername) {
-        this.whiteUsername = whiteUsername;
+    public void setTurnOwner(final String turnOwner) {
+        this.turnOwner = turnOwner;
     }
 
-    public String getBlackUsername() {
-        return blackUsername;
+    public int getTurnNumber() {
+        return turnNumber;
     }
 
-    public void setBlackUsername(String blackUsername) {
-        this.blackUsername = blackUsername;
+    public void setTurnNumber(final int turnNumber) {
+        this.turnNumber = turnNumber;
     }
 
-    public String getRoomName() {
-        return roomName;
+    public boolean isPlaying() {
+        return isPlaying;
     }
 
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
+    public void setPlaying(final boolean playing) {
+        isPlaying = playing;
+    }
+
+    public double getWhiteScore() {
+        return whiteScore;
+    }
+
+    public void setWhiteScore(final double whiteScore) {
+        this.whiteScore = whiteScore;
+    }
+
+    public double getBlackScore() {
+        return blackScore;
+    }
+
+    public void setBlackScore(final double blackScore) {
+        this.blackScore = blackScore;
     }
 }

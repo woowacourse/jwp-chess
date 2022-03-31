@@ -1,12 +1,8 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.6'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -15,18 +11,16 @@ repositories {
 dependencies {
     implementation 'com.sparkjava:spark-core:2.9.3'
     implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
+    implementation 'ch.qos.logback:logback-classic:1.2.10'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.28'
+    testImplementation 'org.assertj:assertj-core:3.22.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+}
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-
-    implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
-    implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.4'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.rest-assured:rest-assured:4.4.0'
-
-    runtimeOnly 'mysql:mysql-connector-java'
-    runtimeOnly 'com.h2database:h2'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
 }
 
 test {

@@ -33,22 +33,19 @@ public class ChessController {
         });
 
         get("/start", (request,response) -> {
-            Map<String, Object> model = new HashMap<>();
-
             String gameName = request.queryParams("game_name");
             List<String> chessBoard = chessService.findByName(gameName);
 
+            Map<String, Object> model = new HashMap<>();
             model.put("chessboard", chessBoard);
-
             return render(model, "chess.html");
         });
 
         post("/move", (request,response) -> {
-            Map<String, Object> model = new HashMap<>();
-
             List<String> chessBoard = chessService.getCurrentChessBoard();
-
             String moveCommand = makeCommand(request);
+
+            Map<String, Object> model = new HashMap<>();
 
             try {
                 chessBoard = chessService.move(moveCommand);
@@ -65,41 +62,32 @@ public class ChessController {
         });
 
         get("/status", (request, response) -> {
-            Map<String, Object> model = new HashMap<>();
-
             Map<Team, Double> score = chessService.getScore();
-
             List<String> chessBoard = chessService.getCurrentChessBoard();
 
+            Map<String, Object> model = new HashMap<>();
             model.put("blackScore", score.get(BLACK));
             model.put("whiteScore", score.get(WHITE));
             model.put("chessboard", chessBoard);
-
             return render(model, "chess.html");
         });
 
         get("/end", (request, response) -> {
-            Map<String, Object> model = new HashMap<>();
-
             String winTeamName = chessService.finish(Command.from("end"));
-
             List<String> chessBoard = chessService.getCurrentChessBoard();
 
+            Map<String, Object> model = new HashMap<>();
             model.put("winTeam", winTeamName);
             model.put("chessboard", chessBoard);
-
             return render(model, "chess.html");
         });
 
         get("/save", (request, response) -> {
-            Map<String, Object> model = new HashMap<>();
-
             chessService.save();
-
             List<String> chessBoard = chessService.getCurrentChessBoard();
 
+            Map<String, Object> model = new HashMap<>();
             model.put("chessboard", chessBoard);
-
             return render(model, "chess.html");
         });
     }

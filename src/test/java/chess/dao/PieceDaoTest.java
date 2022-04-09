@@ -1,6 +1,7 @@
-package chess.web.dao;
+package chess.dao;
 
 import chess.dao.ChessGameDao;
+import chess.dao.PieceDao;
 import chess.domain.ChessGame;
 import chess.dto.ChessGameDto;
 import org.junit.jupiter.api.AfterEach;
@@ -8,22 +9,26 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class ChessBoardDaoTest {
+class PieceDaoTest {
     private static final ChessGameDao chessGameDao = new ChessGameDao();
+    private static final PieceDao pieceDao = new PieceDao();
 
     @AfterEach
     private void rollback() {
-       chessGameDao.remove("test");
+        chessGameDao.remove("test");
     }
 
-    @DisplayName("체스판 저장 테스트")
+    @DisplayName("피스들 저장 테스트")
     @Test
     public void save() {
         //given
         ChessGame chessGame = new ChessGame("test");
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
 
-        //when & then
-        Assertions.assertDoesNotThrow(() -> chessGameDao.save(chessGameDto));
+        //when
+        chessGameDao.save(chessGameDto);
+
+        //then
+        Assertions.assertDoesNotThrow(() -> pieceDao.save(chessGameDto));
     }
 }

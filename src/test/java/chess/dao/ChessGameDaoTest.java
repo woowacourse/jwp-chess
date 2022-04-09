@@ -1,17 +1,14 @@
-package chess.web.dao;
+package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import chess.dao.ChessGameDao;
-import chess.dao.DBConnector;
-import chess.dao.PieceDao;
 import chess.domain.ChessGame;
 import chess.domain.Command;
 import chess.domain.state.State;
 import chess.dto.ChessGameDto;
 import java.sql.Connection;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +42,8 @@ class ChessGameDaoTest {
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
 
         //when & then
-        Assertions.assertDoesNotThrow(() -> chessGameDao.save(chessGameDto));
+        assertThat(chessGameDao.findByName("test")).isNull();
+        assertDoesNotThrow(() -> chessGameDao.save(chessGameDto));
     }
 
     @DisplayName("체스 게임 업데이트 테스트")

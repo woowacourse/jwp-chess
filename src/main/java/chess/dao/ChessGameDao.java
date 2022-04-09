@@ -1,14 +1,12 @@
-package chess.web.dao;
-
-import static chess.web.dao.DBConnector.getConnection;
+package chess.dao;
 
 import chess.domain.ChessGame;
 import chess.domain.piece.Piece;
 import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
-import chess.web.converter.PieceConverter;
-import chess.web.dto.ChessGameDto;
+import chess.converter.PieceConverter;
+import chess.dto.ChessGameDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,8 +18,8 @@ public class ChessGameDao {
 
     public void save(ChessGameDto chessGameDto) {
         String sql = "insert into chessgame (game_name, turn) values (?, ?)";
-        try (Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, chessGameDto.getGameName());
             statement.setString(2, chessGameDto.getTurn());
@@ -33,7 +31,7 @@ public class ChessGameDao {
 
     public void update(ChessGameDto chessGameDto) {
         String sql = "update chessgame set turn = ? where game_name = ?";
-        try (Connection connection = getConnection();
+        try (Connection connection = DBConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, chessGameDto.getTurn());
@@ -47,7 +45,7 @@ public class ChessGameDao {
     public ChessGame findByName(String gameName) {
         String sql = "select CHESSGAME.turn, CHESSGAME.game_name, PIECE.type, PIECE.team, PIECE.`rank`, PIECE.file from CHESSGAME, PIECE\n"
                 + "where CHESSGAME.game_name = PIECE.game_name AND CHESSGAME.game_name = ?;";
-        try (Connection connection = getConnection();
+        try (Connection connection = DBConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
 
             statement.setString(1, gameName);
@@ -100,7 +98,7 @@ public class ChessGameDao {
     public void remove(String gameName) {
         String sql = "delete from chessgame where game_name = ?";
 
-        try (Connection connection = getConnection();
+        try (Connection connection = DBConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, gameName);

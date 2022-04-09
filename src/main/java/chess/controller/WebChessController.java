@@ -1,4 +1,4 @@
-package chess.web.controller;
+package chess.controller;
 
 import static chess.domain.piece.Team.BLACK;
 import static chess.domain.piece.Team.WHITE;
@@ -8,7 +8,7 @@ import static spark.Spark.staticFiles;
 
 import chess.domain.Command;
 import chess.domain.piece.Team;
-import chess.web.service.ChessService;
+import chess.service.ChessService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +16,11 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-public class ChessController {
+public class WebChessController {
 
     private final ChessService chessService;
 
-    public ChessController(ChessService chessService) {
+    public WebChessController(ChessService chessService) {
         this.chessService = chessService;
     }
 

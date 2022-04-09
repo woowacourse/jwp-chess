@@ -1,11 +1,11 @@
-package chess.web.service;
+package chess.service;
 
 import chess.domain.ChessGame;
 import chess.domain.Command;
 import chess.domain.piece.Team;
-import chess.web.dao.ChessGameDao;
-import chess.web.dao.PieceDao;
-import chess.web.dto.ChessGameDto;
+import chess.dao.ChessGameDao;
+import chess.dao.PieceDao;
+import chess.dto.ChessGameDto;
 import java.util.List;
 import java.util.Map;
 

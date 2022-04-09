@@ -1,11 +1,11 @@
-package chess.web.dao;
+package chess.dao;
 
-import static chess.web.dao.DBConnector.getConnection;
+import static chess.dao.DBConnector.getConnection;
 
-import chess.web.dto.ChessBoardDto;
-import chess.web.dto.ChessGameDto;
-import chess.web.dto.PieceDto;
-import chess.web.dto.PositionDto;
+import chess.dto.ChessBoardDto;
+import chess.dto.ChessGameDto;
+import chess.dto.PieceDto;
+import chess.dto.PositionDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

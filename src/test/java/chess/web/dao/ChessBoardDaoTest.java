@@ -1,7 +1,8 @@
 package chess.web.dao;
 
+import chess.dao.ChessGameDao;
 import chess.domain.ChessGame;
-import chess.web.dto.ChessGameDto;
+import chess.dto.ChessGameDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

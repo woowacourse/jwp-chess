@@ -1,4 +1,4 @@
-package chess.web.converter;
+package chess.converter;
 
 import static chess.domain.piece.Team.BLACK;
 import static chess.domain.piece.Team.WHITE;

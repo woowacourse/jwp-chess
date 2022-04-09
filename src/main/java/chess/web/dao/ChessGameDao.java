@@ -27,7 +27,7 @@ public class ChessGameDao {
             statement.setString(2, chessGameDto.getTurn());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e.getMessage());
         }
     }
 
@@ -40,7 +40,7 @@ public class ChessGameDao {
             statement.setString(2, chessGameDto.getGameName());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e.getMessage());
         }
     }
 
@@ -59,10 +59,8 @@ public class ChessGameDao {
 
             return new ChessGame(getTurn(resultSet), gameName, makeCells(resultSet));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e.getMessage());
         }
-
-        return null;
     }
 
     private String getTurn(ResultSet resultSet) throws SQLException {
@@ -108,7 +106,7 @@ public class ChessGameDao {
             statement.setString(1, gameName);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e.getMessage());
         }
     }
 }

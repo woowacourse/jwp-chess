@@ -42,7 +42,7 @@ public class ChessService {
         return chessGame.getWinTeamName();
     }
 
-    public List<String> findByName(String gameName) {
+    public List<String> findByName(String gameName) throws IllegalStateException {
         ChessGame selectedChessGame = chessGameDao.findByName(gameName);
 
         if (selectedChessGame == null) {
@@ -62,7 +62,7 @@ public class ChessService {
         return chessGame.getChessBoardSymbol();
     }
 
-    public void save() {
+    public void save() throws IllegalStateException {
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
 
         String gameName = chessGameDto.getGameName();
@@ -77,12 +77,12 @@ public class ChessService {
         saveChessGame(chessGameDto);
     }
 
-    private void updateChessGame(ChessGameDto chessGameDto) {
+    private void updateChessGame(ChessGameDto chessGameDto) throws IllegalStateException {
         chessGameDao.update(chessGameDto);
         pieceDao.update(chessGameDto);
     }
 
-    private void saveChessGame(ChessGameDto chessGameDto) {
+    private void saveChessGame(ChessGameDto chessGameDto) throws IllegalStateException {
         chessGameDao.save(chessGameDto);
         pieceDao.save(chessGameDto);
     }

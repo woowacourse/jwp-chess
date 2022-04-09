@@ -32,12 +32,21 @@ public class ChessController {
             return render(model, "index.html");
         });
 
-        get("/start", (request,response) -> {
-            String gameName = request.queryParams("game_name");
-            List<String> chessBoard = chessService.findByName(gameName);
-
+        get("/error", (request, response) -> {
             Map<String, Object> model = new HashMap<>();
-            model.put("chessboard", chessBoard);
+            return render(model, "error.html");
+        });
+
+        get("/start", (request,response) -> {
+            Map<String, Object> model = new HashMap<>();
+            try {
+                String gameName = request.queryParams("game_name");
+                List<String> chessBoard = chessService.findByName(gameName);
+
+                model.put("chessboard", chessBoard);
+            } catch (IllegalStateException e) {
+                response.redirect("/error");
+            }
             return render(model, "chess.html");
         });
 
@@ -83,7 +92,11 @@ public class ChessController {
         });
 
         get("/save", (request, response) -> {
-            chessService.save();
+            try {
+                chessService.save();
+            } catch (IllegalStateException e) {
+                response.redirect("/error");
+            }
             List<String> chessBoard = chessService.getCurrentChessBoard();
 
             Map<String, Object> model = new HashMap<>();

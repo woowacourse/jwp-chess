@@ -18,14 +18,14 @@ public class DBConnector {
         }
     }
 
-    static Connection getConnection(){
+    static Connection getConnection() {
         loadDriver();
         Connection connection = null;
 
         try {
             connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
         } catch(SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e.getMessage());
         }
 
         return  connection;

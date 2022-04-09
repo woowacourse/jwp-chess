@@ -25,7 +25,7 @@ public class PieceDao {
             updateCells(gameName, cells, statement);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e.getMessage());
         }
     }
 
@@ -51,7 +51,7 @@ public class PieceDao {
             statement.setString(1, gameName);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e.getMessage());
         }
     }
 

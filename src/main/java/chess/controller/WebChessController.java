@@ -41,7 +41,7 @@ public class WebChessController {
     private void init() {
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            return render(model, "game.html");
+            return render(model, "game.hbs");
         });
     }
 
@@ -60,7 +60,7 @@ public class WebChessController {
             }
             model.put("play", true);
             model.put("board", chessService.currentBoardForUI());
-            return render(model, "game.html");
+            return render(model, "game.hbs");
         });
     }
 
@@ -95,7 +95,7 @@ public class WebChessController {
                 model.put("play", true);
                 model.put("status", chessService.status());
                 model.put("board", chessService.currentBoardForUI());
-                return render(model, "game.html");
+                return render(model, "game.hbs");
             }
             res.redirect("/end");
             return null;
@@ -127,7 +127,7 @@ public class WebChessController {
             model.put("status", chessService.status());
             model.put("board", chessService.currentBoardForUI());
             model.put("winner", chessService.findWinner());
-            return render(model, "game.html");
+            return render(model, "game.hbs");
         });
     }
 }

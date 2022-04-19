@@ -1,5 +1,4 @@
 plugins {
-<<<<<<< HEAD
     id 'org.springframework.boot' version '2.6.6'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
@@ -8,12 +7,6 @@ plugins {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
-=======
-    id 'java'
-}
-
-version '1.0-SNAPSHOT'
->>>>>>> level1/step2
 
 repositories {
     mavenCentral()
@@ -22,7 +15,6 @@ repositories {
 dependencies {
     implementation 'com.sparkjava:spark-core:2.9.3'
     implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
-<<<<<<< HEAD
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
@@ -35,7 +27,6 @@ dependencies {
 
     runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'com.h2database:h2'
-=======
     implementation 'ch.qos.logback:logback-classic:1.2.10'
     runtimeOnly 'mysql:mysql-connector-java:8.0.28'
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.10.3'   // log4j2
@@ -44,17 +35,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
-    }
->>>>>>> level1/step2
-}
-
 test {
     useJUnitPlatform()
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> level1/step2

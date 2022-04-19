@@ -111,9 +111,13 @@ function printTurn(data) {
 }
 
 async function start() {
+<<<<<<< HEAD
   const res = await fetch(`/games/${gameId}`, {
     method: "PUT",
   });
+=======
+  const res = await fetch(`/api/start/${gameId}`);
+>>>>>>> feat: 기존 자바 체스 이식
   const data = await res.json();
   if (!res.ok) {
     alert(data.message);
@@ -126,9 +130,13 @@ async function start() {
 }
 
 async function restart() {
+<<<<<<< HEAD
   const res = await fetch(`/games/${gameId}`, {
     method: "PUT",
   });
+=======
+  const res = await fetch(`/api/restart/${gameId}`);
+>>>>>>> feat: 기존 자바 체스 이식
   const data = await res.json();
   if (!res.ok) {
     alert(data.message);

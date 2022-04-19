@@ -27,12 +27,20 @@ public class PieceResponse {
         return String.valueOf(row.getValue());
     }
 
+    public Piece toPiece() {
+        return PieceType.valueOf(pieceType.toUpperCase(Locale.ROOT))
+                .createPiece(Color.valueOf(color.toUpperCase(Locale.ROOT)));
+    }
+    
     public String getPosition() {
         return position;
     }
 
-    public Piece toPiece() {
-        return PieceType.valueOf(pieceType.toUpperCase(Locale.ROOT))
-                .createPiece(Color.valueOf(color.toUpperCase(Locale.ROOT)));
+    public String getPieceType() {
+        return pieceType;
+    }
+
+    public String getColor() {
+        return color;
     }
 }

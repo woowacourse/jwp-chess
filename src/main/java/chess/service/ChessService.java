@@ -17,7 +17,9 @@ import chess.domain.piece.Piece;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessService {
 
     private static final int ROW_INDEX = 0;

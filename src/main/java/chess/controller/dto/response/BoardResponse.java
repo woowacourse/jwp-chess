@@ -20,4 +20,8 @@ public class BoardResponse {
                 .map(entry -> new PieceResponse(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
+
+    public List<PieceResponse> getPieces() {
+        return pieces;
+    }
 }

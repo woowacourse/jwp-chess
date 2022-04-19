@@ -16,7 +16,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PieceDaoImpl implements PieceDao {
 
     private static final int ROW_INDEX = 0;

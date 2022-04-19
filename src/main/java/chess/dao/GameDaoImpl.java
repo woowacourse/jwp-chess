@@ -6,9 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import org.springframework.stereotype.Component;
 
-;
-
+@Component
 public class GameDaoImpl implements GameDao {
 
     private final ConnectionSetup connectionSetup;

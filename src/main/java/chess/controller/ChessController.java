@@ -1,5 +1,6 @@
 package chess.controller;
 
+<<<<<<< HEAD
 import chess.controller.dto.GameDto;
 import chess.controller.dto.request.GameAccessRequest;
 import chess.controller.dto.request.MoveRequest;
@@ -20,18 +21,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+=======
+import chess.controller.dto.response.ChessGameResponse;
+import chess.service.ChessService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+>>>>>>> feat: 게임 정보를 불러오는 api 기능과 URL 매핑 완료
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+<<<<<<< HEAD
 @RequestMapping("/games")
 public class ChessController {
+=======
+@RequestMapping("/api")
+public class ChessController {
+
+>>>>>>> feat: 게임 정보를 불러오는 api 기능과 URL 매핑 완료
     private final ChessService chessService;
 
     public ChessController(ChessService chessService) {
         this.chessService = chessService;
     }
 
+<<<<<<< HEAD
     @GetMapping("/{gameId}")
     public ChessGameResponse loadGame(@PathVariable long gameId) {
         return chessService.loadGame(gameId);
@@ -92,6 +106,11 @@ public class ChessController {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Void> handleDataNotFound() {
         return ResponseEntity.notFound().build();
+=======
+    @GetMapping("/load/{gameId}")
+    public ChessGameResponse loadGame(@PathVariable long gameId) {
+        return chessService.createOrLoadGame(gameId);
+>>>>>>> feat: 게임 정보를 불러오는 api 기능과 URL 매핑 완료
     }
 }
 

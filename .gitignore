@@ -31,5 +31,12 @@ out/
 ### VS Code ###
 .vscode/
 
+<<<<<<< HEAD
 ### DOCKER ###
 /docker/db/
+=======
+### Docker ###
+docker/db/mysql/data/
+docker/db/mysql/init/*
+!docker/db/mysql/init/init.sql
+>>>>>>> level1/step2

@@ -1,4 +1,4 @@
-const API_HOST = "http://localhost:4567"
+const API_HOST = "http://localhost:8080"
 
 const X_AXES = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const Y_AXES = ["8", "7", "6", "5", "4", "3", "2", "1"];
@@ -15,23 +15,23 @@ async function fetchAsGet(path) {
 }
 
 const fetchBoard = async () => {
-    return fetchAsGet("/board");
+    return fetchAsGet("board");
 }
 
 const fetchCurrentTurn = async () => {
-    return fetchAsGet("/turn");
+    return fetchAsGet("turn");
 }
 
 const fetchScore = async () => {
-    return fetchAsGet("/score");
+    return fetchAsGet("score");
 }
 
 const fetchWinner = async () => {
-    return fetchAsGet("/winner");
+    return fetchAsGet("winner");
 }
 
 const move = async (from, to) => {
-    await fetch("/move", {
+    await fetch("move", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -42,7 +42,7 @@ const move = async (from, to) => {
 }
 
 const initialize = async () => {
-    await fetch("/initialize", {
+    await fetch("initialize", {
         method: "POST"
     })
     await render();

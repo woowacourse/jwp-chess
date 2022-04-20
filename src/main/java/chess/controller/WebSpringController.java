@@ -1,21 +1,20 @@
 package chess.controller;
 
-import java.util.Map;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import chess.dao.BoardDaoImpl;
 import chess.dao.GameDaoImpl;
-import chess.domain.position.Position;
+import chess.dto.request.MovePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.BoardDto;
+import chess.dto.response.CommandResultDto;
 import chess.dto.response.PieceColorDto;
 import chess.dto.response.ScoreResultDto;
 import chess.service.ChessService;
-import chess.util.BodyParser;
 import chess.util.JsonMapper;
 
 @RestController
@@ -67,31 +66,29 @@ public class WebSpringController {
         }
     }
 
+    @ResponseBody
     @PostMapping("/move")
-    public String movePiece(@RequestBody String req) {
+    public CommandResultDto movePiece(@RequestBody MovePieceDto movePieceDto) {
         try {
-            Map<String, String> moveRequest = BodyParser.parseToMap(req);
-
-            Position from = Position.from(moveRequest.get("from"));
-            Position to = Position.from(moveRequest.get("to"));
-
-            chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, from, to));
+            chessService.movePiece(
+                UpdatePiecePositionDto.of(GAME_ID, movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition()));
         } catch (IllegalStateException e) {
-            return e.getMessage();
+            return CommandResultDto.of(false, e.getMessage());
         }
 
-        return "success";
+        return CommandResultDto.of(true, "성공하였습니다.");
     }
 
     // TODO: Exception 으로 catch 하면 안됨
+    @ResponseBody
     @PostMapping("/initialize")
-    public String initialize() {
+    public CommandResultDto initialize() {
         try {
             chessService.initializeGame(GAME_ID);
         } catch (Exception e) {
-            return "fail";
+            return CommandResultDto.of(false, e.getMessage());
         }
-        return "success";
+        return CommandResultDto.of(true, "성공하였습니다.");
     }
 
 }

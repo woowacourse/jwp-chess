@@ -1,5 +1,10 @@
 package chess;
 
+import chess.controller.WebController;
+import chess.dao.DatabaseGameDao;
+import chess.dao.DatabaseMemberDao;
+import chess.service.GameService;
+import chess.service.MemberService;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -10,13 +15,10 @@ import static spark.Spark.get;
 
 public class SparkChessApplication {
     public static void main(String[] args) {
-        get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(model, "index.hbs");
-        });
-    }
-
-    private static String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+        final WebController controller = new WebController(
+                new GameService(new DatabaseGameDao(new DatabaseMemberDao()), new DatabaseMemberDao()),
+                new MemberService(new DatabaseMemberDao())
+        );
+        controller.run();
     }
 }

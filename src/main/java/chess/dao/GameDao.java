@@ -12,6 +12,4 @@ public interface GameDao {
     void updateState(long id, GameState gameState);
 
     void delete(long id);
-
-    void deleteAll();
 }

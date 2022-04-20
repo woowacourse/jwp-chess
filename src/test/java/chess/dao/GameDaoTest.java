@@ -5,24 +5,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.domain.GameState;
 import com.mysql.cj.exceptions.AssertionFailedException;
 import java.util.Optional;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 public class GameDaoTest {
 
     private static final long testGameId = 2;
 
     @Autowired
     private GameDao gameDao;
-
-    @AfterEach
-    void cleanUp() {
-        gameDao.deleteAll();
-    }
 
     @DisplayName("게임 저장 테스트")
     @Test

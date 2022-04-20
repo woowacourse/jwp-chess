@@ -64,10 +64,4 @@ public class GameDaoImpl implements GameDao {
         MapSqlParameterSource parameter = new MapSqlParameterSource("game_id", id);
         namedParameterJdbcTemplate.update(query, parameter);
     }
-
-    @Override
-    public void deleteAll() {
-        String query = "DELETE FROM game";
-        namedParameterJdbcTemplate.update(query, new MapSqlParameterSource());
-    }
 }

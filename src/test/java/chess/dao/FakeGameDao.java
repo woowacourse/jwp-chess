@@ -35,9 +35,4 @@ public class FakeGameDao implements GameDao {
     public void delete(long id) {
         games.remove(id);
     }
-
-    @Override
-    public void deleteAll() {
-        games.clear();
-    }
 }

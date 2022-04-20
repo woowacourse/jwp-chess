@@ -11,12 +11,12 @@
     </div>
     <h2 class="main-message center-object">게임 목록</h2>
     <div>
-        {{#each this.games}}
+        {{#each games.games}}
         <a class="center-object" href ="/board/{{this.id}}"><h2>{{this.name}}</h2></a>
         {{/each}}
     </div>
     <div class="center-object">
-        <form action="/board" method="post"  enctype="text/plain">
+        <form action="/board" method="post" >
             <label for="name">새로운 게임 이름: </label>
             <input type="text" name="name" id="name" required>
             <input type="submit">

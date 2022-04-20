@@ -6,6 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import spark.Request;
+import spark.Response;
 
 @Controller
 public class ChessController {
@@ -17,7 +22,8 @@ public class ChessController {
     }
 
     @GetMapping("/")
-    public String renderIndex() {
+    public String renderIndex(Model model) {
+        model.addAttribute("games", chessService.getAllGames());
         return "index";
     }
 
@@ -42,5 +48,11 @@ public class ChessController {
     public String initBoard(@PathVariable int gameId) {
         chessService.initGame(gameId);
         return "redirect:../board/" + gameId;
+    }
+
+    @PostMapping("/board")
+    public String createGame(@RequestParam String name) {
+        chessService.createGame(name.trim());
+        return "redirect:/";
     }
 }

@@ -1,5 +1,6 @@
 package springchess.dao;
 
+import org.springframework.stereotype.Repository;
 import springchess.model.piece.Piece;
 import springchess.model.piece.PieceType;
 import springchess.model.piece.Team;
@@ -11,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class ChessPieceDao implements PieceDao<Piece> {
 
     private final ConnectionManager connectionManager;

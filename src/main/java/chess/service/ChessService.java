@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 public class ChessService {
 
@@ -138,24 +140,25 @@ public class ChessService {
     }
 
     public Map<String, Double> status(int roomId) {
-         return Team.getPlayerTeams().stream()
-                .collect(Collectors.toMap(Enum::name, team -> calculateScore(roomId, team)));
+        Room room = chessRoomDao.getById(roomId);
+        return Team.getPlayerTeams().stream()
+                .collect(Collectors.toMap(Enum::name, team -> calculateScore(room.getBoardId(), team)));
     }
 
-    public double calculateScore(int roomId, final Team team) {
-        return calculateDefaultScore(roomId, team) - 0.5 * countPawnsOnSameColumns(roomId, team);
+    public double calculateScore(int boardId, final Team team) {
+        return calculateDefaultScore(boardId, team) - 0.5 * countPawnsOnSameColumns(boardId, team);
     }
 
-    private double calculateDefaultScore(int roomId, Team team) {
-        return existPieces(roomId)
+    private double calculateDefaultScore(int boardId, Team team) {
+        return existPieces(boardId)
                 .stream()
                 .filter(piece -> piece.isSameTeam(team))
                 .mapToDouble(Piece::getPoint)
                 .sum();
     }
 
-    public List<Piece> existPieces(int roomId) {
-        return chessPieceDao.getAllPiecesByBoardId(roomId);
+    public List<Piece> existPieces(int boardId) {
+        return chessPieceDao.getAllPiecesByBoardId(boardId);
     }
 
     private int countPawnsOnSameColumns(int roomId, final Team team) {

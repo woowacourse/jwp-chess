@@ -1,5 +1,6 @@
 package springchess.dao;
 
+import org.springframework.stereotype.Repository;
 import springchess.model.board.Board;
 import springchess.model.piece.Piece;
 import springchess.model.piece.Team;
@@ -12,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Map;
 
+@Repository
 public class ChessBoardDao implements BoardDao<Board> {
 
     private final ConnectionManager connectionManager;

@@ -43,7 +43,7 @@ public class SparkChessApplication {
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             model.put("rooms", chessController.getRooms());
-            return render(model, "home.html");
+            return render(model, "home.hbs");
         });
 
         post("/room", (req, res) -> {
@@ -62,7 +62,7 @@ public class SparkChessApplication {
             Map<String, Object> model = new HashMap<>();
             model.put("roomId", Integer.parseInt(req.params(":roomId")));
             model.put("board", chessController.getBoard(Integer.parseInt(req.params(":roomId"))));
-            return render(model, "chess-game.html");
+            return render(model, "chess-game.hbs");
         });
 
         post("/room/:roomId/move", (req, res) -> {
@@ -84,7 +84,7 @@ public class SparkChessApplication {
             final int roomId = Integer.parseInt(req.params(":roomId"));
             model.put("result", chessController.score(roomId));
             chessController.end(roomId);
-            return render(model, "result.html");
+            return render(model, "result.hbs");
         });
     }
 

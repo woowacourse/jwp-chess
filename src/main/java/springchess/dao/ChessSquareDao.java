@@ -1,5 +1,6 @@
 package springchess.dao;
 
+import org.springframework.stereotype.Repository;
 import springchess.model.piece.Piece;
 import springchess.model.piece.PieceType;
 import springchess.model.piece.Team;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class ChessSquareDao implements SquareDao<Square> {
 
     private final ConnectionManager connectionManager;

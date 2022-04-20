@@ -1,5 +1,6 @@
 package springchess.dao;
 
+import org.springframework.stereotype.Repository;
 import springchess.model.member.Member;
 
 import java.sql.PreparedStatement;
@@ -8,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class ChessMemberDao implements MemberDao<Member> {
 
     private final ConnectionManager connectionManager;

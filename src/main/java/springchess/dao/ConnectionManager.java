@@ -1,9 +1,14 @@
 package springchess.dao;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Component
 public final class ConnectionManager {
 
     private static final String URL = "jdbc:mysql://localhost:13306/chess";

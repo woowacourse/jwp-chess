@@ -1,5 +1,6 @@
 package springchess.service;
 
+import org.springframework.stereotype.Service;
 import springchess.dao.*;
 import springchess.dto.BoardDto;
 import springchess.dto.RoomDto;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class ChessService {
 
     private static final int PROPER_KING_COUNT = 2;
@@ -143,24 +145,25 @@ public class ChessService {
     }
 
     public double calculateScore(int roomId, final Team team) {
-        return calculateDefaultScore(roomId, team) - 0.5 * countPawnsOnSameColumns(roomId, team);
+        Room room = chessRoomDao.getById(roomId);
+        return calculateDefaultScore(room.getBoardId(), team) - 0.5 * countPawnsOnSameColumns(room.getBoardId(), team);
     }
 
-    private double calculateDefaultScore(int roomId, Team team) {
-        return existPieces(roomId)
+    private double calculateDefaultScore(int boardId, Team team) {
+        return existPieces(boardId)
                 .stream()
                 .filter(piece -> piece.isSameTeam(team))
                 .mapToDouble(Piece::getPoint)
                 .sum();
     }
 
-    public List<Piece> existPieces(int roomId) {
-        return chessPieceDao.getAllPiecesByBoardId(roomId);
+    public List<Piece> existPieces(int boardId) {
+        return chessPieceDao.getAllPiecesByBoardId(boardId);
     }
 
-    private int countPawnsOnSameColumns(int roomId, final Team team) {
+    private int countPawnsOnSameColumns(int boardId, final Team team) {
         return Arrays.stream(File.values())
-                .mapToInt(file -> chessPieceDao.countPawnsOnSameColumn(roomId, file, team))
+                .mapToInt(file -> chessPieceDao.countPawnsOnSameColumn(boardId, file, team))
                 .filter(count -> count > 1)
                 .sum();
     }

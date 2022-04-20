@@ -25,12 +25,12 @@ import spark.Request;
 import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-public class WebController {
-
+public class SparkWebController {
+    
     private final GameService gameService;
     private final MemberService memberService;
 
-    public WebController(final GameService gameService, final MemberService memberService) {
+    public SparkWebController(final GameService gameService, final MemberService memberService) {
         this.gameService = gameService;
         this.memberService = memberService;
     }

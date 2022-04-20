@@ -13,7 +13,9 @@ import chess.domain.square.Square;
 import chess.dto.GameResultDto;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
+@Service
 public class GameService {
 
     private final GameDao gameDao;
@@ -24,13 +26,13 @@ public class GameService {
         this.memberDao = memberDao;
     }
 
-    public void createGame(final Long whiteId, final Long blackId) {
+    public Long createGame(final Long whiteId, final Long blackId) {
         final Member white = memberDao.findById(whiteId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
         final Member black = memberDao.findById(blackId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
         final Board board = new Board(BoardInitializer.create());
         final Participant participant = new Participant(white, black);
 
-        gameDao.save(new ChessGame(board, Team.WHITE, participant));
+        return gameDao.save(new ChessGame(board, Team.WHITE, participant));
     }
 
     public List<ChessGame> findPlayingGames() {

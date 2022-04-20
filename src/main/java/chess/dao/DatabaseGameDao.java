@@ -20,7 +20,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class DatabaseGameDao implements GameDao {
 
     private final PieceDao pieceDao = new PieceDao();

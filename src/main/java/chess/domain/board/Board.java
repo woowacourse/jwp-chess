@@ -1,12 +1,11 @@
 package chess.domain.board;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import chess.domain.board.coordinate.Coordinate;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Symbol;
 import chess.domain.piece.Team;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Board {
     public static final int BOTH_KING_ALIVE = 2;

@@ -1,10 +1,10 @@
 package chess.domain.game.state;
 
-import static org.assertj.core.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.board.coordinate.Coordinate;
+import org.junit.jupiter.api.Test;
 
 public class StartTest {
     @Test
@@ -17,7 +17,7 @@ public class StartTest {
     @Test
     void end() {
         State start = new Start();
-        assertThatThrownBy(() -> start.end())
+        assertThatThrownBy(start::end)
                 .isInstanceOf(IllegalStateException.class);
     }
 

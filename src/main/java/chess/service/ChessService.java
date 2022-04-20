@@ -1,13 +1,6 @@
 package chess.service;
 
-import static chess.domain.game.ChessGame.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
+import static chess.domain.game.ChessGame.END_STATE;
 
 import chess.dao.BoardDao;
 import chess.dao.GameDao;
@@ -19,6 +12,11 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.dto.BoardDto;
 import chess.dto.GameDto;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
@@ -71,7 +69,6 @@ public class ChessService {
             saveGame(whiteUserName, blackUserName, Team.WHITE.name());
             gameId = findGameIdByUserName(whiteUserName, blackUserName);
             saveBoard(Board.create(), gameId);
-            return;
         }
     }
 

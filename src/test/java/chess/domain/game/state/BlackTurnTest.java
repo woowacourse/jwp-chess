@@ -1,14 +1,14 @@
 package chess.domain.game.state;
 
-import static org.assertj.core.api.Assertions.*;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.board.Board;
 import chess.domain.board.coordinate.Coordinate;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class BlackTurnTest {
     @Test

@@ -1,33 +1,40 @@
 package chess.domain.board;
 
-import static chess.domain.piece.Symbol.*;
-import static chess.domain.piece.Team.*;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static chess.domain.piece.Symbol.BISHOP;
+import static chess.domain.piece.Symbol.EMPTY;
+import static chess.domain.piece.Symbol.KING;
+import static chess.domain.piece.Symbol.KNIGHT;
+import static chess.domain.piece.Symbol.PAWN;
+import static chess.domain.piece.Symbol.QUEEN;
+import static chess.domain.piece.Symbol.ROOK;
+import static chess.domain.piece.Team.BLACK;
+import static chess.domain.piece.Team.NONE;
+import static chess.domain.piece.Team.WHITE;
 
 import chess.domain.board.coordinate.Column;
 import chess.domain.board.coordinate.Coordinate;
 import chess.domain.board.coordinate.Row;
 import chess.domain.piece.Piece;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public enum InitialBoard {
-    BLACK_BISHOP(Arrays.asList(Column.C, Column.F), Arrays.asList(Row.EIGHT), Piece.of(BISHOP.name(), BLACK.name())),
-    WHITE_BISHOP(Arrays.asList(Column.C, Column.F), Arrays.asList(Row.ONE), Piece.of(BISHOP.name(), WHITE.name())),
-    BLACK_KING(Arrays.asList(Column.E), Arrays.asList(Row.EIGHT), Piece.of(KING.name(), BLACK.name())),
-    WHITE_KING(Arrays.asList(Column.E), Arrays.asList(Row.ONE), Piece.of(KING.name(), WHITE.name())),
-    BLACK_KNIGHT(Arrays.asList(Column.B, Column.G), Arrays.asList(Row.EIGHT), Piece.of(KNIGHT.name(), BLACK.name())),
-    WHITE_KNIGHT(Arrays.asList(Column.B, Column.G), Arrays.asList(Row.ONE), Piece.of(KNIGHT.name(), WHITE.name())),
-    BLACK_PAWN(Arrays.asList(Column.values()), Arrays.asList(Row.SEVEN), Piece.of(PAWN.name(), BLACK.name())),
-    WHITE_PAWN(Arrays.asList(Column.values()), Arrays.asList(Row.TWO), Piece.of(PAWN.name(), WHITE.name())),
-    BLACK_QUEEN(Arrays.asList(Column.D), Arrays.asList(Row.EIGHT), Piece.of(QUEEN.name(), BLACK.name())),
-    WHITE_QUEEN(Arrays.asList(Column.D), Arrays.asList(Row.ONE), Piece.of(QUEEN.name(), WHITE.name())),
-    BLACK_ROOK(Arrays.asList(Column.A, Column.H), Arrays.asList(Row.EIGHT), Piece.of(ROOK.name(), BLACK.name())),
-    WHITE_ROOK(Arrays.asList(Column.A, Column.H), Arrays.asList(Row.ONE), Piece.of(ROOK.name(), WHITE.name())),
-    NONE_EMPTY(Arrays.asList(Column.values()),
-            Arrays.asList(Row.THREE, Row.FOUR, Row.FIVE, Row.SIX), Piece.of(EMPTY.name(), NONE.name()));
+    BLACK_BISHOP(List.of(Column.C, Column.F), List.of(Row.EIGHT), Piece.of(BISHOP.name(), BLACK.name())),
+    WHITE_BISHOP(List.of(Column.C, Column.F), List.of(Row.ONE), Piece.of(BISHOP.name(), WHITE.name())),
+    BLACK_KING(List.of(Column.E), List.of(Row.EIGHT), Piece.of(KING.name(), BLACK.name())),
+    WHITE_KING(List.of(Column.E), List.of(Row.ONE), Piece.of(KING.name(), WHITE.name())),
+    BLACK_KNIGHT(List.of(Column.B, Column.G), List.of(Row.EIGHT), Piece.of(KNIGHT.name(), BLACK.name())),
+    WHITE_KNIGHT(List.of(Column.B, Column.G), List.of(Row.ONE), Piece.of(KNIGHT.name(), WHITE.name())),
+    BLACK_PAWN(List.of(Column.values()), List.of(Row.SEVEN), Piece.of(PAWN.name(), BLACK.name())),
+    WHITE_PAWN(List.of(Column.values()), List.of(Row.TWO), Piece.of(PAWN.name(), WHITE.name())),
+    BLACK_QUEEN(List.of(Column.D), List.of(Row.EIGHT), Piece.of(QUEEN.name(), BLACK.name())),
+    WHITE_QUEEN(List.of(Column.D), List.of(Row.ONE), Piece.of(QUEEN.name(), WHITE.name())),
+    BLACK_ROOK(List.of(Column.A, Column.H), List.of(Row.EIGHT), Piece.of(ROOK.name(), BLACK.name())),
+    WHITE_ROOK(List.of(Column.A, Column.H), List.of(Row.ONE), Piece.of(ROOK.name(), WHITE.name())),
+    NONE_EMPTY(List.of(Column.values()),
+            List.of(Row.THREE, Row.FOUR, Row.FIVE, Row.SIX), Piece.of(EMPTY.name(), NONE.name()));
 
     private final List<Column> columns;
     private final List<Row> rows;

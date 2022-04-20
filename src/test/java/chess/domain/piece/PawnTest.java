@@ -1,14 +1,13 @@
 package chess.domain.piece;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.domain.board.Board;
+import chess.domain.board.coordinate.Coordinate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import chess.domain.board.Board;
-import chess.domain.board.coordinate.Coordinate;
 
 public class PawnTest {
 

@@ -1,28 +1,50 @@
 package chess.domain.board;
 
-import static chess.domain.board.coordinate.Column.*;
-import static chess.domain.board.coordinate.Row.*;
-import static chess.domain.piece.Symbol.*;
-import static chess.domain.piece.Team.*;
-import static org.assertj.core.api.Assertions.*;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import static chess.domain.ChessFixtures.BISHOP_BLACK;
+import static chess.domain.ChessFixtures.BISHOP_WHITE;
+import static chess.domain.ChessFixtures.EMPTY_PIECE;
+import static chess.domain.ChessFixtures.KING_BLACK;
+import static chess.domain.ChessFixtures.KING_WHITE;
+import static chess.domain.ChessFixtures.KNIGHT_BLACK;
+import static chess.domain.ChessFixtures.KNIGHT_WHITE;
+import static chess.domain.ChessFixtures.PAWN_BLACK;
+import static chess.domain.ChessFixtures.PAWN_WHITE;
+import static chess.domain.ChessFixtures.QUEEN_BLACK;
+import static chess.domain.ChessFixtures.QUEEN_WHITE;
+import static chess.domain.ChessFixtures.ROOK_BLACK;
+import static chess.domain.ChessFixtures.ROOK_WHITE;
+import static chess.domain.board.coordinate.Column.A;
+import static chess.domain.board.coordinate.Column.B;
+import static chess.domain.board.coordinate.Column.C;
+import static chess.domain.board.coordinate.Column.D;
+import static chess.domain.board.coordinate.Column.E;
+import static chess.domain.board.coordinate.Column.F;
+import static chess.domain.board.coordinate.Column.G;
+import static chess.domain.board.coordinate.Column.H;
+import static chess.domain.board.coordinate.Row.EIGHT;
+import static chess.domain.board.coordinate.Row.FIVE;
+import static chess.domain.board.coordinate.Row.FOUR;
+import static chess.domain.board.coordinate.Row.ONE;
+import static chess.domain.board.coordinate.Row.SEVEN;
+import static chess.domain.board.coordinate.Row.SIX;
+import static chess.domain.board.coordinate.Row.THREE;
+import static chess.domain.board.coordinate.Row.TWO;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.board.coordinate.Column;
 import chess.domain.board.coordinate.Coordinate;
 import chess.domain.board.coordinate.Row;
 import chess.domain.piece.Piece;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class InitialBoardTest {
 
-    private Map<Coordinate, Piece> map = InitialBoard.initialize();
+    private final Map<Coordinate, Piece> map = InitialBoard.initialize();
 
     @ParameterizedTest(name = "{0}{1}에 {2}가 위치한다.")
     @MethodSource("provideParameters")
@@ -40,32 +62,19 @@ class InitialBoardTest {
 
     private static Stream<Arguments> provideParameters() {
         return Stream.of(
-                Arguments.arguments(Arrays.asList(A, H),
-                        Arrays.asList(EIGHT), Piece.of(ROOK.name(), BLACK.name())),
-                Arguments.arguments(Arrays.asList(A, H),
-                        Arrays.asList(ONE), Piece.of(ROOK.name(), WHITE.name())),
-                Arguments.arguments(Arrays.asList(B, G),
-                        Arrays.asList(EIGHT), Piece.of(KNIGHT.name(), BLACK.name())),
-                Arguments.arguments(Arrays.asList(B, G),
-                        Arrays.asList(ONE), Piece.of(KNIGHT.name(), WHITE.name())),
-                Arguments.arguments(Arrays.asList(C, F),
-                        Arrays.asList(EIGHT), Piece.of(BISHOP.name(), BLACK.name())),
-                Arguments.arguments(Arrays.asList(C, F),
-                        Arrays.asList(ONE), Piece.of(BISHOP.name(), WHITE.name())),
-                Arguments.arguments(Arrays.asList(D),
-                        Arrays.asList(EIGHT), Piece.of(QUEEN.name(), BLACK.name())),
-                Arguments.arguments(Arrays.asList(D),
-                        Arrays.asList(ONE), Piece.of(QUEEN.name(), WHITE.name())),
-                Arguments.arguments(Arrays.asList(E),
-                        Arrays.asList(EIGHT), Piece.of(KING.name(), BLACK.name())),
-                Arguments.arguments(Arrays.asList(E),
-                        Arrays.asList(ONE), Piece.of(KING.name(), WHITE.name())),
-                Arguments.arguments(Arrays.asList(Column.values()),
-                        Arrays.asList(SEVEN), Piece.of(PAWN.name(), BLACK.name())),
-                Arguments.arguments(Arrays.asList(Column.values()),
-                        Arrays.asList(TWO), Piece.of(PAWN.name(), WHITE.name())),
-                Arguments.arguments(Arrays.asList(Column.values()),
-                        Arrays.asList(THREE, FOUR, FIVE, SIX), Piece.of(EMPTY.name(), NONE.name()))
+                Arguments.arguments(List.of(A, H), List.of(EIGHT), ROOK_BLACK),
+                Arguments.arguments(List.of(A, H), List.of(ONE), ROOK_WHITE),
+                Arguments.arguments(List.of(B, G), List.of(EIGHT), KNIGHT_BLACK),
+                Arguments.arguments(List.of(B, G), List.of(ONE), KNIGHT_WHITE),
+                Arguments.arguments(List.of(C, F), List.of(EIGHT), BISHOP_BLACK),
+                Arguments.arguments(List.of(C, F), List.of(ONE), BISHOP_WHITE),
+                Arguments.arguments(List.of(D), List.of(EIGHT), QUEEN_BLACK),
+                Arguments.arguments(List.of(D), List.of(ONE), QUEEN_WHITE),
+                Arguments.arguments(List.of(E), List.of(EIGHT), KING_BLACK),
+                Arguments.arguments(List.of(E), List.of(ONE), KING_WHITE),
+                Arguments.arguments(List.of(Column.values()), List.of(SEVEN), PAWN_BLACK),
+                Arguments.arguments(List.of(Column.values()), List.of(TWO), PAWN_WHITE),
+                Arguments.arguments(List.of(Column.values()), List.of(THREE, FOUR, FIVE, SIX), EMPTY_PIECE)
         );
     }
 }

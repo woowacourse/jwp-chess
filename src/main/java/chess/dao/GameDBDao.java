@@ -1,14 +1,11 @@
 package chess.dao;
 
-import static chess.dao.DBConnector.*;
+import static chess.dao.DBConnector.getConnection;
 
+import chess.dto.GameDto;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.springframework.stereotype.Repository;
-
-import chess.dto.GameDto;
 
 public class GameDBDao implements GameDao {
 

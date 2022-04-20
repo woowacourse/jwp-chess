@@ -1,10 +1,9 @@
 package chess.domain.piece;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import chess.domain.direction.Direction;
 import chess.domain.piece.movestrategy.MoveStrategy;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Empty extends Piece {
 

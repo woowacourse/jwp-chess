@@ -5,7 +5,7 @@ public class BoardDto {
     private final String symbol;
     private final String team;
     private final String position;
-    
+
     public BoardDto(String symbol, String team, String position) {
         this.symbol = symbol;
         this.team = team;

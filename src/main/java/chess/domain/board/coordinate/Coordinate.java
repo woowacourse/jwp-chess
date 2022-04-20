@@ -1,10 +1,9 @@
 package chess.domain.board.coordinate;
 
+import chess.domain.direction.Direction;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import chess.domain.direction.Direction;
 
 public class Coordinate {
 

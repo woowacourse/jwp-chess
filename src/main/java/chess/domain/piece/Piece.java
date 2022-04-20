@@ -1,14 +1,13 @@
 package chess.domain.piece;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import chess.domain.board.Board;
 import chess.domain.board.coordinate.Coordinate;
 import chess.domain.direction.Direction;
 import chess.domain.piece.movestrategy.MoveStrategy;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public abstract class Piece {
 

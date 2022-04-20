@@ -1,17 +1,16 @@
 package chess.domain.piece;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.domain.board.Board;
+import chess.domain.board.coordinate.Coordinate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import chess.domain.board.Board;
-import chess.domain.board.coordinate.Coordinate;
-
 class KingTest {
-	
+
     @ParameterizedTest
     @ValueSource(strings = {"b4", "a3", "c3", "b2", "a4", "a2", "c4", "c2"})
     @DisplayName("이동 가능한 경우 true를 반환")

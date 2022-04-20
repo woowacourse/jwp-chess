@@ -1,11 +1,10 @@
 package chess.view;
 
-import java.util.Map;
-
 import chess.domain.board.coordinate.Column;
 import chess.domain.board.coordinate.Coordinate;
 import chess.domain.board.coordinate.Row;
 import chess.domain.piece.Piece;
+import java.util.Map;
 
 public class OutputView {
 

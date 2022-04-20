@@ -1,9 +1,8 @@
 package chess.dao;
 
+import chess.dto.GameDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import chess.dto.GameDto;
 
 @Repository
 public class GameJdbcDao implements GameDao {

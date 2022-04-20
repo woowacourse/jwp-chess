@@ -1,8 +1,10 @@
 package chess.controller;
 
-import static spark.Spark.*;
-
-import java.util.Map;
+import static spark.Spark.exception;
+import static spark.Spark.get;
+import static spark.Spark.port;
+import static spark.Spark.post;
+import static spark.Spark.staticFileLocation;
 
 import chess.converter.Converter;
 import chess.dao.BoardDBDao;
@@ -10,6 +12,7 @@ import chess.dao.GameDBDao;
 import chess.domain.board.Board;
 import chess.domain.game.StatusCalculator;
 import chess.service.ChessService;
+import java.util.Map;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -21,9 +24,7 @@ public class WebChessController {
         port(8081);
         staticFileLocation("/static");
 
-        get("/", (req, res) -> {
-            return new ModelAndView(null, "index.html");
-        }, new HandlebarsTemplateEngine());
+        get("/", (req, res) -> new ModelAndView(null, "index.html"), new HandlebarsTemplateEngine());
 
         get("/game/:id", (req, res) -> {
             int gameId = Integer.parseInt(req.params(":id"));

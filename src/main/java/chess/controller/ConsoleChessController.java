@@ -1,17 +1,16 @@
 package chess.controller;
 
-import java.util.List;
-
 import chess.domain.game.ChessGame;
 import chess.domain.game.StatusCalculator;
 import chess.function.Function;
 import chess.view.InputView;
 import chess.view.OutputView;
+import java.util.List;
 
 public class ConsoleChessController {
 
     public static final int COMMAND_INDEX = 0;
-    
+
     public void run() {
         OutputView.printGameStart();
         ChessGame chessGame = new ChessGame();

@@ -1,13 +1,12 @@
 package chess.domain.game;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import chess.domain.board.coordinate.Column;
 import chess.domain.board.coordinate.Coordinate;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StatusCalculator {
 
@@ -20,7 +19,7 @@ public class StatusCalculator {
     public Map<String, Double> createStatus() {
         return Arrays.stream(Team.values())
                 .filter(Team::isNotNone)
-                .collect(Collectors.toMap(team -> team.name(), this::calculate));
+                .collect(Collectors.toMap(Enum::name, this::calculate));
     }
 
     public double calculate(Team team) {

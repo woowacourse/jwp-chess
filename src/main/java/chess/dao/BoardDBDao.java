@@ -1,16 +1,13 @@
 package chess.dao;
 
-import static chess.dao.DBConnector.*;
+import static chess.dao.DBConnector.getConnection;
 
+import chess.dto.BoardDto;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
-import chess.dto.BoardDto;
 
 public class BoardDBDao implements BoardDao {
 

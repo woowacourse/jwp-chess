@@ -1,8 +1,7 @@
 package chess.domain.direction;
 
-import java.util.Arrays;
-
 import chess.domain.board.coordinate.Coordinate;
+import java.util.Arrays;
 
 public enum Direction {
     UP(0, 1),

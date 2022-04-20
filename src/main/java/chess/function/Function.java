@@ -1,11 +1,10 @@
 package chess.function;
 
+import chess.domain.board.coordinate.Coordinate;
+import chess.domain.game.ChessGame;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
-
-import chess.domain.board.coordinate.Coordinate;
-import chess.domain.game.ChessGame;
 
 public enum Function {
 
@@ -15,7 +14,6 @@ public enum Function {
             Coordinate.of(commands.get(1)),
             Coordinate.of(commands.get(2)))),
     STATUS("status", (chessGame, commands) -> {
-        return;
     });
 
     private final String value;

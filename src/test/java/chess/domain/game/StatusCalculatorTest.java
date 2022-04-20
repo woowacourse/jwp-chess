@@ -1,11 +1,10 @@
 package chess.domain.game;
 
-import static org.assertj.core.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.board.Board;
 import chess.domain.piece.Team;
+import org.junit.jupiter.api.Test;
 
 public class StatusCalculatorTest {
     @Test

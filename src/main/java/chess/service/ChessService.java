@@ -16,7 +16,9 @@ import chess.dto.MoveDto;
 import chess.dto.StatusDto;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessService {
 
     private final BoardDao boardDao;
@@ -69,9 +71,9 @@ public class ChessService {
 
     private Board toBoard(final Map<String, String> findBoard) {
         Map<Position, Piece> boards = findBoard.keySet()
-                .stream()
-                .collect(Collectors.toMap(Position::valueOf,
-                        key -> PieceFactory.createPiece(findBoard.get(key))));
+            .stream()
+            .collect(Collectors.toMap(Position::valueOf,
+                key -> PieceFactory.createPiece(findBoard.get(key))));
         return new Board(boards);
     }
 

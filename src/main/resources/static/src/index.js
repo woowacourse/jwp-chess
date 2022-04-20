@@ -63,7 +63,7 @@ function end() {
                 alert(data.errorMessage);
                 return;
             }
-            location.replace("/result");
+            location.replace("/chess-result");
         })
     })
 }

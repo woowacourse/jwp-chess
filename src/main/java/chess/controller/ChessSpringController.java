@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.ResponseDto;
+import chess.dto.ResultDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import java.util.Arrays;
@@ -60,5 +61,14 @@ public class ChessSpringController {
     public @ResponseBody
     ResponseDto end() {
         return chessGameService.end();
+    }
+
+    @GetMapping("/chess-result")
+    public ModelAndView result() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("result", ResultDto
+                .of(chessGameService.statusOfWhite(), chessGameService.statusOfBlack(), chessGameService.findWinner()));
+        modelAndView.setViewName("result");
+        return modelAndView;
     }
 }

@@ -1,6 +1,7 @@
 package chess.dto;
 
 import chess.domain.Winner;
+import java.util.Objects;
 
 public class ResultDto {
     private final String scoreOfWhite;
@@ -27,5 +28,23 @@ public class ResultDto {
 
     public String getWinner() {
         return winner;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ResultDto resultDto = (ResultDto) o;
+        return Objects.equals(scoreOfWhite, resultDto.scoreOfWhite) && Objects
+                .equals(scoreOfBlack, resultDto.scoreOfBlack) && Objects.equals(winner, resultDto.winner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(scoreOfWhite, scoreOfBlack, winner);
     }
 }

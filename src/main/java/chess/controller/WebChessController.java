@@ -5,8 +5,8 @@ import static spark.Spark.*;
 import java.util.Map;
 
 import chess.converter.Converter;
-import chess.dao.BoardDao;
-import chess.dao.GameDao;
+import chess.dao.BoardDBDao;
+import chess.dao.GameDBDao;
 import chess.domain.board.Board;
 import chess.domain.game.StatusCalculator;
 import chess.service.ChessService;
@@ -15,7 +15,7 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 
 public class WebChessController {
 
-    private final ChessService chessService = new ChessService(new BoardDao(), new GameDao());
+    private final ChessService chessService = new ChessService(new BoardDBDao(), new GameDBDao());
 
     public void run() {
         port(8081);

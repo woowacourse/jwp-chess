@@ -8,8 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import chess.dto.BoardDto;
 
+@Repository
 public class BoardDao {
 
     public List<BoardDto> findByGameId(int gameId) {

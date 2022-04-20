@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import chess.dao.BoardDao;
 import chess.dao.GameDao;
 import chess.domain.board.Board;
@@ -18,6 +20,7 @@ import chess.domain.piece.Team;
 import chess.dto.BoardDto;
 import chess.dto.GameDto;
 
+@Service
 public class ChessService {
 
     private static final int NOT_EXIST_GAME = 0;

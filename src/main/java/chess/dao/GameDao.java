@@ -6,8 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Repository;
+
 import chess.dto.GameDto;
 
+@Repository
 public class GameDao {
 
     public void save(GameDto gameDto) {

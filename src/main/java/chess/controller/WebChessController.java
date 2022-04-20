@@ -22,7 +22,7 @@ public class WebChessController {
         staticFileLocation("/static");
 
         get("/", (req, res) -> {
-            return new ModelAndView(null, "start.html");
+            return new ModelAndView(null, "index.html");
         }, new HandlebarsTemplateEngine());
 
         get("/game/:id", (req, res) -> {
@@ -30,7 +30,7 @@ public class WebChessController {
             Board board = chessService.findBoardByGameId(gameId);
 
             Map<String, Object> map = Converter.toMap(gameId, board);
-            return new ModelAndView(map, "index.html");
+            return new ModelAndView(map, "start.html");
         }, new HandlebarsTemplateEngine());
 
         post("/game/:id/move", (req, res) -> {
@@ -74,7 +74,7 @@ public class WebChessController {
             Board board = chessService.findBoardByGameId(gameId);
 
             Map<String, Object> map = Converter.toMap(gameId, board, status);
-            return new ModelAndView(map, "index.html");
+            return new ModelAndView(map, "start.html");
         }, new HandlebarsTemplateEngine());
 
         exception(Exception.class, (exception, request, response) -> {

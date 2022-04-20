@@ -21,7 +21,7 @@
 
     <h1>♟️ 초간단 체스</h1>
     <section class="chess-ui">
-        {{#this}}
+        {{#board}}
         <div class="black-square"><img src="/images/{{a8.team}}_{{a8.symbol}}.png"/></div>
         <div class="white-square"><img src="/images/{{b8.team}}_{{b8.symbol}}.png"/></div>
         <div class="black-square"><img src="/images/{{c8.team}}_{{c8.symbol}}.png"/></div>
@@ -93,7 +93,7 @@
         <div class="black-square"><img src="/images/{{f1.team}}_{{f1.symbol}}.png"/></div>
         <div class="white-square"><img src="/images/{{g1.team}}_{{g1.symbol}}.png"/></div>
         <div class="black-square"><img src="/images/{{h1.team}}_{{h1.symbol}}.png"/></div>
-        {{/this}}
+        {{/board}}
     </section>
 
     <h3>체스 form</h3>
@@ -107,8 +107,10 @@
         <row>
             <form method="get" action="/game/{{id}}/status">
                 <input type="submit" value="점수">
+                {{#board}}
                 <h3>WHITE : {{WHITE}}</h3>
                 <h3>BLACK : {{BLACK}}</h3>
+                {{/board}}
             </form>
         </row>
     </row>

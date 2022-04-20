@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import chess.domain.board.Board;
 import chess.dto.ChessBoardDto;
 import chess.dto.ResponseDto;
+import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,5 +59,17 @@ public class ChessSpringControllerTest {
                 .content(requestString))
                 .andExpect(content().json(responseDto.toJson()));
 
+    }
+
+    @DisplayName("status GET 요청 테스트")
+    @Test
+    void get_status() throws Exception {
+        final StatusDto statusDto = StatusDto.of(37, 37);
+        given(chessGameService.statusOfBlack()).willReturn(37.0);
+        given(chessGameService.statusOfWhite()).willReturn(37.0);
+
+        mockMvc.perform(get("/chess-status"))
+                .andExpect(view().name("status"))
+                .andExpect(model().attribute("status", statusDto));
     }
 }

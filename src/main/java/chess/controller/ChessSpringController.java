@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.ResponseDto;
+import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import java.util.Arrays;
 import java.util.List;
@@ -43,4 +44,13 @@ public class ChessSpringController {
         List<String> command = Arrays.asList(request.split(" "));
         return chessGameService.move(command.get(0), command.get(1));
     }
+
+    @GetMapping("/chess-status")
+    public ModelAndView status(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("status", StatusDto.of(chessGameService.statusOfWhite(), chessGameService.statusOfBlack()));
+        modelAndView.setViewName("status");
+        return modelAndView;
+    }
+
 }

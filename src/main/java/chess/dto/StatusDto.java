@@ -1,5 +1,7 @@
 package chess.dto;
 
+import java.util.Objects;
+
 public class StatusDto {
     private final String white;
     private final String black;
@@ -19,5 +21,22 @@ public class StatusDto {
 
     public String getBlack() {
         return black;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        StatusDto statusDto = (StatusDto) o;
+        return Objects.equals(white, statusDto.white) && Objects.equals(black, statusDto.black);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(white, black);
     }
 }

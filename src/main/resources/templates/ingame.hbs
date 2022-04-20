@@ -112,8 +112,7 @@
         <th></th>
     </tbody>
 </table>
-<form action="/ingame" method="post" class="textBoxWrapper">
-    <input type="text" name="gameID" class="invisible" value={{gameID}} />
+<form action="/ingame/{{gameID}}" method="post" class="textBoxWrapper">
     FROM : <input type="text" name="source" class="textBox"/>
     TO : <input type="text" name="target" class="textBox"/>
     <input type="submit" value="MOVE" class="btn" id="move"/>

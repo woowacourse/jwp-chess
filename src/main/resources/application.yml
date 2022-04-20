@@ -1,6 +1,15 @@
 spring:
+<<<<<<< HEAD
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:13306/chess?useSSL=false&allowPublicKeyRetrieval=TRUE
+=======
+  h2:
+    console:
+      enabled: true
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:13306/chess?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC;
+>>>>>>> refactor: GameDao가 JdbcTemplate을 사용하도록 변경
     username: root
     password: root

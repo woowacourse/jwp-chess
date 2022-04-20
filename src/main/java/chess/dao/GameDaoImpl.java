@@ -1,94 +1,73 @@
 package chess.dao;
 
 import chess.domain.GameState;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import org.springframework.stereotype.Component;
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class GameDaoImpl implements GameDao {
 
-    private final ConnectionSetup connectionSetup;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final SimpleJdbcInsert insertGame;
 
-    public GameDaoImpl(ConnectionSetup connectionSetup) {
-        this.connectionSetup = connectionSetup;
+    @Autowired
+    public GameDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                       DataSource dataSource) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.insertGame = new SimpleJdbcInsert(dataSource)
+                .withTableName("game");
     }
 
     @Override
     public void save(long id) {
-        String query = "INSERT INTO game VALUES (?, ?)";
-        try (Connection connection = connectionSetup.getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, id);
-            pstmt.setString(2, GameState.READY.toString());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("game_id", id);
+        parameters.put("state", GameState.READY);
+        insertGame.execute(parameters);
     }
 
     @Override
     public Optional<GameState> load(long id) {
-        try (Connection connection = connectionSetup.getConnection();
-             PreparedStatement pstmt = createLoadPreparedStatement(connection, id);
-             ResultSet rs = pstmt.executeQuery()) {
-            return getGame(rs);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        String sql = "SELECT state FROM game WHERE game_id = :game_id";
+
+        SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", id);
+
+        try {
+            return Optional.ofNullable(
+                    namedParameterJdbcTemplate.queryForObject(sql, namedParameters, GameState.class));
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
-    private PreparedStatement createLoadPreparedStatement(Connection connection, long id) throws SQLException {
-        String query = "SELECT * FROM game WHERE game_id = ?";
-        PreparedStatement pstmt = connection.prepareStatement(query);
-        pstmt.setLong(1, id);
-        return pstmt;
-    }
-
-    private Optional<GameState> getGame(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return Optional.of(GameState.valueOf(rs.getString("state")));
-        }
-        return Optional.empty();
-    }
-
     @Override
     public void updateState(long id, GameState gameState) {
-        String query = "UPDATE game SET state = ? WHERE game_id = ?";
-        try (Connection connection = connectionSetup.getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, gameState.name());
-            pstmt.setLong(2, id);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String query = "UPDATE game SET state = :game_state WHERE game_id = :game_id";
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("game_state", gameState.name());
+        parameters.put("game_id", id);
+        namedParameterJdbcTemplate.update(query, parameters);
     }
 
     @Override
     public void delete(long id) {
-        String query = "DELETE FROM game WHERE game_id = ?";
-        try (Connection connection = connectionSetup.getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, id);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String query = "DELETE FROM game WHERE game_id = :game_id";
+        MapSqlParameterSource parameter = new MapSqlParameterSource("game_id", id);
+        namedParameterJdbcTemplate.update(query, parameter);
     }
 
     @Override
     public void deleteAll() {
         String query = "DELETE FROM game";
-        try (Connection connection = connectionSetup.getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        namedParameterJdbcTemplate.update(query, new MapSqlParameterSource());
     }
 }

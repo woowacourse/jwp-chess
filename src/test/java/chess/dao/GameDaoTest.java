@@ -12,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-<<<<<<< HEAD
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -25,21 +24,6 @@ public class GameDaoTest {
 
     @Autowired
     private GameDao gameDao;
-=======
-
-@SpringBootTest
-public class GameDaoTest {
-
-    private static final long testGameId = 2;
-
-    @Autowired
-    private GameDao gameDao;
-
-    @AfterEach
-    void cleanUp() {
-        gameDao.deleteAll();
-    }
->>>>>>> refactor: GameDao가 JdbcTemplate을 사용하도록 변경
 
     @DisplayName("게임 저장 테스트")
     @Test
@@ -87,7 +71,6 @@ public class GameDaoTest {
     void delete() {
         gameDao.delete(testGameId);
     }
-<<<<<<< HEAD
 
     @DisplayName("게임 방 조회 테스트")
     @Test
@@ -109,6 +92,4 @@ public class GameDaoTest {
         final String actualPassword = gameDao.findPassword(gameId);
         assertThat(actualPassword).isEqualTo(password);
     }
-=======
->>>>>>> refactor: GameDao가 JdbcTemplate을 사용하도록 변경
 }

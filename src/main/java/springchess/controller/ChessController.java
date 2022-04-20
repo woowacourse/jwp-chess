@@ -2,17 +2,13 @@ package springchess.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import springchess.model.room.Room;
 import springchess.service.ChessService;
 
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,5 +41,12 @@ public class ChessController {
 
         System.out.println(messageBody);
         return "redirect:/" + room.getId();
+    }
+
+    @GetMapping("/room/{roomId}")
+    public String room(Model model, @PathVariable(value = "roomId") String roomId) {
+        model.addAttribute("roomId", Integer.parseInt(roomId));
+        model.addAttribute("board", chessService.getBoard(Integer.parseInt(roomId)));
+        return "chess-game";
     }
 }

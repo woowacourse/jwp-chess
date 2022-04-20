@@ -63,7 +63,7 @@ public class ChessController {
     }
 
     @GetMapping("/status/{gameId}")
-    private String renderStatus(@PathVariable int gameId, Model model) {
+    public String renderStatus(@PathVariable int gameId, Model model) {
         GameResultDto status = chessService.getResult(gameId);
         chessService.endGame(gameId);
         model.addAttribute("status", status);

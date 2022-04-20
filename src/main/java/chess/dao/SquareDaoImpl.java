@@ -9,14 +9,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 public class SquareDaoImpl implements SquareDao {
 
-    private final DataSource dataSource;
+    private  DataSource dataSource;
+    private  JdbcTemplate jdbcTemplate;
 
-    public SquareDaoImpl(DataSource dataSource) {
+    public SquareDaoImpl(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.dataSource = dataSource;
+        this.jdbcTemplate = jdbcTemplate;
     }
+
+    public SquareDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final RowMapper<Piece> actorRowMapper = (resultSet, rowNum) -> {
+        Piece piece = Piece.getPiece(
+                resultSet.getString("team") + "_" + resultSet.getString("symbol")
+        );
+        return piece;
+    };
 
     public void save(Position position, Piece piece) {
         if (hasPiece(position)) {
@@ -34,6 +50,16 @@ public class SquareDaoImpl implements SquareDao {
     private void insert(Position position, Piece piece) {
         final String sql = "insert into square (position, team, symbol) values (?, ?, ?)";
         executeStatement(sql, List.of(position.getKey(), piece.getTeam(), piece.getSymbol()));
+    }
+
+    public void insert2(Position position, Piece piece) {
+        final String sql = "insert into square (position, team, symbol) values (?, ?, ?)";
+        jdbcTemplate.update(sql, position.getKey(), piece.getTeam(), piece.getSymbol());
+    }
+
+    public Piece find(Position position) {
+        final String sql = "select team, symbol from square where position = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, position.getKey());
     }
 
     private boolean hasPiece(Position position) {

@@ -10,14 +10,16 @@ import chess.dao.SquareDaoImpl;
 import chess.dao.StateDaoImpl;
 import chess.repository.GameRepositoryImpl;
 import chess.service.GameService;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class SparkChessApplication {
     public static void main(String[] args) {
         port(8765);
         staticFileLocation("/static");
         DataSource dataSource = initConnectionInfo();
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         GameService gameService = new GameService(
-                new GameRepositoryImpl(new SquareDaoImpl(dataSource), new StateDaoImpl(dataSource)));
+                new GameRepositoryImpl(new SquareDaoImpl(dataSource, jdbcTemplate), new StateDaoImpl(dataSource)));
         WebChessController webChessController = new WebChessController(gameService);
         webChessController.run();
     }

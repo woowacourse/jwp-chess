@@ -72,4 +72,14 @@ public class ChessSpringControllerTest {
                 .andExpect(view().name("status"))
                 .andExpect(model().attribute("status", statusDto));
     }
+
+    @DisplayName("end GET 요청 테스트")
+    @Test
+    void get_end() throws Exception {
+        ResponseDto responseDto = new ResponseDto(200, "");
+        given(chessGameService.end()).willReturn(new ResponseDto(200, ""));
+
+        mockMvc.perform(get("/end"))
+                .andExpect(content().json(responseDto.toJson()));
+    }
 }

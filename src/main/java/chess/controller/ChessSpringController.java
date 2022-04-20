@@ -26,13 +26,14 @@ public class ChessSpringController {
     }
 
     @GetMapping("/start")
-    public @ResponseBody ResponseDto start(){
+    public @ResponseBody
+    ResponseDto start() {
         return chessGameService.start();
     }
 
 
     @GetMapping("/chess")
-    public ModelAndView chess(){
+    public ModelAndView chess() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("boardDto", chessGameService.getBoard());
         modelAndView.setViewName("index");
@@ -40,17 +41,24 @@ public class ChessSpringController {
     }
 
     @PostMapping("/move")
-    public @ResponseBody ResponseDto move(@RequestBody String request){
+    public @ResponseBody
+    ResponseDto move(@RequestBody String request) {
         List<String> command = Arrays.asList(request.split(" "));
         return chessGameService.move(command.get(0), command.get(1));
     }
 
     @GetMapping("/chess-status")
-    public ModelAndView status(){
+    public ModelAndView status() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("status", StatusDto.of(chessGameService.statusOfWhite(), chessGameService.statusOfBlack()));
+        modelAndView
+                .addObject("status", StatusDto.of(chessGameService.statusOfWhite(), chessGameService.statusOfBlack()));
         modelAndView.setViewName("status");
         return modelAndView;
     }
 
+    @GetMapping("/end")
+    public @ResponseBody
+    ResponseDto end() {
+        return chessGameService.end();
+    }
 }

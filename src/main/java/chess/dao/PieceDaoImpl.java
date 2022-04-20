@@ -11,7 +11,9 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class PieceDaoImpl implements PieceDao {
 
     @Override

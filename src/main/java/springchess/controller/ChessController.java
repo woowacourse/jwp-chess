@@ -69,8 +69,11 @@ public class ChessController {
         return ScoreDto.from(chessService.status(Integer.parseInt(roomId))).toString();
     }
 
-//    get("/room/:roomId/status", (req, res) -> {
-//        final ScoreDto scoreDto = chessController.score(Integer.parseInt(req.params(":roomId")));
-//        return scoreDto.toString();
-//    });
+    @PostMapping("/room/{roomId}/end")
+    public String end(Model model, @PathVariable(value = "roomId") String roomId) {
+        int id = Integer.parseInt(roomId);
+        model.addAttribute("result", ScoreDto.from(chessService.status(id)));
+        chessService.end(id);
+        return "result";
+    }
 }

@@ -3,6 +3,7 @@ package chess.dto;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 public class ChessBoardDto {
@@ -23,5 +24,22 @@ public class ChessBoardDto {
 
     public Map<String, Piece> getBoard() {
         return board;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessBoardDto that = (ChessBoardDto) o;
+        return Objects.equals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board);
     }
 }

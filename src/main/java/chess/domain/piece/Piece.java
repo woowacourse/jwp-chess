@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.Color;
 import chess.domain.board.Position;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public abstract class Piece {
@@ -56,4 +57,21 @@ public abstract class Piece {
     public abstract String getSymbol();
 
     protected abstract boolean canMove(Position beforePosition, Position afterPosition);
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Piece piece = (Piece) o;
+        return color == piece.color && type == piece.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, type);
+    }
 }

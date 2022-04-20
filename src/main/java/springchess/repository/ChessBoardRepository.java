@@ -1,4 +1,4 @@
-package springchess.dao;
+package springchess.repository;
 
 import org.springframework.stereotype.Repository;
 import springchess.model.board.Board;
@@ -14,11 +14,11 @@ import java.sql.Statement;
 import java.util.Map;
 
 @Repository
-public class ChessBoardDao implements BoardDao<Board> {
+public class ChessBoardRepository implements BoardRepository<Board> {
 
     private final ConnectionManager connectionManager;
 
-    public ChessBoardDao(ConnectionManager connectionManager) {
+    public ChessBoardRepository(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
     }
 
@@ -67,7 +67,7 @@ public class ChessBoardDao implements BoardDao<Board> {
             final PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
             final ResultSet resultSet = preparedStatement.executeQuery();
-            final ChessMemberDao chessMemberDao = new ChessMemberDao(new ConnectionManager());
+            final ChessMemberRepository chessMemberDao = new ChessMemberRepository(new ConnectionManager());
             if (!resultSet.next()) {
                 throw new IllegalArgumentException("그런 보드 없습니다. 방 id: " + id);
             }
@@ -84,8 +84,8 @@ public class ChessBoardDao implements BoardDao<Board> {
     public Board init(Board board, Map<Square, Piece> startingPieces) {
         return connectionManager.executeQuery(connection -> {
             final Board savedBoard = save(board);
-            final ChessSquareDao chessSquareDao = new ChessSquareDao(connectionManager);
-            final ChessPieceDao chessPieceDao = new ChessPieceDao(connectionManager);
+            final ChessSquareRepository chessSquareDao = new ChessSquareRepository(connectionManager);
+            final ChessPieceRepository chessPieceDao = new ChessPieceRepository(connectionManager);
             chessSquareDao.saveAllSquare(savedBoard.getId());
             for (Square square : startingPieces.keySet()) {
                 int squareId = chessSquareDao.getSquareIdBySquare(square, savedBoard.getId());

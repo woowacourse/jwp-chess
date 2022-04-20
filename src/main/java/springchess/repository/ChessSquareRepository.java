@@ -1,4 +1,4 @@
-package springchess.dao;
+package springchess.repository;
 
 import org.springframework.stereotype.Repository;
 import springchess.model.piece.Piece;
@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class ChessSquareDao implements SquareDao<Square> {
+public class ChessSquareRepository implements SquareRepository<Square> {
 
     private final ConnectionManager connectionManager;
 
-    public ChessSquareDao(ConnectionManager connectionManager) {
+    public ChessSquareRepository(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
     }
 

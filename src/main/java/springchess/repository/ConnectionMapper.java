@@ -1,4 +1,4 @@
-package springchess.dao;
+package springchess.repository;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package springchess.dao;
+package springchess.repository;
 
 import springchess.model.piece.Piece;
 import springchess.model.square.Square;
@@ -6,7 +6,7 @@ import springchess.model.square.Square;
 import java.util.List;
 import java.util.Map;
 
-public interface SquareDao<T> {
+public interface SquareRepository<T> {
 
     Square save(Square square);
 

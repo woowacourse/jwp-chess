@@ -1,5 +1,8 @@
-package chess.dao;
+package springchess.repository;
 
+import chess.dao.ChessBoardDao;
+import chess.dao.ChessSquareDao;
+import chess.dao.ConnectionManager;
 import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.piece.Team;
@@ -16,10 +19,10 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class ChessSquareDaoTest {
+class ChessSquareRepositoryTest {
 
-    private final ChessSquareDao dao = new ChessSquareDao(new ConnectionManager());
-    private final ChessBoardDao chessBoardDao = new ChessBoardDao(new ConnectionManager());
+    private final chess.dao.ChessSquareDao dao = new ChessSquareDao(new chess.dao.ConnectionManager());
+    private final chess.dao.ChessBoardDao chessBoardDao = new ChessBoardDao(new ConnectionManager());
     private int boardId;
     private Square square;
 

@@ -1,7 +1,5 @@
-package springchess.dao;
+package chess.dao;
 
-import chess.dao.ChessBoardDao;
-import chess.dao.ConnectionManager;
 import chess.model.board.Board;
 import chess.model.piece.Initializer;
 import chess.model.piece.Team;
@@ -13,9 +11,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ChessBoardDaoTest {
+class ChessBoardRepositoryTest {
 
-    private final chess.dao.ChessBoardDao dao = new ChessBoardDao(new ConnectionManager());
+    private final ChessBoardDao dao = new ChessBoardDao(new ConnectionManager());
     private Board board;
 
     @BeforeEach

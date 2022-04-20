@@ -1,8 +1,8 @@
-package springchess.dao;
+package springchess.repository;
 
 import java.util.List;
 
-public interface RoomDao<T> {
+public interface RoomRepository<T> {
 
     List<T> findAllWithRunning();
 

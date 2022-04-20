@@ -1,8 +1,8 @@
-package springchess.dao;
+package springchess.repository;
 
 import java.util.List;
 
-public interface MemberDao<T> {
+public interface MemberRepository<T> {
 
     List<T> getAllByRoomId(int roomId);
 

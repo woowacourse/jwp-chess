@@ -1,4 +1,4 @@
-package springchess.dao;
+package springchess.repository;
 
 import springchess.model.board.Board;
 import springchess.model.piece.Piece;
@@ -6,7 +6,7 @@ import springchess.model.square.Square;
 
 import java.util.Map;
 
-public interface BoardDao<T> {
+public interface BoardRepository<T> {
 
     Board save(Board board);
 

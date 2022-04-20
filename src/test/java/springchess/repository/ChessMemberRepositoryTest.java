@@ -1,4 +1,4 @@
-package springchess.dao;
+package springchess.repository;
 
 import chess.dao.ChessBoardDao;
 import chess.dao.ChessMemberDao;
@@ -18,7 +18,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class ChessMemberDaoTest {
+class ChessMemberRepositoryTest {
 
     private final chess.dao.ChessMemberDao dao = new ChessMemberDao(new chess.dao.ConnectionManager());
     private final chess.dao.ChessBoardDao chessBoardDao = new ChessBoardDao(new chess.dao.ConnectionManager());

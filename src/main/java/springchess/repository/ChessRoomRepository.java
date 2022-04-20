@@ -1,4 +1,4 @@
-package springchess.dao;
+package springchess.repository;
 
 import org.springframework.stereotype.Repository;
 import springchess.model.room.Room;
@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ChessRoomDao implements RoomDao<Room> {
+public class ChessRoomRepository implements RoomRepository<Room> {
 
     private final ConnectionManager connectionManager;
 
-    public ChessRoomDao(ConnectionManager connectionManager) {
+    public ChessRoomRepository(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
     }
 
@@ -57,7 +57,7 @@ public class ChessRoomDao implements RoomDao<Room> {
             preparedStatement.setString(1, room.getTitle());
             preparedStatement.setInt(2, room.getBoardId());
             preparedStatement.executeUpdate();
-            final ChessMemberDao chessMemberDao = new ChessMemberDao(new ConnectionManager());
+            final ChessMemberRepository chessMemberDao = new ChessMemberRepository(new ConnectionManager());
             final ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (!generatedKeys.next()) {
                 throw new IllegalArgumentException("방이 없습니다. 방 제목: " + room.getTitle());

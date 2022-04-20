@@ -13,7 +13,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class ChessRoomDaoTest {
+class ChessRoomRepositoryTest {
 
     private final ChessRoomDao dao = new ChessRoomDao(new ConnectionManager());
     private final ChessBoardDao chessBoardDao = new ChessBoardDao(new ConnectionManager());

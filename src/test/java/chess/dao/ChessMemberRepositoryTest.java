@@ -14,7 +14,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class ChessMemberDaoTest {
+class ChessMemberRepositoryTest {
 
     private final ChessMemberDao dao = new ChessMemberDao(new ConnectionManager());
     private final ChessBoardDao chessBoardDao = new ChessBoardDao(new ConnectionManager());

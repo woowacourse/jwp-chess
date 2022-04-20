@@ -50,7 +50,7 @@ function sendToServer(first, second) {
     let element = document.getElementById("roomId");
     const moveCommand = "command=" + first + " " + second;
     console.log(moveCommand)
-    fetch('/room/' + element.value + '/move', {
+    fetch('/room/' + element.value + 'move', {
         method: "POST",
         headers: {
             "Content-Type": "text/plain",
@@ -58,7 +58,6 @@ function sendToServer(first, second) {
         body: moveCommand
     }).then((response) => {
             response.json().then(data => {
-                console.log(data.finished);
                 if (data.status === 400) {
                     alert(data.errorMessage);
                 }

@@ -1,11 +1,10 @@
 package springchess.controller;
 
+import chess.dto.ResponseDto;
+import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import springchess.model.room.Room;
 import springchess.service.ChessService;
 
@@ -39,8 +38,7 @@ public class ChessController {
                 createRoomInput.get(1),
                 createRoomInput.get(2));
 
-        System.out.println(messageBody);
-        return "redirect:/" + room.getId();
+        return "redirect:/room" + room.getId();
     }
 
     @GetMapping("/room/{roomId}")
@@ -48,5 +46,19 @@ public class ChessController {
         model.addAttribute("roomId", Integer.parseInt(roomId));
         model.addAttribute("board", chessService.getBoard(Integer.parseInt(roomId)));
         return "chess-game";
+    }
+
+    @PostMapping("/room/{roomId}/move")
+    @ResponseBody
+    public String move(@RequestBody String messageBody, @PathVariable(value = "roomId") String roomId) {
+        final String[] split = messageBody.strip().split("=")[1].split(" ");
+        String source = split[0];
+        String target = split[1];
+        try {
+            chessService.move(source, target, Integer.parseInt(roomId));
+        } catch (IllegalArgumentException e) {
+            return ResponseDto.of(HttpStatus.BAD_REQUEST_400, e.getMessage(), chessService.isEnd(Integer.parseInt(roomId))).toString();
+        }
+        return ResponseDto.of(HttpStatus.OK_200, null, chessService.isEnd(Integer.parseInt(roomId))).toString();
     }
 }

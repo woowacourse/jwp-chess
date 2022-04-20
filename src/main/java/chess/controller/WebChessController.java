@@ -1,17 +1,11 @@
 package chess.controller;
 
-import static spark.Spark.exception;
 import static spark.Spark.get;
-import static spark.Spark.post;
 
-import chess.JsonTransformer;
-import chess.controller.dto.request.MoveRequest;
-import chess.controller.dto.response.ErrorResponse;
 import chess.dao.DBConnectionSetup;
 import chess.dao.GameDaoImpl;
 import chess.dao.PieceDaoImpl;
 import chess.service.ChessService;
-import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 import spark.ModelAndView;
@@ -27,8 +21,6 @@ public class WebChessController {
             new PieceDaoImpl(new DBConnectionSetup()));
 
     public void run() {
-        JsonTransformer jsonTransformer = JsonTransformer.getInstance();
-
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             return render(model, "index.html");
@@ -44,30 +36,30 @@ public class WebChessController {
             return render(model, "game.html");
         });
 
-        get("/api/load/:gameId", (req, res) -> chessService.createOrLoadGame(parseGameId(req.params(GAME_ID_PARAM))),
-                jsonTransformer);
-
-        get("/api/start/:gameId", (req, res) -> chessService.startGame(parseGameId(req.params(GAME_ID_PARAM))),
-                jsonTransformer);
-
-        get("/api/restart/:gameId", (req, res) -> chessService.restartGame(parseGameId(req.params(GAME_ID_PARAM))),
-                jsonTransformer);
-
-        post("/api/move/:gameId", (req, res) -> {
-            MoveRequest moveRequest = new Gson().fromJson(req.body(), MoveRequest.class);
-            return chessService.move(parseGameId(req.params(GAME_ID_PARAM)), moveRequest);
-        }, jsonTransformer);
-
-        get("/api/status/:gameId", (req, res) -> chessService.status(parseGameId(req.params(GAME_ID_PARAM))),
-                jsonTransformer);
-
-        get("/api/end/:gameId", (req, res) -> chessService.end(parseGameId(req.params(GAME_ID_PARAM))),
-                jsonTransformer);
-
-        exception(IllegalArgumentException.class, (exception, request, response) -> {
-            response.status(ILLEGAL_REQUEST_CODE);
-            response.body(jsonTransformer.render(new ErrorResponse(exception.getMessage())));
-        });
+//        get("/api/load/:gameId", (req, res) -> chessService.createOrLoadGame(parseGameId(req.params(GAME_ID_PARAM))),
+//                jsonTransformer);
+//
+//        get("/api/start/:gameId", (req, res) -> chessService.startGame(parseGameId(req.params(GAME_ID_PARAM))),
+//                jsonTransformer);
+//
+//        get("/api/restart/:gameId", (req, res) -> chessService.restartGame(parseGameId(req.params(GAME_ID_PARAM))),
+//                jsonTransformer);
+//
+//        post("/api/move/:gameId", (req, res) -> {
+//            MoveRequest moveRequest = new Gson().fromJson(req.body(), MoveRequest.class);
+//            return chessService.move(parseGameId(req.params(GAME_ID_PARAM)), moveRequest);
+//        }, jsonTransformer);
+//
+//        get("/api/status/:gameId", (req, res) -> chessService.status(parseGameId(req.params(GAME_ID_PARAM))),
+//                jsonTransformer);
+//
+//        get("/api/end/:gameId", (req, res) -> chessService.end(parseGameId(req.params(GAME_ID_PARAM))),
+//                jsonTransformer);
+//
+//        exception(IllegalArgumentException.class, (exception, request, response) -> {
+//            response.status(ILLEGAL_REQUEST_CODE);
+//            response.body(jsonTransformer.render(new ErrorResponse(exception.getMessage())));
+//        });
     }
 
     private static String render(Map<String, Object> model, String templatePath) {

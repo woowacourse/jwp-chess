@@ -27,8 +27,6 @@ dependencies {
 
     runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'com.h2database:h2'
-    
-    implementation 'com.google.code.gson:gson:2.9.0'
 }
 
 test {

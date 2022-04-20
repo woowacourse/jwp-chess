@@ -1,5 +1,9 @@
 package chess.domain.piece;
 
+import static chess.domain.ChessFixtures.C1;
+import static chess.domain.ChessFixtures.C3;
+import static chess.domain.ChessFixtures.C4;
+import static chess.domain.ChessFixtures.E3;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.board.Board;
@@ -12,13 +16,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class BishopTest {
 
+    private final Bishop bishop = new Bishop(Symbol.BISHOP, Team.WHITE);
     private Board board;
-    private Bishop bishop;
 
     @BeforeEach
     void init() {
         board = Board.create();
-        bishop = new Bishop(Symbol.BISHOP, Team.WHITE);
     }
 
     @ParameterizedTest
@@ -37,14 +40,14 @@ class BishopTest {
     @Test
     @DisplayName("해당 방향을 비숍이 가지고 있지 않으면 false를 반환")
     void is_not_movable() {
-        boolean actual = bishop.isMovable(board, Coordinate.of("c3"), Coordinate.of("c4"));
+        boolean actual = bishop.isMovable(board, C3, C4);
         assertThat(actual).isFalse();
     }
 
     @Test
     @DisplayName("두 지점 사이에 장애물이 있는 경우 false를 반환")
     void is_not_movable2() {
-        boolean actual = bishop.isMovable(board, Coordinate.of("c1"), Coordinate.of("e3"));
+        boolean actual = bishop.isMovable(board, C1, E3);
         assertThat(actual).isFalse();
     }
 }

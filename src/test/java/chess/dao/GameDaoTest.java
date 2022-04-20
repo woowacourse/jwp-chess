@@ -8,16 +8,20 @@ import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class GameDaoTest {
 
-    private static final long testGameId = 1;
+    private static final long testGameId = 2;
 
-    private final GameDao gameDao = new GameDaoImpl(new TestConnectionSetup());
+    @Autowired
+    private GameDao gameDao;
 
     @AfterEach
-    void clear() {
-        gameDao.delete(testGameId);
+    void cleanUp() {
+        gameDao.deleteAll();
     }
 
     @DisplayName("게임 저장 테스트")
@@ -53,11 +57,5 @@ public class GameDaoTest {
     @Test
     void delete() {
         gameDao.delete(testGameId);
-    }
-
-    @DisplayName("게임 전체 삭제 테스트")
-    @Test
-    void deleteAll() {
-        gameDao.deleteAll();
     }
 }

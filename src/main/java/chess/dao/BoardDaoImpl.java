@@ -8,9 +8,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class BoardDaoImpl implements BoardDao {
 
     private static final int PIECE_COLUMN = 1;

@@ -5,9 +5,7 @@ import chess.util.SqlUpdateException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class TurnDaoImpl implements TurnDao {
 
     private static final int CURRENT_TURN_COLUMN = 1;

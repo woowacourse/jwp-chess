@@ -2,8 +2,12 @@ package chess.controller;
 
 import chess.dto.ResponseDto;
 import chess.service.ChessGameService;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,5 +36,11 @@ public class ChessSpringController {
         modelAndView.addObject("boardDto", chessGameService.getBoard());
         modelAndView.setViewName("index");
         return modelAndView;
+    }
+
+    @PostMapping("/move")
+    public @ResponseBody ResponseDto move(@RequestBody String request){
+        List<String> command = Arrays.asList(request.split(" "));
+        return chessGameService.move(command.get(0), command.get(1));
     }
 }

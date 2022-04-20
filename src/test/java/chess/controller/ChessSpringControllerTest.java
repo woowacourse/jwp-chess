@@ -2,6 +2,7 @@ package chess.controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -45,5 +46,17 @@ public class ChessSpringControllerTest {
         mockMvc.perform(get("/chess"))
                 .andExpect(view().name("index"))
                 .andExpect(model().attribute("boardDto", chessBoardDto));
+    }
+
+    @DisplayName("move POST 요청 테스트")
+    @Test
+    void post_move() throws Exception {
+        final String requestString = "a2 a4";
+        final ResponseDto responseDto = new ResponseDto(302, "");
+        given(chessGameService.move("a2", "a4")).willReturn(responseDto);
+        mockMvc.perform(post("/move")
+                .content(requestString))
+                .andExpect(content().json(responseDto.toJson()));
+
     }
 }

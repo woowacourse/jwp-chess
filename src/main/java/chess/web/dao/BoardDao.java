@@ -7,24 +7,32 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-public class BoardDao {
+public class BoardDao implements BoardRepository {
 
     private static final String ERROR_DB_FAILED = "[ERROR] DB 연결에 문제가 발생했습니다.";
 
-    public void save(int userId, GameStateDto gameStateDto) {
+    @Override
+    public int save(int userId, GameStateDto gameStateDto) {
         final String sql = "insert into board (player_id, turn) values (?, ?)";
 
         try (final Connection connection = DBConnector.getConnection();
-             final PreparedStatement statement = connection.prepareStatement(sql)) {
+             final PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, userId);
             statement.setString(2, gameStateDto.getTurn());
-            statement.execute();
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(ERROR_DB_FAILED);
         }
+        throw new RuntimeException(ERROR_DB_FAILED);
     }
 
+    @Override
     public Color getTurn(int boardId) {
         final String sql = "select turn from board where id = ?";
         Color color = Color.WHITE;
@@ -43,13 +51,14 @@ public class BoardDao {
         return color;
     }
 
-    public int getBoardIdByPlayer(int plyerId) {
+    @Override
+    public int getBoardIdByPlayer(int playerId) {
         final String sql = "select id from board where player_id = ?";
         int id = 0;
 
         try (final Connection connection = DBConnector.getConnection();
              final PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, plyerId);
+            statement.setInt(1, playerId);
             try (final ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     id = resultSet.getInt("id");
@@ -61,6 +70,7 @@ public class BoardDao {
         return id;
     }
 
+    @Override
     public void update(int boardId, GameStateDto gameStateDto) {
         final String sql = "update board set turn = ? where id = ?";
 
@@ -69,6 +79,19 @@ public class BoardDao {
             statement.setString(1, gameStateDto.getTurn());
             statement.setInt(2, boardId);
             statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(ERROR_DB_FAILED);
+        }
+    }
+
+    @Override
+    public void deleteByPlayer(int playerId) {
+        final String sql = "delete from board where player_id = ?";
+
+        try (final Connection connection = DBConnector.getConnection();
+             final PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, playerId);
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(ERROR_DB_FAILED);
         }

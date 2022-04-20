@@ -1,10 +1,7 @@
 create table player
 (
     id   int not null auto_increment primary key,
-    name varchar(12) not null,
-    win  int default 0,
-    draw int default 0,
-    lose int default 0
+    name varchar(12) not null
 );
 
 create table board
@@ -22,5 +19,5 @@ create table piece
     position varchar(2) not null,
     color    varchar(5) not null,
     role     varchar(1) not null,
-    foreign key (board_id) references board(id)
+    foreign key (board_id) references board(id) on delete cascade
 );

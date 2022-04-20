@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class PieceDao {
+public class PieceDao implements PieceRepository {
 
     private static final String ERROR_DB_FAILED = "[ERROR] DB 연결에 문제가 발생했습니다.";
 
+    @Override
     public void save(int boardId, String target, PieceDto pieceDto) {
         final String sql = "insert into piece (board_id, position , color, role) values (?, ?, ?, ?)";
 
@@ -32,7 +33,8 @@ public class PieceDao {
         }
     }
 
-    public void saveAll(int boardId, Map<Position, Piece> pieces) {
+    @Override
+    public void saveAll(int boardId, Map<Position, chess.domain.piece.Piece> pieces) {
         final String sql = "insert into piece (board_id, position, color, role) values (?, ?, ?, ?)";
 
         try (final Connection connection = DBConnector.getConnection();
@@ -52,6 +54,7 @@ public class PieceDao {
         }
     }
 
+    @Override
     public Optional<PieceDto> findOne(int boardId, String position) {
         final String sql = "select * from piece where board_id = ? and position = ?";
         Optional<PieceDto> pieceDto = Optional.ofNullable(null);
@@ -73,6 +76,7 @@ public class PieceDao {
         return pieceDto;
     }
 
+    @Override
     public List<PieceDto> findAll(int boardId) {
         final String sql = "select * from piece where board_id = ?";
         List<PieceDto> pieceDtos = new ArrayList<>();
@@ -95,6 +99,7 @@ public class PieceDao {
         return pieceDtos;
     }
 
+    @Override
     public void updateOne(int boardId, String position, PieceDto pieceDto) {
         final String sql = "update piece set color = ?, role = ? where board_id = ? and position = ?";
 
@@ -110,6 +115,7 @@ public class PieceDao {
         }
     }
 
+    @Override
     public void deleteOne(int boardId, String position) {
         final String sql = "delete from piece where board_id = ? and position = ?";
 
@@ -123,6 +129,7 @@ public class PieceDao {
         }
     }
 
+    @Override
     public void deleteAll(int boardId) {
         final String sql = "delete from piece where board_id = ?";
 

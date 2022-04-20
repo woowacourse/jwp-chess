@@ -4,11 +4,10 @@ import chess.domain.Color;
 import chess.domain.Result;
 import chess.domain.board.Board;
 import chess.domain.board.RegularRuleSetup;
-import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.web.PieceFactory;
-import chess.web.dao.BoardDao;
-import chess.web.dao.PieceDao;
+import chess.web.dao.BoardRepository;
+import chess.web.dao.PieceRepository;
 import chess.web.dto.CommendDto;
 import chess.web.dto.GameStateDto;
 import chess.web.dto.PieceDto;
@@ -21,14 +20,20 @@ import java.util.stream.Collectors;
 
 public class GameService {
 
-    private final PieceDao pieceDao = new PieceDao();
-    private final BoardDao boardDao = new BoardDao();
+    private final PieceRepository pieceRepository;
+    private final BoardRepository boardRepository;
 
-    public Map<String, Object> startNewGame(int userId) {
+    public GameService(PieceRepository pieceRepository, BoardRepository boardRepository) {
+        this.pieceRepository = pieceRepository;
+        this.boardRepository = boardRepository;
+    }
+
+    public Map<String, Object> startNewGame(int playerId) {
         Board board = new Board(new RegularRuleSetup());
-        boardDao.save(userId, getGameStateDto(board));
-        int boardId = boardDao.getBoardIdByPlayer(userId);
-        deletePreviousPieces(boardId);
+
+        boardRepository.deleteByPlayer(playerId);
+
+        int boardId = boardRepository.save(playerId, getGameStateDto(board));
         saveNewPieces(board, boardId);
         return gameStateAndPieces(boardId);
     }
@@ -39,16 +44,16 @@ public class GameService {
         Board board = loadBoard(boardId);
         board.move(source, target);
 
-        Optional<PieceDto> pickedPiece = pieceDao.findOne(boardId, source);
+        Optional<PieceDto> pickedPiece = pieceRepository.findOne(boardId, source);
         deleteMovedPieceFromSource(boardId, source);
         updateMovedPieceToTarget(boardId, target, pickedPiece.get());
         updateGameState(board, boardId);
     }
 
     public Map<String, Object> loadGame(int playerId) {
-        int boardId = boardDao.getBoardIdByPlayer(playerId);
+        int boardId = boardRepository.getBoardIdByPlayer(playerId);
         Board board = loadBoard(boardId);
-        board.loadTurn(boardDao.getTurn(boardId));
+        board.loadTurn(boardRepository.getTurn(boardId));
         return gameStateAndPieces(boardId);
     }
 
@@ -76,41 +81,34 @@ public class GameService {
     }
 
     private void updateMovedPieceToTarget(int boardId, String target, PieceDto pickedPieceDto) {
-        Optional<PieceDto> targetPieceDto = pieceDao.findOne(boardId, target);
+        Optional<PieceDto> targetPieceDto = pieceRepository.findOne(boardId, target);
         if (targetPieceDto.isPresent()) {
-            pieceDao.updateOne(boardId, target, pickedPieceDto);
+            pieceRepository.updateOne(boardId, target, pickedPieceDto);
             return;
         }
-        pieceDao.save(boardId, target, pickedPieceDto);
+        pieceRepository.save(boardId, target, pickedPieceDto);
     }
 
     private void deleteMovedPieceFromSource(int boardId, String source) {
-        pieceDao.deleteOne(boardId, source);
+        pieceRepository.deleteOne(boardId, source);
     }
 
     private void updateGameState(Board board, int boardId) {
-        boardDao.update(boardId, getGameStateDto(board));
+        boardRepository.update(boardId, getGameStateDto(board));
     }
 
     private Board loadBoard(int boardId) {
-        Map<Position, Piece> pieces = new HashMap<>();
-        for (PieceDto pieceDto : pieceDao.findAll(boardId)) {
+        Map<Position, chess.domain.piece.Piece> pieces = new HashMap<>();
+        for (PieceDto pieceDto : pieceRepository.findAll(boardId)) {
             pieces.put(Position.of(pieceDto.getPosition()), PieceFactory.build(pieceDto));
         }
         Board board = new Board(() -> pieces);
-        board.loadTurn(boardDao.getTurn(boardId));
+        board.loadTurn(boardRepository.getTurn(boardId));
         return board;
     }
 
     private void saveNewPieces(Board board, int boardId) {
-        pieceDao.saveAll(boardId, board.getPieces());
-    }
-
-    private void deletePreviousPieces(int boardId) {
-        Optional<PieceDto> piece = pieceDao.findOne(boardId, "a1");
-        if (piece.isPresent()) {
-            pieceDao.deleteAll(boardId);
-        }
+        pieceRepository.saveAll(boardId, board.getPieces());
     }
 
     private GameStateDto getGameStateDto(Board board) {
@@ -118,7 +116,7 @@ public class GameService {
     }
 
     private List<PieceDto> getPieceDtos(Board board) {
-        Map<Position, Piece> pieces = board.getPieces();
+        Map<Position, chess.domain.piece.Piece> pieces = board.getPieces();
         return pieces.keySet().stream()
                 .map(position -> PieceDto.from(position, pieces.get(position)))
                 .collect(Collectors.toList());

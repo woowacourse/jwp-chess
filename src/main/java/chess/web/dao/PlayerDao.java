@@ -8,8 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class PlayerDao {
+public class PlayerDao implements PlayerRepository {
 
+    @Override
     public void save(String name) {
         final Connection connection = DBConnector.getConnection();
         final String sql = "insert into player (name) values (?)";
@@ -22,6 +23,7 @@ public class PlayerDao {
         }
     }
 
+    @Override
     public Optional<PlayerDto> find(String name) {
         final Connection connection = DBConnector.getConnection();
         final String sql = "select * from player where name = ?";
@@ -32,10 +34,7 @@ public class PlayerDao {
             if (resultSet.next()) {
                 playerDto = Optional.of(new PlayerDto(
                         resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getInt("win"),
-                        resultSet.getInt("draw"),
-                        resultSet.getInt("lose")
+                        resultSet.getString("name")
                 ));
             }
         } catch (SQLException e) {

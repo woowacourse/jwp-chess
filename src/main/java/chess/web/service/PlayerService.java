@@ -1,6 +1,7 @@
 package chess.web.service;
 
 import chess.web.dao.PlayerDao;
+import chess.web.dao.PlayerRepository;
 import chess.web.dto.PlayerDto;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,16 +12,21 @@ public class PlayerService {
     private static final int NAME_MIN_SIZE = 1;
     private static final int NAME_MAX_SIZE = 12;
     private static final String ERROR_NAME_SIZE = "닉네임 길이는 1자 이상, 12자 이하입니다.";
-    private final PlayerDao playerDao = new PlayerDao();
+
+    private final PlayerRepository playerRepository;
+
+    public PlayerService(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
 
     public Map<String, Object> login(String name) {
         Map<String, Object> data = new HashMap<>();
         validateNameSize(name);
-        Optional<PlayerDto> playerDto = playerDao.find(name);
+        Optional<PlayerDto> playerDto = playerRepository.find(name);
         if (playerDto.isEmpty()) {
-            playerDao.save(name);
+            playerRepository.save(name);
         }
-        data.put("player", playerDao.find(name).get());
+        data.put("player", playerRepository.find(name).get());
         return data;
     }
 

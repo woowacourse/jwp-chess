@@ -4,6 +4,9 @@ import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
 
+import chess.web.dao.BoardDao;
+import chess.web.dao.PieceDao;
+import chess.web.dao.PlayerDao;
 import chess.web.dto.CommendDto;
 import chess.web.service.GameService;
 import chess.web.service.PlayerService;
@@ -18,8 +21,8 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 public class ChessController {
 
     private Gson gson = new Gson();
-    private GameService gameService = new GameService();
-    private PlayerService playerService = new PlayerService();
+    private GameService gameService = new GameService(new PieceDao(), new BoardDao());
+    private PlayerService playerService = new PlayerService(new PlayerDao());
 
     public ChessController() {
         port(8080);

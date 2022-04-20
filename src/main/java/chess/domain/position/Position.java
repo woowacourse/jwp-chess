@@ -141,7 +141,7 @@ public final class Position {
                 .forEach(row -> CACHE.put(column.name() + row.getValue(), new Position(column, row)));
     }
 
-    public String ColumnRowString() {
+    public String name() {
         return column.name() + row.getValue();
     }
 

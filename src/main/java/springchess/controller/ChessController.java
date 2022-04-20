@@ -1,6 +1,7 @@
 package springchess.controller;
 
 import chess.dto.ResponseDto;
+import chess.dto.ScoreDto;
 import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,4 +62,15 @@ public class ChessController {
         }
         return ResponseDto.of(HttpStatus.OK_200, null, chessService.isEnd(Integer.parseInt(roomId))).toString();
     }
+
+    @GetMapping("/room/{roomId}/status")
+    @ResponseBody
+    public String status(@PathVariable(value = "roomId") String roomId) {
+        return ScoreDto.from(chessService.status(Integer.parseInt(roomId))).toString();
+    }
+
+//    get("/room/:roomId/status", (req, res) -> {
+//        final ScoreDto scoreDto = chessController.score(Integer.parseInt(req.params(":roomId")));
+//        return scoreDto.toString();
+//    });
 }

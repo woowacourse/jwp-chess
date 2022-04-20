@@ -31,7 +31,7 @@ function checkSendToServer() {
 function checkStatus() {
     let element = document.getElementById("roomId");
 
-    fetch('/room/' + element.value + '/status', {
+    fetch('/room/' + element.value + 'status', {
         method: "GET",
         headers: {
             "Content-Type": "text/plain",

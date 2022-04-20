@@ -8,7 +8,9 @@ import chess.domain.Winner;
 import chess.domain.board.Position;
 import chess.dto.ChessBoardDto;
 import chess.dto.ResponseDto;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessGameService {
 
     private final PieceDao pieceDao;

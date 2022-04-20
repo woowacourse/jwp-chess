@@ -166,6 +166,10 @@ function activateLoadGame() {
 }
 
 window.onload = async function () {
+    let param = new URL(location.href).searchParams;
+    let playerId = param.get("playerId");
+    document.getElementById("player-id").value = playerId;
+
     let piecesContainer = document.getElementById('pieces-container');
     await initBlocks(piecesContainer);
 }
@@ -258,7 +262,7 @@ function fetchResult() {
 }
 
 function fetchFinalResult() {
-    let boardId = document.getElementById("board-id").value;
+    c
     fetch('http://localhost:8080/end?boardId=' + boardId, {
         method: 'GET',
         headers: {

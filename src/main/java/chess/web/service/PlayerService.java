@@ -1,10 +1,7 @@
 package chess.web.service;
 
-import chess.web.dao.PlayerDao;
 import chess.web.dao.PlayerRepository;
 import chess.web.dto.PlayerDto;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class PlayerService {
@@ -19,15 +16,13 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
 
-    public Map<String, Object> login(String name) {
-        Map<String, Object> data = new HashMap<>();
+    public PlayerDto login(String name) {
         validateNameSize(name);
         Optional<PlayerDto> playerDto = playerRepository.find(name);
         if (playerDto.isEmpty()) {
             playerRepository.save(name);
         }
-        data.put("player", playerRepository.find(name).get());
-        return data;
+        return playerRepository.find(name).get();
     }
 
     private void validateNameSize(String name) {

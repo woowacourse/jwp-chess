@@ -94,7 +94,7 @@
                 <td class="cell white-cell" id="h1"></td>
             </tr>
         </table>
-        {{#each this.pieces}}
+        {{#each board.pieces}}
             <script>fillSquare("{{this.square}}", "{{this.type}}", "{{this.color}}")</script>
         {{/each}}
     </div>

@@ -7,7 +7,9 @@ import chess.service.dto.PieceWithSquareDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class DatabaseBoardDao implements BoardDao {
 
     private static final String PIECE_COLOR = "piece_color";

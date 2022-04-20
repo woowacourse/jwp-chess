@@ -23,7 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessService {
     private final BoardDao boardDao;
     private final GameDao gameDao;

@@ -1,4 +1,4 @@
-package chess.database.dao;
+package chess.database.vanillajdbc.dao;
 
 import java.util.HashMap;
 import java.util.Map;

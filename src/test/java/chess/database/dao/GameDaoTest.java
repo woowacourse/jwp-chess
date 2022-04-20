@@ -11,6 +11,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import chess.database.dto.GameStateDto;
+import chess.database.vanillajdbc.dao.JdbcConnector;
+import chess.database.vanillajdbc.dao.JdbcGameDao;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 

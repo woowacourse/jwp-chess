@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import chess.database.dto.GameStateDto;
+import chess.database.vanillajdbc.dao.GameDao;
 
 public class FakeGameDao implements GameDao {
 

@@ -14,13 +14,13 @@ import spark.Request;
 import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-public class WebChessController {
+public class SparkChessController {
 
     private static final Gson GSON = new Gson();
 
     private final GameService gameService;
 
-    public WebChessController(GameService gameService) {
+    public SparkChessController(GameService gameService) {
         this.gameService = gameService;
     }
 

@@ -1,10 +1,10 @@
 package chess.config;
 
-import chess.controller.WebChessController;
+import chess.controller.SparkChessController;
 
 public class ControllerConfig {
 
-    public static WebChessController getWebController() {
-        return new WebChessController(ServiceConfig.getGameService());
+    public static SparkChessController getWebController() {
+        return new SparkChessController(ServiceConfig.getGameService());
     }
 }

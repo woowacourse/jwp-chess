@@ -7,6 +7,7 @@ import chess.database.dto.BoardDto;
 import chess.database.dto.PieceDto;
 import chess.database.dto.PointDto;
 import chess.database.dto.RouteDto;
+import chess.database.vanillajdbc.dao.BoardDao;
 
 public class FakeBoardDao implements BoardDao {
 

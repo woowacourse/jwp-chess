@@ -1,43 +1,54 @@
 package chess.domain.dao;
 
 import chess.domain.dto.GameDto;
+import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import chess.domain.game.status.Playing;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+@SpringBootTest
 class GameDaoTest {
 
-    private Connection connection;
-    private GameDao gameDao;
-    private Connector connector = new Connector();
+    @Autowired
+    private GameJdbcTemplateDao gameDao;
+    private final ChessBoard chessBoard = initTestChessBoard();
+
+    private ChessBoard initTestChessBoard() {
+        ChessBoard chessBoard = ChessBoardFactory.initBoard();
+        chessBoard.changeStatus(new Playing());
+        return chessBoard;
+    }
+
+    private int gameSave() {
+        return gameDao.save(chessBoard);
+    }
 
     @BeforeEach
-    void set() throws SQLException {
-        connection = connector.makeConnection(Connector.DEV_DB_URL);
-        gameDao = new GameDao(connection, connector);
-        connection.setAutoCommit(false);
+    void setup() {
+        gameDao.deleteAll();
     }
 
     @Test
     @DisplayName("게임을 저장한다.")
     void save() {
-        int actual = gameDao.save(ChessBoardFactory.initBoard());
-        assertThat(actual).isEqualTo(1);
+        assertDoesNotThrow(() -> gameSave());
     }
 
     @Test
     @DisplayName("가장 최근 게임을 불러온다")
     void findLastGame() throws SQLException {
         //given
-        gameDao.save(ChessBoardFactory.initBoard());
-        gameDao.save(ChessBoardFactory.initBoard());
+        gameSave();
+        gameSave();
         //when
         int actual = gameDao.findLastGameId();
         //then
@@ -48,7 +59,7 @@ class GameDaoTest {
     @DisplayName("id로 게임을 불러온다")
     void findById() {
         //given
-        gameDao.save(ChessBoardFactory.initBoard());
+        gameSave();
         //when
         GameDto actual = gameDao.findById(1);
         //then
@@ -59,18 +70,12 @@ class GameDaoTest {
     @DisplayName("가장 최근 게임을 삭제한다.")
     void delete() {
         //given
-        gameDao.save(ChessBoardFactory.initBoard());
-        gameDao.save(ChessBoardFactory.initBoard());
+        gameSave();
+        gameSave();
         //when
         gameDao.delete();
         //then
         assertThat(gameDao.findLastGameId()).isEqualTo(1);
-    }
-
-    @AfterEach
-    void end() throws SQLException {
-        connection.rollback();
-        connection.close();
     }
 
 }

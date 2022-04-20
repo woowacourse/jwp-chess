@@ -6,6 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,19 +15,16 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest
 class BoardDaoTest {
 
-    private Connection connection;
-    private BoardDao boardDao;
-    private GameDao gameDao;
-    private Connector connector = new Connector();
+    @Autowired private BoardJdbcTemplateDao boardDao;
+    @Autowired private GameJdbcTemplateDao gameDao;
 
     @BeforeEach
     void set() throws SQLException {
-        connection = connector.makeConnection(Connector.DEV_DB_URL);
-        boardDao = new BoardDao(connection, connector);
-        gameDao = new GameDao(connection, connector);
-        connection.setAutoCommit(false);
+        boardDao.deleteAll();
+        gameDao.deleteAll();
         gameDao.save(ChessBoardFactory.initBoard());
     }
 
@@ -64,11 +63,5 @@ class BoardDaoTest {
         assertThat(actual.get(0).getGameId()).isEqualTo(1);
         assertThat(actual.get(0).getPosition()).isEqualTo("a1");
         assertThat(actual.get(0).getPiece()).isEqualTo("Pawn");
-    }
-
-    @AfterEach
-    void end() throws SQLException {
-        connection.rollback();
-        connection.close();
     }
 }

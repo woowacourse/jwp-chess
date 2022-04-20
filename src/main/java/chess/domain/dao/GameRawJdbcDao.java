@@ -5,26 +5,30 @@ import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class GameDao {
+public class GameRawJdbcDao {
 
     private static final int EMPTY_RESULT = 0;
+
     private final Connection connection;
-    private int gameId = 0;
     private final Connector connector;
+
+    private int gameId = 0;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public GameDao(Connector connector) {
+    public GameRawJdbcDao(Connector connector) {
         this.connector = connector;
         connection = this.connector.makeConnection(Connector.PROD_DB_URL);
     }
 
-    public GameDao(final Connection connection, Connector connector) {
+    public GameRawJdbcDao(final Connection connection, Connector connector) {
         this.connection = connection;
         this.connector = connector;
     }

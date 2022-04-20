@@ -3,12 +3,13 @@ package chess.domain.dao;
 import chess.domain.dto.PieceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardDao{
+public class BoardRawJdbcDao {
 
     private static final int EMPTY_RESULT = 0;
     private final Connection connection;
@@ -16,12 +17,12 @@ public class BoardDao{
     private final Connector connector;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public BoardDao(Connector connector) {
+    public BoardRawJdbcDao(Connector connector) {
         this.connector = connector;
         connection = this.connector.makeConnection(Connector.PROD_DB_URL);
     }
 
-    BoardDao(final Connection connection, Connector connector) {
+    BoardRawJdbcDao(final Connection connection, Connector connector) {
         this.connection = connection;
         this.connector = connector;
     }

@@ -1,7 +1,7 @@
 package chess.service;
 
-import chess.domain.dao.BoardDao;
-import chess.domain.dao.GameDao;
+import chess.domain.dao.BoardJdbcTemplateDao;
+import chess.domain.dao.GameJdbcTemplateDao;
 import chess.domain.dto.GameDto;
 import chess.domain.dto.PieceDto;
 import chess.domain.dto.ResponseDto;
@@ -14,24 +14,31 @@ import chess.domain.game.status.Playing;
 import chess.domain.piece.ChessPiece;
 import chess.domain.piece.Type;
 import chess.domain.position.Position;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class ChessService {
 
     private static final int EMPTY_RESULT = 0;
-
-    private final GameDao gameDao;
-    private final BoardDao boardDao;
+ // private final GameRawJdbcDao gameDao;
+    private final BoardJdbcTemplateDao boardDao;
+    private final GameJdbcTemplateDao gameDao;
     private ChessBoard chessBoard = null;
 
-    public ChessService(GameDao gameDao, BoardDao boardDao) {
+    public ChessService(BoardJdbcTemplateDao boardDao, GameJdbcTemplateDao gameDao) {
+        this.boardDao = boardDao;
+        this.gameDao = gameDao;
+    }
+
+/*    public ChessService(GameRawJdbcDao gameDao, BoardDao boardDao) {
         this.gameDao = gameDao;
         this.boardDao = boardDao;
-    }
+    }*/
 
     public ResponseDto start() {
         try {

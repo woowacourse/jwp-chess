@@ -38,5 +38,5 @@ out/
 ### Docker ###
 docker/db/mysql/data/
 docker/db/mysql/init/*
-!docker/db/mysql/init/init.sql
+!docker/db/mysql/init/schema.sql
 >>>>>>> level1/step2

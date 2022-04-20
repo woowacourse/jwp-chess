@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:13306/chess
+    url: jdbc:mysql://localhost:13306/dev_chess
     username: root
     password: root
   h2:

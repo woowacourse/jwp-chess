@@ -42,12 +42,18 @@ public class IngameController {
             chessGame.move(new Square(source), new Square(target));
             DBService.movePiece(gameID, source, target);
             DBService.updateTurn(gameID, chessGame);
-            return runGame(gameID, model);
+            model.addAllAttributes(chessGame.getEmojis());
+            model.addAttribute("msg","누가 이기나 보자구~!");
         } catch (IllegalArgumentException e) {
             model.addAllAttributes(chessGame.getEmojis());
             model.addAttribute("msg", e.getMessage());
         }
         model.addAttribute("gameID", gameID);
+
+        if (chessGame.isKingDie()) {
+            model.addAttribute("msg", "킹 잡았다!! 게임 끝~!~!");
+            return "finished";
+        }
 
         return "ingame";
     }

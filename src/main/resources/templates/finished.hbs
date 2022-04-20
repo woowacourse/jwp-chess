@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-<div class="message">{{message}}</div>
+<div class="message">{{msg}}</div>
 <table class="chess-board">
     <tbody>
     <tr>
@@ -110,7 +110,6 @@
     </tbody>
 </table>
 <form action="/status" method="get" class="inlineBtn">
-    <input type="text" name="gameID" class="invisible" value={{gameID}} />
     <input type="submit" value="STATUS" class="btn" id="status"/>
 </form>
 <form action="/" method="get" class="inlineBtn">

@@ -1,5 +1,6 @@
 package chess.web;
 
+import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.ArgumentMatchers.contains;
 
 import io.restassured.RestAssured;
@@ -31,7 +32,7 @@ class SpringChessControllerTest {
                 .when().post("/board")
                 .then().log().all()
                 .statusCode(HttpStatus.FOUND.value())
-                .header("location", contains("board.html"));
+                .header("Location", containsString("/board?playerId="));
     }
 
 }

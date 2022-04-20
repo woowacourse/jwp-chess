@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -18,7 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class BoardDaoTest {
 
-    @Autowired private BoardJdbcTemplateDao boardDao;
+    @Autowired
+    private BoardJdbcTemplateDao boardDao;
     @Autowired private GameJdbcTemplateDao gameDao;
 
     @BeforeEach
@@ -63,5 +63,11 @@ class BoardDaoTest {
         assertThat(actual.get(0).getGameId()).isEqualTo(1);
         assertThat(actual.get(0).getPosition()).isEqualTo("a1");
         assertThat(actual.get(0).getPiece()).isEqualTo("Pawn");
+    }
+
+    @AfterEach
+    void tearDown() {
+        boardDao.deleteAll();
+        gameDao.deleteAll();
     }
 }

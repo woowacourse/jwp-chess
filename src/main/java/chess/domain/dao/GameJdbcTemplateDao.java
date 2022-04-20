@@ -32,6 +32,7 @@ public class GameJdbcTemplateDao {
             // jdbcTemplate.update(sql, ++gameId, chessBoard.compareStatus(Status.PLAYING), chessBoard.getCurrentTurn().name());
             return jdbcTemplate.update(sql, chessBoard.compareStatus(Status.PLAYING), chessBoard.getCurrentTurn().name());
         } catch (Exception exception) {
+            exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
@@ -45,6 +46,7 @@ public class GameJdbcTemplateDao {
             }
             return result;
         } catch (Exception exception) {
+            exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
@@ -67,6 +69,7 @@ public class GameJdbcTemplateDao {
         } catch (EmptyResultDataAccessException exception) {
             return null;
         } catch (Exception exception) {
+            exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
@@ -77,6 +80,7 @@ public class GameJdbcTemplateDao {
             int lastGameId = findLastGameId();
             jdbcTemplate.update(sql, lastGameId);
         } catch (Exception exception) {
+            exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
@@ -87,6 +91,7 @@ public class GameJdbcTemplateDao {
             jdbcTemplate.update(sql);
             jdbcTemplate.update("alter table game auto_increment = 1");
         } catch (Exception exception) {
+            exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }

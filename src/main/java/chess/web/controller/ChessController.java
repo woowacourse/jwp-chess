@@ -2,6 +2,7 @@ package chess.web.controller;
 
 import chess.service.ChessService;
 import chess.service.dto.BoardDto;
+import chess.service.dto.GameResultDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
@@ -54,5 +56,26 @@ public class ChessController {
     public String createGame(@RequestParam String name) {
         chessService.createGame(name.trim());
         return "redirect:/";
+    }
+
+    @PostMapping("/move/{gameId}")
+    public String requestMove(@PathVariable int gameId, @RequestParam String from,
+        @RequestParam String to) {
+        chessService.move(gameId, from, to);
+        return "redirect:../board/" + gameId;
+    }
+
+    @GetMapping("/status/{gameId}")
+    private String renderStatus(@PathVariable int gameId, Model model) {
+        GameResultDto status = chessService.getResult(gameId);
+        chessService.endGame(gameId);
+        model.addAttribute("status", status);
+        return "result";
+    }
+
+    @GetMapping("/game-end/{gameId}")
+    public String requestEndGame(@PathVariable int gameId) {
+        chessService.endGame(gameId);
+        return "redirect:../";
     }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
 public class WebPathController {
     private static final String PATH_READY = "/ready.html";
     private static final String PATH_FIND_GAME = "/findgame.html";
-    private static final String PATH_IN_GAME = "/ingame.html";
+    private static final String PATH_IN_GAME = "/ingame.hbs";
     private static final String PATH_FINISHED = "/finished.html";
     private static final String PATH_STATUS = "/status.html";
 

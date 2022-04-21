@@ -23,4 +23,12 @@ public class BoardDto {
         }
         return new BoardDto(aBoard, turn);
     }
+
+    public Map<String, String> getBoard() {
+        return board;
+    }
+
+    public String getTurn() {
+        return turn;
+    }
 }

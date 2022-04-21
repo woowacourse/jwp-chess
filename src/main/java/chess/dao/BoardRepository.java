@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.entity.BoardEntity;
+import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -38,6 +39,13 @@ public class BoardRepository implements BoardDao {
 
     @Override
     public void updateBatchPositions(final List<BoardEntity> board) {
-        throw new UnsupportedOperationException("BoardRepository#updateBatchPositions not implemented.");
+        final String sql = "update board set piece = ? where position =?";
+        jdbcTemplate.batchUpdate(sql,
+            board,
+            board.size(),
+            (PreparedStatement ps, BoardEntity boardEntity) -> {
+                ps.setString(1, boardEntity.getPiece());
+                ps.setString(2, boardEntity.getPosition());
+            });
     }
 }

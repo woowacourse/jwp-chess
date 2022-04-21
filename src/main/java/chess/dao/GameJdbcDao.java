@@ -13,6 +13,7 @@ public class GameJdbcDao implements GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // TODO NamedParameterJdbcTemplate 적용 필요 https://steadyjay.tistory.com/34
     @Override
     public void save(GameDto gameDto) {
         final String sql = "insert into game (white_user_name, black_user_name, state) values (?, ?, ?)";

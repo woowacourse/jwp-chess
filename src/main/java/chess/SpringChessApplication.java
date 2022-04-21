@@ -18,8 +18,4 @@ public class SpringChessApplication {
         return "ready";
     }
 
-    @GetMapping("/status")
-    public String showResult() {
-        return "status";
-    }
 }

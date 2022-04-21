@@ -54,4 +54,9 @@ public class RoomRepository {
         String sql = "select * from room where id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper(), id);
     }
+
+    public void updateGameOver(final Long id) {
+        String sql = "update room set game_over = true where id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

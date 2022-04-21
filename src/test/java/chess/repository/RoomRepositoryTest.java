@@ -41,7 +41,17 @@ class RoomRepositoryTest {
         final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
         final Long id = roomRepository.insert(roomEntity).getId();
         roomRepository.updateTeam(id, "black");
-        
+
         assertThat(roomRepository.findById(id).getTeam()).isEqualTo("black");
+    }
+
+    @DisplayName("룸의 상태를 종료로 변경한다")
+    @Test
+    void finishRoom() {
+        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        final Long id = roomRepository.insert(roomEntity).getId();
+        roomRepository.updateGameOver(id);
+
+        assertThat(roomRepository.findById(id).isGameOver()).isTrue();
     }
 }

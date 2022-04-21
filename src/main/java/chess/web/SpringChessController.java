@@ -3,7 +3,9 @@ package chess.web;
 import chess.web.dao.RoomDao;
 import chess.web.dto.RoomDto;
 import chess.web.service.RoomService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,4 +32,8 @@ public class SpringChessController {
         return "/board.html";
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity validateName() {
+        return ResponseEntity.badRequest().build();
+    }
 }

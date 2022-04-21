@@ -7,8 +7,8 @@ import java.util.Optional;
 public class RoomService {
 
     private static final int NAME_MIN_SIZE = 1;
-    private static final int NAME_MAX_SIZE = 12;
-    private static final String ERROR_NAME_SIZE = "닉네임 길이는 1자 이상, 12자 이하입니다.";
+    private static final int NAME_MAX_SIZE = 16;
+    private static final String ERROR_NAME_SIZE = "방 이름은 1자 이상, 16자 이하입니다.";
 
     private final RoomRepository roomRepository;
 

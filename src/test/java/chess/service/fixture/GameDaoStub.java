@@ -1,6 +1,6 @@
 package chess.service.fixture;
 
-import chess.dao2.GameDao;
+import chess.dao.GameDao;
 import chess.dao.GameState;
 import java.util.HashMap;
 import java.util.Map;

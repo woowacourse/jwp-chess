@@ -1,63 +1,62 @@
 package chess.dao;
 
-import java.sql.Statement;
+import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class GameDao {
 
-    private static final String PROD_TABLE_NAME = "game";
+    private static final String TABLE_NAME = "game";
+
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public GameDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
 
     public int saveAndGetGeneratedId() {
-        final String sql = addTable("INSERT INTO %s (state) VALUES (?)");
-
-        ResultReader reader = new StatementExecutor(sql, Statement.RETURN_GENERATED_KEYS)
-                .setString(GameState.RUNNING)
-                .executeCommandAndGetGeneratedKeys();
-        try (reader) {
-            return reader.readFirstColumn();
-        }
+        final String sql = addTable("INSERT INTO %s (state) VALUES (:state)");
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        SqlParameterSource paramSource = new MapSqlParameterSource("state", GameState.RUNNING.name());
+        namedParameterJdbcTemplate.update(sql, paramSource, keyHolder);
+        return keyHolder.getKey().intValue();
     }
 
     public void finishGame(int gameId) {
-        final String sql = addTable("UPDATE %s SET state = ? WHERE id = ?");
-        new StatementExecutor(sql)
-                .setString(GameState.OVER)
-                .setInt(gameId)
-                .executeCommand();
+        final String sql = addTable("UPDATE %s SET state = :state WHERE id = :game_id");
+        MapSqlParameterSource paramSource = new MapSqlParameterSource();
+        paramSource.addValue("game_id", gameId);
+        paramSource.addValue("state", GameState.OVER.name());
+
+        namedParameterJdbcTemplate.update(sql, paramSource);
     }
 
     public boolean checkById(int gameId) {
-        final String sql = addTable("SELECT COUNT(*) FROM %s WHERE id = ?");
+        final String sql = addTable("SELECT COUNT(*) FROM %s WHERE id = :game_id");
 
-        ResultReader reader = new StatementExecutor(sql)
-                .setInt(gameId)
-                .executeQuery();
-        try (reader) {
-            int existingGameCount = reader.readFirstColumn();
-            return existingGameCount > 0;
-        }
+        MapSqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
+        int existingGameCount = namedParameterJdbcTemplate.queryForObject(sql, paramSource, Integer.class);
+        return existingGameCount > 0;
     }
 
     public int countAll() {
         final String sql = addTable("SELECT COUNT(*) FROM %s");
-
-        ResultReader reader = new StatementExecutor(sql).executeQuery();
-        try (reader) {
-            return reader.readFirstColumn();
-        }
+        return namedParameterJdbcTemplate.queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
     }
 
     public int countByState(GameState state) {
-        final String sql = addTable("SELECT COUNT(*) FROM %s WHERE state = ?");
+        final String sql = addTable("SELECT COUNT(*) FROM %s WHERE state = :state");
 
-        ResultReader reader = new StatementExecutor(sql)
-                .setString(state)
-                .executeQuery();
-        try (reader) {
-            return reader.readFirstColumn();
-        }
+        MapSqlParameterSource paramSource = new MapSqlParameterSource("state", state.name());
+        return namedParameterJdbcTemplate.queryForObject(sql, paramSource, Integer.class);
     }
 
     protected String addTable(String sql) {
-        return String.format(sql, PROD_TABLE_NAME);
+        return String.format(sql, TABLE_NAME);
     }
 }

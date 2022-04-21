@@ -1,8 +1,8 @@
 package chess.service;
 
 import chess.dao.GameState;
-import chess.dao2.EventDao;
-import chess.dao2.GameDao;
+import chess.dao.EventDao;
+import chess.dao.GameDao;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.game.Game;

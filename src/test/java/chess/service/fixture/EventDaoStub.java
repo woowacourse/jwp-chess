@@ -1,6 +1,6 @@
 package chess.service.fixture;
 
-import chess.dao2.EventDao;
+import chess.dao.EventDao;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;

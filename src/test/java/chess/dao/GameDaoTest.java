@@ -2,35 +2,42 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @SuppressWarnings("NonAsciiCharacters")
+@JdbcTest
 class GameDaoTest {
 
     private static final String TEST_TABLE = "game_test";
-    private static final String SETUP_TEST_DB_SQL = String.format(
-            "INSERT INTO %s (id, state) VALUES (1, 'RUNNING'), (2, 'OVER')", TEST_TABLE);
 
-    private static final String CLEANSE_TEST_DB_SQL = String.format("TRUNCATE TABLE %s", TEST_TABLE);
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    private final GameDao dao = new GameDao() {
-        @Override
-        protected String addTable(String sql) {
-            return String.format(sql, TEST_TABLE);
-        }
-    };
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    private GameDao dao;
 
     @BeforeEach
     void setUp() {
-        cleanUp();
-        new StatementExecutor(SETUP_TEST_DB_SQL).executeCommand();
-    }
+        dao = new GameDao(namedParameterJdbcTemplate) {
+            @Override
+            protected String addTable(String sql) {
+                return String.format(sql, TEST_TABLE);
+            }
+        };
+        jdbcTemplate.execute("DROP TABLE game_test IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE game_test("
+                + "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
+                + "state ENUM('RUNNING', 'OVER') NOT NULL)");
 
-    @AfterEach
-    void cleanUp() {
-        new StatementExecutor(CLEANSE_TEST_DB_SQL).executeCommand();
+        jdbcTemplate.execute("INSERT INTO game_test (id, state) "
+                + "VALUES (1, 'RUNNING'), (2, 'OVER')");
     }
 
     @Test
@@ -44,10 +51,8 @@ class GameDaoTest {
     void finishGame_메서드로_게임의_상태를_OVER로_변경가능() {
         dao.finishGame(1);
 
-        ResultReader reader = new StatementExecutor(String.format("SELECT state FROM %s WHERE id = %d", TEST_TABLE, 1))
-                .executeQuery();
-        String actual = reader.nextRow()
-                .readStringAt("state");
+        String actual = jdbcTemplate.queryForObject(
+                "SELECT state FROM game_test WHERE id = 1", String.class);
 
         assertThat(actual).isEqualTo("OVER");
     }

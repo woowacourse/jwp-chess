@@ -1,6 +1,7 @@
 package chess.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
@@ -39,6 +40,24 @@ class BoardRepositoryTest {
         boardRepository.updatePosition(source);
         final BoardEntity updatedPiece = boardRepository.findBoardByRoomIdAndPosition(1L, "a2");
         assertThat(updatedPiece.getPiece()).isEqualTo("blank");
+    }
+
+    @DisplayName("a2와 a4의 기물을  blank, white_pawn으로 변경한다")
+    @Test
+    void updateBatch() {
+        insertInitialData();
+        final BoardEntity source = new BoardEntity(1L, "a2", "blank");
+        final BoardEntity target = new BoardEntity(1L, "a4", "white_pawn");
+        boardRepository.updateBatchPositions(List.of(source, target));
+
+        assertAll(
+            () -> assertThat(boardRepository.findBoardByRoomIdAndPosition(1L, "a2")
+                .getPiece())
+                .isEqualTo("blank"),
+            () -> assertThat(boardRepository.findBoardByRoomIdAndPosition(1L, "a4")
+                .getPiece())
+                .isEqualTo("white_pawn")
+        );
     }
 
     private void insertInitialData() {

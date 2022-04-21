@@ -44,4 +44,14 @@ public class RoomRepository {
         final Long id = insertActor.executeAndReturnKey(parameters).longValue();
         return new RoomEntity(id, room.getName(), room.getTeam(), room.isGameOver());
     }
+
+    public void updateTeam(final Long id, final String team) {
+        String sql = "update room set team = ? where id = ?";
+        jdbcTemplate.update(sql, team, id);
+    }
+
+    public RoomEntity findById(final Long id) {
+        String sql = "select * from room where id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper(), id);
+    }
 }

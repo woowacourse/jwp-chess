@@ -34,4 +34,14 @@ class RoomRepositoryTest {
         final RoomEntity insertRoom = roomRepository.insert(roomEntity);
         assertThat(insertRoom).isEqualTo(roomEntity);
     }
+
+    @DisplayName("룸의 현재 차례를 업데이트한다.")
+    @Test
+    void updateTeam() {
+        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        final Long id = roomRepository.insert(roomEntity).getId();
+        roomRepository.updateTeam(id, "black");
+        
+        assertThat(roomRepository.findById(id).getTeam()).isEqualTo("black");
+    }
 }

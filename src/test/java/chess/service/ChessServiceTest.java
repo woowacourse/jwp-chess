@@ -1,5 +1,7 @@
 package chess.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.dto.request.RoomRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,10 +18,12 @@ class ChessServiceTest {
     @Autowired
     private ChessService chessService;
 
-    @DisplayName("")
+    @DisplayName("체스 초보만이라는 이름을 가진 방을 생성한다.")
     @Test
     void createRoom() {
         final RoomRequestDto roomRequestDto = new RoomRequestDto("체스 초보만");
-        chessService.createRoom(roomRequestDto);
+        final String name = chessService.createRoom(roomRequestDto).getName();
+
+        assertThat(name).isEqualTo("체스 초보만");
     }
 }

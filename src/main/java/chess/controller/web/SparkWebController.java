@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-public class WebController {
+public class SparkWebController {
 
     private static final int COLUMN_INDEX = 0;
     private static final int ROW_INDEX = 1;

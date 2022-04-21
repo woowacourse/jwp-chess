@@ -30,23 +30,32 @@ public class ChessService {
         turnDao = new TurnDaoImpl();
     }
 
-    public ChessMap initializeGame(final ChessWebGame chessWebGame) {
+    public ChessMap initializeGame() {
         pieceDao.endPieces();
         pieceDao.initializePieces(new Player(new BlackGenerator(), Team.BLACK));
         pieceDao.initializePieces(new Player(new WhiteGenerator(), Team.WHITE));
         turnDao.resetTurn();
 
+        final ChessWebGame chessWebGame = new ChessWebGame();
         return chessWebGame.initializeChessGame();
     }
 
-    public ChessMap load(final ChessWebGame chessWebGame) {
+    public ChessMap load() {
+        final ChessWebGame chessWebGame = new ChessWebGame();
         loadPieces(chessWebGame);
         loadTurn(chessWebGame);
 
         return chessWebGame.createMap();
     }
 
-    private void loadPieces(ChessWebGame chessWebGame) {
+    private ChessWebGame loadGame() {
+        final ChessWebGame chessWebGame = new ChessWebGame();
+        loadPieces(chessWebGame);
+        loadTurn(chessWebGame);
+        return chessWebGame;
+    }
+
+    private void loadPieces(final ChessWebGame chessWebGame) {
         final List<PieceDto> whitePiecesDto = pieceDao.findPiecesByTeam(Team.WHITE);
         final List<PieceDto> blackPiecesDto = pieceDao.findPiecesByTeam(Team.BLACK);
         final List<Piece> whitePieces = whitePiecesDto.stream()
@@ -77,11 +86,12 @@ public class ChessService {
         return pieces.get(name);
     }
 
-    public ChessMap move(final ChessWebGame chessWebGame, final MoveDto moveDto) {
+    public ChessMap move(final MoveDto moveDto) {
         final Position currentPosition = Position.of(moveDto.getCurrentPosition());
         final Position destinationPosition = Position.of(moveDto.getDestinationPosition());
         final TurnDto turnDto = turnDao.findTurn();
 
+        final ChessWebGame chessWebGame = loadGame();
         chessWebGame.move(currentPosition, destinationPosition);
         chessWebGame.changeTurn();
         pieceDao.removePieceByCaptured(moveDto);
@@ -90,7 +100,8 @@ public class ChessService {
         return chessWebGame.createMap();
     }
 
-    public ScoreDto getStatus(final ChessWebGame chessWebGame) {
+    public ScoreDto getStatus() {
+        final ChessWebGame chessWebGame = loadGame();
         final Map<String, Double> scores = chessWebGame.getScoreStatus();
         final Double whiteScore = scores.get(Team.WHITE.getName());
         final Double blackScore = scores.get(Team.BLACK.getName());
@@ -100,7 +111,8 @@ public class ChessService {
         return new ScoreDto(status);
     }
 
-    public ResultDto getResult(final ChessWebGame chessWebGame) {
+    public ResultDto getResult() {
+        final ChessWebGame chessWebGame = loadGame();
         final Result result = chessWebGame.getResult();
         return new ResultDto(result.getResult());
     }

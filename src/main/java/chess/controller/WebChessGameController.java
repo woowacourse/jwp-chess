@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.domain.ChessWebGame;
 import chess.dto.ErrorMessageDto;
 import chess.dto.MoveDto;
 import chess.dto.ResultDto;
@@ -26,7 +25,6 @@ public class WebChessGameController {
     }
 
     public void run() {
-        final ChessWebGame chessWebGame = new ChessWebGame();
         final ChessService chessService = new ChessService();
 
         get("/", (req, res) ->
@@ -34,30 +32,30 @@ public class WebChessGameController {
         );
 
         get("/start", (req, res) -> {
-            final ChessMap chessMap = chessService.initializeGame(chessWebGame);
+            final ChessMap chessMap = chessService.initializeGame();
             return gson.toJson(chessMap);
         });
 
         get("/load", (req, res) -> {
-            ChessMap chessMap = chessService.load(chessWebGame);
+            ChessMap chessMap = chessService.load();
             return gson.toJson(chessMap);
         });
 
         get("/status", (req, res) -> {
-            final ScoreDto scoreDto = chessService.getStatus(chessWebGame);
+            final ScoreDto scoreDto = chessService.getStatus();
             return gson.toJson(scoreDto);
         });
 
         get("/end", (req, res) -> {
-            final ResultDto resultDto = chessService.getResult(chessWebGame);
-            chessService.initializeGame(chessWebGame);
+            final ResultDto resultDto = chessService.getResult();
+            chessService.initializeGame();
             return gson.toJson(resultDto);
         });
 
         post("/move", (req, res) -> {
             final MoveDto moveDto = gson.fromJson(req.body(), MoveDto.class);
             try {
-                final ChessMap chessMap = chessService.move(chessWebGame, moveDto);
+                final ChessMap chessMap = chessService.move(moveDto);
                 return gson.toJson(chessMap);
             } catch (final Exception e) {
                 return gson.toJson(new ErrorMessageDto(e.getMessage()));

@@ -10,21 +10,20 @@
 <div id="app">
     <div id="main-container">
         <h1> 체스 게임 </h1>
-
         <section id="chess-ui">
             <table id="chess-board">
                 <script>
                     loadBoardBackground();
-                    {{#each board}}
-                    drawPiece({{@key.horizontal}}, {{@key.vertical}}, '{{this.type}}', '{{this.color}}');
-                    {{/each}}
+                    {{#response.board.pieceResponses}}
+                    drawPiece({{horizontalIndex}}, {{verticalIndex}}, '{{type}}', '{{color}}')
+                    {{/response.board.pieceResponses}}
                 </script>
 
             </table>
         </section>
         <section id="main-command">
             <h3 id="turn">
-                <script> drawTurn('{{color}}'); </script>
+                <script> drawTurn('{{response.color}}'); </script>
             </h3>
             <form id="start_form" action="/start" method="get" class="main-form">
                 <input type="submit" value="start" class="button">
@@ -48,6 +47,6 @@
     </div>
 
 </div>
-<script>setUpMain('{{state}}');</script>
+<script>setUpMain('{{response.state}}');</script>
 </body>
 </html>

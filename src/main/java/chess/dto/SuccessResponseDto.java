@@ -2,15 +2,21 @@ package chess.dto;
 
 public class SuccessResponseDto {
 
-    private final String body;
+    private final Object body;
 
-    public SuccessResponseDto(String body) {
+    public SuccessResponseDto(Object body) {
         this.body = body;
     }
 
-    public String toJson() {
-        return "{\"ok\":true,"
-                + "\"error\":null,"
-                + "\"body\":" + body + "}";
+    public boolean getOk() {
+        return true;
+    }
+
+    public String getError() {
+        return null;
+    }
+
+    public Object getBody() {
+        return body;
     }
 }

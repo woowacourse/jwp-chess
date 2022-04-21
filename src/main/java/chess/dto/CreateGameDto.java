@@ -14,10 +14,6 @@ public class CreateGameDto {
         return id;
     }
 
-    public String toJson() {
-        return "{\"gameId\":" + id + "}";
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

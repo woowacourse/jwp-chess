@@ -20,10 +20,6 @@ public class SearchResultDto {
         return gameFound;
     }
 
-    public String toJson() {
-        return "{\"id\":" + gameId + ",\"found\":" + gameFound + "}";
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

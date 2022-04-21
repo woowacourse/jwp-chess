@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -68,4 +69,8 @@ public class BoardRepository implements BoardDao {
         return new BoardEntity(id, board.getRoomId(), board.getPosition(), board.getPiece());
     }
 
+    @Override
+    public void batchInsert(final List<BoardEntity> boards) {
+        insertActor.executeBatch(SqlParameterSourceUtils.createBatch(boards));
+    }
 }

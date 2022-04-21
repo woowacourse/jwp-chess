@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class SpringWebController {
+public class SpringController {
 
     @GetMapping("/")
     public String index(Model model) {

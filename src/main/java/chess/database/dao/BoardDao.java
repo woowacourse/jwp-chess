@@ -1,4 +1,4 @@
-package chess.database.vanillajdbc.dao;
+package chess.database.dao;
 
 import chess.database.dto.BoardDto;
 import chess.database.dto.PointDto;

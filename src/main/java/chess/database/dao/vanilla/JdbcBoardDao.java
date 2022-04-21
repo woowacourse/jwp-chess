@@ -1,4 +1,4 @@
-package chess.database.vanillajdbc.dao;
+package chess.database.dao.vanilla;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +9,7 @@ import chess.database.dto.BoardDto;
 import chess.database.dto.PieceDto;
 import chess.database.dto.PointDto;
 import chess.database.dto.RouteDto;
+import chess.database.dao.BoardDao;
 
 @Repository
 public class JdbcBoardDao implements BoardDao {

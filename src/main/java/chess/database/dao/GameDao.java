@@ -1,4 +1,4 @@
-package chess.database.vanillajdbc.dao;
+package chess.database.dao;
 
 import java.util.List;
 

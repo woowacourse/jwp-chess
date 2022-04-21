@@ -1,4 +1,4 @@
-package chess.database.vanillajdbc.dao;
+package chess.database.dao.vanilla;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

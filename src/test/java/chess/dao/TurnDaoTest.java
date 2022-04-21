@@ -2,29 +2,34 @@ package chess.dao;
 
 import chess.dto.TurnDto;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import static chess.utils.DbConnector.getConnection;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
+@JdbcTest
 class TurnDaoTest {
 
-    private final TurnDao turnDao = new TurnDaoImpl();
+    private TurnDao turnDao;
 
-    @AfterEach
-    void tearDown() {
-        final String sql = "update turn set team = 'WHITE'";
-        try (final Connection connection = getConnection()) {
-            connection.prepareStatement(sql)
-                    .executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        turnDao = new TurnDaoJdbcImpl(jdbcTemplate);
+
+        jdbcTemplate.execute("drop table turn if exists");
+        jdbcTemplate.execute("CREATE TABLE turn (team varchar(5) not null primary key)");
+        jdbcTemplate.execute("insert into turn (team) values ('WHITE')");
     }
 
     @Test

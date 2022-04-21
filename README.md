@@ -16,7 +16,7 @@ spring MVC 를 사용하여 변경한다.
   - [x] TurnDAO
 - [x] Service 를 빈으로 등록되게 한다.
   - [x] ChessGameService
-- [ ] Controller 를 빈으로 등록되게 한다.
+- [x] Controller 를 빈으로 등록되게 한다.
 
 ### DAO
 - [x] JDBC Template을 이용하여 Connection을 직접 만들어 주는 로직을 대체한다.
@@ -26,7 +26,7 @@ spring MVC 를 사용하여 변경한다.
 - [x] @Service 어노테이션을 사용한다.
 - 
 ### Controller
-- [ ] @Controller 나 @RestController 를 활용하여 요청한다.
+- [x] @Controller 나 @RestController 를 활용하여 요청한다.
 - [ ] 요청과 컨트롤러를 맵핑하기 위해 어노테이션을 사용한다. 
 - [ ] 반환 타입은 객체로 보낸다. 
 

@@ -33,3 +33,5 @@ out/
 
 ### DOCKER ###
 /docker/db/
+
+.DS_Store

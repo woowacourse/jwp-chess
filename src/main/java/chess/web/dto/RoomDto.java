@@ -1,11 +1,11 @@
 package chess.web.dto;
 
-public class PlayerDto {
+public class RoomDto {
 
     private long id;
     private String name;
 
-    public PlayerDto(long id, String name) {
+    public RoomDto(long id, String name) {
         this.id = id;
         this.name = name;
     }

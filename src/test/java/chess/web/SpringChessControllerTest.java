@@ -24,7 +24,7 @@ class SpringChessControllerTest {
 
     @DisplayName("유효한 이름을 받으면 게임방 입장")
     @Test
-    void createPlayer() {
+    void createroom() {
         final String name = "summer";
 
         RestAssured.given().log().all()
@@ -32,7 +32,7 @@ class SpringChessControllerTest {
                 .when().post("/board")
                 .then().log().all()
                 .statusCode(HttpStatus.FOUND.value())
-                .header("Location", containsString("/board?playerId="));
+                .header("Location", containsString("/board?roomId="));
     }
 
 }

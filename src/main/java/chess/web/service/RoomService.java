@@ -1,28 +1,28 @@
 package chess.web.service;
 
-import chess.web.dao.PlayerRepository;
-import chess.web.dto.PlayerDto;
+import chess.web.dao.RoomRepository;
+import chess.web.dto.RoomDto;
 import java.util.Optional;
 
-public class PlayerService {
+public class RoomService {
 
     private static final int NAME_MIN_SIZE = 1;
     private static final int NAME_MAX_SIZE = 12;
     private static final String ERROR_NAME_SIZE = "닉네임 길이는 1자 이상, 12자 이하입니다.";
 
-    private final PlayerRepository playerRepository;
+    private final RoomRepository roomRepository;
 
-    public PlayerService(PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
+    public RoomService(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
     }
 
-    public PlayerDto login(String name) {
+    public RoomDto create(String name) {
         validateNameSize(name);
-        Optional<PlayerDto> playerDto = playerRepository.find(name);
-        if (playerDto.isEmpty()) {
-            playerRepository.save(name);
+        Optional<RoomDto> roomDto = roomRepository.find(name);
+        if (roomDto.isEmpty()) {
+            roomRepository.save(name);
         }
-        return playerRepository.find(name).get();
+        return roomRepository.find(name).get();
     }
 
     private void validateNameSize(String name) {

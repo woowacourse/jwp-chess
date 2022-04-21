@@ -15,7 +15,7 @@ public class BoardDao implements BoardRepository {
 
     @Override
     public int save(int userId, GameStateDto gameStateDto) {
-        final String sql = "insert into board (player_id, turn) values (?, ?)";
+        final String sql = "insert into board (room_id, turn) values (?, ?)";
 
         try (final Connection connection = DBConnector.getConnection();
              final PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -52,13 +52,13 @@ public class BoardDao implements BoardRepository {
     }
 
     @Override
-    public int getBoardIdByPlayer(int playerId) {
-        final String sql = "select id from board where player_id = ?";
+    public int getBoardIdByroom(int roomId) {
+        final String sql = "select id from board where room_id = ?";
         int id = 0;
 
         try (final Connection connection = DBConnector.getConnection();
              final PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, playerId);
+            statement.setInt(1, roomId);
             try (final ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     id = resultSet.getInt("id");
@@ -85,12 +85,12 @@ public class BoardDao implements BoardRepository {
     }
 
     @Override
-    public void deleteByPlayer(int playerId) {
-        final String sql = "delete from board where player_id = ?";
+    public void deleteByroom(int roomId) {
+        final String sql = "delete from board where room_id = ?";
 
         try (final Connection connection = DBConnector.getConnection();
              final PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, playerId);
+            statement.setInt(1, roomId);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(ERROR_DB_FAILED);

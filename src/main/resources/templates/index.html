@@ -7,11 +7,11 @@
 </head>
 <body>
 <div class="chess-container">
-    <div class="player-container">
-        <div class="player-icon-wrap">
-            <img src="images/white_player.png" class="player-icon">
+    <div class="room-container">
+        <div class="room-icon-wrap">
+            <img src="images/white_room.png" class="room-icon">
         </div>
-        <div class="player-panel" id="white-message"></div>
+        <div class="room-panel" id="white-message"></div>
         <div class="score-panel" id="white-score">-점</div>
     </div>
     <div class="board-container">
@@ -19,16 +19,16 @@
         </div>
         <img src="images/board.png">
     </div>
-    <div class="player-container">
-        <div class="player-icon-wrap">
-            <img src="images/black_player.png" class="player-icon">
+    <div class="room-container">
+        <div class="room-icon-wrap">
+            <img src="images/black_room.png" class="room-icon">
         </div>
-        <div class="player-panel" id="black-message"></div>
+        <div class="room-panel" id="black-message"></div>
         <div class="score-panel" id="black-score">-점</div>
     </div>
 </div>
 <div class="menu-bar">
-    <input type="hidden" value="{{player.id}}" id="player-id">
+    <input type="hidden" value="{{room.id}}" id="room-id">
     <input type="hidden" value="" id="board-id">
     <input type="hidden" value="" id="game-state-end">
     <button onclick="fetchNewChess()">새 게임</button>

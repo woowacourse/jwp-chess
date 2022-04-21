@@ -1,19 +1,19 @@
 package chess.web.dao;
 
 import chess.web.DBConnector;
-import chess.web.dto.PlayerDto;
+import chess.web.dto.RoomDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class PlayerDao implements PlayerRepository {
+public class RoomDao implements RoomRepository {
 
     @Override
     public void save(String name) {
         final Connection connection = DBConnector.getConnection();
-        final String sql = "insert into player (name) values (?)";
+        final String sql = "insert into room (name) values (?)";
 
         try (final PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
@@ -24,15 +24,15 @@ public class PlayerDao implements PlayerRepository {
     }
 
     @Override
-    public Optional<PlayerDto> find(String name) {
+    public Optional<RoomDto> find(String name) {
         final Connection connection = DBConnector.getConnection();
-        final String sql = "select * from player where name = ?";
-        Optional<PlayerDto> playerDto = Optional.ofNullable(null);
+        final String sql = "select * from room where name = ?";
+        Optional<RoomDto> roomDto = Optional.ofNullable(null);
         try (final PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
             final ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                playerDto = Optional.of(new PlayerDto(
+                roomDto = Optional.of(new RoomDto(
                         resultSet.getInt("id"),
                         resultSet.getString("name")
                 ));
@@ -41,6 +41,6 @@ public class PlayerDao implements PlayerRepository {
             e.printStackTrace();
         }
 
-        return playerDto;
+        return roomDto;
     }
 }

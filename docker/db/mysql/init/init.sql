@@ -1,15 +1,15 @@
-create table player
+create table room
 (
     id   int not null auto_increment primary key,
-    name varchar(12) not null
+    name varchar(16) not null
 );
 
 create table board
 (
     id        int not null auto_increment primary key,
-    player_id int not null,
+    room_id int not null,
     turn      varchar(5) not null,
-    foreign key (player_id) references player(id)
+    foreign key (room_id) references room(id)
 );
 
 create table piece

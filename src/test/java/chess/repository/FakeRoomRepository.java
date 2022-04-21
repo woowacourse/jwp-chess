@@ -1,12 +1,12 @@
 package chess.repository;
 
-import chess.web.dao.PlayerRepository;
-import chess.web.dto.PlayerDto;
+import chess.web.dao.RoomRepository;
+import chess.web.dto.RoomDto;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class FakePlayerRepository implements PlayerRepository {
+public class FakeRoomRepository implements RoomRepository {
 
     private final Map<Integer, String> database = new HashMap<>();
     private int autoIncrementId = 0;
@@ -18,10 +18,10 @@ public class FakePlayerRepository implements PlayerRepository {
     }
 
     @Override
-    public Optional<PlayerDto> find(String name) {
+    public Optional<RoomDto> find(String name) {
         return database.keySet().stream()
                 .filter(key -> database.get(key).equals(name))
-                .map(key -> new PlayerDto(key, database.get(key)))
+                .map(key -> new RoomDto(key, database.get(key)))
                 .findAny();
     }
 }

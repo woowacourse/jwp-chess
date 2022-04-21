@@ -8,9 +8,9 @@ public interface BoardRepository {
 
     Color getTurn(int boardId);
 
-    int getBoardIdByPlayer(int playerId);
+    int getBoardIdByroom(int roomId);
 
     void update(int boardId, GameStateDto gameStateDto);
 
-    void deleteByPlayer(int playerId);
+    void deleteByroom(int roomId);
 }

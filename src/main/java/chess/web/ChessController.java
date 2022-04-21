@@ -6,10 +6,11 @@ import static spark.Spark.post;
 
 import chess.web.dao.BoardDao;
 import chess.web.dao.PieceDao;
-import chess.web.dao.PlayerDao;
+import chess.web.dao.RoomDao;
 import chess.web.dto.CommendDto;
+import chess.web.dto.RoomDto;
 import chess.web.service.GameService;
-import chess.web.service.PlayerService;
+import chess.web.service.RoomService;
 import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class ChessController {
 
     private Gson gson = new Gson();
     private GameService gameService = new GameService(new PieceDao(), new BoardDao());
-    private PlayerService playerService = new PlayerService(new PlayerDao());
+    private RoomService roomService = new RoomService(new RoomDao());
 
     public ChessController() {
         port(8080);
@@ -35,24 +36,31 @@ public class ChessController {
             return render(model, "login.html");
         });
 
+        get("/board", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            return render(model, "index.html");
+        });
+
         post("/board", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
+            RoomDto roomDto;
             try {
-                model.put("player", playerService.login(req.queryParams("name")));
+                roomDto = roomService.create(req.queryParams("name"));
             } catch (IllegalArgumentException e) {
                 res.status(400);
                 model.put("message", e.getMessage());
                 return render(model, "login.html");
             }
-            return render(model, "index.html");
+            res.redirect("/board?roomId=" + roomDto.getId());
+            return null;
         });
 
         get("/start", (req, res) ->
-                gson.toJson(gameService.startNewGame(Integer.parseInt(req.queryParams("playerId"))))
+                gson.toJson(gameService.startNewGame(Integer.parseInt(req.queryParams("roomId"))))
         );
 
         get("/load", (req, res) ->
-                gson.toJson(gameService.loadGame(Integer.parseInt(req.queryParams("playerId"))))
+                gson.toJson(gameService.loadGame(Integer.parseInt(req.queryParams("roomId"))))
         );
 
         post("/move", (req, res) -> {

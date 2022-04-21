@@ -25,39 +25,39 @@ public class FakeBoardRepository implements BoardRepository {
     }
 
     @Override
-    public int getBoardIdByPlayer(int playerId) {
-        return findBoardId(playerId)
+    public int getBoardIdByroom(int roomId) {
+        return findBoardId(roomId)
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    private Optional<Integer> findBoardId(int playerId) {
+    private Optional<Integer> findBoardId(int roomId) {
         return database.keySet().stream()
-                .filter(key -> database.get(key).getPlayerId() == playerId)
+                .filter(key -> database.get(key).getroomId() == roomId)
                 .findAny();
     }
 
     @Override
     public void update(int boardId, GameStateDto gameStateDto) {
         BoardData board = database.get(boardId);
-        database.put(boardId, new BoardData(board.getPlayerId(), gameStateDto.getTurn()));
+        database.put(boardId, new BoardData(board.getroomId(), gameStateDto.getTurn()));
     }
 
     @Override
-    public void deleteByPlayer(int playerId) {
-        findBoardId(playerId).ifPresent(database::remove);
+    public void deleteByroom(int roomId) {
+        findBoardId(roomId).ifPresent(database::remove);
     }
 
     private static class BoardData {
-        private int playerId;
+        private int roomId;
         private String turn;
 
-        private BoardData(int playerId, String turn) {
-            this.playerId = playerId;
+        private BoardData(int roomId, String turn) {
+            this.roomId = roomId;
             this.turn = turn;
         }
 
-        public int getPlayerId() {
-            return playerId;
+        public int getroomId() {
+            return roomId;
         }
 
         public String getTurn() {

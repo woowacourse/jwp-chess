@@ -167,16 +167,16 @@ function activateLoadGame() {
 
 window.onload = async function () {
     let param = new URL(location.href).searchParams;
-    let playerId = param.get("playerId");
-    document.getElementById("player-id").value = playerId;
+    let roomId = param.get("roomId");
+    document.getElementById("room-id").value = roomId;
 
     let piecesContainer = document.getElementById('pieces-container');
     await initBlocks(piecesContainer);
 }
 
 function fetchNewChess() {
-    let playerId = document.getElementById("player-id").value;
-    fetch('http://localhost:8080/start?playerId=' + playerId, {
+    let roomId = document.getElementById("room-id").value;
+    fetch('http://localhost:8080/start?roomId=' + roomId, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -198,8 +198,8 @@ function fetchLoadChess() {
         alert("게임이 종료되었습니다. 새 게임을 눌러주세요.");
         return;
     }
-    let playerId = document.getElementById("player-id").value;
-    fetch('http://localhost:8080/load?playerId=' + playerId, {
+    let roomId = document.getElementById("room-id").value;
+    fetch('http://localhost:8080/load?roomId=' + roomId, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',

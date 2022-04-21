@@ -28,12 +28,12 @@ public class GameService {
         this.boardRepository = boardRepository;
     }
 
-    public Map<String, Object> startNewGame(int playerId) {
+    public Map<String, Object> startNewGame(int roomId) {
         Board board = new Board(new RegularRuleSetup());
 
-        boardRepository.deleteByPlayer(playerId);
+        boardRepository.deleteByroom(roomId);
 
-        int boardId = boardRepository.save(playerId, getGameStateDto(board));
+        int boardId = boardRepository.save(roomId, getGameStateDto(board));
         saveNewPieces(board, boardId);
         return gameStateAndPieces(boardId);
     }
@@ -50,8 +50,8 @@ public class GameService {
         updateGameState(board, boardId);
     }
 
-    public Map<String, Object> loadGame(int playerId) {
-        int boardId = boardRepository.getBoardIdByPlayer(playerId);
+    public Map<String, Object> loadGame(int roomId) {
+        int boardId = boardRepository.getBoardIdByroom(roomId);
         Board board = loadBoard(boardId);
         board.loadTurn(boardRepository.getTurn(boardId));
         return gameStateAndPieces(boardId);

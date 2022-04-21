@@ -2,7 +2,7 @@ body {
     background: linear-gradient(to bottom right, #263542, #483343);
 }
 
-.player-container {
+.room-container {
     width: 280px;
     height: 400px;
     display: flex;
@@ -15,7 +15,7 @@ body {
     flex-wrap: wrap;
 }
 
-.player-icon-wrap {
+.room-icon-wrap {
     width: 100%;
     height: 90px;
     display: flex;
@@ -23,11 +23,11 @@ body {
     align-content: center;
 }
 
-.player-icon {
+.room-icon {
     object-fit: none;
 }
 
-.player-panel {
+.room-panel {
     width: 100%;
     height: 160px;
     color: white;

@@ -1,7 +1,7 @@
 package chess.controller;
 
+import chess.dto.CreateGameDto;
 import chess.dto.GameCountDto;
-import chess.dto.SuccessResponseDto;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +28,7 @@ public class HomeController {
     }
 
     @PostMapping
-    public SuccessResponseDto createGame() {
-        return new SuccessResponseDto(chessService.initGame());
+    public CreateGameDto createGame() {
+        return chessService.initGame();
     }
 }

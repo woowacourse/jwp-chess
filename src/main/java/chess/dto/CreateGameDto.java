@@ -10,7 +10,7 @@ public class CreateGameDto {
         this.id = id;
     }
 
-    public int getGameId() {
+    public int getId() {
         return id;
     }
 

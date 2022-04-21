@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.GameCountDto;
-import chess.dto.SuccessResponseDto;
+import chess.dto.SearchResultDto;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +29,7 @@ public class SearchController {
     }
 
     @PostMapping
-    public SuccessResponseDto searchResult(@RequestParam(name="game_id") int gameId) {
-        return new SuccessResponseDto(chessService.searchGame(gameId));
+    public SearchResultDto searchResult(@RequestParam(name="game_id") int gameId) {
+        return chessService.searchGame(gameId);
     }
 }

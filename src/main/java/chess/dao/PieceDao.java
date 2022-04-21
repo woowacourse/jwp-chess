@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface PieceDao {
 
+    void initializePieces(final Player player);
+
     List<PieceDto> findPiecesByTeam(final Team team);
 
     void updatePiece(final MoveDto moveDto);
@@ -16,6 +18,4 @@ public interface PieceDao {
     void removePieceByCaptured(final MoveDto moveDto);
 
     void endPieces();
-
-    void initializePieces(final Player player);
 }

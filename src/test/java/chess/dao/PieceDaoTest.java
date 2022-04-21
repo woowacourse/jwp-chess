@@ -12,31 +12,40 @@ import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.dto.MoveDto;
 import chess.dto.PieceDto;
-import chess.utils.DbConnector;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
-import static chess.utils.DbConnector.getConnection;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@JdbcTest
 class PieceDaoTest {
 
-    private final PieceDao pieceDao = new PieceDaoImpl();
+    private PieceDao pieceDao;
 
-    @AfterEach
-    void tearDown() {
-        final String sql = "truncate table piece";
-        try (final Connection connection = getConnection()) {
-            connection.prepareStatement(sql)
-                    .executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        pieceDao = new PieceDaoJdbcImpl(jdbcTemplate);
+
+        jdbcTemplate.execute("drop table piece if exists");
+        jdbcTemplate.execute("drop table player if exists");
+        jdbcTemplate.execute("create table player (team varchar(5) not null primary key)");
+        jdbcTemplate.execute("insert into player (team) values ('WHITE')");
+        jdbcTemplate.execute("insert into player (team) values ('BLACK')");
+        jdbcTemplate.execute("CREATE TABLE piece (\n" +
+                "    position varchar(3) not null primary key,\n" +
+                "    name varchar(2) not null,\n" +
+                "    team varchar(5) not null,\n" +
+                "    foreign key (team) references player (team))"
+        );
     }
 
     @Test
@@ -46,7 +55,7 @@ class PieceDaoTest {
         final String sql = "select count(*) from piece where team = 'WHITE'";
         final int expected = 16;
 
-        final int actual = DbConnector.getCountResult(sql);
+        final int actual = jdbcTemplate.queryForObject(sql, Integer.class);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -58,7 +67,7 @@ class PieceDaoTest {
         final String sql = "select count(*) from piece where team = 'BLACK'";
         final int expected = 16;
 
-        final int actual = DbConnector.getCountResult(sql);
+        final int actual = jdbcTemplate.queryForObject(sql, Integer.class);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -90,7 +99,7 @@ class PieceDaoTest {
         final String sql = "select count(*) from piece where position = 'a4'";
         final int expected = 1;
 
-        final int actual = DbConnector.getCountResult(sql);
+        final int actual = jdbcTemplate.queryForObject(sql, Integer.class);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -105,7 +114,7 @@ class PieceDaoTest {
         final String sql = "select count(*) from piece where position = 'a7'";
         final int expected = 0;
 
-        final int actual = DbConnector.getCountResult(sql);
+        final int actual = jdbcTemplate.queryForObject(sql, Integer.class);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -118,7 +127,7 @@ class PieceDaoTest {
         final String sql = "select count(*) from piece";
         final int expected = 0;
 
-        final int actual = DbConnector.getCountResult(sql);
+        final int actual = jdbcTemplate.queryForObject(sql, Integer.class);
 
         assertThat(actual).isEqualTo(expected);
     }

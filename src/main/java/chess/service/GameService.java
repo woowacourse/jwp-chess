@@ -2,6 +2,8 @@ package chess.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import chess.database.GameStateGenerator;
 import chess.database.vanillajdbc.dao.BoardDao;
 import chess.database.vanillajdbc.dao.GameDao;
@@ -16,6 +18,7 @@ import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 import chess.dto.Arguments;
 
+@Service
 public class GameService {
 
     private final GameDao gameDao;
@@ -67,5 +70,10 @@ public class GameService {
         boardDao.deletePiece(PointDto.of(route.getDestination()), roomName);
         boardDao.updatePiece(RouteDto.of(route), roomName);
         return movedState;
+    }
+
+    public void removeGameAndBoard(String roomName) {
+        boardDao.removeBoard(roomName);
+        gameDao.removeGame(roomName);
     }
 }

@@ -25,4 +25,20 @@ public class PieceResponse {
             piece.getType()
         );
     }
+
+    public int getHorizontalIndex() {
+        return horizontalIndex;
+    }
+
+    public int getVerticalIndex() {
+        return verticalIndex;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getType() {
+        return type;
+    }
 }

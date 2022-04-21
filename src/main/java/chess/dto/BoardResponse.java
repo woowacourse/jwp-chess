@@ -23,4 +23,8 @@ public class BoardResponse {
                 .collect(Collectors.toList())
         );
     }
+
+    public List<PieceResponse> getPieceResponses() {
+        return pieceResponses;
+    }
 }

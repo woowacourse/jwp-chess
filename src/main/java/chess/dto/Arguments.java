@@ -1,5 +1,6 @@
 package chess.dto;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +13,10 @@ import spark.Request;
 public class Arguments {
 
     private final List<String> arguments;
+
+    public Arguments() {
+        this.arguments = new ArrayList<>();
+    }
 
     public Arguments(List<String> arguments) {
         this.arguments = arguments;
@@ -30,7 +35,11 @@ public class Arguments {
         return new Arguments(readFromJson(request.body(), parameters));
     }
 
-    private static List<String> readFromJson(String body, List<String> parameters) {
+    public static Arguments ofJson(String jsonString, List<String> parameters) {
+        return new Arguments(readFromJson(jsonString, parameters));
+    }
+
+    public static List<String> readFromJson(String body, List<String> parameters) {
         JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
         return parameters.stream()
             .map(parameter -> jsonObject.get(parameter).getAsString())

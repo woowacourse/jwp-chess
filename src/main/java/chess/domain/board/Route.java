@@ -32,7 +32,7 @@ public class Route {
 
     private static void validateSize(List<String> arguments) {
         if (arguments.size() != ARGUMENT_SIZE) {
-            throw new IllegalArgumentException("[ERROR] 출발지와 도착자가 올바르지 않습니다.(move a1 a2)");
+            throw new IllegalArgumentException("[ERROR] 출발지와 도착지가 올바르지 않습니다.(move a1 a2)");
         }
     }
 

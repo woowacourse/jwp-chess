@@ -21,15 +21,7 @@ public class JdbcTemplateGameStatusDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplateGameStatusDao = new JdbcTemplateGameStatusDao(jdbcTemplate);
-
-        jdbcTemplate.execute("DROP TABLE game_status IF EXISTS");
-
-        jdbcTemplate.execute("create table game_status("
-                + " status varchar(10) not null,"
-                + " primary key (status)"
-                + ")");
-
-        jdbcTemplate.update("INSERT INTO game_status (status) values (?)", "READY");
+        jdbcTemplateGameStatusDao.init();
     }
 
     @DisplayName("초기 값을 확인한다.")

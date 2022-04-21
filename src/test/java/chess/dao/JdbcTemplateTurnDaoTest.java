@@ -21,16 +21,9 @@ public class JdbcTemplateTurnDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplateTurnDao = new JdbcTemplateTurnDao(jdbcTemplate);
-
-        jdbcTemplate.execute("DROP TABLE turn IF EXISTS");
-
-        jdbcTemplate.execute("create table turn("
-                + " team varchar(10) not null,"
-                + " primary key (team)"
-                + ")");
-
-        jdbcTemplate.update("INSERT INTO turn(team) VALUES (?)", "white");
+        jdbcTemplateTurnDao.init();
     }
+
 
     @Test
     @DisplayName("초기 값을 확인한다.")

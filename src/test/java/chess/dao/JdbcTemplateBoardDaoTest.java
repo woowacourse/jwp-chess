@@ -43,7 +43,7 @@ public class JdbcTemplateBoardDaoTest {
     @DisplayName("기본 보드를 가져온다.")
     void getBoard() {
         Board board = new Board();
-        board.initBoard(new BasicBoardStrategy());
+        board.initBoard(new WebBasicBoardStrategy());
         assertThat(jdbcTemplateBoardDao.getBoard()).isEqualTo(board.toMap());
     }
 

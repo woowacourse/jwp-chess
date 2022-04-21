@@ -12,6 +12,18 @@ public class JdbcTemplateTurnDao implements TurnDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void init() {
+        jdbcTemplate.execute("DROP TABLE turn IF EXISTS");
+
+        jdbcTemplate.execute("create table turn("
+                + " team varchar(10) not null,"
+                + " primary key (team)"
+                + ")");
+
+        jdbcTemplate.update("INSERT INTO turn(team) VALUES (?)", "white");
+    }
+
+
     @Override
     public void update(String nowTurn, String nextTurn) {
         String sql = "update turn set team = ? where team = ?";

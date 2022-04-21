@@ -12,6 +12,18 @@ public class JdbcTemplateGameStatusDao implements GameStatusDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void init() {
+        jdbcTemplate.execute("DROP TABLE game_status IF EXISTS");
+
+        jdbcTemplate.execute("create table game_status("
+                + " status varchar(10) not null,"
+                + " primary key (status)"
+                + ")");
+
+        jdbcTemplate.update("INSERT INTO game_status (status) values (?)", "READY");
+    }
+
+
     @Override
     public void update(String nowStatus, String nextStatus) {
         String sql = "update game_status set status = ? where status = ?";

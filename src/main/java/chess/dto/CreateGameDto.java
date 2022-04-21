@@ -10,6 +10,10 @@ public class CreateGameDto {
         this.id = id;
     }
 
+    public int getGameId() {
+        return id;
+    }
+
     public String toJson() {
         return "{\"gameId\":" + id + "}";
     }

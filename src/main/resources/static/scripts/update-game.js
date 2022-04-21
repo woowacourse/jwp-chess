@@ -13,9 +13,11 @@ const updateGame = async (source, target) => {
         body: JSON.stringify({source, target})
     };
     const response = await fetch(window.location.pathname, config);
-    if (response.ok) {
-        return window.location.reload();
+    if (!response.ok) {
+        const errorMessage = await response.text();
+        return alert(errorMessage);
     }
+    window.location.reload();
 }
 
 const toggleSelection = ({target: {id: positionKey, classList}}) => {

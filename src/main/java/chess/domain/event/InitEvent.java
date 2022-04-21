@@ -18,8 +18,8 @@ public final class InitEvent extends Event {
         throw new UnsupportedOperationException("이동 이벤트가 아닙니다.");
     }
 
-    public EventType getType() {
-        return EventType.INIT;
+    public String getType() {
+        return EventType.INIT.name();
     }
 
     public String getDescription() {

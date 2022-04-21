@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dao.member.MemberDao;
 import chess.domain.Member;
 import java.util.ArrayList;
 import java.util.List;

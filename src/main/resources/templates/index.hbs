@@ -19,13 +19,13 @@
 </div>
 <div class="container" style="flex-direction: column;">
     {{#games}}
-    <div class="card" style="width: 100%; margin-top: 1vh;">
-        <div class="card-body">
-            <h5 class="card-title">{{id}} 번째 게임</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
-            <a href="/play/{{id}}" class="btn btn-dark">입장</a>
+        <div class="card" style="width: 100%; margin-top: 1vh;">
+            <div class="card-body">
+                <h5 class="card-title">{{id}} 번째 게임</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
+                <a href="/play/{{id}}" class="btn btn-dark">입장</a>
+            </div>
         </div>
-    </div>
     {{/games}}
 </div>
 
@@ -41,13 +41,13 @@
                 <div>백팀</div>
                 <select id="white" class="form-control">
                     {{#members}}
-                    <option value="{{id}}">{{name}}</option>
+                        <option value="{{id}}">{{name}}</option>
                     {{/members}}
                 </select>
                 <div>흑팀</div>
                 <select id="black" class="form-control">
                     {{#members}}
-                    <option value="{{id}}">{{name}}</option>
+                        <option value="{{id}}">{{name}}</option>
                     {{/members}}
                 </select>
             </div>

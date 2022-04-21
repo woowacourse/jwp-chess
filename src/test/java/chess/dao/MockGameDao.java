@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dao.game.GameDao;
 import chess.domain.ChessGame;
 import java.util.ArrayList;
 import java.util.List;

@@ -10,10 +10,10 @@ import java.util.Map;
 
 public class ChessGame {
 
-    private Long id;
+    private final Long id;
     private final Board board;
     private Team turn;
-    private Participant participant;
+    private final Participant participant;
 
 
     public ChessGame(final Long id, final Board board, final Team turn, final Participant participant) {

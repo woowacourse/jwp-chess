@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dao.MemberDao;
+import chess.dao.member.MemberDao;
 import chess.domain.Member;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,7 +31,7 @@ public class MemberService {
 
     public Member findById(final Long id) {
         return memberDao.findById(id)
-                .orElseThrow(()-> new NoSuchElementException("멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("멤버를 찾을 수 없습니다."));
     }
 }
 

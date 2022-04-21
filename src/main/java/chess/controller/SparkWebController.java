@@ -26,7 +26,7 @@ import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
 public class SparkWebController {
-    
+
     private final GameService gameService;
     private final MemberService memberService;
 

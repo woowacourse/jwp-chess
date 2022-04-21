@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class MockMemberDaoTest {
+class MemberDaoTest {
 
     @Test
     @DisplayName("멤버를 저장소에 저장한다.")

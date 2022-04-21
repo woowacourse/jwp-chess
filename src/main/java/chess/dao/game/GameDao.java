@@ -1,9 +1,8 @@
-package chess.dao;
+package chess.dao.game;
 
 import chess.domain.ChessGame;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Component;
 
 public interface GameDao {
 

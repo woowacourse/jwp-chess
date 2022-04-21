@@ -13,7 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class MockGameDaoTest {
+class GameDaoTest {
 
     @Test
     @DisplayName("체스 게임을 저장소에 저장한다.")

@@ -129,7 +129,7 @@ public class SpringWebController {
 
     @PutMapping("/move/{gameId}")
     public ResponseEntity<Long> movePiece(@PathVariable final Long gameId,
-                                            @RequestBody final MoveRequestDto moveRequestDto) {
+                                          @RequestBody final MoveRequestDto moveRequestDto) {
         gameService.move(gameId, moveRequestDto.getSource(), moveRequestDto.getTarget());
         return ResponseEntity.ok().body(gameId);
     }
@@ -142,7 +142,8 @@ public class SpringWebController {
 
     @PostMapping("/chessGame")
     public ResponseEntity<Long> createGame(@RequestBody final CreateGameRequestDto createGameRequestDto) {
-        final Long gameId = gameService.createGame(createGameRequestDto.getWhiteId(), createGameRequestDto.getBlackId());
+        final Long gameId = gameService.createGame(createGameRequestDto.getWhiteId(),
+                createGameRequestDto.getBlackId());
         return ResponseEntity.created(URI.create("/chessGame/" + gameId)).body(gameId);
     }
 

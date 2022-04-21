@@ -1,5 +1,6 @@
-package chess.dao;
+package chess.dao.member;
 
+import chess.dao.SqlExecutor;
 import chess.domain.Member;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,11 +9,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class DatabaseMemberDao implements MemberDao {
-    private final SqlExecutor executor = SqlExecutor.getInstance();
+public class JdbcMemberDao implements MemberDao {
+    private final SqlExecutor executor;
+
+    public JdbcMemberDao(final SqlExecutor executor) {
+        this.executor = executor;
+    }
 
     @Override
     public Long save(Member member) {

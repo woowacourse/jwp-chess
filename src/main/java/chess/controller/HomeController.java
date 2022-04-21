@@ -16,7 +16,11 @@ public class HomeController {
     private static final String HTML_TEMPLATE_PATH = "home";
     private static final String HOME_DYNAMIC_PROPERTIES = "gameCount";
 
-    private final ChessService chessService = ChessService.getInstance();
+    private final ChessService chessService;
+
+    public HomeController(ChessService chessService) {
+        this.chessService = chessService;
+    }
 
     @GetMapping
     public ModelAndView home() {

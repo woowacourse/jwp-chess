@@ -17,7 +17,11 @@ public class SearchController {
     private static final String HTML_TEMPLATE_PATH = "search";
     private static final String RESPONSE = "response";
 
-    private final ChessService chessService = ChessService.getInstance();
+    private final ChessService chessService;
+
+    public SearchController(ChessService chessService) {
+        this.chessService = chessService;
+    }
 
     @GetMapping
     public ModelAndView render() {
@@ -29,7 +33,7 @@ public class SearchController {
     }
 
     @PostMapping
-    public SearchResultDto searchResult(@RequestParam(name="game_id") int gameId) {
+    public SearchResultDto searchResult(@RequestParam(name = "game_id") int gameId) {
         return chessService.searchGame(gameId);
     }
 }

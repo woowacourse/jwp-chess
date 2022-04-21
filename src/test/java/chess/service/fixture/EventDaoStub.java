@@ -1,6 +1,6 @@
 package chess.service.fixture;
 
-import chess.dao.EventDao;
+import chess.dao2.EventDao;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class EventDaoStub extends EventDao {
 
@@ -23,6 +24,10 @@ public class EventDaoStub extends EventDao {
                 new MoveEvent("d7 d5"), new MoveEvent("f1 b5"),
                 new MoveEvent("a7 a5"), new MoveEvent("b5 e8"))));
     }};
+
+    public EventDaoStub(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        super(namedParameterJdbcTemplate);
+    }
 
     @Override
     public List<Event> findAllByGameId(int gameId) {

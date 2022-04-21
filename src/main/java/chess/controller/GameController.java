@@ -20,7 +20,11 @@ public class GameController {
 
     private static final String HTML_TEMPLATE_PATH = "game";
 
-    private final ChessService chessService = ChessService.getInstance();
+    private final ChessService chessService;
+
+    public GameController(ChessService chessService) {
+        this.chessService = chessService;
+    }
 
     @GetMapping("/{id}")
     public ModelAndView findGame(@PathVariable int id) {
@@ -33,7 +37,7 @@ public class GameController {
 
     @PostMapping("/{id}")
     private ModelAndView playGame(@PathVariable int id,
-                             @RequestBody MoveRoute moveRoute) {
+                                  @RequestBody MoveRoute moveRoute) {
         chessService.playGame(id, new MoveEvent(moveRoute));
 
         ModelAndView modelAndView = new ModelAndView();

@@ -1,8 +1,8 @@
 package chess.service;
 
-import chess.dao.EventDao;
-import chess.dao.GameDao;
 import chess.dao.GameState;
+import chess.dao2.EventDao;
+import chess.dao2.GameDao;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.game.Game;
@@ -13,23 +13,19 @@ import chess.dto.GameDto;
 import chess.dto.GameResultDto;
 import chess.dto.SearchResultDto;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessService {
 
     private static final String GAME_NOT_OVER_EXCEPTION_MESSAGE = "아직 게임 결과가 산출되지 않았습니다.";
 
-    private static final ChessService instance = new ChessService(new GameDao(), new EventDao());
-
     private final GameDao gameDao;
     private final EventDao eventDao;
 
-    ChessService(GameDao gameDao, EventDao eventDao) {
+    public ChessService(GameDao gameDao, EventDao eventDao) {
         this.gameDao = gameDao;
         this.eventDao = eventDao;
-    }
-
-    public static ChessService getInstance() {
-        return instance;
     }
 
     public GameCountDto countGames() {

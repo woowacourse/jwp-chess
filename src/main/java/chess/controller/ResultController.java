@@ -14,7 +14,11 @@ public class ResultController {
 
     private static final String HTML_TEMPLATE_PATH = "result";
 
-    private final ChessService chessService = ChessService.getInstance();
+    private final ChessService chessService;
+
+    public ResultController(ChessService chessService) {
+        this.chessService = chessService;
+    }
 
     @GetMapping("/{id}")
     public ModelAndView result(@PathVariable int id) {

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
-class RoomRepositoryTest {
+class RoomRepositoryImplTest {
 
     @Autowired
     private RoomRepository roomRepository;

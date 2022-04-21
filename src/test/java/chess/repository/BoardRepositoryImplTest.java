@@ -23,13 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 class BoardRepositoryImplTest {
 
     @Autowired
-    private BoardRepositoryImpl boardRepositoryImpl;
+    private BoardRepository boardRepository;
 
     @DisplayName("저장된 보드를 가져온다")
     @Test
     void findBoardByRoomId() {
         insertInitialData();
-        assertThat(boardRepositoryImpl.findBoardByRoomId(1L)).hasSize(64);
+        assertThat(boardRepository.findBoardByRoomId(1L)).hasSize(64);
     }
 
     @DisplayName("a2 위치의 기물을 blank로 업데이트한다")
@@ -37,8 +37,8 @@ class BoardRepositoryImplTest {
     void update() {
         insertInitialData();
         final BoardEntity source = new BoardEntity(1L, "a2", "blank");
-        boardRepositoryImpl.updatePosition(source);
-        final BoardEntity updatedPiece = boardRepositoryImpl.findBoardByRoomIdAndPosition(1L, "a2");
+        boardRepository.updatePosition(source);
+        final BoardEntity updatedPiece = boardRepository.findBoardByRoomIdAndPosition(1L, "a2");
         assertThat(updatedPiece.getPiece()).isEqualTo("blank");
     }
 
@@ -48,13 +48,13 @@ class BoardRepositoryImplTest {
         insertInitialData();
         final BoardEntity source = new BoardEntity(1L, "a2", "blank");
         final BoardEntity target = new BoardEntity(1L, "a4", "white_pawn");
-        boardRepositoryImpl.updateBatchPositions(List.of(source, target));
+        boardRepository.updateBatchPositions(List.of(source, target));
 
         assertAll(
-            () -> assertThat(boardRepositoryImpl.findBoardByRoomIdAndPosition(1L, "a2")
+            () -> assertThat(boardRepository.findBoardByRoomIdAndPosition(1L, "a2")
                 .getPiece())
                 .isEqualTo("blank"),
-            () -> assertThat(boardRepositoryImpl.findBoardByRoomIdAndPosition(1L, "a4")
+            () -> assertThat(boardRepository.findBoardByRoomIdAndPosition(1L, "a4")
                 .getPiece())
                 .isEqualTo("white_pawn")
         );
@@ -64,7 +64,7 @@ class BoardRepositoryImplTest {
     @Test
     void insert() {
         final BoardEntity boardEntity = new BoardEntity(1L, "a2", "blank");
-        final BoardEntity insertBoard = boardRepositoryImpl.insert(boardEntity);
+        final BoardEntity insertBoard = boardRepository.insert(boardEntity);
 
         assertThat(insertBoard).isEqualTo(boardEntity);
     }
@@ -75,7 +75,7 @@ class BoardRepositoryImplTest {
             .map(entry -> new BoardEntity(1L, entry.getKey().convertPositionToString(),
                 entry.getValue().convertPieceToString()))
             .collect(Collectors.toList());
-        boardRepositoryImpl.batchInsert(boardEntities);
+        boardRepository.batchInsert(boardEntities);
     }
 
 }

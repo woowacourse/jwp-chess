@@ -3,13 +3,17 @@ package chess.web.service;
 import chess.domain.game.ChessGame;
 import chess.domain.game.state.ChessBoard;
 import chess.domain.game.state.Player;
+import chess.domain.game.state.RunningGame;
 import chess.domain.piece.Piece;
 import chess.domain.piece.position.Position;
 import chess.domain.piece.property.Color;
 import chess.web.dao.ChessBoardDao;
 import chess.web.dao.PlayerDao;
+import chess.web.dto.MoveDto;
+import chess.web.dto.MoveResultDto;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 @Service
 public class ChessGameService {
@@ -26,12 +30,6 @@ public class ChessGameService {
         ChessGame chessGame = new ChessGame();
         chessGame.start();
 
-        removeAll();
-        saveAll(chessGame);
-    }
-
-    public void move(ChessGame chessGame, String source, String target) {
-        chessGame.move(Position.of(source), Position.of(target));
         removeAll();
         saveAll(chessGame);
     }
@@ -57,7 +55,54 @@ public class ChessGameService {
         return chessBoardDao.findAll();
     }
 
-    public Player findAllPlayer() {
+    public Player findTurn() {
         return playerDao.findAll();
+    }
+
+    public boolean isChessGameEnd() {
+        ChessGame chessGame = getChessGame();
+        return chessGame.isFinished();
+    }
+
+    public ChessGame getChessGame() {
+        return ChessGame.of(new RunningGame(createChessBoard(), findTurn()));
+    }
+
+    public MoveResultDto move(MoveDto moveDto) {
+        ChessGame chessGame = getChessGame();
+        String turn = chessGame.getTurn();
+        MoveResultDto moveResultDto = new MoveResultDto();
+
+        try {
+            chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
+            removeAll();
+            saveAll(chessGame);
+        } catch (IllegalArgumentException e) {
+            moveResultDto.setCanMove(false);
+        }
+
+        if (isChessGameEnd()) {
+            moveResultDto.setGameOver(true);
+            moveResultDto.setWinner(turn);
+        }
+
+        return moveResultDto;
+    }
+
+    public ModelAndView play() {
+        Map<Position, Piece> board = findAllBoard();
+        if (board.isEmpty()) {
+            start();
+        }
+
+        ModelAndView modelAndView = new ModelAndView("index");
+        for (Position position : board.keySet()) {
+            Piece piece = board.get(position);
+            modelAndView.addObject(position.toString(), piece);
+        }
+
+        modelAndView.addObject("turn",  findTurn().name());
+
+        return modelAndView;
     }
 }

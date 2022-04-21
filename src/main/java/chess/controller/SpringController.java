@@ -1,4 +1,4 @@
-package chess.controller.web;
+package chess.controller;
 
 import chess.domain.piece.Piece;
 import chess.service.ChessService;

@@ -1,6 +1,6 @@
 package chess;
 
-import chess.controller.web.SparkController;
+import chess.controller.SparkController;
 
 public class SparkChessApplication {
 

@@ -35,7 +35,6 @@ public class BoardDao {
 
     public List<BoardEntity> load(final String name) {
         String selectSql = "select * from board where name=?";
-        SqlParameterSource source = new MapSqlParameterSource("name", name);
         List<BoardEntity> boardEntities = jdbcTemplate.query(selectSql, (rs, rn) ->
                 new BoardEntity(
                         rs.getString("name"),

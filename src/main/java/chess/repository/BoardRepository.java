@@ -46,19 +46,20 @@ public class BoardRepository implements BoardDao {
 
     @Override
     public void updatePosition(final BoardEntity board) {
-        final String sql = "update board set piece = ? where position =?";
-        jdbcTemplate.update(sql, board.getPiece(), board.getPosition());
+        final String sql = "update board set piece = ? where room_id = ? and position = ?";
+        jdbcTemplate.update(sql, board.getPiece(), board.getRoomId(), board.getPosition());
     }
 
     @Override
     public void updateBatchPositions(final List<BoardEntity> board) {
-        final String sql = "update board set piece = ? where position =?";
+        final String sql = "update board set piece = ? where room_id = ? and position = ?";
         jdbcTemplate.batchUpdate(sql,
             board,
             board.size(),
             (PreparedStatement ps, BoardEntity boardEntity) -> {
                 ps.setString(1, boardEntity.getPiece());
-                ps.setString(2, boardEntity.getPosition());
+                ps.setLong(2, boardEntity.getRoomId());
+                ps.setString(3, boardEntity.getPosition());
             });
     }
 
@@ -72,5 +73,12 @@ public class BoardRepository implements BoardDao {
     @Override
     public void batchInsert(final List<BoardEntity> boards) {
         insertActor.executeBatch(SqlParameterSourceUtils.createBatch(boards));
+    }
+
+    @Override
+    public BoardEntity findBoardByRoomIdAndPosition(final Long roomId, final String position) {
+        final String sql = "select * from board where room_id = ? and position = ?";
+
+        return jdbcTemplate.queryForObject(sql, rowMapper(), roomId, position);
     }
 }

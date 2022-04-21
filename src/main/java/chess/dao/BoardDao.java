@@ -14,4 +14,6 @@ public interface BoardDao {
     BoardEntity insert(final BoardEntity board);
 
     void batchInsert(final List<BoardEntity> boards);
+
+    BoardEntity findBoardByRoomIdAndPosition(final Long roomId, final String position);
 }

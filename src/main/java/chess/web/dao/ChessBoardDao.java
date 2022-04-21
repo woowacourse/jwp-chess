@@ -10,7 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ChessBoardDao {
 
     public void save(Position position, Piece piece) {

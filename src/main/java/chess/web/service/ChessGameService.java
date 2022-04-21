@@ -2,13 +2,16 @@ package chess.web.service;
 
 import chess.domain.game.ChessGame;
 import chess.domain.game.state.ChessBoard;
+import chess.domain.game.state.Player;
 import chess.domain.piece.Piece;
 import chess.domain.piece.position.Position;
 import chess.domain.piece.property.Color;
 import chess.web.dao.ChessBoardDao;
 import chess.web.dao.PlayerDao;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessGameService {
 
     private final ChessBoardDao chessBoardDao;
@@ -48,5 +51,13 @@ public class ChessGameService {
             chessBoardDao.save(position, chessBoard.get(position));
         }
         playerDao.save(Color.of(chessGame.getTurn()));
+    }
+
+    public Map<Position, Piece> findAllBoard() {
+        return chessBoardDao.findAll();
+    }
+
+    public Player findAllPlayer() {
+        return playerDao.findAll();
     }
 }

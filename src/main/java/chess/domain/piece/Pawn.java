@@ -6,7 +6,6 @@ import static chess.domain.piece.Direction.pullDiagonalDirections;
 
 import chess.domain.position.Position;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class Pawn extends Piece {
 
@@ -37,7 +36,7 @@ public abstract class Pawn extends Piece {
 
     private void checkDiagonalCondition(Piece from, Piece to, Direction direction) {
         if (pullDiagonalDirections().contains(direction)
-                && (Objects.isNull(to) || from.isSameTeam(to))) {
+                && (to.isBlank() || from.isSameTeam(to))) {
             throw new IllegalArgumentException("대각선 이동은 상대편의 말을 잡을 때만 가능합니다.");
         }
     }

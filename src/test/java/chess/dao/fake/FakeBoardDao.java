@@ -17,6 +17,11 @@ public class FakeBoardDao implements BoardDao {
     }
 
     @Override
+    public void init(Map<String, String> board) {
+        this.board.putAll(board);
+    }
+
+    @Override
     public void update(String position, String piece) {
         board.put(position, piece);
     }

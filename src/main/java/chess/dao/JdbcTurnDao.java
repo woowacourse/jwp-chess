@@ -14,6 +14,19 @@ public class JdbcTurnDao implements TurnDao {
     private final Connection connection = JdbcConnector.getConnection();
 
     @Override
+    public void init() {
+        final String sql = "insert into turn (team) values (?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(PARAMETER_FIRST_INDEX, Team.WHITE.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void update(String nowTurn, String nextTurn) {
         String sql = "update turn set team = ? where team = ?";
 

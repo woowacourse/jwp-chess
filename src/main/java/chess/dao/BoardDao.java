@@ -4,6 +4,8 @@ import java.util.Map;
 
 public interface BoardDao {
 
+    void init(Map<String,String> board);
+
     void update(String position, String piece);
 
     Map<String, String> getBoard();

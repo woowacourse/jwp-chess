@@ -16,6 +16,22 @@ public class JdbcBoardDao implements BoardDao {
     private final Connection connection = JdbcConnector.getConnection();
 
     @Override
+    public void init(Map<String,String> board) {
+        final String sql = "insert into board (position, piece) values (?,?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            for (Entry<String, String> boardEntry : board.entrySet()) {
+                preparedStatement.setString(PARAMETER_FIRST_INDEX, boardEntry.getKey());
+                preparedStatement.setString(PARAMETER_SECOND_INDEX, boardEntry.getValue());
+                preparedStatement.executeUpdate();
+            }
+            preparedStatement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void update(String position, String piece) {
         String sql = "update board set piece = ? where position = ?";
 

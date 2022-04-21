@@ -15,6 +15,19 @@ public class JdbcGameStatusDao implements GameStatusDao {
     private final Connection connection = JdbcConnector.getConnection();
 
     @Override
+    public void init() {
+        final String sql = "insert into game_status (status) values (?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(PARAMETER_FIRST_INDEX, GameStatus.READY.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void update(String nowStatus, String nextStatus) {
         String sql = "update game_status set status = ? where status = ?";
 

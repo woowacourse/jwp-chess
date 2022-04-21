@@ -7,6 +7,11 @@ public class FakeTurnDao implements TurnDao {
     private String turn = "white";
 
     @Override
+    public void init() {
+        turn = "white";
+    }
+
+    @Override
     public void update(String nowTurn, String nextTurn) {
         turn = nextTurn;
     }

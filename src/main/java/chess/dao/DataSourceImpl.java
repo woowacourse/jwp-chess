@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
 
-public class DataSourceImpl implements DataSource {
+public class DataSourceImpl implements MyDataSource {
 
     private static final String URL = "jdbc:mysql://localhost:13306/chess?autoReconnect=true";
 

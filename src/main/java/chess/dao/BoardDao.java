@@ -10,4 +10,7 @@ public interface BoardDao {
     void updatePosition(final BoardEntity board);
 
     void updateBatchPositions(final List<BoardEntity> board);
+
+    BoardEntity insert(final BoardEntity board);
+    
 }

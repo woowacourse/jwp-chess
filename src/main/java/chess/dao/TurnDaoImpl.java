@@ -11,9 +11,9 @@ public class TurnDaoImpl implements TurnDao {
     private static final int CURRENT_TURN_COLUMN = 1;
     private static final int PREVIOUS_TURN_COLUMN = 2;
 
-    private final DataSource dataSource;
+    private final MyDataSource dataSource;
 
-    public TurnDaoImpl(final DataSource dataSource) {
+    public TurnDaoImpl(final MyDataSource dataSource) {
         this.dataSource = dataSource;
     }
 

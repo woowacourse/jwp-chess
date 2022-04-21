@@ -2,7 +2,7 @@ package chess.dao;
 
 import java.sql.Connection;
 
-public interface DataSource {
+public interface MyDataSource {
 
     Connection getConnection();
 

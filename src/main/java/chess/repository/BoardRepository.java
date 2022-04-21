@@ -1,10 +1,15 @@
-package chess.dao;
+package chess.repository;
 
+import chess.dao.BoardDao;
 import chess.entity.BoardEntity;
 import java.sql.PreparedStatement;
 import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 
@@ -12,9 +17,14 @@ import org.springframework.stereotype.Repository;
 public class BoardRepository implements BoardDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertActor;
 
-    public BoardRepository(final JdbcTemplate jdbcTemplate) {
+    public BoardRepository(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertActor = new SimpleJdbcInsert(dataSource)
+            .withTableName("board")
+            .usingGeneratedKeyColumns("id");
+
     }
 
     @Override
@@ -25,9 +35,11 @@ public class BoardRepository implements BoardDao {
 
     private RowMapper<BoardEntity> rowMapper() {
         return (rs, rowNum) -> {
+            final Long id = rs.getLong("id");
+            final Long roomId = rs.getLong("room_id");
             final String position = rs.getString("position");
             final String piece = rs.getString("piece");
-            return new BoardEntity(position, piece);
+            return new BoardEntity(id, roomId, position, piece);
         };
     }
 
@@ -48,4 +60,12 @@ public class BoardRepository implements BoardDao {
                 ps.setString(2, boardEntity.getPosition());
             });
     }
+
+    @Override
+    public BoardEntity insert(final BoardEntity board) {
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(board);
+        Long id = insertActor.executeAndReturnKey(parameters).longValue();
+        return new BoardEntity(id, board.getRoomId(), board.getPosition(), board.getPiece());
+    }
+
 }

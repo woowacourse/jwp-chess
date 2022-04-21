@@ -28,7 +28,7 @@ public class ChessController {
 
     public void run() {
         get("/", (req, res) -> {
-            return render(new HashMap<>(), "roby.html");
+            return render(new HashMap<>(), "roby.hbs");
         });
 
         get("/room", (req, res) -> {
@@ -36,7 +36,7 @@ public class ChessController {
             String name = req.queryParams("name");
             chessService.createRoom(name);
             model.put("name", name);
-            return render(model, "room.html");
+            return render(model, "room.hbs");
         });
 
         get("/start", (req, res) -> {

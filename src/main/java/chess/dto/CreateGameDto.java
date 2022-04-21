@@ -10,8 +10,8 @@ public class CreateGameDto {
         this.id = id;
     }
 
-    public String toJson() {
-        return "{\"gameId\":" + id + "}";
+    public int getId() {
+        return id;
     }
 
     @Override

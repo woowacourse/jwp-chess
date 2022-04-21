@@ -27,8 +27,8 @@ public final class MoveEvent extends Event {
         return moveRoute;
     }
 
-    public EventType getType() {
-        return EventType.MOVE;
+    public String getType() {
+        return EventType.MOVE.name();
     }
 
     public String getDescription() {

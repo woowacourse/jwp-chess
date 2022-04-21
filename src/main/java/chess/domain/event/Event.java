@@ -18,7 +18,7 @@ public abstract class Event {
 
     public abstract MoveRoute toMoveRoute();
 
-    public abstract EventType getType();
+    public abstract String getType();
 
     public abstract String getDescription();
 }

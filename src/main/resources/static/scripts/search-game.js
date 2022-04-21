@@ -12,12 +12,8 @@ const searchAndRedirect = async (event) => {
         method: 'post',
         body: new URLSearchParams(new FormData(event.target))
     });
-    const {ok, error, body} = await response.json();
-    if (!ok) {
-        alert(error);
-        return;
-    }
-    onSuccessResponse(body);
+    const json = await response.json();
+    onSuccessResponse(json);
 }
 
 const init = () => {

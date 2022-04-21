@@ -1,39 +1,54 @@
 package chess.controller;
 
-import static chess.web.WebUtils.render;
-import static java.lang.Integer.parseInt;
-import static spark.Spark.get;
-import static spark.Spark.post;
-
 import chess.domain.command.MoveRoute;
 import chess.domain.event.MoveEvent;
 import chess.dto.GameDto;
 import chess.service.ChessService;
-import spark.Request;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+@RestController
+@RequestMapping("/game")
 public class GameController {
 
-    private static final String GAME_ROUTE = "/game/:id";
-    private static final String GAME_ID_PARAMETER = "id";
-    private static final String HTML_TEMPLATE_PATH = "game.html";
+    private static final String HTML_TEMPLATE_PATH = "game";
 
-    private final ChessService chessService = ChessService.getInstance();
+    private final ChessService chessService;
 
-    public void initRouteHandler() {
-        get(GAME_ROUTE, (req, res) -> render(findGame(req), HTML_TEMPLATE_PATH));
-        post(GAME_ROUTE, (req, res) -> render(playGame(req), HTML_TEMPLATE_PATH));
+    public GameController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
-    private GameDto findGame(Request request) {
-        int gameId = parseInt(request.params(GAME_ID_PARAMETER));
-        return chessService.findGame(gameId);
+    @GetMapping("/{id}")
+    public ModelAndView findGame(@PathVariable int id) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(HTML_TEMPLATE_PATH);
+        GameDto gameDto = chessService.findGame(id);
+        modelAndView.addObject("response", gameDto);
+        return modelAndView;
     }
 
-    private GameDto playGame(Request request) {
-        int gameId = parseInt(request.params(GAME_ID_PARAMETER));
-        String body = request.body();
-        MoveRoute moveRoute = MoveRoute.ofJson(body);
+    @PostMapping("/{id}")
+    private ModelAndView playGame(@PathVariable int id,
+                                  @RequestBody MoveRoute moveRoute) {
+        chessService.playGame(id, new MoveEvent(moveRoute));
 
-        return chessService.playGame(gameId, new MoveEvent(moveRoute));
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(HTML_TEMPLATE_PATH);
+        GameDto gameDto = chessService.findGame(id);
+        modelAndView.addObject("response", gameDto);
+        return modelAndView;
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleException(Exception e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

@@ -1,27 +1,31 @@
 package chess.controller;
 
-import static chess.web.WebUtils.render;
-import static java.lang.Integer.parseInt;
-import static spark.Spark.get;
-
 import chess.dto.GameResultDto;
 import chess.service.ChessService;
-import spark.Request;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
+@Controller
+@RequestMapping("/result")
 public class ResultController {
 
-    private static final String RESULT_ROUTE = "/result/:id";
-    private static final String RESULT_TARGET_GAME_PARAMETER = "id";
-    private static final String HTML_TEMPLATE_PATH = "result.html";
+    private static final String HTML_TEMPLATE_PATH = "result";
 
-    private final ChessService chessService = ChessService.getInstance();
+    private final ChessService chessService;
 
-    public void initRouteHandler() {
-        get(RESULT_ROUTE, (req, res) -> render(findGameResult(req), HTML_TEMPLATE_PATH));
+    public ResultController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
-    public GameResultDto findGameResult(Request request) {
-        int gameId = parseInt(request.params(RESULT_TARGET_GAME_PARAMETER));
-        return chessService.findGameResult(gameId);
+    @GetMapping("/{id}")
+    public ModelAndView result(@PathVariable int id) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(HTML_TEMPLATE_PATH);
+        GameResultDto gameResultDto = chessService.findGameResult(id);
+        modelAndView.addObject("response", gameResultDto);
+        return modelAndView;
     }
 }

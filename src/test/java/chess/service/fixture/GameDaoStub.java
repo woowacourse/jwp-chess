@@ -4,6 +4,7 @@ import chess.dao.GameDao;
 import chess.dao.GameState;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class GameDaoStub extends GameDao {
 
@@ -15,6 +16,10 @@ public class GameDaoStub extends GameDao {
         put(2, GameState.RUNNING);
         put(3, GameState.OVER);
     }};
+
+    public GameDaoStub(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        super(namedParameterJdbcTemplate);
+    }
 
     @Override
     public int saveAndGetGeneratedId() {

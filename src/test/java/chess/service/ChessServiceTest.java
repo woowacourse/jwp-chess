@@ -15,15 +15,23 @@ import chess.service.fixture.EventDaoStub;
 import chess.service.fixture.GameDaoStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @SuppressWarnings("NonAsciiCharacters")
+@SpringBootTest
 class ChessServiceTest {
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private ChessService service;
 
     @BeforeEach
     void setup() {
-        service = new ChessService(new GameDaoStub(), new EventDaoStub());
+        service = new ChessService(new GameDaoStub(namedParameterJdbcTemplate),
+                new EventDaoStub(namedParameterJdbcTemplate));
     }
 
     @Test

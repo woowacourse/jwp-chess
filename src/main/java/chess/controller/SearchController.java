@@ -1,35 +1,39 @@
 package chess.controller;
 
-import static chess.web.WebUtils.render;
-import static java.lang.Integer.parseInt;
-import static spark.Spark.get;
-import static spark.Spark.post;
-
+import chess.dto.GameCountDto;
 import chess.dto.SearchResultDto;
-import chess.dto.SuccessResponseDto;
 import chess.service.ChessService;
-import chess.web.WebUtils;
-import spark.Request;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+@RestController
+@RequestMapping("/search")
 public class SearchController {
 
-    private static final String SEARCH_ROUTE = "/search";
-    private static final String SEARCH_QUERY_PARAMETER = "game_id";
-    private static final String HTML_TEMPLATE_PATH = "search.html";
+    private static final String HTML_TEMPLATE_PATH = "search";
+    private static final String RESPONSE = "response";
 
-    private final ChessService chessService = ChessService.getInstance();
+    private final ChessService chessService;
 
-    public void initRouteHandler() {
-        get(SEARCH_ROUTE, (req, res) -> render(chessService.countGames(), HTML_TEMPLATE_PATH));
-        post(SEARCH_ROUTE, (req, res) -> {
-            res.type(WebUtils.JSON_CONTENT_TYPE);
-            return new SuccessResponseDto(getSearchGameResponse(req)).toJson();
-        });
+    public SearchController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
-    private String getSearchGameResponse(Request request) {
-        int gameId = parseInt(request.queryParams(SEARCH_QUERY_PARAMETER));
-        SearchResultDto searchResult = chessService.searchGame(gameId);
-        return searchResult.toJson();
+    @GetMapping
+    public ModelAndView render() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(HTML_TEMPLATE_PATH);
+        GameCountDto gameCountDto = chessService.countGames();
+        modelAndView.addObject(RESPONSE, gameCountDto);
+        return modelAndView;
+    }
+
+    @PostMapping
+    public SearchResultDto searchResult(@RequestParam(name = "game_id") int gameId) {
+        return chessService.searchGame(gameId);
     }
 }

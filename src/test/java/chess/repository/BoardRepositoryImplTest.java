@@ -20,16 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
-class BoardRepositoryTest {
+class BoardRepositoryImplTest {
 
     @Autowired
-    private BoardRepository boardRepository;
+    private BoardRepositoryImpl boardRepositoryImpl;
 
     @Test
     @DisplayName("저장된 보드를 가져온다")
     void getBoard() {
         insertInitialData();
-        assertThat(boardRepository.getBoard()).hasSize(64);
+        assertThat(boardRepositoryImpl.getBoard()).hasSize(64);
     }
 
     @DisplayName("a2 위치의 기물을 blank로 업데이트한다")
@@ -37,8 +37,8 @@ class BoardRepositoryTest {
     void update() {
         insertInitialData();
         final BoardEntity source = new BoardEntity(1L, "a2", "blank");
-        boardRepository.updatePosition(source);
-        final BoardEntity updatedPiece = boardRepository.findBoardByRoomIdAndPosition(1L, "a2");
+        boardRepositoryImpl.updatePosition(source);
+        final BoardEntity updatedPiece = boardRepositoryImpl.findBoardByRoomIdAndPosition(1L, "a2");
         assertThat(updatedPiece.getPiece()).isEqualTo("blank");
     }
 
@@ -48,15 +48,28 @@ class BoardRepositoryTest {
         insertInitialData();
         final BoardEntity source = new BoardEntity(1L, "a2", "blank");
         final BoardEntity target = new BoardEntity(1L, "a4", "white_pawn");
-        boardRepository.updateBatchPositions(List.of(source, target));
+        boardRepositoryImpl.updateBatchPositions(List.of(source, target));
 
         assertAll(
-            () -> assertThat(boardRepository.findBoardByRoomIdAndPosition(1L, "a2")
+            () -> assertThat(boardRepositoryImpl.findBoardByRoomIdAndPosition(1L, "a2")
                 .getPiece())
                 .isEqualTo("blank"),
-            () -> assertThat(boardRepository.findBoardByRoomIdAndPosition(1L, "a4")
+            () -> assertThat(boardRepositoryImpl.findBoardByRoomIdAndPosition(1L, "a4")
                 .getPiece())
                 .isEqualTo("white_pawn")
+        );
+    }
+
+    @DisplayName("a2 blank를 insert한다.")
+    @Test
+    void insert() {
+        final BoardEntity boardEntity = new BoardEntity(1L, "a2", "blank");
+        final BoardEntity insertBoard = boardRepositoryImpl.insert(boardEntity);
+
+        assertAll(
+            () -> assertThat(insertBoard.getRoomId()).isEqualTo(1L),
+            () -> assertThat(insertBoard.getPosition()).isEqualTo("a2"),
+            () -> assertThat(insertBoard.getPiece()).isEqualTo("blank")
         );
     }
 
@@ -66,7 +79,7 @@ class BoardRepositoryTest {
             .map(entry -> new BoardEntity(1L, entry.getKey().convertPositionToString(),
                 entry.getValue().convertPieceToString()))
             .collect(Collectors.toList());
-        boardRepository.batchInsert(boardEntities);
+        boardRepositoryImpl.batchInsert(boardEntities);
     }
 
 }

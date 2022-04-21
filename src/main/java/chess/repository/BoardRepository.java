@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface BoardRepository {
 
-    List<BoardEntity> getBoard();
+    List<BoardEntity> findBoardByRoomId(final Long roomId);
 
     void updatePosition(final BoardEntity board);
 

@@ -24,13 +24,12 @@ public class BoardRepositoryImpl implements BoardRepository {
         this.insertActor = new SimpleJdbcInsert(dataSource)
             .withTableName("board")
             .usingGeneratedKeyColumns("id");
-
     }
 
     @Override
-    public List<BoardEntity> getBoard() {
-        String sql = "select * from board";
-        return jdbcTemplate.query(sql, rowMapper());
+    public List<BoardEntity> findBoardByRoomId(final Long roomId) {
+        String sql = "select * from board where room_id = ?";
+        return jdbcTemplate.query(sql, rowMapper(), roomId);
     }
 
     private RowMapper<BoardEntity> rowMapper() {

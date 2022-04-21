@@ -25,11 +25,11 @@ class BoardRepositoryImplTest {
     @Autowired
     private BoardRepositoryImpl boardRepositoryImpl;
 
-    @Test
     @DisplayName("저장된 보드를 가져온다")
-    void getBoard() {
+    @Test
+    void findBoardByRoomId() {
         insertInitialData();
-        assertThat(boardRepositoryImpl.getBoard()).hasSize(64);
+        assertThat(boardRepositoryImpl.findBoardByRoomId(1L)).hasSize(64);
     }
 
     @DisplayName("a2 위치의 기물을 blank로 업데이트한다")

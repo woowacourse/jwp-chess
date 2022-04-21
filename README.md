@@ -10,8 +10,8 @@
 
 spring MVC 를 사용하여 변경한다.
 
-- [ ] DAO 를 빈으로 등록되게 한다.
-  - [ ] BoardDAO
+- [x] DAO 를 빈으로 등록되게 한다.
+  - [x] BoardDAO
   - [x] GameStatusDAO
   - [x] TurnDAO
 - [ ] Service 를 빈으로 등록되게 한다.
@@ -19,8 +19,8 @@ spring MVC 를 사용하여 변경한다.
 - [ ] Controller 를 빈으로 등록되게 한다.
 
 ### DAO
-- [ ] JDBC Template을 이용하여 Connection을 직접 만들어 주는 로직을 대체한다.
-- [ ] JdbcTemplate는 매번 새로 생성하지 않고 빈 주입을 받아서 사용한다.
+- [x] JDBC Template을 이용하여 Connection을 직접 만들어 주는 로직을 대체한다.
+- [x] JdbcTemplate는 매번 새로 생성하지 않고 빈 주입을 받아서 사용한다.
 - 
 ### Service
 - [ ] @Service 어노테이션을 사용한다.

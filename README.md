@@ -51,6 +51,23 @@
 * [x] 저장 버튼을 통해서 현재까지 진행된 게임을 '게임 이름'을 토대로 기억한다.
 * [x] 새로운 게임 버튼을 통해서 새로운 '게임 이름'을 토대로 게임을 새로 시작할 수 있다.
 
+---
+
+## 🌱 스프링 요구사항
+
+* [ ] Spring Framework를 활용하여 애플리케이션을 구동한다.
+* [ ] Spark를 대체하여 Spring MVC를 활용하여 요청을 받고 응답을 한다.
+* [ ] Spring JDBC를 활용하여 DB 접근하던 기존 로직을 대체한다.
+
+## 프로그래밍 요구사항
+
+* [ ] 스프링 애플리케이션으로 체스가 실행 가능 해야한다.
+* [ ] @Controller나 @RestController를 활용하여 요청을 받아야 한다.
+* [ ] Spring JDBC에서 제공하는 JdbcTemplate를 이용하여 Connection을 직접 만들어 주는 로직을 대체한다.
+* [ ] JdbcTemplate는 매번 새로 생성하지 않고 빈 주입을 받아서 사용한다.
+
+
+
 ## 우아한테크코스 코드리뷰
 
 - [온라인 코드 리뷰 과정](https://github.com/woowacourse/woowacourse-docs/blob/master/maincourse/README.md)

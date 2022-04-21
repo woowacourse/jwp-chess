@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.dao.spark;
 
 import chess.dao.entity.ChessGameEntity;
 import java.sql.Connection;

@@ -1,7 +1,7 @@
 package chess.service;
 
-import chess.dao.BoardDao;
-import chess.dao.ChessGameDao;
+import chess.dao.spark.BoardDao;
+import chess.dao.spark.ChessGameDao;
 import chess.dao.entity.BoardEntity;
 import chess.dao.entity.ChessGameEntity;
 import chess.domain.game.ChessGame;
@@ -11,8 +11,10 @@ import chess.domain.piece.Team;
 import chess.service.util.BoardEntitiesToBoardConvertor;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
-public class Service {
+@Service
+public class ChessService {
 
     private final ChessGameDao chessGameDao = new ChessGameDao();
     private final BoardDao boardDao = new BoardDao();

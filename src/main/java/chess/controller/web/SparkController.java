@@ -6,7 +6,7 @@ import static spark.Spark.post;
 import static spark.Spark.staticFileLocation;
 
 import chess.domain.piece.Piece;
-import chess.service.Service;
+import chess.service.ChessService;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -21,56 +21,48 @@ public class SparkController {
 
     public void run() {
         staticFileLocation("/static");
-        Service service = new Service();
-        getIndexPage(service);
-        createChessGame(service);
-        deleteChessGame(service);
-        getChessGamePage(service);
-        movePiece(service);
-        resetChessGame(service);
+        ChessService chessService = new ChessService();
+        getIndexPage(chessService);
+        createChessGame(chessService);
+        deleteChessGame(chessService);
+        getChessGamePage(chessService);
+        movePiece(chessService);
+        resetChessGame(chessService);
         getException();
     }
 
-    private void getIndexPage(final Service service) {
+    private void getIndexPage(final ChessService chessService) {
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            model.put("chess_games", service.loadAllChessGames());
+            model.put("chess_games", chessService.loadAllChessGames());
             return new ModelAndView(model, "index.html");
         }, new HandlebarsTemplateEngine());
     }
 
-    private void createChessGame(final Service service) {
+    private void createChessGame(final ChessService chessService) {
         post("/create_chess_game", (req, res) -> {
             String name = req.queryParams("name");
-            service.createChessGame(name);
+            chessService.createChessGame(name);
             res.redirect("/game/" + name);
             return null;
         });
     }
 
-    private void deleteChessGame(final Service service) {
-        post("/delete/:name", (req, res) -> {
-            service.deleteChessGame(req.params(":name"));
-            res.redirect("/");
-            return null;
-        });
-    }
-
-    private void getChessGamePage(final Service service) {
+    private void getChessGamePage(final ChessService chessService) {
         get("/game/:name", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             String name = req.params(":name");
             model.put("chess_game_name", name);
-            Map<String, Piece> boardForHtml = convertBoardForHtml(service, name);
+            Map<String, Piece> boardForHtml = convertBoardForHtml(chessService, name);
             model.putAll(boardForHtml);
-            model.put("turn", service.loadChessGame(name).getTurn());
-            model.put("result", service.loadChessGame(name).generateResult());
+            model.put("turn", chessService.loadChessGame(name).getTurn());
+            model.put("result", chessService.loadChessGame(name).generateResult());
             return new ModelAndView(model, "chess_game.html");
         }, new HandlebarsTemplateEngine());
     }
 
-    private Map<String, Piece> convertBoardForHtml(Service service, String name) {
-        return service.loadChessGame(name).getCurrentBoard().entrySet().stream()
+    private Map<String, Piece> convertBoardForHtml(ChessService chessService, String name) {
+        return chessService.loadChessGame(name).getCurrentBoard().entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> String.valueOf(entry.getKey().getColumn().getValue()) +
                                 entry.getKey().getRow().getValue(),
@@ -78,12 +70,20 @@ public class SparkController {
                 ));
     }
 
-    private void movePiece(final Service service) {
+    private void deleteChessGame(final ChessService chessService) {
+        post("/delete/:name", (req, res) -> {
+            chessService.deleteChessGame(req.params(":name"));
+            res.redirect("/");
+            return null;
+        });
+    }
+
+    private void movePiece(final ChessService chessService) {
         post("/move/:chess_game_name", (req, res) -> {
             String chessGameName = req.params(":chess_game_name");
             String rawSource = req.queryParams("source").trim().toLowerCase();
             String rawTarget = req.queryParams("target").trim().toLowerCase();
-            service.movePiece(
+            chessService.movePiece(
                     chessGameName,
                     rawSource.charAt(COLUMN_INDEX),
                     Character.getNumericValue(rawSource.charAt(ROW_INDEX)),
@@ -95,10 +95,10 @@ public class SparkController {
         });
     }
 
-    private void resetChessGame(final Service service) {
+    private void resetChessGame(final ChessService chessService) {
         post("/reset/:chess_game_name", (req, res) -> {
             String chessGameName = req.params(":chess_game_name");
-            service.createChessGame(chessGameName);
+            chessService.createChessGame(chessGameName);
             res.redirect("/game/" + chessGameName);
             return null;
         });

@@ -1,6 +1,8 @@
 package chess;
 
 import chess.domain.ChessGame;
+import chess.domain.GameResult;
+import chess.domain.piece.Color;
 import chess.domain.position.Square;
 import chess.service.DBService;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,9 @@ public class IngameController {
         ChessGame chessGame = DBService.loadGame(gameID);
         DBService.startGame(gameID, chessGame);
         DBService.loadPieces(gameID);
+        GameResult gameResult = DBService.getGameResult(gameID);
+        model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
+        model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
 
         model.addAllAttributes(chessGame.getEmojis());
         model.addAttribute("msg", "누가 이기나 보자구~!");
@@ -49,6 +54,9 @@ public class IngameController {
             model.addAttribute("msg", e.getMessage());
         }
         model.addAttribute("gameID", gameID);
+        GameResult gameResult = DBService.getGameResult(gameID);
+        model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
+        model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
 
         if (chessGame.isKingDie()) {
             model.addAttribute("msg", "킹 잡았다!! 게임 끝~!~!");

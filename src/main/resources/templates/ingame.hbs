@@ -10,6 +10,10 @@
 <form action="/" method="get" class="inlineBtn">
     <input type="submit" value="SAVE" class="btn" id="end"/>
 </form>
+<form action="/ingame" method="get" class="inlineBtn">
+    <input type="text" name="gameID" class="invisible" value={{gameID}} />
+    <input type="submit" value="RESTART" class="btn" id="restart">
+</form>
 <table class="chess-board">
     <tbody>
     <tr>
@@ -118,5 +122,13 @@
     <input type="submit" value="MOVE" class="btn" id="move"/>
 </form>
 <br>
+<div>
+    <span class="score">
+        화이트 팀 : {{whiteScore}} 점
+    </span>
+    <span class="score">
+        블랙 팀 : {{blackScore}} 점
+    </span>
+</div>
 </body>
 </html>

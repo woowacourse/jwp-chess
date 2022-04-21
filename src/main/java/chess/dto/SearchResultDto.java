@@ -12,6 +12,14 @@ public class SearchResultDto {
         this.gameFound = gameFound;
     }
 
+    public int getId() {
+        return gameId;
+    }
+
+    public boolean getFound() {
+        return gameFound;
+    }
+
     public String toJson() {
         return "{\"id\":" + gameId + ",\"found\":" + gameFound + "}";
     }

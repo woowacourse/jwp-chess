@@ -36,6 +36,7 @@ public class FakeGameDao implements GameDao {
         target.set(COLOR_INDEX, gameStateDto.getTurnColor());
     }
 
+    @Override
     public void removeGame(String roomName) {
         memoryDatabase.remove(roomName);
     }

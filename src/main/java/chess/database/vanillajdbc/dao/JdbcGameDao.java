@@ -2,8 +2,11 @@ package chess.database.vanillajdbc.dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import chess.database.dto.GameStateDto;
 
+@Repository
 public class JdbcGameDao implements GameDao {
 
     @Override
@@ -29,6 +32,13 @@ public class JdbcGameDao implements GameDao {
     public void updateState(GameStateDto gameStateDto, String roomName) {
         JdbcConnector.query("UPDATE game SET state = ?, turn_color = ? WHERE room_name = ?")
             .parameters(gameStateDto.getState(), gameStateDto.getTurnColor(), roomName)
+            .executeUpdate();
+    }
+
+    @Override
+    public void removeGame(String roomName) {
+        JdbcConnector.query("DELETE FROM game WHERE room_name = ?")
+            .parameters(roomName)
             .executeUpdate();
     }
 }

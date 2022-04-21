@@ -41,6 +41,7 @@ public class FakeBoardDao implements BoardDao {
         pointPieces.put(routeDto.getDestination(), piece);
     }
 
+    @Override
     public void removeBoard(String roomName) {
         memoryDatabase.remove(roomName);
     }

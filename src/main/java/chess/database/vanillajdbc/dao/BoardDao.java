@@ -12,4 +12,6 @@ public interface BoardDao {
     void deletePiece(PointDto destination, String roomName);
 
     void updatePiece(RouteDto routeDto, String roomName);
+
+    void removeBoard(String roomName);
 }

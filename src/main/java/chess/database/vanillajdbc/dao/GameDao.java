@@ -10,4 +10,6 @@ public interface GameDao {
     void saveGame(GameStateDto gameStateDto, String roomName);
 
     void updateState(GameStateDto gameStateDto, String roomName);
+
+    void removeGame(String roomName);
 }

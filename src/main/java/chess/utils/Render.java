@@ -18,7 +18,8 @@ public final class Render {
     public static Map<String, Object> renderBoard(ChessGame chessGame) {
         Map<String, Object> boardDto = new BoardDTO(chessGame.getChessBoard()).getResult();
         Map<String, Object> model = new HashMap<>();
-        String boardHtml = renderHtml(boardDto, "/board.html");
+        String boardHtml = renderHtml(boardDto, "/board.hbs");
+
         model.put("board", boardHtml);
         model.put("currentTurn", chessGame.getChessBoard().getCurrentTurn());
         inputTeamScoresToModel(chessGame, model);
@@ -41,6 +42,6 @@ public final class Render {
         Map<String, Object> model = new HashMap<>();
         model.put("gameId", chessGameDTO.getId());
         model.put("gameName", chessGameDTO.getName());
-        return renderHtml(model, "/game.html");
+        return renderHtml(model, "/game.hbs");
     }
 }

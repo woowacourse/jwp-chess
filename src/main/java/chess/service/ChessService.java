@@ -8,7 +8,9 @@ import chess.dao.PieceDao;
 import chess.dto.ChessGameDto;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessService {
 
     private final ChessGameDao chessGameDao;

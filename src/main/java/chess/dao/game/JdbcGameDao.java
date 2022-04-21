@@ -55,16 +55,8 @@ public class JdbcGameDao implements GameDao {
             final PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, id);
             return statement;
-        }, resultSet -> loadChessGame(id, resultSet));
+        }, resultSet -> makeChessGame(id, resultSet));
         return Optional.ofNullable(game);
-    }
-
-    private ChessGame loadChessGame(Long id, ResultSet resultSet)
-            throws SQLException {
-        if (!resultSet.next()) {
-            return null;
-        }
-        return makeChessGame(id, resultSet);
     }
 
     @Override
@@ -83,7 +75,7 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public List<ChessGame> findHistoriesByMemberId(Long memberId) {
+    public List<ChessGame> findHistoriesByMemberId(final Long memberId) {
         return findAll().stream()
                 .filter(ChessGame::isEnd)
                 .filter(game -> Objects.equals(game.getBlackId(), memberId)
@@ -92,7 +84,7 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public void update(ChessGame game) {
+    public void update(final ChessGame game) {
         updateGame(game);
         movePieces(game);
     }
@@ -113,14 +105,18 @@ public class JdbcGameDao implements GameDao {
         savePieces(game.getId(), game.getBoard());
     }
 
-    private void savePieces(Long gameId, Board board) {
+    private void savePieces(final Long gameId, final Board board) {
         final List<Piece> pieces = board.getPieces();
         for (final Piece piece : pieces) {
             pieceDao.save(gameId, piece);
         }
     }
 
-    private ChessGame makeChessGame(Long id, ResultSet resultSet) throws SQLException {
+    private ChessGame makeChessGame(final Long id, final ResultSet resultSet) throws SQLException {
+        if (!resultSet.next()) {
+            return null;
+        }
+
         final Member white = memberDao.findById(resultSet.getLong("white_member_id"))
                 .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
         final Member black = memberDao.findById(resultSet.getLong("black_member_id"))

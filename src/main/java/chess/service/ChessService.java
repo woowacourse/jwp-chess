@@ -3,7 +3,9 @@ package chess.service;
 import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
+import chess.dto.BoardsDto;
 import chess.dto.request.RoomRequestDto;
+import chess.dto.response.EnterResponseDto;
 import chess.dto.response.RoomResponseDto;
 import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
@@ -39,5 +41,11 @@ public class ChessService {
                 entry.getKey().convertPositionToString(),
                 entry.getValue().convertPieceToString()))
             .collect(Collectors.toList());
+    }
+
+    public EnterResponseDto enterRoom(final Long roomId) {
+        final RoomEntity room = roomRepository.findById(roomId);
+        final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
+        return EnterResponseDto.of(room, BoardsDto.of(boards));
     }
 }

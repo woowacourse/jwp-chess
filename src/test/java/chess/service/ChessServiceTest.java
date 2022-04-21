@@ -1,8 +1,10 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.dto.request.RoomRequestDto;
+import chess.dto.response.EnterResponseDto;
 import chess.dto.response.RoomResponseDto;
 import chess.repository.BoardRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -33,11 +35,18 @@ class ChessServiceTest {
         assertThat(boardRepository.findBoardByRoomId(room.getId())).hasSize(64);
     }
 
-    @DisplayName("")
+    @DisplayName("체스 초보만 방에 입장한다.")
     @Test
     void enterRoom() {
         final RoomRequestDto roomRequestDto = new RoomRequestDto("체스 초보만");
         final Long id = chessService.createRoom(roomRequestDto).getId();
 
+        final EnterResponseDto enterResponseDto = chessService.enterRoom(id);
+
+        assertAll(
+            () -> assertThat(enterResponseDto.getName()).isEqualTo("체스 초보만"),
+            () -> assertThat(enterResponseDto.getTeam()).isEqualTo("white"),
+            () -> assertThat(enterResponseDto.getBoard().getBoards()).hasSize(64)
+        );
     }
 }

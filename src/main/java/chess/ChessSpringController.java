@@ -35,4 +35,10 @@ public class ChessSpringController {
     public BoardDto start(@RequestParam(value = "name") String name) {
         return chessService.startNewGame(name);
     }
+
+    @GetMapping("/load")
+    @ResponseBody
+    public BoardDto load(@RequestParam(value = "name") String name) {
+        return chessService.load(name);
+    }
 }

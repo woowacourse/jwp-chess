@@ -1,6 +1,5 @@
 package chess.web.dao;
 
-import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.web.DBConnector;
 import chess.web.dto.PieceDto;

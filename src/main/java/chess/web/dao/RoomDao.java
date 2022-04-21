@@ -7,7 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class RoomDao implements RoomRepository {
 
     @Override

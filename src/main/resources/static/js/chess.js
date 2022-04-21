@@ -189,6 +189,7 @@ function fetchNewChess() {
             toggleState(res.state);
             initPieces(res.pieces);
             activateLoadGame();
+            console.log(res);
         })
 }
 

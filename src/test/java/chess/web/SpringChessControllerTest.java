@@ -2,22 +2,40 @@ package chess.web;
 
 import static org.hamcrest.core.StringContains.containsString;
 
+import chess.repository.FakeRoomRepository;
+import chess.web.dao.RoomRepository;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
+@TestConfiguration
+class A {
+    @Bean
+    public RoomRepository roomRepository() {
+        return new FakeRoomRepository();
+    }
+}
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(A.class)
 class SpringChessControllerTest {
 
     @LocalServerPort
     int port;
+
+    @Autowired
+    ApplicationContext context;
 
     @BeforeEach
     void setUp() {
@@ -49,4 +67,5 @@ class SpringChessControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
+
 }

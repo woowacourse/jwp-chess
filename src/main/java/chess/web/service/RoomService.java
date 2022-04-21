@@ -3,7 +3,9 @@ package chess.web.service;
 import chess.web.dao.RoomRepository;
 import chess.web.dto.RoomDto;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RoomService {
 
     private static final int NAME_MIN_SIZE = 1;

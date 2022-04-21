@@ -9,21 +9,21 @@ import java.util.Map;
 public class BoardEntity {
 
     private final String name;
-    private final String positionColumnValue;
-    private final int positionRowValue;
-    private final String pieceName;
-    private final String pieceTeamValue;
+    private final String position_column_value;
+    private final int position_row_value;
+    private final String piece_name;
+    private final String piece_team_value;
 
     public BoardEntity(String name,
-                       String positionColumnValue,
-                       int positionRowValue,
-                       String pieceName,
-                       String pieceTeamValue) {
+                       String position_column_value,
+                       int position_row_value,
+                       String piece_name,
+                       String piece_team_value) {
         this.name = name;
-        this.positionColumnValue = positionColumnValue;
-        this.positionRowValue = positionRowValue;
-        this.pieceName = pieceName;
-        this.pieceTeamValue = pieceTeamValue;
+        this.position_column_value = position_column_value;
+        this.position_row_value = position_row_value;
+        this.piece_name = piece_name;
+        this.piece_team_value = piece_team_value;
     }
 
     public static List<BoardEntity> generateBoardEntities(final String name, final Map<Position, Piece> board) {
@@ -45,19 +45,19 @@ public class BoardEntity {
         return name;
     }
 
-    public String getPositionColumnValue() {
-        return positionColumnValue;
+    public String getPosition_column_value() {
+        return position_column_value;
     }
 
-    public int getPositionRowValue() {
-        return positionRowValue;
+    public int getPosition_row_value() {
+        return position_row_value;
     }
 
-    public String getPieceName() {
-        return pieceName;
+    public String getPiece_name() {
+        return piece_name;
     }
 
-    public String getPieceTeamValue() {
-        return pieceTeamValue;
+    public String getPiece_team_value() {
+        return piece_team_value;
     }
 }

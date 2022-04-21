@@ -14,10 +14,10 @@ public class BoardEntitiesToBoardConvertor {
         Map<Position, Piece> board = new HashMap<>();
         for (BoardEntity boardEntity : boardEntities) {
             Position position = Position.of(
-                    boardEntity.getPositionColumnValue().charAt(0),
-                    boardEntity.getPositionRowValue()
+                    boardEntity.getPosition_column_value().charAt(0),
+                    boardEntity.getPosition_row_value()
             );
-            Piece piece = StringToPieceConvertor.convert(boardEntity.getPieceName(), boardEntity.getPieceTeamValue());
+            Piece piece = StringToPieceConvertor.convert(boardEntity.getPiece_name(), boardEntity.getPiece_team_value());
             board.put(position, piece);
         }
         return new Board(board);

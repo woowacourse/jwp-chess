@@ -3,7 +3,9 @@ package chess.dao.jdbctemplate;
 import chess.dao.GameStatusDao;
 import chess.domain.GameStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JdbcTemplateGameStatusDao implements GameStatusDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -12,6 +14,7 @@ public class JdbcTemplateGameStatusDao implements GameStatusDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public void init() {
         jdbcTemplate.execute("DROP TABLE game_status IF EXISTS");
 
@@ -22,7 +25,6 @@ public class JdbcTemplateGameStatusDao implements GameStatusDao {
 
         jdbcTemplate.update("INSERT INTO game_status (status) values (?)", "READY");
     }
-
 
     @Override
     public void update(String nowStatus, String nextStatus) {

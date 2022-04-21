@@ -3,7 +3,9 @@ package chess.dao.jdbctemplate;
 import chess.dao.TurnDao;
 import chess.domain.piece.Team;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JdbcTemplateTurnDao implements TurnDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -12,6 +14,7 @@ public class JdbcTemplateTurnDao implements TurnDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public void init() {
         jdbcTemplate.execute("DROP TABLE turn IF EXISTS");
 
@@ -22,7 +25,6 @@ public class JdbcTemplateTurnDao implements TurnDao {
 
         jdbcTemplate.update("INSERT INTO turn(team) VALUES (?)", "white");
     }
-
 
     @Override
     public void update(String nowTurn, String nextTurn) {

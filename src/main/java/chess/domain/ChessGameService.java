@@ -1,13 +1,8 @@
 package chess.domain;
 
-import chess.dto.GameStatusDto;
-import chess.dto.ScoreDto;
 import chess.dao.BoardDao;
-import chess.dao.JdbcBoardDao;
 import chess.dao.GameStatusDao;
-import chess.dao.JdbcGameStatusDao;
 import chess.dao.TurnDao;
-import chess.dao.JdbcTurnDao;
 import chess.domain.board.Board;
 import chess.domain.board.Result;
 import chess.domain.board.strategy.BoardGenerationStrategy;
@@ -18,10 +13,15 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceConvertor;
 import chess.domain.piece.Team;
 import chess.domain.position.Position;
+import chess.dto.GameStatusDto;
+import chess.dto.ScoreDto;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessGameService {
 
     public static final String WIN_MESSAGE = "승리 팀은 : %s 입니다.";
@@ -30,10 +30,16 @@ public class ChessGameService {
     private final TurnDao turnDao;
     private final GameStatusDao gameStatusDao;
 
-    public ChessGameService() {
-        boardDao = new JdbcBoardDao();
-        turnDao = new JdbcTurnDao();
-        gameStatusDao = new JdbcGameStatusDao();
+    @Autowired
+    public ChessGameService(BoardDao boardDao, TurnDao turnDao, GameStatusDao gameStatusDao) {
+        this.boardDao = boardDao;
+        this.turnDao = turnDao;
+        this.gameStatusDao = gameStatusDao;
+    }
+
+    public void init(){
+        turnDao.init();
+        gameStatusDao.init();
     }
 
     public GameStatusDto startChessGame(BoardGenerationStrategy strategy) {
@@ -42,6 +48,7 @@ public class ChessGameService {
         }
         ChessGame chessGame = new ChessGame();
         chessGame.startGame(strategy);
+        boardDao.init(chessGame.toMap());
         gameStatusDao.update(gameStatusDao.getStatus(), chessGame.getGameStatus().toString());
         return GameStatusDto.of(chessGame);
     }

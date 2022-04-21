@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JdbcTemplateBoardDao implements BoardDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -16,6 +18,7 @@ public class JdbcTemplateBoardDao implements BoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public void init(Map<String, String> board) {
         jdbcTemplate.execute("DROP TABLE board IF EXISTS");
 

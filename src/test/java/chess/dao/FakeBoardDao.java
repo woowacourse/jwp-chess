@@ -1,28 +1,33 @@
 package chess.dao;
 
+import chess.entity.BoardEntity;
 import chess.util.JdbcTestFixture;
-import java.util.Map;
+import java.util.List;
 
 public class FakeBoardDao implements BoardDao {
 
-    public Map<String, String> fakeBoard;
+    public List<BoardEntity> fakeBoard;
 
     public FakeBoardDao() {
         fakeBoard = JdbcTestFixture.getMovedTestBoard();
     }
 
     @Override
-    public Map<String, String> getBoard() {
+    public List<BoardEntity> getBoard() {
         return fakeBoard;
     }
 
     @Override
-    public void updatePosition(final String position, final String piece) {
-        fakeBoard.put(position, piece);
+    public void updatePosition(BoardEntity board) {
+        fakeBoard.stream()
+            .filter(it -> it.getPosition().equals(board.getPosition()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 데이터가 존재하지 않습니다."))
+            .update(board.getPiece());
     }
 
     @Override
-    public void updateBatchPositions(final Map<String, String> board) {
+    public void updateBatchPositions(List<BoardEntity> board) {
         fakeBoard = board;
     }
 }

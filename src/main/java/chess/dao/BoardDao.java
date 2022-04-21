@@ -1,12 +1,13 @@
 package chess.dao;
 
-import java.util.Map;
+import chess.entity.BoardEntity;
+import java.util.List;
 
 public interface BoardDao {
 
-    Map<String, String> getBoard();
+    List<BoardEntity> getBoard();
 
-    void updatePosition(final String position, final String piece);
+    void updatePosition(final BoardEntity board);
 
-    void updateBatchPositions(final Map<String, String> board);
+    void updateBatchPositions(final List<BoardEntity> board);
 }

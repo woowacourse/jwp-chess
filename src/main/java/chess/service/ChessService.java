@@ -30,7 +30,7 @@ public class ChessService {
     }
 
     public ChessDto initializeGame() {
-        Board board = toBoard(boardDao.getBoard());
+        //Board board = toBoard(boardDao.getBoard());
         Team team = Team.of(turnDao.getCurrentTurn());
         return ChessDto.of(board, team.getValue());
     }

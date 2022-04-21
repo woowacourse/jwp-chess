@@ -4,8 +4,6 @@ import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
-import chess.dao.BoardDaoImpl;
-import chess.dao.TurnDaoImpl;
 import chess.dto.ErrorResponseDto;
 import chess.dto.MoveDto;
 import chess.service.ChessService;
@@ -23,7 +21,7 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    private static String render (Map<String, Object> model, String templatePath) {
+    private static String render(Map<String, Object> model, String templatePath) {
         return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
     }
 

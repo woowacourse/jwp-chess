@@ -3,7 +3,6 @@ package chess;
 import static spark.Spark.staticFileLocation;
 
 import chess.controller.ChessController;
-import chess.dao.BoardDaoImpl;
 import chess.dao.DataSourceImpl;
 import chess.dao.TurnDaoImpl;
 import chess.service.ChessService;

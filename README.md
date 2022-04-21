@@ -12,8 +12,8 @@ spring MVC 를 사용하여 변경한다.
 
 - [ ] DAO 를 빈으로 등록되게 한다.
   - [ ] BoardDAO
-  - [ ] GameStatusDAO
-  - [ ] TurnDAO
+  - [x] GameStatusDAO
+  - [x] TurnDAO
 - [ ] Service 를 빈으로 등록되게 한다.
   - [ ] ChessGameService
 - [ ] Controller 를 빈으로 등록되게 한다.

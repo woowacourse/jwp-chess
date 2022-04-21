@@ -6,8 +6,8 @@ import static spark.Spark.post;
 import static spark.Spark.staticFileLocation;
 
 import chess.domain.ChessGameService;
-import chess.controller.dto.ErrorDto;
-import chess.controller.dto.MoveDto;
+import chess.dto.ErrorDto;
+import chess.dto.MoveDto;
 import chess.domain.board.strategy.BoardGenerationStrategy;
 import com.google.gson.Gson;
 import java.util.Map;

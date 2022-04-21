@@ -1,4 +1,4 @@
-package chess.controller.dto;
+package chess.dto;
 
 import chess.domain.ChessGameService;
 import chess.domain.board.Result;

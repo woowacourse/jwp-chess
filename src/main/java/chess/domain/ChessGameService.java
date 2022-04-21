@@ -1,7 +1,7 @@
 package chess.domain;
 
-import chess.controller.dto.GameStatusDto;
-import chess.controller.dto.ScoreDto;
+import chess.dto.GameStatusDto;
+import chess.dto.ScoreDto;
 import chess.dao.BoardDao;
 import chess.dao.JdbcBoardDao;
 import chess.dao.GameStatusDao;

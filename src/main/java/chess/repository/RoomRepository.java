@@ -5,6 +5,8 @@ import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -35,5 +37,11 @@ public class RoomRepository {
             final boolean gameOver = rs.getBoolean("game_over");
             return new RoomEntity(id, name, team, gameOver);
         };
+    }
+
+    public RoomEntity insert(final RoomEntity room) {
+        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(room);
+        final Long id = insertActor.executeAndReturnKey(parameters).longValue();
+        return new RoomEntity(id, room.getName(), room.getTeam(), room.isGameOver());
     }
 }

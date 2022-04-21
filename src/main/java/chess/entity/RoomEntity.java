@@ -34,4 +34,32 @@ public class RoomEntity {
     public boolean isGameOver() {
         return gameOver;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final RoomEntity that = (RoomEntity) o;
+
+        if (isGameOver() != that.isGameOver()) {
+            return false;
+        }
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) {
+            return false;
+        }
+        return getTeam() != null ? getTeam().equals(that.getTeam()) : that.getTeam() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getName() != null ? getName().hashCode() : 0;
+        result = 31 * result + (getTeam() != null ? getTeam().hashCode() : 0);
+        result = 31 * result + (isGameOver() ? 1 : 0);
+        return result;
+    }
 }

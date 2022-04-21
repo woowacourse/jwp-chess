@@ -66,11 +66,7 @@ class BoardRepositoryImplTest {
         final BoardEntity boardEntity = new BoardEntity(1L, "a2", "blank");
         final BoardEntity insertBoard = boardRepositoryImpl.insert(boardEntity);
 
-        assertAll(
-            () -> assertThat(insertBoard.getRoomId()).isEqualTo(1L),
-            () -> assertThat(insertBoard.getPosition()).isEqualTo("a2"),
-            () -> assertThat(insertBoard.getPiece()).isEqualTo("blank")
-        );
+        assertThat(insertBoard).isEqualTo(boardEntity);
     }
 
     private void insertInitialData() {

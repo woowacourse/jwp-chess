@@ -134,7 +134,7 @@ public class ChessGame {
         return gameStatus;
     }
 
-    public Result stepGame() {
+    public Result stop() {
         turn = Team.WHITE;
         gameStatus = END;
         Result result = new Result(getBoard());

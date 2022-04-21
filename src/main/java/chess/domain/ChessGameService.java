@@ -121,7 +121,7 @@ public class ChessGameService {
     public ScoreDto end() {
         ChessGame chessGame = createCustomChessGame();
         checkReady();
-        Result result = chessGame.stepGame();
+        Result result = chessGame.stop();
         return createEndScore(result);
     }
 

@@ -43,7 +43,7 @@ public class OutputView {
     }
 
     private static void printStringOrDefault(Piece piece) {
-        if (piece != null) {
+        if (piece != null && !piece.isBlank()) {
             System.out.print(changeCaseSensitive(piece));
             return;
         }

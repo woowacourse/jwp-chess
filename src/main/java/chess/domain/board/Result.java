@@ -20,7 +20,7 @@ public class Result {
         for (Team team : Team.values()) {
             value.put(team, calculateResult(board, team) + calculatePawnScore(board, team));
         }
-
+        value.remove(Team.NONE);
         winnerResult = findWinTeam();
     }
 

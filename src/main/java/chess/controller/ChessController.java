@@ -15,6 +15,9 @@ public class ChessController {
     }
 
     public boolean isContinue() {
+        if(chessGame.getGameStatus().isEnd()){
+            return false;
+        }
         if (chessGame.isCheck()) {
             OutputView.printMessage("현재 check 상황입니다.");
         }
@@ -40,7 +43,7 @@ public class ChessController {
     }
 
     public void end() {
-        OutputView.printStatus(chessGame.stepGame());
+        OutputView.printStatus(chessGame.stop());
     }
 
     public void status() {

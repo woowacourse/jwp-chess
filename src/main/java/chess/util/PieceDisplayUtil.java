@@ -4,46 +4,36 @@ import chess.domain.board.piece.Color;
 import chess.domain.board.piece.Piece;
 import chess.domain.board.piece.PieceType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PieceDisplayUtil {
 
+    private static final List<String> DISPLAY_FORMATS = List.of("♟", "♞", "♝", "♜", "♛", "♚");
+    private static final String EMPTY_DISPLAY_FORMAT = "";
+
+    private static final Map<Piece, String> displayMap = initDisplayMap();
+
     private PieceDisplayUtil() {
     }
 
-    public static String toWebDisplay(Piece piece) {
-        return PieceDisplayMap.colorlessDisplayOf(piece);
+    public static String toDisplay(Piece piece) {
+        return displayMap.getOrDefault(piece, EMPTY_DISPLAY_FORMAT);
     }
 
-    private static class PieceDisplayMap {
-
-        static final String[] COLORLESS_DISPLAY_FORMATS = "♟♞♝♜♛♚".split("");
-        static final String WEB_EMPTY_DISPLAY_FORMAT = "";
-
-        static final Map<Piece, String> colorlessDisplayMap;
-
-        static {
-            colorlessDisplayMap = initColorlessDisplayMap();
+    private static Map<Piece, String> initDisplayMap() {
+        Map<Piece, String> displayMap = new HashMap<>();
+        for (Color color : Color.values()) {
+            putEachPiece(displayMap, color);
         }
+        return displayMap;
+    }
 
-        static Map<Piece, String> initColorlessDisplayMap() {
-            Map<Piece, String> colorlessDisplayMap = new HashMap<>();
-            for (Color color : Color.values()) {
-                putEachPiece(colorlessDisplayMap, color);
-            }
-            return colorlessDisplayMap;
-        }
-
-        static void putEachPiece(Map<Piece, String> displayMap, Color color) {
-            PieceType[] pieceTypes = PieceType.values();
-            for (int idx = 0; idx < pieceTypes.length; idx++ ){
-                Piece piece = Piece.of(color, pieceTypes[idx]);
-                displayMap.put(piece, PieceDisplayMap.COLORLESS_DISPLAY_FORMATS[idx]);
-            }
-        }
-
-        static String colorlessDisplayOf(Piece piece) {
-            return colorlessDisplayMap.getOrDefault(piece, WEB_EMPTY_DISPLAY_FORMAT);
+    private static void putEachPiece(Map<Piece, String> displayMap, Color color) {
+        PieceType[] pieceTypes = PieceType.values();
+        for (int idx = 0; idx < pieceTypes.length; idx++) {
+            Piece piece = Piece.of(color, pieceTypes[idx]);
+            displayMap.put(piece, DISPLAY_FORMATS.get(idx));
         }
     }
 }

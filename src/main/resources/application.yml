@@ -1,6 +1,6 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:13306/chess?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC;
+    url: jdbc:mysql://localhost:13306/chess?useSSL=false&allowPublicKeyRetrieval=TRUE
     username: root
     password: root

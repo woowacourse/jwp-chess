@@ -153,7 +153,8 @@
         </td>
     </tr>
 </table>
-<form action="backwardToPreprocess" method="post" enctype="text/plain">
+<form action="backwardToPreprocess" method="post" >
+    <input type="hidden" name="roomId" value={{roomId}}>
     {{#exception}}
     <center>[ERROR] {{message}} </center>
     {{/exception}}

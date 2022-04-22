@@ -156,7 +156,8 @@
     <center> 체스게임을 시작하려면 start, 체스게임을 끝내려면 end를 입력하세요. </center>
     <br />
     <center>
-        <form action="ready" method="post" enctype="text/plain">
+        <form action="ready" method="post">
+            <input type="text" name="roomId" value={{roomId}}>
             입력 <input name="command" type="text">  <button type="submit"> 제출 </button>
         </form>
     </center>

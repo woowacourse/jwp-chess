@@ -349,10 +349,11 @@
 <br />
 <center> 말을 움직이고 싶다면 "move 목적지 도착지"의 형식으로 입력하세요 </center>
 <center>
-    <form action="move" method="post" enctype="text/plain">
+    <form action="move" method="post" >
+        <input type="hidden" name="roomId" value={{roomId}}>
         입력 <input name="command" type="text">  <button type="submit"> 제출 </button>
     </form>
-    <form action="saved" method="post" enctype="text/plain">
+    <form action="saved" method="post" >
         <button type="submit"> 저장 후 종료 </button>
     </form>
 </center>

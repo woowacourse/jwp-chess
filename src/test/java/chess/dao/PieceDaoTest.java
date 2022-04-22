@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
+import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.single.King;
+import chess.domain.piece.single.Knight;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,6 +55,15 @@ class PieceDaoTest {
 		Position target = Position.from("a2");
 		pieceDao.savePieces(Map.of(source, new Piece(Color.WHITE, new King())));
 
-		assertThat(pieceDao.updatePiece(source, target)).isEqualTo(1);
+		assertThat(pieceDao.updatePiecePosition(source, target)).isEqualTo(1);
+	}
+
+	@Test
+	@DisplayName("피스 이동 규칙 업데이트")
+	void updatePieceRule() {
+		Position source = Position.from("a1");
+		pieceDao.savePieces(Map.of(source, new Piece(Color.WHITE, new Pawn(Color.WHITE))));
+
+		assertThat(pieceDao.updatePieceRule(source, new Knight())).isEqualTo(1);
 	}
 }

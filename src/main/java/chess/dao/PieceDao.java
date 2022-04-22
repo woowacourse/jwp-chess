@@ -4,6 +4,7 @@ import chess.domain.Color;
 import chess.domain.PieceConverter;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceRule;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -51,10 +52,17 @@ public class PieceDao {
 		return pieces;
 	}
 
-	public int updatePiece(Position source, Position target) {
+	public int updatePiecePosition(Position source, Position target) {
 		String sql = "update piece set position_col = ?, position_row = ? "
 				+ "where position_col = ? and position_row = ?";
 
 		return jdbcTemplate.update(sql, target.column(), target.row(), source.column(), source.row());
+	}
+
+	public int updatePieceRule(Position source, PieceRule pieceRule) {
+		String sql = "update piece set type = ? "
+				+ "where position_col = ? and position_row = ?";
+
+		return jdbcTemplate.update(sql, pieceRule.name(), source.column(), source.row());
 	}
 }

@@ -22,12 +22,12 @@ public class PieceDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public int savePieces(Map<Position, Piece> pieces) {
+	public int savePieces(long chessGameId, Map<Position, Piece> pieces) {
 		String sql = "insert into piece (type, color, position_col, position_row, chess_game_id) values (?, ?, ?, ?, ?)";
 		int count = 0;
 		for (Position position : pieces.keySet()) {
 			Piece piece = pieces.get(position);
-			jdbcTemplate.update(sql, piece.name(), piece.color().name(), position.column(), position.row(), 1);
+			jdbcTemplate.update(sql, piece.name(), piece.color().name(), position.column(), position.row(), chessGameId);
 			count++;
 		}
 		return count;

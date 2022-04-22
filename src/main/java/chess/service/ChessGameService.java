@@ -22,7 +22,7 @@ public class ChessGameService {
 
 	public long createNewChessGame() {
 		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
-		pieceDao.savePieces(PieceFactory.createNewChessBoard(chessGameId));
+		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard(chessGameId));
 		return chessGameId;
 	}
 
@@ -30,12 +30,22 @@ public class ChessGameService {
 		return pieceDao.findChessBoardByChessGameId(chessGameId);
 	}
 
-	public void move(Position source, Position target) {
-//		ChessGameState chessGameState = findGameTurn();
-//		chessGameState.movePiece(source, target);
-//
-//		pieceDao.delete(target);
-//		pieceDao.updatePiecePosition(source, target
-//		turnDao.updateTurn(chessGameState.currentTurn(), chessGameState.nextTurn());
+	public void move(long chessGameId, Position source, Position target) {
+		ChessGameState chessGameState = findChessGameState(chessGameId);
+		chessGameState.movePiece(source, target);
+
+		pieceDao.delete(target);
+		pieceDao.updatePiecePosition(source, target);
+		chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
+	}
+
+	private ChessGameState findChessGameState(long chessGameId) {
+		Turn currentTurn = findChessGameTurn(chessGameId);
+		ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);
+		return currentTurn.createGameTurn(chessBoard);
+	}
+
+	private Turn findChessGameTurn(long chessGameId) {
+		return chessGameDao.findChessGame(chessGameId);
 	}
 }

@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>체스</title>
-    <link rel="stylesheet" href="css/chess.css">
+    <link rel="stylesheet" href="/css/chess.css">
 </head>
 <body>
 <div class="chess-container">
     <div class="room-container">
         <div class="room-icon-wrap">
-            <img src="images/white_player.png" class="room-icon">
+            <img src="/images/white_player.png" class="room-icon">
         </div>
         <div class="room-panel" id="white-message"></div>
         <div class="score-panel" id="white-score">-점</div>
@@ -17,11 +17,11 @@
     <div class="board-container">
         <div class="pieces-container" id="pieces-container">
         </div>
-        <img src="images/board.png">
+        <img src="/images/board.png">
     </div>
     <div class="room-container">
         <div class="room-icon-wrap">
-            <img src="images/black_player.png" class="room-icon">
+            <img src="/images/black_player.png" class="room-icon">
         </div>
         <div class="room-panel" id="black-message"></div>
         <div class="score-panel" id="black-score">-점</div>
@@ -35,6 +35,6 @@
     <button onclick="fetchLoadChess()" id="load-button">이어하기</button>
     <button onclick="fetchResult()">점수 갱신</button>
 </div>
-<script type="text/javascript" src="js/chess.js"></script>
+<script type="text/javascript" src="/js/chess.js"></script>
 </body>
 </html>

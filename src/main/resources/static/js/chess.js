@@ -91,7 +91,7 @@ function setNewPieces(pieces) {
     for (const piece of pieces) {
         let square = document.getElementById('square-' + piece.position);
         let pieceImage = document.createElement('img');
-        pieceImage.src = 'images/' + piece.color + '_' + piece.role + '.png';
+        pieceImage.src = '/images/' + piece.color + '_' + piece.role + '.png';
         pieceImage.className = 'piece' + ' active';
         pieceImage.id = 'piece-' + piece.position;
         pieceImage.onclick = function () {selectPiece(piece.position)};
@@ -166,8 +166,9 @@ function activateLoadGame() {
 }
 
 window.onload = async function () {
-    let param = new URL(location.href).searchParams;
-    let roomId = param.get("roomId");
+    let url = location.href;
+    let urlArr = url.split('/');
+    let roomId = urlArr[urlArr.length-1];
     document.getElementById("room-id").value = roomId;
 
     let piecesContainer = document.getElementById('pieces-container');

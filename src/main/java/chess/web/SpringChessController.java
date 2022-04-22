@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,11 +35,12 @@ public class SpringChessController {
     @PostMapping(value = "/board")
     public String createRoom(@RequestParam String name) {
         RoomDto roomDto = roomService.create(name);
-        return "redirect:/board?roomId=" + roomDto.getId();
+//        return "redirect:/board?boardid=" + roomDto.getId();
+        return "redirect:/rooms/" + roomDto.getId();
     }
 
-    @GetMapping("/board")
-    public String board() {
+    @GetMapping("/rooms/{roomId}")
+    public String board(@PathVariable int roomId) {
         return "/board.html";
     }
 

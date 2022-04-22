@@ -101,6 +101,16 @@ public class WebApplication {
         return modelAndView;
     }
 
+    @GetMapping(path = "/reload")
+    public String reload() {
+        List<String> commands = commandDao.findAll();
+        state = Start.of();
+        for (String command : commands) {
+            state = state.proceed(command);
+        }
+        return "redirect:game";
+    }
+
 
     private List<Square> showChessBoard(final Map<Position, Piece> board) {
         final List<Square> squares = new ArrayList<>();

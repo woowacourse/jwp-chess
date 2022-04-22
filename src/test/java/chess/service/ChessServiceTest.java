@@ -3,15 +3,17 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.controller.dto.response.ChessGameResponse;
-import chess.dao.FakeGameDao;
-import chess.dao.FakePieceDao;
 import chess.domain.GameState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 class ChessServiceTest {
 
-    private final ChessService chessService = new ChessService(new FakeGameDao(), new FakePieceDao());
+    @Autowired
+    private ChessService chessService;
 
     @DisplayName("게임 생성 테스트")
     @Test

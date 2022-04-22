@@ -3,26 +3,46 @@ package chess.web.dao;
 import chess.board.Board;
 import chess.board.Team;
 import chess.board.Turn;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@JdbcTest
 class BoardDaoTest {
 
-    private final BoardDao boardDao = new BoardDaoImpl();
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private BoardDao boardDao;
     private Long boardId;
 
     @BeforeEach
     void setUp() {
-        boardId = boardDao.save();
-    }
+        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
+        jdbcTemplate.execute("DROP TABLE board IF EXISTS");
 
-    @AfterEach
-    void tearDown(){
-        boardDao.deleteById(boardId);
+        jdbcTemplate.execute("CREATE TABLE board (" +
+                " id   INT(10) not null AUTO_INCREMENT," +
+                " turn VARCHAR (5) not null," +
+                " primary key (id))");
+
+        jdbcTemplate.execute("CREATE TABLE piece (" +
+                " id       INT(10) not null AUTO_INCREMENT," +
+                " board_id INT(10)," +
+                " position CHAR(2)," +
+                " type     VARCHAR (20) not null," +
+                " team     VARCHAR (10) not null," +
+                " foreign key (board_id) references board (id) ON DELETE CASCADE ," +
+                " primary key (id))");
+
+
+        boardDao = new BoardDaoImpl(jdbcTemplate);
+        boardId = boardDao.save();
     }
 
     @Test

@@ -13,6 +13,7 @@ import chess.web.dao.PieceDao;
 import chess.web.dao.PieceDaoImpl;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class ChessService {
     private final PieceDao pieceDao;
 
     public ChessService() {
-        boardDao = new BoardDaoImpl();
+        boardDao = new BoardDaoImpl(new JdbcTemplate());
         pieceDao = new PieceDaoImpl();
     }
 

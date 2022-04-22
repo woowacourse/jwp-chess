@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PieceDaoTest {
 
     private final PieceDao pieceDao = new PieceDaoImpl();
-    private final BoardDao boardDao = new BoardDaoImpl();
+    private final BoardDao boardDao = new BoardDaoImpl(new JdbcTemplate());
     private Long boardId;
     private Pieces pieces;
 

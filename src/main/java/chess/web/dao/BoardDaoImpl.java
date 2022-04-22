@@ -7,108 +7,84 @@ import chess.board.piece.Piece;
 import chess.board.piece.PieceFactory;
 import chess.board.piece.Pieces;
 import chess.web.utils.JdbcConnector;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class BoardDaoImpl implements BoardDao {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public BoardDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final RowMapper<Board> boardRowMapper = (resultSet, rowNum) ->{
+        Team team = Team.from(resultSet.getString("turn"));
+        return Board.create(
+                Pieces.from(new ArrayList<>()),
+                new Turn(team)
+        );
+    };
 
     @Override
     public Optional<Turn> findTurnById(Long id) {
         final String query = "SELECT (turn) from board where id = ?";
-        try (
-                Connection connection = JdbcConnector.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)
-        ) {
-            statement.setLong(1, id);
-            ResultSet result = statement.executeQuery();
-            if (result.next()) {
-                String turn = result.getString("turn");
-                return Optional.of(new Turn(Team.from(turn)));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+        String turn = jdbcTemplate.queryForObject(query, String.class, id);
+
+        return Optional.of(new Turn(Team.from(turn)));
     }
 
     @Override
     public void updateTurnById(Long id, String newTurn) {
         final String query = "UPDATE board set turn = ? where id = ?";
-        try (
-                Connection connection = JdbcConnector.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)
-        ) {
-            statement.setString(1, newTurn);
-            statement.setLong(2, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        jdbcTemplate.update(query, newTurn, id);
     }
 
     @Override
     public Long save() {
         final String query = "INSERT INTO board (turn) values (?)";
-        try (
-                Connection connection = JdbcConnector.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
-        ) {
-            statement.setString(1, "white");
-            statement.executeUpdate();
-            ResultSet resultSet = statement.getGeneratedKeys();
-            if (resultSet.next()) {
-                return resultSet.getLong(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        throw new IllegalStateException("[ERROR] 디비 저장에 실패했습니다.");
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
+            preparedStatement.setString(1, "white");
+            return preparedStatement;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     @Override
     public Optional<Board> findById(Long id) {
-        final String query = "SELECT *" +
+        final String query = "SELECT * " +
                 "FROM board as b " +
                 "JOIN piece as p ON b.id = p.board_id " +
                 "WHERE b.id = ?";
-        try (
-                Connection connection = JdbcConnector.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)
-        ) {
-            statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            List<Piece> pieces = new ArrayList<>();
-            String turn = "";
+        List<Board> boards = jdbcTemplate.query(query, boardRowMapper, id);
+        Board board = getBoard(boards);
+        return Optional.of(board);
+    }
 
-            while (resultSet.next()) {
-                turn = resultSet.getString("turn");
-                String position = resultSet.getString("position");
-                String type = resultSet.getString("type");
-                String team = resultSet.getString("team");
-                pieces.add(PieceFactory.create(position, team, type));
-            }
-
-            return Optional.of(Board.create(Pieces.from(pieces), new Turn(Team.from(turn))));
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private Board getBoard(List<Board> boards) {
+        if (boards.isEmpty()) {
+            return Board.create(Pieces.from(new ArrayList<>()), Turn.init());
         }
-        return Optional.empty();
+        return DataAccessUtils.singleResult(boards);
     }
 
     @Override
     public void deleteById(Long id) {
         final String query = "DELETE FROM board WHERE id = ?";
-        try (
-                Connection connection = JdbcConnector.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)
-        ) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        jdbcTemplate.update(query, id);
     }
 }

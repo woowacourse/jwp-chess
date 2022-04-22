@@ -7,6 +7,7 @@ import chess.state.Start;
 import chess.state.State;
 import chess.state.Status;
 import chess.view.Square;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,9 @@ import java.util.Map;
 @Controller
 public class WebApplication {
 
+    @Autowired
+    private CommandDao commandDao;
+
     private State state;
 
     public static void main(String[] args) {
@@ -39,6 +43,7 @@ public class WebApplication {
     @PostMapping("/start")
     public String startChessGame() {
         state = Start.of();
+        commandDao.clear();
         return "redirect:start";
     }
 
@@ -47,6 +52,7 @@ public class WebApplication {
         ModelAndView modelAndView = new ModelAndView("game");
         modelAndView.addObject("squares", showChessBoard(state.getBoard()));
         modelAndView.addObject("player", playerName(state.getPlayer()));
+        modelAndView.addObject("commands", commandDao.findAll());
         modelAndView.addObject("message", "게임을 시작합니다.");
         return modelAndView;
     }
@@ -56,12 +62,14 @@ public class WebApplication {
         ModelAndView modelAndView = new ModelAndView("game");
         modelAndView.addObject("squares", showChessBoard(state.getBoard()));
         modelAndView.addObject("player", playerName(state.getPlayer()));
+        modelAndView.addObject("commands", commandDao.findAll());
         return modelAndView;
     }
 
     @PostMapping(path = "/game")
-    public String movePiece(@RequestParam("command") String requestBody) {
-        state = state.proceed(requestBody);
+    public String movePiece(@RequestParam("command") String command) {
+        state = state.proceed(command);
+        commandDao.insert(command);
         if (state.isRunning()) {
             return "redirect:game";
         }

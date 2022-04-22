@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class GameStateDaoImplTest {
 
-    private final GameStateDaoImpl gameStateDaoImpl = GameStateDaoImpl.getInstance();
+    private final GameStateDaoImpl gameStateDaoImpl = new GameStateDaoImpl();
 
     @Test
     @DisplayName("턴 정보를 DB에 저장한다.")

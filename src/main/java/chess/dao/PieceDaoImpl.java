@@ -16,15 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PieceDaoImpl implements PieceDao {
 
-    private static final PieceDaoImpl INSTANCE = new PieceDaoImpl();
-
-    public static PieceDaoImpl getInstance() {
-        return INSTANCE;
-    }
-
-    public PieceDaoImpl() {
-    }
-
     @Override
     public void saveAllPieces(final Map<Position, Piece> board) {
         final String sql = "insert into piece (position, team, name) values (?, ?, ?)";

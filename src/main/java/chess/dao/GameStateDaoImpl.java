@@ -10,16 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GameStateDaoImpl implements GameStateDao {
 
-    private static final GameStateDaoImpl INSTANCE = new GameStateDaoImpl();
-
     private static final String DATABASE_EMPTY_SYMBOL = "nothing";
-
-    public static GameStateDaoImpl getInstance() {
-        return INSTANCE;
-    }
-
-    public GameStateDaoImpl() {
-    }
 
     @Override
     public boolean hasPlayingGame() {

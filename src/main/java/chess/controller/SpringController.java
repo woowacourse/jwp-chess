@@ -1,8 +1,10 @@
 package chess.controller;
 
 import chess.domain.Command;
+import chess.domain.piece.Team;
 import chess.service.ChessService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,6 +83,21 @@ public class SpringController {
         }
 
         List<String> chessBoard = chessService.getCurrentChessBoard();
+        modelAndView.addObject("chessboard", chessBoard);
+        modelAndView.setViewName("chess");
+
+        return modelAndView;
+    }
+
+    @GetMapping("/status")
+    public ModelAndView status() {
+        ModelAndView modelAndView = new ModelAndView();
+
+        Map<Team, Double> score = chessService.getScore();
+        List<String> chessBoard = chessService.getCurrentChessBoard();
+
+        modelAndView.addObject("blackScore", score.get(Team.BLACK));
+        modelAndView.addObject("whiteScore", score.get(Team.WHITE));
         modelAndView.addObject("chessboard", chessBoard);
         modelAndView.setViewName("chess");
 

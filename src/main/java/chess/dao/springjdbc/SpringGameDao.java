@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class DatabaseGameDao2 implements GameDao {
+public class SpringGameDao implements GameDao {
 
     private static final String ID = "id";
     private static final String NAME = "name";
@@ -29,7 +29,7 @@ public class DatabaseGameDao2 implements GameDao {
         resultSet.getString("turn")
     );
 
-    public DatabaseGameDao2(JdbcTemplate jdbcTemplate) {
+    public SpringGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

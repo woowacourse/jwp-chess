@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class DatabaseBoardDao2 implements BoardDao {
+public class SpringBoardDao implements BoardDao {
 
     private JdbcTemplate jdbcTemplate;
     private final RowMapper<PieceWithSquareDto> pieceRowMapper = (resultSet, rowNum) ->
@@ -17,7 +17,7 @@ public class DatabaseBoardDao2 implements BoardDao {
                     resultSet.getString("piece_type"),
                     resultSet.getString("piece_color")
             );
-    public DatabaseBoardDao2(JdbcTemplate jdbcTemplate) {
+    public SpringBoardDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class ChessController {
+public class SpringChessController {
 
     private final ChessService chessService;
 
-    public ChessController(ChessService chessService) {
+    public SpringChessController(ChessService chessService) {
         this.chessService = chessService;
     }
 

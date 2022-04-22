@@ -15,7 +15,7 @@ import spark.Request;
 import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-public class WebChessController {
+public class SparkChessController {
     private static final int VALUE_INDEX = 1;
     private static final int TO_SQUARE_INDEX = 1;
     private static final int FROM_SQUARE_INDEX = 0;
@@ -33,7 +33,7 @@ public class WebChessController {
 
     private final ChessService service;
 
-    public WebChessController(ChessService service) {
+    public SparkChessController(ChessService service) {
         this.service = service;
     }
 

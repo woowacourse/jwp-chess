@@ -90,4 +90,17 @@ class ChessControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
+
+    @DisplayName("GET - status api 테스트")
+    @Test
+    void status() {
+        chessService.createOrLoadGame(testGameId);
+        chessService.startGame(testGameId);
+
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/status/" + testGameId)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
 }

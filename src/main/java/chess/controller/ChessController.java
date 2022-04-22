@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
+import chess.controller.dto.response.StatusResponse;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +39,11 @@ public class ChessController {
     @PostMapping("/move/{gameId}")
     public ChessGameResponse movePiece(@PathVariable long gameId, @RequestBody MoveRequest moveRequest) {
         return chessService.move(gameId, moveRequest);
+    }
+
+    @GetMapping("/status/{gameId}")
+    public StatusResponse status(@PathVariable long gameId) {
+        return chessService.status(gameId);
     }
 }
 

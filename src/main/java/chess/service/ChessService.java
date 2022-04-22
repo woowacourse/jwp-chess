@@ -13,6 +13,7 @@ import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
 import chess.dto.response.GameResponseDto;
 import chess.dto.response.RoomResponseDto;
+import chess.dto.response.RoomsResponseDto;
 import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
 import chess.repository.BoardRepository;
@@ -92,4 +93,8 @@ public class ChessService {
     }
 
 
+    public RoomsResponseDto findRooms() {
+        final List<RoomEntity> rooms = roomRepository.findRooms();
+        return RoomsResponseDto.of(rooms);
+    }
 }

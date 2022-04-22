@@ -84,4 +84,15 @@ public class SpringWebChessController {
         }
         return "redirect:/play";
     }
+    @GetMapping("/end")
+    public ResponseEntity<ResponseDto> end() {
+        try {
+            chessService.end();
+        } catch (IllegalArgumentException | SQLException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseDto(e.getMessage()));
+        }
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }

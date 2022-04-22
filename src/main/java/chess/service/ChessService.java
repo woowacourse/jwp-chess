@@ -109,15 +109,10 @@ public class ChessService {
                 .collect(Collectors.toMap(m -> m.getKey().name(), Map.Entry::getValue));
     }
 
-    public ResponseDto1 end() throws SQLException {
-        try{
-            chessBoard.changeStatus(new End());
-            boardDao.delete(gameDao.findLastGameId());
-            gameDao.delete();
-        } catch (IllegalArgumentException e){
-            return new ResponseDto1(500, e.getMessage());
-        }
-        return new ResponseDto1(200, null);
+    public void end() throws SQLException {
+        chessBoard.changeStatus(new End());
+        boardDao.delete(gameDao.findLastGameId());
+        gameDao.delete();
     }
 
     public String findWinner() {

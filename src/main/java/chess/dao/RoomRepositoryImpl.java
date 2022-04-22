@@ -11,14 +11,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class RoomRepositoryImpl implements RoomRepository {
 
+    private static final String TABLE_NAME = "room";
+    private static final String KEY_NAME = "id";
+    private static final int KEY_INDEX = 1;
+    private static final int NAME_INDEX = 2;
+
     private final SimpleJdbcInsert insertActor;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public RoomRepositoryImpl(DataSource dataSource,
                               NamedParameterJdbcTemplate jdbcTemplate) {
         this.insertActor = new SimpleJdbcInsert(dataSource)
-                .withTableName("room")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns(KEY_NAME);
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -33,7 +38,7 @@ public class RoomRepositoryImpl implements RoomRepository {
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(sql, Map.of("name", name),
                         (resultSet, rowNum) ->
-                                new RoomDto(resultSet.getInt(1), resultSet.getString(2))
+                                new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX))
                 )
         );
     }

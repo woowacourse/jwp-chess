@@ -2,8 +2,11 @@ package chess.controller.dto.request;
 
 public class MoveRequest {
 
-    private final String start;
-    private final String target;
+    private String start;
+    private String target;
+
+    public MoveRequest() {
+    }
 
     public MoveRequest(String start, String target) {
         this.start = start;

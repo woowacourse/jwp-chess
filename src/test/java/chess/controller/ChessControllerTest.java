@@ -1,6 +1,9 @@
 package chess.controller;
 
+import chess.controller.dto.request.MoveRequest;
 import chess.service.ChessService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,6 +68,25 @@ class ChessControllerTest {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/api/restart/" + testGameId)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("POST - move api 테스트")
+    @Test
+    void move() throws JsonProcessingException {
+        chessService.createOrLoadGame(testGameId);
+        chessService.startGame(testGameId);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        MoveRequest moveRequest = new MoveRequest("a2", "a3");
+        String jsonString = objectMapper.writeValueAsString(moveRequest);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .body(jsonString)
+                .when().post("/api/move/" + testGameId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

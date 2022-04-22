@@ -65,4 +65,10 @@ public class PieceDao {
 
 		return jdbcTemplate.update(sql, pieceRule.name(), source.column(), source.row());
 	}
+
+	public int delete(Position source) {
+		String sql = "delete from piece where position_col = ? and position_row = ?";
+
+		return jdbcTemplate.update(sql, source.column(), source.row());
+	}
 }

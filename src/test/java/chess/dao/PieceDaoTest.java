@@ -66,4 +66,13 @@ class PieceDaoTest {
 
 		assertThat(pieceDao.updatePieceRule(source, new Knight())).isEqualTo(1);
 	}
+
+	@Test
+	@DisplayName("피스 삭제")
+	void deletePiece() {
+		Position source = Position.from("a1");
+		pieceDao.savePieces(Map.of(source, new Piece(Color.WHITE, new Pawn(Color.WHITE))));
+
+		assertThat(pieceDao.delete(source)).isEqualTo(1);
+	}
 }

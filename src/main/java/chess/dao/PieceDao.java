@@ -45,6 +45,7 @@ public class PieceDao {
         return pieceType.createPiece(color);
     };
 
+<<<<<<< HEAD
     public PieceDao(DataSource dataSource) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.insertPiece = new SimpleJdbcInsert(dataSource)
@@ -115,4 +116,7 @@ public class PieceDao {
         parameters.put("position", convertPositionToString(position));
         namedParameterJdbcTemplate.update(query, parameters);
     }
+=======
+    void delete(long gameId, Position position);
+>>>>>>> refactor: PieceDao가 JdbcTemplate을 사용하도록 변경
 }

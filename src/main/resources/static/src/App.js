@@ -10,7 +10,6 @@ function start() {
         },
         body: JSON.stringify(null)
     }).then(response => {
-        debugger;
         if (!response.ok) {
             response.json()
                 .then(body => alert(body.message));
@@ -24,7 +23,6 @@ function start() {
 function end() {
     fetch('/end')
         .then(response => {
-            debugger;
             if (response.ok) {
                 response.json()
                     .then(body => alert(body.message));

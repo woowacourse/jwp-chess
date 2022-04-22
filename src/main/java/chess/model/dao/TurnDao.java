@@ -1,54 +1,41 @@
 package chess.model.dao;
 
-import chess.utils.DBConnector;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Optional;
 
+@Repository
 public class TurnDao {
-    private static final Connection connection = DBConnector.getConnection();
+    private final JdbcTemplate jdbcTemplate;
+
+    public TurnDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void init() {
         String query = "insert into turns (turn) values (?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, "WHITE");
-            preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        jdbcTemplate.update(query, "WHITE");
     }
 
-    public String findOne() {
+    public Optional<String> findOne() {
         String query = "select turn from turns limit 1";
-        String turn = "";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            turn = resultSet.getString("turn");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, String.class));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
         }
-        return turn;
     }
 
     public void update(String nextTurn) {
         String query = "UPDATE turns SET turn = (?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, nextTurn);
-            preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        jdbcTemplate.update(query, nextTurn);
     }
 
     public void deleteAll() {
         String query = "DELETE FROM turns";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        jdbcTemplate.update(query);
     }
 }

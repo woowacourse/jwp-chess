@@ -1,19 +1,23 @@
 package chess.model.dao;
 
+import chess.entity.PieceEntity;
 import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
-import chess.utils.DBConnector;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@Repository
 public class PieceDao {
-    private static final Connection connection = DBConnector.getConnection();
+    private final JdbcTemplate jdbcTemplate;
+
+    public PieceDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public static String getPieceName(Piece piece) {
         return (piece.getTeam().name() + "-" + piece.getName()).toLowerCase();
@@ -21,70 +25,36 @@ public class PieceDao {
 
     public void init(Board board) {
         String query = "insert into pieces (position, name) values (?, ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            connection.setAutoCommit(false);
-            for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
-                preparedStatement.setString(1, entry.getKey().getPosition());
-                preparedStatement.setString(2, getPieceName(entry.getValue()));
-                preparedStatement.executeUpdate();
-            }
-            connection.commit();
-        } catch (SQLException exception) {
-            exception.printStackTrace();
+        for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
+            jdbcTemplate.update(query, entry.getKey().getPosition(), getPieceName(entry.getValue()));
         }
     }
 
-    public Map<String, String> findAll() {
-        String query = "select position, name from pieces";
-        Map<String, String> board = new HashMap<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            makeBoard(board, resultSet);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return board;
+    public List<PieceEntity> findAllPieces() {
+        String sql = "select position, name from pieces";
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> {
+                    PieceEntity pieceEntity = new PieceEntity(
+                            resultSet.getString("name"),
+                            resultSet.getString("position")
+                    );
+                    return pieceEntity;
+                });
     }
 
-    private void makeBoard(Map<String, String> board, ResultSet resultSet) throws SQLException {
-        while (resultSet.next()) {
-            String piece = resultSet.getString("name");
-            String position = resultSet.getString("position");
-            board.put(position, piece);
-        }
-    }
-
-    public String findByPosition(String source) {
-        String query = "select name from pieces where position = (?)";
-        String piece = "";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, source);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            piece = resultSet.getString("name");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return piece;
+    public String findPieceNameByPosition(String source) {
+        String sql = "select name from pieces where position = (?)";
+        return jdbcTemplate.queryForObject(sql, String.class, source);
     }
 
     public void updateByPosition(String position, String pieceName) {
-        String query = "UPDATE pieces SET name = (?) WHERE position = (?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, pieceName);
-            preparedStatement.setString(2, position);
-            preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        String sql = "UPDATE pieces SET name = (?) WHERE position = (?)";
+        jdbcTemplate.update(sql, pieceName, position);
     }
 
     public void deleteAll() {
         String query = "DELETE FROM pieces";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        jdbcTemplate.update(query);
     }
 }

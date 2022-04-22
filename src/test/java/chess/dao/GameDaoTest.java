@@ -17,7 +17,7 @@ public class GameDaoTest {
 
     @BeforeAll
     static void initializeDatabaseConnector() {
-        databaseConnector = new DatabaseConnector("jdbc:h2:~/test", "tester", "");
+        databaseConnector = new DatabaseConnector("jdbc:h2:~/test", "sa", "");
         String rootPath = System.getProperty("user.dir");
         try {
             RunScript.execute(

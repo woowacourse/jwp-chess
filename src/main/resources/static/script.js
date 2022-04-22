@@ -25,9 +25,13 @@ async function load() {
     let pieces;
     let response = await fetch("/load?name=" + roomName);
 
-    if (!response.ok) {
+    if (response.status === 400) {
         const errorMessage = await response.json();
         alert("[ERROR] " + errorMessage.message);
+        return;
+    }
+
+    if (response.status === 500) {
         return;
     }
 
@@ -141,7 +145,8 @@ async function move(fromPosition, toPosition) {
     })
 
     if (!response.ok) {
-        const errorMessage = await response.json();
+        response.const
+        errorMessage = await response.json();
         alert("[ERROR] " + errorMessage.message);
         return;
     }

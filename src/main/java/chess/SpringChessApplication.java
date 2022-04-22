@@ -3,11 +3,11 @@ package chess;
 import chess.domain.game.ChessController;
 import chess.dto.RequestDto;
 import chess.dto.ResponseDto;
+import chess.dto.StatusDto;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,9 +46,14 @@ public class SpringChessApplication {
 
     @ResponseBody
     @PostMapping("/room/{roomId}/move")
-    public String movePiece(@PathVariable("roomId") int id, @RequestBody String body) {
+    public ResponseDto movePiece(@PathVariable("roomId") int id, @RequestBody String body) {
         final String[] split = body.split("=");
-        ResponseDto response = controller.move(id, split[1]);
-        return response.toString();
+        return controller.move(id, split[1]);
+    }
+
+    @ResponseBody
+    @GetMapping("/room/{roomId}/status")
+    public StatusDto showStatus(@PathVariable("roomId") int id) {
+        return controller.status(id);
     }
 }

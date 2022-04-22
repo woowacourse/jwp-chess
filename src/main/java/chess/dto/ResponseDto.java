@@ -23,12 +23,4 @@ public class ResponseDto {
     public boolean isFinished() {
         return finished;
     }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "\"status\" : " + status +
-                ", \"errorMessage\" : \"" + errorMessage + "\"" +
-                ", \"finished\" : " + finished + "}";
-    }
 }

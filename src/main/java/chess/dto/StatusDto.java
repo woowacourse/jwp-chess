@@ -45,25 +45,4 @@ public class StatusDto {
     public String getWinner() {
         return winner;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        for (Map.Entry<String, Double> entry : score.entrySet()) {
-            sb.append("\"")
-                    .append(entry.getKey())
-                    .append("\" : ")
-                    .append(entry.getValue())
-                    .append(",");
-        }
-        sb.append("\"")
-                .append("winner")
-                .append("\" : ")
-                .append("\"")
-                .append(winner)
-                .append("\"");
-        sb.append("}");
-        return sb.toString();
-    }
 }

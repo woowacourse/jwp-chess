@@ -39,8 +39,8 @@ function checkStatus() {
     }).then((response) => {
         response.json().then(data => {
             document.getElementById("statusResult")
-                .innerHTML = "검은말 : " + data.BLACK + "<br >"
-                + "흰말 : " + data.WHITE + "<br >"
+                .innerHTML = "검은 말 : " + data.score.BLACK + "<br>"
+                + "흰말 : " + data.score.WHITE + "<br>"
                 + data.winner;
         });
     });

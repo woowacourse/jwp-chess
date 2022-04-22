@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.domain.Command;
 import chess.service.ChessService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,19 @@ public class SpringController {
 
         modelAndView.addObject("chessboard", chessBoard);
         modelAndView.setViewName("chess");
+        return modelAndView;
+    }
+
+    @GetMapping("/end")
+    public ModelAndView end() {
+        String winTeamName = chessService.finish(Command.from("end"));
+        List<String> chessBoard = chessService.getCurrentChessBoard();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("winTeam", winTeamName);
+        modelAndView.addObject("chessboard", chessBoard);
+        modelAndView.setViewName("chess");
+
         return modelAndView;
     }
 

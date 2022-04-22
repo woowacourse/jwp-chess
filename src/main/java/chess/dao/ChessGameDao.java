@@ -34,4 +34,10 @@ public class ChessGameDao {
 
 		return jdbcTemplate.queryForObject(sql, Turn.class, id);
 	}
+
+	public int changeChessGameTurn(long id, Turn turn) {
+		String sql = "update chess_game set turn = ? where id = ?";
+
+		return jdbcTemplate.update(sql, turn.name(), id);
+	}
 }

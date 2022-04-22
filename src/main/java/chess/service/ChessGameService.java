@@ -3,7 +3,9 @@ package chess.service;
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessBoard;
+import chess.domain.Position;
 import chess.domain.piece.PieceFactory;
+import chess.domain.state.ChessGameState;
 import chess.domain.state.Turn;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +28,14 @@ public class ChessGameService {
 
 	public ChessBoard findChessBoard(long chessGameId) {
 		return pieceDao.findChessBoardByChessGameId(chessGameId);
+	}
+
+	public void move(Position source, Position target) {
+//		ChessGameState chessGameState = findGameTurn();
+//		chessGameState.movePiece(source, target);
+//
+//		pieceDao.delete(target);
+//		pieceDao.updatePiecePosition(source, target
+//		turnDao.updateTurn(chessGameState.currentTurn(), chessGameState.nextTurn());
 	}
 }

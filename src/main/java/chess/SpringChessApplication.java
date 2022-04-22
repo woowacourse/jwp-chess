@@ -2,6 +2,7 @@ package chess;
 
 import chess.domain.game.ChessController;
 import chess.dto.RequestDto;
+import chess.dto.ResponseDto;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @SpringBootApplication
 @Controller
@@ -40,5 +42,13 @@ public class SpringChessApplication {
         model.addAttribute("roomId", id);
         model.addAttribute("board", controller.getBoard(id));
         return "index";
+    }
+
+    @ResponseBody
+    @PostMapping("/room/{roomId}/move")
+    public String movePiece(@PathVariable("roomId") int id, @RequestBody String body) {
+        final String[] split = body.split("=");
+        ResponseDto response = controller.move(id, split[1]);
+        return response.toString();
     }
 }

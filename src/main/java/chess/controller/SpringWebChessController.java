@@ -26,4 +26,10 @@ public class SpringWebChessController {
     public BoardDto start() {
         return gameService.start();
     }
+
+    @ResponseBody
+    @PostMapping("/end")
+    public BoardDto end() {
+        return gameService.end();
+    }
 }

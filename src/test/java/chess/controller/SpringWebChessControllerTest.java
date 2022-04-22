@@ -23,12 +23,23 @@ class SpringWebChessControllerTest {
         RestAssured.port = port;
     }
 
-    @DisplayName("체스 게임보드 데이터가 전송된다.")
+    @DisplayName("체스 게임을 시작하고 게임보드 데이터가 전송된다.")
     @Test
     void start() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/game/start")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("values.size()", is(64));
+    }
+
+    @DisplayName("체스 게임을 종료하고 게임보드 데이터가 전송된다.")
+    @Test
+    void end() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/game/end")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("values.size()", is(64));

@@ -275,4 +275,23 @@ class ChessControllerTest {
                     .extract();
         }
     }
+
+    @DisplayName("POST - move api 테스트")
+    @Test
+    void move() throws JsonProcessingException {
+        chessService.createOrLoadGame(testGameId);
+        chessService.startGame(testGameId);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        MoveRequest moveRequest = new MoveRequest("a2", "a3");
+        String jsonString = objectMapper.writeValueAsString(moveRequest);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .body(jsonString)
+                .when().post("/api/move/" + testGameId)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
 }

@@ -2,19 +2,16 @@ package chess.controller;
 
 import static org.hamcrest.core.Is.*;
 
-import java.util.List;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import chess.config.ServiceConfig;
-import chess.dto.Arguments;
 import chess.service.GameService;
 import io.restassured.RestAssured;
 
@@ -24,7 +21,8 @@ public class SpringChessControllerTest {
     private static final String TEST_ROOM_NAME = "SPRING_T";
     private static final String TEST_CREATION_ROOM_NAME = "SPRING_C";
 
-    private final GameService service = ServiceConfig.getGameService();
+    @Autowired
+    private GameService service;
 
     @LocalServerPort
     int port;

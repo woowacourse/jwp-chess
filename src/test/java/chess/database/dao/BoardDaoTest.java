@@ -8,7 +8,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import chess.database.dao.spring.SpringBoardDao;
+import chess.database.dao.spring.SpringGameDao;
 import chess.database.dto.BoardDto;
 import chess.database.dto.GameStateDto;
 import chess.database.dto.PointDto;
@@ -23,18 +29,27 @@ import chess.domain.board.Route;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 
+@SpringBootTest
 class BoardDaoTest {
 
     private static final String TEST_ROOM_NAME = "TESTING";
+    private static final String TEST_CREATION_ROOM_NAME = "TESTING22";
     private static GameState state;
 
-    private final BoardDao dao = new JdbcBoardDao();
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private GameDao gameDao;
+    private BoardDao dao;
 
     @BeforeEach
     void setUp() {
+        gameDao = new SpringGameDao(jdbcTemplate);
         state = new Ready();
-        JdbcGameDao gameDao = new JdbcGameDao();
         gameDao.saveGame(GameStateDto.of(state), TEST_ROOM_NAME);
+        gameDao.saveGame(GameStateDto.of(state), TEST_CREATION_ROOM_NAME);
+
+        dao = new SpringBoardDao(jdbcTemplate);
         Board board = Board.of(new InitialBoardGenerator());
         dao.saveBoard(BoardDto.of(board.getPointPieces()), TEST_ROOM_NAME);
     }
@@ -45,7 +60,7 @@ class BoardDaoTest {
         // given & when
         Board board = Board.of(new InitialBoardGenerator());
         // then
-        assertThatCode(() -> dao.saveBoard(BoardDto.of(board.getPointPieces()), TEST_ROOM_NAME))
+        assertThatCode(() -> dao.saveBoard(BoardDto.of(board.getPointPieces()), TEST_CREATION_ROOM_NAME))
             .doesNotThrowAnyException();
     }
 
@@ -94,11 +109,9 @@ class BoardDaoTest {
 
     @AfterEach
     void setDown() {
-        JdbcConnector.query("DELETE FROM board WHERE room_name = ?")
-            .parameters(TEST_ROOM_NAME)
-            .executeUpdate();
-        JdbcConnector.query("DELETE FROM game WHERE room_name = ?")
-            .parameters(TEST_ROOM_NAME)
-            .executeUpdate();
+        dao.removeBoard(TEST_ROOM_NAME);
+        dao.removeBoard(TEST_CREATION_ROOM_NAME);
+        gameDao.removeGame(TEST_ROOM_NAME);
+        gameDao.removeGame(TEST_CREATION_ROOM_NAME);
     }
 }

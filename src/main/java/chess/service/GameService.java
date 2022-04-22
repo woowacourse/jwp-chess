@@ -37,10 +37,9 @@ public class GameService {
     }
 
     private void validateDistinctGame(String roomName) {
-        try {
-            gameDao.readStateAndColor(roomName);
+        List<String> stateAndColor = gameDao.readStateAndColor(roomName);
+        if(!stateAndColor.isEmpty()){
             throw new IllegalArgumentException(String.format("[ERROR] %s 이름의 방이 이미 존재합니다.", roomName));
-        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -55,11 +54,20 @@ public class GameService {
     }
 
     public GameState readGameState(String roomName) {
+        List<String> stateAndColor = gameDao.readStateAndColor(roomName);
+        validateExistGame(stateAndColor, roomName);
+
         BoardDto boardDto = boardDao.readBoard(roomName);
         Board board = Board.of(new CustomBoardGenerator(boardDto));
-        List<String> stateAndColor = gameDao.readStateAndColor(roomName);
-
         return GameStateGenerator.generate(board, stateAndColor);
+    }
+
+    private void validateExistGame(List<String> stateAndColor, String roomName) {
+        if (stateAndColor.isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format("[ERROR] %s 이름에 해당하는 방이 없습니다.", roomName)
+            );
+        }
     }
 
     public GameState moveBoard(String roomName, Arguments arguments) {

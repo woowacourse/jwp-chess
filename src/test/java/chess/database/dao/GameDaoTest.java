@@ -9,22 +9,30 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import chess.database.dao.spring.SpringGameDao;
 import chess.database.dto.GameStateDto;
 import chess.database.dao.vanilla.JdbcConnector;
 import chess.database.dao.vanilla.JdbcGameDao;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 
+@SpringBootTest
 class GameDaoTest {
 
     private static final String TEST_ROOM_NAME = "TESTING";
     private static final String TEST_CREATION_ROOM_NAME = "TESTING2";
 
-    private final JdbcGameDao dao = new JdbcGameDao();
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    private GameDao dao;
 
     @BeforeEach
     void setUp() {
+        dao = new SpringGameDao(jdbcTemplate);
         GameState state = new Ready();
         dao.saveGame(GameStateDto.of(state), TEST_ROOM_NAME);
     }
@@ -72,11 +80,7 @@ class GameDaoTest {
 
     @AfterEach
     void afterAll() {
-        JdbcConnector.query("DELETE FROM game WHERE room_name = ?")
-            .parameters(TEST_ROOM_NAME)
-            .executeUpdate();
-        JdbcConnector.query("DELETE FROM game WHERE room_name = ?")
-            .parameters(TEST_CREATION_ROOM_NAME)
-            .executeUpdate();
+        dao.removeGame(TEST_ROOM_NAME);
+        dao.removeGame(TEST_CREATION_ROOM_NAME);
     }
 }

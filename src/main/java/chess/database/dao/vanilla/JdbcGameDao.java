@@ -1,13 +1,14 @@
 package chess.database.dao.vanilla;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
 import chess.database.dto.GameStateDto;
 import chess.database.dao.GameDao;
 
-@Repository
 public class JdbcGameDao implements GameDao {
 
     @Override
@@ -19,7 +20,7 @@ public class JdbcGameDao implements GameDao {
         if (holder.next()) {
             return holder.getStrings("state", "turn_color");
         }
-        throw new IllegalArgumentException("[ERROR] 해당하는 게임이 없습니다.");
+        return new ArrayList<>();
     }
 
     @Override

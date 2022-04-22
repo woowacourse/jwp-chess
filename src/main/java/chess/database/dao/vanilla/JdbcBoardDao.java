@@ -11,7 +11,6 @@ import chess.database.dto.PointDto;
 import chess.database.dto.RouteDto;
 import chess.database.dao.BoardDao;
 
-@Repository
 public class JdbcBoardDao implements BoardDao {
 
     @Override
@@ -82,7 +81,7 @@ public class JdbcBoardDao implements BoardDao {
 
     @Override
     public void removeBoard(String roomName) {
-        JdbcConnector.query("DELETE FROM board WHERE room_name = ?")
+            JdbcConnector.query("DELETE FROM board WHERE room_name = ?")
             .parameters(roomName)
             .executeUpdate();
     }

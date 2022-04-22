@@ -1,5 +1,6 @@
 package chess.database.dao;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,11 @@ public class FakeGameDao implements GameDao {
 
     @Override
     public List<String> readStateAndColor(String roomName) {
-        return memoryDatabase.get(roomName);
+        final List<String> stateAndColor = memoryDatabase.get(roomName);
+        if (stateAndColor == null) {
+            return new ArrayList<>();
+        }
+        return stateAndColor;
     }
 
     @Override

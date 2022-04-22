@@ -4,8 +4,8 @@ const $currentTurn = document.querySelector('#currentTurn');
 
 const $gameSetResult = document.querySelector('#game-result');
 const $winner = document.querySelector('#winner');
-const $currentBlackScore = document.querySelector('#currentBlackScore');
-const $currentWhiteScore = document.querySelector('#currentWhiteScore');
+const $currentBlackScore = document.querySelector('#blackScore');
+const $currentWhiteScore = document.querySelector('#whiteScore');
 
 $board.addEventListener('click', onClickSquare)
 
@@ -56,9 +56,9 @@ function update(response) {
     boardRender(response.board);
     $currentTurn.innerHTML = response.currentTurn;
     turn = response.currentTurn;
-    $currentBlackScore.innerHTML = response.currentBlackScore;
-    $currentWhiteScore.innerHTML = response.currentWhiteScore;
-
+    $currentBlackScore.innerHTML = response.blackScore;
+    $currentWhiteScore.innerHTML = response.whiteScore;
+    console.log(response);
     if (response.gameSet) {
         showResult(response)
     }

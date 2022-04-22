@@ -17,18 +17,25 @@ import org.springframework.stereotype.Service;
 @Service
 public final class ChessService {
 
-    private static final ChessGameDAO CHESS_GAME_DAO = new ChessGameDAO();
-    private static final MovementDAO MOVEMENT_DAO = new MovementDAO();
+//    private static final ChessGameDAO CHESS_GAME_DAO = new ChessGameDAO();
+//    private static final MovementDAO MOVEMENT_DAO = new MovementDAO();
+    private final ChessGameDAO chessGameDAO;
+    private final MovementDAO movementDAO;
+
+    public ChessService(final ChessGameDAO chessGameDAO, final MovementDAO movementDAO) {
+        this.chessGameDAO = chessGameDAO;
+        this.movementDAO = movementDAO;
+    }
 
     public String addChessGame(final String gameName) throws SQLException {
         ChessGame chessGame = new ChessGame(new ChessBoardGenerator());
         chessGame.setName(gameName);
 
-        return CHESS_GAME_DAO.addGame(chessGame);
+        return chessGameDAO.addGame(chessGame);
     }
 
     public ChessGame getChessGamePlayed(final String gameId) throws SQLException {
-        List<Movement> movementByGameId = MOVEMENT_DAO.findMovementByGameId(gameId);
+        List<Movement> movementByGameId = movementDAO.findMovementByGameId(gameId);
         ChessGame chessGame = ChessGame.initChessGame();
         for (Movement movement : movementByGameId) {
             chessGame.execute(movement);
@@ -43,7 +50,7 @@ public final class ChessService {
         validateCurrentTurn(chessGame, team);
         move(chessGame, new Movement(Position.of(source), Position.of(target)), team);
         if (chessGame.isGameSet()){
-            CHESS_GAME_DAO.updateGameEnd(gameId);
+            chessGameDAO.updateGameEnd(gameId);
         }
         return chessGame;
     }
@@ -58,7 +65,7 @@ public final class ChessService {
         chessGame.execute(movement);
         movement.setGameId(chessGame.getId());
         movement.setTeam(team);
-        int insertedRowCount = MOVEMENT_DAO.addMoveCommand(movement);
+        int insertedRowCount = movementDAO.addMoveCommand(movement);
 
         if (insertedRowCount == 0) {
             throw new IllegalArgumentException("플레이어의 턴이 아닙니다");
@@ -73,16 +80,16 @@ public final class ChessService {
     }
 
     public List<ChessGameRoomInfoDTO> getGames() throws SQLException {
-        return CHESS_GAME_DAO.findActiveGames();
+        return chessGameDAO.findActiveGames();
     }
 
     public ChessGameRoomInfoDTO findGameById(String id) {
-        return CHESS_GAME_DAO.findGameById(id);
+        return chessGameDAO.findGameById(id);
     }
 
     public Map<String, Object> getResult(ChessGame chessGame) throws SQLException {
         final Map<String, Object> model = new HashMap<>();
-        CHESS_GAME_DAO.updateGameEnd(chessGame.getId());
+        chessGameDAO.updateGameEnd(chessGame.getId());
         model.put("gameResult", result(chessGame));
         model.put("isGameSet", Boolean.TRUE);
 

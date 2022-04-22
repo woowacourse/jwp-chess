@@ -4,6 +4,7 @@ import chess.dto.ChessGameRoomInfoDTO;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,11 @@ import org.springframework.stereotype.Repository;
 public class ChessGameDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<ChessGameRoomInfoDTO> chessGameRoomInfoDTORowMapper = (rs, rowNum) ->
+            new ChessGameRoomInfoDTO(
+                    rs.getString("id"),
+                    rs.getString("name")
+            );
 
     public ChessGameDAO(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -32,34 +38,15 @@ public class ChessGameDAO {
 
     public List<ChessGameRoomInfoDTO> findActiveGames() {
         String sql = "SELECT id, name FROM CHESS_GAME WHERE IS_END = false";
-        List<ChessGameRoomInfoDTO> chessGameRoomInfoDTOs = jdbcTemplate.query(
-                sql,
-                (rs, rowNum) -> {
-                    ChessGameRoomInfoDTO chessGameRoomInfoDTO = new ChessGameRoomInfoDTO(
-                            rs.getString("id"),
-                            rs.getString("name")
-                    );
-                    return chessGameRoomInfoDTO;
-                }
-        );
-        return chessGameRoomInfoDTOs;
+        return jdbcTemplate.query(sql, chessGameRoomInfoDTORowMapper);
     }
 
     public ChessGameRoomInfoDTO findGameById(final String gameId) {
         String sql = "SELECT id, name FROM CHESS_GAME WHERE ID = ? AND IS_END = FALSE ORDER BY created_at";
-
-        return jdbcTemplate.queryForObject(
-                sql,
-                (rs, rowNum) -> {
-                    ChessGameRoomInfoDTO chessGameRoomInfoDTO = new ChessGameRoomInfoDTO(
-                            rs.getString("id"),
-                            rs.getString("name")
-                    );
-                    return chessGameRoomInfoDTO;
-                }, gameId);
+        return jdbcTemplate.queryForObject(sql, chessGameRoomInfoDTORowMapper, gameId);
     }
 
-    public void updateGameEnd(final String gameId)  {
+    public void updateGameEnd(final String gameId) {
         String sql = "UPDATE chess_game SET is_end = true WHERE id = ?";
         jdbcTemplate.update(sql, gameId);
     }

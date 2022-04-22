@@ -189,7 +189,6 @@ function fetchNewChess() {
             toggleState(res.state);
             initPieces(res.pieces);
             activateLoadGame();
-            console.log(res);
         })
 }
 
@@ -263,7 +262,7 @@ function fetchResult() {
 }
 
 function fetchFinalResult() {
-    c
+    let boardId = document.getElementById("board-id").value;
     fetch('http://localhost:8080/end?boardId=' + boardId, {
         method: 'GET',
         headers: {

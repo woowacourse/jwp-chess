@@ -7,4 +7,8 @@ public class ScoreDto {
     public ScoreDto(String scoreStatus) {
         this.scoreStatus = scoreStatus;
     }
+
+    public String getScoreStatus() {
+        return scoreStatus;
+    }
 }

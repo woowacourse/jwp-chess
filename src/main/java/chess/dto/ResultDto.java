@@ -7,4 +7,8 @@ public class ResultDto {
     public ResultDto(String result) {
         this.result = result;
     }
+
+    public String getResult() {
+        return result;
+    }
 }

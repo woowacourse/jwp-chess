@@ -3,7 +3,6 @@ package chess.dao;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -20,18 +19,16 @@ public class GameDao {
     }
 
     public int saveAndGetGeneratedId() {
-        final String sql = addTable("INSERT INTO %s (state) VALUES (:state)");
+        final String sql = addTable("INSERT INTO %s VALUES ()");
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        SqlParameterSource paramSource = new MapSqlParameterSource("state", GameState.RUNNING.name());
-        namedParameterJdbcTemplate.update(sql, paramSource, keyHolder);
+        namedParameterJdbcTemplate.update(sql, new EmptySqlParameterSource(), keyHolder);
         return keyHolder.getKey().intValue();
     }
 
     public void finishGame(int gameId) {
-        final String sql = addTable("UPDATE %s SET state = :state WHERE id = :game_id");
+        final String sql = addTable("UPDATE %s SET running = false WHERE id = :game_id");
         MapSqlParameterSource paramSource = new MapSqlParameterSource();
         paramSource.addValue("game_id", gameId);
-        paramSource.addValue("state", GameState.OVER.name());
 
         namedParameterJdbcTemplate.update(sql, paramSource);
     }
@@ -49,11 +46,9 @@ public class GameDao {
         return namedParameterJdbcTemplate.queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
     }
 
-    public int countByState(GameState state) {
-        final String sql = addTable("SELECT COUNT(*) FROM %s WHERE state = :state");
-
-        MapSqlParameterSource paramSource = new MapSqlParameterSource("state", state.name());
-        return namedParameterJdbcTemplate.queryForObject(sql, paramSource, Integer.class);
+    public int countRunningGames() {
+        final String sql = addTable("SELECT COUNT(*) FROM %s WHERE running = true");
+        return namedParameterJdbcTemplate.queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
     }
 
     protected String addTable(String sql) {

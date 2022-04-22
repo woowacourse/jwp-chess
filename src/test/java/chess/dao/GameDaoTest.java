@@ -34,10 +34,10 @@ class GameDaoTest {
         jdbcTemplate.execute("DROP TABLE game_test IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE game_test("
                 + "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
-                + "state ENUM('RUNNING', 'OVER') NOT NULL)");
+                + "running BOOLEAN NOT NULL DEFAULT true)");
 
-        jdbcTemplate.execute("INSERT INTO game_test (id, state) "
-                + "VALUES (1, 'RUNNING'), (2, 'OVER')");
+        jdbcTemplate.execute("INSERT INTO game_test (id, running) "
+                + "VALUES (1, true), (2, false)");
     }
 
     @Test
@@ -48,13 +48,13 @@ class GameDaoTest {
     }
 
     @Test
-    void finishGame_메서드로_게임의_상태를_OVER로_변경가능() {
+    void finishGame_메서드로_게임을_종료된_상태로_변경가능() {
         dao.finishGame(1);
 
-        String actual = jdbcTemplate.queryForObject(
-                "SELECT state FROM game_test WHERE id = 1", String.class);
+        boolean actual = jdbcTemplate.queryForObject(
+                "SELECT running FROM game_test WHERE id = 1", Boolean.class);
 
-        assertThat(actual).isEqualTo("OVER");
+        assertThat(actual).isFalse();
     }
 
     @Test
@@ -79,8 +79,8 @@ class GameDaoTest {
     }
 
     @Test
-    void countByState_메서드로_특정_state에_해당되는_데이터의_개수_조회가능() {
-        int actual = dao.countByState(GameState.OVER);
+    void countRunningGames_메서드로_running값이_참인_데이터의_개수_조회가능() {
+        int actual = dao.countRunningGames();
 
         assertThat(actual).isEqualTo(1);
     }

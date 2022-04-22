@@ -1,6 +1,5 @@
 package chess.service;
 
-import chess.dao.GameState;
 import chess.dao.EventDao;
 import chess.dao.GameDao;
 import chess.domain.event.Event;
@@ -30,7 +29,7 @@ public class ChessService {
 
     public GameCountDto countGames() {
         int totalCount = gameDao.countAll();
-        int runningCount = gameDao.countByState(GameState.RUNNING);
+        int runningCount = gameDao.countRunningGames();
 
         return new GameCountDto(totalCount, runningCount);
     }

@@ -77,4 +77,11 @@ public class SpringWebChessController {
         return "redirect:/end";
     }
 
+    @PostMapping("/save")
+    public String save() {
+        if (chessService.checkStatus(Status.PLAYING)) {
+            chessService.save();
+        }
+        return "redirect:/play";
+    }
 }

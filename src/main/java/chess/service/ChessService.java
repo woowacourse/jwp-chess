@@ -55,20 +55,17 @@ public class ChessService {
         return new ResponseDto1(200, null);
     }
 
-    public ResponseDto1 save() {
-        try{
-            int gameId = gameDao.save(chessBoard);
-            for (Map.Entry<String, ChessPiece> entry : chessBoard.convertToMap().entrySet()) {
-                boardDao.save(
-                        gameId,
-                        getPosition(entry),
-                        getPiece(entry),
-                        getColor(entry));
-            }
-        } catch (IllegalArgumentException e){
-            return new ResponseDto1(500, e.getMessage());
+    }
+
+    public void save() {
+        int gameId = gameDao.save(chessBoard);
+        for (Map.Entry<String, ChessPiece> entry : chessBoard.convertToMap().entrySet()) {
+            boardDao.save(
+                    gameId,
+                    getPosition(entry),
+                    getPiece(entry),
+                    getColor(entry));
         }
-        return new ResponseDto1(200, null);
     }
 
     private String getPosition(Map.Entry<String, ChessPiece> entry) {

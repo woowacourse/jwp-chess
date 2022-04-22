@@ -32,4 +32,8 @@ public enum Turn {
         }
         throw new IllegalStateException("END상태는 반대 턴이 없습니다.");
     }
+
+    public boolean isEnd() {
+        return this == END;
+    }
 }

@@ -95,4 +95,16 @@ class ChessGameControllerTest {
 				.then().log().all()
 				.statusCode(HttpStatus.OK.value());
 	}
+
+	@Test
+	@DisplayName("게임 종료 여부 판별")
+	void chessGameStatus() {
+		createNewGame();
+
+		RestAssured.given().log().all()
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.when().get("chessgames/1/status")
+				.then().log().all()
+				.statusCode(HttpStatus.OK.value());
+	}
 }

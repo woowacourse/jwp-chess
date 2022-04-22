@@ -55,6 +55,11 @@ public class ChessGameService {
 		return chessGameState.currentScore();
 	}
 
+	public boolean isEndGame(long chessGameId) {
+		Turn currentTurn = findChessGameTurn(chessGameId);
+		return currentTurn.isEnd();
+	}
+
 	private ChessGameState findChessGameState(long chessGameId) {
 		Turn currentTurn = findChessGameTurn(chessGameId);
 		ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);

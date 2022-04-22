@@ -17,6 +17,4 @@ public interface PieceDao {
     void updatePosition(long gameId, Position start, Position target);
 
     void delete(long gameId, Position position);
-
-    void deleteAll(long gameId);
 }

@@ -55,9 +55,4 @@ public class FakePieceDao implements PieceDao {
     public void delete(long gameId, Position position) {
         pieces.get(gameId).remove(position);
     }
-
-    @Override
-    public void deleteAll(long gameId) {
-        pieces.get(gameId).clear();
-    }
 }

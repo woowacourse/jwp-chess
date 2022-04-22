@@ -19,9 +19,11 @@ public class SpringJdbcMemberDao implements MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Optional<Member>> memberRowMapper = (resultSet, rowNumber) -> Optional.of(
-            new Member(resultSet.getLong("id"), resultSet.getString("name"))
-    );
+    private final RowMapper<Member> memberRowMapper = (resultSet, rowNumber) ->
+            new Member(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name")
+            );
 
     private final RowMapper<List<Member>> membersRowMapper = (resultSet, rowNumber) -> {
         List<Member> members = new ArrayList<>();
@@ -52,13 +54,13 @@ public class SpringJdbcMemberDao implements MemberDao {
     @Override
     public Optional<Member> findById(final Long id) {
         final String sql = "select id, name from Member where id = ?";
-        return jdbcTemplate.queryForObject(sql, memberRowMapper, id);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, id));
     }
 
     @Override
     public List<Member> findAll() {
         final String sql = "select id, name from Member";
-        return jdbcTemplate.queryForObject(sql, membersRowMapper);
+        return jdbcTemplate.query(sql, memberRowMapper);
     }
 
     @Override

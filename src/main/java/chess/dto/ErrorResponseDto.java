@@ -1,12 +1,9 @@
 package chess.dto;
 
 import chess.controller.StatusCode;
-import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 
 public class ErrorResponseDto {
 
-    @SerializedName("error")
     private final String errorMessage;
     private final StatusCode statusCode;
 
@@ -17,11 +14,5 @@ public class ErrorResponseDto {
 
     public static ErrorResponseDto of(final Exception e, final StatusCode statusCode) {
         return new ErrorResponseDto(e.getMessage(), statusCode);
-    }
-
-    public static StatusCode toStatusCode(final String json) {
-        final Gson gson = new Gson();
-        final ErrorResponseDto dto = gson.fromJson(json, ErrorResponseDto.class);
-        return dto.statusCode;
     }
 }

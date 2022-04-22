@@ -5,18 +5,15 @@ import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.CurrentTurnDto;
 import chess.dto.RoomStatusDto;
-import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RoomService {
 
     private final RoomDao roomDao;
-    private final Gson gson;
 
     public RoomService(final RoomDao roomDao) {
         this.roomDao = roomDao;
-        this.gson = new Gson();
     }
 
     public boolean isExistRoom(final String roomName) {
@@ -36,10 +33,9 @@ public class RoomService {
         }
     }
 
-    public String findCurrentTurn(final String roomName) {
+    public CurrentTurnDto findCurrentTurn(final String roomName) {
         checkRoomExist(roomName);
-        final CurrentTurnDto dto = roomDao.findCurrentTurnByName(roomName);
-        return gson.toJson(dto);
+        return roomDao.findCurrentTurnByName(roomName);
     }
 
     private void checkRoomExist(final String roomName) {

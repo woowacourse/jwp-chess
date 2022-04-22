@@ -23,7 +23,8 @@ public class RoomDao {
 
     public boolean isExistName(final String roomName) {
         final String sql = "SELECT name FROM room WHERE name = ?";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, roomName);
+        final String name = jdbcTemplate.queryForObject(sql, String.class, roomName);
+        return name != null;
     }
 
     public CurrentTurnDto findCurrentTurnByName(final String roomName) {

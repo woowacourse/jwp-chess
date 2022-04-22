@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.domain.Score;
 import chess.dto.ChessPieceDto;
+import chess.dto.CurrentTurnDto;
 import chess.dto.MoveRequestDto;
 import chess.result.EndResult;
 import chess.result.MoveResult;
@@ -65,8 +66,9 @@ public class ChessController {
     }
 
     @GetMapping("/{roomName}/turn")
-    public String findTurn(@PathVariable("roomName") final String roomName) {
-        return roomService.findCurrentTurn(roomName);
+    public ResponseEntity<CurrentTurnDto> findTurn(@PathVariable("roomName") final String roomName) {
+        final CurrentTurnDto currentTurn = roomService.findCurrentTurn(roomName);
+        return ResponseEntity.ok(currentTurn);
     }
 
     @GetMapping("/{roomName}/result")

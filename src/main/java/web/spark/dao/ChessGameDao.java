@@ -5,13 +5,18 @@ import chess.piece.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import web.spark.dto.ChessGameDto;
 import web.spark.dto.GameStatus;
 
+@Repository
 public class ChessGameDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public ChessGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -22,7 +27,7 @@ public class ChessGameDao {
                 this::createChessGameDto);
     }
 
-    private ChessGameDto createChessGameDto(ResultSet rs) throws SQLException {
+    private ChessGameDto createChessGameDto(ResultSet rs, int rowNum) throws SQLException {
         int id = rs.getInt("id");
         String name = rs.getString("name");
         GameStatus status = GameStatus.valueOf(rs.getString("status"));
@@ -48,7 +53,7 @@ public class ChessGameDao {
     public void updateChessGame(ChessGameDto chessGameDto) {
         jdbcTemplate.update(
                 "UPDATE chess_game SET status=?, current_color=?, black_score=?, white_score=? WHERE id = ?",
-                chessGameDto.getStatus(), chessGameDto.getCurrentColor(),
+                chessGameDto.getStatus().name(), chessGameDto.getCurrentColor().name(),
                 chessGameDto.getBlackScore().getValue().toPlainString(),
                 chessGameDto.getWhiteScore().getValue().toPlainString(), chessGameDto.getId());
     }

@@ -1,5 +1,6 @@
 package web.spark.dao;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -10,17 +11,42 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import web.spark.dto.ChessGameDto;
 import web.spark.dto.GameStatus;
 
+@JdbcTest
 public class ChessGameDaoTest {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     private ChessGameDao chessGameDao;
     private PieceDao pieceDao;
 
     @BeforeEach
     void setUp() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        jdbcTemplate.execute("DROP TABLE IF EXISTS piece");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS chess_game");
+        jdbcTemplate.execute("CREATE TABLE chess_game\n"
+                + "(\n"
+                + "    id            INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,\n"
+                + "    name          VARCHAR(10) NOT NULL,\n"
+                + "    status        VARCHAR(10) NOT NULL,\n"
+                + "    current_color CHAR(5)     NOT NULL,\n"
+                + "    black_score   VARCHAR(10) NOT NULL,\n"
+                + "    white_score   VARCHAR(10) NOT NULL\n"
+                + ")");
+        jdbcTemplate.execute("CREATE TABLE piece\n"
+                + "(\n"
+                + "    position      CHAR(2)     NOT NULL,\n"
+                + "    chess_game_id INT         NOT NULL,\n"
+                + "    color         CHAR(5)     NOT NULL,\n"
+                + "    type          VARCHAR(10) NOT NULL,\n"
+                + "    PRIMARY KEY (position, chess_game_id),\n"
+                + "    FOREIGN KEY (chess_game_id) REFERENCES chess_game (id)\n"
+                + ")");
 
         pieceDao = new PieceDao(jdbcTemplate);
         pieceDao.deleteAll();

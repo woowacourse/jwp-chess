@@ -10,16 +10,14 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 import web.spark.controller.ChessGameController;
 import web.spark.controller.LobbyController;
 import web.spark.dao.ChessGameDao;
-import web.spark.dao.JdbcTemplate;
 import web.spark.dao.PieceDao;
 import web.spark.service.ChessGameService;
 
 public class WebApplication {
 
     public static void main(String[] args) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        PieceDao pieceDao = new PieceDao(jdbcTemplate);
-        ChessGameDao chessGameDao = new ChessGameDao(jdbcTemplate);
+        PieceDao pieceDao = new PieceDao(null);
+        ChessGameDao chessGameDao = new ChessGameDao(null);
 
         ChessGameService chessGameService = new ChessGameService(pieceDao, chessGameDao);
 

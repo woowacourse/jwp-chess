@@ -25,9 +25,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import web.spark.dto.PieceDto;
 import web.spark.dto.PieceType;
 
+@Repository
 public class PieceDao {
 
     private static final Map<String, Rank> RANKS = Map.of(
@@ -48,7 +51,7 @@ public class PieceDao {
                 this::mapToPieceDTO, chessGameId);
     }
 
-    private PieceDto mapToPieceDTO(ResultSet rs) throws SQLException {
+    private PieceDto mapToPieceDTO(ResultSet rs, int rowNum) throws SQLException {
         Position position = createPosition(rs.getString("position"));
         PieceType type = PieceType.valueOf(rs.getString("type"));
         Color color = Color.valueOf(rs.getString("color"));
@@ -68,7 +71,7 @@ public class PieceDao {
 
     public void savePiece(int chessGameId, PieceDto pieceDto) {
         jdbcTemplate.update("INSERT INTO piece(chess_game_id, position, type, color) VALUES(?, ?, ?, ?)",
-                chessGameId, pieceDto.getPosition(), pieceDto.getType().name(), pieceDto.getColor().name());
+                chessGameId, pieceDto.getPosition().toString(), pieceDto.getType().name(), pieceDto.getColor().name());
     }
 
     public void savePieces(int chessGameId, List<PieceDto> pieceDtos) {

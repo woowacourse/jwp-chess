@@ -14,12 +14,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ChessService {
+public class SpringChessService {
 
     private final ChessGameDao chessGameDao;
     private final BoardDao boardDao;
 
-    public ChessService(ChessGameDao chessGameDao, BoardDao boardDao) {
+    public SpringChessService(ChessGameDao chessGameDao, BoardDao boardDao) {
         this.chessGameDao = chessGameDao;
         this.boardDao = boardDao;
     }

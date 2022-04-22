@@ -6,9 +6,7 @@ import static spark.Spark.post;
 import static spark.Spark.staticFileLocation;
 
 import chess.domain.piece.Piece;
-import chess.repository.spring.BoardDao;
-import chess.repository.spring.ChessGameDao;
-import chess.service.ChessService;
+import chess.service.SparkChessService;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,49 +20,49 @@ public class SparkController {
     private static final int ROW_INDEX = 1;
 
     public void run() {
-//        staticFileLocation("/static");
-//        ChessService chessService = new ChessService();
-//        getIndexPage(chessService);
-//        createChessGame(chessService);
-//        deleteChessGame(chessService);
-//        getChessGamePage(chessService);
-//        movePiece(chessService);
-//        resetChessGame(chessService);
-//        getException();
+        staticFileLocation("/static");
+        SparkChessService chessService = new SparkChessService();
+        getIndexPage(chessService);
+        createChessGame(chessService);
+        deleteChessGame(chessService);
+        getChessGamePage(chessService);
+        movePiece(chessService);
+        resetChessGame(chessService);
+        getException();
     }
 
-    private void getIndexPage(final ChessService chessService) {
+    private void getIndexPage(final SparkChessService springChessService) {
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            model.put("chess_games", chessService.loadAllChessGames());
+            model.put("chess_games", springChessService.loadAllChessGames());
             return new ModelAndView(model, "index.html");
         }, new HandlebarsTemplateEngine());
     }
 
-    private void createChessGame(final ChessService chessService) {
+    private void createChessGame(final SparkChessService springChessService) {
         post("/create_chess_game", (req, res) -> {
             String name = req.queryParams("name");
-            chessService.createChessGame(name);
+            springChessService.createChessGame(name);
             res.redirect("/game/" + name);
             return null;
         });
     }
 
-    private void getChessGamePage(final ChessService chessService) {
+    private void getChessGamePage(final SparkChessService springChessService) {
         get("/game/:name", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             String name = req.params(":name");
             model.put("chess_game_name", name);
-            Map<String, Piece> boardForHtml = convertBoardForHtml(chessService, name);
+            Map<String, Piece> boardForHtml = convertBoardForHtml(springChessService, name);
             model.putAll(boardForHtml);
-            model.put("turn", chessService.loadChessGame(name).getTurn());
-            model.put("result", chessService.loadChessGame(name).generateResult());
+            model.put("turn", springChessService.loadChessGame(name).getTurn());
+            model.put("result", springChessService.loadChessGame(name).generateResult());
             return new ModelAndView(model, "chess_game.html");
         }, new HandlebarsTemplateEngine());
     }
 
-    private Map<String, Piece> convertBoardForHtml(ChessService chessService, String name) {
-        return chessService.loadChessGame(name).getCurrentBoard().entrySet().stream()
+    private Map<String, Piece> convertBoardForHtml(final SparkChessService springChessService, final String name) {
+        return springChessService.loadChessGame(name).getCurrentBoard().entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> String.valueOf(entry.getKey().getColumn().getValue()) +
                                 entry.getKey().getRow().getValue(),
@@ -72,20 +70,20 @@ public class SparkController {
                 ));
     }
 
-    private void deleteChessGame(final ChessService chessService) {
+    private void deleteChessGame(final SparkChessService springChessService) {
         post("/delete/:name", (req, res) -> {
-            chessService.deleteChessGame(req.params(":name"));
+            springChessService.deleteChessGame(req.params(":name"));
             res.redirect("/");
             return null;
         });
     }
 
-    private void movePiece(final ChessService chessService) {
+    private void movePiece(final SparkChessService springChessService) {
         post("/move/:chess_game_name", (req, res) -> {
             String chessGameName = req.params(":chess_game_name");
             String rawSource = req.queryParams("source").trim().toLowerCase();
             String rawTarget = req.queryParams("target").trim().toLowerCase();
-            chessService.movePiece(
+            springChessService.movePiece(
                     chessGameName,
                     rawSource.charAt(COLUMN_INDEX),
                     Character.getNumericValue(rawSource.charAt(ROW_INDEX)),
@@ -97,10 +95,10 @@ public class SparkController {
         });
     }
 
-    private void resetChessGame(final ChessService chessService) {
+    private void resetChessGame(final SparkChessService springChessService) {
         post("/reset/:chess_game_name", (req, res) -> {
             String chessGameName = req.params(":chess_game_name");
-            chessService.createChessGame(chessGameName);
+            springChessService.createChessGame(chessGameName);
             res.redirect("/game/" + chessGameName);
             return null;
         });

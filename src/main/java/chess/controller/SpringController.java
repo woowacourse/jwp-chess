@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.domain.piece.Piece;
-import chess.service.ChessService;
+import chess.service.SpringChessService;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,38 +22,38 @@ public class SpringController {
     private static final int COLUMN_INDEX = 0;
     private static final int ROW_INDEX = 1;
 
-    private final ChessService chessService;
+    private final SpringChessService springChessService;
 
-    public SpringController(final ChessService chessService) {
-        this.chessService = chessService;
+    public SpringController(final SpringChessService springChessService) {
+        this.springChessService = springChessService;
     }
 
     @GetMapping("/")
     public String getIndexPage(final Model model) {
         Map<String, Object> attributes = new HashMap<>();
-        attributes.put("chess_games", chessService.loadAllChessGames());
+        attributes.put("chess_games", springChessService.loadAllChessGames());
         model.addAllAttributes(attributes);
         return "index";
     }
 
     @PostMapping("/create_chess_game")
     public RedirectView createChessGame(final @RequestParam String name) {
-        chessService.createChessGame(name);
-        return new RedirectView("/");
+        springChessService.createChessGame(name);
+        return new RedirectView("/game/" + name);
     }
 
     @GetMapping("/game/{name}")
     public String getChessGamePage(final Model model, final @PathVariable String name) {
-        Map<String, Piece> boardForHtml = convertBoardForHtml(chessService, name);
+        Map<String, Piece> boardForHtml = convertBoardForHtml(springChessService, name);
         model.addAllAttributes(boardForHtml);
         model.addAttribute("chess_game_name", name);
-        model.addAttribute("turn", chessService.loadChessGame(name).getTurn());
-        model.addAttribute("result", chessService.loadChessGame(name).generateResult());
+        model.addAttribute("turn", springChessService.loadChessGame(name).getTurn());
+        model.addAttribute("result", springChessService.loadChessGame(name).generateResult());
         return "chess_game";
     }
 
-    private Map<String, Piece> convertBoardForHtml(final ChessService chessService, final String name) {
-        return chessService.loadChessGame(name).getCurrentBoard().entrySet().stream()
+    private Map<String, Piece> convertBoardForHtml(final SpringChessService springChessService, final String name) {
+        return springChessService.loadChessGame(name).getCurrentBoard().entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> String.valueOf(entry.getKey().getColumn().getValue()) +
                                 entry.getKey().getRow().getValue(),
@@ -63,7 +63,7 @@ public class SpringController {
 
     @PostMapping("/delete/{name}")
     public RedirectView deleteChessGame(final @PathVariable String name) {
-        chessService.deleteChessGame(name);
+        springChessService.deleteChessGame(name);
         return new RedirectView("/");
     }
 
@@ -71,19 +71,21 @@ public class SpringController {
     public RedirectView movePiece(final @PathVariable String chess_game_name,
                                   final @RequestParam String source,
                                   final @RequestParam String target) {
-        chessService.movePiece(
+        String refinedSource = source.trim().toLowerCase();
+        String refinedTarget = target.trim().toLowerCase();
+        springChessService.movePiece(
                 chess_game_name,
-                source.charAt(COLUMN_INDEX),
-                Character.getNumericValue(source.charAt(ROW_INDEX)),
-                target.charAt(COLUMN_INDEX),
-                Character.getNumericValue(target.charAt(ROW_INDEX))
+                refinedSource.charAt(COLUMN_INDEX),
+                Character.getNumericValue(refinedSource.charAt(ROW_INDEX)),
+                refinedTarget.charAt(COLUMN_INDEX),
+                Character.getNumericValue(refinedTarget.charAt(ROW_INDEX))
         );
         return new RedirectView("/game/" + chess_game_name);
     }
 
     @PostMapping("/reset/{chess_game_name}")
     public RedirectView resetChessGame(final @PathVariable String chess_game_name) {
-        chessService.createChessGame(chess_game_name);
+        springChessService.createChessGame(chess_game_name);
         return new RedirectView("/game/" + chess_game_name);
     }
 

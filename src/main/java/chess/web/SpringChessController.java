@@ -44,6 +44,11 @@ public class SpringChessController {
         return ResponseEntity.ok(gameService.startNewGame(roomId));
     }
 
+    @GetMapping("/load")
+    public ResponseEntity loadGame(@RequestParam int roomId) {
+        return ResponseEntity.ok(gameService.loadGame(roomId));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity validateName() {
         return ResponseEntity.badRequest().build();

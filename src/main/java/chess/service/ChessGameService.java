@@ -15,7 +15,9 @@ import chess.dto.PieceDto;
 import chess.dto.PiecesDto;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessGameService {
 
     private final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
@@ -23,50 +25,47 @@ public class ChessGameService {
     private final PieceDao pieceDao;
     private final GameDao gameDao;
 
-    private final String gameId;
-    private ChessGame game;
-
-    public ChessGameService(String gameId) {
+    public ChessGameService() {
         this.pieceDao = new PieceDao();
         this.gameDao = new GameDao();
-        this.gameId = gameId;
     }
 
-    public PiecesDto createOrGet() {
+    public PiecesDto createOrGet(String gameId) {
         if (!gameDao.findById(gameId)) {
-            createGame();
-            initGame();
-            return new PiecesDto(toDto(game.getChessmen()));
+            initGame(gameId);
+            return new PiecesDto(toDto(getChessmenFromDB(gameId)));
         }
-        boolean forceEndFlag = gameDao.findForceEndFlagById(gameId);
-        Color turn = gameDao.findTurnById(gameId);
-        Pieces chessmen = pieceDao.findAllByGameId(gameId);
-
-        game = new ChessGame(forceEndFlag, chessmen, turn);
-
-        return new PiecesDto(toDto(game.getChessmen()));
-    }
-
-    private void createGame() {
-        game = new ChessGame();
+        return new PiecesDto(toDto(getChessmenFromDB(gameId)));
     }
 
     private List<PieceDto> toDto(Pieces chessmen) {
         List<PieceDto> pieces = new ArrayList<>();
         for (Piece piece : chessmen.getPieces()) {
             pieces.add(new PieceDto(piece.getPosition().getPosition(),
-                piece.getColor().getName(),
-                piece.getName()));
+                    piece.getColor().getName(),
+                    piece.getName()));
         }
         return pieces;
     }
 
-    public PiecesDto getCurrentGame() {
-        return new PiecesDto(toDto(game.getChessmen()));
+    public ChessGame getGameFromDB(String gameId) {
+        boolean forceEndFlag = gameDao.findForceEndFlagById(gameId);
+        Color turn = gameDao.findTurnById(gameId);
+        Pieces chessmen = pieceDao.findAllByGameId(gameId);
+        return new ChessGame(forceEndFlag, chessmen, turn);
     }
 
-    public GameResultDto calculateGameResult() {
-        GameResult gameResult = GameResult.calculate(game.getChessmen());
+    public Pieces getChessmenFromDB(String gameId) {
+        return pieceDao.findAllByGameId(gameId);
+
+    }
+
+    public PiecesDto getCurrentGame(String gameId) {
+        return new PiecesDto(toDto(getGameFromDB(gameId).getChessmen()));
+    }
+
+    public GameResultDto calculateGameResult(String gameId) {
+        GameResult gameResult = GameResult.calculate(getGameFromDB(gameId).getChessmen());
         return new GameResultDto(gameResult.getWinner().getName(),
             gameResult.getWhiteScore(),
             gameResult.getBlackScore());
@@ -78,34 +77,32 @@ public class ChessGameService {
 //        game.clean();
 //    }
 
-    private void initGame() {
-        gameDao.saveById(gameId);
+    private void initGame(String gameId) {
+        gameDao.createById(gameId);
         Pieces chessmen = chessmenInitializer.init();
         pieceDao.saveAllByGameId(chessmen.getPieces(), gameId);
-
-        game = ChessGame.of(chessmen);
     }
 
-    public void move(MoveCommandDto moveCommandDto) {
+    public void move(String gameId, MoveCommandDto moveCommandDto) {
         String from = moveCommandDto.getSource();
         String to = moveCommandDto.getTarget();
-        game.moveChessmen(new MoveCommand(from, to));
+        getGameFromDB(gameId).moveChessmen(new MoveCommand(from, to));
+        saveMove(gameId,moveCommandDto);
     }
 
-    public void save() {
-        Pieces chessmen = game.getChessmen();
-        Color turn = game.getTurn();
-        boolean forceEndFlag = game.getForceEndFlag();
+    private void saveMove(String gameId, MoveCommandDto moveCommandDto) {
+        ChessGame chessGame = getGameFromDB(gameId);
+        chessGame.moveChessmen(moveCommandDto.toEntity());
+        boolean forceEndFlag = chessGame.getForceEndFlag();
+        Color turn = chessGame.getTurn();
 
         pieceDao.deleteAllByGameId(gameId);
-        pieceDao.saveAllByGameId(chessmen.getPieces(), gameId);
+        pieceDao.saveAllByGameId(chessGame.getChessmen().getPieces(), gameId);
         gameDao.updateTurnById(turn, gameId);
         gameDao.updateForceEndFlagById(forceEndFlag, gameId);
     }
 
-    public void forceEnd() {
-        game.forceEnd();
-        save();
+    public void forceEnd(String gameId) {
+        gameDao.updateForceEndFlagById(true, gameId);
     }
-
 }

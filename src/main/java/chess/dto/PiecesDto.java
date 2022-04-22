@@ -4,7 +4,10 @@ import java.util.List;
 
 public class PiecesDto {
 
-    private final List<PieceDto> pieces;
+    private List<PieceDto> pieces;
+
+    public PiecesDto() {
+    }
 
     public PiecesDto(List<PieceDto> pieces) {
         this.pieces = pieces;

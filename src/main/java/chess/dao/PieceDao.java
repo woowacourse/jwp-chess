@@ -4,6 +4,7 @@ import chess.dao.util.DatabaseConnector;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Pieces;
+import chess.dto.MoveCommandDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,6 +37,47 @@ public class PieceDao {
             throw new IllegalArgumentException(INVALID_PIECE_VALUE_EXCEPTION_MESSAGE);
         }
     }
+
+    public void updateAllByGameId(List<Piece> pieces, String gameId) {
+        final Connection connection = databaseConnector.getConnection();
+        final String sql = "UPDATE piece SET position = ? "
+                + "WHERE game_id = ? "
+                + "AND name = ? "
+                + "AND color = ?";
+        try {
+            final PreparedStatement statement = connection.prepareStatement(sql);
+            for (Piece piece : pieces) {
+                statement.setString(1, piece.getPosition().getPosition());
+                statement.setString(2, gameId);
+                statement.setString(3, piece.getName());
+                statement.setString(4, piece.getColor().getName());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(INVALID_PIECE_VALUE_EXCEPTION_MESSAGE);
+        }
+    }
+
+//    public void movePiece(MoveCommandDto moveCommandDto, String gameId) {
+//        final Connection connection = databaseConnector.getConnection();
+//        final String sql = "UPDATE piece SET position = ? "
+//                + "WHERE game_id = ? "
+//                + "AND name = ? "
+//                + "AND color = ?";
+//        try {
+//            final PreparedStatement statement = connection.prepareStatement(sql);
+//            statement.setString(3, moveCommandDto.getSource());
+//            statement.setString(4, gameId);
+//            statement.setString(1, piece.getName());
+//            statement.setString(2, piece.getColor().getName());
+//            statement.execute();
+//
+//        } catch (SQLException e) {
+//            throw new IllegalArgumentException(INVALID_PIECE_VALUE_EXCEPTION_MESSAGE);
+//        }
+//    }
 
     public Pieces findAllByGameId(String gameId) {
         final Connection connection = databaseConnector.getConnection();

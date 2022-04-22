@@ -2,9 +2,13 @@ package chess.dto;
 
 public class PieceDto {
 
-    private final String position;
-    private final String color;
-    private final String name;
+    private String position;
+    private String color;
+    private String name;
+
+    public PieceDto() {
+
+    }
 
     public PieceDto(String position, String color, String name) {
         this.position = position;

@@ -1,21 +1,21 @@
 package chess.controller;
 
-import chess.dto.GameResultDto;
+import chess.dto.ChessGameDto;
 import chess.dto.MoveCommandDto;
 import chess.dto.PiecesDto;
 import chess.service.ChessGameService;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import chess.web.view.BoardView;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
-@RestController
+@Controller
 public class SpringChessController {
 
-    AtomicReference<ChessGameService> chessGameService = new AtomicReference<>();
+    ChessGameService chessGameService = new ChessGameService();
 
     //    private void exception() {
 //        exception(Exception.class, (exception, request, response) -> {
@@ -34,47 +34,44 @@ public class SpringChessController {
 //        });
 //    }
 //
-//    private void getEnd() {
-//        post("/game/end", (req, res) -> {
-//            chessGameService.get()
-//                    .forceEnd();
+//    @PostMapping("/game/end")
+//    private void getEnd(@RequestBody ChessGameDto chessGameDto) {
+//            chessGameService.forceEnd(chessGameDto.getGameId());
 //
-//            res.redirect("/game/progress");
 //            return true;
 //        });
 //    }
-//
-    @PostMapping("/game/save")
-    private PiecesDto postSave() {
-        chessGameService.get().save();
-        return chessGameService.get().getCurrentGame();
-    }
 
     @PostMapping("/game/move")
-    private PiecesDto postMove(@RequestBody MoveCommandDto moveDto) {
-        System.out.println(moveDto);
-        chessGameService.get().move(moveDto);
-        return chessGameService.get().getCurrentGame();
+    private String postMove(@RequestBody MoveCommandDto moveDto) {
+        chessGameService.move(moveDto.getGameId(), moveDto);
+        return "redirect:/game/progress";
     }
 
     @GetMapping("/game/status")
-    private GameResultDto getStatus() {
-        return chessGameService.get().calculateGameResult();
+    private ChessGameDto getStatus(@RequestParam String gameId) {
+        return new ChessGameDto(chessGameService.calculateGameResult(gameId), gameId);
     }
 
     @GetMapping("/game/progress")
-    private PiecesDto getProgressPage() {
-        return chessGameService.get().getCurrentGame();
+    private ChessGameDto getProgressPage(@RequestParam String gameId) {
+        ModelAndView modelAndView = getModel();
+        modelAndView.addObject("pieces", BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
+        modelAndView.addObject("gameId", gameId);
+        return new ChessGameDto(chessGameService.getCurrentGame(gameId), gameId);
     }
 
     @GetMapping("/game/start")
-    private PiecesDto getGamePage(@RequestParam String gameId) {
-        chessGameService.set(new ChessGameService(gameId));
-        return chessGameService.get().createOrGet();
+    public ModelAndView getGamePage(@RequestParam String gameId) {
+        chessGameService.createOrGet(gameId);
+        PiecesDto piecesDto = chessGameService.getCurrentGame(gameId);
+        ModelAndView modelAndView = getModel();
+        modelAndView.addObject("pieces", BoardView.of(piecesDto).getBoardView());
+        modelAndView.addObject("gameId", gameId);
+        return modelAndView;
     }
 
-    @GetMapping("/")
-    private PiecesDto getInitPage() {
-        return new PiecesDto(List.of());
+    private ModelAndView getModel() {
+        return new ModelAndView("game");
     }
 }

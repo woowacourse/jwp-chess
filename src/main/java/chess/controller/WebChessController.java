@@ -29,7 +29,7 @@
 //        get("/", (req, res) -> {
 //            PiecesDto piecesDto = new PiecesDto(List.of());
 //
-//            return RenderingUtil.render(piecesDto, "index.html");
+//            return RenderingUtil.render(piecesDto, "index.hbs");
 //        });
 //
 //        get("/game", (req, res) -> {
@@ -37,14 +37,14 @@
 //            PiecesDto piecesDto = chessGameService.get()
 //                .createOrGet();
 //
-//            return RenderingUtil.render(piecesDto, "game.html");
+//            return RenderingUtil.render(piecesDto, "game.hbs");
 //        });
 //
 //        get("/game/progress", (req, res) -> {
 //            PiecesDto piecesDto = chessGameService.get()
 //                .getCurrentGame();
 //
-//            return RenderingUtil.render(piecesDto, "game.html");
+//            return RenderingUtil.render(piecesDto, "game.hbs");
 //        });
 //
 //        get("/game/status", (req, res) -> {

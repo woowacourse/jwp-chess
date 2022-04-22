@@ -27,8 +27,20 @@ class ChessGameControllerTest {
 		RestAssured.given().log().all()
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.when().post("chessgames")
-                .then().log().all()
+				.then().log().all()
 				.statusCode(HttpStatus.CREATED.value())
 				.header("Location", "/chessgames/1");
+	}
+
+	@Test
+	@DisplayName("체스 보드 로딩")
+	void loadChessGame() {
+		createNewGame();
+
+		RestAssured.given().log().all()
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.when().get("chessgames/1")
+				.then().log().all()
+				.statusCode(HttpStatus.OK.value());
 	}
 }

@@ -103,6 +103,10 @@ public class WebGameController {
         chessGame.move(parsePosition(positions.get(KEY_SOURCE)), parsePosition(positions.get(KEY_TARGET)));
     }
 
+    public void move(String source, String target) {
+        chessGame.move(parsePosition(source), parsePosition(target));
+    }
+
     private Position parsePosition(String rawPosition) {
         return Position.of(EXPRESSIONS_COLUMN.get(rawPosition.charAt(INDEX_COLUMN)),
                 EXPRESSIONS_ROW.get(rawPosition.charAt(INDEX_ROW)));

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,10 +18,8 @@ public class GameDaoImpl implements GameDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertGame;
 
-    @Autowired
-    public GameDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                       DataSource dataSource) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    public GameDaoImpl(DataSource dataSource) {
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.insertGame = new SimpleJdbcInsert(dataSource)
                 .withTableName("game");
     }

@@ -4,8 +4,8 @@ import chess.console.command.Command;
 import java.util.NoSuchElementException;
 
 import chess.domain.game.ChessGame;
-import chess.web.dto.ChessBoardDto;
-import chess.web.dto.GameResult;
+import chess.console.dto.ChessBoardDto;
+import chess.console.dto.GameResult;
 import chess.console.view.InputView;
 import chess.console.view.OutputView;
 

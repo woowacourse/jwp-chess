@@ -13,13 +13,13 @@ public class ChessBoardDaoTest {
 
     @BeforeEach
     void init() {
-        final ChessBoardDao chessBoardDao = new ChessBoardDao();
+        final ChessBoardDao chessBoardDao = new ChessBoardDaoImpl();
         chessBoardDao.deleteAll();
     }
 
     @Test
     void save() {
-        final ChessBoardDao chessBoardDao = new ChessBoardDao();
+        final ChessBoardDao chessBoardDao = new ChessBoardDaoImpl();
         ChessGame chessGame = new ChessGame();
         Map<Position, Piece> initBoard = chessGame.start();
         for (Position position : initBoard.keySet()) {
@@ -29,7 +29,7 @@ public class ChessBoardDaoTest {
 
     @Test
     void deleteAll() {
-        final ChessBoardDao chessBoardDao = new ChessBoardDao();
+        final ChessBoardDao chessBoardDao = new ChessBoardDaoImpl();
         ChessGame chessGame = new ChessGame();
         Map<Position, Piece> initBoard = chessGame.start();
         for (Position position : initBoard.keySet()) {

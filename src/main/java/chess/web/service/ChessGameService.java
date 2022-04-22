@@ -56,7 +56,7 @@ public class ChessGameService {
     }
 
     public Player findTurn() {
-        return playerDao.findAll();
+        return playerDao.getPlayer();
     }
 
     public boolean isChessGameEnd() {

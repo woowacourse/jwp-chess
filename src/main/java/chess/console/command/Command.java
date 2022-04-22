@@ -10,7 +10,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.piece.position.File;
 import chess.domain.piece.position.Position;
 import chess.domain.piece.position.Rank;
-import chess.web.dto.GameResult;
+import chess.console.dto.GameResult;
 
 public enum Command {
     STATUS(Pattern.compile("^(status)$"), (chessGame, ignored) -> GameResult.ofScore(chessGame.status())),

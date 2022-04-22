@@ -1,4 +1,4 @@
-package chess.web.dto;
+package chess.console.dto;
 
 import java.util.Objects;
 

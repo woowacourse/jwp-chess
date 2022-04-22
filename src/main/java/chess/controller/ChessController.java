@@ -46,9 +46,9 @@ public class ChessController {
         return chessService.getTurn();
     }
 
-//        get("/turn", (req, res) -> {
-//            String turn = chessService.getTurn();
-//
-//            return gson.toJson(turn);
-//        });
+    @GetMapping("/king/dead")
+    @ResponseBody
+    public boolean kingDead() {
+        return chessService.isKingDead();
+    }
 }

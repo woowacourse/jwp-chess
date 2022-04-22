@@ -26,7 +26,7 @@ public class ChessSpringController {
 
     @GetMapping("/")
     public String index() {
-        return "roby";
+        return "roby.html";
     }
 
     @GetMapping("/room")
@@ -34,7 +34,7 @@ public class ChessSpringController {
                        Model model) {
         chessService.createRoom(name);
         model.addAttribute("name", name);
-        return "room";
+        return "room.html";
     }
 
     @GetMapping("/start")

@@ -41,7 +41,7 @@ public class ChessController {
         return board.getWebBoard();
     }
 
-    @GetMapping("/turn")
+    @GetMapping(value = "/turn")
     @ResponseBody
     public String turn() {
         return chessService.getTurn();
@@ -57,5 +57,11 @@ public class ChessController {
     @ResponseBody
     public GameResult status() {
         return chessService.getResult();
+    }
+
+    @PostMapping("/exit")
+    @ResponseBody
+    public void exit() {
+        chessService.exitGame();
     }
 }

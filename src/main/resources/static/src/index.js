@@ -57,13 +57,12 @@ function initBoard() {
 
 function drawTurnBox() {
     const turnBox = document.getElementById("turn-box")
-
     const response = fetch(`/turn`, {
         method: "GET",
         headers: {"Content-Type": "application/json"}
     });
     response
-        .then(data => data.json())
+        .then(data => data.text())
         .then(body => {
             turnBox.innerText = body + "팀 차례!";
             if (body === "NONE") {

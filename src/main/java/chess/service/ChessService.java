@@ -1,11 +1,17 @@
 package chess.service;
 
+import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
+import chess.domain.board.PieceFactory;
 import chess.domain.board.Position;
+import chess.domain.game.ChessGame;
+import chess.domain.game.Turn;
 import chess.domain.piece.Piece;
+import chess.domain.piece.Team;
 import chess.dto.BoardsDto;
+import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
-import chess.dto.response.EnterResponseDto;
+import chess.dto.response.GameResponseDto;
 import chess.dto.response.RoomResponseDto;
 import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
@@ -43,9 +49,47 @@ public class ChessService {
             .collect(Collectors.toList());
     }
 
-    public EnterResponseDto enterRoom(final Long roomId) {
+    public GameResponseDto enterRoom(final Long roomId) {
         final RoomEntity room = roomRepository.findById(roomId);
         final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
-        return EnterResponseDto.of(room, BoardsDto.of(boards));
+        return GameResponseDto.of(room, BoardsDto.of(boards));
     }
+
+    public GameResponseDto move(final Long id, final MoveRequestDto moveRequestDto) {
+        final RoomEntity room = roomRepository.findById(id);
+        final List<BoardEntity> boardEntity = boardRepository.findBoardByRoomId(id);
+
+        final ChessGame chessGame = new ChessGame(toBoard(boardEntity), new Turn(Team.of(room.getTeam())));
+        final String sourcePosition = moveRequestDto.getSource();
+        final String targetPosition = moveRequestDto.getTarget();
+
+        chessGame.move(sourcePosition, targetPosition);
+
+        final BoardEntity sourceBoardEntity = new BoardEntity(id, sourcePosition,
+            chessGame.getPieceName(sourcePosition));
+        final BoardEntity targetBoardEntity = new BoardEntity(id, targetPosition,
+            chessGame.getPieceName(targetPosition));
+        boardRepository.updateBatchPositions(List.of(sourceBoardEntity, targetBoardEntity));
+
+        final String turnAfterMove = chessGame.getCurrentTurn().getValue();
+        roomRepository.updateTeam(id, turnAfterMove);
+        checkGameOver(id, chessGame);
+        return GameResponseDto.of(roomRepository.findById(id), BoardsDto.of(boardRepository.findBoardByRoomId(id)));
+    }
+
+    private void checkGameOver(final Long id, final ChessGame chessGame) {
+        if (!chessGame.isOn()) {
+            roomRepository.updateGameOver(id);
+        }
+    }
+
+    private Board toBoard(final List<BoardEntity> boardEntity) {
+        final Map<Position, Piece> board = boardEntity.stream()
+            .collect(Collectors.toMap(it -> Position.valueOf(it.getPosition()),
+                it -> PieceFactory.createPiece(it.getPiece())));
+
+        return new Board(board);
+    }
+
+
 }

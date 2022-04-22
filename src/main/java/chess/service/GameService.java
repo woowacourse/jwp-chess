@@ -3,8 +3,9 @@ package chess.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import chess.dao.DatabaseGameDao;
-import chess.dao.DatabaseMemberDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import chess.dao.GameDao;
 import chess.dao.MemberDao;
 import chess.domain.Board;
@@ -17,14 +18,17 @@ import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
 import chess.dto.GameResultDto;
 
+@Service
 public class GameService {
 
-    private final GameDao gameDao;
-    private final MemberDao memberDao;
+    @Autowired
+    private GameDao gameDao;
+    @Autowired
+    private MemberDao memberDao;
 
-    public GameService(DatabaseGameDao databaseGameDao, DatabaseMemberDao databaseMemberDao) {
-        this.gameDao = databaseGameDao;
-        this.memberDao = databaseMemberDao;
+    public GameService(final GameDao gameDao, final MemberDao memberDao) {
+        this.gameDao = gameDao;
+        this.memberDao = memberDao;
     }
 
     public void createGame(final Long whiteId, final Long blackId) {
@@ -121,4 +125,3 @@ public class GameService {
         update(chessGame);
     }
 }
-

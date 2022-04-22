@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import chess.domain.Member;
 
+@Repository
 public class DatabaseMemberDao implements MemberDao {
     private final SqlExecutor executor = SqlExecutor.getInstance();
 

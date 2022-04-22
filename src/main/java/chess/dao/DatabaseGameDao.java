@@ -12,6 +12,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Repository;
+
 import chess.domain.Board;
 import chess.domain.ChessGame;
 import chess.domain.Member;
@@ -22,13 +24,14 @@ import chess.domain.piece.detail.PieceType;
 import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
 
+@Repository
 public class DatabaseGameDao implements GameDao {
 
     private final PieceDao pieceDao = new PieceDao();
     private final SqlExecutor executor = SqlExecutor.getInstance();
     private final MemberDao memberDao;
 
-    public DatabaseGameDao(MemberDao memberDao) {
+    public DatabaseGameDao(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 

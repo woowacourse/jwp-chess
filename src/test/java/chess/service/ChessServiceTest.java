@@ -1,4 +1,4 @@
-package chess.db;
+package chess.service;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import chess.db.ChessGameDao;
+import chess.db.PieceDao;
 import chess.domain.ChessGame;
 import chess.domain.GameTurn;
 import chess.domain.board.InitialBoardGenerator;
@@ -19,7 +21,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
-public class PieceDaoTest {
+public class ChessServiceTest {
     private final static String DRIVER = "com.mysql.jdbc.Driver";
     private static final String URL = "jdbc:mysql://localhost:3306/chess";
     private static final String USER = "user";
@@ -32,8 +34,12 @@ public class PieceDaoTest {
         dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource(URL, USER, PASSWORD);
         dataSource.setDriverClassName(DRIVER);
         jdbcTemplate = new JdbcTemplate(dataSource);
+
         ChessGameDao chessGameDao = new ChessGameDao(jdbcTemplate);
         chessGameDao.save("test", new ChessGame(new InitialBoardGenerator(), GameTurn.WHITE));
+
+        PieceDao pieceDao = new PieceDao(jdbcTemplate);
+        pieceDao.save("test");
     }
 
     @AfterEach
@@ -45,23 +51,10 @@ public class PieceDaoTest {
         jdbcTemplate.update(deleteChessGameSql);
     }
 
-    @DisplayName("존재하는 게임에 대한 검색은 예외를 반환하지 않는다")
     @Test
-    void findByGameID() {
-        PieceDao pieceDao = new PieceDao(jdbcTemplate);
-        pieceDao.save("test");
-
-        assertThatNoException().isThrownBy(() -> pieceDao.findByGameID("test"));
-    }
-
-    @DisplayName("존재하지 않는 게임에 대한 검색은 예외를 반환한다")
-    @Test
-    void findByGameID_NoSuchGame() {
-        PieceDao pieceDao = new PieceDao(jdbcTemplate);
-        pieceDao.save("test");
-
-        assertThatThrownBy(() -> pieceDao.findByGameID("test1"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("헉.. 저장 안한거 아냐? 그런 게임은 없어!");
+    @DisplayName("gameID를 이용해 DB로부터 불러온 turn이 해당 gameTurn과 일치한다")
+    void getTurn() {
+        ChessService dbService = new ChessService(new ChessGameDao(jdbcTemplate), new PieceDao(jdbcTemplate));
+        assertThat(dbService.getTurn("test")).isEqualTo(GameTurn.WHITE);
     }
 }

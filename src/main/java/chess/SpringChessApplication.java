@@ -1,6 +1,5 @@
 package chess;
 
-import chess.service.ChessService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
@@ -18,8 +17,6 @@ public class SpringChessApplication {
 
     @GetMapping("/")
     public String index() {
-        final ChessService chessService = new ChessService();
-        chessService.initializeGame();
         return "index";
     }
 }

@@ -110,24 +110,31 @@ public class SpringJdbcGameDao implements GameDao {
     }
 
     @Override
-    public void update(final ChessGame game) {
-        updateGame(game);
-        movePieces(game);
+    public void move(final ChessGame game, final String rawFrom, final String rawTo) {
+        pieceDao.move(game.getId(), rawFrom, rawTo);
+        reverseTurn(game);
     }
 
-    private void updateGame(final ChessGame game) {
+    private void reverseTurn(final ChessGame game) {
         final String sql = "update Game set turn = ? where id = ?";
+
         jdbcTemplate.update(connection -> {
             final PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, game.getTurn().name());
             statement.setLong(2, game.getId());
             return statement;
         });
-        savePieces(game.getId(), game.getBoard());
     }
 
-    private void movePieces(final ChessGame game) {
-        pieceDao.deletePiecesByGameId(game.getId());
-        savePieces(game.getId(), game.getBoard());
+    @Override
+    public void terminate(final Long id) {
+        final String sql = "update Game set turn = ? where id = ?";
+
+        jdbcTemplate.update(connection -> {
+            final PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, Team.NONE.name());
+            statement.setLong(2, id);
+            return statement;
+        });
     }
 }

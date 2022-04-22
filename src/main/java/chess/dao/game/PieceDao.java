@@ -10,4 +10,6 @@ public interface PieceDao {
     void deletePiecesByGameId(Long gameId);
 
     Board findBoardByGameId(Long gameId);
+
+    void move(final Long gameId, final String rawFrom, final String rawTo);
 }

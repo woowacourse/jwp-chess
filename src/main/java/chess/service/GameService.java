@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.game.GameDao;
+import chess.dao.game.PieceDao;
 import chess.dao.member.MemberDao;
 import chess.domain.Board;
 import chess.domain.BoardInitializer;
@@ -13,6 +14,7 @@ import chess.domain.square.Square;
 import chess.dto.GameResultDto;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +23,7 @@ public class GameService {
     private final GameDao gameDao;
     private final MemberDao memberDao;
 
+    @Autowired
     public GameService(final GameDao gameDao, final MemberDao memberDao) {
         this.gameDao = gameDao;
         this.memberDao = memberDao;
@@ -104,20 +107,16 @@ public class GameService {
         return result.getBlackScore();
     }
 
-    public void update(final ChessGame chessGame) {
-        gameDao.update(chessGame);
-    }
-
     public void move(final Long gameId, final String rawFrom, final String rawTo) {
         final ChessGame chessGame = findByGameId(gameId);
         chessGame.move(Square.from(rawFrom), Square.from(rawTo));
-        update(chessGame);
+        gameDao.move(chessGame, rawFrom, rawTo);
     }
 
     public void terminate(final Long gameId) {
         final ChessGame chessGame = findByGameId(gameId);
         chessGame.terminate();
-        update(chessGame);
+        gameDao.terminate(gameId);
     }
 }
 

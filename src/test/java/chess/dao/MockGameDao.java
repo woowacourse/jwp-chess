@@ -43,7 +43,14 @@ public class MockGameDao implements GameDao {
     }
 
     @Override
-    public void update(ChessGame game) {
+    public void move(final ChessGame game, final String rawFrom, final String rawTo) {
         store.put(game.getId(), game);
+    }
+
+    @Override
+    public void terminate(final Long id) {
+        final ChessGame game = store.get(id);
+        game.terminate();
+        store.put(id, game);
     }
 }

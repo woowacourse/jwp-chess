@@ -90,12 +90,6 @@ public class JdbcGameDao implements GameDao {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void update(final ChessGame game) {
-        updateGame(game);
-        movePieces(game);
-    }
-
     private void updateGame(final ChessGame game) {
         final String sql = "update Game set turn = ? where id = ?";
         executor.update(connection -> {
@@ -127,5 +121,34 @@ public class JdbcGameDao implements GameDao {
         final String rawTurn = resultSet.getString("turn");
         return new ChessGame(id, pieceDao.findBoardByGameId(id), Team.valueOf(rawTurn),
                 new Participant(white, black));
+    }
+
+    @Override
+    public void move(final ChessGame game, final String rawFrom, final String rawTo) {
+        pieceDao.move(game.getId(), rawFrom, rawTo);
+        reverseTurn(game);
+    }
+
+    private void reverseTurn(final ChessGame game) {
+        final String sql = "update Game set turn = ? where id = ?";
+
+        executor.update(connection -> {
+            final PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, game.getTurn().name());
+            statement.setLong(2, game.getId());
+            return statement;
+        });
+    }
+
+    @Override
+    public void terminate(final Long id) {
+        final String sql = "update Game set turn = ? where id = ?";
+
+        executor.update(connection -> {
+            final PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, Team.NONE.name());
+            statement.setLong(2, id);
+            return statement;
+        });
     }
 }

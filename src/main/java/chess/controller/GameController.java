@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.domain.command.MoveRoute;
+import chess.domain.event.MoveRoute;
 import chess.domain.event.MoveEvent;
 import chess.dto.CreateGameDto;
 import chess.dto.GameDto;

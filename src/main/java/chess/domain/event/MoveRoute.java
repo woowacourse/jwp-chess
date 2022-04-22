@@ -1,4 +1,4 @@
-package chess.domain.command;
+package chess.domain.event;
 
 import chess.domain.board.position.Position;
 import java.util.Objects;

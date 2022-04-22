@@ -1,6 +1,5 @@
 package chess.domain.event;
 
-import chess.domain.command.MoveRoute;
 import java.util.Objects;
 
 public final class MoveEvent extends Event {

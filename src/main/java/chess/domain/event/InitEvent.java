@@ -1,7 +1,5 @@
 package chess.domain.event;
 
-import chess.domain.command.MoveRoute;
-
 public final class InitEvent extends Event {
 
     private static final String INIT_DESCRIPTION = "";

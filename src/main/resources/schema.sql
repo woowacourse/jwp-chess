@@ -16,7 +16,7 @@ CREATE TABLE piece
     position_col  varchar(1)  NOT NULL,
     position_row  varchar(1)  NOT NULL,
     chess_game_id bigint      NOT NULL,
-    primary key (id),
-    foreign key (chess_game_id) references chess_game (id)
+    primary key (id)
+--     foreign key (chess_game_id) references chess_game (id)
 );
 

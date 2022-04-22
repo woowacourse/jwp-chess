@@ -35,7 +35,7 @@ public class PlayerDaoJdbcImpl implements PlayerDao {
     public Player getPlayer() {
         final String sql = "select color from player";
         String color = jdbcTemplate.queryForObject(sql, String.class);
-
+        System.out.println("dao입니다" + color);
         return Player.of(Color.of(color));
     }
 }

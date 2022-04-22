@@ -59,8 +59,7 @@ public class ChessGameService {
         return playerDao.getPlayer();
     }
 
-    public boolean isChessGameEnd() {
-        ChessGame chessGame = getChessGame();
+    public boolean isChessGameEnd(ChessGame chessGame) {
         return chessGame.isFinished();
     }
 
@@ -76,14 +75,14 @@ public class ChessGameService {
         try {
             chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
             removeAll();
+            if (isChessGameEnd(chessGame)) {
+                moveResultDto.setGameOver(true);
+                moveResultDto.setWinner(turn);
+                return moveResultDto;
+            }
             saveAll(chessGame);
         } catch (IllegalArgumentException e) {
             moveResultDto.setCanMove(false);
-        }
-
-        if (isChessGameEnd()) {
-            moveResultDto.setGameOver(true);
-            moveResultDto.setWinner(turn);
         }
 
         return moveResultDto;

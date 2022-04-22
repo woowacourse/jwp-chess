@@ -13,10 +13,10 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-public class IngameController {
+public class InGameController {
     private final ChessService chessService;
 
-    public IngameController(final ChessService chessService) {
+    public InGameController(final ChessService chessService) {
         this.chessService = chessService;
     }
 
@@ -47,7 +47,7 @@ public class IngameController {
             chessService.movePiece(gameID, source, target);
             chessService.updateTurn(gameID, chessGame);
             model.addAllAttributes(chessGame.getEmojis());
-            model.addAttribute("msg","누가 이기나 보자구~!");
+            model.addAttribute("msg", "누가 이기나 보자구~!");
         } catch (IllegalArgumentException e) {
             model.addAllAttributes(chessGame.getEmojis());
             model.addAttribute("msg", e.getMessage());

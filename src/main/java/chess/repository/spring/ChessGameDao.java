@@ -23,7 +23,8 @@ public class ChessGameDao {
     }
 
     public void save(final ChessGameEntity chessGameEntity) {
-        String insertSql = "insert into chess_game (name, is_on, team_value_of_turn) values (:name, :isOn, :teamValueOfTurn)";
+        String insertSql = "insert into chess_game (name, is_on, team_value_of_turn)"
+                + " values (:name, :isOn, :teamValueOfTurn)";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(insertSql, source);
     }
@@ -55,5 +56,11 @@ public class ChessGameDao {
                 rs.getBoolean("is_on"),
                 rs.getString("team_value_of_turn")
         );
+    }
+
+    public void updateIsOnAndTurn(final ChessGameEntity chessGameEntity) {
+        String updateSql = "update chess_game set is_on=:isOn, team_value_of_turn=:teamValueOfTurn where name=:name";
+        SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
+        namedParameterJdbcTemplate.update(updateSql, source);
     }
 }

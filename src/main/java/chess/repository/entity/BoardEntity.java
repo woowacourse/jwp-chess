@@ -26,6 +26,19 @@ public class BoardEntity {
         this.pieceTeamValue = pieceTeamValue;
     }
 
+    public BoardEntity(String name,
+                       char columnValue,
+                       int rowValue,
+                       Map<Position, Piece> currentBoard) {
+        this.name = name;
+        positionColumnValue = String.valueOf(columnValue);
+        positionRowValue = rowValue;
+        Piece piece = currentBoard.get(Position.of(columnValue, positionRowValue));
+        pieceName = piece.getName();
+        pieceTeamValue = piece.getTeam().getValue();
+    }
+
+
     public static List<BoardEntity> generateBoardEntities(final String name, final Map<Position, Piece> board) {
         List<BoardEntity> boardEntities = new ArrayList<>();
         for (Position position : board.keySet()) {

@@ -87,7 +87,7 @@ public class SpringController {
         return new RedirectView("/game/" + chess_game_name);
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler
     public ResponseEntity<String> getException(final Exception exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }

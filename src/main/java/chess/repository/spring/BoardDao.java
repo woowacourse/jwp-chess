@@ -1,7 +1,9 @@
 package chess.repository.spring;
 
 import chess.repository.entity.BoardEntity;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,7 +21,8 @@ public class BoardDao {
     }
 
     public void save(final List<BoardEntity> boardEntities) {
-        String insertSql = "insert into board (name, position_column_value, position_row_value, piece_name, piece_team_value) values (:name, :positionColumnValue, :positionRowValue, :pieceName, :pieceTeamValue)";
+        String insertSql = "insert into board (name, position_column_value, position_row_value, piece_name, piece_team_value)"
+                + " values (:name, :positionColumnValue, :positionRowValue, :pieceName, :pieceTeamValue)";
         for (BoardEntity boardEntity : boardEntities) {
             SqlParameterSource source = new BeanPropertySqlParameterSource(boardEntity);
             namedParameterJdbcTemplate.update(insertSql, source);
@@ -56,5 +59,11 @@ public class BoardDao {
         if (boardEntities.size() == 0) {
             throw new IllegalArgumentException("[ERROR] Board 가 존재하지 않습니다.");
         }
+    }
+
+    public void updatePiece(final BoardEntity boardEntity) {
+        String updateSql = "update board set piece_name=:pieceName, piece_team_value=:pieceTeamValue where name=:name and position_column_value=:positionColumnValue and position_row_value=:positionRowValue";
+        SqlParameterSource source = new BeanPropertySqlParameterSource(boardEntity);
+        namedParameterJdbcTemplate.update(updateSql, source);
     }
 }

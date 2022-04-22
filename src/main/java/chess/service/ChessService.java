@@ -76,6 +76,8 @@ public class ChessService {
     ) {
         ChessGame chessGame = loadChessGame(name);
         chessGame.move(sourceColumnValue, sourceRowValue, targetColumnValue, targetRowValue);
-        saveChessGame(chessGame);
+        chessGameDao.updateIsOnAndTurn(new ChessGameEntity(chessGame));
+        boardDao.updatePiece(new BoardEntity(name, sourceColumnValue, sourceRowValue, chessGame.getCurrentBoard()));
+        boardDao.updatePiece(new BoardEntity(name, targetColumnValue, targetRowValue, chessGame.getCurrentBoard()));
     }
 }

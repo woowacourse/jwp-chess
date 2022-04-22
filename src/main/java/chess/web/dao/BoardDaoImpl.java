@@ -4,6 +4,7 @@ import chess.board.Board;
 import chess.board.Team;
 import chess.board.Turn;
 import chess.board.piece.Pieces;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +21,8 @@ import java.util.Optional;
 @Repository
 public class BoardDaoImpl implements BoardDao {
 
-    private final JdbcTemplate jdbcTemplate;
-
-    public BoardDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Board> boardRowMapper = (resultSet, rowNum) -> {
         Team team = Team.from(resultSet.getString("turn"));

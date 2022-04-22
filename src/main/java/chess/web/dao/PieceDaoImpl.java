@@ -2,6 +2,7 @@ package chess.web.dao;
 
 import chess.board.piece.Piece;
 import chess.board.piece.PieceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -11,11 +12,8 @@ import java.util.List;
 @Repository
 public class PieceDaoImpl implements PieceDao {
 
-    private final JdbcTemplate jdbcTemplate;
-
-    public PieceDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Piece> piecesRowMapper = (resultSet, rowNum) -> PieceFactory.create(
             resultSet.getString("position"),

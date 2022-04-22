@@ -8,23 +8,26 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@JdbcTest
+@SpringBootTest
 class BoardDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     private BoardDao boardDao;
     private Long boardId;
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE board IF EXISTS");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS piece");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS board");
 
         jdbcTemplate.execute("CREATE TABLE board (" +
                 " id   INT(10) not null AUTO_INCREMENT," +
@@ -40,8 +43,6 @@ class BoardDaoTest {
                 " foreign key (board_id) references board (id) ON DELETE CASCADE ," +
                 " primary key (id))");
 
-
-        boardDao = new BoardDaoImpl(jdbcTemplate);
         boardId = boardDao.save();
     }
 

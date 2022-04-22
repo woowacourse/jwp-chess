@@ -13,18 +13,21 @@ import chess.web.dao.PieceDao;
 import chess.web.dao.PieceDaoImpl;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ChessService {
 
-    private final BoardDao boardDao;
-    private final PieceDao pieceDao;
+    @Autowired
+    private BoardDao boardDao;
+    @Autowired
+    private PieceDao pieceDao;
 
     public ChessService() {
-        boardDao = new BoardDaoImpl(new JdbcTemplate());
-        pieceDao = new PieceDaoImpl(new JdbcTemplate());
     }
 
     public ChessService(BoardDao boardDao, PieceDao pieceDao) {

@@ -5,6 +5,7 @@ import chess.web.service.ChessService;
 import chess.web.service.dto.BoardDto;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.MediaType;
@@ -19,7 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class SpringChessApplication {
 
-    private final ChessService chessService = new ChessService();
+    @Autowired
+    private ChessService chessService;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringChessApplication.class, args);

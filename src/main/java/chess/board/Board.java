@@ -86,6 +86,7 @@ public final class Board {
     }
 
     public boolean isDeadKing() {
+        System.out.println("King 개수 >>>> " + pieces.countOfKing());
         return pieces.countOfKing() == 1;
     }
 

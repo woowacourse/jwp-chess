@@ -25,7 +25,7 @@ public class DBService {
             GameTurn gameTurn = getTurn(gameID);
             checkCanContinue(gameTurn);
             chessGame = loadSavedChessGame(gameID, gameTurn);
-        } catch (IllegalArgumentException e) {
+        } catch (RuntimeException e) {
             chessGame = loadNewChessGame();
         }
         return chessGame;
